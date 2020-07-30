@@ -2,70 +2,112 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89524C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE371C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2742082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B817320842
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:22:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729977AbgG3QWc (ORCPT
+        id S1730006AbgG3QWm convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 12:22:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44414 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgG3QWb (ORCPT
+        Thu, 30 Jul 2020 12:22:42 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:57305 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728415AbgG3QWm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 12:22:31 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D17EC061574;
-        Thu, 30 Jul 2020 09:22:31 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k1BJz-005lAt-Uv; Thu, 30 Jul 2020 16:22:20 +0000
-Date:   Thu, 30 Jul 2020 17:22:19 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 22/23] fs: default to generic_file_splice_read for files
- having ->read_iter
-Message-ID: <20200730162219.GC1236603@ZenIV.linux.org.uk>
-References: <20200707174801.4162712-1-hch@lst.de>
- <20200707174801.4162712-23-hch@lst.de>
- <20200730000544.GC1236929@ZenIV.linux.org.uk>
- <20200730070329.GB18653@lst.de>
- <20200730150826.GA1236603@ZenIV.linux.org.uk>
- <20200730152046.GA21192@lst.de>
- <20200730161701.GB1236603@ZenIV.linux.org.uk>
+        Thu, 30 Jul 2020 12:22:42 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-168-pSkYNQ8ZO5WTrpGnSW1Ncw-1; Thu, 30 Jul 2020 17:22:38 +0100
+X-MC-Unique: pSkYNQ8ZO5WTrpGnSW1Ncw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 30 Jul 2020 17:22:38 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 30 Jul 2020 17:22:38 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Joerg Roedel' <joro@8bytes.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+CC:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Joerg Roedel <jroedel@suse.de>
+Subject: RE: [PATCH v2 4/4] KVM: SVM: Use __packed shorthand
+Thread-Topic: [PATCH v2 4/4] KVM: SVM: Use __packed shorthand
+Thread-Index: AQHWZohC3H9k40HxxUaQvBycA7RPyakgTMJw
+Date:   Thu, 30 Jul 2020 16:22:38 +0000
+Message-ID: <230e4cc785ff49a38c028474dcfc9c36@AcuMS.aculab.com>
+References: <20200730154340.14021-1-joro@8bytes.org>
+ <20200730154340.14021-5-joro@8bytes.org>
+In-Reply-To: <20200730154340.14021-5-joro@8bytes.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730161701.GB1236603@ZenIV.linux.org.uk>
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 05:17:01PM +0100, Al Viro wrote:
-> On Thu, Jul 30, 2020 at 05:20:46PM +0200, Christoph Hellwig wrote:
+From: Joerg Roedel
+> Sent: 30 July 2020 16:44
 > 
-> > Fortunately I think the fix is pretty easy - remove the special pipe
-> > zero copy optimization from copy_page_to_iter, and just have the
-> > callers actually want it because they have pagecache or similar
-> > refcountable pages use it explicitly for the ITER_PIPE case.  That gives
-> > us a safe default with an opt-in into the optimized variant.  I'm
-> > currently auditing all the users of for how it is used and that looks
-> > pretty promising.
+> From: Borislav Petkov <bp@alien8.de>
 > 
-> Huh?  What does that have to do with anything?
+> Use the shorthand to make it more readable.
+...
+> diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
+> index 8744817358bf..6b4b43f68f4b 100644
+> --- a/arch/x86/include/asm/svm.h
+> +++ b/arch/x86/include/asm/svm.h
+> @@ -150,14 +150,14 @@ struct __attribute__ ((__packed__)) vmcb_control_area {
+>  #define SVM_NESTED_CTL_NP_ENABLE	BIT(0)
+>  #define SVM_NESTED_CTL_SEV_ENABLE	BIT(1)
+> 
+> -struct __attribute__ ((__packed__)) vmcb_seg {
+> +struct vmcb_seg {
+>  	u16 selector;
+>  	u16 attrib;
+>  	u32 limit;
+>  	u64 base;
+> -};
+> +} __packed;
 
-FWIW, none of the dubious (and outright broken) cases I've found go anywhere
-near that.  And it definitely won't help tun/tap...
+Why are they marked 'packed' at all?
+The above has no holes.
+So it would only need to be 'packed' if it might exist at
+an unaligned address.
+That only tends to happed for network messages and compatibility
+with old hardware definitions.
+
+While you might want an attribute for 'error if has holes'
+if definitely isn't __packed.
+
+For larger structures in can be worth adding a compile-time
+assert that the structure is the size of the associated
+hardware registers/structure.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
