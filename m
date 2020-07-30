@@ -2,185 +2,109 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75036C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0795FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F35320829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D515721744
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:41:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="iZkcEonx"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FtONpzrT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbgG3NlR (ORCPT
+        id S1728380AbgG3Nle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 09:41:17 -0400
-Received: from vps.xff.cz ([195.181.215.36]:55364 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726772AbgG3NlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 09:41:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1596116471; bh=GofhiWtZo83ZcSwGRix98z4zveLZhyL8LDQJeSZFE5I=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=iZkcEonxCQQzyGK1LZyT3oh0DfrUWc6bPMjsFRVLCIiNAsKJ8tKncEPFNJv9Nl/pc
-         1c3mp/qj79uELGYcZXENPLcN1S5z4QVZmrPBhOmpT8/3WF0mB9ozYWBCyKyv89+6pE
-         dAaRRkoiFvtzkBHs0FQXQ8QZIfut82ivnSo3/7cY=
-Date:   Thu, 30 Jul 2020 15:41:11 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Samuel Holland <samuel@sholland.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Fix st7703 panel initialization failures
-Message-ID: <20200730134111.nayvgw4kcxeg6kft@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
-        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Fabio Estevam <festevam@gmail.com>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Samuel Holland <samuel@sholland.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20200716123753.3552425-1-megous@megous.com>
- <20200716140843.GA359122@bogon.m.sigxcpu.org>
- <20200716143209.ud6ote4q545bo2c7@core.my.home>
- <20200718173124.GA88021@bogon.m.sigxcpu.org>
- <20200718174215.mgjl3klytfa3nf3t@core.my.home>
- <20200729154809.GA435075@bogon.m.sigxcpu.org>
+        Thu, 30 Jul 2020 09:41:34 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:34442 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728286AbgG3Nld (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 09:41:33 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06UDfRWM107364;
+        Thu, 30 Jul 2020 08:41:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1596116487;
+        bh=LlD7J8iYz9YS4y6oTZTgbYS1wE+qcP20Ye+/P7WW81w=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=FtONpzrT1uVyS/p9GwsThHhRU/kmEFqFGDadOuQGZP/ywELnRGkCs5X3Xmje4uQO4
+         I1HpJPeluEo6GYe5ct3Qo2iYwKlc5L/hdsSkAzxd4tcX/oh0QWrEAD+Wc8cvUmpMWt
+         YaO/C9WwdURHBRzfMpbld27dK5g6fLiPPgEq3UIs=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06UDfRpg125709;
+        Thu, 30 Jul 2020 08:41:27 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 30
+ Jul 2020 08:41:27 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 30 Jul 2020 08:41:26 -0500
+Received: from [10.250.53.226] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06UDfQ2C036307;
+        Thu, 30 Jul 2020 08:41:26 -0500
+Subject: Re: [net-next v5 PATCH 0/7] Add PRP driver
+To:     David Miller <davem@davemloft.net>
+CC:     <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
+        <nsekhar@ti.com>, <grygorii.strashko@ti.com>,
+        <vinicius.gomes@intel.com>
+References: <20200722144022.15746-1-m-karicheri2@ti.com>
+ <20200727.122120.336438917999066726.davem@davemloft.net>
+From:   Murali Karicheri <m-karicheri2@ti.com>
+Message-ID: <fb10c323-d5c2-93d6-9784-51ff632fb3ff@ti.com>
+Date:   Thu, 30 Jul 2020 09:41:26 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200729154809.GA435075@bogon.m.sigxcpu.org>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <20200727.122120.336438917999066726.davem@davemloft.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Dave,
 
-On Wed, Jul 29, 2020 at 05:48:09PM +0200, Guido Günther wrote:
-> Hi,
-> On Sat, Jul 18, 2020 at 07:42:15PM +0200, Ondřej Jirman wrote:
-> > Hello,
-> > 
-> > On Sat, Jul 18, 2020 at 07:31:24PM +0200, Guido Günther wrote:
-> > > Hi,
-> > > On Thu, Jul 16, 2020 at 04:32:09PM +0200, Ondřej Jirman wrote:
-> > > > Hi Guido,
-> > > > 
-> > > > On Thu, Jul 16, 2020 at 04:08:43PM +0200, Guido Günther wrote:
-> > > > > Hi Ondrej,
-> > > > > On Thu, Jul 16, 2020 at 02:37:51PM +0200, Ondrej Jirman wrote:
-> > > > > > When extending the driver for xbd599 panel support I tried to do minimal
-> > > > > > changes and keep the existing initialization timing.
-> > > > > > 
-> > > > > > It turned out that it's not good enough and the existing init sequence
-> > > > > > is too aggressive and doesn't follow the specification. On PinePhone
-> > > > > > panel is being powered down/up during suspend/resume and with current
-> > > > > > timings this frequently leads to corrupted display.
-> > > > > 
-> > > > > Given the amount of ST7703 look alikes i don't think you can go by the
-> > > > > datasheet and hope not to break other panels. The current sleeps cater
-> > > > > for the rocktech panel (which suffered from similar issues you describe
-> > > > > when we took other parameters) so you need to make those panel specific.
-> > > > 
-> > > > It should work on rocktech too. The patch mostly increases/reorders the delays
-> > > > slightly, to match the controller documentation. I don't see a reason to
-> > > > complicate the driver with per panel special delays, unless these patches don't
-> > > > work on your panel.
-> > > 
-> > > That's why i brought it up. It breaks the rocktech panel on
-> > > blank/unblank loops where it just stays blank and then starts hitting
-> > > DSI command timeouts.
-> > 
-> > Good to know. Does keeping the msleep(20); after init sequence and before sleep
-> > exit make it work?
+On 7/27/20 3:21 PM, David Miller wrote:
+> From: Murali Karicheri <m-karicheri2@ti.com>
+> Date: Wed, 22 Jul 2020 10:40:15 -0400
 > 
-> We need both sleeps to make this work reliably so basically
-> reverting your 'drm/panel: st7703: Make the sleep exit timing match the
-> spec' makes things stable again.
+>> This series is dependent on the following patches sent out to
+>> netdev list. All (1-3) are already merged to net/master as of
+>> sending this, but not on the net-next master branch. So need
+>> to apply them to net-next before applying this series. v3 of
+>> the iproute2 patches can be merged to work with this series
+>> as there are no updates since then.
+>>
+>> [1] https://marc.info/?l=linux-netdev&m=159526378131542&w=2
+>> [2] https://marc.info/?l=linux-netdev&m=159499772225350&w=2
+>> [3] https://marc.info/?l=linux-netdev&m=159499772425352&w=2
+>>
+>> This series adds support for Parallel Redundancy Protocol (PRP)
+>> in the Linux HSR driver as defined in IEC-62439-3. PRP Uses a
+>> Redundancy Control Trailer (RCT) the format of which is
+>> similar to HSR Tag. This is used for implementing redundancy.
+>   ...
 > 
-> We don't need to sleep 120ms after sleep out though since our panel only
-> requires 15ms as per data sheet there so it really makes sense to make
-> these configurable.
-
-Thank you for checking it.
-
-I'd be happy with just the other patch being applied. That would be enough
-to fix issues with xingbangda panel too.
-
-In my tests xbd panel doesn't need 120ms either, despite the datasheet.
-What breaks xbd panel is the lack of post-powerup delay before deasserting
-reset line.
-
-regards,
-	o.
-
-> Cheers,
->  -- Guido
+> Series applied to net-next, thank you.
 > 
-> > 
-> > thank you and regards,
-> > 	o.
-> > 
-> > > Cheers,
-> > >  -- Guido
-> > > 
-> > > > 
-> > > > The init sequence is still suboptimal, and doesn't follow the kernel docs
-> > > > completely, even after these patches. Controller spec also talks about adding
-> > > > some delay before enabling the backlight to avoid visual glitches.
-> > > > 
-> > > > Which is what enable callback is documented to be for. Currently part of the
-> > > > initialization that belongs to prepare callback is also done in enable callback.
-> > > > 
-> > > > I see the glitch (small vertical shift of the image on powerup), but personally
-> > > > don't care much to introduce even more delays to the driver, just for the
-> > > > cosmetic issue.
-> > > > 
-> > > > regards,
-> > > > 	o.
-> > > > 
-> > > > > Cheers,
-> > > > >  -- Guido
-> > > > > 
-> > > > > > 
-> > > > > > This patch series fixes the problems.
-> > > > > > 
-> > > > > > The issue was reported by Samuel Holland.
-> > > > > > 
-> > > > > > Relevant screenshots from the datasheet:
-> > > > > > 
-> > > > > >   Power on timing: https://megous.com/dl/tmp/35b72e674ce0ca27.png
-> > > > > >   Power off timing: https://megous.com/dl/tmp/dea195517106ff17.png
-> > > > > >   More optimal reset on poweron: https://megous.com/dl/tmp/a9e5caf14e1b0dc6.png
-> > > > > >   Less optimal reset on poweron: https://megous.com/dl/tmp/246761039283c4cf.png
-> > > > > >   Datasheet: https://megous.com/dl/tmp/ST7703_DS_v01_20160128.pdf
-> > > > > > 
-> > > > > > Please take a look.
-> > > > > > 
-> > > > > > thank you and regards,
-> > > > > >   Ondrej Jirman
-> > > > > > 
-> > > > > > Ondrej Jirman (2):
-> > > > > >   drm/panel: st7703: Make the sleep exit timing match the spec
-> > > > > >   drm/panel: st7703: Fix the power up sequence of the panel
-> > > > > > 
-> > > > > >  drivers/gpu/drm/panel/panel-sitronix-st7703.c | 29 ++++++++++---------
-> > > > > >  1 file changed, 15 insertions(+), 14 deletions(-)
-> > > > > > 
-> > > > > > -- 
-> > > > > > 2.27.0
-> > > > > > 
-> > > > 
-> > 
+Thanks for applying this series. Just wondering who will
+pick up the v3 of the iproute2 patch I have posted to go
+with this.
+
+https://marc.info/?l=linux-netdev&m=159499933326135&w=2
+
+I will reply to that thread as well.
+
+Thanks
+-- 
+Murali Karicheri
+Texas Instruments
