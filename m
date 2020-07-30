@@ -2,338 +2,131 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7CFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E302C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3D65206F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:40:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xv2eFc52"
+	by mail.kernel.org (Postfix) with ESMTP id 0FCA8206F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:41:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729962AbgG3Qkc (ORCPT
+        id S1728539AbgG3Qlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 12:40:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728452AbgG3Qkb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 12:40:31 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB402C061575
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 09:40:30 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g8so6280556wmk.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 09:40:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=z7c6G7LA4wMI31rE/G3DFB1zXivUhfsc+gRf5Yk3dzQ=;
-        b=Xv2eFc52v202z0TsmV3ZVb/X/kfvDRq60L5cb8HHWuJFHy7Nft5APTCNJVJpdQ2FoU
-         +4F5xWb7DgQu0I8dv78ZWgE+RELjBjNFa3PyKTAUCgR+0yFC00pRlnPtihNKHsOVOHE3
-         KONmwpSssoSbwoZ6OfwU8UbNDHWvCknicBeYA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=z7c6G7LA4wMI31rE/G3DFB1zXivUhfsc+gRf5Yk3dzQ=;
-        b=hcou3ebQe/WssfJgYEAqPoijLuKgxzdSSGzfuZbTkeWIGUwN7Ia46AdCLExUVKQVdt
-         6zhUpZ/Lqz5FGfEvNuYQHlFuzBwWhzmDuzEaV1FH0yP0u4X1lwZ+PHsEBKP5KS7Vwcay
-         k2r/BfU9SV7TTAw9VCBqlkVOoqY87ONEPv605QEDpBmAPqaEnpEIjY7jit/fQtuhb+2d
-         JssIkkVA/+c8Qpo6ZtMocx/lZeqyoB7NIgpVFFr/BMdlgVl/Gux+VgrrFiAl0kg+tTbL
-         An6Cr1MZxvfxhL1jOuu/5NYZGvNxV5Ean7jvsIddNBh8EuLISmr8SyZUxG5kier+7fhc
-         PZEw==
-X-Gm-Message-State: AOAM531wIAdkz+ZQqgYr+AS5lGWKmCInMXWcoQ94fmuJ1zNH+gkFTyCk
-        PLXPzyEaUBnj9RHrtIXowjDmYA==
-X-Google-Smtp-Source: ABdhPJzaQjBxQauL+AG6AmnnI1vp9FaY8avLYCkRXAg/NRbM+27Ya8LMA5DQET7r/Tro7gvu+Dq4JA==
-X-Received: by 2002:a1c:bcd6:: with SMTP id m205mr108371wmf.47.1596127229300;
-        Thu, 30 Jul 2020 09:40:29 -0700 (PDT)
-Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
-        by smtp.gmail.com with ESMTPSA id n18sm10825044wrw.45.2020.07.30.09.40.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 09:40:28 -0700 (PDT)
-Date:   Thu, 30 Jul 2020 16:40:27 +0000
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     Xia Jiang <xia.jiang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
-        mojahsu@chromium.org, drinkcat@chromium.org,
-        maoguang.meng@mediatek.com
-Subject: Re: [PATCH v10 00/28] Add support for mt2701 JPEG ENC support
-Message-ID: <20200730164027.GB3779380@chromium.org>
-References: <20200723030451.5616-1-xia.jiang@mediatek.com>
+        Thu, 30 Jul 2020 12:41:51 -0400
+Received: from mga18.intel.com ([134.134.136.126]:59905 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbgG3Qlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 12:41:51 -0400
+IronPort-SDR: 0pEC6jvAMKlKAYAO+lucBBuZ7X/ylk/AjE7JuYT2r6HCBdxURftEMmS5MnMCwK5EOc8LN5Xto5
+ H8x3xeFD4YAA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="139186675"
+X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
+   d="scan'208";a="139186675"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 09:41:49 -0700
+IronPort-SDR: 1Vv1W5DwYf/VI4pbSgIYJesCCX+9ZPGAQ7pCoV0ZKY/YvIpgtvLERdqqi5FNxK4/nY0rFjMm8E
+ owPZWPu3zp+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
+   d="scan'208";a="365248333"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001.jf.intel.com with ESMTP; 30 Jul 2020 09:41:46 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1k1Bco-004zPI-G8; Thu, 30 Jul 2020 19:41:46 +0300
+Date:   Thu, 30 Jul 2020 19:41:46 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] dmaengine: dw: Add DMA-channels mask cell support
+Message-ID: <20200730164146.GX3703480@smile.fi.intel.com>
+References: <20200730154545.3965-1-Sergey.Semin@baikalelectronics.ru>
+ <20200730154545.3965-6-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200723030451.5616-1-xia.jiang@mediatek.com>
+In-Reply-To: <20200730154545.3965-6-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xia,
+On Thu, Jul 30, 2020 at 06:45:45PM +0300, Serge Semin wrote:
+> DW DMA IP-core provides a way to synthesize the DMA controller with
+> channels having different parameters like maximum burst-length,
+> multi-block support, maximum data width, etc. Those parameters both
+> explicitly and implicitly affect the channels performance. Since DMA slave
+> devices might be very demanding to the DMA performance, let's provide a
+> functionality for the slaves to be assigned with DW DMA channels, which
+> performance according to the platform engineer fulfill their requirements.
+> After this patch is applied it can be done by passing the mask of suitable
+> DMA-channels either directly in the dw_dma_slave structure instance or as
+> a fifth cell of the DMA DT-property. If mask is zero or not provided, then
+> there is no limitation on the channels allocation.
+> 
+> For instance Baikal-T1 SoC is equipped with a DW DMAC engine, which first
+> two channels are synthesized with max burst length of 16, while the rest
+> of the channels have been created with max-burst-len=4. It would seem that
+> the first two channels must be faster than the others and should be more
+> preferable for the time-critical DMA slave devices. In practice it turned
+> out that the situation is quite the opposite. The channels with
+> max-burst-len=4 demonstrated a better performance than the channels with
+> max-burst-len=16 even when they both had been initialized with the same
+> settings. The performance drop of the first two DMA-channels made them
+> unsuitable for the DW APB SSI slave device. No matter what settings they
+> are configured with, full-duplex SPI transfers occasionally experience the
+> Rx FIFO overflow. It means that the DMA-engine doesn't keep up with
+> incoming data pace even though the SPI-bus is enabled with speed of 25MHz
+> while the DW DMA controller is clocked with 50MHz signal. There is no such
+> problem has been noticed for the channels synthesized with
+> max-burst-len=4.
 
-On Thu, Jul 23, 2020 at 11:04:23AM +0800, Xia Jiang wrote:
-> This patchset add support for mt2701 JPEG ENC support.      
->                                                             
-> This is the compliance test result for jpeg dec and enc.    
->                                                             
-> The JPEG dec log:                                           
-> ------------------------------------------------------------
-> v4l2-compliance -d /dev/video0
-> v4l2-compliance SHA: 697ae940b60a172ef31948dd74316fe9de365b7e, 32 bits, 32-bit time_t
-> 
-> Compliance test for mtk-jpeg-dec device /dev/video0:
-> 
-> Driver Info:
->         Driver name      : mtk-jpeg-dec
->         Card type        : mtk-jpeg-dec
->         Bus info         : platform:15004000.jpegdec
->         Driver version   : 5.8.0
->         Capabilities     : 0x84204000
->                 Video Memory-to-Memory Multiplanar
->                 Streaming
->                 Extended Pix Format
->                 Device Capabilities
->         Device Caps      : 0x04204000
->                 Video Memory-to-Memory Multiplanar
->                 Streaming
->                 Extended Pix Format
->         Detected JPEG Decoder
-> 
-> Required ioctls:
->         test VIDIOC_QUERYCAP: OK
-> 
-> Allow for multiple opens:
->         test second /dev/video0 open: OK
->         test VIDIOC_QUERYCAP: OK
->         test VIDIOC_G/S_PRIORITY: OK
->         test for unlimited opens: OK
-> 
->         test invalid ioctls: OK
-> Debug ioctls:
->         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
->         test VIDIOC_LOG_STATUS: OK (Not Supported)
-> 
-> Input ioctls:
->         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
->         test VIDIOC_ENUMAUDIO: OK (Not Supported)
->         test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
->         test VIDIOC_G/S_AUDIO: OK (Not Supported)
->         Inputs: 0 Audio Inputs: 0 Tuners: 0
-> 
-> Output ioctls:
->         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
->         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
->         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
->         Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
->         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
->         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
->         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
->         test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
-> Control ioctls:
->         test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
->         test VIDIOC_QUERYCTRL: OK
->         test VIDIOC_G/S_CTRL: OK
->         test VIDIOC_G/S/TRY_EXT_CTRLS: OK
->         test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
->         test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
->         Standard Controls: 0 Private Controls: 0
-> 
-> Format ioctls:
->         test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
->         test VIDIOC_G/S_PARM: OK (Not Supported)
->         test VIDIOC_G_FBUF: OK (Not Supported)
->         test VIDIOC_G_FMT: OK
->         test VIDIOC_TRY_FMT: OK
->         test VIDIOC_S_FMT: OK
->         test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
->         test Cropping: OK (Not Supported)
->         test Composing: OK
->         test Scaling: OK (Not Supported)
-> 
-> Codec ioctls:
->         test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->         test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->         test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-> 
-> Buffer ioctls:
->         test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->         test VIDIOC_EXPBUF: OK
->         test Requests: OK (Not Supported)
-> 
-> Total for mtk-jpeg-dec device /dev/video0: 45, Succeeded: 45, Failed: 0, Warnings: 0
-> ------------------------------------------------------------
->                                                             
-> The JPEG enc log:                                           
->                                                             
-> ------------------------------------------------------------
-> v4l2-compliance -d /dev/video1 
-> v4l2-compliance SHA: 697ae940b60a172ef31948dd74316fe9de365b7e, 32 bits, 32-bit time_t
-> 
-> Compliance test for mtk-jpeg-enc device /dev/video1:
-> 
-> Driver Info:
->         Driver name      : mtk-jpeg-enc
->         Card type        : mtk-jpeg-enc
->         Bus info         : platform:1500a000.jpegenc
->         Driver version   : 5.8.0
->         Capabilities     : 0x84204000
->                 Video Memory-to-Memory Multiplanar
->                 Streaming
->                 Extended Pix Format
->                 Device Capabilities
->         Device Caps      : 0x04204000
->                 Video Memory-to-Memory Multiplanar
->                 Streaming
->                 Extended Pix Format
->         Detected JPEG Encoder
-> 
-> Required ioctls:
->         test VIDIOC_QUERYCAP: OK
-> 
-> Allow for multiple opens:
->         test second /dev/video1 open: OK
->         test VIDIOC_QUERYCAP: OK
->         test VIDIOC_G/S_PRIORITY: OK
->         test for unlimited opens: OK
-> 
->         test invalid ioctls: OK
-> Debug ioctls:
->         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
->         test VIDIOC_LOG_STATUS: OK (Not Supported)
-> 
-> Input ioctls:
->         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
->         test VIDIOC_ENUMAUDIO: OK (Not Supported)
->         test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
->         test VIDIOC_G/S_AUDIO: OK (Not Supported)
->         Inputs: 0 Audio Inputs: 0 Tuners: 0
-> 
-> Output ioctls:
->         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
->         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
->         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
->         Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
->         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
->         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
->         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
->         test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
-> Control ioctls:
->         test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
->         test VIDIOC_QUERYCTRL: OK
->         test VIDIOC_G/S_CTRL: OK
->         test VIDIOC_G/S/TRY_EXT_CTRLS: OK
->         test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
->         test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
->         Standard Controls: 4 Private Controls: 0
-> 
-> Format ioctls:
->         test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
->         test VIDIOC_G/S_PARM: OK (Not Supported)
->         test VIDIOC_G_FBUF: OK (Not Supported)
->         test VIDIOC_G_FMT: OK
->         test VIDIOC_TRY_FMT: OK
->         test VIDIOC_S_FMT: OK
->         test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
->         test Cropping: OK
->         test Composing: OK (Not Supported)
->         test Scaling: OK (Not Supported)
-> 
-> Codec ioctls:
->         test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->         test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->         test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-> 
-> Buffer ioctls:
->         test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->         test VIDIOC_EXPBUF: OK
->         test Requests: OK (Not Supported)
-> 
-> Total for mtk-jpeg-enc device /dev/video1: 45, Succeeded: 45, Failed: 0, Warnings: 0
-> ------------------------------------------------------------
-> 
-> Change compared to v9:
-> - use pm_runtime_force_*()helpers of patch 07/28
-> - add one patch for handling jpeg hardware's locking up
-> - delete mtk_jpeg_qbuf() in patch 09/28
-> - add one patch for deletting vidioc_s_selection ioctl of jpeg dec
-> - add one patch for changing the maximum width and height supported by jpeg dec
-> - add one patch for refactoring mtk_jpeg_try_fmt_mplane function
-> - add one patch for refactoring mtk_jpeg_find_format function
-> - add one patch for redefinition of mtk_jpeg_q_data structure
-> - add one patch for changing the colorspace of jpeg to the fixed value
-> - add one patch for refactoring mtk_jpeg_set_default_params function
-> - add one patch for changing the call function of getting/enable/disable the jpeg's clock
-> - add one patch for using the variant structure to contain the varability between jpeg dec and enc
-> - return active crop information in mtk_jpeg_enc_g_selection function
-> - cancel mtk_jpeg_enc_bs structure
-> - refactor the setting hardware register functions in mtk_jpeg_enc_hw.c
-> - remove mtk_jpeg_enc_job_ready function
-> - refactor mtk_jpeg_enc_irq function
-> - cancel setting up a control handler for jpeg dec
-> - add the mechanism to ensure that the buffer is enough to hold the EXIF data in .buf_prepare callback
-> 
-> Xia Jiang (28):
->   media: platform: Improve subscribe event flow for bug fixing
->   media: platform: Improve queue set up flow for bug fixing
->   media: platform: Improve getting and requesting irq flow for bug
->     fixing
->   media: platform: Change the fixed device node number to unfixed value
->   media: platform: Improve power on and power off flow
->   media: platform: Delete the resetting hardware flow in the system PM
->     ops
->   media: platform: Improve the implementation of the system PM ops
->   media: platform: Add mechanism to handle jpeg hardware's locking up
->   media: platform: Cancel the last frame handling flow
->   media: platform: Delete zeroing the reserved fields
->   media: platform: Stylistic changes for improving code quality
->   media: platform: Use generic rounding helpers
->   media: platform: Change MTK_JPEG_COMP_MAX macro definition location
->   media: platform: Delete redundant code and add annotation for an enum
->   media: platform: Delete vidioc_s_selection ioctl of jpeg dec
->   media: platform: Change the maximum width and height supported by JPEG
->     dec
->   media: platform: Refactor mtk_jpeg_try_fmt_mplane()
->   media: platform: Refactor mtk_jpeg_find_format()
->   media: platform: Redefinition of mtk_jpeg_q_data structure
->   media: platform: Change the colorspace of jpeg to the fixed value
->   media: platform: Refactor mtk_jpeg_set_default_params()
->   media: platform: Change the call functions of getting/enable/disable
->     the jpeg's clock
+...
 
-Except one comment to that one patch, the series looks good to me. After
-fixing that last comment, feel free to add my Reviewed-by to all the
-patches which still don't have it.
+> +	if (dws->channels && !(dws->channels & dwc->mask))
 
-Thanks a lot for patiently addressing the comments. I think the series
-improves the driver a lot.
+You can drop the first check if...
 
-Best regards,
-Tomasz
+> +		return false;
+
+...
+
+> +	if (dma_spec->args_count >= 4)
+> +		slave.channels = dma_spec->args[3];
+
+...you apply sane default here or somewhere else.
+
+...
+
+> +		    fls(slave.channels) > dw->pdata->nr_channels))
+
+Does it really make sense?
+
+I think it can also be simplified to faster op, i.e.
+	BIT(nr_channels) < slave.channels
+(but check for off-by-one errors)
+
+...
+
+> + * @channels:	mask of the channels permitted for allocation (zero
+> + *		value means any)
+
+Perhaps on one line?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
