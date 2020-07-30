@@ -2,219 +2,97 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D652C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C33DFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 689EE20809
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:42:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ln8RMCPa"
+	by mail.kernel.org (Postfix) with ESMTP id A97D3207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:42:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729198AbgG3ImI (ORCPT
+        id S1729226AbgG3Im0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:42:08 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:51864 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729143AbgG3ImG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:42:06 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200730084202epoutp01ec8c111dd5778fe0a1a45be726365956~meyZU5jFx2512325123epoutp01g
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 08:42:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200730084202epoutp01ec8c111dd5778fe0a1a45be726365956~meyZU5jFx2512325123epoutp01g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1596098522;
-        bh=EXg3xl1A+ZJhPcxi9vTn8kiMuMK7HtwFSMB4Ih/vRm8=;
-        h=To:Cc:From:Subject:Date:References:From;
-        b=ln8RMCPavV5kK5ufHUMkSfT+5vxHaDw4orVG439ZeQIZktylswhiSPpWCY0YZcZWS
-         85agxEJfdoKNJIducKEmJdoawmnvO1FEAQwTiEfkGMqF/v6Yjm7qs/Oq6Ak//AGBKN
-         PmYcmITVOSGxgQnTqkSeMXWLh7x1KRWxO4JNOGCI=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200730084201epcas1p2e004212e92166f74a1fc8927d08b3aac~meyYlAgcM0047600476epcas1p2o;
-        Thu, 30 Jul 2020 08:42:01 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.158]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 4BHP6G4YpzzMqYkq; Thu, 30 Jul
-        2020 08:41:58 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        7A.1E.28581.3D7822F5; Thu, 30 Jul 2020 17:41:55 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200730084154epcas1p478b744a64f99618541818c1977c88fc9~meyRw_CPq2244622446epcas1p4a;
-        Thu, 30 Jul 2020 08:41:54 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200730084154epsmtrp29db792bedec64e6a62b4e2aa85cd9c4a~meyRwTF5V1696416964epsmtrp2r;
-        Thu, 30 Jul 2020 08:41:54 +0000 (GMT)
-X-AuditID: b6c32a38-2cdff70000006fa5-85-5f2287d3d064
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E8.B4.08382.2D7822F5; Thu, 30 Jul 2020 17:41:54 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200730084154epsmtip2bf1d9a5325df0f3c2a39649d21e2caa9~meyRfUlfz3040830408epsmtip2c;
-        Thu, 30 Jul 2020 08:41:54 +0000 (GMT)
-To:     "Rafael J. Wysocki <rjw@rjwysocki.net>" <rjw@rjwysocki.net>
-Cc:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chanwoo Choi (samsung.com)" <cw00.choi@samsung.com>,
-        =?UTF-8?B?7ZWo66qF7KO8?= <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        =?UTF-8?B?64KY7ISx6rWt?= <sungguk.na@samsung.com>,
-        =?UTF-8?B?6rmA7Iq57Jqw?= <sw0312.kim@samsung.com>,
-        "Chanwoo Choi (samsung.com)" <cw00.choi@samsung.com>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [GIT PULL] devfreq next for v5.9
-Organization: Samsung Electronics
-Message-ID: <6bf6b502-44ef-ea50-27f6-235a8ce96c1d@samsung.com>
-Date:   Thu, 30 Jul 2020 17:53:35 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Thu, 30 Jul 2020 04:42:26 -0400
+Received: from mga05.intel.com ([192.55.52.43]:22435 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726273AbgG3ImZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:42:25 -0400
+IronPort-SDR: BzDpNO6gTel4a35VeckUe+t2OG21m8QAe6pkXwk4CB8IPp5h/gCI3/IFn20PQdgUtvjMWqAHnX
+ dA8JfFCm9Zhg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="236425878"
+X-IronPort-AV: E=Sophos;i="5.75,413,1589266800"; 
+   d="scan'208";a="236425878"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 01:42:24 -0700
+IronPort-SDR: gfGnHeCWPOOlv1nD9N0LEMMmXHvH6bSvctZ/dB+RjNTm93upa/7TLq4DBfp/EijlZQjUR0oYEj
+ JBE5tQqcRJ7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,413,1589266800"; 
+   d="scan'208";a="290811088"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 30 Jul 2020 01:42:20 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1k148p-004snj-PM; Thu, 30 Jul 2020 11:42:19 +0300
+Date:   Thu, 30 Jul 2020 11:42:19 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Brent Lu <brent.lu@intel.com>
+Cc:     alsa-devel@alsa-project.org,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Daniel Stuart <daniel.stuart14@gmail.com>,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Sam McNally <sammc@chromium.org>,
+        Damian van Soelen <dj.vsoelen@gmail.com>
+Subject: Re: [PATCH v2 2/2] ASoC: Intel: Add period size constraint on strago
+ board
+Message-ID: <20200730084219.GF3703480@smile.fi.intel.com>
+References: <1596096815-32043-1-git-send-email-brent.lu@intel.com>
+ <1596096815-32043-3-git-send-email-brent.lu@intel.com>
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAJsWRmVeSWpSXmKPExsWy7bCmge7ldqV4g6fL9Cyuf3nOanG26Q27
-        xeVdc9gsPvceYbS43biCzeLM6UusFjvmHWS0mDH5JZsDh8eWq+0sHn1bVjF6fN4kF8AclW2T
-        kZqYklqkkJqXnJ+SmZduq+QdHO8cb2pmYKhraGlhrqSQl5ibaqvk4hOg65aZA3SBkkJZYk4p
-        UCggsbhYSd/Opii/tCRVISO/uMRWKbUgJafAskCvODG3uDQvXS85P9fK0MDAyBSoMCE7Y9HJ
-        bSwFZ+Qr2vbdZGxgPCPRxcjJISFgItF0dB0riC0ksINRYkY3I4T9iVFi9m25LkYuIPsbo0T3
-        gpVMMA27f69igUjsZZT4uOA8K4TznlFi5v4VQBkODhEBe4mOD5kgcWaBbcwSRzc2sYN0swlo
-        Sex/cYMNxBYW0JRom7wRbB2/gKLE1R+PwWxeATuJ5hvnwWwWAVWJO1vXgdWLCoRJnNzWAlUj
-        KHFy5hMWEJtZQFzi1pP5TBC2vMT2t3OYIS79yy5x5mw1hO0i8Xr+RxYIW1ji1fEt7BC2lMTn
-        d3vZIOxqiZUnj7CBHC0h0MEosWX/BVaIhLHE/qWTmUAeYwY6ev0ufYiwosTO33MZIfbySbz7
-        2sMKUiIhwCvR0SYEUaIscfnBXWjASUosbu9kgyjxkJjcZjWBUXEWkmdmIXlmFpJnZiHsXcDI
-        sopRLLWgODc9tdiwwAQ5qjcxgpOmlsUOxrlvP+gdYmTiYDzEKMHBrCTC286lEC/Em5JYWZVa
-        lB9fVJqTWnyI0RQYvBOZpUST84FpO68k3tDUyNjY2MLE0MzU0FBJnPfhLaAmgfTEktTs1NSC
-        1CKYPiYOTqkGpraNVxbIlzLUrXi//vodnUa1x2LqGW86Lq04fkNNsFTtqPbHDZtOTtU/KK6b
-        v+lCVND2HvZQEdP5vXqVTf8vnzR6maE+a2mFqk/L270eUVypTwwZbhs+iapd+m561q05i3nj
-        NZNmfY3+GXOigq3rg9D0XrY/HrFtpV5OoRMsJvyUcmmt1Yjt5Pr6u7OjueFzEPNN3aOC7tE7
-        w25/kC49ce7Vhg0Pe084xWmwt7/Z2tp47dinp6LtH9gYi+S49K28bMKT60K2V7IU9KWxeNy5
-        sr7xyorfn9c+K1jyrsL5zqt1CwN1/baK8XOXR8amxJ6PecalO2X2M/9N57cI+Unnn9gWaGlf
-        W38i1vX01y/flViKMxINtZiLihMB6RmjyyMEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKLMWRmVeSWpSXmKPExsWy7bCSvO6ldqV4g+XrBS2uf3nOanG26Q27
-        xeVdc9gsPvceYbS43biCzeLM6UusFjvmHWS0mDH5JZsDh8eWq+0sHn1bVjF6fN4kF8AcxWWT
-        kpqTWZZapG+XwJWx6OQ2loIz8hVt+24yNjCekehi5OSQEDCR2P17FUsXIxeHkMBuRolpDavZ
-        IBKSEtMuHmXuYuQAsoUlDh8uhqh5yyixestZRpC4iIC9RMeHTJA4s8A2ZomJDyczg/SyCWhJ
-        7H9xA2yOsICmRNvkjYwgNr+AosTVH4/BbF4BO4nmG+fBbBYBVYk7W9eB1YsKhEnsXPKYCaJG
-        UOLkzCcsIDazgLrEn3mXmCFscYlbT+YzQdjyEtvfzmGewCg4C0nLLCQts5C0zELSsoCRZRWj
-        ZGpBcW56brFhgWFearlecWJucWleul5yfu4mRnBMaGnuYNy+6oPeIUYmDsZDjBIczEoivO1c
-        CvFCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeW8ULowTEkhPLEnNTk0tSC2CyTJxcEo1MLGfnhgs
-        +LjtgSAnM/fTv19l9h/l1+uI4vn6vz+1XlbpCMfuLj/JNwe3/Eq33yIcdnwS77kuBrGS47e/
-        3Lq9LJwxVGrhHIOotKuK9bxdDJWXf0lOnfvwkv60tGlz9m74k2t6+sUH+Y3XK122zI3NPO3w
-        4cyN9ij258+b9go+nRKpw1Kr9fF/0cyw1K5NM/9tVpgba8Pd/ES8fnHSmmXGV5L2We41EJ64
-        hb+D85wrX/WtPRfqToftPHFjR+kVnpXbRdQlJ673KLH5YLPNYMtB/3Vs9uuf6P5hy56+k3nT
-        u8hfMjHzAh8ubldSkOd6uk7Oi2vmGve+a9ez1KNCFXg2Rh3yfNLFKyDh4XNc5trL0+5KLMUZ
-        iYZazEXFiQBJ9hB1+AIAAA==
-X-CMS-MailID: 20200730084154epcas1p478b744a64f99618541818c1977c88fc9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200730084154epcas1p478b744a64f99618541818c1977c88fc9
-References: <CGME20200730084154epcas1p478b744a64f99618541818c1977c88fc9@epcas1p4.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1596096815-32043-3-git-send-email-brent.lu@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Rafael,
+On Thu, Jul 30, 2020 at 04:13:35PM +0800, Brent Lu wrote:
+> From: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+> 
+> The CRAS server does not set the period size in hw_param so ALSA will
+> calculate a value for period size which is based on the buffer size
+> and other parameters. The value may not always be aligned with Atom's
+> dsp design so a constraint is added to make sure the board always has
+> a good value.
+> 
+> Cyan uses chtmax98090 and others(banon, celes, edgar, kefka...) use
+> rt5650.
 
-This is devfreq-next pull request for v5.9-rc1. I add detailed description of
-this pull request on the following tag. Please pull devfreq with following updates.
-- tag name : devfreq-next-for-5.9
+Actually one more comment here.
+Can you split per machine driver?
 
-Best Regards,
-Chanwoo Choi
+>  sound/soc/intel/boards/cht_bsw_max98090_ti.c | 14 +++++++++++++-
+>  sound/soc/intel/boards/cht_bsw_rt5645.c      | 14 +++++++++++++-
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-The following changes since commit 92ed301919932f777713b9172e525674157e983d:
-
-  Linux 5.8-rc7 (2020-07-26 14:14:06 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git tags/devfreq-next-for-5.9
-
-for you to fetch changes up to 27a69714450f5c9288cec2b20f1ae4f7ad34dacf:
-
-  PM / devfreq: Fix the wrong end with semicolon (2020-07-30 17:22:58 +0900)
-
-----------------------------------------------------------------
-
-Update devfreq for 5.9
-
-Detailed description for this pull request:
-1. Update devfreq core
-- Add support delayed timer for polling mode. Until now, the devfreq supports
-  only deferrable timer for reducing the unneeded CPU wakeup.
-  But, it has a problem for Non-CPU device like DMC device with DMA operation.
-  These Non-CPU device need to monitor continuously regardless of CPU state.
-  Add support the delayed timer for polling mode to support the continuous
-  monitoring.
-- Fix indentation of result of devfreq_summary debugfs node.
-- Fix the wrong end of code with semicolon instead of comma
-- Clean-up code to use the unified local variable name in sysfs-related
-  internal funcitons.
-- Fix trivial spelling for devfreq-event.c.
-
-2. Update devfreq driver
-- Add the exception handling code to control when rockchip,pmu property is absent
-  for rk3399_dmc.c.
-- Add missing 'rockchip,pmu' property to dt-binding document for rk3399_dmc.c.
-- Change the kind of timer of exynos5422-dmc.c from deferrable to delayed
-  timer in order to monitor the DMC (Dynamic Memory Controller) status
-  regardless of CPU idle state. And adjust the polling interval and upthreshold
-  value in order to react faster and make better decisions when benchmarking
-  testing for the memory behavior.
-- Add module parameter to either enable or disable the IRQ mode for DMC
-  behavior monitoring. The exynos5422-dmc.c can operate in both polling
-  and IRQ mode. The user can choose the monitoring mode by using module param.
-  The default monitoring mode is polling mode with delayed timer.
-
- 3. Add maintainer entry
-- Add Dmitry Osipenko <digetx@gmail.com> as maintainer for memory frequency
-  scaling drivers for Nvidia Tegra. He have been developed and reviewed
-  the tegra*-devfreq.c.
-
-----------------------------------------------------------------
-Chanwoo Choi (5):
-      PM / devfreq: Add support delayed timer for polling mode
-      memory: samsung: exynos5422-dmc: Use delayed timer as default
-      PM / devfreq: Clean up the devfreq instance name in sysfs attr
-      PM / devfreq: Fix indentaion of devfreq_summary debugfs node
-      PM / devfreq: Fix the wrong end with semicolon
-
-Dmitry Osipenko (1):
-      PM / devfreq: tegra: Add Dmitry as a maintainer
-
-Enric Balletbo i Serra (1):
-      dt-bindings: devfreq: rk3399_dmc: Add rockchip,pmu phandle
-
-Kieran Bingham (1):
-      PM / devfreq: event: Fix trivial spelling
-
-Lukasz Luba (2):
-      memory: samsung: exynos5422-dmc: Adjust polling interval and uptreshold
-      memory: samsung: exynos5422-dmc: Add module param to control IRQ mode
-
-Marc Zyngier (1):
-      PM / devfreq: rk3399_dmc: Fix kernel oops when rockchip,pmu is absent
-
- Documentation/ABI/testing/sysfs-class-devfreq      |  12 ++
- .../devicetree/bindings/devfreq/rk3399_dmc.txt     |   2 +
- MAINTAINERS                                        |   9 +
- drivers/devfreq/devfreq-event.c                    |   4 +-
- drivers/devfreq/devfreq.c                          | 195 ++++++++++++++++-----
- drivers/devfreq/rk3399_dmc.c                       |  42 +++--
- drivers/memory/samsung/exynos5422-dmc.c            |  14 +-
- include/linux/devfreq.h                            |   9 +
- 8 files changed, 218 insertions(+), 69 deletions(-)
