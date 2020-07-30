@@ -2,160 +2,89 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6ADC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBFCC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CC082070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04CFE2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096806;
-	bh=ympnBPsWLWEV5dvqfJs+FMCh68v3dSOspck0FYRmbHA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kVGOMNpWaqjFReue6/B88EgxcaoQylJTmpW3seT9Li+EfT8z8nbl/aNOTnl1Zspv5
-	 2rmhei8U6s6vrk02d8LWojIdDnTxoyMi3reYbrROim6+q+cED2UdSvP9yGRKtOnZy/
-	 TPMpL73gI+Tp0n6xRlF7gnquTbhwTsBUWleogG7A=
+	s=default; t=1596096819;
+	bh=T3biC8fAhba8MjviyL4yDR2M3+hNkwZbDpM/vWpmI00=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=p2bCs7X6W6Ua7P/aoRWoPXLu8AburpYbjH7l3cM851rljDY3F8FVlT67dXwm8Snew
+	 EzPAL4lW2GeNa5/5dTAfHUR+d25EAnquTR5BAJNs085sZq6ylB91P+YpdC4xiM/ORN
+	 aAYmW+Kf79a0d43EhMLXp3GBWg9EIKRlk5No8hA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729531AbgG3INZ (ORCPT
+        id S1729813AbgG3INi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:13:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52212 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:13:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730087AbgG3IMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:12:51 -0400
+        id S1730118AbgG3INV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:13:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21B692075F;
-        Thu, 30 Jul 2020 08:12:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1CD62250E;
+        Thu, 30 Jul 2020 08:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096770;
-        bh=ympnBPsWLWEV5dvqfJs+FMCh68v3dSOspck0FYRmbHA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oCrW2wtYeQHv6w6A0kbR6o8N0sQN7cxAIMMJWuxQUBaXy8Qk5QkMIx0bx91lCbuoT
-         4wHISfU64lsdvto2JgurhbQ3+UII8Wx7uuJT4kW8KaTJjMbhf3FFQP/76G4X0jSZrz
-         T1V509pD/kwZCD5eotZAWXHI8RUpEpoFZnWt5S5o=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        David Ahern <dsahern@gmail.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Wang Nan <wangnan0@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.4 53/54] perf annotate: Use asprintf when formatting objdump command line
-Date:   Thu, 30 Jul 2020 10:05:32 +0200
-Message-Id: <20200730074423.741683066@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
-References: <20200730074421.203879987@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1596096797;
+        bh=T3biC8fAhba8MjviyL4yDR2M3+hNkwZbDpM/vWpmI00=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vU/yDBA39szoRMbGom7ozuJIvFIPNFzLrQ0BLlhx2dTG07enfiuMrySWDyFrAUVar
+         BhNT6lE8YWo/s20ztUPeX7hmEfPh74giY181mYbzBjcgg6BXZq793FEe/xqWWhKH+Z
+         ay2rNqi+EBk8aq0gvZpcc7QavBvRwuUxH5l1hFk8=
+Date:   Thu, 30 Jul 2020 10:06:39 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Sheng Long Wang <china_shenglong@163.com>
+Cc:     johan@kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jan.kiszka@siemens.com,
+        Wang Sheng Long <shenglong.wang.ext@siemens.com>
+Subject: Re: [PATCH] usb-serial:cp210x: add support to software flow control
+Message-ID: <20200730080639.GA216353@kroah.com>
+References: <20200730075922.28041-1-china_shenglong@163.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730075922.28041-1-china_shenglong@163.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Thu, Jul 30, 2020 at 03:59:22PM +0800, Sheng Long Wang wrote:
+> From: Wang Sheng Long <shenglong.wang.ext@siemens.com>
+> 
+> When data is transmitted between two serial ports,
+> the phenomenon of data loss often occurs. The two kinds
+> of flow control commonly used in serial communication
+> are hardware flow control and software flow control.
+> 
+> In serial communication, If you only use RX/TX/GND Pins, you
+> can't do hardware flow. So we often used software flow control
+> and prevent data loss. The user sets the software flow control
+> through the application program, and the application program
+> sets the software flow control mode for the serial port
+> chip through the driver.
+> 
+> For the cp210 serial port chip, its driver lacks the
+> software flow control setting code, so the user cannot set
+> the software flow control function through the application
+> program. This adds the missing software flow control.
+> 
+> Signed-off-by: Wang Sheng Long <shenglong.wang.ext@siemens.com>
+> ---
+>  drivers/usb/serial/cp210x.c | 118 ++++++++++++++++++++++++++++++++++--
+>  1 file changed, 113 insertions(+), 5 deletions(-)
 
-commit 6810158d526e483868e519befff407b91e76b3db upstream.
+What changed from the previous version of this patch?  That should be
+described below the --- line and this is a v2, right?
 
-We were using a local buffer with an arbitrary size, that would have to
-get increased to avoid truncation as warned by gcc 8:
+thanks,
 
-  util/annotate.c: In function 'symbol__disassemble':
-  util/annotate.c:1488:4: error: '%s' directive output may be truncated writing up to 4095 bytes into a region of size between 3966 and 8086 [-Werror=format-truncation=]
-      "%s %s%s --start-address=0x%016" PRIx64
-      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  util/annotate.c:1498:20:
-      symfs_filename, symfs_filename);
-                      ~~~~~~~~~~~~~~
-  util/annotate.c:1490:50: note: format string is defined here
-      " -l -d %s %s -C \"%s\" 2>/dev/null|grep -v \"%s:\"|expand",
-                                                  ^~
-  In file included from /usr/include/stdio.h:861,
-                   from util/color.h:5,
-                   from util/sort.h:8,
-                   from util/annotate.c:14:
-  /usr/include/bits/stdio2.h:67:10: note: '__builtin___snprintf_chk' output 116 or more bytes (assuming 8331) into a destination of size 8192
-     return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
-            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-          __bos (__s), __fmt, __va_arg_pack ());
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-So switch to asprintf, that will make sure enough space is available.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-qagoy2dmbjpc9gdnaj0r3mml@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- tools/perf/util/annotate.c |   14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
-
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1077,7 +1077,7 @@ int symbol__annotate(struct symbol *sym,
- 	struct dso *dso = map->dso;
- 	char *filename = dso__build_id_filename(dso, NULL, 0);
- 	bool free_filename = true;
--	char command[PATH_MAX * 2];
-+	char *command;
- 	FILE *file;
- 	int err = 0;
- 	char symfs_filename[PATH_MAX];
-@@ -1192,7 +1192,7 @@ fallback:
- 		strcpy(symfs_filename, tmp);
- 	}
- 
--	snprintf(command, sizeof(command),
-+	err = asprintf(&command,
- 		 "%s %s%s --start-address=0x%016" PRIx64
- 		 " --stop-address=0x%016" PRIx64
- 		 " -l -d %s %s -C %s 2>/dev/null|grep -v %s|expand",
-@@ -1205,6 +1205,11 @@ fallback:
- 		 symbol_conf.annotate_src ? "-S" : "",
- 		 symfs_filename, filename);
- 
-+	if (err < 0) {
-+		pr_err("Failure allocating memory for the command to run\n");
-+		goto out_remove_tmp;
-+	}
-+
- 	pr_debug("Executing: %s\n", command);
- 
- 	file = popen(command, "r");
-@@ -1214,7 +1219,7 @@ fallback:
- 		 * If we were using debug info should retry with
- 		 * original binary.
- 		 */
--		goto out_remove_tmp;
-+		goto out_free_command;
- 	}
- 
- 	nline = 0;
-@@ -1237,6 +1242,9 @@ fallback:
- 
- 	pclose(file);
- 
-+out_free_command:
-+	free(command);
-+
- out_remove_tmp:
- 	if (dso__needs_decompress(dso))
- 		unlink(symfs_filename);
-
-
+greg k-h
