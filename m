@@ -2,173 +2,120 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB98C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA58C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 224B020809
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:07:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oUu4IYhl"
+	by mail.kernel.org (Postfix) with ESMTP id 6930421883
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:08:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728791AbgG3KHK (ORCPT
+        id S1728858AbgG3KI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 06:07:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbgG3KHJ (ORCPT
+        Thu, 30 Jul 2020 06:08:28 -0400
+Received: from mail1.windriver.com ([147.11.146.13]:38298 "EHLO
+        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbgG3KI1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 06:07:09 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5D76C061794
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 03:07:07 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id p25so10308020oto.6
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 03:07:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to:cc;
-        bh=K1KeR4D4Cxr6B4E3uVwjEh93DRQqIOh/GgbC/7cyyaA=;
-        b=oUu4IYhlER2voSG0IDa0ssQAiKm1SxB+GsAtXLX1HEacoQg30fXFyu45kI219HcSRy
-         4B0BNLsGNa7cMsL/eblAZ8l1bJu1o6//rDqNeEIvJ9oCFNWvQOhbRaEMdNGfN08Zuj+N
-         BEV934DtGapCWpH1AjBhOvdaK3ZAPAfltklfB1SB9xgxB//Kdf2RVstSDo/nBUB5wCgU
-         wSxIov0jcHzBb6jlwLESRBxMThgdnd6+opiqEIYF01N1IKdrd4jxlZ3W733TYt+6WNMz
-         hvKumlKouGQp/e/7OSMpxQcqEao13+ajZ4luYpeYC2nzfEdj+cGrMGf4igUt6GO+H5WH
-         EYqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=K1KeR4D4Cxr6B4E3uVwjEh93DRQqIOh/GgbC/7cyyaA=;
-        b=EsHD4fHwqD5zuLgs14dmBc3DITHGXwIbT57HIxWJd03d5WMN2aHToqyy0ZXaLxEhO9
-         Sgn4SSBj5Y6D1PE44W6KRvGFVbTzZNMAEniFkb42HIXjieCkbqMjlt9wf3iZpRhdNrA/
-         6RY/e4zSiDnhPa6nwRXHR+HrWt6cz5wQhkov8ONDqCwX9dsBHngT4UPfiC/zT14wSO3t
-         GoxngwTWZG9JADgV11ZmxKj1hgyPrYNSWfXVF3/ONOqpl0kWVzXD7js8q04eH6H6eoPr
-         0YfVspgtNlMUtGfTTBotvBidv7tHWrhY1PyAKJsyDFIRz6CLNjBUB8xMQ4//TbD08cWU
-         g0ag==
-X-Gm-Message-State: AOAM533O7IpCjf85MjaqJjjK33m3qP1ajgggGl8BB3YFG1QzsriDNH3D
-        0OLOcSzRGikqsLS+PraLRxgm4OqIeGJjV2iDOc0=
-X-Google-Smtp-Source: ABdhPJzHFmMNoo3Zw6OznnTP9qoFuJG+FqDsEcSDl4GFkzVrZsUGn1SIe+dTpbnUKQ7oQadDtJP5rrPYVlPoHxJaadk=
-X-Received: by 2002:a9d:5e9a:: with SMTP id f26mr1565839otl.109.1596103627030;
- Thu, 30 Jul 2020 03:07:07 -0700 (PDT)
+        Thu, 30 Jul 2020 06:08:27 -0400
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
+        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id 06UA89XB019930
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Thu, 30 Jul 2020 03:08:09 -0700 (PDT)
+Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
+ ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 30 Jul 2020 03:07:48 -0700
+From:   <qiang.zhang@windriver.com>
+To:     <cl@linux.com>, <penberg@kernel.org>, <rientjes@google.com>,
+        <iamjoonsoo.kim@lge.com>, <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3] mm/slab.c: add node spinlock protect in __cache_free_alien
+Date:   Thu, 30 Jul 2020 18:19:34 +0800
+Message-ID: <20200730101934.38343-1-qiang.zhang@windriver.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Thu, 30 Jul 2020 12:06:55 +0200
-Message-ID: <CA+icZUXiz52bk+8bbLTuYCDLqoF9zLiV6NEjzPRgodu3FzCFLg@mail.gmail.com>
-Subject: [perf] Explicitly use python[3]-[config]
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Zhang Qiang <qiang.zhang@windriver.com>
 
-I wanted to have some detailed numbers for building a Linux-kernel
-with GNU-eco-system means GNU/gcc-10 and GNU/binutils-2,35 VS.
-LLVM/Clang with its utils version 11.0.0-rc1.
+for example:
+			        node0
+	cpu0				                cpu1
+slab_dead_cpu
+   >mutex_lock(&slab_mutex)
+     >cpuup_canceled                            slab_dead_cpu
+       >mask = cpumask_of_node(node)               >mutex_lock(&slab_mutex)
+       >n = get_node(cachep0, node0)
+       >spin_lock_irq(n&->list_lock)
+       >if (!cpumask_empty(mask)) == true
+       	>spin_unlock_irq(&n->list_lock)
+	>goto free_slab
+       ....
+   >mutex_unlock(&slab_mutex)
 
-Arnd recommended me to use "perf stat make ...".
+....						   >cpuup_canceled
+						     >mask = cpumask_of_node(node)
+kmem_cache_free(cachep0 )			     >n = get_node(cachep0, node0)
+ >__cache_free_alien(cachep0 )			     >spin_lock_irq(n&->list_lock)
+   >n = get_node(cachep0, node0)		     >if (!cpumask_empty(mask)) == false
+   >if (n->alien && n->alien[page_node])	     >alien = n->alien
+     >alien = n->alien[page_node]	             >n->alien = NULL
+     >....					     >spin_unlock_irq(&n->list_lock)
+						     >....
 
-First, I tried to build it out of tools/perf from linux.git:
+Due to multiple cpu offline, The same cache in a node may be operated in
+parallel,the "n->alien" should be protect.
 
-MAKE_OPTS="HOSTCC=clang-11 HOSTCXX=clang++-11 HOSTLD=ld.lld-11
-HOSTAR=llvm-ar-11 CC=clang-11 LD=ld.lld-11 AR=llvm-ar-11 NM=llvm-nm-11
-OBJCOPY=llvm-objcopy-11 OBJDUMP=llvm-objdump-11 OBJSIZE=llvm-size-11
-READELF=llvm-readelf-11 STRIP=llvm-strip-11 LLVM_IAS=1"
+Fixes: 6731d4f12315 ("slab: Convert to hotplug state machine")
+Signed-off-by: Zhang Qiang <qiang.zhang@windriver.com>
+---
+ v1->v2->v3:
+ change submission information and fixes tags.
 
-LC_ALL=C make V=1 $MAKE_OPTS -C tools/ perf 2>&1 | tee ../build-perf.txt
+ mm/slab.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-That showed me - it is building against libpython2.
+diff --git a/mm/slab.c b/mm/slab.c
+index a89633603b2d..290523c90b4e 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -759,8 +759,10 @@ static int __cache_free_alien(struct kmem_cache *cachep, void *objp,
+ 
+ 	n = get_node(cachep, node);
+ 	STATS_INC_NODEFREES(cachep);
++	spin_lock(&n->list_lock);
+ 	if (n->alien && n->alien[page_node]) {
+ 		alien = n->alien[page_node];
++		spin_unlock(&n->list_lock);
+ 		ac = &alien->ac;
+ 		spin_lock(&alien->lock);
+ 		if (unlikely(ac->avail == ac->limit)) {
+@@ -769,14 +771,15 @@ static int __cache_free_alien(struct kmem_cache *cachep, void *objp,
+ 		}
+ 		ac->entry[ac->avail++] = objp;
+ 		spin_unlock(&alien->lock);
+-		slabs_destroy(cachep, &list);
+ 	} else {
++		spin_unlock(&n->list_lock);
+ 		n = get_node(cachep, page_node);
+ 		spin_lock(&n->list_lock);
+ 		free_block(cachep, &objp, 1, page_node, &list);
+ 		spin_unlock(&n->list_lock);
+-		slabs_destroy(cachep, &list);
+ 	}
++
++	slabs_destroy(cachep, &list);
+ 	return 1;
+ }
+ 
+-- 
+2.26.2
 
-As python3 is now default for Debian/unstable (and AFAICS
-Debian/testing) I wanted to build explicitly against libpython3 at its
-python3-config.
-
-This needs some hacks like (furthermore I do not want CID in my version-string):
-
-$ cat ~/src/linux-kernel/perf.diff
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 513633809c81..b4da50754b19 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -225,12 +225,13 @@ endif
- # python[2][-config] in weird combinations but always preferring
- # python2 and python2-config as per pep-0394. If we catch a
- # python[-config] in version 3, the version check will kill it.
--PYTHON2 := $(if $(call get-executable,python2),python2,python)
--override PYTHON := $(call get-executable-or-default,PYTHON,$(PYTHON2))
--PYTHON2_CONFIG := \
-+# XXX: Explicitly use python3[-config]. -dileks
-+PYTHON3 := $(if $(call get-executable,python3),python3,python)
-+override PYTHON := $(call get-executable-or-default,PYTHON,$(PYTHON3))
-+PYTHON3_CONFIG := \
-   $(if $(call get-executable,$(PYTHON)-config),$(PYTHON)-config,python-config)
- override PYTHON_CONFIG := \
--  $(call get-executable-or-default,PYTHON_CONFIG,$(PYTHON2_CONFIG))
-+  $(call get-executable-or-default,PYTHON_CONFIG,$(PYTHON3_CONFIG))
-
- grep-libs  = $(filter -l%,$(1))
- strip-libs  = $(filter-out -l%,$(1))
-diff --git a/tools/perf/util/PERF-VERSION-GEN b/tools/perf/util/PERF-VERSION-GEN
-index 59241ff342be..eed9be9a13de 100755
---- a/tools/perf/util/PERF-VERSION-GEN
-+++ b/tools/perf/util/PERF-VERSION-GEN
-@@ -28,6 +28,8 @@ if test -z "$TAG"
- then
-        TAG=$(MAKEFLAGS= make -sC ../.. kernelversion)
- fi
-+# XXX: Do not use Git Commit-ID (CID) in version string. -dileks
-+CID=
- VN="$TAG$CID"
- if test -n "$CID"
- then
-
-In Debian/unstable libpython-dev:amd64 is version 2.7.17-2 and thus
-ships appropriate python[2]-config.
-
-What are your recommendations to build explicitly against python3 and
-its python3-config (here: Debian ships python3 version 3.8.5)?
-
-I can send you my build-perf.txt if needed (approx. 830kiB).
-
-Thanks.
-
-Regards,
-- Sedat -
-
-[1] https://github.com/ClangBuiltLinux/linux/issues/1086#issuecomment-665540053
-
-P.S.: Uninstall all python2 dev packages and replace them via python3
-dev packages.
-
-# diff -uprN packages_0518.txt packages_0519.txt | egrep '^[+|-]ii'
--ii libpython-dev:amd64 2.7.17-2
--ii libpython2-dev:amd64 2.7.17-2
--ii libpython2.7-dev:amd64 2.7.18-1
-+ii libpython3-dev:amd64 3.8.2-3
-+ii libpython3.8-dev:amd64 3.8.5-1
-+ii libunwind-dev:amd64 1.2.1-11
-+ii libzstd-dev:amd64 1.4.5+dfsg-3
-+ii lz4 1.9.2-2
--ii python-dev 2.7.17-2
--ii python2-dev 2.7.17-2
--ii python2.7-dev 2.7.18-1
-+ii python3-dev 3.8.2-3
-+ii python3.8-dev 3.8.5-1
-+ii systemtap-sdt-dev 4.3-1
-
-- EOT -
