@@ -5,134 +5,198 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCE5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBCEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 688482082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7945B2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:11:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aT2vw6A+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vVwDjUUI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbgG3LEY (ORCPT
+        id S1726868AbgG3LLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 07:04:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51798 "EHLO
+        Thu, 30 Jul 2020 07:11:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgG3LEU (ORCPT
+        with ESMTP id S1726367AbgG3LLC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 07:04:20 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BC89C0619D2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 04:04:20 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id m16so13753691pls.5
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 04:04:20 -0700 (PDT)
+        Thu, 30 Jul 2020 07:11:02 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D518BC061794;
+        Thu, 30 Jul 2020 04:11:02 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id g19so1200690plq.0;
+        Thu, 30 Jul 2020 04:11:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UcSB3wfh7zdX0Tp7q0+rt6lDZlbsPbuW0nAVyFfINqs=;
-        b=aT2vw6A+D1q+WUbw+nNYlQh4AEKquMrk7jxVTZXLTXtRYHas8Ar44rqNas5eBuYROT
-         yCnQu6SoALDHR+HvHal6PDw7fYb5W8y+UZxy8s5GosFusYpsIM5KEO+Lw8F5PQwwHYES
-         IyoaDaCLZ5K/yTby/1XHpQG9vvmTMOx8Bhs0ddwydDAtBDAwJU27b6xVIB/hnSsfgBuu
-         IMx8QLvxZGFyLalERBpiO+ztD7qfRJt4ME/OKGY/JCMyIX04Ut0bt1RTirl07LnNEaY9
-         o/Ix0t5GJK5b3LuWVaiChwCt+BuVAxQQtJaFUJQ3OucbCokQh0Bk1FKTRHhqEAtFCy+b
-         vZlw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ae96SR23iZeBLSBCoLIaAGm/kTSoCvrW0+UYQgfK9PA=;
+        b=vVwDjUUI8QVtGmGOzrkxP9OugoCgdsctYMdsbBmFGJLK1yMhi9zeY5aH3Vy6IEtcqF
+         VaqmPddg6vM9AtB69G34lkcF5WbPBB5WJWPLS6PYB6/rIGXgeSavm2/RA+QxzJ5kH26E
+         wcd7Dw8pYssor/HcG6JZYfYdBbyua0Zd4fg8flNkOgTXe22Tqqm0Ubdi7F1+iu2m++1i
+         KqBhxTzsLNYuokT0vh/X7SeOMlbLflLZ9vl7kl78wwzImunjjjjb/8lrvBvDfGR52kRH
+         jvwBrq1JGyAzmMnYruGdOMR4ge8kfTS3k/ZPPwpsA2MQ+w4XLW5JeTj5ieoSrnb5l4YW
+         zcRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UcSB3wfh7zdX0Tp7q0+rt6lDZlbsPbuW0nAVyFfINqs=;
-        b=Z06UE7N5KOJhKOUEJNq1QtCoCaodLt3KhFSZ58FkuE8tScU7IZCqxQdc+lrzrtFELx
-         13Rw1mx+OHyIApHBRqzVkuZYPHPj/neJc9hgzoDuBpnsCqntklPdM1sXpJrXkf2ygzkW
-         8ZsakH4MUVHDqQhwYJ5XAI1cnM6gcbNc5sK6pq+lTcr3/FC34QPveGD7/m1/wnx5HXhV
-         HV9dCrM3qjcn0zi/w91jye37OYmaUKTVbuDEVOuMvXGQarKMZFuUxQ8rrnXE26RJkjFP
-         /q5ND8OW6y7CNZ9l9Z2R4TaLN78VgK59yl9Urc74kaSqjtzJFI8tFxUBqdRKyeX4LSr/
-         n54A==
-X-Gm-Message-State: AOAM530ZmrHALOSudLbLOGV9IsP9BIDW8mw5G15JvEFcdWAfQrOPOKk9
-        OPILn0GsixZ+YwE7CnhujG8=
-X-Google-Smtp-Source: ABdhPJwtf9fENR8h3p79mW3cH2apypEIUJZgpJvUMh2BuUFT1yP8gTzZh2Vru/1v7G20oJL+ViBeyQ==
-X-Received: by 2002:a17:90a:ea83:: with SMTP id h3mr15309060pjz.176.1596107059866;
-        Thu, 30 Jul 2020 04:04:19 -0700 (PDT)
-Received: from bj03382pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id j5sm5499305pfa.5.2020.07.30.04.04.17
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 Jul 2020 04:04:19 -0700 (PDT)
-From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
-X-Google-Original-From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, chunyan.zhang@unisoc.com,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] trace : use kvmalloc instead of kmalloc
-Date:   Thu, 30 Jul 2020 19:04:12 +0800
-Message-Id: <1596107052-25682-1-git-send-email-zhaoyang.huang@unisoc.com>
-X-Mailer: git-send-email 1.7.9.5
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ae96SR23iZeBLSBCoLIaAGm/kTSoCvrW0+UYQgfK9PA=;
+        b=brz8eqvoxBQCZSyaTpVAT93I4eythYtQxsb3V7Ag4L/W141MCX8fJx/38RDy3aAvab
+         B8jj4VHT1MroEojdWs2vxvB3yUG71E9CJnDIuf40nhj2TX54kVNk+JqIdOsTP5611FgJ
+         VQD6ZG6d4gi23SvqMNmhYHj4vEMy5I3tMW474EAmeOpgu0i7QiORgjV3y+kcKqFcOvDm
+         0ooarLNhXZU240JahOipmcC7pxZwx451nTkireXvvX67+ahHZdbCnF9gZcs+b/Tzr+pd
+         BTukHFBWVjPc4NIj3xLVJ8sTTvc95ctlKibBMRMhZ5uj7lqpNjt68Jqoraz5fa5lmE9y
+         eOKA==
+X-Gm-Message-State: AOAM532dLgNrbMKfejYdmXIuao68pjWJDfGy854TeSeuVtRW3ROESUli
+        ar/Gcp5m14RGSPNjHSh/o+w=
+X-Google-Smtp-Source: ABdhPJyu9imbhe+saOmZcAMN5MLeoXerEyGeCx7iwEx2yngQKrOHY5GyuhjSg8RAG0NjyyViO3LBQw==
+X-Received: by 2002:a63:1406:: with SMTP id u6mr33350183pgl.108.1596107462192;
+        Thu, 30 Jul 2020 04:11:02 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.152.86])
+        by smtp.gmail.com with ESMTPSA id i67sm5888019pfg.13.2020.07.30.04.10.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 04:11:01 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Don Brace <don.brace@microsemi.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        esc.storagedev@microsemi.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v2] scsi: smartpqi: use generic power management
+Date:   Thu, 30 Jul 2020 16:39:30 +0530
+Message-Id: <20200730110930.664486-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200730070233.221488-1-vaibhavgupta40@gmail.com>
+References: <20200730070233.221488-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-High order memory stuff within trace could introduce OOM, use kvmalloc instead.
+Drivers using legacy power management .suspen()/.resume() callbacks
+have to manage PCI states and device's PM states themselves. They also
+need to take care of standard configuration registers.
 
-Please find the bellowing for the call stack we run across in an android system. The scenario happens when traced_probes is woken up to get a large quantity of trace even if free memory is even higher than watermark_low. 
+Switch to generic power management framework using a single
+"struct dev_pm_ops" variable to take the unnecessary load from the driver.
+This also avoids the need for the driver to directly call most of the PCI
+helper functions and device power state control functions, as through
+the generic framework PCI Core takes care of the necessary operations,
+and drivers are required to do only device-specific jobs.
 
-traced_probes invoked oom-killer: gfp_mask=0x140c0c0(GFP_KERNEL|__GFP_COMP|__GFP_ZERO), nodemask=(null),  order=2, oom_score_adj=-1
-
-traced_probes cpuset=system-background mems_allowed=0
-CPU: 3 PID: 588 Comm: traced_probes Tainted: G        W  O    4.14.181 #1
-Hardware name: Generic DT based system
-(unwind_backtrace) from [<c010d824>] (show_stack+0x20/0x24)
-(show_stack) from [<c0b2e174>] (dump_stack+0xa8/0xec)
-(dump_stack) from [<c027d584>] (dump_header+0x9c/0x220)
-(dump_header) from [<c027cfe4>] (oom_kill_process+0xc0/0x5c4)
-(oom_kill_process) from [<c027cb94>] (out_of_memory+0x220/0x310)
-(out_of_memory) from [<c02816bc>] (__alloc_pages_nodemask+0xff8/0x13a4)
-(__alloc_pages_nodemask) from [<c02a6a1c>] (kmalloc_order+0x30/0x48)
-(kmalloc_order) from [<c02a6a64>] (kmalloc_order_trace+0x30/0x118)
-(kmalloc_order_trace) from [<c0223d7c>] (tracing_buffers_open+0x50/0xfc)
-(tracing_buffers_open) from [<c02e6f58>] (do_dentry_open+0x278/0x34c)
-(do_dentry_open) from [<c02e70d0>] (vfs_open+0x50/0x70)
-(vfs_open) from [<c02f7c24>] (path_openat+0x5fc/0x169c)
-(path_openat) from [<c02f75c4>] (do_filp_open+0x94/0xf8)
-(do_filp_open) from [<c02e7650>] (do_sys_open+0x168/0x26c)
-(do_sys_open) from [<c02e77bc>] (SyS_openat+0x34/0x38)
-(SyS_openat) from [<c0108bc0>] (ret_fast_syscall+0x0/0x28)
-
-Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 ---
-changes since v1: change kfree to kvfree
----
- kernel/trace/trace.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/smartpqi/smartpqi_init.c | 44 +++++++++++++++++++--------
+ 1 file changed, 31 insertions(+), 13 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index ca1ee65..8d70c79 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6891,7 +6891,7 @@ static int tracing_buffers_open(struct inode *inode, struct file *filp)
- 	if (trace_array_get(tr) < 0)
- 		return -ENODEV;
+diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
+index cd157f11eb22..7061bd26897a 100644
+--- a/drivers/scsi/smartpqi/smartpqi_init.c
++++ b/drivers/scsi/smartpqi/smartpqi_init.c
+@@ -8059,11 +8059,11 @@ static void pqi_process_module_params(void)
+ 	pqi_process_lockup_action_param();
+ }
  
--	info = kzalloc(sizeof(*info), GFP_KERNEL);
-+	info = kvmalloc(sizeof(*info), GFP_KERNEL);
- 	if (!info) {
- 		trace_array_put(tr);
- 		return -ENOMEM;
-@@ -7017,7 +7017,7 @@ static int tracing_buffers_release(struct inode *inode, struct file *file)
- 	if (info->spare)
- 		ring_buffer_free_read_page(iter->trace_buffer->buffer,
- 					   info->spare_cpu, info->spare);
--	kfree(info);
-+	kvfree(info);
+-static __maybe_unused int pqi_suspend(struct pci_dev *pci_dev, pm_message_t state)
++static int pqi_suspend_late(struct device *dev, pm_message_t state)
+ {
+ 	struct pqi_ctrl_info *ctrl_info;
  
- 	mutex_unlock(&trace_types_lock);
+-	ctrl_info = pci_get_drvdata(pci_dev);
++	ctrl_info = dev_get_drvdata(dev);
  
+ 	pqi_disable_events(ctrl_info);
+ 	pqi_cancel_update_time_worker(ctrl_info);
+@@ -8081,20 +8081,33 @@ static __maybe_unused int pqi_suspend(struct pci_dev *pci_dev, pm_message_t stat
+ 	if (state.event == PM_EVENT_FREEZE)
+ 		return 0;
+ 
+-	pci_save_state(pci_dev);
+-	pci_set_power_state(pci_dev, pci_choose_state(pci_dev, state));
+-
+ 	ctrl_info->controller_online = false;
+ 	ctrl_info->pqi_mode_enabled = false;
+ 
+ 	return 0;
+ }
+ 
+-static __maybe_unused int pqi_resume(struct pci_dev *pci_dev)
++static __maybe_unused int pqi_suspend(struct device *dev)
++{
++	return pqi_suspend_late(dev, PMSG_SUSPEND);
++}
++
++static __maybe_unused int pqi_hibernate(struct device *dev)
++{
++	return pqi_suspend_late(dev, PMSG_HIBERNATE);
++}
++
++static __maybe_unused int pqi_freeze(struct device *dev)
++{
++	return pqi_suspend_late(dev, PMSG_FREEZE);
++}
++
++static __maybe_unused int pqi_resume(struct device *dev)
+ {
+ 	int rc;
+ 	struct pqi_ctrl_info *ctrl_info;
+ 
++	struct pci_dev *pci_dev = to_pci_dev(dev);
+ 	ctrl_info = pci_get_drvdata(pci_dev);
+ 
+ 	if (pci_dev->current_state != PCI_D0) {
+@@ -8115,9 +8128,6 @@ static __maybe_unused int pqi_resume(struct pci_dev *pci_dev)
+ 		return 0;
+ 	}
+ 
+-	pci_set_power_state(pci_dev, PCI_D0);
+-	pci_restore_state(pci_dev);
+-
+ 	return pqi_ctrl_init_resume(ctrl_info);
+ }
+ 
+@@ -8480,16 +8490,24 @@ static const struct pci_device_id pqi_pci_id_table[] = {
+ 
+ MODULE_DEVICE_TABLE(pci, pqi_pci_id_table);
+ 
++static const struct dev_pm_ops pqi_pm_ops = {
++#ifdef CONFIG_PM_SLEEP
++	.suspend = pqi_suspend,
++	.resume = pqi_resume,
++	.freeze = pqi_freeze,
++	.thaw = pqi_resume,
++	.poweroff = pqi_hibernate,
++	.restore = pqi_resume,
++#endif
++};
++
+ static struct pci_driver pqi_pci_driver = {
+ 	.name = DRIVER_NAME_SHORT,
+ 	.id_table = pqi_pci_id_table,
+ 	.probe = pqi_pci_probe,
+ 	.remove = pqi_pci_remove,
+ 	.shutdown = pqi_shutdown,
+-#if defined(CONFIG_PM)
+-	.suspend = pqi_suspend,
+-	.resume = pqi_resume,
+-#endif
++	.driver.pm = &pqi_pm_ops
+ };
+ 
+ static int __init pqi_init(void)
 -- 
-1.9.1
+2.27.0
 
