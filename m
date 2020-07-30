@@ -2,125 +2,228 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3BCC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 20:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB7FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 20:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD25E20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 20:52:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CBoJ2b24"
+	by mail.kernel.org (Postfix) with ESMTP id A08352084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 20:54:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596142461;
+	bh=kjsUMa7W/2716/E66O9BRcoDTvK1hMoraL3jFZhSbhQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GEs8TPoVqHjuKMuTmVLiO6CYzPp/tgGg/MnA44OEfoWEVLzMlgLdlc66xIirPTePt
+	 g8BhyYhQIn50Zhe1O8bM3n8Cq6wsjp7d4xTQS5LkE5RcXnsLPX+5zPObEr5idJ/q2p
+	 wwhXTMbTSWlxGaUVaT0FQf+PFuqzrX5MFi2X7Xg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730411AbgG3UwF (ORCPT
+        id S1730453AbgG3UyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 16:52:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728653AbgG3UwE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 16:52:04 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78730C06174A
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 13:52:04 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f18so26126316wrs.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 13:52:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sNQBhS7/TXLnuBaPJWGWRsQsFBSRrqawtzX8JhhIouk=;
-        b=CBoJ2b24vgzFcivcALEjMgSA99rMeCMANwn1Vt2DLSpjaKdWZszhgXW8MtjGenxbMJ
-         BOPMYPR8mlZnVuwZctaGzWvqUTpjCUuXAHK/cmcLrrWh5tW4Z9gxLVXIeQa1on6qNiYj
-         0XxDW1OM66WUEghPc4g4AJ6FxEV7dlZVNSOMR2c9X1C7PSkG4I/qF9f9r04lgNSkozLO
-         gunC+ioLtfWhVHr1J8k9Xw68bEkYpxCr0A5+T6fbQdtY3uW3ya833H0mrlscYyViUVxS
-         +zsheqI2fMX6LgzTmxQBL5N81TODqu1N6ai0Ph2K52KaNQaum0kYO4ytk6ckfoQx0QWU
-         Bacw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sNQBhS7/TXLnuBaPJWGWRsQsFBSRrqawtzX8JhhIouk=;
-        b=gE0jdRfiks0y/Tudk6uTcc92Pv7qQuZ2IPdCobecosCLhJBZc4KnHIRLfLbdVXRdNx
-         eVoFJJ0+H+aElA7VwrcgDtJqVQdOd4z0bAwtJuvQnU8wfzWXIOUlHUyCbIDD9UsFpZ5l
-         9vFNGXYMhVuYLUvLnONhslN5SJvyKjE5TxQJwA25DGwVULDl7WUtcOSWDGZgJf8wFYSi
-         Jo6WABqM9Gh2+fzN1ciNHtHkd+UPJwvkD7RF/O2ZKhk9vGQYv+6hYD7gghlFqd9Sbehp
-         yYVGQsOjqNKfUa8pvtgs1rld0kBOijDcHsb1fB4TQlt2KxnvsLY9zxsQG8ZfI5xLiLjN
-         A0eA==
-X-Gm-Message-State: AOAM532s6gmUq313xLmQkTyDKX1oNk++WbIS1WRmrvVvu546tTtblqMx
-        2+FQhqbRH5b5uzUhb8N3cbdJr0b5e5NBFQ2MzOc1rg==
-X-Google-Smtp-Source: ABdhPJxDgRl/9ZgCFmOaT5JPiqE/grxj5wZw4lSsGR7jhPrRnIbadzcC+0YX7MIInKKf4u/DcAuREV5aPKnCYc60CVI=
-X-Received: by 2002:adf:a19e:: with SMTP id u30mr460027wru.274.1596142322855;
- Thu, 30 Jul 2020 13:52:02 -0700 (PDT)
+        Thu, 30 Jul 2020 16:54:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42600 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728809AbgG3UyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 16:54:19 -0400
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D90121883
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 20:54:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596142458;
+        bh=kjsUMa7W/2716/E66O9BRcoDTvK1hMoraL3jFZhSbhQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=o9dMLI7V7xLay/4FEvc5ZBCLpWIPaCqr6MXAhd3v41abR8skQqLAzbrq08+887reU
+         wRySApjBQKeQ5VZq/RrsOM5e6cbno9eOfSVO8kC1+jgM4mvZwzHMUrYvd4E6R5+giP
+         WaOsgZjN1HyUHoKP9cFT3MNatWBEDqakktTzyWTE=
+Received: by mail-wr1-f50.google.com with SMTP id 88so26091751wrh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 13:54:18 -0700 (PDT)
+X-Gm-Message-State: AOAM532Ue1X/9i5/UrBH8JSpMDQnQuYB7pYmssqrX910wCgGgfPhp3kM
+        uOb47jQBynFl9SZAUv17ss/8AJa1FvSB0H3IEfihBg==
+X-Google-Smtp-Source: ABdhPJzKLFb8fOLe7ajuISL9Za2Aj4/QcGOi3NXA9PDpcRSYfLFS4b/xrq0MWMJYlHADmhXcVVN9ubUqp0AHIqmO1Bk=
+X-Received: by 2002:adf:fa85:: with SMTP id h5mr509001wrr.18.1596142456738;
+ Thu, 30 Jul 2020 13:54:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <1596116336-23147-1-git-send-email-kalyan_t@codeaurora.org>
-In-Reply-To: <1596116336-23147-1-git-send-email-kalyan_t@codeaurora.org>
-From:   Kristian Kristensen <hoegsberg@google.com>
-Date:   Thu, 30 Jul 2020 13:51:51 -0700
-Message-ID: <CAOPc6T=+Yx=+QzOr+6f3SXZXPqE-FTKkis4a+pODnGM5pxyTVQ@mail.gmail.com>
-Subject: Re: [v1] drm/msm/dpu: Fix scale params in plane validation
-To:     Kalyan Thota <kalyan_t@codeaurora.org>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        hoegsberg <hoegsberg@chromium.org>,
-        Doug Anderson <dianders@chromium.org>, mkrishn@codeaurora.org,
-        travitej@codeaurora.org, nganji@codeaurora.org
+References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com> <6540b4b7-3f70-adbf-c922-43886599713a@linux.microsoft.com>
+In-Reply-To: <6540b4b7-3f70-adbf-c922-43886599713a@linux.microsoft.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 30 Jul 2020 13:54:03 -0700
+X-Gmail-Original-Message-ID: <CALCETrWnNR5v3ZCLfBVQGYK8M0jAvQMaAc9uuO05kfZuh-4d6w@mail.gmail.com>
+Message-ID: <CALCETrWnNR5v3ZCLfBVQGYK8M0jAvQMaAc9uuO05kfZuh-4d6w@mail.gmail.com>
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+To:     "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 6:39 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
+On Thu, Jul 30, 2020 at 7:24 AM Madhavan T. Venkataraman
+<madvenka@linux.microsoft.com> wrote:
 >
-> Plane validation uses an API drm_calc_scale which will
-> return src/dst value as a scale ratio.
+> Sorry for the delay. I just wanted to think about this a little.
+> In this email, I will respond to your first suggestion. I will
+> respond to the rest in separate emails if that is alright with
+> you.
 >
-> when viewing the range on a scale the values should fall in as
+> On 7/28/20 12:31 PM, Andy Lutomirski wrote:
 >
-> Upscale ratio < Unity scale < Downscale ratio for src/dst formula
+> On Jul 28, 2020, at 6:11 AM, madvenka@linux.microsoft.com wrote:
 >
-> Fix the min and max scale ratios to suit the API accordingly.
+> =EF=BB=BFFrom: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
 >
-> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> The kernel creates the trampoline mapping without any permissions. When
+> the trampoline is executed by user code, a page fault happens and the
+> kernel gets control. The kernel recognizes that this is a trampoline
+> invocation. It sets up the user registers based on the specified
+> register context, and/or pushes values on the user stack based on the
+> specified stack context, and sets the user PC to the requested target
+> PC. When the kernel returns, execution continues at the target PC.
+> So, the kernel does the work of the trampoline on behalf of the
+> application.
 >
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> index 6379fe1..e46dcb9 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> @@ -946,9 +946,9 @@ static int dpu_plane_atomic_check(struct drm_plane *plane,
->                 crtc_state = drm_atomic_get_new_crtc_state(state->state,
->                                                            state->crtc);
+> This is quite clever, but now I=E2=80=99m wondering just how much kernel =
+help
+> is really needed. In your series, the trampoline is an non-executable
+> page.  I can think of at least two alternative approaches, and I'd
+> like to know the pros and cons.
 >
-> -       min_scale = FRAC_16_16(1, pdpu->pipe_sblk->maxdwnscale);
-> +       min_scale = FRAC_16_16(1, pdpu->pipe_sblk->maxupscale);
->         ret = drm_atomic_helper_check_plane_state(state, crtc_state, min_scale,
-> -                                         pdpu->pipe_sblk->maxupscale << 16,
-> +                                         pdpu->pipe_sblk->maxdwnscale << 16,
->                                           true, true);
->         if (ret) {
->                 DPU_DEBUG_PLANE(pdpu, "Check plane state failed (%d)\n", ret);
+> 1. Entirely userspace: a return trampoline would be something like:
+>
+> 1:
+> pushq %rax
+> pushq %rbc
+> pushq %rcx
+> ...
+> pushq %r15
+> movq %rsp, %rdi # pointer to saved regs
+> leaq 1b(%rip), %rsi # pointer to the trampoline itself
+> callq trampoline_handler # see below
+>
+> You would fill a page with a bunch of these, possibly compacted to get
+> more per page, and then you would remap as many copies as needed.  The
+> 'callq trampoline_handler' part would need to be a bit clever to make
+> it continue to work despite this remapping.  This will be *much*
+> faster than trampfd. How much of your use case would it cover?  For
+> the inverse, it's not too hard to write a bit of asm to set all
+> registers and jump somewhere.
+>
+> Let me state what I have understood about this suggestion. Correct me if
+> I get anything wrong. If you don't mind, I will also take the liberty
+> of generalizing and paraphrasing your suggestion.
+>
+> The goal is to create two page mappings that are adjacent to each other:
+>
+> - a code page that contains template code for a trampoline. Since the
+>  template code would tend to be small in size, pack as many of them
+>  as possible within a page to conserve memory. In other words, create
+>  an array of the template code fragments. Each element in the array
+>  would be used for one trampoline instance.
+>
+> - a data page that contains an array of data elements. Corresponding
+>  to each code element in the code page, there would be a data element
+>  in the data page that would contain data that is specific to a
+>  trampoline instance.
+>
+> - Code will access data using PC-relative addressing.
+>
+> The management of the code pages and allocation for each trampoline
+> instance would all be done in user space.
+>
+> Is this the general idea?
 
-Right, I can see how the drm convention of scaling factor being from
-dest to src (ie 2x scaling up src to dst is as scale factor of 0.5).
-Thanks for fixing this,
+Yes.
 
-Tested-by: Kristian H. Kristensen <hoegsberg@google.com>
-Reviewed-by: Kristian H. Kristensen <hoegsberg@google.com>
-
-> --
-> 1.9.1
 >
+> Creating a code page
+> --------------------
+>
+> We can do this in one of the following ways:
+>
+> - Allocate a writable page at run time, write the template code into
+>   the page and have execute permissions on the page.
+>
+> - Allocate a writable page at run time, write the template code into
+>   the page and remap the page with just execute permissions.
+>
+> - Allocate a writable page at run time, write the template code into
+>   the page, write the page into a temporary file and map the file with
+>   execute permissions.
+>
+> - Include the template code in a code page at build time itself and
+>   just remap the code page each time you need a code page.
+
+This latter part shouldn't need any special permissions as far as I know.
+
+>
+> Pros and Cons
+> -------------
+>
+> As long as the OS provides the functionality to do this and the security
+> subsystem in the OS allows the actions, this is totally feasible. If not,
+> we need something like trampfd.
+>
+> As Floren mentioned, libffi does implement something like this for MACH.
+>
+> In fact, in my libffi changes, I use trampfd only after all the other met=
+hods
+> have failed because of security settings.
+>
+> But the above approach only solves the problem for this simple type of
+> trampoline. It does not provide a framework for addressing more complex t=
+ypes
+> or even other forms of dynamic code.
+>
+> Also, each application would need to implement this solution for itself
+> as opposed to relying on one implementation provided by the kernel.
+
+I would argue this is a benefit.  If the whole implementation is in
+userspace, there is no ABI compatibility issue.  The user program
+contains the trampoline code and the code that uses it.
+
+>
+> Trampfd-based solution
+> ----------------------
+>
+> I outlined an enhancement to trampfd in a response to David Laight. In th=
+is
+> enhancement, the kernel is the one that would set up the code page.
+>
+> The kernel would call an arch-specific support function to generate the
+> code required to load registers, push values on the stack and jump to a P=
+C
+> for a trampoline instance based on its current context. The trampoline
+> instance data could be baked into the code.
+>
+> My initial idea was to only have one trampoline instance per page. But I
+> think I can implement multiple instances per page. I just have to manage
+> the trampfd file private data and VMA private data accordingly to map an
+> element in a code page to its trampoline object.
+>
+> The two approaches are similar except for the detail about who sets up
+> and manages the trampoline pages. In both approaches, the performance pro=
+blem
+> is addressed. But trampfd can be used even when security settings are
+> restrictive.
+>
+> Is my solution acceptable?
+
+Perhaps.  In general, before adding a new ABI to the kernel, it's nice
+to understand how it's better than doing the same thing in userspace.
+Saying that it's easier for user code to work with if it's in the
+kernel isn't necessarily an adequate justification.
+
+Why would remapping two pages of actual application text ever fail?
