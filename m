@@ -2,188 +2,177 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 647EDC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2703FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E08220829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:10:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ajUAXfrD"
+	by mail.kernel.org (Postfix) with ESMTP id 04A8920829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:10:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596132651;
+	bh=oy4zBu3xLBCuWxdfRxweVj3pqrgDJqo/r08Kl3Db94g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=QwUQd5YVR7EAGCC87x6RNcFCrCyLn/qhmaA+QoOEtXczv4l9ZHRZKGHH8YIW898k8
+	 OAJ5IUrDK2bsuLu/c+Gh8mGB/0kr4chQAMNuVIjHLqOAoqaE4mmAXqVSbi1Guw2JCr
+	 E2Lrbi4F72l8VPi+cGqsVulbn9IGh9WS6wNev4HU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730344AbgG3SKk (ORCPT
+        id S1730363AbgG3SKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 14:10:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32868 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727835AbgG3SKj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 14:10:39 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60F82C061575
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 11:10:39 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id t6so1443174pjr.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 11:10:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eCWZ0AKDmj5eYAH74+r2M/mKN/7ZXpbrEknxIsef3Yc=;
-        b=ajUAXfrDq0Mb2pI9UhL+Deo64bgfocmrSQ7S3+wN7kirbVua2E3Fo7cLCk9f3YO1UW
-         ySTM5mAzc7dfFuSgMadQN4k6RAqOOA77JKEXrw0mlGAWt0AsYKbmNK/x2KOhQAdYugUz
-         KrLA08z7cNDfrOZbVmzsCMWDpbJywwGPnUhKY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eCWZ0AKDmj5eYAH74+r2M/mKN/7ZXpbrEknxIsef3Yc=;
-        b=lSdwcsxbCvaJiHF5HE35Xxk7dqYacMvie0pWjwqZ5YelTpSkRsUo6sI7KJA6VR0r0U
-         Ca8NyNSbK0wfFAXTveIWasmII5hSSg+9+q8yTJnYMB8/C2p9ipkhFjQcSteD9gYktlzu
-         +ELJVKvJNNVVDVcmXIhGckWi+TPQYVH0d4n/leuAI69tMCXmw1N0Btq7MzFzX+S2HlzE
-         fANDXpjk/5sRhpjkMNyTKhHSPSfLICe/VcsurIGkqobZa1MLq6sJCRlT8qOuTcQyyrdx
-         0070o8+rzutO73BwgxOoxVCITcJ6o1v6g/S40NpeslobysL08V1mXkBYC1wmdSUv9LXA
-         kpEA==
-X-Gm-Message-State: AOAM533/1MTyR0CTxHO59N0ChiQMuAFmwnZqs/DlC9XO6JSRruRTLxof
-        GCxCBcLdbuyjPW7wlyr/9ZRT1g==
-X-Google-Smtp-Source: ABdhPJzJ1U3yCIj3cyycYFAeqg2w0SXGmg6Cxo8SvVZQ1srTSSZywo4dwa9+2kFhFvmNxkh040WAvA==
-X-Received: by 2002:a17:902:8a90:: with SMTP id p16mr373142plo.167.1596132638877;
-        Thu, 30 Jul 2020 11:10:38 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d24sm6177185pjx.36.2020.07.30.11.10.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 11:10:37 -0700 (PDT)
-Date:   Thu, 30 Jul 2020 11:10:36 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Denis Efremov <efremov@linux.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Peilin Ye <yepeilin.cs@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v2] block/floppy: Prevent
- kernel-infoleak in raw_cmd_copyout()
-Message-ID: <202007301056.D3BD1805B0@keescook>
-References: <20200728141946.426245-1-yepeilin.cs@gmail.com>
- <20200729115157.8519-1-yepeilin.cs@gmail.com>
- <20200729125820.GB1840@kadam>
- <f2cf6137-987a-ab41-d88a-6828d46c255f@linux.com>
- <CAK8P3a20SEoYCrp3jOK32oZc9OkiPv+1KTjNZ2GxLbHpY4WexQ@mail.gmail.com>
+        Thu, 30 Jul 2020 14:10:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727835AbgG3SKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 14:10:47 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1843D20829;
+        Thu, 30 Jul 2020 18:10:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596132646;
+        bh=oy4zBu3xLBCuWxdfRxweVj3pqrgDJqo/r08Kl3Db94g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fl299ZqPsQzWw9UVgzFctl4++/RwzhtHSmL+sPpgHZLcjvSdE26MKYvDtoNPvtCKP
+         mo/1w6qj8PpE0ErMIE2Aw2XcRgsnE0h/LePYRHTcoQ/MjvjdII7TpzUHWU8busK7zV
+         /ze1wpqbNMVAZ7q9TAzIrB4CXKwS9+P9AlpDj9hY=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k1D0u-00GKY3-DU; Thu, 30 Jul 2020 19:10:44 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a20SEoYCrp3jOK32oZc9OkiPv+1KTjNZ2GxLbHpY4WexQ@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 30 Jul 2020 19:10:44 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+Subject: Re: [PATCH v2 2/2] irqchip/gic-v2, v3: Prevent SW resends entirely
+In-Reply-To: <20200730170321.31228-3-valentin.schneider@arm.com>
+References: <20200730170321.31228-1-valentin.schneider@arm.com>
+ <20200730170321.31228-3-valentin.schneider@arm.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <ba26464de5e82eace97924121d7bcd1d@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: valentin.schneider@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de, jason@lakedaemon.net, Lorenzo.Pieralisi@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 10:11:07AM +0200, Arnd Bergmann wrote:
-> > On Wed, Jul 29, 2020 at 3:22 PM Denis Efremov <efremov@linux.com> wrote:
+Hi Valentin,
+
+On 2020-07-30 18:03, Valentin Schneider wrote:
+> The GIC irqchips can now use a HW resend when a retrigger is invoked by
+> check_irq_resend(). However, should the HW resend fail, 
+> check_irq_resend()
+> will still attempt to trigger a SW resend, which is still a bad idea 
+> for
+> the GICs.
 > 
-> > And checked for leaks on x86_64 with the script test.sh
-> > $ cat test.sh
-> > #!/bin/bash
-> >
-> > for i in 4.8 5 6 7 8 9 10
-> > do
-> > ./run_container.sh gcc-$i $(pwd)/src $(pwd)/out bash -c 'gcc test.c; ./a.out'
-> > ./run_container.sh gcc-$i $(pwd)/src $(pwd)/out bash -c 'gcc -O2 test.c; ./a.out'
-> > ./run_container.sh gcc-$i $(pwd)/src $(pwd)/out bash -c 'gcc -O3 test.c; ./a.out'
-> > done
-> >
-> > No leaks reported. Is it really possible this this kind of init, i.e. cmd = *ptr?
+> Prevent this from happening by setting IRQD_HANDLE_ENFORCE_IRQCTX on 
+> all
+> GIC IRQs. Technically per-cpu IRQs do not need this, as their flow 
+> handlers
+> never set IRQS_PENDING, but this aligns all IRQs wrt context 
+> enforcement:
+> this also forces all GIC IRQ handling to happen in IRQ context (as 
+> defined
+> by in_irq()).
 > 
-> The problem is that the behavior is dependent not just on the compiler
-> version but
-> also optimization flags, target architecture and specific structure
-> layouts. Most
-> of the time, both gcc and clang will initialize the whole structure
-> rather than just
-> the individual members, but you still can't be sure that this is true
-> for all configurations
-> that this code runs on, except by using CONFIG_GCC_PLUGIN_STRUCTLEAK.
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> ---
+>  drivers/irqchip/irq-gic-v3.c | 5 ++++-
+>  drivers/irqchip/irq-gic.c    | 6 +++++-
+>  2 files changed, 9 insertions(+), 2 deletions(-)
 > 
-> Kees pointed me to the lib/test_stackinit.c file in the kernel in which he has
-> collected a number of combinations that are known to trigger the problem.
+> diff --git a/drivers/irqchip/irq-gic-v3.c 
+> b/drivers/irqchip/irq-gic-v3.c
+> index 0fbcbf55ec48..1a8acf7cd8ac 100644
+> --- a/drivers/irqchip/irq-gic-v3.c
+> +++ b/drivers/irqchip/irq-gic-v3.c
+> @@ -1279,6 +1279,7 @@ static int gic_irq_domain_map(struct irq_domain
+> *d, unsigned int irq,
+>  			      irq_hw_number_t hw)
+>  {
+>  	struct irq_chip *chip = &gic_chip;
+> +	struct irq_data *irqd = irq_desc_get_irq_data(irq_to_desc(irq));
 > 
-> What I see there though are only cases of struct initializers like
+>  	if (static_branch_likely(&supports_deactivate_key))
+>  		chip = &gic_eoimode1_chip;
+> @@ -1296,7 +1297,7 @@ static int gic_irq_domain_map(struct irq_domain
+> *d, unsigned int irq,
+>  		irq_domain_set_info(d, irq, hw, chip, d->host_data,
+>  				    handle_fasteoi_irq, NULL, NULL);
+>  		irq_set_probe(irq);
+> -		irqd_set_single_target(irq_desc_get_irq_data(irq_to_desc(irq)));
+> +		irqd_set_single_target(irqd);
+>  		break;
 > 
->   struct test_big_hole var = { .one = arg->one, .two=arg->two, .three
-> = arg->three, .four = arg->four };
-
-test_stackinit.c intended to use six cases (where "full" is in the sense
-of "all members are named", this is intentionally testing the behavior
-of padding hole initialization):
-
-full static initialization:
-
-          = { .one = 0,
-              .two = 0,
-              .three = 0,
-              .four = 0,
-          };
-
-partial static init:
-
-          = { .two = 0, };
-
-full dynamic init:
-
-          = { .one = arg->one,
-              .two = arg->two,
-              .three = arg->three,
-              .four = arg->four,
-          };
-
-partial dynamic init:
-
-          = { .two = arg->two, };
-
-full runtime init:
-
-          var.one = 0;
-          var.two = 0;
-          var.three = 0;
-          memset(&var.four, 0, sizeof(var.four));
-
-partial runtime init:
-
-          var.two = 0;
-
-(It seems in refactoring I botched the "full static initialization"
-case, which I'll go fix separately.)
-
-> but not the syntax used in the floppy driver:
+>  	case LPI_RANGE:
+> @@ -1310,6 +1311,8 @@ static int gic_irq_domain_map(struct irq_domain
+> *d, unsigned int irq,
+>  		return -EPERM;
+>  	}
 > 
->    struct test_big_hole var = *arg;
-
-So this one is a "whole structure copy" which I didn't have any tests
-for, since I'd (perhaps inappropriately) assumed would be accomplished
-with memcpy() internally, which means the incoming "*arg"'s padding holes
-would be copied as-is. If the compiler is actually doing per-member copies
-and leaving holes in "var" untouched, that's unexpected, so clearly that
-needs to be added to test_stackinit.c! :)
-
-> or the a constructor like
+> +	/* Prevents SW retriggers which mess up the ACK/EOI ordering */
+> +	irqd_set_handle_enforce_irqctx(irqd);
+>  	return 0;
+>  }
 > 
->   struct test_big_hole var;
->   var = (struct test_big_hole){ .one = arg->one, .two=arg->two, .three
-> = arg->three, .four = arg->four };
+> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+> index e2b4cae88bce..a91ce1e73bd2 100644
+> --- a/drivers/irqchip/irq-gic.c
+> +++ b/drivers/irqchip/irq-gic.c
+> @@ -983,6 +983,7 @@ static int gic_irq_domain_map(struct irq_domain
+> *d, unsigned int irq,
+>  				irq_hw_number_t hw)
+>  {
+>  	struct gic_chip_data *gic = d->host_data;
+> +	struct irq_data *irqd = irq_desc_get_irq_data(irq_to_desc(irq));
 > 
-> Kees, do you know whether those two would behave differently?
-> Would it make sense to also check for those, or am I perhaps
-> misreading your code and it already gets checked?
+>  	if (hw < 32) {
+>  		irq_set_percpu_devid(irq);
+> @@ -992,8 +993,11 @@ static int gic_irq_domain_map(struct irq_domain
+> *d, unsigned int irq,
+>  		irq_domain_set_info(d, irq, hw, &gic->chip, d->host_data,
+>  				    handle_fasteoi_irq, NULL, NULL);
+>  		irq_set_probe(irq);
+> -		irqd_set_single_target(irq_desc_get_irq_data(irq_to_desc(irq)));
+> +		irqd_set_single_target(irqd);
+>  	}
+> +
+> +	/* Prevents SW retriggers which mess up the ACK/EOI ordering */
+> +	irqd_set_handle_enforce_irqctx(irqd);
+>  	return 0;
+>  }
 
-I *think* the above constructor would be covered under "full runtime
-init", but it does also seem likely it would be handled similarly to
-the "whole structure copy" in the previous example. I will go add more
-tests...
+I'm OK with this in principle, but this requires additional changes
+in the rest of the GIC universe. The ITS driver needs to provide its own
+retrigger function for LPIs (queuing an INT command), and any of the
+SPI generating widgets that can be stacked on top of a GIC (GICv3-MBI,
+GICv2m, and all the other Annapurna/Marvell/NVDIA wonders need to gain
+directly or indirectly a call to irq_chip_retrigger_hierarchy().
 
+We can probably avoid changing the MSI widgets by teaching the MSI
+code about the HW retrigger, but a number of other non-MSI drivers
+will need some help...
+
+I'll have a look tomorrow.
+
+Thanks,
+
+         M.
 -- 
-Kees Cook
+Jazz is not dead. It just smells funny...
