@@ -4,75 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D34DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC26C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F6D82173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E8CA2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596148147;
-	bh=3E2zv9US9vLZ0at3kxD0+KN3nNVdL4vqBHT/gU3kpKg=;
-	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
-	b=Icyd4OVsLbgY1S6sdsE9s14ftjqJsr8ITnr9HEd6cW5L8c+/6yvZvncvY/W0JKJZy
-	 YE52/mRPrifREP9iO/PYjuUvl2J+Fu39Ad0/jiuNuw3mYLVQJsByhXOFklPvcA/JoT
-	 6RPbQ2tF+E5cs7KHxvinbJjElchCK09pv5CHWbb8=
+	s=default; t=1596148155;
+	bh=KwGDSsusd/GMVehYUac5bADuIj+1b5g0N27c/uhAflQ=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=BZZHrD8YZomD5bYXpfQAvlXcujBgDTGBBE2si8SaQPngL8kCKJChrOICxLt2LuZ6O
+	 m3j07dRSrvYm9Dk/T8SI78tn5X5W2DHSDi02gfA5pNGM7b1futnQotRhp1nrKpVFJ8
+	 809BSTtOd9CrQKF+8r7mrkdxnU/lRWQ9yytsdjcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730701AbgG3W3G (ORCPT
+        id S1730712AbgG3W3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 18:29:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41174 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 18:29:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730024AbgG3W3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 18:29:04 -0400
+        id S1728846AbgG3W3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 18:29:12 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA27320838;
-        Thu, 30 Jul 2020 22:29:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1562320829;
+        Thu, 30 Jul 2020 22:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596148144;
-        bh=3E2zv9US9vLZ0at3kxD0+KN3nNVdL4vqBHT/gU3kpKg=;
+        s=default; t=1596148151;
+        bh=KwGDSsusd/GMVehYUac5bADuIj+1b5g0N27c/uhAflQ=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=TCa1Fr1V54rnXcOaXy7ogD1GOXg392RrdbZxgon1IDI3C5rvcPSqCBlOQrzxnkWiZ
-         HeubyUagR8xBdeL87DACfSBiFFP9fWqlhMDuJhXgqnFqZ1an6TtMoAw1/p/3pVwLqt
-         /4RugqH3IL+I7EmI2w0jU2ooRr0IMW0qCsjzIkCQ=
-Date:   Thu, 30 Jul 2020 23:28:44 +0100
+        b=Ljz27fSB87EoOFZClLBru0C+YXU/QApJfJrwf6SvRcti387BsBJi3yF9E0iILTOW1
+         J954Tk4oygLbx9rHqjb3CKQ06FjrCJNAVoTwm/p4sBrsh/NqdSEnawQJPz7qi9YOC6
+         thDcG8fcIhdOIkafWYWvcVj8tazTSAwjr6gQ3QsA=
+Date:   Thu, 30 Jul 2020 23:28:51 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Kathiravan T <kathirav@codeaurora.org>,
-        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, lgirdwood@gmail.com,
-        devicetree@vger.kernel.org, sivaprak@codeaurora.org
-In-Reply-To: <1596098964-19878-1-git-send-email-kathirav@codeaurora.org>
-References: <1596098964-19878-1-git-send-email-kathirav@codeaurora.org>
-Subject: Re: [PATCH 0/3] Enable DVFS support for IPQ6018
-Message-Id: <159614812412.1677.11866049151869161352.b4-ty@kernel.org>
+To:     Jon Lin <jon.lin@rock-chips.com>
+Cc:     linux-arm-kernel@lists.infradead.org, heiko@sntech.de,
+        linux-rockchip@lists.infradead.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20200722083737.8820-1-jon.lin@rock-chips.com>
+References: <20200722083737.8820-1-jon.lin@rock-chips.com>
+Subject: Re: [PATCH v2 1/3] spi: rockchip: Config spi rx dma burst size depend on xfer length
+Message-Id: <159614813119.1710.15143804942434946004.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Jul 2020 14:19:21 +0530, Kathiravan T wrote:
-> Add A53 PLL, APCS clock, RPM Glink, RPM message RAM, cpu-opp-table,
-> SMPA2 regulator to enable the cpu frequency on IPQ6018.
-> 
-> Kathiravan T (3):
->   dt-bindings: mailbox: add compatible for the IPQ6018 SoC
->   dt-bindings: regulator: add the sub node names for the MP5496 PMIC
->   arm64: dts: ipq6018: enable DVFS support
-> 
-> [...]
+On Wed, 22 Jul 2020 16:37:35 +0800, Jon Lin wrote:
+> The burst length can be adjusted according to the transmission
+> length to improve the transmission rate
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/1] regulator: add the sub node names for the MP5496 PMIC
-      commit: bcb3b2a7639db2412875520cddc3abd179068793
+[1/3] spi: rockchip: Config spi rx dma burst size depend on xfer length
+      commit: 4d9ca632c847ab88f2f7e7e2747aea966f1390ce
+[2/3] spi: rockchip: Support 64-location deep FIFOs
+      commit: 13a96935e6f66bafb6da92791120546a4bf20889
+[3/3] spi: rockchip: Fix error in SPI slave pio read
+      commit: 4294e4accf8d695ea5605f6b189008b692e3e82c
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
