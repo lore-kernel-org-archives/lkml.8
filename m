@@ -2,53 +2,50 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A1CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 169602074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 319DE2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096936;
-	bh=8/u2v9f1AS4A+vYFzNeZgTlwKWH2MAHgTKw+YPnZWRA=;
+	s=default; t=1596096938;
+	bh=syJIf6GQBppf2Hdw79wPHqxwHwYccToCNQ4NPDLgv8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=soQhHXB9zVeyj5dISapTInRmHvQIuZANcY2KCmXckKQeTSi63T8HErYWd0dyRvjyl
-	 Bw2FDBy6S/1M6+bqHa8XjyIbM4gI9bkHKbaJ1crPK7TQiYZBj+yzxr5lyyEAU0tvHB
-	 adaR/3MquB8019zHjU/+VZmZ37LDPMY+uOBItoUc=
+	b=uea0g6yuKKMniW+U2QM5FQsMFUDlZOOvukL+V+xwP21xWDQIFDSMJ4ZH5qRj60Q5t
+	 M5DUgijWba7MkzDEeFo86r7FViB/BMvrxT5MgdFBGtP5Nd6X7gbmcWet2D5XQj1JFj
+	 tv7Z1KgLVxneWoRBt6RhhrJ0EpFsVOdFR0DU9riI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729650AbgG3IPe (ORCPT
+        id S1730239AbgG3IPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:15:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51044 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:15:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729992AbgG3ILu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:11:50 -0400
+        id S1729982AbgG3ILp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:11:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D20E2074B;
-        Thu, 30 Jul 2020 08:11:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 548DA2083B;
+        Thu, 30 Jul 2020 08:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096709;
-        bh=8/u2v9f1AS4A+vYFzNeZgTlwKWH2MAHgTKw+YPnZWRA=;
+        s=default; t=1596096704;
+        bh=syJIf6GQBppf2Hdw79wPHqxwHwYccToCNQ4NPDLgv8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tzaoed/rARdHghknLEVUYdgNg3XPGejipZs2dGUNttvWhTEhc+adw56w8LTG8otIf
-         KtxzfpTIKE+WFg7WrNudzoL6IL2PNU2rt7jlys28cc13CeXZjYtVLP7rncHPgr/QBq
-         bBvcOfp8EwWD3o0LEkChNV69smrHpZZ2bqcgLld0=
+        b=dDoZANaal+O20DDvKTkIcOskFCH8m+td8p49zbyVFSacekVtrg0iGoxJMLKdZqFG9
+         JzUBLxPelPZz9rc6+S4EJ+WAYJZYSgr9KqKh1sCV84tI4zbmvgWj4uKLoQpobyrUtM
+         jY/krhsGqo/sd6nSlWJB8elVha/soSDaGfd/z+Og=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Bottomley <jejb@linux.ibm.com>,
-        Tom Rix <trix@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 03/54] scsi: scsi_transport_spi: Fix function pointer check
-Date:   Thu, 30 Jul 2020 10:04:42 +0200
-Message-Id: <20200730074421.378665680@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.4 28/54] staging: comedi: addi_apci_1032: check INSN_CONFIG_DIGITAL_TRIG shift
+Date:   Thu, 30 Jul 2020 10:05:07 +0200
+Message-Id: <20200730074422.558679015@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
 References: <20200730074421.203879987@linuxfoundation.org>
@@ -61,50 +58,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-[ Upstream commit 5aee52c44d9170591df65fafa1cd408acc1225ce ]
+commit 0bd0db42a030b75c20028c7ba6e327b9cb554116 upstream.
 
-clang static analysis flags several null function pointer problems.
+The `INSN_CONFIG` comedi instruction with sub-instruction code
+`INSN_CONFIG_DIGITAL_TRIG` includes a base channel in `data[3]`. This is
+used as a right shift amount for other bitmask values without being
+checked.  Shift amounts greater than or equal to 32 will result in
+undefined behavior.  Add code to deal with this.
 
-drivers/scsi/scsi_transport_spi.c:374:1: warning: Called function pointer is null (null dereference) [core.CallAndMessage]
-spi_transport_max_attr(offset, "%d\n");
-^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Fixes: 33cdce6293dcc ("staging: comedi: addi_apci_1032: conform to new INSN_CONFIG_DIGITAL_TRIG")
+Cc: <stable@vger.kernel.org> #3.8+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/20200717145257.112660-3-abbotti@mev.co.uk
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Reviewing the store_spi_store_max macro
-
-	if (i->f->set_##field)
-		return -EINVAL;
-
-should be
-
-	if (!i->f->set_##field)
-		return -EINVAL;
-
-Link: https://lore.kernel.org/r/20200627133242.21618-1-trix@redhat.com
-Reviewed-by: James Bottomley <jejb@linux.ibm.com>
-Signed-off-by: Tom Rix <trix@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_transport_spi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/comedi/drivers/addi_apci_1032.c |   20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/scsi_transport_spi.c b/drivers/scsi/scsi_transport_spi.c
-index 319868f3f6743..083cd11ce7d7d 100644
---- a/drivers/scsi/scsi_transport_spi.c
-+++ b/drivers/scsi/scsi_transport_spi.c
-@@ -353,7 +353,7 @@ store_spi_transport_##field(struct device *dev, 			\
- 	struct spi_transport_attrs *tp					\
- 		= (struct spi_transport_attrs *)&starget->starget_data;	\
- 									\
--	if (i->f->set_##field)						\
-+	if (!i->f->set_##field)						\
- 		return -EINVAL;						\
- 	val = simple_strtoul(buf, NULL, 0);				\
- 	if (val > tp->max_##field)					\
--- 
-2.25.1
-
+--- a/drivers/staging/comedi/drivers/addi_apci_1032.c
++++ b/drivers/staging/comedi/drivers/addi_apci_1032.c
+@@ -115,14 +115,22 @@ static int apci1032_cos_insn_config(stru
+ 				    unsigned int *data)
+ {
+ 	struct apci1032_private *devpriv = dev->private;
+-	unsigned int shift, oldmask;
++	unsigned int shift, oldmask, himask, lomask;
+ 
+ 	switch (data[0]) {
+ 	case INSN_CONFIG_DIGITAL_TRIG:
+ 		if (data[1] != 0)
+ 			return -EINVAL;
+ 		shift = data[3];
+-		oldmask = (1U << shift) - 1;
++		if (shift < 32) {
++			oldmask = (1U << shift) - 1;
++			himask = data[4] << shift;
++			lomask = data[5] << shift;
++		} else {
++			oldmask = 0xffffffffu;
++			himask = 0;
++			lomask = 0;
++		}
+ 		switch (data[2]) {
+ 		case COMEDI_DIGITAL_TRIG_DISABLE:
+ 			devpriv->ctrl = 0;
+@@ -145,8 +153,8 @@ static int apci1032_cos_insn_config(stru
+ 				devpriv->mode2 &= oldmask;
+ 			}
+ 			/* configure specified channels */
+-			devpriv->mode1 |= data[4] << shift;
+-			devpriv->mode2 |= data[5] << shift;
++			devpriv->mode1 |= himask;
++			devpriv->mode2 |= lomask;
+ 			break;
+ 		case COMEDI_DIGITAL_TRIG_ENABLE_LEVELS:
+ 			if (devpriv->ctrl != (APCI1032_CTRL_INT_ENA |
+@@ -163,8 +171,8 @@ static int apci1032_cos_insn_config(stru
+ 				devpriv->mode2 &= oldmask;
+ 			}
+ 			/* configure specified channels */
+-			devpriv->mode1 |= data[4] << shift;
+-			devpriv->mode2 |= data[5] << shift;
++			devpriv->mode1 |= himask;
++			devpriv->mode2 |= lomask;
+ 			break;
+ 		default:
+ 			return -EINVAL;
 
 
