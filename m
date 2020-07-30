@@ -2,233 +2,157 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E14C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C586C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2186020656
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A86420672
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:18:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MtoQL85q"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="AL5BskQR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729231AbgG3JQQ (ORCPT
+        id S1729119AbgG3JSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 05:16:16 -0400
-Received: from ozlabs.org ([203.11.71.1]:43489 "EHLO ozlabs.org"
+        Thu, 30 Jul 2020 05:18:17 -0400
+Received: from vps.xff.cz ([195.181.215.36]:51866 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728880AbgG3JQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 05:16:14 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BHPsm2dWDz9sRW;
-        Thu, 30 Jul 2020 19:16:12 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596100572;
-        bh=3UGzAS3BAzzwuOnXiOZuXoyqPh+hYTBvt/HEmbtVHo8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MtoQL85qFqJHOpWk6PRcrKW/+De01ccTil1Y5951gWFPAHxvX+eXqyvkhFuTOkERX
-         q3J+djWpBExSq3BZukY/+PqyU5ziyW4wSW/nrsNZeTRCwCjcj+ntNEbbMmHZJHRiGo
-         cyY4WgtkFkKIeyAZwDIFCo8rWJCHfbJLkVMWAsbsADDGBeKqrq0FytOgd7UQ/qY4Cc
-         X94Z9k2UwPozO+Bln6Yj4efh+EownlIercmrby49gR+fxkMARihn+r9PDOalUeC1o8
-         b+g6X/3FzTnPhXteyrvyJES414z4d0odHj9xJ9orFs994rDMHDOeqmybMd0Um7g1si
-         7uqW9ntD8yHCw==
-Date:   Thu, 30 Jul 2020 19:16:10 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        Paul Mackerras <paulus@ozlabs.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Laurent Dufour <ldufour@linux.ibm.com>
-Subject: linux-next: manual merge of the hmm tree with the kvm-ppc tree
-Message-ID: <20200730191610.204ed02c@canb.auug.org.au>
+        id S1726819AbgG3JSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 05:18:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1596100692; bh=HOOQYK09295xgAy28jQQY6G9ActTahF44D4teInPcZc=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=AL5BskQRTKQ2jtUjuXN5AlYRTEEoD9Yu79BpEqCpouulQKMRA9mLiMf2M11wyBQHx
+         VO2AnkKvpaCVGtLMT5+sLy0cxbcQPLXiMwuT00skkrIJ8UGZ9Ig02gK+stqpF4/ZYK
+         fxWKL7fR7MlXKcjEwTLEFa155Ph5W4PSBUtOQQDE=
+Date:   Thu, 30 Jul 2020 11:18:12 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 2/4] input: gpio-vibra: Allow to use vcc-supply alone
+ to control the vibrator
+Message-ID: <20200730091812.7sia7w3waz2jj62a@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Luca Weiss <luca@z3ntu.xyz>, Tomas Novotny <tomas@novotny.cz>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20200714102303.3007896-1-megous@megous.com>
+ <20200714102303.3007896-3-megous@megous.com>
+ <20200730061939.GF1665100@dtor-ws>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Sh6n5Ee=hdUmtBiCx7Gq.4c";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730061939.GF1665100@dtor-ws>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Sh6n5Ee=hdUmtBiCx7Gq.4c
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello Dmitry,
 
-Hi all,
+thanks for looking into the patch. :)
 
-Today's linux-next merge of the hmm tree got a conflict in:
+On Wed, Jul 29, 2020 at 11:19:39PM -0700, Dmitry Torokhov wrote:
+> Hi Ondrej,
+> 
+> On Tue, Jul 14, 2020 at 12:23:01PM +0200, Ondrej Jirman wrote:
+> > Make enable-gpio optional to allow using this driver with boards that
+> > have vibrator connected to a power supply without intermediate gpio
+> > based enable circuitry.
+> > 
+> > Also avoid a case where neither regulator nor enable gpio is specified,
+> > and bail out in probe in such a case.
+> > 
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > ---
+> >  drivers/input/misc/gpio-vibra.c | 14 ++++++++++----
+> >  1 file changed, 10 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vibra.c
+> > index f79f75595dd7..b3bb7e61ed1d 100644
+> > --- a/drivers/input/misc/gpio-vibra.c
+> > +++ b/drivers/input/misc/gpio-vibra.c
+> > @@ -39,7 +39,7 @@ static int gpio_vibrator_start(struct gpio_vibrator *vibrator)
+> >  	struct device *pdev = vibrator->input->dev.parent;
+> >  	int err;
+> >  
+> > -	if (!vibrator->vcc_on) {
+> > +	if (vibrator->vcc && !vibrator->vcc_on) {
+> >  		err = regulator_enable(vibrator->vcc);
+> >  		if (err) {
+> >  			dev_err(pdev, "failed to enable regulator: %d\n", err);
+> > @@ -57,7 +57,7 @@ static void gpio_vibrator_stop(struct gpio_vibrator *vibrator)
+> >  {
+> >  	gpiod_set_value_cansleep(vibrator->gpio, 0);
+> >  
+> > -	if (vibrator->vcc_on) {
+> > +	if (vibrator->vcc && vibrator->vcc_on) {
+> >  		regulator_disable(vibrator->vcc);
+> >  		vibrator->vcc_on = false;
+> >  	}
+> > @@ -112,7 +112,7 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
+> >  	if (!vibrator->input)
+> >  		return -ENOMEM;
+> >  
+> > -	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
+> > +	vibrator->vcc = devm_regulator_get_optional(&pdev->dev, "vcc");
+> 
+> I know it is very surprising, but regulator_get_optional does not return
+> NULL when regulator is not present, but rather ERR_PTR(-ENODEV). You
+> need to replace it with NULL in the branch below, or change conditions
+> to !IS_ERR(virbrator->vcc) (and still handle -ENODEV in the branch
+> below).
 
-  arch/powerpc/kvm/book3s_hv_uvmem.c
+Oops, I'll fix that in the next revision.
 
-between commit:
+regards,
+	o.
 
-  f1b87ea8784b ("KVM: PPC: Book3S HV: Move kvmppc_svm_page_out up")
-
-from the kvm-ppc tree and commit:
-
-  5143192cd410 ("mm/migrate: add a flags parameter to migrate_vma")
-
-from the hmm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/powerpc/kvm/book3s_hv_uvmem.c
-index 0d49e3425a12,6850bd04bcb9..000000000000
---- a/arch/powerpc/kvm/book3s_hv_uvmem.c
-+++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
-@@@ -496,94 -253,14 +496,95 @@@ unsigned long kvmppc_h_svm_init_start(s
-  	return ret;
-  }
- =20
- -unsigned long kvmppc_h_svm_init_done(struct kvm *kvm)
- +/*
- + * Provision a new page on HV side and copy over the contents
- + * from secure memory using UV_PAGE_OUT uvcall.
- + * Caller must held kvm->arch.uvmem_lock.
- + */
- +static int __kvmppc_svm_page_out(struct vm_area_struct *vma,
- +		unsigned long start,
- +		unsigned long end, unsigned long page_shift,
- +		struct kvm *kvm, unsigned long gpa)
-  {
- -	if (!(kvm->arch.secure_guest & KVMPPC_SECURE_INIT_START))
- -		return H_UNSUPPORTED;
- +	unsigned long src_pfn, dst_pfn =3D 0;
- +	struct migrate_vma mig;
- +	struct page *dpage, *spage;
- +	struct kvmppc_uvmem_page_pvt *pvt;
- +	unsigned long pfn;
- +	int ret =3D U_SUCCESS;
- =20
- -	kvm->arch.secure_guest |=3D KVMPPC_SECURE_INIT_DONE;
- -	pr_info("LPID %d went secure\n", kvm->arch.lpid);
- -	return H_SUCCESS;
- +	memset(&mig, 0, sizeof(mig));
- +	mig.vma =3D vma;
- +	mig.start =3D start;
- +	mig.end =3D end;
- +	mig.src =3D &src_pfn;
- +	mig.dst =3D &dst_pfn;
-- 	mig.src_owner =3D &kvmppc_uvmem_pgmap;
-++	mig.pgmap_owner =3D &kvmppc_uvmem_pgmap;
-++	mig.flags =3D MIGRATE_VMA_SELECT_DEVICE_PRIVATE;
- +
- +	/* The requested page is already paged-out, nothing to do */
- +	if (!kvmppc_gfn_is_uvmem_pfn(gpa >> page_shift, kvm, NULL))
- +		return ret;
- +
- +	ret =3D migrate_vma_setup(&mig);
- +	if (ret)
- +		return -1;
- +
- +	spage =3D migrate_pfn_to_page(*mig.src);
- +	if (!spage || !(*mig.src & MIGRATE_PFN_MIGRATE))
- +		goto out_finalize;
- +
- +	if (!is_zone_device_page(spage))
- +		goto out_finalize;
- +
- +	dpage =3D alloc_page_vma(GFP_HIGHUSER, vma, start);
- +	if (!dpage) {
- +		ret =3D -1;
- +		goto out_finalize;
- +	}
- +
- +	lock_page(dpage);
- +	pvt =3D spage->zone_device_data;
- +	pfn =3D page_to_pfn(dpage);
- +
- +	/*
- +	 * This function is used in two cases:
- +	 * - When HV touches a secure page, for which we do UV_PAGE_OUT
- +	 * - When a secure page is converted to shared page, we *get*
- +	 *   the page to essentially unmap the device page. In this
- +	 *   case we skip page-out.
- +	 */
- +	if (!pvt->skip_page_out)
- +		ret =3D uv_page_out(kvm->arch.lpid, pfn << page_shift,
- +				  gpa, 0, page_shift);
- +
- +	if (ret =3D=3D U_SUCCESS)
- +		*mig.dst =3D migrate_pfn(pfn) | MIGRATE_PFN_LOCKED;
- +	else {
- +		unlock_page(dpage);
- +		__free_page(dpage);
- +		goto out_finalize;
- +	}
- +
- +	migrate_vma_pages(&mig);
- +
- +out_finalize:
- +	migrate_vma_finalize(&mig);
- +	return ret;
- +}
- +
- +static inline int kvmppc_svm_page_out(struct vm_area_struct *vma,
- +				      unsigned long start, unsigned long end,
- +				      unsigned long page_shift,
- +				      struct kvm *kvm, unsigned long gpa)
- +{
- +	int ret;
- +
- +	mutex_lock(&kvm->arch.uvmem_lock);
- +	ret =3D __kvmppc_svm_page_out(vma, start, end, page_shift, kvm, gpa);
- +	mutex_unlock(&kvm->arch.uvmem_lock);
- +
- +	return ret;
-  }
- =20
-  /*
-@@@ -744,7 -400,20 +745,8 @@@ static int kvmppc_svm_page_in(struct vm
-  	mig.end =3D end;
-  	mig.src =3D &src_pfn;
-  	mig.dst =3D &dst_pfn;
-+ 	mig.flags =3D MIGRATE_VMA_SELECT_SYSTEM;
- =20
- -	/*
- -	 * We come here with mmap_lock write lock held just for
- -	 * ksm_madvise(), otherwise we only need read mmap_lock.
- -	 * Hence downgrade to read lock once ksm_madvise() is done.
- -	 */
- -	ret =3D ksm_madvise(vma, vma->vm_start, vma->vm_end,
- -			  MADV_UNMERGEABLE, &vma->vm_flags);
- -	mmap_write_downgrade(kvm->mm);
- -	*downgrade =3D true;
- -	if (ret)
- -		return ret;
- -
-  	ret =3D migrate_vma_setup(&mig);
-  	if (ret)
-  		return ret;
-
---Sig_/Sh6n5Ee=hdUmtBiCx7Gq.4c
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8ij9oACgkQAVBC80lX
-0GyQLggAmAXT7Bju9ZOstw/WR0iH/VWo0qztW0APbit6+jkygmgkSQfo5/oL3RfL
-Jf/f/84UuFDmjZpz32RMdVg+L8L6YuSZBFOkffVesNXUSbdbhYBotowr/bTohFb1
-HnADYODJSWIwgh+ncK76XfFpO8qHPkIDVCjwkz5sPWS9ckQ6UWA+UzkFIWZ8THZ4
-4ymXJcJ8lwpsH/O0HkR3pFqMSm53Zdn4SMPRDBthguZMFc0i6X7EaK0HaAVTEdNQ
-P/v2YnMmKgJUekVpjKUuIYTMaIi/pSztQRcOvibFyxicGr97PCrelYrd3rJjK7cg
-JJRvLe9ctzdmxSLbalwuN/uL3xKbzg==
-=eSND
------END PGP SIGNATURE-----
-
---Sig_/Sh6n5Ee=hdUmtBiCx7Gq.4c--
+> >  	err = PTR_ERR_OR_ZERO(vibrator->vcc);
+> >  	if (err) {
+> >  		if (err != -EPROBE_DEFER)
+> > @@ -121,7 +121,8 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
+> >  		return err;
+> >  	}
+> >  
+> > -	vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
+> > +	vibrator->gpio = devm_gpiod_get_optional(&pdev->dev, "enable",
+> > +						 GPIOD_OUT_LOW);
+> >  	err = PTR_ERR_OR_ZERO(vibrator->gpio);
+> >  	if (err) {
+> >  		if (err != -EPROBE_DEFER)
+> > @@ -130,6 +131,11 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
+> >  		return err;
+> >  	}
+> >  
+> > +	if (!vibrator->vcc && !vibrator->gpio) {
+> > +		dev_err(&pdev->dev, "Neither gpio nor regulator provided\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> >  	INIT_WORK(&vibrator->play_work, gpio_vibrator_play_work);
+> >  
+> >  	vibrator->input->name = "gpio-vibrator";
+> > -- 
+> > 2.27.0
+> > 
+> 
+> Thanks.
+> 
+> -- 
+> Dmitry
