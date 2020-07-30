@@ -2,113 +2,96 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA48BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16506C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86C0F2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:12:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SUsyqZ5T"
+	by mail.kernel.org (Postfix) with ESMTP id E7409208A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:14:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730083AbgG3RM4 (ORCPT
+        id S1730090AbgG3ROC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 13:12:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52190 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgG3RM4 (ORCPT
+        Thu, 30 Jul 2020 13:14:02 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57778 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbgG3ROC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 13:12:56 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC265C061574;
-        Thu, 30 Jul 2020 10:12:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=yjv0qNLm+lh+U52VJLFTPHJUojr12CTvEdgvoHMSK8A=; b=SUsyqZ5TDwmOvVovpFJHoGld5+
-        6cxWk+nKGHtbgsthDqI48NDebsjN8RYxBL5+rB3uCGeHxLtFrVLHix1PeWuKoOT10NcVoRgcSlu/H
-        ppIeOOGi38jC8dp/6X8/GaECmzgKDIo44rjF7JYNoStFla8H5Zbb1U2kySdrX4PTAsEVPJke+cxLA
-        /0jTur5mAGKIFFSBsiWG5eMGSfjFCoArLXFFK5Q9JPnhknaeDhHU4D4zj1Z5jYkG8nN9+1ecx7i7h
-        S3y2ysfFgNV61t1dWK8BwN04dsQ8S17fOM//Q6TGv0wHcpzKy7wPiEzI7Mpe290LjWml4SFoSXnTq
-        MvtQakbA==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k1C6t-00052u-78; Thu, 30 Jul 2020 17:12:51 +0000
-Date:   Thu, 30 Jul 2020 18:12:51 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Steven Sistare <steven.sistare@oracle.com>
-Cc:     Anthony Yznaga <anthony.yznaga@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
-        arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
-        gerg@linux-m68k.org, ktkhai@virtuozzo.com,
-        christian.brauner@ubuntu.com, peterz@infradead.org,
-        esyr@redhat.com, jgg@ziepe.ca, christian@kellner.me,
-        areber@redhat.com, cyphar@cyphar.com
-Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
-Message-ID: <20200730171251.GI23808@casper.infradead.org>
-References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
- <20200730152250.GG23808@casper.infradead.org>
- <db3bdbae-eb0f-1ae3-94dd-045e37bc94ba@oracle.com>
+        Thu, 30 Jul 2020 13:14:02 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 49F018001304;
+        Thu, 30 Jul 2020 17:14:00 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id nLP0o5s0y3oP; Thu, 30 Jul 2020 20:13:58 +0300 (MSK)
+Date:   Thu, 30 Jul 2020 20:13:58 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Rob Herring <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/5] dmaengine: dw: Activate FIFO-mode for memory
+ peripherals only
+Message-ID: <20200730171358.7yxnqavmszahlzfr@mobilestation>
+References: <20200730154545.3965-1-Sergey.Semin@baikalelectronics.ru>
+ <20200730154545.3965-3-Sergey.Semin@baikalelectronics.ru>
+ <20200730162428.GU3703480@smile.fi.intel.com>
+ <20200730163154.qqrlas4zrybvocno@mobilestation>
+ <20200730164703.GY3703480@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <db3bdbae-eb0f-1ae3-94dd-045e37bc94ba@oracle.com>
+In-Reply-To: <20200730164703.GY3703480@smile.fi.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 11:59:42AM -0400, Steven Sistare wrote:
-> On 7/30/2020 11:22 AM, Matthew Wilcox wrote:
-> > On Mon, Jul 27, 2020 at 10:11:22AM -0700, Anthony Yznaga wrote:
-> >> This patchset adds support for preserving an anonymous memory range across
-> >> exec(3) using a new madvise MADV_DOEXEC argument.  The primary benefit for
-> >> sharing memory in this manner, as opposed to re-attaching to a named shared
-> >> memory segment, is to ensure it is mapped at the same virtual address in
-> >> the new process as it was in the old one.  An intended use for this is to
-> >> preserve guest memory for guests using vfio while qemu exec's an updated
-> >> version of itself.  By ensuring the memory is preserved at a fixed address,
-> >> vfio mappings and their associated kernel data structures can remain valid.
-> >> In addition, for the qemu use case, qemu instances that back guest RAM with
-> >> anonymous memory can be updated.
-> > 
-> > I just realised that something else I'm working on might be a suitable
-> > alternative to this.  Apologies for not realising it sooner.
-> > 
-> > http://www.wil.cx/~willy/linux/sileby.html
-> > 
-> > To use this, you'd mshare() the anonymous memory range, essentially
-> > detaching the VMA from the current process's mm_struct and reparenting
-> > it to this new mm_struct, which has an fd referencing it.
-> > 
-> > Then you call exec(), and the exec'ed task gets to call mmap() on that
-> > new fd to attach the memory range to its own address space.
-> > 
-> > Presto!
+On Thu, Jul 30, 2020 at 07:47:03PM +0300, Andy Shevchenko wrote:
+> On Thu, Jul 30, 2020 at 07:31:54PM +0300, Serge Semin wrote:
+> > On Thu, Jul 30, 2020 at 07:24:28PM +0300, Andy Shevchenko wrote:
+> > > On Thu, Jul 30, 2020 at 06:45:42PM +0300, Serge Semin wrote:
 > 
-> To be suitable for the qemu use case, we need a guarantee that the same VA range
-> is available in the new process, with nothing else mapped there.  From your spec,
-> it sounds like the new process could do a series of unrelated mmap's which could
-> overlap the desired va range before the silby mmap(fd) is performed??
+> ...
+> 
+> > > > Thanks to the commit ???????????? ("dmaengine: dw: Initialize channel
+> 
+> ...
+> 
+> > > > Note the DMA-engine repository git.infradead.org/users/vkoul/slave-dma.git
+> > > > isn't accessible. So I couldn't find out the Andy' commit hash to use it in
+> > > > the log.
+> > 
+> > > It's dmaengine.git on git.kernel.org.
+> > 
+> > Ah, thanks! I've just found out that the repo address has been changed. But I've
+> > also scanned the "next" branch of the repo:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git
+> > 
+> > Your commit isn't there. Am I missing something?
+> 
 
-That could happen.  eg libc might get its text segment mapped there
-randomly.  I believe Khalid was working on a solution for reserving
-memory ranges.
+> It's a fix. It went to upstream branch (don't remember its name by heart in
+> Vinod's repo).
 
-> Also, we need to support updating legacy processes that already created anon segments.
-> We inject code that calls MADV_DOEXEC for such segments.
+Right. Found it. Thanks.
 
-Yes, I was assuming you'd inject code that called mshare().
+-Sergey
 
-Actually, since you're injecting code, why do you need the kernel to
-be involved?  You can mmap the new executable and any libraries it depends
-upon, set up a new stack and jump to the main() entry point, all without
-calling exec().  I appreciate it'd be a fair amount of code, but it'd all
-be in userspace and you can probably steal / reuse code from ld.so (I'm
-not familiar with the details of how setting up an executable is done).
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
