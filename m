@@ -2,153 +2,113 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34296C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA48BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9362082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86C0F2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:12:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SUsyqZ5T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729843AbgG3RMA (ORCPT
+        id S1730083AbgG3RM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 13:12:00 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57750 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726581AbgG3RL7 (ORCPT
+        Thu, 30 Jul 2020 13:12:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52190 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbgG3RM4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 13:11:59 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 5282C803202F;
-        Thu, 30 Jul 2020 17:11:57 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id AIqB7a2FtJ5j; Thu, 30 Jul 2020 20:11:56 +0300 (MSK)
-Date:   Thu, 30 Jul 2020 20:11:55 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 5/5] dmaengine: dw: Add DMA-channels mask cell support
-Message-ID: <20200730171155.rywxoibglse2pc3h@mobilestation>
-References: <20200730154545.3965-1-Sergey.Semin@baikalelectronics.ru>
- <20200730154545.3965-6-Sergey.Semin@baikalelectronics.ru>
- <20200730164146.GX3703480@smile.fi.intel.com>
+        Thu, 30 Jul 2020 13:12:56 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC265C061574;
+        Thu, 30 Jul 2020 10:12:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=yjv0qNLm+lh+U52VJLFTPHJUojr12CTvEdgvoHMSK8A=; b=SUsyqZ5TDwmOvVovpFJHoGld5+
+        6cxWk+nKGHtbgsthDqI48NDebsjN8RYxBL5+rB3uCGeHxLtFrVLHix1PeWuKoOT10NcVoRgcSlu/H
+        ppIeOOGi38jC8dp/6X8/GaECmzgKDIo44rjF7JYNoStFla8H5Zbb1U2kySdrX4PTAsEVPJke+cxLA
+        /0jTur5mAGKIFFSBsiWG5eMGSfjFCoArLXFFK5Q9JPnhknaeDhHU4D4zj1Z5jYkG8nN9+1ecx7i7h
+        S3y2ysfFgNV61t1dWK8BwN04dsQ8S17fOM//Q6TGv0wHcpzKy7wPiEzI7Mpe290LjWml4SFoSXnTq
+        MvtQakbA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k1C6t-00052u-78; Thu, 30 Jul 2020 17:12:51 +0000
+Date:   Thu, 30 Jul 2020 18:12:51 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Steven Sistare <steven.sistare@oracle.com>
+Cc:     Anthony Yznaga <anthony.yznaga@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
+        arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
+        gerg@linux-m68k.org, ktkhai@virtuozzo.com,
+        christian.brauner@ubuntu.com, peterz@infradead.org,
+        esyr@redhat.com, jgg@ziepe.ca, christian@kellner.me,
+        areber@redhat.com, cyphar@cyphar.com
+Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
+Message-ID: <20200730171251.GI23808@casper.infradead.org>
+References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
+ <20200730152250.GG23808@casper.infradead.org>
+ <db3bdbae-eb0f-1ae3-94dd-045e37bc94ba@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200730164146.GX3703480@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <db3bdbae-eb0f-1ae3-94dd-045e37bc94ba@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 07:41:46PM +0300, Andy Shevchenko wrote:
-> On Thu, Jul 30, 2020 at 06:45:45PM +0300, Serge Semin wrote:
-> > DW DMA IP-core provides a way to synthesize the DMA controller with
-> > channels having different parameters like maximum burst-length,
-> > multi-block support, maximum data width, etc. Those parameters both
-> > explicitly and implicitly affect the channels performance. Since DMA slave
-> > devices might be very demanding to the DMA performance, let's provide a
-> > functionality for the slaves to be assigned with DW DMA channels, which
-> > performance according to the platform engineer fulfill their requirements.
-> > After this patch is applied it can be done by passing the mask of suitable
-> > DMA-channels either directly in the dw_dma_slave structure instance or as
-> > a fifth cell of the DMA DT-property. If mask is zero or not provided, then
-> > there is no limitation on the channels allocation.
+On Thu, Jul 30, 2020 at 11:59:42AM -0400, Steven Sistare wrote:
+> On 7/30/2020 11:22 AM, Matthew Wilcox wrote:
+> > On Mon, Jul 27, 2020 at 10:11:22AM -0700, Anthony Yznaga wrote:
+> >> This patchset adds support for preserving an anonymous memory range across
+> >> exec(3) using a new madvise MADV_DOEXEC argument.  The primary benefit for
+> >> sharing memory in this manner, as opposed to re-attaching to a named shared
+> >> memory segment, is to ensure it is mapped at the same virtual address in
+> >> the new process as it was in the old one.  An intended use for this is to
+> >> preserve guest memory for guests using vfio while qemu exec's an updated
+> >> version of itself.  By ensuring the memory is preserved at a fixed address,
+> >> vfio mappings and their associated kernel data structures can remain valid.
+> >> In addition, for the qemu use case, qemu instances that back guest RAM with
+> >> anonymous memory can be updated.
 > > 
-> > For instance Baikal-T1 SoC is equipped with a DW DMAC engine, which first
-> > two channels are synthesized with max burst length of 16, while the rest
-> > of the channels have been created with max-burst-len=4. It would seem that
-> > the first two channels must be faster than the others and should be more
-> > preferable for the time-critical DMA slave devices. In practice it turned
-> > out that the situation is quite the opposite. The channels with
-> > max-burst-len=4 demonstrated a better performance than the channels with
-> > max-burst-len=16 even when they both had been initialized with the same
-> > settings. The performance drop of the first two DMA-channels made them
-> > unsuitable for the DW APB SSI slave device. No matter what settings they
-> > are configured with, full-duplex SPI transfers occasionally experience the
-> > Rx FIFO overflow. It means that the DMA-engine doesn't keep up with
-> > incoming data pace even though the SPI-bus is enabled with speed of 25MHz
-> > while the DW DMA controller is clocked with 50MHz signal. There is no such
-> > problem has been noticed for the channels synthesized with
-> > max-burst-len=4.
+> > I just realised that something else I'm working on might be a suitable
+> > alternative to this.  Apologies for not realising it sooner.
+> > 
+> > http://www.wil.cx/~willy/linux/sileby.html
+> > 
+> > To use this, you'd mshare() the anonymous memory range, essentially
+> > detaching the VMA from the current process's mm_struct and reparenting
+> > it to this new mm_struct, which has an fd referencing it.
+> > 
+> > Then you call exec(), and the exec'ed task gets to call mmap() on that
+> > new fd to attach the memory range to its own address space.
+> > 
+> > Presto!
 > 
-> ...
-> 
+> To be suitable for the qemu use case, we need a guarantee that the same VA range
+> is available in the new process, with nothing else mapped there.  From your spec,
+> it sounds like the new process could do a series of unrelated mmap's which could
+> overlap the desired va range before the silby mmap(fd) is performed??
 
-> > +	if (dws->channels && !(dws->channels & dwc->mask))
-> 
-> You can drop the first check if...
+That could happen.  eg libc might get its text segment mapped there
+randomly.  I believe Khalid was working on a solution for reserving
+memory ranges.
 
-See below.
+> Also, we need to support updating legacy processes that already created anon segments.
+> We inject code that calls MADV_DOEXEC for such segments.
 
-> 
-> > +		return false;
-> 
-> ...
-> 
-> > +	if (dma_spec->args_count >= 4)
-> > +		slave.channels = dma_spec->args[3];
-> 
-> ...you apply sane default here or somewhere else.
+Yes, I was assuming you'd inject code that called mshare().
 
-Alas I can't because dw_dma_slave structure is defined all over the kernel
-drivers/spi/spi-dw-dma.c
-drivers/spi/spi-pxa2xx-pci.c
-drivers/tty/serial/8250/8250_lpss.c
-
-These devices aren't always placed on the OF-based platforms. In that case the
-corresponding DMA-channels won't be requested by means of the dw_dma_of_xlate()
-method. So we have to preserve a default behavior if dws->channels is zero.
-
-> 
-> ...
-> 
-> > +		    fls(slave.channels) > dw->pdata->nr_channels))
-> 
-
-> Does it really make sense?
-
-It does to prevent the clients to specify an invalid channels mask, which can't
-have bits set higher than the number of channels the engine supports.
-
-> 
-> I think it can also be simplified to faster op, i.e.
-> 	BIT(nr_channels) < slave.channels
-> (but check for off-by-one errors)
-
-Makes sense. Thanks. I'll replace it with the next statement:
-slave.channels >= BIT(dw->pdata->nr_channels)
-
-> 
-> ...
-> 
-
-> > + * @channels:	mask of the channels permitted for allocation (zero
-> > + *		value means any)
-> 
-> Perhaps on one line?
-
-I don't really care. If you insist on that, I'll make it a single line, but it
-will be over 80 columns. 85 to be exact.
-
--Sergey
-
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+Actually, since you're injecting code, why do you need the kernel to
+be involved?  You can mmap the new executable and any libraries it depends
+upon, set up a new stack and jump to the main() entry point, all without
+calling exec().  I appreciate it'd be a fair amount of code, but it'd all
+be in userspace and you can probably steal / reuse code from ld.so (I'm
+not familiar with the details of how setting up an executable is done).
