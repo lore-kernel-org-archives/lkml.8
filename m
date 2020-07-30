@@ -2,136 +2,100 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F51FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 169E9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3854C2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA1C62083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:54:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dMGBNNhe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728596AbgG3Fx0 (ORCPT
+        id S1728612AbgG3Fy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 01:53:26 -0400
-Received: from mga18.intel.com ([134.134.136.126]:41627 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725892AbgG3FxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 01:53:24 -0400
-IronPort-SDR: AHeDwTAylFJsiyGxNYgwM3lvi/vglBwtyk7bIZVb7APewc4y8c3eq1LHboksAPOhV30nTJ1bjk
- tB9kAtsbRBFg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="139077538"
-X-IronPort-AV: E=Sophos;i="5.75,413,1589266800"; 
-   d="scan'208";a="139077538"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 22:53:23 -0700
-IronPort-SDR: PRC3j8OG+6j/rSu44XNIo0mtp1yNF+6pddSgd4gjyjX5CMceKE9CKxhJAI1YDXcSOmYXOH6B8y
- u/L4/uY8QRZg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,413,1589266800"; 
-   d="scan'208";a="330637364"
-Received: from lkp-server01.sh.intel.com (HELO aff35d61a1e5) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 29 Jul 2020 22:53:22 -0700
-Received: from kbuild by aff35d61a1e5 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k11VJ-00006S-UA; Thu, 30 Jul 2020 05:53:21 +0000
-Date:   Thu, 30 Jul 2020 13:53:00 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:WIP.x86/kaslr] BUILD SUCCESS
- 4b23103abfba11df3daf26ca006489a467da5b65
-Message-ID: <5f22603c.vUV8r+MXmRJx49Zd%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Thu, 30 Jul 2020 01:54:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbgG3Fy5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 01:54:57 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31A48C061794;
+        Wed, 29 Jul 2020 22:54:57 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id w2so15907542pgg.10;
+        Wed, 29 Jul 2020 22:54:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=E2EytgWa9qS3s3TGjba78LOYjqPjnfrso56HtBNJ3vs=;
+        b=dMGBNNheZT94oRg069QeKz0G83l/o/KAqpKdDXLqbA/25gDCJwUPmLDp0gJug7n2oB
+         Cs+Sv6DDRNPNcByfncSp6OXBJDlg+q8XLJgLltBfADo31Bx3p2+KeC4mJMgkDbtW/MgU
+         dBf6e8JdSo1ZE7peNriXIFno4LJlbTTaY+4EJusw0mWsLXZBS4RRN8Zzc2t2D7PBPhsX
+         wwIyhlPhd9GuJoZ81XwQQ2mB0aUcbdu7L1S5I1qGe2H29+TQ+sNGEw5NUu+yNPhRuOfM
+         1QF+eZyVct01KIQToQrSqXSMkp7A6YMTyCLkEe58EGNpJRbT7KTTk9M7clk22yNuz0fo
+         J3Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=E2EytgWa9qS3s3TGjba78LOYjqPjnfrso56HtBNJ3vs=;
+        b=X0TvukvM0CvdPAJ4kyJdnyE1Vxjtlq42mUtfnlSyQKmQopDjUYucpn74Tj1AnwVaHL
+         /78zsx1HLrSg/YttrAY26wQqZOyIbXSJ/3eCSuXXaKR/soo+Sj4fwEGr3hM+AqdyAC6l
+         irwNnyxXvBFR72L5C+2g1NAJkYMWD6+F9l8S58aUUBkNVgKfk87yLf+P6WVxaZxDidTr
+         bpxu3N1pINrt78OPsP+vfrNmzlzJKWBebShipyRy66ZVcPSSAZgB7R5C/eyfuzF0/mjn
+         mmm1wWGtmfUdxF6DVouIN4xMOrduHI3+LVG2QWs0WoNSnNzJOQ4vXjA6Bqd92KQUlpzq
+         y9BA==
+X-Gm-Message-State: AOAM533AZGtjyQSd/4iVvvXCsIzSlvaWv0JlP1zb26YED2H124TywCJ5
+        AeP6h3fvVnGAn7AdEbRPSW0mQGCPIAI=
+X-Google-Smtp-Source: ABdhPJy254U51wdr6zJE2fW77WYleMshzMMhW/c8Tk9JqOI24a32XSE9O0QVy3cKHoNgwpWQXwS0KA==
+X-Received: by 2002:a63:c049:: with SMTP id z9mr31858702pgi.353.1596088496550;
+        Wed, 29 Jul 2020 22:54:56 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id f73sm3143925pfa.19.2020.07.29.22.54.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 22:54:55 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 22:54:53 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Jiada Wang <jiada_wang@mentor.com>
+Cc:     nick@shmanahar.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, erosca@de.adit-jv.com,
+        Andrew_Gabbasov@mentor.com, digetx@gmail.com
+Subject: Re: [PATCH 1/1] Input: atmel_mxt_ts: split large i2c transfers into
+ blocks
+Message-ID: <20200730055453.GC1665100@dtor-ws>
+References: <20200729092252.6394-1-jiada_wang@mentor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200729092252.6394-1-jiada_wang@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  WIP.x86/kaslr
-branch HEAD: 4b23103abfba11df3daf26ca006489a467da5b65  x86/kaslr: Add a check that the random address is in range
+Hi Jiada,
 
-elapsed time: 720m
+On Wed, Jul 29, 2020 at 06:22:52PM +0900, Jiada Wang wrote:
+> From: Jiada wang <jiada_wang@mentor.com>
+> 
+> Some I2C controllers constrain maximum transferred data in an I2C
+> transaction by set max_[read|write]_len of i2c_adapter_quirk.
+> Large i2c transfer transaction beyond this limitation may fail to complete,
+> cause I2C controller driver aborts the transaction and returns failure.
+> 
+> Therefore this patch was created to split large i2c transaction into
+> smaller chunks which can complete within max_[read|write]_len defined
+> by I2C controller driver.
 
-configs tested: 66
-configs skipped: 46
+Can we consider implementing this chunking logic in i2c core? Otherwise
+we will need to adjust pretty much every driver to do this.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thanks.
 
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-i386                             allyesconfig
-i386                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a004-20200729
-x86_64               randconfig-a005-20200729
-x86_64               randconfig-a002-20200729
-x86_64               randconfig-a006-20200729
-x86_64               randconfig-a003-20200729
-x86_64               randconfig-a001-20200729
-i386                 randconfig-a003-20200729
-i386                 randconfig-a004-20200729
-i386                 randconfig-a005-20200729
-i386                 randconfig-a002-20200729
-i386                 randconfig-a006-20200729
-i386                 randconfig-a001-20200729
-i386                 randconfig-a016-20200729
-i386                 randconfig-a012-20200729
-i386                 randconfig-a013-20200729
-i386                 randconfig-a014-20200729
-i386                 randconfig-a011-20200729
-i386                 randconfig-a015-20200729
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+-- 
+Dmitry
