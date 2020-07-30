@@ -2,160 +2,161 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAFCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67039C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 261F82083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:13:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596132800;
-	bh=vIJFWrnXpMFHH8EimughuB8y+lmfzGjAgR03PPlEdOk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pPGufETxErE/fSMogx88tVlUqQVHGUl/8ASt/mD+uv95ieFpjRBFAj1uMih+wWJlH
-	 b6f7fp15Y7DXPFGOVLbIXbTDekWpjEpXUw45GPGxUrB+5+/N839zpd4YChHfg4D7+V
-	 69UTHAhdmGX9s27et+5WyAyI+KdrWZMBUSDX5aHo=
+	by mail.kernel.org (Postfix) with ESMTP id 49EA820829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:13:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="KhHHz4Bv";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="e4CnuqOS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbgG3SNS (ORCPT
+        id S1728563AbgG3SNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 14:13:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726343AbgG3SNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 14:13:18 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5C6D20829;
-        Thu, 30 Jul 2020 18:13:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596132797;
-        bh=vIJFWrnXpMFHH8EimughuB8y+lmfzGjAgR03PPlEdOk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qEBcihMz9YjzJB2lwWShh3zEfgGGSl291HW4Zvh8Bc18dbNAvzbYgPG/tHuiihSBU
-         jjyvar5wpDBOzT+X6soS9Ny2YyOBoVvbauv+mEFSwlpyjzsq/Si73sVCsUvBl3ZzTG
-         rGdennpMtSdGeT66ngzeEAffDlKV9bHKCyxk6RyY=
-Date:   Thu, 30 Jul 2020 19:12:57 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>, zhangn1985@outlook.com,
-        Stephan Gerhold <stephan@gerhold.net>
-Subject: Re: [PATCH] ASoC: core: restore dpcm flags semantics
-Message-ID: <20200730181257.GF5055@sirena.org.uk>
-References: <20200723180533.220312-1-pierre-louis.bossart@linux.intel.com>
- <20200729154639.1983854-1-jbrunet@baylibre.com>
- <2ad13f95-434d-376a-bc38-b209623b461e@linux.intel.com>
- <1jft998jbe.fsf@starbuckisacylon.baylibre.com>
+        Thu, 30 Jul 2020 14:13:55 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:14916 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726343AbgG3SNy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 14:13:54 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06UIDFX4012232;
+        Thu, 30 Jul 2020 11:13:18 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=iRcJYr1zkhzCasQJtaVqUCELqv9qKbYKnGu+XXFDQMc=;
+ b=KhHHz4BvIOZN+7DJqnc4LFYaZ+OANp1laZb6mdVOXop4pt5EUTHHECrYqkBVpYXyFpaA
+ O9GNw1byE+EwHanJQOTrdYpjf3/khp1pd4IhPmrvrC+8+Tbuz+amL39U9hSiE/iH8cPE
+ LWhPv3ug8JydWfuJAKKyz0liBD8vq5bLsK0= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 32k7hw7dgs-4
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 30 Jul 2020 11:13:18 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 30 Jul 2020 11:12:48 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B9GpUeBxfA1xnW5rIRgwipNoZTRS7gOAkccq+4BEnMt3FMD84qCwMr1IPZletOD1iiowbWg9gqku7gqpB0yZmW4zGHR1UH6nWdJoGfaRO0leyuZVZwAt/7uVQmBdQCQE/tz9cEs41tnXME6z/7yrqKf/07f1A2ixRhgPsPBYTUHb8O4e1iWd59mcTozXaejCcvQDMwrPoNmjLGDaVWz/X2HbaiuDW3atpwgaDUb0+A5OT6Rl32MiUBB2IpyHDlVjy3JTuvOjwm8/9JnWI4GcMhuLq5LArC3SLHEW83VjPAh/0gyuAlNoAYxnx9nUemrdzZ9ThhFNQBO/S8sdr/nMOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iRcJYr1zkhzCasQJtaVqUCELqv9qKbYKnGu+XXFDQMc=;
+ b=PK2rYNO3ATm442RFu3PhLpY16o9R9g/csSZrJTJWq8Tx1f6SJZdqg5QVhKArph+Dey1v3khqjEDsdRWRZcqY3ug9oMKfu7uSiFC9aEcpGgcLMSZL27X+SVD/t9A4Ula15h5icHuWE8zHGtbtsRnD1WdsZZEo+YXzxeKXeuZGxG0NKpBNgPPCxkRn9qeG1kUluOgFjPABDp1oeKVKdhNcZtsy0a1VHfb22llY+lEsT2GZW4fuAKK35mtCSexL6DY6Psl0UAOLR5A4wp44HjUyDJtmfTWPVYkDSswIe39VPkuwdRbZSe/EpJo+FOi8RTYYWRYXFP8zfvTzXAPwpExefg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iRcJYr1zkhzCasQJtaVqUCELqv9qKbYKnGu+XXFDQMc=;
+ b=e4CnuqOSnd5XV0Px6cfZ3pxI2Lyg86M0L9YE/6ck3dVdzGp15kH3NqTSH93qyDtYEZCPhIwXZzPjAg3005P0BA5OR99HSJxC/OWY8ie22csmGyYyfRnrDcPv1HjldcAbjWSeER6Fs2/7KyPMPagWY30RHGDkwphgoBlR4Xgs47c=
+Received: from BY5PR15MB3667.namprd15.prod.outlook.com (2603:10b6:a03:1f9::18)
+ by BY5PR15MB3571.namprd15.prod.outlook.com (2603:10b6:a03:1f6::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Thu, 30 Jul
+ 2020 18:12:45 +0000
+Received: from BY5PR15MB3667.namprd15.prod.outlook.com
+ ([fe80::f4b9:8011:9aaa:e4ea]) by BY5PR15MB3667.namprd15.prod.outlook.com
+ ([fe80::f4b9:8011:9aaa:e4ea%3]) with mapi id 15.20.3216.034; Thu, 30 Jul 2020
+ 18:12:45 +0000
+From:   Nick Terrell <terrelln@fb.com>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+CC:     Nick Terrell <nickrterrell@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Chris Mason <clm@fb.com>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>,
+        "Michael van der Westhuizen" <rmikey@fb.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "Patrick Williams" <patrick@stwcx.xyz>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        "Norbert Lange" <nolange79@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Alex Xu" <alex_y_xu@yahoo.ca>
+Subject: Re: [PATCH v9 6/7] x86: Add support for ZSTD compressed kernel
+Thread-Topic: [PATCH v9 6/7] x86: Add support for ZSTD compressed kernel
+Thread-Index: AQHWZGtJP6i+3aGT+0aLlu4R7hiSkqkcQ4EAgAQtswA=
+Date:   Thu, 30 Jul 2020 18:12:44 +0000
+Message-ID: <8CDBA7E1-B456-439B-86F7-363EFDF127F2@fb.com>
+References: <20200727230606.906598-1-nickrterrell@gmail.com>
+ <20200727230606.906598-7-nickrterrell@gmail.com>
+ <20200728022408.GA3553606@rani.riverdale.lan>
+In-Reply-To: <20200728022408.GA3553606@rani.riverdale.lan>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: alum.mit.edu; dkim=none (message not signed)
+ header.d=none;alum.mit.edu; dmarc=none action=none header.from=fb.com;
+x-originating-ip: [2620:10d:c090:400::5:aaef]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c15e8e21-3a10-4162-c14c-08d834b428a2
+x-ms-traffictypediagnostic: BY5PR15MB3571:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR15MB35712B71DC64303C586167ADAB710@BY5PR15MB3571.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:989;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tXrTLiIREdd1j9/xk3p1whKJLwDx3sx08JUOi1Xa5BKwQqoiVKiCmK8MNKpyZtbJy2eRfQLMuii/L0Gi8zmuAH1A7fWPAAWPkTqhCQeiysuCkk0pqslm4etbbpUSy0SCjGZMyzzQYesCtpueHCBDNevmeJPUG5ZXHq/xXDle1mxDGo8KAlogAZZyTycJLaLFYgHshkSp5TeAv6qdPZN4FCXEZbc3v+qBlINXjti/is8L2wXft6UGIJxc0kaAvPkQRWTzxnhQdQjw1zkRgnFtSu1VunnE39yhoRSed5+zfm/9vMaB6aGv15wsb/2hJrWT1F54tv+qfp7bQT+j9+0U0g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR15MB3667.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(136003)(39860400002)(396003)(366004)(66946007)(6486002)(478600001)(4326008)(33656002)(2906002)(86362001)(6506007)(6916009)(6512007)(83380400001)(76116006)(53546011)(5660300002)(316002)(8936002)(186003)(8676002)(54906003)(66556008)(71200400001)(2616005)(66446008)(36756003)(64756008)(66476007)(7416002)(4744005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: NzZd6veRbQw/onsDGLbW5UPxtTRjhi29HsaRgxG/YWVz0W32psjJIk4esnXTJOZPCE1UI8N95p9aAWXm2rTNd0Orge50gZh5i39dCKdMYUl34Ilef4KCwXIGX37dqlfP+eWhGhTWHH6XwNhc135kZePybOTdPw7JMQffTq1JFbdKkeHytnR9+QYugHKoDcl0dYOcsKG5nhUsWRwO0vtS2lp/TdfvsstLzCPgwPk0c6pZ5IMzOgswlpAXziv1uPLwHWLfhrbVIzgDuxQRb3+sYAnym0R4iZkUzHFrvJy+g+cM4wFRcjVnguy+UGf8z6Q7pagnC21Jyr9zk1V/+MmHvf/mvSNpPZTDdBbVoE5EyZYWvvP7+LEmpnhDdsA2lfLVOFFw+QRjLht+mBErktwiaalBAp+lKcmVZVtpt3t7VL925G64PaikBZ95JZkjHEZxdFLUPbzvCDd92Us5/mpeCltPhxUdvW5AxmPAArV+4jcemcCMSruhpsHrcea0lfZ7euKmZephchu+pGMImloIS7hPeSukKCY4JqwjWXNzkRDGB951P3HgElEevdIuL+13I5nr/r2edfiVwGF/Z2nnu26UvZ7bCygCUoBkfuIWzRLaolD/Bh5nJmqKVOUmlOMgCJhg8Z5huGlBeGAzz12GTxZiNOyn1+nGr3kTX6SXOGpVtUu/TZ8hkcySGrON0/Cf
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <BDAF2659D000794283223659FF11EB8E@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="udcq9yAoWb9A4FsZ"
-Content-Disposition: inline
-In-Reply-To: <1jft998jbe.fsf@starbuckisacylon.baylibre.com>
-X-Cookie: Alex Haley was adopted!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR15MB3667.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c15e8e21-3a10-4162-c14c-08d834b428a2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2020 18:12:45.2318
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NGuEFetKF5UrG/H0MdhB58EasXyNxA232gad7zrMn1D2BnoM5auY6QGFmA+M3ROK
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR15MB3571
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-30_13:2020-07-30,2020-07-30 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=0
+ priorityscore=1501 mlxlogscore=999 spamscore=0 lowpriorityscore=0
+ malwarescore=0 mlxscore=0 bulkscore=0 phishscore=0 impostorscore=0
+ adultscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007300130
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---udcq9yAoWb9A4FsZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 30, 2020 at 11:04:53AM +0200, Jerome Brunet wrote:
-
-> Carrying redundant information makes things complex and error prone.
-> If you really want to update this, here is another proposition:
->  * Removing snd_soc_dai_link_set_capabilities()
->  * Removing both flags completely
->  * Let ASoC figure out what is needed based on the components present.
-
-My understanding is that that was broadly where we were headed with this
-stuff - snd_soc_dai_link_set_capabilities() is trying to figure things
-out from the components already, it's storing the flags as a cache but
-could be modified so we use it every time we need a value.
-
+> On Jul 27, 2020, at 7:24 PM, Arvind Sankar <nivedita@alum.mit.edu> wrote:
 >=20
-> >
-> >>
-> >> Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> >> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> >> ---
-> >>
-> >>   Hi Mark,
-> >>
-> >>   Because b73287f0b0745 ('ASoC: soc-pcm: dpcm: fix playback/capture ch=
-ecks')
-> >>   introduced more than one problem, the change
-> >>   "ASoC: core: use less strict tests for dailink capabilities" [0] is =
-still
-> >>   necessary but the change of semantic remains a problem with it.
-> >>
-> >>   This patch applies on top of it.
-> >>
-> >>   sound/soc/soc-pcm.c | 14 --------------
-> >>   1 file changed, 14 deletions(-)
-> >>
-> >> diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
-> >> index 00ac1cbf6f88..2e205b738eae 100644
-> >> --- a/sound/soc/soc-pcm.c
-> >> +++ b/sound/soc/soc-pcm.c
-> >> @@ -2749,13 +2749,6 @@ int soc_new_pcm(struct snd_soc_pcm_runtime *rtd=
-, int num)
-> >>   					break;
-> >>   				}
-> >>   			}
-> >> -
-> >> -			if (!playback) {
-> >> -				dev_err(rtd->card->dev,
-> >> -					"No CPU DAIs support playback for stream %s\n",
-> >> -					rtd->dai_link->stream_name);
-> >> -				return -EINVAL;
-> >> -			}
-> >>   		}
-> >>   		if (rtd->dai_link->dpcm_capture) {
-> >>   			stream =3D SNDRV_PCM_STREAM_CAPTURE;
-> >> @@ -2766,13 +2759,6 @@ int soc_new_pcm(struct snd_soc_pcm_runtime *rtd=
-, int num)
-> >>   					break;
-> >>   				}
-> >>   			}
-> >> -
-> >> -			if (!capture) {
-> >> -				dev_err(rtd->card->dev,
-> >> -					"No CPU DAIs support capture for stream %s\n",
-> >> -					rtd->dai_link->stream_name);
-> >> -				return -EINVAL;
-> >> -			}
-> >>   		}
-> >>   	} else {
-> >>   		/* Adapt stream for codec2codec links */
-> >>
->=20
+> On Mon, Jul 27, 2020 at 04:06:05PM -0700, Nick Terrell wrote:
+>> From: Nick Terrell <terrelln@fb.com>
+>>=20
+>> * Define __DISABLE_EXPORTS in misc.c
+> ...
+>> __DISABLE_EXPORTS is defined in misc.c instead of the Makefile because
+>> kaslr.c defines __DISABLE_EXPORTS, and defining it in the Makefile gives
+>> duplicate definition warnings.
+>>=20
+> I think the commit message missed getting updated?
 
---udcq9yAoWb9A4FsZ
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks! Putting up a reworded patch now.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8jDagACgkQJNaLcl1U
-h9AuXgf8C4yoy4FY4cfbvcLUvUftWpBQ68HnBjmmDssWMcnsYPZ7eZAuo12Pivif
-aUOrt8CMxCHQ2wDuoSwzLRNhAIHNUMBwGqLwTiLtT5vivhKDjZjnZqjtkswHWb2T
-fJMyArIjKroVQWjmOkarx4gjKfx5mfv1RZmS3xnNvyD+YVY6AcCaITZuEo7j86td
-QN1iHXQ1TPJI0wcql4Y3PEVkLC0O7F+4pReUCugbsPAfjTPvUc63KMfbtqzpQeov
-WYBOnSzQyhJyeaT7YC9AaiGLgWcHq8o1TrmtQT+DD/qZotxlGOcaxx9GgHdkM3mq
-X1YVKyKa3/VCh1h9xxE1P38ZSeo0qA==
-=y7TQ
------END PGP SIGNATURE-----
-
---udcq9yAoWb9A4FsZ--
