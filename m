@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7C1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87452C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F366520838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5686A20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096637;
-	bh=LOrYVVJL1mqPPdpn8zdfbWNQHqdDvHqgNiXmoQM1rMs=;
+	s=default; t=1596096639;
+	bh=0vct4LVgTM2EVqNhF6kmRL0eBebcTy+NUjzRVoKf/XE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xhiQK4mELORFtyRU328Qpgzy3rUrdcJxHnw8Yovk+shFNSXeDgKxmLEVLoEt3JNgK
-	 6lwmKyYdM1ZM0HuwV7cADyNrTtu+4N1Bj8IH+phcWFtbsrR7/vY76pwV7+rYGfaar1
-	 kW1Y4n6LbajEA8qNmgeHmlsCV89vaH7pxrHH+Ma4=
+	b=DCkud7WPFKUwehu8rR9ngna7E3S207h4ksn11Aw/0Rs6RQkhnU9+kHl+h8nN9VLWo
+	 Rxf/Li1w4dOrz2OgI+mgBOhxDNv3U2ESNglbpW3+TSpOb5ug8ymk7WVk0ZuMoC1qdF
+	 K/A8xWhsqHh+xvDMqvOvPov88QZnAVx5C2V/LZ/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729839AbgG3IKe (ORCPT
+        id S1729847AbgG3IKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:10:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49382 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:10:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729824AbgG3IK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:10:29 -0400
+        id S1729838AbgG3IKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:10:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFC432075F;
-        Thu, 30 Jul 2020 08:10:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDE3820838;
+        Thu, 30 Jul 2020 08:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096628;
-        bh=LOrYVVJL1mqPPdpn8zdfbWNQHqdDvHqgNiXmoQM1rMs=;
+        s=default; t=1596096633;
+        bh=0vct4LVgTM2EVqNhF6kmRL0eBebcTy+NUjzRVoKf/XE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pHOIYrwyjkPOtM3v3vCNHtdxzmMEz1tO4nu8UtUNVKfD3xG+Gv9yD7GRpVLP9c6rN
-         WcXTbWrk7X6epgMOWGkwCe1nJQzKWrUikxcJEzdhyf+0i999FQEra85mOYpO8bVtQ4
-         xNRpLrjuVV1XBVrdrCDft8/kKfQN34TU3iLoQDcA=
+        b=JJjbEPNlEAkmb0lDKptjAAyTmHZo0umLMN51L6BpOtnTuXtDNntJhdC2obOB1oFyC
+         GDs/FRFsug/nUYbUr1NfjztuSjCMZlToZNswYrX81imn8AdmKvVkvaLdmbTziqADDF
+         6d+R2VkWAtLYByxuU+Axzf4hMAv6MCbQc/xsgUFM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Changbin Du <changbin.du@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.9 61/61] perf: Make perf able to build with latest libbfd
-Date:   Thu, 30 Jul 2020 10:05:19 +0200
-Message-Id: <20200730074423.794840006@linuxfoundation.org>
+        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 50/61] net: udp: Fix wrong clean up for IS_UDPLITE macro
+Date:   Thu, 30 Jul 2020 10:05:08 +0200
+Message-Id: <20200730074423.257384372@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074420.811058810@linuxfoundation.org>
 References: <20200730074420.811058810@linuxfoundation.org>
@@ -61,60 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changbin Du <changbin.du@gmail.com>
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-commit 0ada120c883d4f1f6aafd01cf0fbb10d8bbba015 upstream.
+[ Upstream commit b0a422772fec29811e293c7c0e6f991c0fd9241d ]
 
-libbfd has changed the bfd_section_* macros to inline functions
-bfd_section_<field> since 2019-09-18. See below two commits:
-  o http://www.sourceware.org/ml/gdb-cvs/2019-09/msg00064.html
-  o https://www.sourceware.org/ml/gdb-cvs/2019-09/msg00072.html
+We can't use IS_UDPLITE to replace udp_sk->pcflag when UDPLITE_RECV_CC is
+checked.
 
-This fix make perf able to build with both old and new libbfd.
-
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200128152938.31413-1-changbin.du@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: b2bf1e2659b1 ("[UDP]: Clean up for IS_UDPLITE macro")
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/perf/util/srcline.c |   16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ net/ipv4/udp.c |    2 +-
+ net/ipv6/udp.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -86,16 +86,30 @@ static void find_address_in_section(bfd
- 	bfd_vma pc, vma;
- 	bfd_size_type size;
- 	struct a2l_data *a2l = data;
-+	flagword flags;
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -1554,7 +1554,7 @@ int udp_queue_rcv_skb(struct sock *sk, s
+ 	/*
+ 	 * 	UDP-Lite specific tests, ignored on UDP sockets
+ 	 */
+-	if ((is_udplite & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
++	if ((up->pcflag & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
  
- 	if (a2l->found)
- 		return;
+ 		/*
+ 		 * MIB statistics other than incrementing the error count are
+--- a/net/ipv6/udp.c
++++ b/net/ipv6/udp.c
+@@ -601,7 +601,7 @@ int udpv6_queue_rcv_skb(struct sock *sk,
+ 	/*
+ 	 * UDP-Lite specific tests, ignored on UDP sockets (see net/ipv4/udp.c).
+ 	 */
+-	if ((is_udplite & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
++	if ((up->pcflag & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
  
--	if ((bfd_get_section_flags(abfd, section) & SEC_ALLOC) == 0)
-+#ifdef bfd_get_section_flags
-+	flags = bfd_get_section_flags(abfd, section);
-+#else
-+	flags = bfd_section_flags(section);
-+#endif
-+	if ((flags & SEC_ALLOC) == 0)
- 		return;
- 
- 	pc = a2l->addr;
-+#ifdef bfd_get_section_vma
- 	vma = bfd_get_section_vma(abfd, section);
-+#else
-+	vma = bfd_section_vma(section);
-+#endif
-+#ifdef bfd_get_section_size
- 	size = bfd_get_section_size(section);
-+#else
-+	size = bfd_section_size(section);
-+#endif
- 
- 	if (pc < vma || pc >= vma + size)
- 		return;
+ 		if (up->pcrlen == 0) {          /* full coverage was set  */
+ 			net_dbg_ratelimited("UDPLITE6: partial coverage %d while full coverage %d requested\n",
 
 
