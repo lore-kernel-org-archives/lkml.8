@@ -2,53 +2,53 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E77C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF4DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B0842074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97D5120838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:10:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096600;
-	bh=eUhvwrtCzl8ctpxf2MXDDRqpicwqtJPQF+VzXjCcQDo=;
+	s=default; t=1596096605;
+	bh=+U6G1q06ryExgq9ufgnfnJAJRWYBQ9uYTA7+TCtW5WI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D9J+DtIboIn6IdXynOL9Wc9wm5TKFdD0yeIPmPikyX5uAhvKoG9DiHky4ic/Ipaqf
-	 HeFOFw9FIgNmPIgl1ra7/h+LwbOO4hPYu2PhEZuPZxnPl6N4H5Y1YvG3NrnWY0hikH
-	 UOLvE208cRnsfmJIjRzE6mzjhpbG2xSkjAvYUt+k=
+	b=UoGjBbYcl1lPoZ2EtJYi4ZWHL2PSzKhxaK9XXUo9sZB7Gp41EeW2me/5F2zDDeu+9
+	 LZQFQXd8EMn8q4OXrO1Iz4P89oqt3QE3pwDIo62WW5vE6CeCLTYzVCUI++B9V373MC
+	 M/yAveb2z4QBr96NB5jQq0B+RSZ4v0i6ezdcRtYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbgG3IJ6 (ORCPT
+        id S1729777AbgG3IKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:09:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48610 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:10:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729746AbgG3IJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:09:54 -0400
+        id S1729724AbgG3IJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:09:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 550422070B;
-        Thu, 30 Jul 2020 08:09:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB0FD2074B;
+        Thu, 30 Jul 2020 08:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096593;
-        bh=eUhvwrtCzl8ctpxf2MXDDRqpicwqtJPQF+VzXjCcQDo=;
+        s=default; t=1596096596;
+        bh=+U6G1q06ryExgq9ufgnfnJAJRWYBQ9uYTA7+TCtW5WI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b79GmVgGe8oPk/WYRH0QV7xzJNz5eKGk5qn9A2cWHWycEw9Nw5ym+0uFJEYx7RYh9
-         YKgcQzxeq9fihHtTc7oxPPs1Z7G0vH7N3smpTXE7EqU00xgvxW4DRb+7s12XipEkZW
-         /yFi45vbyhMJR2Lk33iwzQSDHsjQ07Dd4BG3JL5w=
+        b=PUko6GZukCdU2sbtbBJPP7Z5jlyT2HZJonGaoiXGmpyIG17r+n7HEIfumPBAFujei
+         sHWBPqBOj+8CEdSsqiRP63xVaHPqxRyenp1gXHG2rR3KcbveNiAx8ruh40VVz6aQU/
+         A5kGdhezOAQ5GR1pndUcIwt+Wuukj6bwSjCtbu3c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+c82752228ed975b0a623@syzkaller.appspotmail.com,
-        Peilin Ye <yepeilin.cs@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 46/61] AX.25: Fix out-of-bounds read in ax25_connect()
-Date:   Thu, 30 Jul 2020 10:05:04 +0200
-Message-Id: <20200730074423.061102178@linuxfoundation.org>
+        stable@vger.kernel.org, Sergey Organov <sorganov@gmail.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 18/61] net: dp83640: fix SIOCSHWTSTAMP to update the struct with actual configuration
+Date:   Thu, 30 Jul 2020 10:04:36 +0200
+Message-Id: <20200730074421.730515015@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074420.811058810@linuxfoundation.org>
 References: <20200730074420.811058810@linuxfoundation.org>
@@ -61,43 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peilin Ye <yepeilin.cs@gmail.com>
+From: Sergey Organov <sorganov@gmail.com>
 
-[ Upstream commit 2f2a7ffad5c6cbf3d438e813cfdc88230e185ba6 ]
+[ Upstream commit 473309fb8372365ad211f425bca760af800e10a7 ]
 
-Checks on `addr_len` and `fsa->fsa_ax25.sax25_ndigis` are insufficient.
-ax25_connect() can go out of bounds when `fsa->fsa_ax25.sax25_ndigis`
-equals to 7 or 8. Fix it.
+>From Documentation/networking/timestamping.txt:
 
-This issue has been reported as a KMSAN uninit-value bug, because in such
-a case, ax25_connect() reaches into the uninitialized portion of the
-`struct sockaddr_storage` statically allocated in __sys_connect().
+  A driver which supports hardware time stamping shall update the
+  struct with the actual, possibly more permissive configuration.
 
-It is safe to remove `fsa->fsa_ax25.sax25_ndigis > AX25_MAX_DIGIS` because
-`addr_len` is guaranteed to be less than or equal to
-`sizeof(struct full_sockaddr_ax25)`.
+Do update the struct passed when we upscale the requested time
+stamping mode.
 
-Reported-by: syzbot+c82752228ed975b0a623@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?id=55ef9d629f3b3d7d70b69558015b63b48d01af66
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: cb646e2b02b2 ("ptp: Added a clock driver for the National Semiconductor PHYTER.")
+Signed-off-by: Sergey Organov <sorganov@gmail.com>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ax25/af_ax25.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/phy/dp83640.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/net/ax25/af_ax25.c
-+++ b/net/ax25/af_ax25.c
-@@ -1191,7 +1191,9 @@ static int __must_check ax25_connect(str
- 	if (addr_len > sizeof(struct sockaddr_ax25) &&
- 	    fsa->fsa_ax25.sax25_ndigis != 0) {
- 		/* Valid number of digipeaters ? */
--		if (fsa->fsa_ax25.sax25_ndigis < 1 || fsa->fsa_ax25.sax25_ndigis > AX25_MAX_DIGIS) {
-+		if (fsa->fsa_ax25.sax25_ndigis < 1 ||
-+		    addr_len < sizeof(struct sockaddr_ax25) +
-+		    sizeof(ax25_address) * fsa->fsa_ax25.sax25_ndigis) {
- 			err = -EINVAL;
- 			goto out_release;
- 		}
+diff --git a/drivers/net/phy/dp83640.c b/drivers/net/phy/dp83640.c
+index 7e94526de51c3..5649cc075ccbb 100644
+--- a/drivers/net/phy/dp83640.c
++++ b/drivers/net/phy/dp83640.c
+@@ -1337,6 +1337,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
+ 		dp83640->hwts_rx_en = 1;
+ 		dp83640->layer = PTP_CLASS_L4;
+ 		dp83640->version = PTP_CLASS_V1;
++		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V1_L4_EVENT;
+ 		break;
+ 	case HWTSTAMP_FILTER_PTP_V2_L4_EVENT:
+ 	case HWTSTAMP_FILTER_PTP_V2_L4_SYNC:
+@@ -1344,6 +1345,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
+ 		dp83640->hwts_rx_en = 1;
+ 		dp83640->layer = PTP_CLASS_L4;
+ 		dp83640->version = PTP_CLASS_V2;
++		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_L4_EVENT;
+ 		break;
+ 	case HWTSTAMP_FILTER_PTP_V2_L2_EVENT:
+ 	case HWTSTAMP_FILTER_PTP_V2_L2_SYNC:
+@@ -1351,6 +1353,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
+ 		dp83640->hwts_rx_en = 1;
+ 		dp83640->layer = PTP_CLASS_L2;
+ 		dp83640->version = PTP_CLASS_V2;
++		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_L2_EVENT;
+ 		break;
+ 	case HWTSTAMP_FILTER_PTP_V2_EVENT:
+ 	case HWTSTAMP_FILTER_PTP_V2_SYNC:
+@@ -1358,6 +1361,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
+ 		dp83640->hwts_rx_en = 1;
+ 		dp83640->layer = PTP_CLASS_L4 | PTP_CLASS_L2;
+ 		dp83640->version = PTP_CLASS_V2;
++		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
+ 		break;
+ 	default:
+ 		return -ERANGE;
+-- 
+2.25.1
+
 
 
