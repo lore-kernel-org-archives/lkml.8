@@ -2,112 +2,224 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BD8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 204CBC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 503002070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 001AC20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:04:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="IFvtypmn"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZiWTUa81"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729656AbgG3PEo (ORCPT
+        id S1729735AbgG3PE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:04:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60666 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgG3PEn (ORCPT
+        Thu, 30 Jul 2020 11:04:57 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:55546 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbgG3PE5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 11:04:43 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DA3CC061574
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 08:04:43 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id g19so16453425ioh.8
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 08:04:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mtebjY7zqQmxK4blDByy24YEZvtg1VgS49VyUH+Bk54=;
-        b=IFvtypmnuy+FD59buzQsBGlluhs8zj+9N6uxiqSJhSFqkPX345o3ct+kJ07I1a7DVd
-         Wt/kT40XJ7NtdugtJzHRfQVLMUZDwf1uEkJiCNYtDezotKmw9o0SmkKDW/E2AWx8AjZR
-         DWmzauCwvh/rwYz/8j3Ab1wGhFxsJPFq6w3oMT7J2rToZzcpQgnQ8Bk4ITuj50sbM8IW
-         JfNI4LaOtAHcJQa1mhod1stjeUVqDNHnHSEXyCP16wRhbo7/JMeli0N9UP2eyqW5QqCG
-         UNl1R7wil5HQ0B6FDhvDk0safChUb76Wl1RcQ3F758MwHtOq6tuuQwAAPRdlYFkJG/bC
-         DMsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mtebjY7zqQmxK4blDByy24YEZvtg1VgS49VyUH+Bk54=;
-        b=HpcoOxsauWpftlWxm5PpoPdnEAYrayHIyNSdV1mg5CiYCJzXqnMuVFsYxcMbCFqFVt
-         4U+DY/g4GKmERfiT+Hpjl+A6oK8tmyIb/54JrpXrlQlM7Mohm2zLVfYSxdoPZttuw6y0
-         goSoLzWTAlU2IGY/3ubXEfzHp+E5+kVJC2Br1O+Am9F0UfOopVn+IwWQTFRZyOnqgi4X
-         HuRMMXPL9aQtLbuoQqyUQuFxhfz8Ji8yT5ZutPuNAvVf2C8gzg7dEzlUfv8ndIRAid7Z
-         1tFlTwu/acmSYK75NaXaudPHmtujPkhhdpUWHzytQk/itR98E6q1rUj2O/Ac04psMOic
-         bU3w==
-X-Gm-Message-State: AOAM532X407iksgqS+xrMyRxCnx2YNCa6ycdRfzCrEJyKkp1COx/bM8m
-        dcAnXQW/zOG3kB0Qn2XHMr/SBw==
-X-Google-Smtp-Source: ABdhPJy/LIN0Vx8knW+VahVygoK4OZBhqppeSDsSWVHJQbR9ICzzGFP97DTzi2tbufdFdL7FrC7MJw==
-X-Received: by 2002:a6b:b682:: with SMTP id g124mr38836585iof.55.1596121482554;
-        Thu, 30 Jul 2020 08:04:42 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id b74sm3199806ilb.64.2020.07.30.08.04.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jul 2020 08:04:42 -0700 (PDT)
-Subject: Re: linux-next: Fixes tag needs some work in the block tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20200730080849.70cfeeb6@canb.auug.org.au>
- <20200730081203.5358cbc3@canb.auug.org.au>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <93067598-8a12-4f98-0c76-3fd1f14cd16e@kernel.dk>
-Date:   Thu, 30 Jul 2020 09:04:41 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 11:04:57 -0400
+Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 30B7220B4908;
+        Thu, 30 Jul 2020 08:04:55 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 30B7220B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1596121495;
+        bh=v31BJTVHyQlJJEfYWsYP9CRDEvk6MrMJ0im0UMs3v4k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZiWTUa81dt9xSPC+YdgQN8JvijlPXWjp4uwiWKdfWq9HFmTkV8T2HAO4JVZhoRVkz
+         I0Tq7LBs9R/IJmOBlWtW0xo48qNtiQhGHuoHQ7pcSVUilytnTLtHw6WiCirwJIRD/A
+         EwdugLBN1P1+CUc6EkG5GcA/dZYlEmNCL/k7lp4E=
+Date:   Thu, 30 Jul 2020 10:04:53 -0500
+From:   Tyler Hicks <tyhicks@linux.microsoft.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     zohar@linux.ibm.com, stephen.smalley.work@gmail.com,
+        casey@schaufler-ca.com, sashal@kernel.org, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/4] IMA: Define IMA hooks to measure LSM state and
+ policy
+Message-ID: <20200730150453.GW4181@sequoia>
+References: <20200730034724.3298-1-nramas@linux.microsoft.com>
+ <20200730034724.3298-3-nramas@linux.microsoft.com>
 MIME-Version: 1.0
-In-Reply-To: <20200730081203.5358cbc3@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730034724.3298-3-nramas@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/20 4:12 PM, Stephen Rothwell wrote:
-> Hi all,
+On 2020-07-29 20:47:22, Lakshmi Ramasubramanian wrote:
+> IMA subsystem needs to define IMA hooks that the security modules can
+> call to measure state and policy data.
 > 
-> [Just adding cc's]
+> Define two new IMA hooks, namely ima_lsm_state() and ima_lsm_policy(),
+> that the security modules can call to measure LSM state and LSM policy
+> respectively. Return the status of the measurement operation from these
+> two IMA hooks.
 > 
-> On Thu, 30 Jul 2020 08:08:49 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->>
->> In commit
->>
->>   64d452b3560b ("nvme-loop: set ctrl state connecting after init")
->>
->> Fixes tag
->>
->>   Fixes: aa63fa6776a7 ("nvme-fabrics: allow to queue requests for live queues")
->>
->> has these problem(s):
->>
->>   - Target SHA1 does not exist
->>
->> I can't easily find what commit is meant :-(
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 
-Yeah, it's obviously garbage, the commit doesn't even exist, let alone the sha.
+Reviewed-by: Tyler Hicks <tyhicks@linux.microsoft.com>
 
-Chaitanya, where's this from??
+Tyler
 
--- 
-Jens Axboe
-
+> ---
+>  include/linux/ima.h               | 14 +++++++++
+>  security/integrity/ima/ima.h      |  6 ++--
+>  security/integrity/ima/ima_main.c | 50 ++++++++++++++++++++++++++-----
+>  3 files changed, 60 insertions(+), 10 deletions(-)
+> 
+> diff --git a/include/linux/ima.h b/include/linux/ima.h
+> index d15100de6cdd..442ca0dce3c8 100644
+> --- a/include/linux/ima.h
+> +++ b/include/linux/ima.h
+> @@ -26,6 +26,10 @@ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
+>  extern void ima_post_path_mknod(struct dentry *dentry);
+>  extern int ima_file_hash(struct file *file, char *buf, size_t buf_size);
+>  extern void ima_kexec_cmdline(int kernel_fd, const void *buf, int size);
+> +extern int ima_measure_lsm_state(const char *lsm_event_name, const void *buf,
+> +				 int size);
+> +extern int ima_measure_lsm_policy(const char *lsm_event_name, const void *buf,
+> +				  int size);
+>  
+>  #ifdef CONFIG_IMA_KEXEC
+>  extern void ima_add_kexec_buffer(struct kimage *image);
+> @@ -104,6 +108,16 @@ static inline int ima_file_hash(struct file *file, char *buf, size_t buf_size)
+>  }
+>  
+>  static inline void ima_kexec_cmdline(int kernel_fd, const void *buf, int size) {}
+> +static inline int ima_measure_lsm_state(const char *lsm_event_name,
+> +					const void *buf, int size)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +static inline int ima_measure_lsm_policy(const char *lsm_event_name,
+> +					 const void *buf, int size)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+>  #endif /* CONFIG_IMA */
+>  
+>  #ifndef CONFIG_IMA_KEXEC
+> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+> index 1b5f4b2f17d0..8ed9f5e1dd40 100644
+> --- a/security/integrity/ima/ima.h
+> +++ b/security/integrity/ima/ima.h
+> @@ -267,9 +267,9 @@ void ima_store_measurement(struct integrity_iint_cache *iint, struct file *file,
+>  			   struct evm_ima_xattr_data *xattr_value,
+>  			   int xattr_len, const struct modsig *modsig, int pcr,
+>  			   struct ima_template_desc *template_desc);
+> -void process_buffer_measurement(struct inode *inode, const void *buf, int size,
+> -				const char *eventname, enum ima_hooks func,
+> -				int pcr, const char *keyring);
+> +int process_buffer_measurement(struct inode *inode, const void *buf, int size,
+> +			       const char *eventname, enum ima_hooks func,
+> +			       int pcr, const char *keyring);
+>  void ima_audit_measurement(struct integrity_iint_cache *iint,
+>  			   const unsigned char *filename);
+>  int ima_alloc_init_template(struct ima_event_data *event_data,
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index 8a91711ca79b..74d421e40c8f 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -736,9 +736,9 @@ int ima_load_data(enum kernel_load_data_id id)
+>   *
+>   * Based on policy, the buffer is measured into the ima log.
+>   */
+> -void process_buffer_measurement(struct inode *inode, const void *buf, int size,
+> -				const char *eventname, enum ima_hooks func,
+> -				int pcr, const char *keyring)
+> +int process_buffer_measurement(struct inode *inode, const void *buf, int size,
+> +			       const char *eventname, enum ima_hooks func,
+> +			       int pcr, const char *keyring)
+>  {
+>  	int ret = 0;
+>  	const char *audit_cause = "ENOMEM";
+> @@ -758,7 +758,7 @@ void process_buffer_measurement(struct inode *inode, const void *buf, int size,
+>  	u32 secid;
+>  
+>  	if (!ima_policy_flag)
+> -		return;
+> +		return 0;
+>  
+>  	/*
+>  	 * Both LSM hooks and auxilary based buffer measurements are
+> @@ -772,7 +772,7 @@ void process_buffer_measurement(struct inode *inode, const void *buf, int size,
+>  		action = ima_get_action(inode, current_cred(), secid, 0, func,
+>  					&pcr, &template, keyring);
+>  		if (!(action & IMA_MEASURE))
+> -			return;
+> +			return 0;
+>  	}
+>  
+>  	if (!pcr)
+> @@ -787,7 +787,7 @@ void process_buffer_measurement(struct inode *inode, const void *buf, int size,
+>  			pr_err("template %s init failed, result: %d\n",
+>  			       (strlen(template->name) ?
+>  				template->name : template->fmt), ret);
+> -			return;
+> +			return ret;
+>  		}
+>  	}
+>  
+> @@ -819,7 +819,7 @@ void process_buffer_measurement(struct inode *inode, const void *buf, int size,
+>  					func_measure_str(func),
+>  					audit_cause, ret, 0, ret);
+>  
+> -	return;
+> +	return ret;
+>  }
+>  
+>  /**
+> @@ -846,6 +846,42 @@ void ima_kexec_cmdline(int kernel_fd, const void *buf, int size)
+>  	fdput(f);
+>  }
+>  
+> +/**
+> + * ima_measure_lsm_state - measure LSM specific state
+> + * @lsm_event_name: LSM event
+> + * @buf: pointer to buffer containing LSM specific state
+> + * @size: Number of bytes in buf
+> + *
+> + * Buffers can only be measured, not appraised.
+> + */
+> +int ima_measure_lsm_state(const char *lsm_event_name, const void *buf,
+> +			  int size)
+> +{
+> +	if (!lsm_event_name || !buf || !size)
+> +		return -EINVAL;
+> +
+> +	return process_buffer_measurement(NULL, buf, size, lsm_event_name,
+> +					  LSM_STATE, 0, NULL);
+> +}
+> +
+> +/**
+> + * ima_measure_lsm_policy - measure LSM specific policy
+> + * @lsm_event_name: LSM event
+> + * @buf: pointer to buffer containing LSM specific policy
+> + * @size: Number of bytes in buf
+> + *
+> + * Buffers can only be measured, not appraised.
+> + */
+> +int ima_measure_lsm_policy(const char *lsm_event_name, const void *buf,
+> +			   int size)
+> +{
+> +	if (!lsm_event_name || !buf || !size)
+> +		return -EINVAL;
+> +
+> +	return process_buffer_measurement(NULL, buf, size, lsm_event_name,
+> +					  LSM_POLICY, 0, NULL);
+> +}
+> +
+>  static int __init init_ima(void)
+>  {
+>  	int error;
+> -- 
+> 2.27.0
