@@ -2,121 +2,170 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0174C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE09C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDAA42173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FCC12083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:19:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="U/rG/EIK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CNYeSPa5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728639AbgG3FT1 (ORCPT
+        id S1728650AbgG3FTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 01:19:27 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:47943 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727838AbgG3FT1 (ORCPT
+        Thu, 30 Jul 2020 01:19:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55334 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727838AbgG3FTj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 01:19:27 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596086366; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=WyvtVLlI6cmKVJj0jDe+724H+IlnfLJvsn+Fgvd0fRQ=; b=U/rG/EIKr7RwusXV5pe/oJVorAW7NWowvNIM+/if84XbAWvIkwuGdLfdPvpfPQxdTqdRk5BQ
- WYJWVgimxP69WdgzRleYlZxyvsfORYhfL3aDyN23tBxdsyCf6nrQK8TrR3Ml8IHbQqcvJocf
- L5zr9KX1qAHfze2aPjN8w1iLoYs=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n19.prod.us-east-1.postgun.com with SMTP id
- 5f22583c7186ea1ee1b7d4f9 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 30 Jul 2020 05:18:52
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8077BC4339C; Thu, 30 Jul 2020 05:18:51 +0000 (UTC)
-Received: from deesin-linux.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: deesin)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3EBD3C433AD;
-        Thu, 30 Jul 2020 05:18:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3EBD3C433AD
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=deesin@codeaurora.org
-From:   Deepak Kumar Singh <deesin@codeaurora.org>
-To:     bjorn.andersson@linaro.org, clew@codeaurora.org
-Cc:     mathieu.poirier@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Arun Kumar Neelakantam <aneela@codeaurora.org>,
-        Deepak Kumar Singh <deesin@codeaurora.org>
-Subject: [PATCH V1 4/6] rpmsg: glink: Remove the rpmsg dev in close_ack
-Date:   Thu, 30 Jul 2020 10:48:14 +0530
-Message-Id: <1596086296-28529-5-git-send-email-deesin@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596086296-28529-1-git-send-email-deesin@codeaurora.org>
-References: <1596086296-28529-1-git-send-email-deesin@codeaurora.org>
+        Thu, 30 Jul 2020 01:19:39 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC975C061794;
+        Wed, 29 Jul 2020 22:19:39 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id u10so3655203plr.7;
+        Wed, 29 Jul 2020 22:19:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EnGXeNbQwuYNZ4/SgA8a2g0/K9Xn2zkd8XxAO1wpPBE=;
+        b=CNYeSPa5UHoQU/zAXoMxTvIy8LM9ZnpBrUa+u5uUMyQdzorRKQusWkM0WWRphxi5ru
+         p/FmoF5qPGgJNNY0+EDETyed1MxEEDnBRCn9/qFltha0m+8igcWmCh9nFCRh3mRLf5qE
+         oXYFuLxMrynBJjPTQ7xkCv/VoWYHHQ2CxG1MYDb+mDbsqpKjABOqr2615HF+D0k0Y0bq
+         hwvXDejkhM7UM6Kq06SzRnTtf4aB1nJ4vOVO7tFo3BKYD0PajnvSPrWUBK29IIfPQCAQ
+         blSwhF47KNibbIJ0e+vT7gwNsoX4dZds4/os/tKEW05Jbq9BhC9BWwcZUM8GY/o0iiOY
+         5Fpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EnGXeNbQwuYNZ4/SgA8a2g0/K9Xn2zkd8XxAO1wpPBE=;
+        b=ZpvvJcx1L6B6EVe5tw0dnjBR5DrHJlZZrXLfE7E/t8FhC1ixH4/O4ECQ70BxzuF8z1
+         oUCQ6lEitwFG9xR9wFBlenq8V0iVcHCLw5k3sO6uLdj0q16um5Isx6VPHqmh8R2PyTPL
+         Jos1Gc//WtjkpbOJaBleR4ROf+YVF2O+OUIulCnNEy4wNn4YNldfaM4c1HyzSm++oc9j
+         NeV7/WyJPHlNWdm8cMYQcjyMH2GD1pSsCxj1S7aMc2oqSpG+3N+6dBaYJC7TCM8zNnSV
+         w38UOojlPlzFl95beAFYXZJOkmd8R7gGasap+CQ2zsUUrk8e6xS/wC206+xe6PXcDik6
+         m2kQ==
+X-Gm-Message-State: AOAM5323x6vWTIReWcWarTVeRKGubv1IC3brQBmDrVegkYNqtwI3vmtm
+        mYkLh0/8Xr69ATGg6k7hPeY=
+X-Google-Smtp-Source: ABdhPJwjUlYjYmMWc8AL8fvrnaAOvzZZqXAtYVN5Q/5zg1fY1zOc8Bo7eLrzwvyLF10mdRA/NCC5WA==
+X-Received: by 2002:a17:902:103:: with SMTP id 3mr31556502plb.195.1596086379202;
+        Wed, 29 Jul 2020 22:19:39 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.152.86])
+        by smtp.gmail.com with ESMTPSA id 9sm4224025pfx.131.2020.07.29.22.19.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 22:19:38 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v1] scsi: stex: use generic power management
+Date:   Thu, 30 Jul 2020 10:47:33 +0530
+Message-Id: <20200730051733.113652-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arun Kumar Neelakantam <aneela@codeaurora.org>
+Drivers using legacy power management .suspen()/.resume() callbacks
+have to manage PCI states and device's PM states themselves. They also
+need to take care of standard configuration registers.
 
-Un-register and register of rpmsg driver is sending invalid open_ack
-on closed channel.
+Switch to generic power management framework using a single
+"struct dev_pm_ops" variable to take the unnecessary load from the driver.
+This also avoids the need for the driver to directly call most of the PCI
+helper functions and device power state control functions, as through
+the generic framework PCI Core takes care of the necessary operations,
+and drivers are required to do only device-specific jobs.
 
-To avoid sending invalid open_ack case unregister the rpmsg device
-after receiving the local_close_ack from remote side.
-
-Signed-off-by: Deepak Kumar Singh <deesin@codeaurora.org>
-signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 ---
- drivers/rpmsg/qcom_glink_native.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/scsi/stex.c | 35 +++++++++++++++++++++++++++++------
+ 1 file changed, 29 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
-index ac179b1..031bc1d 100644
---- a/drivers/rpmsg/qcom_glink_native.c
-+++ b/drivers/rpmsg/qcom_glink_native.c
-@@ -1526,6 +1526,7 @@ static void qcom_glink_rx_close(struct qcom_glink *glink, unsigned int rcid)
- 
- 		rpmsg_unregister_device(glink->dev, &chinfo);
+diff --git a/drivers/scsi/stex.c b/drivers/scsi/stex.c
+index d4f10c0d813c..9500666b521a 100644
+--- a/drivers/scsi/stex.c
++++ b/drivers/scsi/stex.c
+@@ -1972,9 +1972,9 @@ static int stex_choice_sleep_mic(struct st_hba *hba, pm_message_t state)
  	}
-+	channel->rpdev = NULL;
- 
- 	qcom_glink_send_close_ack(glink, channel->rcid);
- 
-@@ -1539,6 +1540,7 @@ static void qcom_glink_rx_close(struct qcom_glink *glink, unsigned int rcid)
- 
- static void qcom_glink_rx_close_ack(struct qcom_glink *glink, unsigned int lcid)
- {
-+	struct rpmsg_channel_info chinfo;
- 	struct glink_channel *channel;
- 	unsigned long flags;
- 
-@@ -1553,6 +1555,16 @@ static void qcom_glink_rx_close_ack(struct qcom_glink *glink, unsigned int lcid)
- 	channel->lcid = 0;
- 	spin_unlock_irqrestore(&glink->idr_lock, flags);
- 
-+	/* Decouple the potential rpdev from the channel */
-+	if (channel->rpdev) {
-+		strlcpy(chinfo.name, channel->name, sizeof(chinfo.name));
-+		chinfo.src = RPMSG_ADDR_ANY;
-+		chinfo.dst = RPMSG_ADDR_ANY;
-+
-+		rpmsg_unregister_device(glink->dev, &chinfo);
-+	}
-+	channel->rpdev = NULL;
-+
- 	kref_put(&channel->refcount, qcom_glink_channel_release);
  }
  
+-static int stex_suspend(struct pci_dev *pdev, pm_message_t state)
++static int stex_suspend_late(struct device *dev, pm_message_t state)
+ {
+-	struct st_hba *hba = pci_get_drvdata(pdev);
++	struct st_hba *hba = dev_get_drvdata(dev);
+ 
+ 	if ((hba->cardtype == st_yel || hba->cardtype == st_P3)
+ 		&& hba->supports_pm == 1)
+@@ -1984,9 +1984,24 @@ static int stex_suspend(struct pci_dev *pdev, pm_message_t state)
+ 	return 0;
+ }
+ 
+-static int stex_resume(struct pci_dev *pdev)
++static int stex_suspend(struct device *dev)
+ {
+-	struct st_hba *hba = pci_get_drvdata(pdev);
++	return stex_suspend_late(dev, PMSG_SUSPEND);
++}
++
++static int stex_hibernate(struct device *dev)
++{
++	return stex_suspend_late(dev, PMSG_HIBERNATE);
++}
++
++static int stex_freeze(struct device *dev)
++{
++	return stex_suspend_late(dev, PMSG_FREEZE);
++}
++
++static int stex_resume(struct device *dev)
++{
++	struct st_hba *hba = dev_get_drvdata(dev);
+ 
+ 	hba->mu_status = MU_STATE_STARTING;
+ 	stex_handshake(hba);
+@@ -2000,14 +2015,22 @@ static int stex_halt(struct notifier_block *nb, unsigned long event, void *buf)
+ }
+ MODULE_DEVICE_TABLE(pci, stex_pci_tbl);
+ 
++static const struct dev_pm_ops stex_pm_ops = {
++	.suspend	= stex_suspend,
++	.resume		= stex_resume,
++	.freeze		= stex_freeze,
++	.thaw		= stex_resume,
++	.poweroff	= stex_hibernate,
++	.restore	= stex_resume,
++};
++
+ static struct pci_driver stex_pci_driver = {
+ 	.name		= DRV_NAME,
+ 	.id_table	= stex_pci_tbl,
+ 	.probe		= stex_probe,
+ 	.remove		= stex_remove,
+ 	.shutdown	= stex_shutdown,
+-	.suspend	= stex_suspend,
+-	.resume		= stex_resume,
++	.driver.pm	= &stex_pm_ops,
+ };
+ 
+ static int __init stex_init(void)
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.27.0
 
