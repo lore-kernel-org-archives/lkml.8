@@ -7,104 +7,129 @@ X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0795FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21EFCC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D515721744
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF8F020829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:45:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FtONpzrT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XZyBA8iH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbgG3Nle (ORCPT
+        id S1727883AbgG3Npy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 09:41:34 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:34442 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728286AbgG3Nld (ORCPT
+        Thu, 30 Jul 2020 09:45:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42692 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726535AbgG3Npx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 09:41:33 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06UDfRWM107364;
-        Thu, 30 Jul 2020 08:41:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596116487;
-        bh=LlD7J8iYz9YS4y6oTZTgbYS1wE+qcP20Ye+/P7WW81w=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=FtONpzrT1uVyS/p9GwsThHhRU/kmEFqFGDadOuQGZP/ywELnRGkCs5X3Xmje4uQO4
-         I1HpJPeluEo6GYe5ct3Qo2iYwKlc5L/hdsSkAzxd4tcX/oh0QWrEAD+Wc8cvUmpMWt
-         YaO/C9WwdURHBRzfMpbld27dK5g6fLiPPgEq3UIs=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06UDfRpg125709;
-        Thu, 30 Jul 2020 08:41:27 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 30
- Jul 2020 08:41:27 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 30 Jul 2020 08:41:26 -0500
-Received: from [10.250.53.226] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06UDfQ2C036307;
-        Thu, 30 Jul 2020 08:41:26 -0500
-Subject: Re: [net-next v5 PATCH 0/7] Add PRP driver
-To:     David Miller <davem@davemloft.net>
-CC:     <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
-        <nsekhar@ti.com>, <grygorii.strashko@ti.com>,
-        <vinicius.gomes@intel.com>
-References: <20200722144022.15746-1-m-karicheri2@ti.com>
- <20200727.122120.336438917999066726.davem@davemloft.net>
-From:   Murali Karicheri <m-karicheri2@ti.com>
-Message-ID: <fb10c323-d5c2-93d6-9784-51ff632fb3ff@ti.com>
-Date:   Thu, 30 Jul 2020 09:41:26 -0400
+        Thu, 30 Jul 2020 09:45:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596116751;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=N18kbwNayNCSq56otQGns/biTl+P88TmaRVZCSCurk8=;
+        b=XZyBA8iHEBNDC0Ml03AJkndb9Mu6CdquDXRffqPonEmMJHx1dysQ71CCnufAklwSZhCITA
+        hPsVtdLspO9hudyNRsIbHCZ+8TKQwXATHiBdaT7ptRUKJ1GrRBgfC6OPvtyfsIiXa890aq
+        CPTAQpaCUiSRHpotDRWyDmcyAbebXhU=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-231-JF7Sn9QkMqC8a4saeXcTQA-1; Thu, 30 Jul 2020 09:45:48 -0400
+X-MC-Unique: JF7Sn9QkMqC8a4saeXcTQA-1
+Received: by mail-wm1-f71.google.com with SMTP id u68so1406346wmu.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 06:45:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=N18kbwNayNCSq56otQGns/biTl+P88TmaRVZCSCurk8=;
+        b=esYS3Od6QUf9CBEsNMXacveGxgsFGY/EE7+ud9C+81gdtEhZXgbQQwqqNsWNH/mdA7
+         1UJYe8SFjh9k38O8dBuEqZU/TbdJ3L9dRILxg6eLv7Tu3yd/tzHmH8SGZzIdvv7ndEQY
+         H8dPi1V0VT4loumI0Gv4IYLW5WddgJWw/s06YRi0skmv7okTY9fgDhMZimuqWgIOJ4mZ
+         EsfafgkhcisUHTPZCFus/L4ujOxcZSs78mI1lQtqKIMWtOlOTV2WnXK4N/sx6XsgjHzk
+         k+7rrG4ByTVrg4vbfYagzna0ylPU0SggofEbcIZB7r5BuMseVqgJ+Viaq13WtvZTisAL
+         vC8Q==
+X-Gm-Message-State: AOAM531MuqLriIuhuj1W3bgbZkeS8p5MIvJvnXAdrB4BFfHXwcNr/nrr
+        95PPJo8GnqT/mVEP/8xNrSEXjEAQm5oFEmjeUIyaeKgG7hYj690Bz7aNWfvH9f1PaIuFyJtGhN1
+        SgvE1Vg78Apf9yOIo86a5VS2Y
+X-Received: by 2002:a1c:5603:: with SMTP id k3mr13225214wmb.22.1596116747898;
+        Thu, 30 Jul 2020 06:45:47 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx7QV2KGledFSsRmiFdDDc7hjFzmkKD0YzI7Gb7ntuMmeeaxHhIejGzW4kXKCPdUiMRjqUl9Q==
+X-Received: by 2002:a1c:5603:: with SMTP id k3mr13225196wmb.22.1596116747726;
+        Thu, 30 Jul 2020 06:45:47 -0700 (PDT)
+Received: from ?IPv6:2a01:cb14:499:3d00:cd47:f651:9d80:157a? ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
+        by smtp.gmail.com with ESMTPSA id o7sm9439445wrv.50.2020.07.30.06.45.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jul 2020 06:45:47 -0700 (PDT)
+Subject: Re: [PATCH v3 4/4] objtool: orc_gen: Move orc_entry out of
+ instruction structure
+To:     peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
+        mhelsley@vmware.com, mbenes@suse.cz
+References: <20200730094143.27494-1-jthierry@redhat.com>
+ <20200730094143.27494-5-jthierry@redhat.com>
+ <20200730100304.GI2655@hirez.programming.kicks-ass.net>
+ <e4e239ad-120e-bd8f-4128-6976146c8512@redhat.com>
+ <20200730133343.GN2655@hirez.programming.kicks-ass.net>
+From:   Julien Thierry <jthierry@redhat.com>
+Message-ID: <0280367f-3839-acad-799a-ecc2756c1846@redhat.com>
+Date:   Thu, 30 Jul 2020 14:45:46 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200727.122120.336438917999066726.davem@davemloft.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200730133343.GN2655@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
 
-On 7/27/20 3:21 PM, David Miller wrote:
-> From: Murali Karicheri <m-karicheri2@ti.com>
-> Date: Wed, 22 Jul 2020 10:40:15 -0400
-> 
->> This series is dependent on the following patches sent out to
->> netdev list. All (1-3) are already merged to net/master as of
->> sending this, but not on the net-next master branch. So need
->> to apply them to net-next before applying this series. v3 of
->> the iproute2 patches can be merged to work with this series
->> as there are no updates since then.
+
+On 7/30/20 2:33 PM, peterz@infradead.org wrote:
+> On Thu, Jul 30, 2020 at 01:40:48PM +0100, Julien Thierry wrote:
 >>
->> [1] https://marc.info/?l=linux-netdev&m=159526378131542&w=2
->> [2] https://marc.info/?l=linux-netdev&m=159499772225350&w=2
->> [3] https://marc.info/?l=linux-netdev&m=159499772425352&w=2
 >>
->> This series adds support for Parallel Redundancy Protocol (PRP)
->> in the Linux HSR driver as defined in IEC-62439-3. PRP Uses a
->> Redundancy Control Trailer (RCT) the format of which is
->> similar to HSR Tag. This is used for implementing redundancy.
->   ...
+>> On 7/30/20 11:03 AM, peterz@infradead.org wrote:
+>>> On Thu, Jul 30, 2020 at 10:41:43AM +0100, Julien Thierry wrote:
+>>>> One orc_entry is associated with each instruction in the object file,
+>>>> but having the orc_entry contained by the instruction structure forces
+>>>> architectures not implementing the orc subcommands to provide a dummy
+>>>> definition of the orc_entry.
 > 
-> Series applied to net-next, thank you.
+>> I guess I forgot about the usecase of running objtool on vmlinux...
 > 
-Thanks for applying this series. Just wondering who will
-pick up the v3 of the iproute2 patch I have posted to go
-with this.
+> Right, and LTO builds will even do ORC at that level.
+> 
+>> On a kernel build for x86_64 defconfig, the difference in time seems to be
+>> withing the noise.
+> 
+> Good.
+> 
+>> But I agree the proposed code is not ideal and on the other we've tried
+>> avoiding #ifdef in the code. Ideally I'd have an empty orc_entry definition
+>> when SUBCMD_ORC is not implemented.
+>>
+>> Would you have a suggested approach to do that?
+> 
+> How ugly is having that:
+> 
+> struct orc_entry { };
+> 
+> ?
 
-https://marc.info/?l=linux-netdev&m=159499933326135&w=2
+Not sure I am understanding the suggestion. Without #ifdef this will 
+conflict with the definition in <asm/orc_types.h> for x86. Or every arch 
+needs to provide their own <asm/orc_types.h> and definition of struct 
+orc_entry, even if they don't implement the orc subcommand.
 
-I will reply to that thread as well.
+Which would be preferable? #ifdef? or arch provided definition? (or 
+something I have not thought of)
 
-Thanks
 -- 
-Murali Karicheri
-Texas Instruments
+Julien Thierry
+
