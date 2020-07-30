@@ -2,505 +2,187 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A5DC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A708C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0D9920842
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:31:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gYvwLdhR"
+	by mail.kernel.org (Postfix) with ESMTP id 3FE7E2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:32:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgG3Lbw (ORCPT
+        id S1727808AbgG3LcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 07:31:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56052 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726615AbgG3Lbv (ORCPT
+        Thu, 30 Jul 2020 07:32:21 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3160 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726615AbgG3LcV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 07:31:51 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FE64C061794;
-        Thu, 30 Jul 2020 04:31:51 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id r4so3184591pls.2;
-        Thu, 30 Jul 2020 04:31:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ySjFb6xHTA8Omh7FF42l3yV01aH6PLF0+fI/lUr+5WM=;
-        b=gYvwLdhRLgmKRATmq2uyKUpvBP/YpVxF0ms/2OKnuW9vB6ExHbPGPqkfvSjHL/SXg/
-         jGyIOK0zRMsDXTZSnr/WoVUS73EeCxvGQcwaEepvSYwdjWcQGfyPLLyMTKIky4HfcPU4
-         Sf1SOClOqsa3GacOF5p4HXwAFuwxks1u9xa4euRMPXzwZLJFsfEcHqem5tkqW8W57tng
-         hVoxguv+yb+p3Qnna9O2ag0ObJFldBvaS/uwN9QK4kfFYGq8TjkN3lfunX++wSKpiHdI
-         8EFcXIhOALo+qk9JAFqljWLzLNjsNGb7u2681EIcLkT/UG6++NhccknOWDyAnhiOIyeD
-         0XPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ySjFb6xHTA8Omh7FF42l3yV01aH6PLF0+fI/lUr+5WM=;
-        b=ZZVKhyAi3/QnzahfHhEckJdJInnI/eHMW98Mkoa9ddhE7uu/LWUADYxnb++YbHC/qZ
-         dquaLHLiKT9xdV15Fefw8qXKqt96tPcIg1ILPg5xCPRTUSqB2EfaZSqAlbAdMwuICRSI
-         y2zE9oK2H6jpCL8UXMBMSD9G0cVNTr+Z2L3RtQEQBEUyPwSCHlP9xxwCFxZSgiItHNok
-         l+ND/E/rAlWQ/kLsmYFtOVe6uJuxe5qwBkcEc127mRmlr9wHNG6UmJJzg4MQ4wNXhoBq
-         LKHkQWVpjzTFTN7COgE+c7LQ0G7uYU3vLu8qNjd6I13eBXV8UY5zuDx7jH02v/8HrMMh
-         F5LQ==
-X-Gm-Message-State: AOAM530v/alcZaKCyp/LASUQu+s990qYdwLdDm1fTsf9imifsYrcqzVv
-        Lx9RSXyHoerSrfZyyWgpmlTD2V6AhmbA/hqQLDo=
-X-Google-Smtp-Source: ABdhPJwY3wW8qBfm4pNGjqcSXo15lYCqxsHL4k+xQOGA6M50Zq84lsr9P/Mc0doXNFEzr1goBkgqXLP1RVm2eqyx6cM=
-X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr15182595pjp.228.1596108710486;
- Thu, 30 Jul 2020 04:31:50 -0700 (PDT)
+        Thu, 30 Jul 2020 07:32:21 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06UBW5MM026230;
+        Thu, 30 Jul 2020 07:32:12 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32kv5rj4q2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Jul 2020 07:32:11 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06UBW9cu026634;
+        Thu, 30 Jul 2020 07:32:11 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32kv5rj4hc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Jul 2020 07:32:11 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06UBKROE016839;
+        Thu, 30 Jul 2020 11:31:56 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06ams.nl.ibm.com with ESMTP id 32gcqgp3wr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Jul 2020 11:31:56 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06UBVrQT9568562
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Jul 2020 11:31:53 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ACC43520C9;
+        Thu, 30 Jul 2020 11:31:51 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.51.62])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 893CB52133;
+        Thu, 30 Jul 2020 11:31:20 +0000 (GMT)
+Subject: Re: [PATCH v7 2/2] s390: virtio: PV needs VIRTIO I/O device
+ protection
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, cohuck@redhat.com,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+References: <1594801869-13365-1-git-send-email-pmorel@linux.ibm.com>
+ <1594801869-13365-3-git-send-email-pmorel@linux.ibm.com>
+ <20200715054807-mutt-send-email-mst@kernel.org>
+ <bc5e09ad-faaf-8b38-83e0-5f4a4b1daeb0@redhat.com>
+ <20200715074917-mutt-send-email-mst@kernel.org>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Message-ID: <e41d039c-5fe2-b9db-093b-c0dddcc2ad4f@linux.ibm.com>
+Date:   Thu, 30 Jul 2020 13:31:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200730104946.39148-1-ceggers@arri.de> <20200730104946.39148-3-ceggers@arri.de>
-In-Reply-To: <20200730104946.39148-3-ceggers@arri.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 30 Jul 2020 14:31:31 +0300
-Message-ID: <CAHp75VeXqFgqiGUkS71B1xCD-60iQFS4EKJwVFX-L_dTUFMc6A@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] iio: light: as73211: New driver
-To:     Christian Eggers <ceggers@arri.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200715074917-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-30_09:2020-07-30,2020-07-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
+ impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0 adultscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007300082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 1:52 PM Christian Eggers <ceggers@arri.de> wrote:
-> Support for AMS AS73211 JENCOLOR(R) Digital XYZ Sensor.
->
-> This driver has no built-in trigger. In order for making triggered
-> measurements, an external (software) trigger driver like
-> iio-trig-hrtimer or iio-trig-sysfs is required.
->
-> The sensor supports single and continuous measurement modes. The latter
-> is not used by design as this would require tight timing synchronization
-> between hardware and driver without much benefit.
 
-...
-
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +#include <linux/iio/trigger_consumer.h>
-> +#include <linux/iio/buffer.h>
-> +#include <linux/iio/triggered_buffer.h>
-
-Ordered?
-
-...
-
-> +/**
-> + * struct as73211_data - Instance data for one AS73211
-> + * @client: I2C client.
-> + * @osr:    Cached Operational State Register.
-> + * @creg1:  Cached Configuration Register 1.
-> + * @creg2:  Cached Configuration Register 2.
-> + * @creg3:  Cached Configuration Register 3.
-> + * @buffer: Buffer for triggered measurements.
-> + * @mutex:  Keeps cached registers in synch with the device.
-> + * @completion: Completion to wait for interrupt.
-> + */
-> +struct as73211_data {
-> +       struct i2c_client *client;
-> +       u8 osr;
-> +       u8 creg1;
-> +       u8 creg2;
-> +       u8 creg3;
-> +       struct mutex mutex;
-> +       struct completion completion;
-> +};
-
-Actually Jonathan is correct -- the above has kernel doc issues.
-
-...
-
-> +#define AS73211_SCAN_MASK_COLOR \
-> +       (BIT(AS73211_SCAN_INDEX_X) | BIT(AS73211_SCAN_INDEX_Y) | BIT(AS73211_SCAN_INDEX_Z))
-
-> +#define AS73211_SCAN_MASK_ALL (BIT(AS73211_SCAN_INDEX_TEMP) | AS73211_SCAN_MASK_COLOR)
-
-Perhaps split for easy reading.
-
-...
-
-> +static unsigned int as73211_integration_time_us(struct as73211_data *data)
-> +{
-> +       /* Integration time has 15 steps, the step size depends on the clock. */
-> +       unsigned int mul = BIT(3 - (data->creg3 & GENMASK(1, 0)));
-
-Shouldn't be rather
-
-#define FOO  GENMASK(1, 0)
-mul = BIT(FOO - (creg & FOO));
-
-with a descriptive name of FOO?
-
-Or if both 3:s have different meaning, two definitions?
-
-> +       return as73211_integration_time_cycles(data) * 125 * mul;
-> +}
-
-...
-
-> +static unsigned int as73211_gain(struct as73211_data *data)
-> +{
-
-> +       return BIT(0xb - FIELD_GET(AS73211_CREG1_GAIN_MASK, data->creg1));
-
-Magic!
-
-> +}
-
-...
-
-> +       struct device *dev = &data->client->dev;
-> +       unsigned int time_us = as73211_integration_time_us(data);
-> +       int ret;
-> +       union i2c_smbus_data smbus_data;
-> +       u16 osr_status;
-
-Can you keep this in reversed tree order?
-
-       unsigned int time_us = as73211_integration_time_us(data);
-       struct device *dev = &data->client->dev;
-       union i2c_smbus_data smbus_data;
-       u16 osr_status;
-       int ret;
-
-Same comment to the rest where applicable.
-
-...
-
-> +       /* Add some extra margin for the timeout. sensor timing is not as precise
-> +        * as our one ...
-> +        */
-
-Comment style. Same to the rest of the code where applicable.
-
-...
-
-> +       if (data->client->irq) {
-> +               dev_dbg(dev, "Waiting for completion...\n");
-> +               ret = wait_for_completion_timeout(&data->completion,
-
-> +                                       2 + usecs_to_jiffies(time_us));
-
-Magic!
-
-> +               if (!ret) {
-> +                       dev_err(dev, "timeout waiting for READY IRQ\n");
-> +                       i2c_unlock_bus(data->client->adapter, I2C_LOCK_SEGMENT);
-> +                       return -ETIMEDOUT;
-> +               }
-> +       } else {
-> +               /* Wait integration time */
-
-> +               dev_dbg(dev, "Sleeping %d us\n", time_us);
-
-Looks like a noise (good for development, bad for upstream)
-
-> +               usleep_range(time_us, time_us + 100000);
-
-If time_us appears to be, let's say, 100. The above margin is way too high.
-
-> +       }
-
-...
-
-> +       osr_status = (u16)ret;
-
-Why casting?
-
-...
-
-> +       dev_dbg(dev, "osr_status = 0x%04x\n", osr_status);
-
-Looks like a noise (good for development, bad for upstream)
-
-...
-
-> +               if (osr_status & AS73211_OSR_SS) {
-> +                       dev_warn(dev, "%s() Measurement has not stopped\n", __func__);
-> +                       return -ETIME;
-> +               }
-> +               if (osr_status & AS73211_OSR_STATUS_NOTREADY) {
-> +                       dev_warn(dev, "%s() Data is not ready\n", __func__);
-> +                       return -ENODATA;
-> +               }
-> +               if (!(osr_status & AS73211_OSR_STATUS_NDATA)) {
-> +                       dev_warn(dev, "%s() New new data available\n", __func__);
-> +                       return -ENODATA;
-> +               }
-> +               if (osr_status & AS73211_OSR_STATUS_LDATA) {
-> +                       dev_warn(dev, "%s() Result buffer overrun\n", __func__);
-> +                       return -ENOBUFS;
-> +               }
-> +               if (osr_status & AS73211_OSR_STATUS_ADCOF) {
-> +                       dev_warn(dev, "%s() ADC overflow\n", __func__);
-> +                       return -EOVERFLOW;
-> +               }
-> +               if (osr_status & AS73211_OSR_STATUS_MRESOF) {
-> +                       dev_warn(dev, "%s() Measurement result overflow\n", __func__);
-> +                       return -EOVERFLOW;
-> +               }
-> +               if (osr_status & AS73211_OSR_STATUS_OUTCONVOF) {
-> +                       dev_warn(dev, "%s() Timer overflow\n", __func__);
-> +                       return -EOVERFLOW;
-> +               }
-> +               dev_warn(dev, "%s() Unexpected status value\n", __func__);
-> +               return -EIO;
-> +       }
-
-All above dev_warn() are wrong. Should be dev_err(). Otherwise all
-return -ERRNO are wrong.
-
-...
-
-> +               int ret = iio_device_claim_direct_mode(indio_dev);
-> +
-> +               if (ret)
-> +                       return ret;
-
-Please, use better arrangement, i.e.
-
-  int ret;
-
-  ret = ...
-  if (ret)
-  ...
-
-+ blank line.
-
-> +               ret = as73211_req_data(data);
-> +               if (ret < 0) {
-> +                       iio_device_release_direct_mode(indio_dev);
-> +                       return ret;
-> +               }
-
-+ blank line
-
-> +               ret = i2c_smbus_read_word_data(data->client, chan->address);
-> +               iio_device_release_direct_mode(indio_dev);
-> +               if (ret < 0)
-> +                       return ret;
-
-+ blank line
-
-> +               *val = ret;
-> +               return IIO_VAL_INT;
-> +       }
-
-...
-
-> +       case IIO_CHAN_INFO_SCALE:
-> +       {
-
-On one line.
-
-...
-
-> +               *val = BIT(data->creg3 & GENMASK(1, 0)) * 1024 * 1000;
-
-1000 is magic and 1024 either.
-
-1000 is frequency multiplier? If it's not defined do it like
-  #define HZ_PER_KHZ
-  #define KHZ_PER_MHZ
-or what is that?
-
-...
-
-> +               *val = time_us / 1000000;
-> +               *val2 = time_us % 1000000;
-
-Ditto.
-
-NSEC_PER_SEC or what?
-
-...
-
-> +               int reg_bits, freq_kHz = val / 1000;  /* 1024, 2048, ... */
-
-HZ_PER_KHZ?
-
-...
-
-> +               if (val < 0 || (freq_kHz * 1000) != val || val2)
-
-Ditto.
-
-...
-
-> +               return i2c_smbus_write_byte_data(data->client, AS73211_REG_CREG3, data->creg3);
-
-Can it suddenly return positive number?
-
-...
-
-> +               int time_us = val * 1000000 + val2, time_ms;
-
-NSEC_PER_MSEC ?
-USEC_PER_SEC ?
-
-...
-
-> +               time_ms = (time_us * mul) / 1000;  /* 1 ms, 2 ms, ... (power of two) */
-
-NSEC_PER_MSEC
-
-...
-
-> +               if (time_ms < 0 || !is_power_of_2(time_ms) || time_ms > 16384)
-
-Magic! Shouldn't be rather BIT(14)  and defined somewhere?
-
-...
-
-
-> +       /* Need to switch to config mode ... */
-
-Not sure how this comment related to locking.
-
-> +       mutex_lock(&data->mutex);
-
-...
-
-> +               dev_dbg(&indio_dev->dev, "Switching to configuration state...");
-
-Noise.
-
-...
-
-> +static irqreturn_t as73211_ready_handler(int irq __always_unused, void *priv)
-> +{
-
-> +       struct iio_dev *indio_dev = priv;
-
-Unneeded churn.
-
-> +       struct as73211_data *data = iio_priv(indio_dev);
-
-iio_priv(priv)
-
-> +       complete(&data->completion);
-> +
-> +       return IRQ_HANDLED;
-> +}
-
-...
-
-> +       struct iio_dev *indio_dev = pf->indio_dev;
-
-Ditto. Do you use indio_dev below (except one case)? I haven't noticed.
-
-> +       struct as73211_data *data = iio_priv(indio_dev);
-
-...
-
-> +               struct i2c_msg msgs[] = {
-> +                       {
-> +                               .addr = data->client->addr,
-> +                               .flags = 0,
-> +                               .len = 1,
-> +                               .buf = &addr
-
-+ comma
-
-> +                       },
-> +                       {
-> +                               .addr = data->client->addr,
-> +                               .flags = I2C_M_RD,
-> +                               .len = sizeof(scan.chan),
-> +                               .buf = (u8 *)&scan.chan
-
-+ comma
-
-> +                       },
-> +               };
-
-...
-
-> +       }
-> +       /* Optimization for reading only color channels */
-> +       else {
-
-Should be one line. Had you run checkpatch?
-
-...
-
-> +static ssize_t as73211_show_samp_freq_available(struct device *dev __always_unused,
-> +                                                struct device_attribute *attr __always_unused,
-> +                                                char *buf)
-> +{
-> +}
-> +
-> +static ssize_t as73211_show_int_time_available(struct device *dev,
-> +                                               struct device_attribute *attr __always_unused,
-> +                                               char *buf)
-> +{
-> +}
-> +
-> +static ssize_t as73211_show_hardwaregain_available(struct device *dev __always_unused,
-> +                                                   struct device_attribute *attr __always_unused,
-> +                                                   char *buf)
-> +{
-> +}
-
-I guess above is an overkill. See example here
-
-commit 6085102c494b8afc62bc093f8f32d6248f6d33e5
-Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Date:   Mon Mar 23 12:41:26 2020 +0200
-
-   iio: pressure: bmp280: Convert to use ->read_avail()
-
-...
-
-> +       ret = i2c_smbus_read_byte_data(data->client, AS73211_REG_OSR);
-> +       if (ret < 0)
-> +               return ret;
-
-Yeah, be consistent. Either all such call should be checked against
-negative error code, or drop ' < 0' everywhere it applies.
-
-...
-
-> +       /* At the time of writing this driver, only DEVID 2 and MUT 1 is known. */
-> +       if ((ret & AS73211_AGEN_DEVID_MASK) != AS73211_AGEN_DEVID(2)
-> +                       || (ret & AS73211_AGEN_MUT_MASK) != AS73211_AGEN_MUT(1))
-
-Looks like broken indentation, and leave || on previous line.
-
-> +               return -ENODEV;
-
-...
-
-> +       if (client->irq) {
-> +               ret = request_threaded_irq(client->irq,
-> +                               NULL,
-> +                               as73211_ready_handler,
-
-> +                               IRQF_TRIGGER_RISING | IRQF_ONESHOT,
-
-Should not be IRQ trigger type here. (Do you have broken firmware table?)
-
-> +                               client->name, indio_dev);
-> +               if (ret)
-> +                       goto buffer_cleanup;
-> +       }
+gentle ping.
+
+
+On 2020-07-15 13:51, Michael S. Tsirkin wrote:
+> On Wed, Jul 15, 2020 at 06:16:59PM +0800, Jason Wang wrote:
+>>
+>> On 2020/7/15 下午5:50, Michael S. Tsirkin wrote:
+>>> On Wed, Jul 15, 2020 at 10:31:09AM +0200, Pierre Morel wrote:
+>>>> If protected virtualization is active on s390, the virtio queues are
+>>>> not accessible to the host, unless VIRTIO_F_IOMMU_PLATFORM has been
+>>>> negotiated. Use the new arch_validate_virtio_features() interface to
+>>>> fail probe if that's not the case, preventing a host error on access
+>>>> attempt.
+>>>>
+>>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>>>> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+>>>> Acked-by: Halil Pasic <pasic@linux.ibm.com>
+>>>> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+>>>> ---
+>>>>    arch/s390/mm/init.c | 28 ++++++++++++++++++++++++++++
+>>>>    1 file changed, 28 insertions(+)
+>>>>
+>>>> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+>>>> index 6dc7c3b60ef6..d39af6554d4f 100644
+>>>> --- a/arch/s390/mm/init.c
+>>>> +++ b/arch/s390/mm/init.c
+>>>> @@ -45,6 +45,7 @@
+>>>>    #include <asm/kasan.h>
+>>>>    #include <asm/dma-mapping.h>
+>>>>    #include <asm/uv.h>
+>>>> +#include <linux/virtio_config.h>
+>>>>    pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
+>>>> @@ -161,6 +162,33 @@ bool force_dma_unencrypted(struct device *dev)
+>>>>    	return is_prot_virt_guest();
+>>>>    }
+>>>> +/*
+>>>> + * arch_validate_virtio_features
+>>>> + * @dev: the VIRTIO device being added
+>>>> + *
+>>>> + * Return an error if required features are missing on a guest running
+>>>> + * with protected virtualization.
+>>>> + */
+>>>> +int arch_validate_virtio_features(struct virtio_device *dev)
+>>>> +{
+>>>> +	if (!is_prot_virt_guest())
+>>>> +		return 0;
+>>>> +
+>>>> +	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
+>>>> +		dev_warn(&dev->dev,
+>>>> +			 "legacy virtio not supported with protected virtualization\n");
+>>>> +		return -ENODEV;
+>>>> +	}
+>>>> +
+>>>> +	if (!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
+>>>> +		dev_warn(&dev->dev,
+>>>> +			 "support for limited memory access required for protected virtualization\n");
+>>>> +		return -ENODEV;
+>>>> +	}
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>>    /* protected virtualization */
+>>>>    static void pv_init(void)
+>>>>    {
+>>> What bothers me here is that arch code depends on virtio now.
+>>> It works even with a modular virtio when functions are inline,
+>>> but it seems fragile: e.g. it breaks virtio as an out of tree module,
+>>> since layout of struct virtio_device can change.
+>>
+>>
+>> The code was only called from virtio.c so it should be fine.
+>>
+>> And my understanding is that we don't need to care about the kABI issue
+>> during upstream development?
+>>
+>> Thanks
+> 
+> No, but so far it has been convenient at least for me, for development,
+> to just be able to unload all of virtio and load a different version.
+> 
+> 
+>>
+>>>
+>>> I'm not sure what to do with this yet, will try to think about it
+>>> over the weekend. Thanks!
+>>>
+>>>
+>>>> -- 
+>>>> 2.25.1
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Pierre Morel
+IBM Lab Boeblingen
