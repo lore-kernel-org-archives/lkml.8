@@ -2,145 +2,93 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 110ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 824E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA27A207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CE3E206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:22:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbgG3HTp convert rfc822-to-8bit (ORCPT
+        id S1728830AbgG3HW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 03:19:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728827AbgG3HTo (ORCPT
+        Thu, 30 Jul 2020 03:22:58 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:34301 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbgG3HW5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 03:19:44 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F5E7C061794
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 00:19:44 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1k12qZ-0000ZT-AD; Thu, 30 Jul 2020 09:19:23 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1k12qW-0003Ph-MV; Thu, 30 Jul 2020 09:19:20 +0200
-Message-ID: <0b541063e66e29b1dd0dad70f77a18a8591f224b.camel@pengutronix.de>
-Subject: Re: [PATCH V3 3/3] pci: imx: Select RESET_IMX7 by default
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Anson Huang <anson.huang@nxp.com>, Rob Herring <robh@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        Thu, 30 Jul 2020 03:22:57 -0400
+Received: from mail-qt1-f174.google.com ([209.85.160.174]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MQMi7-1kNERt0L45-00MNCV; Thu, 30 Jul 2020 09:22:56 +0200
+Received: by mail-qt1-f174.google.com with SMTP id s23so19615039qtq.12;
+        Thu, 30 Jul 2020 00:22:53 -0700 (PDT)
+X-Gm-Message-State: AOAM530fhtgVFVvlfB1uelJE+JEgih2QNvxapO06tLFngmOEKUT/zDUC
+        QObTt4DApdgH4AyADhwZPkDqh6f3cvWac6seKuk=
+X-Google-Smtp-Source: ABdhPJzgEsAgdG9F1fxmndEJfU8TT+hsYPEgSAf0hp36PCR11SO9kvadSankG7qIurN5AdirVi451kJyBWRCSzEu5aI=
+X-Received: by 2002:aed:2946:: with SMTP id s64mr1685167qtd.204.1596093772891;
+ Thu, 30 Jul 2020 00:22:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <1596067120-1193-1-git-send-email-Anson.Huang@nxp.com> <1596067120-1193-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1596067120-1193-2-git-send-email-Anson.Huang@nxp.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 30 Jul 2020 09:22:37 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a000jKRMM9pm72mw5a1xV=NtOT6Z-H2EDS6=5165HMt5w@mail.gmail.com>
+Message-ID: <CAK8P3a000jKRMM9pm72mw5a1xV=NtOT6Z-H2EDS6=5165HMt5w@mail.gmail.com>
+Subject: Re: [PATCH V8 1/6] clk: imx6sl: Use BIT(x) to avoid shifting signed
+ 32-bit value by 31 bits
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Sascha Hauer <kernel@pengutronix.de>,
         Fabio Estevam <festevam@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>, Vinod <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Thierry Reding <treding@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        Dilip Kota <eswara.kota@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
+        Andy Duan <fugang.duan@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
-Date:   Thu, 30 Jul 2020 09:19:20 +0200
-In-Reply-To: <DB3PR0402MB391605E5B4F5E03F1E27B67DF5710@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1595254921-26050-1-git-send-email-Anson.Huang@nxp.com>
-         <1595254921-26050-3-git-send-email-Anson.Huang@nxp.com>
-         <CAL_JsqLXGduym51-Ej8Td4yOyP-UfGP-WCh2xeP_V90Yabm4XA@mail.gmail.com>
-         <0cdecff564215de6711ca04e063fa696a160fad9.camel@pengutronix.de>
-         <DB3PR0402MB391605E5B4F5E03F1E27B67DF5710@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
-MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-Provags-ID: V03:K1:lTCNq6hS062jBYwG/0GIfHXkumSjMFIvurIOIr1sjAjklefzOjg
+ /S9ZbtnvL1By5DV1PGooPwKuLutxGv1sdLPlSRA5T8qToxRu+RsGKj2glzxTq/2g31Akmkt
+ aVCZAU1r7Gh9aQNgxZIJ8LkWNqTS5NcOPBDMNdUHDVNey4sH4Kel/etwOclYf2oV19R+fRG
+ c6vk4IYKF1va9Gt04IItQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:dbWKEXZ+pNs=:v9SopY0XoxPhD/hztbdTmI
+ U+3Ca5dH70Dxkw8EgjIa893dTsdwVW4D4u2N1E2WeAMy1WPwUN8hSywgSg9UHp3DE0Uvv06b5
+ v2wrPFl5Sv8MEVbVFxl9Y0CvnrhrVO/iELiqae1vq6kpGEfJ7k+GmfYsoLxmABDAdNYyntL8w
+ XO4UUX7AyyDHSgcP0qk95lyeO2JdfVo1FWVqz/LwHoWE8uF6ocRhDb3I8Hl/4T6bFYNkQRIlY
+ vQ5nzLkMN+827t0DI8tccP3/3Lc/OHpG6YWr+gva/WQj3y9Cqu6FwxcUSeMTWAcxiJvE6IrEM
+ INoA/0JexkpxUUBi36Qfy75UJYM1sDbH/qyVr93/0Kf8q7FNfrZ/GR0pl372JQam5CSFuOzsL
+ OUtG8+9GG3ZSU3YsEV3ntnIG/n8Au7RI9CvQm2BJHFaR6GaGBFyCLpQeUBJUKiFEDW94NVx0I
+ uFUNFEpyPEHCZfGxpzMqMgBZGuiXtvjKIg25fPJtfQqLGT86M/VIhxWMpJKo4UgPrhzpwA8xT
+ Nv3hw0MfQgn9149B3OJi9c0E+q5Vrxhm7fQT5lJGtdiQ+brZVsJ4Yn5ZiBKaRuTlCIK5Hvewg
+ irkrurjHCFcIeHN3ItM8I36twIxtc8Uzg/nvdjEBX2UJ3N2zm3rpn2pOYpk9GMqzrcpjPFl+n
+ s84uIEB75SuGRecYZ7JJB1X4pyYh63vlhj9u6hGQdAkVZzs1g7NWkYqJPcrb2ZFkOEfn5zxFU
+ QkwJ32TNYkxhb8gc6IjGLyGsNV34F1OJPqrSUMeINFT8lBFF08cF1vKOIVqXVrwaW1q13N0X5
+ 7ckmdDCUpl4y9PXNDOW5Sj8f43LSfSAbVpr2hlz/l9XvOFTmp1BRVCQ8ITl20SaZFhURKfW
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anson,
+On Thu, Jul 30, 2020 at 2:03 AM Anson Huang <Anson.Huang@nxp.com> wrote:
+>
+> Use readl_relaxed() instead of __raw_readl(), and use BIT(x)
+> instead of (1 << X) to fix below build warning reported by kernel
+> test robot:
+>
+> drivers/clk/imx/clk-imx6sl.c:149:49: warning: Shifting signed 32-bit
+> value by 31 bits is undefined behaviour [shiftTooManyBitsSigned]
+>      while (!(__raw_readl(anatop_base + PLL_ARM) & BM_PLL_ARM_LOCK))
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Reported-by: kernel test robot <lkp@intel.com>
 
-On Thu, 2020-07-30 at 02:11 +0000, Anson Huang wrote:
-> Hi, Philipp/Rob
-> 
-> > Subject: Re: [PATCH V3 3/3] pci: imx: Select RESET_IMX7 by default
-> > 
-> > On Wed, 2020-07-29 at 09:26 -0600, Rob Herring wrote:
-> > > On Mon, Jul 20, 2020 at 8:26 AM Anson Huang <Anson.Huang@nxp.com>
-> > wrote:
-> > > > i.MX7 reset driver now supports module build and it is no longer
-> > > > built in by default, so i.MX PCI driver needs to select it
-> > > > explicitly due to it is NOT supporting loadable module currently.
-> > > > 
-> > > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > > ---
-> > > > No change.
-> > > > ---
-> > > >  drivers/pci/controller/dwc/Kconfig | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/dwc/Kconfig
-> > > > b/drivers/pci/controller/dwc/Kconfig
-> > > > index 044a376..bcf63ce 100644
-> > > > --- a/drivers/pci/controller/dwc/Kconfig
-> > > > +++ b/drivers/pci/controller/dwc/Kconfig
-> > > > @@ -90,6 +90,7 @@ config PCI_EXYNOS
-> > > > 
-> > > >  config PCI_IMX6
-> > > >         bool "Freescale i.MX6/7/8 PCIe controller"
-> > > > +       select RESET_IMX7
-> > > 
-> > > This will break as select will not cause all of RESET_IMX7's
-> > > dependencies to be met. It also doesn't scale. Are you going to do the
-> > > same thing for clocks, pinctrl, gpio, etc.?
-> > > 
-> > > You should make the PCI driver work as a module.
-> > 
-> > Oh, also PCI_IMX6 is used on (surprise) i.MX6, which doesn't need
-> > RESET_IMX7 at all.
-> > 
-> > How about hiding the RESET_IMX7 option and setting it default y if
-> > PCI_IMX6 is enabled, as an interim solution?
-> 
-> Like below, RESET_IMX7 is already default y when SOC_IMX7D, now added PCI_IMX6,
-> let me know if it is OK for you, then I will send new patch for review.
-> 
-> +++ b/drivers/reset/Kconfig
-> @@ -68,7 +68,7 @@ config RESET_IMX7
->         tristate "i.MX7/8 Reset Driver"
-
-I was thinking something like
-
-	tristate "i.MX7/8 Reset Driver" if COMPILE_TEST || !PCI_IMX6
-
->         depends on HAS_IOMEM
->         depends on SOC_IMX7D || (ARM64 && ARCH_MXC) || COMPILE_TEST
-> -       default y if SOC_IMX7D
-> +       default y if (SOC_IMX7D || PCI_IMX6)
-
-Yes, although without the above I think it could still be disabled
-manually or via oldconfig.
-
-regards
-Philipp
+Acked-by: Arnd Bergmann <arnd@arndb.de>
