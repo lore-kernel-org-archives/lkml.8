@@ -2,95 +2,121 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D320EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D396C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8CAB20672
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2319020809
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:04:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596096287;
+	bh=adE+o9V+aVKv7b7s5ECHe6WwO2Fhgh6YtOsnLfIM7Zg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bPjyOWg6bH0MjOwC1w1B2aQnIbmGM8gty5HH1xcxset8bb2zxyPzZ8ub/Mm1hO2OQ
+	 RbhfL3UQhh1H4JJhdJDrahw7yqCUywHynLziT1iAAZ5uFCtWlCmi9g1UyppNAmuvTg
+	 cHe/O6/6RKYd+5XNF2A/s1BZehyQZ1z0L3NYYr2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728997AbgG3IDq convert rfc822-to-8bit (ORCPT
+        id S1729040AbgG3IEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:03:46 -0400
-Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:17539 "EHLO
-        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725892AbgG3IDp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:03:45 -0400
-Subject: Re: [PATCH] selinux: add tracepoint on denials
-To:     =?UTF-8?Q?Thi=c3=a9baud_Weksteen?= <tweek@google.com>,
-        Paul Moore <paul@paul-moore.com>
-CC:     Steven Rostedt <rostedt@goodmis.org>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Nick Kralevich <nnk@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        SElinux list <selinux@vger.kernel.org>
-References: <20200724091520.880211-1-tweek@google.com>
- <CAEjxPJ45ij3obT37ywn_edb9xb89z-SdwzejfN6+jrvAtghXfA@mail.gmail.com>
- <CAHC9VhS4aXD8kcXnQ2MsYvjc--xXSUpsM1xtgq3X5DBT59ohhw@mail.gmail.com>
- <CA+zpnLfczC=9HQA8s1oBGKGQO+OkuydF85o89dhSxdOyKBHMgg@mail.gmail.com>
- <CAHC9VhT1sGSpfCKojbKR+O2Hf_h+wnKnBwwSo09CbFaCYLcOHA@mail.gmail.com>
- <CA+zpnLecz_gvXYnrwNGW8SLaJsu==M_n9MuJgjqX9nPJtuTZBg@mail.gmail.com>
-From:   peter enderborg <peter.enderborg@sony.com>
-Message-ID: <def030b4-91c3-4aa1-e8ad-e3797688d18d@sony.com>
-Date:   Thu, 30 Jul 2020 10:03:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 04:04:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729004AbgG3IEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:04:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE9D22074B;
+        Thu, 30 Jul 2020 08:04:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596096282;
+        bh=adE+o9V+aVKv7b7s5ECHe6WwO2Fhgh6YtOsnLfIM7Zg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EKfvh43QjZjD3RQfZK5CiZA/iDxW4tov9xo4PdzYpyH8S8bLwzSVJVdCvl0EXpM6B
+         uM5ny/6cJpiNQ0OOC9Dhjp5fAGtEppPLKG/ZH7NcpB6bqY61o3N4nAAAyxEBBuLUw9
+         uInuQLC7UBtFa0VqaefASxQYiDXpdpDi94LWNqmw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Weilong Chen <chenweilong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 10/20] rtnetlink: Fix memory(net_device) leak when ->newlink fails
+Date:   Thu, 30 Jul 2020 10:04:00 +0200
+Message-Id: <20200730074421.023008750@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200730074420.533211699@linuxfoundation.org>
+References: <20200730074420.533211699@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <CA+zpnLecz_gvXYnrwNGW8SLaJsu==M_n9MuJgjqX9nPJtuTZBg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-GB
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=DrAoB13+ c=1 sm=1 tr=0 a=kIrCkORFHx6JeP9rmF/Kww==:117 a=IkcTkHD0fZMA:10 a=_RQrkK6FrEwA:10 a=xVhDTqbCAAAA:8 a=kSkFpLqy8y9c_-cfnwsA:9 a=QEXdDO2ut3YA:10 a=GrmWmAYt4dzCMttCBZOh:22
-X-SEG-SpamProfiler-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/28/20 6:02 PM, Thiébaud Weksteen wrote:
-> On Tue, Jul 28, 2020 at 5:12 PM Paul Moore <paul@paul-moore.com> wrote:
->> Perhaps it would be helpful if you provided an example of how one
->> would be expected to use this new tracepoint?  That would help put
->> things in the proper perspective.
-> The best example is the one I provided in the commit message, that is
-> using perf (or a perf equivalent), to hook onto that tracepoint.
->
->> Well, to be honest, the very nature of this tracepoint is duplicating
->> the AVC audit record with a focus on using perf to establish a full
->> backtrace at the expense of reduced information.  At least that is how
->> it appears to me.
-> I see both methods as complementary. By default, the kernel itself can
-> do some reporting (i.e avc message) on which process triggered the
-> denial, what was the context, etc. This is useful even in production
-> and doesn't require any extra tooling.
-> The case for adding this tracepoint can be seen as advanced debugging.
-> That is, once an avc denial has been confirmed, a developer can use
-> this tracepoint to surface the userland stacktrace. It requires more
-> userland tools and symbols on the userland binaries.
+From: Weilong Chen <chenweilong@huawei.com>
 
-I think from development view you would like to have a better
-way to trap this events in userspace. One idea that I have is
-is to have more outcomes from a rule. We have today allow,
-dontaudit, auditallow i think it would be good to have signal sent too.
-"signal-xxx-allow" for some set of signals. SIGBUS, SIGSEGV, SIGABRT maybe.
+[ Upstream commit cebb69754f37d68e1355a5e726fdac317bcda302 ]
 
-That will be a good way to pickup the problem with a debugger or generate a
-a core file.
+When vlan_newlink call register_vlan_dev fails, it might return error
+with dev->reg_state = NETREG_UNREGISTERED. The rtnl_newlink should
+free the memory. But currently rtnl_newlink only free the memory which
+state is NETREG_UNINITIALIZED.
 
-I have also done some selinux trace functions. I think they collide with this set,
-but I think I can rebase them upon yours and see if they give some more functionality.
+BUG: memory leak
+unreferenced object 0xffff8881051de000 (size 4096):
+  comm "syz-executor139", pid 560, jiffies 4294745346 (age 32.445s)
+  hex dump (first 32 bytes):
+    76 6c 61 6e 32 00 00 00 00 00 00 00 00 00 00 00  vlan2...........
+    00 45 28 03 81 88 ff ff 00 00 00 00 00 00 00 00  .E(.............
+  backtrace:
+    [<0000000047527e31>] kmalloc_node include/linux/slab.h:578 [inline]
+    [<0000000047527e31>] kvmalloc_node+0x33/0xd0 mm/util.c:574
+    [<000000002b59e3bc>] kvmalloc include/linux/mm.h:753 [inline]
+    [<000000002b59e3bc>] kvzalloc include/linux/mm.h:761 [inline]
+    [<000000002b59e3bc>] alloc_netdev_mqs+0x83/0xd90 net/core/dev.c:9929
+    [<000000006076752a>] rtnl_create_link+0x2c0/0xa20 net/core/rtnetlink.c:3067
+    [<00000000572b3be5>] __rtnl_newlink+0xc9c/0x1330 net/core/rtnetlink.c:3329
+    [<00000000e84ea553>] rtnl_newlink+0x66/0x90 net/core/rtnetlink.c:3397
+    [<0000000052c7c0a9>] rtnetlink_rcv_msg+0x540/0x990 net/core/rtnetlink.c:5460
+    [<000000004b5cb379>] netlink_rcv_skb+0x12b/0x3a0 net/netlink/af_netlink.c:2469
+    [<00000000c71c20d3>] netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+    [<00000000c71c20d3>] netlink_unicast+0x4c6/0x690 net/netlink/af_netlink.c:1329
+    [<00000000cca72fa9>] netlink_sendmsg+0x735/0xcc0 net/netlink/af_netlink.c:1918
+    [<000000009221ebf7>] sock_sendmsg_nosec net/socket.c:652 [inline]
+    [<000000009221ebf7>] sock_sendmsg+0x109/0x140 net/socket.c:672
+    [<000000001c30ffe4>] ____sys_sendmsg+0x5f5/0x780 net/socket.c:2352
+    [<00000000b71ca6f3>] ___sys_sendmsg+0x11d/0x1a0 net/socket.c:2406
+    [<0000000007297384>] __sys_sendmsg+0xeb/0x1b0 net/socket.c:2439
+    [<000000000eb29b11>] do_syscall_64+0x56/0xa0 arch/x86/entry/common.c:359
+    [<000000006839b4d0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-I see this functionality very much needed in some form.
+Fixes: cb626bf566eb ("net-sysfs: Fix reference count leak")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Weilong Chen <chenweilong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/core/rtnetlink.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/net/core/rtnetlink.c
++++ b/net/core/rtnetlink.c
+@@ -3337,7 +3337,8 @@ replay:
+ 		 */
+ 		if (err < 0) {
+ 			/* If device is not registered at all, free it now */
+-			if (dev->reg_state == NETREG_UNINITIALIZED)
++			if (dev->reg_state == NETREG_UNINITIALIZED ||
++			    dev->reg_state == NETREG_UNREGISTERED)
+ 				free_netdev(dev);
+ 			goto out;
+ 		}
 
 
