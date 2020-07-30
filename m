@@ -2,69 +2,115 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F081DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F397FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB5FE2065E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C924C206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:41:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LtWOBflS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728586AbgG3Ghv (ORCPT
+        id S1728751AbgG3GlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 02:37:51 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8300 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725892AbgG3Ghv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 02:37:51 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B002FC277C6F562E7155;
-        Thu, 30 Jul 2020 14:37:46 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Thu, 30 Jul 2020
- 14:37:43 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <hca@linux.ibm.com>, <gor@linux.ibm.com>, <borntraeger@de.ibm.com>,
-        <colin.king@canonical.com>, <iii@linux.ibm.com>
-CC:     <linux-s390@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] s390/test_unwind: fix possible memleak in test_unwind()
-Date:   Thu, 30 Jul 2020 14:36:02 +0800
-Message-ID: <20200730063602.31581-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 30 Jul 2020 02:41:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbgG3GlS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 02:41:18 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0893FC0619D2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 23:41:17 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id kr4so1451568pjb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 23:41:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=krIgKID8uYB0pZD4CB8haR2YvOy/MetPylKw6idu3l4=;
+        b=LtWOBflSooNTpehq6wySGxlXhtLuziSucWm8aMNu7Qx8q2bR8GF81/AiBhdD9hzzBb
+         rXa0cqzGTIwPKML3flKaiwaz3cNLdgTQ5eoKvRIop6/KO9mX+0z4AvP0ese2AbDyXRJI
+         T5YXe1NzybAoLYBhkaLHcF83QC40xAy2QnpzFdcgY3ki69ON3mHgp+qmHYgPUXHR5cZm
+         3AzQQFq4dtkPw/wPAzYn2rCNxgW3eqsgt26sUuw7QBcTVT0TaWCf96cBOT6axy37aZew
+         CJDWmLrQ8LaOv664AMsQgqNXnxY2sQcqAKykCvlFY7mEwVmJWkJQCOrF1DqMazKaOdE8
+         1Luw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=krIgKID8uYB0pZD4CB8haR2YvOy/MetPylKw6idu3l4=;
+        b=AVude/vCZreV5n+rrpsVOBUEfnocEIvmdFQNIMNJiemo+PHvJAP4Ypca4FGkJKPT+n
+         HmNVPCpA3Obif7WTu8Yrk2NdH5JS6gN9Geb6pcdXBoVSzsjacZF5UjPxWnof27TvAtYW
+         elcAdUz0hApi1oIgHF10QrO+dy10yeykBShSx/G5nsm4QI55bhkN83z7UAz7/hAQwv+7
+         PP8b8TaNm8b6FZ5uUoh4Lu88AFgP6wyFl38xoa2c5MmkermLoGnuBuYLFw9DKed5/J4z
+         ftp5AL44PtC3LVA1nqWFEkhMWu4DMqbsTa6zGSVgLKRcRm0RBgOuo+Sdnr2wkP2ACks+
+         2EfA==
+X-Gm-Message-State: AOAM530Umyd9kmemv0WekEvE8QVijPF9P7iVIwDCEOVAUfa6ScxYMzoD
+        RvfJlCJbJiR/4NUELvEMSGjh8g==
+X-Google-Smtp-Source: ABdhPJzIeR2VvHfKshUiq72wZlmDXrmkeExywIbvTxbdaTNMXrcYSNWlNQK5rAj4ooTCk1/tFJM5HA==
+X-Received: by 2002:a17:902:262:: with SMTP id 89mr28913394plc.31.1596091276190;
+        Wed, 29 Jul 2020 23:41:16 -0700 (PDT)
+Received: from localhost ([106.201.14.19])
+        by smtp.gmail.com with ESMTPSA id y7sm4329829pjy.54.2020.07.29.23.41.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 Jul 2020 23:41:15 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 12:11:12 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Amit Kucheria <amitk@kernel.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        ionela.voinescu@arm.com,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cpufreq: cached_resolved_idx can not be negative
+Message-ID: <20200730064112.lvbwas7zzqruvprk@vireshk-mac-ubuntu>
+References: <d48d824ab3abacb2356878780979d7ed42191eaf.1596080365.git.viresh.kumar@linaro.org>
+ <CAHLCerP4YPHc4sKD_RTq=Gxfj+ex4F=J2is1Y-UzGXcOuEOrOQ@mail.gmail.com>
+ <20200730061041.gyprgwfkzfb64t3m@vireshk-mac-ubuntu>
+ <CAHLCerMD_spZFHER-y9dOzr7qo9xKXZdqy3cFt+W9QUW4Ng3jw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHLCerMD_spZFHER-y9dOzr7qo9xKXZdqy3cFt+W9QUW4Ng3jw@mail.gmail.com>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-test_unwind() misses to call kfree(bt) in an error path.
-Add the missed function call to fix it.
+On 30-07-20, 12:02, Amit Kucheria wrote:
+> Looking at this more closely, I found another call site for
+> cpufreq_frequency_table_target() in cpufreq.c that needs the index to
+> be unsigned int.
+> 
+> But then cpufreq_frequency_table_target() returns -EINVAL, so we
 
-Fixes: 0610154650f1 ("s390/test_unwind: print verbose unwinding results")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
----
- arch/s390/lib/test_unwind.c | 1 +
- 1 file changed, 1 insertion(+)
+It returns -EINVAL only in the case where the relation is not valid,
+which will never happen. Maybe that should be marked with WARN or BUG
+and we should drop return value of -EINVAL.
 
-diff --git a/arch/s390/lib/test_unwind.c b/arch/s390/lib/test_unwind.c
-index 32b7a30b2485..b0b12b46bc57 100644
---- a/arch/s390/lib/test_unwind.c
-+++ b/arch/s390/lib/test_unwind.c
-@@ -63,6 +63,7 @@ static noinline int test_unwind(struct task_struct *task, struct pt_regs *regs,
- 			break;
- 		if (state.reliable && !addr) {
- 			pr_err("unwind state reliable but addr is 0\n");
-+			kfree(bt);
- 			return -EINVAL;
- 		}
- 		sprint_symbol(sym, addr);
+Rafael ?
+
+> should be able to handle int values.
+
+And so no.
+
+> I think you will need to fix the unconditional assignment of
+>     policy->cached_resolved_idx = idx
+> in cpufreq_driver_resolve_freq(). It doesn't check for -EINVAL, so the
+> qcom driver is write in checking for a negative value.
+
+Right, I don't want it to have that check for the reason stated above.
+
+The point is I don't want code that verifies cached-idx at all, it is
+useless.
+
 -- 
-2.17.1
-
+viresh
