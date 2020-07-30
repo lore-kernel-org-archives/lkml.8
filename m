@@ -2,107 +2,212 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AB5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A16C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26D84207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBE29207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:17:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="StlI6RkZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fSD5EdSO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730617AbgG3VQe (ORCPT
+        id S1730493AbgG3VRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 17:16:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730583AbgG3VQd (ORCPT
+        Thu, 30 Jul 2020 17:17:14 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20741 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730505AbgG3VRO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 17:16:33 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C403C061575
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 14:16:33 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id l17so29713948iok.7
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 14:16:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1Jk6W9UOIzPrRcj3YnPe6EdgKZLyd9ssfbR+74SoEEs=;
-        b=StlI6RkZvkjYp4Ua10Z/QO8u57IBSYfob3BMUfFZbqcZbKOIMZj6H8S2c1VA+5ZM39
-         bibros8tONh3GpshN64Qxt9X9nGHnBllmuUH9j5D/SHtwqjdor6ijsvqonBErhnZBHXL
-         gwnD3nNIqvsvVNu1GERRO8WciamGU1d8SShtr7O3TcLavcB/f5PR4SUG9cKWBXTdGRXa
-         3h+BgDkp5R5jiBgmKadRMW3piVNoTppaSZJjZ8CYOgwcC6aSF0t0UbBWdsuAAbOOgXjf
-         r0EoiawB0QDcsbfJpWjXtAD/zK2FS8Sv2egoZZ+B7Ja7wsTFt5AKhNF8ac8Owh71Nbbn
-         XSxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1Jk6W9UOIzPrRcj3YnPe6EdgKZLyd9ssfbR+74SoEEs=;
-        b=TD2zYk1aB696wv76n3PV27kVN5X2soE42hpWWC7GV8JLyHEg/jFoyz8PYs43ocz2YS
-         OavpV9GDPXIYwm8rn9ruUnhH5oqJHEHu7y6UwJdKznuifF0J83VECcuH5p5m+GoNEFDA
-         MwxPgm8NXCptAwm+l+8lFoC2eNAXZHh7VsODNfpc3n4IHGjXBOeLPJL43ACv5+BuCBYn
-         xY8ek8bmxOg6sAcivfIhNjGD29tkxFsQmKvTEOMtlFeTwfQ/GyJ/FOAxnks2YqlyeIjC
-         XJRZOeP72EHBjEuMF/X5G04S1UW7XIASIGGpdq2vCjDLYBMli+4UBnm/eTbjhbftjRRb
-         qnoA==
-X-Gm-Message-State: AOAM532yDcJX9sb2Qtd8IX3/Hj95HSw3ckHU8lhCF0jbzRuX+PXLoEQM
-        vMA2LjO1kH8T+P9rHx53diKvybMrJlAd++Il8AXo9A==
-X-Google-Smtp-Source: ABdhPJwljSBFhldA5zSRyAo3DDoV7SOJr360N8Y0jCDmFcLoi+5OhqGo4hqoWPoGDjDjGZwW1BJvLujU6wY0dVUpu7w=
-X-Received: by 2002:a05:6638:2493:: with SMTP id x19mr1356986jat.53.1596143792287;
- Thu, 30 Jul 2020 14:16:32 -0700 (PDT)
+        Thu, 30 Jul 2020 17:17:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596143830;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bZGuV4rD0Ceq1ep6s52mf/yK6aOPC8Nt7kiDKbGKZCM=;
+        b=fSD5EdSO4Nry2NbMtGCBXHpYrFugAVbC9tkpespU/M+T6/H60af3AvbeEfXb5bwupHm6Wo
+        JpDKJEyb5PqHjcrbr89Ft3/exIDM4FvC+IcUKDDNtkC4v5YQ7vNaRAbJP7mVrjDsCEqhY8
+        mg87dFG8lwmzXvMNYApNlZMzdPiF818=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-180-x-mLPphPMe-v_LHwNhgtoA-1; Thu, 30 Jul 2020 17:17:06 -0400
+X-MC-Unique: x-mLPphPMe-v_LHwNhgtoA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B53B1100A8F2;
+        Thu, 30 Jul 2020 21:17:04 +0000 (UTC)
+Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C301519D7B;
+        Thu, 30 Jul 2020 21:17:03 +0000 (UTC)
+Date:   Thu, 30 Jul 2020 15:17:03 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] vfio/type1: Use iommu_aux_at(de)tach_group()
+ APIs
+Message-ID: <20200730151703.5daf8ad4@x1.home>
+In-Reply-To: <af6c95a7-3238-1cbd-8656-014c12498587@linux.intel.com>
+References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
+        <20200714055703.5510-5-baolu.lu@linux.intel.com>
+        <20200729143258.22533170@x1.home>
+        <af6c95a7-3238-1cbd-8656-014c12498587@linux.intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <20200730210728.2051-1-f.fainelli@gmail.com>
-In-Reply-To: <20200730210728.2051-1-f.fainelli@gmail.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Thu, 30 Jul 2020 14:16:21 -0700
-Message-ID: <CANn89iJETzud8PK7eTj=rXMSCjBtnmcSq1y0qF7EVK8b5M_vXA@mail.gmail.com>
-Subject: Re: [PATCH net] tcp: Export tcp_write_queue_purge()
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 2:07 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> After tcp_write_queue_purge() got uninlined with commit ac3f09ba3e49
-> ("tcp: uninline tcp_write_queue_purge()"), it became no longer possible
-> to reference this symbol from kernel modules.
->
-> Fixes: ac3f09ba3e49 ("tcp: uninline tcp_write_queue_purge()")
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  net/ipv4/tcp.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-> index 6f0caf9a866d..ea9d296a8380 100644
-> --- a/net/ipv4/tcp.c
-> +++ b/net/ipv4/tcp.c
-> @@ -2626,6 +2626,7 @@ void tcp_write_queue_purge(struct sock *sk)
->         tcp_sk(sk)->packets_out = 0;
->         inet_csk(sk)->icsk_backoff = 0;
->  }
-> +EXPORT_SYMBOL(tcp_write_queue_purge);
->
->  int tcp_disconnect(struct sock *sk, int flags)
->  {
-> --
-> 2.17.1
->
+On Thu, 30 Jul 2020 10:41:32 +0800
+Lu Baolu <baolu.lu@linux.intel.com> wrote:
 
-Hmmm.... which module would need this exactly ?
+> Hi Alex,
+> 
+> On 7/30/20 4:32 AM, Alex Williamson wrote:
+> > On Tue, 14 Jul 2020 13:57:03 +0800
+> > Lu Baolu <baolu.lu@linux.intel.com> wrote:
+> >   
+> >> Replace iommu_aux_at(de)tach_device() with iommu_aux_at(de)tach_group().
+> >> It also saves the IOMMU_DEV_FEAT_AUX-capable physcail device in the
+> >> vfio_group data structure so that it could be reused in other places.
+> >>
+> >> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> >> ---
+> >>   drivers/vfio/vfio_iommu_type1.c | 44 ++++++---------------------------
+> >>   1 file changed, 7 insertions(+), 37 deletions(-)
+> >>
+> >> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> >> index 5e556ac9102a..f8812e68de77 100644
+> >> --- a/drivers/vfio/vfio_iommu_type1.c
+> >> +++ b/drivers/vfio/vfio_iommu_type1.c
+> >> @@ -100,6 +100,7 @@ struct vfio_dma {
+> >>   struct vfio_group {
+> >>   	struct iommu_group	*iommu_group;
+> >>   	struct list_head	next;
+> >> +	struct device		*iommu_device;
+> >>   	bool			mdev_group;	/* An mdev group */
+> >>   	bool			pinned_page_dirty_scope;
+> >>   };
+> >> @@ -1627,45 +1628,13 @@ static struct device *vfio_mdev_get_iommu_device(struct device *dev)
+> >>   	return NULL;
+> >>   }
+> >>   
+> >> -static int vfio_mdev_attach_domain(struct device *dev, void *data)
+> >> -{
+> >> -	struct iommu_domain *domain = data;
+> >> -	struct device *iommu_device;
+> >> -
+> >> -	iommu_device = vfio_mdev_get_iommu_device(dev);
+> >> -	if (iommu_device) {
+> >> -		if (iommu_dev_feature_enabled(iommu_device, IOMMU_DEV_FEAT_AUX))
+> >> -			return iommu_aux_attach_device(domain, iommu_device);
+> >> -		else
+> >> -			return iommu_attach_device(domain, iommu_device);
+> >> -	}
+> >> -
+> >> -	return -EINVAL;
+> >> -}
+> >> -
+> >> -static int vfio_mdev_detach_domain(struct device *dev, void *data)
+> >> -{
+> >> -	struct iommu_domain *domain = data;
+> >> -	struct device *iommu_device;
+> >> -
+> >> -	iommu_device = vfio_mdev_get_iommu_device(dev);
+> >> -	if (iommu_device) {
+> >> -		if (iommu_dev_feature_enabled(iommu_device, IOMMU_DEV_FEAT_AUX))
+> >> -			iommu_aux_detach_device(domain, iommu_device);
+> >> -		else
+> >> -			iommu_detach_device(domain, iommu_device);
+> >> -	}
+> >> -
+> >> -	return 0;
+> >> -}
+> >> -
+> >>   static int vfio_iommu_attach_group(struct vfio_domain *domain,
+> >>   				   struct vfio_group *group)
+> >>   {
+> >>   	if (group->mdev_group)
+> >> -		return iommu_group_for_each_dev(group->iommu_group,
+> >> -						domain->domain,
+> >> -						vfio_mdev_attach_domain);
+> >> +		return iommu_aux_attach_group(domain->domain,
+> >> +					      group->iommu_group,
+> >> +					      group->iommu_device);  
+> > 
+> > No, we previously iterated all devices in the group and used the aux
+> > interface only when we have an iommu_device supporting aux.  If we
+> > simply assume an mdev group only uses an aux domain we break existing
+> > users, ex. SR-IOV VF backed mdevs.  Thanks,  
+> 
+> Oh, yes. Sorry! I didn't consider the physical device backed mdevs
+> cases.
+> 
+> Looked into this part of code, it seems that there's a lock issue here.
+> The group->mutex is held in iommu_group_for_each_dev() and will be
+> acquired again in iommu_attach_device().
 
-How come it took 3 years to discover this issue ?
+These are two different groups.  We walk the devices in the mdev's
+group with iommu_group_for_each_dev(), holding the mdev's group lock,
+but we call iommu_attach_device() with iommu_device, which results in
+acquiring the lock for the iommu_device's group.
+
+> How about making it like:
+> 
+> static int vfio_iommu_attach_group(struct vfio_domain *domain,
+>                                     struct vfio_group *group)
+> {
+>          if (group->mdev_group) {
+>                  struct device *iommu_device = group->iommu_device;
+> 
+>                  if (WARN_ON(!iommu_device))
+>                          return -EINVAL;
+> 
+>                  if (iommu_dev_feature_enabled(iommu_device, 
+> IOMMU_DEV_FEAT_AUX))
+>                          return iommu_aux_attach_device(domain->domain, 
+> iommu_device);
+>                  else
+>                          return iommu_attach_device(domain->domain, 
+> iommu_device);
+>          } else {
+>                  return iommu_attach_group(domain->domain, 
+> group->iommu_group);
+>          }
+> }
+> 
+> The caller (vfio_iommu_type1_attach_group) has guaranteed that all mdevs
+> in an iommu group should be derived from a same physical device.
+
+Have we?  iommu_attach_device() will fail if the group is not
+singleton, but that's just encouraging us to use the _attach_group()
+interface where the _attach_device() interface is relegated to special
+cases.  Ideally we'd get out of those special cases and create an
+_attach_group() for aux that doesn't further promote these notions.
+
+> Any thoughts?
+
+See my reply to Kevin, I'm thinking we need to provide a callback that
+can enlighten the IOMMU layer to be able to do _attach_group() with
+aux or separate IOMMU backed devices.  Thanks,
+
+Alex
+
