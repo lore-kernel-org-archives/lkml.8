@@ -2,215 +2,209 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7613C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD54C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A48442070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C91C62082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:02:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gIE2Bh+h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729673AbgG3PB2 (ORCPT
+        id S1729714AbgG3PCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:01:28 -0400
-Received: from relay.sw.ru ([185.231.240.75]:46850 "EHLO relay3.sw.ru"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726275AbgG3PB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 11:01:28 -0400
-Received: from [192.168.15.64]
-        by relay3.sw.ru with esmtp (Exim 4.93)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1k1A3O-0004lX-J4; Thu, 30 Jul 2020 18:01:06 +0300
-Subject: Re: [PATCH 00/23] proc: Introduce /proc/namespaces/ directory to
- expose namespaces lineary
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
-        akpm@linux-foundation.org, christian.brauner@ubuntu.com,
-        areber@redhat.com, serge@hallyn.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
- <87k0yl5axy.fsf@x220.int.ebiederm.org>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <56928404-f194-4194-5f2a-59acb15b1a04@virtuozzo.com>
-Date:   Thu, 30 Jul 2020 18:01:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 11:02:33 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:55250 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgG3PCc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 11:02:32 -0400
+Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 610CF20B4908;
+        Thu, 30 Jul 2020 08:02:30 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 610CF20B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1596121351;
+        bh=vKzSD0CcVGwc1leJ+1uee8TOPGRgvmYvqxvarqXtglA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gIE2Bh+h354aB27e8tSl3CCtSBrFMWO03GkwNede75VLrbyfSU1mD4qGsi9yrMJKN
+         h6tarjd4QEKaGhkjmBDFum+uyczMgX6OdnxBeSuNnoCMtW9N4iD6KWk8FoBzWxlVoJ
+         RpUPYUiY5a9CJPB7iEHxRdLIcX84FN2XbO06EkTU=
+Date:   Thu, 30 Jul 2020 10:02:28 -0500
+From:   Tyler Hicks <tyhicks@linux.microsoft.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     zohar@linux.ibm.com, stephen.smalley.work@gmail.com,
+        casey@schaufler-ca.com, sashal@kernel.org, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/4] IMA: Add func to measure LSM state and policy
+Message-ID: <20200730150228.GV4181@sequoia>
+References: <20200730034724.3298-1-nramas@linux.microsoft.com>
+ <20200730034724.3298-2-nramas@linux.microsoft.com>
 MIME-Version: 1.0
-In-Reply-To: <87k0yl5axy.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730034724.3298-2-nramas@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.07.2020 17:34, Eric W. Biederman wrote:
-> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
+On 2020-07-29 20:47:21, Lakshmi Ramasubramanian wrote:
+> Critical data structures of security modules need to be measured to
+> enable an attestation service to verify if the configuration and
+> policies for the security modules have been setup correctly and
+> that they haven't been tampered with at runtime. A new IMA policy is
+> required for handling this measurement.
 > 
->> Currently, there is no a way to list or iterate all or subset of namespaces
->> in the system. Some namespaces are exposed in /proc/[pid]/ns/ directories,
->> but some also may be as open files, which are not attached to a process.
->> When a namespace open fd is sent over unix socket and then closed, it is
->> impossible to know whether the namespace exists or not.
->>
->> Also, even if namespace is exposed as attached to a process or as open file,
->> iteration over /proc/*/ns/* or /proc/*/fd/* namespaces is not fast, because
->> this multiplies at tasks and fds number.
+> Define two new IMA policy func namely LSM_STATE and LSM_POLICY to
+> measure the state and the policy provided by the security modules.
+> Update ima_match_rules() and ima_validate_rule() to check for
+> the new func and ima_parse_rule() to handle the new func.
 > 
-> I am very dubious about this.
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+> ---
+>  Documentation/ABI/testing/ima_policy |  9 ++++++++
+>  security/integrity/ima/ima.h         |  2 ++
+>  security/integrity/ima/ima_api.c     |  2 +-
+>  security/integrity/ima/ima_policy.c  | 31 ++++++++++++++++++++++++----
+>  4 files changed, 39 insertions(+), 5 deletions(-)
 > 
-> I have been avoiding exactly this kind of interface because it can
-> create rather fundamental problems with checkpoint restart.
+> diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
+> index cd572912c593..b7c7fb548c0c 100644
+> --- a/Documentation/ABI/testing/ima_policy
+> +++ b/Documentation/ABI/testing/ima_policy
+> @@ -30,6 +30,7 @@ Description:
+>  				[FIRMWARE_CHECK]
+>  				[KEXEC_KERNEL_CHECK] [KEXEC_INITRAMFS_CHECK]
+>  				[KEXEC_CMDLINE] [KEY_CHECK]
+> +				[LSM_STATE] [LSM_POLICY]
+>  			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
+>  			       [[^]MAY_EXEC]
+>  			fsmagic:= hex value
+> @@ -125,3 +126,11 @@ Description:
+>  		keys added to .builtin_trusted_keys or .ima keyring:
+>  
+>  			measure func=KEY_CHECK keyrings=.builtin_trusted_keys|.ima
+> +
+> +		Example of measure rule using LSM_STATE to measure LSM state:
+> +
+> +			measure func=LSM_STATE template=ima-buf
+> +
+> +		Example of measure rule using LSM_POLICY to measure LSM policy:
+> +
+> +			measure func=LSM_POLICY template=ima-ng
+> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+> index 38043074ce5e..1b5f4b2f17d0 100644
+> --- a/security/integrity/ima/ima.h
+> +++ b/security/integrity/ima/ima.h
+> @@ -200,6 +200,8 @@ static inline unsigned int ima_hash_key(u8 *digest)
+>  	hook(POLICY_CHECK, policy)			\
+>  	hook(KEXEC_CMDLINE, kexec_cmdline)		\
+>  	hook(KEY_CHECK, key)				\
+> +	hook(LSM_STATE, lsm_state)			\
+> +	hook(LSM_POLICY, lsm_policy)			\
+>  	hook(MAX_CHECK, none)
+>  
+>  #define __ima_hook_enumify(ENUM, str)	ENUM,
+> diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
+> index 4f39fb93f278..8c8b4e4a6493 100644
+> --- a/security/integrity/ima/ima_api.c
+> +++ b/security/integrity/ima/ima_api.c
+> @@ -176,7 +176,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
+>   *		subj=, obj=, type=, func=, mask=, fsmagic=
+>   *	subj,obj, and type: are LSM specific.
+>   *	func: FILE_CHECK | BPRM_CHECK | CREDS_CHECK | MMAP_CHECK | MODULE_CHECK
+> - *	| KEXEC_CMDLINE | KEY_CHECK
+> + *	| KEXEC_CMDLINE | KEY_CHECK | LSM_STATE | LSM_POLICY
+>   *	mask: contains the permission mask
+>   *	fsmagic: hex value
+>   *
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index 07f033634b27..a0f5c39d9084 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -442,13 +442,20 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
+>  {
+>  	int i;
+>  
+> -	if (func == KEY_CHECK) {
+> -		return (rule->flags & IMA_FUNC) && (rule->func == func) &&
+> -		       ima_match_keyring(rule, keyring, cred);
+> -	}
+>  	if ((rule->flags & IMA_FUNC) &&
+>  	    (rule->func != func && func != POST_SETATTR))
+>  		return false;
+> +
+> +	switch (func) {
+> +	case KEY_CHECK:
+> +		return ima_match_keyring(rule, keyring, cred);
+> +	case LSM_STATE:
+> +	case LSM_POLICY:
+> +		return true;
+> +	default:
+> +		break;
+> +	}
+> +
+>  	if ((rule->flags & IMA_MASK) &&
+>  	    (rule->mask != mask && func != POST_SETATTR))
+>  		return false;
+> @@ -1044,6 +1051,18 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
+>  		if (ima_rule_contains_lsm_cond(entry))
+>  			return false;
+>  
+> +		break;
+> +	case LSM_STATE:
+> +	case LSM_POLICY:
+> +		if (entry->action & ~(MEASURE | DONT_MEASURE))
+> +			return false;
+> +
+> +		if (entry->flags & ~(IMA_FUNC | IMA_PCR))
+> +			return false;
+> +
+> +		if (ima_rule_contains_lsm_cond(entry))
+> +			return false;
+> +
+>  		break;
+>  	default:
+>  		return false;
+> @@ -1176,6 +1195,10 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+>  				entry->func = KEXEC_CMDLINE;
+>  			else if (strcmp(args[0].from, "KEY_CHECK") == 0)
+>  				entry->func = KEY_CHECK;
+> +			else if (strcmp(args[0].from, "LSM_STATE") == 0)
+> +				entry->func = LSM_STATE;
+> +			else if (strcmp(args[0].from, "LSM_POLICY") == 0)
+> +				entry->func = LSM_POLICY;
 
-restart/restore :)
+This patch generally looks really good to me with the exception of one
+thing...
 
-> You do have some filtering and the filtering is not based on current.
-> Which is good.
-> 
-> A view that is relative to a user namespace might be ok.    It almost
-> certainly does better as it's own little filesystem than as an extension
-> to proc though.
-> 
-> The big thing we want to ensure is that if you migrate you can restore
-> everything.  I don't see how you will be able to restore these files
-> after migration.  Anything like this without having a complete
-> checkpoint/restore story is a non-starter.
+We should only accept rules with these specified hook functions when an
+LSM that has measurement support is enabled. This messes up the ordering
+of your patch series but it could be as simple as doing this:
 
-There is no difference between files in /proc/namespaces/ directory and /proc/[pid]/ns/.
+			else if (IS_ENABLED(CONFIG_SECURITY_SELINUX) &&
+				 strcmp(args[0].from, "LSM_STATE") == 0)
+				 entry->func = LSM_STATE;
 
-CRIU can restore open files in /proc/[pid]/ns, the same will be with /proc/namespaces/ files.
-As a person who worked deeply for pid_ns and user_ns support in CRIU, I don't see any
-problem here.
+Or you could do something a little more complex, like what's done with
+CONFIG_IMA_LSM_RULES. You could create a CONFIG_IMA_MEASURE_LSM option
+that's default enabled but depends on CONFIG_SECURITY_SELINUX and then
+check for IS_ENABLED(CONFIG_IMA_MEASURE_LSM) in ima_parse_rule().
 
-If you have a specific worries about, let's discuss them.
+I'd personally opt for just placing the
+IS_ENABLED(CONFIG_SECURITY_SELINUX) check directly into
+ima_parse_rule().
 
-CC: Pavel Tikhomirov CRIU maintainer, who knows everything about namespaces C/R.
- 
-> Further by not going through the processes it looks like you are
-> bypassing the existing permission checks.  Which has the potential
-> to allow someone to use a namespace who would not be able to otherwise.
+Tyler
 
-I agree, and I wrote to Christian, that permissions should be more strict.
-This just should be formalized. Let's discuss this.
-
-> So I think this goes one step too far but I am willing to be persuaded
-> otherwise.
-> 
-> Eric
-> 
-> 
-> 
-> 
->> This patchset introduces a new /proc/namespaces/ directory, which exposes
->> subset of permitted namespaces in linear view:
->>
->> # ls /proc/namespaces/ -l
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'cgroup:[4026531835]' -> 'cgroup:[4026531835]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'ipc:[4026531839]' -> 'ipc:[4026531839]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026531840]' -> 'mnt:[4026531840]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026531861]' -> 'mnt:[4026531861]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026532133]' -> 'mnt:[4026532133]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026532134]' -> 'mnt:[4026532134]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026532135]' -> 'mnt:[4026532135]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026532136]' -> 'mnt:[4026532136]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'net:[4026531993]' -> 'net:[4026531993]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'pid:[4026531836]' -> 'pid:[4026531836]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'time:[4026531834]' -> 'time:[4026531834]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'user:[4026531837]' -> 'user:[4026531837]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'uts:[4026531838]' -> 'uts:[4026531838]'
->>
->> Namespace ns is exposed, in case of its user_ns is permitted from /proc's pid_ns.
->> I.e., /proc is related to pid_ns, so in /proc/namespace we show only a ns, which is
->>
->> 	in_userns(pid_ns->user_ns, ns->user_ns).
->>
->> In case of ns is a user_ns:
->>
->> 	in_userns(pid_ns->user_ns, ns).
->>
->> The patchset follows this steps:
->>
->> 1)A generic counter in ns_common is introduced instead of separate
->>   counters for every ns type (net::count, uts_namespace::kref,
->>   user_namespace::count, etc). Patches [1-8];
->> 2)Patch [9] introduces IDR to link and iterate alive namespaces;
->> 3)Patch [10] is refactoring;
->> 4)Patch [11] actually adds /proc/namespace directory and fs methods;
->> 5)Patches [12-23] make every namespace to use the added methods
->>   and to appear in /proc/namespace directory.
->>
->> This may be usefull to write effective debug utils (say, fast build
->> of networks topology) and checkpoint/restore software.
->> ---
->>
->> Kirill Tkhai (23):
->>       ns: Add common refcount into ns_common add use it as counter for net_ns
->>       uts: Use generic ns_common::count
->>       ipc: Use generic ns_common::count
->>       pid: Use generic ns_common::count
->>       user: Use generic ns_common::count
->>       mnt: Use generic ns_common::count
->>       cgroup: Use generic ns_common::count
->>       time: Use generic ns_common::count
->>       ns: Introduce ns_idr to be able to iterate all allocated namespaces in the system
->>       fs: Rename fs/proc/namespaces.c into fs/proc/task_namespaces.c
->>       fs: Add /proc/namespaces/ directory
->>       user: Free user_ns one RCU grace period after final counter put
->>       user: Add user namespaces into ns_idr
->>       net: Add net namespaces into ns_idr
->>       pid: Eextract child_reaper check from pidns_for_children_get()
->>       proc_ns_operations: Add can_get method
->>       pid: Add pid namespaces into ns_idr
->>       uts: Free uts namespace one RCU grace period after final counter put
->>       uts: Add uts namespaces into ns_idr
->>       ipc: Add ipc namespaces into ns_idr
->>       mnt: Add mount namespaces into ns_idr
->>       cgroup: Add cgroup namespaces into ns_idr
->>       time: Add time namespaces into ns_idr
->>
->>
->>  fs/mount.h                     |    4 
->>  fs/namespace.c                 |   14 +
->>  fs/nsfs.c                      |   78 ++++++++
->>  fs/proc/Makefile               |    1 
->>  fs/proc/internal.h             |   18 +-
->>  fs/proc/namespaces.c           |  382 +++++++++++++++++++++++++++-------------
->>  fs/proc/root.c                 |   17 ++
->>  fs/proc/task_namespaces.c      |  183 +++++++++++++++++++
->>  include/linux/cgroup.h         |    6 -
->>  include/linux/ipc_namespace.h  |    3 
->>  include/linux/ns_common.h      |   11 +
->>  include/linux/pid_namespace.h  |    4 
->>  include/linux/proc_fs.h        |    1 
->>  include/linux/proc_ns.h        |   12 +
->>  include/linux/time_namespace.h |   10 +
->>  include/linux/user_namespace.h |   10 +
->>  include/linux/utsname.h        |   10 +
->>  include/net/net_namespace.h    |   11 -
->>  init/version.c                 |    2 
->>  ipc/msgutil.c                  |    2 
->>  ipc/namespace.c                |   17 +-
->>  ipc/shm.c                      |    1 
->>  kernel/cgroup/cgroup.c         |    2 
->>  kernel/cgroup/namespace.c      |   25 ++-
->>  kernel/pid.c                   |    2 
->>  kernel/pid_namespace.c         |   46 +++--
->>  kernel/time/namespace.c        |   20 +-
->>  kernel/user.c                  |    2 
->>  kernel/user_namespace.c        |   23 ++
->>  kernel/utsname.c               |   23 ++
->>  net/core/net-sysfs.c           |    6 -
->>  net/core/net_namespace.c       |   18 +-
->>  net/ipv4/inet_timewait_sock.c  |    4 
->>  net/ipv4/tcp_metrics.c         |    2 
->>  34 files changed, 746 insertions(+), 224 deletions(-)
->>  create mode 100644 fs/proc/task_namespaces.c
->>
->> --
->> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-
+>  			else
+>  				result = -EINVAL;
+>  			if (!result)
+> -- 
+> 2.27.0
