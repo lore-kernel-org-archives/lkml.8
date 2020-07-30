@@ -2,168 +2,132 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B8AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C93B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3732520829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:24:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="H/fCxaFy"
+	by mail.kernel.org (Postfix) with ESMTP id B1EFC20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:24:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728518AbgG3NYD (ORCPT
+        id S1728719AbgG3NYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 09:24:03 -0400
-Received: from mga17.intel.com ([192.55.52.151]:20576 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726281AbgG3NYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 09:24:01 -0400
-IronPort-SDR: oMqWSwXToIC/8OhEOvFkrA/B9ty0fuypIgi2OfJ6okv70ed0uv9VyIjwjUgjD4sN9PCl3eszPf
- E1uGwxpB7ELg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="131661535"
-X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
-   d="scan'208";a="131661535"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 06:24:00 -0700
-IronPort-SDR: I776F0NrFG552kLlO1CWyPFJn1oEtgWF544Rn0oaziE33SzxOkD3QlfoOZwcvFc/pSw6PjUigp
- f8Zgb+Q2ZSLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
-   d="scan'208";a="365170391"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by orsmga001.jf.intel.com with ESMTP; 30 Jul 2020 06:24:00 -0700
-Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 30 Jul 2020 06:23:59 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.173)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Thu, 30 Jul 2020 06:23:59 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k/sltpwQdAiufo5l+XoXxwxhOupS/kcJP1ER9qBRnz7ybJedU5se9345QuvMF7hxGrJEMuz4AMG7utM4DtRgAae3+m6q80tXdyK1O+lo5uFaEvaHdUbDjVZy07pTRLl6CUVHBSahR7yEDzPRQJlrvblXbRKsUVl+WLrVmacNwdeCJAfKyxOMgrdC61IhFHcSUzlPk3uVF66V80v7CJ2ufB607O8vwgB31W99KJsHV8V/mAuhbO/L24SO1/i+rp7tlE3aKZeUOuOd/HyLFxaWqaiG8UoyWy+3zZmNVywnvT9+ckA5YvCvKSTRjAOPqawZqnHnHV+QT2prXAmLfbmjaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gn9I8vmXvSCM3pPWZ+yOvAvXkQozqsESdQG/60kZXn0=;
- b=NjiEnARv37ZE3EQveP1zcdhHxz+9xJxbgtLvuDGjBkFL7Alaymseizdij8NBhUupzDp76/hfW5J+2Wv5EGGZG/N2Iw7CBB2snmWbHyOhJFmAKJr86k6+PnPF7y51kcA8U1QK4AyzaVD8L5WC0zwl4R3TaJlo9MQNvY+NAFIljM0l00wF+Tam+PpMG7K+GqBMBWd3RTPvGZ3yhAJaJsiIhWVaGU0Abwj9tc8+jjBBwh1v8Mx2OFSg04uU3bnEHwgTnznub1lxRhON5iuACIoAMJ0dDpZ8+nQm5FOCZb8EskjiBxQqA10/xgaiIfSpx8fhZ9E3LSEVCKboVi3tZnbUjA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gn9I8vmXvSCM3pPWZ+yOvAvXkQozqsESdQG/60kZXn0=;
- b=H/fCxaFy3uDF35KKVnj71oIj2V4dU0UJTJb+XVRMyXznQszWt6rXLVwXFmM7u9etbhi8vs+maE+oFilgOYGQDPofRoBcSWPdnjD+wohNgmpEb2DLLUx8EqrtOj+RqccvWxI/SUZGWy4p7sUpCso/7tonSjv+usckrG9FUF65zks=
-Received: from DM6PR11MB3642.namprd11.prod.outlook.com (2603:10b6:5:138::26)
- by DM6PR11MB3930.namprd11.prod.outlook.com (2603:10b6:5:197::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Thu, 30 Jul
- 2020 13:23:57 +0000
-Received: from DM6PR11MB3642.namprd11.prod.outlook.com
- ([fe80::f043:4bdc:ef57:1b41]) by DM6PR11MB3642.namprd11.prod.outlook.com
- ([fe80::f043:4bdc:ef57:1b41%5]) with mapi id 15.20.3239.019; Thu, 30 Jul 2020
- 13:23:57 +0000
-From:   "Lu, Brent" <brent.lu@intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        "Takashi Iwai" <tiwai@suse.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Daniel Stuart <daniel.stuart14@gmail.com>,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        "Guennadi Liakhovetski" <guennadi.liakhovetski@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Sam McNally <sammc@chromium.org>,
-        "Damian van Soelen" <dj.vsoelen@gmail.com>
-Subject: RE: [PATCH v2 2/2] ASoC: Intel: Add period size constraint on strago
- board
-Thread-Topic: [PATCH v2 2/2] ASoC: Intel: Add period size constraint on strago
- board
-Thread-Index: AQHWZkoGGca0TF6PKk6/guLEW+ciXakfzheAgABIxaA=
-Date:   Thu, 30 Jul 2020 13:23:57 +0000
-Message-ID: <DM6PR11MB3642F476740FFDAB29C3B8DF97710@DM6PR11MB3642.namprd11.prod.outlook.com>
-References: <1596096815-32043-1-git-send-email-brent.lu@intel.com>
- <1596096815-32043-3-git-send-email-brent.lu@intel.com>
- <20200730084219.GF3703480@smile.fi.intel.com>
-In-Reply-To: <20200730084219.GF3703480@smile.fi.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [114.25.81.97]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3aae1587-ebff-4746-ea35-08d8348bd04f
-x-ms-traffictypediagnostic: DM6PR11MB3930:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB39304F77FD2D2CBD83F5AB5397710@DM6PR11MB3930.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CED5KV+kMOmaj3g4iGKM6tbT+zUOhWOnRNOJ8NGWUsUbjlBztHvhSDal5vzRHBBrjv84eNvhQR9xWLtv52OeuItTbvNeam/uWjpU144zprCkEx47qhahC0Jxf/IeVvnNYi2lEX/zLvFNXNv6PPVBgGpLZEPV/KjArGmcgK8ZdZ50x7Lye3cOE7AzwEK9BF833RMLatk9EqLzmlzlG/GrGS08bHLapR9nRl+Z7eOW/9LDGmiVXzbFm39Ec8Ep2U+FOJ9X7tIoAKx4q0h1E/djqcAeU2Pzcmk0G3cQdkqPF5hPqFCZYTGe9KP4IekgkjFQiQmlOW4Op91D3gnzV8gqTw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3642.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(136003)(39860400002)(366004)(396003)(478600001)(54906003)(6916009)(8936002)(316002)(8676002)(9686003)(52536014)(55016002)(71200400001)(7696005)(66476007)(66446008)(186003)(76116006)(5660300002)(26005)(4326008)(66946007)(33656002)(4744005)(7416002)(6506007)(2906002)(64756008)(66556008)(86362001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: h1CPt9DKWaCmJ5Q/gnCErkLBDhJPKVt6slOMItnyWEDNntUn/GvNeBKVIvl1uMVG4PGynoZT47xofe6DdUBffH9FW3SaRjc4kkI3DtRafvdyJ3Lz8sdFQTZ9OzA9m1zKdWwZdzKGCrkc7mtjXsqvmQQWnsrQ7H0J31JhFb2DGZlna3s3IhFmsIp2bXxUpUdl/HeiX/myo4aqF2eAqbhH/lLXw5RbZ/cyDJKjJxasJzGqpIKpXc+IlbNok40qoFjlypqYuoW907XMUsK2N5ikzsm4nf5Q0IlMmcB+DZTaIdlvlWqRztY99g0pyWeIg3lfAnhY5dIiXls5Ojs5Ko/+T1gLt7AO5KI5glGJVt4gnGYXa+NrPxBXDjR2YigtFDX5tYZrg3TAlToWoxoMU6mL9XP6SOm9y1DrK9it4Cj3ea4gcXEOUi8RCRSjZCo68aet8PyoIVwQKNQcNhl29v/O41W3ScD7LW4rwK5Jd4W0XEY=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 30 Jul 2020 09:24:18 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:56128 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726281AbgG3NYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 09:24:18 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A8389BDF52B708896333;
+        Thu, 30 Jul 2020 21:24:09 +0800 (CST)
+Received: from [127.0.0.1] (10.174.176.211) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Thu, 30 Jul 2020
+ 21:24:04 +0800
+Subject: Re: [PATCH] vgacon: Fix an out-of-bounds in
+ vgacon_scrollback_update()
+To:     Jiri Slaby <jirislaby@kernel.org>, <b.zolnierkie@samsung.com>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-fbdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?5byg5LqR5rW3?= <zhangyunhai@nsfocus.com>
+References: <20200713105730.550334-1-yangyingliang@huawei.com>
+ <220220f1-48f7-46f6-952f-ab41fa57d6a1@kernel.org>
+From:   Yang Yingliang <yangyingliang@huawei.com>
+Message-ID: <c3714d73-d5fe-c77a-e554-bb1ff4fd6980@huawei.com>
+Date:   Thu, 30 Jul 2020 21:24:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3642.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3aae1587-ebff-4746-ea35-08d8348bd04f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2020 13:23:57.2142
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LC3FknG/E45eGLiAoJsTr1tI1rTmAtkxG4j4uiO0n6uQqNLZsELDVqLOi+6E4EVtnwZModPswI82E2N3scXC9w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3930
-X-OriginatorOrg: intel.com
+In-Reply-To: <220220f1-48f7-46f6-952f-ab41fa57d6a1@kernel.org>
+Content-Type: text/plain; charset="iso-8859-2"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.174.176.211]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Thu, Jul 30, 2020 at 04:13:35PM +0800, Brent Lu wrote:
-> > From: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-> >
-> > The CRAS server does not set the period size in hw_param so ALSA will
-> > calculate a value for period size which is based on the buffer size
-> > and other parameters. The value may not always be aligned with Atom's
-> > dsp design so a constraint is added to make sure the board always has
-> > a good value.
-> >
-> > Cyan uses chtmax98090 and others(banon, celes, edgar, kefka...) use
-> > rt5650.
->=20
-> Actually one more comment here.
-> Can you split per machine driver?
->=20
 
-It adds constraints on BSW Chromebooks for same purpose. I don't see the
-benefit to split it.
+On 2020/7/30 19:04, Jiri Slaby wrote:
+> On 13. 07. 20, 12:57, Yang Yingliang wrote:
+>> I got a slab-out-of-bounds report when I doing fuzz test.
+>>
+>> [  334.989515] ==================================================================
+>> [  334.989577] BUG: KASAN: slab-out-of-bounds in vgacon_scroll+0x57a/0x8ed
+>> [  334.989588] Write of size 1766 at addr ffff8883de69ff3e by task test/2658
+>> [  334.989593]
+>> [  334.989608] CPU: 3 PID: 2658 Comm: test Not tainted 5.7.0-rc5-00005-g152036d1379f #789
+>> [  334.989617] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+>> [  334.989624] Call Trace:
+>> [  334.989646]  dump_stack+0xe4/0x14e
+>> [  334.989676]  print_address_description.constprop.5+0x3f/0x60
+>> [  334.989699]  ? vgacon_scroll+0x57a/0x8ed
+>> [  334.989710]  __kasan_report.cold.8+0x92/0xaf
+>> [  334.989735]  ? vgacon_scroll+0x57a/0x8ed
+>> [  334.989761]  kasan_report+0x37/0x50
+>> [  334.989789]  check_memory_region+0x1c1/0x1e0
+>> [  334.989806]  memcpy+0x38/0x60
+>> [  334.989824]  vgacon_scroll+0x57a/0x8ed
+>> [  334.989876]  con_scroll+0x4ef/0x5e0
+> ...
+>> Because vgacon_scrollback_cur->tail plus memcpy size is greater than
+>> vgacon_scrollback_cur->size. Fix this by checking the memcpy size.
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+>> ---
+>>   drivers/video/console/vgacon.c | 11 ++++++++---
+>>   1 file changed, 8 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/video/console/vgacon.c b/drivers/video/console/vgacon.c
+>> index 998b0de1812f..b51ffb9a208d 100644
+>> --- a/drivers/video/console/vgacon.c
+>> +++ b/drivers/video/console/vgacon.c
+>> @@ -243,6 +243,7 @@ static void vgacon_scrollback_startup(void)
+>>   static void vgacon_scrollback_update(struct vc_data *c, int t, int count)
+>>   {
+>>   	void *p;
+>> +	int size;
+>>   
+>>   	if (!vgacon_scrollback_cur->data || !vgacon_scrollback_cur->size ||
+>>   	    c->vc_num != fg_console)
+>> @@ -251,13 +252,17 @@ static void vgacon_scrollback_update(struct vc_data *c, int t, int count)
+>>   	p = (void *) (c->vc_origin + t * c->vc_size_row);
+>>   
+>>   	while (count--) {
+>> +		size = vgacon_scrollback_cur->size - vgacon_scrollback_cur->tail;
+>> +		if (size > c->vc_size_row)
+>> +			size = c->vc_size_row;
+>> +
+>>   		scr_memcpyw(vgacon_scrollback_cur->data +
+>>   			    vgacon_scrollback_cur->tail,
+>> -			    p, c->vc_size_row);
+>> +			    p, size);
+> Are you sure the consumer can handle split lines? As vgacon_scrolldelta
+> (soff in particular) looks to me like it doesn't.
+>
+> Have you tested you patch? I mean with soft scrollback on the vga console?
 
-Regards,
-Brent
-> >  sound/soc/intel/boards/cht_bsw_max98090_ti.c | 14 +++++++++++++-
-> >  sound/soc/intel/boards/cht_bsw_rt5645.c      | 14 +++++++++++++-
->=20
-> --
-> With Best Regards,
-> Andy Shevchenko
->=20
+I only test the patch with the reproduce program.
+
+
+Thanks,
+
+Yang
+
+>
+>>   		vgacon_scrollback_cur->cnt++;
+>> -		p += c->vc_size_row;
+>> -		vgacon_scrollback_cur->tail += c->vc_size_row;
+>> +		p += size;
+>> +		vgacon_scrollback_cur->tail += size;
+>>   
+>>   		if (vgacon_scrollback_cur->tail >= vgacon_scrollback_cur->size)
+>>   			vgacon_scrollback_cur->tail = 0;
+>>
+> thanks,
 
