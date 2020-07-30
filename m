@@ -2,80 +2,145 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B153C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FA9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7647D208A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 823612082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:27:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596122839;
+	bh=KCyq/zOj5qNJ2u6DpNndotsDRFFpeiKIXrv4aEsMJKY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=czI5HY9mY+I1Z6hYJNbLVfKTo99ZRsUvlO2+7V1txPF7sALP7OkHOWKex96XemE6n
+	 pQypNJxFrdzQjBR0egQFUjpMP8JnCNMqHKO/od4G8Nqf568pYsJMtR+TWZ+Zdzj3Xq
+	 Ude/zR8l5C78BMd7BxVtjt7liCe3WoBRsu2foqSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbgG3P1O (ORCPT
+        id S1729784AbgG3P1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:27:14 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54880 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgG3P1N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 11:27:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726353AbgG3P1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Jul 2020 11:27:13 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1k1ASY-0005n8-GX; Thu, 30 Jul 2020 15:27:06 +0000
-Date:   Thu, 30 Jul 2020 17:27:05 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Anthony Yznaga <anthony.yznaga@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
-        arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
-        gerg@linux-m68k.org, ktkhai@virtuozzo.com, peterz@infradead.org,
-        esyr@redhat.com, jgg@ziepe.ca, christian@kellner.me,
-        areber@redhat.com, cyphar@cyphar.com, steven.sistare@oracle.com
-Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
-Message-ID: <20200730152705.ol42jppnl4xfhl32@wittgenstein>
-References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
- <20200730152250.GG23808@casper.infradead.org>
+Received: from localhost (mobile-166-175-62-240.mycingular.net [166.175.62.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2752E20829;
+        Thu, 30 Jul 2020 15:27:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596122832;
+        bh=KCyq/zOj5qNJ2u6DpNndotsDRFFpeiKIXrv4aEsMJKY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=FiDyM/K3WXa4OsjNfuAXQZEuHxIna/1+4SXUrzaHELeqDig8rBQTLr1+B8AcuXMuL
+         UmIEL+Ys/GWJ/oLVJDViCHAsIUi4yXry1nrfmWKb4NPatO01Wwd+Xtersxv0MGE5nn
+         ePlzes8VcumqqZnHqR48si433BmvVZArHu4M+lqA=
+Date:   Thu, 30 Jul 2020 10:27:07 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alex Deucher <alexdeucher@gmail.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>
+Subject: Re: [PATCH v2] PCI/P2PDMA: Allow P2PDMA on all AMD CPUs newer than
+ the Zen family
+Message-ID: <20200730152707.GA2037922@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200730152250.GG23808@casper.infradead.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200729231844.4653-1-logang@deltatee.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 04:22:50PM +0100, Matthew Wilcox wrote:
-> On Mon, Jul 27, 2020 at 10:11:22AM -0700, Anthony Yznaga wrote:
-> > This patchset adds support for preserving an anonymous memory range across
-> > exec(3) using a new madvise MADV_DOEXEC argument.  The primary benefit for
-> > sharing memory in this manner, as opposed to re-attaching to a named shared
-> > memory segment, is to ensure it is mapped at the same virtual address in
-> > the new process as it was in the old one.  An intended use for this is to
-> > preserve guest memory for guests using vfio while qemu exec's an updated
-> > version of itself.  By ensuring the memory is preserved at a fixed address,
-> > vfio mappings and their associated kernel data structures can remain valid.
-> > In addition, for the qemu use case, qemu instances that back guest RAM with
-> > anonymous memory can be updated.
+On Wed, Jul 29, 2020 at 05:18:44PM -0600, Logan Gunthorpe wrote:
+> In order to avoid needing to add every new AMD CPU host bridge to the list
+> every cycle, allow P2PDMA if the CPUs vendor is AMD and family is
+> greater than 0x17 (Zen).
 > 
-> I just realised that something else I'm working on might be a suitable
-> alternative to this.  Apologies for not realising it sooner.
+> This should cut down a bunch of the churn adding to the list of allowed
+> host bridges.
 > 
-> http://www.wil.cx/~willy/linux/sileby.html
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Alex Deucher <alexdeucher@gmail.com>
+> Cc: Christian König <christian.koenig@amd.com>
+> Cc: Huang Rui <ray.huang@amd.com>
 
-Just skimming: make it O_CLOEXEC by default. ;)
+Thanks, applied as below with Alex's reviewed-by to pci/peer-to-peer
+for v5.9.
 
-> 
-> To use this, you'd mshare() the anonymous memory range, essentially
-> detaching the VMA from the current process's mm_struct and reparenting
-> it to this new mm_struct, which has an fd referencing it.
-> 
-> Then you call exec(), and the exec'ed task gets to call mmap() on that
-> new fd to attach the memory range to its own address space.
-> 
-> Presto!
+I had to enable CONFIG_MEMORY_HOTREMOVE and CONFIG_ZONE_DEVICE in
+order to compile p2pdma.c.  I see some reasons why that is, but it's
+not exactly intuitive, especially for MEMORY_HOTREMOVE.
+
+
+commit dea286bb71ba ("PCI/P2PDMA: Allow P2PDMA on AMD Zen and newer CPUs")
+Author: Logan Gunthorpe <logang@deltatee.com>
+Date:   Wed Jul 29 17:18:44 2020 -0600
+
+    PCI/P2PDMA: Allow P2PDMA on AMD Zen and newer CPUs
+    
+    Allow P2PDMA if the CPU vendor is AMD and family is 0x17 (Zen) or greater.
+    
+    [bhelgaas: commit log, simplify #if/#else/#endif]
+    Link: https://lore.kernel.org/r/20200729231844.4653-1-logang@deltatee.com
+    Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+    Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+    Cc: Christian König <christian.koenig@amd.com>
+    Cc: Huang Rui <ray.huang@amd.com>
+
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index e8e444eeb1cd..1ec61fced4c3 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -273,6 +273,19 @@ static void seq_buf_print_bus_devfn(struct seq_buf *buf, struct pci_dev *pdev)
+ 	seq_buf_printf(buf, "%s;", pci_name(pdev));
+ }
+ 
++static bool cpu_supports_p2pdma(void)
++{
++#ifdef CONFIG_X86
++	struct cpuinfo_x86 *c = &cpu_data(0);
++
++	/* Any AMD CPU whose family ID is Zen or newer supports p2pdma */
++	if (c->x86_vendor == X86_VENDOR_AMD && c->x86 >= 0x17)
++		return true;
++#endif
++
++	return false;
++}
++
+ static const struct pci_p2pdma_whitelist_entry {
+ 	unsigned short vendor;
+ 	unsigned short device;
+@@ -280,11 +293,6 @@ static const struct pci_p2pdma_whitelist_entry {
+ 		REQ_SAME_HOST_BRIDGE	= 1 << 0,
+ 	} flags;
+ } pci_p2pdma_whitelist[] = {
+-	/* AMD ZEN */
+-	{PCI_VENDOR_ID_AMD,	0x1450,	0},
+-	{PCI_VENDOR_ID_AMD,	0x15d0,	0},
+-	{PCI_VENDOR_ID_AMD,	0x1630,	0},
+-
+ 	/* Intel Xeon E5/Core i7 */
+ 	{PCI_VENDOR_ID_INTEL,	0x3c00, REQ_SAME_HOST_BRIDGE},
+ 	{PCI_VENDOR_ID_INTEL,	0x3c01, REQ_SAME_HOST_BRIDGE},
+@@ -473,7 +481,8 @@ upstream_bridge_distance(struct pci_dev *provider, struct pci_dev *client,
+ 					      acs_redirects, acs_list);
+ 
+ 	if (map_type == PCI_P2PDMA_MAP_THRU_HOST_BRIDGE) {
+-		if (!host_bridge_whitelist(provider, client))
++		if (!cpu_supports_p2pdma() &&
++		    !host_bridge_whitelist(provider, client))
+ 			map_type = PCI_P2PDMA_MAP_NOT_SUPPORTED;
+ 	}
+ 
