@@ -2,242 +2,110 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DD4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2372C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE0A320829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC7922083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:23:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Ya+aBj1V"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="qtiUQFS2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730639AbgG3VVG (ORCPT
+        id S1730680AbgG3VXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 17:21:06 -0400
-Received: from gateway23.websitewelcome.com ([192.185.49.218]:38402 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730551AbgG3VVG (ORCPT
+        Thu, 30 Jul 2020 17:23:20 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:35108 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730632AbgG3VXQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 17:21:06 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 9E47C18933
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 16:19:03 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 1Fx9kiqiiSxZV1Fx9kDR74; Thu, 30 Jul 2020 16:19:03 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Dgc5q+btJ0qLtgKsOpVqoaxgoehsQ/cFQWUFMqbTx18=; b=Ya+aBj1VC2ibFEEbdFxjVK4+ip
-        rkM8dXXAa/PREqZa0iuogOr01gjvLpHYNbssEGN/zkmWd4pg300hxGZ0YDV0vDczgw1tadrJZJdSB
-        Byx0gprUPjOisZN+Wpgm5zMPDGyK0U2+xhvQQlaxnJQkq6PNZ1QFHYL3gzw9r2kZWDpi1r3f6qisT
-        GNQ/APg1Jrn0/kjeBM+r96mqOz5ZU//dxn+DyJoeDQc1X1+eRv48XMv8zRj5I1I7OEB6+6VbjAQSp
-        6aQA68ANDCl4ClGl8IBflmtaHXFtd13xAhDrr2suFC3OtuAcsFhsNo7poVTyxhyySxNpK4VdzfxEe
-        69Pckl1g==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:47268 helo=[192.168.15.3])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1k1Fx7-000Sv2-Gr; Thu, 30 Jul 2020 16:19:01 -0500
-To:     Tomas Winkler <tomas.winkler@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Ramalingam C <ramalingam.c@intel.com>, stable@vger.kernel.org
-References: <20200730185451.3621108-1-tomas.winkler@intel.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- AP7RWS474w==
-Subject: Re: [char-misc-next V3] mei: hdcp: fix mei_hdcp_verify_mprime() input
- paramter
-Message-ID: <2ce86027-467f-6cc0-6e1b-f706dd1adfe5@embeddedor.com>
-Date:   Thu, 30 Jul 2020 16:25:04 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 30 Jul 2020 17:23:16 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06ULEqWR024305
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 14:23:16 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=DItnW/NXmv5ug+5NK0qfuwxSbYW6plOy2LXZI/73NLM=;
+ b=qtiUQFS2/vPI58ANZ+aHM17cg9OtX4Yfg9rKs12tnBS7eXxm44db+yg/EgUj/0SBHPdL
+ qpQdQNGj3WNvZyO6SzSn0btZmku3SQTvgajw/zNTr0OmwlDb+ywetUqSiWfVx4IIu/s6
+ V1PFVR9V6XUNBBCIq8a7mxid9IhZokMBAII= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 32m01cj9v4-5
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 14:23:16 -0700
+Received: from intmgw002.41.prn1.facebook.com (2620:10d:c085:208::11) by
+ mail.thefacebook.com (2620:10d:c085:11d::7) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 30 Jul 2020 14:23:15 -0700
+Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
+        id A457320B00A2; Thu, 30 Jul 2020 14:23:12 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
+To:     <bpf@vger.kernel.org>
+CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>,
+        Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: prn0c01
+Subject: [PATCH bpf-next v3 04/29] bpf: refine memcg-based memory accounting for cpumap maps
+Date:   Thu, 30 Jul 2020 14:22:45 -0700
+Message-ID: <20200730212310.2609108-5-guro@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200730212310.2609108-1-guro@fb.com>
+References: <20200730212310.2609108-1-guro@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <20200730185451.3621108-1-tomas.winkler@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1k1Fx7-000Sv2-Gr
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.3]) [187.162.31.110]:47268
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-30_15:2020-07-30,2020-07-30 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
+ adultscore=0 lowpriorityscore=0 suspectscore=13 mlxlogscore=983
+ phishscore=0 clxscore=1015 impostorscore=0 bulkscore=0 mlxscore=0
+ priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007300150
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tomas,
+Include metadata and percpu data into the memcg-based memory accounting.
 
-The subject line has a typo: s/paramter/parameter
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+---
+ kernel/bpf/cpumap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Please, see more comments below...
+diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
+index f1c46529929b..74ae9fcbe82e 100644
+--- a/kernel/bpf/cpumap.c
++++ b/kernel/bpf/cpumap.c
+@@ -99,7 +99,7 @@ static struct bpf_map *cpu_map_alloc(union bpf_attr *at=
+tr)
+ 	    attr->map_flags & ~BPF_F_NUMA_NODE)
+ 		return ERR_PTR(-EINVAL);
+=20
+-	cmap =3D kzalloc(sizeof(*cmap), GFP_USER);
++	cmap =3D kzalloc(sizeof(*cmap), GFP_USER | __GFP_ACCOUNT);
+ 	if (!cmap)
+ 		return ERR_PTR(-ENOMEM);
+=20
+@@ -418,7 +418,7 @@ static struct bpf_cpu_map_entry *
+ __cpu_map_entry_alloc(struct bpf_cpumap_val *value, u32 cpu, int map_id)
+ {
+ 	int numa, err, i, fd =3D value->bpf_prog.fd;
+-	gfp_t gfp =3D GFP_KERNEL | __GFP_NOWARN;
++	gfp_t gfp =3D GFP_KERNEL_ACCOUNT | __GFP_NOWARN;
+ 	struct bpf_cpu_map_entry *rcpu;
+ 	struct xdp_bulk_queue *bq;
+=20
+--=20
+2.26.2
 
-On 7/30/20 13:54, Tomas Winkler wrote:
-> wired_cmd_repeater_auth_stream_req_in has a variable
-> length array at the end. we use struct_size() overflow
-> macro to determine the size for the allocation and sending
-> size.
-> This also fixes bug in case number of streams is > 0 in the original
-> submission. This bug was not triggered as the number of streams is
-> always one.
-> 
-> Fixes: c56967d674e3 (mei: hdcp: Replace one-element array with flexible-array member)
-> Fixes: 0a1af1b5c18d ("misc/mei/hdcp: Verify M_prime")
-> Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-> Cc: Ramalingam C <ramalingam.c@intel.com>
-> Cc: <stable@vger.kernel.org> v5.1+
-> Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-> ---
-> V3:
-> 1. Fix commit message with more info and another patch it fixes (Gustavo)
-> 2. Target stable. (Gustavo)
-> V2: Check for allocation failure.
->  drivers/misc/mei/hdcp/mei_hdcp.c | 40 +++++++++++++++++++-------------
->  1 file changed, 24 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/misc/mei/hdcp/mei_hdcp.c b/drivers/misc/mei/hdcp/mei_hdcp.c
-> index d1d3e025ca0e..f1205e0060db 100644
-> --- a/drivers/misc/mei/hdcp/mei_hdcp.c
-> +++ b/drivers/misc/mei/hdcp/mei_hdcp.c
-> @@ -546,38 +546,46 @@ static int mei_hdcp_verify_mprime(struct device *dev,
->  				  struct hdcp_port_data *data,
->  				  struct hdcp2_rep_stream_ready *stream_ready)
->  {
-> -	struct wired_cmd_repeater_auth_stream_req_in
-> -					verify_mprime_in = { { 0 } };
-> +	struct wired_cmd_repeater_auth_stream_req_in *verify_mprime_in;
->  	struct wired_cmd_repeater_auth_stream_req_out
->  					verify_mprime_out = { { 0 } };
->  	struct mei_cl_device *cldev;
->  	ssize_t byte;
-> +	size_t cmd_size;
->  
->  	if (!dev || !stream_ready || !data)
->  		return -EINVAL;
->  
->  	cldev = to_mei_cl_device(dev);
->  
-> -	verify_mprime_in.header.api_version = HDCP_API_VERSION;
-> -	verify_mprime_in.header.command_id = WIRED_REPEATER_AUTH_STREAM_REQ;
-> -	verify_mprime_in.header.status = ME_HDCP_STATUS_SUCCESS;
-> -	verify_mprime_in.header.buffer_len =
-> +	cmd_size = struct_size(verify_mprime_in, streams, data->k);
-> +	if (cmd_size == SIZE_MAX)
-> +		return -EINVAL;
-> +
-> +	verify_mprime_in = kzalloc(cmd_size, GFP_KERNEL);
-> +	if (!verify_mprime_in)
-> +		return -ENOMEM;
-> +
-> +	verify_mprime_in->header.api_version = HDCP_API_VERSION;
-> +	verify_mprime_in->header.command_id = WIRED_REPEATER_AUTH_STREAM_REQ;
-> +	verify_mprime_in->header.status = ME_HDCP_STATUS_SUCCESS;
-> +	verify_mprime_in->header.buffer_len =
->  			WIRED_CMD_BUF_LEN_REPEATER_AUTH_STREAM_REQ_MIN_IN;
->  
-> -	verify_mprime_in.port.integrated_port_type = data->port_type;
-> -	verify_mprime_in.port.physical_port = (u8)data->fw_ddi;
-> -	verify_mprime_in.port.attached_transcoder = (u8)data->fw_tc;
-> +	verify_mprime_in->port.integrated_port_type = data->port_type;
-> +	verify_mprime_in->port.physical_port = (u8)data->fw_ddi;
-> +	verify_mprime_in->port.attached_transcoder = (u8)data->fw_tc;
-> +
-> +	memcpy(verify_mprime_in->m_prime, stream_ready->m_prime, HDCP_2_2_MPRIME_LEN);
-> +	drm_hdcp_cpu_to_be24(verify_mprime_in->seq_num_m, data->seq_num_m);
->  
-> -	memcpy(verify_mprime_in.m_prime, stream_ready->m_prime,
-> -	       HDCP_2_2_MPRIME_LEN);
-> -	drm_hdcp_cpu_to_be24(verify_mprime_in.seq_num_m, data->seq_num_m);
-> -	memcpy(verify_mprime_in.streams, data->streams,
-> +	memcpy(verify_mprime_in->streams, data->streams,
->  	       array_size(data->k, sizeof(*data->streams)));
->  
-> -	verify_mprime_in.k = cpu_to_be16(data->k);
-> +	verify_mprime_in->k = cpu_to_be16(data->k);
->  
-> -	byte = mei_cldev_send(cldev, (u8 *)&verify_mprime_in,
-> -			      sizeof(verify_mprime_in));
-> +	byte = mei_cldev_send(cldev, (u8 *)&verify_mprime_in, cmd_size);
-
-The line above is incorrect, it should be this, instead:
-
-byte = mei_cldev_send(cldev, (u8 *)verify_mprime_in, cmd_size);
-
-otherwise you are passing the address of the object pointer
-verify_mprime_in and not the reference to what it points to,
-which is what we want in this case.
-
-Thanks
---
-Gustavo
-
-> +	kfree(verify_mprime_in);
->  	if (byte < 0) {
->  		dev_dbg(dev, "mei_cldev_send failed. %zd\n", byte);
->  		return byte;
-> 
