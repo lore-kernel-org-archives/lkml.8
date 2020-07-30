@@ -2,156 +2,120 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MALFORMED_FREEMAIL,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A05C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29307C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A472A2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:58:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dKn1y7Hx"
+	by mail.kernel.org (Postfix) with ESMTP id F36092083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:59:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596088792;
+	bh=BHc8sdSpTVccKCyLCgqnAxB5xRQXDAGKg4tyDUDECSM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=puipU3glaBEWnyfgU06jPZy9Jx0nS+jPb1PQmooatexzcmTnGL3LJNTINtNDiWNZx
+	 IfO7gSqPYWcBpQUvpiqDPqTz8GgWg/UbfsqbGETKaIedxbnlH+AFg651z5DsnT6a39
+	 jVPNECvoBz7oLeQAR18Ug0BLhBfCYmUmhL/TZvOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbgG3F6n (ORCPT
+        id S1728673AbgG3F7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 01:58:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33016 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgG3F6m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 01:58:42 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3ED1C061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 22:58:42 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id qc22so11930173ejb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 22:58:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=IAoTwvssfsWUMQsY9ak3cq0wR9KCIhNThNsjepDyRwQ=;
-        b=dKn1y7HxLHmjpQTyJW7X+RsRlljgI8xQco6QX2Sff2ZbMzjvDCioNAC/Tka7RXXg+d
-         QtUr+TroAF2McWFShmZtuzJb0Z6t+/w760qhbt7wPXZCo7e6W5BSrF5j+RdHwkvk4wS+
-         L6A5z4VulNYVFb6SqSDDtKV41c0hcWnZwuHpQ23Tt0eYtfU98F70Y6WqBdWDJifP9RH8
-         QrBFfCnXzdpiyyEwjg5/pgVZ/i4H+kJjHqS5bj/UroaAf4xzhawcTRuFOIdnXUNIpEyj
-         RumplsqM723RrxBTIfGjfECg+SF9KJC7z45C1trHufbSSUFlpk+mz9ORjIor7w1N6OJ2
-         zByA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=IAoTwvssfsWUMQsY9ak3cq0wR9KCIhNThNsjepDyRwQ=;
-        b=ka6LjUHUZCY3dehhFmTNiN45pUhXDXma4WsjfmRLebSMeyinTwzW0V1yUAc5XxmLOo
-         94eUMezxhalZFHj2vPUOlwLyU6/wyI9ExyPZ5yZ3ShFbxcLXDtRyvRXDqJP7q4I0CnVd
-         0B4ywJDxoZXHPtP4z497rCSkllKEeVldHGx/+5XB5w4glQDPyKLA1THXJJibeB1S+V0T
-         HnKtTu3XhQs0Y0RCTIWouxj6PtC1Tsf/+Cnl5q2fwzD1bSV61ut2vaUz8A8klpRdNx2P
-         cP2XB8e/e5tE3kYvk86DLvU3PhZHPZCgW/9NfWnyvjblixOTvbt54yesUAmGrcXa5q0Q
-         UXFg==
-X-Gm-Message-State: AOAM532QWLK7MTZ7uGiSdTnCj9Ay4ecQw4ekjvM1pASrtPkf+Kk3U954
-        XXDp79sCl12G/qGz6vaweUp1ORxE
-X-Google-Smtp-Source: ABdhPJzUOY3x2BdBSICrBBmMp6brcvGJXLO17FFIn71N4JX99Cih8wJw/y7ACWjKWlADe/8JRI3Chg==
-X-Received: by 2002:a17:906:3790:: with SMTP id n16mr1055673ejc.256.1596088721345;
-        Wed, 29 Jul 2020 22:58:41 -0700 (PDT)
-Received: from felia ([2001:16b8:2d08:ee00:c941:ef07:9c8a:8408])
-        by smtp.gmail.com with ESMTPSA id a18sm4823135ejt.69.2020.07.29.22.58.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 22:58:40 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Thu, 30 Jul 2020 07:58:28 +0200 (CEST)
-X-X-Sender: lukas@felia
-To:     Mrinal Pandey <mrinalmni@gmail.com>, joe@perches.com
-cc:     apw@canonical.com, linux-kernel@vger.kernel.org,
-        lukas.bulwahn@gmail.com, skhan@linuxfoundation.org,
-        Linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH v2] checkpatch: Fix the usage of capture group ( ... )
-In-Reply-To: <20200714032352.f476hanaj2dlmiot@mrinalpandey>
-Message-ID: <alpine.DEB.2.21.2007300746330.13710@felia>
-References: <20200714032352.f476hanaj2dlmiot@mrinalpandey>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 30 Jul 2020 01:59:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60838 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726261AbgG3F7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 01:59:50 -0400
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3B362250E
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 05:59:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596088789;
+        bh=BHc8sdSpTVccKCyLCgqnAxB5xRQXDAGKg4tyDUDECSM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Ij677TMxu+aJeQS3sz3bSQlJu6dHpR1uCYS+d5ck5H2K+PAK2uQ26QwaGEORgsrRv
+         ytcryaIkP0wKcSq0gBAknAaLg7EnNghKW9E6CSaA4+NL1kE693FrKjhcceAEcOJbnh
+         KZuVBMxt2gtOiPkkXWSZwxie18gOizabhmD2kZR4=
+Received: by mail-vs1-f48.google.com with SMTP id w22so8816172vsi.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 22:59:49 -0700 (PDT)
+X-Gm-Message-State: AOAM533PBY6VmLeIUlfNlp6sUdZpSYY7J+oLF38XJ7etIZY19a/vXZ5Y
+        NH/ktA6SqKx8LAQwDFS9fjGgizd30331Wc26vpp02A==
+X-Google-Smtp-Source: ABdhPJxPBuuYiLcqs2lLQIQ7Uiliyjr+Ks2lXGLYVmoL+JZWEwX999c/bNDeqjRZ3CVGt4jRigJ1kfTR0eW5nTifMgc=
+X-Received: by 2002:a67:e40a:: with SMTP id d10mr650578vsf.95.1596088788824;
+ Wed, 29 Jul 2020 22:59:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <d48d824ab3abacb2356878780979d7ed42191eaf.1596080365.git.viresh.kumar@linaro.org>
+In-Reply-To: <d48d824ab3abacb2356878780979d7ed42191eaf.1596080365.git.viresh.kumar@linaro.org>
+From:   Amit Kucheria <amitk@kernel.org>
+Date:   Thu, 30 Jul 2020 11:29:38 +0530
+X-Gmail-Original-Message-ID: <CAHLCerP4YPHc4sKD_RTq=Gxfj+ex4F=J2is1Y-UzGXcOuEOrOQ@mail.gmail.com>
+Message-ID: <CAHLCerP4YPHc4sKD_RTq=Gxfj+ex4F=J2is1Y-UzGXcOuEOrOQ@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: cached_resolved_idx can not be negative
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        ionela.voinescu@arm.com,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Tue, 14 Jul 2020, Mrinal Pandey wrote:
-
-> The usage of "capture group (...)" in the immediate condition after `&&`
-> results in `$1` being uninitialized. This issues a warning "Use of
-> uninitialized value $1 in regexp compilation at ./scripts/checkpatch.pl
-> line 2638".
-> 
-> I noticed this bug while running checkpatch on the set of commits from
-> v5.7 to v5.8-rc1 of the kernel on the commits with a diff content in
-> their commit message.
-> 
-> This bug was introduced in the script by commit e518e9a59ec3
-> ("checkpatch: emit an error when there's a diff in a changelog"). It has
-> been in the script since then.
-> 
-> The author intended to store the match made by capture group in variable
-> `$1`. This should have contained the name of the file as `[\w/]+` matched.
-> However, this couldn't be accomplished due to usage of capture group and
-> `$1` in the same regular expression.
-> 
-> Fix this by placing the capture group in the condition before `&&`.
-> Thus, `$1` can be initialized to the text that capture group matches
-> thereby setting it to the desired and required value.
-> 
-> Reviewed-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> Tested-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> Signed-off-by: Mrinal Pandey <mrinalmni@gmail.com>
-> ---
-> Changes since v1:
-> Add Reviewed-by and Tested-by tag
+On Thu, Jul 30, 2020 at 9:38 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
 >
+> It is not possible for cached_resolved_idx to be invalid here as the
+> cpufreq core always sets index to a positive value.
+>
+> Change its type to unsigned int and fix qcom usage a bit.
 
-Hi Joe,
+Shouldn't you fix up idx in cpufreq_driver_resolve_freq() to be
+unsigned int too?
 
-did you see this quick fix to checkpatch.pl? Can you comment on the 
-commit and can we get a quick ack on that fix, please?
-
-General question on patches for ./scripts/checkpatch.pl:
-
-How do they travel to Linus?
-
-Do you pick those patches and provide them to Andrew Morton?
-Or do you just ack them and we need to send them to Andrew Morton to get 
-them into mainline?
-
-(get_maintainers tells us to just send those patches to you and Andy.)
-
-
-Lukas
-
-
->  scripts/checkpatch.pl | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 4c820607540b..e73e998d582a 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -2636,8 +2636,8 @@ sub process {
->  
->  # Check if the commit log has what seems like a diff which can confuse patch
->  		if ($in_commit_log && !$commit_log_has_diff &&
-> -		    (($line =~ m@^\s+diff\b.*a/[\w/]+@ &&
-> -		      $line =~ m@^\s+diff\b.*a/([\w/]+)\s+b/$1\b@) ||
-> +		    (($line =~ m@^\s+diff\b.*a/([\w/]+)@ &&
-> +		      $line =~ m@^\s+diff\b.*a/[\w/]+\s+b/$1\b@) ||
->  		     $line =~ m@^\s*(?:\-\-\-\s+a/|\+\+\+\s+b/)@ ||
->  		     $line =~ m/^\s*\@\@ \-\d+,\d+ \+\d+,\d+ \@\@/)) {
->  			ERROR("DIFF_IN_COMMIT_MSG",
-> -- 
-> 2.25.1
-> 
-> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  drivers/cpufreq/qcom-cpufreq-hw.c | 5 +----
+>  include/linux/cpufreq.h           | 2 +-
+>  2 files changed, 2 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+> index 0a04b6f03b9a..8c0842bd6c5a 100644
+> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
+> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+> @@ -66,13 +66,10 @@ static unsigned int qcom_cpufreq_hw_fast_switch(struct cpufreq_policy *policy,
+>                                                 unsigned int target_freq)
+>  {
+>         void __iomem *perf_state_reg = policy->driver_data;
+> -       int index;
+> +       unsigned int index;
+>         unsigned long freq;
+>
+>         index = policy->cached_resolved_idx;
+> -       if (index < 0)
+> -               return 0;
+> -
+>         writel_relaxed(index, perf_state_reg);
+>
+>         freq = policy->freq_table[index].frequency;
+> diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+> index e62b022cb07e..58687a5bf9c8 100644
+> --- a/include/linux/cpufreq.h
+> +++ b/include/linux/cpufreq.h
+> @@ -127,7 +127,7 @@ struct cpufreq_policy {
+>
+>          /* Cached frequency lookup from cpufreq_driver_resolve_freq. */
+>         unsigned int cached_target_freq;
+> -       int cached_resolved_idx;
+> +       unsigned int cached_resolved_idx;
+>
+>         /* Synchronization for frequency transitions */
+>         bool                    transition_ongoing; /* Tracks transition status */
+> --
+> 2.14.1
+>
