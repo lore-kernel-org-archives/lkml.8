@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE26C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15466C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 490572083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8EC92083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096530;
-	bh=xifNgLzE//dVOjkKwDmRmsYcKoMZQEEAF3yKPXDq0V0=;
+	s=default; t=1596096532;
+	bh=w4AlBxMKEaOC2MohMrQHWmkC3cIbr3PwOl7vPZnUk8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NziRpQTXwFhUuorgBlZwGD5QnOxy2c859yzadS8gihRbNVfNCHE3P6slxfFCoGS2t
-	 bl5nHuswQzeRNFLrUk5Af22KsWXxm9CuZeRiua3NqXo30dgjw7WfmxmVtxTww15AtX
-	 rJ1woK3qyku+8oS8nxU/nNTwTtf8cJxSwGWnmB+o=
+	b=SOewucrRsGix2ln+u4GVcwQjjZhbBmmI0tvLnIYci9EOTEIZGmgCQGLe5LYufvGKb
+	 uQWdmwz+JBlwbxG8/MlD/sQSwDMEA3hXG+e2cY5v83EZqA70u815AzbM9RAONTDOea
+	 5+eIZpb0tCgBj27z4giF9rE2lNVbK5/tXD4zgcRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729610AbgG3IIj (ORCPT
+        id S1729630AbgG3IIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:08:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46698 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:08:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729588AbgG3II1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:08:27 -0400
+        id S1729213AbgG3IIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:08:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 507582074B;
-        Thu, 30 Jul 2020 08:08:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 312512074B;
+        Thu, 30 Jul 2020 08:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096506;
-        bh=xifNgLzE//dVOjkKwDmRmsYcKoMZQEEAF3yKPXDq0V0=;
+        s=default; t=1596096522;
+        bh=w4AlBxMKEaOC2MohMrQHWmkC3cIbr3PwOl7vPZnUk8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fk6GwjKVaQo5Y8DL8wiN3y/sPXcXG5iNrfuYC861d1otbDrzEXoFoB/KUD+IVeTBJ
-         2Jc4HyBXphqChJArmSZqEaL5TnL8scX9xeFpKvj4oubMoZdaAbWWfraQLMMUeND6dK
-         l1s8LEEfGokqxVrF7aZa1HE+BnFEyrVJPEco72Hw=
+        b=psZUyY327rcCdixXfz5RCNKlSkGPX27xC8yiCsPO52JkDTYNXUucYtCAbnJs6XBeT
+         7DuYGHLDJtOHBa/wL0rrBQ1hWzY+azw3a8slOtLsyGX+86lcC/EVuWuaNBthxhu+II
+         A06WzGi7+zzVKruUxBuECOfG749gU0Trc2VwwxfE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Markus Theil <markus.theil@tu-ilmenau.de>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 02/61] mac80211: allow rx of mesh eapol frames with default rx key
-Date:   Thu, 30 Jul 2020 10:04:20 +0200
-Message-Id: <20200730074420.927666968@linuxfoundation.org>
+Subject: [PATCH 4.9 08/61] drm/nouveau/i2c/g94-: increase NV_PMGR_DP_AUXCTL_TRANSACTREQ timeout
+Date:   Thu, 30 Jul 2020 10:04:26 +0200
+Message-Id: <20200730074421.222794578@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074420.811058810@linuxfoundation.org>
 References: <20200730074420.811058810@linuxfoundation.org>
@@ -60,78 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Theil <markus.theil@tu-ilmenau.de>
+From: Ben Skeggs <bskeggs@redhat.com>
 
-[ Upstream commit 0b467b63870d9c05c81456aa9bfee894ab2db3b6 ]
+[ Upstream commit 0156e76d388310a490aeb0f2fbb5b284ded3aecc ]
 
-Without this patch, eapol frames cannot be received in mesh
-mode, when 802.1X should be used. Initially only a MGTK is
-defined, which is found and set as rx->key, when there are
-no other keys set. ieee80211_drop_unencrypted would then
-drop these eapol frames, as they are data frames without
-encryption and there exists some rx->key.
+Tegra TRM says worst-case reply time is 1216us, and this should fix some
+spurious timeouts that have been popping up.
 
-Fix this by differentiating between mesh eapol frames and
-other data frames with existing rx->key. Allow mesh mesh
-eapol frames only if they are for our vif address.
-
-With this patch in-place, ieee80211_rx_h_mesh_fwding continues
-after the ieee80211_drop_unencrypted check and notices, that
-these eapol frames have to be delivered locally, as they should.
-
-Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
-Link: https://lore.kernel.org/r/20200625104214.50319-1-markus.theil@tu-ilmenau.de
-[small code cleanups]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rx.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c   | 4 ++--
+ drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm200.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
-index d3334fd84ca20..9be82ed02e0e5 100644
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -2098,6 +2098,7 @@ static int ieee80211_802_1x_port_control(struct ieee80211_rx_data *rx)
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c
+index 954f5b76bfcf7..d44965f805fe9 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c
+@@ -118,10 +118,10 @@ g94_i2c_aux_xfer(struct nvkm_i2c_aux *obj, bool retry,
+ 		if (retries)
+ 			udelay(400);
  
- static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
- {
-+	struct ieee80211_hdr *hdr = (void *)rx->skb->data;
- 	struct sk_buff *skb = rx->skb;
- 	struct ieee80211_rx_status *status = IEEE80211_SKB_RXCB(skb);
+-		/* transaction request, wait up to 1ms for it to complete */
++		/* transaction request, wait up to 2ms for it to complete */
+ 		nvkm_wr32(device, 0x00e4e4 + base, 0x00010000 | ctrl);
  
-@@ -2108,6 +2109,31 @@ static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
- 	if (status->flag & RX_FLAG_DECRYPTED)
- 		return 0;
+-		timeout = 1000;
++		timeout = 2000;
+ 		do {
+ 			ctrl = nvkm_rd32(device, 0x00e4e4 + base);
+ 			udelay(1);
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm200.c b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm200.c
+index 61d729b82c69b..a5783f4d972e3 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm200.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm200.c
+@@ -118,10 +118,10 @@ gm200_i2c_aux_xfer(struct nvkm_i2c_aux *obj, bool retry,
+ 		if (retries)
+ 			udelay(400);
  
-+	/* check mesh EAPOL frames first */
-+	if (unlikely(rx->sta && ieee80211_vif_is_mesh(&rx->sdata->vif) &&
-+		     ieee80211_is_data(fc))) {
-+		struct ieee80211s_hdr *mesh_hdr;
-+		u16 hdr_len = ieee80211_hdrlen(fc);
-+		u16 ethertype_offset;
-+		__be16 ethertype;
-+
-+		if (!ether_addr_equal(hdr->addr1, rx->sdata->vif.addr))
-+			goto drop_check;
-+
-+		/* make sure fixed part of mesh header is there, also checks skb len */
-+		if (!pskb_may_pull(rx->skb, hdr_len + 6))
-+			goto drop_check;
-+
-+		mesh_hdr = (struct ieee80211s_hdr *)(skb->data + hdr_len);
-+		ethertype_offset = hdr_len + ieee80211_get_mesh_hdrlen(mesh_hdr) +
-+				   sizeof(rfc1042_header);
-+
-+		if (skb_copy_bits(rx->skb, ethertype_offset, &ethertype, 2) == 0 &&
-+		    ethertype == rx->sdata->control_port_protocol)
-+			return 0;
-+	}
-+
-+drop_check:
- 	/* Drop unencrypted frames if key is set. */
- 	if (unlikely(!ieee80211_has_protected(fc) &&
- 		     !ieee80211_is_any_nullfunc(fc) &&
+-		/* transaction request, wait up to 1ms for it to complete */
++		/* transaction request, wait up to 2ms for it to complete */
+ 		nvkm_wr32(device, 0x00d954 + base, 0x00010000 | ctrl);
+ 
+-		timeout = 1000;
++		timeout = 2000;
+ 		do {
+ 			ctrl = nvkm_rd32(device, 0x00d954 + base);
+ 			udelay(1);
 -- 
 2.25.1
 
