@@ -2,118 +2,134 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EC2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF85EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A39ED2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:15:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096942;
-	bh=qnVZu9crdHTCyMWJNFk+Ro1TPn3vWi+nlVvrtDnRP+I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r17AsPBbFMGMYzckdqJzpNGnHi0Yu64SLTF+IqZwZuDNDUVq6KB3bRdq6SZaFwOUO
-	 +CunXRQiyronxVfzOl51+lA6mGEofspjgkp+oR+b2Nf5PYKewdhRE91JN7dBQBntoQ
-	 OaqvVKnp1oV1zU2gsBuqreW39nlFHix3XJOzjL5I=
+	by mail.kernel.org (Postfix) with ESMTP id A50382074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:15:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730254AbgG3IPl (ORCPT
+        id S1729842AbgG3IPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:15:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729032AbgG3ILk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:11:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90C992074B;
-        Thu, 30 Jul 2020 08:11:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096700;
-        bh=qnVZu9crdHTCyMWJNFk+Ro1TPn3vWi+nlVvrtDnRP+I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ru43QaJ1rXugetJEdJg/vdjShrn+Pc0pXQafpFKlGEJK2Jkw/5QnDuIj37nAjG6ZN
-         hDLSJrAVxUidgK13l/jjQeOKbfmx6cOeG8rjLJnec+MbQ2gATfe+evvkSpQojP23vB
-         wmBvnaDosyMoQUW/bp/+yEEKVITTFM0r6jiaa/wU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
-        Patrick Fernie <patrick.fernie@gmail.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Subject: [PATCH 4.4 26/54] Revert "cifs: Fix the target file was deleted when rename failed."
-Date:   Thu, 30 Jul 2020 10:05:05 +0200
-Message-Id: <20200730074422.463592386@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
-References: <20200730074421.203879987@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 30 Jul 2020 04:15:51 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:45173 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729032AbgG3IPp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:15:45 -0400
+Received: from mail-qt1-f176.google.com ([209.85.160.176]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MY6TD-1kHxuV1Fsr-00YUKZ; Thu, 30 Jul 2020 10:15:42 +0200
+Received: by mail-qt1-f176.google.com with SMTP id x12so11210249qtp.1;
+        Thu, 30 Jul 2020 01:15:42 -0700 (PDT)
+X-Gm-Message-State: AOAM532Ly3J/00BP5r02+s9oIEYyILDMBnNb6VdzpkVQjuqGGB2a34S/
+        HjU5XYYp2T2kz62PUS2Y/MOmGn9GZbML1uu8iY8=
+X-Google-Smtp-Source: ABdhPJy9qE8d6D2vfgEVw6kVbtwQLGW5Rqh6b1z9O7UyiXPqU5prrGsm5t9N2iViOWRfC5+t73qPilDnnD91WD12O3g=
+X-Received: by 2002:ac8:5195:: with SMTP id c21mr1813995qtn.304.1596096941108;
+ Thu, 30 Jul 2020 01:15:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200726220557.102300-1-yepeilin.cs@gmail.com>
+ <20200726222703.102701-1-yepeilin.cs@gmail.com> <CAK8P3a3NB2BVo9fH-Wcinrhhs-QJ=9dK59Ds83TvgLmEkRy3qA@mail.gmail.com>
+ <20200727131608.GD1913@kadam> <CACRpkda7k4L+nqAYE6z2FVZF-WT2Pm3CHH_=fW24xz_u+QCMRQ@mail.gmail.com>
+ <20200728130632.GI1913@kadam> <CAK8P3a3MEUYH3qG-+dxgH1Omx2gtcqSRXzKLLaAw21Xho6HAeQ@mail.gmail.com>
+ <CAMRc=MciXb152=CHAi1kfpwFuELLN55-BfNOo8hBg8Tzp4wMnQ@mail.gmail.com>
+In-Reply-To: <CAMRc=MciXb152=CHAi1kfpwFuELLN55-BfNOo8hBg8Tzp4wMnQ@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 30 Jul 2020 10:15:24 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1m7C0rGGEHvndhxun2TyFh-cweNnPHp-rDtu7Z=YyUKw@mail.gmail.com>
+Message-ID: <CAK8P3a1m7C0rGGEHvndhxun2TyFh-cweNnPHp-rDtu7Z=YyUKw@mail.gmail.com>
+Subject: Re: [Linux-kernel-mentees] [PATCH v3] media/v4l2-core: Fix
+ kernel-infoleak in video_put_user()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vandana BN <bnvandana@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:rvPNdbTTV7PaspPk9G0gnb1jPuuq8fWQC4VHq/Sx6CBresvnL3l
+ tNEWWc3/5FJzPB5NxQZx9mprgop9zm6vIYT5oXYqyEcivzLtClTQcMNu/tKCSRttoPHeW5R
+ ZuUWB9ACTR2fx6p6M7ebBmo3KoffQQz386BmQQsmVmjnQdGrbpuqUvIf5JRzH14mKa3ijSy
+ xcBemIrm27HsLeX/n3ItA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Q+oEQ8b4lzY=:voa7ymqcQ0Gw85U92BLmZd
+ WleBmJHJhjeTVct+sGqSmb5VHOd9vg/U8wdBAajs7qrFZlt5qlTnFYS0gEzA2TPN1V3+MCz+B
+ F2weSfp8HPvbWAYsDOXAY6eellq9j4sfriTaNJDqavBrMHbMK7qAk2mKSCeYrElM9qncJVGhs
+ gSBugGNqB/cAUCuXqpRhxDPRlMCgqO7k3bzV1aArzMLf+fScjWRoSY2CKrashR7z3WMtYJQiL
+ hmLMFkddnSYtCbc/lEh/u+FnpY8265y5v942dBKeIYaq5J4/b+7QbMAKdZRBd0zZVgR1jv3if
+ scHZqcDhQdXcBSnseeIM7QvwoFSt4yZXkPvfQ5LH/u2kYlm1MVK645BYoP5QD4v7OuKNdIiiZ
+ uaD+iWMR4ovnrAG77oGPD6kvi1TGxQVxQyehqSGGXjyE05DEy9TQWFVbSlUUf0ELKtM5bCjky
+ xDmS6Sqxo1kB0HTrQIRC9b7/qKRi3IC03hJlJBm+YXPBDYMgZKmvWF40Wmu7p57jRVDtIxGcM
+ pCUrFhaN+QbqaJxd7Ub+UTdAKEXU/5F++8RcdCaJw+ZLB8jhvx/3d7C0uvdHX1GOLCfcb+0T1
+ k8+zFwM89tRfQuePNbzt9ogYNtRS+RfCoAA9A7ygXGG1wzgQ8nKP4HvIFUQUTAihBxLLqHSPc
+ itxHa+B64V/nQfYUCwsaZ4EQaUd1b9Da0eOMnAwNwBKVRPeoDOCDrODICrtfv9RTcTyCqorYN
+ CX+K0IeMEqYdL/0bIRzuCsHZ9znEv6HWH7UiwebHXDhwP4lJ8i6Im22pjADK8uaOP5ewBLwUt
+ OIrbKzXqm/X6PVa3IbYFofodkpjo3u4J0ZcKMkdODwvzNuOiHZ7OZYGaCbcFgWV2w0nqdlDxM
+ V5Kb2oeCEUBcuTO2tlxOomO6jn3uPi5qy2R3EnWRWcAHXKcCxZlxNgVgTyYMWwOgj33bIWeMZ
+ d/5pBDqXZl/6R+B4jZMeQcM12vo4bAdVRIj6RYOjpGJQBwQo3Lj5b
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+On Thu, Jul 30, 2020 at 10:07 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> On Tue, Jul 28, 2020 at 3:58 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Tue, Jul 28, 2020 at 3:06 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> > Something like
+> >
+> > static int lineevent_put_data(void __user *uptr, struct gpioevent_data *ge)
+> > {
+> > #ifdef __x86_64__
+> >         /* i386 has no padding after 'id' */
+> >         if (in_ia32_syscall()) {
+> >                 struct {
+> >                         compat_u64      timestamp __packed;
+> >                         u32             id;
+> >                 } compat_ge = { ge->timestamp, ge->id };
+> >
+> >                 if (copy_to_user(uptr, &compat_ge, sizeof(compat_ge)))
+> >                         return -EFAULT;
+> >
+> >                 return sizeof(compat_ge);
+> >         }
+> > #endif
+> >
+> >         if (copy_to_user(uptr, ge, sizeof(*ge))
+> >                 return -EFAULT;
+> >
+> >         return sizeof(*ge);
+> > }
+> >
+> >        Arnd
+>
+> Hi Arnd,
+>
+> Andy actually had a patch for that but since this isn't a regression
+> (it never worked), we decided to leave it as it is and get it right in
+> v2 API.
 
-commit 0e6705182d4e1b77248a93470d6d7b3013d59b30 upstream.
+I would argue that it needs to be fixed anyway, unless you also want
+to remove the v1 interface for native mode. If this works on 32-bit
+kernels, on 64-bit kernels with 64-bit user space and on compat
+32-bit user space on 64-bit non-x86 architectures, I see no reason
+to leave it broken specifically on x86 compat user space. There are
+still reasons to use 32-bit x86 user space for low-memory machines
+even though native i386 kernels are getting increasingly silly.
 
-This reverts commit 9ffad9263b467efd8f8dc7ae1941a0a655a2bab2.
-
-Upon additional testing with older servers, it was found that
-the original commit introduced a regression when using the old SMB1
-dialect and rsyncing over an existing file.
-
-The patch will need to be respun to address this, likely including
-a larger refactoring of the SMB1 and SMB3 rename code paths to make
-it less confusing and also to address some additional rename error
-cases that SMB3 may be able to workaround.
-
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reported-by: Patrick Fernie <patrick.fernie@gmail.com>
-CC: Stable <stable@vger.kernel.org>
-Acked-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Acked-by: Pavel Shilovsky <pshilov@microsoft.com>
-Acked-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/cifs/inode.c |   10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
-
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -1737,7 +1737,6 @@ cifs_rename2(struct inode *source_dir, s
- 	FILE_UNIX_BASIC_INFO *info_buf_target;
- 	unsigned int xid;
- 	int rc, tmprc;
--	bool new_target = d_really_is_negative(target_dentry);
- 
- 	if (flags & ~RENAME_NOREPLACE)
- 		return -EINVAL;
-@@ -1814,13 +1813,8 @@ cifs_rename2(struct inode *source_dir, s
- 	 */
- 
- unlink_target:
--	/*
--	 * If the target dentry was created during the rename, try
--	 * unlinking it if it's not negative
--	 */
--	if (new_target &&
--	    d_really_is_positive(target_dentry) &&
--	    (rc == -EACCES || rc == -EEXIST)) {
-+	/* Try unlinking the target dentry if it's not negative */
-+	if (d_really_is_positive(target_dentry) && (rc == -EACCES || rc == -EEXIST)) {
- 		if (d_is_dir(target_dentry))
- 			tmprc = cifs_rmdir(target_dir, target_dentry);
- 		else
-
-
+     Arnd
