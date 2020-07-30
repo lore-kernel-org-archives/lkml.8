@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CD9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C268C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB2F206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F136206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:05:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096343;
-	bh=J0aiOgOPd7YyHG270Ucn4MF+tgtyqZRPTCZ+qXdcNc4=;
+	s=default; t=1596096349;
+	bh=L3Zw8ss3VmWopi7gORgZBBtYTkCV0QdjwK+a37qoRaw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AnwEM21gmeAw37pE6ZJf+ZAhc4lyH2ZhvG/wfNI2Tj2S90wAVLvbMturRxbil8DnV
-	 mh5X5y6Yglj1jfueBhjpzrDlJtiuDMNxxjAxlJCV0julrgKSMv+nKN0aixe06f8X+6
-	 Wp+ZcyPd+rGpbhjizIjC4VB2hS+WwfMGnHmYYIhQ=
+	b=JkmVIhkAP0Xwg5Q9WZVlUmH54YsglVji/FIzQkCScIrDHiDHeU//qfV6LpIUKW7oT
+	 v2rGLeWLd2MTzsI9zGtdJEcHoZpugdmKQh8dk3ECgVHMqghMgg2yfnPJst214uYQ0M
+	 B2utLLv//LwXNdLOalM1foit3nAswE+iXf8p3gnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729195AbgG3IFm (ORCPT
+        id S1729211AbgG3IFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:05:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42858 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:05:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729178AbgG3IFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:05:37 -0400
+        id S1729193AbgG3IFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:05:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6741520656;
-        Thu, 30 Jul 2020 08:05:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C243620656;
+        Thu, 30 Jul 2020 08:05:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096337;
-        bh=J0aiOgOPd7YyHG270Ucn4MF+tgtyqZRPTCZ+qXdcNc4=;
+        s=default; t=1596096342;
+        bh=L3Zw8ss3VmWopi7gORgZBBtYTkCV0QdjwK+a37qoRaw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BBv6alAho++xcs/A5P/d+LTJ/vHzXWe2tCYPXvvTakTQgcXGx3wse2ReaspddMm0h
-         bEe+UwxaZFrR/8CIpIu2h0oxSMdtT0HsY2rZ4mtWx7qbZGLAMVzCW/YXWAH3mjLhqF
-         CJLqfKBhfBybMGKqDO+SH+M6YjY0Jt49iMsNRYVA=
+        b=Ax1dOrcIEC5kYnV0G5Aopt3RGkpyqwQJtoM8ogVEdTyQeDRK4/Xim8PdjgG0aa+xa
+         Krp94BpHwTX/H1qlhTwJpS1j30j+XTBqBIU07zJ5MUSSAXQ4a7h/yzWuJyg85bAnrf
+         t60ToYK75y8Hk7sjT8gMFvQ/4xM9DW3FktNey+eg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 10/19] rxrpc: Fix sendmsg() returning EPIPE due to recvmsg() returning ENODATA
-Date:   Thu, 30 Jul 2020 10:04:12 +0200
-Message-Id: <20200730074421.025280629@linuxfoundation.org>
+Subject: [PATCH 5.4 12/19] AX.25: Prevent integer overflows in connect and sendmsg
+Date:   Thu, 30 Jul 2020 10:04:14 +0200
+Message-Id: <20200730074421.116783315@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074420.502923740@linuxfoundation.org>
 References: <20200730074420.502923740@linuxfoundation.org>
@@ -59,51 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 639f181f0ee20d3249dbc55f740f0167267180f0 ]
+[ Upstream commit 17ad73e941b71f3bec7523ea4e9cbc3752461c2d ]
 
-rxrpc_sendmsg() returns EPIPE if there's an outstanding error, such as if
-rxrpc_recvmsg() indicating ENODATA if there's nothing for it to read.
+We recently added some bounds checking in ax25_connect() and
+ax25_sendmsg() and we so we removed the AX25_MAX_DIGIS checks because
+they were no longer required.
 
-Change rxrpc_recvmsg() to return EAGAIN instead if there's nothing to read
-as this particular error doesn't get stored in ->sk_err by the networking
-core.
+Unfortunately, I believe they are required to prevent integer overflows
+so I have added them back.
 
-Also change rxrpc_sendmsg() so that it doesn't fail with delayed receive
-errors (there's no way for it to report which call, if any, the error was
-caused by).
-
-Fixes: 17926a79320a ("[AF_RXRPC]: Provide secure RxRPC sockets for use by userspace and kernel both")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: 8885bb0621f0 ("AX.25: Prevent out-of-bounds read in ax25_sendmsg()")
+Fixes: 2f2a7ffad5c6 ("AX.25: Fix out-of-bounds read in ax25_connect()")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/rxrpc/recvmsg.c |    2 +-
- net/rxrpc/sendmsg.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ net/ax25/af_ax25.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/net/rxrpc/recvmsg.c
-+++ b/net/rxrpc/recvmsg.c
-@@ -464,7 +464,7 @@ try_again:
- 	    list_empty(&rx->recvmsg_q) &&
- 	    rx->sk.sk_state != RXRPC_SERVER_LISTENING) {
- 		release_sock(&rx->sk);
--		return -ENODATA;
-+		return -EAGAIN;
- 	}
+--- a/net/ax25/af_ax25.c
++++ b/net/ax25/af_ax25.c
+@@ -1188,6 +1188,7 @@ static int __must_check ax25_connect(str
+ 	    fsa->fsa_ax25.sax25_ndigis != 0) {
+ 		/* Valid number of digipeaters ? */
+ 		if (fsa->fsa_ax25.sax25_ndigis < 1 ||
++		    fsa->fsa_ax25.sax25_ndigis > AX25_MAX_DIGIS ||
+ 		    addr_len < sizeof(struct sockaddr_ax25) +
+ 		    sizeof(ax25_address) * fsa->fsa_ax25.sax25_ndigis) {
+ 			err = -EINVAL;
+@@ -1509,7 +1510,9 @@ static int ax25_sendmsg(struct socket *s
+ 			struct full_sockaddr_ax25 *fsa = (struct full_sockaddr_ax25 *)usax;
  
- 	if (list_empty(&rx->recvmsg_q)) {
---- a/net/rxrpc/sendmsg.c
-+++ b/net/rxrpc/sendmsg.c
-@@ -306,7 +306,7 @@ static int rxrpc_send_data(struct rxrpc_
- 	/* this should be in poll */
- 	sk_clear_bit(SOCKWQ_ASYNC_NOSPACE, sk);
- 
--	if (sk->sk_err || (sk->sk_shutdown & SEND_SHUTDOWN))
-+	if (sk->sk_shutdown & SEND_SHUTDOWN)
- 		return -EPIPE;
- 
- 	more = msg->msg_flags & MSG_MORE;
+ 			/* Valid number of digipeaters ? */
+-			if (usax->sax25_ndigis < 1 || addr_len < sizeof(struct sockaddr_ax25) +
++			if (usax->sax25_ndigis < 1 ||
++			    usax->sax25_ndigis > AX25_MAX_DIGIS ||
++			    addr_len < sizeof(struct sockaddr_ax25) +
+ 			    sizeof(ax25_address) * usax->sax25_ndigis) {
+ 				err = -EINVAL;
+ 				goto out;
 
 
