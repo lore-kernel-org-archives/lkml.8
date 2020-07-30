@@ -2,101 +2,94 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9591C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 997BE20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:20:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aywt8rE/"
+	by mail.kernel.org (Postfix) with ESMTP id 4DDAF207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgG3BUT (ORCPT
+        id S1726781AbgG3B1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 21:20:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47066 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbgG3BUS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 21:20:18 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8926C061794;
-        Wed, 29 Jul 2020 18:20:17 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id a14so1782109edx.7;
-        Wed, 29 Jul 2020 18:20:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6Bhtuo7eKFb6UmOlkz+jeD15e4iDeG8/eFQgGG8WWgU=;
-        b=aywt8rE/ZAqOwGwPJc4gPfNm/d+AoJ2HHscoaKrZ+7qvH3e6ge6QilD5Yvz20qz8kZ
-         tzsK2PITt1tLk1xEi7pV7QFmt6K8eKXRVQZ2XuVhMJZMhUnDIiOa1vEGEbB7d5PW2T3G
-         mu6odELvaLuwv3hVVRdqJ2URLL1mpzNXg8bP3OV/q6Gj2bkled6QzcZI46QqPa3HNoGS
-         LFQJeYy8YUT9dCnnpsIfYM0bMZU5GYPIuK4lFzTNQjI0o0PTKrchMlkI5o5lr8RigXx1
-         i3IS+ptC25L67GII1z4p80m/FFrctGS7C/ASXDgQjOfJC9eMkgKTdQUF2k4i9j5FV/1/
-         Hpag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6Bhtuo7eKFb6UmOlkz+jeD15e4iDeG8/eFQgGG8WWgU=;
-        b=R+9VAlFyzSOV1uaCZnm7MNGVegMh06fHVOlczbV3ENteetcNFctn6cBBI2H6ztacHU
-         bQWd+bZzjxwcsoJ+Y60POcB/93HtfGr0tBczBILk1v+KKJAbsiWeFkAOSIpm+Q8jxpQJ
-         YWb4gAW46hWBtIYz2JbJbZvTqt7jcBKYTfOS4di4LXqJakkQrZgd0bcWV+O3Ylhf61s+
-         GhLCrWaBaveE1RHCWj7A0q6jo/eO3+vax9I02Psnka132Hw8GjKaerdRlerkua0XP6Ri
-         W/YVQPnl5iqafdc3JMwOGVKDgHx/bhn0/2c3OuBqJjJ958W6TuYAbJXaLozLEOKY7jp6
-         HiHA==
-X-Gm-Message-State: AOAM531vohaCGlOpNm3ZQRA7BO4rcji/lp4M953L74J7hhbZo9kOkQ9V
-        O+uXBv11gZECg6WFWLSu2AalDcBXwQCf2R/W2Rk=
-X-Google-Smtp-Source: ABdhPJxv4UXtB8XlalMXyzX+Y8TaYgSNcz3eswdocM8l2y2uEcmDNuY9lZ6do5sTxRtW9c/xiAt8+ZikHMKfJWNB//g=
-X-Received: by 2002:aa7:d6cc:: with SMTP id x12mr485098edr.354.1596072016482;
- Wed, 29 Jul 2020 18:20:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1595572867.git.frank@allwinnertech.com>
-In-Reply-To: <cover.1595572867.git.frank@allwinnertech.com>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Thu, 30 Jul 2020 09:20:05 +0800
-Message-ID: <CAEExFWsvScMgi_Dftfq06HZiF8CFAmym8Z_tgQoHHAfiGxWt0g@mail.gmail.com>
-Subject: Re: [PATCH v5 00/16] Allwinner A100 Initial support
-To:     Frank Lee <frank@allwinnertech.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, gregory.clement@bootlin.com,
-        Thomas Gleixner <tglx@linutronix.de>, jason@lakedaemon.net,
-        Marc Zyngier <maz@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "p.zabel" <p.zabel@pengutronix.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
-        clabbe@baylibre.com, bage@linutronix.de,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>, linux-i2c@vger.kernel.org,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 29 Jul 2020 21:27:22 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:42462 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726287AbgG3B1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 21:27:21 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2D3851A02AB;
+        Thu, 30 Jul 2020 03:27:19 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9C6351A0296;
+        Thu, 30 Jul 2020 03:27:12 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3AA07402D0;
+        Thu, 30 Jul 2020 03:27:04 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        aisheng.dong@nxp.com, arnd@arndb.de, peng.fan@nxp.com,
+        abel.vesa@nxp.com, fugang.duan@nxp.com, daniel.baluta@nxp.com,
+        yuehaibing@huawei.com, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V9 0/6] Support building i.MX ARMv8 platforms clock driver as module
+Date:   Thu, 30 Jul 2020 09:22:48 +0800
+Message-Id: <1596072174-16358-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI Maxime,
+Nowdays, there are more and more requirements of building SoC specific drivers as
+modules, such as Android GKI (generic kernel image), this patch set supports building
+i.MX ARMv8 SoCs clock drivers as modules,
 
-Any comments on thermal and other patches?
-I hope these patches can be integrated into the mainline as soon as possible.
+The CLK_IMXxxx is introduced for i.MX ARMv7 platforms in order to make the build options
+aligned, the reason why i.MX ARMv7 platforms clock driver do NOT support module build
+and COMPILE_TEST is because, some drivers like i.MX GPT timer driver depends on clock
+driver to be ready before it, GPT driver uses TIMER_OF_DECLARE(), while i.MX6/7 clock
+drivers use CLK_OF_DECLARE(), and GPT driver is critical for i.MX6/7 platforms kernel
+boot up, so GPT driver needs to be changed to support loadable clock driver first,
+then the i.MX6/7 clock drivers can support loadable module, this will be done later.
 
-Thx,
-Yangtao
+Changes since V8:
+	- explicitly include linux/bits.h in patch #1.
+
+Anson Huang (6):
+  clk: imx6sl: Use BIT(x) to avoid shifting signed 32-bit value by 31
+    bits
+  clk: composite: Export clk_hw_register_composite()
+  clk: imx: Support building i.MX common clock driver as module
+  clk: imx: Add clock configuration for ARMv7 platforms
+  clk: imx8m: Support module build
+  clk: imx8qxp: Support building i.MX8QXP clock driver as module
+
+ drivers/clk/clk-composite.c        |  1 +
+ drivers/clk/imx/Kconfig            | 94 ++++++++++++++++++++++++++++++++------
+ drivers/clk/imx/Makefile           | 79 ++++++++++++++++----------------
+ drivers/clk/imx/clk-composite-8m.c |  2 +
+ drivers/clk/imx/clk-cpu.c          |  2 +
+ drivers/clk/imx/clk-frac-pll.c     |  2 +
+ drivers/clk/imx/clk-gate2.c        |  2 +
+ drivers/clk/imx/clk-imx6sl.c       | 15 +++---
+ drivers/clk/imx/clk-imx8mm.c       |  4 ++
+ drivers/clk/imx/clk-imx8mn.c       |  4 ++
+ drivers/clk/imx/clk-imx8mp.c       |  4 ++
+ drivers/clk/imx/clk-imx8mq.c       |  4 ++
+ drivers/clk/imx/clk-imx8qxp-lpcg.c |  4 ++
+ drivers/clk/imx/clk-imx8qxp.c      |  4 ++
+ drivers/clk/imx/clk-pll14xx.c      |  5 ++
+ drivers/clk/imx/clk-sscg-pll.c     |  2 +
+ drivers/clk/imx/clk.c              | 17 +++++--
+ drivers/clk/imx/clk.h              |  6 +++
+ 18 files changed, 186 insertions(+), 65 deletions(-)
+
+-- 
+2.7.4
+
