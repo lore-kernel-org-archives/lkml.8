@@ -2,105 +2,80 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 816C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC38C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CCB82074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 083CE2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096863;
-	bh=0AwPBqkDI7iKUHVOwyCEUJ91cuDwn/VIKn+EZrBZaqA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uN4xy04efNs4Y1Uh9d8HZM+VzwiQGITM+3nnvMFzHXg5/3GjP5Q6wrZL0VJ4fRu+N
-	 TliS9mMoZdiwbR00mJqXL/YUOAlePK0N7FPhdYvKL7VL/zcYbgEmgeNF6UFJVrySkG
-	 tCWcVtlecbQDH7kUozjrEdk8fYDOMe0S1lUQ+xZc=
+	s=default; t=1596096867;
+	bh=cmEqU1bGUNPQcUFL7GEjx1L5i4iXsnrWVDSfgB4pOsc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=QiBT/BO/w/194DDVVzBwhBV1nMx+AYqMmsrgx43jnEuSHzgPnf/5S6BB+/nLU3We2
+	 0DqrEqUHifNKkOjEsXFWfB1caOZBvwFzAE5l5Z5VWa/jEAeBKvwYzoOuIUCZwlgEpY
+	 ewcxJL6wfRvjWpsDWGUd7SNlNmZRo5Tk1Uduiurc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730185AbgG3IOW (ORCPT
+        id S1730192AbgG3IO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:14:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51994 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:14:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730078AbgG3IMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729462AbgG3IMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Jul 2020 04:12:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+Received: from localhost (unknown [213.57.247.131])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A81882074B;
-        Thu, 30 Jul 2020 08:12:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C93A2070B;
+        Thu, 30 Jul 2020 08:12:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096760;
-        bh=0AwPBqkDI7iKUHVOwyCEUJ91cuDwn/VIKn+EZrBZaqA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S3pNWV6/c4bdyoSbT8q2gfawspDQOHsbcBXcipCY4h+y/Y6M9Qqu3BRRG0Ep5tK26
-         Jjy/jQ3NXQ22aV8TQ884sfXaZQKFIlotPzHZYrY8owfU54Ymo+F/uq2kLyv/BWGhl/
-         wWoKC8KwmgL467hIgJHcM2NwE0IUFrRloumQ4Yd8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 50/54] tools/lib/subcmd/pager.c: do not alias select() params
-Date:   Thu, 30 Jul 2020 10:05:29 +0200
-Message-Id: <20200730074423.593109847@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
-References: <20200730074421.203879987@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1596096761;
+        bh=cmEqU1bGUNPQcUFL7GEjx1L5i4iXsnrWVDSfgB4pOsc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Hty62YjefzOMEoCIPSpXhoFygO0SlCJRJ320vM8i79KeRtMdms5i+MKoBG6OyIKxr
+         EiqaX2asONCp3crKFSSsdRtD7PNzc3WKNT9lrx7WlXmEBsP8Gdb1UX22Zy/UGFTIUN
+         lzlAVoj8FAkDYiqqMq7YJAnXj8kCQEDLvT17x0Wc=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Yishai Hadas <yishaih@mellanox.com>
+Subject: [PATCH rdma-next 0/3] Cleanups to flow creation paths
+Date:   Thu, 30 Jul 2020 11:12:32 +0300
+Message-Id: <20200730081235.1581127-1-leon@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+From: Leon Romanovsky <leonro@mellanox.com>
 
-commit dfbc3c6cb747c074aa2ba0a10bbeea588d6dfda6 upstream.
+Very straightforward cleanup.
 
-[ Change applied file from tools/lib/subcmd/pager.c to
-  tools/perf/util/pager.c ]
+Thanks
 
-Use a separate fd set for select()-s exception fds param to fix the
-following gcc warning:
+Leon Romanovsky (3):
+  RDMA/mlx5: Simplify multiple else-if cases with switch keyword
+  RDMA/mlx5: Replace open-coded offsetofend() macro
+  RDMA: Remove constant domain argument from flow creation call
 
-  pager.c:36:12: error: passing argument 2 to restrict-qualified parameter aliases with argument 4 [-Werror=restrict]
-    select(1, &in, NULL, &in, NULL);
-              ^~~        ~~~
+ drivers/infiniband/core/uverbs_cmd.c |   4 +-
+ drivers/infiniband/hw/mlx4/main.c    |  31 ++----
+ drivers/infiniband/hw/mlx5/ah.c      |   4 +-
+ drivers/infiniband/hw/mlx5/fs.c      | 145 +++++++++++++++------------
+ drivers/infiniband/hw/mlx5/mr.c      |   4 +-
+ drivers/infiniband/hw/mlx5/qp.c      |  20 ++--
+ include/rdma/ib_verbs.h              |  13 +--
+ 7 files changed, 108 insertions(+), 113 deletions(-)
 
-Link: http://lkml.kernel.org/r/20180101105626.7168-1-sergey.senozhatsky@gmail.com
-Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- tools/perf/util/pager.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
---- a/tools/perf/util/pager.c
-+++ b/tools/perf/util/pager.c
-@@ -16,10 +16,13 @@ static void pager_preexec(void)
- 	 * have real input
- 	 */
- 	fd_set in;
-+	fd_set exception;
- 
- 	FD_ZERO(&in);
-+	FD_ZERO(&exception);
- 	FD_SET(0, &in);
--	select(1, &in, NULL, &in, NULL);
-+	FD_SET(0, &exception);
-+	select(1, &in, NULL, &exception, NULL);
- 
- 	setenv("LESS", "FRSX", 0);
- }
-
+--
+2.26.2
 
