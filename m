@@ -2,131 +2,139 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61714C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E23C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CE5C2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76BAC2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:34:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XLRFex85"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="yV0lYXoR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730557AbgG3TaP (ORCPT
+        id S1730510AbgG3Tes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 15:30:15 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:53710 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730497AbgG3TaO (ORCPT
+        Thu, 30 Jul 2020 15:34:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45842 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbgG3Ter (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 15:30:14 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06UJR3XR008264;
-        Thu, 30 Jul 2020 19:30:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=MYB52dScwZ/YBoMJOfRh65nbt7ONDs6/VLbB0Qsq0fc=;
- b=XLRFex85LtNCdTDAA7zB9spn+lHdz8yywS6/YV+AjFb+6CrgVPg02x0RTerQJrzla9lS
- YSXIlriNxsjKlhe7G0qtfRHMpDROWqBnI3Z/wk3r6RBWlq06lFB3LuB0/Jk19gOXTOhO
- AwMi+mshxlbtbJjDtSasSEDGGVseGyInn7v2M2HnegKS9hk1IBUX9uOpUxCFDu8RARe6
- IeyAcq1c4WV6LXPhmjg1pTMiJn2JFAdv73pY1CnrRolipzJv8wNWZJfAPlSY6oGV4xZc
- 87aJxUk3H0eIN77JwJustCdPW1YHRdW4dH/F/LuFuKjvJ21C+92oV56WUejcvD+vuQLt Pw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 32hu1jnkuy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 30 Jul 2020 19:30:04 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06UJSgGP119594;
-        Thu, 30 Jul 2020 19:30:03 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3020.oracle.com with ESMTP id 32hu5xbn6c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 30 Jul 2020 19:30:03 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06UJSh0p119640;
-        Thu, 30 Jul 2020 19:30:03 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 32hu5xbmyp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Jul 2020 19:30:03 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06UJU19s023130;
-        Thu, 30 Jul 2020 19:30:01 GMT
-Received: from dhcp-10-159-232-234.vpn.oracle.com (/10.159.232.234)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 30 Jul 2020 12:30:01 -0700
-Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak
- in rds_notify_queue_get()
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-References: <20200730192026.110246-1-yepeilin.cs@gmail.com>
-From:   "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <2b21c0e4-2783-74f6-313b-9f6cb17c545a@oracle.com>
-Date:   Thu, 30 Jul 2020 12:29:58 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        Thu, 30 Jul 2020 15:34:47 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8386CC061574
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 12:34:47 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id d18so29445183ion.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 12:34:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=S2cxBjoQxqxK4peClB1baOHSFoZL+Yj5o/jId09Ervw=;
+        b=yV0lYXoR+mqd/SzhhBLEqFe2z/OHz5ZaPxBuVNBV2Bu2Yc+gK98PiKbSSaxOA8fZQJ
+         xPaW6ZYdYndj0dCUQlYGJUyuWi+TkvwoN1//Rt8BUkiJ9Jh0BKYPI+oztdDLbnRz7YeD
+         qsuA7hhHZWiGed5zySaE9JpdPjc6IqaicExOpvsR72LlQVc9PmhSQPavwo/BKSwyZjMi
+         Y5hy8hDT1HknicHEl2VvsRA4nbliyB5Zyz8MdmfFd5guleqQE3myjmV5ZqkYA5V4NXuN
+         zCYfIq2BgDRWoQQ5jgWzaonHRDR7zf0hO/Q/XnNuQqhOFd8s8j4WwK6uMdeq+LBz7cMy
+         QtXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=S2cxBjoQxqxK4peClB1baOHSFoZL+Yj5o/jId09Ervw=;
+        b=ind6N7pg/bj+gx1MkpsrUv0CiQZrjlok9feQHHxEE65IyrWz9GCNZnEJHjBoRtxNIH
+         T680dU7CHrxyiW66kcvN+b0rCbXV3azpn5sXQhpgYgWC1sA7X4u9a/2s58vJZxmYidyC
+         2LNnuX+PFBDprKr16Ulp0Dj76zYMxTmSD2kN0Qqr5BN9mYHRCsoHd76lfbXu0V1WTzIj
+         QnOl8wnoOKHCNWtDHQj/RzXCaNC5q14SCzIpsQHGxU/y0Avf4RsxwgRqgQXGBTIrX0p6
+         YAZiAtaHFKWR4G5aX3vdVJKlORrcDQFHEZo7zYM4J4xwk30TB94VA2mhWKIqxQiI1wqw
+         eEpg==
+X-Gm-Message-State: AOAM53020QRuSwdIuJQm0x/XlpOagA887qHXaj1bioC75OGEHLM5pn2G
+        /uu7VlKFG2aKKw3L6J/A0IGIUQ==
+X-Google-Smtp-Source: ABdhPJyGX3EoUChA60mN8Z9VraISoHTk8hPnjL2b4aDG0Dd5gnLyRZYKRdS5SjnJFFEHslJH4WODZQ==
+X-Received: by 2002:a5e:980f:: with SMTP id s15mr132306ioj.5.1596137686835;
+        Thu, 30 Jul 2020 12:34:46 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id 142sm3466284ilc.40.2020.07.30.12.34.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jul 2020 12:34:46 -0700 (PDT)
+Subject: Re: KASAN: use-after-free Read in io_uring_setup (2)
+To:     syzbot <syzbot+9d46305e76057f30c74e@syzkaller.appspotmail.com>,
+        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+References: <000000000000a3709905abad9335@google.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <fcb86aa5-3b91-bf85-7d3a-8ca2a60e05d9@kernel.dk>
+Date:   Thu, 30 Jul 2020 13:34:45 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200730192026.110246-1-yepeilin.cs@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <000000000000a3709905abad9335@google.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9698 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
- malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007300134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/20 12:20 PM, Peilin Ye wrote:
-> rds_notify_queue_get() is potentially copying uninitialized kernel stack
-> memory to userspace since the compiler may leave a 4-byte hole at the end
-> of `cmsg`.
+On 7/30/20 1:21 PM, syzbot wrote:
+> Hello,
 > 
-> In 2016 we tried to fix this issue by doing `= { 0 };` on `cmsg`, which
-> unfortunately does not always initialize that 4-byte hole. Fix it by using
-> memset() instead.
+> syzbot found the following issue on:
 > 
-> Cc: stable@vger.kernel.org
-> Fixes: f037590fff30 ("rds: fix a leak of kernel memory")
-> Fixes: bdbe6fbc6a2f ("RDS: recv.c")
-> Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-> ---
-> Note: the "real" copy_to_user() happens in put_cmsg(), where
-> `cmlen - sizeof(*cm)` equals to `sizeof(cmsg)`.
+> HEAD commit:    04b45717 Add linux-next specific files for 20200729
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=173774b8900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=ec68f65b459f1ed
+> dashboard link: https://syzkaller.appspot.com/bug?extid=9d46305e76057f30c74e
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
 > 
-> Reference: https://lwn.net/Articles/417989/
+> Unfortunately, I don't have any reproducer for this issue yet.
 > 
-> $ pahole -C "rds_rdma_notify" net/rds/recv.o
-> struct rds_rdma_notify {
-> 	__u64                      user_token;           /*     0     8 */
-> 	__s32                      status;               /*     8     4 */
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+9d46305e76057f30c74e@syzkaller.appspotmail.com
 > 
-> 	/* size: 16, cachelines: 1, members: 2 */
-> 	/* padding: 4 */
-> 	/* last cacheline: 16 bytes */
-> };
-> 
->   net/rds/recv.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-Looks good.
-FWIW,
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+> ==================================================================
+> BUG: KASAN: use-after-free in io_account_mem fs/io_uring.c:7397 [inline]
+> BUG: KASAN: use-after-free in io_uring_create fs/io_uring.c:8369 [inline]
+> BUG: KASAN: use-after-free in io_uring_setup+0x2797/0x2910 fs/io_uring.c:8400
+> Read of size 1 at addr ffff888087a41044 by task syz-executor.5/18145
+
+Quick guess would be that the ring is closed in a race before we do the
+accounting. The below should fix that, by ensuring that we account the
+memory before we install the fd.
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index fabf0b692384..eb99994de5e2 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -8329,6 +8329,11 @@ static int io_uring_create(unsigned entries, struct io_uring_params *p,
+ 		ret = -EFAULT;
+ 		goto err;
+ 	}
++
++	io_account_mem(ctx, ring_pages(p->sq_entries, p->cq_entries),
++		       ACCT_LOCKED);
++	ctx->limit_mem = limit_mem;
++
+ 	/*
+ 	 * Install ring fd as the very last thing, so we don't risk someone
+ 	 * having closed it before we finish setup
+@@ -8338,9 +8343,6 @@ static int io_uring_create(unsigned entries, struct io_uring_params *p,
+ 		goto err;
+ 
+ 	trace_io_uring_create(ret, ctx, p->sq_entries, p->cq_entries, p->flags);
+-	io_account_mem(ctx, ring_pages(p->sq_entries, p->cq_entries),
+-		       ACCT_LOCKED);
+-	ctx->limit_mem = limit_mem;
+ 	return ret;
+ err:
+ 	io_ring_ctx_wait_and_kill(ctx);
+
+-- 
+Jens Axboe
+
