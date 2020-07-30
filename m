@@ -2,220 +2,133 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516F3C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A33C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 358F3206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29224206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbgG3IzR (ORCPT
+        id S1729008AbgG3I7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:55:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729233AbgG3IzP (ORCPT
+        Thu, 30 Jul 2020 04:59:19 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:2957 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgG3I7S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:55:15 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85DFBC061794
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 01:55:15 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1k14L8-0002K4-FP; Thu, 30 Jul 2020 10:55:02 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1k14L2-0003Tl-Jy; Thu, 30 Jul 2020 10:54:56 +0200
-Date:   Thu, 30 Jul 2020 10:54:56 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>,
-        Robin Gong <yibin.gong@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Adam Ford <aford173@gmail.com>, linux-input@vger.kernel.org,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>
-Subject: Re: [PATCH v3 2/3] Input: snvs_pwrkey - enable snvs clock as needed
-Message-ID: <20200730085456.qy3uen46nfhkxba4@pengutronix.de>
-References: <20200723074314.3304-1-horia.geanta@nxp.com>
- <20200723074314.3304-3-horia.geanta@nxp.com>
- <20200729073323.pse772mh44bzgdai@pengutronix.de>
- <20200730060426.GD1665100@dtor-ws>
+        Thu, 30 Jul 2020 04:59:18 -0400
+X-Originating-IP: 176.88.148.196
+Received: from [192.168.1.3] (unknown [176.88.148.196])
+        (Authenticated sender: cengiz@kernel.wtf)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 9FA0C24000C;
+        Thu, 30 Jul 2020 08:59:13 +0000 (UTC)
+From:   Cengiz Can <cengiz@kernel.wtf>
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Date:   Thu, 30 Jul 2020 11:59:10 +0300
+Message-ID: <1739ef25b30.2bfa.85c738e3968116fc5c0dc2de74002084@kernel.wtf>
+In-Reply-To: <20200730084545.GB1793@kadam>
+References: <20200729135636.9220-1-cengiz@kernel.wtf>
+ <CAHp75VfM3OapAkYJ-sN-MG2yuGDqaqDjc6p0gXT9cHYgnH+5LQ@mail.gmail.com>
+ <20200730084545.GB1793@kadam>
+User-Agent: AquaMail/1.25.2-1666 (build: 102500007)
+Subject: Re: [PATCH] staging: atomisp: move null check to earlier point
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; format=flowed; charset="us-ascii"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200730060426.GD1665100@dtor-ws>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:02:52 up 257 days, 23:21, 250 users,  load average: 0.24, 0.19,
- 0.09
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
 
-On 20-07-29 23:04, Dmitry Torokhov wrote:
-> On Wed, Jul 29, 2020 at 09:33:23AM +0200, Marco Felsch wrote:
-> > Hi,
-> > 
-> > On 20-07-23 10:43, Horia Geantă wrote:
-> > > From: André Draszik <git@andred.net>
-> > > 
-> > > At the moment, enabling this driver without the SNVS RTC driver
-> > > being active will hang the kernel as soon as the power button
-> > > is pressed.
-> > > 
-> > > The reason is that in that case the SNVS isn't enabled, and
-> > > any attempt to read the SNVS registers will simply hang forever.
-> > > 
-> > > Ensure the clock is enabled (during the interrupt handler) to
-> > > make this driver work.
-> > > 
-> > > Also see commit 7f8993995410 ("drivers/rtc/rtc-snvs: add clock support")
-> > > and commit edb190cb1734
-> > > ("rtc: snvs: make sure clock is enabled for interrupt handle")
-> > > for similar updates to the snvs rtc driver.
-> > > 
-> > > Signed-off-by: André Draszik <git@andred.net>
-> > > Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
-> > > Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-> > > ---
-> > >  drivers/input/keyboard/snvs_pwrkey.c | 28 +++++++++++++++++++++++++++-
-> > >  1 file changed, 27 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/snvs_pwrkey.c
-> > > index 2f5e3ab5ed63..382d2ae82c9b 100644
-> > > --- a/drivers/input/keyboard/snvs_pwrkey.c
-> > > +++ b/drivers/input/keyboard/snvs_pwrkey.c
-> > > @@ -16,6 +16,7 @@
-> > >  #include <linux/of_address.h>
-> > >  #include <linux/platform_device.h>
-> > >  #include <linux/pm_wakeirq.h>
-> > > +#include <linux/clk.h>
-> > >  #include <linux/mfd/syscon.h>
-> > >  #include <linux/regmap.h>
-> > >  
-> > > @@ -38,6 +39,7 @@ struct pwrkey_drv_data {
-> > >  	int wakeup;
-> > >  	struct timer_list check_timer;
-> > >  	struct input_dev *input;
-> > > +	struct clk *clk;
-> > >  	u8 minor_rev;
-> > >  };
-> > >  
-> > > @@ -47,7 +49,10 @@ static void imx_imx_snvs_check_for_events(struct timer_list *t)
-> > >  	struct input_dev *input = pdata->input;
-> > >  	u32 state;
-> > >  
-> > > +	clk_enable(pdata->clk);
-> > >  	regmap_read(pdata->snvs, SNVS_HPSR_REG, &state);
-> > > +	clk_disable(pdata->clk);
-> > > +
-> > >  	state = state & SNVS_HPSR_BTN ? 1 : 0;
-> > >  
-> > >  	/* only report new event if status changed */
-> > > @@ -74,11 +79,13 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
-> > >  
-> > >  	pm_wakeup_event(input->dev.parent, 0);
-> > >  
-> > > +	clk_enable(pdata->clk);
-> > > +
-> > >  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
-> > >  	if (lp_status & SNVS_LPSR_SPO) {
-> > >  		if (pdata->minor_rev == 0) {
-> > >  			/*
-> > > -			 * The first generation i.MX6 SoCs only sends an
-> > > +			 * The first generation i.MX[6|7] SoCs only send an
-> > >  			 * interrupt on button release. To mimic power-key
-> > >  			 * usage, we'll prepend a press event.
-> > >  			 */
-> > > @@ -96,6 +103,8 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
-> > >  	/* clear SPO status */
-> > >  	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
-> > >  
-> > > +	clk_disable(pdata->clk);
-> > 
-> > I'm not so happy about clk_enable/disable() during the interrupt
-> > routine since those routines should be handled fast. Since we assume
-> > that the clock is always oni
-> 
-> We do? I thought that the fact that clock might be off is the root of
-> the problem.
 
-Currently yes else the driver would never work. I thought so at least
-after reading the commit message. But after checking the imx6qdl I
-found that the imx6qdl has no clock-gate for the SNVS module. I think
-Horia had Problems on a imx7 device since he adapted the comment to
-cover the imx7. Which makes more sense since the imx7 has a clock gate
-but the commit message is wrong. After checking the device-tree's in
-mainline all imx7 and imx8 devices specify the "snvs-pwrkey" clock so
-this is a new feature and they need the clock. So IMHO for those devices
-a clock should be required and not optional.
+On July 30, 2020 11:48:06 Dan Carpenter <dan.carpenter@oracle.com> wrote:
 
-> > I would rather call clk_prepare_enable()
-> > during probe() and keep the clock on.
-> 
-> clk_enable() must not sleep and is supposed to be lightweight. This
-> interrupt I believe is supposed to be infrequent, so having it here
-> should be fine and might save us some power.
+> On Wed, Jul 29, 2020 at 06:13:44PM +0300, Andy Shevchenko wrote:
+>> On Wed, Jul 29, 2020 at 5:00 PM Cengiz Can <cengiz@kernel.wtf> wrote:
+>>>
+>>> `find_gmin_subdev` function that returns a pointer to `struct
+>>> gmin_subdev` can return NULL.
+>>>
+>>> In `gmin_v2p8_ctrl` there's a call to this function but the possibility
+>>> of a NULL was not checked before its being dereferenced. ie:
+>>>
+>>> ```
+>>> /* Acquired here --------v */
+>>> struct gmin_subdev *gs = find_gmin_subdev(subdev);
+>>> int ret;
+>>> int value;
+>>>
+>>> /*  v------Dereferenced here */
+>>> if (gs->v2p8_gpio >= 0) {
+>>>  pr_info("atomisp_gmin_platform: 2.8v power on GPIO %d\n",
+>>>          gs->v2p8_gpio);
+>>>  ret = gpio_request(gs->v2p8_gpio, "camera_v2p8");
+>>>  if (!ret)
+>>>          ret = gpio_direction_output(gs->v2p8_gpio, 0);
+>>>  if (ret)
+>>>          pr_err("V2P8 GPIO initialization failed\n");
+>>> }
+>>> ```
+>>>
+>>> I have moved the NULL check before deref point.
+>>
+>> "Move the NULL check..."
+>> See Submitting Patches documentation how to avoid "This patch", "I", "we", etc.
 
-Didn't know that clk_enable()/clk_disable() never sleeps and yes it
-should be infrequent triggered. I don't think that we can save a
-measureable amount of power since this is Low-Power IP clocked by a
-low-power clock. However, this was just my point of view.
+Noted. Sorry. I'm not a native English speaker.
 
-> > > +
-> > >  	return IRQ_HANDLED;
-> > >  }
-> > >  
-> > > @@ -140,6 +149,23 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
-> > >  	if (pdata->irq < 0)
-> > >  		return -EINVAL;
-> > >  
-> > > +	pdata->clk = devm_clk_get_optional(&pdev->dev, "snvs-pwrkey");
-> > > +	if (IS_ERR(pdata->clk))
-> > > +		return PTR_ERR(pdata->clk);
-> > > +
-> > > +	error = clk_prepare(pdata->clk);
-> > > +	if (error) {
-> > > +		dev_err(&pdev->dev, "failed to prepare the snvs clock\n");
-> > > +		return error;
-> > > +	}
-> > > +	error = devm_add_action_or_reset(&pdev->dev,
-> > > +			(void(*)(void *))clk_unprepare,
-> > > +			pdata->clk);
-> > 
-> > I'm not a fan about those casts. However, the intentation should be
-> > fixed.
-> 
-> Yes, can we please create a proper function for this (or maybe we will
-> finally get devm clk API?).
+>>
+>
+> I always feel like this is a pointless requirement.  We're turning into
+> bureaucracts.
+>
+>>
+>>> diff --git a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c 
+>>> b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+>>> index 0df46a1af5f0..8e9c5016f299 100644
+>>> --- a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+>>> +++ b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+>>> @@ -871,6 +871,11 @@ static int gmin_v2p8_ctrl(struct v4l2_subdev *subdev, 
+>>> int on)
+>>>  int ret;
+>>>  int value;
+>>>
+>>> +       if (!gs) {
+>>> +               pr_err("Unable to find gmin subdevice\n");
+>>
+>>> +               return -EINVAL;
+>>
+>> And here is a change of semantics...
+>
+> Yeah.  The change of semantics should be documented in the commit
+> message, but it's actually correct.  I discussed this with Mauro earlier
+> but my bug reporting script didn't CC a mailing list and I didn't
+> catch it.  Mauro suggested:
+>
+>    53  > Yet, it could make sense to have something like:
+>    54  >
+>    55  >       if (WARN_ON(!gs))
+>    56  >               return -ENODEV;
+>    57  >
+>    58  > at the beginning of the functions that call find_gmin_subdev().
 
-devm_clk API +1 :)
+I will be updating v2 according to this.
 
-Regards,
-  Marco
+>
+> regards,
+> dan carpenter
+
+
+
