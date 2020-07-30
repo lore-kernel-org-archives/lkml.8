@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C152C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3427C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5760420838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC9520829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:00:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbgG3MAp (ORCPT
+        id S1728519AbgG3MAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 08:00:45 -0400
-Received: from relay.sw.ru ([185.231.240.75]:56914 "EHLO relay3.sw.ru"
+        Thu, 30 Jul 2020 08:00:50 -0400
+Received: from relay.sw.ru ([185.231.240.75]:56960 "EHLO relay3.sw.ru"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728318AbgG3MAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 08:00:40 -0400
+        id S1726989AbgG3MAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 08:00:45 -0400
 Received: from [192.168.15.64] (helo=localhost.localdomain)
         by relay3.sw.ru with esmtp (Exim 4.93)
         (envelope-from <ktkhai@virtuozzo.com>)
-        id 1k17ET-0002yZ-U7; Thu, 30 Jul 2020 15:00:21 +0300
-Subject: [PATCH 14/23] net: Add net namespaces into ns_idr
+        id 1k17EZ-0002yn-7t; Thu, 30 Jul 2020 15:00:27 +0300
+Subject: [PATCH 15/23] pid: Eextract child_reaper check from
+ pidns_for_children_get()
 From:   Kirill Tkhai <ktkhai@virtuozzo.com>
 To:     viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
         ebiederm@xmission.com, akpm@linux-foundation.org,
         christian.brauner@ubuntu.com, areber@redhat.com, serge@hallyn.com,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         ktkhai@virtuozzo.com
-Date:   Thu, 30 Jul 2020 15:00:35 +0300
-Message-ID: <159611043578.535980.14525601933828392397.stgit@localhost.localdomain>
+Date:   Thu, 30 Jul 2020 15:00:41 +0300
+Message-ID: <159611044115.535980.10236831314879436296.stgit@localhost.localdomain>
 In-Reply-To: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
 References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
 User-Agent: StGit/0.19
@@ -44,46 +44,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now they are exposed in /proc/namespace/ directory.
+This check if for prohibiting access to /proc/[pid]/ns/pid_for_children
+before first task of the pid namespace is created.
 
-We already wait RCU grace period in cleanup_net()
-before pernet_operations exit, so ns_idr_unregister()
-works as expected.
+/proc/namespaces/ code will use this check too, so we move it into
+a separate function.
 
 Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 ---
- net/core/net_namespace.c |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ kernel/pid_namespace.c |   25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
-index 5f658cbedd34..f78655a670e5 100644
---- a/net/core/net_namespace.c
-+++ b/net/core/net_namespace.c
-@@ -701,14 +701,24 @@ EXPORT_SYMBOL_GPL(get_net_ns_by_pid);
+diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
+index d02dc1696edf..4a01328e8763 100644
+--- a/kernel/pid_namespace.c
++++ b/kernel/pid_namespace.c
+@@ -343,6 +343,21 @@ static struct ns_common *pidns_get(struct task_struct *task)
+ 	return ns ? &ns->ns : NULL;
+ }
  
- static __net_init int net_ns_net_init(struct net *net)
- {
-+	int ret;
- #ifdef CONFIG_NET_NS
- 	net->ns.ops = &netns_operations;
- #endif
--	return ns_alloc_inum(&net->ns);
-+	ret = ns_alloc_inum(&net->ns);
-+	if (ret)
-+		return ret;
++static bool pidns_can_get(struct ns_common *ns)
++{
++	struct pid_namespace *pid_ns;
++	bool ret = true;
 +
-+	ret = ns_idr_register(&net->ns);
-+	if (ret < 0)
-+		ns_free_inum(&net->ns);
++	pid_ns = container_of(ns, struct pid_namespace, ns);
++
++	read_lock(&tasklist_lock);
++	if (!pid_ns->child_reaper)
++		ret = false;
++	read_unlock(&tasklist_lock);
 +
 +	return ret;
- }
- 
- static __net_exit void net_ns_net_exit(struct net *net)
++}
++
+ static struct ns_common *pidns_for_children_get(struct task_struct *task)
  {
-+	ns_idr_unregister(&net->ns);
- 	ns_free_inum(&net->ns);
- }
+ 	struct pid_namespace *ns = NULL;
+@@ -354,13 +369,9 @@ static struct ns_common *pidns_for_children_get(struct task_struct *task)
+ 	}
+ 	task_unlock(task);
  
+-	if (ns) {
+-		read_lock(&tasklist_lock);
+-		if (!ns->child_reaper) {
+-			put_pid_ns(ns);
+-			ns = NULL;
+-		}
+-		read_unlock(&tasklist_lock);
++	if (ns && !pidns_can_get(&ns->ns)) {
++		put_pid_ns(ns);
++		ns = NULL;
+ 	}
+ 
+ 	return ns ? &ns->ns : NULL;
 
 
