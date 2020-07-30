@@ -2,64 +2,92 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 694FAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 20:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46F9520656
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABF09207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 20:04:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FEzraYeM"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Q48T1W+x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730623AbgG3T5Z (ORCPT
+        id S1730309AbgG3UEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 15:57:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbgG3T5Y (ORCPT
+        Thu, 30 Jul 2020 16:04:40 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:50738 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbgG3UEk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 15:57:24 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F257C061574
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 12:57:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=/3VtW7SquYEchxQCh33bttrlb5IJlhozRM59vlZwvg0=; b=FEzraYeMg6W36tFFrr6exmwcrN
-        CBXWEHS6VzeQD24mfyWNv9nqCaL/fJ6Ft1XQO6/SGSMVwRiCobXoUiH2tOE8dnrSkGO6cM0YgZwxY
-        TQH6TxIkHaevjogr/+1CUn7j3HsaeG/pHZ/UeyhqNOgfWRL/uvzs9fP0oSQCfOvmYa2mSsRBx66iv
-        3sMWW4t4A99yPFjDNk+zM96aKOY+IZjbEZHgFWQQt0Q1p2iJ6zISXZUCo8geUSvQzYx3uKKU6LpuQ
-        bLgQ1IyL+p/hgADLfk/7wR/6DoOI/WXnLfwfNXW+527XEekVOhy99yd08nSl6V/2ZvPnXwEqaLe/L
-        oGlrybWA==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k1Eg6-0005wG-5J; Thu, 30 Jul 2020 19:57:22 +0000
-Date:   Thu, 30 Jul 2020 20:57:22 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: Re: [PATCH] mm/hugetlb: Fix calculation of
- adjust_range_if_pmd_sharing_possible
-Message-ID: <20200730195722.GL23808@casper.infradead.org>
-References: <20200730195030.60616-1-peterx@redhat.com>
+        Thu, 30 Jul 2020 16:04:40 -0400
+Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id BA74720B4908;
+        Thu, 30 Jul 2020 13:04:38 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BA74720B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1596139479;
+        bh=YPE+I9ZEJip/DLdFnXo/Xe1crHLzi3V6ybUliBj4JTs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Q48T1W+x1nOBEj0hcOWhn4lqsNeYMH9Myb4bAIILzU8uH1cVuuCYmw5pM7NGiUQtX
+         gYeTWUbYNAbItOcYK8W6eaVT+yajSSHjU5egR40XUoxV2mb0LgSuRcoDrd0jBlmnpR
+         x1rnxdYAClfs/1zgh0MM7ZY61sMnY7o3mZupn4Fs=
+Date:   Thu, 30 Jul 2020 15:04:36 -0500
+From:   Tyler Hicks <tyhicks@linux.microsoft.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     zohar@linux.ibm.com, stephen.smalley.work@gmail.com,
+        casey@schaufler-ca.com, sashal@kernel.org, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 4/4] IMA: Handle early boot data measurement
+Message-ID: <20200730200436.GY4181@sequoia>
+References: <20200730034724.3298-1-nramas@linux.microsoft.com>
+ <20200730034724.3298-5-nramas@linux.microsoft.com>
+ <ea3bba66-9b21-b842-990b-2bf1e4ac2179@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200730195030.60616-1-peterx@redhat.com>
+In-Reply-To: <ea3bba66-9b21-b842-990b-2bf1e4ac2179@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 03:50:30PM -0400, Peter Xu wrote:
-> +#define MAX(a,b)  (((a)>(b))?(a):(b))
-> +#define MIN(a,b)  (((a)<(b))?(a):(b))
+On 2020-07-30 11:02:50, Lakshmi Ramasubramanian wrote:
+> On 7/29/20 8:47 PM, Lakshmi Ramasubramanian wrote:
+> 
+> Hi Tyler,
+> 
+> > diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+> > index 080c53545ff0..86cba844f73c 100644
+> > --- a/security/integrity/ima/Kconfig
+> > +++ b/security/integrity/ima/Kconfig
+> > @@ -322,10 +322,9 @@ config IMA_MEASURE_ASYMMETRIC_KEYS
+> >   	depends on ASYMMETRIC_PUBLIC_KEY_SUBTYPE=y
+> >   	default y
+> > -config IMA_QUEUE_EARLY_BOOT_KEYS
+> > +config IMA_QUEUE_EARLY_BOOT_DATA
+> >   	bool
+> > -	depends on IMA_MEASURE_ASYMMETRIC_KEYS
+> > -	depends on SYSTEM_TRUSTED_KEYRING
+> > +	depends on SECURITY || (IMA_MEASURE_ASYMMETRIC_KEYS && SYSTEM_TRUSTED_KEYRING)
+> >   	default y
+> Similar to the change you'd suggested for validating LSM_STATE and
+> LSM_POLICY func, I think IMA_QUEUE_EARLY_BOOT_DATA config should be enabled
+> for SECURITY_SELINUX.
+> 
+> depends on SECURITY_SELINUX ||
+>            (IMA_MEASURE_ASYMMETRIC_KEYS && SYSTEM_TRUSTED_KEYRING)
+> 
+> And, when more security modules are added update this CONFIG as appropriate.
+> 
+> Does that sound okay?
 
-What's wrong with max() and min() defined in kernel.h?
+Yes, I think so.
 
+Tyler
+
+> 
+>  -lakshmi
