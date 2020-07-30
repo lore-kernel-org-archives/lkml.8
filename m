@@ -2,93 +2,104 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E6FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A8E920842
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D040920842
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:58:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V5ullnHI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbgG3M4e (ORCPT
+        id S1728289AbgG3M62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 08:56:34 -0400
-Received: from mx1.emlix.com ([188.40.240.192]:55920 "EHLO mx1.emlix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726535AbgG3M4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 08:56:34 -0400
-X-Greylist: delayed 405 seconds by postgrey-1.27 at vger.kernel.org; Thu, 30 Jul 2020 08:56:33 EDT
-Received: from mailer.emlix.com (p5098be52.dip0.t-ipconnect.de [80.152.190.82])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1.emlix.com (Postfix) with ESMTPS id EF6E75FF99;
-        Thu, 30 Jul 2020 14:49:46 +0200 (CEST)
-From:   Rolf Eike Beer <eb@emlix.com>
-To:     David Woodhouse <dwmw2@infradead.org>
-Cc:     Linux Kernel Developers List <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org
-Subject: Re: [PATCH v4] scripts: use pkg-config to locate libcrypto
-Date:   Thu, 30 Jul 2020 14:49:41 +0200
-Message-ID: <1825784.enSSdDGVcg@devpool35>
-Organization: emlix GmbH
-In-Reply-To: <2278760.8Yd83Mgoko@devpool35>
-References: <20538915.Wj2CyUsUYa@devpool35> <2278760.8Yd83Mgoko@devpool35>
+        Thu, 30 Jul 2020 08:58:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727797AbgG3M62 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 08:58:28 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6E8AC061794
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 05:58:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=n+E0IcQz2G17EYng01IxD+dd16zcpwNuYQtVnBKM4B4=; b=V5ullnHIkfDGk5lRYi5of8CoJL
+        X4kITcl5iQD4tSz05UhS4F1DU2HAVZDgiGnnWPmCSJXl6jlHXq6jbVnmwN/RM3lYBMV8phn7kKCSJ
+        MpDnZi/FkwVT6Zk9B6fjVNaheSiWDE/ME1Qxq5AFXdR6EavN+ypcxgxJ69sz4w583CNC//sRo5wwb
+        WrQh/dQSz2vuNsEz9r7aQyR2UK+7VdoYiPYAz87jMpZGYChleI0otetrrXTMBl7sWYWa0O60p/lLG
+        cTKmLgreMGDqt3hKpdWfVAIH60BX8hGX8IVuW5naAhcwPbbX92Ly+VVy1AMADUY1f7qpo/hA/Qv9J
+        fYXgrn2w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k188a-0005u2-9G; Thu, 30 Jul 2020 12:58:20 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6A33830411F;
+        Thu, 30 Jul 2020 14:58:17 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B7271203DB3CC; Thu, 30 Jul 2020 14:58:17 +0200 (CEST)
+Date:   Thu, 30 Jul 2020 14:58:17 +0200
+From:   peterz@infradead.org
+To:     kan.liang@linux.intel.com
+Cc:     mingo@redhat.com, acme@kernel.org, linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] perf/x86: Reset the counter to prevent the leak for a
+ RDPMC task
+Message-ID: <20200730125817.GL2655@hirez.programming.kicks-ass.net>
+References: <20200730123815.18518-1-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart9679229.JMKxYvS3ME"; micalg="pgp-sha256"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730123815.18518-1-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---nextPart9679229.JMKxYvS3ME
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+On Thu, Jul 30, 2020 at 05:38:15AM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> The counter value of a perf task may leak to another RDPMC task.
 
-Am Montag, 27. April 2020, 10:11:28 CEST schrieb Rolf Eike Beer:
-> From 082ba542ca4c710dcf592a6f9233603b9275d05d Mon Sep 17 00:00:00 2001
-> From: Rolf Eike Beer <eb@emlix.com>
-> Date: Thu, 22 Nov 2018 16:40:49 +0100
-> Subject: [PATCH 1/2] scripts: use pkg-config to locate libcrypto
->=20
-> Otherwise build fails if the headers are not in the default location. Whi=
-le
-> at it also ask pkg-config for the libs, with fallback to the existing
-> value.
+Sure, but nowhere did you explain why that is a problem.
 
-Close to 2 years since the original patch=E2=80=A6 can this please be appli=
-ed? It=20
-get's annoying to patch every new kernel version the same way again.
+> The RDPMC instruction is only available for the X86 platform. Only apply
+> the fix for the X86 platform.
 
-Thx
+ARM64 can also do it, although I'm not sure what the current state of
+things is here.
 
-Eike
-=2D-=20
-Rolf Eike Beer, emlix GmbH, http://www.emlix.com
-=46on +49 551 30664-0, Fax +49 551 30664-11
-Gothaer Platz 3, 37083 G=C3=B6ttingen, Germany
-Sitz der Gesellschaft: G=C3=B6ttingen, Amtsgericht G=C3=B6ttingen HR B 3160
-Gesch=C3=A4ftsf=C3=BChrung: Heike Jordan, Dr. Uwe Kracke =E2=80=93 Ust-IdNr=
-=2E: DE 205 198 055
+> After applying the patch,
+> 
+>     $ taskset -c 0 ./rdpmc_read_all_counters
+>     index 0x0 value 0x0
+>     index 0x1 value 0x0
+>     index 0x2 value 0x0
+>     index 0x3 value 0x0
+> 
+>     index 0x0 value 0x0
+>     index 0x1 value 0x0
+>     index 0x2 value 0x0
+>     index 0x3 value 0x0
 
-emlix - smart embedded open source
+You forgot about:
 
---nextPart9679229.JMKxYvS3ME
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+ - telling us why it's a problem,
+ - telling us how badly it affects performance.
 
------BEGIN PGP SIGNATURE-----
+I would feel much better if we only did this on context switches to
+tasks that have RDPMC enabled.
 
-iLMEAAEIAB0WIQQ/Uctzh31xzAxFCLur5FH7Xu2t/AUCXyLB5gAKCRCr5FH7Xu2t
-/OfFBADHZ2FrSoVi6DAf2H7CaJx74tezgvQax1e0nMjCGpnAgonXf4+y3bjHjNBI
-mHCzvvybwqFG7hC3nVzw4mpptyc/nSv5kJGZZkxFvvJ3+YDWfhbtrovpAxKqBR9y
-D/1YIQ8cR/WoONrRs0BGUf6lDN9BspoABK6gPoXztzT8mz+ODA==
-=tpgR
------END PGP SIGNATURE-----
-
---nextPart9679229.JMKxYvS3ME--
-
-
+So on del() mark the counter dirty (if we don't already have state that
+implies this), but don't WRMSR. And then on
+__perf_event_task_sched_in(), _after_ programming the new tasks'
+counters, check for inactive dirty counters and wipe those -- IFF RDPMC
+is on for that task.
 
