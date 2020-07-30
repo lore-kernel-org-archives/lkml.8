@@ -7,33 +7,32 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 955FBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA558C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7505220829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A115F20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:59:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgG3L7c (ORCPT
+        id S1727919AbgG3L7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 07:59:32 -0400
-Received: from relay.sw.ru ([185.231.240.75]:56344 "EHLO relay3.sw.ru"
+        Thu, 30 Jul 2020 07:59:37 -0400
+Received: from relay.sw.ru ([185.231.240.75]:56402 "EHLO relay3.sw.ru"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726774AbgG3L7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 07:59:30 -0400
+        id S1727844AbgG3L7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 07:59:34 -0400
 Received: from [192.168.15.64] (helo=localhost.localdomain)
         by relay3.sw.ru with esmtp (Exim 4.93)
         (envelope-from <ktkhai@virtuozzo.com>)
-        id 1k17DM-0002ux-03; Thu, 30 Jul 2020 14:59:12 +0300
-Subject: [PATCH 01/23] ns: Add common refcount into ns_common add use it as
- counter for net_ns
+        id 1k17DR-0002va-AS; Thu, 30 Jul 2020 14:59:17 +0300
+Subject: [PATCH 02/23] uts: Use generic ns_common::count
 From:   Kirill Tkhai <ktkhai@virtuozzo.com>
 To:     viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
         ebiederm@xmission.com, akpm@linux-foundation.org,
         christian.brauner@ubuntu.com, areber@redhat.com, serge@hallyn.com,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         ktkhai@virtuozzo.com
-Date:   Thu, 30 Jul 2020 14:59:25 +0300
-Message-ID: <159611036589.535980.1765795847221907147.stgit@localhost.localdomain>
+Date:   Thu, 30 Jul 2020 14:59:31 +0300
+Message-ID: <159611037120.535980.13731766189011538488.stgit@localhost.localdomain>
 In-Reply-To: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
 References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
 User-Agent: StGit/0.19
@@ -45,179 +44,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, every type of namespaces has its own counter,
-which is stored in ns-specific part. Say, @net has
-struct net::count, @pid has struct pid_namespace::kref, etc.
-
-This patchset introduces unified counter for all types
-of namespaces, and converts net namespace to use it first.
+Convert uts namespace to use generic counter instead of kref.
 
 Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 ---
- include/linux/ns_common.h     |    1 +
- include/net/net_namespace.h   |   11 ++++-------
- net/core/net-sysfs.c          |    6 +++---
- net/core/net_namespace.c      |    6 +++---
- net/ipv4/inet_timewait_sock.c |    4 ++--
- net/ipv4/tcp_metrics.c        |    2 +-
- 6 files changed, 14 insertions(+), 16 deletions(-)
+ include/linux/utsname.h |    9 ++++-----
+ init/version.c          |    2 +-
+ kernel/utsname.c        |    7 ++-----
+ 3 files changed, 7 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/ns_common.h b/include/linux/ns_common.h
-index 5fbc4000358f..27db02ebdf36 100644
---- a/include/linux/ns_common.h
-+++ b/include/linux/ns_common.h
-@@ -8,6 +8,7 @@ struct ns_common {
- 	atomic_long_t stashed;
- 	const struct proc_ns_operations *ops;
- 	unsigned int inum;
-+	refcount_t count;
- };
+diff --git a/include/linux/utsname.h b/include/linux/utsname.h
+index 44429d9142ca..2b1737c9b244 100644
+--- a/include/linux/utsname.h
++++ b/include/linux/utsname.h
+@@ -4,7 +4,6 @@
  
- #endif
-diff --git a/include/net/net_namespace.h b/include/net/net_namespace.h
-index 2ee5901bec7a..cb4b33d7834b 100644
---- a/include/net/net_namespace.h
-+++ b/include/net/net_namespace.h
-@@ -60,9 +60,6 @@ struct net {
- 	refcount_t		passive;	/* To decide when the network
- 						 * namespace should be freed.
- 						 */
--	refcount_t		count;		/* To decided when the network
--						 *  namespace should be shut down.
--						 */
- 	spinlock_t		rules_mod_lock;
  
- 	unsigned int		dev_unreg_count;
-@@ -245,7 +242,7 @@ void __put_net(struct net *net);
+ #include <linux/sched.h>
+-#include <linux/kref.h>
+ #include <linux/nsproxy.h>
+ #include <linux/ns_common.h>
+ #include <linux/err.h>
+@@ -22,7 +21,6 @@ struct user_namespace;
+ extern struct user_namespace init_user_ns;
  
- static inline struct net *get_net(struct net *net)
+ struct uts_namespace {
+-	struct kref kref;
+ 	struct new_utsname name;
+ 	struct user_namespace *user_ns;
+ 	struct ucounts *ucounts;
+@@ -33,16 +31,17 @@ extern struct uts_namespace init_uts_ns;
+ #ifdef CONFIG_UTS_NS
+ static inline void get_uts_ns(struct uts_namespace *ns)
  {
--	refcount_inc(&net->count);
-+	refcount_inc(&net->ns.count);
- 	return net;
+-	kref_get(&ns->kref);
++	refcount_inc(&ns->ns.count);
  }
  
-@@ -256,14 +253,14 @@ static inline struct net *maybe_get_net(struct net *net)
- 	 * exists.  If the reference count is zero this
- 	 * function fails and returns NULL.
- 	 */
--	if (!refcount_inc_not_zero(&net->count))
-+	if (!refcount_inc_not_zero(&net->ns.count))
- 		net = NULL;
- 	return net;
+ extern struct uts_namespace *copy_utsname(unsigned long flags,
+ 	struct user_namespace *user_ns, struct uts_namespace *old_ns);
+-extern void free_uts_ns(struct kref *kref);
++extern void free_uts_ns(struct uts_namespace *ns);
+ 
+ static inline void put_uts_ns(struct uts_namespace *ns)
+ {
+-	kref_put(&ns->kref, free_uts_ns);
++	if (refcount_dec_and_test(&ns->ns.count))
++		free_uts_ns(ns);
  }
  
- static inline void put_net(struct net *net)
- {
--	if (refcount_dec_and_test(&net->count))
-+	if (refcount_dec_and_test(&net->ns.count))
- 		__put_net(net);
- }
- 
-@@ -275,7 +272,7 @@ int net_eq(const struct net *net1, const struct net *net2)
- 
- static inline int check_net(const struct net *net)
- {
--	return refcount_read(&net->count) != 0;
-+	return refcount_read(&net->ns.count) != 0;
- }
- 
- void net_drop_ns(void *);
-diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
-index 9de33b594ff2..655a88b0071c 100644
---- a/net/core/net-sysfs.c
-+++ b/net/core/net-sysfs.c
-@@ -1025,7 +1025,7 @@ net_rx_queue_update_kobjects(struct net_device *dev, int old_num, int new_num)
- 	while (--i >= new_num) {
- 		struct kobject *kobj = &dev->_rx[i].kobj;
- 
--		if (!refcount_read(&dev_net(dev)->count))
-+		if (!refcount_read(&dev_net(dev)->ns.count))
- 			kobj->uevent_suppress = 1;
- 		if (dev->sysfs_rx_queue_group)
- 			sysfs_remove_group(kobj, dev->sysfs_rx_queue_group);
-@@ -1603,7 +1603,7 @@ netdev_queue_update_kobjects(struct net_device *dev, int old_num, int new_num)
- 	while (--i >= new_num) {
- 		struct netdev_queue *queue = dev->_tx + i;
- 
--		if (!refcount_read(&dev_net(dev)->count))
-+		if (!refcount_read(&dev_net(dev)->ns.count))
- 			queue->kobj.uevent_suppress = 1;
- #ifdef CONFIG_BQL
- 		sysfs_remove_group(&queue->kobj, &dql_group);
-@@ -1850,7 +1850,7 @@ void netdev_unregister_kobject(struct net_device *ndev)
- {
- 	struct device *dev = &ndev->dev;
- 
--	if (!refcount_read(&dev_net(ndev)->count))
-+	if (!refcount_read(&dev_net(ndev)->ns.count))
- 		dev_set_uevent_suppress(dev, 1);
- 
- 	kobject_get(&dev->kobj);
-diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
-index dcd61aca343e..5f658cbedd34 100644
---- a/net/core/net_namespace.c
-+++ b/net/core/net_namespace.c
-@@ -44,7 +44,7 @@ static struct key_tag init_net_key_domain = { .usage = REFCOUNT_INIT(1) };
+ void uts_ns_init(void);
+diff --git a/init/version.c b/init/version.c
+index cba341161b58..80d2b7566b39 100644
+--- a/init/version.c
++++ b/init/version.c
+@@ -25,7 +25,7 @@ int version_string(LINUX_VERSION_CODE);
  #endif
  
- struct net init_net = {
--	.count		= REFCOUNT_INIT(1),
-+	.ns.count	= REFCOUNT_INIT(1),
- 	.dev_base_head	= LIST_HEAD_INIT(init_net.dev_base_head),
- #ifdef CONFIG_KEYS
- 	.key_domain	= &init_net_key_domain,
-@@ -248,7 +248,7 @@ int peernet2id_alloc(struct net *net, struct net *peer, gfp_t gfp)
+ struct uts_namespace init_uts_ns = {
+-	.kref = KREF_INIT(2),
++	.ns.count = REFCOUNT_INIT(2),
+ 	.name = {
+ 		.sysname	= UTS_SYSNAME,
+ 		.nodename	= UTS_NODENAME,
+diff --git a/kernel/utsname.c b/kernel/utsname.c
+index e488d0e2ab45..b1ac3ca870f2 100644
+--- a/kernel/utsname.c
++++ b/kernel/utsname.c
+@@ -33,7 +33,7 @@ static struct uts_namespace *create_uts_ns(void)
+ 
+ 	uts_ns = kmem_cache_alloc(uts_ns_cache, GFP_KERNEL);
+ 	if (uts_ns)
+-		kref_init(&uts_ns->kref);
++		refcount_set(&uts_ns->ns.count, 1);
+ 	return uts_ns;
+ }
+ 
+@@ -103,11 +103,8 @@ struct uts_namespace *copy_utsname(unsigned long flags,
+ 	return new_ns;
+ }
+ 
+-void free_uts_ns(struct kref *kref)
++void free_uts_ns(struct uts_namespace *ns)
  {
- 	int id;
- 
--	if (refcount_read(&net->count) == 0)
-+	if (refcount_read(&net->ns.count) == 0)
- 		return NETNSA_NSID_NOT_ASSIGNED;
- 
- 	spin_lock(&net->nsid_lock);
-@@ -328,7 +328,7 @@ static __net_init int setup_net(struct net *net, struct user_namespace *user_ns)
- 	int error = 0;
- 	LIST_HEAD(net_exit_list);
- 
--	refcount_set(&net->count, 1);
-+	refcount_set(&net->ns.count, 1);
- 	refcount_set(&net->passive, 1);
- 	get_random_bytes(&net->hash_mix, sizeof(u32));
- 	net->dev_base_seq = 1;
-diff --git a/net/ipv4/inet_timewait_sock.c b/net/ipv4/inet_timewait_sock.c
-index c411c87ae865..437afe392e66 100644
---- a/net/ipv4/inet_timewait_sock.c
-+++ b/net/ipv4/inet_timewait_sock.c
-@@ -272,14 +272,14 @@ void inet_twsk_purge(struct inet_hashinfo *hashinfo, int family)
- 				continue;
- 			tw = inet_twsk(sk);
- 			if ((tw->tw_family != family) ||
--				refcount_read(&twsk_net(tw)->count))
-+				refcount_read(&twsk_net(tw)->ns.count))
- 				continue;
- 
- 			if (unlikely(!refcount_inc_not_zero(&tw->tw_refcnt)))
- 				continue;
- 
- 			if (unlikely((tw->tw_family != family) ||
--				     refcount_read(&twsk_net(tw)->count))) {
-+				     refcount_read(&twsk_net(tw)->ns.count))) {
- 				inet_twsk_put(tw);
- 				goto restart;
- 			}
-diff --git a/net/ipv4/tcp_metrics.c b/net/ipv4/tcp_metrics.c
-index 279db8822439..39710c417565 100644
---- a/net/ipv4/tcp_metrics.c
-+++ b/net/ipv4/tcp_metrics.c
-@@ -887,7 +887,7 @@ static void tcp_metrics_flush_all(struct net *net)
- 		pp = &hb->chain;
- 		for (tm = deref_locked(*pp); tm; tm = deref_locked(*pp)) {
- 			match = net ? net_eq(tm_net(tm), net) :
--				!refcount_read(&tm_net(tm)->count);
-+				!refcount_read(&tm_net(tm)->ns.count);
- 			if (match) {
- 				*pp = tm->tcpm_next;
- 				kfree_rcu(tm, rcu_head);
+-	struct uts_namespace *ns;
+-
+-	ns = container_of(kref, struct uts_namespace, kref);
+ 	dec_uts_namespaces(ns->ucounts);
+ 	put_user_ns(ns->user_ns);
+ 	ns_free_inum(&ns->ns);
 
 
