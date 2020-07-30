@@ -2,147 +2,128 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0407BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF302C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3AA7208A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:22:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596126121;
-	bh=9cFcZnfkur34WPfSqhU2MSEk1J8+VuHGVPWpxsCK54w=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=kfusZzO7A1yy4l5j2Nt8EWUOeWcHjA4NP0axayNZIIeAmk29cGzfJ/QYh5g1E0hE7
-	 RKoyuZKkqb24RIKuCOw/3XY59HWUzN0MZl0n7WKdwbtj5PmAknQtI0pCKjSzrpbq/3
-	 MGjpDCZauO0RPRc9nsV7Hoqw7fS/B1JMELnRpNWM=
+	by mail.kernel.org (Postfix) with ESMTP id BA45D20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:22:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kH+mNkGK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbgG3QWA (ORCPT
+        id S1729459AbgG3QWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 12:22:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47888 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728452AbgG3QWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 12:22:00 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 605E72082E;
-        Thu, 30 Jul 2020 16:21:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596126119;
-        bh=9cFcZnfkur34WPfSqhU2MSEk1J8+VuHGVPWpxsCK54w=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=TncS1nvGzCSVxo7Sr9KeUFeJ9Hf7ZU3kLdn7SE8bAdJk0A0ZMURGgMlECP2pumm53
-         6tWH0uMI2b1S14bMdB7abLeZ8a2DXC1NVJF7ufKI/L6OtfQZi2GVv7pssf6Xd4VYfE
-         F76ZjRPJUR/396oUNHZmuovdnxoHygXq8vFc0meA=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 3E5EF3520751; Thu, 30 Jul 2020 09:21:59 -0700 (PDT)
-Date:   Thu, 30 Jul 2020 09:21:59 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Neeraj Upadhyay <neeraju@codeaurora.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 1/2] rcu/tree: Add a warning if CPU being onlined did not
- report QS already
-Message-ID: <20200730162159.GZ9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200730030221.705255-1-joel@joelfernandes.org>
+        Thu, 30 Jul 2020 12:22:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728452AbgG3QWC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 12:22:02 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C08D6C061574;
+        Thu, 30 Jul 2020 09:22:01 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id o1so14620726plk.1;
+        Thu, 30 Jul 2020 09:22:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=aX2Eg5Gk0V/jRI/X4rim3dxz+h5U/hgYWDFRrQixu1U=;
+        b=kH+mNkGKtbV/we4VOn77a1cfLYJbSy7IRU65jsULUtkVMY7LlT5ldcjVPsnDU57jx4
+         D1oYQDmo3t5hfCS8dbeE2W/3H3oDbI+aIg9EM9F0ByrcB/SEA7NKaVT41yywWG70SfGS
+         jwS2O/TqFGvMTeNI72GmWKgIj3vl9IAAxbhQLOzX3p9RZ14hRNe5g76KZ+gCNsyiDPsH
+         /qcHXigYTba+XBCscKt1v9tr7V9Lgq4swhdNqaTSos8l7xEXJ+yNDxtxMNu5CFCFK7TK
+         j68MhNBxGwfgGkuwesvt/BKxUZkHN4VcXQc1yDt4Kl6s+9VvdUkgeyCuqHUmWX7huZpj
+         wroA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=aX2Eg5Gk0V/jRI/X4rim3dxz+h5U/hgYWDFRrQixu1U=;
+        b=Vee8uAZFEjvShJ4V72QiT0asLtgY2qxHCesdwezsTgbz6MH1SdlN7/gFMIyh/k2lE0
+         pEB5NcuY8b9/rbVnClw0v3s+3L1zeFldzu2wqByoSvXnGXp6qsXV878jIdIyVeHMwvTR
+         qTULNqAAPemgTFvQmCm0uEqKzk3xlciNg+qxYbmz3RomLjChULqA6QKqhdaQcXurk0gX
+         pz9tVONclnWnPdAhSX+200VJxB95MRYUmXX0LQ3bzHEoDXF61qo1Z8qeAkki3ifPGHud
+         YNlyays5cXeTWD1+60tN6uJ7E9FoCQTcMP3UpfAkQvCmHqeWeher6PmgZus9ro01Rr3A
+         ugVw==
+X-Gm-Message-State: AOAM533t2GpEuyXxR6XTqSQqPt+vbRs53quEkSdYhBmudogX9EMcaxGV
+        xM6+exmlwHSq0Cw/u/JBlMQ=
+X-Google-Smtp-Source: ABdhPJxsbtys0VGyQSLoeP/4r5EtvTBYw9ZHBb7MqZSwGRi95+8bm14rpD50tN+X5FlubnPm8tBVTA==
+X-Received: by 2002:a63:475c:: with SMTP id w28mr36536961pgk.222.1596126121197;
+        Thu, 30 Jul 2020 09:22:01 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id s8sm6548365pfc.122.2020.07.30.09.21.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 09:22:00 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 09:21:57 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Roy Im <roy.im.opensource@diasemi.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Rob Herring <robh@kernel.org>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Support Opensource <support.opensource@diasemi.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v18 3/3] Input: new da7280 haptic driver
+Message-ID: <20200730162157.GI1665100@dtor-ws>
+References: <cover.1595991580.git.Roy.Im@diasemi.com>
+ <23b3470401ec5cf525add8e1227cb67586b9f294.1595991580.git.Roy.Im@diasemi.com>
+ <20200729063638.GY1665100@dtor-ws>
+ <20200729072145.ifzoe656sjpxdior@pengutronix.de>
+ <20200730050653.GA1665100@dtor-ws>
+ <20200730061631.y4r4s6v3xepktj54@pengutronix.de>
+ <20200730083058.GC3703480@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200730030221.705255-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200730083058.GC3703480@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 11:02:20PM -0400, Joel Fernandes (Google) wrote:
-> Add a warning if CPU being onlined did not report QS already. This is to
-> simplify the code in the CPU onlining path and also to make clear about
-> where QS is reported. The act of QS reporting in CPU onlining path is
-> is likely unnecessary as shown by code reading and testing with
-> rcutorture's TREE03 and hotplug parameters.
-
-How about something like this for the commit log?
-
-------------------------------------------------------------------------
-
-Currently, rcu_cpu_starting() checks to see if the RCU core expects a
-quiescent state from the incoming CPU.  However, the current interaction
-between RCU quiescent-state reporting and CPU-hotplug operations should
-mean that the incoming CPU never needs to report a quiescent state.
-First, the outgoing CPU reports a quiescent state if needed.  Second,
-the race where the CPU is leaving just as RCU is initializing a new
-grace period is handled by an explicit check for this condition.  Third,
-the CPU's leaf rcu_node structure's ->lock serializes these checks.
-
-This means that if rcu_cpu_starting() ever feels the need to report
-a quiescent state, then there is a bug somewhere in the CPU hotplug
-code or the RCU grace-period handling code.  This commit therefore
-adds a WARN_ON_ONCE() to bring that bug to everyone's attention.
-
-------------------------------------------------------------------------
-
-> Cc: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Neeraj Upadhyay <neeraju@codeaurora.org>
-> Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+On Thu, Jul 30, 2020 at 11:30:58AM +0300, Andy Shevchenko wrote:
+> On Thu, Jul 30, 2020 at 08:16:31AM +0200, Uwe Kleine-König wrote:
+> > On Wed, Jul 29, 2020 at 10:06:53PM -0700, Dmitry Torokhov wrote:
+> > > On Wed, Jul 29, 2020 at 09:21:45AM +0200, Uwe Kleine-König wrote:
+> > > > On Tue, Jul 28, 2020 at 11:36:38PM -0700, Dmitry Torokhov wrote:
 > 
-> ---
->  kernel/rcu/tree.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
+> ...
 > 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 65e1b5e92319..1e51962b565b 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -3996,7 +3996,19 @@ void rcu_cpu_starting(unsigned int cpu)
->  	rcu_gpnum_ovf(rnp, rdp); /* Offline-induced counter wrap? */
->  	rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
->  	rdp->rcu_onl_gp_flags = READ_ONCE(rcu_state.gp_flags);
-> -	if (rnp->qsmask & mask) { /* RCU waiting on incoming CPU? */
-> +
-> +	/*
-> +	 * Delete QS reporting from here, by June 2021, if warning does not
-> +	 * fire. Let us make the rules for reporting QS for an offline CPUs
-> +	 * more explicit. The CPU onlining path does not need to report QS for
-> +	 * an offline CPU. Either the QS should have reported during CPU
-> +	 * offlining, or during rcu_gp_init() if it detected a race with either
-> +	 * CPU offlining or task unblocking on previously offlined CPUs. Note
-> +	 * that the FQS loop also does not report QS for an offline CPU any
-> +	 * longer (unless it splats due to an offline CPU blocking the GP for
-> +	 * too long).
-> +	 */
-
-Let's leave at least the WARN_ON_ONCE() indefinitely.  If you don't
-believe me, remove this code in your local tree, have someone give you
-several branches, some with bugs injected, and then try to figure out
-which have the bugs and then try to find those bugs.
-
-This is not a fastpath, so the overhead of the check is not a concern.
-Believe me, the difficulty of bug location without this check is a very
-real concern!  ;-)
-
-On the other hand, I fully agree with the benefits of documenting the
-design rules.  But is this really the best place to do that from the
-viewpoint of someone who is trying to figure out how RCU works?
-
-							Thanx, Paul
-
-> +	if (WARN_ON_ONCE(rnp->qsmask & mask)) { /* RCU waiting on incoming CPU? */
->  		rcu_disable_urgency_upon_qs(rdp);
->  		/* Report QS -after- changing ->qsmaskinitnext! */
->  		rcu_report_qs_rnp(mask, rnp, rnp->gp_seq, flags);
-> -- 
-> 2.28.0.rc0.142.g3c755180ce-goog
+> > > Maybe we should introduce something like '%de' for the integer error
+> > > case?
+> > 
+> > I suggested that some time ago with limited success, see
+> > https://lore.kernel.org/lkml/20200129115516.zsvxu56e6h7gheiw@pathway.suse.cz/
 > 
+> Oh, please, no need for that really. We have now dev_err_probe() on its way to
+> upstream (now in Greg's tree) which hides all this behind.
+> 
+> Just switch to dev_err_probe() and forget about what is under the hood.
+
+Awesome, we just need to make sure there is never an error condition
+outside of probe path, and we will be set ;) Easy peasy ;)
+
+Thanks.
+
+-- 
+Dmitry
