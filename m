@@ -2,62 +2,60 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8566C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D540C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C72D82074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F11CE2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096976;
-	bh=4PIK3txsItU6RK1rxjj0QPH/Qr9nof33HTpuGYpGiww=;
+	s=default; t=1596096983;
+	bh=ocQitoteaM9KCkLV7fP43lZRJgiX38p88GYiGm/HNN0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QEmDJJudtdSnIZZx4uug3FCKi9VdWJ66xBRuej9imlhmZZTBlvmekPrlWzIpS9DOj
-	 OeRI99Vjd2HGDzcsbJtUrjqktdlj+UNQ4s/EuYNZl/1lZyzWXsbQ7gIIgifZmxEhlp
-	 A6TYQDqNeHo3V5hgpjSPjqmeUZvJEN4EfmPZZxnQ=
+	b=J0tec2zA88OhFbnfbzR6RXLNYqzALGEYtmHV5qJP17VxmPwXf7Am58LVc7rshgGWP
+	 jJvESr2CxQfULx0IQ3R49x6C21XScbL4dcb8qOLZDF669W5yL7mCkyqCQXO8QU1cjK
+	 xQR9mlbu6CcowTBUkHKeW0XyQKaMc/h2MID9SSWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbgG3ILS (ORCPT
+        id S1729910AbgG3ILB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:11:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50332 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:11:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729927AbgG3ILJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:11:09 -0400
+        id S1729901AbgG3IK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:10:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B62532075F;
-        Thu, 30 Jul 2020 08:11:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 566512074B;
+        Thu, 30 Jul 2020 08:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096668;
-        bh=4PIK3txsItU6RK1rxjj0QPH/Qr9nof33HTpuGYpGiww=;
+        s=default; t=1596096655;
+        bh=ocQitoteaM9KCkLV7fP43lZRJgiX38p88GYiGm/HNN0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f4qL2SeVrrQjgqrobKIx2L6PkMDNXFHn1nejXdAy2JlGWMFUhyvPvOdb9loS6/Bh1
-         nyZRHGEQMza2G21/o47R0VrQQJJ7fjxo+gOMb1E9JeT2syu2FfOwZrzFaWl9UGTodO
-         Dj89ZBrHOJMiEANmXA6dmxN5iHRy5sYZgmVljLzU=
+        b=1MlUOWn8/j2vVFDmX23TLgKU82H1iYne5WnQfnMrvvmf2fO/1QnFkOcrS5WXd8/Z1
+         kXchJRYizH21UzHWz6zAHZqAV6BnQ0l+VgtDz8IGUm2K1GSi6pXt5SRqtNLX28ATIb
+         1+5q1rWzUKi5MpXRW3uyNMgAtOk8ib09GdLPQYsI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        kvm ML <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Rik van Riel <riel@surriel.com>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 15/54] x86/fpu: Disable bottom halves while loading FPU registers
-Date:   Thu, 30 Jul 2020 10:04:54 +0200
-Message-Id: <20200730074421.942105266@linuxfoundation.org>
+        Ingo Molnar <mingo@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.4 10/54] perf/core: Fix locking for children siblings group read
+Date:   Thu, 30 Jul 2020 10:04:49 +0200
+Message-Id: <20200730074421.712538730@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
 References: <20200730074421.203879987@linuxfoundation.org>
@@ -70,85 +68,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: Jiri Olsa <jolsa@kernel.org>
 
-[ Upstream commit 68239654acafe6aad5a3c1dc7237e60accfebc03 ]
+commit 2aeb1883547626d82c597cce2c99f0b9c62e2425 upstream.
 
-The sequence
+We're missing ctx lock when iterating children siblings
+within the perf_read path for group reading. Following
+race and crash can happen:
 
-  fpu->initialized = 1;		/* step A */
-  preempt_disable();		/* step B */
-  fpu__restore(fpu);
-  preempt_enable();
+User space doing read syscall on event group leader:
 
-in __fpu__restore_sig() is racy in regard to a context switch.
+T1:
+  perf_read
+    lock event->ctx->mutex
+    perf_read_group
+      lock leader->child_mutex
+      __perf_read_group_add(child)
+        list_for_each_entry(sub, &leader->sibling_list, group_entry)
 
-For 32bit frames, __fpu__restore_sig() prepares the FPU state within
-fpu->state. To ensure that a context switch (switch_fpu_prepare() in
-particular) does not modify fpu->state it uses fpu__drop() which sets
-fpu->initialized to 0.
+---->   sub might be invalid at this point, because it could
+        get removed via perf_event_exit_task_context in T2
 
-After fpu->initialized is cleared, the CPU's FPU state is not saved
-to fpu->state during a context switch. The new state is loaded via
-fpu__restore(). It gets loaded into fpu->state from userland and
-ensured it is sane. fpu->initialized is then set to 1 in order to avoid
-fpu__initialize() doing anything (overwrite the new state) which is part
-of fpu__restore().
+Child exiting and cleaning up its events:
 
-A context switch between step A and B above would save CPU's current FPU
-registers to fpu->state and overwrite the newly prepared state. This
-looks like a tiny race window but the Kernel Test Robot reported this
-back in 2016 while we had lazy FPU support. Borislav Petkov made the
-link between that report and another patch that has been posted. Since
-the removal of the lazy FPU support, this race goes unnoticed because
-the warning has been removed.
+T2:
+  perf_event_exit_task_context
+    lock ctx->mutex
+    list_for_each_entry_safe(child_event, next, &child_ctx->event_list,...
+      perf_event_exit_event(child)
+        lock ctx->lock
+        perf_group_detach(child)
+        unlock ctx->lock
 
-Disable bottom halves around the restore sequence to avoid the race. BH
-need to be disabled because BH is allowed to run (even with preemption
-disabled) and might invoke kernel_fpu_begin() by doing IPsec.
+---->   child is removed from sibling_list without any sync
+        with T1 path above
 
- [ bp: massage commit message a bit. ]
+        ...
+        free_event(child)
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: kvm ML <kvm@vger.kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: stable@vger.kernel.org
-Cc: x86-ml <x86@kernel.org>
-Link: http://lkml.kernel.org/r/20181120102635.ddv3fvavxajjlfqk@linutronix.de
-Link: https://lkml.kernel.org/r/20160226074940.GA28911@pd.tnic
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Before the child is removed from the leader's child_list,
+(and thus is omitted from perf_read_group processing), we
+need to ensure that perf_read_group touches child's
+siblings under its ctx->lock.
+
+Peter further notes:
+
+| One additional note; this bug got exposed by commit:
+|
+|   ba5213ae6b88 ("perf/core: Correct event creation with PERF_FORMAT_GROUP")
+|
+| which made it possible to actually trigger this code-path.
+
+Tested-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: ba5213ae6b88 ("perf/core: Correct event creation with PERF_FORMAT_GROUP")
+Link: http://lkml.kernel.org/r/20170720141455.2106-1-jolsa@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kernel/fpu/signal.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/events/core.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
-index 31fad2cbd734b..8fc842dae3b39 100644
---- a/arch/x86/kernel/fpu/signal.c
-+++ b/arch/x86/kernel/fpu/signal.c
-@@ -317,10 +317,10 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 			sanitize_restored_xstate(tsk, &env, xfeatures, fx_only);
- 		}
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -3940,7 +3940,9 @@ EXPORT_SYMBOL_GPL(perf_event_read_value)
+ static int __perf_read_group_add(struct perf_event *leader,
+ 					u64 read_format, u64 *values)
+ {
++	struct perf_event_context *ctx = leader->ctx;
+ 	struct perf_event *sub;
++	unsigned long flags;
+ 	int n = 1; /* skip @nr */
+ 	int ret;
  
-+		local_bh_disable();
- 		fpu->fpstate_active = 1;
--		preempt_disable();
- 		fpu__restore(fpu);
--		preempt_enable();
-+		local_bh_enable();
+@@ -3970,12 +3972,15 @@ static int __perf_read_group_add(struct
+ 	if (read_format & PERF_FORMAT_ID)
+ 		values[n++] = primary_event_id(leader);
  
- 		return err;
- 	} else {
--- 
-2.25.1
-
++	raw_spin_lock_irqsave(&ctx->lock, flags);
++
+ 	list_for_each_entry(sub, &leader->sibling_list, group_entry) {
+ 		values[n++] += perf_event_count(sub);
+ 		if (read_format & PERF_FORMAT_ID)
+ 			values[n++] = primary_event_id(sub);
+ 	}
+ 
++	raw_spin_unlock_irqrestore(&ctx->lock, flags);
+ 	return 0;
+ }
+ 
 
 
