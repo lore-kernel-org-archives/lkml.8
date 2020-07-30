@@ -2,169 +2,144 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B828FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D87C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9583D22B48
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C7A22B48
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:27:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nhdvWdsp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WwfCkHiH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbgG3D0o (ORCPT
+        id S1728513AbgG3D1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 23:26:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38098 "EHLO
+        Wed, 29 Jul 2020 23:27:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726367AbgG3D0n (ORCPT
+        with ESMTP id S1726367AbgG3D1S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 23:26:43 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF1FBC061794;
-        Wed, 29 Jul 2020 20:26:43 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id d4so15745693pgk.4;
-        Wed, 29 Jul 2020 20:26:43 -0700 (PDT)
+        Wed, 29 Jul 2020 23:27:18 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C352CC061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 20:27:17 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u185so14252097pfu.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 20:27:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=D3DSMcxAJBfVCzQ9tsL41B8n4WlMAXQgIZRXZY0d2fk=;
-        b=nhdvWdsp7OTR0ia6J6e7mP+rRJPbscgtYGVXox9eFXX3AXYXtIFRhNtuIFMGwApCRt
-         R/F6hAs2mBWQWItzVF85rWwDmVd3czfqDU9hK2Wsc68Ko/7JhV+teJiyvZqirGcD44gq
-         e191U0iXU/NNh6ZNa7ZrVVQr8AFex6SGGl674lMl4e4hNY+CTRetN/xafVmD31u7fGIH
-         dBwp3Yrx9uZjeoOLJhYD6FGXrMSJBh8QBkTUbZKjVCbn58scMKJ4ua99D/BL0OAz5fT9
-         yE6obEuznxRklacfwVrGi7TEu12I4q6jyRNm5sfG0eHWrK5n2lgxg0fwEYiLCTKUF1T3
-         nX/w==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SAwanaBh/g8SjyCF66Oh7kkXlY0ljlytzRLB3xpaxAQ=;
+        b=WwfCkHiHKhrFKEuK3iBT93GceFrVkzz0g3zn8mRx7dg/jkd8ItPxPY+x6ZGivO2yET
+         U5Q1Oxp+9yGd8lkJZS61YBYYvWA3ueWHTnBoof7UK9Pso5dXfa9ScakApH7yCFU4Eu+1
+         ldGSMXpl7SQS+59I5zCGXX6jHiMLifa1m2P4XzItzuwKOsf7GsqVq5d3f3hg3P6oe1Wr
+         eYsu5ZYg2FTGMGMZ5146JiyKqE7cFCmsVw7igih8XAPMejx9U9rJW82V5brLrcSGiQT8
+         N4m4AfFpf+OrT3J0XBN+WaasogDFLGaoHDe14aO72Q6tn0gIXYV3El6jP9O3u4Pw/bq1
+         VJAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=D3DSMcxAJBfVCzQ9tsL41B8n4WlMAXQgIZRXZY0d2fk=;
-        b=MCsuFLkeyk59Xbhs2bQc7g8isG3xByhoF2WWkY9LQjhk/fSslgOb7fzRJhC9PbEwqF
-         nFddEE5KqavOiq+ySZc9sGfi7uLUHl2pdrh4SwRfQnYsT9ifCxSL7e/QEIyasXI+w9YP
-         FE6UqNTuTtDKnqbBz3X0iScfzVOubDNHxI2dyn7EZ/dVBDPkn8fAVErU0euMLV3prGEW
-         gJkaG/x3EUX09ItJcs2f6VjPO6PaYU2rsZdWy4TP9UzVZeFV8J1yXnT2eEGPo17tpi3/
-         zS20/uuB+00HlkQkwNV2VWjEvQrRk/aRm191M/TZ4XdigySANEXAhmMmFIr2B+5XXMfa
-         N2BQ==
-X-Gm-Message-State: AOAM530+jqc8K3Pd2QWcVR6ehJFETkqwFvkqFBwgDlXPeEFIJo+WLBd1
-        SB7JQtFyqN8j1JvoiCt8LLk=
-X-Google-Smtp-Source: ABdhPJw1twExWZX4O4IqbAvyOz0gO0V+d8bMgclMUGMPZ3r6fvpxEQH8YriW+0ywdxR5zw0JVoXY6Q==
-X-Received: by 2002:a63:215e:: with SMTP id s30mr30435034pgm.87.1596079602914;
-        Wed, 29 Jul 2020 20:26:42 -0700 (PDT)
-Received: from localhost.localdomain ([132.237.175.251])
-        by smtp.googlemail.com with ESMTPSA id d29sm3978964pgb.54.2020.07.29.20.26.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 20:26:42 -0700 (PDT)
-From:   Crag Wang <crag0715@gmail.com>
-X-Google-Original-From: Crag Wang <crag.wang@dell.com>
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     mario.limonciello@dell.com, mathewk@chromium.org,
-        campello@google.com, crag.wang@dell.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/1] power_supply: wilco_ec: Add long life charging mode
-Date:   Thu, 30 Jul 2020 11:26:09 +0800
-Message-Id: <20200730032609.20330-1-crag.wang@dell.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200715145511.9464-1-crag.wang@dell.com>
-References: <20200715145511.9464-1-crag.wang@dell.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SAwanaBh/g8SjyCF66Oh7kkXlY0ljlytzRLB3xpaxAQ=;
+        b=W7tW9zWIijfTlEjeOGQ96Ns2sAuwPrCQBmBm+/8djimB5T1eT+BDvbA4PDx9lac+ND
+         g76s+c7CuETtWCU0T8ZAm3S9azjw7JvU5uaZ3g1OJmWA89KS/O2ayRNXug4FkVi876kJ
+         P4axMTupQKTC7pa+fTdSpyjwDNCYe+va2PYqVIZXSdlFKplGKoxxY2/wYoaOKKRpm7N/
+         /WNYVm9sT776TPcigpL4C7NkRJ9BYui2wJTafR9fp5pyad3fz3EiCnpAM2RQQU62v+VW
+         vuDa7VFg6Mfixy29RM7Z7587x5A4WdeLSJC7jFTCQGUjFnSFx9DpTg7uQeOibKtsgv9D
+         /Img==
+X-Gm-Message-State: AOAM531Ln7tM37yzZU4llEpN1Tcq54Sc7/aztRXF9S/YYbzR+/86Gk/K
+        q2bQaJmWeCkAfg8Li9ZTOk5UdnfRsCc=
+X-Google-Smtp-Source: ABdhPJw4ghy+Sz4YLvGxKK/Bl5/ZSNjGzvfmoaCh1n5F4gQ9xfmQDf7Tn1lLrJtkUC+BA9UV9m769A==
+X-Received: by 2002:a05:6a00:158b:: with SMTP id u11mr1186063pfk.92.1596079637350;
+        Wed, 29 Jul 2020 20:27:17 -0700 (PDT)
+Received: from builder-PowerEdge-R730xd.mioffice.cn ([209.9.72.212])
+        by smtp.gmail.com with ESMTPSA id ml8sm3565836pjb.47.2020.07.29.20.27.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 Jul 2020 20:27:16 -0700 (PDT)
+From:   Qianli Zhao <zhaoqianligood@gmail.com>
+To:     stefanr@s5r6.in-berlin.de, linux1394-devel@lists.sourceforge.net
+Cc:     linux-kernel@vger.kernel.org, gustavo@embeddedor.com,
+        zhaoqianli@xiaomi.com
+Subject: [PATCH] firewire: firewire-cdev.h: Avoid the use of one-element array
+Date:   Thu, 30 Jul 2020 11:27:00 +0800
+Message-Id: <1596079620-20023-1-git-send-email-zhaoqianligood@gmail.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a long life mode set in the factory for extended warranty
-battery, the power charging rate is customized so that battery at
-work last longer.
+From: Qianli Zhao <zhaoqianli@xiaomi.com>
 
-Presently switching to a different battery charging mode is through
-EC PID 0x0710 to configure the battery firmware, this operation will
-be blocked by EC with failure code 0x01 when PLL mode is already
-in use.
+There is a regular need in the kernel to provide a way to declare having a
+dynamically sized set of trailing elements in a structure. Kernel code should
+always use “flexible array members”[1] for these cases. The older style of
+one-element or zero-length arrays should no longer be used[2].
 
-Signed-off-by: Crag Wang <crag.wang@dell.com>
-Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+[1] https://en.wikipedia.org/wiki/Flexible_array_member
+[2] https://github.com/KSPP/linux/issues/21
+
+Signed-off-by: Qianli Zhao <zhaoqianli@xiaomi.com>
 ---
- Documentation/ABI/testing/sysfs-class-power-wilco | 4 ++++
- drivers/power/supply/power_supply_sysfs.c         | 1 +
- drivers/power/supply/wilco-charger.c              | 5 +++++
- include/linux/power_supply.h                      | 1 +
- 4 files changed, 11 insertions(+)
+ include/uapi/linux/firewire-cdev.h | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-class-power-wilco b/Documentation/ABI/testing/sysfs-class-power-wilco
-index da1d6ffe5e3c..84fde1d0ada0 100644
---- a/Documentation/ABI/testing/sysfs-class-power-wilco
-+++ b/Documentation/ABI/testing/sysfs-class-power-wilco
-@@ -14,6 +14,10 @@ Description:
- 			Charging begins when level drops below
- 			charge_control_start_threshold, and ceases when
- 			level is above charge_control_end_threshold.
-+		Long Life: Customized charge rate for last longer battery life.
-+			On Wilco device this mode is pre-configured in the factory
-+			through EC's private PID. Swiching to a different mode will
-+			be denied by Wilco EC when Long Life mode is enabled.
- 
- What:		/sys/class/power_supply/wilco-charger/charge_control_start_threshold
- Date:		April 2019
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index bc79560229b5..cfb87b8b8392 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -87,6 +87,7 @@ static const char * const POWER_SUPPLY_CHARGE_TYPE_TEXT[] = {
- 	[POWER_SUPPLY_CHARGE_TYPE_STANDARD]	= "Standard",
- 	[POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE]	= "Adaptive",
- 	[POWER_SUPPLY_CHARGE_TYPE_CUSTOM]	= "Custom",
-+	[POWER_SUPPLY_CHARGE_TYPE_LONGLIFE]	= "Long Life",
+diff --git a/include/uapi/linux/firewire-cdev.h b/include/uapi/linux/firewire-cdev.h
+index 7e5b5c1..487de87f 100644
+--- a/include/uapi/linux/firewire-cdev.h
++++ b/include/uapi/linux/firewire-cdev.h
+@@ -118,7 +118,7 @@ struct fw_cdev_event_response {
+ 	__u32 type;
+ 	__u32 rcode;
+ 	__u32 length;
+-	__u32 data[0];
++	__u32 data[];
  };
  
- static const char * const POWER_SUPPLY_HEALTH_TEXT[] = {
-diff --git a/drivers/power/supply/wilco-charger.c b/drivers/power/supply/wilco-charger.c
-index b3c6d7cdd731..98ade073ef05 100644
---- a/drivers/power/supply/wilco-charger.c
-+++ b/drivers/power/supply/wilco-charger.c
-@@ -27,6 +27,7 @@ enum charge_mode {
- 	CHARGE_MODE_AC = 3,	/* Mostly AC use, used for Trickle */
- 	CHARGE_MODE_AUTO = 4,	/* Used for Adaptive */
- 	CHARGE_MODE_CUSTOM = 5,	/* Used for Custom */
-+	CHARGE_MODE_LONGLIFE = 6, /* Used for Long Life */
+ /**
+@@ -142,7 +142,7 @@ struct fw_cdev_event_request {
+ 	__u64 offset;
+ 	__u32 handle;
+ 	__u32 length;
+-	__u32 data[0];
++	__u32 data[];
  };
  
- #define CHARGE_LOWER_LIMIT_MIN	50
-@@ -48,6 +49,8 @@ static int psp_val_to_charge_mode(int psp_val)
- 		return CHARGE_MODE_AUTO;
- 	case POWER_SUPPLY_CHARGE_TYPE_CUSTOM:
- 		return CHARGE_MODE_CUSTOM;
-+	case POWER_SUPPLY_CHARGE_TYPE_LONGLIFE:
-+		return CHARGE_MODE_LONGLIFE;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -67,6 +70,8 @@ static int charge_mode_to_psp_val(enum charge_mode mode)
- 		return POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE;
- 	case CHARGE_MODE_CUSTOM:
- 		return POWER_SUPPLY_CHARGE_TYPE_CUSTOM;
-+	case CHARGE_MODE_LONGLIFE:
-+		return POWER_SUPPLY_CHARGE_TYPE_LONGLIFE;
- 	default:
- 		return -EINVAL;
- 	}
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index ac1345a48ad0..528a3eaa2320 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -48,6 +48,7 @@ enum {
- 	POWER_SUPPLY_CHARGE_TYPE_STANDARD,	/* normal speed */
- 	POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE,	/* dynamically adjusted speed */
- 	POWER_SUPPLY_CHARGE_TYPE_CUSTOM,	/* use CHARGE_CONTROL_* props */
-+	POWER_SUPPLY_CHARGE_TYPE_LONGLIFE,	/* slow speed, longer life */
+ /**
+@@ -205,7 +205,7 @@ struct fw_cdev_event_request2 {
+ 	__u32 generation;
+ 	__u32 handle;
+ 	__u32 length;
+-	__u32 data[0];
++	__u32 data[];
  };
  
- enum {
+ /**
+@@ -344,7 +344,7 @@ struct fw_cdev_event_iso_resource {
+  * @data:	Incoming data
+  *
+  * If @type is %FW_CDEV_EVENT_PHY_PACKET_SENT, @length is 0 and @data empty,
+- * except in case of a ping packet:  Then, @length is 4, and @data[0] is the
++ * except in case of a ping packet:  Then, @length is 4, and @data[] is the
+  * ping time in 49.152MHz clocks if @rcode is %RCODE_COMPLETE.
+  *
+  * If @type is %FW_CDEV_EVENT_PHY_PACKET_RECEIVED, @length is 8 and @data
+@@ -355,7 +355,7 @@ struct fw_cdev_event_phy_packet {
+ 	__u32 type;
+ 	__u32 rcode;
+ 	__u32 length;
+-	__u32 data[0];
++	__u32 data[];
+ };
+ 
+ /**
 -- 
-2.17.1
+2.7.4
 
----
-The original author, Nick no longer being around and that's why he's not on CC.
