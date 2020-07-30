@@ -2,100 +2,164 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77480C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51FF72070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:10:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ualbdPWS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pzTikaBT"
+	by mail.kernel.org (Postfix) with ESMTP id 64FC32070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:13:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbgG3HKM (ORCPT
+        id S1728869AbgG3HNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 03:10:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43978 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbgG3HKM (ORCPT
+        Thu, 30 Jul 2020 03:13:22 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:55109 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbgG3HNT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 03:10:12 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67BECC061794;
-        Thu, 30 Jul 2020 00:10:12 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596093010;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+w/sK1SsZKUn1Dn3lJ80Y6FqshMKdUhZKeHK5jUWI9U=;
-        b=ualbdPWSrWD9PSFYMBEowro0ByFP1H1D4BeTAwCZW4ISWnwsM5iMmiNENi5qqV4RjOyw/x
-        R1oSCVNNteKIA5s1lUB6/vMdWwAkQ8ZAgavxGnttNkEkVQZ8vzdPCRQDFw0uG0ONKiZlGS
-        T2rkCJcl+kcF9dsal0D6S9BuNjC7Yyd6EKfovGsM5vN8uqWQSEkLSmDkElzI4eCmzcW8TK
-        BsHWMgLtB/HX1A4e7Ny72q/tomkBWw3SdExv+1Rdg7B779+JlgSgAu4u0rF7y9qddw00IJ
-        V25WpzpgjaDxONHNpVkEuN9o1Segs20XrxpK6j4H31qpW7eWtITiyzhxo1yiRw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596093010;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+w/sK1SsZKUn1Dn3lJ80Y6FqshMKdUhZKeHK5jUWI9U=;
-        b=pzTikaBTF7mRs6nV0Yky0Nu4FOX/qXu1LiyRtHFUpxCVd5vZMZPgxyN+t23SxBmvm3qe+A
-        Bozdd5Yp3DDSWBCA==
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 15/23] seq_file: switch over direct seq_read method calls to seq_read_iter
-In-Reply-To: <20200729205919.GB1236929@ZenIV.linux.org.uk>
-References: <20200707174801.4162712-1-hch@lst.de> <20200707174801.4162712-16-hch@lst.de> <87eep9rgqu.fsf@nanos.tec.linutronix.de> <20200729205919.GB1236929@ZenIV.linux.org.uk>
-Date:   Thu, 30 Jul 2020 09:10:10 +0200
-Message-ID: <87eeota371.fsf@nanos.tec.linutronix.de>
+        Thu, 30 Jul 2020 03:13:19 -0400
+Received: by mail-io1-f71.google.com with SMTP id z25so10154339ioh.21
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 00:13:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=OsygJws73+ifoiCOA9gS6rVGsiYjzXdLwPjRcW5XWEM=;
+        b=DggBwAlm1cn+MUxas6ybu18zxszzYpJHIATjkiO2wxwth0CF1gZ7lADmk5d9Ncw6kC
+         F/j7y+KWwpCwhKz6aH3cQ2unDxZ6pUIQrGgeuXfNItlZZOsMa0D1Wn00I5Tc5OXuAuVS
+         6+rX9eYryS8UAdRFYhsPAzJZusyMLnVTpfZRRUzkBhXhaM4GknZbSHWjBDCrxOUx0eU6
+         hkCpeQvPCkDJ77B1LeYz5DIbPsupaBLDiYBNEzUxzRwVwpMfniFoUkXwuko1qqaWZDWq
+         KdNPunsjc/Icd/JVmpkVIIRlsRJUkXFjVz/O4qrPBSna/48TePAWivQcmZBOFKSdFc1N
+         4YFQ==
+X-Gm-Message-State: AOAM530IuAh1OfPA8SA+9Gi+o9bwEv0XJLIprRCzoURLtTJIVWPe+WgN
+        ISQaKFjMnqXt1XPDr1BDOJqemWudKxUrDh8Hv5g1NWNWAmzv
+X-Google-Smtp-Source: ABdhPJzG0Ln5tCHYPVorVTvgyzhdlhg1XE6AmkVOAxgZ09CzFspZl+p8H2VYeTiZQOuVFvfsoXfbREYaCPPunfNTp+dOZEehEwUl
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Received: by 2002:a02:9109:: with SMTP id a9mr2063499jag.130.1596093197725;
+ Thu, 30 Jul 2020 00:13:17 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 00:13:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000143a4305aba36803@google.com>
+Subject: KASAN: slab-out-of-bounds Read in ath9k_hif_usb_rx_cb (2)
+From:   syzbot <syzbot+6ecc26112e7241c454ef@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, ath9k-devel@qca.qualcomm.com,
+        davem@davemloft.net, kuba@kernel.org, kvalo@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Al Viro <viro@zeniv.linux.org.uk> writes:
-> On Fri, Jul 17, 2020 at 11:09:13PM +0200, Thomas Gleixner wrote:
->> 
->> Needs some thought and maybe some cocci help from Julia, but that's way
->> better than this brute force sed thing which results in malformed crap
->> like this:
->> 
->> static const struct file_operations debug_stats_fops = {
->> 	.open		= debug_stats_open,
->> 	.read_iter		= seq_read_iter,
->> 	.llseek		= seq_lseek,
->> 	.release	= single_release,
->> };
->> 
->> and proliferates the copy and paste voodoo programming.
->
-> Better copy and paste than templates, IMO; at least the former is
-> greppable; fucking DEFINE_..._ATRIBUTE is *NOT*, especially due
-> to the use of ##.
+Hello,
 
-Copy and paste itself is not the issue, but once the copy and paste orgy
-starts you end up with more subtle bugs and silly differences than
-copies. I spent enough time cleaning such crap up just to figure out
-that once you've finished a full tree sweep you can start over.
+syzbot found the following issue on:
 
-grep for these things is a nuisance, but it's not rocket science to
-figure it out. I rather have to figure that out than staring at a
-gazillion of broken implementations.
+HEAD commit:    ab4dc051 usb: mtu3: simplify mtu3_req_complete()
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+console output: https://syzkaller.appspot.com/x/log.txt?x=11c0666c900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fb6677a3d4f11788
+dashboard link: https://syzkaller.appspot.com/bug?extid=6ecc26112e7241c454ef
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=171e6004900000
 
-Thanks,
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+6ecc26112e7241c454ef@syzkaller.appspotmail.com
 
-        tglx
+==================================================================
+BUG: KASAN: slab-out-of-bounds in ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:627 [inline]
+BUG: KASAN: slab-out-of-bounds in ath9k_hif_usb_rx_cb+0xd7d/0xf80 drivers/net/wireless/ath/ath9k/hif_usb.c:671
+Read of size 4 at addr ffff8881cbf6c090 by task swapper/0/0
+
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.8.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xf6/0x16e lib/dump_stack.c:118
+ print_address_description.constprop.0+0x1a/0x210 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x37/0x7c mm/kasan/report.c:530
+ ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:627 [inline]
+ ath9k_hif_usb_rx_cb+0xd7d/0xf80 drivers/net/wireless/ath/ath9k/hif_usb.c:671
+ __usb_hcd_giveback_urb+0x32d/0x560 drivers/usb/core/hcd.c:1650
+ usb_hcd_giveback_urb+0x367/0x410 drivers/usb/core/hcd.c:1716
+ dummy_timer+0x11f2/0x3240 drivers/usb/gadget/udc/dummy_hcd.c:1967
+ call_timer_fn+0x1ac/0x6e0 kernel/time/timer.c:1415
+ expire_timers kernel/time/timer.c:1460 [inline]
+ __run_timers.part.0+0x54c/0x9e0 kernel/time/timer.c:1784
+ __run_timers kernel/time/timer.c:1756 [inline]
+ run_timer_softirq+0x80/0x120 kernel/time/timer.c:1797
+ __do_softirq+0x222/0x95b kernel/softirq.c:292
+ asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
+ </IRQ>
+ __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
+ run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
+ do_softirq_own_stack+0xed/0x140 arch/x86/kernel/irq_64.c:77
+ invoke_softirq kernel/softirq.c:387 [inline]
+ __irq_exit_rcu kernel/softirq.c:417 [inline]
+ irq_exit_rcu+0x150/0x1f0 kernel/softirq.c:429
+ sysvec_apic_timer_interrupt+0x49/0xc0 arch/x86/kernel/apic/apic.c:1091
+ asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:585
+RIP: 0010:native_irq_disable arch/x86/include/asm/irqflags.h:49 [inline]
+RIP: 0010:arch_local_irq_disable arch/x86/include/asm/irqflags.h:89 [inline]
+RIP: 0010:acpi_safe_halt+0x72/0x90 drivers/acpi/processor_idle.c:112
+Code: 74 06 5b e9 e0 4c 8f fb e8 db 4c 8f fb e8 26 d8 94 fb e9 0c 00 00 00 e8 cc 4c 8f fb 0f 00 2d 05 63 74 00 e8 c0 4c 8f fb fb f4 <fa> e8 18 d2 94 fb 5b e9 b2 4c 8f fb 48 89 df e8 fa fb b8 fb eb ab
+RSP: 0018:ffffffff87207c80 EFLAGS: 00000293
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: ffffffff8722f840 RSI: ffffffff85b05d40 RDI: ffffffff85b05d2a
+RBP: ffff8881d8cca864 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000000 R12: ffff8881d8cca864
+R13: 1ffffffff0e40f99 R14: ffff8881d8cca865 R15: 0000000000000001
+ acpi_idle_do_entry+0x15c/0x1b0 drivers/acpi/processor_idle.c:525
+ acpi_idle_enter+0x3f0/0xa50 drivers/acpi/processor_idle.c:651
+ cpuidle_enter_state+0xff/0x870 drivers/cpuidle/cpuidle.c:235
+ cpuidle_enter+0x4a/0xa0 drivers/cpuidle/cpuidle.c:346
+ call_cpuidle kernel/sched/idle.c:126 [inline]
+ cpuidle_idle_call kernel/sched/idle.c:214 [inline]
+ do_idle+0x3d6/0x5a0 kernel/sched/idle.c:276
+ cpu_startup_entry+0x14/0x20 kernel/sched/idle.c:372
+ start_kernel+0xa1b/0xa56 init/main.c:1043
+ secondary_startup_64+0xb6/0xc0 arch/x86/kernel/head_64.S:243
+
+Allocated by task 0:
+(stack is not available)
+
+Freed by task 0:
+(stack is not available)
+
+The buggy address belongs to the object at ffff8881cbf6c000
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 144 bytes inside of
+ 1024-byte region [ffff8881cbf6c000, ffff8881cbf6c400)
+The buggy address belongs to the page:
+page:ffffea00072fda00 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea00072fda00 order:3 compound_mapcount:0 compound_pincount:0
+flags: 0x200000000010200(slab|head)
+raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da002280
+raw: 0000000000000000 0000000080100010 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881cbf6bf80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8881cbf6c000: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff8881cbf6c080: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+                         ^
+ ffff8881cbf6c100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8881cbf6c180: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
