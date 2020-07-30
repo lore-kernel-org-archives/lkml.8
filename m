@@ -2,124 +2,131 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E689DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6561CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6B2D20838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:24:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Wh/TwJA0"
+	by mail.kernel.org (Postfix) with ESMTP id 4AD1F20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:25:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729229AbgG3KYe (ORCPT
+        id S1729116AbgG3KZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 06:24:34 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.167]:24256 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgG3KYe (ORCPT
+        Thu, 30 Jul 2020 06:25:52 -0400
+Received: from disco-boy.misterjones.org ([51.254.78.96]:58890 "EHLO
+        disco-boy.misterjones.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgG3KZv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 06:24:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1596104672;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=5eS+BVhe8xR/vNU0oSAQGqLHjYljN5F6k3SOrv5G/WQ=;
-        b=Wh/TwJA06GpCKRE8Ko9bjSkFFzFzVNom4HpETO6/guHnUZkEUJx3pu+gbV9sCRgiGF
-        bfCWWhjStqW6ozeLKXkrXxgVopjgd0dajwibO2+oAnajZYbPum+7NA4ixFtr5UGSBjzb
-        PRIy4s7fP/dfp+/JFTzjCQbLjiei+5JCT/avnQQcp7qDBp01gVCORn3LKKCEUldeq5GS
-        VdVfiTECCFDXwXCAderALExM1Nnry01E65uGV38oFniTn7+aZzhl3jChFRFg3rOFscB/
-        aKX9jPkt4xxwcr0kU8zIWjDGFoQhKpwGVk4HGCiYcOLBwZkx1PHLPpKiPT9L1YzOJ1/9
-        ueuw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGHPrvwDOrng=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
-        with ESMTPSA id V07054w6UAOOJMq
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Thu, 30 Jul 2020 12:24:24 +0200 (CEST)
-Subject: Re: BUG: omap5: v5.8-rc7 boot fails
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200729115525.GG2811@atomide.com>
-Date:   Thu, 30 Jul 2020 12:24:23 +0200
-Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
-        kernel@pyra-handheld.com, Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A5FDB933-0B23-43DE-840D-AA9126A5E60A@goldelico.com>
-References: <3FEECC44-3156-4786-8DF9-149F8CA9B41D@goldelico.com> <20200728082348.GD2811@atomide.com> <20200729115525.GG2811@atomide.com>
-To:     Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
+        Thu, 30 Jul 2020 06:25:51 -0400
+X-Greylist: delayed 1589 seconds by postgrey-1.27 at vger.kernel.org; Thu, 30 Jul 2020 06:25:50 EDT
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@misterjones.org>)
+        id 1k15LC-00GDgU-2i; Thu, 30 Jul 2020 10:59:10 +0100
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 30 Jul 2020 10:59:09 +0100
+From:   Marc Zyngier <maz@misterjones.org>
+To:     Willy Tarreau <w@1wt.eu>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Emese Revfy <re.emese@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        =?UTF-8?Q?Daniel_D=C3=ADaz?= <daniel.diaz@linaro.org>
+Subject: Re: linux-next: build failure after merge of the origin tree
+In-Reply-To: <20200730061407.GA7941@1wt.eu>
+References: <20200730090828.2349e159@canb.auug.org.au>
+ <CAHk-=wjK8+12i8iDC41LXfZBcMjGsF+WyW_+ncPFmrexRT0yxw@mail.gmail.com>
+ <202007292007.D87DBD34B@keescook> <20200730032250.GB7790@1wt.eu>
+ <20200730061407.GA7941@1wt.eu>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <102fc7a6fa4c2767879a6f911a9a16d5@misterjones.org>
+X-Sender: maz@misterjones.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: w@1wt.eu, keescook@chromium.org, torvalds@linux-foundation.org, sfr@canb.auug.org.au, re.emese@gmail.com, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org, samitolvanen@google.com, daniel.diaz@linaro.org
+X-SA-Exim-Mail-From: maz@misterjones.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
+On 2020-07-30 07:14, Willy Tarreau wrote:
+> On Thu, Jul 30, 2020 at 05:22:50AM +0200, Willy Tarreau wrote:
+>> On Wed, Jul 29, 2020 at 08:17:48PM -0700, Kees Cook wrote:
+>> > And just another heads-up, the patch[1] (which was never sent to a public
+>> > list) also breaks arm64 (circular header needs?):
+>> (...)
+>> 
+>> Definitely, we've just got a report about this, I'll have a look once
+>> I'm at the office. I'd like to check that we don't obviously break
+>> another arch by just removing percpu. If at least shuffling them 
+>> around
+>> is sufficient that'd be nice. Otherwise we'll likely need a separate
+>> header (which is not a bad thing for the long term).
+> 
+> So Linus proposed a clean solution which might be harder to backport
+> but looks better for 5.8. However the attached one addresses the issue
+> for me on arm64 and still works on x86_64, arm, mips. I think we should
+> go with this one first then apply Linus' one on top of it to be long
+> term proof, and backport only the first one. Linus ?
 
-> Am 29.07.2020 um 13:55 schrieb Tony Lindgren <tony@atomide.com>:
->=20
-> * Tony Lindgren <tony@atomide.com> [200728 08:23]:
->> * H. Nikolaus Schaller <hns@goldelico.com> [200727 20:51]:
->>> Hi Tony,
->>> after trying v5.8-rc7 the Pyra boot hangs after ca. 3 seconds
->>> (a little random what the last log line is).
->>>=20
->>> I could bisect it to:
->>>=20
->>> 6cfcd5563b4fadbf49ba8fa481978e5e86d30322 is the first bad commit
->>> commit 6cfcd5563b4fadbf49ba8fa481978e5e86d30322
->>> Author: Tony Lindgren <tony@atomide.com>
->>> Date:   Mon Jul 13 09:26:01 2020 -0700
->>>=20
->>>    clocksource/drivers/timer-ti-dm: Fix suspend and resume for am3 =
-and am4
->>>=20
->>> And a git revert makes it boot again.
->>>=20
->>> I haven't had time to do more tests (e.g. with omap3/4 or on =
-omap5uevm).
->>=20
->> Oops sorry about that, I'll take a look.
->=20
-> This fixes booting for me,
+So for what it's worth, this patch fixes the arm64 compilation problem
+for me:
 
-yes, I can confirm that this fixes the omap5 Pyra.
+Tested-by: Marc Zyngier <maz@kernel.org>
 
-And there seems to be no regression on dm3730 GTA04 (but I didn't notice =
-the bug either, although it also uses a pwm_dmtimer).
+I had come up with a different fix, only touching arm64 (see below).
 
-BR and thanks,
-Nikolaus
+Thanks,
 
-> but I still need to check if we also
-> need to enable before the reset. And then this needs to be tested
-> on all the related SoCs again.
->=20
-> Regards,
->=20
-> Tony
->=20
-> 8< ------------------
-> diff --git a/drivers/clocksource/timer-ti-dm-systimer.c =
-b/drivers/clocksource/timer-ti-dm-systimer.c
-> --- a/drivers/clocksource/timer-ti-dm-systimer.c
-> +++ b/drivers/clocksource/timer-ti-dm-systimer.c
-> @@ -409,8 +409,8 @@ static int __init dmtimer_systimer_setup(struct =
-device_node *np,
-> 	t->wakeup =3D regbase + _OMAP_TIMER_WAKEUP_EN_OFFSET;
-> 	t->ifctrl =3D regbase + _OMAP_TIMER_IF_CTRL_OFFSET;
->=20
-> -	dmtimer_systimer_enable(t);
-> 	dmtimer_systimer_reset(t);
-> +	dmtimer_systimer_enable(t);
-> 	pr_debug("dmtimer rev %08x sysc %08x\n", readl_relaxed(t->base),
-> 		 readl_relaxed(t->base + t->sysc));
->=20
+         M.
 
+ From 33d819f4efa0a4474b5dc2e4bcaef1b886ca30c3 Mon Sep 17 00:00:00 2001
+ From: Marc Zyngier <maz@kernel.org>
+Date: Thu, 30 Jul 2020 10:53:05 +0100
+Subject: [PATCH] arm64: Drop unnecessary include from asm/smp.h
+
+asm/pointer_auth.h is not needed anymore in asm/smp.h, as 62a679cb2825
+("arm64: simplify ptrauth initialization") removed the keys from the
+secondary_data structure.
+
+This also cures a compilation issue introduced by f227e3ec3b5c
+("random32: update the net random state on interrupt and activity").
+
+Fixes: 62a679cb2825 ("arm64: simplify ptrauth initialization")
+Fixes: f227e3ec3b5c ("random32: update the net random state on interrupt 
+and activity")
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+  arch/arm64/include/asm/smp.h | 1 -
+  1 file changed, 1 deletion(-)
+
+diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
+index ea268d88b6f7..a0c8a0b65259 100644
+--- a/arch/arm64/include/asm/smp.h
++++ b/arch/arm64/include/asm/smp.h
+@@ -30,7 +30,6 @@
+  #include <linux/threads.h>
+  #include <linux/cpumask.h>
+  #include <linux/thread_info.h>
+-#include <asm/pointer_auth.h>
+
+  DECLARE_PER_CPU_READ_MOSTLY(int, cpu_number);
+
+-- 
+2.27.0
+
+
+-- 
+Who you jivin' with that Cosmik Debris?
