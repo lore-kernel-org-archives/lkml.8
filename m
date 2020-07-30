@@ -2,129 +2,137 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D78DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EA2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED0D20809
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:47:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="VZwCyelQ"
+	by mail.kernel.org (Postfix) with ESMTP id 9FD4A2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:51:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbgG3Bq5 (ORCPT
+        id S1728293AbgG3Bvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 21:46:57 -0400
-Received: from crapouillou.net ([89.234.176.41]:46182 "EHLO crapouillou.net"
+        Wed, 29 Jul 2020 21:51:49 -0400
+Received: from mga14.intel.com ([192.55.52.115]:37826 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726287AbgG3Bq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 21:46:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1596073595; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/Od02ztwhZR7+HWXUOfeTO8vPkZfLIWEWfZjF8yhUdY=;
-        b=VZwCyelQgx8HOfSNa9jbao/V+Qn0oyzT2z74fpKfZtkgt9GLGh+hK3EpktJZepLYrAnGSy
-        CtC3SoqEuxKQAOHBsdAlFclxBuh8bEGrqp3PwnR054bOOkujWpDLPx3Y3xgYt655Og/kRV
-        Vqizm968AX4OoRI2vELbh5rd2HyxtGo=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>
-Cc:     od@zcrc.me, Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 3/3] drm/ingenic: ipu: Only enable clock when needed
-Date:   Thu, 30 Jul 2020 03:46:26 +0200
-Message-Id: <20200730014626.83895-4-paul@crapouillou.net>
-In-Reply-To: <20200730014626.83895-1-paul@crapouillou.net>
-References: <20200730014626.83895-1-paul@crapouillou.net>
+        id S1726319AbgG3Bvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 21:51:49 -0400
+IronPort-SDR: I6H8gqtjXqNXh+M8ktJFynhPJFW1UBlxGeaNX3OHJB9g/9dQv9twNbBcCrTwR8dPN9ZYBxCz97
+ xga5TYUWraVw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="150698831"
+X-IronPort-AV: E=Sophos;i="5.75,412,1589266800"; 
+   d="scan'208";a="150698831"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 18:51:48 -0700
+IronPort-SDR: mT16C5NyPsxn9MJXNYqMS14s5QIUvuwtRvX/76esEFS1SspGL7kzTyn8n88de3vL1Hj02sl5kJ
+ ipd+68EVbFPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,412,1589266800"; 
+   d="scan'208";a="394831078"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by fmsmga001.fm.intel.com with ESMTP; 29 Jul 2020 18:51:45 -0700
+Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] iommu: Check IOMMU_DEV_FEAT_AUX feature in aux
+ api's
+To:     Alex Williamson <alex.williamson@redhat.com>
+References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
+ <20200714055703.5510-2-baolu.lu@linux.intel.com>
+ <20200729140343.2b7047b2@x1.home>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <64c11e95-125a-0654-5a3a-2a2739f96d3a@linux.intel.com>
+Date:   Thu, 30 Jul 2020 09:46:50 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200729140343.2b7047b2@x1.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of keeping the IPU clock enabled constantly, enable and disable
-it on demand, when the IPU plane is used.
+Hi Alex,
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/gpu/drm/ingenic/ingenic-ipu.c | 23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
+On 7/30/20 4:03 AM, Alex Williamson wrote:
+> On Tue, 14 Jul 2020 13:57:00 +0800
+> Lu Baolu <baolu.lu@linux.intel.com> wrote:
+> 
+>> The iommu aux-domain api's work only when IOMMU_DEV_FEAT_AUX is enabled
+>> for the device. Add this check to avoid misuse.
+> 
+> Shouldn't this really be the IOMMU driver's responsibility to test?  If
+> nothing else, iommu_dev_feature_enabled() needs to get the iommu_ops
+> from dev->bus->iommu_ops, which is presumably the same iommu_ops we're
+> then calling from domain->ops to attach/detach the device, so it'd be
+> more efficient for the IOMMU driver to error on devices that don't
+> support aux.  Thanks,
 
-diff --git a/drivers/gpu/drm/ingenic/ingenic-ipu.c b/drivers/gpu/drm/ingenic/ingenic-ipu.c
-index f4f0abcd6692..17e682cf1eba 100644
---- a/drivers/gpu/drm/ingenic/ingenic-ipu.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-ipu.c
-@@ -49,6 +49,7 @@ struct ingenic_ipu {
- 	struct regmap *map;
- 	struct clk *clk;
- 	const struct soc_info *soc_info;
-+	bool clk_enabled;
- 
- 	unsigned int num_w, num_h, denom_w, denom_h;
- 
-@@ -288,12 +289,23 @@ static void ingenic_ipu_plane_atomic_update(struct drm_plane *plane,
- 	const struct drm_format_info *finfo;
- 	u32 ctrl, stride = 0, coef_index = 0, format = 0;
- 	bool needs_modeset, upscaling_w, upscaling_h;
-+	int err;
- 
- 	if (!state || !state->fb)
- 		return;
- 
- 	finfo = drm_format_info(state->fb->format->format);
- 
-+	if (!ipu->clk_enabled) {
-+		err = clk_enable(ipu->clk);
-+		if (err) {
-+			dev_err(ipu->dev, "Unable to enable clock: %d\n", err);
-+			return;
-+		}
-+
-+		ipu->clk_enabled = true;
-+	}
-+
- 	/* Reset all the registers if needed */
- 	needs_modeset = drm_atomic_crtc_needs_modeset(state->crtc->state);
- 	if (needs_modeset) {
-@@ -578,6 +590,11 @@ static void ingenic_ipu_plane_atomic_disable(struct drm_plane *plane,
- 	regmap_clear_bits(ipu->map, JZ_REG_IPU_CTRL, JZ_IPU_CTRL_CHIP_EN);
- 
- 	ingenic_drm_plane_disable(ipu->master, plane);
-+
-+	if (ipu->clk_enabled) {
-+		clk_disable(ipu->clk);
-+		ipu->clk_enabled = false;
-+	}
- }
- 
- static const struct drm_plane_helper_funcs ingenic_ipu_plane_helper_funcs = {
-@@ -761,9 +778,9 @@ static int ingenic_ipu_bind(struct device *dev, struct device *master, void *d)
- 	drm_object_attach_property(&plane->base, ipu->sharpness_prop,
- 				   ipu->sharpness);
- 
--	err = clk_prepare_enable(ipu->clk);
-+	err = clk_prepare(ipu->clk);
- 	if (err) {
--		dev_err(dev, "Unable to enable clock\n");
-+		dev_err(dev, "Unable to prepare clock\n");
- 		return err;
- 	}
- 
-@@ -775,7 +792,7 @@ static void ingenic_ipu_unbind(struct device *dev,
- {
- 	struct ingenic_ipu *ipu = dev_get_drvdata(dev);
- 
--	clk_disable_unprepare(ipu->clk);
-+	clk_unprepare(ipu->clk);
- }
- 
- static const struct component_ops ingenic_ipu_ops = {
--- 
-2.27.0
+Fair enough. The vendor iommu driver always knows the status of aux-
+domain support. So this check is duplicated. I will drop this patch.
 
+Best regards,
+baolu
+
+> 
+> Alex
+> 
+>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>> ---
+>>   drivers/iommu/iommu.c | 16 +++++++++-------
+>>   1 file changed, 9 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>> index 1ed1e14a1f0c..e1fdd3531d65 100644
+>> --- a/drivers/iommu/iommu.c
+>> +++ b/drivers/iommu/iommu.c
+>> @@ -2725,11 +2725,13 @@ EXPORT_SYMBOL_GPL(iommu_dev_feature_enabled);
+>>    */
+>>   int iommu_aux_attach_device(struct iommu_domain *domain, struct device *dev)
+>>   {
+>> -	int ret = -ENODEV;
+>> +	int ret;
+>>   
+>> -	if (domain->ops->aux_attach_dev)
+>> -		ret = domain->ops->aux_attach_dev(domain, dev);
+>> +	if (!iommu_dev_feature_enabled(dev, IOMMU_DEV_FEAT_AUX) ||
+>> +	    !domain->ops->aux_attach_dev)
+>> +		return -ENODEV;
+>>   
+>> +	ret = domain->ops->aux_attach_dev(domain, dev);
+>>   	if (!ret)
+>>   		trace_attach_device_to_domain(dev);
+>>   
+>> @@ -2748,12 +2750,12 @@ EXPORT_SYMBOL_GPL(iommu_aux_detach_device);
+>>   
+>>   int iommu_aux_get_pasid(struct iommu_domain *domain, struct device *dev)
+>>   {
+>> -	int ret = -ENODEV;
+>> +	if (!iommu_dev_feature_enabled(dev, IOMMU_DEV_FEAT_AUX) ||
+>> +	    !domain->ops->aux_get_pasid)
+>> +		return -ENODEV;
+>>   
+>> -	if (domain->ops->aux_get_pasid)
+>> -		ret = domain->ops->aux_get_pasid(domain, dev);
+>> +	return domain->ops->aux_get_pasid(domain, dev);
+>>   
+>> -	return ret;
+>>   }
+>>   EXPORT_SYMBOL_GPL(iommu_aux_get_pasid);
+>>   
+> 
