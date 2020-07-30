@@ -2,143 +2,199 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D10C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C087C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F33702082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E94C2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:32:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="D+CsCwZd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730032AbgG3QcA (ORCPT
+        id S1730037AbgG3Qci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 12:32:00 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57534 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgG3QcA (ORCPT
+        Thu, 30 Jul 2020 12:32:38 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:38357 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgG3Qch (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 12:32:00 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 59F78803202F;
-        Thu, 30 Jul 2020 16:31:56 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id LDcaO2d9EnOz; Thu, 30 Jul 2020 19:31:55 +0300 (MSK)
-Date:   Thu, 30 Jul 2020 19:31:54 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/5] dmaengine: dw: Activate FIFO-mode for memory
- peripherals only
-Message-ID: <20200730163154.qqrlas4zrybvocno@mobilestation>
-References: <20200730154545.3965-1-Sergey.Semin@baikalelectronics.ru>
- <20200730154545.3965-3-Sergey.Semin@baikalelectronics.ru>
- <20200730162428.GU3703480@smile.fi.intel.com>
+        Thu, 30 Jul 2020 12:32:37 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06UGMvsZ090374;
+        Thu, 30 Jul 2020 16:31:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=E1ucT1zc2XuteTwgQHD0kqKj6eDXbHg49Zk16afbYZQ=;
+ b=D+CsCwZdlk9mXj4JZhDkq9bodnSEtaso9JXA6qYEAROCokzn/lv1lGVm7OSiFd4IFWCs
+ QOyiLWwYBLJ+vcuQYLy/vHpB+7SPGJDccFu0KcY8sl/uu53pE1L4hOjimUlFhvKvtWaD
+ j/+iJuMuJn6ZkArXXA74qd+REQyDWqa25U6eT8BV4bvRenMeWAClVEh/kmB24/FK2jpt
+ g51C8Rx998SfIm0iCbv+rWdvQthLcgaLXKYKtKPQhZzVXxsVozZkph2s3yquiBPa/H/A
+ c+SLnIIZsYxWy58XbWdDWvW/LWjjFOpOtVQZEs70XSx8bDsBpyNYVHlRkffNeQKL+Ejo nA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 32hu1jmrkw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 30 Jul 2020 16:31:56 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06UGTRWo169610;
+        Thu, 30 Jul 2020 16:31:56 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 32hu5x0b4e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Jul 2020 16:31:56 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06UGVqb6024197;
+        Thu, 30 Jul 2020 16:31:52 GMT
+Received: from monkey.oracle.com (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 30 Jul 2020 09:31:45 -0700
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Michal Nazarewicz <mina86@mina86.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Barry Song <song.bao.hua@hisilicon.com>,
+        Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>, stable@vger.kernel.org
+Subject: [PATCH] cma: don't quit at first error when activating reserved areas
+Date:   Thu, 30 Jul 2020 09:31:23 -0700
+Message-Id: <20200730163123.6451-1-mike.kravetz@oracle.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200730162428.GU3703480@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9698 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ suspectscore=2 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007300117
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9698 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
+ malwarescore=0 spamscore=0 suspectscore=2 bulkscore=0 priorityscore=1501
+ phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007300116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 07:24:28PM +0300, Andy Shevchenko wrote:
-> On Thu, Jul 30, 2020 at 06:45:42PM +0300, Serge Semin wrote:
-> > CFGx.FIFO_MODE field controls a DMA-controller "FIFO readiness" criterion.
-> > In other words it determines when to start pushing data out of a DW
-> > DMAC channel FIFO to a destination peripheral or from a source
-> > peripheral to the DW DMAC channel FIFO. Currently FIFO-mode is set to one
-> > for all DW DMAC channels. It means they are tuned to flush data out of
-> > FIFO (to a memory peripheral or by accepting the burst transaction
-> > requests) when FIFO is at least half-full (except at the end of the block
-> > transfer, when FIFO-flush mode is activated) and are configured to get
-> > data to the FIFO when it's at least half-empty.
-> > 
-> > Such configuration is a good choice when there is no slave device involved
-> > in the DMA transfers. In that case the number of bursts per block is less
-> > than when CFGx.FIFO_MODE = 0 and, hence, the bus utilization will improve.
-> > But the latency of DMA transfers may increase when CFGx.FIFO_MODE = 1,
-> > since DW DMAC will wait for the channel FIFO contents to be either
-> > half-full or half-empty depending on having the destination or the source
-> > transfers. Such latencies might be dangerous in case if the DMA transfers
-> > are expected to be performed from/to a slave device. Since normally
-> > peripheral devices keep data in internal FIFOs, any latency at some
-> > critical moment may cause one being overflown and consequently losing
-> > data. This especially concerns a case when either a peripheral device is
-> > relatively fast or the DW DMAC engine is relatively slow with respect to
-> > the incoming data pace.
-> > 
-> > In order to solve problems, which might be caused by the latencies
-> > described above, let's enable the FIFO half-full/half-empty "FIFO
-> > readiness" criterion only for DMA transfers with no slave device involved.
-> 
-> > Thanks to the commit ???????????? ("dmaengine: dw: Initialize channel
-> 
-> See below.
-> 
-> > before each transfer") we can freely do that in the generic
-> > dw_dma_initialize_chan() method.
-> 
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Thanks!
-> 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > 
-> > ---
-> > 
-> > Note the DMA-engine repository git.infradead.org/users/vkoul/slave-dma.git
-> > isn't accessible. So I couldn't find out the Andy' commit hash to use it in
-> > the log.
-> 
+The routine cma_init_reserved_areas is designed to activate all
+reserved cma areas.  It quits when it first encounters an error.
+This can leave some areas in a state where they are reserved but
+not activated.  There is no feedback to code which performed the
+reservation.  Attempting to allocate memory from areas in such a
+state will result in a BUG.
 
-> It's dmaengine.git on git.kernel.org.
+Modify cma_init_reserved_areas to always attempt to activate all
+areas.  The called routine, cma_activate_area is responsible for
+leaving the area in a valid state.  No one is making active use
+of returned error codes, so change the routine to void.
 
-Ah, thanks! I've just found out that the repo address has been changed. But I've
-also scanned the "next" branch of the repo:
-https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git
+How to reproduce:  This example uses kernelcore, hugetlb and cma
+as an easy way to reproduce.  However, this is a more general cma
+issue.
 
-Your commit isn't there. Am I missing something?
+Two node x86 VM 16GB total, 8GB per node
+Kernel command line parameters, kernelcore=4G hugetlb_cma=8G
+Related boot time messages,
+  hugetlb_cma: reserve 8192 MiB, up to 4096 MiB per node
+  cma: Reserved 4096 MiB at 0x0000000100000000
+  hugetlb_cma: reserved 4096 MiB on node 0
+  cma: Reserved 4096 MiB at 0x0000000300000000
+  hugetlb_cma: reserved 4096 MiB on node 1
+  cma: CMA area hugetlb could not be activated
 
--Sergey
+ # echo 8 > /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
 
-> 
-> > ---
-> >  drivers/dma/dw/dw.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/dma/dw/dw.c b/drivers/dma/dw/dw.c
-> > index 7a085b3c1854..d9810980920a 100644
-> > --- a/drivers/dma/dw/dw.c
-> > +++ b/drivers/dma/dw/dw.c
-> > @@ -14,7 +14,7 @@
-> >  static void dw_dma_initialize_chan(struct dw_dma_chan *dwc)
-> >  {
-> >  	struct dw_dma *dw = to_dw_dma(dwc->chan.device);
-> > -	u32 cfghi = DWC_CFGH_FIFO_MODE;
-> > +	u32 cfghi = is_slave_direction(dwc->direction) ? 0 : DWC_CFGH_FIFO_MODE;
-> >  	u32 cfglo = DWC_CFGL_CH_PRIOR(dwc->priority);
-> >  	bool hs_polarity = dwc->dws.hs_polarity;
-> >  
-> > -- 
-> > 2.27.0
-> > 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+  BUG: kernel NULL pointer dereference, address: 0000000000000000
+  #PF: supervisor read access in kernel mode
+  #PF: error_code(0x0000) - not-present page
+  PGD 0 P4D 0
+  Oops: 0000 [#1] SMP PTI
+  ...
+  Call Trace:
+    bitmap_find_next_zero_area_off+0x51/0x90
+    cma_alloc+0x1a5/0x310
+    alloc_fresh_huge_page+0x78/0x1a0
+    alloc_pool_huge_page+0x6f/0xf0
+    set_max_huge_pages+0x10c/0x250
+    nr_hugepages_store_common+0x92/0x120
+    ? __kmalloc+0x171/0x270
+    kernfs_fop_write+0xc1/0x1a0
+    vfs_write+0xc7/0x1f0
+    ksys_write+0x5f/0xe0
+    do_syscall_64+0x4d/0x90
+    entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: c64be2bb1c6e ("drivers: add Contiguous Memory Allocator")
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: <stable@vger.kernel.org>
+---
+ mm/cma.c | 23 +++++++++--------------
+ 1 file changed, 9 insertions(+), 14 deletions(-)
+
+diff --git a/mm/cma.c b/mm/cma.c
+index 26ecff818881..0963c0f9c502 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -93,17 +93,15 @@ static void cma_clear_bitmap(struct cma *cma, unsigned long pfn,
+ 	mutex_unlock(&cma->lock);
+ }
+ 
+-static int __init cma_activate_area(struct cma *cma)
++static void __init cma_activate_area(struct cma *cma)
+ {
+ 	unsigned long base_pfn = cma->base_pfn, pfn = base_pfn;
+ 	unsigned i = cma->count >> pageblock_order;
+ 	struct zone *zone;
+ 
+ 	cma->bitmap = bitmap_zalloc(cma_bitmap_maxno(cma), GFP_KERNEL);
+-	if (!cma->bitmap) {
+-		cma->count = 0;
+-		return -ENOMEM;
+-	}
++	if (!cma->bitmap)
++		goto out_error;
+ 
+ 	WARN_ON_ONCE(!pfn_valid(pfn));
+ 	zone = page_zone(pfn_to_page(pfn));
+@@ -133,25 +131,22 @@ static int __init cma_activate_area(struct cma *cma)
+ 	spin_lock_init(&cma->mem_head_lock);
+ #endif
+ 
+-	return 0;
++	return;
+ 
+ not_in_zone:
+-	pr_err("CMA area %s could not be activated\n", cma->name);
+ 	bitmap_free(cma->bitmap);
++out_error:
+ 	cma->count = 0;
+-	return -EINVAL;
++	pr_err("CMA area %s could not be activated\n", cma->name);
++	return;
+ }
+ 
+ static int __init cma_init_reserved_areas(void)
+ {
+ 	int i;
+ 
+-	for (i = 0; i < cma_area_count; i++) {
+-		int ret = cma_activate_area(&cma_areas[i]);
+-
+-		if (ret)
+-			return ret;
+-	}
++	for (i = 0; i < cma_area_count; i++)
++		cma_activate_area(&cma_areas[i]);
+ 
+ 	return 0;
+ }
+-- 
+2.25.4
+
