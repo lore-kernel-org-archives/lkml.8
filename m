@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6782C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1791FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 933302074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA6322074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:19:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596097175;
-	bh=8OEVqAg2npBQtJltoNq0N3vs9+ceXdAM6Ofa1mRSckg=;
+	s=default; t=1596097181;
+	bh=607reChhp6EKtOkI4IPELIlw7r9BVtK3n9rjMAH2/wA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KRFO672KQUCT0yrArCmeJeQX0Mwl0BT2dAhiMv9O0IRGWHm1LETiGJ7Iyfls1Ba+A
-	 tkZY7WN6fnNHIFsZqKzy2x4eswftDzcZ5BrPLemHsHbv5i8pOB8z/0c/3gPaLZtS1p
-	 OwfdAZjTjPnWI4hPXMHNchF9Cusg4S+amOwEpjbk=
+	b=x4XMUUKfWsRiuwoKPId6Gf/LMVjMeKcWQz/t7mlyyxgfvOO75rLjDPvPWVu/Bs1j4
+	 sikGs07t9muV+WyRGaFfeCpOlZgIrRQKEdpgey6plJHQ0WvWVDiwS0oC8x3TeC+3EM
+	 0h1MuMMV2vB8O+7gPRvANwuqbYKqqwi61kuu1Bx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730358AbgG3ITe (ORCPT
+        id S1729687AbgG3ITj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:19:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46032 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:19:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729520AbgG3IHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:07:54 -0400
+        id S1729127AbgG3IHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:07:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE2352074B;
-        Thu, 30 Jul 2020 08:07:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8ACA42070B;
+        Thu, 30 Jul 2020 08:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096474;
-        bh=8OEVqAg2npBQtJltoNq0N3vs9+ceXdAM6Ofa1mRSckg=;
+        s=default; t=1596096471;
+        bh=607reChhp6EKtOkI4IPELIlw7r9BVtK3n9rjMAH2/wA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uttkYVCeR5jWZEJgaxAwBTbo7g89s74CDS09sKnkMMYbeebpVqvtLcPBF/ajidXQH
-         96PlQTp0MYYzUC2luUbxwQXKaZA3NChoD7T3pAJnMWaIzG2rMALx1+jrMc3m+y5Qu2
-         5UdKDNdWMilW90sTJMlbaoiLlJekAGS83s8bzbls=
+        b=nOZTBW+nm8Z1IbpXQgNWKwjLCvMR3a+yIBWbBnyVHdXF8ZlCrJ7duVsnPsVGFG33p
+         AvKg7ZpFnzOQStWT34Q+0Lo97oWW6MKy/fZnf/mpl74g2Zao4T/xn9mEH/MkuCILxQ
+         D7h13ea5Lp4DKB+dDZ9OTq7fqrKHvcGfhfM7skxA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        stable@vger.kernel.org, Peilin Ye <yepeilin.cs@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 03/14] dev: Defer free of skbs in flush_backlog
-Date:   Thu, 30 Jul 2020 10:04:46 +0200
-Message-Id: <20200730074419.062729090@linuxfoundation.org>
+Subject: [PATCH 4.14 02/14] AX.25: Prevent out-of-bounds read in ax25_sendmsg()
+Date:   Thu, 30 Jul 2020 10:04:45 +0200
+Message-Id: <20200730074419.010950200@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074418.882736401@linuxfoundation.org>
 References: <20200730074418.882736401@linuxfoundation.org>
@@ -60,31 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+From: Peilin Ye <yepeilin.cs@gmail.com>
 
-[ Upstream commit 7df5cb75cfb8acf96c7f2342530eb41e0c11f4c3 ]
+[ Upstream commit 8885bb0621f01a6c82be60a91e5fc0f6e2f71186 ]
 
-IRQs are disabled when freeing skbs in input queue.
-Use the IRQ safe variant to free skbs here.
+Checks on `addr_len` and `usax->sax25_ndigis` are insufficient.
+ax25_sendmsg() can go out of bounds when `usax->sax25_ndigis` equals to 7
+or 8. Fix it.
 
-Fixes: 145dd5f9c88f ("net: flush the softnet backlog in process context")
-Signed-off-by: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+It is safe to remove `usax->sax25_ndigis > AX25_MAX_DIGIS`, since
+`addr_len` is guaranteed to be less than or equal to
+`sizeof(struct full_sockaddr_ax25)`
+
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/dev.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ax25/af_ax25.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -4626,7 +4626,7 @@ static void flush_backlog(struct work_st
- 	skb_queue_walk_safe(&sd->input_pkt_queue, skb, tmp) {
- 		if (skb->dev->reg_state == NETREG_UNREGISTERING) {
- 			__skb_unlink(skb, &sd->input_pkt_queue);
--			kfree_skb(skb);
-+			dev_kfree_skb_irq(skb);
- 			input_queue_head_incr(sd);
- 		}
- 	}
+--- a/net/ax25/af_ax25.c
++++ b/net/ax25/af_ax25.c
+@@ -1513,7 +1513,8 @@ static int ax25_sendmsg(struct socket *s
+ 			struct full_sockaddr_ax25 *fsa = (struct full_sockaddr_ax25 *)usax;
+ 
+ 			/* Valid number of digipeaters ? */
+-			if (usax->sax25_ndigis < 1 || usax->sax25_ndigis > AX25_MAX_DIGIS) {
++			if (usax->sax25_ndigis < 1 || addr_len < sizeof(struct sockaddr_ax25) +
++			    sizeof(ax25_address) * usax->sax25_ndigis) {
+ 				err = -EINVAL;
+ 				goto out;
+ 			}
 
 
