@@ -4,51 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF4DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4738BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97D5120838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 151172083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096605;
-	bh=+U6G1q06ryExgq9ufgnfnJAJRWYBQ9uYTA7+TCtW5WI=;
+	s=default; t=1596096611;
+	bh=w60tyvXLW9cNr4285M8aqInRux1P5nqyWnXgRzOAkmA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UoGjBbYcl1lPoZ2EtJYi4ZWHL2PSzKhxaK9XXUo9sZB7Gp41EeW2me/5F2zDDeu+9
-	 LZQFQXd8EMn8q4OXrO1Iz4P89oqt3QE3pwDIo62WW5vE6CeCLTYzVCUI++B9V373MC
-	 M/yAveb2z4QBr96NB5jQq0B+RSZ4v0i6ezdcRtYs=
+	b=JErSfeLPpvaSMBBYGEr/5c9rDnha81SO645oacY9UkYHvBPO7ALhT0TLQwf6aZUWO
+	 f/0X4kWnLPSJ/m5MriG9cPXfbv4ES/OqffvYBTJ8Mp+NZ/K2mB8wVWu2v0VWb74ZDd
+	 NjdD02BdSzaee6aqOk+JM3/Z729VB6yqln+P5AnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729777AbgG3IKE (ORCPT
+        id S1729787AbgG3IKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:10:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48642 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:10:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729724AbgG3IJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:09:56 -0400
+        id S1729773AbgG3IKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:10:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB0FD2074B;
-        Thu, 30 Jul 2020 08:09:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82D1020838;
+        Thu, 30 Jul 2020 08:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096596;
-        bh=+U6G1q06ryExgq9ufgnfnJAJRWYBQ9uYTA7+TCtW5WI=;
+        s=default; t=1596096602;
+        bh=w60tyvXLW9cNr4285M8aqInRux1P5nqyWnXgRzOAkmA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PUko6GZukCdU2sbtbBJPP7Z5jlyT2HZJonGaoiXGmpyIG17r+n7HEIfumPBAFujei
-         sHWBPqBOj+8CEdSsqiRP63xVaHPqxRyenp1gXHG2rR3KcbveNiAx8ruh40VVz6aQU/
-         A5kGdhezOAQ5GR1pndUcIwt+Wuukj6bwSjCtbu3c=
+        b=ayvAM2qxowx+oeUdvA89vMiOQcG9RpczYz7ew1XYuHRXcm+jF7ljkcjBIc+YhFj7i
+         NjljycYUwJ6tICAJO2KmP9zEqMPEkTZu7nmjVCrue4oIKboDuIF5zH2Pjsfl6jpX2R
+         +UylJY4X4KakcRhsgGfBLiq1mHViBorvrZxrtXWg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sergey Organov <sorganov@gmail.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 18/61] net: dp83640: fix SIOCSHWTSTAMP to update the struct with actual configuration
-Date:   Thu, 30 Jul 2020 10:04:36 +0200
-Message-Id: <20200730074421.730515015@linuxfoundation.org>
+        stable@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
+        Shik Chen <shik@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 20/61] scripts/decode_stacktrace: strip basepath from all paths
+Date:   Thu, 30 Jul 2020 10:04:38 +0200
+Message-Id: <20200730074421.829350002@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074420.811058810@linuxfoundation.org>
 References: <20200730074420.811058810@linuxfoundation.org>
@@ -61,63 +65,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Organov <sorganov@gmail.com>
+From: Pi-Hsun Shih <pihsun@chromium.org>
 
-[ Upstream commit 473309fb8372365ad211f425bca760af800e10a7 ]
+[ Upstream commit d178770d8d21489abf5bafefcbb6d5243b482e9a ]
 
->From Documentation/networking/timestamping.txt:
+Currently the basepath is removed only from the beginning of the string.
+When the symbol is inlined and there's multiple line outputs of
+addr2line, only the first line would have basepath removed.
 
-  A driver which supports hardware time stamping shall update the
-  struct with the actual, possibly more permissive configuration.
+Change to remove the basepath prefix from all lines.
 
-Do update the struct passed when we upscale the requested time
-stamping mode.
-
-Fixes: cb646e2b02b2 ("ptp: Added a clock driver for the National Semiconductor PHYTER.")
-Signed-off-by: Sergey Organov <sorganov@gmail.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: 31013836a71e ("scripts/decode_stacktrace: match basepath using shell prefix operator, not regex")
+Co-developed-by: Shik Chen <shik@chromium.org>
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Signed-off-by: Shik Chen <shik@chromium.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Nicolas Boichat <drinkcat@chromium.org>
+Cc: Jiri Slaby <jslaby@suse.cz>
+Link: http://lkml.kernel.org/r/20200720082709.252805-1-pihsun@chromium.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/dp83640.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ scripts/decode_stacktrace.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/dp83640.c b/drivers/net/phy/dp83640.c
-index 7e94526de51c3..5649cc075ccbb 100644
---- a/drivers/net/phy/dp83640.c
-+++ b/drivers/net/phy/dp83640.c
-@@ -1337,6 +1337,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
- 		dp83640->hwts_rx_en = 1;
- 		dp83640->layer = PTP_CLASS_L4;
- 		dp83640->version = PTP_CLASS_V1;
-+		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V1_L4_EVENT;
- 		break;
- 	case HWTSTAMP_FILTER_PTP_V2_L4_EVENT:
- 	case HWTSTAMP_FILTER_PTP_V2_L4_SYNC:
-@@ -1344,6 +1345,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
- 		dp83640->hwts_rx_en = 1;
- 		dp83640->layer = PTP_CLASS_L4;
- 		dp83640->version = PTP_CLASS_V2;
-+		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_L4_EVENT;
- 		break;
- 	case HWTSTAMP_FILTER_PTP_V2_L2_EVENT:
- 	case HWTSTAMP_FILTER_PTP_V2_L2_SYNC:
-@@ -1351,6 +1353,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
- 		dp83640->hwts_rx_en = 1;
- 		dp83640->layer = PTP_CLASS_L2;
- 		dp83640->version = PTP_CLASS_V2;
-+		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_L2_EVENT;
- 		break;
- 	case HWTSTAMP_FILTER_PTP_V2_EVENT:
- 	case HWTSTAMP_FILTER_PTP_V2_SYNC:
-@@ -1358,6 +1361,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
- 		dp83640->hwts_rx_en = 1;
- 		dp83640->layer = PTP_CLASS_L4 | PTP_CLASS_L2;
- 		dp83640->version = PTP_CLASS_V2;
-+		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
- 		break;
- 	default:
- 		return -ERANGE;
+diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
+index 98cf6343afcd7..61564e56e3aa3 100755
+--- a/scripts/decode_stacktrace.sh
++++ b/scripts/decode_stacktrace.sh
+@@ -76,8 +76,8 @@ parse_symbol() {
+ 		return
+ 	fi
+ 
+-	# Strip out the base of the path
+-	code=${code#$basepath/}
++	# Strip out the base of the path on each line
++	code=$(while read -r line; do echo "${line#$basepath/}"; done <<< "$code")
+ 
+ 	# In the case of inlines, move everything to same line
+ 	code=${code//$'\n'/' '}
 -- 
 2.25.1
 
