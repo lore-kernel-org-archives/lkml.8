@@ -2,193 +2,178 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A2AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF8DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5C222074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6F622074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:30:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="PMt5ETAL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729029AbgG3M3U (ORCPT
+        id S1727996AbgG3Max (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 08:29:20 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:43483 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728318AbgG3M2r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 08:28:47 -0400
-Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
-  by alexa-out.qualcomm.com with ESMTP; 30 Jul 2020 05:28:46 -0700
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 30 Jul 2020 05:28:44 -0700
-Received: from gokulsri-linux.qualcomm.com ([10.201.2.207])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 30 Jul 2020 17:58:13 +0530
-Received: by gokulsri-linux.qualcomm.com (Postfix, from userid 432570)
-        id 072B2218A1; Thu, 30 Jul 2020 17:58:11 +0530 (IST)
-From:   Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
-To:     gokulsri@codeaurora.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, david.brown@linaro.org,
-        devicetree@vger.kernel.org, jassisinghbrar@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        mark.rutland@arm.com, mturquette@baylibre.com,
-        nprakash@codeaurora.org, ohad@wizery.com, robh+dt@kernel.org,
-        sboyd@kernel.org, sricharan@codeaurora.org
-Subject: [PATCH v7 2/9] remoteproc: qcom: Add secure PIL support
-Date:   Thu, 30 Jul 2020 17:56:36 +0530
-Message-Id: <1596112003-31663-3-git-send-email-gokulsri@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596112003-31663-1-git-send-email-gokulsri@codeaurora.org>
-References: <1596112003-31663-1-git-send-email-gokulsri@codeaurora.org>
+        Thu, 30 Jul 2020 08:30:53 -0400
+Received: from mail-eopbgr00050.outbound.protection.outlook.com ([40.107.0.50]:9285
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726773AbgG3Maw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 08:30:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CXY2r6T9+DxFRW157yyn+Fx3CCEbifRzhsU4s+4dKWcoibMIqJXTYP5O8+FJZ8fSdvtNNhWnz/2LVmZ80LIXcOXC5sh0/yvVY8ru44XsTeMDQoJzr7lUbeXapVZqSqlC//j5SlPwb6IAkRvOnGbLnuQHSAjJc5UoEXEkgmvs3cziYT2UI8aITfyga2XEXKOY49QrsCQhXe/e/L6Haj+ku63ebas48js0B4MHMVHmuOU6xu3IBZt4x/jKZ314TExXpA8DOtL85/4V+ihtz7RQajl7fhUaOZq40DZV4DEFrTmDAimEnb0t62d3B7So+uRfr4JisGhNLTLVzIB7I9lJ+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1O1qT0XmCGyVzdiP3tfXf7fvI2yLW3Nq+7WHWKEoMD4=;
+ b=Z6TYhxcBAvb6ttQfEJIRgSK1S4/Uj0334qNudNf1QgNAafdqFb68xEsQ0XVhEmDAKIcBIpyRf2QFkaqwELFFRA9enmkuUvmzEamZYEBEPx+UPnNwWWsP3QulNgQE2WDDd/cd2OqvbCP2gE//aiYqdfC4r7EG8VQE8gRf2F9YeRp/qMBuwAzqmnWQGBGsCdLAhQEpOUgArACiGqOOyDJXOT/zi9wp4RL9bVRznkBF2sikIttZZZqQNVrYrsJwvOYlcv0xwpMEcPX52d/RftwgJ1E43Zk1QZwn6+pkeghc8Yrw7vTOX1Nuz+CHUcXNNuQIJY29QX2MX8N+1AKExyvlZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1O1qT0XmCGyVzdiP3tfXf7fvI2yLW3Nq+7WHWKEoMD4=;
+ b=PMt5ETALI5+Rs3RNlhpJ8fomnXVddaxA1UJ50Q6BeHwmAbYv+0b9mvwEWG+ScwC8jb2L0f375snRO8gTeQcksv5o+SzdmY3usFt45HOadT4Vyqnkz4VpNS7Xaf8SJeeJvhJjsZer32rTsX1WOM4DTKifyldzt7vq0yqqZaM+LaI=
+Authentication-Results: broadcom.com; dkim=none (message not signed)
+ header.d=none;broadcom.com; dmarc=none action=none header.from=mellanox.com;
+Received: from DB7PR05MB4298.eurprd05.prod.outlook.com (2603:10a6:5:27::14) by
+ DB6PR05MB3174.eurprd05.prod.outlook.com (2603:10a6:6:1e::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3216.28; Thu, 30 Jul 2020 12:30:48 +0000
+Received: from DB7PR05MB4298.eurprd05.prod.outlook.com
+ ([fe80::f0bd:dfca:10ef:b3be]) by DB7PR05MB4298.eurprd05.prod.outlook.com
+ ([fe80::f0bd:dfca:10ef:b3be%4]) with mapi id 15.20.3216.033; Thu, 30 Jul 2020
+ 12:30:48 +0000
+Subject: Re: [PATCH net-next RFC 01/13] devlink: Add reload level option to
+ devlink reload command
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Jacob Keller <jacob.e.keller@intel.com>,
+        Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
+ <1595847753-2234-2-git-send-email-moshe@mellanox.com>
+ <20200727175802.04890dd3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20200728135808.GC2207@nanopsycho>
+ <464add44-3ab1-21b8-3dba-a88202350bb9@intel.com>
+ <20200728114458.762b5396@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <d6fbfedd-9022-ff67-23ed-418607beecc2@intel.com>
+ <20200728130653.7ce2f013@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <04f00024-758c-bc19-c187-49847c24a5a4@mellanox.com>
+ <20200729140708.5f914c15@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Moshe Shemesh <moshe@mellanox.com>
+Message-ID: <3352bd96-d10e-6961-079d-5c913a967513@mellanox.com>
+Date:   Thu, 30 Jul 2020 15:30:45 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <20200729140708.5f914c15@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: AM0PR10CA0040.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:20b:150::20) To DB7PR05MB4298.eurprd05.prod.outlook.com
+ (2603:10a6:5:27::14)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.0.105] (5.102.195.53) by AM0PR10CA0040.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:150::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17 via Frontend Transport; Thu, 30 Jul 2020 12:30:46 +0000
+X-Originating-IP: [5.102.195.53]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 799721ff-94f7-400b-cd0b-08d83484632d
+X-MS-TrafficTypeDiagnostic: DB6PR05MB3174:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB6PR05MB3174907D7F6383B264657C6AD9710@DB6PR05MB3174.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 74EtRrWnxufHkwB9IOWwGcn9pk3BJCk4xpgQgjpdzTRpmb2refS6HZULU/mB3mHUvlEg96pnYncHybMiRMabhJnSYbEHu9U9wBv9uIFkPCcOKushJV1IAJXD0RpxCcH01tJq2vKiTUOoLw8wuYSa0aOcxhLDiJHg0OpPmnX+vj4uYeuiFH2aYW3nsNS79Hh7/FznB01U1Kqc4A4pd88RjGKVuFVRGd+KRq+NGOpgPunZvvcpV8T+3l2oL/5EGuxFOmRdORMZRukIpqVd3IXkGSfhZguoyYT3xgE5TRWdOTRNaqh6riBaTFP8kNgLe0fZ/GKG6n9YLp4kpfCd65+8dJ7bHeyv5A0J7blwSAokL75s7el3OqDBaXwcl5dCGZ28
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR05MB4298.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(366004)(346002)(376002)(136003)(66476007)(66556008)(6486002)(6916009)(956004)(8936002)(8676002)(2616005)(31696002)(54906003)(4326008)(66946007)(316002)(83380400001)(31686004)(2906002)(478600001)(86362001)(5660300002)(26005)(52116002)(36756003)(16526019)(53546011)(16576012)(186003)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: pdTKXD8T4TD3o3nE/lsA0scOD4rENSBUIoBIu8R6rFrQHUI5Bups9gy/c7aq8vTiPXQHmhwQV1S1HZS8QnWEaP68bKVjDDHhAyXwmFDiLHkL/3biiYY5hKc6VQXt4PSFalqTSXaSxLZo0vkgcfH5Ahlzp/QmQ0OYp8sCHEXnoneNgUFIJ09suxuaFjAv0snNU2vmqDqD5jgtJkeUgIxe8gh9zoNrxlUtoWPhl8xMZ7acBsi7mGodjFI0GDkKGtIUrr6YRTwat8YyX47gDvOF7pFAyeoyHJHBfSirlXRYXVZyxs333mBKfij4pR95ZUYC33jDB4pd9PHtEY6g71PYyoVXTQ1GO9Dc/QmyAIjvw+DlxeUh5WYu5LqZ2ctmTFE7UlvXyn78Suut3+ea3Xy3MUy1sGyM0TDMsjUKatVMTt6cE55hbNPJmRmtoJBc15o/h/tjU6rcSm5nMujoxQiojC41AzgsGMTHp21Rfl/IE6E=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 799721ff-94f7-400b-cd0b-08d83484632d
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR05MB4298.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 12:30:47.9177
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qi6YU4wCZPznnbuwCHG4wvirVu8/qdP6FDZqkitxdiv7cmu0uFUxE9oTJwLqc/gtEPYQRO/zoWtIrkH9SmNvWA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR05MB3174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IPQ8074 uses secure PIL. Hence, adding the support for the same.
 
-Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-Signed-off-by: Nikhil Prakash V <nprakash@codeaurora.org>
----
- drivers/remoteproc/qcom_q6v5_wcss.c | 43 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 40 insertions(+), 3 deletions(-)
+On 7/30/2020 12:07 AM, Jakub Kicinski wrote:
+> On Wed, 29 Jul 2020 17:54:08 +0300 Moshe Shemesh wrote:
+>> On 7/28/2020 11:06 PM, Jakub Kicinski wrote:
+>>> On Tue, 28 Jul 2020 12:18:30 -0700 Jacob Keller wrote:
+>>>> On 7/28/2020 11:44 AM, Jakub Kicinski wrote:
+>>>>>   From user perspective what's important is what the reset achieves (and
+>>>>> perhaps how destructive it is). We can define the reset levels as:
+>>>>>
+>>>>> $ devlink dev reload pci/0000:82:00.0 net-ns-respawn
+>>>>> $ devlink dev reload pci/0000:82:00.0 driver-param-init
+>>>>> $ devlink dev reload pci/0000:82:00.0 fw-activate
+>>>>>
+>>>>> combining should be possible when user wants multiple things to happen:
+>>>>>
+>>>>> $ devlink dev reload pci/0000:82:00.0 fw-activate driver-param-init
+>>>> Where today "driver-param-init" is the default behavior. But didn't we
+>>>> just say that mlxsw also does the equivalent of fw-activate?
+>>> Actually the default should probably be the combination of
+>>> driver-param-init and net-ns-respawn.
+>> What about the support of these combinations, one device needs to reset
+>> fw to apply the param init, while another device can apply param-init
+>> without fw reset, but has to reload the driver for fw-reset.
+>>
+>> So the support per driver will be a matrix of combinations ?
+> Note that there is no driver reload in my examples, driver reload is
+> likely not user's goal. Whatever the driver needs to reset to satisfy
+> the goal is fair game IMO.
 
-diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
-index e13d1c6..ba932e6 100644
---- a/drivers/remoteproc/qcom_q6v5_wcss.c
-+++ b/drivers/remoteproc/qcom_q6v5_wcss.c
-@@ -18,6 +18,7 @@
- #include <linux/regulator/consumer.h>
- #include <linux/reset.h>
- #include <linux/soc/qcom/mdt_loader.h>
-+#include <linux/qcom_scm.h>
- #include "qcom_common.h"
- #include "qcom_pil_info.h"
- #include "qcom_q6v5.h"
-@@ -86,6 +87,9 @@
- #define TCSR_WCSS_CLK_ENABLE	0x14
- 
- #define MAX_HALT_REG		3
-+
-+#define WCNSS_PAS_ID		6
-+
- enum {
- 	WCSS_IPQ8074,
- 	WCSS_QCS404,
-@@ -134,6 +138,7 @@ struct q6v5_wcss {
- 	unsigned int crash_reason_smem;
- 	u32 version;
- 	bool requires_force_stop;
-+	bool need_mem_protection;
- 
- 	struct qcom_rproc_glink glink_subdev;
- 	struct qcom_rproc_ssr ssr_subdev;
-@@ -152,6 +157,7 @@ struct wcss_data {
- 	int ssctl_id;
- 	const struct rproc_ops *ops;
- 	bool requires_force_stop;
-+	bool need_mem_protection;
- };
- 
- static int q6v5_wcss_reset(struct q6v5_wcss *wcss)
-@@ -251,6 +257,15 @@ static int q6v5_wcss_start(struct rproc *rproc)
- 
- 	qcom_q6v5_prepare(&wcss->q6v5);
- 
-+	if (wcss->need_mem_protection) {
-+		ret = qcom_scm_pas_auth_and_reset(WCNSS_PAS_ID);
-+		if (ret) {
-+			dev_err(wcss->dev, "wcss_reset failed\n");
-+			return ret;
-+		}
-+		goto wait_for_reset;
-+	}
-+
- 	/* Release Q6 and WCSS reset */
- 	ret = reset_control_deassert(wcss->wcss_reset);
- 	if (ret) {
-@@ -285,6 +300,7 @@ static int q6v5_wcss_start(struct rproc *rproc)
- 	if (ret)
- 		goto wcss_q6_reset;
- 
-+wait_for_reset:
- 	ret = qcom_q6v5_wait_for_start(&wcss->q6v5, 5 * HZ);
- 	if (ret == -ETIMEDOUT)
- 		dev_err(wcss->dev, "start timed out\n");
-@@ -717,6 +733,15 @@ static int q6v5_wcss_stop(struct rproc *rproc)
- 	struct q6v5_wcss *wcss = rproc->priv;
- 	int ret;
- 
-+	if (wcss->need_mem_protection) {
-+		ret = qcom_scm_pas_shutdown(WCNSS_PAS_ID);
-+		if (ret) {
-+			dev_err(wcss->dev, "not able to shutdown\n");
-+			return ret;
-+		}
-+		goto pas_done;
-+	}
-+
- 	/* WCSS powerdown */
- 	if (wcss->requires_force_stop) {
- 		ret = qcom_q6v5_request_stop(&wcss->q6v5);
-@@ -741,6 +766,7 @@ static int q6v5_wcss_stop(struct rproc *rproc)
- 			return ret;
- 	}
- 
-+pas_done:
- 	clk_disable_unprepare(wcss->prng_clk);
- 	qcom_q6v5_unprepare(&wcss->q6v5);
- 
-@@ -764,9 +790,15 @@ static int q6v5_wcss_load(struct rproc *rproc, const struct firmware *fw)
- 	struct q6v5_wcss *wcss = rproc->priv;
- 	int ret;
- 
--	ret = qcom_mdt_load_no_init(wcss->dev, fw, rproc->firmware,
--				    0, wcss->mem_region, wcss->mem_phys,
--				    wcss->mem_size, &wcss->mem_reloc);
-+	if (wcss->need_mem_protection)
-+		ret = qcom_mdt_load(wcss->dev, fw, rproc->firmware,
-+				    WCNSS_PAS_ID, wcss->mem_region,
-+				    wcss->mem_phys, wcss->mem_size,
-+				    &wcss->mem_reloc);
-+	else
-+		ret = qcom_mdt_load_no_init(wcss->dev, fw, rproc->firmware,
-+					    0, wcss->mem_region, wcss->mem_phys,
-+					    wcss->mem_size, &wcss->mem_reloc);
- 	if (ret)
- 		return ret;
- 
-@@ -1032,6 +1064,9 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
- 	if (!desc)
- 		return -EINVAL;
- 
-+	if (desc->need_mem_protection && !qcom_scm_is_available())
-+		return -EPROBE_DEFER;
-+
- 	rproc = rproc_alloc(&pdev->dev, pdev->name, desc->ops,
- 			    desc->firmware_name, sizeof(*wcss));
- 	if (!rproc) {
-@@ -1045,6 +1080,7 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
- 
- 	wcss->version = desc->version;
- 	wcss->requires_force_stop = desc->requires_force_stop;
-+	wcss->need_mem_protection = desc->need_mem_protection;
- 
- 	ret = q6v5_wcss_init_mmio(wcss, pdev);
- 	if (ret)
-@@ -1113,6 +1149,7 @@ static const struct wcss_data wcss_ipq8074_res_init = {
- 	.wcss_q6_reset_required = true,
- 	.ops = &q6v5_wcss_ipq8074_ops,
- 	.requires_force_stop = true,
-+	.need_mem_protection = true,
- };
- 
- static const struct wcss_data wcss_qcs404_res_init = {
--- 
-2.7.4
+
+Actually, driver-param-init (cmode driverinit) implicit driver 
+re-initialization.
+
+> It's already the case that some drivers reset FW for param init and some
+> don't and nobody is complaining.
+
+
+Right, driver may need more than driver re-initialization for 
+driver-param-init, but I think that driver re-initialization is the 
+minimum for driver-param-init.
+
+> We should treat constraints separate (in this set we have the live
+> activation which is a constraint on the reload operation).
+>
+>>> My expectations would be that the driver must perform the lowest
+>>> reset level possible that satisfies the requested functional change.
+>>> IOW driver may do more, in fact it should be acceptable for the
+>>> driver to always for a full HW reset (unless --live or other
+>>> constraint is specified).
+>> OK, but some combinations may still not be valid for specific driver
+>> even if it tries lowest level possible.
+> Can you give an example?
+
+
+For example take the combination of fw-live-patch and param-init.
+
+The fw-live-patch needs no re-initialization, while the param-init 
+requires driver re-initialization.
+
+So the only way to do that is to the one command after the other, not 
+really combining.
+
+Other combination, as fw-atcivate and param-init may not be valid for a 
+specific driver as it doesn't support one of them and so can't even run 
+one after the other.
 
