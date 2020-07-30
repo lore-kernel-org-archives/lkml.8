@@ -2,105 +2,145 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 110ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9841D2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:19:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="i9avbnTs";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v2/7CCNT"
+	by mail.kernel.org (Postfix) with ESMTP id EA27A207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:19:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728822AbgG3HTF (ORCPT
+        id S1728887AbgG3HTp convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 03:19:05 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48322 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgG3HTE (ORCPT
+        Thu, 30 Jul 2020 03:19:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728827AbgG3HTo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 03:19:04 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596093541;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pJGza9Pz+sV1Z8JGFBKIAwU8e2IyPGK36s3Pj76aQFE=;
-        b=i9avbnTss81DkmBzU4BwIQNN/Yy7tEFYX/dK7y+O1TjsfZ9E2+cfxC3b4j5IJpTxKmHAII
-        whwYXMHShIF6fD/tQooG3Vltg+wAQHByKlZ3DlASU+RpbMeyOBVATbZ4bHwVlE1JeeCt6c
-        SXlKqLrRlN4vfvjJ+9X1qTb/8MaaoTi3pAlIQf0CgcfJC3R/OG+g3NW1/iK7NbLRnLC0ca
-        HA7rlYqcLRrVqpTYvl6GgVUwylc6FB8fC+UvKbYIS0jnJw5iDdxRV2BFNOJlll08B713yD
-        eyJnNuYJtCYCHCn1qkljUGL+ztB00SE440sPS7Ts72ds8AsGGsOlD1xnCyVj0w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596093541;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pJGza9Pz+sV1Z8JGFBKIAwU8e2IyPGK36s3Pj76aQFE=;
-        b=v2/7CCNT5pPmG7kimp3idDxfwKe1F9dXaGk7jvbAsZThXuDU2Utaa7pkHv4D1liE56BZXu
-        giFq8KLWyl5AnrAw==
-To:     Qian Cai <cai@lca.pw>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        linux-arch@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        sfr@canb.auug.org.au, linux-next@vger.kernel.org
-Subject: Re: [patch V5 05/15] entry: Provide infrastructure for work before transitioning to guest mode
-In-Reply-To: <20200729165524.GA4178@lca.pw>
-References: <20200722215954.464281930@linutronix.de> <20200722220519.833296398@linutronix.de> <20200729165524.GA4178@lca.pw>
-Date:   Thu, 30 Jul 2020 09:19:01 +0200
-Message-ID: <87bljxa2sa.fsf@nanos.tec.linutronix.de>
+        Thu, 30 Jul 2020 03:19:44 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F5E7C061794
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 00:19:44 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1k12qZ-0000ZT-AD; Thu, 30 Jul 2020 09:19:23 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1k12qW-0003Ph-MV; Thu, 30 Jul 2020 09:19:20 +0200
+Message-ID: <0b541063e66e29b1dd0dad70f77a18a8591f224b.camel@pengutronix.de>
+Subject: Re: [PATCH V3 3/3] pci: imx: Select RESET_IMX7 by default
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Anson Huang <anson.huang@nxp.com>, Rob Herring <robh@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>, Vinod <vkoul@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Thierry Reding <treding@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        Dilip Kota <eswara.kota@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+Date:   Thu, 30 Jul 2020 09:19:20 +0200
+In-Reply-To: <DB3PR0402MB391605E5B4F5E03F1E27B67DF5710@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1595254921-26050-1-git-send-email-Anson.Huang@nxp.com>
+         <1595254921-26050-3-git-send-email-Anson.Huang@nxp.com>
+         <CAL_JsqLXGduym51-Ej8Td4yOyP-UfGP-WCh2xeP_V90Yabm4XA@mail.gmail.com>
+         <0cdecff564215de6711ca04e063fa696a160fad9.camel@pengutronix.de>
+         <DB3PR0402MB391605E5B4F5E03F1E27B67DF5710@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qian Cai <cai@lca.pw> writes:
-> On Wed, Jul 22, 2020 at 11:59:59PM +0200, Thomas Gleixner wrote:
-> SR-IOV will start trigger a warning below in this commit,
->
-> [  765.434611] WARNING: CPU: 13 PID: 3377 at include/linux/entry-kvm.h:75 kvm_arch_vcpu_ioctl_run+0xb52/0x1320 [kvm]
+Hi Anson,
 
-Yes, I'm a moron. Fixed it locally and failed to transfer the fixup when
-merging it. Fix below.
+On Thu, 2020-07-30 at 02:11 +0000, Anson Huang wrote:
+> Hi, Philipp/Rob
+> 
+> > Subject: Re: [PATCH V3 3/3] pci: imx: Select RESET_IMX7 by default
+> > 
+> > On Wed, 2020-07-29 at 09:26 -0600, Rob Herring wrote:
+> > > On Mon, Jul 20, 2020 at 8:26 AM Anson Huang <Anson.Huang@nxp.com>
+> > wrote:
+> > > > i.MX7 reset driver now supports module build and it is no longer
+> > > > built in by default, so i.MX PCI driver needs to select it
+> > > > explicitly due to it is NOT supporting loadable module currently.
+> > > > 
+> > > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > > ---
+> > > > No change.
+> > > > ---
+> > > >  drivers/pci/controller/dwc/Kconfig | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > > 
+> > > > diff --git a/drivers/pci/controller/dwc/Kconfig
+> > > > b/drivers/pci/controller/dwc/Kconfig
+> > > > index 044a376..bcf63ce 100644
+> > > > --- a/drivers/pci/controller/dwc/Kconfig
+> > > > +++ b/drivers/pci/controller/dwc/Kconfig
+> > > > @@ -90,6 +90,7 @@ config PCI_EXYNOS
+> > > > 
+> > > >  config PCI_IMX6
+> > > >         bool "Freescale i.MX6/7/8 PCIe controller"
+> > > > +       select RESET_IMX7
+> > > 
+> > > This will break as select will not cause all of RESET_IMX7's
+> > > dependencies to be met. It also doesn't scale. Are you going to do the
+> > > same thing for clocks, pinctrl, gpio, etc.?
+> > > 
+> > > You should make the PCI driver work as a module.
+> > 
+> > Oh, also PCI_IMX6 is used on (surprise) i.MX6, which doesn't need
+> > RESET_IMX7 at all.
+> > 
+> > How about hiding the RESET_IMX7 option and setting it default y if
+> > PCI_IMX6 is enabled, as an interim solution?
+> 
+> Like below, RESET_IMX7 is already default y when SOC_IMX7D, now added PCI_IMX6,
+> let me know if it is OK for you, then I will send new patch for review.
+> 
+> +++ b/drivers/reset/Kconfig
+> @@ -68,7 +68,7 @@ config RESET_IMX7
+>         tristate "i.MX7/8 Reset Driver"
 
-> [  768.221270] softirqs last disabled at (5093): [<ffffffffa1800ec2>] asm_call_on_stack+0x12/0x20
-> [  768.267273] ---[ end trace 8730450ad8cfee9f ]---
+I was thinking something like
 
-Can you pretty please trim your replies?
+	tristate "i.MX7/8 Reset Driver" if COMPILE_TEST || !PCI_IMX6
 
->> ---
->> V5: Rename exit -> xfer (Sean)
+>         depends on HAS_IOMEM
+>         depends on SOC_IMX7D || (ARM64 && ARCH_MXC) || COMPILE_TEST
+> -       default y if SOC_IMX7D
+> +       default y if (SOC_IMX7D || PCI_IMX6)
 
-<removed 200 lines of useless information>
+Yes, although without the above I think it could still be disabled
+manually or via oldconfig.
 
-Thanks,
-
-        tglx
----
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 82d4a9e88908..532597265c50 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -8682,7 +8682,7 @@ static int vcpu_run(struct kvm_vcpu *vcpu)
- 			break;
- 		}
- 
--		if (xfer_to_guest_mode_work_pending()) {
-+		if (__xfer_to_guest_mode_work_pending()) {
- 			srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
- 			r = xfer_to_guest_mode_handle_work(vcpu);
- 			if (r)
-
+regards
+Philipp
