@@ -2,105 +2,120 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A856C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43ED5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B1E22082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:26:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596126373;
-	bh=8hsmvnpGaJgTXpEgkgu4L6U77WHzbhfLO09R1m6ZOTY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ymhi2cHQ64B8QaJMTauXKmsRjjckeZRYT+ohDtnSDznQmqUDpBkmGRBP9vRzSVVW6
-	 6EWYrqRCJpngG1wWULOHi4bCgs5X6y3D5/jYximr3wclsatenRLTucwtMVhFjYA7vg
-	 2NK6wtCn7X9nfTcIPO86srWagZbJjBo1rcc/Rwko=
+	by mail.kernel.org (Postfix) with ESMTP id 153D02082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:26:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="FhJzlXZl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729964AbgG3Q0L (ORCPT
+        id S1729987AbgG3Q0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 12:26:11 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38042 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgG3Q0L (ORCPT
+        Thu, 30 Jul 2020 12:26:35 -0400
+Received: from mail2.protonmail.ch ([185.70.40.22]:58045 "EHLO
+        mail2.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgG3Q0f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 12:26:11 -0400
-Received: by mail-oi1-f193.google.com with SMTP id u63so12465730oie.5;
-        Thu, 30 Jul 2020 09:26:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4y0trLDvxFm6X9a9D00px5raiFD5iq1zLoW+q4WbwgE=;
-        b=S8DvwnfIkhcuck+8UPqNgoZDWdfAqKvhbSViRr7h0sycvWUl6elj9cMKfFsrAue19Z
-         ieczi74JoDRE4Mh3J5Q0nuqmQL9wimmiFBGZ/61g70YNxPDeDoHbU60CrAIrNGQ0cZeX
-         UTbrQYcNsMEjYuUwa1egfZwtW29KvBtQ7tNh2+NWgwhNiXWbV4bKfJFwfa/6Z6L2cxs5
-         O4EXdnFfUe6NndFmUfKLsgtnP94/fx/Ra8qWBZsm3RgrhgrJOuem3PlEbFDWLtv4vIck
-         eGe5MhqDV5lg0TTtOaDgQdWntUGV5EMEnO6uCnjwdpliN68+9h8A+WR3vDt2G44McPM1
-         HySA==
-X-Gm-Message-State: AOAM533v4UhV0gjcvyr6voDClTYTx8iESSzOl9klMKu+Kl/emLGYZ0WR
-        bXrIhTjL6EmxYL3/JAHUpaWh0wqbGgMsTOZxoKqbAA==
-X-Google-Smtp-Source: ABdhPJxrT6AUgXEocJmQ7pCL9/znNdw1t9+xZb+8yxum3NWoVzCoScjZAmBR1bARnutUs3y1OkCoh27fTFb25d29gug=
-X-Received: by 2002:aca:4a89:: with SMTP id x131mr12785075oia.103.1596126370279;
- Thu, 30 Jul 2020 09:26:10 -0700 (PDT)
+        Thu, 30 Jul 2020 12:26:35 -0400
+Date:   Thu, 30 Jul 2020 16:26:17 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me; s=protonmail;
+        t=1596126392; bh=4VfKsqMSgIAjlvStX7Jque18AnWNCZTbZpiyXiqEaxI=;
+        h=Date:To:From:Cc:Reply-To:Subject:From;
+        b=FhJzlXZlKq11kMhH4Y6se2vV9kwMBD3hYJ/fgdVUSz5jZuFLrfH7T7aX8cUiBtO9e
+         FNJEbVb92/V9XWH7MBAfXFRezGXmJwuyvDQfY/J67nkfDwS3rxC+UxEhbs3RgAH3c3
+         +WZ7K9rGXvptUCFODjwng+FuoXGO79nZ0xULHgQN+p9tyIznXyBQmLNEVtPeEGT6JK
+         YdwVYP0SBUAkBcW8KkQcP0pd286mhVr/hj4PrBgP8TClOUp6ainoQyBg2x6OpNWdbk
+         wnpguCFTIg9czGaip6v3TB0wQdWrBNZAPCkFFWF2TviV9S+HQZY4YEKh0BS0O1Nc3K
+         Yb5i9vZF2rUAw==
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From:   Alexander Lobakin <alobakin@pm.me>
+Cc:     Alexander Lobakin <alobakin@pm.me>,
+        Ariel Elior <aelior@marvell.com>,
+        GR-everest-linux-l2@marvell.com, netdev@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org
+Reply-To: Alexander Lobakin <alobakin@pm.me>
+Subject: Re: [PATCH v1] qed: Use %pM format specifier for MAC addresses
+Message-ID: <SKiAD0R1iJX4FHbr-_GUICKdDvuTvqrJjcR2CQEpE_-GCYtJq-lLbDeec-WmOCZ6NIxW6rca1CRm-d1tSRUu2zFyAapHAjvmgvI5iN6Zvp8=@pm.me>
 MIME-Version: 1.0
-References: <d48d824ab3abacb2356878780979d7ed42191eaf.1596080365.git.viresh.kumar@linaro.org>
- <CAHLCerP4YPHc4sKD_RTq=Gxfj+ex4F=J2is1Y-UzGXcOuEOrOQ@mail.gmail.com>
- <20200730061041.gyprgwfkzfb64t3m@vireshk-mac-ubuntu> <CAHLCerMD_spZFHER-y9dOzr7qo9xKXZdqy3cFt+W9QUW4Ng3jw@mail.gmail.com>
- <20200730064112.lvbwas7zzqruvprk@vireshk-mac-ubuntu>
-In-Reply-To: <20200730064112.lvbwas7zzqruvprk@vireshk-mac-ubuntu>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 30 Jul 2020 18:25:59 +0200
-Message-ID: <CAJZ5v0ia-kjAboeREyDESxp9f_E_SVdDNj0aU4Xgxjf4-=QGTw@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: cached_resolved_idx can not be negative
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Amit Kucheria <amitk@kernel.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ionela Voinescu <ionela.voinescu@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 8:41 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 30-07-20, 12:02, Amit Kucheria wrote:
-> > Looking at this more closely, I found another call site for
-> > cpufreq_frequency_table_target() in cpufreq.c that needs the index to
-> > be unsigned int.
-> >
-> > But then cpufreq_frequency_table_target() returns -EINVAL, so we
->
-> It returns -EINVAL only in the case where the relation is not valid,
-> which will never happen. Maybe that should be marked with WARN or BUG
-> and we should drop return value of -EINVAL.
->
-> Rafael ?
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Date: Thu, 30 Jul 2020 18:59:20 +0300
 
-Yeah, make it a WARN_ON_ONCE() IMO.
+> Convert to %pM instead of using custom code.
+>=20
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/net/ethernet/qlogic/qed/qed_mcp.c   | 5 ++---
+>  drivers/net/ethernet/qlogic/qed/qed_sriov.c | 6 ++----
+>  2 files changed, 4 insertions(+), 7 deletions(-)
 
-> > should be able to handle int values.
->
-> And so no.
->
-> > I think you will need to fix the unconditional assignment of
-> >     policy->cached_resolved_idx = idx
-> > in cpufreq_driver_resolve_freq(). It doesn't check for -EINVAL, so the
-> > qcom driver is write in checking for a negative value.
->
-> Right, I don't want it to have that check for the reason stated above.
->
-> The point is I don't want code that verifies cached-idx at all, it is
-> useless.
->
-> --
-> viresh
+Thanks!
+
+Acked-by: Alexander Lobakin <alobakin@pm.me>
+
+> diff --git a/drivers/net/ethernet/qlogic/qed/qed_mcp.c b/drivers/net/ethe=
+rnet/qlogic/qed/qed_mcp.c
+> index 988d84564849..5be08f83e0aa 100644
+> --- a/drivers/net/ethernet/qlogic/qed/qed_mcp.c
+> +++ b/drivers/net/ethernet/qlogic/qed/qed_mcp.c
+> @@ -2518,11 +2518,10 @@ int qed_mcp_fill_shmem_func_info(struct qed_hwfn =
+*p_hwfn,
+>  =09}
+> =20
+>  =09DP_VERBOSE(p_hwfn, (QED_MSG_SP | NETIF_MSG_IFUP),
+> -=09=09   "Read configuration from shmem: pause_on_host %02x protocol %02=
+x BW [%02x - %02x] MAC %02x:%02x:%02x:%02x:%02x:%02x wwn port %llx node %ll=
+x ovlan %04x wol %02x\n",
+> +=09=09   "Read configuration from shmem: pause_on_host %02x protocol %02=
+x BW [%02x - %02x] MAC %pM wwn port %llx node %llx ovlan %04x wol %02x\n",
+>  =09=09info->pause_on_host, info->protocol,
+>  =09=09info->bandwidth_min, info->bandwidth_max,
+> -=09=09info->mac[0], info->mac[1], info->mac[2],
+> -=09=09info->mac[3], info->mac[4], info->mac[5],
+> +=09=09info->mac,
+>  =09=09info->wwn_port, info->wwn_node,
+>  =09=09info->ovlan, (u8)p_hwfn->hw_info.b_wol_support);
+> =20
+> diff --git a/drivers/net/ethernet/qlogic/qed/qed_sriov.c b/drivers/net/et=
+hernet/qlogic/qed/qed_sriov.c
+> index aa215eeeb4df..9489089706fe 100644
+> --- a/drivers/net/ethernet/qlogic/qed/qed_sriov.c
+> +++ b/drivers/net/ethernet/qlogic/qed/qed_sriov.c
+> @@ -3276,14 +3276,12 @@ static void qed_iov_vf_mbx_ucast_filter(struct qe=
+d_hwfn *p_hwfn,
+> =20
+>  =09DP_VERBOSE(p_hwfn,
+>  =09=09   QED_MSG_IOV,
+> -=09=09   "VF[%d]: opcode 0x%02x type 0x%02x [%s %s] [vport 0x%02x] MAC %=
+02x:%02x:%02x:%02x:%02x:%02x, vlan 0x%04x\n",
+> +=09=09   "VF[%d]: opcode 0x%02x type 0x%02x [%s %s] [vport 0x%02x] MAC %=
+pM, vlan 0x%04x\n",
+>  =09=09   vf->abs_vf_id, params.opcode, params.type,
+>  =09=09   params.is_rx_filter ? "RX" : "",
+>  =09=09   params.is_tx_filter ? "TX" : "",
+>  =09=09   params.vport_to_add_to,
+> -=09=09   params.mac[0], params.mac[1],
+> -=09=09   params.mac[2], params.mac[3],
+> -=09=09   params.mac[4], params.mac[5], params.vlan);
+> +=09=09   params.mac, params.vlan);
+> =20
+>  =09if (!vf->vport_instance) {
+>  =09=09DP_VERBOSE(p_hwfn,
+> --=20
+> 2.27.0
+
+Al
+
