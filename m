@@ -2,124 +2,90 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16449C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31725C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA3A420829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:53:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gmfjbc9f"
+	by mail.kernel.org (Postfix) with ESMTP id 0580220829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:56:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730114AbgG3QxU (ORCPT
+        id S1730008AbgG3Q4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 12:53:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49188 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgG3QxT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 12:53:19 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87BCFC061574;
-        Thu, 30 Jul 2020 09:53:19 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id w17so14676977ply.11;
-        Thu, 30 Jul 2020 09:53:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FsoEV1cyBnFRsNl5V+1d07ITk7Hh7UvpRiA1Dhd44vo=;
-        b=Gmfjbc9fahkE1mEOHQFRjjBVr5fJXmmkmHl+gW96pxG+MdFJTRtfFUpP2XkGJoTV4F
-         88LOWNKrCKR0ENts3EsXT01cKqZL1MELs8VNzxriSbPMiSwcN/WpSur2MXbdJB5ebHx9
-         3HUbnaikyq0+whPTW6xZ1zL7CF2LgYYDp8gN5izNMW4FobBaN1GS7pb31LPilYh8fvTK
-         mPSDZq6pbmuFdAGftqa5CMycfn/ijwd0PoPFxHuPiUkbPhNKZvdGurw8HBb07tjwrNlE
-         yFZQ5v5yaYvkPdgRqcGg9CjRfa9ECUnrt27+An9AHD2H5s5Rx2hDlDB2rrDk6Vm0CKD5
-         qm9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FsoEV1cyBnFRsNl5V+1d07ITk7Hh7UvpRiA1Dhd44vo=;
-        b=FBTBGnNVxgi922VuW9VnVFX2FVwd3J0dGrw2qXIwMbIwjdCIQRAkmHyGXQuu2zb8Q5
-         F95fJgF0Y/AzMs26OSPqmfUTsrFTzR2lTQBxGlofwixlr7kICn9HrmSuHGDtngrYaTY6
-         H9JzVf/CUbWJv1wRnSXtnpHj3XOvfAvzYoK4OV8kXYd6tdlYnbObtOy2leaMwtySqqIr
-         dTgERUDol5fzVjvNn9OK8ouDvQNGZuYZ7FbOo8bT+Xlddx4HjfQhvy0dn/BnZEUM/wKA
-         7se4uyNrBBhHzxYZW076ByURHPzsJh2dLCKmhfSuwMx/1YT3WopCrXK4ti1IH9GXl3qK
-         MR6w==
-X-Gm-Message-State: AOAM533gIz6iGc7/ZFKI4ERYURcj2H7rdwCx7nQuK6UKF3eVWV2mgQEI
-        cQlucp1POksH7zyQd1rLYXAaIR2E
-X-Google-Smtp-Source: ABdhPJyBiRUmuNgQqQaeaWAnB8CarCpvLAuViJ+cPF4A4NhrJ08cFe1eTl3idbKDBuPjqkgZAVhmWQ==
-X-Received: by 2002:aa7:83c9:: with SMTP id j9mr4029996pfn.151.1596127999129;
-        Thu, 30 Jul 2020 09:53:19 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z3sm6117403pjn.32.2020.07.30.09.53.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 Jul 2020 09:53:18 -0700 (PDT)
-Date:   Thu, 30 Jul 2020 09:53:17 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     wim@linux-watchdog.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V3 2/2] watchdog: imx7ulp: Watchdog should continue
- running for wait/stop mode
-Message-ID: <20200730165317.GB178323@roeck-us.net>
-References: <1596074591-4207-1-git-send-email-Anson.Huang@nxp.com>
- <1596074591-4207-2-git-send-email-Anson.Huang@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1596074591-4207-2-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 30 Jul 2020 12:56:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40178 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726353AbgG3Q4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 12:56:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id F3F42AD11;
+        Thu, 30 Jul 2020 16:56:15 +0000 (UTC)
+Date:   Thu, 30 Jul 2020 18:56:03 +0200
+Message-ID: <s5hy2n1aqn0.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     "Lu, Brent" <brent.lu@intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Sam McNally <sammc@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Daniel Stuart <daniel.stuart14@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Damian van Soelen <dj.vsoelen@gmail.com>
+Subject: Re: [PATCH 2/2] ASoC: Intel: Add period size constraint on strago board
+In-Reply-To: <f1386a05-8866-9251-c751-21c9109aa35f@linux.intel.com>
+References: <1596020585-11517-1-git-send-email-brent.lu@intel.com>
+        <1596020585-11517-3-git-send-email-brent.lu@intel.com>
+        <4fe97f63-e552-3b2f-803c-53894b196bfd@linux.intel.com>
+        <DM6PR11MB36421D9A808D401416B72D2D97710@DM6PR11MB3642.namprd11.prod.outlook.com>
+        <f1386a05-8866-9251-c751-21c9109aa35f@linux.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 10:03:11AM +0800, Anson Huang wrote:
-> When kernel idle, system will enter wait/stop mode, wdog should continue
-> running in this scenario, and the refresh thread can wake up system from
-> wait/stop mode.
+On Thu, 30 Jul 2020 17:27:58 +0200,
+Pierre-Louis Bossart wrote:
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> 
+> 
+> >> Is this patch required if you've already constrained the period sizes for the
+> >> platform driver in patch1?
+> >
+> > Yes or alsa will select 320 as default period size for it.
+> 
+> ok, then that's a miss in your patch1. 320 samples is a multiple of
+> 1ms for 48kHz rates. I think it was valid only for the 16kHz VoIP
+> paths used in some versions of Android, but that we don't support in
+> the upstream code.
+> 
+> To build on Takashi's answer, the real ask here is to require that the
+> period be a multiple of 1ms, because that's the fundamental
+> design/limitation of firmware. It doesn't matter if it's 48, 96, 192,
+> 240, 480, 960 samples.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+If the 1ms alignment is the condition, it can be better with a
+different hw_params constraint.  We can use
+snd_pcm_hw_constraint_step() for such a purpose.
 
-> ---
-> no change.
-> ---
->  drivers/watchdog/imx7ulp_wdt.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/watchdog/imx7ulp_wdt.c b/drivers/watchdog/imx7ulp_wdt.c
-> index 010ddd1..77773b0 100644
-> --- a/drivers/watchdog/imx7ulp_wdt.c
-> +++ b/drivers/watchdog/imx7ulp_wdt.c
-> @@ -22,6 +22,8 @@
->  #define WDOG_CS_CLK		(LPO_CLK << LPO_CLK_SHIFT)
->  #define WDOG_CS_EN		BIT(7)
->  #define WDOG_CS_UPDATE		BIT(5)
-> +#define WDOG_CS_WAIT		BIT(1)
-> +#define WDOG_CS_STOP		BIT(0)
->  
->  #define WDOG_CNT	0x4
->  #define WDOG_TOVAL	0x8
-> @@ -187,7 +189,8 @@ static int imx7ulp_wdt_init(void __iomem *base, unsigned int timeout)
->  	/* set an initial timeout value in TOVAL */
->  	writel(timeout, base + WDOG_TOVAL);
->  	/* enable 32bit command sequence and reconfigure */
-> -	val = WDOG_CS_CMD32EN | WDOG_CS_CLK | WDOG_CS_UPDATE;
-> +	val = WDOG_CS_CMD32EN | WDOG_CS_CLK | WDOG_CS_UPDATE |
-> +	      WDOG_CS_WAIT | WDOG_CS_STOP;
->  	writel(val, base + WDOG_CS);
->  	imx7ulp_wdt_wait(base, WDOG_CS_RCS);
->  
-> -- 
-> 2.7.4
-> 
+
+thanks,
+
+Takashi
