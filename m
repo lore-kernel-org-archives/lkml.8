@@ -2,150 +2,113 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BCDC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9EAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B63C20838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AE0F20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:43:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbgG3PmX (ORCPT
+        id S1729815AbgG3Pnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:42:23 -0400
-Received: from mga09.intel.com ([134.134.136.24]:58103 "EHLO mga09.intel.com"
+        Thu, 30 Jul 2020 11:43:47 -0400
+Received: from 8bytes.org ([81.169.241.247]:34112 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgG3PmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 11:42:22 -0400
-IronPort-SDR: ei34C2A5y7d1exDVltL57AgBe+7euMXfCfwEYWOxXc9MeR5fc7f6olftJqUXhjCa6Kss1pwpWH
- jdZkMUoN5Jbw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="152845271"
-X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
-   d="scan'208";a="152845271"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 08:42:22 -0700
-IronPort-SDR: pYFaeeLcAzZxuB3wsRF1p9piO49pM0d0SQc6xtkttyfru1JKtDnZfDFPUceGi0P33TrYamCqla
- XCBsZdFx7ExA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
-   d="scan'208";a="490697704"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 30 Jul 2020 08:42:19 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1k1AhH-004ypR-1w; Thu, 30 Jul 2020 18:42:19 +0300
-Date:   Thu, 30 Jul 2020 18:42:19 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 04/10] gpio: dwapb: Add max GPIOs macro
-Message-ID: <20200730154219.GS3703480@smile.fi.intel.com>
-References: <20200730152808.2955-1-Sergey.Semin@baikalelectronics.ru>
- <20200730152808.2955-5-Sergey.Semin@baikalelectronics.ru>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730152808.2955-5-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        id S1728286AbgG3Pnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 11:43:46 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id CBEB99CE; Thu, 30 Jul 2020 17:43:44 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH v2 3/4] KVM: SVM: Add GHCB Accessor functions
+Date:   Thu, 30 Jul 2020 17:43:39 +0200
+Message-Id: <20200730154340.14021-4-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200730154340.14021-1-joro@8bytes.org>
+References: <20200730154340.14021-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 06:28:01PM +0300, Serge Semin wrote:
-> Add a new macro DWAPB_MAX_GPIOS which defines the maximum possible number
-> of GPIO lines corresponding to the maximum DW APB GPIO controller port
-> width. Use the new macro instead of number literal 32 where it's
-> applicable.
+From: Joerg Roedel <jroedel@suse.de>
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Building a correct GHCB for the hypervisor requires setting valid bits
+in the GHCB. Simplify that process by providing accessor functions to
+set values and to update the valid bitmap and to check the valid bitmap
+in KVM.
 
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> ---
->  drivers/gpio/gpio-dwapb.c                | 8 ++++----
->  include/linux/platform_data/gpio-dwapb.h | 4 +++-
->  2 files changed, 7 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-> index 3081213247d8..f34001152850 100644
-> --- a/drivers/gpio/gpio-dwapb.c
-> +++ b/drivers/gpio/gpio-dwapb.c
-> @@ -162,7 +162,7 @@ static struct dwapb_gpio_port *dwapb_offs_to_port(struct dwapb_gpio *gpio, unsig
->  
->  	for (i = 0; i < gpio->nr_ports; i++) {
->  		port = &gpio->ports[i];
-> -		if (port->idx == offs / 32)
-> +		if (port->idx == offs / DWAPB_MAX_GPIOS)
->  			return port;
->  	}
->  
-> @@ -182,7 +182,7 @@ static void dwapb_toggle_trigger(struct dwapb_gpio *gpio, unsigned int offs)
->  
->  	pol = dwapb_read(gpio, GPIO_INT_POLARITY);
->  	/* Just read the current value right out of the data register */
-> -	val = gc->get(gc, offs % 32);
-> +	val = gc->get(gc, offs % DWAPB_MAX_GPIOS);
->  	if (val)
->  		pol &= ~BIT(offs);
->  	else
-> @@ -197,7 +197,7 @@ static u32 dwapb_do_irq(struct dwapb_gpio *gpio)
->  	irq_hw_number_t hwirq;
->  
->  	irq_status = dwapb_read(gpio, GPIO_INTSTATUS);
-> -	for_each_set_bit(hwirq, &irq_status, 32) {
-> +	for_each_set_bit(hwirq, &irq_status, DWAPB_MAX_GPIOS) {
->  		int gpio_irq = irq_find_mapping(gpio->domain, hwirq);
->  		u32 irq_type = irq_get_trigger_type(gpio_irq);
->  
-> @@ -599,7 +599,7 @@ static struct dwapb_platform_data *dwapb_gpio_get_pdata(struct device *dev)
->  			dev_info(dev,
->  				 "failed to get number of gpios for port%d\n",
->  				 i);
-> -			pp->ngpio = 32;
-> +			pp->ngpio = DWAPB_MAX_GPIOS;
->  		}
->  
->  		pp->irq_shared	= false;
-> diff --git a/include/linux/platform_data/gpio-dwapb.h b/include/linux/platform_data/gpio-dwapb.h
-> index ff1be737bad6..0aa5c6720259 100644
-> --- a/include/linux/platform_data/gpio-dwapb.h
-> +++ b/include/linux/platform_data/gpio-dwapb.h
-> @@ -6,12 +6,14 @@
->  #ifndef GPIO_DW_APB_H
->  #define GPIO_DW_APB_H
->  
-> +#define DWAPB_MAX_GPIOS		32
-> +
->  struct dwapb_port_property {
->  	struct fwnode_handle *fwnode;
->  	unsigned int	idx;
->  	unsigned int	ngpio;
->  	unsigned int	gpio_base;
-> -	int		irq[32];
-> +	int		irq[DWAPB_MAX_GPIOS];
->  	bool		irq_shared;
->  };
->  
-> -- 
-> 2.27.0
-> 
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/include/asm/svm.h | 46 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
+diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
+index 9a3e0b802716..8744817358bf 100644
+--- a/arch/x86/include/asm/svm.h
++++ b/arch/x86/include/asm/svm.h
+@@ -341,4 +341,50 @@ struct __attribute__ ((__packed__)) vmcb {
+ 
+ #define SVM_CR0_SELECTIVE_MASK (X86_CR0_TS | X86_CR0_MP)
+ 
++/* GHCB Accessor functions */
++
++#define GHB_BITMAP_IDX(field)								\
++        (offsetof(struct vmcb_save_area, field) / sizeof(u64))
++
++#define GHCB_SET_VALID(ghcb, field)							\
++	__set_bit(GHB_BITMAP_IDX(field), (unsigned long *)&(ghcb)->save.valid_bitmap);	\
++
++#define DEFINE_GHCB_ACCESSORS(field)							\
++	static inline bool ghcb_##field##_is_valid(const struct ghcb *ghcb)		\
++	{										\
++		int idx = offsetof(struct vmcb_save_area, field) / sizeof(u64);		\
++		return test_bit(idx, (unsigned long *)&(ghcb)->save.valid_bitmap);	\
++	}										\
++											\
++	static inline void								\
++	ghcb_set_##field(struct ghcb *ghcb, u64 value)					\
++	{										\
++		GHCB_SET_VALID(ghcb, field)						\
++		ghcb->save.field = value;						\
++	}
++
++DEFINE_GHCB_ACCESSORS(cpl)
++DEFINE_GHCB_ACCESSORS(rip)
++DEFINE_GHCB_ACCESSORS(rsp)
++DEFINE_GHCB_ACCESSORS(rax)
++DEFINE_GHCB_ACCESSORS(rcx)
++DEFINE_GHCB_ACCESSORS(rdx)
++DEFINE_GHCB_ACCESSORS(rbx)
++DEFINE_GHCB_ACCESSORS(rbp)
++DEFINE_GHCB_ACCESSORS(rsi)
++DEFINE_GHCB_ACCESSORS(rdi)
++DEFINE_GHCB_ACCESSORS(r8)
++DEFINE_GHCB_ACCESSORS(r9)
++DEFINE_GHCB_ACCESSORS(r10)
++DEFINE_GHCB_ACCESSORS(r11)
++DEFINE_GHCB_ACCESSORS(r12)
++DEFINE_GHCB_ACCESSORS(r13)
++DEFINE_GHCB_ACCESSORS(r14)
++DEFINE_GHCB_ACCESSORS(r15)
++DEFINE_GHCB_ACCESSORS(sw_exit_code)
++DEFINE_GHCB_ACCESSORS(sw_exit_info_1)
++DEFINE_GHCB_ACCESSORS(sw_exit_info_2)
++DEFINE_GHCB_ACCESSORS(sw_scratch)
++DEFINE_GHCB_ACCESSORS(xcr0)
++
+ #endif
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.17.1
 
