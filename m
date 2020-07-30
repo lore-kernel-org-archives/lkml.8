@@ -2,95 +2,108 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7BDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD8FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7AF12072A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E50220829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:57:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F2j5z2wE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729445AbgG3N4Y (ORCPT
+        id S1729393AbgG3N5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 09:56:24 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:56568 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728462AbgG3Nzu (ORCPT
+        Thu, 30 Jul 2020 09:57:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50262 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbgG3N5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 09:55:50 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id B0C4C8040A6B;
-        Thu, 30 Jul 2020 13:55:45 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id GZldgJ5dsnYw; Thu, 30 Jul 2020 16:55:45 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Hoan Tran <hoan@os.amperecomputing.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Serge Semin <fancer.lancer@gmail.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 07/10] gpio: dwapb: Discard ACPI GPIO-chip IRQs request
-Date:   Thu, 30 Jul 2020 16:55:33 +0300
-Message-ID: <20200730135536.19747-8-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200730135536.19747-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200730135536.19747-1-Sergey.Semin@baikalelectronics.ru>
+        Thu, 30 Jul 2020 09:57:20 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFD8FC061574;
+        Thu, 30 Jul 2020 06:57:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=BVQM2Vt73FbBfNFVutAzFvp59bkr4TTzTQ9kL/uqdWc=; b=F2j5z2wEA9fJ8hpxfszJXZ+x8N
+        +pSD7Tv6zzCfq0SRbAlDTKbJLK16YlxQDIKKcuruKPYJ5fqWFSS1LxkaJMu5VkDAu/rSdzFo+90K1
+        28YmbJI4Gflfera43TO3ClFGEJNk9wH00CheEEJWWFZ7Ar+dksV8jmS2Vr1JllwnyTr6OAs3cdwoi
+        fSCzxy8h4nlAt3E6atigytaUFt/txRQuss4+s2KRMv4imZ1NW8bwLqfaQKMEJ63ugVmgaweGlEXjy
+        YbNU3FgbvJ9d5tMmkKP5I1pE44nh1av0KnnhV/PpB26tumRBfX8ZhmdEGBYftv51iOvxSN1Oq/prE
+        O3S2Ziqw==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k1932-00013u-QS; Thu, 30 Jul 2020 13:56:40 +0000
+Date:   Thu, 30 Jul 2020 14:56:40 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
+        ebiederm@xmission.com, akpm@linux-foundation.org,
+        christian.brauner@ubuntu.com, areber@redhat.com, serge@hallyn.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 09/23] ns: Introduce ns_idr to be able to iterate all
+ allocated namespaces in the system
+Message-ID: <20200730135640.GE23808@casper.infradead.org>
+References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
+ <159611040870.535980.13460189038999722608.stgit@localhost.localdomain>
+ <20200730122319.GC23808@casper.infradead.org>
+ <485c01e6-a4ee-5076-878e-6303e6d8d5f3@virtuozzo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <485c01e6-a4ee-5076-878e-6303e6d8d5f3@virtuozzo.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since GPIOlib-based IRQ-chip interface is now utilized there is no need
-in calling the methods acpi_gpiochip_{request,free}_interrupts() here.
-They will be called from gpiochip_add_irqchip()/gpiochip_irqchip_remove()
-anyway.
+On Thu, Jul 30, 2020 at 04:32:22PM +0300, Kirill Tkhai wrote:
+> On 30.07.2020 15:23, Matthew Wilcox wrote:
+> > xa_erase_irqsave();
+> 
+> static inline void *xa_erase_irqsave(struct xarray *xa, unsigned long index)
+> {
+> 	unsigned long flags;
+>         void *entry;
+> 
+>         xa_lock_irqsave(xa, flags);
+>         entry = __xa_erase(xa, index);
+>         xa_unlock_irqrestore(xa, flags);
+> 
+>         return entry;
+> }
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+was there a question here?
 
----
+> >> +struct ns_common *ns_get_next(unsigned int *id)
+> >> +{
+> >> +	struct ns_common *ns;
+> >> +
+> >> +	if (*id < PROC_NS_MIN_INO - 1)
+> >> +		*id = PROC_NS_MIN_INO - 1;
+> >> +
+> >> +	*id += 1;
+> >> +	*id -= PROC_NS_MIN_INO;
+> >> +
+> >> +	rcu_read_lock();
+> >> +	do {
+> >> +		ns = idr_get_next(&ns_idr, id);
+> >> +		if (!ns)
+> >> +			break;
+> > 
+> > xa_find_after();
+> > 
+> > You'll want a temporary unsigned long to work with ...
+> > 
+> >> +		if (!refcount_inc_not_zero(&ns->count)) {
+> >> +			ns = NULL;
+> >> +			*id += 1;
+> > 
+> > you won't need this increment.
+> 
+> Why? I don't see a way xarray allows to avoid this.
 
-Changelog v2:
-- This is a new patch detached from commit
-  "gpio: dwapb: Convert driver to using the GPIO-lib-based IRQ-chip".
----
- drivers/gpio/gpio-dwapb.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index f7acc5abbf5c..226d9c2d9493 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -512,9 +512,6 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
- 		return err;
- 	}
- 
--	/* Add GPIO-signaled ACPI event support */
--	acpi_gpiochip_request_interrupts(&port->gc);
--
- 	port->is_registered = true;
- 
- 	return 0;
-@@ -530,7 +527,6 @@ static void dwapb_gpio_unregister(struct dwapb_gpio *gpio)
- 		if (!port->is_registered)
- 			continue;
- 
--		acpi_gpiochip_free_interrupts(&port->gc);
- 		gpiochip_remove(&port->gc);
- 	}
- }
--- 
-2.27.0
-
+It's embedded in xa_find_after().
