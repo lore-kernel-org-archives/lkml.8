@@ -2,98 +2,131 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F28C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2C5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C73F72075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D8B72075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:30:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="JslT8cGb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgG3KaF (ORCPT
+        id S1728996AbgG3Ka3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 06:30:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:37800 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726287AbgG3KaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 06:30:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 578A130E;
-        Thu, 30 Jul 2020 03:30:03 -0700 (PDT)
-Received: from [192.168.178.2] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C14CB3F66E;
-        Thu, 30 Jul 2020 03:29:55 -0700 (PDT)
-Subject: Re: [PATCH v2 3/7] arch_topology: disable frequency invariance for
- CONFIG_BL_SWITCHER
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     rjw@rjwysocki.net, catalin.marinas@arm.com, sudeep.holla@arm.com,
-        will@kernel.org, linux@armlinux.org.uk, mingo@redhat.com,
-        peterz@infradead.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200722093732.14297-1-ionela.voinescu@arm.com>
- <20200722093732.14297-4-ionela.voinescu@arm.com>
- <20200730042423.4j22udejluis7blw@vireshk-mac-ubuntu>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <1db4317a-0018-1590-f0ae-ed5e235b174f@arm.com>
-Date:   Thu, 30 Jul 2020 12:29:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 06:30:29 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.73]:36992 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725892AbgG3Ka2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 06:30:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+        Message-Id:MIME-Version:Content-Transfer-Encoding; bh=YGeAc6Wc56
+        nAYNAcYe8hVIlpE0CdSjlL19b3AqomqcY=; b=JslT8cGb/VHBVQv9qxu+d4+OXK
+        qyWG8oe/foQnMOklextsOh57TG1OuRq+FeCS4JLlTNMkY8WxFdFA76QKUKzcM0aR
+        MvI3wJhgtjgiuDi9ypxvrfaHxF21pXKQ+1V2+lRqwBoteL1JHHXxYvfkqvGVfkoR
+        5/fHbSo0YvJhQwweQ=
+Received: from xin-virtual-machine (unknown [111.192.143.50])
+        by app2 (Coremail) with SMTP id XQUFCgD3_zMnoSJfM9KfAg--.21996S3;
+        Thu, 30 Jul 2020 18:30:00 +0800 (CST)
+From:   Xin Xiong <xiongx18@fudan.edu.cn>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Tariq Toukan <tariqt@mellanox.com>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
+Cc:     yuanxzhang@fudan.edu.cn, Xin Xiong <xiongx18@fudan.edu.cn>,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: [PATCH v2] net/mlx5e: fix bpf_prog reference count leaks in mlx5e_alloc_rq
+Date:   Thu, 30 Jul 2020 18:29:41 +0800
+Message-Id: <20200730102941.5536-1-xiongx18@fudan.edu.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200730042423.4j22udejluis7blw@vireshk-mac-ubuntu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: XQUFCgD3_zMnoSJfM9KfAg--.21996S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7AF1DCFy8JF1rJw1rXF1rCrg_yoW8Cr1kpr
+        47Wr9FkFZ5JFyUJw4DAaykXa4Fka90y3WDWF1Fvw4fXrs8AFs5AFyFgry7uF1UGFW8Gw1j
+        qw429ws8AFn5AFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUB014x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
+        648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK67AK6r4DMxAIw28IcxkI7VAKI4
+        8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+        wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjx
+        v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
+        Y4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+        0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUO5r4UUUUU
+X-CM-SenderInfo: arytiiqsuqiimz6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/07/2020 06:24, Viresh Kumar wrote:
-> On 22-07-20, 10:37, Ionela Voinescu wrote:
->> +++ b/drivers/base/arch_topology.c
->> @@ -27,6 +27,7 @@ __weak bool arch_freq_counters_available(struct cpumask *cpus)
->>  }
->>  DEFINE_PER_CPU(unsigned long, freq_scale) = SCHED_CAPACITY_SCALE;
->>  
->> +#ifndef CONFIG_BL_SWITCHER
->>  void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
->>  			 unsigned long max_freq)
->>  {
->> @@ -46,6 +47,7 @@ void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
->>  	for_each_cpu(i, cpus)
->>  		per_cpu(freq_scale, i) = scale;
->>  }
->> +#endif
-> 
-> I don't really like this change, the ifdef hackery is disgusting and
-> then we are putting that in a completely different part of the kernel.
-> 
-> There are at least these two ways of solving this, maybe more:
-> 
-> - Fix the bl switcher driver and add the complexity in it (which you
->   tried to do earlier).
-> 
-> - Add a cpufreq flag to skip arch-set-freq-scale call.
+The function invokes bpf_prog_inc(), which increases the reference
+count of a bpf_prog object "rq->xdp_prog" if the object isn't NULL.
 
-I agree it's not nice but IMHO the cpufreq flag is worse since we would
-introduce new infrastructure only for a deprecated feature. I'm assuming
-that BL SWITCHER is the only feature needing this CPUfreq flag extension.
+The refcount leak issues take place in two error handling paths. When
+either mlx5_wq_ll_create() or mlx5_wq_cyc_create() fails, the function
+simply returns the error code and forgets to drop the reference count
+increased earlier, causing a reference count leak of "rq->xdp_prog".
 
-#ifdef CONFIG_BL_SWITCHER is already in drivers/irqchip/irq-gic.c so
-it's ugly already.
+Fix this issue by jumping to the error handling path err_rq_wq_destroy
+while either function fails.
 
-Runtime detecting (via bL_switching_enabled) of BL SWITCHER is right now
-also only handled inside vexpress-spc-cpufreq.c via a
-bL_switcher_notifier. A mechanism which also sits behind a #ifdef
-CONFIG_BL_SWITCHER.
+Fixes: 422d4c401edd ("net/mlx5e: RX, Split WQ objects for different RQ
+types")
 
+Signed-off-by: Xin Xiong <xiongx18@fudan.edu.cn>
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+---
+v1 -> v2:
+- Amended parts of wording to be better understood
+- Added Fixes tag
+---
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-So IMHO, the additional #ifdef CONFIG_BL_SWITCHER in
-drivers/base/arch_topology.c it's a small price to pay.
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index a836a02a2116..8e1b1ab416d8 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -419,7 +419,7 @@ static int mlx5e_alloc_rq(struct mlx5e_channel *c,
+ 		err = mlx5_wq_ll_create(mdev, &rqp->wq, rqc_wq, &rq->mpwqe.wq,
+ 					&rq->wq_ctrl);
+ 		if (err)
+-			return err;
++			goto err_rq_wq_destroy;
+ 
+ 		rq->mpwqe.wq.db = &rq->mpwqe.wq.db[MLX5_RCV_DBR];
+ 
+@@ -470,7 +470,7 @@ static int mlx5e_alloc_rq(struct mlx5e_channel *c,
+ 		err = mlx5_wq_cyc_create(mdev, &rqp->wq, rqc_wq, &rq->wqe.wq,
+ 					 &rq->wq_ctrl);
+ 		if (err)
+-			return err;
++			goto err_rq_wq_destroy;
+ 
+ 		rq->wqe.wq.db = &rq->wqe.wq.db[MLX5_RCV_DBR];
+ 
+-- 
+2.25.1
 
-Are there still any users of CONFIG_BL_SWITCHER? I guess it's only
-limited to A15/A7 systems w/ vexpress-spc-cpufreq.c ... so probably only
-TC2?
