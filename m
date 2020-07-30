@@ -2,81 +2,90 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD861C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E74C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 822A922B48
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:10:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Ibj1sb1u"
+	by mail.kernel.org (Postfix) with ESMTP id 332D622B48
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:11:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596078664;
+	bh=H2NODBbkkSUD6I63me+UYQ1BgU7CvdVwALXoiuzsRNU=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=OJ7AUa+YWH5udfnv9Wp3MMj3WSNKKjIpExAMYLCZXGW7ltfZP9AiL5qfjDRbGI7l8
+	 NWqob0zZensWsG9XHKEAlPV/0V6ua+VejX3/fLcdXKHkJdluqTsGX7K9ew22exf+B3
+	 lNrY9uRlliIqFa19LAohGN5jC18+fz0du7GztQ7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728437AbgG3DKY (ORCPT
+        id S1728485AbgG3DLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 23:10:24 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:14858 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726519AbgG3DKY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 23:10:24 -0400
-X-UUID: 4aa88a62df55454295d747cab3951cc1-20200730
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=X5/k5uISNAhPP8r+KLgwOAhdsHCqej1bMnApxEJk9xc=;
-        b=Ibj1sb1uR41YNd1EEujUCtMqmQkK3hELgpPLi3ZaVS1t8Gb6HkAaDLUvIgKLxIK0CeW6UMXX3xkffk5s7VnNCNP6+s21V/AWTNwQ5NxsSMpEIHzuFXRqn2/RjWBAtxBNnQ1HjiXJm/oyBRfkAHYd/g211OCeh67TZ3b3c1sfPW0=;
-X-UUID: 4aa88a62df55454295d747cab3951cc1-20200730
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 774553420; Thu, 30 Jul 2020 11:10:21 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 30 Jul 2020 11:10:17 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 30 Jul 2020 11:10:17 +0800
-Message-ID: <1596078619.23705.0.camel@mtkswgap22>
-Subject: Re: linux-next: build warning after merge of the pm tree
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>
-Date:   Thu, 30 Jul 2020 11:10:19 +0800
-In-Reply-To: <20200730125500.0947e1dd@canb.auug.org.au>
-References: <20200730125500.0947e1dd@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 29 Jul 2020 23:11:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728446AbgG3DLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 23:11:02 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7485C22B48;
+        Thu, 30 Jul 2020 03:11:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596078662;
+        bh=H2NODBbkkSUD6I63me+UYQ1BgU7CvdVwALXoiuzsRNU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=RbZqcquCI0GudeIh3+q9R4S1n+n3KGUJ3JSutRSSooo1brOev6qu5ddM6TxjmqW1p
+         qvB3Dd6T2TkJJefiZjlQMUScNKw503BN44Onz7f0PN7WVBzVM55JuuiM700JXRlrl5
+         Z9K1G4x3b0/ZdqmNrmpWJpnLjyEKiJ42iySmG6fY=
+Date:   Wed, 29 Jul 2020 22:17:00 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH][next] net/sched: act_pedit: Use flex_array_size() helper in
+ memcpy()
+Message-ID: <20200730031700.GA23745@embeddedor>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyB3YXJuaW5nIHNob3VsZCBiZSBmaXhlZCBhbHNvLg0KU2hvdWxkIEkgc2VuZCBhbm90aGVy
-IHBhdGNoPw0KDQpUaGFua3MgIQ0KDQpPbiBUaHUsIDIwMjAtMDctMzAgYXQgMTI6NTUgKzEwMDAs
-IFN0ZXBoZW4gUm90aHdlbGwgd3JvdGU6DQo+IEhpIGFsbCwNCj4gDQo+IEFmdGVyIG1lcmdpbmcg
-dGhlIHBtIHRyZWUsIHRvZGF5J3MgbGludXgtbmV4dCBidWlsZCAoeDg2XzY0IGFsbG1vZGNvbmZp
-ZykNCj4gcHJvZHVjZWQgdGhpcyB3YXJuaW5nOg0KPiANCj4gZHJpdmVycy9hY3BpL3Byb2Nlc3Nv
-cl9pZGxlLmM6IEluIGZ1bmN0aW9uICdhY3BpX2lkbGVfZW50ZXJfczJpZGxlJzoNCj4gZHJpdmVy
-cy9hY3BpL3Byb2Nlc3Nvcl9pZGxlLmM6NjY2OjQ6IHdhcm5pbmc6ICdyZXR1cm4nIHdpdGggbm8g
-dmFsdWUsIGluIGZ1bmN0aW9uIHJldHVybmluZyBub24tdm9pZCBbLVdyZXR1cm4tdHlwZV0NCj4g
-ICA2NjYgfCAgICByZXR1cm47DQo+ICAgICAgIHwgICAgXn5+fn5+DQo+IGRyaXZlcnMvYWNwaS9w
-cm9jZXNzb3JfaWRsZS5jOjY1NzoxMjogbm90ZTogZGVjbGFyZWQgaGVyZQ0KPiAgIDY1NyB8IHN0
-YXRpYyBpbnQgYWNwaV9pZGxlX2VudGVyX3MyaWRsZShzdHJ1Y3QgY3B1aWRsZV9kZXZpY2UgKmRl
-diwNCj4gICAgICAgfCAgICAgICAgICAgIF5+fn5+fn5+fn5+fn5+fn5+fn5+fn4NCj4gZHJpdmVy
-cy9hY3BpL3Byb2Nlc3Nvcl9pZGxlLmM6NjcwOjQ6IHdhcm5pbmc6ICdyZXR1cm4nIHdpdGggbm8g
-dmFsdWUsIGluIGZ1bmN0aW9uIHJldHVybmluZyBub24tdm9pZCBbLVdyZXR1cm4tdHlwZV0NCj4g
-ICA2NzAgfCAgICByZXR1cm47DQo+ICAgICAgIHwgICAgXn5+fn5+DQo+IGRyaXZlcnMvYWNwaS9w
-cm9jZXNzb3JfaWRsZS5jOjY1NzoxMjogbm90ZTogZGVjbGFyZWQgaGVyZQ0KPiAgIDY1NyB8IHN0
-YXRpYyBpbnQgYWNwaV9pZGxlX2VudGVyX3MyaWRsZShzdHJ1Y3QgY3B1aWRsZV9kZXZpY2UgKmRl
-diwNCj4gICAgICAgfCAgICAgICAgICAgIF5+fn5+fn5+fn5+fn5+fn5+fn5+fn4NCj4gDQo+IElu
-dHJvZHVjZWQgYnkgY29tbWl0DQo+IA0KPiAgIGVmZTk3MTEyMTRlNiAoImNwdWlkbGU6IGNoYW5n
-ZSBlbnRlcl9zMmlkbGUoKSBwcm90b3R5cGUiKQ0KPiANCg0K
+Make use of the flex_array_size() helper to calculate the size of a
+flexible array member within an enclosing structure.
+
+This helper offers defense-in-depth against potential integer
+overflows, while at the same time makes it explicitly clear that
+we are dealing with a flexible array member.
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ net/sched/act_pedit.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/net/sched/act_pedit.c b/net/sched/act_pedit.c
+index 66986db062ed..c158bfed86d5 100644
+--- a/net/sched/act_pedit.c
++++ b/net/sched/act_pedit.c
+@@ -436,8 +436,7 @@ static int tcf_pedit_dump(struct sk_buff *skb, struct tc_action *a,
+ 		return -ENOBUFS;
+ 
+ 	spin_lock_bh(&p->tcf_lock);
+-	memcpy(opt->keys, p->tcfp_keys,
+-	       p->tcfp_nkeys * sizeof(struct tc_pedit_key));
++	memcpy(opt->keys, p->tcfp_keys, flex_array_size(opt, keys, p->tcfp_nkeys));
+ 	opt->index = p->tcf_index;
+ 	opt->nkeys = p->tcfp_nkeys;
+ 	opt->flags = p->tcfp_flags;
+-- 
+2.27.0
 
