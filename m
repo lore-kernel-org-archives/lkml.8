@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A85C0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F575C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E8CA207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D96B020829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:14:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgG3AOh (ORCPT
+        id S1728308AbgG3AOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 20:14:37 -0400
-Received: from mga09.intel.com ([134.134.136.24]:33272 "EHLO mga09.intel.com"
+        Wed, 29 Jul 2020 20:14:42 -0400
+Received: from mga09.intel.com ([134.134.136.24]:33261 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728225AbgG3AOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 20:14:24 -0400
-IronPort-SDR: lEqg5LnYcX5iTzxui68tohMnh2MnhWQ3Gb89UkMzoJtYfz94Q9KB7xAO4iRggG+fCKkg2TkjXI
- EaLWdL2z4pfg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="152748851"
+        id S1728053AbgG3AOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 20:14:39 -0400
+IronPort-SDR: ybWncfbVtUwkKbqKoYqjm3umLIqMWf/WAEJ02kRMLGsHDnh5k0qMJCJB+TVpTCLfn4ACRllN7f
+ FwgIsCkMQAcg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="152748854"
 X-IronPort-AV: E=Sophos;i="5.75,412,1589266800"; 
-   d="scan'208";a="152748851"
+   d="scan'208";a="152748854"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
   by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 17:14:20 -0700
-IronPort-SDR: 0ILJmDgohE/d9exFAy37m6A2IdOQjA+z1isX7wk15sn2vyRYV54jkNNKPkBxSC88ZZujMVw9ve
- 2t0Mo+/4oOJg==
+IronPort-SDR: 6dI76rlQDRndcvEw+IjfxQZgGnbCgyI49w9tUO/XAtAH3PbYF7IUK/LhBBB+uMkDn4NWpp2ep7
+ INP2q25tKHVA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,412,1589266800"; 
-   d="scan'208";a="286680262"
+   d="scan'208";a="286680260"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
   by orsmga003.jf.intel.com with ESMTP; 29 Jul 2020 17:14:19 -0700
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
@@ -51,9 +51,9 @@ Cc:     "Lu Baolu" <baolu.lu@linux.intel.com>,
         Eric Auger <eric.auger@redhat.com>,
         Jonathan Corbet <corbet@lwn.net>,
         Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v7 7/7] iommu/vt-d: Check UAPI data processed by IOMMU core
-Date:   Wed, 29 Jul 2020 17:21:07 -0700
-Message-Id: <1596068467-49322-8-git-send-email-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v7 6/7] iommu/uapi: Handle data and argsz filled by users
+Date:   Wed, 29 Jul 2020 17:21:06 -0700
+Message-Id: <1596068467-49322-7-git-send-email-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596068467-49322-1-git-send-email-jacob.jun.pan@linux.intel.com>
 References: <1596068467-49322-1-git-send-email-jacob.jun.pan@linux.intel.com>
@@ -62,49 +62,320 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IOMMU generic layer already does sanity checks UAPI data for version
-match and argsz range under generic information.
-Remove the redundant version check from VT-d driver and check for vendor
-specific data size.
+IOMMU user APIs are responsible for processing user data. This patch
+changes the interface such that user pointers can be passed into IOMMU
+code directly. Separate kernel APIs without user pointers are introduced
+for in-kernel users of the UAPI functionality.
 
+IOMMU UAPI data has a user filled argsz field which indicates the data
+length of the structure. User data is not trusted, argsz must be
+validated based on the current kernel data size, mandatory data size,
+and feature flags.
+
+User data may also be extended, resulting in possible argsz increase.
+Backward compatibility is ensured based on size and flags (or
+the functional equivalent fields) checking.
+
+This patch adds sanity checks in the IOMMU layer. In addition to argsz,
+reserved/unused fields in padding, flags, and version are also checked.
+Details are documented in Documentation/userspace-api/iommu.rst
+
+Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 ---
- drivers/iommu/intel/iommu.c | 3 +--
- drivers/iommu/intel/svm.c   | 7 +++++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ drivers/iommu/iommu.c | 201 ++++++++++++++++++++++++++++++++++++++++++++++++--
+ include/linux/iommu.h |  28 ++++---
+ 2 files changed, 212 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index 021f62078f52..7e03cca31a0e 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -5391,8 +5391,7 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
- 	int ret = 0;
- 	u64 size = 0;
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 3a913ce94a3d..1ee55c4b3a3a 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -1950,33 +1950,218 @@ int iommu_attach_device(struct iommu_domain *domain, struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(iommu_attach_device);
  
--	if (!inv_info || !dmar_domain ||
--	    inv_info->version != IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
-+	if (!inv_info || !dmar_domain)
- 		return -EINVAL;
- 
- 	if (!dev || !dev_is_pci(dev))
-diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index 713b3a218483..55ea11e9c0f5 100644
---- a/drivers/iommu/intel/svm.c
-+++ b/drivers/iommu/intel/svm.c
-@@ -240,8 +240,11 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
- 	if (WARN_ON(!iommu) || !data)
- 		return -EINVAL;
- 
--	if (data->version != IOMMU_GPASID_BIND_VERSION_1 ||
--	    data->format != IOMMU_PASID_FORMAT_INTEL_VTD)
-+	if (data->format != IOMMU_PASID_FORMAT_INTEL_VTD)
++/*
++ * Check flags and other user provided data for valid combinations. We also
++ * make sure no reserved fields or unused flags are set. This is to ensure
++ * not breaking userspace in the future when these fields or flags are used.
++ */
++static int iommu_check_cache_invl_data(struct iommu_cache_invalidate_info *info)
++{
++	u32 mask;
++	int i;
++
++	if (info->version != IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
 +		return -EINVAL;
 +
-+	/* IOMMU core ensures argsz is more than the start of the union */
-+	if (data->argsz < offsetofend(struct iommu_gpasid_bind_data, vendor.vtd))
- 		return -EINVAL;
++	mask = (1 << IOMMU_CACHE_INV_TYPE_NR) - 1;
++	if (info->cache & ~mask)
++		return -EINVAL;
++
++	if (info->granularity >= IOMMU_INV_GRANU_NR)
++		return -EINVAL;
++
++	switch (info->granularity) {
++	case IOMMU_INV_GRANU_ADDR:
++		if (info->cache & IOMMU_CACHE_INV_TYPE_PASID)
++			return -EINVAL;
++
++		mask = IOMMU_INV_ADDR_FLAGS_PASID |
++			IOMMU_INV_ADDR_FLAGS_ARCHID |
++			IOMMU_INV_ADDR_FLAGS_LEAF;
++
++		if (info->granu.addr_info.flags & ~mask)
++			return -EINVAL;
++		break;
++	case IOMMU_INV_GRANU_PASID:
++		mask = IOMMU_INV_PASID_FLAGS_PASID |
++			IOMMU_INV_PASID_FLAGS_ARCHID;
++		if (info->granu.pasid_info.flags & ~mask)
++			return -EINVAL;
++
++		break;
++	case IOMMU_INV_GRANU_DOMAIN:
++		if (info->cache & IOMMU_CACHE_INV_TYPE_DEV_IOTLB)
++			return -EINVAL;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	/* Check reserved padding fields */
++	for (i = 0; i < sizeof(info->padding); i++) {
++		if (info->padding[i])
++			return -EINVAL;
++	}
++
++	return 0;
++}
++
+ int iommu_uapi_cache_invalidate(struct iommu_domain *domain, struct device *dev,
+-				struct iommu_cache_invalidate_info *inv_info)
++				void __user *uinfo)
+ {
++	struct iommu_cache_invalidate_info inv_info = { 0 };
++	u32 minsz;
++	int ret = 0;
++
+ 	if (unlikely(!domain->ops->cache_invalidate))
+ 		return -ENODEV;
  
- 	if (!dev_is_pci(dev))
+-	return domain->ops->cache_invalidate(domain, dev, inv_info);
++	/*
++	 * No new spaces can be added before the variable sized union, the
++	 * minimum size is the offset to the union.
++	 */
++	minsz = offsetof(struct iommu_cache_invalidate_info, granu);
++
++	/* Copy minsz from user to get flags and argsz */
++	if (copy_from_user(&inv_info, uinfo, minsz))
++		return -EFAULT;
++
++	/* Fields before variable size union is mandatory */
++	if (inv_info.argsz < minsz)
++		return -EINVAL;
++
++	/* PASID and address granu require additional info beyond minsz */
++	if (inv_info.argsz == minsz &&
++	    ((inv_info.granularity == IOMMU_INV_GRANU_PASID) ||
++		    (inv_info.granularity == IOMMU_INV_GRANU_ADDR)))
++		return -EINVAL;
++
++	if (inv_info.granularity == IOMMU_INV_GRANU_PASID &&
++	    inv_info.argsz < offsetofend(struct iommu_cache_invalidate_info, granu.pasid_info))
++		return -EINVAL;
++
++	if (inv_info.granularity == IOMMU_INV_GRANU_ADDR &&
++	    inv_info.argsz < offsetofend(struct iommu_cache_invalidate_info, granu.addr_info))
++		return -EINVAL;
++
++	/*
++	 * User might be using a newer UAPI header which has a larger data
++	 * size, we shall support the existing flags within the current
++	 * size. Copy the remaining user data _after_ minsz but not more
++	 * than the current kernel supported size.
++	 */
++	if (copy_from_user((void *)&inv_info + minsz, uinfo + minsz,
++			   min_t(u32, inv_info.argsz, sizeof(inv_info)) - minsz))
++		return -EFAULT;
++
++	/* Now the argsz is validated, check the content */
++	ret = iommu_check_cache_invl_data(&inv_info);
++	if (ret)
++		return ret;
++
++	return domain->ops->cache_invalidate(domain, dev, &inv_info);
+ }
+ EXPORT_SYMBOL_GPL(iommu_uapi_cache_invalidate);
+ 
+-int iommu_uapi_sva_bind_gpasid(struct iommu_domain *domain,
+-			       struct device *dev, struct iommu_gpasid_bind_data *data)
++static int iommu_check_bind_data(struct iommu_gpasid_bind_data *data)
++{
++	u32 mask;
++	int i;
++
++	if (data->version != IOMMU_GPASID_BIND_VERSION_1)
++		return -EINVAL;
++
++	/* Check the range of supported formats */
++	if (data->format >= IOMMU_PASID_FORMAT_LAST)
++		return -EINVAL;
++
++	/* Check all flags */
++	mask = IOMMU_SVA_GPASID_VAL;
++	if (data->flags & ~mask)
++		return -EINVAL;
++
++	/* Check reserved padding fields */
++	for (i = 0; i < sizeof(data->padding); i++) {
++		if (data->padding[i])
++			return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int iommu_sva_prepare_bind_data(void __user *udata,
++				       struct iommu_gpasid_bind_data *data)
+ {
++	u32 minsz;
++
++	/*
++	 * No new spaces can be added before the variable sized union, the
++	 * minimum size is the offset to the union.
++	 */
++	minsz = offsetof(struct iommu_gpasid_bind_data, vendor);
++
++	/* Copy minsz from user to get flags and argsz */
++	if (copy_from_user(data, udata, minsz))
++		return -EFAULT;
++
++	/* Fields before variable size union is mandatory */
++	if (data->argsz < minsz)
++		return -EINVAL;
++	/*
++	 * User might be using a newer UAPI header, we shall let IOMMU vendor
++	 * driver decide on what size it needs. Since the guest PASID bind data
++	 * can be vendor specific, larger argsz could be the result of extension
++	 * for one vendor but it should not affect another vendor.
++	 * Copy the remaining user data _after_ minsz
++	 */
++	if (copy_from_user((void *)data + minsz, udata + minsz,
++			   min_t(u32, data->argsz, sizeof(*data)) - minsz))
++		return -EFAULT;
++
++	return iommu_check_bind_data(data);
++}
++
++int iommu_uapi_sva_bind_gpasid(struct iommu_domain *domain, struct device *dev,
++			       void __user *udata)
++{
++	struct iommu_gpasid_bind_data data = { 0 };
++	int ret;
++
+ 	if (unlikely(!domain->ops->sva_bind_gpasid))
+ 		return -ENODEV;
+ 
+-	return domain->ops->sva_bind_gpasid(domain, dev, data);
++	ret = iommu_sva_prepare_bind_data(udata, &data);
++	if (ret)
++		return ret;
++
++	return domain->ops->sva_bind_gpasid(domain, dev, &data);
+ }
+ EXPORT_SYMBOL_GPL(iommu_uapi_sva_bind_gpasid);
+ 
+-int iommu_uapi_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
+-				 ioasid_t pasid)
++int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
++			    struct iommu_gpasid_bind_data *data)
+ {
+ 	if (unlikely(!domain->ops->sva_unbind_gpasid))
+ 		return -ENODEV;
+ 
+-	return domain->ops->sva_unbind_gpasid(dev, pasid);
++	return domain->ops->sva_unbind_gpasid(dev, data->hpasid);
++}
++EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
++
++int iommu_uapi_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
++				 void __user *udata)
++{
++	struct iommu_gpasid_bind_data data = { 0 };
++	int ret;
++
++	if (unlikely(!domain->ops->sva_bind_gpasid))
++		return -ENODEV;
++
++	ret = iommu_sva_prepare_bind_data(udata, &data);
++	if (ret)
++		return ret;
++
++	return iommu_sva_unbind_gpasid(domain, dev, &data);
+ }
+ EXPORT_SYMBOL_GPL(iommu_uapi_sva_unbind_gpasid);
+ 
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 2dcc1a33f6dc..4a02c9e09048 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -432,11 +432,14 @@ extern void iommu_detach_device(struct iommu_domain *domain,
+ 				struct device *dev);
+ extern int iommu_uapi_cache_invalidate(struct iommu_domain *domain,
+ 				       struct device *dev,
+-				       struct iommu_cache_invalidate_info *inv_info);
++				       void __user *uinfo);
++
+ extern int iommu_uapi_sva_bind_gpasid(struct iommu_domain *domain,
+-				      struct device *dev, struct iommu_gpasid_bind_data *data);
++				      struct device *dev, void __user *udata);
+ extern int iommu_uapi_sva_unbind_gpasid(struct iommu_domain *domain,
+-					struct device *dev, ioasid_t pasid);
++					struct device *dev, void __user *udata);
++extern int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
++				   struct device *dev, struct iommu_gpasid_bind_data *data);
+ extern struct iommu_domain *iommu_get_domain_for_dev(struct device *dev);
+ extern struct iommu_domain *iommu_get_dma_domain(struct device *dev);
+ extern int iommu_map(struct iommu_domain *domain, unsigned long iova,
+@@ -1054,22 +1057,29 @@ static inline int iommu_sva_get_pasid(struct iommu_sva *handle)
+ 	return IOMMU_PASID_INVALID;
+ }
+ 
+-static inline int iommu_uapi_cache_invalidate(struct iommu_domain *domain,
+-					      struct device *dev,
+-					      struct iommu_cache_invalidate_info *inv_info)
++static inline int
++iommu_uapi_cache_invalidate(struct iommu_domain *domain,
++			    struct device *dev,
++			    struct iommu_cache_invalidate_info *inv_info)
+ {
+ 	return -ENODEV;
+ }
+ 
+ static inline int iommu_uapi_sva_bind_gpasid(struct iommu_domain *domain,
+-					     struct device *dev,
+-					     struct iommu_gpasid_bind_data *data)
++					     struct device *dev, void __user *udata)
+ {
+ 	return -ENODEV;
+ }
+ 
+ static inline int iommu_uapi_sva_unbind_gpasid(struct iommu_domain *domain,
+-					       struct device *dev, int pasid)
++					       struct device *dev, void __user *udata)
++{
++	return -ENODEV;
++}
++
++static inline int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
++					  struct device *dev,
++					  struct iommu_gpasid_bind_data *data)
+ {
+ 	return -ENODEV;
+ }
 -- 
 2.7.4
 
