@@ -2,106 +2,93 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D764C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F871C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4306620829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E196120829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:22:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NT0JKZu1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbgG3NW3 (ORCPT
+        id S1728373AbgG3NWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 09:22:29 -0400
-Received: from relay.sw.ru ([185.231.240.75]:49368 "EHLO relay3.sw.ru"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726281AbgG3NW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 09:22:28 -0400
-Received: from [192.168.15.64]
-        by relay3.sw.ru with esmtp (Exim 4.93)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1k18Vc-0003gl-2Y; Thu, 30 Jul 2020 16:22:08 +0300
-Subject: Re: [PATCH 11/23] fs: Add /proc/namespaces/ directory
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     viro@zeniv.linux.org.uk, davem@davemloft.net,
-        ebiederm@xmission.com, akpm@linux-foundation.org,
-        christian.brauner@ubuntu.com, areber@redhat.com, serge@hallyn.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
- <159611041929.535980.14513096920129728440.stgit@localhost.localdomain>
- <20200730121834.GA4490@localhost.localdomain>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <44de5acb-6da3-e742-6472-4f9cbe3051e2@virtuozzo.com>
-Date:   Thu, 30 Jul 2020 16:22:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 09:22:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726281AbgG3NWn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 09:22:43 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09D37C061794
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 06:22:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=wcPyE4+cPQF2p348dprC1q/nCXnWrHlXNo+LiKFxU9c=; b=NT0JKZu1sNprgCq89FvOkPnuOA
+        O7GShg8Baj2xualxn0r//kz6dxm8pUnpLMkS1+MfO7wv8THh15aLntzgTGP81xuHkPCFLq2iUC9jZ
+        B1u354qTKAb8QPHhwEa5WANwSb76+MCBAGWmyIlRwhJszxFSQtMCddHwEnLUthMqmSMbU/fxQU6vO
+        iti/wW7L0zJEkWI9BrbeILJDX6vcCrvQ1XOgq/qUeHop6F098yfV7uIIzxdITYKmS6UYNElIKfka4
+        W3n8mcrmn+hRtb7e3EcUgoTVw5qekWXUnbnzYVRN42F2u+LvD3eyLSoiMOQ6xweEAKenOQ9t8rHrr
+        AvH+omKg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k18W8-0007Rg-Bq; Thu, 30 Jul 2020 13:22:40 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0F73C30411F;
+        Thu, 30 Jul 2020 15:22:37 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D8F3B203DB3CD; Thu, 30 Jul 2020 15:22:37 +0200 (CEST)
+Date:   Thu, 30 Jul 2020 15:22:37 +0200
+From:   peterz@infradead.org
+To:     Julien Thierry <jthierry@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
+        mhelsley@vmware.com, mbenes@suse.cz
+Subject: Re: [PATCH v3 2/4] objtool: Move orc outside of check
+Message-ID: <20200730132237.GM2655@hirez.programming.kicks-ass.net>
+References: <20200730094143.27494-1-jthierry@redhat.com>
+ <20200730094143.27494-3-jthierry@redhat.com>
+ <20200730095759.GH2655@hirez.programming.kicks-ass.net>
+ <dfe69c8f-db70-8366-5601-2592409ce7a0@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200730121834.GA4490@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dfe69c8f-db70-8366-5601-2592409ce7a0@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.07.2020 15:18, Alexey Dobriyan wrote:
-> On Thu, Jul 30, 2020 at 03:00:19PM +0300, Kirill Tkhai wrote:
+On Thu, Jul 30, 2020 at 01:40:42PM +0100, Julien Thierry wrote:
 > 
->> # ls /proc/namespaces/ -l
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'cgroup:[4026531835]' -> 'cgroup:[4026531835]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'ipc:[4026531839]' -> 'ipc:[4026531839]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026531840]' -> 'mnt:[4026531840]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026531861]' -> 'mnt:[4026531861]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026532133]' -> 'mnt:[4026532133]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026532134]' -> 'mnt:[4026532134]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026532135]' -> 'mnt:[4026532135]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026532136]' -> 'mnt:[4026532136]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'net:[4026531993]' -> 'net:[4026531993]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'pid:[4026531836]' -> 'pid:[4026531836]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'time:[4026531834]' -> 'time:[4026531834]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'user:[4026531837]' -> 'user:[4026531837]'
->> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'uts:[4026531838]' -> 'uts:[4026531838]'
 > 
-> I'd say make it '%s-%llu'. The brackets don't carry any information.
-> And ':' forces quoting with recent coreutils.
+> On 7/30/20 10:57 AM, peterz@infradead.org wrote:
+> > On Thu, Jul 30, 2020 at 10:41:41AM +0100, Julien Thierry wrote:
+> > > +		if (file->elf->changed)
+> > > +			return elf_write(file->elf);
+> > > +		else
+> > > +			return 0;
+> > >   	}
+> > 
+> > I think we can do without that else :-)
+> > 
 > 
->> +static int parse_namespace_dentry_name(const struct dentry *dentry,
->> +		const char **type, unsigned int *type_len, unsigned int *inum)
->> +{
->> +	const char *p, *name;
->> +	int count;
->> +
->> +	*type = name = dentry->d_name.name;
->> +	p = strchr(name, ':');
->> +	*type_len = p - name;
->> +	if (!p || p == name)
->> +		return -ENOENT;
->> +
->> +	p += 1;
->> +	if (sscanf(p, "[%u]%n", inum, &count) != 1 || *(p + count) != '\0' ||
->> +	    *inum < PROC_NS_MIN_INO)
->> +		return -ENOENT;
-> 
-> sscanf is banned from lookup code due to lax whitespace rules.
-> See
-> 
-> 	commit ac7f1061c2c11bb8936b1b6a94cdb48de732f7a4
-> 	proc: fix /proc/*/map_files lookup
+> I did wonder and was not 100% confident about it, but the orc gen will
+> always change the file, correct?
 
-Ok, thanks for pointing this.
+Not if it already has orc, iirc.
 
-> Of course someone sneaked in 1 instance, yikes.
-> 
-> 	$ grep -e scanf -n -r fs/proc/
-> 	fs/proc/base.c:1596:            err = sscanf(pos, "%9s %lld %lu", clock,
-> 
->> +static int proc_namespaces_readdir(struct file *file, struct dir_context *ctx)
-> 
->> +		len = snprintf(name, sizeof(name), "%s:[%u]", ns->ops->name, inum);
-> 
-> [] -- no need.
-> 
+But what I was trying to say is that:
 
+	if (file->elf->changed)
+		return elf_write(file->elf)
+
+	return 0;
+
+is identical code and, IMO, easier to read.
