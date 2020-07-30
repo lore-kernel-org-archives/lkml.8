@@ -2,163 +2,77 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C37E5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FADC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A12012075D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:59:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="d8sFH9K6"
+	by mail.kernel.org (Postfix) with ESMTP id D65492075D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:59:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbgG3A7Z (ORCPT
+        id S1728332AbgG3A7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 20:59:25 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2609 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726859AbgG3A7Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 20:59:25 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f221b100000>; Wed, 29 Jul 2020 17:57:52 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 29 Jul 2020 17:59:24 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 29 Jul 2020 17:59:24 -0700
-Received: from [10.2.160.194] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jul
- 2020 00:59:24 +0000
-Subject: Re: [RFC PATCH v5 13/14] media: tegra-video: Add CSI MIPI pads
- calibration
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <gregkh@linuxfoundation.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>
-References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
- <1595883452-17343-14-git-send-email-skomatineni@nvidia.com>
- <c3d40261-9d77-3634-3e04-f20efad9d3d8@gmail.com>
- <01ee0805-3d57-d857-48e3-5c2245cd4500@nvidia.com>
- <2ec535c9-55e8-8834-6002-36c75aeb097c@gmail.com>
- <021707b9-5f72-6f8b-d125-43627ef64a6d@nvidia.com>
- <de2d6117-b1e5-14c0-52ca-ff46b444c866@nvidia.com>
- <ca18b93e-1f1c-50ae-e0c1-11758935ee89@gmail.com>
- <42f25a49-ad2b-4e52-fd99-cb0f52037988@nvidia.com>
- <f5440f57-3653-7cf0-9efe-e9a0c276f7cf@nvidia.com>
- <6ae07f82-53f7-33fc-5892-340b0d9f12cf@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <887d51fb-4292-c251-6568-32b884e8db67@nvidia.com>
-Date:   Wed, 29 Jul 2020 18:06:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 29 Jul 2020 20:59:38 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:34210 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726859AbgG3A7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 20:59:38 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1k0wup-00050D-0F; Thu, 30 Jul 2020 10:59:24 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 30 Jul 2020 10:59:22 +1000
+Date:   Thu, 30 Jul 2020 10:59:22 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Waiman Long <longman@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH 0/2] locking/qspinlock: Break qspinlock_types.h header
+ loop
+Message-ID: <20200730005922.GA9710@gondor.apana.org.au>
+References: <20200729210311.425d0e9b@canb.auug.org.au>
+ <20200729114757.GA19388@gondor.apana.org.au>
+ <20200729122807.GA7047@gondor.apana.org.au>
+ <ed62ba67-0e1d-3fee-8c09-7750d5690be5@redhat.com>
+ <CAHp75VdbZu008RcxNhMysoqBs2FSPXWv+au_ROJ7FPVd0uOhtg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <6ae07f82-53f7-33fc-5892-340b0d9f12cf@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596070672; bh=F9EN8UAgMwigtLNy+JI+iiitzedOW3ZVlLVEoOqUjG0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=d8sFH9K6xPDZyiCkaFZriGF4SjXdoqKjDomj3H/TvH+AWqvSXuZ5txhqXm2EO9wv9
-         0DZDOyw7w0ktujUnVaEqJxN2wHi8n7z4KupEJEGvkfN+l42AQuGuzZyXjVFBv2OjB6
-         NJiAZs1Sbs2Q1gpx161WutaEGbz55QcsZqzO5FizQ91kKuSwrEb+u5kKq7GETg4M9x
-         3FjbZssns/DFAzToQTw+c8qQC2sttJ3Ypdzg65RnT8P56tRKNoJXhUxifwSVzbAaq8
-         L52YKTuaQG/ES1v0ksxsAi76uPku5ZjlAMTA/5YdLQ8+wZcpCRZfzXMbhtobpmLxRZ
-         4kXfbiE2e05jQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdbZu008RcxNhMysoqBs2FSPXWv+au_ROJ7FPVd0uOhtg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 29, 2020 at 06:04:57PM +0300, Andy Shevchenko wrote:
+> On Wed, Jul 29, 2020 at 4:35 PM Waiman Long <longman@redhat.com> wrote:
+> > On 7/29/20 8:28 AM, Herbert Xu wrote:
+> 
+> ...
+> 
+> > This patch series looks good to me. I just wonder if we should also move
+> > ATOMIC64_INIT() to types.h for symmetry purpose. Anyway,
+> 
+> Same question here.
 
-On 7/29/20 5:53 PM, Dmitry Osipenko wrote:
-> 30.07.2020 03:55, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 7/29/20 5:52 PM, Sowjanya Komatineni wrote:
->>> On 7/29/20 5:43 PM, Dmitry Osipenko wrote:
->>>> 30.07.2020 03:27, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> ...
->>>>>>> Secondly, perhaps a failed calibration isn't a very critical error?
->>>>>>> Hence just printing a warning message should be enough.
->>>>>> Using dev_err to report calibration failure. Are you suggesting to u=
-se
->>>>>> dev_warn instead of dev_err?
->>>> I meant that failing s_stream might be unnecessary.
->>>>
->>>> The dev_warn should be more appropriate for a non-critical errors.
->>>>
->>>>>>> Could you please make a patch that factors all ON/OFF code paths
->>>>>>> into a
->>>>>>> separate functions? It's a bit difficult to follow the combined cod=
-e,
->>>>>>> especially partial changes in the patches. Thanks in advance!
->>>>>> what do you mean by partial changes in patches?
->>>>>>
->>>>>> Can you please be more clear?
->>>>> Also please specify what ON/OFF code paths you are referring to when
->>>>> you
->>>>> say to move into separate functions?
->>>> I meant to change all the code like this:
->>>>
->>>> set(on) {
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0 if (on) {
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ...
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0 if (!on)
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ...
->>>>
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0 return;
->>>> }
->>>>
->>>> to somewhat like this:
->>>>
->>>> set(on) {
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0 if (on)
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D enable();
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0 else
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D disable();
->>>>
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> }
->>> You mean to change tegra_channel_set_stream() ?
-> Yes, and tegra_csi_s_stream().
->
->> changing tegra_channel_set_stream() to have like below will have
->> redundant calls as most of the code b/w enable and disable is same
->> except calling them in reverse order based on on/off and doing MIPI
->> calibration only during ON
->>
->>
->> if (on)
->>  =C2=A0=C2=A0=C2=A0 ret =3D enable()
->> else
->>  =C2=A0=C2=A0=C2=A0 ret =3D disable()
->> return ret;
-> Readability should be more important than number of lines.
+Yes I almost started doing it but at least one architecture (arc)
+had a custom atomic64_t so I kept it out just to be on the safe
+side.
 
-Will have v6 and add additional patch at the end to do enable/disable=20
-separately.
+We certainly could do this as a follow-up patch.
 
-Separating this out with additional patch before adding sensor support=20
-patch requires all patches to be updated.
-
-So I am ok either ways. Please let me know if adding additional patch at=20
-the end to split tegra_channel_set_stream() and tegra_csi_s_stream()=20
-separately is ok?
-
-
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
