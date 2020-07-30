@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1791FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2343C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA6322074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B59B62074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596097181;
-	bh=607reChhp6EKtOkI4IPELIlw7r9BVtK3n9rjMAH2/wA=;
+	s=default; t=1596097187;
+	bh=qEFSKF1svw9IjdzOHrzX+VjSPya0UbraoRXCMO0bIu8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x4XMUUKfWsRiuwoKPId6Gf/LMVjMeKcWQz/t7mlyyxgfvOO75rLjDPvPWVu/Bs1j4
-	 sikGs07t9muV+WyRGaFfeCpOlZgIrRQKEdpgey6plJHQ0WvWVDiwS0oC8x3TeC+3EM
-	 0h1MuMMV2vB8O+7gPRvANwuqbYKqqwi61kuu1Bx8=
+	b=LzY00WUuvLZrVuj2+8U6JIWxA9dYh+5Pz04EWUzyU7RZrD4nu7Tni40pRPll+ulAn
+	 u8Lo2QMOzqjTSQl1KsdpYVW3gzq1loEtW28BTh2CpHiAMrbmyptX4cdS8tzMTww972
+	 GAb+1spRdDhPy7Vn91kx+zT/I1t0g+jOWUrtKP7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729687AbgG3ITj (ORCPT
+        id S1730276AbgG3ITq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:19:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45966 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:19:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729127AbgG3IHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:07:52 -0400
+        id S1729121AbgG3IHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:07:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ACA42070B;
-        Thu, 30 Jul 2020 08:07:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AC8D2083B;
+        Thu, 30 Jul 2020 08:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096471;
-        bh=607reChhp6EKtOkI4IPELIlw7r9BVtK3n9rjMAH2/wA=;
+        s=default; t=1596096469;
+        bh=qEFSKF1svw9IjdzOHrzX+VjSPya0UbraoRXCMO0bIu8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nOZTBW+nm8Z1IbpXQgNWKwjLCvMR3a+yIBWbBnyVHdXF8ZlCrJ7duVsnPsVGFG33p
-         AvKg7ZpFnzOQStWT34Q+0Lo97oWW6MKy/fZnf/mpl74g2Zao4T/xn9mEH/MkuCILxQ
-         D7h13ea5Lp4DKB+dDZ9OTq7fqrKHvcGfhfM7skxA=
+        b=l8qbBqsvKuxbW0dxy6bbxQcCamhbjOzg4J95c+nCzZWZ0K11xBM9Wq0OAX+wx2SEw
+         F+8X0rVckON7BfI2KgyKlTjo/Rp3euhHjV+2RkQgeQsnhUXPllKToJz3Mlvl8gCSnE
+         DEDwRkoHviRxeUcHajX3ufNoHP3Eg+qIiC9f35Z8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peilin Ye <yepeilin.cs@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 02/14] AX.25: Prevent out-of-bounds read in ax25_sendmsg()
-Date:   Thu, 30 Jul 2020 10:04:45 +0200
-Message-Id: <20200730074419.010950200@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        "Nobuhiro Iwamatsu (CIP)" <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH 4.14 14/14] xfs: set format back to extents if xfs_bmap_extents_to_btree
+Date:   Thu, 30 Jul 2020 10:04:57 +0200
+Message-Id: <20200730074419.602403976@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074418.882736401@linuxfoundation.org>
 References: <20200730074418.882736401@linuxfoundation.org>
@@ -59,36 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peilin Ye <yepeilin.cs@gmail.com>
+From: Eric Sandeen <sandeen@redhat.com>
 
-[ Upstream commit 8885bb0621f01a6c82be60a91e5fc0f6e2f71186 ]
+commit 2c4306f719b083d17df2963bc761777576b8ad1b upstream.
 
-Checks on `addr_len` and `usax->sax25_ndigis` are insufficient.
-ax25_sendmsg() can go out of bounds when `usax->sax25_ndigis` equals to 7
-or 8. Fix it.
+If xfs_bmap_extents_to_btree fails in a mode where we call
+xfs_iroot_realloc(-1) to de-allocate the root, set the
+format back to extents.
 
-It is safe to remove `usax->sax25_ndigis > AX25_MAX_DIGIS`, since
-`addr_len` is guaranteed to be less than or equal to
-`sizeof(struct full_sockaddr_ax25)`
+Otherwise we can assume we can dereference ifp->if_broot
+based on the XFS_DINODE_FMT_BTREE format, and crash.
 
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=199423
+Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Nobuhiro Iwamatsu (CIP) <nobuhiro1.iwamatsu@toshiba.co.jp>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ax25/af_ax25.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/xfs/libxfs/xfs_bmap.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/net/ax25/af_ax25.c
-+++ b/net/ax25/af_ax25.c
-@@ -1513,7 +1513,8 @@ static int ax25_sendmsg(struct socket *s
- 			struct full_sockaddr_ax25 *fsa = (struct full_sockaddr_ax25 *)usax;
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -761,12 +761,16 @@ xfs_bmap_extents_to_btree(
+ 	*logflagsp = 0;
+ 	if ((error = xfs_alloc_vextent(&args))) {
+ 		xfs_iroot_realloc(ip, -1, whichfork);
++		ASSERT(ifp->if_broot == NULL);
++		XFS_IFORK_FMT_SET(ip, whichfork, XFS_DINODE_FMT_EXTENTS);
+ 		xfs_btree_del_cursor(cur, XFS_BTREE_ERROR);
+ 		return error;
+ 	}
  
- 			/* Valid number of digipeaters ? */
--			if (usax->sax25_ndigis < 1 || usax->sax25_ndigis > AX25_MAX_DIGIS) {
-+			if (usax->sax25_ndigis < 1 || addr_len < sizeof(struct sockaddr_ax25) +
-+			    sizeof(ax25_address) * usax->sax25_ndigis) {
- 				err = -EINVAL;
- 				goto out;
- 			}
+ 	if (WARN_ON_ONCE(args.fsbno == NULLFSBLOCK)) {
+ 		xfs_iroot_realloc(ip, -1, whichfork);
++		ASSERT(ifp->if_broot == NULL);
++		XFS_IFORK_FMT_SET(ip, whichfork, XFS_DINODE_FMT_EXTENTS);
+ 		xfs_btree_del_cursor(cur, XFS_BTREE_ERROR);
+ 		return -ENOSPC;
+ 	}
 
 
