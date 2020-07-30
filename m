@@ -2,124 +2,121 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08077C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6EBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D34E82082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 796402075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:34:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=goautomation-biz.20150623.gappssmtp.com header.i=@goautomation-biz.20150623.gappssmtp.com header.b="As0Dc3S5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jwFK2Uoa";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ihc2Fyuc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgG3Kdt (ORCPT
+        id S1729009AbgG3Ker (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 06:33:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47120 "EHLO
+        Thu, 30 Jul 2020 06:34:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726799AbgG3Kds (ORCPT
+        with ESMTP id S1725892AbgG3Keq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 06:33:48 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CF3DC061794
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 03:33:48 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id v4so18648253ljd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 03:33:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=goautomation-biz.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=pF91T05aS4Co7+HLHbZn7338QFcQLHQl99MYpUZGb5E=;
-        b=As0Dc3S5gvTCRaWF6eKPI6A1dpajxz82kjEkzSQflmklQn+qmMC0kvcWDDxH+Gh/JP
-         0H7lRTa3PUDu3QFs0/rA45xS9mz18eINnJOKaGSCPOIbpyOujNYjg6Muv7cXuqeVmkLj
-         mbOdil5aQc2kntzEi3HvX/3VL/1NdqUzR2mw0KCSonVaecv0KCuHVpzWGQdFklaMPBzf
-         bE/hH1YXUUFab8NXCaadZlO+h2kOpzS4WSVJzW+pyDzON/1Y4WLMElmQ4RK/mRI5eADL
-         yexFgP6VYoXRvcbnWLW78dUV9ixqwWn8mntv7xmlK7D3s6Ks789cB5TIjX5wgO3O7qoE
-         OVxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=pF91T05aS4Co7+HLHbZn7338QFcQLHQl99MYpUZGb5E=;
-        b=V3RITKSd6jgzmBZ6T/xS3ZThZ0ji/qcQ5frfdPpgBlHlVckfkctoqjJOZAxFP79BKm
-         L3n0GsaPy1XJmIqlTdD5ov4muhc1Cce5kWFzOwCFmNEP0In5Gkw2tSOVfzUT96HW1sQ4
-         uPE2kenyNX8VdlT8qaxP2JxFI4+9aag9ALRKkr3h7Xog0AKY+RC/13hcYsfJx8fShqVy
-         5xu6kfK65IggnFuvzUhLqHUHd0ulImBeK/OFQPpYYZFsk88i4uDZYg5t9/4W/TBbIyrS
-         yCGFgFY6gHI3mRd5VXIe/KDDPdRDObkWdCvRYHv6Pww/2vyvO8toTlwF4rIzeERVD1dz
-         Ozug==
-X-Gm-Message-State: AOAM532yZ95R9iyNC14ywjBdMkUcaXto+Uj8seYN7yzpl82NJI3spOHh
-        PgWsN/+x+sLjLlhgqIPTwXmKTnx1SupohfPb1uLFdF1QNf0=
-X-Google-Smtp-Source: ABdhPJy6v079zOS2DCJQ2xknR1dMoxF/g3DOTJdPguz1oyEyMXc+oLLTMTIVXX7RTRZBGzB++s6idGTA7mAhPgnvrRc=
-X-Received: by 2002:a2e:958f:: with SMTP id w15mr1162225ljh.190.1596105226219;
- Thu, 30 Jul 2020 03:33:46 -0700 (PDT)
+        Thu, 30 Jul 2020 06:34:46 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 292D3C061794;
+        Thu, 30 Jul 2020 03:34:46 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 10:34:43 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1596105284;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hu8K0lEmTpVCuDSPeCbbvbJVVrXge13M0xm2T41HKKM=;
+        b=jwFK2UoaHNwl+c8ZfFIcX9uXFSWTZ77gw9Lna9tyS7NekiC6KsOWi0IV2UKYaXfBwhhi7X
+        5VKrJchsxaf/2+NGchh28zVF2n7HsqiE7rxm3ZIYkf1YupOngn4C5frsVh2kumurhleIVy
+        BUz14LIzSYIBge0RbJxfuzUGnacEU80nWly5BiR292q6lQVnc+nhQW0thHJEDiqi2JqC/+
+        AA1PMPITDiFKq6ud0rzD1LoB/dvkJS5dMsUcvCQSw8LnsuVSu4zCoUm2ylnUdos1aBmn4U
+        swJ+/F5rkKecJEYo3sQnilO0/PGZ+AydpWhQAoIFNrjmx/LaakYqzDjroytd6g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1596105284;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hu8K0lEmTpVCuDSPeCbbvbJVVrXge13M0xm2T41HKKM=;
+        b=ihc2FyucQ1Ypbr/v0/RGzH9FPwfKqlQ1upNiTYAReiEyZ88lQGq8Lgjg6rInmc/+6Fbbwd
+        bERiJGPYcRPZDBDQ==
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/entry] x86/kvm: Use __xfer_to_guest_mode_work_pending() in
+ kvm_run_vcpu()
+Cc:     Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <87bljxa2sa.fsf@nanos.tec.linutronix.de>
+References: <87bljxa2sa.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-From:   Neil Whelchel <neil@goautomation.biz>
-Date:   Thu, 30 Jul 2020 03:32:55 -0700
-Message-ID: <CAPcyyENjNG1oF_VnUE0YOf6sXgeS5KvvKaRV-Dk6sZYpf2fzBw@mail.gmail.com>
-Subject: [PATCH] CREDITS: Update contact information
-To:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <159610528353.4006.8299813904303562704.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update my email address in driver, documentation, and add to credits.
+The following commit has been merged into the x86/entry branch of tip:
 
-diff --git a/CREDITS b/CREDITS
-index 0787b5872906..65803e878c92 100644
---- a/CREDITS
-+++ b/CREDITS
-@@ -3957,6 +3957,14 @@ S: 820 4th St. N.
- S: Fargo, North Dakota 58122
- S: USA
+Commit-ID:     f3020b8891b890b48d9e1a83241e3cce518427c1
+Gitweb:        https://git.kernel.org/tip/f3020b8891b890b48d9e1a83241e3cce518427c1
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Thu, 30 Jul 2020 09:19:01 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 30 Jul 2020 12:31:47 +02:00
 
-+N: Neil Whelchel
-+E: neil@goautomation.biz
-+W: http://goautomation.biz
-+S: Go Automation, LLC
-+S: P.O. Box 2082
-+S: Joshua Tree, Ca 92252
-+S: USA
-+
- N: Steven Whitehouse
- E: steve@chygwyn.com
- W: http://www.chygwyn.com/~steve
-diff --git a/Documentation/usb/usb-serial.rst b/Documentation/usb/usb-serial.rst
-index 8fa7dbd3da9a..f9ebfb1a60a3 100644
---- a/Documentation/usb/usb-serial.rst
-+++ b/Documentation/usb/usb-serial.rst
-@@ -231,7 +231,7 @@ ZyXEL omni.net lcd plus ISDN TA
- Cypress M8 CY4601 Family Serial Driver
- --------------------------------------
+x86/kvm: Use __xfer_to_guest_mode_work_pending() in kvm_run_vcpu()
 
--  This driver was in most part developed by Neil "koyama" Whelchel.  It
-+  This driver was in most part developed by Neil Whelchel.  It
-   has been improved since that previous form to support dynamic serial
-   line settings and improved line handling.  The driver is for the most
-   part stable and has been tested on an smp machine. (dual p2)
-diff --git a/drivers/usb/serial/cypress_m8.c b/drivers/usb/serial/cypress_m8.c
-index ecda82198798..2b1d854645ed 100644
---- a/drivers/usb/serial/cypress_m8.c
-+++ b/drivers/usb/serial/cypress_m8.c
-@@ -5,7 +5,7 @@
-  *     Copyright (C) 2004
-  *         Lonnie Mendez (dignome@gmail.com)
-  *     Copyright (C) 2003,2004
-- *         Neil Whelchel (koyama@firstlight.net)
-+ *         Neil Whelchel (neil@goautomation.biz)
-  *
-  * See Documentation/usb/usb-serial.rst for more information on using this
-  * driver
-@@ -45,7 +45,7 @@ static bool stats;
- static int interval;
- static bool unstable_bauds;
+The comments explicitely explain that the work flags check and handling in
+kvm_run_vcpu() is done with preemption and interrupts enabled as KVM
+invokes the check again right before entering guest mode with interrupts
+disabled which guarantees that the work flags are observed and handled
+before VMENTER.
 
--#define DRIVER_AUTHOR "Lonnie Mendez <dignome@gmail.com>, Neil
-Whelchel <koyama@firstlight.net>"
-+#define DRIVER_AUTHOR "Lonnie Mendez <dignome@gmail.com>, Neil
-Whelchel <neil@goautomation.biz>"
- #define DRIVER_DESC "Cypress USB to Serial Driver"
+Nevertheless the flag pending check in kvm_run_vcpu() uses the helper
+variant which requires interrupts to be disabled triggering an instant
+lockdep splat. This was caught in testing before and then not fixed up in
+the patch before applying. :(
 
- /* write buffer size defines */
+Use the relaxed and intentionally racy __xfer_to_guest_mode_work_pending()
+instead.
+
+Fixes: 72c3c0fe54a3 ("x86/kvm: Use generic xfer to guest work function")
+Reported-by: Qian Cai <cai@lca.pw> writes:
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/87bljxa2sa.fsf@nanos.tec.linutronix.de
+
+
+---
+ arch/x86/kvm/x86.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 82d4a9e..5325972 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -8682,7 +8682,7 @@ static int vcpu_run(struct kvm_vcpu *vcpu)
+ 			break;
+ 		}
+ 
+-		if (xfer_to_guest_mode_work_pending()) {
++		if (__xfer_to_guest_mode_work_pending()) {
+ 			srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
+ 			r = xfer_to_guest_mode_handle_work(vcpu);
+ 			if (r)
