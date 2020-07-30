@@ -4,75 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9034C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D34DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5ACE20838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F6D82173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:29:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596148140;
-	bh=YH9+ICW/3hXRtSm64orqu19oSdQuuWKrMUBevTvaXkE=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=zQ3y8nqddtS37BmN4a8BbNKEdSbGubFKqFMZ+kd8hwdnHkMOnummeG/kwrYhpMiDl
-	 8gxNPz0jYt8D42KXmInLer9zLFwCRH2ufa/C8jUOOY/gjeeY4D3bJ6RFdqc3Bonqfd
-	 3c01yPdKzN2MDiExeTvvlJ9x982uM5RGdfAKTKnU=
+	s=default; t=1596148147;
+	bh=3E2zv9US9vLZ0at3kxD0+KN3nNVdL4vqBHT/gU3kpKg=;
+	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
+	b=Icyd4OVsLbgY1S6sdsE9s14ftjqJsr8ITnr9HEd6cW5L8c+/6yvZvncvY/W0JKJZy
+	 YE52/mRPrifREP9iO/PYjuUvl2J+Fu39Ad0/jiuNuw3mYLVQJsByhXOFklPvcA/JoT
+	 6RPbQ2tF+E5cs7KHxvinbJjElchCK09pv5CHWbb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730676AbgG3W26 (ORCPT
+        id S1730701AbgG3W3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 18:28:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41070 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 18:29:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730641AbgG3W25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 18:28:57 -0400
+        id S1730024AbgG3W3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 18:29:04 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D06520829;
-        Thu, 30 Jul 2020 22:28:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA27320838;
+        Thu, 30 Jul 2020 22:29:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596148137;
-        bh=YH9+ICW/3hXRtSm64orqu19oSdQuuWKrMUBevTvaXkE=;
+        s=default; t=1596148144;
+        bh=3E2zv9US9vLZ0at3kxD0+KN3nNVdL4vqBHT/gU3kpKg=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=F+0Ydd/Fgutk16gkyGj2gECpPoXbH4sg6UlFq9catgilRzwkQfA9O7G1w0Kz6j0y8
-         QrQ7gUCMeXm93qiW40R2H2WfV9+NT2PCbOx4GxEs87RdYK42aWEzohK3Bf2m4JuD5e
-         DShs/tsbsdcOdvIawMZxl9W+REGJfO6Zjj0yspI8=
-Date:   Thu, 30 Jul 2020 23:28:36 +0100
+        b=TCa1Fr1V54rnXcOaXy7ogD1GOXg392RrdbZxgon1IDI3C5rvcPSqCBlOQrzxnkWiZ
+         HeubyUagR8xBdeL87DACfSBiFFP9fWqlhMDuJhXgqnFqZ1an6TtMoAw1/p/3pVwLqt
+         /4RugqH3IL+I7EmI2w0jU2ooRr0IMW0qCsjzIkCQ=
+Date:   Thu, 30 Jul 2020 23:28:44 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     linux-rdma@vger.kernel.org, Julia Lawall <Julia.Lawall@inria.fr>
-Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-media@vger.kernel.org, kernel-janitors@vger.kernel.org
-In-Reply-To: <1595761112-11003-1-git-send-email-Julia.Lawall@inria.fr>
-References: <1595761112-11003-1-git-send-email-Julia.Lawall@inria.fr>
-Subject: Re: [PATCH 0/7] drop unnecessary list_empty
-Message-Id: <159614804536.1473.16638498246526574558.b4-ty@kernel.org>
+To:     Kathiravan T <kathirav@codeaurora.org>,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, lgirdwood@gmail.com,
+        devicetree@vger.kernel.org, sivaprak@codeaurora.org
+In-Reply-To: <1596098964-19878-1-git-send-email-kathirav@codeaurora.org>
+References: <1596098964-19878-1-git-send-email-kathirav@codeaurora.org>
+Subject: Re: [PATCH 0/3] Enable DVFS support for IPQ6018
+Message-Id: <159614812412.1677.11866049151869161352.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 26 Jul 2020 12:58:25 +0200, Julia Lawall wrote:
-> The various list iterators are able to handle an empty list.
-> The only effect of avoiding the loop is not initializing some
-> index variables.
-> Drop list_empty tests in cases where these variables are not
-> used.
+On Thu, 30 Jul 2020 14:19:21 +0530, Kathiravan T wrote:
+> Add A53 PLL, APCS clock, RPM Glink, RPM message RAM, cpu-opp-table,
+> SMPA2 regulator to enable the cpu frequency on IPQ6018.
 > 
-> The semantic patch that makes these changes is as follows:
-> (http://coccinelle.lip6.fr/)
+> Kathiravan T (3):
+>   dt-bindings: mailbox: add compatible for the IPQ6018 SoC
+>   dt-bindings: regulator: add the sub node names for the MP5496 PMIC
+>   arm64: dts: ipq6018: enable DVFS support
 > 
 > [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
 Thanks!
 
-[1/1] ASoC: Intel: drop unnecessary list_empty
-      commit: a383308e50244a28fe927b9c1acbe0a963bf186b
+[1/1] regulator: add the sub node names for the MP5496 PMIC
+      commit: bcb3b2a7639db2412875520cddc3abd179068793
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
