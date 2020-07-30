@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2471C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F0BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 999C220829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3255B2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:47:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Btel6k6i"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="SI/T6Qib"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbgG3Bqn (ORCPT
+        id S1728296AbgG3Bqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 21:46:43 -0400
-Received: from crapouillou.net ([89.234.176.41]:45746 "EHLO crapouillou.net"
+        Wed, 29 Jul 2020 21:46:49 -0400
+Received: from crapouillou.net ([89.234.176.41]:46020 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726287AbgG3Bqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 21:46:42 -0400
+        id S1726287AbgG3Bqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 21:46:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
         s=mail; t=1596073594; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=9xEUuTkj78lEWK4O56Tw/kmALvuCP1DLvcLRgltdNFE=;
-        b=Btel6k6ieEyqOpWRjY9NIiHWwMHX5N+ApkW3CzMYSREZaC273j49OqXEht66guiZaEmcsV
-        JENPSd0apS1KAabRFG2askFx1BD9zuJRa4rVS7yzrkSdLMT+VKInizC2FRHYdCq8OtSbpo
-        SwFS8RZD2fg8Q/gzmebNSQ7W2jHEnYA=
+        bh=qh2xEZnWkVZc9Q7R8m4BkAmzplfElpQs19VRo4qFZJo=;
+        b=SI/T6Qibf5RCEzAaDAEEdJIslQPTjG/5uYyvYef6e9j7RZ3poA/5MbPN/9agTpUHNEcoiz
+        aKs8dW888I3xbn2QLiTNVxd7VvW5r1EIHELsRTze6084sCtTYs21txOv4BJtaFOKx+goIx
+        Ud8ANEZZURioKd5SkVR9t/XNknPDNyo=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>
 Cc:     od@zcrc.me, Sam Ravnborg <sam@ravnborg.org>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 1/3] drm/ingenic: ipu: Only restart manually on older SoCs
-Date:   Thu, 30 Jul 2020 03:46:24 +0200
-Message-Id: <20200730014626.83895-2-paul@crapouillou.net>
+Subject: [PATCH 2/3] drm/ingenic: ipu: Remove YUV422 from supported formats on JZ4725B
+Date:   Thu, 30 Jul 2020 03:46:25 +0200
+Message-Id: <20200730014626.83895-3-paul@crapouillou.net>
 In-Reply-To: <20200730014626.83895-1-paul@crapouillou.net>
 References: <20200730014626.83895-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -48,67 +48,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On older SoCs, it is necessary to restart manually the IPU when a frame
-is done processing. Doing so on newer SoCs (JZ4760/70) kinds of work
-too, until the input or output resolutions or the framerate are too
-high.
+When configuring the IPU for packed YUV 4:2:2, depending on the scaling
+ratios given by the source and destination resolutions, it is possible
+to crash the IPU block beyond repair, to the point where a software
+reset of the IP does not fix it. This can happen anytime, in the first
+few frames, or after dozens of minutes. The same crash also happens when
+the IPU is fully controlled by the LCD controller (in that case no HW
+register is written at any moment after startup), which points towards a
+hardware bug.
 
-Make it work properly on newer SoCs by letting the LCD controller
-trigger the IPU frame restart signal.
+Thanksfully multiplanar YUV is not affected.
+
+Until this bug is fixed or worked around, address this issue by removing
+support for YUV 4:2:2 on the IPU of the JZ4725B.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/gpu/drm/ingenic/ingenic-ipu.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/ingenic/ingenic-ipu.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/gpu/drm/ingenic/ingenic-ipu.c b/drivers/gpu/drm/ingenic/ingenic-ipu.c
-index 7a0a8bd865d3..7eae56fa92ea 100644
+index 7eae56fa92ea..f4f0abcd6692 100644
 --- a/drivers/gpu/drm/ingenic/ingenic-ipu.c
 +++ b/drivers/gpu/drm/ingenic/ingenic-ipu.c
-@@ -35,6 +35,7 @@ struct soc_info {
- 	const u32 *formats;
- 	size_t num_formats;
- 	bool has_bicubic;
-+	bool manual_restart;
+@@ -795,10 +795,16 @@ static int ingenic_ipu_remove(struct platform_device *pdev)
+ }
  
- 	void (*set_coefs)(struct ingenic_ipu *ipu, unsigned int reg,
- 			  unsigned int sharpness, bool downscale,
-@@ -645,7 +646,8 @@ static irqreturn_t ingenic_ipu_irq_handler(int irq, void *arg)
- 	unsigned int dummy;
- 
- 	/* dummy read allows CPU to reconfigure IPU */
--	regmap_read(ipu->map, JZ_REG_IPU_STATUS, &dummy);
-+	if (ipu->soc_info->manual_restart)
-+		regmap_read(ipu->map, JZ_REG_IPU_STATUS, &dummy);
- 
- 	/* ACK interrupt */
- 	regmap_write(ipu->map, JZ_REG_IPU_STATUS, 0);
-@@ -656,7 +658,8 @@ static irqreturn_t ingenic_ipu_irq_handler(int irq, void *arg)
- 	regmap_write(ipu->map, JZ_REG_IPU_V_ADDR, ipu->addr_v);
- 
- 	/* Run IPU for the new frame */
--	regmap_set_bits(ipu->map, JZ_REG_IPU_CTRL, JZ_IPU_CTRL_RUN);
-+	if (ipu->soc_info->manual_restart)
-+		regmap_set_bits(ipu->map, JZ_REG_IPU_CTRL, JZ_IPU_CTRL_RUN);
- 
- 	drm_crtc_handle_vblank(crtc);
- 
-@@ -806,6 +809,7 @@ static const struct soc_info jz4725b_soc_info = {
- 	.formats	= jz4725b_ipu_formats,
- 	.num_formats	= ARRAY_SIZE(jz4725b_ipu_formats),
- 	.has_bicubic	= false,
-+	.manual_restart	= true,
- 	.set_coefs	= jz4725b_set_coefs,
- };
- 
-@@ -831,6 +835,7 @@ static const struct soc_info jz4760_soc_info = {
- 	.formats	= jz4760_ipu_formats,
- 	.num_formats	= ARRAY_SIZE(jz4760_ipu_formats),
- 	.has_bicubic	= true,
-+	.manual_restart	= false,
- 	.set_coefs	= jz4760_set_coefs,
- };
- 
+ static const u32 jz4725b_ipu_formats[] = {
++	/*
++	 * While officially supported, packed YUV 4:2:2 formats can cause
++	 * random hardware crashes on JZ4725B, beyond repair, under certain
++	 * circumstances. It seems to happen with some specific resize ratios.
++	 * Until a proper workaround or fix is found, disable these formats.
+ 	DRM_FORMAT_YUYV,
+ 	DRM_FORMAT_YVYU,
+ 	DRM_FORMAT_UYVY,
+ 	DRM_FORMAT_VYUY,
++	*/
+ 	DRM_FORMAT_YUV411,
+ 	DRM_FORMAT_YUV420,
+ 	DRM_FORMAT_YUV422,
 -- 
 2.27.0
 
