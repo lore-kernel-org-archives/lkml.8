@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F02C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA32C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14DE52074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F5CF2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096901;
-	bh=l8iMUhDmxL56ZQClu7OIK41mMOrQdimwaf8E9fVcrz8=;
+	s=default; t=1596096907;
+	bh=3DWxiYd0wuNeQbwCV8FC1RVQySn9TwCsOmu1TqHsW54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XJJULL1iqRlD65E93SXf89GwU/DKZTrmRA4VUBJ5cEL55KKyyy6/oqiOCZbYQ71O9
-	 9lh930fWuaaHfh1QbiuT70urY+qTrbXWWId9jabHD3ZTsU2G4o+62C1Jef9Qg9CsGe
-	 Mp3glNY+gh/viWdDRx02vVUYZBlDn6fc6U+hg7g8=
+	b=1uo1wVOtmKDFVv+bDY3oRKfnM+fvia18H1c6IyH2ycRvsuHKBBt8+iruHqAr0nolG
+	 vh0p3GJ6pJqz35zK4sk0Fxrx6+cujJQV+QvsD2OKio9bSdi6SzOe1Gfb3toZWL104u
+	 GvzAiXJXVhPF1GesPjv/K0rOWczOoA6sJ5vASJtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbgG3IPA (ORCPT
+        id S1730213AbgG3IPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:15:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51436 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:15:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730009AbgG3IMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:12:12 -0400
+        id S1729389AbgG3IMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:12:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E7752070B;
-        Thu, 30 Jul 2020 08:12:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C835620838;
+        Thu, 30 Jul 2020 08:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096731;
-        bh=l8iMUhDmxL56ZQClu7OIK41mMOrQdimwaf8E9fVcrz8=;
+        s=default; t=1596096729;
+        bh=3DWxiYd0wuNeQbwCV8FC1RVQySn9TwCsOmu1TqHsW54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wd4QK8R8mNKVx+ukILqmOq6x8glnCTsQdgbvccDkeO+7wup7peOCYUL5o1YoRkr98
-         ZgXARNtiDlYbF/jEh3I2hVMlDUPFC8ZdlLO01dZAAivbWOc9h2MHrJEnbEmdn8BSE0
-         tFF9SolaBa0RZJj6oobSII4TwXD/Q9CE2K8EKSe0=
+        b=af7n+eIs57tJy3Jxf1V2gsRELsqcX9uFIh7Zt0ooOehzl0ibrwF79g5ifCMYHVUdd
+         lX4JfsB613pnufMD7aUdB401K1JHuSoV3nkTTOWwKPGEkxrhPKUx0JZZ2l4KT7oyGa
+         QMzQwoNzQAfUdMWUufJgRy/Y/ZR+wVbmEl/HPk9s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 08/54] drm/nouveau/i2c/g94-: increase NV_PMGR_DP_AUXCTL_TRANSACTREQ timeout
-Date:   Thu, 30 Jul 2020 10:04:47 +0200
-Message-Id: <20200730074421.619600114@linuxfoundation.org>
+Subject: [PATCH 4.4 07/54] net: sky2: initialize return of gm_phy_read
+Date:   Thu, 30 Jul 2020 10:04:46 +0200
+Message-Id: <20200730074421.574627193@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
 References: <20200730074421.203879987@linuxfoundation.org>
@@ -59,54 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: Tom Rix <trix@redhat.com>
 
-[ Upstream commit 0156e76d388310a490aeb0f2fbb5b284ded3aecc ]
+[ Upstream commit 28b18e4eb515af7c6661c3995c6e3c34412c2874 ]
 
-Tegra TRM says worst-case reply time is 1216us, and this should fix some
-spurious timeouts that have been popping up.
+clang static analysis flags this garbage return
 
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+drivers/net/ethernet/marvell/sky2.c:208:2: warning: Undefined or garbage value returned to caller [core.uninitialized.UndefReturn]
+        return v;
+        ^~~~~~~~
+
+static inline u16 gm_phy_read( ...
+{
+	u16 v;
+	__gm_phy_read(hw, port, reg, &v);
+	return v;
+}
+
+__gm_phy_read can return without setting v.
+
+So handle similar to skge.c's gm_phy_read, initialize v.
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c   | 4 ++--
- drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm204.c | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/marvell/sky2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c
-index 954f5b76bfcf7..d44965f805fe9 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c
-@@ -118,10 +118,10 @@ g94_i2c_aux_xfer(struct nvkm_i2c_aux *obj, bool retry,
- 		if (retries)
- 			udelay(400);
+diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
+index 8ba9eadc20791..3fb9cbdac3bf0 100644
+--- a/drivers/net/ethernet/marvell/sky2.c
++++ b/drivers/net/ethernet/marvell/sky2.c
+@@ -215,7 +215,7 @@ io_error:
  
--		/* transaction request, wait up to 1ms for it to complete */
-+		/* transaction request, wait up to 2ms for it to complete */
- 		nvkm_wr32(device, 0x00e4e4 + base, 0x00010000 | ctrl);
- 
--		timeout = 1000;
-+		timeout = 2000;
- 		do {
- 			ctrl = nvkm_rd32(device, 0x00e4e4 + base);
- 			udelay(1);
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm204.c b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm204.c
-index bed231b56dbd2..7cac8fe372b6b 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm204.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm204.c
-@@ -118,10 +118,10 @@ gm204_i2c_aux_xfer(struct nvkm_i2c_aux *obj, bool retry,
- 		if (retries)
- 			udelay(400);
- 
--		/* transaction request, wait up to 1ms for it to complete */
-+		/* transaction request, wait up to 2ms for it to complete */
- 		nvkm_wr32(device, 0x00d954 + base, 0x00010000 | ctrl);
- 
--		timeout = 1000;
-+		timeout = 2000;
- 		do {
- 			ctrl = nvkm_rd32(device, 0x00d954 + base);
- 			udelay(1);
+ static inline u16 gm_phy_read(struct sky2_hw *hw, unsigned port, u16 reg)
+ {
+-	u16 v;
++	u16 v = 0;
+ 	__gm_phy_read(hw, port, reg, &v);
+ 	return v;
+ }
 -- 
 2.25.1
 
