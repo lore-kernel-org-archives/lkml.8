@@ -2,53 +2,57 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82951C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E966DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CFBF20838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C507A2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:09:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096584;
-	bh=HnEd8weyY2cJzcGqCvbfCZvAam8vR6OcAgYPFgX54Gw=;
+	s=default; t=1596096588;
+	bh=29cjQnjSC+wuvHtG+20VVuSfXqeNY9zwFB/jMOukLSE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uPssKtUB0zKVZpmmlAVG7pe3rg6WnVg3R3PA59XZ3hEbsDlSGxRWD/GddziT5jp8m
-	 vEkS1ZGZzfHQQ+e7d8glpc2M9y6EVXcpQMxZcCJ0FtuuAmuxw0Gv1lJdr6Wi48eKlu
-	 kBQydtmXuBqtxXBopmoAXwSRSAWwSEDeHfTSbxnU=
+	b=F8vEXV2l9obQHbkb8D3xVFNu/KNMHzW7bgNYP6gmMl37dSWQhnw6U3pVROUjYWr4Z
+	 brQvu/yvgZfEFUN7F/iWqL01ApuIhzlFUpf1CTY6lpnGUE6O7/cbcBZUmPmFSJgws4
+	 Oa/c4KODYE6q1TnmW/iFYo5acz4At/0BwqoxII8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729341AbgG3IJe (ORCPT
+        id S1729734AbgG3IJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:09:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47792 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:09:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729624AbgG3IJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:09:18 -0400
+        id S1729714AbgG3IJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:09:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 700DD2083B;
-        Thu, 30 Jul 2020 08:09:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA24E2070B;
+        Thu, 30 Jul 2020 08:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096558;
-        bh=HnEd8weyY2cJzcGqCvbfCZvAam8vR6OcAgYPFgX54Gw=;
+        s=default; t=1596096580;
+        bh=29cjQnjSC+wuvHtG+20VVuSfXqeNY9zwFB/jMOukLSE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HPV4iGnWTpsP65JdjHW4mCRSMAp1HSpW2cBqTgPEG+U0nQVFgv6sPa+0y9Rc8SXZH
-         kgjmJxDJ1+3w2Rp1Yu9T6lqT03nGbCbd3lrq+iiAfHTCTrnPUWtj+PmeOv2Fczjb3O
-         /bcmj5Duhdu1oWY8SEUAPy2WhXq+VIne7HEIQu58=
+        b=zzOsfgxXLOY7dEFB6NUMRubO9Yc+UyuY7ZaYC4eM+GyMNSyymP+YB5ugeyFQHlIv5
+         3WAbNDaTSrW1CliER6txL1Nf0PvJWKHM+SF1syzqb1Tge0XlnCGKFj4LOFC+bWKA6o
+         pLjbuZdaWrowEj/T9n1zdIpLykrf1gnUWEk3Cfh4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 16/61] hippi: Fix a size used in a pci_free_consistent() in an error handling path
-Date:   Thu, 30 Jul 2020 10:04:34 +0200
-Message-Id: <20200730074421.617717391@linuxfoundation.org>
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 42/61] io-mapping: indicate mapping failure
+Date:   Thu, 30 Jul 2020 10:05:00 +0200
+Message-Id: <20200730074422.873157551@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074420.811058810@linuxfoundation.org>
 References: <20200730074420.811058810@linuxfoundation.org>
@@ -61,38 +65,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Michael J. Ruhl <michael.j.ruhl@intel.com>
 
-[ Upstream commit 3195c4706b00106aa82c73acd28340fa8fc2bfc1 ]
+commit e0b3e0b1a04367fc15c07f44e78361545b55357c upstream.
 
-The size used when calling 'pci_alloc_consistent()' and
-'pci_free_consistent()' should match.
+The !ATOMIC_IOMAP version of io_maping_init_wc will always return
+success, even when the ioremap fails.
 
-Fix it and have it consistent with the corresponding call in 'rr_close()'.
+Since the ATOMIC_IOMAP version returns NULL when the init fails, and
+callers check for a NULL return on error this is unexpected.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+During a device probe, where the ioremap failed, a crash can look like
+this:
+
+    BUG: unable to handle page fault for address: 0000000000210000
+     #PF: supervisor write access in kernel mode
+     #PF: error_code(0x0002) - not-present page
+     Oops: 0002 [#1] PREEMPT SMP
+     CPU: 0 PID: 177 Comm:
+     RIP: 0010:fill_page_dma [i915]
+       gen8_ppgtt_create [i915]
+       i915_ppgtt_create [i915]
+       intel_gt_init [i915]
+       i915_gem_init [i915]
+       i915_driver_probe [i915]
+       pci_device_probe
+       really_probe
+       driver_probe_device
+
+The remap failure occurred much earlier in the probe.  If it had been
+propagated, the driver would have exited with an error.
+
+Return NULL on ioremap failure.
+
+[akpm@linux-foundation.org: detect ioremap_wc() errors earlier]
+
+Fixes: cafaf14a5d8f ("io-mapping: Always create a struct to hold metadata about the io-mapping")
+Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200721171936.81563-1-michael.j.ruhl@intel.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/hippi/rrunner.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/io-mapping.h |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/hippi/rrunner.c b/drivers/net/hippi/rrunner.c
-index 313e006f74feb..6f3519123eb66 100644
---- a/drivers/net/hippi/rrunner.c
-+++ b/drivers/net/hippi/rrunner.c
-@@ -1250,7 +1250,7 @@ static int rr_open(struct net_device *dev)
- 		rrpriv->info = NULL;
- 	}
- 	if (rrpriv->rx_ctrl) {
--		pci_free_consistent(pdev, sizeof(struct ring_ctrl),
-+		pci_free_consistent(pdev, 256 * sizeof(struct ring_ctrl),
- 				    rrpriv->rx_ctrl, rrpriv->rx_ctrl_dma);
- 		rrpriv->rx_ctrl = NULL;
- 	}
--- 
-2.25.1
-
+--- a/include/linux/io-mapping.h
++++ b/include/linux/io-mapping.h
+@@ -120,9 +120,12 @@ io_mapping_init_wc(struct io_mapping *io
+ 		   resource_size_t base,
+ 		   unsigned long size)
+ {
++	iomap->iomem = ioremap_wc(base, size);
++	if (!iomap->iomem)
++		return NULL;
++
+ 	iomap->base = base;
+ 	iomap->size = size;
+-	iomap->iomem = ioremap_wc(base, size);
+ #if defined(pgprot_noncached_wc) /* archs can't agree on a name ... */
+ 	iomap->prot = pgprot_noncached_wc(PAGE_KERNEL);
+ #elif defined(pgprot_writecombine)
 
 
