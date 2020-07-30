@@ -2,151 +2,153 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07373C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 633DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E29F521883
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C05421883
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:02:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbgG3WBp (ORCPT
+        id S1728578AbgG3WCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 18:01:45 -0400
-Received: from mga17.intel.com ([192.55.52.151]:20825 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726544AbgG3WBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 18:01:45 -0400
-IronPort-SDR: Hd97d/qInC5mZ4tR8ELyazbVyDYT4FrYtUK15QmQKweRuw2ziMrLstkDHrzsHrZDG2DbyZ6KHZ
- Buzb68Iu7uuQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="131770557"
-X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
-   d="scan'208";a="131770557"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 15:01:44 -0700
-IronPort-SDR: KG5bBtfQ5NYIWnkLXakYe6lEqlSfkszqGP5+7vR7xaJytouSRsMjPtn/ldEsmk8DZk308UE7/U
- eZBSZV2tMA4A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
-   d="scan'208";a="435205691"
-Received: from twinkler-lnx.jer.intel.com ([10.12.91.138])
-  by orsmga004.jf.intel.com with ESMTP; 30 Jul 2020 15:01:41 -0700
-From:   Tomas Winkler <tomas.winkler@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ramalingam C <ramalingam.c@intel.com>, stable@vger.kernel.org
-Subject: [char-misc-next V4] mei: hdcp: fix mei_hdcp_verify_mprime() input parameter
-Date:   Fri, 31 Jul 2020 01:01:39 +0300
-Message-Id: <20200730220139.3642424-1-tomas.winkler@intel.com>
-X-Mailer: git-send-email 2.25.4
+        Thu, 30 Jul 2020 18:02:24 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:41060 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726544AbgG3WCX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 18:02:23 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k1Gcs-004a9H-FX; Thu, 30 Jul 2020 16:02:10 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k1Gcr-000601-6f; Thu, 30 Jul 2020 16:02:10 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Steven Sistare <steven.sistare@oracle.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
+        arnd@arndb.de, keescook@chromium.org, gerg@linux-m68k.org,
+        ktkhai@virtuozzo.com, christian.brauner@ubuntu.com,
+        peterz@infradead.org, esyr@redhat.com, jgg@ziepe.ca,
+        christian@kellner.me, areber@redhat.com, cyphar@cyphar.com
+References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
+        <20200730152250.GG23808@casper.infradead.org>
+        <db3bdbae-eb0f-1ae3-94dd-045e37bc94ba@oracle.com>
+        <20200730171251.GI23808@casper.infradead.org>
+        <63a7404c-e4f6-a82e-257b-217585b0277f@oracle.com>
+        <20200730174956.GK23808@casper.infradead.org>
+        <ab7a25bf-3321-77c8-9bc3-28a223a14032@oracle.com>
+Date:   Thu, 30 Jul 2020 16:58:58 -0500
+In-Reply-To: <ab7a25bf-3321-77c8-9bc3-28a223a14032@oracle.com> (Steven
+        Sistare's message of "Thu, 30 Jul 2020 14:27:21 -0400")
+Message-ID: <87y2n03brx.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1k1Gcr-000601-6f;;;mid=<87y2n03brx.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX196C4Bc9XRPT8Fq7uQRPXVtTpJ1Q6VZOFs=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wired_cmd_repeater_auth_stream_req_in has a variable
-length array at the end. we use struct_size() overflow
-macro to determine the size for the allocation and sending
-size.
-This also fixes bug in case number of streams is > 0 in the original
-submission. This bug was not triggered as the number of streams is
-always one.
+Steven Sistare <steven.sistare@oracle.com> writes:
 
-Fixes: c56967d674e3 (mei: hdcp: Replace one-element array with flexible-array member)
-Fixes: commit 0a1af1b5c18d ("misc/mei/hdcp: Verify M_prime")
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Ramalingam C <ramalingam.c@intel.com>
-Cc: <stable@vger.kernel.org> v5.1+
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
----
-V4:
-1. Fix typo in the subject. (Gustavo)
-2. Fix dereferencing pointer in send. (Gustavo)
-V3:
-1. Fix commit message with more info and another patch it fixes (Gustavo)
-2. Target stable. (Gustavo)
-V2: Check for allocation failure.
+> On 7/30/2020 1:49 PM, Matthew Wilcox wrote:
+>> On Thu, Jul 30, 2020 at 01:35:51PM -0400, Steven Sistare wrote:
+>>> mshare + VA reservation is another possible solution.
+>>>
+>>> Or MADV_DOEXEC alone, which is ready now.  I hope we can get back to reviewing that.
+>> 
+>> We are.  This is the part of the review process where we explore other
+>> solutions to the problem.
+>> 
+>>>>> Also, we need to support updating legacy processes that already created anon segments.
+>>>>> We inject code that calls MADV_DOEXEC for such segments.
+>>>>
+>>>> Yes, I was assuming you'd inject code that called mshare().
+>>>
+>>> OK, mshare works on existing memory and builds a new vma.
+>> 
+>> Actually, reparents an existing VMA, and reuses the existing page tables.
+>> 
+>>>> Actually, since you're injecting code, why do you need the kernel to
+>>>> be involved?  You can mmap the new executable and any libraries it depends
+>>>> upon, set up a new stack and jump to the main() entry point, all without
+>>>> calling exec().  I appreciate it'd be a fair amount of code, but it'd all
+>>>> be in userspace and you can probably steal / reuse code from ld.so (I'm
+>>>> not familiar with the details of how setting up an executable is done).
+>>>
+>>> Duplicating all the work that the kernel and loader do to exec a process would
+>>> be error prone, require ongoing maintenance, and be redundant.  Better to define 
+>>> a small kernel extension and leave exec to the kernel.
+>> 
+>> Either this is a one-off kind of thing, in which case it doesn't need
+>> ongoing maintenance, or it's something with broad applicability, in
+>> which case it can live as its own userspace project.  It could even
+>> start off life as part of qemu and then fork into its own project.
+>
+> exec will be enhanced over time in the kernel.  A separate user space implementation
+> would need to track that.
+>
+> Reimplementing exec in userland would be a big gross mess.  Not a good solution when
+> we have simple and concise ways of solving the problem.
 
- drivers/misc/mei/hdcp/mei_hdcp.c | 40 +++++++++++++++++++-------------
- 1 file changed, 24 insertions(+), 16 deletions(-)
+The interesting work is not done in exec.  The interesting work of
+loading an executable is done in ld.so, and ld.so lives in userspace.
 
-diff --git a/drivers/misc/mei/hdcp/mei_hdcp.c b/drivers/misc/mei/hdcp/mei_hdcp.c
-index d1d3e025ca0e..9ae9669e46ea 100644
---- a/drivers/misc/mei/hdcp/mei_hdcp.c
-+++ b/drivers/misc/mei/hdcp/mei_hdcp.c
-@@ -546,38 +546,46 @@ static int mei_hdcp_verify_mprime(struct device *dev,
- 				  struct hdcp_port_data *data,
- 				  struct hdcp2_rep_stream_ready *stream_ready)
- {
--	struct wired_cmd_repeater_auth_stream_req_in
--					verify_mprime_in = { { 0 } };
-+	struct wired_cmd_repeater_auth_stream_req_in *verify_mprime_in;
- 	struct wired_cmd_repeater_auth_stream_req_out
- 					verify_mprime_out = { { 0 } };
- 	struct mei_cl_device *cldev;
- 	ssize_t byte;
-+	size_t cmd_size;
- 
- 	if (!dev || !stream_ready || !data)
- 		return -EINVAL;
- 
- 	cldev = to_mei_cl_device(dev);
- 
--	verify_mprime_in.header.api_version = HDCP_API_VERSION;
--	verify_mprime_in.header.command_id = WIRED_REPEATER_AUTH_STREAM_REQ;
--	verify_mprime_in.header.status = ME_HDCP_STATUS_SUCCESS;
--	verify_mprime_in.header.buffer_len =
-+	cmd_size = struct_size(verify_mprime_in, streams, data->k);
-+	if (cmd_size == SIZE_MAX)
-+		return -EINVAL;
-+
-+	verify_mprime_in = kzalloc(cmd_size, GFP_KERNEL);
-+	if (!verify_mprime_in)
-+		return -ENOMEM;
-+
-+	verify_mprime_in->header.api_version = HDCP_API_VERSION;
-+	verify_mprime_in->header.command_id = WIRED_REPEATER_AUTH_STREAM_REQ;
-+	verify_mprime_in->header.status = ME_HDCP_STATUS_SUCCESS;
-+	verify_mprime_in->header.buffer_len =
- 			WIRED_CMD_BUF_LEN_REPEATER_AUTH_STREAM_REQ_MIN_IN;
- 
--	verify_mprime_in.port.integrated_port_type = data->port_type;
--	verify_mprime_in.port.physical_port = (u8)data->fw_ddi;
--	verify_mprime_in.port.attached_transcoder = (u8)data->fw_tc;
-+	verify_mprime_in->port.integrated_port_type = data->port_type;
-+	verify_mprime_in->port.physical_port = (u8)data->fw_ddi;
-+	verify_mprime_in->port.attached_transcoder = (u8)data->fw_tc;
-+
-+	memcpy(verify_mprime_in->m_prime, stream_ready->m_prime, HDCP_2_2_MPRIME_LEN);
-+	drm_hdcp_cpu_to_be24(verify_mprime_in->seq_num_m, data->seq_num_m);
- 
--	memcpy(verify_mprime_in.m_prime, stream_ready->m_prime,
--	       HDCP_2_2_MPRIME_LEN);
--	drm_hdcp_cpu_to_be24(verify_mprime_in.seq_num_m, data->seq_num_m);
--	memcpy(verify_mprime_in.streams, data->streams,
-+	memcpy(verify_mprime_in->streams, data->streams,
- 	       array_size(data->k, sizeof(*data->streams)));
- 
--	verify_mprime_in.k = cpu_to_be16(data->k);
-+	verify_mprime_in->k = cpu_to_be16(data->k);
- 
--	byte = mei_cldev_send(cldev, (u8 *)&verify_mprime_in,
--			      sizeof(verify_mprime_in));
-+	byte = mei_cldev_send(cldev, (u8 *)verify_mprime_in, cmd_size);
-+	kfree(verify_mprime_in);
- 	if (byte < 0) {
- 		dev_dbg(dev, "mei_cldev_send failed. %zd\n", byte);
- 		return byte;
--- 
-2.25.4
+>> The idea of tagging an ELF executable to say "I can cope with having
+>> chunks of my address space provided to me by my executor" is ... odd.
+>
+> I don't disagree.  But it is useful.  We already pass a block of data containing
+> environment variables and arguments from one process to the next.  Preserving 
+> additional segments is not a big leap from there.
 
+But we randomize where that block lives.
+
+It has been found to be very useful to have randomization by default and
+you are arguing against that kind of randomization.
+
+
+
+Here is another suggestion.
+
+Have a very simple program that does:
+
+	for (;;) {
+		handle = dlopen("/my/real/program");
+		real_main = dlsym(handle, "main");
+		real_main(argc, argv, envp);
+		dlclose(handle);
+	}
+
+With whatever obvious adjustments are needed to fit your usecase.
+
+That should give the same level of functionality, be portable to all
+unices, and not require you to duplicate code.  It belive it limits you
+to not upgrading libc, or librt but that is a comparatively small
+limitation.
+
+
+Given that in general the interesting work is done in userspace and that
+userspace has provided an interface for reusing that work already.
+I don't see the justification for adding anything to exec at this point.
+
+
+Eric
