@@ -2,120 +2,102 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF4BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AEE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B83092084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7488C22CAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:07:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gI9EGo28"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730426AbgG3VBN (ORCPT
+        id S1730469AbgG3VHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 17:01:13 -0400
-Received: from mga12.intel.com ([192.55.52.136]:13681 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728809AbgG3VBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 17:01:11 -0400
-IronPort-SDR: 7yMrklX/VzB/EgrqbsGlLBsM6V+ap1/WBByFM35lRaR5nZBrXDBhzCKOGe5AoxPR03E0zFDAlI
- JKHmsSfTZ/Kw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="131260075"
-X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
-   d="scan'208";a="131260075"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 14:01:08 -0700
-IronPort-SDR: PbBop5KoWfxIf5o0EeWb6lVbV0rWzkfRTunIt9hrwuf/zZQRSrrXZp+ryETaUUA/WKnwaLh1qp
- 2jvTHGZqeMIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
-   d="scan'208";a="490804902"
-Received: from kyoungil-mobl1.amr.corp.intel.com (HELO ellie) ([10.209.108.110])
-  by fmsmga006.fm.intel.com with ESMTP; 30 Jul 2020 14:01:06 -0700
-From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To:     Eric Dumazet <eric.dumazet@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Cc:     "Zhang\, Qiang" <Qiang.Zhang@windriver.com>,
-        syzbot <syzbot+9f78d5c664a8c33f4cce@syzkaller.appspotmail.com>,
-        "davem\@davemloft.net" <davem@davemloft.net>,
-        "fweisbec\@gmail.com" <fweisbec@gmail.com>,
-        "jhs\@mojatatu.com" <jhs@mojatatu.com>,
-        "jiri\@resnulli.us" <jiri@resnulli.us>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mingo\@kernel.org" <mingo@kernel.org>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
-        "syzkaller-bugs\@googlegroups.com" <syzkaller-bugs@googlegroups.com>,
-        "tglx\@linutronix.de" <tglx@linutronix.de>,
-        "xiyou.wangcong\@gmail.com" <xiyou.wangcong@gmail.com>
-Subject: Re: =?utf-8?B?5Zue5aSNOg==?= INFO: rcu detected stall in
- tc_modify_qdisc
-In-Reply-To: <3fc2ce1b-553a-e6de-776c-7e4d668c6ecb@gmail.com>
-References: <0000000000006f179d05ab8e2cf2@google.com> <BYAPR11MB2632784BE3AD9F03C5C95263FF700@BYAPR11MB2632.namprd11.prod.outlook.com> <87tuxqxhgq.fsf@intel.com> <CACT4Y+ZMvaJMiXikYCm-Xym8ddKDY0n-5=kwH7i2Hu-9uJW1kQ@mail.gmail.com> <87pn8cyk2b.fsf@intel.com> <3fc2ce1b-553a-e6de-776c-7e4d668c6ecb@gmail.com>
-Date:   Thu, 30 Jul 2020 14:01:05 -0700
-Message-ID: <87k0ykyay6.fsf@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Thu, 30 Jul 2020 17:07:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728630AbgG3VHx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 17:07:53 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C47CC061574;
+        Thu, 30 Jul 2020 14:07:53 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z18so22586393wrm.12;
+        Thu, 30 Jul 2020 14:07:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=usQcY9oDo/TU/kpDDIL7ZCIRsakMj2eP/7ZBDv4aLmk=;
+        b=gI9EGo28Fw5DgzGOZG3CRYoUrpJGcJDOFOFxNyiGWQUoEf7/fuR1sRdGJpUKXVcnf2
+         7Aymy2EOe753pjs2b87T43lrfhU6v+7s6ZUiU51yR6MDvSVwwxhrD+whD63mHM6PdI63
+         azm5LoFPSdXKtXYlL3oJ2PvUMbnzxb17ojCyyPaZ/ytIuT4gc2X/EYwiQoDPeRUebGYh
+         /CmZjFEG7XlviH1msN7GgpZ0cVeDQZC/cCSL15Xo5DzUwse/9c7IfwaCD6HuEcCgv9/q
+         Hjpn4jxbnd9Xcx9kZtwwCJZrckjAgvaEE0v3KdLgn3lJaj7v21EV+gDDoNRgJyxHw82/
+         W47Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=usQcY9oDo/TU/kpDDIL7ZCIRsakMj2eP/7ZBDv4aLmk=;
+        b=tpGtkdcULb/hIHkt7WdzmNIAZckjlO3IDdE9G01Ll79w1csUB7OB0+3V4vC+hvCjYv
+         M/iTckwUjKq974U5wnskVK4Vn3QFAc2QGKmJNzyFOmbSpN+YAVft1gPEmADFJ+xIrTab
+         7VTx2wIIWUooYz41mttInvNT9VSTJAT8kLaXqaEDxdyadOKf9nSe0oXnC45Ntr4i8yjx
+         N0VSyqHHjjbSBoUSht86kXwDoge5Zce/h+9r8Y18VBwNLfA/juuQc/lhNEpFIf/cpyjw
+         0Jigea+wkmIlLNOu4XDTYq9qCy+tiP4EJgsnCOKQNXSTWyQCKTA0di+6HYj3jd7VVqse
+         MZsA==
+X-Gm-Message-State: AOAM532rVXlSf2JD/YWNaWG61GvTlhJ7Nr8lxN2e39ZmxLP5YW1tyAcg
+        6ZDO0+gL8AlenXfjbMhyNtAl01tZ
+X-Google-Smtp-Source: ABdhPJwBMoft9EK79eR8HN0ypo2bEGapPKka/0b4F4GLOAi2yG88olq5Pl9gXahi3x5AQw8XhD7hKg==
+X-Received: by 2002:adf:fa4b:: with SMTP id y11mr473551wrr.349.1596143271526;
+        Thu, 30 Jul 2020 14:07:51 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id t17sm10085433wmj.34.2020.07.30.14.07.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 14:07:50 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net] tcp: Export tcp_write_queue_purge()
+Date:   Thu, 30 Jul 2020 14:07:27 -0700
+Message-Id: <20200730210728.2051-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
+After tcp_write_queue_purge() got uninlined with commit ac3f09ba3e49
+("tcp: uninline tcp_write_queue_purge()"), it became no longer possible
+to reference this symbol from kernel modules.
 
-Eric Dumazet <eric.dumazet@gmail.com> writes:
+Fixes: ac3f09ba3e49 ("tcp: uninline tcp_write_queue_purge()")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ net/ipv4/tcp.c | 1 +
+ 1 file changed, 1 insertion(+)
 
->> I admit that I am on the fence on that argument: do not let even root
->> crash the system (the point that my code is crashing the system gives
->> weight to this side) vs. root has great powers, they need to know what
->> they are doing.
->> 
->> The argument that I used to convince myself was: root can easily create
->> a bunch of processes and give them the highest priority and do
->> effectively the same thing as this issue, so I went with a the "they
->> need to know what they are doing side".
->> 
->> A bit more on the specifics here:
->> 
->>   - Using a small interval size, is only a limitation of the taprio
->>   software mode, when using hardware offloads (which I think most users
->>   do), any interval size (supported by the hardware) can be used;
->> 
->>   - Choosing a good lower limit for this seems kind of hard: something
->>   below 1us would never work well, I think, but things 1us < x < 100us
->>   will depend on the hardware/kernel config/system load, and this is the
->>   range includes "useful" values for many systems.
->> 
->> Perhaps a middle ground would be to impose a limit based on the link
->> speed, the interval can never be smaller than the time it takes to send
->> the minimum ethernet frame (for 1G links this would be ~480ns, should be
->> enough to catch most programming mistakes). I am going to add this and
->> see how it looks like.
->> 
->> Sorry for the brain dump :-)
->
->
-> I do not know taprio details, but do you really need a periodic timer
-> ?
-
-As we can control the transmission time of packets, you are right, I
-don't.
-
-Just a bit more detail about the current implementation taprio,
-basically it has a sequence of { Traffic Classes that are open; Interval
-} that repeats cyclicly, it uses an hrtimer to advance the pointer for
-the current element, so during dequeue I can check if a traffic class is
-"open" or "closed".
-
-But again, if I calculate the 'skb->tstamp' of each packet during
-enqueue, I don't need the hrtimer. What we have in the txtime-assisted
-mode is half way there.
-
-I think this is what you had in mind.
-
-
-Cheers,
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 6f0caf9a866d..ea9d296a8380 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -2626,6 +2626,7 @@ void tcp_write_queue_purge(struct sock *sk)
+ 	tcp_sk(sk)->packets_out = 0;
+ 	inet_csk(sk)->icsk_backoff = 0;
+ }
++EXPORT_SYMBOL(tcp_write_queue_purge);
+ 
+ int tcp_disconnect(struct sock *sk, int flags)
+ {
 -- 
-Vinicius
+2.17.1
+
