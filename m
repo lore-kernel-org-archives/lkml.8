@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95816C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A81C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AEC220829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78D3C20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:02:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730760AbgG3XB6 (ORCPT
+        id S1730784AbgG3XCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 19:01:58 -0400
-Received: from mail-bn8nam11olkn2070.outbound.protection.outlook.com ([40.92.20.70]:51041
+        Thu, 30 Jul 2020 19:02:04 -0400
+Received: from mail-bn8nam11olkn2057.outbound.protection.outlook.com ([40.92.20.57]:12065
         "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730722AbgG3XBv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 19:01:51 -0400
+        id S1730759AbgG3XCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 19:02:00 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=As57PK+A8bWbRZXOVwsn83Y7Va1yGuJqJUyySQBUma2iU+qPKTje0YFAQZMdLnvVv7h1rCtKDhvGGiNEoK4cy0pOFMdNW8a89uxUgnhes5wQcQ6J6VcLUNwAjC4dnpUA2nGkVxgPbroMcl0iKZk+nbjuIkULnrtnnqJFhvquqBHRbaYfMIenK5doG3Sw9Lj3qZu0SpY/TOSAGEfiW28JJ7bmYvCgwunc1gseuSeeAeXwWohzTpBXqVvSvC1J544wJmAQlBd9VakEkR85zLYUqzLZKFcsknLs9Z0S2mzWsmt9QQyKrm7CqtIXPu/tk2/RzYV6tYuey2ppkU0n0Fahow==
+ b=NGk32Sw6be5mpPSNM8GYZb+mRoTamhUG6a/00/CL3mvj1X7Eqny+vjppiDJwPmln/81/4bCG0CIT+RqVhym7/lqNA5NuinAsJ4WbraGYNGMSkKq0I0RuFTQpHqqLOvH7kvZctX5TzjzFIgUw4Ayr+pnKASjqi2b8eADS6RfSJh0jGdVLdv4vMVDhpaZUdvd/KYHPT2MgLhHkO9sSXhU/kHElVL6c23a9fXixm2FsqVjy/lEHajRT7DFUQ6QuruWdIuPE9Ootk9AfRFbJFl+94chQH3d20pYBu6F+6yJz/7qHB1cdqZkdsdxByo9v8+1OHwHaN5UnjF1Fprp2MEH3pw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IFwcI1sfhl05Cfxb1Di5AA+LY2hFfLfRai16fbWZX58=;
- b=WnhXwiCxloxr3Sj6eAzsffkVXT6fa7EYNio1ep+p5i2Js0WwPcMnwDg1y5vAN7+uHJDbfSwya2XHxrH3CECiOjKWhVR7GS++2eLPpDKWgmsI3/M/i/Tjj57V7JXbVKUIRgr5MSTxFSbkPE2lZNyhTFqF6hAeDBNfoza90T6xYQXSBsjQE6t7IOy92Zdd9koozWrAFfopg52Ly6mjeSUWtnPZbG4dZT3tKcgfmAq2gm4wX0BoUN9gjvkMedIk8ECTh++LkUjZMHfE+eD8Zf7buGDusFkeV3PKtC+idfQ/JswJwSGD4VwP4WH4U5mTgW7oFKehleLTKiF4qqFDiaxwcg==
+ bh=YzV4jJ26gKp+YoyYh2H7zNySDRn/44W+1lg1EWI3eRs=;
+ b=e+Oqe6RswafIcAZBIBO7w0A7m0ExykNBwWIAOjdYrFllZ9Bmi7b2P1PglmDrjisUFHI9DYFX5GindmhJ2WzAqS1wKxRbaxbJZ4VeXP0u2Uk6JFqhX9Cr31aZkADMwlHFcayioXaeJ3WB2jf0LdDwwQDeG82iL5qdDPeyt17N9IvlTf58lOQyo705SrQuOrIYe7zG3+5TRVhPRGKTMrxASqD1Jk3UTBmCWnHa5KHsL//FPCLJRu+pP7oY2h8xzke2kdsif0o57MiU+2zDGzjpzuaNSWwm2PXKgmTkYE7+roXsvO68JrzEKC2OWgFXh50PfRuJvdaWYnCdWy0UFTIPow==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 Received: from CO1NAM11FT027.eop-nam11.prod.protection.outlook.com
- (2a01:111:e400:3861::50) by
- CO1NAM11HT035.eop-nam11.prod.protection.outlook.com (2a01:111:e400:3861::331)
+ (2a01:111:e400:3861::43) by
+ CO1NAM11HT255.eop-nam11.prod.protection.outlook.com (2a01:111:e400:3861::391)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Thu, 30 Jul
- 2020 23:01:48 +0000
+ 2020 23:01:57 +0000
 Received: from BN6PR04MB0660.namprd04.prod.outlook.com
  (2a01:111:e400:3861::4a) by CO1NAM11FT027.mail.protection.outlook.com
  (2a01:111:e400:3861::224) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20 via Frontend
- Transport; Thu, 30 Jul 2020 23:01:48 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:33A44F6322D0AD2B83F43F8689C76C45CD5E42EA47158C51C25A6059191EF691;UpperCasedChecksum:D0CF47B78F902E1C38966E4DC74BFE8F4A91DB0BB8BB7896936D899EE9099558;SizeAsReceived:7878;Count:49
+ Transport; Thu, 30 Jul 2020 23:01:57 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:90C7DFD20FEE48D4A92D59C9E1AE01C5384C3DC4A9366603477D130A311D71C5;UpperCasedChecksum:F2D0D7A2362F274319A1DBAD0FEF24C064011A265C3A4BA6E4E386A0927F93C8;SizeAsReceived:7875;Count:49
 Received: from BN6PR04MB0660.namprd04.prod.outlook.com
  ([fe80::b9c3:9bff:541d:f383]) by BN6PR04MB0660.namprd04.prod.outlook.com
  ([fe80::b9c3:9bff:541d:f383%9]) with mapi id 15.20.3239.020; Thu, 30 Jul 2020
- 23:01:48 +0000
+ 23:01:57 +0000
 From:   Jonathan Bakker <xc-racer2@live.ca>
 To:     kyungmin.park@samsung.com, s.nawrocki@samsung.com,
         mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
@@ -54,9 +54,9 @@ To:     kyungmin.park@samsung.com, s.nawrocki@samsung.com,
         linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
         Jonathan Bakker <xc-racer2@live.ca>
-Subject: [PATCH v2 03/11] media: exynos4-is: Fix nullptr when no CSIS device present
-Date:   Thu, 30 Jul 2020 16:01:06 -0700
-Message-ID: <BN6PR04MB0660EEE45C82219F3E002013A3710@BN6PR04MB0660.namprd04.prod.outlook.com>
+Subject: [PATCH v2 06/11] media: exynos4-is: Use global num_sensors rather than local index
+Date:   Thu, 30 Jul 2020 16:01:09 -0700
+Message-ID: <BN6PR04MB066025E2D254EF0E5383B7FCA3710@BN6PR04MB0660.namprd04.prod.outlook.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200730230114.8572-1-xc-racer2@live.ca>
 References: <20200730230114.8572-1-xc-racer2@live.ca>
@@ -65,25 +65,25 @@ Content-Type:   text/plain; charset=US-ASCII
 X-ClientProxiedBy: MWHPR07CA0002.namprd07.prod.outlook.com
  (2603:10b6:300:116::12) To BN6PR04MB0660.namprd04.prod.outlook.com
  (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <20200730230114.8572-4-xc-racer2@live.ca>
+X-Microsoft-Original-Message-ID: <20200730230114.8572-7-xc-racer2@live.ca>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR07CA0002.namprd07.prod.outlook.com (2603:10b6:300:116::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Thu, 30 Jul 2020 23:01:45 +0000
+Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR07CA0002.namprd07.prod.outlook.com (2603:10b6:300:116::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Thu, 30 Jul 2020 23:01:54 +0000
 X-Mailer: git-send-email 2.20.1
-X-Microsoft-Original-Message-ID: <20200730230114.8572-4-xc-racer2@live.ca>
-X-TMN:  [5pTyvKD3uOwSfRd6igeVOCvD7KYa5IT+CI7MuP/mmKyP7C5Yjr67Dtg+vwaUTVjB]
+X-Microsoft-Original-Message-ID: <20200730230114.8572-7-xc-racer2@live.ca>
+X-TMN:  [eLa2Rbv6VCJG/Hsz7K+M81GItwGuTbRYFBXedc8GzqsoGD3qo0vzKhexeYG9l+V8]
 X-MS-PublicTrafficType: Email
 X-IncomingHeaderCount: 49
 X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 215fd480-fb37-472c-7bd8-08d834dc898e
-X-MS-TrafficTypeDiagnostic: CO1NAM11HT035:
+X-MS-Office365-Filtering-Correlation-Id: 24082640-ada7-4321-2eab-08d834dc8edb
+X-MS-TrafficTypeDiagnostic: CO1NAM11HT255:
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4AI5RBbwESGuvJDWsrExH7cLCrJWaMivl2C9UZXfNfaN8ltOkAqJSjU0TE7GMz50PfyFHa9DA8cS4bKgC3dkTQZGeDoFMzF9T0kYLZjcvsoyY2Ch8uEEFRwmZEUqXGpHJaGhx+f3RwPPT+oQDDxZD1LGZaCMjekYa1WMwi/isq8crxLwY2MFKdB8WM5prWY0GMtoXmmf3w192JqkUwDixw==
+X-Microsoft-Antispam-Message-Info: LlNiGL7vAMnMC/QLUtVWdmaUobOPeADzz6pTrkmNKfUxxdY1GjZykuKhkgUMABYvzABzw1InrVSjl5EiKh9c1ITN/yfzM7aSJ48tXRj3jmkG2dOwzwcjJFdbjvw8a1Y0u54H+sVvGAbR5+nG6IPAu56h3KVzA1FOHSLQSDBbtVfptHhKHzyIf2CfAf3PrtATL/P+CzRngODaCTPUqC7ZPw==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: 7kb0G2eI5B0JU/fAKFN4PAkfPk25wCftyzpqMxxu01/T/E7LXipeJfk83og3zQqfpz6bYST/9YmdXqlYfTG7AWGqTOWuY2Y//worAX3W83B5TdYrlGQgLaT6KrQor2iSN79wXi55q/hw9dXx6DQS9buYXBENzAJn80roruFYurWkANi/wOsHYzHPEW60ok9ZBUiCAAETc5r2Yw/jU8ot0A==
+X-MS-Exchange-AntiSpam-MessageData: 9A1Jzr8Ik4QXA+tC32j2M0a/+mhO09HjNPICDBL4FLDckfnT1BODCqrU+/Lew7kEE58RPeyO6B6ClvGcX9NO6X45SdfJpEdKR1Tu++GbQig8Z7k3REihh3Jf9jaanH0idPPrYIbe40os3PraAznHREqmx6DhVezCp4/zkkvj0WNa1nUdcubFnJWoAAO9krKrbckTUNLYFc314/OIqVJqnA==
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 215fd480-fb37-472c-7bd8-08d834dc898e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 23:01:48.2189
+X-MS-Exchange-CrossTenant-Network-Message-Id: 24082640-ada7-4321-2eab-08d834dc8edb
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 23:01:57.1361
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -91,59 +91,81 @@ X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT027.eop-nam11.prod.protection.ou
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1NAM11HT035
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1NAM11HT255
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not all devices use the CSIS device, some may use the FIMC directly in
-which case the CSIS device isn't registered.  This leads to a nullptr
-exception when starting the stream as the CSIS device is always
-referenced.  Instead, if getting the CSIS device fails, try getting the
-FIMC directly to check if we are using the subdev API
+Instead of keeping a local copy of how many sensors we've probed
+(which may not even properly represent the number of sensors
+probed if we have a port without a sensor), use the global
+num_sensors counter that has the actual number used.
+
+This will also make it easier to add support for multiple sensors
+being connected to the same port.
 
 Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 ---
 Changes from v1:
-- Added R-b tag
+- New patch
 ---
- drivers/media/platform/exynos4-is/media-dev.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ drivers/media/platform/exynos4-is/media-dev.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
-index 9aaf3b8060d5..5c32abc7251b 100644
+index 5c32abc7251b..70b0a70840cf 100644
 --- a/drivers/media/platform/exynos4-is/media-dev.c
 +++ b/drivers/media/platform/exynos4-is/media-dev.c
-@@ -289,11 +289,26 @@ static int __fimc_pipeline_s_stream(struct exynos_media_pipeline *ep, bool on)
- 		{ IDX_CSIS, IDX_FLITE, IDX_FIMC, IDX_SENSOR, IDX_IS_ISP },
- 	};
- 	struct fimc_pipeline *p = to_fimc_pipeline(ep);
--	struct fimc_md *fmd = entity_to_fimc_mdev(&p->subdevs[IDX_CSIS]->entity);
- 	enum fimc_subdev_index sd_id;
- 	int i, ret = 0;
+@@ -396,9 +396,9 @@ static void fimc_md_pipelines_free(struct fimc_md *fmd)
  
- 	if (p->subdevs[IDX_SENSOR] == NULL) {
-+		struct fimc_md *fmd;
-+		struct v4l2_subdev *sd = p->subdevs[IDX_CSIS];
-+
-+		if (!sd)
-+			sd = p->subdevs[IDX_FIMC];
-+
-+		if (!sd) {
-+			/*
-+			 * If neither CSIS nor FIMC was set up,
-+			 * it's impossible to have any sensors
-+			 */
-+			return -ENODEV;
-+		}
-+
-+		fmd = entity_to_fimc_mdev(&sd->entity);
-+
- 		if (!fmd->user_subdev_api) {
- 			/*
- 			 * Sensor must be already discovered if we
+ /* Parse port node and register as a sub-device any sensor specified there. */
+ static int fimc_md_parse_port_node(struct fimc_md *fmd,
+-				   struct device_node *port,
+-				   unsigned int index)
++				   struct device_node *port)
+ {
++	int index = fmd->num_sensors;
+ 	struct fimc_source_info *pd = &fmd->sensor[index].pdata;
+ 	struct device_node *rem, *ep, *np;
+ 	struct v4l2_fwnode_endpoint endpoint = { .bus_type = 0 };
+@@ -488,7 +488,6 @@ static int fimc_md_register_sensor_entities(struct fimc_md *fmd)
+ 	struct device_node *parent = fmd->pdev->dev.of_node;
+ 	struct device_node *ports = NULL;
+ 	struct device_node *node;
+-	int index = 0;
+ 	int ret;
+ 
+ 	/*
+@@ -515,13 +514,12 @@ static int fimc_md_register_sensor_entities(struct fimc_md *fmd)
+ 		if (!port)
+ 			continue;
+ 
+-		ret = fimc_md_parse_port_node(fmd, port, index);
++		ret = fimc_md_parse_port_node(fmd, port);
+ 		of_node_put(port);
+ 		if (ret < 0) {
+ 			of_node_put(node);
+ 			goto cleanup;
+ 		}
+-		index++;
+ 	}
+ 
+ 	/* Attach sensors listed in the parallel-ports node */
+@@ -530,12 +528,11 @@ static int fimc_md_register_sensor_entities(struct fimc_md *fmd)
+ 		goto rpm_put;
+ 
+ 	for_each_child_of_node(ports, node) {
+-		ret = fimc_md_parse_port_node(fmd, node, index);
++		ret = fimc_md_parse_port_node(fmd, node);
+ 		if (ret < 0) {
+ 			of_node_put(node);
+ 			goto cleanup;
+ 		}
+-		index++;
+ 	}
+ 	of_node_put(ports);
+ 
 -- 
 2.20.1
 
