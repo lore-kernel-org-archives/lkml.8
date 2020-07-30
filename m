@@ -2,90 +2,241 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55C2B206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:06:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XHzwPBVl"
+	by mail.kernel.org (Postfix) with ESMTP id C02A420842
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:07:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729156AbgG3OGb (ORCPT
+        id S1729237AbgG3OHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 10:06:31 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34316 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726581AbgG3OGa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 10:06:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596117989;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mGO4oze85/EJafD3eqbUd1S4qpOJJ5CpzsIVcHhg/wg=;
-        b=XHzwPBVlFbIX3rytZd/aR5SyZxME0ebfmM7ndTSSVUpN2CvwGA4YaChbnrCuoldkszJtkt
-        IUedz8FbKBZ9mrM3O0gQ5KR4GDcVchyaiJ1JMJ2OQws0/KwAJh8uR4OJaIWKkC1+yiyIjA
-        tt8rfVhN0V5WvcSlhcxAzJRev06910A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-135-fRz1uVXDN8aomdZFm9zq4w-1; Thu, 30 Jul 2020 10:06:26 -0400
-X-MC-Unique: fRz1uVXDN8aomdZFm9zq4w-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B4D35100A614;
-        Thu, 30 Jul 2020 14:06:25 +0000 (UTC)
-Received: from treble (ovpn-119-23.rdu2.redhat.com [10.10.119.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 09C181992D;
-        Thu, 30 Jul 2020 14:06:24 +0000 (UTC)
-Date:   Thu, 30 Jul 2020 09:06:23 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Julien Thierry <jthierry@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mhelsley@vmware.com, mbenes@suse.cz
-Subject: Re: [PATCH v3 0/4] Remove dependency of check subcmd upon orc
-Message-ID: <20200730140623.5aw7lm57j7qof5pm@treble>
-References: <20200730094143.27494-1-jthierry@redhat.com>
+        Thu, 30 Jul 2020 10:07:14 -0400
+Received: from relay.sw.ru ([185.231.240.75]:60808 "EHLO relay3.sw.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726581AbgG3OHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 10:07:14 -0400
+Received: from [192.168.15.64]
+        by relay3.sw.ru with esmtp (Exim 4.93)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1k19Cu-00048F-94; Thu, 30 Jul 2020 17:06:52 +0300
+Subject: Re: [PATCH 01/23] ns: Add common refcount into ns_common add use it
+ as counter for net_ns
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        akpm@linux-foundation.org
+Cc:     viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
+        ebiederm@xmission.com, areber@redhat.com, serge@hallyn.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
+ <159611036589.535980.1765795847221907147.stgit@localhost.localdomain>
+ <20200730133526.4lhkmlamgxjdssip@wittgenstein>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <7d30f8ec-d0b7-3bae-942f-49e2f8f233e9@virtuozzo.com>
+Date:   Thu, 30 Jul 2020 17:07:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200730133526.4lhkmlamgxjdssip@wittgenstein>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200730094143.27494-1-jthierry@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 10:41:39AM +0100, Julien Thierry wrote:
-> Hi,
+On 30.07.2020 16:35, Christian Brauner wrote:
+> On Thu, Jul 30, 2020 at 02:59:25PM +0300, Kirill Tkhai wrote:
+>> Currently, every type of namespaces has its own counter,
+>> which is stored in ns-specific part. Say, @net has
+>> struct net::count, @pid has struct pid_namespace::kref, etc.
+>>
+>> This patchset introduces unified counter for all types
+>> of namespaces, and converts net namespace to use it first.
+>>
+>> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+>> ---
 > 
-> Matt Helsley's change[1] provided a base framework to opt-in/out
-> objtool subcommands at compile time. This makes it easier for
-> architectures to port objtool, one subcommand at a time.
-> 
-> Orc generation relies on the check operation implementation. However,
-> the way this is done causes the check implementation to depend on the
-> implementation of orc generation functions to call if orc generation is
-> requested. This means that in order to implement check subcmd, orc
-> subcmd also need to be implemented.
-> 
-> These patches aim at removing that dependency, having orc subcmd
-> being built on top of the check subcmd.
-> 
-> 
-> Changes since v2 [2]:
-> - Rebased on recent tip/objtool/core
+> Any reason the refcount changes need to be tied to the procfs changes?
+> Seems that should be a separate cleanup patchset which we can take
+> independent of procfs changes.
 
-tip/objtool/core is slightly outdated, I got a conflict with patch 1.
+Yes, patches [1-8] are cleanup, it may go separately. 
 
-I guess linus/master would be best.
+For me there is no a problem to resend them also as a separate patchset,
+say at v2, or if there is a change in 1-8, but I'm afraid to bomb mailboxes.
 
--- 
-Josh
+If there is no a request for rework in 1-8, can they be picked directly from here?
+
+>>  include/linux/ns_common.h     |    1 +
+>>  include/net/net_namespace.h   |   11 ++++-------
+>>  net/core/net-sysfs.c          |    6 +++---
+>>  net/core/net_namespace.c      |    6 +++---
+>>  net/ipv4/inet_timewait_sock.c |    4 ++--
+>>  net/ipv4/tcp_metrics.c        |    2 +-
+>>  6 files changed, 14 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/include/linux/ns_common.h b/include/linux/ns_common.h
+>> index 5fbc4000358f..27db02ebdf36 100644
+>> --- a/include/linux/ns_common.h
+>> +++ b/include/linux/ns_common.h
+>> @@ -8,6 +8,7 @@ struct ns_common {
+>>  	atomic_long_t stashed;
+>>  	const struct proc_ns_operations *ops;
+>>  	unsigned int inum;
+>> +	refcount_t count;
+>>  };
+>>  
+>>  #endif
+>> diff --git a/include/net/net_namespace.h b/include/net/net_namespace.h
+>> index 2ee5901bec7a..cb4b33d7834b 100644
+>> --- a/include/net/net_namespace.h
+>> +++ b/include/net/net_namespace.h
+>> @@ -60,9 +60,6 @@ struct net {
+>>  	refcount_t		passive;	/* To decide when the network
+>>  						 * namespace should be freed.
+>>  						 */
+>> -	refcount_t		count;		/* To decided when the network
+>> -						 *  namespace should be shut down.
+>> -						 */
+>>  	spinlock_t		rules_mod_lock;
+>>  
+>>  	unsigned int		dev_unreg_count;
+>> @@ -245,7 +242,7 @@ void __put_net(struct net *net);
+>>  
+>>  static inline struct net *get_net(struct net *net)
+>>  {
+>> -	refcount_inc(&net->count);
+>> +	refcount_inc(&net->ns.count);
+>>  	return net;
+>>  }
+>>  
+>> @@ -256,14 +253,14 @@ static inline struct net *maybe_get_net(struct net *net)
+>>  	 * exists.  If the reference count is zero this
+>>  	 * function fails and returns NULL.
+>>  	 */
+>> -	if (!refcount_inc_not_zero(&net->count))
+>> +	if (!refcount_inc_not_zero(&net->ns.count))
+>>  		net = NULL;
+>>  	return net;
+>>  }
+>>  
+>>  static inline void put_net(struct net *net)
+>>  {
+>> -	if (refcount_dec_and_test(&net->count))
+>> +	if (refcount_dec_and_test(&net->ns.count))
+>>  		__put_net(net);
+>>  }
+>>  
+>> @@ -275,7 +272,7 @@ int net_eq(const struct net *net1, const struct net *net2)
+>>  
+>>  static inline int check_net(const struct net *net)
+>>  {
+>> -	return refcount_read(&net->count) != 0;
+>> +	return refcount_read(&net->ns.count) != 0;
+>>  }
+>>  
+>>  void net_drop_ns(void *);
+>> diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+>> index 9de33b594ff2..655a88b0071c 100644
+>> --- a/net/core/net-sysfs.c
+>> +++ b/net/core/net-sysfs.c
+>> @@ -1025,7 +1025,7 @@ net_rx_queue_update_kobjects(struct net_device *dev, int old_num, int new_num)
+>>  	while (--i >= new_num) {
+>>  		struct kobject *kobj = &dev->_rx[i].kobj;
+>>  
+>> -		if (!refcount_read(&dev_net(dev)->count))
+>> +		if (!refcount_read(&dev_net(dev)->ns.count))
+>>  			kobj->uevent_suppress = 1;
+>>  		if (dev->sysfs_rx_queue_group)
+>>  			sysfs_remove_group(kobj, dev->sysfs_rx_queue_group);
+>> @@ -1603,7 +1603,7 @@ netdev_queue_update_kobjects(struct net_device *dev, int old_num, int new_num)
+>>  	while (--i >= new_num) {
+>>  		struct netdev_queue *queue = dev->_tx + i;
+>>  
+>> -		if (!refcount_read(&dev_net(dev)->count))
+>> +		if (!refcount_read(&dev_net(dev)->ns.count))
+>>  			queue->kobj.uevent_suppress = 1;
+>>  #ifdef CONFIG_BQL
+>>  		sysfs_remove_group(&queue->kobj, &dql_group);
+>> @@ -1850,7 +1850,7 @@ void netdev_unregister_kobject(struct net_device *ndev)
+>>  {
+>>  	struct device *dev = &ndev->dev;
+>>  
+>> -	if (!refcount_read(&dev_net(ndev)->count))
+>> +	if (!refcount_read(&dev_net(ndev)->ns.count))
+>>  		dev_set_uevent_suppress(dev, 1);
+>>  
+>>  	kobject_get(&dev->kobj);
+>> diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+>> index dcd61aca343e..5f658cbedd34 100644
+>> --- a/net/core/net_namespace.c
+>> +++ b/net/core/net_namespace.c
+>> @@ -44,7 +44,7 @@ static struct key_tag init_net_key_domain = { .usage = REFCOUNT_INIT(1) };
+>>  #endif
+>>  
+>>  struct net init_net = {
+>> -	.count		= REFCOUNT_INIT(1),
+>> +	.ns.count	= REFCOUNT_INIT(1),
+>>  	.dev_base_head	= LIST_HEAD_INIT(init_net.dev_base_head),
+>>  #ifdef CONFIG_KEYS
+>>  	.key_domain	= &init_net_key_domain,
+>> @@ -248,7 +248,7 @@ int peernet2id_alloc(struct net *net, struct net *peer, gfp_t gfp)
+>>  {
+>>  	int id;
+>>  
+>> -	if (refcount_read(&net->count) == 0)
+>> +	if (refcount_read(&net->ns.count) == 0)
+>>  		return NETNSA_NSID_NOT_ASSIGNED;
+>>  
+>>  	spin_lock(&net->nsid_lock);
+>> @@ -328,7 +328,7 @@ static __net_init int setup_net(struct net *net, struct user_namespace *user_ns)
+>>  	int error = 0;
+>>  	LIST_HEAD(net_exit_list);
+>>  
+>> -	refcount_set(&net->count, 1);
+>> +	refcount_set(&net->ns.count, 1);
+>>  	refcount_set(&net->passive, 1);
+>>  	get_random_bytes(&net->hash_mix, sizeof(u32));
+>>  	net->dev_base_seq = 1;
+>> diff --git a/net/ipv4/inet_timewait_sock.c b/net/ipv4/inet_timewait_sock.c
+>> index c411c87ae865..437afe392e66 100644
+>> --- a/net/ipv4/inet_timewait_sock.c
+>> +++ b/net/ipv4/inet_timewait_sock.c
+>> @@ -272,14 +272,14 @@ void inet_twsk_purge(struct inet_hashinfo *hashinfo, int family)
+>>  				continue;
+>>  			tw = inet_twsk(sk);
+>>  			if ((tw->tw_family != family) ||
+>> -				refcount_read(&twsk_net(tw)->count))
+>> +				refcount_read(&twsk_net(tw)->ns.count))
+>>  				continue;
+>>  
+>>  			if (unlikely(!refcount_inc_not_zero(&tw->tw_refcnt)))
+>>  				continue;
+>>  
+>>  			if (unlikely((tw->tw_family != family) ||
+>> -				     refcount_read(&twsk_net(tw)->count))) {
+>> +				     refcount_read(&twsk_net(tw)->ns.count))) {
+>>  				inet_twsk_put(tw);
+>>  				goto restart;
+>>  			}
+>> diff --git a/net/ipv4/tcp_metrics.c b/net/ipv4/tcp_metrics.c
+>> index 279db8822439..39710c417565 100644
+>> --- a/net/ipv4/tcp_metrics.c
+>> +++ b/net/ipv4/tcp_metrics.c
+>> @@ -887,7 +887,7 @@ static void tcp_metrics_flush_all(struct net *net)
+>>  		pp = &hb->chain;
+>>  		for (tm = deref_locked(*pp); tm; tm = deref_locked(*pp)) {
+>>  			match = net ? net_eq(tm_net(tm), net) :
+>> -				!refcount_read(&tm_net(tm)->count);
+>> +				!refcount_read(&tm_net(tm)->ns.count);
+>>  			if (match) {
+>>  				*pp = tm->tcpm_next;
+>>  				kfree_rcu(tm, rcu_head);
+>>
+>>
 
