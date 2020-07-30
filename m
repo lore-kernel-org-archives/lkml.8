@@ -2,235 +2,156 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8296CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 02:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A266C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 02:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 622A122CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 02:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C3C20FC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 02:11:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="njXcN5fN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbgG3CHd (ORCPT
+        id S1728325AbgG3CLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 22:07:33 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:57312 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726194AbgG3CHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 22:07:33 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1AB8320114A;
-        Thu, 30 Jul 2020 04:07:31 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CEFA6201144;
-        Thu, 30 Jul 2020 04:07:26 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 78DA040302;
-        Thu, 30 Jul 2020 04:07:21 +0200 (CEST)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     wim@linux-watchdog.org, linux@roeck-us.net, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V3 1/2] watchdog: imx7ulp: Strictly follow the sequence for wdog operations
-Date:   Thu, 30 Jul 2020 10:03:10 +0800
-Message-Id: <1596074591-4207-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 29 Jul 2020 22:11:07 -0400
+Received: from mail-eopbgr20078.outbound.protection.outlook.com ([40.107.2.78]:40007
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726194AbgG3CLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 22:11:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SFjHOEn1eiVQ6stD+fOScQVgor2BUAYb/UOUNNnNYtQ1B8E0REa5dE8QIFxgq3T1LGgJ8VKO8sptCgYqdE7cHdmAuiPUh5oQSO84PZSFWjDis4tmrDnFglww0i8ZjFmMraKPpq5Hid83YC/RlRO+dAoNVUh7iiLpH94xTpHue+VR20cDKrkvB7LvANaqXQSwGUmHVmWqvJ/O/cEANq9ylLMjPxs5E44ZNQnBT9TvdWDuWVIBU8H1MJX9aFKHNgiAXX3rbIIdEOS05vA0kqFL+Hyl0VAF5V7uTAn/v44tlx6Re58HCxtzeR7K6zCJBf47uuGtgUlFkeymVhVa2D8cbw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AjP2R74ysHN7bzpaUOqEFLOb6gF5vOgnoxVvLWCgTf8=;
+ b=EDrYqw8yjA7+J6VAefP4lwMOWZMQNGNVP578apX9IpanHocyMeGl9Ye6gfd5L/lUBdwcJveDVgSLWwID+ZvKCx3g2JKa/JaO936mTn4LNKP/uNce6qcsnGwhPXB9JaFObZGydsOTG8uZ0tsOSn9yYaahXoGqqF5pxOO6tMNgPK7y8lapkio/4UHJ5kL7YhISHtIbfLmbCqWBeWLsCeZnbSZsJVkGBlaD9JSVP87G3V6fQO5pWK94hrJC2RbxKxxT5eGjtlqBtnr+51hrmElLFQ9EbVdqM/4DV59HrHO1LVKLKPMRmArBLZlUuUI7iR2qgJ38oZf72VgmKzbGkICf/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AjP2R74ysHN7bzpaUOqEFLOb6gF5vOgnoxVvLWCgTf8=;
+ b=njXcN5fNKjUeuzwwAgtcpBUuYgu6ZeJzN19EOsA3If3tSz38KPqcaTKU8aGazPN6IDqj7u9mud1kQWDxAIYWx8fBhdq7BxKX2w0gIVypwWRnC+dQJ5BkLMnahPrw1KY0fkOmTc+Lj5WJmFm5AP1rQMyzTu94LDSLlrUrWrVoWtw=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DB7PR04MB4939.eurprd04.prod.outlook.com (2603:10a6:10:20::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Thu, 30 Jul
+ 2020 02:11:02 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::49f8:20ce:cf20:80b3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::49f8:20ce:cf20:80b3%6]) with mapi id 15.20.3216.034; Thu, 30 Jul 2020
+ 02:11:02 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh@kernel.org>
+CC:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>, Vinod <vkoul@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Thierry Reding <treding@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        Dilip Kota <eswara.kota@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V3 3/3] pci: imx: Select RESET_IMX7 by default
+Thread-Topic: [PATCH V3 3/3] pci: imx: Select RESET_IMX7 by default
+Thread-Index: AQHWXqG4Y4oLO+dW6EKGCbyaa2afQ6keu+gAgAAGD4CAAK2XAA==
+Date:   Thu, 30 Jul 2020 02:11:02 +0000
+Message-ID: <DB3PR0402MB391605E5B4F5E03F1E27B67DF5710@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1595254921-26050-1-git-send-email-Anson.Huang@nxp.com>
+         <1595254921-26050-3-git-send-email-Anson.Huang@nxp.com>
+         <CAL_JsqLXGduym51-Ej8Td4yOyP-UfGP-WCh2xeP_V90Yabm4XA@mail.gmail.com>
+ <0cdecff564215de6711ca04e063fa696a160fad9.camel@pengutronix.de>
+In-Reply-To: <0cdecff564215de6711ca04e063fa696a160fad9.camel@pengutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 750b55df-b644-4e95-8d66-08d8342dcf1a
+x-ms-traffictypediagnostic: DB7PR04MB4939:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB4939A70D5C51DFBC51663BB2F5710@DB7PR04MB4939.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: NjyaU5K0E8VPtkyI5A/tVZi6mbF5ujIGJfvc3On4n195R6WZjJCn7XIROsmjSuKOiUYxHfZmXPsK8omNZW0o1QdWh78lt9rSjuezVr6JKKZ5VmJizMVrkj9H3eUHUxrWQMlIIBMVrKXjd6BMGkdLOSgKuPgpwjdPa7t3SpKYrZJQ5ZLyW670f9/DajLRJcNMLuGiexprARgjxZIANwzROJff8rZeFPG7KEzIKhQklzMUlrIVZZ9cXJ3E5jV1x5f7i67phKvZm4/zKMgDJgKbKM+07XUm4wgu2Si24hQ+o9DJehcqTRuoPhwtW+WfP/AmnJc5GOpqdqWQfXbvrZZgaA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(346002)(396003)(366004)(376002)(9686003)(86362001)(110136005)(7416002)(55016002)(53546011)(6506007)(33656002)(71200400001)(316002)(2906002)(44832011)(54906003)(64756008)(66556008)(66476007)(66446008)(52536014)(83380400001)(7696005)(66946007)(76116006)(478600001)(4326008)(186003)(8936002)(8676002)(5660300002)(26005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: Br6e/hGJVVHF8G89eulbS5I+KoyHmp1Hzi/jkR81usWH6m/kKkrjNBCr8K0qU6Ma+wuikCm37oCWR2oucwpGlPNYw+wYlUxxSbsFh2LY9zGtqVoEeFgU+zgv95DxlHhgo6KJaXD7QvgmIkF0WK2yVj9lj1l4iuGA/bDqpWlN9P13LsSn6J6d4SOBefXZMtH/tu5uRgZBsV2Zs6AwhPBtPYfoZLaaI05nO+q39mtcVcc5Nn3Tah/tiWugf9Ysopd31R8i1R6zR/06a4DKQu9gkvhYZdUlQ4R7MytfHiDbaMcUpZOXV/edjP9JYIhVuoGyOo7pVckeseH99KRmr8TjmW7Q2+w5D4KWacuvw7uuomD29Tc6eJX42ljMIJZOku6qecdBYb3G4X0LoR08PLm4YX8YPX6pqV9gELMajTGvz6wyBZvNeEzliDkGPM9vSBQ3d+H5qVsMxzxllIkJKd0lfqG5AD3ClXaKgu0yBJghsISqFRTSrDpkEP8Bw0P+1ElB
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 750b55df-b644-4e95-8d66-08d8342dcf1a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2020 02:11:02.3453
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tpqmY6NwmWNEyMDk5x/MjOJLvD0BBx1BP9QRI/3Ml6kK6o1D1XJfkIjY7O3n/I6+qEQI61DPlp23t5JpfVrqtg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4939
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to reference manual, the i.MX7ULP WDOG's operations except
-refresh should follow below sequence:
-
-1. disable global interrupts;
-2. unlock the wdog and wait unlock bit set;
-3. reconfigure the wdog and wait for reconfiguration bit set;
-4. enabel global interrupts.
-
-Strictly follow the recommended sequence can make it more robust.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-changes since V2:
-	- change the wait timeout to 20us according to experiment;
-	- drop WARN_ON when timeout, and check its return value in each caller for
-	  unlock wait, no need to handle the return value for reconfiguration.
----
- drivers/watchdog/imx7ulp_wdt.c | 74 ++++++++++++++++++++++++++++++++++--------
- 1 file changed, 61 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/watchdog/imx7ulp_wdt.c b/drivers/watchdog/imx7ulp_wdt.c
-index 7993c8c..010ddd1 100644
---- a/drivers/watchdog/imx7ulp_wdt.c
-+++ b/drivers/watchdog/imx7ulp_wdt.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/clk.h>
- #include <linux/io.h>
-+#include <linux/iopoll.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/of.h>
-@@ -36,6 +37,7 @@
- #define DEFAULT_TIMEOUT	60
- #define MAX_TIMEOUT	128
- #define WDOG_CLOCK_RATE	1000
-+#define WDOG_WAIT_TIMEOUT	20
- 
- static bool nowayout = WATCHDOG_NOWAYOUT;
- module_param(nowayout, bool, 0000);
-@@ -48,17 +50,40 @@ struct imx7ulp_wdt_device {
- 	struct clk *clk;
- };
- 
--static void imx7ulp_wdt_enable(struct watchdog_device *wdog, bool enable)
-+static int imx7ulp_wdt_wait(void __iomem *base, u32 mask)
-+{
-+	u32 val = readl(base + WDOG_CS);
-+
-+	if (!(val & mask) && readl_poll_timeout_atomic(base + WDOG_CS, val,
-+						       val & mask, 0,
-+						       WDOG_WAIT_TIMEOUT))
-+		return -ETIMEDOUT;
-+
-+	return 0;
-+}
-+
-+static int imx7ulp_wdt_enable(struct watchdog_device *wdog, bool enable)
- {
- 	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
- 
- 	u32 val = readl(wdt->base + WDOG_CS);
-+	int ret;
- 
-+	local_irq_disable();
- 	writel(UNLOCK, wdt->base + WDOG_CNT);
-+	ret = imx7ulp_wdt_wait(wdt->base, WDOG_CS_ULK);
-+	if (ret)
-+		goto enable_out;
- 	if (enable)
- 		writel(val | WDOG_CS_EN, wdt->base + WDOG_CS);
- 	else
- 		writel(val & ~WDOG_CS_EN, wdt->base + WDOG_CS);
-+	imx7ulp_wdt_wait(wdt->base, WDOG_CS_RCS);
-+
-+enable_out:
-+	local_irq_enable();
-+
-+	return ret;
- }
- 
- static bool imx7ulp_wdt_is_enabled(void __iomem *base)
-@@ -79,17 +104,12 @@ static int imx7ulp_wdt_ping(struct watchdog_device *wdog)
- 
- static int imx7ulp_wdt_start(struct watchdog_device *wdog)
- {
--
--	imx7ulp_wdt_enable(wdog, true);
--
--	return 0;
-+	return imx7ulp_wdt_enable(wdog, true);
- }
- 
- static int imx7ulp_wdt_stop(struct watchdog_device *wdog)
- {
--	imx7ulp_wdt_enable(wdog, false);
--
--	return 0;
-+	return imx7ulp_wdt_enable(wdog, false);
- }
- 
- static int imx7ulp_wdt_set_timeout(struct watchdog_device *wdog,
-@@ -97,22 +117,37 @@ static int imx7ulp_wdt_set_timeout(struct watchdog_device *wdog,
- {
- 	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
- 	u32 val = WDOG_CLOCK_RATE * timeout;
-+	int ret;
- 
-+	local_irq_disable();
- 	writel(UNLOCK, wdt->base + WDOG_CNT);
-+	ret = imx7ulp_wdt_wait(wdt->base, WDOG_CS_ULK);
-+	if (ret)
-+		goto timeout_out;
- 	writel(val, wdt->base + WDOG_TOVAL);
-+	imx7ulp_wdt_wait(wdt->base, WDOG_CS_RCS);
-+
-+timeout_out:
-+	local_irq_enable();
- 
- 	wdog->timeout = timeout;
- 
--	return 0;
-+	return ret;
- }
- 
- static int imx7ulp_wdt_restart(struct watchdog_device *wdog,
- 			       unsigned long action, void *data)
- {
- 	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
-+	int ret;
-+
-+	ret = imx7ulp_wdt_enable(wdog, true);
-+	if (ret)
-+		return ret;
- 
--	imx7ulp_wdt_enable(wdog, true);
--	imx7ulp_wdt_set_timeout(&wdt->wdd, 1);
-+	ret = imx7ulp_wdt_set_timeout(&wdt->wdd, 1);
-+	if (ret)
-+		return ret;
- 
- 	/* wait for wdog to fire */
- 	while (true)
-@@ -136,19 +171,30 @@ static const struct watchdog_info imx7ulp_wdt_info = {
- 		    WDIOF_MAGICCLOSE,
- };
- 
--static void imx7ulp_wdt_init(void __iomem *base, unsigned int timeout)
-+static int imx7ulp_wdt_init(void __iomem *base, unsigned int timeout)
- {
- 	u32 val;
-+	int ret;
- 
-+	local_irq_disable();
- 	/* unlock the wdog for reconfiguration */
- 	writel_relaxed(UNLOCK_SEQ0, base + WDOG_CNT);
- 	writel_relaxed(UNLOCK_SEQ1, base + WDOG_CNT);
-+	ret = imx7ulp_wdt_wait(base, WDOG_CS_ULK);
-+	if (ret)
-+		goto init_out;
- 
- 	/* set an initial timeout value in TOVAL */
- 	writel(timeout, base + WDOG_TOVAL);
- 	/* enable 32bit command sequence and reconfigure */
- 	val = WDOG_CS_CMD32EN | WDOG_CS_CLK | WDOG_CS_UPDATE;
- 	writel(val, base + WDOG_CS);
-+	imx7ulp_wdt_wait(base, WDOG_CS_RCS);
-+
-+init_out:
-+	local_irq_enable();
-+
-+	return ret;
- }
- 
- static void imx7ulp_wdt_action(void *data)
-@@ -199,7 +245,9 @@ static int imx7ulp_wdt_probe(struct platform_device *pdev)
- 	watchdog_stop_on_reboot(wdog);
- 	watchdog_stop_on_unregister(wdog);
- 	watchdog_set_drvdata(wdog, imx7ulp_wdt);
--	imx7ulp_wdt_init(imx7ulp_wdt->base, wdog->timeout * WDOG_CLOCK_RATE);
-+	ret = imx7ulp_wdt_init(imx7ulp_wdt->base, wdog->timeout * WDOG_CLOCK_RATE);
-+	if (ret)
-+		return ret;
- 
- 	return devm_watchdog_register_device(dev, wdog);
- }
--- 
-2.7.4
-
+SGksIFBoaWxpcHAvUm9iDQoNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFYzIDMvM10gcGNpOiBp
+bXg6IFNlbGVjdCBSRVNFVF9JTVg3IGJ5IGRlZmF1bHQNCj4gDQo+IE9uIFdlZCwgMjAyMC0wNy0y
+OSBhdCAwOToyNiAtMDYwMCwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+ID4gT24gTW9uLCBKdWwgMjAs
+IDIwMjAgYXQgODoyNiBBTSBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gd3Jv
+dGU6DQo+ID4gPiBpLk1YNyByZXNldCBkcml2ZXIgbm93IHN1cHBvcnRzIG1vZHVsZSBidWlsZCBh
+bmQgaXQgaXMgbm8gbG9uZ2VyDQo+ID4gPiBidWlsdCBpbiBieSBkZWZhdWx0LCBzbyBpLk1YIFBD
+SSBkcml2ZXIgbmVlZHMgdG8gc2VsZWN0IGl0DQo+ID4gPiBleHBsaWNpdGx5IGR1ZSB0byBpdCBp
+cyBOT1Qgc3VwcG9ydGluZyBsb2FkYWJsZSBtb2R1bGUgY3VycmVudGx5Lg0KPiA+ID4NCj4gPiA+
+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+ID4g
+LS0tDQo+ID4gPiBObyBjaGFuZ2UuDQo+ID4gPiAtLS0NCj4gPiA+ICBkcml2ZXJzL3BjaS9jb250
+cm9sbGVyL2R3Yy9LY29uZmlnIHwgMSArDQo+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0
+aW9uKCspDQo+ID4gPg0KPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
+ZHdjL0tjb25maWcNCj4gPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvS2NvbmZpZw0K
+PiA+ID4gaW5kZXggMDQ0YTM3Ni4uYmNmNjNjZSAxMDA2NDQNCj4gPiA+IC0tLSBhL2RyaXZlcnMv
+cGNpL2NvbnRyb2xsZXIvZHdjL0tjb25maWcNCj4gPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRy
+b2xsZXIvZHdjL0tjb25maWcNCj4gPiA+IEBAIC05MCw2ICs5MCw3IEBAIGNvbmZpZyBQQ0lfRVhZ
+Tk9TDQo+ID4gPg0KPiA+ID4gIGNvbmZpZyBQQ0lfSU1YNg0KPiA+ID4gICAgICAgICBib29sICJG
+cmVlc2NhbGUgaS5NWDYvNy84IFBDSWUgY29udHJvbGxlciINCj4gPiA+ICsgICAgICAgc2VsZWN0
+IFJFU0VUX0lNWDcNCj4gPg0KPiA+IFRoaXMgd2lsbCBicmVhayBhcyBzZWxlY3Qgd2lsbCBub3Qg
+Y2F1c2UgYWxsIG9mIFJFU0VUX0lNWDcncw0KPiA+IGRlcGVuZGVuY2llcyB0byBiZSBtZXQuIEl0
+IGFsc28gZG9lc24ndCBzY2FsZS4gQXJlIHlvdSBnb2luZyB0byBkbyB0aGUNCj4gPiBzYW1lIHRo
+aW5nIGZvciBjbG9ja3MsIHBpbmN0cmwsIGdwaW8sIGV0Yy4/DQo+ID4NCj4gPiBZb3Ugc2hvdWxk
+IG1ha2UgdGhlIFBDSSBkcml2ZXIgd29yayBhcyBhIG1vZHVsZS4NCj4gDQo+IE9oLCBhbHNvIFBD
+SV9JTVg2IGlzIHVzZWQgb24gKHN1cnByaXNlKSBpLk1YNiwgd2hpY2ggZG9lc24ndCBuZWVkDQo+
+IFJFU0VUX0lNWDcgYXQgYWxsLg0KPiANCj4gSG93IGFib3V0IGhpZGluZyB0aGUgUkVTRVRfSU1Y
+NyBvcHRpb24gYW5kIHNldHRpbmcgaXQgZGVmYXVsdCB5IGlmDQo+IFBDSV9JTVg2IGlzIGVuYWJs
+ZWQsIGFzIGFuIGludGVyaW0gc29sdXRpb24/DQoNCkxpa2UgYmVsb3csIFJFU0VUX0lNWDcgaXMg
+YWxyZWFkeSBkZWZhdWx0IHkgd2hlbiBTT0NfSU1YN0QsIG5vdyBhZGRlZCBQQ0lfSU1YNiwNCmxl
+dCBtZSBrbm93IGlmIGl0IGlzIE9LIGZvciB5b3UsIHRoZW4gSSB3aWxsIHNlbmQgbmV3IHBhdGNo
+IGZvciByZXZpZXcuDQoNCisrKyBiL2RyaXZlcnMvcmVzZXQvS2NvbmZpZw0KQEAgLTY4LDcgKzY4
+LDcgQEAgY29uZmlnIFJFU0VUX0lNWDcNCiAgICAgICAgdHJpc3RhdGUgImkuTVg3LzggUmVzZXQg
+RHJpdmVyIg0KICAgICAgICBkZXBlbmRzIG9uIEhBU19JT01FTQ0KICAgICAgICBkZXBlbmRzIG9u
+IFNPQ19JTVg3RCB8fCAoQVJNNjQgJiYgQVJDSF9NWEMpIHx8IENPTVBJTEVfVEVTVA0KLSAgICAg
+ICBkZWZhdWx0IHkgaWYgU09DX0lNWDdEDQorICAgICAgIGRlZmF1bHQgeSBpZiAoU09DX0lNWDdE
+IHx8IFBDSV9JTVg2KQ0KDQpUaGFua3MsDQpBbnNvbg0KDQo=
