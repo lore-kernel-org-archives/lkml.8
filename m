@@ -2,56 +2,46 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B49DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 084D220842
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:33:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="fap1IyJq"
+	by mail.kernel.org (Postfix) with ESMTP id 154F720838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:33:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730073AbgG3QdK (ORCPT
+        id S1730050AbgG3Qdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 12:33:10 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:38782 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgG3QdJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 12:33:09 -0400
-Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 24CBE20B4908;
-        Thu, 30 Jul 2020 09:33:08 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 24CBE20B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1596126788;
-        bh=CXrOFE5NrIuJnLNGlIHi4t8xRkLX9SQCgHFckqGA1wQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=fap1IyJqn1hH6EVgx2Gkat3pIMfUkd4uIXgLtXsTdICaIFNd6nprt9FUMmozk4pqA
-         AtwgFvr2ILNnBVSVRXFLvD2grw3pn/Whmzxf2UyAXig86VuVN/jJ5/vIwA04uxXMuv
-         Rt3ofhkCgRVqJGV9Y0WwZjfwrQ3MYt84B5p2AzIw=
-Subject: Re: [PATCH v5 1/4] IMA: Add func to measure LSM state and policy
-To:     Casey Schaufler <casey@schaufler-ca.com>,
-        Tyler Hicks <tyhicks@linux.microsoft.com>
-Cc:     zohar@linux.ibm.com, stephen.smalley.work@gmail.com,
-        sashal@kernel.org, jmorris@namei.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200730034724.3298-1-nramas@linux.microsoft.com>
- <20200730034724.3298-2-nramas@linux.microsoft.com>
- <20200730150228.GV4181@sequoia>
- <b4428195-7a68-365d-a792-2855609c2221@schaufler-ca.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <1819121c-bc76-2414-a8e1-8bfd1c014d6b@linux.microsoft.com>
-Date:   Thu, 30 Jul 2020 09:33:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 12:33:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:42294 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728473AbgG3Qdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 12:33:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38B3D1FB;
+        Thu, 30 Jul 2020 09:33:53 -0700 (PDT)
+Received: from [10.37.12.83] (unknown [10.37.12.83])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF01C3F66E;
+        Thu, 30 Jul 2020 09:33:51 -0700 (PDT)
+Subject: Re: [RFC PATCH 14/14] dts: bindings: coresight: ETMv4.4 system
+ register access only units
+To:     mathieu.poirier@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mike.leach@linaro.org, coresight@lists.linaro.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+References: <20200722172040.1299289-1-suzuki.poulose@arm.com>
+ <20200722172040.1299289-15-suzuki.poulose@arm.com>
+ <20200729172058.GA3060370@xps15>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <7036b8c5-b920-3de7-21d0-474e759e2624@arm.com>
+Date:   Thu, 30 Jul 2020 17:38:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <b4428195-7a68-365d-a792-2855609c2221@schaufler-ca.com>
+In-Reply-To: <20200729172058.GA3060370@xps15>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -60,38 +50,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/20 9:19 AM, Casey Schaufler wrote:
-
->>> Critical data structures of security modules need to be measured to
->>> enable an attestation service to verify if the configuration and
->>> policies for the security modules have been setup correctly and
->>> that they haven't been tampered with at runtime. A new IMA policy is
->>> required for handling this measurement.
->>>
->>> Define two new IMA policy func namely LSM_STATE and LSM_POLICY to
->>> measure the state and the policy provided by the security modules.
+On 07/29/2020 06:20 PM, Mathieu Poirier wrote:
+> On Wed, Jul 22, 2020 at 06:20:40PM +0100, Suzuki K Poulose wrote:
+>> Document the bindings for ETMv4.4 and later with only system register
+>> access.
+>>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: devicetree@vger.kernel.org
+>> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+>> Cc: Mike Leach <mike.leach@linaro.org>
+>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> ---
+>>   Documentation/devicetree/bindings/arm/coresight.txt | 6 +++++-
+>>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+>> index d711676b4a51..cfe47bdda728 100644
+>> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+>> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+>> @@ -34,9 +34,13 @@ its hardware characteristcs.
+>>   					Program Flow Trace Macrocell:
+>>   			"arm,coresight-etm3x", "arm,primecell";
+>>   
+>> -		- Embedded Trace Macrocell (version 4.x):
+>> +		- Embedded Trace Macrocell (version 4.x), with memory mapped access.
+>>   			"arm,coresight-etm4x", "arm,primecell";
+>>   
+>> +		- Embedded Trace Macrocell (version 4.4 and later) with system
+>> +		  register access only.
+>> +			"arm,coresight-etm-v4.4";
 > 
-> If, as you suggest below, this is SELinux specific,
-> these should be SELINUX_STATE and SELINUX_POLICY.
-> It makes me very uncomfortable when I see LSM used
-> in cases where SELinux is required. The LSM is supposed
-> to be an agnostic interface, so if you need to throw
-> 
-> 	if (IS_ENABLED(CONFIG_SECURITY_SELINUX) &&
-> 
-> into the IMA code you're clearly not thinking in terms
-> of the LSM layer. I have no problem with seeing SELinux
-> oriented and/or specific code in IMA if that's what you want.
-> Just don't call it LSM.
+> I would rather call this "arm,coresight-etm-v4.4+" so that the binding's
+> semantic is still relevant when dealing with ETM v4.5 and onward.
 
-The hook defined in IMA is not SELinux specific - it is generic enough 
-to be used by any security module to measure their STATE and POLICY.
+AFAIUC, "compatible" stands for something that is compatible with v4.4.
+All v4.4+ versions that are compatible with v4.4 are covered here.
+Having said that I am fine with "arm,coresight-etm-v4.4+" , if it
+is fine by the DT conventions.
 
-I have implemented the measurement for SELinux to illustrate the usage.
-
-Tyler's suggestion was to allow this IMA policy only when component(s) 
-that are using it are also enabled.
-
-  -lakshmi
-
-
+Cheers
+Suzuki
