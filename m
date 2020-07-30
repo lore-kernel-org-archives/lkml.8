@@ -2,203 +2,442 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04719C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D666C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C617721883
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29CDF20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:07:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IUqAJLGY"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="evmd3WkT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ph5RvOQq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbgG3WDb (ORCPT
+        id S1728492AbgG3WH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 18:03:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726544AbgG3WDa (ORCPT
+        Thu, 30 Jul 2020 18:07:56 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:55349 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727072AbgG3WHz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 18:03:30 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23510C061574;
-        Thu, 30 Jul 2020 15:03:30 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id l4so29415243ejd.13;
-        Thu, 30 Jul 2020 15:03:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uTBgSMorW9kQ268YynJPUFn8co9EOR+IzjBYlohDvN4=;
-        b=IUqAJLGY0Er1QGP6TV95J67XWrwiYPjN7V5GkT8+Y018ZWFiL84EX2MDgPTMHNqXAA
-         mXALh3ruJ9HVWYX8LYKLazT5YoEGaiKJKNohF120Is1+bUgUwusprQNa2mdePR9euxS3
-         wpsem//MmqSl+fp5PkW0ANL6dGe3AYZoTjLPC+5z3PK0JB5aFWRjbLIfTyU4AwGwWT0K
-         vvy4ndSkCWaeYXLRjiItCcAuh02amoQcnSh8VbjLEuZFaX+br7CdGHIqLTEkStXLbAb9
-         cyQrAB0T1SlMfqbtDz4jAxORUZspvXeBWnVouu8L/sdfetGCqx8Y+M3LelBy1/jIrHlD
-         vhrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=uTBgSMorW9kQ268YynJPUFn8co9EOR+IzjBYlohDvN4=;
-        b=MVI5uwzPq612kNVbviGSbioT2T5GmG1XyjMvOvJs1Fgi1Wv2RrIh74MaASNHOq3a33
-         qIkTy9ZT6XuCkx01cPy/VQfruXeA9vvTurKV3/jOLq3BrftwpHZfpODGitzWgaGFFSN/
-         Tk6p99KwmoGHjRo2Y1wUWH2OuUJsF8yln95/BzZDu52aszsmz+UpuDtCbW/rt5H2Ec/h
-         7f6KRQDkhzMwhD1w61pZtx4px5KAiBfZhf+KUE94T6uDH0W/4yx8VaLQMgewSsA9kDyr
-         YGU8iYaqdzfH26fivEReMg9llQPYFrm6hJ5FM5/QuFbPwGdgL35a/3X9CcgfPGJ5fGOa
-         026A==
-X-Gm-Message-State: AOAM531KL/ACeYwFxqryUBk2QxqIEwYPV8FRnRboI3XY3LmB0HH7/mz7
-        ZAqPY3JuzNGfkgbzKPyiefB+StTg
-X-Google-Smtp-Source: ABdhPJxg93Ma54VFSdySfsO+JU8QQRy6Q5gt8nu75a9m7AI3QkHQ7ivTmtYMfHss37Oz7Mekj+0ClQ==
-X-Received: by 2002:a17:906:2e51:: with SMTP id r17mr1159552eji.308.1596146608545;
-        Thu, 30 Jul 2020 15:03:28 -0700 (PDT)
-Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id bi2sm7735490edb.27.2020.07.30.15.03.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jul 2020 15:03:28 -0700 (PDT)
-Subject: Re: [PATCH net] tcp: Export tcp_write_queue_purge()
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200730210728.2051-1-f.fainelli@gmail.com>
- <CANn89iJETzud8PK7eTj=rXMSCjBtnmcSq1y0qF7EVK8b5M_vXA@mail.gmail.com>
- <2347a342-f0b0-903c-ebb6-6e95eb664864@gmail.com>
- <CANn89iJ=x8eYs9+cGYuyScMo7AD3JZqr6Jp1oZfJg41fHej8JQ@mail.gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <be7ed9b0-e23d-e12b-4e6b-108853ec4776@gmail.com>
-Date:   Thu, 30 Jul 2020 15:03:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 18:07:55 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 90F705C01AF;
+        Thu, 30 Jul 2020 18:07:52 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 30 Jul 2020 18:07:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=vHWWixzs7knWrmLD1yUPl+Ms30
+        6QdTLaTxsMLxt+lQU=; b=evmd3WkThYm1GXm0xd4YM1KrHYUZYyzdbw//msEMhE
+        /vgAySq1++JK+g+1gtEekHVJUm3f9TguXvN//ZlsMTMM7Fbw6IIdg9BZADYblFs+
+        tlEvK/DT+e4etXa9RoAfiqJLy5l8lIgaqqKAVYTdwHlpetayywd+JbxPtiZ0I94o
+        bZGVgUcqMEFXcLv4nxkFYZdjSqSQhih1hMwh6B25LxH2RjFmlOz5g9PLu405XK29
+        44dFk6vLvUkiZ6xYydEKl3f9fCN6XIpk9/ZdBihegLiGSuFu7NpLsNwFQdqCynlk
+        OydtGtkhWmytyDeYWOdPIdMSlbYNedCn61HBbYfH5Zfg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=vHWWixzs7knWrmLD1
+        yUPl+Ms306QdTLaTxsMLxt+lQU=; b=Ph5RvOQqW0TKIH+nfISKNvDN6+PxPatab
+        +RrkEvFIN3HNPrI4Mj+xLfguu7iLGlKIpc/b0rtWEF8jiJ2uATq47++dAMoOV76V
+        3cRWWBDpCdwn7pmDkh5QypVk9sYuTILLFPKl5GRwh0dkNbdAYoLfG9pYMcsdOkFm
+        9f2rzdz0/eRyavv9v+KuSmLhaFKIWdoMhJp9Nmyaoj76zYvik3zIUHILozrbBb/8
+        DgR+evsWP9HNeigxcs7J0cpYuGbQafDRMMhMaua99gue/Jbxo6Rfdmz+kD2I66sk
+        kmYZULAlW8Y8BvQBnNWs+Gu1Tl8U+bt7X2KH7r5cPL/N8Ry8GOhnw==
+X-ME-Sender: <xms:t0QjX64GSBs1npa-Or-iQFueV4-_UVoKiX60PtLfo5HygYjMehpWjg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrieejgddtiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghlucfj
+    ohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecuggftrfgrth
+    htvghrnhephfegvdeiueevjeeuhfduhfejveffieevvedtjeelfeetgfdvudefueelffeg
+    gfelnecuffhomhgrihhnpehnvgiftghomhhmrghnugdrshhgnecukfhppeejtddrudefhe
+    drudegkedrudehudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
+X-ME-Proxy: <xmx:t0QjXz5ICahFvjUMP89ky54FqJbT8PAwhmMf-fZGEZ40jL0nIZ_1WA>
+    <xmx:t0QjX5fOYzd8gcLA2cRBCkJvVV9ReTVLtwAcx6_LqPQuPchG555OiA>
+    <xmx:t0QjX3IMMusKIYog5KYw4SlpbBoTLbUK7QdqrGKqckP35ml5yFYrjw>
+    <xmx:uEQjX62_bQjR2oNHMoM9_WMamGp7d9uhsGRgmrh165h04phf-toI-g>
+Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8DCCB3280063;
+        Thu, 30 Jul 2020 18:07:51 -0400 (EDT)
+From:   Samuel Holland <samuel@sholland.org>
+To:     Adam Radford <aradford@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Samuel Holland <samuel@sholland.org>
+Subject: [PATCH v2] scsi: 3w-9xxx: Fix endianness issues found by sparse
+Date:   Thu, 30 Jul 2020 17:07:50 -0500
+Message-Id: <20200730220750.18158-1-samuel@sholland.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <CANn89iJ=x8eYs9+cGYuyScMo7AD3JZqr6Jp1oZfJg41fHej8JQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/20 2:32 PM, Eric Dumazet wrote:
-> On Thu, Jul 30, 2020 at 2:24 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->>
->> On 7/30/20 2:16 PM, Eric Dumazet wrote:
->>> On Thu, Jul 30, 2020 at 2:07 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->>>>
->>>> After tcp_write_queue_purge() got uninlined with commit ac3f09ba3e49
->>>> ("tcp: uninline tcp_write_queue_purge()"), it became no longer possible
->>>> to reference this symbol from kernel modules.
->>>>
->>>> Fixes: ac3f09ba3e49 ("tcp: uninline tcp_write_queue_purge()")
->>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->>>> ---
->>>>  net/ipv4/tcp.c | 1 +
->>>>  1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
->>>> index 6f0caf9a866d..ea9d296a8380 100644
->>>> --- a/net/ipv4/tcp.c
->>>> +++ b/net/ipv4/tcp.c
->>>> @@ -2626,6 +2626,7 @@ void tcp_write_queue_purge(struct sock *sk)
->>>>         tcp_sk(sk)->packets_out = 0;
->>>>         inet_csk(sk)->icsk_backoff = 0;
->>>>  }
->>>> +EXPORT_SYMBOL(tcp_write_queue_purge);
->>>>
->>>>  int tcp_disconnect(struct sock *sk, int flags)
->>>>  {
->>>> --
->>>> 2.17.1
->>>>
->>>
->>> Hmmm.... which module would need this exactly ?
->>
->> None in tree unfortunately, and I doubt it would be published one day.
->> For consistency one could argue that given it used to be accessible, and
->> other symbols within net/ipv4/tcp.c are also exported, so this should
->> one be. Not going to hold that line of argumentation more than in this
->> email, if you object to it, that would be completely fine with me.
-> 
-> :)
-> 
->>
->>>
->>> How come it took 3 years to discover this issue ?
->>
->> We just upgraded our downstream kernel from 4.9 to 5.4 and this is why
->> it took so long.
-> 
-> It is not because TCP used an inline function in the past that it
-> means we have to keep
-> the equivalent function available for all possible out-of-tree modules.
-> 
-> Sorry, we can not accept that out-of-tree modules use TCP stack like that.
-> 
-> You will have to carry this change locally. Or even better get rid of it.
+The main issue observed was at the call to scsi_set_resid, where the
+byteswapped parameter would eventually trigger the alignment check at
+drivers/scsi/sd.c:2009. At that point, the kernel would continuously
+complain about an "Unaligned partial completion", and no further I/O
+could occur.
 
-Sure, that is completely fair, I had to try though :)
+This gets the controller working on big endian powerpc64.
+
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+---
+
+Changes since v1:
+ - Include changes to use __le?? types in command structures
+ - Use an object literal for the intermediate "schedulertime" value
+ - Use local "error" variable to avoid repeated byte swapping
+ - Create a local "length" variable to avoid very long lines
+ - Move byte swapping to TW_REQ_LUN_IN/TW_LUN_OUT to avoid long lines
+
+I verified this patch with `make C=1`, and there were no warnings from
+these files.
+
+---
+ drivers/scsi/3w-9xxx.c |  56 +++++++++------------
+ drivers/scsi/3w-9xxx.h | 112 ++++++++++++++++++++++-------------------
+ 2 files changed, 85 insertions(+), 83 deletions(-)
+
+diff --git a/drivers/scsi/3w-9xxx.c b/drivers/scsi/3w-9xxx.c
+index 3337b1e80412..8f56beefa338 100644
+--- a/drivers/scsi/3w-9xxx.c
++++ b/drivers/scsi/3w-9xxx.c
+@@ -303,10 +303,10 @@ static int twa_aen_drain_queue(TW_Device_Extension *tw_dev, int no_check_reset)
+ 
+ 	/* Initialize sglist */
+ 	memset(&sglist, 0, sizeof(TW_SG_Entry));
+-	sglist[0].length = TW_SECTOR_SIZE;
+-	sglist[0].address = tw_dev->generic_buffer_phys[request_id];
++	sglist[0].length = cpu_to_le32(TW_SECTOR_SIZE);
++	sglist[0].address = TW_CPU_TO_SGL(tw_dev->generic_buffer_phys[request_id]);
+ 
+-	if (sglist[0].address & TW_ALIGNMENT_9000_SGL) {
++	if (tw_dev->generic_buffer_phys[request_id] & TW_ALIGNMENT_9000_SGL) {
+ 		TW_PRINTK(tw_dev->host, TW_DRIVER, 0x1, "Found unaligned address during AEN drain");
+ 		goto out;
+ 	}
+@@ -440,8 +440,8 @@ static int twa_aen_read_queue(TW_Device_Extension *tw_dev, int request_id)
+ 
+ 	/* Initialize sglist */
+ 	memset(&sglist, 0, sizeof(TW_SG_Entry));
+-	sglist[0].length = TW_SECTOR_SIZE;
+-	sglist[0].address = tw_dev->generic_buffer_phys[request_id];
++	sglist[0].length = cpu_to_le32(TW_SECTOR_SIZE);
++	sglist[0].address = TW_CPU_TO_SGL(tw_dev->generic_buffer_phys[request_id]);
+ 
+ 	/* Mark internal command */
+ 	tw_dev->srb[request_id] = NULL;
+@@ -501,9 +501,8 @@ static void twa_aen_sync_time(TW_Device_Extension *tw_dev, int request_id)
+            Sunday 12:00AM */
+ 	local_time = (ktime_get_real_seconds() - (sys_tz.tz_minuteswest * 60));
+ 	div_u64_rem(local_time - (3 * 86400), 604800, &schedulertime);
+-	schedulertime = cpu_to_le32(schedulertime % 604800);
+ 
+-	memcpy(param->data, &schedulertime, sizeof(u32));
++	memcpy(param->data, &(__le32){cpu_to_le32(schedulertime)}, sizeof(__le32));
+ 
+ 	/* Mark internal command */
+ 	tw_dev->srb[request_id] = NULL;
+@@ -1000,19 +999,13 @@ static int twa_fill_sense(TW_Device_Extension *tw_dev, int request_id, int copy_
+ 		if (print_host)
+ 			printk(KERN_WARNING "3w-9xxx: scsi%d: ERROR: (0x%02X:0x%04X): %s:%s.\n",
+ 			       tw_dev->host->host_no,
+-			       TW_MESSAGE_SOURCE_CONTROLLER_ERROR,
+-			       full_command_packet->header.status_block.error,
+-			       error_str[0] == '\0' ?
+-			       twa_string_lookup(twa_error_table,
+-						 full_command_packet->header.status_block.error) : error_str,
++			       TW_MESSAGE_SOURCE_CONTROLLER_ERROR, error,
++			       error_str[0] ? error_str : twa_string_lookup(twa_error_table, error),
+ 			       full_command_packet->header.err_specific_desc);
+ 		else
+ 			printk(KERN_WARNING "3w-9xxx: ERROR: (0x%02X:0x%04X): %s:%s.\n",
+-			       TW_MESSAGE_SOURCE_CONTROLLER_ERROR,
+-			       full_command_packet->header.status_block.error,
+-			       error_str[0] == '\0' ?
+-			       twa_string_lookup(twa_error_table,
+-						 full_command_packet->header.status_block.error) : error_str,
++			       TW_MESSAGE_SOURCE_CONTROLLER_ERROR, error,
++			       error_str[0] ? error_str : twa_string_lookup(twa_error_table, error),
+ 			       full_command_packet->header.err_specific_desc);
+ 	}
+ 
+@@ -1129,12 +1122,11 @@ static int twa_initconnection(TW_Device_Extension *tw_dev, int message_credits,
+ 	tw_initconnect->opcode__reserved = TW_OPRES_IN(0, TW_OP_INIT_CONNECTION);
+ 	tw_initconnect->request_id = request_id;
+ 	tw_initconnect->message_credits = cpu_to_le16(message_credits);
+-	tw_initconnect->features = set_features;
+ 
+ 	/* Turn on 64-bit sgl support if we need to */
+-	tw_initconnect->features |= sizeof(dma_addr_t) > 4 ? 1 : 0;
++	set_features |= sizeof(dma_addr_t) > 4 ? 1 : 0;
+ 
+-	tw_initconnect->features = cpu_to_le32(tw_initconnect->features);
++	tw_initconnect->features = cpu_to_le32(set_features);
+ 
+ 	if (set_features & TW_EXTENDED_INIT_CONNECT) {
+ 		tw_initconnect->size = TW_INIT_COMMAND_PACKET_SIZE_EXTENDED;
+@@ -1347,8 +1339,10 @@ static irqreturn_t twa_interrupt(int irq, void *dev_instance)
+ 
+ 				/* Report residual bytes for single sgl */
+ 				if ((scsi_sg_count(cmd) <= 1) && (full_command_packet->command.newcommand.status == 0)) {
+-					if (full_command_packet->command.newcommand.sg_list[0].length < scsi_bufflen(tw_dev->srb[request_id]))
+-						scsi_set_resid(cmd, scsi_bufflen(cmd) - full_command_packet->command.newcommand.sg_list[0].length);
++					u32 length = le32_to_cpu(full_command_packet->command.newcommand.sg_list[0].length);
++
++					if (length < scsi_bufflen(cmd))
++						scsi_set_resid(cmd, scsi_bufflen(cmd) - length);
+ 				}
+ 
+ 				/* Now complete the io */
+@@ -1390,13 +1384,13 @@ static void twa_load_sgl(TW_Device_Extension *tw_dev, TW_Command_Full *full_comm
+ 	if (TW_OP_OUT(full_command_packet->command.newcommand.opcode__reserved) == TW_OP_EXECUTE_SCSI) {
+ 		newcommand = &full_command_packet->command.newcommand;
+ 		newcommand->request_id__lunl =
+-			cpu_to_le16(TW_REQ_LUN_IN(TW_LUN_OUT(newcommand->request_id__lunl), request_id));
++			TW_REQ_LUN_IN(TW_LUN_OUT(newcommand->request_id__lunl), request_id);
+ 		if (length) {
+ 			newcommand->sg_list[0].address = TW_CPU_TO_SGL(dma_handle + sizeof(TW_Ioctl_Buf_Apache) - 1);
+ 			newcommand->sg_list[0].length = cpu_to_le32(length);
+ 		}
+ 		newcommand->sgl_entries__lunh =
+-			cpu_to_le16(TW_REQ_LUN_IN(TW_LUN_OUT(newcommand->sgl_entries__lunh), length ? 1 : 0));
++			TW_REQ_LUN_IN(TW_LUN_OUT(newcommand->sgl_entries__lunh), length ? 1 : 0);
+ 	} else {
+ 		oldcommand = &full_command_packet->command.oldcommand;
+ 		oldcommand->request_id = request_id;
+@@ -1837,10 +1831,10 @@ static int twa_scsiop_execute_scsi(TW_Device_Extension *tw_dev, int request_id,
+ 	if (srb) {
+ 		command_packet->unit = srb->device->id;
+ 		command_packet->request_id__lunl =
+-			cpu_to_le16(TW_REQ_LUN_IN(srb->device->lun, request_id));
++			TW_REQ_LUN_IN(srb->device->lun, request_id);
+ 	} else {
+ 		command_packet->request_id__lunl =
+-			cpu_to_le16(TW_REQ_LUN_IN(0, request_id));
++			TW_REQ_LUN_IN(0, request_id);
+ 		command_packet->unit = 0;
+ 	}
+ 
+@@ -1872,19 +1866,19 @@ static int twa_scsiop_execute_scsi(TW_Device_Extension *tw_dev, int request_id,
+ 					}
+ 				}
+ 			}
+-			command_packet->sgl_entries__lunh = cpu_to_le16(TW_REQ_LUN_IN((srb->device->lun >> 4), scsi_sg_count(tw_dev->srb[request_id])));
++			command_packet->sgl_entries__lunh = TW_REQ_LUN_IN((srb->device->lun >> 4), scsi_sg_count(tw_dev->srb[request_id]));
+ 		}
+ 	} else {
+ 		/* Internal cdb post */
+ 		for (i = 0; i < use_sg; i++) {
+-			command_packet->sg_list[i].address = TW_CPU_TO_SGL(sglistarg[i].address);
+-			command_packet->sg_list[i].length = cpu_to_le32(sglistarg[i].length);
++			command_packet->sg_list[i].address = sglistarg[i].address;
++			command_packet->sg_list[i].length = sglistarg[i].length;
+ 			if (command_packet->sg_list[i].address & TW_CPU_TO_SGL(TW_ALIGNMENT_9000_SGL)) {
+ 				TW_PRINTK(tw_dev->host, TW_DRIVER, 0x2f, "Found unaligned sgl address during internal post");
+ 				goto out;
+ 			}
+ 		}
+-		command_packet->sgl_entries__lunh = cpu_to_le16(TW_REQ_LUN_IN(0, use_sg));
++		command_packet->sgl_entries__lunh = TW_REQ_LUN_IN(0, use_sg);
+ 	}
+ 
+ 	if (srb) {
+@@ -2109,7 +2103,7 @@ static int twa_probe(struct pci_dev *pdev, const struct pci_device_id *dev_id)
+ 				     TW_PARAM_FWVER, TW_PARAM_FWVER_LENGTH),
+ 	       (char *)twa_get_param(tw_dev, 1, TW_VERSION_TABLE,
+ 				     TW_PARAM_BIOSVER, TW_PARAM_BIOSVER_LENGTH),
+-	       le32_to_cpu(*(int *)twa_get_param(tw_dev, 2, TW_INFORMATION_TABLE,
++	       le32_to_cpu(*(__le32 *)twa_get_param(tw_dev, 2, TW_INFORMATION_TABLE,
+ 				     TW_PARAM_PORTCOUNT, TW_PARAM_PORTCOUNT_LENGTH)));
+ 
+ 	/* Try to enable MSI */
+diff --git a/drivers/scsi/3w-9xxx.h b/drivers/scsi/3w-9xxx.h
+index d88cd3499bd5..d258bc8fe9b0 100644
+--- a/drivers/scsi/3w-9xxx.h
++++ b/drivers/scsi/3w-9xxx.h
+@@ -434,8 +434,8 @@ static twa_message_type twa_error_table[] = {
+ #define TW_RESID_OUT(x) ((x >> 4) & 0xff)
+ 
+ /* request_id: 12, lun: 4 */
+-#define TW_REQ_LUN_IN(lun, request_id) (((lun << 12) & 0xf000) | (request_id & 0xfff))
+-#define TW_LUN_OUT(lun) ((lun >> 12) & 0xf)
++#define TW_REQ_LUN_IN(lun, request_id) cpu_to_le16(((lun << 12) & 0xf000) | (request_id & 0xfff))
++#define TW_LUN_OUT(lun) ((le16_to_cpu(lun) >> 12) & 0xf)
+ 
+ /* Macros */
+ #define TW_CONTROL_REG_ADDR(x) (x->base_addr)
+@@ -469,70 +469,78 @@ printk(KERN_WARNING "3w-9xxx: ERROR: (0x%02X:0x%04X): %s.\n",a,b,c); \
+ #define TW_APACHE_MAX_SGL_LENGTH (sizeof(dma_addr_t) > 4 ? 72 : 109)
+ #define TW_ESCALADE_MAX_SGL_LENGTH (sizeof(dma_addr_t) > 4 ? 41 : 62)
+ #define TW_PADDING_LENGTH (sizeof(dma_addr_t) > 4 ? 8 : 0)
+-#define TW_CPU_TO_SGL(x) (sizeof(dma_addr_t) > 4 ? cpu_to_le64(x) : cpu_to_le32(x))
++#if IS_ENABLED(CONFIG_ARCH_DMA_ADDR_T_64BIT)
++#define TW_CPU_TO_SGL(x) cpu_to_le64(x)
++#else
++#define TW_CPU_TO_SGL(x) cpu_to_le32(x)
++#endif
+ 
+ #pragma pack(1)
+ 
+ /* Scatter Gather List Entry */
+ typedef struct TAG_TW_SG_Entry {
+-	dma_addr_t address;
+-	u32 length;
++#if IS_ENABLED(CONFIG_ARCH_DMA_ADDR_T_64BIT)
++	__le64	address;
++#else
++	__le32	address;
++#endif
++	__le32	length;
+ } TW_SG_Entry;
+ 
+ /* Command Packet */
+ typedef struct TW_Command {
+-	unsigned char opcode__sgloffset;
+-	unsigned char size;
+-	unsigned char request_id;
+-	unsigned char unit__hostid;
++	u8	opcode__sgloffset;
++	u8	size;
++	u8	request_id;
++	u8	unit__hostid;
+ 	/* Second DWORD */
+-	unsigned char status;
+-	unsigned char flags;
++	u8	status;
++	u8	flags;
+ 	union {
+-		unsigned short block_count;
+-		unsigned short parameter_count;
++		__le16	block_count;
++		__le16	parameter_count;
+ 	} byte6_offset;
+ 	union {
+ 		struct {
+-			u32 lba;
+-			TW_SG_Entry sgl[TW_ESCALADE_MAX_SGL_LENGTH];
+-			dma_addr_t padding;
++			__le32		lba;
++			TW_SG_Entry	sgl[TW_ESCALADE_MAX_SGL_LENGTH];
++			dma_addr_t	padding;
+ 		} io;
+ 		struct {
+-			TW_SG_Entry sgl[TW_ESCALADE_MAX_SGL_LENGTH];
+-			u32 padding;
+-			dma_addr_t padding2;
++			TW_SG_Entry	sgl[TW_ESCALADE_MAX_SGL_LENGTH];
++			__le32		padding;
++			dma_addr_t	padding2;
+ 		} param;
+ 	} byte8_offset;
+ } TW_Command;
+ 
+ /* Command Packet for 9000+ controllers */
+ typedef struct TAG_TW_Command_Apache {
+-	unsigned char opcode__reserved;
+-	unsigned char unit;
+-	unsigned short request_id__lunl;
+-	unsigned char status;
+-	unsigned char sgl_offset;
+-	unsigned short sgl_entries__lunh;
+-	unsigned char cdb[16];
++	u8	opcode__reserved;
++	u8	unit;
++	__le16	request_id__lunl;
++	u8	status;
++	u8	sgl_offset;
++	__le16	sgl_entries__lunh;
++	u8	cdb[16];
+ 	TW_SG_Entry sg_list[TW_APACHE_MAX_SGL_LENGTH];
+-	unsigned char padding[TW_PADDING_LENGTH];
++	u8	padding[TW_PADDING_LENGTH];
+ } TW_Command_Apache;
+ 
+ /* New command packet header */
+ typedef struct TAG_TW_Command_Apache_Header {
+ 	unsigned char sense_data[TW_SENSE_DATA_LENGTH];
+ 	struct {
+-		char reserved[4];
+-		unsigned short error;
+-		unsigned char padding;
+-		unsigned char severity__reserved;
++		u8	reserved[4];
++		__le16	error;
++		u8	padding;
++		u8	severity__reserved;
+ 	} status_block;
+ 	unsigned char err_specific_desc[98];
+ 	struct {
+-		unsigned char size_header;
+-		unsigned short reserved;
+-		unsigned char size_sense;
++		u8	size_header;
++		__le16	reserved;
++		u8	size_sense;
+ 	} header_desc;
+ } TW_Command_Apache_Header;
+ 
+@@ -547,19 +555,19 @@ typedef struct TAG_TW_Command_Full {
+ 
+ /* Initconnection structure */
+ typedef struct TAG_TW_Initconnect {
+-	unsigned char opcode__reserved;
+-	unsigned char size;
+-	unsigned char request_id;
+-	unsigned char res2;
+-	unsigned char status;
+-	unsigned char flags;
+-	unsigned short message_credits;
+-	u32 features;
+-	unsigned short fw_srl;
+-	unsigned short fw_arch_id;
+-	unsigned short fw_branch;
+-	unsigned short fw_build;
+-	u32 result;
++	u8	opcode__reserved;
++	u8	size;
++	u8	request_id;
++	u8	res2;
++	u8	status;
++	u8	flags;
++	__le16	message_credits;
++	__le32	features;
++	__le16	fw_srl;
++	__le16	fw_arch_id;
++	__le16	fw_branch;
++	__le16	fw_build;
++	__le32	result;
+ } TW_Initconnect;
+ 
+ /* Event info structure */
+@@ -600,11 +608,11 @@ typedef struct TAG_TW_Lock {
+ 
+ /* GetParam descriptor */
+ typedef struct {
+-	unsigned short	table_id;
+-	unsigned short	parameter_id;
+-	unsigned short	parameter_size_bytes;
+-	unsigned short  actual_parameter_size_bytes;
+-	unsigned char	data[1];
++	__le16	table_id;
++	__le16	parameter_id;
++	__le16	parameter_size_bytes;
++	__le16  actual_parameter_size_bytes;
++	u8	data[1];
+ } TW_Param_Apache, *PTW_Param_Apache;
+ 
+ /* Response queue */
 -- 
-Florian
+2.26.2
+
