@@ -5,53 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDDBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA8CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D126C2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B32022074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096992;
-	bh=fK3nluCrsd7GJqBhfiZGDJK2iUkNilXgPplE97Uy3us=;
+	s=default; t=1596096999;
+	bh=ilGqjrdiwmTB3oPnFToLZvo+G1GOh4k9YkxlamvhKQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hDlkuecSq9RKBuNWHxPDQymYIIorNBEm383feMbDxAD2xyuR+PrvuS6qmooIobeYd
-	 PuCb8lDxodqHhaZHUHgDQB6L5mcb0mBfIksYLCdfR2rlAJL7jMnzvtjqBCksyBYS10
-	 DMWX7p48h3RAFI7tKl6n/rohqlrZp+oz0Wk2qkpg=
+	b=SvrnKUFA8FDhl7hfawaxc7Btz9S+XiC4QsUzAiKpYD9hfzeWXujUYYt+wJwlzR7TL
+	 vi7XyzNt7iuM2roeFoRvgyjDH3wQD9G5Z1fc0MaUQDyEykRWVlX8B/NPDHQo7AR2Vv
+	 Ieiu1wcS1kkwhpchYkj36lfCBHnCFBX9CygI0ie4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730261AbgG3IQa (ORCPT
+        id S1730144AbgG3IQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:16:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50072 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:16:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729263AbgG3IK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:10:58 -0400
+        id S1729223AbgG3IKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:10:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA9C120838;
-        Thu, 30 Jul 2020 08:10:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1168320838;
+        Thu, 30 Jul 2020 08:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096658;
-        bh=fK3nluCrsd7GJqBhfiZGDJK2iUkNilXgPplE97Uy3us=;
+        s=default; t=1596096641;
+        bh=ilGqjrdiwmTB3oPnFToLZvo+G1GOh4k9YkxlamvhKQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K1EQXe1+NuHym3RsNhK1pQuj6NMTuh5tKg4GbIXMTh6ieMFUjMrK4dNkYVhtv2rk/
-         KTklDnjcgu3wd11U9HlR9MwbAfgEOAq6YoiIGUM+sfi26jzahq0dfW6WnWT3tO20hk
-         u5OTKKFMFXvlFDcrnyBqZuk0fuzmyGmwStB9GspY=
+        b=0P0LuGVnP0LreVfL80et9HoeUWgvzYs3PIl5kGV0mBRdyjYOKWKOSYQFKVCWW3MvE
+         Kuw6Gqo44ZhBVDUoMCFEW0jBcRqwZjpd+xRChr8nZHeLMygD/e1d9zjmaNUd16Iu1e
+         eNQSJIluzPUtOftSImNKzvknr9YkNrRHZX0/GiC0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaron Merey <amerey@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Subject: [PATCH 4.4 11/54] uprobes: Change handle_swbp() to send SIGTRAP with si_code=SI_KERNEL, to fix GDB regression
-Date:   Thu, 30 Jul 2020 10:04:50 +0200
-Message-Id: <20200730074421.757727943@linuxfoundation.org>
+        stable@vger.kernel.org, Yuchung Cheng <ycheng@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 53/61] tcp: allow at most one TLP probe per flight
+Date:   Thu, 30 Jul 2020 10:05:11 +0200
+Message-Id: <20200730074423.402710886@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
-References: <20200730074421.203879987@linuxfoundation.org>
+In-Reply-To: <20200730074420.811058810@linuxfoundation.org>
+References: <20200730074420.811058810@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,65 +61,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleg Nesterov <oleg@redhat.com>
+From: Yuchung Cheng <ycheng@google.com>
 
-commit fe5ed7ab99c656bd2f5b79b49df0e9ebf2cead8a upstream.
+[ Upstream commit 76be93fc0702322179bb0ea87295d820ee46ad14 ]
 
-If a tracee is uprobed and it hits int3 inserted by debugger, handle_swbp()
-does send_sig(SIGTRAP, current, 0) which means si_code == SI_USER. This used
-to work when this code was written, but then GDB started to validate si_code
-and now it simply can't use breakpoints if the tracee has an active uprobe:
+Previously TLP may send multiple probes of new data in one
+flight. This happens when the sender is cwnd limited. After the
+initial TLP containing new data is sent, the sender receives another
+ACK that acks partial inflight.  It may re-arm another TLP timer
+to send more, if no further ACK returns before the next TLP timeout
+(PTO) expires. The sender may send in theory a large amount of TLP
+until send queue is depleted. This only happens if the sender sees
+such irregular uncommon ACK pattern. But it is generally undesirable
+behavior during congestion especially.
 
-	# cat test.c
-	void unused_func(void)
-	{
-	}
-	int main(void)
-	{
-		return 0;
-	}
+The original TLP design restrict only one TLP probe per inflight as
+published in "Reducing Web Latency: the Virtue of Gentle Aggression",
+SIGCOMM 2013. This patch changes TLP to send at most one probe
+per inflight.
 
-	# gcc -g test.c -o test
-	# perf probe -x ./test -a unused_func
-	# perf record -e probe_test:unused_func gdb ./test -ex run
-	GNU gdb (GDB) 10.0.50.20200714-git
-	...
-	Program received signal SIGTRAP, Trace/breakpoint trap.
-	0x00007ffff7ddf909 in dl_main () from /lib64/ld-linux-x86-64.so.2
-	(gdb)
+Note that if the sender is app-limited, TLP retransmits old data
+and did not have this issue.
 
-The tracee hits the internal breakpoint inserted by GDB to monitor shared
-library events but GDB misinterprets this SIGTRAP and reports a signal.
-
-Change handle_swbp() to use force_sig(SIGTRAP), this matches do_int3_user()
-and fixes the problem.
-
-This is the minimal fix for -stable, arch/x86/kernel/uprobes.c is equally
-wrong; it should use send_sigtrap(TRAP_TRACE) instead of send_sig(SIGTRAP),
-but this doesn't confuse GDB and needs another x86-specific patch.
-
-Reported-by: Aaron Merey <amerey@redhat.com>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200723154420.GA32043@redhat.com
+Signed-off-by: Yuchung Cheng <ycheng@google.com>
+Signed-off-by: Neal Cardwell <ncardwell@google.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- kernel/events/uprobes.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/tcp.h   |    4 +++-
+ net/ipv4/tcp_input.c  |   11 ++++++-----
+ net/ipv4/tcp_output.c |   13 ++++++++-----
+ 3 files changed, 17 insertions(+), 11 deletions(-)
 
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1875,7 +1875,7 @@ static void handle_swbp(struct pt_regs *
- 	if (!uprobe) {
- 		if (is_swbp > 0) {
- 			/* No matching uprobe; signal SIGTRAP. */
--			send_sig(SIGTRAP, current, 0);
-+			force_sig(SIGTRAP, current);
- 		} else {
- 			/*
- 			 * Either we raced with uprobe_unregister() or we can't
+--- a/include/linux/tcp.h
++++ b/include/linux/tcp.h
+@@ -218,6 +218,8 @@ struct tcp_sock {
+ 		u8 reord;    /* reordering detected */
+ 	} rack;
+ 	u16	advmss;		/* Advertised MSS			*/
++	u8	tlp_retrans:1,	/* TLP is a retransmission */
++		unused_1:7;
+ 	u8	rate_app_limited:1,  /* rate_{delivered,interval_us} limited? */
+ 		is_sack_reneg:1,    /* in recovery from loss with SACK reneg? */
+ 		unused:6;
+@@ -234,7 +236,7 @@ struct tcp_sock {
+ 		syn_data_acked:1,/* data in SYN is acked by SYN-ACK */
+ 		save_syn:1,	/* Save headers of SYN packet */
+ 		is_cwnd_limited:1;/* forward progress limited by snd_cwnd? */
+-	u32	tlp_high_seq;	/* snd_nxt at the time of TLP retransmit. */
++	u32	tlp_high_seq;	/* snd_nxt at the time of TLP */
+ 
+ /* RTT measurement */
+ 	u32	srtt_us;	/* smoothed round trip time << 3 in usecs */
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -3566,10 +3566,8 @@ static void tcp_replace_ts_recent(struct
+ 	}
+ }
+ 
+-/* This routine deals with acks during a TLP episode.
+- * We mark the end of a TLP episode on receiving TLP dupack or when
+- * ack is after tlp_high_seq.
+- * Ref: loss detection algorithm in draft-dukkipati-tcpm-tcp-loss-probe.
++/* This routine deals with acks during a TLP episode and ends an episode by
++ * resetting tlp_high_seq. Ref: TLP algorithm in draft-ietf-tcpm-rack
+  */
+ static void tcp_process_tlp_ack(struct sock *sk, u32 ack, int flag)
+ {
+@@ -3578,7 +3576,10 @@ static void tcp_process_tlp_ack(struct s
+ 	if (before(ack, tp->tlp_high_seq))
+ 		return;
+ 
+-	if (flag & FLAG_DSACKING_ACK) {
++	if (!tp->tlp_retrans) {
++		/* TLP of new data has been acknowledged */
++		tp->tlp_high_seq = 0;
++	} else if (flag & FLAG_DSACKING_ACK) {
+ 		/* This DSACK means original and TLP probe arrived; no loss */
+ 		tp->tlp_high_seq = 0;
+ 	} else if (after(ack, tp->tlp_high_seq)) {
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -2357,6 +2357,11 @@ void tcp_send_loss_probe(struct sock *sk
+ 	int pcount;
+ 	int mss = tcp_current_mss(sk);
+ 
++	/* At most one outstanding TLP */
++	if (tp->tlp_high_seq)
++		goto rearm_timer;
++
++	tp->tlp_retrans = 0;
+ 	skb = tcp_send_head(sk);
+ 	if (skb) {
+ 		if (tcp_snd_wnd_test(tp, skb, mss)) {
+@@ -2379,10 +2384,6 @@ void tcp_send_loss_probe(struct sock *sk
+ 		return;
+ 	}
+ 
+-	/* At most one outstanding TLP retransmission. */
+-	if (tp->tlp_high_seq)
+-		goto rearm_timer;
+-
+ 	if (skb_still_in_host_queue(sk, skb))
+ 		goto rearm_timer;
+ 
+@@ -2403,10 +2404,12 @@ void tcp_send_loss_probe(struct sock *sk
+ 	if (__tcp_retransmit_skb(sk, skb, 1))
+ 		goto rearm_timer;
+ 
++	tp->tlp_retrans = 1;
++
++probe_sent:
+ 	/* Record snd_nxt for loss detection. */
+ 	tp->tlp_high_seq = tp->snd_nxt;
+ 
+-probe_sent:
+ 	NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPLOSSPROBES);
+ 	/* Reset s.t. tcp_rearm_rto will restart timer from now */
+ 	inet_csk(sk)->icsk_pending = 0;
 
 
