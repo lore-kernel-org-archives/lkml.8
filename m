@@ -2,184 +2,75 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BDEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E72C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9F6E2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E316B207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbgG3KrW (ORCPT
+        id S1727044AbgG3Kuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 06:47:22 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:59124 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgG3KrU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 06:47:20 -0400
-Received: from fsav101.sakura.ne.jp (fsav101.sakura.ne.jp [27.133.134.228])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06UAlIRe084694;
-        Thu, 30 Jul 2020 19:47:18 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav101.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav101.sakura.ne.jp);
- Thu, 30 Jul 2020 19:47:18 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav101.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06UAlHLs084689
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Thu, 30 Jul 2020 19:47:18 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: [PATCH v2] fbmem: pull fbcon_update_vcs() out of fb_set_var()
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        syzbot <syzbot+c37a14770d51a085a520@syzkaller.appspotmail.com>
-References: <1596000620-4075-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <CAKMK7uHeteS2+rKrZKrAM+zQO==hAX0XaVc9JfHPsdLTCtzKOw@mail.gmail.com>
- <a3bb6544-064d-54a1-1215-d92188cb4209@i-love.sakura.ne.jp>
-Message-ID: <075b7e37-3278-cd7d-31ab-c5073cfa8e92@i-love.sakura.ne.jp>
-Date:   Thu, 30 Jul 2020 19:47:14 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 06:50:44 -0400
+Received: from mailout10.rmx.de ([94.199.88.75]:48685 "EHLO mailout10.rmx.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725892AbgG3Kun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 06:50:43 -0400
+Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mailout10.rmx.de (Postfix) with ESMTPS id 4BHRyl6Ql4z37P6;
+        Thu, 30 Jul 2020 12:50:39 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin02.retarus.com (Postfix) with ESMTPS id 4BHRyM1c0Gz2TS5B;
+        Thu, 30 Jul 2020 12:50:19 +0200 (CEST)
+Received: from N95HX1G2.wgnetz.xx (192.168.54.117) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Thu, 30 Jul
+ 2020 12:49:56 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Christian Eggers" <ceggers@arri.de>
+Subject: [PATCH v3 0/2] iio: light: Support AMS AS73211 digital XYZ sensor
+Date:   Thu, 30 Jul 2020 12:49:44 +0200
+Message-ID: <20200730104946.39148-1-ceggers@arri.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <a3bb6544-064d-54a1-1215-d92188cb4209@i-love.sakura.ne.jp>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [192.168.54.117]
+X-RMX-ID: 20200730-125021-4BHRyM1c0Gz2TS5B-0@kdin02
+X-RMX-SOURCE: 217.111.95.66
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot is reporting OOB read bug in vc_do_resize() [1] caused by memcpy()
-based on outdated old_{rows,row_size} values, for resize_screen() can
-recurse into vc_do_resize() which changes vc->vc_{cols,rows} that outdates
-old_{rows,row_size} values which were saved before calling resize_screen().
+This series adds support for the AMS AS73211 digital XYZ sensor.
 
-Daniel Vetter explained that resize_screen() should not recurse into
-fbcon_update_vcs() path due to FBINFO_MISC_USEREVENT being still set
-when calling resize_screen().
+Changes in v3:
+--------------
+- Integrated comments from Andy Shevchenko 
+- Integrated comments from Jonathan Cameron 
 
-Instead of masking FBINFO_MISC_USEREVENT before calling fbcon_update_vcs(),
-we can remove FBINFO_MISC_USEREVENT by calling fbcon_update_vcs() only if
-fb_set_var() returned 0. This change assumes that it is harmless to call
-fbcon_update_vcs() when fb_set_var() returned 0 without reaching
-fb_notifier_call_chain().
+Changes in v2:
+---------------
+- Fix $id in dt binding
+- Document full I2C address range in "reg" property
+- Move "buffer" member out of "struct as73211_data"
+- Fix sparse warnings by using correct data types
 
-[1] https://syzkaller.appspot.com/bug?id=c70c88cfd16dcf6e1d3c7f0ab8648b3144b5b25e
 
-Reported-and-tested-by: syzbot <syzbot+c37a14770d51a085a520@syzkaller.appspotmail.com>
-Suggested-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Reported-by: kernel test robot <lkp@intel.com> for missing #include
----
- drivers/video/fbdev/core/fbmem.c   | 8 ++------
- drivers/video/fbdev/core/fbsysfs.c | 4 ++--
- drivers/video/fbdev/ps3fb.c        | 5 +++--
- include/linux/fb.h                 | 2 --
- 4 files changed, 7 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-index 30e73ec..da7c88f 100644
---- a/drivers/video/fbdev/core/fbmem.c
-+++ b/drivers/video/fbdev/core/fbmem.c
-@@ -957,7 +957,6 @@ static int fb_check_caps(struct fb_info *info, struct fb_var_screeninfo *var,
- int
- fb_set_var(struct fb_info *info, struct fb_var_screeninfo *var)
- {
--	int flags = info->flags;
- 	int ret = 0;
- 	u32 activate;
- 	struct fb_var_screeninfo old_var;
-@@ -1052,9 +1051,6 @@ static int fb_check_caps(struct fb_info *info, struct fb_var_screeninfo *var,
- 	event.data = &mode;
- 	fb_notifier_call_chain(FB_EVENT_MODE_CHANGE, &event);
- 
--	if (flags & FBINFO_MISC_USEREVENT)
--		fbcon_update_vcs(info, activate & FB_ACTIVATE_ALL);
--
- 	return 0;
- }
- EXPORT_SYMBOL(fb_set_var);
-@@ -1105,9 +1101,9 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
- 			return -EFAULT;
- 		console_lock();
- 		lock_fb_info(info);
--		info->flags |= FBINFO_MISC_USEREVENT;
- 		ret = fb_set_var(info, &var);
--		info->flags &= ~FBINFO_MISC_USEREVENT;
-+		if (!ret)
-+			fbcon_update_vcs(info, var.activate & FB_ACTIVATE_ALL);
- 		unlock_fb_info(info);
- 		console_unlock();
- 		if (!ret && copy_to_user(argp, &var, sizeof(var)))
-diff --git a/drivers/video/fbdev/core/fbsysfs.c b/drivers/video/fbdev/core/fbsysfs.c
-index d54c88f..65dae05 100644
---- a/drivers/video/fbdev/core/fbsysfs.c
-+++ b/drivers/video/fbdev/core/fbsysfs.c
-@@ -91,9 +91,9 @@ static int activate(struct fb_info *fb_info, struct fb_var_screeninfo *var)
- 
- 	var->activate |= FB_ACTIVATE_FORCE;
- 	console_lock();
--	fb_info->flags |= FBINFO_MISC_USEREVENT;
- 	err = fb_set_var(fb_info, var);
--	fb_info->flags &= ~FBINFO_MISC_USEREVENT;
-+	if (!err)
-+		fbcon_update_vcs(fb_info, var->activate & FB_ACTIVATE_ALL);
- 	console_unlock();
- 	if (err)
- 		return err;
-diff --git a/drivers/video/fbdev/ps3fb.c b/drivers/video/fbdev/ps3fb.c
-index 9df78fb..203c254 100644
---- a/drivers/video/fbdev/ps3fb.c
-+++ b/drivers/video/fbdev/ps3fb.c
-@@ -29,6 +29,7 @@
- #include <linux/freezer.h>
- #include <linux/uaccess.h>
- #include <linux/fb.h>
-+#include <linux/fbcon.h>
- #include <linux/init.h>
- 
- #include <asm/cell-regs.h>
-@@ -824,12 +825,12 @@ static int ps3fb_ioctl(struct fb_info *info, unsigned int cmd,
- 				var = info->var;
- 				fb_videomode_to_var(&var, vmode);
- 				console_lock();
--				info->flags |= FBINFO_MISC_USEREVENT;
- 				/* Force, in case only special bits changed */
- 				var.activate |= FB_ACTIVATE_FORCE;
- 				par->new_mode_id = val;
- 				retval = fb_set_var(info, &var);
--				info->flags &= ~FBINFO_MISC_USEREVENT;
-+				if (!retval)
-+					fbcon_update_vcs(info, var.activate & FB_ACTIVATE_ALL);
- 				console_unlock();
- 			}
- 			break;
-diff --git a/include/linux/fb.h b/include/linux/fb.h
-index 3b4b2f0..b11eb02 100644
---- a/include/linux/fb.h
-+++ b/include/linux/fb.h
-@@ -400,8 +400,6 @@ struct fb_tile_ops {
- #define FBINFO_HWACCEL_YPAN		0x2000 /* optional */
- #define FBINFO_HWACCEL_YWRAP		0x4000 /* optional */
- 
--#define FBINFO_MISC_USEREVENT          0x10000 /* event request
--						  from userspace */
- #define FBINFO_MISC_TILEBLITTING       0x20000 /* use tile blitting */
- 
- /* A driver may set this flag to indicate that it does want a set_par to be
--- 
-1.8.3.1
 
