@@ -2,145 +2,248 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A37C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA613C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDC920829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89E622082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:39:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729623AbgG3OiZ (ORCPT
+        id S1729645AbgG3OjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 10:38:25 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:56878 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgG3OiZ (ORCPT
+        Thu, 30 Jul 2020 10:39:16 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53237 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbgG3OjQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 10:38:25 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id DBADF80045E5;
-        Thu, 30 Jul 2020 14:38:21 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id KpegvUn9Uau9; Thu, 30 Jul 2020 17:38:21 +0300 (MSK)
-Date:   Thu, 30 Jul 2020 17:38:20 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 05/10] gpio: dwapb: Convert driver to using the
- GPIO-lib-based IRQ-chip
-Message-ID: <20200730143820.suneapi2ilp34nat@mobilestation>
-References: <20200730135536.19747-1-Sergey.Semin@baikalelectronics.ru>
- <20200730135536.19747-6-Sergey.Semin@baikalelectronics.ru>
- <20200730142618.GM3703480@smile.fi.intel.com>
+        Thu, 30 Jul 2020 10:39:16 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1k19i5-0001C8-BN; Thu, 30 Jul 2020 14:39:05 +0000
+Date:   Thu, 30 Jul 2020 16:39:04 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
+        ebiederm@xmission.com, akpm@linux-foundation.org,
+        areber@redhat.com, serge@hallyn.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 01/23] ns: Add common refcount into ns_common add use it
+ as counter for net_ns
+Message-ID: <20200730143904.liappabxaretvah6@wittgenstein>
+References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
+ <159611036589.535980.1765795847221907147.stgit@localhost.localdomain>
+ <20200730143049.m3isrpwrktxnh7pz@wittgenstein>
+ <2f922e05-fd2b-f176-727a-f8b913087891@virtuozzo.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200730142618.GM3703480@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <2f922e05-fd2b-f176-727a-f8b913087891@virtuozzo.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 05:26:18PM +0300, Andy Shevchenko wrote:
-> On Thu, Jul 30, 2020 at 04:55:31PM +0300, Serge Semin wrote:
-> > GPIO-lib provides a ready-to-use interface to initialize an IRQ-chip on
-> > top of a GPIO chip. It's better from maintainability and readability
-> > point of view to use one instead of supporting a hand-written Generic
-> > IRQ-chip-based implementation. Moreover the new implementation won't
-> > cause much functional overhead but will provide a cleaner driver code.
-> > All of that makes the DW APB GPIO driver conversion pretty much justified
-> > especially seeing a tendency of the other GPIO drivers getting converted
-> > too.
+On Thu, Jul 30, 2020 at 05:34:28PM +0300, Kirill Tkhai wrote:
+> On 30.07.2020 17:30, Christian Brauner wrote:
+> > On Thu, Jul 30, 2020 at 02:59:25PM +0300, Kirill Tkhai wrote:
+> >> Currently, every type of namespaces has its own counter,
+> >> which is stored in ns-specific part. Say, @net has
+> >> struct net::count, @pid has struct pid_namespace::kref, etc.
+> >>
+> >> This patchset introduces unified counter for all types
+> >> of namespaces, and converts net namespace to use it first.
+> >>
+> >> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> >> ---
+> >>  include/linux/ns_common.h     |    1 +
+> >>  include/net/net_namespace.h   |   11 ++++-------
+> >>  net/core/net-sysfs.c          |    6 +++---
+> >>  net/core/net_namespace.c      |    6 +++---
+> >>  net/ipv4/inet_timewait_sock.c |    4 ++--
+> >>  net/ipv4/tcp_metrics.c        |    2 +-
+> >>  6 files changed, 14 insertions(+), 16 deletions(-)
+> >>
+> >> diff --git a/include/linux/ns_common.h b/include/linux/ns_common.h
+> >> index 5fbc4000358f..27db02ebdf36 100644
+> >> --- a/include/linux/ns_common.h
+> >> +++ b/include/linux/ns_common.h
+> >> @@ -8,6 +8,7 @@ struct ns_common {
+> >>  	atomic_long_t stashed;
+> >>  	const struct proc_ns_operations *ops;
+> >>  	unsigned int inum;
+> >> +	refcount_t count;
 > > 
-> > Here is what we do in the framework of this commit to convert the driver
-> > to using the GPIO-lib-based IRQ-chip interface:
-> > 1) IRQ ack, mask and unmask callbacks are locally defined instead of
-> > using the Generic IRQ-chip ones.
-> 
-
-> Easy to read if you put blank lines in between of items.
-
-Ok.
-
-> 
-> > 2) An irq_chip structure instance is embedded into the dwapb_gpio
-> > private data. Note we can't have a static instance of that structure since
-> > GPIO-lib will add some hooks into it by calling gpiochip_set_irq_hooks().
-> > A warning about that would have been printed by the GPIO-lib code if we
-> > used a single irq_chip structure instance for multiple DW APB GPIO
-> > controllers.
-> > 3) Initialize the gpio_irq_chip structure embedded into the gpio_chip
-> > descriptor. By default there is no IRQ enabled so any event raised will be
-> > handled by the handle_bad_irq() IRQ flow handler. If DW APB GPIO IP-core
-> > is synthesized to have non-shared reference IRQ-lines, then as before the
-> > hierarchical and cascaded cases are distinguished by checking how many
-> > parental IRQs are defined. (Note irq_set_chained_handler_and_data() won't
-> > initialize IRQs, which descriptors couldn't be found.) If DW APB GPIO IP
-> > is used on a platform with shared IRQ line, then we simply won't let the
-> > GPIO-lib to initialize the parental IRQs, but will handle them locally in
-> > the driver.
-> > 4) Discard linear IRQ-domain and Generic IRQ-chip initialization, since
-> > GPIO-lib IRQ-chip interface will create a new domain and accept a standard
-> > IRQ-chip structure pointer based on the setting we provided in the
-> > gpio_irq_chip structure.
-> > 5) Manually select a proper IRQ flow handler directly in the
-> > irq_set_type() callback by calling irq_set_handler_locked() method, since
-> > an ordinary (not Generic) irq_chip descriptor is now utilized. Note this
-> > shalln't give any regression
-> > 6) Alter CONFIG_GPIO_DWAPB kernel config to select
-> > CONFIG_GPIOLIB_IRQCHIP instead of CONFIG_GENERIC_IRQ_CHIP.
+> > Hm, I wonder whether it's worth to have this addition be in a separate
+> > patch but probably not and even if there'd be no need to resend.
 > > 
-> > Note neither 4) nor 5) shall cause a regression of commit 6a2f4b7dadd5
-> > ("gpio: dwapb: use a second irq chip"), since the later isn't properly
-> > used here anyway.
+> > Though I wonder, isn't this missing an include for refcount_t or is
+> > there some header-magic we're doing during pre-processing?
 > 
-> ...
-> 
-> >  struct dwapb_gpio_port {
-> >  	struct gpio_chip	gc;
-> > +	unsigned int		nr_irqs;
-> > +	unsigned int		irq[DWAPB_MAX_GPIOS];
-> > +	struct irq_chip		irqchip;
-> >  	bool			is_registered;
-> >  	struct dwapb_gpio	*gpio;
-> 
+> We have to add, I think. I'll resend with #include <linux/refcount.h>
+> in this file. Can I keep your Ack here on resend?
 
-> Isn't it too much wasted memory (imagine 4 port controller)?
-> 
-> What if we have it in another structure and allocate dynamically?
-> 
-> struct dwapb_gpio_port_irqchip {
-> 	struct irq_chip		irqchip;
-> 	unsigned int		nr_irqs;
-> 	unsigned int		irq[DWAPB_MAX_GPIOS];
-> };
+Sure.
 
-Agree. I have to send a new revision of the series anyway. I'll do that shortly.
-
--Sergey
-
-> 
-> 	...
-> 	struct dwapb_gpio_port_irqchip *pirq;
-> 	...
-> 
-> (I agree that IRQ chip is rather property of a port than controller)
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
+>  
+> > Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > 
+> > Thanks!
+> > Christian
+> > 
+> >>  };
+> >>  
+> >>  #endif
+> >> diff --git a/include/net/net_namespace.h b/include/net/net_namespace.h
+> >> index 2ee5901bec7a..cb4b33d7834b 100644
+> >> --- a/include/net/net_namespace.h
+> >> +++ b/include/net/net_namespace.h
+> >> @@ -60,9 +60,6 @@ struct net {
+> >>  	refcount_t		passive;	/* To decide when the network
+> >>  						 * namespace should be freed.
+> >>  						 */
+> >> -	refcount_t		count;		/* To decided when the network
+> >> -						 *  namespace should be shut down.
+> >> -						 */
+> >>  	spinlock_t		rules_mod_lock;
+> >>  
+> >>  	unsigned int		dev_unreg_count;
+> >> @@ -245,7 +242,7 @@ void __put_net(struct net *net);
+> >>  
+> >>  static inline struct net *get_net(struct net *net)
+> >>  {
+> >> -	refcount_inc(&net->count);
+> >> +	refcount_inc(&net->ns.count);
+> >>  	return net;
+> >>  }
+> >>  
+> >> @@ -256,14 +253,14 @@ static inline struct net *maybe_get_net(struct net *net)
+> >>  	 * exists.  If the reference count is zero this
+> >>  	 * function fails and returns NULL.
+> >>  	 */
+> >> -	if (!refcount_inc_not_zero(&net->count))
+> >> +	if (!refcount_inc_not_zero(&net->ns.count))
+> >>  		net = NULL;
+> >>  	return net;
+> >>  }
+> >>  
+> >>  static inline void put_net(struct net *net)
+> >>  {
+> >> -	if (refcount_dec_and_test(&net->count))
+> >> +	if (refcount_dec_and_test(&net->ns.count))
+> >>  		__put_net(net);
+> >>  }
+> >>  
+> >> @@ -275,7 +272,7 @@ int net_eq(const struct net *net1, const struct net *net2)
+> >>  
+> >>  static inline int check_net(const struct net *net)
+> >>  {
+> >> -	return refcount_read(&net->count) != 0;
+> >> +	return refcount_read(&net->ns.count) != 0;
+> >>  }
+> >>  
+> >>  void net_drop_ns(void *);
+> >> diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+> >> index 9de33b594ff2..655a88b0071c 100644
+> >> --- a/net/core/net-sysfs.c
+> >> +++ b/net/core/net-sysfs.c
+> >> @@ -1025,7 +1025,7 @@ net_rx_queue_update_kobjects(struct net_device *dev, int old_num, int new_num)
+> >>  	while (--i >= new_num) {
+> >>  		struct kobject *kobj = &dev->_rx[i].kobj;
+> >>  
+> >> -		if (!refcount_read(&dev_net(dev)->count))
+> >> +		if (!refcount_read(&dev_net(dev)->ns.count))
+> >>  			kobj->uevent_suppress = 1;
+> >>  		if (dev->sysfs_rx_queue_group)
+> >>  			sysfs_remove_group(kobj, dev->sysfs_rx_queue_group);
+> >> @@ -1603,7 +1603,7 @@ netdev_queue_update_kobjects(struct net_device *dev, int old_num, int new_num)
+> >>  	while (--i >= new_num) {
+> >>  		struct netdev_queue *queue = dev->_tx + i;
+> >>  
+> >> -		if (!refcount_read(&dev_net(dev)->count))
+> >> +		if (!refcount_read(&dev_net(dev)->ns.count))
+> >>  			queue->kobj.uevent_suppress = 1;
+> >>  #ifdef CONFIG_BQL
+> >>  		sysfs_remove_group(&queue->kobj, &dql_group);
+> >> @@ -1850,7 +1850,7 @@ void netdev_unregister_kobject(struct net_device *ndev)
+> >>  {
+> >>  	struct device *dev = &ndev->dev;
+> >>  
+> >> -	if (!refcount_read(&dev_net(ndev)->count))
+> >> +	if (!refcount_read(&dev_net(ndev)->ns.count))
+> >>  		dev_set_uevent_suppress(dev, 1);
+> >>  
+> >>  	kobject_get(&dev->kobj);
+> >> diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+> >> index dcd61aca343e..5f658cbedd34 100644
+> >> --- a/net/core/net_namespace.c
+> >> +++ b/net/core/net_namespace.c
+> >> @@ -44,7 +44,7 @@ static struct key_tag init_net_key_domain = { .usage = REFCOUNT_INIT(1) };
+> >>  #endif
+> >>  
+> >>  struct net init_net = {
+> >> -	.count		= REFCOUNT_INIT(1),
+> >> +	.ns.count	= REFCOUNT_INIT(1),
+> >>  	.dev_base_head	= LIST_HEAD_INIT(init_net.dev_base_head),
+> >>  #ifdef CONFIG_KEYS
+> >>  	.key_domain	= &init_net_key_domain,
+> >> @@ -248,7 +248,7 @@ int peernet2id_alloc(struct net *net, struct net *peer, gfp_t gfp)
+> >>  {
+> >>  	int id;
+> >>  
+> >> -	if (refcount_read(&net->count) == 0)
+> >> +	if (refcount_read(&net->ns.count) == 0)
+> >>  		return NETNSA_NSID_NOT_ASSIGNED;
+> >>  
+> >>  	spin_lock(&net->nsid_lock);
+> >> @@ -328,7 +328,7 @@ static __net_init int setup_net(struct net *net, struct user_namespace *user_ns)
+> >>  	int error = 0;
+> >>  	LIST_HEAD(net_exit_list);
+> >>  
+> >> -	refcount_set(&net->count, 1);
+> >> +	refcount_set(&net->ns.count, 1);
+> >>  	refcount_set(&net->passive, 1);
+> >>  	get_random_bytes(&net->hash_mix, sizeof(u32));
+> >>  	net->dev_base_seq = 1;
+> >> diff --git a/net/ipv4/inet_timewait_sock.c b/net/ipv4/inet_timewait_sock.c
+> >> index c411c87ae865..437afe392e66 100644
+> >> --- a/net/ipv4/inet_timewait_sock.c
+> >> +++ b/net/ipv4/inet_timewait_sock.c
+> >> @@ -272,14 +272,14 @@ void inet_twsk_purge(struct inet_hashinfo *hashinfo, int family)
+> >>  				continue;
+> >>  			tw = inet_twsk(sk);
+> >>  			if ((tw->tw_family != family) ||
+> >> -				refcount_read(&twsk_net(tw)->count))
+> >> +				refcount_read(&twsk_net(tw)->ns.count))
+> >>  				continue;
+> >>  
+> >>  			if (unlikely(!refcount_inc_not_zero(&tw->tw_refcnt)))
+> >>  				continue;
+> >>  
+> >>  			if (unlikely((tw->tw_family != family) ||
+> >> -				     refcount_read(&twsk_net(tw)->count))) {
+> >> +				     refcount_read(&twsk_net(tw)->ns.count))) {
+> >>  				inet_twsk_put(tw);
+> >>  				goto restart;
+> >>  			}
+> >> diff --git a/net/ipv4/tcp_metrics.c b/net/ipv4/tcp_metrics.c
+> >> index 279db8822439..39710c417565 100644
+> >> --- a/net/ipv4/tcp_metrics.c
+> >> +++ b/net/ipv4/tcp_metrics.c
+> >> @@ -887,7 +887,7 @@ static void tcp_metrics_flush_all(struct net *net)
+> >>  		pp = &hb->chain;
+> >>  		for (tm = deref_locked(*pp); tm; tm = deref_locked(*pp)) {
+> >>  			match = net ? net_eq(tm_net(tm), net) :
+> >> -				!refcount_read(&tm_net(tm)->count);
+> >> +				!refcount_read(&tm_net(tm)->ns.count);
+> >>  			if (match) {
+> >>  				*pp = tm->tcpm_next;
+> >>  				kfree_rcu(tm, rcu_head);
+> >>
+> >>
 > 
