@@ -2,168 +2,161 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22364C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 976A9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAD212074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE58204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596097218;
-	bh=sohbCCYuDX3uDhpZAatiWG9WdBhEJF+UgBnwV/nnHNY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=xP/x58GTL43ixM8Es+q3Cn3oZljRUu0ZWKPif2dFFzCv7hejntCou3WeJ8a631BRw
-	 u+UASo7Q3EqUObjAcQmdYxvYrd6EczQKY5idjCKAYxCLbkiOGS/DtwMH+7dByy347d
-	 YO6kr4EL3Gg9isWWtfvhwu7hbf/1bhxfbeBGREe4=
+	s=default; t=1596097221;
+	bh=kh+wE68N2kyRA2fXhaGgr74yea6YKa1fBgeKu2BPwew=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nbF/LboJbixfWsXgeaIzQ74DdvsRsZ/ChbL3tC+u6hkUqgZCuGaoPYhv7NHyYCYj1
+	 9qYVL9zz3Z3ilh238ZJeoyEmu59NFeV38rnyYWLzlIWPJOaXH1zOJwU2Rp8psHahi7
+	 JjJj8Xxkx+2GeZw018pOw0cODwMZ9HylDXTtVdnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729884AbgG3IUQ (ORCPT
+        id S1730241AbgG3IUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:20:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44682 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:20:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729376AbgG3IHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:07:01 -0400
+        id S1729268AbgG3IG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:06:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97A0521744;
-        Thu, 30 Jul 2020 08:06:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34D1220809;
+        Thu, 30 Jul 2020 08:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096420;
-        bh=sohbCCYuDX3uDhpZAatiWG9WdBhEJF+UgBnwV/nnHNY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=yVqdY5QLrQHbW1862RZUqgBYLiqEtYVoW5PlIVfCud8oPeBEsJhIoIIJyHNqPQzzq
-         YbnNjeWD4TAXpf3qaqlaWx1t73gqQCqSS7H/iSdoU7GTbVVRcxAqTbRPtfYHS37mlf
-         y2lLFP+tUHXPFYT4Qq74l/xM5OOYzIqdZlbzV9go=
+        s=default; t=1596096417;
+        bh=kh+wE68N2kyRA2fXhaGgr74yea6YKa1fBgeKu2BPwew=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qPFUbqbAYvkBjsRuzi95E28JnlZmC7UshP8Bd2Vsf8UyLraCAZeYbKNTGCtdeS4d/
+         bzvn5w2w3AxhCTvDcPtD+g1acpFs/93FuVvSPCgS1OS96JDYE0GXVOl1BlL62PMbLz
+         ELtSbJDA1ruB7Q0RrYk7IXHHwbNc/4LbyfS4PFYk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.19 00/17] 4.19.136-rc1 review
-Date:   Thu, 30 Jul 2020 10:04:26 +0200
-Message-Id: <20200730074420.449233408@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Martin Schiller <ms@dev.tdt.de>,
+        Xie He <xie.he.0141@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 04/17] drivers/net/wan/x25_asy: Fix to make it work
+Date:   Thu, 30 Jul 2020 10:04:30 +0200
+Message-Id: <20200730074420.672035354@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-MIME-Version: 1.0
+In-Reply-To: <20200730074420.449233408@linuxfoundation.org>
+References: <20200730074420.449233408@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.136-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.136-rc1
-X-KernelTest-Deadline: 2020-08-01T07:44+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.19.136 release.
-There are 17 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Xie He <xie.he.0141@gmail.com>
 
-Responses should be made by Sat, 01 Aug 2020 07:44:05 +0000.
-Anything received after that time might be too late.
+[ Upstream commit 8fdcabeac39824fe67480fd9508d80161c541854 ]
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.136-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-and the diffstat can be found below.
+This driver is not working because of problems of its receiving code.
+This patch fixes it to make it work.
 
-thanks,
+When the driver receives an LAPB frame, it should first pass the frame
+to the LAPB module to process. After processing, the LAPB module passes
+the data (the packet) back to the driver, the driver should then add a
+one-byte pseudo header and pass the data to upper layers.
 
-greg k-h
+The changes to the "x25_asy_bump" function and the
+"x25_asy_data_indication" function are to correctly implement this
+procedure.
 
--------------
-Pseudo-Shortlog of commits:
+Also, the "x25_asy_unesc" function ignores any frame that is shorter
+than 3 bytes. However the shortest frames are 2-byte long. So we need
+to change it to allow 2-byte frames to pass.
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.19.136-rc1
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
+Reviewed-by: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/wan/x25_asy.c |   21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-Peng Fan <peng.fan@nxp.com>
-    regmap: debugfs: check count when read regmap file
-
-Weilong Chen <chenweilong@huawei.com>
-    rtnetlink: Fix memory(net_device) leak when ->newlink fails
-
-Kuniyuki Iwashima <kuniyu@amazon.co.jp>
-    udp: Improve load balancing for SO_REUSEPORT.
-
-Kuniyuki Iwashima <kuniyu@amazon.co.jp>
-    udp: Copy has_conns in reuseport_grow().
-
-Xin Long <lucien.xin@gmail.com>
-    sctp: shrink stream outq when fails to do addstream reconf
-
-Xin Long <lucien.xin@gmail.com>
-    sctp: shrink stream outq only when new outcnt < old outcnt
-
-Dan Carpenter <dan.carpenter@oracle.com>
-    AX.25: Prevent integer overflows in connect and sendmsg
-
-Yuchung Cheng <ycheng@google.com>
-    tcp: allow at most one TLP probe per flight
-
-David Howells <dhowells@redhat.com>
-    rxrpc: Fix sendmsg() returning EPIPE due to recvmsg() returning ENODATA
-
-Cong Wang <xiyou.wangcong@gmail.com>
-    qrtr: orphan socket in qrtr_release()
-
-Miaohe Lin <linmiaohe@huawei.com>
-    net: udp: Fix wrong clean up for IS_UDPLITE macro
-
-Xiongfeng Wang <wangxiongfeng2@huawei.com>
-    net-sysfs: add a newline when printing 'tx_timeout' by sysfs
-
-Wei Yongjun <weiyongjun1@huawei.com>
-    ip6_gre: fix null-ptr-deref in ip6gre_init_net()
-
-Xie He <xie.he.0141@gmail.com>
-    drivers/net/wan/x25_asy: Fix to make it work
-
-Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
-    dev: Defer free of skbs in flush_backlog
-
-Peilin Ye <yepeilin.cs@gmail.com>
-    AX.25: Prevent out-of-bounds read in ax25_sendmsg()
-
-Peilin Ye <yepeilin.cs@gmail.com>
-    AX.25: Fix out-of-bounds read in ax25_connect()
-
-
--------------
-
-Diffstat:
-
- Makefile                             |  4 ++--
- drivers/base/regmap/regmap-debugfs.c |  6 ++++++
- drivers/net/wan/x25_asy.c            | 21 ++++++++++++++-------
- include/linux/tcp.h                  |  4 +++-
- net/ax25/af_ax25.c                   | 10 ++++++++--
- net/core/dev.c                       |  2 +-
- net/core/net-sysfs.c                 |  2 +-
- net/core/rtnetlink.c                 |  3 ++-
- net/core/sock_reuseport.c            |  1 +
- net/ipv4/tcp_input.c                 | 11 ++++++-----
- net/ipv4/tcp_output.c                | 13 ++++++++-----
- net/ipv4/udp.c                       | 17 ++++++++++-------
- net/ipv6/ip6_gre.c                   | 11 ++++++-----
- net/ipv6/udp.c                       | 17 ++++++++++-------
- net/qrtr/qrtr.c                      |  1 +
- net/rxrpc/recvmsg.c                  |  2 +-
- net/rxrpc/sendmsg.c                  |  2 +-
- net/sctp/stream.c                    | 27 ++++++++++++++++++---------
- 18 files changed, 99 insertions(+), 55 deletions(-)
+--- a/drivers/net/wan/x25_asy.c
++++ b/drivers/net/wan/x25_asy.c
+@@ -183,7 +183,7 @@ static inline void x25_asy_unlock(struct
+ 	netif_wake_queue(sl->dev);
+ }
+ 
+-/* Send one completely decapsulated IP datagram to the IP layer. */
++/* Send an LAPB frame to the LAPB module to process. */
+ 
+ static void x25_asy_bump(struct x25_asy *sl)
+ {
+@@ -195,13 +195,12 @@ static void x25_asy_bump(struct x25_asy
+ 	count = sl->rcount;
+ 	dev->stats.rx_bytes += count;
+ 
+-	skb = dev_alloc_skb(count+1);
++	skb = dev_alloc_skb(count);
+ 	if (skb == NULL) {
+ 		netdev_warn(sl->dev, "memory squeeze, dropping packet\n");
+ 		dev->stats.rx_dropped++;
+ 		return;
+ 	}
+-	skb_push(skb, 1);	/* LAPB internal control */
+ 	skb_put_data(skb, sl->rbuff, count);
+ 	skb->protocol = x25_type_trans(skb, sl->dev);
+ 	err = lapb_data_received(skb->dev, skb);
+@@ -209,7 +208,6 @@ static void x25_asy_bump(struct x25_asy
+ 		kfree_skb(skb);
+ 		printk(KERN_DEBUG "x25_asy: data received err - %d\n", err);
+ 	} else {
+-		netif_rx(skb);
+ 		dev->stats.rx_packets++;
+ 	}
+ }
+@@ -356,12 +354,21 @@ static netdev_tx_t x25_asy_xmit(struct s
+  */
+ 
+ /*
+- *	Called when I frame data arrives. We did the work above - throw it
+- *	at the net layer.
++ *	Called when I frame data arrive. We add a pseudo header for upper
++ *	layers and pass it to upper layers.
+  */
+ 
+ static int x25_asy_data_indication(struct net_device *dev, struct sk_buff *skb)
+ {
++	if (skb_cow(skb, 1)) {
++		kfree_skb(skb);
++		return NET_RX_DROP;
++	}
++	skb_push(skb, 1);
++	skb->data[0] = X25_IFACE_DATA;
++
++	skb->protocol = x25_type_trans(skb, dev);
++
+ 	return netif_rx(skb);
+ }
+ 
+@@ -657,7 +664,7 @@ static void x25_asy_unesc(struct x25_asy
+ 	switch (s) {
+ 	case X25_END:
+ 		if (!test_and_clear_bit(SLF_ERROR, &sl->flags) &&
+-		    sl->rcount > 2)
++		    sl->rcount >= 2)
+ 			x25_asy_bump(sl);
+ 		clear_bit(SLF_ESCAPE, &sl->flags);
+ 		sl->rcount = 0;
 
 
