@@ -2,115 +2,215 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F204C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7613C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4A320838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:01:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596121264;
-	bh=vrT0L42uxKpirJmQf04CjGJseDo6AeA6oDr8HXNg8Vs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nQvRoAmR2rT83Uv3lqDkPlEfmXJ+zY/qblLgUMSjnMYHuY8QeNHBTd2WmejgbvjxN
-	 CpsP+ugKP5ff+CuLbFxLuk4hGU20pguuqdVPuptGEY66GNHokpfua3TBfeb779BSD5
-	 0pmKFTsTCIrbLoLI5ui8uZ0pkLmDcmoecnie6JWI=
+	by mail.kernel.org (Postfix) with ESMTP id A48442070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:01:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbgG3PBC (ORCPT
+        id S1729673AbgG3PB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:01:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52526 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgG3PBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 11:01:02 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFD832070B;
-        Thu, 30 Jul 2020 15:00:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596121261;
-        bh=vrT0L42uxKpirJmQf04CjGJseDo6AeA6oDr8HXNg8Vs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J2AGaFsP3cCdxOYRg2TlT/S6yMwsJgah7u7grimwcOQdZL6EaFs/5bFUbboX8sXAW
-         dHs1inYA/qcBuTef/BAmWX5GTgUor/PoRZs+lkVwHU3LcCTeRpCbmwZdpD5ZsjHuw+
-         zqksTEoCJqMZm2C4kp9xeJhfbBGyuWWdqILwkzBA=
-Date:   Thu, 30 Jul 2020 16:00:56 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Marc Zyngier <maz@misterjones.org>, Willy Tarreau <w@1wt.eu>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Emese Revfy <re.emese@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
-Subject: Re: linux-next: build failure after merge of the origin tree
-Message-ID: <20200730150056.GA24716@willie-the-truck>
-References: <20200730090828.2349e159@canb.auug.org.au>
- <CAHk-=wjK8+12i8iDC41LXfZBcMjGsF+WyW_+ncPFmrexRT0yxw@mail.gmail.com>
- <202007292007.D87DBD34B@keescook>
- <20200730032250.GB7790@1wt.eu>
- <20200730061407.GA7941@1wt.eu>
- <102fc7a6fa4c2767879a6f911a9a16d5@misterjones.org>
- <20200730100923.GE25149@gaia>
+        Thu, 30 Jul 2020 11:01:28 -0400
+Received: from relay.sw.ru ([185.231.240.75]:46850 "EHLO relay3.sw.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726275AbgG3PB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 11:01:28 -0400
+Received: from [192.168.15.64]
+        by relay3.sw.ru with esmtp (Exim 4.93)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1k1A3O-0004lX-J4; Thu, 30 Jul 2020 18:01:06 +0300
+Subject: Re: [PATCH 00/23] proc: Introduce /proc/namespaces/ directory to
+ expose namespaces lineary
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
+        akpm@linux-foundation.org, christian.brauner@ubuntu.com,
+        areber@redhat.com, serge@hallyn.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
+ <87k0yl5axy.fsf@x220.int.ebiederm.org>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <56928404-f194-4194-5f2a-59acb15b1a04@virtuozzo.com>
+Date:   Thu, 30 Jul 2020 18:01:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730100923.GE25149@gaia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87k0yl5axy.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 11:09:23AM +0100, Catalin Marinas wrote:
-> On Thu, Jul 30, 2020 at 10:59:09AM +0100, Marc Zyngier wrote:
-> > From 33d819f4efa0a4474b5dc2e4bcaef1b886ca30c3 Mon Sep 17 00:00:00 2001
-> > From: Marc Zyngier <maz@kernel.org>
-> > Date: Thu, 30 Jul 2020 10:53:05 +0100
-> > Subject: [PATCH] arm64: Drop unnecessary include from asm/smp.h
-> > 
-> > asm/pointer_auth.h is not needed anymore in asm/smp.h, as 62a679cb2825
-> > ("arm64: simplify ptrauth initialization") removed the keys from the
-> > secondary_data structure.
-> > 
-> > This also cures a compilation issue introduced by f227e3ec3b5c
-> > ("random32: update the net random state on interrupt and activity").
-> > 
-> > Fixes: 62a679cb2825 ("arm64: simplify ptrauth initialization")
-> > Fixes: f227e3ec3b5c ("random32: update the net random state on interrupt and
-> > activity")
-> > Signed-off-by: Marc Zyngier <maz@kernel.org>
-> > ---
-> >  arch/arm64/include/asm/smp.h | 1 -
-> >  1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
-> > index ea268d88b6f7..a0c8a0b65259 100644
-> > --- a/arch/arm64/include/asm/smp.h
-> > +++ b/arch/arm64/include/asm/smp.h
-> > @@ -30,7 +30,6 @@
-> >  #include <linux/threads.h>
-> >  #include <linux/cpumask.h>
-> >  #include <linux/thread_info.h>
-> > -#include <asm/pointer_auth.h>
-> > 
-> >  DECLARE_PER_CPU_READ_MOSTLY(int, cpu_number);
+On 30.07.2020 17:34, Eric W. Biederman wrote:
+> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
 > 
-> I think this arm64 patch makes sense irrespective of any other generic
-> fixes. If Will wants to take it as a fix:
+>> Currently, there is no a way to list or iterate all or subset of namespaces
+>> in the system. Some namespaces are exposed in /proc/[pid]/ns/ directories,
+>> but some also may be as open files, which are not attached to a process.
+>> When a namespace open fd is sent over unix socket and then closed, it is
+>> impossible to know whether the namespace exists or not.
+>>
+>> Also, even if namespace is exposed as attached to a process or as open file,
+>> iteration over /proc/*/ns/* or /proc/*/fd/* namespaces is not fast, because
+>> this multiplies at tasks and fds number.
 > 
-> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> I am very dubious about this.
 > 
-> (otherwise I'll queue it for 5.9)
+> I have been avoiding exactly this kind of interface because it can
+> create rather fundamental problems with checkpoint restart.
 
-Cheers, I'll pick this up asap.
+restart/restore :)
 
-Will
+> You do have some filtering and the filtering is not based on current.
+> Which is good.
+> 
+> A view that is relative to a user namespace might be ok.    It almost
+> certainly does better as it's own little filesystem than as an extension
+> to proc though.
+> 
+> The big thing we want to ensure is that if you migrate you can restore
+> everything.  I don't see how you will be able to restore these files
+> after migration.  Anything like this without having a complete
+> checkpoint/restore story is a non-starter.
+
+There is no difference between files in /proc/namespaces/ directory and /proc/[pid]/ns/.
+
+CRIU can restore open files in /proc/[pid]/ns, the same will be with /proc/namespaces/ files.
+As a person who worked deeply for pid_ns and user_ns support in CRIU, I don't see any
+problem here.
+
+If you have a specific worries about, let's discuss them.
+
+CC: Pavel Tikhomirov CRIU maintainer, who knows everything about namespaces C/R.
+ 
+> Further by not going through the processes it looks like you are
+> bypassing the existing permission checks.  Which has the potential
+> to allow someone to use a namespace who would not be able to otherwise.
+
+I agree, and I wrote to Christian, that permissions should be more strict.
+This just should be formalized. Let's discuss this.
+
+> So I think this goes one step too far but I am willing to be persuaded
+> otherwise.
+> 
+> Eric
+> 
+> 
+> 
+> 
+>> This patchset introduces a new /proc/namespaces/ directory, which exposes
+>> subset of permitted namespaces in linear view:
+>>
+>> # ls /proc/namespaces/ -l
+>> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'cgroup:[4026531835]' -> 'cgroup:[4026531835]'
+>> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'ipc:[4026531839]' -> 'ipc:[4026531839]'
+>> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026531840]' -> 'mnt:[4026531840]'
+>> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026531861]' -> 'mnt:[4026531861]'
+>> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026532133]' -> 'mnt:[4026532133]'
+>> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026532134]' -> 'mnt:[4026532134]'
+>> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026532135]' -> 'mnt:[4026532135]'
+>> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026532136]' -> 'mnt:[4026532136]'
+>> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'net:[4026531993]' -> 'net:[4026531993]'
+>> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'pid:[4026531836]' -> 'pid:[4026531836]'
+>> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'time:[4026531834]' -> 'time:[4026531834]'
+>> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'user:[4026531837]' -> 'user:[4026531837]'
+>> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'uts:[4026531838]' -> 'uts:[4026531838]'
+>>
+>> Namespace ns is exposed, in case of its user_ns is permitted from /proc's pid_ns.
+>> I.e., /proc is related to pid_ns, so in /proc/namespace we show only a ns, which is
+>>
+>> 	in_userns(pid_ns->user_ns, ns->user_ns).
+>>
+>> In case of ns is a user_ns:
+>>
+>> 	in_userns(pid_ns->user_ns, ns).
+>>
+>> The patchset follows this steps:
+>>
+>> 1)A generic counter in ns_common is introduced instead of separate
+>>   counters for every ns type (net::count, uts_namespace::kref,
+>>   user_namespace::count, etc). Patches [1-8];
+>> 2)Patch [9] introduces IDR to link and iterate alive namespaces;
+>> 3)Patch [10] is refactoring;
+>> 4)Patch [11] actually adds /proc/namespace directory and fs methods;
+>> 5)Patches [12-23] make every namespace to use the added methods
+>>   and to appear in /proc/namespace directory.
+>>
+>> This may be usefull to write effective debug utils (say, fast build
+>> of networks topology) and checkpoint/restore software.
+>> ---
+>>
+>> Kirill Tkhai (23):
+>>       ns: Add common refcount into ns_common add use it as counter for net_ns
+>>       uts: Use generic ns_common::count
+>>       ipc: Use generic ns_common::count
+>>       pid: Use generic ns_common::count
+>>       user: Use generic ns_common::count
+>>       mnt: Use generic ns_common::count
+>>       cgroup: Use generic ns_common::count
+>>       time: Use generic ns_common::count
+>>       ns: Introduce ns_idr to be able to iterate all allocated namespaces in the system
+>>       fs: Rename fs/proc/namespaces.c into fs/proc/task_namespaces.c
+>>       fs: Add /proc/namespaces/ directory
+>>       user: Free user_ns one RCU grace period after final counter put
+>>       user: Add user namespaces into ns_idr
+>>       net: Add net namespaces into ns_idr
+>>       pid: Eextract child_reaper check from pidns_for_children_get()
+>>       proc_ns_operations: Add can_get method
+>>       pid: Add pid namespaces into ns_idr
+>>       uts: Free uts namespace one RCU grace period after final counter put
+>>       uts: Add uts namespaces into ns_idr
+>>       ipc: Add ipc namespaces into ns_idr
+>>       mnt: Add mount namespaces into ns_idr
+>>       cgroup: Add cgroup namespaces into ns_idr
+>>       time: Add time namespaces into ns_idr
+>>
+>>
+>>  fs/mount.h                     |    4 
+>>  fs/namespace.c                 |   14 +
+>>  fs/nsfs.c                      |   78 ++++++++
+>>  fs/proc/Makefile               |    1 
+>>  fs/proc/internal.h             |   18 +-
+>>  fs/proc/namespaces.c           |  382 +++++++++++++++++++++++++++-------------
+>>  fs/proc/root.c                 |   17 ++
+>>  fs/proc/task_namespaces.c      |  183 +++++++++++++++++++
+>>  include/linux/cgroup.h         |    6 -
+>>  include/linux/ipc_namespace.h  |    3 
+>>  include/linux/ns_common.h      |   11 +
+>>  include/linux/pid_namespace.h  |    4 
+>>  include/linux/proc_fs.h        |    1 
+>>  include/linux/proc_ns.h        |   12 +
+>>  include/linux/time_namespace.h |   10 +
+>>  include/linux/user_namespace.h |   10 +
+>>  include/linux/utsname.h        |   10 +
+>>  include/net/net_namespace.h    |   11 -
+>>  init/version.c                 |    2 
+>>  ipc/msgutil.c                  |    2 
+>>  ipc/namespace.c                |   17 +-
+>>  ipc/shm.c                      |    1 
+>>  kernel/cgroup/cgroup.c         |    2 
+>>  kernel/cgroup/namespace.c      |   25 ++-
+>>  kernel/pid.c                   |    2 
+>>  kernel/pid_namespace.c         |   46 +++--
+>>  kernel/time/namespace.c        |   20 +-
+>>  kernel/user.c                  |    2 
+>>  kernel/user_namespace.c        |   23 ++
+>>  kernel/utsname.c               |   23 ++
+>>  net/core/net-sysfs.c           |    6 -
+>>  net/core/net_namespace.c       |   18 +-
+>>  net/ipv4/inet_timewait_sock.c  |    4 
+>>  net/ipv4/tcp_metrics.c         |    2 
+>>  34 files changed, 746 insertions(+), 224 deletions(-)
+>>  create mode 100644 fs/proc/task_namespaces.c
+>>
+>> --
+>> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+
