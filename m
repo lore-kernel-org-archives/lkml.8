@@ -2,169 +2,137 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F26EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B3EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B44B22075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:59:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ROpRuTiB"
+	by mail.kernel.org (Postfix) with ESMTP id 5C0D6207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:00:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbgG3G7K (ORCPT
+        id S1728861AbgG3HAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 02:59:10 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:42007 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgG3G7J (ORCPT
+        Thu, 30 Jul 2020 03:00:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42508 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbgG3HAc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 02:59:09 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200730065906epoutp017e53644864307c26ce947b191cf75a39~mdYhl0hj72819328193epoutp013
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 06:59:06 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200730065906epoutp017e53644864307c26ce947b191cf75a39~mdYhl0hj72819328193epoutp013
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1596092346;
-        bh=pDvJp/B32STG6lSb4sos12eTCOwHaRMloGPYdlNzDzk=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=ROpRuTiBERS0/ge6VM3/BlNHL7pnkOsQwuSnAXxYhkOcfT9hPA6Bu1cZmcDI67GOZ
-         F05Hytcb4LzhQqZNqyVOaBbUMc9X7gOivyFNKYTSUueLW87xCLKqL40wxfFP7LpMy/
-         RHxE0mKQ7YSP8g/yHNH5GtbMZ+BpUe3GqlfyUEgw=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200730065905epcas1p234aa4fa21170e122709ce2d996e24708~mdYguMJHX0989609896epcas1p2Z;
-        Thu, 30 Jul 2020 06:59:05 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.160]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 4BHLqY0ktGzMqYkf; Thu, 30 Jul
-        2020 06:59:05 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        89.68.19033.8BF622F5; Thu, 30 Jul 2020 15:59:05 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200730065904epcas1p4c3c049738b1a543aaa37f63d92d0c35d~mdYfpf6Vh0573405734epcas1p4O;
-        Thu, 30 Jul 2020 06:59:04 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200730065904epsmtrp12017cdd9f76713325f52c09579d18b10~mdYfoaZPz3001230012epsmtrp1j;
-        Thu, 30 Jul 2020 06:59:04 +0000 (GMT)
-X-AuditID: b6c32a36-159ff70000004a59-70-5f226fb82628
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C8.A7.08382.8BF622F5; Thu, 30 Jul 2020 15:59:04 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200730065904epsmtip16ed9e1d48eaf82e39682897bd35e3597~mdYffDp4G0290802908epsmtip16;
-        Thu, 30 Jul 2020 06:59:04 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>,
-        <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-Cc:     <Mori.Takahiro@ab.MitsubishiElectric.co.jp>,
-        <Motai.Hirotaka@aj.MitsubishiElectric.co.jp>,
-        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <fa122230-e0fd-6ed6-5473-31b17b56260c@gmail.com>
-Subject: RE: [PATCH] exfat: retain 'VolumeFlags' properly
-Date:   Thu, 30 Jul 2020 15:59:04 +0900
-Message-ID: <015e01d6663e$e99e4ec0$bcdaec40$@samsung.com>
+        Thu, 30 Jul 2020 03:00:32 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DF80C061794
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 00:00:32 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k12YD-0006w4-F8; Thu, 30 Jul 2020 09:00:25 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k12Y9-0007TC-HZ; Thu, 30 Jul 2020 09:00:21 +0200
+Date:   Thu, 30 Jul 2020 09:00:21 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Roy Im <roy.im.opensource@diasemi.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Rob Herring <robh@kernel.org>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Support Opensource <support.opensource@diasemi.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v18 3/3] Input: new da7280 haptic driver
+Message-ID: <20200730070021.l2yuomsc3uwua5bx@pengutronix.de>
+References: <cover.1595991580.git.Roy.Im@diasemi.com>
+ <23b3470401ec5cf525add8e1227cb67586b9f294.1595991580.git.Roy.Im@diasemi.com>
+ <20200729063638.GY1665100@dtor-ws>
+ <20200729072145.ifzoe656sjpxdior@pengutronix.de>
+ <20200730050653.GA1665100@dtor-ws>
+ <20200730061631.y4r4s6v3xepktj54@pengutronix.de>
+ <20200730063404.GH1665100@dtor-ws>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJOchBlupSQwdEhi4rggGDYoy3yLwE5agcKAmVRsN0CrFCHjgKKBjVEAx7tf5ECsQmAL6e6b/8Q
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDJsWRmVeSWpSXmKPExsWy7bCmvu7OfKV4g1+9zBY/5t5msXhzciqL
-        xZ69J1ksLu+aw2Zx+f8nFotlXyazWGz5d4TVgd3jy5zj7B5tk/+xezQfW8nmsXPWXXaPvi2r
-        GD0+b5ILYIvKsclITUxJLVJIzUvOT8nMS7dV8g6Od443NTMw1DW0tDBXUshLzE21VXLxCdB1
-        y8wBukVJoSwxpxQoFJBYXKykb2dTlF9akqqQkV9cYquUWpCSU2BoUKBXnJhbXJqXrpecn2tl
-        aGBgZApUmZCTMe3QX8aCmRwVX28dZ2lgPMbWxcjJISFgInHj/xsgm4tDSGAHo8T1Jd+ZIJxP
-        jBLHv55jAqkSEvjGKNFxzQamY83LF6wQRXsZJW4t/8oM4bwEKpo7C2wum4CuxL8/+8FsEYEE
-        ic23NjOD2MwC5xklGif4g9icArYSH7buZAexhQUsJV5O2glWzyKgKvHk2gIWEJsXKP73xAtm
-        CFtQ4uTMJywQc+Qltr+dwwxxkYLEz6fLWCF2RUk8vP8dqkZEYnZnG9hxEgILOSQ2X1sE1eAi
-        0dh8lB3CFpZ4dXwLlC0l8bK/DcjmALKrJT7uhyrvYJR48d0WwjaWuLl+AytICbOApsT6XfoQ
-        YUWJnb/nMkKs5ZN497WHFWIKr0RHmxBEiapE36XDTBC2tERX+wf2CYxKs5A8NgvJY7OQPDAL
-        YdkCRpZVjGKpBcW56anFhgVGyHG9iRGcTLXMdjBOevtB7xAjEwfjIUYJDmYlEd52LoV4Id6U
-        xMqq1KL8+KLSnNTiQ4ymwKCeyCwlmpwPTOd5JfGGpkbGxsYWJmbmZqbGSuK8D28BNQmkJ5ak
-        ZqemFqQWwfQxcXBKNTAFsXvl+l1V+af8Pix5+r9VP8ou2IpI1aZwiX/5vLNxaW0f35QV5k9f
-        2i2erp+abRThnhmaYcRwdIdyTqvX0TyBsydbLglayp/vfKn3iev3zUYfdQ3XZb4ZB6bv/rdH
-        1Ofa+eeLS7LOGIsoLr0ye5HDzH1TJpWafTu42kgqSqt9TtqeNh1Om6aCNINZjydOMbCUvsx3
-        X1FX9UVnXCbPB4Vd79fwF21fvk5r4m6JJOuq6TtaX3i3PeiSiisqjbqtZGx0i5vfwOD4M79J
-        xw4vea75+dzJ789mx8pmd25QP7z8WsvrikeLVs0y1uhZEGn+I+XF+WUeQoHlQd8k3gYkaN1b
-        lRgV89phT+4+kUWGripKLMUZiYZazEXFiQD76bdALwQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupkkeLIzCtJLcpLzFFi42LZdlhJTndHvlK8wdsNshY/5t5msXhzciqL
-        xZ69J1ksLu+aw2Zx+f8nFotlXyazWGz5d4TVgd3jy5zj7B5tk/+xezQfW8nmsXPWXXaPvi2r
-        GD0+b5ILYIvisklJzcksSy3St0vgyph26C9jwUyOiq+3jrM0MB5j62Lk5JAQMJFY8/IFaxcj
-        F4eQwG5GidVfJjJCJKQljp04w9zFyAFkC0scPlwMUfOcUeLS8WMsIDVsAroS//7sBxskIpAg
-        sfnWZmaQImaBi4wS/xfuYYbomMEssXLbPWaQKk4BW4kPW3eyg9jCApYSLyftBOtmEVCVeHJt
-        AdhUXqD43xMvmCFsQYmTM5+AxZkFtCV6H7YyQtjyEtvfzmGGuFRB4ufTZawQV0RJPLz/Hape
-        RGJ2ZxvzBEbhWUhGzUIyahaSUbOQtCxgZFnFKJlaUJybnltsWGCYl1quV5yYW1yal66XnJ+7
-        iREcW1qaOxi3r/qgd4iRiYPxEKMEB7OSCG87l0K8EG9KYmVValF+fFFpTmrxIUZpDhYlcd4b
-        hQvjhATSE0tSs1NTC1KLYLJMHJxSDUylLeHcRvpTkqzn6c/XTTujsfRK6IIuucfPVvJqnP94
-        9c7D3ulndwgKmU24nFY3g3frDHmF3u1cKYdOXtZaWyCSlP7UaZmJdW4zW2i50q4QnQzzz4em
-        S1bMvmvOYBFcbim9ddKaKdKnPX5mKy9OmHP1/LQCZptChyczAyOXMN6S75jP3eU436dL4eOT
-        5T/PljYpPjh7Z+uDyMULxBXbCw94VX/3bFJZnNr81jdkSpmNz4sovUV/Dh+rMgj+v+zAl69m
-        kmWsn/dsnrSNtfPWKt+jkvPtnB9qxDzcYXmQTeuyF4P83CSd5XVZL7t8FWdOdntoOcewOUb3
-        vgrnMqXe3hk3RW77Tln12X+tQXdUs4kSS3FGoqEWc1FxIgBBzbLyHAMAAA==
-X-CMS-MailID: 20200730065904epcas1p4c3c049738b1a543aaa37f63d92d0c35d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200708095813epcas1p2277cdf7de6a8bb20c27bcd030eec431f
-References: <CGME20200708095813epcas1p2277cdf7de6a8bb20c27bcd030eec431f@epcas1p2.samsung.com>
-        <20200708095746.4179-1-kohada.t2@gmail.com>
-        <005101d658d1$7202e5d0$5608b170$@samsung.com>
-        <TY2PR01MB2875C88DD10CC13D0C70DE1690610@TY2PR01MB2875.jpnprd01.prod.outlook.com>
-        <015801d65a4a$ebedd380$c3c97a80$@samsung.com>
-        <ad0beeab-48ba-ee6d-f4cf-de19ec35a405@gmail.com>
-        <fa122230-e0fd-6ed6-5473-31b17b56260c@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6mvmazbtlauombxa"
+Content-Disposition: inline
+In-Reply-To: <20200730063404.GH1665100@dtor-ws>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Ping..
-Hi Tetsuhiro,
 
-> 
-> On 2020/07/15 19:06, Tetsuhiro Kohada wrote:
-> >> It looks complicated. It would be better to simply set/clear VOLUME DIRTY bit.
-> >
-> > I think exfat_set_vol_flags() gets a little complicated, because it
-> > needs the followings (with bit operation)
-> >   a) Set/Clear VOLUME_DIRTY.
-> >   b) Set MEDIA_FAILUR.
-> 
-> How about splitting these into separate functions  as below?
-> 
-> 
-> exfat_set_volume_dirty()
-> 	exfat_set_vol_flags(sb, sbi->vol_flag | VOLUME_DIRTY);
-> 
-> exfat_clear_volume_dirty()
-> 	exfat_set_vol_flags(sb, sbi->vol_flag & ~VOLUME_DIRTY);
-Looks good.
+--6mvmazbtlauombxa
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> exfat_set_media_failure()
-> 	exfat_set_vol_flags(sb, sbi->vol_flag | MEDIA_FAILURE);
-Where will this function be called? We don't need to create unused functions in advance...
+Hello,
 
-> 
-> 
-> The implementation is essentially the same for exfat_set_vol_flags(), but I think the intention of the
-> operation will be easier to understand.
-Yes.
+On Wed, Jul 29, 2020 at 11:34:04PM -0700, Dmitry Torokhov wrote:
+> On Thu, Jul 30, 2020 at 08:16:31AM +0200, Uwe Kleine-K=F6nig wrote:
+> > I suggested that some time ago with limited success, see
+> > https://lore.kernel.org/lkml/20200129115516.zsvxu56e6h7gheiw@pathway.su=
+se.cz/
+> > .
+> >=20
+> > > In the meantime I would prefer using %d when we have integer
+> > > error. We should not see these error messages anyway ;)
+> >=20
+> > I don't agree. Error messages are supposed to be helpful and I prefer
+> > some casting between error pointer and error int over emitting bare
+> > numbers to the kernel log. (And additionally the uglyness might help to
+> > convince the vsprintf guys that %de might be a good idea after all :-)
+>=20
+> Sorry, but I do not think that I want to introduce this pointless
+> casting just to sway printk folks. Either we have proper way of
+> formatting error codes, or we do not and we stick with what was working
+> since forever.
 
-Thanks!
-> 
-> 
-> BR
-> ---
-> Tetsuhiro Kohada <kohada.t2@gmail.com>
+You got me wrong. Getting an argument to rediscuss %de is just a minor
+side reason for me. Getting an expressive error message is the relevant
+reason.
 
+There is also an inconsitence in what you suggest that I don't like. If
+in a probe function devm_clk_get fails it should say "-ENODEV" but if
+it's clk_enable that fails it should say "-5"?
+
+Also "we stick with what was working since forever" is a poor argument.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--6mvmazbtlauombxa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8icAIACgkQwfwUeK3K
+7AnIkAf/d0H21gepKuzCj8TF4i7RhVdQmovVhCkjECV45VfUaPWJVa5DPDT51HVp
+ddTSzc4cQybR+P11UlUZxDh19YETlA7weL1KOPOqVQsdolbW7jg55nisi0UP5PEN
+rPfPU6HBQCr4G1pFsoljrxtLUe/oXfz52LMF1MQtRaOoOebAxuDZJ66D45I2fAm1
+ZXFmjlpv8x0ynqwD2JjmZGc8YQG2+qa5ncHlZg2Ip6dNL99PMMuQ6vFK7+tDah0f
+10opv9MtabIWYebuDxP5Pn3LeAG5Vw11oMjZKsf9ndwDCSqg1F4uLYYX7iDsR1lb
+sGIy10masMtW9D+19sXnR2cqwFDzWQ==
+=DuS1
+-----END PGP SIGNATURE-----
+
+--6mvmazbtlauombxa--
