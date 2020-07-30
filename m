@@ -2,106 +2,130 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6514DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 04:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A9CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 04:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 413E422B43
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 04:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06BAB22B42
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 04:43:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DWUKRxNk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fzel8Nfe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbgG3Ed1 (ORCPT
+        id S1728090AbgG3Enu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 00:33:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48296 "EHLO
+        Thu, 30 Jul 2020 00:43:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbgG3Ed1 (ORCPT
+        with ESMTP id S1725765AbgG3Enu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 00:33:27 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D4E1C061794;
-        Wed, 29 Jul 2020 21:33:26 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id p16so10605200ile.0;
-        Wed, 29 Jul 2020 21:33:26 -0700 (PDT)
+        Thu, 30 Jul 2020 00:43:50 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CE05C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 21:43:50 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id l12so4762133pgt.13
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 21:43:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1/8RnS4x4W8m0YHiu5amCYbnx/T7Aru1VqlIWnTME70=;
-        b=DWUKRxNk7x7CVf6W7KRRGPgYHyL4Fi+wLI43Pf4GXCsitNmR19V6LCsj3wSEeYmm04
-         yOdGgWO7Vs30/d5rL2j/YCHSSGL/bdIuSibmPVrc/JKIj7ACup+d44DgJs8z9Ssp0h8r
-         Fa5DpPibIatS4BAqJ20YbIMA15uvOVKJHGxnK/Lcn7ULIv8uAYwbBnY4yKcZ0EDW+oTO
-         8+uwYB9KPaki9LAEswob9fGSs1PW5w+lh2VzeiLkJC8+bFNYYgG6i9TM3ii4fzpMC+bt
-         3pDKiONEKLv1FlJeVQmER4mWFGLJAH8kjYIxsifedvKQLxtteyHxepu65gfszGJk30Ip
-         6TtQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wF05xhf0pmO+SSDfaVtMOIn5xpcwCosKEIhsXa5iKW0=;
+        b=fzel8NfefEAXLrAbNWtDcfYD0YL3yGUJOZ3zytgP3tVwdyw20MGYQzzKYicNU9dZru
+         ZYDVRNCXeeALbgfgg7WKV8Gz5ueVQ9X12Ypfah1VBwaQbAAzjmkkUNRaGmSJLcaY7eFH
+         30rB53RFoOHvXqK0yuFOFX6oekKlie4+nLSSMBDlQNV4BoBrKJiAbDsVaPwQH5N71GFo
+         8y3/iSrAWU26TB6qnbDiKcQVDw9vTTyYl6QEjfRpPhbfWP9grtYdwN0ejgxda8HI/1n2
+         qfkQYKGpZ5yLugfXZtPpyxJUqEKAKTD4DmzOx+pd9moHzFYO5o0Ro3KUKwkExoEkl5CN
+         ODTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1/8RnS4x4W8m0YHiu5amCYbnx/T7Aru1VqlIWnTME70=;
-        b=hatdDkyVW9emapHQv9+mM8PVvebHoNI6miYOJWn9BF7z6+Zu2euSDbACM/cpPuN41u
-         rjOdB6llQ+McafVWsAuSOYlI7Ahu6BDmWQKxvkn06eJbr1fHl2YmjBqueMP5dcbzS7Te
-         ixrZTRY44zzO1Vm5LpO8k+iDKXWJSEdAOBVURWOA6niP2JaVoGjSaHgHWlMbGM8Xzif1
-         2yIFBUmNfM9gxwCaxxXdxMc1F+rZBRLgbAR217q+FpDp9aPYFW+o2yULupOdETuRwMzX
-         jTfKITzEuIXNQnbdADwVfp+v7as3auazYYkQncbzTRtegynzPsgjWIIwLWLe8hCmYGb7
-         0adA==
-X-Gm-Message-State: AOAM530gFdif35dTen3/cHc2syTTkN+ipO6s4WAu1XgCJXvfQ+aJ66Kd
-        S59K272aBlIuZXhzPAhQ1dLItZQUogXX2mC+y6A=
-X-Google-Smtp-Source: ABdhPJy/dmKUsQhl8cVEkWj79cLpTgDY5uGzmUwT/INw4PNci3ryYBF2MmFnSITitD5fVe1LdbZreYB99yu8k0/8bAo=
-X-Received: by 2002:a92:4a09:: with SMTP id m9mr38727451ilf.79.1596083605662;
- Wed, 29 Jul 2020 21:33:25 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wF05xhf0pmO+SSDfaVtMOIn5xpcwCosKEIhsXa5iKW0=;
+        b=nPXam3GUDFcfKWJ3ipFYqXM644aTOHS5kOkALNS10vkqy1pGNBiqMoxCm2zrkA6o63
+         TlFgklchSO9npglQF5HnfG9QZeUhTy6deZJrKI2v5eUpn+EolmC+RRQef/1ukYSwB/pQ
+         YFBmPBlnCZAT/Nz9oVn8m0gyyugnwjOea8xszFdDWEbZdhbdROyPDT89R+sETL7hpFPB
+         HYH5yPI5mUNIew6Aq+buNjZ8gPHBKS+q/m9PfX75r/LnAYy97iq9ysDLWLa8XypEg5V3
+         B41rXSklfvXY2+Yi09onriQ+86ClWC7QVdLnWeZn08bc+gTnaJUp+jvsfUeQllAmQSVq
+         a3NA==
+X-Gm-Message-State: AOAM531ku3/NaVJoU+Bc0iyH5NuM1JCQzLHWyvGaWc34fU46/yjwzgB+
+        Wn23P+88Tb6Asw6qBN6Durqd9A==
+X-Google-Smtp-Source: ABdhPJxoozYbKSzWF/vpDj6rzKXc6Czkqc1yWHX7rgEwF6c/alcWJ6gw85vqUjBwUGpFgmce229YqQ==
+X-Received: by 2002:a63:f316:: with SMTP id l22mr31659281pgh.291.1596084229406;
+        Wed, 29 Jul 2020 21:43:49 -0700 (PDT)
+Received: from localhost ([106.201.14.19])
+        by smtp.gmail.com with ESMTPSA id t184sm4334122pfd.49.2020.07.29.21.43.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 Jul 2020 21:43:48 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 10:13:46 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     rjw@rjwysocki.net, dietmar.eggemann@arm.com,
+        catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
+        linux@armlinux.org.uk, mingo@redhat.com, peterz@infradead.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/7] cpufreq: report whether cpufreq supports
+ Frequency Invariance (FI)
+Message-ID: <20200730044346.rgtaikotkgwdpc3m@vireshk-mac-ubuntu>
+References: <20200722093732.14297-1-ionela.voinescu@arm.com>
+ <20200722093732.14297-5-ionela.voinescu@arm.com>
 MIME-Version: 1.0
-References: <20200729034436.24267-1-lihao2018.fnst@cn.fujitsu.com>
-In-Reply-To: <20200729034436.24267-1-lihao2018.fnst@cn.fujitsu.com>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Thu, 30 Jul 2020 06:33:14 +0200
-Message-ID: <CAM9Jb+hUk_e-Un3+9Jx8eKDtZ2A597bawQTJXQx77T0yG+PdnQ@mail.gmail.com>
-Subject: Re: [PATCH] dax: Fix wrong error-number passed into xas_set_err()
-To:     Hao Li <lihao2018.fnst@cn.fujitsu.com>
-Cc:     viro@zeniv.linux.org.uk, Matthew Wilcox <willy@infradead.org>,
-        Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200722093732.14297-5-ionela.voinescu@arm.com>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The error-number passed into xas_set_err() should be negative. Otherwise,
-> the xas_error() will return 0, and grab_mapping_entry() will return the
-> found entry instead of a SIGBUS error when the entry is not a value.
-> And then, the subsequent code path would be wrong.
->
-> Signed-off-by: Hao Li <lihao2018.fnst@cn.fujitsu.com>
-> ---
->  fs/dax.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/dax.c b/fs/dax.c
-> index 11b16729b86f..acac675fe7a6 100644
-> --- a/fs/dax.c
-> +++ b/fs/dax.c
-> @@ -488,7 +488,7 @@ static void *grab_mapping_entry(struct xa_state *xas,
->                 if (dax_is_conflict(entry))
->                         goto fallback;
->                 if (!xa_is_value(entry)) {
-> -                       xas_set_err(xas, EIO);
-> +                       xas_set_err(xas, -EIO);
->                         goto out_unlock;
->                 }
->
-> --
+On 22-07-20, 10:37, Ionela Voinescu wrote:
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 3497c1cd6818..1d0b046fe8e9 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -61,6 +61,9 @@ static struct cpufreq_driver *cpufreq_driver;
+>  static DEFINE_PER_CPU(struct cpufreq_policy *, cpufreq_cpu_data);
+>  static DEFINE_RWLOCK(cpufreq_driver_lock);
+>  
+> +/* Mark support for the scheduler's frequency invariance engine */
+> +static DEFINE_STATIC_KEY_FALSE(cpufreq_set_freq_scale);
+> +
+>  /* Flag to suspend/resume CPUFreq governors */
+>  static bool cpufreq_suspended;
+>  
+> @@ -69,6 +72,25 @@ static inline bool has_target(void)
+>  	return cpufreq_driver->target_index || cpufreq_driver->target;
+>  }
+>  
+> +static inline
+> +void enable_cpufreq_freq_invariance(struct cpufreq_driver *driver)
+> +{
+> +	if ((driver->target || driver->target_index || driver->fast_switch) &&
+> +	    !driver->setpolicy) {
 
-Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Just checking for !driver->setpolicy should be enough here.
 
-> 2.28.0
->
->
-> _______________________________________________
-> Linux-nvdimm mailing list -- linux-nvdimm@lists.01.org
-> To unsubscribe send an email to linux-nvdimm-leave@lists.01.org
+> +		static_branch_enable_cpuslocked(&cpufreq_set_freq_scale);
+> +		pr_debug("%s: Driver %s can provide frequency invariance.",
+> +			 __func__, driver->name);
+
+I think a simpler print will work well too.
+
+                pr_debug("Freq invariance enabled");
+
+__func__ isn't really required as this is the only print with that
+kind of info in cpufreq.c.
+
+> +	} else
+> +		pr_err("%s: Driver %s cannot provide frequency invariance.",
+> +		__func__, driver->name);
+
+Why not supporting freq-invariance an error ? I will just drop this
+message completely.
+
+-- 
+viresh
