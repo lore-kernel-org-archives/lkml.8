@@ -2,233 +2,92 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 531CCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3889E2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1CB52083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:11:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596150665;
+	bh=d7EuQ0AAcl/JAtg15EpS6qwrrRhGuijEjeshu+bi+fQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=e7V/FIL4z9KzFCmQ1WBoxcaPDiOXBG0haVDuseieiB92VXWSjqg/p7UqEsXw+Wllg
+	 SyZPN9l8ktFMTVS05UGf31tSEBdnLBHUUBc+Pk8iKs5YsH7/ahlo2jaxKUFpvBKuzJ
+	 Ib8YK72zwjttkl6XHCRKPJrcgneeUAhDrN+TyGE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730756AbgG3XIV (ORCPT
+        id S1730678AbgG3XLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 19:08:21 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:42714 "EHLO inva020.nxp.com"
+        Thu, 30 Jul 2020 19:11:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729995AbgG3XIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 19:08:20 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 19C2E1A0605;
-        Fri, 31 Jul 2020 01:08:05 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AE8491A1498;
-        Fri, 31 Jul 2020 01:08:00 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 351A040310;
-        Fri, 31 Jul 2020 01:07:55 +0200 (CEST)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     wim@linux-watchdog.org, linux@roeck-us.net, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V4 1/2] watchdog: imx7ulp: Strictly follow the sequence for wdog operations
-Date:   Fri, 31 Jul 2020 07:03:32 +0800
-Message-Id: <1596150213-31638-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1728588AbgG3XLD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 19:11:03 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAE4020809;
+        Thu, 30 Jul 2020 23:11:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596150663;
+        bh=d7EuQ0AAcl/JAtg15EpS6qwrrRhGuijEjeshu+bi+fQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=yKMAJx19arwhG8RMKjMSXZm20W5syYg2r9Vfi5N5havOQGeHUQ0zxA6h+j/rEJYdH
+         xZH2sLoG8q8tRRYG6pQ8qa/bDOapthREjYdv+uodN7gaLgpudBs065yAV/57MLiQda
+         E/YRl27bjYeYXfOi/qIT8O7fVCLPYDJnyoTBT+0I=
+Date:   Thu, 30 Jul 2020 16:11:01 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Moshe Shemesh <moshe@mellanox.com>
+Cc:     Jacob Keller <jacob.e.keller@intel.com>,
+        Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Subject: Re: [PATCH net-next RFC 01/13] devlink: Add reload level option to
+ devlink reload command
+Message-ID: <20200730161101.48f42c5b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <3352bd96-d10e-6961-079d-5c913a967513@mellanox.com>
+References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
+        <1595847753-2234-2-git-send-email-moshe@mellanox.com>
+        <20200727175802.04890dd3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <20200728135808.GC2207@nanopsycho>
+        <464add44-3ab1-21b8-3dba-a88202350bb9@intel.com>
+        <20200728114458.762b5396@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <d6fbfedd-9022-ff67-23ed-418607beecc2@intel.com>
+        <20200728130653.7ce2f013@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <04f00024-758c-bc19-c187-49847c24a5a4@mellanox.com>
+        <20200729140708.5f914c15@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <3352bd96-d10e-6961-079d-5c913a967513@mellanox.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to reference manual, the i.MX7ULP WDOG's operations except
-refresh should follow below sequence:
+On Thu, 30 Jul 2020 15:30:45 +0300 Moshe Shemesh wrote:
+> >>> My expectations would be that the driver must perform the lowest
+> >>> reset level possible that satisfies the requested functional change.
+> >>> IOW driver may do more, in fact it should be acceptable for the
+> >>> driver to always for a full HW reset (unless --live or other
+> >>> constraint is specified).  
+> >> OK, but some combinations may still not be valid for specific driver
+> >> even if it tries lowest level possible.  
+> > Can you give an example?  
+> 
+> For example take the combination of fw-live-patch and param-init.
+> 
+> The fw-live-patch needs no re-initialization, while the param-init 
+> requires driver re-initialization.
+> 
+> So the only way to do that is to the one command after the other, not 
+> really combining.
 
-1. disable global interrupts;
-2. unlock the wdog and wait unlock bit set;
-3. reconfigure the wdog and wait for reconfiguration bit set;
-4. enabel global interrupts.
-
-Strictly follow the recommended sequence can make it more robust.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-changes since V3:
-	- wdog timeout should NOT update when setting timeout register failed.
----
- drivers/watchdog/imx7ulp_wdt.c | 74 ++++++++++++++++++++++++++++++++++--------
- 1 file changed, 61 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/watchdog/imx7ulp_wdt.c b/drivers/watchdog/imx7ulp_wdt.c
-index 7993c8c..badfc0b 100644
---- a/drivers/watchdog/imx7ulp_wdt.c
-+++ b/drivers/watchdog/imx7ulp_wdt.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/clk.h>
- #include <linux/io.h>
-+#include <linux/iopoll.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/of.h>
-@@ -36,6 +37,7 @@
- #define DEFAULT_TIMEOUT	60
- #define MAX_TIMEOUT	128
- #define WDOG_CLOCK_RATE	1000
-+#define WDOG_WAIT_TIMEOUT	20
- 
- static bool nowayout = WATCHDOG_NOWAYOUT;
- module_param(nowayout, bool, 0000);
-@@ -48,17 +50,40 @@ struct imx7ulp_wdt_device {
- 	struct clk *clk;
- };
- 
--static void imx7ulp_wdt_enable(struct watchdog_device *wdog, bool enable)
-+static int imx7ulp_wdt_wait(void __iomem *base, u32 mask)
-+{
-+	u32 val = readl(base + WDOG_CS);
-+
-+	if (!(val & mask) && readl_poll_timeout_atomic(base + WDOG_CS, val,
-+						       val & mask, 0,
-+						       WDOG_WAIT_TIMEOUT))
-+		return -ETIMEDOUT;
-+
-+	return 0;
-+}
-+
-+static int imx7ulp_wdt_enable(struct watchdog_device *wdog, bool enable)
- {
- 	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
- 
- 	u32 val = readl(wdt->base + WDOG_CS);
-+	int ret;
- 
-+	local_irq_disable();
- 	writel(UNLOCK, wdt->base + WDOG_CNT);
-+	ret = imx7ulp_wdt_wait(wdt->base, WDOG_CS_ULK);
-+	if (ret)
-+		goto enable_out;
- 	if (enable)
- 		writel(val | WDOG_CS_EN, wdt->base + WDOG_CS);
- 	else
- 		writel(val & ~WDOG_CS_EN, wdt->base + WDOG_CS);
-+	imx7ulp_wdt_wait(wdt->base, WDOG_CS_RCS);
-+
-+enable_out:
-+	local_irq_enable();
-+
-+	return ret;
- }
- 
- static bool imx7ulp_wdt_is_enabled(void __iomem *base)
-@@ -79,17 +104,12 @@ static int imx7ulp_wdt_ping(struct watchdog_device *wdog)
- 
- static int imx7ulp_wdt_start(struct watchdog_device *wdog)
- {
--
--	imx7ulp_wdt_enable(wdog, true);
--
--	return 0;
-+	return imx7ulp_wdt_enable(wdog, true);
- }
- 
- static int imx7ulp_wdt_stop(struct watchdog_device *wdog)
- {
--	imx7ulp_wdt_enable(wdog, false);
--
--	return 0;
-+	return imx7ulp_wdt_enable(wdog, false);
- }
- 
- static int imx7ulp_wdt_set_timeout(struct watchdog_device *wdog,
-@@ -97,22 +117,37 @@ static int imx7ulp_wdt_set_timeout(struct watchdog_device *wdog,
- {
- 	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
- 	u32 val = WDOG_CLOCK_RATE * timeout;
-+	int ret;
- 
-+	local_irq_disable();
- 	writel(UNLOCK, wdt->base + WDOG_CNT);
-+	ret = imx7ulp_wdt_wait(wdt->base, WDOG_CS_ULK);
-+	if (ret)
-+		goto timeout_out;
- 	writel(val, wdt->base + WDOG_TOVAL);
-+	imx7ulp_wdt_wait(wdt->base, WDOG_CS_RCS);
- 
- 	wdog->timeout = timeout;
- 
--	return 0;
-+timeout_out:
-+	local_irq_enable();
-+
-+	return ret;
- }
- 
- static int imx7ulp_wdt_restart(struct watchdog_device *wdog,
- 			       unsigned long action, void *data)
- {
- 	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
-+	int ret;
-+
-+	ret = imx7ulp_wdt_enable(wdog, true);
-+	if (ret)
-+		return ret;
- 
--	imx7ulp_wdt_enable(wdog, true);
--	imx7ulp_wdt_set_timeout(&wdt->wdd, 1);
-+	ret = imx7ulp_wdt_set_timeout(&wdt->wdd, 1);
-+	if (ret)
-+		return ret;
- 
- 	/* wait for wdog to fire */
- 	while (true)
-@@ -136,19 +171,30 @@ static const struct watchdog_info imx7ulp_wdt_info = {
- 		    WDIOF_MAGICCLOSE,
- };
- 
--static void imx7ulp_wdt_init(void __iomem *base, unsigned int timeout)
-+static int imx7ulp_wdt_init(void __iomem *base, unsigned int timeout)
- {
- 	u32 val;
-+	int ret;
- 
-+	local_irq_disable();
- 	/* unlock the wdog for reconfiguration */
- 	writel_relaxed(UNLOCK_SEQ0, base + WDOG_CNT);
- 	writel_relaxed(UNLOCK_SEQ1, base + WDOG_CNT);
-+	ret = imx7ulp_wdt_wait(base, WDOG_CS_ULK);
-+	if (ret)
-+		goto init_out;
- 
- 	/* set an initial timeout value in TOVAL */
- 	writel(timeout, base + WDOG_TOVAL);
- 	/* enable 32bit command sequence and reconfigure */
- 	val = WDOG_CS_CMD32EN | WDOG_CS_CLK | WDOG_CS_UPDATE;
- 	writel(val, base + WDOG_CS);
-+	imx7ulp_wdt_wait(base, WDOG_CS_RCS);
-+
-+init_out:
-+	local_irq_enable();
-+
-+	return ret;
- }
- 
- static void imx7ulp_wdt_action(void *data)
-@@ -199,7 +245,9 @@ static int imx7ulp_wdt_probe(struct platform_device *pdev)
- 	watchdog_stop_on_reboot(wdog);
- 	watchdog_stop_on_unregister(wdog);
- 	watchdog_set_drvdata(wdog, imx7ulp_wdt);
--	imx7ulp_wdt_init(imx7ulp_wdt->base, wdog->timeout * WDOG_CLOCK_RATE);
-+	ret = imx7ulp_wdt_init(imx7ulp_wdt->base, wdog->timeout * WDOG_CLOCK_RATE);
-+	if (ret)
-+		return ret;
- 
- 	return devm_watchdog_register_device(dev, wdog);
- }
--- 
-2.7.4
-
+You need to read my responses more carefully. I don't have
+fw-live-patch in my proposal. The operation is fw-activate,
+--live is independent and an constraint, not an operation.
