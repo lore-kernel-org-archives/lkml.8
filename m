@@ -2,86 +2,156 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F10C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF91C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EE8820656
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A818C20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:16:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbgG3GQF (ORCPT
+        id S1728690AbgG3GQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 02:16:05 -0400
-Received: from mga01.intel.com ([192.55.52.88]:2189 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726287AbgG3GQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 02:16:04 -0400
-IronPort-SDR: uzwtjNGUfP8n/Cuvlhqpgtd8xaD/1p1dqBCgOeRB0XAXZzG4cRhs82o6IxZawK3arIYYGm9iSP
- 4Xh31C2zuzHg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="169666541"
-X-IronPort-AV: E=Sophos;i="5.75,413,1589266800"; 
-   d="scan'208";a="169666541"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 23:16:04 -0700
-IronPort-SDR: vncdIGSZjOvJ++EV9D9QT15AoGjFKFxYg4WgykdR9lilU76W41lQnJexaZJq520852MMb5TY9T
- hZ9S9f2XD+nw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,413,1589266800"; 
-   d="scan'208";a="313301258"
-Received: from sgsxdev003.isng.intel.com (HELO localhost) ([10.226.88.14])
-  by fmsmga004.fm.intel.com with ESMTP; 29 Jul 2020 23:16:01 -0700
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        hpa@zytor.com, rahul.tanwar@linux.intel.com
-Cc:     hdegoede@redhat.com, linux-kernel@vger.kernel.org,
-        andy@infradead.org, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
-        Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [PATCH 1/1] x86/tsr: Fix tsc frequency enumeration failure on lightning mountain SoC
-Date:   Thu, 30 Jul 2020 14:15:24 +0800
-Message-Id: <4fcf09a0786550f5510ec3d9a8628baf7326dd39.1596084248.git.eswara.kota@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
+        Thu, 30 Jul 2020 02:16:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728528AbgG3GQp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 02:16:45 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64DC2C0619D2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 23:16:45 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k11ro-00032m-Hv; Thu, 30 Jul 2020 08:16:36 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k11rj-0006Ev-DC; Thu, 30 Jul 2020 08:16:31 +0200
+Date:   Thu, 30 Jul 2020 08:16:31 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Roy Im <roy.im.opensource@diasemi.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Rob Herring <robh@kernel.org>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Support Opensource <support.opensource@diasemi.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v18 3/3] Input: new da7280 haptic driver
+Message-ID: <20200730061631.y4r4s6v3xepktj54@pengutronix.de>
+References: <cover.1595991580.git.Roy.Im@diasemi.com>
+ <23b3470401ec5cf525add8e1227cb67586b9f294.1595991580.git.Roy.Im@diasemi.com>
+ <20200729063638.GY1665100@dtor-ws>
+ <20200729072145.ifzoe656sjpxdior@pengutronix.de>
+ <20200730050653.GA1665100@dtor-ws>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fz3lejizyldfimsi"
+Content-Disposition: inline
+In-Reply-To: <20200730050653.GA1665100@dtor-ws>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Frequency descriptor of Lightning Mountain SoC doesn't have all the
-frequency entries so resulting in the below failure causing kernel hang.
 
-[    0.000000] Error MSR_FSB_FREQ index 15 is unknown
-[    0.000000] tsc: Fast TSC calibration failed
+--fz3lejizyldfimsi
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So, add all the frequency entries in the Lightning Mountain SoC frequency
-descriptor.
+[Adding vsprintf maintainers to Cc:]
 
-Fixes: 0cc5359d8fd45 ("x86/cpu: Update init data for new Airmont CPU model")
-Fixes: 812c2d7506fd ("x86/tsc_msr: Use named struct initializers")
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
----
- arch/x86/kernel/tsc_msr.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Hello,
 
-diff --git a/arch/x86/kernel/tsc_msr.c b/arch/x86/kernel/tsc_msr.c
-index 4fec6f3a1858b2..c255e10e914aa5 100644
---- a/arch/x86/kernel/tsc_msr.c
-+++ b/arch/x86/kernel/tsc_msr.c
-@@ -136,7 +136,8 @@ static const struct freq_desc freq_desc_ann = {
- /* 24 MHz crystal? : 24 * 13 / 4 = 78 MHz */
- static const struct freq_desc freq_desc_lgm = {
- 	.use_msr_plat = true,
--	.freqs = { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 },
-+	.freqs = { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000,
-+		   78000, 78000, 78000, 78000, 78000, 78000, 78000 },
- 	.mask = 0x0f,
- };
- 
--- 
-2.11.0
+On Wed, Jul 29, 2020 at 10:06:53PM -0700, Dmitry Torokhov wrote:
+> On Wed, Jul 29, 2020 at 09:21:45AM +0200, Uwe Kleine-K=F6nig wrote:
+> > Hello,
+> >=20
+> > On Tue, Jul 28, 2020 at 11:36:38PM -0700, Dmitry Torokhov wrote:
+> > > > v9:=20
+> > > > 	- Removed the header file and put the definitions into the c file.
+> > > > 	- Updated the pwm code and error logs with %pE
+> > >=20
+> > > I believe the %pE is to format an escaped buffer, you probably want to
+> > > %pe (lowercase) to print errors. I am also not quite sure if we want =
+to
+> > > use it in cases when we have non-pointer error, or we should stick wi=
+th
+> > > %d as most of the kernel does.
+> >=20
+> > compared with %d %pe is easier to understand as it emits "-ETIMEOUT"
+> > instead of "-110". And yes, %pE is wrong.
+>=20
+> While I can see that symbolic name instead of a numeric constant might
+> be appealing, I do not believe that we want fragments like this with
+> endless conversions between integer and pointer errors:
+>=20
+> 	if (haptics->const_op_mode =3D=3D DA7280_PWM_MODE) {
+> 		haptics->pwm_dev =3D devm_pwm_get(dev, NULL);
+> 		if (IS_ERR(haptics->pwm_dev)) {
+> 			error =3D PTR_ERR(haptics->pwm_dev);
+> 			if (error !=3D -EPROBE_DEFER)
+> 				dev_err(dev, "unable to request PWM: %pE\n",
+> 					ERR_PTR(error));
+> 			return error;
+> 		}
+>=20
+> Maybe we should introduce something like '%de' for the integer error
+> case?
 
+I suggested that some time ago with limited success, see
+https://lore.kernel.org/lkml/20200129115516.zsvxu56e6h7gheiw@pathway.suse.c=
+z/
+=2E
+
+> In the meantime I would prefer using %d when we have integer
+> error. We should not see these error messages anyway ;)
+
+I don't agree. Error messages are supposed to be helpful and I prefer
+some casting between error pointer and error int over emitting bare
+numbers to the kernel log. (And additionally the uglyness might help to
+convince the vsprintf guys that %de might be a good idea after all :-)
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--fz3lejizyldfimsi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8iZbwACgkQwfwUeK3K
+7Alqgwf/QhPTWri/aJ6aKC1Qf4GZICrCZy5Xn1coDwtnUcU/daCkeA6gtX4fGffV
+pAVA/5PJ/H2T0urdRlwPynwLunhL0FVKOlFB3ta+Ir7aiI8r8V7joD0Eqbb56gCh
+yJCowGmV4Pz1BmkjlZqo9c2BFAxqLMOePENs85PfgMrcayhsuG55kNtFb7ZyXzvW
+QMJ5tuaOeesM/5iAjUKSGQneGXYvJPOLGkwmPxER+ACeWIqCWaXSeNIeU/d22wCT
+a2csqlFa6SG3J8D8lcWa+9xH80VmvF60ROr5BjQWah5ccbO7zwH9nc9hY5rdg+Ub
+tFmojQ9HJW32hSFz2olina/eIgV39g==
+=9HiY
+-----END PGP SIGNATURE-----
+
+--fz3lejizyldfimsi--
