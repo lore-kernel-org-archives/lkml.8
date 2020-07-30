@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B42CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBC06206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEA6520672
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096382;
-	bh=fuJpv34UICRsqqTJ8eJO+ty2ZOaoGbXn6ypEgCh0JLA=;
+	s=default; t=1596096385;
+	bh=uiZlRAIDfr7V5wkzLLJktwI7L8k50wgm0ffRF+1OxbY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BLVRjIFp34Ro5HyZLZVaxG5TeS/28cPbkHvJDEAoymQXDB73TprH1t6q1g4VU5onx
-	 Ik/H6zcw+tabKh2VSR5QpXwjCNmOGSb1sLzTeOFJ3nRi60041/kLyGlIH3o08WOMRn
-	 JB8/nEjocvry8D5Uvk//DDg9GXoSk6Lj51USRU4w=
+	b=jVxuTK72+mYCL+Nkkno7815nSSHNqw0Tq3VSlqhS43eoyY34XPKP8R0w9T2W9ATPD
+	 MTuh03Aa1WfARLgtCuiPbsgr4zEehMbEDQsBSX5o+Kyu0ROcCQ9q9Ko7guoth8I9Hk
+	 exY47gE9ZIdDo1dG/Ik4/t3edBQRyA8i7EXQiigQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728838AbgG3IGR (ORCPT
+        id S1729318AbgG3IGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:06:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43632 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:06:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729257AbgG3IGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:06:08 -0400
+        id S1729297AbgG3IGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:06:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B278C20656;
-        Thu, 30 Jul 2020 08:06:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACD3B20656;
+        Thu, 30 Jul 2020 08:06:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096367;
-        bh=fuJpv34UICRsqqTJ8eJO+ty2ZOaoGbXn6ypEgCh0JLA=;
+        s=default; t=1596096377;
+        bh=uiZlRAIDfr7V5wkzLLJktwI7L8k50wgm0ffRF+1OxbY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tc1wUTl/d5gw8op06LIJPREdXIxpe+Jc41nTtsT7cipoxA0aZytZCcbgcf1tUJxsG
-         3OLXXhkmJqyzpxaAIcOg+uTpcwtSAEjyecDTg4ZDrTZ0TUIzcWH37I3eyozVCiG4J5
-         EGvTIl/Xs6osqdwiMOjo5DMvpvpeRB9ldrZDTN/E=
+        b=BDY/mH6o6Vwpfwjx5ANAk50OIjNGivUqipQcLsqJE5t3Tn1DgGJZjeHaRnktrZ/AF
+         zzpnO/B1T3UdiUliLcrCcWJty0jKvqx+Bber93lmV+CJKgCnottCr2awSSF5d8qs5S
+         /qoHai1wEhSTrIk2+2NYQJhjWfx1f2IDNsK3rwUw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Weilong Chen <chenweilong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 09/19] rtnetlink: Fix memory(net_device) leak when ->newlink fails
-Date:   Thu, 30 Jul 2020 10:04:11 +0200
-Message-Id: <20200730074420.975889035@linuxfoundation.org>
+        stable@vger.kernel.org, zhuguangqing <zhuguangqing@xiaomi.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH 5.4 18/19] PM: wakeup: Show statistics for deleted wakeup sources again
+Date:   Thu, 30 Jul 2020 10:04:20 +0200
+Message-Id: <20200730074421.402316044@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074420.502923740@linuxfoundation.org>
 References: <20200730074420.502923740@linuxfoundation.org>
@@ -60,63 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weilong Chen <chenweilong@huawei.com>
+From: zhuguangqing <zhuguangqing@xiaomi.com>
 
-[ Upstream commit cebb69754f37d68e1355a5e726fdac317bcda302 ]
+commit e976eb4b91e906f20ec25b20c152d53c472fc3fd upstream.
 
-When vlan_newlink call register_vlan_dev fails, it might return error
-with dev->reg_state = NETREG_UNREGISTERED. The rtnl_newlink should
-free the memory. But currently rtnl_newlink only free the memory which
-state is NETREG_UNINITIALIZED.
+After commit 00ee22c28915 (PM / wakeup: Use seq_open() to show wakeup
+stats), print_wakeup_source_stats(m, &deleted_ws) is not called from
+wakeup_sources_stats_seq_show() any more.
 
-BUG: memory leak
-unreferenced object 0xffff8881051de000 (size 4096):
-  comm "syz-executor139", pid 560, jiffies 4294745346 (age 32.445s)
-  hex dump (first 32 bytes):
-    76 6c 61 6e 32 00 00 00 00 00 00 00 00 00 00 00  vlan2...........
-    00 45 28 03 81 88 ff ff 00 00 00 00 00 00 00 00  .E(.............
-  backtrace:
-    [<0000000047527e31>] kmalloc_node include/linux/slab.h:578 [inline]
-    [<0000000047527e31>] kvmalloc_node+0x33/0xd0 mm/util.c:574
-    [<000000002b59e3bc>] kvmalloc include/linux/mm.h:753 [inline]
-    [<000000002b59e3bc>] kvzalloc include/linux/mm.h:761 [inline]
-    [<000000002b59e3bc>] alloc_netdev_mqs+0x83/0xd90 net/core/dev.c:9929
-    [<000000006076752a>] rtnl_create_link+0x2c0/0xa20 net/core/rtnetlink.c:3067
-    [<00000000572b3be5>] __rtnl_newlink+0xc9c/0x1330 net/core/rtnetlink.c:3329
-    [<00000000e84ea553>] rtnl_newlink+0x66/0x90 net/core/rtnetlink.c:3397
-    [<0000000052c7c0a9>] rtnetlink_rcv_msg+0x540/0x990 net/core/rtnetlink.c:5460
-    [<000000004b5cb379>] netlink_rcv_skb+0x12b/0x3a0 net/netlink/af_netlink.c:2469
-    [<00000000c71c20d3>] netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-    [<00000000c71c20d3>] netlink_unicast+0x4c6/0x690 net/netlink/af_netlink.c:1329
-    [<00000000cca72fa9>] netlink_sendmsg+0x735/0xcc0 net/netlink/af_netlink.c:1918
-    [<000000009221ebf7>] sock_sendmsg_nosec net/socket.c:652 [inline]
-    [<000000009221ebf7>] sock_sendmsg+0x109/0x140 net/socket.c:672
-    [<000000001c30ffe4>] ____sys_sendmsg+0x5f5/0x780 net/socket.c:2352
-    [<00000000b71ca6f3>] ___sys_sendmsg+0x11d/0x1a0 net/socket.c:2406
-    [<0000000007297384>] __sys_sendmsg+0xeb/0x1b0 net/socket.c:2439
-    [<000000000eb29b11>] do_syscall_64+0x56/0xa0 arch/x86/entry/common.c:359
-    [<000000006839b4d0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Because deleted_ws is one of the wakeup sources, it should be shown
+too, so add it to the end of all other wakeup sources.
 
-Fixes: cb626bf566eb ("net-sysfs: Fix reference count leak")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Weilong Chen <chenweilong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: zhuguangqing <zhuguangqing@xiaomi.com>
+[ rjw: Subject & changelog ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/rtnetlink.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/core/rtnetlink.c
-+++ b/net/core/rtnetlink.c
-@@ -3231,7 +3231,8 @@ replay:
- 		 */
- 		if (err < 0) {
- 			/* If device is not registered at all, free it now */
--			if (dev->reg_state == NETREG_UNINITIALIZED)
-+			if (dev->reg_state == NETREG_UNINITIALIZED ||
-+			    dev->reg_state == NETREG_UNREGISTERED)
- 				free_netdev(dev);
- 			goto out;
- 		}
+---
+ drivers/base/power/wakeup.c |    3 +++
+ 1 file changed, 3 insertions(+)
+
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -1073,6 +1073,9 @@ static void *wakeup_sources_stats_seq_ne
+ 		break;
+ 	}
+ 
++	if (!next_ws)
++		print_wakeup_source_stats(m, &deleted_ws);
++
+ 	return next_ws;
+ }
+ 
 
 
