@@ -2,225 +2,111 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0742DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D64FEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0D31206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:08:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jvJv6yv6"
+	by mail.kernel.org (Postfix) with ESMTP id BA82A206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:09:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729605AbgG3OIR (ORCPT
+        id S1729362AbgG3OJ2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 10:08:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51844 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729299AbgG3OH0 (ORCPT
+        Thu, 30 Jul 2020 10:09:28 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:35721 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728286AbgG3OJ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 10:07:26 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C96D1C06179E
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 07:07:25 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id q76so5128125wme.4
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 07:07:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wg0kUSEGrXJMBnS7RgbBCsvy47iqb2tGJq2KYVpzp4k=;
-        b=jvJv6yv6xw2Jt9XFRvVkb3uVw/3MnlSFZoSU57KuYryVkW5Qt16DX5ASNRWVB1imJd
-         LCuiiB4KD795O/OGiWAohtAJgpioTiLJpJv2SBRIz0XpaOEPNrorUeMMAGTUQD1zDT8E
-         ftT4KTIUlr287/LdTtbJh78IKSbyJb4hm4laI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wg0kUSEGrXJMBnS7RgbBCsvy47iqb2tGJq2KYVpzp4k=;
-        b=qTlh+zeOYBZEdbg63nYgJOG2/WqDXPPgGZJb5JQjx1g5cUwFZauxcKOVIHS+rzSu6z
-         a9KoxbNQU9lzDW8Pds2CFL/CbeqP/vNGybgo52CslpwDEHQTEK5D+N4T9snlZjpkI+8d
-         7P2dOWo+IX7RBGpsFVhDh4zLgWEAoEmiLyffV7WO9X0+aTgVyS3uWdzxC0UkdKrphu+E
-         9ZDoiAkUoNaMaMhIJEJxnCUqvgXCGHJd8qi0ih9KEVwzVGzfzfNjwOVkz5VGgprYDzL+
-         zrgCKRTV6wJlAorMLHyvcCsrHTO+5Nh40ysOw6YIrFGJplKdN6wuFOzgBGms7tfekucU
-         1W8w==
-X-Gm-Message-State: AOAM532ttW8NIw7fRMZP21EpCNYOpNu98E4Qg9ZUjNNN4eJJZ7ukyR1z
-        ywx8CDK1Witto/6obGtKFT2fScKhevrNQw==
-X-Google-Smtp-Source: ABdhPJwKmxyL+HXR/Ui+uT+uL2doJSlN+dfZt76rDaYOmw4WSo1ziMuCfc4EcPFbtA1OTmIOu6zoWQ==
-X-Received: by 2002:a1c:5f41:: with SMTP id t62mr14230359wmb.134.1596118044164;
-        Thu, 30 Jul 2020 07:07:24 -0700 (PDT)
-Received: from kpsingh.zrh.corp.google.com ([81.6.44.51])
-        by smtp.gmail.com with ESMTPSA id a10sm19088599wmd.3.2020.07.30.07.07.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 07:07:23 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>
-Subject: [PATCH bpf-next v7 2/7] bpf: Generalize caching for sk_storage.
-Date:   Thu, 30 Jul 2020 16:07:11 +0200
-Message-Id: <20200730140716.404558-3-kpsingh@chromium.org>
-X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
-In-Reply-To: <20200730140716.404558-1-kpsingh@chromium.org>
-References: <20200730140716.404558-1-kpsingh@chromium.org>
+        Thu, 30 Jul 2020 10:09:27 -0400
+Received: from mail-qt1-f176.google.com ([209.85.160.176]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MNfgZ-1kOzvB0q2F-00P9Oj for <linux-kernel@vger.kernel.org>; Thu, 30 Jul
+ 2020 16:09:26 +0200
+Received: by mail-qt1-f176.google.com with SMTP id c12so11374418qtn.9
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 07:09:26 -0700 (PDT)
+X-Gm-Message-State: AOAM532plOoj1RHSzksI5I7LItHRQkUfSnE0HRFaUKRHuFwep8knlCt/
+        KcCPbl1PxSMJzvtr2t6RFW9s5a/6mOcKheoEvsk=
+X-Google-Smtp-Source: ABdhPJyi9kI9tH2eVgfgqkCmMA+l204uFszK+oAlVJwFl1iWmPPCUPIZeVt8CBeEBpdFXQKzYRq+C/Bcofig8C3dcDg=
+X-Received: by 2002:ac8:688e:: with SMTP id m14mr3126506qtq.7.1596118164881;
+ Thu, 30 Jul 2020 07:09:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200724212853.11601-1-daniel.gutson@eclypsium.com>
+ <20200725055649.GA1047853@kroah.com> <CAFmMkTE_dT9+WJYyb19uQ_HmgJWZSARBy6PveheQJk++NuGbkQ@mail.gmail.com>
+ <20200726071723.GB441916@kroah.com> <CAFmMkTFzGfFDrJrdgHztzLK2K-zBWy6T2Tv+G4-rrbVpbahkgg@mail.gmail.com>
+ <CAK8P3a1nA7K15Cxz84Q8Grw3tKfgkUmsfURcytJEWb_0Wjqm5w@mail.gmail.com>
+ <CAFmMkTExBY3V_Ghej7Bzjatg+vFtWq3UZmKzjAiEoR9EqnFN9Q@mail.gmail.com>
+ <CAFmMkTEO7VNKJeYz2uoHsS-yN_aY8UuiQ2GcCq9NyAD5481ZGA@mail.gmail.com>
+ <20200730053108.GA3861609@kroah.com> <CAFmMkTHXjfG7zMr0i_h65PvjAe4opPgvzdABH8W1EUGOmcA4Zg@mail.gmail.com>
+In-Reply-To: <CAFmMkTHXjfG7zMr0i_h65PvjAe4opPgvzdABH8W1EUGOmcA4Zg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 30 Jul 2020 16:09:08 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2SN3pdXV8=0jXfrsz8L64yV46fEM4zrSXfA25QK0GNuA@mail.gmail.com>
+Message-ID: <CAK8P3a2SN3pdXV8=0jXfrsz8L64yV46fEM4zrSXfA25QK0GNuA@mail.gmail.com>
+Subject: Re: [PATCH] Module argument to control whether intel-spi-pci attempts
+ to turn the SPI flash chip writeable
+To:     Daniel Gutson <daniel@eclypsium.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alex Bazhaniuk <alex@eclypsium.com>,
+        Richard Hughes <hughsient@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:PaZdRPgyOTwoxdG5QIOY7aerP3XsVhhp5X0+6VM6UA7ZFmCzaCk
+ YB09U/TzuHD0nCwWmohmroDO7KIUC1jSaiQ0mJm7oNxMsg6CtfvSSb7Nk874cAX5Eyl7S82
+ HOnIyh3g4QMTTef3y8X+UzZZd8lTJGeBxL/fzPJfzhhY/jD9KeheTu8LF++0BUrwooVB116
+ Pob7dfMIyW2XAUuIEdtlw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mMUbIM3C6O4=:6eIgjwfPJutJOq76l6dOuN
+ +lU7EAUFi/V6wHWvnAfqFE/ZA6qyGEValzD7OPsGv5grEBxCLwe41EKblkX7LMkj6Enbcm5WW
+ mkOlsIIsE7CY74HtWS8U9li+i2qF9yeLxdiOPk2wcB9zemVayyRwZAFPKKhF7wYv81LBBEyEb
+ ShCAl3lsCYQU8HR7RQNpoB1hOVkoC5lxYmDdSK6Qx5iLj20QMTUEnn61QXKIdGImIgCCqjXXH
+ aNGO+a+lr3scGZuF3YOB8j/Kc+1umq/Mwwm6RfV3up5j27aycfa4fN9nuOxzKAK7WJEmezo1W
+ Evdh9dHkTDgSiZTXbNhHaPL3Ue/jQzJ0ScNar44AgMUz7O1jYjYKbmPJoMJKzwWb+Bhm7zgIS
+ BOh8Sv6j8LuuYm1OwCpDeXxPMzhxp8EJ5dnOop8S2MCSOyVV0l1MtI+OHVPKHsPmVLHcFTqyb
+ pepJ4+4zaeSDLvo+BKezPeFYbNjXtu/i0elkEWtp7gAdPdULUh1GeqJc6czqqdA9mQcF5b7IA
+ 7otPioTr6ZFBJDAwv0NrQ4xWA/vxoDoXqJUcz01h9ALDbt/ElYNFJbREaXhTymqCStOIba0LP
+ fp4lv5EphqrL/IF3NJZjmgCUDHhNQA/4he6PhEGgPokDN4rliJOdxdyzgTp8rLZnyZn2kkBHB
+ tuyR9mPmxJDZI8pS4NT7+aeVDNQ/RrreTlrm8h2YPEZ6TXYSTgK0sa6wYTQQtPhR+H9fZrASI
+ 5pxsrexs6hIe+j3wWuBpHQS2s/pM3jIZ/91UN/ijH3kFeHeweIx1TciU9POROmVA+qlkE4XtZ
+ gefK9f0wONY0Aw0Ib2tV35cv9dBassyil9/DKgYH6mWJ4sgoBM7lub4QLnXS2nf2u8bw3oQiT
+ c7s3qldOYkIcWHm78v39klgAaFCnM7RqoZ0KWF0fbG/O8Hy9cw6h5G3v26OkBSW6P+FPeUn9c
+ Hu1qEZlPFR3V+uECTTrQ7XnLCjmdyYbT+s1LINCH5YQpqqGWL7xSK
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KP Singh <kpsingh@google.com>
+On Thu, Jul 30, 2020 at 2:21 PM Daniel Gutson <daniel@eclypsium.com> wrote:
+> El jue., 30 jul. 2020 2:31 a. m., Greg Kroah-Hartman <gregkh@linuxfoundation.org> escribió:
+>>
+>> Again, module parameters are working on a per-chunk-of-code basis, while
+>> you want to work on a per-device basis,
+>
+>
+> I think there is a misunderstanding.  What I want is to control (turn on or off) is a very specific code snippet that provides the "functionality" of trying to turn the chip writable. The rest of the device driver is fine.
+> I assume that the one that doesn't understand is me.
+>
 
-Provide the a ability to define local storage caches on a per-object
-type basis. The caches and caching indices for different objects should
-not be inter-mixed as suggested in:
+I looked at the source code again and found that the existing module
+parameter applies to both the platform and pci device front-ends, both
+of which go through
 
-  https://lore.kernel.org/bpf/20200630193441.kdwnkestulg5erii@kafai-mbp.dhcp.thefacebook.com/
+        /* Prevent writes if not explicitly enabled */
+        if (!ispi->writeable || !writeable)
+                ispi->nor.mtd.flags &= ~MTD_WRITEABLE;
 
-  "Caching a sk-storage at idx=0 of a sk should not stop an
-  inode-storage to be cached at the same idx of a inode."
+Setting the PCI device writable in hardware makes it possible to
+actually write to it *only* if the module parameter is also set to '1'.
+One might disagree with that design, but I don't think your patch
+would make it any better, it just means one would have to set
+two module parameters instead of one.
 
-Signed-off-by: KP Singh <kpsingh@google.com>
----
- include/net/bpf_sk_storage.h | 19 +++++++++++++++++++
- net/core/bpf_sk_storage.c    | 31 +++++++++++++++----------------
- 2 files changed, 34 insertions(+), 16 deletions(-)
-
-diff --git a/include/net/bpf_sk_storage.h b/include/net/bpf_sk_storage.h
-index 5036c94c0503..950c5aaba15e 100644
---- a/include/net/bpf_sk_storage.h
-+++ b/include/net/bpf_sk_storage.h
-@@ -3,6 +3,9 @@
- #ifndef _BPF_SK_STORAGE_H
- #define _BPF_SK_STORAGE_H
- 
-+#include <linux/types.h>
-+#include <linux/spinlock.h>
-+
- struct sock;
- 
- void bpf_sk_storage_free(struct sock *sk);
-@@ -15,6 +18,22 @@ struct sk_buff;
- struct nlattr;
- struct sock;
- 
-+#define BPF_LOCAL_STORAGE_CACHE_SIZE	16
-+
-+struct bpf_local_storage_cache {
-+	spinlock_t idx_lock;
-+	u64 idx_usage_counts[BPF_LOCAL_STORAGE_CACHE_SIZE];
-+};
-+
-+#define DEFINE_BPF_STORAGE_CACHE(name)				\
-+static struct bpf_local_storage_cache name = {			\
-+	.idx_lock = __SPIN_LOCK_UNLOCKED(name.idx_lock),	\
-+}
-+
-+u16 bpf_local_storage_cache_idx_get(struct bpf_local_storage_cache *cache);
-+void bpf_local_storage_cache_idx_free(struct bpf_local_storage_cache *cache,
-+				      u16 idx);
-+
- #ifdef CONFIG_BPF_SYSCALL
- int bpf_sk_storage_clone(const struct sock *sk, struct sock *newsk);
- struct bpf_sk_storage_diag *
-diff --git a/net/core/bpf_sk_storage.c b/net/core/bpf_sk_storage.c
-index a5cc218834ee..99dde7b74767 100644
---- a/net/core/bpf_sk_storage.c
-+++ b/net/core/bpf_sk_storage.c
-@@ -14,6 +14,8 @@
- 
- #define BPF_LOCAL_STORAGE_CREATE_FLAG_MASK (BPF_F_NO_PREALLOC | BPF_F_CLONE)
- 
-+DEFINE_BPF_STORAGE_CACHE(sk_cache);
-+
- struct bpf_local_storage_map_bucket {
- 	struct hlist_head list;
- 	raw_spinlock_t lock;
-@@ -78,10 +80,6 @@ struct bpf_local_storage_elem {
- #define SELEM(_SDATA)							\
- 	container_of((_SDATA), struct bpf_local_storage_elem, sdata)
- #define SDATA(_SELEM) (&(_SELEM)->sdata)
--#define BPF_LOCAL_STORAGE_CACHE_SIZE	16
--
--static DEFINE_SPINLOCK(cache_idx_lock);
--static u64 cache_idx_usage_counts[BPF_LOCAL_STORAGE_CACHE_SIZE];
- 
- struct bpf_local_storage {
- 	struct bpf_local_storage_data __rcu *cache[BPF_LOCAL_STORAGE_CACHE_SIZE];
-@@ -517,16 +515,16 @@ static int sk_storage_delete(struct sock *sk, struct bpf_map *map)
- 	return 0;
- }
- 
--static u16 cache_idx_get(void)
-+u16 bpf_local_storage_cache_idx_get(struct bpf_local_storage_cache *cache)
- {
- 	u64 min_usage = U64_MAX;
- 	u16 i, res = 0;
- 
--	spin_lock(&cache_idx_lock);
-+	spin_lock(&cache->idx_lock);
- 
- 	for (i = 0; i < BPF_LOCAL_STORAGE_CACHE_SIZE; i++) {
--		if (cache_idx_usage_counts[i] < min_usage) {
--			min_usage = cache_idx_usage_counts[i];
-+		if (cache->idx_usage_counts[i] < min_usage) {
-+			min_usage = cache->idx_usage_counts[i];
- 			res = i;
- 
- 			/* Found a free cache_idx */
-@@ -534,18 +532,19 @@ static u16 cache_idx_get(void)
- 				break;
- 		}
- 	}
--	cache_idx_usage_counts[res]++;
-+	cache->idx_usage_counts[res]++;
- 
--	spin_unlock(&cache_idx_lock);
-+	spin_unlock(&cache->idx_lock);
- 
- 	return res;
- }
- 
--static void cache_idx_free(u16 idx)
-+void bpf_local_storage_cache_idx_free(struct bpf_local_storage_cache *cache,
-+				      u16 idx)
- {
--	spin_lock(&cache_idx_lock);
--	cache_idx_usage_counts[idx]--;
--	spin_unlock(&cache_idx_lock);
-+	spin_lock(&cache->idx_lock);
-+	cache->idx_usage_counts[idx]--;
-+	spin_unlock(&cache->idx_lock);
- }
- 
- /* Called by __sk_destruct() & bpf_sk_storage_clone() */
-@@ -597,7 +596,7 @@ static void bpf_local_storage_map_free(struct bpf_map *map)
- 
- 	smap = (struct bpf_local_storage_map *)map;
- 
--	cache_idx_free(smap->cache_idx);
-+	bpf_local_storage_cache_idx_free(&sk_cache, smap->cache_idx);
- 
- 	/* Note that this map might be concurrently cloned from
- 	 * bpf_sk_storage_clone. Wait for any existing bpf_sk_storage_clone
-@@ -713,7 +712,7 @@ static struct bpf_map *bpf_local_storage_map_alloc(union bpf_attr *attr)
- 	}
- 
- 	smap->elem_size = sizeof(struct bpf_local_storage_elem) + attr->value_size;
--	smap->cache_idx = cache_idx_get();
-+	smap->cache_idx = bpf_local_storage_cache_idx_get(&sk_cache);
- 
- 	return &smap->map;
- }
--- 
-2.28.0.rc0.142.g3c755180ce-goog
-
+     Arnd
