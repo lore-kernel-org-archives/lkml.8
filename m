@@ -2,323 +2,79 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A82C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D21B6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3110A20672
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE40A20672
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:51:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729320AbgG3Jv3 (ORCPT
+        id S1729419AbgG3Jv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 05:51:29 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:51394 "EHLO inva020.nxp.com"
+        Thu, 30 Jul 2020 05:51:57 -0400
+Received: from mga06.intel.com ([134.134.136.31]:18339 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726883AbgG3Jv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 05:51:28 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F3FD01A03AA;
-        Thu, 30 Jul 2020 11:51:26 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5BEF61A04C3;
-        Thu, 30 Jul 2020 11:51:22 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8FD26402AA;
-        Thu, 30 Jul 2020 11:51:16 +0200 (CEST)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-        perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ASoC: fsl-asoc-card: Remove fsl_asoc_card_set_bias_level function
-Date:   Thu, 30 Jul 2020 17:47:02 +0800
-Message-Id: <1596102422-14010-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726883AbgG3Jv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 05:51:57 -0400
+IronPort-SDR: UME8XL7Z3Ix6FWrQAULZXIiQCTXAdoqg7bndB7vOky0F/PSbbV6/DPdRzXR8Q6daZGHhaqX2gn
+ Mqj4HXnFVKAQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="213101325"
+X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
+   d="scan'208";a="213101325"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 02:51:56 -0700
+IronPort-SDR: 7NEcFv9Di871vKistPPGOVijhJOGB2pxqS93tB4fTX1Aip1gZ/21Bat8nyfrLbTk8f4800eauL
+ qK2YSpU/+8HA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
+   d="scan'208";a="321021577"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 30 Jul 2020 02:51:56 -0700
+Received: from [10.215.145.173] (ekotax-MOBL.gar.corp.intel.com [10.215.145.173])
+        by linux.intel.com (Postfix) with ESMTP id E5869580295;
+        Thu, 30 Jul 2020 02:51:52 -0700 (PDT)
+Subject: Re: [PATCH 1/1] x86/tsr: Fix tsc frequency enumeration failure on
+ lightning mountain SoC
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy@infradead.org>, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+References: <4fcf09a0786550f5510ec3d9a8628baf7326dd39.1596084248.git.eswara.kota@linux.intel.com>
+ <CAHp75VdJc58PSjgnL48jeae+=pHw28sMj3m+HTcVUZZ8kJTYqg@mail.gmail.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <3db9ed8c-f024-676e-b048-0cd50f7b1a6d@linux.intel.com>
+Date:   Thu, 30 Jul 2020 17:51:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CAHp75VdJc58PSjgnL48jeae+=pHw28sMj3m+HTcVUZZ8kJTYqg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With this case:
-aplay -Dhw:x 16khz.wav 24khz.wav
-There is sound distortion for 24khz.wav. The reason is that setting
-PLL of WM8962 with set_bias_level function, the bias level is not
-changed when 24khz.wav is played, then the PLL won't be reset, the
-clock is not correct, so distortion happens.
 
-The resolution of this issue is to remove fsl_asoc_card_set_bias_level.
-Move PLL configuration to hw_params and hw_free.
+On 7/30/2020 3:57 PM, Andy Shevchenko wrote:
+> While at this, can you confirm (with maybe good description and
+> documentation reference) that the numbers in that array are all
+> correct?
 
-After removing fsl_asoc_card_set_bias_level, also test WM8960 case,
-it can work.
+Sure, i will add the description.
 
-Fixes: 708b4351f08c ("ASoC: fsl: Add Freescale Generic ASoC Sound Card with ASRC support")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
-changes in v2
-- replace is_stream_in_use with streams
-- add "out" error handler in hw_params()
-
- sound/soc/fsl/fsl-asoc-card.c | 155 ++++++++++++++++------------------
- 1 file changed, 71 insertions(+), 84 deletions(-)
-
-diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
-index 4848ba61d083..b6a2a527dc04 100644
---- a/sound/soc/fsl/fsl-asoc-card.c
-+++ b/sound/soc/fsl/fsl-asoc-card.c
-@@ -73,6 +73,7 @@ struct cpu_priv {
-  * @codec_priv: CODEC private data
-  * @cpu_priv: CPU private data
-  * @card: ASoC card structure
-+ * @streams: Mask of current active streams
-  * @sample_rate: Current sample rate
-  * @sample_format: Current sample format
-  * @asrc_rate: ASRC sample rate used by Back-Ends
-@@ -89,6 +90,7 @@ struct fsl_asoc_card_priv {
- 	struct codec_priv codec_priv;
- 	struct cpu_priv cpu_priv;
- 	struct snd_soc_card card;
-+	u8 streams;
- 	u32 sample_rate;
- 	snd_pcm_format_t sample_format;
- 	u32 asrc_rate;
-@@ -151,21 +153,17 @@ static int fsl_asoc_card_hw_params(struct snd_pcm_substream *substream,
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
- 	struct fsl_asoc_card_priv *priv = snd_soc_card_get_drvdata(rtd->card);
- 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
-+	struct codec_priv *codec_priv = &priv->codec_priv;
- 	struct cpu_priv *cpu_priv = &priv->cpu_priv;
- 	struct device *dev = rtd->card->dev;
-+	unsigned int pll_out;
- 	int ret;
- 
- 	priv->sample_rate = params_rate(params);
- 	priv->sample_format = params_format(params);
-+	priv->streams |= BIT(substream->stream);
- 
--	/*
--	 * If codec-dai is DAI Master and all configurations are already in the
--	 * set_bias_level(), bypass the remaining settings in hw_params().
--	 * Note: (dai_fmt & CBM_CFM) includes CBM_CFM and CBM_CFS.
--	 */
--	if ((priv->card.set_bias_level &&
--	     priv->dai_fmt & SND_SOC_DAIFMT_CBM_CFM) ||
--	    fsl_asoc_card_is_ac97(priv))
-+	if (fsl_asoc_card_is_ac97(priv))
- 		return 0;
- 
- 	/* Specific configurations of DAIs starts from here */
-@@ -174,7 +172,7 @@ static int fsl_asoc_card_hw_params(struct snd_pcm_substream *substream,
- 				     cpu_priv->sysclk_dir[tx]);
- 	if (ret && ret != -ENOTSUPP) {
- 		dev_err(dev, "failed to set sysclk for cpu dai\n");
--		return ret;
-+		goto out;
- 	}
- 
- 	if (cpu_priv->slot_width) {
-@@ -182,6 +180,69 @@ static int fsl_asoc_card_hw_params(struct snd_pcm_substream *substream,
- 					       cpu_priv->slot_width);
- 		if (ret && ret != -ENOTSUPP) {
- 			dev_err(dev, "failed to set TDM slot for cpu dai\n");
-+			goto out;
-+		}
-+	}
-+
-+	/* Specific configuration for PLL */
-+	if (codec_priv->pll_id && codec_priv->fll_id) {
-+		if (priv->sample_format == SNDRV_PCM_FORMAT_S24_LE)
-+			pll_out = priv->sample_rate * 384;
-+		else
-+			pll_out = priv->sample_rate * 256;
-+
-+		ret = snd_soc_dai_set_pll(asoc_rtd_to_codec(rtd, 0),
-+					  codec_priv->pll_id,
-+					  codec_priv->mclk_id,
-+					  codec_priv->mclk_freq, pll_out);
-+		if (ret) {
-+			dev_err(dev, "failed to start FLL: %d\n", ret);
-+			goto out;
-+		}
-+
-+		ret = snd_soc_dai_set_sysclk(asoc_rtd_to_codec(rtd, 0),
-+					     codec_priv->fll_id,
-+					     pll_out, SND_SOC_CLOCK_IN);
-+
-+		if (ret && ret != -ENOTSUPP) {
-+			dev_err(dev, "failed to set SYSCLK: %d\n", ret);
-+			goto out;
-+		}
-+	}
-+
-+	return 0;
-+
-+out:
-+	priv->streams &= ~BIT(substream->stream);
-+	return ret;
-+}
-+
-+static int fsl_asoc_card_hw_free(struct snd_pcm_substream *substream)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct fsl_asoc_card_priv *priv = snd_soc_card_get_drvdata(rtd->card);
-+	struct codec_priv *codec_priv = &priv->codec_priv;
-+	struct device *dev = rtd->card->dev;
-+	int ret;
-+
-+	priv->streams &= ~BIT(substream->stream);
-+
-+	if (!priv->streams && codec_priv->pll_id &&
-+	    codec_priv->fll_id) {
-+		/* Force freq to be 0 to avoid error message in codec */
-+		ret = snd_soc_dai_set_sysclk(asoc_rtd_to_codec(rtd, 0),
-+					     codec_priv->mclk_id,
-+					     0,
-+					     SND_SOC_CLOCK_IN);
-+		if (ret) {
-+			dev_err(dev, "failed to switch away from FLL: %d\n", ret);
-+			return ret;
-+		}
-+
-+		ret = snd_soc_dai_set_pll(asoc_rtd_to_codec(rtd, 0),
-+					  codec_priv->pll_id, 0, 0, 0);
-+		if (ret && ret != -ENOTSUPP) {
-+			dev_err(dev, "failed to stop FLL: %d\n", ret);
- 			return ret;
- 		}
- 	}
-@@ -191,6 +252,7 @@ static int fsl_asoc_card_hw_params(struct snd_pcm_substream *substream,
- 
- static const struct snd_soc_ops fsl_asoc_card_ops = {
- 	.hw_params = fsl_asoc_card_hw_params,
-+	.hw_free = fsl_asoc_card_hw_free,
- };
- 
- static int be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
-@@ -254,75 +316,6 @@ static struct snd_soc_dai_link fsl_asoc_card_dai[] = {
- 	},
- };
- 
--static int fsl_asoc_card_set_bias_level(struct snd_soc_card *card,
--					struct snd_soc_dapm_context *dapm,
--					enum snd_soc_bias_level level)
--{
--	struct fsl_asoc_card_priv *priv = snd_soc_card_get_drvdata(card);
--	struct snd_soc_pcm_runtime *rtd;
--	struct snd_soc_dai *codec_dai;
--	struct codec_priv *codec_priv = &priv->codec_priv;
--	struct device *dev = card->dev;
--	unsigned int pll_out;
--	int ret;
--
--	rtd = snd_soc_get_pcm_runtime(card, &card->dai_link[0]);
--	codec_dai = asoc_rtd_to_codec(rtd, 0);
--	if (dapm->dev != codec_dai->dev)
--		return 0;
--
--	switch (level) {
--	case SND_SOC_BIAS_PREPARE:
--		if (dapm->bias_level != SND_SOC_BIAS_STANDBY)
--			break;
--
--		if (priv->sample_format == SNDRV_PCM_FORMAT_S24_LE)
--			pll_out = priv->sample_rate * 384;
--		else
--			pll_out = priv->sample_rate * 256;
--
--		ret = snd_soc_dai_set_pll(codec_dai, codec_priv->pll_id,
--					  codec_priv->mclk_id,
--					  codec_priv->mclk_freq, pll_out);
--		if (ret) {
--			dev_err(dev, "failed to start FLL: %d\n", ret);
--			return ret;
--		}
--
--		ret = snd_soc_dai_set_sysclk(codec_dai, codec_priv->fll_id,
--					     pll_out, SND_SOC_CLOCK_IN);
--		if (ret && ret != -ENOTSUPP) {
--			dev_err(dev, "failed to set SYSCLK: %d\n", ret);
--			return ret;
--		}
--		break;
--
--	case SND_SOC_BIAS_STANDBY:
--		if (dapm->bias_level != SND_SOC_BIAS_PREPARE)
--			break;
--
--		ret = snd_soc_dai_set_sysclk(codec_dai, codec_priv->mclk_id,
--					     codec_priv->mclk_freq,
--					     SND_SOC_CLOCK_IN);
--		if (ret && ret != -ENOTSUPP) {
--			dev_err(dev, "failed to switch away from FLL: %d\n", ret);
--			return ret;
--		}
--
--		ret = snd_soc_dai_set_pll(codec_dai, codec_priv->pll_id, 0, 0, 0);
--		if (ret) {
--			dev_err(dev, "failed to stop FLL: %d\n", ret);
--			return ret;
--		}
--		break;
--
--	default:
--		break;
--	}
--
--	return 0;
--}
--
- static int fsl_asoc_card_audmux_init(struct device_node *np,
- 				     struct fsl_asoc_card_priv *priv)
- {
-@@ -611,7 +604,6 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 	/* Diversify the card configurations */
- 	if (of_device_is_compatible(np, "fsl,imx-audio-cs42888")) {
- 		codec_dai_name = "cs42888";
--		priv->card.set_bias_level = NULL;
- 		priv->cpu_priv.sysclk_freq[TX] = priv->codec_priv.mclk_freq;
- 		priv->cpu_priv.sysclk_freq[RX] = priv->codec_priv.mclk_freq;
- 		priv->cpu_priv.sysclk_dir[TX] = SND_SOC_CLOCK_OUT;
-@@ -628,26 +620,22 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
- 	} else if (of_device_is_compatible(np, "fsl,imx-audio-wm8962")) {
- 		codec_dai_name = "wm8962";
--		priv->card.set_bias_level = fsl_asoc_card_set_bias_level;
- 		priv->codec_priv.mclk_id = WM8962_SYSCLK_MCLK;
- 		priv->codec_priv.fll_id = WM8962_SYSCLK_FLL;
- 		priv->codec_priv.pll_id = WM8962_FLL;
- 		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
- 	} else if (of_device_is_compatible(np, "fsl,imx-audio-wm8960")) {
- 		codec_dai_name = "wm8960-hifi";
--		priv->card.set_bias_level = fsl_asoc_card_set_bias_level;
- 		priv->codec_priv.fll_id = WM8960_SYSCLK_AUTO;
- 		priv->codec_priv.pll_id = WM8960_SYSCLK_AUTO;
- 		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
- 	} else if (of_device_is_compatible(np, "fsl,imx-audio-ac97")) {
- 		codec_dai_name = "ac97-hifi";
--		priv->card.set_bias_level = NULL;
- 		priv->dai_fmt = SND_SOC_DAIFMT_AC97;
- 		priv->card.dapm_routes = audio_map_ac97;
- 		priv->card.num_dapm_routes = ARRAY_SIZE(audio_map_ac97);
- 	} else if (of_device_is_compatible(np, "fsl,imx-audio-mqs")) {
- 		codec_dai_name = "fsl-mqs-dai";
--		priv->card.set_bias_level = NULL;
- 		priv->dai_fmt = SND_SOC_DAIFMT_LEFT_J |
- 				SND_SOC_DAIFMT_CBS_CFS |
- 				SND_SOC_DAIFMT_NB_NF;
-@@ -657,7 +645,6 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 		priv->card.num_dapm_routes = ARRAY_SIZE(audio_map_tx);
- 	} else if (of_device_is_compatible(np, "fsl,imx-audio-wm8524")) {
- 		codec_dai_name = "wm8524-hifi";
--		priv->card.set_bias_level = NULL;
- 		priv->dai_fmt |= SND_SOC_DAIFMT_CBS_CFS;
- 		priv->dai_link[1].dpcm_capture = 0;
- 		priv->dai_link[2].dpcm_capture = 0;
--- 
-2.27.0
+Regards,
+Dilip
 
