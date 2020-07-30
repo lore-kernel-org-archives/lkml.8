@@ -2,89 +2,90 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD3AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8632C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D223820809
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C65B720809
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:02:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t4aPDRYe"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZjcMZbIw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730362AbgG3SC2 (ORCPT
+        id S1730394AbgG3SCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 14:02:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgG3SC2 (ORCPT
+        Thu, 30 Jul 2020 14:02:54 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:35040 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730363AbgG3SCw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 14:02:28 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC913C061574
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 11:02:27 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id w9so21012083qts.6
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 11:02:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cNgWjzKHskwT0MftVG/9B5dX6kQx1rkKM1Y7gjwQfIo=;
-        b=t4aPDRYed6LP/GqYAZ/1/OhlJjN7mYd7e8LPKEnQS9ZXO5Te0mHernQE6PfLgGDk0Y
-         WHGyAeJr2LLBdPfyVLkyY4wilrUtQb+UrhCynaHFVINnCiAa4612slLDc5DjRVbuyO3g
-         MxOb6Oytk9KLjLkeY0Z9cXet6Pzu02vXp0HYUCKqDjnLq1RnMilpp2JXkr7J5qEmmV5k
-         o0NQodpHuAmj0bAKvTDjL/XQSM7NXO3SLR8bNqujETIk/vdwFcHJTvPOJs+/gzYjtnsn
-         KHUTAKjiXpz+PWWwvA7MJPwNhZfKUgpBydweua4CKc9KuqBw0fbakFOjvd0iu7QGgWsq
-         wprg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=cNgWjzKHskwT0MftVG/9B5dX6kQx1rkKM1Y7gjwQfIo=;
-        b=quGykgoAfM58Tt52fg1xGP7SigLMiaN/HavF5pw/0ZVt9LqnNP1g7OSVnKjSpBYzKk
-         y5HDUI9uZm9gdnujKfz7n/YX0guUZnfHU95pNNXTIoQtXqXHWqLbjqKg/yXOMOG3XPG7
-         enZwG4C1rSlUIsZTPuEJ/QY8CnlNjZR3Hpyyq/xFdu6uuvSFtivO3tbSZgBZqYf8OQ8o
-         dyMmGKEKvpNCWkYOp2Grt7cU+OPcR3eRYpVYTS+F0CcgAZ7YSkzukLpqJOZzJpvUDmx5
-         AloKimQppT2ZxOUlUGPRMk+cdF/OHZd0ZoBDeRMBLQKaUYmr2GoLAnXa+KWsVx0D5ghv
-         POrQ==
-X-Gm-Message-State: AOAM532k2IgsMIElfpc+BnIEOoHF4AlW01GF3w93aBEQNYUU3rax3LR1
-        lqD1lC5jUTMJaiBeiTlh3CpygBek
-X-Google-Smtp-Source: ABdhPJwDyuHXDS+cQUsSX5+UlAGCpfGV+n/T74fdECgkw94+PxEhKiOfoisK0bXPBl5Rh8S3CW7d0w==
-X-Received: by 2002:ac8:6a07:: with SMTP id t7mr4201192qtr.1.1596132147185;
-        Thu, 30 Jul 2020 11:02:27 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id e4sm5232739qts.57.2020.07.30.11.02.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 11:02:26 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Thu, 30 Jul 2020 14:02:24 -0400
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/21] x86/kaslr: Cleanup and small bugfixes
-Message-ID: <20200730180224.GA1203420@rani.riverdale.lan>
-References: <20200727230801.3468620-1-nivedita@alum.mit.edu>
- <20200728225722.67457-1-nivedita@alum.mit.edu>
+        Thu, 30 Jul 2020 14:02:52 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 508FA20B4908;
+        Thu, 30 Jul 2020 11:02:51 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 508FA20B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1596132171;
+        bh=Lq00ap7Yu8hoUdPCLVlYdZakWLvY3wTeBBusKqVGKL4=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=ZjcMZbIwR/fP3byLrxge5Ao5e6GNyOxy0eX1JNinRJb1DKlygk8vEypRNhuOT3BA8
+         QBSKgVbqSbcijtYHbivDb7NzWH29EtNUIPqz4nmIPjJgvbngaWRjLUKQCQD6CokjSB
+         FA2pANqUEaaDk+qglmoS3yYd6EEKu0thLoDca/n8=
+Subject: Re: [PATCH v5 4/4] IMA: Handle early boot data measurement
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, stephen.smalley.work@gmail.com,
+        casey@schaufler-ca.com
+Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200730034724.3298-1-nramas@linux.microsoft.com>
+ <20200730034724.3298-5-nramas@linux.microsoft.com>
+Message-ID: <ea3bba66-9b21-b842-990b-2bf1e4ac2179@linux.microsoft.com>
+Date:   Thu, 30 Jul 2020 11:02:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200728225722.67457-1-nivedita@alum.mit.edu>
+In-Reply-To: <20200730034724.3298-5-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 06:57:01PM -0400, Arvind Sankar wrote:
-> v2->v3:
-> - Fix the first patch: command line size should be strlen + 1 to account
->   for terminating NUL. Avoid calling add_identity_map if cmdline was
->   NULL, though it should do nothing in that case anyway.
+On 7/29/20 8:47 PM, Lakshmi Ramasubramanian wrote:
 
-Hi Ingo, I noticed that WIP.x86/kaslr and x86/kaslr both have the v2
-version of the first patch. That has a bug in the cmd_line_size
-calculation (missing the +1).
+Hi Tyler,
 
-Thanks.
+> diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+> index 080c53545ff0..86cba844f73c 100644
+> --- a/security/integrity/ima/Kconfig
+> +++ b/security/integrity/ima/Kconfig
+> @@ -322,10 +322,9 @@ config IMA_MEASURE_ASYMMETRIC_KEYS
+>   	depends on ASYMMETRIC_PUBLIC_KEY_SUBTYPE=y
+>   	default y
+>   
+> -config IMA_QUEUE_EARLY_BOOT_KEYS
+> +config IMA_QUEUE_EARLY_BOOT_DATA
+>   	bool
+> -	depends on IMA_MEASURE_ASYMMETRIC_KEYS
+> -	depends on SYSTEM_TRUSTED_KEYRING
+> +	depends on SECURITY || (IMA_MEASURE_ASYMMETRIC_KEYS && SYSTEM_TRUSTED_KEYRING)
+>   	default y
+>   
+Similar to the change you'd suggested for validating LSM_STATE and 
+LSM_POLICY func, I think IMA_QUEUE_EARLY_BOOT_DATA config should be 
+enabled for SECURITY_SELINUX.
+
+depends on SECURITY_SELINUX ||
+            (IMA_MEASURE_ASYMMETRIC_KEYS && SYSTEM_TRUSTED_KEYRING)
+
+And, when more security modules are added update this CONFIG as appropriate.
+
+Does that sound okay?
+
+  -lakshmi
