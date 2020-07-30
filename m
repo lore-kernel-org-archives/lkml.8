@@ -5,54 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E966DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7256EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C507A2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4778D20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096588;
-	bh=29cjQnjSC+wuvHtG+20VVuSfXqeNY9zwFB/jMOukLSE=;
+	s=default; t=1596096592;
+	bh=5wiFjCkrc5/l0EYFnbG2YrEL33UCdlxVBXBd0bosvds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F8vEXV2l9obQHbkb8D3xVFNu/KNMHzW7bgNYP6gmMl37dSWQhnw6U3pVROUjYWr4Z
-	 brQvu/yvgZfEFUN7F/iWqL01ApuIhzlFUpf1CTY6lpnGUE6O7/cbcBZUmPmFSJgws4
-	 Oa/c4KODYE6q1TnmW/iFYo5acz4At/0BwqoxII8k=
+	b=VH+gxsH70Bp7aYVjFmFOJOq+HYz8lwdw5BmC9XroLj1POuzEYOwXHcgXc+5rTKaDW
+	 qix6XoWbKEpCtonPEMM90cyuPky05yF6HZuWfx/52g0srv749EQzkNEk9K1g37NNQm
+	 /clA3W8VRLAlt7CSotLFWuYlD3HmRngOMDW/0eR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729734AbgG3IJr (ORCPT
+        id S1729251AbgG3IJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:09:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48254 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:09:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729714AbgG3IJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:09:41 -0400
+        id S1729696AbgG3IJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:09:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA24E2070B;
-        Thu, 30 Jul 2020 08:09:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 414F820838;
+        Thu, 30 Jul 2020 08:09:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096580;
-        bh=29cjQnjSC+wuvHtG+20VVuSfXqeNY9zwFB/jMOukLSE=;
+        s=default; t=1596096572;
+        bh=5wiFjCkrc5/l0EYFnbG2YrEL33UCdlxVBXBd0bosvds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zzOsfgxXLOY7dEFB6NUMRubO9Yc+UyuY7ZaYC4eM+GyMNSyymP+YB5ugeyFQHlIv5
-         3WAbNDaTSrW1CliER6txL1Nf0PvJWKHM+SF1syzqb1Tge0XlnCGKFj4LOFC+bWKA6o
-         pLjbuZdaWrowEj/T9n1zdIpLykrf1gnUWEk3Cfh4=
+        b=ySTk78ysaSg3s+0FITWQNNK3aZq/pvF8Vn/m7PAdC4tPzSTcqo6QZb5/Iy6r1lhwX
+         5PvWkqxNROg5jiuRAvqyrr6+aKh4sBigLkFXozKKY43O6fVX6btbbAg37QE86j0qG5
+         M79/kVKf9g/hmcrPrChkiTeFsQ7jqS4XDj/5LEeU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 42/61] io-mapping: indicate mapping failure
-Date:   Thu, 30 Jul 2020 10:05:00 +0200
-Message-Id: <20200730074422.873157551@linuxfoundation.org>
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        syzbot <syzbot+017265e8553724e514e8@syzkaller.appspotmail.com>
+Subject: [PATCH 4.9 39/61] vt: Reject zero-sized screen buffer size.
+Date:   Thu, 30 Jul 2020 10:04:57 +0200
+Message-Id: <20200730074422.724107068@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074420.811058810@linuxfoundation.org>
 References: <20200730074420.811058810@linuxfoundation.org>
@@ -65,73 +60,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael J. Ruhl <michael.j.ruhl@intel.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-commit e0b3e0b1a04367fc15c07f44e78361545b55357c upstream.
+commit ce684552a266cb1c7cc2f7e623f38567adec6653 upstream.
 
-The !ATOMIC_IOMAP version of io_maping_init_wc will always return
-success, even when the ioremap fails.
+syzbot is reporting general protection fault in do_con_write() [1] caused
+by vc->vc_screenbuf == ZERO_SIZE_PTR caused by vc->vc_screenbuf_size == 0
+caused by vc->vc_cols == vc->vc_rows == vc->vc_size_row == 0 caused by
+fb_set_var() from ioctl(FBIOPUT_VSCREENINFO) on /dev/fb0 , for
+gotoxy(vc, 0, 0) from reset_terminal() from vc_init() from vc_allocate()
+ from con_install() from tty_init_dev() from tty_open() on such console
+causes vc->vc_pos == 0x10000000e due to
+((unsigned long) ZERO_SIZE_PTR) + -1U * 0 + (-1U << 1).
 
-Since the ATOMIC_IOMAP version returns NULL when the init fails, and
-callers check for a NULL return on error this is unexpected.
+I don't think that a console with 0 column or 0 row makes sense. And it
+seems that vc_do_resize() does not intend to allow resizing a console to
+0 column or 0 row due to
 
-During a device probe, where the ioremap failed, a crash can look like
-this:
+  new_cols = (cols ? cols : vc->vc_cols);
+  new_rows = (lines ? lines : vc->vc_rows);
 
-    BUG: unable to handle page fault for address: 0000000000210000
-     #PF: supervisor write access in kernel mode
-     #PF: error_code(0x0002) - not-present page
-     Oops: 0002 [#1] PREEMPT SMP
-     CPU: 0 PID: 177 Comm:
-     RIP: 0010:fill_page_dma [i915]
-       gen8_ppgtt_create [i915]
-       i915_ppgtt_create [i915]
-       intel_gt_init [i915]
-       i915_gem_init [i915]
-       i915_driver_probe [i915]
-       pci_device_probe
-       really_probe
-       driver_probe_device
+exception.
 
-The remap failure occurred much earlier in the probe.  If it had been
-propagated, the driver would have exited with an error.
+Theoretically, cols and rows can be any range as long as
+0 < cols * rows * 2 <= KMALLOC_MAX_SIZE is satisfied (e.g.
+cols == 1048576 && rows == 2 is possible) because of
 
-Return NULL on ioremap failure.
+  vc->vc_size_row = vc->vc_cols << 1;
+  vc->vc_screenbuf_size = vc->vc_rows * vc->vc_size_row;
 
-[akpm@linux-foundation.org: detect ioremap_wc() errors earlier]
+in visual_init() and kzalloc(vc->vc_screenbuf_size) in vc_allocate().
 
-Fixes: cafaf14a5d8f ("io-mapping: Always create a struct to hold metadata about the io-mapping")
-Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200721171936.81563-1-michael.j.ruhl@intel.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Since we can detect cols == 0 or rows == 0 via screenbuf_size = 0 in
+visual_init(), we can reject kzalloc(0). Then, vc_allocate() will return
+an error, and con_write() will not be called on a console with 0 column
+or 0 row.
+
+We need to make sure that integer overflow in visual_init() won't happen.
+Since vc_do_resize() restricts cols <= 32767 and rows <= 32767, applying
+1 <= cols <= 32767 and 1 <= rows <= 32767 restrictions to vc_allocate()
+will be practically fine.
+
+This patch does not touch con_init(), for returning -EINVAL there
+does not help when we are not returning -ENOMEM.
+
+[1] https://syzkaller.appspot.com/bug?extid=017265e8553724e514e8
+
+Reported-and-tested-by: syzbot <syzbot+017265e8553724e514e8@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200712111013.11881-1-penguin-kernel@I-love.SAKURA.ne.jp
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/io-mapping.h |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/tty/vt/vt.c |   29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
 
---- a/include/linux/io-mapping.h
-+++ b/include/linux/io-mapping.h
-@@ -120,9 +120,12 @@ io_mapping_init_wc(struct io_mapping *io
- 		   resource_size_t base,
- 		   unsigned long size)
- {
-+	iomap->iomem = ioremap_wc(base, size);
-+	if (!iomap->iomem)
-+		return NULL;
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -765,10 +765,19 @@ static const struct tty_port_operations
+ 	.destruct = vc_port_destruct,
+ };
+ 
++/*
++ * Change # of rows and columns (0 means unchanged/the size of fg_console)
++ * [this is to be used together with some user program
++ * like resize that changes the hardware videomode]
++ */
++#define VC_MAXCOL (32767)
++#define VC_MAXROW (32767)
 +
- 	iomap->base = base;
- 	iomap->size = size;
--	iomap->iomem = ioremap_wc(base, size);
- #if defined(pgprot_noncached_wc) /* archs can't agree on a name ... */
- 	iomap->prot = pgprot_noncached_wc(PAGE_KERNEL);
- #elif defined(pgprot_writecombine)
+ int vc_allocate(unsigned int currcons)	/* return 0 on success */
+ {
+ 	struct vt_notifier_param param;
+ 	struct vc_data *vc;
++	int err;
+ 
+ 	WARN_CONSOLE_UNLOCKED();
+ 
+@@ -798,6 +807,11 @@ int vc_allocate(unsigned int currcons)	/
+ 	if (!*vc->vc_uni_pagedir_loc)
+ 		con_set_default_unimap(vc);
+ 
++	err = -EINVAL;
++	if (vc->vc_cols > VC_MAXCOL || vc->vc_rows > VC_MAXROW ||
++	    vc->vc_screenbuf_size > KMALLOC_MAX_SIZE || !vc->vc_screenbuf_size)
++		goto err_free;
++	err = -ENOMEM;
+ 	vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_KERNEL);
+ 	if (!vc->vc_screenbuf)
+ 		goto err_free;
+@@ -815,7 +829,7 @@ int vc_allocate(unsigned int currcons)	/
+ err_free:
+ 	kfree(vc);
+ 	vc_cons[currcons].d = NULL;
+-	return -ENOMEM;
++	return err;
+ }
+ 
+ static inline int resize_screen(struct vc_data *vc, int width, int height,
+@@ -830,14 +844,6 @@ static inline int resize_screen(struct v
+ 	return err;
+ }
+ 
+-/*
+- * Change # of rows and columns (0 means unchanged/the size of fg_console)
+- * [this is to be used together with some user program
+- * like resize that changes the hardware videomode]
+- */
+-#define VC_RESIZE_MAXCOL (32767)
+-#define VC_RESIZE_MAXROW (32767)
+-
+ /**
+  *	vc_do_resize	-	resizing method for the tty
+  *	@tty: tty being resized
+@@ -872,7 +878,7 @@ static int vc_do_resize(struct tty_struc
+ 	user = vc->vc_resize_user;
+ 	vc->vc_resize_user = 0;
+ 
+-	if (cols > VC_RESIZE_MAXCOL || lines > VC_RESIZE_MAXROW)
++	if (cols > VC_MAXCOL || lines > VC_MAXROW)
+ 		return -EINVAL;
+ 
+ 	new_cols = (cols ? cols : vc->vc_cols);
+@@ -883,7 +889,7 @@ static int vc_do_resize(struct tty_struc
+ 	if (new_cols == vc->vc_cols && new_rows == vc->vc_rows)
+ 		return 0;
+ 
+-	if (new_screen_size > (4 << 20))
++	if (new_screen_size > (4 << 20) || !new_screen_size)
+ 		return -EINVAL;
+ 	newscreen = kzalloc(new_screen_size, GFP_USER);
+ 	if (!newscreen)
+@@ -3033,6 +3039,7 @@ static int __init con_init(void)
+ 		INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
+ 		tty_port_init(&vc->port);
+ 		visual_init(vc, currcons, 1);
++		/* Assuming vc->vc_{cols,rows,screenbuf_size} are sane here. */
+ 		vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_NOWAIT);
+ 		vc_init(vc, vc->vc_rows, vc->vc_cols,
+ 			currcons || !vc->vc_sw->con_save_screen);
 
 
