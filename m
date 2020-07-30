@@ -2,77 +2,142 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FADC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B677EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D65492075D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D02F2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:00:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gEILaMts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbgG3A7i (ORCPT
+        id S1728323AbgG3BAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 20:59:38 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:34210 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726859AbgG3A7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 20:59:38 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1k0wup-00050D-0F; Thu, 30 Jul 2020 10:59:24 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 30 Jul 2020 10:59:22 +1000
-Date:   Thu, 30 Jul 2020 10:59:22 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Waiman Long <longman@redhat.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH 0/2] locking/qspinlock: Break qspinlock_types.h header
- loop
-Message-ID: <20200730005922.GA9710@gondor.apana.org.au>
-References: <20200729210311.425d0e9b@canb.auug.org.au>
- <20200729114757.GA19388@gondor.apana.org.au>
- <20200729122807.GA7047@gondor.apana.org.au>
- <ed62ba67-0e1d-3fee-8c09-7750d5690be5@redhat.com>
- <CAHp75VdbZu008RcxNhMysoqBs2FSPXWv+au_ROJ7FPVd0uOhtg@mail.gmail.com>
+        Wed, 29 Jul 2020 21:00:12 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4279 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726709AbgG3BAL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 21:00:11 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f221b6d0000>; Wed, 29 Jul 2020 17:59:26 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 29 Jul 2020 18:00:11 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 29 Jul 2020 18:00:11 -0700
+Received: from [10.2.54.252] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jul
+ 2020 01:00:10 +0000
+Subject: Re: [PATCH v2] drivers/virt/fsl_hypervisor: Correcting error handling
+ path
+To:     Souptick Joarder <jrdr.linux@gmail.com>,
+        <akpm@linux-foundation.org>
+CC:     <jgg@ziepe.ca>, <dan.j.williams@intel.com>,
+        <gregkh@linuxfoundation.org>, <mchehab+samsung@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dan.carpenter@oracle.com>
+References: <1596049269-14950-1-git-send-email-jrdr.linux@gmail.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <692e6a9b-6caa-7c60-d685-6cc951ee9483@nvidia.com>
+Date:   Wed, 29 Jul 2020 18:00:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdbZu008RcxNhMysoqBs2FSPXWv+au_ROJ7FPVd0uOhtg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1596049269-14950-1-git-send-email-jrdr.linux@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596070766; bh=xf06fm8gUfOPKwbhKrIi//8iK9C11cakFrO0HCloz2Q=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=gEILaMtsYMRkmmzOYkBKoUCW7ORe8sHzQ8Z17ZgXXwwz0S76K7qDAtKdRxv4gVJ4T
+         JkIX7lu9uE7lMqJXFV/SRAWAtkubxpQAI3mIQxanlUVPQ0R2cfbW2QHDxyAZLbJcGd
+         QNrHuAl3p/V9zn2+Phib2hwDJdq7/T4N5kvGIZqvVPcgiyczHaesiVwhm8PxYHRNgP
+         k9NTWViRX3Ts7xm8jDWmBdKzRhyOCHBSYjCnlnMpXN/FTG6zi0PtOZlxXuzOXF8reS
+         WnwLka1cjwXx98OgOx1QoDi7Efmmmiy1QL2siEwC3R3g8vGgq+87Yys5OzYyTsqnzD
+         LluOq8d8kVNbQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 06:04:57PM +0300, Andy Shevchenko wrote:
-> On Wed, Jul 29, 2020 at 4:35 PM Waiman Long <longman@redhat.com> wrote:
-> > On 7/29/20 8:28 AM, Herbert Xu wrote:
+On 7/29/20 12:01 PM, Souptick Joarder wrote:
+> First, when memory allocation for sg_list_unaligned failed, there
+> is no point of calling put_pages() as we haven't pinned any pages.
 > 
-> ...
+> Second, if get_user_pages_fast() failed we should unpinned num_pinned
+> pages, no point of checking till num_pages.
+
+Hi Souptick,
+
+For both of the above, the wording "no point" is so overly gentle as
+to be misleading. That's because calling put_page() on any pages beyond
+num_pinned is a *bug*.
+
+So let's reword that. And let's change the patch subject from "Correcting" to
+"fix".
+
+And probably good to add a Fixes: tag, too.
+
+More:
+
 > 
-> > This patch series looks good to me. I just wonder if we should also move
-> > ATOMIC64_INIT() to types.h for symmetry purpose. Anyway,
+> This will address both.
 > 
-> Same question here.
+> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> ---
+> v2:
+> 	Added review tag.
+> 
+>   drivers/virt/fsl_hypervisor.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/virt/fsl_hypervisor.c b/drivers/virt/fsl_hypervisor.c
+> index 1b0b11b..ea344d7 100644
+> --- a/drivers/virt/fsl_hypervisor.c
+> +++ b/drivers/virt/fsl_hypervisor.c
+> @@ -157,7 +157,7 @@ static long ioctl_memcpy(struct fsl_hv_ioctl_memcpy __user *p)
+>   
+>   	unsigned int i;
+>   	long ret = 0;
+> -	int num_pinned; /* return value from get_user_pages() */
+> +	int num_pinned = 0; /* return value from get_user_pages() */
+>   	phys_addr_t remote_paddr; /* The next address in the remote buffer */
+>   	uint32_t count; /* The number of bytes left to copy */
+>   
+> @@ -293,7 +293,7 @@ static long ioctl_memcpy(struct fsl_hv_ioctl_memcpy __user *p)
+>   
+>   exit:
+>   	if (pages) {
+> -		for (i = 0; i < num_pages; i++)
+> +		for (i = 0; i < num_pinned; i++)
+>   			if (pages[i])
 
-Yes I almost started doing it but at least one architecture (arc)
-had a custom atomic64_t so I kept it out just to be on the safe
-side.
+I suspect that this "if" is unnecessary now.
 
-We certainly could do this as a follow-up patch.
+Either way, the diff itself looks good to me, so with the wording changes to
+the commit description, you can add:
 
-Cheers,
+     Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+
+thanks,
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+John Hubbard
+NVIDIA
+
+>   				put_page(pages[i]);
+>   	}
+> 
+
