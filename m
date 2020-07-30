@@ -2,108 +2,95 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF1CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C1FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19B5920838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:46:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596127569;
-	bh=sjUWVqnlQSPnCmcVzA42xZKTz0MB5WjOwvqExeXK3mo=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=zU3y96EgQaIX+45fF7PqEpBDDk70VPndzZuLHs96TlVuO9u4ufNqACDTucn3vsZBB
-	 oaJNYc4vkfF1YQ74aPk3W6YQaHg5Q/nIjy7PR0JyPHrZ0N2Q1VMaJ59CYvdKI3217G
-	 heMrR71UfdwreTy1kSc+Gs+B8Ts/XNimtT+KFtP8=
+	by mail.kernel.org (Postfix) with ESMTP id 9ACFB207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:46:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UlLwJKul"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730045AbgG3QqH (ORCPT
+        id S1730066AbgG3Qq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 12:46:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55440 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728494AbgG3QqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 12:46:07 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85D87207F5;
-        Thu, 30 Jul 2020 16:46:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596127567;
-        bh=sjUWVqnlQSPnCmcVzA42xZKTz0MB5WjOwvqExeXK3mo=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=zeVcJuWMC8bamVJMQkvT6IfOjFGZuWxs2cr/6aNCxkH2resEQjdycMwMAncyVobfy
-         05iueRVkIJNhyHWDGkEA8xD92ellgYMZpHxV4vkiB8F3niObue+iLH63HT5jZFyBDR
-         /htjNTIAm5BL8bNF129w25bbpTsYCYvrJHMOV5fU=
-Message-ID: <e9c69117a1ce870c2a96565d2a2d64d066a6604f.camel@kernel.org>
-Subject: Re: [PATCH] ceph: use frag's MDS in either mode
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Yanhu Cao <gmayyyha@gmail.com>
-Cc:     idryomov@gmail.com, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 30 Jul 2020 12:46:05 -0400
-In-Reply-To: <20200730112242.31648-1-gmayyyha@gmail.com>
-References: <20200730112242.31648-1-gmayyyha@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.4 (3.36.4-1.fc32) 
+        Thu, 30 Jul 2020 12:46:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48108 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgG3Qq0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 12:46:26 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF904C061574;
+        Thu, 30 Jul 2020 09:46:26 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id b9so14666872plx.6;
+        Thu, 30 Jul 2020 09:46:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=E9wgKNF89nMY2ADGRokAy0qBSB4WUfKmi8IgRPD/ipQ=;
+        b=UlLwJKulY6TDnJabacT87ez7Y3hfFlEZcKhpH56qOb+Rsss0clVJ9RUlcdUaBJhCaQ
+         JLUOS6Mv6AaYWgYRcaQboWE1i386n3pSrOt4sXY4/pfoEVXGkqiw+b/M85gtMrijOZsX
+         ALz2Y1A991QYlrmnARcsgC8eVbMWhbCkPLnz5lD4qOZ1sdSCreyOcavWWjODwXE/o2Fh
+         J3grOLx1/lH+x7L/p0GwvjZY7gWz4tiEnzZKjlO8AD1m9vGG8ez2gFHg6REM1t+ritDy
+         txcdzf6ot6B5n2Bm+WGrfwX5c2X/m45wvDrf+zj7iHmj8Od5Prt6NQw51nwTLUrUKWGN
+         mgVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=E9wgKNF89nMY2ADGRokAy0qBSB4WUfKmi8IgRPD/ipQ=;
+        b=EZnUjzIFowDyzuw60HSZRLF8qRW9tjONvVD+uNj8hJ3DV/7S5WSe5AG+Mecasol9nt
+         o7vrbFIeRMVEAQ0oR7150H28JS3locywu05ZON+NxmMq6Y1JRcWSCCEzdjT6tYxzxg2/
+         srZechNTH7zA8ldGe9Dm1HF1XThs1hTjehphmLizTZdlBWPblRndkUEIkWQxuKpnTDoV
+         3pCYJ2vtJRghMH8VF1sjPpe1I/kiqH9Cg61ZOpduzje/rJqqy4fQhKjAn7/UHgOG48kw
+         0N61+UjljfaxGG6l4heslP1fDaidgMNI7aoEFvgBvKXRXFQ26JNyeS50ixHUhGFq6WtE
+         Ljgg==
+X-Gm-Message-State: AOAM530z1/NKCBbB18/JmTO+cBljpewuTU4y+33pAWhDyzcPxJDEWjXr
+        HaqinF5cbWPqkPzp0EjKuvQ=
+X-Google-Smtp-Source: ABdhPJyyWV6EP2rRBCGkus5eZ0bkMGOWxEV78cRTylyF5aaJfkzaIx85YOCDq6VYiU2ZGe3bTxn2EQ==
+X-Received: by 2002:a63:210c:: with SMTP id h12mr34881505pgh.152.1596127586288;
+        Thu, 30 Jul 2020 09:46:26 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z8sm7010811pgz.7.2020.07.30.09.46.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 30 Jul 2020 09:46:25 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 09:46:24 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 00/54] 4.4.232-rc1 review
+Message-ID: <20200730164624.GA57647@roeck-us.net>
+References: <20200730074421.203879987@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-07-30 at 19:22 +0800, Yanhu Cao wrote:
-> if frag.mds != cap->session->s_mds, the client's req will be resent.
+On Thu, Jul 30, 2020 at 10:04:39AM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.232 release.
+> There are 54 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> e.g.
-> 
-> file: mnt/cephfs/dir03/dir003 (0x10000000003)
-> ceph.dir.pin="1"
-> 
-> echo 'aaa' > /mnt/cephfs/dir03/dir003/file29
-> 
-> kernel: ceph:  __choose_mds 00000000ca362c7a is_hash=1 (0x7c768b89) mode 2
-> kernel: ceph:  __choose_mds 00000000ca362c7a 10000000003.fffffffffffffffe frag 0 mds1 (auth)
-> kernel: ceph:  __choose_mds 00000000ca362c7a 10000000003.fffffffffffffffe mds0 (auth cap 00000000679c38e2)
-> kernel: ceph:  __choose_mds using resend_mds mds1
-> 
-> Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
-> ---
->  fs/ceph/mds_client.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> Responses should be made by Sat, 01 Aug 2020 07:44:05 +0000.
+> Anything received after that time might be too late.
 > 
 
-I think you're right that there is a bug here, but this patch
-description is not terribly descriptive. Can you explain the problem and
-solution a bit better?
+Build results:
+	total: 169 pass: 169 fail: 0
+Qemu test results:
+	total: 331 pass: 331 fail: 0
 
-A good patch description should walk me through the problem and your
-reasoning to fix it. Why is this wrong now, and how does your change
-address it?
-
-Thanks,
-Jeff
-
-> diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-> index a50497142e59..b2255a9be7c0 100644
-> --- a/fs/ceph/mds_client.c
-> +++ b/fs/ceph/mds_client.c
-> @@ -1103,8 +1103,7 @@ static int __choose_mds(struct ceph_mds_client *mdsc,
->  				     frag.frag, mds);
->  				if (ceph_mdsmap_get_state(mdsc->mdsmap, mds) >=
->  				    CEPH_MDS_STATE_ACTIVE) {
-> -					if (mode == USE_ANY_MDS &&
-> -					    !ceph_mdsmap_is_laggy(mdsc->mdsmap,
-> +					if (!ceph_mdsmap_is_laggy(mdsc->mdsmap,
->  								  mds))
->  						goto out;
->  				}
-
--- 
-Jeff Layton <jlayton@kernel.org>
-
+Guenter
