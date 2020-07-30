@@ -2,134 +2,187 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21EFCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2DDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF8F020829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D0D20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:47:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XZyBA8iH"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="k2Gwrb1B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgG3Npy (ORCPT
+        id S1728357AbgG3Nri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 09:45:54 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42692 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726535AbgG3Npx (ORCPT
+        Thu, 30 Jul 2020 09:47:38 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57660 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726281AbgG3Nrh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 09:45:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596116751;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=N18kbwNayNCSq56otQGns/biTl+P88TmaRVZCSCurk8=;
-        b=XZyBA8iHEBNDC0Ml03AJkndb9Mu6CdquDXRffqPonEmMJHx1dysQ71CCnufAklwSZhCITA
-        hPsVtdLspO9hudyNRsIbHCZ+8TKQwXATHiBdaT7ptRUKJ1GrRBgfC6OPvtyfsIiXa890aq
-        CPTAQpaCUiSRHpotDRWyDmcyAbebXhU=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-231-JF7Sn9QkMqC8a4saeXcTQA-1; Thu, 30 Jul 2020 09:45:48 -0400
-X-MC-Unique: JF7Sn9QkMqC8a4saeXcTQA-1
-Received: by mail-wm1-f71.google.com with SMTP id u68so1406346wmu.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 06:45:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=N18kbwNayNCSq56otQGns/biTl+P88TmaRVZCSCurk8=;
-        b=esYS3Od6QUf9CBEsNMXacveGxgsFGY/EE7+ud9C+81gdtEhZXgbQQwqqNsWNH/mdA7
-         1UJYe8SFjh9k38O8dBuEqZU/TbdJ3L9dRILxg6eLv7Tu3yd/tzHmH8SGZzIdvv7ndEQY
-         H8dPi1V0VT4loumI0Gv4IYLW5WddgJWw/s06YRi0skmv7okTY9fgDhMZimuqWgIOJ4mZ
-         EsfafgkhcisUHTPZCFus/L4ujOxcZSs78mI1lQtqKIMWtOlOTV2WnXK4N/sx6XsgjHzk
-         k+7rrG4ByTVrg4vbfYagzna0ylPU0SggofEbcIZB7r5BuMseVqgJ+Viaq13WtvZTisAL
-         vC8Q==
-X-Gm-Message-State: AOAM531MuqLriIuhuj1W3bgbZkeS8p5MIvJvnXAdrB4BFfHXwcNr/nrr
-        95PPJo8GnqT/mVEP/8xNrSEXjEAQm5oFEmjeUIyaeKgG7hYj690Bz7aNWfvH9f1PaIuFyJtGhN1
-        SgvE1Vg78Apf9yOIo86a5VS2Y
-X-Received: by 2002:a1c:5603:: with SMTP id k3mr13225214wmb.22.1596116747898;
-        Thu, 30 Jul 2020 06:45:47 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx7QV2KGledFSsRmiFdDDc7hjFzmkKD0YzI7Gb7ntuMmeeaxHhIejGzW4kXKCPdUiMRjqUl9Q==
-X-Received: by 2002:a1c:5603:: with SMTP id k3mr13225196wmb.22.1596116747726;
-        Thu, 30 Jul 2020 06:45:47 -0700 (PDT)
-Received: from ?IPv6:2a01:cb14:499:3d00:cd47:f651:9d80:157a? ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
-        by smtp.gmail.com with ESMTPSA id o7sm9439445wrv.50.2020.07.30.06.45.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jul 2020 06:45:47 -0700 (PDT)
-Subject: Re: [PATCH v3 4/4] objtool: orc_gen: Move orc_entry out of
- instruction structure
-To:     peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-        mhelsley@vmware.com, mbenes@suse.cz
-References: <20200730094143.27494-1-jthierry@redhat.com>
- <20200730094143.27494-5-jthierry@redhat.com>
- <20200730100304.GI2655@hirez.programming.kicks-ass.net>
- <e4e239ad-120e-bd8f-4128-6976146c8512@redhat.com>
- <20200730133343.GN2655@hirez.programming.kicks-ass.net>
-From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <0280367f-3839-acad-799a-ecc2756c1846@redhat.com>
-Date:   Thu, 30 Jul 2020 14:45:46 +0100
+        Thu, 30 Jul 2020 09:47:37 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06UDlWqd095379;
+        Thu, 30 Jul 2020 08:47:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1596116852;
+        bh=SnY4IJzNmWOwcsTU47tujhAkaOUygDAfU16TsRF244A=;
+        h=Subject:From:To:References:Date:In-Reply-To;
+        b=k2Gwrb1BzOmGlF4j1mc2j36539ewCLeXvz/4yV9VMmhHJWX8Y5gQtcGhF3aIVnPRG
+         KmwR4hXzxJ2VYa4eNP0/opo/TWdKRoaW1O1WAbXVugXGh6YHfrFER/qa+AcIpYs6N8
+         zl3B38CKCkt4LMqDPmr7A00YwEyyaSeWpsd0eEOI=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06UDlWNq073880
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 30 Jul 2020 08:47:32 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 30
+ Jul 2020 08:47:31 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 30 Jul 2020 08:47:31 -0500
+Received: from [10.250.53.226] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06UDlVrl055436;
+        Thu, 30 Jul 2020 08:47:31 -0500
+Subject: Re: [net-next iproute2 PATCH v3 1/2] iplink: hsr: add support for
+ creating PRP device similar to HSR
+From:   Murali Karicheri <m-karicheri2@ti.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
+        <nsekhar@ti.com>, <grygorii.strashko@ti.com>,
+        <vinicius.gomes@intel.com>
+References: <20200717152205.826-1-m-karicheri2@ti.com>
+Message-ID: <75fb8843-0b93-0755-0350-c2c91dfc4f91@ti.com>
+Date:   Thu, 30 Jul 2020 09:47:31 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200730133343.GN2655@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200717152205.826-1-m-karicheri2@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Dave,
 
+On 7/17/20 11:22 AM, Murali Karicheri wrote:
+> This patch enhances the iplink command to add a proto parameters to
+> create PRP device/interface similar to HSR. Both protocols are
+> quite similar and requires a pair of Ethernet interfaces. So re-use
+> the existing HSR iplink command to create PRP device/interface as
+> well. Use proto parameter to differentiate the two protocols.
+> 
+> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+> ---
+>   dependent on the series "[net-next PATCH v3 0/7] Add PRP driver"
+>   include/uapi/linux/if_link.h | 12 +++++++++++-
+>   ip/iplink_hsr.c              | 19 +++++++++++++++++--
+>   2 files changed, 28 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
+> index a8901a39a345..fa2e3f642deb 100644
+> --- a/include/uapi/linux/if_link.h
+> +++ b/include/uapi/linux/if_link.h
+> @@ -904,7 +904,14 @@ enum {
+>   #define IFLA_IPOIB_MAX (__IFLA_IPOIB_MAX - 1)
+>   
+>   
+> -/* HSR section */
+> +/* HSR/PRP section, both uses same interface */
+> +
+> +/* Different redundancy protocols for hsr device */
+> +enum {
+> +	HSR_PROTOCOL_HSR,
+> +	HSR_PROTOCOL_PRP,
+> +	HSR_PROTOCOL_MAX,
+> +};
+>   
+>   enum {
+>   	IFLA_HSR_UNSPEC,
+> @@ -914,6 +921,9 @@ enum {
+>   	IFLA_HSR_SUPERVISION_ADDR,	/* Supervision frame multicast addr */
+>   	IFLA_HSR_SEQ_NR,
+>   	IFLA_HSR_VERSION,		/* HSR version */
+> +	IFLA_HSR_PROTOCOL,		/* Indicate different protocol than
+> +					 * HSR. For example PRP.
+> +					 */
+>   	__IFLA_HSR_MAX,
+>   };
+>   
+> diff --git a/ip/iplink_hsr.c b/ip/iplink_hsr.c
+> index 7d9167d4e6a3..6ea138a23cbc 100644
+> --- a/ip/iplink_hsr.c
+> +++ b/ip/iplink_hsr.c
+> @@ -25,7 +25,7 @@ static void print_usage(FILE *f)
+>   {
+>   	fprintf(f,
+>   		"Usage:\tip link add name NAME type hsr slave1 SLAVE1-IF slave2 SLAVE2-IF\n"
+> -		"\t[ supervision ADDR-BYTE ] [version VERSION]\n"
+> +		"\t[ supervision ADDR-BYTE ] [version VERSION] [proto PROTOCOL]\n"
+>   		"\n"
+>   		"NAME\n"
+>   		"	name of new hsr device (e.g. hsr0)\n"
+> @@ -35,7 +35,9 @@ static void print_usage(FILE *f)
+>   		"	0-255; the last byte of the multicast address used for HSR supervision\n"
+>   		"	frames (default = 0)\n"
+>   		"VERSION\n"
+> -		"	0,1; the protocol version to be used. (default = 0)\n");
+> +		"	0,1; the protocol version to be used. (default = 0)\n"
+> +		"PROTOCOL\n"
+> +		"	0 - HSR, 1 - PRP. (default = 0 - HSR)\n");
+>   }
+>   
+>   static void usage(void)
+> @@ -49,6 +51,7 @@ static int hsr_parse_opt(struct link_util *lu, int argc, char **argv,
+>   	int ifindex;
+>   	unsigned char multicast_spec;
+>   	unsigned char protocol_version;
+> +	unsigned char protocol = HSR_PROTOCOL_HSR;
+>   
+>   	while (argc > 0) {
+>   		if (matches(*argv, "supervision") == 0) {
+> @@ -64,6 +67,13 @@ static int hsr_parse_opt(struct link_util *lu, int argc, char **argv,
+>   				invarg("version is invalid", *argv);
+>   			addattr_l(n, 1024, IFLA_HSR_VERSION,
+>   				  &protocol_version, 1);
+> +		} else if (matches(*argv, "proto") == 0) {
+> +			NEXT_ARG();
+> +			if (!(get_u8(&protocol, *argv, 0) == HSR_PROTOCOL_HSR ||
+> +			      get_u8(&protocol, *argv, 0) == HSR_PROTOCOL_PRP))
+> +				invarg("protocol is invalid", *argv);
+> +			addattr_l(n, 1024, IFLA_HSR_PROTOCOL,
+> +				  &protocol, 1);
+>   		} else if (matches(*argv, "slave1") == 0) {
+>   			NEXT_ARG();
+>   			ifindex = ll_name_to_index(*argv);
+> @@ -140,6 +150,11 @@ static void hsr_print_opt(struct link_util *lu, FILE *f, struct rtattr *tb[])
+>   					 RTA_PAYLOAD(tb[IFLA_HSR_SUPERVISION_ADDR]),
+>   					 ARPHRD_VOID,
+>   					 b1, sizeof(b1)));
+> +	if (tb[IFLA_HSR_PROTOCOL])
+> +		print_int(PRINT_ANY,
+> +			  "proto",
+> +			  "proto %d ",
+> +			  rta_getattr_u8(tb[IFLA_HSR_PROTOCOL]));
+>   }
+>   
+>   static void hsr_print_help(struct link_util *lu, int argc, char **argv,
+> 
+Just wondering who will merge this now that PRP support series below
+is applied to net-next. These iproute2 patches have to go along with 
+that to have full PRP support working.
 
-On 7/30/20 2:33 PM, peterz@infradead.org wrote:
-> On Thu, Jul 30, 2020 at 01:40:48PM +0100, Julien Thierry wrote:
->>
->>
->> On 7/30/20 11:03 AM, peterz@infradead.org wrote:
->>> On Thu, Jul 30, 2020 at 10:41:43AM +0100, Julien Thierry wrote:
->>>> One orc_entry is associated with each instruction in the object file,
->>>> but having the orc_entry contained by the instruction structure forces
->>>> architectures not implementing the orc subcommands to provide a dummy
->>>> definition of the orc_entry.
-> 
->> I guess I forgot about the usecase of running objtool on vmlinux...
-> 
-> Right, and LTO builds will even do ORC at that level.
-> 
->> On a kernel build for x86_64 defconfig, the difference in time seems to be
->> withing the noise.
-> 
-> Good.
-> 
->> But I agree the proposed code is not ideal and on the other we've tried
->> avoiding #ifdef in the code. Ideally I'd have an empty orc_entry definition
->> when SUBCMD_ORC is not implemented.
->>
->> Would you have a suggested approach to do that?
-> 
-> How ugly is having that:
-> 
-> struct orc_entry { };
-> 
-> ?
-
-Not sure I am understanding the suggestion. Without #ifdef this will 
-conflict with the definition in <asm/orc_types.h> for x86. Or every arch 
-needs to provide their own <asm/orc_types.h> and definition of struct 
-orc_entry, even if they don't implement the orc subcommand.
-
-Which would be preferable? #ifdef? or arch provided definition? (or 
-something I have not thought of)
+https://lkml.org/lkml/2020/7/22/638
 
 -- 
-Julien Thierry
-
+Murali Karicheri
+Texas Instruments
