@@ -2,48 +2,74 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C7FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C7AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A7592072A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B80CE2072A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:43:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DGoWzp8Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P0OX91nT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbgG3AkJ (ORCPT
+        id S1728234AbgG3Anb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 20:40:09 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3294 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727858AbgG3AkI (ORCPT
+        Wed, 29 Jul 2020 20:43:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41456 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726756AbgG3Ana (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 20:40:08 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2216ba0000>; Wed, 29 Jul 2020 17:39:22 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 29 Jul 2020 17:40:08 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 29 Jul 2020 17:40:08 -0700
-Received: from [10.2.160.194] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jul
- 2020 00:40:07 +0000
+        Wed, 29 Jul 2020 20:43:30 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D383C061794;
+        Wed, 29 Jul 2020 17:43:30 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id q4so27054835lji.2;
+        Wed, 29 Jul 2020 17:43:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hrd/sVVbKRv6h5dpxseIhAUo32QAsCOmdQZx4X9C3no=;
+        b=P0OX91nTqbPspSBtwOZVQ3guP5eiSZJC2M19r/UGpT4KhBifEfQCQ9z8MVbZMSe/Ok
+         raCasPqFLOfTbiWc+uPWD8CE3g0x1AWj37Pe7HW8eNXW0MxvgTIXwkdjq9Z3g/hNP9b+
+         D+6zyWwMq5C3XQbI1T/9ZXL2qxmFor33tuqlMEdWmjzfUlG01YpSMIVQV2HHpkvF8iPn
+         lk2WBwfUTTd3fWMS11MEFZA9bLJIyrOtQXrqndX9yuUmO6O8/vTBQipK53MENdIaaGIW
+         q3qvwjqx0Kr0aOaogBHXa/L2GvzgyXUWiF9LipkR0foKIHXuo0Y8xaaVt8izMK9J9R+m
+         UUog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hrd/sVVbKRv6h5dpxseIhAUo32QAsCOmdQZx4X9C3no=;
+        b=n6VX4jPGpcWalcT3rCmgbl+7YgN3d5iq4T20oEo0di6QMpcBjSpxBy6JhCJ/INVvIb
+         eV2fwpf3m9R/52bUv2ndQlFRv1bIv5Jh6ipc+330rGNlOTe1pNDCAz+UeN0LTvTM7vm1
+         580BSTDA2o4eE1kx8SgkDKyBpOXZBEf3Mn3kVScFfhSDD2S0+A2DlmyYr+a61pNEHvpT
+         6fJEpq/mN3ZOWus0wueqhii8xB6xg4zDPhNPe32uN4tGDTiit9sUSib1XC/4bmhJwRFH
+         ZKO/vVLD9txdoRyZJmKpeOStD3C+UX9PrruRUQM0gWUAZtwvWj7DfNjBQ2zJcCmYJYO/
+         Xb7Q==
+X-Gm-Message-State: AOAM532v4vUt8J3uctbmWY8DWQHSgyX5n+B5JQMiq9XpRdisxNu2W9po
+        s6GLQIhxyHY9S0PfiLlkRJWrR/HC
+X-Google-Smtp-Source: ABdhPJyiMUIZNIERHZwVbH1z2zo3M9gskdrosLEziaNIVKnn3UPRV+fACPP07e5h5ftb9Zj9QIdVDA==
+X-Received: by 2002:a2e:b4cd:: with SMTP id r13mr184858ljm.249.1596069808456;
+        Wed, 29 Jul 2020 17:43:28 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-76-12-16.pppoe.mtu-net.ru. [91.76.12.16])
+        by smtp.googlemail.com with ESMTPSA id y1sm961104lfb.45.2020.07.29.17.43.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jul 2020 17:43:27 -0700 (PDT)
 Subject: Re: [RFC PATCH v5 13/14] media: tegra-video: Add CSI MIPI pads
  calibration
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <gregkh@linuxfoundation.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com
+Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
 References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
  <1595883452-17343-14-git-send-email-skomatineni@nvidia.com>
  <c3d40261-9d77-3634-3e04-f20efad9d3d8@gmail.com>
@@ -51,92 +77,33 @@ References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
  <2ec535c9-55e8-8834-6002-36c75aeb097c@gmail.com>
  <021707b9-5f72-6f8b-d125-43627ef64a6d@nvidia.com>
  <de2d6117-b1e5-14c0-52ca-ff46b444c866@nvidia.com>
-Message-ID: <5d2b67a1-9e85-606e-9bf2-802379d922f9@nvidia.com>
-Date:   Wed, 29 Jul 2020 17:47:23 -0700
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <ca18b93e-1f1c-50ae-e0c1-11758935ee89@gmail.com>
+Date:   Thu, 30 Jul 2020 03:43:27 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
 In-Reply-To: <de2d6117-b1e5-14c0-52ca-ff46b444c866@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596069562; bh=zEElWQxu+E1s3hgsmMljlq5NeoGb/HDShunRfurBl1o=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=DGoWzp8YtSe4A/xQLbriAj7OL91uXQOIF5J0MKiXJ8xV1YVHnCtbKakSezHOvNF02
-         Xd7n0dQRTb4x+22UaD6YcUUoFzivv9Ixu1Au1jLIhTBYegh0Mp8DL5qhNCvNXEpU8H
-         VGmFd4k8azuwtWHffTepbkizahAl3lQLN/hUzIM3pPwxUJLrZB4ppZXQYBm5rTrXKu
-         UmAyBLIKLtnrpf95GSk/x6tLa2iODe2pYYQArMExus1wnF10KuamfSJ/YcvIuSOsCD
-         ZJVZhmnRk759y9zzE7jbO4YyTFCKngOgO+chWECcyaIuiTbx9eYvsrqqhbFNkoUtw/
-         s14adilLiiWlA==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 7/29/20 5:27 PM, Sowjanya Komatineni wrote:
->
-> On 7/29/20 4:59 PM, Sowjanya Komatineni wrote:
->>
->> On 7/29/20 4:25 PM, Dmitry Osipenko wrote:
->>> 28.07.2020 18:59, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> ...
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D tegra_mipi_finis=
-h_calibration(csi_chan->mipi);
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-dev_err(csi_chan->csi->dev,
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "MIPI calibration failed: %d\n", ret);
->>>>> Doesn't v4l2_subdev_call(OFF) need to be invoked here on error?
->>>> Not required as on error streaming fails and runtime PM will turn off
->>>> power anyway.
->>> I see that camera drivers bump theirs RPM on s_stream=3D1, and thus,
->>> s_stream=3D0 should be invoked in order to balance the RPM. What am I=20
->>> missing?
->>>
->>> https://elixir.bootlin.com/linux/v5.8-rc4/source/drivers/media/i2c/ov27=
-40.c#L634=20
->>>
->>
->> Sensor drivers take care of RPM put when any failure happens during=20
->> s_stream.
->>
->> So bridge driver don't have to call v4l2_subdev_call s_stream off=20
->> incase if sensor subdev stream on fails.
->>
->>>> Also we only did csi subdev s_stream on and during sensor subdev
->>>> s_stream on fail, actual stream dont happen and on tegra side frame
->>>> capture by HW happens only when kthreads run.
+30.07.2020 03:27, Sowjanya Komatineni пишет:
+...
 >>> Secondly, perhaps a failed calibration isn't a very critical error?
 >>> Hence just printing a warning message should be enough.
 >>
->> Using dev_err to report calibration failure. Are you suggesting to=20
->> use dev_warn instead of dev_err?
->>
-OK I think I understood what you meant.
+>> Using dev_err to report calibration failure. Are you suggesting to use
+>> dev_warn instead of dev_err?
 
-When v4l2_subdev_call for sensor s_stream ON fails, we dont have to do=20
-v4l2_subdev_call s_stream OFF.
+I meant that failing s_stream might be unnecessary.
 
-As sensor drivers take care of RPM put when any failure happens during=20
-s_stream ON
+The dev_warn should be more appropriate for a non-critical errors.
 
-Other case when v4l2_subdev_call for sensor s_stream ON is good, then=20
-tegra_mipi_finish_calibration fail need to call s_stream OFF for sensor.
-
-Agree as calibration errors out in this case as its not critical in this=20
-scenario, So will change dev_err to dev_warn and will not report this as=20
-error so no need to call s_stream off.
-
->>>
 >>> Could you please make a patch that factors all ON/OFF code paths into a
 >>> separate functions? It's a bit difficult to follow the combined code,
 >>> especially partial changes in the patches. Thanks in advance!
@@ -144,12 +111,31 @@ error so no need to call s_stream off.
 >> what do you mean by partial changes in patches?
 >>
 >> Can you please be more clear?
->
-> Also please specify what ON/OFF code paths you are referring to when=20
-> you say to move into separate functions?
->
->>
->> Thanks
->>
->> Sowjanya
->>
+> 
+> Also please specify what ON/OFF code paths you are referring to when you
+> say to move into separate functions?
+
+I meant to change all the code like this:
+
+set(on) {
+    if (on) {
+       ...
+       return;
+    }
+
+    if (!on)
+      ...
+
+    return;
+}
+
+to somewhat like this:
+
+set(on) {
+    if (on)
+      ret = enable();
+    else
+      ret = disable();
+
+    return ret;
+}
