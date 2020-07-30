@@ -2,55 +2,50 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DAFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BC7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEE7720838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75CAD2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096552;
-	bh=kn6xsBvh+/OHG6/QlVSA/8ITK530MiBVTVqzv90rQBo=;
+	s=default; t=1596096556;
+	bh=7rd/OGluXtLn4fNF/C5/d8dC2FG2dp25gWQxcM9U4/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mg8DVksLyywuNohXz5dmWrmOYKjFRprcgRpUOpkxOcn0AIJfsKmcha2XZMqLLE5q7
-	 NMXfUgLECNPDdDq6sv1sZbWLuTajb6IL6ItinvZtswK0hAml4lmsUq12QJjl6/wmrA
-	 N3Wx6FNwzdtQytEKval5rbSIrFzWLbqn6Jv5Ujik=
+	b=0+PJFqXncot/P7qdPHun2iLux3GsyjZF6USe0AYY1esSsvcF4RLsO4Wk3lX1aZobY
+	 JzSAxN44GWG/k0Gj5nY5xc/EuVMons/gc13HCNpwmFQeAei5zQI9twegW2OSabkG2E
+	 0V5RZCB77fXCjpn6NFfSwj5tJikZz2QsdAOEjNOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729664AbgG3IJC (ORCPT
+        id S1729222AbgG3IJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:09:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47204 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:09:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729624AbgG3IIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:08:51 -0400
+        id S1729272AbgG3IJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:09:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D307720838;
-        Thu, 30 Jul 2020 08:08:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01D702074B;
+        Thu, 30 Jul 2020 08:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096530;
-        bh=kn6xsBvh+/OHG6/QlVSA/8ITK530MiBVTVqzv90rQBo=;
+        s=default; t=1596096545;
+        bh=7rd/OGluXtLn4fNF/C5/d8dC2FG2dp25gWQxcM9U4/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A3drLSpxgBkiJHHtGnbful1g8Jhn7ea5nExRTwHiydDjovtVAtvLpNf6mz61Y6qPk
-         D0eIpRg2aW8z+VCgtGy/U57Oahyaq9KNP4tNPSJIclw/GoKTnJox8w4taUL4wfaUH/
-         3F8CiNvldD1ydeHtxFVGNWiSF60GTMhWKgPWzYes=
+        b=QFOc2TIJWpdhAJlE5sPFLk8Tq+AtIcLuBRsiY7A/X6B/F8CuheCuOXNFAqAhhjjku
+         EONPrpV1Z6PIKdL/6ElttHJpFV7puROrhvv8wAvtatOkIVywBXEqKGgj9MeBC7ivev
+         MsXZOCJzm/uU6SDLDmhHVSczkw2OGYQdpFUPre/4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Edwin Peer <edwin.peer@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 15/61] bnxt_en: Fix race when modifying pause settings.
-Date:   Thu, 30 Jul 2020 10:04:33 +0200
-Message-Id: <20200730074421.565483568@linuxfoundation.org>
+        stable@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH 4.9 29/61] usb: xhci-mtk: fix the failure of bandwidth allocation
+Date:   Thu, 30 Jul 2020 10:04:47 +0200
+Message-Id: <20200730074422.248871374@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074420.811058810@linuxfoundation.org>
 References: <20200730074420.811058810@linuxfoundation.org>
@@ -63,44 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
 
-[ Upstream commit 163e9ef63641a02de4c95cd921577265c52e1ce2 ]
+commit 5ce1a24dd98c00a57a8fa13660648abf7e08e3ef upstream.
 
-The driver was modified to not rely on rtnl lock to protect link
-settings about 2 years ago.  The pause setting was missed when
-making that change.  Fix it by acquiring link_lock mutex before
-calling bnxt_hwrm_set_pause().
+The wMaxPacketSize field of endpoint descriptor may be zero
+as default value in alternate interface, and they are not
+actually selected when start stream, so skip them when try to
+allocate bandwidth.
 
-Fixes: e2dc9b6e38fa ("bnxt_en: Don't use rtnl lock to protect link change logic in workqueue.")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Reviewed-by: Edwin Peer <edwin.peer@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Fixes: 0cbd4b34cda9 ("xhci: mediatek: support MTK xHCI host controller")
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Link: https://lore.kernel.org/r/1594360672-2076-1-git-send-email-chunfeng.yun@mediatek.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/usb/host/xhci-mtk-sch.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-index 3a352f76e633c..427d4dbc97354 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-@@ -1023,8 +1023,11 @@ static int bnxt_set_pauseparam(struct net_device *dev,
- 	if (epause->tx_pause)
- 		link_info->req_flow_ctrl |= BNXT_LINK_PAUSE_TX;
+--- a/drivers/usb/host/xhci-mtk-sch.c
++++ b/drivers/usb/host/xhci-mtk-sch.c
+@@ -284,6 +284,10 @@ static bool need_bw_sch(struct usb_host_
+ 	if (is_fs_or_ls(speed) && !has_tt)
+ 		return false;
  
--	if (netif_running(dev))
-+	if (netif_running(dev)) {
-+		mutex_lock(&bp->link_lock);
- 		rc = bnxt_hwrm_set_pause(bp);
-+		mutex_unlock(&bp->link_lock);
-+	}
- 	return rc;
++	/* skip endpoint with zero maxpkt */
++	if (usb_endpoint_maxp(&ep->desc) == 0)
++		return false;
++
+ 	return true;
  }
  
--- 
-2.25.1
-
 
 
