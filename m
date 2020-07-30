@@ -2,114 +2,150 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BB7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A417C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C78B2072A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 077AB2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:10:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fdyooRrC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vfT1P3WG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbgG3FJj (ORCPT
+        id S1728583AbgG3FKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 01:09:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53810 "EHLO
+        Thu, 30 Jul 2020 01:10:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgG3FJi (ORCPT
+        with ESMTP id S1726267AbgG3FKS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 01:09:38 -0400
+        Thu, 30 Jul 2020 01:10:18 -0400
 Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C62A1C061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 22:09:37 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id bh1so37919plb.12
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 22:09:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45C7CC061794;
+        Wed, 29 Jul 2020 22:10:17 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id d1so13135960plr.8;
+        Wed, 29 Jul 2020 22:10:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sRoZs4D1CNYfrOlS/aIbzgfYQ1SktXdRegTngPqrg14=;
-        b=fdyooRrCV2FclnceL3/Yy52L/nRYSE9ERsZFzzFuLa3JmRzvQwUDzkKA7/vTPmKPJ9
-         Caeb7dcjTkKReY5z4JeUlDtndhMDeNlHdqSVIhtH3otK8TY1/2N6EUsLwv2eFSbw/C4R
-         OwsdfK2BJMI25F1/ytu4jlRYHSyR1eAlbOZiWVO2x9DTyNEOBqS12k7Zlx12Bbv89L5u
-         r2DWb2jJ3w6AMa35/wrUiSSuB5n8ewiT40jWARpeXMLeh66v/y/DNDzRS+yC5x2iDLYi
-         RfMuO1bo1wAtts0VaskgEoIhQcbSgUrglP1bbuzoTQK38R9sQOVCFIm1P5kE3bv6Bgj9
-         2GMg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3Vkw/8crPqmhVB2Zcyh0SoqmwjZCclFsRnwB76cJQ0w=;
+        b=vfT1P3WGIsMFyWgzAeDSPjrX3k6/wgMcQwpcVeG1XYoe0HNZd2ApnUmvCtIFQVnZLE
+         yVQKnl4GVlnw4vOAD8rU+EWGf95i9xhoG1u1r/LYJ5Hwnd0oyGDVpfkOnGDH3cvkYy5r
+         MjAcpE4QijWE0Owfvj2X9a9IPLIFTkhiuOFPmzwlUrpyj3Dle8u0i2Raq2wvKm6XGSTz
+         zVFm+qKk88/axVw/ktK2phYFMf7eSRgjVI4hakDITkJt3FKSuK142npj/oAU0DRhZAxu
+         LNrJpCJOkAiRA2cxjVpRl57JGlb1OCyrGJoeqMP96M8F8ya6k5NDGsPLX1UUNjBMNpSx
+         EiUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sRoZs4D1CNYfrOlS/aIbzgfYQ1SktXdRegTngPqrg14=;
-        b=sUn8pnYRhmPlhJjFtGdD4ybn/4yFDQ4c2AqHCFOuDrDIgw5EHy6vaicpcYUQp7Ta4F
-         XZ1jrS6a955GVX9Yn1inF+jHql461lYTokMOjQCSEnpR9GiccsRI8D06VUGfNKoWAJ7F
-         r6DdFFkMrEkBhyCDXGcDVIcPiEi4Mu8M7s6qZdfYf8uV8pzDNYotEbdQy7cRlAa96fI2
-         lkt+1wAKiBQwf/PPCME1HCfuilBH+bJFwuTCw22RDjjAEG8p2UhQw20EnoJIjbuKYv8C
-         Kk2Fju5IUgrJ9R3Y0AOtSRgY7l8VkjOYHWc4jFkYpxrJO30HBpmN1DkZGFSmgmvfd89h
-         YSGQ==
-X-Gm-Message-State: AOAM532r2eKcrWgwFEn+knDAgs2cc4Gtv6vWNkPoXSCgF7qLaO32jBhI
-        ONlI+B4nyUFilXuaXyEq+Yf1CGqqeWg=
-X-Google-Smtp-Source: ABdhPJzhloODSlqZ3SGmchjbJDqStVbAQ+Gk407WqgbI1VfbjtKH+UMNMIzktYU3EmXJczDNA+Tfng==
-X-Received: by 2002:a17:902:7d90:: with SMTP id a16mr29784015plm.226.1596085776116;
-        Wed, 29 Jul 2020 22:09:36 -0700 (PDT)
-Received: from daehojeong1.seo.corp.google.com ([2401:fa00:d:1:a6ae:11ff:fe18:6ce2])
-        by smtp.gmail.com with ESMTPSA id q3sm3690057pjo.16.2020.07.29.22.09.33
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3Vkw/8crPqmhVB2Zcyh0SoqmwjZCclFsRnwB76cJQ0w=;
+        b=aXzdvExFUeWY+OZypaqx1enJUK9GkxJuOmayX4etSR5QjlJEEo4HSuynhaqjhmHaym
+         ay2XdXTsVujmE1TrYfxP46xzbT1KjmnImVbkvmboK5koYJU2wylP+cr6yN8Z6ubjB/SE
+         FOZcqSZqn3c4h5cJoBVVNTuRGcq9nz/i+s2MA8D6AR+JMdIlaGO97f59h2GDGX/mvHPJ
+         lgkJaXWmRZdvdRY6n1Bj4Q9LEYvJk2iOO2FvKWjiNSg0lDAjCM/t7P/NtqpZwIoQV1Cw
+         +68JQTZtcCX/eBxDPMxK4LBsJKvE1n684I1JsYUlTCtzCC+Fg/X8l5y+MVUpOd7qbQB5
+         vl1w==
+X-Gm-Message-State: AOAM533BdgQb+NvzRLfGqkJXus29P/dghxlhJRvk0jQFHffarZX2knaR
+        pK5GxVIcSNs1flTueOhVroA=
+X-Google-Smtp-Source: ABdhPJy/OSW+dLeCrvdE5RnhZsyNUlaL3ioZOOHibWlEKYG66uBPyf4XO7AGHhFtcSZUCWm3c09W2Q==
+X-Received: by 2002:a17:90a:3c8f:: with SMTP id g15mr1328728pjc.215.1596085816692;
+        Wed, 29 Jul 2020 22:10:16 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id f27sm415310pfk.217.2020.07.29.22.10.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 22:09:35 -0700 (PDT)
-From:   Daeho Jeong <daeho43@gmail.com>
-To:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
-Cc:     Daeho Jeong <daehojeong@google.com>
-Subject: [PATCH] f2fs: make file immutable even if releasing zero compression block
-Date:   Thu, 30 Jul 2020 14:09:28 +0900
-Message-Id: <20200730050928.356916-1-daeho43@gmail.com>
-X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
+        Wed, 29 Jul 2020 22:10:16 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 22:10:13 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Roy Im <roy.im.opensource@diasemi.com>
+Cc:     Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Rob Herring <robh@kernel.org>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH v18 3/3] Input: new da7280 haptic driver
+Message-ID: <20200730051013.GB1665100@dtor-ws>
+References: <cover.1595991580.git.Roy.Im@diasemi.com>
+ <23b3470401ec5cf525add8e1227cb67586b9f294.1595991580.git.Roy.Im@diasemi.com>
+ <20200729063638.GY1665100@dtor-ws>
+ <DB8PR10MB3436EF37E1F1581BDB7996C785700@DB8PR10MB3436.EURPRD10.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB8PR10MB3436EF37E1F1581BDB7996C785700@DB8PR10MB3436.EURPRD10.PROD.OUTLOOK.COM>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daeho Jeong <daehojeong@google.com>
+On Wed, Jul 29, 2020 at 02:09:48PM +0000, Roy Im wrote:
+> Hello Dmitry and Uwe,
+> 
+> Wednesday, July 29, 2020 3:37 PM, Dmitry Torokhov wrote: 
+> 
+> > On Wed, Jul 29, 2020 at 11:59:40AM +0900, Roy Im wrote:
+> > > Adds support for the Dialog DA7280 LRA/ERM Haptic Driver with multiple
+> > > mode and integrated waveform memory and wideband support.
+> > > It communicates via an I2C bus to the device.
+> > 
+> > A few questions/suggestions...
+> > 
+> > >
+> > > Reviewed-by: Jes Sorensen <Jes.Sorensen@gmail.com>.
+> > >
+> > > Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
+> > >
+> > > ---
+> > > v18:
+> > > 	- Corrected comments in Kconfig
+> > > 	- Updated to preferred style for multi line comments in c file.
+> > > v17:
+> > > 	- fixed an issue.
+> > > v16:
+> > > 	- Corrected some code and updated description in Kconfig.
+> > > v15:
+> > > 	- Removed some defines and updated some comments.
+> > > v14:
+> > > 	- Updated pwm related code, alignments and comments.
+> > > v13:
+> > > 	- Updated some conditions in pwm function and alignments.
+> > > v12: No changes.
+> > > v11:
+> > > 	- Updated the pwm related code, comments and typo.
+> > > v10:
+> > > 	- Updated the pwm related function and added some comments.
+> > > v9:
+> > > 	- Removed the header file and put the definitions into the c file.
+> > > 	- Updated the pwm code and error logs with %pE
+> > 
+> > I believe the %pE is to format an escaped buffer, you probably want to %pe (lowercase) to print errors. I am also not quite sure
+> > if we want to use it in cases when we have non-pointer error, or we should stick with %d as most of the kernel does.
+> 
+> Right, it should be %pe as you and Uwe said, Uwe suggested %pe to understand easier.. do you still prefer to stick with %d?
 
-When we use F2FS_IOC_RELEASE_COMPRESS_BLOCKS ioctl, if we can't find
-any compressed blocks in the file even with large file size, the
-ioctl just ends up without changing the file's status as immutable.
-It makes the user, who expects that the file is immutable when it
-returns successfully, confused.
+Depends on the situation. If you already have ERR_PTR-encoded error
+there is no reason for not using %pe, but if you have integer error, or
+you have already converted pointer to integer I'd prefer we stick with
+%d.
 
-Signed-off-by: Daeho Jeong <daehojeong@google.com>
----
- fs/f2fs/file.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+As I mentioned in another message maybe we should consider adding '%de'
+or similar for formatting integer errors.
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index cc7f5670390f..8a422400e824 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -3535,14 +3535,14 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
- 	if (ret)
- 		goto out;
- 
--	if (!F2FS_I(inode)->i_compr_blocks)
--		goto out;
--
- 	F2FS_I(inode)->i_flags |= F2FS_IMMUTABLE_FL;
- 	f2fs_set_inode_flags(inode);
- 	inode->i_ctime = current_time(inode);
- 	f2fs_mark_inode_dirty_sync(inode, true);
- 
-+	if (!F2FS_I(inode)->i_compr_blocks)
-+		goto out;
-+
- 	down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
- 	down_write(&F2FS_I(inode)->i_mmap_sem);
- 
+Thanks.
+
 -- 
-2.28.0.rc0.142.g3c755180ce-goog
-
+Dmitry
