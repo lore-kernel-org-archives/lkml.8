@@ -2,109 +2,131 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B1DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 747ABC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2EC620829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:36:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CRUSw+V2"
+	by mail.kernel.org (Postfix) with ESMTP id 5676420829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:38:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbgG3Mgb (ORCPT
+        id S1727930AbgG3Miq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 08:36:31 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27904 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727935AbgG3Mg3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 08:36:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596112588;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=31PzmvZoLrb+VBxM22N3vxrRxLtADMFNugnbQ/5/Q1U=;
-        b=CRUSw+V2sn26NN5Tk0vnVHg0OoEUvUn5JKpcU2BM1XlDpfg35C9nDfgARgsVeev1G+XGaj
-        XBpJyBELSp5NO4D2GMlBvWfv50TmR7JGzVXFX4uL/JE7I7DTpo4jtl0YHosx0VTPPa4V9i
-        0NuWVz9F1obYN48dnHyzgoNCsNCAAfw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-25-RA2a7GGdO5qhhZezBS-zyQ-1; Thu, 30 Jul 2020 08:36:24 -0400
-X-MC-Unique: RA2a7GGdO5qhhZezBS-zyQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C9F0C800685;
-        Thu, 30 Jul 2020 12:36:21 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 895FC87B07;
-        Thu, 30 Jul 2020 12:36:15 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200730121622.GB23808@casper.infradead.org>
-References: <20200730121622.GB23808@casper.infradead.org> <447452.1596109876@warthog.procyon.org.uk>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>,
-        Jeff Layton <jlayton@redhat.com>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Upcoming: fscache rewrite
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <488586.1596112574.1@warthog.procyon.org.uk>
-Date:   Thu, 30 Jul 2020 13:36:14 +0100
-Message-ID: <488587.1596112574@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Thu, 30 Jul 2020 08:38:46 -0400
+Received: from mga03.intel.com ([134.134.136.65]:47697 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726535AbgG3Mip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 08:38:45 -0400
+IronPort-SDR: dG0YZNoUPyhbTqHDicRvmtzmhP5bRQtHqmpzqFmdx0lw0Xo1FO2DgzMt/keLIaPqWdJx55x8/G
+ Ca+pBuqHfXjQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="151563279"
+X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
+   d="scan'208";a="151563279"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 05:38:44 -0700
+IronPort-SDR: LxO0L/Emc8Xug75DJZakcEv19XEKGrJHX6uCYvlVDCTvKhkN7JSOY0AstIR+Xmaz8YtuHRrVBn
+ ihw9h2toY9WQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
+   d="scan'208";a="321060269"
+Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.65])
+  by orsmga008.jf.intel.com with ESMTP; 30 Jul 2020 05:38:44 -0700
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     ak@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH] perf/x86: Reset the counter to prevent the leak for a RDPMC task
+Date:   Thu, 30 Jul 2020 05:38:15 -0700
+Message-Id: <20200730123815.18518-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Matthew Wilcox <willy@infradead.org> wrote:
+From: Kan Liang <kan.liang@linux.intel.com>
 
-> I suspect you don't need to call find_get_pages_contig().  If you look
-> at __readahead_batch() in pagemap.h, it does basically what you want
-> (other than being wrapped up inside the readahead iterator).  You require
-> the pages already be pinned in the xarray, so there's no need for the
-> page_cache_get_speculative() dance that find_get_pages_contig) does,
-> nor the check for xa_is_value().
+The counter value of a perf task may leak to another RDPMC task.
+For example, a perf stat task as below is running on CPU 0.
 
-I'll have a look at that.
+    perf stat -e 'branches,cycles' -- taskset -c 0 ./workload
 
-> My main concern with your patchset is that it introduces a new page flag
+In the meantime, an RDPMC task, which is also running on CPU 0, may read
+the GP counters periodically. (The RDPMC task creates a fixed event,
+but read four GP counters.)
 
-Technically, the flag already exists - I'm just using it for something
-different than the old fscache code used it for.
+    $ taskset -c 0 ./rdpmc_read_all_counters
+    index 0x0 value 0x8001e5970f99
+    index 0x1 value 0x8005d750edb6
+    index 0x2 value 0x0
+    index 0x3 value 0x0
 
-> to sleep on which basically means "I am writing this page to the fscache".
-> I don't understand why you need it; you've elevated the refcount on
-> the pages so they're not going to get reused for another purpose.
-> All it does (as far as I can tell) is make a task calling truncate()
-> wait for the page to finish being written to cache, which isn't actually
-> necessary.
+    index 0x0 value 0x8002358e48a5
+    index 0x1 value 0x8006bd1e3bc9
+    index 0x2 value 0x0
+    index 0x3 value 0x0
 
-It's also used to prevent starting overlapping async DIO writes to the cache.
+The counter value of the perf stat task leaks to the RDPMC task because
+perf never clears the counter when it's stopped.
 
-See fscache_read_done(), where it's set to cover writing what we've just read
-from the server to the cache, and afs_write_back_from_locked_page(), where
-it's set to cover writing the data to be written back to the cache.
+A counter/event stops for the following cases:
+- Schedule the monitored task, e.g., context switch or task exit;
+- Adjust the event period, e.g., Throttle, in frequency mode;
+- Update the event's address range filters.
 
-David
+For the first case, following tasks may reuse the counter. To
+prevent the leak, the counter has to be reset, when the event is
+scheduled out. The del() is eventually invoked for the schedule out.
+The counter should be reset in x86_pmu_del().
+
+For the rest of the cases, the counter/event is temporarily stopped and
+will be restarted soon. Other tasks don't have a chance to reuse the
+counter. Reset the counter is not necessary.
+
+The RDPMC instruction is only available for the X86 platform. Only apply
+the fix for the X86 platform.
+
+After applying the patch,
+
+    $ taskset -c 0 ./rdpmc_read_all_counters
+    index 0x0 value 0x0
+    index 0x1 value 0x0
+    index 0x2 value 0x0
+    index 0x3 value 0x0
+
+    index 0x0 value 0x0
+    index 0x1 value 0x0
+    index 0x2 value 0x0
+    index 0x3 value 0x0
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ arch/x86/events/core.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 01ba5fec5765..72b2c7e1bb20 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1499,6 +1499,13 @@ static void x86_pmu_del(struct perf_event *event, int flags)
+ 	 */
+ 	x86_pmu_stop(event, PERF_EF_UPDATE);
+ 
++	/*
++	 * The counter value may leak to an RDPMC task.
++	 * Clear the counter if the userspace RDPMC usage is enabled.
++	 */
++	if (READ_ONCE(x86_pmu.attr_rdpmc))
++		wrmsrl(event->hw.event_base, 0);
++
+ 	for (i = 0; i < cpuc->n_events; i++) {
+ 		if (event == cpuc->event_list[i])
+ 			break;
+-- 
+2.17.1
 
