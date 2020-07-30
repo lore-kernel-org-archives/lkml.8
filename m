@@ -2,158 +2,138 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A876C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D66920829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:40:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DXJe+Ajn"
+	by mail.kernel.org (Postfix) with ESMTP id 2441420829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:41:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729579AbgG3Okm (ORCPT
+        id S1729678AbgG3OlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 10:40:42 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:49634 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgG3Okl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 10:40:41 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06UEVjnh041154;
-        Thu, 30 Jul 2020 14:40:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=omQ+KSFeNr5QzVD54DbuGF3jbgJUnhNVpnQ3/r7WG9Y=;
- b=DXJe+AjnLLOo+GuhAKz2j/wROv2iZtMBMELdPuW+tQvaOEpXsgR5WT2koCt/bc/41Eng
- iCK6T7ejntLXxEISPEQbTrAdJgHp+JFBAT2zXBfVO9bUdTQinJ2IYE8KSq+EfiMrWOdG
- dbfDH2Xw+8oTtkHCXQ5ZDJcSsCam5ms0wqhb//fX3Dz46g6TOlmuWxAg33EoLCSrV2Gr
- FwcjHf9bJc8mdYa1Ob+Mfuw9mp8Bz7+4NZJH7y1MUR86J9ucAdKBrM9Ar8r5XYMi7GKR
- Cgv9qMeSigmCSb5bL3bXForwMqT6/XlbXggoglc+eRIVFhNxhBBDFU7WiifkcV7TTNOL Xg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 32hu1jv3dw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 30 Jul 2020 14:40:35 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06UEcps2170441;
-        Thu, 30 Jul 2020 14:40:35 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 32hu5xg0ve-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Jul 2020 14:40:35 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06UEeXOS013061;
-        Thu, 30 Jul 2020 14:40:33 GMT
-Received: from dhcp-10-154-135-99.vpn.oracle.com (/10.154.135.99)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 30 Jul 2020 07:40:33 -0700
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.5\))
-Subject: Re: (resend) [PATCH [linux-4.14.y]] dm cache: submit writethrough
- writes in parallel to origin and cache
-From:   John Donnelly <john.p.donnelly@oracle.com>
-In-Reply-To: <20200730052127.GA3860556@kroah.com>
-Date:   Thu, 30 Jul 2020 09:40:32 -0500
-Cc:     Mike Snitzer <snitzer@redhat.com>, stable@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <8481B1B9-C9CF-442A-87BE-4A01499CF26D@oracle.com>
-References: <37c5a615-655d-c106-afd0-54e03f3c0eef@oracle.com>
- <20200727150014.GA27472@redhat.com> <20200729115119.GB2674635@kroah.com>
- <20200729115557.GA2799681@kroah.com> <20200729141607.GA7215@redhat.com>
- <851f749a-5c92-dcb1-f8e4-95b4434a1ec4@oracle.com>
- <20200730052127.GA3860556@kroah.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-X-Mailer: Apple Mail (2.3445.9.5)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9697 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- mlxscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007300108
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9697 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 mlxlogscore=999
- malwarescore=0 impostorscore=0 priorityscore=1501 spamscore=0 phishscore=0
- suspectscore=3 bulkscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007300107
+        Thu, 30 Jul 2020 10:41:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:40794 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729092AbgG3OlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 10:41:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D42F61FB;
+        Thu, 30 Jul 2020 07:41:01 -0700 (PDT)
+Received: from [10.37.12.83] (unknown [10.37.12.83])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E2313F71F;
+        Thu, 30 Jul 2020 07:41:00 -0700 (PDT)
+Subject: Re: [RFC PATCH 01/14] coresight: etm4x: Skip save/restore before
+ device registration
+To:     mathieu.poirier@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mike.leach@linaro.org, coresight@lists.linaro.org
+References: <20200722172040.1299289-1-suzuki.poulose@arm.com>
+ <20200722172040.1299289-2-suzuki.poulose@arm.com>
+ <20200729180128.GA3073178@xps15>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <dc1409bf-3b8a-d669-fb9a-09537d01fb0f@arm.com>
+Date:   Thu, 30 Jul 2020 15:45:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200729180128.GA3073178@xps15>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 07/29/2020 07:01 PM, Mathieu Poirier wrote:
+> Hi Suzuki,
+> 
+> I have starte to review this - comments will be scattered over a few days.
+> 
+> On Wed, Jul 22, 2020 at 06:20:27PM +0100, Suzuki K Poulose wrote:
+>> Skip cpu save/restore before the coresight device is registered.
+>>
+>> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+>> Cc: Mike Leach <mike.leach@linaro.org>
+>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> ---
+>>   drivers/hwtracing/coresight/coresight-etm4x.c | 16 +++++++++++++++-
+>>   1 file changed, 15 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+>> index 6d7d2169bfb2..cb83fb77ded6 100644
+>> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
+>> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+>> @@ -1135,7 +1135,13 @@ static int etm4_cpu_save(struct etmv4_drvdata *drvdata)
+>>   {
+>>   	int i, ret = 0;
+>>   	struct etmv4_save_state *state;
+>> -	struct device *etm_dev = &drvdata->csdev->dev;
+>> +	struct coresight_device *csdev = drvdata->csdev;
+>> +	struct device *etm_dev;
+>> +
+>> +	if (WARN_ON(!csdev))
+>> +		return -ENODEV;
+>> +
+>> +	etm_dev = &csdev->dev;
+>>   
+>>   	/*
+>>   	 * As recommended by 3.4.1 ("The procedure when powering down the PE")
+>> @@ -1261,6 +1267,10 @@ static void etm4_cpu_restore(struct etmv4_drvdata *drvdata)
+>>   {
+>>   	int i;
+>>   	struct etmv4_save_state *state = drvdata->save_state;
+>> +	struct coresight_device *csdev = drvdata->csdev;
+>> +
+>> +	if (WARN_ON(!csdev))
+>> +		return;
+> 
+> Restore and save operations are only called from etm4_cpu_pm_notify() where the
+> check for a valid drvdata->csdev is already done.
+> 
 
+Correct, this is just an enforcement as we are going to rely on the 
+availability of drvdata->csdev to access the device with the
+introduction of abstraction. This is why we WARN_ON() as we should
+never hit this case.
 
-> On Jul 30, 2020, at 12:21 AM, Greg KH <gregkh@linuxfoundation.org> =
-wrote:
->=20
-> On Wed, Jul 29, 2020 at 06:45:46PM -0500, John Donnelly wrote:
->>=20
->>=20
->> On 7/29/20 9:16 AM, Mike Snitzer wrote:
->>> On Wed, Jul 29 2020 at  7:55am -0400,
->>> Greg KH <gregkh@linuxfoundation.org> wrote:
->>>=20
->>>> On Wed, Jul 29, 2020 at 01:51:19PM +0200, Greg KH wrote:
->>>>> On Mon, Jul 27, 2020 at 11:00:14AM -0400, Mike Snitzer wrote:
->>>>>> This mail needs to be saent to stable@vger.kernel.org (now cc'd).
->>>>>>=20
->>>>>> Greg et al: please backport =
-2df3bae9a6543e90042291707b8db0cbfbae9ee9
->>>>>=20
->>>>> Now backported, thanks.
->>>>=20
->>>> Nope, it broke the build, I need something that actually works :)
->>>>=20
->>>=20
->>> OK, I'll defer to John Donnelly to get back with you (and rest of
->>> stable@).  He is more invested due to SUSE also having this issue.  =
-I
->>> can put focus to it if John cannot sort this out.
->>>=20
->>> Mike
->>>=20
->>=20
->>=20
->> Hi.
->>=20
->>=20
->> Thank you for reaching out.
->>=20
->> What specifically is broken? . If it that applying
->> 2df3bae9a6543e90042291707b8db0cbfbae9ee9 to 4.14.y is failing?
->=20
-> yes, try it yourself and see!
+>>   
+>>   	CS_UNLOCK(drvdata->base);
+>>   
+>> @@ -1368,6 +1378,10 @@ static int etm4_cpu_pm_notify(struct notifier_block *nb, unsigned long cmd,
+>>   
+>>   	drvdata = etmdrvdata[cpu];
+>>   
+>> +	/* If we have not registered the device there is nothing to do */
+>> +	if (!drvdata->csdev)
+>> +		return NOTIFY_OK;
+> 
+> Can you describe the scenario you've seen this happening in?  Probably best to
+> add it to the changelog.
 
- Hi .=20
+The CPU PM notifier is registered with the probing of the first ETM
+device. Now, another ETM device could be probed (on a different CPU
+than the parent of this ETM). Now, there is a very narrow window of
+time between :
 
- Yes . =20
+1) Initialise etmdrvdata[cpu]
 
-  2df3bae9a6543e90042291707b8db0cbfbae9ee9
+2) Register the coresight_device for the ETM.(i.e, coresight_register()).
 
- Needs refactored to work in 4.14.y (now .190) as there is a conflict in =
-arguments as noted in my original submittal ;-) .=20
- I also noticed there are warning to functions " defined but not used =
-[-Wunused-function] =E2=80=9C  too.
+If the CPU is put on idle, after (1) and before (2), we end up with
 
- Do you want another PATCH v2 message  in a new email thread,  or can I  =
-append it to this this thread ?
+drvdata->csdev == NULL.
 
-Please advice.
+This is unacceptable and there is no need to take an action in
+such case. This patch fixes the potential problem, also making
+sure that we have the access methods available when we need it.
+(drvdata->csdev->access)
 
-Thanks.
-JD.
+I will add it to the commit message.
 
-
-
-
-
-=20
-
-
-
+Cheers
+Suzuki
