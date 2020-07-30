@@ -2,187 +2,148 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32481C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A6A020838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:14:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="VP/dlrNE"
+	by mail.kernel.org (Postfix) with ESMTP id CA32B20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596125678;
+	bh=0aMZNuZZ87P262TCTl7JTgVhH1Sd45zJlDg8CK8T17s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=L4dFRo8lcz+HV0N2Of9bAHlOeBWVj8SPe70ZACl+lflItA54t0pRHt8mGoiD6uP+G
+	 M6Q9xGWagIHJC58ou9NGH3QOy6DVajKPgBqDky0Yfk0WLgN0NTfdKI0SliZ9zs8JJy
+	 Ylq27MQ2wDo94beIbmJ610V6a5FRKTYrTCNmh+Y0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730004AbgG3QOD (ORCPT
+        id S1730011AbgG3QOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 12:14:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43114 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729459AbgG3QOA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 12:14:00 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F28BC061756
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 09:14:00 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id e4so1384790pjd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 09:14:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2cEXkEXVTWwLucH9omujSAfOqa3WLkWR4PelWjXQFNg=;
-        b=VP/dlrNE4R3fh1kC0zEFNVslfKeWiqHg2rvnG3XvMO07cpQGdmqp1i+GAdgwDXQ548
-         baQ8y57LmBTqQhwBesX4FCAiukcf+aLMcOY1K2XaEmz1fU1G+P6bYrK8OPRXyiSMU/VX
-         GFxZF3EyY+OvPy3BEbR1gOZ37VRpyEcUTnT+0ZR2Z1iOJ2p3IN870t/aTJRb3HipmO22
-         1Tuj5S3jgOO/XEQUo8AB3NvrinwFrH5SAnkrxF/g9dayxQza2pg5EiNhiDQPmWpvtcJ7
-         6ksBjlZNdtzEJTd9RO1LYI2wKShLlpjQ2Cx6aF+CsXn8NnMUuaty0oYsysIntLRNUKrd
-         bbqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2cEXkEXVTWwLucH9omujSAfOqa3WLkWR4PelWjXQFNg=;
-        b=FPSWcaPTH+BucH+bGY22qspjgoKwANpFfjkdwzl0+miwZohNbA55D1eaVJ7/alW08S
-         AxSrd57ZvOFzZso7qPweKgr1JMJKqCgczrj1A9iGCl/SHzYVffLRD69Nwd6J1Qk0CVdU
-         D0xnUwsw8p5I3KVpKlKhr6ulpLQpkQ1joJV60Zaun1QmC2G9vsoDihN5t5g5VXqRkNh7
-         vdOsDOJC6QIQgoi6QtghVtjI7UzQqp6ZdjOui+scAZ53PqvKBO4CLYaatWa5w0a/8JMX
-         Xw4ih0cjwpGPGxWU3TeIwXGDYW3TZgXt5hijQkI0nNM21h3JEo267QA13VPnARKcvBJN
-         yAqQ==
-X-Gm-Message-State: AOAM531VOndNhHF5kmZKqHyLmICoQmJmR76BuDc+R9PkXhNQEr6FD2kY
-        P36N7AJaWgfXDv/842OXaWP6Xg==
-X-Google-Smtp-Source: ABdhPJwjyBVK7W6BHEhO7L1UnGYqerVAaCNgXaICwWaIii4F/KcpzVLHAKaxC/zFM550+qDWayd5hA==
-X-Received: by 2002:a17:90a:14a5:: with SMTP id k34mr16416649pja.37.1596125639842;
-        Thu, 30 Jul 2020 09:13:59 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c085:21e8::11c1? ([2620:10d:c090:400::5:6c5a])
-        by smtp.gmail.com with ESMTPSA id i196sm6694268pgc.55.2020.07.30.09.13.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jul 2020 09:13:59 -0700 (PDT)
-Subject: Re: [PATCH v4 6/6] io_uring: add support for zone-append
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        Kanchan Joshi <joshiiitr@gmail.com>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org, Matthew Wilcox <willy@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-aio@kvack.org, io-uring@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-api@vger.kernel.org,
-        SelvaKumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <1595605762-17010-1-git-send-email-joshi.k@samsung.com>
- <CGME20200724155350epcas5p3b8f1d59eda7f8fbb38c828f692d42fd6@epcas5p3.samsung.com>
- <1595605762-17010-7-git-send-email-joshi.k@samsung.com>
- <f5416bd4-93b3-4d14-3266-bdbc4ae1990b@kernel.dk>
- <CA+1E3rJAa3E2Ti0fvvQTzARP797qge619m4aYLjXeR3wxdFwWw@mail.gmail.com>
- <b0b7159d-ed10-08ad-b6c7-b85d45f60d16@kernel.dk>
- <e871eef2-8a93-fdbc-b762-2923526a2db4@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <80d27717-080a-1ced-50d5-a3a06cf06cd3@kernel.dk>
-Date:   Thu, 30 Jul 2020 10:13:57 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 12:14:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46450 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726353AbgG3QOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 12:14:35 -0400
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA43D21744;
+        Thu, 30 Jul 2020 16:14:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596125675;
+        bh=0aMZNuZZ87P262TCTl7JTgVhH1Sd45zJlDg8CK8T17s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=yiVMnIgskP2MdSlOX5zT5x+tdbya179aoYyaCEUrpUeGda7zpzQRm9WryG6OIZHzA
+         m/MrEV0bMeZUKvzKnFR1Wo1BPiQE8tzfxC+sAOpcPVu29Gx58+xwFLr/PQ3DXj4l2w
+         du6EYkGprZwG2z3Gz7OpHBMHrOXCAV3rV9UcyfHY=
+Received: by mail-ed1-f46.google.com with SMTP id q4so17149966edv.13;
+        Thu, 30 Jul 2020 09:14:34 -0700 (PDT)
+X-Gm-Message-State: AOAM532t83zsQOxGeKaKLY2sGB1cFsaCdRjDOFOzzjOll0REJ1m+vPZY
+        m0npOMeJkDkv5bp/lGuqcI3Va+fqDhRvyVTF9Q==
+X-Google-Smtp-Source: ABdhPJwikWp3DYvBmgsqn1L0ZzeeaYzTNHPPSdjPh1WXVqu2um+iA+5qm3sBHbdE8aAs96kerq91GTmOIdCNqsF3R2I=
+X-Received: by 2002:a05:6402:38c:: with SMTP id o12mr3509657edv.271.1596125673214;
+ Thu, 30 Jul 2020 09:14:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <e871eef2-8a93-fdbc-b762-2923526a2db4@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1596010690-13178-1-git-send-email-neal.liu@mediatek.com> <1596010690-13178-3-git-send-email-neal.liu@mediatek.com>
+In-Reply-To: <1596010690-13178-3-git-send-email-neal.liu@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Fri, 31 Jul 2020 00:14:20 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9HXv+OsSRF7P9=cRy9AYZ0vwffgo3Kc8V=qQ6ce90uJw@mail.gmail.com>
+Message-ID: <CAAOTY_9HXv+OsSRF7P9=cRy9AYZ0vwffgo3Kc8V=qQ6ce90uJw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] soc: mediatek: add mtk-devapc driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/20 10:08 AM, Pavel Begunkov wrote:
-> On 27/07/2020 23:34, Jens Axboe wrote:
->> On 7/27/20 1:16 PM, Kanchan Joshi wrote:
->>> On Fri, Jul 24, 2020 at 10:00 PM Jens Axboe <axboe@kernel.dk> wrote:
->>>>
->>>> On 7/24/20 9:49 AM, Kanchan Joshi wrote:
->>>>> diff --git a/fs/io_uring.c b/fs/io_uring.c
->>>>> index 7809ab2..6510cf5 100644
->>>>> --- a/fs/io_uring.c
->>>>> +++ b/fs/io_uring.c
->>>>> @@ -1284,8 +1301,15 @@ static void __io_cqring_fill_event(struct io_kiocb *req, long res, long cflags)
->>>>>       cqe = io_get_cqring(ctx);
->>>>>       if (likely(cqe)) {
->>>>>               WRITE_ONCE(cqe->user_data, req->user_data);
->>>>> -             WRITE_ONCE(cqe->res, res);
->>>>> -             WRITE_ONCE(cqe->flags, cflags);
->>>>> +             if (unlikely(req->flags & REQ_F_ZONE_APPEND)) {
->>>>> +                     if (likely(res > 0))
->>>>> +                             WRITE_ONCE(cqe->res64, req->rw.append_offset);
->>>>> +                     else
->>>>> +                             WRITE_ONCE(cqe->res64, res);
->>>>> +             } else {
->>>>> +                     WRITE_ONCE(cqe->res, res);
->>>>> +                     WRITE_ONCE(cqe->flags, cflags);
->>>>> +             }
->>>>
->>>> This would be nice to keep out of the fast path, if possible.
->>>
->>> I was thinking of keeping a function-pointer (in io_kiocb) during
->>> submission. That would have avoided this check......but argument count
->>> differs, so it did not add up.
->>
->> But that'd grow the io_kiocb just for this use case, which is arguably
->> even worse. Unless you can keep it in the per-request private data,
->> but there's no more room there for the regular read/write side.
->>
->>>>> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
->>>>> index 92c2269..2580d93 100644
->>>>> --- a/include/uapi/linux/io_uring.h
->>>>> +++ b/include/uapi/linux/io_uring.h
->>>>> @@ -156,8 +156,13 @@ enum {
->>>>>   */
->>>>>  struct io_uring_cqe {
->>>>>       __u64   user_data;      /* sqe->data submission passed back */
->>>>> -     __s32   res;            /* result code for this event */
->>>>> -     __u32   flags;
->>>>> +     union {
->>>>> +             struct {
->>>>> +                     __s32   res;    /* result code for this event */
->>>>> +                     __u32   flags;
->>>>> +             };
->>>>> +             __s64   res64;  /* appending offset for zone append */
->>>>> +     };
->>>>>  };
->>>>
->>>> Is this a compatible change, both for now but also going forward? You
->>>> could randomly have IORING_CQE_F_BUFFER set, or any other future flags.
->>>
->>> Sorry, I didn't quite understand the concern. CQE_F_BUFFER is not
->>> used/set for write currently, so it looked compatible at this point.
->>
->> Not worried about that, since we won't ever use that for writes. But it
->> is a potential headache down the line for other flags, if they apply to
->> normal writes.
->>
->>> Yes, no room for future flags for this operation.
->>> Do you see any other way to enable this support in io-uring?
->>
->> Honestly I think the only viable option is as we discussed previously,
->> pass in a pointer to a 64-bit type where we can copy the additional
->> completion information to.
-> 
-> TBH, I hate the idea of such overhead/latency at times when SSDs can
-> serve writes in less than 10ms. Any chance you measured how long does it
+Hi, Neal:
 
-10us? :-)
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8829=E6=97=
+=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:29=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> MediaTek bus fabric provides TrustZone security support and data
+> protection to prevent slaves from being accessed by unexpected
+> masters.
+> The security violation is logged and sent to the processor for
+> further analysis or countermeasures.
+>
+> Any occurrence of security violation would raise an interrupt, and
+> it will be handled by mtk-devapc driver. The violation
+> information is printed in order to find the murderer.
+>
+> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> ---
 
-> take to drag through task_work?
+[snip]
 
-A 64-bit value copy is really not a lot of overhead... But yes, we'd
-need to push the completion through task_work at that point, as we can't
-do it from the completion side. That's not a lot of overhead, and most
-notably, it's overhead that only affects this particular type.
+> +
+> +/*
+> + * devapc_extract_vio_dbg - extract full violation information after doi=
+ng
+> + *                          shift mechanism.
+> + */
+> +static void devapc_extract_vio_dbg(struct mtk_devapc_context *ctx)
+> +{
+> +       const struct mtk_devapc_vio_dbgs *vio_dbgs;
+> +       struct mtk_devapc_vio_info *vio_info;
+> +       void __iomem *vio_dbg0_reg;
+> +       void __iomem *vio_dbg1_reg;
+> +       u32 dbg0;
+> +
+> +       vio_dbg0_reg =3D ctx->devapc_pd_base + ctx->offset->vio_dbg0;
+> +       vio_dbg1_reg =3D ctx->devapc_pd_base + ctx->offset->vio_dbg1;
+> +
+> +       vio_dbgs =3D ctx->vio_dbgs;
+> +       vio_info =3D ctx->vio_info;
+> +
+> +       /* Starts to extract violation information */
+> +       dbg0 =3D readl(vio_dbg0_reg);
+> +       vio_info->vio_addr =3D readl(vio_dbg1_reg);
+> +
+> +       vio_info->master_id =3D (dbg0 & vio_dbgs->mstid.mask) >>
+> +                             vio_dbgs->mstid.start;
+> +       vio_info->domain_id =3D (dbg0 & vio_dbgs->dmnid.mask) >>
+> +                             vio_dbgs->dmnid.start;
+> +       vio_info->write =3D ((dbg0 & vio_dbgs->vio_w.mask) >>
+> +                           vio_dbgs->vio_w.start) =3D=3D 1;
+> +       vio_info->read =3D ((dbg0 & vio_dbgs->vio_r.mask) >>
+> +                         vio_dbgs->vio_r.start) =3D=3D 1;
+> +       vio_info->vio_addr_high =3D (dbg0 & vio_dbgs->addr_h.mask) >>
+> +                                 vio_dbgs->addr_h.start;
 
-That's not a bad starting point, and something that can always be
-optimized later if need be. But I seriously doubt it'd be anything to
-worry about.
 
--- 
-Jens Axboe
+I would like to define the type of ctx->vio_info to be
 
+struct mtk_devapc_vio_dbgs {
+    u32 mstid:16;
+    u32 dmnid:6;
+    u32 vio_w:1;
+    u32 vio_r:1;
+    u32 addr_h:4;
+    u32 resv:4;
+};
+
+so the code would like the simple way
+
+ctx->vio_info =3D (struct mtk_devapc_vio_dbgs)readl(vio_dbg1_reg);
+
+Regards,
+Chun-Kuang.
+
+> +
+> +       devapc_vio_info_print(ctx);
+> +}
+> +
