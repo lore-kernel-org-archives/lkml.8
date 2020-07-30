@@ -2,121 +2,144 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDD0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D68F2C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE0B2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF0692082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:05:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730102AbgG3RFX (ORCPT
+        id S1730131AbgG3RF4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 13:05:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:42706 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729843AbgG3RFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 13:05:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6FE261063;
-        Thu, 30 Jul 2020 10:05:21 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 709CB3F66E;
-        Thu, 30 Jul 2020 10:05:20 -0700 (PDT)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
-Subject: [PATCH v2 2/2] irqchip/gic-v2, v3: Prevent SW resends entirely
-Date:   Thu, 30 Jul 2020 18:03:21 +0100
-Message-Id: <20200730170321.31228-3-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200730170321.31228-1-valentin.schneider@arm.com>
-References: <20200730170321.31228-1-valentin.schneider@arm.com>
+        Thu, 30 Jul 2020 13:05:56 -0400
+Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:11001 "EHLO
+        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728452AbgG3RFy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 13:05:54 -0400
+Subject: Re: [PATCH] RFC: selinux avc trace
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     =?UTF-8?Q?Thi=c3=a9baud_Weksteen?= <tweek@google.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Nick Kralevich <nnk@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <selinux@vger.kernel.org>
+References: <20200724091520.880211-1-tweek@google.com>
+ <20200724095232.5f9d3f17@oasis.local.home>
+ <80a23580-5067-93b0-53fa-3bd53253c056@sony.com>
+ <20200730110459.5bf0b0df@oasis.local.home>
+ <6f1262fc-21ad-f872-5460-e78d4685c9c4@sony.com>
+ <20200730120200.1367e1cd@oasis.local.home>
+From:   peter enderborg <peter.enderborg@sony.com>
+Message-ID: <15fcdc87-5e9b-8144-5a6b-34594d1e52ef@sony.com>
+Date:   Thu, 30 Jul 2020 19:05:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200730120200.1367e1cd@oasis.local.home>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-GB
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=DrAoB13+ c=1 sm=1 tr=0 a=Jtaq2Av1iV2Yg7i8w6AGMw==:117 a=IkcTkHD0fZMA:10 a=_RQrkK6FrEwA:10 a=z6gsHLkEAAAA:8 a=ruEXFAjfVybtFaqCrVkA:9 a=QEXdDO2ut3YA:10 a=d-OLMTCWyvARjPbQ-enb:22
+X-SEG-SpamProfiler-Score: 0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The GIC irqchips can now use a HW resend when a retrigger is invoked by
-check_irq_resend(). However, should the HW resend fail, check_irq_resend()
-will still attempt to trigger a SW resend, which is still a bad idea for
-the GICs.
+On 7/30/20 6:02 PM, Steven Rostedt wrote:
+> On Thu, 30 Jul 2020 17:31:17 +0200
+> peter enderborg <peter.enderborg@sony.com> wrote:
+>
+>> On 7/30/20 5:04 PM, Steven Rostedt wrote:
+>>> On Thu, 30 Jul 2020 16:29:12 +0200
+>>> peter enderborg <peter.enderborg@sony.com> wrote:
+>>>  
+>>>> +#undef TRACE_SYSTEM
+>>>> +#define TRACE_SYSTEM avc
+>>>> +
+>>>> +#if !defined(_TRACE_AVC_H) || defined(TRACE_HEADER_MULTI_READ)
+>>>> +#define _TRACE_AVC_H
+>>>> +
+>>>> +#include <linux/tracepoint.h>
+>>>> +TRACE_EVENT(avc_data,
+>>>> +        TP_PROTO(u32 requested,
+>>>> +             u32 denied,
+>>>> +             u32 audited,
+>>>> +             int result,
+>>>> +             const char *msg
+>>>> +             ),
+>>>> +
+>>>> +        TP_ARGS(requested, denied, audited, result,msg),
+>>>> +
+>>>> +        TP_STRUCT__entry(
+>>>> +             __field(u32, requested)
+>>>> +             __field(u32, denied)
+>>>> +             __field(u32, audited)
+>>>> +             __field(int, result)
+>>>> +             __array(char, msg, 255)  
+>>> You want to use __string() here, otherwise you are wasting a lot of
+>>> buffer space.
+>>>
+>>> 		__string( msg, msg)  
+>> It should be a full structure with a lot of sub strings.  But that make is even more relevant.
+> So one event instance can have a list of strings recorded?
 
-Prevent this from happening by setting IRQD_HANDLE_ENFORCE_IRQCTX on all
-GIC IRQs. Technically per-cpu IRQs do not need this, as their flow handlers
-never set IRQS_PENDING, but this aligns all IRQs wrt context enforcement:
-this also forces all GIC IRQ handling to happen in IRQ context (as defined
-by in_irq()).
+Yes, it is a list very similar to a normal trace. But it is more generic.
 
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
----
- drivers/irqchip/irq-gic-v3.c | 5 ++++-
- drivers/irqchip/irq-gic.c    | 6 +++++-
- 2 files changed, 9 insertions(+), 2 deletions(-)
+For example ino= is for filesystems that have inode, but for a
+violation that send a signal that make no sense at all.  Network
+addresses is in many cases not applicable. laddr= is only exist for
+for IP.
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 0fbcbf55ec48..1a8acf7cd8ac 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -1279,6 +1279,7 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
- 			      irq_hw_number_t hw)
- {
- 	struct irq_chip *chip = &gic_chip;
-+	struct irq_data *irqd = irq_desc_get_irq_data(irq_to_desc(irq));
- 
- 	if (static_branch_likely(&supports_deactivate_key))
- 		chip = &gic_eoimode1_chip;
-@@ -1296,7 +1297,7 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
- 		irq_domain_set_info(d, irq, hw, chip, d->host_data,
- 				    handle_fasteoi_irq, NULL, NULL);
- 		irq_set_probe(irq);
--		irqd_set_single_target(irq_desc_get_irq_data(irq_to_desc(irq)));
-+		irqd_set_single_target(irqd);
- 		break;
- 
- 	case LPI_RANGE:
-@@ -1310,6 +1311,8 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
- 		return -EPERM;
- 	}
- 
-+	/* Prevents SW retriggers which mess up the ACK/EOI ordering */
-+	irqd_set_handle_enforce_irqctx(irqd);
- 	return 0;
- }
- 
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index e2b4cae88bce..a91ce1e73bd2 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -983,6 +983,7 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
- 				irq_hw_number_t hw)
- {
- 	struct gic_chip_data *gic = d->host_data;
-+	struct irq_data *irqd = irq_desc_get_irq_data(irq_to_desc(irq));
- 
- 	if (hw < 32) {
- 		irq_set_percpu_devid(irq);
-@@ -992,8 +993,11 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
- 		irq_domain_set_info(d, irq, hw, &gic->chip, d->host_data,
- 				    handle_fasteoi_irq, NULL, NULL);
- 		irq_set_probe(irq);
--		irqd_set_single_target(irq_desc_get_irq_data(irq_to_desc(irq)));
-+		irqd_set_single_target(irqd);
- 	}
-+
-+	/* Prevents SW retriggers which mess up the ACK/EOI ordering */
-+	irqd_set_handle_enforce_irqctx(irqd);
- 	return 0;
- }
- 
--- 
-2.27.0
+So if you just print them it will look like:
+
+avc:  denied  { find } for interface=vendor.qti.hardware.perf::IPerf sid=u:r:permissioncontroller_app:s0:c230,c256,c512,c768 pid=9164 scontext=u:r:permissioncontroller_app:s0:c230,c256,c512,c768 tcontext=u:object_r:vendor_hal_perf_hwservice:s0 tclass=hwservice_manager permissive=0
+ avc:  denied  { execute } for  pid=13914 comm="ScionFrontendAp" path="/data/user_de/0/com.google.android.gms/app_chimera/m/00000002/oat/arm64/DynamiteLoader.odex" dev="sda77" ino=204967 scontext=u:r:platform_app:s0:c512,c768 tcontext=u:object_r:privapp_data_file:s0:c512,c768 tclass=file permissive=0 ppid=788 pcomm="main" pgid=13914 pgcomm="on.updatecenter"
+
+It omit the fields that are not used. Some parts are common some are not. So a correct format specification for trace will be problematic if there is no "optional" field indicator.
+
+>
+>>>  
+>>>> +                 ),
+>>>> +
+>>>> +        TP_fast_assign(
+>>>> +               __entry->requested    = requested;
+>>>> +               __entry->denied    = denied;
+>>>> +               __entry->audited    = audited;
+>>>> +               __entry->result    = result;
+>>>> +               memcpy(__entry->msg, msg, 255);  
+>>> Not to mention, the above is a bug. As the msg being passed in, is
+>>> highly unlikely to be 255 bytes. You just leaked all that memory after
+>>> the sting to user space.
+>>>
+>>> Where you want here:
+>>>
+>>> 		__assign_str( msg, msg );  
+>> Directly in to the code. Was more in to get in to discussion on how complex we should have
+>> the trace data. There is a lot of fields. Not all is always present. Is there any good way
+>> to handle that? Like "something= somethingelse=42" or "something=nil somthingelse=42"
+> Can you show what you want to record and what you want to display? I'm
+> not totally understanding the request.
+>
+> -- Steve
+>
+>>>> +    ),
+>>>> +
+>>>> +        TP_printk("requested=0x%x denied=%d audited=%d result=%d
+>>>> msg=%s",
+>>>> +              __entry->requested, __entry->denied, __entry->audited,
+>>>> __entry->result, __entry->msg
+>>>> +              )  
+
 
