@@ -2,117 +2,156 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AF7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D864C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B81A12070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63FA120838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:10:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729706AbgG3PIv (ORCPT
+        id S1729684AbgG3PKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:08:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgG3PIu (ORCPT
+        Thu, 30 Jul 2020 11:10:32 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:33997 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728286AbgG3PKb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 11:08:50 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A694C061574;
-        Thu, 30 Jul 2020 08:08:50 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k1AAU-005j5Y-G1; Thu, 30 Jul 2020 15:08:26 +0000
-Date:   Thu, 30 Jul 2020 16:08:26 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 22/23] fs: default to generic_file_splice_read for files
- having ->read_iter
-Message-ID: <20200730150826.GA1236603@ZenIV.linux.org.uk>
-References: <20200707174801.4162712-1-hch@lst.de>
- <20200707174801.4162712-23-hch@lst.de>
- <20200730000544.GC1236929@ZenIV.linux.org.uk>
- <20200730070329.GB18653@lst.de>
+        Thu, 30 Jul 2020 11:10:31 -0400
+Received: (qmail 6777 invoked by uid 1000); 30 Jul 2020 11:10:30 -0400
+Date:   Thu, 30 Jul 2020 11:10:30 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@puri.sm
+Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
+Message-ID: <20200730151030.GB6332@rowland.harvard.edu>
+References: <f3958758-afce-8add-1692-2a3bbcc49f73@puri.sm>
+ <20200729143213.GC1530967@rowland.harvard.edu>
+ <1596033995.4356.15.camel@linux.ibm.com>
+ <1596034432.4356.19.camel@HansenPartnership.com>
+ <d9bb92e9-23fa-306f-c7f2-71a81ab28811@puri.sm>
+ <1596037482.4356.37.camel@HansenPartnership.com>
+ <A1653792-B7E5-46A9-835B-7FA85FCD0378@puri.sm>
+ <20200729182515.GB1580638@rowland.harvard.edu>
+ <1596047349.4356.84.camel@HansenPartnership.com>
+ <d3fe36a9-b785-a5c4-c90d-b8fa10f4272f@puri.sm>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200730070329.GB18653@lst.de>
+In-Reply-To: <d3fe36a9-b785-a5c4-c90d-b8fa10f4272f@puri.sm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 09:03:29AM +0200, Christoph Hellwig wrote:
-> On Thu, Jul 30, 2020 at 01:05:44AM +0100, Al Viro wrote:
-> > On Tue, Jul 07, 2020 at 07:48:00PM +0200, Christoph Hellwig wrote:
-> > > If a file implements the ->read_iter method, the iter based splice read
-> > > works and is always preferred over the ->read based one.  Use it by
-> > > default in do_splice_to and remove all the direct assignment of
-> > > generic_file_splice_read to file_operations.
-> > 
-> > The worst problem here is the assumption that all ->read_iter() instances
-> > will take pipe-backed destination; that's _not_ automatically true.
-> > In particular, it's almost certainly false for tap_read_iter() (as
-> > well as tun_chr_read_iter() in IFF_VNET_HDR case).
-> > 
-> > Other potentially interesting cases: cuse and hugetlbfs.
-> > 
-> > But in any case, that blind assertion ("iter based splice read works")
-> > really needs to be backed by something.
+On Thu, Jul 30, 2020 at 10:52:14AM +0200, Martin Kepplinger wrote:
+> Maybe I should just start a new discussion with a patch, but the below
+> is what makes sense to me (when I understand you correctly) and seems to
+> work. I basically add a new flag, so that the old flags behave unchanged
+> and only call it during *runtime* resume for SD cards:
 > 
-> I think we need to fix that in the instances, as we really expect
-> ->splice_read to just work instead of the caller knowing what could
-> work and what might not.
+> 
+> --- a/drivers/scsi/scsi_error.c
+> +++ b/drivers/scsi/scsi_error.c
+> @@ -553,15 +553,21 @@ int scsi_check_sense(struct scsi_cmnd *scmd)
+>                  * information that we should pass up to the upper-level
+> driver
+>                  * so that we can deal with it there.
+>                  */
+> -               if (scmd->device->expecting_cc_ua) {
+> +               if (scmd->device->expecting_cc_ua ||
+> +                   scmd->device->expecting_media_change) {
+>                         /*
+>                          * Because some device does not queue unit
+>                          * attentions correctly, we carefully check
+>                          * additional sense code and qualifier so as
+> -                        * not to squash media change unit attention.
+> +                        * not to squash media change unit attention;
+> +                        * unless expecting_media_change is set, indicating
+> +                        * that the media (most likely) didn't change
+> +                        * but a device only believes so (for example
+> +                        * because of suspend/resume).
+>                          */
+> -                       if (sshdr.asc != 0x28 || sshdr.ascq != 0x00) {
+> -                               scmd->device->expecting_cc_ua = 0;
+> +                       if ((sshdr.asc != 0x28 || sshdr.ascq != 0x00) ||
+> +                           scmd->device->expecting_media_change) {
+> +                               scmd->device->expecting_media_change = 0;
+>                                 return NEEDS_RETRY;
+>                         }
+>                 }
+> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+> index d90fefffe31b..b647fab2b663 100644
+> --- a/drivers/scsi/sd.c
+> +++ b/drivers/scsi/sd.c
+> @@ -114,6 +114,7 @@ static void sd_shutdown(struct device *);
+>  static int sd_suspend_system(struct device *);
+>  static int sd_suspend_runtime(struct device *);
+>  static int sd_resume(struct device *);
+> +static int sd_resume_runtime(struct device *);
+>  static void sd_rescan(struct device *);
+>  static blk_status_t sd_init_command(struct scsi_cmnd *SCpnt);
+>  static void sd_uninit_command(struct scsi_cmnd *SCpnt);
+> @@ -574,7 +575,7 @@ static const struct dev_pm_ops sd_pm_ops = {
+>         .poweroff               = sd_suspend_system,
+>         .restore                = sd_resume,
+>         .runtime_suspend        = sd_suspend_runtime,
+> -       .runtime_resume         = sd_resume,
+> +       .runtime_resume         = sd_resume_runtime,
+>  };
+> 
+>  static struct scsi_driver sd_template = {
+> @@ -3652,6 +3653,21 @@ static int sd_resume(struct device *dev)
+>         return ret;
+>  }
+> 
+> +static int sd_resume_runtime(struct device *dev)
+> +{
+> +       struct scsi_disk *sdkp = dev_get_drvdata(dev);
+> +
+> +       /* Some SD cardreaders report media change when resuming from
+> suspend
+> +        * because they can't keep track during suspend. */
+> +
+> +       /* XXX This is not unproblematic though: We won't notice when a card
+> +        * was really changed during runtime suspend! We basically rely
+> on users
+> +        * to unmount or suspend before doing so. */
+> +       sdkp->device->expecting_media_change = 1;
+> +
+> +       return sd_resume(dev);
+> +}
+> +
+>  /**
+>   *     init_sd - entry point for this driver (both when built in or when
+>   *     a module).
+> diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
+> index bc5909033d13..8c8f053f71c8 100644
+> --- a/include/scsi/scsi_device.h
+> +++ b/include/scsi/scsi_device.h
+> @@ -169,6 +169,8 @@ struct scsi_device {
+>                                  * this device */
+>         unsigned expecting_cc_ua:1; /* Expecting a CHECK_CONDITION/UNIT_ATTN
+>                                      * because we did a bus reset. */
+> +       unsigned expecting_media_change:1; /* Expecting media change
+> ASC/ASCQ
+> +                                             when it actually doesn't
+> change */
+>         unsigned use_10_for_rw:1; /* first try 10-byte read / write */
+>         unsigned use_10_for_ms:1; /* first try 10-byte mode sense/select */
+>         unsigned set_dbd_for_ms:1; /* Set "DBD" field in mode sense */
 
-Er...  generic_file_splice_read() is a library helper; the decision to use
-is up to the filesystem/driver/protocol in question, and so's making sure
-it's not used with ->read_iter() that isn't fit for it.
+That's pretty much what James was suggesting, except for one thing: You 
+must not set sdkp->device->expecting_media_change to 1 for all devices 
+in sd_runtime_resume().  Only for devices which may generate a spurious 
+Unit Attention following runtime resume -- and maybe not even for all of 
+them, depending on what the user wants.
 
-Note that we *do* have instances where we have different ->splice_read()
-(sometimes using generic_file_splice_read(), sometimes not) even though
-->read_iter() is there.
-
-Your patch ignores those (thankfully), but commit message is rather
-misleading - it strongly implies that generic_file_splice_read() is
-*always* the right thing when ->read_iter() is there, not just that
-in such cases it makes a better fallback than default_file_splice_read().
-
-And even the latter assumption is not obvious - AFAICS, we do have
-counterexamples.
-
-I'm not saying that e.g. tun/tap don't need fixing for other reasons and
-it's quite possible that they will become suitable for generic_file_splice_read()
-after that's done.  But I'm really unhappy about the implied change of
-generic_file_splice_read() role; if nothing else, commit message should
-be very clear that if you have ->read_iter() and generic_file_splice_read()
-won't do the right thing, you MUST provide ->splice_read() of your own.
-Probably worth Documentation/filesystem/porting entry as well.
-
-Alternatively, if you really want to change the role of that thing,
-we need to go through all instances that are *not* generic_file_splice_read()
-and see what's going on in those.  Starting with the sockets.
-
-The list right now is:
-fs/fuse/dev.c:2263:     .splice_read    = fuse_dev_splice_read,
-fs/overlayfs/file.c:786:        .splice_read    = ovl_splice_read,
-net/socket.c:164:       .splice_read =  sock_splice_read,
-kernel/relay.c:1331:    .splice_read    = relay_file_splice_read,
-kernel/trace/trace.c:7081:      .splice_read    = tracing_splice_read_pipe,
-kernel/trace/trace.c:7149:      .splice_read    = tracing_buffers_splice_read,
-kernel/trace/trace.c:7712:      .splice_read    = tracing_buffers_splice_read,
-
-The first 3 have ->read_iter(); the rest (kernel/* stuff) doesn't.
-Socket case uses generic_file_splice_read() unless the protocol provides
-an override; SMC, TCP, TCPv6, AF_UNIX STREAM and KCM SEQPACKET do that.
-
-I hadn't looked into the socket side of things for 5 years or so, so I'd
-have to dig the notes out first.  It wasn't pleasant...
+Alan Stern
