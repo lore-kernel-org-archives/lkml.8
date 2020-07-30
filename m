@@ -2,129 +2,142 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA66C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA2DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62265206F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:05:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZkTKO+iu"
+	by mail.kernel.org (Postfix) with ESMTP id C0B9D20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:06:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596136017;
+	bh=1I8fO+aOE4GM8YnM8qo4Nuupe+/TzUrSp9geRjuPg7k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mpLlzEE1ngSms920rbABH7WHw0+uoE7qY94wmQj1a1UQmNCqJkOp/YJwBqE0wUTdg
+	 4kGUL7OmQHJi/0SKd494+zpy9Fju4pFG4to80Sg3sbYzLLTVzcaEb9hg2d24ZikcVu
+	 CWG2Ksvr4CoeAODHvoifLlElaL/h2JoTyqDTKbuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730415AbgG3TFY (ORCPT
+        id S1730423AbgG3TG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 15:05:24 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:42510 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726544AbgG3TFW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 15:05:22 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06UJ4f4W052710;
-        Thu, 30 Jul 2020 14:04:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596135881;
-        bh=7R9JaaDyYHy6j1wPGdULOAzlHcWaIwOq1zScyFP4fpA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ZkTKO+iuingK+4RBn9kVZitYeGcnuiyBwnt+USE8cHTR3YxVI4nAatlD1WwT/Uh8I
-         2LgY0U15xRwnv1ZZjjOWAl21h0jrvZqDLGKENCOsrth3nDZLTxSeaENsLachXE5sTU
-         VC1ouMEDFgIAKyhmD99zw580oMpEiZm8/sHome1k=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06UJ4f4X025816
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 30 Jul 2020 14:04:41 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 30
- Jul 2020 14:04:40 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 30 Jul 2020 14:04:40 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06UJ4ZfB013220;
-        Thu, 30 Jul 2020 14:04:35 -0500
-Subject: =?UTF-8?B?UmU6IGFybTY0OiBwb2ludGVyX2F1dGguaDo0MDozOiBlcnJvcjogaW1w?=
- =?UTF-8?Q?licit_declaration_of_function_=e2=80=98get=5frandom=5fbytes?=
- =?UTF-8?B?4oCZOyBkaWQgeW91IG1lYW4g4oCYZ2V0X3JhbmRvbV9vbmNl4oCZPw==?=
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Theodore Ts'o" <tytso@mit.edu>, Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        <lkft-triage@lists.linaro.org>, Emese Revfy <re.emese@gmail.com>,
-        <hsinyi@chromium.org>, Will Deacon <will@kernel.org>,
-        Willy Tarreau <w@1wt.eu>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <CA+G9fYvSyXnfGmK1FLRtraWWre7QjUoGE_qiwM8XPUBXjnudWA@mail.gmail.com>
- <20200730211522.1ea3561f@canb.auug.org.au>
- <d23eba90-ee2c-efe0-0cb6-88e99fb22e54@ti.com>
- <CAHk-=whn8OB-QbxpffK=Lhh6Mhj+Y2ALFZ1asCgtnQOnmQgWUw@mail.gmail.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <7b0c0f44-f56d-5e71-cf86-dbdea190267a@ti.com>
-Date:   Thu, 30 Jul 2020 22:04:32 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 30 Jul 2020 15:06:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35978 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728644AbgG3TG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 15:06:56 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1D97206F5;
+        Thu, 30 Jul 2020 19:06:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596136015;
+        bh=1I8fO+aOE4GM8YnM8qo4Nuupe+/TzUrSp9geRjuPg7k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zTI8TKPGCH5TvgmEZYVPZIu/SeTLs5dEOoKzcI8T5sGbuA4syJ7F4F59AJtqNkfTN
+         IdQBuDXBoqIsIUodnJf8xzVyLbeV+gpv0gLLzRbfnncnFt67La4zr2MkMNS9EdF5DZ
+         r05Orm18MH5SwELFo/25PICbJjNRLvMxxJLSm7y8=
+Date:   Thu, 30 Jul 2020 20:06:35 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH v9 0/4] driver core: add probe error check helper
+Message-ID: <20200730190634.GI5055@sirena.org.uk>
+References: <CGME20200713144331eucas1p25911c4ffa9315f632d8f6dd833588981@eucas1p2.samsung.com>
+ <20200713144324.23654-1-a.hajda@samsung.com>
+ <e55a23bf-59bb-43c6-f7d7-467c282b8648@samsung.com>
+ <20200730070832.GA4045592@kroah.com>
+ <CAKdAkRTKjHg2y8yTFgxr4yY98M8D2noutDBfB1mh7wwLLQrYbw@mail.gmail.com>
+ <20200730164845.GE5055@sirena.org.uk>
+ <CAKdAkRS+QooavPaKMcsaUQdRJGky_6JYq1EiUbyT_gcU3ZYeJw@mail.gmail.com>
+ <20200730181639.GG5055@sirena.org.uk>
+ <CAKdAkRSaF3q1MJ7mteD-4C4O58LL4FP6xpTovVOdu0v2VD=sAQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=whn8OB-QbxpffK=Lhh6Mhj+Y2ALFZ1asCgtnQOnmQgWUw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6b3yLyRKT1M6kiA0"
+Content-Disposition: inline
+In-Reply-To: <CAKdAkRSaF3q1MJ7mteD-4C4O58LL4FP6xpTovVOdu0v2VD=sAQ@mail.gmail.com>
+X-Cookie: Alex Haley was adopted!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--6b3yLyRKT1M6kiA0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 30/07/2020 21:56, Linus Torvalds wrote:
-> On Thu, Jul 30, 2020 at 11:47 AM Grygorii Strashko
-> <grygorii.strashko@ti.com> wrote:
->>
->>
->> I'd like to note that below set of patches:
->> 1c9df907da83 random: fix circular include dependency on arm64 after addition of percpu.h
->> 83bdc7275e62 random32: remove net_rand_state from the latent entropy gcc plugin
->> f227e3ec3b5c random32: update the net random state on interrupt and activity
->>
->> also break ARM build for the case:
->> #if defined(CONFIG_SMP) && !defined(CONFIG_CPU_V6)
-> 
-> Lovely.
-> 
-> I think I'll have to revert 1c9df907da83 after all, and  use Marc
-> Zyngier's patch to just remove that troublesome <asm/pointer_auth.h>
-> include in arm64 instead.
-> 
-> This turned out to be much messier than it should have been.
+On Thu, Jul 30, 2020 at 11:45:25AM -0700, Dmitry Torokhov wrote:
+> On Thu, Jul 30, 2020 at 11:16 AM Mark Brown <broonie@kernel.org> wrote:
 
-FYI. Below diff seems fixes build:
+> > You can sometimes do a better job of explaining what the resource you
+> > were looking for was,
 
-diff --git a/arch/arm/include/asm/percpu.h b/arch/arm/include/asm/percpu.h
-index f44f448537f2..1a3eedbac4a2 100644
---- a/arch/arm/include/asm/percpu.h
-+++ b/arch/arm/include/asm/percpu.h
-@@ -5,6 +5,8 @@
-  #ifndef _ASM_ARM_PERCPU_H_
-  #define _ASM_ARM_PERCPU_H_
-  
-+#include <asm/thread_info.h>
-+
-  /*
-   * Same as asm-generic/percpu.h, except that we store the per cpu offset
-   * in the TPIDRPRW. TPIDRPRW only exists on V6K and V7
+> I think it is true for very esoteric cases. I.e. your driver uses 2
+> interrupt lines, or something like that. For GPIO, regulators, and
+> clocks we normally have a name/connection ID that provides enough of
 
+*Normally* but not always - some of the older bindings do love their
+arrays of phandles (or mixes of numbers and phandles!) unfortunately.
 
--- 
-Best regards,
-grygorii
+> context. We need to remember, the error messages really only make
+> total sense to a person familiar with the driver to begin with, not
+> for a random person looking at the log.
+
+Not really, one of the big targets is people doing system integration
+who are writing a DT or possibly producing a highly tuned kernel config.
+They needn't have a strong familiarity with the driver, they're often
+just picking it up off the shelf.
+
+> > and of course you still need diagnostics in the
+> > non-deferral case.  Whatever happens we'll need a lot of per-driver
+> > churn, either removing existing diagnostics that get factored into cores
+> > or updating to use this new API.
+
+> The point is if you push it into core you'll get the benefit of
+> notifying about the deferral (and can "attach" deferral reason to a
+> device) without changing drivers at all. You can clean them up later
+> if you want, or decide that additional logging in error paths does not
+> hurt. This new API does not do you any good unless you convert
+> drivers, and you need to convert the majority of them to be able to
+> rely on the deferral diagnostic that is being added.
+
+The push for this is that there's already people going around modifying
+drivers whatever happens but at present they're mainly trying to delete
+diagnostics which isn't wonderful.  Besides, even if we push things into
+the subsystems they'd want to use this interface or something quite like
+it anyway - it's more a question of if we go quickly add some users to
+subsystems isn't it?  I'm not against that.
+
+--6b3yLyRKT1M6kiA0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8jGjoACgkQJNaLcl1U
+h9BywAf8C7mJ7xiPFi7qLH/+T9F0CBF3SL6/ubMOaNhmgrWz+rz2qb5TTQ1adyjl
+GiUu7DQbZhoWvWxb/8fqdy4BufqP58KbV53l0Oy6loVslM914RzzWcHv2hRT16wn
+nMTVtBOfXjxT6Dv6UYNQs7a3XxaOLFx6SNDydn5bAoQNxz2r6+lPCIlevPOIVwyV
+W41iFyk6AeACKSDbKSi7R/eP8apDELZTV1JQMv9kFQjPi0Qn+g/BvH6AjtJWlBke
+CssSrTU7H/Ifu0yJqGaCyYWHgb8A7C8A4NOYpHwbkwhJ0q8bT3BbMlc7785n8C08
+MT1LDTbH/SJqhnox2e+FWjcDkEyAJA==
+=Dnzb
+-----END PGP SIGNATURE-----
+
+--6b3yLyRKT1M6kiA0--
