@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 942A8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A102AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 777D722BEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:02:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E00420829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:02:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730798AbgG3XCG (ORCPT
+        id S1730806AbgG3XCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 19:02:06 -0400
-Received: from mail-bn8nam11olkn2038.outbound.protection.outlook.com ([40.92.20.38]:30688
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        Thu, 30 Jul 2020 19:02:09 -0400
+Received: from mail-co1nam11olkn2046.outbound.protection.outlook.com ([40.92.18.46]:27315
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730730AbgG3XB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 19:01:56 -0400
+        id S1730448AbgG3XCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 19:02:01 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SowYpgBUnOP3L4PIpIW+QttKzdmDgVZF/U+5ulDJOjpjTKEqQ9i0X5x8kt59HpSK19Z0MAP1Hgji40xfS/UvVo+EVXy0x4J7DCy+FretDk1dND2y+CjbRbrHhucrbEjJoe31gCnxxGVYalLjuC1GJBHRWqUFW3l7G7c/pWeC3e2HJkfp5/S99kGbClxvhvtfdq4L9OnSWYtofXA5EqtWqCPbW41GWRj63WLKChXkq0SrhOMJpEmS9pCJcsTdBVgHfzAptSduocoY8eUyHmFGnr38rVKd08X0TbGhfdqP5y0+7YKf5593W61euVJmnQdZQ4AJXXRgycacMoEHG5/eAg==
+ b=AKE3Mf6UqFX5HD2DOyHl5bDRbRQeN+9TXN3UYi2nRBdMjETmgc7+0AHluAvtg88fxciTGsgaCkeJ9htzOUw2NV17vp7Ntk+RaWbdyHQrZ6XjV2LI8eAYpSw9k7nMiB5bYOPdRU4asoIq3lHlRQt2B1TObSS48XUGebkSdC+sqJ92TUsPLPqo2KhfXJS+C96MLskBmaa5Y6A/gfsFWQdbXhwRJ2wnLHGN3Fap8g5JWnAK9B5eL+J8GgLNRomO1IZQeqQPWgbHvZqkudcQMjKXY+dBZqOYux8DDd7Dn2v+HP7h5rs8oAIo3nCoC/iczeh/zuEH42/Z1AcVcyvvsLsvrw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oPOU3Pqy+7AMsEp+2f1FLlsm3Y/VJ9J0mITZ3S4WYqk=;
- b=A3/E0uwU6CYNR1CGm7Idh118u/Mwg9rCO5X6D685guuaRw7NAID5ZgE/9Wqgir2vITB1xbD0Rj7ldzypEesE4VoBpJPnKFHnhWBPOZ8VfsP+/Y11qMR6BRjtQSQzehGnBKHkMFUv4pyELb9aaHCRlhqAmr+2BKnktON3V5YfY7k1zpO1PmFnZI5a7JumH4PyPCkkuNj7XIdP3M2Kww6mg3M52U6AslAgqGyrH2WLRNaOtaSVhfl01dvXmTo9eDadaqfzk38MAgPl4Sm9sb007iGE1D+Fh+PQa/R00o7LtDq8DFRiFXgcHz5oeLV/aLoWy4qEy79roQH0OzClc77PlA==
+ bh=JD5D/K+YOcaHEelvCtTtp3WVVuV1oKEaVPdLgu7VF8k=;
+ b=DY5eWIi1kL8yo2BwdZNbEHFLwSWJglmVMHN2TCJQXrJMF4+FIR9M/+w8rvc+gbL5vXgFMSl5tjku2Uh+liFRNvbz4763kmemcehJ8V4kq3vfKuv+PR18S7cn5heqC/wftxp4nmXxNnLY4SILAo/6F0h3HbNQon0Qq3xuQ42VVbLpHx3BjVhVDf1uVnHzsbL2CwCiY+zEGC37ULL/At8PHDzIGR0B4IUEctBeE9tDaDLtUJYu552h9f57ybt+HuJdyLm7jB2dM1J4TI1A3eg25A6PAjcMzd2OXZV3+I139LTp3l6u9KG1Rtr59OHdWE7yg1IyFHQOeYxvB0j5ZZcBog==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 Received: from CO1NAM11FT027.eop-nam11.prod.protection.outlook.com
- (2a01:111:e400:3861::49) by
- CO1NAM11HT024.eop-nam11.prod.protection.outlook.com (2a01:111:e400:3861::90)
+ (2a01:111:e400:3861::47) by
+ CO1NAM11HT248.eop-nam11.prod.protection.outlook.com (2a01:111:e400:3861::243)
  with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.34; Thu, 30 Jul
- 2020 23:01:53 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.10; Thu, 30 Jul
+ 2020 23:01:59 +0000
 Received: from BN6PR04MB0660.namprd04.prod.outlook.com
  (2a01:111:e400:3861::4a) by CO1NAM11FT027.mail.protection.outlook.com
  (2a01:111:e400:3861::224) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20 via Frontend
- Transport; Thu, 30 Jul 2020 23:01:53 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:34E6A582C7CEEB1B120FF0426C8CBF7DEF9FC53914CDE0FA451380ACF3445E0E;UpperCasedChecksum:C3D149B0385F3212795C78D4112D990E1EEFF348F159996243496527CF57A9FA;SizeAsReceived:7897;Count:49
+ Transport; Thu, 30 Jul 2020 23:01:59 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:91B40D7CCB0CF246473237CE7063468868981E2365E6A229D029AAE4A81270B0;UpperCasedChecksum:27A67388A55D91C7A5DA75087D551B23173E720CEF8C3A7DBC961D1D488CDE32;SizeAsReceived:7874;Count:49
 Received: from BN6PR04MB0660.namprd04.prod.outlook.com
  ([fe80::b9c3:9bff:541d:f383]) by BN6PR04MB0660.namprd04.prod.outlook.com
  ([fe80::b9c3:9bff:541d:f383%9]) with mapi id 15.20.3239.020; Thu, 30 Jul 2020
- 23:01:53 +0000
+ 23:01:59 +0000
 From:   Jonathan Bakker <xc-racer2@live.ca>
 To:     kyungmin.park@samsung.com, s.nawrocki@samsung.com,
         mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
@@ -54,9 +54,9 @@ To:     kyungmin.park@samsung.com, s.nawrocki@samsung.com,
         linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
         Jonathan Bakker <xc-racer2@live.ca>
-Subject: [PATCH v2 05/11] media: exynos4-is: Properly set JPEG options for parallel ports
-Date:   Thu, 30 Jul 2020 16:01:08 -0700
-Message-ID: <BN6PR04MB06606078C5234BE00FDDA682A3710@BN6PR04MB0660.namprd04.prod.outlook.com>
+Subject: [PATCH v2 07/11] media: exynos4-is: Add support for multiple sensors on one port
+Date:   Thu, 30 Jul 2020 16:01:10 -0700
+Message-ID: <BN6PR04MB0660571351D03A3A4FEDCD2CA3710@BN6PR04MB0660.namprd04.prod.outlook.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200730230114.8572-1-xc-racer2@live.ca>
 References: <20200730230114.8572-1-xc-racer2@live.ca>
@@ -65,25 +65,25 @@ Content-Type:   text/plain; charset=US-ASCII
 X-ClientProxiedBy: MWHPR07CA0002.namprd07.prod.outlook.com
  (2603:10b6:300:116::12) To BN6PR04MB0660.namprd04.prod.outlook.com
  (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <20200730230114.8572-6-xc-racer2@live.ca>
+X-Microsoft-Original-Message-ID: <20200730230114.8572-8-xc-racer2@live.ca>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR07CA0002.namprd07.prod.outlook.com (2603:10b6:300:116::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Thu, 30 Jul 2020 23:01:50 +0000
+Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR07CA0002.namprd07.prod.outlook.com (2603:10b6:300:116::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Thu, 30 Jul 2020 23:01:57 +0000
 X-Mailer: git-send-email 2.20.1
-X-Microsoft-Original-Message-ID: <20200730230114.8572-6-xc-racer2@live.ca>
-X-TMN:  [XUMFdNQ3ktpLQlcl5YT/V9IQPutN4lV7yIQkFVF3IaPuV09RcCDOFjpFqnWZoTKn]
+X-Microsoft-Original-Message-ID: <20200730230114.8572-8-xc-racer2@live.ca>
+X-TMN:  [JrF8oTi6rFTDZdf5fmmX6ALqLUqYrBV2AmSBzh+md3cYM8SZSL76vFqOPu4Nd9Vx]
 X-MS-PublicTrafficType: Email
 X-IncomingHeaderCount: 49
 X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: adab711a-4a43-4b02-6848-08d834dc8c89
-X-MS-TrafficTypeDiagnostic: CO1NAM11HT024:
+X-MS-Office365-Filtering-Correlation-Id: db38cafc-8b28-4935-e1a5-08d834dc9057
+X-MS-TrafficTypeDiagnostic: CO1NAM11HT248:
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Gdx0wHdFujlRIr6s0+ggopvAInFF9UjuCMXE5tBhRU+3Ijz1iFvkA6JCHXDAkTa+vHNu812XUNLGClueEZ4wrpbycuTM4om/WEzuLd096Th6CxLdeYm4VfwL5Hb/WJ1hLlDcpqEXgv2AhF+eNCO9JD419g4XmDtXNZA4KbyfEZalDDSgd+holGN6BeFDx6sy8kuJCepPBpV5VjvrU3Cytg==
+X-Microsoft-Antispam-Message-Info: EZymLmPO/YonkdFjQPRNlKJ2UoqMOJcm5V5Wril5aZjUR+c1ncx58dEVSXi7yoM8efyEtHZuyKhOcMKsvaB5grqAbNwC6oKMWAVFYgqDeXvkiAW6g6TeTLw3fEr41UlFKBcPZbHDueXyQ9MQERhlUguOOio21obbo8mWiBBOfJo+kBEphjwTmqc4m4ISYru8vyAigFecJNzB0o6QPzTxdQ==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: 37GHycH95X64Zwn0w26gyL48Z2Vj++IPng6Wa6sKLg6wI0bEQPSyGyQYw1qDksLi9lulBdzKzWCfGbTcfH/w49Z8AM+6ti5B/TpSDEIZJevLCPV5S24TToKhRvjjCR2zqsQAnljOwHikyC7EWYxYv7rG0y1RtvtYgaKPomvJeyVuRlbiAQVTIXUmPbnxHJ6O8ubYeEuInJYH5iYzSbwcAQ==
+X-MS-Exchange-AntiSpam-MessageData: uChhgvxFYvgDL3O7FnZxkxOMS7TznRdNmdcSDvTzF4X7I7m2SZfrhhE1haYr6JDyDGMfW0dKUJ3CYoGQPAh0Jb100H0EQv2Dm47/DR/MK2GCiCWau17Xcn8midrhKluTHvmjRYLZ0J4AVpJS7D1zgpW7T4FspzPludfx+2f56ss8tMwoPD2LwoPubyPNPmuC4/E3PnnMj6DXvEdZVpqRZA==
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: adab711a-4a43-4b02-6848-08d834dc8c89
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 23:01:53.2248
+X-MS-Exchange-CrossTenant-Network-Message-Id: db38cafc-8b28-4935-e1a5-08d834dc9057
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 23:01:59.5691
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -91,51 +91,76 @@ X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT027.eop-nam11.prod.protection.ou
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1NAM11HT024
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1NAM11HT248
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit ee7160e57c98 ("[media] s5p-fimc: Add support for JPEG capture")
-added support for JPEG capture, but missed setting a register when the
-parallel port was used rather than the CSIS device.
+On some devices, there may be multiple camera sensors attached
+to the same port.  Make sure we probe all of them, not just the
+first one.
 
 Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 ---
 Changes from v1:
-- Re-wording commit message
-- Add R-b tag
+- Separated parsing each endpoint into separate func
 ---
- drivers/media/platform/exynos4-is/fimc-reg.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/media/platform/exynos4-is/media-dev.c | 28 +++++++++++++------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/media/platform/exynos4-is/fimc-reg.c b/drivers/media/platform/exynos4-is/fimc-reg.c
-index 5ce2bdebd424..269a98fca1e8 100644
---- a/drivers/media/platform/exynos4-is/fimc-reg.c
-+++ b/drivers/media/platform/exynos4-is/fimc-reg.c
-@@ -606,6 +606,11 @@ int fimc_hw_set_camera_source(struct fimc_dev *fimc,
- 	switch (source->fimc_bus_type) {
- 	case FIMC_BUS_TYPE_ITU_601:
- 	case FIMC_BUS_TYPE_ITU_656:
-+		if (fimc_fmt_is_user_defined(f->fmt->color)) {
-+			cfg |= FIMC_REG_CISRCFMT_ITU601_8BIT;
-+			break;
-+		}
+diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
+index 70b0a70840cf..6d9b8fe3ac79 100644
+--- a/drivers/media/platform/exynos4-is/media-dev.c
++++ b/drivers/media/platform/exynos4-is/media-dev.c
+@@ -394,21 +394,15 @@ static void fimc_md_pipelines_free(struct fimc_md *fmd)
+ 	}
+ }
+ 
+-/* Parse port node and register as a sub-device any sensor specified there. */
+-static int fimc_md_parse_port_node(struct fimc_md *fmd,
+-				   struct device_node *port)
++static int fimc_md_parse_one_endpoint(struct fimc_md *fmd,
++				   struct device_node *ep)
+ {
+ 	int index = fmd->num_sensors;
+ 	struct fimc_source_info *pd = &fmd->sensor[index].pdata;
+-	struct device_node *rem, *ep, *np;
++	struct device_node *rem, *np;
+ 	struct v4l2_fwnode_endpoint endpoint = { .bus_type = 0 };
+ 	int ret;
+ 
+-	/* Assume here a port node can have only one endpoint node. */
+-	ep = of_get_next_child(port, NULL);
+-	if (!ep)
+-		return 0;
+-
+ 	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &endpoint);
+ 	if (ret) {
+ 		of_node_put(ep);
+@@ -482,6 +476,22 @@ static int fimc_md_parse_port_node(struct fimc_md *fmd,
+ 	return 0;
+ }
+ 
++/* Parse port node and register as a sub-device any sensor specified there. */
++static int fimc_md_parse_port_node(struct fimc_md *fmd,
++				   struct device_node *port)
++{
++	struct device_node *ep;
++	int ret;
 +
- 		for (i = 0; i < ARRAY_SIZE(pix_desc); i++) {
- 			if (vc->ci_fmt.code == pix_desc[i].pixelcode) {
- 				cfg = pix_desc[i].cisrcfmt;
-@@ -707,6 +712,8 @@ int fimc_hw_set_camera_type(struct fimc_dev *fimc,
- 	case FIMC_BUS_TYPE_ITU_601...FIMC_BUS_TYPE_ITU_656:
- 		if (source->mux_id == 0) /* ITU-A, ITU-B: 0, 1 */
- 			cfg |= FIMC_REG_CIGCTRL_SELCAM_ITU_A;
-+		if (vid_cap->ci_fmt.code == MEDIA_BUS_FMT_JPEG_1X8)
-+			cfg |= FIMC_REG_CIGCTRL_CAM_JPEG;
- 		break;
- 	case FIMC_BUS_TYPE_LCD_WRITEBACK_A:
- 		cfg |= FIMC_REG_CIGCTRL_CAMIF_SELWB;
++	for_each_child_of_node(port, ep) {
++		ret = fimc_md_parse_one_endpoint(fmd, ep);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
++}
++
+ /* Register all SoC external sub-devices */
+ static int fimc_md_register_sensor_entities(struct fimc_md *fmd)
+ {
 -- 
 2.20.1
 
