@@ -2,97 +2,113 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC6CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B61C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80F672083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8429F20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:58:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="TILig4iY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730624AbgG3Wzt (ORCPT
+        id S1730398AbgG3W6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 18:55:49 -0400
-Received: from mga14.intel.com ([192.55.52.115]:45564 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729995AbgG3Wzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 18:55:42 -0400
-IronPort-SDR: uAJkNBziQkcgufPec5JC2DybvGwYBcGVAhi8XKuOsxsQR9ES0xq+UmdMMoHc5uPqsdi3kX/fOC
- Eg36bcmcdPwg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="150902159"
-X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
-   d="scan'208";a="150902159"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 15:55:41 -0700
-IronPort-SDR: nQTTPm5nWtMCFgfj9n++aLnBNQV58b/0mlVTTCbzvPA3MC3WUoQcbmEfcMbfim4mcxDGfVCUdS
- pxbKNKV2kWyg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
-   d="scan'208";a="273056534"
-Received: from otc-chromeosbuild-1.jf.intel.com ([10.54.30.83])
-  by fmsmga007.fm.intel.com with ESMTP; 30 Jul 2020 15:55:41 -0700
-From:   Azhar Shaikh <azhar.shaikh@intel.com>
-To:     bleung@chromium.org, enric.balletbo@collabora.com,
-        groeck@chromium.org, pmalani@chromium.org,
-        linux-kernel@vger.kernel.org
-Cc:     heikki.krogerus@linux.intel.com, azhar.shaikh@intel.com,
-        utkarsh.h.patel@intel.com, casey.g.bowman@intel.com,
-        rajmohan.mani@intel.com
-Subject: [PATCH v2 2/2] platform/chrome: cros_ec_typec: Avoid setting usb role  during disconnect
-Date:   Thu, 30 Jul 2020 15:56:09 -0700
-Message-Id: <20200730225609.7395-3-azhar.shaikh@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200730225609.7395-1-azhar.shaikh@intel.com>
-References: <20200730225609.7395-1-azhar.shaikh@intel.com>
+        Thu, 30 Jul 2020 18:58:08 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:56792 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728607AbgG3W6I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 18:58:08 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 7876B8066C;
+        Fri, 31 Jul 2020 10:58:04 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1596149884;
+        bh=RbVCEkYiIo113LiclSdCPmwd7Z4op8xK+9phR72pNYA=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=TILig4iYZQds39R0cOsd1QzFQet+TJRHuGsv3iJAbH9Ij1yIrnVEEk/v3uWS8sBok
+         iftR+T6Ci/C0iHt8fodJaBPJCN+vQp0q68Qichh09UlVqIuPzWpL2/RWss5eJnfWgk
+         asvRhaR/23fSrD2wAtlCAUdm0xPHnDWT2yAx1Vajja/tx0h4fayM977fN3DqDjvXL2
+         bLcaWBkCftlKv4VU295eqB6nx/1/4TbGH55wyCOpbQ6XR+CMAvMOCM1z6PjzbbpNlY
+         R8kO3A3ElVhA1+46+Vzb2vTv8Wwhd3Ko9mwgHjZgDfzCNX5lM15hHOM8PWGQqOLHoV
+         nNuRZEVUp44AQ==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f23507a0001>; Fri, 31 Jul 2020 10:58:02 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 31 Jul 2020 10:58:04 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Fri, 31 Jul 2020 10:58:04 +1200
+From:   Mark Tomlinson <Mark.Tomlinson@alliedtelesis.co.nz>
+To:     "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "rjui@broadcom.com" <rjui@broadcom.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+Subject: Re: [PATCH 2/3] PCI: iproc: Stop using generic config read/write
+ functions
+Thread-Topic: [PATCH 2/3] PCI: iproc: Stop using generic config read/write
+ functions
+Thread-Index: AQHWZiLShW7/hIyd+02gOchr4KBXl6kfgk0AgAByBYA=
+Date:   Thu, 30 Jul 2020 22:58:03 +0000
+Message-ID: <5ee5e0f76435883d6f5eec9f6483e283e2e652e0.camel@alliedtelesis.co.nz>
+References: <20200730160958.GA2038661@bjorn-Precision-5520>
+In-Reply-To: <20200730160958.GA2038661@bjorn-Precision-5520>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:23:2150:a287:ad2f:f26b]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AA0756D425D80245996E0B8C5C7B91E5@atlnz.lc>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On disconnect port partner is removed and usb role is set to NONE.
-But then in cros_typec_port_update() the role is set again.
-Avoid this by moving usb_role_switch_set_role() to
-cros_typec_configure_mux().
-
-Signed-off-by: Azhar Shaikh <azhar.shaikh@intel.com>
-Suggested-by: Prashant Malani <pmalani@chromium.org>
----
- drivers/platform/chrome/cros_ec_typec.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index eb4713b7ae14..df97431b2275 100644
---- a/drivers/platform/chrome/cros_ec_typec.c
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -515,6 +515,12 @@ static int cros_typec_configure_mux(struct cros_typec_data *typec, int port_num,
- 	if (ret)
- 		return ret;
- 
-+	ret = usb_role_switch_set_role(typec->ports[port_num]->role_sw,
-+				       pd_ctrl->role & PD_CTRL_RESP_ROLE_DATA
-+				       ? USB_ROLE_HOST : USB_ROLE_DEVICE);
-+	if (ret)
-+		return ret;
-+
- 	if (mux_flags & USB_PD_MUX_TBT_COMPAT_ENABLED) {
- 		ret = cros_typec_enable_tbt(typec, port_num, pd_ctrl);
- 	} else if (mux_flags & USB_PD_MUX_DP_ENABLED) {
-@@ -589,9 +595,7 @@ static int cros_typec_port_update(struct cros_typec_data *typec, int port_num)
- 	if (ret)
- 		dev_warn(typec->dev, "Configure muxes failed, err = %d\n", ret);
- 
--	return usb_role_switch_set_role(typec->ports[port_num]->role_sw,
--				       resp.role & PD_CTRL_RESP_ROLE_DATA
--				       ? USB_ROLE_HOST : USB_ROLE_DEVICE);
-+	return ret;
- }
- 
- static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
--- 
-2.17.1
-
+T24gVGh1LCAyMDIwLTA3LTMwIGF0IDExOjA5IC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
+PiBJIHRoaW5rIGl0IHdvdWxkIGJlIGJldHRlciB0byBoYXZlIGEgd2FybmluZyBvbmNlIHBlciBk
+ZXZpY2UsIHNvIGlmDQo+IFhZWiBkZXZpY2UgaGFzIGEgcHJvYmxlbSBhbmQgd2UgbG9vayBhdCB0
+aGUgZG1lc2cgbG9nLCB3ZSB3b3VsZCBmaW5kIGENCj4gc2luZ2xlIG1lc3NhZ2UgZm9yIGRldmlj
+ZSBYWVogYXMgYSBoaW50LiAgV291bGQgdGhhdCByZWR1Y2UgdGhlDQo+IG51aXNhbmNlIGxldmVs
+IGVub3VnaD8NCg0KV2Ugd291bGQgYmUgT0sgd2l0aCB0aGF0Lg0KDQo+IFNvIEkgdGhpbmsgSSBk
+aWQgaXQgd3JvbmcgaW4gZmIyNjU5MjMwMTIwICgiUENJOiBXYXJuIG9uIHBvc3NpYmxlIFJXMUMN
+Cj4gY29ycnVwdGlvbiBmb3Igc3ViLTMyIGJpdCBjb25maWcgd3JpdGVzIikuICBSYXRlbGltaXRp
+bmcgaXMgdGhlIHdyb25nDQo+IGNvbmNlcHQgYmVjYXVzZSB3aGF0IHdlIHdhbnQgaXMgYSBzaW5n
+bGUgd2FybmluZyBwZXIgZGV2aWNlLCBub3QgYQ0KPiBsaW1pdCBvbiB0aGUgc2ltaWxhciBtZXNz
+YWdlcyBmb3IgKmFsbCogZGV2aWNlcywgbWF5YmUgc29tZXRoaW5nIGxpa2UNCj4gdGhpczoNCj4g
+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9hY2Nlc3MuYyBiL2RyaXZlcnMvcGNpL2FjY2Vz
+cy5jDQo+IGluZGV4IDc5YzRhMmVmMjY5YS4uZTVmOTU2YjdlM2I3IDEwMDY0NA0KPiAtLS0gYS9k
+cml2ZXJzL3BjaS9hY2Nlc3MuYw0KPiArKysgYi9kcml2ZXJzL3BjaS9hY2Nlc3MuYw0KPiBAQCAt
+MTYwLDkgKzE2MCwxMiBAQCBpbnQgcGNpX2dlbmVyaWNfY29uZmlnX3dyaXRlMzIoc3RydWN0IHBj
+aV9idXMgKmJ1cywgdW5zaWduZWQgaW50IGRldmZuLA0KPiAgCSAqIHdyaXRlIGhhcHBlbiB0byBo
+YXZlIGFueSBSVzFDICh3cml0ZS1vbmUtdG8tY2xlYXIpIGJpdHMgc2V0LCB3ZQ0KPiAgCSAqIGp1
+c3QgaW5hZHZlcnRlbnRseSBjbGVhcmVkIHNvbWV0aGluZyB3ZSBzaG91bGRuJ3QgaGF2ZS4NCj4g
+IAkgKi8NCj4gLQlkZXZfd2Fybl9yYXRlbGltaXRlZCgmYnVzLT5kZXYsICIlZC1ieXRlIGNvbmZp
+ZyB3cml0ZSB0byAlMDR4OiUwMng6JTAyeC4lZCBvZmZzZXQgJSN4IG1heSBjb3JydXB0IGFkamFj
+ZW50IFJXMUMgYml0c1xuIiwNCj4gKwlpZiAoIShidXMtPnVuc2FmZV93YXJuICYgKDEgPDwgZGV2
+Zm4pKSkgew0KPiArCQlkZXZfd2FybigmYnVzLT5kZXYsICIlZC1ieXRlIGNvbmZpZyB3cml0ZSB0
+byAlMDR4OiUwMng6JTAyeC4lZCBvZmZzZXQgJSN4IG1heSBjb3JydXB0IGFkamFjZW50IFJXMUMg
+Yml0c1xuIiwNCj4gIAkJCSAgICAgc2l6ZSwgcGNpX2RvbWFpbl9ucihidXMpLCBidXMtPm51bWJl
+ciwNCj4gIAkJCSAgICAgUENJX1NMT1QoZGV2Zm4pLCBQQ0lfRlVOQyhkZXZmbiksIHdoZXJlKTsN
+Cj4gKwkJYnVzLT51bnNhZmVfd2FybiB8PSAxIDw8IGRldmZuOw0KPiArCX0NCg0KQXMgSSB1bmRl
+cnN0YW5kIGl0LCBkZXZmbiBpcyBhbiA4LWJpdCB2YWx1ZSB3aXRoIGZpdmUgYml0cyBvZiBkZXZp
+Y2UNCmFuZCB0aHJlZSBiaXRzIG9mIGZ1bmN0aW9uLiBTbyAoMSA8PCBkZXZmbikgaXMgbm90IGdv
+aW5nIHRvIGZpdCBpbiBhbg0KOC1iaXQgbWFzay4gQW0gSSBtaXNzaW5nIHNvbWV0aGluZyBoZXJl
+PyAoSSBkbyBhZG1pdCB0aGF0IG15IFBDSQ0Ka25vd2xlZGdlIGlzIG5vdCBncmVhdCkuDQoNCg0K
