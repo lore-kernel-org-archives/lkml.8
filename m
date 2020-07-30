@@ -2,170 +2,137 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD65C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31730C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE2A2072A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F3DD2072A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:22:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FyRMSHJb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730471AbgG3TVV (ORCPT
+        id S1730501AbgG3TV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 15:21:21 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:55672 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgG3TVT (ORCPT
+        Thu, 30 Jul 2020 15:21:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730475AbgG3TV7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 15:21:19 -0400
-Received: by mail-io1-f69.google.com with SMTP id k10so19196251ioh.22
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 12:21:18 -0700 (PDT)
+        Thu, 30 Jul 2020 15:21:59 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF8A6C061574;
+        Thu, 30 Jul 2020 12:21:58 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id 11so26728297qkn.2;
+        Thu, 30 Jul 2020 12:21:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=agaThPhartfIHs0CEVdT0S0oqKuMNdJA/yYlXtKqgNk=;
+        b=FyRMSHJbJlHdwbK7O7cNCShcgYOjQ/O59qUAUFfx4KS+mcIV0USH78zqh+JpriUN4P
+         zUT87eXfKUEjQk6A+SJdwFOHRQ246AByRhfbIUWJtIIj27EJz78aucu4KRz3Ge6LzRzC
+         5zD16l0ZqNaGBSbPH/V4IJrgHRlSuAgKV8OTIM/GBnQMGBg/No74TCnfKfX5SyySLuzv
+         EmRaQtgF4mDtZBY9cB9aMePCezuNGr27rLbcFhvMIG2t7lwDGfSmTTTJlNoBhDxmxFjP
+         i+u5Y2joONJm3KIpGVfSbUhLHLRNEtA0ZcqI5h/7kSe0/1k0cCmI2ZRfQ5EsUF8Rut2P
+         DtUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=zcGvcLBkmLVIiitWjC0dTjPKNOWpI78/MjOsV9KI+nI=;
-        b=A5QL2OApqFRFSqxGOzB5hLvecVP7is+wZI08mvtMq6SC9TPLIDGsseA+IOYB0iSuSw
-         5OUX2dHljMklEhtqV1rxeKKU7gDFY2wvua2BGfaZk9pm3JpwFr48fa8fez8An8ZrOW0T
-         sQyJk1LD7DIjVxbqaQHimhCA7eNAgSulYPmawiYKJA0CESkuJK52CtTCV6RhxDtLyTnh
-         +z01NjIhBIx7ue3pR3SDTS+b9WXM/TDAoHacDQfbFetFRkJC6vf4S6HUwKtb9jNJcJD9
-         VVCcVBJceN+TXhoOrhk56NLY6D59JwhrgQkGCWb4UpsxHHLJLK+HjLvEMUOaeb1B0Aqv
-         cDTQ==
-X-Gm-Message-State: AOAM533Av5WG/Xl9ezH4IA5E/XPQUn/WaZMnC/NH7Vu9eyHZSzpZOE72
-        aiiaEC1JzuHUtcB0MhV9pTUU9Gg/mkAjC9ksHfcpcXRcx/Iu
-X-Google-Smtp-Source: ABdhPJxA1XVBHHgevcFGRcm19/FogHJVO/W/fLEMw40v6yi3auJFWHjZ0mPyzWWj13H7vbhXlSAjTVVJacoHQ30dUKZz5gJjN5gF
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=agaThPhartfIHs0CEVdT0S0oqKuMNdJA/yYlXtKqgNk=;
+        b=IAhtleAp1AIn6EjLobIQiyNSWEQ2ALS5a9b96tUQQp8WL3QKMCVu59Fv+gVE6JxMIC
+         7tTPlnTyJpIAQh3DA5At57X3pBKQmYr8cICXRQFBMFwU0tEDevwKaGm/lKcdXLYfMg/b
+         bwqp4SFCfY1hSYrYgPf/R4wkoadgom3GKNrLpbgrf2fKGSGzRmTSAJr6LxufXLLcd096
+         1xb5xxsWfIkvcizshTzEuyftIirZuuEPPRBq9PtoD0lxYceV02cUNAZgdeBGyA907YY/
+         5teN/is0GEjfGJmAH9kDhptZyRpx1vuwOye1M+/0DnsMpg+tvHJnxYj08H+XigzgPOpE
+         OtYg==
+X-Gm-Message-State: AOAM532BZM8J5btHTErDYWFX+TY+PfEBcPPW3D4kjddkHHXElYnkSqMm
+        5MAPZ3IhciVaNXGn8GbEwg==
+X-Google-Smtp-Source: ABdhPJwWCgUMsoFCCaoH1/xFyEBTGW5Q+V6fazGvqkm22JCMJGkInRBxDqiFpodkc6+juDwBXBZwtg==
+X-Received: by 2002:ae9:e507:: with SMTP id w7mr730223qkf.264.1596136918051;
+        Thu, 30 Jul 2020 12:21:58 -0700 (PDT)
+Received: from localhost.localdomain (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
+        by smtp.gmail.com with ESMTPSA id c205sm4994572qkg.98.2020.07.30.12.21.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 12:21:57 -0700 (PDT)
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+Subject: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak in rds_notify_queue_get()
+Date:   Thu, 30 Jul 2020 15:20:26 -0400
+Message-Id: <20200730192026.110246-1-yepeilin.cs@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:c1:: with SMTP id r1mr119662ilq.34.1596136878205;
- Thu, 30 Jul 2020 12:21:18 -0700 (PDT)
-Date:   Thu, 30 Jul 2020 12:21:18 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a3709905abad9335@google.com>
-Subject: KASAN: use-after-free Read in io_uring_setup (2)
-From:   syzbot <syzbot+9d46305e76057f30c74e@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+rds_notify_queue_get() is potentially copying uninitialized kernel stack
+memory to userspace since the compiler may leave a 4-byte hole at the end
+of `cmsg`.
 
-syzbot found the following issue on:
+In 2016 we tried to fix this issue by doing `= { 0 };` on `cmsg`, which
+unfortunately does not always initialize that 4-byte hole. Fix it by using
+memset() instead.
 
-HEAD commit:    04b45717 Add linux-next specific files for 20200729
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=173774b8900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ec68f65b459f1ed
-dashboard link: https://syzkaller.appspot.com/bug?extid=9d46305e76057f30c74e
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+9d46305e76057f30c74e@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in io_account_mem fs/io_uring.c:7397 [inline]
-BUG: KASAN: use-after-free in io_uring_create fs/io_uring.c:8369 [inline]
-BUG: KASAN: use-after-free in io_uring_setup+0x2797/0x2910 fs/io_uring.c:8400
-Read of size 1 at addr ffff888087a41044 by task syz-executor.5/18145
-
-CPU: 0 PID: 18145 Comm: syz-executor.5 Not tainted 5.8.0-rc7-next-20200729-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- io_account_mem fs/io_uring.c:7397 [inline]
- io_uring_create fs/io_uring.c:8369 [inline]
- io_uring_setup+0x2797/0x2910 fs/io_uring.c:8400
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45c429
-Code: 8d b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f8f121d0c78 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
-RAX: ffffffffffffffda RBX: 0000000000008540 RCX: 000000000045c429
-RDX: 0000000000000000 RSI: 0000000020000040 RDI: 0000000000000196
-RBP: 000000000078bf38 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bf0c
-R13: 00007fff86698cff R14: 00007f8f121d19c0 R15: 000000000078bf0c
-
-Allocated by task 18145:
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
- kmem_cache_alloc_trace+0x16e/0x2c0 mm/slab.c:3550
- kmalloc include/linux/slab.h:554 [inline]
- kzalloc include/linux/slab.h:666 [inline]
- io_ring_ctx_alloc fs/io_uring.c:1042 [inline]
- io_uring_create fs/io_uring.c:8313 [inline]
- io_uring_setup+0x4df/0x2910 fs/io_uring.c:8400
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 15583:
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
- kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
- __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
- __cache_free mm/slab.c:3418 [inline]
- kfree+0x103/0x2c0 mm/slab.c:3756
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-
-Last call_rcu():
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_record_aux_stack+0x82/0xb0 mm/kasan/generic.c:346
- __call_rcu kernel/rcu/tree.c:2883 [inline]
- call_rcu+0x14f/0x7e0 kernel/rcu/tree.c:2957
- __percpu_ref_switch_to_atomic lib/percpu-refcount.c:192 [inline]
- __percpu_ref_switch_mode+0x365/0x700 lib/percpu-refcount.c:237
- percpu_ref_kill_and_confirm+0x94/0x350 lib/percpu-refcount.c:350
- percpu_ref_kill include/linux/percpu-refcount.h:136 [inline]
- io_ring_ctx_wait_and_kill+0x38/0x600 fs/io_uring.c:7799
- io_uring_release+0x3e/0x50 fs/io_uring.c:7831
- __fput+0x285/0x920 fs/file_table.c:281
- task_work_run+0xdd/0x190 kernel/task_work.c:135
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:139 [inline]
- exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:166
- syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:241
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The buggy address belongs to the object at ffff888087a41000
- which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 68 bytes inside of
- 2048-byte region [ffff888087a41000, ffff888087a41800)
-The buggy address belongs to the page:
-page:000000007a29a6b9 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x87a41
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea0002386288 ffffea000253c0c8 ffff8880aa000800
-raw: 0000000000000000 ffff888087a41000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff888087a40f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff888087a40f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff888087a41000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                           ^
- ffff888087a41080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888087a41100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
+Cc: stable@vger.kernel.org
+Fixes: f037590fff30 ("rds: fix a leak of kernel memory")
+Fixes: bdbe6fbc6a2f ("RDS: recv.c")
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Note: the "real" copy_to_user() happens in put_cmsg(), where
+`cmlen - sizeof(*cm)` equals to `sizeof(cmsg)`.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Reference: https://lwn.net/Articles/417989/
+
+$ pahole -C "rds_rdma_notify" net/rds/recv.o
+struct rds_rdma_notify {
+	__u64                      user_token;           /*     0     8 */
+	__s32                      status;               /*     8     4 */
+
+	/* size: 16, cachelines: 1, members: 2 */
+	/* padding: 4 */
+	/* last cacheline: 16 bytes */
+};
+
+ net/rds/recv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/net/rds/recv.c b/net/rds/recv.c
+index c8404971d5ab..aba4afe4dfed 100644
+--- a/net/rds/recv.c
++++ b/net/rds/recv.c
+@@ -450,12 +450,13 @@ static int rds_still_queued(struct rds_sock *rs, struct rds_incoming *inc,
+ int rds_notify_queue_get(struct rds_sock *rs, struct msghdr *msghdr)
+ {
+ 	struct rds_notifier *notifier;
+-	struct rds_rdma_notify cmsg = { 0 }; /* fill holes with zero */
++	struct rds_rdma_notify cmsg;
+ 	unsigned int count = 0, max_messages = ~0U;
+ 	unsigned long flags;
+ 	LIST_HEAD(copy);
+ 	int err = 0;
+ 
++	memset(&cmsg, 0, sizeof(cmsg));	/* fill holes with zero */
+ 
+ 	/* put_cmsg copies to user space and thus may sleep. We can't do this
+ 	 * with rs_lock held, so first grab as many notifications as we can stuff
+-- 
+2.25.1
+
