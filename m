@@ -2,109 +2,144 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04647C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 02:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C4CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 02:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D169F22B48
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 02:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BDCB22B48
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 02:56:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="k2isr9KV"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gus/bIxR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbgG3CzI (ORCPT
+        id S1728412AbgG3C4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 22:55:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbgG3CzH (ORCPT
+        Wed, 29 Jul 2020 22:56:24 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:43701 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726774AbgG3C4X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 22:55:07 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49786C061794;
-        Wed, 29 Jul 2020 19:55:07 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BHFPx5z7vz9sR4;
-        Thu, 30 Jul 2020 12:55:01 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596077703;
-        bh=KeMsUgTTRQJUB2ALeA/VNpxNjkkQHAcqAD41AHy8QFA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=k2isr9KVTnTwNMTNwyKuK67O+quMJv4e32jfXdyEDlVy7ylhA4yHagA2H5kNYgIH2
-         ga9/j0CJTGLlhxJJPrcyWDI+uVPmGTilnvENj7F4idMQ2/hftGlVxkIFIU+Out5U8V
-         0895d2w2Jj6C1WC/UzH61duJcn7v8GQOYEiv6pXb17+uJ4LW9e9r8+3ADL9P/MLkNk
-         NaEvUaUy5fN8tmqUMUbSu+2VWYrTFy+XZCialTIVta+Oho2w+SxAPWhwpCJBS4jB7t
-         F1KpzrohVkTNrBq4qKw/APramRsi/bEd6GMST30qDw25ZmQ9rjoILsgQcCzbi/MhsH
-         a9cyExu4OnVYg==
-Date:   Thu, 30 Jul 2020 12:55:00 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Neal Liu <neal.liu@mediatek.com>,
-        Sami Tolvanen <samitolvanen@google.com>
-Subject: linux-next: build warning after merge of the pm tree
-Message-ID: <20200730125500.0947e1dd@canb.auug.org.au>
+        Wed, 29 Jul 2020 22:56:23 -0400
+X-UUID: e98c061da58f451d9abf26f70a8de1b2-20200730
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=i0bupk3lA9+XOW/dVZ3V8pmhPwEwozZV30mSX3eVTBE=;
+        b=gus/bIxR97sic2KSYq4C211n4bNFr6LC/1SOT3AFItXePExvS5Ua+mZte16FsNfodUt297N+21hHzmx48+IkZ5SJkorBDkHMM23ffU4jO14fry9grdLBrXm4WXhJyW7IpOF6odwOWeVVsdJwR4kq8oZUmvX2lxkNAWShuYZD4Qs=;
+X-UUID: e98c061da58f451d9abf26f70a8de1b2-20200730
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <yingjoe.chen@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1447122656; Thu, 30 Jul 2020 10:56:13 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ MTKMBS32DR.mediatek.inc (172.27.6.104) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 30 Jul 2020 10:56:10 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 30 Jul 2020 10:56:08 +0800
+Message-ID: <1596077771.11024.18.camel@mtksdaap41>
+Subject: Re: [PATCH v16 1/3] dt-bindings: Add keypad devicetree documentation
+From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
+To:     Fengping Yu <fengping.yu@mediatek.com>
+CC:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Mattijs Korpershoek" <mkorpershoek@baylibre.com>,
+        <linux-input@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Date:   Thu, 30 Jul 2020 10:56:11 +0800
+In-Reply-To: <20200727114504.28536-2-fengping.yu@mediatek.com>
+References: <20200727114504.28536-1-fengping.yu@mediatek.com>
+         <20200727114504.28536-2-fengping.yu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/A+5Dkh0co2cLrus.5Zan56l";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-TM-SNTS-SMTP: B5B7D66D4661DBC9931269635E8730C67D7D08F06E0F3BA34AF7139FCD2B3F232000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/A+5Dkh0co2cLrus.5Zan56l
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+SGksDQoNClN1bW1hcnkgc2hvdWxkIHNwZWNpZmllZCB0aGlzIHBhdGNoIGlzIGZvciBNZWRpYVRl
+azoNCg0KZHQtYmluZGluZ3M6IGFkZCBNZWRpYVRlayBrZXlwYWQgZGV2aWNldHJlZSBkb2N1bWVu
+dGF0aW9uDQoNCg0KT24gTW9uLCAyMDIwLTA3LTI3IGF0IDE5OjQ1ICswODAwLCBGZW5ncGluZyBZ
+dSB3cm90ZToNCj4gRnJvbTogImZlbmdwaW5nLnl1IiA8ZmVuZ3BpbmcueXVAbWVkaWF0ZWsuY29t
+Pg0KDQo+IEFkZCBNZWRpYXRlayBtYXRyaXgga2V5cGFkIGR0LWJpbmRpbmdzIGRvYyBhcyB5YW1s
+IHNjaGVtYS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IGZlbmdwaW5nLnl1IDxmZW5ncGluZy55dUBt
+ZWRpYXRlay5jb20+DQo+IC0tLQ0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvaW5wdXQvbXRr
+LWtwZC55YW1sICAgIHwgOTYgKysrKysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQs
+IDk2IGluc2VydGlvbnMoKykNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvaW5wdXQvbXRrLWtwZC55YW1sDQo+IA0KPiBkaWZmIC0tZ2l0IGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0L210ay1rcGQueWFtbCBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC9tdGsta3BkLnlhbWwNCj4gbmV3
+IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMDAwMDAwLi4zYmYwOWU3Mzk1ZDANCj4g
+LS0tIC9kZXYvbnVsbA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+aW5wdXQvbXRrLWtwZC55YW1sDQo+IEBAIC0wLDAgKzEsOTYgQEANCj4gKyMgU1BEWC1MaWNlbnNl
+LUlkZW50aWZpZXI6IEdQTC0yLjANCj4gKyVZQU1MIDEuMg0KPiArLS0tDQo+ICt2ZXJzaW9uOiAx
+DQo+ICsNCj4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvaW5wdXQvbXRrLWtl
+eXBhZC55YW1sIw0KPiArJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1h
+cy9jb3JlLnlhbWwjDQo+ICsNCj4gK3RpdGxlOiBNZWRpYXRlaydzIEtleXBhZCBDb250cm9sbGVy
+IGRldmljZSB0cmVlIGJpbmRpbmdzDQo+ICsNCj4gK21haW50YWluZXI6DQo+ICsgIC0gRmVuZ3Bp
+bmcgWXUgPGZlbmdwaW5nLnl1QG1lZGlhdGVrLmNvbT4NCj4gKw0KPiArZGVzY3JpcHRpb246IHwN
+Cj4gKyAgTWVkaWF0ZWsncyBLZXlwYWQgY29udHJvbGxlciBpcyB1c2VkIHRvIGludGVyZmFjZSBh
+IFNvQyB3aXRoIGEgbWF0cml4LXR5cGUNCj4gKyAga2V5cGFkIGRldmljZS4gVGhlIGtleXBhZCBj
+b250cm9sbGVyIHN1cHBvcnRzIG11bHRpcGxlIHJvdyBhbmQgY29sdW1uIGxpbmVzLg0KPiArICBB
+IGtleSBjYW4gYmUgcGxhY2VkIGF0IGVhY2ggaW50ZXJzZWN0aW9uIG9mIGEgdW5pcXVlIHJvdyBh
+bmQgYSB1bmlxdWUgY29sdW1uLg0KPiArICBUaGUga2V5cGFkIGNvbnRyb2xsZXIgY2FuIHNlbnNl
+IGEga2V5LXByZXNzIGFuZCBrZXktcmVsZWFzZSBhbmQgcmVwb3J0IHRoZQ0KPiArICBldmVudCB1
+c2luZyBhIGludGVycnVwdCB0byB0aGUgY3B1Lg0KPiArDQo+ICtwcm9wZXJ0aWVzOg0KPiArICBj
+b21wYXRpYmxlOg0KPiArICAgIG9uZU9mOg0KPiArICAgICAgLSBjb25zdDogIm1lZGlhdGVrLG10
+Njc3OS1rZXlwYWQiDQo+ICsgICAgICAtIGNvbnN0OiAibWVkaWF0ZWssbXQ2ODczLWtleXBhZCIN
+Cj4gKw0KPiArICBjbG9jay1uYW1lczoNCj4gKyAgICBkZXNjcmlwdGlvbjogTmFtZXMgb2YgdGhl
+IGNsb2NrcyBsaXN0ZWQgaW4gY2xvY2tzIHByb3BlcnR5IGluIHRoZSBzYW1lIG9yZGVyDQo+ICsg
+ICAgbWF4SXRlbXM6IDENCg0KUGxlYXNlIGxpc3QgdGhlIGNsb2NrLW5hbWVzIHJlcXVpcmVkLiBJ
+biB0aGlzIGNhc2UsICdrcGQnDQoNCg0KPiArDQo+ICsgIGNsb2NrczoNCj4gKyAgICBkZXNjcmlw
+dGlvbjogTXVzdCBjb250YWluIG9uZSBlbnRyeSwgZm9yIHRoZSBtb2R1bGUgY2xvY2sNCj4gKyAg
+ICByZWZzOiBkZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2Nrcy9jbG9jay1iaW5kaW5ncy50eHQgZm9y
+IGRldGFpbHMuDQo+ICsNCj4gKyAgaW50ZXJydXB0czoNCj4gKyAgICBkZXNjcmlwdGlvbjogQSBz
+aW5nbGUgaW50ZXJydXB0IHNwZWNpZmllcg0KPiArICAgIG1heEl0ZW1zOiAxDQo+ICsNCj4gKyAg
+bGludXgsa2V5bWFwOg0KPiArICAgIGRlc2NyaXB0aW9uOiBUaGUga2V5bWFwIGZvciBrZXlzIGFz
+IGRlc2NyaWJlZCBpbiB0aGUgYmluZGluZyBkb2N1bWVudA0KPiArICAgIHJlZnM6IGRldmljZXRy
+ZWUvYmluZGluZ3MvaW5wdXQvbWF0cml4LWtleW1hcC50eHQNCj4gKyAgICBtaW5JdGVtczogMQ0K
+PiArICAgIG1heEl0ZW1zOiAxNg0KDQpXaHkgaXMgdGhpcyBtYXggYXQgMTY/DQoNCg0KPiArDQo+
+ICsgIHBpbmN0cmwtMDoNCj4gKyAgICBkZXNjcmlwdGlvbjogU3BlY2lmeSBwaW4gY29udHJvbCBn
+cm91cHMgdXNlZCBmb3IgdGhpcyBjb250cm9sbGVyDQo+ICsgICAgcmVmczogZGV2aWNldHJlZS9i
+aW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtYmluZGluZ3MudHh0DQo+ICsNCj4gKyAgcGluY3RybC1u
+YW1lczoNCj4gKyAgICBkZXNjcmlwdGlvbjogTmFtZXMgZm9yIG9wdGlvbmFsIHBpbiBtb2Rlcw0K
+PiArICAgIG1heEl0ZW1zOiAxDQoNCkknbSBub3Qgc3VyZSB3ZSBzaG91bGQgbGlzdCBwaW5jdHJs
+IGhlcmUuIA0KDQoNCj4gKw0KPiArICByZWc6DQo+ICsgICAgZGVzY3JpcHRpb246IFRoZSBiYXNl
+IGFkZHJlc3Mgb2YgdGhlIEtleXBhZCByZWdpc3RlciBiYW5rDQo+ICsgICAgbWF4SXRlbXM6IDEN
+Cj4gKw0KPiArICB3YWtldXAtc291cmNlOg0KPiArICAgIGRlc2NyaXB0aW9uOiB1c2UgYW55IGV2
+ZW50IG9uIGtleXBhZCBhcyB3YWtldXAgZXZlbnQNCj4gKyAgICB0eXBlOiBib29sZWFuDQo+ICsN
+Cj4gKyAga2V5cGFkLG51bS1jb2x1bW5zOg0KPiArICAgIGRlc2NyaXB0aW9uOiBOdW1iZXIgb2Yg
+Y29sdW1uIGxpbmVzIGNvbm5lY3RlZCB0byB0aGUga2V5cGFkIGNvbnRyb2xsZXIsDQo+ICsgICAg
+aXQgaXMgbm90IGVxdWFsIHRvIFBDQiBjb2x1bW5zIG51bWJlciwgaW5zdGVhZCB5b3Ugc2hvdWxk
+IGFkZCByZXF1aXJlZCB2YWx1ZQ0KPiArICAgIGZvciBlYWNoIElDDQo+ICsNCj4gKyAga2V5cGFk
+LG51bS1yb3dzOg0KPiArICAgIGRlc2NyaXB0aW9uOiBOdW1iZXIgb2Ygcm93IGxpbmVzIGNvbm5l
+Y3RlZCB0byB0aGUga2V5cGFkIGNvbnRyb2xsZXIsIGl0IGlzDQo+ICsgICAgbm90IGVxdWFsIHRv
+IFBDQiByb3dzIG51bWJlciwgaW5zdGVhZCB5b3Ugc2hvdWxkIGFkZCByZXF1aXJlZCB2YWx1ZSBm
+b3IgZWFjaCBJQw0KDQpTbyB0aGUgdmFsdWVzIGRlcGVuZCBvbiBJQyBIVy4gVGhlc2UgYXJlIG5v
+dCBsaXN0ZWQgYXMgcmVxdWlyZWQuIENhbg0KeW91ciBkcml2ZXIgd29ya3Mgd2l0aG91dCB0aGVt
+PyBEZWZhdWx0IHZhbHVlPw0KDQo+ICsNCj4gKyAgbWVkaWF0ZWssZGVib3VuY2UtdXM6DQo+ICsg
+ICAgZGVzY3JpcHRpb246IERlYm91bmNlIGludGVydmFsIGluIG1pY3Jvc2Vjb25kcywgaWYgbm90
+IHNwZWNpZmllZCwgdGhlIGRlZmF1bHQNCj4gKyAgICB2YWx1ZSBpcyAxNjAwMA0KPiArICAgIG1h
+eGltdW06IDI1NjAwMA0KPiArDQo+ICtyZXF1aXJlZDoNCj4gKyAgLSBjb21wYXRpYmxlDQo+ICsg
+IC0gcmVnDQo+ICsgIC0gaW50ZXJydXB0cw0KPiArICAtIGxpbnV4LGtleW1hcA0KPiArICAtIHBp
+bmN0cmwNCj4gKyAgLSBjbG9ja3MNCj4gKyAgLSBjbG9jay1uYW1lcw0KPiArDQo+ICtleGFtcGxl
+czoNCj4gKyAgLSB8DQo+ICsNCj4gKyAga2V5cGFkOiBrcEAxMDAxMDAwMCB7DQoNClRoaXMgc2hv
+dWxkIGJlICdrZXlwYWQnIG9yIGluc3RlYWQgb2Yga3AuDQoNCkpvZS5DDQoNCj4gKyAgICBjb21w
+YXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS1rZXlwYWQiOw0KPiArICAgIHJlZyA9IDwwIDB4MTAw
+MTAwMDAgMCAweDEwMDA+Ow0KPiArICAgIGxpbnV4LGtleW1hcCA9IDwgTUFUUklYX0tFWSgweDAw
+LCAweDAwLCBLRVlfVk9MVU1FRE9XTikgPjsNCj4gKyAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkg
+NzUgSVJRX1RZUEVfRURHRV9GQUxMSU5HPjsNCj4gKyAgICBjbG9ja3MgPSA8JmNsazI2bT47DQo+
+ICsgICAgY2xvY2stbmFtZXMgPSAia3BkIjsNCj4gKyAgICBwaW5jdHJsLW5hbWVzID0gImRlZmF1
+bHQiOw0KPiArICAgIHBpbmN0cmwtMCA9IDwma3BkX2dwaW9zX2RlZl9jZmc+Ow0KPiArICB9Ow0K
+DQo=
 
-Hi all,
-
-After merging the pm tree, today's linux-next build (x86_64 allmodconfig)
-produced this warning:
-
-drivers/acpi/processor_idle.c: In function 'acpi_idle_enter_s2idle':
-drivers/acpi/processor_idle.c:666:4: warning: 'return' with no value, in fu=
-nction returning non-void [-Wreturn-type]
-  666 |    return;
-      |    ^~~~~~
-drivers/acpi/processor_idle.c:657:12: note: declared here
-  657 | static int acpi_idle_enter_s2idle(struct cpuidle_device *dev,
-      |            ^~~~~~~~~~~~~~~~~~~~~~
-drivers/acpi/processor_idle.c:670:4: warning: 'return' with no value, in fu=
-nction returning non-void [-Wreturn-type]
-  670 |    return;
-      |    ^~~~~~
-drivers/acpi/processor_idle.c:657:12: note: declared here
-  657 | static int acpi_idle_enter_s2idle(struct cpuidle_device *dev,
-      |            ^~~~~~~~~~~~~~~~~~~~~~
-
-Introduced by commit
-
-  efe9711214e6 ("cpuidle: change enter_s2idle() prototype")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/A+5Dkh0co2cLrus.5Zan56l
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8iNoQACgkQAVBC80lX
-0Gw2vgf8D04zaNBUbkQJ3cFJ7Sx+BwSWJLsrs9iyIMlgVHw+rcMZEAxJEkD2WVCh
-0tp/JmsK385QFdXVObKNgGAlz8V5pFx+pLUO7tEY6pCok7JKaY7FyJz0Wa+mvDnV
-yOcv0YB/mct8EWsnupB9cKm0gcHKyUOcCEdNV/IQvXpjhwZWMQIyQfWNR7BP6bqP
-GHcZxjY2Aeghln+GIQNDFDJYAqKHtAHkFDgStPa6OfawwpWUWGnuDDqVCyTIXffY
-dmnfyIX9ASpEyFotmUNmukbMhJQ2Z0dL/LRd1Itk3+SwNVpp/5v1BEMOzqiOMTb5
-xjgIDLm7fWtSsCKWYEwSqa9vJGjm3w==
-=HtkD
------END PGP SIGNATURE-----
-
---Sig_/A+5Dkh0co2cLrus.5Zan56l--
