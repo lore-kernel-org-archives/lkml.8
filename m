@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F085FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC50C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBAA72070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:12:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 549DB2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096758;
-	bh=/85MTSUrkdvlsEtS/Ynf0UsPvy/3ax+tiYzrW3lkylM=;
+	s=default; t=1596096767;
+	bh=0TS8vaOu8U0C0bL3BfPsJsUIqCQxjQ5c4Kkh2xglFhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xtidQ7eJgyp9bbr1tHDzxeM+ciYLGye+PKCZLuYwfU/jJ0NUAAYXVoNzABPRKjYFN
-	 8bBtsaiwcryHdeOCsJEFZ705dtRyXA0mN1vrohy92fO+ZNnCaARkz15tTqqr/fMGKH
-	 w7YChKg5iIJQRBq0rcAB3PH2DNsqoCoG6kRioU94=
+	b=AYxQidLZfqKcIHxByIHvUj2HwlM2xjVZQoLPL8yLc03kViFM6XN8tyH94MSorb8bH
+	 FvTom8pSpD9QQCHy7w+L+7887NuVDAQx3tHPxU/buJWGS1ka0kqSeoAPlXx+foVrF3
+	 JJnhvMnyP8db53Qs8SJ7vGpBvCCMXHesPu0nrqdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbgG3IMh (ORCPT
+        id S1728980AbgG3IMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:12:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51780 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:12:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730052AbgG3IMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:12:31 -0400
+        id S1730063AbgG3IMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:12:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AE112074B;
-        Thu, 30 Jul 2020 08:12:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87BD52070B;
+        Thu, 30 Jul 2020 08:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096749;
-        bh=/85MTSUrkdvlsEtS/Ynf0UsPvy/3ax+tiYzrW3lkylM=;
+        s=default; t=1596096755;
+        bh=0TS8vaOu8U0C0bL3BfPsJsUIqCQxjQ5c4Kkh2xglFhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BdT5QDnZgibobrM8FLfb8wh89tYtb0jmr1chYgZDOedUpupYwdF220xDxGBK3qmY/
-         ZVfFt8zuadsmMW/B20tfcRAah6TyeWA0yYavMJbAzwmnQXDepQcN4I1VJIYjbj9jqj
-         s5kSrhwBLrcxYCx12A5QXB+K5aWnInI9y8R3H7Gg=
+        b=QPuvJ5MKQpenadQFe5svGsQLk6WpRFMQ95424h9DxYXn/VJsRBxdCqRFm2Mpb19A3
+         thFus3om5JFVxx7M+GGrd3FUmMTPDpmHuyDVu75EfF1985RqoUN+y210qzX7fjhCi5
+         ZSEWWLj4waptExhnZoWKuc4xmroTLVabYN7bqXRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Martin Schiller <ms@dev.tdt.de>,
-        Xie He <xie.he.0141@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 46/54] drivers/net/wan/x25_asy: Fix to make it work
-Date:   Thu, 30 Jul 2020 10:05:25 +0200
-Message-Id: <20200730074423.408931056@linuxfoundation.org>
+        stable@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.4 48/54] regmap: debugfs: check count when read regmap file
+Date:   Thu, 30 Jul 2020 10:05:27 +0200
+Message-Id: <20200730074423.496275329@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
 References: <20200730074421.203879987@linuxfoundation.org>
@@ -61,102 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie He <xie.he.0141@gmail.com>
+From: Peng Fan <peng.fan@nxp.com>
 
-[ Upstream commit 8fdcabeac39824fe67480fd9508d80161c541854 ]
+commit 74edd08a4fbf51d65fd8f4c7d8289cd0f392bd91 upstream.
 
-This driver is not working because of problems of its receiving code.
-This patch fixes it to make it work.
+When executing the following command, we met kernel dump.
+dmesg -c > /dev/null; cd /sys;
+for i in `ls /sys/kernel/debug/regmap/* -d`; do
+	echo "Checking regmap in $i";
+	cat $i/registers;
+done && grep -ri "0x02d0" *;
 
-When the driver receives an LAPB frame, it should first pass the frame
-to the LAPB module to process. After processing, the LAPB module passes
-the data (the packet) back to the driver, the driver should then add a
-one-byte pseudo header and pass the data to upper layers.
+It is because the count value is too big, and kmalloc fails. So add an
+upper bound check to allow max size `PAGE_SIZE << (MAX_ORDER - 1)`.
 
-The changes to the "x25_asy_bump" function and the
-"x25_asy_data_indication" function are to correctly implement this
-procedure.
-
-Also, the "x25_asy_unesc" function ignores any frame that is shorter
-than 3 bytes. However the shortest frames are 2-byte long. So we need
-to change it to allow 2-byte frames to pass.
-
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
-Reviewed-by: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Link: https://lore.kernel.org/r/1584064687-12964-1-git-send-email-peng.fan@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/wan/x25_asy.c |   21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
 
---- a/drivers/net/wan/x25_asy.c
-+++ b/drivers/net/wan/x25_asy.c
-@@ -186,7 +186,7 @@ static inline void x25_asy_unlock(struct
- 	netif_wake_queue(sl->dev);
- }
+---
+ drivers/base/regmap/regmap-debugfs.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
+
+--- a/drivers/base/regmap/regmap-debugfs.c
++++ b/drivers/base/regmap/regmap-debugfs.c
+@@ -194,6 +194,9 @@ static ssize_t regmap_read_debugfs(struc
+ 	if (*ppos < 0 || !count)
+ 		return -EINVAL;
  
--/* Send one completely decapsulated IP datagram to the IP layer. */
-+/* Send an LAPB frame to the LAPB module to process. */
- 
- static void x25_asy_bump(struct x25_asy *sl)
- {
-@@ -198,13 +198,12 @@ static void x25_asy_bump(struct x25_asy
- 	count = sl->rcount;
- 	dev->stats.rx_bytes += count;
- 
--	skb = dev_alloc_skb(count+1);
-+	skb = dev_alloc_skb(count);
- 	if (skb == NULL) {
- 		netdev_warn(sl->dev, "memory squeeze, dropping packet\n");
- 		dev->stats.rx_dropped++;
- 		return;
- 	}
--	skb_push(skb, 1);	/* LAPB internal control */
- 	memcpy(skb_put(skb, count), sl->rbuff, count);
- 	skb->protocol = x25_type_trans(skb, sl->dev);
- 	err = lapb_data_received(skb->dev, skb);
-@@ -212,7 +211,6 @@ static void x25_asy_bump(struct x25_asy
- 		kfree_skb(skb);
- 		printk(KERN_DEBUG "x25_asy: data received err - %d\n", err);
- 	} else {
--		netif_rx(skb);
- 		dev->stats.rx_packets++;
- 	}
- }
-@@ -358,12 +356,21 @@ static netdev_tx_t x25_asy_xmit(struct s
-  */
- 
- /*
-- *	Called when I frame data arrives. We did the work above - throw it
-- *	at the net layer.
-+ *	Called when I frame data arrive. We add a pseudo header for upper
-+ *	layers and pass it to upper layers.
-  */
- 
- static int x25_asy_data_indication(struct net_device *dev, struct sk_buff *skb)
- {
-+	if (skb_cow(skb, 1)) {
-+		kfree_skb(skb);
-+		return NET_RX_DROP;
-+	}
-+	skb_push(skb, 1);
-+	skb->data[0] = X25_IFACE_DATA;
++	if (count > (PAGE_SIZE << (MAX_ORDER - 1)))
++		count = PAGE_SIZE << (MAX_ORDER - 1);
 +
-+	skb->protocol = x25_type_trans(skb, dev);
-+
- 	return netif_rx(skb);
- }
+ 	buf = kmalloc(count, GFP_KERNEL);
+ 	if (!buf)
+ 		return -ENOMEM;
+@@ -342,6 +345,9 @@ static ssize_t regmap_reg_ranges_read_fi
+ 	if (*ppos < 0 || !count)
+ 		return -EINVAL;
  
-@@ -655,7 +662,7 @@ static void x25_asy_unesc(struct x25_asy
- 	switch (s) {
- 	case X25_END:
- 		if (!test_and_clear_bit(SLF_ERROR, &sl->flags) &&
--		    sl->rcount > 2)
-+		    sl->rcount >= 2)
- 			x25_asy_bump(sl);
- 		clear_bit(SLF_ESCAPE, &sl->flags);
- 		sl->rcount = 0;
++	if (count > (PAGE_SIZE << (MAX_ORDER - 1)))
++		count = PAGE_SIZE << (MAX_ORDER - 1);
++
+ 	buf = kmalloc(count, GFP_KERNEL);
+ 	if (!buf)
+ 		return -ENOMEM;
 
 
