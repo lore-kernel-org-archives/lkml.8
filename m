@@ -2,202 +2,233 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDEBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E14C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC622082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:14:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596100493;
-	bh=l4NjSWF1HZWx/Xih8Ycmt7FVp9NzizelD5w+ezXB0Gs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ney0qpKsRjZb9g5C4j9Ri+4rXlH7eKBfAUt4VdHCM41Ene3lIutMCjMLDTzklw1Cd
-	 6t+M+sAIZuzXWp528gKvQah1E5h/KwIIe43mAQhWA6wgH64dMWTCj/cCFTTMXvmAqE
-	 ETVZDbsUIBa4di3eVrBc11ImgRW24y17SH05UZ1s=
+	by mail.kernel.org (Postfix) with ESMTP id 2186020656
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:16:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MtoQL85q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729331AbgG3JOv (ORCPT
+        id S1729231AbgG3JQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 05:14:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43912 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 05:16:16 -0400
+Received: from ozlabs.org ([203.11.71.1]:43489 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728880AbgG3JOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 05:14:50 -0400
-Received: from kernel.org (unknown [87.70.91.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728880AbgG3JQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 05:16:14 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C15820809;
-        Thu, 30 Jul 2020 09:14:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596100489;
-        bh=l4NjSWF1HZWx/Xih8Ycmt7FVp9NzizelD5w+ezXB0Gs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IjhsmzIR4gyOzE6k4cUaxOv7b3yXeZhUjHCgaMSbpMORCrhxlHXPA6sn2Z9x6yXYg
-         bZ8ePyTHxQnYyT4KrMKZErHOPOeTCznQMU31gArycY+pKUSlT/2NRLzUV8VOHzTDqJ
-         dYnv4+pPpOJMQZo7w3oqdgMb6bpD6kXrK52WSEmg=
-Date:   Thu, 30 Jul 2020 12:14:40 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     linux-kernel@vger.kernel.org, Anup Patel <anup.patel@wdc.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>, linux-efi@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Hu <nickhu@andestech.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yash Shah <yash.shah@sifive.com>, Zong Li <zong.li@sifive.com>
-Subject: Re: [RFT PATCH v4 3/9] RISC-V: Implement late mapping page table
- allocation functions
-Message-ID: <20200730091440.GA534153@kernel.org>
-References: <20200729233635.14406-1-atish.patra@wdc.com>
- <20200729233635.14406-4-atish.patra@wdc.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BHPsm2dWDz9sRW;
+        Thu, 30 Jul 2020 19:16:12 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596100572;
+        bh=3UGzAS3BAzzwuOnXiOZuXoyqPh+hYTBvt/HEmbtVHo8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=MtoQL85qFqJHOpWk6PRcrKW/+De01ccTil1Y5951gWFPAHxvX+eXqyvkhFuTOkERX
+         q3J+djWpBExSq3BZukY/+PqyU5ziyW4wSW/nrsNZeTRCwCjcj+ntNEbbMmHZJHRiGo
+         cyY4WgtkFkKIeyAZwDIFCo8rWJCHfbJLkVMWAsbsADDGBeKqrq0FytOgd7UQ/qY4Cc
+         X94Z9k2UwPozO+Bln6Yj4efh+EownlIercmrby49gR+fxkMARihn+r9PDOalUeC1o8
+         b+g6X/3FzTnPhXteyrvyJES414z4d0odHj9xJ9orFs994rDMHDOeqmybMd0Um7g1si
+         7uqW9ntD8yHCw==
+Date:   Thu, 30 Jul 2020 19:16:10 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jason Gunthorpe <jgg@mellanox.com>,
+        Paul Mackerras <paulus@ozlabs.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Laurent Dufour <ldufour@linux.ibm.com>
+Subject: linux-next: manual merge of the hmm tree with the kvm-ppc tree
+Message-ID: <20200730191610.204ed02c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200729233635.14406-4-atish.patra@wdc.com>
+Content-Type: multipart/signed; boundary="Sig_/Sh6n5Ee=hdUmtBiCx7Gq.4c";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+--Sig_/Sh6n5Ee=hdUmtBiCx7Gq.4c
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 29, 2020 at 04:36:29PM -0700, Atish Patra wrote:
-> Currently, page table setup is done during setup_va_final where fixmap can
-> be used to create the temporary mappings. The physical frame is allocated
-> from memblock_alloc_* functions. However, this won't work if page table
-> mapping needs to be created for a different mm context (i.e. efi mm) at
-> a later point of time.
+Hi all,
 
-TBH, I'm not very happy to see pte/pmd allocations, but I don't see a
-way to reuse the existing routines in this case.
+Today's linux-next merge of the hmm tree got a conflict in:
 
-As a general wild idea, maybe it's worth using something like
+  arch/powerpc/kvm/book3s_hv_uvmem.c
 
-struct pt_alloc_ops {
-	pte_t *(*get_pte_virt)(phys_addr_t pa);
-	phys_addr_t (*alloc_pte)(uintptr_t va);
-	...
-};
+between commit:
 
-and add there implementations: nommu, MMU early and MMU late.
+  f1b87ea8784b ("KVM: PPC: Book3S HV: Move kvmppc_svm_page_out up")
 
-Some more comments below.
- 
-> Use generic kernel page allocation function & macros for any mapping
-> after setup_vm_final.
-> 
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> ---
->  arch/riscv/mm/init.c | 29 ++++++++++++++++++++++++-----
->  1 file changed, 24 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index 68c608a0e91f..cba03fec08c1 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -212,6 +212,7 @@ pgd_t swapper_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
->  pgd_t trampoline_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
->  pte_t fixmap_pte[PTRS_PER_PTE] __page_aligned_bss;
->  static bool mmu_enabled;
-> +static bool late_mapping;
->  
->  #define MAX_EARLY_MAPPING_SIZE	SZ_128M
->  
-> @@ -236,7 +237,9 @@ void __set_fixmap(enum fixed_addresses idx, phys_addr_t phys, pgprot_t prot)
->  
->  static pte_t *__init get_pte_virt(phys_addr_t pa)
->  {
-> -	if (mmu_enabled) {
-> +	if (late_mapping)
-> +		return (pte_t *) __va(pa);
-> +	else if (mmu_enabled) {
->  		clear_fixmap(FIX_PTE);
->  		return (pte_t *)set_fixmap_offset(FIX_PTE, pa);
->  	} else {
-> @@ -246,13 +249,19 @@ static pte_t *__init get_pte_virt(phys_addr_t pa)
->  
->  static phys_addr_t __init alloc_pte(uintptr_t va)
->  {
-> +	unsigned long vaddr;
->  	/*
->  	 * We only create PMD or PGD early mappings so we
->  	 * should never reach here with MMU disabled.
->  	 */
->  	BUG_ON(!mmu_enabled);
-> -
-> -	return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
-> +	if (late_mapping) {
-> +		vaddr = __get_free_page(GFP_KERNEL);
-> +		if (!vaddr || !pgtable_pte_page_ctor(virt_to_page(vaddr)))
-> +			BUG();
+from the kvm-ppc tree and commit:
 
-Is BUG() here really necessary? If I understand correctly, this would be
-used to enable mappings for EFI runtime services, so we probably want to
-propagete the error to to caller and, if really necessary, BUG() there,
-don't we?
+  5143192cd410 ("mm/migrate: add a flags parameter to migrate_vma")
 
-> +		return __pa(vaddr);
-> +	} else
-> +		return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
->  }
->  
->  static void __init create_pte_mapping(pte_t *ptep,
-> @@ -281,7 +290,9 @@ pmd_t early_pmd[PTRS_PER_PMD * NUM_EARLY_PMDS] __initdata __aligned(PAGE_SIZE);
->  
->  static pmd_t *__init get_pmd_virt(phys_addr_t pa)
->  {
-> -	if (mmu_enabled) {
-> +	if (late_mapping)
-> +		return (pmd_t *) __va(pa);
-> +	else if (mmu_enabled) {
->  		clear_fixmap(FIX_PMD);
->  		return (pmd_t *)set_fixmap_offset(FIX_PMD, pa);
->  	} else {
-> @@ -292,8 +303,13 @@ static pmd_t *__init get_pmd_virt(phys_addr_t pa)
->  static phys_addr_t __init alloc_pmd(uintptr_t va)
->  {
->  	uintptr_t pmd_num;
-> +	unsigned long vaddr;
->  
-> -	if (mmu_enabled)
-> +	if (late_mapping) {
-> +		vaddr = __get_free_page(GFP_KERNEL);
-> +		BUG_ON(!vaddr);
-> +		return __pa(vaddr);
+from the hmm tree.
 
-Does nommu also need to allocate a page for pmd?
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-> +	} else if (mmu_enabled)
->  		return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
->  
->  	pmd_num = (va - PAGE_OFFSET) >> PGDIR_SHIFT;
-> @@ -533,6 +549,9 @@ static void __init setup_vm_final(void)
->  	/* Move to swapper page table */
->  	csr_write(CSR_SATP, PFN_DOWN(__pa_symbol(swapper_pg_dir)) | SATP_MODE);
->  	local_flush_tlb_all();
-> +
-> +	/* generic page allocation function must be used to setup page table */
-> +	late_mapping = true;
->  }
->  #else
->  asmlinkage void __init setup_vm(uintptr_t dtb_pa)
-> -- 
-> 2.24.0
-> 
+--=20
+Cheers,
+Stephen Rothwell
 
--- 
-Sincerely yours,
-Mike.
+diff --cc arch/powerpc/kvm/book3s_hv_uvmem.c
+index 0d49e3425a12,6850bd04bcb9..000000000000
+--- a/arch/powerpc/kvm/book3s_hv_uvmem.c
++++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
+@@@ -496,94 -253,14 +496,95 @@@ unsigned long kvmppc_h_svm_init_start(s
+  	return ret;
+  }
+ =20
+ -unsigned long kvmppc_h_svm_init_done(struct kvm *kvm)
+ +/*
+ + * Provision a new page on HV side and copy over the contents
+ + * from secure memory using UV_PAGE_OUT uvcall.
+ + * Caller must held kvm->arch.uvmem_lock.
+ + */
+ +static int __kvmppc_svm_page_out(struct vm_area_struct *vma,
+ +		unsigned long start,
+ +		unsigned long end, unsigned long page_shift,
+ +		struct kvm *kvm, unsigned long gpa)
+  {
+ -	if (!(kvm->arch.secure_guest & KVMPPC_SECURE_INIT_START))
+ -		return H_UNSUPPORTED;
+ +	unsigned long src_pfn, dst_pfn =3D 0;
+ +	struct migrate_vma mig;
+ +	struct page *dpage, *spage;
+ +	struct kvmppc_uvmem_page_pvt *pvt;
+ +	unsigned long pfn;
+ +	int ret =3D U_SUCCESS;
+ =20
+ -	kvm->arch.secure_guest |=3D KVMPPC_SECURE_INIT_DONE;
+ -	pr_info("LPID %d went secure\n", kvm->arch.lpid);
+ -	return H_SUCCESS;
+ +	memset(&mig, 0, sizeof(mig));
+ +	mig.vma =3D vma;
+ +	mig.start =3D start;
+ +	mig.end =3D end;
+ +	mig.src =3D &src_pfn;
+ +	mig.dst =3D &dst_pfn;
+- 	mig.src_owner =3D &kvmppc_uvmem_pgmap;
+++	mig.pgmap_owner =3D &kvmppc_uvmem_pgmap;
+++	mig.flags =3D MIGRATE_VMA_SELECT_DEVICE_PRIVATE;
+ +
+ +	/* The requested page is already paged-out, nothing to do */
+ +	if (!kvmppc_gfn_is_uvmem_pfn(gpa >> page_shift, kvm, NULL))
+ +		return ret;
+ +
+ +	ret =3D migrate_vma_setup(&mig);
+ +	if (ret)
+ +		return -1;
+ +
+ +	spage =3D migrate_pfn_to_page(*mig.src);
+ +	if (!spage || !(*mig.src & MIGRATE_PFN_MIGRATE))
+ +		goto out_finalize;
+ +
+ +	if (!is_zone_device_page(spage))
+ +		goto out_finalize;
+ +
+ +	dpage =3D alloc_page_vma(GFP_HIGHUSER, vma, start);
+ +	if (!dpage) {
+ +		ret =3D -1;
+ +		goto out_finalize;
+ +	}
+ +
+ +	lock_page(dpage);
+ +	pvt =3D spage->zone_device_data;
+ +	pfn =3D page_to_pfn(dpage);
+ +
+ +	/*
+ +	 * This function is used in two cases:
+ +	 * - When HV touches a secure page, for which we do UV_PAGE_OUT
+ +	 * - When a secure page is converted to shared page, we *get*
+ +	 *   the page to essentially unmap the device page. In this
+ +	 *   case we skip page-out.
+ +	 */
+ +	if (!pvt->skip_page_out)
+ +		ret =3D uv_page_out(kvm->arch.lpid, pfn << page_shift,
+ +				  gpa, 0, page_shift);
+ +
+ +	if (ret =3D=3D U_SUCCESS)
+ +		*mig.dst =3D migrate_pfn(pfn) | MIGRATE_PFN_LOCKED;
+ +	else {
+ +		unlock_page(dpage);
+ +		__free_page(dpage);
+ +		goto out_finalize;
+ +	}
+ +
+ +	migrate_vma_pages(&mig);
+ +
+ +out_finalize:
+ +	migrate_vma_finalize(&mig);
+ +	return ret;
+ +}
+ +
+ +static inline int kvmppc_svm_page_out(struct vm_area_struct *vma,
+ +				      unsigned long start, unsigned long end,
+ +				      unsigned long page_shift,
+ +				      struct kvm *kvm, unsigned long gpa)
+ +{
+ +	int ret;
+ +
+ +	mutex_lock(&kvm->arch.uvmem_lock);
+ +	ret =3D __kvmppc_svm_page_out(vma, start, end, page_shift, kvm, gpa);
+ +	mutex_unlock(&kvm->arch.uvmem_lock);
+ +
+ +	return ret;
+  }
+ =20
+  /*
+@@@ -744,7 -400,20 +745,8 @@@ static int kvmppc_svm_page_in(struct vm
+  	mig.end =3D end;
+  	mig.src =3D &src_pfn;
+  	mig.dst =3D &dst_pfn;
++ 	mig.flags =3D MIGRATE_VMA_SELECT_SYSTEM;
+ =20
+ -	/*
+ -	 * We come here with mmap_lock write lock held just for
+ -	 * ksm_madvise(), otherwise we only need read mmap_lock.
+ -	 * Hence downgrade to read lock once ksm_madvise() is done.
+ -	 */
+ -	ret =3D ksm_madvise(vma, vma->vm_start, vma->vm_end,
+ -			  MADV_UNMERGEABLE, &vma->vm_flags);
+ -	mmap_write_downgrade(kvm->mm);
+ -	*downgrade =3D true;
+ -	if (ret)
+ -		return ret;
+ -
+  	ret =3D migrate_vma_setup(&mig);
+  	if (ret)
+  		return ret;
+
+--Sig_/Sh6n5Ee=hdUmtBiCx7Gq.4c
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8ij9oACgkQAVBC80lX
+0GyQLggAmAXT7Bju9ZOstw/WR0iH/VWo0qztW0APbit6+jkygmgkSQfo5/oL3RfL
+Jf/f/84UuFDmjZpz32RMdVg+L8L6YuSZBFOkffVesNXUSbdbhYBotowr/bTohFb1
+HnADYODJSWIwgh+ncK76XfFpO8qHPkIDVCjwkz5sPWS9ckQ6UWA+UzkFIWZ8THZ4
+4ymXJcJ8lwpsH/O0HkR3pFqMSm53Zdn4SMPRDBthguZMFc0i6X7EaK0HaAVTEdNQ
+P/v2YnMmKgJUekVpjKUuIYTMaIi/pSztQRcOvibFyxicGr97PCrelYrd3rJjK7cg
+JJRvLe9ctzdmxSLbalwuN/uL3xKbzg==
+=eSND
+-----END PGP SIGNATURE-----
+
+--Sig_/Sh6n5Ee=hdUmtBiCx7Gq.4c--
