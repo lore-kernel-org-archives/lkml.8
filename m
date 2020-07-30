@@ -2,106 +2,167 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 859A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF04C2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63EE020842
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:16:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Eki0+EB8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FIxgMomY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgG3LP2 (ORCPT
+        id S1727001AbgG3LQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 07:15:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53510 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgG3LP2 (ORCPT
+        Thu, 30 Jul 2020 07:16:20 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59420 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726367AbgG3LQS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 07:15:28 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C26F2C061794
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 04:15:27 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BHSWG6sjxz9sR4;
-        Thu, 30 Jul 2020 21:15:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596107724;
-        bh=SZTIjXiffI1HVrd0DN5lE7xLsaof/MbgIRVfIXV15o0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Eki0+EB8zA3AcxXO0Q7yIldE0cGruHJk4LbVRQGZZx2E+zpt7COogL+fUAVaXJLJB
-         l89X4Nfb1EWBa+UtppIu1j/EzHFWc5PW8WLFkIpOswMAQ9lgc33aX0JsPhr++B4qQO
-         jO4PDDrCxjIGQVGIVo1Jm8syzWBStJx/DCE1aNtGbYehglhiziNag9pEpTI3aHHCth
-         bqBRTm8TTnjmXotXKbVD1dyOlO6p9rfCA14F5rIRAO7t87Vyd5gsCATIE/QWRt16+O
-         Z/lmIIC+DtERZ67NYR6fLHi24Q3pSc3z8qQCMx9vJgDTU2S4MJPjaKDlCO61eIT4Sp
-         fpSItUe4YKl7A==
-Date:   Thu, 30 Jul 2020 21:15:22 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        re.emese@gmail.com, Kees Cook <keescook@chromium.org>, w@1wt.eu,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, hsinyi@chromium.org,
-        "Theodore Ts'o" <tytso@mit.edu>, richard.henderson@linaro.org
-Subject: Re: arm64: pointer_auth.h:40:3: error: implicit declaration of
- function =?UTF-8?B?4oCYZ2V0X3JhbmRvbV9ieXRlc+KAmTs=?= did you mean
- =?UTF-8?B?4oCYZ2V0X3JhbmRvbV9vbmNl4oCZPw==?=
-Message-ID: <20200730211522.1ea3561f@canb.auug.org.au>
-In-Reply-To: <CA+G9fYvSyXnfGmK1FLRtraWWre7QjUoGE_qiwM8XPUBXjnudWA@mail.gmail.com>
-References: <CA+G9fYvSyXnfGmK1FLRtraWWre7QjUoGE_qiwM8XPUBXjnudWA@mail.gmail.com>
+        Thu, 30 Jul 2020 07:16:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596107776;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=i6M54uk3wxSqMByimlcSdiyFDQobGVGgtyqtJxIsLh8=;
+        b=FIxgMomYRm621Ae9yM4aVkNFGccgywKrxjB3M2dsLmFxXyqN7LHkeQSOIq43NbQExmLmnM
+        WEaCL+GKj1pTstfKMf2I+pNEhvo8RbaCPn4l4xfB7Neetg+Hz57m+EIc2My514V5+Iee3d
+        +RFveyjDbeWWP9EOyV4gXxAjByWmvfo=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-475-HLRGaI7AMe2Dqs1S8YBVpQ-1; Thu, 30 Jul 2020 07:16:13 -0400
+X-MC-Unique: HLRGaI7AMe2Dqs1S8YBVpQ-1
+Received: by mail-ej1-f71.google.com with SMTP id y10so9764096ejd.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 04:16:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=i6M54uk3wxSqMByimlcSdiyFDQobGVGgtyqtJxIsLh8=;
+        b=Mn25Q+ILBYpqvivbNNNCVlsLcnrIqXOexCtuJ3RgFNx3tnMaUdWXYFEAGuV3JVB/Eg
+         JVNeQtTwtnmYK+g49FIi5HLR1roV3JsrL7JBLlDtWEcPGWQezW+yEnrIMtifB293GQ3c
+         v9YJ1Sn/lzR4znYd3MAnE36UHjLdKFUJG7v5YGhCM0oxwpvBtNqaT9kMFyXDy+Ixmx86
+         5ekSmeCYtjmAuBfmrZS9y9pWwnsFr6m/TGlc1Zw3s2ugCgq1RuUq6KsYqGyFGMpW8VA7
+         1d6sPNM9YTEqRiSv9adFNURPhHQzYee2t4G2u4HsM0TLRuvej8RyCqRMBXYzb5whoy1w
+         PAIA==
+X-Gm-Message-State: AOAM530YAZkSj1jISDE1tRJWBzgfq1A/5qxikJ2w85JsAzfZqtgbsT/Y
+        SpkLu4PHwZ6dXrgsuB/SqgbOsEpHlo/8TU0OUqyyUfti/zSKe2Y0iC8rP3zUKC6VoNzIVbZRsJc
+        VcrEYqWUiRpOsTAkZ9a2QJoVz
+X-Received: by 2002:a17:906:8782:: with SMTP id za2mr1998832ejb.419.1596107771887;
+        Thu, 30 Jul 2020 04:16:11 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwWZycTltIDSKNoeknahH26vkjSn5+zXLiJ8OL45eqL5qMszYqVuD9fPffkhz0Wugn3GjdTpA==
+X-Received: by 2002:a17:906:8782:: with SMTP id za2mr1998815ejb.419.1596107771693;
+        Thu, 30 Jul 2020 04:16:11 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id cc9sm5811982edb.14.2020.07.30.04.16.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 04:16:10 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH v2 3/3] KVM: SVM: Fix disable pause loop exit/pause filtering capability on SVM
+In-Reply-To: <CANRm+Cx-VM=QGcDNG0oRq7YX+2wmmw8yDjESrJGxTeEWkUUv0A@mail.gmail.com>
+References: <1595929506-9203-1-git-send-email-wanpengli@tencent.com> <1595929506-9203-3-git-send-email-wanpengli@tencent.com> <87k0ymldg9.fsf@vitty.brq.redhat.com> <CANRm+Cx-VM=QGcDNG0oRq7YX+2wmmw8yDjESrJGxTeEWkUUv0A@mail.gmail.com>
+Date:   Thu, 30 Jul 2020 13:16:09 +0200
+Message-ID: <875za5l0cm.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/os0Su/w9QRKsjvVjuQA=g8C";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/os0Su/w9QRKsjvVjuQA=g8C
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Wanpeng Li <kernellwp@gmail.com> writes:
 
-Hi Naresh,
-
-On Thu, 30 Jul 2020 16:25:49 +0530 Naresh Kamboju <naresh.kamboju@linaro.or=
-g> wrote:
+> On Wed, 29 Jul 2020 at 20:21, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>>
+>> Wanpeng Li <kernellwp@gmail.com> writes:
+>>
+>> > From: Wanpeng Li <wanpengli@tencent.com>
+>> >
+>> > Commit 8566ac8b (KVM: SVM: Implement pause loop exit logic in SVM) drops
+>> > disable pause loop exit/pause filtering capability completely, I guess it
+>> > is a merge fault by Radim since disable vmexits capabilities and pause
+>> > loop exit for SVM patchsets are merged at the same time. This patch
+>> > reintroduces the disable pause loop exit/pause filtering capability
+>> > support.
+>> >
+>> > We can observe 2.9% hackbench improvement for a 92 vCPUs guest on AMD
+>> > Rome Server.
+>> >
+>> > Reported-by: Haiwei Li <lihaiwei@tencent.com>
+>> > Tested-by: Haiwei Li <lihaiwei@tencent.com>
+>> > Fixes: 8566ac8b (KVM: SVM: Implement pause loop exit logic in SVM)
+>> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+>> > ---
+>> >  arch/x86/kvm/svm/svm.c | 9 ++++++---
+>> >  1 file changed, 6 insertions(+), 3 deletions(-)
+>> >
+>> > diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+>> > index c0da4dd..c20f127 100644
+>> > --- a/arch/x86/kvm/svm/svm.c
+>> > +++ b/arch/x86/kvm/svm/svm.c
+>> > @@ -1090,7 +1090,7 @@ static void init_vmcb(struct vcpu_svm *svm)
+>> >       svm->nested.vmcb = 0;
+>> >       svm->vcpu.arch.hflags = 0;
+>> >
+>> > -     if (pause_filter_count) {
+>> > +     if (pause_filter_count && !kvm_pause_in_guest(svm->vcpu.kvm)) {
+>> >               control->pause_filter_count = pause_filter_count;
+>> >               if (pause_filter_thresh)
+>> >                       control->pause_filter_thresh = pause_filter_thresh;
+>> > @@ -2693,7 +2693,7 @@ static int pause_interception(struct vcpu_svm *svm)
+>> >       struct kvm_vcpu *vcpu = &svm->vcpu;
+>> >       bool in_kernel = (svm_get_cpl(vcpu) == 0);
+>> >
+>> > -     if (pause_filter_thresh)
+>> > +     if (!kvm_pause_in_guest(vcpu->kvm))
+>> >               grow_ple_window(vcpu);
+>> >
+>> >       kvm_vcpu_on_spin(vcpu, in_kernel);
+>> > @@ -3780,7 +3780,7 @@ static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu)
+>> >
+>> >  static void svm_sched_in(struct kvm_vcpu *vcpu, int cpu)
+>> >  {
+>> > -     if (pause_filter_thresh)
+>> > +     if (!kvm_pause_in_guest(vcpu->kvm))
+>> >               shrink_ple_window(vcpu);
+>> >  }
+>> >
+>> > @@ -3958,6 +3958,9 @@ static void svm_vm_destroy(struct kvm *kvm)
+>> >
+>> >  static int svm_vm_init(struct kvm *kvm)
+>> >  {
+>> > +     if (!pause_filter_thresh)
+>> > +             kvm->arch.pause_in_guest = true;
+>>
+>> Would it make sense to do
+>>
+>>         if (!pause_filter_count || !pause_filter_thresh)
+>>                 kvm->arch.pause_in_guest = true;
+>>
+>> here and simplify the condition in init_vmcb()?
 >
-> Linus master branch failed to build the arm64 architecture due to
-> below error and warnings.
+> kvm->arch.pause_in_guest can also be true when userspace sets the
+> KVM_CAP_X86_DISABLE_EXITS capability, so we can't simplify the
+> condition in init_vmcb().
+>
 
-Thanks for the report.
+I meant we simplify it to
 
-Please see https://lore.kernel.org/lkml/202007292007.D87DBD34B@keescook/
+if (!kvm_pause_in_guest(svm->vcpu.kvm))
 
---=20
-Cheers,
-Stephen Rothwell
+as "!pause_filter_count" gets included.
 
---Sig_/os0Su/w9QRKsjvVjuQA=g8C
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+-- 
+Vitaly
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8iq8oACgkQAVBC80lX
-0Gx/uAf/eDoIWkfM+LtYiHmGQ6ufky2yy+lfcuEjQT2zOc6JbKXNpUPObtUtYw5N
-xaliQg8OvKqTL+0ENLVSknlASEzgNIkdYvgREDiErp8DYGNOjTsmDB6M54E6dvnc
-vHYfUR9i5clTf0TCZaRvdlgeo+lMCtd9//qR7h5awpw/Cx4k27Ddav5tb+ZUwKL7
-re5zX2+rgwg/hnCK04RMi/GDc4fjU2fC84BvwubITDqjEzbQFRVYjOscGWlcuKgq
-3PYidzH1qppDtUIIrie+sMvtcYTUytrB3B9YZNjZCy/KsszvzgnZKIU3s6JPF0et
-W5R6u6huphE4g7+w81uDGsBOv2gBqQ==
-=BnqQ
------END PGP SIGNATURE-----
-
---Sig_/os0Su/w9QRKsjvVjuQA=g8C--
