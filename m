@@ -2,82 +2,145 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A774CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F797C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8219C20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:25:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hKwd9y4u"
+	by mail.kernel.org (Postfix) with ESMTP id 2AF6D208A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:26:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729550AbgG3OZg (ORCPT
+        id S1729566AbgG3O0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 10:25:36 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:50298 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbgG3OZg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 10:25:36 -0400
-Received: from [192.168.254.32] (unknown [47.187.206.220])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 6E69220B4908;
-        Thu, 30 Jul 2020 07:25:35 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6E69220B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1596119136;
-        bh=iQD4oMx1vXbV5tj3ST9M8eMgC4Qkots35Kpu1EaisYA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=hKwd9y4uik37h5AXO9wYYs/IAI7QSFqMmQrGXxVcsc7Zj8tY598SJwC87D8DnDzCT
-         oNB/IY35bqDRkvJr9zK4x/HZCTMj9yJelgItkU+vGout2ADwPWSIJ5OvDqFtemhKEt
-         ZIQoOyX9muMMkl7kDsT0vI3YDhumgFIjTlZDd61s=
-Subject: Re: [PATCH v1 2/4] [RFC] x86/trampfd: Provide support for the
- trampoline file descriptor
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, oleg@redhat.com,
-        x86@kernel.org
-References: <aefc85852ea518982e74b233e11e16d2e707bc32>
- <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <20200728131050.24443-3-madvenka@linux.microsoft.com>
- <20200730090612.GA900546@kroah.com>
-From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Message-ID: <f8a8c7b9-43b9-35de-343d-a1deeee2b769@linux.microsoft.com>
-Date:   Thu, 30 Jul 2020 09:25:34 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 10:26:25 -0400
+Received: from mga02.intel.com ([134.134.136.20]:51832 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726772AbgG3O0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 10:26:22 -0400
+IronPort-SDR: EKA6l8smH00tcJxWoJMeY6BB+2UcrC4Ay7w/RlWsA4vQ1kdR+KZC4KXhsrAPAaEQIEPZhhRC5J
+ lZNE6Os2eogA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="139602083"
+X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
+   d="scan'208";a="139602083"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 07:26:21 -0700
+IronPort-SDR: 0z/f9C0aKmcaJuv9JfTI6EX2hMEDI6ArHeITPd+Iv9SFJPbVsBFb4MeSzXy9cZZu0hJrosKyMm
+ gyS4PA/BHLsQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
+   d="scan'208";a="322912485"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 30 Jul 2020 07:26:19 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1k19Vi-004xxx-Hb; Thu, 30 Jul 2020 17:26:18 +0300
+Date:   Thu, 30 Jul 2020 17:26:18 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 05/10] gpio: dwapb: Convert driver to using the
+ GPIO-lib-based IRQ-chip
+Message-ID: <20200730142618.GM3703480@smile.fi.intel.com>
+References: <20200730135536.19747-1-Sergey.Semin@baikalelectronics.ru>
+ <20200730135536.19747-6-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <20200730090612.GA900546@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730135536.19747-6-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yes. I will fix this.
+On Thu, Jul 30, 2020 at 04:55:31PM +0300, Serge Semin wrote:
+> GPIO-lib provides a ready-to-use interface to initialize an IRQ-chip on
+> top of a GPIO chip. It's better from maintainability and readability
+> point of view to use one instead of supporting a hand-written Generic
+> IRQ-chip-based implementation. Moreover the new implementation won't
+> cause much functional overhead but will provide a cleaner driver code.
+> All of that makes the DW APB GPIO driver conversion pretty much justified
+> especially seeing a tendency of the other GPIO drivers getting converted
+> too.
+> 
+> Here is what we do in the framework of this commit to convert the driver
+> to using the GPIO-lib-based IRQ-chip interface:
+> 1) IRQ ack, mask and unmask callbacks are locally defined instead of
+> using the Generic IRQ-chip ones.
 
-Thanks.
+Easy to read if you put blank lines in between of items.
 
-Madhavan
+> 2) An irq_chip structure instance is embedded into the dwapb_gpio
+> private data. Note we can't have a static instance of that structure since
+> GPIO-lib will add some hooks into it by calling gpiochip_set_irq_hooks().
+> A warning about that would have been printed by the GPIO-lib code if we
+> used a single irq_chip structure instance for multiple DW APB GPIO
+> controllers.
+> 3) Initialize the gpio_irq_chip structure embedded into the gpio_chip
+> descriptor. By default there is no IRQ enabled so any event raised will be
+> handled by the handle_bad_irq() IRQ flow handler. If DW APB GPIO IP-core
+> is synthesized to have non-shared reference IRQ-lines, then as before the
+> hierarchical and cascaded cases are distinguished by checking how many
+> parental IRQs are defined. (Note irq_set_chained_handler_and_data() won't
+> initialize IRQs, which descriptors couldn't be found.) If DW APB GPIO IP
+> is used on a platform with shared IRQ line, then we simply won't let the
+> GPIO-lib to initialize the parental IRQs, but will handle them locally in
+> the driver.
+> 4) Discard linear IRQ-domain and Generic IRQ-chip initialization, since
+> GPIO-lib IRQ-chip interface will create a new domain and accept a standard
+> IRQ-chip structure pointer based on the setting we provided in the
+> gpio_irq_chip structure.
+> 5) Manually select a proper IRQ flow handler directly in the
+> irq_set_type() callback by calling irq_set_handler_locked() method, since
+> an ordinary (not Generic) irq_chip descriptor is now utilized. Note this
+> shalln't give any regression
+> 6) Alter CONFIG_GPIO_DWAPB kernel config to select
+> CONFIG_GPIOLIB_IRQCHIP instead of CONFIG_GENERIC_IRQ_CHIP.
+> 
+> Note neither 4) nor 5) shall cause a regression of commit 6a2f4b7dadd5
+> ("gpio: dwapb: use a second irq chip"), since the later isn't properly
+> used here anyway.
 
-On 7/30/20 4:06 AM, Greg KH wrote:
-> On Tue, Jul 28, 2020 at 08:10:48AM -0500, madvenka@linux.microsoft.com wrote:
->> +EXPORT_SYMBOL_GPL(trampfd_valid_regs);
-> Why are all of these exported?  I don't see a module user in this
-> series, or did I miss it somehow?
->
-> EXPORT_SYMBOL* is only needed for symbols to be used by modules, not by
-> code that is built into the kernel.
->
-> thanks,
->
-> greg k-h
+...
+
+>  struct dwapb_gpio_port {
+>  	struct gpio_chip	gc;
+> +	unsigned int		nr_irqs;
+> +	unsigned int		irq[DWAPB_MAX_GPIOS];
+> +	struct irq_chip		irqchip;
+>  	bool			is_registered;
+>  	struct dwapb_gpio	*gpio;
+
+Isn't it too much wasted memory (imagine 4 port controller)?
+
+What if we have it in another structure and allocate dynamically?
+
+struct dwapb_gpio_port_irqchip {
+	struct irq_chip		irqchip;
+	unsigned int		nr_irqs;
+	unsigned int		irq[DWAPB_MAX_GPIOS];
+};
+
+	...
+	struct dwapb_gpio_port_irqchip *pirq;
+	...
+
+(I agree that IRQ chip is rather property of a port than controller)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
