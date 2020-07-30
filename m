@@ -2,121 +2,103 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEDAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F38A4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 170B120838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:28:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vgaIwncX"
+	by mail.kernel.org (Postfix) with ESMTP id D84C620842
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:31:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729338AbgG3I2y (ORCPT
+        id S1729179AbgG3IbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:28:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56016 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbgG3I2x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:28:53 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE681C0619D2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 01:28:52 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id t15so3802207pjq.5
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 01:28:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dcCsLLurihXDG2ArxLxOQzE6h/YxXGnUypoiUIrMUPs=;
-        b=vgaIwncXLH76c2vsjopH6VnpXCFwwvIE7id91VfeltlytUTvkT6D8F19YWHHMP7xwr
-         /VeViC12OhIl3n1xQKb6sQDJ/I+mR4iffOgoi8TbCG/SK8pI/8udYIj11dNQ6xXS6oKB
-         QrKDEweLqv/Dba2wvepV6O9G6hv2c6hoaOd2d0WJ11hjyAZyz5adZywiHvFdeCbdhOX1
-         Yqc1m/hG7M7WVYGEPRUfKHsbSYwRj+DxwDUHeNJnA3wXbw/9QzZ+9miPWuvByLjGnKfV
-         /gSe+TwEovFkQAOWSzSOCGCVBF5o74xWWtGpgWpyhThUyHcwYaK8gAdciEnWXncy8AEM
-         7+AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dcCsLLurihXDG2ArxLxOQzE6h/YxXGnUypoiUIrMUPs=;
-        b=d50klt50h3m1+ayECjfC19PLkBIUvmM1akjYOZK9bXdsILToOId//IkoP85kk93Dq1
-         Q9LuP49a7KnD8xaFo2QxYtSPWSq+R/jsy6A7qRnnBjLHKJhDXrHpcgi11vb594n3o03M
-         8Rzd6aiwyRVkmyqJeuNtkwMS+cmi/22qnCi+tID8BAzsddXC2kKncOlkpreqkTCzkv5q
-         jwSoGTcOMqGfZzhM3Je+tehBwWRwfAo7v/Y0pZ1qjfZxCWJpQveqiT8WAnkdLQ2xgfp7
-         B4incLyXJLMWnMdjwrLRYxeHiJA1DL0uqBZ7i6YvQRhGwllCbAXeZ6wufdcCg/EKnw1R
-         GesA==
-X-Gm-Message-State: AOAM532pj5FduYq5G6eybvZ/9lCdyd3ox+aMyvb+WDC7CEOEaQDs+F8+
-        IRtguZEqo7ziGK/xOgajR38=
-X-Google-Smtp-Source: ABdhPJyn9R58zagQgVL2qh2n3BuTu8xw4rtcySVK0Yvdhwt9gbPpCSe/bklWxOYeoyn3yIekr5Qd/Q==
-X-Received: by 2002:a17:90a:fe0c:: with SMTP id ck12mr2226712pjb.102.1596097732436;
-        Thu, 30 Jul 2020 01:28:52 -0700 (PDT)
-Received: from pek-lpggp6.wrs.com (unknown-105-123.windriver.com. [147.11.105.123])
-        by smtp.gmail.com with ESMTPSA id d29sm5150685pgb.54.2020.07.30.01.28.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 Jul 2020 01:28:52 -0700 (PDT)
-From:   Kevin Hao <haokexin@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] tracing/hwlat: Honor the tracing_cpumask
-Date:   Thu, 30 Jul 2020 16:23:18 +0800
-Message-Id: <20200730082318.42584-2-haokexin@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200730082318.42584-1-haokexin@gmail.com>
-References: <20200730082318.42584-1-haokexin@gmail.com>
+        Thu, 30 Jul 2020 04:31:05 -0400
+Received: from mga12.intel.com ([192.55.52.136]:59652 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728850AbgG3IbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:31:04 -0400
+IronPort-SDR: eDu5NXabJ6tzA7DATUEyiPXWtBOL2jhzIlUKbQafYpCU+PT/EscvChTL75BocMdK20vmibEpOF
+ AAwjbqX3VaZg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="131118949"
+X-IronPort-AV: E=Sophos;i="5.75,413,1589266800"; 
+   d="scan'208";a="131118949"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 01:31:04 -0700
+IronPort-SDR: ffGzBVTSxb8GpJc5oh3CKyQ0enNV7diTBxOIIzSwAJmju32x4zKCZ4nucAIkxFyY399Tj+DSj3
+ EuyzMacinsYQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,413,1589266800"; 
+   d="scan'208";a="272865479"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 30 Jul 2020 01:31:00 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1k13xq-004sgj-T2; Thu, 30 Jul 2020 11:30:58 +0300
+Date:   Thu, 30 Jul 2020 11:30:58 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Roy Im <roy.im.opensource@diasemi.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Rob Herring <robh@kernel.org>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Support Opensource <support.opensource@diasemi.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v18 3/3] Input: new da7280 haptic driver
+Message-ID: <20200730083058.GC3703480@smile.fi.intel.com>
+References: <cover.1595991580.git.Roy.Im@diasemi.com>
+ <23b3470401ec5cf525add8e1227cb67586b9f294.1595991580.git.Roy.Im@diasemi.com>
+ <20200729063638.GY1665100@dtor-ws>
+ <20200729072145.ifzoe656sjpxdior@pengutronix.de>
+ <20200730050653.GA1665100@dtor-ws>
+ <20200730061631.y4r4s6v3xepktj54@pengutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200730061631.y4r4s6v3xepktj54@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In calculation of the cpu mask for the hwlat kernel thread, the wrong
-cpu mask is used instead of the tracing_cpumask, this causes the
-tracing/tracing_cpumask useless for hwlat tracer. Fixes it.
+On Thu, Jul 30, 2020 at 08:16:31AM +0200, Uwe Kleine-König wrote:
+> On Wed, Jul 29, 2020 at 10:06:53PM -0700, Dmitry Torokhov wrote:
+> > On Wed, Jul 29, 2020 at 09:21:45AM +0200, Uwe Kleine-König wrote:
+> > > On Tue, Jul 28, 2020 at 11:36:38PM -0700, Dmitry Torokhov wrote:
 
-Fixes: 0330f7aa8ee6 ("tracing: Have hwlat trace migrate across tracing_cpumask CPUs")
-Signed-off-by: Kevin Hao <haokexin@gmail.com>
----
- kernel/trace/trace_hwlat.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+...
 
-diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
-index ddb528a6cd51..17873e5d0353 100644
---- a/kernel/trace/trace_hwlat.c
-+++ b/kernel/trace/trace_hwlat.c
-@@ -283,6 +283,7 @@ static bool disable_migrate;
- static void move_to_next_cpu(void)
- {
- 	struct cpumask *current_mask = &save_cpumask;
-+	struct trace_array *tr = hwlat_trace;
- 	int next_cpu;
- 
- 	if (disable_migrate)
-@@ -296,7 +297,7 @@ static void move_to_next_cpu(void)
- 		goto disable;
- 
- 	get_online_cpus();
--	cpumask_and(current_mask, cpu_online_mask, tracing_buffer_mask);
-+	cpumask_and(current_mask, cpu_online_mask, tr->tracing_cpumask);
- 	next_cpu = cpumask_next(smp_processor_id(), current_mask);
- 	put_online_cpus();
- 
-@@ -372,7 +373,7 @@ static int start_kthread(struct trace_array *tr)
- 
- 	/* Just pick the first CPU on first iteration */
- 	get_online_cpus();
--	cpumask_and(current_mask, cpu_online_mask, tracing_buffer_mask);
-+	cpumask_and(current_mask, cpu_online_mask, tr->tracing_cpumask);
- 	put_online_cpus();
- 	next_cpu = cpumask_first(current_mask);
- 
+> > Maybe we should introduce something like '%de' for the integer error
+> > case?
+> 
+> I suggested that some time ago with limited success, see
+> https://lore.kernel.org/lkml/20200129115516.zsvxu56e6h7gheiw@pathway.suse.cz/
+
+Oh, please, no need for that really. We have now dev_err_probe() on its way to
+upstream (now in Greg's tree) which hides all this behind.
+
+Just switch to dev_err_probe() and forget about what is under the hood.
+
 -- 
-2.26.2
+With Best Regards,
+Andy Shevchenko
+
 
