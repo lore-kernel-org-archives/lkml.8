@@ -2,130 +2,130 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C90C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3187AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D517E206F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:00:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vTt+f3pk"
+	by mail.kernel.org (Postfix) with ESMTP id 1685420838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:02:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729934AbgG3QAv (ORCPT
+        id S1729777AbgG3QCE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 12:00:51 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:41320 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgG3QAv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 12:00:51 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06UFvHn4041953;
-        Thu, 30 Jul 2020 16:00:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=Qc8yTS3/0uqmBgDDziPyn/x72XbIBs2YRTJ1co+pfuQ=;
- b=vTt+f3pkLBuNfIO582kSbvGeBWJpW/dSw+mleXLSPBeQQGFFDXCbzReXezY/2Ph3JTWt
- Gw1cTpot8k1gTQAmj/49tSfNtJcOVg3fRaeVrMLE9nCaZd9MXM2HBSzSKU9zFFyF+vAx
- kmFZtp10+5NNfiE2ETSILcnrXZ1KSakXeKTdS1Tp3+soLiiu1h0l2bEM0FCXZiqI5INS
- rDA9vpad91EK8H5wn9FtBaMRfJ2jP9Q0tNQYeHKLGMEWk5KHPXUgELn8RzweKuqjTW7r
- 6n6u6gjSZ2AKn+/E85SxbN3fCBzm1TnWcDIBUUHbOUN9CxNcGF2n/PUOsWkdupZXXhHa cg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 32hu1jmk99-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 30 Jul 2020 16:00:00 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06UFrVRG009502;
-        Thu, 30 Jul 2020 15:59:59 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 32hu5wxtw2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Jul 2020 15:59:59 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06UFxlZu022011;
-        Thu, 30 Jul 2020 15:59:48 GMT
-Received: from [10.39.200.60] (/10.39.200.60)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 30 Jul 2020 08:59:47 -0700
-Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
-To:     Matthew Wilcox <willy@infradead.org>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
-        arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
-        gerg@linux-m68k.org, ktkhai@virtuozzo.com,
-        christian.brauner@ubuntu.com, peterz@infradead.org,
-        esyr@redhat.com, jgg@ziepe.ca, christian@kellner.me,
-        areber@redhat.com, cyphar@cyphar.com
-References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
- <20200730152250.GG23808@casper.infradead.org>
-From:   Steven Sistare <steven.sistare@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <db3bdbae-eb0f-1ae3-94dd-045e37bc94ba@oracle.com>
-Date:   Thu, 30 Jul 2020 11:59:42 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 12:02:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbgG3QCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 12:02:04 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F934206F5;
+        Thu, 30 Jul 2020 16:02:02 +0000 (UTC)
+Date:   Thu, 30 Jul 2020 12:02:00 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     peter enderborg <peter.enderborg@sony.com>
+Cc:     =?UTF-8?B?VGhpw6liYXVk?= Weksteen <tweek@google.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Nick Kralevich <nnk@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <selinux@vger.kernel.org>
+Subject: Re: [PATCH] RFC: selinux avc trace
+Message-ID: <20200730120200.1367e1cd@oasis.local.home>
+In-Reply-To: <6f1262fc-21ad-f872-5460-e78d4685c9c4@sony.com>
+References: <20200724091520.880211-1-tweek@google.com>
+        <20200724095232.5f9d3f17@oasis.local.home>
+        <80a23580-5067-93b0-53fa-3bd53253c056@sony.com>
+        <20200730110459.5bf0b0df@oasis.local.home>
+        <6f1262fc-21ad-f872-5460-e78d4685c9c4@sony.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200730152250.GG23808@casper.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9698 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
- suspectscore=0 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007300112
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9698 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
- malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007300112
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/2020 11:22 AM, Matthew Wilcox wrote:
-> On Mon, Jul 27, 2020 at 10:11:22AM -0700, Anthony Yznaga wrote:
->> This patchset adds support for preserving an anonymous memory range across
->> exec(3) using a new madvise MADV_DOEXEC argument.  The primary benefit for
->> sharing memory in this manner, as opposed to re-attaching to a named shared
->> memory segment, is to ensure it is mapped at the same virtual address in
->> the new process as it was in the old one.  An intended use for this is to
->> preserve guest memory for guests using vfio while qemu exec's an updated
->> version of itself.  By ensuring the memory is preserved at a fixed address,
->> vfio mappings and their associated kernel data structures can remain valid.
->> In addition, for the qemu use case, qemu instances that back guest RAM with
->> anonymous memory can be updated.
-> 
-> I just realised that something else I'm working on might be a suitable
-> alternative to this.  Apologies for not realising it sooner.
-> 
-> http://www.wil.cx/~willy/linux/sileby.html
-> 
-> To use this, you'd mshare() the anonymous memory range, essentially
-> detaching the VMA from the current process's mm_struct and reparenting
-> it to this new mm_struct, which has an fd referencing it.
-> 
-> Then you call exec(), and the exec'ed task gets to call mmap() on that
-> new fd to attach the memory range to its own address space.
-> 
-> Presto!
+On Thu, 30 Jul 2020 17:31:17 +0200
+peter enderborg <peter.enderborg@sony.com> wrote:
 
-To be suitable for the qemu use case, we need a guarantee that the same VA range
-is available in the new process, with nothing else mapped there.  From your spec,
-it sounds like the new process could do a series of unrelated mmap's which could
-overlap the desired va range before the silby mmap(fd) is performed??
+> On 7/30/20 5:04 PM, Steven Rostedt wrote:
+> > On Thu, 30 Jul 2020 16:29:12 +0200
+> > peter enderborg <peter.enderborg@sony.com> wrote:
+> >  
+> >> +#undef TRACE_SYSTEM
+> >> +#define TRACE_SYSTEM avc
+> >> +
+> >> +#if !defined(_TRACE_AVC_H) || defined(TRACE_HEADER_MULTI_READ)
+> >> +#define _TRACE_AVC_H
+> >> +
+> >> +#include <linux/tracepoint.h>
+> >> +TRACE_EVENT(avc_data,
+> >> +        TP_PROTO(u32 requested,
+> >> +             u32 denied,
+> >> +             u32 audited,
+> >> +             int result,
+> >> +             const char *msg
+> >> +             ),
+> >> +
+> >> +        TP_ARGS(requested, denied, audited, result,msg),
+> >> +
+> >> +        TP_STRUCT__entry(
+> >> +             __field(u32, requested)
+> >> +             __field(u32, denied)
+> >> +             __field(u32, audited)
+> >> +             __field(int, result)
+> >> +             __array(char, msg, 255)  
+> > You want to use __string() here, otherwise you are wasting a lot of
+> > buffer space.
+> >
+> > 		__string( msg, msg)  
 
-Also, we need to support updating legacy processes that already created anon segments.
-We inject code that calls MADV_DOEXEC for such segments.
+> It should be a full structure with a lot of sub strings.  But that make is even more relevant.
 
-- Steve
+So one event instance can have a list of strings recorded?
+
+> >  
+> >> +                 ),
+> >> +
+> >> +        TP_fast_assign(
+> >> +               __entry->requested    = requested;
+> >> +               __entry->denied    = denied;
+> >> +               __entry->audited    = audited;
+> >> +               __entry->result    = result;
+> >> +               memcpy(__entry->msg, msg, 255);  
+> > Not to mention, the above is a bug. As the msg being passed in, is
+> > highly unlikely to be 255 bytes. You just leaked all that memory after
+> > the sting to user space.
+> >
+> > Where you want here:
+> >
+> > 		__assign_str( msg, msg );  
+> 
+> Directly in to the code. Was more in to get in to discussion on how complex we should have
+> the trace data. There is a lot of fields. Not all is always present. Is there any good way
+> to handle that? Like "something= somethingelse=42" or "something=nil somthingelse=42"
+
+Can you show what you want to record and what you want to display? I'm
+not totally understanding the request.
+
+-- Steve
+
+> >> +    ),
+> >> +
+> >> +        TP_printk("requested=0x%x denied=%d audited=%d result=%d
+> >> msg=%s",
+> >> +              __entry->requested, __entry->denied, __entry->audited,
+> >> __entry->result, __entry->msg
+> >> +              )  
+> 
+
