@@ -5,50 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C935C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB85CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8AC42075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89DDE2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:12:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096734;
-	bh=+CBJnLT9l5f2AVkqwFSFxgld0R7ZlkycEiayQqbZqgM=;
+	s=default; t=1596096737;
+	bh=Ox1LBgxq2BbH8C3xaLYweJKjWUPcht9asvvNmBpt6Ls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uYdyoTiXNfuI8ThtzypgpvR1Vsm08gDzVX4Kzq6fK4p6BLU653G+ujXWXM6ivAxyi
-	 6agL5dsqP7pM068agkp4xySWOhr+xG2dRtrXAo0GqOOIfnnUtRGcBJdIicMAPE9XxK
-	 7GjfnzBXQJUDc6R1Z+vxp2vtZzjEwGQXLkbnksh0=
+	b=D8xWeYXF4MiYX36DQflt+eTPB2/kFPSBSKRQm+s1wUKIC3vOBpvdkEfzSBdl3khPY
+	 dS0pIZy5jZrs8Rd/D7ALTJsEi86nDnbAKBu7lZ+omOz7j+62MqIyBWRHz/wECtW/4A
+	 FX41im015Vhddy5Cvklc6l17kSa1h/sIHQxJB5Mw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730014AbgG3IMN (ORCPT
+        id S1730020AbgG3IMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:12:13 -0400
+        Thu, 30 Jul 2020 04:12:16 -0400
 Received: from mail.kernel.org ([198.145.29.99]:50894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729273AbgG3ILi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:11:38 -0400
+        id S1729987AbgG3ILs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:11:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 447902075F;
-        Thu, 30 Jul 2020 08:11:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCC0720842;
+        Thu, 30 Jul 2020 08:11:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096697;
-        bh=+CBJnLT9l5f2AVkqwFSFxgld0R7ZlkycEiayQqbZqgM=;
+        s=default; t=1596096707;
+        bh=Ox1LBgxq2BbH8C3xaLYweJKjWUPcht9asvvNmBpt6Ls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KCG5w6dWU2mLEXWmQ/dnfmyX4iQ050qn0BFA93HUvEpZcmy0/HU1yDxF3oTWGEK6t
-         zTW0ZLj3H86x0oAOhjI4Mk869MeECwOyTRw3OXQ44Dz+hrdfN4jnhnddNBVSrDNJ6P
-         AQzGv5daR1YEVK8uvioXfftuZr6uQ4MDLuxkM0Vw=
+        b=sd0j++wAoTET2TzmgrI67NoiewuV6Vz2a3CZWK4H8znLGVaQRVfX04YrSAxi6wgzU
+         yKSP7cOS2jGu5UgjKk6AW7w14uYXsSRngkzoRZ8MdRLDeg4KTAvaBV/iYOk+24a7fp
+         3IpOFZJKOhr/9maP9NgKJaFrTsw1JwokZr7dLmWc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 25/54] x86: math-emu: Fix up cmp insn for clang ias
-Date:   Thu, 30 Jul 2020 10:05:04 +0200
-Message-Id: <20200730074422.415958430@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.4 29/54] staging: comedi: ni_6527: fix INSN_CONFIG_DIGITAL_TRIG support
+Date:   Thu, 30 Jul 2020 10:05:08 +0200
+Message-Id: <20200730074422.606886401@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
 References: <20200730074421.203879987@linuxfoundation.org>
@@ -61,38 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-[ Upstream commit 81e96851ea32deb2c921c870eecabf335f598aeb ]
+commit f07804ec77d77f8a9dcf570a24154e17747bc82f upstream.
 
-The clang integrated assembler requires the 'cmp' instruction to
-have a length prefix here:
+`ni6527_intr_insn_config()` processes `INSN_CONFIG` comedi instructions
+for the "interrupt" subdevice.  When `data[0]` is
+`INSN_CONFIG_DIGITAL_TRIG` it is configuring the digital trigger.  When
+`data[2]` is `COMEDI_DIGITAL_TRIG_ENABLE_EDGES` it is configuring rising
+and falling edge detection for the digital trigger, using a base channel
+number (or shift amount) in `data[3]`, a rising edge bitmask in
+`data[4]` and falling edge bitmask in `data[5]`.
 
-arch/x86/math-emu/wm_sqrt.S:212:2: error: ambiguous instructions require an explicit suffix (could be 'cmpb', 'cmpw', or 'cmpl')
- cmp $0xffffffff,-24(%ebp)
- ^
+If the base channel number (shift amount) is greater than or equal to
+the number of channels (24) of the digital input subdevice, there are no
+changes to the rising and falling edges, so the mask of channels to be
+changed can be set to 0, otherwise the mask of channels to be changed,
+and the rising and falling edge bitmasks are shifted by the base channel
+number before calling `ni6527_set_edge_detection()` to change the
+appropriate registers.  Unfortunately, the code is comparing the base
+channel (shift amount) to the interrupt subdevice's number of channels
+(1) instead of the digital input subdevice's number of channels (24).
+Fix it by comparing to 32 because all shift amounts for an `unsigned
+int` must be less than that and everything from bit 24 upwards is
+ignored by `ni6527_set_edge_detection()` anyway.
 
-Make this a 32-bit comparison, which it was clearly meant to be.
+Fixes: 110f9e687c1a8 ("staging: comedi: ni_6527: support INSN_CONFIG_DIGITAL_TRIG")
+Cc: <stable@vger.kernel.org> # 3.17+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/20200717145257.112660-2-abbotti@mev.co.uk
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Link: https://lkml.kernel.org/r/20200527135352.1198078-1-arnd@arndb.de
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/math-emu/wm_sqrt.S |    2 +-
+ drivers/staging/comedi/drivers/ni_6527.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/math-emu/wm_sqrt.S
-+++ b/arch/x86/math-emu/wm_sqrt.S
-@@ -208,7 +208,7 @@ sqrt_stage_2_finish:
- 
- #ifdef PARANOID
- /* It should be possible to get here only if the arg is ffff....ffff */
--	cmp	$0xffffffff,FPU_fsqrt_arg_1
-+	cmpl	$0xffffffff,FPU_fsqrt_arg_1
- 	jnz	sqrt_stage_2_error
- #endif /* PARANOID */
- 
+--- a/drivers/staging/comedi/drivers/ni_6527.c
++++ b/drivers/staging/comedi/drivers/ni_6527.c
+@@ -341,7 +341,7 @@ static int ni6527_intr_insn_config(struc
+ 		case COMEDI_DIGITAL_TRIG_ENABLE_EDGES:
+ 			/* check shift amount */
+ 			shift = data[3];
+-			if (shift >= s->n_chan) {
++			if (shift >= 32) {
+ 				mask = 0;
+ 				rising = 0;
+ 				falling = 0;
 
 
