@@ -2,166 +2,148 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA87AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D7EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB60F207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:56:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596070605;
-	bh=JT6jtDG0iOddtAjTvbt4c86jgkq7+Vw0sGLnvvm3bH0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zYA69fWPvztnR5H6DqW2cVxapgNCYFgJFWjwKS0r8eeDovbK4ftUzeBvpKYqQ1RGf
-	 b3WN2hC07d41Hkepr313rIG02TlLUrs+Wrxh2XaSxfhcYqGvQQiisZD45zd2wBAXoa
-	 226M17vPMIuMQGQCFf/6s81DKLs1sguTEynHh2dw=
+	by mail.kernel.org (Postfix) with ESMTP id 9E869207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:56:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="XuFHDQuc";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="WG0PFiVD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbgG3A4o (ORCPT
+        id S1728303AbgG3A4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 20:56:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58676 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726858AbgG3A4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 20:56:44 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 29 Jul 2020 20:56:52 -0400
+Received: from relay5.mymailcheap.com ([159.100.248.207]:34265 "EHLO
+        relay5.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726709AbgG3A4w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 20:56:52 -0400
+Received: from relay4.mymailcheap.com (relay4.mymailcheap.com [137.74.80.156])
+        by relay5.mymailcheap.com (Postfix) with ESMTPS id 08A0126376
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 00:56:49 +0000 (UTC)
+Received: from filter2.mymailcheap.com (filter2.mymailcheap.com [91.134.140.82])
+        by relay4.mymailcheap.com (Postfix) with ESMTPS id 0D8623F1D0;
+        Thu, 30 Jul 2020 02:56:43 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by filter2.mymailcheap.com (Postfix) with ESMTP id CFB272A90C;
+        Thu, 30 Jul 2020 02:56:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+        s=default; t=1596070602;
+        bh=jt6CXPuxRRHbhS3TXLRcgmZiibXtcKZSRTlrq/14zrI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XuFHDQuc7IOKosfSbNDfcFpAYVGDt6SZ7AXF4ZehRR2PdlXArIB4tURpRgFSoRRpZ
+         G/H//0mBDXsaDzn7lSIp/4CwkaeN+PKgms6wHoLRSdo1TVtZoE251STz9NULqwMMyh
+         JV0YpW+ueIAHLbb92P28c/RepKGIMG8jDUrw26HQ=
+X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
+Received: from filter2.mymailcheap.com ([127.0.0.1])
+        by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ip1L72fUqe0v; Thu, 30 Jul 2020 02:56:40 +0200 (CEST)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B2162075D;
-        Thu, 30 Jul 2020 00:56:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596070603;
-        bh=JT6jtDG0iOddtAjTvbt4c86jgkq7+Vw0sGLnvvm3bH0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LjiVwMrqcBtHTh37YREBH3CKLQbwfeudi2Efui6/HeeVMCfjeB14SAFmJF9m22Uw3
-         EdGTwYGHWKO608B33x5ey+vQQhlnjsKvWROGJWy3A3n3t0a3utx35iKGGfGnXyDfmV
-         1rJ80XNm+yS0guiGtS2rCzEod8wCSm4ht+egTKAY=
-Date:   Thu, 30 Jul 2020 09:56:39 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Alistair Delva <adelva@google.com>, linux-doc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/3] bootconfig: Add value override operator
-Message-Id: <20200730095639.71ce61e7826ad72ace675791@kernel.org>
-In-Reply-To: <20200716102703.33435594dbf192157cf9655f@kernel.org>
-References: <159482882056.126704.15508672095852220119.stgit@devnote2>
-        <20200715164504.3400efc5@oasis.local.home>
-        <20200716073843.e7b1921aae962da9e5714fe0@kernel.org>
-        <20200715200212.0db61d5a@oasis.local.home>
-        <20200716102703.33435594dbf192157cf9655f@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by filter2.mymailcheap.com (Postfix) with ESMTPS;
+        Thu, 30 Jul 2020 02:56:40 +0200 (CEST)
+Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
+        by mail20.mymailcheap.com (Postfix) with ESMTP id 3948840143;
+        Thu, 30 Jul 2020 00:56:39 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com;
+        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="WG0PFiVD";
+        dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from localhost.localdomain (unknown [123.157.159.172])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail20.mymailcheap.com (Postfix) with ESMTPSA id C3B0F40143;
+        Thu, 30 Jul 2020 00:56:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
+        s=default; t=1596070592;
+        bh=jt6CXPuxRRHbhS3TXLRcgmZiibXtcKZSRTlrq/14zrI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=WG0PFiVDsOWJMFzQBYlGYI2nKEUfBmaOnG2heQdBJtbF9nxGw2RPx2DBGSFcXvexd
+         +kEJtszEREXGdPLzif45B5dePQIGSGGcJcQkVZx9oqzuqvvvJxmsWXFKXgAGsCEe7k
+         0f4oVDQfxU5otEOe6w1ZIygtPPmwaotsAJPTvT4Q=
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     robh@kernel.org, linux-kernel@vger.kernel.org,
+        tsbogend@alpha.franken.de, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [PATCH] of_address: Guard of_bus_pci_get_flags with CONFIG_PCI
+Date:   Thu, 30 Jul 2020 08:56:14 +0800
+Message-Id: <20200730005614.32302-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 3948840143
+X-Spamd-Result: default: False [4.90 / 10.00];
+         RCVD_VIA_SMTP_AUTH(0.00)[];
+         ARC_NA(0.00)[];
+         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
+         RECEIVED_SPAMHAUS_PBL(0.00)[123.157.159.172:received];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         R_SPF_SOFTFAIL(0.00)[~all];
+         RCPT_COUNT_FIVE(0.00)[6];
+         ML_SERVERS(-3.10)[148.251.23.173];
+         DKIM_TRACE(0.00)[flygoat.com:+];
+         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
+         MID_CONTAINS_FROM(1.00)[];
+         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
+         RCVD_COUNT_TWO(0.00)[2];
+         HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
+X-Rspamd-Server: mail20.mymailcheap.com
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+After 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser"),
+the last user of of_bus_pci_get_flags when CONFIG_PCI is disabled had gone.
 
-On Thu, 16 Jul 2020 10:27:03 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
+This caused unused function warning when compiling without CONFIG_PCI.
+Fix by guarding it with CONFIG_PCI.
 
-> Hi Steve,
-> 
-> On Wed, 15 Jul 2020 20:02:12 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > On Thu, 16 Jul 2020 07:38:43 +0900
-> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > 
-> > 
-> > > > So the end of the initrd would have:
-> > > > 
-> > > >  [data][size/checksum/magic][more-data][size/checksum/magic]
-> > > > 
-> > > > 
-> > > > And the kernel could do the following:
-> > > > 
-> > > >  1. read the end of the initrd for bootconfig
-> > > >  2. If found parse the bootconfig data.
-> > > >  3. look at the content before the bootconfig
-> > > >  4. if another bootconfig exists, goto 2.
-> > > >   
-> > > 
-> > > Yeah, that is possible. But since the total size of the bootconfig
-> > > is limited to 32KB (this means data + 1st footer + more-data),
-> > > I would like to give a chance of sanity check to the bootloader.
-> > 
-> > 
-> > That's a limit of the size field, right?
-> 
-> If you mean the size field in the footer, no, it is u32.
-> 
-> To be honest, the size limitation came from the xbc_node data
-> structure. To minimize the memory footprint, I decided to
-> pack the data structure into 64bits with 4 fields.
-> Each field has 16bits, and the data field needs 1 bit flag
-> to distinguish the value and the key.
-> Thus the maximum number of nodes can be expanded to 64K
-> (but it is not feasible, maybe less than 8K will be a real
-> size), but the data field (the offset from the bootconfig
-> start address) is 15bits = 32KB long.
-> Of course we can use the bitfield to tune it, but maybe current
-> balance ( 512 node / 32KB ) is enough.
-> 
-> Note that if we expand the number of nodes, we need to pre-allocate
-> the node data structure as a static data (in .bss) because parsing
-> will be done before initializing memory management. 512 nodes means
-> 4096B is already allocated. 8K node needs 64KB, and that will be
-> not filled in most cases.
-> 
-> > The bootloader (and all tools including the kernel) could check for
-> > multiple instances, and that would even increase the size of what can
-> > be added. As each section would be 32KB max size, but there's no limit
-> > to how many you have. All tools, bootconfig, the bootloader, and the
-> > kernel can perform the checksum.
-> 
-> In fact, I previously considered the multi-section, but came to the
-> conclusion that it wasn't much benefit for both Linux and the
-> bootloaders.
-> 
-> If we support multi-section, we have to mix the section nodes on
-> a single tree for overriding values, this means the data field must
-> have a section number (and per-section starting address pointers),
-> or an offset from the 1st section address.
-> 
-> And I think it is easy for the bootloader to just concatenate the
-> data as below, because the data is already on memory.
-> 
-> [data][more-data][size/checksum/magic]
-> 
-> To support multiple-section, the bootloader will do
-> 
-> 0. load the bootconfig with the initrd from media
-> 1. prepare the data
-> 2. calculate the size and checksum of the data
-> 3. append the data and footer right after the last footer
-> 
-> and to support single section,
-> 
-> 0. load the bootconfig with the initrd from media
-> 1. prepare the data
-> 2. calculate the size and checksum of the data
-> 3. increment the size and the checksum 
->    (note that the size and checksum is already on memory)
-> 4. append the data and footer right after the last data
-> 
-> Thus, I think there is no much benefit to support multiple sections.
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
+---
+ drivers/of/address.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-What would you think?
-
-I guess if we have other types of data appended to the initrd
-as similar to the bootconfig, I think we should add the multiple
-section support. But only for the bootconfig, we can just update
-the bootconfig data as I suggested, since it keeps the code simple.
-It might be a chiken-egg problem...
-
-Thank you,
-
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 813936d419ad..157dc7e06077 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -101,6 +101,7 @@ static unsigned int of_bus_default_get_flags(const __be32 *addr)
+ 	return IORESOURCE_MEM;
+ }
+ 
++#ifdef CONFIG_PCI
+ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
+ {
+ 	unsigned int flags = 0;
+@@ -123,7 +124,6 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
+ 	return flags;
+ }
+ 
+-#ifdef CONFIG_PCI
+ /*
+  * PCI bus specific translator
+  */
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.27.0
