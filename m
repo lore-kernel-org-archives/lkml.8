@@ -2,198 +2,373 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3222C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C574C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D593D2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21B8C2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:40:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="Xz5oki38"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgG3KjV (ORCPT
+        id S1729037AbgG3Kki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 06:39:21 -0400
-Received: from nsfocus.com ([221.122.62.131]:57018 "HELO nsfocus.com"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S1726819AbgG3KjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 06:39:19 -0400
-Received: (qmail 14384 invoked from network); 30 Jul 2020 10:37:47 -0000
-Received: from unknown (HELO ?192.168.7.10?) (221.122.62.131)
-  by nsfocus.com with SMTP; 30 Jul 2020 10:37:47 -0000
-Subject: Re: [PATCH] vgacon: fix out of bounds write to the scrollback buffer
-To:     Jiri Slaby <jirislaby@kernel.org>,
-        Solar Designer <solar@openwall.com>
-Cc:     b.zolnierkie@samsung.com,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Kyungtae Kim <kt0755@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg KH <greg@kroah.com>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        Anthony Liguori <aliguori@amazon.com>,
-        xiao.zhang@windriver.com,
-        DRI devel <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-References: <659f8dcf-7802-1ca1-1372-eb7fefd4d8f4@kernel.org>
-From:   =?UTF-8?B?5byg5LqR5rW3?= <zhangyunhai@nsfocus.com>
-Autocrypt: addr=zhangyunhai@nsfocus.com; keydata=
- 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
-Message-ID: <dbcf2841-7718-2ba7-11e0-efa4b9de8de1@nsfocus.com>
-Date:   Thu, 30 Jul 2020 18:39:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 06:40:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726819AbgG3Kkh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 06:40:37 -0400
+Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46781C061794;
+        Thu, 30 Jul 2020 03:40:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
+        :Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=E3AZ3pLcXHiTa8y0cu9vg0iCiq6X1gsc4YSVmWzL2ug=; b=Xz5oki38ODj89iqPtHc5HcKKQ6
+        JGqR/jL5UqiqGLpnU5Hf9kGXDoQDImTfikk242HnCV6ktkvMmY7T5lqyzY4IICClMFuvmTkIAhXtO
+        l3HBHkvXxWCD0vmDPxzfu5iRNyJc66el5+ERBe4TjbKIfWQoR48z/cXxgg3IzDgcP71VLTiARlAvq
+        p+KdepwKktrg/drzdFyUooZDdq8tI5RV5bWN/rB5BsJtZscpXXoe+loOrmYxlQFhd9pq8R3uuxhD2
+        GghN6mvsxNaAMhUTXX8A2u9uJJV0ZkzV/uFO0GgJOQctbDWZXJGYL6pbldvJ31WBSXnxwSoQuNBu4
+        PDZ2+PPg==;
+Received: from noodles by the.earth.li with local (Exim 4.92)
+        (envelope-from <noodles@earth.li>)
+        id 1k15zB-0003kD-8H; Thu, 30 Jul 2020 11:40:29 +0100
+Date:   Thu, 30 Jul 2020 11:40:29 +0100
+From:   Jonathan McDowell <noodles@earth.li>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Matthew Hagan <mnhagan88@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2] net: dsa: qca8k: Add 802.1q VLAN support
+Message-ID: <20200730104029.GB21409@earth.li>
+References: <20200721171624.GK23489@earth.li>
+ <20200726145611.GA31479@earth.li>
+ <20200728163457.imcrsuj7w2la5inp@skbuf>
 MIME-Version: 1.0
-In-Reply-To: <659f8dcf-7802-1ca1-1372-eb7fefd4d8f4@kernel.org>
-Content-Type: multipart/mixed;
- boundary="------------360FA215ABC3E00392C9DB2C"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728163457.imcrsuj7w2la5inp@skbuf>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------360FA215ABC3E00392C9DB2C
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 7bit
+On Tue, Jul 28, 2020 at 07:34:57PM +0300, Vladimir Oltean wrote:
+> Hi Jonathan,
+> 
+> On Sun, Jul 26, 2020 at 03:56:11PM +0100, Jonathan McDowell wrote:
+> > This adds full 802.1q VLAN support to the qca8k, allowing the use of
+> > vlan_filtering and more complicated bridging setups than allowed by
+> > basic port VLAN support.
+> > 
+> > Tested with a number of untagged ports with separate VLANs and then a
+> > trunk port with all the VLANs tagged on it.
+> > 
+> > v2:
+> > - Return sensible errnos on failure rather than -1 (rmk)
+> > - Style cleanups based on Florian's feedback
+> > - Silently allow VLAN 0 as device correctly treats this as no tag
+> > 
+> > Signed-off-by: Jonathan McDowell <noodles@earth.li>
+> > ---
+> 
+> This generally looks ok. The integration with the APIs is fine.
+> Some comments below.
+> 
+> >  drivers/net/dsa/qca8k.c | 191 ++++++++++++++++++++++++++++++++++++++--
+> >  drivers/net/dsa/qca8k.h |  28 ++++++
+> >  2 files changed, 214 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
+> > index a5566de82853..1cc61bc8929f 100644
+> > --- a/drivers/net/dsa/qca8k.c
+> > +++ b/drivers/net/dsa/qca8k.c
+> > @@ -408,6 +408,111 @@ qca8k_fdb_flush(struct qca8k_priv *priv)
+> >  	mutex_unlock(&priv->reg_mutex);
+> >  }
+> >  
+> > +static int
+> > +qca8k_vlan_access(struct qca8k_priv *priv, enum qca8k_vlan_cmd cmd, u16 vid)
+> > +{
+> > +	u32 reg;
+> > +
+> > +	/* Set the command and VLAN index */
+> > +	reg = QCA8K_VTU_FUNC1_BUSY;
+> > +	reg |= cmd;
+> > +	reg |= vid << QCA8K_VTU_FUNC1_VID_S;
+> > +
+> > +	/* Write the function register triggering the table access */
+> > +	qca8k_write(priv, QCA8K_REG_VTU_FUNC1, reg);
+> > +
+> > +	/* wait for completion */
+> > +	if (qca8k_busy_wait(priv, QCA8K_REG_VTU_FUNC1, QCA8K_VTU_FUNC1_BUSY))
+> > +		return -ETIMEDOUT;
+> > +
+> > +	/* Check for table full violation when adding an entry */
+> > +	if (cmd == QCA8K_VLAN_LOAD) {
+> > +		reg = qca8k_read(priv, QCA8K_REG_VTU_FUNC1);
+> > +		if (reg & QCA8K_VTU_FUNC1_FULL)
+> > +			return -ENOMEM;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int
+> > +qca8k_vlan_add(struct qca8k_priv *priv, u8 port, u16 vid, bool tagged)
+> 
+> It is customary to keep referring to this bool as 'untagged' for
+> consistency with many other parts of the kernel.
 
-Update the patch, add CC list, sample output, and Jiri's PoC.
+Ok, changed.
 
-On 2020/7/30 14:46, Jiri Slaby wrote:
-> Hi, OTOH, you should have CCed all the (public) lists.
+> > +{
+> > +	u32 reg;
+> > +	int ret;
+> > +
+> > +	/* We do the right thing with VLAN 0 and treat it as untagged */
+> 
+> ...while also preserving the tag on egress.
+> 
+> > +	if (vid == 0)
+> > +		return 0;
+> > +
+> > +	mutex_lock(&priv->reg_mutex);
+> 
+> Unrelated, but what's the purpose of this mutex?
 
+The access to the VLAN configuration is a set of writes to multiple
+registers, so the mutex is to avoid trying to do 2 updates at the same
+time. Same principle as is applied for the existing FDB accesses.
 
---------------360FA215ABC3E00392C9DB2C
-Content-Type: text/plain; charset=UTF-8;
- name="0001-Fix-for-missing-check-in-vgacon-scrollback-handling.patch"
-Content-Transfer-Encoding: 8bit
-Content-Disposition: attachment;
- filename*0="0001-Fix-for-missing-check-in-vgacon-scrollback-handling.pat";
- filename*1="ch"
+> > +	ret = qca8k_vlan_access(priv, QCA8K_VLAN_READ, vid);
+> > +	if (ret < 0)
+> > +		goto out;
+> > +
+> > +	reg = qca8k_read(priv, QCA8K_REG_VTU_FUNC0);
+> > +	reg |= QCA8K_VTU_FUNC0_VALID | QCA8K_VTU_FUNC0_IVL_EN;
+> > +	reg &= ~(3 << QCA8K_VTU_FUNC0_EG_MODE_S(port));
+> > +	if (tagged)
+> > +		reg |= QCA8K_VTU_FUNC0_EG_MODE_TAG <<
+> > +				QCA8K_VTU_FUNC0_EG_MODE_S(port);
+> > +	else
+> > +		reg |= QCA8K_VTU_FUNC0_EG_MODE_UNTAG <<
+> > +				QCA8K_VTU_FUNC0_EG_MODE_S(port);
+> > +
+> 
+> Not thrilled about the "3 <<" thing, maybe a definition like the one
+> below would look better:
+> 
+> #define QCA8K_VTU_FUNC_REG0_EG_VLAN_MODE_MASK(port) \
+> 	GENMASK(5 + (port) * 2, 4 + (port) * 2)
+> 
+> ...
+> 
+> 	int eg_vlan_mode = QCA8K_VTU_FUNC_REG0_EG_MODE_TAG;
+> 
+> 	reg &= ~QCA8K_VTU_FUNC_REG0_EG_VLAN_MODE_MASK(port);
+> 	if (tagged)
+> 		eg_vlan_mode = QCA8K_VTU_FUNC_REG0_EG_MODE_UNTAG;
+> 	reg |= QCA8K_VTU_FUNC_REG0_EG_MODE(eg_vlan_mode, port);
+> 
+> Your call if you want to change this, though.
 
-From ad143ede24ff4e61292cc9c96000100aacd97259 Mon Sep 17 00:00:00 2001
-From: Yunhai Zhang <zhangyunhai@nsfocus.com>
-Date: Tue, 28 Jul 2020 09:58:03 +0800
-Subject: [PATCH] Fix for missing check in vgacon scrollback handling
+I've added QCA8K_VTU_FUNC_REG0_EG_MODE_MASK instead of using the hard
+coded 3, I think it's clearer when the mask + the values are both
+getting the shift in the same manner.
 
-vgacon_scrollback_update() always leaves enbough room in the scrollback
-buffer for the next call, but if the console size changed that room
-might not actually be enough, and so we need to re-check.
+> > +	qca8k_write(priv, QCA8K_REG_VTU_FUNC0, reg);
+> > +	ret = qca8k_vlan_access(priv, QCA8K_VLAN_LOAD, vid);
+> > +
+> > +out:
+> > +	mutex_unlock(&priv->reg_mutex);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int
+> > +qca8k_vlan_del(struct qca8k_priv *priv, u8 port, u16 vid)
+> > +{
+> > +	u32 reg;
+> > +	u32 mask;
+> > +	int ret;
+> > +	int i;
+> > +	bool del;
+> 
+> How about:
+> 
+> 	u32 reg, mask;
+> 	int ret, i;
+> 	bool del;
 
-The check should be in the loop since vgacon_scrollback_cur->tail is
-updated in the loop and count may be more than 1 when triggered by CSI M,
-as Jiri's PoC:
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
+Ok.
 
-int main(int argc, char** argv)
-{
-        int fd = open("/dev/tty1", O_RDWR);
-        unsigned short size[3] = {25, 200, 0};
-        ioctl(fd, 0x5609, size); // VT_RESIZE
+> > +
+> > +	mutex_lock(&priv->reg_mutex);
+> > +	ret = qca8k_vlan_access(priv, QCA8K_VLAN_READ, vid);
+> > +	if (ret < 0)
+> > +		goto out;
+> > +
+> > +	reg = qca8k_read(priv, QCA8K_REG_VTU_FUNC0);
+> > +	reg &= ~(3 << QCA8K_VTU_FUNC0_EG_MODE_S(port));
+> > +	reg |= QCA8K_VTU_FUNC0_EG_MODE_NOT <<
+> > +			QCA8K_VTU_FUNC0_EG_MODE_S(port);
+> > +
+> > +	/* Check if we're the last member to be removed */
+> > +	del = true;
+> > +	for (i = 0; i < QCA8K_NUM_PORTS; i++) {
+> > +		mask = QCA8K_VTU_FUNC0_EG_MODE_NOT;
+> > +		mask <<= QCA8K_VTU_FUNC0_EG_MODE_S(i);
+> > +
+> > +		if ((reg & mask) != mask) {
+> > +			del = false;
+> > +			break;
+> > +		}
+> > +	}
+> > +
+> > +	if (del) {
+> > +		ret = qca8k_vlan_access(priv, QCA8K_VLAN_PURGE, vid);
+> > +	} else {
+> > +		qca8k_write(priv, QCA8K_REG_VTU_FUNC0, reg);
+> > +		ret = qca8k_vlan_access(priv, QCA8K_VLAN_LOAD, vid);
+> > +	}
+> > +
+> > +out:
+> > +	mutex_unlock(&priv->reg_mutex);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> >  static void
+> >  qca8k_mib_init(struct qca8k_priv *priv)
+> >  {
+> > @@ -663,10 +768,11 @@ qca8k_setup(struct dsa_switch *ds)
+> >  			 * default egress vid
+> >  			 */
+> >  			qca8k_rmw(priv, QCA8K_EGRESS_VLAN(i),
+> > -				  0xffff << shift, 1 << shift);
+> > +				  0xffff << shift,
+> > +				  QCA8K_PORT_VID_DEF << shift);
+> 
+> This has telltale signs of copy-pasted code. ROUTER_DEFAULT_VID is a
+> 12-bit register, so 0xffff is probably not the right mask. But, it is
+> true that the upper 4 bits are reserved, so it isn't quite a bug to
+> zero them out, just something that sticks out as not correct.
 
-        write(fd, "\e[1;1H", 6);
-        for (int i = 0; i < 30; i++)
-                write(fd, "\e[10M", 5);
-}
+Not my code originally, can fix up.
 
-It leads to various crashes as vgacon_scrollback_update writes out of
-the buffer:
- BUG: unable to handle page fault for address: ffffc900001752a0
- #PF: supervisor write access in kernel mode
- #PF: error_code(0x0002) - not-present page
- RIP: 0010:mutex_unlock+0x13/0x30
-...
- Call Trace:
-  n_tty_write+0x1a0/0x4d0
-  tty_write+0x1a0/0x2e0
+> >  			qca8k_write(priv, QCA8K_REG_PORT_VLAN_CTRL0(i),
+> > -				    QCA8K_PORT_VLAN_CVID(1) |
+> > -				    QCA8K_PORT_VLAN_SVID(1));
+> > +				    QCA8K_PORT_VLAN_CVID(QCA8K_PORT_VID_DEF) |
+> > +				    QCA8K_PORT_VLAN_SVID(QCA8K_PORT_VID_DEF));
+> >  		}
+> >  	}
+> >  
+> > @@ -1133,7 +1239,7 @@ qca8k_port_fdb_insert(struct qca8k_priv *priv, const u8 *addr,
+> >  {
+> >  	/* Set the vid to the port vlan id if no vid is set */
+> >  	if (!vid)
+> > -		vid = 1;
+> > +		vid = QCA8K_PORT_VID_DEF;
+> >  
+> >  	return qca8k_fdb_add(priv, addr, port_mask, vid,
+> >  			     QCA8K_ATU_STATUS_STATIC);
+> > @@ -1157,7 +1263,7 @@ qca8k_port_fdb_del(struct dsa_switch *ds, int port,
+> >  	u16 port_mask = BIT(port);
+> >  
+> >  	if (!vid)
+> > -		vid = 1;
+> > +		vid = QCA8K_PORT_VID_DEF;
+> 
+> Maybe you could split out this s/1/QCA8K_PORT_VID_DEF/g patch into a
+> separate one? For the purpose of the introduction of VLAN callbacks,
+> it's just noise.
 
-Or to KASAN reports:
-BUG: KASAN: slab-out-of-bounds in vgacon_scroll+0x57a/0x8ed
+Ok.
 
-This fixes CVE-2020-14331.
+> >  	return qca8k_fdb_del(priv, addr, port_mask, vid);
+> >  }
+> > @@ -1186,6 +1292,76 @@ qca8k_port_fdb_dump(struct dsa_switch *ds, int port,
+> >  	return 0;
+> >  }
+> >  
+> > +static int
+> > +qca8k_port_vlan_filtering(struct dsa_switch *ds, int port, bool vlan_filtering)
+> > +{
+> > +	struct qca8k_priv *priv = ds->priv;
+> > +
+> > +	if (vlan_filtering) {
+> > +		qca8k_rmw(priv, QCA8K_PORT_LOOKUP_CTRL(port),
+> > +			  QCA8K_PORT_LOOKUP_VLAN_MODE,
+> > +			  QCA8K_PORT_LOOKUP_VLAN_MODE_SECURE);
+> > +	} else {
+> > +		qca8k_rmw(priv, QCA8K_PORT_LOOKUP_CTRL(port),
+> > +			  QCA8K_PORT_LOOKUP_VLAN_MODE,
+> > +			  QCA8K_PORT_LOOKUP_VLAN_MODE_NONE);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int
+> > +qca8k_port_vlan_prepare(struct dsa_switch *ds, int port,
+> > +			const struct switchdev_obj_port_vlan *vlan)
+> > +{
+> > +	return 0;
+> > +}
+> > +
+> > +static void
+> > +qca8k_port_vlan_add(struct dsa_switch *ds, int port,
+> > +		    const struct switchdev_obj_port_vlan *vlan)
+> > +{
+> > +	struct qca8k_priv *priv = ds->priv;
+> 
+> Reverse Christmas notation please.
 
-Reported-and-debugged-by: 张云海 <zhangyunhai@nsfocus.com>
-Reported-and-debugged-by: Yang Yingliang <yangyingliang@huawei.com>
-Reported-by: Kyungtae Kim <kt0755@gmail.com>
-Fixes: 15bdab959c9b ([PATCH] vgacon: Add support for soft scrollback)
-Cc: stable@vger.kernel.org
-Cc: linux-fbdev@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Greg KH <greg@kroah.com>
-Cc: Solar Designer <solar@openwall.com>
-Cc: "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Cc: Anthony Liguori <aliguori@amazon.com>
-Cc: Yang Yingliang <yangyingliang@huawei.com>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Signed-off-by: Yunhai Zhang <zhangyunhai@nsfocus.com>
----
- drivers/video/console/vgacon.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Sure, fixed.
 
-diff --git a/drivers/video/console/vgacon.c b/drivers/video/console/vgacon.c
-index 998b0de1812f..37b5711cd958 100644
---- a/drivers/video/console/vgacon.c
-+++ b/drivers/video/console/vgacon.c
-@@ -251,6 +251,10 @@ static void vgacon_scrollback_update(struct vc_data *c, int t, int count)
- 	p = (void *) (c->vc_origin + t * c->vc_size_row);
- 
- 	while (count--) {
-+		if ((vgacon_scrollback_cur->tail + c->vc_size_row) > 
-+		    vgacon_scrollback_cur->size)
-+			vgacon_scrollback_cur->tail = 0;
-+
- 		scr_memcpyw(vgacon_scrollback_cur->data +
- 			    vgacon_scrollback_cur->tail,
- 			    p, c->vc_size_row);
+> > +
+> > +	for (vid = vlan->vid_begin; vid <= vlan->vid_end && !ret; ++vid)
+> > +		ret = qca8k_vlan_add(priv, port, vid, !untagged);
+> > +
+> > +	if (ret)
+> > +		dev_err(priv->dev, "Failed to add VLAN to port %d (%d)", port, ret);
+> > +
+> 
+> If for some reason there is a temporary failure in qca8k_vlan_add, you'd
+> be swallowing it instead of printing the error and stopping the
+> execution.
+
+I don't follow; I'm breaking out of the for loop when we get an error? I
+figured that was a better move than potentially printing 4095 error
+messages if they were all going to fail.
+
+> > +	if (pvid) {
+> > +		int shift = 16 * (port % 2);
+> > +
+> > +		qca8k_rmw(priv, QCA8K_EGRESS_VLAN(port),
+> 
+> What's up with this name? Why not "ROUTER_DEFAULT_VID" which is how the
+> hardware calls it? I had some trouble finding it.
+
+Not my naming; it's how the driver already defined it.
+
+J.
+
 -- 
-2.25.1
-
---------------360FA215ABC3E00392C9DB2C--
+... Nice world. Let's make it weirder.
