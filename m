@@ -2,121 +2,74 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7289DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38223C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C47D20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1528721D95
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:52:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596127936;
+	bh=48kj/KpAT0YftWuuMbp2IoV23MYjAsh2YyFjGW5b7h8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MeftIUmaPQ/CjCsGmUNkb+AUN52Y50wYBvNYrOK8lSwQ5WQVS1mQqY/oacf/tmZKR
+	 0EXR9dOBoJdQndcQGWmuWSjFft/ARt7MYaq72HRCx5RQNi0z1PMHwrFjlkzg9GvQAJ
+	 WsYGDputd5Gqk4n9BhZcDJd/JP0x5ZOjIF9g01c0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729885AbgG3Qvm (ORCPT
+        id S1730026AbgG3QwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 12:51:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:42538 "EHLO foss.arm.com"
+        Thu, 30 Jul 2020 12:52:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726353AbgG3Qvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 12:51:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F37141FB;
-        Thu, 30 Jul 2020 09:51:40 -0700 (PDT)
-Received: from e123648.arm.com (unknown [10.37.12.66])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9CF543F66E;
-        Thu, 30 Jul 2020 09:51:39 -0700 (PDT)
-From:   Lukasz Luba <lukasz.luba@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        daniel.lezcano@linaro.org, amitk@kernel.org
-Cc:     lukasz.luba@arm.com
-Subject: [PATCH] thermal: Update power allocator and devfreq cooling to SPDX licensing
-Date:   Thu, 30 Jul 2020 17:51:17 +0100
-Message-Id: <20200730165117.13998-1-lukasz.luba@arm.com>
-X-Mailer: git-send-email 2.17.1
+        id S1726353AbgG3QwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 12:52:14 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34BF620829;
+        Thu, 30 Jul 2020 16:52:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596127933;
+        bh=48kj/KpAT0YftWuuMbp2IoV23MYjAsh2YyFjGW5b7h8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CfnsF6V1H1yVIIWRWl/+umghrTxTzpjS1ITRvkuXqaFDP8FIzqGizZ2f9dsi+Wyi0
+         GqU+62/YTcAXkDB4/bNuKq6oX3wEZntMwS977gyl9oUxO+3gP8HoQU4dYxRogm7E/s
+         nCOEWbf60SAT4XvQMCeCLYXlzq6zQKPW+CRsdSa4=
+From:   Will Deacon <will@kernel.org>
+To:     mark.rutland@arm.com, John Garry <john.garry@huawei.com>
+Cc:     catalin.marinas@arm.com, kernel-team@android.com,
+        Will Deacon <will@kernel.org>, zhangshaokun@hisilicon.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: Include drivers subdirs for ARM PMU PROFILING AND DEBUGGING entry
+Date:   Thu, 30 Jul 2020 17:52:07 +0100
+Message-Id: <159612513463.1044769.11425867844459372721.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <1592392648-128331-1-git-send-email-john.garry@huawei.com>
+References: <1592392648-128331-1-git-send-email-john.garry@huawei.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the license to the SPDX licensing format.
+On Wed, 17 Jun 2020 19:17:28 +0800, John Garry wrote:
+> Ensure that the ARM PMU PROFILING AND DEBUGGING maintainers are included
+> for the HiSilicon PMU driver.
 
-Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
----
- drivers/thermal/devfreq_cooling.c     | 10 +---------
- drivers/thermal/gov_power_allocator.c |  9 +--------
- include/linux/devfreq_cooling.h       |  9 +--------
- 3 files changed, 3 insertions(+), 25 deletions(-)
+Applied to arm64 (for-next/fixes), thanks!
 
-diff --git a/drivers/thermal/devfreq_cooling.c b/drivers/thermal/devfreq_cooling.c
-index f7f32e98331b..a12d29096229 100644
---- a/drivers/thermal/devfreq_cooling.c
-+++ b/drivers/thermal/devfreq_cooling.c
-@@ -1,18 +1,10 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * devfreq_cooling: Thermal cooling device implementation for devices using
-  *                  devfreq
-  *
-  * Copyright (C) 2014-2015 ARM Limited
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-  * TODO:
-  *    - If OPPs are added or removed after devfreq cooling has
-  *      registered, the devfreq cooling won't react to it.
-diff --git a/drivers/thermal/gov_power_allocator.c b/drivers/thermal/gov_power_allocator.c
-index 44636475b2a3..5cb518d8f156 100644
---- a/drivers/thermal/gov_power_allocator.c
-+++ b/drivers/thermal/gov_power_allocator.c
-@@ -1,16 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * A power allocator to manage temperature
-  *
-  * Copyright (C) 2014 ARM Ltd.
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-- * GNU General Public License for more details.
-  */
- 
- #define pr_fmt(fmt) "Power allocator: " fmt
-diff --git a/include/linux/devfreq_cooling.h b/include/linux/devfreq_cooling.h
-index 79a6e37a1d6f..9df2dfca68dd 100644
---- a/include/linux/devfreq_cooling.h
-+++ b/include/linux/devfreq_cooling.h
-@@ -1,17 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * devfreq_cooling: Thermal cooling device implementation for devices using
-  *                  devfreq
-  *
-  * Copyright (C) 2014-2015 ARM Limited
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- 
- #ifndef __DEVFREQ_COOLING_H__
+[1/1] MAINTAINERS: Include drivers subdirs for ARM PMU PROFILING AND DEBUGGING entry
+      https://git.kernel.org/arm64/c/6a7389f0312f
+
+Cheers,
 -- 
-2.17.1
+Will
 
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
