@@ -2,100 +2,237 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 169E9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BBEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA1C62083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:54:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dMGBNNhe"
+	by mail.kernel.org (Postfix) with ESMTP id 924B42083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728612AbgG3Fy5 (ORCPT
+        id S1728535AbgG3F5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 01:54:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60676 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgG3Fy5 (ORCPT
+        Thu, 30 Jul 2020 01:57:19 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55758 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725892AbgG3F5S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 01:54:57 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31A48C061794;
-        Wed, 29 Jul 2020 22:54:57 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id w2so15907542pgg.10;
-        Wed, 29 Jul 2020 22:54:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=E2EytgWa9qS3s3TGjba78LOYjqPjnfrso56HtBNJ3vs=;
-        b=dMGBNNheZT94oRg069QeKz0G83l/o/KAqpKdDXLqbA/25gDCJwUPmLDp0gJug7n2oB
-         Cs+Sv6DDRNPNcByfncSp6OXBJDlg+q8XLJgLltBfADo31Bx3p2+KeC4mJMgkDbtW/MgU
-         dBf6e8JdSo1ZE7peNriXIFno4LJlbTTaY+4EJusw0mWsLXZBS4RRN8Zzc2t2D7PBPhsX
-         wwIyhlPhd9GuJoZ81XwQQ2mB0aUcbdu7L1S5I1qGe2H29+TQ+sNGEw5NUu+yNPhRuOfM
-         1QF+eZyVct01KIQToQrSqXSMkp7A6YMTyCLkEe58EGNpJRbT7KTTk9M7clk22yNuz0fo
-         J3Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=E2EytgWa9qS3s3TGjba78LOYjqPjnfrso56HtBNJ3vs=;
-        b=X0TvukvM0CvdPAJ4kyJdnyE1Vxjtlq42mUtfnlSyQKmQopDjUYucpn74Tj1AnwVaHL
-         /78zsx1HLrSg/YttrAY26wQqZOyIbXSJ/3eCSuXXaKR/soo+Sj4fwEGr3hM+AqdyAC6l
-         irwNnyxXvBFR72L5C+2g1NAJkYMWD6+F9l8S58aUUBkNVgKfk87yLf+P6WVxaZxDidTr
-         bpxu3N1pINrt78OPsP+vfrNmzlzJKWBebShipyRy66ZVcPSSAZgB7R5C/eyfuzF0/mjn
-         mmm1wWGtmfUdxF6DVouIN4xMOrduHI3+LVG2QWs0WoNSnNzJOQ4vXjA6Bqd92KQUlpzq
-         y9BA==
-X-Gm-Message-State: AOAM533AZGtjyQSd/4iVvvXCsIzSlvaWv0JlP1zb26YED2H124TywCJ5
-        AeP6h3fvVnGAn7AdEbRPSW0mQGCPIAI=
-X-Google-Smtp-Source: ABdhPJy254U51wdr6zJE2fW77WYleMshzMMhW/c8Tk9JqOI24a32XSE9O0QVy3cKHoNgwpWQXwS0KA==
-X-Received: by 2002:a63:c049:: with SMTP id z9mr31858702pgi.353.1596088496550;
-        Wed, 29 Jul 2020 22:54:56 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id f73sm3143925pfa.19.2020.07.29.22.54.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 22:54:55 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 22:54:53 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Jiada Wang <jiada_wang@mentor.com>
-Cc:     nick@shmanahar.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, erosca@de.adit-jv.com,
-        Andrew_Gabbasov@mentor.com, digetx@gmail.com
-Subject: Re: [PATCH 1/1] Input: atmel_mxt_ts: split large i2c transfers into
- blocks
-Message-ID: <20200730055453.GC1665100@dtor-ws>
-References: <20200729092252.6394-1-jiada_wang@mentor.com>
+        Thu, 30 Jul 2020 01:57:18 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06U5WbRK139586;
+        Thu, 30 Jul 2020 01:57:03 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32k9qv98as-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Jul 2020 01:57:03 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06U5Wrxm140823;
+        Thu, 30 Jul 2020 01:57:02 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32k9qv989x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Jul 2020 01:57:02 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06U5oOp8030969;
+        Thu, 30 Jul 2020 05:55:22 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma04dal.us.ibm.com with ESMTP id 32gcq1swjn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Jul 2020 05:55:22 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06U5tLX155509472
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Jul 2020 05:55:21 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BFBE3AE05F;
+        Thu, 30 Jul 2020 05:55:21 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 27445AE060;
+        Thu, 30 Jul 2020 05:55:21 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.102.0.230])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 30 Jul 2020 05:55:21 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 26C122E2D91; Thu, 30 Jul 2020 11:25:17 +0530 (IST)
+Date:   Thu, 30 Jul 2020 11:25:17 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jordan Niethe <jniethe5@gmail.com>
+Subject: Re: [PATCH v4 06/10] powerpc/smp: Generalize 2nd sched domain
+Message-ID: <20200730055517.GA29623@in.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+References: <20200727053230.19753-1-srikar@linux.vnet.ibm.com>
+ <20200727053230.19753-7-srikar@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200729092252.6394-1-jiada_wang@mentor.com>
+In-Reply-To: <20200727053230.19753-7-srikar@linux.vnet.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-30_03:2020-07-29,2020-07-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
+ phishscore=0 clxscore=1015 bulkscore=0 impostorscore=0 mlxlogscore=999
+ adultscore=0 malwarescore=0 priorityscore=1501 lowpriorityscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007300042
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiada,
-
-On Wed, Jul 29, 2020 at 06:22:52PM +0900, Jiada Wang wrote:
-> From: Jiada wang <jiada_wang@mentor.com>
+On Mon, Jul 27, 2020 at 11:02:26AM +0530, Srikar Dronamraju wrote:
+> Currently "CACHE" domain happens to be the 2nd sched domain as per
+> powerpc_topology. This domain will collapse if cpumask of l2-cache is
+> same as SMT domain. However we could generalize this domain such that it
+> could mean either be a "CACHE" domain or a "BIGCORE" domain.
 > 
-> Some I2C controllers constrain maximum transferred data in an I2C
-> transaction by set max_[read|write]_len of i2c_adapter_quirk.
-> Large i2c transfer transaction beyond this limitation may fail to complete,
-> cause I2C controller driver aborts the transaction and returns failure.
+> While setting up the "CACHE" domain, check if shared_cache is already
+> set.
 > 
-> Therefore this patch was created to split large i2c transaction into
-> smaller chunks which can complete within max_[read|write]_len defined
-> by I2C controller driver.
+> Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+> Cc: LKML <linux-kernel@vger.kernel.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Anton Blanchard <anton@ozlabs.org>
+> Cc: Oliver O'Halloran <oohall@gmail.com>
+> Cc: Nathan Lynch <nathanl@linux.ibm.com>
+> Cc: Michael Neuling <mikey@neuling.org>
+> Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: Jordan Niethe <jniethe5@gmail.com>
+> Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 
-Can we consider implementing this chunking logic in i2c core? Otherwise
-we will need to adjust pretty much every driver to do this.
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 
-Thanks.
-
--- 
-Dmitry
+> ---
+> Changelog v1 -> v2:
+> 	Moved shared_cache topology fixup to fixup_topology (Gautham)
+> 
+>  arch/powerpc/kernel/smp.c | 48 +++++++++++++++++++++++++++------------
+>  1 file changed, 34 insertions(+), 14 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
+> index d997c7411664..3c5ccf6d2b1c 100644
+> --- a/arch/powerpc/kernel/smp.c
+> +++ b/arch/powerpc/kernel/smp.c
+> @@ -85,6 +85,14 @@ EXPORT_PER_CPU_SYMBOL(cpu_l2_cache_map);
+>  EXPORT_PER_CPU_SYMBOL(cpu_core_map);
+>  EXPORT_SYMBOL_GPL(has_big_cores);
+> 
+> +enum {
+> +#ifdef CONFIG_SCHED_SMT
+> +	smt_idx,
+> +#endif
+> +	bigcore_idx,
+> +	die_idx,
+> +};
+> +
+>  #define MAX_THREAD_LIST_SIZE	8
+>  #define THREAD_GROUP_SHARE_L1   1
+>  struct thread_groups {
+> @@ -851,13 +859,7 @@ static int powerpc_shared_cache_flags(void)
+>   */
+>  static const struct cpumask *shared_cache_mask(int cpu)
+>  {
+> -	if (shared_caches)
+> -		return cpu_l2_cache_mask(cpu);
+> -
+> -	if (has_big_cores)
+> -		return cpu_smallcore_mask(cpu);
+> -
+> -	return per_cpu(cpu_sibling_map, cpu);
+> +	return per_cpu(cpu_l2_cache_map, cpu);
+>  }
+> 
+>  #ifdef CONFIG_SCHED_SMT
+> @@ -867,11 +869,16 @@ static const struct cpumask *smallcore_smt_mask(int cpu)
+>  }
+>  #endif
+> 
+> +static const struct cpumask *cpu_bigcore_mask(int cpu)
+> +{
+> +	return per_cpu(cpu_sibling_map, cpu);
+> +}
+> +
+>  static struct sched_domain_topology_level powerpc_topology[] = {
+>  #ifdef CONFIG_SCHED_SMT
+>  	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
+>  #endif
+> -	{ shared_cache_mask, powerpc_shared_cache_flags, SD_INIT_NAME(CACHE) },
+> +	{ cpu_bigcore_mask, SD_INIT_NAME(BIGCORE) },
+>  	{ cpu_cpu_mask, SD_INIT_NAME(DIE) },
+>  	{ NULL, },
+>  };
+> @@ -1311,7 +1318,6 @@ static void add_cpu_to_masks(int cpu)
+>  void start_secondary(void *unused)
+>  {
+>  	unsigned int cpu = smp_processor_id();
+> -	struct cpumask *(*sibling_mask)(int) = cpu_sibling_mask;
+> 
+>  	mmgrab(&init_mm);
+>  	current->active_mm = &init_mm;
+> @@ -1337,14 +1343,20 @@ void start_secondary(void *unused)
+>  	/* Update topology CPU masks */
+>  	add_cpu_to_masks(cpu);
+> 
+> -	if (has_big_cores)
+> -		sibling_mask = cpu_smallcore_mask;
+>  	/*
+>  	 * Check for any shared caches. Note that this must be done on a
+>  	 * per-core basis because one core in the pair might be disabled.
+>  	 */
+> -	if (!cpumask_equal(cpu_l2_cache_mask(cpu), sibling_mask(cpu)))
+> -		shared_caches = true;
+> +	if (!shared_caches) {
+> +		struct cpumask *(*sibling_mask)(int) = cpu_sibling_mask;
+> +		struct cpumask *mask = cpu_l2_cache_mask(cpu);
+> +
+> +		if (has_big_cores)
+> +			sibling_mask = cpu_smallcore_mask;
+> +
+> +		if (cpumask_weight(mask) > cpumask_weight(sibling_mask(cpu)))
+> +			shared_caches = true;
+> +	}
+> 
+>  	set_numa_node(numa_cpu_lookup_table[cpu]);
+>  	set_numa_mem(local_memory_node(numa_cpu_lookup_table[cpu]));
+> @@ -1375,9 +1387,17 @@ static void fixup_topology(void)
+>  #ifdef CONFIG_SCHED_SMT
+>  	if (has_big_cores) {
+>  		pr_info("Big cores detected but using small core scheduling\n");
+> -		powerpc_topology[0].mask = smallcore_smt_mask;
+> +		powerpc_topology[smt_idx].mask = smallcore_smt_mask;
+>  	}
+>  #endif
+> +	if (shared_caches) {
+> +		pr_info("Using shared cache scheduler topology\n");
+> +		powerpc_topology[bigcore_idx].mask = shared_cache_mask;
+> +		powerpc_topology[bigcore_idx].sd_flags = powerpc_shared_cache_flags;
+> +#ifdef CONFIG_SCHED_DEBUG
+> +		powerpc_topology[bigcore_idx].name = "CACHE";
+> +#endif
+> +	}
+>  }
+> 
+>  void __init smp_cpus_done(unsigned int max_cpus)
+> -- 
+> 2.17.1
+> 
