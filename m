@@ -2,235 +2,197 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED69C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 772AAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11CBA2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5131120842
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:53:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Kd2jLlaI"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="qKj3QG0j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728038AbgG3Mxr (ORCPT
+        id S1728272AbgG3Mxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 08:53:47 -0400
-Received: from gateway24.websitewelcome.com ([192.185.51.35]:32233 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726535AbgG3Mxp (ORCPT
+        Thu, 30 Jul 2020 08:53:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbgG3Mxu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 08:53:45 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 5289A5DD9
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 07:53:26 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 183qk8YXrQyTQ183qki6ZO; Thu, 30 Jul 2020 07:53:26 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=QZ4BKgZJSRvqd0E7KvYS/q4D5CC5tTLJdNa/HA/1yUw=; b=Kd2jLlaIwm4GBvdFd+3XwS9oKM
-        fikK0PhLX1bA597iTNZkJXG5KzRbDeJWWW+WTE7Rtg9THYSwUsl6DMj1n1RRC4/4cYfgm9YCVzNDM
-        Ib+lcCuBnudvUfG80vp75QhVrBqUmWLLQsuenLOSDv6UvoSBXw24pZNA9PxDMBTaLl1xNnJYKNwus
-        iImIZNBBcS11ueRTf8/aFLotq3HL/e61sOcWKeo0jZz7FPFlF4S63D0Z9tdY7qq1etJ04tfH+pIkC
-        F2X/iN88tC+ObI5xe9f14ZaEuA/2CBbla5MKffxR225vPEXD77KLLqYIaHxDzfrM/Utm6G8KHqJa7
-        VyUC9vMQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:33550 helo=[192.168.15.3])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1k183p-003ExR-VD; Thu, 30 Jul 2020 07:53:26 -0500
-Subject: Re: [char-misc-next V2] mei: hdcp: fix mei_hdcp_verify_mprime() input
- paramter
-To:     Tomas Winkler <tomas.winkler@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Ramalingam C <ramalingam.c@intel.com>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>
-References: <20200730070258.3361503-1-tomas.winkler@intel.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- AP7RWS474w==
-Message-ID: <787ef32c-b10d-5fb7-786f-2825180e1b88@embeddedor.com>
-Date:   Thu, 30 Jul 2020 07:59:27 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 30 Jul 2020 08:53:50 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 350CEC0619D4
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 05:53:50 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id s16so20178975qtn.7
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 05:53:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Axn2UqhWLSVFHKSnfRxdouhha5NVgiK5lnLse6I8u/A=;
+        b=qKj3QG0jwvFT0NZqDejQIs9lBvfAq1rwCAK66yjilxPi02Gftmljq9/TtWuJSUrTdf
+         0A5FsV1qzVsnazzVipjEF8aL3obfFIwsE6upFp4Gpec60UDOSzb1IsgyZZ46ujTxIn9o
+         jDVf3LcgHaggfl5lPv0biDPFrN9viSMQtusPs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Axn2UqhWLSVFHKSnfRxdouhha5NVgiK5lnLse6I8u/A=;
+        b=FFs7q5amLApWhcYnrXeBewX11izp+twXwigKmfhbPZHn0O6iSO7yn3ltgk8fiik+5y
+         qqY6dGY6yKAMBctJv0DhNrP5GyRIkHQbC/Ul67mdp4OX9KPIzjzjNqRFXhaQyRK6KgZU
+         E2jWV7qcrbDToLUIJl43GIv09TJul+2wIg+v84H3BcuMS1HseKpV8lpc8us8IhkdXI4j
+         JoaxMohIMIJ1Q2Gd4+ofLrXfWUGv992L6CFOa1wl4fGhHunH8zIn6REEt5Burc/FsFl2
+         yQGO+n3p3truKfRQBOCieLF68x/wBvCWavbbgLuU98X3gjqGM1bsRj+7v2SgEB6+Gb3D
+         tLRQ==
+X-Gm-Message-State: AOAM5318T+HDIpL/OetKymll/NmSc23RIaVYeM8Bge35p/ZgNojz+caW
+        6Iifa4pSy2NbhvZfi14Kqq4hgA==
+X-Google-Smtp-Source: ABdhPJwbJddY2ae4n72jMCi/8IovQDNd2woE1dqvSEGMExUQGBjQpyx1XNeAtFII7RIAYjVw1ykbwQ==
+X-Received: by 2002:ac8:7741:: with SMTP id g1mr2701917qtu.28.1596113629333;
+        Thu, 30 Jul 2020 05:53:49 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id 205sm4166584qkn.104.2020.07.30.05.53.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 05:53:48 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 08:53:48 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, "Paul E . McKenney" <paulmck@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH v2 1/1] rcu/tree: Drop the lock before entering to page
+ allocator
+Message-ID: <20200730125348.GA2074029@google.com>
+References: <20200727211012.30948-1-urezki@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200730070258.3361503-1-tomas.winkler@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1k183p-003ExR-VD
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.3]) [187.162.31.110]:33550
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727211012.30948-1-urezki@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tomas,
-
-On 7/30/20 02:02, Tomas Winkler wrote:
-> wired_cmd_repeater_auth_stream_req_in has a variable
-> length array at the end. we use struct_size() overflow
-> macro to determine the size for the allocation and sending
-> size.
+On Mon, Jul 27, 2020 at 11:10:12PM +0200, Uladzislau Rezki (Sony) wrote:
+> If the kernel is built with CONFIG_PROVE_RAW_LOCK_NESTING
+> option, the lockedp will complain about violation of the
+> nesting rules:
 > 
-
-My comments here:
-https://lore.kernel.org/lkml/66c9950c-ef54-423e-467f-38a9f7afb384@embeddedor.com/
-
-still stand...
-
-> Fixes: c56967d674e3 (mei: hdcp: Replace one-element array with flexible-array member)
-> Fixes: c56967d674e3 (mei: hdcp: Replace one-element array with flexible-array member)
-
-You have repeated the same commit twice, above. Also, a Fixes tag for the commit from
-Feb 2019 that I talk about here:
-https://lore.kernel.org/lkml/66c9950c-ef54-423e-467f-38a9f7afb384@embeddedor.com/
-
-should be included in this changelog text.
-
---
-Gustavo
-
-> Cc: Ramalingam C <ramalingam.c@intel.com>
-> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+> <snip>
+> [   28.060389] =============================
+> [   28.060389] [ BUG: Invalid wait context ]
+> [   28.060389] 5.8.0-rc3-rcu #211 Tainted: G            E
+> [   28.060389] -----------------------------
+> [   28.060390] vmalloc_test/0/523 is trying to lock:
+> [   28.060390] ffff96df7ffe0228 (&zone->lock){-.-.}-{3:3}, at: get_page_from_freelist+0xcf0/0x16d0
+> [   28.060391] other info that might help us debug this:
+> [   28.060391] context-{5:5}
+> [   28.060392] 2 locks held by vmalloc_test/0/523:
+> [   28.060392]  #0: ffffffffc06750d0 (prepare_for_test_rwsem){++++}-{4:4}, at: test_func+0x76/0x240 [test_vmalloc]
+> [   28.060393]  #1: ffff96df5fa1d390 (krc.lock){..-.}-{2:2}, at: kvfree_call_rcu+0x5c/0x230
+> [   28.060395] stack backtrace:
+> [   28.060395] CPU: 0 PID: 523 Comm: vmalloc_test/0 Tainted: G            E     5.8.0-rc3-rcu #211
+> [   28.060395] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+> [   28.060396] Call Trace:
+> [   28.060397]  dump_stack+0x96/0xd0
+> [   28.060397]  __lock_acquire.cold.65+0x166/0x2d7
+> [   28.060398]  ? find_held_lock+0x2d/0x90
+> [   28.060399]  lock_acquire+0xad/0x370
+> [   28.060400]  ? get_page_from_freelist+0xcf0/0x16d0
+> [   28.060401]  ? mark_held_locks+0x48/0x70
+> [   28.060402]  _raw_spin_lock+0x25/0x30
+> [   28.060403]  ? get_page_from_freelist+0xcf0/0x16d0
+> [   28.060404]  get_page_from_freelist+0xcf0/0x16d0
+> [   28.060405]  ? __lock_acquire+0x3ee/0x1b90
+> [   28.060407]  __alloc_pages_nodemask+0x16a/0x3a0
+> [   28.060408]  __get_free_pages+0xd/0x30
+> [   28.060409]  kvfree_call_rcu+0x18a/0x230
+> <snip>
+> 
+> Internally the kfree_rcu() uses raw_spinlock_t whereas the
+> page allocator internally deals with spinlock_t to access
+> to its zones.
+> 
+> In order to prevent such vialation that is in question we
+> can drop the internal raw_spinlock_t before entering to
+> the page allocaor.
+> 
+> Short changelog (v1 -> v2):
+>     - rework the commit message;
+>     - rework the patch making it smaller;
+>     - add more comments.
+> 
+> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 > ---
-> V2: Check for allocation failure.
->  drivers/misc/mei/hdcp/mei_hdcp.c | 40 +++++++++++++++++++-------------
->  1 file changed, 24 insertions(+), 16 deletions(-)
+>  kernel/rcu/tree.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
 > 
-> diff --git a/drivers/misc/mei/hdcp/mei_hdcp.c b/drivers/misc/mei/hdcp/mei_hdcp.c
-> index d1d3e025ca0e..f1205e0060db 100644
-> --- a/drivers/misc/mei/hdcp/mei_hdcp.c
-> +++ b/drivers/misc/mei/hdcp/mei_hdcp.c
-> @@ -546,38 +546,46 @@ static int mei_hdcp_verify_mprime(struct device *dev,
->  				  struct hdcp_port_data *data,
->  				  struct hdcp2_rep_stream_ready *stream_ready)
->  {
-> -	struct wired_cmd_repeater_auth_stream_req_in
-> -					verify_mprime_in = { { 0 } };
-> +	struct wired_cmd_repeater_auth_stream_req_in *verify_mprime_in;
->  	struct wired_cmd_repeater_auth_stream_req_out
->  					verify_mprime_out = { { 0 } };
->  	struct mei_cl_device *cldev;
->  	ssize_t byte;
-> +	size_t cmd_size;
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 21c2fa5bd8c3..2de112404121 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -3287,6 +3287,8 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
+>  		return false;
 >  
->  	if (!dev || !stream_ready || !data)
->  		return -EINVAL;
->  
->  	cldev = to_mei_cl_device(dev);
->  
-> -	verify_mprime_in.header.api_version = HDCP_API_VERSION;
-> -	verify_mprime_in.header.command_id = WIRED_REPEATER_AUTH_STREAM_REQ;
-> -	verify_mprime_in.header.status = ME_HDCP_STATUS_SUCCESS;
-> -	verify_mprime_in.header.buffer_len =
-> +	cmd_size = struct_size(verify_mprime_in, streams, data->k);
-> +	if (cmd_size == SIZE_MAX)
-> +		return -EINVAL;
+>  	lockdep_assert_held(&krcp->lock);
+> +	lockdep_assert_irqs_disabled();
 > +
-> +	verify_mprime_in = kzalloc(cmd_size, GFP_KERNEL);
-> +	if (!verify_mprime_in)
-> +		return -ENOMEM;
+>  	idx = !!is_vmalloc_addr(ptr);
+>  
+>  	/* Check if a new block is required. */
+> @@ -3306,6 +3308,29 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
+>  			if (IS_ENABLED(CONFIG_PREEMPT_RT))
+>  				return false;
+>  
+> +			/*
+> +			 * If built with CONFIG_PROVE_RAW_LOCK_NESTING option,
+> +			 * the lockedp will complain about violation of the
+> +			 * nesting rules. It does the raw_spinlock vs. spinlock
+> +			 * nesting checks.
+> +			 *
+> +			 * That is why we drop the raw lock. Please note IRQs are
+> +			 * still disabled it guarantees that the "current" stays
+> +			 * on the same CPU later on when the raw lock is taken
+> +			 * back.
+> +			 *
+> +			 * It is important because if the page allocator is invoked
+> +			 * in fully preemptible context, it can be that we get a page
+> +			 * but end up on another CPU. That another CPU might not need
+> +			 * a page because of having some extra spots in its internal
+> +			 * array for pointer collecting. Staying on same CPU eliminates
+> +			 * described issue.
+> +			 *
+> +			 * Dropping the lock also reduces the critical section by
+> +			 * the time taken by the page allocator to obtain a page.
+> +			 */
+> +			raw_spin_unlock(&krcp->lock);
 > +
-> +	verify_mprime_in->header.api_version = HDCP_API_VERSION;
-> +	verify_mprime_in->header.command_id = WIRED_REPEATER_AUTH_STREAM_REQ;
-> +	verify_mprime_in->header.status = ME_HDCP_STATUS_SUCCESS;
-> +	verify_mprime_in->header.buffer_len =
->  			WIRED_CMD_BUF_LEN_REPEATER_AUTH_STREAM_REQ_MIN_IN;
->  
-> -	verify_mprime_in.port.integrated_port_type = data->port_type;
-> -	verify_mprime_in.port.physical_port = (u8)data->fw_ddi;
-> -	verify_mprime_in.port.attached_transcoder = (u8)data->fw_tc;
-> +	verify_mprime_in->port.integrated_port_type = data->port_type;
-> +	verify_mprime_in->port.physical_port = (u8)data->fw_ddi;
-> +	verify_mprime_in->port.attached_transcoder = (u8)data->fw_tc;
+>  			/*
+>  			 * NOTE: For one argument of kvfree_rcu() we can
+>  			 * drop the lock and get the page in sleepable
+> @@ -3315,6 +3340,8 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
+>  			 */
+>  			bnode = (struct kvfree_rcu_bulk_data *)
+>  				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
 > +
-> +	memcpy(verify_mprime_in->m_prime, stream_ready->m_prime, HDCP_2_2_MPRIME_LEN);
-> +	drm_hdcp_cpu_to_be24(verify_mprime_in->seq_num_m, data->seq_num_m);
+> +			raw_spin_lock(&krcp->lock);
+
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+
+thanks,
+
+ - Joel
+
+
+>  		}
 >  
-> -	memcpy(verify_mprime_in.m_prime, stream_ready->m_prime,
-> -	       HDCP_2_2_MPRIME_LEN);
-> -	drm_hdcp_cpu_to_be24(verify_mprime_in.seq_num_m, data->seq_num_m);
-> -	memcpy(verify_mprime_in.streams, data->streams,
-> +	memcpy(verify_mprime_in->streams, data->streams,
->  	       array_size(data->k, sizeof(*data->streams)));
->  
-> -	verify_mprime_in.k = cpu_to_be16(data->k);
-> +	verify_mprime_in->k = cpu_to_be16(data->k);
->  
-> -	byte = mei_cldev_send(cldev, (u8 *)&verify_mprime_in,
-> -			      sizeof(verify_mprime_in));
-> +	byte = mei_cldev_send(cldev, (u8 *)&verify_mprime_in, cmd_size);
-> +	kfree(verify_mprime_in);
->  	if (byte < 0) {
->  		dev_dbg(dev, "mei_cldev_send failed. %zd\n", byte);
->  		return byte;
+>  		/* Switch to emergency path. */
+> -- 
+> 2.20.1
 > 
