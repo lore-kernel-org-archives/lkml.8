@@ -2,102 +2,102 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC35C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5970C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6FF3207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:13:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="McJOS71U"
+	by mail.kernel.org (Postfix) with ESMTP id 9B5D820838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:14:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729703AbgG3PNT (ORCPT
+        id S1729717AbgG3POH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:13:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728286AbgG3PNS (ORCPT
+        Thu, 30 Jul 2020 11:14:07 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:54123 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728286AbgG3POG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 11:13:18 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F2A2C061574
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 08:13:18 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id f24so7849583ejx.6
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 08:13:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vfXGH/CEwaBaC/kQBLI8IC/drfAO5muRPoqQ1huaXOI=;
-        b=McJOS71UhOePjQddHfrQt53FnJHJC0kuVMQu/+RnujQmsJPvqSwPBy9z8zCkrYYY2T
-         9ZdqgPN5eXpDFXra002a1uwK/liS5BLPcUlejRgFdKW3LooogLoj/fjnfsXkdw8i5Vup
-         f9PivRMEUHpTG9rhzJAdaWOlFMSurvCygaBEe0eBbeCKDY8s2kxeS+Rm2sdWUTIACFat
-         UOxs1fCjkyUlRBca/MYzag7GDk3MvtA6RhKZzFYXtxGfQGKGvuSxhn/fzdUD/F341109
-         Chcye3SKwaQBxN/tHr/LWyEEx7wP9nkvRA1tU6nzUS10GF65XzNFLZKPbZ4E187wWFYU
-         bKFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vfXGH/CEwaBaC/kQBLI8IC/drfAO5muRPoqQ1huaXOI=;
-        b=kaMPT42d5OAtAF9GWHjh1fnRDT/H78qBiiLGFqCHlkhT0WBCeYFjeGCxNqGUcRijZW
-         iqIMzM1yfHEw4H+xr7PTUjENJD0KEo/0pi5EefeShEkwlGRHPyDxnXDuwn/UpErwJHB9
-         SJqi6WjRNUyQ6Gp/eBi/UBo83l4HO/rwfwmuEMKkPxPWE/7+Ghn0385t5dENun28vX4R
-         FZQPMfU6l0QIypdAW/pMZKpEbLhPzNewJyKrzEf9AMH50VHMgnoCKOC6kl1HytSx9KAJ
-         KucROwmnTONChRj8Cdzk4gKMbO0bw0+WV7hyBnffhgF/Ce+pOWgWC7ewuBLZS28t6jf+
-         h+kA==
-X-Gm-Message-State: AOAM531/yraxbGdUeu3V/bH89cvN6FoG4uwS9n4Huitb26v9xb9gZdBt
-        0K6WPMgF/JhwbA3wAl1kMnzSKc2ApWEOmQqqrkJTpA==
-X-Google-Smtp-Source: ABdhPJzunWv9jHlXQYg33b+C7Rtiu1eMksfQIE/LP2+0U+iyZFw1c/zddv7AfbByWB/s7vUMZbTHhoeQHHnKibfLQVo=
-X-Received: by 2002:a17:906:694b:: with SMTP id c11mr2989856ejs.232.1596121996817;
- Thu, 30 Jul 2020 08:13:16 -0700 (PDT)
+        Thu, 30 Jul 2020 11:14:06 -0400
+Received: (qmail 6915 invoked by uid 1000); 30 Jul 2020 11:14:05 -0400
+Date:   Thu, 30 Jul 2020 11:14:05 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     Bart Van Assche <bvanassche@acm.org>, jejb@linux.ibm.com,
+        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@puri.sm
+Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
+Message-ID: <20200730151405.GC6332@rowland.harvard.edu>
+References: <20200623111018.31954-1-martin.kepplinger@puri.sm>
+ <ed9ae198-4c68-f82b-04fc-2299ab16df96@acm.org>
+ <eccacce9-393c-ca5d-e3b3-09961340e0db@puri.sm>
+ <1379e21d-c51a-3710-e185-c2d7a9681fb7@acm.org>
+ <20200626154441.GA296771@rowland.harvard.edu>
+ <c19f1938-ae47-2357-669d-5b4021aec154@puri.sm>
+ <20200629161536.GA405175@rowland.harvard.edu>
+ <c253dde7-9347-b3dc-9c91-65d685793b29@puri.sm>
 MIME-Version: 1.0
-References: <20200729215152.662225-1-samitolvanen@google.com> <20200730122201.GM25149@gaia>
-In-Reply-To: <20200730122201.GM25149@gaia>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Thu, 30 Jul 2020 08:13:05 -0700
-Message-ID: <CABCJKucS-DXPkHMCPKpbFduZApRdw=1DL4+YhULAsUNn=o-dTA@mail.gmail.com>
-Subject: Re: [PATCH] arm64/alternatives: move length validation inside the subsection
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c253dde7-9347-b3dc-9c91-65d685793b29@puri.sm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 5:22 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
->
-> On Wed, Jul 29, 2020 at 02:51:52PM -0700, Sami Tolvanen wrote:
-> > Commit f7b93d42945c ("arm64/alternatives: use subsections for replacement
-> > sequences") breaks LLVM's integrated assembler, because due to its
-> > one-pass design, it cannot compute instruction sequence lengths before the
-> > layout for the subsection has been finalized. This change fixes the build
-> > by moving the .org directives inside the subsection, so they are processed
-> > after the subsection layout is known.
-> >
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/1078
-> > Cc: <stable@vger.kernel.org> # 4.14+
->
-> Commit f7b93d42945c went in 5.8-rc4. Why is this cc stable from 4.14? If
-> Will picks it up for 5.8, it doesn't even need a cc stable.
+On Thu, Jul 30, 2020 at 10:05:50AM +0200, Martin Kepplinger wrote:
+> On 29.06.20 18:15, Alan Stern wrote:
+> > On Mon, Jun 29, 2020 at 11:42:59AM +0200, Martin Kepplinger wrote:
+> >>
+> >>
+> >> On 26.06.20 17:44, Alan Stern wrote:
+> >>> Martin's best approach would be to add some debugging code to find out why 
+> >>> blk_queue_enter() isn't calling bkl_pm_request_resume(), or why that call 
+> >>> doesn't lead to pm_request_resume().
+> >>>
+> >>> Alan Stern
+> >>>
+> >>
+> >> Hi Alan,
+> >>
+> >> blk_queue_enter() always - especially when sd is runtime suspended and I
+> >> try to mount as above - sets success to be true for me, so never
+> >> continues down to bkl_pm_request_resume(). All I see is "PM: Removing
+> >> info for No Bus:sda1".
+> > 
+> > Aha.  Looking at this more closely, it's apparent that the code in 
+> > blk-core.c contains a logic bug: It assumes that if the BLK_MQ_REQ_PREEMPT 
+> > flag is set then the request can be issued regardless of the queue's 
+> > runtime status.  That is not correct when the queue is suspended.
+> > 
+> > Below is my attempt to fix this up.  I'm not sure that the patch is 
+> > entirely correct, but it should fix this logic bug.  I would appreciate a 
+> > critical review.
+> > 
+> > Martin, does this fix the problem?
+> > 
+> > Alan Stern
+> 
+> Hi Alan,
+> 
+> So in the block layer your change below indeed fixes the problem and if
+> you want to submit that 1:1 feel free to add
+> 
+> Tested-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+> 
+> thanks for your help in this!
 
-Greg or Sasha can probably answer why, but this patch is in 4.14.189,
-4.19.134, 5.4.53, and 5.7.10, which ended up breaking some downstream
-Android kernel builds.
+Thank you for _your_ help!
 
-> Please add a Fixes: tag as well.
+The next merge window is coming up soon.  I think I'll wait until it is 
+over before submitting the patch (maintainers tend to be too busy to 
+consider new patches during a merge window).
 
-Sure, I'll send v2 shortly with the tag. Thanks.
+But I am still open to comments or criticism of the patch in the 
+meantime.  There hasn't been any feedback since Bart's initial set of 
+questions.
 
-Sami
+Alan Stern
