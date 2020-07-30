@@ -2,185 +2,170 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F04C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD65C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60FF72074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:20:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O71muXcb"
+	by mail.kernel.org (Postfix) with ESMTP id 1DE2A2072A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:21:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730465AbgG3TUA (ORCPT
+        id S1730471AbgG3TVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 15:20:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43520 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730412AbgG3TT5 (ORCPT
+        Thu, 30 Jul 2020 15:21:21 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:55672 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbgG3TVT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 15:19:57 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92D55C061575
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 12:19:57 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id o22so20966242qtt.13
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 12:19:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=o8Qcp6UYu/AwRpOfmT/2gGbG6QiB9KOv8ZsebKXGjxA=;
-        b=O71muXcbjS+AQhdrYp3rP/Oq3wA2x0Bshh7svkdi7T5qIqpFrB4DAla8m+jgG139WM
-         mu9h80gMcvvG3REpQ0xWeEBiLAEO9ouc7CHVvNy3LlbUO9w/VzRgVK7O0hesil0/uGPb
-         XM2dhjX4TfvhczKFQNkcZRnOyn93pHQ/sHrDaLahetyY9oeD814+JNlGB9G4410sjJpR
-         KiX4qdCJrtcUnuqbgHH/ZXql47zD/IdwPIth+qPs2VKdWBQp5JRO5u1lWW2ItF4OQ/+W
-         g4LhmLIkvKXHjxy4m37HYkEqJ0cM4kg2xxRFz3anmFWDZky7WUjuZ6xy09UgeL4rxttF
-         pb3A==
+        Thu, 30 Jul 2020 15:21:19 -0400
+Received: by mail-io1-f69.google.com with SMTP id k10so19196251ioh.22
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 12:21:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=o8Qcp6UYu/AwRpOfmT/2gGbG6QiB9KOv8ZsebKXGjxA=;
-        b=Lj+N8W8WEitdLZv8zkUE/X/rTnYoV8f6aaCH8fSrmZJa6/iU0057z5BVHmCK2VovKK
-         6tjLUnyt2QY8eFKjNGx9GVCc8c0EW2Ruap1r7sGVLdUkg31XgB6HUHmiUayVOsnOB+1x
-         GrII3wb9oUK/Y2XM3gvqBU8ulezKP2Q2nS2vUPFCHPs7VUFuXOAFr3FOMUo6ZLiiqRhs
-         DMjmAwkoSKUVKmXIjOzasce4EXjqbh7D/I5MI9aJU+HcBpEm6LxQF3RcC5ea4M4G8r/6
-         S+R5vzq1KOEiUiZKncOFGSaYi+lrKMeeTRvI3/MXxqkblepclDazTVJ2mC1hQyv7WO7u
-         lMXA==
-X-Gm-Message-State: AOAM531r9sHrMmUwryvsjjNM2T0imPXwRNXXN2JSHSyINVAEknXFMx3i
-        vGG3SxCxC8nN4dc6NglHw56uRkeY12bcftazyrrnIA==
-X-Google-Smtp-Source: ABdhPJxGY+3yiLfWMLQGFR+u0XpEd9XrA00TfNj19g9cW2Ub4rj5e+f6P4RueKWbKrI7OD2cX1nec7UeUiSPprga/hE=
-X-Received: by 2002:ac8:7609:: with SMTP id t9mr210248qtq.158.1596136795878;
- Thu, 30 Jul 2020 12:19:55 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=zcGvcLBkmLVIiitWjC0dTjPKNOWpI78/MjOsV9KI+nI=;
+        b=A5QL2OApqFRFSqxGOzB5hLvecVP7is+wZI08mvtMq6SC9TPLIDGsseA+IOYB0iSuSw
+         5OUX2dHljMklEhtqV1rxeKKU7gDFY2wvua2BGfaZk9pm3JpwFr48fa8fez8An8ZrOW0T
+         sQyJk1LD7DIjVxbqaQHimhCA7eNAgSulYPmawiYKJA0CESkuJK52CtTCV6RhxDtLyTnh
+         +z01NjIhBIx7ue3pR3SDTS+b9WXM/TDAoHacDQfbFetFRkJC6vf4S6HUwKtb9jNJcJD9
+         VVCcVBJceN+TXhoOrhk56NLY6D59JwhrgQkGCWb4UpsxHHLJLK+HjLvEMUOaeb1B0Aqv
+         cDTQ==
+X-Gm-Message-State: AOAM533Av5WG/Xl9ezH4IA5E/XPQUn/WaZMnC/NH7Vu9eyHZSzpZOE72
+        aiiaEC1JzuHUtcB0MhV9pTUU9Gg/mkAjC9ksHfcpcXRcx/Iu
+X-Google-Smtp-Source: ABdhPJxA1XVBHHgevcFGRcm19/FogHJVO/W/fLEMw40v6yi3auJFWHjZ0mPyzWWj13H7vbhXlSAjTVVJacoHQ30dUKZz5gJjN5gF
 MIME-Version: 1.0
-References: <0000000000006f179d05ab8e2cf2@google.com> <BYAPR11MB2632784BE3AD9F03C5C95263FF700@BYAPR11MB2632.namprd11.prod.outlook.com>
- <87tuxqxhgq.fsf@intel.com> <CACT4Y+ZMvaJMiXikYCm-Xym8ddKDY0n-5=kwH7i2Hu-9uJW1kQ@mail.gmail.com>
- <87pn8cyk2b.fsf@intel.com>
-In-Reply-To: <87pn8cyk2b.fsf@intel.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 30 Jul 2020 21:19:43 +0200
-Message-ID: <CACT4Y+ZY-JnawN5Tmeh0+EfbsXgcv11QDiE-Lh2t8Cc3L1OEXg@mail.gmail.com>
-Subject: =?UTF-8?B?UmU6IOWbnuWkjTogSU5GTzogcmN1IGRldGVjdGVkIHN0YWxsIGluIHRjX21vZGlmeV9xZA==?=
-        =?UTF-8?B?aXNj?=
-To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Cc:     "Zhang, Qiang" <Qiang.Zhang@windriver.com>,
-        syzbot <syzbot+9f78d5c664a8c33f4cce@syzkaller.appspotmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "fweisbec@gmail.com" <fweisbec@gmail.com>,
-        "jhs@mojatatu.com" <jhs@mojatatu.com>,
-        "jiri@resnulli.us" <jiri@resnulli.us>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "xiyou.wangcong@gmail.com" <xiyou.wangcong@gmail.com>
+X-Received: by 2002:a05:6e02:c1:: with SMTP id r1mr119662ilq.34.1596136878205;
+ Thu, 30 Jul 2020 12:21:18 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 12:21:18 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a3709905abad9335@google.com>
+Subject: KASAN: use-after-free Read in io_uring_setup (2)
+From:   syzbot <syzbot+9d46305e76057f30c74e@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 7:44 PM Vinicius Costa Gomes
-<vinicius.gomes@intel.com> wrote:
->
-> Hi,
->
-> Dmitry Vyukov <dvyukov@google.com> writes:
->
-> > On Wed, Jul 29, 2020 at 9:13 PM Vinicius Costa Gomes
-> > <vinicius.gomes@intel.com> wrote:
-> >>
-> >> Hi,
-> >>
-> >> "Zhang, Qiang" <Qiang.Zhang@windriver.com> writes:
-> >>
-> >> > ________________________________________
-> >> > =E5=8F=91=E4=BB=B6=E4=BA=BA: linux-kernel-owner@vger.kernel.org <lin=
-ux-kernel-owner@vger.kernel.org> =E4=BB=A3=E8=A1=A8 syzbot <syzbot+9f78d5c6=
-64a8c33f4cce@syzkaller.appspotmail.com>
-> >> > =E5=8F=91=E9=80=81=E6=97=B6=E9=97=B4: 2020=E5=B9=B47=E6=9C=8829=E6=
-=97=A5 13:53
-> >> > =E6=94=B6=E4=BB=B6=E4=BA=BA: davem@davemloft.net; fweisbec@gmail.com=
-; jhs@mojatatu.com; jiri@resnulli.us; linux-kernel@vger.kernel.org; mingo@k=
-ernel.org; netdev@vger.kernel.org; syzkaller-bugs@googlegroups.com; tglx@li=
-nutronix.de; vinicius.gomes@intel.com; xiyou.wangcong@gmail.com
-> >> > =E4=B8=BB=E9=A2=98: INFO: rcu detected stall in tc_modify_qdisc
-> >> >
-> >> > Hello,
-> >> >
-> >> > syzbot found the following issue on:
-> >> >
-> >> > HEAD commit:    181964e6 fix a braino in cmsghdr_from_user_compat_to=
-_kern()
-> >> > git tree:       net
-> >> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D12925e38=
-900000
-> >> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3Df87a5e42=
-32fdb267
-> >> > dashboard link: https://syzkaller.appspot.com/bug?extid=3D9f78d5c664=
-a8c33f4cce
-> >> > compiler:       gcc (GCC) 10.1.0-syz 20200507
-> >> > syz repro:
-> >> > https://syzkaller.appspot.com/x/repro.syz?x=3D16587f8c900000
-> >>
-> >> It seems that syzkaller is generating an schedule with too small
-> >> intervals (3ns in this case) which causes a hrtimer busy-loop which
-> >> starves other kernel threads.
-> >>
-> >> We could put some limits on the interval when running in software mode=
-,
-> >> but I don't like this too much, because we are talking about users wit=
-h
-> >> CAP_NET_ADMIN and they have easier ways to do bad things to the system=
-.
-> >
-> > Hi Vinicius,
-> >
-> > Could you explain why you don't like the argument if it's for CAP_NET_A=
-DMIN?
-> > Good code should check arguments regardless I think and it's useful to
-> > protect root from, say, programming bugs rather than kill the machine
-> > on any bug and misconfiguration. What am I missing?
->
-> I admit that I am on the fence on that argument: do not let even root
-> crash the system (the point that my code is crashing the system gives
-> weight to this side) vs. root has great powers, they need to know what
-> they are doing.
->
-> The argument that I used to convince myself was: root can easily create
-> a bunch of processes and give them the highest priority and do
-> effectively the same thing as this issue, so I went with a the "they
-> need to know what they are doing side".
->
-> A bit more on the specifics here:
->
->   - Using a small interval size, is only a limitation of the taprio
->   software mode, when using hardware offloads (which I think most users
->   do), any interval size (supported by the hardware) can be used;
->
->   - Choosing a good lower limit for this seems kind of hard: something
->   below 1us would never work well, I think, but things 1us < x < 100us
->   will depend on the hardware/kernel config/system load, and this is the
->   range includes "useful" values for many systems.
->
-> Perhaps a middle ground would be to impose a limit based on the link
-> speed, the interval can never be smaller than the time it takes to send
-> the minimum ethernet frame (for 1G links this would be ~480ns, should be
-> enough to catch most programming mistakes). I am going to add this and
-> see how it looks like.
->
-> Sorry for the brain dump :-)
->
-> >
-> > Also are we talking about CAP_NET_ADMIN in a user ns as well
-> > (effectively nobody)?
->
-> Just checked, we are talking about CAP_NET_ADMIN in user namespace as
-> well.
+Hello,
 
-OK, so this is not root/admin, this is just any user.
+syzbot found the following issue on:
+
+HEAD commit:    04b45717 Add linux-next specific files for 20200729
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=173774b8900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ec68f65b459f1ed
+dashboard link: https://syzkaller.appspot.com/bug?extid=9d46305e76057f30c74e
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+9d46305e76057f30c74e@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in io_account_mem fs/io_uring.c:7397 [inline]
+BUG: KASAN: use-after-free in io_uring_create fs/io_uring.c:8369 [inline]
+BUG: KASAN: use-after-free in io_uring_setup+0x2797/0x2910 fs/io_uring.c:8400
+Read of size 1 at addr ffff888087a41044 by task syz-executor.5/18145
+
+CPU: 0 PID: 18145 Comm: syz-executor.5 Not tainted 5.8.0-rc7-next-20200729-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ io_account_mem fs/io_uring.c:7397 [inline]
+ io_uring_create fs/io_uring.c:8369 [inline]
+ io_uring_setup+0x2797/0x2910 fs/io_uring.c:8400
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45c429
+Code: 8d b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f8f121d0c78 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
+RAX: ffffffffffffffda RBX: 0000000000008540 RCX: 000000000045c429
+RDX: 0000000000000000 RSI: 0000000020000040 RDI: 0000000000000196
+RBP: 000000000078bf38 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bf0c
+R13: 00007fff86698cff R14: 00007f8f121d19c0 R15: 000000000078bf0c
+
+Allocated by task 18145:
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
+ kmem_cache_alloc_trace+0x16e/0x2c0 mm/slab.c:3550
+ kmalloc include/linux/slab.h:554 [inline]
+ kzalloc include/linux/slab.h:666 [inline]
+ io_ring_ctx_alloc fs/io_uring.c:1042 [inline]
+ io_uring_create fs/io_uring.c:8313 [inline]
+ io_uring_setup+0x4df/0x2910 fs/io_uring.c:8400
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Freed by task 15583:
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
+ kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
+ __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
+ __cache_free mm/slab.c:3418 [inline]
+ kfree+0x103/0x2c0 mm/slab.c:3756
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+
+Last call_rcu():
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_record_aux_stack+0x82/0xb0 mm/kasan/generic.c:346
+ __call_rcu kernel/rcu/tree.c:2883 [inline]
+ call_rcu+0x14f/0x7e0 kernel/rcu/tree.c:2957
+ __percpu_ref_switch_to_atomic lib/percpu-refcount.c:192 [inline]
+ __percpu_ref_switch_mode+0x365/0x700 lib/percpu-refcount.c:237
+ percpu_ref_kill_and_confirm+0x94/0x350 lib/percpu-refcount.c:350
+ percpu_ref_kill include/linux/percpu-refcount.h:136 [inline]
+ io_ring_ctx_wait_and_kill+0x38/0x600 fs/io_uring.c:7799
+ io_uring_release+0x3e/0x50 fs/io_uring.c:7831
+ __fput+0x285/0x920 fs/file_table.c:281
+ task_work_run+0xdd/0x190 kernel/task_work.c:135
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:139 [inline]
+ exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:166
+ syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:241
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The buggy address belongs to the object at ffff888087a41000
+ which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 68 bytes inside of
+ 2048-byte region [ffff888087a41000, ffff888087a41800)
+The buggy address belongs to the page:
+page:000000007a29a6b9 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x87a41
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea0002386288 ffffea000253c0c8 ffff8880aa000800
+raw: 0000000000000000 ffff888087a41000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888087a40f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888087a40f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff888087a41000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                           ^
+ ffff888087a41080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888087a41100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
