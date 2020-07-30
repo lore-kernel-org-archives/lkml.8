@@ -2,81 +2,99 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE617C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0743DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E479206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:05:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="TgqjfKTg"
+	by mail.kernel.org (Postfix) with ESMTP id C7F2A20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:05:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596096334;
+	bh=3AwXia64fCTFpJoU6h5xVPg77ZN+UbsHXwwU8FVjCbw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Di0IgLrmNpH8OipBcBRhzMOEZfTxioo7awdW4XffdtqUe+SuNWBDiU92g9lRmBpON
+	 0rpXof0z3WSXKL625+OgkgHHU9d+W46QRnG6h71r99+i3DTPpDQSGTQfpw8HE+vdqm
+	 xEA4ukoyuolbRv9FVZJniiJcqWhGaiHs8eaEahMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbgG3IFa (ORCPT
+        id S1729167AbgG3IFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:05:30 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:16832 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729137AbgG3IFX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:05:23 -0400
-X-UUID: 644fe121202244c4b38649415137a0f5-20200730
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=gtc/7yIbUp5/Z/sZoviqQWwUV/DSInVUWpg1vFZLruY=;
-        b=TgqjfKTg2cR+y6eIfMj0fJSi1VFMiJkTpcLHe3zywndNhGyEWwGZEL77j/+3uUaqOws3JR2Kx7zGusNsmHiBX/3PmLHWOUfK0BkyXQ6/05MWFjmjJ4hz/hYZVaLXOgnWeXpN4P56usounCI43xOa9iMwCb4JvCcQ3UugEyhSFbw=;
-X-UUID: 644fe121202244c4b38649415137a0f5-20200730
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <henry.yen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1605561292; Thu, 30 Jul 2020 16:05:18 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 30 Jul 2020 16:05:14 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 30 Jul 2020 16:05:15 +0800
-From:   Henry Yen <henry.yen@mediatek.com>
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <linux-pm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Steven Liu <steven.liu@mediatek.com>,
-        Henry Yen <henry.yen@mediatek.com>,
-        Michael Kao <michael.kao@mediatek.com>
-Subject: [PATCH] thermal: mediatek: Fix missing selection
-Date:   Thu, 30 Jul 2020 16:05:04 +0800
-Message-ID: <1596096304-16422-1-git-send-email-henry.yen@mediatek.com>
-X-Mailer: git-send-email 1.9.1
+        Thu, 30 Jul 2020 04:05:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42658 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729152AbgG3IF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:05:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B592120656;
+        Thu, 30 Jul 2020 08:05:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596096329;
+        bh=3AwXia64fCTFpJoU6h5xVPg77ZN+UbsHXwwU8FVjCbw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lhidhxJ8g6pxO/yKglcHjbZ/m4FnKj27Tq/gJbTZFLpTrmETZSuRDKhVm4v6Sb6TY
+         /zl8XZfrNJp231bbcCDvpav5HM0vFWDSwJ9gabqCfGKE7HPgnJCPwdyTBezJNZl4TR
+         bSnNR95oMiNOyBU38qIrajG0hdKeO11X7nFh+vb0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+6720d64f31c081c2f708@syzkaller.appspotmail.com
+Subject: [PATCH 5.7 09/20] qrtr: orphan socket in qrtr_release()
+Date:   Thu, 30 Jul 2020 10:03:59 +0200
+Message-Id: <20200730074420.973027895@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200730074420.533211699@linuxfoundation.org>
+References: <20200730074420.533211699@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TWVkaWF0ZWsgdGhlcm1hbCBkcml2ZXIgaXMgY29tcGF0aWJsZSB3aXRoIG11bHRpcGxlIHBsYXRm
-b3Jtcy4NClNvbWUgb2YgdGhlIHBsYXRmb3JtcyAoZS5nLiwgTVQyNzAxKSByZXF1aXJlcyB0byBl
-bmFibGUNCk1FRElBVEVLX01UNjU3N19BVVhBREMgb3B0aW9uLiBJZiBsYWNrcyB0aGUgY29uZmln
-LCB0aGUgZHJpdmVyDQp3aWxsIG5vdCBiZSBhYmxlIHRvIHJlYWQgY29ycmVjdCB0ZW1wZXJhdHVy
-ZS4NCg0KVG8gZml4IGl0LCBzZWxlY3QgbWlzc2luZyBNRURJQVRFS19NVDY1NzdfQVVYQURDIGNv
-bmZpZy4NCg0KU2lnbmVkLW9mZi1ieTogSGVucnkgWWVuIDxoZW5yeS55ZW5AbWVkaWF0ZWsuY29t
-Pg0KLS0tDQogZHJpdmVycy90aGVybWFsL0tjb25maWcgfCAxICsNCiAxIGZpbGUgY2hhbmdlZCwg
-MSBpbnNlcnRpb24oKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvdGhlcm1hbC9LY29uZmlnIGIv
-ZHJpdmVycy90aGVybWFsL0tjb25maWcNCmluZGV4IDNlYjIzNDhlNTI0Mi4uM2EzN2Y2NzRmN2Yz
-IDEwMDY0NA0KLS0tIGEvZHJpdmVycy90aGVybWFsL0tjb25maWcNCisrKyBiL2RyaXZlcnMvdGhl
-cm1hbC9LY29uZmlnDQpAQCAtNDA5LDYgKzQwOSw3IEBAIGNvbmZpZyBNVEtfVEhFUk1BTA0KIAlk
-ZXBlbmRzIG9uIE5WTUVNIHx8IE5WTUVNPW4NCiAJZGVwZW5kcyBvbiBSRVNFVF9DT05UUk9MTEVS
-DQogCWRlZmF1bHQgeQ0KKwlzZWxlY3QgTUVESUFURUtfTVQ2NTc3X0FVWEFEQw0KIAloZWxwDQog
-CSAgRW5hYmxlIHRoaXMgb3B0aW9uIGlmIHlvdSB3YW50IHRvIGhhdmUgc3VwcG9ydCBmb3IgdGhl
-cm1hbCBtYW5hZ2VtZW50DQogCSAgY29udHJvbGxlciBwcmVzZW50IGluIE1lZGlhdGVrIFNvQ3MN
-Ci0tIA0KMi4xNy4xDQo=
+From: Cong Wang <xiyou.wangcong@gmail.com>
+
+[ Upstream commit af9f691f0f5bdd1ade65a7b84927639882d7c3e5 ]
+
+We have to detach sock from socket in qrtr_release(),
+otherwise skb->sk may still reference to this socket
+when the skb is released in tun->queue, particularly
+sk->sk_wq still points to &sock->wq, which leads to
+a UAF.
+
+Reported-and-tested-by: syzbot+6720d64f31c081c2f708@syzkaller.appspotmail.com
+Fixes: 28fb4e59a47d ("net: qrtr: Expose tunneling endpoint to user space")
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Eric Dumazet <eric.dumazet@gmail.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/qrtr/qrtr.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -1180,6 +1180,7 @@ static int qrtr_release(struct socket *s
+ 		sk->sk_state_change(sk);
+ 
+ 	sock_set_flag(sk, SOCK_DEAD);
++	sock_orphan(sk);
+ 	sock->sk = NULL;
+ 
+ 	if (!sock_flag(sk, SOCK_ZAPPED))
+
 
