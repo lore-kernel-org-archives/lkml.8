@@ -2,122 +2,132 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF7FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2E162070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:15:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N2Sm8Dqf"
+	by mail.kernel.org (Postfix) with ESMTP id A3AD72070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:16:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbgG3OP4 (ORCPT
+        id S1729311AbgG3OQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 10:15:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53184 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbgG3OP4 (ORCPT
+        Thu, 30 Jul 2020 10:16:43 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:56744 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726794AbgG3OQn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 10:15:56 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B4D8C061574;
-        Thu, 30 Jul 2020 07:15:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=tFNWyA6j56ec9aeIQ1OfZZxIge2UH4uedAgETJaYKbk=; b=N2Sm8DqfAr9tzEPQRhtlTBh2Mx
-        tox4OdA1mARnf8x6r2/doq8NQd/GK/8iZDaje/7XsV8tbwggyoq2W1S2ygXyLajpTKjcJd9QFE7rs
-        SG61EIoHG6EpfY4BgVOz9hO0M1JZQjS1CRYviOqKcNgj8f1nPY4fHN04NSa+ftWDiRksAGdy4Baf4
-        OBjvH33Y6L478WA5eYEArJ+5CAbHYsIps4st0nzh3UnqJd3UsrO4DVgi94MT4ICnRAUBZVLoepWOa
-        UqNbmygbtOqjvdev2rJApy35V0Pw68ULJKAwZABa5LKAIJ6et1rjNYrF1qv9XSikbQvyvTkKWndGQ
-        OdGEycIg==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k19LN-0002N9-GX; Thu, 30 Jul 2020 14:15:37 +0000
-Date:   Thu, 30 Jul 2020 15:15:37 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
-        ebiederm@xmission.com, akpm@linux-foundation.org,
-        christian.brauner@ubuntu.com, areber@redhat.com, serge@hallyn.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 09/23] ns: Introduce ns_idr to be able to iterate all
- allocated namespaces in the system
-Message-ID: <20200730141537.GF23808@casper.infradead.org>
-References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
- <159611040870.535980.13460189038999722608.stgit@localhost.localdomain>
- <20200730122319.GC23808@casper.infradead.org>
- <485c01e6-a4ee-5076-878e-6303e6d8d5f3@virtuozzo.com>
- <20200730135640.GE23808@casper.infradead.org>
- <1e41ae9d-9c3d-1c4a-d49e-b7f660ce99f7@virtuozzo.com>
+        Thu, 30 Jul 2020 10:16:43 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 1430B80045E5;
+        Thu, 30 Jul 2020 14:16:41 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id cxUsVcMBCens; Thu, 30 Jul 2020 17:16:39 +0300 (MSK)
+Date:   Thu, 30 Jul 2020 17:16:39 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 00/10] gpio: dwapb: Refactor GPIO resources
+ initialization
+Message-ID: <20200730141639.b6sinzkuckxhj7ld@mobilestation>
+References: <20200730135536.19747-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <1e41ae9d-9c3d-1c4a-d49e-b7f660ce99f7@virtuozzo.com>
+In-Reply-To: <20200730135536.19747-1-Sergey.Semin@baikalelectronics.ru>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 05:12:09PM +0300, Kirill Tkhai wrote:
-> On 30.07.2020 16:56, Matthew Wilcox wrote:
-> > On Thu, Jul 30, 2020 at 04:32:22PM +0300, Kirill Tkhai wrote:
-> >> On 30.07.2020 15:23, Matthew Wilcox wrote:
-> >>> xa_erase_irqsave();
-> >>
-> >> static inline void *xa_erase_irqsave(struct xarray *xa, unsigned long index)
-> >> {
-> >> 	unsigned long flags;
-> >>         void *entry;
-> >>
-> >>         xa_lock_irqsave(xa, flags);
-> >>         entry = __xa_erase(xa, index);
-> >>         xa_unlock_irqrestore(xa, flags);
-> >>
-> >>         return entry;
-> >> }
-> > 
-> > was there a question here?
+Wou, I've confused my SOB tag here.
+
+Linus, if no additional patchset revision is required, could you please
+replace it with:
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+?
+
+Alternatively I could resend the series with correct version of the tag.
+
+-Sergey
+
+On Thu, Jul 30, 2020 at 04:55:26PM +0300, Serge Semin wrote:
+> This series is about the DW APB GPIO device initialization procedure
+> cleaning up. First of all it has been discovered that having a
+> vendor-specific "snps,nr-gpios" property isn't only redundant but also
+> might be dangerous (see the commit log for details). Instead we suggest to
+> use the generic "ngpios" property to define a number of GPIOs each DW APB
+> GPIO controller port supports. Secondly seeing a tendency of the other
+> GPIO drivers getting converted to using the GPIO-lib-based IRQ-chip
+> interface this series provides a patch, which replaces the DW APB GPIO
+> driver Generic IRQ-chip implementation with the GPIO-lib IRQ-chip one.
+> Finally the DW APB GPIO device probe procedure is simplified by
+> converting the code to be using the device managed resources for the
+> reference clocks initialization, reset control assertion/de-assertion
+> and GPIO-chip registration.
 > 
-> No, I just I will add this in separate patch.
-
-Ah, yes.  Thanks!
-
-> >>>> +struct ns_common *ns_get_next(unsigned int *id)
-> >>>> +{
-> >>>> +	struct ns_common *ns;
-> >>>> +
-> >>>> +	if (*id < PROC_NS_MIN_INO - 1)
-> >>>> +		*id = PROC_NS_MIN_INO - 1;
-> >>>> +
-> >>>> +	*id += 1;
-> >>>> +	*id -= PROC_NS_MIN_INO;
-> >>>> +
-> >>>> +	rcu_read_lock();
-> >>>> +	do {
-> >>>> +		ns = idr_get_next(&ns_idr, id);
-> >>>> +		if (!ns)
-> >>>> +			break;
-> >>>
-> >>> xa_find_after();
-> >>>
-> >>> You'll want a temporary unsigned long to work with ...
-> >>>
-> >>>> +		if (!refcount_inc_not_zero(&ns->count)) {
-> >>>> +			ns = NULL;
-> >>>> +			*id += 1;
-> >>>
-> >>> you won't need this increment.
-> >>
-> >> Why? I don't see a way xarray allows to avoid this.
-> > 
-> > It's embedded in xa_find_after().
->  
-> How is it embedded to check ns->count that it knows nothing?
-
-I meant you won't need to increment '*id'.  The refcount is, of course,
-your business.
-
+> Some additional cleanups like replacing a number of GPIOs literal with a
+> corresponding macro and grouping the IRQ handlers up in a single place of
+> the driver are also introduced in this patchset.
+> 
+> Link: https://lore.kernel.org/linux-gpio/20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru/
+> Changelog v2:
+> - Replace gc->to_irq() with irq_find_mapping() method.
+> - Refactor dwapb_irq_set_type() method to directly set IRQ flow handler
+>   instead of using a temporary variable.
+> - Initialize GPIOlib IRQ-chip settings before calling request_irq()
+>   method.
+> - Add a notice regarding regression of commit 6a2f4b7dadd5 ("gpio:
+>   dwapb: use a second irq chip").
+> - Move the acpi_gpiochip_{request,free}_interrupts() methods invocation
+>   removal to a dedicated patch.
+> - Move GPIO-chip to_irq callback removal to a dedicated patch.
+> - Add a patch which replaces a max number of GPIO literals with a macro.
+> - Introduce dwapb_convert_irqs() method to convert the sparse parental
+>   IRQs array into an array of linearly distributed IRQs correctly
+>   perceived by GPIO-lib.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Serge Semin (10):
+>   dt-bindings: gpio: dwapb: Add ngpios property support
+>   gpio: dwapb: Add ngpios DT-property support
+>   gpio: dwapb: Move MFD-specific IRQ handler
+>   gpio: dwapb: Add max GPIOs macro
+>   gpio: dwapb: Convert driver to using the GPIO-lib-based IRQ-chip
+>   gpio: dwapb: Discard GPIO-to-IRQ mapping function
+>   gpio: dwapb: Discard ACPI GPIO-chip IRQs request
+>   gpio: dwapb: Get reset control by means of resource managed interface
+>   gpio: dwapb: Get clocks by means of resource managed interface
+>   gpio: dwapb: Use resource managed GPIO-chip add data method
+> 
+>  .../bindings/gpio/snps,dw-apb-gpio.yaml       |   6 +
+>  drivers/gpio/Kconfig                          |   2 +-
+>  drivers/gpio/gpio-dwapb.c                     | 340 +++++++++---------
+>  include/linux/platform_data/gpio-dwapb.h      |   4 +-
+>  4 files changed, 178 insertions(+), 174 deletions(-)
+> 
+> -- 
+> 2.27.0
+> 
