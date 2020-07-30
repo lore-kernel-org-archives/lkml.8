@@ -2,115 +2,91 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 048D8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B21A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB0D120829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 844D920829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:58:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596117486;
+	bh=I4VtO+RvTl5dHcnmis2rhMN15keqAvYuB5FZEdImv3A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HM1boQrSolEHmmzVujMtH5rKrc1x1v5XIOqwh/W8sfAqyUAgsMP55Y57gL83mti7W
+	 zTxi0McvyI2tQIq+6dABbDaHe2IoYPm2koxK8Rl8N2QAN18cAw+hZ5LsyS0YGLJmhx
+	 Wo/X+FM4iGkc7Y3JcAFbD6wkhta0Y02MKzPmPjsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729518AbgG3N5r (ORCPT
+        id S1729371AbgG3N6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 09:57:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728286AbgG3N5p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 09:57:45 -0400
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DC54C061574;
-        Thu, 30 Jul 2020 06:57:45 -0700 (PDT)
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.93)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1k192s-00DYvR-Pl; Thu, 30 Jul 2020 15:56:30 +0200
-Message-ID: <943c5eaf12bc9e92e817fb9818ebd65038f5fb54.camel@sipsolutions.net>
-Subject: Re: [RFC 1/2] devlink: add simple fw crash helpers
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>, derosier@gmail.com,
-        greearb@candelatech.com, jeyu@kernel.org,
-        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
-        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
-        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
-        schlad@suse.de, andriy.shevchenko@linux.intel.com,
-        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        ath10k@lists.infradead.org, jiri@resnulli.us,
-        briannorris@chromium.org
-Date:   Thu, 30 Jul 2020 15:56:25 +0200
-In-Reply-To: <20200525135746.45e764de@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-References: <20200519010530.GS11244@42.do-not-panic.com>
-         <20200519211531.3702593-1-kuba@kernel.org>
-         <20200522052046.GY11244@42.do-not-panic.com>
-         <20200522101738.1495f4cc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-         <2e5199edb433c217c7974ef7408ff8c7253145b6.camel@sipsolutions.net>
-         <20200525135746.45e764de@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.4 (3.36.4-1.fc32) 
+        Thu, 30 Jul 2020 09:58:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36580 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727966AbgG3N6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 09:58:04 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 368962074B;
+        Thu, 30 Jul 2020 13:58:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596117484;
+        bh=I4VtO+RvTl5dHcnmis2rhMN15keqAvYuB5FZEdImv3A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bm9nVVGjGZ7XYNnFoyAkAmwjyW5kA9q1IsWKYLKaXwYx5CxsIH156XdZeWk+HBeOn
+         nkjkN6aIgkq/OSSDn08riSiwgRXr2P9h+M3dHPFJmZk2HRzvSiuVcc3IOnBZLRq4lG
+         bbcdjhffeKKlT7hQJnfY11YZKzgeDrmUju2alRl8=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=hot-poop.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k194M-00GH3a-Mo; Thu, 30 Jul 2020 14:58:02 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Alexander Graf <graf@amazon.com>, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        linux-kernel@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        kvmarm@lists.cs.columbia.edu,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH] KVM: arm: Add trace name for ARM_NISV
+Date:   Thu, 30 Jul 2020 14:57:56 +0100
+Message-Id: <159611742543.1691243.7923791390001583960.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200730094441.18231-1-graf@amazon.com>
+References: <20200730094441.18231-1-graf@amazon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: graf@amazon.com, kvm@vger.kernel.org, pbonzini@redhat.com, xypron.glpk@gmx.de, linux-kernel@vger.kernel.org, christoffer.dall@arm.com, kvmarm@lists.cs.columbia.edu, vkuznets@redhat.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Sorry ... long delay.
-
-> > The reason I'm asking is that it's starting to sound like we really
-> > ought to be implementing devlink, but we've got a bunch of
-> > infrastructure that uses the devcoredump, and it'll take time
-> > (significantly so) to change all that...
+On Thu, 30 Jul 2020 11:44:41 +0200, Alexander Graf wrote:
+> Commit c726200dd106d ("KVM: arm/arm64: Allow reporting non-ISV data aborts
+> to userspace") introduced a mechanism to deflect MMIO traffic the kernel
+> can not handle to user space. For that, it introduced a new exit reason.
 > 
-> In devlink world pure FW core dumps are exposed by devlink regions.
-> An API allowing reading device memory, registers, etc., but also 
-> creating dumps of memory regions when things go wrong. It should be
-> a fairly straightforward migration.
+> However, it did not update the trace point array that gives human readable
+> names to these exit reasons inside the trace log.
+> 
+> [...]
 
-Right. We also have regions (various memory pieces, registers, ...).
+Applied to kvm-arm64/misc-5.9, thanks!
 
-One issue might be that for devlink we wouldn't want to expose these as
-a single blob, I guess, but for devcoredump we already have a custom
-format to glue all the things together. Since it seems unlikely that
-anyone else would want to use the *iwlwifi* format to glue things
-together, we'd have to do something there.
+[1/1] KVM: arm: Add trace name for ARM_NISV
+      commit: 1ccf2fe35c30f79102ad129c5aa71059daaaed7f
 
-But perhaps that could be a matter of providing a "glue things into a
-devcoredump" function that would have a reasonable default but could be
-overridden by the driver for those migration cases.
+Cheers,
 
-> Devlink health is more targeted, the dump is supposed to contain only
-> relevant information, selected and formatted by the driver. When device
-> misbehaves driver reads the relevant registers and FW state and creates
-> a formatted state dump. I believe each element of the dump must fit
-> into a netlink message (but there may be multiple elements, see
-> devlink_fmsg_prepare_skb()).
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
 
-That wouldn't help for our big memory dumps, but OK.
-
-> We should be able to convert dl-regions dumps and dl-health dumps into
-> devcoredumps, but since health reporters are supposed to be more
-> targeted there's usually multiple of them per device.
-
-Right.
-
-> Conversely devcoredumps can be trivially exposed as dl-region dumps,
-> but I believe dl-health would require driver changes to format the
-> information appropriately.
-
-Agree.
-
-Anyway, thanks. I'll put it on my list of things to look at ... not too
-hopeful that will be soon, given how long it even took me to get back to
-this email :)
-
-johannes
 
