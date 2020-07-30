@@ -2,137 +2,89 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B3EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC86C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C0D6207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 131722074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:02:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbgG3HAd (ORCPT
+        id S1728752AbgG3HCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 03:00:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42508 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbgG3HAc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 03:00:32 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DF80C061794
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 00:00:32 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k12YD-0006w4-F8; Thu, 30 Jul 2020 09:00:25 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k12Y9-0007TC-HZ; Thu, 30 Jul 2020 09:00:21 +0200
-Date:   Thu, 30 Jul 2020 09:00:21 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Roy Im <roy.im.opensource@diasemi.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Rob Herring <robh@kernel.org>,
-        Samuel Ortiz <sameo@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Support Opensource <support.opensource@diasemi.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH v18 3/3] Input: new da7280 haptic driver
-Message-ID: <20200730070021.l2yuomsc3uwua5bx@pengutronix.de>
-References: <cover.1595991580.git.Roy.Im@diasemi.com>
- <23b3470401ec5cf525add8e1227cb67586b9f294.1595991580.git.Roy.Im@diasemi.com>
- <20200729063638.GY1665100@dtor-ws>
- <20200729072145.ifzoe656sjpxdior@pengutronix.de>
- <20200730050653.GA1665100@dtor-ws>
- <20200730061631.y4r4s6v3xepktj54@pengutronix.de>
- <20200730063404.GH1665100@dtor-ws>
+        Thu, 30 Jul 2020 03:02:22 -0400
+Received: from verein.lst.de ([213.95.11.211]:54761 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726133AbgG3HCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 03:02:21 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 334FE68AFE; Thu, 30 Jul 2020 09:02:18 +0200 (CEST)
+Date:   Thu, 30 Jul 2020 09:02:18 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 08/23] fs: don't change the address limit for
+ ->write_iter in __kernel_write
+Message-ID: <20200730070218.GA18653@lst.de>
+References: <20200707174801.4162712-1-hch@lst.de> <20200707174801.4162712-9-hch@lst.de> <20200729205036.GA1236929@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6mvmazbtlauombxa"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200730063404.GH1665100@dtor-ws>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200729205036.GA1236929@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 29, 2020 at 09:50:36PM +0100, Al Viro wrote:
+> On Tue, Jul 07, 2020 at 07:47:46PM +0200, Christoph Hellwig wrote:
+> > If we write to a file that implements ->write_iter there is no need
+> > to change the address limit if we send a kvec down.  Implement that
+> > case, and prefer it over using plain ->write with a changed address
+> > limit if available.
+> 
+> 	You are flipping the priorities of ->write and ->write_iter
+> for kernel_write().
 
---6mvmazbtlauombxa
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Note by the end of the series (and what's been in linux-next for a while
+now) there is no order, as kernel_write only uses ->write_iter, so a
+few patches later this kinda becomes moot point.
 
-Hello,
+> Now, there are 4 instances of file_operations
+> where we have both.  null_fops and zero_fops are fine either way -
+> ->write() and ->write_iter() do the same thing there (and arguably
+> removing ->write might be the right thing; the only reason I hesistate
+> is that writing to /dev/null *is* critical for many things, including
+> the proper mail delivery ;-)
+> 
+> However, the other two (infinibarf and pcm) are different; there we
+> really have different semantics.  I don't believe anything writes into
+> either under KERNEL_DS, but having kernel_write() and vfs_write() with
+> subtly different semantics is asking for trouble down the road.
+> 
+> How about we remove ->write in null_fops/zero_fops and fail loudly if
+> *both* ->write() and ->write_iter() are present (in kernel_write(),
+> that is)?
 
-On Wed, Jul 29, 2020 at 11:34:04PM -0700, Dmitry Torokhov wrote:
-> On Thu, Jul 30, 2020 at 08:16:31AM +0200, Uwe Kleine-K=F6nig wrote:
-> > I suggested that some time ago with limited success, see
-> > https://lore.kernel.org/lkml/20200129115516.zsvxu56e6h7gheiw@pathway.su=
-se.cz/
-> > .
-> >=20
-> > > In the meantime I would prefer using %d when we have integer
-> > > error. We should not see these error messages anyway ;)
-> >=20
-> > I don't agree. Error messages are supposed to be helpful and I prefer
-> > some casting between error pointer and error int over emitting bare
-> > numbers to the kernel log. (And additionally the uglyness might help to
-> > convince the vsprintf guys that %de might be a good idea after all :-)
->=20
-> Sorry, but I do not think that I want to introduce this pointless
-> casting just to sway printk folks. Either we have proper way of
-> formatting error codes, or we do not and we stick with what was working
-> since forever.
+I'm fine with removing plain ->write for /dev/null and /dev/zero, as
+that seems the right thing to do.
 
-You got me wrong. Getting an argument to rediscuss %de is just a minor
-side reason for me. Getting an expressive error message is the relevant
-reason.
+Failing the kernel ops if both are present sounds fine, I'm not sure
+about the loud part as it could be user triggered through splice.  I'd
+go for the same kind of noticable not loud warning that we have for
+the lack of iter ops in kernel_read/write.
 
-There is also an inconsitence in what you suggest that I don't like. If
-in a probe function devm_clk_get fails it should say "-ENODEV" but if
-it's clk_enable that fails it should say "-5"?
-
-Also "we stick with what was working since forever" is a poor argument.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---6mvmazbtlauombxa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8icAIACgkQwfwUeK3K
-7AnIkAf/d0H21gepKuzCj8TF4i7RhVdQmovVhCkjECV45VfUaPWJVa5DPDT51HVp
-ddTSzc4cQybR+P11UlUZxDh19YETlA7weL1KOPOqVQsdolbW7jg55nisi0UP5PEN
-rPfPU6HBQCr4G1pFsoljrxtLUe/oXfz52LMF1MQtRaOoOebAxuDZJ66D45I2fAm1
-ZXFmjlpv8x0ynqwD2JjmZGc8YQG2+qa5ncHlZg2Ip6dNL99PMMuQ6vFK7+tDah0f
-10opv9MtabIWYebuDxP5Pn3LeAG5Vw11oMjZKsf9ndwDCSqg1F4uLYYX7iDsR1lb
-sGIy10masMtW9D+19sXnR2cqwFDzWQ==
-=DuS1
------END PGP SIGNATURE-----
-
---6mvmazbtlauombxa--
+> There's a similar situation on the read side - there we have /dev/null
+> with both ->read() and ->read_iter() (and there "remove ->read" is
+> obviously the right thing to do) *and* we have pcm crap, with different
+> semantics for ->read() and ->read_iter().
