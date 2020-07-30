@@ -2,219 +2,170 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 410A5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A47C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16CAD2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:04:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aKwkplrC"
+	by mail.kernel.org (Postfix) with ESMTP id 695632084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:05:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbgG3GEb (ORCPT
+        id S1728644AbgG3GFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 02:04:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgG3GEa (ORCPT
+        Thu, 30 Jul 2020 02:05:32 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33950 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725892AbgG3GFb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 02:04:30 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86DD9C061794;
-        Wed, 29 Jul 2020 23:04:30 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id il6so3612599pjb.0;
-        Wed, 29 Jul 2020 23:04:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=ComNkpy0mDYB1CNiEj1XOKVCQA9y437to2e9E5caCaU=;
-        b=aKwkplrCz2NPVfcK7clzI4/PBXWv8w6qJoj51ShustB+6cHEFb0N/rOPITlMtLkePA
-         7zIVKj6zdTL6qLKsOi/J60izP5mZ0e/2rt1NgsA5dn4J1HrDG4y7+d/aHOcK4K+lkuWw
-         2H6dh73jKI0k71IXu4v7SdTE0Xng/+JQsb1dY618OpgcZ+Y/mnAaWNzpoX+A0/6bIW7F
-         C8l9ceoYgVO0XlFn9XEZdH78mOWAp7BP50ncWrcfBZIC5FRTNDmw8gFwCAZi2faS3eev
-         ahgHSK3KkqFjW3ydrfOPSuNhA/vdfuBMa2X7T4/AjR/flAWG90+VPHZdrcaqV+5m196K
-         FYRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ComNkpy0mDYB1CNiEj1XOKVCQA9y437to2e9E5caCaU=;
-        b=ExoF5K7HYHhNDCytXoPae3V2xDgRWje+/P4nZAB2hdk6ez63Yq0pmimo42m30elRGP
-         UoXnQtcqHrZZPrb95bia5SReWAUisKjmRgskOCwEmAxc6+CVqnP0XCfPVK6zbVjzo0ov
-         iC6kwQ5cZzysCRJ/spSbr0fzkIHt9Rrt9EihkmnsTEIanTqWPNOTS0/fP+/BWmHu2ipm
-         /mcJawxDV0Ijv0MRL/yfrW5mdjcEzj+YkKkjCgljaFxqXyNJC8arhKJs4/IERc5rmaB4
-         ockGSy9rP+DoLRXcIO9irL1EDm8Nui2pTyEsiqRhoek6JvGCxqjvgwfPndhEUv1EmYRR
-         +7PQ==
-X-Gm-Message-State: AOAM531g2kExJyVe/cwZqc1byIF9tR/LrTdezinTkUaY5gvsU/na+Hkc
-        XXK4cfQ7d0hU6X34dBXbH7k=
-X-Google-Smtp-Source: ABdhPJwjd5kmrY/fNgHXgOLGocoGLlKHMUrCvfqRXqmWi6QlXeg6hdGvLmTIkKPpzMEqlJtMq5t15w==
-X-Received: by 2002:a17:90b:3807:: with SMTP id mq7mr12483216pjb.221.1596089069935;
-        Wed, 29 Jul 2020 23:04:29 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id 9sm4533833pfy.177.2020.07.29.23.04.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 23:04:29 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 23:04:26 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>,
-        Robin Gong <yibin.gong@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Adam Ford <aford173@gmail.com>, linux-input@vger.kernel.org,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>
-Subject: Re: [PATCH v3 2/3] Input: snvs_pwrkey - enable snvs clock as needed
-Message-ID: <20200730060426.GD1665100@dtor-ws>
-References: <20200723074314.3304-1-horia.geanta@nxp.com>
- <20200723074314.3304-3-horia.geanta@nxp.com>
- <20200729073323.pse772mh44bzgdai@pengutronix.de>
+        Thu, 30 Jul 2020 02:05:31 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06U5Wafr139489;
+        Thu, 30 Jul 2020 02:05:18 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32k9qv9guh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Jul 2020 02:05:18 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06U5j1N9025907;
+        Thu, 30 Jul 2020 02:05:18 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32k9qv9gt7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Jul 2020 02:05:17 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06U65Fdq005152;
+        Thu, 30 Jul 2020 06:05:15 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04ams.nl.ibm.com with ESMTP id 32gcy4nupm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Jul 2020 06:05:15 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06U65CPF31064358
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Jul 2020 06:05:12 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 05A31A406F;
+        Thu, 30 Jul 2020 06:05:12 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 499B2A4065;
+        Thu, 30 Jul 2020 06:05:08 +0000 (GMT)
+Received: from [9.102.24.129] (unknown [9.102.24.129])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 30 Jul 2020 06:05:08 +0000 (GMT)
+Subject: Re: [RESEND PATCH v5 00/11] ppc64: enable kdump support for
+ kexec_file_load syscall
+To:     piliu <piliu@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     kernel test robot <lkp@intel.com>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Dave Young <dyoung@redhat.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+References: <159579157320.5790.6748078824637688685.stgit@hbathini>
+ <23911b9d-7534-031c-6f98-80f90439c834@redhat.com>
+From:   Hari Bathini <hbathini@linux.ibm.com>
+Message-ID: <df8f1d6f-d85b-f2fb-548b-ecdaddec311c@linux.ibm.com>
+Date:   Thu, 30 Jul 2020 11:35:07 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200729073323.pse772mh44bzgdai@pengutronix.de>
+In-Reply-To: <23911b9d-7534-031c-6f98-80f90439c834@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-30_03:2020-07-29,2020-07-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
+ phishscore=0 clxscore=1015 bulkscore=0 impostorscore=0 mlxlogscore=999
+ adultscore=0 malwarescore=0 priorityscore=1501 lowpriorityscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007300042
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 09:33:23AM +0200, Marco Felsch wrote:
-> Hi,
+
+
+On 28/07/20 8:02 am, piliu wrote:
 > 
-> On 20-07-23 10:43, Horia Geantă wrote:
-> > From: André Draszik <git@andred.net>
-> > 
-> > At the moment, enabling this driver without the SNVS RTC driver
-> > being active will hang the kernel as soon as the power button
-> > is pressed.
-> > 
-> > The reason is that in that case the SNVS isn't enabled, and
-> > any attempt to read the SNVS registers will simply hang forever.
-> > 
-> > Ensure the clock is enabled (during the interrupt handler) to
-> > make this driver work.
-> > 
-> > Also see commit 7f8993995410 ("drivers/rtc/rtc-snvs: add clock support")
-> > and commit edb190cb1734
-> > ("rtc: snvs: make sure clock is enabled for interrupt handle")
-> > for similar updates to the snvs rtc driver.
-> > 
-> > Signed-off-by: André Draszik <git@andred.net>
-> > Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
-> > Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-> > ---
-> >  drivers/input/keyboard/snvs_pwrkey.c | 28 +++++++++++++++++++++++++++-
-> >  1 file changed, 27 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/snvs_pwrkey.c
-> > index 2f5e3ab5ed63..382d2ae82c9b 100644
-> > --- a/drivers/input/keyboard/snvs_pwrkey.c
-> > +++ b/drivers/input/keyboard/snvs_pwrkey.c
-> > @@ -16,6 +16,7 @@
-> >  #include <linux/of_address.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/pm_wakeirq.h>
-> > +#include <linux/clk.h>
-> >  #include <linux/mfd/syscon.h>
-> >  #include <linux/regmap.h>
-> >  
-> > @@ -38,6 +39,7 @@ struct pwrkey_drv_data {
-> >  	int wakeup;
-> >  	struct timer_list check_timer;
-> >  	struct input_dev *input;
-> > +	struct clk *clk;
-> >  	u8 minor_rev;
-> >  };
-> >  
-> > @@ -47,7 +49,10 @@ static void imx_imx_snvs_check_for_events(struct timer_list *t)
-> >  	struct input_dev *input = pdata->input;
-> >  	u32 state;
-> >  
-> > +	clk_enable(pdata->clk);
-> >  	regmap_read(pdata->snvs, SNVS_HPSR_REG, &state);
-> > +	clk_disable(pdata->clk);
-> > +
-> >  	state = state & SNVS_HPSR_BTN ? 1 : 0;
-> >  
-> >  	/* only report new event if status changed */
-> > @@ -74,11 +79,13 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
-> >  
-> >  	pm_wakeup_event(input->dev.parent, 0);
-> >  
-> > +	clk_enable(pdata->clk);
-> > +
-> >  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
-> >  	if (lp_status & SNVS_LPSR_SPO) {
-> >  		if (pdata->minor_rev == 0) {
-> >  			/*
-> > -			 * The first generation i.MX6 SoCs only sends an
-> > +			 * The first generation i.MX[6|7] SoCs only send an
-> >  			 * interrupt on button release. To mimic power-key
-> >  			 * usage, we'll prepend a press event.
-> >  			 */
-> > @@ -96,6 +103,8 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
-> >  	/* clear SPO status */
-> >  	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
-> >  
-> > +	clk_disable(pdata->clk);
 > 
-> I'm not so happy about clk_enable/disable() during the interrupt
-> routine since those routines should be handled fast. Since we assume
-> that the clock is always oni
+> On 07/27/2020 03:36 AM, Hari Bathini wrote:
+>> Sorry! There was a gateway issue on my system while posting v5, due to
+>> which some patches did not make it through. Resending...
+>>
+>> This patch series enables kdump support for kexec_file_load system
+>> call (kexec -s -p) on PPC64. The changes are inspired from kexec-tools
+>> code but heavily modified for kernel consumption.
+>>
+>> The first patch adds a weak arch_kexec_locate_mem_hole() function to
+>> override locate memory hole logic suiting arch needs. There are some
+>> special regions in ppc64 which should be avoided while loading buffer
+>> & there are multiple callers to kexec_add_buffer making it complicated
+>> to maintain range sanity and using generic lookup at the same time.
+>>
+>> The second patch marks ppc64 specific code within arch/powerpc/kexec
+>> and arch/powerpc/purgatory to make the subsequent code changes easy
+>> to understand.
+>>
+>> The next patch adds helper function to setup different memory ranges
+>> needed for loading kdump kernel, booting into it and exporting the
+>> crashing kernel's elfcore.
+>>
+>> The fourth patch overrides arch_kexec_locate_mem_hole() function to
+>> locate memory hole for kdump segments by accounting for the special
+>> memory regions, referred to as excluded memory ranges, and sets
+>> kbuf->mem when a suitable memory region is found.
+>>
+>> The fifth patch moves walk_drmem_lmbs() out of .init section with
+>> a few changes to reuse it for setting up kdump kernel's usable memory
+>> ranges. The next patch uses walk_drmem_lmbs() to look up the LMBs
+>> and set linux,drconf-usable-memory & linux,usable-memory properties
+>> in order to restrict kdump kernel's memory usage.
+>>
+>> The seventh patch updates purgatory to setup r8 & r9 with opal base
+>> and opal entry addresses respectively to aid kernels built with
+>> CONFIG_PPC_EARLY_DEBUG_OPAL enabled. The next patch setups up backup
+>> region as a kexec segment while loading kdump kernel and teaches
+>> purgatory to copy data from source to destination.
+>>
+>> Patch 09 builds the elfcore header for the running kernel & passes
+>> the info to kdump kernel via "elfcorehdr=" parameter to export as
+>> /proc/vmcore file. The next patch sets up the memory reserve map
+>> for the kexec kernel and also claims kdump support for kdump as
+>> all the necessary changes are added.
+>>
+>> The last patch fixes a lookup issue for `kexec -l -s` case when
+>> memory is reserved for crashkernel.
+>>
+>> Tested the changes successfully on P8, P9 lpars, couple of OpenPOWER
+>> boxes, one with secureboot enabled, KVM guest and a simulator.
+>>
+>> v4 -> v5:
+>> * Dropped patches 07/12 & 08/12 and updated purgatory to do everything
+>>    in assembly.
 
-We do? I thought that the fact that clock might be off is the root of
-the problem.
+Hello Pingfan,
 
-> I would rather call clk_prepare_enable()
-> during probe() and keep the clock on.
+Sorry, I missed out on responding to this.
 
-clk_enable() must not sleep and is supposed to be lightweight. This
-interrupt I believe is supposed to be infrequent, so having it here
-should be fine and might save us some power.
 
-> 
-> > +
-> >  	return IRQ_HANDLED;
-> >  }
-> >  
-> > @@ -140,6 +149,23 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
-> >  	if (pdata->irq < 0)
-> >  		return -EINVAL;
-> >  
-> > +	pdata->clk = devm_clk_get_optional(&pdev->dev, "snvs-pwrkey");
-> > +	if (IS_ERR(pdata->clk))
-> > +		return PTR_ERR(pdata->clk);
-> > +
-> > +	error = clk_prepare(pdata->clk);
-> > +	if (error) {
-> > +		dev_err(&pdev->dev, "failed to prepare the snvs clock\n");
-> > +		return error;
-> > +	}
-> > +	error = devm_add_action_or_reset(&pdev->dev,
-> > +			(void(*)(void *))clk_unprepare,
-> > +			pdata->clk);
-> 
-> I'm not a fan about those casts. However, the intentation should be
-> fixed.
+> I guess you achieve this by carefully selecting instruction to avoid
+> relocation issue, right?
 
-Yes, can we please create a proper function for this (or maybe we will
-finally get devm clk API?).
+Yes. No far branching or reference to data from elsewhere.
 
-Thanks.
-
--- 
-Dmitry
+Thanks
+Hari
