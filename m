@@ -2,113 +2,112 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D58C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF24C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 687A420656
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59A4920578
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:10:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XBqp9xb8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WrT5vijK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbgG3GKw (ORCPT
+        id S1728777AbgG3GKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 02:10:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34866 "EHLO
+        Thu, 30 Jul 2020 02:10:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728741AbgG3GKp (ORCPT
+        with ESMTP id S1728758AbgG3GKs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 02:10:45 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50F68C0619D2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 23:10:45 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 74so6162308pfx.13
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 23:10:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uQYpM0l2BVpiJWQZFm1BaeuXeXgCvf7ouFHsM+pxK3o=;
-        b=XBqp9xb8A9zcXM17E9TiNethe3UCCEif5I2cMuTLDm+LzY/Q2h/KEWFSUUIU7+OOsp
-         fGEfbag1AKQoz9XbUpT/O8kbZdNkENjutG77LUQoYDU1WZSv71gcM3J/pBNKIVOkdclA
-         FLTQ7DrgWZXGCECvMsiy7JgW113vuB7rqh+MYWSubjaMXMJDnSj1gFZMVwHl9DVCZWnr
-         V1QOc8GZRqNu9ZCgYrn1pMnHs9SapztI74OlUkc0AskHJD/mQ9yWV9lupgZKwp63IBNg
-         afahJsaFHOxnIDSCUeF37d3jphtAWoDYcShcDIXQ22qeNvzkR4hQyZz+1pQhbjw8WLa1
-         NhIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uQYpM0l2BVpiJWQZFm1BaeuXeXgCvf7ouFHsM+pxK3o=;
-        b=MUJHeFw9Dpwd/YUr8ErvgclQre3/BwruBcAMmy7is6uN5i71YYTOxWZFG24Nfx82tf
-         DcFDLx75v7/Ocx6g+UbrGKAc9rxsn0CkxNmn9s/Mv84xXD+c8pRPCeD9jUeqy/d9y9AD
-         kuCXX61LmofKRR5UZyFLpdq/GAbjczdGJYWL5s6SALI5xhIj7uPQYG1dADnZ7bVfyx+9
-         KFngWciTWAcOg3Zf6CNU7oNf+gJkBUpMlB+FlzixWsMC1dY0ehZ/ZfBZ9t07YUjz4bPy
-         joWHZHWv5jD0Bi6GqGL2AyzFi/Ye+99DkRMnAsS5upri37ns8fLSAmrWka7EDAMFn4+m
-         ccTA==
-X-Gm-Message-State: AOAM531C3yoCUqp4isOE3u+QAEiwE6pJdD7yro5YuUIzXsAKpWOtylYM
-        sVoLvMr6DuqeZYZDmOkXB1NYew==
-X-Google-Smtp-Source: ABdhPJxSQvMRu1T3KgR5lHuZ010N5ABhbRziRXq9ba4d0wesRySTDuiJw9HJ7RCTVwThb1P+v7OFrQ==
-X-Received: by 2002:a62:7c09:: with SMTP id x9mr1632779pfc.229.1596089444870;
-        Wed, 29 Jul 2020 23:10:44 -0700 (PDT)
-Received: from localhost ([106.201.14.19])
-        by smtp.gmail.com with ESMTPSA id t73sm4667429pfc.78.2020.07.29.23.10.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Jul 2020 23:10:44 -0700 (PDT)
-Date:   Thu, 30 Jul 2020 11:40:41 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Amit Kucheria <amitk@kernel.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        ionela.voinescu@arm.com,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cpufreq: cached_resolved_idx can not be negative
-Message-ID: <20200730061041.gyprgwfkzfb64t3m@vireshk-mac-ubuntu>
-References: <d48d824ab3abacb2356878780979d7ed42191eaf.1596080365.git.viresh.kumar@linaro.org>
- <CAHLCerP4YPHc4sKD_RTq=Gxfj+ex4F=J2is1Y-UzGXcOuEOrOQ@mail.gmail.com>
+        Thu, 30 Jul 2020 02:10:48 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97A03C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 23:10:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=7i/oU01pSKahB9sA7zWqIHiRiXPfiH+9euXkSu1Iu/0=; b=WrT5vijKlnpkXAeEmW3JOO43tA
+        DJqM1qnIcD4kK7DTrKwlRy5iBsuHM7lDbiaSrWV6F1sR0Ejah06SgpIk9dTNiHAgwECdfVU0czByu
+        Tlt5fliW0u+egxZOm/DCrmvGny4hgIPHQWufkgsq1LQqp7OFjGOPE+A2B3cO+gqXu2WZi9yEIkY84
+        85iZhgUoXe5reLeUTNn9e6Otesbu7lNpkAA2QJypG1KlWhGH7/R+GeU4uZxHz3DZLFvQ069iS8gcp
+        7JJzwkNA1YgPsDxwRxky+dEHBc3LsTonnnaU9npZ5GLD/HEJDABO1aiKLq3KEwrvcDHKicJs9CyAP
+        q1lu0AVg==;
+Received: from 138.57.168.109.cust.ip.kpnqwest.it ([109.168.57.138] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k11m8-0007WY-WF; Thu, 30 Jul 2020 06:10:46 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 8/8] modules: inherit TAINT_PROPRIETARY_MODULE
+Date:   Thu, 30 Jul 2020 08:10:27 +0200
+Message-Id: <20200730061027.29472-9-hch@lst.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200730061027.29472-1-hch@lst.de>
+References: <20200730061027.29472-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHLCerP4YPHc4sKD_RTq=Gxfj+ex4F=J2is1Y-UzGXcOuEOrOQ@mail.gmail.com>
-User-Agent: NeoMutt/20170609 (1.8.3)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30-07-20, 11:29, Amit Kucheria wrote:
-> On Thu, Jul 30, 2020 at 9:38 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > It is not possible for cached_resolved_idx to be invalid here as the
-> > cpufreq core always sets index to a positive value.
-> >
-> > Change its type to unsigned int and fix qcom usage a bit.
-> 
-> Shouldn't you fix up idx in cpufreq_driver_resolve_freq() to be
-> unsigned int too?
+If a TAINT_PROPRIETARY_MODULE exports symbol, inherit the taint flag
+for all modules importing these symbols, and don't allow loading
+symbols from TAINT_PROPRIETARY_MODULE modules if the module previously
+imported gplonly symbols.  Add a anti-circumvention devices so people
+don't accidentally get themselves into trouble this way.
 
-Yes, merged this into the patch.
+Comment from Greg:
+ Ah, the proven-to-be-illegal "GPL Condom" defense :)
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index 0128de3603df..053d72e52a31 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -538,7 +538,7 @@ unsigned int cpufreq_driver_resolve_freq(struct cpufreq_policy *policy,
-        policy->cached_target_freq = target_freq;
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ include/linux/module.h |  1 +
+ kernel/module.c        | 12 ++++++++++++
+ 2 files changed, 13 insertions(+)
+
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 30b0f5fcdb3c37..e30ed5fa33a738 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -389,6 +389,7 @@ struct module {
+ 	unsigned int num_gpl_syms;
+ 	const struct kernel_symbol *gpl_syms;
+ 	const s32 *gpl_crcs;
++	bool using_gplonly_symbols;
  
-        if (cpufreq_driver->target_index) {
--               int idx;
-+               unsigned int idx;
+ #ifdef CONFIG_UNUSED_SYMBOLS
+ 	/* unused exported symbols. */
+diff --git a/kernel/module.c b/kernel/module.c
+index afb2bfdd5134b3..04f993863ae417 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1456,6 +1456,18 @@ static const struct kernel_symbol *resolve_symbol(struct module *mod,
+ 	if (!sym)
+ 		goto unlock;
  
-                idx = cpufreq_frequency_table_target(policy, target_freq,
-                                                     CPUFREQ_RELATION_L);
-
++	if (license == GPL_ONLY)
++		mod->using_gplonly_symbols = true;
++
++	if (owner && test_bit(TAINT_PROPRIETARY_MODULE, &owner->taints)) {
++		if (mod->using_gplonly_symbols) {
++			sym = NULL;
++			goto getname;
++		}
++		add_taint_module(mod, TAINT_PROPRIETARY_MODULE,
++				 LOCKDEP_NOW_UNRELIABLE);
++	}
++
+ 	if (!check_version(info, name, mod, crc)) {
+ 		sym = ERR_PTR(-EINVAL);
+ 		goto getname;
 -- 
-viresh
+2.27.0
+
