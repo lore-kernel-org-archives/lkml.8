@@ -2,184 +2,93 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 249B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C00BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0C1320829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E387208A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:25:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R7tGuqjD"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="a/oIX2tA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbgG3OWd (ORCPT
+        id S1729273AbgG3OZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 10:22:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54194 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727966AbgG3OWc (ORCPT
+        Thu, 30 Jul 2020 10:25:17 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40898 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727769AbgG3OZR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 10:22:32 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 413CBC061575
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 07:22:32 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id c16so7775641ejx.12
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 07:22:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YwZxozNZBXDiR/2kRqLL1MaXDjLPic26w5gQoYGrfkM=;
-        b=R7tGuqjD/vvCJ2904Vuec4iUJ6rFzusWXWJpA5X/dmo3kgYXJDkMmYeNILpJLVELhQ
-         IAVW2EQA1kYDJ0mQVbVZ/ri+6eTjMHp7C0fwDl/HDXtSIamI0BGeYc+Na69ibjZfTR+k
-         A43hfZYIvSuhBuw6gTrAUuz2MGPi0kClRbeqMBypGnTi7UtIDyfJfWxE69l/X0YJM87N
-         MTV3qlKOPuB7n3Y0yYpW9nt3ndY4Wc/s/iYW81vulZijqz8/pLpbUe9h8ZxE73hNQsXz
-         v9H9yTa9MF94xzDWteLRVawS/ekYrp4ZjUF2eDn4jSz+CCPVPTPzkBYtQRE46iqj4tpE
-         lifw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YwZxozNZBXDiR/2kRqLL1MaXDjLPic26w5gQoYGrfkM=;
-        b=tx4hptA7JMyK0xGzsbBR6qc89cB1UgSJ+cTkL2Q/ujlWYD3dzZuWLiGggdN5xdGzqF
-         3csS+Uo4Kw8033qQwwpyy5tsQmVR9CKkwzpmp0lTDdL6WnVFZugoFqVdwudgKpgphlh5
-         xEkSo9qNIrggYqaBQnWT/xo6ymXNxpcylnCpFTGPRk9d+xhhZlpA4HEcG6uXhWTBr25/
-         OG0UDJ2DobLelQRK6a4a7OwYK8WBS+V20u1N2VILHdUG0FGSKsCh/v1qDJQKJj1nVLNH
-         PUi74ffSSRgVPXtKOC+CXLwWb5sNCfs3rc7PP0vGTzfea4SvRkUpTgr0SSsy8mxJHEPs
-         cYhg==
-X-Gm-Message-State: AOAM532B84Ofgoc1YLKJmssgNLVhBn7aQ1ehpUg5uoYFOXsB2dwQFmyo
-        CTk3gY3TUTYk+sTMFS8SMTUnTg==
-X-Google-Smtp-Source: ABdhPJy7aqlSQaQrLHhofONaPZjwKauHbZHDGRXdQ92TUeggQySP4YNI9qe5tEKnlr5K8H51rOJFuQ==
-X-Received: by 2002:a17:906:3e54:: with SMTP id t20mr2770755eji.471.1596118950795;
-        Thu, 30 Jul 2020 07:22:30 -0700 (PDT)
-Received: from myrica ([2001:1715:4e26:a7e0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id x16sm6372795edr.52.2020.07.30.07.22.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 07:22:29 -0700 (PDT)
-Date:   Thu, 30 Jul 2020 16:22:13 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org,
-        songliubraving@fb.com, andriin@fb.com, daniel@iogearbox.net,
-        catalin.marinas@arm.com, john.fastabend@gmail.com, ast@kernel.org,
-        zlim.lnx@gmail.com, kpsingh@chromium.org, yhs@fb.com,
-        will@kernel.org, kafai@fb.com, sfr@canb.auug.org.au,
-        linux-next@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next 1/1] arm64: bpf: Add BPF exception tables
-Message-ID: <20200730142213.GB1529030@myrica>
-References: <20200728152122.1292756-1-jean-philippe@linaro.org>
- <20200728152122.1292756-2-jean-philippe@linaro.org>
- <20200730122855.GA3773@lca.pw>
+        Thu, 30 Jul 2020 10:25:17 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06UEOPK0120202;
+        Thu, 30 Jul 2020 09:24:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1596119065;
+        bh=Tg6ayNdN7O4/CjjcMHoaiFkUayvdOa+Ei5rN0VtBwB0=;
+        h=From:To:CC:Subject:Date;
+        b=a/oIX2tA3Vi6briZJB3wH4zAU3Zt3eBiB+n1ONHq1Ll6fOMCQFdMWp0/MzhzeaTm3
+         4AXIBI1C+WSF7jbC32W4mjIUwMRlVIY6NPTwdWV4Hz2QnxL/3ISIfxR8C0qXmZSPF7
+         fCUqc8tRxkE0fKe+MUVONtAwffct2GAyldawBDPg=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06UEOPdS075710
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 30 Jul 2020 09:24:25 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 30
+ Jul 2020 09:24:25 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 30 Jul 2020 09:24:25 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06UEOPlG115124;
+        Thu, 30 Jul 2020 09:24:25 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH 1/2] ASoC: tlv320adcx140: Fix GPO register start address
+Date:   Thu, 30 Jul 2020 09:24:18 -0500
+Message-ID: <20200730142419.28205-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="r5Pyd7+fXNt84Ff3"
-Content-Disposition: inline
-In-Reply-To: <20200730122855.GA3773@lca.pw>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The header was updated to align with the data sheet to start the GPO_CFG
+at GPO_CFG0.  The code was not updated to the change and therefore the
+GPO_CFG0 register was not written to.
 
---r5Pyd7+fXNt84Ff3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Jul 30, 2020 at 08:28:56AM -0400, Qian Cai wrote:
-> On Tue, Jul 28, 2020 at 05:21:26PM +0200, Jean-Philippe Brucker wrote:
-> > When a tracing BPF program attempts to read memory without using the
-> > bpf_probe_read() helper, the verifier marks the load instruction with
-> > the BPF_PROBE_MEM flag. Since the arm64 JIT does not currently recognize
-> > this flag it falls back to the interpreter.
-> > 
-> > Add support for BPF_PROBE_MEM, by appending an exception table to the
-> > BPF program. If the load instruction causes a data abort, the fixup
-> > infrastructure finds the exception table and fixes up the fault, by
-> > clearing the destination register and jumping over the faulting
-> > instruction.
-> > 
-> > To keep the compact exception table entry format, inspect the pc in
-> > fixup_exception(). A more generic solution would add a "handler" field
-> > to the table entry, like on x86 and s390.
-> > 
-> > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> 
-> This will fail to compile on arm64,
-> 
-> https://gitlab.com/cailca/linux-mm/-/blob/master/arm64.config
-> 
-> arch/arm64/mm/extable.o: In function `fixup_exception':
-> arch/arm64/mm/extable.c:19: undefined reference to `arm64_bpf_fixup_exception'
-
-Thanks for the report, I attached a fix. Daniel, can I squash it and
-resend as v2 or is it too late?
-
-I'd be more confident if my patches sat a little longer on the list so
-arm64 folks have a chance to review them. This isn't my first silly
-mistake...
-
-Thanks,
-Jean
-
---r5Pyd7+fXNt84Ff3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment;
-	filename="0001-arm64-bpf-Fix-build-for-CONFIG_BPF_JIT.patch"
-
-From 17d0f041b57903cb2657dde15559cd1923498337 Mon Sep 17 00:00:00 2001
-From: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Date: Thu, 30 Jul 2020 14:45:44 +0200
-Subject: [PATCH] arm64: bpf: Fix build for !CONFIG_BPF_JIT
-
-Add a stub for arm64_bpf_fixup_exception() when CONFIG_BPF_JIT isn't
-enabled, and avoid the fixup in this case.
-
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Fixes: 6617cff6a05e ("ASoC: tlv320adcx140: Add GPO configuration and drive output config")
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- arch/arm64/include/asm/extable.h | 9 +++++++++
- arch/arm64/mm/extable.c          | 3 ++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ sound/soc/codecs/tlv320adcx140.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/extable.h b/arch/arm64/include/asm/extable.h
-index bcee40df1586..840a35ed92ec 100644
---- a/arch/arm64/include/asm/extable.h
-+++ b/arch/arm64/include/asm/extable.h
-@@ -22,8 +22,17 @@ struct exception_table_entry
+diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
+index 7bb9e9aa0c0a..fc7616dcf9b5 100644
+--- a/sound/soc/codecs/tlv320adcx140.c
++++ b/sound/soc/codecs/tlv320adcx140.c
+@@ -790,7 +790,7 @@ static int adcx140_configure_gpo(struct adcx140_priv *adcx140)
  
- #define ARCH_HAS_RELATIVE_EXTABLE
- 
-+#ifdef CONFIG_BPF_JIT
- int arm64_bpf_fixup_exception(const struct exception_table_entry *ex,
- 			      struct pt_regs *regs);
-+#else /* !CONFIG_BPF_JIT */
-+static inline
-+int arm64_bpf_fixup_exception(const struct exception_table_entry *ex,
-+			      struct pt_regs *regs)
-+{
-+	return 0;
-+}
-+#endif /* !CONFIG_BPF_JIT */
- 
- extern int fixup_exception(struct pt_regs *regs);
- #endif
-diff --git a/arch/arm64/mm/extable.c b/arch/arm64/mm/extable.c
-index 1f42991cacdd..eee1732ab6cd 100644
---- a/arch/arm64/mm/extable.c
-+++ b/arch/arm64/mm/extable.c
-@@ -14,7 +14,8 @@ int fixup_exception(struct pt_regs *regs)
- 	if (!fixup)
- 		return 0;
- 
--	if (regs->pc >= BPF_JIT_REGION_START &&
-+	if (IS_ENABLED(CONFIG_BPF_JIT) &&
-+	    regs->pc >= BPF_JIT_REGION_START &&
- 	    regs->pc < BPF_JIT_REGION_END)
- 		return arm64_bpf_fixup_exception(fixup, regs);
- 
+ 		gpo_output_val = gpo_outputs[0] << ADCX140_GPO_SHIFT |
+ 				 gpo_outputs[1];
+-		ret = regmap_write(adcx140->regmap, ADCX140_GPO_CFG1 + i,
++		ret = regmap_write(adcx140->regmap, ADCX140_GPO_CFG0 + i,
+ 				   gpo_output_val);
+ 		if (ret)
+ 			return ret;
 -- 
-2.27.0
+2.28.0
 
-
---r5Pyd7+fXNt84Ff3--
