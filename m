@@ -2,108 +2,173 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D992CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 985D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9E2D2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:19:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596097156;
-	bh=AmXDh2gGqF8SVqhoUGaF7BNkNEQUF4kBqRb3Nfd6rZ8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DIjU3sH4T14ElG7pE/qpV2NFKPCdxvZZ/Ug25COwu/HA6PrhfeEDm3EKRUeL/lF6O
-	 gNEi5eXlwx8oPgS6ahj2vHPwxnhTEnQw0aJgYaDSCnCYm4Zu0Ftb2K01K0/9FXjVzy
-	 r7ZRz3Q0lQIJjE+X8BvyE6PTbuf8rui1S7UVmxAg=
+	by mail.kernel.org (Postfix) with ESMTP id EF3142075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:19:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="becSKvSU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729814AbgG3ITP (ORCPT
+        id S1730336AbgG3ITS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:19:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729493AbgG3IIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:08:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84DAB2070B;
-        Thu, 30 Jul 2020 08:08:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096485;
-        bh=AmXDh2gGqF8SVqhoUGaF7BNkNEQUF4kBqRb3Nfd6rZ8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WulxESGNl6C40wCvqnUCYzMsn+Mpi6NIWdrz+Ku8r+mac8+k6bWBMghYD2o8BxAwR
-         D4Yaml2qMLo/EbHfZ4zaO1t/gOLyR3WMVgz44Sih7YUkAhJr/KYEynbpolO08tfJ2i
-         PF1L5zwiOvig0RclRjKKWi1s7SgLYsajqPd2PUkQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 07/14] rxrpc: Fix sendmsg() returning EPIPE due to recvmsg() returning ENODATA
-Date:   Thu, 30 Jul 2020 10:04:50 +0200
-Message-Id: <20200730074419.259597562@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200730074418.882736401@linuxfoundation.org>
-References: <20200730074418.882736401@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 30 Jul 2020 04:19:18 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:34401 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729537AbgG3IIE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:08:04 -0400
+X-Greylist: delayed 359 seconds by postgrey-1.27 at vger.kernel.org; Thu, 30 Jul 2020 04:08:03 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1596096481;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=HaJwBOdIkjvs8im4/IU2I0knSpAyk7I2vquFxeVH9ME=;
+        b=becSKvSUQo39DQ7whDwPGJsEAU9z6tUL6n1upxkodPPlZG904vfzQx1wKvBpjKGPUe
+        +X08GGmybvFQjgCYY1jTtq3N4sq3nZvMzZ2BVtT8Ctk1eHIgP2MDQS4EqLZ1yBr6UxZO
+        lhWxfsUIr6Wlt2UCdApCD6Dxca9ZpP4SfpZbLcQQrzOcskM2nvpH9ehElyW5MfdyZfhj
+        K3RlN2NW4rwtLMcXwzkDYuAQRe9ccCG2dn2nCwucNQEvKRGrBvHYBY3tmVUVT9n+Dngo
+        0+EkAfesIE9fGoZRw3Xo4xmSAol+PAgwKvrGCw/pQUWvpoPAd8uWI0rWBQun3YTYXuVH
+        qlYw==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxB4G6NeHYC"
+X-RZG-CLASS-ID: mo00
+Received: from localhost.localdomain
+        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
+        with ESMTPSA id Y0939ew6U81xgut
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Thu, 30 Jul 2020 10:01:59 +0200 (CEST)
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Niklas Cassel <nks@flawful.org>
+Subject: [RFC PATCH 2/3] opp: Set required OPPs in reverse order when scaling down
+Date:   Thu, 30 Jul 2020 10:01:45 +0200
+Message-Id: <20200730080146.25185-3-stephan@gerhold.net>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200730080146.25185-1-stephan@gerhold.net>
+References: <20200730080146.25185-1-stephan@gerhold.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+The OPP core already has well-defined semantics to ensure required
+OPPs/regulators are set before/after the frequency change, depending
+on if we scale up or down.
 
-[ Upstream commit 639f181f0ee20d3249dbc55f740f0167267180f0 ]
+Similar requirements might exist for the order of required OPPs
+when multiple power domains need to be scaled for a frequency change.
 
-rxrpc_sendmsg() returns EPIPE if there's an outstanding error, such as if
-rxrpc_recvmsg() indicating ENODATA if there's nothing for it to read.
+For example, on Qualcomm platforms using CPR (Core Power Reduction),
+we need to scale the VDDMX and CPR power domain. When scaling up,
+MX should be scaled up before CPR. When scaling down, CPR should be
+scaled down before MX.
 
-Change rxrpc_recvmsg() to return EAGAIN instead if there's nothing to read
-as this particular error doesn't get stored in ->sk_err by the networking
-core.
+In general, if there are multiple "required-opps" in the device tree
+I would expect that the order is either irrelevant, or there is some
+dependency between the power domains. In that case, the power domains
+should be scaled down in reverse order.
 
-Also change rxrpc_sendmsg() so that it doesn't fail with delayed receive
-errors (there's no way for it to report which call, if any, the error was
-caused by).
+This commit updates _set_required_opps() to set required OPPs in
+reverse order when scaling down.
 
-Fixes: 17926a79320a ("[AF_RXRPC]: Provide secure RxRPC sockets for use by userspace and kernel both")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 ---
- net/rxrpc/recvmsg.c |    2 +-
- net/rxrpc/sendmsg.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Related discussion: https://lore.kernel.org/linux-arm-msm/20200525194443.GA11851@flawful.org/
 
---- a/net/rxrpc/recvmsg.c
-+++ b/net/rxrpc/recvmsg.c
-@@ -445,7 +445,7 @@ try_again:
- 	    list_empty(&rx->recvmsg_q) &&
- 	    rx->sk.sk_state != RXRPC_SERVER_LISTENING) {
- 		release_sock(&rx->sk);
--		return -ENODATA;
-+		return -EAGAIN;
+The advantage of this approach is that the CPR driver does not need
+to bother with the VDDMX power domain at all - the requirements
+can be fully described within the device tree, see e.g. [1].
+An alternative option would be to modify the CPR driver to make these votes.
+
+[1]: https://lore.kernel.org/linux-arm-msm/20200507104603.GA581328@gerhold.net/2-msm8916-vdd-mx.patch
+---
+ drivers/opp/core.c | 30 +++++++++++++++++++++---------
+ 1 file changed, 21 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index f7a476b55069..f93f551c911e 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -799,7 +799,7 @@ static int _set_required_opp(struct device *dev, struct device *pd_dev,
+ /* This is only called for PM domain for now */
+ static int _set_required_opps(struct device *dev,
+ 			      struct opp_table *opp_table,
+-			      struct dev_pm_opp *opp)
++			      struct dev_pm_opp *opp, bool up)
+ {
+ 	struct opp_table **required_opp_tables = opp_table->required_opp_tables;
+ 	struct device **genpd_virt_devs = opp_table->genpd_virt_devs;
+@@ -821,12 +821,24 @@ static int _set_required_opps(struct device *dev,
+ 	 */
+ 	mutex_lock(&opp_table->genpd_virt_dev_lock);
+ 
+-	for (i = 0; i < opp_table->required_opp_count; i++) {
+-		pd_dev = genpd_virt_devs[i];
++	if (up) {
++		/* Scaling up? Set required OPPs in normal order */
++		for (i = 0; i < opp_table->required_opp_count; i++) {
++			pd_dev = genpd_virt_devs[i];
+ 
+-		ret = _set_required_opp(dev, pd_dev, opp, i);
+-		if (ret)
+-			break;
++			ret = _set_required_opp(dev, pd_dev, opp, i);
++			if (ret)
++				break;
++		}
++	} else {
++		/* Scaling down? Set required OPPs in reverse order */
++		for (i = opp_table->required_opp_count - 1; i >= 0; i--) {
++			pd_dev = genpd_virt_devs[i];
++
++			ret = _set_required_opp(dev, pd_dev, opp, i);
++			if (ret)
++				break;
++		}
+ 	}
+ 	mutex_unlock(&opp_table->genpd_virt_dev_lock);
+ 
+@@ -914,7 +926,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
+ 			opp_table->regulator_enabled = false;
+ 		}
+ 
+-		ret = _set_required_opps(dev, opp_table, NULL);
++		ret = _set_required_opps(dev, opp_table, NULL, false);
+ 		goto put_opp_table;
  	}
  
- 	if (list_empty(&rx->recvmsg_q)) {
---- a/net/rxrpc/sendmsg.c
-+++ b/net/rxrpc/sendmsg.c
-@@ -222,7 +222,7 @@ static int rxrpc_send_data(struct rxrpc_
- 	/* this should be in poll */
- 	sk_clear_bit(SOCKWQ_ASYNC_NOSPACE, sk);
+@@ -973,7 +985,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
  
--	if (sk->sk_err || (sk->sk_shutdown & SEND_SHUTDOWN))
-+	if (sk->sk_shutdown & SEND_SHUTDOWN)
- 		return -EPIPE;
+ 	/* Scaling up? Configure required OPPs before frequency */
+ 	if (freq >= old_freq) {
+-		ret = _set_required_opps(dev, opp_table, opp);
++		ret = _set_required_opps(dev, opp_table, opp, true);
+ 		if (ret)
+ 			goto put_opp;
+ 	}
+@@ -993,7 +1005,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
  
- 	more = msg->msg_flags & MSG_MORE;
-
+ 	/* Scaling down? Configure required OPPs after frequency */
+ 	if (!ret && freq < old_freq) {
+-		ret = _set_required_opps(dev, opp_table, opp);
++		ret = _set_required_opps(dev, opp_table, opp, false);
+ 		if (ret)
+ 			dev_err(dev, "Failed to set required opps: %d\n", ret);
+ 	}
+-- 
+2.27.0
 
