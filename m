@@ -2,125 +2,241 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E43EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 117D7C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53D7A2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDA7C22B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:37:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="WIy2McQg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729323AbgG3Jg4 (ORCPT
+        id S1729443AbgG3JhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 05:36:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:37056 "EHLO foss.arm.com"
+        Thu, 30 Jul 2020 05:37:14 -0400
+Received: from mga04.intel.com ([192.55.52.120]:1937 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726273AbgG3Jg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 05:36:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8EC2E1FB;
-        Thu, 30 Jul 2020 02:36:55 -0700 (PDT)
-Received: from [10.37.12.66] (unknown [10.37.12.66])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE2B53F66E;
-        Thu, 30 Jul 2020 02:36:53 -0700 (PDT)
-Subject: Re: [PATCH 0/4] CPUFreq statistics retrieved by drivers
-To:     Sudeep Holla <sudeep.holla@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org, cristian.marussi@arm.com,
-        rjw@rjwysocki.net
-References: <20200729151208.27737-1-lukasz.luba@arm.com>
- <20200730085333.qubrsv7ufqninihd@vireshk-mac-ubuntu>
- <20200730091014.GA13158@bogus>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <3b3a56e9-29ec-958f-fb3b-c689a9389d2f@arm.com>
-Date:   Thu, 30 Jul 2020 10:36:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200730091014.GA13158@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        id S1726273AbgG3JhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 05:37:13 -0400
+IronPort-SDR: 4XyujDS8WIXLghFD13rWg4jNzHVOeL/+q7YdhfyS/i/heJL08VBYU7n0xLguMOoEE7akc1fA4Y
+ RjZLofyDmeuw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="149027696"
+X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
+   d="scan'208";a="149027696"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 02:37:00 -0700
+IronPort-SDR: gRv0EasT6GQ/0vzQt55khpS4jRRM7UiETxHjA5SMnZSBuQXanAPj8n2kinSCHn97xcIzrSWw0l
+ i8XFZbNz2Abw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
+   d="scan'208";a="272878097"
+Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
+  by fmsmga007.fm.intel.com with ESMTP; 30 Jul 2020 02:37:00 -0700
+Received: from orsmsx161.amr.corp.intel.com (10.22.240.84) by
+ ORSMSX103.amr.corp.intel.com (10.22.225.130) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 30 Jul 2020 02:37:00 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ ORSMSX161.amr.corp.intel.com (10.22.240.84) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 30 Jul 2020 02:37:00 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.44) by
+ edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Thu, 30 Jul 2020 02:36:59 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DYSb2C6hkSBxzB5DQRRXYUTam1M984W8Dt55WZa76k9UITaDAxTZD3rRqxQuTn1cHrsTQArTmKAyySufaivi8dwKXqkLncZZdHIxh+VbhXIMq75RSIFVwAmoNrF0FWTp1ct3lg9DAFypatDE080TLqtTT86SSseiMU7h5YP8IxB7A0LVD5JkzPClz6rFmUrf3VL6XKOyOPFxkpI7QZN2E0qJoT4f3cAOdHiqxuMWCjZe7HxKfMrCHa4uU6cG4ICRfwRkv2pNDyyyFlkzel74hnL6bhr67o9AAFo5nHeYLQS1nH/0SdsN+Rj4rOzsNHOi+vCrFI/45T+AgtT6zOj8OQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9AlpTjAmVZcdPMDompfOzNbjxGNwsHD5jL5IKl6IvE0=;
+ b=hHkcq06ETfxRynXoGoxXqvHGo8cE7SMgniyqxrc9zaOqP/iLTXRSNOoucnxlPKEKZ1ekhXRzUW6T5IuQICy+NwtA2euSGHl6ZBRZApeT7vvYZnpE736KD0gIUuRN0Q2hNdHQReQaSdCM23lHtvXnBi4HN2ST0wfRFX4iZS7uvr9O5nC2wW78MstIP7HTLJrZuJOivmFKCKubJOdCVZXCysLkDal0yFa8cGGKgMX8squU64pglPO9y4xQUo9IfoMyfIvAtLjelJZNOWuXyIf7CqpobnqKz8F9nKLuTitH9dW7xv5SeYjYbiWMl0n2g5/kMeRCzbgpqOV5WlDykVJB+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9AlpTjAmVZcdPMDompfOzNbjxGNwsHD5jL5IKl6IvE0=;
+ b=WIy2McQg6icVrcup+WwG+ADMXAR7MVYCBMi0ngn3MOnKzLWFMy2WLyreuuS0zpc2Qu2bTXDjgt/z5auU3WF27IFLXxDUzsZKHHjHsIo5BOSTG41AIZ8YIxIlNpjbyhh9vCPo/4i14pDNHvz5OtJZc+bEusaNW/9anu+H/pT5SBA=
+Received: from DM5PR11MB1435.namprd11.prod.outlook.com (2603:10b6:4:7::18) by
+ DM6PR11MB3067.namprd11.prod.outlook.com (2603:10b6:5:6a::24) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3216.24; Thu, 30 Jul 2020 09:36:58 +0000
+Received: from DM5PR11MB1435.namprd11.prod.outlook.com
+ ([fe80::9002:97a2:d8c0:8364]) by DM5PR11MB1435.namprd11.prod.outlook.com
+ ([fe80::9002:97a2:d8c0:8364%10]) with mapi id 15.20.3216.034; Thu, 30 Jul
+ 2020 09:36:58 +0000
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Alex Williamson" <alex.williamson@redhat.com>
+CC:     Robin Murphy <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: RE: [PATCH v3 4/4] vfio/type1: Use iommu_aux_at(de)tach_group() APIs
+Thread-Topic: [PATCH v3 4/4] vfio/type1: Use iommu_aux_at(de)tach_group() APIs
+Thread-Index: AQHWWaRWyngsNDGINUqk8kDgSaetUakf9XtA
+Date:   Thu, 30 Jul 2020 09:36:58 +0000
+Message-ID: <DM5PR11MB14351AE909E031B578EA3170C3710@DM5PR11MB1435.namprd11.prod.outlook.com>
+References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
+ <20200714055703.5510-5-baolu.lu@linux.intel.com>
+In-Reply-To: <20200714055703.5510-5-baolu.lu@linux.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+authentication-results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.102.204.45]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ea45cc8d-dd0d-4af1-42c9-08d8346c1af6
+x-ms-traffictypediagnostic: DM6PR11MB3067:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB30674CA71F58FB2F128FC05DC3710@DM6PR11MB3067.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:422;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IjZrxhNxemeFlx6A5PnPsjbpejbvOx37tsLAXdcvLZ5kPV+coiiHkJZU9fm4ycF6Lv29HpPQA8f4D5Bs9Q/3jtBcBKndbYkIXqd9dPIJE1lMZOxXjIWE3MtDCY6SHpyiZ5SstjjWcCMvvDuKUUn4KEmf51H0DgPTHAIyBmqwLrgmq4tbE80i4JLx07e6mcwQJcu2MIy9WG6t3OTvyGbSbxV+LWRar17OxHX8myKLzOC14BlXAMKJ4aQ9jaYL7nlCTi9MZFkFI0E0Gz/mNYWkm7ghV1sCkNjdWZKY4ubo/GtWz8sFl11/ZNlyxcrzh56D
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(346002)(136003)(376002)(39860400002)(110136005)(54906003)(9686003)(316002)(71200400001)(66476007)(64756008)(6506007)(66446008)(86362001)(33656002)(7696005)(76116006)(83380400001)(66556008)(8676002)(66946007)(186003)(4326008)(52536014)(5660300002)(55016002)(8936002)(2906002)(26005)(478600001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: JHy24Bo2O2hHsEPI2VKMwPcrGpuuIgTylFCp4y47h0i5g7D8OiP+9eg40fClSAM2bCiyy9I6Ek0lDcbRK6NVw7AbqexbHnbAuWit1WvHIFrdvFi/UN0Upq1gL39FC8QIUMJ5kLNoIstJIIi3JnypuFgOwztYkola1TSNdXcL9rJf3yZBHmEdaN49EE7rZXcIQHshDBAkLHtQcyz/geTWexhDV6pwfEmc72/e+Gtm/UjqitV0RUQLs2cuD1mViShA10WyqJqCUEYC8AS4k+EjVqkEm8mMe1RcFDckmf2WmllnAWSIMVGyoGFtZrQC9zjcUtiCtMTig8RaVNBBbJvj/ADl9HQDpg+rm9Whn0Ca6W9mx3Kq3xbqrZUXtke2/DSq85WRMl2MlsgRjKGmhgEsmTkRMLDNIb7dqh2TKyJOCh8EJS2Hy2hYFQwr/uR33y2ev0lyN/C87Fuub5TjQDecfWCZGNLt3pKuB71b/dn0H2HSfk0GSgPynp6YrEoN7Si2
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR11MB1435.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea45cc8d-dd0d-4af1-42c9-08d8346c1af6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2020 09:36:58.5494
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8bAJACR52pCPEb9DNyLepIcNTFdu0iYC1qr0x0taX6gqtoG1/GYdnHGN/Mu62CZ76W3nHMrAw1vv4T/fNwLA1w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3067
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> From: Lu Baolu <baolu.lu@linux.intel.com>
+> Sent: Tuesday, July 14, 2020 1:57 PM
+>=20
+> Replace iommu_aux_at(de)tach_device() with iommu_aux_at(de)tach_group().
+> It also saves the IOMMU_DEV_FEAT_AUX-capable physcail device in the vfio_=
+group
+> data structure so that it could be reused in other places.
+>=20
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+>  drivers/vfio/vfio_iommu_type1.c | 44 ++++++---------------------------
+>  1 file changed, 7 insertions(+), 37 deletions(-)
+>=20
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_ty=
+pe1.c
+> index 5e556ac9102a..f8812e68de77 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -100,6 +100,7 @@ struct vfio_dma {
+>  struct vfio_group {
+>  	struct iommu_group	*iommu_group;
+>  	struct list_head	next;
+> +	struct device		*iommu_device;
 
-
-On 7/30/20 10:10 AM, Sudeep Holla wrote:
-> On Thu, Jul 30, 2020 at 02:23:33PM +0530, Viresh Kumar wrote:
->> On 29-07-20, 16:12, Lukasz Luba wrote:
->>> The existing CPUFreq framework does not tracks the statistics when the
->>> 'fast switch' is used or when firmware changes the frequency independently
->>> due to e.g. thermal reasons. However, the firmware might track the frequency
->>> changes and expose this to the kernel.
->>>
->>> This patch set aims to introduce CPUfreq statistics gathered by firmware
->>> and retrieved by CPUFreq driver. It would require a new API functions
->>> in the CPUFreq, which allows to poke drivers to get these stats.
->>>
->>> The needed CPUFreq infrastructure is in patch 1/4, patch 2/4 extends
->>> ARM SCMI protocol layer, patches 3/4, 4/4  modify ARM SCMI CPUFreq driver.
->>
->> Are you doing this for the fast switch case or because your platform
->> actually runs at frequencies which may be different from what cpufreq
->> core has requested ?
->>
-> 
-> I think so.
-
-For both cases, but fast switch is major and present. Thermal is not
-currently implemented in SCP FW, but might be in future.
-
-> 
->> I am also not sure what these tables should represent, what the
->> cpufreq core has decided for the CPUs or the frequencies we actually
->> run at, as these two can be very different for example if the hardware
->> runs at frequencies which don't match exactly to what is there in the
->> freq table. I believe these are rather to show what cpufreq and its
->> governors are doing with the CPUs.
->>
-> 
-> Exactly, I raised similar point in internal discussion and asked Lukasz
-> to take up the same on the list. I assume it was always what cpufreq
-> requested rather than what was delivered. So will we break the userspace
-> ABI if we change that is the main question.
-
-Thank you for confirmation. If that is the mechanism for tracking what
-cpufreq governors are doing with the CPUs, then is clashes with
-presented data in FW memory, because firmware is the governor.
-
-> 
->> Over that I would like the userspace stats to work exactly as the way
->> they work right now, i.e. capture all transitions from one freq to
->> other, not just time-in-state. Also resetting of the stats from
->> userspace for example. All allocation and printing of the data must be
->> done from stats core, the only thing which the driver would do at the
->> end is updating the stats structure and nothing more. Instead of
->> reading all stats from the firmware, it will be much easier if you can
->> just get the information from the firmware whenever there is a
->> frequency switch and then we can update the stats the way it is done
->> right now. And that would be simple.
->>
-> 
-> Good point, but notifications may not be lightweight. If that is no good,
-> alternatively, I suggested to keep these firmware stats in a separate
-> debugfs. Thoughts ?
-
-I agree that notifications might not be lightweight. Furthermore I think
-this still clashes with the assumption that cpufreq governor decisions
-are tracked in these statistics, not the firmware decision.
-
-In this case I think we would have to create debugfs.
-Sudeep do you think these debugfs should be exposed from the protocol
-layer:
-drivers/firmware/arm_scmi/perf.c
-or maybe from the cpufreq scmi driver? I would probably be safer to have
-it in the cpufreq driver because we have scmi_handle there.
+I know mdev group has only one device, so such a group has a single
+iommu_device. But I guess may be helpful to add a comment here or in
+commit message. Otherwise, it looks weird that a group structure
+contains a single iommu_device field instead of a list of iommu_device.
 
 Regards,
-Lukasz
+Yi Liu
+
+>  	bool			mdev_group;	/* An mdev group */
+>  	bool			pinned_page_dirty_scope;
+>  };
+> @@ -1627,45 +1628,13 @@ static struct device
+> *vfio_mdev_get_iommu_device(struct device *dev)
+>  	return NULL;
+>  }
+>=20
+> -static int vfio_mdev_attach_domain(struct device *dev, void *data) -{
+> -	struct iommu_domain *domain =3D data;
+> -	struct device *iommu_device;
+> -
+> -	iommu_device =3D vfio_mdev_get_iommu_device(dev);
+> -	if (iommu_device) {
+> -		if (iommu_dev_feature_enabled(iommu_device,
+> IOMMU_DEV_FEAT_AUX))
+> -			return iommu_aux_attach_device(domain, iommu_device);
+> -		else
+> -			return iommu_attach_device(domain, iommu_device);
+> -	}
+> -
+> -	return -EINVAL;
+> -}
+> -
+> -static int vfio_mdev_detach_domain(struct device *dev, void *data) -{
+> -	struct iommu_domain *domain =3D data;
+> -	struct device *iommu_device;
+> -
+> -	iommu_device =3D vfio_mdev_get_iommu_device(dev);
+> -	if (iommu_device) {
+> -		if (iommu_dev_feature_enabled(iommu_device,
+> IOMMU_DEV_FEAT_AUX))
+> -			iommu_aux_detach_device(domain, iommu_device);
+> -		else
+> -			iommu_detach_device(domain, iommu_device);
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>  static int vfio_iommu_attach_group(struct vfio_domain *domain,
+>  				   struct vfio_group *group)
+>  {
+>  	if (group->mdev_group)
+> -		return iommu_group_for_each_dev(group->iommu_group,
+> -						domain->domain,
+> -						vfio_mdev_attach_domain);
+> +		return iommu_aux_attach_group(domain->domain,
+> +					      group->iommu_group,
+> +					      group->iommu_device);
+>  	else
+>  		return iommu_attach_group(domain->domain, group-
+> >iommu_group);  } @@ -1674,8 +1643,8 @@ static void
+> vfio_iommu_detach_group(struct vfio_domain *domain,
+>  				    struct vfio_group *group)
+>  {
+>  	if (group->mdev_group)
+> -		iommu_group_for_each_dev(group->iommu_group, domain-
+> >domain,
+> -					 vfio_mdev_detach_domain);
+> +		iommu_aux_detach_group(domain->domain, group->iommu_group,
+> +				       group->iommu_device);
+>  	else
+>  		iommu_detach_group(domain->domain, group->iommu_group);  }
+> @@ -2007,6 +1976,7 @@ static int vfio_iommu_type1_attach_group(void
+> *iommu_data,
+>  			return 0;
+>  		}
+>=20
+> +		group->iommu_device =3D iommu_device;
+>  		bus =3D iommu_device->bus;
+>  	}
+>=20
+> --
+> 2.17.1
+
