@@ -2,119 +2,102 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A858C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 011EBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34C9E20842
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3DCC20842
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:04:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="gwMEPelP"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PgrmgBWT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbgG3NCr (ORCPT
+        id S1728654AbgG3NEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 09:02:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728442AbgG3NCl (ORCPT
+        Thu, 30 Jul 2020 09:04:40 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:29846 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726535AbgG3NEk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 09:02:41 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4725FC061794
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 06:02:40 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id o1so14063704plk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 06:02:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1mAnNNAZfPfzyF88X1fOSRFSMBROfjHobKP31kxfdOc=;
-        b=gwMEPelPCgps8yK/7P5U/nJeMrOiHbmuTpDjW3s5ScDbElTNZlQ48BdHcUjSr3otHT
-         f9gqkU53F4K8jQ1FDa9L9zSnEylVfJq7FvPbjC1rGH6N21g8UqQWPJfl6hHzzKksHuBo
-         K41e4E6uwPaneffN2lXMuphGRuQzOqFIEcuR4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1mAnNNAZfPfzyF88X1fOSRFSMBROfjHobKP31kxfdOc=;
-        b=KxYJTKcpA8Qz6Le29LdyCm9UYHVKHIvOOc+n2q6JGqLrsS3exinUZKXaId4fIxC8RV
-         pocRmTCqK6UlO6qUBonULaJrqM0xXb0p6EZY/KkRrZ0oSyKqB/z+tTeTcfD17iKZxfOs
-         kUfZ1AtbfC1y0izfa79BfE6J81/yp/8tLFRh8bSb1ym7EA5GzCT618ofFeJj5yaB+5o5
-         WOvqV/sZf2Ze6f0JAoITeSxRyFPB5kI8cLipdN+sKBzML+PIHSOt80V4UTtLzZo9aGwE
-         5iKpBktd4lgnhCGRgcMwbMCB53xGe0eN0vfIUJlPcs7c3QYEo+8C5WviEu9AI7ltnsgZ
-         U9WA==
-X-Gm-Message-State: AOAM531iRDbg64X4fl1qctHqj2k3FH7ZUdPpZSO4eeSngQfrhoUnZQa3
-        Ht4Cn/8yVxnae45KqrfbVfiMxA==
-X-Google-Smtp-Source: ABdhPJxNukSgN9Qo/irUQx6o1//oMXDCOpTPEIiCWNID4Fq0bqW7VIUaf+7hbETLGyIkE09W+8cNcQ==
-X-Received: by 2002:a62:8307:: with SMTP id h7mr3159636pfe.149.1596114159579;
-        Thu, 30 Jul 2020 06:02:39 -0700 (PDT)
-Received: from shiro.work (p532183-ipngn200506sizuokaden.shizuoka.ocn.ne.jp. [153.199.2.183])
-        by smtp.googlemail.com with ESMTPSA id b13sm6758704pgd.36.2020.07.30.06.02.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 06:02:38 -0700 (PDT)
-From:   Daniel Palmer <daniel@0x0f.com>
-List-Id: <soc.lore.kernel.org>
-To:     soc@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux@armlinux.org.uk, w@1wt.eu, Daniel Palmer <daniel@0x0f.com>
-Subject: [RFC PATCH 3/3] ARM: mstar: Add interrupt controller to base dtsi
-Date:   Thu, 30 Jul 2020 22:00:44 +0900
-Message-Id: <20200730130044.2037509-4-daniel@0x0f.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200730130044.2037509-1-daniel@0x0f.com>
-References: <20200730130044.2037509-1-daniel@0x0f.com>
+        Thu, 30 Jul 2020 09:04:40 -0400
+X-UUID: 61cb2150daa84d339ee08bb8227ef686-20200730
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=9B9LPQrlX3PAUh89jHh+tGfGpsTtq5UlUz9JBjl2JHw=;
+        b=PgrmgBWT3WZWVdd2oqwCC3x5FsNAodG5pA/++tE9xAYO/H0xDjSLafreanQQnY/OxZVmSrlHyOqpoh5RVt+opiVxr+SJffo2jLrCARkjTDAYAXg+b7k2XvPrEuorltJ63VKrkl/0KOz5QEcRgTUVyk7jjEqxT6RGEq5XJERYiTo=;
+X-UUID: 61cb2150daa84d339ee08bb8227ef686-20200730
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 615329586; Thu, 30 Jul 2020 21:04:34 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 30 Jul 2020 21:04:29 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 30 Jul 2020 21:04:29 +0800
+Message-ID: <1596114272.18804.1.camel@mtkswgap22>
+Subject: Re: [PATCH v2 0/2] Remove MT6779 UART3 clock support
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>, <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
+Date:   Thu, 30 Jul 2020 21:04:32 +0800
+In-Reply-To: <252ba954-ae8f-18a3-55a3-9dd844a4d5b6@gmail.com>
+References: <1595387397-13110-1-git-send-email-hanks.chen@mediatek.com>
+         <54e4d0b9-e62c-a3cb-7f74-af2891664cf1@gmail.com>
+         <1595416581.5511.6.camel@mtkswgap22>
+         <252ba954-ae8f-18a3-55a3-9dd844a4d5b6@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-TM-SNTS-SMTP: FF05D014242A87BF7E5C8EAA45B129EDA2912E3E23F1213959CA97F6E6AE6AD42000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the IRQ and FIQ intc instances to the base MStar/SigmaStar v7
-dtsi. All of the know SoCs have both and at the same place with
-their common IPs using the same interrupt lines.
-
-Signed-off-by: Daniel Palmer <daniel@0x0f.com>
-Tested-by: Willy Tarreau <w@1wt.eu>
----
- arch/arm/boot/dts/mstar-v7.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/arch/arm/boot/dts/mstar-v7.dtsi b/arch/arm/boot/dts/mstar-v7.dtsi
-index 3b7b9b793736..2b3bb0886d1a 100644
---- a/arch/arm/boot/dts/mstar-v7.dtsi
-+++ b/arch/arm/boot/dts/mstar-v7.dtsi
-@@ -85,6 +85,26 @@ reboot {
- 				mask = <0x79>;
- 			};
- 
-+			intc_fiq: intc@201310 {
-+				compatible = "mstar,msc313-intc-fiq";
-+				interrupt-controller;
-+				reg = <0x201310 0x40>;
-+				#interrupt-cells = <2>;
-+				interrupt-parent = <&gic>;
-+				mstar,gic-offset = <96>;
-+				mstar,nr-interrupts = <32>;
-+			};
-+
-+			intc_irq: intc@201350 {
-+				compatible = "mstar,msc313-intc-irq";
-+				interrupt-controller;
-+				reg = <0x201350 0x40>;
-+				#interrupt-cells = <2>;
-+				interrupt-parent = <&gic>;
-+				mstar,gic-offset = <32>;
-+				mstar,nr-interrupts = <64>;
-+			};
-+
- 			l3bridge: l3bridge@204400 {
- 				compatible = "mstar,l3bridge";
- 				reg = <0x204400 0x200>;
--- 
-2.27.0
+SGkgYWxsLA0KDQpHZW50bGUgcGluZyBvbiB0aGlzIHBhdGNoLg0KDQpUaGFua3MhDQoNCkhhbmtz
+IENoZW4NCg0KDQpPbiBXZWQsIDIwMjAtMDctMjIgYXQgMTc6MjEgKzAyMDAsIE1hdHRoaWFzIEJy
+dWdnZXIgd3JvdGU6DQo+IA0KPiBPbiAyMi8wNy8yMDIwIDEzOjE2LCBIYW5rcyBDaGVuIHdyb3Rl
+Og0KPiA+IE9uIFdlZCwgMjAyMC0wNy0yMiBhdCAxMDo0MyArMDIwMCwgTWF0dGhpYXMgQnJ1Z2dl
+ciB3cm90ZToNCj4gPj4NCj4gPj4gT24gMjIvMDcvMjAyMCAwNTowOSwgSGFua3MgQ2hlbiB3cm90
+ZToNCj4gPj4+IHJlbW92ZSB0aGUgcmVkdW5kYW50IGNsayBpbnRlcmZhY2Ugb2YgdWFydC4NCj4g
+Pj4+IENMS19JTkZSQV9VQVJUMyBpcyBhIGR1bW15IGNsayBpbnRlcmZhY2UsDQo+ID4+PiBpdCBo
+YXMgbm8gZWZmZWN0IG9uIHRoZSBvcGVyYXRpb24gb2YgdGhlIHJlYWQvd3JpdGUgaW5zdHJ1Y3Rp
+b24uDQo+ID4+Pg0KPiA+Pj4gQ2hhbmdlIHNpbmNlIHYyOg0KPiA+Pj4gQ29tbWl0ICJkdC1iaW5k
+aW5nczogY2xvY2s6IHJlbW92ZSBVQVJUMyBjbG9jayBzdXBwb3J0Ig0KPiA+Pg0KPiA+PiBTb3Jy
+eSBqdXN0IGFub3RoZXIgY29tbWVudC4gSSB0aGluayB3ZSBjYW4gbWFrZSB0aGlzIG9uZSBwYXRj
+aCBkZWxldGluZyBldmVyeXRoaW5nLg0KPiA+Pg0KPiA+IFNvcnJ5LCBJIGRvbid0IHVuZGVyc3Rh
+bmQgdGhlIGNvbW1lbnQuIERvIEkgbmVlZCB0byBtZXJnZSB0aGVtIGludG8gb25lDQo+ID4gYmln
+IHBhdGNoPw0KPiA+IEJ0dywgaWYgSSB1c2Ugb25lIHBhdGNoLCBJIHdvdWxkIGdldCBjaGVjayBw
+YXRjaCBmYWlsLg0KPiA+IC0tLQ0KPiA+IFsyMDIwLTA3LTIyIDE5OjEyOjQ5LDA0NiBFUlJPUl0g
+UnVuIGNoZWNrIHBhdGNoIHJlc3VsdHM6DQo+ID4gV0FSTklORzpEVF9TUExJVF9CSU5ESU5HX1BB
+VENIOiBEVCBiaW5kaW5nIGRvY3MgYW5kIGluY2x1ZGVzIHNob3VsZCBiZSBhDQo+ID4gc2VwYXJh
+dGUgcGF0Y2guIFNlZToNCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3Vi
+bWl0dGluZy1wYXRjaGVzLnJzdA0KPiA+IC0tLQ0KPiANCj4gSG0sIEkgdGhpbmsgdGhhdCdzIGEg
+ZGViYXRhYmxlIGVycm9yIG1lc3NhZ2UgZnJvbSBjaGVja3BhdGNoLCBidXQgbGV0J3MgbGVhdmUg
+aXQgDQo+IGFzIGl0IGlzLg0KPiANCj4gUmVnYXJkcywNCj4gTWF0dGhpYXMNCj4gDQo+IA0KPiA+
+IA0KPiA+IEhhbmtzDQo+ID4gDQo+ID4+PiAtLSByZW1vdmUgRml4ZXMgdGFnDQo+ID4+PiBDb21t
+aXQgImNsazogbWVkaWF0ZWs6IHJlbW92ZSBVQVJUMyBjbG9jayBzdXBwb3J0Ig0KPiA+Pj4gLS0g
+cmVtb3ZlIEZpeGVzIHRhZw0KPiA+Pj4NCj4gPj4+IEhhbmtzIENoZW4gKDIpOg0KPiA+Pj4gICAg
+IGR0LWJpbmRpbmdzOiBjbG9jazogcmVtb3ZlIFVBUlQzIGNsb2NrIHN1cHBvcnQNCj4gPj4+ICAg
+ICBjbGs6IG1lZGlhdGVrOiByZW1vdmUgVUFSVDMgY2xvY2sgc3VwcG9ydA0KPiA+Pj4NCj4gPj4+
+ICAgIGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDY3NzkuYyAgICAgIHwgMiAtLQ0KPiA+Pj4g
+ICAgaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9tdDY3NzktY2xrLmggfCAxIC0NCj4gPj4+ICAg
+IDIgZmlsZXMgY2hhbmdlZCwgMyBkZWxldGlvbnMoLSkNCj4gPj4+DQo+ID4gDQoNCg==
 
