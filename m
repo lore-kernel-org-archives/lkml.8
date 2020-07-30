@@ -2,140 +2,70 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8606CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2BEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 625882074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F76D2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:08:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bit-cube.eu header.i=@bit-cube.eu header.b="lQq+aah7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbgG3NFe (ORCPT
+        id S1728467AbgG3NH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 09:05:34 -0400
-Received: from 8bytes.org ([81.169.241.247]:34040 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726535AbgG3NFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 09:05:34 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id F3B893C8; Thu, 30 Jul 2020 15:05:32 +0200 (CEST)
-Date:   Thu, 30 Jul 2020 15:05:31 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 3/4] KVM: SVM: Add GHCB Accessor functions
-Message-ID: <20200730130531.GC3257@8bytes.org>
-References: <20200729132234.2346-1-joro@8bytes.org>
- <20200729132234.2346-4-joro@8bytes.org>
- <20200729154328.GC27751@linux.intel.com>
+        Thu, 30 Jul 2020 09:07:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbgG3NH6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 09:07:58 -0400
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 764C4C061794
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 06:07:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bit-cube.eu
+        ; s=ds20207; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
+        Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=nKkAEooQrPys4F+nqNLeHSrWDl9KkcYV1ChHlGSjIVg=; b=lQq+aah791RxA/tWYsTMzIAl/n
+        MvCDZT1o4h8HgcHyI468+GA3Sm57BNjiCSGuqyHxkoDa5Iltqo3xIXOtYUaM9ZySEwyT0uhyBmsaN
+        0bKKvhk+oh4Lv+kB67yBVXGEGEvdwQw5wWptIYshZ1jtchkLq+16oKE7FfsVOif6p3315elDxLknG
+        ZeYYkTWEHm7JwPFHzZDuiVKduJtGW9amya1zvs89pNNwf96BjB7A6nIvNTvqBnWzes7MyHQ3wC+fN
+        zNFwqjOQR72HeqyioxleLeeC+Wbt2J4Ux1LrQSGGenqx6vemNHIjeX30IZsFDjExVHpHh+2VZDlN/
+        Jy36Ju9A==;
+Received: from [2a02:fe0:c700:2:8ac:86d7:cb55:d6b9] (port=50789)
+        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <y_car@bit-cube.eu>)
+        id 1k18Hr-0007DN-P2
+        for linux-kernel@vger.kernel.org; Thu, 30 Jul 2020 15:07:55 +0200
+To:     linux-kernel@vger.kernel.org
+From:   =?UTF-8?Q?Ywe_C=c3=a6rlyn?= <y_car@bit-cube.eu>
+Subject: sdX - Another fun fact.
+Message-ID: <26cdca4c-44ad-a7ff-43e3-e2ee34e4e584@bit-cube.eu>
+Date:   Thu, 30 Jul 2020 15:07:44 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200729154328.GC27751@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 08:43:28AM -0700, Sean Christopherson wrote:
-> Rather than manually calculate the byte/bit indices just use __set_bit()
-> and test_bit().  That will also solve the variable declaration issue.
-> 
-> E.g.
-> 
-> #define GHB_BITMAP_IDX(field)		\
-> 	(offsetof(struct vmcb_save_area, (field)) / sizeof(u64))
-> 
-> #define GHCB_SET_VALID(ghcb, field)	\
-> 	__set_bit(GHCB_BITMAP_IDX(field), (unsigned long *)&ghcb->save.valid_bitmap)
-> 
-> Or alternatively drop GHCB_SET_VALID() and just open code the two users.
+The name Unix seems to go back to a Scanza (pre-christian name of 
+Norway) tribe, also.
 
-Thanks for your suggestions, I updated the patch and will do some
-testing before re-posting.
+We earlier discussed the Sami Tor idol, and this is where it seems to go.
 
-Regards,
+These facts also make the name sdX fit perfectly, again a supply and 
+demand principle based OS.
 
-	Joerg
-
-> 
-> > +	}
-> > +
-> > +#define DEFINE_GHCB_SETTER(field)					\
-> > +	static inline void						\
-> > +	ghcb_set_##field(struct ghcb *ghcb, u64 value)			\
-> > +	{								\
-> > +		GHCB_SET_VALID(ghcb, field)				\
-> > +		(ghcb)->save.field = value;				\
-> 
-> 
-> The ghcb doesn't need to be wrapped in (), it's a parameter to a function.
-> Same comment for the below usage.
-> 
-> > +	}
-> > +
-> > +#define DEFINE_GHCB_ACCESSORS(field)					\
-> > +	static inline bool ghcb_is_valid_##field(const struct ghcb *ghcb)	\
-> 
-> I'd prefer to follow the naming of the arch reg accessors, i.e.
-> 
-> 	static inline bool ghcb_##field##_is_valid(...)
-> 
-> to pair with
-> 
-> 	kvm_##lname##_read
-> 	kvm_##lname##_write
-> 
-> And because ghcb_is_valid_rip() reads a bit weird, e.g. IMO is more likely
-> to be read as "does the RIP in the GHCB hold a valid (canonical) value",
-> versus ghcb_rip_is_valid() reading as "is RIP valid in the GHCB".
-> 
-> > +	{								\
-> > +		DEFINE_GHCB_INDICES(field)				\
-> > +		return !!((ghcb)->save.valid_bitmap[byte_idx]		\
-> > +						& BIT(bit_idx));	\
-> > +	}								\
-> > +									\
-> > +	static inline void						\
-> > +	ghcb_set_##field(struct ghcb *ghcb, u64 value)			\
-> > +	{								\
-> > +		GHCB_SET_VALID(ghcb, field)				\
-> > +		(ghcb)->save.field = value;				\
-> 
-> > +	}
-> > +
-> > +DEFINE_GHCB_ACCESSORS(cpl)
-> > +DEFINE_GHCB_ACCESSORS(rip)
-> > +DEFINE_GHCB_ACCESSORS(rsp)
-> > +DEFINE_GHCB_ACCESSORS(rax)
-> > +DEFINE_GHCB_ACCESSORS(rcx)
-> > +DEFINE_GHCB_ACCESSORS(rdx)
-> > +DEFINE_GHCB_ACCESSORS(rbx)
-> > +DEFINE_GHCB_ACCESSORS(rbp)
-> > +DEFINE_GHCB_ACCESSORS(rsi)
-> > +DEFINE_GHCB_ACCESSORS(rdi)
-> > +DEFINE_GHCB_ACCESSORS(r8)
-> > +DEFINE_GHCB_ACCESSORS(r9)
-> > +DEFINE_GHCB_ACCESSORS(r10)
-> > +DEFINE_GHCB_ACCESSORS(r11)
-> > +DEFINE_GHCB_ACCESSORS(r12)
-> > +DEFINE_GHCB_ACCESSORS(r13)
-> > +DEFINE_GHCB_ACCESSORS(r14)
-> > +DEFINE_GHCB_ACCESSORS(r15)
-> > +DEFINE_GHCB_ACCESSORS(sw_exit_code)
-> > +DEFINE_GHCB_ACCESSORS(sw_exit_info_1)
-> > +DEFINE_GHCB_ACCESSORS(sw_exit_info_2)
-> > +DEFINE_GHCB_ACCESSORS(sw_scratch)
-> > +DEFINE_GHCB_ACCESSORS(xcr0)
-> > +
-> >  #endif
-> > -- 
-> > 2.17.1
-> > 
+Serenity!
+Ywe Cærlyn
+https://www.youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
