@@ -2,89 +2,140 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC86C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E22B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 131722074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0BB82074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:03:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbgG3HCW (ORCPT
+        id S1728801AbgG3HDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 03:02:22 -0400
-Received: from verein.lst.de ([213.95.11.211]:54761 "EHLO verein.lst.de"
+        Thu, 30 Jul 2020 03:03:06 -0400
+Received: from mga11.intel.com ([192.55.52.93]:28434 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbgG3HCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 03:02:21 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 334FE68AFE; Thu, 30 Jul 2020 09:02:18 +0200 (CEST)
-Date:   Thu, 30 Jul 2020 09:02:18 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 08/23] fs: don't change the address limit for
- ->write_iter in __kernel_write
-Message-ID: <20200730070218.GA18653@lst.de>
-References: <20200707174801.4162712-1-hch@lst.de> <20200707174801.4162712-9-hch@lst.de> <20200729205036.GA1236929@ZenIV.linux.org.uk>
+        id S1726133AbgG3HDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 03:03:06 -0400
+IronPort-SDR: n3mLsN/tnYJ3UmFnfFYjoJs8q3+Z2Rr3Bym5StZHbj3Z0Etim8SEgJxaH+pzO7i2ExYeurK+nN
+ pYiEocs0rYyQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="149384481"
+X-IronPort-AV: E=Sophos;i="5.75,413,1589266800"; 
+   d="scan'208";a="149384481"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 00:03:05 -0700
+IronPort-SDR: +45noUNCgkqDce/jRQFGXSClpd1TRTAvJEj73vKXwJ14/Kf09x1BT+l8pu7oqblrtErneLC6Gk
+ 90YN/XAyij3Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,413,1589266800"; 
+   d="scan'208";a="320984312"
+Received: from twinkler-lnx.jer.intel.com ([10.12.91.138])
+  by orsmga008.jf.intel.com with ESMTP; 30 Jul 2020 00:03:02 -0700
+From:   Tomas Winkler <tomas.winkler@intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Ramalingam C <ramalingam.c@intel.com>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>
+Subject: [char-misc-next V2] mei: hdcp: fix mei_hdcp_verify_mprime() input paramter
+Date:   Thu, 30 Jul 2020 10:02:58 +0300
+Message-Id: <20200730070258.3361503-1-tomas.winkler@intel.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200729205036.GA1236929@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 09:50:36PM +0100, Al Viro wrote:
-> On Tue, Jul 07, 2020 at 07:47:46PM +0200, Christoph Hellwig wrote:
-> > If we write to a file that implements ->write_iter there is no need
-> > to change the address limit if we send a kvec down.  Implement that
-> > case, and prefer it over using plain ->write with a changed address
-> > limit if available.
-> 
-> 	You are flipping the priorities of ->write and ->write_iter
-> for kernel_write().
+wired_cmd_repeater_auth_stream_req_in has a variable
+length array at the end. we use struct_size() overflow
+macro to determine the size for the allocation and sending
+size.
 
-Note by the end of the series (and what's been in linux-next for a while
-now) there is no order, as kernel_write only uses ->write_iter, so a
-few patches later this kinda becomes moot point.
+Fixes: c56967d674e3 (mei: hdcp: Replace one-element array with flexible-array member)
+Fixes: c56967d674e3 (mei: hdcp: Replace one-element array with flexible-array member)
+Cc: Ramalingam C <ramalingam.c@intel.com>
+Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+---
+V2: Check for allocation failure.
+ drivers/misc/mei/hdcp/mei_hdcp.c | 40 +++++++++++++++++++-------------
+ 1 file changed, 24 insertions(+), 16 deletions(-)
 
-> Now, there are 4 instances of file_operations
-> where we have both.  null_fops and zero_fops are fine either way -
-> ->write() and ->write_iter() do the same thing there (and arguably
-> removing ->write might be the right thing; the only reason I hesistate
-> is that writing to /dev/null *is* critical for many things, including
-> the proper mail delivery ;-)
-> 
-> However, the other two (infinibarf and pcm) are different; there we
-> really have different semantics.  I don't believe anything writes into
-> either under KERNEL_DS, but having kernel_write() and vfs_write() with
-> subtly different semantics is asking for trouble down the road.
-> 
-> How about we remove ->write in null_fops/zero_fops and fail loudly if
-> *both* ->write() and ->write_iter() are present (in kernel_write(),
-> that is)?
+diff --git a/drivers/misc/mei/hdcp/mei_hdcp.c b/drivers/misc/mei/hdcp/mei_hdcp.c
+index d1d3e025ca0e..f1205e0060db 100644
+--- a/drivers/misc/mei/hdcp/mei_hdcp.c
++++ b/drivers/misc/mei/hdcp/mei_hdcp.c
+@@ -546,38 +546,46 @@ static int mei_hdcp_verify_mprime(struct device *dev,
+ 				  struct hdcp_port_data *data,
+ 				  struct hdcp2_rep_stream_ready *stream_ready)
+ {
+-	struct wired_cmd_repeater_auth_stream_req_in
+-					verify_mprime_in = { { 0 } };
++	struct wired_cmd_repeater_auth_stream_req_in *verify_mprime_in;
+ 	struct wired_cmd_repeater_auth_stream_req_out
+ 					verify_mprime_out = { { 0 } };
+ 	struct mei_cl_device *cldev;
+ 	ssize_t byte;
++	size_t cmd_size;
+ 
+ 	if (!dev || !stream_ready || !data)
+ 		return -EINVAL;
+ 
+ 	cldev = to_mei_cl_device(dev);
+ 
+-	verify_mprime_in.header.api_version = HDCP_API_VERSION;
+-	verify_mprime_in.header.command_id = WIRED_REPEATER_AUTH_STREAM_REQ;
+-	verify_mprime_in.header.status = ME_HDCP_STATUS_SUCCESS;
+-	verify_mprime_in.header.buffer_len =
++	cmd_size = struct_size(verify_mprime_in, streams, data->k);
++	if (cmd_size == SIZE_MAX)
++		return -EINVAL;
++
++	verify_mprime_in = kzalloc(cmd_size, GFP_KERNEL);
++	if (!verify_mprime_in)
++		return -ENOMEM;
++
++	verify_mprime_in->header.api_version = HDCP_API_VERSION;
++	verify_mprime_in->header.command_id = WIRED_REPEATER_AUTH_STREAM_REQ;
++	verify_mprime_in->header.status = ME_HDCP_STATUS_SUCCESS;
++	verify_mprime_in->header.buffer_len =
+ 			WIRED_CMD_BUF_LEN_REPEATER_AUTH_STREAM_REQ_MIN_IN;
+ 
+-	verify_mprime_in.port.integrated_port_type = data->port_type;
+-	verify_mprime_in.port.physical_port = (u8)data->fw_ddi;
+-	verify_mprime_in.port.attached_transcoder = (u8)data->fw_tc;
++	verify_mprime_in->port.integrated_port_type = data->port_type;
++	verify_mprime_in->port.physical_port = (u8)data->fw_ddi;
++	verify_mprime_in->port.attached_transcoder = (u8)data->fw_tc;
++
++	memcpy(verify_mprime_in->m_prime, stream_ready->m_prime, HDCP_2_2_MPRIME_LEN);
++	drm_hdcp_cpu_to_be24(verify_mprime_in->seq_num_m, data->seq_num_m);
+ 
+-	memcpy(verify_mprime_in.m_prime, stream_ready->m_prime,
+-	       HDCP_2_2_MPRIME_LEN);
+-	drm_hdcp_cpu_to_be24(verify_mprime_in.seq_num_m, data->seq_num_m);
+-	memcpy(verify_mprime_in.streams, data->streams,
++	memcpy(verify_mprime_in->streams, data->streams,
+ 	       array_size(data->k, sizeof(*data->streams)));
+ 
+-	verify_mprime_in.k = cpu_to_be16(data->k);
++	verify_mprime_in->k = cpu_to_be16(data->k);
+ 
+-	byte = mei_cldev_send(cldev, (u8 *)&verify_mprime_in,
+-			      sizeof(verify_mprime_in));
++	byte = mei_cldev_send(cldev, (u8 *)&verify_mprime_in, cmd_size);
++	kfree(verify_mprime_in);
+ 	if (byte < 0) {
+ 		dev_dbg(dev, "mei_cldev_send failed. %zd\n", byte);
+ 		return byte;
+-- 
+2.25.4
 
-I'm fine with removing plain ->write for /dev/null and /dev/zero, as
-that seems the right thing to do.
-
-Failing the kernel ops if both are present sounds fine, I'm not sure
-about the loud part as it could be user triggered through splice.  I'd
-go for the same kind of noticable not loud warning that we have for
-the lack of iter ops in kernel_read/write.
-
-> There's a similar situation on the read side - there we have /dev/null
-> with both ->read() and ->read_iter() (and there "remove ->read" is
-> obviously the right thing to do) *and* we have pcm crap, with different
-> semantics for ->read() and ->read_iter().
