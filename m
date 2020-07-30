@@ -2,218 +2,98 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A09AFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AADAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88EDC2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E9AE2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:14:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596118449;
+	bh=NbHLZf31GGPCGywTI9YMetN3AtIUrukVE0kwJ01c3qY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xRXlIeHnKIayRQ26pOBtiA+qEoDN/jOvaJbQAjIxBudvyE5xcOYGkARmpkHKE0PXi
+	 4ZlKz3tQlmXqu23tPTt/4Q/VuOUK7Qxu04v65/nmTY2B7YlHdKEb/MBbe7bvjCA/zZ
+	 tz1vQzOVV1pybgBF4ou2j7njV2QUiPZVOQjQ1FE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729506AbgG3ONq (ORCPT
+        id S1729524AbgG3OOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 10:13:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43130 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728447AbgG3ONp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 10:13:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 7647FAB3E;
-        Thu, 30 Jul 2020 14:13:55 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Stefan Wahren <wahrenst@gmx.net>
-Cc:     pbrobinson@gmail.com, kernel-list@raspberrypi.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] clk: bcm2835: Do not use prediv with bcm2711's PLLs
-Date:   Thu, 30 Jul 2020 16:13:37 +0200
-Message-Id: <20200730141337.12753-1-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.27.0
+        Thu, 30 Jul 2020 10:14:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52898 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729252AbgG3OOH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 10:14:07 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50D3EC061574;
+        Thu, 30 Jul 2020 07:14:07 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id l13so6192880qvt.10;
+        Thu, 30 Jul 2020 07:14:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1GfYkK7/x88dPSta57qjc35WTcVURqTk5ykRw4B7tRs=;
+        b=aqLfRSJIgUYu9JS6xR32xAwjDb6+rBkvWTHYyoxS9ZpZ4SUlL+SYdcII49Ip9Yf7CA
+         pllE5GHAS2zM91bOva74Ab+ZDJB8OfysW7TfskidPcAAxo5kccxxhhPyY9PV5UUxLNn1
+         9NKNfg3tD3sKoIseu4rgSnxW+cjrrNGrW7QJUkU/zovJ2fgxO1ehXqFOYbzD3tlzurB1
+         l6JbmmOC7IP8EyR/6wYIzcoD+w59RDR6kX2RhGfZSmf+uTA+FWBuCvBFVwX2NnUj8Rcm
+         s8BWWezcZOwmTemeQeQZ8txA8rpg7Bz4VJE94DL08BC9Dl666N3K9F/SOTG+b16x4nP+
+         IQTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=1GfYkK7/x88dPSta57qjc35WTcVURqTk5ykRw4B7tRs=;
+        b=VdumjmViXBCSRo/lW5K9yKcSh0U6YgRI1veyR8YzFQlRaiVAnlxNqy5fyLfXW1vdw1
+         unhryVYUFn6/Maxm1WFcOlMTCI88j8qgz5ydPnPguJsgZhoynx+1WAPfC2ReLTw2O6mn
+         gs4ZWvmTbv/Oq46xcYch16T44HEefawWAaExweJn4s0BTzZDr/KAg8jLR+Se3Ir8YCjp
+         ycTb83brToL0PyiOIYrbagJ1pi8VuA9ct3n2dAbEPvJVY86zQLlLqPPjJN2UpXP1f/Lm
+         Gp4pFIyKKK0yWEV7+j9wZi67ORpRo3lOZ9EHqm52C4QPvsay2yskE9jAmploPRZSuM9I
+         zrag==
+X-Gm-Message-State: AOAM5324YuNMF65BcTG7e90mBBJPBSIIU/VhOfuXhQpT3/Yt9gBiO9H8
+        0Y5mnUxn7mQc5MYWq6lG/xCF1t7Nw9I=
+X-Google-Smtp-Source: ABdhPJza5cdd/JllkSeePgWZUtYrkYwWysIydxYTzkhTwHxYPW3DDxz4idf7kabQyApRfR97v++kBg==
+X-Received: by 2002:a0c:fde4:: with SMTP id m4mr2979870qvu.97.1596118446244;
+        Thu, 30 Jul 2020 07:14:06 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:115b])
+        by smtp.gmail.com with ESMTPSA id h144sm4091990qke.83.2020.07.30.07.14.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 07:14:05 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 10:14:04 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Chengming Zhou <zhouchengming@bytedance.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iocost: Fix check condition of iocg abs_vdebt
+Message-ID: <20200730141404.GA4601@mtj.duckdns.org>
+References: <20200730090321.38781-1-zhouchengming@bytedance.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730090321.38781-1-zhouchengming@bytedance.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Contrary to previous SoCs, bcm2711 doesn't have a prescaler in the PLL
-feedback loop. Bypass it by zeroing fb_prediv_mask.
+Hello,
 
-Note that, since the prediv configuration bits were re-purposed, this
-was triggering a miscalculation on all clock hanging from the VPU clock,
-notably the aux UART, making its output unintelligible.
+On Thu, Jul 30, 2020 at 05:03:21PM +0800, Chengming Zhou wrote:
+> We shouldn't skip iocg when its abs_vdebt is not zero.
+> 
+> Fixes: 0b80f9866e6b ("iocost: protect iocg->abs_vdebt with
+> iocg->waitq.lock")
+> 
+> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
 
-Fixes: 42de9ad400af ("clk: bcm2835: Add BCM2711_CLOCK_EMMC2 support")
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
+  Acked-by: Tejun Heo <tj@kernel.org>
 
-FYI relevant discussion with RPi engineers:
-https://github.com/raspberrypi/firmware/issues/1435#issuecomment-666242077
+Thanks.
 
- drivers/clk/bcm/clk-bcm2835.c | 79 +++++++++++++++++++++++++++++++++--
- 1 file changed, 75 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
-index 027eba31f793..acf499d26263 100644
---- a/drivers/clk/bcm/clk-bcm2835.c
-+++ b/drivers/clk/bcm/clk-bcm2835.c
-@@ -454,6 +454,16 @@ static const struct bcm2835_pll_ana_bits bcm2835_ana_default = {
- 	.fb_prediv_mask = BIT(14),
- };
- 
-+static const struct bcm2835_pll_ana_bits bcm2711_ana_default = {
-+	.mask0 = 0,
-+	.set0 = 0,
-+	.mask1 = A2W_PLL_KI_MASK | A2W_PLL_KP_MASK,
-+	.set1 = (2 << A2W_PLL_KI_SHIFT) | (8 << A2W_PLL_KP_SHIFT),
-+	.mask3 = A2W_PLL_KA_MASK,
-+	.set3 = (2 << A2W_PLL_KA_SHIFT),
-+	.fb_prediv_mask = 0, /* No prediv in bcm2711 */
-+};
-+
- static const struct bcm2835_pll_ana_bits bcm2835_ana_pllh = {
- 	.mask0 = A2W_PLLH_KA_MASK | A2W_PLLH_KI_LOW_MASK,
- 	.set0 = (2 << A2W_PLLH_KA_SHIFT) | (2 << A2W_PLLH_KI_LOW_SHIFT),
-@@ -1631,7 +1641,7 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 	 * AUDIO domain is on.
- 	 */
- 	[BCM2835_PLLA]		= REGISTER_PLL(
--		SOC_ALL,
-+		SOC_BCM2835,
- 		.name = "plla",
- 		.cm_ctrl_reg = CM_PLLA,
- 		.a2w_ctrl_reg = A2W_PLLA_CTRL,
-@@ -1642,6 +1652,21 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 
- 		.ana = &bcm2835_ana_default,
- 
-+		.min_rate = 600000000u,
-+		.max_rate = 2400000000u,
-+		.max_fb_rate = BCM2835_MAX_FB_RATE),
-+	[BCM2835_PLLA]		= REGISTER_PLL(
-+		SOC_BCM2711,
-+		.name = "plla",
-+		.cm_ctrl_reg = CM_PLLA,
-+		.a2w_ctrl_reg = A2W_PLLA_CTRL,
-+		.frac_reg = A2W_PLLA_FRAC,
-+		.ana_reg_base = A2W_PLLA_ANA0,
-+		.reference_enable_mask = A2W_XOSC_CTRL_PLLA_ENABLE,
-+		.lock_mask = CM_LOCK_FLOCKA,
-+
-+		.ana = &bcm2711_ana_default,
-+
- 		.min_rate = 600000000u,
- 		.max_rate = 2400000000u,
- 		.max_fb_rate = BCM2835_MAX_FB_RATE),
-@@ -1687,7 +1712,7 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 
- 	/* PLLB is used for the ARM's clock. */
- 	[BCM2835_PLLB]		= REGISTER_PLL(
--		SOC_ALL,
-+		SOC_BCM2835,
- 		.name = "pllb",
- 		.cm_ctrl_reg = CM_PLLB,
- 		.a2w_ctrl_reg = A2W_PLLB_CTRL,
-@@ -1698,6 +1723,22 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 
- 		.ana = &bcm2835_ana_default,
- 
-+		.min_rate = 600000000u,
-+		.max_rate = 3000000000u,
-+		.max_fb_rate = BCM2835_MAX_FB_RATE,
-+		.flags = CLK_GET_RATE_NOCACHE),
-+	[BCM2835_PLLB]		= REGISTER_PLL(
-+		SOC_BCM2711,
-+		.name = "pllb",
-+		.cm_ctrl_reg = CM_PLLB,
-+		.a2w_ctrl_reg = A2W_PLLB_CTRL,
-+		.frac_reg = A2W_PLLB_FRAC,
-+		.ana_reg_base = A2W_PLLB_ANA0,
-+		.reference_enable_mask = A2W_XOSC_CTRL_PLLB_ENABLE,
-+		.lock_mask = CM_LOCK_FLOCKB,
-+
-+		.ana = &bcm2711_ana_default,
-+
- 		.min_rate = 600000000u,
- 		.max_rate = 3000000000u,
- 		.max_fb_rate = BCM2835_MAX_FB_RATE,
-@@ -1720,7 +1761,7 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 	 * AUDIO domain is on.
- 	 */
- 	[BCM2835_PLLC]		= REGISTER_PLL(
--		SOC_ALL,
-+		SOC_BCM2835,
- 		.name = "pllc",
- 		.cm_ctrl_reg = CM_PLLC,
- 		.a2w_ctrl_reg = A2W_PLLC_CTRL,
-@@ -1731,6 +1772,21 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 
- 		.ana = &bcm2835_ana_default,
- 
-+		.min_rate = 600000000u,
-+		.max_rate = 3000000000u,
-+		.max_fb_rate = BCM2835_MAX_FB_RATE),
-+	[BCM2835_PLLC]		= REGISTER_PLL(
-+		SOC_BCM2711,
-+		.name = "pllc",
-+		.cm_ctrl_reg = CM_PLLC,
-+		.a2w_ctrl_reg = A2W_PLLC_CTRL,
-+		.frac_reg = A2W_PLLC_FRAC,
-+		.ana_reg_base = A2W_PLLC_ANA0,
-+		.reference_enable_mask = A2W_XOSC_CTRL_PLLC_ENABLE,
-+		.lock_mask = CM_LOCK_FLOCKC,
-+
-+		.ana = &bcm2711_ana_default,
-+
- 		.min_rate = 600000000u,
- 		.max_rate = 3000000000u,
- 		.max_fb_rate = BCM2835_MAX_FB_RATE),
-@@ -1782,7 +1838,7 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 	 * AUDIO domain is on.
- 	 */
- 	[BCM2835_PLLD]		= REGISTER_PLL(
--		SOC_ALL,
-+		SOC_BCM2835,
- 		.name = "plld",
- 		.cm_ctrl_reg = CM_PLLD,
- 		.a2w_ctrl_reg = A2W_PLLD_CTRL,
-@@ -1793,6 +1849,21 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 
- 		.ana = &bcm2835_ana_default,
- 
-+		.min_rate = 600000000u,
-+		.max_rate = 2400000000u,
-+		.max_fb_rate = BCM2835_MAX_FB_RATE),
-+	[BCM2835_PLLD]		= REGISTER_PLL(
-+		SOC_BCM2711,
-+		.name = "plld",
-+		.cm_ctrl_reg = CM_PLLD,
-+		.a2w_ctrl_reg = A2W_PLLD_CTRL,
-+		.frac_reg = A2W_PLLD_FRAC,
-+		.ana_reg_base = A2W_PLLD_ANA0,
-+		.reference_enable_mask = A2W_XOSC_CTRL_DDR_ENABLE,
-+		.lock_mask = CM_LOCK_FLOCKD,
-+
-+		.ana = &bcm2711_ana_default,
-+
- 		.min_rate = 600000000u,
- 		.max_rate = 2400000000u,
- 		.max_fb_rate = BCM2835_MAX_FB_RATE),
 -- 
-2.27.0
-
+tejun
