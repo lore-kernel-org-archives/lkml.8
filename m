@@ -2,122 +2,153 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE2E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8566C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D88B52075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C72D82074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596096976;
+	bh=4PIK3txsItU6RK1rxjj0QPH/Qr9nof33HTpuGYpGiww=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QEmDJJudtdSnIZZx4uug3FCKi9VdWJ66xBRuej9imlhmZZTBlvmekPrlWzIpS9DOj
+	 OeRI99Vjd2HGDzcsbJtUrjqktdlj+UNQ4s/EuYNZl/1lZyzWXsbQ7gIIgifZmxEhlp
+	 A6TYQDqNeHo3V5hgpjSPjqmeUZvJEN4EfmPZZxnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729390AbgG3IQL (ORCPT
+        id S1729402AbgG3ILS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:16:11 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:42273 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729424AbgG3IL1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:11:27 -0400
-Received: from mail-qt1-f173.google.com ([209.85.160.173]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MXpQA-1kHgrQ2420-00Y9g6; Thu, 30 Jul 2020 10:11:24 +0200
-Received: by mail-qt1-f173.google.com with SMTP id o22so19471336qtt.13;
-        Thu, 30 Jul 2020 01:11:24 -0700 (PDT)
-X-Gm-Message-State: AOAM53112YMrI1YItF6CAgt8WRH188Rba8WbZL8hhaq7oMHDM2b2KoD8
-        B28X5U6AwJylWSO5Cx6+RN/f/WA2+NzN4ZjAbEA=
-X-Google-Smtp-Source: ABdhPJyi8EKI+AIaFPt4gm4DpxtwBsJeU20bhkDhmCW6PRTBeUF30Hz/fPEst/ZpzIRbEjFkzYHg8KIN+OaDxrvgq9w=
-X-Received: by 2002:aed:2946:: with SMTP id s64mr1820401qtd.204.1596096683269;
- Thu, 30 Jul 2020 01:11:23 -0700 (PDT)
+        Thu, 30 Jul 2020 04:11:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50332 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729927AbgG3ILJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:11:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B62532075F;
+        Thu, 30 Jul 2020 08:11:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596096668;
+        bh=4PIK3txsItU6RK1rxjj0QPH/Qr9nof33HTpuGYpGiww=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=f4qL2SeVrrQjgqrobKIx2L6PkMDNXFHn1nejXdAy2JlGWMFUhyvPvOdb9loS6/Bh1
+         nyZRHGEQMza2G21/o47R0VrQQJJ7fjxo+gOMb1E9JeT2syu2FfOwZrzFaWl9UGTodO
+         Dj89ZBrHOJMiEANmXA6dmxN5iHRy5sYZgmVljLzU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        kvm ML <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Rik van Riel <riel@surriel.com>, x86-ml <x86@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 15/54] x86/fpu: Disable bottom halves while loading FPU registers
+Date:   Thu, 30 Jul 2020 10:04:54 +0200
+Message-Id: <20200730074421.942105266@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
+References: <20200730074421.203879987@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200728141946.426245-1-yepeilin.cs@gmail.com>
- <20200729115157.8519-1-yepeilin.cs@gmail.com> <20200729125820.GB1840@kadam> <f2cf6137-987a-ab41-d88a-6828d46c255f@linux.com>
-In-Reply-To: <f2cf6137-987a-ab41-d88a-6828d46c255f@linux.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 30 Jul 2020 10:11:07 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a20SEoYCrp3jOK32oZc9OkiPv+1KTjNZ2GxLbHpY4WexQ@mail.gmail.com>
-Message-ID: <CAK8P3a20SEoYCrp3jOK32oZc9OkiPv+1KTjNZ2GxLbHpY4WexQ@mail.gmail.com>
-Subject: Re: [Linux-kernel-mentees] [PATCH v2] block/floppy: Prevent
- kernel-infoleak in raw_cmd_copyout()
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Peilin Ye <yepeilin.cs@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:WKfzjuFnGRw3OvhrL5U3oP+zdQSICdJwRT+YAQE6KeBvZrjXHix
- GK55VGH5GiV0guHajImKtAU5Fcp96pvBWq6WT9ecv259t9+hK5fpZV0xw1DXDl4Aw9CXMeQ
- vSi69vNoiAhaDQem+U6bZWtED9yTgTY8Dcg1phuGKq549XeTrPp9pRNxIj2YDUwwtHd8siD
- DskXfhI6XFiAE6LfrvMQA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:h4zwwkv9Zb4=:bjifiEJFF+2dRDosiT4ZYQ
- uSNW93BZu9jkT+VY/8nHNZ5gwgaRUI8LahdvzdoCaQ7jsIDqe6h9Q8RfujPWwZqFx4mMredwF
- TJ27Oega4jL3cA9i9JP+CwFOL6Jo6xkFiR8HsI0Y9TQW6/K4/y+cwhN3R5nK0AJWOTnSL1ifG
- BrKcIAJaPAwYiySOTGySxLd/5q8+bxtOwqapgOg5wM3VTtlQnPYT9znZ5ggxmPmPvXbvSHFKk
- tXPuCFVquhJidlGVnDTtUbhwO9Sz+ydrRaYTQ3f49UFJ1uX/3y3TrpCIKnFFD6mUSrC1EuY0Z
- cf8egNpV6OCpZdXWjocSQW6y3vJ4yAdEMqkwGgcyrNAlhCJ46/HxXStHRrkQZqWixjmTk9lG3
- ycnAQzFQgp3w8NT17U8rz5YsvoUzpDo4UhLtQm/x8vT42fkHGgMTEUhFT8+ho3h9cFFNPvgcZ
- 8Cibx531qNTpi2qNW1q+jJLxWXt2VQYUyC/TKxMFhiTi18c1+zPoCwsazrPgzwPeQfSGCtdwO
- Q5/J/o6EEzLGz6kQkQcFIRKsSVxbUg5caeqYCjQLy61XkJPMNDxlkyPTtZBCBnGBnlkSVUtey
- XoQhu0hV6BlslSuJA5gv3KT10c85GDSeU8MCQGbCLxcrdCHF13zxGqO+GabOrvP+0iMhQ1z2r
- VTUT28txlY7esGHZ1iZIFB0wce1aHV+QqLfwjQBbTjBaRFB3MpNTUQNBaIwavXk8+RkFl8Mrj
- eL3UfxSTDx8xwyMEqulRdbvI6cKD3wfQxWGZA8v6spx6O+lgE2apB/9XVR5cXxu2LBogXMqjn
- 44DPp92fy4huvriFZDaPXUHkLP+2Bwb8bwZdqkT2OVgFnfNu/7xV2EynxWM4YSpKgdQWVUvPP
- AV8V4+gfWGCd8TN3Eb/5CMYwk75MKwPrWb6F6mOF+MJJUawSzEkf6+dpjw/zqYV0T+3zqrFLd
- GaqOFA1VdpZ3vvRXuq9U7EXgEQarzihhFtbarxFKm8gvy5BHzhNrg
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Wed, Jul 29, 2020 at 3:22 PM Denis Efremov <efremov@linux.com> wrote:
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-> And checked for leaks on x86_64 with the script test.sh
-> $ cat test.sh
-> #!/bin/bash
->
-> for i in 4.8 5 6 7 8 9 10
-> do
-> ./run_container.sh gcc-$i $(pwd)/src $(pwd)/out bash -c 'gcc test.c; ./a.out'
-> ./run_container.sh gcc-$i $(pwd)/src $(pwd)/out bash -c 'gcc -O2 test.c; ./a.out'
-> ./run_container.sh gcc-$i $(pwd)/src $(pwd)/out bash -c 'gcc -O3 test.c; ./a.out'
-> done
->
-> No leaks reported. Is it really possible this this kind of init, i.e. cmd = *ptr?
+[ Upstream commit 68239654acafe6aad5a3c1dc7237e60accfebc03 ]
 
-The problem is that the behavior is dependent not just on the compiler
-version but
-also optimization flags, target architecture and specific structure
-layouts. Most
-of the time, both gcc and clang will initialize the whole structure
-rather than just
-the individual members, but you still can't be sure that this is true
-for all configurations
-that this code runs on, except by using CONFIG_GCC_PLUGIN_STRUCTLEAK.
+The sequence
 
-Kees pointed me to the lib/test_stackinit.c file in the kernel in which he has
-collected a number of combinations that are known to trigger the problem.
+  fpu->initialized = 1;		/* step A */
+  preempt_disable();		/* step B */
+  fpu__restore(fpu);
+  preempt_enable();
 
-What I see there though are only cases of struct initializers like
+in __fpu__restore_sig() is racy in regard to a context switch.
 
-  struct test_big_hole var = { .one = arg->one, .two=arg->two, .three
-= arg->three, .four = arg->four };
+For 32bit frames, __fpu__restore_sig() prepares the FPU state within
+fpu->state. To ensure that a context switch (switch_fpu_prepare() in
+particular) does not modify fpu->state it uses fpu__drop() which sets
+fpu->initialized to 0.
 
-but not the syntax used in the floppy driver:
+After fpu->initialized is cleared, the CPU's FPU state is not saved
+to fpu->state during a context switch. The new state is loaded via
+fpu__restore(). It gets loaded into fpu->state from userland and
+ensured it is sane. fpu->initialized is then set to 1 in order to avoid
+fpu__initialize() doing anything (overwrite the new state) which is part
+of fpu__restore().
 
-   struct test_big_hole var = *arg;
+A context switch between step A and B above would save CPU's current FPU
+registers to fpu->state and overwrite the newly prepared state. This
+looks like a tiny race window but the Kernel Test Robot reported this
+back in 2016 while we had lazy FPU support. Borislav Petkov made the
+link between that report and another patch that has been posted. Since
+the removal of the lazy FPU support, this race goes unnoticed because
+the warning has been removed.
 
-or the a constructor like
+Disable bottom halves around the restore sequence to avoid the race. BH
+need to be disabled because BH is allowed to run (even with preemption
+disabled) and might invoke kernel_fpu_begin() by doing IPsec.
 
-  struct test_big_hole var;
-  var = (struct test_big_hole){ .one = arg->one, .two=arg->two, .three
-= arg->three, .four = arg->four };
+ [ bp: massage commit message a bit. ]
 
-Kees, do you know whether those two would behave differently?
-Would it make sense to also check for those, or am I perhaps
-misreading your code and it already gets checked?
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: kvm ML <kvm@vger.kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: stable@vger.kernel.org
+Cc: x86-ml <x86@kernel.org>
+Link: http://lkml.kernel.org/r/20181120102635.ddv3fvavxajjlfqk@linutronix.de
+Link: https://lkml.kernel.org/r/20160226074940.GA28911@pd.tnic
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/kernel/fpu/signal.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-      Arnd
+diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+index 31fad2cbd734b..8fc842dae3b39 100644
+--- a/arch/x86/kernel/fpu/signal.c
++++ b/arch/x86/kernel/fpu/signal.c
+@@ -317,10 +317,10 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 			sanitize_restored_xstate(tsk, &env, xfeatures, fx_only);
+ 		}
+ 
++		local_bh_disable();
+ 		fpu->fpstate_active = 1;
+-		preempt_disable();
+ 		fpu__restore(fpu);
+-		preempt_enable();
++		local_bh_enable();
+ 
+ 		return err;
+ 	} else {
+-- 
+2.25.1
+
+
+
