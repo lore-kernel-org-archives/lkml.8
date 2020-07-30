@@ -2,148 +2,153 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D7EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB280C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E869207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A76A220809
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:56:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="XuFHDQuc";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="WG0PFiVD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PScGXoEr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbgG3A4w (ORCPT
+        id S1728318AbgG3A45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 20:56:52 -0400
-Received: from relay5.mymailcheap.com ([159.100.248.207]:34265 "EHLO
-        relay5.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbgG3A4w (ORCPT
+        Wed, 29 Jul 2020 20:56:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43486 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726709AbgG3A4y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 20:56:52 -0400
-Received: from relay4.mymailcheap.com (relay4.mymailcheap.com [137.74.80.156])
-        by relay5.mymailcheap.com (Postfix) with ESMTPS id 08A0126376
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 00:56:49 +0000 (UTC)
-Received: from filter2.mymailcheap.com (filter2.mymailcheap.com [91.134.140.82])
-        by relay4.mymailcheap.com (Postfix) with ESMTPS id 0D8623F1D0;
-        Thu, 30 Jul 2020 02:56:43 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by filter2.mymailcheap.com (Postfix) with ESMTP id CFB272A90C;
-        Thu, 30 Jul 2020 02:56:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
-        s=default; t=1596070602;
-        bh=jt6CXPuxRRHbhS3TXLRcgmZiibXtcKZSRTlrq/14zrI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=XuFHDQuc7IOKosfSbNDfcFpAYVGDt6SZ7AXF4ZehRR2PdlXArIB4tURpRgFSoRRpZ
-         G/H//0mBDXsaDzn7lSIp/4CwkaeN+PKgms6wHoLRSdo1TVtZoE251STz9NULqwMMyh
-         JV0YpW+ueIAHLbb92P28c/RepKGIMG8jDUrw26HQ=
-X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
-Received: from filter2.mymailcheap.com ([127.0.0.1])
-        by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ip1L72fUqe0v; Thu, 30 Jul 2020 02:56:40 +0200 (CEST)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by filter2.mymailcheap.com (Postfix) with ESMTPS;
-        Thu, 30 Jul 2020 02:56:40 +0200 (CEST)
-Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
-        by mail20.mymailcheap.com (Postfix) with ESMTP id 3948840143;
-        Thu, 30 Jul 2020 00:56:39 +0000 (UTC)
-Authentication-Results: mail20.mymailcheap.com;
-        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="WG0PFiVD";
-        dkim-atps=neutral
-AI-Spam-Status: Not processed
-Received: from localhost.localdomain (unknown [123.157.159.172])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail20.mymailcheap.com (Postfix) with ESMTPSA id C3B0F40143;
-        Thu, 30 Jul 2020 00:56:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
-        s=default; t=1596070592;
-        bh=jt6CXPuxRRHbhS3TXLRcgmZiibXtcKZSRTlrq/14zrI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=WG0PFiVDsOWJMFzQBYlGYI2nKEUfBmaOnG2heQdBJtbF9nxGw2RPx2DBGSFcXvexd
-         +kEJtszEREXGdPLzif45B5dePQIGSGGcJcQkVZx9oqzuqvvvJxmsWXFKXgAGsCEe7k
-         0f4oVDQfxU5otEOe6w1ZIygtPPmwaotsAJPTvT4Q=
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     robh@kernel.org, linux-kernel@vger.kernel.org,
-        tsbogend@alpha.franken.de, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH] of_address: Guard of_bus_pci_get_flags with CONFIG_PCI
-Date:   Thu, 30 Jul 2020 08:56:14 +0800
-Message-Id: <20200730005614.32302-1-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.27.0
+        Wed, 29 Jul 2020 20:56:54 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1AFEC061794;
+        Wed, 29 Jul 2020 17:56:54 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id q9so3234449oth.5;
+        Wed, 29 Jul 2020 17:56:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7VwGC5we8NqM1/WqIBKe+R0LI4Ddr3r8VHSb3CITwzE=;
+        b=PScGXoErZ4EY/dcMyDRi4iDpWGOSewRjuyIKMrlTalG7wtmT091Lt9/sAWUYDwAizb
+         BCOVQ8mNemL3Xyeq/DL0Oha973Qxmg1xvXizNdO1Q2bw1pMM0sMP0VfrNCIIyG3fFjlj
+         y5jC8WjPtdtMl8LMTatvMHsxq1HzCqbs5rowcQkmCCrxSlZOIsF/82ZWjTjYQhzzcj2R
+         VndzvkAxX6kQgpBWfryaNugjJ0Uy0ywd8oXn/hMzLCPY2BrEF4AOJnk74hETT94AEifl
+         LGOwFVLh18IEZmN2S6EG08P5b9qvD77e+941IBd7wqM5eWR6N1Gt2/7/QpOCEEGvirGG
+         +0FA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7VwGC5we8NqM1/WqIBKe+R0LI4Ddr3r8VHSb3CITwzE=;
+        b=nmgwpyN1lZYD+bHpj8uA6IfaeDdnusgvLZKoVTRuUuzxgDqqrcMMFELl1UEpfmSjhi
+         lZTecH7bC1PMVXys5+sfqx5N7oe9us8uv/fkr8Tqqv3jVOkPIMNlIuQIgipBtD17Adfm
+         d4pYM8VW5nuejskmcfL+qRHuPbXBuLFiPAzRn9o+FQaZsUukvwHftsY5vUqT2XRZna0y
+         v7JAGBvfi0a7Xb03DrP5jNPpXmkykqW25qMjN4jGn5PGApMGFGg3pIRfyjnmukXJZ2F2
+         c5S93q8S25NQjrimosZbDJB/Px0cm1PYB0zi3rgtyRkwaWBPmm26XlcAZ2F4vSZltHzO
+         +mDA==
+X-Gm-Message-State: AOAM531n6XJ15ZkgBoq2yFbuKlsHUirrhCCOYVEU3mY77XlFR5j8YDvZ
+        hjxKvMySL7C9uELB/JpLZmSBCoZJyv/x9u+WDlU=
+X-Google-Smtp-Source: ABdhPJwkeeToi1bvgT2kK6So+NXMvcn8/ncDmL7dxNfHdEFMqAvWNpDMhVRqWyDmzoB1x0j8YMM+kmd3gX/NsczQwVg=
+X-Received: by 2002:a9d:37f5:: with SMTP id x108mr414581otb.254.1596070614099;
+ Wed, 29 Jul 2020 17:56:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 3948840143
-X-Spamd-Result: default: False [4.90 / 10.00];
-         RCVD_VIA_SMTP_AUTH(0.00)[];
-         ARC_NA(0.00)[];
-         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
-         RECEIVED_SPAMHAUS_PBL(0.00)[123.157.159.172:received];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         R_SPF_SOFTFAIL(0.00)[~all];
-         RCPT_COUNT_FIVE(0.00)[6];
-         ML_SERVERS(-3.10)[148.251.23.173];
-         DKIM_TRACE(0.00)[flygoat.com:+];
-         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
-         MID_CONTAINS_FROM(1.00)[];
-         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
-         RCVD_NO_TLS_LAST(0.10)[];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
-         RCVD_COUNT_TWO(0.00)[2];
-         HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
-X-Rspamd-Server: mail20.mymailcheap.com
-X-Spam: Yes
+References: <1595929506-9203-1-git-send-email-wanpengli@tencent.com>
+ <1595929506-9203-3-git-send-email-wanpengli@tencent.com> <87k0ymldg9.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87k0ymldg9.fsf@vitty.brq.redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Thu, 30 Jul 2020 08:56:42 +0800
+Message-ID: <CANRm+Cx-VM=QGcDNG0oRq7YX+2wmmw8yDjESrJGxTeEWkUUv0A@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] KVM: SVM: Fix disable pause loop exit/pause
+ filtering capability on SVM
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser"),
-the last user of of_bus_pci_get_flags when CONFIG_PCI is disabled had gone.
+On Wed, 29 Jul 2020 at 20:21, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>
+> Wanpeng Li <kernellwp@gmail.com> writes:
+>
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > Commit 8566ac8b (KVM: SVM: Implement pause loop exit logic in SVM) drops
+> > disable pause loop exit/pause filtering capability completely, I guess it
+> > is a merge fault by Radim since disable vmexits capabilities and pause
+> > loop exit for SVM patchsets are merged at the same time. This patch
+> > reintroduces the disable pause loop exit/pause filtering capability
+> > support.
+> >
+> > We can observe 2.9% hackbench improvement for a 92 vCPUs guest on AMD
+> > Rome Server.
+> >
+> > Reported-by: Haiwei Li <lihaiwei@tencent.com>
+> > Tested-by: Haiwei Li <lihaiwei@tencent.com>
+> > Fixes: 8566ac8b (KVM: SVM: Implement pause loop exit logic in SVM)
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+> >  arch/x86/kvm/svm/svm.c | 9 ++++++---
+> >  1 file changed, 6 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> > index c0da4dd..c20f127 100644
+> > --- a/arch/x86/kvm/svm/svm.c
+> > +++ b/arch/x86/kvm/svm/svm.c
+> > @@ -1090,7 +1090,7 @@ static void init_vmcb(struct vcpu_svm *svm)
+> >       svm->nested.vmcb = 0;
+> >       svm->vcpu.arch.hflags = 0;
+> >
+> > -     if (pause_filter_count) {
+> > +     if (pause_filter_count && !kvm_pause_in_guest(svm->vcpu.kvm)) {
+> >               control->pause_filter_count = pause_filter_count;
+> >               if (pause_filter_thresh)
+> >                       control->pause_filter_thresh = pause_filter_thresh;
+> > @@ -2693,7 +2693,7 @@ static int pause_interception(struct vcpu_svm *svm)
+> >       struct kvm_vcpu *vcpu = &svm->vcpu;
+> >       bool in_kernel = (svm_get_cpl(vcpu) == 0);
+> >
+> > -     if (pause_filter_thresh)
+> > +     if (!kvm_pause_in_guest(vcpu->kvm))
+> >               grow_ple_window(vcpu);
+> >
+> >       kvm_vcpu_on_spin(vcpu, in_kernel);
+> > @@ -3780,7 +3780,7 @@ static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu)
+> >
+> >  static void svm_sched_in(struct kvm_vcpu *vcpu, int cpu)
+> >  {
+> > -     if (pause_filter_thresh)
+> > +     if (!kvm_pause_in_guest(vcpu->kvm))
+> >               shrink_ple_window(vcpu);
+> >  }
+> >
+> > @@ -3958,6 +3958,9 @@ static void svm_vm_destroy(struct kvm *kvm)
+> >
+> >  static int svm_vm_init(struct kvm *kvm)
+> >  {
+> > +     if (!pause_filter_thresh)
+> > +             kvm->arch.pause_in_guest = true;
+>
+> Would it make sense to do
+>
+>         if (!pause_filter_count || !pause_filter_thresh)
+>                 kvm->arch.pause_in_guest = true;
+>
+> here and simplify the condition in init_vmcb()?
 
-This caused unused function warning when compiling without CONFIG_PCI.
-Fix by guarding it with CONFIG_PCI.
+kvm->arch.pause_in_guest can also be true when userspace sets the
+KVM_CAP_X86_DISABLE_EXITS capability, so we can't simplify the
+condition in init_vmcb().
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
----
- drivers/of/address.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 813936d419ad..157dc7e06077 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -101,6 +101,7 @@ static unsigned int of_bus_default_get_flags(const __be32 *addr)
- 	return IORESOURCE_MEM;
- }
- 
-+#ifdef CONFIG_PCI
- static unsigned int of_bus_pci_get_flags(const __be32 *addr)
- {
- 	unsigned int flags = 0;
-@@ -123,7 +124,6 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
- 	return flags;
- }
- 
--#ifdef CONFIG_PCI
- /*
-  * PCI bus specific translator
-  */
--- 
-2.27.0
+    Wanpeng
