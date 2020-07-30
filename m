@@ -2,95 +2,82 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B584AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39907C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 958A3206F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 249722082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:56:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbgG3Jzy (ORCPT
+        id S1729553AbgG3J4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 05:55:54 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:35882 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726790AbgG3Jzy (ORCPT
+        Thu, 30 Jul 2020 05:56:14 -0400
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:58417 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726790AbgG3J4N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 05:55:54 -0400
-Received: from marcel-macbook.fritz.box (p4ff9f430.dip0.t-ipconnect.de [79.249.244.48])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 6647FCECF2;
-        Thu, 30 Jul 2020 12:05:53 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] Revert "Bluetooth: btusb: Disable runtime suspend on
- Realtek devices"
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200729161740.1.Ib03d0827c8e48fc3df887fec698f79fa335c9274@changeid>
-Date:   Thu, 30 Jul 2020 11:55:51 +0200
-Cc:     chromeos-bluetooth-upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bluetooth Kernel Mailing List 
-        <linux-bluetooth@vger.kernel.org>,
-        Alex Lu <alex_lu@realsil.com.cn>, linux-pm@vger.kernel.org,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <C006448A-9FE3-4F83-AB67-68973709C0C2@holtmann.org>
-References: <20200729161740.1.Ib03d0827c8e48fc3df887fec698f79fa335c9274@changeid>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Thu, 30 Jul 2020 05:56:13 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 3352D30000898;
+        Thu, 30 Jul 2020 11:56:11 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id ED72B60DD4; Thu, 30 Jul 2020 11:56:10 +0200 (CEST)
+Date:   Thu, 30 Jul 2020 11:56:10 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH 2/3] driver core: Use rwsem for kill_device()
+ serialization
+Message-ID: <20200730095610.orkum2n6snb42uzs@wunner.de>
+References: <cover.1594214103.git.lukas@wunner.de>
+ <bf185285172a7b127424ac22fa42811eb2081cd4.1594214103.git.lukas@wunner.de>
+ <20200730065326.GA3950394@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730065326.GA3950394@kroah.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
+On Thu, Jul 30, 2020 at 08:53:26AM +0200, Greg Kroah-Hartman wrote:
+> On Wed, Jul 08, 2020 at 03:27:02PM +0200, Lukas Wunner wrote:
+> > kill_device() is currently serialized with driver probing by way of the
+> > device_lock().  We're about to serialize it with device_add() as well
+> > to prevent addition of children below a device which is going away.
+> 
+> Why?  Who does this?  Shouldn't the bus that is trying to do this know
+> this is happening?
 
-> This reverts commit 7ecacafc240638148567742cca41aa7144b4fe1e.
-> 
-> Testing this change on a board with RTL8822CE, I found that enabling
-> autosuspend has no effect on the stability of the system. The board
-> continued working after autosuspend, suspend and reboot.
-> 
-> The original commit makes it impossible to enable autosuspend on working
-> systems so it should be reverted. Disabling autosuspend should be done
-> via module param or udev in userspace instead.
-> 
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> ---
-> We have a few Chromebooks using the RTL 8822CE part over USB and they
-> are running without problems with autosuspend enabled. While bringing up
-> a new board, I found some power regressions that I was able to narrow
-> down to this change so I'm requesting a revert.
-> 
-> I tested this on Hp Chromebook 14a (running 4.14 kernel and 5.4 kernel)
-> with this revert:
-> * Enabled autosuspend, used it normally with a HID device
-> * Suspended the Chromebook and verified it worked normally on resume
-> * Rebooted the Chromebook and verified Bluetooth was working on next
->  boot
-> 
-> I didn't see the issue that was originally reported with this fix. For
-> the original reporter, if you're still seeing this issue, there are
-> other ways to disable autosuspend for your device:
-> * set module param: enable_autosuspend=0
-> * change your kconfig so BT_HCIBTUSB_AUTOSUSPEND=n
-> * use a udev rule to disable autosuspend for specific vid:pid
-> 
-> Keeping this change in the kernel makes it impossible to enable
-> autosuspend so it should be reverted.
-> 
-> drivers/bluetooth/btusb.c | 4 ----
-> 1 file changed, 4 deletions(-)
+AFAICS, at least spi and i2c are affected.
 
-patch has been applied to bluetooth-next tree.
+I first thought that pci is affected as well but it seems the global
+pci_lock_rescan_remove() performs the required serialization.
 
-Regards
+I've yet to take a closer look at acpi and usb.  Any bus which
+creates a device hierarchy with dynamic addition & removal needs
+to make sure no new children are added after removal of the parent
+has begun.
 
-Marcel
 
+> So, why are you pushing this down into the driver core, can't this be
+> done in whatever crazy bus wants to do this, like is done here?
+
+I guess it can.  Let me try to perform the locking at the bus level then.
+
+Thanks,
+
+Lukas
