@@ -2,72 +2,163 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AADC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2D1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7547420809
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:52:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD412075D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:53:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LxOV/pwA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgG3Awo (ORCPT
+        id S1728301AbgG3AxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 20:52:44 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:48672 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726709AbgG3Awn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 20:52:43 -0400
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 79EC1DE18D7FD5DBC91C;
-        Thu, 30 Jul 2020 08:52:41 +0800 (CST)
-Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Thu, 30 Jul 2020 08:52:41 +0800
-Received: from [10.174.61.242] (10.174.61.242) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Thu, 30 Jul 2020 08:52:40 +0800
-Subject: Re: [PATCH net-next] hinic: add generating mailbox random index
- support
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
-        <chiqijun@huawei.com>
-References: <20200729005919.11293-1-luobin9@huawei.com>
- <20200729150303.0cbe7948@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   "luobin (L)" <luobin9@huawei.com>
-Message-ID: <9ecea2b0-cf06-570c-f695-6b8076d63630@huawei.com>
-Date:   Thu, 30 Jul 2020 08:52:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 29 Jul 2020 20:53:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42920 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726709AbgG3AxJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 20:53:09 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 817A8C061794;
+        Wed, 29 Jul 2020 17:53:09 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id s16so11819137ljc.8;
+        Wed, 29 Jul 2020 17:53:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2WIsb3OakYjVF8It8z90CrlZdw9biUetyGUhn5Gd9zk=;
+        b=LxOV/pwADxmLgnpAn+jbdz5AKBHxCpc/fKkznCKuZayUymRrRDAsQCB/BOt8G4cTbc
+         SSJ0DMfLg7hAzdfyxjSZ6aT+t7uqiNkHxIyhWpdTnwB86aYn6DY9sOAWKptq012/EKks
+         ue8Ncx+bhH6u2V9Ni2ih10Gqe8a3PnKRW9+N9vz8SOnIXm9qJX4jOeQRBvHwU6fv6ko2
+         PC4IXJTx7akbYwyZm666fmJCoTpAw3DhbtQohmALJXHmEyMelGVRMrcT3ISXMvzFW769
+         ptzX4T75V2X5d/IoP58qdytZeH2dADX43cPK3GuDC6BzBV0pFFPZ6TP77UhKUsk2zdAQ
+         znLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2WIsb3OakYjVF8It8z90CrlZdw9biUetyGUhn5Gd9zk=;
+        b=rRY2Fq5Bwe1YvpdYSVX7zLBN+U7VXlXBM9TIWPoN6hdDD5qpw6m5ZfWl+keX/+9W9n
+         p39TU77lSKQy/Xx+cdQua4tshjacMXE6zS7ts/uIXzYGRbcxpifDy3pIVKjdguOQuDlU
+         Ya2CLQkzMW/FqAuOElsznu5n2bQq49RqsuH8tpD+6HTm0FyIL8cytvKlC0phVHUR+I6E
+         5wtbCngsJ00AOJo/c5oRJv3c6tr/Ab8HgxrA6eYbD/EIRcfJxzE66W2xJO3qfv//tEQ5
+         NHNBCGf5gXhnyVV+cSrJx2ZGmY3fYwyixGQU9cgrNOQ+sAB3TA01WxmM0hlrPvCy++aB
+         y6qw==
+X-Gm-Message-State: AOAM533j5rtVLVSYSy8EKRDtzv0oIJvcNbwd5tq6BgkSeMRaPbYKFTeZ
+        e01NoLj8pzzw9TQJr6mKQjjcWaBZ
+X-Google-Smtp-Source: ABdhPJyrfeqwdyj25iD1xokH7+qTgCm7Qmo3VsGSgHxwkAYo+mtQ7x5gnXHVBPX1PLQKx4jfLffKPA==
+X-Received: by 2002:a2e:8718:: with SMTP id m24mr221091lji.253.1596070387782;
+        Wed, 29 Jul 2020 17:53:07 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-76-12-16.pppoe.mtu-net.ru. [91.76.12.16])
+        by smtp.googlemail.com with ESMTPSA id r19sm803663lfi.58.2020.07.29.17.53.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jul 2020 17:53:07 -0700 (PDT)
+Subject: Re: [RFC PATCH v5 13/14] media: tegra-video: Add CSI MIPI pads
+ calibration
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com
+Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
+ <1595883452-17343-14-git-send-email-skomatineni@nvidia.com>
+ <c3d40261-9d77-3634-3e04-f20efad9d3d8@gmail.com>
+ <01ee0805-3d57-d857-48e3-5c2245cd4500@nvidia.com>
+ <2ec535c9-55e8-8834-6002-36c75aeb097c@gmail.com>
+ <021707b9-5f72-6f8b-d125-43627ef64a6d@nvidia.com>
+ <de2d6117-b1e5-14c0-52ca-ff46b444c866@nvidia.com>
+ <ca18b93e-1f1c-50ae-e0c1-11758935ee89@gmail.com>
+ <42f25a49-ad2b-4e52-fd99-cb0f52037988@nvidia.com>
+ <f5440f57-3653-7cf0-9efe-e9a0c276f7cf@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <6ae07f82-53f7-33fc-5892-340b0d9f12cf@gmail.com>
+Date:   Thu, 30 Jul 2020 03:53:06 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200729150303.0cbe7948@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <f5440f57-3653-7cf0-9efe-e9a0c276f7cf@nvidia.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.61.242]
-X-ClientProxiedBy: dggeme701-chm.china.huawei.com (10.1.199.97) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/30 6:03, Jakub Kicinski wrote:
-> On Wed, 29 Jul 2020 08:59:19 +0800 Luo bin wrote:
->> add support to generate mailbox random id for VF to ensure that
->> the mailbox message from VF is valid and PF should check whether
->> the cmd from VF is supported before passing it to hw.
+30.07.2020 03:55, Sowjanya Komatineni пишет:
 > 
-> This is hard to review. I don't see how the addition of
-> hinic_mbox_check_cmd_valid() correlates to the random id 
-> thing. Please split this into two or more patches making
-> one logical change each.
+> On 7/29/20 5:52 PM, Sowjanya Komatineni wrote:
+>>
+>> On 7/29/20 5:43 PM, Dmitry Osipenko wrote:
+>>> 30.07.2020 03:27, Sowjanya Komatineni пишет:
+>>> ...
+>>>>>> Secondly, perhaps a failed calibration isn't a very critical error?
+>>>>>> Hence just printing a warning message should be enough.
+>>>>> Using dev_err to report calibration failure. Are you suggesting to use
+>>>>> dev_warn instead of dev_err?
+>>> I meant that failing s_stream might be unnecessary.
+>>>
+>>> The dev_warn should be more appropriate for a non-critical errors.
+>>>
+>>>>>> Could you please make a patch that factors all ON/OFF code paths
+>>>>>> into a
+>>>>>> separate functions? It's a bit difficult to follow the combined code,
+>>>>>> especially partial changes in the patches. Thanks in advance!
+>>>>> what do you mean by partial changes in patches?
+>>>>>
+>>>>> Can you please be more clear?
+>>>> Also please specify what ON/OFF code paths you are referring to when
+>>>> you
+>>>> say to move into separate functions?
+>>> I meant to change all the code like this:
+>>>
+>>> set(on) {
+>>>      if (on) {
+>>>         ...
+>>>         return;
+>>>      }
+>>>
+>>>      if (!on)
+>>>        ...
+>>>
+>>>      return;
+>>> }
+>>>
+>>> to somewhat like this:
+>>>
+>>> set(on) {
+>>>      if (on)
+>>>        ret = enable();
+>>>      else
+>>>        ret = disable();
+>>>
+>>>      return ret;
+>>> }
+>>
+>> You mean to change tegra_channel_set_stream() ?
+
+Yes, and tegra_csi_s_stream().
+
+> changing tegra_channel_set_stream() to have like below will have
+> redundant calls as most of the code b/w enable and disable is same
+> except calling them in reverse order based on on/off and doing MIPI
+> calibration only during ON
 > 
-> .
 > 
-I'll split it into two patches. Thank you!
+> if (on)
+>     ret = enable()
+> else
+>     ret = disable()
+> return ret;
+
+Readability should be more important than number of lines.
