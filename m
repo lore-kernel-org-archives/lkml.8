@@ -2,53 +2,52 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF29CC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFBB62075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3F4F2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:17:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596097017;
-	bh=WTVL0m1JxbN9FAbto5tt2PyUCly73Fc2OqFEXOXruPY=;
+	s=default; t=1596097024;
+	bh=T/Uqo1pGCLFxqxThNCnIF1XGIsQEQgNGpx28Wsefn0g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t555dWkk0ZBAQ+7ZC6dMH4Lh9WKkyjoaxEVt9gDik04wSzArFrOzR/jUnt1+vqhit
-	 qwipr226clwCmFgFgp1/TwQPS9KFF2HT0CJiH5djspfgbYo4KV8n3zF56FeDRWRUyC
-	 LScIzBFfO1v6awchOLuHm0KmbuPimPNihOeP201M=
+	b=tXgkQuAy5WCc+pZGFmoe+O5WhslurYs7bQgMGYEqHYEAugX9fSccl4/4lby+7ekWH
+	 eWqrOF/vPYaB+FhvpRflzHUUzSQ5NNk3FKKbva1DhgSY9sp5MpbvLXIvRlpwJtIXRe
+	 bkiad4MW6Fwzq2nqEjUzi0l2IiDDWKInvS09vveU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730145AbgG3IQ4 (ORCPT
+        id S1729799AbgG3IKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:16:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49200 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:10:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729808AbgG3IKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:10:21 -0400
+        id S1729265AbgG3IKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:10:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBF0F2070B;
-        Thu, 30 Jul 2020 08:10:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91D702074B;
+        Thu, 30 Jul 2020 08:10:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096620;
-        bh=WTVL0m1JxbN9FAbto5tt2PyUCly73Fc2OqFEXOXruPY=;
+        s=default; t=1596096613;
+        bh=T/Uqo1pGCLFxqxThNCnIF1XGIsQEQgNGpx28Wsefn0g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b1VveCCPHsMSrbqMDJ4eIzEyDknnYFusr5X0rl4qlkFsRVM0jyI2gg/NUlW9k4Z9P
-         Roy7APVWbzLRb7R6Jx/9YsRVJ4UBZBRnBcLwuYO6tUI9kiLp4rmwHm7v2MR95dpThr
-         SkF+5wsuftla0+c3LJNoL3vi4tbpmMbOKmsZp568=
+        b=QWawl1xgtU1xV9Xn0XaGozx9nur/J1PUkapq7Rvx9muyirT4JnyVFmA0InuLxH6Wq
+         mshLOdksZnRzbEsD2NcTcWiJFRcLx8Id7e7hmEzU7FiHPr56agJCKfKfouEo7Lmt+F
+         Mu3TzALMYNmWG6QZLATitiCy8BfAuSyijmN3U7D4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 4.9 58/61] perf probe: Fix to check blacklist address correctly
-Date:   Thu, 30 Jul 2020 10:05:16 +0200
-Message-Id: <20200730074423.646049205@linuxfoundation.org>
+        stable@vger.kernel.org, Boris Burkov <boris@bur.io>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 14/61] btrfs: fix mount failure caused by race with umount
+Date:   Thu, 30 Jul 2020 10:04:32 +0200
+Message-Id: <20200730074421.512942134@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074420.811058810@linuxfoundation.org>
 References: <20200730074420.811058810@linuxfoundation.org>
@@ -61,118 +60,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Boris Burkov <boris@bur.io>
 
-commit 80526491c2ca6abc028c0f0dbb0707a1f35fb18a upstream.
+[ Upstream commit 48cfa61b58a1fee0bc49eef04f8ccf31493b7cdd ]
 
-Fix to check kprobe blacklist address correctly with relocated address
-by adjusting debuginfo address.
+It is possible to cause a btrfs mount to fail by racing it with a slow
+umount. The crux of the sequence is generic_shutdown_super not yet
+calling sop->put_super before btrfs_mount_root calls btrfs_open_devices.
+If that occurs, btrfs_open_devices will decide the opened counter is
+non-zero, increment it, and skip resetting fs_devices->total_rw_bytes to
+0. From here, mount will call sget which will result in grab_super
+trying to take the super block umount semaphore. That semaphore will be
+held by the slow umount, so mount will block. Before up-ing the
+semaphore, umount will delete the super block, resulting in mount's sget
+reliably allocating a new one, which causes the mount path to dutifully
+fill it out, and increment total_rw_bytes a second time, which causes
+the mount to fail, as we see double the expected bytes.
 
-Since the address in the debuginfo is same as objdump, it is different
-from relocated kernel address with KASLR.  Thus, 'perf probe' always
-misses to catch the blacklisted addresses.
+Here is the sequence laid out in greater detail:
 
-Without this patch, 'perf probe' can not detect the blacklist addresses
-on a KASLR enabled kernel.
+CPU0                                                    CPU1
+down_write sb->s_umount
+btrfs_kill_super
+  kill_anon_super(sb)
+    generic_shutdown_super(sb);
+      shrink_dcache_for_umount(sb);
+      sync_filesystem(sb);
+      evict_inodes(sb); // SLOW
 
-  # perf probe kprobe_dispatcher
-  Failed to write event: Invalid argument
-    Error: Failed to add events.
-  #
+                                              btrfs_mount_root
+                                                btrfs_scan_one_device
+                                                fs_devices = device->fs_devices
+                                                fs_info->fs_devices = fs_devices
+                                                // fs_devices-opened makes this a no-op
+                                                btrfs_open_devices(fs_devices, mode, fs_type)
+                                                s = sget(fs_type, test, set, flags, fs_info);
+                                                  find sb in s_instances
+                                                  grab_super(sb);
+                                                    down_write(&s->s_umount); // blocks
 
-With this patch, it correctly shows the error message.
+      sop->put_super(sb)
+        // sb->fs_devices->opened == 2; no-op
+      spin_lock(&sb_lock);
+      hlist_del_init(&sb->s_instances);
+      spin_unlock(&sb_lock);
+      up_write(&sb->s_umount);
+                                                    return 0;
+                                                  retry lookup
+                                                  don't find sb in s_instances (deleted by CPU0)
+                                                  s = alloc_super
+                                                  return s;
+                                                btrfs_fill_super(s, fs_devices, data)
+                                                  open_ctree // fs_devices total_rw_bytes improperly set!
+                                                    btrfs_read_chunk_tree
+                                                      read_one_dev // increment total_rw_bytes again!!
+                                                      super_total_bytes < fs_devices->total_rw_bytes // ERROR!!!
 
-  # perf probe kprobe_dispatcher
-  kprobe_dispatcher is blacklisted function, skip it.
-  Probe point 'kprobe_dispatcher' not found.
-    Error: Failed to add events.
-  #
+To fix this, we clear total_rw_bytes from within btrfs_read_chunk_tree
+before the calls to read_one_dev, while holding the sb umount semaphore
+and the uuid mutex.
 
-Fixes: 9aaf5a5f479b ("perf probe: Check kprobes blacklist when adding new events")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/158763966411.30755.5882376357738273695.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To reproduce, it is sufficient to dirty a decent number of inodes, then
+quickly umount and mount.
+
+  for i in $(seq 0 500)
+  do
+    dd if=/dev/zero of="/mnt/foo/$i" bs=1M count=1
+  done
+  umount /mnt/foo&
+  mount /mnt/foo
+
+does the trick for me.
+
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Boris Burkov <boris@bur.io>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-event.c |   21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ fs/btrfs/volumes.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -118,7 +118,7 @@ static struct symbol *__find_kernel_func
- 	return machine__find_kernel_function(host_machine, addr, mapp);
- }
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index 70aa22a8a9cce..bace03a546b2d 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -6854,6 +6854,14 @@ int btrfs_read_chunk_tree(struct btrfs_root *root)
+ 	mutex_lock(&uuid_mutex);
+ 	lock_chunks(root);
  
--static struct ref_reloc_sym *kernel_get_ref_reloc_sym(void)
-+static struct ref_reloc_sym *kernel_get_ref_reloc_sym(struct map **pmap)
- {
- 	/* kmap->ref_reloc_sym should be set if host_machine is initialized */
- 	struct kmap *kmap;
-@@ -130,6 +130,10 @@ static struct ref_reloc_sym *kernel_get_
- 	kmap = map__kmap(map);
- 	if (!kmap)
- 		return NULL;
++	/*
++	 * It is possible for mount and umount to race in such a way that
++	 * we execute this code path, but open_fs_devices failed to clear
++	 * total_rw_bytes. We certainly want it cleared before reading the
++	 * device items, so clear it here.
++	 */
++	root->fs_info->fs_devices->total_rw_bytes = 0;
 +
-+	if (pmap)
-+		*pmap = map;
-+
- 	return kmap->ref_reloc_sym;
- }
- 
-@@ -141,7 +145,7 @@ static int kernel_get_symbol_address_by_
- 	struct map *map;
- 
- 	/* ref_reloc_sym is just a label. Need a special fix*/
--	reloc_sym = kernel_get_ref_reloc_sym();
-+	reloc_sym = kernel_get_ref_reloc_sym(NULL);
- 	if (reloc_sym && strcmp(name, reloc_sym->name) == 0)
- 		*addr = (reloc) ? reloc_sym->addr : reloc_sym->unrelocated_addr;
- 	else {
-@@ -742,6 +746,7 @@ post_process_kernel_probe_trace_events(s
- 				       int ntevs)
- {
- 	struct ref_reloc_sym *reloc_sym;
-+	struct map *map;
- 	char *tmp;
- 	int i, skipped = 0;
- 
-@@ -750,7 +755,7 @@ post_process_kernel_probe_trace_events(s
- 		return post_process_offline_probe_trace_events(tevs, ntevs,
- 						symbol_conf.vmlinux_name);
- 
--	reloc_sym = kernel_get_ref_reloc_sym();
-+	reloc_sym = kernel_get_ref_reloc_sym(&map);
- 	if (!reloc_sym) {
- 		pr_warning("Relocated base symbol is not found!\n");
- 		return -EINVAL;
-@@ -759,9 +764,13 @@ post_process_kernel_probe_trace_events(s
- 	for (i = 0; i < ntevs; i++) {
- 		if (!tevs[i].point.address || tevs[i].point.retprobe)
- 			continue;
--		/* If we found a wrong one, mark it by NULL symbol */
-+		/*
-+		 * If we found a wrong one, mark it by NULL symbol.
-+		 * Since addresses in debuginfo is same as objdump, we need
-+		 * to convert it to addresses on memory.
-+		 */
- 		if (kprobe_warn_out_range(tevs[i].point.symbol,
--					  tevs[i].point.address)) {
-+			map__objdump_2mem(map, tevs[i].point.address))) {
- 			tmp = NULL;
- 			skipped++;
- 		} else {
-@@ -2850,7 +2859,7 @@ static int find_probe_trace_events_from_
- 
- 	/* Note that the symbols in the kmodule are not relocated */
- 	if (!pev->uprobes && !pp->retprobe && !pev->target) {
--		reloc_sym = kernel_get_ref_reloc_sym();
-+		reloc_sym = kernel_get_ref_reloc_sym(NULL);
- 		if (!reloc_sym) {
- 			pr_warning("Relocated base symbol is not found!\n");
- 			ret = -EINVAL;
+ 	/*
+ 	 * Read all device items, and then all the chunk items. All
+ 	 * device items are found before any chunk item (their object id
+-- 
+2.25.1
+
 
 
