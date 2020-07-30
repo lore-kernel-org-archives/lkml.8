@@ -2,105 +2,158 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D064EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A15FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A709E2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 485352074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096501;
-	bh=uXpmu6psb5xH47uWhmnUMxGJmFYHmZdXZm3CUBvJp1o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wqwDVPD6FXAJ1UIEANd4e2HTerrTIX5n+1wyOlo9Vng5EPL9PYgUAlR786gwSPrke
-	 RlD5lIQ+Ufuub29CaO3DoVw6aoUGRuW5O2GCEeg0iv10cwoMn6VgTU0tfx6ZwHXJOw
-	 RRJb86fnya+9inwwjHkzay0ZAJVOfZPmdyqoM8pE=
+	s=default; t=1596096513;
+	bh=OtPGktX9xA7qGP4dAIzq5V8EZxaj5xNIoS63jDZGvGk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=dQBNDn3MnUgD/o5iHJNgKX2Xmi2jl8xoJ9Xlbg2R9HvjKCy5Zig7YXNkmBPacPpYj
+	 PZIOuKrd5pZWp1VPk1OSOxsYq8yEDKlbssbW8ppMpsvZT5xag5DqShty11UqVehcSx
+	 dB6iFdpqCgx6Sq/l0w6OPf4pl64lr0zzeqYKPMhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729172AbgG3IIT (ORCPT
+        id S1729026AbgG3IIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:08:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46440 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:08:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729004AbgG3IIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:08:15 -0400
+        id S1729553AbgG3IIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:08:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2617A2074B;
-        Thu, 30 Jul 2020 08:08:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB44D2070B;
+        Thu, 30 Jul 2020 08:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096494;
-        bh=uXpmu6psb5xH47uWhmnUMxGJmFYHmZdXZm3CUBvJp1o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AY4dqRATihxM4LEK48dSx+bPOVYrwMvcEWh3VVXh/HR3T8k/d+0eV7q5le+FFstoO
-         SgBTAsJmsoUrVsEW9zIfKcPUh2UX9E5YtccEKD+0T8OT+pXJEVRa8rgfdGlxuFiTCR
-         meaIT4EdkmrssULdS7CI32XN098fLrt9eFwDvNEM=
+        s=default; t=1596096492;
+        bh=OtPGktX9xA7qGP4dAIzq5V8EZxaj5xNIoS63jDZGvGk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nW5CpqHhDqPNgnyyUqtQ0eArXOs0Xvsfjj8r7yMg3VwtDkyw9Nm9qBEkzqgJwLLti
+         NfMH4uPTG4pDQwp6oiWDg1lYbwZx0XYTNEE/uU5W5A9UTA3HifGfGIamWnovP927B5
+         mqw4NDj2gjoBkJH3QOdm/yOFHEQmqAcfQ9oret1w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacky Hu <hengqing.hu@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 01/61] pinctrl: amd: fix npins for uart0 in kerncz_groups
-Date:   Thu, 30 Jul 2020 10:04:19 +0200
-Message-Id: <20200730074420.885749921@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.14 00/14] 4.14.191-rc1 review
+Date:   Thu, 30 Jul 2020 10:04:43 +0200
+Message-Id: <20200730074418.882736401@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200730074420.811058810@linuxfoundation.org>
-References: <20200730074420.811058810@linuxfoundation.org>
+MIME-Version: 1.0
 User-Agent: quilt/0.66
 X-stable: review
 X-Patchwork-Hint: ignore
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.191-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.14.191-rc1
+X-KernelTest-Deadline: 2020-08-01T07:44+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacky Hu <hengqing.hu@gmail.com>
+This is the start of the stable review cycle for the 4.14.191 release.
+There are 14 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit 69339d083dfb7786b0e0b3fc19eaddcf11fabdfb ]
+Responses should be made by Sat, 01 Aug 2020 07:44:05 +0000.
+Anything received after that time might be too late.
 
-uart0_pins is defined as:
-static const unsigned uart0_pins[] = {135, 136, 137, 138, 139};
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.191-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+and the diffstat can be found below.
 
-which npins is wronly specified as 9 later
-	{
-		.name = "uart0",
-		.pins = uart0_pins,
-		.npins = 9,
-	},
+thanks,
 
-npins should be 5 instead of 9 according to the definition.
+greg k-h
 
-Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
-Link: https://lore.kernel.org/r/20200616015024.287683-1-hengqing.hu@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pinctrl/pinctrl-amd.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+-------------
+Pseudo-Shortlog of commits:
 
-diff --git a/drivers/pinctrl/pinctrl-amd.h b/drivers/pinctrl/pinctrl-amd.h
-index e8bbb20779d0d..83597e1d6dcd7 100644
---- a/drivers/pinctrl/pinctrl-amd.h
-+++ b/drivers/pinctrl/pinctrl-amd.h
-@@ -250,7 +250,7 @@ static const struct amd_pingroup kerncz_groups[] = {
- 	{
- 		.name = "uart0",
- 		.pins = uart0_pins,
--		.npins = 9,
-+		.npins = 5,
- 	},
- 	{
- 		.name = "uart1",
--- 
-2.25.1
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.14.191-rc1
 
+Eric Sandeen <sandeen@redhat.com>
+    xfs: set format back to extents if xfs_bmap_extents_to_btree
+
+Peng Fan <peng.fan@nxp.com>
+    regmap: debugfs: check count when read regmap file
+
+Oscar Salvador <osalvador@techadventures.net>
+    mm/page_owner.c: remove drain_all_pages from init_early_allocated_pages
+
+Yuchung Cheng <ycheng@google.com>
+    tcp: allow at most one TLP probe per flight
+
+Weilong Chen <chenweilong@huawei.com>
+    rtnetlink: Fix memory(net_device) leak when ->newlink fails
+
+Wei Yongjun <weiyongjun1@huawei.com>
+    ip6_gre: fix null-ptr-deref in ip6gre_init_net()
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    AX.25: Prevent integer overflows in connect and sendmsg
+
+David Howells <dhowells@redhat.com>
+    rxrpc: Fix sendmsg() returning EPIPE due to recvmsg() returning ENODATA
+
+Miaohe Lin <linmiaohe@huawei.com>
+    net: udp: Fix wrong clean up for IS_UDPLITE macro
+
+Xiongfeng Wang <wangxiongfeng2@huawei.com>
+    net-sysfs: add a newline when printing 'tx_timeout' by sysfs
+
+Xie He <xie.he.0141@gmail.com>
+    drivers/net/wan/x25_asy: Fix to make it work
+
+Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+    dev: Defer free of skbs in flush_backlog
+
+Peilin Ye <yepeilin.cs@gmail.com>
+    AX.25: Prevent out-of-bounds read in ax25_sendmsg()
+
+Peilin Ye <yepeilin.cs@gmail.com>
+    AX.25: Fix out-of-bounds read in ax25_connect()
+
+
+-------------
+
+Diffstat:
+
+ Makefile                             |  4 ++--
+ drivers/base/regmap/regmap-debugfs.c |  6 ++++++
+ drivers/net/wan/x25_asy.c            | 21 ++++++++++++++-------
+ fs/xfs/libxfs/xfs_bmap.c             |  4 ++++
+ include/linux/tcp.h                  |  4 +++-
+ mm/page_owner.c                      |  1 -
+ net/ax25/af_ax25.c                   | 10 ++++++++--
+ net/core/dev.c                       |  2 +-
+ net/core/net-sysfs.c                 |  2 +-
+ net/core/rtnetlink.c                 |  3 ++-
+ net/ipv4/tcp_input.c                 | 11 ++++++-----
+ net/ipv4/tcp_output.c                | 13 ++++++++-----
+ net/ipv4/udp.c                       |  2 +-
+ net/ipv6/ip6_gre.c                   | 11 ++++++-----
+ net/ipv6/udp.c                       |  2 +-
+ net/rxrpc/recvmsg.c                  |  2 +-
+ net/rxrpc/sendmsg.c                  |  2 +-
+ 17 files changed, 65 insertions(+), 35 deletions(-)
 
 
