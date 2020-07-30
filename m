@@ -2,111 +2,168 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA30CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C879AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 996D02074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A328D2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:13:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OKIIlyfe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YBnTtUAF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgG3BKo (ORCPT
+        id S1727863AbgG3BNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 21:10:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45620 "EHLO
+        Wed, 29 Jul 2020 21:13:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgG3BKn (ORCPT
+        with ESMTP id S1726194AbgG3BNL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 21:10:43 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AE97C061794;
-        Wed, 29 Jul 2020 18:10:43 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id g6so14451168ljn.11;
-        Wed, 29 Jul 2020 18:10:43 -0700 (PDT)
+        Wed, 29 Jul 2020 21:13:11 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BD7CC061794;
+        Wed, 29 Jul 2020 18:13:11 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id e13so24200763qkg.5;
+        Wed, 29 Jul 2020 18:13:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZWKEJngoLfhhkppq8eEFicxqCaNFQuLwFe+Ry9i9VR0=;
-        b=OKIIlyfeMjBGfuQvoh4OzO1JzWurq/DAAfEv4IVHsIhaU9EIs0ZZUkMVF3Rbl1g7dK
-         8oLnI8mlAA0yDuJ/VsM3Rd0mvMWAMLtDYcp3BBCOwMogJVtBfqkMHFXLyEDSIIX4Y7zV
-         cwXB8ukqffd2T0J8PEXK8g9SLrb1MiHlunl/BQ7NcYY4MgMGhnLW9aelZbbFN317B9TJ
-         8O+6qo1jcwo+wG7GrTLURf6+o1ePqkTwCnwbPmf8vGyTI5QO6qT5EuitOn7p193eWzEd
-         NBOjpICE/ies/v0UOwzSEew1FY+E5EKkBVK3geOjt7mioEUsiRzkEK4b2MliMyJI4ULn
-         LVdg==
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=29jI3ci+a7Sp9d2xnBWnJDwqEUNpCdqc7ZH0hJFRuMU=;
+        b=YBnTtUAF9rZY2tbC6ODuETMDGQDuNtrq+FlAGUKdQm9jZnv0UGMruYUV0RRme+vrrV
+         bwvAHFXDbCcDaxEjLzfFXQA6KqomF8scOa+ss8EBzhTHr/0wBQ5T1rIGc89PaIHjBJ1M
+         rjfaQ9ZDDEwWkzybyscEgShEMeToKnAQsfHuC8n71Yywr/dVewTU9YYtjIpeN8Xktf16
+         T8qnIoLsUx7APgfCXee96lq8PAyFamdS/JUgsSOnPve9/a7RhGccbdi4KxDCIYRRrake
+         U21XWbNO32efXdZcDVUxvgdHE2432M4SXLbQRxwn9CrDXnZj8cPmF6uFaJ97uJAVOI67
+         f3lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZWKEJngoLfhhkppq8eEFicxqCaNFQuLwFe+Ry9i9VR0=;
-        b=bapeXFuJgSdQXR+sFCv48hBiO0NEsToXUI4R4P0vu0exZmUhPa6BbS4BNBrYtF/dTb
-         oIS45qozt1IA8asRMFH++YleaqWetdsAfe9/xItt42oTYq96n+M2G+BbaKtjc8qjaa2A
-         hs5SqsnmlRcwc/0Uu3QGuY3a7lz0K0rJAoHc0R0j8N3LHFys04VRJAAwyXXVAzQ/j6+u
-         ZByLkK78wJwZbE2F9y97coefzXy1ulgF6U5kkVe7HljT77WceDWNHeV2OBCOd6f58nP5
-         9UA4sFD1TeBjlSUXCQ66u7gf+RDBZgrwCu6ftfnpun8ltUM/JZ5adLjFs13x7qsUBvYq
-         5TEg==
-X-Gm-Message-State: AOAM533pgbfbmIxd9AC/riEkZWKjZu+IJPCHmmqnHf6zoE33rq5U9KsA
-        puMJtAOFrlbA27t99Y2s4w3XF59z
-X-Google-Smtp-Source: ABdhPJwGIPVKqY18W3xbI/qBcECiSl3t/7iGIH/zuAH8Xc2d/HetO2yM1KDxIckcJgpWPRGdLMx92Q==
-X-Received: by 2002:a2e:9d81:: with SMTP id c1mr263058ljj.198.1596071441626;
-        Wed, 29 Jul 2020 18:10:41 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-12-16.pppoe.mtu-net.ru. [91.76.12.16])
-        by smtp.googlemail.com with ESMTPSA id e10sm692996ljb.118.2020.07.29.18.10.40
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=29jI3ci+a7Sp9d2xnBWnJDwqEUNpCdqc7ZH0hJFRuMU=;
+        b=g2WwfBgvhbWoI4MsL8CvmFjdQpUuiSlWSEADdo68OIdjBMDMxUJHX1IUT1daZfm0xY
+         2wtBuUDVP1a3GsmhcwY6eyeVk+CnDCgfvR2v+VHgDAdylZI732vB/vQWfQVOe+t+Rqy3
+         GOgdfYEMfT1h0zJKn9pXvKYba653JliHTj/UWJrgU+mfNSG4PorBVB47pO9BUVSD5I9T
+         INw6KtCY8nPGBrtuoKcanOh0DtIAOTLuXIlvtgLH4iN5s4APASxKQBCCjBlzQevQ5Tcw
+         U6btO/6TYk03fU/dPYRudNsp5eFlaEdE4Xo4xmYt3sUPKgo5SrXcVPIkiKrKY98xTPPj
+         Kisw==
+X-Gm-Message-State: AOAM530WzeOeN+D5dhmyNqvoar51lLaG69i2rrub+fKrRejGnhDRRQah
+        2kC2PbvYedV5UT91ITl9qSU=
+X-Google-Smtp-Source: ABdhPJwIeYlm0bFYC6MAZFPYEr+oPEI2FVM3K2DH6xa6lTaI1M9nBwNTygdSVOvfjQAaUnR3//PQ2Q==
+X-Received: by 2002:a37:4048:: with SMTP id n69mr34076346qka.421.1596071590282;
+        Wed, 29 Jul 2020 18:13:10 -0700 (PDT)
+Received: from RedmiNote8Pro-Redmi.localdomain ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id k31sm1838251qtd.60.2020.07.29.18.13.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 18:10:40 -0700 (PDT)
-Subject: Re: [RFC PATCH v5 13/14] media: tegra-video: Add CSI MIPI pads
- calibration
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
- <1595883452-17343-14-git-send-email-skomatineni@nvidia.com>
- <c3d40261-9d77-3634-3e04-f20efad9d3d8@gmail.com>
- <01ee0805-3d57-d857-48e3-5c2245cd4500@nvidia.com>
- <2ec535c9-55e8-8834-6002-36c75aeb097c@gmail.com>
- <021707b9-5f72-6f8b-d125-43627ef64a6d@nvidia.com>
- <de2d6117-b1e5-14c0-52ca-ff46b444c866@nvidia.com>
- <ca18b93e-1f1c-50ae-e0c1-11758935ee89@gmail.com>
- <42f25a49-ad2b-4e52-fd99-cb0f52037988@nvidia.com>
- <f5440f57-3653-7cf0-9efe-e9a0c276f7cf@nvidia.com>
- <6ae07f82-53f7-33fc-5892-340b0d9f12cf@gmail.com>
- <887d51fb-4292-c251-6568-32b884e8db67@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <5a0d4162-09c3-46c7-7811-f38c98e13179@gmail.com>
-Date:   Thu, 30 Jul 2020 04:10:40 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 29 Jul 2020 18:13:09 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 22:12:46 -0300
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAP-5=fX9YUucA-3QMxO_jV954104UPNg04=_JGstuLekNJHzJw@mail.gmail.com>
+References: <20200724100706.48330-1-bobo.shaobowang@huawei.com> <CAP-5=fX9YUucA-3QMxO_jV954104UPNg04=_JGstuLekNJHzJw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <887d51fb-4292-c251-6568-32b884e8db67@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH -next] tools build: Check return value of fwrite_unlocked in jvmti_agent.c
+To:     Ian Rogers <irogers@google.com>,
+        Wang ShaoBo <bobo.shaobowang@huawei.com>
+CC:     cj.chengjian@huawei.com, Li Bin <huawei.libin@huawei.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Message-ID: <F549EBCC-2BC0-43D4-B470-A53E9DF37A29@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-30.07.2020 04:06, Sowjanya Komatineni пишет:
-...
-> Will have v6 and add additional patch at the end to do enable/disable
-> separately.
-> 
-> Separating this out with additional patch before adding sensor support
-> patch requires all patches to be updated.
-> 
-> So I am ok either ways. Please let me know if adding additional patch at
-> the end to split tegra_channel_set_stream() and tegra_csi_s_stream()
-> separately is ok?
 
-Should be okay, thanks!
+
+On July 29, 2020 8:47:36 PM GMT-03:00, Ian Rogers <irogers@google=2Ecom> w=
+rote:
+>On Fri, Jul 24, 2020 at 3:07 AM Wang ShaoBo
+><bobo=2Eshaobowang@huawei=2Ecom> wrote:
+>>
+>> Function jvmti_write_code called by compiled_method_load_cb may
+>return
+>> error in using fwrite_unlocked, this failure should be captured and
+>> warned=2E
+>>
+>> Signed-off-by: Wang ShaoBo <bobo=2Eshaobowang@huawei=2Ecom>
+>> ---
+>>  tools/perf/jvmti/jvmti_agent=2Ec | 23 +++++++++++++++--------
+>>  1 file changed, 15 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/tools/perf/jvmti/jvmti_agent=2Ec
+>b/tools/perf/jvmti/jvmti_agent=2Ec
+>> index 88108598d6e9=2E=2Ea1fe6aa16b6d 100644
+>> --- a/tools/perf/jvmti/jvmti_agent=2Ec
+>> +++ b/tools/perf/jvmti/jvmti_agent=2Ec
+>> @@ -363,7 +363,7 @@ jvmti_write_code(void *agent, char const *sym,
+>>         struct jr_code_load rec;
+>>         size_t sym_len;
+>>         FILE *fp =3D agent;
+>> -       int ret =3D -1;
+>> +       int ret;
+>>
+>>         /* don't care about 0 length function, no samples */
+>>         if (size =3D=3D 0)
+>> @@ -401,16 +401,23 @@ jvmti_write_code(void *agent, char const *sym,
+>>         rec=2Ecode_index =3D code_generation++;
+>>
+>>         ret =3D fwrite_unlocked(&rec, sizeof(rec), 1, fp);
+>> -       fwrite_unlocked(sym, sym_len, 1, fp);
+>> +       if (ret)
+>> +               goto error;
+>
+>Sorry, it seems I lost a reply to this=2E Won't ret here be the number
+>of items written and not an error code? Consequently all writes will
+>immediately goto error?
+
+Good thing this is in tmp=2Eperf/core, you're right, the test has to be (r=
+et < 0)=2E=2E=2E I'll fix, thanks!
+
+Also we need some 'perf test' for this :-/
+
+- Arnaldo
+>
+>Thanks,
+>Ian
+>
+>> +       ret =3D fwrite_unlocked(sym, sym_len, 1, fp);
+>> +       if (ret)
+>> +               goto error;
+>>
+>> -       if (code)
+>> -               fwrite_unlocked(code, size, 1, fp);
+>> +       if (code) {
+>> +               ret =3D fwrite_unlocked(code, size, 1, fp);
+>> +               if (ret)
+>> +                       goto error;
+>> +       }
+>>
+>>         funlockfile(fp);
+>> -
+>> -       ret =3D 0;
+>> -
+>> -       return ret;
+>> +       return 0;
+>> +error:
+>> +       funlockfile(fp);
+>> +       return -1;
+>>  }
+>>
+>>  int
+>> --
+>> 2=2E17=2E1
+>>
+
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
