@@ -2,81 +2,103 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DCCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC77CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DAF12070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:56:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aElSe4e6"
+	by mail.kernel.org (Postfix) with ESMTP id 9E15A2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:57:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729090AbgG3O4c (ORCPT
+        id S1729477AbgG3O5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 10:56:32 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47507 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726275AbgG3O4b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 10:56:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596120990;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yKszPGuwEMpU5+IR0bvpm9HZk4pnbzEZAwwA9OvxBKo=;
-        b=aElSe4e6+pxXWsgbAv6G3liC0qGf1lRwS1yNVTfStk5KdGdPjWAG0A145nZY8CR3qX/oVp
-        KWcdoF4lqAFMFrhfD6bKXSupAZY62paMWWqjWZLBjS9xg3o+J0RslsWZDflG4Q60Bmvhtb
-        E0rIgdcuAXeqs1W6WYC8+MGYyjDa8L4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-389-YQ0oL0tTO2CGOiiX58aJ5g-1; Thu, 30 Jul 2020 10:56:17 -0400
-X-MC-Unique: YQ0oL0tTO2CGOiiX58aJ5g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 259D51893DC0;
-        Thu, 30 Jul 2020 14:56:16 +0000 (UTC)
-Received: from treble (ovpn-119-23.rdu2.redhat.com [10.10.119.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6639A10023A5;
-        Thu, 30 Jul 2020 14:56:15 +0000 (UTC)
-Date:   Thu, 30 Jul 2020 09:56:13 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Julien Thierry <jthierry@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org, mbenes@suse.cz,
-        raphael.gault@arm.com, benh@kernel.crashing.org
-Subject: Re: [PATCH v2 8/9] frame: Make unwind hints definitions available to
- other architectures
-Message-ID: <20200730145613.lbsexjcqwj67ktmb@treble>
-References: <20200730094652.28297-1-jthierry@redhat.com>
- <20200730094652.28297-9-jthierry@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200730094652.28297-9-jthierry@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Thu, 30 Jul 2020 10:57:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35668 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbgG3O5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 10:57:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id CC8C3ACA0;
+        Thu, 30 Jul 2020 14:58:03 +0000 (UTC)
+Date:   Thu, 30 Jul 2020 16:57:51 +0200
+Message-ID: <s5ha6zhcaog.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] ALSA: vmaster: Use flex_array_size() helper in memcpy()
+In-Reply-To: <96ea053c-f4c9-56dd-0d44-b627b067405f@embeddedor.com>
+References: <20200729221829.GA10623@embeddedor>
+        <s5h1rkte6ni.wl-tiwai@suse.de>
+        <96ea053c-f4c9-56dd-0d44-b627b067405f@embeddedor.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 10:46:51AM +0100, Julien Thierry wrote:
-> Unwind hints are useful to provide objtool with information about stack
-> states in non-standard functions/code.
-> While the type of information being provided might be very arch
-> specific, the mechanism to provide the information can be useful for
-> other architectures.
+On Thu, 30 Jul 2020 15:12:33 +0200,
+Gustavo A. R. Silva wrote:
 > 
-> Move the relevant unwint hint definitions for all architectures to
-> see.
+> 
+> 
+> On 7/30/20 03:41, Takashi Iwai wrote:
+> > On Thu, 30 Jul 2020 00:18:29 +0200,
+> > Gustavo A. R. Silva wrote:
+> >>
+> >> Make use of the flex_array_size() helper to calculate the size of a
+> >> flexible array member within an enclosing structure.
+> >>
+> >> This helper offers defense-in-depth against potential integer overflows
+> >> and makes it explicitly clear that we are dealing with a flexible array
+> >> member.
+> >>
+> >> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> >> ---
+> >>  sound/core/vmaster.c | 3 ++-
+> >>  1 file changed, 2 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/sound/core/vmaster.c b/sound/core/vmaster.c
+> >> index ab36f9898711..21ce4082cb5f 100644
+> >> --- a/sound/core/vmaster.c
+> >> +++ b/sound/core/vmaster.c
+> >> @@ -262,7 +262,8 @@ int _snd_ctl_add_follower(struct snd_kcontrol *master,
+> >>  		return -ENOMEM;
+> >>  	srec->kctl = follower;
+> >>  	srec->follower = *follower;
+> >> -	memcpy(srec->follower.vd, follower->vd, follower->count * sizeof(*follower->vd));
+> >> +	memcpy(srec->follower.vd, follower->vd, flex_array_size(srec, follower.vd,
+> >> +								srec->follower.count));
+> > 
+> > Changing from follower->count to srec->follower.count isn't obvious,
+> > so it should have been mentioned in the log; other than that, the code
+> > change looks good.
+> > 
+> 
+> Yeah; you're right. I'll include that in the changelog text.
 
-The scope of include/linux/frame.h has been creeping, it's no longer
-just about frame pointers.  Maybe we should rename it to objtool.h.
+OK, then I'll wait for the v2 for merging.
 
--- 
-Josh
+> > But since the API isn't in Linus tree yet, I'll postpone the merge
+> > until the API reaches to upstream.  Maybe I can merge this during RC1
+> > merge window, as those are trivial.
+> > 
+> 
+> The API is already in mainline, see:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/overflow.h#n320
 
+Ah, thanks, I didn't expect that the API change comes after rc1 into
+mainline.  Then I can merge later the commits based on the late rc.
+
+
+Takashi
