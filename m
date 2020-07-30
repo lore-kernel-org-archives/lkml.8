@@ -2,37 +2,39 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50781C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 273AAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3911C20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0020920829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:59:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgG3L7i (ORCPT
+        id S1726942AbgG3L7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 07:59:38 -0400
-Received: from relay.sw.ru ([185.231.240.75]:56340 "EHLO relay3.sw.ru"
+        Thu, 30 Jul 2020 07:59:42 -0400
+Received: from relay.sw.ru ([185.231.240.75]:56444 "EHLO relay3.sw.ru"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726794AbgG3L7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 07:59:31 -0400
+        id S1727922AbgG3L7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 07:59:39 -0400
 Received: from [192.168.15.64] (helo=localhost.localdomain)
         by relay3.sw.ru with esmtp (Exim 4.93)
         (envelope-from <ktkhai@virtuozzo.com>)
-        id 1k17DG-0002up-Iy; Thu, 30 Jul 2020 14:59:06 +0300
-Subject: [PATCH 00/23] proc: Introduce /proc/namespaces/ directory to expose
- namespaces lineary
+        id 1k17DW-0002vq-Ki; Thu, 30 Jul 2020 14:59:22 +0300
+Subject: [PATCH 03/23] ipc: Use generic ns_common::count
 From:   Kirill Tkhai <ktkhai@virtuozzo.com>
 To:     viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
         ebiederm@xmission.com, akpm@linux-foundation.org,
         christian.brauner@ubuntu.com, areber@redhat.com, serge@hallyn.com,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         ktkhai@virtuozzo.com
-Date:   Thu, 30 Jul 2020 14:59:20 +0300
-Message-ID: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
+Date:   Thu, 30 Jul 2020 14:59:36 +0300
+Message-ID: <159611037654.535980.11569207616830163621.stgit@localhost.localdomain>
+In-Reply-To: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
+References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -42,121 +44,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, there is no a way to list or iterate all or subset of namespaces
-in the system. Some namespaces are exposed in /proc/[pid]/ns/ directories,
-but some also may be as open files, which are not attached to a process.
-When a namespace open fd is sent over unix socket and then closed, it is
-impossible to know whether the namespace exists or not.
+Convert uts namespace to use generic counter.
 
-Also, even if namespace is exposed as attached to a process or as open file,
-iteration over /proc/*/ns/* or /proc/*/fd/* namespaces is not fast, because
-this multiplies at tasks and fds number.
-
-This patchset introduces a new /proc/namespaces/ directory, which exposes
-subset of permitted namespaces in linear view:
-
-# ls /proc/namespaces/ -l
-lrwxrwxrwx 1 root root 0 Jul 29 16:50 'cgroup:[4026531835]' -> 'cgroup:[4026531835]'
-lrwxrwxrwx 1 root root 0 Jul 29 16:50 'ipc:[4026531839]' -> 'ipc:[4026531839]'
-lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026531840]' -> 'mnt:[4026531840]'
-lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026531861]' -> 'mnt:[4026531861]'
-lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026532133]' -> 'mnt:[4026532133]'
-lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026532134]' -> 'mnt:[4026532134]'
-lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026532135]' -> 'mnt:[4026532135]'
-lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026532136]' -> 'mnt:[4026532136]'
-lrwxrwxrwx 1 root root 0 Jul 29 16:50 'net:[4026531993]' -> 'net:[4026531993]'
-lrwxrwxrwx 1 root root 0 Jul 29 16:50 'pid:[4026531836]' -> 'pid:[4026531836]'
-lrwxrwxrwx 1 root root 0 Jul 29 16:50 'time:[4026531834]' -> 'time:[4026531834]'
-lrwxrwxrwx 1 root root 0 Jul 29 16:50 'user:[4026531837]' -> 'user:[4026531837]'
-lrwxrwxrwx 1 root root 0 Jul 29 16:50 'uts:[4026531838]' -> 'uts:[4026531838]'
-
-Namespace ns is exposed, in case of its user_ns is permitted from /proc's pid_ns.
-I.e., /proc is related to pid_ns, so in /proc/namespace we show only a ns, which is
-
-	in_userns(pid_ns->user_ns, ns->user_ns).
-
-In case of ns is a user_ns:
-
-	in_userns(pid_ns->user_ns, ns).
-
-The patchset follows this steps:
-
-1)A generic counter in ns_common is introduced instead of separate
-  counters for every ns type (net::count, uts_namespace::kref,
-  user_namespace::count, etc). Patches [1-8];
-2)Patch [9] introduces IDR to link and iterate alive namespaces;
-3)Patch [10] is refactoring;
-4)Patch [11] actually adds /proc/namespace directory and fs methods;
-5)Patches [12-23] make every namespace to use the added methods
-  and to appear in /proc/namespace directory.
-
-This may be usefull to write effective debug utils (say, fast build
-of networks topology) and checkpoint/restore software.
----
-
-Kirill Tkhai (23):
-      ns: Add common refcount into ns_common add use it as counter for net_ns
-      uts: Use generic ns_common::count
-      ipc: Use generic ns_common::count
-      pid: Use generic ns_common::count
-      user: Use generic ns_common::count
-      mnt: Use generic ns_common::count
-      cgroup: Use generic ns_common::count
-      time: Use generic ns_common::count
-      ns: Introduce ns_idr to be able to iterate all allocated namespaces in the system
-      fs: Rename fs/proc/namespaces.c into fs/proc/task_namespaces.c
-      fs: Add /proc/namespaces/ directory
-      user: Free user_ns one RCU grace period after final counter put
-      user: Add user namespaces into ns_idr
-      net: Add net namespaces into ns_idr
-      pid: Eextract child_reaper check from pidns_for_children_get()
-      proc_ns_operations: Add can_get method
-      pid: Add pid namespaces into ns_idr
-      uts: Free uts namespace one RCU grace period after final counter put
-      uts: Add uts namespaces into ns_idr
-      ipc: Add ipc namespaces into ns_idr
-      mnt: Add mount namespaces into ns_idr
-      cgroup: Add cgroup namespaces into ns_idr
-      time: Add time namespaces into ns_idr
-
-
- fs/mount.h                     |    4 
- fs/namespace.c                 |   14 +
- fs/nsfs.c                      |   78 ++++++++
- fs/proc/Makefile               |    1 
- fs/proc/internal.h             |   18 +-
- fs/proc/namespaces.c           |  382 +++++++++++++++++++++++++++-------------
- fs/proc/root.c                 |   17 ++
- fs/proc/task_namespaces.c      |  183 +++++++++++++++++++
- include/linux/cgroup.h         |    6 -
- include/linux/ipc_namespace.h  |    3 
- include/linux/ns_common.h      |   11 +
- include/linux/pid_namespace.h  |    4 
- include/linux/proc_fs.h        |    1 
- include/linux/proc_ns.h        |   12 +
- include/linux/time_namespace.h |   10 +
- include/linux/user_namespace.h |   10 +
- include/linux/utsname.h        |   10 +
- include/net/net_namespace.h    |   11 -
- init/version.c                 |    2 
- ipc/msgutil.c                  |    2 
- ipc/namespace.c                |   17 +-
- ipc/shm.c                      |    1 
- kernel/cgroup/cgroup.c         |    2 
- kernel/cgroup/namespace.c      |   25 ++-
- kernel/pid.c                   |    2 
- kernel/pid_namespace.c         |   46 +++--
- kernel/time/namespace.c        |   20 +-
- kernel/user.c                  |    2 
- kernel/user_namespace.c        |   23 ++
- kernel/utsname.c               |   23 ++
- net/core/net-sysfs.c           |    6 -
- net/core/net_namespace.c       |   18 +-
- net/ipv4/inet_timewait_sock.c  |    4 
- net/ipv4/tcp_metrics.c         |    2 
- 34 files changed, 746 insertions(+), 224 deletions(-)
- create mode 100644 fs/proc/task_namespaces.c
-
---
 Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+---
+ include/linux/ipc_namespace.h |    3 +--
+ ipc/msgutil.c                 |    2 +-
+ ipc/namespace.c               |    4 ++--
+ 3 files changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/ipc_namespace.h b/include/linux/ipc_namespace.h
+index a06a78c67f19..05e22770af51 100644
+--- a/include/linux/ipc_namespace.h
++++ b/include/linux/ipc_namespace.h
+@@ -27,7 +27,6 @@ struct ipc_ids {
+ };
+ 
+ struct ipc_namespace {
+-	refcount_t	count;
+ 	struct ipc_ids	ids[3];
+ 
+ 	int		sem_ctls[4];
+@@ -128,7 +127,7 @@ extern struct ipc_namespace *copy_ipcs(unsigned long flags,
+ static inline struct ipc_namespace *get_ipc_ns(struct ipc_namespace *ns)
+ {
+ 	if (ns)
+-		refcount_inc(&ns->count);
++		refcount_inc(&ns->ns.count);
+ 	return ns;
+ }
+ 
+diff --git a/ipc/msgutil.c b/ipc/msgutil.c
+index 3149b4a379de..d0a0e877cadd 100644
+--- a/ipc/msgutil.c
++++ b/ipc/msgutil.c
+@@ -26,7 +26,7 @@ DEFINE_SPINLOCK(mq_lock);
+  * and not CONFIG_IPC_NS.
+  */
+ struct ipc_namespace init_ipc_ns = {
+-	.count		= REFCOUNT_INIT(1),
++	.ns.count = REFCOUNT_INIT(1),
+ 	.user_ns = &init_user_ns,
+ 	.ns.inum = PROC_IPC_INIT_INO,
+ #ifdef CONFIG_IPC_NS
+diff --git a/ipc/namespace.c b/ipc/namespace.c
+index 24e7b45320f7..7bd0766ddc3b 100644
+--- a/ipc/namespace.c
++++ b/ipc/namespace.c
+@@ -51,7 +51,7 @@ static struct ipc_namespace *create_ipc_ns(struct user_namespace *user_ns,
+ 		goto fail_free;
+ 	ns->ns.ops = &ipcns_operations;
+ 
+-	refcount_set(&ns->count, 1);
++	refcount_set(&ns->ns.count, 1);
+ 	ns->user_ns = get_user_ns(user_ns);
+ 	ns->ucounts = ucounts;
+ 
+@@ -164,7 +164,7 @@ static DECLARE_WORK(free_ipc_work, free_ipc);
+  */
+ void put_ipc_ns(struct ipc_namespace *ns)
+ {
+-	if (refcount_dec_and_lock(&ns->count, &mq_lock)) {
++	if (refcount_dec_and_lock(&ns->ns.count, &mq_lock)) {
+ 		mq_clear_sbinfo(ns);
+ 		spin_unlock(&mq_lock);
+ 
+
 
