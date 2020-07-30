@@ -2,177 +2,146 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2703FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C867BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04A8920829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:10:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596132651;
-	bh=oy4zBu3xLBCuWxdfRxweVj3pqrgDJqo/r08Kl3Db94g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=QwUQd5YVR7EAGCC87x6RNcFCrCyLn/qhmaA+QoOEtXczv4l9ZHRZKGHH8YIW898k8
-	 OAJ5IUrDK2bsuLu/c+Gh8mGB/0kr4chQAMNuVIjHLqOAoqaE4mmAXqVSbi1Guw2JCr
-	 E2Lrbi4F72l8VPi+cGqsVulbn9IGh9WS6wNev4HU=
+	by mail.kernel.org (Postfix) with ESMTP id 9905320829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:11:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="CcXOy1+t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730363AbgG3SKu (ORCPT
+        id S1730395AbgG3SLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 14:10:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49772 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 14:11:07 -0400
+Received: from mga04.intel.com ([192.55.52.120]:60966 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727835AbgG3SKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 14:10:47 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1843D20829;
-        Thu, 30 Jul 2020 18:10:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596132646;
-        bh=oy4zBu3xLBCuWxdfRxweVj3pqrgDJqo/r08Kl3Db94g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fl299ZqPsQzWw9UVgzFctl4++/RwzhtHSmL+sPpgHZLcjvSdE26MKYvDtoNPvtCKP
-         mo/1w6qj8PpE0ErMIE2Aw2XcRgsnE0h/LePYRHTcoQ/MjvjdII7TpzUHWU8busK7zV
-         /ze1wpqbNMVAZ7q9TAzIrB4CXKwS9+P9AlpDj9hY=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k1D0u-00GKY3-DU; Thu, 30 Jul 2020 19:10:44 +0100
+        id S1727835AbgG3SLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 14:11:06 -0400
+IronPort-SDR: akvOvEgVkj6YmAF/UCLc37MlhCFtPeqGvmk7xLhFRr7hE4hn9KmmudMvkdWdHFQsxVEfW/pv4k
+ tPG2dZ2Z9UXg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="149127527"
+X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
+   d="scan'208";a="149127527"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 11:11:05 -0700
+IronPort-SDR: XGhOtikLRFj4bUzHis/EUAMaJn9hTuP27qCHecWJYfKr5W4UMMGjJ92NJawgnOKwvZpeOtnKRF
+ O0DIyhvKpm1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
+   d="scan'208";a="274290275"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmsmga008.fm.intel.com with ESMTP; 30 Jul 2020 11:11:05 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 30 Jul 2020 11:11:04 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 30 Jul 2020 11:11:04 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.58) by
+ edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Thu, 30 Jul 2020 11:11:01 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GYI+GCQb+Jv+cjQu7jpeYT9GrxUs6pxuZXMgsNrU8EZWIEi6AHDqIEFMAQSOVGHQ9GoWmQIWDurAanylXFHgg8WuH1MTJehhRs5TON8qm2t+zbfiFHt/Vjwp3QA/X3T4JZ1fkSdmFsdTqQjLpfN7CrJoNVKPElNxCugHuvoeg0cH9Gb3CRF6QDzvusi3knVLzyi0tiLGV3oIhd45m48aEat9lWLBM0wBJ8FugvWTV5idAraVBjGLFld3+g52vVB5R6R9g8+cn3JahrRcFh1GLhufVAcbqa/iVO5gTBlqfK3QEdPzNlCUlIMqXrvuPBbOup58a0I0v5M8EACrSC/c3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KNokaa+lICIb3HvcRCsaOQZfgtyQtxNXcnLk0VAgR2U=;
+ b=kd02wpZDLJvKmEwRmxoE0alV2gb3fbnk2taVBF74GtS6Ax0vJ1K/O61dzugA/3g6zT5nI28TwCbQf0DKr3hfr/unIZ5afbaqW8P2eUf0XJgyje8E70DPnz16nJ7WRm8EjIrO0AbPSmHAl4lPSa06cv+URtTPKv+dygKBwLs7V9+zGu8NYpE5MFMIYwX5ohV0/dsihBti3lkcyEaHFWnh6uVumnH0JLhG0VjjDvmiXwT5lLzyk+0xRSlQH5Y+XyDmwhlNbcwfsdvQvO3AkP/SNgsDIMQXzkgfiVT7JN/9779A5xVSXd1X+7k0Tx6GqhcMIXtdWT7fy64d59vpim8EpQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KNokaa+lICIb3HvcRCsaOQZfgtyQtxNXcnLk0VAgR2U=;
+ b=CcXOy1+tHqvx1ASPKx7ekbCdgonF/iDsmWiqCrqOUOgW0+uMcHs0aiJJZm3TWIe0UovwzEZg618VNbNScczeUAueFup2OA3xctu9G5uEv1WUk2SQc01cQNZE+GwAPgD22iDBgs55WjuSFznHBNtZdetPHU3ctm1cyPE54jALxew=
+Received: from DM6PR11MB2890.namprd11.prod.outlook.com (2603:10b6:5:63::20) by
+ DM5PR11MB1945.namprd11.prod.outlook.com (2603:10b6:3:10b::15) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3216.24; Thu, 30 Jul 2020 18:10:59 +0000
+Received: from DM6PR11MB2890.namprd11.prod.outlook.com
+ ([fe80::65c2:9ac9:2c52:82bd]) by DM6PR11MB2890.namprd11.prod.outlook.com
+ ([fe80::65c2:9ac9:2c52:82bd%6]) with mapi id 15.20.3216.034; Thu, 30 Jul 2020
+ 18:10:59 +0000
+From:   "Brown, Aaron F" <aaron.f.brown@intel.com>
+To:     linmiaohe <linmiaohe@huawei.com>,
+        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuba@kernel.org" <kuba@kernel.org>
+CC:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] igb: use eth_zero_addr() to clear mac address
+Thread-Topic: [PATCH] igb: use eth_zero_addr() to clear mac address
+Thread-Index: AQHWXm+I59f8q93ZeEeloBybSFRo46kgfKwA
+Date:   Thu, 30 Jul 2020 18:10:58 +0000
+Message-ID: <DM6PR11MB28901BD34266235B3CB65D9ABC710@DM6PR11MB2890.namprd11.prod.outlook.com>
+References: <1595233754-13765-1-git-send-email-linmiaohe@huawei.com>
+In-Reply-To: <1595233754-13765-1-git-send-email-linmiaohe@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.5.1.3
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: huawei.com; dkim=none (message not signed)
+ header.d=none;huawei.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [97.120.173.209]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 47a72c03-7c26-43fb-2f4b-08d834b3e941
+x-ms-traffictypediagnostic: DM5PR11MB1945:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR11MB1945E6D6F5E4B35E1B058575BC710@DM5PR11MB1945.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:241;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: z85JSWl+d/7f4YA6u1E0HvAe4wX7cybMw7vXhfljoQ4TanTLxs36bpPNIJeprgYgvu7a6S0R2YxpDyD55g7UJm72G7+P3y70Cmuf6PDG1aNm2+TYxD3ojLg7QwXZydbjG9y32L00/X5bGiEEdJDiLCHz8pwAqOUjt50tXL0uJesIhjYELof4Gjku0DpsWuHfjoGXeSfLyGkEbSwjVJUuvRoU3pkGsrhRlMqkZeHj4mA+NCUsQGQziJMXEzpi2O1tTHOrlyrh7lFFciTRK4iEI5i9qxg0yLoV2dM3UU8m2iXWE0SBQXz3utYJqOY3OB0uGTV0nwuw7klKUb+DjAtu0Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB2890.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(39860400002)(366004)(376002)(136003)(9686003)(55016002)(76116006)(64756008)(66476007)(54906003)(33656002)(8676002)(66446008)(66556008)(110136005)(83380400001)(66946007)(4744005)(2906002)(26005)(186003)(86362001)(71200400001)(4326008)(5660300002)(7696005)(53546011)(478600001)(316002)(6506007)(8936002)(52536014);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: r8FHiaWSE/m/l/JUJ5qHOa50ok75pcHomQ38g/7jGeKVEaJFKw0TE4WwtvJ/s/TrLL0qXxgZMaM9MOA71Q/9rYjrd8roKpp46UBPoTpTerBJZ9gNBHDuPMESH/uh5CDOsFTdX39aOqnvDeaMZQV8foKHO4GUXPBk0EbosS1588fCbyX/8hRH6K1iXzCj2Zya1aXm/nDVP6K5v9Nbrt9TvDN6Gj6cRZu/uoK2z4gOd89PI3zDtfnPewZ+SPyh8A1AIMkstBD2sI9/IM8mOMkXl5QtKQs3v9LYC9fx8Bm0+8ebrL242pYpu2ACLdX3vD+sYH3GuLHfHLz79mXIk7liM79x9EOUOHOQo3YmSBTWiWnFUQ0a3ODATSGxT2ng9D6DYZlMy6qibZYVc2p4kdqQsug+ZHgvrrt/w3vFFTfcyqtW/wSAtXHG+IE074swCfA8EG9SuwkPTZq6A+llGi65hIVf6a1z9rNtFXXDcsLKIfZ1lZ6mhfTZNVhM5K8SZ78t
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 30 Jul 2020 19:10:44 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
-Subject: Re: [PATCH v2 2/2] irqchip/gic-v2, v3: Prevent SW resends entirely
-In-Reply-To: <20200730170321.31228-3-valentin.schneider@arm.com>
-References: <20200730170321.31228-1-valentin.schneider@arm.com>
- <20200730170321.31228-3-valentin.schneider@arm.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <ba26464de5e82eace97924121d7bcd1d@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: valentin.schneider@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de, jason@lakedaemon.net, Lorenzo.Pieralisi@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB2890.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47a72c03-7c26-43fb-2f4b-08d834b3e941
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2020 18:10:58.8659
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uP+0zFkolpvNz/ibauMajp2J7JucMoIBghMMbn3igD3h01wF1cWo0AF/b9xLfc1QXHeC3qQ0hfZijjDpa6o3EA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1945
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Valentin,
-
-On 2020-07-30 18:03, Valentin Schneider wrote:
-> The GIC irqchips can now use a HW resend when a retrigger is invoked by
-> check_irq_resend(). However, should the HW resend fail, 
-> check_irq_resend()
-> will still attempt to trigger a SW resend, which is still a bad idea 
-> for
-> the GICs.
-> 
-> Prevent this from happening by setting IRQD_HANDLE_ENFORCE_IRQCTX on 
-> all
-> GIC IRQs. Technically per-cpu IRQs do not need this, as their flow 
-> handlers
-> never set IRQS_PENDING, but this aligns all IRQs wrt context 
-> enforcement:
-> this also forces all GIC IRQ handling to happen in IRQ context (as 
-> defined
-> by in_irq()).
-> 
-> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> From: linmiaohe <linmiaohe@huawei.com>
+> Sent: Monday, July 20, 2020 1:29 AM
+> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; davem@davemloft.net=
+;
+> kuba@kernel.org
+> Cc: intel-wired-lan@lists.osuosl.org; netdev@vger.kernel.org; linux-
+> kernel@vger.kernel.org; linmiaohe@huawei.com
+> Subject: [PATCH] igb: use eth_zero_addr() to clear mac address
+>=20
+> From: Miaohe Lin <linmiaohe@huawei.com>
+>=20
+> Use eth_zero_addr() to clear mac address insetad of memset().
+>=20
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 > ---
->  drivers/irqchip/irq-gic-v3.c | 5 ++++-
->  drivers/irqchip/irq-gic.c    | 6 +++++-
->  2 files changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3.c 
-> b/drivers/irqchip/irq-gic-v3.c
-> index 0fbcbf55ec48..1a8acf7cd8ac 100644
-> --- a/drivers/irqchip/irq-gic-v3.c
-> +++ b/drivers/irqchip/irq-gic-v3.c
-> @@ -1279,6 +1279,7 @@ static int gic_irq_domain_map(struct irq_domain
-> *d, unsigned int irq,
->  			      irq_hw_number_t hw)
->  {
->  	struct irq_chip *chip = &gic_chip;
-> +	struct irq_data *irqd = irq_desc_get_irq_data(irq_to_desc(irq));
-> 
->  	if (static_branch_likely(&supports_deactivate_key))
->  		chip = &gic_eoimode1_chip;
-> @@ -1296,7 +1297,7 @@ static int gic_irq_domain_map(struct irq_domain
-> *d, unsigned int irq,
->  		irq_domain_set_info(d, irq, hw, chip, d->host_data,
->  				    handle_fasteoi_irq, NULL, NULL);
->  		irq_set_probe(irq);
-> -		irqd_set_single_target(irq_desc_get_irq_data(irq_to_desc(irq)));
-> +		irqd_set_single_target(irqd);
->  		break;
-> 
->  	case LPI_RANGE:
-> @@ -1310,6 +1311,8 @@ static int gic_irq_domain_map(struct irq_domain
-> *d, unsigned int irq,
->  		return -EPERM;
->  	}
-> 
-> +	/* Prevents SW retriggers which mess up the ACK/EOI ordering */
-> +	irqd_set_handle_enforce_irqctx(irqd);
->  	return 0;
->  }
-> 
-> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-> index e2b4cae88bce..a91ce1e73bd2 100644
-> --- a/drivers/irqchip/irq-gic.c
-> +++ b/drivers/irqchip/irq-gic.c
-> @@ -983,6 +983,7 @@ static int gic_irq_domain_map(struct irq_domain
-> *d, unsigned int irq,
->  				irq_hw_number_t hw)
->  {
->  	struct gic_chip_data *gic = d->host_data;
-> +	struct irq_data *irqd = irq_desc_get_irq_data(irq_to_desc(irq));
-> 
->  	if (hw < 32) {
->  		irq_set_percpu_devid(irq);
-> @@ -992,8 +993,11 @@ static int gic_irq_domain_map(struct irq_domain
-> *d, unsigned int irq,
->  		irq_domain_set_info(d, irq, hw, &gic->chip, d->host_data,
->  				    handle_fasteoi_irq, NULL, NULL);
->  		irq_set_probe(irq);
-> -		irqd_set_single_target(irq_desc_get_irq_data(irq_to_desc(irq)));
-> +		irqd_set_single_target(irqd);
->  	}
-> +
-> +	/* Prevents SW retriggers which mess up the ACK/EOI ordering */
-> +	irqd_set_handle_enforce_irqctx(irqd);
->  	return 0;
->  }
-
-I'm OK with this in principle, but this requires additional changes
-in the rest of the GIC universe. The ITS driver needs to provide its own
-retrigger function for LPIs (queuing an INT command), and any of the
-SPI generating widgets that can be stacked on top of a GIC (GICv3-MBI,
-GICv2m, and all the other Annapurna/Marvell/NVDIA wonders need to gain
-directly or indirectly a call to irq_chip_retrigger_hierarchy().
-
-We can probably avoid changing the MSI widgets by teaching the MSI
-code about the HW retrigger, but a number of other non-MSI drivers
-will need some help...
-
-I'll have a look tomorrow.
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+>  drivers/net/ethernet/intel/igb/igb_main.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
