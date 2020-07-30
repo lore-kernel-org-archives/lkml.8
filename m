@@ -2,117 +2,396 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23687C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19045C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF69C20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:59:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N1IV89Qm"
+	by mail.kernel.org (Postfix) with ESMTP id D1D9520829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:00:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730564AbgG3W7X (ORCPT
+        id S1730649AbgG3W77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 18:59:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49198 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728607AbgG3W7X (ORCPT
+        Thu, 30 Jul 2020 18:59:59 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:41580 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728607AbgG3W77 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 18:59:23 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 279DEC061574
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 15:59:23 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id w17so15578930ply.11
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 15:59:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1tCgxzZFgBmN5BP/Gtd6Qog3rehlHJS7ze5ylUHdc1Y=;
-        b=N1IV89Qms8KPVjsZz44hlQRN5Tgf3vxJBHeNKOfZpH2aHlYzXqMHGaSvFRVvbQ3Swl
-         JCJ8IzVXYQHetCQPZU0guumKE9xWI/8z23YXxm0VjAh97TXEw74fpzA7BeKfy3Hr12vh
-         h3Pq9LZj+vSWzog2S9mzQIASEhI+sx/gWdTHk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1tCgxzZFgBmN5BP/Gtd6Qog3rehlHJS7ze5ylUHdc1Y=;
-        b=UYw+ng+I9QBSxVV3PYwR8FNH3C8Zb1Khupn5hA8a4RffdTMNnSAvOLZXbpQRWRAJyP
-         8OzEU0lRCI/k3KAgI0OF0Zz6nWdnXIPNI/o8ZVWHZ+RBC+GBWQw/0gK15BgWAUfdGpVQ
-         SB7Pud73vLUGgy3UTa3LlXy3nK2hW0P8UV42ynjHIZAfXNXJvqXqOUn24mvvFQJ9VGJn
-         v1VAfimQigeS0KdPQrcLoX+P5qGk0Nvxax75JJHqf7Xv6/w1L2fR+p9M5X9UoZa9R771
-         edVw0sVUlzBdk01ooc+OZxTFufFtm9Zj21uTkbtykiqUJgg4gaiDs9CIrrmjbvzrCddR
-         fMeQ==
-X-Gm-Message-State: AOAM533KBdOqm2GwTNasx++QilupOSh5OgILpdEjyzuavr5uBkIfo25o
-        5BateNctIHqTTn7IFclt365ReA==
-X-Google-Smtp-Source: ABdhPJxQYdudZr0u5Ior4Wwl11nPhAEG5OZyk58r6rJ0DsP9/VfKp0EejMb76y4UlAbhN/KOZA/Teg==
-X-Received: by 2002:a62:5443:: with SMTP id i64mr1032634pfb.313.1596149962517;
-        Thu, 30 Jul 2020 15:59:22 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:a28c:fdff:fef0:49dd])
-        by smtp.gmail.com with ESMTPSA id c134sm7415152pfc.115.2020.07.30.15.59.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 15:59:22 -0700 (PDT)
-Date:   Thu, 30 Jul 2020 15:59:21 -0700
-From:   Prashant Malani <pmalani@chromium.org>
-To:     Azhar Shaikh <azhar.shaikh@intel.com>
-Cc:     bleung@chromium.org, enric.balletbo@collabora.com,
-        groeck@chromium.org, linux-kernel@vger.kernel.org,
-        heikki.krogerus@linux.intel.com, utkarsh.h.patel@intel.com,
-        casey.g.bowman@intel.com, rajmohan.mani@intel.com
-Subject: Re: [PATCH v2 1/2] platform/chrome: cros_ec_typec: Send enum values
- to usb_role_switch_set_role()
-Message-ID: <20200730225921.GC3145664@google.com>
-References: <20200730225609.7395-1-azhar.shaikh@intel.com>
- <20200730225609.7395-2-azhar.shaikh@intel.com>
+        Thu, 30 Jul 2020 18:59:59 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k1HWm-0020SL-70; Thu, 30 Jul 2020 16:59:56 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k1HWk-0006md-Hb; Thu, 30 Jul 2020 16:59:56 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>, Pavel Machek <pavel@ucw.cz>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linux PM <linux-pm@vger.kernel.org>
+References: <87h7tsllgw.fsf@x220.int.ebiederm.org>
+        <CAHk-=wj34Pq1oqFVg1iWYAq_YdhCyvhyCYxiy-CG-o76+UXydQ@mail.gmail.com>
+        <87d04fhkyz.fsf@x220.int.ebiederm.org>
+        <87h7trg4ie.fsf@x220.int.ebiederm.org>
+        <CAHk-=wj+ynePRJC3U5Tjn+ZBRAE3y7=anc=zFhL=ycxyKP8BxA@mail.gmail.com>
+        <878sf16t34.fsf@x220.int.ebiederm.org>
+Date:   Thu, 30 Jul 2020 17:56:45 -0500
+In-Reply-To: <878sf16t34.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Thu, 30 Jul 2020 08:16:47 -0500")
+Message-ID: <87pn8c1uj6.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730225609.7395-2-azhar.shaikh@intel.com>
+Content-Type: text/plain
+X-XM-SPF: eid=1k1HWk-0006md-Hb;;;mid=<87pn8c1uj6.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/5iVlOpukdhK3Is3+8qmtO7vex3LGrfR8=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [RFC][PATCH] exec: Conceal the other threads from wakeups during exec
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Azhar,
 
-On Thu, Jul 30, 2020 at 03:56:08PM -0700, Azhar Shaikh wrote:
-> usb_role_switch_set_role() has the second argument as enum for usb_role.
-> Currently depending upon the data role i.e. UFP(0) or DFP(1) is sent.
-> This eventually translates to USB_ROLE_NONE in case of UFP and
-> USB_ROLE_DEVICE in case of DFP. Correct this by sending correct enum
-> values as USB_ROLE_DEVICE in case of UFP and USB_ROLE_HOST in case of
-> DFP.
-> 
-> Fixes: 7e7def15fa4b ("platform/chrome: cros_ec_typec: Add USB mux control")
-> 
-> Signed-off-by: Azhar Shaikh <azhar.shaikh@intel.com>
-> Cc: Prashant Malani <pmalani@chromium.org>
-> Reviewed-by: Prashant Malani <pmalani@chromium.org>
-> ---
+Right now I think I see solutions to the problems of exec without
+using this code.
 
-Please add the list of changes in each version after the "---" line.
+However this code is tested and working for the common cases (and has no
+lockdep warnings) and the techniques it is using could potentially be
+used to simplify the freezer, the cgroup v1 freezer, or the cgroup v2
+freezer.
 
->  drivers/platform/chrome/cros_ec_typec.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-> index 3eae01f4c9f7..eb4713b7ae14 100644
-> --- a/drivers/platform/chrome/cros_ec_typec.c
-> +++ b/drivers/platform/chrome/cros_ec_typec.c
-> @@ -590,7 +590,8 @@ static int cros_typec_port_update(struct cros_typec_data *typec, int port_num)
->  		dev_warn(typec->dev, "Configure muxes failed, err = %d\n", ret);
->  
->  	return usb_role_switch_set_role(typec->ports[port_num]->role_sw,
-> -					!!(resp.role & PD_CTRL_RESP_ROLE_DATA));
-> +				       resp.role & PD_CTRL_RESP_ROLE_DATA
-> +				       ? USB_ROLE_HOST : USB_ROLE_DEVICE);
->  }
->  
->  static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
-> -- 
-> 2.17.1
-> 
+The key is the function make_task_wakekill which could probably
+benefit from a little more review and refinement but appears to
+be basically correct.
+
+---
+[This change requires more work to handle TASK_STOPPED and TASK_TRACED]
+[This adds a new lock ordering dependency siglock -> pi_lock -> rq_lock ]
+
+Many of the challenges of implementing a simple version of exec come
+from the fact the code handles exec'ing multi-thread processes.
+
+To the best of my knowledge processes with more than one thread
+calling exec are not common, and as all of the threads will be killed
+by exec there does not appear to be any useful work a thread can
+reliably do during exec.
+
+Therefore make it simpler to get exec correct by concealing the other
+threads from wakeups at the beginning of exec.  This removes an entire
+class of races, and makes it tractable to fix some of the long
+standing issues with exec.
+
+One issue that this change makes it easier to solve is the issue of
+deailing with the file table.  Today exec unshares the file table at
+the beginning to ensure there are no weird races with file
+descriptors.  Unfortunately this unsharing can unshare the file table
+when only threads of the current process share it.  Which results in
+unnecessary unsharing and posix locks being inappropriately dropped by
+a multi-threaded exec.  With all of the threads frozen the thread
+count is stable and it is easy to tell if the if the file table really
+needs to be unshared by exec.
+
+Further this changes allows seccomp to stop taking cred_guard_mutex,
+as the seccomp code takes cred_guard_mutex to protect against another
+thread that is in the middle of calling exec and this change
+guarantees that if one threads is calling exec all of the other threads
+have stopped running.  So this problematic kind of concurrency between
+threads can no longer happen.
+
+The code in de_thread was modified to unmask the threads at the same
+time as it is killing them ensuring that code continues to work as it
+does today, and without introducing any races where a thread might
+perform any problematic work in the middle of de_thread.
+
+The code in fork is modified to fail if another thread in the parent
+is in the middle of fork.
+
+A new generic scheduler function make_task_killable is added.
+I think the locking is ok, changing task->state under
+both pi_lock and the rq_lock, but I have not done a detailed
+looked yet to confirm that I am not missing something subtle.
+
+A new function exec_conceal_threads is added, to set
+group_execing_task and walk through all of the threads and change
+their state to TASK_WAKEKILL if it is not already.
+
+A new companion function exec_reveal_threads sends a wake up to all of
+the other threads and clear group_execing_task.  This may cause a
+spuroius wake up but that is an uncommon case and the code for
+TASK_UNINTERRUPTIBLE and TASK_INTERRUPTIBLE is expected to be handle
+spurious so it should be fine.
+
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+---
+ fs/exec.c                    | 98 +++++++++++++++++++++++++++++++++++-
+ include/linux/sched.h        |  2 +
+ include/linux/sched/signal.h |  3 ++
+ kernel/fork.c                |  6 +++
+ kernel/sched/core.c          | 38 ++++++++++++++
+ kernel/signal.c              | 11 ++++
+ 6 files changed, 157 insertions(+), 1 deletion(-)
+
+diff --git a/fs/exec.c b/fs/exec.c
+index 3698252719a3..5e4b0187ac05 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1145,6 +1145,95 @@ static int exec_mmap(struct mm_struct *mm)
+ 	return 0;
+ }
+ 
++static void exec_reveal_threads_locked(void)
++{
++	struct task_struct *p = current, *t;
++	struct signal_struct *signal = p->signal;
++
++	if (signal->group_execing_task) {
++		signal->group_execing_task = NULL;
++		__for_each_thread(signal, t) {
++			if (t == p)
++				continue;
++			/*
++			 * This might be a spurious wake up task t but
++			 * this should be fine as t should verify it
++			 * is the appropriate time to wake up and if
++			 * not fall back asleep.
++			 *
++			 * Any performance (rather than correctness)
++			 * implications of this code should be unimportant
++			 * as it is only called on error.
++			 */
++			wake_up_state(t, TASK_WAKEKILL);
++		}
++	}
++}
++
++static void exec_reveal_threads(void)
++{
++	spinlock_t *lock = &current->sighand->siglock;
++
++	spin_lock_irq(lock);
++	exec_reveal_threads_locked();
++	spin_unlock_irq(lock);
++}
++
++/*
++ * Conceal all other threads in the thread group from wakeups
++ */
++static int exec_conceal_threads(void)
++{
++	struct task_struct *me = current, *t;
++	struct signal_struct *signal = me->signal;
++	spinlock_t *lock = &me->sighand->siglock;
++	int ret = 0;
++
++	if (thread_group_empty(me))
++		return 0;
++
++	spin_lock_irq(lock);
++	if (signal_pending(me) || signal_group_exit(signal) ||
++	    signal->group_execing_task) {
++		spin_unlock(lock);
++		return -ERESTARTNOINTR;
++	}
++
++	signal->group_execing_task = me;
++	for (;;) {
++		unsigned int todo = 0;
++
++		__for_each_thread(signal, t) {
++			if ((t == me) || (t->flags & PF_EXITING))
++				continue;
++
++			if (make_task_wakekill(t))
++				continue;
++
++			signal_wake_up(t, 0);
++			todo++;
++		}
++
++		if ((todo == 0) || __fatal_signal_pending(me))
++			break;
++
++		set_current_state(TASK_KILLABLE);
++		spin_unlock_irq(lock);
++
++		schedule();
++
++		spin_lock_irq(lock);
++		if (__fatal_signal_pending(me))
++			break;
++	}
++	if (__fatal_signal_pending(me)) {
++		ret = -ERESTARTNOINTR;
++		exec_reveal_threads_locked();
++	}
++	spin_unlock_irq(lock);
++	return ret;
++}
++
+ static int de_thread(struct task_struct *tsk)
+ {
+ 	struct signal_struct *sig = tsk->signal;
+@@ -1885,10 +1974,15 @@ static int bprm_execve(struct linux_binprm *bprm,
+ 	struct files_struct *displaced;
+ 	int retval;
+ 
+-	retval = unshare_files(&displaced);
++	/* Conceal any other threads from wakeups */
++	retval = exec_conceal_threads();
+ 	if (retval)
+ 		return retval;
+ 
++	retval = unshare_files(&displaced);
++	if (retval)
++		goto out_ret;
++
+ 	retval = prepare_bprm_creds(bprm);
+ 	if (retval)
+ 		goto out_files;
+@@ -1949,6 +2043,8 @@ static int bprm_execve(struct linux_binprm *bprm,
+ out_files:
+ 	if (displaced)
+ 		reset_files_struct(displaced);
++out_ret:
++	exec_reveal_threads();
+ 
+ 	return retval;
+ }
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index edb2020875ad..dcd79e78b651 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1726,6 +1726,8 @@ extern void kick_process(struct task_struct *tsk);
+ static inline void kick_process(struct task_struct *tsk) { }
+ #endif
+ 
++extern int make_task_wakekill(struct task_struct *tsk);
++
+ extern void __set_task_comm(struct task_struct *tsk, const char *from, bool exec);
+ 
+ static inline void set_task_comm(struct task_struct *tsk, const char *from)
+diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+index 1bad18a1d8ba..647b7d0d2231 100644
+--- a/include/linux/sched/signal.h
++++ b/include/linux/sched/signal.h
+@@ -106,6 +106,9 @@ struct signal_struct {
+ 	int			notify_count;
+ 	struct task_struct	*group_exit_task;
+ 
++	/* Task that is performing exec */
++	struct task_struct	*group_execing_task;
++
+ 	/* thread group stop support, overloads group_exit_code too */
+ 	int			group_stop_count;
+ 	unsigned int		flags; /* see SIGNAL_* flags below */
+diff --git a/kernel/fork.c b/kernel/fork.c
+index bf215af7a904..686c6901eabd 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2247,6 +2247,12 @@ static __latent_entropy struct task_struct *copy_process(
+ 		goto bad_fork_cancel_cgroup;
+ 	}
+ 
++	/* Don't allow creation of new tasks during exec */
++	if (unlikely(current->signal->group_execing_task)) {
++		retval = -ERESTARTNOINTR;
++		goto bad_fork_cancel_cgroup;
++	}
++
+ 	/* past the last point of failure */
+ 	if (pidfile)
+ 		fd_install(pidfd, pidfile);
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 8f360326861e..1ac8b81f22de 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2648,6 +2648,44 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+ 	return success;
+ }
+ 
++int make_task_wakekill(struct task_struct *p)
++{
++	unsigned long flags;
++	int cpu, success = 0;
++	struct rq_flags rf;
++	struct rq *rq;
++	long state;
++
++	/* Assumes p != current */
++	preempt_disable();
++	/*
++	 * If we are going to change a thread waiting for CONDITION we
++	 * need to ensure that CONDITION=1 done by the caller can not be
++	 * reordered with p->state check below. This pairs with mb() in
++	 * set_current_state() the waiting thread does.
++	 */
++	raw_spin_lock_irqsave(&p->pi_lock, flags);
++	smp_mb__after_spinlock();
++	state = p->state;
++
++	/* FIXME handle TASK_STOPPED and TASK_TRACED */
++	if ((state == TASK_KILLABLE) ||
++	    (state == TASK_INTERRUPTIBLE)) {
++		success = 1;
++		cpu = task_cpu(p);
++		rq = cpu_rq(cpu);
++		rq_lock(rq, &rf);
++		p->state = TASK_WAKEKILL;
++		rq_unlock(rq, &rf);
++	}
++	else if (state == TASK_WAKEKILL)
++		success = 1;
++
++	raw_spin_unlock_irqrestore(&p->pi_lock, flags);
++	preempt_enable();
++	return success;
++}
++
+ /**
+  * try_invoke_on_locked_down_task - Invoke a function on task in fixed state
+  * @p: Process for which the function is to be invoked.
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 5ca48cc5da76..19f73eda1d54 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -2590,6 +2590,15 @@ bool get_signal(struct ksignal *ksig)
+ 		goto fatal;
+ 	}
+ 
++	/* Is this task concealing itself from wake-ups during exec? */
++	if (unlikely(signal->group_execing_task)) {
++		set_current_state(TASK_WAKEKILL);
++		wake_up_process(signal->group_execing_task);
++		spin_unlock_irq(&sighand->siglock);
++		schedule();
++		goto relock;
++	}
++
+ 	for (;;) {
+ 		struct k_sigaction *ka;
+ 
+@@ -2849,6 +2858,8 @@ void exit_signals(struct task_struct *tsk)
+ 	    task_participate_group_stop(tsk))
+ 		group_stop = CLD_STOPPED;
+ out:
++	if (unlikely(tsk->signal->group_execing_task))
++		wake_up_process(tsk->signal->group_execing_task);
+ 	spin_unlock_irq(&tsk->sighand->siglock);
+ 
+ 	/*
+-- 
+2.20.1
+
