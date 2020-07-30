@@ -2,101 +2,206 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D167C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 555392082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F170D20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:09:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M/ATWDm1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbgG3NJa (ORCPT
+        id S1729083AbgG3NJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 09:09:30 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:50239 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726794AbgG3NJ3 (ORCPT
+        Thu, 30 Jul 2020 09:09:45 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36879 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726794AbgG3NJp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 09:09:29 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-237-OWiDeMRKNgyfXRUgU29ZSg-1; Thu, 30 Jul 2020 14:09:25 +0100
-X-MC-Unique: OWiDeMRKNgyfXRUgU29ZSg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 30 Jul 2020 14:09:24 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 30 Jul 2020 14:09:24 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Andy Lutomirski' <luto@kernel.org>,
-        "madvenka@linux.microsoft.com" <madvenka@linux.microsoft.com>
-CC:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "LSM List" <linux-security-module@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
-Subject: RE: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-Thread-Topic: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-Thread-Index: AQHWZQT/T+e4gDrzGEmP/30MMvDTCqkgFteg
-Date:   Thu, 30 Jul 2020 13:09:24 +0000
-Message-ID: <b9879beef3e740c0aeb1af73485069a8@AcuMS.aculab.com>
-References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
-In-Reply-To: <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 30 Jul 2020 09:09:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596114582;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gWaKeY39EULxcPQEMCGaeW0bHOFmCjPvx3LSrbbV7xY=;
+        b=M/ATWDm1ZMQyyM8rbXMc1S9AuUUukpm5HPu+H6RRKA3Km7cUNXVjRIpw6Ciw32Z7h6Ss46
+        C+I/8RoCvlMpA5YgZKj4uivccyNqBS3tMUWApkebe9VuPhEDq7DL/4b+hrfnatJdjBN+xm
+        tRZwUSFonptmvHdrdbfuCj7HBM1r6ww=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-457-rPz_Q_iZNX6UE0RZCZjreg-1; Thu, 30 Jul 2020 09:08:35 -0400
+X-MC-Unique: rPz_Q_iZNX6UE0RZCZjreg-1
+Received: by mail-qv1-f69.google.com with SMTP id f1so7333448qvx.13
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 06:08:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=gWaKeY39EULxcPQEMCGaeW0bHOFmCjPvx3LSrbbV7xY=;
+        b=S3Z/TySlR2PMQIAGKwnohQHBUu8ReCspcMB5DraoWQjtixKm2QqEt8LJ3kn03djDPV
+         sfZSaGB1GUE9bT7QtHPhQIt+qFahQYHlxhjKQSU6he49OoWIAAhvoB32TpRxzpVnbCqU
+         kr+yoz4L1n6sdybbBC7zqpnJ3RMG3QNxktjq2usrTsOrEAUnTP/OqcyLW3dvSUDTy3PA
+         xVeVtaNPnQC2sKOiEbmrLPl5F7uIsLt7SkhtGwwl0obTUa8PeWpIAHC5h2/EFpVoqIAn
+         KgCtEUsRPA3vKfp5ze3hgKbsxNx8DyTvohhrF/hzBfLkaTBpTISs2OEzbX/AyxCMLjK1
+         DIGA==
+X-Gm-Message-State: AOAM532KpYS2BxhL+sVLuwCuDyS4HnPUUx6nXLdtALvbMfSVb2e98Nb+
+        8xURbY122V7Fer9/Rpsd9D55KQFg50LV2XK/sIv1V107sWOwY+nOvbKtBGiSqsZPPzEf3jhuYbm
+        Bd6dwnBz/WVgKOIds/jOjtajO
+X-Received: by 2002:ac8:454f:: with SMTP id z15mr2627664qtn.351.1596114514351;
+        Thu, 30 Jul 2020 06:08:34 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzE3m4VK7ilMGfBwsUtRjmSKljYtJpn8E03df8J9j67dNo1Fgsoe+A7NDnW7aFB+gXKH74gBg==
+X-Received: by 2002:ac8:454f:: with SMTP id z15mr2627612qtn.351.1596114513855;
+        Thu, 30 Jul 2020 06:08:33 -0700 (PDT)
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
+        by smtp.gmail.com with ESMTPSA id 8sm4314260qkh.77.2020.07.30.06.08.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 06:08:33 -0700 (PDT)
+Message-ID: <2db05b3eb59bfb59688e7cb435c1b5f2096b8f8a.camel@redhat.com>
+Subject: Re: Upcoming: fscache rewrite
+From:   Jeff Layton <jlayton@redhat.com>
+To:     David Howells <dhowells@redhat.com>, torvalds@linux-foundation.org
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 30 Jul 2020 09:08:32 -0400
+In-Reply-To: <447452.1596109876@warthog.procyon.org.uk>
+References: <447452.1596109876@warthog.procyon.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.4 (3.36.4-1.fc32) 
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBUaGlzIGlzIHF1aXRlIGNsZXZlciwgYnV0IG5vdyBJ4oCZbSB3b25kZXJpbmcganVzdCBob3cg
-bXVjaCBrZXJuZWwgaGVscA0KPiBpcyByZWFsbHkgbmVlZGVkLiBJbiB5b3VyIHNlcmllcywgdGhl
-IHRyYW1wb2xpbmUgaXMgYW4gbm9uLWV4ZWN1dGFibGUNCj4gcGFnZS4gIEkgY2FuIHRoaW5rIG9m
-IGF0IGxlYXN0IHR3byBhbHRlcm5hdGl2ZSBhcHByb2FjaGVzLCBhbmQgSSdkDQo+IGxpa2UgdG8g
-a25vdyB0aGUgcHJvcyBhbmQgY29ucy4NCj4gDQo+IDEuIEVudGlyZWx5IHVzZXJzcGFjZTogYSBy
-ZXR1cm4gdHJhbXBvbGluZSB3b3VsZCBiZSBzb21ldGhpbmcgbGlrZToNCj4gDQo+IDE6DQo+IHB1
-c2hxICVyYXgNCj4gcHVzaHEgJXJiYw0KPiBwdXNocSAlcmN4DQo+IC4uLg0KPiBwdXNocSAlcjE1
-DQo+IG1vdnEgJXJzcCwgJXJkaSAjIHBvaW50ZXIgdG8gc2F2ZWQgcmVncw0KPiBsZWFxIDFiKCVy
-aXApLCAlcnNpICMgcG9pbnRlciB0byB0aGUgdHJhbXBvbGluZSBpdHNlbGYNCj4gY2FsbHEgdHJh
-bXBvbGluZV9oYW5kbGVyICMgc2VlIGJlbG93DQoNCkZvciBuZXN0ZWQgY2FsbHMgKHdoZXJlIHRo
-ZSB0cmFtcG9saW5lIG5lZWRzIHRvIHBhc3MgdGhlDQpvcmlnaW5hbCBzdGFjayBmcmFtZSB0byB0
-aGUgbmVzdGVkIGZ1bmN0aW9uKSBJIHRoaW5rIHlvdQ0KanVzdCBuZWVkIGEgcGFnZSBmdWxsIG9m
-Og0KCW1vdgkkMCwgc2NyYXRjaF9yZWc7IGptcCB0cmFtcG9saW5lX2hhbmRsZXINCgltb3YJJDEs
-IHNjcmF0Y2hfcmVnOyBqbXAgdHJhbXBvbGluZV9oYW5kbGVyDQpZb3UgbmVlZCBhbiB1bnVzZWQg
-cmVnaXN0ZXIsIG9uIHg4Ni02NCBJIHRoaW5rIGJvdGgNCnIxMCBhbmQgcjExIGFyZSBhdmFpbGFi
-bGUuDQpPbiBpMzg2IEkgdGhpbmsgZWF4IGNhbiBiZSB1c2VkLg0KSXQgbWlnaHQgZXZlbiBiZSB0
-aGF0IHRoZSBmaXJzdCBhcmd1bWVudCByZWdpc3RlciBpcw0KYXZhaWxhYmxlIC0gaWYgdGhhdCBp
-cyB1c2VkIHRvIHBhc3MgaW4gdGhlIHN0YWNrIGZyYW1lLg0KDQpUaGUgdHJhbXBvbGluZV9oYW5k
-bGVyIHRoZW4gdXNlcyB0aGUgcGFzc2VkIGluIHZhbHVlDQp0byBpbmRleCBhbiBhcnJheSBvZiBz
-dGFjayBmcmFtZSBhbmQgZnVuY3Rpb24gcG9pbnRlcnMNCmFuZCBqdW1wcyB0byB0aGUgcmVhbCBm
-dW5jdGlvbi4NCllvdSBuZWVkIHRvIGhvbGQgZXZlcnl0aGluZyBpbiBfX3RocmVhZCBkYXRhLg0K
-QW5kIG1heWJlIGJlIGFibGUgdG8gYWxsb2NhdGUgYW4gZXh0cmEgcGFnZSBmb3IgZGVlcGx5DQpu
-ZXN0ZWQgY29kZSBwYXRocyAoZWcgcmVjdXJzaXZlIG5lc3RlZCBmdW5jdGlvbnMpLg0KDQpZb3Ug
-bWlnaHQgdGhlbiBuZWVkIGEgZHJpdmVyIHRvIGNyZWF0ZSB5b3UgYSBzdWl0YWJsZQ0KZXhlY3V0
-YWJsZSBwYWdlLiBTb21laG93IHlvdSBuZWVkIHRvIHBhc3MgaW4gdGhlIGFkZHJlc3MNCm9mIHRo
-ZSB0cmFtcG9saW5lX2hhbmRsZXIgYW5kIHRoZSBudW1iZXIgZm9yIHRoZSBmaXJzdCBmYXVsdC4N
-Ckl0IG5lZWQgdG8gcGFzcyBiYWNrIHRoZSAnc3RyaWRlJyBvZiB0aGUgYXJyYXkgYW5kIG51bWJl
-cg0Kb2YgZWxlbWVudHMgY3JlYXRlZC4NCg0KQnV0IGlmIHlvdSBjYW4gdGFrZSB0aGUgY29zdCBv
-ZiB0aGUgcGFnZSBmYXVsdCwgdGhlbg0KeW91IGNhbiBpbnRlcnByZXQgdGhlIGV4aXN0aW5nIHRy
-YW1wb2xpbmUgaW4gdXNlcnNwYWNlDQp3aXRoaW4gdGhlIHNpZ25hbCBoYW5kbGVyLg0KVGhpcyBp
-cyB0d28ga2VybmVsIGVudHJ5L2V4aXRzLg0KDQpBcmJpdHJhcnkgSklUIGlzIGEgZGlmZmVyZW50
-IHByb2JsZW0gZW50aXJlbHkuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFr
-ZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwg
-VUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+On Thu, 2020-07-30 at 12:51 +0100, David Howells wrote:
+> Hi Linus, Trond/Anna, Steve, Eric,
+> 
+> I have an fscache rewrite that I'm tempted to put in for the next merge
+> window:
+> 
+> 	https://lore.kernel.org/linux-fsdevel/159465784033.1376674.18106463693989811037.stgit@warthog.procyon.org.uk/
+> 
+> It improves the code by:
+> 
+>  (*) Ripping out the stuff that uses page cache snooping and kernel_write()
+>      and using kiocb instead.  This gives multiple wins: uses async DIO rather
+>      than snooping for updated pages and then copying them, less VM overhead.
+> 
+>  (*) Object management is also simplified, getting rid of the state machine
+>      that was managing things and using a much simplified thread pool instead.
+> 
+>  (*) Object invalidation creates a tmpfile and diverts new activity to that so
+>      that it doesn't have to synchronise in-flight ADIO.
+> 
+>  (*) Using a bitmap stored in an xattr rather than using bmap to find out if
+>      a block is present in the cache.  Probing the backing filesystem's
+>      metadata to find out is not reliable in modern extent-based filesystems
+>      as them may insert or remove blocks of zeros.  Even SEEK_HOLE/SEEK_DATA
+>      are problematic since they don't distinguish transparently inserted
+>      bridging.
+> 
+> I've provided a read helper that handles ->readpage, ->readpages, and
+> preparatory writes in ->write_begin.  Willy is looking at using this as a way
+> to roll his new ->readahead op out into filesystems.  A good chunk of this
+> will move into MM code.
+> 
+> The code is simpler, and this is nice too:
+> 
+>  67 files changed, 5947 insertions(+), 8294 deletions(-)
+> 
+> not including documentation changes, which I need to convert to rst format
+> yet.  That removes a whole bunch more lines.
+> 
+> But there are reasons you might not want to take it yet:
+> 
+>  (1) It starts off by disabling fscache support in all the filesystems that
+>      use it: afs, nfs, cifs, ceph and 9p.  I've taken care of afs, Dave
+>      Wysochanski has patches for nfs:
+> 
+> 	https://lore.kernel.org/linux-nfs/1596031949-26793-1-git-send-email-dwysocha@redhat.com/
+> 
+>      but they haven't been reviewed by Trond or Anna yet, and Jeff Layton has
+>      patches for ceph:
+> 
+> 	https://marc.info/?l=ceph-devel&m=159541538914631&w=2
+> 
+>      and I've briefly discussed cifs with Steve, but nothing has started there
+>      yet.  9p I've not looked at yet.
+> 
+>      Now, if we're okay for going a kernel release with 4/5 filesystems with
+>      caching disabled and then pushing the changes for individual filesystems
+>      through their respective trees, it might be easier.
+> 
+>      Unfortunately, I wasn't able to get together with Trond and Anna at LSF
+>      to discuss this.
+> 
+>  (2) The patched afs fs passed xfstests -g quick (unlike the upstream code
+>      that oopses pretty quickly with caching enabled).  Dave and Jeff's nfs
+>      and ceph code is getting close, but not quite there yet.
+
+
+That was my experience on cephfs+fscache too -- it often crashed down in
+the fscache code. I'd support the approach in (1) above -- put this in
+soon and disable the caches in the filesystems. Then push the changes to
+reenable it via fs-specific trees.
+
+The ceph patch series is more or less ready. It passes all of the
+xfstest "quick" group run (aside from a few expected failures on
+cephfs).
+
+The only real exception is generic/531, which seems to trigger OOM kills
+in my testing. The test tries to create a ton of files and leak the file
+descriptors. I tend to think that workload is pretty unusual, and given
+that fscache was terribly unstable and crashed before, this is still a
+marked improvement.
+
+>  (3) Al has objections to the ITER_MAPPING iov_iter type that I added
+> 
+> 	https://lore.kernel.org/linux-fsdevel/20200719014436.GG2786714@ZenIV.linux.org.uk/
+> 
+>      but note that iov_iter_for_each_range() is not actually used by anything.
+> 
+>      However, Willy likes it and would prefer to make it ITER_XARRAY instead
+>      as he might be able to use it in other places, though there's an issue
+>      where I'm calling find_get_pages_contig() which takes a mapping (though
+>      all it does is then get the xarray out of it).
+> 
+>      Instead I would have to use ITER_BVEC, which has quite a high overhead,
+>      though it would mean that the RCU read lock wouldn't be necessary.  This
+>      would require 1K of memory for every 256K block the cache wants to read;
+>      for any read >1M, I'd have to use vmalloc() instead.
+> 
+>      I'd also prefer not to use ITER_BVEC because the offset and length are
+>      superfluous here.  If ITER_MAPPING is not good, would it be possible to
+>      have an ITER_PAGEARRAY that just takes a page array instead?  Or, even,
+>      create a transient xarray?
+> 
+>  (4) The way object culling is managed needs overhauling too, but that's a
+>      whole 'nother patchset.  We could wait till that's done too, but its lack
+>      doesn't prevent what we have now being used.
+> 
+> Thoughts?
+> 
+> David
+> 
+
+-- 
+Jeff Layton <jlayton@redhat.com>
 
