@@ -2,156 +2,89 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D864C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F7DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63FA120838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA021207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:12:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b="e7dfnkL3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729684AbgG3PKc (ORCPT
+        id S1729629AbgG3PMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:10:32 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:33997 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728286AbgG3PKb (ORCPT
+        Thu, 30 Jul 2020 11:12:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727072AbgG3PME (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 11:10:31 -0400
-Received: (qmail 6777 invoked by uid 1000); 30 Jul 2020 11:10:30 -0400
-Date:   Thu, 30 Jul 2020 11:10:30 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@puri.sm
-Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
-Message-ID: <20200730151030.GB6332@rowland.harvard.edu>
-References: <f3958758-afce-8add-1692-2a3bbcc49f73@puri.sm>
- <20200729143213.GC1530967@rowland.harvard.edu>
- <1596033995.4356.15.camel@linux.ibm.com>
- <1596034432.4356.19.camel@HansenPartnership.com>
- <d9bb92e9-23fa-306f-c7f2-71a81ab28811@puri.sm>
- <1596037482.4356.37.camel@HansenPartnership.com>
- <A1653792-B7E5-46A9-835B-7FA85FCD0378@puri.sm>
- <20200729182515.GB1580638@rowland.harvard.edu>
- <1596047349.4356.84.camel@HansenPartnership.com>
- <d3fe36a9-b785-a5c4-c90d-b8fa10f4272f@puri.sm>
+        Thu, 30 Jul 2020 11:12:04 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F05EC061575
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 08:12:04 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id r2so20171165wrs.8
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 08:12:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxtx.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bd6k9y9ocae6qDNTeHFOtb+QmjW35gPCvFK2OagBbAk=;
+        b=e7dfnkL3oHidiv2xiTBuK7S3CHJPYTmyaCn9j9JyOM2kTQgefIxUsl9AW7/EUa/HVv
+         jXbUXc3YM0vy5t6Myr7f6toWwSrUmiucL7CmvB/QoT7VWI2tAJ8eg/8gPYgcIC8B3Bx7
+         nkEk9bRhEpkjLI7pmsscD/4YjNQ0zmo/0CQBM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bd6k9y9ocae6qDNTeHFOtb+QmjW35gPCvFK2OagBbAk=;
+        b=RdH0Ou40/7QzUdsTaZ/nAdWtXqsARFkGDaI2y37xPKunfBA8R3KkDrVERJPkPF6iLx
+         IvD262fA0jTgtIf4mL5v09YyYKFH8fMzKinha1gXxDQBq2p75yuwNUYCYC8kiSo0k/tw
+         pfVESIkC6zx6ZnLYafJq4nOOC7vnNV4/mxA/+A5dj/kgaTUakFgfLysdcPEvBfCVjbBp
+         OUkKPIXpVVBWawmHgqQXOGX4LQmNwU3NVWTYERWJ8bfeqaM2aAWpAzDnaDML+T3b6KbH
+         hNQc3JAMStgqBwPcmQzLrTbYhC8Eu/rBR4Gb7B0hw2TZmYz1zJk1Jfk6MjZa5YnneUWv
+         hsRg==
+X-Gm-Message-State: AOAM531tYjTeSJhTaeXuzLudJKekeeCKJ15I51/oUCq+tPTZnpULPIba
+        IYSnSEUM6bLYul1q43ZvxHVjucphpjgre+WY5uxv7A==
+X-Google-Smtp-Source: ABdhPJyTMKHCgY67oNooR7z73laB6BI1tH8YVqF7S5lwcLdP6Zdqj8V26HYN5HBJVvnd7cd0j/MA/HFSaEVy1Oo4fzk=
+X-Received: by 2002:a5d:55c9:: with SMTP id i9mr3145795wrw.31.1596121923069;
+ Thu, 30 Jul 2020 08:12:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d3fe36a9-b785-a5c4-c90d-b8fa10f4272f@puri.sm>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200727130517.GA1222569@xps-13>
+In-Reply-To: <20200727130517.GA1222569@xps-13>
+From:   Justin Forbes <jmforbes@linuxtx.org>
+Date:   Thu, 30 Jul 2020 10:11:52 -0500
+Message-ID: <CAFxkdAphiZJWnrDUNToVwYJ1Nr9H+E9cSLwA6w3OwSpO4K+pow@mail.gmail.com>
+Subject: Re: crypto: aegis128: error: incompatible types when initializing
+ type 'unsigned char' using type 'uint8x16_t'
+To:     Andrea Righi <andrea.righi@canonical.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 10:52:14AM +0200, Martin Kepplinger wrote:
-> Maybe I should just start a new discussion with a patch, but the below
-> is what makes sense to me (when I understand you correctly) and seems to
-> work. I basically add a new flag, so that the old flags behave unchanged
-> and only call it during *runtime* resume for SD cards:
-> 
-> 
-> --- a/drivers/scsi/scsi_error.c
-> +++ b/drivers/scsi/scsi_error.c
-> @@ -553,15 +553,21 @@ int scsi_check_sense(struct scsi_cmnd *scmd)
->                  * information that we should pass up to the upper-level
-> driver
->                  * so that we can deal with it there.
->                  */
-> -               if (scmd->device->expecting_cc_ua) {
-> +               if (scmd->device->expecting_cc_ua ||
-> +                   scmd->device->expecting_media_change) {
->                         /*
->                          * Because some device does not queue unit
->                          * attentions correctly, we carefully check
->                          * additional sense code and qualifier so as
-> -                        * not to squash media change unit attention.
-> +                        * not to squash media change unit attention;
-> +                        * unless expecting_media_change is set, indicating
-> +                        * that the media (most likely) didn't change
-> +                        * but a device only believes so (for example
-> +                        * because of suspend/resume).
->                          */
-> -                       if (sshdr.asc != 0x28 || sshdr.ascq != 0x00) {
-> -                               scmd->device->expecting_cc_ua = 0;
-> +                       if ((sshdr.asc != 0x28 || sshdr.ascq != 0x00) ||
-> +                           scmd->device->expecting_media_change) {
-> +                               scmd->device->expecting_media_change = 0;
->                                 return NEEDS_RETRY;
->                         }
->                 }
-> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-> index d90fefffe31b..b647fab2b663 100644
-> --- a/drivers/scsi/sd.c
-> +++ b/drivers/scsi/sd.c
-> @@ -114,6 +114,7 @@ static void sd_shutdown(struct device *);
->  static int sd_suspend_system(struct device *);
->  static int sd_suspend_runtime(struct device *);
->  static int sd_resume(struct device *);
-> +static int sd_resume_runtime(struct device *);
->  static void sd_rescan(struct device *);
->  static blk_status_t sd_init_command(struct scsi_cmnd *SCpnt);
->  static void sd_uninit_command(struct scsi_cmnd *SCpnt);
-> @@ -574,7 +575,7 @@ static const struct dev_pm_ops sd_pm_ops = {
->         .poweroff               = sd_suspend_system,
->         .restore                = sd_resume,
->         .runtime_suspend        = sd_suspend_runtime,
-> -       .runtime_resume         = sd_resume,
-> +       .runtime_resume         = sd_resume_runtime,
->  };
-> 
->  static struct scsi_driver sd_template = {
-> @@ -3652,6 +3653,21 @@ static int sd_resume(struct device *dev)
->         return ret;
->  }
-> 
-> +static int sd_resume_runtime(struct device *dev)
-> +{
-> +       struct scsi_disk *sdkp = dev_get_drvdata(dev);
-> +
-> +       /* Some SD cardreaders report media change when resuming from
-> suspend
-> +        * because they can't keep track during suspend. */
-> +
-> +       /* XXX This is not unproblematic though: We won't notice when a card
-> +        * was really changed during runtime suspend! We basically rely
-> on users
-> +        * to unmount or suspend before doing so. */
-> +       sdkp->device->expecting_media_change = 1;
-> +
-> +       return sd_resume(dev);
-> +}
-> +
->  /**
->   *     init_sd - entry point for this driver (both when built in or when
->   *     a module).
-> diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
-> index bc5909033d13..8c8f053f71c8 100644
-> --- a/include/scsi/scsi_device.h
-> +++ b/include/scsi/scsi_device.h
-> @@ -169,6 +169,8 @@ struct scsi_device {
->                                  * this device */
->         unsigned expecting_cc_ua:1; /* Expecting a CHECK_CONDITION/UNIT_ATTN
->                                      * because we did a bus reset. */
-> +       unsigned expecting_media_change:1; /* Expecting media change
-> ASC/ASCQ
-> +                                             when it actually doesn't
-> change */
->         unsigned use_10_for_rw:1; /* first try 10-byte read / write */
->         unsigned use_10_for_ms:1; /* first try 10-byte mode sense/select */
->         unsigned set_dbd_for_ms:1; /* Set "DBD" field in mode sense */
+On Mon, Jul 27, 2020 at 8:05 AM Andrea Righi <andrea.righi@canonical.com> wrote:
+>
+> I'm experiencing this build error on arm64 after updating to gcc 10:
+>
+> crypto/aegis128-neon-inner.c: In function 'crypto_aegis128_init_neon':
+> crypto/aegis128-neon-inner.c:151:3: error: incompatible types when initializing type 'unsigned char' using type 'uint8x16_t'
+>   151 |   k ^ vld1q_u8(const0),
+>       |   ^
+> crypto/aegis128-neon-inner.c:152:3: error: incompatible types when initializing type 'unsigned char' using type 'uint8x16_t'
+>   152 |   k ^ vld1q_u8(const1),
+>       |   ^
+>
+> Anybody knows if there's a fix for this already? Otherwise I'll take a look at it.
 
-That's pretty much what James was suggesting, except for one thing: You 
-must not set sdkp->device->expecting_media_change to 1 for all devices 
-in sd_runtime_resume().  Only for devices which may generate a spurious 
-Unit Attention following runtime resume -- and maybe not even for all of 
-them, depending on what the user wants.
 
-Alan Stern
+I hit it and have been working with Jakub on the issue.
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96377
+
+Justin
