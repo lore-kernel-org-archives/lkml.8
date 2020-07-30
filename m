@@ -2,115 +2,97 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B09C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95085C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0422082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 731DC2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:44:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729801AbgG3PoE (ORCPT
+        id S1729919AbgG3Poy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:44:04 -0400
-Received: from 8bytes.org ([81.169.241.247]:34118 "EHLO theia.8bytes.org"
+        Thu, 30 Jul 2020 11:44:54 -0400
+Received: from mga01.intel.com ([192.55.52.88]:64857 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728412AbgG3Pnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 11:43:46 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 028269FA; Thu, 30 Jul 2020 17:43:44 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v2 4/4] KVM: SVM: Use __packed shorthand
-Date:   Thu, 30 Jul 2020 17:43:40 +0200
-Message-Id: <20200730154340.14021-5-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200730154340.14021-1-joro@8bytes.org>
-References: <20200730154340.14021-1-joro@8bytes.org>
+        id S1729484AbgG3Pox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 11:44:53 -0400
+IronPort-SDR: TIR6l2DGrofJF3PaleNR+Vt77Ae4qR4Cdp4TlpZruvf2aPV75wDaAgQoHvBoAr5eXt5bWYm4a2
+ uV6cgeXNVPQg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="169741992"
+X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
+   d="scan'208";a="169741992"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 08:44:52 -0700
+IronPort-SDR: BaDDVqq1GqCh5P3//G0SQJkoDZ+wJwOxaBVXR86DpT6KgejRLnM2kmkD5ysie2SG0I1YNg4Dog
+ CTWy6xxIrUcw==
+X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
+   d="scan'208";a="465284728"
+Received: from jrwang2-mobl.amr.corp.intel.com (HELO [10.212.82.25]) ([10.212.82.25])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 08:44:49 -0700
+Subject: Re: [PATCH 2/2] ASoC: Intel: Add period size constraint on strago
+ board
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     "Lu, Brent" <brent.lu@intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Cc:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Sam McNally <sammc@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Daniel Stuart <daniel.stuart14@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Damian van Soelen <dj.vsoelen@gmail.com>
+References: <1596020585-11517-1-git-send-email-brent.lu@intel.com>
+ <1596020585-11517-3-git-send-email-brent.lu@intel.com>
+ <4fe97f63-e552-3b2f-803c-53894b196bfd@linux.intel.com>
+ <DM6PR11MB36421D9A808D401416B72D2D97710@DM6PR11MB3642.namprd11.prod.outlook.com>
+ <f1386a05-8866-9251-c751-21c9109aa35f@linux.intel.com>
+Message-ID: <c00c47ad-abd7-d6e7-e3c5-a25a6a4f7f68@linux.intel.com>
+Date:   Thu, 30 Jul 2020 10:44:47 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <f1386a05-8866-9251-c751-21c9109aa35f@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@alien8.de>
 
-Use the shorthand to make it more readable.
 
-No functional changes.
+On 7/30/20 10:27 AM, Pierre-Louis Bossart wrote:
+> 
+> 
+>>> Is this patch required if you've already constrained the period sizes 
+>>> for the
+>>> platform driver in patch1?
+>>
+>> Yes or alsa will select 320 as default period size for it.
+> 
+> ok, then that's a miss in your patch1. 320 samples is a multiple of 1ms 
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/include/asm/svm.h | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+typo: is NOT
 
-diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-index 8744817358bf..6b4b43f68f4b 100644
---- a/arch/x86/include/asm/svm.h
-+++ b/arch/x86/include/asm/svm.h
-@@ -150,14 +150,14 @@ struct __attribute__ ((__packed__)) vmcb_control_area {
- #define SVM_NESTED_CTL_NP_ENABLE	BIT(0)
- #define SVM_NESTED_CTL_SEV_ENABLE	BIT(1)
- 
--struct __attribute__ ((__packed__)) vmcb_seg {
-+struct vmcb_seg {
- 	u16 selector;
- 	u16 attrib;
- 	u32 limit;
- 	u64 base;
--};
-+} __packed;
- 
--struct __attribute__ ((__packed__)) vmcb_save_area {
-+struct vmcb_save_area {
- 	struct vmcb_seg es;
- 	struct vmcb_seg cs;
- 	struct vmcb_seg ss;
-@@ -231,9 +231,9 @@ struct __attribute__ ((__packed__)) vmcb_save_area {
- 	u64 xcr0;
- 	u8 valid_bitmap[16];
- 	u64 x87_state_gpa;
--};
-+} __packed;
- 
--struct __attribute__ ((__packed__)) ghcb {
-+struct ghcb {
- 	struct vmcb_save_area save;
- 	u8 reserved_save[2048 - sizeof(struct vmcb_save_area)];
- 
-@@ -242,7 +242,7 @@ struct __attribute__ ((__packed__)) ghcb {
- 	u8 reserved_1[10];
- 	u16 protocol_version;	/* negotiated SEV-ES/GHCB protocol version */
- 	u32 ghcb_usage;
--};
-+} __packed;
- 
- 
- static inline void __unused_size_checks(void)
-@@ -252,11 +252,11 @@ static inline void __unused_size_checks(void)
- 	BUILD_BUG_ON(sizeof(struct ghcb) != 4096);
- }
- 
--struct __attribute__ ((__packed__)) vmcb {
-+struct vmcb {
- 	struct vmcb_control_area control;
- 	u8 reserved_control[1024 - sizeof(struct vmcb_control_area)];
- 	struct vmcb_save_area save;
--};
-+} __packed;
- 
- #define SVM_CPUID_FUNC 0x8000000a
- 
--- 
-2.17.1
-
+> for 48kHz rates. I think it was valid only for the 16kHz VoIP paths used 
+> in some versions of Android, but that we don't support in the upstream 
+> code.
+> 
+> To build on Takashi's answer, the real ask here is to require that the 
+> period be a multiple of 1ms, because that's the fundamental 
+> design/limitation of firmware. It doesn't matter if it's 48, 96, 192, 
+> 240, 480, 960 samples.
