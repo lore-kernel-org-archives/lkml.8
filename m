@@ -2,131 +2,98 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6561CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F28C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AD1F20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C73F72075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:30:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729116AbgG3KZw (ORCPT
+        id S1726899AbgG3KaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 06:25:52 -0400
-Received: from disco-boy.misterjones.org ([51.254.78.96]:58890 "EHLO
-        disco-boy.misterjones.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgG3KZv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 06:25:51 -0400
-X-Greylist: delayed 1589 seconds by postgrey-1.27 at vger.kernel.org; Thu, 30 Jul 2020 06:25:50 EDT
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@misterjones.org>)
-        id 1k15LC-00GDgU-2i; Thu, 30 Jul 2020 10:59:10 +0100
+        Thu, 30 Jul 2020 06:30:05 -0400
+Received: from foss.arm.com ([217.140.110.172]:37800 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726287AbgG3KaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 06:30:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 578A130E;
+        Thu, 30 Jul 2020 03:30:03 -0700 (PDT)
+Received: from [192.168.178.2] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C14CB3F66E;
+        Thu, 30 Jul 2020 03:29:55 -0700 (PDT)
+Subject: Re: [PATCH v2 3/7] arch_topology: disable frequency invariance for
+ CONFIG_BL_SWITCHER
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     rjw@rjwysocki.net, catalin.marinas@arm.com, sudeep.holla@arm.com,
+        will@kernel.org, linux@armlinux.org.uk, mingo@redhat.com,
+        peterz@infradead.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200722093732.14297-1-ionela.voinescu@arm.com>
+ <20200722093732.14297-4-ionela.voinescu@arm.com>
+ <20200730042423.4j22udejluis7blw@vireshk-mac-ubuntu>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <1db4317a-0018-1590-f0ae-ed5e235b174f@arm.com>
+Date:   Thu, 30 Jul 2020 12:29:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200730042423.4j22udejluis7blw@vireshk-mac-ubuntu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 30 Jul 2020 10:59:09 +0100
-From:   Marc Zyngier <maz@misterjones.org>
-To:     Willy Tarreau <w@1wt.eu>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Emese Revfy <re.emese@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        =?UTF-8?Q?Daniel_D=C3=ADaz?= <daniel.diaz@linaro.org>
-Subject: Re: linux-next: build failure after merge of the origin tree
-In-Reply-To: <20200730061407.GA7941@1wt.eu>
-References: <20200730090828.2349e159@canb.auug.org.au>
- <CAHk-=wjK8+12i8iDC41LXfZBcMjGsF+WyW_+ncPFmrexRT0yxw@mail.gmail.com>
- <202007292007.D87DBD34B@keescook> <20200730032250.GB7790@1wt.eu>
- <20200730061407.GA7941@1wt.eu>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <102fc7a6fa4c2767879a6f911a9a16d5@misterjones.org>
-X-Sender: maz@misterjones.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: w@1wt.eu, keescook@chromium.org, torvalds@linux-foundation.org, sfr@canb.auug.org.au, re.emese@gmail.com, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org, samitolvanen@google.com, daniel.diaz@linaro.org
-X-SA-Exim-Mail-From: maz@misterjones.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-30 07:14, Willy Tarreau wrote:
-> On Thu, Jul 30, 2020 at 05:22:50AM +0200, Willy Tarreau wrote:
->> On Wed, Jul 29, 2020 at 08:17:48PM -0700, Kees Cook wrote:
->> > And just another heads-up, the patch[1] (which was never sent to a public
->> > list) also breaks arm64 (circular header needs?):
->> (...)
->> 
->> Definitely, we've just got a report about this, I'll have a look once
->> I'm at the office. I'd like to check that we don't obviously break
->> another arch by just removing percpu. If at least shuffling them 
->> around
->> is sufficient that'd be nice. Otherwise we'll likely need a separate
->> header (which is not a bad thing for the long term).
+On 30/07/2020 06:24, Viresh Kumar wrote:
+> On 22-07-20, 10:37, Ionela Voinescu wrote:
+>> +++ b/drivers/base/arch_topology.c
+>> @@ -27,6 +27,7 @@ __weak bool arch_freq_counters_available(struct cpumask *cpus)
+>>  }
+>>  DEFINE_PER_CPU(unsigned long, freq_scale) = SCHED_CAPACITY_SCALE;
+>>  
+>> +#ifndef CONFIG_BL_SWITCHER
+>>  void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
+>>  			 unsigned long max_freq)
+>>  {
+>> @@ -46,6 +47,7 @@ void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
+>>  	for_each_cpu(i, cpus)
+>>  		per_cpu(freq_scale, i) = scale;
+>>  }
+>> +#endif
 > 
-> So Linus proposed a clean solution which might be harder to backport
-> but looks better for 5.8. However the attached one addresses the issue
-> for me on arm64 and still works on x86_64, arm, mips. I think we should
-> go with this one first then apply Linus' one on top of it to be long
-> term proof, and backport only the first one. Linus ?
+> I don't really like this change, the ifdef hackery is disgusting and
+> then we are putting that in a completely different part of the kernel.
+> 
+> There are at least these two ways of solving this, maybe more:
+> 
+> - Fix the bl switcher driver and add the complexity in it (which you
+>   tried to do earlier).
+> 
+> - Add a cpufreq flag to skip arch-set-freq-scale call.
 
-So for what it's worth, this patch fixes the arm64 compilation problem
-for me:
+I agree it's not nice but IMHO the cpufreq flag is worse since we would
+introduce new infrastructure only for a deprecated feature. I'm assuming
+that BL SWITCHER is the only feature needing this CPUfreq flag extension.
 
-Tested-by: Marc Zyngier <maz@kernel.org>
+#ifdef CONFIG_BL_SWITCHER is already in drivers/irqchip/irq-gic.c so
+it's ugly already.
 
-I had come up with a different fix, only touching arm64 (see below).
-
-Thanks,
-
-         M.
-
- From 33d819f4efa0a4474b5dc2e4bcaef1b886ca30c3 Mon Sep 17 00:00:00 2001
- From: Marc Zyngier <maz@kernel.org>
-Date: Thu, 30 Jul 2020 10:53:05 +0100
-Subject: [PATCH] arm64: Drop unnecessary include from asm/smp.h
-
-asm/pointer_auth.h is not needed anymore in asm/smp.h, as 62a679cb2825
-("arm64: simplify ptrauth initialization") removed the keys from the
-secondary_data structure.
-
-This also cures a compilation issue introduced by f227e3ec3b5c
-("random32: update the net random state on interrupt and activity").
-
-Fixes: 62a679cb2825 ("arm64: simplify ptrauth initialization")
-Fixes: f227e3ec3b5c ("random32: update the net random state on interrupt 
-and activity")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
-  arch/arm64/include/asm/smp.h | 1 -
-  1 file changed, 1 deletion(-)
-
-diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
-index ea268d88b6f7..a0c8a0b65259 100644
---- a/arch/arm64/include/asm/smp.h
-+++ b/arch/arm64/include/asm/smp.h
-@@ -30,7 +30,6 @@
-  #include <linux/threads.h>
-  #include <linux/cpumask.h>
-  #include <linux/thread_info.h>
--#include <asm/pointer_auth.h>
-
-  DECLARE_PER_CPU_READ_MOSTLY(int, cpu_number);
-
--- 
-2.27.0
+Runtime detecting (via bL_switching_enabled) of BL SWITCHER is right now
+also only handled inside vexpress-spc-cpufreq.c via a
+bL_switcher_notifier. A mechanism which also sits behind a #ifdef
+CONFIG_BL_SWITCHER.
 
 
--- 
-Who you jivin' with that Cosmik Debris?
+So IMHO, the additional #ifdef CONFIG_BL_SWITCHER in
+drivers/base/arch_topology.c it's a small price to pay.
+
+Are there still any users of CONFIG_BL_SWITCHER? I guess it's only
+limited to A15/A7 systems w/ vexpress-spc-cpufreq.c ... so probably only
+TC2?
