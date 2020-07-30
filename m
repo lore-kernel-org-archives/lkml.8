@@ -2,111 +2,137 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80210C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDF6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5331B2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:39:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="J1OtPUmE"
+	by mail.kernel.org (Postfix) with ESMTP id CE3E120838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:40:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730425AbgG3Wjf (ORCPT
+        id S1730432AbgG3Wkh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 18:39:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728607AbgG3Wjf (ORCPT
+        Thu, 30 Jul 2020 18:40:37 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:34627 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729995AbgG3Wkg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 18:39:35 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C3E1C061574;
-        Thu, 30 Jul 2020 15:39:34 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BHlhd5RX7z9s1x;
-        Fri, 31 Jul 2020 08:39:29 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596148771;
-        bh=gdN6/RiIeAEmqzsDtkQE792bclCZDlFCE+lgbehyMWs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=J1OtPUmE8FsW4yKUQfeLr+QYLXD4YtnNUk9ORnhmyREdNkTsC8+hAeVKFB9SdDVrW
-         IiWpQzThgcl+FHyxiQ2UMLswbDpcuyHtEFxYcojWWJ6bd5MTO2QLyn1r08iW87hfoV
-         lY4oiZK8BBG0S3Tw1nbej9Z07bU1nbN7UBV87BcrYnU01rkGiZIBLBf3lWVL9qmP5R
-         My+C0b6zFDbmV/7ouWfy8LPD8KDJvTFtuIdvzaFg3mwlJhiRnXlVCmD8BIkU08COTC
-         x0HfC6HwGyoinbvMu8LsV5A6y6OeEnz/Lp5Rj9o1Gev+GoCk704CwTpTRoomRvsuOH
-         YY2c8fwwiC66Q==
-Date:   Fri, 31 Jul 2020 08:39:28 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: linux-next: build warning after merge of the mips tree
-Message-ID: <20200731083928.47bc96f0@canb.auug.org.au>
-In-Reply-To: <e8757bd7-e6e6-5181-ef52-7dca0a114360@flygoat.com>
-References: <20200729203142.18248463@canb.auug.org.au>
-        <f2a9f50d-5299-04f8-146b-e09df8943367@flygoat.com>
-        <20200730114023.60317d30@canb.auug.org.au>
-        <e8757bd7-e6e6-5181-ef52-7dca0a114360@flygoat.com>
+        Thu, 30 Jul 2020 18:40:36 -0400
+Received: from sogo13.sd4.0x35.net (sogo13.sd4.0x35.net [10.200.201.63])
+        (Authenticated sender: kerneldev@karsmulder.nl)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPA id 47FBBE0004;
+        Thu, 30 Jul 2020 22:40:29 +0000 (UTC)
+From:   "Kars Mulder" <kerneldev@karsmulder.nl>
+In-Reply-To: <1ee1-5f234c00-f3-165a6440@234394593>
+Content-Type: text/plain; charset="utf-8"
+X-Forward: 127.0.0.1
+Date:   Fri, 31 Jul 2020 00:40:29 +0200
+Cc:     "Eldad Zack" <eldad@fogrefinery.com>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>,
+        "Geert Uytterhoeven" <geert+renesas@glider.be>,
+        "Mans Rullgard" <mans@mansr.com>, "Petr Mladek" <pmladek@suse.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>
+To:     linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/9mg_JBgOLSFITTzhywmBXn=";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Message-ID: <29b9-5f234c80-13-4e3aa200@244003027>
+Subject: =?utf-8?q?=5BPATCH?==?utf-8?q?_2=2F2=5D?==?utf-8?q?_kstrto*=3A?= do not 
+ describe =?utf-8?q?simple=5Fstrto*=28=29?= as 
+ =?utf-8?q?obsolete=2Freplaced?=
+User-Agent: SOGoMail 4.3.2
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/9mg_JBgOLSFITTzhywmBXn=
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+The documentation of the kstrto*() functions describes kstrto*() as
+"replacements" of the "obsolete" simple_strto*() functions. Both of
+these terms are inaccurate: they're not replacements because they have
+different behaviour, and the simple_strto*() are not obsolete because
+there are cases where they have benefits over kstrto*().
 
-Hi all,
+Remove usage of the terms "replacement" and "obsolete" in reference
+to simple_strto*(), and instead use the term "preferred over".
 
-On Thu, 30 Jul 2020 09:56:59 +0800 Jiaxun Yang <jiaxun.yang@flygoat.com> wr=
-ote:
->
-> =E5=9C=A8 2020/7/30 =E4=B8=8A=E5=8D=889:40, Stephen Rothwell =E5=86=99=E9=
-=81=93:
-> >
-> > On Thu, 30 Jul 2020 09:04:40 +0800 Jiaxun Yang <jiaxun.yang@flygoat.com=
-> wrote: =20
-> >> Btw: Neither James nor Ralf is still active at Linux-MIPS. =20
-> > Interesting.  I have just them listed as my contacts for MIPS.  Should
-> > I change to just Thomes (Thomas Bogendoerfer
-> > <tsbogend@alpha.franken.de>)? =20
->=20
-> Yes, Thomas is now the sole maintainer of Linux-MIPS.
+Fixes: 4c925d6031f71 ("kstrto*: add documentation")
+Fixes: 885e68e8b7b13 ("kernel.h: update comment about simple_strto<foo>() functions")
+Signed-off-by: Kars Mulder <kerneldev@karsmulder.nl>
 
-OK, done.
+---
+ include/linux/kernel.h |  4 ++--
+ lib/kstrtox.c          | 12 ++++--------
+ 2 files changed, 6 insertions(+), 10 deletions(-)
 
---=20
-Cheers,
-Stephen Rothwell
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 2d6050f12c64..35fd7e0e3f04 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -346,7 +346,7 @@ int __must_check kstrtoll(const char *s, unsigned int base, long long *res);
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the simple_strtoul(). Return code must be checked.
++ * Preferred over simple_strtoul(). Return code must be checked.
+ */
+ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsigned long *res)
+ {
+@@ -374,7 +374,7 @@ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsign
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the simple_strtol(). Return code must be checked.
++ * Preferred over simple_strtol(). Return code must be checked.
+  */
+ static inline int __must_check kstrtol(const char *s, unsigned int base, long *res)
+ {
+diff --git a/lib/kstrtox.c b/lib/kstrtox.c
+index 252ac414ba9a..a14ccf905055 100644
+--- a/lib/kstrtox.c
++++ b/lib/kstrtox.c
+@@ -115,8 +115,7 @@ static int _kstrtoull(const char *s, unsigned int base, unsigned long long *res)
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtoull(). Return code must
+- * be checked.
++ * Preferred over simple_strtoull(). Return code must be checked.
+  */
+ int kstrtoull(const char *s, unsigned int base, unsigned long long *res)
+ {
+@@ -139,8 +138,7 @@ EXPORT_SYMBOL(kstrtoull);
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtoll(). Return code must
+- * be checked.
++ * Preferred over simple_strtoll(). Return code must be checked.
+  */
+ int kstrtoll(const char *s, unsigned int base, long long *res)
+ {
+@@ -211,8 +209,7 @@ EXPORT_SYMBOL(_kstrtol);
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtoul(). Return code must
+- * be checked.
++ * Preferred over simple_strtoul(). Return code must be checked.
+  */
+ int kstrtouint(const char *s, unsigned int base, unsigned int *res)
+ {
+@@ -242,8 +239,7 @@ EXPORT_SYMBOL(kstrtouint);
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtol(). Return code must
+- * be checked.
++ * Preferred over simple_strtol(). Return code must be checked.
+  */
+ int kstrtoint(const char *s, unsigned int base, int *res)
+ {
+-- 
+2.28.0
 
---Sig_/9mg_JBgOLSFITTzhywmBXn=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8jTCAACgkQAVBC80lX
-0GxDwgf/QvgHksnzySB0BK/amC8jm+MhAsS2E0D/7HExoGDdoxt4sLDimbODdrFY
-KYYCdB7nZS4bKiiwDSErUBCyg3qkC5V9hWIFmjRRfhcXlSHSoAXmbkThDBhuFxqD
-MEw55qE3PKcaFEowW+p4IRQlGMqEi1cchZgaDbsxGyu7dHVSVwsbX9oRmfDktWBD
-okPmME5YPNrIvKa0HD4lxI8sjbo7nuk8SVo7FVwl+Wx0II/DuOOS9WqtlV7+lkBh
-d+HevsQ+JcUSAmP+PyZ0ZOIZU8Ep/wq1jTFZiidii85kFZvCeQHKIadEOB8F/5HN
-Abl10wKlsP4rN8Go0+4ej6PGt3rhrQ==
-=UtbL
------END PGP SIGNATURE-----
-
---Sig_/9mg_JBgOLSFITTzhywmBXn=--
