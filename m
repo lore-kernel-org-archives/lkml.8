@@ -2,120 +2,85 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D30C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A1CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B968A20809
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:18:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596097098;
-	bh=vaM/NckY/1bulk+3pEPHiNnLx88iOZqkYgq2IUR8Qtw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iDprsNULbiBU0QNWc46kNp0wHmpY9tZlThTyglstl5sQjk3+c19TelUlihNSkbY+5
-	 TtHvOS+1mql8AKsN4A38fVMhSg6MsuqrHmbNWRG0QFMl1QlHa7m7sFgNvs/SbtLsWU
-	 wsLDTTIKpKO8ZHytlJy81UChVvOSs3lBzfj9OXT0=
+	by mail.kernel.org (Postfix) with ESMTP id 1FEFE20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730244AbgG3ISR (ORCPT
+        id S1730307AbgG3IST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:18:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47338 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:18:19 -0400
+Received: from mga09.intel.com ([134.134.136.24]:14344 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729645AbgG3IIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:08:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEBBD20838;
-        Thu, 30 Jul 2020 08:08:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096535;
-        bh=vaM/NckY/1bulk+3pEPHiNnLx88iOZqkYgq2IUR8Qtw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DgaIFX/mZqdqKYX9PHUndMMnl5aijhKwZkrEO9gRmgRGhvA6ONqujPrdq16e89jMo
-         h+lmmY6hlEO5Rozj2LFHsYOITlVTzfPLGKVccksakrdqFU+m6mKHSasBvUO8d809gF
-         JELTuGxjdj9ilOpORlwojgcURwqzcGZA3EdZsjdI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leonid Ravich <Leonid.Ravich@emc.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 25/61] dmaengine: ioat setting ioat timeout as module parameter
-Date:   Thu, 30 Jul 2020 10:04:43 +0200
-Message-Id: <20200730074422.065269654@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200730074420.811058810@linuxfoundation.org>
-References: <20200730074420.811058810@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1729659AbgG3ISP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:18:15 -0400
+IronPort-SDR: BzMvT3YhdkYHk1AKiUiuqFskRZ4rXaAA6JFh1HDB591uZSeaiePBZAJbIgK+KYNiEOwdwIAbGt
+ 7bcSI8pN5K5g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="152784348"
+X-IronPort-AV: E=Sophos;i="5.75,413,1589266800"; 
+   d="scan'208";a="152784348"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 01:18:13 -0700
+IronPort-SDR: jaZKtJOdnhQfRkuwu/E9Qg3bLhMxpMW0GMvfkwl0ukZT/0OihGCwGi03VLxU4UV62TFSE26MZQ
+ dXEpFnkQKRtw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,413,1589266800"; 
+   d="scan'208";a="272863409"
+Received: from brentlu-desk0.itwn.intel.com ([10.5.253.11])
+  by fmsmga007.fm.intel.com with ESMTP; 30 Jul 2020 01:18:07 -0700
+From:   Brent Lu <brent.lu@intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Brent Lu <brent.lu@intel.com>, linux-kernel@vger.kernel.org,
+        Daniel Stuart <daniel.stuart14@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Sam McNally <sammc@chromium.org>,
+        Damian van Soelen <dj.vsoelen@gmail.com>
+Subject: [PATCH v2 0/2] Add period size constraint for Atom Chromebook
+Date:   Thu, 30 Jul 2020 16:13:33 +0800
+Message-Id: <1596096815-32043-1-git-send-email-brent.lu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonid Ravich <Leonid.Ravich@emc.com>
+Two different constraints are implemented: one is in platform's CPU
+DAI to enforce period sizes which are already used in Android BSP. The
+other is in Atom Chromebook's machine driver to use 240 as period size.
 
-[ Upstream commit 87730ccbddcb48478b1b88e88b14e73424130764 ]
+Changes since v1:
+-Add comma at the end of media_period_size array declaration.
 
-DMA transaction time to completion is a function of PCI bandwidth,
-transaction size and a queue depth.  So hard coded value for timeouts
-might be wrong for some scenarios.
+Brent Lu (1):
+  ASoC: intel: atom: Add period size constraint
 
-Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Link: https://lore.kernel.org/r/20200701184816.29138-1-leonid.ravich@dell.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/dma/ioat/dma.c | 12 ++++++++++++
- drivers/dma/ioat/dma.h |  2 --
- 2 files changed, 12 insertions(+), 2 deletions(-)
+Yu-Hsuan Hsu (1):
+  ASoC: Intel: Add period size constraint on strago board
 
-diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
-index 1389f0582e29b..c5a45c57b8b8d 100644
---- a/drivers/dma/ioat/dma.c
-+++ b/drivers/dma/ioat/dma.c
-@@ -38,6 +38,18 @@
- 
- #include "../dmaengine.h"
- 
-+int completion_timeout = 200;
-+module_param(completion_timeout, int, 0644);
-+MODULE_PARM_DESC(completion_timeout,
-+		"set ioat completion timeout [msec] (default 200 [msec])");
-+int idle_timeout = 2000;
-+module_param(idle_timeout, int, 0644);
-+MODULE_PARM_DESC(idle_timeout,
-+		"set ioat idel timeout [msec] (default 2000 [msec])");
-+
-+#define IDLE_TIMEOUT msecs_to_jiffies(idle_timeout)
-+#define COMPLETION_TIMEOUT msecs_to_jiffies(completion_timeout)
-+
- static char *chanerr_str[] = {
- 	"DMA Transfer Destination Address Error",
- 	"Next Descriptor Address Error",
-diff --git a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h
-index a9bc1a15b0d16..b0152288983bc 100644
---- a/drivers/dma/ioat/dma.h
-+++ b/drivers/dma/ioat/dma.h
-@@ -111,8 +111,6 @@ struct ioatdma_chan {
- 	#define IOAT_RUN 5
- 	#define IOAT_CHAN_ACTIVE 6
- 	struct timer_list timer;
--	#define COMPLETION_TIMEOUT msecs_to_jiffies(100)
--	#define IDLE_TIMEOUT msecs_to_jiffies(2000)
- 	#define RESET_DELAY msecs_to_jiffies(100)
- 	struct ioatdma_device *ioat_dma;
- 	dma_addr_t completion_dma;
+ sound/soc/intel/atom/sst-mfld-platform-pcm.c | 15 +++++++++++++++
+ sound/soc/intel/boards/cht_bsw_max98090_ti.c | 14 +++++++++++++-
+ sound/soc/intel/boards/cht_bsw_rt5645.c      | 14 +++++++++++++-
+ 3 files changed, 41 insertions(+), 2 deletions(-)
+
 -- 
-2.25.1
-
-
+2.7.4
 
