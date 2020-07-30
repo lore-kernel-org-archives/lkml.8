@@ -2,133 +2,196 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15262C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23516C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E63BC207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E78207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:31:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="RSGrhsL+"
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="mcx6Rx5s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbgG3B1w (ORCPT
+        id S1728119AbgG3BbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 21:27:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48220 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgG3B1w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 21:27:52 -0400
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (mail-co1nam04on0608.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe4d::608])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC5E7C061794;
-        Wed, 29 Jul 2020 18:27:51 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U/2zz/tD+N2zdClQuxTZfdlhG+0OYpPmTf70AJk7JaUOBpRjAt8w4p89Yr1Rfz0LO6zbbUWg5wuQWgS+EscaQAZWJNkKrWgU/P2G8tn3wSuVGo4OCBf81qaYakXOm/+5z2vQiOOa14FzzEAAGG+A5yEgfxzSHakJhdLrtqxx/1P9QeKKRJOnKBAlRj4GJ85Til5wJWNXRQhDVoEuoddj455S4XFliSZ53C94k3TlcGQv2iVtEASQtchgf4qlv5tWCUKWHwlULVnFE07ycjJkc1H0Ms9GUdRqcEW2Xrx/6CxLk8V0YvB2EFaJxBgFuif+9ycY4wakz3xp0ff1jQun2A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FY9urDxZEPkBEGifrGZgd9rDpxIIqaBlpfqrZQR+/ps=;
- b=RCDE+MOjYw+G1h9lNrYiv1m5u0JKz0vlK5/bSgNOtQJ5JEQUWE67BTbgUNcHrWkFljsBOby7W8fJCL45CU6FhgSkD74/evVqLy/XpnRfM5nd5bjOVn1R/lQuo4B8ArwqJ2OZkVrnp/38Uz7hkABL9/dF5sapT9NCHBV0MdKJAHwns2zGTtDdbwxjnuP7sYnPRpHR9LAuYpP6XJ+PhenlRaBQuRotCeHV4zmWWRLZfhdWeoPXh78Me2CS5LGGhHrGz8oHfMIK08QFZpEO+s2T02P7iQhmBxJ6CbXzwsNEbMx9rlL8uYdaI00ICajh0SW2+2UHfaNvAorqwaUorvtaPg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FY9urDxZEPkBEGifrGZgd9rDpxIIqaBlpfqrZQR+/ps=;
- b=RSGrhsL+b/bPICtRujuO79q6OJn50kNRcQrjaVcO0admlT+GouVHhcVG9d3CN6yUGdWZE7HjfNIdm0LevoalmwRmigQH0BvdifdKffOq8uV1OXpTdUJRJgzjQ0/2vJVSOnwHt1ps+a4PoANJXmaeL2W1pa8657fcSrHFbarLQfw=
-Received: from BY5PR05MB7191.namprd05.prod.outlook.com (2603:10b6:a03:1d9::14)
- by SJ0PR05MB7280.namprd05.prod.outlook.com (2603:10b6:a03:288::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.9; Thu, 30 Jul
- 2020 01:27:49 +0000
-Received: from BY5PR05MB7191.namprd05.prod.outlook.com
- ([fe80::7d2f:b4c0:5bd9:f6af]) by BY5PR05MB7191.namprd05.prod.outlook.com
- ([fe80::7d2f:b4c0:5bd9:f6af%9]) with mapi id 15.20.3239.018; Thu, 30 Jul 2020
- 01:27:49 +0000
-From:   Mike Stunes <mstunes@vmware.com>
-To:     Joerg Roedel <joro@8bytes.org>
-CC:     "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <jroedel@suse.de>,
-        "hpa@zytor.com" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
+        Wed, 29 Jul 2020 21:31:10 -0400
+Received: from mx1.riseup.net ([198.252.153.129]:52776 "EHLO mx1.riseup.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726194AbgG3BbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 21:31:10 -0400
+Received: from capuchin.riseup.net (capuchin-pn.riseup.net [10.0.1.176])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "*.riseup.net", Issuer "Sectigo RSA Domain Validation Secure Server CA" (not verified))
+        by mx1.riseup.net (Postfix) with ESMTPS id 4BHCY84wkyzFf0J;
+        Wed, 29 Jul 2020 18:31:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+        t=1596072668; bh=aUisLHgt6JsY1GKX1kNHTO+GIzCjTF9ZNIDBeF3Ng1c=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=mcx6Rx5sIvR+Mz8ZWWO7PSOshswXZaF93E9hH1w+NlyYTbDo/g3ZtE2XdjhYfRO95
+         iJrA8xInIu0JMhSPfHUX6sJ0apCVvCPiDWiTPKnWc+BNNF0Tp3S6lhbO15DCMNdNfx
+         tX5WIlfMrKLCxFfOq6Fs4CryHm92IM/clqGeg1xo=
+X-Riseup-User-ID: 1FA0CC4141DEFDA066FBB3DC5B0B40BC23C0B84848AF0AEF793354A9C2D3F5BB
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+         by capuchin.riseup.net (Postfix) with ESMTPSA id 4BHCY771Grz8tJg;
+        Wed, 29 Jul 2020 18:31:07 -0700 (PDT)
+From:   Francisco Jerez <currojerez@riseup.net>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>
+Cc:     Linux Documentation <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>
-Subject: Re: [PATCH v5 00/75] x86: SEV-ES Guest Support
-Thread-Topic: [PATCH v5 00/75] x86: SEV-ES Guest Support
-Thread-Index: AQHWYdQMsnCBwIAXv0SX/F24aOvyxqkfXZuA
-Date:   Thu, 30 Jul 2020 01:27:48 +0000
-Message-ID: <B65392F4-FD42-4AA3-8AA8-6C0C0D1FF007@vmware.com>
-References: <20200724160336.5435-1-joro@8bytes.org>
-In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3608.120.23.2.1)
-authentication-results: 8bytes.org; dkim=none (message not signed)
- header.d=none;8bytes.org; dmarc=none action=none header.from=vmware.com;
-x-originating-ip: [2601:600:9e7f:eac1:21a1:5a0:da53:d63e]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9c9e819b-608a-4f51-c72f-08d83427c540
-x-ms-traffictypediagnostic: SJ0PR05MB7280:
-x-microsoft-antispam-prvs: <SJ0PR05MB728092D2A62234E5B8259837C8710@SJ0PR05MB7280.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1265;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6Za47x9ckP5i4amtlyaaNrTv45actS2jmXbocq1QmOHViSHyz8fteKPUQURD3zZgTQ4BCsGY9LudkPH8CTC1aQULwqj9jw2uzh5uMo2U/UPrWCr3GrdzEGEZxoJQ9ce20MOMmeGQ4u3hAhPhOnRkwdrHuIDoBwaToGXzBH1nhZgUuTHcRbw02PkyqcnsTkepQP1qymSGsnAxsArtLbopaSbS+DImWieFaDfePr+DTO72tYlB40Do7H2PRF499knU76Xwd0d8jLVWMZ719um9GosaH/8LgGD+howiyQIlVQcY95ybEPmDmYIHFco/Frh2
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR05MB7191.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(136003)(346002)(376002)(39860400002)(4744005)(64756008)(6512007)(36756003)(66556008)(66476007)(66446008)(83380400001)(478600001)(316002)(76116006)(2616005)(2906002)(7416002)(66946007)(5660300002)(86362001)(53546011)(6506007)(8936002)(71200400001)(186003)(4326008)(6916009)(6486002)(33656002)(54906003)(8676002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: /2C99xzWeF/KU9StAZywfFM1iFjff2Gg9yMD0zgouSFQ2EDyGsvmPkXKwG8Tt2sJ5WKawOUR54IzbOtd3uRKFwRtfbCHQMMt8wHelKIjC+e10LbGWjoVeh/vefFCSoKywm6aaVgIp9WibUMoLgJlCz/8xNyBYA+TINceDvI43H+h5r2p6+BsjBXdvR/mDwXMKJGkRnQktfH1FcmyB+wQgNjKi1xeEcCf8p4yBtaGME4Eq8JVgabui8pAUK1VXrfD6NGDu7porChXESwf+xdMFmt7ZYIXsGN+VMdhCPRUWgYBECJmuuZ+q8VsjoufItCyskvQ7EC/FNV2sIHMYuFemhwos6LCu5DYZHAn+4KLNw8Z1yUdCyrcR6JKAxPZKhFQd/jp9jJI7ar5MA75DnOzxHHAKmOb4idl99Xe9ePeKIy3I5axfOzDY9Ny1vYCChyfzf4IChiL3kkV08Lrhtofiju272MZ5WPWBlX8EoDhP1RG8WwqRakBR4WvWmLHT2aw2wMqidibl80XDwP45vuB/cpAUz+H3qbnPHhYpHH6I7Ieytls3C7HwFqeE1ySJ4njLD1Oev/xqjTVMy+GqcLVi8E9kmheZhVD8vJ3mUIQXFTu51fGIMQ6D525ridco8pHkAGLYXA+FeMUWfSvGiVdrmmV3DUcAEuyMwDqkj+rG97UdjqlmNwcdmy0TVl2efvd4vvDV7BO1dgOfnt30l8cbQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2D0CF3C099AEF64099DB28E05D9218F9@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Doug Smythies <dsmythies@telus.net>
+Subject: Re: [PATCH v4 1/2] cpufreq: intel_pstate: Rearrange the storing of new EPP values
+In-Reply-To: <1665283.zxI7kaGBi8@kreacher>
+References: <4981405.3kqTVLv5tO@kreacher> <1709487.Bxjb1zNRZM@kreacher> <13207937.r2GEYrEf4f@kreacher> <1665283.zxI7kaGBi8@kreacher>
+Date:   Wed, 29 Jul 2020 18:31:07 -0700
+Message-ID: <87wo2leqlg.fsf@riseup.net>
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR05MB7191.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c9e819b-608a-4f51-c72f-08d83427c540
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2020 01:27:48.7215
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: l9PYQ3s2UDKScP7L4LI0A5d5ziYkxp5eZfgK003NlXttufywRKYF0fCpMO1758n48/SNmrxxJKkBvXe1i5kq/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR05MB7280
+Content-Type: multipart/signed; boundary="==-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSm9lcmcsDQoNCj4gT24gSnVsIDI0LCAyMDIwLCBhdCA5OjAyIEFNLCBKb2VyZyBSb2VkZWwg
-PGpvcm9AOGJ5dGVzLm9yZz4gd3JvdGU6DQo+IA0KPiBGcm9tOiBKb2VyZyBSb2VkZWwgPGpyb2Vk
-ZWxAc3VzZS5kZT4NCj4gDQo+IEhpLA0KPiANCj4gaGVyZSBpcyBhIHJlYmFzZWQgdmVyc2lvbiBv
-ZiB0aGUgbGF0ZXN0IFNFVi1FUyBwYXRjaGVzLiBUaGV5IGFyZSBub3cNCj4gYmFzZWQgb24gbGF0
-ZXN0IHRpcC9tYXN0ZXIgaW5zdGVhZCBvZiB1cHN0cmVhbSBMaW51eCBhbmQgaW5jbHVkZSB0aGUN
-Cj4gbmVjZXNzYXJ5IGNoYW5nZXMuDQoNClRoYW5rcyBmb3IgdGhlIHVwZGF0ZWQgcGF0Y2hlcyEg
-SSBhcHBsaWVkIHRoaXMgcGF0Y2gtc2V0IG9udG8gY29tbWl0DQowMTYzNGYyYmQ0MmUgKCJNZXJn
-ZSBicmFuY2ggJ3g4Ni91cmdlbnTigJnigJ0pIGZyb20geW91ciB0cmVlLiBJdCBib290cywNCmJ1
-dCBDUFUgMSAob24gYSB0d28tQ1BVIFZNKSBpcyBvZmZsaW5lIGF0IGJvb3QsIGFuZCBgY2hjcHUg
-LWUgMWAgcmV0dXJuczoNCg0KY2hjcHU6IENQVSAxIGVuYWJsZSBmYWlsZWQ6IElucHV0L291dHB1
-dCBlcnJvcg0KDQp3aXRoIG5vdGhpbmcgaW4gZG1lc2cgdG8gaW5kaWNhdGUgd2h5IGl0IGZhaWxl
-ZC4gVGhlIGZpcnN0IHRoaW5nIEkgdGhvdWdodA0Kb2Ygd2FzIGFueXRoaW5nIHJlbGF0aW5nIHRv
-IHRoZSBBUCBqdW1wIHRhYmxlLCBidXQgSSBoYXZlbuKAmXQgY2hhbmdlZA0KYW55dGhpbmcgdGhl
-cmUgb24gdGhlIGh5cGVydmlzb3Igc2lkZS4gTGV0IG1lIGtub3cgd2hhdCBvdGhlciBkYXRhIEkg
-Y2FuDQpwcm92aWRlIGZvciB5b3UuDQoNCk1pa2U=
+--==-=-=
+Content-Type: multipart/mixed; boundary="=-=-="
+
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+"Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
+
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Move the locking away from intel_pstate_set_energy_pref_index()
+> into its only caller and drop the (now redundant) return_pref label
+> from it.
+>
+> Also move the "raw" EPP value check into the caller of that function,
+> so as to do it before acquiring the mutex, and reduce code duplication
+> related to the "raw" EPP values processing somewhat.
+>
+> No intentional functional impact.
+>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+Reviewed-by: Francisco Jerez <currojerez@riseup.net>
+
+> ---
+>
+> v2 -> v3:
+>
+>    * Fix error handling in intel_pstate_set_energy_pref_index() and
+>      rebase.
+>
+> v3 -> v4: No changes
+>
+> ---
+>  drivers/cpufreq/intel_pstate.c |   35 +++++++++++++++--------------------
+>  1 file changed, 15 insertions(+), 20 deletions(-)
+>
+> Index: linux-pm/drivers/cpufreq/intel_pstate.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux-pm.orig/drivers/cpufreq/intel_pstate.c
+> +++ linux-pm/drivers/cpufreq/intel_pstate.c
+> @@ -649,28 +649,18 @@ static int intel_pstate_set_energy_pref_
+>  	if (!pref_index)
+>  		epp =3D cpu_data->epp_default;
+>=20=20
+> -	mutex_lock(&intel_pstate_limits_lock);
+> -
+>  	if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
+>  		u64 value;
+>=20=20
+>  		ret =3D rdmsrl_on_cpu(cpu_data->cpu, MSR_HWP_REQUEST, &value);
+>  		if (ret)
+> -			goto return_pref;
+> +			return ret;
+>=20=20
+>  		value &=3D ~GENMASK_ULL(31, 24);
+>=20=20
+> -		if (use_raw) {
+> -			if (raw_epp > 255) {
+> -				ret =3D -EINVAL;
+> -				goto return_pref;
+> -			}
+> -			value |=3D (u64)raw_epp << 24;
+> -			ret =3D wrmsrl_on_cpu(cpu_data->cpu, MSR_HWP_REQUEST, value);
+> -			goto return_pref;
+> -		}
+> -
+> -		if (epp =3D=3D -EINVAL)
+> +		if (use_raw)
+> +			epp =3D raw_epp;
+> +		else if (epp =3D=3D -EINVAL)
+>  			epp =3D epp_values[pref_index - 1];
+>=20=20
+>  		value |=3D (u64)epp << 24;
+> @@ -680,8 +670,6 @@ static int intel_pstate_set_energy_pref_
+>  			epp =3D (pref_index - 1) << 2;
+>  		ret =3D intel_pstate_set_epb(cpu_data->cpu, epp);
+>  	}
+> -return_pref:
+> -	mutex_unlock(&intel_pstate_limits_lock);
+>=20=20
+>  	return ret;
+>  }
+> @@ -708,8 +696,8 @@ static ssize_t store_energy_performance_
+>  	struct cpudata *cpu_data =3D all_cpu_data[policy->cpu];
+>  	char str_preference[21];
+>  	bool raw =3D false;
+> +	ssize_t ret;
+>  	u32 epp =3D 0;
+> -	int ret;
+>=20=20
+>  	ret =3D sscanf(buf, "%20s", str_preference);
+>  	if (ret !=3D 1)
+> @@ -724,14 +712,21 @@ static ssize_t store_energy_performance_
+>  		if (ret)
+>  			return ret;
+>=20=20
+> +		if (epp > 255)
+> +			return -EINVAL;
+> +
+>  		raw =3D true;
+>  	}
+>=20=20
+> +	mutex_lock(&intel_pstate_limits_lock);
+> +
+>  	ret =3D intel_pstate_set_energy_pref_index(cpu_data, ret, raw, epp);
+> -	if (ret)
+> -		return ret;
+> +	if (!ret)
+> +		ret =3D count;
+>=20=20
+> -	return count;
+> +	mutex_unlock(&intel_pstate_limits_lock);
+> +
+> +	return ret;
+>  }
+>=20=20
+>  static ssize_t show_energy_performance_preference(
+
+--=-=-=--
+
+--==-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEAREIAB0WIQST8OekYz69PM20/4aDmTidfVK/WwUCXyIi2wAKCRCDmTidfVK/
+W+bIAP9VI6QX7g2roqBKi/zof0Rfvrs5n3eeDvhO33ZmdO88nwEAjpv6+ZAvh6pk
+rKhiSm3lspzJ3ly69OUe1/IEeWcze5c=
+=ElU5
+-----END PGP SIGNATURE-----
+--==-=-=--
