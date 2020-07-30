@@ -2,241 +2,199 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C02A420842
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3DB120842
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:07:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G7RjaGf3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbgG3OHO (ORCPT
+        id S1729280AbgG3OH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 10:07:14 -0400
-Received: from relay.sw.ru ([185.231.240.75]:60808 "EHLO relay3.sw.ru"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726581AbgG3OHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 10:07:14 -0400
-Received: from [192.168.15.64]
-        by relay3.sw.ru with esmtp (Exim 4.93)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1k19Cu-00048F-94; Thu, 30 Jul 2020 17:06:52 +0300
-Subject: Re: [PATCH 01/23] ns: Add common refcount into ns_common add use it
- as counter for net_ns
-To:     Christian Brauner <christian.brauner@ubuntu.com>,
-        akpm@linux-foundation.org
-Cc:     viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
-        ebiederm@xmission.com, areber@redhat.com, serge@hallyn.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
- <159611036589.535980.1765795847221907147.stgit@localhost.localdomain>
- <20200730133526.4lhkmlamgxjdssip@wittgenstein>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <7d30f8ec-d0b7-3bae-942f-49e2f8f233e9@virtuozzo.com>
-Date:   Thu, 30 Jul 2020 17:07:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 10:07:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726581AbgG3OHZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 10:07:25 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C5D3C06174A
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 07:07:25 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g8so5841815wmk.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 07:07:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0IG2zqVou670EWuwadK3PaDAiaWJXT9eJnNO0hKRQcg=;
+        b=G7RjaGf3J5CCo8vM8HMRtajN/iiNGY2U1F1f2BZlJxc10UVkbr2bLHA3vG+tTGStzn
+         p463ti/KHK7xTLnztqX8o95TxWeOzy+ohCBdR3YijMDerbdhwHEG70GrTGS4btlGhG+b
+         dsBY3LCXNRWe/3FPV0UX9620GxqXokpiCjWek=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0IG2zqVou670EWuwadK3PaDAiaWJXT9eJnNO0hKRQcg=;
+        b=EQD70PSSbKf7Uy5hJd3hBQjhGghdHTH7WPi9LmIW/zCl/cN0+XbPKHNHJd0OOBB++y
+         WKu4uaOr9MeL+TZDVpFaydK6jIaLzK+qZt97mgNAq5KtskN5gOcce+nl34Z1kK/crPIr
+         rmGYac8y3t/EOTiY/1tgVwNsdPrSqhhpSupF2kbwbaxMSEAL9tI6+N5eRTZ2y3qw1bbk
+         lZb2Kn7qUzkVu6HgEOYmPFqMIxhdZbwSgLMl5bXNG/j1dnHqtHhnphqiud14LxhvyIvN
+         9inzGN5daL7vENzJfXVnTlL6VZrMqlBbhA3vOBbhvd2BHFBPafjzesrxheQMz5tTr7Jx
+         VviQ==
+X-Gm-Message-State: AOAM533Vg6iEdEQlXeYWCDsQU2mfBFhidJltbjlEfc9XJNfM4X72lV8D
+        uH9DB9Lkg3XsHBHbgyMm0tkk5FN9iuPllw==
+X-Google-Smtp-Source: ABdhPJwXfklCgZpLWouF+DqIAqMNvZb4ArNbbyzJKlUdu1nEuKDDnGRl3jsnJfVW77Uw2d5LottwXg==
+X-Received: by 2002:a1c:1f85:: with SMTP id f127mr14439545wmf.154.1596118042428;
+        Thu, 30 Jul 2020 07:07:22 -0700 (PDT)
+Received: from kpsingh.zrh.corp.google.com ([81.6.44.51])
+        by smtp.gmail.com with ESMTPSA id a10sm19088599wmd.3.2020.07.30.07.07.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 07:07:21 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>
+Subject: [PATCH bpf-next v7 0/7] Generalizing bpf_local_storage
+Date:   Thu, 30 Jul 2020 16:07:09 +0200
+Message-Id: <20200730140716.404558-1-kpsingh@chromium.org>
+X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
 MIME-Version: 1.0
-In-Reply-To: <20200730133526.4lhkmlamgxjdssip@wittgenstein>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.07.2020 16:35, Christian Brauner wrote:
-> On Thu, Jul 30, 2020 at 02:59:25PM +0300, Kirill Tkhai wrote:
->> Currently, every type of namespaces has its own counter,
->> which is stored in ns-specific part. Say, @net has
->> struct net::count, @pid has struct pid_namespace::kref, etc.
->>
->> This patchset introduces unified counter for all types
->> of namespaces, and converts net namespace to use it first.
->>
->> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
->> ---
-> 
-> Any reason the refcount changes need to be tied to the procfs changes?
-> Seems that should be a separate cleanup patchset which we can take
-> independent of procfs changes.
+From: KP Singh <kpsingh@google.com>
 
-Yes, patches [1-8] are cleanup, it may go separately. 
 
-For me there is no a problem to resend them also as a separate patchset,
-say at v2, or if there is a change in 1-8, but I'm afraid to bomb mailboxes.
+# v6 -> v7
 
-If there is no a request for rework in 1-8, can they be picked directly from here?
+- Updated the series to use Martin's POC patch:
 
->>  include/linux/ns_common.h     |    1 +
->>  include/net/net_namespace.h   |   11 ++++-------
->>  net/core/net-sysfs.c          |    6 +++---
->>  net/core/net_namespace.c      |    6 +++---
->>  net/ipv4/inet_timewait_sock.c |    4 ++--
->>  net/ipv4/tcp_metrics.c        |    2 +-
->>  6 files changed, 14 insertions(+), 16 deletions(-)
->>
->> diff --git a/include/linux/ns_common.h b/include/linux/ns_common.h
->> index 5fbc4000358f..27db02ebdf36 100644
->> --- a/include/linux/ns_common.h
->> +++ b/include/linux/ns_common.h
->> @@ -8,6 +8,7 @@ struct ns_common {
->>  	atomic_long_t stashed;
->>  	const struct proc_ns_operations *ops;
->>  	unsigned int inum;
->> +	refcount_t count;
->>  };
->>  
->>  #endif
->> diff --git a/include/net/net_namespace.h b/include/net/net_namespace.h
->> index 2ee5901bec7a..cb4b33d7834b 100644
->> --- a/include/net/net_namespace.h
->> +++ b/include/net/net_namespace.h
->> @@ -60,9 +60,6 @@ struct net {
->>  	refcount_t		passive;	/* To decide when the network
->>  						 * namespace should be freed.
->>  						 */
->> -	refcount_t		count;		/* To decided when the network
->> -						 *  namespace should be shut down.
->> -						 */
->>  	spinlock_t		rules_mod_lock;
->>  
->>  	unsigned int		dev_unreg_count;
->> @@ -245,7 +242,7 @@ void __put_net(struct net *net);
->>  
->>  static inline struct net *get_net(struct net *net)
->>  {
->> -	refcount_inc(&net->count);
->> +	refcount_inc(&net->ns.count);
->>  	return net;
->>  }
->>  
->> @@ -256,14 +253,14 @@ static inline struct net *maybe_get_net(struct net *net)
->>  	 * exists.  If the reference count is zero this
->>  	 * function fails and returns NULL.
->>  	 */
->> -	if (!refcount_inc_not_zero(&net->count))
->> +	if (!refcount_inc_not_zero(&net->ns.count))
->>  		net = NULL;
->>  	return net;
->>  }
->>  
->>  static inline void put_net(struct net *net)
->>  {
->> -	if (refcount_dec_and_test(&net->count))
->> +	if (refcount_dec_and_test(&net->ns.count))
->>  		__put_net(net);
->>  }
->>  
->> @@ -275,7 +272,7 @@ int net_eq(const struct net *net1, const struct net *net2)
->>  
->>  static inline int check_net(const struct net *net)
->>  {
->> -	return refcount_read(&net->count) != 0;
->> +	return refcount_read(&net->ns.count) != 0;
->>  }
->>  
->>  void net_drop_ns(void *);
->> diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
->> index 9de33b594ff2..655a88b0071c 100644
->> --- a/net/core/net-sysfs.c
->> +++ b/net/core/net-sysfs.c
->> @@ -1025,7 +1025,7 @@ net_rx_queue_update_kobjects(struct net_device *dev, int old_num, int new_num)
->>  	while (--i >= new_num) {
->>  		struct kobject *kobj = &dev->_rx[i].kobj;
->>  
->> -		if (!refcount_read(&dev_net(dev)->count))
->> +		if (!refcount_read(&dev_net(dev)->ns.count))
->>  			kobj->uevent_suppress = 1;
->>  		if (dev->sysfs_rx_queue_group)
->>  			sysfs_remove_group(kobj, dev->sysfs_rx_queue_group);
->> @@ -1603,7 +1603,7 @@ netdev_queue_update_kobjects(struct net_device *dev, int old_num, int new_num)
->>  	while (--i >= new_num) {
->>  		struct netdev_queue *queue = dev->_tx + i;
->>  
->> -		if (!refcount_read(&dev_net(dev)->count))
->> +		if (!refcount_read(&dev_net(dev)->ns.count))
->>  			queue->kobj.uevent_suppress = 1;
->>  #ifdef CONFIG_BQL
->>  		sysfs_remove_group(&queue->kobj, &dql_group);
->> @@ -1850,7 +1850,7 @@ void netdev_unregister_kobject(struct net_device *ndev)
->>  {
->>  	struct device *dev = &ndev->dev;
->>  
->> -	if (!refcount_read(&dev_net(ndev)->count))
->> +	if (!refcount_read(&dev_net(ndev)->ns.count))
->>  		dev_set_uevent_suppress(dev, 1);
->>  
->>  	kobject_get(&dev->kobj);
->> diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
->> index dcd61aca343e..5f658cbedd34 100644
->> --- a/net/core/net_namespace.c
->> +++ b/net/core/net_namespace.c
->> @@ -44,7 +44,7 @@ static struct key_tag init_net_key_domain = { .usage = REFCOUNT_INIT(1) };
->>  #endif
->>  
->>  struct net init_net = {
->> -	.count		= REFCOUNT_INIT(1),
->> +	.ns.count	= REFCOUNT_INIT(1),
->>  	.dev_base_head	= LIST_HEAD_INIT(init_net.dev_base_head),
->>  #ifdef CONFIG_KEYS
->>  	.key_domain	= &init_net_key_domain,
->> @@ -248,7 +248,7 @@ int peernet2id_alloc(struct net *net, struct net *peer, gfp_t gfp)
->>  {
->>  	int id;
->>  
->> -	if (refcount_read(&net->count) == 0)
->> +	if (refcount_read(&net->ns.count) == 0)
->>  		return NETNSA_NSID_NOT_ASSIGNED;
->>  
->>  	spin_lock(&net->nsid_lock);
->> @@ -328,7 +328,7 @@ static __net_init int setup_net(struct net *net, struct user_namespace *user_ns)
->>  	int error = 0;
->>  	LIST_HEAD(net_exit_list);
->>  
->> -	refcount_set(&net->count, 1);
->> +	refcount_set(&net->ns.count, 1);
->>  	refcount_set(&net->passive, 1);
->>  	get_random_bytes(&net->hash_mix, sizeof(u32));
->>  	net->dev_base_seq = 1;
->> diff --git a/net/ipv4/inet_timewait_sock.c b/net/ipv4/inet_timewait_sock.c
->> index c411c87ae865..437afe392e66 100644
->> --- a/net/ipv4/inet_timewait_sock.c
->> +++ b/net/ipv4/inet_timewait_sock.c
->> @@ -272,14 +272,14 @@ void inet_twsk_purge(struct inet_hashinfo *hashinfo, int family)
->>  				continue;
->>  			tw = inet_twsk(sk);
->>  			if ((tw->tw_family != family) ||
->> -				refcount_read(&twsk_net(tw)->count))
->> +				refcount_read(&twsk_net(tw)->ns.count))
->>  				continue;
->>  
->>  			if (unlikely(!refcount_inc_not_zero(&tw->tw_refcnt)))
->>  				continue;
->>  
->>  			if (unlikely((tw->tw_family != family) ||
->> -				     refcount_read(&twsk_net(tw)->count))) {
->> +				     refcount_read(&twsk_net(tw)->ns.count))) {
->>  				inet_twsk_put(tw);
->>  				goto restart;
->>  			}
->> diff --git a/net/ipv4/tcp_metrics.c b/net/ipv4/tcp_metrics.c
->> index 279db8822439..39710c417565 100644
->> --- a/net/ipv4/tcp_metrics.c
->> +++ b/net/ipv4/tcp_metrics.c
->> @@ -887,7 +887,7 @@ static void tcp_metrics_flush_all(struct net *net)
->>  		pp = &hb->chain;
->>  		for (tm = deref_locked(*pp); tm; tm = deref_locked(*pp)) {
->>  			match = net ? net_eq(tm_net(tm), net) :
->> -				!refcount_read(&tm_net(tm)->count);
->> +				!refcount_read(&tm_net(tm)->ns.count);
->>  			if (match) {
->>  				*pp = tm->tcpm_next;
->>  				kfree_rcu(tm, rcu_head);
->>
->>
+  https://lore.kernel.org/bpf/20200725013047.4006241-1-kafai@fb.com/
+
+  I added a Co-developed-by: tag, but would need Martin's Signoff
+  (was not sure of the procedure here).
+
+- Rebase.
+
+# v5 -> v6
+
+- Fixed a build warning.
+- Rebase.
+
+# v4 -> v5
+
+- Split non-functional changes into separate commits.
+- Updated the cache macros to be simpler.
+- Fixed some bugs noticed by Martin.
+- Updated the userspace map functions to use an fd for lookups, updates
+  and deletes.
+- Rebase.
+
+# v3 -> v4
+
+- Fixed a missing include to bpf_sk_storage.h in bpf_sk_storage.c
+- Fixed some functions that were not marked as static which led to
+  W=1 compilation warnings.
+
+# v2 -> v3
+
+* Restructured the code as per Martin's suggestions:
+  - Common functionality in bpf_local_storage.c
+  - bpf_sk_storage functionality remains in net/bpf_sk_storage.
+  - bpf_inode_storage is kept separate as it is enabled only with
+    CONFIG_BPF_LSM.
+* A separate cache for inode and sk storage with macros to define it.
+* Use the ops style approach as suggested by Martin instead of the
+  enum + switch style.
+* Added the inode map to bpftool bash completion and docs.
+* Rebase and indentation fixes.
+
+# v1 -> v2
+
+* Use the security blob pointer instead of dedicated member in
+  struct inode.
+* Better code re-use as suggested by Alexei.
+* Dropped the inode count arithmetic as pointed out by Alexei.
+* Minor bug fixes and rebase.
+
+bpf_sk_storage can already be used by some BPF program types to annotate
+socket objects. These annotations are managed with the life-cycle of the
+object (i.e. freed when the object is freed) which makes BPF programs
+much simpler and less prone to errors and leaks.
+
+This patch series:
+
+* Generalizes the bpf_sk_storage infrastructure to allow easy
+  implementation of local storage for other objects
+* Implements local storage for inodes
+* Makes both bpf_{sk, inode}_storage available to LSM programs.
+
+Local storage is safe to use in LSM programs as the attachment sites are
+limited and the owning object won't be freed, however, this is not the
+case for tracing. Usage in tracing is expected to follow a white-list
+based approach similar to the d_path helper
+(https://lore.kernel.org/bpf/20200506132946.2164578-1-jolsa@kernel.org).
+
+Access to local storage would allow LSM programs to implement stateful
+detections like detecting the unlink of a running executable from the
+examples shared as a part of the KRSI series
+https://lore.kernel.org/bpf/20200329004356.27286-1-kpsingh@chromium.org/
+and
+https://github.com/sinkap/linux-krsi/blob/patch/v1/examples/samples/bpf/lsm_detect_exec_unlink.c
+
+
+KP Singh (7):
+  A purely mechanical change to split the renaming from the actual
+    generalization.
+  bpf: Generalize caching for sk_storage.
+  bpf: Generalize bpf_sk_storage
+  bpf: Split bpf_local_storage to bpf_sk_storage
+  bpf: Implement bpf_local_storage for inodes
+  bpf: Allow local storage to be used from LSM programs
+  bpf: Add selftests for local_storage
+
+ include/linux/bpf.h                           |   9 +
+ include/linux/bpf_local_storage.h             | 173 ++++
+ include/linux/bpf_lsm.h                       |  21 +
+ include/linux/bpf_types.h                     |   3 +
+ include/net/bpf_sk_storage.h                  |  13 +
+ include/net/sock.h                            |   4 +-
+ include/uapi/linux/bpf.h                      |  54 +-
+ kernel/bpf/Makefile                           |   2 +
+ kernel/bpf/bpf_inode_storage.c                | 254 ++++++
+ kernel/bpf/bpf_local_storage.c                | 600 +++++++++++++
+ kernel/bpf/bpf_lsm.c                          |  21 +-
+ kernel/bpf/syscall.c                          |   3 +-
+ kernel/bpf/verifier.c                         |  10 +
+ net/core/bpf_sk_storage.c                     | 827 +++---------------
+ security/bpf/hooks.c                          |   7 +
+ .../bpf/bpftool/Documentation/bpftool-map.rst |   2 +-
+ tools/bpf/bpftool/bash-completion/bpftool     |   3 +-
+ tools/bpf/bpftool/map.c                       |   3 +-
+ tools/include/uapi/linux/bpf.h                |  54 +-
+ tools/lib/bpf/libbpf_probes.c                 |   5 +-
+ .../bpf/prog_tests/test_local_storage.c       |  60 ++
+ .../selftests/bpf/progs/local_storage.c       | 136 +++
+ 22 files changed, 1553 insertions(+), 711 deletions(-)
+ create mode 100644 include/linux/bpf_local_storage.h
+ create mode 100644 kernel/bpf/bpf_inode_storage.c
+ create mode 100644 kernel/bpf/bpf_local_storage.c
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/test_local_storage.c
+ create mode 100644 tools/testing/selftests/bpf/progs/local_storage.c
+
+-- 
+2.28.0.rc0.142.g3c755180ce-goog
 
