@@ -2,98 +2,117 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87929C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D6EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 664CB2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:21:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596086501;
-	bh=pf25fmQ/TZV16YYmJ+84pEKXAho0XJaQPnceNoQ5PBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gV/MP9sGW6PcOa5/EU2jnxexyHFVUYMOgxMf7GapuMWeitpfF4ytTavY0Oli5IRk/
-	 scImsynYJ5GwyJuWudr6eBvO+pyFBhMBaixG+gwF3+4jdQjqgXW2D0T5KkTTc2Y3ya
-	 MWXEjgMsk5eb3XJ1WSPlRNqFq15S/49n2UnvhWnQ=
+	by mail.kernel.org (Postfix) with ESMTP id EA38C20842
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:27:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgG3FVk (ORCPT
+        id S1728578AbgG3F1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 01:21:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52786 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728195AbgG3FVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 01:21:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Thu, 30 Jul 2020 01:27:08 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:42206 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbgG3F1I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 01:27:08 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BABF20842;
-        Thu, 30 Jul 2020 05:21:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596086498;
-        bh=pf25fmQ/TZV16YYmJ+84pEKXAho0XJaQPnceNoQ5PBg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2qS+e8juE+hJmAnsxhBWQ3mFEv84S6snZ8Kp8oimbo74cX5rA5q8nVLlLj0W8CIPI
-         Q53zZQO7jPpaCAHWAUnQAdvzt0Ypf/BZ0vlykXC7NDplKPcwTEBriz/ffHJG4U6h6m
-         yXgB6s99/30eUWur+damaSIIjl6Gz4mHLKmnvf2I=
-Date:   Thu, 30 Jul 2020 07:21:27 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     John Donnelly <John.P.donnelly@oracle.com>
-Cc:     Mike Snitzer <snitzer@redhat.com>, stable@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: (resend) [PATCH [linux-4.14.y]] dm cache: submit writethrough
- writes in parallel to origin and cache
-Message-ID: <20200730052127.GA3860556@kroah.com>
-References: <37c5a615-655d-c106-afd0-54e03f3c0eef@oracle.com>
- <20200727150014.GA27472@redhat.com>
- <20200729115119.GB2674635@kroah.com>
- <20200729115557.GA2799681@kroah.com>
- <20200729141607.GA7215@redhat.com>
- <851f749a-5c92-dcb1-f8e4-95b4434a1ec4@oracle.com>
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 022F0804D8;
+        Thu, 30 Jul 2020 07:27:03 +0200 (CEST)
+Date:   Thu, 30 Jul 2020 07:27:02 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        od@zcrc.me, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] drm/ingenic: ipu: Only restart manually on older SoCs
+Message-ID: <20200730052702.GA1429781@ravnborg.org>
+References: <20200730014626.83895-1-paul@crapouillou.net>
+ <20200730014626.83895-2-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <851f749a-5c92-dcb1-f8e4-95b4434a1ec4@oracle.com>
+In-Reply-To: <20200730014626.83895-2-paul@crapouillou.net>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8 a=7gkXJVJtAAAA:8
+        a=OIODGcd-7M2Q43qThiUA:9 a=tsY6iTuTbHcPZO7O:21 a=fjEtzezOzUu0zJxH:21
+        a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22 a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 06:45:46PM -0500, John Donnelly wrote:
+On Thu, Jul 30, 2020 at 03:46:24AM +0200, Paul Cercueil wrote:
+> On older SoCs, it is necessary to restart manually the IPU when a frame
+> is done processing. Doing so on newer SoCs (JZ4760/70) kinds of work
+> too, until the input or output resolutions or the framerate are too
+> high.
 > 
+> Make it work properly on newer SoCs by letting the LCD controller
+> trigger the IPU frame restart signal.
 > 
-> On 7/29/20 9:16 AM, Mike Snitzer wrote:
-> > On Wed, Jul 29 2020 at  7:55am -0400,
-> > Greg KH <gregkh@linuxfoundation.org> wrote:
-> > 
-> > > On Wed, Jul 29, 2020 at 01:51:19PM +0200, Greg KH wrote:
-> > > > On Mon, Jul 27, 2020 at 11:00:14AM -0400, Mike Snitzer wrote:
-> > > > > This mail needs to be saent to stable@vger.kernel.org (now cc'd).
-> > > > > 
-> > > > > Greg et al: please backport 2df3bae9a6543e90042291707b8db0cbfbae9ee9
-> > > > 
-> > > > Now backported, thanks.
-> > > 
-> > > Nope, it broke the build, I need something that actually works :)
-> > > 
-> > 
-> > OK, I'll defer to John Donnelly to get back with you (and rest of
-> > stable@).  He is more invested due to SUSE also having this issue.  I
-> > can put focus to it if John cannot sort this out.
-> > 
-> > Mike
-> > 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> ---
+>  drivers/gpu/drm/ingenic/ingenic-ipu.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 > 
-> 
-> Hi.
-> 
-> 
-> Thank you for reaching out.
-> 
-> What specifically is broken? . If it that applying
-> 2df3bae9a6543e90042291707b8db0cbfbae9ee9 to 4.14.y is failing?
-
-yes, try it yourself and see!
+> diff --git a/drivers/gpu/drm/ingenic/ingenic-ipu.c b/drivers/gpu/drm/ingenic/ingenic-ipu.c
+> index 7a0a8bd865d3..7eae56fa92ea 100644
+> --- a/drivers/gpu/drm/ingenic/ingenic-ipu.c
+> +++ b/drivers/gpu/drm/ingenic/ingenic-ipu.c
+> @@ -35,6 +35,7 @@ struct soc_info {
+>  	const u32 *formats;
+>  	size_t num_formats;
+>  	bool has_bicubic;
+> +	bool manual_restart;
+>  
+>  	void (*set_coefs)(struct ingenic_ipu *ipu, unsigned int reg,
+>  			  unsigned int sharpness, bool downscale,
+> @@ -645,7 +646,8 @@ static irqreturn_t ingenic_ipu_irq_handler(int irq, void *arg)
+>  	unsigned int dummy;
+>  
+>  	/* dummy read allows CPU to reconfigure IPU */
+> -	regmap_read(ipu->map, JZ_REG_IPU_STATUS, &dummy);
+> +	if (ipu->soc_info->manual_restart)
+> +		regmap_read(ipu->map, JZ_REG_IPU_STATUS, &dummy);
+>  
+>  	/* ACK interrupt */
+>  	regmap_write(ipu->map, JZ_REG_IPU_STATUS, 0);
+> @@ -656,7 +658,8 @@ static irqreturn_t ingenic_ipu_irq_handler(int irq, void *arg)
+>  	regmap_write(ipu->map, JZ_REG_IPU_V_ADDR, ipu->addr_v);
+>  
+>  	/* Run IPU for the new frame */
+> -	regmap_set_bits(ipu->map, JZ_REG_IPU_CTRL, JZ_IPU_CTRL_RUN);
+> +	if (ipu->soc_info->manual_restart)
+> +		regmap_set_bits(ipu->map, JZ_REG_IPU_CTRL, JZ_IPU_CTRL_RUN);
+>  
+>  	drm_crtc_handle_vblank(crtc);
+>  
+> @@ -806,6 +809,7 @@ static const struct soc_info jz4725b_soc_info = {
+>  	.formats	= jz4725b_ipu_formats,
+>  	.num_formats	= ARRAY_SIZE(jz4725b_ipu_formats),
+>  	.has_bicubic	= false,
+> +	.manual_restart	= true,
+>  	.set_coefs	= jz4725b_set_coefs,
+>  };
+>  
+> @@ -831,6 +835,7 @@ static const struct soc_info jz4760_soc_info = {
+>  	.formats	= jz4760_ipu_formats,
+>  	.num_formats	= ARRAY_SIZE(jz4760_ipu_formats),
+>  	.has_bicubic	= true,
+> +	.manual_restart	= false,
+>  	.set_coefs	= jz4760_set_coefs,
+>  };
+>  
+> -- 
+> 2.27.0
