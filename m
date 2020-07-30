@@ -2,82 +2,124 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD111C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA45C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B161F2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:18:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51A412074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:18:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596097131;
+	bh=NNlEVXo3UQ7qWHdlC8wROzn6n5lKu8TzbE3HTYTb5so=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AoyhWSsyHx64sGDgKqb4Yd5FZrbg1LLiMg9dsfeOpzdjXjTqH8/R013OrJJqwHOki
+	 9EJyrDrxdM4UNd7Nrl2vbJRMU6ul6d7NIYrBghcHgVsIf42FqD9PUc8Pt+BfIwTzIJ
+	 7y4a3MEaDEncvqGqhKGXE4yyyHkeXBl5Ksf4gFwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729503AbgG3ISr (ORCPT
+        id S1729583AbgG3IIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:18:47 -0400
-Received: from mga05.intel.com ([192.55.52.43]:20059 "EHLO mga05.intel.com"
+        Thu, 30 Jul 2020 04:08:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729811AbgG3ISn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:18:43 -0400
-IronPort-SDR: B1etKWDcpeaKtSExcsu6koGiIJtr4/CCePNTsRNXrLVUNgIqLhpJTIvPAHApXEaf1GsDgguif2
- M4apBEynD8Jg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="236423480"
-X-IronPort-AV: E=Sophos;i="5.75,413,1589266800"; 
-   d="scan'208";a="236423480"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 01:18:42 -0700
-IronPort-SDR: jT1YwYmjCO6/8hTme+5T0L3vRl94aFnGf3RgGPCm+PguQT6V7guNehPyrRwKo3NF0ZwE8lBKaz
- S0V1eJl1hpYw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,413,1589266800"; 
-   d="scan'208";a="491051305"
-Received: from unknown (HELO linuxpc.iind.intel.com) ([10.223.107.108])
-  by fmsmga005.fm.intel.com with ESMTP; 30 Jul 2020 01:18:40 -0700
-From:   Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
-To:     rui.zhang@intel.com, srinivas.pandruvada@linux.intel.com,
-        daniel.lezcano@linaro.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
-Subject: [PATCH] thermal: intel: intel_pch_thermal: Add Cannon Lake Low Power PCH support
-Date:   Thu, 30 Jul 2020 13:55:03 +0530
-Message-Id: <1596097503-27924-1-git-send-email-sumeet.r.pawnikar@intel.com>
-X-Mailer: git-send-email 1.7.9.5
+        id S1729163AbgG3IIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:08:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98E702074B;
+        Thu, 30 Jul 2020 08:08:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596096497;
+        bh=NNlEVXo3UQ7qWHdlC8wROzn6n5lKu8TzbE3HTYTb5so=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Rwub0oFdAv5xwfk1CNpVyYO3NQINCkE7IDNC9cFvVyetdSOPSfZ01+149XnY0EJzD
+         tKhtVi+al7NgFtZtom5QMLr6m8tE0hFdaXrp4Ck06FxkuDMDl/DgSX7b5QBOO/fIYm
+         q9wwn5VWoTggR4UH/dwEPJNgJ1d+KcoGeLvQTQLo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Aaron Merey <amerey@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Subject: [PATCH 4.9 10/61] uprobes: Change handle_swbp() to send SIGTRAP with si_code=SI_KERNEL, to fix GDB regression
+Date:   Thu, 30 Jul 2020 10:04:28 +0200
+Message-Id: <20200730074421.323102663@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200730074420.811058810@linuxfoundation.org>
+References: <20200730074420.811058810@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add LP (Low Power) PCH id for Cannon Lake (CNL) based platforms.
+From: Oleg Nesterov <oleg@redhat.com>
 
-Signed-off-by: Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
+commit fe5ed7ab99c656bd2f5b79b49df0e9ebf2cead8a upstream.
+
+If a tracee is uprobed and it hits int3 inserted by debugger, handle_swbp()
+does send_sig(SIGTRAP, current, 0) which means si_code == SI_USER. This used
+to work when this code was written, but then GDB started to validate si_code
+and now it simply can't use breakpoints if the tracee has an active uprobe:
+
+	# cat test.c
+	void unused_func(void)
+	{
+	}
+	int main(void)
+	{
+		return 0;
+	}
+
+	# gcc -g test.c -o test
+	# perf probe -x ./test -a unused_func
+	# perf record -e probe_test:unused_func gdb ./test -ex run
+	GNU gdb (GDB) 10.0.50.20200714-git
+	...
+	Program received signal SIGTRAP, Trace/breakpoint trap.
+	0x00007ffff7ddf909 in dl_main () from /lib64/ld-linux-x86-64.so.2
+	(gdb)
+
+The tracee hits the internal breakpoint inserted by GDB to monitor shared
+library events but GDB misinterprets this SIGTRAP and reports a signal.
+
+Change handle_swbp() to use force_sig(SIGTRAP), this matches do_int3_user()
+and fixes the problem.
+
+This is the minimal fix for -stable, arch/x86/kernel/uprobes.c is equally
+wrong; it should use send_sigtrap(TRAP_TRACE) instead of send_sig(SIGTRAP),
+but this doesn't confuse GDB and needs another x86-specific patch.
+
+Reported-by: Aaron Merey <amerey@redhat.com>
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200723154420.GA32043@redhat.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/thermal/intel/intel_pch_thermal.c |    3 +++
- 1 file changed, 3 insertions(+)
+ kernel/events/uprobes.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/intel/intel_pch_thermal.c b/drivers/thermal/intel/intel_pch_thermal.c
-index 56401fd4708d..7ed66927d822 100644
---- a/drivers/thermal/intel/intel_pch_thermal.c
-+++ b/drivers/thermal/intel/intel_pch_thermal.c
-@@ -24,6 +24,7 @@
- #define PCH_THERMAL_DID_SKL_H	0xA131 /* Skylake PCH 100 series */
- #define PCH_THERMAL_DID_CNL	0x9Df9 /* CNL PCH */
- #define PCH_THERMAL_DID_CNL_H	0xA379 /* CNL-H PCH */
-+#define PCH_THERMAL_DID_CNL_LP	0x02F9 /* CNL-LP PCH */
- #define PCH_THERMAL_DID_CML_H	0X06F9 /* CML-H PCH */
- 
- /* Wildcat Point-LP  PCH Thermal registers */
-@@ -405,6 +406,8 @@ static int intel_pch_thermal_resume(struct device *device)
- 		.driver_data = board_cnl, },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCH_THERMAL_DID_CNL_H),
- 		.driver_data = board_cnl, },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCH_THERMAL_DID_CNL_LP),
-+		.driver_data = board_cnl, },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCH_THERMAL_DID_CML_H),
- 		.driver_data = board_cml, },
- 	{ 0, },
--- 
-1.7.9.5
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1885,7 +1885,7 @@ static void handle_swbp(struct pt_regs *
+ 	if (!uprobe) {
+ 		if (is_swbp > 0) {
+ 			/* No matching uprobe; signal SIGTRAP. */
+-			send_sig(SIGTRAP, current, 0);
++			force_sig(SIGTRAP, current);
+ 		} else {
+ 			/*
+ 			 * Either we raced with uprobe_unregister() or we can't
+
 
