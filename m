@@ -5,48 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BEEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B13EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0F452075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F04322070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096843;
-	bh=4BqZ/RhG1SD/WQbc4OLwfRvW43zToqd/adGssxo8Ef4=;
+	s=default; t=1596096849;
+	bh=c9kD4tw+Ad1bv5uOVglWYRBhArOwIgsVn4AlD4ZLPk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vIgs+8LgJN7MKrGu2AVKZLCJUU3ofpMM0tHWFCXeM1eK4Z/oh2BxigPfpp7RlTwsP
-	 VAvUlzAc/PSfDMs7MUEZNP8q5KgQuHoExT+Ybog9GM5mNAV+VTcKqP6hl6P3eTLFju
-	 jfi9/rpbribUWoGVaWOeqijKzn1BieSqzIkd7JlA=
+	b=rOSNsF3WxIgE7I+o7OrEjTbPWzwB/uPEzKWLthyV5Ee92uiHWhCj2YTwXI1l8n5Zu
+	 TUpXJ9x7Vqey8YtPRc2gdWM1X4ieXFiQJs8SYosHKAtX3v34jc0RNrnexMlqfh+aO+
+	 mA1+EzEVPw9YUWYysOHPXopEKUSRC5aeVhGrrYoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730142AbgG3IN6 (ORCPT
+        id S1730138AbgG3IOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:13:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52494 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:14:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730108AbgG3INE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:13:04 -0400
+        id S1730101AbgG3IM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:12:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A6122070B;
-        Thu, 30 Jul 2020 08:13:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11EFE2070B;
+        Thu, 30 Jul 2020 08:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096783;
-        bh=4BqZ/RhG1SD/WQbc4OLwfRvW43zToqd/adGssxo8Ef4=;
+        s=default; t=1596096778;
+        bh=c9kD4tw+Ad1bv5uOVglWYRBhArOwIgsVn4AlD4ZLPk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qAY20vQwinxZcskcVtIa8NjAb/BRw5V2kEKkXcz9NHkTf3ZHMUcWRsrXS//DWNmpg
-         ABxcOi/0KvlzvZNf0RKpTnFcR+qVxNtLWnT2oa65pbA2ZSOr9ZtfXcRGpxumuyKNVt
-         X8LFXZnCdq2Y2QvuLty6XA/PCEh6DtTP7ks5MVTc=
+        b=E+xV1ZgrpWFpE5mz+9N3mePvCL8XL2A/u81m8JcoML51pzheQeBpir5pYTuF7hweK
+         +t6MwOzcM8TQ9gZEPTEwXbpyfOFJjXw/ClkhNFz3VxDw/4h4MZOp7gFP2GgLrwoBrz
+         r/YXR5FunKIEKCoY/OkV3qebtw7eZYeknzFK2W24=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peilin Ye <yepeilin.cs@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 39/54] AX.25: Prevent out-of-bounds read in ax25_sendmsg()
-Date:   Thu, 30 Jul 2020 10:05:18 +0200
-Message-Id: <20200730074423.084112225@linuxfoundation.org>
+        stable@vger.kernel.org, Mark ODonovan <shiftee@posteo.net>,
+        Roman Mamedov <rm@romanrm.net>,
+        =?UTF-8?q?Viktor=20J=C3=A4gersk=C3=BCpper?= 
+        <viktor_jaegerskuepper@freenet.de>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.4 37/54] ath9k: Fix regression with Atheros 9271
+Date:   Thu, 30 Jul 2020 10:05:16 +0200
+Message-Id: <20200730074422.986527884@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
 References: <20200730074421.203879987@linuxfoundation.org>
@@ -59,36 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peilin Ye <yepeilin.cs@gmail.com>
+From: Mark O'Donovan <shiftee@posteo.net>
 
-[ Upstream commit 8885bb0621f01a6c82be60a91e5fc0f6e2f71186 ]
+commit 92f53e2fda8bb9a559ad61d57bfb397ce67ed0ab upstream.
 
-Checks on `addr_len` and `usax->sax25_ndigis` are insufficient.
-ax25_sendmsg() can go out of bounds when `usax->sax25_ndigis` equals to 7
-or 8. Fix it.
+This fix allows ath9k_htc modules to connect to WLAN once again.
 
-It is safe to remove `usax->sax25_ndigis > AX25_MAX_DIGIS`, since
-`addr_len` is guaranteed to be less than or equal to
-`sizeof(struct full_sockaddr_ax25)`
-
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2bbcaaee1fcb ("ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=208251
+Signed-off-by: Mark O'Donovan <shiftee@posteo.net>
+Reported-by: Roman Mamedov <rm@romanrm.net>
+Tested-by: Viktor Jägersküpper <viktor_jaegerskuepper@freenet.de>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200711043324.8079-1-shiftee@posteo.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ax25/af_ax25.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/ax25/af_ax25.c
-+++ b/net/ax25/af_ax25.c
-@@ -1512,7 +1512,8 @@ static int ax25_sendmsg(struct socket *s
- 			struct full_sockaddr_ax25 *fsa = (struct full_sockaddr_ax25 *)usax;
+---
+ drivers/net/wireless/ath/ath9k/hif_usb.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/drivers/net/wireless/ath/ath9k/hif_usb.c
++++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
+@@ -729,11 +729,13 @@ static void ath9k_hif_usb_reg_in_cb(stru
+ 			return;
+ 		}
  
- 			/* Valid number of digipeaters ? */
--			if (usax->sax25_ndigis < 1 || usax->sax25_ndigis > AX25_MAX_DIGIS) {
-+			if (usax->sax25_ndigis < 1 || addr_len < sizeof(struct sockaddr_ax25) +
-+			    sizeof(ax25_address) * usax->sax25_ndigis) {
- 				err = -EINVAL;
- 				goto out;
- 			}
++		rx_buf->skb = nskb;
++
+ 		usb_fill_int_urb(urb, hif_dev->udev,
+ 				 usb_rcvintpipe(hif_dev->udev,
+ 						 USB_REG_IN_PIPE),
+ 				 nskb->data, MAX_REG_IN_BUF_SIZE,
+-				 ath9k_hif_usb_reg_in_cb, nskb, 1);
++				 ath9k_hif_usb_reg_in_cb, rx_buf, 1);
+ 	}
+ 
+ resubmit:
 
 
