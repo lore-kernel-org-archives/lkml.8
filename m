@@ -2,168 +2,154 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C879AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D008C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A328D2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E608B2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:14:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YBnTtUAF"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="iS/YMDwL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgG3BNM (ORCPT
+        id S1726581AbgG3BOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 21:13:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgG3BNL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 21:13:11 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BD7CC061794;
-        Wed, 29 Jul 2020 18:13:11 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id e13so24200763qkg.5;
-        Wed, 29 Jul 2020 18:13:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=29jI3ci+a7Sp9d2xnBWnJDwqEUNpCdqc7ZH0hJFRuMU=;
-        b=YBnTtUAF9rZY2tbC6ODuETMDGQDuNtrq+FlAGUKdQm9jZnv0UGMruYUV0RRme+vrrV
-         bwvAHFXDbCcDaxEjLzfFXQA6KqomF8scOa+ss8EBzhTHr/0wBQ5T1rIGc89PaIHjBJ1M
-         rjfaQ9ZDDEwWkzybyscEgShEMeToKnAQsfHuC8n71Yywr/dVewTU9YYtjIpeN8Xktf16
-         T8qnIoLsUx7APgfCXee96lq8PAyFamdS/JUgsSOnPve9/a7RhGccbdi4KxDCIYRRrake
-         U21XWbNO32efXdZcDVUxvgdHE2432M4SXLbQRxwn9CrDXnZj8cPmF6uFaJ97uJAVOI67
-         f3lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=29jI3ci+a7Sp9d2xnBWnJDwqEUNpCdqc7ZH0hJFRuMU=;
-        b=g2WwfBgvhbWoI4MsL8CvmFjdQpUuiSlWSEADdo68OIdjBMDMxUJHX1IUT1daZfm0xY
-         2wtBuUDVP1a3GsmhcwY6eyeVk+CnDCgfvR2v+VHgDAdylZI732vB/vQWfQVOe+t+Rqy3
-         GOgdfYEMfT1h0zJKn9pXvKYba653JliHTj/UWJrgU+mfNSG4PorBVB47pO9BUVSD5I9T
-         INw6KtCY8nPGBrtuoKcanOh0DtIAOTLuXIlvtgLH4iN5s4APASxKQBCCjBlzQevQ5Tcw
-         U6btO/6TYk03fU/dPYRudNsp5eFlaEdE4Xo4xmYt3sUPKgo5SrXcVPIkiKrKY98xTPPj
-         Kisw==
-X-Gm-Message-State: AOAM530WzeOeN+D5dhmyNqvoar51lLaG69i2rrub+fKrRejGnhDRRQah
-        2kC2PbvYedV5UT91ITl9qSU=
-X-Google-Smtp-Source: ABdhPJwIeYlm0bFYC6MAZFPYEr+oPEI2FVM3K2DH6xa6lTaI1M9nBwNTygdSVOvfjQAaUnR3//PQ2Q==
-X-Received: by 2002:a37:4048:: with SMTP id n69mr34076346qka.421.1596071590282;
-        Wed, 29 Jul 2020 18:13:10 -0700 (PDT)
-Received: from RedmiNote8Pro-Redmi.localdomain ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id k31sm1838251qtd.60.2020.07.29.18.13.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 18:13:09 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 22:12:46 -0300
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAP-5=fX9YUucA-3QMxO_jV954104UPNg04=_JGstuLekNJHzJw@mail.gmail.com>
-References: <20200724100706.48330-1-bobo.shaobowang@huawei.com> <CAP-5=fX9YUucA-3QMxO_jV954104UPNg04=_JGstuLekNJHzJw@mail.gmail.com>
+        Wed, 29 Jul 2020 21:14:14 -0400
+Received: from mail-eopbgr70044.outbound.protection.outlook.com ([40.107.7.44]:32263
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725851AbgG3BON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 21:14:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KDSLK04NucYkHy2nzJv4HuMf1TEqE2IMc9P3t3xdQZLGkZXeBUEVSi2uiGvCrmanaTnO01L/2lpnIkM9hCx+EdZ/FckhS/7w6xBXTR9Qwcx1EgeKOYaOT2dBgihj/sMolBAr2o2AknnJaRiFV9YX6hEUyZym+LYB0R4b7AXqgs2247QpuUGEn31xLyq+yBpxs+8pVkhPhPD5XJuxxGZw26P4quHZk33rNYJmK0H2wILgnUVHedyB7a3oA1oD52dIZbDRmAesP5iBRRrOoDawHTZBjNRJOdXVbxvtL0FmyXYuvFjKoJfePPPTl8DAj1ZuUTsc2RSgRMwTyZ8NSuf4BQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S8nOBMNwBSQwukf6r+4hE61HBrSRBYCO9O/8AVN1DTQ=;
+ b=HEU6+yK7YGJs2tiK9Ptx9jZU2HLq/kMx2x3DN7n2LxKovWSPdHaXEPVJPVStifOgfJpyH9xogUiZlMNq3+1EV03lkFf3E4BmT0+oPwKDssLO//kZE4ncZJkUL/uCtPrqXOpeAlkSq9MvEnlTeWTIwFhwMBsF4/vxIwKyY+05gcBlUIp4qp33XewOM7UfT1WpwGCBZN3KgYKQgqQY6lqo7GS2G1iHHEXk534mFkaXAXNLeeCsHVS5XZrvZr2fwe9Ma+OUEYYJ5xpyYkSnH9EXzYxeX4uPC9bL4Yr0chnjFtTUFmUUeCFGoZ+ORUppDKRi6xlZ5DzttuFiBck9Us5YQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S8nOBMNwBSQwukf6r+4hE61HBrSRBYCO9O/8AVN1DTQ=;
+ b=iS/YMDwLIemQSSfyq2RkTdaiPNBPwbAhFMkde4SOTtlH28XyWowSGnolmMwU+2Sd6V0avyKf2ZgwfnW32/EBIFcRZQ01SZWWbwoGB/Lqtq0GybPxVDHZUxiLwgj+k+aMzsLTS/Zr2h0KRqr6JQTAAUBXDrkYpZsrSkuP+hnhogw=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DB8PR04MB7050.eurprd04.prod.outlook.com (2603:10a6:10:129::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17; Thu, 30 Jul
+ 2020 01:14:08 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::49f8:20ce:cf20:80b3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::49f8:20ce:cf20:80b3%6]) with mapi id 15.20.3216.034; Thu, 30 Jul 2020
+ 01:14:08 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, Peng Fan <peng.fan@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>, Andy Duan <fugang.duan@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V7 1/6] clk: imx6sl: Use BIT(x) to avoid shifting signed
+ 32-bit value by 31 bits
+Thread-Topic: [PATCH V7 1/6] clk: imx6sl: Use BIT(x) to avoid shifting signed
+ 32-bit value by 31 bits
+Thread-Index: AQHWZbf31I7BtnmqO0Gipqqw0aCR4aketDaAgACFjvCAAAwLAIAAC0MA
+Date:   Thu, 30 Jul 2020 01:14:08 +0000
+Message-ID: <DB3PR0402MB3916E18C8B36010D60086EA2F5710@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1596034117-24246-1-git-send-email-Anson.Huang@nxp.com>
+ <1596034117-24246-2-git-send-email-Anson.Huang@nxp.com>
+ <86ae1d4e-27c9-07e4-73be-37d490cb0063@infradead.org>
+ <DB3PR0402MB3916559F7E1908D76B47FE66F5700@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <34161e5c-0e83-97de-3cb6-1040d8abdc71@infradead.org>
+In-Reply-To: <34161e5c-0e83-97de-3cb6-1040d8abdc71@infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: infradead.org; dkim=none (message not signed)
+ header.d=none;infradead.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 39193609-d97d-41a1-a2bd-08d83425dc42
+x-ms-traffictypediagnostic: DB8PR04MB7050:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB7050D07DC90CF0D0EB2EEB5EF5710@DB8PR04MB7050.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2733;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: mHXwBV5cT7JqYFtRZXDOMt0KAWj8skv1SO8UqmSspY9h0brCVubdflP8l5foFYV340HXM8fE6ZTQcSZYQ2G0o4Tqx/JJFoZiXX0b6X/ARJcv8kdfAZT2zF+fYscYcGqCTT+5LAqr8/b5kFplJ1/2FWFWmPT8Nd8iUvyvzbksYGc9LENNpPuLH3PRkiWlyHaVuhdmXX9MdKJ660sIPtEzNtX9hyEUQCxsORDGKu1QWU77NBGfyxKXigUZuKcXH3ED7ZVnU6RqvTxxUj8aQXf9oVStWrD9u0mcxP18036gqhnDC3dotxKvYh+vedmYFExYQpbkFRCkX4CqbGQOPlZo0jQM+Pj6j4vfoFag/Ksf6loUS+kcgnrlP+r8/CojVKOWlQboHFxT6Hf2WIfn2dTM0Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(376002)(366004)(396003)(136003)(53546011)(66946007)(76116006)(66476007)(64756008)(5660300002)(66556008)(8676002)(478600001)(6506007)(26005)(7696005)(316002)(9686003)(71200400001)(66446008)(52536014)(44832011)(2906002)(55016002)(4326008)(186003)(83380400001)(33656002)(8936002)(7416002)(86362001)(110136005)(921003)(32563001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 2zlzUvOKPagKruPMKXb/uvHHy/RDZJMc5wyW/o0G5AXEb4UOfz6od2ZtIju8wFhiBFEy893+s+ujMEsRlD4aMm461qmA7Lb0q7OkcCeGd3YNDotOx+RoDS9Mt7ce57iuv3kp/zxdKPmYsp7oA4qzEnoLY6wnVvJoeqs5wxd0fR9b+nGb3BvW/+V6FB01xMCDrj3uyMgcW1mwt1LpTjlncPDApnk2GfIF117mOS29a8eGMHsUHe/1iNaZ/J8WWEFQt/yjZLEVxRqxW7OnyARP9jvUJCLIJoVwlM3qDxwM38aTUOGBS4NXUuFwzdk6439xQbAtbAi1o17RWsVrf3Hs/b/r6kF4OBwxAZxoqEpIG4A/cVJov35yeMdtoQ50lpRuLZXx802pHEtJhCUJgP6Kh2x9eBtXEyS8fgmSfPKK5lD75Swslj5egTe/bFV9vf2ZhE17raGq0LsbNCCvRCtPO9JRjpKbjl1W1AAvfAosxQEq3jdQCXcre2bcE4jRAxroKSMqRlN/cgnD9WBvNXH9f+UKKD5iZxW8Ft+AqmOsFjYn3tPvr9Vp2888D+2giTEiZWstauqHGC5wk69x/ZQMM3OoOWyk0N/6y+oOs8YiZacdaCk1/4EjM8un2XoheCA0Keg+TWtA2+zaGBipXGtYaA==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH -next] tools build: Check return value of fwrite_unlocked in jvmti_agent.c
-To:     Ian Rogers <irogers@google.com>,
-        Wang ShaoBo <bobo.shaobowang@huawei.com>
-CC:     cj.chengjian@huawei.com, Li Bin <huawei.libin@huawei.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Message-ID: <F549EBCC-2BC0-43D4-B470-A53E9DF37A29@gmail.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 39193609-d97d-41a1-a2bd-08d83425dc42
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2020 01:14:08.3545
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UBCQKixsfvLxYGwnZ0I/sDBaeiqmfekBnSXdV7ZZI+9mfe2oFTx0uwge9sQ1lnH0Y2bfzv22+31FHjYrz8gI9A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7050
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On July 29, 2020 8:47:36 PM GMT-03:00, Ian Rogers <irogers@google=2Ecom> w=
-rote:
->On Fri, Jul 24, 2020 at 3:07 AM Wang ShaoBo
-><bobo=2Eshaobowang@huawei=2Ecom> wrote:
->>
->> Function jvmti_write_code called by compiled_method_load_cb may
->return
->> error in using fwrite_unlocked, this failure should be captured and
->> warned=2E
->>
->> Signed-off-by: Wang ShaoBo <bobo=2Eshaobowang@huawei=2Ecom>
->> ---
->>  tools/perf/jvmti/jvmti_agent=2Ec | 23 +++++++++++++++--------
->>  1 file changed, 15 insertions(+), 8 deletions(-)
->>
->> diff --git a/tools/perf/jvmti/jvmti_agent=2Ec
->b/tools/perf/jvmti/jvmti_agent=2Ec
->> index 88108598d6e9=2E=2Ea1fe6aa16b6d 100644
->> --- a/tools/perf/jvmti/jvmti_agent=2Ec
->> +++ b/tools/perf/jvmti/jvmti_agent=2Ec
->> @@ -363,7 +363,7 @@ jvmti_write_code(void *agent, char const *sym,
->>         struct jr_code_load rec;
->>         size_t sym_len;
->>         FILE *fp =3D agent;
->> -       int ret =3D -1;
->> +       int ret;
->>
->>         /* don't care about 0 length function, no samples */
->>         if (size =3D=3D 0)
->> @@ -401,16 +401,23 @@ jvmti_write_code(void *agent, char const *sym,
->>         rec=2Ecode_index =3D code_generation++;
->>
->>         ret =3D fwrite_unlocked(&rec, sizeof(rec), 1, fp);
->> -       fwrite_unlocked(sym, sym_len, 1, fp);
->> +       if (ret)
->> +               goto error;
->
->Sorry, it seems I lost a reply to this=2E Won't ret here be the number
->of items written and not an error code? Consequently all writes will
->immediately goto error?
-
-Good thing this is in tmp=2Eperf/core, you're right, the test has to be (r=
-et < 0)=2E=2E=2E I'll fix, thanks!
-
-Also we need some 'perf test' for this :-/
-
-- Arnaldo
->
->Thanks,
->Ian
->
->> +       ret =3D fwrite_unlocked(sym, sym_len, 1, fp);
->> +       if (ret)
->> +               goto error;
->>
->> -       if (code)
->> -               fwrite_unlocked(code, size, 1, fp);
->> +       if (code) {
->> +               ret =3D fwrite_unlocked(code, size, 1, fp);
->> +               if (ret)
->> +                       goto error;
->> +       }
->>
->>         funlockfile(fp);
->> -
->> -       ret =3D 0;
->> -
->> -       return ret;
->> +       return 0;
->> +error:
->> +       funlockfile(fp);
->> +       return -1;
->>  }
->>
->>  int
->> --
->> 2=2E17=2E1
->>
-
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+SGksIFJhbmR5DQoNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFY3IDEvNl0gY2xrOiBpbXg2c2w6
+IFVzZSBCSVQoeCkgdG8gYXZvaWQgc2hpZnRpbmcgc2lnbmVkDQo+IDMyLWJpdCB2YWx1ZSBieSAz
+MSBiaXRzDQo+IA0KPiBPbiA3LzI5LzIwIDQ6NTEgUE0sIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+
+IEhpLCBSYW5keQ0KPiA+DQo+ID4NCj4gPj4gU3ViamVjdDogUmU6IFtQQVRDSCBWNyAxLzZdIGNs
+azogaW14NnNsOiBVc2UgQklUKHgpIHRvIGF2b2lkIHNoaWZ0aW5nDQo+ID4+IHNpZ25lZCAzMi1i
+aXQgdmFsdWUgYnkgMzEgYml0cw0KPiA+Pg0KPiA+PiBPbiA3LzI5LzIwIDc6NDggQU0sIEFuc29u
+IEh1YW5nIHdyb3RlOg0KPiA+Pj4gVXNlIHJlYWRsX3JlbGF4ZWQoKSBpbnN0ZWFkIG9mIF9fcmF3
+X3JlYWRsKCksIGFuZCB1c2UgQklUKHgpIGluc3RlYWQNCj4gPj4+IG9mICgxIDw8IFgpIHRvIGZp
+eCBiZWxvdyBidWlsZCB3YXJuaW5nIHJlcG9ydGVkIGJ5IGtlcm5lbCB0ZXN0IHJvYm90Og0KPiA+
+Pj4NCj4gPj4+IGRyaXZlcnMvY2xrL2lteC9jbGstaW14NnNsLmM6MTQ5OjQ5OiB3YXJuaW5nOiBT
+aGlmdGluZyBzaWduZWQgMzItYml0DQo+ID4+PiB2YWx1ZSBieSAzMSBiaXRzIGlzIHVuZGVmaW5l
+ZCBiZWhhdmlvdXIgW3NoaWZ0VG9vTWFueUJpdHNTaWduZWRdDQo+ID4+PiAgICAgIHdoaWxlICgh
+KF9fcmF3X3JlYWRsKGFuYXRvcF9iYXNlICsgUExMX0FSTSkgJg0KPiA+PiBCTV9QTExfQVJNX0xP
+Q0spKQ0KPiA+Pj4NCj4gPj4+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFu
+Z0BueHAuY29tPg0KPiA+Pj4gUmVwb3J0ZWQtYnk6IGtlcm5lbCB0ZXN0IHJvYm90IDxsa3BAaW50
+ZWwuY29tPg0KPiA+Pj4gLS0tDQo+ID4+PiBDaGFuZ2VzIHNpbmNlIFY2Og0KPiA+Pj4gCS0gaW1w
+cm92ZSB0aGUgc3ViamVjdC4NCj4gPj4+IC0tLQ0KPiA+Pj4gIGRyaXZlcnMvY2xrL2lteC9jbGst
+aW14NnNsLmMgfCAxNSArKysrKysrKy0tLS0tLS0NCj4gPj4+ICAxIGZpbGUgY2hhbmdlZCwgOCBp
+bnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQ0KPiA+Pj4NCj4gPj4+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL2Nsay9pbXgvY2xrLWlteDZzbC5jDQo+ID4+PiBiL2RyaXZlcnMvY2xrL2lteC9jbGst
+aW14NnNsLmMgaW5kZXggMGY2NDdkMS4uZTY5ZGJhMSAxMDA2NDQNCj4gPj4+IC0tLSBhL2RyaXZl
+cnMvY2xrL2lteC9jbGstaW14NnNsLmMNCj4gPj4+ICsrKyBiL2RyaXZlcnMvY2xrL2lteC9jbGst
+aW14NnNsLmMNCj4gPj4+IEBAIC0zLDYgKzMsNyBAQA0KPiA+Pj4gICAqIENvcHlyaWdodCAyMDEz
+LTIwMTQgRnJlZXNjYWxlIFNlbWljb25kdWN0b3IsIEluYy4NCj4gPj4+ICAgKi8NCj4gPj4+DQo+
+ID4+PiArI2luY2x1ZGUgPGxpbnV4L2JpdGZpZWxkLmg+DQo+ID4+DQo+ID4+IEhpLA0KPiA+PiBJ
+IHRoaW5rIHlvdSB3YW50DQo+ID4+ICNpbmNsdWRlIDxsaW51eC9iaXRzLmg+DQo+ID4+DQo+ID4+
+IGZvciBCSVQoKSB1c2FnZS4NCj4gPg0KPiA+IEFjdHVhbGx5LCB0aGUgbGludXgvb2YuaCBhbHJl
+YWR5IGluY2x1ZGVzIGxpbnV4L2JpdG9wcy5oIGFuZA0KPiA+IGxpbnV4L2JpdG9wcy5oIGluY2x1
+ZGVzIGxpbnV4L2JpdHMuaCwgc28gSSB3aWxsIGp1c3QgZHJvcCBsaW51eC9iaXRmaWVsZC5oIGFu
+ZA0KPiBzZW5kIGEgVjguDQo+IA0KPiBvciB5b3UgY291bGQgcmVhZCBEb2N1bWVudGF0aW9uL3By
+b2Nlc3Mvc3VibWl0LWNoZWNrbGlzdC5yc3QsDQo+IHdoZXJlIHJ1bGUgIzEgc2F5czoNCj4gDQo+
+IDEpIElmIHlvdSB1c2UgYSBmYWNpbGl0eSB0aGVuICNpbmNsdWRlIHRoZSBmaWxlIHRoYXQgZGVm
+aW5lcy9kZWNsYXJlcw0KPiAgICB0aGF0IGZhY2lsaXR5LiAgRG9uJ3QgZGVwZW5kIG9uIG90aGVy
+IGhlYWRlciBmaWxlcyBwdWxsaW5nIGluIG9uZXMNCj4gICAgdGhhdCB5b3UgdXNlLg0KDQpVbmRl
+cnN0b29kLCB3aGlsZSBJIHNlYXJjaCAiQklUKCkiIGluIGNsayBkcml2ZXIsIG1vc3Qgb2YgdGhl
+IGRyaXZlcnMgZG9lcyBOT1QgaW5jbHVkZQ0KbGludXgvYml0cy5oIGV2ZW4gdGhleSB1c2UgaXQu
+DQoNCkJ1dCBPSywgSSB3aWxsIHNlbmQgVjkgdG8gaW5jbHVkZSBpdC4NCg0KVGhhbmtzLA0KQW5z
+b24NCg0KDQoNCg0K
