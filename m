@@ -2,150 +2,96 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7275FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CE3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46D0C20672
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09A9220672
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:02:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="zB/f/2N2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ni9dtpix"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbgG3ICU (ORCPT
+        id S1729034AbgG3IC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:02:20 -0400
-Received: from mga07.intel.com ([134.134.136.100]:46003 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726774AbgG3ICR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:02:17 -0400
-IronPort-SDR: +Nm96pxeKleJoqWCDzQoeScF2AGG1cXeKgcU7h2KM+uMxSD2kphcJwgZ9d+mQs3R9R05Ar7aHt
- Y7jkOdUxu1gg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="216036797"
-X-IronPort-AV: E=Sophos;i="5.75,413,1589266800"; 
-   d="scan'208";a="216036797"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 01:02:15 -0700
-IronPort-SDR: xy+QGq28c/i+IC0ugJrL9tHe5/Uk51QyzrwTOHmz+QMizI55mpkxl8Q1En9ySRPaqWKYB+azvZ
- Ir6SKDPq/FJg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,413,1589266800"; 
-   d="scan'208";a="490578032"
-Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
-  by fmsmga006.fm.intel.com with ESMTP; 30 Jul 2020 01:02:14 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX109.amr.corp.intel.com (10.22.240.7) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 30 Jul 2020 01:02:13 -0700
-Received: from orsmsx604.amr.corp.intel.com (10.22.229.17) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 30 Jul 2020 01:02:12 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- orsmsx604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 30 Jul 2020 01:02:12 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.42) by
- edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Thu, 30 Jul 2020 01:02:12 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UUkMSr+rqKUipXSNyAGV7ZRI7lZvlxNaaTrQufTshwZVRYN+3zNkeYuo+cCXCAYEoup8fkRxDj5153QQoM6cBXYwEpH/AdxIu7QHNBl17PbRtsgNkJXfMdyyW25A9UgTJMiEVMoHBrKak4ZcHdX/BBptwlHs+TN7JGRQHcRUt/goDnqWmRs7iN4vsFED3BbOWGduCSOsX7vGmTSxtNsLEJHEcYaS/ottQOYkBkrLT6g5hiD0fmZIhLQKlrX/eYtn7Xys0DWuLHe5qy3uBnE71WM69yqIQ3ncJ06uMa2RcJctvjOwe42fTAZckS9IBDBzrwAL4xfz/P/CHHHcCyToBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OytoeSxkISSPclirR+yJoRs9m+xvNaTmp6C7p1cA0jk=;
- b=lAGe1efjFlNONdRxok9MULQvZsJaeGna9bYZyrkHhtnz3n9WQnR+Fje9W5DtFi+xxkKMbKpMABLnHIJbaiBIHQoEc71u4L+khxg1e5fKOfupHus9xFjLZO+C5hdgAUgskgBU2nL5Bt8R4WaB7bG+o6HDdd2eHxbRCCxFrhrFffmwwuvBAVT4D6oBSP5PmEJEwXBIeFQc3YEJBBIVoDsyKMfjupHuj6gDtw4SSLkljDb/5CQwEp08yZjNPJ1V0CSHxsyl03S1C4Rv0InVqjriToRfxsauuJjmjEqiOEkc8dHsqjvv/+emeECzzuBxxQtaWBk0xNg8U6MEh6NAANoQ1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OytoeSxkISSPclirR+yJoRs9m+xvNaTmp6C7p1cA0jk=;
- b=zB/f/2N28FIm3w6fAXjRorSdDCpwbu0KO+f9bqxGZQvH0vKtpp1EtEeGMVYquSfakA7dGgoVLVx5bvzzg5OJAddTyYuXQrUQ0XTDcEqPaQ2NVpaZg7lp48rF2FIl3Agwte3a5t6LaVCuMLEpt4a03KnPtx0ZxuHLDKNBWAk5fuc=
-Received: from DM6PR11MB3642.namprd11.prod.outlook.com (2603:10b6:5:138::26)
- by DM6PR11MB3739.namprd11.prod.outlook.com (2603:10b6:5:13b::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Thu, 30 Jul
- 2020 08:02:09 +0000
-Received: from DM6PR11MB3642.namprd11.prod.outlook.com
- ([fe80::f043:4bdc:ef57:1b41]) by DM6PR11MB3642.namprd11.prod.outlook.com
- ([fe80::f043:4bdc:ef57:1b41%5]) with mapi id 15.20.3239.019; Thu, 30 Jul 2020
- 08:02:09 +0000
-From:   "Lu, Brent" <brent.lu@intel.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-CC:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Sam McNally <sammc@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Ranjani Sridharan" <ranjani.sridharan@linux.intel.com>,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Daniel Stuart <daniel.stuart14@gmail.com>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        Damian van Soelen <dj.vsoelen@gmail.com>
-Subject: RE: [PATCH 2/2] ASoC: Intel: Add period size constraint on strago
- board
-Thread-Topic: [PATCH 2/2] ASoC: Intel: Add period size constraint on strago
- board
-Thread-Index: AQHWZZiWhH0ib4T+aUeOy2BFXbTqlKkemFEAgAErLkA=
-Date:   Thu, 30 Jul 2020 08:02:09 +0000
-Message-ID: <DM6PR11MB36421D9A808D401416B72D2D97710@DM6PR11MB3642.namprd11.prod.outlook.com>
-References: <1596020585-11517-1-git-send-email-brent.lu@intel.com>
- <1596020585-11517-3-git-send-email-brent.lu@intel.com>
- <4fe97f63-e552-3b2f-803c-53894b196bfd@linux.intel.com>
-In-Reply-To: <4fe97f63-e552-3b2f-803c-53894b196bfd@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [114.25.81.97]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 11c5c899-84a2-4ac7-c312-08d8345edc2f
-x-ms-traffictypediagnostic: DM6PR11MB3739:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB3739ECA45067A2968F0E934D97710@DM6PR11MB3739.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: r5PdFy3vttVZfIe1Stz19KgSHZIwWUg3GrIRMN7cGONcVSXhdZs2+fJloogyPKDxYsQIYMMBiR1S3wkMKAbdaMAx5E41V1ZLlZU07u7SKXjtn22dXaNRlTjP1pZ7TJ2/VL0aYSNn7tsMyI0EMRyy06lp38DIkbLMFsucwYYJZhgJe/6ut+sUKe0hlG7+AFNUXtGUbCGDt1l9GqK9/SV8jxntkTgs+BmReWG53AVqNkMDmhgmrKcvFQyDI5Tev+scd2VPySmjytKRJNrtPJefQFQCto3snNrF80WvZ8cRxpaiE4nW6iiIuCq7M9jUdNFIZS8RuGuYw6qurHPrk5bvbw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3642.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(346002)(376002)(366004)(136003)(5660300002)(52536014)(186003)(7696005)(26005)(76116006)(64756008)(66946007)(86362001)(6506007)(71200400001)(66476007)(66446008)(558084003)(66556008)(110136005)(55016002)(8936002)(7416002)(4326008)(33656002)(2906002)(9686003)(316002)(54906003)(8676002)(478600001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: YG3uKJc69C8GwRe4Kt5S2ptUBG1J9+ZjARDMCTcAhbABYN5dcWmMM6tu1ap+POWgCl02CnH28IyQ4T1tuT+vuSdiNEckWWfgd22RFUjTk/QbOR3aL/JTDy38abxfe284wsaXf7lla98pStxyqIfZ3l48qa7swEnKz1xYBuNZsZ+p1jv//DSmgoXXy8nXXoBuUDdN0iAVKR43QO4RT8ZKhUDKZc9KLWDduaejzfU7/JuuJrD7NPeW6gscxs4W7DesHfDtYLAZsvUnHbfw8jya4xw34Upm/Lmz6zqUI7Qr5LetTYpiL3tnWzQcX4XdvGOn5xnPfLnt+/ztn/nhQJiNlkOOC9ds0DkqyC1ruj8SfUn1GUqgIs5HCv4R/yAA7eumKZtImNctcLSQ0ETI/MiLIQ2p2OWJtyS1cFCRk2IijBF1QmVGBYganKMnCZk6wnVBZoPxcAFqDuTyQsGYZI2umFE34xbkp6wv0/GBN4PFdhvAlzo4phaFNlmJTJrKhFXEYHRfbzONRNIOxJw+hv8BBJL1b6lxpSUgx3cY5+7jeFpOJ61M6JD8PZ2j7tTNc0bm3USRQKeEQj91Km2tCJfRlAb+5o0/UQBV+bd1SMXJQKzMLCFWgolMeGEvqrpVeJBiqunKiLU+SCgKpAkuhMpikw==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 30 Jul 2020 04:02:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51912 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726774AbgG3ICW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:02:22 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8417C061794;
+        Thu, 30 Jul 2020 01:02:22 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id a9so3462276pjd.3;
+        Thu, 30 Jul 2020 01:02:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=XCmfqFtBUrWLGb0HRDwnKJuQyG0oIwWAg+A2BuLLHlk=;
+        b=Ni9dtpixzC9T0JSf1dz8WSqnJqMFFOr6aMpkKq7RUF8VMgW6JliqG5FYvO+SjUr0RC
+         jrgYAaQ2ukMMAjW34DThgLXD+Q3NhOfu7tt0H6kG5lCdNjEqU2yBUkxbEp7xBGE61hQ8
+         Q51KOI1vwwm/fFJwiOdcDWp6ssn2nut+QzTXRuny6Vy0kReeTK/tw8EdBqq+dw6OSzXj
+         BDT2LQBtrxDO6psEf8/6zRasJlWUlVvqw3JKT3gmes8ZViJ+2puSPCRSGkXfVMoO76J/
+         xPp2dxWO/fW345mYWUygzMqthWQQNz9E/loJYeGFZzh/xHyAVWGITVnviouF0XVMGPo+
+         q4Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=XCmfqFtBUrWLGb0HRDwnKJuQyG0oIwWAg+A2BuLLHlk=;
+        b=KseAtjvgp5z+RICrPhBZuZOOemur5w3Cc+oXzQlP3enHy2pQH1OKuSVM86cgBzzTw5
+         mmSVNafQVNE8BoBjCwQLOFbYltBJ2yePKy4MJv05xJ4d/W4scRGUL6o88ixbnO+1bDnb
+         DFHdbgEoPucEFqIEIU2wzBtQH20UfSmdd+FFu2hS6ZbF+jLx83T/sHngkJzUNxen43dL
+         om6eI8hyEEb34tdF3MBstnCukRdBqVQj1CpQ66pemyTdg5htEVeo5KaQ/fdn6Lgoe8EP
+         JjwhQ2ispHvZihwYCxuIFWl82VB5dHd3MFErgh3sx9Nfwqsobwci4JMC0hcP1i6ocykI
+         SIeQ==
+X-Gm-Message-State: AOAM531sOAj3HBM6G/TJw/X37FLFFmnAXbB4PL2qTZz6sHZ9VTuzJgDK
+        MVneADHdx/Ll4QpJJfFFF2eFNbtQf4zGfaMigT9gHQhM
+X-Google-Smtp-Source: ABdhPJy0ddlORXpGjQKfME9zoUWY2prLtamhgQ18XGO0AYNnAP3SyIkK4wzxBORjSqX7wRmj4S5RG2ytTbL1az8lNR8=
+X-Received: by 2002:a17:90b:11c4:: with SMTP id gv4mr1944336pjb.198.1596096141675;
+ Thu, 30 Jul 2020 01:02:21 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3642.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11c5c899-84a2-4ac7-c312-08d8345edc2f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2020 08:02:09.6744
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BrCpbk6CqgxpwP8FDB4QlqzljZPp3Rt7drOBANYHsJ2X14QEGy49z9GfkTE0e3wgxxA6GcKYm2pGd0vhm7oYlA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3739
-X-OriginatorOrg: intel.com
+References: <20200730073702.16887-1-xie.he.0141@gmail.com>
+In-Reply-To: <20200730073702.16887-1-xie.he.0141@gmail.com>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Thu, 30 Jul 2020 01:02:10 -0700
+Message-ID: <CAJht_EO1srhh68DifK61+hpY+zBRU8oOAbJOSpjOqePithc7gw@mail.gmail.com>
+Subject: Re: [PATCH v2] drivers/net/wan/lapbether: Use needed_headroom instead
+ of hard_header_len
+To:     Martin Schiller <ms@dev.tdt.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux X25 <linux-x25@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IA0KPiBJcyB0aGlzIHBhdGNoIHJlcXVpcmVkIGlmIHlvdSd2ZSBhbHJlYWR5IGNvbnN0cmFp
-bmVkIHRoZSBwZXJpb2Qgc2l6ZXMgZm9yIHRoZQ0KPiBwbGF0Zm9ybSBkcml2ZXIgaW4gcGF0Y2gx
-Pw0KDQpZZXMgb3IgYWxzYSB3aWxsIHNlbGVjdCAzMjAgYXMgZGVmYXVsdCBwZXJpb2Qgc2l6ZSBm
-b3IgaXQuDQoNCg0KUmVnYXJkcywNCkJyZW50DQo=
+Hi Martin,
+
+I'm currently working on a plan to make all X.25 drivers (lapbether.c,
+x25_asy.c, hdlc_x25.c) to set dev->hard_header_len /
+dev->needed_headroom correctly. So that upper layers no longer need to
+guess how much headroom a X.25 device needs with a constant value (as
+they currently do).
+
+After studying af_packet.c, I found that X.25 drivers needed to set
+needed_headroom to reserve the headroom instead of using
+hard_header_len. Because hard_header_len should be the length of the
+header that would be created by dev_hard_header, and in this case it
+should be 0, according to the logic of af_packet.c.
+
+So my first step is to fix the settings in lapbether.c. Could you
+review this patch and extend your support via a "Reviewed-by" tag? If
+this can be fixed, I'll go on and fix other X.25 drivers. Thanks!
+
+It's very hard to find reviewers for X.25 code because it is
+relatively unmaintained by people. I hope I can do some of the
+maintenance work. I greatly appreciate your support!
