@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E483C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE5AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F48920809
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA22F2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096964;
-	bh=EK7AU3umgWF+MjgNKJPzI26DlG5PNOhqnBDJBBvQw98=;
+	s=default; t=1596096969;
+	bh=WVGseNld/B1+IQwECE9FwtgVtrQctphA6KMqHwfC9lk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sD8S4tFf98E2Jly0o+8wDBoCMuZSDc5ULd7myhkNR2O+bximez/tqaZ4NXL5q9onT
-	 P/sjPjvLOAcMQrZnXMegT+rEEPbIlWAYlBfJVbbei5pLJWY45jgu+Db4peYgazyQL8
-	 J7yj8IOz5hDOtqLeVWzjI4DiLfNMNPH7cmcafgwQ=
+	b=DN6zmZ6OOOdONzqz6oDB/LmIsRMvcg+no1uw7RZlPWfLnUhwAMNJqkhPiQhH9kj+R
+	 TctEJxfh+vUYUVa9WUp7u8HC0cppYyRdKs3rwnZ1kfrHaIsVcYjjwX2CODEQXeTFI0
+	 ixPtn4Dc93sbR5Wj3LeQ+dWQAh1/jecD/H8MXVKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730063AbgG3IQC (ORCPT
+        id S1729300AbgG3IQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:16:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50772 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:16:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729331AbgG3ILa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:11:30 -0400
+        id S1729556AbgG3IL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:11:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 868B82075F;
-        Thu, 30 Jul 2020 08:11:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CCFC2074B;
+        Thu, 30 Jul 2020 08:11:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096690;
-        bh=EK7AU3umgWF+MjgNKJPzI26DlG5PNOhqnBDJBBvQw98=;
+        s=default; t=1596096686;
+        bh=WVGseNld/B1+IQwECE9FwtgVtrQctphA6KMqHwfC9lk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H48FNtuNkc9UOHQzMBa/5axTipm045YUl07naGt0k6FuYJfK5r5Mq2n8ZIWkmkMew
-         kOdWGRFd/fBJ4ikTq4o4x/2XT/T32nuFJAjL2ulG9YVL3Hnuz/Jo9Ox9qHmTZbb5Zf
-         p9mpVLN4IcXobJblPxbmTNAAKaWyrpNKNwAQfVoQ=
+        b=O/pHUYMcSxI4HWhUvytln0vS545DwTibF9iXsQaGSRz7OqAnqcIsL70bxih0a1AOl
+         BZF/cB5aZMP33bmqFAo2QlVyJ/MQsJY7fz3ruqbebn4B78tpwGtluiz+GJ3/KCLvf2
+         QxFGnbTWkaxFkc/P0pFJ/nN0VyChInJCPk2QwFmo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 22/54] regmap: dev_get_regmap_match(): fix string comparison
-Date:   Thu, 30 Jul 2020 10:05:01 +0200
-Message-Id: <20200730074422.276619714@linuxfoundation.org>
+        stable@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
+        Shik Chen <shik@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 21/54] scripts/decode_stacktrace: strip basepath from all paths
+Date:   Thu, 30 Jul 2020 10:05:00 +0200
+Message-Id: <20200730074422.227700703@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
 References: <20200730074421.203879987@linuxfoundation.org>
@@ -60,41 +65,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Kleine-Budde <mkl@pengutronix.de>
+From: Pi-Hsun Shih <pihsun@chromium.org>
 
-[ Upstream commit e84861fec32dee8a2e62bbaa52cded6b05a2a456 ]
+[ Upstream commit d178770d8d21489abf5bafefcbb6d5243b482e9a ]
 
-This function is used by dev_get_regmap() to retrieve a regmap for the
-specified device. If the device has more than one regmap, the name parameter
-can be used to specify one.
+Currently the basepath is removed only from the beginning of the string.
+When the symbol is inlined and there's multiple line outputs of
+addr2line, only the first line would have basepath removed.
 
-The code here uses a pointer comparison to check for equal strings. This
-however will probably always fail, as the regmap->name is allocated via
-kstrdup_const() from the regmap's config->name.
+Change to remove the basepath prefix from all lines.
 
-Fix this by using strcmp() instead.
-
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Link: https://lore.kernel.org/r/20200703103315.267996-1-mkl@pengutronix.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 31013836a71e ("scripts/decode_stacktrace: match basepath using shell prefix operator, not regex")
+Co-developed-by: Shik Chen <shik@chromium.org>
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Signed-off-by: Shik Chen <shik@chromium.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Nicolas Boichat <drinkcat@chromium.org>
+Cc: Jiri Slaby <jslaby@suse.cz>
+Link: http://lkml.kernel.org/r/20200720082709.252805-1-pihsun@chromium.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/regmap/regmap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/decode_stacktrace.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index 77cabde977edd..4a4efc6f54b55 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -1106,7 +1106,7 @@ static int dev_get_regmap_match(struct device *dev, void *res, void *data)
+diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
+index 4f5e76f76b9dc..003968cb04d4a 100755
+--- a/scripts/decode_stacktrace.sh
++++ b/scripts/decode_stacktrace.sh
+@@ -63,8 +63,8 @@ parse_symbol() {
+ 		return
+ 	fi
  
- 	/* If the user didn't specify a name match any */
- 	if (data)
--		return (*r)->name == data;
-+		return !strcmp((*r)->name, data);
- 	else
- 		return 1;
- }
+-	# Strip out the base of the path
+-	code=${code#$basepath/}
++	# Strip out the base of the path on each line
++	code=$(while read -r line; do echo "${line#$basepath/}"; done <<< "$code")
+ 
+ 	# In the case of inlines, move everything to same line
+ 	code=${code//$'\n'/' '}
 -- 
 2.25.1
 
