@@ -2,140 +2,96 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B14C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 768CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4FAA20809
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:21:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596147664;
-	bh=NgJpcR0LL0zYDccbtazPPHHNYrCpIo7SgHXiesZqEp4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RBJ3SKB5JDX/CgQ+AxVfc52UWZDQ73FKvOeTiWOQRdVB3C+ILF/Ai3UMzvaz6IAPk
-	 fqiYB/sw4/Ij76U+CAWkVJfRse9yxMobUTYSuAyuXBN4oLCfmOv36O+JZR3GVRLmW7
-	 T4TNjJOhf3Mtii0ERxA10LID5W1PguUK7CgGekiQ=
+	by mail.kernel.org (Postfix) with ESMTP id 453E020809
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:21:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UqXHJHdz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729092AbgG3WVD (ORCPT
+        id S1730251AbgG3WVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 18:21:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43184 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728070AbgG3WVC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 18:21:02 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75357C061574;
-        Thu, 30 Jul 2020 15:21:02 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id m20so11589050eds.2;
-        Thu, 30 Jul 2020 15:21:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=y+mpXV57TW2iO0c6IHfRHHNirfzxpC6g/J95M/azzkY=;
-        b=JWF6dui1IzPCk7OPjzXS68CeUeDkUYBrDVhoV57bX+R12EF+lGgYYXfAiiYl+rvLuR
-         qNNUK2R9V/hIYGJqF9d+oukJDzsFTk2qlCfw/l7MYYlV9RxqDGnyBZBW7wS/AFXKRK8/
-         ybTYNbEz+IWOaqzW4MfuyXO8FrXHfvkY+V9U9xElqO0BlWSKfjpy3i9DOzvYi7UCAMWQ
-         LZPbbHo5WFq3dzpHDQFU471gNJI84dYat78N7NFpCfFfOlo0hoQ6DzzItwTlpV0nxi3W
-         pZ1rtwtcgF2/j5vcp5xYYj0plvPMRLJSF4Ior4nDQxtxqRkn/v/mXjI+ngtUqfKFDXd1
-         GIfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=y+mpXV57TW2iO0c6IHfRHHNirfzxpC6g/J95M/azzkY=;
-        b=IGj0WRtR7mN7fNVLSGIaTiCr+Qjdi7jx+k9Ds8ckbyLG9VM7k4sE0YmBaCfJMGgqjq
-         lRpbNyjMEhZvxm5cvm0DeLYThJovIGr253EJ0za9MHPMj8O8878OoVhcbKicM1q0P9S/
-         r/p3SjT6a+y31CXSIpWVCCmaZ/jfy23R7QQ0019o/2Fsi9J+t48skfQ3fFbO17FigRIn
-         zUKSnWKpXLucIEmyVZbt38ild9c9dt/6SqmzwUiz2HeXMYpNTBYP779P747sRwh3iF5y
-         uRiddCGvvtZ7C8v8rnO2DaiKIt55aQbtIA4Ye7DYcjSaHsHwvQNkOSjkOsA4JfKurJL3
-         tIog==
-X-Gm-Message-State: AOAM533lQcC/HU/XVKWuj7aK65Gyyy0yAV4NDkBtHAz1gyzuFtP3RxTH
-        BwDSZ8J1tr4/3mNPjYvO4YI=
-X-Google-Smtp-Source: ABdhPJyI6nx7BepTT+yJdQ/rbOjasxKetAGavgY9Wfr4+anngSW2RrkSYvoL9VX9kHKzBffTSZ/FGA==
-X-Received: by 2002:a05:6402:1346:: with SMTP id y6mr1167784edw.192.1596147661214;
-        Thu, 30 Jul 2020 15:21:01 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id y14sm6313577ejr.35.2020.07.30.15.20.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 15:20:59 -0700 (PDT)
-Date:   Fri, 31 Jul 2020 00:20:57 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org, arnd@arndb.de,
-        bigeasy@linutronix.de, elver@google.com, ethp@qq.com,
-        frederic@kernel.org, jbi.octave@gmail.com, joel@joelfernandes.org,
-        lihaoliang@google.com, madhuparnabhowmik10@gmail.com,
-        mchehab+huawei@kernel.org, peter.enderborg@sony.com,
-        rdunlap@infradead.org, richard.weiyang@linux.alibaba.com,
-        urezki@gmail.com, zou_wei@huawei.com, tglx@linutronix.de
-Subject: Re: [GIT PULL tip/core/rcu] RCU commits for v5.9
-Message-ID: <20200730222057.GA423051@gmail.com>
-References: <20200714172701.GA31369@paulmck-ThinkPad-P72>
+        Thu, 30 Jul 2020 18:21:10 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43881 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728063AbgG3WVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 18:21:09 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BHlHR0sPjz9sTC;
+        Fri, 31 Jul 2020 08:21:06 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596147667;
+        bh=v81W8GIsNfgI+jNrSnQzwtV4UC776qBdtzVq2xM/XQQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=UqXHJHdzyspL7lWX4rhLYDvN3nEx4Axl3nmlhDZWHztQzBp3xjhd4W03D2/qlrctd
+         Ce9h6uOCex41gBy1mbMrG1+8SHHHBA9QKCNm4//GdqY6klyTUOTEqZCq4VzCxZFaBI
+         RBawGJaetk2si3MZpNL4yYnWlQYw1H2UyURgerEs+rZAZyLXPYKVA81Hwy0BLZ9YaF
+         N3MBmVh0d1ALlAj45ffnR9cPkHPThUhb2UIJflNp0RjwtotKkwoks1x7JyQnTDE2VO
+         DH0d3P0YqYkEaRJPHhOII49+bEZUfROx/3E51vNeX7hQncuvm2jppTj7zdxNbiateA
+         qYQY7xMXZ3AWQ==
+Date:   Fri, 31 Jul 2020 08:21:05 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        Wireless <linux-wireless@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        P Praneesh <ppranees@codeaurora.org>
+Subject: linux-next: Fixes tag needs some work in the mac80211-next tree
+Message-ID: <20200731082105.75e60bda@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714172701.GA31369@paulmck-ThinkPad-P72>
+Content-Type: multipart/signed; boundary="Sig_/KdgfdNUuPJW4qH/heNXQkr5";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/KdgfdNUuPJW4qH/heNXQkr5
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-* Paul E. McKenney <paulmck@kernel.org> wrote:
+Hi all,
 
-> Hello, Ingo!
-> 
-> This pull request contains the following changes:
-> 
-> 1.	Documentation updates.
-> 
-> 	https://lore.kernel.org/lkml/20200623000923.GA25047@paulmck-ThinkPad-P72
-> 
-> 2.	Miscellaneous fixes.
-> 
-> 	https://lore.kernel.org/lkml/20200623002128.GA25456@paulmck-ThinkPad-P72
-> 
-> 3.	kfree_rcu updates.
-> 
-> 	https://lore.kernel.org/lkml/20200624201200.GA28901@paulmck-ThinkPad-P72
-> 
-> 4.	RCU tasks updates.
-> 
-> 	https://lore.kernel.org/lkml/20200623002423.GA25869@paulmck-ThinkPad-P72
-> 
-> 5.	Read-side scalability tests.
-> 
-> 	https://lore.kernel.org/lkml/20200623002941.GA26089@paulmck-ThinkPad-P72
-> 
-> 6.	SRCU updates.
-> 
-> 	https://lore.kernel.org/lkml/20200623003310.GA26539@paulmck-ThinkPad-P72
-> 
-> 7.	Torture-test updates.
-> 
-> 	https://lore.kernel.org/lkml/20200623003731.GA26717@paulmck-ThinkPad-P72
-> 
-> All of these have been subjected to the kbuild test robot and -next
-> testing, and are available in the git repository based on v5.8-rc3 at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git for-mingo
-> 
-> for you to fetch changes up to 13625c0a4074d3bab61b1dc70a828b574255f339:
-> 
->   Merge branches 'doc.2020.06.29a', 'fixes.2020.06.29a', 'kfree_rcu.2020.06.29a', 'rcu-tasks.2020.06.29a', 'scale.2020.06.29a', 'srcu.2020.06.29a' and 'torture.2020.06.29a' into HEAD (2020-06-29 12:03:15 -0700)
+In commit
 
->  61 files changed, 2395 insertions(+), 680 deletions(-)
+  5fa4ab3cf34e ("mac80211: avoid bss color setting in non-HE modes")
 
-Pulled into tip:core/rcu, thanks a lot Paul!
+Fixes tag
 
-I assume the fix Uladzislau Rezki is working on will resolve Sebastian 
-Andrzej Siewior's objections?
+  Fixes: eb024f1abca3("mac80211: avoid bss color setting in non-he mode")
 
-Thanks,
+has these problem(s):
 
-	Ingo
+  - Target SHA1 does not exist
+
+I can't find which commit is meant.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/KdgfdNUuPJW4qH/heNXQkr5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8jR9EACgkQAVBC80lX
+0Gy34Af/e7rSP2pQ9PkQud80zM3HRxW2nPNYDqI/xj3I28TsaAJRWLPEBWAhikLL
+uoSQdUPTUZA3w3CoP77SSHLbCll/DpgJmouBWunL+5d7y4DVpSk0b8o1vOm8wyyL
+h0KG4b2HGrwiH5KHA5tLExNN7bzELv7cORy7Z8RBD9EZ/Cas8enBi44oa/iLA9GO
+WrJB1yUe4QsGOwSuV5opPkXaMSJuDH6IEn0LNltRNyx9mkkhhWJSsuOVMUsTHGX7
+6cjtZEwT07jgenjPR0ca2uS0LEEzA7RQ6GB56V2Habw7CLbGeH1YNuyMjPyUzdTP
+Y2LE+NdS7gWakniGnPTfa0q8k8qzaQ==
+=DuOS
+-----END PGP SIGNATURE-----
+
+--Sig_/KdgfdNUuPJW4qH/heNXQkr5--
