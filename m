@@ -2,202 +2,222 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E71DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 955FBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69D4821D95
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:51:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UQD1Ik9n"
+	by mail.kernel.org (Postfix) with ESMTP id 7505220829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:59:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbgG3Lvn (ORCPT
+        id S1727817AbgG3L7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 07:51:43 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25423 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727781AbgG3Lvn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 07:51:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596109901;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=XbbtDAwlbqFbl9LRgvVvqdOJ/w6Qt8l6sHZuVLApgCc=;
-        b=UQD1Ik9n7l+3El0T+pzDeBH8w19lUMPzS13CBg2x5ZpnPA+R0reEsiQB6LIt6P7Ckbkk2x
-        2QeCLY0E54N9mE5t/5H86zz0c6LDSwM8yg8MQQdXyur1kxkO69em2IevcfBIDVDL2uJHXL
-        zu90CuHOZXDO2eAuMgkFdV4OH7rtnVo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-446-lpsWJq8MMBO5dqJYqQQUdg-1; Thu, 30 Jul 2020 07:51:37 -0400
-X-MC-Unique: lpsWJq8MMBO5dqJYqQQUdg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0FB6D79EDC;
-        Thu, 30 Jul 2020 11:51:34 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ABF8B10002CA;
-        Thu, 30 Jul 2020 11:51:16 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-cc:     dhowells@redhat.com, Alexander Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Jeff Layton <jlayton@redhat.com>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Upcoming: fscache rewrite
+        Thu, 30 Jul 2020 07:59:32 -0400
+Received: from relay.sw.ru ([185.231.240.75]:56344 "EHLO relay3.sw.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726774AbgG3L7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 07:59:30 -0400
+Received: from [192.168.15.64] (helo=localhost.localdomain)
+        by relay3.sw.ru with esmtp (Exim 4.93)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1k17DM-0002ux-03; Thu, 30 Jul 2020 14:59:12 +0300
+Subject: [PATCH 01/23] ns: Add common refcount into ns_common add use it as
+ counter for net_ns
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+To:     viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
+        ebiederm@xmission.com, akpm@linux-foundation.org,
+        christian.brauner@ubuntu.com, areber@redhat.com, serge@hallyn.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        ktkhai@virtuozzo.com
+Date:   Thu, 30 Jul 2020 14:59:25 +0300
+Message-ID: <159611036589.535980.1765795847221907147.stgit@localhost.localdomain>
+In-Reply-To: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
+References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <447451.1596109876.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Thu, 30 Jul 2020 12:51:16 +0100
-Message-ID: <447452.1596109876@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus, Trond/Anna, Steve, Eric,
+Currently, every type of namespaces has its own counter,
+which is stored in ns-specific part. Say, @net has
+struct net::count, @pid has struct pid_namespace::kref, etc.
 
-I have an fscache rewrite that I'm tempted to put in for the next merge
-window:
+This patchset introduces unified counter for all types
+of namespaces, and converts net namespace to use it first.
 
-	https://lore.kernel.org/linux-fsdevel/159465784033.1376674.18106463693989=
-811037.stgit@warthog.procyon.org.uk/
+Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+---
+ include/linux/ns_common.h     |    1 +
+ include/net/net_namespace.h   |   11 ++++-------
+ net/core/net-sysfs.c          |    6 +++---
+ net/core/net_namespace.c      |    6 +++---
+ net/ipv4/inet_timewait_sock.c |    4 ++--
+ net/ipv4/tcp_metrics.c        |    2 +-
+ 6 files changed, 14 insertions(+), 16 deletions(-)
 
-It improves the code by:
+diff --git a/include/linux/ns_common.h b/include/linux/ns_common.h
+index 5fbc4000358f..27db02ebdf36 100644
+--- a/include/linux/ns_common.h
++++ b/include/linux/ns_common.h
+@@ -8,6 +8,7 @@ struct ns_common {
+ 	atomic_long_t stashed;
+ 	const struct proc_ns_operations *ops;
+ 	unsigned int inum;
++	refcount_t count;
+ };
+ 
+ #endif
+diff --git a/include/net/net_namespace.h b/include/net/net_namespace.h
+index 2ee5901bec7a..cb4b33d7834b 100644
+--- a/include/net/net_namespace.h
++++ b/include/net/net_namespace.h
+@@ -60,9 +60,6 @@ struct net {
+ 	refcount_t		passive;	/* To decide when the network
+ 						 * namespace should be freed.
+ 						 */
+-	refcount_t		count;		/* To decided when the network
+-						 *  namespace should be shut down.
+-						 */
+ 	spinlock_t		rules_mod_lock;
+ 
+ 	unsigned int		dev_unreg_count;
+@@ -245,7 +242,7 @@ void __put_net(struct net *net);
+ 
+ static inline struct net *get_net(struct net *net)
+ {
+-	refcount_inc(&net->count);
++	refcount_inc(&net->ns.count);
+ 	return net;
+ }
+ 
+@@ -256,14 +253,14 @@ static inline struct net *maybe_get_net(struct net *net)
+ 	 * exists.  If the reference count is zero this
+ 	 * function fails and returns NULL.
+ 	 */
+-	if (!refcount_inc_not_zero(&net->count))
++	if (!refcount_inc_not_zero(&net->ns.count))
+ 		net = NULL;
+ 	return net;
+ }
+ 
+ static inline void put_net(struct net *net)
+ {
+-	if (refcount_dec_and_test(&net->count))
++	if (refcount_dec_and_test(&net->ns.count))
+ 		__put_net(net);
+ }
+ 
+@@ -275,7 +272,7 @@ int net_eq(const struct net *net1, const struct net *net2)
+ 
+ static inline int check_net(const struct net *net)
+ {
+-	return refcount_read(&net->count) != 0;
++	return refcount_read(&net->ns.count) != 0;
+ }
+ 
+ void net_drop_ns(void *);
+diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+index 9de33b594ff2..655a88b0071c 100644
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -1025,7 +1025,7 @@ net_rx_queue_update_kobjects(struct net_device *dev, int old_num, int new_num)
+ 	while (--i >= new_num) {
+ 		struct kobject *kobj = &dev->_rx[i].kobj;
+ 
+-		if (!refcount_read(&dev_net(dev)->count))
++		if (!refcount_read(&dev_net(dev)->ns.count))
+ 			kobj->uevent_suppress = 1;
+ 		if (dev->sysfs_rx_queue_group)
+ 			sysfs_remove_group(kobj, dev->sysfs_rx_queue_group);
+@@ -1603,7 +1603,7 @@ netdev_queue_update_kobjects(struct net_device *dev, int old_num, int new_num)
+ 	while (--i >= new_num) {
+ 		struct netdev_queue *queue = dev->_tx + i;
+ 
+-		if (!refcount_read(&dev_net(dev)->count))
++		if (!refcount_read(&dev_net(dev)->ns.count))
+ 			queue->kobj.uevent_suppress = 1;
+ #ifdef CONFIG_BQL
+ 		sysfs_remove_group(&queue->kobj, &dql_group);
+@@ -1850,7 +1850,7 @@ void netdev_unregister_kobject(struct net_device *ndev)
+ {
+ 	struct device *dev = &ndev->dev;
+ 
+-	if (!refcount_read(&dev_net(ndev)->count))
++	if (!refcount_read(&dev_net(ndev)->ns.count))
+ 		dev_set_uevent_suppress(dev, 1);
+ 
+ 	kobject_get(&dev->kobj);
+diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+index dcd61aca343e..5f658cbedd34 100644
+--- a/net/core/net_namespace.c
++++ b/net/core/net_namespace.c
+@@ -44,7 +44,7 @@ static struct key_tag init_net_key_domain = { .usage = REFCOUNT_INIT(1) };
+ #endif
+ 
+ struct net init_net = {
+-	.count		= REFCOUNT_INIT(1),
++	.ns.count	= REFCOUNT_INIT(1),
+ 	.dev_base_head	= LIST_HEAD_INIT(init_net.dev_base_head),
+ #ifdef CONFIG_KEYS
+ 	.key_domain	= &init_net_key_domain,
+@@ -248,7 +248,7 @@ int peernet2id_alloc(struct net *net, struct net *peer, gfp_t gfp)
+ {
+ 	int id;
+ 
+-	if (refcount_read(&net->count) == 0)
++	if (refcount_read(&net->ns.count) == 0)
+ 		return NETNSA_NSID_NOT_ASSIGNED;
+ 
+ 	spin_lock(&net->nsid_lock);
+@@ -328,7 +328,7 @@ static __net_init int setup_net(struct net *net, struct user_namespace *user_ns)
+ 	int error = 0;
+ 	LIST_HEAD(net_exit_list);
+ 
+-	refcount_set(&net->count, 1);
++	refcount_set(&net->ns.count, 1);
+ 	refcount_set(&net->passive, 1);
+ 	get_random_bytes(&net->hash_mix, sizeof(u32));
+ 	net->dev_base_seq = 1;
+diff --git a/net/ipv4/inet_timewait_sock.c b/net/ipv4/inet_timewait_sock.c
+index c411c87ae865..437afe392e66 100644
+--- a/net/ipv4/inet_timewait_sock.c
++++ b/net/ipv4/inet_timewait_sock.c
+@@ -272,14 +272,14 @@ void inet_twsk_purge(struct inet_hashinfo *hashinfo, int family)
+ 				continue;
+ 			tw = inet_twsk(sk);
+ 			if ((tw->tw_family != family) ||
+-				refcount_read(&twsk_net(tw)->count))
++				refcount_read(&twsk_net(tw)->ns.count))
+ 				continue;
+ 
+ 			if (unlikely(!refcount_inc_not_zero(&tw->tw_refcnt)))
+ 				continue;
+ 
+ 			if (unlikely((tw->tw_family != family) ||
+-				     refcount_read(&twsk_net(tw)->count))) {
++				     refcount_read(&twsk_net(tw)->ns.count))) {
+ 				inet_twsk_put(tw);
+ 				goto restart;
+ 			}
+diff --git a/net/ipv4/tcp_metrics.c b/net/ipv4/tcp_metrics.c
+index 279db8822439..39710c417565 100644
+--- a/net/ipv4/tcp_metrics.c
++++ b/net/ipv4/tcp_metrics.c
+@@ -887,7 +887,7 @@ static void tcp_metrics_flush_all(struct net *net)
+ 		pp = &hb->chain;
+ 		for (tm = deref_locked(*pp); tm; tm = deref_locked(*pp)) {
+ 			match = net ? net_eq(tm_net(tm), net) :
+-				!refcount_read(&tm_net(tm)->count);
++				!refcount_read(&tm_net(tm)->ns.count);
+ 			if (match) {
+ 				*pp = tm->tcpm_next;
+ 				kfree_rcu(tm, rcu_head);
 
- (*) Ripping out the stuff that uses page cache snooping and kernel_write(=
-)
-     and using kiocb instead.  This gives multiple wins: uses async DIO ra=
-ther
-     than snooping for updated pages and then copying them, less VM overhe=
-ad.
-
- (*) Object management is also simplified, getting rid of the state machin=
-e
-     that was managing things and using a much simplified thread pool inst=
-ead.
-
- (*) Object invalidation creates a tmpfile and diverts new activity to tha=
-t so
-     that it doesn't have to synchronise in-flight ADIO.
-
- (*) Using a bitmap stored in an xattr rather than using bmap to find out =
-if
-     a block is present in the cache.  Probing the backing filesystem's
-     metadata to find out is not reliable in modern extent-based filesyste=
-ms
-     as them may insert or remove blocks of zeros.  Even SEEK_HOLE/SEEK_DA=
-TA
-     are problematic since they don't distinguish transparently inserted
-     bridging.
-
-I've provided a read helper that handles ->readpage, ->readpages, and
-preparatory writes in ->write_begin.  Willy is looking at using this as a =
-way
-to roll his new ->readahead op out into filesystems.  A good chunk of this
-will move into MM code.
-
-The code is simpler, and this is nice too:
-
- 67 files changed, 5947 insertions(+), 8294 deletions(-)
-
-not including documentation changes, which I need to convert to rst format
-yet.  That removes a whole bunch more lines.
-
-But there are reasons you might not want to take it yet:
-
- (1) It starts off by disabling fscache support in all the filesystems tha=
-t
-     use it: afs, nfs, cifs, ceph and 9p.  I've taken care of afs, Dave
-     Wysochanski has patches for nfs:
-
-	https://lore.kernel.org/linux-nfs/1596031949-26793-1-git-send-email-dwyso=
-cha@redhat.com/
-
-     but they haven't been reviewed by Trond or Anna yet, and Jeff Layton =
-has
-     patches for ceph:
-
-	https://marc.info/?l=3Dceph-devel&m=3D159541538914631&w=3D2
-
-     and I've briefly discussed cifs with Steve, but nothing has started t=
-here
-     yet.  9p I've not looked at yet.
-
-     Now, if we're okay for going a kernel release with 4/5 filesystems wi=
-th
-     caching disabled and then pushing the changes for individual filesyst=
-ems
-     through their respective trees, it might be easier.
-
-     Unfortunately, I wasn't able to get together with Trond and Anna at L=
-SF
-     to discuss this.
-
- (2) The patched afs fs passed xfstests -g quick (unlike the upstream code
-     that oopses pretty quickly with caching enabled).  Dave and Jeff's nf=
-s
-     and ceph code is getting close, but not quite there yet.
-
- (3) Al has objections to the ITER_MAPPING iov_iter type that I added
-
-	https://lore.kernel.org/linux-fsdevel/20200719014436.GG2786714@ZenIV.linu=
-x.org.uk/
-
-     but note that iov_iter_for_each_range() is not actually used by anyth=
-ing.
-
-     However, Willy likes it and would prefer to make it ITER_XARRAY inste=
-ad
-     as he might be able to use it in other places, though there's an issu=
-e
-     where I'm calling find_get_pages_contig() which takes a mapping (thou=
-gh
-     all it does is then get the xarray out of it).
-
-     Instead I would have to use ITER_BVEC, which has quite a high overhea=
-d,
-     though it would mean that the RCU read lock wouldn't be necessary.  T=
-his
-     would require 1K of memory for every 256K block the cache wants to re=
-ad;
-     for any read >1M, I'd have to use vmalloc() instead.
-
-     I'd also prefer not to use ITER_BVEC because the offset and length ar=
-e
-     superfluous here.  If ITER_MAPPING is not good, would it be possible =
-to
-     have an ITER_PAGEARRAY that just takes a page array instead?  Or, eve=
-n,
-     create a transient xarray?
-
- (4) The way object culling is managed needs overhauling too, but that's a
-     whole 'nother patchset.  We could wait till that's done too, but its =
-lack
-     doesn't prevent what we have now being used.
-
-Thoughts?
-
-David
 
