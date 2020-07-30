@@ -2,119 +2,180 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B531C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8ECCC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B83920829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9619D20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:38:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="hF6zjJlK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gJwzjMhs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728527AbgG3DiI (ORCPT
+        id S1728538AbgG3DiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 23:38:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39824 "EHLO
+        Wed, 29 Jul 2020 23:38:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728491AbgG3DiG (ORCPT
+        with ESMTP id S1728470AbgG3DiW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 23:38:06 -0400
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90111C0619D2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 20:38:05 -0700 (PDT)
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 6B1728011F;
-        Thu, 30 Jul 2020 15:38:00 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1596080280;
-        bh=zj6MeGpKBno5Q9imPzulxAOCtgQV2JSmD3hyVPNyDJM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=hF6zjJlK5tK0ahmbdj9r/Ej84yc2qbeIkvwrlkiJtk1KyC9NpkiF/gp7tl1uqjKod
-         z5P4UsoPYLzSmDuorFzbAfCDGbWfOSulcP4bqrbTmJhoBD/yQzyMtgc+4CvoOX5JQg
-         SU5QQzL4UPnINK+ndupe8hI9XcoZAXBo1cPh7QUG/kfj/OaB8WirCg6f+KGIz60lEg
-         X5iLEzVNzdH+scla2I87KKVb2LclUtQq6f4gNq32MkjKT6OXER2/L92H20Gl63/Df/
-         1SIT8fuik6mXvFyHdxkoAY3gtqwpU9SEFwar5ISi4fBHpup8I/gRSWbUQqcZlgBO6q
-         IrK400aLtT0mQ==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f2240990000>; Thu, 30 Jul 2020 15:38:01 +1200
-Received: from markto-dl.ws.atlnz.lc (markto-dl.ws.atlnz.lc [10.33.23.25])
-        by smtp (Postfix) with ESMTP id 018C213EF0D;
-        Thu, 30 Jul 2020 15:38:00 +1200 (NZST)
-Received: by markto-dl.ws.atlnz.lc (Postfix, from userid 1155)
-        id 3C3A733F7C9; Thu, 30 Jul 2020 15:38:00 +1200 (NZST)
-From:   Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-To:     bhelgaas@google.com, rjui@broadcom.com, sbranden@broadcom.com,
-        f.fainelli@gmail.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-Subject: [PATCH 2/3] PCI: iproc: Stop using generic config read/write functions
-Date:   Thu, 30 Jul 2020 15:37:46 +1200
-Message-Id: <20200730033747.18931-2-mark.tomlinson@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200730033747.18931-1-mark.tomlinson@alliedtelesis.co.nz>
-References: <20200730033747.18931-1-mark.tomlinson@alliedtelesis.co.nz>
+        Wed, 29 Jul 2020 23:38:22 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99EBFC0619D2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 20:38:21 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id s81so861664vkb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 20:38:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=z1sAyLTDEjPM6zyaHgMGx2Wjb/mXRdUmNjDBN1uT0q4=;
+        b=gJwzjMhsyl7z5qQHIT4ATU64NfDhGWH8Yy6QsBH4feSwQGonlDnIyhBffRnVCxPjYm
+         XOyvlqZL0vWEMZL7Ub0+z5NsBy/qkBQfF6mXo7fRQTmLiG3fXgNUcgIy4GqYCcwfkrXi
+         V2uQyR3LekHvhKFdXbSjcwn8wNPHdJCTvTxVAlcfczACk2/QaiqqBwjzeuKOeXwNpilW
+         +QuiN8Fa5WS7KjQdgOAEyDsY2XoYtdnZwM5mZixDuU+TJO8BJh3aqpD+lbbPP/JoQR49
+         rqgW3ekcHn6gEZozVfm9i1Fhrt3tpxDCVhilO5oNDRcMSx4snhTkM38Ch6EBwYtL3aOa
+         4ZUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=z1sAyLTDEjPM6zyaHgMGx2Wjb/mXRdUmNjDBN1uT0q4=;
+        b=GK/9I4/qCidxSVf8fE//olEEPxZmXNC/yyBFTcv2GW9pGiI8jUlABBsfnNja1J/ENU
+         nRsTm4Oflx8IeG48eFIK5HSFtt7d+HhJVc/8aeotCksvd5GozcYZIKA7zqWHq1ilUkqW
+         3VHuWk0m0CTLsMoygaIYV91HvnRerF3z0HWblURub1PfCQ0HtqUmKdmx6k/wChVBZTv/
+         RNCPZiVHvkyG+g40IrG5UhjDb6TzfK5ouX5n7NzbGyc5avKRpefKXWTUjzLSXuEgYkS4
+         yVhsBl42VE6Xkaf/RlLXhR4scCYwvySjPXzNJnqxcO7lNoC49J1ZFWR/Pv08QuOrfKkh
+         EMbQ==
+X-Gm-Message-State: AOAM533bT23GLVCXIad5TEdvlTI8HPTq+D+7X39uP0r3n3rBIWiGAG8E
+        SmeygKEp3tMKHmEF0tIXGyk70aFwS5BGb1GThmhIFg==
+X-Google-Smtp-Source: ABdhPJyRpse/6SEsyCNIObavCe1OrUc08rciOedYIEiDwarn5tQpeVbFpe3wKPhtvJUw/q52Dxb8lzVrHqXgF9y7cDA=
+X-Received: by 2002:a1f:2688:: with SMTP id m130mr556541vkm.48.1596080300428;
+ Wed, 29 Jul 2020 20:38:20 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200724020551.2737376-1-badhri@google.com> <20200729145309.GA3490882@kroah.com>
+ <CAPTae5+JbpzC7qzznXFqLPL-KrPzHLaHsJXj29Bx-jW1zEPEAQ@mail.gmail.com> <f7fe51da-5dd7-5065-b5c7-426bf8e07c29@roeck-us.net>
+In-Reply-To: <f7fe51da-5dd7-5065-b5c7-426bf8e07c29@roeck-us.net>
+From:   Badhri Jagan Sridharan <badhri@google.com>
+Date:   Wed, 29 Jul 2020 20:37:44 -0700
+Message-ID: <CAPTae5JMaxa5ZVZG=DKshYVoeedon1KvH2coygCa4dRS8qKAxg@mail.gmail.com>
+Subject: Re: [PATCH v2] usb: typec: tcpm: Migrate workqueue to RT priority for
+ processing events
+To:     Guenter Roeck <linux@roeck-us.net>, hdegoede@redhat.com
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        USB <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pci_generic_config_write32() function will give warning messages
-whenever writing less than 4 bytes at a time. As there is nothing we can
-do about this without changing the hardware, the message is just a
-nuisance. So instead of using the generic functions, use the functions
-that have already been written for reading/writing the config registers.
+Hi Guenter,
 
-Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
----
- drivers/pci/controller/pcie-iproc.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+I see that Hans is saying that he has submitted some patch here.
+https://lore.kernel.org/lkml/65f27abc-69c8-3877-be5b-e5e478153af9@redhat.co=
+m/
+But, haven't found the actual patches yet !
 
-diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller=
-/pcie-iproc.c
-index 2c836eede42c..68ecd3050529 100644
---- a/drivers/pci/controller/pcie-iproc.c
-+++ b/drivers/pci/controller/pcie-iproc.c
-@@ -709,12 +709,13 @@ static int iproc_pcie_config_read32(struct pci_bus =
-*bus, unsigned int devfn,
- {
- 	int ret;
- 	struct iproc_pcie *pcie =3D iproc_data(bus);
-+	int busno =3D bus->number;
-=20
- 	iproc_pcie_apb_err_disable(bus, true);
- 	if (pcie->iproc_cfg_read)
- 		ret =3D iproc_pcie_config_read(bus, devfn, where, size, val);
- 	else
--		ret =3D pci_generic_config_read32(bus, devfn, where, size, val);
-+		ret =3D iproc_pci_raw_config_read32(pcie, busno, devfn, where, size, v=
-al);
- 	iproc_pcie_apb_err_disable(bus, false);
-=20
- 	return ret;
-@@ -724,9 +725,11 @@ static int iproc_pcie_config_write32(struct pci_bus =
-*bus, unsigned int devfn,
- 				     int where, int size, u32 val)
- {
- 	int ret;
-+	struct iproc_pcie *pcie =3D iproc_data(bus);
-+	int busno =3D bus->number;
-=20
- 	iproc_pcie_apb_err_disable(bus, true);
--	ret =3D pci_generic_config_write32(bus, devfn, where, size, val);
-+	ret =3D iproc_pci_raw_config_write32(pcie, busno, devfn, where, size, v=
-al);
- 	iproc_pcie_apb_err_disable(bus, false);
-=20
- 	return ret;
---=20
-2.28.0
+Thanks,
+Badhri
 
+On Wed, Jul 29, 2020 at 8:03 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On 7/29/20 7:28 PM, Badhri Jagan Sridharan wrote:
+> > Hi Greg,
+> >
+> > Sure just sent the new patch v3.
+> >
+> > Patch applies cleanly on my end. So wondering what I am missing.
+>
+> I expected your patch to conflict with Hans' patch series.
+> Maybe those are in a different tree/branch ?
+>
+> Guenter
+>
+> > Just in case if you are still noticing merge conflicts.
+> >
+> > Here is the git log of my local tree:
+> > 633198cd2945b7 (HEAD -> usb-next-1) usb: typec: tcpm: Migrate workqueue=
+ to RT priority for processing events
+> > fa56dd9152ef95 (origin/usb-next) Merge tag 'usb-serial-5.9-rc1' of http=
+s://git.kernel.org/pub/scm/linux/kernel/git/johan/usb-serial into usb-next
+> > 25252919a1050e xhci: dbgtty: Make some functions static
+> > b0e02550346e67 xhci: dbc: Make function xhci_dbc_ring_alloc() static
+> > ca6377900974c3 Revert "usb: dwc2: override PHY input signals with usb r=
+ole switch support"
+> > 09df709cb5aeb2 Revert "usb: dwc2: don't use ID/Vbus detection if usb-ro=
+le-switch on STM32MP15 SoCs"
+> > 17a82716587e9d USB: iowarrior: fix up report size handling for some dev=
+ices
+> > e98ba8cc3f8a89 Merge tag 'usb-for-v5.9' of git://git.kernel.org/pub/scm=
+/linux/kernel/git/balbi/usb <http://git.kernel.org/pub/scm/linux/kernel/git=
+/balbi/usb> into usb-next
+> > c97793089b11f7 Merge 5.8-rc7 into usb-next
+> > 92ed301919932f (tag: v5.8-rc7, origin/usb-linus, origin/main) Linux 5.8=
+-rc7
+> >
+> > Was comparing against https://git.kernel.org/pub/scm/linux/kernel/git/g=
+regkh/usb.git/log/?h=3Dusb-next
+> >
+> > Thanks,
+> > Badhri
+> >
+> > On Wed, Jul 29, 2020 at 7:53 AM Greg Kroah-Hartman <gregkh@linuxfoundat=
+ion.org <mailto:gregkh@linuxfoundation.org>> wrote:
+> >
+> >     On Thu, Jul 23, 2020 at 07:05:51PM -0700, Badhri Jagan Sridharan wr=
+ote:
+> >     > "tReceiverResponse 15 ms Section 6.6.2
+> >     > The receiver of a Message requiring a response Shall respond
+> >     > within tReceiverResponse in order to ensure that the
+> >     > sender=E2=80=99s SenderResponseTimer does not expire."
+> >     >
+> >     > When the cpu complex is busy running other lower priority
+> >     > work items, TCPM's work queue sometimes does not get scheduled
+> >     > on time to meet the above requirement from the spec.
+> >     > Moving to kthread_work apis to run with real time priority.
+> >     > Just lower than the default threaded irq priority,
+> >     > MAX_USER_RT_PRIO/2 + 1. (Higher number implies lower priority).
+> >     >
+> >     > Further, as observed in 1ff688209e2e, moving to hrtimers to
+> >     > overcome scheduling latency while scheduling the delayed work.
+> >     >
+> >     > TCPM has three work streams:
+> >     > 1. tcpm_state_machine
+> >     > 2. vdm_state_machine
+> >     > 3. event_work
+> >     >
+> >     > tcpm_state_machine and vdm_state_machine both schedule work in
+> >     > future i.e. delayed. Hence each of them have a corresponding
+> >     > hrtimer, tcpm_state_machine_timer & vdm_state_machine_timer.
+> >     >
+> >     > When work is queued right away kthread_queue_work is used.
+> >     > Else, the relevant timer is programmed and made to queue
+> >     > the kthread_work upon timer expiry.
+> >     >
+> >     > kthread_create_worker only creates one kthread worker thread,
+> >     > hence single threadedness of workqueue is retained.
+> >     >
+> >     > Signed-off-by: Badhri Jagan Sridharan <badhri@google.com <mailto:=
+badhri@google.com>>
+> >
+> >     This doesn't apply against my usb-next branch at all.
+> >
+> >     Can you rebase and resend?
+> >
+> >     Remember to collect the reviewed-by tags as well when you do so.
+> >
+> >     thanks,
+> >
+> >     greg k-h
+> >
+>
