@@ -2,180 +2,157 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2764C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D068C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF7722083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61F8B207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596097258;
-	bh=qlYDvpfhOP1bAGHT2gNFafdZfJvOMDt+QdoEypLlfig=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=BVTIChCLSfrG7MR6qvxNhzqOjNtVG8KA6oGB/2ZJB/wWI4wIX7vDPQ/MzNu7Ge5pZ
-	 5dL9UVSEIs/iaOifqAAHRdRvjc97aZAK43DSFrQy+7msHKdCVAI4kj6wSw+z6rhbBv
-	 itf2Gfn+ADq607WISrH/7OKpKIjWyYcJX69Y7x3w=
+	s=default; t=1596097264;
+	bh=ujPKpPCEH1vowH1yF5817YURZkyiHerQ4CbRd4rKHq4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SpwXQ9bz8i/SRLAiGHaPHr+T3lMCuW+xPLcB9YRpl9XJ6jGeQklJZf+9vTYj0za6j
+	 wMANrzpJUL/4QV4OATbC0iEKioODEWiR3nwvqkdPPsT2eJKBti7DzwwYv96nv+RhFj
+	 mzVmrlM4FCqC2rsnW37ePFzzvOG3/HFSYZkxkbE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730017AbgG3IU4 (ORCPT
+        id S1730096AbgG3IVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:20:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42700 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:21:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726774AbgG3IFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:05:32 -0400
+        id S1728883AbgG3IFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:05:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C5A320672;
-        Thu, 30 Jul 2020 08:05:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F3B222CB3;
+        Thu, 30 Jul 2020 08:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096331;
-        bh=qlYDvpfhOP1bAGHT2gNFafdZfJvOMDt+QdoEypLlfig=;
-        h=From:To:Cc:Subject:Date:From;
-        b=qcPlj8DzCWHSXO1jI+j6MpK2Z+AqEjvWHLmScUGT4jYTbZQISdumcMg7W7BIGGoCB
-         DajysooR9UbwPsrEEoElhdjqoeZ63bTBplyKIZDZWg+zgZ+HZ2tpue0cLmWIQRE5zc
-         uhwg87aCxIziD1buCMWmqV8BfItXywUoWQKbd9Mo=
+        s=default; t=1596096321;
+        bh=ujPKpPCEH1vowH1yF5817YURZkyiHerQ4CbRd4rKHq4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tTSWai1hVhWrOPkUIUu59w4IIZlsETPlPLOLjMP7yyBTUHH9m+pTa0nI2sxUWP5pQ
+         nBEk5riSEK8DLJeCniKBkb5YBzOFZphpG+BYkgoPdjhylGLUBFUM3ZUvliiPt6fpCE
+         Ye1wrE07uJuIMZ6UidkLkbh0YMiSRTXo/5abVwe0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.7 00/20] 5.7.12-rc1 review
-Date:   Thu, 30 Jul 2020 10:03:50 +0200
-Message-Id: <20200730074420.533211699@linuxfoundation.org>
+        stable@vger.kernel.org, wenxu <wenxu@ucloud.cn>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 06/20] net/sched: act_ct: fix restore the qdisc_skb_cb after defrag
+Date:   Thu, 30 Jul 2020 10:03:56 +0200
+Message-Id: <20200730074420.845160025@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-MIME-Version: 1.0
+In-Reply-To: <20200730074420.533211699@linuxfoundation.org>
+References: <20200730074420.533211699@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.7.12-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.12-rc1
-X-KernelTest-Deadline: 2020-08-01T07:44+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.7.12 release.
-There are 20 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: wenxu <wenxu@ucloud.cn>
 
-Responses should be made by Sat, 01 Aug 2020 07:44:05 +0000.
-Anything received after that time might be too late.
+[ Upstream commit ae372cb1750f6c95370f92fe5f5620e0954663ba ]
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.12-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
-and the diffstat can be found below.
+The fragment packets do defrag in tcf_ct_handle_fragments
+will clear the skb->cb which make the qdisc_skb_cb clear
+too. So the qdsic_skb_cb should be store before defrag and
+restore after that.
+It also update the pkt_len after all the
+fragments finish the defrag to one packet and make the
+following actions counter correct.
 
-thanks,
+Fixes: b57dc7c13ea9 ("net/sched: Introduce action ct")
+Signed-off-by: wenxu <wenxu@ucloud.cn>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/sched/act_ct.c |   16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.7.12-rc1
-
-Peng Fan <peng.fan@nxp.com>
-    regmap: debugfs: check count when read regmap file
-
-Jens Axboe <axboe@kernel.dk>
-    io_uring: ensure double poll additions work with both request types
-
-Tung Nguyen <tung.q.nguyen@dektech.com.au>
-    tipc: allow to build NACK message in link timeout function
-
-Kuniyuki Iwashima <kuniyu@amazon.co.jp>
-    udp: Improve load balancing for SO_REUSEPORT.
-
-Kuniyuki Iwashima <kuniyu@amazon.co.jp>
-    udp: Copy has_conns in reuseport_grow().
-
-Xin Long <lucien.xin@gmail.com>
-    sctp: shrink stream outq when fails to do addstream reconf
-
-Xin Long <lucien.xin@gmail.com>
-    sctp: shrink stream outq only when new outcnt < old outcnt
-
-Dan Carpenter <dan.carpenter@oracle.com>
-    AX.25: Prevent integer overflows in connect and sendmsg
-
-Yuchung Cheng <ycheng@google.com>
-    tcp: allow at most one TLP probe per flight
-
-David Howells <dhowells@redhat.com>
-    rxrpc: Fix sendmsg() returning EPIPE due to recvmsg() returning ENODATA
-
-Weilong Chen <chenweilong@huawei.com>
-    rtnetlink: Fix memory(net_device) leak when ->newlink fails
-
-Cong Wang <xiyou.wangcong@gmail.com>
-    qrtr: orphan socket in qrtr_release()
-
-Miaohe Lin <linmiaohe@huawei.com>
-    net: udp: Fix wrong clean up for IS_UDPLITE macro
-
-Xiongfeng Wang <wangxiongfeng2@huawei.com>
-    net-sysfs: add a newline when printing 'tx_timeout' by sysfs
-
-wenxu <wenxu@ucloud.cn>
-    net/sched: act_ct: fix restore the qdisc_skb_cb after defrag
-
-Wei Yongjun <weiyongjun1@huawei.com>
-    ip6_gre: fix null-ptr-deref in ip6gre_init_net()
-
-Xie He <xie.he.0141@gmail.com>
-    drivers/net/wan/x25_asy: Fix to make it work
-
-Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
-    dev: Defer free of skbs in flush_backlog
-
-Peilin Ye <yepeilin.cs@gmail.com>
-    AX.25: Prevent out-of-bounds read in ax25_sendmsg()
-
-Peilin Ye <yepeilin.cs@gmail.com>
-    AX.25: Fix out-of-bounds read in ax25_connect()
-
-
--------------
-
-Diffstat:
-
- Makefile                             |  4 +--
- drivers/base/regmap/regmap-debugfs.c |  6 +++++
- drivers/net/wan/x25_asy.c            | 21 ++++++++++------
- fs/io_uring.c                        | 47 ++++++++++++++++++++----------------
- include/linux/tcp.h                  |  4 ++-
- net/ax25/af_ax25.c                   | 10 ++++++--
- net/core/dev.c                       |  2 +-
- net/core/net-sysfs.c                 |  2 +-
- net/core/rtnetlink.c                 |  3 ++-
- net/core/sock_reuseport.c            |  1 +
- net/ipv4/tcp_input.c                 | 11 +++++----
- net/ipv4/tcp_output.c                | 13 ++++++----
- net/ipv4/udp.c                       | 17 +++++++------
- net/ipv6/ip6_gre.c                   | 11 +++++----
- net/ipv6/udp.c                       | 17 +++++++------
- net/qrtr/qrtr.c                      |  1 +
- net/rxrpc/recvmsg.c                  |  2 +-
- net/rxrpc/sendmsg.c                  |  2 +-
- net/sched/act_ct.c                   | 16 ++++++++++--
- net/sctp/stream.c                    | 27 ++++++++++++++-------
- net/tipc/link.c                      |  2 +-
- 21 files changed, 140 insertions(+), 79 deletions(-)
+--- a/net/sched/act_ct.c
++++ b/net/sched/act_ct.c
+@@ -671,9 +671,10 @@ static int tcf_ct_ipv6_is_fragment(struc
+ }
+ 
+ static int tcf_ct_handle_fragments(struct net *net, struct sk_buff *skb,
+-				   u8 family, u16 zone)
++				   u8 family, u16 zone, bool *defrag)
+ {
+ 	enum ip_conntrack_info ctinfo;
++	struct qdisc_skb_cb cb;
+ 	struct nf_conn *ct;
+ 	int err = 0;
+ 	bool frag;
+@@ -691,6 +692,7 @@ static int tcf_ct_handle_fragments(struc
+ 		return err;
+ 
+ 	skb_get(skb);
++	cb = *qdisc_skb_cb(skb);
+ 
+ 	if (family == NFPROTO_IPV4) {
+ 		enum ip_defrag_users user = IP_DEFRAG_CONNTRACK_IN + zone;
+@@ -701,6 +703,9 @@ static int tcf_ct_handle_fragments(struc
+ 		local_bh_enable();
+ 		if (err && err != -EINPROGRESS)
+ 			goto out_free;
++
++		if (!err)
++			*defrag = true;
+ 	} else { /* NFPROTO_IPV6 */
+ #if IS_ENABLED(CONFIG_NF_DEFRAG_IPV6)
+ 		enum ip6_defrag_users user = IP6_DEFRAG_CONNTRACK_IN + zone;
+@@ -709,12 +714,16 @@ static int tcf_ct_handle_fragments(struc
+ 		err = nf_ct_frag6_gather(net, skb, user);
+ 		if (err && err != -EINPROGRESS)
+ 			goto out_free;
++
++		if (!err)
++			*defrag = true;
+ #else
+ 		err = -EOPNOTSUPP;
+ 		goto out_free;
+ #endif
+ 	}
+ 
++	*qdisc_skb_cb(skb) = cb;
+ 	skb_clear_hash(skb);
+ 	skb->ignore_df = 1;
+ 	return err;
+@@ -912,6 +921,7 @@ static int tcf_ct_act(struct sk_buff *sk
+ 	int nh_ofs, err, retval;
+ 	struct tcf_ct_params *p;
+ 	bool skip_add = false;
++	bool defrag = false;
+ 	struct nf_conn *ct;
+ 	u8 family;
+ 
+@@ -942,7 +952,7 @@ static int tcf_ct_act(struct sk_buff *sk
+ 	 */
+ 	nh_ofs = skb_network_offset(skb);
+ 	skb_pull_rcsum(skb, nh_ofs);
+-	err = tcf_ct_handle_fragments(net, skb, family, p->zone);
++	err = tcf_ct_handle_fragments(net, skb, family, p->zone, &defrag);
+ 	if (err == -EINPROGRESS) {
+ 		retval = TC_ACT_STOLEN;
+ 		goto out;
+@@ -1010,6 +1020,8 @@ out_push:
+ 
+ out:
+ 	tcf_action_update_bstats(&c->common, skb);
++	if (defrag)
++		qdisc_skb_cb(skb)->pkt_len = skb->len;
+ 	return retval;
+ 
+ drop:
 
 
