@@ -2,89 +2,152 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC26C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1963BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E8CA2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:29:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596148155;
-	bh=KwGDSsusd/GMVehYUac5bADuIj+1b5g0N27c/uhAflQ=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=BZZHrD8YZomD5bYXpfQAvlXcujBgDTGBBE2si8SaQPngL8kCKJChrOICxLt2LuZ6O
-	 m3j07dRSrvYm9Dk/T8SI78tn5X5W2DHSDi02gfA5pNGM7b1futnQotRhp1nrKpVFJ8
-	 809BSTtOd9CrQKF+8r7mrkdxnU/lRWQ9yytsdjcc=
+	by mail.kernel.org (Postfix) with ESMTP id E636620809
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:33:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EAgn+yg3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730712AbgG3W3O (ORCPT
+        id S1730205AbgG3Wdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 18:29:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41310 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728846AbgG3W3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 18:29:12 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1562320829;
-        Thu, 30 Jul 2020 22:29:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596148151;
-        bh=KwGDSsusd/GMVehYUac5bADuIj+1b5g0N27c/uhAflQ=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=Ljz27fSB87EoOFZClLBru0C+YXU/QApJfJrwf6SvRcti387BsBJi3yF9E0iILTOW1
-         J954Tk4oygLbx9rHqjb3CKQ06FjrCJNAVoTwm/p4sBrsh/NqdSEnawQJPz7qi9YOC6
-         thDcG8fcIhdOIkafWYWvcVj8tazTSAwjr6gQ3QsA=
-Date:   Thu, 30 Jul 2020 23:28:51 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jon Lin <jon.lin@rock-chips.com>
-Cc:     linux-arm-kernel@lists.infradead.org, heiko@sntech.de,
-        linux-rockchip@lists.infradead.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20200722083737.8820-1-jon.lin@rock-chips.com>
-References: <20200722083737.8820-1-jon.lin@rock-chips.com>
-Subject: Re: [PATCH v2 1/3] spi: rockchip: Config spi rx dma burst size depend on xfer length
-Message-Id: <159614813119.1710.15143804942434946004.b4-ty@kernel.org>
+        Thu, 30 Jul 2020 18:33:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45286 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728607AbgG3Wdu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 18:33:50 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B500C061574
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 15:33:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description;
+        bh=F8V5dJHtdOS7toaRAn2Ry59zBUcx5vitMpMVIJbeVfk=; b=EAgn+yg3QQpl9ZeRYNqax2++tY
+        v9WOHaDz0CaO8A99zlFxGIOayyA+cQVtIkuhn91Dv1ReQzVauCGu+yHnAq3mcynE0AAgO1YgwW2nW
+        HaSvOTyJxY90uSuTZSpaID7Bd7mz8AWGOo4pzxHT269INqcBbULiQRAw1yIyl070I6bzk57iM9o4X
+        80OaIHdj7ChzLPaFRkxu03RtNE8iKioyHh2+z9RXoEWZSFKkmyrg0jci9+NN4iEPvcnLEF7ErZFAy
+        rjalyyGIo9E7988CtYqd/npRv3hQyr73o1RVHukOWNhi5CPKd629y0HzUGq9so60iK0M1+fiYrNdk
+        VEzfilnQ==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k1H7Q-0006Vz-2W; Thu, 30 Jul 2020 22:33:45 +0000
+Subject: Re: [PATCH] Platform lockdown information in SYSFS
+To:     Daniel Gutson <daniel.gutson@eclypsium.com>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Richard Hughes <hughsient@gmail.com>,
+        Alex Bazhaniuk <alex@eclypsium.com>
+References: <20200730214136.5534-1-daniel.gutson@eclypsium.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <5bd9d37f-4567-f28b-3932-58bd9de38882@infradead.org>
+Date:   Thu, 30 Jul 2020 15:33:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200730214136.5534-1-daniel.gutson@eclypsium.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jul 2020 16:37:35 +0800, Jon Lin wrote:
-> The burst length can be adjusted according to the transmission
-> length to improve the transmission rate
+Hi,
 
-Applied to
+Could we get some consistency in the use of "bios" vs. "Bios" vs. "BIOS", please.
+BIOS is preferred IMO.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+On 7/30/20 2:41 PM, Daniel Gutson wrote:
+> 
+> This initial version exports the BIOS Write Enable (bioswe),
+> BIOS Lock Enable (ble), and the SMM Bios Write Protect (SMM_BWP)
+> fields of the Bios Control register. The idea is to keep adding more
+> flags, not only from the BC but also from other registers in following
+> versions.
+> 
+> The goal is that the attributes are avilable to fwupd when SecureBoot
 
-Thanks!
+                                      available
 
-[1/3] spi: rockchip: Config spi rx dma burst size depend on xfer length
-      commit: 4d9ca632c847ab88f2f7e7e2747aea966f1390ce
-[2/3] spi: rockchip: Support 64-location deep FIFOs
-      commit: 13a96935e6f66bafb6da92791120546a4bf20889
-[3/3] spi: rockchip: Fix error in SPI slave pio read
-      commit: 4294e4accf8d695ea5605f6b189008b692e3e82c
+> is turned on.
+> 
+> The patch provides a new misc driver, as proposed in the previous patch,
+> that provides a registration function for HW Driver devices to register
+> class_attributes.
+> In this case, the intel SPI flash chip (intel-spi) registers three
+> class_attributes corresponding to the fields mentioned above.
+> 
+> Signed-off-by: Daniel Gutson <daniel.gutson@eclypsium.com>
+> ---
+>  .../ABI/stable/sysfs-class-platform-lockdown  | 23 +++++++
+>  MAINTAINERS                                   |  7 +++
+>  drivers/misc/Kconfig                          |  9 +++
+>  drivers/misc/Makefile                         |  1 +
+>  drivers/misc/platform-lockdown-attrs.c        | 57 +++++++++++++++++
+>  drivers/mtd/spi-nor/controllers/Kconfig       |  1 +
+>  .../mtd/spi-nor/controllers/intel-spi-pci.c   | 49 +++++++++++++++
+>  drivers/mtd/spi-nor/controllers/intel-spi.c   | 62 +++++++++++++++++++
+>  .../platform_data/platform-lockdown-attrs.h   | 19 ++++++
+>  9 files changed, 228 insertions(+)
+>  create mode 100644 Documentation/ABI/stable/sysfs-class-platform-lockdown
+>  create mode 100644 drivers/misc/platform-lockdown-attrs.c
+>  create mode 100644 include/linux/platform_data/platform-lockdown-attrs.h
+> 
+> diff --git a/Documentation/ABI/stable/sysfs-class-platform-lockdown b/Documentation/ABI/stable/sysfs-class-platform-lockdown
+> new file mode 100644
+> index 000000000000..6034d6cbefac
+> --- /dev/null
+> +++ b/Documentation/ABI/stable/sysfs-class-platform-lockdown
+> @@ -0,0 +1,23 @@
+> +What:		/sys/class/platform-lockdown/bioswe
+> +Date:		July 2020
+> +KernelVersion:	5.8.0
+> +Contact:	Daniel Gutson <daniel.gutson@eclypsium.com>
+> +Description:	If the system firmware set BIOS Write Enable.
+> +		0: writes disabled, 1: writes enabled.
+> +Users:		https://github.com/fwupd/fwupd
+> +
+> +What:		/sys/class/platform-lockdown/ble
+> +Date:		July 2020
+> +KernelVersion:	5.8.0
+> +Contact:	Daniel Gutson <daniel.gutson@eclypsium.com>
+> +Description:	If the system firmware set Bios Lock Enable.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+                                           BIOS
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+> +		0: SMM lock disabled, 1: SMM lock enabled.
+> +Users:		https://github.com/fwupd/fwupd
+> +
+> +What:		/sys/class/platform-lockdown/smm_bwp
+> +Date:		July 2020
+> +KernelVersion:	5.8.0
+> +Contact:	Daniel Gutson <daniel.gutson@eclypsium.com>
+> +Description:	If the system firmware set SMM Bios Write Protect.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+                                               BIOS
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+> +		0: writes disabled unless in SMM, 1: writes enabled.
+> +Users:		https://github.com/fwupd/fwupd
 
-Thanks,
-Mark
+
+
+cheers.
+-- 
+~Randy
+
