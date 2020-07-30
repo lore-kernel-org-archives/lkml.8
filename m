@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDED5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA3AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B62FF2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F3342070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096484;
-	bh=xs7LQ2LBAeYJBzB+0vFKPqcnN/L4y7IAK++oRk+kDb8=;
+	s=default; t=1596096491;
+	bh=Hg43xg5T/x8Z2lC1HlJ6BZpLECdlxTMQ8JMR1HJDtD0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ECBXrFMi4nvZJvYkrFFHSqhZxTKEBZYiN4NJXcsI/n0WwH1cgdLzRUw3Eo+FD3xwN
-	 VnMbLWtv7wJ9lF6eLUcBPn0R1L85VHEEV1Fcy9hSl866gVLW9BPHYrZ4p4SnKAZx2E
-	 mZft2YRfk+uGROTEa9nuESNOiPNjXi8gULQTBuzY=
+	b=fdY5L3yLd8Um0NNW8ltJuQW55h+wpI1d0JbYtDk56MgkNq8PSdWiV0FFs1ODGL6DK
+	 hhkqicolo6ewRFjgqFCClR/jTrkp9QxJg7c6yR8CFiD+gqg0ML5L8sObY3hzP0m+i8
+	 x++6Nt9NHKjyWoZJIod39sW0MS6FZwlEuGosi0x4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729535AbgG3IIC (ORCPT
+        id S1729072AbgG3IIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:08:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45688 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:08:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729493AbgG3IHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:07:41 -0400
+        id S1729539AbgG3IID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:08:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0AB9206C0;
-        Thu, 30 Jul 2020 08:07:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D97312074B;
+        Thu, 30 Jul 2020 08:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096459;
-        bh=xs7LQ2LBAeYJBzB+0vFKPqcnN/L4y7IAK++oRk+kDb8=;
+        s=default; t=1596096482;
+        bh=Hg43xg5T/x8Z2lC1HlJ6BZpLECdlxTMQ8JMR1HJDtD0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iiSifVCfMtMGkzg3ZFp1fAPCqp3ML5cb8McpCjwyec3gyMC8gAmXUp6KRPJB2pQ8x
-         zCBYPAd+4SqPoHLNj17eSS9ucz99g1q/PvoFXkGKpwN3aRQsu6pZ567i1AKoRNLaXh
-         C0IDzp9wzTJlX93v7JDG5kDWebxXuw5wA/RKnGqw=
+        b=kLSrItuHI4XzDpPKMcaqjEnx026N3zxZqkX21bin7u1tXn4pIDgISAY3kFCwR7FDC
+         37T5TKNEC2Z3EzsJB76TWGcEiwJk8oyQnKy9YKJ4V1MAAf2ITc2KhsV+WjPNWKVOH1
+         Jnd54Pmi+xo4GQ/frZRB7yy+RfUXJV8prBDeN4uY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Weilong Chen <chenweilong@huawei.com>,
+        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 10/14] rtnetlink: Fix memory(net_device) leak when ->newlink fails
-Date:   Thu, 30 Jul 2020 10:04:53 +0200
-Message-Id: <20200730074419.408134183@linuxfoundation.org>
+Subject: [PATCH 4.14 06/14] net: udp: Fix wrong clean up for IS_UDPLITE macro
+Date:   Thu, 30 Jul 2020 10:04:49 +0200
+Message-Id: <20200730074419.205288671@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074418.882736401@linuxfoundation.org>
 References: <20200730074418.882736401@linuxfoundation.org>
@@ -60,63 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weilong Chen <chenweilong@huawei.com>
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-[ Upstream commit cebb69754f37d68e1355a5e726fdac317bcda302 ]
+[ Upstream commit b0a422772fec29811e293c7c0e6f991c0fd9241d ]
 
-When vlan_newlink call register_vlan_dev fails, it might return error
-with dev->reg_state = NETREG_UNREGISTERED. The rtnl_newlink should
-free the memory. But currently rtnl_newlink only free the memory which
-state is NETREG_UNINITIALIZED.
+We can't use IS_UDPLITE to replace udp_sk->pcflag when UDPLITE_RECV_CC is
+checked.
 
-BUG: memory leak
-unreferenced object 0xffff8881051de000 (size 4096):
-  comm "syz-executor139", pid 560, jiffies 4294745346 (age 32.445s)
-  hex dump (first 32 bytes):
-    76 6c 61 6e 32 00 00 00 00 00 00 00 00 00 00 00  vlan2...........
-    00 45 28 03 81 88 ff ff 00 00 00 00 00 00 00 00  .E(.............
-  backtrace:
-    [<0000000047527e31>] kmalloc_node include/linux/slab.h:578 [inline]
-    [<0000000047527e31>] kvmalloc_node+0x33/0xd0 mm/util.c:574
-    [<000000002b59e3bc>] kvmalloc include/linux/mm.h:753 [inline]
-    [<000000002b59e3bc>] kvzalloc include/linux/mm.h:761 [inline]
-    [<000000002b59e3bc>] alloc_netdev_mqs+0x83/0xd90 net/core/dev.c:9929
-    [<000000006076752a>] rtnl_create_link+0x2c0/0xa20 net/core/rtnetlink.c:3067
-    [<00000000572b3be5>] __rtnl_newlink+0xc9c/0x1330 net/core/rtnetlink.c:3329
-    [<00000000e84ea553>] rtnl_newlink+0x66/0x90 net/core/rtnetlink.c:3397
-    [<0000000052c7c0a9>] rtnetlink_rcv_msg+0x540/0x990 net/core/rtnetlink.c:5460
-    [<000000004b5cb379>] netlink_rcv_skb+0x12b/0x3a0 net/netlink/af_netlink.c:2469
-    [<00000000c71c20d3>] netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-    [<00000000c71c20d3>] netlink_unicast+0x4c6/0x690 net/netlink/af_netlink.c:1329
-    [<00000000cca72fa9>] netlink_sendmsg+0x735/0xcc0 net/netlink/af_netlink.c:1918
-    [<000000009221ebf7>] sock_sendmsg_nosec net/socket.c:652 [inline]
-    [<000000009221ebf7>] sock_sendmsg+0x109/0x140 net/socket.c:672
-    [<000000001c30ffe4>] ____sys_sendmsg+0x5f5/0x780 net/socket.c:2352
-    [<00000000b71ca6f3>] ___sys_sendmsg+0x11d/0x1a0 net/socket.c:2406
-    [<0000000007297384>] __sys_sendmsg+0xeb/0x1b0 net/socket.c:2439
-    [<000000000eb29b11>] do_syscall_64+0x56/0xa0 arch/x86/entry/common.c:359
-    [<000000006839b4d0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: cb626bf566eb ("net-sysfs: Fix reference count leak")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Weilong Chen <chenweilong@huawei.com>
+Fixes: b2bf1e2659b1 ("[UDP]: Clean up for IS_UDPLITE macro")
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/rtnetlink.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/ipv4/udp.c |    2 +-
+ net/ipv6/udp.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/core/rtnetlink.c
-+++ b/net/core/rtnetlink.c
-@@ -2733,7 +2733,8 @@ replay:
- 			 */
- 			if (err < 0) {
- 				/* If device is not registered at all, free it now */
--				if (dev->reg_state == NETREG_UNINITIALIZED)
-+				if (dev->reg_state == NETREG_UNINITIALIZED ||
-+				    dev->reg_state == NETREG_UNREGISTERED)
- 					free_netdev(dev);
- 				goto out;
- 			}
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -1894,7 +1894,7 @@ static int udp_queue_rcv_skb(struct sock
+ 	/*
+ 	 * 	UDP-Lite specific tests, ignored on UDP sockets
+ 	 */
+-	if ((is_udplite & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
++	if ((up->pcflag & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
+ 
+ 		/*
+ 		 * MIB statistics other than incrementing the error count are
+--- a/net/ipv6/udp.c
++++ b/net/ipv6/udp.c
+@@ -629,7 +629,7 @@ static int udpv6_queue_rcv_skb(struct so
+ 	/*
+ 	 * UDP-Lite specific tests, ignored on UDP sockets (see net/ipv4/udp.c).
+ 	 */
+-	if ((is_udplite & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
++	if ((up->pcflag & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
+ 
+ 		if (up->pcrlen == 0) {          /* full coverage was set  */
+ 			net_dbg_ratelimited("UDPLITE6: partial coverage %d while full coverage %d requested\n",
 
 
