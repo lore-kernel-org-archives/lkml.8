@@ -2,229 +2,351 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14985C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE7F620809
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C38AE20809
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:00:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="gw/iCFk/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OSeU1K2d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730340AbgG3Ry5 (ORCPT
+        id S1730342AbgG3SAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 13:54:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58684 "EHLO
+        Thu, 30 Jul 2020 14:00:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728489AbgG3Ryz (ORCPT
+        with ESMTP id S1726275AbgG3SAk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 13:54:55 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6DA8C061756
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 10:54:55 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id z3so12988553ilh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 10:54:55 -0700 (PDT)
+        Thu, 30 Jul 2020 14:00:40 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2EF2C061574
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 11:00:40 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id w19so1872472plq.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 11:00:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qZxl6RlcjeBo55Fcy6iPmsqYVaQtSKURd48rtYSeZj4=;
-        b=gw/iCFk/RVskyceLGKO+tloqFLuIWEnHnjupL2l++0br12+PBSUShRgw+bPKiu0Yaa
-         rFRORmkDAc/gmiQfJBtek+oKYwvboV6LyOiZKFUjHUHOwzfLDIrAZwTr8FKxQNz4r4mK
-         Htd/eMSeNZ3K5/2RrcTIrmsJ57EAmXi63QkPP/ovDgTG8zg+6JuRvRRXA7ACQuZHTekN
-         0h0XN5fYP8uAKYUv1TKsgv3Xfmwj4mMFyBK+3vaLqpVGItDeySe5ZZ4m4unh5flZ+WbF
-         LBk6kFJlJlPGjCWJEIVG2Yh75Vjiilk7dhg9FrBhoHvwaEC6SmvuBIQY8OiD/p6OV7iu
-         akvg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=YAbIFdBDABY/iXuY15hqoTWQkh5jDcA9cKphlTXpDXY=;
+        b=OSeU1K2dfFPDKWOoMiuL8J8qgmGnmMfm6C28NeV15zxkyshGg9Pn2+mYhFVK8fwBpA
+         F0Zho5yBnVJBSOSQJSFH7X+q3RnhJ3VWm8kN1F5TRGN0EW7AUd7gl7+3eY0YWVYopR7M
+         DYRXQGDLmfyr+qyTU8P3BOKf9vrGwlwjqrSuvpKrDfEOtoOFgI4oqizRFEDrv33Lo0KR
+         KdnhwqtFz4ATwU/EKNM2QRV13vvi8hIQ8b6KGR7DOn3F1OaBxPuYdwJbbsWv9BLcaZGk
+         WgwYomkRlk/Mh70u49DNhgLSSnWKTIz08ASRfDKbVR6ggvsPQp1r3wKGeMvteYgjVEL7
+         mVzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qZxl6RlcjeBo55Fcy6iPmsqYVaQtSKURd48rtYSeZj4=;
-        b=s/QF32n0CoqZ3D3aScaa3iJ2yn+nhY5IR6D5LNjbLqYFOM7CoiVudni835RvAAmd4w
-         6c5jUf3oNLd5ZXZQHS8UC9b4LOTTztohfi2uDroF+agDdt/3cqqWoKNvo2375RyIYO6G
-         DkhY850ork0zXBrid2HBANEl+X3OMVmjXQMvUs4gxJkCX/gyg0fILo7L7o1U0RoO2r83
-         LnJ/sql/24T05bHxUxFhbCzXRU7iBp9bVG+IjRtGUnzCD6WFNnfwWwyMVtIeD7Xvs5WP
-         xig50WvKqA2Fw+QtSMihoseVAasNiauWXyLEztUSrt0xKu1+XHe+4vY24MT+ZcozvviY
-         c2ng==
-X-Gm-Message-State: AOAM533v9SjUlsAPYTV2gTJOkKJhvMcIWeCbfcStaUSo1rQn7DAXXZLV
-        vUnTL+fBVYda36uc/1pnOgHH5/Oklsg=
-X-Google-Smtp-Source: ABdhPJwBJLXpr2je4Zc+DCL3I1fwHXLDw7C0LU53JyfAwAy9/eHrQfqARPYwMJRvkwx8uyKJIjJ2iQ==
-X-Received: by 2002:a92:bd0f:: with SMTP id c15mr38652504ile.95.1596131694849;
-        Thu, 30 Jul 2020 10:54:54 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id c25sm3447235ilf.63.2020.07.30.10.54.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jul 2020 10:54:54 -0700 (PDT)
-Subject: Re: [PATCH v4 6/6] io_uring: add support for zone-append
-To:     Kanchan Joshi <joshiiitr@gmail.com>,
-        Pavel Begunkov <asml.silence@gmail.com>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org, Matthew Wilcox <willy@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-aio@kvack.org, io-uring@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-api@vger.kernel.org,
-        SelvaKumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <1595605762-17010-1-git-send-email-joshi.k@samsung.com>
- <CGME20200724155350epcas5p3b8f1d59eda7f8fbb38c828f692d42fd6@epcas5p3.samsung.com>
- <1595605762-17010-7-git-send-email-joshi.k@samsung.com>
- <f5416bd4-93b3-4d14-3266-bdbc4ae1990b@kernel.dk>
- <CA+1E3rJAa3E2Ti0fvvQTzARP797qge619m4aYLjXeR3wxdFwWw@mail.gmail.com>
- <b0b7159d-ed10-08ad-b6c7-b85d45f60d16@kernel.dk>
- <e871eef2-8a93-fdbc-b762-2923526a2db4@gmail.com>
- <80d27717-080a-1ced-50d5-a3a06cf06cd3@kernel.dk>
- <da4baa8c-76b0-7255-365c-d8b58e322fd0@gmail.com>
- <65a7e9a6-aede-31ce-705c-b7f94f079112@kernel.dk>
- <d4f9a5d3-1df2-1060-94fa-f77441a89299@gmail.com>
- <CA+1E3rJ3SoLU9aYcugAQgJnSPnJtcCwjZdMREXS3FTmXgy3yow@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <f030a338-cd52-2e83-e1da-bdbca910d49e@kernel.dk>
-Date:   Thu, 30 Jul 2020 11:54:53 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YAbIFdBDABY/iXuY15hqoTWQkh5jDcA9cKphlTXpDXY=;
+        b=hpJq4SRixXpb+MVRSuXBbfRdhuEg+icvCOHFmWAjIwRxN0h5DQcb7b8Gdu1PRxbh5r
+         lDRyELUMJ2WDjx+AiRhGWVKAfcSLHki1fbXrxuyHDHLETiKeXJ3aplN2l9CKyN5CzjaI
+         l9P9QheFg9G0wvlDVUrvosTU383MsrJE/wKQ1Ih9vWmLP/+DUNIiEDgCegmmJFAtlU7s
+         FOjDdu6h2ijMmNYTw+QqennijWi32FZEAK3yIqo+5HXnqUyQStiU+3U65cCcdTW7rpaV
+         6pd1Bsq928PdG4NR4XrdYC861KBjcIE6YVGCtV8RI0mQXxAFrqZgVqfdu3EeYeqlTMV6
+         BKqw==
+X-Gm-Message-State: AOAM531585wyXaljEyrDmjxLcBI094n3p6ZBoIfi5iIxM0jBHuJQ+W7R
+        6bK+0BoX7rFJIzQxXnxSXFzOEA==
+X-Google-Smtp-Source: ABdhPJz6Oh6ceXjr+WqAskWacr79G2Qt+NEOQixqHlwv4Dg7MtX5BxU8v8XnKT6IexMsvSSkL+5FqA==
+X-Received: by 2002:a17:90a:ff92:: with SMTP id hf18mr268933pjb.107.1596132040054;
+        Thu, 30 Jul 2020 11:00:40 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id r7sm5088400pfl.186.2020.07.30.11.00.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 11:00:39 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 12:00:37 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mike.leach@linaro.org, coresight@lists.linaro.org
+Subject: Re: [RFC PATCH 05/14] coresight: Convert coresight_timeout to use
+ access abstraction
+Message-ID: <20200730180037.GB3155687@xps15>
+References: <20200722172040.1299289-1-suzuki.poulose@arm.com>
+ <20200722172040.1299289-6-suzuki.poulose@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <CA+1E3rJ3SoLU9aYcugAQgJnSPnJtcCwjZdMREXS3FTmXgy3yow@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200722172040.1299289-6-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/20 11:51 AM, Kanchan Joshi wrote:
-> On Thu, Jul 30, 2020 at 11:10 PM Pavel Begunkov <asml.silence@gmail.com> wrote:
->>
->> On 30/07/2020 20:16, Jens Axboe wrote:
->>> On 7/30/20 10:26 AM, Pavel Begunkov wrote:
->>>> On 30/07/2020 19:13, Jens Axboe wrote:
->>>>> On 7/30/20 10:08 AM, Pavel Begunkov wrote:
->>>>>> On 27/07/2020 23:34, Jens Axboe wrote:
->>>>>>> On 7/27/20 1:16 PM, Kanchan Joshi wrote:
->>>>>>>> On Fri, Jul 24, 2020 at 10:00 PM Jens Axboe <axboe@kernel.dk> wrote:
->>>>>>>>>
->>>>>>>>> On 7/24/20 9:49 AM, Kanchan Joshi wrote:
->>>>>>>>>> diff --git a/fs/io_uring.c b/fs/io_uring.c
->>>>>>>>>> index 7809ab2..6510cf5 100644
->>>>>>>>>> --- a/fs/io_uring.c
->>>>>>>>>> +++ b/fs/io_uring.c
->>>>>>>>>> @@ -1284,8 +1301,15 @@ static void __io_cqring_fill_event(struct io_kiocb *req, long res, long cflags)
->>>>>>>>>>       cqe = io_get_cqring(ctx);
->>>>>>>>>>       if (likely(cqe)) {
->>>>>>>>>>               WRITE_ONCE(cqe->user_data, req->user_data);
->>>>>>>>>> -             WRITE_ONCE(cqe->res, res);
->>>>>>>>>> -             WRITE_ONCE(cqe->flags, cflags);
->>>>>>>>>> +             if (unlikely(req->flags & REQ_F_ZONE_APPEND)) {
->>>>>>>>>> +                     if (likely(res > 0))
->>>>>>>>>> +                             WRITE_ONCE(cqe->res64, req->rw.append_offset);
->>>>>>>>>> +                     else
->>>>>>>>>> +                             WRITE_ONCE(cqe->res64, res);
->>>>>>>>>> +             } else {
->>>>>>>>>> +                     WRITE_ONCE(cqe->res, res);
->>>>>>>>>> +                     WRITE_ONCE(cqe->flags, cflags);
->>>>>>>>>> +             }
->>>>>>>>>
->>>>>>>>> This would be nice to keep out of the fast path, if possible.
->>>>>>>>
->>>>>>>> I was thinking of keeping a function-pointer (in io_kiocb) during
->>>>>>>> submission. That would have avoided this check......but argument count
->>>>>>>> differs, so it did not add up.
->>>>>>>
->>>>>>> But that'd grow the io_kiocb just for this use case, which is arguably
->>>>>>> even worse. Unless you can keep it in the per-request private data,
->>>>>>> but there's no more room there for the regular read/write side.
->>>>>>>
->>>>>>>>>> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
->>>>>>>>>> index 92c2269..2580d93 100644
->>>>>>>>>> --- a/include/uapi/linux/io_uring.h
->>>>>>>>>> +++ b/include/uapi/linux/io_uring.h
->>>>>>>>>> @@ -156,8 +156,13 @@ enum {
->>>>>>>>>>   */
->>>>>>>>>>  struct io_uring_cqe {
->>>>>>>>>>       __u64   user_data;      /* sqe->data submission passed back */
->>>>>>>>>> -     __s32   res;            /* result code for this event */
->>>>>>>>>> -     __u32   flags;
->>>>>>>>>> +     union {
->>>>>>>>>> +             struct {
->>>>>>>>>> +                     __s32   res;    /* result code for this event */
->>>>>>>>>> +                     __u32   flags;
->>>>>>>>>> +             };
->>>>>>>>>> +             __s64   res64;  /* appending offset for zone append */
->>>>>>>>>> +     };
->>>>>>>>>>  };
->>>>>>>>>
->>>>>>>>> Is this a compatible change, both for now but also going forward? You
->>>>>>>>> could randomly have IORING_CQE_F_BUFFER set, or any other future flags.
->>>>>>>>
->>>>>>>> Sorry, I didn't quite understand the concern. CQE_F_BUFFER is not
->>>>>>>> used/set for write currently, so it looked compatible at this point.
->>>>>>>
->>>>>>> Not worried about that, since we won't ever use that for writes. But it
->>>>>>> is a potential headache down the line for other flags, if they apply to
->>>>>>> normal writes.
->>>>>>>
->>>>>>>> Yes, no room for future flags for this operation.
->>>>>>>> Do you see any other way to enable this support in io-uring?
->>>>>>>
->>>>>>> Honestly I think the only viable option is as we discussed previously,
->>>>>>> pass in a pointer to a 64-bit type where we can copy the additional
->>>>>>> completion information to.
->>>>>>
->>>>>> TBH, I hate the idea of such overhead/latency at times when SSDs can
->>>>>> serve writes in less than 10ms. Any chance you measured how long does it
->>>>>
->>>>> 10us? :-)
->>>>
->>>> Hah, 10us indeed :)
->>>>
->>>>>
->>>>>> take to drag through task_work?
->>>>>
->>>>> A 64-bit value copy is really not a lot of overhead... But yes, we'd
->>>>> need to push the completion through task_work at that point, as we can't
->>>>> do it from the completion side. That's not a lot of overhead, and most
->>>>> notably, it's overhead that only affects this particular type.
->>>>>
->>>>> That's not a bad starting point, and something that can always be
->>>>> optimized later if need be. But I seriously doubt it'd be anything to
->>>>> worry about.
->>>>
->>>> I probably need to look myself how it's really scheduled, but if you don't
->>>> mind, here is a quick question: if we do work_add(task) when the task is
->>>> running in the userspace, wouldn't the work execution wait until the next
->>>> syscall/allotted time ends up?
->>>
->>> It'll get the task to enter the kernel, just like signal delivery. The only
->>> tricky part is really if we have a dependency waiting in the kernel, like
->>> the recent eventfd fix.
->>
->> I see, thanks for sorting this out!
+On Wed, Jul 22, 2020 at 06:20:31PM +0100, Suzuki K Poulose wrote:
+> Convert the generic routines to use the new access abstraction layer
+> gradually, starting with coresigth_timeout.
 > 
-> Few more doubts about this (please mark me wrong if that is the case):
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Mike Leach <mike.leach@linaro.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  drivers/hwtracing/coresight/coresight-catu.c  |  2 +-
+>  drivers/hwtracing/coresight/coresight-etb10.c |  5 +++--
+>  drivers/hwtracing/coresight/coresight-etm4x.c | 12 +++++++-----
+>  drivers/hwtracing/coresight/coresight-stm.c   |  2 +-
+>  drivers/hwtracing/coresight/coresight-tmc.c   |  9 ++++++---
+>  drivers/hwtracing/coresight/coresight-tpiu.c  |  4 ++--
+>  drivers/hwtracing/coresight/coresight.c       | 15 +++++++++------
+>  include/linux/coresight.h                     | 17 +++++++++++++----
+>  8 files changed, 42 insertions(+), 24 deletions(-)
 > 
-> - Task-work makes me feel like N completions waiting to be served by
-> single task.
-> Currently completions keep arriving and CQEs would be updated with
-> result, but the user-space (submitter task) would not be poked.
+> diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/hwtracing/coresight/coresight-catu.c
+> index 6299ff7b8a14..30f037d4549d 100644
+> --- a/drivers/hwtracing/coresight/coresight-catu.c
+> +++ b/drivers/hwtracing/coresight/coresight-catu.c
+> @@ -401,7 +401,7 @@ static const struct attribute_group *catu_groups[] = {
+>  
+>  static inline int catu_wait_for_ready(struct catu_drvdata *drvdata)
+>  {
+> -	return coresight_timeout(drvdata->base,
+> +	return coresight_timeout(&drvdata->csdev->access,
+>  				 CATU_STATUS, CATU_STATUS_READY, 1);
+>  }
+>  
+> diff --git a/drivers/hwtracing/coresight/coresight-etb10.c b/drivers/hwtracing/coresight/coresight-etb10.c
+> index 0f2735e15119..507f63c51be5 100644
+> --- a/drivers/hwtracing/coresight/coresight-etb10.c
+> +++ b/drivers/hwtracing/coresight/coresight-etb10.c
+> @@ -251,6 +251,7 @@ static void __etb_disable_hw(struct etb_drvdata *drvdata)
+>  {
+>  	u32 ffcr;
+>  	struct device *dev = &drvdata->csdev->dev;
+> +	struct coresight_device *csdev = drvdata->csdev;
+>  
+>  	CS_UNLOCK(drvdata->base);
+>  
+> @@ -262,7 +263,7 @@ static void __etb_disable_hw(struct etb_drvdata *drvdata)
+>  	ffcr |= ETB_FFCR_FON_MAN;
+>  	writel_relaxed(ffcr, drvdata->base + ETB_FFCR);
+>  
+> -	if (coresight_timeout(drvdata->base, ETB_FFCR, ETB_FFCR_BIT, 0)) {
+> +	if (coresight_timeout(&csdev->access, ETB_FFCR, ETB_FFCR_BIT, 0)) {
+>  		dev_err(dev,
+>  		"timeout while waiting for completion of Manual Flush\n");
+>  	}
+> @@ -270,7 +271,7 @@ static void __etb_disable_hw(struct etb_drvdata *drvdata)
+>  	/* disable trace capture */
+>  	writel_relaxed(0x0, drvdata->base + ETB_CTL_REG);
+>  
+> -	if (coresight_timeout(drvdata->base, ETB_FFSR, ETB_FFSR_BIT, 1)) {
+> +	if (coresight_timeout(&csdev->access, ETB_FFSR, ETB_FFSR_BIT, 1)) {
+>  		dev_err(dev,
+>  			"timeout while waiting for Formatter to Stop\n");
+>  	}
+> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+> index 67deb4a4e618..d78d79940fc9 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+> @@ -109,6 +109,7 @@ static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
+>  	int i, rc;
+>  	struct etmv4_config *config = &drvdata->config;
+>  	struct device *etm_dev = &drvdata->csdev->dev;
+> +	struct coresight_device *csdev = drvdata->csdev;
+>  
+>  	CS_UNLOCK(drvdata->base);
+>  
+> @@ -122,7 +123,7 @@ static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
+>  	writel_relaxed(0, drvdata->base + TRCPRGCTLR);
+>  
+>  	/* wait for TRCSTATR.IDLE to go up */
+> -	if (coresight_timeout(drvdata->base, TRCSTATR, TRCSTATR_IDLE_BIT, 1))
+> +	if (coresight_timeout(&csdev->access, TRCSTATR, TRCSTATR_IDLE_BIT, 1))
+>  		dev_err(etm_dev,
+>  			"timeout while waiting for Idle Trace Status\n");
+>  
+> @@ -209,7 +210,7 @@ static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
+>  	writel_relaxed(1, drvdata->base + TRCPRGCTLR);
+>  
+>  	/* wait for TRCSTATR.IDLE to go back down to '0' */
+> -	if (coresight_timeout(drvdata->base, TRCSTATR, TRCSTATR_IDLE_BIT, 0))
+> +	if (coresight_timeout(&csdev->access, TRCSTATR, TRCSTATR_IDLE_BIT, 0))
+>  		dev_err(etm_dev,
+>  			"timeout while waiting for Idle Trace Status\n");
+>  
+> @@ -474,6 +475,7 @@ static void etm4_disable_hw(void *info)
+>  	struct etmv4_drvdata *drvdata = info;
+>  	struct etmv4_config *config = &drvdata->config;
+>  	struct device *etm_dev = &drvdata->csdev->dev;
+> +	struct coresight_device *csdev = drvdata->csdev;
+>  	int i;
+>  
+>  	CS_UNLOCK(drvdata->base);
+> @@ -500,7 +502,7 @@ static void etm4_disable_hw(void *info)
+>  	writel_relaxed(control, drvdata->base + TRCPRGCTLR);
+>  
+>  	/* wait for TRCSTATR.PMSTABLE to go to '1' */
+> -	if (coresight_timeout(drvdata->base, TRCSTATR,
+> +	if (coresight_timeout(&csdev->access, TRCSTATR,
+>  			      TRCSTATR_PMSTABLE_BIT, 1))
+>  		dev_err(etm_dev,
+>  			"timeout while waiting for PM stable Trace Status\n");
+> @@ -1163,7 +1165,7 @@ static int etm4_cpu_save(struct etmv4_drvdata *drvdata)
+>  	etm4_os_lock(drvdata);
+>  
+>  	/* wait for TRCSTATR.PMSTABLE to go up */
+> -	if (coresight_timeout(drvdata->base, TRCSTATR,
+> +	if (coresight_timeout(&csdev->access, TRCSTATR,
+>  			      TRCSTATR_PMSTABLE_BIT, 1)) {
+>  		dev_err(etm_dev,
+>  			"timeout while waiting for PM Stable Status\n");
+> @@ -1247,7 +1249,7 @@ static int etm4_cpu_save(struct etmv4_drvdata *drvdata)
+>  	state->trcpdcr = readl(drvdata->base + TRCPDCR);
+>  
+>  	/* wait for TRCSTATR.IDLE to go up */
+> -	if (coresight_timeout(drvdata->base, TRCSTATR, TRCSTATR_IDLE_BIT, 1)) {
+> +	if (coresight_timeout(&csdev->access, TRCSTATR, TRCSTATR_IDLE_BIT, 1)) {
+>  		dev_err(etm_dev,
+>  			"timeout while waiting for Idle Trace Status\n");
+>  		etm4_os_unlock(drvdata);
+> diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
+> index c8509cc78512..b704000c96b8 100644
+> --- a/drivers/hwtracing/coresight/coresight-stm.c
+> +++ b/drivers/hwtracing/coresight/coresight-stm.c
+> @@ -270,7 +270,7 @@ static void stm_disable(struct coresight_device *csdev,
+>  		spin_unlock(&drvdata->spinlock);
+>  
+>  		/* Wait until the engine has completely stopped */
+> -		coresight_timeout(drvdata->base, STMTCSR, STMTCSR_BUSY_BIT, 0);
+> +		coresight_timeout(&csdev->access, STMTCSR, STMTCSR_BUSY_BIT, 0);
+>  
+>  		pm_runtime_put(csdev->dev.parent);
+>  
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc.c b/drivers/hwtracing/coresight/coresight-tmc.c
+> index b49795ad6861..6036eb73dce8 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc.c
+> @@ -33,16 +33,19 @@ DEFINE_CORESIGHT_DEVLIST(etr_devs, "tmc_etr");
+>  
+>  void tmc_wait_for_tmcready(struct tmc_drvdata *drvdata)
+>  {
+> +	struct coresight_device *csdev = drvdata->csdev;
+> +
+>  	/* Ensure formatter, unformatter and hardware fifo are empty */
+> -	if (coresight_timeout(drvdata->base,
+> +	if (coresight_timeout(&csdev->access,
+>  			      TMC_STS, TMC_STS_TMCREADY_BIT, 1)) {
+> -		dev_err(&drvdata->csdev->dev,
+> +		dev_err(&csdev->dev,
+>  			"timeout while waiting for TMC to be Ready\n");
+>  	}
+>  }
+>  
+>  void tmc_flush_and_stop(struct tmc_drvdata *drvdata)
+>  {
+> +	struct coresight_device *csdev = drvdata->csdev;
+>  	u32 ffcr;
+>  
+>  	ffcr = readl_relaxed(drvdata->base + TMC_FFCR);
+> @@ -51,7 +54,7 @@ void tmc_flush_and_stop(struct tmc_drvdata *drvdata)
+>  	ffcr |= BIT(TMC_FFCR_FLUSHMAN_BIT);
+>  	writel_relaxed(ffcr, drvdata->base + TMC_FFCR);
+>  	/* Ensure flush completes */
+> -	if (coresight_timeout(drvdata->base,
+> +	if (coresight_timeout(&csdev->access,
+>  			      TMC_FFCR, TMC_FFCR_FLUSHMAN_BIT, 0)) {
+>  		dev_err(&drvdata->csdev->dev,
+>  		"timeout while waiting for completion of Manual Flush\n");
+> diff --git a/drivers/hwtracing/coresight/coresight-tpiu.c b/drivers/hwtracing/coresight/coresight-tpiu.c
+> index 84ff4bf5d3b8..282d80e97265 100644
+> --- a/drivers/hwtracing/coresight/coresight-tpiu.c
+> +++ b/drivers/hwtracing/coresight/coresight-tpiu.c
+> @@ -86,9 +86,9 @@ static void tpiu_disable_hw(struct csdev_access *csa)
+>  	/* Generate manual flush */
+>  	csdev_access_relaxed_write32(csa, FFCR_STOP_FI | FFCR_FON_MAN, TPIU_FFCR);
+>  	/* Wait for flush to complete */
+> -	coresight_timeout(csa->base, TPIU_FFCR, FFCR_FON_MAN_BIT, 0);
+> +	coresight_timeout(csa, TPIU_FFCR, FFCR_FON_MAN_BIT, 0);
+>  	/* Wait for formatter to stop */
+> -	coresight_timeout(csa->base, TPIU_FFSR, FFSR_FT_STOPPED_BIT, 1);
+> +	coresight_timeout(csa, TPIU_FFSR, FFSR_FT_STOPPED_BIT, 1);
+>  
+>  	CS_LOCK(csa->base);
+>  }
+> diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
+> index 38e9c03ab754..21e7615fcbc8 100644
+> --- a/drivers/hwtracing/coresight/coresight.c
+> +++ b/drivers/hwtracing/coresight/coresight.c
+> @@ -1338,23 +1338,26 @@ static void coresight_remove_conns(struct coresight_device *csdev)
+>  }
+>  
+>  /**
+> - * coresight_timeout - loop until a bit has changed to a specific state.
+> - * @addr: base address of the area of interest.
+> - * @offset: address of a register, starting from @addr.
+> + * coresight_timeout - loop until a bit has changed to a specific register
+> + *			state.
+> + * @csa: coresight device access for the device
+> + * @offset: Offset of the register from the base of the device.
+>   * @position: the position of the bit of interest.
+>   * @value: the value the bit should have.
+>   *
+>   * Return: 0 as soon as the bit has taken the desired state or -EAGAIN if
+>   * TIMEOUT_US has elapsed, which ever happens first.
+>   */
+> -
+> -int coresight_timeout(void __iomem *addr, u32 offset, int position, int value)
+> +int coresight_timeout(struct csdev_access *csa,
+> +		      u32 offset,
+> +		      int position,
+> +		      int value)
+>  {
+>  	int i;
+>  	u32 val;
+>  
+>  	for (i = TIMEOUT_US; i > 0; i--) {
+> -		val = __raw_readl(addr + offset);
+> +		val = csdev_access_read32(csa, offset);
+
+Here we are moving to a memory barrier access, which is probably not a bad
+thing.
+
+>  		/* waiting on the bit to go from 0 to 1 */
+>  		if (value) {
+>  			if (val & BIT(position))
+> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+> index 81ac708689f8..2989306f6041 100644
+> --- a/include/linux/coresight.h
+> +++ b/include/linux/coresight.h
+> @@ -433,8 +433,10 @@ coresight_register(struct coresight_desc *desc);
+>  extern void coresight_unregister(struct coresight_device *csdev);
+>  extern int coresight_enable(struct coresight_device *csdev);
+>  extern void coresight_disable(struct coresight_device *csdev);
+> -extern int coresight_timeout(void __iomem *addr, u32 offset,
+> -			     int position, int value);
+> +extern int coresight_timeout(struct csdev_access *csa,
+> +			     u32 offset,
+> +			     int position,
+> +			     int value);
+>  
+>  extern int coresight_claim_device(void __iomem *base);
+>  extern int coresight_claim_device_unlocked(void __iomem *base);
+> @@ -460,8 +462,15 @@ static inline void coresight_unregister(struct coresight_device *csdev) {}
+>  static inline int
+>  coresight_enable(struct coresight_device *csdev) { return -ENOSYS; }
+>  static inline void coresight_disable(struct coresight_device *csdev) {}
+> -static inline int coresight_timeout(void __iomem *addr, u32 offset,
+> -				     int position, int value) { return 1; }
+> +
+> +static inline int coresight_timeout(struct csdev_access *csa,
+> +				    u32 offset,
+> +				    int position,
+> +				    int value)
+> +{
+> +	return 1;
+> +}
+
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+
+> +
+>  static inline int coresight_claim_device_unlocked(void __iomem *base)
+>  {
+>  	return -EINVAL;
+> -- 
+> 2.24.1
 > 
-> - Completion-code will set the task-work. But post that it cannot go
-> immediately to its regular business of picking cqe and updating
-> res/flags, as we cannot afford user-space to see the cqe before the
-> pointer update. So it seems completion-code needs to spawn another
-> work which will allocate/update cqe after waiting for pointer-update
-> from task-work?
-
-The task work would post the completion CQE for the request after
-writing the offset.
-
--- 
-Jens Axboe
-
