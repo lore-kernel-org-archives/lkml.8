@@ -4,80 +4,130 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E6AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B649BC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3CFD2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A06272070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:34:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbgG3Hbo (ORCPT
+        id S1728907AbgG3Hd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 03:31:44 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:34790 "EHLO huawei.com"
+        Thu, 30 Jul 2020 03:33:59 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8302 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725892AbgG3Hbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 03:31:44 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 03203F4AF1BFB6FA8F89;
-        Thu, 30 Jul 2020 15:31:42 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Thu, 30 Jul 2020
- 15:31:40 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <ulli.kroll@googlemail.com>, <linus.walleij@linaro.org>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <mirq-linux@rere.qmqm.pl>
-CC:     <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net] net: gemini: Fix missing clk_disable_unprepare() in error path of gemini_ethernet_port_probe()
-Date:   Thu, 30 Jul 2020 15:30:00 +0800
-Message-ID: <20200730073000.59797-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        id S1725892AbgG3Hd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 03:33:59 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 0EA2B942A9034AD7533E;
+        Thu, 30 Jul 2020 15:33:33 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.24) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 30 Jul 2020 15:33:22 +0800
+From:   Xiaofei Tan <tanxiaofei@huawei.com>
+To:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <rjw@rjwysocki.net>, <lenb@kernel.org>, <james.morse@arm.com>,
+        <tony.luck@intel.com>, <bp@alien8.de>
+CC:     <linuxarm@huawei.com>, <shiju.jose@huawei.com>,
+        <jonathan.cameron@huawei.com>, Xiaofei Tan <tanxiaofei@huawei.com>
+Subject: [PATCH] ACPI / APEI: do memory failure on the physical address reported by ARM processor error section
+Date:   Thu, 30 Jul 2020 15:32:28 +0800
+Message-ID: <1596094348-10230-1-git-send-email-tanxiaofei@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
+X-Originating-IP: [10.67.165.24]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the missing clk_disable_unprepare() before return
-from gemini_ethernet_port_probe() in the error handling case.
+After the following commit applied, user-mode SEA is preferentially
+processed by APEI. Do memory failure to recover.
 
-Fixes: 4d5ae32f5e1e ("net: ethernet: Add a driver for Gemini gigabit ethernet")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
+But there are some problems:
+1) The function apei_claim_sea() has processed an CPER, does not
+mean that memory failure handling has done. Because the firmware-first
+RAS error is reported by both producer and consumer. Mostly SEA uses
+ARM processor error section to report as a consumer. (The producer could
+be DDRC and cache, and use memory error section and other error section
+to report). But memory failure handling for ARM processor error section
+has not been supported. We should add it.
+
+2) Some hardware platforms can't record physical address each time. But
+they could always have reported a firmware-first RAS error using ARM
+processor error section. Such platform should update firmware. Don't
+report the RAS error when physical address is not recorded.
+
+Fixes: 8fcc4ae6faf8 ("arm64: acpi: Make apei_claim_sea() synchronise with APEI's irq work")
+Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
 ---
- drivers/net/ethernet/cortina/gemini.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/acpi/apei/ghes.c | 42 +++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 39 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/cortina/gemini.c b/drivers/net/ethernet/cortina/gemini.c
-index 8d13ea370db1..66e67b24a887 100644
---- a/drivers/net/ethernet/cortina/gemini.c
-+++ b/drivers/net/ethernet/cortina/gemini.c
-@@ -2446,6 +2446,7 @@ static int gemini_ethernet_port_probe(struct platform_device *pdev)
- 	port->reset = devm_reset_control_get_exclusive(dev, NULL);
- 	if (IS_ERR(port->reset)) {
- 		dev_err(dev, "no reset\n");
-+		clk_disable_unprepare(port->pclk);
- 		return PTR_ERR(port->reset);
- 	}
- 	reset_control_reset(port->reset);
-@@ -2501,8 +2502,10 @@ static int gemini_ethernet_port_probe(struct platform_device *pdev)
- 					IRQF_SHARED,
- 					port_names[port->id],
- 					port);
--	if (ret)
-+	if (ret) {
-+		clk_disable_unprepare(port->pclk);
- 		return ret;
-+	}
+diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+index 81bf71b..07bfa28 100644
+--- a/drivers/acpi/apei/ghes.c
++++ b/drivers/acpi/apei/ghes.c
+@@ -466,6 +466,44 @@ static bool ghes_handle_memory_failure(struct acpi_hest_generic_data *gdata,
+ 	return false;
+ }
  
- 	ret = register_netdev(netdev);
- 	if (!ret) {
++static bool ghes_handle_arm_hw_error(struct acpi_hest_generic_data *gdata, int sev)
++{
++	struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
++	struct cper_arm_err_info *err_info;
++	bool queued = false;
++	int sec_sev, i;
++
++	log_arm_hw_error(err);
++
++	if (!IS_ENABLED(CONFIG_ACPI_APEI_MEMORY_FAILURE))
++		return false;
++
++	sec_sev = ghes_severity(gdata->error_severity);
++	if (sev != GHES_SEV_RECOVERABLE || sec_sev != GHES_SEV_RECOVERABLE)
++		return false;
++
++	err_info = (struct cper_arm_err_info *) (err + 1);
++	for (i = 0; i < err->err_info_num; i++, err_info++) {
++		unsigned long pfn;
++
++		if (!(err_info->validation_bits & CPER_ARM_INFO_VALID_PHYSICAL_ADDR))
++			continue;
++
++		pfn = PHYS_PFN(err_info->physical_fault_addr);
++		if (!pfn_valid(pfn)) {
++			pr_warn(FW_WARN GHES_PFX
++				"Invalid address in generic error data: 0x%#llx\n",
++				err_info->physical_fault_addr);
++			continue;
++		}
++
++		memory_failure_queue(pfn, 0);
++		queued = true;
++	}
++
++	return queued;
++}
++
+ /*
+  * PCIe AER errors need to be sent to the AER driver for reporting and
+  * recovery. The GHES severities map to the following AER severities and
+@@ -543,9 +581,7 @@ static bool ghes_do_proc(struct ghes *ghes,
+ 			ghes_handle_aer(gdata);
+ 		}
+ 		else if (guid_equal(sec_type, &CPER_SEC_PROC_ARM)) {
+-			struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
+-
+-			log_arm_hw_error(err);
++			queued = ghes_handle_arm_hw_error(gdata, sev);
+ 		} else {
+ 			void *err = acpi_hest_get_payload(gdata);
+ 
 -- 
-2.17.1
+2.8.1
 
