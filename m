@@ -2,122 +2,110 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E83C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF88C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 251FA2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15A0C20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:49:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SOWTL1vm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="yMlsUfvi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730491AbgG3Wtc (ORCPT
+        id S1730609AbgG3Wto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 18:49:32 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60419 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728588AbgG3Wtb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 18:49:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596149369;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AKyJrYWDX6x969FmRZ0QcDqOUbfYEkv8rsi7p3uCKKw=;
-        b=SOWTL1vm3f4oE5Qa3ZDIj0TjgkNK0o7Hq90gcS+7sXok0w43cYhos+Ki9+/BYJwmBjExDJ
-        HLXw4cKlMkn2QXpPk3CnWwcRzh01iolxOO7GK1BuCr4zzGDvm1EWVn95vLnWVZn/Lpr/PX
-        D0F2CstoSR/E9Txa9Ssm98gmUwRQSTk=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-492-05PNKzhdNcGoHCMXztb2og-1; Thu, 30 Jul 2020 18:49:28 -0400
-X-MC-Unique: 05PNKzhdNcGoHCMXztb2og-1
-Received: by mail-wr1-f69.google.com with SMTP id 89so8398029wrr.15
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 15:49:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AKyJrYWDX6x969FmRZ0QcDqOUbfYEkv8rsi7p3uCKKw=;
-        b=imKM4vL6uU9BZGrsnfVGbP8qvw1QLKYJwyeuZ+nSLANWQnv/xQNOLnv/cQRfxFiX3k
-         i0RyG8p8o42F/D0ZfyRcXR7O+TOBppwErnR30J/fCC3WirrINADSUgAwLAcTlJs4eRyY
-         /T32UbKJNtqVv1fClRqk5F9FfY4MKwVpf3MU+cW+cOkkWc0V3ju8nRS9PTEAJ9QtZTAJ
-         an+CAsHTu802B3jB/MjxTgEg89uEjiuwZ7B4PoCBdzq2wZeyyclAfBKKjulMWTrr3yxp
-         fooMQQgDdmzK8YLYAG88bPlU4YyxKm/ZuSfQczyJK39WLPsuaLoLqmkjRXLtnhg4pYaV
-         iN0w==
-X-Gm-Message-State: AOAM533bxl/9YMN48Vl4s1rS34b8XvDijzxtwY5xwsZiWwxeEBrf9h3W
-        jONfTZZcb6qlX58VgX/KP8SVLZTKvOBjDMozWOI513KApK2h4YGFm9IE8e3m2u3X9Pwv+BdoV0O
-        EEl5uWRcF+SAYZQgtjg7UcDP+
-X-Received: by 2002:a05:600c:2888:: with SMTP id g8mr1244787wmd.118.1596149366789;
-        Thu, 30 Jul 2020 15:49:26 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxiSvm3UnA27GuaplhnTlAkbTEsPEhFvd2AYU6wvlMVGQFr2KY+Xr1z3LwwSh73Mtd0o/Yd0w==
-X-Received: by 2002:a05:600c:2888:: with SMTP id g8mr1244781wmd.118.1596149366596;
-        Thu, 30 Jul 2020 15:49:26 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.170.5])
-        by smtp.gmail.com with ESMTPSA id k4sm12545213wrd.72.2020.07.30.15.49.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jul 2020 15:49:26 -0700 (PDT)
-Subject: Re: [PATCH v3 03/11] KVM: SVM: Change intercept_dr to generic
- intercepts
-To:     Babu Moger <babu.moger@amd.com>, Jim Mattson <jmattson@google.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm list <kvm@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <159597929496.12744.14654593948763926416.stgit@bmoger-ubuntu>
- <159597948692.12744.7037992839778140055.stgit@bmoger-ubuntu>
- <CALMp9eRF-ScqaWG7vn2mxKmR4jWo7LYZiiicHksiZR9hh+G=-A@mail.gmail.com>
- <3841a638-eb9e-fae6-a6b6-04fec0e64b50@redhat.com>
- <2987e401-f021-a3a7-b4fa-c24ff6d0381b@amd.com>
- <560456cc-0cda-13f6-d152-3dca4896e27f@amd.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <3737d3b5-0569-bba3-cda1-9967e9651365@redhat.com>
-Date:   Fri, 31 Jul 2020 00:49:24 +0200
+        Thu, 30 Jul 2020 18:49:44 -0400
+Received: from vern.gendns.com ([98.142.107.122]:48900 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730457AbgG3Wtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 18:49:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=zIBbAfaKyv0a8khPFENs9bkRVRW75g282kFb88ll0RE=; b=yMlsUfviYgQGqrsCcQwvQ+E9+4
+        n4HKPHVxV3jzQ0oWcZAvtI+PY5km7eQGTZuzRA+5HkyL3yRKEHfiB66jyo5qY/YRP4HQzz/bszsyx
+        Vts7C81XDbxzeLVlXwom6UzAcjLyuwI9G5Ea6LNcZflptu7rpAUOzeSl0Icuz7PcsMCBpDF+sKey6
+        Jr8XysA3pCKftO59vuP+H+1BDP4xx8gYeJDPC7/sJkSX2YPRW/S5umktLVAvBDGdw+QXbLUfWr0WX
+        MDFEQBcVcSTqMtPZ/ING/CB1LVxJPdlHg/SvDtc6eOCZ+yeL+Ghku7zua54tD4t+znNRxeX8OgtmW
+        8b2McVaQ==;
+Received: from [2600:1700:4830:165f::19e] (port=45352)
+        by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <david@lechnology.com>)
+        id 1k1HMq-0000Lv-I2; Thu, 30 Jul 2020 18:49:40 -0400
+Subject: Re: [PATCH v4 3/5] counter: Add character device interface
+From:   David Lechner <david@lechnology.com>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>, jic23@kernel.org
+Cc:     kamel.bouhara@bootlin.com, gwendal@chromium.org,
+        alexandre.belloni@bootlin.com, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
+        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
+References: <cover.1595358237.git.vilhelm.gray@gmail.com>
+ <08b3ac7349a59ba7fa5cd438bbe78360842ccd11.1595358237.git.vilhelm.gray@gmail.com>
+ <415ee9ad-255e-cee7-22a6-ffa977999691@lechnology.com>
+Message-ID: <a287770b-c263-f1db-bcc4-d901d3ff3c7c@lechnology.com>
+Date:   Thu, 30 Jul 2020 17:49:37 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <560456cc-0cda-13f6-d152-3dca4896e27f@amd.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <415ee9ad-255e-cee7-22a6-ffa977999691@lechnology.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/07/20 00:41, Babu Moger wrote:
->> Let me try to understand.
->>
->> vmcb01 is &svm->vmcb->control;l
->> vmcb02 is &svm->nested.hsave->control
->> vmcb12 is  &svm->nested.ctl;
+On 7/28/20 7:20 PM, David Lechner wrote:
+> On 7/21/20 2:35 PM, William Breathitt Gray wrote:
+>> This patch introduces a character device interface for the Counter
+>> subsystem. Device data is exposed through standard character device read
+>> operations. Device data is gathered when a Counter event is pushed by
+>> the respective Counter device driver. Configuration is handled via ioctl
+>> operations on the respective Counter character device node.
+> 
+> This sounds similar to triggers and buffers in the iio subsystem. And
+> I can see how it might be useful in some cases. But I think it would not
+> give the desired results when performance is important.
+> 
 
-Right now we don't have a separate vmcb01/vmcb02, we have the current
-and hsave VMCBs.  Cathy is working on it.
+By the way, I really appreciate the work you have done here. When reviewing
+code, it is easy to point out what is wrong or we don't like and to not
+mention all the parts that are good. And there is a lot of really good work
+here already.
 
-Just do the refactoring by passing the control area to
-vmcb_set_intercept/vmcb_clr_intercept/vmcb_is_intercept.
+I've been working on this all week to try out some of my suggestions and
+I'm not getting very far. This is a very difficult problem to solve!
 
->> The functions set_intercept and clr_intercept calls get_host_vmcb to get the
->> vmcb address.
->
-> I will move the get_host_vmcb inside the caller and then call
-> vmcb_set_intercept/vmcb_clr_intercept/vmcb_is_intercept directly.
+I just wanted to mention this since I responded to this patch series
+already but I am still learning and trying things. So I may have more/
+different feedback in the future and I may decide some of my suggestions
+are not so good. :-)
 
-Hmm no I think set_intercept and clr_intercept should remain as is.
+And one more thing, there was a nice talk at the Embedded Linux
+Conference last month about lessons learned from designing a userspace
+API for the GPIO subsystem [1]. Unfortunately, there is no video yet,
+but the slides might have some helpful ideas about mistakes to avoid.
 
-Paolo
-
-> I will re post the series. This will change the whole series a little bit.
+[1]: https://elinux.org/ELC_2020_Presentations
 
