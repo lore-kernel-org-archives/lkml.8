@@ -2,236 +2,124 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6131C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C59EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF61D206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:46:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596091598;
-	bh=xvqWS7CZoxjvuY4gZz1/7/xQt6ZD0TfcxHp9St78Pjk=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=uF8CGC7irHHQ+GD7n5GffXuu73XmgFDkgwdLZTqHUC5yx9huMXOOEJN0DBNvulod3
-	 AJtVW9rGjynmGRKxKLhtRgo0wNo7NdrBb/PqNw3+iCpz6yB5vZk+eIGknPpUsWMlMG
-	 hrQxuoZJkMftzcDXOHqkVHSLRtd6ezpFCxQdVWmk=
+	by mail.kernel.org (Postfix) with ESMTP id E8A9620656
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:50:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="EY/rMHh3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbgG3Gqh (ORCPT
+        id S1728756AbgG3Guw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 02:46:37 -0400
-Received: from mail-ej1-f66.google.com ([209.85.218.66]:37500 "EHLO
-        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgG3Gqh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 02:46:37 -0400
-Received: by mail-ej1-f66.google.com with SMTP id qc22so12042345ejb.4;
-        Wed, 29 Jul 2020 23:46:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=VvW/5770zwdEjP0loB0rGyzZeqTV1S8hvb/EOvhH5ns=;
-        b=K8Ncut16Dy74iSG9N70LUm44js+zJp+txfKEKYYwBqHjgkUThhfCo3imov/f3AP8n3
-         +PoPDNORyU1WjCVCglgLVI7YwyfwCJ+ZtOQD6Xb/+KtWs3DPF3gqEsIncCTwMR//wALO
-         9FkiRljCU+X5smUasRL9m0fX9olSSKFzBwCJbg8x1Dj+nPICgp8DnfntODVd8ifdWj0q
-         Qq7SNzh6/bXwSiMMGeKd+7GRsdhesXKK1nQ6CjJfzLFkBb8KtQiB1VPW1RxJ2m783qAk
-         FLFkHFmcwbuEEcZBKZreLppkqGNBYfBa5AYWe35r+fMbLYfqe+ldRC9u379CantMyDOI
-         DsSQ==
-X-Gm-Message-State: AOAM532XgSQUXyIUpjNBQW4scL7okC61NV5uHvVWINrKMqVLXQOuleSv
-        DdUaJZ10lssrvG/IAxI3poYxsWdy
-X-Google-Smtp-Source: ABdhPJz9oidJ37cVJXjWt97VdLi7NLqMYVy6XmEAAIyOjANEBvS0Sei67vqcg/JYxg4UqxI6pxM3FA==
-X-Received: by 2002:a17:907:94c9:: with SMTP id dn9mr1149368ejc.355.1596091593696;
-        Wed, 29 Jul 2020 23:46:33 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
-        by smtp.gmail.com with ESMTPSA id t25sm4480562ejc.34.2020.07.29.23.46.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 23:46:32 -0700 (PDT)
-Subject: Re: [PATCH] vgacon: fix out of bounds write to the scrollback buffer
-To:     =?UTF-8?B?5byg5LqR5rW3?= <zhangyunhai@nsfocus.com>,
-        Solar Designer <solar@openwall.com>
-Cc:     b.zolnierkie@samsung.com,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Kyungtae Kim <kt0755@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg KH <greg@kroah.com>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        Anthony Liguori <aliguori@amazon.com>,
-        xiao.zhang@windriver.com,
-        DRI devel <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-References: <20200729130710.GA13262@openwall.com>
- <b764c575-70be-80dd-6718-e84370a7b2b3@nsfocus.com>
-From:   Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <659f8dcf-7802-1ca1-1372-eb7fefd4d8f4@kernel.org>
-Date:   Thu, 30 Jul 2020 08:46:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 02:50:52 -0400
+Received: from mail-eopbgr30066.outbound.protection.outlook.com ([40.107.3.66]:8419
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726133AbgG3Guw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 02:50:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L0ALxpUEKvvVeqogRGlJMVP1/L+3CSY5kb1DtJ1ucDsEscXxFj3QtowW+/Z4vtREv7N4JzGhYOE7g634/0djfXDKfJDANf62Zr/iZOCuNltGHO4J295ahPVtk07gagMEW5LcAotkvWd7ZvghzbzEBlEYbYv7T2S47g974Ktg+he4CaTUj4KfTP7ZBVd9wEiAlOjw+n+Nf+hgytTvjtddhns7Gd3XtXbIkwl6uQ87NcNrf0AEsGznXc18cfANgbu5aElP9AyK9AfFfpQCOle/1PgcgaHXzIzvz/IiLpEoe/0RH1kc+aOLcJfs834fY45rCS1DZ98Mvd6E3aeyclLdOg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nJimGzboT3ZBqvfv9IAt5pbzgthPf2mpbIaSmm96tOc=;
+ b=UooP2oeGAnk0k5zGdKjEyUm9cp7+U2Zhqqw4TCcTMqLI1oR5/PkxIA1EmJJ2rDPjn6kdtv3GdR+HvF/KsdPGwHnsyFx+cFCQgH/TsQK3S+mO44MuVlLp0M1B5lyB+K1974wm7tk71eT2Pn9aQgdtteXhIWWidYf3ZtHplE+UX2BwGc8l5LPgkY4Yr8ez/L1Q7MhgNp+FpUwDq1xAwKb/faebCHVXJoN50pYlndVpmJpTe48Tzl4W/FuxYhqtf6ooWFA1yazJotUm0b5FMhZhOmJE8dztdcEBGVW9kQDNUuFAtLYnllvyQyjYst2aDWw8BF/SZ+sHsAs0e3AY0gKWuw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nJimGzboT3ZBqvfv9IAt5pbzgthPf2mpbIaSmm96tOc=;
+ b=EY/rMHh3wKlvWb3IWw45IA7WioQSFa+o93sZjH2ag7+f9TGIIRtKt7R0KUwvO6Rbacwq/G47R9/nu/+tmzUdKiNyPtvP+YKqCgEkJDochnJqSbZHAO+3s8PxyXpj7+lg+mQ89jtgb+CUY5IXAm75O3qitvEjaMXcdfuYhRjxqmU=
+Authentication-Results: pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=none action=none header.from=nxp.com;
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+ by DB8PR04MB5803.eurprd04.prod.outlook.com (2603:10a6:10:a9::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17; Thu, 30 Jul
+ 2020 06:50:49 +0000
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::2d36:b569:17c:7701]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::2d36:b569:17c:7701%4]) with mapi id 15.20.3216.033; Thu, 30 Jul 2020
+ 06:50:49 +0000
+From:   peng.fan@nxp.com
+To:     p.zabel@pengutronix.de, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, robh+dt@kernel.org
+Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH 1/2] dt-bindings: reset: imx8mq: add m4 reset
+Date:   Thu, 30 Jul 2020 14:46:08 +0800
+Message-Id: <1596091569-10013-1-git-send-email-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR01CA0142.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:8f::22) To DB6PR0402MB2760.eurprd04.prod.outlook.com
+ (2603:10a6:4:a1::14)
 MIME-Version: 1.0
-In-Reply-To: <b764c575-70be-80dd-6718-e84370a7b2b3@nsfocus.com>
-Content-Type: text/plain; charset=gbk
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.67) by SG2PR01CA0142.apcprd01.prod.exchangelabs.com (2603:1096:4:8f::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3239.16 via Frontend Transport; Thu, 30 Jul 2020 06:50:45 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.67]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: a527bdd9-2761-422f-a1ae-08d83454e46f
+X-MS-TrafficTypeDiagnostic: DB8PR04MB5803:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB8PR04MB58031D00F2366BCDD88D3E6B88710@DB8PR04MB5803.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:632;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vpeAjbv9QS5v1OxXXBphC3mZaRnZqeBcAh4jThmUOVGpFYYLIROB+/E5/SrpwfJw38IBssiW1RHr8ZS1C2JQckahlwt941a+sqdELB4WzsB1enHxs4YdBm89sjs9xDETxoP/I8LnHLFE2PhgsRj9DI1SBswPF/aecKUVKgAN+0IKhptSG5lpVNmHPTpBA6TDmsIWKaDAfv5fOxVjJWdZofnA/dzZqLJerw4ebvEClWWO2xCjiZbZlBkFg3HyauWbN3iUtVgm9qH9TR6xlAie8EQPr4P/kteXrVfNh3JaAdexYQeHOJDon6Sw1vZMaZeBJOW328A9Fk4xBAkwTGtipYmVTiRM5sBIVFi306/gPDo7DoiNH+eDhq5O+F+IIB06JpSBVGcNH62IUy7sJCYZ1g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(39860400002)(366004)(136003)(346002)(6512007)(9686003)(36756003)(6666004)(316002)(83380400001)(4326008)(86362001)(52116002)(69590400007)(6486002)(2906002)(8676002)(16526019)(66946007)(66556008)(66476007)(478600001)(186003)(6506007)(2616005)(4744005)(26005)(8936002)(5660300002)(956004)(32563001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: gjWzw2RNsRaNon2EKNF53eVlJvVITAbLQbepj4R6k4KYbSFYzXdS3uTCEfR83pBVRFZq+haES0d3vvr6wqEQzMRbdKJ/rbHJvJ51kkXBXvrHKHZWPLKE29lcQGCaPkAdxZypDxfOgVlwOO2oPylo2LMl5gF15xUpymB0Q1+QHiGKDIljbyLJbIsEJxc2Bqic8zXVvfggVud+FzcXOfe01tGjKWnrPAJy+IeBUMWrr3ENKFcO5Il/WD+Oxlj+Okb3GUfYjKmRW+gXy4gX6F71lfsiVUNN+Ro7NqLi6qq7nWpEZ2pV0n8CkaKHtuTIKJZNynoMM40Ju4YLMfPF3L8P1rDu9iOkNhnS33L5jPULH4pmxVHZChSy42JmiqCi5T3+zX8KRj3GMwTBVig+6cfPTdxAVuz+TbpkqxEbIuQ7woUXpyepdiz/B7FeFQiUeF5JgZDgPoaHeX63USbiwtDRuxxfTOFfjcvbnn9GbCeJwYPCWeOrF4OLIKKsNabBO+XWSeX6Ne2YbHzZt8Orjra0c0AeQuyOkXFSrVHq3sxNQi59fhPRuX1OgA2OqeANkN/igGAX8fCZewb+mTabyNPc3t+AHDjFRVHcBWtF/27yWFkbLi+z9iFZ8n/o1X96235uW/RazALPKZ3Ip0cEekkjng==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a527bdd9-2761-422f-a1ae-08d83454e46f
+X-MS-Exchange-CrossTenant-AuthSource: DB6PR0402MB2760.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 06:50:49.0861
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: o8Y564FXZiUZaj87g7hj09mcxkfOQoyj0DzIIfyy50op07wbTzQo5cgLXdFPkBWYI0D/Wy+tYhddaWdwbzmqrg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5803
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, OTOH, you should have CCed all the (public) lists.
+From: Peng Fan <peng.fan@nxp.com>
 
-On 30. 07. 20, 4:50, 张云海 wrote:
-> Zhang Xiao points out that the check should use > instead of >=,
-> otherwise the last line will be skip.
-> I agree with that, so I modify the patch.
-> Could you please verify that it is still correct and sufficient?
+Add the m4 reset used by the remoteproc driver
 
-IMO, yes, correct -- I was thinking about this yesterday too. Just an
-example: hypothetically, if we had:
-size_row = 1
-tail = 29
-size = 30
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+ include/dt-bindings/reset/imx8mq-reset.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-data[29] would be the last accessible member. Writing to data + tail (as
-"29 + 1 > 30" doesn't hold, so the modified check would pass), i.e.
-data[29] is still OK. So yes, > is OK, >= would waste space and would be
-actually incorrect.
-
-> BTW, Zhang Xiao also points out that the check after the memcpy can be
-> remove.
-> I also think that was right, but vgacon_scrollback_cur->tail may keep
-> the value vgacon_scrollback_cur->size in some case. That is not a
-> problem in vgacon_scrollback_update because of the check before the
-> memcpy. However, that may break some other code which assumes that
-> vgacon_scrollback_cur->tail won't be vgacon_scrollback_cur->size. I do
-> not know if there are such code, and if it is the code actually  should
-> check it too. But I still not remove the check in the patch to make sure
-> it won't breaks other code.
-
-As I wrote about this yesterday:
-===
-I am also not sure the test I was pointing out on the top of this
-message would be of any use after the change. But maybe leave the code
-rest in peace.
-===
-
-I would let it as is in this particular code. Especially because
-vgacon_scrolldelta takes ->tail into consideration and I was too lazy to
-study the code there. But if you are willing to study the code there and
-confirm the check is superfluous, feel free to remove it. Perhaps in a
-separate patch. I was actually testing with the check removed and didn't
-hit any issue (which means, in fact, exactly nothing).
-
-> From ad143ede24ff4e61292cc9c96000100aacd97259 Mon Sep 17 00:00:00 2001
-> From: Yunhai Zhang <zhangyunhai@nsfocus.com>
-> Date: Tue, 28 Jul 2020 09:58:03 +0800
-> Subject: [PATCH] Fix for missing check in vgacon scrollback handling
-> 
-> vgacon_scrollback_update() always left enbough room in the scrollback
-
-"leaves enough"
-
-> buffer for the next call, but if the console size changed that room
-> might not actually be enough, and so we need to re-check.
-
-Also, could you add reasoning why you are adding the check to the loop
-and not outside (for instance, use your reasoning with numbers or CSI M
-as an example).
-
-Could you add a sample output here, something like I had:
-===
-    This leads to random crashes or KASAN reports like:
-    BUG: KASAN: slab-out-of-bounds in vgacon_scroll+0x57a/0x8ed
-===
-
-It's then easier to google for when this happens to someone who runs
-non-patched kernels.
-
-> This fixes CVE-2020-14331.
-> 
-> Reported-and-debugged-by: 张云海 <zhangyunhai@nsfocus.com>
-> Reported-and-debugged-by: Yang Yingliang <yangyingliang@huawei.com>
-> Reported-by: Kyungtae Kim <kt0755@gmail.com>
-> Fixes: 15bdab959c9b ([PATCH] vgacon: Add support for soft scrollback)
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Greg KH <greg@kroah.com>
-> Cc: Solar Designer <solar@openwall.com>
-> Cc: "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-> Cc: Anthony Liguori <aliguori@amazon.com>
-> Cc: Yang Yingliang <yangyingliang@huawei.com>
-> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-
-Oh, and we should:
-Cc: stable@vger.kernel.org
-
-> Signed-off-by: Yunhai Zhang <zhangyunhai@nsfocus.com>
-> ---
->  drivers/video/console/vgacon.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/video/console/vgacon.c b/drivers/video/console/vgacon.c
-> index 998b0de1812f..37b5711cd958 100644
-> --- a/drivers/video/console/vgacon.c
-> +++ b/drivers/video/console/vgacon.c
-> @@ -251,6 +251,10 @@ static void vgacon_scrollback_update(struct vc_data *c, int t, int count)
->  	p = (void *) (c->vc_origin + t * c->vc_size_row);
->  
->  	while (count--) {
-> +		if ((vgacon_scrollback_cur->tail + c->vc_size_row) > 
-> +		    vgacon_scrollback_cur->size)
-> +			vgacon_scrollback_cur->tail = 0;
-> +
->  		scr_memcpyw(vgacon_scrollback_cur->data +
->  			    vgacon_scrollback_cur->tail,
->  			    p, c->vc_size_row);
-
-thanks,
+diff --git a/include/dt-bindings/reset/imx8mq-reset.h b/include/dt-bindings/reset/imx8mq-reset.h
+index a5b570737582..705870693ec2 100644
+--- a/include/dt-bindings/reset/imx8mq-reset.h
++++ b/include/dt-bindings/reset/imx8mq-reset.h
+@@ -58,7 +58,10 @@
+ #define IMX8MQ_RESET_DDRC2_PRST			47	/* i.MX8MM/i.MX8MN does NOT support */
+ #define IMX8MQ_RESET_DDRC2_CORE_RESET		48	/* i.MX8MM/i.MX8MN does NOT support */
+ #define IMX8MQ_RESET_DDRC2_PHY_RESET		49	/* i.MX8MM/i.MX8MN does NOT support */
++#define IMX8MQ_RESET_SW_M4C_RST			50
++#define IMX8MQ_RESET_SW_M4P_RST			51
++#define IMX8MQ_RESET_M4_ENABLE			52
+ 
+-#define IMX8MQ_RESET_NUM			50
++#define IMX8MQ_RESET_NUM			53
+ 
+ #endif
 -- 
-js
-suse labs
+2.16.4
+
