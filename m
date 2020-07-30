@@ -2,90 +2,215 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E74C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 564DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 332D622B48
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:11:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596078664;
-	bh=H2NODBbkkSUD6I63me+UYQ1BgU7CvdVwALXoiuzsRNU=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=OJ7AUa+YWH5udfnv9Wp3MMj3WSNKKjIpExAMYLCZXGW7ltfZP9AiL5qfjDRbGI7l8
-	 NWqob0zZensWsG9XHKEAlPV/0V6ua+VejX3/fLcdXKHkJdluqTsGX7K9ew22exf+B3
-	 lNrY9uRlliIqFa19LAohGN5jC18+fz0du7GztQ7k=
+	by mail.kernel.org (Postfix) with ESMTP id 2B42A22B48
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:13:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbgG3DLD (ORCPT
+        id S1728489AbgG3DNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 23:11:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55938 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728446AbgG3DLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 23:11:02 -0400
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7485C22B48;
-        Thu, 30 Jul 2020 03:11:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596078662;
-        bh=H2NODBbkkSUD6I63me+UYQ1BgU7CvdVwALXoiuzsRNU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=RbZqcquCI0GudeIh3+q9R4S1n+n3KGUJ3JSutRSSooo1brOev6qu5ddM6TxjmqW1p
-         qvB3Dd6T2TkJJefiZjlQMUScNKw503BN44Onz7f0PN7WVBzVM55JuuiM700JXRlrl5
-         Z9K1G4x3b0/ZdqmNrmpWJpnLjyEKiJ42iySmG6fY=
-Date:   Wed, 29 Jul 2020 22:17:00 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH][next] net/sched: act_pedit: Use flex_array_size() helper in
- memcpy()
-Message-ID: <20200730031700.GA23745@embeddedor>
+        Wed, 29 Jul 2020 23:13:16 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8854 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726367AbgG3DNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 23:13:15 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0D9F3ACDF479E1EF6CB6;
+        Thu, 30 Jul 2020 11:13:13 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.103) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Thu, 30 Jul 2020
+ 11:13:03 +0800
+Subject: Re: [RFC PATCH] iomap: add support to track dirty state of sub pages
+To:     Gao Xiang <hsiangkao@redhat.com>
+CC:     <hch@infradead.org>, <darrick.wong@oracle.com>,
+        <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>
+References: <20200730011901.2840886-1-yukuai3@huawei.com>
+ <20200730022736.GA23366@xiangao.remote.csb>
+From:   "yukuai (C)" <yukuai3@huawei.com>
+Message-ID: <7a5923ce-812f-f372-d751-b59f69d9544f@huawei.com>
+Date:   Thu, 30 Jul 2020 11:13:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200730022736.GA23366@xiangao.remote.csb>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.179.103]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of the flex_array_size() helper to calculate the size of a
-flexible array member within an enclosing structure.
+On 2020/7/30 10:27, Gao Xiang wrote:
+> Hi Kuai,
+> 
+> On Thu, Jul 30, 2020 at 09:19:01AM +0800, Yu Kuai wrote:
+>> commit 9dc55f1389f9 ("iomap: add support for sub-pagesize buffered I/O
+>> without buffer heads") replace the per-block structure buffer_head with
+>> the per-page structure iomap_page. However, iomap_page can't track the
+>> dirty state of sub pages, which will cause performance issue since sub
+>> pages will be writeback even if they are not dirty.
+>>
+>> For example, if block size is 4k and page size is 64k:
+>>
+>> dd if=/dev/zero of=testfile bs=4k count=16 oflag=sync
+>>
+>> With buffer_head implementation, the above dd cmd will writeback 4k in
+>> each round. However, with iomap_page implementation, the range of
+>> writeback in each round is from the start of the page to the end offset
+>> we just wrote.
+>>
+>> Thus add support to track dirty state for sub pages in iomap_page.
+> 
+> AFAIK, the current focus is also on the numbers in the original
+> discussion thread, so it'd be better to show some numbers with
+> large PAGE_SIZE on this with some workloads as well.
+> 
+> https://lore.kernel.org/r/20200729230503.GA2005@dread.disaster.area
+> 
 
-This helper offers defense-in-depth against potential integer
-overflows, while at the same time makes it explicitly clear that
-we are dealing with a flexible array member.
+Hi, Xiang!
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- net/sched/act_pedit.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+The problem was found by iozone to test 4k sequintail write in my
+case, thanks for pointing out the discussion thread. I'll test it if
+this patch have any effect on that situation.
 
-diff --git a/net/sched/act_pedit.c b/net/sched/act_pedit.c
-index 66986db062ed..c158bfed86d5 100644
---- a/net/sched/act_pedit.c
-+++ b/net/sched/act_pedit.c
-@@ -436,8 +436,7 @@ static int tcf_pedit_dump(struct sk_buff *skb, struct tc_action *a,
- 		return -ENOBUFS;
- 
- 	spin_lock_bh(&p->tcf_lock);
--	memcpy(opt->keys, p->tcfp_keys,
--	       p->tcfp_nkeys * sizeof(struct tc_pedit_key));
-+	memcpy(opt->keys, p->tcfp_keys, flex_array_size(opt, keys, p->tcfp_nkeys));
- 	opt->index = p->tcf_index;
- 	opt->nkeys = p->tcfp_nkeys;
- 	opt->flags = p->tcfp_flags;
--- 
-2.27.0
+Thanks,
+Yu Kuai
+
+> e.g. My guess is if the dirty blocks in the page are highly fragmented, maybe
+> it'd be better to writeback the whole page in an IO rather than individual blocks.
+> 
+> At a very quick glance, the approach looks good to me.
+> 
+> Thanks,
+> Gao Xiang
+> 
+>>
+>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+>> ---
+>>   fs/iomap/buffered-io.c | 51 +++++++++++++++++++++++++++++++++++++++++-
+>>   1 file changed, 50 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+>> index bcfc288dba3f..ac2676146b98 100644
+>> --- a/fs/iomap/buffered-io.c
+>> +++ b/fs/iomap/buffered-io.c
+>> @@ -29,7 +29,9 @@ struct iomap_page {
+>>   	atomic_t		read_count;
+>>   	atomic_t		write_count;
+>>   	spinlock_t		uptodate_lock;
+>> +	spinlock_t		dirty_lock;
+>>   	DECLARE_BITMAP(uptodate, PAGE_SIZE / 512);
+>> +	DECLARE_BITMAP(dirty, PAGE_SIZE / 512);
+>>   };
+>>   
+>>   static inline struct iomap_page *to_iomap_page(struct page *page)
+>> @@ -53,7 +55,9 @@ iomap_page_create(struct inode *inode, struct page *page)
+>>   	atomic_set(&iop->read_count, 0);
+>>   	atomic_set(&iop->write_count, 0);
+>>   	spin_lock_init(&iop->uptodate_lock);
+>> +	spin_lock_init(&iop->dirty_lock);
+>>   	bitmap_zero(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
+>> +	bitmap_zero(iop->dirty, PAGE_SIZE / SECTOR_SIZE);
+>>   
+>>   	/*
+>>   	 * migrate_page_move_mapping() assumes that pages with private data have
+>> @@ -135,6 +139,44 @@ iomap_adjust_read_range(struct inode *inode, struct iomap_page *iop,
+>>   	*lenp = plen;
+>>   }
+>>   
+>> +static void
+>> +iomap_iop_set_or_clear_range_dirty(
+>> +	struct page *page,
+>> +	unsigned int off,
+>> +	unsigned int len,
+>> +	bool is_set)
+>> +{
+>> +	struct iomap_page *iop = to_iomap_page(page);
+>> +	struct inode *inode = page->mapping->host;
+>> +	unsigned int first = off >> inode->i_blkbits;
+>> +	unsigned int last = (off + len - 1) >> inode->i_blkbits;
+>> +	unsigned long flags;
+>> +	unsigned int i;
+>> +
+>> +	spin_lock_irqsave(&iop->dirty_lock, flags);
+>> +	for (i = first; i <= last; i++)
+>> +		if (is_set)
+>> +			set_bit(i, iop->dirty);
+>> +		else
+>> +			clear_bit(i, iop->dirty);
+>> +	spin_unlock_irqrestore(&iop->dirty_lock, flags);
+>> +}
+>> +
+>> +static void
+>> +iomap_set_or_clear_range_dirty(
+>> +	struct page *page,
+>> +	unsigned int off,
+>> +	unsigned int len,
+>> +	bool is_set)
+>> +{
+>> +	if (PageError(page))
+>> +		return;
+>> +
+>> +	if (page_has_private(page))
+>> +		iomap_iop_set_or_clear_range_dirty(
+>> +			page, off, len, is_set);
+> 3> +}
+>> +
+>>   static void
+>>   iomap_iop_set_range_uptodate(struct page *page, unsigned off, unsigned len)
+>>   {
+>> @@ -705,6 +747,8 @@ __iomap_write_end(struct inode *inode, loff_t pos, unsigned len,
+>>   	if (unlikely(copied < len && !PageUptodate(page)))
+>>   		return 0;
+>>   	iomap_set_range_uptodate(page, offset_in_page(pos), len);
+>> +	iomap_set_or_clear_range_dirty(
+>> +		page, offset_in_page(pos), len, true);
+>>   	iomap_set_page_dirty(page);
+>>   	return copied;
+>>   }
+>> @@ -1030,6 +1074,8 @@ iomap_page_mkwrite_actor(struct inode *inode, loff_t pos, loff_t length,
+>>   		WARN_ON_ONCE(!PageUptodate(page));
+>>   		iomap_page_create(inode, page);
+>>   		set_page_dirty(page);
+>> +		iomap_set_or_clear_range_dirty(
+>> +			page, offset_in_page(pos), length, true);
+>>   	}
+>>   
+>>   	return length;
+>> @@ -1386,7 +1432,8 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
+>>   	for (i = 0, file_offset = page_offset(page);
+>>   	     i < (PAGE_SIZE >> inode->i_blkbits) && file_offset < end_offset;
+>>   	     i++, file_offset += len) {
+>> -		if (iop && !test_bit(i, iop->uptodate))
+>> +		if (iop && (!test_bit(i, iop->uptodate) ||
+>> +		    !test_bit(i, iop->dirty)))
+>>   			continue;
+>>   
+>>   		error = wpc->ops->map_blocks(wpc, inode, file_offset);
+>> @@ -1435,6 +1482,8 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
+>>   		 */
+>>   		set_page_writeback_keepwrite(page);
+>>   	} else {
+>> +		iomap_set_or_clear_range_dirty(
+>> +			page, 0, end_offset - page_offset(page) + 1, false);
+>>   		clear_page_dirty_for_io(page);
+>>   		set_page_writeback(page);
+>>   	}
+>> -- 
+>> 2.25.4
+>>
+> 
+> 
+> .
+> 
 
