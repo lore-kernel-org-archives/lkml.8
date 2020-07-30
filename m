@@ -2,107 +2,140 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07642C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B14C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E01BE2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4FAA20809
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:21:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596147664;
+	bh=NgJpcR0LL0zYDccbtazPPHHNYrCpIo7SgHXiesZqEp4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RBJ3SKB5JDX/CgQ+AxVfc52UWZDQ73FKvOeTiWOQRdVB3C+ILF/Ai3UMzvaz6IAPk
+	 fqiYB/sw4/Ij76U+CAWkVJfRse9yxMobUTYSuAyuXBN4oLCfmOv36O+JZR3GVRLmW7
+	 T4TNjJOhf3Mtii0ERxA10LID5W1PguUK7CgGekiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730128AbgG3WSe (ORCPT
+        id S1729092AbgG3WVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 18:18:34 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:41307 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728543AbgG3WSe (ORCPT
+        Thu, 30 Jul 2020 18:21:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43184 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728070AbgG3WVC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 18:18:34 -0400
-Received: from localhost.localdomain (unknown [46.106.42.139])
-        (Authenticated sender: cengiz@kernel.wtf)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 2AB1D100003;
-        Thu, 30 Jul 2020 22:18:26 +0000 (UTC)
-From:   Cengiz Can <cengiz@kernel.wtf>
-To:     dan.carpenter@oracle.com, andy.shevchenko@gmail.com
-Cc:     andriy.shevchenko@linux.intel.com, cengiz@kernel.wtf,
-        devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        mchehab@kernel.org, sakari.ailus@linux.intel.com
-Subject: [PATCH v2] staging: atomisp: move null check to earlier point
-Date:   Fri, 31 Jul 2020 01:17:38 +0300
-Message-Id: <20200730221737.51569-1-cengiz@kernel.wtf>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200730084545.GB1793@kadam>
-References: <20200730084545.GB1793@kadam>
+        Thu, 30 Jul 2020 18:21:02 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75357C061574;
+        Thu, 30 Jul 2020 15:21:02 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id m20so11589050eds.2;
+        Thu, 30 Jul 2020 15:21:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=y+mpXV57TW2iO0c6IHfRHHNirfzxpC6g/J95M/azzkY=;
+        b=JWF6dui1IzPCk7OPjzXS68CeUeDkUYBrDVhoV57bX+R12EF+lGgYYXfAiiYl+rvLuR
+         qNNUK2R9V/hIYGJqF9d+oukJDzsFTk2qlCfw/l7MYYlV9RxqDGnyBZBW7wS/AFXKRK8/
+         ybTYNbEz+IWOaqzW4MfuyXO8FrXHfvkY+V9U9xElqO0BlWSKfjpy3i9DOzvYi7UCAMWQ
+         LZPbbHo5WFq3dzpHDQFU471gNJI84dYat78N7NFpCfFfOlo0hoQ6DzzItwTlpV0nxi3W
+         pZ1rtwtcgF2/j5vcp5xYYj0plvPMRLJSF4Ior4nDQxtxqRkn/v/mXjI+ngtUqfKFDXd1
+         GIfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=y+mpXV57TW2iO0c6IHfRHHNirfzxpC6g/J95M/azzkY=;
+        b=IGj0WRtR7mN7fNVLSGIaTiCr+Qjdi7jx+k9Ds8ckbyLG9VM7k4sE0YmBaCfJMGgqjq
+         lRpbNyjMEhZvxm5cvm0DeLYThJovIGr253EJ0za9MHPMj8O8878OoVhcbKicM1q0P9S/
+         r/p3SjT6a+y31CXSIpWVCCmaZ/jfy23R7QQ0019o/2Fsi9J+t48skfQ3fFbO17FigRIn
+         zUKSnWKpXLucIEmyVZbt38ild9c9dt/6SqmzwUiz2HeXMYpNTBYP779P747sRwh3iF5y
+         uRiddCGvvtZ7C8v8rnO2DaiKIt55aQbtIA4Ye7DYcjSaHsHwvQNkOSjkOsA4JfKurJL3
+         tIog==
+X-Gm-Message-State: AOAM533lQcC/HU/XVKWuj7aK65Gyyy0yAV4NDkBtHAz1gyzuFtP3RxTH
+        BwDSZ8J1tr4/3mNPjYvO4YI=
+X-Google-Smtp-Source: ABdhPJyI6nx7BepTT+yJdQ/rbOjasxKetAGavgY9Wfr4+anngSW2RrkSYvoL9VX9kHKzBffTSZ/FGA==
+X-Received: by 2002:a05:6402:1346:: with SMTP id y6mr1167784edw.192.1596147661214;
+        Thu, 30 Jul 2020 15:21:01 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id y14sm6313577ejr.35.2020.07.30.15.20.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 15:20:59 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 00:20:57 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org, arnd@arndb.de,
+        bigeasy@linutronix.de, elver@google.com, ethp@qq.com,
+        frederic@kernel.org, jbi.octave@gmail.com, joel@joelfernandes.org,
+        lihaoliang@google.com, madhuparnabhowmik10@gmail.com,
+        mchehab+huawei@kernel.org, peter.enderborg@sony.com,
+        rdunlap@infradead.org, richard.weiyang@linux.alibaba.com,
+        urezki@gmail.com, zou_wei@huawei.com, tglx@linutronix.de
+Subject: Re: [GIT PULL tip/core/rcu] RCU commits for v5.9
+Message-ID: <20200730222057.GA423051@gmail.com>
+References: <20200714172701.GA31369@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200714172701.GA31369@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-`find_gmin_subdev` function that returns a pointer to `struct
-gmin_subdev` can return NULL.
 
-In `gmin_v2p8_ctrl` there's a call to this function but the possibility
-of a NULL was not checked before its being dereferenced. ie:
+* Paul E. McKenney <paulmck@kernel.org> wrote:
 
-```
-/* Acquired here --------v */
-struct gmin_subdev *gs = find_gmin_subdev(subdev);
+> Hello, Ingo!
+> 
+> This pull request contains the following changes:
+> 
+> 1.	Documentation updates.
+> 
+> 	https://lore.kernel.org/lkml/20200623000923.GA25047@paulmck-ThinkPad-P72
+> 
+> 2.	Miscellaneous fixes.
+> 
+> 	https://lore.kernel.org/lkml/20200623002128.GA25456@paulmck-ThinkPad-P72
+> 
+> 3.	kfree_rcu updates.
+> 
+> 	https://lore.kernel.org/lkml/20200624201200.GA28901@paulmck-ThinkPad-P72
+> 
+> 4.	RCU tasks updates.
+> 
+> 	https://lore.kernel.org/lkml/20200623002423.GA25869@paulmck-ThinkPad-P72
+> 
+> 5.	Read-side scalability tests.
+> 
+> 	https://lore.kernel.org/lkml/20200623002941.GA26089@paulmck-ThinkPad-P72
+> 
+> 6.	SRCU updates.
+> 
+> 	https://lore.kernel.org/lkml/20200623003310.GA26539@paulmck-ThinkPad-P72
+> 
+> 7.	Torture-test updates.
+> 
+> 	https://lore.kernel.org/lkml/20200623003731.GA26717@paulmck-ThinkPad-P72
+> 
+> All of these have been subjected to the kbuild test robot and -next
+> testing, and are available in the git repository based on v5.8-rc3 at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git for-mingo
+> 
+> for you to fetch changes up to 13625c0a4074d3bab61b1dc70a828b574255f339:
+> 
+>   Merge branches 'doc.2020.06.29a', 'fixes.2020.06.29a', 'kfree_rcu.2020.06.29a', 'rcu-tasks.2020.06.29a', 'scale.2020.06.29a', 'srcu.2020.06.29a' and 'torture.2020.06.29a' into HEAD (2020-06-29 12:03:15 -0700)
 
-/*  v------Dereferenced here */
-if (gs->v2p8_gpio >= 0) {
-    ...
-}
-```
+>  61 files changed, 2395 insertions(+), 680 deletions(-)
 
-To avoid the issue, null check has been moved to an earlier point
-and return semantics has been changed to reflect this exception.
+Pulled into tip:core/rcu, thanks a lot Paul!
 
-Please do note that this change introduces a new return value to
-`gmin_v2p8_ctrl`.
+I assume the fix Uladzislau Rezki is working on will resolve Sebastian 
+Andrzej Siewior's objections?
 
-[NEW] - raise a WARN and return -ENODEV if there are no subdevices.
-      - return result of `gpio_request` or `gpio_direction_output`.
-      - return 0 if GPIO is ON.
-      - return results of `regulator_enable` or `regulator_disable`.
-      - according to PMIC type, return result of `axp_regulator_set`
-        or `gmin_i2c_write`.
-      - return -EINVAL if unknown PMIC type.
+Thanks,
 
-Caught-by: Coverity Static Analyzer CID 1465536
-Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
----
- drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-index 0df46a1af5f0..1ad0246764a6 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-@@ -871,6 +871,9 @@ static int gmin_v2p8_ctrl(struct v4l2_subdev *subdev, int on)
- 	int ret;
- 	int value;
- 
-+	if (WARN_ON(!gs))
-+		return -ENODEV;
-+
- 	if (gs->v2p8_gpio >= 0) {
- 		pr_info("atomisp_gmin_platform: 2.8v power on GPIO %d\n",
- 			gs->v2p8_gpio);
-@@ -881,7 +884,7 @@ static int gmin_v2p8_ctrl(struct v4l2_subdev *subdev, int on)
- 			pr_err("V2P8 GPIO initialization failed\n");
- 	}
- 
--	if (!gs || gs->v2p8_on == on)
-+	if (gs->v2p8_on == on)
- 		return 0;
- 	gs->v2p8_on = on;
- 
--- 
-2.27.0
-
+	Ingo
