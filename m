@@ -2,173 +2,165 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDE3C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CB5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13C41208A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:06:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YiyAL6Nc"
+	by mail.kernel.org (Postfix) with ESMTP id 3F90E20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:10:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596125403;
+	bh=FAeJmqJWUwun8tkRthozqocoLOawjcpNH+44TDl/UnM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=HmTE5/YyJgxiEa0Vo2U7Ir9xODFsAWIzawg1a93Pj+QZzSPGbeIECnJoAhxn5aOlb
+	 JBnZsH3izckSOT5r9FM++qqPSq0cdVBcjedAsyTYabYOl6aILqEvKOQyCuzMuqyIq7
+	 /e0q6eSB7KpsssIfZWOwASBoVGe9V2dQKt3SkWSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729928AbgG3QGw (ORCPT
+        id S1729882AbgG3QKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 12:06:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42014 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727966AbgG3QGv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 12:06:51 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2668C061574;
-        Thu, 30 Jul 2020 09:06:51 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id g19so1994560plq.0;
-        Thu, 30 Jul 2020 09:06:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GhpcKX576gNG3e6fvUmX715XzKZ/gDgDhfOPrvbZwyQ=;
-        b=YiyAL6Nc+Czgq2OXZdBrJSo5CmeqtKq6WGq7ORc73Lkl7hKETUYMoGEpTwtcjR74Qd
-         bvDmMnzPkKcau8OSK47lx4j5NLy6U2VCuNGUR/zD8cPFq05xhDibkTM3NxJ7lsj5DA0Z
-         IQHyjYhkrB7ll0ZgcIVkKXiKw840wKrbA5NNy4rBaQoghwjq9vG+5jc1UalschOk4LFO
-         DOM7LdnABr7lRDE8af3xoseYEiTkCMQvfbwLoVgXElR5WpyyRgqRk2mauKLjr8tfw8ot
-         NwptU93WrLENSU7tQl0zUxMDMuW2PwSsVcIF5kHKixM1wRsCr0aNSv3tSDKSQRrnJuX+
-         VvVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=GhpcKX576gNG3e6fvUmX715XzKZ/gDgDhfOPrvbZwyQ=;
-        b=uGxqsPBdv6Y8ThWsDypdDiaQG9ElTydtwSPZllnnLjH/tLSEPx2f4zLOJ2CjXifNlZ
-         kOW6G/PG9yPn5LPRg40x4T1hXW2REXua5Sy/naWKunjEUwIntzHRv9cBb82HlDuKxLFx
-         GWxfJ1Rn4/8GdaP2D7FAk5JXe5cztEZsBBDT8chQ+bP5CVn8Lx6fa1bhuDACdznUGlF7
-         17MDLhCzET/D5hrlA+Ejqa+A8KJAKIdY7RAPQ0ngHBFNzRa51a2jPAfOd+72WZrTiVao
-         KsczmbHCOXTuXbp4yocjf+jE4hfGdYjPYspny//XY8tyZx97sxUXY1AVmKhEJ5WG9RjM
-         OUAA==
-X-Gm-Message-State: AOAM532IDfzR+cqgr7qosHD2e7zMTWIxNwlz1BVs+gaeJ3LnK698QxlN
-        yuMboeL6xWvVHxHoF1K4CFU=
-X-Google-Smtp-Source: ABdhPJx09HZYzOqvJSHSy9DVLGDqR2GnQ2VbF72b/27vYeEpUm5UOa7anTogbx3LYXWfeOjoTgWf0A==
-X-Received: by 2002:a65:4549:: with SMTP id x9mr34439912pgr.415.1596125211126;
-        Thu, 30 Jul 2020 09:06:51 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f6sm6546120pje.16.2020.07.30.09.06.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jul 2020 09:06:50 -0700 (PDT)
-Subject: Re: [v3,5/5] watchdog: mt8192: add wdt support
-To:     Crystal Guo <crystal.guo@mediatek.com>, robh+dt@kernel.org,
-        matthias.bgg@gmail.com
-Cc:     srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, seiya.wang@mediatek.com
-References: <1596104510-11113-1-git-send-email-crystal.guo@mediatek.com>
- <1596104510-11113-6-git-send-email-crystal.guo@mediatek.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
- RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
- nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
- 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
- gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
- IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
- kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
- VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
- jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
- BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
- ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
- CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
- nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
- hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
- c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
- 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
- GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
- sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
- Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
- HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
- BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
- l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
- 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
- pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
- J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
- pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
- 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
- ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
- I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
- nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
- HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
- JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
- J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
- cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
- wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
- hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
- nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
- QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
- trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
- WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
- HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <6801c0d3-323f-0e48-9433-5e74ba78057e@roeck-us.net>
-Date:   Thu, 30 Jul 2020 09:06:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 12:10:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbgG3QKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 12:10:01 -0400
+Received: from localhost (mobile-166-175-62-240.mycingular.net [166.175.62.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75EB220829;
+        Thu, 30 Jul 2020 16:10:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596125400;
+        bh=FAeJmqJWUwun8tkRthozqocoLOawjcpNH+44TDl/UnM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=BOSve1uri58VZSQ/Ky+ZrJuqsF12h7bv4c4Xw/nLmhKh0tCdoxJlfFHN068iAt9Lf
+         DOS14cK8OlWc/day8ilhyEHUYv9MclMdvwap3XKhHz/cEdLceQ4+/R/oDXjeXIBxHc
+         5josqv9rJ4GVKZqOxdkGt4bZMaCFe775I+xKP9TQ=
+Date:   Thu, 30 Jul 2020 11:09:58 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Cc:     bhelgaas@google.com, rjui@broadcom.com, sbranden@broadcom.com,
+        f.fainelli@gmail.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/3] PCI: iproc: Stop using generic config read/write
+ functions
+Message-ID: <20200730160958.GA2038661@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <1596104510-11113-6-git-send-email-crystal.guo@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730033747.18931-2-mark.tomlinson@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/20 3:21 AM, Crystal Guo wrote:
-> Add support for watchdog device found in MT8192 SoC
-> 
-> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+[+cc Lorenzo, Rob]
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+On Thu, Jul 30, 2020 at 03:37:46PM +1200, Mark Tomlinson wrote:
+> The pci_generic_config_write32() function will give warning messages
+> whenever writing less than 4 bytes at a time. As there is nothing we can
+> do about this without changing the hardware, the message is just a
+> nuisance. So instead of using the generic functions, use the functions
+> that have already been written for reading/writing the config registers.
 
+The reason that pci_generic_config_write32() message is there is
+because, as the message says, a read/modify/write may corrupt bits in
+adjacent registers.  
+
+It makes me a little queasy to do these read/modify/write sequences
+silently.  A generic driver doing an 8- or 16-bit config write has no
+idea that the write may corrupt an adjacent register.  That leads to
+bugs that are very difficult to debug and only reproducible on iProc.
+
+The ratelimiting on the current pci_generic_config_write32() message
+is based on the call site, not on the device.  That's not ideal: we
+may emit several messages for device A, trigger ratelimiting, then do
+a write for device B that doesn't generate a message.
+
+I think it would be better to have a warning once per device, so if
+XYZ device has a problem and we look at the dmesg log, we would find a
+single message for device XYZ as a hint.  Would that reduce the
+nuisance level enough?
+
+So I think I did it wrong in fb2659230120 ("PCI: Warn on possible RW1C
+corruption for sub-32 bit config writes").  Ratelimiting is the wrong
+concept because what we want is a single warning per device, not a
+limit on the similar messages for *all* devices, maybe something like
+this:
+
+diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+index 79c4a2ef269a..e5f956b7e3b7 100644
+--- a/drivers/pci/access.c
++++ b/drivers/pci/access.c
+@@ -160,9 +160,12 @@ int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
+ 	 * write happen to have any RW1C (write-one-to-clear) bits set, we
+ 	 * just inadvertently cleared something we shouldn't have.
+ 	 */
+-	dev_warn_ratelimited(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
++	if (!(bus->unsafe_warn & (1 << devfn))) {
++		dev_warn(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
+ 			     size, pci_domain_nr(bus), bus->number,
+ 			     PCI_SLOT(devfn), PCI_FUNC(devfn), where);
++		bus->unsafe_warn |= 1 << devfn;
++	}
+ 
+ 	mask = ~(((1 << (size * 8)) - 1) << ((where & 0x3) * 8));
+ 	tmp = readl(addr) & mask;
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index c79d83304e52..264b009fa4a6 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -613,6 +613,7 @@ struct pci_bus {
+ 	unsigned char	primary;	/* Number of primary bridge */
+ 	unsigned char	max_bus_speed;	/* enum pci_bus_speed */
+ 	unsigned char	cur_bus_speed;	/* enum pci_bus_speed */
++	u8		unsafe_warn;	/* warned about R/M/W config write */
+ #ifdef CONFIG_PCI_DOMAINS_GENERIC
+ 	int		domain_nr;
+ #endif
+
+> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
 > ---
->  drivers/watchdog/mtk_wdt.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  drivers/pci/controller/pcie-iproc.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/watchdog/mtk_wdt.c b/drivers/watchdog/mtk_wdt.c
-> index d6a6393..aef0c2d 100644
-> --- a/drivers/watchdog/mtk_wdt.c
-> +++ b/drivers/watchdog/mtk_wdt.c
-> @@ -11,6 +11,7 @@
->  
->  #include <dt-bindings/reset-controller/mt2712-resets.h>
->  #include <dt-bindings/reset-controller/mt8183-resets.h>
-> +#include <dt-bindings/reset-controller/mt8192-resets.h>
->  #include <linux/delay.h>
->  #include <linux/err.h>
->  #include <linux/init.h>
-> @@ -76,6 +77,10 @@ struct mtk_wdt_data {
->  	.toprgu_sw_rst_num = MT8183_TOPRGU_SW_RST_NUM,
->  };
->  
-> +static const struct mtk_wdt_data mt8192_data = {
-> +	.toprgu_sw_rst_num = MT8192_TOPRGU_SW_RST_NUM,
-> +};
-> +
->  static int toprgu_reset_update(struct reset_controller_dev *rcdev,
->  			       unsigned long id, bool assert)
+> diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+> index 2c836eede42c..68ecd3050529 100644
+> --- a/drivers/pci/controller/pcie-iproc.c
+> +++ b/drivers/pci/controller/pcie-iproc.c
+> @@ -709,12 +709,13 @@ static int iproc_pcie_config_read32(struct pci_bus *bus, unsigned int devfn,
 >  {
-> @@ -322,6 +327,7 @@ static int mtk_wdt_resume(struct device *dev)
->  	{ .compatible = "mediatek,mt2712-wdt", .data = &mt2712_data },
->  	{ .compatible = "mediatek,mt6589-wdt" },
->  	{ .compatible = "mediatek,mt8183-wdt", .data = &mt8183_data },
-> +	{ .compatible = "mediatek,mt8192-wdt", .data = &mt8192_data },
->  	{ /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, mtk_wdt_dt_ids);
+>  	int ret;
+>  	struct iproc_pcie *pcie = iproc_data(bus);
+> +	int busno = bus->number;
+>  
+>  	iproc_pcie_apb_err_disable(bus, true);
+>  	if (pcie->iproc_cfg_read)
+>  		ret = iproc_pcie_config_read(bus, devfn, where, size, val);
+>  	else
+> -		ret = pci_generic_config_read32(bus, devfn, where, size, val);
+> +		ret = iproc_pci_raw_config_read32(pcie, busno, devfn, where, size, val);
+>  	iproc_pcie_apb_err_disable(bus, false);
+>  
+>  	return ret;
+> @@ -724,9 +725,11 @@ static int iproc_pcie_config_write32(struct pci_bus *bus, unsigned int devfn,
+>  				     int where, int size, u32 val)
+>  {
+>  	int ret;
+> +	struct iproc_pcie *pcie = iproc_data(bus);
+> +	int busno = bus->number;
+>  
+>  	iproc_pcie_apb_err_disable(bus, true);
+> -	ret = pci_generic_config_write32(bus, devfn, where, size, val);
+> +	ret = iproc_pci_raw_config_write32(pcie, busno, devfn, where, size, val);
+>  	iproc_pcie_apb_err_disable(bus, false);
+>  
+>  	return ret;
+> -- 
+> 2.28.0
 > 
-
