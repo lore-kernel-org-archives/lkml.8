@@ -2,156 +2,158 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C538C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F8EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25CFA2067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 555082067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:26:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G/dR2Xzg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="VwLIsuZl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbgG3NZ1 (ORCPT
+        id S1729265AbgG3N0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 09:25:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45378 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbgG3NZ0 (ORCPT
+        Thu, 30 Jul 2020 09:26:09 -0400
+Received: from gateway36.websitewelcome.com ([192.185.186.5]:26480 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726535AbgG3N0J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 09:25:26 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCC99C061794
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 06:25:25 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id l2so14344096wrc.7
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 06:25:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VUEiWZ9pO6UikEPfnSxWzM8COZBi2CR+f41vrCc2PbU=;
-        b=G/dR2XzgwW5YtNdUxo7l6BrOSY8dlaYGR3bL6VO/Qt+dAQs46+Fzql3lsSJws7Ri4K
-         rmU53JAod/zYnRODSPbMlaQo/8wdoxS+NhVSLUnbEdnX33Cnthrx5VCzfsKRS1cZrrZr
-         bYkGxpJpV0ADVvKBgCgabzkJBiMLxlR9IaD0CnCip0jLeZaVkNIJ8ztHFDgrknltpQEu
-         Qcy1/uXwU4UYBxPcAWWpYYyyQZf+BnIArF6YasmLRsCp+UznJe2+UrgHjb1GAVK/dFSB
-         qq2aPX3+QhJtfjDWYK7IYVoTZVQ3VNW2kh6sWOEz9cZryUZTFgMQAw7XrR3xsd3hm9VP
-         dfkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VUEiWZ9pO6UikEPfnSxWzM8COZBi2CR+f41vrCc2PbU=;
-        b=q9BGkSIO70jRh88MbRFZ5XJd/+Q1LJe6zpiZ4WGC2zi4Aqj043TniNcdmYlU9UNtZd
-         rvxpr00Lm+a5muTESj+gGEmEXz3MLTe96l+hh/9wCm9BmJJ2U/gzQtSN+32SvtTI4Y86
-         niC5G/J1CzRgMPfBcLagrBmNcJsu55T/2PAskgWBI5cQvLz9WgrPH3cbqUIn5iGNFFQE
-         jovPKw1zjjpTvtQ6ju+llpwmRx4takoYrATTTOEYpMFgGV2ENDKDcoAkthe1d6MZhSuw
-         OnYKHclqwlQv8JFq1PoBLqhxbfi/APJhtPP3v1ZLj3ZPOYxXV2uuhxyiTity7bR6yOGe
-         mY8g==
-X-Gm-Message-State: AOAM530KgdLRl/BQT2t3+T5UTJMeu7JKV7iQdlstA9kPg9gTIlEzaD2j
-        j2NImmG8kWcqhLX3Ym8H/xjplw==
-X-Google-Smtp-Source: ABdhPJxUh0JNkpM1blwpstAX29yKD5NnvCsKPNTg2SbOEjWPbmwEW4f53P8bEqqdzEpR20ArFW0tjw==
-X-Received: by 2002:adf:94c5:: with SMTP id 63mr2776837wrr.34.1596115524080;
-        Thu, 30 Jul 2020 06:25:24 -0700 (PDT)
-Received: from localhost ([2a01:4b00:8523:2d03:b4ef:bd7f:473a:9fdf])
-        by smtp.gmail.com with ESMTPSA id b142sm6483931wmd.19.2020.07.30.06.25.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jul 2020 06:25:22 -0700 (PDT)
-From:   David Brazdil <dbrazdil@google.com>
-To:     Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        android-kvm@google.com, kernel-team@google.com,
-        David Brazdil <dbrazdil@google.com>
-Subject: [PATCH] KVM: arm64: Ensure that all nVHE hyp code is in .hyp.text
-Date:   Thu, 30 Jul 2020 14:25:19 +0100
-Message-Id: <20200730132519.48787-1-dbrazdil@google.com>
-X-Mailer: git-send-email 2.27.0
+        Thu, 30 Jul 2020 09:26:09 -0400
+X-Greylist: delayed 1062 seconds by postgrey-1.27 at vger.kernel.org; Thu, 30 Jul 2020 09:26:08 EDT
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 5D1364013CD88
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 07:47:47 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 18XjkJSZZBb5d18XjkwQTi; Thu, 30 Jul 2020 08:24:19 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=PILysAc0l8w2gVhnmRWQ95ExWl1QPAfFkwXzogc9snk=; b=VwLIsuZl6k4aNgXGv7sLTjRKDt
+        IhCTY1bXwbZu/V3uksM4IYd9M01ZFEYUS4vmPGbpZC6n4y9DGFDjJwvsnmwlcVptsenqchgbbkkB0
+        ONyoyYlhJ6w97HyTnPwHloVbS/r20+U4XDVjLTFKyTy4rRHnY2POmlPlAQ3s9xtWCen0WBKitjXuu
+        dMqKJgmPz/81fcGdgD1PlauWGCSMdc9UFQjiDCQjHFuzYrxyxm9eZmtycI63fQmcICaIo6ZOE7w/6
+        xOmMRMQWNi9D6htajgmIWpmj6dGMtTIfhQz9ohS3r0ytKi69vRakK2BMkFmYVzrDS1M/CmqFzjaLt
+        SJF/XU6Q==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:34674 helo=[192.168.15.3])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1k18Xi-003fG7-Rb; Thu, 30 Jul 2020 08:24:18 -0500
+Subject: Re: [PATCH][next] mlxsw: spectrum_cnt: Use flex_array_size() helper
+ in memcpy()
+To:     Ido Schimmel <idosch@idosch.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200729225803.GA15866@embeddedor>
+ <20200730092153.GA2182419@shredder>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ AP7RWS474w==
+Message-ID: <2a37db2e-3e58-efd8-ffbd-0f318927e59e@embeddedor.com>
+Date:   Thu, 30 Jul 2020 08:30:20 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200730092153.GA2182419@shredder>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1k18Xi-003fG7-Rb
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.3]) [187.162.31.110]:34674
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 14
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some compilers may put a subset of generated functions into '.text.*'
-ELF sections and the linker may leverage this division to optimize ELF
-layout. Unfortunately, the recently introduced HYPCOPY command assumes
-that all executable code (with the exception of specialized sections
-such as '.hyp.idmap.text') is in the '.text' section. If this
-assumption is broken, code in '.text.*' will be merged into kernel
-proper '.text' instead of the '.hyp.text' that is mapped in EL2.
 
-To ensure that this cannot happen, insert an OBJDUMP assertion into
-HYPCOPY. The command dumps a list of ELF sections in the input object
-file and greps for '.text.'. If found, compilation fails. Tested with
-both binutils' and LLVM's objdump (the output format is different).
 
-GCC offers '-fno-reorder-functions' to disable this behaviour. Select
-the flag if it is available. From inspection of GCC source (latest
-Git in July 2020), this flag does force all code into '.text'.
-By default, GCC uses profile data, heuristics and attributes to select
-a subsection.
+On 7/30/20 04:21, Ido Schimmel wrote:
+> On Wed, Jul 29, 2020 at 05:58:03PM -0500, Gustavo A. R. Silva wrote:
+>> Make use of the flex_array_size() helper to calculate the size of a
+>> flexible array member within an enclosing structure.
+>>
+>> This helper offers defense-in-depth against potential integer
+>> overflows, while at the same time makes it explicitly clear that
+>> we are dealing witha flexible array member.
+>>
+>> Also, remove unnecessary pointer identifier sub_pool.
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> 
+> Reviewed-by: Ido Schimmel <idosch@mellanox.com>
+> Tested-by: Ido Schimmel <idosch@mellanox.com>
+> 
 
-LLVM/Clang currently does not have a similar optimization pass. It can
-place static constructors into '.text.startup' and it's optimizer can
-be provided with profile data to reorder hot/cold functions. Neither
-of these is applicable to nVHE hyp code. If this changes in the future,
-the OBJDUMP assertion should alert users to the problem.
+Thanks, Ido.
 
-Patch based off kvmarm/next (commit a394cf6e85).
-
-Signed-off-by: David Brazdil <dbrazdil@google.com>
----
- arch/arm64/kvm/hyp/nvhe/Makefile | 26 +++++++++++++++++++++++---
- 1 file changed, 23 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile b/arch/arm64/kvm/hyp/nvhe/Makefile
-index 0b34414557d6..aef76487edc2 100644
---- a/arch/arm64/kvm/hyp/nvhe/Makefile
-+++ b/arch/arm64/kvm/hyp/nvhe/Makefile
-@@ -20,10 +20,30 @@ $(obj)/%.hyp.tmp.o: $(src)/%.S FORCE
- $(obj)/%.hyp.o: $(obj)/%.hyp.tmp.o FORCE
- 	$(call if_changed,hypcopy)
- 
-+# Disable reordering functions by GCC (enabled at -O2).
-+# This pass puts functions into '.text.*' sections to aid the linker
-+# in optimizing ELF layout. See HYPCOPY comment below for more info.
-+ccflags-y += $(call cc-option,-fno-reorder-functions)
-+
-+# The HYPCOPY command uses `objcopy` to prefix all ELF symbol names
-+# and relevant ELF section names to avoid clashes with VHE code/data.
-+#
-+# Hyp code is assumed to be in the '.text' section of the input object
-+# files (with the exception of specialized sections such as
-+# '.hyp.idmap.text'). This assumption may be broken by a compiler that
-+# divides code into sections like '.text.unlikely' so as to optimize
-+# ELF layout. HYPCOPY checks that no such sections exist in the input
-+# using `objdump`, otherwise they would be linked together with other
-+# kernel code and not memory-mapped correctly at runtime.
- quiet_cmd_hypcopy = HYPCOPY $@
--      cmd_hypcopy = $(OBJCOPY)	--prefix-symbols=__kvm_nvhe_		\
--				--rename-section=.text=.hyp.text	\
--				$< $@
-+      cmd_hypcopy =							\
-+	if $(OBJDUMP) -h $< | grep -F '.text.'; then			\
-+		echo "$@: function reordering not supported in nVHE hyp code" >&2; \
-+		/bin/false;						\
-+	fi;								\
-+	$(OBJCOPY) --prefix-symbols=__kvm_nvhe_				\
-+		   --rename-section=.text=.hyp.text			\
-+		   $< $@
- 
- # Remove ftrace and Shadow Call Stack CFLAGS.
- # This is equivalent to the 'notrace' and '__noscs' annotations.
--- 
-2.28.0.163.g6104cc2f0b6-goog
-
+--
+Gustavo
