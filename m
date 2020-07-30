@@ -2,98 +2,213 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D61C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 02:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0068FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 02:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA95322B48
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 02:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D354E22BEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 02:46:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbgG3ClA (ORCPT
+        id S1728306AbgG3Cqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 22:41:00 -0400
-Received: from mail.windriver.com ([147.11.1.11]:61721 "EHLO
-        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbgG3ClA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 22:41:00 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 06U2efi2012132
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Wed, 29 Jul 2020 19:40:41 -0700 (PDT)
-Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
- ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 29 Jul 2020 19:40:40 -0700
-From:   <qiang.zhang@windriver.com>
-To:     <cl@linux.com>, <penberg@kernel.org>, <rientjes@google.com>,
-        <iamjoonsoo.kim@lge.com>, <akpm@linux-foundation.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] mm/slab.c: add node spinlock protect in __cache_free_alien
-Date:   Thu, 30 Jul 2020 10:52:26 +0800
-Message-ID: <20200730025226.10350-1-qiang.zhang@windriver.com>
-X-Mailer: git-send-email 2.26.2
+        Wed, 29 Jul 2020 22:46:31 -0400
+Received: from mga06.intel.com ([134.134.136.31]:41718 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726319AbgG3Cqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 22:46:31 -0400
+IronPort-SDR: oAB8JHGA3wWyT+VPQxsR3nu6HH7gaD2NYzrJMTh6GgKF847aJQYRV/ERCBvb80juJA6gBzB2R2
+ a3Uq49UW7mlQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="213064114"
+X-IronPort-AV: E=Sophos;i="5.75,412,1589266800"; 
+   d="scan'208";a="213064114"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 19:46:30 -0700
+IronPort-SDR: 0iJ7hBD9wyNkQ0O5ISSl6IT4NwwZIo8wpg/gAFopSKoJ5cAqj8JDZihqnOYhqnpMw7UrdG+sE+
+ qJaypzmRJj9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,412,1589266800"; 
+   d="scan'208";a="394841270"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by fmsmga001.fm.intel.com with ESMTP; 29 Jul 2020 19:46:27 -0700
+Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] vfio/type1: Use iommu_aux_at(de)tach_group() APIs
+To:     Alex Williamson <alex.williamson@redhat.com>
+References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
+ <20200714055703.5510-5-baolu.lu@linux.intel.com>
+ <20200729143258.22533170@x1.home>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <af6c95a7-3238-1cbd-8656-014c12498587@linux.intel.com>
+Date:   Thu, 30 Jul 2020 10:41:32 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+In-Reply-To: <20200729143258.22533170@x1.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Qiang <qiang.zhang@windriver.com>
+Hi Alex,
 
-Due to cpu hotplug, the "cpuup_canceled" func be called, it's currently
-manipulating the alien cache for the canceled cpu's node and this node
-may be the same as the node which node's alien cache being operated in
-the "__cache_free_alien" func, so we should add a protect for node's alien
-cache in "__cache_free_alien" func.
+On 7/30/20 4:32 AM, Alex Williamson wrote:
+> On Tue, 14 Jul 2020 13:57:03 +0800
+> Lu Baolu <baolu.lu@linux.intel.com> wrote:
+> 
+>> Replace iommu_aux_at(de)tach_device() with iommu_aux_at(de)tach_group().
+>> It also saves the IOMMU_DEV_FEAT_AUX-capable physcail device in the
+>> vfio_group data structure so that it could be reused in other places.
+>>
+>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>> ---
+>>   drivers/vfio/vfio_iommu_type1.c | 44 ++++++---------------------------
+>>   1 file changed, 7 insertions(+), 37 deletions(-)
+>>
+>> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+>> index 5e556ac9102a..f8812e68de77 100644
+>> --- a/drivers/vfio/vfio_iommu_type1.c
+>> +++ b/drivers/vfio/vfio_iommu_type1.c
+>> @@ -100,6 +100,7 @@ struct vfio_dma {
+>>   struct vfio_group {
+>>   	struct iommu_group	*iommu_group;
+>>   	struct list_head	next;
+>> +	struct device		*iommu_device;
+>>   	bool			mdev_group;	/* An mdev group */
+>>   	bool			pinned_page_dirty_scope;
+>>   };
+>> @@ -1627,45 +1628,13 @@ static struct device *vfio_mdev_get_iommu_device(struct device *dev)
+>>   	return NULL;
+>>   }
+>>   
+>> -static int vfio_mdev_attach_domain(struct device *dev, void *data)
+>> -{
+>> -	struct iommu_domain *domain = data;
+>> -	struct device *iommu_device;
+>> -
+>> -	iommu_device = vfio_mdev_get_iommu_device(dev);
+>> -	if (iommu_device) {
+>> -		if (iommu_dev_feature_enabled(iommu_device, IOMMU_DEV_FEAT_AUX))
+>> -			return iommu_aux_attach_device(domain, iommu_device);
+>> -		else
+>> -			return iommu_attach_device(domain, iommu_device);
+>> -	}
+>> -
+>> -	return -EINVAL;
+>> -}
+>> -
+>> -static int vfio_mdev_detach_domain(struct device *dev, void *data)
+>> -{
+>> -	struct iommu_domain *domain = data;
+>> -	struct device *iommu_device;
+>> -
+>> -	iommu_device = vfio_mdev_get_iommu_device(dev);
+>> -	if (iommu_device) {
+>> -		if (iommu_dev_feature_enabled(iommu_device, IOMMU_DEV_FEAT_AUX))
+>> -			iommu_aux_detach_device(domain, iommu_device);
+>> -		else
+>> -			iommu_detach_device(domain, iommu_device);
+>> -	}
+>> -
+>> -	return 0;
+>> -}
+>> -
+>>   static int vfio_iommu_attach_group(struct vfio_domain *domain,
+>>   				   struct vfio_group *group)
+>>   {
+>>   	if (group->mdev_group)
+>> -		return iommu_group_for_each_dev(group->iommu_group,
+>> -						domain->domain,
+>> -						vfio_mdev_attach_domain);
+>> +		return iommu_aux_attach_group(domain->domain,
+>> +					      group->iommu_group,
+>> +					      group->iommu_device);
+> 
+> No, we previously iterated all devices in the group and used the aux
+> interface only when we have an iommu_device supporting aux.  If we
+> simply assume an mdev group only uses an aux domain we break existing
+> users, ex. SR-IOV VF backed mdevs.  Thanks,
 
-Fixes: 6731d4f12315 ("slab: Convert to hotplug state machine")
-Signed-off-by: Zhang Qiang <qiang.zhang@windriver.com>
----
- v1->v2:
- change submission information and fixes tags.
+Oh, yes. Sorry! I didn't consider the physical device backed mdevs
+cases.
 
- mm/slab.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Looked into this part of code, it seems that there's a lock issue here.
+The group->mutex is held in iommu_group_for_each_dev() and will be
+acquired again in iommu_attach_device().
 
-diff --git a/mm/slab.c b/mm/slab.c
-index a89633603b2d..290523c90b4e 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -759,8 +759,10 @@ static int __cache_free_alien(struct kmem_cache *cachep, void *objp,
- 
- 	n = get_node(cachep, node);
- 	STATS_INC_NODEFREES(cachep);
-+	spin_lock(&n->list_lock);
- 	if (n->alien && n->alien[page_node]) {
- 		alien = n->alien[page_node];
-+		spin_unlock(&n->list_lock);
- 		ac = &alien->ac;
- 		spin_lock(&alien->lock);
- 		if (unlikely(ac->avail == ac->limit)) {
-@@ -769,14 +771,15 @@ static int __cache_free_alien(struct kmem_cache *cachep, void *objp,
- 		}
- 		ac->entry[ac->avail++] = objp;
- 		spin_unlock(&alien->lock);
--		slabs_destroy(cachep, &list);
- 	} else {
-+		spin_unlock(&n->list_lock);
- 		n = get_node(cachep, page_node);
- 		spin_lock(&n->list_lock);
- 		free_block(cachep, &objp, 1, page_node, &list);
- 		spin_unlock(&n->list_lock);
--		slabs_destroy(cachep, &list);
- 	}
-+
-+	slabs_destroy(cachep, &list);
- 	return 1;
- }
- 
--- 
-2.26.2
+How about making it like:
 
+static int vfio_iommu_attach_group(struct vfio_domain *domain,
+                                    struct vfio_group *group)
+{
+         if (group->mdev_group) {
+                 struct device *iommu_device = group->iommu_device;
+
+                 if (WARN_ON(!iommu_device))
+                         return -EINVAL;
+
+                 if (iommu_dev_feature_enabled(iommu_device, 
+IOMMU_DEV_FEAT_AUX))
+                         return iommu_aux_attach_device(domain->domain, 
+iommu_device);
+                 else
+                         return iommu_attach_device(domain->domain, 
+iommu_device);
+         } else {
+                 return iommu_attach_group(domain->domain, 
+group->iommu_group);
+         }
+}
+
+The caller (vfio_iommu_type1_attach_group) has guaranteed that all mdevs
+in an iommu group should be derived from a same physical device.
+
+Any thoughts?
+
+> 
+> Alex
+
+Best regards,
+baolu
+
+> 
+> 
+>>   	else
+>>   		return iommu_attach_group(domain->domain, group->iommu_group);
+>>   }
+>> @@ -1674,8 +1643,8 @@ static void vfio_iommu_detach_group(struct vfio_domain *domain,
+>>   				    struct vfio_group *group)
+>>   {
+>>   	if (group->mdev_group)
+>> -		iommu_group_for_each_dev(group->iommu_group, domain->domain,
+>> -					 vfio_mdev_detach_domain);
+>> +		iommu_aux_detach_group(domain->domain, group->iommu_group,
+>> +				       group->iommu_device);
+>>   	else
+>>   		iommu_detach_group(domain->domain, group->iommu_group);
+>>   }
+>> @@ -2007,6 +1976,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+>>   			return 0;
+>>   		}
+>>   
+>> +		group->iommu_device = iommu_device;
+>>   		bus = iommu_device->bus;
+>>   	}
+>>   
+> 
