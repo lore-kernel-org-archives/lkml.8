@@ -2,147 +2,119 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 479F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C303A20809
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23DF820809
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:56:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596135405;
+	bh=ahopoJhkUNAmqcQVZECWtTVa3Je+ZV4G1vuI7wq4h98=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bbxcSm4XdKo8nO6HB/iAkvG7Mjiq/m+IOk8eivzR5R8XHjri5k9iuwwQwIzf0GK48
+	 7tQ7W8SY12T89kja8h8upzZSeEm8B9Qa9WPBMC2B1Mp8U/NKUlEFuaR5+VjRuVCrDI
+	 Jg9w+D2VzGSA2Vzw/TF6ENaTCLLRMxicUoGkBqP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730359AbgG3Sy7 (ORCPT
+        id S1730390AbgG3S4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 14:54:59 -0400
-Received: from mga07.intel.com ([134.134.136.100]:45250 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728560AbgG3Sy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 14:54:59 -0400
-IronPort-SDR: Bba3eUPvpZyOiXXjjaZNfQkNmAqoekLvZaobyQgjvU3+IYv0fGE1u0Pb593pfV3M7UwpBpiDQv
- aBYumfti8pSQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="216138421"
-X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
-   d="scan'208";a="216138421"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 11:54:58 -0700
-IronPort-SDR: tYoiNIPxjbrsOvLRQOl+uYAL1LacBy+JzM0T9tJkGdCJXiffwL/3VyNuZ6x3uXaiRi8+lhRIg4
- Fs9yRb7Px1Nw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
-   d="scan'208";a="435153652"
-Received: from twinkler-lnx.jer.intel.com ([10.12.91.138])
-  by orsmga004.jf.intel.com with ESMTP; 30 Jul 2020 11:54:55 -0700
-From:   Tomas Winkler <tomas.winkler@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ramalingam C <ramalingam.c@intel.com>, stable@vger.kernel.org
-Subject: [char-misc-next V3] mei: hdcp: fix mei_hdcp_verify_mprime() input paramter
-Date:   Thu, 30 Jul 2020 21:54:51 +0300
-Message-Id: <20200730185451.3621108-1-tomas.winkler@intel.com>
-X-Mailer: git-send-email 2.25.4
+        Thu, 30 Jul 2020 14:56:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727945AbgG3S4m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 14:56:42 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8677C061574
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 11:56:41 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id t6so17066235ljk.9
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 11:56:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S9XvOCIZomYoWOybgFc4dJIRisyri6goifQpHivVhjQ=;
+        b=NiSqZ1L3+jKj/ENVQ7FTP/DPPS7DkO3KYGOG80dxounEWJap2KYLCVPiXYxX35JvIE
+         yysoMAH2ARnCKDKdURlmQKiKl91+24V6C44MrEGKVrvlJ5Wdft4ekQxS5KepHKOSdW4l
+         cVBxf3/FlbWYUi1SOp/+iZVLg28JNzYfYL+78=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S9XvOCIZomYoWOybgFc4dJIRisyri6goifQpHivVhjQ=;
+        b=YJqEo/W+jcKhTtyvmFjFXf49QG5P0rvmc8QJmwm/ib6BEbTivtCHi2BxLLv5fbAk9I
+         n+CkECB5mXNiAcfGKugjDcHAqHeRNjWnwJLbFSb8SZA8GrDIaJgg8n+Le0ojLsNHQL73
+         Romla5elITIlWZMwwysYCqdZU23tDHoeJjGKqhtlJSF3yrqHSN8cNFzEIMlZF/PgnKVn
+         TcMqqkEbv7ooCVOKxiP90wX5e4qG5p0mGD+/PoP9Fsb8Fuj2DzrrbVlqcx+kqX8lTHvx
+         sjOTssdEX3+26wsREW2duvItZttq/y/etJlSFX83oKqrOcqVTsuK3LaoEsME0Y/qPqON
+         j54Q==
+X-Gm-Message-State: AOAM532RUKG7SNrVZlT2PwVOuiUQQblsb6j8RNgMOEzWcOQdl9PO6A0M
+        /KfpZ4kwoSJRGQfddlax+oOkYKyu4cU=
+X-Google-Smtp-Source: ABdhPJwJ+4U1eJ9MVKsd44utOWcm58NWCqlydvXP0O11iqY3q8nFg8oyS4YQK5Jwo3rUqQIGHNr2xw==
+X-Received: by 2002:a05:651c:118f:: with SMTP id w15mr254508ljo.211.1596135399919;
+        Thu, 30 Jul 2020 11:56:39 -0700 (PDT)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id 197sm1197591ljf.103.2020.07.30.11.56.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jul 2020 11:56:38 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id q4so30015414lji.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 11:56:38 -0700 (PDT)
+X-Received: by 2002:a2e:86c4:: with SMTP id n4mr277841ljj.312.1596135398246;
+ Thu, 30 Jul 2020 11:56:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CA+G9fYvSyXnfGmK1FLRtraWWre7QjUoGE_qiwM8XPUBXjnudWA@mail.gmail.com>
+ <20200730211522.1ea3561f@canb.auug.org.au> <d23eba90-ee2c-efe0-0cb6-88e99fb22e54@ti.com>
+In-Reply-To: <d23eba90-ee2c-efe0-0cb6-88e99fb22e54@ti.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 30 Jul 2020 11:56:22 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whn8OB-QbxpffK=Lhh6Mhj+Y2ALFZ1asCgtnQOnmQgWUw@mail.gmail.com>
+Message-ID: <CAHk-=whn8OB-QbxpffK=Lhh6Mhj+Y2ALFZ1asCgtnQOnmQgWUw@mail.gmail.com>
+Subject: =?UTF-8?B?UmU6IGFybTY0OiBwb2ludGVyX2F1dGguaDo0MDozOiBlcnJvcjogaW1wbGljaXQgZGVjbA==?=
+        =?UTF-8?B?YXJhdGlvbiBvZiBmdW5jdGlvbiDigJhnZXRfcmFuZG9tX2J5dGVz4oCZOyBkaWQgeW91IG1lYW4g4oCY?=
+        =?UTF-8?B?Z2V0X3JhbmRvbV9vbmNl4oCZPw==?=
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Theodore Ts'o" <tytso@mit.edu>, Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, Emese Revfy <re.emese@gmail.com>,
+        hsinyi@chromium.org, Will Deacon <will@kernel.org>,
+        Willy Tarreau <w@1wt.eu>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wired_cmd_repeater_auth_stream_req_in has a variable
-length array at the end. we use struct_size() overflow
-macro to determine the size for the allocation and sending
-size.
-This also fixes bug in case number of streams is > 0 in the original
-submission. This bug was not triggered as the number of streams is
-always one.
+On Thu, Jul 30, 2020 at 11:47 AM Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
+>
+>
+> I'd like to note that below set of patches:
+> 1c9df907da83 random: fix circular include dependency on arm64 after addition of percpu.h
+> 83bdc7275e62 random32: remove net_rand_state from the latent entropy gcc plugin
+> f227e3ec3b5c random32: update the net random state on interrupt and activity
+>
+> also break ARM build for the case:
+> #if defined(CONFIG_SMP) && !defined(CONFIG_CPU_V6)
 
-Fixes: c56967d674e3 (mei: hdcp: Replace one-element array with flexible-array member)
-Fixes: 0a1af1b5c18d ("misc/mei/hdcp: Verify M_prime")
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Ramalingam C <ramalingam.c@intel.com>
-Cc: <stable@vger.kernel.org> v5.1+
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
----
-V3:
-1. Fix commit message with more info and another patch it fixes (Gustavo)
-2. Target stable. (Gustavo)
-V2: Check for allocation failure.
- drivers/misc/mei/hdcp/mei_hdcp.c | 40 +++++++++++++++++++-------------
- 1 file changed, 24 insertions(+), 16 deletions(-)
+Lovely.
 
-diff --git a/drivers/misc/mei/hdcp/mei_hdcp.c b/drivers/misc/mei/hdcp/mei_hdcp.c
-index d1d3e025ca0e..f1205e0060db 100644
---- a/drivers/misc/mei/hdcp/mei_hdcp.c
-+++ b/drivers/misc/mei/hdcp/mei_hdcp.c
-@@ -546,38 +546,46 @@ static int mei_hdcp_verify_mprime(struct device *dev,
- 				  struct hdcp_port_data *data,
- 				  struct hdcp2_rep_stream_ready *stream_ready)
- {
--	struct wired_cmd_repeater_auth_stream_req_in
--					verify_mprime_in = { { 0 } };
-+	struct wired_cmd_repeater_auth_stream_req_in *verify_mprime_in;
- 	struct wired_cmd_repeater_auth_stream_req_out
- 					verify_mprime_out = { { 0 } };
- 	struct mei_cl_device *cldev;
- 	ssize_t byte;
-+	size_t cmd_size;
- 
- 	if (!dev || !stream_ready || !data)
- 		return -EINVAL;
- 
- 	cldev = to_mei_cl_device(dev);
- 
--	verify_mprime_in.header.api_version = HDCP_API_VERSION;
--	verify_mprime_in.header.command_id = WIRED_REPEATER_AUTH_STREAM_REQ;
--	verify_mprime_in.header.status = ME_HDCP_STATUS_SUCCESS;
--	verify_mprime_in.header.buffer_len =
-+	cmd_size = struct_size(verify_mprime_in, streams, data->k);
-+	if (cmd_size == SIZE_MAX)
-+		return -EINVAL;
-+
-+	verify_mprime_in = kzalloc(cmd_size, GFP_KERNEL);
-+	if (!verify_mprime_in)
-+		return -ENOMEM;
-+
-+	verify_mprime_in->header.api_version = HDCP_API_VERSION;
-+	verify_mprime_in->header.command_id = WIRED_REPEATER_AUTH_STREAM_REQ;
-+	verify_mprime_in->header.status = ME_HDCP_STATUS_SUCCESS;
-+	verify_mprime_in->header.buffer_len =
- 			WIRED_CMD_BUF_LEN_REPEATER_AUTH_STREAM_REQ_MIN_IN;
- 
--	verify_mprime_in.port.integrated_port_type = data->port_type;
--	verify_mprime_in.port.physical_port = (u8)data->fw_ddi;
--	verify_mprime_in.port.attached_transcoder = (u8)data->fw_tc;
-+	verify_mprime_in->port.integrated_port_type = data->port_type;
-+	verify_mprime_in->port.physical_port = (u8)data->fw_ddi;
-+	verify_mprime_in->port.attached_transcoder = (u8)data->fw_tc;
-+
-+	memcpy(verify_mprime_in->m_prime, stream_ready->m_prime, HDCP_2_2_MPRIME_LEN);
-+	drm_hdcp_cpu_to_be24(verify_mprime_in->seq_num_m, data->seq_num_m);
- 
--	memcpy(verify_mprime_in.m_prime, stream_ready->m_prime,
--	       HDCP_2_2_MPRIME_LEN);
--	drm_hdcp_cpu_to_be24(verify_mprime_in.seq_num_m, data->seq_num_m);
--	memcpy(verify_mprime_in.streams, data->streams,
-+	memcpy(verify_mprime_in->streams, data->streams,
- 	       array_size(data->k, sizeof(*data->streams)));
- 
--	verify_mprime_in.k = cpu_to_be16(data->k);
-+	verify_mprime_in->k = cpu_to_be16(data->k);
- 
--	byte = mei_cldev_send(cldev, (u8 *)&verify_mprime_in,
--			      sizeof(verify_mprime_in));
-+	byte = mei_cldev_send(cldev, (u8 *)&verify_mprime_in, cmd_size);
-+	kfree(verify_mprime_in);
- 	if (byte < 0) {
- 		dev_dbg(dev, "mei_cldev_send failed. %zd\n", byte);
- 		return byte;
--- 
-2.25.4
+I think I'll have to revert 1c9df907da83 after all, and  use Marc
+Zyngier's patch to just remove that troublesome <asm/pointer_auth.h>
+include in arm64 instead.
 
+This turned out to be much messier than it should have been.
+
+            Linus
