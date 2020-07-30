@@ -2,203 +2,117 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 320EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 20:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53517C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 20:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 095D92083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 20:47:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2793B2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 20:48:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="pjbecsg8";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="b3LJUawO"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ciwC00u6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728612AbgG3UrF (ORCPT
+        id S1728750AbgG3Us5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 16:47:05 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:5346 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726539AbgG3UrE (ORCPT
+        Thu, 30 Jul 2020 16:48:57 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:50208 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbgG3Us4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 16:47:04 -0400
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06UKjafP004298;
-        Thu, 30 Jul 2020 13:46:50 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=98L+6IA6qjO2g67W2tKi8j3Hlywts0AhMj8JLqqcEVc=;
- b=pjbecsg8j+wuDZ1aXVMyAbzmvWCrmzAOi5PjRmrnfWsatfl/vJ5mVne/5YipeQLq119/
- boJs2UUdTLyYIFbZ+NU+NsBKpNRuTt8TxoDL9OXq6Mu8hbbRUkpAfv/Gy65oOBsDpX1i
- NH+G7zUtSLoK1sX278wWM7pGtG+N0L6goh8= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 32kcbuxtwp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 30 Jul 2020 13:46:50 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 30 Jul 2020 13:46:49 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cvTo9hjriUnNpT4AvUeYfxDV62Re4pEsA1OznMg43MfkLPN3FQ+xtbCrC3S+eH181x0h2Kq4KOJK1Ws2BsZRZNtp8O6aRt/XwzsRx0FA7LyT0oXtDz/4N7zQWfsGuZbpT6zXcc3+jHMxLcyguX6eGfQ86zaBKYXJxWuA1+MqTjVfIQEl5waSO7GCLZrUI5kXYydkd0lyP7KgPeilpagCPLtehs5H3+72UUggl+RVI/+kOHVL/8oRAegy9PvZ4bH+XDcl5jJpY89YEJa7L9Ha0v/JkPenSExLGRNf+u/0ndQ0VZ2AFTFkESN7JoGp7VZnmY4i0g48PoQ3aCNLwHISXg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=98L+6IA6qjO2g67W2tKi8j3Hlywts0AhMj8JLqqcEVc=;
- b=Px0OUCrCqHQZWKh+LO0VBPxfhmwMrXzY0YP/RSd5oeu68FJXhNsBA/7MJAaEt4k2pMtxFxooOBANsZtE8ZxTLLffEKTAgrlJ/RfjZYJsGZF7zXyqo9na3xbVsJPJBPEp1tXuNY25s4y9ZIOm1Ohb4sSKEADVQzZ06lDyzmQh2RyGlIZCBMHeiYp/KPG44+9XKVkL3FLgs8CnOSlSllXAGmCxnBUY3NWfw8qwTxVSJOTMnzL7yfbMySFHE1EgZJKrN7T6gJaDfrIdCLQLaP5kExV599TaL46KlC8bWC8VzuwkuNFqsRAV7fo9ZoK/ftMY9ngDZNtQwLm7V09M92mMFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=98L+6IA6qjO2g67W2tKi8j3Hlywts0AhMj8JLqqcEVc=;
- b=b3LJUawO1dZ01X32Wc+fkkyswegDT6s80+OnrRBro14GtPOzsXgpEqjs5MDsW4wESmMSs15VpsmTNoDNBx8OwB5nvB9L/dz3Hu3iyQp6hz6MXorPJefgzeQDbeZnQnQaPjcIJ14o76Xl1fJ0R0bnqtxMHKlTIj5EcwUNEoWDC7Q=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB2870.namprd15.prod.outlook.com (2603:10b6:a03:ff::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Thu, 30 Jul
- 2020 20:46:31 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::354d:5296:6a28:f55e]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::354d:5296:6a28:f55e%6]) with mapi id 15.20.3239.017; Thu, 30 Jul 2020
- 20:46:31 +0000
-Date:   Thu, 30 Jul 2020 13:46:28 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-CC:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH bpf-next v2 29/35] bpf: libbpf: cleanup RLIMIT_MEMLOCK
- usage
-Message-ID: <20200730204628.GA712334@carbon.dhcp.thefacebook.com>
-References: <20200727184506.2279656-1-guro@fb.com>
- <20200727184506.2279656-30-guro@fb.com>
- <CAEf4BzZjbK4W1fmW07tMOJsRGCYNeBd6eqyFE_fSXAK6+0uHhw@mail.gmail.com>
- <20200727231538.GA352883@carbon.DHCP.thefacebook.com>
- <CAEf4BzamC4RQrQuAgH1DK-qcW3cKFuBEbYRhVz-8UMU+mbTcvA@mail.gmail.com>
- <20200730013836.GA637520@carbon.dhcp.thefacebook.com>
- <CAEf4BzaZhyus7Kd-08vrVW9sr6gHGj1mCBgUY-NCWUOfdEJgHw@mail.gmail.com>
+        Thu, 30 Jul 2020 16:48:56 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06UKgHEh101584;
+        Thu, 30 Jul 2020 20:48:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=Cqjec/JmJLo7a5VR/JGr2Y+AIOuHwIGHZrb6qGXqEIw=;
+ b=ciwC00u6FHi2+R0x/txxaIzTO2qoFcexcEIhCYoUaE/+dwmKZdvBI8hyBxuqGxFLWpxp
+ 9ntMbAL6HK55vNU5fyrXeSiPBc5Z5XRVRZ4J3PvdQ9GDsDTOp69bs/Msh9MD/wnS/0+K
+ SGyNfYKtS5dI62EOL8+iI8aPeQJ44dkmIALCgWQoAhHqoqUe6Iog/iVYS+Fu02Tb8VJZ
+ MG9m3TE/uK32EfoqICucDUORK10MfudmTHDmfp/oiSrtdUcjHp7SWXfh+ew0rzh8ugGA
+ tMB5OmKwfsmJqfK9w4APUIXHw26fmr3CK2835ENRlFNPAwJJhJMVLY21BUqOdgE+IeGI CQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 32hu1jwwf8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 30 Jul 2020 20:48:26 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06UKhSH7161581;
+        Thu, 30 Jul 2020 20:48:26 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 32hu5xcnst-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Jul 2020 20:48:26 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06UKmGi1032069;
+        Thu, 30 Jul 2020 20:48:21 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 30 Jul 2020 13:48:15 -0700
+Date:   Thu, 30 Jul 2020 16:57:05 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Pengfei Li <fly@kernel.page>, akpm@linux-foundation.org,
+        bmt@zurich.ibm.com, dledford@redhat.com, willy@infradead.org,
+        vbabka@suse.cz, kirill.shutemov@linux.intel.com, jgg@ziepe.ca,
+        alex.williamson@redhat.com, cohuck@redhat.com,
+        daniel.m.jordan@oracle.com, dbueso@suse.de, jglisse@redhat.com,
+        jhubbard@nvidia.com, ldufour@linux.ibm.com,
+        Liam.Howlett@oracle.com, peterz@infradead.org, cl@linux.com,
+        jack@suse.cz, rientjes@google.com, walken@google.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 2/2] mm, util: account_locked_vm() does not hold mmap_lock
+Message-ID: <20200730205705.ityqlyeswzo5dkow@ca-dmjordan1.us.oracle.com>
+References: <20200726080224.205470-1-fly@kernel.page>
+ <20200726080224.205470-2-fly@kernel.page>
+ <alpine.LSU.2.11.2007291121280.4649@eggly.anvils>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEf4BzaZhyus7Kd-08vrVW9sr6gHGj1mCBgUY-NCWUOfdEJgHw@mail.gmail.com>
-X-ClientProxiedBy: BY5PR16CA0002.namprd16.prod.outlook.com
- (2603:10b6:a03:1a0::15) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:aebb) by BY5PR16CA0002.namprd16.prod.outlook.com (2603:10b6:a03:1a0::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Thu, 30 Jul 2020 20:46:31 +0000
-X-Originating-IP: [2620:10d:c090:400::5:aebb]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8b8f2fae-872a-4860-6265-08d834c9a3c4
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2870:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB2870F4FC466877DD72874667BE710@BYAPR15MB2870.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hf4sHHQQ3cXapE+HyQz/2yUZtHertccavJdbMY96jbihFEns6yqjAUjN28o/dvxaHeLw+vvGWYBWo/F0r94lde2Xd9zhvJkhBJsYjK1byx+t8rU+u37z7yftwJT2RWcJ0Dz8y8sKVKO79vPgp/beFiU+dBcXaS4HuCQLJBrA2eScfL5QCTvVbJ0+R0c7GZeehr1220+AkARhV4FMFXbLSTCNGo8p3j+0v+kbvN9ccx2uwgkfVibCAPxLr3r2MI+kTPEy0+JvDC49RuXjfPb8wHm8VLpJHF5TE0Zy31GIWYdVLxpWS/pmWB4T8ehs0AqhyZRqYnYLdHrRMOfFpFT48g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(136003)(366004)(396003)(376002)(346002)(66946007)(66556008)(9686003)(6666004)(86362001)(8676002)(6916009)(55016002)(1076003)(66476007)(8936002)(316002)(83380400001)(33656002)(186003)(16526019)(7696005)(54906003)(6506007)(52116002)(478600001)(5660300002)(2906002)(4326008)(53546011);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: 0QZWwZl+wQsz4S+pUc3bz1O0jGU7qQI2PS/DiLOxW14bMcygbv/3drJ2ErlWtIOOBanYU+7gUPADeYWQngTY1CfmLqfJy8WN/WCArQ8tyXHfYkweNG78Xu4ulEYz1l5bHc1gn7d1e6GmdkvBObPww3G3S1jIimG5g5e44SpvRhRC2mkp8f/HBJwon0TNBqDQ4d4+G6QvKShHEUwMLVOXQpPXEOs68Sn+UA0pM7SJFXpQ3feGpMssmNvMOxZ8DqzwkKSttYBXcXQftXoJuz28SvAF63/SBamKNUarVeBlRXymlhZUYHVj52AyTkT1FWcRjdNTy0MEl5QEToFpC5ntf/HOdxfdpBn+Kn0h/9ScNIaqpMgOOF/j/JuY2HOV+3UbywjHD6lGF0lBzGeaZzrHU0gYlZ/BWryPFb3xJOdDZcTYAv8Caz8R1lY1IsmhaEc2tXXnA6ocyHqzAvxARnZfG6Vj9m7miV7DLd7UWBDClwbP/8n/IWgie7t5s4H4tmuYHmaEkWlM5xxR/RSbUOI/7A==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b8f2fae-872a-4860-6265-08d834c9a3c4
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4136.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 20:46:31.5471
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Am3La02DP4YQO2lIyGGGVnDQnB7YfWMW+1kxFCINeSf4rorgBe1OWErfhaoeNdlS
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2870
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-30_15:2020-07-30,2020-07-30 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
- bulkscore=0 clxscore=1015 suspectscore=1 phishscore=0 malwarescore=0
- priorityscore=1501 adultscore=0 spamscore=0 impostorscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007300146
-X-FB-Internal: deliver
+In-Reply-To: <alpine.LSU.2.11.2007291121280.4649@eggly.anvils>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9698 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ suspectscore=0 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007300145
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9698 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 mlxlogscore=999
+ malwarescore=0 impostorscore=0 priorityscore=1501 spamscore=0 phishscore=0
+ suspectscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007300145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 12:39:40PM -0700, Andrii Nakryiko wrote:
-> On Wed, Jul 29, 2020 at 6:38 PM Roman Gushchin <guro@fb.com> wrote:
-> >
-> > On Mon, Jul 27, 2020 at 10:59:33PM -0700, Andrii Nakryiko wrote:
-> > > On Mon, Jul 27, 2020 at 4:15 PM Roman Gushchin <guro@fb.com> wrote:
-> > > >
-> > > > On Mon, Jul 27, 2020 at 03:05:11PM -0700, Andrii Nakryiko wrote:
-> > > > > On Mon, Jul 27, 2020 at 12:21 PM Roman Gushchin <guro@fb.com> wrote:
-> > > > > >
-> > > > > > As bpf is not using memlock rlimit for memory accounting anymore,
-> > > > > > let's remove the related code from libbpf.
-> > > > > >
-> > > > > > Bpf operations can't fail because of exceeding the limit anymore.
-> > > > > >
-> > > > >
-> > > > > They can't in the newest kernel, but libbpf will keep working and
-> > > > > supporting old kernels for a very long time now. So please don't
-> > > > > remove any of this.
-> > > >
-> > > > Yeah, good point, agree.
-> > > > So we just can drop this patch from the series, no other changes
-> > > > are needed.
-> > > >
-> > > > >
-> > > > > But it would be nice to add a detection of whether kernel needs a
-> > > > > RLIMIT_MEMLOCK bump or not. Is there some simple and reliable way to
-> > > > > detect this from user-space?
-> >
-> > Btw, do you mean we should add a new function to the libbpf API?
-> > Or just extend pr_perm_msg() to skip guessing on new kernels?
-> >
+On Wed, Jul 29, 2020 at 12:21:11PM -0700, Hugh Dickins wrote:
+> On Sun, 26 Jul 2020, Pengfei Li wrote:
 > 
-> I think we have to do both. There is libbpf_util.h in libbpf, we could
-> add two functions there:
+> > Since mm->locked_vm is already an atomic counter, account_locked_vm()
+> > does not need to hold mmap_lock.
 > 
-> - libbpf_needs_memlock() that would return true/false if kernel is old
-> and needs RLIMIT_MEMLOCK
-> - as a convenience, we can also add libbpf_inc_memlock_by() and
-> libbpf_set_memlock_to(), which will optionally (if kernel needs it)
-> adjust RLIMIT_MEMLOCK?
+> I am worried that this patch, already added to mmotm, along with its
+> 1/2 making locked_vm an atomic64, might be rushed into v5.9 with just
+> that two-line commit description, and no discussion at all.
 > 
-> I think for your patch set, given it's pretty big already, let's not
-> touch runqslower, libbpf, and perf code (I think samples/bpf are fine
-> to just remove memlock adjustment), and we'll deal with detection and
-> optional bumping of RLIMIT_MEMLOCK as a separate patch once your
-> change land.
+> locked_vm belongs fundamentally to mm/mlock.c, and the lock to guard
+> it is mmap_lock; and mlock() has some complicated stuff to do under
+> that lock while it decides how to adjust locked_vm.
+>
+> It is very easy to convert an unsigned long to an atomic64_t, but
+> "atomic read, check limit and do stuff, atomic add" does not give
+> the same guarantee as holding the right lock around it all.
 
-Ok, works for me. Let me repost the kernel part + samples as v3.
+Yes, this is why I withdrew my attempt to do something similar last year, I
+didn't want to make the accounting racy.  Stack and heap growing and mremap
+would be affected in addition to mlock.
 
-> 
-> 
-> > The problem with the latter one is that it's called on a failed attempt
-> > to create a map, so unlikely we'll be able to create a new one just to test
-> > for the "memlock" value. But it also raises a question what should we do
-> > if the creation of this temporarily map fails? Assume the old kernel and
-> > bump the limit?
-> 
-> Yeah, I think we'll have to make assumptions like that. Ideally, of
-> course, detection of this would be just a simple sysfs value or
-> something, don't know. Maybe there is already a way for kernel to
-> communicate something like that?
+It'd help to hear more about the motivation for this.
 
-For instance, we've /sys/kernel/cgroup/features for cgroup features:
-it's a list of supported mount options for cgroup fs.
-
-Idk if bpf deserves something similar, but as far as I remember,
-we've discussed it a couple of years ago, and at that time the consensus
-was that it's too hard to keep such list uptodate, so the userspace should
-just try and fail. Idk if it's still valid.
-
-Thank you!
+Daniel
