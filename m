@@ -2,177 +2,184 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D83C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 249B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB93820838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0C1320829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:22:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=eclypsium.com header.i=@eclypsium.com header.b="Nj1mCKyv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R7tGuqjD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729422AbgG3OVC (ORCPT
+        id S1729456AbgG3OWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 10:21:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53962 "EHLO
+        Thu, 30 Jul 2020 10:22:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728286AbgG3OVB (ORCPT
+        with ESMTP id S1727966AbgG3OWc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 10:21:01 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5E92C061574
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 07:21:01 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id g26so25749797qka.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 07:21:01 -0700 (PDT)
+        Thu, 30 Jul 2020 10:22:32 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 413CBC061575
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 07:22:32 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id c16so7775641ejx.12
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 07:22:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eclypsium.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=F/jomJ6uLuwf7Rw57RY5/Ap0B+MxWKyeViCBM/4WQzw=;
-        b=Nj1mCKyvWXQ5WMAXKRNDk1pZNoJQX9fEIaJ63VFKTqrfKPJhxiM/Nml+21topTFOy4
-         G0TNK2Lz76W+LEenbSDrvqkaNJJxtL6L8J4wb4XkkwRmnFrEAh7u6babGn2OmNid7r7e
-         djWhNr8OkPrZ071irRX2XiZCW0QB2JU4bSb6VyuTkfSY7Tb3vng6EQ1Nc5T5jgnYQ41n
-         WlULoSZF6vgp8GYCcXSHCdXlUU1CXvs3gYtVhc/82lVnMlWSGs3IqR/TIZO5aRHc32pQ
-         w0j7uEZIT1BIxkpYu0JelNwyCBxw5xSJ77BWWKPhlwSBzA/INGmz839oOgc+MSMXFU5e
-         rn6g==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=YwZxozNZBXDiR/2kRqLL1MaXDjLPic26w5gQoYGrfkM=;
+        b=R7tGuqjD/vvCJ2904Vuec4iUJ6rFzusWXWJpA5X/dmo3kgYXJDkMmYeNILpJLVELhQ
+         IAVW2EQA1kYDJ0mQVbVZ/ri+6eTjMHp7C0fwDl/HDXtSIamI0BGeYc+Na69ibjZfTR+k
+         A43hfZYIvSuhBuw6gTrAUuz2MGPi0kClRbeqMBypGnTi7UtIDyfJfWxE69l/X0YJM87N
+         MTV3qlKOPuB7n3Y0yYpW9nt3ndY4Wc/s/iYW81vulZijqz8/pLpbUe9h8ZxE73hNQsXz
+         v9H9yTa9MF94xzDWteLRVawS/ekYrp4ZjUF2eDn4jSz+CCPVPTPzkBYtQRE46iqj4tpE
+         lifw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=F/jomJ6uLuwf7Rw57RY5/Ap0B+MxWKyeViCBM/4WQzw=;
-        b=aerAriStoOLSPMqpMKmwsoVdwYXR6/5CnNFoPGEZ8csrswdusYCKqHw4Wu3OP+X9w0
-         zoY22Km1d8KJD/0l6rpc60lnVJZ5NdNI19+zDDByLSUidaQWumxvs0yBFfMTRTyYIGH6
-         i93gb0Z0A+S5xbDJL8iztRaFS3qpmEf2DWrhCtxDXVxeHrj185DEFDINjqAC8NM8c4Lo
-         zKvNCugFImc+CM2x3aTFZlAD50pRhU1fyhFMASugiHGuwHvO+3fZTY3dmXiTVTCGKZBc
-         hQ/GBKpwa58bkGm2EMDIhQCoJPDr6b/9nHsLmJqcbeATyGxlUJqqX7qTc0n4E3Zkb+vF
-         EzrQ==
-X-Gm-Message-State: AOAM530BfTSfCO5bDl/uCU7psRqYq5V7trykxIr5JPu14eLkmLMRxLfE
-        PPtPAKrXrd+E0Rt4VnK0bmbp0Y7Uoo1mLXO+h3Of5A==
-X-Google-Smtp-Source: ABdhPJxY8vBzd8PV7ZptzGOU4HwrJqwhHLac85B6YDcDX282dEOhwvgNuUaHLjh4D+n6fwlJFNl4ifNbnQwyMbXcODk=
-X-Received: by 2002:ae9:eb81:: with SMTP id b123mr38265818qkg.288.1596118860878;
- Thu, 30 Jul 2020 07:21:00 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YwZxozNZBXDiR/2kRqLL1MaXDjLPic26w5gQoYGrfkM=;
+        b=tx4hptA7JMyK0xGzsbBR6qc89cB1UgSJ+cTkL2Q/ujlWYD3dzZuWLiGggdN5xdGzqF
+         3csS+Uo4Kw8033qQwwpyy5tsQmVR9CKkwzpmp0lTDdL6WnVFZugoFqVdwudgKpgphlh5
+         xEkSo9qNIrggYqaBQnWT/xo6ymXNxpcylnCpFTGPRk9d+xhhZlpA4HEcG6uXhWTBr25/
+         OG0UDJ2DobLelQRK6a4a7OwYK8WBS+V20u1N2VILHdUG0FGSKsCh/v1qDJQKJj1nVLNH
+         PUi74ffSSRgVPXtKOC+CXLwWb5sNCfs3rc7PP0vGTzfea4SvRkUpTgr0SSsy8mxJHEPs
+         cYhg==
+X-Gm-Message-State: AOAM532B84Ofgoc1YLKJmssgNLVhBn7aQ1ehpUg5uoYFOXsB2dwQFmyo
+        CTk3gY3TUTYk+sTMFS8SMTUnTg==
+X-Google-Smtp-Source: ABdhPJy7aqlSQaQrLHhofONaPZjwKauHbZHDGRXdQ92TUeggQySP4YNI9qe5tEKnlr5K8H51rOJFuQ==
+X-Received: by 2002:a17:906:3e54:: with SMTP id t20mr2770755eji.471.1596118950795;
+        Thu, 30 Jul 2020 07:22:30 -0700 (PDT)
+Received: from myrica ([2001:1715:4e26:a7e0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id x16sm6372795edr.52.2020.07.30.07.22.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 07:22:29 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 16:22:13 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org,
+        songliubraving@fb.com, andriin@fb.com, daniel@iogearbox.net,
+        catalin.marinas@arm.com, john.fastabend@gmail.com, ast@kernel.org,
+        zlim.lnx@gmail.com, kpsingh@chromium.org, yhs@fb.com,
+        will@kernel.org, kafai@fb.com, sfr@canb.auug.org.au,
+        linux-next@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next 1/1] arm64: bpf: Add BPF exception tables
+Message-ID: <20200730142213.GB1529030@myrica>
+References: <20200728152122.1292756-1-jean-philippe@linaro.org>
+ <20200728152122.1292756-2-jean-philippe@linaro.org>
+ <20200730122855.GA3773@lca.pw>
 MIME-Version: 1.0
-References: <20200724212853.11601-1-daniel.gutson@eclypsium.com>
- <20200725055649.GA1047853@kroah.com> <CAFmMkTE_dT9+WJYyb19uQ_HmgJWZSARBy6PveheQJk++NuGbkQ@mail.gmail.com>
- <20200726071723.GB441916@kroah.com> <CAFmMkTFzGfFDrJrdgHztzLK2K-zBWy6T2Tv+G4-rrbVpbahkgg@mail.gmail.com>
- <CAK8P3a1nA7K15Cxz84Q8Grw3tKfgkUmsfURcytJEWb_0Wjqm5w@mail.gmail.com>
- <CAFmMkTExBY3V_Ghej7Bzjatg+vFtWq3UZmKzjAiEoR9EqnFN9Q@mail.gmail.com>
- <CAFmMkTEO7VNKJeYz2uoHsS-yN_aY8UuiQ2GcCq9NyAD5481ZGA@mail.gmail.com>
- <20200730053108.GA3861609@kroah.com> <CAFmMkTHXjfG7zMr0i_h65PvjAe4opPgvzdABH8W1EUGOmcA4Zg@mail.gmail.com>
- <CAK8P3a2SN3pdXV8=0jXfrsz8L64yV46fEM4zrSXfA25QK0GNuA@mail.gmail.com> <CAFmMkTFiqDtTw2v8RJktzY--WxGd7Fdz2fKA3YxXzA8ZiDS1XQ@mail.gmail.com>
-In-Reply-To: <CAFmMkTFiqDtTw2v8RJktzY--WxGd7Fdz2fKA3YxXzA8ZiDS1XQ@mail.gmail.com>
-From:   Daniel Gutson <daniel@eclypsium.com>
-Date:   Thu, 30 Jul 2020 11:20:48 -0300
-Message-ID: <CAFmMkTFyKSUWYgKeTBGh9wkB4dajhdJ3xZ9CUvQwk8hS1LGU-Q@mail.gmail.com>
-Subject: Re: [PATCH] Module argument to control whether intel-spi-pci attempts
- to turn the SPI flash chip writeable
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alex Bazhaniuk <alex@eclypsium.com>,
-        Richard Hughes <hughsient@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="r5Pyd7+fXNt84Ff3"
+Content-Disposition: inline
+In-Reply-To: <20200730122855.GA3773@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 11:18 AM Daniel Gutson <daniel@eclypsium.com> wrote=
-:
->
-> On Thu, Jul 30, 2020 at 11:09 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Thu, Jul 30, 2020 at 2:21 PM Daniel Gutson <daniel@eclypsium.com> wr=
-ote:
-> > > El jue., 30 jul. 2020 2:31 a. m., Greg Kroah-Hartman <gregkh@linuxfou=
-ndation.org> escribi=C3=B3:
-> > >>
-> > >> Again, module parameters are working on a per-chunk-of-code basis, w=
-hile
-> > >> you want to work on a per-device basis,
-> > >
-> > >
-> > > I think there is a misunderstanding.  What I want is to control (turn=
- on or off) is a very specific code snippet that provides the "functionalit=
-y" of trying to turn the chip writable. The rest of the device driver is fi=
-ne.
-> > > I assume that the one that doesn't understand is me.
-> > >
-> >
-> > I looked at the source code again and found that the existing module
-> > parameter applies to both the platform and pci device front-ends, both
-> > of which go through
-> >
-> >         /* Prevent writes if not explicitly enabled */
-> >         if (!ispi->writeable || !writeable)
-> >                 ispi->nor.mtd.flags &=3D ~MTD_WRITEABLE;
-> >
->
-> I think you missed
-> https://elixir.bootlin.com/linux/latest/source/drivers/mtd/spi-nor/contro=
-llers/intel-spi-pci.c#L44
->
->     /* Try to make the chip read/write */
->     pci_read_config_dword(pdev, BCR, &bcr);
->     if (!(bcr & BCR_WPD)) {
->         bcr |=3D BCR_WPD;
->         pci_write_config_dword(pdev, BCR, bcr);
->         pci_read_config_dword(pdev, BCR, &bcr);
->     }
->
-> in the probe function, and is executed always and unconditionally.
 
-To clarify, this is executed before intel-spi code.
+--r5Pyd7+fXNt84Ff3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->
-> /* Try to make the chip read/write */
-> pci_read_config_dword(pdev, BCR, &bcr);
-> if (!(bcr & BCR_WPD)) {
-> bcr |=3D BCR_WPD;
-> pci_write_config_dword(pdev, BCR, bcr);
-> pci_read_config_dword(pdev, BCR, &bcr);
-> }
->
-> > Setting the PCI device writable in hardware makes it possible to
-> > actually write to it *only* if the module parameter is also set to '1'.
-> > One might disagree with that design, but I don't think your patch
-> > would make it any better, it just means one would have to set
-> > two module parameters instead of one.
-> >
-> >      Arnd
->
->
->
-> --
-> Daniel Gutson
-> Argentina Site Director
-> Enginieering Director
-> Eclypsium
->
-> Below The Surface: Get the latest threat research and insights on
-> firmware and supply chain threats from the research team at Eclypsium.
-> https://eclypsium.com/research/#threatreport
+On Thu, Jul 30, 2020 at 08:28:56AM -0400, Qian Cai wrote:
+> On Tue, Jul 28, 2020 at 05:21:26PM +0200, Jean-Philippe Brucker wrote:
+> > When a tracing BPF program attempts to read memory without using the
+> > bpf_probe_read() helper, the verifier marks the load instruction with
+> > the BPF_PROBE_MEM flag. Since the arm64 JIT does not currently recognize
+> > this flag it falls back to the interpreter.
+> > 
+> > Add support for BPF_PROBE_MEM, by appending an exception table to the
+> > BPF program. If the load instruction causes a data abort, the fixup
+> > infrastructure finds the exception table and fixes up the fault, by
+> > clearing the destination register and jumping over the faulting
+> > instruction.
+> > 
+> > To keep the compact exception table entry format, inspect the pc in
+> > fixup_exception(). A more generic solution would add a "handler" field
+> > to the table entry, like on x86 and s390.
+> > 
+> > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> 
+> This will fail to compile on arm64,
+> 
+> https://gitlab.com/cailca/linux-mm/-/blob/master/arm64.config
+> 
+> arch/arm64/mm/extable.o: In function `fixup_exception':
+> arch/arm64/mm/extable.c:19: undefined reference to `arm64_bpf_fixup_exception'
+
+Thanks for the report, I attached a fix. Daniel, can I squash it and
+resend as v2 or is it too late?
+
+I'd be more confident if my patches sat a little longer on the list so
+arm64 folks have a chance to review them. This isn't my first silly
+mistake...
+
+Thanks,
+Jean
+
+--r5Pyd7+fXNt84Ff3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0001-arm64-bpf-Fix-build-for-CONFIG_BPF_JIT.patch"
+
+From 17d0f041b57903cb2657dde15559cd1923498337 Mon Sep 17 00:00:00 2001
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Date: Thu, 30 Jul 2020 14:45:44 +0200
+Subject: [PATCH] arm64: bpf: Fix build for !CONFIG_BPF_JIT
+
+Add a stub for arm64_bpf_fixup_exception() when CONFIG_BPF_JIT isn't
+enabled, and avoid the fixup in this case.
+
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+---
+ arch/arm64/include/asm/extable.h | 9 +++++++++
+ arch/arm64/mm/extable.c          | 3 ++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/include/asm/extable.h b/arch/arm64/include/asm/extable.h
+index bcee40df1586..840a35ed92ec 100644
+--- a/arch/arm64/include/asm/extable.h
++++ b/arch/arm64/include/asm/extable.h
+@@ -22,8 +22,17 @@ struct exception_table_entry
+ 
+ #define ARCH_HAS_RELATIVE_EXTABLE
+ 
++#ifdef CONFIG_BPF_JIT
+ int arm64_bpf_fixup_exception(const struct exception_table_entry *ex,
+ 			      struct pt_regs *regs);
++#else /* !CONFIG_BPF_JIT */
++static inline
++int arm64_bpf_fixup_exception(const struct exception_table_entry *ex,
++			      struct pt_regs *regs)
++{
++	return 0;
++}
++#endif /* !CONFIG_BPF_JIT */
+ 
+ extern int fixup_exception(struct pt_regs *regs);
+ #endif
+diff --git a/arch/arm64/mm/extable.c b/arch/arm64/mm/extable.c
+index 1f42991cacdd..eee1732ab6cd 100644
+--- a/arch/arm64/mm/extable.c
++++ b/arch/arm64/mm/extable.c
+@@ -14,7 +14,8 @@ int fixup_exception(struct pt_regs *regs)
+ 	if (!fixup)
+ 		return 0;
+ 
+-	if (regs->pc >= BPF_JIT_REGION_START &&
++	if (IS_ENABLED(CONFIG_BPF_JIT) &&
++	    regs->pc >= BPF_JIT_REGION_START &&
+ 	    regs->pc < BPF_JIT_REGION_END)
+ 		return arm64_bpf_fixup_exception(fixup, regs);
+ 
+-- 
+2.27.0
 
 
-
---=20
-Daniel Gutson
-Argentina Site Director
-Enginieering Director
-Eclypsium
-
-Below The Surface: Get the latest threat research and insights on
-firmware and supply chain threats from the research team at Eclypsium.
-https://eclypsium.com/research/#threatreport
+--r5Pyd7+fXNt84Ff3--
