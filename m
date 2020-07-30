@@ -2,122 +2,152 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5192CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E8AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EBDE2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:12:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596118359;
-	bh=hwxLMbLU9oOOzBEmH/uvXVBKXbhllKWHIHTEJrSSZ+A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XVH399IiOinfkYyYbrr9KcIXEY9HYT2m2tY61VkmdxVs8zZ3KuYuJbDjh/jXYyChC
-	 /WIKyrDOE0ubOZRTD1oDBqalT1SoznHIBEnJiFsVvMU1yo99pm+haVrbORz60JoiJi
-	 LvhnMDovaCjyZc0MFPryZCl/TkYTOixx3Dd/sbLU=
+	by mail.kernel.org (Postfix) with ESMTP id CF73B2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:13:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fzpLxMHS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729424AbgG3OMi (ORCPT
+        id S1729436AbgG3ONj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 10:12:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41822 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 10:13:39 -0400
+Received: from nat-hk.nvidia.com ([203.18.50.4]:18907 "EHLO nat-hk.nvidia.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728092AbgG3OMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 10:12:37 -0400
-Received: from linux-8ccs (p57a236d4.dip0.t-ipconnect.de [87.162.54.212])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E42952070B;
-        Thu, 30 Jul 2020 14:12:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596118356;
-        bh=hwxLMbLU9oOOzBEmH/uvXVBKXbhllKWHIHTEJrSSZ+A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V2HfeLes47KOa567jky5Q5EYyaoJLaozSP+3MGPBMhD6gqFkVV+wP3fvWRGha0Q/G
-         tEreBgXZ1u4/cAHoue1xneAIxkcG7LrKlX+68Xs3fYKo1ZuxPZ7Z1EdXM0v6KLKAHd
-         CeConsS6JrTtG7Qd6LpdTPrKA4bgURUZ26/xrt/Q=
-Date:   Thu, 30 Jul 2020 16:12:32 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 8/8] modules: inherit TAINT_PROPRIETARY_MODULE
-Message-ID: <20200730141232.GA31539@linux-8ccs>
-References: <20200730061027.29472-1-hch@lst.de>
- <20200730061027.29472-9-hch@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+        id S1726581AbgG3ONi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 10:13:38 -0400
+Received: from hkpgpgate101.nvidia.com (Not Verified[10.18.92.100]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f22d5900000>; Thu, 30 Jul 2020 22:13:36 +0800
+Received: from HKMAIL103.nvidia.com ([10.18.16.12])
+  by hkpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 30 Jul 2020 07:13:36 -0700
+X-PGP-Universal: processed;
+        by hkpgpgate101.nvidia.com on Thu, 30 Jul 2020 07:13:36 -0700
+Received: from HKMAIL103.nvidia.com (10.18.16.12) by HKMAIL103.nvidia.com
+ (10.18.16.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jul
+ 2020 14:13:36 +0000
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.50) by
+ HKMAIL103.nvidia.com (10.18.16.12) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Thu, 30 Jul 2020 14:13:35 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oVWwYnziG7ddDe+OrEtlra0+EevjKKev3PN7NiCD07Rvy7eVxG9/cHFcWBNDn+x+rj3J9sohyD+RrKrCnREza2eOm1/VI8jL7VpamTbA9+gwZDDzjTfEwsV8nTtz4K3M1n23rE708TxApbOtI9whW0FjP18Cz49CoDWrgxbUOS+wCKYBMwBuy73s4hVJa/OtXg7HoeHvrSVxYSypbsd3gIRFGBX6j76ZPNJezDFQMeSyfcNHJIHAaw9VZcy6rBPnjuBWvv/Lc+vU/Vdnbdq/9NxYBegVAnBuZ+D029TLn2zh1lY/y0G4AEUi6Liq8QsgFYyi/GgmSEXmkA+5qNqD1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=17lj3KiRNaEC/1axVBmKyn7C2sBlvjf5x9Vb2lGyG1Y=;
+ b=Hkh5Z8e5lGTXgxoa++xjnR6FV93dJcwQmGNZn6qyph+RNZZpGKC85XzXo56zxsGgokXMBr0OKnjSvMrfIAiFs0uk9YWXzMPm5hg77l3TdJw8vEpE+N3SDtxxoyDnZ3aYKGLERTEm4oPcZZKArc4rbPZHaW2g9wG0hlJvS4eJd/4PGBcneRP5rh0GmV0F3rzuZXoc4Wcy5b9GigRkXrfpft0NAlpOUy7QofLf22+/rROFiSeobhRL9QeumwrPZZxXp3FkvLvrJd4wH/2yisqUGIlq7nEg66mWSziILSVXnfwIEuTjXuMMsKRHi1CvgqOvX+RBFnTQk5qv0S/hJ3tPDw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM5PR12MB1756.namprd12.prod.outlook.com (2603:10b6:3:108::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.25; Thu, 30 Jul
+ 2020 14:13:33 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3216.034; Thu, 30 Jul 2020
+ 14:13:33 +0000
+Date:   Thu, 30 Jul 2020 11:13:31 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Leon Romanovsky <leon@kernel.org>
+CC:     Doug Ledford <dledford@redhat.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Yamin Friedman <yaminf@mellanox.com>,
+        Yishai Hadas <yishaih@mellanox.com>
+Subject: Re: [PATCH rdma-rc 0/3] Simple fixes to DIM and mlx5
+Message-ID: <20200730141331.GA349702@nvidia.com>
+References: <20200730082719.1582397-1-leon@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200730061027.29472-9-hch@lst.de>
-X-OS:   Linux linux-8ccs 5.5.0-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200730082719.1582397-1-leon@kernel.org>
+X-ClientProxiedBy: BL0PR0102CA0055.prod.exchangelabs.com
+ (2603:10b6:208:25::32) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by BL0PR0102CA0055.prod.exchangelabs.com (2603:10b6:208:25::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.18 via Frontend Transport; Thu, 30 Jul 2020 14:13:33 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k19JL-001Sz4-Vn; Thu, 30 Jul 2020 11:13:31 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c70570a7-c417-4542-e3b0-08d83492be08
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1756:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB175642D8B742213DDF316E7FC2710@DM5PR12MB1756.namprd12.prod.outlook.com>
+X-MS-Exchange-Transport-Forked: True
+X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: E5rZWRQEx63/V88fj913kumGwaY/Nl9kytI5XGre3Areo+sOZeVEFntzG4tzWSW1E9fHQLI4BJJcZVpqhJfLfKXxKTCtyQmV/ql4DK15mbMnyPgF/3agjDHlGfwhoTDR/y5Cb709/JfidIkxsz0n4oLklvOyW91VW6xiTC/lN8cefNOM60N9FRpPrylNutBxKrXiyY4fhYGeIEQpVd3+OYLiNBLKM6icij4lk0Td827mh4Llmw/MlF3VHgpwReNOXH8h55XAIgWnML8QtFgV5JR1Ts02wJkkWbX/+GapW+43Ap+XeqWxcxCiGiLyIluUAY78KYoaCIXv0ZmpgQfY7z/M8ck7TAJV9WPo9ckIthqRdrk/3cK7srs3Pa3GJcOE
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(376002)(136003)(346002)(39860400002)(478600001)(4326008)(36756003)(186003)(26005)(86362001)(9786002)(9746002)(2906002)(316002)(2616005)(66556008)(426003)(107886003)(33656002)(6916009)(4744005)(66946007)(54906003)(66476007)(5660300002)(1076003)(8676002)(8936002)(27376004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 2KXeHrdWzRI/Oz9OMJqKRT+yy8PHfgxh5x5dj8URRebJdiPxJ4UG81W0nSSlkc0ewLPDHyG1gR/FE0UyH0PcXlLfYvTTryZxdLT5glKIYHjUh1aWYoTHlkH8Nj9jehfHGX8kIyKNJalBlJvjuUDmwfLR3b/IgxD6UhBJjzS4X4dD5aDss1oIXvl8PR5jTlp0zP6YjDicycyZ+38ogEOSX+deRUBs71nsVB2mwjcaM7jdoRpBbn7cp6ircC24wAtJd+wnM5szKCgt6F/kL39ysb+w47ReRrOUj+Co6xDddZu21jLeKlDwKoEuOGq50a4LPgD3y++TzbvnQBeX8GMne8mfiyZ2oKORJvHRkoSPwsMKTJdBjERrmvNVK/hT9CewJkm0tLHqc8bnkfqIrvAu5mxmepbft4BtkneFJvtR4bBNXLlhsUB49OjMIcEDiz5vqQShZcqJmQaJ8o/fpNpuxOWsFjwyBiGuXxPvJRGX3ac=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c70570a7-c417-4542-e3b0-08d83492be08
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 14:13:33.3966
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DwOOyX1elLG1xIxwvg520Yv2W0cDK63rlsq0DwbTrXT4N29p8mjq99pgfDsSrY//
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1756
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596118416; bh=17lj3KiRNaEC/1axVBmKyn7C2sBlvjf5x9Vb2lGyG1Y=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:References:Content-Type:Content-Disposition:
+         In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
+         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
+         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
+         X-MS-Exchange-Transport-Forked:X-MS-Oob-TLC-OOBClassifiers:
+         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
+         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+         X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=fzpLxMHSWSzcQbbSrr1uIZvP1UG++nGz1oA8KQgAU5f25rriXfAJYkmdycbzBMb9G
+         m2Sw4Uat89NJgWA61HBwZykcXU8pM6gVjfbc+cV/3oc2DequsCQloFYEqKCy+XhApx
+         B+r5zuETftIb7Lfq6eKN443Nz+MWoO4nPkv6+11HEkts1OhpyjpTbCoV5DJ2jHNZl+
+         a1U74oEafu3dbKoQsBDVR6Bme+/4QKRrjzODMuWeQCwcKNqZaz0GqSYg+rIMqbmEUc
+         hK1qqszsUx7qF4tR5S2+3HQ8nVIy0xHnlChw8tdHTUTkjZXTZLCA6SAlI1IBOLcjqf
+         jqxqs/6jglCtA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Christoph Hellwig [30/07/20 08:10 +0200]:
->If a TAINT_PROPRIETARY_MODULE exports symbol, inherit the taint flag
->for all modules importing these symbols, and don't allow loading
->symbols from TAINT_PROPRIETARY_MODULE modules if the module previously
->imported gplonly symbols.  Add a anti-circumvention devices so people
->don't accidentally get themselves into trouble this way.
->
->Comment from Greg:
-> Ah, the proven-to-be-illegal "GPL Condom" defense :)
->
->Signed-off-by: Christoph Hellwig <hch@lst.de>
->Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->---
-> include/linux/module.h |  1 +
-> kernel/module.c        | 12 ++++++++++++
-> 2 files changed, 13 insertions(+)
->
->diff --git a/include/linux/module.h b/include/linux/module.h
->index 30b0f5fcdb3c37..e30ed5fa33a738 100644
->--- a/include/linux/module.h
->+++ b/include/linux/module.h
->@@ -389,6 +389,7 @@ struct module {
-> 	unsigned int num_gpl_syms;
-> 	const struct kernel_symbol *gpl_syms;
-> 	const s32 *gpl_crcs;
->+	bool using_gplonly_symbols;
->
-> #ifdef CONFIG_UNUSED_SYMBOLS
-> 	/* unused exported symbols. */
->diff --git a/kernel/module.c b/kernel/module.c
->index afb2bfdd5134b3..04f993863ae417 100644
->--- a/kernel/module.c
->+++ b/kernel/module.c
->@@ -1456,6 +1456,18 @@ static const struct kernel_symbol *resolve_symbol(struct module *mod,
-> 	if (!sym)
-> 		goto unlock;
->
->+	if (license == GPL_ONLY)
->+		mod->using_gplonly_symbols = true;
->+
->+	if (owner && test_bit(TAINT_PROPRIETARY_MODULE, &owner->taints)) {
->+		if (mod->using_gplonly_symbols) {
->+			sym = NULL;
->+			goto getname;
->+		}
->+		add_taint_module(mod, TAINT_PROPRIETARY_MODULE,
->+				 LOCKDEP_NOW_UNRELIABLE);
->+	}
+On Thu, Jul 30, 2020 at 11:27:16AM +0300, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@mellanox.com>
+> 
+> Hi,
+> 
+> First patch fixes an issue observed after auto-PID series was merged,
+> but because the bug that not-initialized mutex existed before, the
+> patch is sent to -rc.
+> 
+> Other two patches are fixing unwind flows and appropriate for -rc.
 
-Sorry that I didn't think of this yesterday, but I'm wondering if we
-should print a warning before add_taint_module(). Maybe something
-along the lines of, "%s: module uses symbols from proprietary module
-%s, inheriting taint.", with %s being mod->name, owner->name. We can
-check mod->taints for TAINT_PROPRIETARY_MODULE and print the warning once.
+Applied to for-rc, thanks
 
-Additionally, maybe it's a good idea to print an error before goto
-getname (e.g., "%s: module using GPL-only symbols uses symbols from
-proprietary module %s."), so one would know why the module load
-failed, right now this manifests itself as an unknown symbol error.
-
-Otherwise, this patchset looks good to me and I agree with it in
-principle. Thanks Christoph!
+Jason
