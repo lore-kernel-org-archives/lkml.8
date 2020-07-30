@@ -2,130 +2,202 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E71DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74CAD20838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D4821D95
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:51:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UQD1Ik9n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgG3Lss (ORCPT
+        id S1727877AbgG3Lvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 07:48:48 -0400
-Received: from mga18.intel.com ([134.134.136.126]:28320 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726267AbgG3Lsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 07:48:47 -0400
-IronPort-SDR: 43OE7a9WJ395AqDiD2EuId75l8yCfaEudjVKoAVY4rwenWJ024TxGavR/pjIhzUZunw9TD13Jz
- D7l+S4cpxZTw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="139121723"
-X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
-   d="scan'208";a="139121723"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 04:48:47 -0700
-IronPort-SDR: wmlhB2ZzttBFINXRufelrxv8L53CImhLZ6YLEBjkVR5V0gkzH1JXuIS1XD0H6dLKepNgiLNPuq
- Qw0S9w3OkVZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
-   d="scan'208";a="491097611"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 30 Jul 2020 04:48:43 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1k173C-004ugB-9a; Thu, 30 Jul 2020 14:48:42 +0300
-Date:   Thu, 30 Jul 2020 14:48:42 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Peilin Ye <yepeilin.cs@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vandana BN <bnvandana@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [Linux-kernel-mentees] [PATCH v3] media/v4l2-core: Fix
- kernel-infoleak in video_put_user()
-Message-ID: <20200730114842.GH3703480@smile.fi.intel.com>
-References: <20200726222703.102701-1-yepeilin.cs@gmail.com>
- <CAK8P3a3NB2BVo9fH-Wcinrhhs-QJ=9dK59Ds83TvgLmEkRy3qA@mail.gmail.com>
- <20200727131608.GD1913@kadam>
- <CACRpkda7k4L+nqAYE6z2FVZF-WT2Pm3CHH_=fW24xz_u+QCMRQ@mail.gmail.com>
- <20200728130632.GI1913@kadam>
- <CAK8P3a3MEUYH3qG-+dxgH1Omx2gtcqSRXzKLLaAw21Xho6HAeQ@mail.gmail.com>
- <CAMRc=MciXb152=CHAi1kfpwFuELLN55-BfNOo8hBg8Tzp4wMnQ@mail.gmail.com>
- <CAK8P3a1m7C0rGGEHvndhxun2TyFh-cweNnPHp-rDtu7Z=YyUKw@mail.gmail.com>
- <20200730083833.GD3703480@smile.fi.intel.com>
- <CAK8P3a2i2mnRPZ-f9UNxPNJcjyjdTOA7-fgcMqavsV8Ab17RkQ@mail.gmail.com>
+        Thu, 30 Jul 2020 07:51:43 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25423 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727781AbgG3Lvn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 07:51:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596109901;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=XbbtDAwlbqFbl9LRgvVvqdOJ/w6Qt8l6sHZuVLApgCc=;
+        b=UQD1Ik9n7l+3El0T+pzDeBH8w19lUMPzS13CBg2x5ZpnPA+R0reEsiQB6LIt6P7Ckbkk2x
+        2QeCLY0E54N9mE5t/5H86zz0c6LDSwM8yg8MQQdXyur1kxkO69em2IevcfBIDVDL2uJHXL
+        zu90CuHOZXDO2eAuMgkFdV4OH7rtnVo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-446-lpsWJq8MMBO5dqJYqQQUdg-1; Thu, 30 Jul 2020 07:51:37 -0400
+X-MC-Unique: lpsWJq8MMBO5dqJYqQQUdg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0FB6D79EDC;
+        Thu, 30 Jul 2020 11:51:34 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id ABF8B10002CA;
+        Thu, 30 Jul 2020 11:51:16 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+cc:     dhowells@redhat.com, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Jeff Layton <jlayton@redhat.com>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Upcoming: fscache rewrite
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2i2mnRPZ-f9UNxPNJcjyjdTOA7-fgcMqavsV8Ab17RkQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <447451.1596109876.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Thu, 30 Jul 2020 12:51:16 +0100
+Message-ID: <447452.1596109876@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 11:18:04AM +0200, Arnd Bergmann wrote:
-> On Thu, Jul 30, 2020 at 10:38 AM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Thu, Jul 30, 2020 at 10:15:24AM +0200, Arnd Bergmann wrote:
-> > > On Thu, Jul 30, 2020 at 10:07 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+Hi Linus, Trond/Anna, Steve, Eric,
 
-...
+I have an fscache rewrite that I'm tempted to put in for the next merge
+window:
 
-> > > I would argue that it needs to be fixed anyway, unless you also want
-> > > to remove the v1 interface for native mode. If this works on 32-bit
-> > > kernels, on 64-bit kernels with 64-bit user space and on compat
-> > > 32-bit user space on 64-bit non-x86 architectures, I see no reason
-> > > to leave it broken specifically on x86 compat user space. There are
-> > > still reasons to use 32-bit x86 user space for low-memory machines
-> > > even though native i386 kernels are getting increasingly silly.
-> >
-> > It was possible to "fix" (mitigate to some extent) before libgpiod got support
-> > for several events in a request. Now it seems to be impossible to fix. AFAIU we
-> > must discard any request to more than one event in it.
-> 
-> Any reason why the workaround I suggested above would not work?
+	https://lore.kernel.org/linux-fsdevel/159465784033.1376674.18106463693989=
+811037.stgit@warthog.procyon.org.uk/
 
-That is the question to somebody who has better understanding. If it works,
-I vote up to get it fixed with little effort. I would be glad to test patches!
+It improves the code by:
 
-> The in_ia32_syscall() check should be completely reliable in telling whether
-> we are called from read() by an ia32 task or not, and we use the same
-> logic for input_event, which has a similar problem (on all compat architectures,
-> not just x86).
+ (*) Ripping out the stuff that uses page cache snooping and kernel_write(=
+)
+     and using kiocb instead.  This gives multiple wins: uses async DIO ra=
+ther
+     than snooping for updated pages and then copying them, less VM overhe=
+ad.
 
-By the way any reason why we have to have in_ia32_syscall() instead of
-in_compat_syscall()?
+ (*) Object management is also simplified, getting rid of the state machin=
+e
+     that was managing things and using a much simplified thread pool inst=
+ead.
 
-> > However I'm not an expert in compat IOCTL code (you are :-) and perhaps you may
-> > provide ideas better than mine.
-> 
-> What makes this interface tricky is that this is actually a read() call, not
-> ioctl() which is usually easier because it encodes the data length in the
-> command code. As far as I could tell from skimming the interface, the
-> ioctls are actually fine here.
+ (*) Object invalidation creates a tmpfile and diverts new activity to tha=
+t so
+     that it doesn't have to synchronise in-flight ADIO.
 
-Right.
+ (*) Using a bitmap stored in an xattr rather than using bmap to find out =
+if
+     a block is present in the cache.  Probing the backing filesystem's
+     metadata to find out is not reliable in modern extent-based filesyste=
+ms
+     as them may insert or remove blocks of zeros.  Even SEEK_HOLE/SEEK_DA=
+TA
+     are problematic since they don't distinguish transparently inserted
+     bridging.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I've provided a read helper that handles ->readpage, ->readpages, and
+preparatory writes in ->write_begin.  Willy is looking at using this as a =
+way
+to roll his new ->readahead op out into filesystems.  A good chunk of this
+will move into MM code.
 
+The code is simpler, and this is nice too:
+
+ 67 files changed, 5947 insertions(+), 8294 deletions(-)
+
+not including documentation changes, which I need to convert to rst format
+yet.  That removes a whole bunch more lines.
+
+But there are reasons you might not want to take it yet:
+
+ (1) It starts off by disabling fscache support in all the filesystems tha=
+t
+     use it: afs, nfs, cifs, ceph and 9p.  I've taken care of afs, Dave
+     Wysochanski has patches for nfs:
+
+	https://lore.kernel.org/linux-nfs/1596031949-26793-1-git-send-email-dwyso=
+cha@redhat.com/
+
+     but they haven't been reviewed by Trond or Anna yet, and Jeff Layton =
+has
+     patches for ceph:
+
+	https://marc.info/?l=3Dceph-devel&m=3D159541538914631&w=3D2
+
+     and I've briefly discussed cifs with Steve, but nothing has started t=
+here
+     yet.  9p I've not looked at yet.
+
+     Now, if we're okay for going a kernel release with 4/5 filesystems wi=
+th
+     caching disabled and then pushing the changes for individual filesyst=
+ems
+     through their respective trees, it might be easier.
+
+     Unfortunately, I wasn't able to get together with Trond and Anna at L=
+SF
+     to discuss this.
+
+ (2) The patched afs fs passed xfstests -g quick (unlike the upstream code
+     that oopses pretty quickly with caching enabled).  Dave and Jeff's nf=
+s
+     and ceph code is getting close, but not quite there yet.
+
+ (3) Al has objections to the ITER_MAPPING iov_iter type that I added
+
+	https://lore.kernel.org/linux-fsdevel/20200719014436.GG2786714@ZenIV.linu=
+x.org.uk/
+
+     but note that iov_iter_for_each_range() is not actually used by anyth=
+ing.
+
+     However, Willy likes it and would prefer to make it ITER_XARRAY inste=
+ad
+     as he might be able to use it in other places, though there's an issu=
+e
+     where I'm calling find_get_pages_contig() which takes a mapping (thou=
+gh
+     all it does is then get the xarray out of it).
+
+     Instead I would have to use ITER_BVEC, which has quite a high overhea=
+d,
+     though it would mean that the RCU read lock wouldn't be necessary.  T=
+his
+     would require 1K of memory for every 256K block the cache wants to re=
+ad;
+     for any read >1M, I'd have to use vmalloc() instead.
+
+     I'd also prefer not to use ITER_BVEC because the offset and length ar=
+e
+     superfluous here.  If ITER_MAPPING is not good, would it be possible =
+to
+     have an ITER_PAGEARRAY that just takes a page array instead?  Or, eve=
+n,
+     create a transient xarray?
+
+ (4) The way object culling is managed needs overhauling too, but that's a
+     whole 'nother patchset.  We could wait till that's done too, but its =
+lack
+     doesn't prevent what we have now being used.
+
+Thoughts?
+
+David
 
