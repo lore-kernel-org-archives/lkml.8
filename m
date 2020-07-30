@@ -2,138 +2,133 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E977C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FD4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EF3A20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:44:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H2cdWY/F"
+	by mail.kernel.org (Postfix) with ESMTP id 44CE820829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:47:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbgG3OoY (ORCPT
+        id S1729215AbgG3OrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 10:44:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40319 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726275AbgG3OoX (ORCPT
+        Thu, 30 Jul 2020 10:47:09 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53496 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgG3OrI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 10:44:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596120261;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dsId+rhdX5PqVP541hzQk5NPr2OWjjymtpyXFAnC+IY=;
-        b=H2cdWY/F0e73tuE9bPZ1jw444q71yElpftlSYli6g7mokDCE+sef9XVig8J3OuZdKrJI+/
-        oiwWAwA+uBQUlQm6TwxRGwZ6hZSHUyoWQgNM65z/LsAXt9dIFpu3ahn9WE7QVwuIgtnjr/
-        B64WiBY6lyVxiDn6j3I1BsRwDPMt26c=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-191-Yad0818VOFa-Zy-ZgYrTCw-1; Thu, 30 Jul 2020 10:44:18 -0400
-X-MC-Unique: Yad0818VOFa-Zy-ZgYrTCw-1
-Received: by mail-wr1-f71.google.com with SMTP id z7so7490588wrw.21
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 07:44:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dsId+rhdX5PqVP541hzQk5NPr2OWjjymtpyXFAnC+IY=;
-        b=uEpygcknm0yPlygDCYraKXdv8Hzcd+BrYPFiaEoOUg1W7+cHAATqqWyS0dk0obn50Y
-         L2eS36ylccBpEEvHB4OEfatpPNkchl693rNyp6ntkT4D5D0lrTQJYuLqj6s2QoJEQnAf
-         LSFeklGu8oZ1Owiqiw1lbECYHusAhNVed7klnicVEObFZd91rDuM8o9Cg+2lbZ+SSYJy
-         juhoPv6Nj/J6s23yCBmGg+wcpM5fU4ypWYHJiRbp2flMEhdmYb5IcAbef3xnNN3Px5HN
-         Od1ieqdGhK2WftCaZEkRtXxsj7JlgQSReVq2Cau7+/7W6qBoJH7sdvHUpmRWl9Wo1gU0
-         AiUQ==
-X-Gm-Message-State: AOAM531iPi340yWkEgmMz0NKIII0mh+P1eszNea3bhqVQfES4VW3QR6I
-        joP5H2lYhRe2Vs1iKQ8fL+W2vFcBFksIaqptDc8OYgmRDXKAVjwFODi66BMn5Z/tBaPx0qj69Jw
-        NvGf/Z6PM5n1lVa8hiGrXcz20
-X-Received: by 2002:adf:f486:: with SMTP id l6mr30125492wro.265.1596120257909;
-        Thu, 30 Jul 2020 07:44:17 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwsRebcqtb2r3HVBYpqFGPr7WRNjDET5HjTMzOb5f4QSejj6Gg+McR8fz7pgNh7OIZu/Pq74A==
-X-Received: by 2002:adf:f486:: with SMTP id l6mr30125480wro.265.1596120257713;
-        Thu, 30 Jul 2020 07:44:17 -0700 (PDT)
-Received: from ?IPv6:2a01:cb14:499:3d00:cd47:f651:9d80:157a? ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
-        by smtp.gmail.com with ESMTPSA id u6sm2457529wrn.95.2020.07.30.07.44.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jul 2020 07:44:17 -0700 (PDT)
-Subject: Re: [PATCH v3 2/4] objtool: Move orc outside of check
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org, mbenes@suse.cz
-References: <20200730094143.27494-1-jthierry@redhat.com>
- <20200730094143.27494-3-jthierry@redhat.com>
- <20200730095759.GH2655@hirez.programming.kicks-ass.net>
- <dfe69c8f-db70-8366-5601-2592409ce7a0@redhat.com>
- <20200730132237.GM2655@hirez.programming.kicks-ass.net>
- <3af41a3b-a4b9-8120-3ac0-c9ce13770628@redhat.com>
- <20200730141526.lr33zv4ffa3rdygp@treble>
-From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <7f7a7196-8b28-cd55-0685-799766bb6d4c@redhat.com>
-Date:   Thu, 30 Jul 2020 15:44:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 30 Jul 2020 10:47:08 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1k19pS-0001p0-Ro; Thu, 30 Jul 2020 14:46:42 +0000
+Date:   Thu, 30 Jul 2020 16:46:41 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
+        ebiederm@xmission.com, akpm@linux-foundation.org,
+        areber@redhat.com, serge@hallyn.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 05/23] user: Use generic ns_common::count
+Message-ID: <20200730144641.rep2ht5lmnryfhzj@wittgenstein>
+References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
+ <159611038719.535980.13960315152927389105.stgit@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20200730141526.lr33zv4ffa3rdygp@treble>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <159611038719.535980.13960315152927389105.stgit@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/30/20 3:15 PM, Josh Poimboeuf wrote:
-> On Thu, Jul 30, 2020 at 02:29:20PM +0100, Julien Thierry wrote:
->>
->>
->> On 7/30/20 2:22 PM, peterz@infradead.org wrote:
->>> On Thu, Jul 30, 2020 at 01:40:42PM +0100, Julien Thierry wrote:
->>>>
->>>>
->>>> On 7/30/20 10:57 AM, peterz@infradead.org wrote:
->>>>> On Thu, Jul 30, 2020 at 10:41:41AM +0100, Julien Thierry wrote:
->>>>>> +		if (file->elf->changed)
->>>>>> +			return elf_write(file->elf);
->>>>>> +		else
->>>>>> +			return 0;
->>>>>>     	}
->>>>>
->>>>> I think we can do without that else :-)
->>>>>
->>>>
->>>> I did wonder and was not 100% confident about it, but the orc gen will
->>>> always change the file, correct?
->>>
->>> Not if it already has orc, iirc.
->>>
->>> But what I was trying to say is that:
->>>
->>> 	if (file->elf->changed)
->>> 		return elf_write(file->elf)
->>>
->>> 	return 0;
->>>
->>> is identical code and, IMO, easier to read.
->>>
->>
->> Much easier yes, I'll change it.
+On Thu, Jul 30, 2020 at 02:59:47PM +0300, Kirill Tkhai wrote:
+> Convert user namespace to use generic counter.
 > 
-> But I think file->elf->changed can be assumed at this point anyway, so
-> it could just be an unconditional
+> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> ---
+
+Looks good!
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+
+>  include/linux/user_namespace.h |    5 ++---
+>  kernel/user.c                  |    2 +-
+>  kernel/user_namespace.c        |    4 ++--
+>  3 files changed, 5 insertions(+), 6 deletions(-)
 > 
-> 	return elf_write(file->elf);
+> diff --git a/include/linux/user_namespace.h b/include/linux/user_namespace.h
+> index 6ef1c7109fc4..64cf8ebdc4ec 100644
+> --- a/include/linux/user_namespace.h
+> +++ b/include/linux/user_namespace.h
+> @@ -57,7 +57,6 @@ struct user_namespace {
+>  	struct uid_gid_map	uid_map;
+>  	struct uid_gid_map	gid_map;
+>  	struct uid_gid_map	projid_map;
+> -	atomic_t		count;
+>  	struct user_namespace	*parent;
+>  	int			level;
+>  	kuid_t			owner;
+> @@ -109,7 +108,7 @@ void dec_ucount(struct ucounts *ucounts, enum ucount_type type);
+>  static inline struct user_namespace *get_user_ns(struct user_namespace *ns)
+>  {
+>  	if (ns)
+> -		atomic_inc(&ns->count);
+> +		refcount_inc(&ns->ns.count);
+>  	return ns;
+>  }
+>  
+> @@ -119,7 +118,7 @@ extern void __put_user_ns(struct user_namespace *ns);
+>  
+>  static inline void put_user_ns(struct user_namespace *ns)
+>  {
+> -	if (ns && atomic_dec_and_test(&ns->count))
+> +	if (ns && refcount_dec_and_test(&ns->ns.count))
+>  		__put_user_ns(ns);
+>  }
+>  
+> diff --git a/kernel/user.c b/kernel/user.c
+> index b1635d94a1f2..a2478cddf536 100644
+> --- a/kernel/user.c
+> +++ b/kernel/user.c
+> @@ -55,7 +55,7 @@ struct user_namespace init_user_ns = {
+>  			},
+>  		},
+>  	},
+> -	.count = ATOMIC_INIT(3),
+> +	.ns.count = REFCOUNT_INIT(3),
+
+Note-to-self: I really wish we'd had a comment in cases where the
+refcount isn't set to 1 but to something like 3. Otherwise one always
+needs to dig up the reasons why. :)
+
+>  	.owner = GLOBAL_ROOT_UID,
+>  	.group = GLOBAL_ROOT_GID,
+>  	.ns.inum = PROC_USER_INIT_INO,
+> diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
+> index 87804e0371fe..7c2bbe8f3e45 100644
+> --- a/kernel/user_namespace.c
+> +++ b/kernel/user_namespace.c
+> @@ -111,7 +111,7 @@ int create_user_ns(struct cred *new)
+>  		goto fail_free;
+>  	ns->ns.ops = &userns_operations;
+>  
+> -	atomic_set(&ns->count, 1);
+> +	refcount_set(&ns->ns.count, 1);
+>  	/* Leave the new->user_ns reference with the new user namespace. */
+>  	ns->parent = parent_ns;
+>  	ns->level = parent_ns->level + 1;
+> @@ -197,7 +197,7 @@ static void free_user_ns(struct work_struct *work)
+>  		kmem_cache_free(user_ns_cachep, ns);
+>  		dec_user_namespaces(ucounts);
+>  		ns = parent;
+> -	} while (atomic_dec_and_test(&parent->count));
+> +	} while (refcount_dec_and_test(&parent->ns.count));
+>  }
+>  
+>  void __put_user_ns(struct user_namespace *ns)
 > 
-
-I'll triple check whether that's the case and remove the if if possible.
-
--- 
-Julien Thierry
-
+> 
