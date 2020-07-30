@@ -2,316 +2,122 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8E0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB816C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58D23206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B28A22074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:08:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z1WD+vmR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729558AbgG3OIB (ORCPT
+        id S1729568AbgG3OIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 10:08:01 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38039 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbgG3OH4 (ORCPT
+        Thu, 30 Jul 2020 10:08:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728639AbgG3OH6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 10:07:56 -0400
-Received: by mail-lj1-f195.google.com with SMTP id x9so29039574ljc.5
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 07:07:54 -0700 (PDT)
+        Thu, 30 Jul 2020 10:07:58 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD3A1C061574;
+        Thu, 30 Jul 2020 07:07:57 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id d1so14224148plr.8;
+        Thu, 30 Jul 2020 07:07:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZvBujrZbpHTyFtf4aDyQcSP+scQySwGgnJgI3//5ECY=;
+        b=Z1WD+vmRUTNVztgbMjp2ehhOi3ixY+RUkMPLYgxVngJTaX+/d8F8KS8ZV9C0VuN3lw
+         Bq/BBCJG0wb5rKMSuI+d98nZg5ku3/NG16GZnkXwNrQfkzOFxCzTS6DMriXXSKRcGRkf
+         Fdfol1Ay48UxOgEOW6jWWlVwEmwNA5ZrrTOLbSw4NSAMAJ7XZGdUPgRTDupgqu7ZMDFC
+         oQ4Yx0aV4uI3gadiUDXJMYwhuZcEhEJfCzoL9FpjMByaq5a0Nczw8aEYcZvwpS+sZtC/
+         /A5POXMfpcb3wLIRWEH8+8vNcF1xwT7cBuCyndHTRS09Kof/u0qLSQIBZP7OOnzWAxl7
+         2PnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=E4GjGtlMybVSB0ZL/vAbrz8hzmPOHmkRXNFAvsQ5qlU=;
-        b=eVQgvh3B7QET6VPrJQTjFKUkuwTPZ8BwBIwlnbUz6A1azikrL73YKh2Xxrj3r6/gte
-         iWI+hVhbTg46NIId2JoTSAPHpW/LzKeIuVfhj+t29fLo444XQx5qQlvtbpXydVvYctdF
-         YTxWu6XrYJhYC3vsgI0HLGD+Vv5L1h9A9DFDcFP2g/W9/XEekCd6KAK9Uj1RF35qlNPW
-         LP0tUV7isgMpg83Cr3asLE7urpV1MTOITchHTZlVcPMJT8+QDkIToed9mVwaxGqS6qvB
-         JJIkpkcN5fTrQp4iMAaAoT9lPaAQNCekU7nr3AWF9bavVQrDt5QCHWluvUip2QhzYQ4i
-         6CUg==
-X-Gm-Message-State: AOAM533SrE+4ICEERjVpZ4Ye1XPbW8UL9JB6Mil43PZqpjrG36IsAXJZ
-        YOWmBEDbIBXSrrAnCk526g4=
-X-Google-Smtp-Source: ABdhPJyhRu/IQKvo9ytF6XuktRAfzXw8siuI3vjm4JdOJJjHdhFyhv4PUQimM/cRdydYrV0xa31o/Q==
-X-Received: by 2002:a2e:a583:: with SMTP id m3mr1544125ljp.135.1596118073614;
-        Thu, 30 Jul 2020 07:07:53 -0700 (PDT)
-Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.googlemail.com with ESMTPSA id b16sm1063559ljp.124.2020.07.30.07.07.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 07:07:52 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4] coccinelle: api: add kvfree script
-Date:   Thu, 30 Jul 2020 17:07:51 +0300
-Message-Id: <20200730140751.8635-1-efremov@linux.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200605204237.85055-1-efremov@linux.com>
-References: <20200605204237.85055-1-efremov@linux.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZvBujrZbpHTyFtf4aDyQcSP+scQySwGgnJgI3//5ECY=;
+        b=smSC8dmKM3EEGL/Q2Skg6/WmkPfqwVVI8mtqc3XcyTIa7Ik29Hwp7bwiRDCAQKmKes
+         +MSErU15TBe5np/MOTKa2BvevHFxPZpxWf0BPWr28MKNHhCAd70XI+V8uyKRfPfd/WY/
+         YTtsmVbOeC37IryRWhMWTFmg5EOyj40piAP5LFg0gC4j9j8YOi1eNNRkQbWgXaVcksOV
+         T8Tgruu64O5HMe/MVCxtt5hVwKPIIk6IgVY6eCPPdbb5Y4tYIti5b7I4aXJKDIX7rTNQ
+         zyAWnGJ4/ZG5B8uNjWZLyTQaNzV1otE7e6Z5EvHaSXoR8SIO3T61TNUAWqrL0ZWuIXKZ
+         LUyQ==
+X-Gm-Message-State: AOAM532zzYICO+inWzH2ItggZMRaCSCQA5bddwPGzl+y/qB78Ofq2Q17
+        ISWbnmMKp3j8ZPk2VLTJQOwayKadSzCLLQ==
+X-Google-Smtp-Source: ABdhPJwmoDlh7vnJf/uBuu29Ec5+DQgH2UXB080ZHlB6VeyOQuaxQY51BY+zrbaJEe2ZTSYNq5asSA==
+X-Received: by 2002:a63:4a0e:: with SMTP id x14mr36113319pga.271.1596116273386;
+        Thu, 30 Jul 2020 06:37:53 -0700 (PDT)
+Received: from yangdongdo-OptiPlex-9010.mioffice.cn ([209.9.72.214])
+        by smtp.gmail.com with ESMTPSA id c139sm5987441pfb.65.2020.07.30.06.37.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 Jul 2020 06:37:52 -0700 (PDT)
+From:   Dongdong Yang <contribute.kernel@gmail.com>
+To:     gregkh@linuxfoundation.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-pm@vger.kernel.org, yangdongdong@xiaomi.com,
+        tanggeliang@xiaomi.com, taojun@xiaomi.com, huangqiwu@xiaomi.com,
+        rocking@linux.alibaba.com, fengwei@xiaomi.com,
+        zhangguoquan@xiaomi.com, gulinghua@xiaomi.com, duhui@xiaomi.com
+Subject: [PATCH] sched: Provide USF for the portable equipment.
+Date:   Thu, 30 Jul 2020 21:35:42 +0800
+Message-Id: <cover.1596101307.git.yangdongdong@xiaomi.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check that alloc and free types of functions match each other.
+From: Dongdong Yang <yangdongdong@xiaomi.com>
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
-Changes in v2:
- - Lines are limited to 80 characters where possible
- - Confidence changed from High to Medium because of 
-   fs/btrfs/send.c:1119 false-positive
- - __vmalloc_area_node() explicitly excluded from analysis
-   instead of !(file in "mm/vmalloc.c") condition
-Changes in v3:
- - prints style in org && report modes changed for python2
-Changes in v4:
- - missing msg argument to print_todo fixed
+This patch provides USF(User Sensitive Feedback factor)
+auxiliary cpufreq governor to support high level layer
+sysfs inodes setting for utils adjustment purpose from
+the identified scenario on portable equipment.
+Because the power consumption and UI response are more
+cared for by portable equipment users. And the "screen
+off" status stands for no request from the user, however,
+the kernel is still expected to notify the user in time
+on modem, network or powerkey events occur. USF provides
+"sched_usf_non_ux_r" sysfs inode to cut down the utils
+from user space tasks according to high level scenario.
+In addition, it usually hints more cpufreq demand that
+the preemptive counts of the tasks on the cpu burst and
+over the user expecting completed time such as the ratio
+sysctl_sched_latency to sysctl_sched_min_granularity
+on "screen on" status, which more likely with more UI.
+The sysfs inodes "sched_usf_up_l0_r" and "sched_usf_down_r"
+have been provided to adjust the utils according to high
+level identified scenario to alloc the cpufreq in time.
 
- scripts/coccinelle/api/kvfree.cocci | 227 ++++++++++++++++++++++++++++
- 1 file changed, 227 insertions(+)
- create mode 100644 scripts/coccinelle/api/kvfree.cocci
+Dongdong Yang (1):
+  sched: Provide USF for portable equipment.
 
-diff --git a/scripts/coccinelle/api/kvfree.cocci b/scripts/coccinelle/api/kvfree.cocci
-new file mode 100644
-index 000000000000..d73578c5549c
---- /dev/null
-+++ b/scripts/coccinelle/api/kvfree.cocci
-@@ -0,0 +1,227 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+///
-+/// Check that kvmalloc'ed memory is freed by kfree functions,
-+/// vmalloc'ed by vfree functions and kvmalloc'ed by kvfree
-+/// functions.
-+///
-+// Confidence: Medium
-+// Copyright: (C) 2020 Denis Efremov ISPRAS
-+// Options: --no-includes --include-headers
-+//
-+
-+virtual patch
-+virtual report
-+virtual org
-+virtual context
-+
-+@initialize:python@
-+@@
-+# low-level memory api
-+filter = frozenset(['__vmalloc_area_node'])
-+
-+def relevant(p):
-+    return not (filter & {el.current_element for el in p})
-+
-+@choice@
-+expression E, E1;
-+position kok, vok;
-+@@
-+
-+(
-+  if (...) {
-+    ...
-+    E = \(kmalloc@kok\|kzalloc@kok\|krealloc@kok\|kcalloc@kok\|
-+          kmalloc_node@kok\|kzalloc_node@kok\|kmalloc_array@kok\|
-+          kmalloc_array_node@kok\|kcalloc_node@kok\)(...)
-+    ...
-+  } else {
-+    ...
-+    E = \(vmalloc@vok\|vzalloc@vok\|vmalloc_user@vok\|vmalloc_node@vok\|
-+          vzalloc_node@vok\|vmalloc_exec@vok\|vmalloc_32@vok\|
-+          vmalloc_32_user@vok\|__vmalloc@vok\|__vmalloc_node_range@vok\|
-+          __vmalloc_node@vok\)(...)
-+    ...
-+  }
-+|
-+  E = \(kmalloc\|kzalloc\|krealloc\|kcalloc\|kmalloc_node\|kzalloc_node\|
-+        kmalloc_array\|kmalloc_array_node\|kcalloc_node\)(...)
-+  ... when != E = E1
-+      when any
-+  if (\(!E\|E == NULL\)) {
-+    ...
-+    E = \(vmalloc@vok\|vzalloc@vok\|vmalloc_user@vok\|vmalloc_node@vok\|
-+          vzalloc_node@vok\|vmalloc_exec@vok\|vmalloc_32@vok\|
-+          vmalloc_32_user@vok\|__vmalloc@vok\|__vmalloc_node_range@vok\|
-+          __vmalloc_node@vok\)(...)
-+    ...
-+  }
-+)
-+
-+@opportunity depends on !patch@
-+expression E, E1, size;
-+position p : script:python() { relevant(p) };
-+@@
-+
-+(
-+* if (\(size <= E1\|size < E1\|size = E1\|size > E1\) || ...)@p {
-+    ...
-+    E = \(kmalloc\|kzalloc\|krealloc\|kcalloc\|kmalloc_node\|kzalloc_node\|
-+          kmalloc_array\|kmalloc_array_node\|kcalloc_node\)(..., size, ...)
-+    ...
-+  } else {
-+    ...
-+    E = \(vmalloc\|vzalloc\|vmalloc_user\|vmalloc_node\|vzalloc_node\|
-+          vmalloc_exec\|vmalloc_32\|vmalloc_32_user\|__vmalloc\|
-+          __vmalloc_node_range\|__vmalloc_node\)(..., size, ...)
-+    ...
-+  }
-+|
-+  E = \(kmalloc\|kzalloc\|krealloc\|kcalloc\|kmalloc_node\|kzalloc_node\|
-+        kmalloc_array\|kmalloc_array_node\|kcalloc_node\)(..., size, ...)
-+  ... when != E = E1
-+      when != size = E1
-+      when any
-+* if (\(!E\|E == NULL\))@p {
-+    ...
-+    E = \(vmalloc\|vzalloc\|vmalloc_user\|vmalloc_node\|vzalloc_node\|
-+          vmalloc_exec\|vmalloc_32\|vmalloc_32_user\|__vmalloc\|
-+          __vmalloc_node_range\|__vmalloc_node\)(..., size, ...)
-+    ...
-+  }
-+)
-+
-+@vfree depends on !patch@
-+expression E;
-+position k != choice.kok;
-+position p;
-+@@
-+
-+* E = \(kmalloc@k\|kzalloc@k\|krealloc@k\|kcalloc@k\|kmalloc_node@k\|
-+        kzalloc_node@k\|kmalloc_array@k\|kmalloc_array_node@k\|
-+        kcalloc_node@k\)(...)
-+  ... when != if (...) { ... E = \(vmalloc\|vzalloc\|vmalloc_user\|vmalloc_node\|vzalloc_node\|vmalloc_exec\|vmalloc_32\|vmalloc_32_user\|__vmalloc\|__vmalloc_node_range\|__vmalloc_node\)(...); ... }
-+      when != is_vmalloc_addr(E)
-+      when any
-+* \(vfree\|vfree_atomic\|kvfree\)(E)@p
-+
-+@pvfree depends on patch exists@
-+expression E;
-+position k != choice.kok;
-+@@
-+
-+  E = \(kmalloc@k\|kzalloc@k\|krealloc@k\|kcalloc@k\|kmalloc_node@k\|
-+        kzalloc_node@k\|kmalloc_array@k\|kmalloc_array_node@k\|
-+        kcalloc_node@k\)(...)
-+  ... when != if (...) { ... E = \(vmalloc\|vzalloc\|vmalloc_user\|vmalloc_node\|vzalloc_node\|vmalloc_exec\|vmalloc_32\|vmalloc_32_user\|__vmalloc\|__vmalloc_node_range\|__vmalloc_node\)(...); ... }
-+      when != is_vmalloc_addr(E)
-+      when any
-+- \(vfree\|vfree_atomic\|kvfree\)(E)
-++ kfree(E)
-+
-+@kfree depends on !patch@
-+expression E;
-+position v != choice.vok;
-+position p;
-+@@
-+
-+* E = \(vmalloc@v\|vzalloc@v\|vmalloc_user@v\|vmalloc_node@v\|vzalloc_node@v\|
-+        vmalloc_exec@v\|vmalloc_32@v\|vmalloc_32_user@v\|__vmalloc@v\|
-+        __vmalloc_node_range@v\|__vmalloc_node@v\)(...)
-+  ... when != !is_vmalloc_addr(E)
-+      when any
-+* \(kfree\|kzfree\|kvfree\)(E)
-+
-+@pkfree depends on patch exists@
-+expression E;
-+position v != choice.vok;
-+@@
-+
-+  E = \(vmalloc@v\|vzalloc@v\|vmalloc_user@v\|vmalloc_node@v\|vzalloc_node@v\|
-+        vmalloc_exec@v\|vmalloc_32@v\|vmalloc_32_user@v\|__vmalloc@v\|
-+        __vmalloc_node_range@v\|__vmalloc_node@v\)(...)
-+  ... when != !is_vmalloc_addr(E)
-+      when any
-+- \(kfree\|kvfree\)(E)
-++ vfree(E)
-+
-+@kvfree depends on !patch@
-+expression E;
-+position p, k;
-+@@
-+
-+* E = \(kvmalloc\|kvzalloc\|kvcalloc\|kvzalloc_node\|kvmalloc_node\|
-+        kvmalloc_array\)(...)@k
-+  ... when != is_vmalloc_addr(E)
-+      when any
-+* \(kfree\|kzfree\|vfree\|vfree_atomic\)(E)@p
-+
-+@pkvfree depends on patch exists@
-+expression E;
-+@@
-+
-+  E = \(kvmalloc\|kvzalloc\|kvcalloc\|kvzalloc_node\|kvmalloc_node\|
-+        kvmalloc_array\)(...)
-+  ... when != is_vmalloc_addr(E)
-+      when any
-+- \(kfree\|vfree\)(E)
-++ kvfree(E)
-+
-+@script: python depends on report@
-+k << vfree.k;
-+p << vfree.p;
-+@@
-+
-+msg = "WARNING: kmalloc is used to allocate this memory at line %s" % (k[0].line)
-+coccilib.report.print_report(p[0], msg)
-+
-+@script: python depends on org@
-+k << vfree.k;
-+p << vfree.p;
-+@@
-+
-+msg = "WARNING: kmalloc is used to allocate this memory at line %s" % (k[0].line)
-+coccilib.org.print_todo(p[0], msg)
-+
-+@script: python depends on report@
-+v << kfree.v;
-+p << kfree.p;
-+@@
-+
-+msg = "WARNING: vmalloc is used to allocate this memory at line %s" % (v[0].line)
-+coccilib.report.print_report(p[0], msg)
-+
-+@script: python depends on org@
-+v << kfree.v;
-+p << kfree.p;
-+@@
-+
-+msg = "WARNING: vmalloc is used to allocate this memory at line %s" % (v[0].line)
-+coccilib.org.print_todo(p[0], msg)
-+
-+@script: python depends on report@
-+k << kvfree.k;
-+p << kvfree.p;
-+@@
-+
-+msg = "WARNING: kvmalloc is used to allocate this memory at line %s" % (k[0].line)
-+coccilib.report.print_report(p[0], msg)
-+
-+@script: python depends on org@
-+k << kvfree.k;
-+p << kvfree.p;
-+@@
-+
-+msg = "WARNING: kvmalloc is used to allocate this memory at line %s" % (k[0].line)
-+coccilib.org.print_todo(p[0], msg)
-+
-+@script: python depends on report@
-+p << opportunity.p;
-+@@
-+
-+coccilib.report.print_report(p[0], "WARNING: opportunity for kvmalloc")
-+
-+@script: python depends on org@
-+p << opportunity.p;
-+@@
-+
-+coccilib.org.print_todo(p[0], "WARNING: opportunity for kvmalloc")
+ drivers/staging/Kconfig          |   2 +
+ drivers/staging/Makefile         |   1 +
+ drivers/staging/fbsched/Kconfig  |  10 ++
+ drivers/staging/fbsched/Makefile |   2 +
+ drivers/staging/fbsched/usf.c    | 351 +++++++++++++++++++++++++++++++++++++++
+ kernel/sched/cpufreq_schedutil.c |  11 +-
+ 6 files changed, 376 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/staging/fbsched/Kconfig
+ create mode 100644 drivers/staging/fbsched/Makefile
+ create mode 100644 drivers/staging/fbsched/usf.c
+
 -- 
-2.26.2
+2.7.4
 
