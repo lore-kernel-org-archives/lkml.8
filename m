@@ -2,145 +2,115 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C58C9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3C7A20809
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98F4B20809
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:33:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dy30OPps"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P9YaxADt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729369AbgG3JX6 (ORCPT
+        id S1728911AbgG3JdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 05:23:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36284 "EHLO
+        Thu, 30 Jul 2020 05:33:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbgG3JX5 (ORCPT
+        with ESMTP id S1726774AbgG3JdQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 05:23:57 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5836CC061794;
-        Thu, 30 Jul 2020 02:23:57 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id r4so2879319pls.2;
-        Thu, 30 Jul 2020 02:23:57 -0700 (PDT)
+        Thu, 30 Jul 2020 05:33:16 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF77AC061794
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 02:33:15 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id s16so12921048ljc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 02:33:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qEcfQyKopahyJ7cyN5C7qc3ogAAlzbIDe3eGdCZLDlg=;
-        b=Dy30OPpsunVqPQHRc8zKA0CNz1xj5tnGaAKB3bfCSkaCdEh/XzdiXvfg7q1kwQqaKr
-         P5DnoB9OnJyOILV4j6GHpZRuvoIFchtzfcoGRMr/jOiumprmJXYO4xk/lF0Yvl5xqx0Z
-         58tErr5r92NrX4WtqTq4Z9e3KLBFKI0hoQ0vD2chzDheOcO7rgq9vCKUORpnaNgVawo/
-         iPDCZ++2p+jbM58i54zHtdoaLT5oybQwz4LUwN5NpcrlHEzn9/1YG4sOHDukYbJ/opOY
-         xjphFAJlRere1Rj2hX3B7WfDcga/TZnmt40SBEeIbtVcEzqeVYdPXSRdsJT7d6V081pr
-         u7fg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cYxJoTE2jxDp3y/CrFjanvXbnIWCrDFo6s2oL1qbNcI=;
+        b=P9YaxADta+fBNrEYnvrbiPji+LRWUB9XBiJqjtD7ZD93Kb0FlpG9YuR69iS2C3Z5lV
+         1ZFLzFrSkvurSx8jqhc1e4feHW9TiPRSOA/7B8cPXRYRsCKT8ujvB775EQlXypegUcrq
+         IGncOb1i5A6lhvlCAG9YyJSEYsDMGaVvjZIODNmrv5Y7WXp5xPkJ+QJx5q5i6uNjgjeU
+         4NgjLxYt67UM3yd6+rYJrzUm8NmwJG56wzD9OjBg+vvwqR+XpraEzM2uNTLiJkRqK0m3
+         4t1xREN2mh9CLmzkief4me9CCvHpWGD5YS+T3D/Kv2XcA75cD/jdbgYbUMtnjZ/L1OTV
+         VaQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qEcfQyKopahyJ7cyN5C7qc3ogAAlzbIDe3eGdCZLDlg=;
-        b=AoCamPqn6KUGQ5cNUJMMsy4wKkSBSWoYV9JQr3vgv80lDeag/zYejAlT2BE2+nPyEm
-         dkuepQvbi+Sss6FvIeFoQSX8lkOMywz59p4Hh6eEc5F6Ri+B/csUyrDWVvElWa/oicNq
-         4tQ4jYQUh4131JqR7+rPAAKW0oya6NmH5VUrt7YzQ2M0BltKCtezJ/6jxP9/tAA6txz8
-         mfZY/vJYbIAJnFf6Qtl84W+cj5k6Ua5Samxl+3O8W62pbzUbAe5NOV6UOl4EBbNn/J1y
-         LWbD+Zllt3In/+D6K/XqCXBR95pDeahHA68O9bUmeSWe8bu2JW/QTZjSDP55jk5cK+OZ
-         srlQ==
-X-Gm-Message-State: AOAM5314BZGvy7V1Ez2adOcdeWrRAYt8ERVyBsxt6qy8Xg7wXqFaWxAF
-        fxYTKAla5RsCDt3MGQUU7gk=
-X-Google-Smtp-Source: ABdhPJx3WDwF3oqL6peA+8A4RFcrk+CQEEDrK8qZi7yLmtrQIv/rqJP1yDMF6/GNeb65q3Z8TOFNzw==
-X-Received: by 2002:a17:90a:1d46:: with SMTP id u6mr2182031pju.220.1596101036913;
-        Thu, 30 Jul 2020 02:23:56 -0700 (PDT)
-Received: from huyue2.ccdomain.com ([103.29.143.67])
-        by smtp.gmail.com with ESMTPSA id s8sm5183803pfc.122.2020.07.30.02.23.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 Jul 2020 02:23:56 -0700 (PDT)
-From:   Yue Hu <zbestahu@gmail.com>
-To:     robh+dt@kernel.org, frowand.list@gmail.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        huyue2@yulong.com, zbestahu@163.com
-Subject: [PATCH] of: reserved-memory: remove duplicated call to of_get_flat_dt_prop() for no-map node
-Date:   Thu, 30 Jul 2020 17:23:53 +0800
-Message-Id: <20200730092353.15644-1-zbestahu@gmail.com>
-X-Mailer: git-send-email 2.19.1.windows.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cYxJoTE2jxDp3y/CrFjanvXbnIWCrDFo6s2oL1qbNcI=;
+        b=HDI0jukNO82gPBE6VOHREecUyqG2c1K/ENKuQIn5USYhuqqnfrgYPJ2jARnpsziPb8
+         qixqP6360AeJCmA5vIrt6XpKDCIVLYjeNir1RCF0b+t6hHHK1xcw8leZhn9rqsXCd3rF
+         SRQZ9r1snvFh9gTE8yOBDJAkvSUO/45KyVR/1bgKDCqJCXq5UznFHzioj5Cazzd8YE3D
+         E8h6dBWu0Uov/moHwMl4xaCTSChr26Q1Bu2MKyOFBC0niDLXyDzPimQnwKXFJJscG6I4
+         4+5vIH8hwTUcv8N2daMtXxDyQwiRKPtWupmGImVmupK41vzVD1Mo3Vo6p/NDi4U2YwBF
+         WdKQ==
+X-Gm-Message-State: AOAM533RCYG4xZGanj9UExc3NCU5P3WUq5IkzaobgXE1WdATSHR4IqiT
+        TjSb+Op3uQL36BimMhq0Js2KS3srb2++f8k0Kb8ySnZFvhI=
+X-Google-Smtp-Source: ABdhPJxBfIdQENZSBmBjHEbEKqlZTEaUjkkdyLRlYLTelpng81AOwjnPntuXe/AhU3ON07S0c3Wp7NHhC3vKEZn7WEE=
+X-Received: by 2002:a2e:9d4a:: with SMTP id y10mr1088338ljj.104.1596101592293;
+ Thu, 30 Jul 2020 02:33:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200504091018.GA24897@afzalpc> <CAK8P3a25sZ9B+AE=EJyJZSU91CkBLLR6p2nixw_=UAbczg3RiQ@mail.gmail.com>
+ <20200511142113.GA31707@afzalpc> <CAK8P3a0=+aBJLTvHOskTv=tba_s5b5MzWrYG8mxH3iLNy4hfBw@mail.gmail.com>
+ <20200512104758.GA12980@afzalpc> <CAK8P3a1DQWG1+ab2+vQ2XCAKYxPUjJk5g3W3094j-adDXSQfzQ@mail.gmail.com>
+ <20200514111755.GA4997@afzalpc> <CAK8P3a2PNZY-9L9+SFDLtrp731ZGo6Nbs-7jY6E2PwWXa0kfKw@mail.gmail.com>
+ <20200514162535.GP1551@shell.armlinux.org.uk> <CAK8P3a2KR+O5Ua5hsNgzLQV5-V1pat6JH_WM10Es-oUhXO2OgA@mail.gmail.com>
+ <20200514234013.GQ1551@shell.armlinux.org.uk> <CAK8P3a1d-9B86uXxkZnDGf7u-2Vf9fCrUgWQ9HGNEcf3--Yg5w@mail.gmail.com>
+In-Reply-To: <CAK8P3a1d-9B86uXxkZnDGf7u-2Vf9fCrUgWQ9HGNEcf3--Yg5w@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 30 Jul 2020 11:33:01 +0200
+Message-ID: <CACRpkdZ0YT7JoBdYHSb1bbZUv_ovjkBg7yx7gHbG5VjEDV8vhQ@mail.gmail.com>
+Subject: Re: ARM: static kernel in vmalloc space
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yue Hu <huyue2@yulong.com>
+On Fri, May 15, 2020 at 5:41 PM Arnd Bergmann <arnd@arndb.de> wrote:
 
-Just use nomap instead of the second call to of_get_flat_dt_prop(). And
-change nomap as a bool type due to != NULL operator. Also, correct comment
-about node of 'align' -> 'alignment'.
+[Russell]
+> > There are some aliasing VIPT implementations on ARMv6, but I don't
+> > remember how common.
+>
+> I thought it was only realview-pb and omap2, but it seems there
+> are more, at least ast2500 is an important example.
+>
+> I could not find information about integrator-cp and picoxcell.
+(...)
+>   integrator CM1136JF-S core module: arm1136r?, 16kb non-aliasing VIPT
+> ? integrator CTB36 core tile: arm1136r?, ???
 
-Signed-off-by: Yue Hu <huyue2@yulong.com>
----
- drivers/of/of_reserved_mem.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+These do exist, the Integrators have pluggable CPU core modules.
+What you do is populate the core module slot on the Integrator CP
+with a CM1136.
 
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 6877080..c255c7e 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -69,7 +69,7 @@ void __init fdt_reserved_mem_save_node(unsigned long node, const char *uname,
- 
- /**
-  * __reserved_mem_alloc_size() - allocate reserved memory described by
-- *	'size', 'align'  and 'alloc-ranges' properties.
-+ *	'size', 'alignment'  and 'alloc-ranges' properties.
-  */
- static int __init __reserved_mem_alloc_size(unsigned long node,
- 	const char *uname, phys_addr_t *res_base, phys_addr_t *res_size)
-@@ -79,7 +79,7 @@ static int __init __reserved_mem_alloc_size(unsigned long node,
- 	phys_addr_t base = 0, align = 0, size;
- 	int len;
- 	const __be32 *prop;
--	int nomap;
-+	bool nomap;
- 	int ret;
- 
- 	prop = of_get_flat_dt_prop(node, "size", &len);
-@@ -92,8 +92,6 @@ static int __init __reserved_mem_alloc_size(unsigned long node,
- 	}
- 	size = dt_mem_next_cell(dt_root_size_cells, &prop);
- 
--	nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
--
- 	prop = of_get_flat_dt_prop(node, "alignment", &len);
- 	if (prop) {
- 		if (len != dt_root_addr_cells * sizeof(__be32)) {
-@@ -104,11 +102,13 @@ static int __init __reserved_mem_alloc_size(unsigned long node,
- 		align = dt_mem_next_cell(dt_root_addr_cells, &prop);
- 	}
- 
-+	nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
-+
- 	/* Need adjust the alignment to satisfy the CMA requirement */
- 	if (IS_ENABLED(CONFIG_CMA)
- 	    && of_flat_dt_is_compatible(node, "shared-dma-pool")
- 	    && of_get_flat_dt_prop(node, "reusable", NULL)
--	    && !of_get_flat_dt_prop(node, "no-map", NULL)) {
-+	    && !nomap) {
- 		unsigned long order =
- 			max_t(unsigned long, MAX_ORDER - 1, pageblock_order);
- 
-@@ -247,7 +247,7 @@ void __init fdt_init_reserved_mem(void)
- 		int len;
- 		const __be32 *prop;
- 		int err = 0;
--		int nomap;
-+		bool nomap;
- 
- 		nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
- 		prop = of_get_flat_dt_prop(node, "phandle", &len);
--- 
-1.9.1
+That said, I think I am the only user of the Integrator/CP actual
+hardware. And I don't have this core module. So I think it will be
+safe to drop support for that specific VIPT implementation by the
+token that if a tree falls in the forest and noone
+is there to hear it, it does not make a sound.
 
+As for physically existing VIPT 1136/1176 systems the Ambarella
+legacy SoCs that are not upstream is the big consumer of these.
+
+Ambarella's main customer is GoPro cameras and similar
+products. I have no idea if they ever upgrade kernels on these
+things though, I think not, but it would be great if someone knows
+them and can ask whether this is a concern for them. (They
+should be working with the community IMO, but is one of those
+companies that for some reason do not.)
+
+Yours,
+Linus Walleij
