@@ -2,126 +2,147 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F32C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3C1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE3A20809
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:53:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cs.washington.edu header.i=@cs.washington.edu header.b="aNmEAluR"
+	by mail.kernel.org (Postfix) with ESMTP id C303A20809
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:55:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730348AbgG3SxS (ORCPT
+        id S1730359AbgG3Sy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 14:53:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39368 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728560AbgG3SxR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 14:53:17 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DD3CC061574
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 11:53:17 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id c16so11547996ils.8
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 11:53:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cs.washington.edu; s=goo201206;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=42l4ctj1Gypy+YF97+QpYMW91oh26x5wOMqUsgssC6s=;
-        b=aNmEAluRstld+RIo7hQUz4NM8ImkejUWF/fEJtMXvDNc1ZLsHGVAj1sX3XZx8SHsBT
-         DQnU61itpM1kTzbT6mU+RlB4m8Oj08Z/4BRq1prQZadsUGnlY7giifhAe0vxUFe3EFyZ
-         bFf7SgKzakHLoGV7Jfie/FBaf3nE9fJVIOMJE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=42l4ctj1Gypy+YF97+QpYMW91oh26x5wOMqUsgssC6s=;
-        b=PdRjgHA91WNeMjIEtGmerbMogMGPtAyaJ/gBG65jDCfl2N1TQdKtlKM3MEHg3so+Bw
-         R+MQXJCN4x+mvaNsT5GBFPBggErhjVTuFb71zgE9Em3BUPd+cyhiS4zbU2ZfZ/gqvk/C
-         xtnQ4qaSzGF+QIlJh3l0o5LpCCswu0N8lXnTzfZbR4zjYWjRYGnjK+qNYZ0UuC28N/hC
-         fecPGVtnm4YJ0nkwbBdDxNVRyMrdlHQ6DyaCx2I57GPjiPtW5amrhJ+O1GWNq64uTYcB
-         OW8V1arYRGglNzkhW21XmiJbH/bnTWkcjUJuC7B50Sa+RVvWIu3XFykmUc5zd24Zqdr+
-         cWLQ==
-X-Gm-Message-State: AOAM531VEHD08GlKoZPmM4ClIeYMhvXBmgcpBrnZwTT64sFCf28rzeD8
-        N5T9PLxNSxV7jXduz+loprA1jlZMUYEhXEzzvu7M8A==
-X-Google-Smtp-Source: ABdhPJxSedzy/Q7HXRU/z9wJWqDWTBmt62c9ADo7O1Zj105UNNtxV6tpIvvZ5SGx50X91HnHl5zU5uT1AtbgwHDVVFY=
-X-Received: by 2002:a92:918b:: with SMTP id e11mr29802679ill.201.1596135196772;
- Thu, 30 Jul 2020 11:53:16 -0700 (PDT)
+        Thu, 30 Jul 2020 14:54:59 -0400
+Received: from mga07.intel.com ([134.134.136.100]:45250 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728560AbgG3Sy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 14:54:59 -0400
+IronPort-SDR: Bba3eUPvpZyOiXXjjaZNfQkNmAqoekLvZaobyQgjvU3+IYv0fGE1u0Pb593pfV3M7UwpBpiDQv
+ aBYumfti8pSQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="216138421"
+X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
+   d="scan'208";a="216138421"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 11:54:58 -0700
+IronPort-SDR: tYoiNIPxjbrsOvLRQOl+uYAL1LacBy+JzM0T9tJkGdCJXiffwL/3VyNuZ6x3uXaiRi8+lhRIg4
+ Fs9yRb7Px1Nw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
+   d="scan'208";a="435153652"
+Received: from twinkler-lnx.jer.intel.com ([10.12.91.138])
+  by orsmga004.jf.intel.com with ESMTP; 30 Jul 2020 11:54:55 -0700
+From:   Tomas Winkler <tomas.winkler@intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ramalingam C <ramalingam.c@intel.com>, stable@vger.kernel.org
+Subject: [char-misc-next V3] mei: hdcp: fix mei_hdcp_verify_mprime() input paramter
+Date:   Thu, 30 Jul 2020 21:54:51 +0300
+Message-Id: <20200730185451.3621108-1-tomas.winkler@intel.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-References: <20200722152422.72532-1-kernel@esmil.dk> <20200722152422.72532-2-kernel@esmil.dk>
-In-Reply-To: <20200722152422.72532-2-kernel@esmil.dk>
-From:   Luke Nelson <lukenels@cs.washington.edu>
-Date:   Thu, 30 Jul 2020 11:53:06 -0700
-Message-ID: <CADasFoDfRwcfFHM_Sa-HzwSDyXEr2PNu3Wfe5riwZJM9XsELBQ@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] riscv: Clean up module relocations
-To:     Emil Renner Berthing <kernel@esmil.dk>
-Cc:     linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
-        Zong Li <zong@andestech.com>, Andreas Schwab <schwab@suse.de>,
-        LKML <linux-kernel@vger.kernel.org>, Xi Wang <xi.wang@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the patch!
+wired_cmd_repeater_auth_stream_req_in has a variable
+length array at the end. we use struct_size() overflow
+macro to determine the size for the allocation and sending
+size.
+This also fixes bug in case number of streams is > 0 in the original
+submission. This bug was not triggered as the number of streams is
+always one.
 
-> Also RISC-V has a number of instruction pairs to
-> generate 32bit immediates or jump/call offsets. Eg.:
->
-> lui   rd, hi20
-> addi  rd, rd, lo12
+Fixes: c56967d674e3 (mei: hdcp: Replace one-element array with flexible-array member)
+Fixes: 0a1af1b5c18d ("misc/mei/hdcp: Verify M_prime")
+Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: Ramalingam C <ramalingam.c@intel.com>
+Cc: <stable@vger.kernel.org> v5.1+
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+---
+V3:
+1. Fix commit message with more info and another patch it fixes (Gustavo)
+2. Target stable. (Gustavo)
+V2: Check for allocation failure.
+ drivers/misc/mei/hdcp/mei_hdcp.c | 40 +++++++++++++++++++-------------
+ 1 file changed, 24 insertions(+), 16 deletions(-)
 
-On RV64, both hi20 from lui and lo12 from addi are sign-extended to 64 bits=
-.
-This means that there are some 32-bit signed offsets (in the range
-[2^31-2^11, 2^31-1])
-that are not encodable using (lui+addi), (auipc+jalr), etc. (see
-discussion at [1]).
+diff --git a/drivers/misc/mei/hdcp/mei_hdcp.c b/drivers/misc/mei/hdcp/mei_hdcp.c
+index d1d3e025ca0e..f1205e0060db 100644
+--- a/drivers/misc/mei/hdcp/mei_hdcp.c
++++ b/drivers/misc/mei/hdcp/mei_hdcp.c
+@@ -546,38 +546,46 @@ static int mei_hdcp_verify_mprime(struct device *dev,
+ 				  struct hdcp_port_data *data,
+ 				  struct hdcp2_rep_stream_ready *stream_ready)
+ {
+-	struct wired_cmd_repeater_auth_stream_req_in
+-					verify_mprime_in = { { 0 } };
++	struct wired_cmd_repeater_auth_stream_req_in *verify_mprime_in;
+ 	struct wired_cmd_repeater_auth_stream_req_out
+ 					verify_mprime_out = { { 0 } };
+ 	struct mei_cl_device *cldev;
+ 	ssize_t byte;
++	size_t cmd_size;
+ 
+ 	if (!dev || !stream_ready || !data)
+ 		return -EINVAL;
+ 
+ 	cldev = to_mei_cl_device(dev);
+ 
+-	verify_mprime_in.header.api_version = HDCP_API_VERSION;
+-	verify_mprime_in.header.command_id = WIRED_REPEATER_AUTH_STREAM_REQ;
+-	verify_mprime_in.header.status = ME_HDCP_STATUS_SUCCESS;
+-	verify_mprime_in.header.buffer_len =
++	cmd_size = struct_size(verify_mprime_in, streams, data->k);
++	if (cmd_size == SIZE_MAX)
++		return -EINVAL;
++
++	verify_mprime_in = kzalloc(cmd_size, GFP_KERNEL);
++	if (!verify_mprime_in)
++		return -ENOMEM;
++
++	verify_mprime_in->header.api_version = HDCP_API_VERSION;
++	verify_mprime_in->header.command_id = WIRED_REPEATER_AUTH_STREAM_REQ;
++	verify_mprime_in->header.status = ME_HDCP_STATUS_SUCCESS;
++	verify_mprime_in->header.buffer_len =
+ 			WIRED_CMD_BUF_LEN_REPEATER_AUTH_STREAM_REQ_MIN_IN;
+ 
+-	verify_mprime_in.port.integrated_port_type = data->port_type;
+-	verify_mprime_in.port.physical_port = (u8)data->fw_ddi;
+-	verify_mprime_in.port.attached_transcoder = (u8)data->fw_tc;
++	verify_mprime_in->port.integrated_port_type = data->port_type;
++	verify_mprime_in->port.physical_port = (u8)data->fw_ddi;
++	verify_mprime_in->port.attached_transcoder = (u8)data->fw_tc;
++
++	memcpy(verify_mprime_in->m_prime, stream_ready->m_prime, HDCP_2_2_MPRIME_LEN);
++	drm_hdcp_cpu_to_be24(verify_mprime_in->seq_num_m, data->seq_num_m);
+ 
+-	memcpy(verify_mprime_in.m_prime, stream_ready->m_prime,
+-	       HDCP_2_2_MPRIME_LEN);
+-	drm_hdcp_cpu_to_be24(verify_mprime_in.seq_num_m, data->seq_num_m);
+-	memcpy(verify_mprime_in.streams, data->streams,
++	memcpy(verify_mprime_in->streams, data->streams,
+ 	       array_size(data->k, sizeof(*data->streams)));
+ 
+-	verify_mprime_in.k = cpu_to_be16(data->k);
++	verify_mprime_in->k = cpu_to_be16(data->k);
+ 
+-	byte = mei_cldev_send(cldev, (u8 *)&verify_mprime_in,
+-			      sizeof(verify_mprime_in));
++	byte = mei_cldev_send(cldev, (u8 *)&verify_mprime_in, cmd_size);
++	kfree(verify_mprime_in);
+ 	if (byte < 0) {
+ 		dev_dbg(dev, "mei_cldev_send failed. %zd\n", byte);
+ 		return byte;
+-- 
+2.25.4
 
-The following note is from the ISA manual:
->>> Note that the set of address offsets that can be formed by pairing LUI =
-with LD,
->>> AUIPC with JALR, etc. in RV64I is [=E2=88=922^31=E2=88=922^11, 2^31=E2=
-=88=922^11=E2=88=921].
-
-The existing code and the new code both seem buggy if the offset happens to
-be a 32-bit int but falls outside of the encodable range.
-
-> +       if (offset !=3D (s32)offset) {
-> [...]
-> +       if (offset !=3D (s32)offset) {
-> [...]
-
-These checks should probably be replaced with something similar to
-what's used in the RV64 BPF JIT here: [2],
-except that this code should check if using RV32 or RV64, since the
-encodable range differs for each.
-
-> My hope is that we can eventually factor out the code to generate
-> immediates and instructions so it can be reused both here, in the
-> jump-label code and in the bpf-jit code, but let's take it
-> one step at a time.
-
-This sounds great! Having fewer copies of RISC-V encoding logic around will
-hopefully decrease the likelihood of bugs :) Some other archs already
-have shared
-infrastructure for doing instruction encoding (e.g., in
-arch/arm64/kernel/insn.c);
-we should consider doing something similar for RISC-V.
-
-- Luke Nelson
-
-[1]: https://groups.google.com/a/groups.riscv.org/forum/#!topic/isa-dev/bwW=
-FhBnnZFQ
-[2]: https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git/commit/?id=
-=3D489553dd13a88d8a882db10622ba8b9b58582ce4
