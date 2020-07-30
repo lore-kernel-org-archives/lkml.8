@@ -2,107 +2,133 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8787DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAC8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D7BB20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:31:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IDllqmel"
+	by mail.kernel.org (Postfix) with ESMTP id D3EDD2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:32:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730229AbgG3Rbx (ORCPT
+        id S1730247AbgG3Rca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 13:31:53 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1305 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730199AbgG3Rbw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 13:31:52 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2303da0000>; Thu, 30 Jul 2020 10:31:06 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 30 Jul 2020 10:31:52 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 30 Jul 2020 10:31:52 -0700
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jul
- 2020 17:31:45 +0000
-Subject: Re: linux-next: manual merge of the hmm tree with the drm tree
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Ben Skeggs <bskeggs@redhat.com>
-CC:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-References: <20200730192110.1466e63e@canb.auug.org.au>
- <20200730120303.GQ19097@mellanox.com>
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <cf7af4c9-592a-2143-831a-cb0f44bc768e@nvidia.com>
-Date:   Thu, 30 Jul 2020 10:31:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 30 Jul 2020 13:32:30 -0400
+Received: from mga12.intel.com ([192.55.52.136]:55226 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730199AbgG3Rca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 13:32:30 -0400
+IronPort-SDR: UokWzagSkmkix5zVV7ydOh/0ymZhxpTiZtfffVpXJjAO1/akwVTLF/yiWjKEtn+dZcR9Fl8LIM
+ BZ8jrS0z4+hQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="131219581"
+X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
+   d="scan'208";a="131219581"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 10:32:29 -0700
+IronPort-SDR: NgVXvRu+i3HcOFSdjl1iZHHP8fQOTgnGPcsEKWmpCaTgj3fqTbkOsv8MbhETZDzy1xhQiug4ii
+ EXMad0VdWlSQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
+   d="scan'208";a="322970726"
+Received: from lkp-server02.sh.intel.com (HELO d4d86dd808e0) ([10.239.97.151])
+  by fmsmga002.fm.intel.com with ESMTP; 30 Jul 2020 10:32:25 -0700
+Received: from kbuild by d4d86dd808e0 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k1CPo-0000AK-Hf; Thu, 30 Jul 2020 17:32:24 +0000
+Date:   Fri, 31 Jul 2020 01:31:34 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:locking/core] BUILD REGRESSION
+ 47490fdd411675707624fdfbf7bcfcd5f6a5e706
+Message-ID: <5f2303f6.7YtGdtNYJf/FTBJ2%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <20200730120303.GQ19097@mellanox.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596130266; bh=k4vNNiKstW6Z4KOTz1fqT9YxUmyKEbjWauOw7RAdy6E=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=IDllqmel5uIxCRjyj3mE7PtQjbfdPLAHQaKS7JSlcufXQnN0y2wr9uNpduQmM5RrJ
-         DxzkaWGYixjZ+7++WSnROrAz3JQ3PSagZWwfKQzu1JnTOBWOGOeHtssYrwZpALTrN0
-         qhdmTSvdkX+jNESbUszk6fWDe1c5xsOT13/gNEINM+faqNkqqGbtr0zycn7+lNiweS
-         M9mMWebWrxVBt8GQGc6KU9KJBVlueykDJk/COiuW0lgjClzIuxbbs++nOYHW8llTvT
-         O9+y7MGd8SlBYOL0G/08vXb6g0g+SoVCzw7djjwc0r/ka1lZCwWT+ZytK7Tb8mF2Zd
-         fesOHI2MS7mtQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  locking/core
+branch HEAD: 47490fdd411675707624fdfbf7bcfcd5f6a5e706  kcsan: Improve IRQ state trace reporting
 
-On 7/30/20 5:03 AM, Jason Gunthorpe wrote:
-> On Thu, Jul 30, 2020 at 07:21:10PM +1000, Stephen Rothwell wrote:
->> Hi all,
->>
->> Today's linux-next merge of the hmm tree got a conflict in:
->>
->>    drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmgp100.c
->>
->> between commit:
->>
->>    7763d24f3ba0 ("drm/nouveau/vmm/gp100-: fix mapping 2MB sysmem pages")
->>
->> from the drm tree and commits:
->>
->>    4725c6b82a48 ("nouveau: fix mapping 2MB sysmem pages")
->>    1a77decd0cae ("nouveau: fix storing invalid ptes")
->>
->> from the hmm tree.
->>
->> 7763d24f3ba0 and 4725c6b82a48 are exactly the same patch.
-> 
-> Oh? Ralph? What happened here?
+Error/Warning in current branch:
 
-Ben did email me saying he was planning to take this patch into
-his nouveau tree and I did reply to him saying you had also taken it
-into your tree and that I had more nouveau/SVM patches for you on the way.
-So, I'm not sure what happened.
+arch/mips/include/asm/smp.h:28:19: error: static declaration of 'raw_smp_processor_id' follows non-static declaration
 
-> Ben can you drop 7763d24f3ba0 ?
-> 
-> Jason
-> 
+Error/Warning ids grouped by kconfigs:
+
+recent_errors
+|-- mips-allmodconfig
+|   `-- arch-mips-include-asm-smp.h:error:static-declaration-of-raw_smp_processor_id-follows-non-static-declaration
+`-- mips-allyesconfig
+    `-- arch-mips-include-asm-smp.h:error:static-declaration-of-raw_smp_processor_id-follows-non-static-declaration
+
+elapsed time: 1419m
+
+configs tested: 54
+configs skipped: 1
+
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a016-20200730
+i386                 randconfig-a012-20200730
+i386                 randconfig-a014-20200730
+i386                 randconfig-a015-20200730
+i386                 randconfig-a011-20200730
+i386                 randconfig-a013-20200730
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
