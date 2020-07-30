@@ -2,110 +2,146 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C52DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E350C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6887A20809
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56C2A20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:54:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zI4Avvu0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XXq4WTCP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730492AbgG3Vtg (ORCPT
+        id S1730646AbgG3Vyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 17:49:36 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:37496 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728499AbgG3Vtf (ORCPT
+        Thu, 30 Jul 2020 17:54:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730590AbgG3Vyy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 17:49:35 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06ULbxWT189784;
-        Thu, 30 Jul 2020 21:49:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=VhPoQ91Z8DcdITe8DMePmmf/oHiACBtLRKfXshYhz/Y=;
- b=zI4Avvu05svh9hkFH+8R4WRl1y80MLEsHoZKleuKXewcfhZso81l893WIwjJNokZUFW8
- JVYEOKPaKT+PhVdmtH5pHW2soRfEquasUWoStFcBv40FaL8hKC49e2RMlFQq38RmjL+j
- 0nFN02I4tXyN8YRwpY2bdUgaKxI7MJxtPikNCCTQh9/iyhAgOj+zPLEMy3wD69Jt2kpK
- pl4W0KlztacBV5rnJZ5faDPFLR8AqjT8X0icu+6akOL9ZOnYMD8dDlWHDSC1PxRpdgiE
- xLQQySV84NL99AvD2HRFJ1RHv/lhbgI0mVDUk4MMqse8a9/7uPEBwCbzwm+Qgh8phuYh Yw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 32hu1jp5wm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 30 Jul 2020 21:49:21 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06ULcpIK163961;
-        Thu, 30 Jul 2020 21:49:21 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 32hu5xytbs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Jul 2020 21:49:20 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06ULnJki008286;
-        Thu, 30 Jul 2020 21:49:20 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 30 Jul 2020 14:49:19 -0700
-Subject: Re: [PATCH v2] mm/hugetlb: Fix calculation of
- adjust_range_if_pmd_sharing_possible
-To:     Peter Xu <peterx@redhat.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>
-References: <20200730201636.74778-1-peterx@redhat.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <4680014a-a328-b0c2-dc86-8c1eb4556f69@oracle.com>
-Date:   Thu, 30 Jul 2020 14:49:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 17:54:54 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D413CC061575
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 14:54:53 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id d18so29828617ion.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 14:54:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Hz6qbfDEuhZyd0+x8odAvWpkuP8UaNczToSkFGvnkFk=;
+        b=XXq4WTCPC7+tz1SDKdUi3QhlL2AziVHW6ufg5IaUDVj/PPY8yId2LXr49FGP9QMHgA
+         +6PIbDXgPxiMnANJkkJWoHlf7V/xrVIHmtT7st/kjFLsxqbTDE12SlFu8/mv45+/i2uh
+         zjAYCIWQ/crNEhaXO8S3F11ceJLYqrX0aIiv9yOv9peKJS41mDA8lLL4SJyQ4tDydVC/
+         cTXNC8j6pyW9NPjfyA5TLM0yeCg0DOLPFWelNgtTbOrV2CoZ6XZd1miuCO/p9fIYoytu
+         x4o/sCU/1POFbzkWTvhcf2t00xeJ9dx3hYZofEnFBj4ijp68az1QMTdXuEp2KA0tFxCO
+         o6Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Hz6qbfDEuhZyd0+x8odAvWpkuP8UaNczToSkFGvnkFk=;
+        b=ezCWZ9K1YCbS++UEWgEC91oqf5vzSVRDOWPL3s0CBLT7M9OZdas4LlLLc9nHwafjev
+         +Wx9YF+KqGWU2R44WkGiTjxUvAZjHP27HA+FMnQREXUzPbVPCZjZjaBkGzXVpFkd4m3a
+         opwETKmH+BgJm+yDu4XzmAS6OZQH61RjDb38cs+P7uTeKaRVfmmTgRLqrw1ICpvHdwcb
+         wNkDXmyn1bIVlwJwm6PyMvqigJlpHg8xgAy1AmI9Nu/GqqPuXjmAaBKLi18RYp8yApmR
+         SqbGf/WzLOtESmFL0VdviGxTA/xX8LYDQmYX6TYyyv4KZFC8DGsSrGRlbmkm7sxJTlTw
+         7z4g==
+X-Gm-Message-State: AOAM532jCC7lYQQcv34rwh8p8G2wfcSDW3RkqGj/DcX9siW3exgVMalS
+        UIAhf0fqFgVgiNsmpWFFM2o2peZ+lSDNwoEhetGzxw==
+X-Google-Smtp-Source: ABdhPJxfaQq5HeiMdevqGMWqFwqGsny4Dy1qiomWJuQvLs0WDvh1gLD/SMeUG/RmSS335Pisek5x4JO4bpQQI0HhYSw=
+X-Received: by 2002:a05:6638:138a:: with SMTP id w10mr1466182jad.36.1596146093086;
+ Thu, 30 Jul 2020 14:54:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200730201636.74778-1-peterx@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9698 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- mlxscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007300151
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9698 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxlogscore=999
- lowpriorityscore=0 malwarescore=0 clxscore=1015 mlxscore=0 impostorscore=0
- phishscore=0 adultscore=0 suspectscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007300151
+References: <20200722131543.7024-1-peng.fan@nxp.com> <20200729170516.GA3059951@xps15>
+ <DB6PR0402MB2760BF33BCBFF1CD1F1C4EED88710@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+In-Reply-To: <DB6PR0402MB2760BF33BCBFF1CD1F1C4EED88710@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Thu, 30 Jul 2020 15:54:42 -0600
+Message-ID: <CANLsYkzOOs5999zD-1EPujpk9ZbfZwCHmNRvxE_cO+-zkZdzbA@mail.gmail.com>
+Subject: Re: [PATCH] remoteproc: virtio: support sharing vdev buffer
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "ohad@wizery.com" <ohad@wizery.com>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/20 1:16 PM, Peter Xu wrote:
-> This is found by code observation only.
-> 
-> Firstly, the worst case scenario should assume the whole range was covered by
-> pmd sharing.  The old algorithm might not work as expected for ranges
-> like (1g-2m, 1g+2m), where the adjusted range should be (0, 1g+2m) but the
-> expected range should be (0, 2g).
-> 
-> Since at it, remove the loop since it should not be required.  With that, the
-> new code should be faster too when the invalidating range is huge.
+On Thu, 30 Jul 2020 at 00:22, Peng Fan <peng.fan@nxp.com> wrote:
+>
+> Hi Mathieu,
+>
+> > Subject: Re: [PATCH] remoteproc: virtio: support sharing vdev buffer
+> >
+> > Hi Peng,
+> >
+> > On Wed, Jul 22, 2020 at 09:15:43PM +0800, Peng Fan wrote:
+> > > Support sharing vdev buffer between multiple vdevs by using name
+> > > "vdevbuffer".
+> > >
+> > > Reviewed-by: Richard Zhu <hongxing.zhu@nxp.com>
+> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > ---
+> > >  drivers/remoteproc/remoteproc_virtio.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
+> > > diff --git a/drivers/remoteproc/remoteproc_virtio.c
+> > > b/drivers/remoteproc/remoteproc_virtio.c
+> > > index dfd3808c34fd..5d78ebea111e 100644
+> > > --- a/drivers/remoteproc/remoteproc_virtio.c
+> > > +++ b/drivers/remoteproc/remoteproc_virtio.c
+> > > @@ -343,6 +343,8 @@ int rproc_add_virtio_dev(struct rproc_vdev *rvdev,
+> > > int id)
+> > >
+> > >     /* Try to find dedicated vdev buffer carveout */
+> > >     mem = rproc_find_carveout_by_name(rproc, "vdev%dbuffer",
+> > > rvdev->index);
+> > > +   if (!mem)
+> > > +           mem = rproc_find_carveout_by_name(rproc, "vdevbuffer");
+> >
+> > We already have a way to share buffers [1], do you think it would work for you?
+> > I would rather proceed that way to avoid introducing a 3rd way to deal with
+> > vdev buffers.
+>
+> That should work for me. I just need to move the vdevbuffer to the 1st one
+> inside the memory-region.
 
-Thanks Peter!
+Perfect
 
-That is certainly much simpler than the loop in current code.  You say there
-are instances where old code 'might not work' for ranges like (1g-2m, 1g+2m).
-Not sure I understand what you mean by adjusted and expected ranges in the
-message.  Both are possible 'adjusted' ranges depending on vma size.
+>
+> BTW: Do you have time to give a review for
+> https://patchwork.kernel.org/patch/11688751/
+>
 
-Just trying to figure out if there is an actual problem in the existing code
-that needs to be fixed in stable.  I think the existing code is correct, just
-inefficient.
--- 
-Mike Kravetz
+Unfortunately not in a little while.  There are a couple of beefy
+patchset in the queue ahead of yours and to make matters worse I am
+away next week.
+
+> Thanks,
+> Peng.
+>
+> >
+> > Thanks,
+> > Mathieu
+> >
+> > [1].
+> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Felixir.b
+> > ootlin.com%2Flinux%2Fv5.8-rc4%2Fsource%2Fdrivers%2Fremoteproc%2Frem
+> > oteproc_virtio.c%23L389&amp;data=02%7C01%7Cpeng.fan%40nxp.com%7C
+> > 760ae238005c49fe20db08d833e193ca%7C686ea1d3bc2b4c6fa92cd99c5c30
+> > 1635%7C0%7C0%7C637316391223184319&amp;sdata=UTN8YVaEynomrwFx
+> > 7aTCJ7fp0fjfIS8fscfGG67naKk%3D&amp;reserved=0
+> >
+> > >     if (mem) {
+> > >             phys_addr_t pa;
+> > >
+> > > --
+> > > 2.16.4
+> > >
