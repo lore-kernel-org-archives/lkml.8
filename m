@@ -2,104 +2,120 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C3DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 02:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 520CFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ABB822B48
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 02:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3213622C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:02:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nR+RD2hv"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="f1TfqRn1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728415AbgG3C7I (ORCPT
+        id S1728401AbgG3DCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 22:59:08 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42791 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726319AbgG3C7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 22:59:07 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BHFVd2QzRz9sR4;
-        Thu, 30 Jul 2020 12:59:05 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596077945;
-        bh=4mCVNzof32ENbznJmA/smGybo47PtWuzbXw60FX7K7Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nR+RD2hvbudtG58WWmODlBSKtnYRaPYOe31YM9sD3anyATpq50kKdO65pjRkiadyq
-         5xoZyc1NUTai4nBBaA9Po6/kgtCZTl/c3RM28DtqYXmZhO7X+ehcXRxzDCeNz1u5d8
-         txf/S4sGm7XESWaEFqfZka6Y7NfuR3eqlF/9AJK8o6viBgX2Mi8EPm1mn33XWgK/2H
-         IPa2zaX3ACsnDWfduw1kUaGg2o58pD0y0MMqikHh1upTZbVyeZpNfkMaIz+FyJEu0N
-         6/APbrOaPV4zUsLD/4S1nYUcVxqZQGBjsBU8K7soHRiixkWXCMUxcWtKa6+sXkALJG
-         dW6Tcv1dmV89g==
-Date:   Thu, 30 Jul 2020 12:59:04 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     James Morris <jmorris@namei.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the security tree
-Message-ID: <20200730125904.4d20b4e6@canb.auug.org.au>
-In-Reply-To: <alpine.LRH.2.21.2007301233210.3625@namei.org>
-References: <20200708140034.546298ff@canb.auug.org.au>
-        <20200713120419.33cf7a87@canb.auug.org.au>
-        <20200730093500.334c56cb@canb.auug.org.au>
-        <alpine.LRH.2.21.2007301233210.3625@namei.org>
+        Wed, 29 Jul 2020 23:02:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbgG3DCc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 23:02:32 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEECDC0619D2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 20:02:31 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id o2so11875765qvk.6
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 20:02:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QahY/9HMVaM3fXtDIHLh10tOlgXtwkItMDEdu9i8774=;
+        b=f1TfqRn1SoO6CPLCa3CInrbLgwlMviXEm0dtWty03sFyhCYMhIFP4URm2bdiIRowPk
+         t9mEek0Fu7zJEj1RzfVByOgHUpKs4s1tbhyAqGIR4SDZjHUqJ9DK+sJADyalWanDam6y
+         Q8tTD0yesxeXCQgPoezTdbTQjS2phNDlOctiI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QahY/9HMVaM3fXtDIHLh10tOlgXtwkItMDEdu9i8774=;
+        b=g78/1f1lD82LajknMGR3DXKqVDbWIBGPl4IhsJBAQJUZUSF9lz+mPhwdZAr9pHkxkt
+         heduQC5HIx8uhlGcDHPfdDYTsk2IIBmDDoOSsDRICZRpOZb2ziA9tEllV6g/IV+6lz2F
+         045ChQFtsuYmk0npNb9HuGAZoB5PlBKjggvfD/K2QzNpdLcixoKsPeo1oTLqMmJBbQPy
+         5f8vGMSQc86+agAQ79+w8kDJ/uxaRrdViFnro3qF1nuN3P4PdcrLvA1uoM/E/7pEUOX2
+         VvsnG1XHnknhM/5/qN8Y3E+jNbWZZHZ0RUi28vGFt5QQvoSMViE31CnxPJxNIMfp45s8
+         rnBQ==
+X-Gm-Message-State: AOAM531tMT9l8tD3nsRTwMnfioRpofSgcMhLWgScduJDCry/Knp2ZYPQ
+        aQ1XrxQbOC/aP/GyUATWgFX3PpNa33g=
+X-Google-Smtp-Source: ABdhPJwU11T0hSFJFM8Lfqmv1ZiKG9hcF33D0qVnmJJ8eB+zH8kZCgnZke55bteVffYCb6CKulUGeA==
+X-Received: by 2002:a05:6214:1709:: with SMTP id db9mr964563qvb.142.1596078150702;
+        Wed, 29 Jul 2020 20:02:30 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id f7sm3122044qkj.32.2020.07.29.20.02.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 20:02:30 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Neeraj Upadhyay <neeraju@codeaurora.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH 1/2] rcu/tree: Add a warning if CPU being onlined did not report QS already
+Date:   Wed, 29 Jul 2020 23:02:20 -0400
+Message-Id: <20200730030221.705255-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/LW_h+4MxPn8UErcYVod6_j3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/LW_h+4MxPn8UErcYVod6_j3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Add a warning if CPU being onlined did not report QS already. This is to
+simplify the code in the CPU onlining path and also to make clear about
+where QS is reported. The act of QS reporting in CPU onlining path is
+is likely unnecessary as shown by code reading and testing with
+rcutorture's TREE03 and hotplug parameters.
 
-Hi James,
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Cc: Neeraj Upadhyay <neeraju@codeaurora.org>
+Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-On Thu, 30 Jul 2020 12:35:03 +1000 (AEST) James Morris <jmorris@namei.org> =
-wrote:
->
-> On Thu, 30 Jul 2020, Stephen Rothwell wrote:
->=20
-> > > I am still applying the above patch ... =20
-> >=20
-> > The merge window is coming up fast ... is anything happening about this
-> > failure? =20
->=20
-> A new patch is coming, but I'm not sure this code has had enough review=20
-> from the core VFS folk.
->=20
-> Please drop secure_uffd_v5.9 for the time being.
+---
+ kernel/rcu/tree.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-You just need to remove/revert it from your security tree
-(git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git#n=
-ext-testing).
---=20
-Cheers,
-Stephen Rothwell
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 65e1b5e92319..1e51962b565b 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3996,7 +3996,19 @@ void rcu_cpu_starting(unsigned int cpu)
+ 	rcu_gpnum_ovf(rnp, rdp); /* Offline-induced counter wrap? */
+ 	rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
+ 	rdp->rcu_onl_gp_flags = READ_ONCE(rcu_state.gp_flags);
+-	if (rnp->qsmask & mask) { /* RCU waiting on incoming CPU? */
++
++	/*
++	 * Delete QS reporting from here, by June 2021, if warning does not
++	 * fire. Let us make the rules for reporting QS for an offline CPUs
++	 * more explicit. The CPU onlining path does not need to report QS for
++	 * an offline CPU. Either the QS should have reported during CPU
++	 * offlining, or during rcu_gp_init() if it detected a race with either
++	 * CPU offlining or task unblocking on previously offlined CPUs. Note
++	 * that the FQS loop also does not report QS for an offline CPU any
++	 * longer (unless it splats due to an offline CPU blocking the GP for
++	 * too long).
++	 */
++	if (WARN_ON_ONCE(rnp->qsmask & mask)) { /* RCU waiting on incoming CPU? */
+ 		rcu_disable_urgency_upon_qs(rdp);
+ 		/* Report QS -after- changing ->qsmaskinitnext! */
+ 		rcu_report_qs_rnp(mask, rnp, rnp->gp_seq, flags);
+-- 
+2.28.0.rc0.142.g3c755180ce-goog
 
---Sig_/LW_h+4MxPn8UErcYVod6_j3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8iN3gACgkQAVBC80lX
-0Gw/4Qf/V/2Hbkji5AM7i6R6i9dLO/xrVd2ALFCZZeRejaV0kEIpEpmujf6/09FF
-WZjiSGF86bIAWnF2pNJUgdHAxkPuHk9Tj2TtO5Puxd5iD6ah5aCJWKglQdW23dt3
-vizkIKfSgdsOLm8hDM6ZUtZuMOiZDoXirzZyecqHAxLTpaTchek33UDuI7H6ueFm
-I5njilovu5b6H6uLfJd5V7XvHyWW3NGefgNKLk/79BB4oHZurwOAmeu2F/nAO4Af
-mix8/5U7BdeBxGocib9RtLBiLRbM/NpN8JYGWAeqQt/NcoynYzmS99DP/lciZ7iM
-Pn/SKVooz8FKGXnMQnd1lr8p4/xAQA==
-=xH+w
------END PGP SIGNATURE-----
-
---Sig_/LW_h+4MxPn8UErcYVod6_j3--
