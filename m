@@ -5,108 +5,109 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A78E5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C56B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B7122074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4F4A2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:22:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="em1o/scn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F2kDh3qK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgG3LVn (ORCPT
+        id S1727092AbgG3LWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 07:21:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54478 "EHLO
+        Thu, 30 Jul 2020 07:22:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgG3LVm (ORCPT
+        with ESMTP id S1726367AbgG3LWu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 07:21:42 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99BE1C061794
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 04:21:40 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a5so14556335wrm.6
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 04:21:40 -0700 (PDT)
+        Thu, 30 Jul 2020 07:22:50 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F614C061794;
+        Thu, 30 Jul 2020 04:22:49 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id e22so4215400pjt.3;
+        Thu, 30 Jul 2020 04:22:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=2fKN5lB5E97AFklcPW2OKcQHBfR9S0UWEJIP7OKzhUE=;
-        b=em1o/scndKx9OX1hjOQ2bjLKuLEESvFRi3QROdaMkGSL38XPZxX4JYmjw/I5GG+rWh
-         XmXIiscO0vX/2qCv3Gw8MogsNP7dVzSpFwdJ/dqoQbPTa+SRDZTmvd7d1Hc1yKhMkdoR
-         m49jb7exEkobJh1x9C0BHTUOXMNCPhFfcuqOFC5UeZDiiylcahnYsi58c3xJ9Hlw8VM5
-         RKDuYfCOBfZBmA0aELpjKrEw9drc09Xd+lj4f04J5MlQvtSB5aHfJhzJwMZRZMwHmdNH
-         yN+wKj31YKsrTSvTY2HerM53TmmxNE9gI8auJSfnz4zCSsH4dsmex6BzKJHo4R8AmDS1
-         e9xQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IwjGvmHYj5CwlmD5GYkZzUlslsm23kbi+AR0fiLStwE=;
+        b=F2kDh3qK24YMvm0UIFUHs0oJeGnSx1evitnSLdEc4wCp4My/XY/gWcjDpepy6i7aAr
+         +8Q4o9H3WCTovoZg4EjjWXR1CDlZ5cQvHzmmacQz2aK4wEbJqcpYMp5NAFqkxZ1iTgqG
+         S58omo0hZLudRuScRY1JOq4F9mZ/U22nBLDt7amC4eaCqTb8VdeysD5VHT5epWSfoZrO
+         jWc5n8SCpg8m+GzDDmeYPWYGsb8vk42IICG+4P0UKvQYqk6ZbO34Jmq5+4pyWBwpxmQy
+         syDofhr9aKFyThw+oOSv5AGcq3Vw9+DJ6NIuJTyX/g4hzzEITwC2fOdlkrJlb5pBcxfB
+         3hDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=2fKN5lB5E97AFklcPW2OKcQHBfR9S0UWEJIP7OKzhUE=;
-        b=eECMej3rlv7Ous89zxIbH5TEiNsX0n2W8zZdxBHYNQOakaSYRDL8wZnH8jYzuYDLrX
-         fR5W6lynpn80NZx2bnvnNpUmQIAomDyEPK+x0mfE40q7Gu9rtBui+iLB+6WO4/96MHkh
-         zPE7wuxQTf+2IiJGc+dqmH/SFeRXf/6243hvFwv0y0u+WulWihdMECi0aowuQzOpSRep
-         tF3sFQNMdpnXXaMIUC+pfX3R2WAP1Oc4Kb7yJNSPTc49lcnUQnbIMH1yCPcnFAy4Vz4p
-         hu/QUu3S6X/6soC0TpBbShZ/v63+zltLjAml7w+7fypC+JaNMz6gjd7VlJHZabkEBySa
-         2Zyw==
-X-Gm-Message-State: AOAM532w1z3FcIDOb8akIVS4snTsIqges0oGC7sseLl4PVc/eXOqXaTP
-        fIwdJC2ubVEcV4N6FZmbsItzGC0D
-X-Google-Smtp-Source: ABdhPJzMYJt3iPkYVzBzU9J2bIbwqErmt0KcNR895BK67GVv9jja+wMzPbg2478W0X1FTmolttq7bg==
-X-Received: by 2002:adf:e712:: with SMTP id c18mr2467810wrm.92.1596108098998;
-        Thu, 30 Jul 2020 04:21:38 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
-        by smtp.gmail.com with ESMTPSA id k184sm9212591wme.1.2020.07.30.04.21.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 04:21:37 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
-Cc:     Ofir Bitton <obitton@habana.ai>
-Subject: [PATCH] habanalabs: unmap PCI bars upon iATU failure
-Date:   Thu, 30 Jul 2020 14:21:34 +0300
-Message-Id: <20200730112134.17448-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IwjGvmHYj5CwlmD5GYkZzUlslsm23kbi+AR0fiLStwE=;
+        b=lTbD4w2FnBUwUmhxn+uoOWv2ZMq4Cm8im2Po7ZOE4pyy/mJb2ZeNsh2QNCdfL36H2t
+         RKS9tE6V7vgePbZn77VGSfv6kVk9oqCZbRrnWjc/ZCmHNAEu72wXBjQbBp6U4CYjqsII
+         EwqK6WNsuTlyNWqrcfNvAdlPfleC6v4dIBpe7MVsLHh+T++pFTGjjDV+cSyssa9wSZ8Z
+         d+MmGxRAT7+Bwdn8Gsi58d7yu8fJg4zAa1rSOGZj91pPScbKWXUtxGihDycicfY/ufH1
+         rDF7x2E6pgp8DDeKoz+9udPns8U7gBmtHb2gih1atCNLEoX32Gc8hCTTcm9iLjIw/0US
+         tzgg==
+X-Gm-Message-State: AOAM530a8rXjfXp+hfF9yDwVO4TW/H3meQKCGr0/NlI1smJ9fkvnAC08
+        jdTyrn+6SyvWkhqz1EDcZPzxuQ9/aQc=
+X-Google-Smtp-Source: ABdhPJzTziGmekPWyfescjKyJeiO2PR5tcws6T0uYoASSTkChMWbCnIJguIFL05p9WI6j/3pXu3YeQ==
+X-Received: by 2002:a17:902:bd8a:: with SMTP id q10mr33500723pls.236.1596108168933;
+        Thu, 30 Jul 2020 04:22:48 -0700 (PDT)
+Received: from localhost.localdomain ([122.224.153.227])
+        by smtp.gmail.com with ESMTPSA id s22sm351176pfh.16.2020.07.30.04.22.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 Jul 2020 04:22:48 -0700 (PDT)
+From:   Yanhu Cao <gmayyyha@gmail.com>
+To:     jlayton@kernel.org
+Cc:     idryomov@gmail.com, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yanhu Cao <gmayyyha@gmail.com>
+Subject: [PATCH] ceph: use frag's MDS in either mode
+Date:   Thu, 30 Jul 2020 19:22:42 +0800
+Message-Id: <20200730112242.31648-1-gmayyyha@gmail.com>
+X-Mailer: git-send-email 2.24.3 (Apple Git-128)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ofir Bitton <obitton@habana.ai>
+if frag.mds != cap->session->s_mds, the client's req will be resent.
 
-In case the driver fails to configure the PCI controller iATU, it needs to
-unmap the PCI bars before exiting so if the driver is removed, the bars
-won't be left mapped.
+e.g.
 
-Signed-off-by: Ofir Bitton <obitton@habana.ai>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+file: mnt/cephfs/dir03/dir003 (0x10000000003)
+ceph.dir.pin="1"
+
+echo 'aaa' > /mnt/cephfs/dir03/dir003/file29
+
+kernel: ceph:  __choose_mds 00000000ca362c7a is_hash=1 (0x7c768b89) mode 2
+kernel: ceph:  __choose_mds 00000000ca362c7a 10000000003.fffffffffffffffe frag 0 mds1 (auth)
+kernel: ceph:  __choose_mds 00000000ca362c7a 10000000003.fffffffffffffffe mds0 (auth cap 00000000679c38e2)
+kernel: ceph:  __choose_mds using resend_mds mds1
+
+Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
 ---
- drivers/misc/habanalabs/common/pci.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/ceph/mds_client.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/common/pci.c b/drivers/misc/habanalabs/common/pci.c
-index 7bd3737571f3..b8184cb49034 100644
---- a/drivers/misc/habanalabs/common/pci.c
-+++ b/drivers/misc/habanalabs/common/pci.c
-@@ -369,15 +369,17 @@ int hl_pci_init(struct hl_device *hdev)
- 	rc = hdev->asic_funcs->init_iatu(hdev);
- 	if (rc) {
- 		dev_err(hdev->dev, "Failed to initialize iATU\n");
--		goto disable_device;
-+		goto unmap_pci_bars;
- 	}
- 
- 	rc = hl_pci_set_dma_mask(hdev);
- 	if (rc)
--		goto disable_device;
-+		goto unmap_pci_bars;
- 
- 	return 0;
- 
-+unmap_pci_bars:
-+	hl_pci_bars_unmap(hdev);
- disable_device:
- 	pci_clear_master(pdev);
- 	pci_disable_device(pdev);
+diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+index a50497142e59..b2255a9be7c0 100644
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -1103,8 +1103,7 @@ static int __choose_mds(struct ceph_mds_client *mdsc,
+ 				     frag.frag, mds);
+ 				if (ceph_mdsmap_get_state(mdsc->mdsmap, mds) >=
+ 				    CEPH_MDS_STATE_ACTIVE) {
+-					if (mode == USE_ANY_MDS &&
+-					    !ceph_mdsmap_is_laggy(mdsc->mdsmap,
++					if (!ceph_mdsmap_is_laggy(mdsc->mdsmap,
+ 								  mds))
+ 						goto out;
+ 				}
 -- 
-2.17.1
+2.24.3 (Apple Git-128)
 
