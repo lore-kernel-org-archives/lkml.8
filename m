@@ -2,89 +2,152 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBFCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E25ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04CFE2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C16222070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096819;
-	bh=T3biC8fAhba8MjviyL4yDR2M3+hNkwZbDpM/vWpmI00=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=p2bCs7X6W6Ua7P/aoRWoPXLu8AburpYbjH7l3cM851rljDY3F8FVlT67dXwm8Snew
-	 EzPAL4lW2GeNa5/5dTAfHUR+d25EAnquTR5BAJNs085sZq6ylB91P+YpdC4xiM/ORN
-	 aAYmW+Kf79a0d43EhMLXp3GBWg9EIKRlk5No8hA8=
+	s=default; t=1596096822;
+	bh=pBNKik9CfN3KP4PD85GKjACxbLFUYWDevkMDVvDtMQs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=c+7ngmhVKfaLadg20TH3Fc3DcgyJCvKXDZDsoSGCvjGL/Z+TWReMDuFYlZSj5U1zD
+	 b7DoJJrbOrhiyl7K5hMy/DGmGzsPkWUP4TkM/O0X38gqy+/yq8I4xtpgml/qizz0d6
+	 8f+CEqMLreegBN6Li4Y1zmppmPPBBfy26teHpOGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbgG3INi (ORCPT
+        id S1730092AbgG3INl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:13:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52686 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:13:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730118AbgG3INV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:13:21 -0400
+        id S1730114AbgG3INQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:13:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1CD62250E;
-        Thu, 30 Jul 2020 08:13:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F138B21883;
+        Thu, 30 Jul 2020 08:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096797;
-        bh=T3biC8fAhba8MjviyL4yDR2M3+hNkwZbDpM/vWpmI00=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vU/yDBA39szoRMbGom7ozuJIvFIPNFzLrQ0BLlhx2dTG07enfiuMrySWDyFrAUVar
-         BhNT6lE8YWo/s20ztUPeX7hmEfPh74giY181mYbzBjcgg6BXZq793FEe/xqWWhKH+Z
-         ay2rNqi+EBk8aq0gvZpcc7QavBvRwuUxH5l1hFk8=
-Date:   Thu, 30 Jul 2020 10:06:39 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Sheng Long Wang <china_shenglong@163.com>
-Cc:     johan@kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jan.kiszka@siemens.com,
-        Wang Sheng Long <shenglong.wang.ext@siemens.com>
-Subject: Re: [PATCH] usb-serial:cp210x: add support to software flow control
-Message-ID: <20200730080639.GA216353@kroah.com>
-References: <20200730075922.28041-1-china_shenglong@163.com>
+        s=default; t=1596096794;
+        bh=pBNKik9CfN3KP4PD85GKjACxbLFUYWDevkMDVvDtMQs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nedeJ97pUQBLMyySW08n1MeNnuAKbdkxLyqxeybhYPeZTedCp/aYRYFi4F+xDTYEr
+         l4MEgWfhs+Q5DiYmMEVE8S8K2ZgcKJeqdcq3y4ZzPPepK13fHg4XyvGnyVzot3WpRo
+         4SOp1D5CqO0lZr/BKDLQgPgsOlzHLjh7OQ+x81dc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Daniel Winkler <danielwinkler@google.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Claire Chang <tientzu@chromium.org>
+Subject: [PATCH 4.4 33/54] serial: 8250_mtk: Fix high-speed baud rates clamping
+Date:   Thu, 30 Jul 2020 10:05:12 +0200
+Message-Id: <20200730074422.798025996@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
+References: <20200730074421.203879987@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730075922.28041-1-china_shenglong@163.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 03:59:22PM +0800, Sheng Long Wang wrote:
-> From: Wang Sheng Long <shenglong.wang.ext@siemens.com>
-> 
-> When data is transmitted between two serial ports,
-> the phenomenon of data loss often occurs. The two kinds
-> of flow control commonly used in serial communication
-> are hardware flow control and software flow control.
-> 
-> In serial communication, If you only use RX/TX/GND Pins, you
-> can't do hardware flow. So we often used software flow control
-> and prevent data loss. The user sets the software flow control
-> through the application program, and the application program
-> sets the software flow control mode for the serial port
-> chip through the driver.
-> 
-> For the cp210 serial port chip, its driver lacks the
-> software flow control setting code, so the user cannot set
-> the software flow control function through the application
-> program. This adds the missing software flow control.
-> 
-> Signed-off-by: Wang Sheng Long <shenglong.wang.ext@siemens.com>
-> ---
->  drivers/usb/serial/cp210x.c | 118 ++++++++++++++++++++++++++++++++++--
->  1 file changed, 113 insertions(+), 5 deletions(-)
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-What changed from the previous version of this patch?  That should be
-described below the --- line and this is a v2, right?
+commit 551e553f0d4ab623e2a6f424ab5834f9c7b5229c upstream.
 
-thanks,
+Commit 7b668c064ec3 ("serial: 8250: Fix max baud limit in generic 8250
+port") fixed limits of a baud rate setting for a generic 8250 port.
+In other words since that commit the baud rate has been permitted to be
+within [uartclk / 16 / UART_DIV_MAX; uartclk / 16], which is absolutely
+normal for a standard 8250 UART port. But there are custom 8250 ports,
+which provide extended baud rate limits. In particular the Mediatek 8250
+port can work with baud rates up to "uartclk" speed.
 
-greg k-h
+Normally that and any other peculiarity is supposed to be handled in a
+custom set_termios() callback implemented in the vendor-specific
+8250-port glue-driver. Currently that is how it's done for the most of
+the vendor-specific 8250 ports, but for some reason for Mediatek a
+solution has been spread out to both the glue-driver and to the generic
+8250-port code. Due to that a bug has been introduced, which permitted the
+extended baud rate limit for all even for standard 8250-ports. The bug
+has been fixed by the commit 7b668c064ec3 ("serial: 8250: Fix max baud
+limit in generic 8250 port") by narrowing the baud rates limit back down to
+the normal bounds. Unfortunately by doing so we also broke the
+Mediatek-specific extended bauds feature.
+
+A fix of the problem described above is twofold. First since we can't get
+back the extended baud rate limits feature to the generic set_termios()
+function and that method supports only a standard baud rates range, the
+requested baud rate must be locally stored before calling it and then
+restored back to the new termios structure after the generic set_termios()
+finished its magic business. By doing so we still use the
+serial8250_do_set_termios() method to set the LCR/MCR/FCR/etc. registers,
+while the extended baud rate setting procedure will be performed later in
+the custom Mediatek-specific set_termios() callback. Second since a true
+baud rate is now fully calculated in the custom set_termios() method we
+need to locally update the port timeout by calling the
+uart_update_timeout() function. After the fixes described above are
+implemented in the 8250_mtk.c driver, the Mediatek 8250-port should
+get back to normally working with extended baud rates.
+
+Link: https://lore.kernel.org/linux-serial/20200701211337.3027448-1-danielwinkler@google.com
+
+Fixes: 7b668c064ec3 ("serial: 8250: Fix max baud limit in generic 8250 port")
+Reported-by: Daniel Winkler <danielwinkler@google.com>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: stable <stable@vger.kernel.org>
+Tested-by: Claire Chang <tientzu@chromium.org>
+Link: https://lore.kernel.org/r/20200714124113.20918-1-Sergey.Semin@baikalelectronics.ru
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/tty/serial/8250/8250_mtk.c |   18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+--- a/drivers/tty/serial/8250/8250_mtk.c
++++ b/drivers/tty/serial/8250/8250_mtk.c
+@@ -47,8 +47,21 @@ mtk8250_set_termios(struct uart_port *po
+ 	struct uart_8250_port *up =
+ 		container_of(port, struct uart_8250_port, port);
+ 
++	/*
++	 * Store the requested baud rate before calling the generic 8250
++	 * set_termios method. Standard 8250 port expects bauds to be
++	 * no higher than (uartclk / 16) so the baud will be clamped if it
++	 * gets out of that bound. Mediatek 8250 port supports speed
++	 * higher than that, therefore we'll get original baud rate back
++	 * after calling the generic set_termios method and recalculate
++	 * the speed later in this method.
++	 */
++	baud = tty_termios_baud_rate(termios);
++
+ 	serial8250_do_set_termios(port, termios, old);
+ 
++	tty_termios_encode_baud_rate(termios, baud, baud);
++
+ 	/*
+ 	 * Mediatek UARTs use an extra highspeed register (UART_MTK_HIGHS)
+ 	 *
+@@ -91,6 +104,11 @@ mtk8250_set_termios(struct uart_port *po
+ 	 */
+ 	spin_lock_irqsave(&port->lock, flags);
+ 
++	/*
++	 * Update the per-port timeout.
++	 */
++	uart_update_timeout(port, termios->c_cflag, baud);
++
+ 	/* set DLAB we have cval saved in up->lcr from the call to the core */
+ 	serial_port_out(port, UART_LCR, up->lcr | UART_LCR_DLAB);
+ 	serial_dl_write(up, quot);
+
+
