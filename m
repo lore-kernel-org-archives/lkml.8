@@ -2,87 +2,83 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BA672075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:23:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SgqlNcWC"
+	by mail.kernel.org (Postfix) with ESMTP id 2B9A620838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:23:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbgG3KX1 (ORCPT
+        id S1729342AbgG3KXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 06:23:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726883AbgG3KX1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 06:23:27 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D974C061794;
-        Thu, 30 Jul 2020 03:23:27 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id lx9so4087556pjb.2;
-        Thu, 30 Jul 2020 03:23:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1TfTR8Lp7hRKQ+lCxjn1lE5hq4Qzl/G7eGSS/NXpthA=;
-        b=SgqlNcWCpJUaLfLBwM02ixJFhCj4xCMvydh2bBlK+bU/6gsSrxVBlDeQqW3sdpjcpS
-         ql2RfXZF+/z5wYVZ/ajCmbuaaYFwlDRoMtZsfGOq3ojCNjBipuSwC7sM6Sj3sCmgibUy
-         6BA1LRisHrKgr+FDYaXgEvwAWX/59rj6nrI4DMNiJUwnbpIkbnwIUuhGUy1YWZOSTkbS
-         FOEeO5IMRy4z9Hlf2JoxUR9CVT+A55JjHX/Oyc33st0X9JSzbbb6+JGByea1m2/gSgm7
-         GEdwEooCZDqwu105hUNFFh5ZydPXtdoPyVxaHrr8C+PY5wnMAxmbX09kBmVoO7Edp0oa
-         fH9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1TfTR8Lp7hRKQ+lCxjn1lE5hq4Qzl/G7eGSS/NXpthA=;
-        b=bl4T4JIGxc8FFddlToWFW85vudh+QQeQN4poMPwo09PZjUKXY3rE2mo6wEEHUDkOVi
-         mIst3Gfm2UYzA4UAVcehh3+Qs25yE6wUyIm4R58RgalMnpNsHpzi0xBKaaK5TWFlnG9N
-         /6buocrWjp6rimlYHvLSntGvsGI6+SgdY7AHRZBu17mxOsKPrPV8F+0dXJyZNwdj/Idv
-         1T5ZdDpcm2FUpAviqOmvtXh3rkT5mu8GLszGCn7VSvONewmpW0IdeDINQx+VLd9NBc7u
-         RwAtVQ5M94yy6vCXupOvCnGPqX7ymc8YvBX1ao3eLQbCMp2ZDaCqKkC6I5FWsmGoGxZL
-         kXKg==
-X-Gm-Message-State: AOAM530xTT1ygyhLjiutS9N9RR48LPFZC1hBNyI2elKLHOpVadd0hwTc
-        qQOzursp/VBEPMYFZxguGJA=
-X-Google-Smtp-Source: ABdhPJwtUE3R0FEcG2no1f+PaKbEvfyDitIH4cyALH9m+3bRtaBL1KTwLLao4m/kkUElXedWB7iaRQ==
-X-Received: by 2002:aa7:91cd:: with SMTP id z13mr2664104pfa.133.1596104605709;
-        Thu, 30 Jul 2020 03:23:25 -0700 (PDT)
-Received: from gmail.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id t28sm2507739pgn.81.2020.07.30.03.23.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 03:23:25 -0700 (PDT)
-Date:   Thu, 30 Jul 2020 15:51:59 +0530
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v2] scsi: stex: use generic power management
-Message-ID: <20200730102159.GA595053@gmail.com>
-References: <20200730101658.576205-1-vaibhavgupta40@gmail.com>
+        Thu, 30 Jul 2020 06:23:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32790 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725892AbgG3KXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 06:23:54 -0400
+Received: from gaia (unknown [95.146.230.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4D202082E;
+        Thu, 30 Jul 2020 10:23:51 +0000 (UTC)
+Date:   Thu, 30 Jul 2020 11:23:49 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Quentin Perret <qperret@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Qian Cai <cai@lca.pw>, Sudeep Holla <sudeep.holla@arm.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH] arm, arm64: Fix selection of
+ CONFIG_SCHED_THERMAL_PRESSURE
+Message-ID: <20200730102348.GF25149@gaia>
+References: <20200729135718.1871-1-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200730101658.576205-1-vaibhavgupta40@gmail.com>
+In-Reply-To: <20200729135718.1871-1-valentin.schneider@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch is compile-tested only.
+On Wed, Jul 29, 2020 at 02:57:18PM +0100, Valentin Schneider wrote:
+> Qian reported that the current setup forgoes the Kconfig dependencies and
+> results in warnings such as:
+> 
+>   WARNING: unmet direct dependencies detected for SCHED_THERMAL_PRESSURE
+>     Depends on [n]: SMP [=y] && CPU_FREQ_THERMAL [=n]
+>     Selected by [y]:
+>     - ARM64 [=y]
+> 
+> Revert commit
+> 
+>   e17ae7fea871 ("arm, arm64: Select CONFIG_SCHED_THERMAL_PRESSURE")
+> 
+> and re-implement it by making the option default to 'y' for arm64 and arm,
+> which respects Kconfig dependencies (i.e. will remain 'n' if
+> CPU_FREQ_THERMAL=n).
+> 
+> Fixes: e17ae7fea871 ("arm, arm64: Select CONFIG_SCHED_THERMAL_PRESSURE")
+> Reported-by: Qian Cai <cai@lca.pw>
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> ---
+>  arch/arm/Kconfig   | 1 -
+>  arch/arm64/Kconfig | 1 -
+>  init/Kconfig       | 2 ++
+>  3 files changed, 2 insertions(+), 2 deletions(-)
 
-Thanks
-Vaibhav Gupta
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
