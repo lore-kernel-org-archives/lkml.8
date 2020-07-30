@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4BEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDDBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAE5020838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D126C2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096985;
-	bh=N9rfu8Rm9dG6SIRtmK83SO4PfCqaxsXzeswlY0y/zTI=;
+	s=default; t=1596096992;
+	bh=fK3nluCrsd7GJqBhfiZGDJK2iUkNilXgPplE97Uy3us=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q3Fc6wcHNxiu3dbq/H3UL5EZHL6Y/MdZBXK63kwf2un9FkdQVOzqXyFi9rBe7Yt+8
-	 ZzpJBe8Xzqsb2EuQi+11irVws0I3FqJ2IsIp/dUp3OlwlDK8uMLo5nWGQrDG1ivrvh
-	 e1h4nUtgKVjBvGVObJJiAOMivRPk1dqN9EVy8tNU=
+	b=hDlkuecSq9RKBuNWHxPDQymYIIorNBEm383feMbDxAD2xyuR+PrvuS6qmooIobeYd
+	 PuCb8lDxodqHhaZHUHgDQB6L5mcb0mBfIksYLCdfR2rlAJL7jMnzvtjqBCksyBYS10
+	 DMWX7p48h3RAFI7tKl6n/rohqlrZp+oz0Wk2qkpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729922AbgG3IQY (ORCPT
+        id S1730261AbgG3IQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:16:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50158 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:16:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729908AbgG3ILB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:11:01 -0400
+        id S1729263AbgG3IK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:10:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 325372070B;
-        Thu, 30 Jul 2020 08:11:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA9C120838;
+        Thu, 30 Jul 2020 08:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096660;
-        bh=N9rfu8Rm9dG6SIRtmK83SO4PfCqaxsXzeswlY0y/zTI=;
+        s=default; t=1596096658;
+        bh=fK3nluCrsd7GJqBhfiZGDJK2iUkNilXgPplE97Uy3us=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kAeX0+yiVxLJ2prMBOjdkFiqTeAw2LkImyZLH0Lsehrx2psnF4zA3QLAfFrYW2XYr
-         GVUFk1/m1VdZYkxYLR3ysJ/p7asnLk1nsTTeSqGjJe6kDhXYT0yzvTHRKxMqaR4IGp
-         0GnqY1pNoxJK7PccqI/XZ2kQaP0Zx9aKm+7VZCpc=
+        b=K1EQXe1+NuHym3RsNhK1pQuj6NMTuh5tKg4GbIXMTh6ieMFUjMrK4dNkYVhtv2rk/
+         KTklDnjcgu3wd11U9HlR9MwbAfgEOAq6YoiIGUM+sfi26jzahq0dfW6WnWT3tO20hk
+         u5OTKKFMFXvlFDcrnyBqZuk0fuzmyGmwStB9GspY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+e42d0746c3c3699b6061@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 12/54] ALSA: info: Drop WARN_ON() from buffer NULL sanity check
-Date:   Thu, 30 Jul 2020 10:04:51 +0200
-Message-Id: <20200730074421.806017336@linuxfoundation.org>
+        stable@vger.kernel.org, Aaron Merey <amerey@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Subject: [PATCH 4.4 11/54] uprobes: Change handle_swbp() to send SIGTRAP with si_code=SI_KERNEL, to fix GDB regression
+Date:   Thu, 30 Jul 2020 10:04:50 +0200
+Message-Id: <20200730074421.757727943@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
 References: <20200730074421.203879987@linuxfoundation.org>
@@ -60,43 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Oleg Nesterov <oleg@redhat.com>
 
-commit 60379ba08532eca861e933b389526a4dc89e0c42 upstream.
+commit fe5ed7ab99c656bd2f5b79b49df0e9ebf2cead8a upstream.
 
-snd_info_get_line() has a sanity check of NULL buffer -- both buffer
-itself being NULL and buffer->buffer being NULL.  Basically both
-checks are valid and necessary, but the problem is that it's with
-snd_BUG_ON() macro that triggers WARN_ON().  The latter condition
-(NULL buffer->buffer) can be met arbitrarily by user since the buffer
-is allocated at the first write, so it means that user can trigger
-WARN_ON() at will.
+If a tracee is uprobed and it hits int3 inserted by debugger, handle_swbp()
+does send_sig(SIGTRAP, current, 0) which means si_code == SI_USER. This used
+to work when this code was written, but then GDB started to validate si_code
+and now it simply can't use breakpoints if the tracee has an active uprobe:
 
-This patch addresses it by simply moving buffer->buffer NULL check out
-of snd_BUG_ON() so that spurious WARNING is no longer triggered.
+	# cat test.c
+	void unused_func(void)
+	{
+	}
+	int main(void)
+	{
+		return 0;
+	}
 
-Reported-by: syzbot+e42d0746c3c3699b6061@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200717084023.5928-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+	# gcc -g test.c -o test
+	# perf probe -x ./test -a unused_func
+	# perf record -e probe_test:unused_func gdb ./test -ex run
+	GNU gdb (GDB) 10.0.50.20200714-git
+	...
+	Program received signal SIGTRAP, Trace/breakpoint trap.
+	0x00007ffff7ddf909 in dl_main () from /lib64/ld-linux-x86-64.so.2
+	(gdb)
+
+The tracee hits the internal breakpoint inserted by GDB to monitor shared
+library events but GDB misinterprets this SIGTRAP and reports a signal.
+
+Change handle_swbp() to use force_sig(SIGTRAP), this matches do_int3_user()
+and fixes the problem.
+
+This is the minimal fix for -stable, arch/x86/kernel/uprobes.c is equally
+wrong; it should use send_sigtrap(TRAP_TRACE) instead of send_sig(SIGTRAP),
+but this doesn't confuse GDB and needs another x86-specific patch.
+
+Reported-by: Aaron Merey <amerey@redhat.com>
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200723154420.GA32043@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/info.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ kernel/events/uprobes.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/core/info.c
-+++ b/sound/core/info.c
-@@ -634,7 +634,9 @@ int snd_info_get_line(struct snd_info_bu
- {
- 	int c = -1;
- 
--	if (snd_BUG_ON(!buffer || !buffer->buffer))
-+	if (snd_BUG_ON(!buffer))
-+		return 1;
-+	if (!buffer->buffer)
- 		return 1;
- 	if (len <= 0 || buffer->stop || buffer->error)
- 		return 1;
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1875,7 +1875,7 @@ static void handle_swbp(struct pt_regs *
+ 	if (!uprobe) {
+ 		if (is_swbp > 0) {
+ 			/* No matching uprobe; signal SIGTRAP. */
+-			send_sig(SIGTRAP, current, 0);
++			force_sig(SIGTRAP, current);
+ 		} else {
+ 			/*
+ 			 * Either we raced with uprobe_unregister() or we can't
 
 
