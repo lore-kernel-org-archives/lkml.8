@@ -2,209 +2,91 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD54C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07956C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C91C62082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:02:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gIE2Bh+h"
+	by mail.kernel.org (Postfix) with ESMTP id D79422070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:03:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbgG3PCd (ORCPT
+        id S1729721AbgG3PDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:02:33 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:55250 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgG3PCc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 11:02:32 -0400
-Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 610CF20B4908;
-        Thu, 30 Jul 2020 08:02:30 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 610CF20B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1596121351;
-        bh=vKzSD0CcVGwc1leJ+1uee8TOPGRgvmYvqxvarqXtglA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gIE2Bh+h354aB27e8tSl3CCtSBrFMWO03GkwNede75VLrbyfSU1mD4qGsi9yrMJKN
-         h6tarjd4QEKaGhkjmBDFum+uyczMgX6OdnxBeSuNnoCMtW9N4iD6KWk8FoBzWxlVoJ
-         RpUPYUiY5a9CJPB7iEHxRdLIcX84FN2XbO06EkTU=
-Date:   Thu, 30 Jul 2020 10:02:28 -0500
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     zohar@linux.ibm.com, stephen.smalley.work@gmail.com,
-        casey@schaufler-ca.com, sashal@kernel.org, jmorris@namei.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/4] IMA: Add func to measure LSM state and policy
-Message-ID: <20200730150228.GV4181@sequoia>
-References: <20200730034724.3298-1-nramas@linux.microsoft.com>
- <20200730034724.3298-2-nramas@linux.microsoft.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730034724.3298-2-nramas@linux.microsoft.com>
+        Thu, 30 Jul 2020 11:03:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38006 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726353AbgG3PDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 11:03:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 5D927B57A;
+        Thu, 30 Jul 2020 15:03:53 +0000 (UTC)
+Date:   Thu, 30 Jul 2020 17:03:40 +0200
+Message-ID: <s5h8sf1caer.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Brent Lu <brent.lu@intel.com>
+Cc:     alsa-devel@alsa-project.org,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Sam McNally <sammc@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Daniel Stuart <daniel.stuart14@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Damian van Soelen <dj.vsoelen@gmail.com>
+Subject: Re: [PATCH v2 0/2] Add period size constraint for Atom Chromebook
+In-Reply-To: <1596096815-32043-1-git-send-email-brent.lu@intel.com>
+References: <1596096815-32043-1-git-send-email-brent.lu@intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-29 20:47:21, Lakshmi Ramasubramanian wrote:
-> Critical data structures of security modules need to be measured to
-> enable an attestation service to verify if the configuration and
-> policies for the security modules have been setup correctly and
-> that they haven't been tampered with at runtime. A new IMA policy is
-> required for handling this measurement.
+On Thu, 30 Jul 2020 10:13:33 +0200,
+Brent Lu wrote:
 > 
-> Define two new IMA policy func namely LSM_STATE and LSM_POLICY to
-> measure the state and the policy provided by the security modules.
-> Update ima_match_rules() and ima_validate_rule() to check for
-> the new func and ima_parse_rule() to handle the new func.
+> Two different constraints are implemented: one is in platform's CPU
+> DAI to enforce period sizes which are already used in Android BSP. The
+> other is in Atom Chromebook's machine driver to use 240 as period size.
 > 
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> ---
->  Documentation/ABI/testing/ima_policy |  9 ++++++++
->  security/integrity/ima/ima.h         |  2 ++
->  security/integrity/ima/ima_api.c     |  2 +-
->  security/integrity/ima/ima_policy.c  | 31 ++++++++++++++++++++++++----
->  4 files changed, 39 insertions(+), 5 deletions(-)
+> Changes since v1:
+> -Add comma at the end of media_period_size array declaration.
+
+Is it a hardware restriction?  Unless it's a must for some hardware
+issues, enforcing such a small period size is nothing but a drawback
+for a system without CRAS.
+
+
+thanks,
+
+Takashi
+
 > 
-> diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
-> index cd572912c593..b7c7fb548c0c 100644
-> --- a/Documentation/ABI/testing/ima_policy
-> +++ b/Documentation/ABI/testing/ima_policy
-> @@ -30,6 +30,7 @@ Description:
->  				[FIRMWARE_CHECK]
->  				[KEXEC_KERNEL_CHECK] [KEXEC_INITRAMFS_CHECK]
->  				[KEXEC_CMDLINE] [KEY_CHECK]
-> +				[LSM_STATE] [LSM_POLICY]
->  			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
->  			       [[^]MAY_EXEC]
->  			fsmagic:= hex value
-> @@ -125,3 +126,11 @@ Description:
->  		keys added to .builtin_trusted_keys or .ima keyring:
->  
->  			measure func=KEY_CHECK keyrings=.builtin_trusted_keys|.ima
-> +
-> +		Example of measure rule using LSM_STATE to measure LSM state:
-> +
-> +			measure func=LSM_STATE template=ima-buf
-> +
-> +		Example of measure rule using LSM_POLICY to measure LSM policy:
-> +
-> +			measure func=LSM_POLICY template=ima-ng
-> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index 38043074ce5e..1b5f4b2f17d0 100644
-> --- a/security/integrity/ima/ima.h
-> +++ b/security/integrity/ima/ima.h
-> @@ -200,6 +200,8 @@ static inline unsigned int ima_hash_key(u8 *digest)
->  	hook(POLICY_CHECK, policy)			\
->  	hook(KEXEC_CMDLINE, kexec_cmdline)		\
->  	hook(KEY_CHECK, key)				\
-> +	hook(LSM_STATE, lsm_state)			\
-> +	hook(LSM_POLICY, lsm_policy)			\
->  	hook(MAX_CHECK, none)
->  
->  #define __ima_hook_enumify(ENUM, str)	ENUM,
-> diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
-> index 4f39fb93f278..8c8b4e4a6493 100644
-> --- a/security/integrity/ima/ima_api.c
-> +++ b/security/integrity/ima/ima_api.c
-> @@ -176,7 +176,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
->   *		subj=, obj=, type=, func=, mask=, fsmagic=
->   *	subj,obj, and type: are LSM specific.
->   *	func: FILE_CHECK | BPRM_CHECK | CREDS_CHECK | MMAP_CHECK | MODULE_CHECK
-> - *	| KEXEC_CMDLINE | KEY_CHECK
-> + *	| KEXEC_CMDLINE | KEY_CHECK | LSM_STATE | LSM_POLICY
->   *	mask: contains the permission mask
->   *	fsmagic: hex value
->   *
-> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> index 07f033634b27..a0f5c39d9084 100644
-> --- a/security/integrity/ima/ima_policy.c
-> +++ b/security/integrity/ima/ima_policy.c
-> @@ -442,13 +442,20 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
->  {
->  	int i;
->  
-> -	if (func == KEY_CHECK) {
-> -		return (rule->flags & IMA_FUNC) && (rule->func == func) &&
-> -		       ima_match_keyring(rule, keyring, cred);
-> -	}
->  	if ((rule->flags & IMA_FUNC) &&
->  	    (rule->func != func && func != POST_SETATTR))
->  		return false;
-> +
-> +	switch (func) {
-> +	case KEY_CHECK:
-> +		return ima_match_keyring(rule, keyring, cred);
-> +	case LSM_STATE:
-> +	case LSM_POLICY:
-> +		return true;
-> +	default:
-> +		break;
-> +	}
-> +
->  	if ((rule->flags & IMA_MASK) &&
->  	    (rule->mask != mask && func != POST_SETATTR))
->  		return false;
-> @@ -1044,6 +1051,18 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
->  		if (ima_rule_contains_lsm_cond(entry))
->  			return false;
->  
-> +		break;
-> +	case LSM_STATE:
-> +	case LSM_POLICY:
-> +		if (entry->action & ~(MEASURE | DONT_MEASURE))
-> +			return false;
-> +
-> +		if (entry->flags & ~(IMA_FUNC | IMA_PCR))
-> +			return false;
-> +
-> +		if (ima_rule_contains_lsm_cond(entry))
-> +			return false;
-> +
->  		break;
->  	default:
->  		return false;
-> @@ -1176,6 +1195,10 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
->  				entry->func = KEXEC_CMDLINE;
->  			else if (strcmp(args[0].from, "KEY_CHECK") == 0)
->  				entry->func = KEY_CHECK;
-> +			else if (strcmp(args[0].from, "LSM_STATE") == 0)
-> +				entry->func = LSM_STATE;
-> +			else if (strcmp(args[0].from, "LSM_POLICY") == 0)
-> +				entry->func = LSM_POLICY;
-
-This patch generally looks really good to me with the exception of one
-thing...
-
-We should only accept rules with these specified hook functions when an
-LSM that has measurement support is enabled. This messes up the ordering
-of your patch series but it could be as simple as doing this:
-
-			else if (IS_ENABLED(CONFIG_SECURITY_SELINUX) &&
-				 strcmp(args[0].from, "LSM_STATE") == 0)
-				 entry->func = LSM_STATE;
-
-Or you could do something a little more complex, like what's done with
-CONFIG_IMA_LSM_RULES. You could create a CONFIG_IMA_MEASURE_LSM option
-that's default enabled but depends on CONFIG_SECURITY_SELINUX and then
-check for IS_ENABLED(CONFIG_IMA_MEASURE_LSM) in ima_parse_rule().
-
-I'd personally opt for just placing the
-IS_ENABLED(CONFIG_SECURITY_SELINUX) check directly into
-ima_parse_rule().
-
-Tyler
-
->  			else
->  				result = -EINVAL;
->  			if (!result)
+> Brent Lu (1):
+>   ASoC: intel: atom: Add period size constraint
+> 
+> Yu-Hsuan Hsu (1):
+>   ASoC: Intel: Add period size constraint on strago board
+> 
+>  sound/soc/intel/atom/sst-mfld-platform-pcm.c | 15 +++++++++++++++
+>  sound/soc/intel/boards/cht_bsw_max98090_ti.c | 14 +++++++++++++-
+>  sound/soc/intel/boards/cht_bsw_rt5645.c      | 14 +++++++++++++-
+>  3 files changed, 41 insertions(+), 2 deletions(-)
+> 
 > -- 
-> 2.27.0
+> 2.7.4
+> 
