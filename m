@@ -2,103 +2,109 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F305DC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9385C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF141206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80E00206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:30:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596094226;
+	bh=obI1cW5B2vkgbR1FTfLccdeC3SAat3jW9yYsILJxDWg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=scvKpOg+0/K6xqiAyvnkQd5SJEORDkBRW1HcURv2jUmsOHrPd2vfWEZFI/xxMM2HJ
+	 go8r2m4L9owsjQC1lesAKWurAQ1kpFfKaIUwVgXS96qSBCe0llyIqKh/IWuKwzVW2K
+	 O3MFVzxD9n51xanSXTgEHEIfCCATQey2Un+wDapE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbgG3HaV convert rfc822-to-8bit (ORCPT
+        id S1728984AbgG3HaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 03:30:21 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:47807 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgG3HaU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 03:30:20 -0400
-Received: from marcel-macbook.fritz.box (p4ff9f430.dip0.t-ipconnect.de [79.249.244.48])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 7D0B8CECF1;
-        Thu, 30 Jul 2020 09:40:19 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] Revert "Bluetooth: btusb: Disable runtime suspend on
- Realtek devices"
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <8DFB5D1A-AA7E-4960-9937-4FD00827937B@canonical.com>
-Date:   Thu, 30 Jul 2020 09:30:16 +0200
-Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        chromeos-bluetooth-upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        Bluetooth Kernel Mailing List 
-        <linux-bluetooth@vger.kernel.org>,
-        Alex Lu <alex_lu@realsil.com.cn>, linux-pm@vger.kernel.org,
-        Johan Hedberg <johan.hedberg@gmail.com>,
+        Thu, 30 Jul 2020 03:30:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54038 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726194AbgG3HaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 03:30:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 920F12070B;
+        Thu, 30 Jul 2020 07:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596094224;
+        bh=obI1cW5B2vkgbR1FTfLccdeC3SAat3jW9yYsILJxDWg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=orK/glA1/hvlkXbeRL/ErCXplRTG2IdEYTZIOuVeFybdLjUDj+ooPomqVXeg43nNx
+         KUv7nvvrlhzi9y8Gv4OlkglG+/K/2Ahej8yLlhBLQBriVuIocrEIT5rGr70LaYanAU
+         Vpzlk51SlSihnn6OD4YaDjfQGoXhb9AAHTM+tzuk=
+Date:   Thu, 30 Jul 2020 09:30:13 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     stable@vger.kernel.org, netdev@vger.kernel.org,
+        madalin.bucur@oss.nxp.com, camelia.groza@nxp.com,
+        joakim.tjernlund@infinera.com, fido_max@inbox.ru,
         linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <E52C04D8-67C6-4949-B988-A61F6FCD1434@holtmann.org>
-References: <20200729161740.1.Ib03d0827c8e48fc3df887fec698f79fa335c9274@changeid>
- <8DFB5D1A-AA7E-4960-9937-4FD00827937B@canonical.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+Subject: Re: [PATCH v2 stable-5.4.y] Revert "dpaa_eth: fix usage as DSA
+ master, try 3"
+Message-ID: <20200730073013.GC4045776@kroah.com>
+References: <20200624124517.3212326-1-olteanv@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624124517.3212326-1-olteanv@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kai-Heng,
-
->> On Jul 30, 2020, at 07:17, Abhishek Pandit-Subedi <abhishekpandit@chromium.org> wrote:
->> 
->> This reverts commit 7ecacafc240638148567742cca41aa7144b4fe1e.
->> 
->> Testing this change on a board with RTL8822CE, I found that enabling
->> autosuspend has no effect on the stability of the system. The board
->> continued working after autosuspend, suspend and reboot.
+On Wed, Jun 24, 2020 at 03:45:17PM +0300, Vladimir Oltean wrote:
+> From: Vladimir Oltean <vladimir.oltean@nxp.com>
 > 
-> The original issue was found on 8723DE. Do you have one to test with?
-> The rtw88 codebase has changed a lot and maybe it's already fixed in mainline.
-> Let me do some test and I'll report back.
+> This reverts commit 40a904b1c2e57b22dd002dfce73688871cb0bac8.
 > 
->> 
->> The original commit makes it impossible to enable autosuspend on working
->> systems so it should be reverted. Disabling autosuspend should be done
->> via module param or udev in userspace instead.
->> 
->> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
->> ---
->> We have a few Chromebooks using the RTL 8822CE part over USB and they
->> are running without problems with autosuspend enabled. While bringing up
->> a new board, I found some power regressions that I was able to narrow
->> down to this change so I'm requesting a revert.
->> 
->> I tested this on Hp Chromebook 14a (running 4.14 kernel and 5.4 kernel)
->> with this revert:
->> * Enabled autosuspend, used it normally with a HID device
->> * Suspended the Chromebook and verified it worked normally on resume
->> * Rebooted the Chromebook and verified Bluetooth was working on next
->> boot
->> 
->> I didn't see the issue that was originally reported with this fix. For
->> the original reporter, if you're still seeing this issue, there are
->> other ways to disable autosuspend for your device:
->> * set module param: enable_autosuspend=0
->> * change your kconfig so BT_HCIBTUSB_AUTOSUSPEND=n
->> * use a udev rule to disable autosuspend for specific vid:pid
->> 
->> Keeping this change in the kernel makes it impossible to enable
->> autosuspend so it should be reverted.
+> The patch is not wrong, but the Fixes: tag is. It should have been:
 > 
-> It's apparently a driver/firmware/hardware issue, so the fix should keep inside the kernel.
-> However, the fix can be more precise and target only 8723DE.
+> 	Fixes: 060ad66f9795 ("dpaa_eth: change DMA device")
+> 
+> which means that it's fixing a commit which was introduced in:
+> 
+> git tag --contains 060ad66f97954
+> v5.5
+> 
+> which then means it should have not been backported to linux-5.4.y,
+> where things _were_ working and now they're not.
+> 
+> Reported-by: Joakim Tjernlund <joakim.tjernlund@infinera.com>
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> ---
+> Changes in v1:
+> Adjusted the commit message from linux-4.19.y to linux-5.4.y
+> 
+> Changes in v2:
+> Fixed the sha1sum of the reverted commit.
+> 
+>  drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+> index 6683409fbd4a..4b21ae27a9fd 100644
+> --- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+> +++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+> @@ -2796,7 +2796,7 @@ static int dpaa_eth_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	/* Do this here, so we can be verbose early */
+> -	SET_NETDEV_DEV(net_dev, dev->parent);
+> +	SET_NETDEV_DEV(net_dev, dev);
+>  	dev_set_drvdata(dev, net_dev);
+>  
+>  	priv = netdev_priv(net_dev);
+> -- 
+> 2.25.1
+> 
 
-lets do that and lets do it quickly since the merge window is close. Otherwise I really have to revert that patch.
+Now queued up, thanks.
 
-Regards
-
-Marcel
-
+greg k-h
