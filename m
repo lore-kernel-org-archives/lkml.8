@@ -2,119 +2,113 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3594DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 04:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3321C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 04:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 053D222B43
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 04:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9315C2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 04:24:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PZg3x3E9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GRJbWIVR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbgG3EVp (ORCPT
+        id S1726544AbgG3EY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 00:21:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46520 "EHLO
+        Thu, 30 Jul 2020 00:24:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbgG3EVp (ORCPT
+        with ESMTP id S1725765AbgG3EY1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 00:21:45 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 400FFC061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 21:21:45 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id k23so26872278iom.10
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 21:21:45 -0700 (PDT)
+        Thu, 30 Jul 2020 00:24:27 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2477C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 21:24:27 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id m16so13092145pls.5
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 21:24:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6xpfl3EgxCfkX2czZsyELOLTTm2Qpx8o0HHjudwK3iQ=;
-        b=PZg3x3E96FLpVfIP4mXsw6BJZa4kPE724pl4xDKJ762RhlwGzZDB/XJH0kA7tI9NJk
-         0ueTo6zqLNzsEUaORTov6c7u0Uq/ToqZ8Yea7HoEB9fpHbs/5BM2hiimDiS/9POw6Kf6
-         oFw7JsCzJJjkwiLmiwwtgXzBOmuELSmpECDPP/7dipETJB4Wg58tR6d2cJU+uCEFRDQ5
-         WG/zSQGPATkSf89kIXWxTZPldDV3JuLOJ5SrLl53a//S0Fp3w35L6VmWkMFf0mnQJQtz
-         +CL/hxthboihNtBZXjHk4nzk4xKqvGnGejHab4KdvUR9nom+ka59A8bDCT6GuoLdEo/+
-         PVWg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5sgdtYzqTNVnuC7tTThaaFG3wxZ0ZxYzze4AncPyru0=;
+        b=GRJbWIVRXQ2chTvOGH7LcET+CS3EqdQ3FE2txXjNJJQd5NhQbwr1Bs1WJV09IAstre
+         c7nY+/7bByE/JMUWsVycHako7T8U+8AiWmGitjQiTfsigfC+SrZauFxZd+kdnTKC4o0B
+         ctRZULLQjmxvICgTh1WOqrF4pPYw12UCGrqRzCdKTQgBIlmm24e6szM/3PNuK7LqEcpv
+         3KhCahzYK/6fpdEyp9hZf65tcY9kSZd/yzFTCljxnTwobIZr05T4p1U6WIFp61VaL9iH
+         Cr1FAiKnrYVNWB7omYDjL6h5/REgvSqtYWq2OlLNN0a/DDDciMhCb0NLnRud1FD3iAqs
+         c6iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6xpfl3EgxCfkX2czZsyELOLTTm2Qpx8o0HHjudwK3iQ=;
-        b=Lkk7+C6sUGvhLGIjb0t/vlR9x542xbcjE5xfPhC2R3ZtdF/VWu73uArUpGSdCk5Xcr
-         4hrlxg6km+c6V83/ZlmD01Fj3WSk2cNOQJnAP8crXG+6+J9KaSpvBYVD7rHJoDCoVqES
-         8yXpUIKwv83+hO/8qrB/APfpNDR+ueG3XisbBzDYZaoAW2rwGCIMAIQJJVnRij4XUVxA
-         O7ZlhwBInUgmizfU8CFP6KYZRqnQdpt65+0T30Vio53dtbdjikOfjsvdINZ+e/WkUtfC
-         nViMdnAEiO+HYLrTbNyNruMM2iaZ9kME0B6aHe5YigTIz6JIGCtcNAcPQCAdULkD4M5A
-         Mp+A==
-X-Gm-Message-State: AOAM533mb+HzqwmgV63rDj91I96q/GdUDcqSEPCSkQvUPlI/e6HVP9on
-        t7q3W7BDKiKFET0er4N79acgi1i6Y96qC7ZkA05v3olEftY=
-X-Google-Smtp-Source: ABdhPJykIKJCHIXweVbFX5NqFGgm+dgBMuMyqp12O5YWh5nSx5UmBH6/j6/5tCLa+7uUqLnQcmkw5jGVyHRRpBmNCtw=
-X-Received: by 2002:a02:6066:: with SMTP id d38mr1479683jaf.105.1596082904664;
- Wed, 29 Jul 2020 21:21:44 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5sgdtYzqTNVnuC7tTThaaFG3wxZ0ZxYzze4AncPyru0=;
+        b=CpuBYYgrMVQs06FZdwtaLNMabEW1cwsKJlxSPHOkIJy9Olio1EvzTJJ9evUyTdILW/
+         HogebBYrE7ANd/brMtkWmhLJGfXDPoArhcdjNcPddPnU/rI8/DHULIaMODtHTbJfSqIR
+         H0qJn1JLw9qottnhW42pyU/VTcj7dV372cfzZ8H9gV9ixGK6JeiMhpPIelTbc/5cC3me
+         GMKHFyygsLH9mJvcLCLWxCYM4CS97skhtgX/3Y+wPs5nbCcy9hQh0fx7aCdK+16gae9r
+         MrKOT1bBd4MC/wY8VNaIrOKjCrWErFhsOzyTTGNTDl3ZrV9MqdRo9UVNvAzspeQbCXM5
+         D7Nw==
+X-Gm-Message-State: AOAM533bUXafC+B33wejHrTAErsMSVGQ1rkdEFPFTXvAMCvapJb2Zpof
+        Qv+pQyEXkc7cSMB0l+d+mCcOtA==
+X-Google-Smtp-Source: ABdhPJx1DHAbdahx3DDZViUcA0KPnnf1c9a/fhDZ4VrpcnC85CChhioBJu+ODR5uSLaHF1eR5NILUA==
+X-Received: by 2002:a17:902:a713:: with SMTP id w19mr31748049plq.146.1596083067140;
+        Wed, 29 Jul 2020 21:24:27 -0700 (PDT)
+Received: from localhost ([106.201.14.19])
+        by smtp.gmail.com with ESMTPSA id 9sm4158736pfy.177.2020.07.29.21.24.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 Jul 2020 21:24:26 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 09:54:23 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     rjw@rjwysocki.net, dietmar.eggemann@arm.com,
+        catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
+        linux@armlinux.org.uk, mingo@redhat.com, peterz@infradead.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/7] arch_topology: disable frequency invariance for
+ CONFIG_BL_SWITCHER
+Message-ID: <20200730042423.4j22udejluis7blw@vireshk-mac-ubuntu>
+References: <20200722093732.14297-1-ionela.voinescu@arm.com>
+ <20200722093732.14297-4-ionela.voinescu@arm.com>
 MIME-Version: 1.0
-References: <20200630142639.22770-1-david@redhat.com> <20200630142639.22770-3-david@redhat.com>
-In-Reply-To: <20200630142639.22770-3-david@redhat.com>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Thu, 30 Jul 2020 06:21:33 +0200
-Message-ID: <CAM9Jb+gGhg9umBKZRbkCDAAgqi+4VqMzN0BZ5v0hVPoR7gdhvA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/6] mm/page_isolation: don't dump_page(NULL) in set_migratetype_isolate()
-To:     David Hildenbrand <david@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200722093732.14297-4-ionela.voinescu@arm.com>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Right now, if we have two isolations racing, we might trigger the
-> WARN_ON_ONCE() and to dump_page(NULL), dereferencing NULL. Let's just
-> return directly.
->
-> In the future, we might want to report -EAGAIN to the caller instead, as
-> this could indicate a temporary isolation failure only.
->
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Michael S. Tsirkin <mst@redhat.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  mm/page_isolation.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-> index f6d07c5f0d34d..553b49a34cf71 100644
-> --- a/mm/page_isolation.c
-> +++ b/mm/page_isolation.c
-> @@ -29,10 +29,12 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
->         /*
->          * We assume the caller intended to SET migrate type to isolate.
->          * If it is already set, then someone else must have raced and
-> -        * set it before us.  Return -EBUSY
-> +        * set it before us.
->          */
-> -       if (is_migrate_isolate_page(page))
-> -               goto out;
-> +       if (is_migrate_isolate_page(page)) {
-> +               spin_unlock_irqrestore(&zone->lock, flags);
-> +               return -EBUSY;
-> +       }
->
->         /*
->          * FIXME: Now, memory hotplug doesn't call shrink_slab() by itself.
-> --
+On 22-07-20, 10:37, Ionela Voinescu wrote:
+> +++ b/drivers/base/arch_topology.c
+> @@ -27,6 +27,7 @@ __weak bool arch_freq_counters_available(struct cpumask *cpus)
+>  }
+>  DEFINE_PER_CPU(unsigned long, freq_scale) = SCHED_CAPACITY_SCALE;
+>  
+> +#ifndef CONFIG_BL_SWITCHER
+>  void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
+>  			 unsigned long max_freq)
+>  {
+> @@ -46,6 +47,7 @@ void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
+>  	for_each_cpu(i, cpus)
+>  		per_cpu(freq_scale, i) = scale;
+>  }
+> +#endif
 
-Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+I don't really like this change, the ifdef hackery is disgusting and
+then we are putting that in a completely different part of the kernel.
 
-> 2.26.2
->
->
+There are at least these two ways of solving this, maybe more:
+
+- Fix the bl switcher driver and add the complexity in it (which you
+  tried to do earlier).
+
+- Add a cpufreq flag to skip arch-set-freq-scale call.
+
+Rafael ?
+
+-- 
+viresh
