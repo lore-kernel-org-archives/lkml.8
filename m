@@ -2,145 +2,111 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 598ECC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0519C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39BC32072A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0BCA20809
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:03:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Isjp6sJO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="lI6HSdOs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbgG3JC3 (ORCPT
+        id S1728920AbgG3JDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 05:02:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33002 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbgG3JC1 (ORCPT
+        Thu, 30 Jul 2020 05:03:34 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:54833 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726819AbgG3JDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 05:02:27 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BA98C061794;
-        Thu, 30 Jul 2020 02:02:27 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b6so24118493wrs.11;
-        Thu, 30 Jul 2020 02:02:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6AdvSzH8Ud3oWLaS+qrTxwwZZQDqRX8Mvzyvl4juDeM=;
-        b=Isjp6sJOCLivxUv00q7fZSH+/0xUw2/Fz4Kyb1h+QlTNcVydr7vre/wbrI+E1Od6zM
-         dOBga5snkHQxgj+j7idiktj7U4baNVv84g5l1v95skr9FA+rp1Ur9VE1G3Zw206gj3Fs
-         1Txs3/d+fkTlY4Jxr1JA1bKwhhEQS36mizitqovJZ9YR77gPCiFGxRFCe6vcFCuapP9f
-         feay/4KoLVBbPCSN8Q/yUxqFugkeViyWPSAKmmLbcfdWQfLpQLbdVYAtcB66971H3kpw
-         VdzDoPThqaiVuB+lZ/hSkNKLRoet3eMcbmLNzOYP4AothWWOEPTnPmzjoq+a2kkxYTW8
-         rRUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6AdvSzH8Ud3oWLaS+qrTxwwZZQDqRX8Mvzyvl4juDeM=;
-        b=KumCDMtOEPknM9Nf40G9Ku5ksUt2Gu90ZGZyDdVuvgyvEFFncPE+Z/MCqxic3WzWaC
-         jb/JHvC/A3519hWx3rh49q3g7ehuYiTuOpVEbLT9KQ4Z1fZ38+rWfSVmm8EaBmxDSBol
-         M6W0ocTvFgw2XWE1gdH3Wly+thqPTTtWxndcgr4WQtGHt7oCXWpdEFrYB5E0r+E8+PN8
-         Rwj583auZKHVOS1ErIuy3yl6um4yRYgPe3x6aTzNrbr0WUqZpp3okTPCOsTU/ug0cvt/
-         H0GJ6eAdh5MQQqbZtFZ8YlLjHu0q2RYw/bAGuVV+3PpWIkAjhsVX7fnRN8ayV75j+t6/
-         BowA==
-X-Gm-Message-State: AOAM532me9WpaQ4z4DAHj9VZ5P933NaLD6CVuz9O7ZzkjfZe/amQqzAp
-        5m6qnVYW4Q1+lRcB5zDcD4g=
-X-Google-Smtp-Source: ABdhPJyf7RFP56DLxmpIyOGANhgyPuiolEwtFsmlL7gEqELMH0knJsUDmjdz1zG9fOpI5LqQbHF5jQ==
-X-Received: by 2002:a5d:414e:: with SMTP id c14mr1991900wrq.57.1596099746227;
-        Thu, 30 Jul 2020 02:02:26 -0700 (PDT)
-Received: from ziggy.stardust (81.172.57.81.dyn.user.ono.com. [81.172.57.81])
-        by smtp.gmail.com with ESMTPSA id g25sm7619605wmh.35.2020.07.30.02.02.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jul 2020 02:02:25 -0700 (PDT)
-Subject: Re: [v2,1/3] dt-binding: mediatek: mt8192: update mtk-wdt document
-To:     Crystal Guo <crystal.guo@mediatek.com>
-Cc:     "linux@roeck-us.net" <linux@roeck-us.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
+        Thu, 30 Jul 2020 05:03:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1596099811; x=1627635811;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=wG0qc9Qe3PmllwLgrljUElhepPvWWpfYNaS3kbDUyic=;
+  b=lI6HSdOsCb9fPW3NAwFhwI1/ga6hveAcvjMeWTtTo26KeaFBQY8lTUOA
+   jgH5GUDBWedrT07anJegr7pBnxpGprCBjWY0lPoFbHqwLzoBMQ0otMsP7
+   PUMeYJj0JyWRu4DAjcYMqZVlu96Azhbl4fi8Hll3gII8EI3hl50VKw+Kw
+   EpCNoQZbKP5RoYUzG6ORex9Owbql9mX+tltXmiqrpo4fHVNt6jHQqX667
+   Hw+QMr2Uy6CZWRcjvEHSwBJeKgj7qmzK4dCtAPJ5h6/lF1J2EQSNFbF/s
+   bjGSJDIDHb1Fem7QD2o+tXed61NuzLJdRx/Z9nl6s3bZbLHLP+uOFfhyP
+   w==;
+IronPort-SDR: /LnkmD0fcoQxRE5257n9DoPutsYPD8XlBWm6digJP66ACvdxM74XPMzlytKlYpjnMrRA93ypUC
+ JXRwfIqabsQ7nb+HaVxXrEZ/+CM+xOvpE+063JYq9StAxiWt1/hRHNFIplY0trc1nqKpxEiXgx
+ jlxMjL+PW+7HipneCPkmp5mBhtHtsDV1AvtHkxWSf76i1dQFUW0Utd30PCFJ85u3GJKv38hRvO
+ FvVn9LJT9bVlLqHKeEAdHqUp14VcCWViGm4zWDhD4xgfaA/fW0NhTE3eQBs8XEaazqwhEXwt9X
+ ixA=
+X-IronPort-AV: E=Sophos;i="5.75,413,1589266800"; 
+   d="scan'208";a="21081936"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 30 Jul 2020 02:03:30 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 30 Jul 2020 02:03:30 -0700
+Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Thu, 30 Jul 2020 02:03:27 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <ludovic.desroches@microchip.com>, <mturquette@linaro.org>,
+        <bbrezillon@kernel.org>
+CC:     <linux-clk@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        =?UTF-8?B?U2VpeWEgV2FuZyAo546L6L+65ZCbKQ==?= 
-        <seiya.wang@mediatek.com>,
-        =?UTF-8?B?RXJpbiBMbyAo576F6ZuF6b2hKQ==?= <erin.lo@mediatek.com>
-References: <1596016922-13184-1-git-send-email-crystal.guo@mediatek.com>
- <1596016922-13184-2-git-send-email-crystal.guo@mediatek.com>
- <c6ea8852-0381-0924-185e-083ea167f8fa@gmail.com>
- <1596072913.11360.12.camel@mhfsdcap03>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <47a351dd-7b67-6280-a80f-c5299a4f260a@gmail.com>
-Date:   Thu, 30 Jul 2020 11:02:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        <linux-kernel@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH] clk: at91: clk-main: update key before writing AT91_CKGR_MOR
+Date:   Thu, 30 Jul 2020 12:03:23 +0300
+Message-ID: <1596099803-1393-1-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <1596072913.11360.12.camel@mhfsdcap03>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+SAMA5D2 datasheet specifies on chapter 33.22.8 (PMC Clock Generator
+Main Oscillator Register) that writing any value other than
+0x37 on KEY field aborts the write operation. Use the key when
+selecting main clock parent.
 
+Fixes: 27cb1c2083373 ("clk: at91: rework main clk implementation")
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
+ drivers/clk/at91/clk-main.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-On 30/07/2020 03:35, Crystal Guo wrote:
-> On Wed, 2020-07-29 at 18:18 +0800, Matthias Brugger wrote:
->>
->> On 29/07/2020 12:02, Crystal Guo wrote:
->>> update mtk-wdt document for MT8192 platform
->>
->>
->> should be two patches. one fixing the compatibles and second adding new board.
->>
->>>
->>> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
->>> ---
->>>    Documentation/devicetree/bindings/watchdog/mtk-wdt.txt | 5 +++--
->>>    1 file changed, 3 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
->>> index 4dd36bd..e36ba60 100644
->>> --- a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
->>> +++ b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
->>> @@ -4,14 +4,15 @@ Required properties:
->>>    
->>>    - compatible should contain:
->>>    	"mediatek,mt2701-wdt", "mediatek,mt6589-wdt": for MT2701
->>> -	"mediatek,mt2712-wdt", "mediatek,mt6589-wdt": for MT2712
->>> +	"mediatek,mt2712-wdt": for MT2712
->>>    	"mediatek,mt6589-wdt": for MT6589
->>>    	"mediatek,mt6797-wdt", "mediatek,mt6589-wdt": for MT6797
->>>    	"mediatek,mt7622-wdt", "mediatek,mt6589-wdt": for MT7622
->>>    	"mediatek,mt7623-wdt", "mediatek,mt6589-wdt": for MT7623
->>>    	"mediatek,mt7629-wdt", "mediatek,mt6589-wdt": for MT7629
->>> -	"mediatek,mt8183-wdt", "mediatek,mt6589-wdt": for MT8183
->>> +	"mediatek,mt8183-wdt": for MT8183
->>
->> We will need to update the DTSI in a seperate patch as well.
-> 
-> Yes, this patch is based on
-> https://patchwork.kernel.org/patch/11690401/ , which modify description
-> for mt2712 and mt8183.
-> 
+diff --git a/drivers/clk/at91/clk-main.c b/drivers/clk/at91/clk-main.c
+index 5c83e899084f..cfae2f59df66 100644
+--- a/drivers/clk/at91/clk-main.c
++++ b/drivers/clk/at91/clk-main.c
+@@ -437,12 +437,17 @@ static int clk_sam9x5_main_set_parent(struct clk_hw *hw, u8 index)
+ 		return -EINVAL;
+ 
+ 	regmap_read(regmap, AT91_CKGR_MOR, &tmp);
+-	tmp &= ~MOR_KEY_MASK;
+ 
+ 	if (index && !(tmp & AT91_PMC_MOSCSEL))
+-		regmap_write(regmap, AT91_CKGR_MOR, tmp | AT91_PMC_MOSCSEL);
++		tmp = AT91_PMC_MOSCSEL;
+ 	else if (!index && (tmp & AT91_PMC_MOSCSEL))
+-		regmap_write(regmap, AT91_CKGR_MOR, tmp & ~AT91_PMC_MOSCSEL);
++		tmp = 0;
++	else
++		return 0;
++
++	regmap_update_bits(regmap, AT91_CKGR_MOR,
++			   AT91_PMC_MOSCSEL | MOR_KEY_MASK,
++			   tmp | AT91_PMC_KEY);
+ 
+ 	while (!clk_sam9x5_main_ready(regmap))
+ 		cpu_relax();
+-- 
+2.7.4
 
-I don't understand your comment. This patch modifies the binding. The link you 
-provide is from an older version of the series (which is called v2 as well...)
-
-So repeating myself: if you are updating the binding descritpion you will have 
-to update the dtsi as well as otherwise the binding and the dtsi are out of sync.
-
-Regards,
-Matthias
