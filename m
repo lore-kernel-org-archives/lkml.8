@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA45C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC73C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51A412074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E3A22075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:18:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596097131;
-	bh=NNlEVXo3UQ7qWHdlC8wROzn6n5lKu8TzbE3HTYTb5so=;
+	s=default; t=1596097133;
+	bh=Nnhd+w3yjRwiRlO24gBe/2VSKSr+yHLfg1IpWXs3ph4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AoyhWSsyHx64sGDgKqb4Yd5FZrbg1LLiMg9dsfeOpzdjXjTqH8/R013OrJJqwHOki
-	 9EJyrDrxdM4UNd7Nrl2vbJRMU6ul6d7NIYrBghcHgVsIf42FqD9PUc8Pt+BfIwTzIJ
-	 7y4a3MEaDEncvqGqhKGXE4yyyHkeXBl5Ksf4gFwg=
+	b=rGH9jDRegQXC3TO6q1yXLrjijY1l3Cfpg0KRmXKynzgu7Eos+ALJtW+gMaTG22wP4
+	 hYAAzvallt2bd91oyrqfDVIClcD6/liMZFwArikohQxISb0UWM31wWp+IhU/znu+NJ
+	 hTNiv+UpWQ4+yQC0lW0Ez0tNotqk/5XWRrDoR1oU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729583AbgG3IIZ (ORCPT
+        id S1730330AbgG3ISw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:08:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46498 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:18:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729163AbgG3IIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:08:17 -0400
+        id S1729580AbgG3IIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:08:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98E702074B;
-        Thu, 30 Jul 2020 08:08:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F363C20838;
+        Thu, 30 Jul 2020 08:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096497;
-        bh=NNlEVXo3UQ7qWHdlC8wROzn6n5lKu8TzbE3HTYTb5so=;
+        s=default; t=1596096504;
+        bh=Nnhd+w3yjRwiRlO24gBe/2VSKSr+yHLfg1IpWXs3ph4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rwub0oFdAv5xwfk1CNpVyYO3NQINCkE7IDNC9cFvVyetdSOPSfZ01+149XnY0EJzD
-         tKhtVi+al7NgFtZtom5QMLr6m8tE0hFdaXrp4Ck06FxkuDMDl/DgSX7b5QBOO/fIYm
-         q9wwn5VWoTggR4UH/dwEPJNgJ1d+KcoGeLvQTQLo=
+        b=BSbTxgO4y6s5ZWwPps4/96GjEcdBIgWZtvdeuArj42sv/squkHgIzmNh+m8zL+s0i
+         sCwxL6DwhLCOagSw1v27qXe3Qgw7V/uQlc0VDBi08X+kWyN7dqSzsczIivB/VmNbUI
+         BHWv9ijgRiegp61yuYv/baK8L0ngTIlcdL8nOQHk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaron Merey <amerey@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Subject: [PATCH 4.9 10/61] uprobes: Change handle_swbp() to send SIGTRAP with si_code=SI_KERNEL, to fix GDB regression
-Date:   Thu, 30 Jul 2020 10:04:28 +0200
-Message-Id: <20200730074421.323102663@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.9 13/61] btrfs: fix double free on ulist after backref resolution failure
+Date:   Thu, 30 Jul 2020 10:04:31 +0200
+Message-Id: <20200730074421.460046134@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074420.811058810@linuxfoundation.org>
 References: <20200730074420.811058810@linuxfoundation.org>
@@ -61,65 +60,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleg Nesterov <oleg@redhat.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit fe5ed7ab99c656bd2f5b79b49df0e9ebf2cead8a upstream.
+commit 580c079b5766ac706f56eec5c79aee4bf929fef6 upstream.
 
-If a tracee is uprobed and it hits int3 inserted by debugger, handle_swbp()
-does send_sig(SIGTRAP, current, 0) which means si_code == SI_USER. This used
-to work when this code was written, but then GDB started to validate si_code
-and now it simply can't use breakpoints if the tracee has an active uprobe:
+At btrfs_find_all_roots_safe() we allocate a ulist and set the **roots
+argument to point to it. However if later we fail due to an error returned
+by find_parent_nodes(), we free that ulist but leave a dangling pointer in
+the **roots argument. Upon receiving the error, a caller of this function
+can attempt to free the same ulist again, resulting in an invalid memory
+access.
 
-	# cat test.c
-	void unused_func(void)
-	{
-	}
-	int main(void)
-	{
-		return 0;
-	}
+One such scenario is during qgroup accounting:
 
-	# gcc -g test.c -o test
-	# perf probe -x ./test -a unused_func
-	# perf record -e probe_test:unused_func gdb ./test -ex run
-	GNU gdb (GDB) 10.0.50.20200714-git
-	...
-	Program received signal SIGTRAP, Trace/breakpoint trap.
-	0x00007ffff7ddf909 in dl_main () from /lib64/ld-linux-x86-64.so.2
-	(gdb)
+btrfs_qgroup_account_extents()
 
-The tracee hits the internal breakpoint inserted by GDB to monitor shared
-library events but GDB misinterprets this SIGTRAP and reports a signal.
+ --> calls btrfs_find_all_roots() passes &new_roots (a stack allocated
+     pointer) to btrfs_find_all_roots()
 
-Change handle_swbp() to use force_sig(SIGTRAP), this matches do_int3_user()
-and fixes the problem.
+   --> btrfs_find_all_roots() just calls btrfs_find_all_roots_safe()
+       passing &new_roots to it
 
-This is the minimal fix for -stable, arch/x86/kernel/uprobes.c is equally
-wrong; it should use send_sigtrap(TRAP_TRACE) instead of send_sig(SIGTRAP),
-but this doesn't confuse GDB and needs another x86-specific patch.
+     --> allocates ulist and assigns its address to **roots (which
+         points to new_roots from btrfs_qgroup_account_extents())
 
-Reported-by: Aaron Merey <amerey@redhat.com>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200723154420.GA32043@redhat.com
+     --> find_parent_nodes() returns an error, so we free the ulist
+         and leave **roots pointing to it after returning
+
+ --> btrfs_qgroup_account_extents() sees btrfs_find_all_roots() returned
+     an error and jumps to the label 'cleanup', which just tries to
+     free again the same ulist
+
+Stack trace example:
+
+ ------------[ cut here ]------------
+ BTRFS: tree first key check failed
+ WARNING: CPU: 1 PID: 1763215 at fs/btrfs/disk-io.c:422 btrfs_verify_level_key+0xe0/0x180 [btrfs]
+ Modules linked in: dm_snapshot dm_thin_pool (...)
+ CPU: 1 PID: 1763215 Comm: fsstress Tainted: G        W         5.8.0-rc3-btrfs-next-64 #1
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+ RIP: 0010:btrfs_verify_level_key+0xe0/0x180 [btrfs]
+ Code: 28 5b 5d (...)
+ RSP: 0018:ffffb89b473779a0 EFLAGS: 00010286
+ RAX: 0000000000000000 RBX: ffff90397759bf08 RCX: 0000000000000000
+ RDX: 0000000000000001 RSI: 0000000000000027 RDI: 00000000ffffffff
+ RBP: ffff9039a419c000 R08: 0000000000000000 R09: 0000000000000000
+ R10: 0000000000000000 R11: ffffb89b43301000 R12: 000000000000005e
+ R13: ffffb89b47377a2e R14: ffffb89b473779af R15: 0000000000000000
+ FS:  00007fc47e1e1000(0000) GS:ffff9039ac200000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00007fc47e1df000 CR3: 00000003d9e4e001 CR4: 00000000003606e0
+ DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ Call Trace:
+  read_block_for_search+0xf6/0x350 [btrfs]
+  btrfs_next_old_leaf+0x242/0x650 [btrfs]
+  resolve_indirect_refs+0x7cf/0x9e0 [btrfs]
+  find_parent_nodes+0x4ea/0x12c0 [btrfs]
+  btrfs_find_all_roots_safe+0xbf/0x130 [btrfs]
+  btrfs_qgroup_account_extents+0x9d/0x390 [btrfs]
+  btrfs_commit_transaction+0x4f7/0xb20 [btrfs]
+  btrfs_sync_file+0x3d4/0x4d0 [btrfs]
+  do_fsync+0x38/0x70
+  __x64_sys_fdatasync+0x13/0x20
+  do_syscall_64+0x5c/0xe0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ RIP: 0033:0x7fc47e2d72e3
+ Code: Bad RIP value.
+ RSP: 002b:00007fffa32098c8 EFLAGS: 00000246 ORIG_RAX: 000000000000004b
+ RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fc47e2d72e3
+ RDX: 00007fffa3209830 RSI: 00007fffa3209830 RDI: 0000000000000003
+ RBP: 000000000000072e R08: 0000000000000001 R09: 0000000000000003
+ R10: 0000000000000000 R11: 0000000000000246 R12: 00000000000003e8
+ R13: 0000000051eb851f R14: 00007fffa3209970 R15: 00005607c4ac8b50
+ irq event stamp: 0
+ hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+ hardirqs last disabled at (0): [<ffffffffb8eb5e85>] copy_process+0x755/0x1eb0
+ softirqs last  enabled at (0): [<ffffffffb8eb5e85>] copy_process+0x755/0x1eb0
+ softirqs last disabled at (0): [<0000000000000000>] 0x0
+ ---[ end trace 8639237550317b48 ]---
+ BTRFS error (device sdc): tree first key mismatch detected, bytenr=62324736 parent_transid=94 key expected=(262,108,1351680) has=(259,108,1921024)
+ general protection fault, probably for non-canonical address 0x6b6b6b6b6b6b6b6b: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC PTI
+ CPU: 2 PID: 1763215 Comm: fsstress Tainted: G        W         5.8.0-rc3-btrfs-next-64 #1
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+ RIP: 0010:ulist_release+0x14/0x60 [btrfs]
+ Code: c7 07 00 (...)
+ RSP: 0018:ffffb89b47377d60 EFLAGS: 00010282
+ RAX: 6b6b6b6b6b6b6b6b RBX: ffff903959b56b90 RCX: 0000000000000000
+ RDX: 0000000000000001 RSI: 0000000000270024 RDI: ffff9036e2adc840
+ RBP: ffff9036e2adc848 R08: 0000000000000000 R09: 0000000000000000
+ R10: 0000000000000000 R11: 0000000000000000 R12: ffff9036e2adc840
+ R13: 0000000000000015 R14: ffff9039a419ccf8 R15: ffff90395d605840
+ FS:  00007fc47e1e1000(0000) GS:ffff9039ac600000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00007f8c1c0a51c8 CR3: 00000003d9e4e004 CR4: 00000000003606e0
+ DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ Call Trace:
+  ulist_free+0x13/0x20 [btrfs]
+  btrfs_qgroup_account_extents+0xf3/0x390 [btrfs]
+  btrfs_commit_transaction+0x4f7/0xb20 [btrfs]
+  btrfs_sync_file+0x3d4/0x4d0 [btrfs]
+  do_fsync+0x38/0x70
+  __x64_sys_fdatasync+0x13/0x20
+  do_syscall_64+0x5c/0xe0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ RIP: 0033:0x7fc47e2d72e3
+ Code: Bad RIP value.
+ RSP: 002b:00007fffa32098c8 EFLAGS: 00000246 ORIG_RAX: 000000000000004b
+ RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fc47e2d72e3
+ RDX: 00007fffa3209830 RSI: 00007fffa3209830 RDI: 0000000000000003
+ RBP: 000000000000072e R08: 0000000000000001 R09: 0000000000000003
+ R10: 0000000000000000 R11: 0000000000000246 R12: 00000000000003e8
+ R13: 0000000051eb851f R14: 00007fffa3209970 R15: 00005607c4ac8b50
+ Modules linked in: dm_snapshot dm_thin_pool (...)
+ ---[ end trace 8639237550317b49 ]---
+ RIP: 0010:ulist_release+0x14/0x60 [btrfs]
+ Code: c7 07 00 (...)
+ RSP: 0018:ffffb89b47377d60 EFLAGS: 00010282
+ RAX: 6b6b6b6b6b6b6b6b RBX: ffff903959b56b90 RCX: 0000000000000000
+ RDX: 0000000000000001 RSI: 0000000000270024 RDI: ffff9036e2adc840
+ RBP: ffff9036e2adc848 R08: 0000000000000000 R09: 0000000000000000
+ R10: 0000000000000000 R11: 0000000000000000 R12: ffff9036e2adc840
+ R13: 0000000000000015 R14: ffff9039a419ccf8 R15: ffff90395d605840
+ FS:  00007fc47e1e1000(0000) GS:ffff9039ad200000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00007f6a776f7d40 CR3: 00000003d9e4e002 CR4: 00000000003606e0
+ DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+Fix this by making btrfs_find_all_roots_safe() set *roots to NULL after
+it frees the ulist.
+
+Fixes: 8da6d5815c592b ("Btrfs: added btrfs_find_all_roots()")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/events/uprobes.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/backref.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1885,7 +1885,7 @@ static void handle_swbp(struct pt_regs *
- 	if (!uprobe) {
- 		if (is_swbp > 0) {
- 			/* No matching uprobe; signal SIGTRAP. */
--			send_sig(SIGTRAP, current, 0);
-+			force_sig(SIGTRAP, current);
- 		} else {
- 			/*
- 			 * Either we raced with uprobe_unregister() or we can't
+--- a/fs/btrfs/backref.c
++++ b/fs/btrfs/backref.c
+@@ -1550,6 +1550,7 @@ static int __btrfs_find_all_roots(struct
+ 		if (ret < 0 && ret != -ENOENT) {
+ 			ulist_free(tmp);
+ 			ulist_free(*roots);
++			*roots = NULL;
+ 			return ret;
+ 		}
+ 		node = ulist_next(tmp, &uiter);
 
 
