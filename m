@@ -2,95 +2,179 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 812BCC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B69EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 617C1206F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B454206F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:38:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Rhg1GJu0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgG3Qhd (ORCPT
+        id S1729968AbgG3QiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 12:37:33 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57560 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgG3Qhd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 12:37:33 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id A8F7B8030866;
-        Thu, 30 Jul 2020 16:37:30 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 0mIXFzg4vNJg; Thu, 30 Jul 2020 19:37:30 +0300 (MSK)
-Date:   Thu, 30 Jul 2020 19:37:29 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/5] dmaengine: dw: Ignore burst setting for memory
- peripherals
-Message-ID: <20200730163729.azi6e2ket37choub@mobilestation>
-References: <20200730154545.3965-1-Sergey.Semin@baikalelectronics.ru>
- <20200730154545.3965-5-Sergey.Semin@baikalelectronics.ru>
- <20200730163122.GW3703480@smile.fi.intel.com>
+        Thu, 30 Jul 2020 12:38:12 -0400
+Received: from mail-dm6nam11on2068.outbound.protection.outlook.com ([40.107.223.68]:45685
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726353AbgG3QiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 12:38:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nZ//ti6FoYSmCggvWerSSzHb4jbMooQAHnMISqIHeNiKgVAkP++Mx7sYSZcUMGbjl1C19Vt6aYOqD8piLjt3F6TiQDAuINsowoRNAEPzij7PHPHCKIzKFRyPz9zF6A2/lbC/7QRqPnCeAHY7ApbFM4iguXJsmsh314AHSMZX9K+E8Hy36nwVG5WANTmsSJIUDqC86qBTs2QQnlbeXEDZ178heeQR/WQ5kGzDamBvrxr7I9TcF4258bg9iNuvTN5NtWfBjYLN5XCyH3lMPj8ESYwza3KebQBTt18Fo+rorFosCsvc2b6b9bn9YOZtzXtC+K+U9rp7/hIu2dTz/nMylA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sBYjKOTHnKTUFXuGdIU0TJ2NyRGmf/Dyh0LKfZO1TIA=;
+ b=GJ5+hDAJUAJ2CoP5p/KXaJnYkFrWFAIj9sUbxPDwRW9zG5IhPB9GMg9FbwVe5LffwS+NjEKkbul0cQud99q+y9qLI6kCTMt4njxCuJVxMvOX331uEihqBH0NKg0Bp6U0InEXyADbpiAF5ebcx8esclAVa4mPBpSF4fWx9m0yZL33EHcWx9I9TpJtLtxxLRHKBLUsCQi9E9fwDzQ3jshMT79Mif7BgOA6hEuLQGOogyNYhsaRyIssLp7YyTl/R/UWCh6FpBO8CtjMv9XCoI236gF7r3+BXcULmKLysoiuMEEaj5Lrpxgn0myUut5FScjJPASoe171jIGC3/E3tNeICQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sBYjKOTHnKTUFXuGdIU0TJ2NyRGmf/Dyh0LKfZO1TIA=;
+ b=Rhg1GJu0XITN6vX/YRUktRawxtPdHx4IgPM6t+EkrzywKDO8s9HpiDA4Xc2KhEWmgSqi5XIckQIOZzwwI/RmWFBJw5Gtoa78IfokB+mCpN7JvIdSKANBuS9g79XalbgmANkauDIq9J9oxK6LZ+P3m2MGznyZznbHpBCJSR9HoHI=
+Authentication-Results: linutronix.de; dkim=none (message not signed)
+ header.d=none;linutronix.de; dmarc=none action=none header.from=amd.com;
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
+ by SN6PR12MB2735.namprd12.prod.outlook.com (2603:10b6:805:69::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.19; Thu, 30 Jul
+ 2020 16:38:09 +0000
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::691c:c75:7cc2:7f2c]) by SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::691c:c75:7cc2:7f2c%6]) with mapi id 15.20.3216.033; Thu, 30 Jul 2020
+ 16:38:09 +0000
+Subject: RE: [PATCH v3 03/11] KVM: SVM: Change intercept_dr to generic
+ intercepts
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm list <kvm@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <159597929496.12744.14654593948763926416.stgit@bmoger-ubuntu>
+ <159597948692.12744.7037992839778140055.stgit@bmoger-ubuntu>
+ <CALMp9eRF-ScqaWG7vn2mxKmR4jWo7LYZiiicHksiZR9hh+G=-A@mail.gmail.com>
+ <3841a638-eb9e-fae6-a6b6-04fec0e64b50@redhat.com>
+From:   Babu Moger <babu.moger@amd.com>
+Message-ID: <2987e401-f021-a3a7-b4fa-c24ff6d0381b@amd.com>
+Date:   Thu, 30 Jul 2020 11:38:06 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <3841a638-eb9e-fae6-a6b6-04fec0e64b50@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DM5PR06CA0044.namprd06.prod.outlook.com
+ (2603:10b6:3:5d::30) To SN1PR12MB2560.namprd12.prod.outlook.com
+ (2603:10b6:802:26::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200730163122.GW3703480@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.236.31.79] (165.204.77.1) by DM5PR06CA0044.namprd06.prod.outlook.com (2603:10b6:3:5d::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.18 via Frontend Transport; Thu, 30 Jul 2020 16:38:07 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: dc25bafc-8bf4-4b09-2fba-08d834a6f116
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2735:
+X-Microsoft-Antispam-PRVS: <SN6PR12MB27352E6E245B340DA997D21495710@SN6PR12MB2735.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /YlHw2270mt1Bo5S4pUtz5CCA/Um4PrxuP1PNqq6UXQIInzyZpiDH9pbyVSkpTuBG3wxFyze2scgv1Nk5kKs0pncBZ+CFOXAJ77BG3Mtb/uVU4pNrOeJ+mVimMUyhVhET96xwyYnomfuqcPU4bLedpCn8AiZCYvh6uXDLMrwDwpfmElBtGleew95SipSg7cxMS9tSc+b/YxUpPmbkBBAqmzBunTC+0x3WmWVAja0yV7OrN3qOzpYiKtMUqqXbtXBWZh0cnKTRzX+5bjVhbnPLdE9/OAGGvktuMEAIf53JDXUmQEjGcJ2L9rhvv8Xoxpky4r8liQAXxqFRN84R6LUR2GeMLoex4DiYW67lTnD8ZF037NPvJ3c5v2dOFGBInOiiaEB91tdVrnAas9n9IAM1Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(376002)(346002)(136003)(396003)(2906002)(53546011)(86362001)(31696002)(83380400001)(52116002)(6486002)(16526019)(8936002)(66476007)(66946007)(186003)(8676002)(4326008)(26005)(66556008)(316002)(36756003)(5660300002)(16576012)(54906003)(110136005)(478600001)(31686004)(956004)(44832011)(2616005)(7416002)(41533002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 8BGlUn66AbONHWI76ASjZFIndKkPpUdNFC6tWRBzIGqi+qVK8Nh4ZJTk34RVZpQojaite0M3aIIjVOkSGrwcpS93H3ZPSEVmlXWblqwKNPBpKBNt6eX81LQfv5UL+Z1F9TX3RTy8ZTfPHrj5rIyx3WBID8IzIJx+4LumiZEKykeB+U8fJESuXrJomqMTugCmPeGGN3zY3L/5+HaHi6L/AXPAJZuRsW7oW8YCQSlcfj6/LcEng1fMbjG5iBfJrGsBesnqf7WIaHA9LxCNvKhI1VqI9W256uTpvEjbrvlLNC964eENihrR7/7wNnR82XS3YnZmd62XobYNVZGs7/dINRo3LoX6cbUU+udUIgPVuMhKs520mLMQJp9IkeRV/1t0PCRszYToXb/iaxV92GaMueRw59HXjz0mgor358WZETWmaEfDx3kfkLlQGRp3lHbtaq9O1VSEoPMMmHAfVS1Y6+obG8zn6q0KsGOPUHnR1E+mhXAW322EBmQpOws9YyXI90Ww6nGKdomOznraQvwF0vaPK/bDe9mJiC0hB9XbLWQ65nxs/nmVd+orxpYBl9yEJEQ7YKyUqP71hof1vHx5UV+MYGqHeEPClgQgv5DFFwMMYNOOe22vdW5RSzSO5AcYzumrIZHdXTmGoxLECZlRMw==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc25bafc-8bf4-4b09-2fba-08d834a6f116
+X-MS-Exchange-CrossTenant-AuthSource: SN1PR12MB2560.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 16:38:08.9052
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: usQep8kA6GOUdZydRM2uHzeDoHsR3/buwUCa7YXf8KEjAykDHeCJELZ5vwhPsJwf
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2735
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 07:31:22PM +0300, Andy Shevchenko wrote:
-> On Thu, Jul 30, 2020 at 06:45:44PM +0300, Serge Semin wrote:
-> > According to the DW DMA controller Databook (page 40 "3.5 Memory
+
+
+> -----Original Message-----
+> From: Paolo Bonzini <pbonzini@redhat.com>
+> Sent: Wednesday, July 29, 2020 6:12 PM
+> To: Jim Mattson <jmattson@google.com>; Moger, Babu
+> <Babu.Moger@amd.com>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>; Wanpeng Li
+> <wanpengli@tencent.com>; Sean Christopherson
+> <sean.j.christopherson@intel.com>; kvm list <kvm@vger.kernel.org>; Joerg
+> Roedel <joro@8bytes.org>; the arch/x86 maintainers <x86@kernel.org>; LKML
+> <linux-kernel@vger.kernel.org>; Ingo Molnar <mingo@redhat.com>; Borislav
+> Petkov <bp@alien8.de>; H . Peter Anvin <hpa@zytor.com>; Thomas Gleixner
+> <tglx@linutronix.de>
+> Subject: Re: [PATCH v3 03/11] KVM: SVM: Change intercept_dr to generic
+> intercepts
 > 
+> On 29/07/20 01:59, Jim Mattson wrote:
+> >>         case SVM_EXIT_READ_DR0 ... SVM_EXIT_WRITE_DR7: {
+> >> -               u32 bit = 1U << (exit_code - SVM_EXIT_READ_DR0);
+> >> -               if (svm->nested.ctl.intercept_dr & bit)
+> >> +               if (__is_intercept(&svm->nested.ctl.intercepts,
+> >> + exit_code))
+> > Can I assume that all of these __<function> calls will become
+> > <function> calls when the grand unification is done? (Maybe I should
+> > just look ahead.)
+> >
+> 
+> The <function> calls are reserved for the active VMCB while these take a vector.
+> Probably it would be nicer to call them vmcb_{set,clr,is}_intercept and make
+> them take a struct vmcb_control_area*, but apart from that the concept is fine
+> 
+> Once we do the vmcb01/vmcb02/vmcb12 work, there will not be anymore
+> &svm->nested.ctl (replaced by &svm->nested.vmcb12->ctl) and we will be able
+> to change them to take a struct vmcb*.  Then is_intercept would for example be
+> simply:
+Yea. True. It makes the code even cleaner. Also we can avoid calling
+recalc_intercepts every time we set or clear a bit inside the same
+function(like init_vmcb).
 
-> Which version of it?
+Let me try to understand.
 
-2.18b
+vmcb01 is &svm->vmcb->control;l
+vmcb02 is &svm->nested.hsave->control
+vmcb12 is  &svm->nested.ctl;
+
+The functions set_intercept and clr_intercept calls get_host_vmcb to get
+the vmcb address.
+
+static inline struct vmcb *get_host_vmcb(struct vcpu_svm *svm)
+{
+        if (is_guest_mode(&svm->vcpu))
+                return svm->nested.hsave;
+        else
+                return svm->vmcb;
+}
+
+I need to study little bit when is_guest_mode Is on or off.  Let me take a
+look at.
+
+Thanks
 
 > 
-> > Peripherals") memory peripherals don't have handshaking interface
-> > connected to the controller, therefore they can never be a flow
-> > controller. Since the CTLx.SRC_MSIZE and CTLx.DEST_MSIZE are
-> > properties valid only for peripherals with a handshaking
-> > interface, we can freely zero these fields out if the memory peripheral
-> > is selected to be the source or the destination of the DMA transfers.
-> > 
-> > Note according to the databook, length of burst transfers to memory is
-> > always equal to the number of data items available in a channel FIFO or
-> > data items required to complete the block transfer, whichever is smaller;
-> > length of burst transfers from memory is always equal to the space
-> > available in a channel FIFO or number of data items required to complete
-> > the block transfer, whichever is smaller.
+> 	return vmcb_is_intercept(svm->vmcb, nr);
 > 
-
-> But does it really matter if you program there something or not?
-
-For memory peripherals it doesn't. But it's better to remove the redundant
-settings for consistency with the doc and to get rid of the unneeded
-stack-variable declaration.
-
--Sergey
-
+> as expected.
 > 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+> Paolo
+
