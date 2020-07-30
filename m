@@ -2,75 +2,100 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E21C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66351C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF84D2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:06:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596099985;
-	bh=ieC3UQSH9xTQQlFP1mBTpQK8Jaet0JuMdqnPvTiLzSc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qoFy0vxyLrAlJNjBR4L7bORTtUrYq+Aa465dQQ1D7mQRdrfK0YSqFRRj6FqmiZh5l
-	 7Yl2+KCa/X/miLMQnYSrRRN7Bw0Us5Aa4xlCgATeFxsQaZwfJ3Y5k6VXFqwG6fAyOu
-	 /OWtovkMn2lM1Q+6x0ucUt/rt0UuOK2zbLUnBnZs=
+	by mail.kernel.org (Postfix) with ESMTP id 5138020809
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:10:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729302AbgG3JGY (ORCPT
+        id S1728890AbgG3JKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 05:06:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42144 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 05:10:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:36742 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728528AbgG3JGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 05:06:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFDC92072A;
-        Thu, 30 Jul 2020 09:06:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596099983;
-        bh=ieC3UQSH9xTQQlFP1mBTpQK8Jaet0JuMdqnPvTiLzSc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z/OlMNCjgJjVCDEAUFFVbS7j9qnE79NsrCIar3YE+oLzkykZo4SyLPjtjBmvhhkcD
-         T9PkgtjWLgbnsiDPD6gD6YwuUd+7hajjK66mABoLrTUlc/yFV744DxvWyv+/e12Zv2
-         o7cXTtiuU4bHGqJbB2DKVrNBS9iI30MBTfDZpeMY=
-Date:   Thu, 30 Jul 2020 11:06:12 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     madvenka@linux.microsoft.com
-Cc:     kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, oleg@redhat.com,
-        x86@kernel.org
-Subject: Re: [PATCH v1 2/4] [RFC] x86/trampfd: Provide support for the
- trampoline file descriptor
-Message-ID: <20200730090612.GA900546@kroah.com>
-References: <aefc85852ea518982e74b233e11e16d2e707bc32>
- <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <20200728131050.24443-3-madvenka@linux.microsoft.com>
+        id S1726819AbgG3JKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 05:10:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A42C7D6E;
+        Thu, 30 Jul 2020 02:10:22 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 637473F792;
+        Thu, 30 Jul 2020 02:10:20 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 10:10:14 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        cristian.marussi@arm.com, rjw@rjwysocki.net,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 0/4] CPUFreq statistics retrieved by drivers
+Message-ID: <20200730091014.GA13158@bogus>
+References: <20200729151208.27737-1-lukasz.luba@arm.com>
+ <20200730085333.qubrsv7ufqninihd@vireshk-mac-ubuntu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200728131050.24443-3-madvenka@linux.microsoft.com>
+In-Reply-To: <20200730085333.qubrsv7ufqninihd@vireshk-mac-ubuntu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 08:10:48AM -0500, madvenka@linux.microsoft.com wrote:
-> +EXPORT_SYMBOL_GPL(trampfd_valid_regs);
+On Thu, Jul 30, 2020 at 02:23:33PM +0530, Viresh Kumar wrote:
+> On 29-07-20, 16:12, Lukasz Luba wrote:
+> > The existing CPUFreq framework does not tracks the statistics when the
+> > 'fast switch' is used or when firmware changes the frequency independently
+> > due to e.g. thermal reasons. However, the firmware might track the frequency
+> > changes and expose this to the kernel.
+> >
+> > This patch set aims to introduce CPUfreq statistics gathered by firmware
+> > and retrieved by CPUFreq driver. It would require a new API functions
+> > in the CPUFreq, which allows to poke drivers to get these stats.
+> >
+> > The needed CPUFreq infrastructure is in patch 1/4, patch 2/4 extends
+> > ARM SCMI protocol layer, patches 3/4, 4/4  modify ARM SCMI CPUFreq driver.
+>
+> Are you doing this for the fast switch case or because your platform
+> actually runs at frequencies which may be different from what cpufreq
+> core has requested ?
+>
 
-Why are all of these exported?  I don't see a module user in this
-series, or did I miss it somehow?
+I think so.
 
-EXPORT_SYMBOL* is only needed for symbols to be used by modules, not by
-code that is built into the kernel.
+> I am also not sure what these tables should represent, what the
+> cpufreq core has decided for the CPUs or the frequencies we actually
+> run at, as these two can be very different for example if the hardware
+> runs at frequencies which don't match exactly to what is there in the
+> freq table. I believe these are rather to show what cpufreq and its
+> governors are doing with the CPUs.
+>
 
-thanks,
+Exactly, I raised similar point in internal discussion and asked Lukasz
+to take up the same on the list. I assume it was always what cpufreq
+requested rather than what was delivered. So will we break the userspace
+ABI if we change that is the main question.
 
-greg k-h
+> Over that I would like the userspace stats to work exactly as the way
+> they work right now, i.e. capture all transitions from one freq to
+> other, not just time-in-state. Also resetting of the stats from
+> userspace for example. All allocation and printing of the data must be
+> done from stats core, the only thing which the driver would do at the
+> end is updating the stats structure and nothing more. Instead of
+> reading all stats from the firmware, it will be much easier if you can
+> just get the information from the firmware whenever there is a
+> frequency switch and then we can update the stats the way it is done
+> right now. And that would be simple.
+>
+
+Good point, but notifications may not be lightweight. If that is no good,
+alternatively, I suggested to keep these firmware stats in a separate
+debugfs. Thoughts ?
+
+--
+Regards,
+Sudeep
