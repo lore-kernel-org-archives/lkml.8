@@ -2,84 +2,89 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C976CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABAFC20809
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:53:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="VzisHPZ8"
+	by mail.kernel.org (Postfix) with ESMTP id 070D22083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:53:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730322AbgG3RxD (ORCPT
+        id S1730331AbgG3Rx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 13:53:03 -0400
-Received: from mout.gmx.net ([212.227.15.15]:37489 "EHLO mout.gmx.net"
+        Thu, 30 Jul 2020 13:53:58 -0400
+Received: from mga11.intel.com ([192.55.52.93]:36972 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgG3RxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 13:53:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1596131562;
-        bh=ziofVbDPyMepDQRodxoTHDhSQkTSPPyJObV8bPWtPoc=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=VzisHPZ8rHX/27/tdJTZGe0Knw1gxZZFH+Gs0xSVfHCITUTMuiLdvXehjs7KId8L0
-         XtAl1C6XNpM8xMtaISjmWjLRk+SNZu9yt5tBsjbfLCR38V39diIBj+/V7FC8tuPMRr
-         iSfF5SsVGE15kqZp6BV6ZJGpUKMjhuXFt/Damflg=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [217.61.153.170] ([217.61.153.170]) by web-mail.gmx.net
- (3c-app-gmx-bs42.server.lan [172.19.170.94]) (via HTTP); Thu, 30 Jul 2020
- 19:52:41 +0200
+        id S1726275AbgG3Rx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 13:53:56 -0400
+IronPort-SDR: 69vSudRU4FrcwkmxhHxA1hsqh4d1YLBzRLFqI1PVRBdA9M2xFPTfZBbDNzOXsZBhOd3Lorx0Md
+ /+YuqDA0n15A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="149489899"
+X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
+   d="scan'208";a="149489899"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 10:53:55 -0700
+IronPort-SDR: Fc6Z47lifP2sAA8iN/gjznggKHYN2Ve5qn8/4HVHpCiTtwAARK9r8DQuX2N/VHbhnGHeFZMWEz
+ mW/xHz/Bg/sw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
+   d="scan'208";a="321161314"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 30 Jul 2020 10:53:55 -0700
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
+        by linux.intel.com (Postfix) with ESMTP id 2139858010E;
+        Thu, 30 Jul 2020 10:53:55 -0700 (PDT)
+Message-ID: <0d4e8a8130e6a78ba3b6fcb3aee9858d22e5c23b.camel@linux.intel.com>
+Subject: Re: [PATCH V4 2/3] mfd: Intel Platform Monitoring Technology support
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Mark D Rustad <mrustad@gmail.com>, Lee Jones <lee.jones@linaro.org>
+Cc:     dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
+        alexander.h.duyck@linux.intel.com,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 30 Jul 2020 10:53:55 -0700
+In-Reply-To: <3DCA0A88-0890-49EE-8644-E6311E891C55@gmail.com>
+References: <20200714062323.19990-1-david.e.box@linux.intel.com>
+         <20200717190620.29821-3-david.e.box@linux.intel.com>
+         <20200728075859.GH1850026@dell>
+         <3DCA0A88-0890-49EE-8644-E6311E891C55@gmail.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Message-ID: <trinity-7671b933-7c8b-4967-9785-1994ffbd090d-1596131561877@3c-app-gmx-bs42>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Henry Yen <henry.yen@mediatek.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Steven Liu <steven.liu@mediatek.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Kao <michael.kao@mediatek.com>,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Aw: Re: [PATCH v2 1/2] thermal: mediatek: prepare to add support
- for other platforms
-Content-Type: text/plain; charset=UTF-8
-Date:   Thu, 30 Jul 2020 19:52:41 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <94d81c8a-2710-98a1-4cae-040e9b51fcd9@gmail.com>
-References: <1588238074-19338-1-git-send-email-henry.yen@mediatek.com>
- <1588238074-19338-2-git-send-email-henry.yen@mediatek.com>
- <94d81c8a-2710-98a1-4cae-040e9b51fcd9@gmail.com>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:B0nL+ATtvwAyy4RCra60ZlFLZfK70cMRXJYEps3ztLnlxLK3gcn9MyGnUiOpxnF0vzZwJ
- GYOw1yAEZFHaxM8v146laW3/ZOLx6LyJbSNMXzBB/F7QHiSGR5l5WzsKXrrwFDGfFpSEv/njZpgk
- ZASUvk/u6PkzmEZ3dRcEMvVIOMbUank8trxUvH8mz8xUCw29719kul5IrnlutqBTdFYzrzU+ojxW
- ro8wjUCNgp7MiYpepnm6CaiOm8Rmlls8c9MzSRkQtMDeSTziFYXLK/WnyT22ne1apfgl5gOsiGl8
- hI=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:AY1TYB4J/HM=:JN0ihmh5O4YRngTK21lUrk
- fGON3AijZ8jsJdOR4HawKEyV367AecVtwwIZvoLxiS+yQf7k9dFFc/toW1+K/MiXtQS/zO5B3
- b2tY/vWuyhRoQoi29HwBmIduDLcTtq/VuONNCpO4+l53R2XaSH6pzK3nns4xzcYK45yheK6ik
- 8zI1uB9KyJHjX56OxOScoc+GiKW3yjPyc9L14xeVFGrtxnIzxrs5NRB2645Ck3nQU/kQRSmNd
- RTNpWxEDkyMRPINJfQDvLCZ0lqtSPF4bXfL62yb/TDcLCOt6Ns6ufHAsuQ+P8wsL0HMVmsO90
- 6Ssv6sxjs2t82o5fQ9subWfJRnXdRyZQe3dBiFvYG2lx6ccdTTT4ED50vldcGct91msKIW70p
- 1Rb12/gMAp7HCanAxQQcduuhv8jmwIJW+cBdTxOiXIN+jaLTAFu9ZF8hVLv9CDT1elWZst/7I
- XXnwyTVJ0gUgV5FKdd7n86MLaFcYnivPUewUdSwm90jrg28I1l7ApDt9RBbI38/sgSFALbKvW
- dxtytUJ8kHbbQnZQ9dC8WSmIWv25265LDG3A+2z8lQgda3B3WxcGQt4x3EJEYzxgSb1hvufeG
- Ec6X8XVlOUUF5ZkKsLryPmFT/vb4loOGUhvogdEwrRuiiEm01Y+8V8mi+GCpamusMdgfduGaU
- PTBDVL1a0BEg8Je2AZFwaFXB83TATE79v3wiijcxmAEsWJhZ6/mI5g3NGo57z2gMo5Cw=
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tested on bpi-r64 and r2, i hope this can be merged to next / 5.9
+On Wed, 2020-07-29 at 15:59 -0700, Mark D Rustad wrote:
+> at 12:58 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> 
+> > If you do:
+> > 
+> > 	do {
+> > 		int pos;
+> > 
+> > 		pos = pci_find_next_ext_capability(pdev, pos,
+> > PCI_EXT_CAP_ID_DVSEC);
+> > 		if (!pos)
+> > 			break;
+> > 
+> > Then you can invoke pci_find_next_ext_capability() once, no?
+> 
+> Part of your suggestion here won't work, because pos needs to be  
+> initialized to 0 the first time. As such it needs to be declared
+> and  
+> initialized outside the loop. Other than that it may be ok.
 
-Tested-By: Frank Wunderlich <frank-w@public-files.de>
+Already done in V5. Thanks.
 
-regards Frank
+David
+
