@@ -2,187 +2,297 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A708C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDFAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE7E2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:32:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 522352082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:34:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CAkTfwVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727808AbgG3LcV (ORCPT
+        id S1727788AbgG3Lev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 07:32:21 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3160 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726615AbgG3LcV (ORCPT
+        Thu, 30 Jul 2020 07:34:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56512 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbgG3Leu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 07:32:21 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06UBW5MM026230;
-        Thu, 30 Jul 2020 07:32:12 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32kv5rj4q2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Jul 2020 07:32:11 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06UBW9cu026634;
-        Thu, 30 Jul 2020 07:32:11 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32kv5rj4hc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Jul 2020 07:32:11 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06UBKROE016839;
-        Thu, 30 Jul 2020 11:31:56 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06ams.nl.ibm.com with ESMTP id 32gcqgp3wr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Jul 2020 11:31:56 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06UBVrQT9568562
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Jul 2020 11:31:53 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ACC43520C9;
-        Thu, 30 Jul 2020 11:31:51 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.51.62])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 893CB52133;
-        Thu, 30 Jul 2020 11:31:20 +0000 (GMT)
-Subject: Re: [PATCH v7 2/2] s390: virtio: PV needs VIRTIO I/O device
- protection
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, cohuck@redhat.com,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-References: <1594801869-13365-1-git-send-email-pmorel@linux.ibm.com>
- <1594801869-13365-3-git-send-email-pmorel@linux.ibm.com>
- <20200715054807-mutt-send-email-mst@kernel.org>
- <bc5e09ad-faaf-8b38-83e0-5f4a4b1daeb0@redhat.com>
- <20200715074917-mutt-send-email-mst@kernel.org>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <e41d039c-5fe2-b9db-093b-c0dddcc2ad4f@linux.ibm.com>
-Date:   Thu, 30 Jul 2020 13:31:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 30 Jul 2020 07:34:50 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 791A1C061794;
+        Thu, 30 Jul 2020 04:34:50 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id z6so27896838iow.6;
+        Thu, 30 Jul 2020 04:34:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/cCy3e2/ARsCaPTvfDZ1uKfIB+o4G74oHwe5Mn6cKCA=;
+        b=CAkTfwVMKQWGuz9ekL1cJ3HgC/qgAGLTmvVrwvcx01jtGw6HYmAD8Pt9aQ0wWPq8dX
+         BBGkShFGHPYnAFuaPIaAVljma+aRynx8GrTI42nCbD1HNTK9iQnhL+gVAIhjqoe6ZtUJ
+         3EGZDx8UTtF6o4mEoKrmpQ+p7YVQdXnh+XMrXFRnm4OtB8q0v7m4qyZ9nfjSSYSDgTop
+         Sqj7uaYCx8TcapSGqvuPot/sdUTAeObLbMo6k0KL/axM1WR8EpHRdXEuYvrckcW0MkkX
+         rQysbHpIjupRsbJZFVFGxJKftGdT/IJlFhNxDYN4GuFe7M+0lKtaL7D0a9/LZcswsa6P
+         +wfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/cCy3e2/ARsCaPTvfDZ1uKfIB+o4G74oHwe5Mn6cKCA=;
+        b=NDhhRBM6DKeT3/UjymaGMVjqxVNGHbR4XywnHbHUKDVQ37ZjB5HVdkw+x2aYFM7yPj
+         kGB9Xc7WKaF/zW+LwTAzK78PthhluHwyIhEzDO4Cg8Qt2X89tn2ZO2QP4CQCi1wja4HV
+         kcN1ivwF9yTUxRuMJ8dy3fftpbdIdThBZD204jDYsV7F6hHHcMlqgTpc534RvuLQJUEN
+         uoiBoJlwJKO92gd1mRSuzcq6KGW1M8h+eqiSohnsWftLLQikuocnFlpHjPx11qSWyauI
+         D77ErTo0iS2YdfW9ydpn8Qd++MVRMOasSdevSezLtHhpTPXAfZQsUGX4X6fEpGTLxYxC
+         Q4CA==
+X-Gm-Message-State: AOAM530qH+2xU9tyC90DtgRvYyiRtdOQtKtAOKkngu++pcMvewhnkmWw
+        +B6zLh+5NytY8xr+Sc/a/hE8oSdemZ6yAsQLsTk=
+X-Google-Smtp-Source: ABdhPJyd4mFaZ3dVHSZ0+D3fgyXhU3yNg3UTIH3UHlRjZwBERyG5jEtfls1uM+yzJ3hkFSZsknSWsJ8rX5KHKVOeWtQ=
+X-Received: by 2002:a02:6d5d:: with SMTP id e29mr2778861jaf.139.1596108889675;
+ Thu, 30 Jul 2020 04:34:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200715074917-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-30_09:2020-07-30,2020-07-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0
- suspectscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0 adultscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007300082
+References: <20200729160942.28867-1-krzk@kernel.org> <20200729160942.28867-7-krzk@kernel.org>
+ <CA+Ln22F_PaEMNyEg4XSR0PXHTa+3dQyEvzgtnRNHMu61uZytQg@mail.gmail.com> <20200729191544.GB5822@kozik-lap>
+In-Reply-To: <20200729191544.GB5822@kozik-lap>
+From:   Tomasz Figa <tomasz.figa@gmail.com>
+Date:   Thu, 30 Jul 2020 13:34:38 +0200
+Message-ID: <CA+Ln22ED+-B96jf8p89sXpD2vmDLuteKXQiuKPy50vJ80MgSjA@mail.gmail.com>
+Subject: Re: [PATCH 6/7] ARM: s3c64xx: Switch to generic watchdog driver reset
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Kukjin Kim <kgene@kernel.org>,
+        Vincent Sanders <vince@simtec.co.uk>,
+        Simtec Linux Team <linux@simtec.co.uk>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:SAMSUNG SOC CLOCK DRIVERS" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        patches@opensource.cirrus.com,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        linux-watchdog@vger.kernel.org,
+        Sergio Prado <sergio.prado@e-labworks.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Cedric Roux <sed@free.fr>, Lihua Yao <ylhuajnu@outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+2020=E5=B9=B47=E6=9C=8829=E6=97=A5(=E6=B0=B4) 21:15 Krzysztof Kozlowski <kr=
+zk@kernel.org>:
+>
+> On Wed, Jul 29, 2020 at 07:33:33PM +0200, Tomasz Figa wrote:
+> > Hi Krzysztof,
+> >
+> > 2020=E5=B9=B47=E6=9C=8829=E6=97=A5(=E6=B0=B4) 18:11 Krzysztof Kozlowski=
+ <krzk@kernel.org>:
+> > >
+> > > Similarly to commit f6361c6b3880 ("ARM: S3C24XX: remove separate rest=
+art
+> > > code"), the platform watchdog reset code can be removed in favor of
+> > > a generic watchdog driver which already handles reset.
+> > >
+> > > This allows removal of a bunch of machine code and fixes also W=3D1
+> > > compile warnings:
+> > >
+> > >     arch/arm/plat-samsung/watchdog-reset.c:29:6: warning: no previous=
+ prototype for 'samsung_wdt_reset' [-Wmissing-prototypes]
+> > >        29 | void samsung_wdt_reset(void)
+> > >           |      ^~~~~~~~~~~~~~~~~
+> > >     arch/arm/plat-samsung/watchdog-reset.c:69:13: warning: no previou=
+s prototype for 'samsung_wdt_reset_of_init' [-Wmissing-prototypes]
+> > >        69 | void __init samsung_wdt_reset_of_init(void)
+> > >           |             ^~~~~~~~~~~~~~~~~~~~~~~~~
+> > >     arch/arm/plat-samsung/watchdog-reset.c:89:13: warning: no previou=
+s prototype for 'samsung_wdt_reset_init' [-Wmissing-prototypes]
+> > >        89 | void __init samsung_wdt_reset_init(void __iomem *base)
+> > >
+> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > ---
+> > >  arch/arm/mach-s3c64xx/Kconfig           |  3 +-
+> > >  arch/arm/mach-s3c64xx/common.c          | 15 +---
+> > >  arch/arm/mach-s3c64xx/common.h          |  2 -
+> > >  arch/arm/mach-s3c64xx/mach-anw6410.c    |  1 -
+> > >  arch/arm/mach-s3c64xx/mach-crag6410.c   |  1 -
+> > >  arch/arm/mach-s3c64xx/mach-hmt.c        |  1 -
+> > >  arch/arm/mach-s3c64xx/mach-mini6410.c   |  1 -
+> > >  arch/arm/mach-s3c64xx/mach-ncp.c        |  1 -
+> > >  arch/arm/mach-s3c64xx/mach-real6410.c   |  1 -
+> > >  arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c | 17 -----
+> > >  arch/arm/mach-s3c64xx/mach-smartq5.c    |  1 -
+> > >  arch/arm/mach-s3c64xx/mach-smartq7.c    |  1 -
+> > >  arch/arm/mach-s3c64xx/mach-smdk6400.c   |  1 -
+> > >  arch/arm/mach-s3c64xx/mach-smdk6410.c   |  1 -
+> > >  arch/arm/mach-s3c64xx/watchdog-reset.h  | 16 -----
+> > >  arch/arm/plat-samsung/Kconfig           |  6 --
+> > >  arch/arm/plat-samsung/Makefile          |  1 -
+> > >  arch/arm/plat-samsung/watchdog-reset.c  | 93 -----------------------=
+--
+> > >  18 files changed, 5 insertions(+), 158 deletions(-)
+> > >  delete mode 100644 arch/arm/mach-s3c64xx/watchdog-reset.h
+> > >  delete mode 100644 arch/arm/plat-samsung/watchdog-reset.c
+> > >
+> >
+> > Thanks for the patch! Please see my comments inline.
+> >
+> > > diff --git a/arch/arm/mach-s3c64xx/Kconfig b/arch/arm/mach-s3c64xx/Kc=
+onfig
+> > > index e208c2b48853..f3fcb570edf5 100644
+> > > --- a/arch/arm/mach-s3c64xx/Kconfig
+> > > +++ b/arch/arm/mach-s3c64xx/Kconfig
+> > > @@ -18,9 +18,10 @@ menuconfig ARCH_S3C64XX
+> > >         select PM_GENERIC_DOMAINS if PM
+> > >         select S3C_DEV_NAND if ATAGS
+> > >         select S3C_GPIO_TRACK if ATAGS
+> > > +       select S3C2410_WATCHDOG
+> > >         select SAMSUNG_ATAGS if ATAGS
+> > >         select SAMSUNG_WAKEMASK if PM
+> > > -       select SAMSUNG_WDT_RESET
+> > > +       select WATCHDOG
+> > >         help
+> > >           Samsung S3C64XX series based systems
+> > >
+> > > diff --git a/arch/arm/mach-s3c64xx/common.c b/arch/arm/mach-s3c64xx/c=
+ommon.c
+> > > index a655bf0c7802..42e96d196f61 100644
+> > > --- a/arch/arm/mach-s3c64xx/common.c
+> > > +++ b/arch/arm/mach-s3c64xx/common.c
+> > > @@ -50,7 +50,6 @@
+> > >
+> > >  #include "common.h"
+> > >  #include "irq-uart.h"
+> > > -#include "watchdog-reset.h"
+> > >
+> > >  /* External clock frequency */
+> > >  static unsigned long xtal_f __ro_after_init =3D 12000000;
+> > > @@ -232,10 +231,11 @@ void __init s3c64xx_init_irq(u32 vic0_valid, u3=
+2 vic1_valid)
+> > >         /*
+> > >          * FIXME: there is no better place to put this at the moment
+> > >          * (s3c64xx_clk_init needs ioremap and must happen before ini=
+t_time
+> > > -        * samsung_wdt_reset_init needs clocks)
+> > > +        * samsung_wdt_reset_init needs clocks).  However
+> > > +        * samsung_wdt_reset_init() was removed in favor of watchdog =
+driver
+> > > +        * so this should be revised.
+> >
+> > This leaves the comment referring to an inexistent function.
+>
+> Yes, I left it as a reference/reason. Although might be quite confusing
+> now...
+>
+> >
+> > I wonder if this being here is actually a problem at all. It's legacy
+> > code and probably there isn't much value in reshuffling it further.
+> > Rather than that, we would probably want to make sure that everything
+> > migrated to DT and just drop the board files.
+>
+> Maybe let's remove the FIXME and leave the clock init. Since all these
+> times no one fixed the FIXME, so now with limited hardware access I do
+> not expect any movements here.
+>
 
-gentle ping.
+I think that would be fairly uncontroversial at this point.
 
+> >
+> > >          */
+> > >         s3c64xx_clk_init(NULL, xtal_f, xusbxti_f, soc_is_s3c6400(), S=
+3C_VA_SYS);
+> > > -       samsung_wdt_reset_init(S3C_VA_WATCHDOG);
+> > >
+> > >         printk(KERN_DEBUG "%s: initialising interrupts\n", __func__);
+> > >
+> > > @@ -429,12 +429,3 @@ static int __init s3c64xx_init_irq_eint(void)
+> > >         return 0;
+> > >  }
+> > >  arch_initcall(s3c64xx_init_irq_eint);
+> > > -
+> > > -void s3c64xx_restart(enum reboot_mode mode, const char *cmd)
+> > > -{
+> > > -       if (mode !=3D REBOOT_SOFT)
+> > > -               samsung_wdt_reset();
+> > > -
+> > > -       /* if all else fails, or mode was for soft, jump to 0 */
+> > > -       soft_restart(0);
+> >
+> > Does this remove the soft reboot capability? I'm not sure how much of
+> > a problem that would be, though.
+>
+> 1. No one cared about it in f6361c6b3880 :)
 
-On 2020-07-15 13:51, Michael S. Tsirkin wrote:
-> On Wed, Jul 15, 2020 at 06:16:59PM +0800, Jason Wang wrote:
->>
->> On 2020/7/15 下午5:50, Michael S. Tsirkin wrote:
->>> On Wed, Jul 15, 2020 at 10:31:09AM +0200, Pierre Morel wrote:
->>>> If protected virtualization is active on s390, the virtio queues are
->>>> not accessible to the host, unless VIRTIO_F_IOMMU_PLATFORM has been
->>>> negotiated. Use the new arch_validate_virtio_features() interface to
->>>> fail probe if that's not the case, preventing a host error on access
->>>> attempt.
->>>>
->>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->>>> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
->>>> Acked-by: Halil Pasic <pasic@linux.ibm.com>
->>>> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
->>>> ---
->>>>    arch/s390/mm/init.c | 28 ++++++++++++++++++++++++++++
->>>>    1 file changed, 28 insertions(+)
->>>>
->>>> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
->>>> index 6dc7c3b60ef6..d39af6554d4f 100644
->>>> --- a/arch/s390/mm/init.c
->>>> +++ b/arch/s390/mm/init.c
->>>> @@ -45,6 +45,7 @@
->>>>    #include <asm/kasan.h>
->>>>    #include <asm/dma-mapping.h>
->>>>    #include <asm/uv.h>
->>>> +#include <linux/virtio_config.h>
->>>>    pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
->>>> @@ -161,6 +162,33 @@ bool force_dma_unencrypted(struct device *dev)
->>>>    	return is_prot_virt_guest();
->>>>    }
->>>> +/*
->>>> + * arch_validate_virtio_features
->>>> + * @dev: the VIRTIO device being added
->>>> + *
->>>> + * Return an error if required features are missing on a guest running
->>>> + * with protected virtualization.
->>>> + */
->>>> +int arch_validate_virtio_features(struct virtio_device *dev)
->>>> +{
->>>> +	if (!is_prot_virt_guest())
->>>> +		return 0;
->>>> +
->>>> +	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
->>>> +		dev_warn(&dev->dev,
->>>> +			 "legacy virtio not supported with protected virtualization\n");
->>>> +		return -ENODEV;
->>>> +	}
->>>> +
->>>> +	if (!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
->>>> +		dev_warn(&dev->dev,
->>>> +			 "support for limited memory access required for protected virtualization\n");
->>>> +		return -ENODEV;
->>>> +	}
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>>    /* protected virtualization */
->>>>    static void pv_init(void)
->>>>    {
->>> What bothers me here is that arch code depends on virtio now.
->>> It works even with a modular virtio when functions are inline,
->>> but it seems fragile: e.g. it breaks virtio as an out of tree module,
->>> since layout of struct virtio_device can change.
->>
->>
->> The code was only called from virtio.c so it should be fine.
->>
->> And my understanding is that we don't need to care about the kABI issue
->> during upstream development?
->>
->> Thanks
-> 
-> No, but so far it has been convenient at least for me, for development,
-> to just be able to unload all of virtio and load a different version.
-> 
-> 
->>
->>>
->>> I'm not sure what to do with this yet, will try to think about it
->>> over the weekend. Thanks!
->>>
->>>
->>>> -- 
->>>> 2.25.1
-> 
+That was a different SoC family, though.
 
--- 
-Pierre Morel
-IBM Lab Boeblingen
+> 2. Exynos does not have it
+> 3. Does soft_restart really work? It would be worth to keep it if more
+>    or less it was working.
+
+Anyway, I guess there is no way to know other than just removing it.
+It can be always brought back if it turns out that someone needs it.
+Please just mention that in the commit message.
+
+With that addressed:
+
+Reviewed-by: Tomasz Figa <tomasz.figa@gmail.com>
+
+>
+> Best regards,
+> Krzysztof
+>
+> >
+> > [snip]
+> > > diff --git a/arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c b/arch/arm/mach-=
+s3c64xx/mach-s3c64xx-dt.c
+> > > index 1724f5ea5c46..09c4e8742629 100644
+> > > --- a/arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c
+> > > +++ b/arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c
+> > > @@ -12,7 +12,6 @@
+> > >  #include <mach/map.h>
+> > >
+> > >  #include "common.h"
+> > > -#include "watchdog-reset.h"
+> > >
+> > >  /*
+> > >   * IO mapping for shared system controller IP.
+> > > @@ -39,20 +38,6 @@ static void __init s3c64xx_dt_map_io(void)
+> > >                 panic("SoC is not S3C64xx!");
+> > >  }
+> > >
+> > > -static void __init s3c64xx_dt_init_machine(void)
+> > > -{
+> > > -       samsung_wdt_reset_of_init();
+> > > -}
+> > > -
+> > > -static void s3c64xx_dt_restart(enum reboot_mode mode, const char *cm=
+d)
+> > > -{
+> > > -       if (mode !=3D REBOOT_SOFT)
+> > > -               samsung_wdt_reset();
+> > > -
+> > > -       /* if all else fails, or mode was for soft, jump to 0 */
+> > > -       soft_restart(0);
+> >
+> > Ditto.
+> >
+> > Best regards,
+> > Tomasz
