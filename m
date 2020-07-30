@@ -2,179 +2,141 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D82ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A294EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2F5020809
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B5552075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:22:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hBfSVUuI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729023AbgG3KTg (ORCPT
+        id S1728945AbgG3KWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 06:19:36 -0400
-Received: from mailout10.rmx.de ([94.199.88.75]:48133 "EHLO mailout10.rmx.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726287AbgG3KTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 06:19:35 -0400
-Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mailout10.rmx.de (Postfix) with ESMTPS id 4BHRGp5lxyz36vg;
-        Thu, 30 Jul 2020 12:19:30 +0200 (CEST)
-Received: from mta.arri.de (unknown [217.111.95.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by kdin02.retarus.com (Postfix) with ESMTPS id 4BHRGZ0yJ6z2TTLy;
-        Thu, 30 Jul 2020 12:19:18 +0200 (CEST)
-Received: from n95hx1g2.localnet (192.168.54.117) by mta.arri.de
- (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Thu, 30 Jul
- 2020 12:18:57 +0200
-From:   Christian Eggers <ceggers@arri.de>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] iio: light: as73211: New driver
-Date:   Thu, 30 Jul 2020 12:18:56 +0200
-Message-ID: <2665878.D8vGGo3OXt@n95hx1g2>
-Organization: Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
-In-Reply-To: <20200728190114.00004636@Huawei.com>
-References: <20200728062831.1143-1-ceggers@arri.de> <20200728062831.1143-3-ceggers@arri.de> <20200728190114.00004636@Huawei.com>
+        Thu, 30 Jul 2020 06:22:16 -0400
+Received: from mail-eopbgr60089.outbound.protection.outlook.com ([40.107.6.89]:38285
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725892AbgG3KWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 06:22:15 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bV+0GZmtzjXdgXe9Xp72Rio3nguL7dB6+Pumzm4hvN0Cz0WP+bpGXlyFVRKsH/8mJAfaUwkIPwHLHs+w9osiRQMkvPoLE9JNxvmZgh5drQfPIOhFGjmawfndWHp8FO+auchhKD2BSbD4nY5E8w0lNusfTKB/traNSq9NYeO6buwEH5WDIaZS+gq9JMLwi3c1G38/8sp7RNArjgQkgiU07nO5FnmwaOWvW8XHdebsPVNaxdMRowX9dUR2kYSlfkxKorXiNzAgXlruMRUzwLptN2zvKDi4JB6/K/YMaDOlc3SZh97FLTS2x7b5v3P2Vy1jlFxPdSzTa2I87aRl2v1niA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xhDX0usYKyFSwfHA23XFSDaT8UCERO9Jou2prt5uSwI=;
+ b=DGcSkeZW4pI7tz6i+Z80hCcQlrLbHhthRIRfLw4eid/oCmfAuLfVJVjAZnU/uhykPhbwUOxX725m+BtxnDAZk8OLa3OtOI4r0LWFWhkDwJrL4t3aMp6w+3nFleW/oXcOXh9l2tl6IUmJySyjE78jysqMpS2FVIfJBnFbB12rrNMsJodzvAFduIgN0AZRFhIFVzWtplvXkq/dy06H33ZnIGYQ/mO/PsmXcxvsQMzC/RZhUGyL4goc/k5WU5QvBqSbT1C0KUnfvzVDEVS5LMk04O56SesIqtZnIy2jU3kSonl99Zx6Ytfjn9gWJ9FP66daHAUmoV7Q1IkIgPd/hhJQ5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xhDX0usYKyFSwfHA23XFSDaT8UCERO9Jou2prt5uSwI=;
+ b=hBfSVUuIbGq2J3AERK28QAli4ID42Z+H/7xXqoIYOBibHg6dSOtICJcJRBy8FLXNUeu9qDHnm15HPQuCDRX8kOVAFfoI0HP8fQlluqbI1uY3/watr5j+RMrc2Bmq70Sxmlt8/qpPkP22OhOijX6crw17aqt0FmQ7xOMrvyl9VKM=
+Authentication-Results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+Received: from DB7PR04MB5099.eurprd04.prod.outlook.com (2603:10a6:10:18::30)
+ by DB8PR04MB6924.eurprd04.prod.outlook.com (2603:10a6:10:11e::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Thu, 30 Jul
+ 2020 10:22:12 +0000
+Received: from DB7PR04MB5099.eurprd04.prod.outlook.com
+ ([fe80::f801:51e:28:f2a3]) by DB7PR04MB5099.eurprd04.prod.outlook.com
+ ([fe80::f801:51e:28:f2a3%4]) with mapi id 15.20.3239.019; Thu, 30 Jul 2020
+ 10:22:12 +0000
+From:   hongbo.wang@nxp.com
+To:     xiaoliang.yang_1@nxp.com, allan.nielsen@microchip.com,
+        po.liu@nxp.com, claudiu.manoil@nxp.com,
+        alexandru.marginean@nxp.com, vladimir.oltean@nxp.com,
+        leoyang.li@nxp.com, mingkai.hu@nxp.com, andrew@lunn.ch,
+        f.fainelli@gmail.com, vivien.didelot@gmail.com,
+        davem@davemloft.net, jiri@resnulli.us, idosch@idosch.org,
+        kuba@kernel.org, vinicius.gomes@intel.com,
+        nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        horatiu.vultur@microchip.com, alexandre.belloni@bootlin.com,
+        UNGLinuxDriver@microchip.com, ivecera@redhat.com
+Cc:     "hongbo.wang" <hongbo.wang@nxp.com>
+Subject: [PATCH v4 0/2] Add 802.1AD protocol support for dsa switch and ocelot driver
+Date:   Thu, 30 Jul 2020 18:25:03 +0800
+Message-Id: <20200730102505.27039-1-hongbo.wang@nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SGBP274CA0019.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::31)
+ To DB7PR04MB5099.eurprd04.prod.outlook.com (2603:10a6:10:18::30)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Originating-IP: [192.168.54.117]
-X-RMX-ID: 20200730-121918-4BHRGZ0yJ6z2TTLy-0@kdin02
-X-RMX-SOURCE: 217.111.95.66
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from whb-OptiPlex-790.ap.freescale.net (119.31.174.73) by SGBP274CA0019.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17 via Frontend Transport; Thu, 30 Jul 2020 10:22:05 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [119.31.174.73]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: c95ad15c-4c97-4618-9111-08d834726c37
+X-MS-TrafficTypeDiagnostic: DB8PR04MB6924:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB8PR04MB6924FBF0F1493DBB07A2533CE1710@DB8PR04MB6924.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: h4z08L5sOZXmoW6x55iy17jmbVa8eOSvYvHm/CE2dkECBJdNVtbJATkyOsIqGUBQw5IQIRUI0poQJaxyjnLvvrSU51tIutSp+4oOiPD23JXxGB4U86ELi51+mmOxPeZNEve7GtC9Vhcwj8VmfdDjH5da57uExFNOctbaYFFJgo0wmc6Aj6bKRYgqE7WOTXt+5RyRSyc7g2PYb5n+mkKB2Pl7ydtLdvAIWT5vZvv3NPILwX3P4msTgRczHS/fkH4JA0dwrGZ+acw7Y2s2dppcWy/2Ea4PVqcKU+rvdR9kk4/7q5jUDuunzcSe1ZZg42CXu3ETm2XlPSkWFPJQTFOCMS70hyaTXYcs2w1W29bGhW4uFe9JN31KrFbkwQZ6PXtl
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB5099.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(376002)(366004)(136003)(396003)(2906002)(83380400001)(36756003)(66476007)(66946007)(4326008)(66556008)(6486002)(7416002)(52116002)(8676002)(316002)(86362001)(6506007)(6512007)(9686003)(1076003)(26005)(2616005)(956004)(478600001)(186003)(5660300002)(8936002)(16526019)(921003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: rng0YGPoGA6CptCVTUacyjKkLgYlCz8kGek+c3VnL2dYJbN2HOoparw953aXFEArWK4aNyIFGbUepq3Be4VijYUnbzJojQIUE+uRyKqoqP65DpSRVJkBRpMxnV7jLYY2No4RDKwN9eWsZlzJi+ZzBX8UbgW/qH/sZat3eixTbaPloa+vQbCra4m1Sd4CjW+eJY9KV/4gqFUkViPMvvHmdYcUHssW+gpCXeWq/i7Ki7DQpf70rF9QPzrDyWXtxvt/Gc20rusp+nMJuNdJ3Y0HKLmxXo/OpR9Mn9qmEE2N7QGwUgLE1vv5AAz8fpAxureZa6ovvzvOuAhQUb/pknHLg6uegP23GxHZ6786BhzeRetrpeOYRmbBJDZocm6DD2rL7xUpfbgBWvLpDxEdZ4Lm/eHKalrE8VghA0qbmABCeu5kqPYwZx+onZEH7yqMR2aSVy1Nl9bWbhVL0NNqjiqmHWzLa+CRcoseH1kWavpLS7sGMHBVNWK3MkE6YPjdk1iJIowDEqHGBYFE1QLyNR1Yk/dets2xe1isACxboOHrgx7x9uCeeNYCXTmsnprE3Tt7f6Xoyk0M90P3TMn/CHf8JVZ6tcIr1sgaCqvwv01u3ZJAzE1TYRPXI925D38YLpUa07FJ57JG96cJWEQGQrnOSg==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c95ad15c-4c97-4618-9111-08d834726c37
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB5099.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 10:22:12.2080
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ubuhUhWOdBQNZrWLbXy8nKsKmfW05DNN4Gj4VZdvVEidqGgWm3an/qsG6KVl2MpYzSMe7HtEFv5D/6EU9Aosxw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6924
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan.
+From: "hongbo.wang" <hongbo.wang@nxp.com>
 
-got your review nearly simultaneous with Andy's. There are many overlaps
-between both. Most is already integrated, below I left only the open points.
+1. the patch 0001* is for setting single port into 802.1AD(QinQ) mode,
+before this patch, the function dsa_slave_vlan_rx_add_vid didn't pass 
+the parameter "proto" to next port level, so switch's port can't get
+parameter "proto"
+  after applying this patch, the following command can be supported:
+  ip link set br0 type bridge vlan_protocol 802.1ad
+  ip link add link swp1 name swp1.100 type vlan protocol 802.1ad id 100
 
-On Tuesday, 28 July 2020, 20:01:14 CEST, Jonathan Cameron wrote:
-> Hi Christian,
-> 
-> I took a fairly quick look. Not divided into the datasheet or anything yet!
+2. the patch 0002* is for setting QinQ related registers in ocelot 
+switch driver, after applying this patch, the switch(VSC99599)'s port can
+enable or disable QinQ mode.
 
-> Christian Eggers <ceggers@arri.de> wrote:
-> > +/**
-> > + * struct as73211_data - Instance data for one AS73211
-> > + * @client: I2C client.
-> > + * @osr:    Cached Operational State Register.
-> > + * @creg1:  Cached Configuration Register 1.
-> > + * @creg2:  Cached Configuration Register 2.
-> > + * @creg3:  Cached Configuration Register 3.
-> 
-> Just a thought, but why not creg[3]?;
-creg[3] would be indexed from 0 to 2. But the datasheet names them 1 to 3.
+3. Version log
+v4: 
+a. modify slave.c to support "ip set br0 type bridge vlan_protocol 802.1ad"
+b. modify ocelot.c, if enable QinQ, set VLAN_AWARE_ENA and VLAN_POP_CNT per
+   port when vlan_filter=1
+v3: combine two patches to one post
 
-> > + * @buffer: Buffer for triggered measurements.
-> 
-> ?  Run kernel-doc, or build with W=1 and to check docs.
-I ran "make htmldoc" and enabled W=1. Are there any errors I should see?
+hongbo.wang (2):
+  net: dsa: Add protocol support for 802.1AD when adding or   deleting
+    vlan for dsa switch port
+  net: dsa: ocelot: Add support for QinQ Operation
 
-> > +static unsigned int as73211_integration_time_us(struct as73211_data
-> > *data)
-> > +{
-> > +	/* Integration time has 15 steps, the step size depends on the 
-clock. */
-> > +	unsigned int mul = 1 << (3 - (data->creg3 & 0b11));  /* 8 = 1.024 
-MHz, 4
-> > = 2.048 MHz ...*/ +	unsigned int time_cycles =
-> > as73211_integration_time_cycles(data); +	unsigned int time_us =
-> > time_cycles * 125 * mul;
-> 
-> This would be easier to read as
-> 
-> 	unsigned int mul, time_cycles;
-> 
-> 	mul = ...
-> 
-> 	return time_cycles * 125 * mul;
-> 
-changed this according to Andy's proposal.
+ drivers/net/dsa/ocelot/felix.c     | 12 +++++++
+ drivers/net/ethernet/mscc/ocelot.c | 53 +++++++++++++++++++++++++-----
+ include/net/switchdev.h            |  1 +
+ include/soc/mscc/ocelot.h          |  2 ++
+ net/dsa/dsa_priv.h                 |  4 +--
+ net/dsa/port.c                     |  6 ++--
+ net/dsa/slave.c                    | 27 +++++++++++----
+ net/dsa/tag_8021q.c                |  4 +--
+ 8 files changed, 89 insertions(+), 20 deletions(-)
 
-> > +static int as73211_read_raw(struct iio_dev *indio_dev,
-> > +			struct iio_chan_spec const *chan,
-> > +			int *val, int *val2, long mask)
-> 
-> Align parameters with opening bracket.
-Mixed tabs(8) and spaces or only spaces?
-
-> > +static int _as73211_write_raw(struct iio_dev *indio_dev,
-> > +			struct iio_chan_spec const *chan 
-__always_unused,
-> 
-> Whilst true, what's the benefit of marking that as __always_unused?
-> 
-I read somewhere in the process docs that I should build with EXTRA_CFLAGS=-W
-
-> > +		} else {
-> > +			/* saturate all channels (useful for 
-overflows) */
-> > +			iio_buffer[1] = 0xffff;
-> > +			iio_buffer[2] = 0xffff;
-> > +			iio_buffer[3] = 0xffff;
-> 
-> That is rather non standard.
-How do other drivers handle measurement errors in buffered mode? The
-application needs to know about measurement overflows as the integration
-time and gain have to be adjusted in case.
-
-> > +static IIO_DEV_ATTR_SAMP_FREQ_AVAIL(as73211_show_samp_freq_available);
-> > +static IIO_DEV_ATTR_INT_TIME_AVAIL(as73211_show_int_time_available);
-> > +static IIO_DEVICE_ATTR(hardwaregain_available, S_IRUGO,
-> > +		as73211_show_hardwaregain_available, NULL, 0);
-> > +static IIO_CONST_ATTR_TEMP_OFFSET("-66.9");
-> > +static IIO_CONST_ATTR_TEMP_SCALE("0.05");
-> > +
-> > +static struct attribute *as73211_attributes[] = {
-> > +	&iio_dev_attr_sampling_frequency_available.dev_attr.attr,
-> > +	&iio_dev_attr_integration_time_available.dev_attr.attr,
-> > +	&iio_dev_attr_hardwaregain_available.dev_attr.attr,
-> > +	&iio_const_attr_in_temp_offset.dev_attr.attr,
-> > +	&iio_const_attr_in_temp_scale.dev_attr.attr,
-> 
-> These should be handled via read_raw.
-Only the last two ones?
-
-> Ideally do the _available ones via the core callbacks
-> and _avail masks as well. For the more complex values,
-> compute the table on first read or at probe and cache it.
-The list of available values can depend on the setting of other attributes
-(e.g. available integration times depends on sampling frequency).
-
-> > +	indio_dev->dev.parent = &client->dev;
-> 
-> That is now set by the IIO core, so no need to set it manually.
-Can you please give me a pointer? Before removing this in my branch, I need to
-make sure that this is already available in the kernel I'm using (5.4.latest).
-
-> > +buffer_cleanup:
-> > +	iio_triggered_buffer_cleanup(indio_dev);
-> 
-> Should we not powerdown on error?
-yes, we should.
-
-> Also rather feels like we should have a trivial powerup function to
-> match with powerdown.
-changed as73211_powerdown() to as73211_power()
-
-regards
-Christian
-
-
+-- 
+2.17.1
 
