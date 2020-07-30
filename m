@@ -2,117 +2,158 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53517C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 20:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B25C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 20:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2793B2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 20:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8F2820829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 20:51:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ciwC00u6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WS/N+oLb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbgG3Us5 (ORCPT
+        id S1728766AbgG3UvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 16:48:57 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50208 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbgG3Us4 (ORCPT
+        Thu, 30 Jul 2020 16:51:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbgG3UvX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 16:48:56 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06UKgHEh101584;
-        Thu, 30 Jul 2020 20:48:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=Cqjec/JmJLo7a5VR/JGr2Y+AIOuHwIGHZrb6qGXqEIw=;
- b=ciwC00u6FHi2+R0x/txxaIzTO2qoFcexcEIhCYoUaE/+dwmKZdvBI8hyBxuqGxFLWpxp
- 9ntMbAL6HK55vNU5fyrXeSiPBc5Z5XRVRZ4J3PvdQ9GDsDTOp69bs/Msh9MD/wnS/0+K
- SGyNfYKtS5dI62EOL8+iI8aPeQJ44dkmIALCgWQoAhHqoqUe6Iog/iVYS+Fu02Tb8VJZ
- MG9m3TE/uK32EfoqICucDUORK10MfudmTHDmfp/oiSrtdUcjHp7SWXfh+ew0rzh8ugGA
- tMB5OmKwfsmJqfK9w4APUIXHw26fmr3CK2835ENRlFNPAwJJhJMVLY21BUqOdgE+IeGI CQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 32hu1jwwf8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 30 Jul 2020 20:48:26 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06UKhSH7161581;
-        Thu, 30 Jul 2020 20:48:26 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 32hu5xcnst-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Jul 2020 20:48:26 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06UKmGi1032069;
-        Thu, 30 Jul 2020 20:48:21 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 30 Jul 2020 13:48:15 -0700
-Date:   Thu, 30 Jul 2020 16:57:05 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Pengfei Li <fly@kernel.page>, akpm@linux-foundation.org,
-        bmt@zurich.ibm.com, dledford@redhat.com, willy@infradead.org,
-        vbabka@suse.cz, kirill.shutemov@linux.intel.com, jgg@ziepe.ca,
-        alex.williamson@redhat.com, cohuck@redhat.com,
-        daniel.m.jordan@oracle.com, dbueso@suse.de, jglisse@redhat.com,
-        jhubbard@nvidia.com, ldufour@linux.ibm.com,
-        Liam.Howlett@oracle.com, peterz@infradead.org, cl@linux.com,
-        jack@suse.cz, rientjes@google.com, walken@google.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 2/2] mm, util: account_locked_vm() does not hold mmap_lock
-Message-ID: <20200730205705.ityqlyeswzo5dkow@ca-dmjordan1.us.oracle.com>
-References: <20200726080224.205470-1-fly@kernel.page>
- <20200726080224.205470-2-fly@kernel.page>
- <alpine.LSU.2.11.2007291121280.4649@eggly.anvils>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.11.2007291121280.4649@eggly.anvils>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9698 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
- suspectscore=0 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007300145
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9698 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 mlxlogscore=999
- malwarescore=0 impostorscore=0 priorityscore=1501 spamscore=0 phishscore=0
- suspectscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007300145
+        Thu, 30 Jul 2020 16:51:23 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97D6AC061574
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 13:51:22 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id d24so12030190qtg.23
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 13:51:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=+8IcRcjNMmg55nzAYWemaonCO3YVJFMOAlMg6/HQqZk=;
+        b=WS/N+oLbFzSBBDpGrj5zhi5qc3eMKgQfUSbLNA4X6vw0fslhwV92R948HcCKCQBs4B
+         3cAPHFnBjNf1GJzmYzjIdxVcT88aOw/+5Z7wY4hDcfZ5yh6wC2nAOs69NEGLdm4IKtNI
+         RHkMh6NAvOxXxk7mDuS8rcqW39ze8lB0GIa6RhJc9qU7vK9N2Btacj0v68dmU6Dug9LP
+         jP/tT7rYjKVlIhvetloVr2f4TprDQRLJSmx4UsvYZgDVA5qVyPFnBDK3Fkb88waPgT74
+         NFiy+CaVbmI50DH86lrxVdWJKfOc9vsv3Lpzq90+nz4g64FuSpFl766z+JkRzk2031lz
+         HZxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=+8IcRcjNMmg55nzAYWemaonCO3YVJFMOAlMg6/HQqZk=;
+        b=tMrfeM9D93+MvBUe/BFAeddDkBtqEffFGBWBwzaK09xH+ht9BFyg88KO4PFZE3aOjb
+         5MXQWcOyrcFqj1i/bEAZU9XepZ2u7u6ZClYJhP0SDXiA4LO+SIWzdjZ5JRd+OXhLuE22
+         hHYt2/ib4AJ6QWNRyMrVmN2KtG3zdiz4SPu7jTuw05utQglnqZikfNzgRAw47NZiymlE
+         9Mw5BdEh2N/x7NtXTRjID52qIgVq6+vnlB+Wk/EYzYduzEtoP7q9vkFl0VdC40vGMzi+
+         kxQ1CH+fuGOhaenO6aNImGtZzxzqf4cL8JXsxfxjQRkmAz+rwemGIt0i1hoddT8d3db0
+         DfFw==
+X-Gm-Message-State: AOAM531GeW5FO+6mIXZFk3aG/rajDbfS2SadYHyC9r4Yk2o9yCHMgMmI
+        vUgQYov373JJKzng6CQDo8E08Dk7EkwZJWMgs+I=
+X-Google-Smtp-Source: ABdhPJwmD50FNu7pg+bxDxzIfP7b6FbrE4ZJaK1Bw8TAS+CDtLGbaaU90Wd09/zT21c7WigKXG7F+Uwo0u5cNy1rAbY=
+X-Received: by 2002:a0c:b712:: with SMTP id t18mr958012qvd.205.1596142281418;
+ Thu, 30 Jul 2020 13:51:21 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 13:51:08 -0700
+Message-Id: <20200730205112.2099429-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+Subject: [PATCH 0/4] CONFIG_UNWINDER_FRAME_POINTER fixes+cleanups
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     Nathan Huckleberry <nhuck15@gmail.com>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        clang-built-linux@googlegroups.com,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Lvqiang Huang <lvqiang.huang@unisoc.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Miles Chen <miles.chen@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 12:21:11PM -0700, Hugh Dickins wrote:
-> On Sun, 26 Jul 2020, Pengfei Li wrote:
-> 
-> > Since mm->locked_vm is already an atomic counter, account_locked_vm()
-> > does not need to hold mmap_lock.
-> 
-> I am worried that this patch, already added to mmotm, along with its
-> 1/2 making locked_vm an atomic64, might be rushed into v5.9 with just
-> that two-line commit description, and no discussion at all.
-> 
-> locked_vm belongs fundamentally to mm/mlock.c, and the lock to guard
-> it is mmap_lock; and mlock() has some complicated stuff to do under
-> that lock while it decides how to adjust locked_vm.
->
-> It is very easy to convert an unsigned long to an atomic64_t, but
-> "atomic read, check limit and do stuff, atomic add" does not give
-> the same guarantee as holding the right lock around it all.
+We received a report of boot failure on stable/4.14.y using Clang with
+CONFIG_UNWINDER_FRAME_POINTER. Turns out, this was a cascaded failure
+with at least 4 different things going wrong. Working backwards from the
+failure:
 
-Yes, this is why I withdrew my attempt to do something similar last year, I
-didn't want to make the accounting racy.  Stack and heap growing and mremap
-would be affected in addition to mlock.
+4) There was no fixup handler in backtrace-clang.S for a specific
+address calculation. If an indirect access to that address triggers a
+page fault for which no corresponding fixup exists, then a panic is
+triggered. Panicking triggers another unwind, and all this repeats in an
+infinite loop.  If the unwind was started from within start_kernel(),
+this results in a kernel that does not boot.  We can install a fixup
+handler to fix the infinite loop, but why was the unwinder accessing an
+address that would trigger a fault?
 
-It'd help to hear more about the motivation for this.
+3) The unwinder has multiple conditions to know when to stop unwinding,
+but checking for a valid address in the link register was not one of
+them. If there was a value for lr that we could check for before using
+it, then we could add that as another stopping condition to terminate
+unwinding. But the garbage value in lr in the case of save_stack()
+wasn't particularly noteworthy from any other address; it was ambiguous
+whether we had more frames to continue unwinding through or not, but
+what value would we check for?
 
-Daniel
+2) When following a frame chain, we can generally follow the addresses
+pushed onto the stack from the link register, lr. The callee generally
+pushes this value.  For our particular failure, the value in the link
+register upon entry to save_stack() was garbage. The caller,
+__mmap_switched, does a tail call into save_stack() since we don't plan
+to return control flow back to __mmap_switched. It uses a `b` (branch)
+instruction rather than a `bl` (branch+link) which is correct, since
+there are no instructions after the `b save_stack` in __mmap_switched.
+If we interpret the value of lr that was pushed on the stack in
+save_stack(), then it appears that we have further frames to unwind.
+When observing an unwind on mainline though, lr upon entry to
+save_stack() was 0x00!
+
+It turns out that this exact ambiguity was found+fixed already by
+upstream
+commit 59b6359dd92d ("ARM: 8702/1: head-common.S: Clear lr before jumping to start_kernel()")
+which landed in 4.15-rc1 but was not yet backported to stable/4.14.y.
+Sent to stable in:
+https://lore.kernel.org/stable/20200730180340.1724137-1-ndesaulniers@google.com/T/#u
+That gives us a value in lr upon entry to save_stack() that's noteworthy
+as a terminal condition during unwinding.  But why did we start
+unwinding in start_kernel() in the first place?
+
+1) A simple WARN_ON_ONCE was being triggered during start_kernel() due
+to another patch that landed in v4.15-rc9 but wasn't backported to
+stable/4.14.y. Sent to stable in:
+https://lore.kernel.org/stable/20200727191746.3644844-1-ndesaulniers@google.com/T/#u
+
+Read (or unwound; pun intended) in the order 1), 2), 3), 4) explains the
+cascading chain of failures that lead to a kernel not booting.
+
+Patch 0001 fixes 3) by adding a test for NULL to the conditions to stop
+unwinding. This prevents the cascade from going further.
+Patch 0002 fixes 4) by adding a fixup handler. It's not strictly
+necessary right now, but I get the feeling that we might not be able to
+trust the value of the link register pushed on the stack.  I'm guessing
+a stack buffer overflow could overwrite this value. Either way,
+triggering an exception during unwind should be prevented at all costs
+to avoid infinite loops.
+Patches 0003/0004 are cleanup/bikeshed, feel free to NACK them and I
+don't mind dropping them.  They're just minor touchups I felt helped
+readability from when I was debugging these. 0001 (and slightly so 0002)
+are the only patches I really care about.
+
+Nick Desaulniers (4):
+  ARM: backtrace-clang: check for NULL lr
+  ARM: backtrace-clang: add fixup for lr dereference
+  ARM: backtrace-clang: give labels more descriptive names
+  ARM: backtrace: use more descriptive labels
+
+ arch/arm/lib/backtrace-clang.S | 34 +++++++++++++++++++++-------------
+ arch/arm/lib/backtrace.S       | 30 +++++++++++++++---------------
+ 2 files changed, 36 insertions(+), 28 deletions(-)
+
+-- 
+2.28.0.163.g6104cc2f0b6-goog
+
