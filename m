@@ -2,168 +2,199 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF96C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F72C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50FBB20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE4120829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:02:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="dWczkWlf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730864AbgG3XC1 (ORCPT
+        id S1730867AbgG3XCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 19:02:27 -0400
-Received: from mail-co1nam11olkn2089.outbound.protection.outlook.com ([40.92.18.89]:48096
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730770AbgG3XCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 19:02:04 -0400
+        Thu, 30 Jul 2020 19:02:37 -0400
+Received: from mga12.intel.com ([192.55.52.136]:25191 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730490AbgG3XCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 19:02:33 -0400
+IronPort-SDR: B06KIO2DwcIMtzI9TORgMzESrAjQ/eBwRhRkqxgqDcKRCnrp0UySiEOPdyUutcJU/vpw3SmlMV
+ HTH9tgiER/uQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="131271970"
+X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
+   d="scan'208";a="131271970"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 16:02:32 -0700
+IronPort-SDR: 1BXeI0/UzQv14hbbHM72hfUFOPOvTJs9opYoPfMEwvo/1aeo7KfcHkboD4toFafNVRk9qVkquX
+ OAPXGtIz4mJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
+   d="scan'208";a="304752996"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orsmga002.jf.intel.com with ESMTP; 30 Jul 2020 16:02:31 -0700
+Received: from fmsmsx606.amr.corp.intel.com (10.18.126.86) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 30 Jul 2020 16:02:31 -0700
+Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
+ fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 30 Jul 2020 16:02:31 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.177)
+ by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Thu, 30 Jul 2020 16:02:30 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b6t+tJROmpXol7kejzNBPpdvwjjoxV6yA/Kla5FMK2FB9/8W3xXXxkJafVoAi2r6hh4aT5ELtD5NYjWYR/d+kNb0CjDPSkJ9Mtx/7qY2Kqr+GIl1kL4DFbA0LGiX5F6yzptPW3ze23SKj/zzPQt0kvFg5e2r40h9KQtNgzuGvT4V+RJu92ATs+k6N270bQYNrAGvaCBv5W79UNJAF0/FdB58u2yvi6bEyJ3fJ/a/YYVTAqfB+RckKW7vqz0pRUPG4u0E/RqyDKQZjl8YRUGbDBNiFolwjm4BsinzdyU4+YCearEoxYTfe3AizDR3xB1qa9wGZvfut+V3uFfhFaRpaQ==
+ b=Q/A3JY7clPsNdAWjHhljLpWL4SkBHqgGpt9+dGJPyuQ6HFps/elSOfkAYltn3aMiCWKA8scD1y7gQQVbCDdFVP4E+ZfzxfjrSP4CdKrYGfNL4vBVirbhG9DNupdH12ScP7RsOKN7yFu+axhy5WEwU5h/hEsbp24w/px7OpQhIk6eb78PWIQbFmGFJkjC0R9VbOf0+lBCudZ5agkBWW6kVZ+Ns1XYPnOkNo+j6vKmOK4JNfLGG5Ur8qAfuO52qJDHLM1hvsKjXOFkrHXG7arUA92Q3YVqajpcRn47wvnKWJcMerBtieqlTNI3VfJ6yoqxcFn6W2XJY3vIeGIj0rvIOQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2pJ6xJQhePW4eETLLlJKJGjutRhO0/Rc8Esmkoshk5s=;
- b=S+2UQJba76GrvFrt3FLlgCMjK84lfPK+IIkDhmQQTXLZJM+0Qjvn5HU7M3z3jlhVMoy7uLKBsjWmc9/v2E5B+I4J1CzqyXPUwKiKJG2KKwylkZ7L6VWxUAlQW+37rzDvmImDB6V9Vo0foHIkYg6urQzytPM0OVzf6lGLzk/D7bPT1GkEHtHnSCmK6FKUeNHSUzkA2nIdOCXzD5SK5bBdYUnMzLPxT+V1OfvIRr9zZn3l5cXrfPvmTwliOFguik9drhBDGXD6A3rKpjTIo+selT7h63CdjEtP5QKqKetw5nadg9yivdzG2oI4Wes1GtLSnnvXSI/Zvskj7R3i7UYqhA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from CO1NAM11FT027.eop-nam11.prod.protection.outlook.com
- (2a01:111:e400:3861::45) by
- CO1NAM11HT133.eop-nam11.prod.protection.outlook.com (2a01:111:e400:3861::72)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Thu, 30 Jul
- 2020 23:02:02 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:3861::4a) by CO1NAM11FT027.mail.protection.outlook.com
- (2a01:111:e400:3861::224) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20 via Frontend
- Transport; Thu, 30 Jul 2020 23:02:02 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:22984D4AC8BD4FCEA25A7B65AFA40CA7A2EBD9C78C1223786523D479F330E945;UpperCasedChecksum:134294722C09C000F6ACEE3BBB1E529F04DE0C8A6F6FF0B70C9A587EC48BD131;SizeAsReceived:7912;Count:49
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::b9c3:9bff:541d:f383]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::b9c3:9bff:541d:f383%9]) with mapi id 15.20.3239.020; Thu, 30 Jul 2020
- 23:02:02 +0000
-From:   Jonathan Bakker <xc-racer2@live.ca>
-To:     kyungmin.park@samsung.com, s.nawrocki@samsung.com,
-        mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: [PATCH v2 08/11] media: exynos4-is: Remove inh_sensor_ctrls
-Date:   Thu, 30 Jul 2020 16:01:11 -0700
-Message-ID: <BN6PR04MB0660A067E00EEC583E9C718FA3710@BN6PR04MB0660.namprd04.prod.outlook.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200730230114.8572-1-xc-racer2@live.ca>
-References: <20200730230114.8572-1-xc-racer2@live.ca>
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MWHPR07CA0002.namprd07.prod.outlook.com
- (2603:10b6:300:116::12) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <20200730230114.8572-9-xc-racer2@live.ca>
+ bh=CjOPW9py0N7fsw9Kw/pCMuwbpk4ZHEdVblVBBIbxGgc=;
+ b=GilApDuUPkvDqSC+uw5hcSCVn245Z7MrWDRzrCOaxymwvkOSvWbPWFnSskteR47DdkimM7Kn6YX1Daq3w4Wj92G69q0o0Uzqj5+e4MBEtf2CIuUwqFTyVFVg4goWC1PoI5xoFYJ0/Cax8WmyAGsTbJEM5RrpvolTUxXNPxckk/wQwJ9CdMZKvcHhUoi/QL+HR7rx9kqMsIP3C7wTGj8zmsUZeuD0Tyhbh8KrOuKDUBiJMk97tGauF/swH2RDxTvHd1vFaNujBFVlsApFUFDtUwKI8JgJ2W3qBZ258iOuZpTbdZEnx35UnNE1EJOAPBn3ai486RYbaT2ostZrp+IZdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CjOPW9py0N7fsw9Kw/pCMuwbpk4ZHEdVblVBBIbxGgc=;
+ b=dWczkWlfBoQ1WpszrtISNiF2K7vGd/cAj/5fB1JV7wE8ZFonY3zxi8mS0nzJFCjgGqXjvYAAPDDtM/t4bNyAQEbwBr+xoTgzYW16VHVlkP67Ekypdhbzn7F9ILpsUPYLIWobExEoGSoWUnJ/OAaea/fneIuFuMuw1GdY69TBoZo=
+Received: from MWHPR11MB1518.namprd11.prod.outlook.com (2603:10b6:301:c::10)
+ by MWHPR1101MB2174.namprd11.prod.outlook.com (2603:10b6:301:50::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.18; Thu, 30 Jul
+ 2020 23:02:28 +0000
+Received: from MWHPR11MB1518.namprd11.prod.outlook.com
+ ([fe80::7199:c7d8:e0fa:d595]) by MWHPR11MB1518.namprd11.prod.outlook.com
+ ([fe80::7199:c7d8:e0fa:d595%10]) with mapi id 15.20.3216.034; Thu, 30 Jul
+ 2020 23:02:28 +0000
+From:   "Shaikh, Azhar" <azhar.shaikh@intel.com>
+To:     Prashant Malani <pmalani@chromium.org>
+CC:     "bleung@chromium.org" <bleung@chromium.org>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        "groeck@chromium.org" <groeck@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>,
+        "Patel, Utkarsh H" <utkarsh.h.patel@intel.com>,
+        "Bowman, Casey G" <casey.g.bowman@intel.com>,
+        "Mani, Rajmohan" <rajmohan.mani@intel.com>
+Subject: RE: [PATCH v2 1/2] platform/chrome: cros_ec_typec: Send enum values
+ to usb_role_switch_set_role()
+Thread-Topic: [PATCH v2 1/2] platform/chrome: cros_ec_typec: Send enum values
+ to usb_role_switch_set_role()
+Thread-Index: AQHWZsSZvlUsJzdXqkqf6LtgMiR0NqkgvJWAgAAAwwA=
+Date:   Thu, 30 Jul 2020 23:02:28 +0000
+Message-ID: <MWHPR11MB15189A9180898261A92DD7C091710@MWHPR11MB1518.namprd11.prod.outlook.com>
+References: <20200730225609.7395-1-azhar.shaikh@intel.com>
+ <20200730225609.7395-2-azhar.shaikh@intel.com>
+ <20200730225921.GC3145664@google.com>
+In-Reply-To: <20200730225921.GC3145664@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-reaction: no-action
+dlp-version: 11.5.1.3
+dlp-product: dlpe-windows
+authentication-results: chromium.org; dkim=none (message not signed)
+ header.d=none;chromium.org; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [71.236.160.161]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 640bc0f8-ca15-42b6-70e7-08d834dca205
+x-ms-traffictypediagnostic: MWHPR1101MB2174:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR1101MB2174FF8325942F3816A82B0A91710@MWHPR1101MB2174.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: mp7WBZA4mkcvSTW//Ihik7IMNVbvRCWNq2wprxFxY0fGXKK2gAaVu9sTWZyl2vmJBiqUcsnI5xHX4GHw39DFpyQvmBVOEkCTBjhlaTHUwq+6CEXN1EH7CmMveseeolmXi5J9u9TjMovDmaZBTvtu6MHm/k7g2jfRl2V2KCo/ZEmua/yyJmgHihJC92vNt2e2YtFJatXR0fKhEAj4nL0c2EuWkaKmkK0LVG9NW9gcTorQShljp0JPrP7f5Vw3weDNN369pS9CJMFl/yE9g0OzeZEidj+lJ9C/QPUYRUu8zqJ4a7+4tPxZfWpQZhYmtx7N
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1518.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(136003)(346002)(396003)(376002)(66556008)(64756008)(66446008)(66946007)(76116006)(8676002)(33656002)(55016002)(9686003)(52536014)(6506007)(4326008)(2906002)(5660300002)(478600001)(26005)(53546011)(86362001)(66476007)(316002)(186003)(71200400001)(7696005)(54906003)(8936002)(83380400001)(6916009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: gP+QMEXFrQ7g3YeMnqzIWJErymXxskakYfLn7Tr0Lpr4yaeAXM+TsFlhlQFzTgtCPdDF3MsViXnmJBMwOY3rqq3vgEun2UZ0sCUJJQ5RMgvJ1arW3dEcsx3Gg/IvYB7Fut/fz0yU6FtQ5w5kDX5Ar1RfVJfjVjhrw4BiTPfQieWnXn2Em8gLZD4ZGHQ8It1Vfvp6tKlpEYEdCWH4XpduEn7NKBmwQF9m2i00oiZ/Zz7HTDs/KLCNtMrEvJviRl/9xNZNwOoOXclrk8HGZ65DyG3HzAWOdQafhp5UclHks6JAwdGgTo+EHyI2L65GY5g1jtGmy6bcFb48mL0TdAE/dCxOVILlOiShmxpuwHIse5DllvqXguqY6slIFz4zevcyWAriyM2Ik+S1uA61W5jADRkgXSQ1H5iDl9yF7qdJhRHIfZnlEnu6S/Nh+7fAELD1J4PlmQhpVNvLGnC1SdiEdzfNRVNRuNvr/umu21rVPL1NiRwJvJAg/ldF7Sw6MpkP17g3qexM8BJBHVKDHTsk95TVZRecapNRwLDxXEKfub/4gA9tpM59Xd+ZzrFrZFfITEfoEpujDdZK26BJHGqWoaZOWdkgOVvRROyfiBJ60CimL72tTvGcHFP32pJoRly6BJG6OKNPFLNAlxMmBx8jFw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR07CA0002.namprd07.prod.outlook.com (2603:10b6:300:116::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Thu, 30 Jul 2020 23:01:59 +0000
-X-Mailer: git-send-email 2.20.1
-X-Microsoft-Original-Message-ID: <20200730230114.8572-9-xc-racer2@live.ca>
-X-TMN:  [Mg/ZFCpLrxkWYy9upa9oNV+bBeZCE0wJaDtq08CU5OCCzmMNLfCN+/Y5Z2zfV++L]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 49
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 4fdd141b-1242-4ba5-efa9-08d834dc91d7
-X-MS-TrafficTypeDiagnostic: CO1NAM11HT133:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: eFR2PgS6y7n4HfgDdMmfK7mI7/FlEr3WNaVOXft2metJt0ZsOGpIOXzOjvLbOve2jMI8/fYnnuADJ02eVSzL7FWwx2HV6JIc2AzvAreQyM9PdhPkRjznifvRH6CZh/wa9OHGyLBLOoOr3zguxNXk9hjys+bJ3W74B9SqupaoZ4NRdUMQ92sZY2YEWWB2ESxACQtjrQ32LKyg0k/plGUALg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: zIEFU3O3E1HYVHYqxzmkakHQ473vtdu5dRE80GDyPCGliiYvBof7vkfaqHKZviFEi0HChGZ/dCsW7+QQSkeiLuWk9ZJJGx52JboM586b2g3uvXeyHN0WRK8B5qDpTQchvyftM90eEuDX/81ECJ3tuAkRpWmifxlvLWkkyV96DePAjtaTvVrS8+2D6m8nYBzCHASjJHhW2wQi66crMn2Twg==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4fdd141b-1242-4ba5-efa9-08d834dc91d7
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 23:02:02.1020
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1518.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 640bc0f8-ca15-42b6-70e7-08d834dca205
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2020 23:02:28.6321
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT027.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1NAM11HT133
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AOkY1xKMP4oP/iRV/Yco4E6qrqMrK25zZ5fkM/1gtb+UrSPoIjcyxRqvmjQGZyLuIBvTzZs9BY1+TN27j5lodQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1101MB2174
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a no-op as it is never set and is a remnant from non-DT days
-that can be safely removed.
+Hi Prashant,
 
-Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
-Changes from v1:
-- Added R-b tags
----
- drivers/media/platform/exynos4-is/fimc-capture.c | 13 +------------
- drivers/media/platform/exynos4-is/fimc-core.h    |  3 ---
- 2 files changed, 1 insertion(+), 15 deletions(-)
 
-diff --git a/drivers/media/platform/exynos4-is/fimc-capture.c b/drivers/media/platform/exynos4-is/fimc-capture.c
-index 82f051f6b816..e70785d8a809 100644
---- a/drivers/media/platform/exynos4-is/fimc-capture.c
-+++ b/drivers/media/platform/exynos4-is/fimc-capture.c
-@@ -492,17 +492,6 @@ static int fimc_capture_open(struct file *file)
- 
- 		ret = fimc_pipeline_call(ve, open, &ve->vdev.entity, true);
- 
--		if (ret == 0 && vc->user_subdev_api && vc->inh_sensor_ctrls) {
--			/*
--			 * Recreate controls of the the video node to drop
--			 * any controls inherited from the sensor subdev.
--			 */
--			fimc_ctrls_delete(vc->ctx);
--
--			ret = fimc_ctrls_create(vc->ctx);
--			if (ret == 0)
--				vc->inh_sensor_ctrls = false;
--		}
- 		if (ret == 0)
- 			ve->vdev.entity.use_count++;
- 
-@@ -1408,7 +1397,7 @@ static int fimc_link_setup(struct media_entity *entity,
- 
- 	vc->input = sd->grp_id;
- 
--	if (vc->user_subdev_api || vc->inh_sensor_ctrls)
-+	if (vc->user_subdev_api)
- 		return 0;
- 
- 	/* Inherit V4L2 controls from the image sensor subdev. */
-diff --git a/drivers/media/platform/exynos4-is/fimc-core.h b/drivers/media/platform/exynos4-is/fimc-core.h
-index d130f664a60b..31f81bcb8483 100644
---- a/drivers/media/platform/exynos4-is/fimc-core.h
-+++ b/drivers/media/platform/exynos4-is/fimc-core.h
-@@ -299,8 +299,6 @@ struct fimc_m2m_device {
-  * @input_index: input (camera sensor) index
-  * @input: capture input type, grp_id of the attached subdev
-  * @user_subdev_api: true if subdevs are not configured by the host driver
-- * @inh_sensor_ctrls: a flag indicating v4l2 controls are inherited from
-- *		      an image sensor subdev
-  */
- struct fimc_vid_cap {
- 	struct fimc_ctx			*ctx;
-@@ -322,7 +320,6 @@ struct fimc_vid_cap {
- 	int				input_index;
- 	u32				input;
- 	bool				user_subdev_api;
--	bool				inh_sensor_ctrls;
- };
- 
- /**
--- 
-2.20.1
+> -----Original Message-----
+> From: Prashant Malani <pmalani@chromium.org>
+> Sent: Thursday, July 30, 2020 3:59 PM
+> To: Shaikh, Azhar <azhar.shaikh@intel.com>
+> Cc: bleung@chromium.org; enric.balletbo@collabora.com;
+> groeck@chromium.org; linux-kernel@vger.kernel.org;
+> heikki.krogerus@linux.intel.com; Patel, Utkarsh H
+> <utkarsh.h.patel@intel.com>; Bowman, Casey G
+> <casey.g.bowman@intel.com>; Mani, Rajmohan
+> <rajmohan.mani@intel.com>
+> Subject: Re: [PATCH v2 1/2] platform/chrome: cros_ec_typec: Send enum
+> values to usb_role_switch_set_role()
+>=20
+> Hi Azhar,
+>=20
+> On Thu, Jul 30, 2020 at 03:56:08PM -0700, Azhar Shaikh wrote:
+> > usb_role_switch_set_role() has the second argument as enum for
+> usb_role.
+> > Currently depending upon the data role i.e. UFP(0) or DFP(1) is sent.
+> > This eventually translates to USB_ROLE_NONE in case of UFP and
+> > USB_ROLE_DEVICE in case of DFP. Correct this by sending correct enum
+> > values as USB_ROLE_DEVICE in case of UFP and USB_ROLE_HOST in case of
+> > DFP.
+> >
+> > Fixes: 7e7def15fa4b ("platform/chrome: cros_ec_typec: Add USB mux
+> > control")
+> >
+> > Signed-off-by: Azhar Shaikh <azhar.shaikh@intel.com>
+> > Cc: Prashant Malani <pmalani@chromium.org>
+> > Reviewed-by: Prashant Malani <pmalani@chromium.org>
+> > ---
+>=20
+> Please add the list of changes in each version after the "---" line.
 
+I have added those in the cover letter.
+>=20
+> >  drivers/platform/chrome/cros_ec_typec.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/platform/chrome/cros_ec_typec.c
+> > b/drivers/platform/chrome/cros_ec_typec.c
+> > index 3eae01f4c9f7..eb4713b7ae14 100644
+> > --- a/drivers/platform/chrome/cros_ec_typec.c
+> > +++ b/drivers/platform/chrome/cros_ec_typec.c
+> > @@ -590,7 +590,8 @@ static int cros_typec_port_update(struct
+> cros_typec_data *typec, int port_num)
+> >  		dev_warn(typec->dev, "Configure muxes failed, err =3D %d\n",
+> ret);
+> >
+> >  	return usb_role_switch_set_role(typec->ports[port_num]-
+> >role_sw,
+> > -					!!(resp.role &
+> PD_CTRL_RESP_ROLE_DATA));
+> > +				       resp.role & PD_CTRL_RESP_ROLE_DATA
+> > +				       ? USB_ROLE_HOST : USB_ROLE_DEVICE);
+> >  }
+> >
+> >  static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
+> > --
+> > 2.17.1
+> >
