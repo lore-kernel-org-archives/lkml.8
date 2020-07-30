@@ -2,75 +2,184 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9149DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BDEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3022074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:47:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N76ksBCZ"
+	by mail.kernel.org (Postfix) with ESMTP id E9F6E2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:47:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbgG3KrB (ORCPT
+        id S1729055AbgG3KrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 06:47:01 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53986 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726287AbgG3KrA (ORCPT
+        Thu, 30 Jul 2020 06:47:22 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:59124 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgG3KrU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 06:47:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596106018;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZpJBVrfk7CBP+2x9tuVRq2yFi/n5laYEQwJk4+y6mA8=;
-        b=N76ksBCZTSFQcbbISte1mvMExVHT6efxhLThUiu0SW8fU5QMA2vQhJhYJ+4M3aXTr6so/p
-        791erLbEjxAx8LLfHu3uRK0HLTwBhUkwsXs+0sbg4Q+csbYvqlUxLHozgFDK1mqqnApW/M
-        xdgCSs+Fl3horfPTm3HNb+X/aAyg4MQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-351-6b_sYAohM_epvOGm9Ig2HA-1; Thu, 30 Jul 2020 06:46:57 -0400
-X-MC-Unique: 6b_sYAohM_epvOGm9Ig2HA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B140B18C63D3;
-        Thu, 30 Jul 2020 10:46:51 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 654B619D7B;
-        Thu, 30 Jul 2020 10:46:50 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <159562904644.2287160.13294507067766261970.stgit@warthog.procyon.org.uk>
-References: <159562904644.2287160.13294507067766261970.stgit@warthog.procyon.org.uk>
-To:     torvalds@linux-foundation.org
-Cc:     dhowells@redhat.com, jarkko.sakkinen@linux.intel.com,
-        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] watch_queue: Limit the number of watches a user can hold
+        Thu, 30 Jul 2020 06:47:20 -0400
+Received: from fsav101.sakura.ne.jp (fsav101.sakura.ne.jp [27.133.134.228])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06UAlIRe084694;
+        Thu, 30 Jul 2020 19:47:18 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav101.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav101.sakura.ne.jp);
+ Thu, 30 Jul 2020 19:47:18 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav101.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06UAlHLs084689
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Thu, 30 Jul 2020 19:47:18 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: [PATCH v2] fbmem: pull fbcon_update_vcs() out of fb_set_var()
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        syzbot <syzbot+c37a14770d51a085a520@syzkaller.appspotmail.com>
+References: <1596000620-4075-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <CAKMK7uHeteS2+rKrZKrAM+zQO==hAX0XaVc9JfHPsdLTCtzKOw@mail.gmail.com>
+ <a3bb6544-064d-54a1-1215-d92188cb4209@i-love.sakura.ne.jp>
+Message-ID: <075b7e37-3278-cd7d-31ab-c5073cfa8e92@i-love.sakura.ne.jp>
+Date:   Thu, 30 Jul 2020 19:47:14 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <439875.1596106009.1@warthog.procyon.org.uk>
-Date:   Thu, 30 Jul 2020 11:46:49 +0100
-Message-ID: <439876.1596106009@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <a3bb6544-064d-54a1-1215-d92188cb4209@i-love.sakura.ne.jp>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+syzbot is reporting OOB read bug in vc_do_resize() [1] caused by memcpy()
+based on outdated old_{rows,row_size} values, for resize_screen() can
+recurse into vc_do_resize() which changes vc->vc_{cols,rows} that outdates
+old_{rows,row_size} values which were saved before calling resize_screen().
 
-Could you consider taking this patch as a bugfix since the problem exists
-already in upstream code?
+Daniel Vetter explained that resize_screen() should not recurse into
+fbcon_update_vcs() path due to FBINFO_MISC_USEREVENT being still set
+when calling resize_screen().
 
-David
+Instead of masking FBINFO_MISC_USEREVENT before calling fbcon_update_vcs(),
+we can remove FBINFO_MISC_USEREVENT by calling fbcon_update_vcs() only if
+fb_set_var() returned 0. This change assumes that it is harmless to call
+fbcon_update_vcs() when fb_set_var() returned 0 without reaching
+fb_notifier_call_chain().
+
+[1] https://syzkaller.appspot.com/bug?id=c70c88cfd16dcf6e1d3c7f0ab8648b3144b5b25e
+
+Reported-and-tested-by: syzbot <syzbot+c37a14770d51a085a520@syzkaller.appspotmail.com>
+Suggested-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Reported-by: kernel test robot <lkp@intel.com> for missing #include
+---
+ drivers/video/fbdev/core/fbmem.c   | 8 ++------
+ drivers/video/fbdev/core/fbsysfs.c | 4 ++--
+ drivers/video/fbdev/ps3fb.c        | 5 +++--
+ include/linux/fb.h                 | 2 --
+ 4 files changed, 7 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
+index 30e73ec..da7c88f 100644
+--- a/drivers/video/fbdev/core/fbmem.c
++++ b/drivers/video/fbdev/core/fbmem.c
+@@ -957,7 +957,6 @@ static int fb_check_caps(struct fb_info *info, struct fb_var_screeninfo *var,
+ int
+ fb_set_var(struct fb_info *info, struct fb_var_screeninfo *var)
+ {
+-	int flags = info->flags;
+ 	int ret = 0;
+ 	u32 activate;
+ 	struct fb_var_screeninfo old_var;
+@@ -1052,9 +1051,6 @@ static int fb_check_caps(struct fb_info *info, struct fb_var_screeninfo *var,
+ 	event.data = &mode;
+ 	fb_notifier_call_chain(FB_EVENT_MODE_CHANGE, &event);
+ 
+-	if (flags & FBINFO_MISC_USEREVENT)
+-		fbcon_update_vcs(info, activate & FB_ACTIVATE_ALL);
+-
+ 	return 0;
+ }
+ EXPORT_SYMBOL(fb_set_var);
+@@ -1105,9 +1101,9 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
+ 			return -EFAULT;
+ 		console_lock();
+ 		lock_fb_info(info);
+-		info->flags |= FBINFO_MISC_USEREVENT;
+ 		ret = fb_set_var(info, &var);
+-		info->flags &= ~FBINFO_MISC_USEREVENT;
++		if (!ret)
++			fbcon_update_vcs(info, var.activate & FB_ACTIVATE_ALL);
+ 		unlock_fb_info(info);
+ 		console_unlock();
+ 		if (!ret && copy_to_user(argp, &var, sizeof(var)))
+diff --git a/drivers/video/fbdev/core/fbsysfs.c b/drivers/video/fbdev/core/fbsysfs.c
+index d54c88f..65dae05 100644
+--- a/drivers/video/fbdev/core/fbsysfs.c
++++ b/drivers/video/fbdev/core/fbsysfs.c
+@@ -91,9 +91,9 @@ static int activate(struct fb_info *fb_info, struct fb_var_screeninfo *var)
+ 
+ 	var->activate |= FB_ACTIVATE_FORCE;
+ 	console_lock();
+-	fb_info->flags |= FBINFO_MISC_USEREVENT;
+ 	err = fb_set_var(fb_info, var);
+-	fb_info->flags &= ~FBINFO_MISC_USEREVENT;
++	if (!err)
++		fbcon_update_vcs(fb_info, var->activate & FB_ACTIVATE_ALL);
+ 	console_unlock();
+ 	if (err)
+ 		return err;
+diff --git a/drivers/video/fbdev/ps3fb.c b/drivers/video/fbdev/ps3fb.c
+index 9df78fb..203c254 100644
+--- a/drivers/video/fbdev/ps3fb.c
++++ b/drivers/video/fbdev/ps3fb.c
+@@ -29,6 +29,7 @@
+ #include <linux/freezer.h>
+ #include <linux/uaccess.h>
+ #include <linux/fb.h>
++#include <linux/fbcon.h>
+ #include <linux/init.h>
+ 
+ #include <asm/cell-regs.h>
+@@ -824,12 +825,12 @@ static int ps3fb_ioctl(struct fb_info *info, unsigned int cmd,
+ 				var = info->var;
+ 				fb_videomode_to_var(&var, vmode);
+ 				console_lock();
+-				info->flags |= FBINFO_MISC_USEREVENT;
+ 				/* Force, in case only special bits changed */
+ 				var.activate |= FB_ACTIVATE_FORCE;
+ 				par->new_mode_id = val;
+ 				retval = fb_set_var(info, &var);
+-				info->flags &= ~FBINFO_MISC_USEREVENT;
++				if (!retval)
++					fbcon_update_vcs(info, var.activate & FB_ACTIVATE_ALL);
+ 				console_unlock();
+ 			}
+ 			break;
+diff --git a/include/linux/fb.h b/include/linux/fb.h
+index 3b4b2f0..b11eb02 100644
+--- a/include/linux/fb.h
++++ b/include/linux/fb.h
+@@ -400,8 +400,6 @@ struct fb_tile_ops {
+ #define FBINFO_HWACCEL_YPAN		0x2000 /* optional */
+ #define FBINFO_HWACCEL_YWRAP		0x4000 /* optional */
+ 
+-#define FBINFO_MISC_USEREVENT          0x10000 /* event request
+-						  from userspace */
+ #define FBINFO_MISC_TILEBLITTING       0x20000 /* use tile blitting */
+ 
+ /* A driver may set this flag to indicate that it does want a set_par to be
+-- 
+1.8.3.1
 
