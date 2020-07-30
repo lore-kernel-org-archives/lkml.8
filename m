@@ -2,163 +2,166 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA87AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD412075D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:53:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LxOV/pwA"
+	by mail.kernel.org (Postfix) with ESMTP id AB60F207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:56:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596070605;
+	bh=JT6jtDG0iOddtAjTvbt4c86jgkq7+Vw0sGLnvvm3bH0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=zYA69fWPvztnR5H6DqW2cVxapgNCYFgJFWjwKS0r8eeDovbK4ftUzeBvpKYqQ1RGf
+	 b3WN2hC07d41Hkepr313rIG02TlLUrs+Wrxh2XaSxfhcYqGvQQiisZD45zd2wBAXoa
+	 226M17vPMIuMQGQCFf/6s81DKLs1sguTEynHh2dw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgG3AxK (ORCPT
+        id S1728274AbgG3A4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 20:53:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbgG3AxJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 20:53:09 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 817A8C061794;
-        Wed, 29 Jul 2020 17:53:09 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id s16so11819137ljc.8;
-        Wed, 29 Jul 2020 17:53:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2WIsb3OakYjVF8It8z90CrlZdw9biUetyGUhn5Gd9zk=;
-        b=LxOV/pwADxmLgnpAn+jbdz5AKBHxCpc/fKkznCKuZayUymRrRDAsQCB/BOt8G4cTbc
-         SSJ0DMfLg7hAzdfyxjSZ6aT+t7uqiNkHxIyhWpdTnwB86aYn6DY9sOAWKptq012/EKks
-         ue8Ncx+bhH6u2V9Ni2ih10Gqe8a3PnKRW9+N9vz8SOnIXm9qJX4jOeQRBvHwU6fv6ko2
-         PC4IXJTx7akbYwyZm666fmJCoTpAw3DhbtQohmALJXHmEyMelGVRMrcT3ISXMvzFW769
-         ptzX4T75V2X5d/IoP58qdytZeH2dADX43cPK3GuDC6BzBV0pFFPZ6TP77UhKUsk2zdAQ
-         znLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2WIsb3OakYjVF8It8z90CrlZdw9biUetyGUhn5Gd9zk=;
-        b=rRY2Fq5Bwe1YvpdYSVX7zLBN+U7VXlXBM9TIWPoN6hdDD5qpw6m5ZfWl+keX/+9W9n
-         p39TU77lSKQy/Xx+cdQua4tshjacMXE6zS7ts/uIXzYGRbcxpifDy3pIVKjdguOQuDlU
-         Ya2CLQkzMW/FqAuOElsznu5n2bQq49RqsuH8tpD+6HTm0FyIL8cytvKlC0phVHUR+I6E
-         5wtbCngsJ00AOJo/c5oRJv3c6tr/Ab8HgxrA6eYbD/EIRcfJxzE66W2xJO3qfv//tEQ5
-         NHNBCGf5gXhnyVV+cSrJx2ZGmY3fYwyixGQU9cgrNOQ+sAB3TA01WxmM0hlrPvCy++aB
-         y6qw==
-X-Gm-Message-State: AOAM533j5rtVLVSYSy8EKRDtzv0oIJvcNbwd5tq6BgkSeMRaPbYKFTeZ
-        e01NoLj8pzzw9TQJr6mKQjjcWaBZ
-X-Google-Smtp-Source: ABdhPJyrfeqwdyj25iD1xokH7+qTgCm7Qmo3VsGSgHxwkAYo+mtQ7x5gnXHVBPX1PLQKx4jfLffKPA==
-X-Received: by 2002:a2e:8718:: with SMTP id m24mr221091lji.253.1596070387782;
-        Wed, 29 Jul 2020 17:53:07 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-12-16.pppoe.mtu-net.ru. [91.76.12.16])
-        by smtp.googlemail.com with ESMTPSA id r19sm803663lfi.58.2020.07.29.17.53.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 17:53:07 -0700 (PDT)
-Subject: Re: [RFC PATCH v5 13/14] media: tegra-video: Add CSI MIPI pads
- calibration
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
- <1595883452-17343-14-git-send-email-skomatineni@nvidia.com>
- <c3d40261-9d77-3634-3e04-f20efad9d3d8@gmail.com>
- <01ee0805-3d57-d857-48e3-5c2245cd4500@nvidia.com>
- <2ec535c9-55e8-8834-6002-36c75aeb097c@gmail.com>
- <021707b9-5f72-6f8b-d125-43627ef64a6d@nvidia.com>
- <de2d6117-b1e5-14c0-52ca-ff46b444c866@nvidia.com>
- <ca18b93e-1f1c-50ae-e0c1-11758935ee89@gmail.com>
- <42f25a49-ad2b-4e52-fd99-cb0f52037988@nvidia.com>
- <f5440f57-3653-7cf0-9efe-e9a0c276f7cf@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <6ae07f82-53f7-33fc-5892-340b0d9f12cf@gmail.com>
-Date:   Thu, 30 Jul 2020 03:53:06 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <f5440f57-3653-7cf0-9efe-e9a0c276f7cf@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 29 Jul 2020 20:56:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58676 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726858AbgG3A4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 20:56:44 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B2162075D;
+        Thu, 30 Jul 2020 00:56:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596070603;
+        bh=JT6jtDG0iOddtAjTvbt4c86jgkq7+Vw0sGLnvvm3bH0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LjiVwMrqcBtHTh37YREBH3CKLQbwfeudi2Efui6/HeeVMCfjeB14SAFmJF9m22Uw3
+         EdGTwYGHWKO608B33x5ey+vQQhlnjsKvWROGJWy3A3n3t0a3utx35iKGGfGnXyDfmV
+         1rJ80XNm+yS0guiGtS2rCzEod8wCSm4ht+egTKAY=
+Date:   Thu, 30 Jul 2020 09:56:39 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Alistair Delva <adelva@google.com>, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/3] bootconfig: Add value override operator
+Message-Id: <20200730095639.71ce61e7826ad72ace675791@kernel.org>
+In-Reply-To: <20200716102703.33435594dbf192157cf9655f@kernel.org>
+References: <159482882056.126704.15508672095852220119.stgit@devnote2>
+        <20200715164504.3400efc5@oasis.local.home>
+        <20200716073843.e7b1921aae962da9e5714fe0@kernel.org>
+        <20200715200212.0db61d5a@oasis.local.home>
+        <20200716102703.33435594dbf192157cf9655f@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-30.07.2020 03:55, Sowjanya Komatineni пишет:
-> 
-> On 7/29/20 5:52 PM, Sowjanya Komatineni wrote:
->>
->> On 7/29/20 5:43 PM, Dmitry Osipenko wrote:
->>> 30.07.2020 03:27, Sowjanya Komatineni пишет:
->>> ...
->>>>>> Secondly, perhaps a failed calibration isn't a very critical error?
->>>>>> Hence just printing a warning message should be enough.
->>>>> Using dev_err to report calibration failure. Are you suggesting to use
->>>>> dev_warn instead of dev_err?
->>> I meant that failing s_stream might be unnecessary.
->>>
->>> The dev_warn should be more appropriate for a non-critical errors.
->>>
->>>>>> Could you please make a patch that factors all ON/OFF code paths
->>>>>> into a
->>>>>> separate functions? It's a bit difficult to follow the combined code,
->>>>>> especially partial changes in the patches. Thanks in advance!
->>>>> what do you mean by partial changes in patches?
->>>>>
->>>>> Can you please be more clear?
->>>> Also please specify what ON/OFF code paths you are referring to when
->>>> you
->>>> say to move into separate functions?
->>> I meant to change all the code like this:
->>>
->>> set(on) {
->>>      if (on) {
->>>         ...
->>>         return;
->>>      }
->>>
->>>      if (!on)
->>>        ...
->>>
->>>      return;
->>> }
->>>
->>> to somewhat like this:
->>>
->>> set(on) {
->>>      if (on)
->>>        ret = enable();
->>>      else
->>>        ret = disable();
->>>
->>>      return ret;
->>> }
->>
->> You mean to change tegra_channel_set_stream() ?
+Hi Steve,
 
-Yes, and tegra_csi_s_stream().
+On Thu, 16 Jul 2020 10:27:03 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-> changing tegra_channel_set_stream() to have like below will have
-> redundant calls as most of the code b/w enable and disable is same
-> except calling them in reverse order based on on/off and doing MIPI
-> calibration only during ON
+> Hi Steve,
 > 
+> On Wed, 15 Jul 2020 20:02:12 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> if (on)
->     ret = enable()
-> else
->     ret = disable()
-> return ret;
+> > On Thu, 16 Jul 2020 07:38:43 +0900
+> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > 
+> > 
+> > > > So the end of the initrd would have:
+> > > > 
+> > > >  [data][size/checksum/magic][more-data][size/checksum/magic]
+> > > > 
+> > > > 
+> > > > And the kernel could do the following:
+> > > > 
+> > > >  1. read the end of the initrd for bootconfig
+> > > >  2. If found parse the bootconfig data.
+> > > >  3. look at the content before the bootconfig
+> > > >  4. if another bootconfig exists, goto 2.
+> > > >   
+> > > 
+> > > Yeah, that is possible. But since the total size of the bootconfig
+> > > is limited to 32KB (this means data + 1st footer + more-data),
+> > > I would like to give a chance of sanity check to the bootloader.
+> > 
+> > 
+> > That's a limit of the size field, right?
+> 
+> If you mean the size field in the footer, no, it is u32.
+> 
+> To be honest, the size limitation came from the xbc_node data
+> structure. To minimize the memory footprint, I decided to
+> pack the data structure into 64bits with 4 fields.
+> Each field has 16bits, and the data field needs 1 bit flag
+> to distinguish the value and the key.
+> Thus the maximum number of nodes can be expanded to 64K
+> (but it is not feasible, maybe less than 8K will be a real
+> size), but the data field (the offset from the bootconfig
+> start address) is 15bits = 32KB long.
+> Of course we can use the bitfield to tune it, but maybe current
+> balance ( 512 node / 32KB ) is enough.
+> 
+> Note that if we expand the number of nodes, we need to pre-allocate
+> the node data structure as a static data (in .bss) because parsing
+> will be done before initializing memory management. 512 nodes means
+> 4096B is already allocated. 8K node needs 64KB, and that will be
+> not filled in most cases.
+> 
+> > The bootloader (and all tools including the kernel) could check for
+> > multiple instances, and that would even increase the size of what can
+> > be added. As each section would be 32KB max size, but there's no limit
+> > to how many you have. All tools, bootconfig, the bootloader, and the
+> > kernel can perform the checksum.
+> 
+> In fact, I previously considered the multi-section, but came to the
+> conclusion that it wasn't much benefit for both Linux and the
+> bootloaders.
+> 
+> If we support multi-section, we have to mix the section nodes on
+> a single tree for overriding values, this means the data field must
+> have a section number (and per-section starting address pointers),
+> or an offset from the 1st section address.
+> 
+> And I think it is easy for the bootloader to just concatenate the
+> data as below, because the data is already on memory.
+> 
+> [data][more-data][size/checksum/magic]
+> 
+> To support multiple-section, the bootloader will do
+> 
+> 0. load the bootconfig with the initrd from media
+> 1. prepare the data
+> 2. calculate the size and checksum of the data
+> 3. append the data and footer right after the last footer
+> 
+> and to support single section,
+> 
+> 0. load the bootconfig with the initrd from media
+> 1. prepare the data
+> 2. calculate the size and checksum of the data
+> 3. increment the size and the checksum 
+>    (note that the size and checksum is already on memory)
+> 4. append the data and footer right after the last data
+> 
+> Thus, I think there is no much benefit to support multiple sections.
 
-Readability should be more important than number of lines.
+What would you think?
+
+I guess if we have other types of data appended to the initrd
+as similar to the bootconfig, I think we should add the multiple
+section support. But only for the bootconfig, we can just update
+the bootconfig data as I suggested, since it keeps the code simple.
+It might be a chiken-egg problem...
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
