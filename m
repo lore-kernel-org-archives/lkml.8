@@ -2,112 +2,74 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C56B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98605C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4F4A2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:22:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F2kDh3qK"
+	by mail.kernel.org (Postfix) with ESMTP id 796272082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:27:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgG3LWv (ORCPT
+        id S1727063AbgG3L1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 07:22:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54658 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726367AbgG3LWu (ORCPT
+        Thu, 30 Jul 2020 07:27:32 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:54301 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgG3L1b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 07:22:50 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F614C061794;
-        Thu, 30 Jul 2020 04:22:49 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id e22so4215400pjt.3;
-        Thu, 30 Jul 2020 04:22:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IwjGvmHYj5CwlmD5GYkZzUlslsm23kbi+AR0fiLStwE=;
-        b=F2kDh3qK24YMvm0UIFUHs0oJeGnSx1evitnSLdEc4wCp4My/XY/gWcjDpepy6i7aAr
-         +8Q4o9H3WCTovoZg4EjjWXR1CDlZ5cQvHzmmacQz2aK4wEbJqcpYMp5NAFqkxZ1iTgqG
-         S58omo0hZLudRuScRY1JOq4F9mZ/U22nBLDt7amC4eaCqTb8VdeysD5VHT5epWSfoZrO
-         jWc5n8SCpg8m+GzDDmeYPWYGsb8vk42IICG+4P0UKvQYqk6ZbO34Jmq5+4pyWBwpxmQy
-         syDofhr9aKFyThw+oOSv5AGcq3Vw9+DJ6NIuJTyX/g4hzzEITwC2fOdlkrJlb5pBcxfB
-         3hDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IwjGvmHYj5CwlmD5GYkZzUlslsm23kbi+AR0fiLStwE=;
-        b=lTbD4w2FnBUwUmhxn+uoOWv2ZMq4Cm8im2Po7ZOE4pyy/mJb2ZeNsh2QNCdfL36H2t
-         RKS9tE6V7vgePbZn77VGSfv6kVk9oqCZbRrnWjc/ZCmHNAEu72wXBjQbBp6U4CYjqsII
-         EwqK6WNsuTlyNWqrcfNvAdlPfleC6v4dIBpe7MVsLHh+T++pFTGjjDV+cSyssa9wSZ8Z
-         d+MmGxRAT7+Bwdn8Gsi58d7yu8fJg4zAa1rSOGZj91pPScbKWXUtxGihDycicfY/ufH1
-         rDF7x2E6pgp8DDeKoz+9udPns8U7gBmtHb2gih1atCNLEoX32Gc8hCTTcm9iLjIw/0US
-         tzgg==
-X-Gm-Message-State: AOAM530a8rXjfXp+hfF9yDwVO4TW/H3meQKCGr0/NlI1smJ9fkvnAC08
-        jdTyrn+6SyvWkhqz1EDcZPzxuQ9/aQc=
-X-Google-Smtp-Source: ABdhPJzTziGmekPWyfescjKyJeiO2PR5tcws6T0uYoASSTkChMWbCnIJguIFL05p9WI6j/3pXu3YeQ==
-X-Received: by 2002:a17:902:bd8a:: with SMTP id q10mr33500723pls.236.1596108168933;
-        Thu, 30 Jul 2020 04:22:48 -0700 (PDT)
-Received: from localhost.localdomain ([122.224.153.227])
-        by smtp.gmail.com with ESMTPSA id s22sm351176pfh.16.2020.07.30.04.22.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 Jul 2020 04:22:48 -0700 (PDT)
-From:   Yanhu Cao <gmayyyha@gmail.com>
-To:     jlayton@kernel.org
-Cc:     idryomov@gmail.com, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yanhu Cao <gmayyyha@gmail.com>
-Subject: [PATCH] ceph: use frag's MDS in either mode
-Date:   Thu, 30 Jul 2020 19:22:42 +0800
-Message-Id: <20200730112242.31648-1-gmayyyha@gmail.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
+        Thu, 30 Jul 2020 07:27:31 -0400
+Received: from fsav404.sakura.ne.jp (fsav404.sakura.ne.jp [133.242.250.103])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06UBRToT022896;
+        Thu, 30 Jul 2020 20:27:30 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav404.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp);
+ Thu, 30 Jul 2020 20:27:29 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06UBRTGu022886
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Thu, 30 Jul 2020 20:27:29 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] fbmem: pull fbcon_update_vcs() out of fb_set_var()
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        syzbot <syzbot+c37a14770d51a085a520@syzkaller.appspotmail.com>
+References: <1596000620-4075-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <CAKMK7uHeteS2+rKrZKrAM+zQO==hAX0XaVc9JfHPsdLTCtzKOw@mail.gmail.com>
+ <a3bb6544-064d-54a1-1215-d92188cb4209@i-love.sakura.ne.jp>
+ <CAKMK7uGTL02SHbEazu5YEnEncO6c-+P6DXt1GWSVQ28enqLx2g@mail.gmail.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <d4c97785-467a-6e04-b8bb-c8aa4177882a@i-love.sakura.ne.jp>
+Date:   Thu, 30 Jul 2020 20:27:26 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKMK7uGTL02SHbEazu5YEnEncO6c-+P6DXt1GWSVQ28enqLx2g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-if frag.mds != cap->session->s_mds, the client's req will be resent.
+On 2020/07/30 20:16, Daniel Vetter wrote:
+> Patch looks good, except ... does this compile? fbcon_update_vcs is
+> defined in fbcon.h, and that doesn't seem to be included here ...
+> Maybe what we want is an fb_set_var_ioctl in fbmem.c so that the fbcon
+> interaction is a bit better hidden (but that's a bikeshed, feel free
+> to ignore). Also I have no idea what trickery you need to compile-test
+> ps3fb, that's why I'm asking :-)
 
-e.g.
-
-file: mnt/cephfs/dir03/dir003 (0x10000000003)
-ceph.dir.pin="1"
-
-echo 'aaa' > /mnt/cephfs/dir03/dir003/file29
-
-kernel: ceph:  __choose_mds 00000000ca362c7a is_hash=1 (0x7c768b89) mode 2
-kernel: ceph:  __choose_mds 00000000ca362c7a 10000000003.fffffffffffffffe frag 0 mds1 (auth)
-kernel: ceph:  __choose_mds 00000000ca362c7a 10000000003.fffffffffffffffe mds0 (auth cap 00000000679c38e2)
-kernel: ceph:  __choose_mds using resend_mds mds1
-
-Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
----
- fs/ceph/mds_client.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index a50497142e59..b2255a9be7c0 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -1103,8 +1103,7 @@ static int __choose_mds(struct ceph_mds_client *mdsc,
- 				     frag.frag, mds);
- 				if (ceph_mdsmap_get_state(mdsc->mdsmap, mds) >=
- 				    CEPH_MDS_STATE_ACTIVE) {
--					if (mode == USE_ANY_MDS &&
--					    !ceph_mdsmap_is_laggy(mdsc->mdsmap,
-+					if (!ceph_mdsmap_is_laggy(mdsc->mdsmap,
- 								  mds))
- 						goto out;
- 				}
--- 
-2.24.3 (Apple Git-128)
-
+Right. I didn't prepare environment for compiling powerpc kernel.
+Kernel test robot found it and I already posted V2 patch as
+https://lkml.kernel.org/r/075b7e37-3278-cd7d-31ab-c5073cfa8e92@i-love.sakura.ne.jp .
