@@ -2,95 +2,103 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BD5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F305DC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0889206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF141206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:30:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbgG3HaH (ORCPT
+        id S1728968AbgG3HaV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 03:30:07 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:37426 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726194AbgG3HaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 03:30:07 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3885D2011E0;
-        Thu, 30 Jul 2020 09:30:05 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2BA3420021B;
-        Thu, 30 Jul 2020 09:30:05 +0200 (CEST)
-Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 0A41D20341;
-        Thu, 30 Jul 2020 09:30:04 +0200 (CEST)
-Date:   Thu, 30 Jul 2020 10:30:04 +0300
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Anson Huang <anson.huang@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 10/17] Documentation: bindings: clk: Add bindings for
- i.MX BLK_CTRL
-Message-ID: <20200730073004.r2d2prwlocqclpz3@fsr-ub1664-175>
-References: <1596024483-21482-1-git-send-email-abel.vesa@nxp.com>
- <1596024483-21482-11-git-send-email-abel.vesa@nxp.com>
- <159605218106.1360974.17212937588367161697@swboyd.mtv.corp.google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159605218106.1360974.17212937588367161697@swboyd.mtv.corp.google.com>
-User-Agent: NeoMutt/20180622
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 30 Jul 2020 03:30:21 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:47807 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgG3HaU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 03:30:20 -0400
+Received: from marcel-macbook.fritz.box (p4ff9f430.dip0.t-ipconnect.de [79.249.244.48])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 7D0B8CECF1;
+        Thu, 30 Jul 2020 09:40:19 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] Revert "Bluetooth: btusb: Disable runtime suspend on
+ Realtek devices"
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <8DFB5D1A-AA7E-4960-9937-4FD00827937B@canonical.com>
+Date:   Thu, 30 Jul 2020 09:30:16 +0200
+Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        chromeos-bluetooth-upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        Bluetooth Kernel Mailing List 
+        <linux-bluetooth@vger.kernel.org>,
+        Alex Lu <alex_lu@realsil.com.cn>, linux-pm@vger.kernel.org,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <E52C04D8-67C6-4949-B988-A61F6FCD1434@holtmann.org>
+References: <20200729161740.1.Ib03d0827c8e48fc3df887fec698f79fa335c9274@changeid>
+ <8DFB5D1A-AA7E-4960-9937-4FD00827937B@canonical.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-07-29 12:49:41, Stephen Boyd wrote:
-> Quoting Abel Vesa (2020-07-29 05:07:56)
-> > diff --git a/Documentation/devicetree/bindings/clock/fsl,imx-blk-ctrl.yaml b/Documentation/devicetree/bindings/clock/fsl,imx-blk-ctrl.yaml
-> > new file mode 100644
-> > index 00000000..036d3d3
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/clock/fsl,imx-blk-ctrl.yaml
-> > @@ -0,0 +1,55 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only)
-> > +%YAML 1.2
-> > +---
-> > +$id: https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevicetree.org%2Fschemas%2Fclock%2Ffsl%2Cimx-blk-ctrl.yaml%23&amp;data=02%7C01%7Cabel.vesa%40nxp.com%7C30d7fec624c44b4f85e108d833f88a5e%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637316489861505079&amp;sdata=63jhxp1rw%2BMYPlc%2BhwSjOwBvN%2Fikf5PXUKGjEXD5agM%3D&amp;reserved=0
-> > +$schema: https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevicetree.org%2Fmeta-schemas%2Fcore.yaml%23&amp;data=02%7C01%7Cabel.vesa%40nxp.com%7C30d7fec624c44b4f85e108d833f88a5e%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637316489861505079&amp;sdata=9%2FLcFRkMHXx1%2FHsEfFyhNmI73hDC2GUu2s%2BE9EQTUSE%3D&amp;reserved=0
-> [...]
-> > +
-> > +examples:
-> > +  - |
-> > +    audio-blk-ctrl: blk-ctrl@30e20000 {
-> 
-> clock-controller@30e20000 {
+Hi Kai-Heng,
 
-Will change in the new version.
-
+>> On Jul 30, 2020, at 07:17, Abhishek Pandit-Subedi <abhishekpandit@chromium.org> wrote:
+>> 
+>> This reverts commit 7ecacafc240638148567742cca41aa7144b4fe1e.
+>> 
+>> Testing this change on a board with RTL8822CE, I found that enabling
+>> autosuspend has no effect on the stability of the system. The board
+>> continued working after autosuspend, suspend and reboot.
 > 
-> > +       compatible = "fsl,imx8mp-blk-ctrl", "syscon";
-> > +       reg = <0x30e20000 0x10000>;
-> > +       power-domains = <&audiomix_pd>;
-> > +
-> > +       #clock-cells = <1>;
-> > +       #reset-cells = <1>;
-> > +    };
+> The original issue was found on 8723DE. Do you have one to test with?
+> The rtw88 codebase has changed a lot and maybe it's already fixed in mainline.
+> Let me do some test and I'll report back.
+> 
+>> 
+>> The original commit makes it impossible to enable autosuspend on working
+>> systems so it should be reverted. Disabling autosuspend should be done
+>> via module param or udev in userspace instead.
+>> 
+>> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+>> ---
+>> We have a few Chromebooks using the RTL 8822CE part over USB and they
+>> are running without problems with autosuspend enabled. While bringing up
+>> a new board, I found some power regressions that I was able to narrow
+>> down to this change so I'm requesting a revert.
+>> 
+>> I tested this on Hp Chromebook 14a (running 4.14 kernel and 5.4 kernel)
+>> with this revert:
+>> * Enabled autosuspend, used it normally with a HID device
+>> * Suspended the Chromebook and verified it worked normally on resume
+>> * Rebooted the Chromebook and verified Bluetooth was working on next
+>> boot
+>> 
+>> I didn't see the issue that was originally reported with this fix. For
+>> the original reporter, if you're still seeing this issue, there are
+>> other ways to disable autosuspend for your device:
+>> * set module param: enable_autosuspend=0
+>> * change your kconfig so BT_HCIBTUSB_AUTOSUSPEND=n
+>> * use a udev rule to disable autosuspend for specific vid:pid
+>> 
+>> Keeping this change in the kernel makes it impossible to enable
+>> autosuspend so it should be reverted.
+> 
+> It's apparently a driver/firmware/hardware issue, so the fix should keep inside the kernel.
+> However, the fix can be more precise and target only 8723DE.
+
+lets do that and lets do it quickly since the merge window is close. Otherwise I really have to revert that patch.
+
+Regards
+
+Marcel
+
