@@ -2,179 +2,140 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84307C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B4EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5222083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:51:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="AemhoB+W"
+	by mail.kernel.org (Postfix) with ESMTP id 1B456207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:52:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbgG3Kv3 (ORCPT
+        id S1729124AbgG3KwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 06:51:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgG3Kv2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 06:51:28 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32956C061794;
-        Thu, 30 Jul 2020 03:51:28 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 81F479B1;
-        Thu, 30 Jul 2020 12:51:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1596106281;
-        bh=n1m+bmGyUH/eEEu4Y5sQCh8enZ0QEwG8JGJeZO/CgWA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AemhoB+Wbm5z61TJjrRYLOIcv1wizPX3kIHNJXbo53DykqqR8ZsUJCXg8w2YJg5/R
-         BoHqzZUngWXUOxzYtV8Z4H9SqGVDS5I3gOcZO6Rs77sF28+OhdZsp5gvR8wr+zz6QV
-         CN9KoxyhYSoPyjqIcl/PsbrKIVxLuVVyy5m9yWJI=
-Date:   Thu, 30 Jul 2020 13:51:12 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Kaaira Gupta <kgupta@es.iitr.ac.in>
-Cc:     Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Subject: Re: [PATCH v2 0/3] media: vimc: Allow multiple capture devices to
- use the same sensor
-Message-ID: <20200730105112.GA7079@pendragon.ideasonboard.com>
-References: <20200724120213.17119-1-kgupta@es.iitr.ac.in>
+        Thu, 30 Jul 2020 06:52:03 -0400
+Received: from mailout08.rmx.de ([94.199.90.85]:49523 "EHLO mailout08.rmx.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725892AbgG3KwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 06:52:02 -0400
+Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mailout08.rmx.de (Postfix) with ESMTPS id 4BHS0G00t7zMvJV;
+        Thu, 30 Jul 2020 12:51:58 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin02.retarus.com (Postfix) with ESMTPS id 4BHRzK1VJyz2TTM9;
+        Thu, 30 Jul 2020 12:51:09 +0200 (CEST)
+Received: from N95HX1G2.wgnetz.xx (192.168.54.117) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Thu, 30 Jul
+ 2020 12:50:27 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Christian Eggers" <ceggers@arri.de>
+Subject: [PATCH v3 1/2] dt-bindings: iio: light: add AMS AS73211 support
+Date:   Thu, 30 Jul 2020 12:49:45 +0200
+Message-ID: <20200730104946.39148-2-ceggers@arri.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200730104946.39148-1-ceggers@arri.de>
+References: <20200730104946.39148-1-ceggers@arri.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200724120213.17119-1-kgupta@es.iitr.ac.in>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [192.168.54.117]
+X-RMX-ID: 20200730-125117-4BHRzK1VJyz2TTM9-0@kdin02
+X-RMX-SOURCE: 217.111.95.66
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kaaira,
+Add DT bindings for AMS AS73211 XYZ True Color Sensor.
 
-Thank you for the patches.
+Signed-off-by: Christian Eggers <ceggers@arri.de>
+---
+ .../bindings/iio/light/ams,as73211.yaml       | 54 +++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/ams,as73211.yaml
 
-On Fri, Jul 24, 2020 at 05:32:10PM +0530, Kaaira Gupta wrote:
-> This is version 2 of the patch series posted by Niklas for allowing
-> multiple streams in VIMC.
-> The original series can be found here:
-> https://patchwork.kernel.org/cover/10948831/
-> 
-> This series adds support for two (or more) capture devices to be 
-> connected to the same sensors and run simultaneously. Each capture device 
-> can be started and stopped independent of each other.
-> 
-> Patch 1/3 and 2/3 deals with solving the issues that arises once two 
-> capture devices can be part of the same pipeline. While 3/3 allows for 
-> two capture devices to be part of the same pipeline and thus allows for 
-> simultaneously use.
-
-I think this is really nice work, as it will make the vimc driver even
-more useful for testing purposes.
-
-I however just noticed that the patches seem to have lost Niklas'
-authorship. Niklas posted v1 ([1]), and while there's absolutely no
-issue with taking over a patch series (especially when the original
-author is aware of that, and approves :-)), it's customary to keep the
-original authorship.
-
-Authorship, as recorded in the commit's "Author:" field (displayed by
-"git show" or "git log" for instance), is distinct from Signed-off-by.
-The original Signed-off-by line needs to be preserved to indicate the
-original author's commitment to the certificate of origin ([2]), but in
-itself that doesn't acknowledge original authorship of the code.
-
-I'm sure this is an oversight. Authorship can easily be changed with the
---author option to "git commit --amend".
-
-$ git show -s
-commit 8be3a53e18e0e1a98f288f6c7f5e9da3adbe9c49 (HEAD -> tmp)
-Merge: fc10807db5ce 3c597282887f
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed Jun 24 17:39:30 2020 -0700
-
-    Merge tag 'erofs-for-5.8-rc3-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs
-
-    Pull erofs fix from Gao Xiang:
-     "Fix a regression which uses potential uninitialized high 32-bit value
-      unexpectedly recently observed with specific compiler options"
-
-    * tag 'erofs-for-5.8-rc3-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs:
-      erofs: fix partially uninitialized misuse in z_erofs_onlinepage_fixup
-$ git commit --amend --author 'Laurent Pinchart <laurent.pinchart@ideasonboard.com>'
-[tmp 6a7191c2aee9] Merge tag 'erofs-for-5.8-rc3-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs
- Date: Wed Jun 24 17:39:30 2020 -0700
-$ git show -s
-commit 6a7191c2aee9e4a2ba375f14c821bc9b4d7f881b (HEAD -> tmp)
-Merge: fc10807db5ce 3c597282887f
-Author: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Date:   Wed Jun 24 17:39:30 2020 -0700
-
-    Merge tag 'erofs-for-5.8-rc3-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs
-    
-    Pull erofs fix from Gao Xiang:
-     "Fix a regression which uses potential uninitialized high 32-bit value
-      unexpectedly recently observed with specific compiler options"
-    
-    * tag 'erofs-for-5.8-rc3-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs:
-      erofs: fix partially uninitialized misuse in z_erofs_onlinepage_fixup
-
-Not that I would try to take ownership of a commit authored by Linus, I
-doubt he would appreciate that :-)
-
-Authorship is normally preserved through git-format-patch,
-git-send-email and git-am:
-
-- git-format-patch sets the "From:" line to the patch's author
-
-- If the "From:" line is different than the mail sender, git-send-email
-  replaces it with the sender's identity (as we don't want to forge
-  e-mails with an incorrect sender). It then adds the original "From:"
-  line *inside* the mail, just after the headers, right before the body
-  of the commit message.
-
-- git-am sets the author to the "From:" line from the e-mail's body if
-  it exists, and uses the "From:" line from the e-mail's header (the
-  sender's identity) otherwise.
-
-If you use those tools authorship should get preserved automatically.
-
-Of course new patches that you would add to the series should have your
-authorship.
-
-I hope this helps clarifying the process, please let me know if you have
-any question.
-
-[1] https://lore.kernel.org/linux-media/20190518010744.15195-1-niklas.soderlund+renesas@ragnatech.se/
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst#n431
-
-> Changes since v1:
-> 	- All three patches rebased on latest media-tree.
-> 	Patch 3:
-> 	- Search for an entity with a non-NULL pipe instead of searching
-> 	  for sensor. This terminates the search at output itself.
-> 
-> Kaaira Gupta (3):
->   media: vimc: Add usage count to subdevices
->   media: vimc: Serialize vimc_streamer_s_stream()
->   media: vimc: Join pipeline if one already exists
-> 
->  .../media/test-drivers/vimc/vimc-capture.c    | 35 ++++++++++++++++++-
->  .../media/test-drivers/vimc/vimc-debayer.c    |  8 +++++
->  drivers/media/test-drivers/vimc/vimc-scaler.c |  8 +++++
->  drivers/media/test-drivers/vimc/vimc-sensor.c |  9 ++++-
->  .../media/test-drivers/vimc/vimc-streamer.c   | 23 +++++++-----
->  5 files changed, 73 insertions(+), 10 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/iio/light/ams,as73211.yaml b/Documentation/devicetree/bindings/iio/light/ams,as73211.yaml
+new file mode 100644
+index 000000000000..0e8cd02759b3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/ams,as73211.yaml
+@@ -0,0 +1,54 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/light/ams,as73211.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: AMS AS73211 JENCOLOR(R) Digital XYZ Sensor
++
++maintainers:
++  - Christian Eggers <ceggers@arri.de>
++
++description: |
++  XYZ True Color Sensor with I2C Interface
++  https://ams.com/documents/20143/36005/AS73211_DS000556_3-01.pdf/a65474c0-b302-c2fd-e30a-c98df87616df
++
++properties:
++  compatible:
++    enum:
++      - ams,as73211
++
++  reg:
++    description:
++      I2C address of the device (0x74...0x77).
++    maxItems: 1
++
++  interrupts:
++    description:
++      Interrupt specifier for the READY interrupt generated by the device.
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        as73211@74 {
++            compatible = "ams,as73211";
++            reg = <0x74>;
++            pinctrl-names = "default";
++            pinctrl-0 = <&pinctrl_color_sensor>;
++            interrupt-parent = <&gpio2>;
++            interrupts = <19 IRQ_TYPE_EDGE_RISING>; /* READY */
++        };
++    };
++...
 -- 
-Regards,
+Christian Eggers
+Embedded software developer
 
-Laurent Pinchart
+Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
+Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
+Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
+
