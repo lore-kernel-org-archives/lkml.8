@@ -2,275 +2,95 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B1DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B584AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A8E32082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:54:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aBctt9hN"
+	by mail.kernel.org (Postfix) with ESMTP id 958A3206F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 09:55:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729517AbgG3Jym (ORCPT
+        id S1729541AbgG3Jzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 05:54:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41038 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729483AbgG3Jyi (ORCPT
+        Thu, 30 Jul 2020 05:55:54 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:35882 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726790AbgG3Jzy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 05:54:38 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B1CAC061794
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 02:54:38 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a14so24300724wra.5
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 02:54:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=CDZdaQ0UzaVPAl4BrEXf3VptjqZf7e9m4ADVCxDxrwM=;
-        b=aBctt9hN1SEHEjvnjyq5z/vDwrSXncytca2M31s3l66fzbVxOfEZ6K2WrM0pxShQAG
-         /bDxhTI1jfWBaQdqV1DHm6tZA2Pq2AVmnh0CkhKMV+6JiqmRsNa4XUVqnc+xBLcmoyZ7
-         zkWKBfaORiXExgzZErl7Lrq39Mv5kygheDtUP6dlWdR7w4go9C6b6iaqowpp8IYjHKQz
-         4np2mGlKZfZltwY62qgby9+r6jIjuV4X1sJUmsssNu+Ty4nJov6ozXIwf56J7yzckley
-         dDcDKNe/p9KHT2VVlRJNipdtwGtZTM/XxH7Ws+iYgbOhSLvQp/orR2PEjhz5ksYkCvkQ
-         T3Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=CDZdaQ0UzaVPAl4BrEXf3VptjqZf7e9m4ADVCxDxrwM=;
-        b=Snux22WpILrjZSh9L365rCzVYCXJFavx1HZQRJCxNNYtm4lQw96Fro1pAxQMVciNIU
-         KT4sVMLckECiaxcnp9J+O3OR9LwH81d7/bCvIqP/8dhA2ZUzzFBAgN4O4rAZ79LPpjx7
-         MJZTM9tL79fIeCoWT3qLy+oy7umOZU9aNts7cHqifHtq/f6mS2sbi77HkxRECAvbh9A7
-         eVDzRfD0zgd8+HUZaL1RayNb7lOuHLKbNzzb5PIWslAwVGMGXNPi0vo93tqI5os+Sf96
-         sfY+i5qcv608ObBLV/NZDDWpT1qGPRBIDwAGdm292RTm3ZYdG2sRt3wqEvEAKO5Gy3X9
-         0vcg==
-X-Gm-Message-State: AOAM532UP6KBhvi44HBcyw/ZwEEHY9wzcOntHOCtvtSZWAGBkEKn+mwx
-        J3OUvhxjxX7xwneo+C4SXAWlhmn7TcMc0w==
-X-Google-Smtp-Source: ABdhPJx/B/OXkKu4Gty1PyBAlg5p4CeBzcpdxJ5UJ/rubahK4WjxK5/CCwYAsAy+9vzZvVCBXCRHHA==
-X-Received: by 2002:a05:6000:124c:: with SMTP id j12mr2097457wrx.83.1596102876865;
-        Thu, 30 Jul 2020 02:54:36 -0700 (PDT)
-Received: from localhost.localdomain ([195.24.90.54])
-        by smtp.gmail.com with ESMTPSA id u1sm10623139wrb.78.2020.07.30.02.54.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 02:54:36 -0700 (PDT)
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Cc:     jim.cromie@gmail.com, Joe Perches <joe@perches.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v5 3/3] venus: Make debug infrastructure more flexible
-Date:   Thu, 30 Jul 2020 12:53:50 +0300
-Message-Id: <20200730095350.13925-4-stanimir.varbanov@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200730095350.13925-1-stanimir.varbanov@linaro.org>
-References: <20200730095350.13925-1-stanimir.varbanov@linaro.org>
+        Thu, 30 Jul 2020 05:55:54 -0400
+Received: from marcel-macbook.fritz.box (p4ff9f430.dip0.t-ipconnect.de [79.249.244.48])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 6647FCECF2;
+        Thu, 30 Jul 2020 12:05:53 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] Revert "Bluetooth: btusb: Disable runtime suspend on
+ Realtek devices"
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200729161740.1.Ib03d0827c8e48fc3df887fec698f79fa335c9274@changeid>
+Date:   Thu, 30 Jul 2020 11:55:51 +0200
+Cc:     chromeos-bluetooth-upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bluetooth Kernel Mailing List 
+        <linux-bluetooth@vger.kernel.org>,
+        Alex Lu <alex_lu@realsil.com.cn>, linux-pm@vger.kernel.org,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <C006448A-9FE3-4F83-AB67-68973709C0C2@holtmann.org>
+References: <20200729161740.1.Ib03d0827c8e48fc3df887fec698f79fa335c9274@changeid>
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Here we introduce debug prefixes for dev_dbg groups by level of
-importance - Venus{Low,Med,High,FW} Enabling the particular level
-will be done by dynamic debug.
+Hi Abhishek,
 
-For example to enable debug messages with low level:
-echo 'format "VenusLow" +p' > debugfs/dynamic_debug/control
+> This reverts commit 7ecacafc240638148567742cca41aa7144b4fe1e.
+> 
+> Testing this change on a board with RTL8822CE, I found that enabling
+> autosuspend has no effect on the stability of the system. The board
+> continued working after autosuspend, suspend and reboot.
+> 
+> The original commit makes it impossible to enable autosuspend on working
+> systems so it should be reverted. Disabling autosuspend should be done
+> via module param or udev in userspace instead.
+> 
+> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> ---
+> We have a few Chromebooks using the RTL 8822CE part over USB and they
+> are running without problems with autosuspend enabled. While bringing up
+> a new board, I found some power regressions that I was able to narrow
+> down to this change so I'm requesting a revert.
+> 
+> I tested this on Hp Chromebook 14a (running 4.14 kernel and 5.4 kernel)
+> with this revert:
+> * Enabled autosuspend, used it normally with a HID device
+> * Suspended the Chromebook and verified it worked normally on resume
+> * Rebooted the Chromebook and verified Bluetooth was working on next
+>  boot
+> 
+> I didn't see the issue that was originally reported with this fix. For
+> the original reporter, if you're still seeing this issue, there are
+> other ways to disable autosuspend for your device:
+> * set module param: enable_autosuspend=0
+> * change your kconfig so BT_HCIBTUSB_AUTOSUSPEND=n
+> * use a udev rule to disable autosuspend for specific vid:pid
+> 
+> Keeping this change in the kernel makes it impossible to enable
+> autosuspend so it should be reverted.
+> 
+> drivers/bluetooth/btusb.c | 4 ----
+> 1 file changed, 4 deletions(-)
 
-If you want to enable all levels:
-echo 'format "Venus" +p' > debugfs/dynamic_debug/control
+patch has been applied to bluetooth-next tree.
 
-All the features which dynamic debugging provide are preserved.
+Regards
 
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
----
- drivers/media/platform/qcom/venus/core.h       |  5 +++++
- drivers/media/platform/qcom/venus/helpers.c    |  2 +-
- drivers/media/platform/qcom/venus/hfi_msgs.c   | 18 +++++++++---------
- drivers/media/platform/qcom/venus/hfi_venus.c  |  4 ++--
- drivers/media/platform/qcom/venus/pm_helpers.c |  2 +-
- drivers/media/platform/qcom/venus/vdec.c       |  6 +++---
- 6 files changed, 21 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-index b48782f9aa95..b1c94316a553 100644
---- a/drivers/media/platform/qcom/venus/core.h
-+++ b/drivers/media/platform/qcom/venus/core.h
-@@ -15,6 +15,11 @@
- #include "dbgfs.h"
- #include "hfi.h"
- 
-+#define VDBGL	"VenusLow : "
-+#define VDBGM	"VenusMed : "
-+#define VDBGH	"VenusHigh: "
-+#define VDBGFW	"VenusFW  : "
-+
- #define VIDC_CLKS_NUM_MAX		4
- #define VIDC_VCODEC_CLKS_NUM_MAX	2
- #define VIDC_PMDOMAINS_NUM_MAX		3
-diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-index 0143af7822b2..7147871d9dc1 100644
---- a/drivers/media/platform/qcom/venus/helpers.c
-+++ b/drivers/media/platform/qcom/venus/helpers.c
-@@ -396,7 +396,7 @@ put_ts_metadata(struct venus_inst *inst, struct vb2_v4l2_buffer *vbuf)
- 	}
- 
- 	if (slot == -1) {
--		dev_dbg(inst->core->dev, "%s: no free slot\n", __func__);
-+		dev_dbg(inst->core->dev, VDBGL "no free slot\n");
- 		return;
- 	}
- 
-diff --git a/drivers/media/platform/qcom/venus/hfi_msgs.c b/drivers/media/platform/qcom/venus/hfi_msgs.c
-index 279a9d6fe737..06a1908ca225 100644
---- a/drivers/media/platform/qcom/venus/hfi_msgs.c
-+++ b/drivers/media/platform/qcom/venus/hfi_msgs.c
-@@ -138,7 +138,7 @@ static void event_sys_error(struct venus_core *core, u32 event,
- 			    struct hfi_msg_event_notify_pkt *pkt)
- {
- 	if (pkt)
--		dev_dbg(core->dev,
-+		dev_dbg(core->dev, VDBGH
- 			"sys error (session id:%x, data1:%x, data2:%x)\n",
- 			pkt->shdr.session_id, pkt->event_data1,
- 			pkt->event_data2);
-@@ -152,7 +152,7 @@ event_session_error(struct venus_core *core, struct venus_inst *inst,
- {
- 	struct device *dev = core->dev;
- 
--	dev_dbg(dev, "session error: event id:%x, session id:%x\n",
-+	dev_dbg(dev, VDBGH "session error: event id:%x, session id:%x\n",
- 		pkt->event_data1, pkt->shdr.session_id);
- 
- 	if (!inst)
-@@ -247,7 +247,7 @@ sys_get_prop_image_version(struct device *dev,
- 		/* bad packet */
- 		return;
- 
--	dev_dbg(dev, "F/W version: %s\n", (u8 *)&pkt->data[1]);
-+	dev_dbg(dev, VDBGL "F/W version: %s\n", (u8 *)&pkt->data[1]);
- }
- 
- static void hfi_sys_property_info(struct venus_core *core,
-@@ -257,7 +257,7 @@ static void hfi_sys_property_info(struct venus_core *core,
- 	struct device *dev = core->dev;
- 
- 	if (!pkt->num_properties) {
--		dev_dbg(dev, "%s: no properties\n", __func__);
-+		dev_dbg(dev, VDBGL "no properties\n");
- 		return;
- 	}
- 
-@@ -266,7 +266,7 @@ static void hfi_sys_property_info(struct venus_core *core,
- 		sys_get_prop_image_version(dev, pkt);
- 		break;
- 	default:
--		dev_dbg(dev, "%s: unknown property data\n", __func__);
-+		dev_dbg(dev, VDBGL "unknown property data\n");
- 		break;
- 	}
- }
-@@ -297,7 +297,7 @@ static void hfi_sys_ping_done(struct venus_core *core, struct venus_inst *inst,
- static void hfi_sys_idle_done(struct venus_core *core, struct venus_inst *inst,
- 			      void *packet)
- {
--	dev_dbg(core->dev, "sys idle\n");
-+	dev_dbg(core->dev, VDBGL "sys idle\n");
- }
- 
- static void hfi_sys_pc_prepare_done(struct venus_core *core,
-@@ -305,7 +305,8 @@ static void hfi_sys_pc_prepare_done(struct venus_core *core,
- {
- 	struct hfi_msg_sys_pc_prep_done_pkt *pkt = packet;
- 
--	dev_dbg(core->dev, "pc prepare done (error %x)\n", pkt->error_type);
-+	dev_dbg(core->dev, VDBGL "pc prepare done (error %x)\n",
-+		pkt->error_type);
- }
- 
- static unsigned int
-@@ -387,8 +388,7 @@ static void hfi_session_prop_info(struct venus_core *core,
- 	case HFI_PROPERTY_CONFIG_VDEC_ENTROPY:
- 		break;
- 	default:
--		dev_dbg(dev, "%s: unknown property id:%x\n", __func__,
--			pkt->data[0]);
-+		dev_dbg(dev, VDBGM "unknown property id:%x\n", pkt->data[0]);
- 		return;
- 	}
- 
-diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
-index 450c4800c12e..cb9367254c4e 100644
---- a/drivers/media/platform/qcom/venus/hfi_venus.c
-+++ b/drivers/media/platform/qcom/venus/hfi_venus.c
-@@ -477,7 +477,7 @@ static u32 venus_hwversion(struct venus_hfi_device *hdev)
- 	minor = minor >> WRAPPER_HW_VERSION_MINOR_VERSION_SHIFT;
- 	step = ver & WRAPPER_HW_VERSION_STEP_VERSION_MASK;
- 
--	dev_dbg(dev, "venus hw version %x.%x.%x\n", major, minor, step);
-+	dev_dbg(dev, VDBGL "venus hw version %x.%x.%x\n", major, minor, step);
- 
- 	return major;
- }
-@@ -906,7 +906,7 @@ static void venus_flush_debug_queue(struct venus_hfi_device *hdev)
- 		if (pkt->hdr.pkt_type != HFI_MSG_SYS_COV) {
- 			struct hfi_msg_sys_debug_pkt *pkt = packet;
- 
--			dev_dbg(dev, "%s", pkt->msg_data);
-+			dev_dbg(dev, VDBGFW "%s", pkt->msg_data);
- 		}
- 	}
- }
-diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
-index 531e7a41658f..cecf079cf0b8 100644
---- a/drivers/media/platform/qcom/venus/pm_helpers.c
-+++ b/drivers/media/platform/qcom/venus/pm_helpers.c
-@@ -212,7 +212,7 @@ static int load_scale_bw(struct venus_core *core)
- 	}
- 	mutex_unlock(&core->lock);
- 
--	dev_dbg(core->dev, "total: avg_bw: %u, peak_bw: %u\n",
-+	dev_dbg(core->dev, VDBGL "total: avg_bw: %u, peak_bw: %u\n",
- 		total_avg, total_peak);
- 
- 	return icc_set_bw(core->video_path, total_avg, total_peak);
-diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-index 7c4c483d5438..6a71fc47273e 100644
---- a/drivers/media/platform/qcom/venus/vdec.c
-+++ b/drivers/media/platform/qcom/venus/vdec.c
-@@ -225,7 +225,7 @@ static int vdec_check_src_change(struct venus_inst *inst)
- 
- 	if (!(inst->codec_state == VENUS_DEC_STATE_CAPTURE_SETUP) ||
- 	    !inst->reconfig)
--		dev_dbg(inst->core->dev, "%s: wrong state\n", __func__);
-+		dev_dbg(inst->core->dev, VDBGH "wrong state\n");
- 
- done:
- 	return 0;
-@@ -1310,7 +1310,7 @@ static void vdec_event_change(struct venus_inst *inst,
- 	if (inst->bit_depth != ev_data->bit_depth)
- 		inst->bit_depth = ev_data->bit_depth;
- 
--	dev_dbg(dev, "event %s sufficient resources (%ux%u)\n",
-+	dev_dbg(dev, VDBGM "event %s sufficient resources (%ux%u)\n",
- 		sufficient ? "" : "not", ev_data->width, ev_data->height);
- 
- 	if (sufficient) {
-@@ -1344,7 +1344,7 @@ static void vdec_event_change(struct venus_inst *inst,
- 
- 		ret = hfi_session_flush(inst, HFI_FLUSH_OUTPUT, false);
- 		if (ret)
--			dev_dbg(dev, "flush output error %d\n", ret);
-+			dev_dbg(dev, VDBGH "flush output error %d\n", ret);
- 	}
- 
- 	inst->reconfig = true;
--- 
-2.17.1
+Marcel
 
