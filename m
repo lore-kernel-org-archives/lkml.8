@@ -2,90 +2,218 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8632C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5701C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C65B720809
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D1BC2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:10:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZjcMZbIw"
+	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="UnWw23WT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730394AbgG3SCy (ORCPT
+        id S1728790AbgG3SJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 14:02:54 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:35040 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730363AbgG3SCw (ORCPT
+        Thu, 30 Jul 2020 14:09:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727835AbgG3SJ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 14:02:52 -0400
-Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 508FA20B4908;
-        Thu, 30 Jul 2020 11:02:51 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 508FA20B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1596132171;
-        bh=Lq00ap7Yu8hoUdPCLVlYdZakWLvY3wTeBBusKqVGKL4=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=ZjcMZbIwR/fP3byLrxge5Ao5e6GNyOxy0eX1JNinRJb1DKlygk8vEypRNhuOT3BA8
-         QBSKgVbqSbcijtYHbivDb7NzWH29EtNUIPqz4nmIPjJgvbngaWRjLUKQCQD6CokjSB
-         FA2pANqUEaaDk+qglmoS3yYd6EEKu0thLoDca/n8=
-Subject: Re: [PATCH v5 4/4] IMA: Handle early boot data measurement
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, stephen.smalley.work@gmail.com,
-        casey@schaufler-ca.com
-Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200730034724.3298-1-nramas@linux.microsoft.com>
- <20200730034724.3298-5-nramas@linux.microsoft.com>
-Message-ID: <ea3bba66-9b21-b842-990b-2bf1e4ac2179@linux.microsoft.com>
-Date:   Thu, 30 Jul 2020 11:02:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 14:09:59 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA34DC061574
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 11:09:58 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id r4so4247874pls.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 11:09:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yJTC9tdJwPLZ8XKjWGq9++9+N0X7BqXA0dHtAoYBz9A=;
+        b=UnWw23WTINjuXuXNdaist30khDs1c76D+z0KQ6m6AhcqH3uxHqK6lgZjSuWJv0sKZB
+         ISppBq8MZDjG7NwpJvrVyTZAyCbuxv+WVOZwjfBnCD8oPjVeuRiGC/BCpfSioAViXnLU
+         MpYyhsEcJEiFHC3eeB31X7rhndwhn7eiNYZH9q0ZyhNUA/fEUVceSRygOXbjA9zwAdo0
+         DNsh5v6JHb+u+zadCmSgzxMyE7LIxOBD29WMeBvW6T6H0BOtA8XiXMPP87UGnFHva4bS
+         1kuf2/03DYjqJSHHuM8v6+WuM0ncGcvH24PColr0vX5JF9RMfvhuyRx2b9SK9GLyCdzx
+         qpGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yJTC9tdJwPLZ8XKjWGq9++9+N0X7BqXA0dHtAoYBz9A=;
+        b=AChbqfdKxpkiNQM29749NkJ5OdTjjictB9qCvjEz5QFDhPSnlFlbDyQbnEv9s2KwGu
+         o7N4NP1nts5p2NDhjxygih9uzuCi4UNYrxsgXCdPP5jomiUyZUG20nJJISde3Fx5CXpv
+         7YUk2xXNantvGI2cBIJkYSjyIayMQlDnghqwWLstE7kFM6aRW1q52bMxWGu6SkB4HJ77
+         KexssCIdSipkcUWSDu+ej6PZTDwxJnkv1Kgsf8LpStSKva5qzJ5w/kgSpGjYJilclHk1
+         kceVm7LLXLLb603EaTbXq2RJYsMeoDdbYSJgpnJgOAbphlpE7NSTh0dX9iYzPKEm+ICS
+         Zpww==
+X-Gm-Message-State: AOAM530ITG8e2urvW3ULg+c9W1O3DFsTu4DpI8pvvUcONqBpaE7c6AiA
+        C4wEwX3KP1fT8Tuqe0MJsdtmZw==
+X-Google-Smtp-Source: ABdhPJyx/HxNt8rspjLNKULshkc3XEh52fqmPI0aPPmFIUc16IcVv/T2Z88hD58BvEbeAlzS8tsQXQ==
+X-Received: by 2002:a63:3c41:: with SMTP id i1mr79055pgn.349.1596132598057;
+        Thu, 30 Jul 2020 11:09:58 -0700 (PDT)
+Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.178])
+        by smtp.gmail.com with ESMTPSA id y6sm6166676pji.2.2020.07.30.11.09.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 30 Jul 2020 11:09:57 -0700 (PDT)
+From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
+X-Google-Original-From: Kaaira Gupta <Kaairakgupta@es.iitr.ac.in>
+Date:   Thu, 30 Jul 2020 23:39:49 +0530
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+Subject: Re: [PATCH v2 0/3] media: vimc: Allow multiple capture devices to
+ use the same sensor
+Message-ID: <20200730180949.GA14700@kaaira-HP-Pavilion-Notebook>
+References: <20200724120213.17119-1-kgupta@es.iitr.ac.in>
+ <20200730105112.GA7079@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-In-Reply-To: <20200730034724.3298-5-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730105112.GA7079@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/20 8:47 PM, Lakshmi Ramasubramanian wrote:
+On Thu, Jul 30, 2020 at 01:51:12PM +0300, Laurent Pinchart wrote:
+Hi,
 
-Hi Tyler,
+> Hi Kaaira,
+> 
+> Thank you for the patches.
+> 
+> On Fri, Jul 24, 2020 at 05:32:10PM +0530, Kaaira Gupta wrote:
+> > This is version 2 of the patch series posted by Niklas for allowing
+> > multiple streams in VIMC.
+> > The original series can be found here:
+> > https://patchwork.kernel.org/cover/10948831/
+> > 
+> > This series adds support for two (or more) capture devices to be 
+> > connected to the same sensors and run simultaneously. Each capture device 
+> > can be started and stopped independent of each other.
+> > 
+> > Patch 1/3 and 2/3 deals with solving the issues that arises once two 
+> > capture devices can be part of the same pipeline. While 3/3 allows for 
+> > two capture devices to be part of the same pipeline and thus allows for 
+> > simultaneously use.
+> 
+> I think this is really nice work, as it will make the vimc driver even
+> more useful for testing purposes.
+> 
+> I however just noticed that the patches seem to have lost Niklas'
+> authorship. Niklas posted v1 ([1]), and while there's absolutely no
+> issue with taking over a patch series (especially when the original
+> author is aware of that, and approves :-)), it's customary to keep the
+> original authorship.
 
-> diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
-> index 080c53545ff0..86cba844f73c 100644
-> --- a/security/integrity/ima/Kconfig
-> +++ b/security/integrity/ima/Kconfig
-> @@ -322,10 +322,9 @@ config IMA_MEASURE_ASYMMETRIC_KEYS
->   	depends on ASYMMETRIC_PUBLIC_KEY_SUBTYPE=y
->   	default y
->   
-> -config IMA_QUEUE_EARLY_BOOT_KEYS
-> +config IMA_QUEUE_EARLY_BOOT_DATA
->   	bool
-> -	depends on IMA_MEASURE_ASYMMETRIC_KEYS
-> -	depends on SYSTEM_TRUSTED_KEYRING
-> +	depends on SECURITY || (IMA_MEASURE_ASYMMETRIC_KEYS && SYSTEM_TRUSTED_KEYRING)
->   	default y
->   
-Similar to the change you'd suggested for validating LSM_STATE and 
-LSM_POLICY func, I think IMA_QUEUE_EARLY_BOOT_DATA config should be 
-enabled for SECURITY_SELINUX.
+Hm, I had a meeting with Kieren yesterday where he explained this to me.
+I wasn't aware of the distinction between authorship and a Signed-off
+tag, I thought signed-off implies authorship. Now that I know this, I
+will amend this in the next version I send.
 
-depends on SECURITY_SELINUX ||
-            (IMA_MEASURE_ASYMMETRIC_KEYS && SYSTEM_TRUSTED_KEYRING)
+Thanks!
 
-And, when more security modules are added update this CONFIG as appropriate.
-
-Does that sound okay?
-
-  -lakshmi
+> 
+> Authorship, as recorded in the commit's "Author:" field (displayed by
+> "git show" or "git log" for instance), is distinct from Signed-off-by.
+> The original Signed-off-by line needs to be preserved to indicate the
+> original author's commitment to the certificate of origin ([2]), but in
+> itself that doesn't acknowledge original authorship of the code.
+> 
+> I'm sure this is an oversight. Authorship can easily be changed with the
+> --author option to "git commit --amend".
+> 
+> $ git show -s
+> commit 8be3a53e18e0e1a98f288f6c7f5e9da3adbe9c49 (HEAD -> tmp)
+> Merge: fc10807db5ce 3c597282887f
+> Author: Linus Torvalds <torvalds@linux-foundation.org>
+> Date:   Wed Jun 24 17:39:30 2020 -0700
+> 
+>     Merge tag 'erofs-for-5.8-rc3-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs
+> 
+>     Pull erofs fix from Gao Xiang:
+>      "Fix a regression which uses potential uninitialized high 32-bit value
+>       unexpectedly recently observed with specific compiler options"
+> 
+>     * tag 'erofs-for-5.8-rc3-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs:
+>       erofs: fix partially uninitialized misuse in z_erofs_onlinepage_fixup
+> $ git commit --amend --author 'Laurent Pinchart <laurent.pinchart@ideasonboard.com>'
+> [tmp 6a7191c2aee9] Merge tag 'erofs-for-5.8-rc3-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs
+>  Date: Wed Jun 24 17:39:30 2020 -0700
+> $ git show -s
+> commit 6a7191c2aee9e4a2ba375f14c821bc9b4d7f881b (HEAD -> tmp)
+> Merge: fc10807db5ce 3c597282887f
+> Author: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Date:   Wed Jun 24 17:39:30 2020 -0700
+> 
+>     Merge tag 'erofs-for-5.8-rc3-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs
+>     
+>     Pull erofs fix from Gao Xiang:
+>      "Fix a regression which uses potential uninitialized high 32-bit value
+>       unexpectedly recently observed with specific compiler options"
+>     
+>     * tag 'erofs-for-5.8-rc3-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs:
+>       erofs: fix partially uninitialized misuse in z_erofs_onlinepage_fixup
+> 
+> Not that I would try to take ownership of a commit authored by Linus, I
+> doubt he would appreciate that :-)
+> 
+> Authorship is normally preserved through git-format-patch,
+> git-send-email and git-am:
+> 
+> - git-format-patch sets the "From:" line to the patch's author
+> 
+> - If the "From:" line is different than the mail sender, git-send-email
+>   replaces it with the sender's identity (as we don't want to forge
+>   e-mails with an incorrect sender). It then adds the original "From:"
+>   line *inside* the mail, just after the headers, right before the body
+>   of the commit message.
+> 
+> - git-am sets the author to the "From:" line from the e-mail's body if
+>   it exists, and uses the "From:" line from the e-mail's header (the
+>   sender's identity) otherwise.
+> 
+> If you use those tools authorship should get preserved automatically.
+> 
+> Of course new patches that you would add to the series should have your
+> authorship.
+> 
+> I hope this helps clarifying the process, please let me know if you have
+> any question.
+> 
+> [1] https://lore.kernel.org/linux-media/20190518010744.15195-1-niklas.soderlund+renesas@ragnatech.se/
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst#n431
+> 
+> > Changes since v1:
+> > 	- All three patches rebased on latest media-tree.
+> > 	Patch 3:
+> > 	- Search for an entity with a non-NULL pipe instead of searching
+> > 	  for sensor. This terminates the search at output itself.
+> > 
+> > Kaaira Gupta (3):
+> >   media: vimc: Add usage count to subdevices
+> >   media: vimc: Serialize vimc_streamer_s_stream()
+> >   media: vimc: Join pipeline if one already exists
+> > 
+> >  .../media/test-drivers/vimc/vimc-capture.c    | 35 ++++++++++++++++++-
+> >  .../media/test-drivers/vimc/vimc-debayer.c    |  8 +++++
+> >  drivers/media/test-drivers/vimc/vimc-scaler.c |  8 +++++
+> >  drivers/media/test-drivers/vimc/vimc-sensor.c |  9 ++++-
+> >  .../media/test-drivers/vimc/vimc-streamer.c   | 23 +++++++-----
+> >  5 files changed, 73 insertions(+), 10 deletions(-)
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
