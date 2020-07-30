@@ -2,51 +2,52 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38AB4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BECAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15F7221744
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FF4620838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096535;
-	bh=PO98IxXYDBqn674cEJXk8rqRkVdotQu0HmgKd61RnH0=;
+	s=default; t=1596096538;
+	bh=EPHloOM0DXlDaIKPPfLO266b1vDEBjiAw24s/4FRhi0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cJNMsCvchsZulTs6hdIgsuXorYQXSVx21Hm5DUDH2yeTOTsqAd5/EFWb01HUYHLJI
-	 GKuC7ZdNrRRHATARkVtwSYre7bsNhx9PrNebKaEvimVTKln0ZyV1li7AWnfmaEBmx1
-	 Oal/Recp2ikclmjXnB0bS6D8u4x20oYIyjcvjNug=
+	b=kUGG8fzlTddUjoXczk87q64g5A+KkkVXYL9BfRRDmW/91pRAPtawj4eebdOZoeOrs
+	 wK5eh8zveQUVMPd8LfOENmH+cF8fFZ/jukdyCd0xsrXonyIkCMcMIt2N+D9svp8l4O
+	 e2I0nGrjVabUfP9LvNWdYK3+GD+3MgB44JpDi0Yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729047AbgG3IIx (ORCPT
+        id S1729654AbgG3II5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:08:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47104 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:08:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729150AbgG3IIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:08:45 -0400
+        id S1729637AbgG3IIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:08:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 795ED2083E;
-        Thu, 30 Jul 2020 08:08:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5547A2084D;
+        Thu, 30 Jul 2020 08:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096525;
-        bh=PO98IxXYDBqn674cEJXk8rqRkVdotQu0HmgKd61RnH0=;
+        s=default; t=1596096532;
+        bh=EPHloOM0DXlDaIKPPfLO266b1vDEBjiAw24s/4FRhi0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gyG2vd4LRBt/6fjc2wTBTXyRNwiqpdVXJ9XeAcIm1R8kXoDR+L6zY+CWfmNB8wJyw
-         2IUSvyO0C7uA74bNa9sY8pkNHLD8ZUtOmQqgnZyve5oJnbUvvwjXG9JxgYxk5/QXgo
-         rvjnFBOAWKeIVDnkcjd1Q9ABOJOaKi0OCv9SzRic=
+        b=Fpy68Zp0I4a/FGVlaADA+9AA3vR/JYdyAuWoDSqUzv/IFZ9UvizsTfUTLdy5xnLRj
+         2MEWaZuihkN2sA8jfE7tc1YEabYHAhhALjvGVDyo9d4qwYnjKBc/uhhvPulXpdLzC7
+         bMIJN8BcySSDVDw/Rf8q66+EBs94vNRi0dWwIsuw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 4.9 09/61] SUNRPC reverting d03727b248d0 ("NFSv4 fix CLOSE not waiting for direct IO compeletion")
-Date:   Thu, 30 Jul 2020 10:04:27 +0200
-Message-Id: <20200730074421.272533071@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 24/61] regmap: dev_get_regmap_match(): fix string comparison
+Date:   Thu, 30 Jul 2020 10:04:42 +0200
+Message-Id: <20200730074422.017257160@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074420.811058810@linuxfoundation.org>
 References: <20200730074420.811058810@linuxfoundation.org>
@@ -59,84 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
 
-commit 65caafd0d2145d1dd02072c4ced540624daeab40 upstream.
+[ Upstream commit e84861fec32dee8a2e62bbaa52cded6b05a2a456 ]
 
-Reverting commit d03727b248d0 "NFSv4 fix CLOSE not waiting for
-direct IO compeletion". This patch made it so that fput() by calling
-inode_dio_done() in nfs_file_release() would wait uninterruptably
-for any outstanding directIO to the file (but that wait on IO should
-be killable).
+This function is used by dev_get_regmap() to retrieve a regmap for the
+specified device. If the device has more than one regmap, the name parameter
+can be used to specify one.
 
-The problem the patch was also trying to address was REMOVE returning
-ERR_ACCESS because the file is still opened, is supposed to be resolved
-by server returning ERR_FILE_OPEN and not ERR_ACCESS.
+The code here uses a pointer comparison to check for equal strings. This
+however will probably always fail, as the regmap->name is allocated via
+kstrdup_const() from the regmap's config->name.
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix this by using strcmp() instead.
 
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Link: https://lore.kernel.org/r/20200703103315.267996-1-mkl@pengutronix.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/direct.c |   13 ++++---------
- fs/nfs/file.c   |    1 -
- 2 files changed, 4 insertions(+), 10 deletions(-)
+ drivers/base/regmap/regmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -379,6 +379,8 @@ static void nfs_direct_complete(struct n
- {
- 	struct inode *inode = dreq->inode;
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index 1799a1dfa46ea..cd984b59a8a16 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -1239,7 +1239,7 @@ static int dev_get_regmap_match(struct device *dev, void *res, void *data)
  
-+	inode_dio_end(inode);
-+
- 	if (dreq->iocb) {
- 		long res = (long) dreq->error;
- 		if (dreq->count != 0) {
-@@ -390,10 +392,7 @@ static void nfs_direct_complete(struct n
- 
- 	complete(&dreq->completion);
- 
--	igrab(inode);
- 	nfs_direct_req_release(dreq);
--	inode_dio_end(inode);
--	iput(inode);
+ 	/* If the user didn't specify a name match any */
+ 	if (data)
+-		return (*r)->name == data;
++		return !strcmp((*r)->name, data);
+ 	else
+ 		return 1;
  }
- 
- static void nfs_direct_readpage_release(struct nfs_page *req)
-@@ -535,10 +534,8 @@ static ssize_t nfs_direct_read_schedule_
- 	 * generic layer handle the completion.
- 	 */
- 	if (requested_bytes == 0) {
--		igrab(inode);
--		nfs_direct_req_release(dreq);
- 		inode_dio_end(inode);
--		iput(inode);
-+		nfs_direct_req_release(dreq);
- 		return result < 0 ? result : -EIO;
- 	}
- 
-@@ -956,10 +953,8 @@ static ssize_t nfs_direct_write_schedule
- 	 * generic layer handle the completion.
- 	 */
- 	if (requested_bytes == 0) {
--		igrab(inode);
--		nfs_direct_req_release(dreq);
- 		inode_dio_end(inode);
--		iput(inode);
-+		nfs_direct_req_release(dreq);
- 		return result < 0 ? result : -EIO;
- 	}
- 
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -82,7 +82,6 @@ nfs_file_release(struct inode *inode, st
- 	dprintk("NFS: release(%pD2)\n", filp);
- 
- 	nfs_inc_stats(inode, NFSIOS_VFSRELEASE);
--	inode_dio_wait(inode);
- 	nfs_file_clear_open_context(filp);
- 	return 0;
- }
+-- 
+2.25.1
+
 
 
