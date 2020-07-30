@@ -2,126 +2,141 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF84C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E924DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B5D420809
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C770320809
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 23:08:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="f3Ve0iJP"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="u3IuQOES"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730707AbgG3XHB (ORCPT
+        id S1730722AbgG3XIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 19:07:01 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:10824 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729995AbgG3XHA (ORCPT
+        Thu, 30 Jul 2020 19:08:06 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:15791 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729995AbgG3XIF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 19:07:00 -0400
+        Thu, 30 Jul 2020 19:08:05 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1596150420; x=1627686420;
-  h=date:from:to:cc:message-id:references:mime-version:
-   in-reply-to:subject;
-  bh=7vMrFvtUTBg/lhMoMFfi8NrSvzxD5ruFtgpTJwVUKIE=;
-  b=f3Ve0iJP/GTxNZ8Sy0ZyZA/rVceEoPt/2ymn3zvTrutSV/Lh7NT1d8o+
-   Q7diDvLuLezlrrL8A2BIU2F+RBEap58T2UGoY3r+87U4rys5fAnKi53gx
-   IuPPaic8LxEDeTd/zjBChTupF+n35y1UHjsHYonhej/DCgKjQfNvt1DTu
-   0=;
-IronPort-SDR: QtZ+XaoPa1wpxqYDTq2G1f0sXs4cmexTY/A+g/lEhuRJZ3WCcxB5sOu3b78fnTjQ8rKbrbn3ky
- jsdilpsZgCJg==
+  t=1596150485; x=1627686485;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=ECxXYxjhOUgHxVld+NUy25OcuAuJbKhWy4PYHGYnfeA=;
+  b=u3IuQOESI4VRxhN5cvJdaoEGI7/gDel5j2ZIkLUil1y1wCFpuYm+i8vi
+   UOV9BGlGVXOo/CVyqFTfN89rnJi2zXCz7Czkv8HWxwH1J/f1ZDQKCYQKh
+   NVsZU/ZaIzNyJdK6l+83NoV67w5sXY1qsaE3l/+1qPGzmRX4VOoSOGI5d
+   c=;
+IronPort-SDR: /3w+tIAc8jF63yOrk32vRrVgsIPL+3S7TybFjGshWokrpQlCtg5jeehokkYv6A1PelHZZQEhbK
+ JRzDWH4KPY1Q==
 X-IronPort-AV: E=Sophos;i="5.75,415,1589241600"; 
-   d="scan'208";a="64407396"
-Subject: Re: [PATCH v2 01/11] xen/manage: keep track of the on-going suspend mode
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 30 Jul 2020 23:06:55 +0000
-Received: from EX13MTAUEE002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (Postfix) with ESMTPS id 143F3A2573;
-        Thu, 30 Jul 2020 23:06:47 +0000 (UTC)
-Received: from EX13D08UEE001.ant.amazon.com (10.43.62.126) by
- EX13MTAUEE002.ant.amazon.com (10.43.62.24) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 30 Jul 2020 23:06:35 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D08UEE001.ant.amazon.com (10.43.62.126) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 30 Jul 2020 23:06:35 +0000
-Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
- (172.22.96.68) by mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP
- Server id 15.0.1497.2 via Frontend Transport; Thu, 30 Jul 2020 23:06:35 +0000
-Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
-        id BFA4640384; Thu, 30 Jul 2020 23:06:34 +0000 (UTC)
-Date:   Thu, 30 Jul 2020 23:06:34 +0000
-From:   Anchal Agarwal <anchalag@amazon.com>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-CC:     Stefano Stabellini <sstabellini@kernel.org>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
-        <x86@kernel.org>, <jgross@suse.com>, <linux-pm@vger.kernel.org>,
-        <linux-mm@kvack.org>, <kamatam@amazon.com>,
-        <konrad.wilk@oracle.com>, <roger.pau@citrix.com>,
-        <axboe@kernel.dk>, <davem@davemloft.net>, <rjw@rjwysocki.net>,
-        <len.brown@intel.com>, <pavel@ucw.cz>, <peterz@infradead.org>,
-        <eduval@amazon.com>, <sblbir@amazon.com>,
-        <xen-devel@lists.xenproject.org>, <vkuznets@redhat.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>
-Message-ID: <20200730230634.GA17221@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-References: <20200717191009.GA3387@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <5464f384-d4b4-73f0-d39e-60ba9800d804@oracle.com>
- <20200721000348.GA19610@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <408d3ce9-2510-2950-d28d-fdfe8ee41a54@oracle.com>
- <alpine.DEB.2.21.2007211640500.17562@sstabellini-ThinkPad-T480s>
- <20200722180229.GA32316@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <alpine.DEB.2.21.2007221645430.17562@sstabellini-ThinkPad-T480s>
- <20200723225745.GB32316@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <alpine.DEB.2.21.2007241431280.17562@sstabellini-ThinkPad-T480s>
- <66a9b838-70ed-0807-9260-f2c31343a081@oracle.com>
+   d="scan'208";a="45163570"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-69849ee2.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 30 Jul 2020 23:08:03 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-69849ee2.us-west-2.amazon.com (Postfix) with ESMTPS id 301CFA04B7;
+        Thu, 30 Jul 2020 23:08:01 +0000 (UTC)
+Received: from EX13D20UWC002.ant.amazon.com (10.43.162.163) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 30 Jul 2020 23:08:00 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.162.109) by
+ EX13D20UWC002.ant.amazon.com (10.43.162.163) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 30 Jul 2020 23:07:57 +0000
+Subject: Re: [PATCH v2 1/3] KVM: x86: Deflect unknown MSR accesses to user
+ space
+To:     Jim Mattson <jmattson@google.com>
+CC:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        KarimAllah Raslan <karahmed@amazon.de>,
+        kvm list <kvm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Aaron Lewis <aaronlewis@google.com>
+References: <20200729235929.379-1-graf@amazon.com>
+ <20200729235929.379-2-graf@amazon.com>
+ <CALMp9eRq3QUG64BwSGLbehFr8k-OLSM3phcw7mhuZ9hVk_N2-A@mail.gmail.com>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <e7cbf218-fb01-2f30-6c5c-a4b6e441b5e4@amazon.com>
+Date:   Fri, 31 Jul 2020 01:07:55 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <66a9b838-70ed-0807-9260-f2c31343a081@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <CALMp9eRq3QUG64BwSGLbehFr8k-OLSM3phcw7mhuZ9hVk_N2-A@mail.gmail.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.162.109]
+X-ClientProxiedBy: EX13D04UWB003.ant.amazon.com (10.43.161.231) To
+ EX13D20UWC002.ant.amazon.com (10.43.162.163)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 06:08:29PM -0400, Boris Ostrovsky wrote:
-> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
-> 
-> 
-> 
-> On 7/24/20 7:01 PM, Stefano Stabellini wrote:
-> > Yes, it does, thank you. I'd rather not introduce unknown regressions so
-> > I would recommend to add an arch-specific check on registering
-> > freeze/thaw/restore handlers. Maybe something like the following:
-> >
-> > #ifdef CONFIG_X86
-> >     .freeze = blkfront_freeze,
-> >     .thaw = blkfront_restore,
-> >     .restore = blkfront_restore
-> > #endif
-> >
-> >
-> > maybe Boris has a better suggestion on how to do it
-> 
-> 
-> An alternative might be to still install pm notifier in
-> drivers/xen/manage.c (I think as result of latest discussions we decided
-> we won't need it) and return -ENOTSUPP for ARM for
-> PM_HIBERNATION_PREPARE and friends. Would that work?
->
-I think the question here is for registering driver specific freeze/thaw/restore
-callbacks for x86 only. I have dropped the pm_notifier in the v3 still pending
-testing. So I think just registering driver specific callbacks for x86 only is a
-good option. What do you think?
+CgpPbiAzMS4wNy4yMCAwMDo0MiwgSmltIE1hdHRzb24gd3JvdGU6Cj4gCj4gT24gV2VkLCBKdWwg
+MjksIDIwMjAgYXQgNDo1OSBQTSBBbGV4YW5kZXIgR3JhZiA8Z3JhZkBhbWF6b24uY29tPiB3cm90
+ZToKPj4KPj4gTVNScyBhcmUgd2VpcmQuIFNvbWUgb2YgdGhlbSBhcmUgbm9ybWFsIGNvbnRyb2wg
+cmVnaXN0ZXJzLCBzdWNoIGFzIEVGRVIuCj4+IFNvbWUgaG93ZXZlciBhcmUgcmVnaXN0ZXJzIHRo
+YXQgcmVhbGx5IGFyZSBtb2RlbCBzcGVjaWZpYywgbm90IHZlcnkKPj4gaW50ZXJlc3RpbmcgdG8g
+dmlydHVhbGl6YXRpb24gd29ya2xvYWRzLCBhbmQgbm90IHBlcmZvcm1hbmNlIGNyaXRpY2FsLgo+
+PiBPdGhlcnMgYWdhaW4gYXJlIHJlYWxseSBqdXN0IHdpbmRvd3MgaW50byBwYWNrYWdlIGNvbmZp
+Z3VyYXRpb24uCj4+Cj4+IE91dCBvZiB0aGVzZSBNU1JzLCBvbmx5IHRoZSBmaXJzdCBjYXRlZ29y
+eSBpcyBuZWNlc3NhcnkgdG8gaW1wbGVtZW50IGluCj4+IGtlcm5lbCBzcGFjZS4gUmFyZWx5IGFj
+Y2Vzc2VkIE1TUnMsIE1TUnMgdGhhdCBzaG91bGQgYmUgZmluZSB0dW5lcyBhZ2FpbnN0Cj4+IGNl
+cnRhaW4gQ1BVIG1vZGVscyBhbmQgTVNScyB0aGF0IGNvbnRhaW4gaW5mb3JtYXRpb24gb24gdGhl
+IHBhY2thZ2UgbGV2ZWwKPj4gYXJlIG11Y2ggYmV0dGVyIHN1aXRlZCBmb3IgdXNlciBzcGFjZSB0
+byBwcm9jZXNzLiBIb3dldmVyLCBvdmVyIHRpbWUgd2UgaGF2ZQo+PiBhY2N1bXVsYXRlZCBhIGxv
+dCBvZiBNU1JzIHRoYXQgYXJlIG5vdCB0aGUgZmlyc3QgY2F0ZWdvcnksIGJ1dCBzdGlsbCBoYW5k
+bGVkCj4+IGJ5IGluLWtlcm5lbCBLVk0gY29kZS4KPj4KPj4gVGhpcyBwYXRjaCBhZGRzIGEgZ2Vu
+ZXJpYyBpbnRlcmZhY2UgdG8gaGFuZGxlIFdSTVNSIGFuZCBSRE1TUiBmcm9tIHVzZXIKPj4gc3Bh
+Y2UuIFdpdGggdGhpcywgYW55IGZ1dHVyZSBNU1IgdGhhdCBpcyBwYXJ0IG9mIHRoZSBsYXR0ZXIg
+Y2F0ZWdvcmllcyBjYW4KPj4gYmUgaGFuZGxlZCBpbiB1c2VyIHNwYWNlLgo+Pgo+PiBGdXJ0aGVy
+bW9yZSwgaXQgYWxsb3dzIHVzIHRvIHJlcGxhY2UgdGhlIGV4aXN0aW5nICJpZ25vcmVfbXNycyIg
+bG9naWMgd2l0aAo+PiBzb21ldGhpbmcgdGhhdCBhcHBsaWVzIHBlci1WTSByYXRoZXIgdGhhbiBv
+biB0aGUgZnVsbCBzeXN0ZW0uIFRoYXQgd2F5IHlvdQo+PiBjYW4gcnVuIHByb2R1Y3RpdmUgVk1z
+IGluIHBhcmFsbGVsIHRvIGV4cGVyaW1lbnRhbCBvbmVzIHdoZXJlIHlvdSBkb24ndCBjYXJlCj4+
+IGFib3V0IHByb3BlciBNU1IgaGFuZGxpbmcuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEFsZXhhbmRl
+ciBHcmFmIDxncmFmQGFtYXpvbi5jb20+Cj4gCj4gQ2FuIHdlIGp1c3QgZHJvcCBlbV93cm1zciBh
+bmQgZW1fcmRtc3I/IFRoZSBpbi1rZXJuZWwgZW11bGF0b3IgaXMKPiBhbHJlYWR5IGluY29tcGxl
+dGUsIGFuZCBJIGRvbid0IHRoaW5rIHRoZXJlIGlzIGV2ZXIgYSBnb29kIHJlYXNvbiBmb3IKPiBr
+dm0gdG8gZW11bGF0ZSBSRE1TUiBvciBXUk1TUiBpZiB0aGUgVk0tZXhpdCB3YXMgZm9yIHNvbWUg
+b3RoZXIgcmVhc29uCj4gKGFuZCB3ZSBzaG91bGRuJ3QgZW5kIHVwIGhlcmUgaWYgdGhlIFZNLWV4
+aXQgd2FzIGZvciBSRE1TUiBvciBXUk1TUikuCj4gQW0gSSBtaXNzaW5nIHNvbWV0aGluZz8KCk9u
+IGNlcnRhaW4gY29tYmluYXRpb25zIG9mIENQVXMgYW5kIGd1ZXN0IG1vZGVzLCBzdWNoIGFzIHJl
+YWwgbW9kZSBvbiAKcHJlLU5laGFsZW0oPykgYXQgbGVhc3QsIHdlIGFyZSBydW5uaW5nIGFsbCBn
+dWVzdCBjb2RlIHRocm91Z2ggdGhlIAplbXVsYXRvciBhbmQgdGh1cyBtYXkgZW5jb3VudGVyIGEg
+UkRNU1Igb3IgV1JNU1IgaW5zdHJ1Y3Rpb24uIEkgKnRoaW5rKiAKd2UgYWxzbyBkbyBzbyBmb3Ig
+YmlnIHJlYWwgbW9kZSBvbiBtb3JlIG1vZGVybiBDUFVzLCBidXQgSSdtIG5vdCAxMDAlIHN1cmUu
+Cgo+IFlvdSBzZWVtIHRvIGJlIGFzc3VtaW5nIHRoYXQgdGhlIGluc3RydWN0aW9uIGF0IENTOklQ
+IHdpbGwgc3RpbGwgYmUKPiBSRE1TUiAob3IgV1JNU1IpIGFmdGVyIHJldHVybmluZyBmcm9tIHVz
+ZXJzcGFjZSwgYW5kIHdlIHdpbGwgY29tZQo+IHRocm91Z2gga3ZtX3tnZXQsc2V0fV9tc3JfdXNl
+cl9zcGFjZSBhZ2FpbiBhdCB0aGUgbmV4dCBLVk1fUlVOLiBUaGF0Cj4gaXNuJ3QgbmVjZXNzYXJp
+bHkgdGhlIGNhc2UsIGZvciBhIHZhcmlldHkgb2YgcmVhc29ucy4gSSB0aGluayB0aGUKCkRvIHlv
+dSBoYXZlIGEgcGFydGljdWxhciBzaXR1YXRpb24gaW4gbWluZCB3aGVyZSB0aGF0IHdvdWxkIG5v
+dCBiZSB0aGUgCmNhc2UgYW5kIHdoZXJlIHdlIHdvdWxkIHN0aWxsIHdhbnQgdG8gYWN0dWFsbHkg
+Y29tcGxldGUgYW4gTVNSIG9wZXJhdGlvbiAKYWZ0ZXIgdGhlIGVudmlyb25tZW50IGNoYW5nZWQ/
+Cgo+ICdjb21wbGV0aW9uJyBvZiB0aGUgdXNlcnNwYWNlIGluc3RydWN0aW9uIGVtdWxhdGlvbiBz
+aG91bGQgYmUgZG9uZQo+IHdpdGggdGhlIGNvbXBsZXRlX3VzZXJzcGFjZV9pbyBbc2ljXSBtZWNo
+YW5pc20gaW5zdGVhZC4KCkhtLCB0aGF0IHdvdWxkIGF2b2lkIGEgcm91bmR0cmlwIGludG8gZ3Vl
+c3QgbW9kZSwgYnV0IGFkZCBhIGN5Y2xlIAp0aHJvdWdoIHRoZSBpbi1rZXJuZWwgZW11bGF0b3Iu
+IEknbSBub3Qgc3VyZSB0aGF0J3MgYSBuZXQgd2luIHF1aXRlIHlldC4KCj4gCj4gSSdkIHJlYWxs
+eSBsaWtlIHRvIHNlZSB0aGlzIG1lY2hhbmlzbSBhcHBseSBvbmx5IGluIHRoZSBjYXNlIG9mCj4g
+aW52YWxpZC91bmtub3duIE1TUnMsIGFuZCBub3QgZm9yIGlsbGVnYWwgcmVhZHMvd3JpdGVzIGFz
+IHdlbGwuCgpXaHk/IEFueSAjR1AgaW5kdWNpbmcgTVNSIGFjY2VzcyB3aWxsIGJlIG9uIHRoZSBz
+bG93IHBhdGguIFdoYXQncyB0aGUgCnByb2JsZW0gaWYgeW91IGdldCBhIGZldyBtb3JlIG9mIHRo
+ZW0gaW4gdXNlciBzcGFjZSB0aGF0IHlvdSBqdXN0IGJvdW5jZSAKYmFjayBhcyBmYWlsaW5nLCBz
+byB0aGV5IGFjdHVhbGx5IGRvIGluamVjdCBhIGZhdWx0PwoKQWxleAoKCgpBbWF6b24gRGV2ZWxv
+cG1lbnQgQ2VudGVyIEdlcm1hbnkgR21iSApLcmF1c2Vuc3RyLiAzOAoxMDExNyBCZXJsaW4KR2Vz
+Y2hhZWZ0c2Z1ZWhydW5nOiBDaHJpc3RpYW4gU2NobGFlZ2VyLCBKb25hdGhhbiBXZWlzcwpFaW5n
+ZXRyYWdlbiBhbSBBbXRzZ2VyaWNodCBDaGFybG90dGVuYnVyZyB1bnRlciBIUkIgMTQ5MTczIEIK
+U2l0ejogQmVybGluClVzdC1JRDogREUgMjg5IDIzNyA4NzkKCgo=
 
-Anchal
-> 
-> -boris
-> 
-> 
-> 
