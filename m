@@ -2,124 +2,207 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-17.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6A6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04812C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8B7F2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7E122074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:28:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="MtDwwZN6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="gd3/GZhD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbgG3AZl (ORCPT
+        id S1728231AbgG3A21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 20:25:41 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:33201 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727862AbgG3AZk (ORCPT
+        Wed, 29 Jul 2020 20:28:27 -0400
+Received: from gateway20.websitewelcome.com ([192.185.54.2]:31082 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728053AbgG3A21 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 20:25:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1596068739; x=1627604739;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=eZTfMgiK2vEeMZsD5lwwoP2zVvgB9NQ0c2HdLF8qwXA=;
-  b=MtDwwZN6u54Yd6TZyAesj3nKzWmd37fDiXby6gvMrCxmFZOECwB/s1Tj
-   qeBiGwxRyPSY/fWXgy2wt5u5pZHQo80OfWiubuQNoniZjvU5efEXJlclZ
-   Yg6eruHy6NRmMqRAYXbuL/gAd1vR0a1ZtjdmSea6z5TACi6QO745s7Ucj
-   eVkQhzqXnBy8DLjtMCDwCwJTYCQHKo2JZwAKcg8a7Iye/6ADpNfFdI77d
-   8bzmzb+WlmtFD5USejezAEk1DTZNyN97Qfy7bObAjh1fmUdcRctKPEpBq
-   GHZtvwtJuqA9MzV0r9Ug3KXxhe4l5fEW2yXkBaysKA405gWyCpOZUEJ1Y
-   w==;
-IronPort-SDR: LRjIRlPiDUXVZavr6SS0YbT2Ll9/TQnMq2TSZoWyndF1OV/qX2DDDl1sh29PCRZ6WW082HMBjg
- Kz4QkkhHoYBPTdJqnRuvu7Zdd0mokur51okc8K4HWp+04jYzFaQSVPshkN990Jb8CivUOd/D1e
- eZRSxUOaHHyFUh1ql+NxkQvyjQgrPWx4kpUFgyY2kZdZPsUlan56sGIx32LWtDYfmwLxiqzPYS
- BMxr41pEvhaCOaIVX3HGRFl+Rn0CxpPhPb59M3ODYE6k3ddmXOtQgHibBCci1Hl8+PyX7ExgbQ
- Ues=
-X-IronPort-AV: E=Sophos;i="5.75,412,1589212800"; 
-   d="scan'208";a="253040609"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 30 Jul 2020 08:25:39 +0800
-IronPort-SDR: 2kmw3pgLDyOZaUJhD5yBfLPod9DCOGcdEkWCNZW0yk7HkEI95YNdJKr9fJ/kNEpNxJYAKM/QDy
- HphhY6hBr3OnXyxP67dCiPPn5teYb+qm4=
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 17:13:09 -0700
-IronPort-SDR: 6UJWOZcUcSr7TfQqXrqD26zZiC1kzKQxJVo8FI0jW1AO2FT4vnNLnamB+KCsFFg/X6LmkZwDOT
- CyVema/uVjpw==
-WDCIronportException: Internal
-Received: from jpf009043.ad.shared (HELO jedi-01.hgst.com) ([10.86.58.210])
-  by uls-op-cesaip02.wdc.com with ESMTP; 29 Jul 2020 17:25:40 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup.patel@wdc.com>,
-        linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Subject: [PATCH] RISC-V: Fix build warning for smpboot.c
-Date:   Wed, 29 Jul 2020 17:25:35 -0700
-Message-Id: <20200730002535.17335-1-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.24.0
+        Wed, 29 Jul 2020 20:28:27 -0400
+X-Greylist: delayed 1245 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 Jul 2020 20:28:26 EDT
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 3AAAB40515241
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 17:44:15 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 0w5fkCwuSRQIV0w5fkeyFv; Wed, 29 Jul 2020 19:06:31 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=O9pd5wZFyMlo2KIw2w7Jr68x5gB033RYBnB9J5fYDs8=; b=gd3/GZhDMc/bVV0PV5dtEt3bWR
+        EMH5E0gwCIB5xwWmdRUGdRutDmV5ckeKvscXTN6jlaVrfbzSTLtnVdo0O7dbeNVCDfkjydN5ktvvw
+        lcl982UJNymyU2OKDizVuZwZCcveNsgCLq+c5XytdvZxnx6CeHVD2VgOyJkg0bBCvCTYvzA4GsaaA
+        WoiPJS3LD+K3NC58oCl8EYiTuFxkTv9Ea7loz+9F36IcZyqr8PBouVL4IaE1GQ8aL7xF60WTVNa/H
+        l1u9u+wEd/NCPQ704rbRxP8I8+EvLELU0r8JHKSVo1DgKixKUgMo0etiJscBj+CrbL7fjqJ97PT5v
+        78BmJkuQ==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:51790 helo=[192.168.15.3])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1k0w5f-0031yi-A5; Wed, 29 Jul 2020 19:06:31 -0500
+To:     Qianli Zhao <zhaoqianligood@gmail.com>, cl@linux.com,
+        penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
+        akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com, zhaoqianli@xiaomi.com
+References: <1596034214-15010-1-git-send-email-zhaoqianligood@gmail.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ AP7RWS474w==
+Subject: Re: [PATCH] mm: slab: Avoid the use of one-element array and use
+ struct_size() helper
+Message-ID: <90b2c9f3-cc2b-b2e6-51ef-998d2f79123a@embeddedor.com>
+Date:   Wed, 29 Jul 2020 19:12:31 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <1596034214-15010-1-git-send-email-zhaoqianligood@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1k0w5f-0031yi-A5
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.3]) [187.162.31.110]:51790
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 8
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following warnings are reported by kbuild with W=1.
+Hi,
 
->> arch/riscv/kernel/smpboot.c:109:5: warning: no previous prototype for
-'start_secondary_cpu' [-Wmissing-prototypes]
-     109 | int start_secondary_cpu(int cpu, struct task_struct *tidle)
-         |     ^~~~~~~~~~~~~~~~~~~
-   arch/riscv/kernel/smpboot.c:146:34: warning: no previous prototype for
-'smp_callin' [-Wmissing-prototypes]
-     146 | asmlinkage __visible void __init smp_callin(void)
-         |                                  ^~~~~~~~~~
+If you are going to copy/paste this, please at least CC the people
+that is originally working on these changes, in this case _me_. One
+needs to be very careful when doing these transformations. This
+code doesn't even exist in linux-next.
 
-Fix the warnings by marking the local functions static and adding the prototype
-for the global function.
+If you want to land your first kernel patch, I encourage you to start
+in drivers/staging/, while you get the hang of the kernel development
+process and you know how to work with linux-next. :)
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
----
- arch/riscv/include/asm/smp.h | 3 +++
- arch/riscv/kernel/smpboot.c  | 2 +-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+Thanks
+--
+Gustavo
 
-diff --git a/arch/riscv/include/asm/smp.h b/arch/riscv/include/asm/smp.h
-index 40bb1c15a731..6dfd2a1446d5 100644
---- a/arch/riscv/include/asm/smp.h
-+++ b/arch/riscv/include/asm/smp.h
-@@ -40,6 +40,9 @@ void arch_send_call_function_single_ipi(int cpu);
- int riscv_hartid_to_cpuid(int hartid);
- void riscv_cpuid_to_hartid_mask(const struct cpumask *in, struct cpumask *out);
- 
-+/* Secondary hart entry */
-+asmlinkage void smp_callin(void);
-+
- /*
-  * Obtains the hart ID of the currently executing task.  This relies on
-  * THREAD_INFO_IN_TASK, but we define that unconditionally.
-diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
-index 4e9922790f6e..c09fbdf924b1 100644
---- a/arch/riscv/kernel/smpboot.c
-+++ b/arch/riscv/kernel/smpboot.c
-@@ -106,7 +106,7 @@ void __init setup_smp(void)
- 	}
- }
- 
--int start_secondary_cpu(int cpu, struct task_struct *tidle)
-+static int start_secondary_cpu(int cpu, struct task_struct *tidle)
- {
- 	if (cpu_ops[cpu]->cpu_start)
- 		return cpu_ops[cpu]->cpu_start(cpu, tidle);
--- 
-2.24.0
-
+On 7/29/20 09:50, Qianli Zhao wrote:
+> From: Qianli Zhao <zhaoqianli@xiaomi.com>
+> 
+> There is a regular need in the kernel to provide a way to declare having a
+> dynamically sized set of trailing elements in a structure. Kernel code should
+> always use “flexible array members”[1] for these cases. The older style of
+> one-element or zero-length arrays should no longer be used[2].
+> 
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes.
+> 
+> [1] https://en.wikipedia.org/wiki/Flexible_array_member
+> [2] https://github.com/KSPP/linux/issues/21
+> 
+> Signed-off-by: Qianli Zhao <zhaoqianli@xiaomi.com>
+> ---
+>  mm/slab.h        | 2 +-
+>  mm/slab_common.c | 7 ++-----
+>  2 files changed, 3 insertions(+), 6 deletions(-)
+> 
+> diff --git a/mm/slab.h b/mm/slab.h
+> index 74f7e09..c12fb65 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+> @@ -34,7 +34,7 @@ struct kmem_cache {
+>  
+>  struct memcg_cache_array {
+>  	struct rcu_head rcu;
+> -	struct kmem_cache *entries[0];
+> +	struct kmem_cache *entries[];
+>  };
+>  
+>  /*
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index fe8b684..56f4818 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -166,9 +166,7 @@ static int init_memcg_params(struct kmem_cache *s,
+>  	if (!memcg_nr_cache_ids)
+>  		return 0;
+>  
+> -	arr = kvzalloc(sizeof(struct memcg_cache_array) +
+> -		       memcg_nr_cache_ids * sizeof(void *),
+> -		       GFP_KERNEL);
+> +	arr = kvzalloc(struct_size(arr, entries, memcg_nr_cache_ids), GFP_KERNEL);
+>  	if (!arr)
+>  		return -ENOMEM;
+>  
+> @@ -199,8 +197,7 @@ static int update_memcg_params(struct kmem_cache *s, int new_array_size)
+>  {
+>  	struct memcg_cache_array *old, *new;
+>  
+> -	new = kvzalloc(sizeof(struct memcg_cache_array) +
+> -		       new_array_size * sizeof(void *), GFP_KERNEL);
+> +	new = kvzalloc(struct_size(new, entries, new_array_size), GFP_KERNEL);
+>  	if (!new)
+>  		return -ENOMEM;
+>  
+> 
