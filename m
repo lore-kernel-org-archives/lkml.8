@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3759FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E32B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B8882083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB70B2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096664;
-	bh=4BqZ/RhG1SD/WQbc4OLwfRvW43zToqd/adGssxo8Ef4=;
+	s=default; t=1596096666;
+	bh=391sbRHYpWgc8awcde+J3xrFm3+48hwdU8hDC9WLgas=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZLKmMHt4PqPw6jzIJ75RuzUYkJFotU60T/sGD02eY227mJDcQ1RWlKQGeIaLcaLo3
-	 0n+rxSlMYon/gVyy05XAKT69WJFPCmNM/ZQCksM7lTPdJylu9Giz4ixPaBw5uAcFaK
-	 V7/kGMTMyZhi7nMH1SaIaQXee+LRu05qrKu5vDAE=
+	b=odhyktMtl+9mtx5fw4oFrYobQKH9Bwfn7zCYENkiK9ohV2A/I7qKXjgaeKX1bxGye
+	 okfg+Gr/1y6mpJlmRjh7/pb2ZEy2KK0IJWNjrljFWlWFuZR99xmEEb/EYIHzdVjm+m
+	 veJtDefKdik8+ASLbztzh5B7GCBgxAaaDpdPXLVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729917AbgG3ILD (ORCPT
+        id S1729924AbgG3ILF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:11:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49896 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:11:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729880AbgG3IKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:10:51 -0400
+        id S1729918AbgG3ILD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:11:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9C8F20842;
-        Thu, 30 Jul 2020 08:10:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95E5F2070B;
+        Thu, 30 Jul 2020 08:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096651;
-        bh=4BqZ/RhG1SD/WQbc4OLwfRvW43zToqd/adGssxo8Ef4=;
+        s=default; t=1596096663;
+        bh=391sbRHYpWgc8awcde+J3xrFm3+48hwdU8hDC9WLgas=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=evDifpktTBtdqfFHyXJ5JNcszka6sOscAfK9kmLyZcyltounCXdxW/pjLWcmqlL1D
-         Waj2XiT1YQNbcwOmgwmUFJDi5Q0MOgctKdHIbqFcSiSVl0Z5StRY0nGyhtWrkGdFuy
-         htrmMWTpbE1B58KnIkVgwu+Y/KAs2aRxoE6ULY30=
+        b=A8xwgMCA1WEzkUWybYfQNwfcKn96drZRO9Y7twwbmt5x5pNyBgKOkjTSCtdt02i/1
+         8kWYK+IKPtMyFSuarXRTKPYFcn98HigGFQGMk75mxH74IwhRqCja/nMFE6p3TelHVn
+         C1ZleGW+DPI2+9cMFkxB0xdA3GdUcUuUHQ/IdZCw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peilin Ye <yepeilin.cs@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 47/61] AX.25: Prevent out-of-bounds read in ax25_sendmsg()
-Date:   Thu, 30 Jul 2020 10:05:05 +0200
-Message-Id: <20200730074423.110716116@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.4 13/54] ASoC: rt5670: Correct RT5670_LDO_SEL_MASK
+Date:   Thu, 30 Jul 2020 10:04:52 +0200
+Message-Id: <20200730074421.852863350@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200730074420.811058810@linuxfoundation.org>
-References: <20200730074420.811058810@linuxfoundation.org>
+In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
+References: <20200730074421.203879987@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,36 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peilin Ye <yepeilin.cs@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 8885bb0621f01a6c82be60a91e5fc0f6e2f71186 ]
+commit 5cacc6f5764e94fa753b2c1f5f7f1f3f74286e82 upstream.
 
-Checks on `addr_len` and `usax->sax25_ndigis` are insufficient.
-ax25_sendmsg() can go out of bounds when `usax->sax25_ndigis` equals to 7
-or 8. Fix it.
+The RT5670_PWR_ANLG1 register has 3 bits to select the LDO voltage,
+so the correct mask is 0x7 not 0x3.
 
-It is safe to remove `usax->sax25_ndigis > AX25_MAX_DIGIS`, since
-`addr_len` is guaranteed to be less than or equal to
-`sizeof(struct full_sockaddr_ax25)`
+Because of this wrong mask we were programming the ldo bits
+to a setting of binary 001 (0x05 & 0x03) instead of binary 101
+when moving to SND_SOC_BIAS_PREPARE.
 
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+According to the datasheet 001 is a reserved value, so no idea
+what it did, since the driver was working fine before I guess we
+got lucky and it does something which is ok.
+
+Fixes: 5e8351de740d ("ASoC: add RT5670 CODEC driver")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200628155231.71089-3-hdegoede@redhat.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ax25/af_ax25.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/ax25/af_ax25.c
-+++ b/net/ax25/af_ax25.c
-@@ -1512,7 +1512,8 @@ static int ax25_sendmsg(struct socket *s
- 			struct full_sockaddr_ax25 *fsa = (struct full_sockaddr_ax25 *)usax;
+---
+ sound/soc/codecs/rt5670.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/sound/soc/codecs/rt5670.h
++++ b/sound/soc/codecs/rt5670.h
+@@ -760,7 +760,7 @@
+ #define RT5670_PWR_VREF2_BIT			4
+ #define RT5670_PWR_FV2				(0x1 << 3)
+ #define RT5670_PWR_FV2_BIT			3
+-#define RT5670_LDO_SEL_MASK			(0x3)
++#define RT5670_LDO_SEL_MASK			(0x7)
+ #define RT5670_LDO_SEL_SFT			0
  
- 			/* Valid number of digipeaters ? */
--			if (usax->sax25_ndigis < 1 || usax->sax25_ndigis > AX25_MAX_DIGIS) {
-+			if (usax->sax25_ndigis < 1 || addr_len < sizeof(struct sockaddr_ax25) +
-+			    sizeof(ax25_address) * usax->sax25_ndigis) {
- 				err = -EINVAL;
- 				goto out;
- 			}
+ /* Power Management for Analog 2 (0x64) */
 
 
