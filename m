@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 823ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6276FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57FE62074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F1C2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096825;
-	bh=8YRW/f78TgXrKU6CirmFlfF1OeBr1ipbQ53HPQPsv8g=;
+	s=default; t=1596096827;
+	bh=Y8lAx+eKZ3CIYuntwb1LpmtKS/UOeQbTeoOw7VBL6D4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k5+spDNlOz4xvl0D+KlAsoCjNdV5sHoGAp9ixEpveA2wSxIm8huxulxBjYFTi5MKK
-	 B4W59woNEDsaC1e480Ud3hjvhHzVzdb32HBs26Xao+GU0hwYfwo3cvHhtasnE1P63Z
-	 EatSv/EXlZaaCgHhpZYUtJsvjoXTNZbLHMZVFTu8=
+	b=EIzyWXhuDxH0lsX1JG4m7xZ3Tu9rlD6a4nrM70iQIRDeSHG7g4X+0NLNt3qL0dajW
+	 wDkv7XrU3zdv3IhYwSrELsrm8BqPv0N9ywh8DtjZsrIw6a9qo9+tYvZuUq0K5fu6WR
+	 htA3KAvEutOGG++P8t05L2YXOptEAQRa3gKWdSYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730125AbgG3INo (ORCPT
+        id S1730133AbgG3INq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:13:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52586 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:13:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730113AbgG3INN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:13:13 -0400
+        id S1730112AbgG3INK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:13:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FF4C2083E;
-        Thu, 30 Jul 2020 08:13:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70CDF20838;
+        Thu, 30 Jul 2020 08:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096791;
-        bh=8YRW/f78TgXrKU6CirmFlfF1OeBr1ipbQ53HPQPsv8g=;
+        s=default; t=1596096788;
+        bh=Y8lAx+eKZ3CIYuntwb1LpmtKS/UOeQbTeoOw7VBL6D4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MW6PLDEwA4AiTsBlzO/wCDvHV0fqTj5K8BtkObmecbyzmcHJlZ5a3x9bMqs+1KaFw
-         Mu9W+BS+pRgZ1r2iFYZf8615Ot2rg1uuRBAliwlEhID+xgAE349ePkH3aFtoVqryLG
-         QM0V26Y5wxsOOd7VwcRKMRl7kiFtvtLV3zieEXYI=
+        b=SpHeiygWM0O4BTza8dCDLj87ht0YAGecEVkCWF0nX6Fi06qIiPMDVZG4JNPLhx6Zr
+         Y6ZrlyaiJirYOpuP2IaYEbJjkBXbVyhh7cjxtAahtjLfTvdckhfTPhU1udxcL4UYQp
+         R13wy5eNgkqq7G1sKs1IY0vy3Iq3SDwIX6M9L97s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 42/54] AX.25: Prevent integer overflows in connect and sendmsg
-Date:   Thu, 30 Jul 2020 10:05:21 +0200
-Message-Id: <20200730074423.220045461@linuxfoundation.org>
+Subject: [PATCH 4.4 41/54] net: udp: Fix wrong clean up for IS_UDPLITE macro
+Date:   Thu, 30 Jul 2020 10:05:20 +0200
+Message-Id: <20200730074423.173106010@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
 References: <20200730074421.203879987@linuxfoundation.org>
@@ -59,46 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-[ Upstream commit 17ad73e941b71f3bec7523ea4e9cbc3752461c2d ]
+[ Upstream commit b0a422772fec29811e293c7c0e6f991c0fd9241d ]
 
-We recently added some bounds checking in ax25_connect() and
-ax25_sendmsg() and we so we removed the AX25_MAX_DIGIS checks because
-they were no longer required.
+We can't use IS_UDPLITE to replace udp_sk->pcflag when UDPLITE_RECV_CC is
+checked.
 
-Unfortunately, I believe they are required to prevent integer overflows
-so I have added them back.
-
-Fixes: 8885bb0621f0 ("AX.25: Prevent out-of-bounds read in ax25_sendmsg()")
-Fixes: 2f2a7ffad5c6 ("AX.25: Fix out-of-bounds read in ax25_connect()")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: b2bf1e2659b1 ("[UDP]: Clean up for IS_UDPLITE macro")
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ax25/af_ax25.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ net/ipv4/udp.c |    2 +-
+ net/ipv6/udp.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/ax25/af_ax25.c
-+++ b/net/ax25/af_ax25.c
-@@ -1192,6 +1192,7 @@ static int __must_check ax25_connect(str
- 	    fsa->fsa_ax25.sax25_ndigis != 0) {
- 		/* Valid number of digipeaters ? */
- 		if (fsa->fsa_ax25.sax25_ndigis < 1 ||
-+		    fsa->fsa_ax25.sax25_ndigis > AX25_MAX_DIGIS ||
- 		    addr_len < sizeof(struct sockaddr_ax25) +
- 		    sizeof(ax25_address) * fsa->fsa_ax25.sax25_ndigis) {
- 			err = -EINVAL;
-@@ -1512,7 +1513,9 @@ static int ax25_sendmsg(struct socket *s
- 			struct full_sockaddr_ax25 *fsa = (struct full_sockaddr_ax25 *)usax;
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -1558,7 +1558,7 @@ int udp_queue_rcv_skb(struct sock *sk, s
+ 	/*
+ 	 * 	UDP-Lite specific tests, ignored on UDP sockets
+ 	 */
+-	if ((is_udplite & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
++	if ((up->pcflag & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
  
- 			/* Valid number of digipeaters ? */
--			if (usax->sax25_ndigis < 1 || addr_len < sizeof(struct sockaddr_ax25) +
-+			if (usax->sax25_ndigis < 1 ||
-+			    usax->sax25_ndigis > AX25_MAX_DIGIS ||
-+			    addr_len < sizeof(struct sockaddr_ax25) +
- 			    sizeof(ax25_address) * usax->sax25_ndigis) {
- 				err = -EINVAL;
- 				goto out;
+ 		/*
+ 		 * MIB statistics other than incrementing the error count are
+--- a/net/ipv6/udp.c
++++ b/net/ipv6/udp.c
+@@ -672,7 +672,7 @@ int udpv6_queue_rcv_skb(struct sock *sk,
+ 	/*
+ 	 * UDP-Lite specific tests, ignored on UDP sockets (see net/ipv4/udp.c).
+ 	 */
+-	if ((is_udplite & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
++	if ((up->pcflag & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
+ 
+ 		if (up->pcrlen == 0) {          /* full coverage was set  */
+ 			net_dbg_ratelimited("UDPLITE6: partial coverage %d while full coverage %d requested\n",
 
 
