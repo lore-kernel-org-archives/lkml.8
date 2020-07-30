@@ -2,119 +2,119 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE0DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C57C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 774D52075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 729D52075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:24:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="De35tnc5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ldIuMhjR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728725AbgG3GYU (ORCPT
+        id S1728745AbgG3GYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 02:24:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36928 "EHLO
+        Thu, 30 Jul 2020 02:24:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbgG3GYT (ORCPT
+        with ESMTP id S1726261AbgG3GYU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 02:24:19 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36D69C061794;
-        Wed, 29 Jul 2020 23:24:18 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id c6so3352632pje.1;
-        Wed, 29 Jul 2020 23:24:18 -0700 (PDT)
+        Thu, 30 Jul 2020 02:24:20 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93690C0619D4
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 23:24:19 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id s15so4414191pgc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 23:24:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Shb9i0LDUlIh9UpG3vq1YdMvlhvbI8HAkHm5WKnBgRI=;
-        b=De35tnc5xk2HVD/mdWVVmeQxk1EKb045+dYbNw7/gQkxGto19yzGp0yAjDbbQgsnGN
-         rkw+6mA10fyiDLmZq4JiNQHfjZ4wuHm/PbxILPkNikrr6+q6Gr6R25Bfa7mD3DUghi2m
-         umRzj3CMFyFL2qPrvbfov1Dg19ZyyeDOYtwuOmsexkVquJBmWCRKlFV593T80yYAk3JA
-         FcCbAeWPZ98NKQrwuR5Dwb8ShYfMcvpuj+vPjjjwHJwx0eSnN7qcCPD77BI3DK1dT6OH
-         953zn0EHzO7Tq5PC5XvAB361xxelqUGqUB7/kQFewab31gtiZgKMfbtdV1CnNVLuW0zn
-         N38A==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XPnPVe/hBWV8ylTxStT4hqgYjjgVSOD9uWxEIWOaFgQ=;
+        b=ldIuMhjRCKAjbwoGPa+nSN6KncO7fsi1IvDYGFsNSnDyaQ+H/cnJ2f3w7dEo5QgvPh
+         xtEqOV1uuf/gmhfscqmAA2ExohCpn3Zz+GXwzguHX1VAmjy6p2iBuNi2VejPqhC81xxw
+         etkEWT9Vuu6P1PiO3NYhSe2KtJKglpTZUWrU9sn/Kgi4AZjoqS/Sk95euSmpJS4gg/X+
+         IFFnCag173v57OWvBfRdhrSnu2LcIOlURV7JFtawULXaFhaZXDl5yULkxre5yrA2Spp3
+         JQTO0XIuJ0tD2zZMmwmHfX/Tei4B3OXhvJ61prZxsJDwBDM3XqnHsCHjl7aWfE4TW40s
+         rTkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Shb9i0LDUlIh9UpG3vq1YdMvlhvbI8HAkHm5WKnBgRI=;
-        b=Oy/93bXLgxJzCBuGCg7cn49hsZV6HKMs/vq33Dm6QcOanAqLESb6nNxhhBB07CncrO
-         SCwzKkX0hpJ4lCnrIqqSKPIImbFdna+1EdvWDoxs/oDsQj6CWcqhkyP+XL75OJ67ChKg
-         9rx5MG9r1sL6+nwpPMpUQm+c0vfjHZOUENRXcEH0BYapn2GxPd+PaT6574q9I9nHgATV
-         ZQkckCjc6lS1jWWw6mYMpAw0C4pfaxLbrq7mooKC+7R+556jhPLRZ/TZBpvPMoRkd+7F
-         lGoZgk9XFXY784LfTc5ZLZDQNSgtfCcQ+mn5QyU3A0dNOkA1lTPd942SMIuOT9dy9Mgf
-         hbcA==
-X-Gm-Message-State: AOAM533FWJLi6W1k54ITewpdQTQaFQglSTl83ladaFRoK2NBCtUt12Ad
-        hNad1u8L2gVMDTASiIsEbpPo4jmwZFM=
-X-Google-Smtp-Source: ABdhPJyaJmEzG7DtkyZwrZ5g7LBfWKVfxBFN+4675TvEPpa5fecLylykOzsMbIVkBJThG9DLecykuQ==
-X-Received: by 2002:a17:902:8bc6:: with SMTP id r6mr18520900plo.289.1596090257450;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XPnPVe/hBWV8ylTxStT4hqgYjjgVSOD9uWxEIWOaFgQ=;
+        b=CKkP2eXHy2ELDQeT+T1Jq2U6KsFrvz5ncdrxwoZ+pcT6kFrkTF3Ba9i2+9+NtVjHCp
+         8bKDLk1L4ZARC00rLAvmwtfq4vcgjXS0i1SD59OLEIZexd2dL3/ErYYP8i0FxI7IcUgS
+         9PfISWQUJOj++Vo3K4l6gvG8yXxeRfyXUDeYlRY6tYG9d+yZ2trk1Qzh6yZ5H4XIf4oo
+         vNQr7MzQ/ju378CnVd1XnsXNd4CF1S8E5SQ6a53BmjxFz4YuOlmBr7qI2TN/WxDdIy4W
+         KxRP2FcBWALdDsMc8DQwzaOYNa0By++gy30fkOCwYrhYXVfoBldXgQC42m92xFSCavQq
+         Tx1g==
+X-Gm-Message-State: AOAM533lI4dThwgBgrsqD76dyOqHQ6sIYIxgJfAmRuRQ83nX/fzUYqOQ
+        HfCOsMJ1HhgG/osej7dTeXFdUQ==
+X-Google-Smtp-Source: ABdhPJx3x1DBRy4eexY/OhOFytaYU7ysFTqceScvV/5SpmHvZFAmx47nY0u/kZ3Cq7/6tuca1ZuNbQ==
+X-Received: by 2002:a62:1951:: with SMTP id 78mr1751266pfz.137.1596090257777;
         Wed, 29 Jul 2020 23:24:17 -0700 (PDT)
-Received: from ?IPv6:2404:7a87:83e0:f800:ccae:99d9:bebb:d2c4? ([2404:7a87:83e0:f800:ccae:99d9:bebb:d2c4])
-        by smtp.gmail.com with ESMTPSA id d22sm4673206pfd.42.2020.07.29.23.24.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+Received: from localhost ([106.201.14.19])
+        by smtp.gmail.com with ESMTPSA id 3sm3489881pfv.109.2020.07.29.23.24.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
         Wed, 29 Jul 2020 23:24:17 -0700 (PDT)
-Subject: Re: [PATCH] exfat: retain 'VolumeFlags' properly
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-To:     Namjae Jeon <namjae.jeon@samsung.com>,
-        Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp
-Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
-        Motai.Hirotaka@aj.MitsubishiElectric.co.jp,
-        'Sungjong Seo' <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CGME20200708095813epcas1p2277cdf7de6a8bb20c27bcd030eec431f@epcas1p2.samsung.com>
- <20200708095746.4179-1-kohada.t2@gmail.com>
- <005101d658d1$7202e5d0$5608b170$@samsung.com>
- <TY2PR01MB2875C88DD10CC13D0C70DE1690610@TY2PR01MB2875.jpnprd01.prod.outlook.com>
- <015801d65a4a$ebedd380$c3c97a80$@samsung.com>
- <ad0beeab-48ba-ee6d-f4cf-de19ec35a405@gmail.com>
-Message-ID: <fa122230-e0fd-6ed6-5473-31b17b56260c@gmail.com>
-Date:   Thu, 30 Jul 2020 15:24:14 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Date:   Thu, 30 Jul 2020 11:54:14 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Lukasz Luba <lukasz.luba@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Quentin Perret <qperret@google.com>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH 2/2] thermal: cpufreq_cooling: Reuse effective_cpu_util()
+Message-ID: <20200730062414.uq3ip7ukpu7nkiyg@vireshk-mac-ubuntu>
+References: <cover.1594707424.git.viresh.kumar@linaro.org>
+ <b051b42f0c4f36d7177978e090c6a85df17922c6.1594707424.git.viresh.kumar@linaro.org>
+ <20200716115605.GR10769@hirez.programming.kicks-ass.net>
+ <681fb3e8-d645-2558-38de-b39b372499de@arm.com>
+ <CAKfTPtA+BPegK2h6PQMFs+p4dpxO+sk1FDQuOfJvSpGCJ-rBrA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <ad0beeab-48ba-ee6d-f4cf-de19ec35a405@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtA+BPegK2h6PQMFs+p4dpxO+sk1FDQuOfJvSpGCJ-rBrA@mail.gmail.com>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping..
-
-On 2020/07/15 19:06, Tetsuhiro Kohada wrote:
->> It looks complicated. It would be better to simply set/clear VOLUME DIRTY bit.
+On 17-07-20, 11:46, Vincent Guittot wrote:
+> On Thu, 16 Jul 2020 at 16:24, Lukasz Luba <lukasz.luba@arm.com> wrote:
+> > On 7/16/20 12:56 PM, Peter Zijlstra wrote:
+> > > Currently cpufreq_cooling appears to estimate the CPU energy usage by
+> > > calculating the percentage of idle time using the per-cpu cpustat stuff,
+> > > which is pretty horrific.
+> >
+> > Even worse, it then *samples* the *current* CPU frequency at that
+> > particular point in time and assumes that when the CPU wasn't idle
+> > during that period - it had *this* frequency...
 > 
-> I think exfat_set_vol_flags() gets a little complicated,
-> because it needs the followings (with bit operation)
->   a) Set/Clear VOLUME_DIRTY.
->   b) Set MEDIA_FAILUR.
+> So there is 2 problems in the power calculation of cpufreq cooling device :
+> - How to get an accurate utilization level of the cpu which is what
+> this patch is trying to fix because using idle time is just wrong
+> whereas scheduler utilization is frequency invariant
 
-How about splitting these into separate functions  as below?
+Since this patch is targeted only towards fixing this particular
+problem, should I change something in the patch to make it acceptable
+?
 
+> - How to get power estimate from this utilization level. And as you
+> pointed out, using the current freq which is not accurate.
 
-exfat_set_volume_dirty()
-	exfat_set_vol_flags(sb, sbi->vol_flag | VOLUME_DIRTY);
+This should be tackled separately I believe.
 
-exfat_clear_volume_dirty()
-	exfat_set_vol_flags(sb, sbi->vol_flag & ~VOLUME_DIRTY);
-
-exfat_set_media_failure()
-	exfat_set_vol_flags(sb, sbi->vol_flag | MEDIA_FAILURE);
-
-
-The implementation is essentially the same for exfat_set_vol_flags(),
-but I think the intention of the operation will be easier to understand.
-
-
-BR
----
-Tetsuhiro Kohada <kohada.t2@gmail.com>
+-- 
+viresh
