@@ -2,177 +2,101 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB412C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9591C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5ACA2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 997BE20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:20:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aywt8rE/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgG3BS5 (ORCPT
+        id S1728053AbgG3BUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 21:18:57 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:39260 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725851AbgG3BS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 21:18:57 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4CD56A7A3968656C05A9;
-        Thu, 30 Jul 2020 09:18:54 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Thu, 30 Jul 2020
- 09:18:45 +0800
-From:   Yu Kuai <yukuai3@huawei.com>
-To:     <hch@infradead.org>, <darrick.wong@oracle.com>
-CC:     <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>,
-        <yukuai3@huawei.com>
-Subject: [RFC PATCH] iomap: add support to track dirty state of sub pages
-Date:   Thu, 30 Jul 2020 09:19:01 +0800
-Message-ID: <20200730011901.2840886-1-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.25.4
+        Wed, 29 Jul 2020 21:20:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbgG3BUS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 21:20:18 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8926C061794;
+        Wed, 29 Jul 2020 18:20:17 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id a14so1782109edx.7;
+        Wed, 29 Jul 2020 18:20:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6Bhtuo7eKFb6UmOlkz+jeD15e4iDeG8/eFQgGG8WWgU=;
+        b=aywt8rE/ZAqOwGwPJc4gPfNm/d+AoJ2HHscoaKrZ+7qvH3e6ge6QilD5Yvz20qz8kZ
+         tzsK2PITt1tLk1xEi7pV7QFmt6K8eKXRVQZ2XuVhMJZMhUnDIiOa1vEGEbB7d5PW2T3G
+         mu6odELvaLuwv3hVVRdqJ2URLL1mpzNXg8bP3OV/q6Gj2bkled6QzcZI46QqPa3HNoGS
+         LFQJeYy8YUT9dCnnpsIfYM0bMZU5GYPIuK4lFzTNQjI0o0PTKrchMlkI5o5lr8RigXx1
+         i3IS+ptC25L67GII1z4p80m/FFrctGS7C/ASXDgQjOfJC9eMkgKTdQUF2k4i9j5FV/1/
+         Hpag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6Bhtuo7eKFb6UmOlkz+jeD15e4iDeG8/eFQgGG8WWgU=;
+        b=R+9VAlFyzSOV1uaCZnm7MNGVegMh06fHVOlczbV3ENteetcNFctn6cBBI2H6ztacHU
+         bQWd+bZzjxwcsoJ+Y60POcB/93HtfGr0tBczBILk1v+KKJAbsiWeFkAOSIpm+Q8jxpQJ
+         YWb4gAW46hWBtIYz2JbJbZvTqt7jcBKYTfOS4di4LXqJakkQrZgd0bcWV+O3Ylhf61s+
+         GhLCrWaBaveE1RHCWj7A0q6jo/eO3+vax9I02Psnka132Hw8GjKaerdRlerkua0XP6Ri
+         W/YVQPnl5iqafdc3JMwOGVKDgHx/bhn0/2c3OuBqJjJ958W6TuYAbJXaLozLEOKY7jp6
+         HiHA==
+X-Gm-Message-State: AOAM531vohaCGlOpNm3ZQRA7BO4rcji/lp4M953L74J7hhbZo9kOkQ9V
+        O+uXBv11gZECg6WFWLSu2AalDcBXwQCf2R/W2Rk=
+X-Google-Smtp-Source: ABdhPJxv4UXtB8XlalMXyzX+Y8TaYgSNcz3eswdocM8l2y2uEcmDNuY9lZ6do5sTxRtW9c/xiAt8+ZikHMKfJWNB//g=
+X-Received: by 2002:aa7:d6cc:: with SMTP id x12mr485098edr.354.1596072016482;
+ Wed, 29 Jul 2020 18:20:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-CFilter-Loop: Reflected
+References: <cover.1595572867.git.frank@allwinnertech.com>
+In-Reply-To: <cover.1595572867.git.frank@allwinnertech.com>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Thu, 30 Jul 2020 09:20:05 +0800
+Message-ID: <CAEExFWsvScMgi_Dftfq06HZiF8CFAmym8Z_tgQoHHAfiGxWt0g@mail.gmail.com>
+Subject: Re: [PATCH v5 00/16] Allwinner A100 Initial support
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, gregory.clement@bootlin.com,
+        Thomas Gleixner <tglx@linutronix.de>, jason@lakedaemon.net,
+        Marc Zyngier <maz@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "p.zabel" <p.zabel@pengutronix.de>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        clabbe@baylibre.com, bage@linutronix.de,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>, linux-i2c@vger.kernel.org,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 9dc55f1389f9 ("iomap: add support for sub-pagesize buffered I/O
-without buffer heads") replace the per-block structure buffer_head with
-the per-page structure iomap_page. However, iomap_page can't track the
-dirty state of sub pages, which will cause performance issue since sub
-pages will be writeback even if they are not dirty.
+HI Maxime,
 
-For example, if block size is 4k and page size is 64k:
+Any comments on thermal and other patches?
+I hope these patches can be integrated into the mainline as soon as possible.
 
-dd if=/dev/zero of=testfile bs=4k count=16 oflag=sync
-
-With buffer_head implementation, the above dd cmd will writeback 4k in
-each round. However, with iomap_page implementation, the range of
-writeback in each round is from the start of the page to the end offset
-we just wrote.
-
-Thus add support to track dirty state for sub pages in iomap_page.
-
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- fs/iomap/buffered-io.c | 51 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 50 insertions(+), 1 deletion(-)
-
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index bcfc288dba3f..ac2676146b98 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -29,7 +29,9 @@ struct iomap_page {
- 	atomic_t		read_count;
- 	atomic_t		write_count;
- 	spinlock_t		uptodate_lock;
-+	spinlock_t		dirty_lock;
- 	DECLARE_BITMAP(uptodate, PAGE_SIZE / 512);
-+	DECLARE_BITMAP(dirty, PAGE_SIZE / 512);
- };
- 
- static inline struct iomap_page *to_iomap_page(struct page *page)
-@@ -53,7 +55,9 @@ iomap_page_create(struct inode *inode, struct page *page)
- 	atomic_set(&iop->read_count, 0);
- 	atomic_set(&iop->write_count, 0);
- 	spin_lock_init(&iop->uptodate_lock);
-+	spin_lock_init(&iop->dirty_lock);
- 	bitmap_zero(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
-+	bitmap_zero(iop->dirty, PAGE_SIZE / SECTOR_SIZE);
- 
- 	/*
- 	 * migrate_page_move_mapping() assumes that pages with private data have
-@@ -135,6 +139,44 @@ iomap_adjust_read_range(struct inode *inode, struct iomap_page *iop,
- 	*lenp = plen;
- }
- 
-+static void
-+iomap_iop_set_or_clear_range_dirty(
-+	struct page *page,
-+	unsigned int off,
-+	unsigned int len,
-+	bool is_set)
-+{
-+	struct iomap_page *iop = to_iomap_page(page);
-+	struct inode *inode = page->mapping->host;
-+	unsigned int first = off >> inode->i_blkbits;
-+	unsigned int last = (off + len - 1) >> inode->i_blkbits;
-+	unsigned long flags;
-+	unsigned int i;
-+
-+	spin_lock_irqsave(&iop->dirty_lock, flags);
-+	for (i = first; i <= last; i++)
-+		if (is_set)
-+			set_bit(i, iop->dirty);
-+		else
-+			clear_bit(i, iop->dirty);
-+	spin_unlock_irqrestore(&iop->dirty_lock, flags);
-+}
-+
-+static void
-+iomap_set_or_clear_range_dirty(
-+	struct page *page,
-+	unsigned int off,
-+	unsigned int len,
-+	bool is_set)
-+{
-+	if (PageError(page))
-+		return;
-+
-+	if (page_has_private(page))
-+		iomap_iop_set_or_clear_range_dirty(
-+			page, off, len, is_set);
-+}
-+
- static void
- iomap_iop_set_range_uptodate(struct page *page, unsigned off, unsigned len)
- {
-@@ -705,6 +747,8 @@ __iomap_write_end(struct inode *inode, loff_t pos, unsigned len,
- 	if (unlikely(copied < len && !PageUptodate(page)))
- 		return 0;
- 	iomap_set_range_uptodate(page, offset_in_page(pos), len);
-+	iomap_set_or_clear_range_dirty(
-+		page, offset_in_page(pos), len, true);
- 	iomap_set_page_dirty(page);
- 	return copied;
- }
-@@ -1030,6 +1074,8 @@ iomap_page_mkwrite_actor(struct inode *inode, loff_t pos, loff_t length,
- 		WARN_ON_ONCE(!PageUptodate(page));
- 		iomap_page_create(inode, page);
- 		set_page_dirty(page);
-+		iomap_set_or_clear_range_dirty(
-+			page, offset_in_page(pos), length, true);
- 	}
- 
- 	return length;
-@@ -1386,7 +1432,8 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
- 	for (i = 0, file_offset = page_offset(page);
- 	     i < (PAGE_SIZE >> inode->i_blkbits) && file_offset < end_offset;
- 	     i++, file_offset += len) {
--		if (iop && !test_bit(i, iop->uptodate))
-+		if (iop && (!test_bit(i, iop->uptodate) ||
-+		    !test_bit(i, iop->dirty)))
- 			continue;
- 
- 		error = wpc->ops->map_blocks(wpc, inode, file_offset);
-@@ -1435,6 +1482,8 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
- 		 */
- 		set_page_writeback_keepwrite(page);
- 	} else {
-+		iomap_set_or_clear_range_dirty(
-+			page, 0, end_offset - page_offset(page) + 1, false);
- 		clear_page_dirty_for_io(page);
- 		set_page_writeback(page);
- 	}
--- 
-2.25.4
-
+Thx,
+Yangtao
