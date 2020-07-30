@@ -2,201 +2,128 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBCEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EFD8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7945B2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E042082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:11:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vVwDjUUI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GnWpPtrt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgG3LLE (ORCPT
+        id S1727051AbgG3LLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 07:11:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52842 "EHLO
+        Thu, 30 Jul 2020 07:11:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726367AbgG3LLC (ORCPT
+        with ESMTP id S1726367AbgG3LLi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 07:11:02 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D518BC061794;
-        Thu, 30 Jul 2020 04:11:02 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id g19so1200690plq.0;
-        Thu, 30 Jul 2020 04:11:02 -0700 (PDT)
+        Thu, 30 Jul 2020 07:11:38 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24199C061794;
+        Thu, 30 Jul 2020 04:11:37 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z18so20945418wrm.12;
+        Thu, 30 Jul 2020 04:11:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ae96SR23iZeBLSBCoLIaAGm/kTSoCvrW0+UYQgfK9PA=;
-        b=vVwDjUUI8QVtGmGOzrkxP9OugoCgdsctYMdsbBmFGJLK1yMhi9zeY5aH3Vy6IEtcqF
-         VaqmPddg6vM9AtB69G34lkcF5WbPBB5WJWPLS6PYB6/rIGXgeSavm2/RA+QxzJ5kH26E
-         wcd7Dw8pYssor/HcG6JZYfYdBbyua0Zd4fg8flNkOgTXe22Tqqm0Ubdi7F1+iu2m++1i
-         KqBhxTzsLNYuokT0vh/X7SeOMlbLflLZ9vl7kl78wwzImunjjjjb/8lrvBvDfGR52kRH
-         jvwBrq1JGyAzmMnYruGdOMR4ge8kfTS3k/ZPPwpsA2MQ+w4XLW5JeTj5ieoSrnb5l4YW
-         zcRw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+0iowu5xEfPH7yjXvVBsR1zC3LFBJmoKMH8nuby/sFI=;
+        b=GnWpPtrtvLFQrIvPWKQ3x+hLmZQOnsGb2mOxnHtZf+3PKUEyAfUB5sGJImtjtbm6zr
+         6U7vMKvKE8VRMhaUPT21A8bglTvJzmBmah7MqtoF++11LRRhCoBBb5x34ABeYLAMKzZ/
+         OigG88mHCVRGTHXayDVGS9o/pj9cJ2lAIwo07rR5IKKqA4VngkOVFIF10/p8Cqacdqkr
+         IpPvHvvn9RQw5Tsa9iWA4HmvopcWpjmM78H1r6/YC4xXCoz81udYkQez3cJyW71F/2Cs
+         JsS9s+UcdTmDDXnmvtlDzykh+mw+4DO06ELW/mExH6HTUqulWglC73UdJvjMY+ui9Hfn
+         nsUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ae96SR23iZeBLSBCoLIaAGm/kTSoCvrW0+UYQgfK9PA=;
-        b=brz8eqvoxBQCZSyaTpVAT93I4eythYtQxsb3V7Ag4L/W141MCX8fJx/38RDy3aAvab
-         B8jj4VHT1MroEojdWs2vxvB3yUG71E9CJnDIuf40nhj2TX54kVNk+JqIdOsTP5611FgJ
-         VQD6ZG6d4gi23SvqMNmhYHj4vEMy5I3tMW474EAmeOpgu0i7QiORgjV3y+kcKqFcOvDm
-         0ooarLNhXZU240JahOipmcC7pxZwx451nTkireXvvX67+ahHZdbCnF9gZcs+b/Tzr+pd
-         BTukHFBWVjPc4NIj3xLVJ8sTTvc95ctlKibBMRMhZ5uj7lqpNjt68Jqoraz5fa5lmE9y
-         eOKA==
-X-Gm-Message-State: AOAM532dLgNrbMKfejYdmXIuao68pjWJDfGy854TeSeuVtRW3ROESUli
-        ar/Gcp5m14RGSPNjHSh/o+w=
-X-Google-Smtp-Source: ABdhPJyu9imbhe+saOmZcAMN5MLeoXerEyGeCx7iwEx2yngQKrOHY5GyuhjSg8RAG0NjyyViO3LBQw==
-X-Received: by 2002:a63:1406:: with SMTP id u6mr33350183pgl.108.1596107462192;
-        Thu, 30 Jul 2020 04:11:02 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id i67sm5888019pfg.13.2020.07.30.04.10.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 04:11:01 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Don Brace <don.brace@microsemi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        esc.storagedev@microsemi.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v2] scsi: smartpqi: use generic power management
-Date:   Thu, 30 Jul 2020 16:39:30 +0530
-Message-Id: <20200730110930.664486-1-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200730070233.221488-1-vaibhavgupta40@gmail.com>
-References: <20200730070233.221488-1-vaibhavgupta40@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+0iowu5xEfPH7yjXvVBsR1zC3LFBJmoKMH8nuby/sFI=;
+        b=bZP5aJzltBooiok9oT4jsa0MU1vfIef0j6ZNTeSSEWEBnr0QSiT31iQPXutxe61MTP
+         TXNDVDaGJUtF8visFEpMJH23xPT+dXUnB7Mpt5aJgeXuRUKjUWN3UyJjT698+jFI05fb
+         iJ6cdAKs/zG+61stiDiNeDEfVdo5zcooj+tJJzXp1AXJ49k9D9CGF7ecytumPd7NAHvB
+         2a0QU6M5uy3w158kytzESN0+JS5KyD7PtL//S+ld2ZQANKj97/mcHLQU4bpBS+XqtXsb
+         /TbcDIXAJojlsXHnJlgtxa2HEBNahwFaLtkMSMYRc7m7sWImodcQV75DVeKiQ8kKdi19
+         uXcg==
+X-Gm-Message-State: AOAM5324gLfKY+aAQlkh+5nF3kGe3SjoMwNaDlrCtLgyphCdLDYeDfwi
+        PUBS8+XHmMaOgVoxxJDeIaBcb6/FoHw=
+X-Google-Smtp-Source: ABdhPJyzrCbW0TufxlUf4YkPb0Dtc3clPloAllLT6W6ASv6ufOJZ4JIRJvQHLXGZ3Q5JjOxz3dalBg==
+X-Received: by 2002:a5d:48c8:: with SMTP id p8mr2265618wrs.84.1596107495864;
+        Thu, 30 Jul 2020 04:11:35 -0700 (PDT)
+Received: from ziggy.stardust (81.172.57.81.dyn.user.ono.com. [81.172.57.81])
+        by smtp.gmail.com with ESMTPSA id z8sm8387862wmf.42.2020.07.30.04.11.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jul 2020 04:11:35 -0700 (PDT)
+Subject: Re: [v3,1/5] dt-binding: mediatek: watchdog: fix the description of
+ compatible
+To:     Crystal Guo <crystal.guo@mediatek.com>, linux@roeck-us.net,
+        robh+dt@kernel.org
+Cc:     srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, seiya.wang@mediatek.com
+References: <1596104510-11113-1-git-send-email-crystal.guo@mediatek.com>
+ <1596104510-11113-2-git-send-email-crystal.guo@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <2fca091d-4889-2564-0fe0-927093929f10@gmail.com>
+Date:   Thu, 30 Jul 2020 13:11:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1596104510-11113-2-git-send-email-crystal.guo@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drivers using legacy power management .suspen()/.resume() callbacks
-have to manage PCI states and device's PM states themselves. They also
-need to take care of standard configuration registers.
 
-Switch to generic power management framework using a single
-"struct dev_pm_ops" variable to take the unnecessary load from the driver.
-This also avoids the need for the driver to directly call most of the PCI
-helper functions and device power state control functions, as through
-the generic framework PCI Core takes care of the necessary operations,
-and drivers are required to do only device-specific jobs.
 
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- drivers/scsi/smartpqi/smartpqi_init.c | 44 +++++++++++++++++++--------
- 1 file changed, 31 insertions(+), 13 deletions(-)
+On 30/07/2020 12:21, Crystal Guo wrote:
+> Besides watchdog, mt2712 and nt8183 also provide sub-system software
+> reset features. But mt6589 not support this feature
+> 
+> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
 
-diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
-index cd157f11eb22..7061bd26897a 100644
---- a/drivers/scsi/smartpqi/smartpqi_init.c
-+++ b/drivers/scsi/smartpqi/smartpqi_init.c
-@@ -8059,11 +8059,11 @@ static void pqi_process_module_params(void)
- 	pqi_process_lockup_action_param();
- }
- 
--static __maybe_unused int pqi_suspend(struct pci_dev *pci_dev, pm_message_t state)
-+static int pqi_suspend_late(struct device *dev, pm_message_t state)
- {
- 	struct pqi_ctrl_info *ctrl_info;
- 
--	ctrl_info = pci_get_drvdata(pci_dev);
-+	ctrl_info = dev_get_drvdata(dev);
- 
- 	pqi_disable_events(ctrl_info);
- 	pqi_cancel_update_time_worker(ctrl_info);
-@@ -8081,20 +8081,33 @@ static __maybe_unused int pqi_suspend(struct pci_dev *pci_dev, pm_message_t stat
- 	if (state.event == PM_EVENT_FREEZE)
- 		return 0;
- 
--	pci_save_state(pci_dev);
--	pci_set_power_state(pci_dev, pci_choose_state(pci_dev, state));
--
- 	ctrl_info->controller_online = false;
- 	ctrl_info->pqi_mode_enabled = false;
- 
- 	return 0;
- }
- 
--static __maybe_unused int pqi_resume(struct pci_dev *pci_dev)
-+static __maybe_unused int pqi_suspend(struct device *dev)
-+{
-+	return pqi_suspend_late(dev, PMSG_SUSPEND);
-+}
-+
-+static __maybe_unused int pqi_hibernate(struct device *dev)
-+{
-+	return pqi_suspend_late(dev, PMSG_HIBERNATE);
-+}
-+
-+static __maybe_unused int pqi_freeze(struct device *dev)
-+{
-+	return pqi_suspend_late(dev, PMSG_FREEZE);
-+}
-+
-+static __maybe_unused int pqi_resume(struct device *dev)
- {
- 	int rc;
- 	struct pqi_ctrl_info *ctrl_info;
- 
-+	struct pci_dev *pci_dev = to_pci_dev(dev);
- 	ctrl_info = pci_get_drvdata(pci_dev);
- 
- 	if (pci_dev->current_state != PCI_D0) {
-@@ -8115,9 +8128,6 @@ static __maybe_unused int pqi_resume(struct pci_dev *pci_dev)
- 		return 0;
- 	}
- 
--	pci_set_power_state(pci_dev, PCI_D0);
--	pci_restore_state(pci_dev);
--
- 	return pqi_ctrl_init_resume(ctrl_info);
- }
- 
-@@ -8480,16 +8490,24 @@ static const struct pci_device_id pqi_pci_id_table[] = {
- 
- MODULE_DEVICE_TABLE(pci, pqi_pci_id_table);
- 
-+static const struct dev_pm_ops pqi_pm_ops = {
-+#ifdef CONFIG_PM_SLEEP
-+	.suspend = pqi_suspend,
-+	.resume = pqi_resume,
-+	.freeze = pqi_freeze,
-+	.thaw = pqi_resume,
-+	.poweroff = pqi_hibernate,
-+	.restore = pqi_resume,
-+#endif
-+};
-+
- static struct pci_driver pqi_pci_driver = {
- 	.name = DRIVER_NAME_SHORT,
- 	.id_table = pqi_pci_id_table,
- 	.probe = pqi_pci_probe,
- 	.remove = pqi_pci_remove,
- 	.shutdown = pqi_shutdown,
--#if defined(CONFIG_PM)
--	.suspend = pqi_suspend,
--	.resume = pqi_resume,
--#endif
-+	.driver.pm = &pqi_pm_ops
- };
- 
- static int __init pqi_init(void)
--- 
-2.27.0
+My proposal for the commit message:
 
+"The watchdog driver for MT2712 and MT8183 relies on DT data, so the fallback 
+compatible MT6589 won't work."
+
+With that or anything like that:
+
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+> ---
+>   Documentation/devicetree/bindings/watchdog/mtk-wdt.txt | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> index 4dd36bd..45eedc2 100644
+> --- a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> @@ -4,13 +4,13 @@ Required properties:
+>   
+>   - compatible should contain:
+>   	"mediatek,mt2701-wdt", "mediatek,mt6589-wdt": for MT2701
+> -	"mediatek,mt2712-wdt", "mediatek,mt6589-wdt": for MT2712
+> +	"mediatek,mt2712-wdt": for MT2712
+>   	"mediatek,mt6589-wdt": for MT6589
+>   	"mediatek,mt6797-wdt", "mediatek,mt6589-wdt": for MT6797
+>   	"mediatek,mt7622-wdt", "mediatek,mt6589-wdt": for MT7622
+>   	"mediatek,mt7623-wdt", "mediatek,mt6589-wdt": for MT7623
+>   	"mediatek,mt7629-wdt", "mediatek,mt6589-wdt": for MT7629
+> -	"mediatek,mt8183-wdt", "mediatek,mt6589-wdt": for MT8183
+> +	"mediatek,mt8183-wdt": for MT8183
+>   	"mediatek,mt8516-wdt", "mediatek,mt6589-wdt": for MT8516
+>   
+>   - reg : Specifies base physical address and size of the registers.
+> 
