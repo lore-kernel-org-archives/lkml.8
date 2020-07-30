@@ -2,120 +2,122 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2703C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D317AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9A93207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:44:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596091448;
-	bh=MVEIO7FfojzQztFXL9hSu5cyY0RA3fORSt6UPu4rm/E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RcotdlmYj8RYdik/+2UGJXX/umtLcwNUDQVQGIRfKpQvYP28kz2smMOqknh7zi6oE
-	 YHn+4/ych2l7SbJBW/EZc2Oxu5QeHLO3BxWr5VygyvsrQCb5fd9o7D3E6UvR8zm5yf
-	 Vizf/N94dB+7FFPSMmcLbsv24dkZJTws9rfUgBdQ=
+	by mail.kernel.org (Postfix) with ESMTP id AAA312083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:44:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OiRstPhm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbgG3GoH (ORCPT
+        id S1728824AbgG3GoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 02:44:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725892AbgG3GoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 02:44:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3918206D7;
-        Thu, 30 Jul 2020 06:44:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596091446;
-        bh=MVEIO7FfojzQztFXL9hSu5cyY0RA3fORSt6UPu4rm/E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A1FiKYPaH2+h9zer3nVVTKIHkZyRLDJ55pAj6CjKudvNPdyLel5Bga4zkaFViIkaD
-         tYYTFcNOoljvUQlJxHVm1X0htfpq+0F2sYd4y2wQuzzEZ7NmX78+j0PY7thuwNc5Yv
-         LLSCs2cm9lxqKt0VhIjQzYkCNLfqLoKhgpZuVuXE=
-Date:   Thu, 30 Jul 2020 08:43:56 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Badhri Jagan Sridharan <badhri@google.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] usb: typec: tcpm: Migrate workqueue to RT priority
- for processing events
-Message-ID: <20200730064356.GA3910237@kroah.com>
-References: <20200730022457.3021112-1-badhri@google.com>
+        Thu, 30 Jul 2020 02:44:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39960 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbgG3GoO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 02:44:14 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8D34C061794;
+        Wed, 29 Jul 2020 23:44:13 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id r4so2602681pls.2;
+        Wed, 29 Jul 2020 23:44:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=T0Z6YHYdP/kQD0cMS+cNQldOhqY6T8q1pjXPvT/YgO4=;
+        b=OiRstPhmDEM9j1YxieKFDsmisl0va0TTs8SAgeCbQrA9AWLamk4R9MGSsK4v6bndhB
+         RLewfarih1eCgV3Iputcsb8Fikf0Ts4i1DzVjx+N38MZOsWuNZkJbnGWYYRBMLzi/QnS
+         gWLNvJwgGfa9pyvyYFGPfrF6suBPHMvAA8Pp+dAgRwz7pEIvIVwPBboizcmAW1ewhGnw
+         oyNfRbmQAbZmpzaktT4Tx0ON8SY7SRP9rtF+afdlUt1d0G0UQIhpYsUI4FmTbgULbQSr
+         QN5TpBwhN21MUhS84sWBvKcg/78IQrktg/pOpWQICx27YFOfDNq88Ez46QtYgrlndHW+
+         F7jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=T0Z6YHYdP/kQD0cMS+cNQldOhqY6T8q1pjXPvT/YgO4=;
+        b=OGsm1z4+TV9Q8RRpg5P7iD33t/H5RuY0O0rUS7C2hEhTSpPcIh55zUddfTo5KT815d
+         vGPgqj8jx1aIDu3sqJWeuCSOGqqv2/SOrWow6QUny7DCKyNylqOdpcrpXvz3LDQhxiXq
+         GWAYjtZUnBmDhOOzCnMZRElW/N/pfyjxgEb994BY+ToZT5JXk8WmXnLOqDMfQda39yma
+         MOgtFX0LqsAplXN79L85Kk9MgT2DdfzwNA7hLS8YXtuejqRdd2rr7te0xUHlMl3f6SMg
+         vf0y60lFwljAZ7j511x6MsMU8VVEpnRys/3mXbL+jtdh10IEznsGQt5U/wnjf/zYv9Oj
+         trYA==
+X-Gm-Message-State: AOAM531IOL5hEDWG+nTcuzRom//OFe3n5ZtEAqSW68mcK1mJfdndtZ9o
+        tk6nynk7x+gck8pfz7G5Xd0=
+X-Google-Smtp-Source: ABdhPJw9O6djxb55ZNdBVxjrgHGcCupOaAemxFpYzSxNl58AoVv0WDFvfO70K4EdqKqtCV1QzKsN3w==
+X-Received: by 2002:a17:902:c405:: with SMTP id k5mr30039309plk.202.1596091453251;
+        Wed, 29 Jul 2020 23:44:13 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.152.86])
+        by smtp.gmail.com with ESMTPSA id t19sm4456942pgg.19.2020.07.29.23.44.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 23:44:12 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Daniele Venzano <venza@brownhat.org>,
+        Samuel Chessman <chessman@tux.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v1 0/3] net: ethernet: use generic power management
+Date:   Thu, 30 Jul 2020 12:12:26 +0530
+Message-Id: <20200730064229.174933-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200730051733.113652-1-vaibhavgupta40@gmail.com>
+References: <20200730051733.113652-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200730022457.3021112-1-badhri@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 07:24:57PM -0700, Badhri Jagan Sridharan wrote:
-> "tReceiverResponse 15 ms Section 6.6.2
-> The receiver of a Message requiring a response Shall respond
-> within tReceiverResponse in order to ensure that the
-> sender’s SenderResponseTimer does not expire."
-> 
-> When the cpu complex is busy running other lower priority
-> work items, TCPM's work queue sometimes does not get scheduled
-> on time to meet the above requirement from the spec.
-> Moving to kthread_work apis to run with real time priority.
-> Just lower than the default threaded irq priority,
-> MAX_USER_RT_PRIO/2 + 1. (Higher number implies lower priority).
-> 
-> Further, as observed in 1ff688209e2e, moving to hrtimers to
-> overcome scheduling latency while scheduling the delayed work.
-> 
-> TCPM has three work streams:
-> 1. tcpm_state_machine
-> 2. vdm_state_machine
-> 3. event_work
-> 
-> tcpm_state_machine and vdm_state_machine both schedule work in
-> future i.e. delayed. Hence each of them have a corresponding
-> hrtimer, tcpm_state_machine_timer & vdm_state_machine_timer.
-> 
-> When work is queued right away kthread_queue_work is used.
-> Else, the relevant timer is programmed and made to queue
-> the kthread_work upon timer expiry.
-> 
-> kthread_create_worker only creates one kthread worker thread,
-> hence single threadedness of workqueue is retained.
-> 
-> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> ---
-> Changes since v1:(Guenter's suggestions)
-> - Remove redundant call to hrtimer_cancel while calling
->   hrtimer_start.
-> 
-> Changes since v2:(Greg KH's suggestions)
-> - Rebase usb-next TOT.
->   633198cd2945b7 (HEAD -> usb-next-1) usb: typec: tcpm: Migrate workqueue to RT priority for processing events
->   fa56dd9152ef95 (origin/usb-next) Merge tag 'usb-serial-5.9-rc1' of https://git.kernel.org/pub/scm/linux/kernel/git/johan/usb-serial into usb-next
->   25252919a1050e xhci: dbgtty: Make some functions static
->   b0e02550346e67 xhci: dbc: Make function xhci_dbc_ring_alloc() static
->   ca6377900974c3 Revert "usb: dwc2: override PHY input signals with usb role switch support"
->   09df709cb5aeb2 Revert "usb: dwc2: don't use ID/Vbus detection if usb-role-switch on STM32MP15 SoCs"
->   17a82716587e9d USB: iowarrior: fix up report size handling for some devices
->   e98ba8cc3f8a89 Merge tag 'usb-for-v5.9' of git://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb into usb-next
->   c97793089b11f7 Merge 5.8-rc7 into usb-next
->   92ed301919932f (tag: v5.8-rc7, origin/usb-linus, origin/main) Linux 5.8-rc7
-> 
+Linux Kernel Mentee: Remove Legacy Power Management.
 
-Hm, still does not apply.  I think it has something to do with other
-patches that landed before yours, can you rebase again?
+The purpose of this patch series is to upgrade power management in net ethernet
+drivers. This has been done by upgrading .suspend() and .resume() callbacks.
 
-thanks,
+The upgrade makes sure that the involvement of PCI Core does not change the
+order of operations executed in a driver. Thus, does not change its behavior.
 
-greg k-h
+In general, drivers with legacy PM, .suspend() and .resume() make use of PCI
+helper functions like pci_enable/disable_device_mem(), pci_set_power_state(),
+pci_save/restore_state(), pci_enable/disable_device(), etc. to complete
+their job.
+
+The conversion requires the removal of those function calls, change the
+callbacks' definition accordingly and make use of dev_pm_ops structure.
+
+All patches are compile-tested only.
+
+Test tools:
+    - Compiler: gcc (GCC) 10.1.0
+    - allmodconfig build: make -j$(nproc) W=1 all
+
+Vaibhav Gupta (3):
+  sc92031: use generic power management
+  sis900: use generic power management
+  tlan: use generic power management
+
+ drivers/net/ethernet/silan/sc92031.c | 26 ++++++++---------------
+ drivers/net/ethernet/sis/sis900.c    | 23 +++++++--------------
+ drivers/net/ethernet/ti/tlan.c       | 31 ++++++----------------------
+ 3 files changed, 22 insertions(+), 58 deletions(-)
+
+-- 
+2.27.0
+
