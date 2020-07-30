@@ -2,82 +2,77 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D88C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CBDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 932E121744
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29EAF2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:19:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PmaYikEA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730287AbgG3RRC convert rfc822-to-8bit (ORCPT
+        id S1730119AbgG3RTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 13:17:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36414 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728492AbgG3RRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 13:17:02 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 30 Jul 2020 13:19:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40533 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728452AbgG3RTn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 13:19:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596129582;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yfgpEad35QlSnKs/MBOCUF8OTtEP6rCnc2IsO7uLItY=;
+        b=PmaYikEAhKai4wSOW7s00YEWZGjELfndB6Kb/KwaRkhNpF5IW3c/gOWJgwCGaNnIlTTFu+
+        hs5k+c/Dyy3iLQgLG7wFve+QddGaKFMG83MiPhHqBZ8uEoT4p6m59cNbEsVCL227wXOJV3
+        jl4lFirypf8VE6l7eTqD0Pu2r83xk2s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-315-XdgRvRDMN0yJ3P4Ns-mDBQ-1; Thu, 30 Jul 2020 13:19:39 -0400
+X-MC-Unique: XdgRvRDMN0yJ3P4Ns-mDBQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFC7B2082E;
-        Thu, 30 Jul 2020 17:17:00 +0000 (UTC)
-Date:   Thu, 30 Jul 2020 13:16:59 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     peter enderborg <peter.enderborg@sony.com>
-Cc:     =?UTF-8?B?VGhpw6liYXVk?= Weksteen <tweek@google.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Nick Kralevich <nnk@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <selinux@vger.kernel.org>
-Subject: Re: [PATCH] RFC: selinux avc trace
-Message-ID: <20200730131659.7f1d21e8@oasis.local.home>
-In-Reply-To: <15fcdc87-5e9b-8144-5a6b-34594d1e52ef@sony.com>
-References: <20200724091520.880211-1-tweek@google.com>
-        <20200724095232.5f9d3f17@oasis.local.home>
-        <80a23580-5067-93b0-53fa-3bd53253c056@sony.com>
-        <20200730110459.5bf0b0df@oasis.local.home>
-        <6f1262fc-21ad-f872-5460-e78d4685c9c4@sony.com>
-        <20200730120200.1367e1cd@oasis.local.home>
-        <15fcdc87-5e9b-8144-5a6b-34594d1e52ef@sony.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 71CCD79EC2;
+        Thu, 30 Jul 2020 17:19:38 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 038325FC31;
+        Thu, 30 Jul 2020 17:19:36 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <439876.1596106009@warthog.procyon.org.uk>
+References: <439876.1596106009@warthog.procyon.org.uk> <159562904644.2287160.13294507067766261970.stgit@warthog.procyon.org.uk>
+To:     torvalds@linux-foundation.org
+Cc:     dhowells@redhat.com, jarkko.sakkinen@linux.intel.com,
+        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] watch_queue: Limit the number of watches a user can hold
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <521561.1596129576.1@warthog.procyon.org.uk>
+Date:   Thu, 30 Jul 2020 18:19:36 +0100
+Message-ID: <521562.1596129576@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Jul 2020 19:05:49 +0200
-peter enderborg <peter.enderborg@sony.com> wrote:
+David Howells <dhowells@redhat.com> wrote:
 
-> >> It should be a full structure with a lot of sub strings.  But that make is even more relevant.  
-> > So one event instance can have a list of strings recorded?  
-> 
-> Yes, it is a list very similar to a normal trace. But it is more generic.
-> 
-> For example ino= is for filesystems that have inode, but for a
-> violation that send a signal that make no sense at all.  Network
-> addresses is in many cases not applicable. laddr= is only exist for
-> for IP.
-> 
-> So if you just print them it will look like:
-> 
-> avc:  denied  { find } for interface=vendor.qti.hardware.perf::IPerf sid=u:r:permissioncontroller_app:s0:c230,c256,c512,c768 pid=9164 scontext=u:r:permissioncontroller_app:s0:c230,c256,c512,c768 tcontext=u:object_r:vendor_hal_perf_hwservice:s0 tclass=hwservice_manager permissive=0
->  avc:  denied  { execute } for  pid=13914 comm="ScionFrontendAp" path="/data/user_de/0/com.google.android.gms/app_chimera/m/00000002/oat/arm64/DynamiteLoader.odex" dev="sda77" ino=204967 scontext=u:r:platform_app:s0:c512,c768 tcontext=u:object_r:privapp_data_file:s0:c512,c768 tclass=file permissive=0 ppid=788 pcomm="main" pgid=13914 pgcomm="on.updatecenter"
-> 
-> It omit the fields that are not used. Some parts are common some are not. So a correct format specification for trace will be problematic if there is no "optional" field indicator.
+> Could you consider taking this patch as a bugfix since the problem exists
+> already in upstream code?
 
-That's all quite noisy. What is the object of these changes? What
-exactly are you trying to trace and why?
+Alternatively, I can include it in a set with the mount notifications.
 
--- Steve
+David
+
