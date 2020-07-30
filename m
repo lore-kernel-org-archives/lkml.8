@@ -4,54 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 976A9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBD1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE58204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D6822074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:20:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596097221;
-	bh=kh+wE68N2kyRA2fXhaGgr74yea6YKa1fBgeKu2BPwew=;
+	s=default; t=1596097228;
+	bh=LKGNT2qVhcOAafZ2dGb9zKN9EZp306o8SFySeGT4rD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nbF/LboJbixfWsXgeaIzQ74DdvsRsZ/ChbL3tC+u6hkUqgZCuGaoPYhv7NHyYCYj1
-	 9qYVL9zz3Z3ilh238ZJeoyEmu59NFeV38rnyYWLzlIWPJOaXH1zOJwU2Rp8psHahi7
-	 JjJj8Xxkx+2GeZw018pOw0cODwMZ9HylDXTtVdnM=
+	b=XCSun35nlSSqr3UcoLNSdH7wAz7Q/AClLbfHmutH8ghpzmxijg2XHFTBCX6wHZMd3
+	 WN+XVBp+mRG1MRzJTtOhS9MUE07VCmf+gjHYUprpmpymH4KBG0NRY2xK/V26NF9BpK
+	 K0ILZZVdXRP8iK689nGq6zS05/7MyoUvjIJXYEWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730241AbgG3IUU (ORCPT
+        id S1729648AbgG3IU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:20:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44604 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:20:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729268AbgG3IG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:06:58 -0400
+        id S1726194AbgG3IGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:06:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34D1220809;
-        Thu, 30 Jul 2020 08:06:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 500CE206C0;
+        Thu, 30 Jul 2020 08:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096417;
-        bh=kh+wE68N2kyRA2fXhaGgr74yea6YKa1fBgeKu2BPwew=;
+        s=default; t=1596096364;
+        bh=LKGNT2qVhcOAafZ2dGb9zKN9EZp306o8SFySeGT4rD8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qPFUbqbAYvkBjsRuzi95E28JnlZmC7UshP8Bd2Vsf8UyLraCAZeYbKNTGCtdeS4d/
-         bzvn5w2w3AxhCTvDcPtD+g1acpFs/93FuVvSPCgS1OS96JDYE0GXVOl1BlL62PMbLz
-         ELtSbJDA1ruB7Q0RrYk7IXHHwbNc/4LbyfS4PFYk=
+        b=X2vIrl6dUKVd1ONs/F+uJVCw62+FKtsZPxjLeAwMD0TLBjUDhUQ5JBROt/E8JI4xs
+         JcnLkJXdkLuFGZo7BhS6OCYxKRfWDz4F9F8sQecgPUXgYa9TeUxaYslqsx4WGAbru8
+         H7xyarOYGvxjuML5fgbqyF3RBEkXvRnhxxcPTZY8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Martin Schiller <ms@dev.tdt.de>,
-        Xie He <xie.he.0141@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 04/17] drivers/net/wan/x25_asy: Fix to make it work
-Date:   Thu, 30 Jul 2020 10:04:30 +0200
-Message-Id: <20200730074420.672035354@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+6720d64f31c081c2f708@syzkaller.appspotmail.com
+Subject: [PATCH 5.4 08/19] qrtr: orphan socket in qrtr_release()
+Date:   Thu, 30 Jul 2020 10:04:10 +0200
+Message-Id: <20200730074420.924420214@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200730074420.449233408@linuxfoundation.org>
-References: <20200730074420.449233408@linuxfoundation.org>
+In-Reply-To: <20200730074420.502923740@linuxfoundation.org>
+References: <20200730074420.502923740@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,102 +64,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie He <xie.he.0141@gmail.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit 8fdcabeac39824fe67480fd9508d80161c541854 ]
+[ Upstream commit af9f691f0f5bdd1ade65a7b84927639882d7c3e5 ]
 
-This driver is not working because of problems of its receiving code.
-This patch fixes it to make it work.
+We have to detach sock from socket in qrtr_release(),
+otherwise skb->sk may still reference to this socket
+when the skb is released in tun->queue, particularly
+sk->sk_wq still points to &sock->wq, which leads to
+a UAF.
 
-When the driver receives an LAPB frame, it should first pass the frame
-to the LAPB module to process. After processing, the LAPB module passes
-the data (the packet) back to the driver, the driver should then add a
-one-byte pseudo header and pass the data to upper layers.
-
-The changes to the "x25_asy_bump" function and the
-"x25_asy_data_indication" function are to correctly implement this
-procedure.
-
-Also, the "x25_asy_unesc" function ignores any frame that is shorter
-than 3 bytes. However the shortest frames are 2-byte long. So we need
-to change it to allow 2-byte frames to pass.
-
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
-Reviewed-by: Martin Schiller <ms@dev.tdt.de>
+Reported-and-tested-by: syzbot+6720d64f31c081c2f708@syzkaller.appspotmail.com
+Fixes: 28fb4e59a47d ("net: qrtr: Expose tunneling endpoint to user space")
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Eric Dumazet <eric.dumazet@gmail.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/wan/x25_asy.c |   21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ net/qrtr/qrtr.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/wan/x25_asy.c
-+++ b/drivers/net/wan/x25_asy.c
-@@ -183,7 +183,7 @@ static inline void x25_asy_unlock(struct
- 	netif_wake_queue(sl->dev);
- }
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -1004,6 +1004,7 @@ static int qrtr_release(struct socket *s
+ 		sk->sk_state_change(sk);
  
--/* Send one completely decapsulated IP datagram to the IP layer. */
-+/* Send an LAPB frame to the LAPB module to process. */
+ 	sock_set_flag(sk, SOCK_DEAD);
++	sock_orphan(sk);
+ 	sock->sk = NULL;
  
- static void x25_asy_bump(struct x25_asy *sl)
- {
-@@ -195,13 +195,12 @@ static void x25_asy_bump(struct x25_asy
- 	count = sl->rcount;
- 	dev->stats.rx_bytes += count;
- 
--	skb = dev_alloc_skb(count+1);
-+	skb = dev_alloc_skb(count);
- 	if (skb == NULL) {
- 		netdev_warn(sl->dev, "memory squeeze, dropping packet\n");
- 		dev->stats.rx_dropped++;
- 		return;
- 	}
--	skb_push(skb, 1);	/* LAPB internal control */
- 	skb_put_data(skb, sl->rbuff, count);
- 	skb->protocol = x25_type_trans(skb, sl->dev);
- 	err = lapb_data_received(skb->dev, skb);
-@@ -209,7 +208,6 @@ static void x25_asy_bump(struct x25_asy
- 		kfree_skb(skb);
- 		printk(KERN_DEBUG "x25_asy: data received err - %d\n", err);
- 	} else {
--		netif_rx(skb);
- 		dev->stats.rx_packets++;
- 	}
- }
-@@ -356,12 +354,21 @@ static netdev_tx_t x25_asy_xmit(struct s
-  */
- 
- /*
-- *	Called when I frame data arrives. We did the work above - throw it
-- *	at the net layer.
-+ *	Called when I frame data arrive. We add a pseudo header for upper
-+ *	layers and pass it to upper layers.
-  */
- 
- static int x25_asy_data_indication(struct net_device *dev, struct sk_buff *skb)
- {
-+	if (skb_cow(skb, 1)) {
-+		kfree_skb(skb);
-+		return NET_RX_DROP;
-+	}
-+	skb_push(skb, 1);
-+	skb->data[0] = X25_IFACE_DATA;
-+
-+	skb->protocol = x25_type_trans(skb, dev);
-+
- 	return netif_rx(skb);
- }
- 
-@@ -657,7 +664,7 @@ static void x25_asy_unesc(struct x25_asy
- 	switch (s) {
- 	case X25_END:
- 		if (!test_and_clear_bit(SLF_ERROR, &sl->flags) &&
--		    sl->rcount > 2)
-+		    sl->rcount >= 2)
- 			x25_asy_bump(sl);
- 		clear_bit(SLF_ESCAPE, &sl->flags);
- 		sl->rcount = 0;
+ 	if (!sock_flag(sk, SOCK_ZAPPED))
 
 
