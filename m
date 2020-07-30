@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A48C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62622C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D3C32082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4176720838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:47:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jzg2hwb9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uaEmjOC2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbgG3Lr2 (ORCPT
+        id S1728031AbgG3Lrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 07:47:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58458 "EHLO
+        Thu, 30 Jul 2020 07:47:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727988AbgG3Lr0 (ORCPT
+        with ESMTP id S1727914AbgG3LrS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 07:47:26 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07B11C061794
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 04:47:25 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 3so5928809wmi.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 04:47:24 -0700 (PDT)
+        Thu, 30 Jul 2020 07:47:18 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7233FC0619D6
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 04:47:18 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l2so14045799wrc.7
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 04:47:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=YqqkwlyeTqm8wK7NZ5whyaJb7lnPkkqR0DOowlryp8Y=;
-        b=jzg2hwb9COuCcPenG5X/xHPyQOHLNtf2QtJlU5FLwtZ+lLCbvchX7MVPqmY9XTj1DR
-         tRl3OzzMxFCFPudy4ugU7ga6eYI342MheKypEiZkx/8CSk0c/Tngm8E9MbE0dCThXxD4
-         FjQqLDapoxF6GgrBJijQ0//pN/MygWlG1bwdZdl9mV6LIsCwo/0d6NrLjPw1x4GnPInl
-         gxvpccHvhUKBcOTZo5VkRx+FBgtM1IdpJ3F2CYv+S7eWTiGbJVDzsGNTVllBinqruSVh
-         oVxOqvPFUcEQ8mDpT9DxVg38lK1sHBL/8p++zg00HL/+Quj3n7j6qNU5Cyqj0Lakd2dI
-         8m+w==
+        bh=CTatHtGbJyhfIe07LyOFqsBAVFHXpCGvt0MRleoAwFM=;
+        b=uaEmjOC2l9sHxKq7NHLH6ZQ/+FQ9P8LnKs3PJp993cAdhk0pREg2Wiryu6EtJVV4/t
+         9PSq1/5a8rp94P/DPRkFKBMb44gE/F5+TSyztqX0OSRMKgsNABOl8UacD1ia2FwnxeLI
+         YnpfZ9Wprk8Sq/Q3DWDoXEd1Ba0uBG+DmAhlk/4OEygcCkGPbpuEwtXdrgKRRd1kSuSM
+         gv9WSizuUKm8a6VOGRTObtnR6vZ142SDrrbiGt7lxr1PnoU4Mk2pOsQ+DWQeClt6T7CD
+         WVHny8bvWrDgog3DcOj4SD4/341IqiLTqEPzTSgyEeueBPtpyyrq5iZSu7DmuO7TUz+U
+         ahhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=YqqkwlyeTqm8wK7NZ5whyaJb7lnPkkqR0DOowlryp8Y=;
-        b=i2p479oPBAIMMrJfD7CDGjOGiurK62aCjxcETKOCffSst6EO6IusV0a8vdifDghZtu
-         9oBWQMZbMAHuzXbpxNYPNGUuy97+qvIUFNiQH5jBqkL0YKjMBJGQZK5n2O6KFPL+AW4g
-         ibACGXhTB8Rb6r0h+GbyvycdEAvN41dAsjg4HExWdrs/YRWhDVR6uoI3s1RApgrhrz/1
-         CzrJnPWrcuUyMy42xLIjP3K9KDCRa/xmKyejxPqOzceQ1W2sxUu15TMxzCKk5axN5JT/
-         AXyIe+V5TSnaQX0FInKUqYdcEtL+R10p/LMcL13Vp5+NGXCzgzAQn/EjtukD8EIXSDhC
-         IZhw==
-X-Gm-Message-State: AOAM533QFVoyZjTWDofveZ91TLOl0LPgKP290lC5bNXIqDSNP1Em9b5K
-        4mb80+zKmg8oTazT6MXbIASlFw==
-X-Google-Smtp-Source: ABdhPJy9g940Q1pXeQGLiZfG7tJ8qlcU4WWpYKS4Aod14FqDcb5Wep+xaCrl5hCoXwC4qbhs2S0BZw==
-X-Received: by 2002:a1c:6289:: with SMTP id w131mr4902033wmb.41.1596109643689;
-        Thu, 30 Jul 2020 04:47:23 -0700 (PDT)
+        bh=CTatHtGbJyhfIe07LyOFqsBAVFHXpCGvt0MRleoAwFM=;
+        b=ZnBkvzHH7akZKnj1LX08Ike/WP2+fB0DdjB48ipY0YIe6CFkWT6OFwcNGETYOLhF6F
+         nhuXPzP6YJru2J3YLw/+uoZfbQm6Mc2/dvXYNgFuaukbsKvkW5H12bVpI6xPwfdYO6AB
+         vAcQd4yhAVlfwLydFEowsnxUEs/GHvop3lfLcmcgeSGGHGqIV7lKN2LE3fzKfVFhMj3z
+         bp3rHRFOVJ0wxFWUOLhS1brcO2es37fWHIy/ksHxfqXJzwnSg3JsP1AP3EzumtYZ2htO
+         DHLMAjaYpo1RmdpfzQu3TH/xUgDdAAtisS89FWDh4m/wJNp7QsktOOX94XsEE9mihQyZ
+         5KNg==
+X-Gm-Message-State: AOAM5325qIxZyfl++h9sZYckUvVyynq0qTZg5EHkI9w7wD0LOM4imWZO
+        67S4L0yPGBpC0bPh2L9y9+cBZA==
+X-Google-Smtp-Source: ABdhPJxSRZkvCIm8Zm439FWlOxBqCLeYktGV8+YQ++3WfHvvEz+Xf5CpMovL50+ZyWyEAs/WLFhMuw==
+X-Received: by 2002:adf:a192:: with SMTP id u18mr2704077wru.158.1596109637205;
+        Thu, 30 Jul 2020 04:47:17 -0700 (PDT)
 Received: from localhost.localdomain ([195.24.90.54])
-        by smtp.gmail.com with ESMTPSA id 32sm9636691wrn.86.2020.07.30.04.47.21
+        by smtp.gmail.com with ESMTPSA id 32sm9636691wrn.86.2020.07.30.04.47.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 04:47:23 -0700 (PDT)
+        Thu, 30 Jul 2020 04:47:16 -0700 (PDT)
 From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
 To:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH 3/3] venus: Add new interface queues reinit
-Date:   Thu, 30 Jul 2020 14:46:32 +0300
-Message-Id: <20200730114632.6717-4-stanimir.varbanov@linaro.org>
+Subject: [PATCH 1/3] venus: parser: Prepare parser for multiple invocations
+Date:   Thu, 30 Jul 2020 14:46:30 +0300
+Message-Id: <20200730114632.6717-2-stanimir.varbanov@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200730114632.6717-1-stanimir.varbanov@linaro.org>
 References: <20200730114632.6717-1-stanimir.varbanov@linaro.org>
@@ -73,132 +73,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Presently the recovery mechanism is using two hfi functions
-to destroy and create interface queues. For the purpose of
-recovery we don't need to free and allocate the memory used
-for interface message queues, that's why we introduce new
-function which just reinit the queues.  Also this will give
-to the recovery procedure one less reason to fail (if for
-some reason we couldn't allocate memory).
+Presently the hfi_parser has been called only once during driver
+probe. To prepare the parser function to be called multiple times
+from recovery we need to initialize few variables which are used
+during parsing time.
 
 Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 ---
- drivers/media/platform/qcom/venus/core.c      |  3 +-
- drivers/media/platform/qcom/venus/hfi.c       |  5 ++
- drivers/media/platform/qcom/venus/hfi.h       |  1 +
- drivers/media/platform/qcom/venus/hfi_venus.c | 51 +++++++++++++++++++
- drivers/media/platform/qcom/venus/hfi_venus.h |  1 +
- 5 files changed, 59 insertions(+), 2 deletions(-)
+ drivers/media/platform/qcom/venus/hfi_parser.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index 46f6e34d435a..eda8f35425df 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -72,8 +72,7 @@ static void venus_sys_error_handler(struct work_struct *work)
- 	while (core->pmdomains[0] && pm_runtime_active(core->pmdomains[0]))
- 		usleep_range(1000, 1500);
+diff --git a/drivers/media/platform/qcom/venus/hfi_parser.c b/drivers/media/platform/qcom/venus/hfi_parser.c
+index 7f515a4b9bd1..363ee2a65453 100644
+--- a/drivers/media/platform/qcom/venus/hfi_parser.c
++++ b/drivers/media/platform/qcom/venus/hfi_parser.c
+@@ -239,6 +239,9 @@ u32 hfi_parser(struct venus_core *core, struct venus_inst *inst, void *buf,
  
--	hfi_destroy(core);
--	ret |= hfi_create(core, &venus_core_ops);
-+	hfi_reinit(core);
+ 	parser_init(inst, &codecs, &domain);
  
- 	pm_runtime_get_sync(core->dev);
++	core->codecs_count = 0;
++	memset(core->caps, 0, sizeof(core->caps));
++
+ 	while (words_count) {
+ 		data = word + 1;
  
-diff --git a/drivers/media/platform/qcom/venus/hfi.c b/drivers/media/platform/qcom/venus/hfi.c
-index a211eb93e0f9..a59022adb14c 100644
---- a/drivers/media/platform/qcom/venus/hfi.c
-+++ b/drivers/media/platform/qcom/venus/hfi.c
-@@ -517,3 +517,8 @@ void hfi_destroy(struct venus_core *core)
- {
- 	venus_hfi_destroy(core);
- }
-+
-+void hfi_reinit(struct venus_core *core)
-+{
-+	venus_hfi_queues_reinit(core);
-+}
-diff --git a/drivers/media/platform/qcom/venus/hfi.h b/drivers/media/platform/qcom/venus/hfi.h
-index 62c315291484..f25d412d6553 100644
---- a/drivers/media/platform/qcom/venus/hfi.h
-+++ b/drivers/media/platform/qcom/venus/hfi.h
-@@ -145,6 +145,7 @@ struct hfi_ops {
- 
- int hfi_create(struct venus_core *core, const struct hfi_core_ops *ops);
- void hfi_destroy(struct venus_core *core);
-+void hfi_reinit(struct venus_core *core);
- 
- int hfi_core_init(struct venus_core *core);
- int hfi_core_deinit(struct venus_core *core, bool blocking);
-diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
-index 3392fd177d22..90067cd8c892 100644
---- a/drivers/media/platform/qcom/venus/hfi_venus.c
-+++ b/drivers/media/platform/qcom/venus/hfi_venus.c
-@@ -1603,3 +1603,54 @@ int venus_hfi_create(struct venus_core *core)
- 	core->ops = NULL;
- 	return ret;
- }
-+
-+void venus_hfi_queues_reinit(struct venus_core *core)
-+{
-+	struct venus_hfi_device *hdev = to_hfi_priv(core);
-+	struct hfi_queue_table_header *tbl_hdr;
-+	struct iface_queue *queue;
-+	struct hfi_sfr *sfr;
-+	unsigned int i;
-+
-+	mutex_lock(&hdev->lock);
-+
-+	for (i = 0; i < IFACEQ_NUM; i++) {
-+		queue = &hdev->queues[i];
-+		queue->qhdr =
-+			IFACEQ_GET_QHDR_START_ADDR(hdev->ifaceq_table.kva, i);
-+
-+		venus_set_qhdr_defaults(queue->qhdr);
-+
-+		queue->qhdr->start_addr = queue->qmem.da;
-+
-+		if (i == IFACEQ_CMD_IDX)
-+			queue->qhdr->type |= HFI_HOST_TO_CTRL_CMD_Q;
-+		else if (i == IFACEQ_MSG_IDX)
-+			queue->qhdr->type |= HFI_CTRL_TO_HOST_MSG_Q;
-+		else if (i == IFACEQ_DBG_IDX)
-+			queue->qhdr->type |= HFI_CTRL_TO_HOST_DBG_Q;
-+	}
-+
-+	tbl_hdr = hdev->ifaceq_table.kva;
-+	tbl_hdr->version = 0;
-+	tbl_hdr->size = IFACEQ_TABLE_SIZE;
-+	tbl_hdr->qhdr0_offset = sizeof(struct hfi_queue_table_header);
-+	tbl_hdr->qhdr_size = sizeof(struct hfi_queue_header);
-+	tbl_hdr->num_q = IFACEQ_NUM;
-+	tbl_hdr->num_active_q = IFACEQ_NUM;
-+
-+	/*
-+	 * Set receive request to zero on debug queue as there is no
-+	 * need of interrupt from video hardware for debug messages
-+	 */
-+	queue = &hdev->queues[IFACEQ_DBG_IDX];
-+	queue->qhdr->rx_req = 0;
-+
-+	sfr = hdev->sfr.kva;
-+	sfr->buf_size = ALIGNED_SFR_SIZE;
-+
-+	/* ensure table and queue header structs are settled in memory */
-+	wmb();
-+
-+	mutex_unlock(&hdev->lock);
-+}
-diff --git a/drivers/media/platform/qcom/venus/hfi_venus.h b/drivers/media/platform/qcom/venus/hfi_venus.h
-index 57154832090e..1b656ef2bf07 100644
---- a/drivers/media/platform/qcom/venus/hfi_venus.h
-+++ b/drivers/media/platform/qcom/venus/hfi_venus.h
-@@ -10,5 +10,6 @@ struct venus_core;
- 
- void venus_hfi_destroy(struct venus_core *core);
- int venus_hfi_create(struct venus_core *core);
-+void venus_hfi_queues_reinit(struct venus_core *core);
- 
- #endif
 -- 
 2.17.1
 
