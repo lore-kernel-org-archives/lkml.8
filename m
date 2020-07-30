@@ -2,114 +2,150 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E8DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BCDC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50DF520838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:37:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MGZ/ahYt"
+	by mail.kernel.org (Postfix) with ESMTP id 3B63C20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:42:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729908AbgG3Pha (ORCPT
+        id S1729693AbgG3PmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:37:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37466 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729484AbgG3Ph3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 11:37:29 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5A33C061574
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 08:37:29 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id e22so4858238pjt.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 08:37:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9SEQ1OEv82nHNMdL9SqhRCzSBouc4sokzr4x8Hh1/DI=;
-        b=MGZ/ahYtIdiF9ni3ETE3Khx9UnzPeaO4A/M7nSu0MJyY5+bCzMAsEhfkzzy2Gy2vHu
-         N6joxF9xSH76v6buIa+i8zHYXDLBXuMJT6TDd7p3WcnMb9N2l3Szxxl333c9/wjLes+C
-         KtGkEIWrsimjwMDomJX3xuQeVyWoSYJbL0I3PyBtDVqJClaQgg9l4+QISP2TJ2TKivAo
-         prRKjq++Yg1p+fpQMs+eU75sFdgTQy1OezcxkoAtTcQky2LSiVUmrmEZ3bdWem0LD+gh
-         BUuZmuoHDN7Lc3ZjsiqvPDeGFq3/uxgCTXRPlI9G52R9C+UxF/divsyP6+uS1leZZniY
-         d9Ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9SEQ1OEv82nHNMdL9SqhRCzSBouc4sokzr4x8Hh1/DI=;
-        b=ULMFpBrjTdlKvfpB3mnpm7fI289oJpQA2lGiOaF0DwlaDszs8ewCNKnoQR6K84EzD+
-         NSzkFnpMrhcsCgGwsEwLCtAngYUN85Dl2o0wa3JjRJpxtV4a8z+uZJYiV+jUjemWSvTQ
-         wO6J1PfFrqBRvRRBnOhdMfJH20UsOgZORkhdqwmpm+wIXPEg3+vuNrvC7vm0gABxCaF4
-         wc99gZwuygaCW+RL2xT1gfRj5wMmPyybNDP4Tdb+9/b5wloDsAy05fUDjiGOFqJfFXoB
-         fBDpPU411W0hKCx5pzKxwPNBlx2yAi5hlcRm7BkBn91838p+At7c1HUfL5TgZs2Imcm7
-         nLfw==
-X-Gm-Message-State: AOAM532oN4CDxT1zLvzvoTGaPJQ9xBt4riZT8pSVvaWlYNuLBtqKU7vj
-        daC+cfbLJle6knqHfWf0lh87hg==
-X-Google-Smtp-Source: ABdhPJwQyi8M14QMhOXfHbSaGH7VCYAkvRqASesnwEbOczg1tB8ocLA9RDU1wXDJ/FEr3D1Nv1dW2A==
-X-Received: by 2002:a62:520b:: with SMTP id g11mr3981023pfb.168.1596123449285;
-        Thu, 30 Jul 2020 08:37:29 -0700 (PDT)
-Received: from localhost ([106.201.14.19])
-        by smtp.gmail.com with ESMTPSA id f29sm6943179pga.59.2020.07.30.08.37.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 Jul 2020 08:37:27 -0700 (PDT)
-Date:   Thu, 30 Jul 2020 21:07:22 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Akhil P Oommen <akhilpo@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
-        saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>,
-        Jonathan <jonathan@marek.ca>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dave Airlie <airlied@gmail.com>
-Subject: Re: [PATCH v5 0/6] Add support for GPU DDR BW scaling
-Message-ID: <20200730153722.cnpg6n6tnmvjtuso@vireshk-mac-ubuntu>
-References: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
- <CAF6AEGtAEwZbWxLb4MxaWNswvtrFbLK+N0Fez2XYr7odKZffWA@mail.gmail.com>
- <20200720100131.6ux4zumbwqpa42ye@vireshk-mac-ubuntu>
- <CAF6AEGurrsd3nrbB=ktZjWfKTNbKwPHYwTFiZdD-NOW1T7gePQ@mail.gmail.com>
- <20200721032442.hv7l4q6633vnmnfe@vireshk-mac-ubuntu>
- <CAF6AEGuhQcRskGhrFvmCf5T3EcZ9S+3LRdZBiaDYqF34yZjd+A@mail.gmail.com>
- <20200722053023.vwaoj5oqh4cazzzz@vireshk-mac-ubuntu>
- <20200730051045.jejrtkor3b32l2qe@vireshk-mac-ubuntu>
- <CAF6AEGuzff9+Wy4EHx0aDx1gBzSEGh--yqT5rnwLHp=U6amnyA@mail.gmail.com>
+        Thu, 30 Jul 2020 11:42:23 -0400
+Received: from mga09.intel.com ([134.134.136.24]:58103 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbgG3PmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 11:42:22 -0400
+IronPort-SDR: ei34C2A5y7d1exDVltL57AgBe+7euMXfCfwEYWOxXc9MeR5fc7f6olftJqUXhjCa6Kss1pwpWH
+ jdZkMUoN5Jbw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="152845271"
+X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
+   d="scan'208";a="152845271"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 08:42:22 -0700
+IronPort-SDR: pYFaeeLcAzZxuB3wsRF1p9piO49pM0d0SQc6xtkttyfru1JKtDnZfDFPUceGi0P33TrYamCqla
+ XCBsZdFx7ExA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
+   d="scan'208";a="490697704"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 30 Jul 2020 08:42:19 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1k1AhH-004ypR-1w; Thu, 30 Jul 2020 18:42:19 +0300
+Date:   Thu, 30 Jul 2020 18:42:19 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/10] gpio: dwapb: Add max GPIOs macro
+Message-ID: <20200730154219.GS3703480@smile.fi.intel.com>
+References: <20200730152808.2955-1-Sergey.Semin@baikalelectronics.ru>
+ <20200730152808.2955-5-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAF6AEGuzff9+Wy4EHx0aDx1gBzSEGh--yqT5rnwLHp=U6amnyA@mail.gmail.com>
-User-Agent: NeoMutt/20170609 (1.8.3)
+In-Reply-To: <20200730152808.2955-5-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30-07-20, 08:27, Rob Clark wrote:
-> Hmm, I've already sent my pull request to Dave, dropping the patch
-> would require force-push and sending a new PR.  Which I can do if Dave
-> prefers.  OTOH I guess it isn't the end of the world if the patch is
-> merged via two different trees.
+On Thu, Jul 30, 2020 at 06:28:01PM +0300, Serge Semin wrote:
+> Add a new macro DWAPB_MAX_GPIOS which defines the maximum possible number
+> of GPIO lines corresponding to the maximum DW APB GPIO controller port
+> width. Use the new macro instead of number literal 32 where it's
+> applicable.
 
-I don't think a patch can go via two trees, as that would have two sha
-keys for the same code.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Though it is fine for a patch to go via two different trees if we make
-sure the same sha key is used for both.
-
-Will it be possible for you to provide a branch/tag of your branch
-that I can base stuff of ?
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> ---
+>  drivers/gpio/gpio-dwapb.c                | 8 ++++----
+>  include/linux/platform_data/gpio-dwapb.h | 4 +++-
+>  2 files changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+> index 3081213247d8..f34001152850 100644
+> --- a/drivers/gpio/gpio-dwapb.c
+> +++ b/drivers/gpio/gpio-dwapb.c
+> @@ -162,7 +162,7 @@ static struct dwapb_gpio_port *dwapb_offs_to_port(struct dwapb_gpio *gpio, unsig
+>  
+>  	for (i = 0; i < gpio->nr_ports; i++) {
+>  		port = &gpio->ports[i];
+> -		if (port->idx == offs / 32)
+> +		if (port->idx == offs / DWAPB_MAX_GPIOS)
+>  			return port;
+>  	}
+>  
+> @@ -182,7 +182,7 @@ static void dwapb_toggle_trigger(struct dwapb_gpio *gpio, unsigned int offs)
+>  
+>  	pol = dwapb_read(gpio, GPIO_INT_POLARITY);
+>  	/* Just read the current value right out of the data register */
+> -	val = gc->get(gc, offs % 32);
+> +	val = gc->get(gc, offs % DWAPB_MAX_GPIOS);
+>  	if (val)
+>  		pol &= ~BIT(offs);
+>  	else
+> @@ -197,7 +197,7 @@ static u32 dwapb_do_irq(struct dwapb_gpio *gpio)
+>  	irq_hw_number_t hwirq;
+>  
+>  	irq_status = dwapb_read(gpio, GPIO_INTSTATUS);
+> -	for_each_set_bit(hwirq, &irq_status, 32) {
+> +	for_each_set_bit(hwirq, &irq_status, DWAPB_MAX_GPIOS) {
+>  		int gpio_irq = irq_find_mapping(gpio->domain, hwirq);
+>  		u32 irq_type = irq_get_trigger_type(gpio_irq);
+>  
+> @@ -599,7 +599,7 @@ static struct dwapb_platform_data *dwapb_gpio_get_pdata(struct device *dev)
+>  			dev_info(dev,
+>  				 "failed to get number of gpios for port%d\n",
+>  				 i);
+> -			pp->ngpio = 32;
+> +			pp->ngpio = DWAPB_MAX_GPIOS;
+>  		}
+>  
+>  		pp->irq_shared	= false;
+> diff --git a/include/linux/platform_data/gpio-dwapb.h b/include/linux/platform_data/gpio-dwapb.h
+> index ff1be737bad6..0aa5c6720259 100644
+> --- a/include/linux/platform_data/gpio-dwapb.h
+> +++ b/include/linux/platform_data/gpio-dwapb.h
+> @@ -6,12 +6,14 @@
+>  #ifndef GPIO_DW_APB_H
+>  #define GPIO_DW_APB_H
+>  
+> +#define DWAPB_MAX_GPIOS		32
+> +
+>  struct dwapb_port_property {
+>  	struct fwnode_handle *fwnode;
+>  	unsigned int	idx;
+>  	unsigned int	ngpio;
+>  	unsigned int	gpio_base;
+> -	int		irq[32];
+> +	int		irq[DWAPB_MAX_GPIOS];
+>  	bool		irq_shared;
+>  };
+>  
+> -- 
+> 2.27.0
+> 
 
 -- 
-viresh
+With Best Regards,
+Andy Shevchenko
+
+
