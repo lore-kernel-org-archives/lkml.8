@@ -5,54 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A089C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 865FFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BBCC2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C35B2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096782;
-	bh=fyzKT2iRn0QWt6nu+SakO+xM2XHlEbN3pByCgW0KMlk=;
+	s=default; t=1596096802;
+	bh=Mc08/Y2BsY/mIkRNqTpfOa/umI+Wdp+70Pc0H6ZfhlY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eOlwM13V3E+GiYZhpLFGtwRfWr3GYIP3Yns7Sf95grBg61mAFbAbhiZQqJGMQk/9I
-	 qmnPxg++hL1VPFDbU64CBHo+sYVKTJXLLzGVyPharmMJKWO2CQ3TDzpg8szfodxm9k
-	 XN3KHcoHfwQ3mkQyyltycQmOcep9Kv/wlcPgRhyw=
+	b=BmMcttHsT1kpRlYxKw2ad4Kc4MGeYPhNb/W1s7Z4NCKOS44bIAwmrwjbVmf4Ksu3X
+	 v60FnzhUMp6uPTxBbGU1C/bNFxiPlYkhy3n+sydT0U9zDWRocvfH1sRG6zvnSZdoDX
+	 wQTMKH1aKr/quFGaYHlmrQQAoQVJyp4nJfxwwUas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729727AbgG3INA (ORCPT
+        id S1730115AbgG3INS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:13:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52100 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:13:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729689AbgG3IMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:12:46 -0400
+        id S1729701AbgG3IMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:12:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC3C220838;
-        Thu, 30 Jul 2020 08:12:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AB2A2070B;
+        Thu, 30 Jul 2020 08:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096765;
-        bh=fyzKT2iRn0QWt6nu+SakO+xM2XHlEbN3pByCgW0KMlk=;
+        s=default; t=1596096768;
+        bh=Mc08/Y2BsY/mIkRNqTpfOa/umI+Wdp+70Pc0H6ZfhlY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uqCLXBb2NaiQgL9XpHh1xtluX0vnK8jdTlCgpzdHduSf88TljrLIrm8oP0rGyzHtU
-         47tBB1kDOzg0MBPxt5WyG/pUg2RmJ9OxRSgz7N/G0mYNqIeJrmWqxqfMQD2PW5hpU0
-         nNh0TgB2w1xIVAXHu2Iqy808JquOg8HGtbgX743w=
+        b=s/YsFco40t6tWXiAsxh2+TwnN4tv4xTZlx3wCOTVFypKN9HnIg0dlEAud2g/YzZ0Y
+         MWieQrrvnq2ig5B8uhlMnulgArdxGHAFCp+09aOrnaxeq2oP37YouNXUp11FC+q/aO
+         cybUBqQX8if5qpOXcI6xiHwy0IoOdiZ49+qbEJNY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        David Ahern <dsahern@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.4 52/54] perf tools: Fix snprint warnings for gcc 8
-Date:   Thu, 30 Jul 2020 10:05:31 +0200
-Message-Id: <20200730074423.690852972@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Anglin <dave.anglin@bell.net>,
+        Helge Deller <deller@gmx.de>
+Subject: [PATCH 4.4 35/54] parisc: Add atomic64_set_release() define to avoid CPU soft lockups
+Date:   Thu, 30 Jul 2020 10:05:14 +0200
+Message-Id: <20200730074422.890412042@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
 References: <20200730074421.203879987@linuxfoundation.org>
@@ -65,184 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: John David Anglin <dave.anglin@bell.net>
 
-commit 77f18153c080855e1c3fb520ca31a4e61530121d upstream.
+commit be6577af0cef934ccb036445314072e8cb9217b9 upstream.
 
-[Add an additional sprintf replacement in tools/perf/builtin-script.c]
+Stalls are quite frequent with recent kernels. I enabled
+CONFIG_SOFTLOCKUP_DETECTOR and I caught the following stall:
 
-With gcc 8 we get new set of snprintf() warnings that breaks the
-compilation, one example:
+watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [cc1:22803]
+CPU: 0 PID: 22803 Comm: cc1 Not tainted 5.6.17+ #3
+Hardware name: 9000/800/rp3440
+ IAOQ[0]: d_alloc_parallel+0x384/0x688
+ IAOQ[1]: d_alloc_parallel+0x388/0x688
+ RP(r2): d_alloc_parallel+0x134/0x688
+Backtrace:
+ [<000000004036974c>] __lookup_slow+0xa4/0x200
+ [<0000000040369fc8>] walk_component+0x288/0x458
+ [<000000004036a9a0>] path_lookupat+0x88/0x198
+ [<000000004036e748>] filename_lookup+0xa0/0x168
+ [<000000004036e95c>] user_path_at_empty+0x64/0x80
+ [<000000004035d93c>] vfs_statx+0x104/0x158
+ [<000000004035dfcc>] __do_sys_lstat64+0x44/0x80
+ [<000000004035e5a0>] sys_lstat64+0x20/0x38
+ [<0000000040180054>] syscall_exit+0x0/0x14
 
-  tests/mem.c: In function ‘check’:
-  tests/mem.c:19:48: error: ‘%s’ directive output may be truncated writing \
-        up to 99 bytes into a region of size 89 [-Werror=format-truncation=]
-    snprintf(failure, sizeof failure, "unexpected %s", out);
+The code was stuck in this loop in d_alloc_parallel:
 
-The gcc docs says:
+    4037d414:   0e 00 10 dc     ldd 0(r16),ret0
+    4037d418:   c7 fc 5f ed     bb,< ret0,1f,4037d414 <d_alloc_parallel+0x384>
+    4037d41c:   08 00 02 40     nop
 
- To avoid the warning either use a bigger buffer or handle the
- function's return value which indicates whether or not its output
- has been truncated.
+This is the inner loop of bit_spin_lock which is called by hlist_bl_unlock in
+d_alloc_parallel:
 
-Given that all these warnings are harmless, because the code either
-properly fails due to uncomplete file path or we don't care for
-truncated output at all, I'm changing all those snprintf() calls to
-scnprintf(), which actually 'checks' for the snprint return value so the
-gcc stays silent.
+static inline void bit_spin_lock(int bitnum, unsigned long *addr)
+{
+        /*
+         * Assuming the lock is uncontended, this never enters
+         * the body of the outer loop. If it is contended, then
+         * within the inner loop a non-atomic test is used to
+         * busywait with less bus contention for a good time to
+         * attempt to acquire the lock bit.
+         */
+        preempt_disable();
+#if defined(CONFIG_SMP) || defined(CONFIG_DEBUG_SPINLOCK)
+        while (unlikely(test_and_set_bit_lock(bitnum, addr))) {
+                preempt_enable();
+                do {
+                        cpu_relax();
+                } while (test_bit(bitnum, addr));
+                preempt_disable();
+        }
+#endif
+        __acquire(bitlock);
+}
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Link: http://lkml.kernel.org/r/20180319082902.4518-1-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+After consideration, I realized that we must be losing bit unlocks.
+Then, I noticed that we missed defining atomic64_set_release().
+Adding this define fixes the stalls in bit operations.
+
+Signed-off-by: Dave Anglin <dave.anglin@bell.net>
+Cc: stable@vger.kernel.org
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- tools/perf/builtin-script.c    |   24 ++++++++++++------------
- tools/perf/tests/attr.c        |    4 ++--
- tools/perf/tests/pmu.c         |    2 +-
- tools/perf/util/cgroup.c       |    2 +-
- tools/perf/util/parse-events.c |    4 ++--
- tools/perf/util/pmu.c          |    2 +-
- 6 files changed, 19 insertions(+), 19 deletions(-)
 
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1245,7 +1245,7 @@ static int is_directory(const char *base
- 	char path[PATH_MAX];
- 	struct stat st;
- 
--	sprintf(path, "%s/%s", base_path, dent->d_name);
-+	scnprintf(path, PATH_MAX, "%s/%s", base_path, dent->d_name);
- 	if (stat(path, &st))
- 		return 0;
- 
-@@ -1426,8 +1426,8 @@ static int list_available_scripts(const
- 		return -1;
- 
- 	for_each_lang(scripts_path, scripts_dir, lang_dirent) {
--		snprintf(lang_path, MAXPATHLEN, "%s/%s/bin", scripts_path,
--			 lang_dirent->d_name);
-+		scnprintf(lang_path, MAXPATHLEN, "%s/%s/bin", scripts_path,
-+			  lang_dirent->d_name);
- 		lang_dir = opendir(lang_path);
- 		if (!lang_dir)
- 			continue;
-@@ -1436,8 +1436,8 @@ static int list_available_scripts(const
- 			script_root = get_script_root(script_dirent, REPORT_SUFFIX);
- 			if (script_root) {
- 				desc = script_desc__findnew(script_root);
--				snprintf(script_path, MAXPATHLEN, "%s/%s",
--					 lang_path, script_dirent->d_name);
-+				scnprintf(script_path, MAXPATHLEN, "%s/%s",
-+					  lang_path, script_dirent->d_name);
- 				read_script_info(desc, script_path);
- 				free(script_root);
- 			}
-@@ -1473,7 +1473,7 @@ static int check_ev_match(char *dir_name
- 	int match, len;
- 	FILE *fp;
- 
--	sprintf(filename, "%s/bin/%s-record", dir_name, scriptname);
-+	scnprintf(filename, MAXPATHLEN, "%s/bin/%s-record", dir_name, scriptname);
- 
- 	fp = fopen(filename, "r");
- 	if (!fp)
-@@ -1549,8 +1549,8 @@ int find_scripts(char **scripts_array, c
- 	}
- 
- 	for_each_lang(scripts_path, scripts_dir, lang_dirent) {
--		snprintf(lang_path, MAXPATHLEN, "%s/%s", scripts_path,
--			 lang_dirent->d_name);
-+		scnprintf(lang_path, MAXPATHLEN, "%s/%s", scripts_path,
-+			  lang_dirent->d_name);
- #ifdef NO_LIBPERL
- 		if (strstr(lang_path, "perl"))
- 			continue;
-@@ -1605,8 +1605,8 @@ static char *get_script_path(const char
- 		return NULL;
- 
- 	for_each_lang(scripts_path, scripts_dir, lang_dirent) {
--		snprintf(lang_path, MAXPATHLEN, "%s/%s/bin", scripts_path,
--			 lang_dirent->d_name);
-+		scnprintf(lang_path, MAXPATHLEN, "%s/%s/bin", scripts_path,
-+			  lang_dirent->d_name);
- 		lang_dir = opendir(lang_path);
- 		if (!lang_dir)
- 			continue;
-@@ -1617,8 +1617,8 @@ static char *get_script_path(const char
- 				free(__script_root);
- 				closedir(lang_dir);
- 				closedir(scripts_dir);
--				snprintf(script_path, MAXPATHLEN, "%s/%s",
--					 lang_path, script_dirent->d_name);
-+				scnprintf(script_path, MAXPATHLEN, "%s/%s",
-+					  lang_path, script_dirent->d_name);
- 				return strdup(script_path);
- 			}
- 			free(__script_root);
---- a/tools/perf/tests/attr.c
-+++ b/tools/perf/tests/attr.c
-@@ -147,8 +147,8 @@ static int run_dir(const char *d, const
- 	if (verbose)
- 		vcnt++;
- 
--	snprintf(cmd, 3*PATH_MAX, PYTHON " %s/attr.py -d %s/attr/ -p %s %.*s",
--		 d, d, perf, vcnt, v);
-+	scnprintf(cmd, 3*PATH_MAX, PYTHON " %s/attr.py -d %s/attr/ -p %s %.*s",
-+		  d, d, perf, vcnt, v);
- 
- 	return system(cmd) ? TEST_FAIL : TEST_OK;
+---
+ arch/parisc/include/asm/atomic.h |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/arch/parisc/include/asm/atomic.h
++++ b/arch/parisc/include/asm/atomic.h
+@@ -208,6 +208,8 @@ atomic64_set(atomic64_t *v, s64 i)
+ 	_atomic_spin_unlock_irqrestore(v, flags);
  }
---- a/tools/perf/tests/pmu.c
-+++ b/tools/perf/tests/pmu.c
-@@ -95,7 +95,7 @@ static char *test_format_dir_get(void)
- 		struct test_format *format = &test_formats[i];
- 		FILE *file;
  
--		snprintf(name, PATH_MAX, "%s/%s", dir, format->name);
-+		scnprintf(name, PATH_MAX, "%s/%s", dir, format->name);
- 
- 		file = fopen(name, "w");
- 		if (!file)
---- a/tools/perf/util/cgroup.c
-+++ b/tools/perf/util/cgroup.c
-@@ -64,7 +64,7 @@ static int open_cgroup(char *name)
- 	if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1))
- 		return -1;
- 
--	snprintf(path, PATH_MAX, "%s/%s", mnt, name);
-+	scnprintf(path, PATH_MAX, "%s/%s", mnt, name);
- 
- 	fd = open(path, O_RDONLY);
- 	if (fd == -1)
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -194,8 +194,8 @@ struct tracepoint_path *tracepoint_id_to
- 
- 		for_each_event(sys_dirent, evt_dir, evt_dirent) {
- 
--			snprintf(evt_path, MAXPATHLEN, "%s/%s/id", dir_path,
--				 evt_dirent->d_name);
-+			scnprintf(evt_path, MAXPATHLEN, "%s/%s/id", dir_path,
-+				  evt_dirent->d_name);
- 			fd = open(evt_path, O_RDONLY);
- 			if (fd < 0)
- 				continue;
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -302,7 +302,7 @@ static int pmu_aliases_parse(char *dir,
- 		if (pmu_alias_info_file(name))
- 			continue;
- 
--		snprintf(path, PATH_MAX, "%s/%s", dir, name);
-+		scnprintf(path, PATH_MAX, "%s/%s", dir, name);
- 
- 		file = fopen(path, "r");
- 		if (!file) {
++#define atomic64_set_release(v, i)	atomic64_set((v), (i))
++
+ static __inline__ s64
+ atomic64_read(const atomic64_t *v)
+ {
 
 
