@@ -2,248 +2,158 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA613C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89E622082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D66920829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:40:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DXJe+Ajn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729645AbgG3OjQ (ORCPT
+        id S1729579AbgG3Okm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 10:39:16 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53237 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgG3OjQ (ORCPT
+        Thu, 30 Jul 2020 10:40:42 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:49634 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbgG3Okl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 10:39:16 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1k19i5-0001C8-BN; Thu, 30 Jul 2020 14:39:05 +0000
-Date:   Thu, 30 Jul 2020 16:39:04 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
-        ebiederm@xmission.com, akpm@linux-foundation.org,
-        areber@redhat.com, serge@hallyn.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 01/23] ns: Add common refcount into ns_common add use it
- as counter for net_ns
-Message-ID: <20200730143904.liappabxaretvah6@wittgenstein>
-References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
- <159611036589.535980.1765795847221907147.stgit@localhost.localdomain>
- <20200730143049.m3isrpwrktxnh7pz@wittgenstein>
- <2f922e05-fd2b-f176-727a-f8b913087891@virtuozzo.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2f922e05-fd2b-f176-727a-f8b913087891@virtuozzo.com>
+        Thu, 30 Jul 2020 10:40:41 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06UEVjnh041154;
+        Thu, 30 Jul 2020 14:40:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=omQ+KSFeNr5QzVD54DbuGF3jbgJUnhNVpnQ3/r7WG9Y=;
+ b=DXJe+AjnLLOo+GuhAKz2j/wROv2iZtMBMELdPuW+tQvaOEpXsgR5WT2koCt/bc/41Eng
+ iCK6T7ejntLXxEISPEQbTrAdJgHp+JFBAT2zXBfVO9bUdTQinJ2IYE8KSq+EfiMrWOdG
+ dbfDH2Xw+8oTtkHCXQ5ZDJcSsCam5ms0wqhb//fX3Dz46g6TOlmuWxAg33EoLCSrV2Gr
+ FwcjHf9bJc8mdYa1Ob+Mfuw9mp8Bz7+4NZJH7y1MUR86J9ucAdKBrM9Ar8r5XYMi7GKR
+ Cgv9qMeSigmCSb5bL3bXForwMqT6/XlbXggoglc+eRIVFhNxhBBDFU7WiifkcV7TTNOL Xg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 32hu1jv3dw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 30 Jul 2020 14:40:35 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06UEcps2170441;
+        Thu, 30 Jul 2020 14:40:35 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 32hu5xg0ve-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Jul 2020 14:40:35 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06UEeXOS013061;
+        Thu, 30 Jul 2020 14:40:33 GMT
+Received: from dhcp-10-154-135-99.vpn.oracle.com (/10.154.135.99)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 30 Jul 2020 07:40:33 -0700
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.5\))
+Subject: Re: (resend) [PATCH [linux-4.14.y]] dm cache: submit writethrough
+ writes in parallel to origin and cache
+From:   John Donnelly <john.p.donnelly@oracle.com>
+In-Reply-To: <20200730052127.GA3860556@kroah.com>
+Date:   Thu, 30 Jul 2020 09:40:32 -0500
+Cc:     Mike Snitzer <snitzer@redhat.com>, stable@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <8481B1B9-C9CF-442A-87BE-4A01499CF26D@oracle.com>
+References: <37c5a615-655d-c106-afd0-54e03f3c0eef@oracle.com>
+ <20200727150014.GA27472@redhat.com> <20200729115119.GB2674635@kroah.com>
+ <20200729115557.GA2799681@kroah.com> <20200729141607.GA7215@redhat.com>
+ <851f749a-5c92-dcb1-f8e4-95b4434a1ec4@oracle.com>
+ <20200730052127.GA3860556@kroah.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+X-Mailer: Apple Mail (2.3445.9.5)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9697 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ mlxscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007300108
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9697 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 mlxlogscore=999
+ malwarescore=0 impostorscore=0 priorityscore=1501 spamscore=0 phishscore=0
+ suspectscore=3 bulkscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007300107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 05:34:28PM +0300, Kirill Tkhai wrote:
-> On 30.07.2020 17:30, Christian Brauner wrote:
-> > On Thu, Jul 30, 2020 at 02:59:25PM +0300, Kirill Tkhai wrote:
-> >> Currently, every type of namespaces has its own counter,
-> >> which is stored in ns-specific part. Say, @net has
-> >> struct net::count, @pid has struct pid_namespace::kref, etc.
-> >>
-> >> This patchset introduces unified counter for all types
-> >> of namespaces, and converts net namespace to use it first.
-> >>
-> >> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-> >> ---
-> >>  include/linux/ns_common.h     |    1 +
-> >>  include/net/net_namespace.h   |   11 ++++-------
-> >>  net/core/net-sysfs.c          |    6 +++---
-> >>  net/core/net_namespace.c      |    6 +++---
-> >>  net/ipv4/inet_timewait_sock.c |    4 ++--
-> >>  net/ipv4/tcp_metrics.c        |    2 +-
-> >>  6 files changed, 14 insertions(+), 16 deletions(-)
-> >>
-> >> diff --git a/include/linux/ns_common.h b/include/linux/ns_common.h
-> >> index 5fbc4000358f..27db02ebdf36 100644
-> >> --- a/include/linux/ns_common.h
-> >> +++ b/include/linux/ns_common.h
-> >> @@ -8,6 +8,7 @@ struct ns_common {
-> >>  	atomic_long_t stashed;
-> >>  	const struct proc_ns_operations *ops;
-> >>  	unsigned int inum;
-> >> +	refcount_t count;
-> > 
-> > Hm, I wonder whether it's worth to have this addition be in a separate
-> > patch but probably not and even if there'd be no need to resend.
-> > 
-> > Though I wonder, isn't this missing an include for refcount_t or is
-> > there some header-magic we're doing during pre-processing?
-> 
-> We have to add, I think. I'll resend with #include <linux/refcount.h>
-> in this file. Can I keep your Ack here on resend?
 
-Sure.
 
->  
-> > Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > 
-> > Thanks!
-> > Christian
-> > 
-> >>  };
-> >>  
-> >>  #endif
-> >> diff --git a/include/net/net_namespace.h b/include/net/net_namespace.h
-> >> index 2ee5901bec7a..cb4b33d7834b 100644
-> >> --- a/include/net/net_namespace.h
-> >> +++ b/include/net/net_namespace.h
-> >> @@ -60,9 +60,6 @@ struct net {
-> >>  	refcount_t		passive;	/* To decide when the network
-> >>  						 * namespace should be freed.
-> >>  						 */
-> >> -	refcount_t		count;		/* To decided when the network
-> >> -						 *  namespace should be shut down.
-> >> -						 */
-> >>  	spinlock_t		rules_mod_lock;
-> >>  
-> >>  	unsigned int		dev_unreg_count;
-> >> @@ -245,7 +242,7 @@ void __put_net(struct net *net);
-> >>  
-> >>  static inline struct net *get_net(struct net *net)
-> >>  {
-> >> -	refcount_inc(&net->count);
-> >> +	refcount_inc(&net->ns.count);
-> >>  	return net;
-> >>  }
-> >>  
-> >> @@ -256,14 +253,14 @@ static inline struct net *maybe_get_net(struct net *net)
-> >>  	 * exists.  If the reference count is zero this
-> >>  	 * function fails and returns NULL.
-> >>  	 */
-> >> -	if (!refcount_inc_not_zero(&net->count))
-> >> +	if (!refcount_inc_not_zero(&net->ns.count))
-> >>  		net = NULL;
-> >>  	return net;
-> >>  }
-> >>  
-> >>  static inline void put_net(struct net *net)
-> >>  {
-> >> -	if (refcount_dec_and_test(&net->count))
-> >> +	if (refcount_dec_and_test(&net->ns.count))
-> >>  		__put_net(net);
-> >>  }
-> >>  
-> >> @@ -275,7 +272,7 @@ int net_eq(const struct net *net1, const struct net *net2)
-> >>  
-> >>  static inline int check_net(const struct net *net)
-> >>  {
-> >> -	return refcount_read(&net->count) != 0;
-> >> +	return refcount_read(&net->ns.count) != 0;
-> >>  }
-> >>  
-> >>  void net_drop_ns(void *);
-> >> diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
-> >> index 9de33b594ff2..655a88b0071c 100644
-> >> --- a/net/core/net-sysfs.c
-> >> +++ b/net/core/net-sysfs.c
-> >> @@ -1025,7 +1025,7 @@ net_rx_queue_update_kobjects(struct net_device *dev, int old_num, int new_num)
-> >>  	while (--i >= new_num) {
-> >>  		struct kobject *kobj = &dev->_rx[i].kobj;
-> >>  
-> >> -		if (!refcount_read(&dev_net(dev)->count))
-> >> +		if (!refcount_read(&dev_net(dev)->ns.count))
-> >>  			kobj->uevent_suppress = 1;
-> >>  		if (dev->sysfs_rx_queue_group)
-> >>  			sysfs_remove_group(kobj, dev->sysfs_rx_queue_group);
-> >> @@ -1603,7 +1603,7 @@ netdev_queue_update_kobjects(struct net_device *dev, int old_num, int new_num)
-> >>  	while (--i >= new_num) {
-> >>  		struct netdev_queue *queue = dev->_tx + i;
-> >>  
-> >> -		if (!refcount_read(&dev_net(dev)->count))
-> >> +		if (!refcount_read(&dev_net(dev)->ns.count))
-> >>  			queue->kobj.uevent_suppress = 1;
-> >>  #ifdef CONFIG_BQL
-> >>  		sysfs_remove_group(&queue->kobj, &dql_group);
-> >> @@ -1850,7 +1850,7 @@ void netdev_unregister_kobject(struct net_device *ndev)
-> >>  {
-> >>  	struct device *dev = &ndev->dev;
-> >>  
-> >> -	if (!refcount_read(&dev_net(ndev)->count))
-> >> +	if (!refcount_read(&dev_net(ndev)->ns.count))
-> >>  		dev_set_uevent_suppress(dev, 1);
-> >>  
-> >>  	kobject_get(&dev->kobj);
-> >> diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
-> >> index dcd61aca343e..5f658cbedd34 100644
-> >> --- a/net/core/net_namespace.c
-> >> +++ b/net/core/net_namespace.c
-> >> @@ -44,7 +44,7 @@ static struct key_tag init_net_key_domain = { .usage = REFCOUNT_INIT(1) };
-> >>  #endif
-> >>  
-> >>  struct net init_net = {
-> >> -	.count		= REFCOUNT_INIT(1),
-> >> +	.ns.count	= REFCOUNT_INIT(1),
-> >>  	.dev_base_head	= LIST_HEAD_INIT(init_net.dev_base_head),
-> >>  #ifdef CONFIG_KEYS
-> >>  	.key_domain	= &init_net_key_domain,
-> >> @@ -248,7 +248,7 @@ int peernet2id_alloc(struct net *net, struct net *peer, gfp_t gfp)
-> >>  {
-> >>  	int id;
-> >>  
-> >> -	if (refcount_read(&net->count) == 0)
-> >> +	if (refcount_read(&net->ns.count) == 0)
-> >>  		return NETNSA_NSID_NOT_ASSIGNED;
-> >>  
-> >>  	spin_lock(&net->nsid_lock);
-> >> @@ -328,7 +328,7 @@ static __net_init int setup_net(struct net *net, struct user_namespace *user_ns)
-> >>  	int error = 0;
-> >>  	LIST_HEAD(net_exit_list);
-> >>  
-> >> -	refcount_set(&net->count, 1);
-> >> +	refcount_set(&net->ns.count, 1);
-> >>  	refcount_set(&net->passive, 1);
-> >>  	get_random_bytes(&net->hash_mix, sizeof(u32));
-> >>  	net->dev_base_seq = 1;
-> >> diff --git a/net/ipv4/inet_timewait_sock.c b/net/ipv4/inet_timewait_sock.c
-> >> index c411c87ae865..437afe392e66 100644
-> >> --- a/net/ipv4/inet_timewait_sock.c
-> >> +++ b/net/ipv4/inet_timewait_sock.c
-> >> @@ -272,14 +272,14 @@ void inet_twsk_purge(struct inet_hashinfo *hashinfo, int family)
-> >>  				continue;
-> >>  			tw = inet_twsk(sk);
-> >>  			if ((tw->tw_family != family) ||
-> >> -				refcount_read(&twsk_net(tw)->count))
-> >> +				refcount_read(&twsk_net(tw)->ns.count))
-> >>  				continue;
-> >>  
-> >>  			if (unlikely(!refcount_inc_not_zero(&tw->tw_refcnt)))
-> >>  				continue;
-> >>  
-> >>  			if (unlikely((tw->tw_family != family) ||
-> >> -				     refcount_read(&twsk_net(tw)->count))) {
-> >> +				     refcount_read(&twsk_net(tw)->ns.count))) {
-> >>  				inet_twsk_put(tw);
-> >>  				goto restart;
-> >>  			}
-> >> diff --git a/net/ipv4/tcp_metrics.c b/net/ipv4/tcp_metrics.c
-> >> index 279db8822439..39710c417565 100644
-> >> --- a/net/ipv4/tcp_metrics.c
-> >> +++ b/net/ipv4/tcp_metrics.c
-> >> @@ -887,7 +887,7 @@ static void tcp_metrics_flush_all(struct net *net)
-> >>  		pp = &hb->chain;
-> >>  		for (tm = deref_locked(*pp); tm; tm = deref_locked(*pp)) {
-> >>  			match = net ? net_eq(tm_net(tm), net) :
-> >> -				!refcount_read(&tm_net(tm)->count);
-> >> +				!refcount_read(&tm_net(tm)->ns.count);
-> >>  			if (match) {
-> >>  				*pp = tm->tcpm_next;
-> >>  				kfree_rcu(tm, rcu_head);
-> >>
-> >>
-> 
+> On Jul 30, 2020, at 12:21 AM, Greg KH <gregkh@linuxfoundation.org> =
+wrote:
+>=20
+> On Wed, Jul 29, 2020 at 06:45:46PM -0500, John Donnelly wrote:
+>>=20
+>>=20
+>> On 7/29/20 9:16 AM, Mike Snitzer wrote:
+>>> On Wed, Jul 29 2020 at  7:55am -0400,
+>>> Greg KH <gregkh@linuxfoundation.org> wrote:
+>>>=20
+>>>> On Wed, Jul 29, 2020 at 01:51:19PM +0200, Greg KH wrote:
+>>>>> On Mon, Jul 27, 2020 at 11:00:14AM -0400, Mike Snitzer wrote:
+>>>>>> This mail needs to be saent to stable@vger.kernel.org (now cc'd).
+>>>>>>=20
+>>>>>> Greg et al: please backport =
+2df3bae9a6543e90042291707b8db0cbfbae9ee9
+>>>>>=20
+>>>>> Now backported, thanks.
+>>>>=20
+>>>> Nope, it broke the build, I need something that actually works :)
+>>>>=20
+>>>=20
+>>> OK, I'll defer to John Donnelly to get back with you (and rest of
+>>> stable@).  He is more invested due to SUSE also having this issue.  =
+I
+>>> can put focus to it if John cannot sort this out.
+>>>=20
+>>> Mike
+>>>=20
+>>=20
+>>=20
+>> Hi.
+>>=20
+>>=20
+>> Thank you for reaching out.
+>>=20
+>> What specifically is broken? . If it that applying
+>> 2df3bae9a6543e90042291707b8db0cbfbae9ee9 to 4.14.y is failing?
+>=20
+> yes, try it yourself and see!
+
+ Hi .=20
+
+ Yes . =20
+
+  2df3bae9a6543e90042291707b8db0cbfbae9ee9
+
+ Needs refactored to work in 4.14.y (now .190) as there is a conflict in =
+arguments as noted in my original submittal ;-) .=20
+ I also noticed there are warning to functions " defined but not used =
+[-Wunused-function] =E2=80=9C  too.
+
+ Do you want another PATCH v2 message  in a new email thread,  or can I  =
+append it to this this thread ?
+
+Please advice.
+
+Thanks.
+JD.
+
+
+
+
+
+=20
+
+
+
