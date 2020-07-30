@@ -2,168 +2,154 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2C4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C7FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F29162083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A7592072A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:40:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="c6MB2iC5"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DGoWzp8Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbgG3AcU (ORCPT
+        id S1728232AbgG3AkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 20:32:20 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:54148 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728275AbgG3AbV (ORCPT
+        Wed, 29 Jul 2020 20:40:09 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3294 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727858AbgG3AkI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 20:31:21 -0400
-Received: from dede-linux-virt.corp.microsoft.com (unknown [131.107.160.54])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 6342620B490F;
-        Wed, 29 Jul 2020 17:31:20 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6342620B490F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1596069080;
-        bh=+61YBSjOP4ZQrvaK6jew3ITHo5Th5B0Y1X96EWC3CeE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c6MB2iC5YpjPOBp774dDuSE7Wzv34z0ERFqgb4MbETlNZmmgELjrrtDvWkZL0NYzi
-         j3Lc/2iY2UTduS+1EuPBHRzhQt/scEmOlCrgGSH1211sjaRgwOcFPfJVm1tSX3vYF1
-         0nOIdFu2NJmmxYk+4H7wja+RQudVAQj2xBnOV5zE=
-From:   Deven Bowers <deven.desai@linux.microsoft.com>
-To:     agk@redhat.com, axboe@kernel.dk, snitzer@redhat.com,
-        jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com,
-        viro@zeniv.linux.org.uk, paul@paul-moore.com, eparis@redhat.com,
-        jannh@google.com, dm-devel@redhat.com,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-audit@redhat.com
-Cc:     tyhicks@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        corbet@lwn.net, sashal@kernel.org,
-        jaskarankhurana@linux.microsoft.com, mdsakib@microsoft.com,
-        nramas@linux.microsoft.com, pasha.tatashin@soleen.com
-Subject: [RFC PATCH v6 06/11] dm-verity: add bdev_setsecurity hook for dm-verity signature
-Date:   Wed, 29 Jul 2020 17:31:08 -0700
-Message-Id: <20200730003113.2561644-7-deven.desai@linux.microsoft.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200730003113.2561644-1-deven.desai@linux.microsoft.com>
-References: <20200730003113.2561644-1-deven.desai@linux.microsoft.com>
+        Wed, 29 Jul 2020 20:40:08 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f2216ba0000>; Wed, 29 Jul 2020 17:39:22 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 29 Jul 2020 17:40:08 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 29 Jul 2020 17:40:08 -0700
+Received: from [10.2.160.194] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jul
+ 2020 00:40:07 +0000
+Subject: Re: [RFC PATCH v5 13/14] media: tegra-video: Add CSI MIPI pads
+ calibration
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>
+References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
+ <1595883452-17343-14-git-send-email-skomatineni@nvidia.com>
+ <c3d40261-9d77-3634-3e04-f20efad9d3d8@gmail.com>
+ <01ee0805-3d57-d857-48e3-5c2245cd4500@nvidia.com>
+ <2ec535c9-55e8-8834-6002-36c75aeb097c@gmail.com>
+ <021707b9-5f72-6f8b-d125-43627ef64a6d@nvidia.com>
+ <de2d6117-b1e5-14c0-52ca-ff46b444c866@nvidia.com>
+Message-ID: <5d2b67a1-9e85-606e-9bf2-802379d922f9@nvidia.com>
+Date:   Wed, 29 Jul 2020 17:47:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <de2d6117-b1e5-14c0-52ca-ff46b444c866@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596069562; bh=zEElWQxu+E1s3hgsmMljlq5NeoGb/HDShunRfurBl1o=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=DGoWzp8YtSe4A/xQLbriAj7OL91uXQOIF5J0MKiXJ8xV1YVHnCtbKakSezHOvNF02
+         Xd7n0dQRTb4x+22UaD6YcUUoFzivv9Ixu1Au1jLIhTBYegh0Mp8DL5qhNCvNXEpU8H
+         VGmFd4k8azuwtWHffTepbkizahAl3lQLN/hUzIM3pPwxUJLrZB4ppZXQYBm5rTrXKu
+         UmAyBLIKLtnrpf95GSk/x6tLa2iODe2pYYQArMExus1wnF10KuamfSJ/YcvIuSOsCD
+         ZJVZhmnRk759y9zzE7jbO4YyTFCKngOgO+chWECcyaIuiTbx9eYvsrqqhbFNkoUtw/
+         s14adilLiiWlA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a security hook call to set a security property of a block_device
-in dm-verity with the results of a verified, signed root-hash.
 
-Signed-off-by: Deven Bowers <deven.desai@linux.microsoft.com>
----
- drivers/md/dm-verity-target.c     |  2 +-
- drivers/md/dm-verity-verify-sig.c | 14 +++++++++++---
- drivers/md/dm-verity-verify-sig.h | 10 ++++++----
- include/linux/device-mapper.h     |  2 ++
- 4 files changed, 20 insertions(+), 8 deletions(-)
+On 7/29/20 5:27 PM, Sowjanya Komatineni wrote:
+>
+> On 7/29/20 4:59 PM, Sowjanya Komatineni wrote:
+>>
+>> On 7/29/20 4:25 PM, Dmitry Osipenko wrote:
+>>> 28.07.2020 18:59, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> ...
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D tegra_mipi_finis=
+h_calibration(csi_chan->mipi);
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+dev_err(csi_chan->csi->dev,
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 "MIPI calibration failed: %d\n", ret);
+>>>>> Doesn't v4l2_subdev_call(OFF) need to be invoked here on error?
+>>>> Not required as on error streaming fails and runtime PM will turn off
+>>>> power anyway.
+>>> I see that camera drivers bump theirs RPM on s_stream=3D1, and thus,
+>>> s_stream=3D0 should be invoked in order to balance the RPM. What am I=20
+>>> missing?
+>>>
+>>> https://elixir.bootlin.com/linux/v5.8-rc4/source/drivers/media/i2c/ov27=
+40.c#L634=20
+>>>
+>>
+>> Sensor drivers take care of RPM put when any failure happens during=20
+>> s_stream.
+>>
+>> So bridge driver don't have to call v4l2_subdev_call s_stream off=20
+>> incase if sensor subdev stream on fails.
+>>
+>>>> Also we only did csi subdev s_stream on and during sensor subdev
+>>>> s_stream on fail, actual stream dont happen and on tegra side frame
+>>>> capture by HW happens only when kthreads run.
+>>> Secondly, perhaps a failed calibration isn't a very critical error?
+>>> Hence just printing a warning message should be enough.
+>>
+>> Using dev_err to report calibration failure. Are you suggesting to=20
+>> use dev_warn instead of dev_err?
+>>
+OK I think I understood what you meant.
 
-diff --git a/drivers/md/dm-verity-target.c b/drivers/md/dm-verity-target.c
-index eec9f252e935..9970488e67ed 100644
---- a/drivers/md/dm-verity-target.c
-+++ b/drivers/md/dm-verity-target.c
-@@ -1134,7 +1134,7 @@ static int verity_ctr(struct dm_target *ti, unsigned argc, char **argv)
- 	}
- 
- 	/* Root hash signature is  a optional parameter*/
--	r = verity_verify_root_hash(root_hash_digest_to_validate,
-+	r = verity_verify_root_hash(v, root_hash_digest_to_validate,
- 				    strlen(root_hash_digest_to_validate),
- 				    verify_args.sig,
- 				    verify_args.sig_size);
-diff --git a/drivers/md/dm-verity-verify-sig.c b/drivers/md/dm-verity-verify-sig.c
-index 614e43db93aa..2cd9f8c85449 100644
---- a/drivers/md/dm-verity-verify-sig.c
-+++ b/drivers/md/dm-verity-verify-sig.c
-@@ -8,7 +8,10 @@
- #include <linux/device-mapper.h>
- #include <linux/verification.h>
- #include <keys/user-type.h>
-+#include <linux/security.h>
-+#include <linux/list.h>
- #include <linux/module.h>
-+#include "dm-core.h"
- #include "dm-verity.h"
- #include "dm-verity-verify-sig.h"
- 
-@@ -103,8 +106,9 @@ int verity_verify_sig_parse_opt_args(struct dm_arg_set *as,
-  * @sig_len: Size of the signature.
-  *
-  */
--int verity_verify_root_hash(const void *root_hash, size_t root_hash_len,
--			    const void *sig_data, size_t sig_len)
-+int verity_verify_root_hash(struct dm_verity *v, const void *root_hash,
-+			    size_t root_hash_len, const void *sig_data,
-+			    size_t sig_len)
- {
- 	int ret;
- 
-@@ -121,8 +125,12 @@ int verity_verify_root_hash(const void *root_hash, size_t root_hash_len,
- 	ret = verify_pkcs7_signature(root_hash, root_hash_len, sig_data,
- 				sig_len, NULL, VERIFYING_UNSPECIFIED_SIGNATURE,
- 				NULL, NULL);
-+	if (ret)
-+		return ret;
- 
--	return ret;
-+	return security_bdev_setsecurity(dm_table_get_md(v->ti->table)->bdev,
-+					 DM_VERITY_SIGNATURE_SEC_NAME,
-+					 sig_data, sig_len);
- }
- 
- void verity_verify_sig_opts_cleanup(struct dm_verity_sig_opts *sig_opts)
-diff --git a/drivers/md/dm-verity-verify-sig.h b/drivers/md/dm-verity-verify-sig.h
-index 19b1547aa741..6b7de1d48e5a 100644
---- a/drivers/md/dm-verity-verify-sig.h
-+++ b/drivers/md/dm-verity-verify-sig.h
-@@ -20,8 +20,9 @@ struct dm_verity_sig_opts {
- 
- #define DM_VERITY_ROOT_HASH_VERIFICATION_OPTS 2
- 
--int verity_verify_root_hash(const void *data, size_t data_len,
--			    const void *sig_data, size_t sig_len);
-+int verity_verify_root_hash(struct dm_verity *v, const void *data,
-+			    size_t data_len, const void *sig_data,
-+			    size_t sig_len);
- bool verity_verify_is_sig_opt_arg(const char *arg_name);
- 
- int verity_verify_sig_parse_opt_args(struct dm_arg_set *as, struct dm_verity *v,
-@@ -34,8 +35,9 @@ void verity_verify_sig_opts_cleanup(struct dm_verity_sig_opts *sig_opts);
- 
- #define DM_VERITY_ROOT_HASH_VERIFICATION_OPTS 0
- 
--int verity_verify_root_hash(const void *data, size_t data_len,
--			    const void *sig_data, size_t sig_len)
-+int verity_verify_root_hash(struct dm_verity *v, const void *data,
-+			    size_t data_len, const void *sig_data,
-+			    size_t sig_len)
- {
- 	return 0;
- }
-diff --git a/include/linux/device-mapper.h b/include/linux/device-mapper.h
-index 73dec4b5d5be..ab6b8eb0a150 100644
---- a/include/linux/device-mapper.h
-+++ b/include/linux/device-mapper.h
-@@ -625,4 +625,6 @@ static inline unsigned long to_bytes(sector_t n)
- 	return (n << SECTOR_SHIFT);
- }
- 
-+#define DM_VERITY_SIGNATURE_SEC_NAME DM_NAME	".verity-sig"
-+
- #endif	/* _LINUX_DEVICE_MAPPER_H */
--- 
-2.27.0
+When v4l2_subdev_call for sensor s_stream ON fails, we dont have to do=20
+v4l2_subdev_call s_stream OFF.
 
+As sensor drivers take care of RPM put when any failure happens during=20
+s_stream ON
+
+Other case when v4l2_subdev_call for sensor s_stream ON is good, then=20
+tegra_mipi_finish_calibration fail need to call s_stream OFF for sensor.
+
+Agree as calibration errors out in this case as its not critical in this=20
+scenario, So will change dev_err to dev_warn and will not report this as=20
+error so no need to call s_stream off.
+
+>>>
+>>> Could you please make a patch that factors all ON/OFF code paths into a
+>>> separate functions? It's a bit difficult to follow the combined code,
+>>> especially partial changes in the patches. Thanks in advance!
+>>
+>> what do you mean by partial changes in patches?
+>>
+>> Can you please be more clear?
+>
+> Also please specify what ON/OFF code paths you are referring to when=20
+> you say to move into separate functions?
+>
+>>
+>> Thanks
+>>
+>> Sowjanya
+>>
