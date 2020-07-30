@@ -2,212 +2,135 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A16C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F90C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBE29207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6677520829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:20:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fSD5EdSO"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="UM7q/hh3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730493AbgG3VRO (ORCPT
+        id S1730612AbgG3VUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 17:17:14 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20741 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730505AbgG3VRO (ORCPT
+        Thu, 30 Jul 2020 17:20:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33840 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730551AbgG3VUl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 17:17:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596143830;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bZGuV4rD0Ceq1ep6s52mf/yK6aOPC8Nt7kiDKbGKZCM=;
-        b=fSD5EdSO4Nry2NbMtGCBXHpYrFugAVbC9tkpespU/M+T6/H60af3AvbeEfXb5bwupHm6Wo
-        JpDKJEyb5PqHjcrbr89Ft3/exIDM4FvC+IcUKDDNtkC4v5YQ7vNaRAbJP7mVrjDsCEqhY8
-        mg87dFG8lwmzXvMNYApNlZMzdPiF818=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-180-x-mLPphPMe-v_LHwNhgtoA-1; Thu, 30 Jul 2020 17:17:06 -0400
-X-MC-Unique: x-mLPphPMe-v_LHwNhgtoA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B53B1100A8F2;
-        Thu, 30 Jul 2020 21:17:04 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C301519D7B;
-        Thu, 30 Jul 2020 21:17:03 +0000 (UTC)
-Date:   Thu, 30 Jul 2020 15:17:03 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] vfio/type1: Use iommu_aux_at(de)tach_group()
- APIs
-Message-ID: <20200730151703.5daf8ad4@x1.home>
-In-Reply-To: <af6c95a7-3238-1cbd-8656-014c12498587@linux.intel.com>
-References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
-        <20200714055703.5510-5-baolu.lu@linux.intel.com>
-        <20200729143258.22533170@x1.home>
-        <af6c95a7-3238-1cbd-8656-014c12498587@linux.intel.com>
-Organization: Red Hat
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        Thu, 30 Jul 2020 17:20:41 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A071C061574
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 14:20:41 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id c10so2794851pjn.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 14:20:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=T9TN+IiG05axbq9DvASXkbUWMclW/1L5ezZkeAERv5E=;
+        b=UM7q/hh3+ycXamy6DmVDsqTeyGwToom5lGdDqRMu9nAmBIv9chtjGOtptQGetwvOLM
+         dsbPN8u5TFZ4QxDmLlK2Qc8xKyIcI/Q4NYjbUuaSrkkEI6pidokfHVungFblJBmjzoz6
+         m8k0/Kw7NxtrkfSYNWkXwhoqyaNZZ6d/gv+ZRsx9H+ofRvhogUmbxCvbEb9ELRr/ntEr
+         seYQhSQhj4IkcOY/BiB6K++rUFLn5u5hKFGYT3+Q79YBWK/qBEMpIgkbhzctmN/Qmqqt
+         CMP9i25xSEC9So5qlz7pEJooph+gaPlzD40QmetOhYuvq0Tc5Ft0hUd0GDEKws4bGMMs
+         xBpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=T9TN+IiG05axbq9DvASXkbUWMclW/1L5ezZkeAERv5E=;
+        b=iCNHry0TtGsni4zBcFNx4CidYspg/Ko2JqgTsYlnz7eV9DTEFDjz5KPBXv0Qt0X1qx
+         yxIx3wQ+WQc2a9R27khzq/Pe5++hL24GMy60lJgQpsIdLrXvsx5ZayAbUpHib/pmKzJH
+         jwIjRXil5AfdrRcQ9rvg/NfIsJFRP0Vm5O0oSL8oIZN4YwzP0phBYviQyD0Y5QRNmyM3
+         sKL0lsVUy5vrrU/3Ob9C1pPJuwPDlPfsyC1+Z8jr7NI0K7+q8RAw9YMQbjJQjXfJQvG0
+         KPq/uGvk7HQBiZZroXuopBuiMPETTbA8wpojHHjrKl0TRU6SY07Ynghf58lIQ2zBFgz+
+         yi1A==
+X-Gm-Message-State: AOAM531eOLg0A+OmRaaBEdB8+L1MmHdfwNBCNwB47aTPxyu3aPUwBhkI
+        Ud21Pt+DvE7DRJXQ49u9bmSIVA==
+X-Google-Smtp-Source: ABdhPJzjBOdzPpZw2Zy8gz/U2wDGlNr+GQCGfyGI52RbMq/aPY97IjWGN5aeZxp17vggsWF8JUIiGw==
+X-Received: by 2002:a63:5b55:: with SMTP id l21mr813118pgm.348.1596144040321;
+        Thu, 30 Jul 2020 14:20:40 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id d9sm7277389pgv.45.2020.07.30.14.20.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 14:20:39 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 14:20:39 -0700 (PDT)
+X-Google-Original-Date: Thu, 30 Jul 2020 14:20:34 PDT (-0700)
+Subject:     Re: [PATCH 17/24] riscv: use asm-generic/mmu_context.h for no-op implementations
+In-Reply-To: <20200728033405.78469-18-npiggin@gmail.com>
+CC:     linux-arch@vger.kernel.org, npiggin@gmail.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     npiggin@gmail.com
+Message-ID: <mhng-5c1b7324-11f8-4334-bfc4-6fc1920aeaa3@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Jul 2020 10:41:32 +0800
-Lu Baolu <baolu.lu@linux.intel.com> wrote:
+On Mon, 27 Jul 2020 20:33:58 PDT (-0700), npiggin@gmail.com wrote:
+> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
+> Cc: linux-riscv@lists.infradead.org
+> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+> ---
+>  arch/riscv/include/asm/mmu_context.h | 22 ++--------------------
+>  1 file changed, 2 insertions(+), 20 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/mmu_context.h b/arch/riscv/include/asm/mmu_context.h
+> index 67c463812e2d..250defa06f3a 100644
+> --- a/arch/riscv/include/asm/mmu_context.h
+> +++ b/arch/riscv/include/asm/mmu_context.h
+> @@ -13,34 +13,16 @@
+>  #include <linux/mm.h>
+>  #include <linux/sched.h>
+>
+> -static inline void enter_lazy_tlb(struct mm_struct *mm,
+> -	struct task_struct *task)
+> -{
+> -}
+> -
+> -/* Initialize context-related info for a new mm_struct */
+> -static inline int init_new_context(struct task_struct *task,
+> -	struct mm_struct *mm)
+> -{
+> -	return 0;
+> -}
+> -
+> -static inline void destroy_context(struct mm_struct *mm)
+> -{
+> -}
+> -
+>  void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+>  	struct task_struct *task);
+>
+> +#define activate_mm activate_mm
+>  static inline void activate_mm(struct mm_struct *prev,
+>  			       struct mm_struct *next)
+>  {
+>  	switch_mm(prev, next, NULL);
+>  }
+>
+> -static inline void deactivate_mm(struct task_struct *task,
+> -	struct mm_struct *mm)
+> -{
+> -}
+> +#include <asm-generic/mmu_context.h>
+>
+>  #endif /* _ASM_RISCV_MMU_CONTEXT_H */
 
-> Hi Alex,
-> 
-> On 7/30/20 4:32 AM, Alex Williamson wrote:
-> > On Tue, 14 Jul 2020 13:57:03 +0800
-> > Lu Baolu <baolu.lu@linux.intel.com> wrote:
-> >   
-> >> Replace iommu_aux_at(de)tach_device() with iommu_aux_at(de)tach_group().
-> >> It also saves the IOMMU_DEV_FEAT_AUX-capable physcail device in the
-> >> vfio_group data structure so that it could be reused in other places.
-> >>
-> >> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> >> ---
-> >>   drivers/vfio/vfio_iommu_type1.c | 44 ++++++---------------------------
-> >>   1 file changed, 7 insertions(+), 37 deletions(-)
-> >>
-> >> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> >> index 5e556ac9102a..f8812e68de77 100644
-> >> --- a/drivers/vfio/vfio_iommu_type1.c
-> >> +++ b/drivers/vfio/vfio_iommu_type1.c
-> >> @@ -100,6 +100,7 @@ struct vfio_dma {
-> >>   struct vfio_group {
-> >>   	struct iommu_group	*iommu_group;
-> >>   	struct list_head	next;
-> >> +	struct device		*iommu_device;
-> >>   	bool			mdev_group;	/* An mdev group */
-> >>   	bool			pinned_page_dirty_scope;
-> >>   };
-> >> @@ -1627,45 +1628,13 @@ static struct device *vfio_mdev_get_iommu_device(struct device *dev)
-> >>   	return NULL;
-> >>   }
-> >>   
-> >> -static int vfio_mdev_attach_domain(struct device *dev, void *data)
-> >> -{
-> >> -	struct iommu_domain *domain = data;
-> >> -	struct device *iommu_device;
-> >> -
-> >> -	iommu_device = vfio_mdev_get_iommu_device(dev);
-> >> -	if (iommu_device) {
-> >> -		if (iommu_dev_feature_enabled(iommu_device, IOMMU_DEV_FEAT_AUX))
-> >> -			return iommu_aux_attach_device(domain, iommu_device);
-> >> -		else
-> >> -			return iommu_attach_device(domain, iommu_device);
-> >> -	}
-> >> -
-> >> -	return -EINVAL;
-> >> -}
-> >> -
-> >> -static int vfio_mdev_detach_domain(struct device *dev, void *data)
-> >> -{
-> >> -	struct iommu_domain *domain = data;
-> >> -	struct device *iommu_device;
-> >> -
-> >> -	iommu_device = vfio_mdev_get_iommu_device(dev);
-> >> -	if (iommu_device) {
-> >> -		if (iommu_dev_feature_enabled(iommu_device, IOMMU_DEV_FEAT_AUX))
-> >> -			iommu_aux_detach_device(domain, iommu_device);
-> >> -		else
-> >> -			iommu_detach_device(domain, iommu_device);
-> >> -	}
-> >> -
-> >> -	return 0;
-> >> -}
-> >> -
-> >>   static int vfio_iommu_attach_group(struct vfio_domain *domain,
-> >>   				   struct vfio_group *group)
-> >>   {
-> >>   	if (group->mdev_group)
-> >> -		return iommu_group_for_each_dev(group->iommu_group,
-> >> -						domain->domain,
-> >> -						vfio_mdev_attach_domain);
-> >> +		return iommu_aux_attach_group(domain->domain,
-> >> +					      group->iommu_group,
-> >> +					      group->iommu_device);  
-> > 
-> > No, we previously iterated all devices in the group and used the aux
-> > interface only when we have an iommu_device supporting aux.  If we
-> > simply assume an mdev group only uses an aux domain we break existing
-> > users, ex. SR-IOV VF backed mdevs.  Thanks,  
-> 
-> Oh, yes. Sorry! I didn't consider the physical device backed mdevs
-> cases.
-> 
-> Looked into this part of code, it seems that there's a lock issue here.
-> The group->mutex is held in iommu_group_for_each_dev() and will be
-> acquired again in iommu_attach_device().
+Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
 
-These are two different groups.  We walk the devices in the mdev's
-group with iommu_group_for_each_dev(), holding the mdev's group lock,
-but we call iommu_attach_device() with iommu_device, which results in
-acquiring the lock for the iommu_device's group.
-
-> How about making it like:
-> 
-> static int vfio_iommu_attach_group(struct vfio_domain *domain,
->                                     struct vfio_group *group)
-> {
->          if (group->mdev_group) {
->                  struct device *iommu_device = group->iommu_device;
-> 
->                  if (WARN_ON(!iommu_device))
->                          return -EINVAL;
-> 
->                  if (iommu_dev_feature_enabled(iommu_device, 
-> IOMMU_DEV_FEAT_AUX))
->                          return iommu_aux_attach_device(domain->domain, 
-> iommu_device);
->                  else
->                          return iommu_attach_device(domain->domain, 
-> iommu_device);
->          } else {
->                  return iommu_attach_group(domain->domain, 
-> group->iommu_group);
->          }
-> }
-> 
-> The caller (vfio_iommu_type1_attach_group) has guaranteed that all mdevs
-> in an iommu group should be derived from a same physical device.
-
-Have we?  iommu_attach_device() will fail if the group is not
-singleton, but that's just encouraging us to use the _attach_group()
-interface where the _attach_device() interface is relegated to special
-cases.  Ideally we'd get out of those special cases and create an
-_attach_group() for aux that doesn't further promote these notions.
-
-> Any thoughts?
-
-See my reply to Kevin, I'm thinking we need to provide a callback that
-can enlighten the IOMMU layer to be able to do _attach_group() with
-aux or separate IOMMU backed devices.  Thanks,
-
-Alex
-
+I'm assuming this is going in along with the others.  Thanks!
