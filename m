@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E25ACC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 823ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C16222070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57FE62074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096822;
-	bh=pBNKik9CfN3KP4PD85GKjACxbLFUYWDevkMDVvDtMQs=;
+	s=default; t=1596096825;
+	bh=8YRW/f78TgXrKU6CirmFlfF1OeBr1ipbQ53HPQPsv8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c+7ngmhVKfaLadg20TH3Fc3DcgyJCvKXDZDsoSGCvjGL/Z+TWReMDuFYlZSj5U1zD
-	 b7DoJJrbOrhiyl7K5hMy/DGmGzsPkWUP4TkM/O0X38gqy+/yq8I4xtpgml/qizz0d6
-	 8f+CEqMLreegBN6Li4Y1zmppmPPBBfy26teHpOGU=
+	b=k5+spDNlOz4xvl0D+KlAsoCjNdV5sHoGAp9ixEpveA2wSxIm8huxulxBjYFTi5MKK
+	 B4W59woNEDsaC1e480Ud3hjvhHzVzdb32HBs26Xao+GU0hwYfwo3cvHhtasnE1P63Z
+	 EatSv/EXlZaaCgHhpZYUtJsvjoXTNZbLHMZVFTu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730092AbgG3INl (ORCPT
+        id S1730125AbgG3INo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:13:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52644 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:13:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730114AbgG3INQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:13:16 -0400
+        id S1730113AbgG3INN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:13:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F138B21883;
-        Thu, 30 Jul 2020 08:13:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FF4C2083E;
+        Thu, 30 Jul 2020 08:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096794;
-        bh=pBNKik9CfN3KP4PD85GKjACxbLFUYWDevkMDVvDtMQs=;
+        s=default; t=1596096791;
+        bh=8YRW/f78TgXrKU6CirmFlfF1OeBr1ipbQ53HPQPsv8g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nedeJ97pUQBLMyySW08n1MeNnuAKbdkxLyqxeybhYPeZTedCp/aYRYFi4F+xDTYEr
-         l4MEgWfhs+Q5DiYmMEVE8S8K2ZgcKJeqdcq3y4ZzPPepK13fHg4XyvGnyVzot3WpRo
-         4SOp1D5CqO0lZr/BKDLQgPgsOlzHLjh7OQ+x81dc=
+        b=MW6PLDEwA4AiTsBlzO/wCDvHV0fqTj5K8BtkObmecbyzmcHJlZ5a3x9bMqs+1KaFw
+         Mu9W+BS+pRgZ1r2iFYZf8615Ot2rg1uuRBAliwlEhID+xgAE349ePkH3aFtoVqryLG
+         QM0V26Y5wxsOOd7VwcRKMRl7kiFtvtLV3zieEXYI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Winkler <danielwinkler@google.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Claire Chang <tientzu@chromium.org>
-Subject: [PATCH 4.4 33/54] serial: 8250_mtk: Fix high-speed baud rates clamping
-Date:   Thu, 30 Jul 2020 10:05:12 +0200
-Message-Id: <20200730074422.798025996@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 42/54] AX.25: Prevent integer overflows in connect and sendmsg
+Date:   Thu, 30 Jul 2020 10:05:21 +0200
+Message-Id: <20200730074423.220045461@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
 References: <20200730074421.203879987@linuxfoundation.org>
@@ -60,94 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 551e553f0d4ab623e2a6f424ab5834f9c7b5229c upstream.
+[ Upstream commit 17ad73e941b71f3bec7523ea4e9cbc3752461c2d ]
 
-Commit 7b668c064ec3 ("serial: 8250: Fix max baud limit in generic 8250
-port") fixed limits of a baud rate setting for a generic 8250 port.
-In other words since that commit the baud rate has been permitted to be
-within [uartclk / 16 / UART_DIV_MAX; uartclk / 16], which is absolutely
-normal for a standard 8250 UART port. But there are custom 8250 ports,
-which provide extended baud rate limits. In particular the Mediatek 8250
-port can work with baud rates up to "uartclk" speed.
+We recently added some bounds checking in ax25_connect() and
+ax25_sendmsg() and we so we removed the AX25_MAX_DIGIS checks because
+they were no longer required.
 
-Normally that and any other peculiarity is supposed to be handled in a
-custom set_termios() callback implemented in the vendor-specific
-8250-port glue-driver. Currently that is how it's done for the most of
-the vendor-specific 8250 ports, but for some reason for Mediatek a
-solution has been spread out to both the glue-driver and to the generic
-8250-port code. Due to that a bug has been introduced, which permitted the
-extended baud rate limit for all even for standard 8250-ports. The bug
-has been fixed by the commit 7b668c064ec3 ("serial: 8250: Fix max baud
-limit in generic 8250 port") by narrowing the baud rates limit back down to
-the normal bounds. Unfortunately by doing so we also broke the
-Mediatek-specific extended bauds feature.
+Unfortunately, I believe they are required to prevent integer overflows
+so I have added them back.
 
-A fix of the problem described above is twofold. First since we can't get
-back the extended baud rate limits feature to the generic set_termios()
-function and that method supports only a standard baud rates range, the
-requested baud rate must be locally stored before calling it and then
-restored back to the new termios structure after the generic set_termios()
-finished its magic business. By doing so we still use the
-serial8250_do_set_termios() method to set the LCR/MCR/FCR/etc. registers,
-while the extended baud rate setting procedure will be performed later in
-the custom Mediatek-specific set_termios() callback. Second since a true
-baud rate is now fully calculated in the custom set_termios() method we
-need to locally update the port timeout by calling the
-uart_update_timeout() function. After the fixes described above are
-implemented in the 8250_mtk.c driver, the Mediatek 8250-port should
-get back to normally working with extended baud rates.
-
-Link: https://lore.kernel.org/linux-serial/20200701211337.3027448-1-danielwinkler@google.com
-
-Fixes: 7b668c064ec3 ("serial: 8250: Fix max baud limit in generic 8250 port")
-Reported-by: Daniel Winkler <danielwinkler@google.com>
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: stable <stable@vger.kernel.org>
-Tested-by: Claire Chang <tientzu@chromium.org>
-Link: https://lore.kernel.org/r/20200714124113.20918-1-Sergey.Semin@baikalelectronics.ru
+Fixes: 8885bb0621f0 ("AX.25: Prevent out-of-bounds read in ax25_sendmsg()")
+Fixes: 2f2a7ffad5c6 ("AX.25: Fix out-of-bounds read in ax25_connect()")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/tty/serial/8250/8250_mtk.c |   18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ net/ax25/af_ax25.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/serial/8250/8250_mtk.c
-+++ b/drivers/tty/serial/8250/8250_mtk.c
-@@ -47,8 +47,21 @@ mtk8250_set_termios(struct uart_port *po
- 	struct uart_8250_port *up =
- 		container_of(port, struct uart_8250_port, port);
+--- a/net/ax25/af_ax25.c
++++ b/net/ax25/af_ax25.c
+@@ -1192,6 +1192,7 @@ static int __must_check ax25_connect(str
+ 	    fsa->fsa_ax25.sax25_ndigis != 0) {
+ 		/* Valid number of digipeaters ? */
+ 		if (fsa->fsa_ax25.sax25_ndigis < 1 ||
++		    fsa->fsa_ax25.sax25_ndigis > AX25_MAX_DIGIS ||
+ 		    addr_len < sizeof(struct sockaddr_ax25) +
+ 		    sizeof(ax25_address) * fsa->fsa_ax25.sax25_ndigis) {
+ 			err = -EINVAL;
+@@ -1512,7 +1513,9 @@ static int ax25_sendmsg(struct socket *s
+ 			struct full_sockaddr_ax25 *fsa = (struct full_sockaddr_ax25 *)usax;
  
-+	/*
-+	 * Store the requested baud rate before calling the generic 8250
-+	 * set_termios method. Standard 8250 port expects bauds to be
-+	 * no higher than (uartclk / 16) so the baud will be clamped if it
-+	 * gets out of that bound. Mediatek 8250 port supports speed
-+	 * higher than that, therefore we'll get original baud rate back
-+	 * after calling the generic set_termios method and recalculate
-+	 * the speed later in this method.
-+	 */
-+	baud = tty_termios_baud_rate(termios);
-+
- 	serial8250_do_set_termios(port, termios, old);
- 
-+	tty_termios_encode_baud_rate(termios, baud, baud);
-+
- 	/*
- 	 * Mediatek UARTs use an extra highspeed register (UART_MTK_HIGHS)
- 	 *
-@@ -91,6 +104,11 @@ mtk8250_set_termios(struct uart_port *po
- 	 */
- 	spin_lock_irqsave(&port->lock, flags);
- 
-+	/*
-+	 * Update the per-port timeout.
-+	 */
-+	uart_update_timeout(port, termios->c_cflag, baud);
-+
- 	/* set DLAB we have cval saved in up->lcr from the call to the core */
- 	serial_port_out(port, UART_LCR, up->lcr | UART_LCR_DLAB);
- 	serial_dl_write(up, quot);
+ 			/* Valid number of digipeaters ? */
+-			if (usax->sax25_ndigis < 1 || addr_len < sizeof(struct sockaddr_ax25) +
++			if (usax->sax25_ndigis < 1 ||
++			    usax->sax25_ndigis > AX25_MAX_DIGIS ||
++			    addr_len < sizeof(struct sockaddr_ax25) +
+ 			    sizeof(ax25_address) * usax->sax25_ndigis) {
+ 				err = -EINVAL;
+ 				goto out;
 
 
