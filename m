@@ -2,89 +2,229 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14985C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 070D22083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE7F620809
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:54:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="gw/iCFk/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730331AbgG3Rx6 (ORCPT
+        id S1730340AbgG3Ry5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 13:53:58 -0400
-Received: from mga11.intel.com ([192.55.52.93]:36972 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgG3Rx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 13:53:56 -0400
-IronPort-SDR: 69vSudRU4FrcwkmxhHxA1hsqh4d1YLBzRLFqI1PVRBdA9M2xFPTfZBbDNzOXsZBhOd3Lorx0Md
- /+YuqDA0n15A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="149489899"
-X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
-   d="scan'208";a="149489899"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 10:53:55 -0700
-IronPort-SDR: Fc6Z47lifP2sAA8iN/gjznggKHYN2Ve5qn8/4HVHpCiTtwAARK9r8DQuX2N/VHbhnGHeFZMWEz
- mW/xHz/Bg/sw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
-   d="scan'208";a="321161314"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 30 Jul 2020 10:53:55 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id 2139858010E;
-        Thu, 30 Jul 2020 10:53:55 -0700 (PDT)
-Message-ID: <0d4e8a8130e6a78ba3b6fcb3aee9858d22e5c23b.camel@linux.intel.com>
-Subject: Re: [PATCH V4 2/3] mfd: Intel Platform Monitoring Technology support
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Mark D Rustad <mrustad@gmail.com>, Lee Jones <lee.jones@linaro.org>
-Cc:     dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
-        alexander.h.duyck@linux.intel.com,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 30 Jul 2020 10:53:55 -0700
-In-Reply-To: <3DCA0A88-0890-49EE-8644-E6311E891C55@gmail.com>
-References: <20200714062323.19990-1-david.e.box@linux.intel.com>
-         <20200717190620.29821-3-david.e.box@linux.intel.com>
-         <20200728075859.GH1850026@dell>
-         <3DCA0A88-0890-49EE-8644-E6311E891C55@gmail.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Thu, 30 Jul 2020 13:54:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58684 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728489AbgG3Ryz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 13:54:55 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6DA8C061756
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 10:54:55 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id z3so12988553ilh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 10:54:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qZxl6RlcjeBo55Fcy6iPmsqYVaQtSKURd48rtYSeZj4=;
+        b=gw/iCFk/RVskyceLGKO+tloqFLuIWEnHnjupL2l++0br12+PBSUShRgw+bPKiu0Yaa
+         rFRORmkDAc/gmiQfJBtek+oKYwvboV6LyOiZKFUjHUHOwzfLDIrAZwTr8FKxQNz4r4mK
+         Htd/eMSeNZ3K5/2RrcTIrmsJ57EAmXi63QkPP/ovDgTG8zg+6JuRvRRXA7ACQuZHTekN
+         0h0XN5fYP8uAKYUv1TKsgv3Xfmwj4mMFyBK+3vaLqpVGItDeySe5ZZ4m4unh5flZ+WbF
+         LBk6kFJlJlPGjCWJEIVG2Yh75Vjiilk7dhg9FrBhoHvwaEC6SmvuBIQY8OiD/p6OV7iu
+         akvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qZxl6RlcjeBo55Fcy6iPmsqYVaQtSKURd48rtYSeZj4=;
+        b=s/QF32n0CoqZ3D3aScaa3iJ2yn+nhY5IR6D5LNjbLqYFOM7CoiVudni835RvAAmd4w
+         6c5jUf3oNLd5ZXZQHS8UC9b4LOTTztohfi2uDroF+agDdt/3cqqWoKNvo2375RyIYO6G
+         DkhY850ork0zXBrid2HBANEl+X3OMVmjXQMvUs4gxJkCX/gyg0fILo7L7o1U0RoO2r83
+         LnJ/sql/24T05bHxUxFhbCzXRU7iBp9bVG+IjRtGUnzCD6WFNnfwWwyMVtIeD7Xvs5WP
+         xig50WvKqA2Fw+QtSMihoseVAasNiauWXyLEztUSrt0xKu1+XHe+4vY24MT+ZcozvviY
+         c2ng==
+X-Gm-Message-State: AOAM533v9SjUlsAPYTV2gTJOkKJhvMcIWeCbfcStaUSo1rQn7DAXXZLV
+        vUnTL+fBVYda36uc/1pnOgHH5/Oklsg=
+X-Google-Smtp-Source: ABdhPJwBJLXpr2je4Zc+DCL3I1fwHXLDw7C0LU53JyfAwAy9/eHrQfqARPYwMJRvkwx8uyKJIjJ2iQ==
+X-Received: by 2002:a92:bd0f:: with SMTP id c15mr38652504ile.95.1596131694849;
+        Thu, 30 Jul 2020 10:54:54 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id c25sm3447235ilf.63.2020.07.30.10.54.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jul 2020 10:54:54 -0700 (PDT)
+Subject: Re: [PATCH v4 6/6] io_uring: add support for zone-append
+To:     Kanchan Joshi <joshiiitr@gmail.com>,
+        Pavel Begunkov <asml.silence@gmail.com>
+Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
+        bcrl@kvack.org, Matthew Wilcox <willy@infradead.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-aio@kvack.org, io-uring@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-api@vger.kernel.org,
+        SelvaKumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+References: <1595605762-17010-1-git-send-email-joshi.k@samsung.com>
+ <CGME20200724155350epcas5p3b8f1d59eda7f8fbb38c828f692d42fd6@epcas5p3.samsung.com>
+ <1595605762-17010-7-git-send-email-joshi.k@samsung.com>
+ <f5416bd4-93b3-4d14-3266-bdbc4ae1990b@kernel.dk>
+ <CA+1E3rJAa3E2Ti0fvvQTzARP797qge619m4aYLjXeR3wxdFwWw@mail.gmail.com>
+ <b0b7159d-ed10-08ad-b6c7-b85d45f60d16@kernel.dk>
+ <e871eef2-8a93-fdbc-b762-2923526a2db4@gmail.com>
+ <80d27717-080a-1ced-50d5-a3a06cf06cd3@kernel.dk>
+ <da4baa8c-76b0-7255-365c-d8b58e322fd0@gmail.com>
+ <65a7e9a6-aede-31ce-705c-b7f94f079112@kernel.dk>
+ <d4f9a5d3-1df2-1060-94fa-f77441a89299@gmail.com>
+ <CA+1E3rJ3SoLU9aYcugAQgJnSPnJtcCwjZdMREXS3FTmXgy3yow@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <f030a338-cd52-2e83-e1da-bdbca910d49e@kernel.dk>
+Date:   Thu, 30 Jul 2020 11:54:53 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <CA+1E3rJ3SoLU9aYcugAQgJnSPnJtcCwjZdMREXS3FTmXgy3yow@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-07-29 at 15:59 -0700, Mark D Rustad wrote:
-> at 12:58 AM, Lee Jones <lee.jones@linaro.org> wrote:
+On 7/30/20 11:51 AM, Kanchan Joshi wrote:
+> On Thu, Jul 30, 2020 at 11:10 PM Pavel Begunkov <asml.silence@gmail.com> wrote:
+>>
+>> On 30/07/2020 20:16, Jens Axboe wrote:
+>>> On 7/30/20 10:26 AM, Pavel Begunkov wrote:
+>>>> On 30/07/2020 19:13, Jens Axboe wrote:
+>>>>> On 7/30/20 10:08 AM, Pavel Begunkov wrote:
+>>>>>> On 27/07/2020 23:34, Jens Axboe wrote:
+>>>>>>> On 7/27/20 1:16 PM, Kanchan Joshi wrote:
+>>>>>>>> On Fri, Jul 24, 2020 at 10:00 PM Jens Axboe <axboe@kernel.dk> wrote:
+>>>>>>>>>
+>>>>>>>>> On 7/24/20 9:49 AM, Kanchan Joshi wrote:
+>>>>>>>>>> diff --git a/fs/io_uring.c b/fs/io_uring.c
+>>>>>>>>>> index 7809ab2..6510cf5 100644
+>>>>>>>>>> --- a/fs/io_uring.c
+>>>>>>>>>> +++ b/fs/io_uring.c
+>>>>>>>>>> @@ -1284,8 +1301,15 @@ static void __io_cqring_fill_event(struct io_kiocb *req, long res, long cflags)
+>>>>>>>>>>       cqe = io_get_cqring(ctx);
+>>>>>>>>>>       if (likely(cqe)) {
+>>>>>>>>>>               WRITE_ONCE(cqe->user_data, req->user_data);
+>>>>>>>>>> -             WRITE_ONCE(cqe->res, res);
+>>>>>>>>>> -             WRITE_ONCE(cqe->flags, cflags);
+>>>>>>>>>> +             if (unlikely(req->flags & REQ_F_ZONE_APPEND)) {
+>>>>>>>>>> +                     if (likely(res > 0))
+>>>>>>>>>> +                             WRITE_ONCE(cqe->res64, req->rw.append_offset);
+>>>>>>>>>> +                     else
+>>>>>>>>>> +                             WRITE_ONCE(cqe->res64, res);
+>>>>>>>>>> +             } else {
+>>>>>>>>>> +                     WRITE_ONCE(cqe->res, res);
+>>>>>>>>>> +                     WRITE_ONCE(cqe->flags, cflags);
+>>>>>>>>>> +             }
+>>>>>>>>>
+>>>>>>>>> This would be nice to keep out of the fast path, if possible.
+>>>>>>>>
+>>>>>>>> I was thinking of keeping a function-pointer (in io_kiocb) during
+>>>>>>>> submission. That would have avoided this check......but argument count
+>>>>>>>> differs, so it did not add up.
+>>>>>>>
+>>>>>>> But that'd grow the io_kiocb just for this use case, which is arguably
+>>>>>>> even worse. Unless you can keep it in the per-request private data,
+>>>>>>> but there's no more room there for the regular read/write side.
+>>>>>>>
+>>>>>>>>>> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+>>>>>>>>>> index 92c2269..2580d93 100644
+>>>>>>>>>> --- a/include/uapi/linux/io_uring.h
+>>>>>>>>>> +++ b/include/uapi/linux/io_uring.h
+>>>>>>>>>> @@ -156,8 +156,13 @@ enum {
+>>>>>>>>>>   */
+>>>>>>>>>>  struct io_uring_cqe {
+>>>>>>>>>>       __u64   user_data;      /* sqe->data submission passed back */
+>>>>>>>>>> -     __s32   res;            /* result code for this event */
+>>>>>>>>>> -     __u32   flags;
+>>>>>>>>>> +     union {
+>>>>>>>>>> +             struct {
+>>>>>>>>>> +                     __s32   res;    /* result code for this event */
+>>>>>>>>>> +                     __u32   flags;
+>>>>>>>>>> +             };
+>>>>>>>>>> +             __s64   res64;  /* appending offset for zone append */
+>>>>>>>>>> +     };
+>>>>>>>>>>  };
+>>>>>>>>>
+>>>>>>>>> Is this a compatible change, both for now but also going forward? You
+>>>>>>>>> could randomly have IORING_CQE_F_BUFFER set, or any other future flags.
+>>>>>>>>
+>>>>>>>> Sorry, I didn't quite understand the concern. CQE_F_BUFFER is not
+>>>>>>>> used/set for write currently, so it looked compatible at this point.
+>>>>>>>
+>>>>>>> Not worried about that, since we won't ever use that for writes. But it
+>>>>>>> is a potential headache down the line for other flags, if they apply to
+>>>>>>> normal writes.
+>>>>>>>
+>>>>>>>> Yes, no room for future flags for this operation.
+>>>>>>>> Do you see any other way to enable this support in io-uring?
+>>>>>>>
+>>>>>>> Honestly I think the only viable option is as we discussed previously,
+>>>>>>> pass in a pointer to a 64-bit type where we can copy the additional
+>>>>>>> completion information to.
+>>>>>>
+>>>>>> TBH, I hate the idea of such overhead/latency at times when SSDs can
+>>>>>> serve writes in less than 10ms. Any chance you measured how long does it
+>>>>>
+>>>>> 10us? :-)
+>>>>
+>>>> Hah, 10us indeed :)
+>>>>
+>>>>>
+>>>>>> take to drag through task_work?
+>>>>>
+>>>>> A 64-bit value copy is really not a lot of overhead... But yes, we'd
+>>>>> need to push the completion through task_work at that point, as we can't
+>>>>> do it from the completion side. That's not a lot of overhead, and most
+>>>>> notably, it's overhead that only affects this particular type.
+>>>>>
+>>>>> That's not a bad starting point, and something that can always be
+>>>>> optimized later if need be. But I seriously doubt it'd be anything to
+>>>>> worry about.
+>>>>
+>>>> I probably need to look myself how it's really scheduled, but if you don't
+>>>> mind, here is a quick question: if we do work_add(task) when the task is
+>>>> running in the userspace, wouldn't the work execution wait until the next
+>>>> syscall/allotted time ends up?
+>>>
+>>> It'll get the task to enter the kernel, just like signal delivery. The only
+>>> tricky part is really if we have a dependency waiting in the kernel, like
+>>> the recent eventfd fix.
+>>
+>> I see, thanks for sorting this out!
 > 
-> > If you do:
-> > 
-> > 	do {
-> > 		int pos;
-> > 
-> > 		pos = pci_find_next_ext_capability(pdev, pos,
-> > PCI_EXT_CAP_ID_DVSEC);
-> > 		if (!pos)
-> > 			break;
-> > 
-> > Then you can invoke pci_find_next_ext_capability() once, no?
+> Few more doubts about this (please mark me wrong if that is the case):
 > 
-> Part of your suggestion here won't work, because pos needs to be  
-> initialized to 0 the first time. As such it needs to be declared
-> and  
-> initialized outside the loop. Other than that it may be ok.
+> - Task-work makes me feel like N completions waiting to be served by
+> single task.
+> Currently completions keep arriving and CQEs would be updated with
+> result, but the user-space (submitter task) would not be poked.
+> 
+> - Completion-code will set the task-work. But post that it cannot go
+> immediately to its regular business of picking cqe and updating
+> res/flags, as we cannot afford user-space to see the cqe before the
+> pointer update. So it seems completion-code needs to spawn another
+> work which will allocate/update cqe after waiting for pointer-update
+> from task-work?
 
-Already done in V5. Thanks.
+The task work would post the completion CQE for the request after
+writing the offset.
 
-David
+-- 
+Jens Axboe
 
