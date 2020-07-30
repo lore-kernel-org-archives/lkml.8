@@ -2,96 +2,95 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CE3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D320EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09A9220672
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:02:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ni9dtpix"
+	by mail.kernel.org (Postfix) with ESMTP id B8CAB20672
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:03:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbgG3IC1 (ORCPT
+        id S1728997AbgG3IDq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:02:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbgG3ICW (ORCPT
+        Thu, 30 Jul 2020 04:03:46 -0400
+Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:17539 "EHLO
+        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725892AbgG3IDp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:02:22 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8417C061794;
-        Thu, 30 Jul 2020 01:02:22 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id a9so3462276pjd.3;
-        Thu, 30 Jul 2020 01:02:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=XCmfqFtBUrWLGb0HRDwnKJuQyG0oIwWAg+A2BuLLHlk=;
-        b=Ni9dtpixzC9T0JSf1dz8WSqnJqMFFOr6aMpkKq7RUF8VMgW6JliqG5FYvO+SjUr0RC
-         jrgYAaQ2ukMMAjW34DThgLXD+Q3NhOfu7tt0H6kG5lCdNjEqU2yBUkxbEp7xBGE61hQ8
-         Q51KOI1vwwm/fFJwiOdcDWp6ssn2nut+QzTXRuny6Vy0kReeTK/tw8EdBqq+dw6OSzXj
-         BDT2LQBtrxDO6psEf8/6zRasJlWUlVvqw3JKT3gmes8ZViJ+2puSPCRSGkXfVMoO76J/
-         xPp2dxWO/fW345mYWUygzMqthWQQNz9E/loJYeGFZzh/xHyAVWGITVnviouF0XVMGPo+
-         q4Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=XCmfqFtBUrWLGb0HRDwnKJuQyG0oIwWAg+A2BuLLHlk=;
-        b=KseAtjvgp5z+RICrPhBZuZOOemur5w3Cc+oXzQlP3enHy2pQH1OKuSVM86cgBzzTw5
-         mmSVNafQVNE8BoBjCwQLOFbYltBJ2yePKy4MJv05xJ4d/W4scRGUL6o88ixbnO+1bDnb
-         DFHdbgEoPucEFqIEIU2wzBtQH20UfSmdd+FFu2hS6ZbF+jLx83T/sHngkJzUNxen43dL
-         om6eI8hyEEb34tdF3MBstnCukRdBqVQj1CpQ66pemyTdg5htEVeo5KaQ/fdn6Lgoe8EP
-         JjwhQ2ispHvZihwYCxuIFWl82VB5dHd3MFErgh3sx9Nfwqsobwci4JMC0hcP1i6ocykI
-         SIeQ==
-X-Gm-Message-State: AOAM531sOAj3HBM6G/TJw/X37FLFFmnAXbB4PL2qTZz6sHZ9VTuzJgDK
-        MVneADHdx/Ll4QpJJfFFF2eFNbtQf4zGfaMigT9gHQhM
-X-Google-Smtp-Source: ABdhPJy0ddlORXpGjQKfME9zoUWY2prLtamhgQ18XGO0AYNnAP3SyIkK4wzxBORjSqX7wRmj4S5RG2ytTbL1az8lNR8=
-X-Received: by 2002:a17:90b:11c4:: with SMTP id gv4mr1944336pjb.198.1596096141675;
- Thu, 30 Jul 2020 01:02:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200730073702.16887-1-xie.he.0141@gmail.com>
-In-Reply-To: <20200730073702.16887-1-xie.he.0141@gmail.com>
-From:   Xie He <xie.he.0141@gmail.com>
-Date:   Thu, 30 Jul 2020 01:02:10 -0700
-Message-ID: <CAJht_EO1srhh68DifK61+hpY+zBRU8oOAbJOSpjOqePithc7gw@mail.gmail.com>
-Subject: Re: [PATCH v2] drivers/net/wan/lapbether: Use needed_headroom instead
- of hard_header_len
-To:     Martin Schiller <ms@dev.tdt.de>,
+        Thu, 30 Jul 2020 04:03:45 -0400
+Subject: Re: [PATCH] selinux: add tracepoint on denials
+To:     =?UTF-8?Q?Thi=c3=a9baud_Weksteen?= <tweek@google.com>,
+        Paul Moore <paul@paul-moore.com>
+CC:     Steven Rostedt <rostedt@goodmis.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Nick Kralevich <nnk@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux X25 <linux-x25@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>
+References: <20200724091520.880211-1-tweek@google.com>
+ <CAEjxPJ45ij3obT37ywn_edb9xb89z-SdwzejfN6+jrvAtghXfA@mail.gmail.com>
+ <CAHC9VhS4aXD8kcXnQ2MsYvjc--xXSUpsM1xtgq3X5DBT59ohhw@mail.gmail.com>
+ <CA+zpnLfczC=9HQA8s1oBGKGQO+OkuydF85o89dhSxdOyKBHMgg@mail.gmail.com>
+ <CAHC9VhT1sGSpfCKojbKR+O2Hf_h+wnKnBwwSo09CbFaCYLcOHA@mail.gmail.com>
+ <CA+zpnLecz_gvXYnrwNGW8SLaJsu==M_n9MuJgjqX9nPJtuTZBg@mail.gmail.com>
+From:   peter enderborg <peter.enderborg@sony.com>
+Message-ID: <def030b4-91c3-4aa1-e8ad-e3797688d18d@sony.com>
+Date:   Thu, 30 Jul 2020 10:03:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CA+zpnLecz_gvXYnrwNGW8SLaJsu==M_n9MuJgjqX9nPJtuTZBg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-GB
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=DrAoB13+ c=1 sm=1 tr=0 a=kIrCkORFHx6JeP9rmF/Kww==:117 a=IkcTkHD0fZMA:10 a=_RQrkK6FrEwA:10 a=xVhDTqbCAAAA:8 a=kSkFpLqy8y9c_-cfnwsA:9 a=QEXdDO2ut3YA:10 a=GrmWmAYt4dzCMttCBZOh:22
+X-SEG-SpamProfiler-Score: 0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Martin,
+On 7/28/20 6:02 PM, Thiébaud Weksteen wrote:
+> On Tue, Jul 28, 2020 at 5:12 PM Paul Moore <paul@paul-moore.com> wrote:
+>> Perhaps it would be helpful if you provided an example of how one
+>> would be expected to use this new tracepoint?  That would help put
+>> things in the proper perspective.
+> The best example is the one I provided in the commit message, that is
+> using perf (or a perf equivalent), to hook onto that tracepoint.
+>
+>> Well, to be honest, the very nature of this tracepoint is duplicating
+>> the AVC audit record with a focus on using perf to establish a full
+>> backtrace at the expense of reduced information.  At least that is how
+>> it appears to me.
+> I see both methods as complementary. By default, the kernel itself can
+> do some reporting (i.e avc message) on which process triggered the
+> denial, what was the context, etc. This is useful even in production
+> and doesn't require any extra tooling.
+> The case for adding this tracepoint can be seen as advanced debugging.
+> That is, once an avc denial has been confirmed, a developer can use
+> this tracepoint to surface the userland stacktrace. It requires more
+> userland tools and symbols on the userland binaries.
 
-I'm currently working on a plan to make all X.25 drivers (lapbether.c,
-x25_asy.c, hdlc_x25.c) to set dev->hard_header_len /
-dev->needed_headroom correctly. So that upper layers no longer need to
-guess how much headroom a X.25 device needs with a constant value (as
-they currently do).
+I think from development view you would like to have a better
+way to trap this events in userspace. One idea that I have is
+is to have more outcomes from a rule. We have today allow,
+dontaudit, auditallow i think it would be good to have signal sent too.
+"signal-xxx-allow" for some set of signals. SIGBUS, SIGSEGV, SIGABRT maybe.
 
-After studying af_packet.c, I found that X.25 drivers needed to set
-needed_headroom to reserve the headroom instead of using
-hard_header_len. Because hard_header_len should be the length of the
-header that would be created by dev_hard_header, and in this case it
-should be 0, according to the logic of af_packet.c.
+That will be a good way to pickup the problem with a debugger or generate a
+a core file.
 
-So my first step is to fix the settings in lapbether.c. Could you
-review this patch and extend your support via a "Reviewed-by" tag? If
-this can be fixed, I'll go on and fix other X.25 drivers. Thanks!
+I have also done some selinux trace functions. I think they collide with this set,
+but I think I can rebase them upon yours and see if they give some more functionality.
 
-It's very hard to find reviewers for X.25 code because it is
-relatively unmaintained by people. I hope I can do some of the
-maintenance work. I greatly appreciate your support!
+I see this functionality very much needed in some form.
+
+
