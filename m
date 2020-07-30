@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72457C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F08F22074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D62B2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:18:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596097121;
-	bh=GzMHvU5YZPPPhdYnAemrHx5q6lnHr6D06MopjFY/qFc=;
+	s=default; t=1596097125;
+	bh=4UDb7Ao8BAv6BbrlbobXgiF4d3R3K3FUqdy1c8fpSGU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NN/Tbb5VZEUU8OLJJ38L+kvzXGYtFRwNIWMtaDeXi2VTJOibPWNae3J/qg4Ww4GRF
-	 LdxiwFAyx37ZDegVRE5NisWMspaQEAtaWChHEzbahKbXU6uvamHFQaAsj3aWJKag90
-	 8hKyeMPWkUku8erb941JWZ/8K4OiTf3MZ0Y5fvY0=
+	b=BAXnvu/SELRI8kai1Wqvbot6fh1OVeqzE6s1XimZglbB1lu4umiJRU/M+hb9nit2f
+	 yCfb5RpzTrrbjje2HdB3DOXTYPFiCQuwkayNrhWcNpAM2gNvFP5nMw7jqApKVzBYOx
+	 QFSEqFn4rcvNnFcCJCS/Sf3j4o0g8tTy4lN1ItAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730143AbgG3ISj (ORCPT
+        id S1730257AbgG3ISn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:18:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46856 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:18:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729600AbgG3IIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:08:35 -0400
+        id S1729188AbgG3IIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:08:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7974E2083B;
-        Thu, 30 Jul 2020 08:08:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 672FB20838;
+        Thu, 30 Jul 2020 08:08:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096515;
-        bh=GzMHvU5YZPPPhdYnAemrHx5q6lnHr6D06MopjFY/qFc=;
+        s=default; t=1596096511;
+        bh=4UDb7Ao8BAv6BbrlbobXgiF4d3R3K3FUqdy1c8fpSGU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gdoHoLIdOawzfxPNOmO5u2LU7sW/Yj5/ZRddzrw9UKb9ITW7+/TXFuCmUh1NAKaLT
-         0fvkStLMR6mZLiPpVHDz3mANpouQYqrgikGZpt7kAM+QVE0pUYwibgrBVdkdd8Qv87
-         Lj9KAp1+SV9sTQ4NM11+vqPuhuGAn3HSH5L4uJ6Q=
+        b=M0E/pIhkKbLkHiIurii+TjYPC/1Hs1rQ5y3K8JEXkrsPuW8IXFDZWlRvZ9rq1kK9V
+         3fbkZjTU/jB6hww5jo10KYPctgKRXBEM48N5AZTTeOI5uaCLBv9CxEKriZPGrcvzba
+         jEwFNciYSjOokupYHwstN7093JtzHaNemsyH1GIY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 05/61] xtensa: update *pos in cpuinfo_op.next
-Date:   Thu, 30 Jul 2020 10:04:23 +0200
-Message-Id: <20200730074421.072010947@linuxfoundation.org>
+Subject: [PATCH 4.9 04/61] xtensa: fix __sync_fetch_and_{and,or}_4 declarations
+Date:   Thu, 30 Jul 2020 10:04:22 +0200
+Message-Id: <20200730074421.020429541@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074420.811058810@linuxfoundation.org>
 References: <20200730074420.811058810@linuxfoundation.org>
@@ -61,33 +61,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Max Filippov <jcmvbkbc@gmail.com>
 
-[ Upstream commit 0d5ab144429e8bd80889b856a44d56ab4a5cd59b ]
+[ Upstream commit 73f9941306d5ce030f3ffc7db425c7b2a798cf8e ]
 
-Increment *pos in the cpuinfo_op.next to fix the following warning
-triggered by cat /proc/cpuinfo:
+Building xtensa kernel with gcc-10 produces the following warnings:
+  arch/xtensa/kernel/xtensa_ksyms.c:90:15: warning: conflicting types
+    for built-in function ‘__sync_fetch_and_and_4’;
+    expected ‘unsigned int(volatile void *, unsigned int)’
+    [-Wbuiltin-declaration-mismatch]
+  arch/xtensa/kernel/xtensa_ksyms.c:96:15: warning: conflicting types
+    for built-in function ‘__sync_fetch_and_or_4’;
+    expected ‘unsigned int(volatile void *, unsigned int)’
+    [-Wbuiltin-declaration-mismatch]
 
-  seq_file: buggy .next function c_next did not update position index
+Fix declarations of these functions to avoid the warning.
 
 Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/xtensa/kernel/setup.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/xtensa/kernel/xtensa_ksyms.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/xtensa/kernel/setup.c b/arch/xtensa/kernel/setup.c
-index b9beae798d727..8679fa3062060 100644
---- a/arch/xtensa/kernel/setup.c
-+++ b/arch/xtensa/kernel/setup.c
-@@ -830,7 +830,8 @@ c_start(struct seq_file *f, loff_t *pos)
- static void *
- c_next(struct seq_file *f, void *v, loff_t *pos)
- {
--	return NULL;
-+	++*pos;
-+	return c_start(f, pos);
+diff --git a/arch/xtensa/kernel/xtensa_ksyms.c b/arch/xtensa/kernel/xtensa_ksyms.c
+index 9210b9cc4ec96..455c6ec4086c2 100644
+--- a/arch/xtensa/kernel/xtensa_ksyms.c
++++ b/arch/xtensa/kernel/xtensa_ksyms.c
+@@ -82,13 +82,13 @@ void __xtensa_libgcc_window_spill(void)
  }
+ EXPORT_SYMBOL(__xtensa_libgcc_window_spill);
  
- static void
+-unsigned long __sync_fetch_and_and_4(unsigned long *p, unsigned long v)
++unsigned int __sync_fetch_and_and_4(volatile void *p, unsigned int v)
+ {
+ 	BUG();
+ }
+ EXPORT_SYMBOL(__sync_fetch_and_and_4);
+ 
+-unsigned long __sync_fetch_and_or_4(unsigned long *p, unsigned long v)
++unsigned int __sync_fetch_and_or_4(volatile void *p, unsigned int v)
+ {
+ 	BUG();
+ }
 -- 
 2.25.1
 
