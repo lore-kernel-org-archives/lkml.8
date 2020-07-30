@@ -2,69 +2,153 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F800C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34296C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A84B22BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:10:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596129008;
-	bh=gvE5h8zht06L+i1mq4DL8H+us7Brwv5uOG4eCZFu1Ts=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=arn+00DyqTxrZvuy1tK5kaO30jrWYJ7P+eE1Va0vJ8Qdmvq1fDjSqAm2RCvw6SP5V
-	 WhQAFgbLCOVyb7ryBr4uJAo1LZb4vQefFRFxO1ggEqlWqMgno5DBkS+tXgztzpoyFH
-	 ysfitGBmZIj53hHn1fC4XnCu6DuZkiPwK2pzzazY=
+	by mail.kernel.org (Postfix) with ESMTP id 1A9362082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 17:12:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730221AbgG3RKG (ORCPT
+        id S1729843AbgG3RMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 13:10:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34774 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728368AbgG3RKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 13:10:04 -0400
-Subject: Re: [GIT PULL] io_uring fixes for 5.8-rc
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596129004;
-        bh=gvE5h8zht06L+i1mq4DL8H+us7Brwv5uOG4eCZFu1Ts=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=1UaBTERbDtbqxEWmHHLB2ziQMcoZjBpGINVyPl7X8OCgjpdG1YaMFnGWBNKudn+DA
-         3qwZ/BrHy5VTxUHDDrAD876dcTwK57umhU0zMSwWdQrm3+wlKe1IDRioltS1Mu9obs
-         wGmQxBLKMRPHfwb+QWscKfB4nIuZi+vaPEV6oFsg=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <c3965487-1654-17e8-0d7e-9e8078d5dd6e@kernel.dk>
-References: <c3965487-1654-17e8-0d7e-9e8078d5dd6e@kernel.dk>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <c3965487-1654-17e8-0d7e-9e8078d5dd6e@kernel.dk>
-X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git
- tags/io_uring-5.8-2020-07-30
-X-PR-Tracked-Commit-Id: 4ae6dbd683860b9edc254ea8acf5e04b5ae242e5
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0513b9d75c07cbcdfda3778b636d3d131d679eb1
-Message-Id: <159612900434.480.3513588991201494064.pr-tracker-bot@kernel.org>
-Date:   Thu, 30 Jul 2020 17:10:04 +0000
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Thu, 30 Jul 2020 13:12:00 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57750 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726581AbgG3RL7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 13:11:59 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 5282C803202F;
+        Thu, 30 Jul 2020 17:11:57 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id AIqB7a2FtJ5j; Thu, 30 Jul 2020 20:11:56 +0300 (MSK)
+Date:   Thu, 30 Jul 2020 20:11:55 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Rob Herring <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 5/5] dmaengine: dw: Add DMA-channels mask cell support
+Message-ID: <20200730171155.rywxoibglse2pc3h@mobilestation>
+References: <20200730154545.3965-1-Sergey.Semin@baikalelectronics.ru>
+ <20200730154545.3965-6-Sergey.Semin@baikalelectronics.ru>
+ <20200730164146.GX3703480@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200730164146.GX3703480@smile.fi.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 30 Jul 2020 09:19:01 -0600:
+On Thu, Jul 30, 2020 at 07:41:46PM +0300, Andy Shevchenko wrote:
+> On Thu, Jul 30, 2020 at 06:45:45PM +0300, Serge Semin wrote:
+> > DW DMA IP-core provides a way to synthesize the DMA controller with
+> > channels having different parameters like maximum burst-length,
+> > multi-block support, maximum data width, etc. Those parameters both
+> > explicitly and implicitly affect the channels performance. Since DMA slave
+> > devices might be very demanding to the DMA performance, let's provide a
+> > functionality for the slaves to be assigned with DW DMA channels, which
+> > performance according to the platform engineer fulfill their requirements.
+> > After this patch is applied it can be done by passing the mask of suitable
+> > DMA-channels either directly in the dw_dma_slave structure instance or as
+> > a fifth cell of the DMA DT-property. If mask is zero or not provided, then
+> > there is no limitation on the channels allocation.
+> > 
+> > For instance Baikal-T1 SoC is equipped with a DW DMAC engine, which first
+> > two channels are synthesized with max burst length of 16, while the rest
+> > of the channels have been created with max-burst-len=4. It would seem that
+> > the first two channels must be faster than the others and should be more
+> > preferable for the time-critical DMA slave devices. In practice it turned
+> > out that the situation is quite the opposite. The channels with
+> > max-burst-len=4 demonstrated a better performance than the channels with
+> > max-burst-len=16 even when they both had been initialized with the same
+> > settings. The performance drop of the first two DMA-channels made them
+> > unsuitable for the DW APB SSI slave device. No matter what settings they
+> > are configured with, full-duplex SPI transfers occasionally experience the
+> > Rx FIFO overflow. It means that the DMA-engine doesn't keep up with
+> > incoming data pace even though the SPI-bus is enabled with speed of 25MHz
+> > while the DW DMA controller is clocked with 50MHz signal. There is no such
+> > problem has been noticed for the channels synthesized with
+> > max-burst-len=4.
+> 
+> ...
+> 
 
-> git://git.kernel.dk/linux-block.git tags/io_uring-5.8-2020-07-30
+> > +	if (dws->channels && !(dws->channels & dwc->mask))
+> 
+> You can drop the first check if...
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0513b9d75c07cbcdfda3778b636d3d131d679eb1
+See below.
 
-Thank you!
+> 
+> > +		return false;
+> 
+> ...
+> 
+> > +	if (dma_spec->args_count >= 4)
+> > +		slave.channels = dma_spec->args[3];
+> 
+> ...you apply sane default here or somewhere else.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Alas I can't because dw_dma_slave structure is defined all over the kernel
+drivers/spi/spi-dw-dma.c
+drivers/spi/spi-pxa2xx-pci.c
+drivers/tty/serial/8250/8250_lpss.c
+
+These devices aren't always placed on the OF-based platforms. In that case the
+corresponding DMA-channels won't be requested by means of the dw_dma_of_xlate()
+method. So we have to preserve a default behavior if dws->channels is zero.
+
+> 
+> ...
+> 
+> > +		    fls(slave.channels) > dw->pdata->nr_channels))
+> 
+
+> Does it really make sense?
+
+It does to prevent the clients to specify an invalid channels mask, which can't
+have bits set higher than the number of channels the engine supports.
+
+> 
+> I think it can also be simplified to faster op, i.e.
+> 	BIT(nr_channels) < slave.channels
+> (but check for off-by-one errors)
+
+Makes sense. Thanks. I'll replace it with the next statement:
+slave.channels >= BIT(dw->pdata->nr_channels)
+
+> 
+> ...
+> 
+
+> > + * @channels:	mask of the channels permitted for allocation (zero
+> > + *		value means any)
+> 
+> Perhaps on one line?
+
+I don't really care. If you insist on that, I'll make it a single line, but it
+will be over 80 columns. 85 to be exact.
+
+-Sergey
+
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
