@@ -2,50 +2,51 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB85CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B2FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89DDE2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FC7720842
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096737;
-	bh=Ox1LBgxq2BbH8C3xaLYweJKjWUPcht9asvvNmBpt6Ls=;
+	s=default; t=1596096742;
+	bh=hefa8JMmSI12GUN8k4OJXtkfvq+zxJV0gbxbA/x2908=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D8xWeYXF4MiYX36DQflt+eTPB2/kFPSBSKRQm+s1wUKIC3vOBpvdkEfzSBdl3khPY
-	 dS0pIZy5jZrs8Rd/D7ALTJsEi86nDnbAKBu7lZ+omOz7j+62MqIyBWRHz/wECtW/4A
-	 FX41im015Vhddy5Cvklc6l17kSa1h/sIHQxJB5Mw=
+	b=RbrBeccNV3b8auAahZLi9UTZVFDjxo3oF2HNg643I2rd+QqvnBjVFi3XGrR8XPHVQ
+	 c0gKIGww7E91kFv6BXq1Lq+EAQVyZJ2fWRX7aOLepHyIgxdqe6ihni0lEQM/xkmGj0
+	 7qaqN5v297Hrzc5rxAPxsuZh5lswOsTcqtBkIwL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730020AbgG3IMQ (ORCPT
+        id S1729018AbgG3IMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:12:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50894 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:12:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729987AbgG3ILs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:11:48 -0400
+        id S1729614AbgG3IMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:12:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCC0720842;
-        Thu, 30 Jul 2020 08:11:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36D942074B;
+        Thu, 30 Jul 2020 08:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096707;
-        bh=Ox1LBgxq2BbH8C3xaLYweJKjWUPcht9asvvNmBpt6Ls=;
+        s=default; t=1596096720;
+        bh=hefa8JMmSI12GUN8k4OJXtkfvq+zxJV0gbxbA/x2908=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sd0j++wAoTET2TzmgrI67NoiewuV6Vz2a3CZWK4H8znLGVaQRVfX04YrSAxi6wgzU
-         yKSP7cOS2jGu5UgjKk6AW7w14uYXsSRngkzoRZ8MdRLDeg4KTAvaBV/iYOk+24a7fp
-         3IpOFZJKOhr/9maP9NgKJaFrTsw1JwokZr7dLmWc=
+        b=1qJ0FXPY3g4dwVFYyPkeP4kD1wkWkqhXgPuP3TjxLpL3wRSfJbxf0UPlp/uDEiSUw
+         xUeDYn9GXgVd3VzQUbdIdTVU53CMIcNAf3ikN3CJveYf0aa8hyD2GGCtYpiC6ym/Un
+         ct7SB8feR8lbxXSH+YdBDuszAMl0E0qla3ridT+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.4 29/54] staging: comedi: ni_6527: fix INSN_CONFIG_DIGITAL_TRIG support
-Date:   Thu, 30 Jul 2020 10:05:08 +0200
-Message-Id: <20200730074422.606886401@linuxfoundation.org>
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 04/54] xtensa: fix __sync_fetch_and_{and,or}_4 declarations
+Date:   Thu, 30 Jul 2020 10:04:43 +0200
+Message-Id: <20200730074421.427082448@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
 References: <20200730074421.203879987@linuxfoundation.org>
@@ -58,51 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Max Filippov <jcmvbkbc@gmail.com>
 
-commit f07804ec77d77f8a9dcf570a24154e17747bc82f upstream.
+[ Upstream commit 73f9941306d5ce030f3ffc7db425c7b2a798cf8e ]
 
-`ni6527_intr_insn_config()` processes `INSN_CONFIG` comedi instructions
-for the "interrupt" subdevice.  When `data[0]` is
-`INSN_CONFIG_DIGITAL_TRIG` it is configuring the digital trigger.  When
-`data[2]` is `COMEDI_DIGITAL_TRIG_ENABLE_EDGES` it is configuring rising
-and falling edge detection for the digital trigger, using a base channel
-number (or shift amount) in `data[3]`, a rising edge bitmask in
-`data[4]` and falling edge bitmask in `data[5]`.
+Building xtensa kernel with gcc-10 produces the following warnings:
+  arch/xtensa/kernel/xtensa_ksyms.c:90:15: warning: conflicting types
+    for built-in function ‘__sync_fetch_and_and_4’;
+    expected ‘unsigned int(volatile void *, unsigned int)’
+    [-Wbuiltin-declaration-mismatch]
+  arch/xtensa/kernel/xtensa_ksyms.c:96:15: warning: conflicting types
+    for built-in function ‘__sync_fetch_and_or_4’;
+    expected ‘unsigned int(volatile void *, unsigned int)’
+    [-Wbuiltin-declaration-mismatch]
 
-If the base channel number (shift amount) is greater than or equal to
-the number of channels (24) of the digital input subdevice, there are no
-changes to the rising and falling edges, so the mask of channels to be
-changed can be set to 0, otherwise the mask of channels to be changed,
-and the rising and falling edge bitmasks are shifted by the base channel
-number before calling `ni6527_set_edge_detection()` to change the
-appropriate registers.  Unfortunately, the code is comparing the base
-channel (shift amount) to the interrupt subdevice's number of channels
-(1) instead of the digital input subdevice's number of channels (24).
-Fix it by comparing to 32 because all shift amounts for an `unsigned
-int` must be less than that and everything from bit 24 upwards is
-ignored by `ni6527_set_edge_detection()` anyway.
+Fix declarations of these functions to avoid the warning.
 
-Fixes: 110f9e687c1a8 ("staging: comedi: ni_6527: support INSN_CONFIG_DIGITAL_TRIG")
-Cc: <stable@vger.kernel.org> # 3.17+
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Link: https://lore.kernel.org/r/20200717145257.112660-2-abbotti@mev.co.uk
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/comedi/drivers/ni_6527.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/xtensa/kernel/xtensa_ksyms.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/staging/comedi/drivers/ni_6527.c
-+++ b/drivers/staging/comedi/drivers/ni_6527.c
-@@ -341,7 +341,7 @@ static int ni6527_intr_insn_config(struc
- 		case COMEDI_DIGITAL_TRIG_ENABLE_EDGES:
- 			/* check shift amount */
- 			shift = data[3];
--			if (shift >= s->n_chan) {
-+			if (shift >= 32) {
- 				mask = 0;
- 				rising = 0;
- 				falling = 0;
+diff --git a/arch/xtensa/kernel/xtensa_ksyms.c b/arch/xtensa/kernel/xtensa_ksyms.c
+index e2dd9109df633..00f17b5ec9c92 100644
+--- a/arch/xtensa/kernel/xtensa_ksyms.c
++++ b/arch/xtensa/kernel/xtensa_ksyms.c
+@@ -82,13 +82,13 @@ void __xtensa_libgcc_window_spill(void)
+ }
+ EXPORT_SYMBOL(__xtensa_libgcc_window_spill);
+ 
+-unsigned long __sync_fetch_and_and_4(unsigned long *p, unsigned long v)
++unsigned int __sync_fetch_and_and_4(volatile void *p, unsigned int v)
+ {
+ 	BUG();
+ }
+ EXPORT_SYMBOL(__sync_fetch_and_and_4);
+ 
+-unsigned long __sync_fetch_and_or_4(unsigned long *p, unsigned long v)
++unsigned int __sync_fetch_and_or_4(volatile void *p, unsigned int v)
+ {
+ 	BUG();
+ }
+-- 
+2.25.1
+
 
 
