@@ -2,125 +2,203 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2805C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 20:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 320EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 20:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 871FD20838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 20:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 095D92083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 20:47:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="pjbecsg8";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="b3LJUawO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbgG3UpW (ORCPT
+        id S1728612AbgG3UrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 16:45:22 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:33665 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728581AbgG3UpV (ORCPT
+        Thu, 30 Jul 2020 16:47:05 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:5346 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726539AbgG3UrE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 16:45:21 -0400
-Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M6lYs-1k8OYb2gtq-008McS; Thu, 30 Jul 2020 22:45:19 +0200
-Received: by mail-qt1-f181.google.com with SMTP id k18so21393727qtm.10;
-        Thu, 30 Jul 2020 13:45:19 -0700 (PDT)
-X-Gm-Message-State: AOAM531J2zhpQnBnSWy7WpypqOSy3L7fHv9AgaQCkKFsPxJO7hqJAoLM
-        rIFLexxTo/WXqqRM2SXwJ1ajKKLRGxEtFVcZ62Q=
-X-Google-Smtp-Source: ABdhPJwwPO9hZwLZNagtwDmktY5mx1mcmsBMR1k9OLKFMguOZRxKmQmtyn1wb9YuRx7t2pYE3m7tLxnTNippxiVQFmY=
-X-Received: by 2002:ac8:688e:: with SMTP id m14mr527498qtq.7.1596141918397;
- Thu, 30 Jul 2020 13:45:18 -0700 (PDT)
+        Thu, 30 Jul 2020 16:47:04 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06UKjafP004298;
+        Thu, 30 Jul 2020 13:46:50 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=98L+6IA6qjO2g67W2tKi8j3Hlywts0AhMj8JLqqcEVc=;
+ b=pjbecsg8j+wuDZ1aXVMyAbzmvWCrmzAOi5PjRmrnfWsatfl/vJ5mVne/5YipeQLq119/
+ boJs2UUdTLyYIFbZ+NU+NsBKpNRuTt8TxoDL9OXq6Mu8hbbRUkpAfv/Gy65oOBsDpX1i
+ NH+G7zUtSLoK1sX278wWM7pGtG+N0L6goh8= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 32kcbuxtwp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 30 Jul 2020 13:46:50 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 30 Jul 2020 13:46:49 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cvTo9hjriUnNpT4AvUeYfxDV62Re4pEsA1OznMg43MfkLPN3FQ+xtbCrC3S+eH181x0h2Kq4KOJK1Ws2BsZRZNtp8O6aRt/XwzsRx0FA7LyT0oXtDz/4N7zQWfsGuZbpT6zXcc3+jHMxLcyguX6eGfQ86zaBKYXJxWuA1+MqTjVfIQEl5waSO7GCLZrUI5kXYydkd0lyP7KgPeilpagCPLtehs5H3+72UUggl+RVI/+kOHVL/8oRAegy9PvZ4bH+XDcl5jJpY89YEJa7L9Ha0v/JkPenSExLGRNf+u/0ndQ0VZ2AFTFkESN7JoGp7VZnmY4i0g48PoQ3aCNLwHISXg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=98L+6IA6qjO2g67W2tKi8j3Hlywts0AhMj8JLqqcEVc=;
+ b=Px0OUCrCqHQZWKh+LO0VBPxfhmwMrXzY0YP/RSd5oeu68FJXhNsBA/7MJAaEt4k2pMtxFxooOBANsZtE8ZxTLLffEKTAgrlJ/RfjZYJsGZF7zXyqo9na3xbVsJPJBPEp1tXuNY25s4y9ZIOm1Ohb4sSKEADVQzZ06lDyzmQh2RyGlIZCBMHeiYp/KPG44+9XKVkL3FLgs8CnOSlSllXAGmCxnBUY3NWfw8qwTxVSJOTMnzL7yfbMySFHE1EgZJKrN7T6gJaDfrIdCLQLaP5kExV599TaL46KlC8bWC8VzuwkuNFqsRAV7fo9ZoK/ftMY9ngDZNtQwLm7V09M92mMFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=98L+6IA6qjO2g67W2tKi8j3Hlywts0AhMj8JLqqcEVc=;
+ b=b3LJUawO1dZ01X32Wc+fkkyswegDT6s80+OnrRBro14GtPOzsXgpEqjs5MDsW4wESmMSs15VpsmTNoDNBx8OwB5nvB9L/dz3Hu3iyQp6hz6MXorPJefgzeQDbeZnQnQaPjcIJ14o76Xl1fJ0R0bnqtxMHKlTIj5EcwUNEoWDC7Q=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB2870.namprd15.prod.outlook.com (2603:10b6:a03:ff::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Thu, 30 Jul
+ 2020 20:46:31 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::354d:5296:6a28:f55e]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::354d:5296:6a28:f55e%6]) with mapi id 15.20.3239.017; Thu, 30 Jul 2020
+ 20:46:31 +0000
+Date:   Thu, 30 Jul 2020 13:46:28 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+CC:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH bpf-next v2 29/35] bpf: libbpf: cleanup RLIMIT_MEMLOCK
+ usage
+Message-ID: <20200730204628.GA712334@carbon.dhcp.thefacebook.com>
+References: <20200727184506.2279656-1-guro@fb.com>
+ <20200727184506.2279656-30-guro@fb.com>
+ <CAEf4BzZjbK4W1fmW07tMOJsRGCYNeBd6eqyFE_fSXAK6+0uHhw@mail.gmail.com>
+ <20200727231538.GA352883@carbon.DHCP.thefacebook.com>
+ <CAEf4BzamC4RQrQuAgH1DK-qcW3cKFuBEbYRhVz-8UMU+mbTcvA@mail.gmail.com>
+ <20200730013836.GA637520@carbon.dhcp.thefacebook.com>
+ <CAEf4BzaZhyus7Kd-08vrVW9sr6gHGj1mCBgUY-NCWUOfdEJgHw@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzaZhyus7Kd-08vrVW9sr6gHGj1mCBgUY-NCWUOfdEJgHw@mail.gmail.com>
+X-ClientProxiedBy: BY5PR16CA0002.namprd16.prod.outlook.com
+ (2603:10b6:a03:1a0::15) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
 MIME-Version: 1.0
-References: <20200728141946.426245-1-yepeilin.cs@gmail.com>
- <20200729115157.8519-1-yepeilin.cs@gmail.com> <20200729125820.GB1840@kadam>
- <f2cf6137-987a-ab41-d88a-6828d46c255f@linux.com> <CAK8P3a20SEoYCrp3jOK32oZc9OkiPv+1KTjNZ2GxLbHpY4WexQ@mail.gmail.com>
- <202007301056.D3BD1805B0@keescook>
-In-Reply-To: <202007301056.D3BD1805B0@keescook>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 30 Jul 2020 22:45:02 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2oUgdaYicdHwWvCY-HqjrcBAEzYA5yc5Gw14RLLoLdug@mail.gmail.com>
-Message-ID: <CAK8P3a2oUgdaYicdHwWvCY-HqjrcBAEzYA5yc5Gw14RLLoLdug@mail.gmail.com>
-Subject: Re: [Linux-kernel-mentees] [PATCH v2] block/floppy: Prevent
- kernel-infoleak in raw_cmd_copyout()
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Denis Efremov <efremov@linux.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Peilin Ye <yepeilin.cs@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:3L5qp2rCNnf3YKbaKvTM/I14TgkbxDLotK+kqGmDy5kv4EqWsvY
- 3YK9zFJKiRQNiKkcEWviVvPXF2YKH9azX3merS/u7E5ku0lGK2BEe6BuWGv7kY5h5FlIikK
- YUCRJcPj1GqQ9yFyjA1YYd4Tx3YaLrrASAx2OPJt7Nc46c/Df2RhdUBV3jNqAkc7PhvNDJf
- gMZxAXzaYFpayG0pNqxwA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/5YeVEoM2Sg=:nT7UgV1osmuaiQ4kDFWQPL
- nd3TosOlVgCBOmD3RUGWJN22gSmwUE7EKzPxDnZy7ekwzA/kjt034CrsBrKVcd011YdfhXdxa
- q7XCmk/Z57h7/21fuXc0gQj9JC6w0qaz84NiveAb0Ahw6tbt04iIQmVFjfojovGrZtwwCk9M8
- A7TCkJK426vPExANzFKy3+TNNs/NvRbZ1e5VgGLg1/7AyaIkZh7zDl4M0FCEGzMvH1ETYh1pe
- e8IkSj64NP1KycYRc5yymYVUOAhaze3Y1a4BaszFwnuNQY/UYoLNywDADLdau7LS8hEtXfQ+6
- gSs8z3CwtnIL03aeIEKWQ5k5XfdTmHnhBGl+eaL2XMkmfmh6r2tLBibQvXwPuZ5d2j7LMQ2vn
- SdKAVDvQcwFJvs5eIsmJhiKApw8IPfgKRcJtn39eYtNjyqdD2IPYpNrdmGXTP6eFBtf9/FJUV
- DIdgVzo9ye8+OIySluFU/GLu6r+gcKlJj9GiieJPkeScAs3JZpOXqdpqXZJEmpQOdyTSPcRzQ
- TQqe9XaM+I+APLPH0Er3tpa9AzL/sjRhvs2aSKDBLcnOBvKC2Du/Gw0jsfwwWokEWkeaeXVNr
- QtQmgSUi7PYw9psITg799Hsje4dzEpR2DvOFqgPpF5Y69q7SlLtQx/u2bRVKHhYyxvQV2M8XV
- /3PSmXZRV642274DUpzIOyREZMx4UM6M3wH3iLoTewvi+t2G/42R5xqLc3Tno3mOum5iqjsqI
- XVTOKmvaAaQMbvpwCWHvrg7ObrNx8eNfViX3R2nEMFe66FQPBeZ0VwX6hqelpkssMcdZnaGJh
- NvlMHyamLX64dCEs5JvR/NsRkbrSIuxQLzUnfgad65ZVdtK2MbwKdHB34iXBQKbKQgaj4gS
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:aebb) by BY5PR16CA0002.namprd16.prod.outlook.com (2603:10b6:a03:1a0::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Thu, 30 Jul 2020 20:46:31 +0000
+X-Originating-IP: [2620:10d:c090:400::5:aebb]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8b8f2fae-872a-4860-6265-08d834c9a3c4
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2870:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB2870F4FC466877DD72874667BE710@BYAPR15MB2870.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hf4sHHQQ3cXapE+HyQz/2yUZtHertccavJdbMY96jbihFEns6yqjAUjN28o/dvxaHeLw+vvGWYBWo/F0r94lde2Xd9zhvJkhBJsYjK1byx+t8rU+u37z7yftwJT2RWcJ0Dz8y8sKVKO79vPgp/beFiU+dBcXaS4HuCQLJBrA2eScfL5QCTvVbJ0+R0c7GZeehr1220+AkARhV4FMFXbLSTCNGo8p3j+0v+kbvN9ccx2uwgkfVibCAPxLr3r2MI+kTPEy0+JvDC49RuXjfPb8wHm8VLpJHF5TE0Zy31GIWYdVLxpWS/pmWB4T8ehs0AqhyZRqYnYLdHrRMOfFpFT48g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(136003)(366004)(396003)(376002)(346002)(66946007)(66556008)(9686003)(6666004)(86362001)(8676002)(6916009)(55016002)(1076003)(66476007)(8936002)(316002)(83380400001)(33656002)(186003)(16526019)(7696005)(54906003)(6506007)(52116002)(478600001)(5660300002)(2906002)(4326008)(53546011);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: 0QZWwZl+wQsz4S+pUc3bz1O0jGU7qQI2PS/DiLOxW14bMcygbv/3drJ2ErlWtIOOBanYU+7gUPADeYWQngTY1CfmLqfJy8WN/WCArQ8tyXHfYkweNG78Xu4ulEYz1l5bHc1gn7d1e6GmdkvBObPww3G3S1jIimG5g5e44SpvRhRC2mkp8f/HBJwon0TNBqDQ4d4+G6QvKShHEUwMLVOXQpPXEOs68Sn+UA0pM7SJFXpQ3feGpMssmNvMOxZ8DqzwkKSttYBXcXQftXoJuz28SvAF63/SBamKNUarVeBlRXymlhZUYHVj52AyTkT1FWcRjdNTy0MEl5QEToFpC5ntf/HOdxfdpBn+Kn0h/9ScNIaqpMgOOF/j/JuY2HOV+3UbywjHD6lGF0lBzGeaZzrHU0gYlZ/BWryPFb3xJOdDZcTYAv8Caz8R1lY1IsmhaEc2tXXnA6ocyHqzAvxARnZfG6Vj9m7miV7DLd7UWBDClwbP/8n/IWgie7t5s4H4tmuYHmaEkWlM5xxR/RSbUOI/7A==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8b8f2fae-872a-4860-6265-08d834c9a3c4
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4136.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 20:46:31.5471
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Am3La02DP4YQO2lIyGGGVnDQnB7YfWMW+1kxFCINeSf4rorgBe1OWErfhaoeNdlS
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2870
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-30_15:2020-07-30,2020-07-30 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
+ bulkscore=0 clxscore=1015 suspectscore=1 phishscore=0 malwarescore=0
+ priorityscore=1501 adultscore=0 spamscore=0 impostorscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007300146
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 8:10 PM Kees Cook <keescook@chromium.org> wrote:
-> On Thu, Jul 30, 2020 at 10:11:07AM +0200, Arnd Bergmann wrote:
->
-> test_stackinit.c intended to use six cases (where "full" is in the sense
-> of "all members are named", this is intentionally testing the behavior
-> of padding hole initialization):
-
-Ok, so I read that correctly, thanks for confirming.
-
+On Thu, Jul 30, 2020 at 12:39:40PM -0700, Andrii Nakryiko wrote:
+> On Wed, Jul 29, 2020 at 6:38 PM Roman Gushchin <guro@fb.com> wrote:
 > >
-> >    struct test_big_hole var = *arg;
->
-> So this one is a "whole structure copy" which I didn't have any tests
-> for, since I'd (perhaps inappropriately) assumed would be accomplished
-> with memcpy() internally, which means the incoming "*arg"'s padding holes
-> would be copied as-is. If the compiler is actually doing per-member copies
-> and leaving holes in "var" untouched, that's unexpected, so clearly that
-> needs to be added to test_stackinit.c! :)
-
-For some reason I remembered this not turning into a memcpy()
-somewhere, but I can't reproduce it in any of my recent attempts,
-just like what Denis found.
-
-> > or the a constructor like
+> > On Mon, Jul 27, 2020 at 10:59:33PM -0700, Andrii Nakryiko wrote:
+> > > On Mon, Jul 27, 2020 at 4:15 PM Roman Gushchin <guro@fb.com> wrote:
+> > > >
+> > > > On Mon, Jul 27, 2020 at 03:05:11PM -0700, Andrii Nakryiko wrote:
+> > > > > On Mon, Jul 27, 2020 at 12:21 PM Roman Gushchin <guro@fb.com> wrote:
+> > > > > >
+> > > > > > As bpf is not using memlock rlimit for memory accounting anymore,
+> > > > > > let's remove the related code from libbpf.
+> > > > > >
+> > > > > > Bpf operations can't fail because of exceeding the limit anymore.
+> > > > > >
+> > > > >
+> > > > > They can't in the newest kernel, but libbpf will keep working and
+> > > > > supporting old kernels for a very long time now. So please don't
+> > > > > remove any of this.
+> > > >
+> > > > Yeah, good point, agree.
+> > > > So we just can drop this patch from the series, no other changes
+> > > > are needed.
+> > > >
+> > > > >
+> > > > > But it would be nice to add a detection of whether kernel needs a
+> > > > > RLIMIT_MEMLOCK bump or not. Is there some simple and reliable way to
+> > > > > detect this from user-space?
 > >
-> >   struct test_big_hole var;
-> >   var = (struct test_big_hole){ .one = arg->one, .two=arg->two, .three
-> > = arg->three, .four = arg->four };
+> > Btw, do you mean we should add a new function to the libbpf API?
+> > Or just extend pr_perm_msg() to skip guessing on new kernels?
 > >
-> > Kees, do you know whether those two would behave differently?
-> > Would it make sense to also check for those, or am I perhaps
-> > misreading your code and it already gets checked?
->
-> I *think* the above constructor would be covered under "full runtime
-> init", but it does also seem likely it would be handled similarly to
-> the "whole structure copy" in the previous example.
+> 
+> I think we have to do both. There is libbpf_util.h in libbpf, we could
+> add two functions there:
+> 
+> - libbpf_needs_memlock() that would return true/false if kernel is old
+> and needs RLIMIT_MEMLOCK
+> - as a convenience, we can also add libbpf_inc_memlock_by() and
+> libbpf_set_memlock_to(), which will optionally (if kernel needs it)
+> adjust RLIMIT_MEMLOCK?
+> 
+> I think for your patch set, given it's pretty big already, let's not
+> touch runqslower, libbpf, and perf code (I think samples/bpf are fine
+> to just remove memlock adjustment), and we'll deal with detection and
+> optional bumping of RLIMIT_MEMLOCK as a separate patch once your
+> change land.
 
-I would assume that at least with C99 it is more like the
-"whole structure copy", based on the standard language of
+Ok, works for me. Let me repost the kernel part + samples as v3.
 
-  "The value of the compound literal is that of an unnamed
-  object initialized by the initializer list. If the compound literal
-  occurs outside the body of a function, the object has static
-  storage duration; otherwise, it has automatic storage duration
-  associated with the enclosing block."
+> 
+> 
+> > The problem with the latter one is that it's called on a failed attempt
+> > to create a map, so unlikely we'll be able to create a new one just to test
+> > for the "memlock" value. But it also raises a question what should we do
+> > if the creation of this temporarily map fails? Assume the old kernel and
+> > bump the limit?
+> 
+> Yeah, I think we'll have to make assumptions like that. Ideally, of
+> course, detection of this would be just a simple sysfs value or
+> something, don't know. Maybe there is already a way for kernel to
+> communicate something like that?
 
-> I will go add more tests...
+For instance, we've /sys/kernel/cgroup/features for cgroup features:
+it's a list of supported mount options for cgroup fs.
 
-Thanks!
+Idk if bpf deserves something similar, but as far as I remember,
+we've discussed it a couple of years ago, and at that time the consensus
+was that it's too hard to keep such list uptodate, so the userspace should
+just try and fail. Idk if it's still valid.
 
-         Arnd
+Thank you!
