@@ -2,295 +2,82 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2013C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81E7F2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 901C42075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:22:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Xz+kI6H3"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Uwp9v1rd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbgG3KWY (ORCPT
+        id S1729102AbgG3KWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 30 Jul 2020 06:22:25 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:28213 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728960AbgG3KWY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Jul 2020 06:22:24 -0400
-Received: from mail-eopbgr60040.outbound.protection.outlook.com ([40.107.6.40]:31652
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725892AbgG3KWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 06:22:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OHDmItlMHs2eyw5D4ialBMdL1UtW8/UyO9tcKEpJANV3Erlfz7g3rkrncIw30z8m/JlVvgcM4rUPRliOf7ZA6ruQDR/wHrfpCnXZpfOH0telDjqP9mSwF6WfTWD6V1UVCSnDNIzCHk5zljQWinJN5uu1Z5USbTUYOjbQvJYnN8Qg1f/pGyKdWGy0VSHcYrYDrJyQdKLLbLWxHLZVKGwxHFQRlLJsdkCOZWeDZNmoN589wbtyymztOYFZi4WlZ2QfsrdepllkTkQnReQD03YITQOj1QelaotwBxjReJAFNKuqgGoi0eegZFoquM4QRtGGVGztj6NTv9fPrrmIYwIxDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Of4U4XOHDr+xMSmd+ykLhYWk8MZOY/1WCY7NtLT108o=;
- b=lIHdx+MRroKoS8Ado0t34LUSDSyQIFaIBFNXfOgas2ocDz75CYrMTuqWsdh9indg2UDjvpo0+wS+80FaFnmNUMQ+wdNAt9UEFGyAWq0kVb9djsnY0UIWk7eO1ifLrT/lFmBnHTKvrvZixx3InAtUP8LnyEj2yZlpAkZdkulmK4A2QMwSPw0+RCazbEYCrkEoBMf67oZsQ5/CyJMuelcOmeBgY7b7yxYAk78+EyTWzLTXhzFmXNbJXt70tkCvAH8YcrpdfEtDMninfGdHazqRLBkiSrTsImLtJL3oeWdjRUCe3fkr7Hxl8AL3DJSJeT67WcaSjT08fvKtGkw8chSj5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Of4U4XOHDr+xMSmd+ykLhYWk8MZOY/1WCY7NtLT108o=;
- b=Xz+kI6H3dIhP+Mh3illw4A6TketKBC2QTY0NrqycIO2d+W6qMiCu32IVtwUrWYTl+7UjW5xVGspaT7kwHnTmv4qkbjRFhOIoYddYfgEsYGiWTP3X/AVCzu1BQn6Nxl21Cosy1APrrN5KrOL6fs98cz7ToH1d8wQ//wvFnQwgyxk=
-Authentication-Results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-Received: from DB7PR04MB5099.eurprd04.prod.outlook.com (2603:10a6:10:18::30)
- by DB8PR04MB6924.eurprd04.prod.outlook.com (2603:10a6:10:11e::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Thu, 30 Jul
- 2020 10:22:19 +0000
-Received: from DB7PR04MB5099.eurprd04.prod.outlook.com
- ([fe80::f801:51e:28:f2a3]) by DB7PR04MB5099.eurprd04.prod.outlook.com
- ([fe80::f801:51e:28:f2a3%4]) with mapi id 15.20.3239.019; Thu, 30 Jul 2020
- 10:22:19 +0000
-From:   hongbo.wang@nxp.com
-To:     xiaoliang.yang_1@nxp.com, allan.nielsen@microchip.com,
-        po.liu@nxp.com, claudiu.manoil@nxp.com,
-        alexandru.marginean@nxp.com, vladimir.oltean@nxp.com,
-        leoyang.li@nxp.com, mingkai.hu@nxp.com, andrew@lunn.ch,
-        f.fainelli@gmail.com, vivien.didelot@gmail.com,
-        davem@davemloft.net, jiri@resnulli.us, idosch@idosch.org,
-        kuba@kernel.org, vinicius.gomes@intel.com,
-        nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        horatiu.vultur@microchip.com, alexandre.belloni@bootlin.com,
-        UNGLinuxDriver@microchip.com, ivecera@redhat.com
-Cc:     "hongbo.wang" <hongbo.wang@nxp.com>
-Subject: [PATCH v4 1/2] net: dsa: Add protocol support for 802.1AD when adding or   deleting vlan for dsa switch port
-Date:   Thu, 30 Jul 2020 18:25:04 +0800
-Message-Id: <20200730102505.27039-2-hongbo.wang@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200730102505.27039-1-hongbo.wang@nxp.com>
-References: <20200730102505.27039-1-hongbo.wang@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SGBP274CA0019.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::31)
- To DB7PR04MB5099.eurprd04.prod.outlook.com (2603:10a6:10:18::30)
+X-UUID: 9905e934e2b741ec9c4fe77dfe937de2-20200730
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=G6HeZr3xVZvC12t/cmuV9GZ3u6QAq9e6j97h583fwvQ=;
+        b=Uwp9v1rdAQL4Vjv7C5YAhFcOydTO5cJYmdMUJMINYkmLuZiLyfGi+6vuxqL0n7W2q/hvqpXQziu8jIbIz9a5xwx6HdAD8JBYZ/Lrcl5e5k+vH8OpMs17WZSjLWeQu97ERTIjDgnx/eI7NsRuVedh6A90QeYmts4AIpq/g6rD7RQ=;
+X-UUID: 9905e934e2b741ec9c4fe77dfe937de2-20200730
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <crystal.guo@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1684985185; Thu, 30 Jul 2020 18:22:20 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 30 Jul 2020 18:22:16 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 30 Jul 2020 18:22:16 +0800
+From:   Crystal Guo <crystal.guo@mediatek.com>
+To:     <linux@roeck-us.net>, <robh+dt@kernel.org>,
+        <matthias.bgg@gmail.com>
+CC:     <srv_heupstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
+        <seiya.wang@mediatek.com>
+Subject: add watchdog support for mt8192 
+Date:   Thu, 30 Jul 2020 18:21:45 +0800
+Message-ID: <1596104510-11113-1-git-send-email-crystal.guo@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from whb-OptiPlex-790.ap.freescale.net (119.31.174.73) by SGBP274CA0019.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17 via Frontend Transport; Thu, 30 Jul 2020 10:22:12 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [119.31.174.73]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 52bbf67a-6b4a-42e4-088b-08d8347270b6
-X-MS-TrafficTypeDiagnostic: DB8PR04MB6924:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB8PR04MB692420704B876D9E09ADA944E1710@DB8PR04MB6924.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Gv3X271q/znAYrAv9RU3urXTJSySwzWud5BCkCD1uUJhgmi6VLUWJpBlIbrT6qlL6R6cNFKh2qQNpYpCHaObI2+rGHHc/CdQP+FTEytClkFzZ8Yap0c6mFYhKEfCt+Dx9HPc51NvqvvtLkQ1ASwDNICTMV97gfgHfn3xh4Bvcz1Tjpdjr+dLJ4qZREMdB0RAJsE4RvKv8BpAQk56FvZA3CxdGtD9OGk84ZG75zCT4ZkHtegb2bOMXrrd26EfTF873n7wUaHPdutokcEcmbazZKTOkiOC+e5foYPMbo4wvQSTSX1HWTksfVmpm3A0XzYKX7k0ftyikUCV0poNqtNd0X939aiDnv18abMdPSV74LoU04YZaCpOuk/715V7uxeg
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB5099.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(376002)(366004)(136003)(396003)(2906002)(83380400001)(36756003)(66476007)(66946007)(4326008)(6666004)(66556008)(6486002)(7416002)(52116002)(8676002)(316002)(86362001)(6506007)(6512007)(9686003)(1076003)(26005)(2616005)(956004)(478600001)(186003)(5660300002)(8936002)(16526019)(921003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: lBm/Yz4evaVGvYI6Kbe5UxDbpu3ZpMAFM78/D42nM+fvrP74tAQwn0W6xT/aR+nvG65A67bnEcD/AZPoo36HDnOvkqRTNbLrKFXCNYB/gyAJ57wUGsQ5YhJvlihWxHtenAnrbFQZ4+CdfqPa3GjY58owCi0o8SoQWoHUwNv5HBhJy90XbH7X5ZBMJ3LplZNFCkzUK2BQta9CIZAuiTIOdQi6fcewWy4Q4mwozxpmoVRK/twJk4Wj1P9chyNrsX8J9yEzTfnljV7sH0RVdJRz+uMYUphHVEom5nSrxKhMQzPSNaRKT82u41wWmKBTRyknmBg/HhvLHOOgfowgOhKB7BHk1gPHGd5SqvJPWIRrChEOEk6whToXf0tuzM6b0BdqI2d8vQaJmX5QUHJ3nUq/0RbQ0tyuWMH7CVkXeUiMapYuc9ERW+eZOR0TNNAMy/WmyCbRt9pOdoPzBLZALb29msQ5m84VgrAPTQCIHybFAaKseXRKSQb5WGy3TytbeaP/mXEI1RN+0MbHWfQQ7y649XLLnfjhgF66UL9x/p8DJo+0rpEoPCdCBY4CbnwSbRznZmN1kwoUa1Nf2gDFcATmWmmcEOuEMLJLSh466qKC95+aDwNRS9Yld3F4/CVOECPTGTwm63au8VYlUBTpDkOpmA==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 52bbf67a-6b4a-42e4-088b-08d8347270b6
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB5099.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 10:22:19.7737
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7s+kMFc6cQyZ0z4HEjFd7PAxqLo7v2/v+NngP/3hh2J6ificXosCM3g+UMsz+McqlpPY0MKJ2kv2VMeKmck3wg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6924
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "hongbo.wang" <hongbo.wang@nxp.com>
-
-the following command will be supported:
-
-Set bridge's vlan protocol:
-    ip link set br0 type bridge vlan_protocol 802.1ad
-Add VLAN:
-    ip link add link swp1 name swp1.100 type vlan protocol 802.1ad id 100
-Delete VLAN:
-    ip link del link swp1 name swp1.100
-
-Signed-off-by: hongbo.wang <hongbo.wang@nxp.com>
----
- include/net/switchdev.h |  1 +
- net/dsa/dsa_priv.h      |  4 ++--
- net/dsa/port.c          |  6 ++++--
- net/dsa/slave.c         | 27 +++++++++++++++++++++------
- net/dsa/tag_8021q.c     |  4 ++--
- 5 files changed, 30 insertions(+), 12 deletions(-)
-
-diff --git a/include/net/switchdev.h b/include/net/switchdev.h
-index ff2246914301..7594ea82879f 100644
---- a/include/net/switchdev.h
-+++ b/include/net/switchdev.h
-@@ -97,6 +97,7 @@ struct switchdev_obj_port_vlan {
- 	u16 flags;
- 	u16 vid_begin;
- 	u16 vid_end;
-+	u16 proto;
- };
- 
- #define SWITCHDEV_OBJ_PORT_VLAN(OBJ) \
-diff --git a/net/dsa/dsa_priv.h b/net/dsa/dsa_priv.h
-index 1653e3377cb3..52685b9875e5 100644
---- a/net/dsa/dsa_priv.h
-+++ b/net/dsa/dsa_priv.h
-@@ -164,8 +164,8 @@ int dsa_port_vlan_add(struct dsa_port *dp,
- 		      struct switchdev_trans *trans);
- int dsa_port_vlan_del(struct dsa_port *dp,
- 		      const struct switchdev_obj_port_vlan *vlan);
--int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 flags);
--int dsa_port_vid_del(struct dsa_port *dp, u16 vid);
-+int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 proto, u16 flags);
-+int dsa_port_vid_del(struct dsa_port *dp, u16 vid, u16 proto);
- int dsa_port_link_register_of(struct dsa_port *dp);
- void dsa_port_link_unregister_of(struct dsa_port *dp);
- extern const struct phylink_mac_ops dsa_port_phylink_mac_ops;
-diff --git a/net/dsa/port.c b/net/dsa/port.c
-index e23ece229c7e..c98bbac3980a 100644
---- a/net/dsa/port.c
-+++ b/net/dsa/port.c
-@@ -433,13 +433,14 @@ int dsa_port_vlan_del(struct dsa_port *dp,
- 	return dsa_port_notify(dp, DSA_NOTIFIER_VLAN_DEL, &info);
- }
- 
--int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 flags)
-+int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 proto, u16 flags)
- {
- 	struct switchdev_obj_port_vlan vlan = {
- 		.obj.id = SWITCHDEV_OBJ_ID_PORT_VLAN,
- 		.flags = flags,
- 		.vid_begin = vid,
- 		.vid_end = vid,
-+		.proto = proto,
- 	};
- 	struct switchdev_trans trans;
- 	int err;
-@@ -454,12 +455,13 @@ int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 flags)
- }
- EXPORT_SYMBOL(dsa_port_vid_add);
- 
--int dsa_port_vid_del(struct dsa_port *dp, u16 vid)
-+int dsa_port_vid_del(struct dsa_port *dp, u16 vid, u16 proto)
- {
- 	struct switchdev_obj_port_vlan vlan = {
- 		.obj.id = SWITCHDEV_OBJ_ID_PORT_VLAN,
- 		.vid_begin = vid,
- 		.vid_end = vid,
-+		.proto = proto,
- 	};
- 
- 	return dsa_port_vlan_del(dp, &vlan);
-diff --git a/net/dsa/slave.c b/net/dsa/slave.c
-index 41d60eeefdbd..2a03da92af0a 100644
---- a/net/dsa/slave.c
-+++ b/net/dsa/slave.c
-@@ -1233,7 +1233,10 @@ static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
- 				     u16 vid)
- {
- 	struct dsa_port *dp = dsa_slave_to_port(dev);
-+	u16 vlan_proto = ntohs(proto);
- 	struct bridge_vlan_info info;
-+	bool change_proto = false;
-+	u16 br_proto = 0;
- 	int ret;
- 
- 	/* Check for a possible bridge VLAN entry now since there is no
-@@ -1243,20 +1246,24 @@ static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
- 		if (dsa_port_skip_vlan_configuration(dp))
- 			return 0;
- 
-+		ret = br_vlan_get_proto(dp->bridge_dev, &br_proto);
-+		if (ret == 0 && br_proto != vlan_proto)
-+			change_proto = true;
-+
- 		/* br_vlan_get_info() returns -EINVAL or -ENOENT if the
- 		 * device, respectively the VID is not found, returning
- 		 * 0 means success, which is a failure for us here.
- 		 */
- 		ret = br_vlan_get_info(dp->bridge_dev, vid, &info);
--		if (ret == 0)
-+		if (ret == 0 && !change_proto)
- 			return -EBUSY;
- 	}
- 
--	ret = dsa_port_vid_add(dp, vid, 0);
-+	ret = dsa_port_vid_add(dp, vid, vlan_proto, 0);
- 	if (ret)
- 		return ret;
- 
--	ret = dsa_port_vid_add(dp->cpu_dp, vid, 0);
-+	ret = dsa_port_vid_add(dp->cpu_dp, vid, 0, 0);
- 	if (ret)
- 		return ret;
- 
-@@ -1267,7 +1274,10 @@ static int dsa_slave_vlan_rx_kill_vid(struct net_device *dev, __be16 proto,
- 				      u16 vid)
- {
- 	struct dsa_port *dp = dsa_slave_to_port(dev);
-+	u16 vlan_proto = ntohs(proto);
- 	struct bridge_vlan_info info;
-+	bool change_proto = false;
-+	u16 br_proto = 0;
- 	int ret;
- 
- 	/* Check for a possible bridge VLAN entry now since there is no
-@@ -1277,19 +1287,23 @@ static int dsa_slave_vlan_rx_kill_vid(struct net_device *dev, __be16 proto,
- 		if (dsa_port_skip_vlan_configuration(dp))
- 			return 0;
- 
-+		ret = br_vlan_get_proto(dp->bridge_dev, &br_proto);
-+		if (ret == 0 && br_proto != vlan_proto)
-+			change_proto = true;
-+
- 		/* br_vlan_get_info() returns -EINVAL or -ENOENT if the
- 		 * device, respectively the VID is not found, returning
- 		 * 0 means success, which is a failure for us here.
- 		 */
- 		ret = br_vlan_get_info(dp->bridge_dev, vid, &info);
--		if (ret == 0)
-+		if (ret == 0 && !change_proto)
- 			return -EBUSY;
- 	}
- 
- 	/* Do not deprogram the CPU port as it may be shared with other user
- 	 * ports which can be members of this VLAN as well.
- 	 */
--	return dsa_port_vid_del(dp, vid);
-+	return dsa_port_vid_del(dp, vid, vlan_proto);
- }
- 
- struct dsa_hw_port {
-@@ -1744,7 +1758,8 @@ int dsa_slave_create(struct dsa_port *port)
- 
- 	slave_dev->features = master->vlan_features | NETIF_F_HW_TC;
- 	if (ds->ops->port_vlan_add && ds->ops->port_vlan_del)
--		slave_dev->features |= NETIF_F_HW_VLAN_CTAG_FILTER;
-+		slave_dev->features |= NETIF_F_HW_VLAN_CTAG_FILTER |
-+				       NETIF_F_HW_VLAN_STAG_FILTER;
- 	slave_dev->hw_features |= NETIF_F_HW_TC;
- 	slave_dev->features |= NETIF_F_LLTX;
- 	slave_dev->ethtool_ops = &dsa_slave_ethtool_ops;
-diff --git a/net/dsa/tag_8021q.c b/net/dsa/tag_8021q.c
-index 780b2a15ac9b..848f85ed5c0f 100644
---- a/net/dsa/tag_8021q.c
-+++ b/net/dsa/tag_8021q.c
-@@ -152,9 +152,9 @@ static int dsa_8021q_vid_apply(struct dsa_switch *ds, int port, u16 vid,
- 	struct dsa_port *dp = dsa_to_port(ds, port);
- 
- 	if (enabled)
--		return dsa_port_vid_add(dp, vid, flags);
-+		return dsa_port_vid_add(dp, vid, 0, flags);
- 
--	return dsa_port_vid_del(dp, vid);
-+	return dsa_port_vid_del(dp, vid, 0);
- }
- 
- /* RX VLAN tagging (left) and TX VLAN tagging (right) setup shown for a single
--- 
-2.17.1
+djMgY2hhbmdlczoNCjEuc2VwYXJhdGUgZml4aW5nIGNvbXBhdGlibGVzIGRlc2NyaXB0aW9uIGFu
+ZCBhZGRpbmcgbmV3IGJvYXJkIHdpdGggdHdvIHBhdGNoZXMuDQoyLnVwZGF0ZSBtdDgxODMgRFRT
+SSBmb3Igc3luYyB3aXRoIHRoZSBiaW5kaW5nLCB3aGlsZSBtdDI3MTIgRFRTSSBoYXMgbm8gd2F0
+Y2hkb2cgbm9kZSwNCnRodXMgbm90IHVwZGF0ZSBpdCB0b2dldGhlci4NCg0KDQp2MiBjaGFuZ2Vz
+Og0KaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTY5MDcyOS8NCmh0dHBzOi8v
+cGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTE2OTA3MzEvDQpodHRwczovL3BhdGNod29yay5r
+ZXJuZWwub3JnL3BhdGNoLzExNjkwNzE5Lw0KDQoNCnYxIGNoYW5nZXM6DQpodHRwczovL3BhdGNo
+d29yay5rZXJuZWwub3JnL3BhdGNoLzExNjgwNDk1Lw0KaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVs
+Lm9yZy9wYXRjaC8xMTY4MDQ5Ny8NCg0KQ3J5c3RhbCBHdW8gKDUpOg0KICBkdC1iaW5kaW5nOiBt
+ZWRpYXRlazogd2F0Y2hkb2c6IGZpeCB0aGUgZGVzY3JpcHRpb24gb2YgY29tcGF0aWJsZQ0KICBh
+cm02NDogZHRzOiBtdDgxODM6IHVwZGF0ZSB3YXRjaGRvZyBkZXZpY2Ugbm9kZQ0KICBkdC1iaW5k
+aW5nOiBtZWRpYXRlazogbXQ4MTkyOiB1cGRhdGUgbXRrLXdkdCBkb2N1bWVudA0KICBkdC1iaW5k
+aW5nOiBtdDgxOTI6IGFkZCB0b3ByZ3UgcmVzZXQtY29udHJvbGxlciBoZWFkIGZpbGUNCiAgd2F0
+Y2hkb2c6IG10ODE5MjogYWRkIHdkdCBzdXBwb3J0DQoNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
+cy93YXRjaGRvZy9tdGstd2R0LnR4dCAgICAgICB8ICA1ICsrLS0NCiBhcmNoL2FybTY0L2Jvb3Qv
+ZHRzL21lZGlhdGVrL210ODE4My5kdHNpICAgICAgICAgICB8ICAzICstLQ0KIGRyaXZlcnMvd2F0
+Y2hkb2cvbXRrX3dkdC5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDYgKysrKysNCiAuLi4v
+ZHQtYmluZGluZ3MvcmVzZXQtY29udHJvbGxlci9tdDgxOTItcmVzZXRzLmggICB8IDMwICsrKysr
+KysrKysrKysrKysrKysrKysNCiA0IGZpbGVzIGNoYW5nZWQsIDQwIGluc2VydGlvbnMoKyksIDQg
+ZGVsZXRpb25zKC0pDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvcmVz
+ZXQtY29udHJvbGxlci9tdDgxOTItcmVzZXRzLmgNCg==
 
