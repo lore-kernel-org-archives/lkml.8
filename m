@@ -2,97 +2,115 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95085C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D01C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 731DC2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C9F2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:45:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mYI2K30r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729919AbgG3Poy (ORCPT
+        id S1729926AbgG3Ppi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:44:54 -0400
-Received: from mga01.intel.com ([192.55.52.88]:64857 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729484AbgG3Pox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 11:44:53 -0400
-IronPort-SDR: TIR6l2DGrofJF3PaleNR+Vt77Ae4qR4Cdp4TlpZruvf2aPV75wDaAgQoHvBoAr5eXt5bWYm4a2
- uV6cgeXNVPQg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="169741992"
-X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
-   d="scan'208";a="169741992"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 08:44:52 -0700
-IronPort-SDR: BaDDVqq1GqCh5P3//G0SQJkoDZ+wJwOxaBVXR86DpT6KgejRLnM2kmkD5ysie2SG0I1YNg4Dog
- CTWy6xxIrUcw==
-X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
-   d="scan'208";a="465284728"
-Received: from jrwang2-mobl.amr.corp.intel.com (HELO [10.212.82.25]) ([10.212.82.25])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 08:44:49 -0700
-Subject: Re: [PATCH 2/2] ASoC: Intel: Add period size constraint on strago
- board
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     "Lu, Brent" <brent.lu@intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Cc:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Sam McNally <sammc@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Daniel Stuart <daniel.stuart14@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Damian van Soelen <dj.vsoelen@gmail.com>
-References: <1596020585-11517-1-git-send-email-brent.lu@intel.com>
- <1596020585-11517-3-git-send-email-brent.lu@intel.com>
- <4fe97f63-e552-3b2f-803c-53894b196bfd@linux.intel.com>
- <DM6PR11MB36421D9A808D401416B72D2D97710@DM6PR11MB3642.namprd11.prod.outlook.com>
- <f1386a05-8866-9251-c751-21c9109aa35f@linux.intel.com>
-Message-ID: <c00c47ad-abd7-d6e7-e3c5-a25a6a4f7f68@linux.intel.com>
-Date:   Thu, 30 Jul 2020 10:44:47 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 11:45:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38728 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728452AbgG3Pph (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 11:45:37 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1194AC061574;
+        Thu, 30 Jul 2020 08:45:37 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id n2so20294894edr.5;
+        Thu, 30 Jul 2020 08:45:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e1J01Oczhd220RAym1LfngVA7OUijoix/GTLOnOq0wQ=;
+        b=mYI2K30rokgxWE0w7UBhOkOYryaDcfDKVw60BHk8x3vYQ//HRCVaVYL2FU1hFijMfT
+         8rwLHSUgRg6/W4AvbrMRanJPGCBILdYCXc9SWKUFPRFJy2DEbfn3agkQJvTbPEzwd5hq
+         Z7xb4bbxbDLahiPDYZ4URSuz3MQj++4zVmHqM/tXhleHuX4XwfDzWsqa7a3ASLmbqdNw
+         PQtvqxQ6Qv1RyiW63qtuPBNmZF21uFplD/0Yigy4RjgHLEr3/XZIdkL6GA62Vw7iCzbH
+         ocQCE4wQEl0soppOd8kGhR6nr5YcIrnu8VKQ6oc7usO2cTRWz0ICuZi+gHH8fMD59RgR
+         HGRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e1J01Oczhd220RAym1LfngVA7OUijoix/GTLOnOq0wQ=;
+        b=sXlybJHqzcOrGf0G1i8J882oE/PXqPuQGnJ0kxpsvyZA1gJcZX/25K8gNEN7hfjkZt
+         oiQa55JDQfxg+qZHwD9vYLtx/CfdSYpysTTBWOeTtfXyf+QBHkjAA1tOSegoclfMM1pU
+         KJF2TMrC5JkGvwZ2tJmSJqsTivzhLvszKjFWU3OTzxycd5hftKnX5X3/VXT3/4PT7w6n
+         +NWog3J0NLrLo0OYhrwaur5ImoIwBg6NL427uX0WDFyjNmWZaz4t3Up2rxgD9Zms7ud4
+         8qi2oBJD6guqPX4mbwwqyqMa3N7nuo40zFqKmLMhGrpJ+q7Zb9RrL6+ijzwl/5zo4W7w
+         GFGQ==
+X-Gm-Message-State: AOAM533w3hX8+0Gt5hFlrZ2jNicNPnyOrrdfW9c3Pqvf8O40Fq+tuZcT
+        83o5tEcGcbGn0mM/noWnqvGA7Hk0XeQA6qcz2Ww=
+X-Google-Smtp-Source: ABdhPJxJBzb6IrbCKjuOC0BujTWS0dRylwUyeXRe0DDUCUbkZVlP/EuIVuplkgjxRZfoLFnUlWJiDAFypFhpWjX6r1E=
+X-Received: by 2002:a05:6402:1c10:: with SMTP id ck16mr3213692edb.151.1596123935735;
+ Thu, 30 Jul 2020 08:45:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <f1386a05-8866-9251-c751-21c9109aa35f@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
+ <CAF6AEGtAEwZbWxLb4MxaWNswvtrFbLK+N0Fez2XYr7odKZffWA@mail.gmail.com>
+ <20200720100131.6ux4zumbwqpa42ye@vireshk-mac-ubuntu> <CAF6AEGurrsd3nrbB=ktZjWfKTNbKwPHYwTFiZdD-NOW1T7gePQ@mail.gmail.com>
+ <20200721032442.hv7l4q6633vnmnfe@vireshk-mac-ubuntu> <CAF6AEGuhQcRskGhrFvmCf5T3EcZ9S+3LRdZBiaDYqF34yZjd+A@mail.gmail.com>
+ <20200722053023.vwaoj5oqh4cazzzz@vireshk-mac-ubuntu> <20200730051045.jejrtkor3b32l2qe@vireshk-mac-ubuntu>
+ <CAF6AEGuzff9+Wy4EHx0aDx1gBzSEGh--yqT5rnwLHp=U6amnyA@mail.gmail.com> <20200730153722.cnpg6n6tnmvjtuso@vireshk-mac-ubuntu>
+In-Reply-To: <20200730153722.cnpg6n6tnmvjtuso@vireshk-mac-ubuntu>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 30 Jul 2020 08:46:16 -0700
+Message-ID: <CAF6AEGs9=-0YBJpONaXf1wavU5ZpxhAQ19vfOn4JHby1zgPwpg@mail.gmail.com>
+Subject: Re: [PATCH v5 0/6] Add support for GPU DDR BW scaling
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Akhil P Oommen <akhilpo@codeaurora.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
+        saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>,
+        Jonathan <jonathan@marek.ca>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dave Airlie <airlied@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 30, 2020 at 8:37 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 30-07-20, 08:27, Rob Clark wrote:
+> > Hmm, I've already sent my pull request to Dave, dropping the patch
+> > would require force-push and sending a new PR.  Which I can do if Dave
+> > prefers.  OTOH I guess it isn't the end of the world if the patch is
+> > merged via two different trees.
+>
+> I don't think a patch can go via two trees, as that would have two sha
+> keys for the same code.
 
+it looks weird in the history, but other than that I think it is
+fine.. at least I see it happen somewhat regularly with fixes in drm
 
-On 7/30/20 10:27 AM, Pierre-Louis Bossart wrote:
-> 
-> 
->>> Is this patch required if you've already constrained the period sizes 
->>> for the
->>> platform driver in patch1?
->>
->> Yes or alsa will select 320 as default period size for it.
-> 
-> ok, then that's a miss in your patch1. 320 samples is a multiple of 1ms 
+> Though it is fine for a patch to go via two different trees if we make
+> sure the same sha key is used for both.
+>
+> Will it be possible for you to provide a branch/tag of your branch
+> that I can base stuff of ?
 
-typo: is NOT
+You could use https://gitlab.freedesktop.org/drm/msm/-/commits/msm-next/
+(or the tag drm-msm-next-2020-07-29), which already has the OPP patch.
+I've been trying to avoid force-pushing that because downstream trees
+are already pulling from that.
 
-> for 48kHz rates. I think it was valid only for the 16kHz VoIP paths used 
-> in some versions of Android, but that we don't support in the upstream 
-> code.
-> 
-> To build on Takashi's answer, the real ask here is to require that the 
-> period be a multiple of 1ms, because that's the fundamental 
-> design/limitation of firmware. It doesn't matter if it's 48, 96, 192, 
-> 240, 480, 960 samples.
+BR,
+-R
