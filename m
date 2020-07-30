@@ -2,93 +2,110 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCC4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9897F2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:15:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596118511;
-	bh=dY00H7wSmtOHK/uw4sMHsPRIHx974EK8RbHLR7GWuK4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=v4sQ6jU47Kn3GujCoCFweEuhKL0sVZmVEvil7xvFfT0hYqA5vf6y75rDDUAicvtR1
-	 eRtWM+tPeiQmFt/G7GqVhlXI7SNWqnwSeIEG3uJb8kjeMpaIfHmxyNmSHysw0ll9+o
-	 utm8fMTb0zfAZWYSbj98fBFD3AG5Ayy0NTJFB2WA=
+	by mail.kernel.org (Postfix) with ESMTP id 0C9862070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:15:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ow95l7Hy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729540AbgG3OPK (ORCPT
+        id S1729546AbgG3OPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 10:15:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728310AbgG3OPJ (ORCPT
+        Thu, 30 Jul 2020 10:15:35 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40259 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727072AbgG3OPf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 10:15:09 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E280C061574
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 07:15:09 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id t6so7637649qvw.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 07:15:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cOIc35GbadqeLJ9Zr0ZeXeBC0U2pLAaCNW8yxikmhc8=;
-        b=QMoWf3BbUtdtIc70Qb0D2HnX5MWeWCLygP1lxIe6xruBOVPodRZY7/VihCNCdVSqTi
-         O/BeoWsr3bxl4dJxVamPhbuOzfj4vB03kB0+o1sezlQSE3+XP5tmU08oG4TEc93wlqAi
-         Shkm8+jUgwetKFIuCWwcVcZoxMuupHCF3qQqsM0gZfKIoqMDwDPZGnNhP3gCe063HWL1
-         LbdnLA/ZcOmmZqo15d63X0cSgoXi/pnYnMKVUY8wkcOW6rNYtJppx6B3HEhW2wLyXTeZ
-         nqsBaaS91oJBuCN9BrKP9k0ngVG9KPwFKdBgqpPnY03noMp00halDu4uFI7QOmwnZLP2
-         3n1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=cOIc35GbadqeLJ9Zr0ZeXeBC0U2pLAaCNW8yxikmhc8=;
-        b=ijJ5w1WB4R44GduS08BkGEI3vXeittGzVogV2VZ531V8Kq9k5+YJvbPoFEuGujwPUf
-         3wDz5ti7Wtyl9Jr4QJJMiSoxB1/IZqIKCD25kqGXVt1vOzkjXnz4rSbnJemibDsXPzkf
-         +K4riposc/1HkJBCHDY7r4YKTE5QzRK1EuCUtEIU1aMX2AIZF3BJVyFOnQj8+QH3fCoG
-         ybDoOreVw38llVMKfs9KnXlN0wK6GBSjzQi8JDIjAeeyXVwHhiyQkS1XCxMA4sf8lNAH
-         UgpDZLE60sK3eou6Gx3qdMNaAwQ20Sms+T34z/L7jCWN0zAnpm3jg4cUVxmjX8b59DZd
-         ILrA==
-X-Gm-Message-State: AOAM531QhaRFYFpj8zv6BnNxmT0Kog8cz9BwBBs1PGT2IBvNwsu9Mtrc
-        o7Gylcck3rXdbd8EVuGq0/M=
-X-Google-Smtp-Source: ABdhPJxBeNfOKGEVwYP1ubnmlEoNf1ZGmZAdhu9b74sHMPnAr6EwzvPjj9/B7fBifzWXzY7P0g2IkA==
-X-Received: by 2002:ad4:4507:: with SMTP id k7mr3033545qvu.170.1596118508507;
-        Thu, 30 Jul 2020 07:15:08 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:115b])
-        by smtp.gmail.com with ESMTPSA id h55sm4768731qte.16.2020.07.30.07.15.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 07:15:07 -0700 (PDT)
-Date:   Thu, 30 Jul 2020 10:15:06 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Chengming Zhou <zhouchengming@bytedance.com>
-Cc:     axboe@kernel.dk, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iocost_monitor: start from the oldest usage index
-Message-ID: <20200730141506.GB4601@mtj.duckdns.org>
-References: <20200730123104.27023-1-zhouchengming@bytedance.com>
+        Thu, 30 Jul 2020 10:15:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596118534;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mC9bnvLUmM2DBjf+quSal6Se9a1/PYo8DVnoJYZcaTc=;
+        b=Ow95l7Hy33WpUuimm99Ud9CJFBgQD0BACnv886Nqeva1yiKdxYL8qujGa2RgrIt6zIJADE
+        dDESO9mihKk12v9ZjT1D1IcxF2K+MelbN7uKUo2tpSE0JSEKxCh7hCjYiQnHMn1pgD06ea
+        LieU59CIrmnQ2YWvuSiZvhkOy9WaQSU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-296-2bvH98rxNImIqjoAgJcl4A-1; Thu, 30 Jul 2020 10:15:32 -0400
+X-MC-Unique: 2bvH98rxNImIqjoAgJcl4A-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 66FFA100944F;
+        Thu, 30 Jul 2020 14:15:31 +0000 (UTC)
+Received: from treble (ovpn-119-23.rdu2.redhat.com [10.10.119.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C0E2610246F2;
+        Thu, 30 Jul 2020 14:15:28 +0000 (UTC)
+Date:   Thu, 30 Jul 2020 09:15:26 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Julien Thierry <jthierry@redhat.com>
+Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org, mbenes@suse.cz
+Subject: Re: [PATCH v3 2/4] objtool: Move orc outside of check
+Message-ID: <20200730141526.lr33zv4ffa3rdygp@treble>
+References: <20200730094143.27494-1-jthierry@redhat.com>
+ <20200730094143.27494-3-jthierry@redhat.com>
+ <20200730095759.GH2655@hirez.programming.kicks-ass.net>
+ <dfe69c8f-db70-8366-5601-2592409ce7a0@redhat.com>
+ <20200730132237.GM2655@hirez.programming.kicks-ass.net>
+ <3af41a3b-a4b9-8120-3ac0-c9ce13770628@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200730123104.27023-1-zhouchengming@bytedance.com>
+In-Reply-To: <3af41a3b-a4b9-8120-3ac0-c9ce13770628@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 08:31:04PM +0800, Chengming Zhou wrote:
-> iocg usage_idx is the latest usage index, we should start from the
-> oldest usage index to show the consecutive NR_USAGE_SLOTS usages.
+On Thu, Jul 30, 2020 at 02:29:20PM +0100, Julien Thierry wrote:
 > 
-> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+> 
+> On 7/30/20 2:22 PM, peterz@infradead.org wrote:
+> > On Thu, Jul 30, 2020 at 01:40:42PM +0100, Julien Thierry wrote:
+> > > 
+> > > 
+> > > On 7/30/20 10:57 AM, peterz@infradead.org wrote:
+> > > > On Thu, Jul 30, 2020 at 10:41:41AM +0100, Julien Thierry wrote:
+> > > > > +		if (file->elf->changed)
+> > > > > +			return elf_write(file->elf);
+> > > > > +		else
+> > > > > +			return 0;
+> > > > >    	}
+> > > > 
+> > > > I think we can do without that else :-)
+> > > > 
+> > > 
+> > > I did wonder and was not 100% confident about it, but the orc gen will
+> > > always change the file, correct?
+> > 
+> > Not if it already has orc, iirc.
+> > 
+> > But what I was trying to say is that:
+> > 
+> > 	if (file->elf->changed)
+> > 		return elf_write(file->elf)
+> > 
+> > 	return 0;
+> > 
+> > is identical code and, IMO, easier to read.
+> > 
+> 
+> Much easier yes, I'll change it.
 
-Acked-by: Tejun Heo <tj@kernel.org>
+But I think file->elf->changed can be assumed at this point anyway, so
+it could just be an unconditional
 
-Thanks.
+	return elf_write(file->elf);
 
 -- 
-tejun
+Josh
+
