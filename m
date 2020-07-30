@@ -8,42 +8,42 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C870C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFA4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A59B2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9B4920829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:24:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="K02bgOPC"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="RcuSOaIr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730842AbgG3VYF (ORCPT
+        id S1730852AbgG3VYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 17:24:05 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:64490 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730753AbgG3VX0 (ORCPT
+        Thu, 30 Jul 2020 17:24:07 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:25558 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730747AbgG3VX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Jul 2020 17:23:26 -0400
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06ULGL0H006639
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 14:23:25 -0700
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06ULEoGS026397
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 14:23:24 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=facebook;
- bh=vNrR4zSzmcgBz+DK2EJwB/LPCbtsGJ9/WTDRVxCAlTk=;
- b=K02bgOPCqwROefdApUXx75Gc9iUBV1n/CPKaUysiUSWHUTL9yPctJz96EVZPILALMb/k
- D/ilTRPT3o+K6doLA6xvHPqPJJNn6OX2/EQyD0XU5drSMrkrUftAZWXWjKv6CX5Y6foA
- PSDBhitcEWh/hcFrVTI4P2EucYMS5Q/l6ok= 
+ bh=ldgkziWNhgKGHaEaIvrqqqJV14OWcEl1yhGPR2mgJgw=;
+ b=RcuSOaIrPs1UFxY0VRaqwcd7pJGw4H2rjRZnApIUpG8Y6UaWVReqBjBx4yY5AYAnH8Z8
+ ofDCZcEMDyS1SiTIR15k2xRFxieMqzP03L8ABwzXo5s0oGayAmTtoAH+n4FMDBl9MVp2
+ UWL6DttgWtK7d29tX1xc5SyGcV9gyP7KJb0= 
 Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 32jk9ddb0p-5
+        by mx0a-00082601.pphosted.com with ESMTP id 32jp0uvkb9-20
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 14:23:25 -0700
-Received: from intmgw001.06.prn3.facebook.com (2620:10d:c085:208::f) by
- mail.thefacebook.com (2620:10d:c085:21d::6) with Microsoft SMTP Server
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 14:23:24 -0700
+Received: from intmgw004.06.prn3.facebook.com (2620:10d:c085:208::11) by
+ mail.thefacebook.com (2620:10d:c085:11d::5) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
  15.1.1979.3; Thu, 30 Jul 2020 14:23:19 -0700
 Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
-        id E1BF820B00BA; Thu, 30 Jul 2020 14:23:12 -0700 (PDT)
+        id F09B720B00C0; Thu, 30 Jul 2020 14:23:12 -0700 (PDT)
 Smtp-Origin-Hostprefix: devvm
 From:   Roman Gushchin <guro@fb.com>
 Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
@@ -53,9 +53,9 @@ CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
         <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>,
         Song Liu <songliubraving@fb.com>
 Smtp-Origin-Cluster: prn0c01
-Subject: [PATCH bpf-next v3 15/29] bpf: eliminate rlimit-based memory accounting for cpumap maps
-Date:   Thu, 30 Jul 2020 14:22:56 -0700
-Message-ID: <20200730212310.2609108-16-guro@fb.com>
+Subject: [PATCH bpf-next v3 18/29] bpf: eliminate rlimit-based memory accounting for hashtab maps
+Date:   Thu, 30 Jul 2020 14:22:59 -0700
+Message-ID: <20200730212310.2609108-19-guro@fb.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200730212310.2609108-1-guro@fb.com>
 References: <20200730212310.2609108-1-guro@fb.com>
@@ -66,9 +66,9 @@ Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-30_15:2020-07-30,2020-07-30 signatures=0
 X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
- clxscore=1015 impostorscore=0 malwarescore=0 mlxscore=0 mlxlogscore=954
- suspectscore=38 adultscore=0 priorityscore=1501 phishscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ mlxscore=0 phishscore=0 priorityscore=1501 suspectscore=38 malwarescore=0
+ mlxlogscore=827 bulkscore=0 adultscore=0 impostorscore=0 spamscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2007300150
 X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,58 +76,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not use rlimit-based memory accounting for cpumap maps.
+Do not use rlimit-based memory accounting for hashtab maps.
 It has been replaced with the memcg-based memory accounting.
 
 Signed-off-by: Roman Gushchin <guro@fb.com>
 Acked-by: Song Liu <songliubraving@fb.com>
 ---
- kernel/bpf/cpumap.c | 16 +---------------
- 1 file changed, 1 insertion(+), 15 deletions(-)
+ kernel/bpf/hashtab.c | 19 +------------------
+ 1 file changed, 1 insertion(+), 18 deletions(-)
 
-diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
-index 74ae9fcbe82e..50f3444a3301 100644
---- a/kernel/bpf/cpumap.c
-+++ b/kernel/bpf/cpumap.c
-@@ -86,8 +86,6 @@ static struct bpf_map *cpu_map_alloc(union bpf_attr *at=
-tr)
- 	u32 value_size =3D attr->value_size;
- 	struct bpf_cpu_map *cmap;
- 	int err =3D -ENOMEM;
+diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
+index 9d0432170812..9372b559b4e7 100644
+--- a/kernel/bpf/hashtab.c
++++ b/kernel/bpf/hashtab.c
+@@ -422,7 +422,6 @@ static struct bpf_map *htab_map_alloc(union bpf_attr =
+*attr)
+ 	bool percpu_lru =3D (attr->map_flags & BPF_F_NO_COMMON_LRU);
+ 	bool prealloc =3D !(attr->map_flags & BPF_F_NO_PREALLOC);
+ 	struct bpf_htab *htab;
 -	u64 cost;
--	int ret;
+ 	int err;
 =20
- 	if (!bpf_capable())
- 		return ERR_PTR(-EPERM);
-@@ -111,26 +109,14 @@ static struct bpf_map *cpu_map_alloc(union bpf_attr=
- *attr)
- 		goto free_cmap;
- 	}
+ 	htab =3D kzalloc(sizeof(*htab), GFP_USER | __GFP_ACCOUNT);
+@@ -459,26 +458,12 @@ static struct bpf_map *htab_map_alloc(union bpf_att=
+r *attr)
+ 	    htab->n_buckets > U32_MAX / sizeof(struct bucket))
+ 		goto free_htab;
 =20
--	/* make sure page count doesn't overflow */
--	cost =3D (u64) cmap->map.max_entries * sizeof(struct bpf_cpu_map_entry =
-*);
+-	cost =3D (u64) htab->n_buckets * sizeof(struct bucket) +
+-	       (u64) htab->elem_size * htab->map.max_entries;
 -
--	/* Notice returns -EPERM on if map size is larger than memlock limit */
--	ret =3D bpf_map_charge_init(&cmap->map.memory, cost);
--	if (ret) {
--		err =3D ret;
--		goto free_cmap;
--	}
+-	if (percpu)
+-		cost +=3D (u64) round_up(htab->map.value_size, 8) *
+-			num_possible_cpus() * htab->map.max_entries;
+-	else
+-	       cost +=3D (u64) htab->elem_size * num_possible_cpus();
 -
- 	/* Alloc array for possible remote "destination" CPUs */
- 	cmap->cpu_map =3D bpf_map_area_alloc(cmap->map.max_entries *
- 					   sizeof(struct bpf_cpu_map_entry *),
- 					   cmap->map.numa_node);
- 	if (!cmap->cpu_map)
+-	/* if map size is larger than memlock limit, reject it */
+-	err =3D bpf_map_charge_init(&htab->map.memory, cost);
+-	if (err)
+-		goto free_htab;
+-
+ 	err =3D -ENOMEM;
+ 	htab->buckets =3D bpf_map_area_alloc(htab->n_buckets *
+ 					   sizeof(struct bucket),
+ 					   htab->map.numa_node);
+ 	if (!htab->buckets)
 -		goto free_charge;
-+		goto free_cmap;
++		goto free_htab;
 =20
- 	return &cmap->map;
+ 	if (htab->map.map_flags & BPF_F_ZERO_SEED)
+ 		htab->hashrnd =3D 0;
+@@ -508,8 +493,6 @@ static struct bpf_map *htab_map_alloc(union bpf_attr =
+*attr)
+ 	prealloc_destroy(htab);
+ free_buckets:
+ 	bpf_map_area_free(htab->buckets);
 -free_charge:
--	bpf_map_charge_finish(&cmap->map.memory);
- free_cmap:
- 	kfree(cmap);
+-	bpf_map_charge_finish(&htab->map.memory);
+ free_htab:
+ 	kfree(htab);
  	return ERR_PTR(err);
 --=20
 2.26.2
