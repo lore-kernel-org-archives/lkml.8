@@ -2,156 +2,71 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A50C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 02:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9E1C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 02:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 505B322B40
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 02:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C91B422B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 02:39:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lfV5Tdpz"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YsY0oMaq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbgG3CjB (ORCPT
+        id S1728463AbgG3CjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 22:39:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59054 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728407AbgG3CjB (ORCPT
+        Wed, 29 Jul 2020 22:39:08 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:5665 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726480AbgG3CjH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 22:39:01 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DD94C061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 19:39:01 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id 4so3554473uav.8
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 19:39:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=E20RVflhVFnMt9UGu16p7I5RTrWtNW8Uf2aYJ2/Gr7Y=;
-        b=lfV5TdpzVjKu+M+liEs7tTTk+NgtfxK/nozymIFCnGRVSdsVuikHvSbNgxaTqgZfml
-         1UGtWqI3XGE+pRbt7DP1OE4nQ5uaB7Rxs83BXQQ1vkXSeqBT1UzB4Ijhc8yifp9PIKHt
-         sBVSGbd39iUAzWsjPlaDTt/Qh2hHox0avjEdPw83tS/cG87HYumw4idIsfBBmiQA/c2r
-         lcyeeoZzSF5fYUYH/vPZLwpEvAcf0/TlXxkQffsAn2f3127QcNHypevW9SqabO95VuDJ
-         UxULZ/YT3sj8J+d7nnVfz8yMy5p5Qq86PaBezHfjTmRZNIITG+pZ1Is8CuWsYQkb5vvM
-         khwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=E20RVflhVFnMt9UGu16p7I5RTrWtNW8Uf2aYJ2/Gr7Y=;
-        b=dKiOVCWiJ2JY9V3wK91+ZsFm5pwUbQqxeUGddaStGz6WmkGPkwNxI1UvgJsknf8c7/
-         VQrQzwtpgGYyj+kUSyZ1Kh5F4/KpSadaRos9KMuTXnHWOc8swRzpt6ZZshMP+hY93H2m
-         yMz2uY00YdL/xsHozwe2fXtAgr0W6u1ozJFCCaGaxUhLGfc4cW/aP9Gpm82jypf4eQHj
-         lQsiPcM2+AGJJzTdm6TWJm8OfN8dID0S+E9fkOXpwX5v+qsnhXsatUtVUnAxen+OOXem
-         eXFkDm9F7bJd9g00UAKijfNxCZ5uT6YNSX+nvjiHSjtHai9OXWWsTGOPFhMvOHnlTJR3
-         sYuQ==
-X-Gm-Message-State: AOAM530652yRSApBGAH0Ja65ALnKURKItLNOToqgXwotUnN6nrRPm8aB
-        B2DKxk38k0TWYGKyuod6fF0/Cssx8mK1HqMM0M5Kdw==
-X-Google-Smtp-Source: ABdhPJxIG1HcbbzQQNHtu2oFdgoSkUBH11ggchCC3T+Er2W4FoZeNX6n5wjRR6RQEjk76B7mkoDqEKz27yn1e+kCykA=
-X-Received: by 2002:a9f:370a:: with SMTP id z10mr12273015uad.69.1596076737246;
- Wed, 29 Jul 2020 19:38:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200724020551.2737376-1-badhri@google.com> <20200729145309.GA3490882@kroah.com>
-In-Reply-To: <20200729145309.GA3490882@kroah.com>
-From:   Badhri Jagan Sridharan <badhri@google.com>
-Date:   Wed, 29 Jul 2020 19:38:21 -0700
-Message-ID: <CAPTae5+jOkRs9nWRMQHg3uBjZnqYhZnR=DTg5-Yku1r4qOqNZQ@mail.gmail.com>
-Subject: Re: [PATCH v2] usb: typec: tcpm: Migrate workqueue to RT priority for
- processing events
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        USB <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Wed, 29 Jul 2020 22:39:07 -0400
+X-UUID: e070296f14b240c499589d9ae9d2ee97-20200730
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=X1UadCFz90FbPm5aWCk0xfL4ZtGAfS8oTL2vDHMeIS4=;
+        b=YsY0oMaqZSq5i4rn32G2cf4decDUejbZSjAhbUAOXagl0JeTkPOTr/itiGphda6KzixNFkqg8IY1bWR2omXdxeYGlYyJ5Ro1y6pxPm8Te8HUZ2B5kODghh3HiY2OHAoGUuVjVzVjRmXeKO2vC9QmUWW4RZdla3P/Z76Ska9pv4Y=;
+X-UUID: e070296f14b240c499589d9ae9d2ee97-20200730
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <yingjoe.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 755538541; Thu, 30 Jul 2020 10:39:02 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 30 Jul 2020 10:39:00 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 30 Jul 2020 10:39:00 +0800
+Message-ID: <1596076741.11024.4.camel@mtksdaap41>
+Subject: Re: [PATCH v2 2/4] i2c: mediatek: Add access to more than 8GB dram
+ in i2c driver
+From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
+To:     Qii Wang <qii.wang@mediatek.com>
+CC:     <wsa@the-dreams.de>, <qiangming.xia@mediatek.com>,
+        <devicetree@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        <leilk.liu@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <robh+dt@kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-i2c@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 30 Jul 2020 10:39:01 +0800
+In-Reply-To: <1595939446-5484-3-git-send-email-qii.wang@mediatek.com>
+References: <1595939446-5484-1-git-send-email-qii.wang@mediatek.com>
+         <1595939446-5484-3-git-send-email-qii.wang@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+T24gVHVlLCAyMDIwLTA3LTI4IGF0IDIwOjMwICswODAwLCBRaWkgV2FuZyB3cm90ZToNCj4gTmV3
+ZXIgTVRLIGNoaXAgc3VwcG9ydCBtb3JlIHRoYW4gOEdCIG9mIGRyYW0uIFJlcGxhY2Ugc3VwcG9y
+dF8zM2JpdHMNCj4gd2l0aCBtb3JlIGdlbmVyYWwgZG1hX21heF9zdXBwb3J0IGFuZCByZW1vdmUg
+bXRrX2kyY19zZXRfNGdfbW9kZS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFFpaSBXYW5nIDxxaWku
+d2FuZ0BtZWRpYXRlay5jb20+DQoNClFpaSwNCg0KQWZ0ZXIgeW91IHJlbW92ZSBJMkNfRE1BXzRH
+X01PREUgTWF0dGhpYXMgbWVudGlvbmVkLCB5b3UgY2FuIGhhdmU6DQoNClJldmlld2VkLWJ5OiBZ
+aW5nam9lIENoZW4gPHlpbmdqb2UuY2hlbkBtZWRpYXRlay5jb20+DQoNCkpvZS5DDQoNCg==
 
-Sure just sent the new patch v3.
-
-Patch applies cleanly on my end. So wondering what I am missing.
-Just in case if you are still noticing merge conflicts.
-
-Here is the git log of my local tree:
-633198cd2945b7 (HEAD -> usb-next-1) usb: typec: tcpm: Migrate
-workqueue to RT priority for processing events
-fa56dd9152ef95 (origin/usb-next) Merge tag 'usb-serial-5.9-rc1' of
-https://git.kernel.org/pub/scm/linux/kernel/git/johan/usb-serial into
-usb-next
-25252919a1050e xhci: dbgtty: Make some functions static
-b0e02550346e67 xhci: dbc: Make function xhci_dbc_ring_alloc() static
-ca6377900974c3 Revert "usb: dwc2: override PHY input signals with usb
-role switch support"
-09df709cb5aeb2 Revert "usb: dwc2: don't use ID/Vbus detection if
-usb-role-switch on STM32MP15 SoCs"
-17a82716587e9d USB: iowarrior: fix up report size handling for some devices
-e98ba8cc3f8a89 Merge tag 'usb-for-v5.9' of
-git://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb into usb-next
-c97793089b11f7 Merge 5.8-rc7 into usb-next
-92ed301919932f (tag: v5.8-rc7, origin/usb-linus, origin/main) Linux 5.8-rc7
-
-Was comparing against
-https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/log/?h=3Dusb=
--next
-
-Thanks,
-Badhri
-
-
-On Wed, Jul 29, 2020 at 7:53 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Jul 23, 2020 at 07:05:51PM -0700, Badhri Jagan Sridharan wrote:
-> > "tReceiverResponse 15 ms Section 6.6.2
-> > The receiver of a Message requiring a response Shall respond
-> > within tReceiverResponse in order to ensure that the
-> > sender=E2=80=99s SenderResponseTimer does not expire."
-> >
-> > When the cpu complex is busy running other lower priority
-> > work items, TCPM's work queue sometimes does not get scheduled
-> > on time to meet the above requirement from the spec.
-> > Moving to kthread_work apis to run with real time priority.
-> > Just lower than the default threaded irq priority,
-> > MAX_USER_RT_PRIO/2 + 1. (Higher number implies lower priority).
-> >
-> > Further, as observed in 1ff688209e2e, moving to hrtimers to
-> > overcome scheduling latency while scheduling the delayed work.
-> >
-> > TCPM has three work streams:
-> > 1. tcpm_state_machine
-> > 2. vdm_state_machine
-> > 3. event_work
-> >
-> > tcpm_state_machine and vdm_state_machine both schedule work in
-> > future i.e. delayed. Hence each of them have a corresponding
-> > hrtimer, tcpm_state_machine_timer & vdm_state_machine_timer.
-> >
-> > When work is queued right away kthread_queue_work is used.
-> > Else, the relevant timer is programmed and made to queue
-> > the kthread_work upon timer expiry.
-> >
-> > kthread_create_worker only creates one kthread worker thread,
-> > hence single threadedness of workqueue is retained.
-> >
-> > Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
->
-> This doesn't apply against my usb-next branch at all.
->
-> Can you rebase and resend?
->
-> Remember to collect the reviewed-by tags as well when you do so.
->
-> thanks,
->
-> greg k-h
