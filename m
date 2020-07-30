@@ -5,45 +5,44 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83881C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAF6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6465220838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A9AA20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:24:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="W+v2C8W+"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="SiIagKog"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730922AbgG3VYs (ORCPT
+        id S1730939AbgG3VY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 17:24:48 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:51392 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730727AbgG3VXX (ORCPT
+        Thu, 30 Jul 2020 17:24:57 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:18484 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730731AbgG3VXX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Jul 2020 17:23:23 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06ULFCVm012444
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 14:23:22 -0700
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06ULFbLJ011474
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 14:23:23 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=facebook;
- bh=kIac3K29KuxLPRtc7qBb+BJfpPRwmuI9BdUX1UJoV5o=;
- b=W+v2C8W+EhNVzqWslryL+n4y8nKhGM6GS0+rumfLrkwSkORSMmX3sIo5JIWACk4NsKUb
- 10lh6BVGY7w5jaUIMVXSiuHyo8M21N0DTJfg8fvfGOS0Lsg+6piWxtWQBkvw02+xIgjd
- 7IW7NvWfGtR1x+BeBF6j91qmPLCMBOdiDpI= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 32k7hw89kq-6
+ bh=HmEMMOl2X9iRm4zfLXbqxhHSMwZOVTaYZPNN8g7Tjq8=;
+ b=SiIagKogqeJQAakpHoMleHMIi6Nt4ZokRy668GJeguzY5kgfSg8KTE5gsvszfZDQFr0o
+ ejIexeY0w+fy90pSu3xenjNlARx5qyOAKH2v+go1csr0UtcVtwg9ibC5Yn0VOmTx0mCR
+ IsdWJDu3rIluoRx6MVeq5rhPIm9S5sAuhUc= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 32kcbuy100-2
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 14:23:22 -0700
-Received: from intmgw001.06.prn3.facebook.com (2620:10d:c085:208::11) by
- mail.thefacebook.com (2620:10d:c085:11d::4) with Microsoft SMTP Server
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 14:23:23 -0700
+Received: from intmgw003.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 30 Jul 2020 14:23:19 -0700
+ 15.1.1979.3; Thu, 30 Jul 2020 14:23:21 -0700
 Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
-        id C08B320B00B0; Thu, 30 Jul 2020 14:23:12 -0700 (PDT)
+        id 9A5BF20B009E; Thu, 30 Jul 2020 14:23:12 -0700 (PDT)
 Smtp-Origin-Hostprefix: devvm
 From:   Roman Gushchin <guro@fb.com>
 Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
@@ -53,9 +52,9 @@ CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
         <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>,
         Song Liu <songliubraving@fb.com>
 Smtp-Origin-Cluster: prn0c01
-Subject: [PATCH bpf-next v3 10/29] bpf: memcg-based memory accounting for socket storage maps
-Date:   Thu, 30 Jul 2020 14:22:51 -0700
-Message-ID: <20200730212310.2609108-11-guro@fb.com>
+Subject: [PATCH bpf-next v3 02/29] bpf: memcg-based memory accounting for bpf maps
+Date:   Thu, 30 Jul 2020 14:22:43 -0700
+Message-ID: <20200730212310.2609108-3-guro@fb.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200730212310.2609108-1-guro@fb.com>
 References: <20200730212310.2609108-1-guro@fb.com>
@@ -65,10 +64,10 @@ X-FB-Internal: Safe
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-30_15:2020-07-30,2020-07-30 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=13
- priorityscore=1501 mlxlogscore=999 spamscore=0 lowpriorityscore=0
- malwarescore=0 mlxscore=0 bulkscore=0 phishscore=0 impostorscore=0
- adultscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=750
+ bulkscore=0 clxscore=1015 suspectscore=13 phishscore=0 malwarescore=0
+ priorityscore=1501 adultscore=0 spamscore=0 impostorscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2007300150
 X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,70 +75,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Account memory used by the socket storage.
+This patch enables memcg-based memory accounting for memory allocated
+by __bpf_map_area_alloc(), which is used by most map types for
+large allocations.
+
+Following patches in the series will refine the accounting for
+some map types.
 
 Signed-off-by: Roman Gushchin <guro@fb.com>
 Acked-by: Song Liu <songliubraving@fb.com>
 ---
- net/core/bpf_sk_storage.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ kernel/bpf/syscall.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/core/bpf_sk_storage.c b/net/core/bpf_sk_storage.c
-index d3377c90a291..c9b9cd2d11c5 100644
---- a/net/core/bpf_sk_storage.c
-+++ b/net/core/bpf_sk_storage.c
-@@ -130,7 +130,8 @@ static struct bpf_sk_storage_elem *selem_alloc(struct=
- bpf_sk_storage_map *smap,
- 	if (charge_omem && omem_charge(sk, smap->elem_size))
- 		return NULL;
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index cd3d599e9e90..a53e7aff3efc 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -275,7 +275,7 @@ static void *__bpf_map_area_alloc(u64 size, int numa_=
+node, bool mmapable)
+ 	 * __GFP_RETRY_MAYFAIL to avoid such situations.
+ 	 */
 =20
--	selem =3D kzalloc(smap->elem_size, GFP_ATOMIC | __GFP_NOWARN);
-+	selem =3D kzalloc(smap->elem_size,
-+			GFP_ATOMIC | __GFP_NOWARN | __GFP_ACCOUNT);
- 	if (selem) {
- 		if (value)
- 			memcpy(SDATA(selem)->data, value, smap->map.value_size);
-@@ -337,7 +338,8 @@ static int sk_storage_alloc(struct sock *sk,
- 	if (err)
- 		return err;
-=20
--	sk_storage =3D kzalloc(sizeof(*sk_storage), GFP_ATOMIC | __GFP_NOWARN);
-+	sk_storage =3D kzalloc(sizeof(*sk_storage),
-+			     GFP_ATOMIC | __GFP_NOWARN | __GFP_ACCOUNT);
- 	if (!sk_storage) {
- 		err =3D -ENOMEM;
- 		goto uncharge;
-@@ -677,7 +679,7 @@ static struct bpf_map *bpf_sk_storage_map_alloc(union=
- bpf_attr *attr)
- 	u64 cost;
- 	int ret;
-=20
--	smap =3D kzalloc(sizeof(*smap), GFP_USER | __GFP_NOWARN);
-+	smap =3D kzalloc(sizeof(*smap), GFP_USER | __GFP_NOWARN | __GFP_ACCOUNT=
-);
- 	if (!smap)
- 		return ERR_PTR(-ENOMEM);
- 	bpf_map_init_from_attr(&smap->map, attr);
-@@ -695,7 +697,7 @@ static struct bpf_map *bpf_sk_storage_map_alloc(union=
- bpf_attr *attr)
- 	}
-=20
- 	smap->buckets =3D kvcalloc(sizeof(*smap->buckets), nbuckets,
--				 GFP_USER | __GFP_NOWARN);
-+				 GFP_USER | __GFP_NOWARN | __GFP_ACCOUNT);
- 	if (!smap->buckets) {
- 		bpf_map_charge_finish(&smap->map.memory);
- 		kfree(smap);
-@@ -1034,7 +1036,7 @@ bpf_sk_storage_diag_alloc(const struct nlattr *nla_=
-stgs)
- 	}
-=20
- 	diag =3D kzalloc(sizeof(*diag) + sizeof(diag->maps[0]) * nr_maps,
--		       GFP_KERNEL);
-+		       GFP_KERNEL | __GFP_ACCOUNT);
- 	if (!diag)
- 		return ERR_PTR(-ENOMEM);
-=20
+-	const gfp_t gfp =3D __GFP_NOWARN | __GFP_ZERO;
++	const gfp_t gfp =3D __GFP_NOWARN | __GFP_ZERO | __GFP_ACCOUNT;
+ 	unsigned int flags =3D 0;
+ 	unsigned long align =3D 1;
+ 	void *area;
 --=20
 2.26.2
 
