@@ -4,60 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EF5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30920C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C576207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 10:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15BF5207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 11:00:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbgG3K6w (ORCPT
+        id S1729192AbgG3LAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 06:58:52 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:42631
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726631AbgG3K6v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 06:58:51 -0400
-X-IronPort-AV: E=Sophos;i="5.75,414,1589234400"; 
-   d="scan'208";a="355625807"
-Received: from palace.rsr.lip6.fr (HELO palace.lip6.fr) ([132.227.105.202])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/AES256-SHA256; 30 Jul 2020 12:58:49 +0200
-From:   Julia Lawall <Julia.Lawall@inria.fr>
-To:     Tony Luck <tony.luck@intel.com>
-Cc:     kernel-janitors@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-ia64@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] docs: ia64: correct typo
-Date:   Thu, 30 Jul 2020 12:17:30 +0200
-Message-Id: <1596104250-32673-1-git-send-email-Julia.Lawall@inria.fr>
-X-Mailer: git-send-email 1.9.1
+        Thu, 30 Jul 2020 07:00:10 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8303 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726631AbgG3LAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 07:00:09 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id AAF5379B622294EE9634;
+        Thu, 30 Jul 2020 19:00:06 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Thu, 30 Jul 2020
+ 18:59:58 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <jiri@mellanox.com>,
+        <edumazet@google.com>, <ap420073@gmail.com>,
+        <xiyou.wangcong@gmail.com>, <lukas@wunner.de>,
+        <maximmi@mellanox.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linmiaohe@huawei.com>
+Subject: [PATCH] net: Pass NULL to skb_network_protocol() when we don't care about vlan depth
+Date:   Thu, 30 Jul 2020 19:02:36 +0800
+Message-ID: <1596106956-22054-1-git-send-email-linmiaohe@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.101.6]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace RTC_WKLAM_RD with RTC_WKALM_RD.
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+When we don't care about vlan depth, we could pass NULL instead of the
+address of a unused local variable to skb_network_protocol() as a param.
 
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 ---
- Documentation/ia64/efirtc.rst |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/dev.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/Documentation/ia64/efirtc.rst b/Documentation/ia64/efirtc.rst
-index 2f7ff50..fd83284 100644
---- a/Documentation/ia64/efirtc.rst
-+++ b/Documentation/ia64/efirtc.rst
-@@ -113,7 +113,7 @@ We have added 2 new ioctl()s that are specific to the EFI driver:
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 7a774ebf64e2..474da11d18c9 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -3448,10 +3448,9 @@ static netdev_features_t net_mpls_features(struct sk_buff *skb,
+ static netdev_features_t harmonize_features(struct sk_buff *skb,
+ 	netdev_features_t features)
+ {
+-	int tmp;
+ 	__be16 type;
  
- 	Read the current state of the alarm::
+-	type = skb_network_protocol(skb, &tmp);
++	type = skb_network_protocol(skb, NULL);
+ 	features = net_mpls_features(skb, features, type);
  
--		ioctl(d, RTC_WKLAM_RD, &wkt)
-+		ioctl(d, RTC_WKALM_RD, &wkt)
- 
- 	Set the alarm or change its status::
- 
+ 	if (skb->ip_summed != CHECKSUM_NONE &&
+-- 
+2.19.1
 
