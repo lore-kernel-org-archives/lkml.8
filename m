@@ -4,128 +4,178 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3187AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEBBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1685420838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E90E206F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:02:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729777AbgG3QCE convert rfc822-to-8bit (ORCPT
+        id S1729852AbgG3QC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 12:02:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgG3QCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 12:02:04 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F934206F5;
-        Thu, 30 Jul 2020 16:02:02 +0000 (UTC)
-Date:   Thu, 30 Jul 2020 12:02:00 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     peter enderborg <peter.enderborg@sony.com>
-Cc:     =?UTF-8?B?VGhpw6liYXVk?= Weksteen <tweek@google.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Nick Kralevich <nnk@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <selinux@vger.kernel.org>
-Subject: Re: [PATCH] RFC: selinux avc trace
-Message-ID: <20200730120200.1367e1cd@oasis.local.home>
-In-Reply-To: <6f1262fc-21ad-f872-5460-e78d4685c9c4@sony.com>
-References: <20200724091520.880211-1-tweek@google.com>
-        <20200724095232.5f9d3f17@oasis.local.home>
-        <80a23580-5067-93b0-53fa-3bd53253c056@sony.com>
-        <20200730110459.5bf0b0df@oasis.local.home>
-        <6f1262fc-21ad-f872-5460-e78d4685c9c4@sony.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 30 Jul 2020 12:02:27 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55910 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgG3QCZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 12:02:25 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1k1B0g-0000qJ-T6; Thu, 30 Jul 2020 16:02:22 +0000
+To:     Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        "Greg Kroah-Hartman <gregkh"@linuxfoundation.org,
+        Vaibhav Agarwal <vaibhav.sr@gmail.com>,
+        Mark Greer <mgreer@animalcreek.com>,
+        greybus-dev@lists.linaro.org,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Subject: issue with uninitialized value used in a comparison in
+ gbcodec_mixer_dapm_ctl_put
+Message-ID: <7da6363c-9423-2b9f-029a-395cc8a932d7@canonical.com>
+Date:   Thu, 30 Jul 2020 17:02:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Jul 2020 17:31:17 +0200
-peter enderborg <peter.enderborg@sony.com> wrote:
+Hi,
 
-> On 7/30/20 5:04 PM, Steven Rostedt wrote:
-> > On Thu, 30 Jul 2020 16:29:12 +0200
-> > peter enderborg <peter.enderborg@sony.com> wrote:
-> >  
-> >> +#undef TRACE_SYSTEM
-> >> +#define TRACE_SYSTEM avc
-> >> +
-> >> +#if !defined(_TRACE_AVC_H) || defined(TRACE_HEADER_MULTI_READ)
-> >> +#define _TRACE_AVC_H
-> >> +
-> >> +#include <linux/tracepoint.h>
-> >> +TRACE_EVENT(avc_data,
-> >> +        TP_PROTO(u32 requested,
-> >> +             u32 denied,
-> >> +             u32 audited,
-> >> +             int result,
-> >> +             const char *msg
-> >> +             ),
-> >> +
-> >> +        TP_ARGS(requested, denied, audited, result,msg),
-> >> +
-> >> +        TP_STRUCT__entry(
-> >> +             __field(u32, requested)
-> >> +             __field(u32, denied)
-> >> +             __field(u32, audited)
-> >> +             __field(int, result)
-> >> +             __array(char, msg, 255)  
-> > You want to use __string() here, otherwise you are wasting a lot of
-> > buffer space.
-> >
-> > 		__string( msg, msg)  
+Static analysis with Coverity has detected an uninitialized value being
+used in a comparison.  The error was detected on a recent change to
+drivers/staging/greybus/audio_topology.c however the issue actually
+dates back to the original commit:
 
-> It should be a full structure with a lot of sub strings.  But that make is even more relevant.
+commit 6339d2322c47f4b8ebabf9daf0130328ed72648b
+Author: Vaibhav Agarwal <vaibhav.agarwal@linaro.org>
+Date:   Wed Jan 13 14:07:51 2016 -0700
 
-So one event instance can have a list of strings recorded?
+    greybus: audio: Add topology parser for GB codec
 
-> >  
-> >> +                 ),
-> >> +
-> >> +        TP_fast_assign(
-> >> +               __entry->requested    = requested;
-> >> +               __entry->denied    = denied;
-> >> +               __entry->audited    = audited;
-> >> +               __entry->result    = result;
-> >> +               memcpy(__entry->msg, msg, 255);  
-> > Not to mention, the above is a bug. As the msg being passed in, is
-> > highly unlikely to be 255 bytes. You just leaked all that memory after
-> > the sting to user space.
-> >
-> > Where you want here:
-> >
-> > 		__assign_str( msg, msg );  
-> 
-> Directly in to the code. Was more in to get in to discussion on how complex we should have
-> the trace data. There is a lot of fields. Not all is always present. Is there any good way
-> to handle that? Like "something= somethingelse=42" or "something=nil somthingelse=42"
+The analysis is as follows:
 
-Can you show what you want to record and what you want to display? I'm
-not totally understanding the request.
+425 static int gbcodec_mixer_dapm_ctl_put(struct snd_kcontrol *kcontrol,
+426                                      struct snd_ctl_elem_value
+*ucontrol)
+427 {
+428        int ret, wi, max, connect;
+429        unsigned int mask, val;
+430        struct gb_audio_ctl_elem_info *info;
+431        struct gbaudio_ctl_pvt *data;
 
--- Steve
+   1. var_decl: Declaring variable gbvalue without initializer.
+432        struct gb_audio_ctl_elem_value gbvalue;
+433        struct gbaudio_module_info *module;
+434        struct snd_soc_dapm_widget_list *wlist =
+snd_kcontrol_chip(kcontrol);
+435        struct snd_soc_dapm_widget *widget = wlist->widgets[0];
+436        struct device *codec_dev = widget->dapm->dev;
+437        struct gbaudio_codec_info *gb = dev_get_drvdata(codec_dev);
+438        struct gb_bundle *bundle;
+439
 
-> >> +    ),
-> >> +
-> >> +        TP_printk("requested=0x%x denied=%d audited=%d result=%d
-> >> msg=%s",
-> >> +              __entry->requested, __entry->denied, __entry->audited,
-> >> __entry->result, __entry->msg
-> >> +              )  
-> 
+   2. Condition 0 /* __builtin_types_compatible_p() */, taking false branch.
+   3. Condition 1 /* __builtin_types_compatible_p() */, taking true branch.
+   4. Falling through to end of if statement.
+   5. Condition !!branch, taking false branch.
+   6. Condition ({...; !!branch;}), taking false branch.
+
+440        dev_dbg(codec_dev, "Entered %s:%s\n", __func__,
+kcontrol->id.name);
+441        module = find_gb_module(gb, kcontrol->id.name);
+
+   7. Condition !module, taking false branch.
+442        if (!module)
+443                return -EINVAL;
+444
+445        data = (struct gbaudio_ctl_pvt *)kcontrol->private_value;
+446        info = (struct gb_audio_ctl_elem_info *)data->info;
+
+   8. Condition 0 /* !!(!__builtin_types_compatible_p() &&
+!__builtin_types_compatible_p()) */, taking false branch.
+447        bundle = to_gb_bundle(module->dev);
+448
+
+   9. Condition data->vcount == 2, taking true branch.
+449        if (data->vcount == 2)
+450                dev_warn(widget->dapm->dev,
+451                         "GB: Control '%s' is stereo, which is not
+supported\n",
+452                         kcontrol->id.name);
+453
+454        max = le32_to_cpu(info->value.integer.max);
+455        mask = (1 << fls(max)) - 1;
+456        val = ucontrol->value.integer.value[0] & mask;
+
+   10. Condition !!val, taking true branch.
+457        connect = !!val;
+458
+459        /* update ucontrol */
+
+Uninitialized scalar variable (UNINIT)
+   11. uninit_use: Using uninitialized value gbvalue.value.integer_value[0].
+460        if (gbvalue.value.integer_value[0] != val) {
+
+The gbvalue.value.integer_value[0] read is bogus since gbvalue was
+declared on the stack but was not initialized.  There seems to be no
+where that sets this data. I'm assuming most of the time that the
+comparison works because the garbage value is different from val and so
+the code in the if stanza is executed.
+
+Anyhow, I'm unsure what the original intent of the code was, so I've not
+attempted to fix this.
+
+Colin
+
 
