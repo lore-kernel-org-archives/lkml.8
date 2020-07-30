@@ -2,154 +2,103 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BA7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 226C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCF1420838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0AB9206F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:54:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729829AbgG3Pyj (ORCPT
+        id S1729874AbgG3Pyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:54:39 -0400
-Received: from mga09.intel.com ([134.134.136.24]:59416 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727072AbgG3Pyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 11:54:39 -0400
-IronPort-SDR: ifLtQHcDM77wRI68OZ7bTaVlA4HCg2BIya+GYRpFKCVpejRgYDkJTQFNfIn3f7klcx5OWiT83+
- XYymTDAA/XJw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="152847747"
-X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
-   d="scan'208";a="152847747"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 08:54:38 -0700
-IronPort-SDR: 2Oyh9SXnTy6vG12/ri2tPBygah7XluuALPmzWR6vkA8h2TV1nXjygQ2xBIkQbh2swXB9Vgrlsh
- /MUmYKpKVWXA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,414,1589266800"; 
-   d="scan'208";a="322939885"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 30 Jul 2020 08:54:38 -0700
-Received: from [10.251.2.11] (kliang2-mobl.ccr.corp.intel.com [10.251.2.11])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 41406580378;
-        Thu, 30 Jul 2020 08:54:37 -0700 (PDT)
-Subject: Re: [PATCH] perf/x86: Reset the counter to prevent the leak for a
- RDPMC task
-To:     peterz@infradead.org
-Cc:     mingo@redhat.com, acme@kernel.org, linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, Mark Rutland <mark.rutland@arm.com>
-References: <20200730123815.18518-1-kan.liang@linux.intel.com>
- <20200730125817.GL2655@hirez.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <cd65635b-d226-3089-cb4a-8f60ae408db5@linux.intel.com>
-Date:   Thu, 30 Jul 2020 11:54:35 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 11:54:52 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55682 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727072AbgG3Pyw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 11:54:52 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1k1AtK-0000Fx-Sz; Thu, 30 Jul 2020 15:54:46 +0000
+Date:   Thu, 30 Jul 2020 17:54:45 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Anthony Yznaga <anthony.yznaga@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
+        arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
+        gerg@linux-m68k.org, ktkhai@virtuozzo.com, peterz@infradead.org,
+        esyr@redhat.com, jgg@ziepe.ca, christian@kellner.me,
+        areber@redhat.com, cyphar@cyphar.com, steven.sistare@oracle.com
+Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
+Message-ID: <20200730155445.2xiyzbglibqlyioo@wittgenstein>
+References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
+ <20200730152250.GG23808@casper.infradead.org>
+ <20200730152705.ol42jppnl4xfhl32@wittgenstein>
+ <20200730153450.GH23808@casper.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200730125817.GL2655@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200730153450.GH23808@casper.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/30/2020 8:58 AM, peterz@infradead.org wrote:
-> On Thu, Jul 30, 2020 at 05:38:15AM -0700, kan.liang@linux.intel.com wrote:
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> The counter value of a perf task may leak to another RDPMC task.
+On Thu, Jul 30, 2020 at 04:34:50PM +0100, Matthew Wilcox wrote:
+> On Thu, Jul 30, 2020 at 05:27:05PM +0200, Christian Brauner wrote:
+> > On Thu, Jul 30, 2020 at 04:22:50PM +0100, Matthew Wilcox wrote:
+> > > On Mon, Jul 27, 2020 at 10:11:22AM -0700, Anthony Yznaga wrote:
+> > > > This patchset adds support for preserving an anonymous memory range across
+> > > > exec(3) using a new madvise MADV_DOEXEC argument.  The primary benefit for
+> > > > sharing memory in this manner, as opposed to re-attaching to a named shared
+> > > > memory segment, is to ensure it is mapped at the same virtual address in
+> > > > the new process as it was in the old one.  An intended use for this is to
+> > > > preserve guest memory for guests using vfio while qemu exec's an updated
+> > > > version of itself.  By ensuring the memory is preserved at a fixed address,
+> > > > vfio mappings and their associated kernel data structures can remain valid.
+> > > > In addition, for the qemu use case, qemu instances that back guest RAM with
+> > > > anonymous memory can be updated.
+> > > 
+> > > I just realised that something else I'm working on might be a suitable
+> > > alternative to this.  Apologies for not realising it sooner.
+> > > 
+> > > http://www.wil.cx/~willy/linux/sileby.html
+> > 
+> > Just skimming: make it O_CLOEXEC by default. ;)
 > 
-> Sure, but nowhere did you explain why that is a problem.
-> 
->> The RDPMC instruction is only available for the X86 platform. Only apply
->> the fix for the X86 platform.
-> 
-> ARM64 can also do it, although I'm not sure what the current state of
-> things is here.
-> 
->> After applying the patch,
->>
->>      $ taskset -c 0 ./rdpmc_read_all_counters
->>      index 0x0 value 0x0
->>      index 0x1 value 0x0
->>      index 0x2 value 0x0
->>      index 0x3 value 0x0
->>
->>      index 0x0 value 0x0
->>      index 0x1 value 0x0
->>      index 0x2 value 0x0
->>      index 0x3 value 0x0
-> 
-> You forgot about:
-> 
->   - telling us why it's a problem,
+> I appreciate the suggestion, and it makes sense for many 'return an fd'
+> interfaces, but the point of mshare() is to, well, share.  So sharing
+> the fd with a child is a common usecase, unlike say sharing a timerfd.
 
-The non-privileged RDPMC user can get the counter information from other 
-perf users. It is a security issue. I will add it in the next version.
+Fair point, from reading I thought the main reason was share after
+fork() but having an fd over exec() may be a good use-case too.
+(Fwiw, this very much looks like what the memfd_create() api should have
+looked like, i.e. mshare() could've possibly encompassed both.)
 
->   - telling us how badly it affects performance.
+> The only other reason to use mshare() is to pass the fd over a unix
+> socket to a non-child, and I submit that is far less common than wanting
+> to share with a child.
 
-I once did performance test on a HSX machine. There is no notable slow 
-down with the patch. I will add the performance data in the next version.
+Well, we have use-cases for that too. E.g. where we need to attach to an
+existing pid namespace which requires a first fork() of an intermediate
+process so that the caller doesn't change the pid_for_children
+namespace. Then we setns() to the target pid namespace in the
+intermediate process which changes the pid_ns_children namespace such
+that the next process will be a proper member of the target pid
+namespace. Finally, we fork() the target process that is now a full
+member of the target pid namespace. We also set CLONE_PARENT so
+grandfather process == father process for the second process and then
+have the intermediate process exit. Some fds we only ever open or create
+after the intermediate process exited and some fds we can only open or
+create after the intermediate process has been created and then send the
+fds via scm (since we can't share the fdtable) to the final process.
 
-> 
-> I would feel much better if we only did this on context switches to
-> tasks that have RDPMC enabled.
-
-AFAIK, at least for X86, we can only enable/disable RDPMC globally.
-How can we know if a specific task that have RDPMC enabled/disabled?
-
-> 
-> So on del() mark the counter dirty (if we don't already have state that
-> implies this), but don't WRMSR. And then on
-> __perf_event_task_sched_in(), _after_ programming the new tasks'
-> counters, check for inactive dirty counters and wipe those -- IFF RDPMC
-> is on for that task.
-> 
-
-The generic code doesn't have counters' information. It looks like we 
-need to add a new callback to cleanup the dirty counters as below.
-
-In the specific implementation of pmu_cleanup(), we can check and wipe 
-all inactive dirty counters.
-
-Is it OK?
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 1cbf57dc2ac8..3daaf0a7746d 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -3774,6 +3781,15 @@ static void perf_event_context_sched_in(struct 
-perf_event_context *ctx,
-         if (!RB_EMPTY_ROOT(&ctx->pinned_groups.tree))
-                 cpu_ctx_sched_out(cpuctx, EVENT_FLEXIBLE);
-         perf_event_sched_in(cpuctx, ctx, task);
-+
-+	/*
-+	 * Some leftovers from the previous task may still exist on the unused
-+	 * counters. The new task may illegally read the counters, e.g. via
-+	 * RDPMC. The information from the previous task will be leaked. Clean
-+	 * up the PMU before enabling it.
-+	 */
-+	if (ctx->pmu->pmu_cleanup)
-+		ctx->pmu->pmu_cleanup(pmu);
-	perf_pmu_enable(ctx->pmu);
-
-  unlock:
-
-
-
-Thanks,
-Kan
+Christian
