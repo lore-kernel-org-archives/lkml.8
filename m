@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E841C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 319DE2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F26E52074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096938;
-	bh=syJIf6GQBppf2Hdw79wPHqxwHwYccToCNQ4NPDLgv8o=;
+	s=default; t=1596096940;
+	bh=3skWiDVPUpQL4qr7FPevZfmE+/vdlGPFeS71okyenxI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uea0g6yuKKMniW+U2QM5FQsMFUDlZOOvukL+V+xwP21xWDQIFDSMJ4ZH5qRj60Q5t
-	 M5DUgijWba7MkzDEeFo86r7FViB/BMvrxT5MgdFBGtP5Nd6X7gbmcWet2D5XQj1JFj
-	 tv7Z1KgLVxneWoRBt6RhhrJ0EpFsVOdFR0DU9riI=
+	b=MJGh1xZWq2AZpgNXcpg3HVNcnGIEICCtZnFOwalnoseSITTaJqZl3Mt2wIB+5D5Kn
+	 0zhGaNRtx4GQXjDBUaVyjPWYakwH7vUIGH69hEf1kCjpDdT7nTrg+dpCAqvBEaHqf0
+	 FMrdJmE5Ng6RMLY/IPcPCR92OVSIgx+Tq+RGvqSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730239AbgG3IPf (ORCPT
+        id S1729458AbgG3IPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:15:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50996 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:15:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729982AbgG3ILp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:11:45 -0400
+        id S1729981AbgG3ILn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:11:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 548DA2083B;
-        Thu, 30 Jul 2020 08:11:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA89720838;
+        Thu, 30 Jul 2020 08:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096704;
-        bh=syJIf6GQBppf2Hdw79wPHqxwHwYccToCNQ4NPDLgv8o=;
+        s=default; t=1596096702;
+        bh=3skWiDVPUpQL4qr7FPevZfmE+/vdlGPFeS71okyenxI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dDoZANaal+O20DDvKTkIcOskFCH8m+td8p49zbyVFSacekVtrg0iGoxJMLKdZqFG9
-         JzUBLxPelPZz9rc6+S4EJ+WAYJZYSgr9KqKh1sCV84tI4zbmvgWj4uKLoQpobyrUtM
-         jY/krhsGqo/sd6nSlWJB8elVha/soSDaGfd/z+Og=
+        b=p2m8QS22WGHv8YRi+WIxlMKvsajEVAmzhtZ4UgI2z0LSsEu+J2jDRndWGSOx5l4jj
+         i+bVLIVdU09VHzaos1l0dTxFnkDXJcXmcnn5PVq102B7vr2DbfPoYs51qcVDRqKhVr
+         GcwubHZlV7FhlK6C/hW3oMQ0w0AUDAyqokmsWWeg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.4 28/54] staging: comedi: addi_apci_1032: check INSN_CONFIG_DIGITAL_TRIG shift
-Date:   Thu, 30 Jul 2020 10:05:07 +0200
-Message-Id: <20200730074422.558679015@linuxfoundation.org>
+        stable@vger.kernel.org, Rustam Kovhaev <rkovhaev@gmail.com>,
+        syzbot+c2a1fa67c02faa0de723@syzkaller.appspotmail.com
+Subject: [PATCH 4.4 27/54] staging: wlan-ng: properly check endpoint types
+Date:   Thu, 30 Jul 2020 10:05:06 +0200
+Message-Id: <20200730074422.510568876@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
 References: <20200730074421.203879987@linuxfoundation.org>
@@ -58,74 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Rustam Kovhaev <rkovhaev@gmail.com>
 
-commit 0bd0db42a030b75c20028c7ba6e327b9cb554116 upstream.
+commit faaff9765664009c1c7c65551d32e9ed3b1dda8f upstream.
 
-The `INSN_CONFIG` comedi instruction with sub-instruction code
-`INSN_CONFIG_DIGITAL_TRIG` includes a base channel in `data[3]`. This is
-used as a right shift amount for other bitmask values without being
-checked.  Shift amounts greater than or equal to 32 will result in
-undefined behavior.  Add code to deal with this.
+As syzkaller detected, wlan-ng driver does not do sanity check of
+endpoints in prism2sta_probe_usb(), add check for xfer direction and type
 
-Fixes: 33cdce6293dcc ("staging: comedi: addi_apci_1032: conform to new INSN_CONFIG_DIGITAL_TRIG")
-Cc: <stable@vger.kernel.org> #3.8+
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Link: https://lore.kernel.org/r/20200717145257.112660-3-abbotti@mev.co.uk
+Reported-and-tested-by: syzbot+c2a1fa67c02faa0de723@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=c2a1fa67c02faa0de723
+Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200722161052.999754-1-rkovhaev@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/addi_apci_1032.c |   20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ drivers/staging/wlan-ng/prism2usb.c |   16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/comedi/drivers/addi_apci_1032.c
-+++ b/drivers/staging/comedi/drivers/addi_apci_1032.c
-@@ -115,14 +115,22 @@ static int apci1032_cos_insn_config(stru
- 				    unsigned int *data)
+--- a/drivers/staging/wlan-ng/prism2usb.c
++++ b/drivers/staging/wlan-ng/prism2usb.c
+@@ -60,11 +60,25 @@ static int prism2sta_probe_usb(struct us
+ 			       const struct usb_device_id *id)
  {
- 	struct apci1032_private *devpriv = dev->private;
--	unsigned int shift, oldmask;
-+	unsigned int shift, oldmask, himask, lomask;
+ 	struct usb_device *dev;
+-
++	const struct usb_endpoint_descriptor *epd;
++	const struct usb_host_interface *iface_desc = interface->cur_altsetting;
+ 	wlandevice_t *wlandev = NULL;
+ 	hfa384x_t *hw = NULL;
+ 	int result = 0;
  
- 	switch (data[0]) {
- 	case INSN_CONFIG_DIGITAL_TRIG:
- 		if (data[1] != 0)
- 			return -EINVAL;
- 		shift = data[3];
--		oldmask = (1U << shift) - 1;
-+		if (shift < 32) {
-+			oldmask = (1U << shift) - 1;
-+			himask = data[4] << shift;
-+			lomask = data[5] << shift;
-+		} else {
-+			oldmask = 0xffffffffu;
-+			himask = 0;
-+			lomask = 0;
-+		}
- 		switch (data[2]) {
- 		case COMEDI_DIGITAL_TRIG_DISABLE:
- 			devpriv->ctrl = 0;
-@@ -145,8 +153,8 @@ static int apci1032_cos_insn_config(stru
- 				devpriv->mode2 &= oldmask;
- 			}
- 			/* configure specified channels */
--			devpriv->mode1 |= data[4] << shift;
--			devpriv->mode2 |= data[5] << shift;
-+			devpriv->mode1 |= himask;
-+			devpriv->mode2 |= lomask;
- 			break;
- 		case COMEDI_DIGITAL_TRIG_ENABLE_LEVELS:
- 			if (devpriv->ctrl != (APCI1032_CTRL_INT_ENA |
-@@ -163,8 +171,8 @@ static int apci1032_cos_insn_config(stru
- 				devpriv->mode2 &= oldmask;
- 			}
- 			/* configure specified channels */
--			devpriv->mode1 |= data[4] << shift;
--			devpriv->mode2 |= data[5] << shift;
-+			devpriv->mode1 |= himask;
-+			devpriv->mode2 |= lomask;
- 			break;
- 		default:
- 			return -EINVAL;
++	if (iface_desc->desc.bNumEndpoints != 2) {
++		result = -ENODEV;
++		goto failed;
++	}
++
++	result = -EINVAL;
++	epd = &iface_desc->endpoint[1].desc;
++	if (!usb_endpoint_is_bulk_in(epd))
++		goto failed;
++	epd = &iface_desc->endpoint[2].desc;
++	if (!usb_endpoint_is_bulk_out(epd))
++		goto failed;
++
+ 	dev = interface_to_usbdev(interface);
+ 	wlandev = create_wlan();
+ 	if (wlandev == NULL) {
 
 
