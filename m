@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5739C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FA2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9932120829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA69120829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:52:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730481AbgG3Wwb (ORCPT
+        id S1730601AbgG3Wwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 18:52:31 -0400
-Received: from mga14.intel.com ([192.55.52.115]:45264 "EHLO mga14.intel.com"
+        Thu, 30 Jul 2020 18:52:34 -0400
+Received: from mga14.intel.com ([192.55.52.115]:45267 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729995AbgG3Wwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 18:52:30 -0400
-IronPort-SDR: uFtuHiCl+CTnE2/iaRYYDXOZZ4MHQODxJlXtuIzoKD20+0YvfTQmmaA9ul8YNPzt28iSc6bUz6
- +1q9aWRLTNiQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="150901952"
+        id S1730036AbgG3Wwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 18:52:31 -0400
+IronPort-SDR: gqZNZoRx9V3JxtTy0639viOSIFXmEkE5cGkzTpkHlV57Z4/In11rAecpE4g17rKD5vbW+1iQFY
+ LpifZucauHyg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="150901954"
 X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
-   d="scan'208";a="150901952"
+   d="scan'208";a="150901954"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
   by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 15:52:29 -0700
-IronPort-SDR: PKaCNUZl0mAhPLZfpP8lofzuq7CleIQxcu9QD4j2OpfWOPQzjU0CbqtZOVXH5zqZVd08NMTQCJ
- U2JXQLJzSJhg==
+IronPort-SDR: n5Q4reraHlJojA5tTdrvH0b3jSBDPyZWeZs112s6l+9gaF8sn3P9fDjrQiwEazOO2kG6iuA1N7
+ zZSg+HNxeJcg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
-   d="scan'208";a="323056395"
+   d="scan'208";a="323056399"
 Received: from otc-chromeosbuild-1.jf.intel.com ([10.54.30.83])
   by fmsmga002.fm.intel.com with ESMTP; 30 Jul 2020 15:52:29 -0700
 From:   Azhar Shaikh <azhar.shaikh@intel.com>
@@ -43,9 +43,9 @@ To:     bleung@chromium.org, enric.balletbo@collabora.com,
 Cc:     heikki.krogerus@linux.intel.com, azhar.shaikh@intel.com,
         utkarsh.h.patel@intel.com, casey.g.bowman@intel.com,
         rajmohan.mani@intel.com
-Subject: [PATCH v2 1/2] platform/chrome: cros_ec_typec: Send enum values to usb_role_switch_set_role()
-Date:   Thu, 30 Jul 2020 15:52:56 -0700
-Message-Id: <20200730225257.7208-2-azhar.shaikh@intel.com>
+Subject: [PATCH] platform/chrome: cros_ec_typec: Avoid setting usb role twice during disconnect
+Date:   Thu, 30 Jul 2020 15:52:57 -0700
+Message-Id: <20200730225257.7208-3-azhar.shaikh@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200730225257.7208-1-azhar.shaikh@intel.com>
 References: <20200730225257.7208-1-azhar.shaikh@intel.com>
@@ -54,33 +54,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-usb_role_switch_set_role() has the second argument as enum for usb_role.
-Currently depending upon the data role i.e. UFP(0) or DFP(1) is sent.
-This eventually translates to USB_ROLE_NONE in case of UFP and
-USB_ROLE_DEVICE in case of DFP. Correct this by sending correct enum
-values as USB_ROLE_DEVICE in case of UFP and USB_ROLE_HOST in case of
-DFP.
-
-Fixes: 7e7def15fa4b ("platform/chrome: cros_ec_typec: Add USB mux control")
+On disconnect port partner is removed and usb role is set to NONE.
+But then in cros_typec_port_update() the role is set again.
+Avoid this by moving usb_role_switch_set_role() to
+cros_typec_configure_mux().
 
 Signed-off-by: Azhar Shaikh <azhar.shaikh@intel.com>
-Cc: Prashant Malani <pmalani@chromium.org>
-Reviewed-by: Prashant Malani <pmalani@chromium.org>
+Suggested-by: Prashant Malani <pmalani@chromium.org>
 ---
- drivers/platform/chrome/cros_ec_typec.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/platform/chrome/cros_ec_typec.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index 3eae01f4c9f7..eb4713b7ae14 100644
+index eb4713b7ae14..df97431b2275 100644
 --- a/drivers/platform/chrome/cros_ec_typec.c
 +++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -590,7 +590,8 @@ static int cros_typec_port_update(struct cros_typec_data *typec, int port_num)
+@@ -515,6 +515,12 @@ static int cros_typec_configure_mux(struct cros_typec_data *typec, int port_num,
+ 	if (ret)
+ 		return ret;
+ 
++	ret = usb_role_switch_set_role(typec->ports[port_num]->role_sw,
++				       pd_ctrl->role & PD_CTRL_RESP_ROLE_DATA
++				       ? USB_ROLE_HOST : USB_ROLE_DEVICE);
++	if (ret)
++		return ret;
++
+ 	if (mux_flags & USB_PD_MUX_TBT_COMPAT_ENABLED) {
+ 		ret = cros_typec_enable_tbt(typec, port_num, pd_ctrl);
+ 	} else if (mux_flags & USB_PD_MUX_DP_ENABLED) {
+@@ -589,9 +595,7 @@ static int cros_typec_port_update(struct cros_typec_data *typec, int port_num)
+ 	if (ret)
  		dev_warn(typec->dev, "Configure muxes failed, err = %d\n", ret);
  
- 	return usb_role_switch_set_role(typec->ports[port_num]->role_sw,
--					!!(resp.role & PD_CTRL_RESP_ROLE_DATA));
-+				       resp.role & PD_CTRL_RESP_ROLE_DATA
-+				       ? USB_ROLE_HOST : USB_ROLE_DEVICE);
+-	return usb_role_switch_set_role(typec->ports[port_num]->role_sw,
+-				       resp.role & PD_CTRL_RESP_ROLE_DATA
+-				       ? USB_ROLE_HOST : USB_ROLE_DEVICE);
++	return ret;
  }
  
  static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
