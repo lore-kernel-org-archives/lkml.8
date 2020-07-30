@@ -2,136 +2,124 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A644C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 277412075D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8B7F2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 00:25:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dyQEfSTo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="MtDwwZN6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgG3AUC (ORCPT
+        id S1728183AbgG3AZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 20:20:02 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2464 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbgG3AUC (ORCPT
+        Wed, 29 Jul 2020 20:25:41 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:33201 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727862AbgG3AZk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 20:20:02 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2212040003>; Wed, 29 Jul 2020 17:19:16 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 29 Jul 2020 17:20:02 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 29 Jul 2020 17:20:02 -0700
-Received: from [10.2.160.194] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jul
- 2020 00:20:01 +0000
-Subject: Re: [RFC PATCH v5 13/14] media: tegra-video: Add CSI MIPI pads
- calibration
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <gregkh@linuxfoundation.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>
-References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
- <1595883452-17343-14-git-send-email-skomatineni@nvidia.com>
- <c3d40261-9d77-3634-3e04-f20efad9d3d8@gmail.com>
- <01ee0805-3d57-d857-48e3-5c2245cd4500@nvidia.com>
- <2ec535c9-55e8-8834-6002-36c75aeb097c@gmail.com>
- <021707b9-5f72-6f8b-d125-43627ef64a6d@nvidia.com>
-Message-ID: <de2d6117-b1e5-14c0-52ca-ff46b444c866@nvidia.com>
-Date:   Wed, 29 Jul 2020 17:27:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 29 Jul 2020 20:25:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1596068739; x=1627604739;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=eZTfMgiK2vEeMZsD5lwwoP2zVvgB9NQ0c2HdLF8qwXA=;
+  b=MtDwwZN6u54Yd6TZyAesj3nKzWmd37fDiXby6gvMrCxmFZOECwB/s1Tj
+   qeBiGwxRyPSY/fWXgy2wt5u5pZHQo80OfWiubuQNoniZjvU5efEXJlclZ
+   Yg6eruHy6NRmMqRAYXbuL/gAd1vR0a1ZtjdmSea6z5TACi6QO745s7Ucj
+   eVkQhzqXnBy8DLjtMCDwCwJTYCQHKo2JZwAKcg8a7Iye/6ADpNfFdI77d
+   8bzmzb+WlmtFD5USejezAEk1DTZNyN97Qfy7bObAjh1fmUdcRctKPEpBq
+   GHZtvwtJuqA9MzV0r9Ug3KXxhe4l5fEW2yXkBaysKA405gWyCpOZUEJ1Y
+   w==;
+IronPort-SDR: LRjIRlPiDUXVZavr6SS0YbT2Ll9/TQnMq2TSZoWyndF1OV/qX2DDDl1sh29PCRZ6WW082HMBjg
+ Kz4QkkhHoYBPTdJqnRuvu7Zdd0mokur51okc8K4HWp+04jYzFaQSVPshkN990Jb8CivUOd/D1e
+ eZRSxUOaHHyFUh1ql+NxkQvyjQgrPWx4kpUFgyY2kZdZPsUlan56sGIx32LWtDYfmwLxiqzPYS
+ BMxr41pEvhaCOaIVX3HGRFl+Rn0CxpPhPb59M3ODYE6k3ddmXOtQgHibBCci1Hl8+PyX7ExgbQ
+ Ues=
+X-IronPort-AV: E=Sophos;i="5.75,412,1589212800"; 
+   d="scan'208";a="253040609"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 30 Jul 2020 08:25:39 +0800
+IronPort-SDR: 2kmw3pgLDyOZaUJhD5yBfLPod9DCOGcdEkWCNZW0yk7HkEI95YNdJKr9fJ/kNEpNxJYAKM/QDy
+ HphhY6hBr3OnXyxP67dCiPPn5teYb+qm4=
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 17:13:09 -0700
+IronPort-SDR: 6UJWOZcUcSr7TfQqXrqD26zZiC1kzKQxJVo8FI0jW1AO2FT4vnNLnamB+KCsFFg/X6LmkZwDOT
+ CyVema/uVjpw==
+WDCIronportException: Internal
+Received: from jpf009043.ad.shared (HELO jedi-01.hgst.com) ([10.86.58.210])
+  by uls-op-cesaip02.wdc.com with ESMTP; 29 Jul 2020 17:25:40 -0700
+From:   Atish Patra <atish.patra@wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup.patel@wdc.com>,
+        linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Subject: [PATCH] RISC-V: Fix build warning for smpboot.c
+Date:   Wed, 29 Jul 2020 17:25:35 -0700
+Message-Id: <20200730002535.17335-1-atish.patra@wdc.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <021707b9-5f72-6f8b-d125-43627ef64a6d@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596068356; bh=hV+Rb57UmhCj8pm6WTLYiOwES0CnuMuyE+cAvTI8bYU=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=dyQEfSToFkFK5Ao+j9IJdx52QAx74A1w4Knhlb63k2k+/PBa19roLzwO7B7GvfEfV
-         /xE4nmXQmaIa8c+cE3GPby4Hb45lL2K7IV2+KAgr8qGTQ0xB93afvae0yrNnnWwc89
-         yYB4JBzGngaKMtnHg/3JzF6CaCbCKjbA5BenBmL7WTnMXrn73TD4IT6Kc92g01Mi8q
-         WDWqWhMsxSm7z8N3H6/wL5BNdHDQL5p8rFqg7zYQdNPlhi6hHMs8+q3M0DqcjLoEyy
-         pfdy2oo3ejbKUIc3FlRGx3DoGjEIp7kgNMwrJchlx72Mf6jhoJPV2HPAdZ9RLN66ld
-         pLqtjXbxgWHVQ==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following warnings are reported by kbuild with W=1.
 
-On 7/29/20 4:59 PM, Sowjanya Komatineni wrote:
->
-> On 7/29/20 4:25 PM, Dmitry Osipenko wrote:
->> 28.07.2020 18:59, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> ...
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D tegra_mipi_finish=
-_calibration(csi_chan->mipi);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 d=
-ev_err(csi_chan->csi->dev,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 "MIPI calibration failed: %d\n", ret);
->>>> Doesn't v4l2_subdev_call(OFF) need to be invoked here on error?
->>> Not required as on error streaming fails and runtime PM will turn off
->>> power anyway.
->> I see that camera drivers bump theirs RPM on s_stream=3D1, and thus,
->> s_stream=3D0 should be invoked in order to balance the RPM. What am I=20
->> missing?
->>
->> https://elixir.bootlin.com/linux/v5.8-rc4/source/drivers/media/i2c/ov274=
-0.c#L634=20
->>
->
-> Sensor drivers take care of RPM put when any failure happens during=20
-> s_stream.
->
-> So bridge driver don't have to call v4l2_subdev_call s_stream off=20
-> incase if sensor subdev stream on fails.
->
->>> Also we only did csi subdev s_stream on and during sensor subdev
->>> s_stream on fail, actual stream dont happen and on tegra side frame
->>> capture by HW happens only when kthreads run.
->> Secondly, perhaps a failed calibration isn't a very critical error?
->> Hence just printing a warning message should be enough.
->
-> Using dev_err to report calibration failure. Are you suggesting to use=20
-> dev_warn instead of dev_err?
->
->>
->> Could you please make a patch that factors all ON/OFF code paths into a
->> separate functions? It's a bit difficult to follow the combined code,
->> especially partial changes in the patches. Thanks in advance!
->
-> what do you mean by partial changes in patches?
->
-> Can you please be more clear?
+>> arch/riscv/kernel/smpboot.c:109:5: warning: no previous prototype for
+'start_secondary_cpu' [-Wmissing-prototypes]
+     109 | int start_secondary_cpu(int cpu, struct task_struct *tidle)
+         |     ^~~~~~~~~~~~~~~~~~~
+   arch/riscv/kernel/smpboot.c:146:34: warning: no previous prototype for
+'smp_callin' [-Wmissing-prototypes]
+     146 | asmlinkage __visible void __init smp_callin(void)
+         |                                  ^~~~~~~~~~
 
-Also please specify what ON/OFF code paths you are referring to when you=20
-say to move into separate functions?
+Fix the warnings by marking the local functions static and adding the prototype
+for the global function.
 
->
-> Thanks
->
-> Sowjanya
->
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
+---
+ arch/riscv/include/asm/smp.h | 3 +++
+ arch/riscv/kernel/smpboot.c  | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/arch/riscv/include/asm/smp.h b/arch/riscv/include/asm/smp.h
+index 40bb1c15a731..6dfd2a1446d5 100644
+--- a/arch/riscv/include/asm/smp.h
++++ b/arch/riscv/include/asm/smp.h
+@@ -40,6 +40,9 @@ void arch_send_call_function_single_ipi(int cpu);
+ int riscv_hartid_to_cpuid(int hartid);
+ void riscv_cpuid_to_hartid_mask(const struct cpumask *in, struct cpumask *out);
+ 
++/* Secondary hart entry */
++asmlinkage void smp_callin(void);
++
+ /*
+  * Obtains the hart ID of the currently executing task.  This relies on
+  * THREAD_INFO_IN_TASK, but we define that unconditionally.
+diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+index 4e9922790f6e..c09fbdf924b1 100644
+--- a/arch/riscv/kernel/smpboot.c
++++ b/arch/riscv/kernel/smpboot.c
+@@ -106,7 +106,7 @@ void __init setup_smp(void)
+ 	}
+ }
+ 
+-int start_secondary_cpu(int cpu, struct task_struct *tidle)
++static int start_secondary_cpu(int cpu, struct task_struct *tidle)
+ {
+ 	if (cpu_ops[cpu]->cpu_start)
+ 		return cpu_ops[cpu]->cpu_start(cpu, tidle);
+-- 
+2.24.0
+
