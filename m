@@ -2,136 +2,107 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E135C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB76AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDFCC20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3BB1208A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:58:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="BwbeTpv5";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="YWQi6BdG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NNHAiB3G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbgG3B5x (ORCPT
+        id S1728345AbgG3B6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 21:57:53 -0400
-Received: from relay4.mymailcheap.com ([137.74.80.156]:40119 "EHLO
-        relay4.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbgG3B5x (ORCPT
+        Wed, 29 Jul 2020 21:58:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52806 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728305AbgG3B6E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 21:57:53 -0400
-X-Greylist: delayed 3668 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 Jul 2020 21:57:51 EDT
-Received: from filter2.mymailcheap.com (filter2.mymailcheap.com [91.134.140.82])
-        by relay4.mymailcheap.com (Postfix) with ESMTPS id 6C4AA3F1CF;
-        Thu, 30 Jul 2020 03:57:50 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by filter2.mymailcheap.com (Postfix) with ESMTP id 38F7A2A905;
-        Thu, 30 Jul 2020 03:57:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
-        s=default; t=1596074270;
-        bh=HNTEtPvZ8Q8gpHfiRmmFzp9wJg7FvAMRKSwxXCTdJrE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=BwbeTpv5nImr8tezlb1vzB2mbeke4/G4RVKozUmwkrFbDdrHv9rckNjRDOiSBACRu
-         RHzZIHM4PJXBDq/M6jfHsPT8A0AhhkwndzNRvC7BAk82ptan1Zr98IXVGTIwBeQnQi
-         5/EOXz/gR43aXrFxcyzkx5xRmNdb4JbO11aCMR0Y=
-X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
-Received: from filter2.mymailcheap.com ([127.0.0.1])
-        by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id dkVGCNmU6JUo; Thu, 30 Jul 2020 03:57:48 +0200 (CEST)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by filter2.mymailcheap.com (Postfix) with ESMTPS;
-        Thu, 30 Jul 2020 03:57:48 +0200 (CEST)
-Received: from [213.133.102.83] (ml.mymailcheap.com [213.133.102.83])
-        by mail20.mymailcheap.com (Postfix) with ESMTP id A46B940143;
-        Thu, 30 Jul 2020 01:57:45 +0000 (UTC)
-Authentication-Results: mail20.mymailcheap.com;
-        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="YWQi6BdG";
-        dkim-atps=neutral
-AI-Spam-Status: Not processed
-Received: from [0.0.0.0] (n11212042148.netvigator.com [112.120.42.148])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 74A0C40EB8;
-        Thu, 30 Jul 2020 01:57:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
-        s=default; t=1596074226;
-        bh=HNTEtPvZ8Q8gpHfiRmmFzp9wJg7FvAMRKSwxXCTdJrE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=YWQi6BdG/NkMEerlQ1guyowekdGQEQKRmswhMgIQKX8MUnnQc530Sus0VGPVC5aSf
-         cbR7Lr9h+zV0v+be1jTdNq0Vjmoj34IZKBgz34SCAROeB7mA8PzHIJHy5QmH9HjkEn
-         RfCFYxbSWWbM77QQfAulrrnDqOxJa70EtFrF0764=
-Subject: Re: linux-next: build warning after merge of the mips tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh@kernel.org>
-References: <20200729203142.18248463@canb.auug.org.au>
- <f2a9f50d-5299-04f8-146b-e09df8943367@flygoat.com>
- <20200730114023.60317d30@canb.auug.org.au>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <e8757bd7-e6e6-5181-ef52-7dca0a114360@flygoat.com>
-Date:   Thu, 30 Jul 2020 09:56:59 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200730114023.60317d30@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Rspamd-Queue-Id: A46B940143
-X-Spamd-Result: default: False [-0.10 / 10.00];
-         RCVD_VIA_SMTP_AUTH(0.00)[];
-         ARC_NA(0.00)[];
-         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
-         FROM_HAS_DN(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         R_SPF_SOFTFAIL(0.00)[~all];
-         ML_SERVERS(-3.10)[213.133.102.83];
-         TO_DN_ALL(0.00)[];
-         DKIM_TRACE(0.00)[flygoat.com:+];
-         RCPT_COUNT_SEVEN(0.00)[7];
-         RCVD_IN_DNSWL_NONE(0.00)[213.133.102.83:from];
-         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
-         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
-         RCVD_NO_TLS_LAST(0.10)[];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:24940, ipnet:213.133.96.0/19, country:DE];
-         RCVD_COUNT_TWO(0.00)[2];
-         MID_RHS_MATCH_FROM(0.00)[];
-         HFILTER_HELO_BAREIP(3.00)[213.133.102.83,1]
-X-Rspamd-Server: mail20.mymailcheap.com
+        Wed, 29 Jul 2020 21:58:04 -0400
+Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5148C0619D2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 18:58:03 -0700 (PDT)
+Received: by mail-qv1-xf49.google.com with SMTP id p15so4013967qvv.7
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 18:58:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=hD4JVbRoXU8HBHOVfHiuteW8LNmG7l4+fLjJw6+lL+o=;
+        b=NNHAiB3GjPKlQ2xd5ZEwvNI3BDPOqBsPbHib1dCO1pZMaDNmrdPoRZI+l+EGuATwEr
+         LTtHLGmJFuTcIfU43Sqt7WooR5gHwVSc5mQM6X2YENJvLGONb7TGwcsKR2Ch+t+w9Gsh
+         MFH0D0jjOIfYTSTEhLPQD/VhFax+cUjC/QKjVrcbzM0yZRgbYgBELsI2na6TDBicnWRB
+         VCx8lSF2ElimO0Kpffa/BFNtv2ids+2NZ6uou8OYNhal1Ac5a+T6nCpM3/F0ySEt3NkI
+         5L7dt1j0BSu3dopiQ97Q+CbqhkfRadubUKfaQjHQFkUHP40w1Ve98WSC53EtzifkMmNb
+         xH7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=hD4JVbRoXU8HBHOVfHiuteW8LNmG7l4+fLjJw6+lL+o=;
+        b=QOPDS2NPyOs9IZY7ggyxHdzlwlROrK55cT1XEH9XkegBgAZ6StkxfZJFaNLM2Ddru9
+         OHH3U2P93HxbegflzT6hwbne+NLmJZGhbFCnyCQvuBR4u9l3tMMsSkGqev0a7PwW3n7U
+         apeu/E0BN6Ly4YjW3B8rIQKu6W7fmuW8oBGjU3xLhwLtyEjYwdpUaFNiU671Curqzy8Y
+         Y7q3dYYKCMuqBANX3GmDxhJ6I/4zrpWmCbAaZu7P9F1QDmq7rc7S5fhNaqMPr4gX7iO3
+         Z1rwMDMqHiToqHCv5QhpMTssTA9HQ/NGGDwNA73PK2XhVIL5eDU6apwkhn3x1T4J8Uc7
+         nJGA==
+X-Gm-Message-State: AOAM533cQ2/vTsaJXvfD9NNp9JFR1nVUUj74igJIamTrOn5OgaL3IhqS
+        jrHnWjQL+xTcI3N3L4490u3ec6EThWDqLQ==
+X-Google-Smtp-Source: ABdhPJxtYHASL5siDARRmf7mGdSRr96pDCPaV546UOgYlDtH2NBqg8etyj2L9VQKSHjUZCfKcfpQhSULoZWGyw==
+X-Received: by 2002:ad4:4d83:: with SMTP id cv3mr767697qvb.236.1596074282824;
+ Wed, 29 Jul 2020 18:58:02 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 18:57:55 -0700
+Message-Id: <20200730015755.1827498-1-edumazet@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
+Subject: [PATCH net] RDMA/umem: add a schedule point in ib_umem_get()
+From:   Eric Dumazet <edumazet@google.com>
+To:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        linux-rdma@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Mapping as little as 64GB can take more than 10 seconds,
+triggering issues on kernels with CONFIG_PREEMPT_NONE=y.
 
+ib_umem_get() already splits the work in 2MB units on x86_64,
+adding a cond_resched() in the long-lasting loop is enough
+to solve the issue.
 
-在 2020/7/30 上午9:40, Stephen Rothwell 写道:
-> Hi Jiaxun,
->
-> On Thu, 30 Jul 2020 09:04:40 +0800 Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->> Btw: Neither James nor Ralf is still active at Linux-MIPS.
-> Interesting.  I have just them listed as my contacts for MIPS.  Should
-> I change to just Thomes (Thomas Bogendoerfer
-> <tsbogend@alpha.franken.de>)?
+Note that sg_alloc_table() can still use more than 100 ms,
+which is also problematic. This might be addressed later
+in ib_umem_add_sg_table(), adding new blocks in sgl
+on demand.
 
-Yes, Thomas is now the sole maintainer of Linux-MIPS.
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Doug Ledford <dledford@redhat.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: linux-rdma@vger.kernel.org
+---
+ drivers/infiniband/core/umem.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks.
+diff --git a/drivers/infiniband/core/umem.c b/drivers/infiniband/core/umem.c
+index 82455a1392f1d19c96ae956f0bd4e93e3a52d29c..831bff8d52e547834e9e04064127fbb280595126 100644
+--- a/drivers/infiniband/core/umem.c
++++ b/drivers/infiniband/core/umem.c
+@@ -261,6 +261,7 @@ struct ib_umem *ib_umem_get(struct ib_device *device, unsigned long addr,
+ 	sg = umem->sg_head.sgl;
+ 
+ 	while (npages) {
++		cond_resched();
+ 		ret = pin_user_pages_fast(cur_base,
+ 					  min_t(unsigned long, npages,
+ 						PAGE_SIZE /
+-- 
+2.28.0.rc0.142.g3c755180ce-goog
 
-- Jiaxun
-
->
