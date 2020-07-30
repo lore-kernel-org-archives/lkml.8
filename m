@@ -2,72 +2,109 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03403C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC48FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D560622B49
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7E172074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:47:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HWli+F3c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbgG3Hl0 (ORCPT
+        id S1728754AbgG3Hrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 03:41:26 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:35872 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726133AbgG3Hl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 03:41:26 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 875487918EA1FF0698D8;
-        Thu, 30 Jul 2020 15:41:21 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Thu, 30 Jul 2020
- 15:41:19 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <kvalo@codeaurora.org>, <davem@davemloft.net>, <kuba@kernel.org>,
-        <david.gnedt@davizone.at>, <linville@tuxdriver.com>,
-        <pavel@ucw.cz>, <pali@kernel.org>
-CC:     <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net] wl1251: fix always return 0 error
-Date:   Thu, 30 Jul 2020 15:39:39 +0800
-Message-ID: <20200730073939.33704-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 30 Jul 2020 03:47:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbgG3Hrc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 03:47:32 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 657A1C061794;
+        Thu, 30 Jul 2020 00:47:32 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id t6so16085060pgq.1;
+        Thu, 30 Jul 2020 00:47:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qtQd0r7mPWp4LCw9V5WruqvGI96T5CfT/3YOE4IYwQ0=;
+        b=HWli+F3cevEtYkBYYAuXIgETbH5MGA5ExQ9WlWrGjRuUIvFZ37JydUyNRuJy8P5vPj
+         8wj20w+O+qh2W1z22hoZoyjpNes8mHlfrCxmUfkxdsuwoNWp16IbARd6DE7c83M/pEA7
+         rV5g81Lgcogtn+Yq+3Im0FMGGiMg3qLLQa4rPN9e++mtzRZ0tOY5pH58CfJ9HZBmx5Mr
+         KemeY08AQzmAeJJHE2mxKjhMwfDUWVCmJdcECblJtWkRyQcyy/D0VLHewLaFItoFXrhX
+         zoOXeCFFnJzEQqVwTeoayag3F8bzUyoNyuygIMd7HqiS/9zcaMqX1MMDBQSrzO3tftRC
+         SWLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qtQd0r7mPWp4LCw9V5WruqvGI96T5CfT/3YOE4IYwQ0=;
+        b=sln+m9hdVYPKr8peJDipqolfbrYI9fG6wsD5tQMADbnlFG6XgfG0KuxNMnQ1LnKj6X
+         oHYHL0oDxTC1U6+ddL80HDTOr/v2Zx9RMxAurO0aP/31nLyJFnPGbBkOJ1uv2aiZkonT
+         NED+C4/yKQo/CqdeFEbxIWIWtKinI02TByLXtSR0VN+GzaHzBjuBjBZZVgERv2tLIV2Y
+         /PinjsbGc6ZLHVV+60V3IZE0ykcDxxVsGAyGbcJzvvcOr+96z5Wlrs+jOZz1uRikDDGv
+         uWM/XakOle5inZFnpGzbfG+UuUALGVLRHMWDguQodJ67Ollzm7QtSmBvxgp+gyehu9Z3
+         LiPw==
+X-Gm-Message-State: AOAM533GuWJpHyKEWlk9Flkek56o7o850lsu9yU8Jpg9Msc3odlewp4n
+        SbiX4auQoIcfszogiDC98SS2Do293V+I5NHVAxk=
+X-Google-Smtp-Source: ABdhPJyvPhaxkAc8ZiP0Pqc3h7whZYpVSqj5vo0Mt3lDjRMjOkz1Mb4vjCwgIGBpxrGSQlRS1dJC8fjYpwgg3idWIL0=
+X-Received: by 2002:a62:7b4e:: with SMTP id w75mr1977914pfc.130.1596095251805;
+ Thu, 30 Jul 2020 00:47:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+References: <20200729210311.425d0e9b@canb.auug.org.au> <20200729114757.GA19388@gondor.apana.org.au>
+ <20200729122807.GA7047@gondor.apana.org.au> <ed62ba67-0e1d-3fee-8c09-7750d5690be5@redhat.com>
+ <CAHp75VdbZu008RcxNhMysoqBs2FSPXWv+au_ROJ7FPVd0uOhtg@mail.gmail.com> <20200730005922.GA9710@gondor.apana.org.au>
+In-Reply-To: <20200730005922.GA9710@gondor.apana.org.au>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 30 Jul 2020 10:47:16 +0300
+Message-ID: <CAHp75Vf9Oj5DsGveN32i0A2TqudS+DXfhJYUOzSMJ6VD_A+2Ow@mail.gmail.com>
+Subject: Re: [PATCH 0/2] locking/qspinlock: Break qspinlock_types.h header loop
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc:     Waiman Long <longman@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wl1251_event_ps_report() should not always return 0 because
-wl1251_ps_set_mode() may fail. Change it to return 'ret'.
+On Thu, Jul 30, 2020 at 4:00 AM Herbert Xu <herbert@gondor.apana.org.au> wrote:
+>
+> On Wed, Jul 29, 2020 at 06:04:57PM +0300, Andy Shevchenko wrote:
+> > On Wed, Jul 29, 2020 at 4:35 PM Waiman Long <longman@redhat.com> wrote:
+> > > On 7/29/20 8:28 AM, Herbert Xu wrote:
+> >
+> > ...
+> >
+> > > This patch series looks good to me. I just wonder if we should also move
+> > > ATOMIC64_INIT() to types.h for symmetry purpose. Anyway,
+> >
+> > Same question here.
+>
+> Yes I almost started doing it but at least one architecture (arc)
+> had a custom atomic64_t so I kept it out just to be on the safe
+> side.
 
-Fixes: f7ad1eed4d4b ("wl1251: retry power save entry")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
----
- drivers/net/wireless/ti/wl1251/event.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+We may ask Synopsys folks to look at this as well.
+Vineet, any ideas if we may unify ATOMIC64_INIT() across the architectures?
 
-diff --git a/drivers/net/wireless/ti/wl1251/event.c b/drivers/net/wireless/ti/wl1251/event.c
-index 850864dbafa1..e6d426edab56 100644
---- a/drivers/net/wireless/ti/wl1251/event.c
-+++ b/drivers/net/wireless/ti/wl1251/event.c
-@@ -70,7 +70,7 @@ static int wl1251_event_ps_report(struct wl1251 *wl,
- 		break;
- 	}
- 
--	return 0;
-+	return ret;
- }
- 
- static void wl1251_event_mbox_dump(struct event_mailbox *mbox)
+> We certainly could do this as a follow-up patch.
+
 -- 
-2.17.1
-
+With Best Regards,
+Andy Shevchenko
