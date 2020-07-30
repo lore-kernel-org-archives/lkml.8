@@ -2,131 +2,98 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B85B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87929C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9870E20842
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:20:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BVHxBkPZ"
+	by mail.kernel.org (Postfix) with ESMTP id 664CB2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:21:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596086501;
+	bh=pf25fmQ/TZV16YYmJ+84pEKXAho0XJaQPnceNoQ5PBg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gV/MP9sGW6PcOa5/EU2jnxexyHFVUYMOgxMf7GapuMWeitpfF4ytTavY0Oli5IRk/
+	 scImsynYJ5GwyJuWudr6eBvO+pyFBhMBaixG+gwF3+4jdQjqgXW2D0T5KkTTc2Y3ya
+	 MWXEjgMsk5eb3XJ1WSPlRNqFq15S/49n2UnvhWnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbgG3FUK (ORCPT
+        id S1726267AbgG3FVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 01:20:10 -0400
-Received: from ozlabs.org ([203.11.71.1]:46997 "EHLO ozlabs.org"
+        Thu, 30 Jul 2020 01:21:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726267AbgG3FUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 01:20:10 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1728195AbgG3FVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 01:21:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BHJdN0ss3z9sRX;
-        Thu, 30 Jul 2020 15:20:07 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596086408;
-        bh=ODeRgtMKT9jb1AW+U70iuR+0CpBcYdgaLgF+n3GXCP4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=BVHxBkPZYUUs2Y6tuyHj5/gZZ98M9TqcWwGpfOpIihsQ0Z9MSdbw4YcTaPA5xqGiJ
-         bXmHaVtsWKLxTYTJIkUnCz1M5J0honBwSb4a9XhHl6RmyS6YnBg0uRrEEYvqvFqYda
-         /lOe12lKSibmolA6r2GVWamN6PRUmOU3Ovq6PdKfapT8UKdwwDbrKiSHWOkohLFDq/
-         xtgkl0Ydp9K7YfmH4ZtWrCMLAO/uqRGe7ghqqHligX7Vq/xIfeGw90AxSZsZ3gEkTD
-         4TMYsUBALOiNM7ZMi8GUKx/Qdpp/4L7ZLiGF31v+HB7qWH/SuKtftMFryESdzMWO0r
-         B2gUjy+qTJzjg==
-Date:   Thu, 30 Jul 2020 15:20:06 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Joerg Roedel <joro@8bytes.org>, Christoph Hellwig <hch@lst.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jerry Snitselaar <jsnitsel@redhat.com>
-Subject: linux-next: manual merge of the iommu tree with the dma-mapping
- tree
-Message-ID: <20200730152006.7d012668@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BABF20842;
+        Thu, 30 Jul 2020 05:21:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596086498;
+        bh=pf25fmQ/TZV16YYmJ+84pEKXAho0XJaQPnceNoQ5PBg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2qS+e8juE+hJmAnsxhBWQ3mFEv84S6snZ8Kp8oimbo74cX5rA5q8nVLlLj0W8CIPI
+         Q53zZQO7jPpaCAHWAUnQAdvzt0Ypf/BZ0vlykXC7NDplKPcwTEBriz/ffHJG4U6h6m
+         yXgB6s99/30eUWur+damaSIIjl6Gz4mHLKmnvf2I=
+Date:   Thu, 30 Jul 2020 07:21:27 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     John Donnelly <John.P.donnelly@oracle.com>
+Cc:     Mike Snitzer <snitzer@redhat.com>, stable@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: (resend) [PATCH [linux-4.14.y]] dm cache: submit writethrough
+ writes in parallel to origin and cache
+Message-ID: <20200730052127.GA3860556@kroah.com>
+References: <37c5a615-655d-c106-afd0-54e03f3c0eef@oracle.com>
+ <20200727150014.GA27472@redhat.com>
+ <20200729115119.GB2674635@kroah.com>
+ <20200729115557.GA2799681@kroah.com>
+ <20200729141607.GA7215@redhat.com>
+ <851f749a-5c92-dcb1-f8e4-95b4434a1ec4@oracle.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/.gygsxj+xJnStLtg1iKpndV";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <851f749a-5c92-dcb1-f8e4-95b4434a1ec4@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/.gygsxj+xJnStLtg1iKpndV
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jul 29, 2020 at 06:45:46PM -0500, John Donnelly wrote:
+> 
+> 
+> On 7/29/20 9:16 AM, Mike Snitzer wrote:
+> > On Wed, Jul 29 2020 at  7:55am -0400,
+> > Greg KH <gregkh@linuxfoundation.org> wrote:
+> > 
+> > > On Wed, Jul 29, 2020 at 01:51:19PM +0200, Greg KH wrote:
+> > > > On Mon, Jul 27, 2020 at 11:00:14AM -0400, Mike Snitzer wrote:
+> > > > > This mail needs to be saent to stable@vger.kernel.org (now cc'd).
+> > > > > 
+> > > > > Greg et al: please backport 2df3bae9a6543e90042291707b8db0cbfbae9ee9
+> > > > 
+> > > > Now backported, thanks.
+> > > 
+> > > Nope, it broke the build, I need something that actually works :)
+> > > 
+> > 
+> > OK, I'll defer to John Donnelly to get back with you (and rest of
+> > stable@).  He is more invested due to SUSE also having this issue.  I
+> > can put focus to it if John cannot sort this out.
+> > 
+> > Mike
+> > 
+> 
+> 
+> Hi.
+> 
+> 
+> Thank you for reaching out.
+> 
+> What specifically is broken? . If it that applying
+> 2df3bae9a6543e90042291707b8db0cbfbae9ee9 to 4.14.y is failing?
 
-Hi all,
-
-Today's linux-next merge of the iommu tree got a conflict in:
-
-  drivers/iommu/Kconfig
-
-between commit:
-
-  2f9237d4f6df ("dma-mapping: make support for dma ops optional")
-
-from the dma-mapping tree and commit:
-
-  ab65ba57e3ac ("iommu/vt-d: Move Kconfig and Makefile bits down into intel=
- directory")
-
-from the iommu tree.
-
-I fixed it up (I used the ;atter and applied the folowing merge fix
-patch as well) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Thu, 30 Jul 2020 15:14:18 +1000
-Subject: [PATCH] merge fix for "dma-mapping: make support for dma ops optio=
-nal"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/iommu/intel/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/iommu/intel/Kconfig b/drivers/iommu/intel/Kconfig
-index 877beec9d987..5337ee1584b0 100644
---- a/drivers/iommu/intel/Kconfig
-+++ b/drivers/iommu/intel/Kconfig
-@@ -6,6 +6,7 @@ config DMAR_TABLE
- config INTEL_IOMMU
- 	bool "Support for Intel IOMMU using DMA Remapping Devices"
- 	depends on PCI_MSI && ACPI && (X86 || IA64)
-+	select DMA_OPS
- 	select IOMMU_API
- 	select IOMMU_IOVA
- 	select NEED_DMA_MAP_STATE
---=20
-2.27.0
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/.gygsxj+xJnStLtg1iKpndV
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8iWIYACgkQAVBC80lX
-0GxylAf3V+eKlEHqQi+SBPIXWiaFumZKs8Zr6vyqoeeu1NhsHKGmfRuUs7DI5Rd0
-ss5/FvPXlbnmqsZT0KoCeS9ZwAIjlh8OJ/9eiR1q9bgkAAEBrFNIC2BaP47/O433
-Hd/BlGhnbFpyZQ5hWv9cn+GGP5TwSGyDHa87nkhh3vBzh4ScRTjYkT+KKC5z54Au
-rAq2MYLvqaJBBCHLb28Si1aO/OFGxhDJGXmy03p/Qo7Ds98uCfqIEWiJMdE0yvro
-jkkk0mfrnchgof/iQllMoppkoHAJ7nEXZgSlpLVE+M3egM9svMd4VMkDNoC1yzCx
-7Ax+PJ7DYjJdhGmQ1BNsQJjfskf/
-=yw64
------END PGP SIGNATURE-----
-
---Sig_/.gygsxj+xJnStLtg1iKpndV--
+yes, try it yourself and see!
