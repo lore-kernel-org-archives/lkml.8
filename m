@@ -2,109 +2,72 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9385C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3835BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80E00206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:30:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596094226;
-	bh=obI1cW5B2vkgbR1FTfLccdeC3SAat3jW9yYsILJxDWg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=scvKpOg+0/K6xqiAyvnkQd5SJEORDkBRW1HcURv2jUmsOHrPd2vfWEZFI/xxMM2HJ
-	 go8r2m4L9owsjQC1lesAKWurAQ1kpFfKaIUwVgXS96qSBCe0llyIqKh/IWuKwzVW2K
-	 O3MFVzxD9n51xanSXTgEHEIfCCATQey2Un+wDapE=
+	by mail.kernel.org (Postfix) with ESMTP id 1814C2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 07:31:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbgG3HaZ (ORCPT
+        id S1728753AbgG3Hbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 03:30:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54038 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726194AbgG3HaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 03:30:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 920F12070B;
-        Thu, 30 Jul 2020 07:30:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596094224;
-        bh=obI1cW5B2vkgbR1FTfLccdeC3SAat3jW9yYsILJxDWg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=orK/glA1/hvlkXbeRL/ErCXplRTG2IdEYTZIOuVeFybdLjUDj+ooPomqVXeg43nNx
-         KUv7nvvrlhzi9y8Gv4OlkglG+/K/2Ahej8yLlhBLQBriVuIocrEIT5rGr70LaYanAU
-         Vpzlk51SlSihnn6OD4YaDjfQGoXhb9AAHTM+tzuk=
-Date:   Thu, 30 Jul 2020 09:30:13 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     stable@vger.kernel.org, netdev@vger.kernel.org,
-        madalin.bucur@oss.nxp.com, camelia.groza@nxp.com,
-        joakim.tjernlund@infinera.com, fido_max@inbox.ru,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 stable-5.4.y] Revert "dpaa_eth: fix usage as DSA
- master, try 3"
-Message-ID: <20200730073013.GC4045776@kroah.com>
-References: <20200624124517.3212326-1-olteanv@gmail.com>
+        Thu, 30 Jul 2020 03:31:34 -0400
+Received: from smtprelay0137.hostedemail.com ([216.40.44.137]:34098 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725892AbgG3Hbe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 03:31:34 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 56C49100E7B46;
+        Thu, 30 Jul 2020 07:31:33 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: stop99_63068d426f79
+X-Filterd-Recvd-Size: 1484
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 30 Jul 2020 07:31:31 +0000 (UTC)
+Message-ID: <a2773089a844047407855f2da7bd72c2970d2e6b.camel@perches.com>
+Subject: Re: [PATCH v2] checkpatch: Fix the usage of capture group ( ... )
+From:   Joe Perches <joe@perches.com>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Mrinal Pandey <mrinalmni@gmail.com>
+Cc:     apw@canonical.com, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org,
+        Linux-kernel-mentees@lists.linuxfoundation.org
+Date:   Thu, 30 Jul 2020 00:31:30 -0700
+In-Reply-To: <alpine.DEB.2.21.2007300746330.13710@felia>
+References: <20200714032352.f476hanaj2dlmiot@mrinalpandey>
+         <alpine.DEB.2.21.2007300746330.13710@felia>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624124517.3212326-1-olteanv@gmail.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 03:45:17PM +0300, Vladimir Oltean wrote:
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
+On Thu, 2020-07-30 at 07:58 +0200, Lukas Bulwahn wrote:
+> Hi Joe,
 > 
-> This reverts commit 40a904b1c2e57b22dd002dfce73688871cb0bac8.
-> 
-> The patch is not wrong, but the Fixes: tag is. It should have been:
-> 
-> 	Fixes: 060ad66f9795 ("dpaa_eth: change DMA device")
-> 
-> which means that it's fixing a commit which was introduced in:
-> 
-> git tag --contains 060ad66f97954
-> v5.5
-> 
-> which then means it should have not been backported to linux-5.4.y,
-> where things _were_ working and now they're not.
-> 
-> Reported-by: Joakim Tjernlund <joakim.tjernlund@infinera.com>
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> ---
-> Changes in v1:
-> Adjusted the commit message from linux-4.19.y to linux-5.4.y
-> 
-> Changes in v2:
-> Fixed the sha1sum of the reverted commit.
-> 
->  drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-> index 6683409fbd4a..4b21ae27a9fd 100644
-> --- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-> +++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-> @@ -2796,7 +2796,7 @@ static int dpaa_eth_probe(struct platform_device *pdev)
->  	}
->  
->  	/* Do this here, so we can be verbose early */
-> -	SET_NETDEV_DEV(net_dev, dev->parent);
-> +	SET_NETDEV_DEV(net_dev, dev);
->  	dev_set_drvdata(dev, net_dev);
->  
->  	priv = netdev_priv(net_dev);
-> -- 
-> 2.25.1
-> 
+> did you see this quick fix to checkpatch.pl? Can you comment on the 
+> commit and can we get a quick ack on that fix, please?
 
-Now queued up, thanks.
+Yes, in a bit.
 
-greg k-h
+> General question on patches for ./scripts/checkpatch.pl:
+> How do they travel to Linus?
+
+Generally via Andrew Morton.
+
+> Do you pick those patches and provide them to Andrew Morton?
+> Or do you just ack them and we need to send them to Andrew Morton to get 
+> them into mainline?
+
+Generally, ack and forward.
+
+
