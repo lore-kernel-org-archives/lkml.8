@@ -2,92 +2,341 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7775C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21275C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0B8A20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E471220842
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:35:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dCzn/wkP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mLH18p6F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729771AbgG3Pey (ORCPT
+        id S1729796AbgG3Pf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:34:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37060 "EHLO
+        Thu, 30 Jul 2020 11:35:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726581AbgG3Pex (ORCPT
+        with ESMTP id S1726581AbgG3Pf0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 11:34:53 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D164C061574;
-        Thu, 30 Jul 2020 08:34:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=VBPWwrsXMPKnDitP89rUNPyQKT9bsGFBjZQdtzzU7ds=; b=dCzn/wkP++dkRu1oDJt9RGaBFz
-        K2yUeZF7hHvMOL2NmgXDAC5Z4QNx8FMnirqGBK+cSaN/08vTSc9ttNWOCGRYDQyNvT9Ez//mrHUnt
-        n0eUNrEFNhpwEIb5zx6moVr+SseapOElItdDhZy5VeFs8+NeRxLvC53Bugwg+M10AxEdv9YTV6tc6
-        0oa6hy8yD+sLiFfg484wsbw6RQbkY2AFSGHwMz8757ejFlLk0zDqtX9+6o8MNNhFPJKQpvOkTFAMi
-        YyvPWknL1/EsDgV5cQaPJ0mtm/1cVNunmLlH8j3dnt9H+/6ynBG4D8QMl4l0ZfckxU+qysqDoBqka
-        jA9bb4VQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k1Aa2-0006vP-4Q; Thu, 30 Jul 2020 15:34:50 +0000
-Date:   Thu, 30 Jul 2020 16:34:50 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Anthony Yznaga <anthony.yznaga@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
-        arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
-        gerg@linux-m68k.org, ktkhai@virtuozzo.com, peterz@infradead.org,
-        esyr@redhat.com, jgg@ziepe.ca, christian@kellner.me,
-        areber@redhat.com, cyphar@cyphar.com, steven.sistare@oracle.com
-Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
-Message-ID: <20200730153450.GH23808@casper.infradead.org>
-References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
- <20200730152250.GG23808@casper.infradead.org>
- <20200730152705.ol42jppnl4xfhl32@wittgenstein>
+        Thu, 30 Jul 2020 11:35:26 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7408FC061574;
+        Thu, 30 Jul 2020 08:35:26 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id x69so26006954qkb.1;
+        Thu, 30 Jul 2020 08:35:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ww+VtdoA6riXvdcxQjNRAvO2TJJKFKtGr51sohVqrlg=;
+        b=mLH18p6FsRXXWhEsi1fYEMYmlm3hbSqTdTWG9Vg2KnurRTVgSWrzNywe9PFBUGrKhu
+         GgnMY57pdTTtIEzcVUISk/uBXFXlaLonjnJgVFHBaT0WSJC+3zqNljViWuv56CdWFf+s
+         XDL97RhXLxC2aR7OAn1HOFiDN2bbmL0avQgPSZWLFVir52fgi11RBJiCfoDej1bdI7dk
+         wtOwb+N6pkfvqfQerLZMcOWMzp8B5PJ9eqs9l5JipPWuWQTTHBOIis5joYtgWFieKCn3
+         5ySQzQm3mR73g5UR0UPqB7ERZcohT0Nz4sR6JvwaeppoRjst0eakZHyNiwje2VfMRrDZ
+         Npbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ww+VtdoA6riXvdcxQjNRAvO2TJJKFKtGr51sohVqrlg=;
+        b=mb6hRUmswbXLvWdjdkNu9bZaroYymZ2pqOAl77Zf+XPh+dMrwyj/ev4kRqLhkNyg0T
+         ygOLYZF6Tdb7wnq3AnvkssD4y0tWN/cgo/o/6m01Ftx0NMKDvAeIMGcry31sTvQRbIbP
+         rlO6FC2xuLw7cT82LLiN7aj/oEtJkOJdH3X9bMN3zyosC3dT/TKAf0H+NgfFCk9fdVIY
+         ijrGK4Ha1H7MS6QRsi9f+wF6JUv877GN6tJ0FkXgc9L7zYNhL5wrDeeUksFlRNpBDWlI
+         qCNrEe7hHlt0L260k/yfMhcA6v2ttCqyhwycbNVpIwZxsJiLGh4UnbU7hd8MNRzXeh22
+         Tl3Q==
+X-Gm-Message-State: AOAM5322qise0oQNg7tzC40E/Qa9iVfOLZKyCcXt14rlhJjwCDDIun/c
+        AMB4GEgWQwEMAjAP9rZQhtY=
+X-Google-Smtp-Source: ABdhPJxWTkiCH9U+VuFEcwhQD6FLBSq3WDEOT3bXoozCq2UfOlTo4OVcEHYLExZtRcWh0C82ifnN3Q==
+X-Received: by 2002:a37:8305:: with SMTP id f5mr39702199qkd.497.1596123325201;
+        Thu, 30 Jul 2020 08:35:25 -0700 (PDT)
+Received: from localhost.localdomain ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
+        by smtp.gmail.com with ESMTPSA id i7sm659047qtb.27.2020.07.30.08.35.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 08:35:24 -0700 (PDT)
+From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+X-Google-Original-From: Daniel W. S. Almeida
+To:     mchehab+huawei@kernel.org, sean@mess.org,
+        kstewart@linuxfoundation.org, allison@lohutok.net,
+        tglx@linutronix.de
+Cc:     "Daniel W . S . Almeida" <dwlsalmeida@gmail.com>,
+        linux-media@vger.kernel.org, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: [v8 0/4] media: vidtv: Implement a virtual DVB driver
+Date:   Thu, 30 Jul 2020 12:34:57 -0300
+Message-Id: <20200730153501.742993-1-dwlsalmeida@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730152705.ol42jppnl4xfhl32@wittgenstein>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 05:27:05PM +0200, Christian Brauner wrote:
-> On Thu, Jul 30, 2020 at 04:22:50PM +0100, Matthew Wilcox wrote:
-> > On Mon, Jul 27, 2020 at 10:11:22AM -0700, Anthony Yznaga wrote:
-> > > This patchset adds support for preserving an anonymous memory range across
-> > > exec(3) using a new madvise MADV_DOEXEC argument.  The primary benefit for
-> > > sharing memory in this manner, as opposed to re-attaching to a named shared
-> > > memory segment, is to ensure it is mapped at the same virtual address in
-> > > the new process as it was in the old one.  An intended use for this is to
-> > > preserve guest memory for guests using vfio while qemu exec's an updated
-> > > version of itself.  By ensuring the memory is preserved at a fixed address,
-> > > vfio mappings and their associated kernel data structures can remain valid.
-> > > In addition, for the qemu use case, qemu instances that back guest RAM with
-> > > anonymous memory can be updated.
-> > 
-> > I just realised that something else I'm working on might be a suitable
-> > alternative to this.  Apologies for not realising it sooner.
-> > 
-> > http://www.wil.cx/~willy/linux/sileby.html
-> 
-> Just skimming: make it O_CLOEXEC by default. ;)
+From: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
 
-I appreciate the suggestion, and it makes sense for many 'return an fd'
-interfaces, but the point of mshare() is to, well, share.  So sharing
-the fd with a child is a common usecase, unlike say sharing a timerfd.
-The only other reason to use mshare() is to pass the fd over a unix
-socket to a non-child, and I submit that is far less common than wanting
-to share with a child.
+This series is work in progress. It represents the current work done on a
+virtual DVB driver for the Linux media subsystem. I am new to the media
+subsystem and to kernel development in general.
+
+This driver aims to:
+	- Serve as template for new DVB driver writers
+	- Help userspace application writers in general
+	- Push fake audio/video to userspace for testing
+	purposes
+	- Push debug information to userspace via debugfs
+
+Current state for this driver:
+	- Driver is modprobed without any errors on dmesg
+	- Using dvbv5-scan does not cause the driver to crash
+	- Driver feeds the demux with TS packets (PSI, PCR, AES3 audio
+	and NULL packets for padding), but the stream is not valid
+	yet.
+	- Kmemleak shows no leaks. UBSAN & KASAN pick up some bugs
+
+
+
+The Virtual Digital TV Driver (vidtv)
+
+Background
+----------
+
+Vidtv is a virtual DVB driver that aims to serve as a reference for driver
+writers by serving as a template. It also validates the existing media DVB
+APIs, thus helping userspace application writers.
+
+Currently, it consists of:
+
+- A fake tuner driver, which will report a bad signal quality if the chosen
+  frequency is too far away from a table of valid frequencies for a
+  particular delivery system.
+
+- A fake demod driver, which will constantly poll the fake signal quality
+  returned by the tuner, simulating a device that can lose/reacquire a lock
+  on the signal depending on the CNR levels.
+
+- A fake bridge driver, which is the module responsible for modprobing the
+  fake tuner and demod modules and implementing the demux logic. This module
+  takes parameters at initialization that will dictate how the simulation
+  behaves.
+
+- Code reponsible for encoding a valid MPEG Transport Stream, which is then
+  passed to the bridge driver. This fake stream contains some hardcoded content.
+  For now, we have a single, audio-only channel containing a single MPEG
+  Elementary Stream, which in turn contains a SMPTE 302m encoded sine-wave.
+  Note that this particular encoder was chosen because it is the easiest
+  way to encode PCM audio data in a MPEG Transport Stream.
+
+Building vidtv
+--------------
+vidtv is a test driver and thus is **not** enabled by default when
+compiling the kernel.
+
+In order to enable compilation of vidtv:
+
+- Enable **DVB_TEST_DRIVERS**, then
+- Enable **DVB_VIDTV**
+
+When compiled as a module, expect the following .ko files:
+
+- dvb_vidtv_tuner.ko
+
+- dvb_vidtv_demod.ko
+
+- dvb_vidtv_bridge.ko
+
+Running vidtv
+-------------
+When compiled as a module, run::
+
+	modprobe dvb_vidtv_bridge
+
+That's it! The bridge driver will initialize the tuner and demod drivers as
+part of its own initialization.
+
+You can optionally define some command-line arguments to vidtv, see the
+documentation for more info.
+
+Testing vidtv with v4l-utils
+============================
+
+Start by installing v4l-utils and then modprobing vidtv::
+
+	modprobe dvb_vidtv_bridge
+
+If the driver is OK, it should load and its probing code will run. This will
+pull in the tuner and demod drivers.
+
+Using dvb-fe-tool
+-----------------
+
+The first step to check whether the demod loaded successfully is to run::
+
+	$ dvb-fe-tool
+
+This should return what is currently set up at the demod struct, i.e.::
+
+	static const struct dvb_frontend_ops vidtv_demod_ops = {
+		.delsys = {
+			SYS_DVBT,
+			SYS_DVBT2,
+			SYS_DVBC_ANNEX_A,
+			SYS_DVBS,
+			SYS_DVBS2,
+		},
+
+		.info = {
+			.name                   = "Dummy demod for DVB-T/T2/C/S/S2",
+			.frequency_min_hz       = 51 * MHz,
+			.frequency_max_hz       = 2150 * MHz,
+			.frequency_stepsize_hz  = 62500,
+			.frequency_tolerance_hz = 29500 * kHz,
+			.symbol_rate_min        = 1000000,
+			.symbol_rate_max        = 45000000,
+
+			.caps = FE_CAN_FEC_1_2 |
+				FE_CAN_FEC_2_3 |
+				FE_CAN_FEC_3_4 |
+				FE_CAN_FEC_4_5 |
+				FE_CAN_FEC_5_6 |
+				FE_CAN_FEC_6_7 |
+				FE_CAN_FEC_7_8 |
+				FE_CAN_FEC_8_9 |
+				FE_CAN_QAM_16 |
+				FE_CAN_QAM_64 |
+				FE_CAN_QAM_32 |
+				FE_CAN_QAM_128 |
+				FE_CAN_QAM_256 |
+				FE_CAN_QAM_AUTO |
+				FE_CAN_QPSK |
+				FE_CAN_FEC_AUTO |
+				FE_CAN_INVERSION_AUTO |
+				FE_CAN_TRANSMISSION_MODE_AUTO |
+				FE_CAN_GUARD_INTERVAL_AUTO |
+				FE_CAN_HIERARCHY_AUTO,
+		}
+
+		....
+
+Using dvb-scan
+--------------
+
+In order to tune into a channel and read the PSI tables, we can use dvb-scan.
+
+For this, one should provide a configuration file known as a 'scan file',
+here's an example::
+
+	[Channel]
+	FREQUENCY = 330000000
+	MODULATION = QAM/AUTO
+	SYMBOL_RATE = 6940000
+	INNER_FEC = AUTO
+	DELIVERY_SYSTEM = DVBC/ANNEX_A
+
+	NOTE:
+	The parameters depend on the video standard you're testing.
+
+	NOTE:
+	Vidtv is a fake driver and does not validate much of the information
+	in the scan file. Just specifying 'FREQUENCY' and 'DELIVERY_SYSTEM'
+	should be enough for DVB-T/DVB-T2. For DVB-S/DVB-C however, you
+	should also provide 'SYMBOL_RATE'.
+
+Assuming this channel is named 'channel.conf', you can then run::
+
+        $ dvbv5-scan dresden_dvbc_channel.conf
+
+Using dvb-zap
+-------------
+
+dvbv5-zap is a command line tool that can be used to record MPEG-TS to disk. The
+typical use is to tune into a channel and put it into record mode. The example
+below - which is taken from the documentation - illustrates that::
+
+        $ dvbv5-zap -c dvb_channel.conf "trilhas sonoras" -r
+        using demux '/dev/dvb/adapter0/demux0'
+        reading channels from file 'dvb_channel.conf'
+        service has pid type 05:  204
+        tuning to 573000000 Hz
+        audio pid 104
+          dvb_set_pesfilter 104
+        Lock   (0x1f) Quality= Good Signal= 100.00% C/N= -13.80dB UCB= 70 postBER= 3.14x10^-3 PER= 0
+        DVR interface '/dev/dvb/adapter0/dvr0' can now be opened
+
+The channel can be watched by playing the contents of the DVR interface, with
+some player that recognizes the MPEG-TS format, such as *mplayer* or *vlc*.
+
+By playing the contents of the stream one can visually inspect the workings of
+vidtv, e.g.::
+
+	$ mplayer /dev/dvb/adapter0/dvr0
+
+Daniel W. S. Almeida (4):
+  media: vidtv: implement a tuner driver
+  media: vidtv: implement a demodulator driver
+  media: vidtv: add a bridge driver
+  media: Documentation: vidtv: Add ReST documentation for vidtv
+
+ .../driver-api/media/drivers/index.rst        |    1 +
+ .../driver-api/media/drivers/vidtv.rst        |  417 ++++++
+ MAINTAINERS                                   |    8 +
+ drivers/media/test-drivers/Kconfig            |   16 +
+ drivers/media/test-drivers/Makefile           |    1 +
+ drivers/media/test-drivers/vidtv/Kconfig      |   11 +
+ drivers/media/test-drivers/vidtv/Makefile     |    9 +
+ .../media/test-drivers/vidtv/vidtv_bridge.c   |  547 ++++++++
+ .../media/test-drivers/vidtv/vidtv_bridge.h   |   60 +
+ .../media/test-drivers/vidtv/vidtv_channel.c  |  360 ++++++
+ .../media/test-drivers/vidtv/vidtv_channel.h  |   82 ++
+ .../media/test-drivers/vidtv/vidtv_common.c   |   90 ++
+ .../media/test-drivers/vidtv/vidtv_common.h   |   33 +
+ .../media/test-drivers/vidtv/vidtv_demod.c    |  440 +++++++
+ .../media/test-drivers/vidtv/vidtv_demod.h    |   73 ++
+ .../media/test-drivers/vidtv/vidtv_encoder.h  |   99 ++
+ drivers/media/test-drivers/vidtv/vidtv_mux.c  |  454 +++++++
+ drivers/media/test-drivers/vidtv/vidtv_mux.h  |  154 +++
+ drivers/media/test-drivers/vidtv/vidtv_pes.c  |  434 +++++++
+ drivers/media/test-drivers/vidtv/vidtv_pes.h  |  243 ++++
+ drivers/media/test-drivers/vidtv/vidtv_psi.c  | 1131 +++++++++++++++++
+ drivers/media/test-drivers/vidtv/vidtv_psi.h  |  686 ++++++++++
+ .../media/test-drivers/vidtv/vidtv_s302m.c    |  663 ++++++++++
+ .../media/test-drivers/vidtv/vidtv_s302m.h    |  136 ++
+ drivers/media/test-drivers/vidtv/vidtv_ts.c   |  147 +++
+ drivers/media/test-drivers/vidtv/vidtv_ts.h   |  138 ++
+ .../media/test-drivers/vidtv/vidtv_tuner.c    |  427 +++++++
+ .../media/test-drivers/vidtv/vidtv_tuner.h    |   43 +
+ 28 files changed, 6903 insertions(+)
+ create mode 100644 Documentation/driver-api/media/drivers/vidtv.rst
+ create mode 100644 drivers/media/test-drivers/vidtv/Kconfig
+ create mode 100644 drivers/media/test-drivers/vidtv/Makefile
+ create mode 100644 drivers/media/test-drivers/vidtv/vidtv_bridge.c
+ create mode 100644 drivers/media/test-drivers/vidtv/vidtv_bridge.h
+ create mode 100644 drivers/media/test-drivers/vidtv/vidtv_channel.c
+ create mode 100644 drivers/media/test-drivers/vidtv/vidtv_channel.h
+ create mode 100644 drivers/media/test-drivers/vidtv/vidtv_common.c
+ create mode 100644 drivers/media/test-drivers/vidtv/vidtv_common.h
+ create mode 100644 drivers/media/test-drivers/vidtv/vidtv_demod.c
+ create mode 100644 drivers/media/test-drivers/vidtv/vidtv_demod.h
+ create mode 100644 drivers/media/test-drivers/vidtv/vidtv_encoder.h
+ create mode 100644 drivers/media/test-drivers/vidtv/vidtv_mux.c
+ create mode 100644 drivers/media/test-drivers/vidtv/vidtv_mux.h
+ create mode 100644 drivers/media/test-drivers/vidtv/vidtv_pes.c
+ create mode 100644 drivers/media/test-drivers/vidtv/vidtv_pes.h
+ create mode 100644 drivers/media/test-drivers/vidtv/vidtv_psi.c
+ create mode 100644 drivers/media/test-drivers/vidtv/vidtv_psi.h
+ create mode 100644 drivers/media/test-drivers/vidtv/vidtv_s302m.c
+ create mode 100644 drivers/media/test-drivers/vidtv/vidtv_s302m.h
+ create mode 100644 drivers/media/test-drivers/vidtv/vidtv_ts.c
+ create mode 100644 drivers/media/test-drivers/vidtv/vidtv_ts.h
+ create mode 100644 drivers/media/test-drivers/vidtv/vidtv_tuner.c
+ create mode 100644 drivers/media/test-drivers/vidtv/vidtv_tuner.h
+
+-- 
+2.27.0
 
