@@ -2,50 +2,54 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6508C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94085C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E5E120838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7011022CB2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:09:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096577;
-	bh=2N5Wm++7+eoqHG8fsn7/XL8Q1oSa/XmTbUdG1O2wd7U=;
+	s=default; t=1596096582;
+	bh=9U8Zlh4Tp++W52y47iLBLszmisu1bIMe3FBsSfMFuts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jx1wlqTlZ9dEL8HZmCPvfvgEkIsEF3J2z9wru0W9lzuLJXitL/8fIY2vWVfrtIMps
-	 xBiRNIhQatjQ82N+S2xbQhZNaF4o/9ZOs7Dp+XYOeMMd6F9WKUMN3fOQt3olnS6H7D
-	 1r5ShdfBv5K3kNRUAxtZhXKDmy1NWgFyilmyiDaU=
+	b=Q0TrRonHZ0I1kHXJyqgNv11TBRsscUfkKxmla7KdjWloFxhWCIkAJm7pLODoNrOM9
+	 7kuxoZ3mig0elYPPUJHEylKo5SUugU2dsP3Y9H1d7LvEdv56AxH//CYvw8mIUXnv5j
+	 7quNvdY1AznfejWdLwv65QVC6Nsn0qtj8zQcYNmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729705AbgG3IJg (ORCPT
+        id S1729711AbgG3IJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:09:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47982 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:09:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729683AbgG3IJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:09:26 -0400
+        id S1729703AbgG3IJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:09:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF9DA20838;
-        Thu, 30 Jul 2020 08:09:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B766C2070B;
+        Thu, 30 Jul 2020 08:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096565;
-        bh=2N5Wm++7+eoqHG8fsn7/XL8Q1oSa/XmTbUdG1O2wd7U=;
+        s=default; t=1596096575;
+        bh=9U8Zlh4Tp++W52y47iLBLszmisu1bIMe3FBsSfMFuts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZdZkEKvLneekmyiFGi2VwnRtxqF16qsg+6rfBY3Bvkm/ifpZdmpZWQAbpIkLKyaI8
-         HuLvM1qAvxzdWxWSGqdJATgLSKz6rPeB4xA1JBbw11B0P01PPT5hKAWlSiQDtPdih9
-         BsvQsFNIWJllrn28xBeNLE8PDSMFI1K7us5Hn6BE=
+        b=Z4hnbBsoLnYv4UKcDV8tF2JvuNvK0JApcJGtC1v4HJqATakeAU7Of3P5SWCX1BjjD
+         c+ZU5tMJhLhdLGaGAyN05lf91SiS/gOrGjh6cIcgLq5cDUosRGtZws5mI+AUOToYGI
+         veYe3yfORjmANJAMNNhphqil2ig8OJ3keiGpGVxE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.9 36/61] staging: comedi: addi_apci_1564: check INSN_CONFIG_DIGITAL_TRIG shift
-Date:   Thu, 30 Jul 2020 10:04:54 +0200
-Message-Id: <20200730074422.579044866@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Fangrui Song <maskray@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH 4.9 40/61] Makefile: Fix GCC_TOOLCHAIN_DIR prefix for Clang cross compilation
+Date:   Thu, 30 Jul 2020 10:04:58 +0200
+Message-Id: <20200730074422.772965892@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074420.811058810@linuxfoundation.org>
 References: <20200730074420.811058810@linuxfoundation.org>
@@ -58,74 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Fangrui Song <maskray@google.com>
 
-commit 926234f1b8434c4409aa4c53637aa3362ca07cea upstream.
+commit ca9b31f6bb9c6aa9b4e5f0792f39a97bbffb8c51 upstream.
 
-The `INSN_CONFIG` comedi instruction with sub-instruction code
-`INSN_CONFIG_DIGITAL_TRIG` includes a base channel in `data[3]`. This is
-used as a right shift amount for other bitmask values without being
-checked.  Shift amounts greater than or equal to 32 will result in
-undefined behavior.  Add code to deal with this.
+When CROSS_COMPILE is set (e.g. aarch64-linux-gnu-), if
+$(CROSS_COMPILE)elfedit is found at /usr/bin/aarch64-linux-gnu-elfedit,
+GCC_TOOLCHAIN_DIR will be set to /usr/bin/.  --prefix= will be set to
+/usr/bin/ and Clang as of 11 will search for both
+$(prefix)aarch64-linux-gnu-$needle and $(prefix)$needle.
 
-Fixes: 1e15687ea472 ("staging: comedi: addi_apci_1564: add Change-of-State interrupt subdevice and required functions")
-Cc: <stable@vger.kernel.org> #3.17+
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Link: https://lore.kernel.org/r/20200717145257.112660-4-abbotti@mev.co.uk
+GCC searchs for $(prefix)aarch64-linux-gnu/$version/$needle,
+$(prefix)aarch64-linux-gnu/$needle and $(prefix)$needle. In practice,
+$(prefix)aarch64-linux-gnu/$needle rarely contains executables.
+
+To better model how GCC's -B/--prefix takes in effect in practice, newer
+Clang (since
+https://github.com/llvm/llvm-project/commit/3452a0d8c17f7166f479706b293caf6ac76ffd90)
+only searches for $(prefix)$needle. Currently it will find /usr/bin/as
+instead of /usr/bin/aarch64-linux-gnu-as.
+
+Set --prefix= to $(GCC_TOOLCHAIN_DIR)$(notdir $(CROSS_COMPILE))
+(/usr/bin/aarch64-linux-gnu-) so that newer Clang can find the
+appropriate cross compiling GNU as (when -no-integrated-as is in
+effect).
+
+Cc: stable@vger.kernel.org
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Fangrui Song <maskray@google.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/1099
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/addi_apci_1564.c |   20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/comedi/drivers/addi_apci_1564.c
-+++ b/drivers/staging/comedi/drivers/addi_apci_1564.c
-@@ -340,14 +340,22 @@ static int apci1564_cos_insn_config(stru
- 				    unsigned int *data)
- {
- 	struct apci1564_private *devpriv = dev->private;
--	unsigned int shift, oldmask;
-+	unsigned int shift, oldmask, himask, lomask;
- 
- 	switch (data[0]) {
- 	case INSN_CONFIG_DIGITAL_TRIG:
- 		if (data[1] != 0)
- 			return -EINVAL;
- 		shift = data[3];
--		oldmask = (1U << shift) - 1;
-+		if (shift < 32) {
-+			oldmask = (1U << shift) - 1;
-+			himask = data[4] << shift;
-+			lomask = data[5] << shift;
-+		} else {
-+			oldmask = 0xffffffffu;
-+			himask = 0;
-+			lomask = 0;
-+		}
- 		switch (data[2]) {
- 		case COMEDI_DIGITAL_TRIG_DISABLE:
- 			devpriv->ctrl = 0;
-@@ -371,8 +379,8 @@ static int apci1564_cos_insn_config(stru
- 				devpriv->mode2 &= oldmask;
- 			}
- 			/* configure specified channels */
--			devpriv->mode1 |= data[4] << shift;
--			devpriv->mode2 |= data[5] << shift;
-+			devpriv->mode1 |= himask;
-+			devpriv->mode2 |= lomask;
- 			break;
- 		case COMEDI_DIGITAL_TRIG_ENABLE_LEVELS:
- 			if (devpriv->ctrl != (APCI1564_DI_IRQ_ENA |
-@@ -389,8 +397,8 @@ static int apci1564_cos_insn_config(stru
- 				devpriv->mode2 &= oldmask;
- 			}
- 			/* configure specified channels */
--			devpriv->mode1 |= data[4] << shift;
--			devpriv->mode2 |= data[5] << shift;
-+			devpriv->mode1 |= himask;
-+			devpriv->mode2 |= lomask;
- 			break;
- 		default:
- 			return -EINVAL;
+--- a/Makefile
++++ b/Makefile
+@@ -505,7 +505,7 @@ ifeq ($(cc-name),clang)
+ ifneq ($(CROSS_COMPILE),)
+ CLANG_FLAGS	+= --target=$(notdir $(CROSS_COMPILE:%-=%))
+ GCC_TOOLCHAIN_DIR := $(dir $(shell which $(CROSS_COMPILE)elfedit))
+-CLANG_FLAGS	+= --prefix=$(GCC_TOOLCHAIN_DIR)
++CLANG_FLAGS	+= --prefix=$(GCC_TOOLCHAIN_DIR)$(notdir $(CROSS_COMPILE))
+ GCC_TOOLCHAIN	:= $(realpath $(GCC_TOOLCHAIN_DIR)/..)
+ endif
+ ifneq ($(GCC_TOOLCHAIN),)
 
 
