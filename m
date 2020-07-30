@@ -2,80 +2,185 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CE7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75036C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED2D20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F35320829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:41:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="iZkcEonx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbgG3Nj1 (ORCPT
+        id S1728124AbgG3NlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 09:39:27 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:15632 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgG3Nj1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 09:39:27 -0400
-Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
-  by alexa-out.qualcomm.com with ESMTP; 30 Jul 2020 06:39:26 -0700
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 30 Jul 2020 06:39:24 -0700
-Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 30 Jul 2020 19:09:00 +0530
-Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
-        id 5F78B4AFD; Thu, 30 Jul 2020 19:08:59 +0530 (IST)
-From:   Kalyan Thota <kalyan_t@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        dianders@chromium.org, mkrishn@codeaurora.org,
-        travitej@codeaurora.org, nganji@codeaurora.org
-Subject: [v1] drm/msm/dpu: Fix scale params in plane validation
-Date:   Thu, 30 Jul 2020 19:08:56 +0530
-Message-Id: <1596116336-23147-1-git-send-email-kalyan_t@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Thu, 30 Jul 2020 09:41:17 -0400
+Received: from vps.xff.cz ([195.181.215.36]:55364 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726772AbgG3NlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 09:41:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1596116471; bh=GofhiWtZo83ZcSwGRix98z4zveLZhyL8LDQJeSZFE5I=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=iZkcEonxCQQzyGK1LZyT3oh0DfrUWc6bPMjsFRVLCIiNAsKJ8tKncEPFNJv9Nl/pc
+         1c3mp/qj79uELGYcZXENPLcN1S5z4QVZmrPBhOmpT8/3WF0mB9ozYWBCyKyv89+6pE
+         dAaRRkoiFvtzkBHs0FQXQ8QZIfut82ivnSo3/7cY=
+Date:   Thu, 30 Jul 2020 15:41:11 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Samuel Holland <samuel@sholland.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Fix st7703 panel initialization failures
+Message-ID: <20200730134111.nayvgw4kcxeg6kft@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
+        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Fabio Estevam <festevam@gmail.com>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Samuel Holland <samuel@sholland.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20200716123753.3552425-1-megous@megous.com>
+ <20200716140843.GA359122@bogon.m.sigxcpu.org>
+ <20200716143209.ud6ote4q545bo2c7@core.my.home>
+ <20200718173124.GA88021@bogon.m.sigxcpu.org>
+ <20200718174215.mgjl3klytfa3nf3t@core.my.home>
+ <20200729154809.GA435075@bogon.m.sigxcpu.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200729154809.GA435075@bogon.m.sigxcpu.org>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Plane validation uses an API drm_calc_scale which will
-return src/dst value as a scale ratio.
+Hello,
 
-when viewing the range on a scale the values should fall in as
+On Wed, Jul 29, 2020 at 05:48:09PM +0200, Guido Günther wrote:
+> Hi,
+> On Sat, Jul 18, 2020 at 07:42:15PM +0200, Ondřej Jirman wrote:
+> > Hello,
+> > 
+> > On Sat, Jul 18, 2020 at 07:31:24PM +0200, Guido Günther wrote:
+> > > Hi,
+> > > On Thu, Jul 16, 2020 at 04:32:09PM +0200, Ondřej Jirman wrote:
+> > > > Hi Guido,
+> > > > 
+> > > > On Thu, Jul 16, 2020 at 04:08:43PM +0200, Guido Günther wrote:
+> > > > > Hi Ondrej,
+> > > > > On Thu, Jul 16, 2020 at 02:37:51PM +0200, Ondrej Jirman wrote:
+> > > > > > When extending the driver for xbd599 panel support I tried to do minimal
+> > > > > > changes and keep the existing initialization timing.
+> > > > > > 
+> > > > > > It turned out that it's not good enough and the existing init sequence
+> > > > > > is too aggressive and doesn't follow the specification. On PinePhone
+> > > > > > panel is being powered down/up during suspend/resume and with current
+> > > > > > timings this frequently leads to corrupted display.
+> > > > > 
+> > > > > Given the amount of ST7703 look alikes i don't think you can go by the
+> > > > > datasheet and hope not to break other panels. The current sleeps cater
+> > > > > for the rocktech panel (which suffered from similar issues you describe
+> > > > > when we took other parameters) so you need to make those panel specific.
+> > > > 
+> > > > It should work on rocktech too. The patch mostly increases/reorders the delays
+> > > > slightly, to match the controller documentation. I don't see a reason to
+> > > > complicate the driver with per panel special delays, unless these patches don't
+> > > > work on your panel.
+> > > 
+> > > That's why i brought it up. It breaks the rocktech panel on
+> > > blank/unblank loops where it just stays blank and then starts hitting
+> > > DSI command timeouts.
+> > 
+> > Good to know. Does keeping the msleep(20); after init sequence and before sleep
+> > exit make it work?
+> 
+> We need both sleeps to make this work reliably so basically
+> reverting your 'drm/panel: st7703: Make the sleep exit timing match the
+> spec' makes things stable again.
+> 
+> We don't need to sleep 120ms after sleep out though since our panel only
+> requires 15ms as per data sheet there so it really makes sense to make
+> these configurable.
 
-Upscale ratio < Unity scale < Downscale ratio for src/dst formula
+Thank you for checking it.
 
-Fix the min and max scale ratios to suit the API accordingly.
+I'd be happy with just the other patch being applied. That would be enough
+to fix issues with xingbangda panel too.
 
-Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+In my tests xbd panel doesn't need 120ms either, despite the datasheet.
+What breaks xbd panel is the lack of post-powerup delay before deasserting
+reset line.
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-index 6379fe1..e46dcb9 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-@@ -946,9 +946,9 @@ static int dpu_plane_atomic_check(struct drm_plane *plane,
- 		crtc_state = drm_atomic_get_new_crtc_state(state->state,
- 							   state->crtc);
- 
--	min_scale = FRAC_16_16(1, pdpu->pipe_sblk->maxdwnscale);
-+	min_scale = FRAC_16_16(1, pdpu->pipe_sblk->maxupscale);
- 	ret = drm_atomic_helper_check_plane_state(state, crtc_state, min_scale,
--					  pdpu->pipe_sblk->maxupscale << 16,
-+					  pdpu->pipe_sblk->maxdwnscale << 16,
- 					  true, true);
- 	if (ret) {
- 		DPU_DEBUG_PLANE(pdpu, "Check plane state failed (%d)\n", ret);
--- 
-1.9.1
+regards,
+	o.
 
+> Cheers,
+>  -- Guido
+> 
+> > 
+> > thank you and regards,
+> > 	o.
+> > 
+> > > Cheers,
+> > >  -- Guido
+> > > 
+> > > > 
+> > > > The init sequence is still suboptimal, and doesn't follow the kernel docs
+> > > > completely, even after these patches. Controller spec also talks about adding
+> > > > some delay before enabling the backlight to avoid visual glitches.
+> > > > 
+> > > > Which is what enable callback is documented to be for. Currently part of the
+> > > > initialization that belongs to prepare callback is also done in enable callback.
+> > > > 
+> > > > I see the glitch (small vertical shift of the image on powerup), but personally
+> > > > don't care much to introduce even more delays to the driver, just for the
+> > > > cosmetic issue.
+> > > > 
+> > > > regards,
+> > > > 	o.
+> > > > 
+> > > > > Cheers,
+> > > > >  -- Guido
+> > > > > 
+> > > > > > 
+> > > > > > This patch series fixes the problems.
+> > > > > > 
+> > > > > > The issue was reported by Samuel Holland.
+> > > > > > 
+> > > > > > Relevant screenshots from the datasheet:
+> > > > > > 
+> > > > > >   Power on timing: https://megous.com/dl/tmp/35b72e674ce0ca27.png
+> > > > > >   Power off timing: https://megous.com/dl/tmp/dea195517106ff17.png
+> > > > > >   More optimal reset on poweron: https://megous.com/dl/tmp/a9e5caf14e1b0dc6.png
+> > > > > >   Less optimal reset on poweron: https://megous.com/dl/tmp/246761039283c4cf.png
+> > > > > >   Datasheet: https://megous.com/dl/tmp/ST7703_DS_v01_20160128.pdf
+> > > > > > 
+> > > > > > Please take a look.
+> > > > > > 
+> > > > > > thank you and regards,
+> > > > > >   Ondrej Jirman
+> > > > > > 
+> > > > > > Ondrej Jirman (2):
+> > > > > >   drm/panel: st7703: Make the sleep exit timing match the spec
+> > > > > >   drm/panel: st7703: Fix the power up sequence of the panel
+> > > > > > 
+> > > > > >  drivers/gpu/drm/panel/panel-sitronix-st7703.c | 29 ++++++++++---------
+> > > > > >  1 file changed, 15 insertions(+), 14 deletions(-)
+> > > > > > 
+> > > > > > -- 
+> > > > > > 2.27.0
+> > > > > > 
+> > > > 
+> > 
