@@ -2,129 +2,89 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6657C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECECC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D9682082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FEF120838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:29:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="fBfc+Z5W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729950AbgG3Q2i (ORCPT
+        id S1728546AbgG3Q3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 12:28:38 -0400
-Received: from mga12.intel.com ([192.55.52.136]:47605 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgG3Q2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 12:28:37 -0400
-IronPort-SDR: MgAtMaF2kcvmTecnKTRPZHO/nNOGfQ6RInaJeANBKVfQhoF8e3bHs2CZKP6v/892aLTEwG3eqp
- qD1vZPDWWXPw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="131200238"
-X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
-   d="scan'208";a="131200238"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 09:28:37 -0700
-IronPort-SDR: 3EFjlDhVMfjudTwik6M7iGEp3/iA8cQxPmUMk9Cxeo+rosuhM35RLz6oH/Ht0gUGxL6XGeJ/un
- 8fEPrK1DPTQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
-   d="scan'208";a="490714354"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 30 Jul 2020 09:28:34 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1k1BQ1-004zHp-QU; Thu, 30 Jul 2020 19:28:33 +0300
-Date:   Thu, 30 Jul 2020 19:28:33 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] dmaengine: dw: Discard dlen from the dev-to-mem xfer
- width calculation
-Message-ID: <20200730162833.GV3703480@smile.fi.intel.com>
-References: <20200730154545.3965-1-Sergey.Semin@baikalelectronics.ru>
- <20200730154545.3965-4-Sergey.Semin@baikalelectronics.ru>
+        Thu, 30 Jul 2020 12:29:52 -0400
+Received: from mail2.protonmail.ch ([185.70.40.22]:33422 "EHLO
+        mail2.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgG3Q3u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 12:29:50 -0400
+Date:   Thu, 30 Jul 2020 16:29:36 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me; s=protonmail;
+        t=1596126588; bh=lhZL6Pg1VacjmIyZabRgO1ohmiqISKl8lk2khLgH1zY=;
+        h=Date:To:From:Cc:Reply-To:Subject:From;
+        b=fBfc+Z5WK4LT0RIPNlnzsUdqaHb7L4Rwn/1kWFPjFoSs4fggKqBlhfLaArRzDYHTp
+         QxPAzbWFQVgo2VIlBJQZdqgTY6gS5urh/qD/eIAjfpqGMTJqRgKxwc/vWW4fm50i4P
+         RWkN9MG1296BCrQL2zQjoldG9qg1B+w0c+JlBLWHOAaOnMmmsVyCwhNXYOcB4RnD2U
+         V3PYC0QJVG0sv9aQQdZTQkDQilr+NwoFF0rN+t/wDKNG26ZYxySXFMEcktD6gcKGdm
+         t5uD2uwVTn0y29XG4MdKPIHKkhlmxfmfhhLM2Y1AIC2usc9LXQu/tHVmBLFrEn7YKT
+         5eWpl9+NRjJGA==
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From:   Alexander Lobakin <alobakin@pm.me>
+Cc:     Alexander Lobakin <alobakin@pm.me>,
+        Ariel Elior <aelior@marvell.com>,
+        GR-everest-linux-l2@marvell.com, netdev@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org
+Reply-To: Alexander Lobakin <alobakin@pm.me>
+Subject: Re: [PATCH v1] qede: Use %pM format specifier for MAC addresses
+Message-ID: <pXdhhJtDMa8Tr3tB0ugk5KdQcS3D71r1PEgqtPcJ3kBa4P_Yc0xG6HSXW9O1bQB_1FyD4wvS0xiXLiqvUb3OVzDKR9e7lLijB7jf6ZoHfaw=@pm.me>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730154545.3965-4-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 06:45:43PM +0300, Serge Semin wrote:
-> Indeed in case of the DMA_DEV_TO_MEM DMA transfers it's enough to take the
-> destination memory address and the destination master data width into
-> account to calculate the CTLx.DST_TR_WIDTH setting of the memory
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Date: Thu, 30 Jul 2020 19:00:57 +0300
 
-> peripheral. According to the DW DMAC IP-core Databook (page 66, Example 5)
-
-Always put a version of the Databook document. I have several and they may differ.
-
-> at the and of a DMA transfer when the DMA-channel internal FIFO is left
-> with data less than for a single destination burst transaction, the
-> destination peripheral will enter the Single Transaction Region where the
-> DW DMA controller can complete a block transfer to the destination using
-> single transactions (non-burst transaction of CTLx.DST_TR_WIDTH bytes). If
-> there is no enough data in the DMA-channel internal FIFO for even a single
-> non-burst transaction of CTLx.DST_TR_WIDTH bytes, then the channel enters
-> "FIFO flush mode". That mode is activated to empty the FIFO and flush the
-> leftovers out to the memory peripheral. The flushing procedure is simple.
-> The data is sent to the memory by means of a set of single transaction of
-> CTLx.SRC_TR_WIDTH bytes. To sum up it's redundant to use the LLPs length
-> to find out the CTLx.DST_TR_WIDTH parameter value, since each DMA transfer
-> will be completed with the CTLx.SRC_TR_WIDTH bytes transaction if it is
-> required.
-
-> In this commit we remove the LLP entry length from the statement which
-
-"In this commit" should be removed, see Submitting Patches ("This patch").
-
-> calculates the memory peripheral DMA transaction width since it's
-> redundant due to the feature described above. By doing so we'll improve
-> the memory bus utilization and speed up the DMA-channel performance for
-> DMA_DEV_TO_MEM DMA-transfers.
-
-Okay, I have no objections.
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Convert to %pM instead of using custom code.
+>=20
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  drivers/dma/dw/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-> index 4700f2e87a62..3da0aea9fe25 100644
-> --- a/drivers/dma/dw/core.c
-> +++ b/drivers/dma/dw/core.c
-> @@ -723,7 +723,7 @@ dwc_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
->  			lli_write(desc, sar, reg);
->  			lli_write(desc, dar, mem);
->  			lli_write(desc, ctlhi, ctlhi);
-> -			mem_width = __ffs(data_width | mem | dlen);
-> +			mem_width = __ffs(data_width | mem);
->  			lli_write(desc, ctllo, ctllo | DWC_CTLL_DST_WIDTH(mem_width));
->  			desc->len = dlen;
->  
-> -- 
+>  drivers/net/ethernet/qlogic/qede/qede_main.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+
+Thanks!
+
+Acked-by: Alexander Lobakin <alobakin@pm.me>
+
+> diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/e=
+thernet/qlogic/qede/qede_main.c
+> index 1aaae3203f5a..4250c17940c0 100644
+> --- a/drivers/net/ethernet/qlogic/qede/qede_main.c
+> +++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
+> @@ -144,9 +144,7 @@ static int qede_set_vf_mac(struct net_device *ndev, i=
+nt vfidx, u8 *mac)
+>  {
+>  =09struct qede_dev *edev =3D netdev_priv(ndev);
+> =20
+> -=09DP_VERBOSE(edev, QED_MSG_IOV,
+> -=09=09   "Setting MAC %02x:%02x:%02x:%02x:%02x:%02x to VF [%d]\n",
+> -=09=09   mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], vfidx);
+> +=09DP_VERBOSE(edev, QED_MSG_IOV, "Setting MAC %pM to VF [%d]\n", mac, vf=
+idx);
+> =20
+>  =09if (!is_valid_ether_addr(mac)) {
+>  =09=09DP_VERBOSE(edev, QED_MSG_IOV, "MAC address isn't valid\n");
+> --=20
 > 2.27.0
-> 
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+Al
 
