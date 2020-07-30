@@ -2,101 +2,100 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AB6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6804C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EED892082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A54CD20842
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:47:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730035AbgG3PqT (ORCPT
+        id S1729844AbgG3PrZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:46:19 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57382 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729777AbgG3Pp5 (ORCPT
+        Thu, 30 Jul 2020 11:47:25 -0400
+Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:9285 "EHLO
+        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729091AbgG3PrY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 11:45:57 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id F22EE8040A6A;
-        Thu, 30 Jul 2020 15:45:54 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 79Cw5IwDZWQc; Thu, 30 Jul 2020 18:45:54 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 3/5] dmaengine: dw: Discard dlen from the dev-to-mem xfer width calculation
-Date:   Thu, 30 Jul 2020 18:45:43 +0300
-Message-ID: <20200730154545.3965-4-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200730154545.3965-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200730154545.3965-1-Sergey.Semin@baikalelectronics.ru>
+        Thu, 30 Jul 2020 11:47:24 -0400
+Subject: Re: [PATCH] RFC: selinux avc trace
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+CC:     Steven Rostedt <rostedt@goodmis.org>,
+        =?UTF-8?Q?Thi=c3=a9baud_Weksteen?= <tweek@google.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Nick Kralevich <nnk@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>
+References: <20200724091520.880211-1-tweek@google.com>
+ <20200724095232.5f9d3f17@oasis.local.home>
+ <80a23580-5067-93b0-53fa-3bd53253c056@sony.com>
+ <CAEjxPJ5tu=R20snbetzv+CCZMd-yD+obbkbf6MYVqQx3oZLkqA@mail.gmail.com>
+From:   peter enderborg <peter.enderborg@sony.com>
+Message-ID: <b2bde77e-98cf-2c62-79ed-ca7d58b10bca@sony.com>
+Date:   Thu, 30 Jul 2020 17:47:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <CAEjxPJ5tu=R20snbetzv+CCZMd-yD+obbkbf6MYVqQx3oZLkqA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-GB
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=DrAoB13+ c=1 sm=1 tr=0 a=kIrCkORFHx6JeP9rmF/Kww==:117 a=IkcTkHD0fZMA:10 a=_RQrkK6FrEwA:10 a=z6gsHLkEAAAA:8 a=t2xpVXhOPp6f4VaANuYA:9 a=QEXdDO2ut3YA:10 a=d-OLMTCWyvARjPbQ-enb:22
+X-SEG-SpamProfiler-Score: 0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Indeed in case of the DMA_DEV_TO_MEM DMA transfers it's enough to take the
-destination memory address and the destination master data width into
-account to calculate the CTLx.DST_TR_WIDTH setting of the memory
-peripheral. According to the DW DMAC IP-core Databook (page 66, Example 5)
-at the and of a DMA transfer when the DMA-channel internal FIFO is left
-with data less than for a single destination burst transaction, the
-destination peripheral will enter the Single Transaction Region where the
-DW DMA controller can complete a block transfer to the destination using
-single transactions (non-burst transaction of CTLx.DST_TR_WIDTH bytes). If
-there is no enough data in the DMA-channel internal FIFO for even a single
-non-burst transaction of CTLx.DST_TR_WIDTH bytes, then the channel enters
-"FIFO flush mode". That mode is activated to empty the FIFO and flush the
-leftovers out to the memory peripheral. The flushing procedure is simple.
-The data is sent to the memory by means of a set of single transaction of
-CTLx.SRC_TR_WIDTH bytes. To sum up it's redundant to use the LLPs length
-to find out the CTLx.DST_TR_WIDTH parameter value, since each DMA transfer
-will be completed with the CTLx.SRC_TR_WIDTH bytes transaction if it is
-required.
+On 7/30/20 4:50 PM, Stephen Smalley wrote:
+> On Thu, Jul 30, 2020 at 10:29 AM peter enderborg
+> <peter.enderborg@sony.com> wrote:
+>> I did manage to rebase it but this is about my approach.
+>>
+>> Compared to Thiébaud Weksteen patch this adds:
+>>
+>> 1 Filtering. Types goes to trace so we can put up a filter for contexts or type etc.
+>>
+>> 2 It tries also to cover non denies.  And upon that you should be able to do coverage tools.
+>> I think many systems have a lot more rules that what is needed, but there is good way
+>> to find out what.  A other way us to make a stat page for the rules, but this way connect to
+>> userspace and can be used for test cases.
+>>
+>> This code need a lot more work, but it shows how the filter should work (extra info is not right)
+>> and there are  memory leaks, extra debug info and nonsense variable etc.
+> Perhaps the two of you could work together to come up with a common
+> tracepoint that addresses both needs.
 
-In this commit we remove the LLP entry length from the statement which
-calculates the memory peripheral DMA transaction width since it's
-redundant due to the feature described above. By doing so we'll improve
-the memory bus utilization and speed up the DMA-channel performance for
-DMA_DEV_TO_MEM DMA-transfers.
+Sounds good to me.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
----
- drivers/dma/dw/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> On the one hand, we don't need/want to duplicate the avc message
+> itself; we just need enough to be able to correlate them.
+> With respect to non-denials, SELinux auditallow statements can be used
+> to generate avc: granted messages that can be used to support coverage
+> tools although you can easily flood the logs that way.  One other
 
-diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index 4700f2e87a62..3da0aea9fe25 100644
---- a/drivers/dma/dw/core.c
-+++ b/drivers/dma/dw/core.c
-@@ -723,7 +723,7 @@ dwc_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
- 			lli_write(desc, sar, reg);
- 			lli_write(desc, dar, mem);
- 			lli_write(desc, ctlhi, ctlhi);
--			mem_width = __ffs(data_width | mem | dlen);
-+			mem_width = __ffs(data_width | mem);
- 			lli_write(desc, ctllo, ctllo | DWC_CTLL_DST_WIDTH(mem_width));
- 			desc->len = dlen;
- 
--- 
-2.27.0
+That is one reason to use trace. I can be used for things that
+generate a lot of data. Like memory allocations and scheduler etc,
+and it is a developer tool so you should not have to worry about DOS etc.
+
+Both netlink and android logging are too happy to throw away data for
+developers to be happy.
+
+> limitation of the other patch is that it doesn't support generating
+> trace information for denials silenced by dontaudit rules, which might
+> be challenging to debug especially on Android where you can't just run
+> semodule -DB to strip all dontaudits.
+
+I think that only work for rooted devices. Many application developers
+run on commercial devices that are locked, but they do have access
+to trace. But I have no idea if they (google) have intended the selinux traces to
+available there.
 
