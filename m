@@ -2,142 +2,142 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B677EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3448EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D02F2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E52D2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:05:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gEILaMts"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="xqEW10RO";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="PE+nHAN4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbgG3BAM (ORCPT
+        id S1726942AbgG3BFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 21:00:12 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4279 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbgG3BAL (ORCPT
+        Wed, 29 Jul 2020 21:05:32 -0400
+Received: from relay5.mymailcheap.com ([159.100.248.207]:34278 "EHLO
+        relay5.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgG3BFc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 21:00:11 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f221b6d0000>; Wed, 29 Jul 2020 17:59:26 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 29 Jul 2020 18:00:11 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 29 Jul 2020 18:00:11 -0700
-Received: from [10.2.54.252] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jul
- 2020 01:00:10 +0000
-Subject: Re: [PATCH v2] drivers/virt/fsl_hypervisor: Correcting error handling
- path
-To:     Souptick Joarder <jrdr.linux@gmail.com>,
-        <akpm@linux-foundation.org>
-CC:     <jgg@ziepe.ca>, <dan.j.williams@intel.com>,
-        <gregkh@linuxfoundation.org>, <mchehab+samsung@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dan.carpenter@oracle.com>
-References: <1596049269-14950-1-git-send-email-jrdr.linux@gmail.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <692e6a9b-6caa-7c60-d685-6cc951ee9483@nvidia.com>
-Date:   Wed, 29 Jul 2020 18:00:10 -0700
+        Wed, 29 Jul 2020 21:05:32 -0400
+Received: from relay4.mymailcheap.com (relay4.mymailcheap.com [137.74.199.117])
+        by relay5.mymailcheap.com (Postfix) with ESMTPS id 7E0422636A;
+        Thu, 30 Jul 2020 01:05:29 +0000 (UTC)
+Received: from filter2.mymailcheap.com (filter2.mymailcheap.com [91.134.140.82])
+        by relay4.mymailcheap.com (Postfix) with ESMTPS id 321EC3F162;
+        Thu, 30 Jul 2020 03:05:28 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by filter2.mymailcheap.com (Postfix) with ESMTP id E021F2A905;
+        Thu, 30 Jul 2020 03:05:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+        s=default; t=1596071127;
+        bh=qdsRPhmO+L5hjef8bRPCdPBKjPsHQKVEGVkqtl+9ymo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=xqEW10RONSzyVDklzuoNTQD4U8w52vIfVzSXDLZUny9Vz4hSXK8bC4wnohWf7wy/O
+         2C4TP/FNfw5AyBYORaU3t8MPCm+gKp+llC9UOMZbYsKulLduOqb5jCy+E7P+EARk4L
+         Qr4+hxBwbRxliG/a6uY4czmkPY89M/nwECKY5eoc=
+X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
+Received: from filter2.mymailcheap.com ([127.0.0.1])
+        by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id wRMZEMqT6eDq; Thu, 30 Jul 2020 03:05:26 +0200 (CEST)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by filter2.mymailcheap.com (Postfix) with ESMTPS;
+        Thu, 30 Jul 2020 03:05:26 +0200 (CEST)
+Received: from [213.133.102.83] (ml.mymailcheap.com [213.133.102.83])
+        by mail20.mymailcheap.com (Postfix) with ESMTP id EBDE440EE0;
+        Thu, 30 Jul 2020 01:05:24 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com;
+        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="PE+nHAN4";
+        dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from [0.0.0.0] (n11212042148.netvigator.com [112.120.42.148])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail20.mymailcheap.com (Postfix) with ESMTPSA id CA36740143;
+        Thu, 30 Jul 2020 01:04:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
+        s=default; t=1596071089;
+        bh=qdsRPhmO+L5hjef8bRPCdPBKjPsHQKVEGVkqtl+9ymo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=PE+nHAN4aM3BVNNwKeOBHDkkc7Rl4WvadeBclNiZsydlWZr3Uk7MbvGjuUP7ZYcjK
+         4Pq0clTAVxOinQ3qu2l8CX77c3mANCqjRqavnA13aSA7RtrkBGhRMieLnU8UYpq8th
+         O40Oyj9l/KWEoItwhx5nHiz9N3Qv79IjIMBCuVyQ=
+Subject: Re: linux-next: build warning after merge of the mips tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh@kernel.org>
+References: <20200729203142.18248463@canb.auug.org.au>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <f2a9f50d-5299-04f8-146b-e09df8943367@flygoat.com>
+Date:   Thu, 30 Jul 2020 09:04:40 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <1596049269-14950-1-git-send-email-jrdr.linux@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200729203142.18248463@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596070766; bh=xf06fm8gUfOPKwbhKrIi//8iK9C11cakFrO0HCloz2Q=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=gEILaMtsYMRkmmzOYkBKoUCW7ORe8sHzQ8Z17ZgXXwwz0S76K7qDAtKdRxv4gVJ4T
-         JkIX7lu9uE7lMqJXFV/SRAWAtkubxpQAI3mIQxanlUVPQ0R2cfbW2QHDxyAZLbJcGd
-         QNrHuAl3p/V9zn2+Phib2hwDJdq7/T4N5kvGIZqvVPcgiyczHaesiVwhm8PxYHRNgP
-         k9NTWViRX3Ts7xm8jDWmBdKzRhyOCHBSYjCnlnMpXN/FTG6zi0PtOZlxXuzOXF8reS
-         WnwLka1cjwXx98OgOx1QoDi7Efmmmiy1QL2siEwC3R3g8vGgq+87Yys5OzYyTsqnzD
-         LluOq8d8kVNbQ==
+X-Rspamd-Queue-Id: EBDE440EE0
+X-Spamd-Result: default: False [-0.10 / 10.00];
+         RCVD_VIA_SMTP_AUTH(0.00)[];
+         ARC_NA(0.00)[];
+         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
+         FROM_HAS_DN(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         R_SPF_SOFTFAIL(0.00)[~all];
+         ML_SERVERS(-3.10)[213.133.102.83];
+         TO_DN_ALL(0.00)[];
+         DKIM_TRACE(0.00)[flygoat.com:+];
+         RCPT_COUNT_SEVEN(0.00)[7];
+         RCVD_IN_DNSWL_NONE(0.00)[213.133.102.83:from];
+         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
+         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:24940, ipnet:213.133.96.0/19, country:DE];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[];
+         HFILTER_HELO_BAREIP(3.00)[213.133.102.83,1]
+X-Rspamd-Server: mail20.mymailcheap.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/20 12:01 PM, Souptick Joarder wrote:
-> First, when memory allocation for sg_list_unaligned failed, there
-> is no point of calling put_pages() as we haven't pinned any pages.
-> 
-> Second, if get_user_pages_fast() failed we should unpinned num_pinned
-> pages, no point of checking till num_pages.
 
-Hi Souptick,
 
-For both of the above, the wording "no point" is so overly gentle as
-to be misleading. That's because calling put_page() on any pages beyond
-num_pinned is a *bug*.
+在 2020/7/29 下午6:31, Stephen Rothwell 写道:
+> Hi all,
+>
+> After merging the mips tree, today's linux-next build (powerpc
+> allnoconfig) produced this warning:
+>
+> drivers/of/address.c:104:21: warning: 'of_bus_pci_get_flags' defined but not used [-Wunused-function]
+>    104 | static unsigned int of_bus_pci_get_flags(const __be32 *addr)
+>        |                     ^~~~~~~~~~~~~~~~~~~~
+>
+> Introduced by commit
+>
+>    2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
 
-So let's reword that. And let's change the patch subject from "Correcting" to
-"fix".
+Thanks for catching that!
+Fix patch sent.
 
-And probably good to add a Fixes: tag, too.
+Btw: Neither James nor Ralf is still active at Linux-MIPS.
 
-More:
+- Jiaxun
 
-> 
-> This will address both.
-> 
-> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-> Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> ---
-> v2:
-> 	Added review tag.
-> 
->   drivers/virt/fsl_hypervisor.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/virt/fsl_hypervisor.c b/drivers/virt/fsl_hypervisor.c
-> index 1b0b11b..ea344d7 100644
-> --- a/drivers/virt/fsl_hypervisor.c
-> +++ b/drivers/virt/fsl_hypervisor.c
-> @@ -157,7 +157,7 @@ static long ioctl_memcpy(struct fsl_hv_ioctl_memcpy __user *p)
->   
->   	unsigned int i;
->   	long ret = 0;
-> -	int num_pinned; /* return value from get_user_pages() */
-> +	int num_pinned = 0; /* return value from get_user_pages() */
->   	phys_addr_t remote_paddr; /* The next address in the remote buffer */
->   	uint32_t count; /* The number of bytes left to copy */
->   
-> @@ -293,7 +293,7 @@ static long ioctl_memcpy(struct fsl_hv_ioctl_memcpy __user *p)
->   
->   exit:
->   	if (pages) {
-> -		for (i = 0; i < num_pages; i++)
-> +		for (i = 0; i < num_pinned; i++)
->   			if (pages[i])
-
-I suspect that this "if" is unnecessary now.
-
-Either way, the diff itself looks good to me, so with the wording changes to
-the commit description, you can add:
-
-     Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
->   				put_page(pages[i]);
->   	}
-> 
-
+>
