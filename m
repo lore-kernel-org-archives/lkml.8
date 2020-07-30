@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6168C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AFCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BEB92083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F37572070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096697;
-	bh=vVWDWPbwFx627JZu+ldC9umZMqsZBBFfTqSw1nsF7aE=;
+	s=default; t=1596096717;
+	bh=307H0mAGqFThKH7YKYzyGbkMGO1zCL4yynGdqbyR1Cc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EdTbES79BXXzgXGX4MprxvSbbkA6jE/AQk0kPbS77OrdKXJUlcJ2IXJdVaIOcu11C
-	 6s2mVZyeS+S8tm6aVlERE6X9kKcYeUrMccmEd/RN0tJWt3L+ztP+gZD8dRKN5EN6we
-	 NanWE9VPq/inCX4faJtlHMds0ePOkBOrdFIf+924=
+	b=pxLRskQIJyo0G/hQk/bJ9E6uDUMF4m6rqzAkXGuDLWfnIM3jLy+z4gl0F4RscA1rv
+	 z6EZtZYU1W7TqBzS5CmEaxqrK1/wMqmUZF80cudeAR9JGV5EA/SUsFEBfrtGYVlKWk
+	 CMN55+4nBiX+4gmvNHwvjjOio6jocSZ76lRQapXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729969AbgG3ILd (ORCPT
+        id S1729988AbgG3ILs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:11:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50690 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:11:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729947AbgG3ILZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:11:25 -0400
+        id S1729959AbgG3ILW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:11:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAC692075F;
-        Thu, 30 Jul 2020 08:11:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F7992074B;
+        Thu, 30 Jul 2020 08:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096684;
-        bh=vVWDWPbwFx627JZu+ldC9umZMqsZBBFfTqSw1nsF7aE=;
+        s=default; t=1596096681;
+        bh=307H0mAGqFThKH7YKYzyGbkMGO1zCL4yynGdqbyR1Cc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ijl/oQqjyKG8pPpdRnWZ7A+EDkyaHPrzmJpsgWjy68wdI5QGzYlmfymshnLmmQb+w
-         VBDPFIxVFuUaG+cjST0cgJu1yb5K/w7q21Atdh1w+izbEnEX3/mofMKZ5MhOpsv1dd
-         A5lM7Kqbgy3K0j9tXCQpfgCJ9EDTGoO+6cukVN/w=
+        b=FvwjlBvQzWntU1RB2Q0SqUdBtPY9JsHXzbJ8S6mqjP1274bRf0vBd33Gdadi2o85g
+         p9uH33OL+S6Afti39W/ppn1QAG4HiUnnBr70QsF3IsGPkQCtQjYDk0A13WQj/IRFGW
+         G9MltIEE12GxPuz1ZUSmr8mCTg0We9vfbaPoXno0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Markus Theil <markus.theil@tu-ilmenau.de>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 20/54] net: smc91x: Fix possible memory leak in smc_drv_probe()
-Date:   Thu, 30 Jul 2020 10:04:59 +0200
-Message-Id: <20200730074422.179899192@linuxfoundation.org>
+Subject: [PATCH 4.4 02/54] mac80211: allow rx of mesh eapol frames with default rx key
+Date:   Thu, 30 Jul 2020 10:04:41 +0200
+Message-Id: <20200730074421.330256531@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074421.203879987@linuxfoundation.org>
 References: <20200730074421.203879987@linuxfoundation.org>
@@ -61,45 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Markus Theil <markus.theil@tu-ilmenau.de>
 
-[ Upstream commit bca9749b1aa23d964d3ab930938af66dbf887f15 ]
+[ Upstream commit 0b467b63870d9c05c81456aa9bfee894ab2db3b6 ]
 
-If try_toggle_control_gpio() failed in smc_drv_probe(), free_netdev(ndev)
-should be called to free the ndev created earlier. Otherwise, a memleak
-will occur.
+Without this patch, eapol frames cannot be received in mesh
+mode, when 802.1X should be used. Initially only a MGTK is
+defined, which is found and set as rx->key, when there are
+no other keys set. ieee80211_drop_unencrypted would then
+drop these eapol frames, as they are data frames without
+encryption and there exists some rx->key.
 
-Fixes: 7d2911c43815 ("net: smc91x: Fix gpios for device tree based booting")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fix this by differentiating between mesh eapol frames and
+other data frames with existing rx->key. Allow mesh mesh
+eapol frames only if they are for our vif address.
+
+With this patch in-place, ieee80211_rx_h_mesh_fwding continues
+after the ieee80211_drop_unencrypted check and notices, that
+these eapol frames have to be delivered locally, as they should.
+
+Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
+Link: https://lore.kernel.org/r/20200625104214.50319-1-markus.theil@tu-ilmenau.de
+[small code cleanups]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/smsc/smc91x.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/mac80211/rx.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/drivers/net/ethernet/smsc/smc91x.c b/drivers/net/ethernet/smsc/smc91x.c
-index 7405f537beca7..8531a72019680 100644
---- a/drivers/net/ethernet/smsc/smc91x.c
-+++ b/drivers/net/ethernet/smsc/smc91x.c
-@@ -2289,7 +2289,7 @@ static int smc_drv_probe(struct platform_device *pdev)
- 		ret = try_toggle_control_gpio(&pdev->dev, &lp->power_gpio,
- 					      "power", 0, 0, 100);
- 		if (ret)
--			return ret;
-+			goto out_free_netdev;
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index a74a6ff18f919..886dce84e70c0 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -1963,6 +1963,7 @@ static int ieee80211_802_1x_port_control(struct ieee80211_rx_data *rx)
  
- 		/*
- 		 * Optional reset GPIO configured? Minimum 100 ns reset needed
-@@ -2298,7 +2298,7 @@ static int smc_drv_probe(struct platform_device *pdev)
- 		ret = try_toggle_control_gpio(&pdev->dev, &lp->reset_gpio,
- 					      "reset", 0, 0, 100);
- 		if (ret)
--			return ret;
-+			goto out_free_netdev;
+ static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
+ {
++	struct ieee80211_hdr *hdr = (void *)rx->skb->data;
+ 	struct sk_buff *skb = rx->skb;
+ 	struct ieee80211_rx_status *status = IEEE80211_SKB_RXCB(skb);
  
- 		/*
- 		 * Need to wait for optional EEPROM to load, max 750 us according
+@@ -1973,6 +1974,31 @@ static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
+ 	if (status->flag & RX_FLAG_DECRYPTED)
+ 		return 0;
+ 
++	/* check mesh EAPOL frames first */
++	if (unlikely(rx->sta && ieee80211_vif_is_mesh(&rx->sdata->vif) &&
++		     ieee80211_is_data(fc))) {
++		struct ieee80211s_hdr *mesh_hdr;
++		u16 hdr_len = ieee80211_hdrlen(fc);
++		u16 ethertype_offset;
++		__be16 ethertype;
++
++		if (!ether_addr_equal(hdr->addr1, rx->sdata->vif.addr))
++			goto drop_check;
++
++		/* make sure fixed part of mesh header is there, also checks skb len */
++		if (!pskb_may_pull(rx->skb, hdr_len + 6))
++			goto drop_check;
++
++		mesh_hdr = (struct ieee80211s_hdr *)(skb->data + hdr_len);
++		ethertype_offset = hdr_len + ieee80211_get_mesh_hdrlen(mesh_hdr) +
++				   sizeof(rfc1042_header);
++
++		if (skb_copy_bits(rx->skb, ethertype_offset, &ethertype, 2) == 0 &&
++		    ethertype == rx->sdata->control_port_protocol)
++			return 0;
++	}
++
++drop_check:
+ 	/* Drop unencrypted frames if key is set. */
+ 	if (unlikely(!ieee80211_has_protected(fc) &&
+ 		     !ieee80211_is_any_nullfunc(fc) &&
 -- 
 2.25.1
 
