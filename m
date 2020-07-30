@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F6EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C82C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E92B2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77B1620838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:21:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596097289;
-	bh=hmR68HHAxwJGc9KMOu2OPGMn7a+StS9X8sZSVsjPbws=;
+	s=default; t=1596097293;
+	bh=h4SF7kQes2fUNdh+Gfq4IwRkqtMDHZN0FI7W4r8XtDg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qS7hNMDOIyKINni1hFtlM9xBGc43b1lrKslDCJQr7w+eQ8VQoN4QnTJzNDt4owIi3
-	 JLtCW4UhmGzXlTi0s81cA0DNeXlAqc+/f7g2Zjm5IF3V9CZi52z+EC/fcYM4dG36vL
-	 D77yzRnXVV+F7qxqYkSvrb70B9gn6ZU63p8cq2rQ=
+	b=e0hOueGSWnlQA++T+x+G5sYcJKnwi+0b8LOekQF8wU33G3acX1s9nRtJ1ZZLEHufL
+	 5rALpimgd8bPXf5SisZbB5M4ecG/3L9LH3wteHkoBmEWf8Kg6BWXQ5fZKbPhYLMCwA
+	 ++HWt7QSmp8yQ/oN8ANINoxBsvkLuW4f4y8p2nX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729826AbgG3IV2 (ORCPT
+        id S1729079AbgG3IVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:21:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41922 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:21:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729079AbgG3IFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:05:01 -0400
+        id S1729075AbgG3IE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:04:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D594C20672;
-        Thu, 30 Jul 2020 08:04:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2E062074B;
+        Thu, 30 Jul 2020 08:04:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096300;
-        bh=hmR68HHAxwJGc9KMOu2OPGMn7a+StS9X8sZSVsjPbws=;
+        s=default; t=1596096297;
+        bh=h4SF7kQes2fUNdh+Gfq4IwRkqtMDHZN0FI7W4r8XtDg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pf1BJAfSSTT6RYGGDEsy2+4rVa21S2JWyN9qd0CtFmET6a39RM0t+doFRY5EGJo/d
-         NP1eRvYSOqUZ4StYRFcMjJseAX+z1D6yRLg4CPg5xsPMIkyok39CtEJKXSFVCQ5u2o
-         RBbXO1s/PoM4+LZPHOMffwYapeHq/6ZTGevXp4jE=
+        b=guH++SBTru1JnOHlbN3UmVCb6rr/V9OZ7/Hk+uQLq5sFmUCAW/Aavxoh3roOWfd13
+         fqxPR08wNEvP9yoTo2wn7QO1o2Z5Si6TnP0HlN9nehzKG8dsNQc+WnshIYDWoZILx7
+         4WM6H48yzwrb5lu/U2NadaG9rRMTgkPYfSM8QrAs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Benjamin Herrenschmidt <benh@amazon.com>,
         Kuniyuki Iwashima <kuniyu@amazon.co.jp>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 17/20] udp: Improve load balancing for SO_REUSEPORT.
-Date:   Thu, 30 Jul 2020 10:04:07 +0200
-Message-Id: <20200730074421.342711211@linuxfoundation.org>
+Subject: [PATCH 5.7 16/20] udp: Copy has_conns in reuseport_grow().
+Date:   Thu, 30 Jul 2020 10:04:06 +0200
+Message-Id: <20200730074421.291324106@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074420.533211699@linuxfoundation.org>
 References: <20200730074420.533211699@linuxfoundation.org>
@@ -63,33 +63,19 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kuniyuki Iwashima <kuniyu@amazon.co.jp>
 
-[ Upstream commit efc6b6f6c3113e8b203b9debfb72d81e0f3dcace ]
+[ Upstream commit f2b2c55e512879a05456eaf5de4d1ed2f7757509 ]
 
-Currently, SO_REUSEPORT does not work well if connected sockets are in a
-UDP reuseport group.
+If an unconnected socket in a UDP reuseport group connect()s, has_conns is
+set to 1. Then, when a packet is received, udp[46]_lib_lookup2() scans all
+sockets in udp_hslot looking for the connected socket with the highest
+score.
 
-Then reuseport_has_conns() returns true and the result of
-reuseport_select_sock() is discarded. Also, unconnected sockets have the
-same score, hence only does the first unconnected socket in udp_hslot
-always receive all packets sent to unconnected sockets.
+However, when the number of sockets bound to the port exceeds max_socks,
+reuseport_grow() resets has_conns to 0. It can cause udp[46]_lib_lookup2()
+to return without scanning all sockets, resulting in that packets sent to
+connected sockets may be distributed to unconnected sockets.
 
-So, the result of reuseport_select_sock() should be used for load
-balancing.
-
-The noteworthy point is that the unconnected sockets placed after
-connected sockets in sock_reuseport.socks will receive more packets than
-others because of the algorithm in reuseport_select_sock().
-
-    index | connected | reciprocal_scale | result
-    ---------------------------------------------
-    0     | no        | 20%              | 40%
-    1     | no        | 20%              | 20%
-    2     | yes       | 20%              | 0%
-    3     | no        | 20%              | 40%
-    4     | yes       | 20%              | 0%
-
-If most of the sockets are connected, this can be a problem, but it still
-works better than now.
+Therefore, reuseport_grow() should copy has_conns.
 
 Fixes: acdcecc61285 ("udp: correct reuseport selection with connected sockets")
 CC: Willem de Bruijn <willemb@google.com>
@@ -99,83 +85,18 @@ Acked-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/udp.c |   15 +++++++++------
- net/ipv6/udp.c |   15 +++++++++------
- 2 files changed, 18 insertions(+), 12 deletions(-)
+ net/core/sock_reuseport.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -413,7 +413,7 @@ static struct sock *udp4_lib_lookup2(str
- 				     struct udp_hslot *hslot2,
- 				     struct sk_buff *skb)
- {
--	struct sock *sk, *result;
-+	struct sock *sk, *result, *reuseport_result;
- 	int score, badness;
- 	u32 hash = 0;
+--- a/net/core/sock_reuseport.c
++++ b/net/core/sock_reuseport.c
+@@ -101,6 +101,7 @@ static struct sock_reuseport *reuseport_
+ 	more_reuse->prog = reuse->prog;
+ 	more_reuse->reuseport_id = reuse->reuseport_id;
+ 	more_reuse->bind_inany = reuse->bind_inany;
++	more_reuse->has_conns = reuse->has_conns;
  
-@@ -423,17 +423,20 @@ static struct sock *udp4_lib_lookup2(str
- 		score = compute_score(sk, net, saddr, sport,
- 				      daddr, hnum, dif, sdif);
- 		if (score > badness) {
-+			reuseport_result = NULL;
-+
- 			if (sk->sk_reuseport &&
- 			    sk->sk_state != TCP_ESTABLISHED) {
- 				hash = udp_ehashfn(net, daddr, hnum,
- 						   saddr, sport);
--				result = reuseport_select_sock(sk, hash, skb,
--							sizeof(struct udphdr));
--				if (result && !reuseport_has_conns(sk, false))
--					return result;
-+				reuseport_result = reuseport_select_sock(sk, hash, skb,
-+									 sizeof(struct udphdr));
-+				if (reuseport_result && !reuseport_has_conns(sk, false))
-+					return reuseport_result;
- 			}
-+
-+			result = reuseport_result ? : sk;
- 			badness = score;
--			result = sk;
- 		}
- 	}
- 	return result;
---- a/net/ipv6/udp.c
-+++ b/net/ipv6/udp.c
-@@ -148,7 +148,7 @@ static struct sock *udp6_lib_lookup2(str
- 		int dif, int sdif, struct udp_hslot *hslot2,
- 		struct sk_buff *skb)
- {
--	struct sock *sk, *result;
-+	struct sock *sk, *result, *reuseport_result;
- 	int score, badness;
- 	u32 hash = 0;
- 
-@@ -158,17 +158,20 @@ static struct sock *udp6_lib_lookup2(str
- 		score = compute_score(sk, net, saddr, sport,
- 				      daddr, hnum, dif, sdif);
- 		if (score > badness) {
-+			reuseport_result = NULL;
-+
- 			if (sk->sk_reuseport &&
- 			    sk->sk_state != TCP_ESTABLISHED) {
- 				hash = udp6_ehashfn(net, daddr, hnum,
- 						    saddr, sport);
- 
--				result = reuseport_select_sock(sk, hash, skb,
--							sizeof(struct udphdr));
--				if (result && !reuseport_has_conns(sk, false))
--					return result;
-+				reuseport_result = reuseport_select_sock(sk, hash, skb,
-+									 sizeof(struct udphdr));
-+				if (reuseport_result && !reuseport_has_conns(sk, false))
-+					return reuseport_result;
- 			}
--			result = sk;
-+
-+			result = reuseport_result ? : sk;
- 			badness = score;
- 		}
- 	}
+ 	memcpy(more_reuse->socks, reuse->socks,
+ 	       reuse->num_socks * sizeof(struct sock *));
 
 
