@@ -4,46 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31870C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B51F1C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF342082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DFA42082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:28:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729810AbgG3P2Q (ORCPT
+        id S1729947AbgG3P2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:28:16 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57060 "EHLO
+        Thu, 30 Jul 2020 11:28:54 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57122 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728412AbgG3P2P (ORCPT
+        with ESMTP id S1729796AbgG3P2P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Jul 2020 11:28:15 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id A083D8030866;
-        Thu, 30 Jul 2020 15:28:12 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id EBAFA8040A69;
+        Thu, 30 Jul 2020 15:28:13 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id xq1zIwFDAxoC; Thu, 30 Jul 2020 18:28:12 +0300 (MSK)
+        with ESMTP id TyDLcoUfh4Qp; Thu, 30 Jul 2020 18:28:13 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Hoan Tran <hoan@os.amperecomputing.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
+        Serge Semin <fancer.lancer@gmail.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 01/10] dt-bindings: gpio: dwapb: Add ngpios property support
-Date:   Thu, 30 Jul 2020 18:27:58 +0300
-Message-ID: <20200730152808.2955-2-Sergey.Semin@baikalelectronics.ru>
+        Rob Herring <robh+dt@kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 03/10] gpio: dwapb: Move MFD-specific IRQ handler
+Date:   Thu, 30 Jul 2020 18:28:00 +0300
+Message-ID: <20200730152808.2955-4-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200730152808.2955-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200730152808.2955-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -55,36 +53,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's redundant to have a vendor-specific property describing a number of
-GPIOS while there is a generic one. Let's mark the former one as
-deprecated and define the "ngpios" property supported with constraints
-of being within [1; 32] range.
+For better readability let's group all the IRQ handlers in a single place
+of the driver instead of having them scatter around all over the file.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- .../devicetree/bindings/gpio/snps,dw-apb-gpio.yaml          | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpio/gpio-dwapb.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml b/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
-index 1240f6289249..b391cc1b4590 100644
---- a/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
-@@ -61,8 +61,14 @@ patternProperties:
-       '#gpio-cells':
-         const: 2
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+index ccd80df16062..3081213247d8 100644
+--- a/drivers/gpio/gpio-dwapb.c
++++ b/drivers/gpio/gpio-dwapb.c
+@@ -220,6 +220,11 @@ static void dwapb_irq_handler(struct irq_desc *desc)
+ 	chained_irq_exit(chip, desc);
+ }
  
-+      ngpios:
-+        default: 32
-+        minimum: 1
-+        maximum: 32
++static irqreturn_t dwapb_irq_handler_mfd(int irq, void *dev_id)
++{
++	return IRQ_RETVAL(dwapb_do_irq(dev_id));
++}
 +
-       snps,nr-gpios:
-         description: The number of GPIO pins exported by the port.
-+        deprecated: true
-         $ref: /schemas/types.yaml#/definitions/uint32
-         default: 32
-         minimum: 1
+ static void dwapb_irq_enable(struct irq_data *d)
+ {
+ 	struct irq_chip_generic *igc = irq_data_get_irq_chip_data(d);
+@@ -349,11 +354,6 @@ static int dwapb_gpio_set_config(struct gpio_chip *gc, unsigned offset,
+ 	return dwapb_gpio_set_debounce(gc, offset, debounce);
+ }
+ 
+-static irqreturn_t dwapb_irq_handler_mfd(int irq, void *dev_id)
+-{
+-	return IRQ_RETVAL(dwapb_do_irq(dev_id));
+-}
+-
+ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+ 				 struct dwapb_gpio_port *port,
+ 				 struct dwapb_port_property *pp)
 -- 
 2.27.0
 
