@@ -2,113 +2,169 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E054C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B828FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6472A2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9583D22B48
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 03:26:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ei0yzKh/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nhdvWdsp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgG3DZc (ORCPT
+        id S1728495AbgG3D0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 23:25:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37914 "EHLO
+        Wed, 29 Jul 2020 23:26:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726519AbgG3DZb (ORCPT
+        with ESMTP id S1726367AbgG3D0n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 23:25:31 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85936C0619D2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 20:25:31 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id t4so21300672iln.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 20:25:31 -0700 (PDT)
+        Wed, 29 Jul 2020 23:26:43 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF1FBC061794;
+        Wed, 29 Jul 2020 20:26:43 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id d4so15745693pgk.4;
+        Wed, 29 Jul 2020 20:26:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BMOKpsoAycMZRgiyYsf2Iv8iNWZoQZsua7ZF5l9UzN0=;
-        b=ei0yzKh/0+/EVfLlVvdicxsBwhwQbO0UpL2frM3TZ8p1BlLc/Bk6n5tzdHhkvE5kqC
-         BuuvBcneeC9QqKUF3XHgDlQtxHv6ejgvQE03z+QoPx5WJsvdHz43ALA1wZip6POLKkAY
-         w2DY4w/a2cpNv3En9dleOzNxW8o/45qRmUaTE=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=D3DSMcxAJBfVCzQ9tsL41B8n4WlMAXQgIZRXZY0d2fk=;
+        b=nhdvWdsp7OTR0ia6J6e7mP+rRJPbscgtYGVXox9eFXX3AXYXtIFRhNtuIFMGwApCRt
+         R/F6hAs2mBWQWItzVF85rWwDmVd3czfqDU9hK2Wsc68Ko/7JhV+teJiyvZqirGcD44gq
+         e191U0iXU/NNh6ZNa7ZrVVQr8AFex6SGGl674lMl4e4hNY+CTRetN/xafVmD31u7fGIH
+         dBwp3Yrx9uZjeoOLJhYD6FGXrMSJBh8QBkTUbZKjVCbn58scMKJ4ua99D/BL0OAz5fT9
+         yE6obEuznxRklacfwVrGi7TEu12I4q6jyRNm5sfG0eHWrK5n2lgxg0fwEYiLCTKUF1T3
+         nX/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BMOKpsoAycMZRgiyYsf2Iv8iNWZoQZsua7ZF5l9UzN0=;
-        b=MdVy1EYJtpeFJb86p/FNfZNUCaJ6ZDi+/hbQzwmhEZG5wosL+JaeDaaHyTPhMikTHa
-         7niGdxtSiwnrAnQELYVxLo3MbmoUFOLoFqgOagDyK2dzjHJWq4rlLSTHXNzh66vzuMd7
-         lSMUlGQOVzNeu/ERGByQnYx8cwH30qVXs4QusZFZ29gW7Zi5fvVAWG4j3t8zU5EBgktk
-         yjieHSFVdroTLW7F5eJz0tymMZrpjjxY6a5BJtmMuEEX6wY4B5YkawHCN6xLW6FsH8t0
-         f5FKabvTcpeYA3hCBH3HkvBaqCxM4t3ccKrHtu5o49axJMNx1AWIsJdfDbEpfYGVzHxP
-         pppQ==
-X-Gm-Message-State: AOAM532NJ6+k5GpR+IZYy059dlWbKimicmdkkfGnDCrCYk9QQWcEHzcr
-        +175ogZXwwGoTOi0PCbLv+xKlwtgDir8U8tKppJQnmytStY=
-X-Google-Smtp-Source: ABdhPJxf3SJtdtcC3xEnWvm6qVniq9pX3GBUs7lPhXnrpuU95EdRjwzChN8OOM19xBI9ulznZWr3XCnXu1ZfiGkUoPE=
-X-Received: by 2002:a92:660e:: with SMTP id a14mr6084382ilc.262.1596079530713;
- Wed, 29 Jul 2020 20:25:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200730030221.705255-1-joel@joelfernandes.org> <20200730030221.705255-2-joel@joelfernandes.org>
-In-Reply-To: <20200730030221.705255-2-joel@joelfernandes.org>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Wed, 29 Jul 2020 23:25:19 -0400
-Message-ID: <CAEXW_YSbad9Cium_9f1eA1RfZ2Me9JcX2S-KMe-jRQo8W6AaBg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] rcu/tree: Clarify comments about FQS loop reporting
- quiescent states
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Neeraj Upadhyay <neeraju@codeaurora.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>, rcu <rcu@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=D3DSMcxAJBfVCzQ9tsL41B8n4WlMAXQgIZRXZY0d2fk=;
+        b=MCsuFLkeyk59Xbhs2bQc7g8isG3xByhoF2WWkY9LQjhk/fSslgOb7fzRJhC9PbEwqF
+         nFddEE5KqavOiq+ySZc9sGfi7uLUHl2pdrh4SwRfQnYsT9ifCxSL7e/QEIyasXI+w9YP
+         FE6UqNTuTtDKnqbBz3X0iScfzVOubDNHxI2dyn7EZ/dVBDPkn8fAVErU0euMLV3prGEW
+         gJkaG/x3EUX09ItJcs2f6VjPO6PaYU2rsZdWy4TP9UzVZeFV8J1yXnT2eEGPo17tpi3/
+         zS20/uuB+00HlkQkwNV2VWjEvQrRk/aRm191M/TZ4XdigySANEXAhmMmFIr2B+5XXMfa
+         N2BQ==
+X-Gm-Message-State: AOAM530+jqc8K3Pd2QWcVR6ehJFETkqwFvkqFBwgDlXPeEFIJo+WLBd1
+        SB7JQtFyqN8j1JvoiCt8LLk=
+X-Google-Smtp-Source: ABdhPJw1twExWZX4O4IqbAvyOz0gO0V+d8bMgclMUGMPZ3r6fvpxEQH8YriW+0ywdxR5zw0JVoXY6Q==
+X-Received: by 2002:a63:215e:: with SMTP id s30mr30435034pgm.87.1596079602914;
+        Wed, 29 Jul 2020 20:26:42 -0700 (PDT)
+Received: from localhost.localdomain ([132.237.175.251])
+        by smtp.googlemail.com with ESMTPSA id d29sm3978964pgb.54.2020.07.29.20.26.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 20:26:42 -0700 (PDT)
+From:   Crag Wang <crag0715@gmail.com>
+X-Google-Original-From: Crag Wang <crag.wang@dell.com>
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     mario.limonciello@dell.com, mathewk@chromium.org,
+        campello@google.com, crag.wang@dell.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/1] power_supply: wilco_ec: Add long life charging mode
+Date:   Thu, 30 Jul 2020 11:26:09 +0800
+Message-Id: <20200730032609.20330-1-crag.wang@dell.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200715145511.9464-1-crag.wang@dell.com>
+References: <20200715145511.9464-1-crag.wang@dell.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 11:02 PM Joel Fernandes (Google)
-<joel@joelfernandes.org> wrote:
->
-> At least since v4.19, the FQS loop no longer reports quiescent states
+This is a long life mode set in the factory for extended warranty
+battery, the power charging rate is customized so that battery at
+work last longer.
 
-I meant here, "FQS loop no longer reports quiescent states for offline CPUs."
+Presently switching to a different battery charging mode is through
+EC PID 0x0710 to configure the battery firmware, this operation will
+be blocked by EC with failure code 0x01 when PLL mode is already
+in use.
 
-Sorry,
+Signed-off-by: Crag Wang <crag.wang@dell.com>
+Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+---
+ Documentation/ABI/testing/sysfs-class-power-wilco | 4 ++++
+ drivers/power/supply/power_supply_sysfs.c         | 1 +
+ drivers/power/supply/wilco-charger.c              | 5 +++++
+ include/linux/power_supply.h                      | 1 +
+ 4 files changed, 11 insertions(+)
 
- - Joel
+diff --git a/Documentation/ABI/testing/sysfs-class-power-wilco b/Documentation/ABI/testing/sysfs-class-power-wilco
+index da1d6ffe5e3c..84fde1d0ada0 100644
+--- a/Documentation/ABI/testing/sysfs-class-power-wilco
++++ b/Documentation/ABI/testing/sysfs-class-power-wilco
+@@ -14,6 +14,10 @@ Description:
+ 			Charging begins when level drops below
+ 			charge_control_start_threshold, and ceases when
+ 			level is above charge_control_end_threshold.
++		Long Life: Customized charge rate for last longer battery life.
++			On Wilco device this mode is pre-configured in the factory
++			through EC's private PID. Swiching to a different mode will
++			be denied by Wilco EC when Long Life mode is enabled.
+ 
+ What:		/sys/class/power_supply/wilco-charger/charge_control_start_threshold
+ Date:		April 2019
+diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+index bc79560229b5..cfb87b8b8392 100644
+--- a/drivers/power/supply/power_supply_sysfs.c
++++ b/drivers/power/supply/power_supply_sysfs.c
+@@ -87,6 +87,7 @@ static const char * const POWER_SUPPLY_CHARGE_TYPE_TEXT[] = {
+ 	[POWER_SUPPLY_CHARGE_TYPE_STANDARD]	= "Standard",
+ 	[POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE]	= "Adaptive",
+ 	[POWER_SUPPLY_CHARGE_TYPE_CUSTOM]	= "Custom",
++	[POWER_SUPPLY_CHARGE_TYPE_LONGLIFE]	= "Long Life",
+ };
+ 
+ static const char * const POWER_SUPPLY_HEALTH_TEXT[] = {
+diff --git a/drivers/power/supply/wilco-charger.c b/drivers/power/supply/wilco-charger.c
+index b3c6d7cdd731..98ade073ef05 100644
+--- a/drivers/power/supply/wilco-charger.c
++++ b/drivers/power/supply/wilco-charger.c
+@@ -27,6 +27,7 @@ enum charge_mode {
+ 	CHARGE_MODE_AC = 3,	/* Mostly AC use, used for Trickle */
+ 	CHARGE_MODE_AUTO = 4,	/* Used for Adaptive */
+ 	CHARGE_MODE_CUSTOM = 5,	/* Used for Custom */
++	CHARGE_MODE_LONGLIFE = 6, /* Used for Long Life */
+ };
+ 
+ #define CHARGE_LOWER_LIMIT_MIN	50
+@@ -48,6 +49,8 @@ static int psp_val_to_charge_mode(int psp_val)
+ 		return CHARGE_MODE_AUTO;
+ 	case POWER_SUPPLY_CHARGE_TYPE_CUSTOM:
+ 		return CHARGE_MODE_CUSTOM;
++	case POWER_SUPPLY_CHARGE_TYPE_LONGLIFE:
++		return CHARGE_MODE_LONGLIFE;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -67,6 +70,8 @@ static int charge_mode_to_psp_val(enum charge_mode mode)
+ 		return POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE;
+ 	case CHARGE_MODE_CUSTOM:
+ 		return POWER_SUPPLY_CHARGE_TYPE_CUSTOM;
++	case CHARGE_MODE_LONGLIFE:
++		return POWER_SUPPLY_CHARGE_TYPE_LONGLIFE;
+ 	default:
+ 		return -EINVAL;
+ 	}
+diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+index ac1345a48ad0..528a3eaa2320 100644
+--- a/include/linux/power_supply.h
++++ b/include/linux/power_supply.h
+@@ -48,6 +48,7 @@ enum {
+ 	POWER_SUPPLY_CHARGE_TYPE_STANDARD,	/* normal speed */
+ 	POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE,	/* dynamically adjusted speed */
+ 	POWER_SUPPLY_CHARGE_TYPE_CUSTOM,	/* use CHARGE_CONTROL_* props */
++	POWER_SUPPLY_CHARGE_TYPE_LONGLIFE,	/* slow speed, longer life */
+ };
+ 
+ enum {
+-- 
+2.17.1
 
-
-> unless it is a dire situation where an offlined CPU failed to report
-> a quiescent state. Let us clarify the comment in rcu_gp_init() inorder
-> to keep the comment current.
->
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  kernel/rcu/tree.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 1e51962b565b..929568ff5989 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -1701,8 +1701,8 @@ static bool rcu_gp_init(void)
->
->         /*
->          * Apply per-leaf buffered online and offline operations to the
-> -        * rcu_node tree.  Note that this new grace period need not wait
-> -        * for subsequent online CPUs, and that quiescent-state forcing
-> +        * rcu_node tree.  Note that this new grace period need not wait for
-> +        * subsequent online CPUs, and that RCU hooks in CPU offlining path
->          * will handle subsequent offline CPUs.
->          */
->         rcu_state.gp_state = RCU_GP_ONOFF;
-> --
-> 2.28.0.rc0.142.g3c755180ce-goog
->
+---
+The original author, Nick no longer being around and that's why he's not on CC.
