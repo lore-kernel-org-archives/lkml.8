@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02059C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AB6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBD3120838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EED892082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:46:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730019AbgG3PqM (ORCPT
+        id S1730035AbgG3PqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:46:12 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57404 "EHLO
+        Thu, 30 Jul 2020 11:46:19 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57382 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729952AbgG3Pp6 (ORCPT
+        with ESMTP id S1729777AbgG3Pp5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 11:45:58 -0400
+        Thu, 30 Jul 2020 11:45:57 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 911B58040A6B;
-        Thu, 30 Jul 2020 15:45:55 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id F22EE8040A6A;
+        Thu, 30 Jul 2020 15:45:54 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id XMy_RAm5KOh0; Thu, 30 Jul 2020 18:45:54 +0300 (MSK)
+        with ESMTP id 79Cw5IwDZWQc; Thu, 30 Jul 2020 18:45:54 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -40,9 +40,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Rob Herring <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 4/5] dmaengine: dw: Ignore burst setting for memory peripherals
-Date:   Thu, 30 Jul 2020 18:45:44 +0300
-Message-ID: <20200730154545.3965-5-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH 3/5] dmaengine: dw: Discard dlen from the dev-to-mem xfer width calculation
+Date:   Thu, 30 Jul 2020 18:45:43 +0300
+Message-ID: <20200730154545.3965-4-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200730154545.3965-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200730154545.3965-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -54,59 +54,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the DW DMA controller Databook (page 40 "3.5 Memory
-Peripherals") memory peripherals don't have handshaking interface
-connected to the controller, therefore they can never be a flow
-controller. Since the CTLx.SRC_MSIZE and CTLx.DEST_MSIZE are
-properties valid only for peripherals with a handshaking
-interface, we can freely zero these fields out if the memory peripheral
-is selected to be the source or the destination of the DMA transfers.
+Indeed in case of the DMA_DEV_TO_MEM DMA transfers it's enough to take the
+destination memory address and the destination master data width into
+account to calculate the CTLx.DST_TR_WIDTH setting of the memory
+peripheral. According to the DW DMAC IP-core Databook (page 66, Example 5)
+at the and of a DMA transfer when the DMA-channel internal FIFO is left
+with data less than for a single destination burst transaction, the
+destination peripheral will enter the Single Transaction Region where the
+DW DMA controller can complete a block transfer to the destination using
+single transactions (non-burst transaction of CTLx.DST_TR_WIDTH bytes). If
+there is no enough data in the DMA-channel internal FIFO for even a single
+non-burst transaction of CTLx.DST_TR_WIDTH bytes, then the channel enters
+"FIFO flush mode". That mode is activated to empty the FIFO and flush the
+leftovers out to the memory peripheral. The flushing procedure is simple.
+The data is sent to the memory by means of a set of single transaction of
+CTLx.SRC_TR_WIDTH bytes. To sum up it's redundant to use the LLPs length
+to find out the CTLx.DST_TR_WIDTH parameter value, since each DMA transfer
+will be completed with the CTLx.SRC_TR_WIDTH bytes transaction if it is
+required.
 
-Note according to the databook, length of burst transfers to memory is
-always equal to the number of data items available in a channel FIFO or
-data items required to complete the block transfer, whichever is smaller;
-length of burst transfers from memory is always equal to the space
-available in a channel FIFO or number of data items required to complete
-the block transfer, whichever is smaller.
+In this commit we remove the LLP entry length from the statement which
+calculates the memory peripheral DMA transaction width since it's
+redundant due to the feature described above. By doing so we'll improve
+the memory bus utilization and speed up the DMA-channel performance for
+DMA_DEV_TO_MEM DMA-transfers.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 ---
- drivers/dma/dw/dw.c     | 5 ++---
- drivers/dma/dw/idma32.c | 5 ++---
- 2 files changed, 4 insertions(+), 6 deletions(-)
+ drivers/dma/dw/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/dw/dw.c b/drivers/dma/dw/dw.c
-index d9810980920a..a4862263ff14 100644
---- a/drivers/dma/dw/dw.c
-+++ b/drivers/dma/dw/dw.c
-@@ -67,9 +67,8 @@ static size_t dw_dma_block2bytes(struct dw_dma_chan *dwc, u32 block, u32 width)
- static u32 dw_dma_prepare_ctllo(struct dw_dma_chan *dwc)
- {
- 	struct dma_slave_config	*sconfig = &dwc->dma_sconfig;
--	bool is_slave = is_slave_direction(dwc->direction);
--	u8 smsize = is_slave ? sconfig->src_maxburst : DW_DMA_MSIZE_16;
--	u8 dmsize = is_slave ? sconfig->dst_maxburst : DW_DMA_MSIZE_16;
-+	u8 smsize = (dwc->direction == DMA_DEV_TO_MEM) ? sconfig->src_maxburst : 0;
-+	u8 dmsize = (dwc->direction == DMA_MEM_TO_DEV) ? sconfig->dst_maxburst : 0;
- 	u8 p_master = dwc->dws.p_master;
- 	u8 m_master = dwc->dws.m_master;
- 	u8 dms = (dwc->direction == DMA_MEM_TO_DEV) ? p_master : m_master;
-diff --git a/drivers/dma/dw/idma32.c b/drivers/dma/dw/idma32.c
-index f00657308811..3ce44de25d33 100644
---- a/drivers/dma/dw/idma32.c
-+++ b/drivers/dma/dw/idma32.c
-@@ -73,9 +73,8 @@ static size_t idma32_block2bytes(struct dw_dma_chan *dwc, u32 block, u32 width)
- static u32 idma32_prepare_ctllo(struct dw_dma_chan *dwc)
- {
- 	struct dma_slave_config	*sconfig = &dwc->dma_sconfig;
--	bool is_slave = is_slave_direction(dwc->direction);
--	u8 smsize = is_slave ? sconfig->src_maxburst : IDMA32_MSIZE_8;
--	u8 dmsize = is_slave ? sconfig->dst_maxburst : IDMA32_MSIZE_8;
-+	u8 smsize = (dwc->direction == DMA_DEV_TO_MEM) ? sconfig->src_maxburst : 0;
-+	u8 dmsize = (dwc->direction == DMA_MEM_TO_DEV) ? sconfig->dst_maxburst : 0;
+diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
+index 4700f2e87a62..3da0aea9fe25 100644
+--- a/drivers/dma/dw/core.c
++++ b/drivers/dma/dw/core.c
+@@ -723,7 +723,7 @@ dwc_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 			lli_write(desc, sar, reg);
+ 			lli_write(desc, dar, mem);
+ 			lli_write(desc, ctlhi, ctlhi);
+-			mem_width = __ffs(data_width | mem | dlen);
++			mem_width = __ffs(data_width | mem);
+ 			lli_write(desc, ctllo, ctllo | DWC_CTLL_DST_WIDTH(mem_width));
+ 			desc->len = dlen;
  
- 	return DWC_CTLL_LLP_D_EN | DWC_CTLL_LLP_S_EN |
- 	       DWC_CTLL_DST_MSIZE(dmsize) | DWC_CTLL_SRC_MSIZE(smsize);
 -- 
 2.27.0
 
