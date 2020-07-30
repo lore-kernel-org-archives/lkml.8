@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAB5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDED5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F4AD2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B62FF2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096481;
-	bh=8je/VXTUbTj7wWw5DJkWCZC8gN/APZOy2RV5kYfjlFU=;
+	s=default; t=1596096484;
+	bh=xs7LQ2LBAeYJBzB+0vFKPqcnN/L4y7IAK++oRk+kDb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rTH8YcsenvGszyCyU7hqn+d2O9uwZXhBDlno0i22xvLEqPv+wZdhJBcXUNrYMChVD
-	 kTBlVFChhlUB2UoU7udZZ10fZE/Iabi6BrmmCjBjzeOXRp5HoZwQ9OsA9NS8gEFRlU
-	 IFU3MX5gLqal2/xjwRvFiAa4gmYMjkfPrr1JNMHE=
+	b=ECBXrFMi4nvZJvYkrFFHSqhZxTKEBZYiN4NJXcsI/n0WwH1cgdLzRUw3Eo+FD3xwN
+	 VnMbLWtv7wJ9lF6eLUcBPn0R1L85VHEEV1Fcy9hSl866gVLW9BPHYrZ4p4SnKAZx2E
+	 mZft2YRfk+uGROTEa9nuESNOiPNjXi8gULQTBuzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729528AbgG3IH7 (ORCPT
+        id S1729535AbgG3IIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:07:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45812 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:08:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729506AbgG3IHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:07:44 -0400
+        id S1729493AbgG3IHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:07:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC444206C0;
-        Thu, 30 Jul 2020 08:07:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0AB9206C0;
+        Thu, 30 Jul 2020 08:07:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096464;
-        bh=8je/VXTUbTj7wWw5DJkWCZC8gN/APZOy2RV5kYfjlFU=;
+        s=default; t=1596096459;
+        bh=xs7LQ2LBAeYJBzB+0vFKPqcnN/L4y7IAK++oRk+kDb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W6Powl9hDvJuEb74tVNG2E8tmR/z+VIalQ1Gy9zjFpeTXEO0R/S5IZJRql9iFEqiY
-         xAxpI4FCfwwFapvQGsLHnSS1ZbBkM57KKyNzK93iJoF3XsNFIbBGFcZjDIbqVUD+71
-         n+J814+njhoBLeaDeTFYW1LvrsgKgoYmqQFAwFnY=
+        b=iiSifVCfMtMGkzg3ZFp1fAPCqp3ML5cb8McpCjwyec3gyMC8gAmXUp6KRPJB2pQ8x
+         zCBYPAd+4SqPoHLNj17eSS9ucz99g1q/PvoFXkGKpwN3aRQsu6pZ567i1AKoRNLaXh
+         C0IDzp9wzTJlX93v7JDG5kDWebxXuw5wA/RKnGqw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Oscar Salvador <osalvador@techadventures.net>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Ayush Mittal <ayush.m@samsung.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: [PATCH 4.14 12/14] mm/page_owner.c: remove drain_all_pages from init_early_allocated_pages
-Date:   Thu, 30 Jul 2020 10:04:55 +0200
-Message-Id: <20200730074419.503737903@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Weilong Chen <chenweilong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 10/14] rtnetlink: Fix memory(net_device) leak when ->newlink fails
+Date:   Thu, 30 Jul 2020 10:04:53 +0200
+Message-Id: <20200730074419.408134183@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074418.882736401@linuxfoundation.org>
 References: <20200730074418.882736401@linuxfoundation.org>
@@ -66,53 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oscar Salvador <osalvador@techadventures.net>
+From: Weilong Chen <chenweilong@huawei.com>
 
-commit 6bec6ad77fac3d29aed0d8e0b7526daedc964970 upstream.
+[ Upstream commit cebb69754f37d68e1355a5e726fdac317bcda302 ]
 
-When setting page_owner = on, the following warning can be seen in the
-boot log:
+When vlan_newlink call register_vlan_dev fails, it might return error
+with dev->reg_state = NETREG_UNREGISTERED. The rtnl_newlink should
+free the memory. But currently rtnl_newlink only free the memory which
+state is NETREG_UNINITIALIZED.
 
-  WARNING: CPU: 0 PID: 0 at mm/page_alloc.c:2537 drain_all_pages+0x171/0x1a0
-  Modules linked in:
-  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.15.0-rc7-next-20180109-1-default+ #7
-  Hardware name: Dell Inc. Latitude E7470/0T6HHJ, BIOS 1.11.3 11/09/2016
-  RIP: 0010:drain_all_pages+0x171/0x1a0
-  Call Trace:
-    init_page_owner+0x4e/0x260
-    start_kernel+0x3e6/0x4a6
-    ? set_init_arg+0x55/0x55
-    secondary_startup_64+0xa5/0xb0
-  Code: c5 ed ff 89 df 48 c7 c6 20 3b 71 82 e8 f9 4b 52 00 3b 05 d7 0b f8 00 89 c3 72 d5 5b 5d 41 5
+BUG: memory leak
+unreferenced object 0xffff8881051de000 (size 4096):
+  comm "syz-executor139", pid 560, jiffies 4294745346 (age 32.445s)
+  hex dump (first 32 bytes):
+    76 6c 61 6e 32 00 00 00 00 00 00 00 00 00 00 00  vlan2...........
+    00 45 28 03 81 88 ff ff 00 00 00 00 00 00 00 00  .E(.............
+  backtrace:
+    [<0000000047527e31>] kmalloc_node include/linux/slab.h:578 [inline]
+    [<0000000047527e31>] kvmalloc_node+0x33/0xd0 mm/util.c:574
+    [<000000002b59e3bc>] kvmalloc include/linux/mm.h:753 [inline]
+    [<000000002b59e3bc>] kvzalloc include/linux/mm.h:761 [inline]
+    [<000000002b59e3bc>] alloc_netdev_mqs+0x83/0xd90 net/core/dev.c:9929
+    [<000000006076752a>] rtnl_create_link+0x2c0/0xa20 net/core/rtnetlink.c:3067
+    [<00000000572b3be5>] __rtnl_newlink+0xc9c/0x1330 net/core/rtnetlink.c:3329
+    [<00000000e84ea553>] rtnl_newlink+0x66/0x90 net/core/rtnetlink.c:3397
+    [<0000000052c7c0a9>] rtnetlink_rcv_msg+0x540/0x990 net/core/rtnetlink.c:5460
+    [<000000004b5cb379>] netlink_rcv_skb+0x12b/0x3a0 net/netlink/af_netlink.c:2469
+    [<00000000c71c20d3>] netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+    [<00000000c71c20d3>] netlink_unicast+0x4c6/0x690 net/netlink/af_netlink.c:1329
+    [<00000000cca72fa9>] netlink_sendmsg+0x735/0xcc0 net/netlink/af_netlink.c:1918
+    [<000000009221ebf7>] sock_sendmsg_nosec net/socket.c:652 [inline]
+    [<000000009221ebf7>] sock_sendmsg+0x109/0x140 net/socket.c:672
+    [<000000001c30ffe4>] ____sys_sendmsg+0x5f5/0x780 net/socket.c:2352
+    [<00000000b71ca6f3>] ___sys_sendmsg+0x11d/0x1a0 net/socket.c:2406
+    [<0000000007297384>] __sys_sendmsg+0xeb/0x1b0 net/socket.c:2439
+    [<000000000eb29b11>] do_syscall_64+0x56/0xa0 arch/x86/entry/common.c:359
+    [<000000006839b4d0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-This warning is shown because we are calling drain_all_pages() in
-init_early_allocated_pages(), but mm_percpu_wq is not up yet, it is being
-set up later on in kernel_init_freeable() -> init_mm_internals().
-
-Link: http://lkml.kernel.org/r/20180109153921.GA13070@techadventures.net
-Signed-off-by: Oscar Salvador <osalvador@techadventures.net>
-Acked-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Ayush Mittal <ayush.m@samsung.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Fixes: cb626bf566eb ("net-sysfs: Fix reference count leak")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Weilong Chen <chenweilong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- mm/page_owner.c |    1 -
- 1 file changed, 1 deletion(-)
+ net/core/rtnetlink.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/mm/page_owner.c
-+++ b/mm/page_owner.c
-@@ -617,7 +617,6 @@ static void init_early_allocated_pages(v
- {
- 	pg_data_t *pgdat;
- 
--	drain_all_pages(NULL);
- 	for_each_online_pgdat(pgdat)
- 		init_zones_in_node(pgdat);
- }
+--- a/net/core/rtnetlink.c
++++ b/net/core/rtnetlink.c
+@@ -2733,7 +2733,8 @@ replay:
+ 			 */
+ 			if (err < 0) {
+ 				/* If device is not registered at all, free it now */
+-				if (dev->reg_state == NETREG_UNINITIALIZED)
++				if (dev->reg_state == NETREG_UNINITIALIZED ||
++				    dev->reg_state == NETREG_UNREGISTERED)
+ 					free_netdev(dev);
+ 				goto out;
+ 			}
 
 
