@@ -2,196 +2,106 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23516C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4916AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3E78207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2685B2075D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 01:35:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="mcx6Rx5s"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ixe0Z2+O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgG3BbK (ORCPT
+        id S1726913AbgG3Bfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 21:31:10 -0400
-Received: from mx1.riseup.net ([198.252.153.129]:52776 "EHLO mx1.riseup.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726194AbgG3BbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 21:31:10 -0400
-Received: from capuchin.riseup.net (capuchin-pn.riseup.net [10.0.1.176])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "*.riseup.net", Issuer "Sectigo RSA Domain Validation Secure Server CA" (not verified))
-        by mx1.riseup.net (Postfix) with ESMTPS id 4BHCY84wkyzFf0J;
-        Wed, 29 Jul 2020 18:31:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
-        t=1596072668; bh=aUisLHgt6JsY1GKX1kNHTO+GIzCjTF9ZNIDBeF3Ng1c=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=mcx6Rx5sIvR+Mz8ZWWO7PSOshswXZaF93E9hH1w+NlyYTbDo/g3ZtE2XdjhYfRO95
-         iJrA8xInIu0JMhSPfHUX6sJ0apCVvCPiDWiTPKnWc+BNNF0Tp3S6lhbO15DCMNdNfx
-         tX5WIlfMrKLCxFfOq6Fs4CryHm92IM/clqGeg1xo=
-X-Riseup-User-ID: 1FA0CC4141DEFDA066FBB3DC5B0B40BC23C0B84848AF0AEF793354A9C2D3F5BB
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-         by capuchin.riseup.net (Postfix) with ESMTPSA id 4BHCY771Grz8tJg;
-        Wed, 29 Jul 2020 18:31:07 -0700 (PDT)
-From:   Francisco Jerez <currojerez@riseup.net>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
-Cc:     Linux Documentation <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Doug Smythies <dsmythies@telus.net>
-Subject: Re: [PATCH v4 1/2] cpufreq: intel_pstate: Rearrange the storing of new EPP values
-In-Reply-To: <1665283.zxI7kaGBi8@kreacher>
-References: <4981405.3kqTVLv5tO@kreacher> <1709487.Bxjb1zNRZM@kreacher> <13207937.r2GEYrEf4f@kreacher> <1665283.zxI7kaGBi8@kreacher>
-Date:   Wed, 29 Jul 2020 18:31:07 -0700
-Message-ID: <87wo2leqlg.fsf@riseup.net>
+        Wed, 29 Jul 2020 21:35:50 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:16032 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726194AbgG3Bfu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 21:35:50 -0400
+X-UUID: 95aa0a724cb341fbb607e4a31a9b81c8-20200730
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Gf/Mo8xD23Vb19E0FPpkZ0VSoaVgKK6weloMaegtMYM=;
+        b=ixe0Z2+Ot/DWdm2oYuiS2Vx9b0YCFNpzBt1gc5TXw31ClcDHQ7Q7P/B0Fu0mc5IPjCHAjGxzXVPILGFvEaEem4hN+9BX8lL/AQzoBZo6FrcnRTuPV6vdym0p4Y1HnL6NOaLTxHyG4FvQnzg8lHhxUfvwIpRQ4ekn5jwocgbkQ84=;
+X-UUID: 95aa0a724cb341fbb607e4a31a9b81c8-20200730
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <crystal.guo@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1527585400; Thu, 30 Jul 2020 09:35:47 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs02n1.mediatek.inc
+ (172.21.101.77) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 30 Jul
+ 2020 09:35:39 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 30 Jul 2020 09:35:38 +0800
+Message-ID: <1596072913.11360.12.camel@mhfsdcap03>
+Subject: Re: [v2,1/3] dt-binding: mediatek: mt8192: update mtk-wdt document
+From:   Crystal Guo <crystal.guo@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     "linux@roeck-us.net" <linux@roeck-us.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        Seiya Wang =?UTF-8?Q?=28=E7=8E=8B=E8=BF=BA=E5=90=9B=29?= 
+        <seiya.wang@mediatek.com>,
+        Erin Lo =?UTF-8?Q?=28=E7=BE=85=E9=9B=85=E9=BD=A1=29?= 
+        <erin.lo@mediatek.com>
+Date:   Thu, 30 Jul 2020 09:35:13 +0800
+In-Reply-To: <c6ea8852-0381-0924-185e-083ea167f8fa@gmail.com>
+References: <1596016922-13184-1-git-send-email-crystal.guo@mediatek.com>
+         <1596016922-13184-2-git-send-email-crystal.guo@mediatek.com>
+         <c6ea8852-0381-0924-185e-083ea167f8fa@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="==-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==-=-=
-Content-Type: multipart/mixed; boundary="=-=-="
+T24gV2VkLCAyMDIwLTA3LTI5IGF0IDE4OjE4ICswODAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KPiANCj4gT24gMjkvMDcvMjAyMCAxMjowMiwgQ3J5c3RhbCBHdW8gd3JvdGU6DQo+ID4gdXBk
+YXRlIG10ay13ZHQgZG9jdW1lbnQgZm9yIE1UODE5MiBwbGF0Zm9ybQ0KPiANCj4gDQo+IHNob3Vs
+ZCBiZSB0d28gcGF0Y2hlcy4gb25lIGZpeGluZyB0aGUgY29tcGF0aWJsZXMgYW5kIHNlY29uZCBh
+ZGRpbmcgbmV3IGJvYXJkLg0KPiANCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBDcnlzdGFsIEd1
+byA8Y3J5c3RhbC5ndW9AbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICAgRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL210ay13ZHQudHh0IHwgNSArKystLQ0KPiA+
+ICAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gPiAN
+Cj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3dhdGNo
+ZG9nL210ay13ZHQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3dhdGNo
+ZG9nL210ay13ZHQudHh0DQo+ID4gaW5kZXggNGRkMzZiZC4uZTM2YmE2MCAxMDA2NDQNCj4gPiAt
+LS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvbXRrLXdkdC50
+eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cv
+bXRrLXdkdC50eHQNCj4gPiBAQCAtNCwxNCArNCwxNSBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0K
+PiA+ICAgDQo+ID4gICAtIGNvbXBhdGlibGUgc2hvdWxkIGNvbnRhaW46DQo+ID4gICAJIm1lZGlh
+dGVrLG10MjcwMS13ZHQiLCAibWVkaWF0ZWssbXQ2NTg5LXdkdCI6IGZvciBNVDI3MDENCj4gPiAt
+CSJtZWRpYXRlayxtdDI3MTItd2R0IiwgIm1lZGlhdGVrLG10NjU4OS13ZHQiOiBmb3IgTVQyNzEy
+DQo+ID4gKwkibWVkaWF0ZWssbXQyNzEyLXdkdCI6IGZvciBNVDI3MTINCj4gPiAgIAkibWVkaWF0
+ZWssbXQ2NTg5LXdkdCI6IGZvciBNVDY1ODkNCj4gPiAgIAkibWVkaWF0ZWssbXQ2Nzk3LXdkdCIs
+ICJtZWRpYXRlayxtdDY1ODktd2R0IjogZm9yIE1UNjc5Nw0KPiA+ICAgCSJtZWRpYXRlayxtdDc2
+MjItd2R0IiwgIm1lZGlhdGVrLG10NjU4OS13ZHQiOiBmb3IgTVQ3NjIyDQo+ID4gICAJIm1lZGlh
+dGVrLG10NzYyMy13ZHQiLCAibWVkaWF0ZWssbXQ2NTg5LXdkdCI6IGZvciBNVDc2MjMNCj4gPiAg
+IAkibWVkaWF0ZWssbXQ3NjI5LXdkdCIsICJtZWRpYXRlayxtdDY1ODktd2R0IjogZm9yIE1UNzYy
+OQ0KPiA+IC0JIm1lZGlhdGVrLG10ODE4My13ZHQiLCAibWVkaWF0ZWssbXQ2NTg5LXdkdCI6IGZv
+ciBNVDgxODMNCj4gPiArCSJtZWRpYXRlayxtdDgxODMtd2R0IjogZm9yIE1UODE4Mw0KPiANCj4g
+V2Ugd2lsbCBuZWVkIHRvIHVwZGF0ZSB0aGUgRFRTSSBpbiBhIHNlcGVyYXRlIHBhdGNoIGFzIHdl
+bGwuDQoNClllcywgdGhpcyBwYXRjaCBpcyBiYXNlZCBvbg0KaHR0cHM6Ly9wYXRjaHdvcmsua2Vy
+bmVsLm9yZy9wYXRjaC8xMTY5MDQwMS8gLCB3aGljaCBtb2RpZnkgZGVzY3JpcHRpb24NCmZvciBt
+dDI3MTIgYW5kIG10ODE4My4NCg0KPiANCj4gPiAgIAkibWVkaWF0ZWssbXQ4NTE2LXdkdCIsICJt
+ZWRpYXRlayxtdDY1ODktd2R0IjogZm9yIE1UODUxNg0KPiA+ICsJIm1lZGlhdGVrLG10ODE5Mi13
+ZHQiOiBmb3IgTVQ4MTkyDQo+ID4gICANCj4gPiAgIC0gcmVnIDogU3BlY2lmaWVzIGJhc2UgcGh5
+c2ljYWwgYWRkcmVzcyBhbmQgc2l6ZSBvZiB0aGUgcmVnaXN0ZXJzLg0KPiA+ICAgDQo+ID4gDQoN
+Cg==
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-"Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
-
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
-> Move the locking away from intel_pstate_set_energy_pref_index()
-> into its only caller and drop the (now redundant) return_pref label
-> from it.
->
-> Also move the "raw" EPP value check into the caller of that function,
-> so as to do it before acquiring the mutex, and reduce code duplication
-> related to the "raw" EPP values processing somewhat.
->
-> No intentional functional impact.
->
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-Reviewed-by: Francisco Jerez <currojerez@riseup.net>
-
-> ---
->
-> v2 -> v3:
->
->    * Fix error handling in intel_pstate_set_energy_pref_index() and
->      rebase.
->
-> v3 -> v4: No changes
->
-> ---
->  drivers/cpufreq/intel_pstate.c |   35 +++++++++++++++--------------------
->  1 file changed, 15 insertions(+), 20 deletions(-)
->
-> Index: linux-pm/drivers/cpufreq/intel_pstate.c
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> --- linux-pm.orig/drivers/cpufreq/intel_pstate.c
-> +++ linux-pm/drivers/cpufreq/intel_pstate.c
-> @@ -649,28 +649,18 @@ static int intel_pstate_set_energy_pref_
->  	if (!pref_index)
->  		epp =3D cpu_data->epp_default;
->=20=20
-> -	mutex_lock(&intel_pstate_limits_lock);
-> -
->  	if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
->  		u64 value;
->=20=20
->  		ret =3D rdmsrl_on_cpu(cpu_data->cpu, MSR_HWP_REQUEST, &value);
->  		if (ret)
-> -			goto return_pref;
-> +			return ret;
->=20=20
->  		value &=3D ~GENMASK_ULL(31, 24);
->=20=20
-> -		if (use_raw) {
-> -			if (raw_epp > 255) {
-> -				ret =3D -EINVAL;
-> -				goto return_pref;
-> -			}
-> -			value |=3D (u64)raw_epp << 24;
-> -			ret =3D wrmsrl_on_cpu(cpu_data->cpu, MSR_HWP_REQUEST, value);
-> -			goto return_pref;
-> -		}
-> -
-> -		if (epp =3D=3D -EINVAL)
-> +		if (use_raw)
-> +			epp =3D raw_epp;
-> +		else if (epp =3D=3D -EINVAL)
->  			epp =3D epp_values[pref_index - 1];
->=20=20
->  		value |=3D (u64)epp << 24;
-> @@ -680,8 +670,6 @@ static int intel_pstate_set_energy_pref_
->  			epp =3D (pref_index - 1) << 2;
->  		ret =3D intel_pstate_set_epb(cpu_data->cpu, epp);
->  	}
-> -return_pref:
-> -	mutex_unlock(&intel_pstate_limits_lock);
->=20=20
->  	return ret;
->  }
-> @@ -708,8 +696,8 @@ static ssize_t store_energy_performance_
->  	struct cpudata *cpu_data =3D all_cpu_data[policy->cpu];
->  	char str_preference[21];
->  	bool raw =3D false;
-> +	ssize_t ret;
->  	u32 epp =3D 0;
-> -	int ret;
->=20=20
->  	ret =3D sscanf(buf, "%20s", str_preference);
->  	if (ret !=3D 1)
-> @@ -724,14 +712,21 @@ static ssize_t store_energy_performance_
->  		if (ret)
->  			return ret;
->=20=20
-> +		if (epp > 255)
-> +			return -EINVAL;
-> +
->  		raw =3D true;
->  	}
->=20=20
-> +	mutex_lock(&intel_pstate_limits_lock);
-> +
->  	ret =3D intel_pstate_set_energy_pref_index(cpu_data, ret, raw, epp);
-> -	if (ret)
-> -		return ret;
-> +	if (!ret)
-> +		ret =3D count;
->=20=20
-> -	return count;
-> +	mutex_unlock(&intel_pstate_limits_lock);
-> +
-> +	return ret;
->  }
->=20=20
->  static ssize_t show_energy_performance_preference(
-
---=-=-=--
-
---==-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEAREIAB0WIQST8OekYz69PM20/4aDmTidfVK/WwUCXyIi2wAKCRCDmTidfVK/
-W+bIAP9VI6QX7g2roqBKi/zof0Rfvrs5n3eeDvhO33ZmdO88nwEAjpv6+ZAvh6pk
-rKhiSm3lspzJ3ly69OUe1/IEeWcze5c=
-=ElU5
------END PGP SIGNATURE-----
---==-=-=--
