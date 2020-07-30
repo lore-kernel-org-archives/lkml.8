@@ -2,68 +2,148 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BE2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C65C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCB9C21744
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E2D52082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:23:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o1Z+YuKK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgG3MXR (ORCPT
+        id S1727962AbgG3MXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 08:23:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60824 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726631AbgG3MXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 08:23:17 -0400
-Received: from localhost.localdomain (unknown [95.146.230.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09CBD2082E;
-        Thu, 30 Jul 2020 12:23:15 +0000 (UTC)
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
-Cc:     Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/3] arm64: delete duplicated words
-Date:   Thu, 30 Jul 2020 13:23:14 +0100
-Message-Id: <159611178452.13689.4392512277054335405.b4-ty@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200726003207.20253-1-rdunlap@infradead.org>
-References: <20200726003207.20253-1-rdunlap@infradead.org>
+        Thu, 30 Jul 2020 08:23:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbgG3MXr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 08:23:47 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A600FC061794;
+        Thu, 30 Jul 2020 05:23:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=IT3v0Hh8vnx5zaKRHtOH95ARGWeTEDbEFgcfcKeku4Y=; b=o1Z+YuKKUhGP2mMcZG3HwQ1XDy
+        +g0pF/YGFnpA5Ik90W5jj8n0UfvoB2rQCfKsHtmFCuhVTTILtbQZA4P57BVJJbTB16Wto5krB2G+m
+        AOXUgzisnmWPRIQV3t88b9j3QCKkherCng35P6EslkIqnUJryw+SfoUs3pOTNw3koaw4giJonUQ/6
+        fgcDNMGdWZeLJ+9OG1l3isRH9QrXD9+iCDbiAxuIsvCrl8CS5Up02idOVJ+YWdNAzfu7RNrH7JhmN
+        n/oBpDtvfnFHISXfG6SpoaSPoUXJS/8wfxiMOsv/buoV7hY3RwsMjiLj5Ykgsyy2LQL8khawvWd7T
+        A9trhPYA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k17ah-0003nb-UL; Thu, 30 Jul 2020 12:23:20 +0000
+Date:   Thu, 30 Jul 2020 13:23:19 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
+        ebiederm@xmission.com, akpm@linux-foundation.org,
+        christian.brauner@ubuntu.com, areber@redhat.com, serge@hallyn.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 09/23] ns: Introduce ns_idr to be able to iterate all
+ allocated namespaces in the system
+Message-ID: <20200730122319.GC23808@casper.infradead.org>
+References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
+ <159611040870.535980.13460189038999722608.stgit@localhost.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159611040870.535980.13460189038999722608.stgit@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 Jul 2020 17:32:04 -0700, Randy Dunlap wrote:
-> Delete duplicated words in arch/arm64/ header files.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> 
->  arch/arm64/include/asm/pgtable-hwdef.h   |    4 ++--
->  arch/arm64/include/asm/ptrace.h          |    2 +-
->  arch/arm64/include/uapi/asm/sigcontext.h |    2 +-
->  3 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> [...]
+On Thu, Jul 30, 2020 at 03:00:08PM +0300, Kirill Tkhai wrote:
+> This patch introduces a new IDR and functions to add/remove and iterate
+> registered namespaces in the system. It will be used to list namespaces
+> in /proc/namespaces/... in next patches.
 
-Applied to arm64 (for-next/trivial), thanks!
+Looks like you could use an XArray for this and it would be fewer lines of
+code.
 
-[1/3] arm64: pgtable-hwdef.h: delete duplicated words
-      https://git.kernel.org/arm64/c/c4334d576cf4
-[2/3] arm64: ptrace.h: delete duplicated word
-      https://git.kernel.org/arm64/c/c4b5abba0083
-[3/3] arm64: sigcontext.h: delete duplicated word
-      https://git.kernel.org/arm64/c/1a9ea25d1874
+>  
+>  static struct vfsmount *nsfs_mnt;
+> +static DEFINE_SPINLOCK(ns_lock);
+> +static DEFINE_IDR(ns_idr);
 
--- 
-Catalin
+XArray includes its own spinlock.
+
+> +/*
+> + * Add a newly created ns to ns_idr. The ns must be fully
+> + * initialized since it becomes available for ns_get_next()
+> + * right after we exit this function.
+> + */
+> +int ns_idr_register(struct ns_common *ns)
+> +{
+> +	int ret, id = ns->inum - PROC_NS_MIN_INO;
+> +
+> +	if (WARN_ON(id < 0))
+> +		return -EINVAL;
+> +
+> +	idr_preload(GFP_KERNEL);
+> +	spin_lock_irq(&ns_lock);
+> +	ret = idr_alloc(&ns_idr, ns, id, id + 1, GFP_ATOMIC);
+> +	spin_unlock_irq(&ns_lock);
+> +	idr_preload_end();
+> +	return ret < 0 ? ret : 0;
+
+This would simply be return xa_insert_irq(...);
+
+> +}
+> +
+> +/*
+> + * Remove a dead ns from ns_idr. Note, that ns memory must
+> + * be freed not earlier then one RCU grace period after
+> + * this function, since ns_get_next() uses RCU to iterate the IDR.
+> + */
+> +void ns_idr_unregister(struct ns_common *ns)
+> +{
+> +	int id = ns->inum - PROC_NS_MIN_INO;
+> +	unsigned long flags;
+> +
+> +	if (WARN_ON(id < 0))
+> +		return;
+> +
+> +	spin_lock_irqsave(&ns_lock, flags);
+> +	idr_remove(&ns_idr, id);
+> +	spin_unlock_irqrestore(&ns_lock, flags);
+> +}
+
+xa_erase_irqsave();
+
+> +
+> +/*
+> + * This returns ns with inum greater than @id or NULL.
+> + * @id is updated to refer the ns inum.
+> + */
+> +struct ns_common *ns_get_next(unsigned int *id)
+> +{
+> +	struct ns_common *ns;
+> +
+> +	if (*id < PROC_NS_MIN_INO - 1)
+> +		*id = PROC_NS_MIN_INO - 1;
+> +
+> +	*id += 1;
+> +	*id -= PROC_NS_MIN_INO;
+> +
+> +	rcu_read_lock();
+> +	do {
+> +		ns = idr_get_next(&ns_idr, id);
+> +		if (!ns)
+> +			break;
+
+xa_find_after();
+
+You'll want a temporary unsigned long to work with ...
+
+> +		if (!refcount_inc_not_zero(&ns->count)) {
+> +			ns = NULL;
+> +			*id += 1;
+
+you won't need this increment.
 
