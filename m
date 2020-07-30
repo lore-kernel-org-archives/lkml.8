@@ -2,269 +2,133 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40897C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADFC20838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86E0220838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 12:18:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SCERfalj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gb+/IzTE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgG3MSY (ORCPT
+        id S1728089AbgG3MSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 08:18:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34994 "EHLO
+        Thu, 30 Jul 2020 08:18:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727797AbgG3MSX (ORCPT
+        with ESMTP id S1726631AbgG3MSj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 08:18:23 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0901C061794;
-        Thu, 30 Jul 2020 05:18:22 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id g19so1365194plq.0;
-        Thu, 30 Jul 2020 05:18:22 -0700 (PDT)
+        Thu, 30 Jul 2020 08:18:39 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 274ADC061794;
+        Thu, 30 Jul 2020 05:18:38 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id d190so5503437wmd.4;
+        Thu, 30 Jul 2020 05:18:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BWcupHG1mhYkAKx/dy8TBzw4I8ChGdzaP3QPFWlXFhU=;
-        b=SCERfaljin7+1GMBuo1tAr6qj36cEB4ODEub6UroXGTIC8HGiQaqdHAGczdnceUWgP
-         zpT2BG72kyT0uGe1HwcEgJpy2DV59l0kIa/SalRtvjdFC1pUxolTk9nQbXe4OxEqOK22
-         PuGjAE9ss0iPIWPabmMQdq++B5fSpbyzgXP+NsztTNZTxCg9f3peXVtFxzo96CntpxCW
-         yqLk89Hp+MCHCTgVg+MXgduHljb1QIxXG2uROprw2whuSMeKpMTA/zrrWYlbvppQZq0m
-         qa4azl8DlfHQA4LG3HneA14HvuxMWHZ5hg5jQeSEf2eN9TLWZE3bhfeuW1+maeRGBgpq
-         ClTA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ssgOwtuSxoojGbvdK992E6f0RKSl1f4hgxlzsy7IsF8=;
+        b=Gb+/IzTEV4sYLdPjwCAufl3SIMkTrf7Ghq2qHVnA5WWB7gdQv2990KjOYSQnbhaSji
+         /bVDEXYlhBTpAmM6ZZjyvoDrerJIYIE3F5W+xiSA20K5P8zcxQ+yRo27hYHr3V2vi79w
+         AwOJZVu5uqWrKo2KEbnz3GcoZTT7NvXqUbH5+adqWAllFA6hewf2mXAyEzZ3Ma9cAGkO
+         Lm6if8gvmHKeq8mV0xReInuXsYu796sSkwQEizHrdz4Y8nyqaEu8ctaOCIe5Sugeq7n0
+         LkwAzxOwhfb7FLKZwUjjis4MQnByI5PkH+f2xRuksl3weRUlv0GMrm0kM200Fw6dc0Dl
+         Xazw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BWcupHG1mhYkAKx/dy8TBzw4I8ChGdzaP3QPFWlXFhU=;
-        b=tO6GrsfRL35wvbmFFi4BQcTa9FailSNZUbEqPGtlJhVhZE5N+j3GjgoSf4SmUfxazi
-         mw0pkRFVy9cwB1wyT3NuoSZo1FBUfy0H8aXBSEQHQ9kHWMWIGeNuteghbaaL8VjjSRbo
-         IFfqD6H6Y6w0eGaGIffpAHiDwpDDaXuWemMjU8IbCWyKHQUq8swjpycqRW/I4Iv8gtUJ
-         cINMxdPl6x3hFZXqj27b02AKSE+f3gIIhAqK/INdxWQTz8tdhU9Y8Cma7oB5N28gqVvv
-         hVzL2xCocByjMdCRRe5sN1t9zCzg1dpALlqd9tsqiHlA5JXDfACdtcon0ELdJTkvLK2c
-         TKeA==
-X-Gm-Message-State: AOAM531hjc1N92L1slfbt+FiDXb4NzGCRHgXISoS01XUJ1NKs8QYZWmI
-        vCv8/j9sDvpVGEoLEzrjVFrzT2vf0xp3Xg==
-X-Google-Smtp-Source: ABdhPJyky7gP0f/vjyTeyGWzHxMzT+NSR/DK2UIvM7ADGohkTEu/p+599JS/86wzLivsb9w6/M/DNA==
-X-Received: by 2002:a17:902:7585:: with SMTP id j5mr15898476pll.168.1596111502234;
-        Thu, 30 Jul 2020 05:18:22 -0700 (PDT)
-Received: from arpitha-Inspiron-7570.lan ([49.206.12.123])
-        by smtp.gmail.com with ESMTPSA id a184sm5886600pfa.83.2020.07.30.05.18.18
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ssgOwtuSxoojGbvdK992E6f0RKSl1f4hgxlzsy7IsF8=;
+        b=lL7cxPAzLbx7hAS0UjPJKnjzFr6xmKncVrnnrN06ZLHuGzz6b2hl1dcbDpjKD5AN8i
+         l1D+35zZMz2ZLr/VZabHqHwHnUuk+51waiUM01BfdqT+fYQOuUkGRPfuEzhxu+4Lu2Gv
+         kEfF+ztYs3McuT15EnZffUrx6raPDpPeve0LYisra30u6TeBQkew9ckCwfU63t4goi47
+         Nm5hBL2is2Mcog8sVuUP1YYFupxPZlethedthZOaaeA9cABIZcA3atGGUTmOKsLMAM1n
+         Bmr5hG9ZX0cuxPgl0/zwjlF0+Pn/qYNkMP7ECPyAZq17KlhCYa7wZpxNj0D2Dk0dc6S3
+         +LuA==
+X-Gm-Message-State: AOAM533hmxthVcPGBTLPH6zU1R7yDtjMvRNqvYK72cZINpGbFwa6s54I
+        lulmstzO5C3c9pMjav0xGA==
+X-Google-Smtp-Source: ABdhPJxr2iK8oMOGAetqp7RzY1WlShHwp0N8nVXqtU70Bj1DWnnzIadhjm9Dvzuv/HOuZe6fi8CZVA==
+X-Received: by 2002:a1c:1f0d:: with SMTP id f13mr13734335wmf.53.1596111516899;
+        Thu, 30 Jul 2020 05:18:36 -0700 (PDT)
+Received: from localhost.localdomain ([46.53.251.89])
+        by smtp.gmail.com with ESMTPSA id i66sm9600776wma.35.2020.07.30.05.18.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 05:18:21 -0700 (PDT)
-From:   Arpitha Raghunandan <98.arpi@gmail.com>
-To:     brendanhiggins@google.com, skhan@linuxfoundation.org,
-        andriy.shevchenko@linux.intel.com
-Cc:     Arpitha Raghunandan <98.arpi@gmail.com>,
-        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH] lib: Convert test_uuid.c to KUnit
-Date:   Thu, 30 Jul 2020 17:46:56 +0530
-Message-Id: <20200730121656.45302-1-98.arpi@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 30 Jul 2020 05:18:36 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 15:18:34 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     viro@zeniv.linux.org.uk, davem@davemloft.net,
+        ebiederm@xmission.com, akpm@linux-foundation.org,
+        christian.brauner@ubuntu.com, areber@redhat.com, serge@hallyn.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 11/23] fs: Add /proc/namespaces/ directory
+Message-ID: <20200730121834.GA4490@localhost.localdomain>
+References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
+ <159611041929.535980.14513096920129728440.stgit@localhost.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <159611041929.535980.14513096920129728440.stgit@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Converts test lib/test_uuid.c to KUnit
+On Thu, Jul 30, 2020 at 03:00:19PM +0300, Kirill Tkhai wrote:
 
-Signed-off-by: Arpitha Raghunandan <98.arpi@gmail.com>
----
- lib/Kconfig.debug                 |  7 +--
- lib/Makefile                      |  2 +-
- lib/{test_uuid.c => uuid_kunit.c} | 84 +++++++++----------------------
- 3 files changed, 28 insertions(+), 65 deletions(-)
- rename lib/{test_uuid.c => uuid_kunit.c} (48%)
+> # ls /proc/namespaces/ -l
+> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'cgroup:[4026531835]' -> 'cgroup:[4026531835]'
+> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'ipc:[4026531839]' -> 'ipc:[4026531839]'
+> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026531840]' -> 'mnt:[4026531840]'
+> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026531861]' -> 'mnt:[4026531861]'
+> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026532133]' -> 'mnt:[4026532133]'
+> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026532134]' -> 'mnt:[4026532134]'
+> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026532135]' -> 'mnt:[4026532135]'
+> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'mnt:[4026532136]' -> 'mnt:[4026532136]'
+> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'net:[4026531993]' -> 'net:[4026531993]'
+> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'pid:[4026531836]' -> 'pid:[4026531836]'
+> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'time:[4026531834]' -> 'time:[4026531834]'
+> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'user:[4026531837]' -> 'user:[4026531837]'
+> lrwxrwxrwx 1 root root 0 Jul 29 16:50 'uts:[4026531838]' -> 'uts:[4026531838]'
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index f174f8887ae7..330c0d1de50b 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2070,9 +2070,6 @@ config TEST_BITFIELD
- 
- 	  If unsure, say N.
- 
--config TEST_UUID
--	tristate "Test functions located in the uuid module at runtime"
--
- config TEST_XARRAY
- 	tristate "Test the XArray code at runtime"
- 
-@@ -2273,6 +2270,10 @@ config BITS_TEST
- 
- 	  If unsure, say N.
- 
-+config UUID_KUNIT_TEST
-+	tristate "KUnit test for functions located in the uuid module at runtime"
-+	depends on KUNIT
-+
- config TEST_UDELAY
- 	tristate "udelay test driver"
- 	help
-diff --git a/lib/Makefile b/lib/Makefile
-index 032cc6c71a3a..62ef383c7563 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -81,7 +81,6 @@ obj-$(CONFIG_TEST_PRINTF) += test_printf.o
- obj-$(CONFIG_TEST_BITMAP) += test_bitmap.o
- obj-$(CONFIG_TEST_STRSCPY) += test_strscpy.o
- obj-$(CONFIG_TEST_BITFIELD) += test_bitfield.o
--obj-$(CONFIG_TEST_UUID) += test_uuid.o
- obj-$(CONFIG_TEST_XARRAY) += test_xarray.o
- obj-$(CONFIG_TEST_PARMAN) += test_parman.o
- obj-$(CONFIG_TEST_KMOD) += test_kmod.o
-@@ -342,5 +341,6 @@ obj-$(CONFIG_PLDMFW) += pldmfw/
- obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
- obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
- obj-$(CONFIG_BITS_TEST) += test_bits.o
-+obj-$(CONFIG_UUID_KUNIT_TEST) += uuid_kunit.o
- 
- obj-$(CONFIG_GENERIC_LIB_DEVMEM_IS_ALLOWED) += devmem_is_allowed.o
-diff --git a/lib/test_uuid.c b/lib/uuid_kunit.c
-similarity index 48%
-rename from lib/test_uuid.c
-rename to lib/uuid_kunit.c
-index cd819c397dc7..f7f219ddecc2 100644
---- a/lib/test_uuid.c
-+++ b/lib/uuid_kunit.c
-@@ -3,6 +3,7 @@
-  */
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
-+#include <kunit/test.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -39,95 +40,56 @@ static const char * const test_uuid_wrong_data[] = {
- 	"0cb4ddff-a545-4401-9d06-688af53e",	/* not enough data */
- };
- 
--static unsigned total_tests __initdata;
--static unsigned failed_tests __initdata;
--
--static void __init test_uuid_failed(const char *prefix, bool wrong, bool be,
--				    const char *data, const char *actual)
--{
--	pr_err("%s test #%u %s %s data: '%s'\n",
--	       prefix,
--	       total_tests,
--	       wrong ? "passed on wrong" : "failed on",
--	       be ? "BE" : "LE",
--	       data);
--	if (actual && *actual)
--		pr_err("%s test #%u actual data: '%s'\n",
--		       prefix,
--		       total_tests,
--		       actual);
--	failed_tests++;
--}
--
--static void __init test_uuid_test(const struct test_uuid_data *data)
-+static void test_uuid_test(struct kunit *test, const struct test_uuid_data *data)
- {
- 	guid_t le;
- 	uuid_t be;
- 	char buf[48];
- 
- 	/* LE */
--	total_tests++;
--	if (guid_parse(data->uuid, &le))
--		test_uuid_failed("conversion", false, false, data->uuid, NULL);
--
--	total_tests++;
--	if (!guid_equal(&data->le, &le)) {
--		sprintf(buf, "%pUl", &le);
--		test_uuid_failed("cmp", false, false, data->uuid, buf);
--	}
-+	KUNIT_EXPECT_EQ(test, 0, guid_parse(data->uuid, &le));
-+	KUNIT_EXPECT_TRUE(test, guid_equal(&data->le, &le));
- 
- 	/* BE */
--	total_tests++;
--	if (uuid_parse(data->uuid, &be))
--		test_uuid_failed("conversion", false, true, data->uuid, NULL);
--
--	total_tests++;
--	if (!uuid_equal(&data->be, &be)) {
--		sprintf(buf, "%pUb", &be);
--		test_uuid_failed("cmp", false, true, data->uuid, buf);
--	}
-+	KUNIT_EXPECT_EQ(test, 0, uuid_parse(data->uuid, &be));
-+	KUNIT_EXPECT_TRUE(test, uuid_equal(&data->be, &be));
- }
- 
--static void __init test_uuid_wrong(const char *data)
-+static void test_uuid_wrong(struct kunit *test, const char *data)
- {
- 	guid_t le;
- 	uuid_t be;
- 
- 	/* LE */
--	total_tests++;
--	if (!guid_parse(data, &le))
--		test_uuid_failed("negative", true, false, data, NULL);
-+	KUNIT_EXPECT_NE(test, 0, guid_parse(data, &le));
- 
- 	/* BE */
--	total_tests++;
--	if (!uuid_parse(data, &be))
--		test_uuid_failed("negative", true, true, data, NULL);
-+	KUNIT_EXPECT_NE(test, 0, uuid_parse(data, &be));
- }
- 
--static int __init test_uuid_init(void)
-+static void test_uuid_init(struct kunit *test)
- {
- 	unsigned int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(test_uuid_test_data); i++)
--		test_uuid_test(&test_uuid_test_data[i]);
-+		test_uuid_test(test, &test_uuid_test_data[i]);
- 
- 	for (i = 0; i < ARRAY_SIZE(test_uuid_wrong_data); i++)
--		test_uuid_wrong(test_uuid_wrong_data[i]);
-+		test_uuid_wrong(test, test_uuid_wrong_data[i]);
-+}
- 
--	if (failed_tests == 0)
--		pr_info("all %u tests passed\n", total_tests);
--	else
--		pr_err("failed %u out of %u tests\n", failed_tests, total_tests);
-+static struct kunit_case uuid_test_cases[] = {
-+	KUNIT_CASE(test_uuid_init),
-+	{}
-+};
- 
--	return failed_tests ? -EINVAL : 0;
--}
--module_init(test_uuid_init);
-+static struct kunit_suite uuid_test_suite = {
-+	.name = "uuid-kunit-test",
-+	.test_cases = uuid_test_cases,
-+};
-+
-+kunit_test_suite(uuid_test_suite);
- 
--static void __exit test_uuid_exit(void)
--{
--	/* do nothing */
--}
--module_exit(test_uuid_exit);
- 
- MODULE_AUTHOR("Andy Shevchenko <andriy.shevchenko@linux.intel.com>");
- MODULE_LICENSE("Dual BSD/GPL");
--- 
-2.25.1
+I'd say make it '%s-%llu'. The brackets don't carry any information.
+And ':' forces quoting with recent coreutils.
 
+> +static int parse_namespace_dentry_name(const struct dentry *dentry,
+> +		const char **type, unsigned int *type_len, unsigned int *inum)
+> +{
+> +	const char *p, *name;
+> +	int count;
+> +
+> +	*type = name = dentry->d_name.name;
+> +	p = strchr(name, ':');
+> +	*type_len = p - name;
+> +	if (!p || p == name)
+> +		return -ENOENT;
+> +
+> +	p += 1;
+> +	if (sscanf(p, "[%u]%n", inum, &count) != 1 || *(p + count) != '\0' ||
+> +	    *inum < PROC_NS_MIN_INO)
+> +		return -ENOENT;
+
+sscanf is banned from lookup code due to lax whitespace rules.
+See
+
+	commit ac7f1061c2c11bb8936b1b6a94cdb48de732f7a4
+	proc: fix /proc/*/map_files lookup
+
+Of course someone sneaked in 1 instance, yikes.
+
+	$ grep -e scanf -n -r fs/proc/
+	fs/proc/base.c:1596:            err = sscanf(pos, "%9s %lld %lu", clock,
+
+> +static int proc_namespaces_readdir(struct file *file, struct dir_context *ctx)
+
+> +		len = snprintf(name, sizeof(name), "%s:[%u]", ns->ops->name, inum);
+
+[] -- no need.
