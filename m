@@ -2,144 +2,195 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F380CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 691A3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D562B208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C0C3208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:12:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="qTCDi5DH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbgGaQKh (ORCPT
+        id S1729839AbgGaQME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 12:10:37 -0400
-Received: from raptor.unsafe.ru ([5.9.43.93]:38518 "EHLO raptor.unsafe.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727819AbgGaQKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 12:10:37 -0400
-Received: from comp-core-i7-2640m-0182e6.redhat.com (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by raptor.unsafe.ru (Postfix) with ESMTPSA id C1D88203BD;
-        Fri, 31 Jul 2020 16:10:32 +0000 (UTC)
-From:   Alexey Gladkov <gladkov.alexey@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Gladkov <legion@kernel.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH v2 2/2] Show /proc/self/net only for CAP_NET_ADMIN
-Date:   Fri, 31 Jul 2020 18:10:14 +0200
-Message-Id: <20200731161014.748597-1-gladkov.alexey@gmail.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <87blk0ncpb.fsf@x220.int.ebiederm.org>
-References: <87blk0ncpb.fsf@x220.int.ebiederm.org>
+        Fri, 31 Jul 2020 12:12:04 -0400
+Received: from m15111.mail.126.com ([220.181.15.111]:39310 "EHLO
+        m15111.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727819AbgGaQMD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 12:12:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=eWSI7
+        L8NGq/27v/T6lDLZQTISBFxShctwfHHbupILPw=; b=qTCDi5DHFwHcZrKqLpf2a
+        j7v+1QUAZke/Rm8d+7cQnzgAKFyvy2IYZ6oGugY4xEHzruyTdE6voPY3ZJL9z15C
+        dmn9JeDjPKT78uudy9Ye6733lPZzZFG4maT+VPX/Vf2CRngnviFZ1I3ymqKduAMF
+        ajBpExJvLuZ5XYSqNdvP6w=
+Received: from 192.168.137.249 (unknown [112.10.84.202])
+        by smtp1 (Coremail) with SMTP id C8mowACHv0dxQiRfuzR5IA--.15697S3;
+        Sat, 01 Aug 2020 00:10:28 +0800 (CST)
+From:   Xianting Tian <xianting_tian@126.com>
+To:     viro@zeniv.linux.org.uk, tytso@mit.edu, adilger.kernel@dilger.ca
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH] ext4: move buffer_mapped() to proper position
+Date:   Fri, 31 Jul 2020 12:10:25 -0400
+Message-Id: <1596211825-8750-1-git-send-email-xianting_tian@126.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Fri, 31 Jul 2020 16:10:33 +0000 (UTC)
+X-CM-TRANSID: C8mowACHv0dxQiRfuzR5IA--.15697S3
+X-Coremail-Antispam: 1Uf129KBjvJXoWxtw17Aw1furW7CF1fCryxGrg_yoW7tF47pr
+        nIkFWjgF4kJ3W29rsFvF4Yq3WrX3ZxZFyxWrnagr47ZFnrGF1aqryUtF48GFW5Xws7X342
+        qr15Gw18Kw1rJaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jw-B_UUUUU=
+X-Originating-IP: [112.10.84.202]
+X-CM-SenderInfo: h0ld03plqjs3xldqqiyswou0bp/1tbiwRRypFpD+6DxHgAAsu
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cache the mounters credentials and make access to the net directories
-contingent of the permissions of the mounter of proc.
+As you know, commit a17712c8 has added below code to aviod a
+crash( 'BUG_ON(!buffer_mapped(bh))' in submit_bh_wbc) when
+device hot-removed(a physical device is unpluged from pcie slot
+or a nbd device's network is shutdown).
+static int ext4_commit_super():
+ 	if (!sbh || block_device_ejected(sb))
+ 		return error;
++
++	/*
++	 * The superblock bh should be mapped, but it might not be if the
++	 * device was hot-removed. Not much we can do but fail the I/O.
++	 */
++	if (!buffer_mapped(sbh))
++		return error;
 
-Show /proc/self/net only if mounter has CAP_NET_ADMIN and if proc is
-mounted with subset=pid option.
+And the call trace, which leads to the crash, as below:
+ext4_commit_super()
+  __sync_dirty_buffer()
+    submit_bh()
+      submit_bh_wbc()
+        BUG_ON(!buffer_mapped(bh));
 
-Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
+But recently we met the same crash(with very low probability) when
+device hot-removed even though the kernel already contained
+above exception protection code. Still, the crash is caused by
+'BUG_ON(!buffer_mapped(bh))' in submit_bh_wbc(), and the same
+call trace as below.
+
+As my understanding and below code，there are still some more
+codes needs to run between 'buffer_mapped(sbh)'(which is added
+by commit a17712c8) and 'BUG_ON(!buffer_mapped(bh))' in
+submit_bh_wbc(), especially lock_buffer is called two times(sometimes,
+it may take more times to get the lock). So when do the test of
+device hot-remove, there is low probability that the sbh is mapped
+when executing 'buffer_mapped(sbh)'(which is added by commit a17712c8)
+but sbh is not mapped when executing 'BUG_ON(!buffer_mapped(bh))'
+in submit_bh_wbc().
+Code path:
+ext4_commit_super
+    judge if 'buffer_mapped(sbh)' is false, return <== commit a17712c8
+          lock_buffer(sbh)
+          ...
+          unlock_buffer(sbh)
+               __sync_dirty_buffer(sbh,...
+                    lock_buffer(sbh)
+                        judge if 'buffer_mapped(sbh))' is false, return <== added by this patch
+                            submit_bh(...,sbh)
+                                submit_bh_wbc(...,sbh,...)
+
+This patch is to move the check of 'buffer_mapped(sbh)' to the place just
+before calling 'BUG_ON(!buffer_mapped(bh))' in submit_bh_wbc().
+
+[100722.966497] kernel BUG at fs/buffer.c:3095! <== BUG_ON(!buffer_mapped(bh))' in submit_bh_wbc()
+[100722.966503] invalid opcode: 0000 [#1] SMP
+[100722.966566] task: ffff8817e15a9e40 task.stack: ffffc90024744000
+[100722.966574] RIP: 0010:submit_bh_wbc+0x180/0x190
+[100722.966575] RSP: 0018:ffffc90024747a90 EFLAGS: 00010246
+[100722.966576] RAX: 0000000000620005 RBX: ffff8818a80603a8 RCX: 0000000000000000
+[100722.966576] RDX: ffff8818a80603a8 RSI: 0000000000020800 RDI: 0000000000000001
+[100722.966577] RBP: ffffc90024747ac0 R08: 0000000000000000 R09: ffff88207f94170d
+[100722.966578] R10: 00000000000437c8 R11: 0000000000000001 R12: 0000000000020800
+[100722.966578] R13: 0000000000000001 R14: 000000000bf9a438 R15: ffff88195f333000
+[100722.966580] FS:  00007fa2eee27700(0000) GS:ffff88203d840000(0000) knlGS:0000000000000000
+[100722.966580] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[100722.966581] CR2: 0000000000f0b008 CR3: 000000201a622003 CR4: 00000000007606e0
+[100722.966582] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[100722.966583] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[100722.966583] PKRU: 55555554
+[100722.966583] Call Trace:
+[100722.966588]  __sync_dirty_buffer+0x6e/0xd0
+[100722.966614]  ext4_commit_super+0x1d8/0x290 [ext4]
+[100722.966626]  __ext4_std_error+0x78/0x100 [ext4]
+[100722.966635]  ? __ext4_journal_get_write_access+0xca/0x120 [ext4]
+[100722.966646]  ext4_reserve_inode_write+0x58/0xb0 [ext4]
+[100722.966655]  ? ext4_dirty_inode+0x48/0x70 [ext4]
+[100722.966663]  ext4_mark_inode_dirty+0x53/0x1e0 [ext4]
+[100722.966671]  ? __ext4_journal_start_sb+0x6d/0xf0 [ext4]
+[100722.966679]  ext4_dirty_inode+0x48/0x70 [ext4]
+[100722.966682]  __mark_inode_dirty+0x17f/0x350
+[100722.966686]  generic_update_time+0x87/0xd0
+[100722.966687]  touch_atime+0xa9/0xd0
+[100722.966690]  generic_file_read_iter+0xa09/0xcd0
+[100722.966694]  ? page_cache_tree_insert+0xb0/0xb0
+[100722.966704]  ext4_file_read_iter+0x4a/0x100 [ext4]
+[100722.966707]  ? __inode_security_revalidate+0x4f/0x60
+[100722.966709]  __vfs_read+0xec/0x160
+[100722.966711]  vfs_read+0x8c/0x130
+[100722.966712]  SyS_pread64+0x87/0xb0
+[100722.966716]  do_syscall_64+0x67/0x1b0
+[100722.966719]  entry_SYSCALL64_slow_path+0x25/0x25
+
+Signed-off-by: Xianting Tian <xianting_tian@126.com>
 ---
- fs/proc/proc_net.c      | 8 ++++++++
- fs/proc/root.c          | 7 +++++++
- include/linux/proc_fs.h | 1 +
- 3 files changed, 16 insertions(+)
+ fs/buffer.c     | 9 +++++++++
+ fs/ext4/super.c | 7 -------
+ 2 files changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/fs/proc/proc_net.c b/fs/proc/proc_net.c
-index dba63b2429f0..c43fc5c907db 100644
---- a/fs/proc/proc_net.c
-+++ b/fs/proc/proc_net.c
-@@ -26,6 +26,7 @@
- #include <linux/uidgid.h>
- #include <net/net_namespace.h>
- #include <linux/seq_file.h>
-+#include <linux/security.h>
- 
- #include "internal.h"
- 
-@@ -275,6 +276,7 @@ static struct net *get_proc_task_net(struct inode *dir)
- 	struct task_struct *task;
- 	struct nsproxy *ns;
- 	struct net *net = NULL;
-+	struct proc_fs_info *fs_info = proc_sb_info(dir->i_sb);
- 
- 	rcu_read_lock();
- 	task = pid_task(proc_pid(dir), PIDTYPE_PID);
-@@ -287,6 +289,12 @@ static struct net *get_proc_task_net(struct inode *dir)
- 	}
- 	rcu_read_unlock();
- 
-+	if (net && (fs_info->pidonly == PROC_PIDONLY_ON) &&
-+	    security_capable(fs_info->mounter_cred, net->user_ns, CAP_NET_ADMIN, CAP_OPT_NONE) < 0) {
-+		put_net(net);
-+		net = NULL;
-+	}
+diff --git a/fs/buffer.c b/fs/buffer.c
+index 64fe82e..75a8849 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -3160,6 +3160,15 @@ int __sync_dirty_buffer(struct buffer_head *bh, int op_flags)
+ 	WARN_ON(atomic_read(&bh->b_count) < 1);
+ 	lock_buffer(bh);
+ 	if (test_clear_buffer_dirty(bh)) {
++		/*
++		 * The bh should be mapped, but it might not be if the
++		 * device was hot-removed. Not much we can do but fail the I/O.
++		 */
++		if (!buffer_mapped(bh)) {
++			unlock_buffer(bh);
++			return -EIO;
++		}
 +
- 	return net;
- }
- 
-diff --git a/fs/proc/root.c b/fs/proc/root.c
-index c6bf74de1906..eeeda375cf85 100644
---- a/fs/proc/root.c
-+++ b/fs/proc/root.c
-@@ -184,6 +184,8 @@ static int proc_fill_super(struct super_block *s, struct fs_context *fc)
- 	s->s_fs_info = fs_info;
- 
- 	fs_info->pid_ns = get_pid_ns(ctx->pid_ns);
-+	fs_info->mounter_cred = get_cred(fc->cred);
-+
- 	proc_apply_options(s, fc, current_user_ns());
+ 		get_bh(bh);
+ 		bh->b_end_io = end_buffer_write_sync;
+ 		ret = submit_bh(REQ_OP_WRITE, op_flags, bh);
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 330957e..1c22044 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -5171,13 +5171,6 @@ static int ext4_commit_super(struct super_block *sb, int sync)
+ 		return error;
  
  	/*
-@@ -219,9 +221,13 @@ static int proc_fill_super(struct super_block *s, struct fs_context *fc)
- static int proc_reconfigure(struct fs_context *fc)
- {
- 	struct super_block *sb = fc->root->d_sb;
-+	struct proc_fs_info *fs_info = proc_sb_info(sb);
- 
- 	sync_filesystem(sb);
- 
-+	put_cred(fs_info->mounter_cred);
-+	fs_info->mounter_cred = get_cred(fc->cred);
-+
- 	proc_apply_options(sb, fc, current_user_ns());
- 	return 0;
- }
-@@ -276,6 +282,7 @@ static void proc_kill_sb(struct super_block *sb)
- 
- 	kill_anon_super(sb);
- 	put_pid_ns(fs_info->pid_ns);
-+	put_cred(fs_info->mounter_cred);
- 	kfree(fs_info);
- }
- 
-diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
-index d1eed1b43651..671c6dafc4ee 100644
---- a/include/linux/proc_fs.h
-+++ b/include/linux/proc_fs.h
-@@ -63,6 +63,7 @@ struct proc_fs_info {
- 	kgid_t pid_gid;
- 	enum proc_hidepid hide_pid;
- 	enum proc_pidonly pidonly;
-+	struct cred *mounter_cred;
- };
- 
- static inline struct proc_fs_info *proc_sb_info(struct super_block *sb)
+-	 * The superblock bh should be mapped, but it might not be if the
+-	 * device was hot-removed. Not much we can do but fail the I/O.
+-	 */
+-	if (!buffer_mapped(sbh))
+-		return error;
+-
+-	/*
+ 	 * If the file system is mounted read-only, don't update the
+ 	 * superblock write time.  This avoids updating the superblock
+ 	 * write time when we are mounting the root file system
 -- 
-2.25.4
+1.8.3.1
 
