@@ -2,104 +2,161 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF54EC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4247C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C28C820829
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7924D20829
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:19:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="XQrP/KIh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DqPl2iuN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731955AbgGaITZ (ORCPT
+        id S1731962AbgGaITh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:19:25 -0400
-Received: from mx07-00178001.pphosted.com ([185.132.182.106]:24226 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731875AbgGaITY (ORCPT
+        Fri, 31 Jul 2020 04:19:37 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28176 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731682AbgGaITg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 04:19:24 -0400
-X-Greylist: delayed 1816 seconds by postgrey-1.27 at vger.kernel.org; Fri, 31 Jul 2020 04:19:23 EDT
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06V7md51021645;
-        Fri, 31 Jul 2020 09:49:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=1+U+fnjITJVBDho/9pxc8EjH2jCC5Fv7LCPjvJFXy28=;
- b=XQrP/KIhunJR/9sCAfCl9PFOop+aF7KNHlAxGcyhNritGL+2sWt3a0PlCN8PR3tPVBuX
- r6TPGvDaRmSTtLWXuS1R4KhUjvbAPohuS9q4rUr6y69MmDOL2mm1CQLTcm9sDtlLLC7q
- QnmC5z/nTR5vvH9Z45kFOUY86HGMoqET6cT9WpbLeEP2BWO6VIZYploVU/qSOuX3lsI0
- RFl9j9z5motnwkrJufIcjmAPYbyY9Lzhe/PWAwpx2rgsPn9odpSExJfWoGaephT0oC2w
- 6MYKQIk4JUhEnYHLDt/2Vr2pFKsMkQKtTJ+wbLEhtJAcocOB4eZRDzrzYRcY0EtMXLEX Qg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32ga72cag9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 31 Jul 2020 09:49:04 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A09B910002A;
-        Fri, 31 Jul 2020 09:49:03 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8DD4622108B;
-        Fri, 31 Jul 2020 09:49:03 +0200 (CEST)
-Received: from localhost (10.75.127.46) by SFHDAG3NODE1.st.com (10.75.127.7)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul 2020 09:49:02
- +0200
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <arnaud.pouliquen@st.com>
-Subject: [PATCH] rpmsg: virtio: fix compilation warning for virtio_rpmsg_channel description
-Date:   Fri, 31 Jul 2020 09:48:50 +0200
-Message-ID: <20200731074850.3262-1-arnaud.pouliquen@st.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 31 Jul 2020 04:19:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596183574;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jfFMjT41x32JmXGU4h8v9Y4PzlKoVZrgQhXXJtzjd24=;
+        b=DqPl2iuNeMAIHmUm7+kWio6PwGCMFirpvU+Pg+mS8FkiTv2xRJA0yFgb4fLGZNO2KE4yAb
+        MHA15Uzhq5RgjrNQZPilTGDm9Zg8YkR9zYcXtyd/AURjrLC9Fy43uaxOWFKNpDu7MM2HDM
+        0FP96m2mjxF4ikpvJfM4KO5wrGDvckA=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-9-WgvKttdvNsubI0NEnjlo4Q-1; Fri, 31 Jul 2020 04:19:30 -0400
+X-MC-Unique: WgvKttdvNsubI0NEnjlo4Q-1
+Received: by mail-wr1-f71.google.com with SMTP id z12so8892213wrl.16
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 01:19:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jfFMjT41x32JmXGU4h8v9Y4PzlKoVZrgQhXXJtzjd24=;
+        b=kwDPldkObU14rzvziyCLEf8qXNQ+PAeFqGMdhbyhp9QVLh3nYKrDK8uH5zaakshPzK
+         bbXKEVu/ZSq1iOt9GxWnEIRB+1kvW6EtAsi8uNUbJlQcPY5aKGPp4G+t8qZASYdeSxLJ
+         nZt1YKIsSCapcHiim/c570l61PjedKsM1DNDy7zoRjuMW5yQvzJZ2zjlq9+mswZLU01a
+         cQ0c7BVBLjFRiPFfiTexuY7iPsHMCnRl1Ufxrc9BCCNHO10acFmb+01IiuMBymKRhRnr
+         Gt4q2iZT8DqtOhLTathW0uyLI4j6U/Rc4Px/frR6ctAgA95Nh3m/sBp/HrVFFYUy0AN2
+         lpdw==
+X-Gm-Message-State: AOAM530v0bazuyFKEzo7o01cEfMQBh6KZlJ4kgPgN8oND+df0S87xtIf
+        ArYjUPT4MYKQCN2zGgPU6FFLWNgQzZbWAGYLywNf89uXntSiRjDN9CNCihJxp/dgbXznWZZGgos
+        cnILzoLy+no5/L3nWHRLjgB/n
+X-Received: by 2002:a7b:c316:: with SMTP id k22mr2710962wmj.41.1596183569058;
+        Fri, 31 Jul 2020 01:19:29 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwkSafGFHyjbCKRO5npiw4aj8riuizOGooQrO23LAmIE9oUXkmBZn/NeB028W2r8C5RaLFZXw==
+X-Received: by 2002:a7b:c316:: with SMTP id k22mr2710951wmj.41.1596183568884;
+        Fri, 31 Jul 2020 01:19:28 -0700 (PDT)
+Received: from ?IPv6:2a01:cb14:499:3d00:cd47:f651:9d80:157a? ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
+        by smtp.gmail.com with ESMTPSA id p22sm10822051wmc.38.2020.07.31.01.19.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jul 2020 01:19:27 -0700 (PDT)
+Subject: Re: [PATCH v3 2/4] objtool: Move orc outside of check
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, peterz@infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20200730094143.27494-1-jthierry@redhat.com>
+ <20200730094143.27494-3-jthierry@redhat.com>
+ <20200730095759.GH2655@hirez.programming.kicks-ass.net>
+ <dfe69c8f-db70-8366-5601-2592409ce7a0@redhat.com>
+ <20200730132237.GM2655@hirez.programming.kicks-ass.net>
+ <3af41a3b-a4b9-8120-3ac0-c9ce13770628@redhat.com>
+ <20200730141526.lr33zv4ffa3rdygp@treble>
+ <7f7a7196-8b28-cd55-0685-799766bb6d4c@redhat.com>
+ <alpine.LSU.2.21.2007310949020.19678@pobox.suse.cz>
+From:   Julien Thierry <jthierry@redhat.com>
+Message-ID: <c3b0636e-3f32-8349-3e86-277da8c54606@redhat.com>
+Date:   Fri, 31 Jul 2020 09:19:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-31_02:2020-07-31,2020-07-31 signatures=0
+In-Reply-To: <alpine.LSU.2.21.2007310949020.19678@pobox.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Complete the virtio_rpmsg_channel structure description to fix a
-compilation warning with W=1 option:
 
-drivers/rpmsg/virtio_rpmsg_bus.c:95: warning: Cannot understand
- * @vrp: the remote processor this channel belongs to
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
----
- drivers/rpmsg/virtio_rpmsg_bus.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+On 7/31/20 8:56 AM, Miroslav Benes wrote:
+> On Thu, 30 Jul 2020, Julien Thierry wrote:
+> 
+>>
+>>
+>> On 7/30/20 3:15 PM, Josh Poimboeuf wrote:
+>>> On Thu, Jul 30, 2020 at 02:29:20PM +0100, Julien Thierry wrote:
+>>>>
+>>>>
+>>>> On 7/30/20 2:22 PM, peterz@infradead.org wrote:
+>>>>> On Thu, Jul 30, 2020 at 01:40:42PM +0100, Julien Thierry wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 7/30/20 10:57 AM, peterz@infradead.org wrote:
+>>>>>>> On Thu, Jul 30, 2020 at 10:41:41AM +0100, Julien Thierry wrote:
+>>>>>>>> +		if (file->elf->changed)
+>>>>>>>> +			return elf_write(file->elf);
+>>>>>>>> +		else
+>>>>>>>> +			return 0;
+>>>>>>>>       }
+>>>>>>>
+>>>>>>> I think we can do without that else :-)
+>>>>>>>
+>>>>>>
+>>>>>> I did wonder and was not 100% confident about it, but the orc gen will
+>>>>>> always change the file, correct?
+>>>>>
+>>>>> Not if it already has orc, iirc.
+>>>>>
+>>>>> But what I was trying to say is that:
+>>>>>
+>>>>>   if (file->elf->changed)
+>>>>>    return elf_write(file->elf)
+>>>>>
+>>>>>   return 0;
+>>>>>
+>>>>> is identical code and, IMO, easier to read.
+>>>>>
+>>>>
+>>>> Much easier yes, I'll change it.
+>>>
+>>> But I think file->elf->changed can be assumed at this point anyway, so
+>>> it could just be an unconditional
+>>>
+>>>   return elf_write(file->elf);
+>>>
+>>
+>> I'll triple check whether that's the case and remove the if if possible.
+> 
+> I think it is the case. And even if not, it would only cause a pointless
+> call to elf_update() in the end and that should not do any harm anyway if
+> I am not mistaken.
+> 
+> However, I think there is a problem with the rebase on top of the current
+> code. The patch moves elf_write() call to orc_gen.c which was ok before
+> Peterz introduced elf_write_insn() et al. We need to keep elf_write() in
+> check.c for this case too.
+> 
 
-diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
-index 9006fc7f73d0..7d7ed4e5cce7 100644
---- a/drivers/rpmsg/virtio_rpmsg_bus.c
-+++ b/drivers/rpmsg/virtio_rpmsg_bus.c
-@@ -123,7 +123,12 @@ enum rpmsg_ns_flags {
- };
- 
- /**
-- * @vrp: the remote processor this channel belongs to
-+ * struct virtio_rpmsg_channel - rpmsg channel descriptor
-+ * @rpdev: the rpmsg channel device
-+ * @vrp: the virtio remote processor device this channel belongs to
-+ *
-+ * This structure stores the channel that links the rpmsg device to the virtio
-+ * remote processor device.
-  */
- struct virtio_rpmsg_channel {
- 	struct rpmsg_device rpdev;
+Yes, you're right. Looks like I messed things up with the rebase. That 
+means I might have to move the elf_write() to builtin-check.c.
+
+Thanks for pointing it out.
+
 -- 
-2.17.1
+Julien Thierry
 
