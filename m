@@ -2,459 +2,114 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B23F3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7259C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86BE420838
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A182820838
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:42:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X9hz1SHL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HqWtzFYG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732588AbgGaKkw (ORCPT
+        id S1732595AbgGaKma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 06:40:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43788 "EHLO
+        Fri, 31 Jul 2020 06:42:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732487AbgGaKkv (ORCPT
+        with ESMTP id S1732431AbgGaKm3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 06:40:51 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D1BCC061575
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 03:40:51 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id r4so6386607pls.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 03:40:51 -0700 (PDT)
+        Fri, 31 Jul 2020 06:42:29 -0400
+Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5051C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 03:42:29 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id k63so2959055oob.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 03:42:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Q/BYkHhkI0myoPFmGmvb8OjoGkTwZH6gWekV7iPJq9I=;
-        b=X9hz1SHL6jJBOzumqUf+dz1RwuDVp4r0V8fsOioSNuf6y0TaHmNuo4QKnwKvBRkj3p
-         bD2f9SEbo8pjRlkGPv3dMafYK4MmQa3/9lW6zw23+2pQzpROBwoAj/TeQdi4xNAacNqW
-         EPVK00VxHVU/yBnFJmwIUq1DqjPN1ICFXz1o/mzNCZsCRSRog0v8ntKMbxqmp/NX+B9e
-         b0UfIbVYbkCrNThvTBHHMcSUgkQOEII2wi98NuchJ1uAupUZY5agVX/AtQhBEBj36epR
-         6OMcWh2SfC2qbkXcuw/t31M8P4cGyvkli420P9apFrABR2lJkiq1LVZ0CxfRsT1Csd2C
-         sYEQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=Hd8wvT4b7y7GSWMKgqZCYWtrUwduUCyWW8ioRrqvkAs=;
+        b=HqWtzFYGwUPfARVcYA6OBCcbEfaztunUaTVBVKIoLrihy+35o7tBvwT4Tdfif+yY8q
+         vW5t9V3LkFj/SIRvoD+kuAQamH1KbCSCQWv2Bgh+/umfkYGsWW3vXC7X+ccqZHo0wnrm
+         ajW+XqNq1eX1X/TkE0W28gQXRFbiTFvCG5nTVNz3UGfoO2OwxxBiBtOQzvr5D7XBv3qq
+         GF8+ADRqMrFvFfDq6zndrfgPyCu9fWosXKZZ43cH9HoEo2ksNFPPjH25naKVYEwtqh7T
+         sKsW4rSHB1xB92J9w2E3uIxFFCiYVJ5ykOR4EanfXtxZrRElW+ckF8htNI+7eXzhttgh
+         HgWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Q/BYkHhkI0myoPFmGmvb8OjoGkTwZH6gWekV7iPJq9I=;
-        b=Rq0KGhy5241nsFOfivjIdH63NcE1YDOp361nc0AZFq+pRuoXwJwkd40RyWIrfMTQSS
-         aaipho8W5VKIDOZgOd50hr9byz+HU5EW1B0HXMOqQpahHwIZ7yTz9CSfj4u8RfkjA++c
-         ToObDApFre3rUg4fKHuXFTZjslxSz1L/ducVEzWmskiso2tWMFHGi2jL4qPH0raeIUgm
-         inhR0ibuY/Zf3dUZW+I81r8XOwaLA8lbNEn88abne5ptfdTEaZPhD2irYEpkG3b1ZiUe
-         QRt8iS8PScCigY0Eb+Fy/9TP+BHyyVQRhkLTRKx3brPdrAMpd400IoRTsup6JpAT6pWo
-         Lj/A==
-X-Gm-Message-State: AOAM53319lvIFBqHCdw9+wYUawW5tE/eboE6hqoejylbhLQbsbI1AdUO
-        7WrCMRTxzjSFX6raaZBmcGSjoA==
-X-Google-Smtp-Source: ABdhPJz1haCWZ+VL/uD4a3kFU6XXL4+YY4lot++ca3qlus8XckNt4xjt8eIuOp2o/zm2X9zwyevoqA==
-X-Received: by 2002:a63:1a0c:: with SMTP id a12mr3102313pga.24.1596192050716;
-        Fri, 31 Jul 2020 03:40:50 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:6803:60a7:796a:53a4:d98b:a871])
-        by smtp.gmail.com with ESMTPSA id t10sm7428576pga.73.2020.07.31.03.40.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 Jul 2020 03:40:50 -0700 (PDT)
-From:   Amit Pundir <amit.pundir@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dt <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] arm64: dts: qcom: Add support for Xiaomi Poco F1 (Beryllium)
-Date:   Fri, 31 Jul 2020 16:10:44 +0530
-Message-Id: <1596192044-18725-1-git-send-email-amit.pundir@linaro.org>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=Hd8wvT4b7y7GSWMKgqZCYWtrUwduUCyWW8ioRrqvkAs=;
+        b=SDfqjCm8YfKJm5iPbk5FYYXt6Yu5NldRbuhv7Kde+BYPL90t711IJ+lYBRam0ur3wx
+         3wK0AqElVEvdlkfZgzGQP0/aUmGu6OBz+3KHgTM3Lq/YkYrz3CXW0hJiMgiFYmyRMMLS
+         Fuepa1X/a+xUEIevxw8eG5d5MkkY6JrjTIsnM0XTJTNh4kBkA53EbsrNM+F5hx/+odf3
+         1bcNDEWqqJFiIQ1D5IiB4nxtXZcCMdktPMA4BNsGHdrsMvO2teW4VdrBayjwWq9zSCzD
+         VkeXkVcB4HNVHcgpwUcWwwwwtfaumOjS8BdOVL+Q7+OPIaJRLne+Ok04Lf0AdPFeptoU
+         JTRA==
+X-Gm-Message-State: AOAM531b4ZAQxIIcvKnkEkyUQuPqTRCHvZybxfg4fMRZ4jA7srzs3J3o
+        eMETFn+kpJBI4fiYsXC92KOsIJYl6pdFBnKQ2Y0=
+X-Google-Smtp-Source: ABdhPJw+i0I+P441LxXNKMNTb5p+5CyJsW6V81kwSQNJ9QHTo1LmWm7rSHCRzw9+04Ww8fiLhFlZW4lObYvaxFBV+Ok=
+X-Received: by 2002:a4a:4594:: with SMTP id y142mr430529ooa.24.1596192149187;
+ Fri, 31 Jul 2020 03:42:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <CA+icZUXiz52bk+8bbLTuYCDLqoF9zLiV6NEjzPRgodu3FzCFLg@mail.gmail.com>
+ <20200730112022.GE424218@kernel.org>
+In-Reply-To: <20200730112022.GE424218@kernel.org>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Fri, 31 Jul 2020 12:42:17 +0200
+Message-ID: <CA+icZUV0NRkvbb5Nn86qN_KnXd3qAo9kCqrkPEvf9GHc0SAt3w@mail.gmail.com>
+Subject: Re: [perf] Explicitly use python[3]-[config]
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add initial dts support for Xiaomi Poco F1 (Beryllium).
+> Please let me know if you need further help.
+>
+> - Arnaldo
 
-This initial support is based on upstream Dragonboard 845c
-(sdm845) device. With this dts, Beryllium boots AOSP up to
-ADB shell over USB-C.
+Hi Arnaldo,
 
-Supported functionality includes UFS, USB-C (peripheral),
-microSD card and Vol+/Vol-/power keys. Bluetooth should work
-too but couldn't be verified from adb command line, it is
-verified when enabled from UI with few WIP display patches.
+YES, I need further help.
 
-Just like initial db845c support, initializing the SMMU is
-clearing the mapping used for the splash screen framebuffer,
-which causes the device to hang during boot and recovery
-needs a hard power reset. This can be worked around using:
+I have published in [1] numbers for "perf stat make ..." with
+GNU/gcc+binutils vs. LLVM toolchain for building Linux v5.8-rc7.
 
-    fastboot oem select-display-panel none
+[ GNU/gcc+binutils toolchain ]
 
-To switch ON the display back run:
+   10964.876434769 seconds time elapsed
 
-    fastboot oem select-display-panel
+   29666.464675000 seconds user
+    2149.943729000 seconds sys
 
-But this only works on Beryllium devices running bootloader
-version BOOT.XF.2.0-00369-SDM845LZB-1 that shipped with
-Android-9 based release. Newer bootloader version do not
-support switching OFF the display panel at all. So we need
-a few additional smmu patches (under review) from here to
-boot to shell:
-https://github.com/pundiramit/linux/commits/beryllium-mainline
+[ LLVM toolchain ]
 
-Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
----
-v2: Updated machine compatible string for seemingly inevitable
-    future quirks.
+   17149.393417675 seconds time elapsed
 
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- arch/arm64/boot/dts/qcom/sdm845-beryllium.dts | 321 ++++++++++++++++++++++++++
- 2 files changed, 322 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/sdm845-beryllium.dts
+   47787.158036000 seconds user
+    2289.196142000 seconds sys
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 0f2c33d611df..3ef1b48bc0cb 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -21,6 +21,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r1.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-beryllium.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-beryllium.dts b/arch/arm64/boot/dts/qcom/sdm845-beryllium.dts
-new file mode 100644
-index 000000000000..714c5157d9f8
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sdm845-beryllium.dts
-@@ -0,0 +1,321 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-+#include "sdm845.dtsi"
-+#include "pm8998.dtsi"
-+#include "pmi8998.dtsi"
-+
-+/ {
-+	model = "Xiaomi Technologies Inc. Beryllium";
-+	compatible = "xiaomi,beryllium", "qcom,sdm845";
-+
-+	/* required for bootloader to select correct board */
-+	qcom,board-id = <69 0>;
-+	qcom,msm-id = <321 0x20001>;
-+
-+	aliases {
-+		hsuart0 = &uart6;
-+	};
-+
-+	dc12v: dc12v-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "DC12V";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		regulator-always-on;
-+	};
-+
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		autorepeat;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vol_up_pin_a>;
-+
-+		vol-up {
-+			label = "Volume Up";
-+			linux,code = <KEY_VOLUMEUP>;
-+			gpios = <&pm8998_gpio 6 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	vbat: vbat-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VBAT";
-+
-+		vin-supply = <&dc12v>;
-+		regulator-min-microvolt = <4200000>;
-+		regulator-max-microvolt = <4200000>;
-+		regulator-always-on;
-+	};
-+
-+	vbat_som: vbat-som-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VBAT_SOM";
-+
-+		vin-supply = <&dc12v>;
-+		regulator-min-microvolt = <4200000>;
-+		regulator-max-microvolt = <4200000>;
-+		regulator-always-on;
-+	};
-+
-+	vdc_3v3: vdc-3v3-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDC_3V3";
-+		vin-supply = <&dc12v>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	vdc_5v: vdc-5v-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDC_5V";
-+
-+		vin-supply = <&dc12v>;
-+		regulator-min-microvolt = <500000>;
-+		regulator-max-microvolt = <500000>;
-+		regulator-always-on;
-+	};
-+
-+	vreg_s4a_1p8: vreg-s4a-1p8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vreg_s4a_1p8";
-+
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+};
-+
-+&apps_rsc {
-+	pm8998-rpmh-regulators {
-+		compatible = "qcom,pm8998-rpmh-regulators";
-+		qcom,pmic-id = "a";
-+
-+		vreg_l1a_0p875: ldo1 {
-+			regulator-min-microvolt = <880000>;
-+			regulator-max-microvolt = <880000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l7a_1p8: ldo7 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l12a_1p8: ldo12 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l13a_2p95: ldo13 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2960000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l17a_1p3: ldo17 {
-+			regulator-min-microvolt = <1304000>;
-+			regulator-max-microvolt = <1304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l20a_2p95: ldo20 {
-+			regulator-min-microvolt = <2960000>;
-+			regulator-max-microvolt = <2968000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l21a_2p95: ldo21 {
-+			regulator-min-microvolt = <2960000>;
-+			regulator-max-microvolt = <2968000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l24a_3p075: ldo24 {
-+			regulator-min-microvolt = <3088000>;
-+			regulator-max-microvolt = <3088000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l25a_3p3: ldo25 {
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3312000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l26a_1p2: ldo26 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+};
-+
-+&gcc {
-+	protected-clocks = <GCC_QSPI_CORE_CLK>,
-+			   <GCC_QSPI_CORE_CLK_SRC>,
-+			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
-+};
-+
-+&pm8998_gpio {
-+	vol_up_pin_a: vol-up-active {
-+		pins = "gpio6";
-+		function = "normal";
-+		input-enable;
-+		bias-pull-up;
-+		qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
-+	};
-+};
-+
-+&pm8998_pon {
-+	resin {
-+		compatible = "qcom,pm8941-resin";
-+		interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
-+		debounce = <15625>;
-+		bias-pull-up;
-+		linux,code = <KEY_VOLUMEDOWN>;
-+	};
-+};
-+
-+&qupv3_id_0 {
-+	status = "okay";
-+};
-+
-+&sdhc_2 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdc2_default_state &sdc2_card_det_n>;
-+
-+	vmmc-supply = <&vreg_l21a_2p95>;
-+	vqmmc-supply = <&vreg_l13a_2p95>;
-+
-+	bus-width = <4>;
-+	cd-gpios = <&tlmm 126 GPIO_ACTIVE_HIGH>;
-+};
-+
-+&tlmm {
-+	gpio-reserved-ranges = <0 4>, <81 4>;
-+
-+	sdc2_default_state: sdc2-default {
-+		clk {
-+			pins = "sdc2_clk";
-+			bias-disable;
-+
-+			/*
-+			 * It seems that mmc_test reports errors if drive
-+			 * strength is not 16 on clk, cmd, and data pins.
-+			 */
-+			drive-strength = <16>;
-+		};
-+
-+		cmd {
-+			pins = "sdc2_cmd";
-+			bias-pull-up;
-+			drive-strength = <10>;
-+		};
-+
-+		data {
-+			pins = "sdc2_data";
-+			bias-pull-up;
-+			drive-strength = <10>;
-+		};
-+	};
-+
-+	sdc2_card_det_n: sd-card-det-n {
-+		pins = "gpio126";
-+		function = "gpio";
-+		bias-pull-up;
-+	};
-+};
-+
-+&uart6 {
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "qcom,wcn3990-bt";
-+
-+		vddio-supply = <&vreg_s4a_1p8>;
-+		vddxo-supply = <&vreg_l7a_1p8>;
-+		vddrf-supply = <&vreg_l17a_1p3>;
-+		vddch0-supply = <&vreg_l25a_3p3>;
-+		max-speed = <3200000>;
-+	};
-+};
-+
-+&usb_1 {
-+	status = "okay";
-+};
-+
-+&usb_1_dwc3 {
-+	dr_mode = "peripheral";
-+};
-+
-+&usb_1_hsphy {
-+	status = "okay";
-+
-+	vdd-supply = <&vreg_l1a_0p875>;
-+	vdda-pll-supply = <&vreg_l12a_1p8>;
-+	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
-+
-+	qcom,imp-res-offset-value = <8>;
-+	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
-+	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
-+	qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
-+};
-+
-+&usb_1_qmpphy {
-+	status = "okay";
-+
-+	vdda-phy-supply = <&vreg_l26a_1p2>;
-+	vdda-pll-supply = <&vreg_l1a_0p875>;
-+};
-+
-+&ufs_mem_hc {
-+	status = "okay";
-+
-+	reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
-+
-+	vcc-supply = <&vreg_l20a_2p95>;
-+	vcc-max-microamp = <800000>;
-+};
-+
-+&ufs_mem_phy {
-+	status = "okay";
-+
-+	vdda-phy-supply = <&vreg_l1a_0p875>;
-+	vdda-pll-supply = <&vreg_l26a_1p2>;
-+};
-+
-+/* PINCTRL - additions to nodes defined in sdm845.dtsi */
-+
-+&qup_uart6_default {
-+	pinmux {
-+		pins = "gpio45", "gpio46", "gpio47", "gpio48";
-+		function = "qup6";
-+	};
-+
-+	cts {
-+		pins = "gpio45";
-+		bias-disable;
-+	};
-+
-+	rts-tx {
-+		pins = "gpio46", "gpio47";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
-+	rx {
-+		pins = "gpio48";
-+		bias-pull-up;
-+	};
-+};
--- 
-2.7.4
+How can I dig further to see why the time for user is higher when
+building with LLVM toolchain?
+Any suggestions?
 
+Thanks.
+
+Regards,
+- Sedat -
+
+[1] https://github.com/ClangBuiltLinux/linux/issues/1086#issuecomment-667036028
