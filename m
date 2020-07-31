@@ -8,70 +8,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 757C1C433EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEADFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55CD722BF3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA76322BF3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:02:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M6Y0jv5k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q1ELpRRF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733028AbgGaMCZ (ORCPT
+        id S1733049AbgGaMC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 08:02:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56210 "EHLO
+        Fri, 31 Jul 2020 08:02:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732699AbgGaMCW (ORCPT
+        with ESMTP id S1733029AbgGaMCZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 08:02:22 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 652AAC061574;
-        Fri, 31 Jul 2020 05:02:22 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id qc22so16378770ejb.4;
-        Fri, 31 Jul 2020 05:02:22 -0700 (PDT)
+        Fri, 31 Jul 2020 08:02:25 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60CA1C061575;
+        Fri, 31 Jul 2020 05:02:25 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id g19so17353807ejc.9;
+        Fri, 31 Jul 2020 05:02:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0s8kQrogwdlSPLZApHKOPIg76Pp1CNTA9YznKKgGPck=;
-        b=M6Y0jv5kDqUnaX/yd/T2xgMQt71taFc83qH0hNkDJSCO82eBpAd0hnmaZzXzH8JwwR
-         QxnHOUFXM4WOTonZWpymDce5CueUtu5cPdmXzfF3QkrFwjTonyaSBB6/OFutNKWXXJl7
-         1jUDYkKMxsmMDhL2Zw4OcJ1xStjLUKRpOJXm5Y9RjchXLuWxHlaZ4NjkFERXie4cqi+O
-         OqAUwBdHmMok6y4FmBJihc5eH+MTABnbOjG2wVrZs5mQO/rZvl7GoIwILp5r9rZkXKaj
-         I1ZZYBXCyxy0zsS5imx/7/w6t7tKz/PDc+l5Py3ZaKD6QtvvAyfi+GgIxAJ99ngBWThA
-         2OYQ==
+        bh=+B0ZiRGGkQHGfacBVvFgt+7CbN36ujRN2OQHpeuEl8Q=;
+        b=q1ELpRRFFJl8UZ7DlKSBerPXQVxyKAd4T3Rh0sn2R47QsC0y9Bjo6tJovpznNhS8yR
+         1ky2nz6HbkWcz/wRA3cUSi86NBcbDAf4+sQAuPbHZ8KjHOPop1D8Cs+efmggmlP6kaTE
+         cejWvPxN+7BdWCABfsSrVCZ4a5ZrEbPMMx43Rj6x8ChHzQReQfKVL+7BtF+0ppl8pHIg
+         OL7ouoqnTXagdt4YbGlYplW9EAo5EKk4QJ1SbxuVOJbBf7HvSjYGpb3GROvrXv/pNevl
+         XjTzuyStpqPFCaHph9dgTIXXlp1veqq0qMTJH3ugoZ/2xMD+1DQd5SwmH+/K6LZVIxpl
+         iQSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=0s8kQrogwdlSPLZApHKOPIg76Pp1CNTA9YznKKgGPck=;
-        b=V7QYWryoK4+e4eZVv1xqAbRKBVzC3neKD4xzKAi7IWfFtWvTIw4riOgMzPQ/XABLDb
-         Q44QNADShZSWV+d8eu/fS45awaQ8Zr+VLpIDFOiWb0auyWkfy3s6wVGbhM36vREVYQ/8
-         fNibDIYcTuKsme6vHrK8KXPxsv1t1R7oP6Hut59jdpoaTSHSNTPFmDkV+sfRC0ZhirUK
-         wHdEUJgqIdO28U+NoPEbEkX5htcWNWV2SYpurXP61hTuSt28cPsk9TguUzJtvjpJAV10
-         PkEilVeEjs3JnSNTqDr4hyvbvIt8UgQY+NFqeDmLg6ZZL2h1QTSRckqqKT5zKoT4E/xw
-         6sBA==
-X-Gm-Message-State: AOAM532+tpeYjNk4BAVYrgthFq+aZXZ+S75AVLcN925cAwPwUS8f0Dwi
-        hCeIIRqmNDgMR4zCfpeI685Vtgz8yBowbw==
-X-Google-Smtp-Source: ABdhPJz45zbOZzboFeAodzV6Jdd70KawW/kH4Nt1N7OyBQuz8phrmzy5Ee9QL5qqaAtYtkYbQgzHiA==
-X-Received: by 2002:a17:906:1c0e:: with SMTP id k14mr3597814ejg.479.1596196941171;
-        Fri, 31 Jul 2020 05:02:21 -0700 (PDT)
+        bh=+B0ZiRGGkQHGfacBVvFgt+7CbN36ujRN2OQHpeuEl8Q=;
+        b=fzWphx4Ujf37TII2q03MipMpictfkM3Yqkwu+mu6iJqcvNtjI1hRAN1DFt0nhonxCD
+         ueXbWJ6Zu7fpFbW6j/GR2+pIBz78VZoOLuf2qhSx4z9BClPWf5+gaJxJJ7GRNoFep8P1
+         W73nk9cEW10plqGsMffmWf7Njnh2yR4rGWKdtHIOQvYeg6cQTUXh/gPI4YCSoYAxkal9
+         NxZlmpWE026lRKd/tMXuXG+2NIJMmHzK2uUMCnYdkSN5/FoGoq+Btp6sQJF5lsUA1J3f
+         YxYZgGyLpIkV5Lfn0JdzbG80dgeD1WroAZRdinQKX4Kv2efl6cwXQQvZNZ6ImGk5qRNc
+         NY4g==
+X-Gm-Message-State: AOAM533IHQS426NleByawD7pFIc54XMruY2bLlX7YgoJTuhm0OSr3oeJ
+        m5/iLipUg1ynm29iNl4VZjA=
+X-Google-Smtp-Source: ABdhPJxgR17bqYSQeGy025fhxigm0MVrq5A7QiKas69UQZRDtn4IPk1fEsdjUzNRp0lVrz4itO5j9Q==
+X-Received: by 2002:a17:906:3756:: with SMTP id e22mr3810103ejc.487.1596196944109;
+        Fri, 31 Jul 2020 05:02:24 -0700 (PDT)
 Received: from net.saheed (95C84E0A.dsl.pool.telekom.hu. [149.200.78.10])
-        by smtp.gmail.com with ESMTPSA id j5sm9091734ejk.87.2020.07.31.05.02.19
+        by smtp.gmail.com with ESMTPSA id j5sm9091734ejk.87.2020.07.31.05.02.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 05:02:20 -0700 (PDT)
+        Fri, 31 Jul 2020 05:02:23 -0700 (PDT)
 From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-To:     helgaas@kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Jakub Kicinski <kuba@kernel.org>
+To:     helgaas@kernel.org
 Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
         bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-pci@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH v4 03/12] ath9k: Check if pcie_capability_read_*() reads ~0
-Date:   Fri, 31 Jul 2020 13:02:31 +0200
-Message-Id: <20200731110240.98326-4-refactormyself@gmail.com>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 05/12] PCI: pciehp: Set "Power On" as the default get_power_status
+Date:   Fri, 31 Jul 2020 13:02:33 +0200
+Message-Id: <20200731110240.98326-6-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.18.4
 In-Reply-To: <20200731110240.98326-1-refactormyself@gmail.com>
 References: <20200731110240.98326-1-refactormyself@gmail.com>
@@ -80,34 +77,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On failure pcie_capability_read_dword() sets it's last parameter, val
-to 0. However, with Patch 12/12, it is possible that val is set to ~0
-on failure. This would introduce a bug because (x & x) == (~0 & x).
+The default case of the switch statement is redundant since
+PCI_EXP_SLTCTL_PCC is only a single bit.
 
-Since ~0 is an invalid value here,
-
-Add an extra check for ~0 to the if condition to ensure success.
+Set the default case in the switch-statement to set status
+to "Power On"
 
 Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
 Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
 ---
- drivers/net/wireless/ath/ath9k/pci.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pci/hotplug/pciehp_hpc.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/pci.c b/drivers/net/wireless/ath/ath9k/pci.c
-index f3461b193c7a..f02b243befef 100644
---- a/drivers/net/wireless/ath/ath9k/pci.c
-+++ b/drivers/net/wireless/ath/ath9k/pci.c
-@@ -867,7 +867,8 @@ static void ath_pci_aspm_init(struct ath_common *common)
- 		pci_read_config_dword(pdev, 0x70c, &ah->config.aspm_l1_fix);
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 53433b37e181..b89c9ee4a3b5 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -400,14 +400,12 @@ void pciehp_get_power_status(struct controller *ctrl, u8 *status)
+ 		 pci_pcie_cap(ctrl->pcie->port) + PCI_EXP_SLTCTL, slot_ctrl);
  
- 	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &aspm);
--	if (aspm & (PCI_EXP_LNKCTL_ASPM_L0S | PCI_EXP_LNKCTL_ASPM_L1)) {
-+	if ((aspm != (u16)~0) &&
-+	    (aspm & (PCI_EXP_LNKCTL_ASPM_L0S | PCI_EXP_LNKCTL_ASPM_L1))) {
- 		ah->aspm_enabled = true;
- 		/* Initialize PCIe PM and SERDES registers. */
- 		ath9k_hw_configpcipowersave(ah, false);
+ 	switch (slot_ctrl & PCI_EXP_SLTCTL_PCC) {
+-	case PCI_EXP_SLTCTL_PWR_ON:
+-		*status = 1;	/* On */
+-		break;
+ 	case PCI_EXP_SLTCTL_PWR_OFF:
+ 		*status = 0;	/* Off */
+ 		break;
++	case PCI_EXP_SLTCTL_PWR_ON:
+ 	default:
+-		*status = 0xFF;
++		*status = 1;	/* On */
+ 		break;
+ 	}
+ }
 -- 
 2.18.4
 
