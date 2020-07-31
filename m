@@ -2,119 +2,138 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D2CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 00:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C972C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 00:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5D2D20829
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 00:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BFA020663
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 00:26:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lJtMgGbh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sOOQDS6l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730911AbgGaAZE (ORCPT
+        id S1730942AbgGaA0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 20:25:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34020 "EHLO
+        Thu, 30 Jul 2020 20:26:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730892AbgGaAYn (ORCPT
+        with ESMTP id S1730915AbgGaA0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 20:24:43 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F6B8C06174A
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 17:24:43 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id d14so27352158qke.13
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 17:24:43 -0700 (PDT)
+        Thu, 30 Jul 2020 20:26:16 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A96BC061575
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 17:26:16 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id p1so15764831pls.4
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 17:26:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bCnm2zhl1XL25GtJr/etbA3HQMGW2EG8k+e5UYsAJpw=;
-        b=lJtMgGbhxO85pPQ3zmFyvT81x30eZCJUjTqGcbLx9wGlUYe1jJjdPY6ReHw6gFzteV
-         PGVcl91LOUNhqC6ggzpRMQ6AloWyvYhtERJOjsT7jyjSwQaTtyqF3aHUeBUqvy/VXOBh
-         oblTtIls0ssqkEbpSn4i+FQqshusH5TL4zGs4=
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Z3Lm1sGkWQwPe3NkE6iARE36RcrQ0xDQdl/rL+tDjI0=;
+        b=sOOQDS6l29PwJncVTdlZkzs7X7QSPkZPgnQAmSIwmUOgSvyL2/q0N7p90FYdSW2s8j
+         7CUVCSO8S+NAKPz3nxM6HhwyGHv+sbArXQoh5HbHlu8QYOGJbIQnOYENg9nXxXSjqXmE
+         b/NXnhhTJcnAncLg5glbJ16Gmu7U9R7QCPUgEmu8abMsBqnftD0pBFG9svq8rL0X1x/+
+         8QDgT9u9tf81CyG+A5/tzVxH58yQi4pFayRE1lwYeGvyydlZNXXPSUdjYJIU9bOJ2Y5Q
+         Duxb7LFSRiGHX9usLWXOtYqk0aAF6bIjq1IUM4JvYDAPcBT2UjU0aKEK9VPxeKVm1Hx4
+         PkFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bCnm2zhl1XL25GtJr/etbA3HQMGW2EG8k+e5UYsAJpw=;
-        b=DQ5B68/QCIYMFX1nTdNycFg8P3PpbGCpkLG035h7xQX7X6SN0kPId0BT429iZDcitx
-         VU7LqnULSjhL2Bl6BvwsY5sytShfjCANc24QWqb3zObcDiuWY3tP0fyq1DXA+4vva/FR
-         aEjIx0Ol5wRirFFIMwBxyxcm2syu5AFqeUaEvfGpTiF7foEywe0//KEtrbUi1QTUScXy
-         EPUCQ+l3OkZG90uNH7yGq4e8OAz2K/ZzD3YnYDo3798aF7hJceiWKCkaXZ5+/FWFufQk
-         hssNb5Ukp+wESR5rw3uHky4nvn3i5s8F6qoOCf3SIfXdJxpqnaMMRoPvbSuE8hL8na/r
-         ADAg==
-X-Gm-Message-State: AOAM532q5Trq6xAakqhPOgo/kKMd04/1CO/Xul1uT4TV8ycjJeHyVj7c
-        wjO67kd6KbcPx32orU06WgepwCpFgOo=
-X-Google-Smtp-Source: ABdhPJyIL0MTtcaUNdK2wd95mOUnQjo/jghgD2yDkNb9rtCd4WvmWlGE+97mDfAOgnF+j1dKLYW2Qw==
-X-Received: by 2002:a37:8107:: with SMTP id c7mr1774643qkd.22.1596155081528;
-        Thu, 30 Jul 2020 17:24:41 -0700 (PDT)
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com. [209.85.222.178])
-        by smtp.gmail.com with ESMTPSA id n184sm5926168qkn.49.2020.07.30.17.24.39
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jul 2020 17:24:40 -0700 (PDT)
-Received: by mail-qk1-f178.google.com with SMTP id h7so27357831qkk.7
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 17:24:39 -0700 (PDT)
-X-Received: by 2002:a05:620a:3de:: with SMTP id r30mr1567282qkm.221.1596155079426;
- Thu, 30 Jul 2020 17:24:39 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Z3Lm1sGkWQwPe3NkE6iARE36RcrQ0xDQdl/rL+tDjI0=;
+        b=fyVcMM0baUhXTI7jTfijMFB5AQpre3KZ/WzapWtis0McoTDEZmeVCUgcUBWYZGoNG5
+         D0aqbqQnJbYjVwKx+nQ+mVfKFnRlxKK+J1SSLJsTTKsepVJHDa28VSBOZPPWlpcfRpyg
+         s22XXJFMIkYfqTDNKu44zt/GSsl8WMZmyOVcdNLzWKpxESg+Q89LnabCmtAPQOWpKscN
+         u9TVAgxFjdm8JDyp/bdyCYVDNA+LMfVIv7osSusJsZBZR0Oc44fXw4ota2hLvea7XWqR
+         uQNLTY4lYtqHfH5c9B1zyqpXXT5qVgtwLuUQo8Mi1atYdl2iDzNp+dKO8qCGMp17I0x4
+         cpdA==
+X-Gm-Message-State: AOAM531TdPJbDnDIelLjtD15OYIn+9m42Y7NQqjXCH4BirVv9Hq0FPiL
+        c+h5IVyCl5luIath8+1s3IR1yA==
+X-Google-Smtp-Source: ABdhPJwcr954AG1gqEdKpM5QuRqbV3+wB5pscU2NtJ0l5WoRi0tIaQ0FwOD7I+WVx/5rp3y/anJJGw==
+X-Received: by 2002:a63:8c5d:: with SMTP id q29mr1238398pgn.249.1596155175408;
+        Thu, 30 Jul 2020 17:26:15 -0700 (PDT)
+Received: from google.com (56.4.82.34.bc.googleusercontent.com. [34.82.4.56])
+        by smtp.gmail.com with ESMTPSA id p19sm7867698pgj.74.2020.07.30.17.26.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 17:26:14 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 00:26:11 +0000
+From:   William Mcvicker <willmcvicker@google.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+Cc:     security@kernel.org, Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH 1/1] netfilter: nat: add range checks for access to
+ nf_nat_l[34]protos[]
+Message-ID: <20200731002611.GA1035680@google.com>
+References: <20200727175720.4022402-1-willmcvicker@google.com>
+ <20200727175720.4022402-2-willmcvicker@google.com>
+ <20200729214607.GA30831@salvia>
 MIME-Version: 1.0
-References: <20200726110524.151957-1-xie.he.0141@gmail.com>
- <20200728195246.GA482576@google.com> <CAJht_EOcRx=J5PiZwsSh+0Yb0=QJFahqxVbeMgFbSxh+cNZLew@mail.gmail.com>
-In-Reply-To: <CAJht_EOcRx=J5PiZwsSh+0Yb0=QJFahqxVbeMgFbSxh+cNZLew@mail.gmail.com>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Thu, 30 Jul 2020 17:24:27 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXPRLqq=vxnkF4z8=xvuqOKuuoqifvsNsERWg9uYJrFXgg@mail.gmail.com>
-Message-ID: <CA+ASDXPRLqq=vxnkF4z8=xvuqOKuuoqifvsNsERWg9uYJrFXgg@mail.gmail.com>
-Subject: Re: [PATCH] drivers/net/wan/lapbether: Use needed_headroom instead of hard_header_len
-To:     Xie He <xie.he.0141@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux X25 <linux-x25@vger.kernel.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200729214607.GA30831@salvia>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 6:42 PM Xie He <xie.he.0141@gmail.com> wrote:
-> On Tue, Jul 28, 2020 at 12:52 PM -0700
-> Brian Norris <briannorris@chromium.org> wrote:
-> > What is the intention with this X25 protocol? I guess the headers added
-> > in lapbeth_data_transmit() are supposed to be "invisible", as with this
-> > note in af_packet.c?
-...
-> This driver is not intended to be used with IPv4 or IPv6 protocols,
-> but is intended to be used with a special "X.25" protocol. That's the
-> reason the device type is ARPHRD_X25. I used "grep" in the X.25
-> network layer code (net/x25) and I found there's nowhere
-> "dev_hard_header" is called. I also used "grep" in all the X.25
+Hi Pablo,
 
-That well could just be a bug in net/x25/. But from context, it does
-appear that X.25 does not intend to expose its headers to higher
-layers.
+Yes, I believe this oops is only triggered by userspace when the user
+specifically passes in an invalid nf_nat_l3protos index. I'm happy to re-work
+the patch to check for this in ctnetlink_create_conntrack().
 
-> drivers in the kernel (lapbether.c, x25_asy.c, hdlc_x25.c under
-> drivers/net/wan) and I found no driver implemented "header_ops". So I
-> think the X.25 networking code doesn't expect any header visible
-> outside of the device driver, and X.25 drivers should make their
-> headers invisible outside of them.
->
-> So I think hard_header_len should be 0 for all X.25 drivers, so that
-> they can be used correctly with af_packet.c.
->
-> I don't know if this sounds plausible to you. If it does, could you
-> please let me have your name in a "Reviewed_by" tag. It would be of
-> great help to have your support. Thanks!
+> BTW, do you have a Fixes: tag for this? This will be useful for
+> -stable maintainer to pick up this fix.
 
-Sure, I can do that:
+Regarding the Fixes: tag, I don't have one offhand since this bug was reported
+to me, but I can search through the code history to find the commit that
+exposed this vulnerability.
 
-Reviewed-by: Brian Norris <briannorris@chromium.org>
+Thanks,
+Will
 
-I guess x25 is basically an abandoned project, if you're coming to me for this?
+On 07/29/2020, Pablo Neira Ayuso wrote:
+> Hi Will,
+> 
+> On Mon, Jul 27, 2020 at 05:57:20PM +0000, Will McVicker wrote:
+> > The indexes to the nf_nat_l[34]protos arrays come from userspace. So we
+> > need to make sure that before indexing the arrays, we verify the index
+> > is within the array bounds in order to prevent an OOB memory access.
+> > Here is an example kernel panic on 4.14.180 when userspace passes in an
+> > index greater than NFPROTO_NUMPROTO.
+> > 
+> > Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+> > Modules linked in:...
+> > Process poc (pid: 5614, stack limit = 0x00000000a3933121)
+> > CPU: 4 PID: 5614 Comm: poc Tainted: G S      W  O    4.14.180-g051355490483
+> > Hardware name: Qualcomm Technologies, Inc. SM8150 V2 PM8150 Google Inc. MSM
+> > task: 000000002a3dfffe task.stack: 00000000a3933121
+> > pc : __cfi_check_fail+0x1c/0x24
+> > lr : __cfi_check_fail+0x1c/0x24
+> > ...
+> > Call trace:
+> > __cfi_check_fail+0x1c/0x24
+> > name_to_dev_t+0x0/0x468
+> > nfnetlink_parse_nat_setup+0x234/0x258
+> 
+> If this oops is only triggerable from userspace, I think a sanity
+> check in nfnetlink_parse_nat_setup should suffice to reject
+> unsupported layer 3 and layer 4 protocols.
+> 
+> I mean, in this patch I see more chunks in the packet path, such as
+> nf_nat_l3proto_ipv4 that should never happen. I would just fix the
+> userspace ctnetlink path.
+> 
+> BTW, do you have a Fixes: tag for this? This will be useful for
+> -stable maintainer to pick up this fix.
+> 
+> Thanks.
