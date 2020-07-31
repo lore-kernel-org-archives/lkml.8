@@ -2,196 +2,92 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA37C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03729C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B9E320838
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C547F20838
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:53:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LQ1RKR5/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732597AbgGaKxN (ORCPT
+        id S1732635AbgGaKx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 06:53:13 -0400
-Received: from mailout07.rmx.de ([94.199.90.95]:55415 "EHLO mailout07.rmx.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729141AbgGaKxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 06:53:12 -0400
-Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mailout07.rmx.de (Postfix) with ESMTPS id 4BJ3z72b6fzBwbd;
-        Fri, 31 Jul 2020 12:53:07 +0200 (CEST)
-Received: from mta.arri.de (unknown [217.111.95.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by kdin01.retarus.com (Postfix) with ESMTPS id 4BJ3yk4dddz2xFV;
-        Fri, 31 Jul 2020 12:52:46 +0200 (CEST)
-Received: from n95hx1g2.localnet (192.168.54.39) by mta.arri.de
- (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Fri, 31 Jul
- 2020 12:52:23 +0200
-From:   Christian Eggers <ceggers@arri.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        "Hartmut Knaack" <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/2] iio: light: as73211: New driver
-Date:   Fri, 31 Jul 2020 12:52:22 +0200
-Message-ID: <2706267.JtmGt7LAV2@n95hx1g2>
-Organization: Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
-In-Reply-To: <CAHp75VdDCnQLh0Qts8hsgLBy5TqibOKAYSeFxuV69XLroRBOEg@mail.gmail.com>
-References: <20200731070114.40471-1-ceggers@arri.de> <20200731070114.40471-3-ceggers@arri.de> <CAHp75VdDCnQLh0Qts8hsgLBy5TqibOKAYSeFxuV69XLroRBOEg@mail.gmail.com>
+        Fri, 31 Jul 2020 06:53:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732538AbgGaKx4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 06:53:56 -0400
+Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB8D1C061574;
+        Fri, 31 Jul 2020 03:53:55 -0700 (PDT)
+Received: by mail-oi1-x230.google.com with SMTP id q4so14610464oia.1;
+        Fri, 31 Jul 2020 03:53:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=060okimkvHZHl9OWyLt7+K8yQ38XaZrF6LJc1HiWbRI=;
+        b=LQ1RKR5/QC8MEg2QZqp6i+aaeb6PXil2GELlyocM6zZ0ij1q/0MLeOIFNeFzMY2dEf
+         za3DCz3/qCG+UFW6Av0Kq191WAe7w0EWIvxkYD91GQpj7zfAARKuQW6PjOOaSQoojvPQ
+         Ikrf62ZtRDcEnbS1dNRP7+2FSYZogNsR07iCQC3sftUz0XLAqFLwmEH3GWOc+gOrB/vC
+         eLdpN3rwzrl5sZQ31OPr9JR3MjJVohDoh+vj9GxEZd6JiGcgTaD/lLB0FEggajM5R+HD
+         j9gG7td7f1r6LJQLdaC9dDqo8xb3Ubqin05/JijH0JnHzyh2DuFK60IKnAGdyVyo8OW6
+         pofg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=060okimkvHZHl9OWyLt7+K8yQ38XaZrF6LJc1HiWbRI=;
+        b=ar7oyQG4x+ipINjSqwKPHu0HWnlgjDYJl0Q5zeMpWvyMFXSNwByo+OdNH2RbUI13Z3
+         ebcMcgzEE7cK9Uhre4AI8EXxMDTrqiSTvuV6Hx1Vf75SCMrzSKSU5PZ9Tih8ghyyP5FW
+         AzHkbS12qNvntNPT7YA1NlyCundJeOmnMIvZMeWh8sLXvs4c9P6KLvRThkNfcpn825WI
+         TSgipedZA80ZxC101/+ja4QBl60uA2sgxZ/6rN0aXCe6g/OrE0TwR+rKkYHlRoYnp4PZ
+         mW8BEX6/EDYZgUmFURJrqW8NtuNTTaM2RJ7Si/oxkVvpZOpfvX2gmebeaUfqPfev0M+B
+         1p9g==
+X-Gm-Message-State: AOAM533bc7HYfbc/Kg+1IK5XLmvQcRxc7onew0+wVIK5KX/tza7LzAe2
+        77HOfxOM36WnjnC7v5124Mia8ig9Ob96Z2qTRKB/BCawJmLbiQ==
+X-Google-Smtp-Source: ABdhPJzYm4lmtPNgDZK1H1U5XHvZSIeBQoEIqs2j4MdOz2Po+vACtN/fV6WUE3kpz4FpoRxzgG1AIWfpybhOu5eHhLM=
+X-Received: by 2002:a05:6808:311:: with SMTP id i17mr2614907oie.72.1596192835308;
+ Fri, 31 Jul 2020 03:53:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Originating-IP: [192.168.54.39]
-X-RMX-ID: 20200731-125248-4BJ3yk4dddz2xFV-0@kdin01
-X-RMX-SOURCE: 217.111.95.66
+References: <CGME20200731071604epcas1p39fe86c3931c5adf9073817c12fb15f1d@epcas1p3.samsung.com>
+ <002901d6670a$742e8cf0$5c8ba6d0$@samsung.com> <CA+icZUX8KWtdDpMcmzqp461ndcyfvP13gaZK591OFpkp3nRHaQ@mail.gmail.com>
+In-Reply-To: <CA+icZUX8KWtdDpMcmzqp461ndcyfvP13gaZK591OFpkp3nRHaQ@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Fri, 31 Jul 2020 12:53:44 +0200
+Message-ID: <CA+icZUWzkovf=kQcdwrGirfEkhyXHF0j4ZXf+4S3+5m+vuOJjw@mail.gmail.com>
+Subject: Re: exfatprogs-1.0.4 version released
+To:     Namjae Jeon <namjae.jeon@samsung.com>,
+        Sven Hoexter <sven@stormbind.net>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, Eric Sandeen <sandeen@sandeen.net>,
+        Goldwyn Rodrigues <rgoldwyn@suse.com>,
+        Nicolas Boos <nicolas.boos@wanadoo.fr>,
+        Hyunchul Lee <hyc.lee@gmail.com>,
+        Luca Stefani <luca.stefani.ge1@gmail.com>,
+        Matthieu CASTET <castet.matthieu@free.fr>,
+        Ethan Sommer <e5ten.arch@gmail.com>,
+        Hyeongseok Kim <hyeongseok@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+> congrats to version 1.0.4 and hope to see it in the Debian repositories soon.
+>
 
-thanks for further review. If nobody else sends comments, I'll
-publish the next version tonight. Maybe we could clarify the questions
-below in time.
+Thanks Sven!
 
-Best regards
-Christian
+root# dpkg -l | grep exfatprogs | awk '/^ii/ {print $1 " " $2 " " $3}'
+| column -t
+ii  exfatprogs  1.0.4-1
 
-
-> W=1 (not V=1) runs kernel doc validation script.
-without V=1, I get nothing. Neither excess nor missing members
-are reported on my system.
-
-
-On Friday, 31 July 2020, 09:34:02 CEST, Andy Shevchenko wrote:
-> On Fri, Jul 31, 2020 at 10:03 AM Christian Eggers <ceggers@arri.de> wrote:
-> > +static const int as73211_samp_freq_avail[] = { 1024000, 2048000, 4096000,
-> > 8192000 };
-> This looks related to the below mentioned 1.024MHz.
-> 
-> Perhaps add a definition above and comment here?
-> 
-> #define AS73211_BASE_FREQ_1024KHZ   1024000
-added similar define in v5. The array looks like the following now
-
-static const int as73211_samp_freq_avail[] = {
-	AS73211_SAMPLE_FREQ_BASE,
-	AS73211_SAMPLE_FREQ_BASE * 2,
-	AS73211_SAMPLE_FREQ_BASE * 4,
-	AS73211_SAMPLE_FREQ_BASE * 8
-};
-
-
-> > +/* integration time in units of 1024 clock cycles */
-> 
-> Unify this with below one. Or the other way around, i.o.w. join one of
-> them into the other.
-> 
-> > +static unsigned int as73211_integration_time_1024cyc(struct as73211_data
-> > *data) +{
-> > +       /* integration time in CREG1 is in powers of 2 (x 1024 cycles) */
-> > +       return BIT(FIELD_GET(AS73211_CREG1_TIME_MASK, data->creg1));
-> > +}
-I'm not sure, whether this is possible. as73211_integration_time_1024cyc()
-returns the current setting from hardware. as73211_integration_time_us()
-calculates the resulting time. But as73211_integration_time_us() is also
-called in as73211_integration_time_calc_avail() inside the loop.
-
-> > +       unsigned int time_us = as73211_integration_time_us(data,
-> > +                                                          as73211_integration_time_1024cyc(data));
-> One line?
-checkpatch complains... ignore?
-
-
-> > +               int reg_bits, freq_kHz = val / 1000 /* HZ_PER_KHZ */;  /*
-> > 1024, 2048, ... */ +
-> > +               /* val must be 1024 * 2^x */
-> > +               if (val < 0 || (freq_kHz * 1000 /* HZ_PER_KHZ */) != val
-> > ||
-> > +                               !is_power_of_2(freq_kHz) || val2)
-> > +                       return -EINVAL;
-> 
-> Please, define HZ_PER_KHZ locally. It will really help when we move
-> these definitions to a global level.
-ok
-
-> 
-> ...
-> 
-> > +               /* gain can be calculated from CREG1 as 2^(13 -
-> > CREG1_GAIN) */ +               reg_bits = 13 - ilog2(val);
-> 
-> 13 is the second time in the code. Deserves a descriptive definition.
-I'm unsure how to solve this. Possible values for gain:
-
-CREG1[7:4]  | gain
------------------------------
-0           | 2048x
-1           | 1024x
-2           |  512x
-...         |  ...
-13          |    1x
-
-#define AS73211_CREG1_GAIN_1_NON_SHIFTED 13  // this define is CREG1 related, but not shifted to the right position
-
-static unsigned int as73211_gain(struct as73211_data *data)
-{
-	/* gain can be calculated from CREG1 as 2^(13 - CREG1_GAIN) */
-	return BIT(AS73211_CREG1_GAIN_1_NON_SHIFTED - FIELD_GET(AS73211_CREG1_GAIN_MASK, data->creg1));
-}
-
----- or ----
-
-#define AS73211_CREG1_GAIN_1 FIELD_PREP(AS73211_CREG1_GAIN_MASK, 13)
-
-static unsigned int as73211_gain(struct as73211_data *data)
-{
-	/* gain can be calculated from CREG1 as 2^(13 - CREG1_GAIN) */
-	return BIT(FIELD_GET(AS73211_CREG1_GAIN_MASK, AS73211_CREG1_GAIN_1) - FIELD_GET(AS73211_CREG1_GAIN_MASK, data->creg1));
-}
-
-
-> > +       indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
-> > +       if (indio_dev == NULL)
-> 
-> if (!indio_dev)
-> 
-> > +               return -ENOMEM;
-> 
-> ...
-> 
-> > +       indio_dev->dev.parent = dev;
-> 
-> Doesn't IIO core do this for you?
-devm_iio_device_alloc() doesn't pass 'dev' to iio_device_alloc().
-I already looked around, but I didn't find. And after debugging
-v5.4, devm_iio_device_alloc() definitely doesn't do it.
-
-> > +       ret = devm_iio_device_register(dev, indio_dev);
-> > +       if (ret < 0)
-> > +               goto powerdown;
-> > +
-> > +       return 0;
-> > 
-> > +powerdown:
-> > +       as73211_power(indio_dev, false);
-> > +       return ret;
-> 
-> devm_*() is tricky. Here you broke ordering heavily. So, consider to
-> add this under devm_add_action_or_reset().
-Sorry, my mistake! I already felt that something may be wrong here...
-
-
-
+- Sedat -
