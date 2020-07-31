@@ -2,162 +2,148 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEFCC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57BF521744
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA9F12245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:43:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t0dpG410"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733213AbgGaMkB (ORCPT
+        id S1733239AbgGaMnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 08:40:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33792 "EHLO
+        Fri, 31 Jul 2020 08:43:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733093AbgGaMkA (ORCPT
+        with ESMTP id S1733101AbgGaMnL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 08:40:00 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84039C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 05:40:00 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <afa@pengutronix.de>)
-        id 1k1UKI-0000kD-5f; Fri, 31 Jul 2020 14:39:54 +0200
-Received: from afa by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <afa@pengutronix.de>)
-        id 1k1UKH-0002d3-3w; Fri, 31 Jul 2020 14:39:53 +0200
-From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Thierry Reding <treding@nvidia.com>
-Cc:     kernel@pengutronix.de, Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: don't use same lockdep class for all devm_gpiochip_add_data users
-Date:   Fri, 31 Jul 2020 14:38:36 +0200
-Message-Id: <20200731123835.8003-1-a.fatoum@pengutronix.de>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: afa@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Fri, 31 Jul 2020 08:43:11 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFAE3C061574;
+        Fri, 31 Jul 2020 05:43:10 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id i26so18944731edv.4;
+        Fri, 31 Jul 2020 05:43:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=kTEKWlV4nOSheNgHEWqv/22qBE+Vx8ikH8s2qmj4c7s=;
+        b=t0dpG410UoQ/AaCrJfLmpl35pb7gf3W1ueoUC8Kx/JGEDzX7QhXn5oMP733MHTQBAs
+         4LHic3AIM6xJiSRqq86G0JWPXwCyYpMFkw1J37Hgzea7FX23P8viHUNdV3GNCMT2+KyH
+         30SP4kpBZIQ7kkMIRQBBtv/0a0tqGNdn7OGEPahzFad8ybt4zUqY/+DIhgIkc4MH7WBE
+         Ipg+7wJV93OZWFJfr80g3CHPMHWQlOpprwu9VAiS83J2a5O9VqKZzPcK9J7TRQ4wD5Eh
+         ClijEVwOSSt5Ab03vnsaD5eKXzsZszfeQxc31WMyDT2QiXIB5oa54S3zN/3m8F1OluCA
+         +QkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=kTEKWlV4nOSheNgHEWqv/22qBE+Vx8ikH8s2qmj4c7s=;
+        b=nwYo8B/lD+q4CkN1IQMnYPdG0Mx6EH6sKJnoyC95KIMzeN0l/0aulw7FtVi6nJOwS9
+         q+Eq3Koew9N5/yvDH2/Kh/kLVJCAMkUSO8CIIyEn3V7HVrDeqSnWZaECYfJ8VLl06VX2
+         EddxUqXX9f4qFTOVidds5h0g9/pRuH7Lpmqfe3Ml28P00vjqat+6FL5+3ZhMX6v92v5v
+         CMRTGTXB8qH6lXeUj+F5mu1itapJbtbrTso7ZaSE77n/V/aN0kcQP1J1XYfopdbGXSxC
+         aqjeTVfXue7/n8n4Z6HvP8HDRTzjPmA31uYRwD2VGPBXamHNPbuMaTHZxEwG/TOzcNNJ
+         dtwA==
+X-Gm-Message-State: AOAM5314rgExP9jC4NxyxKdpJOYUfyyrhSM5VxiGrlRVA+AkuXs+E6Un
+        rW8eFpETwgxvrlhnV5/UeDs=
+X-Google-Smtp-Source: ABdhPJx87fnYc/ryc1eaPTpKu9cM5/FUxmCOhynUIBbPcaF0NGu/M6CJK7gWLKoZuQT408yhWdXUOA==
+X-Received: by 2002:aa7:c45a:: with SMTP id n26mr3749694edr.45.1596199389154;
+        Fri, 31 Jul 2020 05:43:09 -0700 (PDT)
+Received: from net.saheed (95C84E0A.dsl.pool.telekom.hu. [149.200.78.10])
+        by smtp.gmail.com with ESMTPSA id g23sm8668514ejb.24.2020.07.31.05.43.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 05:43:08 -0700 (PDT)
+From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+To:     helgaas@kernel.org
+Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 08/12] PCI: Check if pcie_capability_read_*() reads ~0
+Date:   Fri, 31 Jul 2020 13:43:25 +0200
+Message-Id: <20200731114329.100848-1-refactormyself@gmail.com>
+X-Mailer: git-send-email 2.18.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 959bc7b22bd2 ("gpio: Automatically add lockdep keys") documents
-in its commits message its intention to "create a unique class key for
-each driver".
+On failure pcie_capability_read_*() sets it's last parameter, val
+to 0. However, with Patch 12/12, it is possible that val is set
+to ~0 on failure. This would introduce a bug because
+(x & x) == (~0 & x).
 
-It does so by having gpiochip_add_data add in-place the definition of
-two static lockdep classes for LOCKDEP use. That way, every caller of
-the macro adds their gpiochip with unique lockdep classes.
+Since ~0 is an invalid value in here,
 
-There are many indirect callers of gpiochip_add_data, however, via
-use of devm_gpiochip_add_data. devm_gpiochip_add_data has external
-linkage and all its users will share the same lockdep classes, which
-probably is not intended.
+Add extra check for ~0 in the if condition to ensure success or
+failure.
 
-Fix this by replicating the gpio_chip_add_data statics-in-macro for
-the devm_ version as well.
-
-Fixes: 959bc7b22bd2 ("gpio: Automatically add lockdep keys")
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
 ---
-This doesn't fix any particular problem I ran into, but the code
-looked buggy, at least to my lockdep-user-not-developer eyes.
----
- drivers/gpio/gpiolib-devres.c | 13 ++++++++-----
- include/linux/gpio/driver.h   | 13 +++++++++++--
- 2 files changed, 19 insertions(+), 7 deletions(-)
+ drivers/pci/probe.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
-index 5c91c4365da1..7dbce4c4ebdf 100644
---- a/drivers/gpio/gpiolib-devres.c
-+++ b/drivers/gpio/gpiolib-devres.c
-@@ -487,10 +487,12 @@ static void devm_gpio_chip_release(struct device *dev, void *res)
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 2f66988cea25..af95f67c19a7 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1124,7 +1124,7 @@ static void pci_enable_crs(struct pci_dev *pdev)
+ 
+ 	/* Enable CRS Software Visibility if supported */
+ 	pcie_capability_read_word(pdev, PCI_EXP_RTCAP, &root_cap);
+-	if (root_cap & PCI_EXP_RTCAP_CRSVIS)
++	if ((root_cap != (u16)~0) && (root_cap & PCI_EXP_RTCAP_CRSVIS))
+ 		pcie_capability_set_word(pdev, PCI_EXP_RTCTL,
+ 					 PCI_EXP_RTCTL_CRSSVE);
+ }
+@@ -1521,7 +1521,7 @@ void set_pcie_hotplug_bridge(struct pci_dev *pdev)
+ 	u32 reg32;
+ 
+ 	pcie_capability_read_dword(pdev, PCI_EXP_SLTCAP, &reg32);
+-	if (reg32 & PCI_EXP_SLTCAP_HPC)
++	if ((reg32 != (u32)~0) && (reg32 & PCI_EXP_SLTCAP_HPC))
+ 		pdev->is_hotplug_bridge = 1;
  }
  
- /**
-- * devm_gpiochip_add_data() - Resource managed gpiochip_add_data()
-+ * devm_gpiochip_add_data_with_key() - Resource managed gpiochip_add_data_with_key()
-  * @dev: pointer to the device that gpio_chip belongs to.
-  * @gc: the GPIO chip to register
-  * @data: driver-private data associated with this chip
-+ * @lock_key: lockdep class for IRQ lock
-+ * @request_key: lockdep class for IRQ request
-  *
-  * Context: potentially before irqs will work
-  *
-@@ -501,8 +503,9 @@ static void devm_gpio_chip_release(struct device *dev, void *res)
-  * gc->base is invalid or already associated with a different chip.
-  * Otherwise it returns zero as a success code.
-  */
--int devm_gpiochip_add_data(struct device *dev, struct gpio_chip *gc,
--			   void *data)
-+int devm_gpiochip_add_data_with_key(struct device *dev, struct gpio_chip *gc, void *data,
-+				    struct lock_class_key *lock_key,
-+				    struct lock_class_key *request_key)
- {
- 	struct gpio_chip **ptr;
- 	int ret;
-@@ -512,7 +515,7 @@ int devm_gpiochip_add_data(struct device *dev, struct gpio_chip *gc,
- 	if (!ptr)
- 		return -ENOMEM;
+@@ -2060,7 +2060,7 @@ bool pcie_relaxed_ordering_enabled(struct pci_dev *dev)
  
--	ret = gpiochip_add_data(gc, data);
-+	ret = gpiochip_add_data_with_key(gc, data, lock_key, request_key);
- 	if (ret < 0) {
- 		devres_free(ptr);
- 		return ret;
-@@ -523,4 +526,4 @@ int devm_gpiochip_add_data(struct device *dev, struct gpio_chip *gc,
+ 	pcie_capability_read_word(dev, PCI_EXP_DEVCTL, &v);
  
- 	return 0;
+-	return !!(v & PCI_EXP_DEVCTL_RELAX_EN);
++	return ((v != (u16)~0) && (v & PCI_EXP_DEVCTL_RELAX_EN));
  }
--EXPORT_SYMBOL_GPL(devm_gpiochip_add_data);
-+EXPORT_SYMBOL_GPL(devm_gpiochip_add_data_with_key);
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index c4f272af7af5..e6217d8e2e9f 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -509,8 +509,16 @@ extern int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 		gpiochip_add_data_with_key(gc, data, &lock_key, \
- 					   &request_key);	  \
- 	})
-+#define devm_gpiochip_add_data(dev, gc, data) ({ \
-+		static struct lock_class_key lock_key;	\
-+		static struct lock_class_key request_key;	  \
-+		devm_gpiochip_add_data_with_key(dev, gc, data, &lock_key, \
-+					   &request_key);	  \
-+	})
- #else
- #define gpiochip_add_data(gc, data) gpiochip_add_data_with_key(gc, data, NULL, NULL)
-+#define devm_gpiochip_add_data(dev, gc, data) \
-+	devm_gpiochip_add_data_with_key(dev, gc, data, NULL, NULL)
- #endif /* CONFIG_LOCKDEP */
+ EXPORT_SYMBOL(pcie_relaxed_ordering_enabled);
  
- static inline int gpiochip_add(struct gpio_chip *gc)
-@@ -518,8 +526,9 @@ static inline int gpiochip_add(struct gpio_chip *gc)
- 	return gpiochip_add_data(gc, NULL);
- }
- extern void gpiochip_remove(struct gpio_chip *gc);
--extern int devm_gpiochip_add_data(struct device *dev, struct gpio_chip *gc,
--				  void *data);
-+extern int devm_gpiochip_add_data_with_key(struct device *dev, struct gpio_chip *gc, void *data,
-+					   struct lock_class_key *lock_key,
-+					   struct lock_class_key *request_key);
+@@ -2101,11 +2101,11 @@ static void pci_configure_ltr(struct pci_dev *dev)
+ 		return;
  
- extern struct gpio_chip *gpiochip_find(void *data,
- 			      int (*match)(struct gpio_chip *gc, void *data));
+ 	pcie_capability_read_dword(dev, PCI_EXP_DEVCAP2, &cap);
+-	if (!(cap & PCI_EXP_DEVCAP2_LTR))
++	if ((cap == (u32)~0) || !(cap & PCI_EXP_DEVCAP2_LTR))
+ 		return;
+ 
+ 	pcie_capability_read_dword(dev, PCI_EXP_DEVCTL2, &ctl);
+-	if (ctl & PCI_EXP_DEVCTL2_LTR_EN) {
++	if ((ctl != (u32)~0) && (ctl & PCI_EXP_DEVCTL2_LTR_EN)) {
+ 		if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) {
+ 			dev->ltr_path = 1;
+ 			return;
+@@ -2147,7 +2147,7 @@ static void pci_configure_eetlp_prefix(struct pci_dev *dev)
+ 		return;
+ 
+ 	pcie_capability_read_dword(dev, PCI_EXP_DEVCAP2, &cap);
+-	if (!(cap & PCI_EXP_DEVCAP2_EE_PREFIX))
++	if ((cap == (u32)~0) || !(cap & PCI_EXP_DEVCAP2_EE_PREFIX))
+ 		return;
+ 
+ 	pcie_type = pci_pcie_type(dev);
 -- 
-2.27.0
+2.18.4
 
