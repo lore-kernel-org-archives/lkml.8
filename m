@@ -2,167 +2,180 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 027D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B15EDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C33AB20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D3902245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:08:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rli980ko"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p4vRZh00"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732607AbgGaK6e (ORCPT
+        id S1732584AbgGaLIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 06:58:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46476 "EHLO
+        Fri, 31 Jul 2020 07:08:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729141AbgGaK6e (ORCPT
+        with ESMTP id S1732104AbgGaLII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 06:58:34 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9C6EC061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 03:58:33 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id e64so31222861iof.12
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 03:58:33 -0700 (PDT)
+        Fri, 31 Jul 2020 07:08:08 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4512EC061575
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 04:08:08 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id s81so1819401vkb.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 04:08:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=atvDp6J9S9UphQS2KC0AkwktCLxJNBc+ILJ3smYnHdU=;
-        b=rli980koGd1kgmFsVlyqWdra6dMO4bC6Yi4MNRh/aFjXRN3u6MB4SVjncpEbbnQF/H
-         pjELWlbAvBZ48IThZhDem+4gL6v1C4AneETr/pWXAem2wofMVuJwW5zr5UDwLrh7brJE
-         ymiOBKCj0SoVI5Tbav8PcOzOd2z3c3TgNRA3PMTdgEq/FFCqEprvwlmUoUfaI8dgCKxd
-         2MgMe81U/1R3EHnW1ZX1azw7Y3/S3Iq/e69QWRVeuyg+4xKNrltzzf7ppYnEDgQ4PN6F
-         2fHI2eh5NdmGxNibPHYEdUfogGvy9mVXpJl7q7MA9/whIEerId3Hbegl/oO9hzBP8EOU
-         /C3w==
+         :cc;
+        bh=4RtuJYuOeZ9aZxW7KJ9m2nVUm4WzUl8yyClqrsCRb5w=;
+        b=p4vRZh00sf8zba/lrM/YmR3JmpmBBlB39gKQECas6LCuOiZJb/tlXwrpS9TB6as9cZ
+         dAWaUg0BX3uq2NGxG3eX0sTRYo/004YRFDSCm7ZwNgkzyrIRXIEt0IxfmlxfTWE6sRAz
+         FIdkGiwe5PNnxossM18nzlc7h/1bjc6t6/O0pewcF35Z1q9AhhRFGG8S4LSJ8DbYpA+W
+         kWXsRFoYRS1jY6wri/TGLrdk7kZw0X1PM2SMOP8IyLx/63RklVMN0cGcG7PpMVwxkYp5
+         x1bM+2Py+79Vb6dnQhvpKIXSSO6n+Td1LSE7Ai2mhRGvja60PjK8NP9f17aLd0NqpGt0
+         ZV+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=atvDp6J9S9UphQS2KC0AkwktCLxJNBc+ILJ3smYnHdU=;
-        b=MdD53mbeYOqfPeYYTjCL5Ij18Kw/hshogatUz26oPC36J96xijjFoVBewmn9dToF7m
-         JRtSRpnoB7VF1JjImLdPxpRevOXGZGdQ0jUwKbcyfaY6pfUbzHkv4Frev4UlL4A8p8p2
-         0Ntm1sBTb2oK5It8bi9SoyF7FU3jVB7twV66fJvSNNYlFv6LlYHDxeOn5/ppRmMagEzo
-         kd6d+SaV9u+mHY0EnMVUMWRb5WHDESZCpL3TVfnsvan96XUHW5eYn8+lZxWSPqmzCAfg
-         M888XEN8Afrqu8MqkrKNIOdglEsyyedHNvBB5Kqi5rjQV9gwmp/OOoID9WnTeLi7/1WS
-         qIVg==
-X-Gm-Message-State: AOAM532hhBcAdWvbxDjfmhia9l6BRkCePqlvgA+jWppHU3vA8276V8Fz
-        JI046PG0Kv9mNFJXciR1nGc+13y1dmiF8yFe1DE=
-X-Google-Smtp-Source: ABdhPJw3IUJGVTABwss1bI3N0AsfeVswdlGTGp6kTwD01l5sJFonpgH2ry/SoQ8R0bi1Z2nP/8iAoO4Oy0c24W0+u90=
-X-Received: by 2002:a5e:d519:: with SMTP id e25mr3084419iom.36.1596193113186;
- Fri, 31 Jul 2020 03:58:33 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=4RtuJYuOeZ9aZxW7KJ9m2nVUm4WzUl8yyClqrsCRb5w=;
+        b=IaEX0Z3AzcapVDWLOWZqGwWaalQaQ/bTyY1vdC/hKyZA3HzW4ZurwMYOC5WUVE8tqy
+         s46ouvDqyCnqariR9UDNoVfGC+yy+nXinbaYD/cVcF6hWPEYm+vj1NuUoQelEOpUhRTX
+         WqciyHGa9Vdwk+5RYxeqBp9wH3MV4yYFz6Au0TbM3FjABnu3IHz1eIx1afZOGMB1ISwx
+         zaQYibWexp9b4cmcuZf+2xK9eNzRwR6AmS2mza3XUrw4f7R0/wF5wpeuv5rnbJae/pkY
+         5HV4JQwh71lncy+Gx4dcg7Z5p+YlFaep5CFim+ILhTyaPh1zcJbVrlNhAHS2OTmeryM7
+         0wcQ==
+X-Gm-Message-State: AOAM533w2ql2G2Z4nyhEIReGun4C2wOw5f4MED6kHMxKvWYhfC96m4k6
+        Q0Ny8/TYAB4XVIw41/nh7ky8RBhS1tudUyfa1LEXZA==
+X-Google-Smtp-Source: ABdhPJzQyptXAlQYJLkRPSg4Su00OAWYAwwnoqrl5meRHgp+FUZVASGE8GpdpE2TWoG+mVS2cMQT/lqxDPIpYdBMSCY=
+X-Received: by 2002:ac5:cce9:: with SMTP id k9mr2180291vkn.17.1596193687096;
+ Fri, 31 Jul 2020 04:08:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <1594983811-25908-1-git-send-email-gene.chen.richtek@gmail.com>
- <1594983811-25908-5-git-send-email-gene.chen.richtek@gmail.com>
- <20200727112921.GK1850026@dell> <CAE+NS36cxY9KqxxcmuctK_W_3ZmZnC_xK8VVVaTZqC3vSoqbUw@mail.gmail.com>
- <20200728065422.GB1850026@dell>
-In-Reply-To: <20200728065422.GB1850026@dell>
-From:   Gene Chen <gene.chen.richtek@gmail.com>
-Date:   Fri, 31 Jul 2020 10:58:21 +0800
-Message-ID: <CAE+NS34OFVf36zp7Nn0ETZ5KEaTet-P_VdPMuiZgqo1HfNxeYA@mail.gmail.com>
-Subject: Re: [PATCH v2 4/9] mfd: mt6360: Combine mt6360 pmic/ldo resouces into
- mt6360 regulator resources
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Gene Chen <gene_chen@richtek.com>, benjamin.chao@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com
+References: <20200724091520.880211-1-tweek@google.com> <20200724095232.5f9d3f17@oasis.local.home>
+ <80a23580-5067-93b0-53fa-3bd53253c056@sony.com>
+In-Reply-To: <80a23580-5067-93b0-53fa-3bd53253c056@sony.com>
+From:   =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
+Date:   Fri, 31 Jul 2020 13:07:50 +0200
+Message-ID: <CA+zpnLd+bTbhiVutj=DpfTHkJFsXqodu+PekqTPDcBB+UKsoaw@mail.gmail.com>
+Subject: Re: [PATCH] RFC: selinux avc trace
+To:     peter enderborg <peter.enderborg@sony.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Nick Kralevich <nnk@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> =E6=96=BC 2020=E5=B9=B47=E6=9C=8828=E6=97=
-=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=882:54=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On Tue, 28 Jul 2020, Gene Chen wrote:
->
-> > Lee Jones <lee.jones@linaro.org> =E6=96=BC 2020=E5=B9=B47=E6=9C=8827=E6=
-=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=887:29=E5=AF=AB=E9=81=93=EF=BC=9A
-> > >
-> > > On Fri, 17 Jul 2020, Gene Chen wrote:
-> > >
-> > > > From: Gene Chen <gene_chen@richtek.com>
-> > > >
-> > > > Combine mt6360 pmic/ldo resouces into mt6360 regulator resources
-> > > > to simplify the similar resources object.
-> > >
-> > > Do the sub-devices actually share these resources, or are you doing
-> > > this just to make the code simpler?
-> > >
-> >
-> > They are different resources used by different bucks and ldos without
-> > sharing relations.
-> > I just to make the code simpler.
->
-> I don't think that's sensible.
->
-> You should only share resources with child devices that consume them.
->
+Thanks Peter, this looks like a great start.
 
-At first, I separated regulators into two drivers, mt6360-pmic.c and
-mt6360-ldo.c, according to default-on power or not.
-Then, I merged two drivers into mt6360-regulator.c and merged their
-resources as well.
-Therefore, for every device of BUCK/LDO, I'll find resources according
-to their name and request IRQs.
+> Perhaps the two of you could work together to come up with a common
+tracepoint that addresses both needs.
 
-> > > > Signed-off-by: Gene Chen <gene_chen@richtek.com>
-> > > > ---
-> > > >  drivers/mfd/mt6360-core.c | 11 +++--------
-> > > >  1 file changed, 3 insertions(+), 8 deletions(-)
-> > > >
-> > > > diff --git a/drivers/mfd/mt6360-core.c b/drivers/mfd/mt6360-core.c
-> > > > index 7cc1b59..665e26f 100644
-> > > > --- a/drivers/mfd/mt6360-core.c
-> > > > +++ b/drivers/mfd/mt6360-core.c
-> > > > @@ -265,7 +265,7 @@ static const struct resource mt6360_led_resourc=
-es[] =3D {
-> > > >       DEFINE_RES_IRQ_NAMED(MT6360_FLED1_STRB_TO_EVT, "fled1_strb_to=
-_evt"),
-> > > >  };
-> > > >
-> > > > -static const struct resource mt6360_pmic_resources[] =3D {
-> > > > +static const struct resource mt6360_regulator_resources[] =3D {
-> > > >       DEFINE_RES_IRQ_NAMED(MT6360_BUCK1_PGB_EVT, "buck1_pgb_evt"),
-> > > >       DEFINE_RES_IRQ_NAMED(MT6360_BUCK1_OC_EVT, "buck1_oc_evt"),
-> > > >       DEFINE_RES_IRQ_NAMED(MT6360_BUCK1_OV_EVT, "buck1_ov_evt"),
-> > > > @@ -278,9 +278,6 @@ static const struct resource mt6360_pmic_resour=
-ces[] =3D {
-> > > >       DEFINE_RES_IRQ_NAMED(MT6360_LDO7_OC_EVT, "ldo7_oc_evt"),
-> > > >       DEFINE_RES_IRQ_NAMED(MT6360_LDO6_PGB_EVT, "ldo6_pgb_evt"),
-> > > >       DEFINE_RES_IRQ_NAMED(MT6360_LDO7_PGB_EVT, "ldo7_pgb_evt"),
-> > > > -};
-> > > > -
-> > > > -static const struct resource mt6360_ldo_resources[] =3D {
-> > > >       DEFINE_RES_IRQ_NAMED(MT6360_LDO1_OC_EVT, "ldo1_oc_evt"),
-> > > >       DEFINE_RES_IRQ_NAMED(MT6360_LDO2_OC_EVT, "ldo2_oc_evt"),
-> > > >       DEFINE_RES_IRQ_NAMED(MT6360_LDO3_OC_EVT, "ldo3_oc_evt"),
-> > > > @@ -298,10 +295,8 @@ static const struct mfd_cell mt6360_devs[] =3D=
- {
-> > > >                   NULL, 0, 0, "mediatek,mt6360-chg"),
-> > > >       OF_MFD_CELL("mt6360-led", mt6360_led_resources,
-> > > >                   NULL, 0, 0, "mediatek,mt6360-led"),
-> > > > -     OF_MFD_CELL("mt6360-pmic", mt6360_pmic_resources,
-> > > > -                 NULL, 0, 0, "mediatek,mt6360-pmic"),
-> > > > -     OF_MFD_CELL("mt6360-ldo", mt6360_ldo_resources,
-> > > > -                 NULL, 0, 0, "mediatek,mt6360-ldo"),
-> > > > +     OF_MFD_CELL("mt6360-regulator", mt6360_regulator_resources,
-> > > > +                 NULL, 0, 0, "mediatek,mt6360-regulator"),
-> > > >       OF_MFD_CELL("mt6360-tcpc", NULL,
-> > > >                   NULL, 0, 0, "mediatek,mt6360-tcpc"),
-> > > >  };
-> > >
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> Senior Technical Lead - Developer Services
-> Linaro.org =E2=94=82 Open source software for Arm SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+Agreed.
+
+> 1 Filtering. Types goes to trace so we can put up a filter for contexts or type etc.
+
+That's right. I think this is the main reason why we would need
+further attributes in the trace event.
+
+> 2 It tries also to cover non denies.  And upon that you should be able to do coverage tools.
+> I think many systems have a lot more rules that what is needed, but there is good way
+> to find out what.  A other way us to make a stat page for the rules, but this way connect to
+> userspace and can be used for test cases.
+
+This is a great idea too.
+
+>> On the one hand, we don't need/want to duplicate the avc message
+>> itself; we just need enough to be able to correlate them.
+>> With respect to non-denials, SELinux auditallow statements can be used
+>> to generate avc: granted messages that can be used to support coverage
+>> tools although you can easily flood the logs that way.  One other
+> That is one reason to use trace.
+
+Yes, that's right. I don't have any concern about the flooding here.
+As Peter mentioned, trace is specially designed for this purpose.
+
+On the patch, few things to note:
+
+> ---
+> +#include <linux/tracepoint.h>
+> +TRACE_EVENT(avc_data,
+> +        TP_PROTO(u32 requested,
+> +             u32 denied,
+> +             u32 audited,
+> +             int result,
+> +             const char *msg
+> +             ),
+
+I would not store the raw msg from avc. As we discussed, it is useful
+to be able to match against the values we are seeing in the avc denial
+message but these attributes should be simple (as opposed to
+composite) so the filtering can easily be setup (see section 5.1 in
+https://www.kernel.org/doc/Documentation/trace/events.txt). It makes
+more sense extracting scontext and tcontext (for instance) which
+allows for a precise filtering setup.
+
+Here, I would also pass down the "struct selinux_audit_data" to avoid
+a large list of arguments.
+
+> +TRACE_EVENT(avc_req,
+> +        TP_PROTO(u32 requested,
+> +             u32 denied,
+> +             u32 audited,
+> +             int result,
+> +             const char *msg,
+> +             u32 ssid,
+> +             struct selinux_state *state
+> +             ),
+
+I don't see that event being used later on. What was the intention here?
+
+> +static int avc_dump_querys(struct selinux_state *state, char *ab, u32 ssid, u32 tsid, u16 tclass)
+> +{
+> +    int rc;
+> +    char *scontext;
+> +    u32 scontext_len;
+> +    int rp;
+> +
+> +    rc = security_sid_to_context(state,ssid, &scontext, &scontext_len);
+> +    if (rc)
+> +        rp = sprintf(ab, "ssid=%d", ssid);
+> +    else {
+> +        rp = sprintf(ab, "scontext=%s", scontext);
+> +        kfree(scontext);
+> +    }
+> +
+> +    rc = security_sid_to_context(state, tsid, &scontext, &scontext_len);
+> +    if (rc)
+> +        rp +=sprintf(ab+rp, " tsid=%d", tsid);
+> +    else {
+> +        rp +=sprintf(ab+rp, " tcontext=%s", scontext);
+> +        kfree(scontext);
+> +    }
+> +
+> +    BUG_ON(!tclass || tclass >= ARRAY_SIZE(secclass_map));
+> +    rp += sprintf(ab+rp, " tclass=%s", secclass_map[tclass-1].name);
+> +    return rp;
+> +}
+
+As I mentioned before, this is literally repeating the avc audit
+message. We are better off storing the exact fields we are interested
+in, so that the filtering is precise.
+
+Thanks
