@@ -2,162 +2,58 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACC5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 674C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFA2F20829
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 324692084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:00:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732027AbgGaI7y (ORCPT
+        id S1732047AbgGaJAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:59:54 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54584 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732002AbgGaI7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 04:59:54 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8D30C5935469A8C5426D;
-        Fri, 31 Jul 2020 16:59:51 +0800 (CST)
-Received: from DESKTOP-KKJBAGG.china.huawei.com (10.174.186.173) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 31 Jul 2020 16:59:43 +0800
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-To:     <pbonzini@redhat.com>
-CC:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yezhenyu2@huawei.com>, <xiexiangyou@huawei.com>
-Subject: [PATCH v1] ioeventfd: introduce get_ioeventfd()
-Date:   Fri, 31 Jul 2020 16:59:39 +0800
-Message-ID: <20200731085939.629-1-yezhenyu2@huawei.com>
-X-Mailer: git-send-email 2.22.0.windows.1
+        Fri, 31 Jul 2020 05:00:12 -0400
+Received: from verein.lst.de ([213.95.11.211]:58594 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731998AbgGaJAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 05:00:11 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 5382768BFE; Fri, 31 Jul 2020 11:00:09 +0200 (CEST)
+Date:   Fri, 31 Jul 2020 11:00:08 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 8/8] modules: inherit TAINT_PROPRIETARY_MODULE
+Message-ID: <20200731090008.GA12930@lst.de>
+References: <20200730061027.29472-1-hch@lst.de> <20200730061027.29472-9-hch@lst.de> <20200730141232.GA31539@linux-8ccs> <20200730162957.GA22469@lst.de> <20200731085129.GA20130@linux-8ccs>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.186.173]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200731085129.GA20130@linux-8ccs>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Get corresponding ioeventfd from kvm->ioeventfds. If no match
-is found, return NULL.  This is used in kvm_assign_ioeventfd_idx()
-and kvm_deassign_ioeventfd_idx().
+On Fri, Jul 31, 2020 at 10:51:30AM +0200, Jessica Yu wrote:
+>> +	if (mod->using_gplonly_symbols) {
+>> +		pr_info("%s: module using GPL-only symbols uses symbols from proprietary module %s.\n",
+>> +			mod->name, owner->name);
+>
+> pr_err() maybe?
+>
+>> +		return false;
+>> +	}
+>> +
+>> +	if (!test_bit(TAINT_PROPRIETARY_MODULE, &mod->taints)) {
+>> +		pr_info("%s: module uses symbols from proprietary module %s, inheriting taint.\n",
+>> +			mod->name, owner->name);
+>
+> and pr_warn()? But otherwise this looks much better.
 
-Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
----
- virt/kvm/eventfd.c | 53 ++++++++++++++++++++++++----------------------
- 1 file changed, 28 insertions(+), 25 deletions(-)
-
-diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
-index ef7ed916ad4a..77f7d81c1138 100644
---- a/virt/kvm/eventfd.c
-+++ b/virt/kvm/eventfd.c
-@@ -28,6 +28,11 @@
- 
- #include <kvm/iodev.h>
- 
-+#define warn_if(expr, msg) do {				\
-+	if (expr)					\
-+		pr_warn("ioeventfd: %s\n", msg);	\
-+} while (0)
-+
- #ifdef CONFIG_HAVE_KVM_IRQFD
- 
- static struct workqueue_struct *irqfd_cleanup_wq;
-@@ -756,21 +761,23 @@ static const struct kvm_io_device_ops ioeventfd_ops = {
- };
- 
- /* assumes kvm->slots_lock held */
--static bool
--ioeventfd_check_collision(struct kvm *kvm, struct _ioeventfd *p)
-+static inline struct _ioeventfd *
-+get_ioeventfd(struct kvm *kvm, enum kvm_bus bus_idx,
-+	      struct kvm_ioeventfd *args)
- {
--	struct _ioeventfd *_p;
-+	static struct _ioeventfd *_p;
-+	bool wildcard = !(args->flags & KVM_IOEVENTFD_FLAG_DATAMATCH);
- 
- 	list_for_each_entry(_p, &kvm->ioeventfds, list)
--		if (_p->bus_idx == p->bus_idx &&
--		    _p->addr == p->addr &&
--		    (!_p->length || !p->length ||
--		     (_p->length == p->length &&
--		      (_p->wildcard || p->wildcard ||
--		       _p->datamatch == p->datamatch))))
--			return true;
-+		if (_p->bus_idx == bus_idx &&
-+		    _p->addr == args->addr &&
-+		    (!_p->length || !args->len ||
-+		     (_p->length == args->len &&
-+		      (_p->wildcard || wildcard ||
-+		       _p->datamatch == args->datamatch))))
-+			return _p;
- 
--	return false;
-+	return NULL;
- }
- 
- static enum kvm_bus ioeventfd_bus_from_flags(__u32 flags)
-@@ -816,7 +823,7 @@ static int kvm_assign_ioeventfd_idx(struct kvm *kvm,
- 	mutex_lock(&kvm->slots_lock);
- 
- 	/* Verify that there isn't a match already */
--	if (ioeventfd_check_collision(kvm, p)) {
-+	if (get_ioeventfd(kvm, bus_idx, args)) {
- 		ret = -EEXIST;
- 		goto unlock_fail;
- 	}
-@@ -849,7 +856,7 @@ static int
- kvm_deassign_ioeventfd_idx(struct kvm *kvm, enum kvm_bus bus_idx,
- 			   struct kvm_ioeventfd *args)
- {
--	struct _ioeventfd        *p, *tmp;
-+	struct _ioeventfd        *p;
- 	struct eventfd_ctx       *eventfd;
- 	struct kvm_io_bus	 *bus;
- 	int                       ret = -ENOENT;
-@@ -860,18 +867,15 @@ kvm_deassign_ioeventfd_idx(struct kvm *kvm, enum kvm_bus bus_idx,
- 
- 	mutex_lock(&kvm->slots_lock);
- 
--	list_for_each_entry_safe(p, tmp, &kvm->ioeventfds, list) {
-+	p = get_ioeventfd(kvm, bus_idx, args);
-+	if (p) {
- 		bool wildcard = !(args->flags & KVM_IOEVENTFD_FLAG_DATAMATCH);
--
--		if (p->bus_idx != bus_idx ||
--		    p->eventfd != eventfd  ||
--		    p->addr != args->addr  ||
--		    p->length != args->len ||
--		    p->wildcard != wildcard)
--			continue;
--
--		if (!p->wildcard && p->datamatch != args->datamatch)
--			continue;
-+		warn_if(p->eventfd != eventfd, "eventfd should be the same!");
-+		warn_if(p->length != args->len,	"length should be the same!");
-+		warn_if(p->length && p->wildcard != wildcard,
-+				"wildcard should be the same!");
-+		warn_if(p->length && !p->wildcard && p->datamatch != args->datamatch,
-+				"datamatch should be the same!");
- 
- 		kvm_io_bus_unregister_dev(kvm, bus_idx, &p->dev);
- 		bus = kvm_get_bus(kvm, bus_idx);
-@@ -879,7 +883,6 @@ kvm_deassign_ioeventfd_idx(struct kvm *kvm, enum kvm_bus bus_idx,
- 			bus->ioeventfd_count--;
- 		ioeventfd_release(p);
- 		ret = 0;
--		break;
- 	}
- 
- 	mutex_unlock(&kvm->slots_lock);
--- 
-2.19.1
-
-
+Ok with me.  Can you just fix it up, or do you want a full resend?
