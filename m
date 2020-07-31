@@ -2,77 +2,189 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A45C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEA2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24556208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:49:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596235750;
-	bh=CGZPpSPwU4Ft3nkQSct8Yfba5pnYrv+k1vzWI7Vvo14=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zStY/sKMK3a7qvrNe66IZnl3FGZVhIl0Jins89zd6bC1ymhc/RSMyLgI/vgHHzJbP
-	 llpyXZhuH9S/NmcODkxEF4TaQiX+WZ76SfKqzSLb7RrsuKjDIFpyJnmi0HwtTddyUb
-	 Rjl4E3zexrG04EqU0ALBPdy8yE2D/Xu33SGCx+4M=
+	by mail.kernel.org (Postfix) with ESMTP id D760E208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:49:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0PbYsZp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgGaWtJ (ORCPT
+        id S1727120AbgGaWtj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 18:49:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55514 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726099AbgGaWtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 18:49:08 -0400
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DBCA208E4;
-        Fri, 31 Jul 2020 22:49:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596235748;
-        bh=CGZPpSPwU4Ft3nkQSct8Yfba5pnYrv+k1vzWI7Vvo14=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=V1by968qfs6cOZcU1RGIjbf0/lSp2y69tB7AD7jaJVYjK/s+8Rpc6j+mbnOtl3Ruk
-         5XfDh9lJyYT1Z/TPZ3BcjJ6Z5b8MdR5eb6YhNPIVejjJVR3R5PzcvsZEmS1A2N3miE
-         Hs7vZ/3sFCu6aySFDws88EpbodvX09gz1GOHmz1M=
-Received: by mail-lj1-f182.google.com with SMTP id q7so33978606ljm.1;
-        Fri, 31 Jul 2020 15:49:07 -0700 (PDT)
-X-Gm-Message-State: AOAM5320jpW8nJbMhexCWq5JJjnWtV4nktQ7LkHJsqbaRobsZpGi//Ax
-        ZM3QGhCwCX5qJ4AVUuiL1Ns6TqyU16kAzs1nzIo=
-X-Google-Smtp-Source: ABdhPJxzRPwQz1lTk777pWHRA3nE93WDPkgpLtBySMa4XjqNP/eILmq6dAu6ohDnYHZqED3FUVOUjsoU0/sg2yfgUaw=
-X-Received: by 2002:a2e:88c6:: with SMTP id a6mr2752812ljk.27.1596235746330;
- Fri, 31 Jul 2020 15:49:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200730212310.2609108-1-guro@fb.com> <20200730212310.2609108-2-guro@fb.com>
-In-Reply-To: <20200730212310.2609108-2-guro@fb.com>
-From:   Song Liu <song@kernel.org>
-Date:   Fri, 31 Jul 2020 15:48:55 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5X5tWGspKwwtJdsRgE8xu=4TsDF5+=sR7k+yco=9Uz0Q@mail.gmail.com>
-Message-ID: <CAPhsuW5X5tWGspKwwtJdsRgE8xu=4TsDF5+=sR7k+yco=9Uz0Q@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 01/29] bpf: memcg-based memory accounting for
- bpf progs
-To:     Roman Gushchin <guro@fb.com>
-Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>,
+        Fri, 31 Jul 2020 18:49:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42818 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgGaWti (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 18:49:38 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AF04C06174A;
+        Fri, 31 Jul 2020 15:49:38 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id b14so28628070qkn.4;
+        Fri, 31 Jul 2020 15:49:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KldUXxywDI2lybh6bj7T/diBCppFO1Ycr5/0d2oq2Kw=;
+        b=f0PbYsZpguL0x4cQoCXf/NJ0Fgg1tekz7mQomMv/Y4eD3nk6O/K16CNToj7A6ZB8u6
+         hD4U8hnkjkDZZZzrNnXXgJoCu8VsCVEMEMons8FqGjzYBT23GS9UwHzdcna69VD+E3uL
+         ZXN5WxKdhNE5dxTbe6odKZgUfVCBAlK3NgO/DNBfAErKZDvBsPZYpN+uftz6+WYWYDPy
+         qdEy9nCci5AeM1YvkTbGE6LzUydZ85LmbFNmwI1PcX5DA6eZe6/dMoDp2fk+Vr9FUWri
+         75YHg/FKacuNh9KybVZISAodoHsif/mM4PfITRzvpr5UHemuKULCR4UP5BT9NMkiB5R7
+         9wGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=KldUXxywDI2lybh6bj7T/diBCppFO1Ycr5/0d2oq2Kw=;
+        b=Pv1jUR4D4WOh4Hl3V3ZBsrbhzxcPcF5TJWFgVMQSWA8P9vcVXakj1XRnZYEdyXLkH/
+         gnRJcPah4fH7vSyVy9vLhQNT5um1WDBSpxbHEZr/A3ssvKyxnYs6LLmdnfJbFvYvWnBl
+         WxJgoCTdPtJffwH9tYS3nYYYBhuW6ynnSlIqB2W9Uyikt1MW57+3wGQ+UZ9fImvaIrKF
+         kWF+zLoeMv85+41An5nglZMxF2t09std4PK0OMI70TyBk/CqWjTidlSC3PE9pAKjP0L+
+         Sy9QaT/beqFjNjnl/Jdy7fjiWnfc2z84J4fHsUng2vSUJDwrWteZedjwkyzLBECZz9Vj
+         5XUg==
+X-Gm-Message-State: AOAM531v3eKff8qWVP4ozSdsJdlH+xZiPKdRy1XY8TnQsPtlmqChmH9k
+        NeIGgA7iRDTwecSZK5HoQanWjD+8
+X-Google-Smtp-Source: ABdhPJyDDpLtaqgVw5b/rqNhxR801xyrnKQCOq653pE5P8Cm4Cb83rkzNVqOCJNkxi5z2wE2HxLXPg==
+X-Received: by 2002:a05:620a:48c:: with SMTP id 12mr6399491qkr.452.1596235777420;
+        Fri, 31 Jul 2020 15:49:37 -0700 (PDT)
+Received: from [10.67.50.75] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id r6sm9953894qtt.81.2020.07.31.15.49.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jul 2020 15:49:36 -0700 (PDT)
+Subject: Re: [PATCH] MIPS: BMIPS: Disable pref 30 for buggy CPUs
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-mips@linux-mips.org
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
+        <linux-mips@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <20200731042401.22871-1-f.fainelli@gmail.com>
+ <21ad5472-1287-acba-5604-09f2e633c043@flygoat.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <46de49ec-cc8b-708a-0cdd-82389b041078@gmail.com>
+Date:   Fri, 31 Jul 2020 15:49:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <21ad5472-1287-acba-5604-09f2e633c043@flygoat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 2:28 PM Roman Gushchin <guro@fb.com> wrote:
->
-> Include memory used by bpf programs into the memcg-based accounting.
-> This includes the memory used by programs itself, auxiliary data
-> and statistics.
->
-> Signed-off-by: Roman Gushchin <guro@fb.com>
+On 7/31/20 3:34 AM, Jiaxun Yang wrote:
+> 
+> 
+> 在 2020/7/31 下午12:24, Florian Fainelli 写道:
+>> Disable pref 30 by utilizing the standard quirk method and matching the
+>> affected SoCs: 7344, 7346, 7425.
+>>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>> ---
+>>   arch/mips/bmips/setup.c | 17 +++++++++++++++++
+>>   1 file changed, 17 insertions(+)
+>>
+>> diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
+>> index 19308df5f577..df0efea12611 100644
+>> --- a/arch/mips/bmips/setup.c
+>> +++ b/arch/mips/bmips/setup.c
+>> @@ -110,6 +110,20 @@ static void bcm6368_quirks(void)
+>>       bcm63xx_fixup_cpu1();
+>>   }
+>>   +static void bmips5000_pref30_quirk(void)
+>> +{
+>> +    __asm__ __volatile__(
+>> +    "    li    $8, 0x5a455048\n"
+>> +    "    .word    0x4088b00f\n"    /* mtc0 $8, $22, 15 */
+>> +    "    nop; nop; nop\n"
+>> +    "    .word    0x4008b008\n"    /* mfc0 $8, $22, 8 */
+>> +    /* disable "pref 30" on buggy CPUs */
+>> +    "    lui    $9, 0x0800\n"
+>> +    "    or    $8, $9\n"
+>> +    "    .word    0x4088b008\n"    /* mtc0 $8, $22, 8 */
+>> +    : : : "$8", "$9");
+>> +}
+> Hi,
+> 
+> Is there any toolchain issue blocking read_c0_**** family helpers being
+> used?
+> 
+> Use .word looks unreasonable.
 
-Acked-by: Song Liu <songliubraving@fb.com>
+Yes, the assembler would be choking on the custom $22 selector, however
+this patch should not be necessary given that the boot loader (CFE)
+should have long been updated by now to disable pref 30.
+
+Thanks
+-- 
+Florian
