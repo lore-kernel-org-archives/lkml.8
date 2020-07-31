@@ -3,109 +3,146 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 709B1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B962C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47493208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:21:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596187312;
-	bh=fEkgmR7JykmZIABEmsxw/RbH/+WeDb5aN/r+gG+nbSc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ep1uWxWaA0Bt3Z/OV+CArv2L2trNggAPvYqLXeCofyJriSvXsoLwbYjtzqjzsA72z
-	 EqIC5jvfTf3tRiw5Nxpo2HB517+ycrJAPNSsCh/gdr1nEOfA/FQC4n0nwqhkX+HbGL
-	 CmrAUMv9QV71GghNH5cnfIR8WlHlNmsLmvZe9A6g=
+	by mail.kernel.org (Postfix) with ESMTP id 5953C208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:22:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IjROntUA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732098AbgGaJVv (ORCPT
+        id S1732116AbgGaJWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:21:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732076AbgGaJVu (ORCPT
+        Fri, 31 Jul 2020 05:22:17 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52105 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732037AbgGaJWQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:21:50 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34192C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 02:21:50 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id jp10so4192338ejb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 02:21:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dNrpXoN0P7Mw0lDt7PtL/XatWZHmnShSjWiq3ODdZQ4=;
-        b=W8rDMRmVvDEfiMxVSsc0Ry+ZIZvEJDoUHD/XK9c6dGxB5rJYdWq8Th1/LAZTaiQCYC
-         pb/YQ0gEAv1CNWhjD/qgrbxiq37mnqInHyZrBBtwm6yhaCm0Xbzgd8zet0tKCHLNnYXl
-         ceWYTQy7CfHX1M7tezpJJUpATZQHf7CQ0ve/a2NpksQoGjz+7TbAcputXAhJAEZt7I98
-         q5L+vJQQXt7y/Bb/RjuFJRRndLkLBxvTDoJ5zgLxaqtASfg+gD4XCxTnYtTPk0X6Us94
-         vl3UPgV9KpgRa0z9A/JsA5cEWzXqNoc92I06OehYRzF6osx/3WzPsUNVPteJ+gAKn5qE
-         IZuw==
+        Fri, 31 Jul 2020 05:22:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596187334;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=nbjq+Qd3z4uniercrgDzYmhwtwrHGx+NiF3QyYytaOI=;
+        b=IjROntUAXx3B2xHJEqPeUMVOnuqNcMf4+Cy7c7tPTvBI7jrvv+mWZSlWZ90ljAJHuLA0LZ
+        CRHLT3V5iEMd89hd5P2k1Umn5O4e4AFCjoxz2n5nrbIM4QHvk84hWq4g+EIpXEatZqOLQP
+        u5xohD7yOh71wASvlQylUEKZI8Xeev8=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-424-9xsDaQfSNKSjPXdZQjKKHQ-1; Fri, 31 Jul 2020 05:22:12 -0400
+X-MC-Unique: 9xsDaQfSNKSjPXdZQjKKHQ-1
+Received: by mail-ej1-f70.google.com with SMTP id i23so6990596ejx.11
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 02:22:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=dNrpXoN0P7Mw0lDt7PtL/XatWZHmnShSjWiq3ODdZQ4=;
-        b=kUZ7fSsqpeVWxxmJNqxp33sXDMR5shdW9G8qgtFGKakI8LDbj4OS/OuoBlkqDf99cP
-         kAYp49vSB+1fPwUDihIA1/S8xMdKhLYxOGmEW5yod85u0QjxUPP57Qxo37qNeNVu3y1Z
-         asrtjjJenHWyXO6Uu1XmFE6DwZ2gC15LgbgwvnozLKeR0iTnlLdErp4sqjEEsSBWAhxn
-         g3tbdAiYQWjy3jg2bVJqbM5kBwAb88Yd+QFgp3RqbZESvANjCxsL3ClmDKHpYt2SGFKR
-         OK+7849BPM+wf/jXDTe8t/u0tXdTGWVnCo+S1TFOQxFP2KuXnRRTY6XOQBxlAxjvOdvw
-         wxtA==
-X-Gm-Message-State: AOAM5320lgbo3cr43vEFYFVqpA1BOHjSWKG/jPJOQ2jevWtaNgtDU1Ia
-        h6ZDsFnBMct4xy1NPt0dmGk=
-X-Google-Smtp-Source: ABdhPJyoHgKwGuOqlVKlywxoBoE3NxNmtPffJ/2SwIbf3MB9FzpYde1gUCFSGbCwWng6GuOh3hEWLg==
-X-Received: by 2002:a17:906:1106:: with SMTP id h6mr3165422eja.200.1596187308997;
-        Fri, 31 Jul 2020 02:21:48 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id s4sm8736775ejx.94.2020.07.31.02.21.47
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=nbjq+Qd3z4uniercrgDzYmhwtwrHGx+NiF3QyYytaOI=;
+        b=bQ/nsIQcAqrJWYq8ko4+IEahSDaCYowHwOvwWjSHezJPlhvZ2pDvNCch6CO7ySQxjw
+         7n2mMc97EgY0EshS/X7NBEGwI8MHi30IIewFpU40yhQsza1Ka1FPoxJ/B58ht/UnTPgv
+         k5yh6prV8cYGiDIDm7e54XRWAeK76+lp7W5sna2RaXGTe2uwbZvJHhsCjH2yNg1UICu7
+         CD0uqEIV8UQnUznoyw/aW0kgDA6nYXGaWUul79FDGac6hcWrMzF7T5jQYz2pY8isknM2
+         rifTgzOloQWHdr5d97ZkdKPoYsc/hDypHL6/80xAWEyYLuYnpLIRTf9WNIs4Q2leLbd2
+         XrAQ==
+X-Gm-Message-State: AOAM532+qwuyxsv+bE48kRVF/X5nzKgdOSAAKUi1V9SJNP7fLt6KuctC
+        Nm1nu3kd05ArwGUYs99eeKlrwL9dwRTl3lkFaGlOQqRqj39cWgm0b5b3Le3lqLwV5Otgop8wlWY
+        /hLvNBYoQBZyGf33xq7XH87BM
+X-Received: by 2002:a05:6402:1346:: with SMTP id y6mr2973722edw.192.1596187331450;
+        Fri, 31 Jul 2020 02:22:11 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJznu+HSM6FxQEoWZ1y19cDcknKkYopQloP3v72psiCbKCVdlMUaN5YWjCmK+xs7S81m8dFclA==
+X-Received: by 2002:a05:6402:1346:: with SMTP id y6mr2973702edw.192.1596187331208;
+        Fri, 31 Jul 2020 02:22:11 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id j11sm8081698ejx.0.2020.07.31.02.22.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 02:21:48 -0700 (PDT)
-Date:   Fri, 31 Jul 2020 11:21:46 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Kees Cook <keescook@chromium.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/21] x86/kaslr: Cleanup and small bugfixes
-Message-ID: <20200731092146.GB2956@gmail.com>
-References: <20200727230801.3468620-1-nivedita@alum.mit.edu>
- <20200728225722.67457-1-nivedita@alum.mit.edu>
- <20200730180224.GA1203420@rani.riverdale.lan>
+        Fri, 31 Jul 2020 02:22:10 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Julia Suvorova <jusual@redhat.com>
+Cc:     "open list\:VFIO DRIVER" <kvm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] KVM: x86: Use MMCONFIG for all PCI config space accesses
+In-Reply-To: <CAHp75VcyRjAr3ugmAWYcKMrAeea6ioQOPfJnj-Srntdg_W8ScQ@mail.gmail.com>
+References: <20200730193510.578309-1-jusual@redhat.com> <CAHp75VcyRjAr3ugmAWYcKMrAeea6ioQOPfJnj-Srntdg_W8ScQ@mail.gmail.com>
+Date:   Fri, 31 Jul 2020 11:22:09 +0200
+Message-ID: <873658kpj2.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730180224.GA1203420@rani.riverdale.lan>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Andy Shevchenko <andy.shevchenko@gmail.com> writes:
 
-* Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> On Thu, Jul 30, 2020 at 10:37 PM Julia Suvorova <jusual@redhat.com> wrote:
+>>
+>> Using MMCONFIG instead of I/O ports cuts the number of config space
+>> accesses in half, which is faster on KVM and opens the door for
+>> additional optimizations such as Vitaly's "[PATCH 0/3] KVM: x86: KVM
+>> MEM_PCI_HOLE memory":
+>
+>> https://lore.kernel.org/kvm/20200728143741.2718593-1-vkuznets@redhat.com
+>
+> You may use Link: tag for this.
+>
+>> However, this change will not bring significant performance improvement
+>> unless it is running on x86 within a hypervisor. Moreover, allowing
+>> MMCONFIG access for addresses < 256 can be dangerous for some devices:
+>> see commit a0ca99096094 ("PCI x86: always use conf1 to access config
+>> space below 256 bytes"). That is why a special feature flag is needed.
+>>
+>> Introduce KVM_FEATURE_PCI_GO_MMCONFIG, which can be enabled when the
+>> configuration is known to be safe (e.g. in QEMU).
+>
+> ...
+>
+>> +static int __init kvm_pci_arch_init(void)
+>> +{
+>> +       if (raw_pci_ext_ops &&
+>> +           kvm_para_has_feature(KVM_FEATURE_PCI_GO_MMCONFIG)) {
+>
+> Better to use traditional pattern, i.e.
+>   if (not_supported)
+>     return bail_out;
+>
+>   ...do useful things...
+>   return 0;
+>
+>> +               pr_info("PCI: Using MMCONFIG for base access\n");
+>> +               raw_pci_ops = raw_pci_ext_ops;
+>> +               return 0;
+>> +       }
+>
+>> +       return 1;
+>
+> Hmm... I don't remember what positive codes means there. Perhaps you
+> need to return a rather error code?
 
-> On Tue, Jul 28, 2020 at 06:57:01PM -0400, Arvind Sankar wrote:
-> > v2->v3:
-> > - Fix the first patch: command line size should be strlen + 1 to account
-> >   for terminating NUL. Avoid calling add_identity_map if cmdline was
-> >   NULL, though it should do nothing in that case anyway.
-> 
-> Hi Ingo, I noticed that WIP.x86/kaslr and x86/kaslr both have the v2
-> version of the first patch. That has a bug in the cmd_line_size
-> calculation (missing the +1).
+If I'm reading the code correctly,
 
-Indeed, well spotted. I rebased the affected 4 patches in x86/kaslr 
-and used the opportunity to add Kees's Reviewed-by to the first 4 
-patches as well.
+pci_arch_init() has the following:
 
-I've zapped tip:x86/kaslr for now and put the whole series into 
-tip:WIP.x86/kaslr, will move it into tip:x86/kaslr for a v5.9 merge 
-once Kees is happy with the latest version.
+        if (x86_init.pci.arch_init && !x86_init.pci.arch_init())
+                return 0;
 
-Kees, AFAICS your type truncation and patch split-up review 
-suggestions were resolved in v3?
 
-Thanks,
+so returning '1' here means 'continue' and this seems to be
+correct. (E.g. Hyper-V's hv_pci_init() does the same). What I'm not sure
+about is 'return 0' above as this will result in skipping the rest of
+pci_arch_init(). Was this desired or should we return '1' in both cases?
 
-	Ingo
+-- 
+Vitaly
+
