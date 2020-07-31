@@ -2,112 +2,162 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A946C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED90E22B40
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:38:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596217120;
-	bh=ThVcK9Hvk7m9SF2um16GNyMOPFFlXYWERxYa9S07VUg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=U4zKuUUUKURfxQQI6MVA455WFLG3ufZj7p3ZyM4w5pjAPlRCEyBtUSSRPhMSEypUY
-	 5/pPipimojjdmqtwWPHIh/gq++vpIVgKzBEm5clCuuBJ1WWQF6J/LK5JQRV/+wcsev
-	 dFgRp2qto1KU1LsvwR4iYnM46/LTMyCSN/9L/4bk=
+	by mail.kernel.org (Postfix) with ESMTP id CDAAC2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:40:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q/VIBgY9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387619AbgGaRii (ORCPT
+        id S2387630AbgGaRkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 13:38:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56078 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733236AbgGaRih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 13:38:37 -0400
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FF432083B;
-        Fri, 31 Jul 2020 17:38:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596217117;
-        bh=ThVcK9Hvk7m9SF2um16GNyMOPFFlXYWERxYa9S07VUg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IhnygZYjOuB4e8fBhH11m1q+TmFS2ZWUv8vOBc4uVHIHAvi287Ay/CKLxsFFcZ8gn
-         dN5LsV3Wzf16tQXmdLDJd7zpNyKEAD8wM/eVEu+bR3aRt/bVCDuV24pG/ouu5z0HXJ
-         1hj8WiNwwWEOaqsAtIwELhY+t/dAMR+YN88Sgf9k=
-Received: by mail-oi1-f171.google.com with SMTP id s144so17455720oie.3;
-        Fri, 31 Jul 2020 10:38:37 -0700 (PDT)
-X-Gm-Message-State: AOAM533Q6Ur7PZvk3Mh0FVY3gnU/959dBVzSrEIIr/XGaxZm0HUvQQ6Q
-        nrTHFxA/YAJktbzLTlWeAyubd84nLAZk9xF9WA==
-X-Google-Smtp-Source: ABdhPJyGE9R4ouWUf/7eAFYfwi5aW8aeIQseFytCl+rC5dI2vrcQrsvoB5m3JRF0dMRdAmvJ49Y6r7hnrSEVwQmilqY=
-X-Received: by 2002:aca:190c:: with SMTP id l12mr3850529oii.147.1596217116807;
- Fri, 31 Jul 2020 10:38:36 -0700 (PDT)
+        Fri, 31 Jul 2020 13:40:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51798 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732973AbgGaRkL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 13:40:11 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C2FEC061574;
+        Fri, 31 Jul 2020 10:40:11 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id n141so14432120ybf.3;
+        Fri, 31 Jul 2020 10:40:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=8b/Gz63jV8i64EIMR1/6c06BEPrGRFh8qZ4FbX6xqVM=;
+        b=q/VIBgY9C17ORCh9W+8WpvzsHoG8oYEx1yoLr1as1o9Yb1UCL281l4mNZBXyrhngVj
+         2ckW44YZGI+hkRV/tfZWvKssZJSSaxVJ0UWkzwQXxRwYLKAFtmxxA2qiOGClgQwE5LFB
+         oF7WlDDwelHTWn8HaP7JXhS+D0/UJwqRwbfHqfG5YvN2sc5ZdRRULgczODklAR4m2AzH
+         NjYjiorgCbPvGKS+RHp2bG5Xkod95B+wRR0Naedzrqu/AyP8QiPK1g7pBlbQsmelXQNd
+         kBl5z3kBxwVC9F4LX9ERTevZrDrQM0P6FqiAAkBV9YxCQthZ5iV95mp28UqUfXVz5h+m
+         ZeCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8b/Gz63jV8i64EIMR1/6c06BEPrGRFh8qZ4FbX6xqVM=;
+        b=WtM+KHQefNz30OIvQLn8Atc3NInZTbGnLuDOoEQHsPZ4Vzsc1E6jnzuMV1f7JRRHLV
+         2OH5sIOT6QWrZpRcHojEY8lRf1DLXUNgSX0Na0dceT6ylgZMJcuG6Yylvw31aGifFdXl
+         CBH9kdE9mz7fIQ60+LbHsd9dGjKiaPVGcpmC3CKSx7otajTc2CQ27I/tagWtAlK3x8Ru
+         0UnpYPd3kkspt5JfVLKRr/fpVqQYahlEFet/nb43JTMVYAQs4hYd0Sw5TSsxAIfeqJDQ
+         hZ0e6Tfown70g6AWGtQWv18nvNRRIvnES16n14QLViJJiuPwKQiAaEUmVe8EBZBMLw/S
+         uong==
+X-Gm-Message-State: AOAM532hGz7Ft5Dntps7ZxAEWQSbJchhcRX3EokL0R8LnaWa2bYKQGQ6
+        HV1RfmNdbVnp2eoFYxpz7PWZWRJyJTbGOaQOaaMUcQ==
+X-Google-Smtp-Source: ABdhPJwamYK1UxXdpljizPP02TFzOiw9n7waFqGuNJ6Vl7seV4+7fMtMmSVDUDY6b7FI1OQZNLHANenTR54PAj30vYA=
+X-Received: by 2002:a25:84cd:: with SMTP id x13mr7846369ybm.425.1596217210540;
+ Fri, 31 Jul 2020 10:40:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200727031513.31774-1-xiaoning.wang@nxp.com>
-In-Reply-To: <20200727031513.31774-1-xiaoning.wang@nxp.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 31 Jul 2020 11:38:25 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+M0bjH6KnrT4ob6YF7VZxUtgUeAJOE84Omp4PNH2hSZQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+M0bjH6KnrT4ob6YF7VZxUtgUeAJOE84Omp4PNH2hSZQ@mail.gmail.com>
-Subject: Re: [PATCH V2 4/4] dt-bindings: lpspi: New property in document DT
- bindings for LPSPI
-To:     Clark Wang <xiaoning.wang@nxp.com>
-Cc:     Mark Brown <broonie@kernel.org>, Anson Huang <Anson.Huang@nxp.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200731061600.18344-1-Jianlin.Lv@arm.com>
+In-Reply-To: <20200731061600.18344-1-Jianlin.Lv@arm.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 31 Jul 2020 10:39:59 -0700
+Message-ID: <CAEf4BzY9Kc=Q664Yas+YY=2os_sjx9_RVwdQOwW_-=tkPAe8BA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: fix compilation warning of selftests
+To:     Jianlin Lv <Jianlin.Lv@arm.com>
+Cc:     bpf <bpf@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>, Song.Zhu@arm.com,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 9:15 PM Clark Wang <xiaoning.wang@nxp.com> wrote:
+On Thu, Jul 30, 2020 at 11:18 PM Jianlin Lv <Jianlin.Lv@arm.com> wrote:
 >
-> Add "fsl,spi-only-use-cs1-sel" to fit i.MX8DXL-EVK.
-> Spi common code does not support use of CS signals discontinuously.
-> It only uses CS1 without using CS0. So, add this property to re-config
-> chipselect value.
+> Clang compiler version: 12.0.0
+> The following warning appears during the selftests/bpf compilation:
 >
-> Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
+> prog_tests/send_signal.c:51:3: warning: ignoring return value of =E2=80=
+=98write=E2=80=99,
+> declared with attribute warn_unused_result [-Wunused-result]
+>    51 |   write(pipe_c2p[1], buf, 1);
+>       |   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+> prog_tests/send_signal.c:54:3: warning: ignoring return value of =E2=80=
+=98read=E2=80=99,
+> declared with attribute warn_unused_result [-Wunused-result]
+>    54 |   read(pipe_p2c[0], buf, 1);
+>       |   ^~~~~~~~~~~~~~~~~~~~~~~~~
+> ......
+>
+> prog_tests/stacktrace_build_id_nmi.c:13:2: warning: ignoring return value
+> of =E2=80=98fscanf=E2=80=99,declared with attribute warn_unused_result [-=
+Wunused-resul]
+>    13 |  fscanf(f, "%llu", &sample_freq);
+>       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>
+> test_tcpnotify_user.c:133:2: warning:ignoring return value of =E2=80=98sy=
+stem=E2=80=99,
+> declared with attribute warn_unused_result [-Wunused-result]
+>   133 |  system(test_script);
+>       |  ^~~~~~~~~~~~~~~~~~~
+> test_tcpnotify_user.c:138:2: warning:ignoring return value of =E2=80=98sy=
+stem=E2=80=99,
+> declared with attribute warn_unused_result [-Wunused-result]
+>   138 |  system(test_script);
+>       |  ^~~~~~~~~~~~~~~~~~~
+> test_tcpnotify_user.c:143:2: warning:ignoring return value of =E2=80=98sy=
+stem=E2=80=99,
+> declared with attribute warn_unused_result [-Wunused-result]
+>   143 |  system(test_script);
+>       |  ^~~~~~~~~~~~~~~~~~~
+>
+> Add code that fix compilation warning about ignoring return value and
+> handles any errors; Check return value of library`s API make the code
+> more secure.
+>
+> Signed-off-by: Jianlin Lv <Jianlin.Lv@arm.com>
 > ---
-> Changes:
-> V2:
->  - New patch added in the v2 patchset.
-> ---
->  Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  .../selftests/bpf/prog_tests/send_signal.c    | 37 ++++++++++++++-----
+>  .../bpf/prog_tests/stacktrace_build_id_nmi.c  |  3 +-
+>  .../selftests/bpf/test_tcpnotify_user.c       | 15 ++++++--
+>  3 files changed, 41 insertions(+), 14 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
-> index 143b94a1883a..22882e769e26 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
-> +++ b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
-> @@ -34,6 +34,12 @@ properties:
->        - const: per
->        - const: ipg
+> diff --git a/tools/testing/selftests/bpf/prog_tests/send_signal.c b/tools=
+/testing/selftests/bpf/prog_tests/send_signal.c
+> index 504abb7bfb95..7a5272e4e810 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/send_signal.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/send_signal.c
+> @@ -48,22 +48,31 @@ static void test_send_signal_common(struct perf_event=
+_attr *attr,
+>                 close(pipe_p2c[1]); /* close write */
 >
-> +  fsl,spi-only-use-cs1-sel:
-> +    description:
-> +      spi common code does not support use of CS signals discontinuously.
-> +      i.MX8DXL-EVK board only uses CS1 without using CS0. Therefore, add
-> +      this property to re-config the chipselect value in the LPSPI driver.
+>                 /* notify parent signal handler is installed */
+> -               write(pipe_c2p[1], buf, 1);
+> +               if (CHECK_FAIL(write(pipe_c2p[1], buf, 1) !=3D 1)) {
+> +                       perror("Child: write pipe error");
+> +                       goto close_out;
+> +               }
 
-This breaks linux-next and you didn't test with 'make dt_binding_check':
+Please don't use CHECK_FAIL. Using CHECK is better for many reasons,
+but it will also be shorter here (while still recording failure):
 
-/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml:
-properties:fsl,spi-only-use-cs1-sel: {'description': 'spi common code
-does not support use of CS signals discontinuously. i.MX8DXL-EVK board
-only uses CS1 without using CS0. Therefore, add this property to
-re-config the chipselect value in the LPSPI driver.'} is not valid
-under any of the given schemas (Possible causes of the failure):
- /builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml:
-properties:fsl,spi-only-use-cs1-sel: 'not' is a required property
 
-The problem is you need a type definition for a vendor specific
-property. In this case 'type: boolean'.
+CHECK(write(pipe_c2p[1], buf, 1) !=3D 1, "pipe_write", "err %d\n", -errno);
 
-Rob
+
+>
+>                 /* make sure parent enabled bpf program to send_signal */
+> -               read(pipe_p2c[0], buf, 1);
+> +               if (CHECK_FAIL(read(pipe_p2c[0], buf, 1) !=3D 1)) {
+> +                       perror("Child: read pipe error");
+> +                       goto close_out;
+> +               }
+>
+
+[...]
