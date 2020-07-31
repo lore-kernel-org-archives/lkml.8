@@ -2,93 +2,121 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F86C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D25C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9165F208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE8E622B3F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:38:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wpz9JxHr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KvmAMOvF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387893AbgGaSic (ORCPT
+        id S2387911AbgGaSi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 14:38:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60756 "EHLO
+        Fri, 31 Jul 2020 14:38:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387890AbgGaSib (ORCPT
+        with ESMTP id S2387676AbgGaSi6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 14:38:31 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12AC1C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 11:38:31 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id t10so12501912plz.10
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 11:38:31 -0700 (PDT)
+        Fri, 31 Jul 2020 14:38:58 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1C59C061574;
+        Fri, 31 Jul 2020 11:38:57 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id 6so23726776qtt.0;
+        Fri, 31 Jul 2020 11:38:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=SNpK+3wWVxGTyist2fLUSgIvEfDZxw0Tclt5ni7TW34=;
-        b=Wpz9JxHr67aJk9mP3sR63H5t7ksI0PpWbEtowXXceem2XblTkxAx8ias5Io1IBdyKN
-         CjVfnyIxnhcqoGWGvljAocxdC415cvlFjbooBpvH6B0T3sy6m4BtCkJnTVub7/AFnfUP
-         NbjjtPwPpjjOY31HqZpPNkFPDLKK5gOzbetc4=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hmlynqxkKJT+AklZpDdQn6RJdhmkaFRFUyQ1+UUwwKU=;
+        b=KvmAMOvF4+8tqzp2+qH7sQBYhUmlWMMHQYRQEAyX3ufuczq/2ENbC41E24FHBlYMOQ
+         QRx1CQ7hH2UgONKJE+0vjN4gt7zUPCgaAGdpgINwANeZhNLhBqwJTj2KtiiSSCa/n7E2
+         kibXk4mLLih6bIxNNRuzVqE2Y9ttW7RGnMSUjYYgMt27H6Q7g4YI2lKDaifOSoSFC3z+
+         pbtu/kbAIyS3q0LQgCnWY3+CqLOuAqqzvXZfdVQjwm9UePpzq8ipLBUvKbuVyEKyBGBP
+         cLi5Hf9J9QrJq0mq2XzaMGmiwq9ryko8PRbHfPVS1dKmronXw12z88vP6y8oqDFQS9Cj
+         lh2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=SNpK+3wWVxGTyist2fLUSgIvEfDZxw0Tclt5ni7TW34=;
-        b=gI9iUYEOj20cG4fDr/X2/9uJn7+UL4e4mmanxn0LhuhF17h/PxakGW6huCWtaXllZY
-         IkWOIFEvVTT6zmKJtL6JesyzY59oLeJZfXS4OnlD3H12bbtXgc91RGrUI2HvdN78S/Lu
-         z1XHb/zSTwYxpNN800wIq1OtSo+sXOOTIouE6JNBgWByt7u1ylCyE6pyITDqn3z/dUdi
-         eDDfEUARdH+WUpVSY4EJwcDpLwc/VL9kPEbg/yHBX0l4/RibJod8aFE/hGlnkIS71JBl
-         GyO8y+SmEwZ9afFQvM3dzm6ihJKF0dVB9W4IXcep/UbXZfDM9QqEUCR0//HBLNc9h2yV
-         3zxw==
-X-Gm-Message-State: AOAM531ePcoVbUbmJwYBwBpb+Xnh1nlk2YE55Sgw11GP/ka0aQ9CEGXp
-        RZKiIPyTBkYg+nhuCldzqJX9Lg==
-X-Google-Smtp-Source: ABdhPJxWQH37ntc/c6bbP/1fWoO0uz6UdFlR3yqVZ7s1qSuwG9SpA1iRMLMBBX4cHatU4Pafdwg3tQ==
-X-Received: by 2002:a17:90a:31ce:: with SMTP id j14mr5205373pjf.65.1596220710601;
-        Fri, 31 Jul 2020 11:38:30 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id 137sm12324262pgg.72.2020.07.31.11.38.29
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hmlynqxkKJT+AklZpDdQn6RJdhmkaFRFUyQ1+UUwwKU=;
+        b=ir8wsYNSgmkZMMbXj/AOAsZ5eytMXTKHbotIZ0SVG+AaWqqIfVa39BucL/rF/nNUQT
+         KdSsSw9+Fj6Uj0tR7VsVunUgM2uBJQ+2bhMJXgxmsZ2qK7LY135FQf58qjxVNpfGtk2P
+         LkU8fv6l6wwJOsCa2Jc9FAba0F2oZh2F8e8rFKwudhFPNhgMP3OwapdEwZ8tCaywMX8i
+         jBkb1oOOCxjNyqCtySmw/W4J23RUa4AOXEejivhNW1iebpBkajFqmLBCM0doMpGTgKXk
+         mX2Rs6q4XK46lQtSKO/o9uSEhgfEh151zvuCgyQ6OyJLPjK75lV6taavdGejCVlWOvdz
+         hn4w==
+X-Gm-Message-State: AOAM530l2b17E6weygqAJs7WwX3Kiq7GL7wAd30G1MtfBKNGajWddeYI
+        C6uAhznVu6PJDjxnehdHKmk=
+X-Google-Smtp-Source: ABdhPJy4SC1/P8V4XXUJOKNekIdadtMw2vA2d1nIgiOXTL1o9u+42phUs021Nj3hsi3+kyOjtGWBLA==
+X-Received: by 2002:ac8:5416:: with SMTP id b22mr5004515qtq.45.1596220737104;
+        Fri, 31 Jul 2020 11:38:57 -0700 (PDT)
+Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
+        by smtp.gmail.com with ESMTPSA id l1sm9492144qtp.96.2020.07.31.11.38.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 11:38:30 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Fri, 31 Jul 2020 11:38:56 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 11:38:54 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: gadget: s3c: Remove unused 'udc' variable
+Message-ID: <20200731183854.GA2279514@ubuntu-n2-xlarge-x86>
+References: <20200731074122.6484-1-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200731104555.v3.7.Iecaa50e469918a385b3e5dab375e442540ea2ad4@changeid>
-References: <20200731164853.3020946-1-campello@chromium.org> <20200731104555.v3.7.Iecaa50e469918a385b3e5dab375e442540ea2ad4@changeid>
-Subject: Re: [PATCH v3 07/15] iio: sx9310: Use long instead of int for channel bitmaps
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Daniel Campello <campello@chromium.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org
-To:     Daniel Campello <campello@chromium.org>,
-        LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Fri, 31 Jul 2020 11:38:28 -0700
-Message-ID: <159622070873.1360974.241649023719158449@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200731074122.6484-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Daniel Campello (2020-07-31 09:48:44)
-> Uses for_each_set_bit() macro to loop over channel bitmaps.
->=20
-> Signed-off-by: Daniel Campello <campello@chromium.org>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> ---
+On Fri, Jul 31, 2020 at 09:41:22AM +0200, Krzysztof Kozlowski wrote:
+> Remove unused 'udc' variable to fix compile warnings:
+> 
+>     drivers/usb/gadget/udc/s3c2410_udc.c: In function 's3c2410_udc_dequeue':
+>     drivers/usb/gadget/udc/s3c2410_udc.c:1268:22: warning: variable 'udc' set but not used [-Wunused-but-set-variable]
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Weird, looks like it has been unused since the introduction of the
+driver.
+
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+
+> ---
+>  drivers/usb/gadget/udc/s3c2410_udc.c | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/drivers/usb/gadget/udc/s3c2410_udc.c b/drivers/usb/gadget/udc/s3c2410_udc.c
+> index bc2e8eb737c3..e875a0b967c0 100644
+> --- a/drivers/usb/gadget/udc/s3c2410_udc.c
+> +++ b/drivers/usb/gadget/udc/s3c2410_udc.c
+> @@ -1270,7 +1270,6 @@ static int s3c2410_udc_queue(struct usb_ep *_ep, struct usb_request *_req,
+>  static int s3c2410_udc_dequeue(struct usb_ep *_ep, struct usb_request *_req)
+>  {
+>  	struct s3c2410_ep	*ep = to_s3c2410_ep(_ep);
+> -	struct s3c2410_udc	*udc;
+>  	int			retval = -EINVAL;
+>  	unsigned long		flags;
+>  	struct s3c2410_request	*req = NULL;
+> @@ -1283,8 +1282,6 @@ static int s3c2410_udc_dequeue(struct usb_ep *_ep, struct usb_request *_req)
+>  	if (!_ep || !_req)
+>  		return retval;
+>  
+> -	udc = to_s3c2410_udc(ep->gadget);
+> -
+>  	local_irq_save(flags);
+>  
+>  	list_for_each_entry(req, &ep->queue, queue) {
+> -- 
+> 2.17.1
+> 
