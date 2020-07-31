@@ -2,111 +2,122 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52E982076B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF0922087C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:47:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="V/UmbF9Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZgyyXZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729685AbgGaTmg (ORCPT
+        id S1726339AbgGaTrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 15:42:36 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:56088 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgGaTmg (ORCPT
+        Fri, 31 Jul 2020 15:47:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgGaTrN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 15:42:36 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06VJfmfq036480;
-        Fri, 31 Jul 2020 19:41:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=jBXujslfGLcy/uxKVs6euah0Afp+K2q+zLyuafXCuYs=;
- b=V/UmbF9Z6fJS4SNlcf5gW/z+uk4ICCEH8d4bET9Wtn05VqGE/OlnQz5vRv/uaNPNJaLw
- AITqFHUxx8k58B03kImuXfXECS84E2NdizSoF1QGowa4+AA4DNISVFwcOOWODSuMzlSe
- /m9zGzOt6EJY4i2WEv5QRKNIp86f27WCmDKN26BHEv+MR9DzX0S1qSabTHYVXqYtNik6
- aVhd0xjbspLZuw2A7+Sn8WTNNh0Knq+tgBnSU3LrKK3CtvaXShIzu8OrRNvThBujA9P/
- hjigm1cWus2RjREhOdziWMIReYoyuBNkUhGILrwGmBghQ1onIgZdpxQAQJcsokVkwAL4 ng== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 32mf7036up-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 Jul 2020 19:41:57 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06VJIc20163330;
-        Fri, 31 Jul 2020 19:41:56 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 32hu64wdy6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 Jul 2020 19:41:56 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06VJff9C019420;
-        Fri, 31 Jul 2020 19:41:42 GMT
-Received: from [10.39.235.87] (/10.39.235.87)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 31 Jul 2020 12:41:41 -0700
-Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org
-Cc:     mhocko@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        viro@zeniv.linux.org.uk, akpm@linux-foundation.org, arnd@arndb.de,
-        ebiederm@xmission.com, keescook@chromium.org, gerg@linux-m68k.org,
-        ktkhai@virtuozzo.com, christian.brauner@ubuntu.com,
-        peterz@infradead.org, esyr@redhat.com, jgg@ziepe.ca,
-        christian@kellner.me, areber@redhat.com, cyphar@cyphar.com
-References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
-From:   Steven Sistare <steven.sistare@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <389f79f9-f1a5-963e-dd05-4d0aaabb5346@oracle.com>
-Date:   Fri, 31 Jul 2020 15:41:37 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 31 Jul 2020 15:47:13 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C1CBC061574;
+        Fri, 31 Jul 2020 12:47:13 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t10so12570453plz.10;
+        Fri, 31 Jul 2020 12:47:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CCtzz/ikDkJ40Y/Or+xxVZzqpUQAfxOSoGmmOXHGcF0=;
+        b=kZgyyXZzlTSotlgAD3426upKCbCWC8tIK3CDvULUFCFRt2C5J8Y60BGLkoyLmbrwDB
+         1bKOcMzeCkT7P71wRZMeodZQbczAFXiTr5o4wVPCeHqoZ35KjV9xsG/WBA1ikQfZQnjR
+         yQBqIfYq4jE9tm1TG0vQpVa5qKTSSDO2PQgqPl5IF6yopJLXKk+ncUkx9VdXHw4ULV/C
+         +tvmnTVjCnbSpDB2vcHkSIIk+V52ulaIis8UqN6K2a/TE96jg5dOLnnI5R+fwC1dJkmy
+         Ubh4Ym97N9r3mk+lctxG2p2gY0Pdpn5LcG8gwSn0LRF+JAw/3/YpCMr4lo3mKS8ezwH6
+         T68Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CCtzz/ikDkJ40Y/Or+xxVZzqpUQAfxOSoGmmOXHGcF0=;
+        b=AXPTRC6ktOvjf/WHvEtq7zBSzR5vXixaufCBAVhB3s8eRznyeVxd++0KPC8gFdBvnZ
+         4FRw45B/WVWphlkHARfVmee99DVbzDvXNzSFr/hLUCu+R/tiuHhzzIVXXO91uDdyCB/y
+         az35DVMBwBQcEzaT3eYd+FCWXT/Uj5ELLPMO/rofjx/Ir3q55fzfHw5gp1Qa2af1iz6j
+         Om5pFKINEEK6OABf+xLomD/N38IzVoRgGexY8jiCouYykbaSualxhfci+bf9HuODl5Bz
+         p8d4xNnz9fNF4Yo7w8OLEKO31O6eHXTTxDRBGyoRgkUw9hoXR23NkU87NCSdONxd9ui6
+         GDhg==
+X-Gm-Message-State: AOAM530Lhf8WGEVa0cRdqinTNbo/Lstn12qRREpr9bQrjy75ifLJtN41
+        Z2hKxfhpzzy2FATqNNZJHsJ8WOmHV44IY6QWSrA=
+X-Google-Smtp-Source: ABdhPJyDJn9A53QZee7pWSd5gmobL0PoAUBAt3fINUbvQ28dAdLqpDrPWrPnlfdzaRiwkcEDasBWqEIKqNkA4AZ84m0=
+X-Received: by 2002:a17:90a:fa06:: with SMTP id cm6mr5729991pjb.129.1596224832360;
+ Fri, 31 Jul 2020 12:47:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9699 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 bulkscore=0
- malwarescore=0 mlxscore=0 spamscore=0 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007310142
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9699 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 suspectscore=0
- spamscore=0 impostorscore=0 clxscore=1015 phishscore=0 priorityscore=1501
- adultscore=0 mlxlogscore=999 malwarescore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007310143
+References: <20200731164853.3020946-1-campello@chromium.org> <20200731104555.v3.15.I4c344a6793007001bbb3c1c08e96d3acf893b36b@changeid>
+In-Reply-To: <20200731104555.v3.15.I4c344a6793007001bbb3c1c08e96d3acf893b36b@changeid>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 31 Jul 2020 22:46:55 +0300
+Message-ID: <CAHp75Vcyv_sbgEWEzFeSnmoMzQqrS+obogKJhjPajX1FDutF4w@mail.gmail.com>
+Subject: Re: [PATCH v3 15/15] iio: sx9310: Use irq trigger flags from firmware
+To:     Daniel Campello <campello@chromium.org>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/27/2020 1:11 PM, Anthony Yznaga wrote:
-> This patchset adds support for preserving an anonymous memory range across
-> exec(3) using a new madvise MADV_DOEXEC argument.  The primary benefit for
-> sharing memory in this manner, as opposed to re-attaching to a named shared
-> memory segment, is to ensure it is mapped at the same virtual address in
-> the new process as it was in the old one.  An intended use for this is to
-> preserve guest memory for guests using vfio while qemu exec's an updated
-> version of itself.  By ensuring the memory is preserved at a fixed address,
-> vfio mappings and their associated kernel data structures can remain valid.
-> In addition, for the qemu use case, qemu instances that back guest RAM with
-> anonymous memory can be updated.
+On Fri, Jul 31, 2020 at 7:49 PM Daniel Campello <campello@chromium.org> wrote:
+>
+> From: Stephen Boyd <swboyd@chromium.org>
+>
+> We shouldn't need to set default irq trigger flags here as the firmware
+> should have properly indicated the trigger type, i.e. level low, in the
+> DT or ACPI tables.
 
-I forgot to mention, our use case is not just theoretical.  It has been implemented
-and is pretty cool (but I am biased).  The pause time for the guest is in the
-100 - 200 msec range.  We submitted qemu patches for review based on the MADV_DOEXEC
-proposal.  In case you are curious:
-  https://lore.kernel.org/qemu-devel/1596122076-341293-1-git-send-email-steven.sistare@oracle.com/
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-- Steve
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> ---
+>
+> Changes in v3:
+>  - Added irq trigger flags commit to the series.
+>
+> Changes in v2: None
+>
+>  drivers/iio/proximity/sx9310.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+> index a20cd6a4dad729..c41fa7f6558e3f 100644
+> --- a/drivers/iio/proximity/sx9310.c
+> +++ b/drivers/iio/proximity/sx9310.c
+> @@ -951,7 +951,7 @@ static int sx9310_probe(struct i2c_client *client)
+>                 ret = devm_request_threaded_irq(dev, client->irq,
+>                                                 sx9310_irq_handler,
+>                                                 sx9310_irq_thread_handler,
+> -                                               IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+> +                                               IRQF_ONESHOT,
+>                                                 "sx9310_event", indio_dev);
+>                 if (ret)
+>                         return ret;
+> --
+> 2.28.0.163.g6104cc2f0b6-goog
+>
 
+
+-- 
+With Best Regards,
+Andy Shevchenko
