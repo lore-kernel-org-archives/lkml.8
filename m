@@ -2,251 +2,80 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C72C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B22C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BE40207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:01:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596178870;
-	bh=waSGCZLpLqJudH+BLycSs/9v2ZDJaeAT4KfCWI6/Jvs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JDobrMAdNrdOrEkR8lMEuEvTO2PxDAkU5E/K62xtX+JKMjAURcgwZ+GWwW5Wc7vxE
-	 z1ltRSTrKceLKHvf0dQCBWV7ZMsQ66WkfsZJGKuER8SjdjmhbT9B6eH/ef7d1Ikp9o
-	 tJJmiJYd7hHp6KsvonEkwXTTnQb4XYK+fHSiqQSE=
+	by mail.kernel.org (Postfix) with ESMTP id EEC012067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:02:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731646AbgGaHBJ (ORCPT
+        id S1731532AbgGaHCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 03:01:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33396 "EHLO mail.kernel.org"
+        Fri, 31 Jul 2020 03:02:11 -0400
+Received: from mailout10.rmx.de ([94.199.88.75]:51475 "EHLO mailout10.rmx.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731419AbgGaHBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 03:01:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731375AbgGaHCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 03:02:10 -0400
+Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3816A2067D;
-        Fri, 31 Jul 2020 07:01:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596178865;
-        bh=waSGCZLpLqJudH+BLycSs/9v2ZDJaeAT4KfCWI6/Jvs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EjESepdU0cbJJG5YD4jBp/1oM4zWebkZpk5JYVTQTed644CZwt1qKILyc05IEKJxw
-         6aum4e1WObjV+VC8JHYkFGzfXzJk4xBbpSvxVgfXWgNtBCdnE1A4K8hAMr1kQ1s2LU
-         vk4y5W7s1wT0eYa+hbRebImDjEC+yGTvvkuJfeRo=
-Date:   Fri, 31 Jul 2020 09:00:53 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Daniel Gutson <daniel.gutson@eclypsium.com>
-Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Richard Hughes <hughsient@gmail.com>,
-        Alex Bazhaniuk <alex@eclypsium.com>
-Subject: Re: [PATCH] Platform lockdown information in SYSFS
-Message-ID: <20200731070053.GC1518178@kroah.com>
-References: <20200730214136.5534-1-daniel.gutson@eclypsium.com>
+        by mailout10.rmx.de (Postfix) with ESMTPS id 4BHyrb3XV4z36mZ;
+        Fri, 31 Jul 2020 09:02:07 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin01.retarus.com (Postfix) with ESMTPS id 4BHyrD4GQkz2xwy;
+        Fri, 31 Jul 2020 09:01:48 +0200 (CEST)
+Received: from N95HX1G2.localdomain (192.168.54.61) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Fri, 31 Jul
+ 2020 09:01:23 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Cameron <jic23@kernel.org>
+CC:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Christian Eggers" <ceggers@arri.de>
+Subject: [PATCH v4 0/2] iio: light: Support AMS AS73211 digital XYZ sensor
+Date:   Fri, 31 Jul 2020 09:01:12 +0200
+Message-ID: <20200731070114.40471-1-ceggers@arri.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730214136.5534-1-daniel.gutson@eclypsium.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [192.168.54.61]
+X-RMX-ID: 20200731-090152-4BHyrD4GQkz2xwy-0@kdin01
+X-RMX-SOURCE: 217.111.95.66
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 06:41:36PM -0300, Daniel Gutson wrote:
-> This patch exports information about the platform lockdown
-> firmware configuration in the sysfs filesystem.
-> In this initial patch, I include some configuration attributes
-> for the system SPI chip.
-> 
-> This initial version exports the BIOS Write Enable (bioswe),
-> BIOS Lock Enable (ble), and the SMM Bios Write Protect (SMM_BWP)
-> fields of the Bios Control register. The idea is to keep adding more
-> flags, not only from the BC but also from other registers in following
-> versions.
-> 
-> The goal is that the attributes are avilable to fwupd when SecureBoot
-> is turned on.
-> 
-> The patch provides a new misc driver, as proposed in the previous patch,
-> that provides a registration function for HW Driver devices to register
-> class_attributes.
-> In this case, the intel SPI flash chip (intel-spi) registers three
-> class_attributes corresponding to the fields mentioned above.
+his series adds support for the AMS AS73211 digital XYZ sensor.
 
-Better, but you are abusing sysfs (note, no CAPS) a lot here...
+Changes in v4:
+---------------
+- Integrated 2nd review from Andy Shevchenko
+- Use more devm_ functions in as73211_probe()
+
+Changes in v3:
+---------------
+- Integrated comments from Andy Shevchenko
+- Integrated comments from Jonathan Cameron
+
+Changes in v2:
+---------------
+- Fix $id in dt binding
+- Document full I2C address range in "reg" property
+- Move "buffer" member out of "struct as73211_data"
+- Fix sparse warnings by using correct data types
 
 
-> 
-> Signed-off-by: Daniel Gutson <daniel.gutson@eclypsium.com>
-> ---
->  .../ABI/stable/sysfs-class-platform-lockdown  | 23 +++++++
->  MAINTAINERS                                   |  7 +++
->  drivers/misc/Kconfig                          |  9 +++
->  drivers/misc/Makefile                         |  1 +
->  drivers/misc/platform-lockdown-attrs.c        | 57 +++++++++++++++++
->  drivers/mtd/spi-nor/controllers/Kconfig       |  1 +
->  .../mtd/spi-nor/controllers/intel-spi-pci.c   | 49 +++++++++++++++
->  drivers/mtd/spi-nor/controllers/intel-spi.c   | 62 +++++++++++++++++++
->  .../platform_data/platform-lockdown-attrs.h   | 19 ++++++
->  9 files changed, 228 insertions(+)
->  create mode 100644 Documentation/ABI/stable/sysfs-class-platform-lockdown
->  create mode 100644 drivers/misc/platform-lockdown-attrs.c
->  create mode 100644 include/linux/platform_data/platform-lockdown-attrs.h
-> 
-> diff --git a/Documentation/ABI/stable/sysfs-class-platform-lockdown b/Documentation/ABI/stable/sysfs-class-platform-lockdown
-> new file mode 100644
-> index 000000000000..6034d6cbefac
-> --- /dev/null
-> +++ b/Documentation/ABI/stable/sysfs-class-platform-lockdown
-> @@ -0,0 +1,23 @@
-> +What:		/sys/class/platform-lockdown/bioswe
-> +Date:		July 2020
-> +KernelVersion:	5.8.0
-> +Contact:	Daniel Gutson <daniel.gutson@eclypsium.com>
-> +Description:	If the system firmware set BIOS Write Enable.
-> +		0: writes disabled, 1: writes enabled.
-> +Users:		https://github.com/fwupd/fwupd
-> +
-> +What:		/sys/class/platform-lockdown/ble
-> +Date:		July 2020
-> +KernelVersion:	5.8.0
-> +Contact:	Daniel Gutson <daniel.gutson@eclypsium.com>
-> +Description:	If the system firmware set Bios Lock Enable.
-> +		0: SMM lock disabled, 1: SMM lock enabled.
-> +Users:		https://github.com/fwupd/fwupd
-> +
-> +What:		/sys/class/platform-lockdown/smm_bwp
-> +Date:		July 2020
-> +KernelVersion:	5.8.0
-> +Contact:	Daniel Gutson <daniel.gutson@eclypsium.com>
-> +Description:	If the system firmware set SMM Bios Write Protect.
-> +		0: writes disabled unless in SMM, 1: writes enabled.
-> +Users:		https://github.com/fwupd/fwupd
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f0569cf304ca..771ed1693d28 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13608,6 +13608,13 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml
->  F:	drivers/iio/chemical/pms7003.c
->  
-> +PLATFORM LOCKDOWN ATTRIBUTES MODULE
-> +M:	Daniel Gutson <daniel.gutson@eclypsium.com>
-> +S:	Supported
-> +F:	Documentation/ABI/sysfs-class-platform-lockdown
-> +F:	drivers/misc/platform-lockdown-attrs.c
-> +F:	include/linux/platform_data/platform-lockdown-attrs.h
-> +
->  PLX DMA DRIVER
->  M:	Logan Gunthorpe <logang@deltatee.com>
->  S:	Maintained
-> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-> index e1b1ba5e2b92..058d4ba3cefd 100644
-> --- a/drivers/misc/Kconfig
-> +++ b/drivers/misc/Kconfig
-> @@ -456,6 +456,15 @@ config PVPANIC
->  	  a paravirtualized device provided by QEMU; it lets a virtual machine
->  	  (guest) communicate panic events to the host.
->  
-> +config PLATFORM_LOCKDOWN_ATTRS
-> +	tristate "Platform lockdown information in the SYSFS"
 
-"Platform lockdown information for some hardware information displayed
-in sysfs" ?
-
-> +	depends on SYSFS
-> +	help
-> +	  This kernel module is a helper driver to provide information about
-> +	  platform lockdown settings and configuration.
-
-Is that what this really is?
-
-> +	  This module is used by other device drivers -such as the intel-spi-
-> +	  to publish the information in /sys/class/platform-lockdown.
-> +
->  source "drivers/misc/c2port/Kconfig"
->  source "drivers/misc/eeprom/Kconfig"
->  source "drivers/misc/cb710/Kconfig"
-> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-> index c7bd01ac6291..e29b45c564f9 100644
-> --- a/drivers/misc/Makefile
-> +++ b/drivers/misc/Makefile
-> @@ -57,3 +57,4 @@ obj-$(CONFIG_PVPANIC)   	+= pvpanic.o
->  obj-$(CONFIG_HABANA_AI)		+= habanalabs/
->  obj-$(CONFIG_UACCE)		+= uacce/
->  obj-$(CONFIG_XILINX_SDFEC)	+= xilinx_sdfec.o
-> +obj-$(CONFIG_PLATFORM_LOCKDOWN_ATTRS)	+= platform-lockdown-attrs.o
-> diff --git a/drivers/misc/platform-lockdown-attrs.c b/drivers/misc/platform-lockdown-attrs.c
-> new file mode 100644
-> index 000000000000..d08b3d895064
-> --- /dev/null
-> +++ b/drivers/misc/platform-lockdown-attrs.c
-> @@ -0,0 +1,57 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Platform lockdown attributes kernel module
-> + *
-> + * Copyright (C) 2020 Daniel Gutson <daniel.gutson@eclypsium.com>
-> + * Copyright (C) 2020 Eclypsium Inc.
-> + */
-> +#include <linux/kobject.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/module.h>
-> +#include <linux/init.h>
-> +#include <linux/list.h>
-> +#include <linux/slab.h>
-> +#include <linux/platform_data/platform-lockdown-attrs.h>
-> +
-> +static struct class platform_lockdown_class = {
-> +	.name	= "platform-lockdown",
-> +	.owner	= THIS_MODULE,
-> +};
-> +
-> +int register_platform_lockdown_attribute(
-> +	struct class_attribute *lockdown_attribute)
-> +{
-> +	/* attempt to create the file: */
-> +	return class_create_file(&platform_lockdown_class,
-> +				   lockdown_attribute);
-> +}
-> +EXPORT_SYMBOL_GPL(register_platform_lockdown_attribute);
-
-nit, global symbols should put the noun first:
-	platform_lockdown_attribute_register()
-
-But, this all is not ok.
-
-You are trying to create/remove random sysfs files that end up in a
-single class.  What you want to do is create a device that is associated
-with this class, and make that device a child of the device you are
-registering these attributes for.
-
-Think of this as an input device.  You don't put the random input
-attributes all in one place, you create a new device that represents the
-input interface and register that.  Then userspace can iterate over all
-devices that are of the input class and see the individual attributes of
-them.
-
-Make more sense?
-
-So you need something like:
-	platform_lockdown_device_create()
-
-that returns a 'struct device' that is associated with the new class
-device.
-
-thanks,
-
-greg k-h
