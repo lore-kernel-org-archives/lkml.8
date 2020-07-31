@@ -2,143 +2,118 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E16FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAF1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA3F12084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 105812084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:54:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596178486;
+	bh=fPtI3iB0w+i9NqvkRZZDNHizCXiZekrYk0lhbejzVOE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Bjl1LLm0q0ujArluSxzWz1eoNpOpqnq86cXPjlwErPsTWv9oo6FJAkuX1m65MBCtc
+	 Y32EqjDjZtUJDFm25rl7RzG6w9FjekHLdUFa5f5GCTL3QIxGTftt+WH/pju4U/dBsH
+	 UGEXqDh0QxDUFhLIZkT1j6ro4iiSpy/i+mYCZzN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731492AbgGaGy0 (ORCPT
+        id S1731506AbgGaGyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 02:54:26 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:46330 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731224AbgGaGyZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 02:54:25 -0400
-Received: by mail-il1-f194.google.com with SMTP id l17so14326265ilq.13;
-        Thu, 30 Jul 2020 23:54:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ddULUPmve2Ih4FDIGVaZL8hkWKq+zZCtd1KIQB4rlVc=;
-        b=suKKRghKfTq6JZ9jPMggQB5fgmzLcCUZXN7OykBu0SFEz3om9ijn+A+1wWOA7SNyv+
-         ApXb+wgEPJ4yT1LYyKm3n3WvZ5wfFS9bJZH+pXi5teWzEEmmhU7wGyJEPYv30jP3Hk01
-         5jWeMtphz7366A8QfHclNVChsfOGL91Q6qS6X0Spem1HjuXs+eSpPpFAZ7RLI0n2nyic
-         qR87ZA8vSnGToUAGXg2VO62YdwiB54xjX3xsFjoUsHO32CmEMTOTfvmqtEMbVCOw1Xd3
-         3WKREVcYGUDQBzyKytUK4fqlxKRFDsoMwH57ZI0lcjORfoIRn3LdLCdZn5Yhsn4FGtzj
-         EXMw==
-X-Gm-Message-State: AOAM533U5toP8E1cmbvbsvzZ6LBB1owqfevBxqu8o0ohhmmAueIdoFKo
-        RcyZFpb6AMnGiyHzTjypMVsM2wsqmXfpvDRKAKk=
-X-Google-Smtp-Source: ABdhPJwrYeQlsEiUFPw0NHC1XzVesrxl6Uh3k+YaqEex2s/LgpjNgb+1s9FyFTbjLLVHl0WC4GsKyoBiqbFTrqNhxes=
-X-Received: by 2002:a92:d64d:: with SMTP id x13mr2302391ilp.287.1596178464410;
- Thu, 30 Jul 2020 23:54:24 -0700 (PDT)
+        Fri, 31 Jul 2020 02:54:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59660 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731224AbgGaGyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 02:54:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2660207F5;
+        Fri, 31 Jul 2020 06:54:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596178484;
+        bh=fPtI3iB0w+i9NqvkRZZDNHizCXiZekrYk0lhbejzVOE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Lr9L1KwKgWeUJgLL/j+abV6HCcYORLKzFEMMJkF7+dGwegpezY2pNaOemcq9rynaO
+         BM3/yElUq2pxZ93BNdb9mWSAueNkErA+SwMdBSRxV70wtZ8CRihTEhSqNcqYbQ1Ujb
+         VUOlZnPF3j6QRQIO5U37/xpQDgVjCmS3p+CyuLi4=
+Date:   Fri, 31 Jul 2020 08:54:31 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     John Donnelly <John.P.donnelly@oracle.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: Re: [PATCH v2: [linux-4.14.y] ] dm cache: submit writethrough writes
+ in parallel to origin and cache
+Message-ID: <20200731065431.GB1518178@kroah.com>
+References: <48659508-86e7-8107-75db-584b2896ad48@oracle.com>
 MIME-Version: 1.0
-References: <20200731041018.1381642-1-jiaxun.yang@flygoat.com> <20200731061702.fxdfyxpvd6qrhoql@mobilestation>
-In-Reply-To: <20200731061702.fxdfyxpvd6qrhoql@mobilestation>
-From:   Huacai Chen <chenhc@lemote.com>
-Date:   Fri, 31 Jul 2020 14:54:12 +0800
-Message-ID: <CAAhV-H5PyXZDpysbjhF9EL0iNKeDM7WWPRgjJB2WW0kVdj+w-Q@mail.gmail.com>
-Subject: Re: [PATCH] MIPS: Provide Kconfig option for default IEEE754
- conformance mode
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Zhou Yanjie <zhouyanjie@zoho.com>,
-        =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>,
-        Liangliang Huang <huanglllzu@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <48659508-86e7-8107-75db-584b2896ad48@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Huacai Chen <chenhc@lemote.com>
+On Thu, Jul 30, 2020 at 03:33:42PM -0500, John Donnelly wrote:
+> From: Mike Snitzer <snitzer@redhat.com>
+> 
+> Discontinue issuing writethrough write IO in series to the origin and
+> then cache.
+> 
+> Use bio_clone_fast() to create a new origin clone bio that will be
+> mapped to the origin device and then bio_chain() it to the bio that gets
+> remapped to the cache device.  The origin clone bio does _not_ have a
+> copy of the per_bio_data -- as such check_if_tick_bio_needed() will not
+> be called.
+> 
+> The cache bio (parent bio) will not complete until the origin bio has
+> completed -- this fulfills bio_clone_fast()'s requirements as well as
+> the requirement to not complete the original IO until the write IO has
+> completed to both the origin and cache device.
+> 
+> Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+> 
+> (cherry picked from commit 2df3bae9a6543e90042291707b8db0cbfbae9ee9)
+> 
+> Fixes: 4ec34f2196d125ff781170ddc6c3058c08ec5e73 (dm bio record:
+> save/restore bi_end_io and bi_integrity )
+> 
+> 4ec34f21 introduced a mkfs.ext4 hang on a LVM device that has been
+> modified with lvconvert --cachemode=writethrough.
+> 
+> CC:stable@vger.kernel.org for 4.14.x .
+> 
+> Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
+> Reviewed-by: Somasundaram Krishnasamy <somasundaram.krishnasamy@oracle.com>
+> 
+> conflicts:
+> 	drivers/md/dm-cache-target.c. -  Corrected usage of
+> 	writethrough_mode(&cache->feature) that was caught by
+> 	compiler, and removed unused static functions : writethrough_endio(),
+> 	defer_writethrough_bio(), wake_deferred_writethrough_worker()
+> 	that generated warnings.
+> ---
+>  drivers/md/dm-cache-target.c | 94
+> ++++++++++++++++++--------------------------
 
-On Fri, Jul 31, 2020 at 2:18 PM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
->
-> On Fri, Jul 31, 2020 at 12:10:16PM +0800, Jiaxun Yang wrote:
-> > Requested by downstream distros, a Kconfig option for default
-> > IEEE754 conformance mode allows them to set their mode to
-> > relaxed by default.
->
-> That's what should have been here in the first place. Thanks!
-> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
->
-> >
-> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > ---
-> >  arch/mips/Kconfig            | 21 +++++++++++++++++++++
-> >  arch/mips/kernel/cpu-probe.c | 12 +++++++++++-
-> >  2 files changed, 32 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> > index f6bb446d30f0..ef5b2a177b1b 100644
-> > --- a/arch/mips/Kconfig
-> > +++ b/arch/mips/Kconfig
-> > @@ -2877,6 +2877,27 @@ config MIPS_NR_CPU_NR_MAP
-> >       default 1024 if MIPS_NR_CPU_NR_MAP_1024
-> >       default NR_CPUS if !MIPS_NR_CPU_NR_MAP_1024
-> >
-> > +choice
-> > +     prompt "Default IEEE Std 754 conformance mode"
-> > +     default IEEE754_DEFAULT_STRICT
-> > +     help
-> > +       Default IEEE Std 754 conformance mode, see ieee754= kernel parameter
-> > +       for detail.
-> > +
-> > +     config IEEE754_DEFAULT_STRICT
-> > +             bool "Strict"
-> > +
-> > +     config IEEE754_DEFAULT_LEGACY
-> > +             bool "Legacy"
-> > +
-> > +     config IEEE754_DEFAULT_STD2008
-> > +             bool "2008"
-> > +
-> > +     config IEEE754_DEFAULT_RELAXED
-> > +             bool "Relaxed"
-> > +
-> > +endchoice
-> > +
-> >  #
-> >  # Timer Interrupt Frequency Configuration
-> >  #
-> > diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
-> > index d9e8d39a7289..03adeed58efb 100644
-> > --- a/arch/mips/kernel/cpu-probe.c
-> > +++ b/arch/mips/kernel/cpu-probe.c
-> > @@ -157,7 +157,17 @@ static void cpu_set_fpu_2008(struct cpuinfo_mips *c)
-> >   * IEEE 754 conformance mode to use.  Affects the NaN encoding and the
-> >   * ABS.fmt/NEG.fmt execution mode.
-> >   */
-> > -static enum { STRICT, LEGACY, STD2008, RELAXED } ieee754 = STRICT;
-> > +enum ieee754_mode { STRICT, LEGACY, STD2008, RELAXED };
-> > +
-> > +#if defined(CONFIG_IEEE754_DEFAULT_STRICT)
-> > +static enum ieee754_mode ieee754 = STRICT;
-> > +#elif defined(CONFIG_IEEE754_DEFAULT_LEGACY)
-> > +static enum ieee754_mode ieee754 = LEGACY;
-> > +#elif defined(CONFIG_IEEE754_DEFAULT_STD2008)
-> > +static enum ieee754_mode ieee754 = STD2008;
-> > +#elif defined(CONFIG_IEEE754_DEFAULT_RELAXED)
-> > +static enum ieee754_mode ieee754 = RELAXED;
-> > +#endif
-> >
-> >  /*
-> >   * Set the IEEE 754 NaN encodings and the ABS.fmt/NEG.fmt execution modes
-> > --
-> > 2.28.0
-> >
+Line wrapped?
+
+>  1 file changed, 38 insertions(+), 56 deletions(-)
+> 
+> diff --git a/drivers/md/dm-cache-target.c b/drivers/md/dm-cache-target.c
+> index 69cdb29ef6be..2d9566bfe08b 100644
+> --- a/drivers/md/dm-cache-target.c
+> +++ b/drivers/md/dm-cache-target.c
+> @@ -1,5 +1,5 @@
+>  /*
+> - * Copyright (C) 2012 Red Hat. All rights reserved.
+> + i Copyright (C) 2012 Red Hat. All rights reserved.
+
+What happened here?
+
+This patch can't be applied as-is :(
+
+greg k-h
