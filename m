@@ -2,151 +2,128 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15240C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0F7B2074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:19:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596215981;
-	bh=yxLFBtERe8UngePE6Ae91aGE2Ev7MNPNAO2x8RUFAKY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Im3wymrs1NT8FVgI2xmdSIKJH5NNQ0MrU0TMHta3wYUzwIVeCOEg5D/lwjsyhdg/Q
-	 tKLvDq6E0GFquZW2KDJPJYxj3Nv0nmQcb6OGc6ktMTdm8IOd1DKGHUJ4MhuhNr/C5O
-	 7bSwOka92nVbkekH+QZRnE4fk3RjmL2RxTADyKRY=
+	by mail.kernel.org (Postfix) with ESMTP id 596412074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733301AbgGaRTj (ORCPT
+        id S2387495AbgGaRTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 13:19:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732817AbgGaRTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 13:19:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6645C2074B;
-        Fri, 31 Jul 2020 17:19:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596215978;
-        bh=yxLFBtERe8UngePE6Ae91aGE2Ev7MNPNAO2x8RUFAKY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FJM6T0vbEgq2PNNmTnnc65DNz/A50UbgHexnPy4ZP95gE8ClTSvPshL0drR9tvoqC
-         Luj0SVJLc7CMxudDRUS2o57mBQ75nNh6SFidxxegIkiPaZrRJZtpzWaTW8Rc+03Jfz
-         XCdf00Knp7UBGQTGQpqSCFA9Dz+RfqVPF4vs9i0M=
-Date:   Fri, 31 Jul 2020 19:19:24 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Peilin Ye <yepeilin.cs@gmail.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak
- in rds_notify_queue_get()
-Message-ID: <20200731171924.GA2014207@kroah.com>
-References: <20200730192026.110246-1-yepeilin.cs@gmail.com>
- <20200731045301.GI75549@unreal>
- <20200731053306.GA466103@kroah.com>
- <20200731053333.GB466103@kroah.com>
- <20200731140452.GE24045@ziepe.ca>
- <20200731142148.GA1718799@kroah.com>
- <20200731143604.GF24045@ziepe.ca>
+        Fri, 31 Jul 2020 13:19:44 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:59002 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732817AbgGaRTm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 13:19:42 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k1Yh1-005yTT-FM; Fri, 31 Jul 2020 11:19:39 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k1Yh0-0005CV-Mh; Fri, 31 Jul 2020 11:19:39 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>, Pavel Machek <pavel@ucw.cz>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linux PM <linux-pm@vger.kernel.org>
+References: <87h7tsllgw.fsf@x220.int.ebiederm.org>
+        <CAHk-=wj34Pq1oqFVg1iWYAq_YdhCyvhyCYxiy-CG-o76+UXydQ@mail.gmail.com>
+        <87d04fhkyz.fsf@x220.int.ebiederm.org>
+        <87h7trg4ie.fsf@x220.int.ebiederm.org>
+        <CAHk-=wj+ynePRJC3U5Tjn+ZBRAE3y7=anc=zFhL=ycxyKP8BxA@mail.gmail.com>
+        <878sf16t34.fsf@x220.int.ebiederm.org>
+        <87pn8c1uj6.fsf_-_@x220.int.ebiederm.org>
+        <CAHk-=wjMcHGDh8Wx+dwaYHOGVNN+zzCPEKZEc5qb3spsEydNKg@mail.gmail.com>
+Date:   Fri, 31 Jul 2020 12:16:29 -0500
+In-Reply-To: <CAHk-=wjMcHGDh8Wx+dwaYHOGVNN+zzCPEKZEc5qb3spsEydNKg@mail.gmail.com>
+        (Linus Torvalds's message of "Thu, 30 Jul 2020 16:17:50 -0700")
+Message-ID: <87pn8by58y.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200731143604.GF24045@ziepe.ca>
+Content-Type: text/plain
+X-XM-SPF: eid=1k1Yh0-0005CV-Mh;;;mid=<87pn8by58y.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/myGxaPwVa4s7NNKG9jDuSCrMBG7MsRNg=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [RFC][PATCH] exec: Conceal the other threads from wakeups during exec
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 11:36:04AM -0300, Jason Gunthorpe wrote:
-> On Fri, Jul 31, 2020 at 04:21:48PM +0200, Greg Kroah-Hartman wrote:
-> 
-> > > The spec was updated in C11 to require zero'ing padding when doing
-> > > partial initialization of aggregates (eg = {})
-> > > 
-> > > """if it is an aggregate, every member is initialized (recursively)
-> > > according to these rules, and any padding is initialized to zero
-> > > bits;"""
-> > 
-> > But then why does the compilers not do this?
-> 
-> Do you have an example?
+Linus Torvalds <torvalds@linux-foundation.org> writes:
 
-At the moment, no, but we have had them in the past due to security
-issues we have had to fix for this.
+> On Thu, Jul 30, 2020 at 4:00 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>>
+>> The key is the function make_task_wakekill which could probably
+>> benefit from a little more review and refinement but appears to
+>> be basically correct.
+>
+> You really need to explain a lot more why you think this is all a good idea.
+>
+> For example, what if one of those other threads is waiting in line for
+> a critical lock, and the wait-queue you basically disabled was the
+> exclusive wait after lock handoff?
+>
+> That means that the lock will now effectively be held by that thread.
+> No, it wasn't woken up, but it had the lock handed to it, and it's now
+> entirely unresponsive until it is killed.
+>
+> How is that different from the deadlocks you're actually trying to fix?
+>
+> These are the kinds of problems that the freezer() code had too, with
+> freezing things that held locks etc.
+>
+> This approach does seem better than the freezer thing, and if I read
+> it right it will gather things in the signal handler code, but it's
+> not obvious that gathering them in random places where they sleep for
+> random reasons is safe or a good idea.
+>
+> I can imagine _so_ many dead systems if you just basically froze
+> something that holds the mmap lock and is sleeping on a page fault,
+> for example.
+>
+> Maybe I'm missing something, but I really think your "let's freeze
+> things" is seriously misguided. You're concentrating on some small
+> problem and trying to solve that, and not seeign the HUGE HONKING
+> problems that your approach is fundamentally introducing.
 
-> > > Considering we have thousands of aggregate initializers it
-> > > seems likely to me Linux also requires a compiler with this C11
-> > > behavior to operate correctly.
-> > 
-> > Note that this is not an "operate correctly" thing, it is a "zero out
-> > stale data in structure paddings so that data will not leak to
-> > userspace" thing.
-> 
-> Yes, not being insecure is "operate correctly", IMHO :)
->  
-> > > Does this patch actually fix anything? My compiler generates identical
-> > > assembly code in either case.
-> > 
-> > What compiler version?
-> 
-> I tried clang 10 and gcc 9.3 for x86-64.
-> 
-> #include <string.h>
-> 
-> void test(void *out)
-> {
-> 	struct rds_rdma_notify {
-> 		unsigned long user_token;
-> 		unsigned int status;
-> 	} foo = {};
-> 	memcpy(out, &foo, sizeof(foo));
-> }
-> 
-> $ gcc -mno-sse2 -O2 -Wall -std=c99 t.c -S
-> 
-> test:
-> 	endbr64
-> 	movq	$0, (%rdi)
-> 	movq	$0, 8(%rdi)
-> 	ret
-> 
-> Just did this same test with gcc 4.4 and it also gave the same output..
-> 
-> Made it more complex with this:
-> 
-> 	struct rds_rdma_notify {
-> 		unsigned long user_token;
-> 		unsigned char status;
-> 		unsigned long user_token1;
-> 		unsigned char status1;
-> 		unsigned long user_token2;
-> 		unsigned char status2;
-> 		unsigned long user_token3;
-> 		unsigned char status3;
-> 		unsigned long user_token4;
-> 		unsigned char status4;
-> 	} foo;
-> 
-> And still got the same assembly vs memset on gcc 4.4.
-> 
-> I tried for a bit and didn't find a way to get even old gcc 4.4 to not
-> initialize the holes.
+Very good point.  That would be a priority inversion on mmap_lock.
+Without great care that could indeed result in lockups.
 
-Odd, so it is just the "= {0};" that does not zero out the holes?
+That definitely requires the points where things are already sleeping
+that can be converted to be opt-in.  Which potentially makes things much
+more work.
 
-thanks,
+Thanks, that helps kill my bright idea as I expressed it.
 
-greg k-h
+Part of what I was trying to solve (because I ran into the problem while
+I was reading the code) was that the freezer, the cgroup v2 freezer, and
+other waits do not compose nicely.
+
+Even limited to opt-in locations I think the trick of being able to
+transform the wait-state may solve that composition problem.
+
+
+That said I was really just posting this so if the ideas were good they
+could inspire future code, and if the ideas were bad they could be sunk.
+When it comes to sorting out future especially in exec I will know which
+ideas don't fly, so it will be easier to make the case for ideas that
+will work.
+
+Eric
+
