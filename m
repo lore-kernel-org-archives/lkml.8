@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE21C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 119F0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68E4E22D72
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D413A22B40
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:23:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZsqKQCwC";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8b6NaSTp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RAz0FjDt";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RJJldY2C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732354AbgGaJXG (ORCPT
+        id S1732391AbgGaJXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:23:06 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56390 "EHLO
+        Fri, 31 Jul 2020 05:23:12 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56434 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732248AbgGaJWw (ORCPT
+        with ESMTP id S1732286AbgGaJW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:22:52 -0400
-Date:   Fri, 31 Jul 2020 09:22:48 -0000
+        Fri, 31 Jul 2020 05:22:58 -0400
+Date:   Fri, 31 Jul 2020 09:22:55 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596187369;
+        s=2020; t=1596187375;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=6wVn6Fx971em4nYfkz+RfazeJN6npvESKsBOPxOg0GM=;
-        b=ZsqKQCwC8Um6+14DP0kdEtcgS+PT/HvOI6djURHqTDnlHv762Yl+47flERnAcla5jWYkPo
-        RS7cgd3wj5GsTbT6BDIXyAZmTNd4xeuCZ/wgxBV2RgAIAHhk2FxA+bIW1Ujno8TDjl8eSt
-        j3t6Tx0BaCxd7nal7RtXhfaPxX3fWkGmyfJBszpuwINOE4UeE4CGCU6I6LTxWbUl3H/9jk
-        Pn58Wns4XahBBwAbt8hjAjJ3X2pRKpTtND/7JSswxEwTxmtVkg7LrlVqqZSCQ7ml+RZZht
-        zk/LGP3A4ZSm3+4aooX/3Z+7A1zTcjxTMFg6CyPNSeTW3GJjf+PDMrQuDqyUbQ==
+        bh=sbYCIUsOAV3704u7mcpiRX1NVlpsC2ejS56Gb5y4xeM=;
+        b=RAz0FjDt84ztKHlGp4GW+DRDtq349r634pEG/kTXGSGHa6eUVm5oCxO68bkwMZ0Nazcda4
+        0E1Kxy5vMBc2Wyur9tFvazOjEj9V136rPeBngivpoYxtj2pIgWkW16JYqG/XJ7PGKOrzmE
+        rXd59PB6shEj/LVTW+xKw3/fIK8rWPOPRHjAwrLk16FpUFAeSHny8yzP4NUT16Fr8kaPAU
+        LqqNNWjPzVoP4xi8JEvpKfhdIXg5mrB8/ls7x+jD2pYDH8CkcXL4+dXPiBXNAAC0pO1Nme
+        36OyBhHH9UIy6M60xUo2pBoA5Ec6Ktt/eV8t22eLRfjgQfyWLaSCSMnYreL0/g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596187369;
+        s=2020e; t=1596187375;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=6wVn6Fx971em4nYfkz+RfazeJN6npvESKsBOPxOg0GM=;
-        b=8b6NaSTp3V3vLXjY+fsF5vQhcijQdAOIuQU6ZpRKwkAYBIRVeYA9hkCYAyv2AwgnT9BRop
-        vPpWuG+DyMQtGkCQ==
+        bh=sbYCIUsOAV3704u7mcpiRX1NVlpsC2ejS56Gb5y4xeM=;
+        b=RJJldY2CB1qY/8s/WfNF8BxNZNLNXwqoKvC6iOZ/j8e56P/BnvGCq2W/Zz4gxXgd6fIgPu
+        /IfvTkAP0PHMf1Dw==
 From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] torture: Add script to smoke-test commits in a branch
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: core/rcu] refperf: Change readdelay module parameter to nanoseconds
+Cc:     Akira Yokosawa <akiyks@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <159618736862.4006.14202618761532645344.tip-bot2@tip-bot2>
+Message-ID: <159618737528.4006.7436673446115115268.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -63,137 +64,153 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     6582e7f184e49a754ee09c996a886b89113d7354
-Gitweb:        https://git.kernel.org/tip/6582e7f184e49a754ee09c996a886b89113d7354
+Commit-ID:     918b351d965560c7902ad482cf87049517843ff2
+Gitweb:        https://git.kernel.org/tip/918b351d965560c7902ad482cf87049517843ff2
 Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Mon, 04 May 2020 15:55:47 -07:00
+AuthorDate:    Sun, 31 May 2020 18:14:57 -07:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Mon, 29 Jun 2020 12:01:43 -07:00
+CommitterDate: Mon, 29 Jun 2020 12:00:45 -07:00
 
-torture: Add script to smoke-test commits in a branch
+refperf: Change readdelay module parameter to nanoseconds
 
-This commit adds a kvm-check-branches.sh script that takes a list
-of commits and commit ranges and runs a short rcutorture test on all
-scenarios on each specified commit.  A summary is printed at the end, and
-the script returns success if all rcutorture runs completed without error.
+The current units of microseconds are too coarse, so this commit
+changes the units to nanoseconds.  However, ndelay is used only for the
+nanoseconds with udelay being used for whole microseconds.  For example,
+setting refperf.readdelay=1500 results in a udelay(1) followed by an
+ndelay(500).
 
+Suggested-by: Akira Yokosawa <akiyks@gmail.com>
+[ paulmck: Abstracted delay per Akira feedback and move from 80 to 100 lines. ]
+[ paulmck: Fix names as suggested by kbuild test robot. ]
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- tools/testing/selftests/rcutorture/bin/kvm-check-branches.sh | 108 +++++++-
- 1 file changed, 108 insertions(+)
- create mode 100755 tools/testing/selftests/rcutorture/bin/kvm-check-branches.sh
+ kernel/rcu/refperf.c | 36 ++++++++++++++++++++++--------------
+ 1 file changed, 22 insertions(+), 14 deletions(-)
 
-diff --git a/tools/testing/selftests/rcutorture/bin/kvm-check-branches.sh b/tools/testing/selftests/rcutorture/bin/kvm-check-branches.sh
-new file mode 100755
-index 0000000..6e65c13
---- /dev/null
-+++ b/tools/testing/selftests/rcutorture/bin/kvm-check-branches.sh
-@@ -0,0 +1,108 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# Run a group of kvm.sh tests on the specified commits.  This currently
-+# unconditionally does three-minute runs on each scenario in CFLIST,
-+# taking advantage of all available CPUs and trusting the "make" utility.
-+# In the short term, adjustments can be made by editing this script and
-+# CFLIST.  If some adjustments appear to have ongoing value, this script
-+# might grow some command-line arguments.
-+#
-+# Usage: kvm-check-branches.sh commit1 commit2..commit3 commit4 ...
-+#
-+# This script considers its arguments one at a time.  If more elaborate
-+# specification of commits is needed, please use "git rev-list" to
-+# produce something that this simple script can understand.  The reason
-+# for retaining the simplicity is that it allows the user to more easily
-+# see which commit came from which branch.
-+#
-+# This script creates a yyyy.mm.dd-hh.mm.ss-group entry in the "res"
-+# directory.  The calls to kvm.sh create the usual entries, but this script
-+# moves them under the yyyy.mm.dd-hh.mm.ss-group entry, each in its own
-+# directory numbered in run order, that is, "0001", "0002", and so on.
-+# For successful runs, the large build artifacts are removed.  Doing this
-+# reduces the disk space required by about two orders of magnitude for
-+# successful runs.
-+#
-+# Copyright (C) Facebook, 2020
-+#
-+# Authors: Paul E. McKenney <paulmck@kernel.org>
+diff --git a/kernel/rcu/refperf.c b/kernel/rcu/refperf.c
+index 80d4490..49fffb9 100644
+--- a/kernel/rcu/refperf.c
++++ b/kernel/rcu/refperf.c
+@@ -66,8 +66,8 @@ torture_param(long, loops, 10000, "Number of loops per experiment.");
+ torture_param(int, nreaders, -1, "Number of readers, -1 for 75% of CPUs.");
+ // Number of runs.
+ torture_param(int, nruns, 30, "Number of experiments to run.");
+-// Reader delay in microseconds, 0 for no delay.
+-torture_param(int, readdelay, 0, "Read-side delay in microseconds.");
++// Reader delay in nanoseconds, 0 for no delay.
++torture_param(int, readdelay, 0, "Read-side delay in nanoseconds.");
+ 
+ #ifdef MODULE
+ # define REFPERF_SHUTDOWN 0
+@@ -111,12 +111,20 @@ struct ref_perf_ops {
+ 	void (*init)(void);
+ 	void (*cleanup)(void);
+ 	void (*readsection)(const int nloops);
+-	void (*delaysection)(const int nloops, const int ndelay);
++	void (*delaysection)(const int nloops, const int udl, const int ndl);
+ 	const char *name;
+ };
+ 
+ static struct ref_perf_ops *cur_ops;
+ 
++static void un_delay(const int udl, const int ndl)
++{
++	if (udl)
++		udelay(udl);
++	if (ndl)
++		ndelay(ndl);
++}
 +
-+if ! git status > /dev/null 2>&1
-+then
-+	echo '!!!' This script needs to run in a git archive. 1>&2
-+	echo '!!!' Giving up. 1>&2
-+	exit 1
-+fi
-+
-+# Remember where we started so that we can get back and the end.
-+curcommit="`git status | head -1 | awk '{ print $NF }'`"
-+
-+nfail=0
-+ntry=0
-+resdir="tools/testing/selftests/rcutorture/res"
-+ds="`date +%Y.%m.%d-%H.%M.%S`-group"
-+if ! test -e $resdir
-+then
-+	mkdir $resdir || :
-+fi
-+mkdir $resdir/$ds
-+echo Results directory: $resdir/$ds
-+
-+KVM="`pwd`/tools/testing/selftests/rcutorture"; export KVM
-+PATH=${KVM}/bin:$PATH; export PATH
-+. functions.sh
-+cpus="`identify_qemu_vcpus`"
-+echo Using up to $cpus CPUs.
-+
-+# Each pass through this loop does one command-line argument.
-+for gitbr in $@
-+do
-+	echo ' --- git branch ' $gitbr
-+
-+	# Each pass through this loop tests one commit.
-+	for i in `git rev-list "$gitbr"`
-+	do
-+		ntry=`expr $ntry + 1`
-+		idir=`awk -v ntry="$ntry" 'END { printf "%04d", ntry; }' < /dev/null`
-+		echo ' --- commit ' $i from branch $gitbr
-+		date
-+		mkdir $resdir/$ds/$idir
-+		echo $gitbr > $resdir/$ds/$idir/gitbr
-+		echo $i >> $resdir/$ds/$idir/gitbr
-+
-+		# Test the specified commit.
-+		git checkout $i > $resdir/$ds/$idir/git-checkout.out 2>&1
-+		echo git checkout return code: $? "(Commit $ntry: $i)"
-+		kvm.sh --cpus $cpus --duration 3 --trust-make > $resdir/$ds/$idir/kvm.sh.out 2>&1
-+		ret=$?
-+		echo kvm.sh return code $ret for commit $i from branch $gitbr
-+
-+		# Move the build products to their resting place.
-+		runresdir="`grep -m 1 '^Results directory:' < $resdir/$ds/$idir/kvm.sh.out | sed -e 's/^Results directory://'`"
-+		mv $runresdir $resdir/$ds/$idir
-+		rrd="`echo $runresdir | sed -e 's,^.*/,,'`"
-+		echo Run results: $resdir/$ds/$idir/$rrd
-+		if test "$ret" -ne 0
-+		then
-+			# Failure, so leave all evidence intact.
-+			nfail=`expr $nfail + 1`
-+		else
-+			# Success, so remove large files to save about 1GB.
-+			( cd $resdir/$ds/$idir/$rrd; rm -f */vmlinux */bzImage */System.map */Module.symvers )
-+		fi
-+	done
-+done
-+date
-+
-+# Go back to the original commit.
-+git checkout "$curcommit"
-+
-+if test $nfail -ne 0
-+then
-+	echo '!!! ' $nfail failures in $ntry 'runs!!!'
-+	exit 1
-+else
-+	echo No failures in $ntry runs.
-+	exit 0
-+fi
+ static void ref_rcu_read_section(const int nloops)
+ {
+ 	int i;
+@@ -127,13 +135,13 @@ static void ref_rcu_read_section(const int nloops)
+ 	}
+ }
+ 
+-static void ref_rcu_delay_section(const int nloops, const int ndelay)
++static void ref_rcu_delay_section(const int nloops, const int udl, const int ndl)
+ {
+ 	int i;
+ 
+ 	for (i = nloops; i >= 0; i--) {
+ 		rcu_read_lock();
+-		udelay(ndelay);
++		un_delay(udl, ndl);
+ 		rcu_read_unlock();
+ 	}
+ }
+@@ -165,14 +173,14 @@ static void srcu_ref_perf_read_section(const int nloops)
+ 	}
+ }
+ 
+-static void srcu_ref_perf_delay_section(const int nloops, const int ndelay)
++static void srcu_ref_perf_delay_section(const int nloops, const int udl, const int ndl)
+ {
+ 	int i;
+ 	int idx;
+ 
+ 	for (i = nloops; i >= 0; i--) {
+ 		idx = srcu_read_lock(srcu_ctlp);
+-		udelay(ndelay);
++		un_delay(udl, ndl);
+ 		srcu_read_unlock(srcu_ctlp, idx);
+ 	}
+ }
+@@ -197,13 +205,13 @@ static void ref_refcnt_section(const int nloops)
+ 	}
+ }
+ 
+-static void ref_refcnt_delay_section(const int nloops, const int ndelay)
++static void ref_refcnt_delay_section(const int nloops, const int udl, const int ndl)
+ {
+ 	int i;
+ 
+ 	for (i = nloops; i >= 0; i--) {
+ 		atomic_inc(&refcnt);
+-		udelay(ndelay);
++		un_delay(udl, ndl);
+ 		atomic_dec(&refcnt);
+ 	}
+ }
+@@ -233,13 +241,13 @@ static void ref_rwlock_section(const int nloops)
+ 	}
+ }
+ 
+-static void ref_rwlock_delay_section(const int nloops, const int ndelay)
++static void ref_rwlock_delay_section(const int nloops, const int udl, const int ndl)
+ {
+ 	int i;
+ 
+ 	for (i = nloops; i >= 0; i--) {
+ 		read_lock(&test_rwlock);
+-		udelay(ndelay);
++		un_delay(udl, ndl);
+ 		read_unlock(&test_rwlock);
+ 	}
+ }
+@@ -269,13 +277,13 @@ static void ref_rwsem_section(const int nloops)
+ 	}
+ }
+ 
+-static void ref_rwsem_delay_section(const int nloops, const int ndelay)
++static void ref_rwsem_delay_section(const int nloops, const int udl, const int ndl)
+ {
+ 	int i;
+ 
+ 	for (i = nloops; i >= 0; i--) {
+ 		down_read(&test_rwsem);
+-		udelay(ndelay);
++		un_delay(udl, ndl);
+ 		up_read(&test_rwsem);
+ 	}
+ }
+@@ -292,7 +300,7 @@ static void rcu_perf_one_reader(void)
+ 	if (readdelay <= 0)
+ 		cur_ops->readsection(loops);
+ 	else
+-		cur_ops->delaysection(loops, readdelay);
++		cur_ops->delaysection(loops, readdelay / 1000, readdelay % 1000);
+ }
+ 
+ // Reader kthread.  Repeatedly does empty RCU read-side
