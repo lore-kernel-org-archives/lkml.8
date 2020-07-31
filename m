@@ -2,105 +2,138 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3539DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6C0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 067B822B3F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58E1421744
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:31:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VfUjSEfR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="obajWK+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387426AbgGaRXr (ORCPT
+        id S1733262AbgGaRbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 13:23:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49300 "EHLO
+        Fri, 31 Jul 2020 13:31:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732970AbgGaRXr (ORCPT
+        with ESMTP id S1732970AbgGaRbZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 13:23:47 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46667C061574;
-        Fri, 31 Jul 2020 10:23:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=1mijjRYuRlV1nsas7+RkkJeUm22srBJgqC/kjl8CxTo=; b=VfUjSEfRmnrJ+EhnkKqaubP8LY
-        bPDymb+ADlyxt4KSFmNG0Kdi9f0XdEd3AGurw1Iq1LfD3qNEFLgZg5KXh3fjBauS+N3hpvaoF2KCz
-        6qDSKlY6nElZV7JEGX5vEWwcXkW7KdWomh3ez+xbuveQumtBN9ETF65jZxsfubRxRYSE6KC2QY9Jz
-        l4SdO5PEVzXiyZge4/yp5ddWWP8TqXfSoXy2ce0B7OsiSsK4zXCJSVCtfK8jPJQtcpzJ2+Ep3YeXh
-        JmGNgfodGHSCuxWnen/BJOFvJKpMd4185WrTmsN7H330wpeVTaZ/nCYJRedW3ux9Tqh3wXb6H5Vd9
-        T3UAQkyA==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k1Ykr-0008T6-G9; Fri, 31 Jul 2020 17:23:37 +0000
-Date:   Fri, 31 Jul 2020 18:23:37 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Steven Sistare <steven.sistare@oracle.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
-        arnd@arndb.de, keescook@chromium.org, gerg@linux-m68k.org,
-        ktkhai@virtuozzo.com, christian.brauner@ubuntu.com,
-        peterz@infradead.org, esyr@redhat.com, jgg@ziepe.ca,
-        christian@kellner.me, areber@redhat.com, cyphar@cyphar.com
-Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
-Message-ID: <20200731172337.GQ23808@casper.infradead.org>
-References: <20200730152250.GG23808@casper.infradead.org>
- <db3bdbae-eb0f-1ae3-94dd-045e37bc94ba@oracle.com>
- <20200730171251.GI23808@casper.infradead.org>
- <63a7404c-e4f6-a82e-257b-217585b0277f@oracle.com>
- <20200730174956.GK23808@casper.infradead.org>
- <ab7a25bf-3321-77c8-9bc3-28a223a14032@oracle.com>
- <87y2n03brx.fsf@x220.int.ebiederm.org>
- <689d6348-6029-5396-8de7-a26bc3c017e5@oracle.com>
- <20200731152736.GP23808@casper.infradead.org>
- <9ba26063-0098-e796-9431-8c1d0c076ffc@oracle.com>
+        Fri, 31 Jul 2020 13:31:25 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FAEFC061574;
+        Fri, 31 Jul 2020 10:31:24 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id 3so9935732wmi.1;
+        Fri, 31 Jul 2020 10:31:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wO4f9oVxrsweCzVrPEPTiBn0n29w9yIsNMekGB68JeI=;
+        b=obajWK+2pCFiEKV/2eMDwzcf7coFlPTQCpnzhLsxXlijhZ8oEvL0eeF1bczkYNKwYU
+         w4N48fL1HDLI50n+/dzVLCSEmzp+sdXX6DmIOPEfoHwIZHgMR8R7bmrEhbtZjzHmYOYD
+         THVj8cb1vUBrmNs9413xDV/JE3xLqw9UNZlOJ52XoEj32enO6PeLN2CogJoYZ9iA/lpO
+         xrN259lT630oT20Z2V8QDzcMPLGQy2PGapeyURfyOW7w3rlUCtOcbpPiZS+SW1COX+qV
+         MINBxQ/ymFo6hLbb0jpuGQ7We+UA2CKQqMw/pJ4RxT1pZj6NJ85+H4wVTLoDCAMSJbc9
+         kbdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wO4f9oVxrsweCzVrPEPTiBn0n29w9yIsNMekGB68JeI=;
+        b=lNEFH64dmBedByZvHrFkmlY9/XNksxoS9CC2AekNwIB0wzKd7zazyJw0BqM8vWwiPC
+         boSTOztZF2mUiqefjWD4XgTLrA/kGmuVzruUWhwzGlkqK+jpv0XGsxfa28LvuxRsfc+x
+         zRXlD7/HddbjbXHnjzlZWdbQJOPGjwqB65xLaRNkE8V9Dhz5gi2pREZvzSbfxo0l66Lc
+         AGJLFnfwsMPy2fg6NIs8JB3PqDA0nwz8E1SASAatVXrNTcBQawGrlyvkuAQ4LrZwOovj
+         eDRMrPHI9XCrp8O4jBgiDhAEgRSOnvWVKFqr6JLhVE1PWd1lVKRltuLWg64PVu/oQdQc
+         j9Rg==
+X-Gm-Message-State: AOAM532FkHvbO6tnLBHVyyyX03UNXyVzN89Rfw5V1p64sy03R2wFIige
+        hPDO3PkVb8OqvrchopAAwZiYzPqh
+X-Google-Smtp-Source: ABdhPJzHHTpsN9YodTgSjp2Xan9EQZ1qXY9klsnJ1b5gK4zP6O8x4+C+bkc5hEx2fssF9sPExQ5Ijw==
+X-Received: by 2002:a1c:6007:: with SMTP id u7mr4926216wmb.32.1596216683216;
+        Fri, 31 Jul 2020 10:31:23 -0700 (PDT)
+Received: from [10.55.3.148] ([173.38.220.51])
+        by smtp.gmail.com with ESMTPSA id h23sm12591375wmb.3.2020.07.31.10.31.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jul 2020 10:31:22 -0700 (PDT)
+Subject: Re: [net-next] seg6: using DSCP of inner IPv4 packets
+To:     David Miller <davem@davemloft.net>
+Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        andrea.mayer@uniroma2.it
+References: <20200728122044.1900-1-ahabdels@gmail.com>
+ <20200730.164424.85007408369570229.davem@davemloft.net>
+From:   Ahmed Abdelsalam <ahabdels@gmail.com>
+Message-ID: <64f8d98d-3195-9bb0-858f-18a9625ccf8e@gmail.com>
+Date:   Fri, 31 Jul 2020 19:31:20 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9ba26063-0098-e796-9431-8c1d0c076ffc@oracle.com>
+In-Reply-To: <20200730.164424.85007408369570229.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 12:11:52PM -0400, Steven Sistare wrote:
-> On 7/31/2020 11:27 AM, Matthew Wilcox wrote:
-> > On Fri, Jul 31, 2020 at 10:57:44AM -0400, Steven Sistare wrote:
-> >> Matthews sileby/mshare proposal has the same issue.  If a process opts-in
-> >> and mmap's an address in the shared region, then content becomes mapped at
-> >> a VA that was known to the pre-fork or pre-exec process.  Trust must still
-> >> be established.
-> > 
-> > It's up to the recipient whether they try to map it at the same address
-> > or at a fresh address.  The intended use case is a "semi-shared" address
-> > space between two processes (ie partway between a threaded, fully-shared
-> > address space and a forked un-shared address space), in which case
-> > there's a certain amount of trust and cooperation between the processes.
+I will refactor the code of this function and submit a new patch.
+Ahmed
+
+On 31/07/2020 01:44, David Miller wrote:
+> From: Ahmed Abdelsalam <ahabdels@gmail.com>
+> Date: Tue, 28 Jul 2020 12:20:44 +0000
 > 
-> Understood, but if the recipient does map at any of the same, which is the whole
-> point because you want to share the page table.  The trust relationship is no
-> different than for the live update case.  
-
-You don't have to map at the same address to share the page tables.
-For example, on x86 if you share an 8GB region, that must be aligned at
-1GB in both the donor and the recipient, but they need not be mapped at
-the same address.
-
-> > It's a net increase of 200 lines of kernel code.  If 4 lines of userspace
-> > code removes 200 lines of kernel code, I think I know which I prefer ...
+>> This patch allows copying the DSCP from inner IPv4 header to the
+>> outer IPv6 header, when doing SRv6 Encapsulation.
+>>
+>> This allows forwarding packet across the SRv6 fabric based on their
+>> original traffic class.
+>>
+>> Signed-off-by: Ahmed Abdelsalam <ahabdels@gmail.com>
 > 
-> It will be *far* more than 4 lines.
-> Much of the 200 lines is mostly for the elf opt in, and much of the elf code is from
-> anthony reviving an earlier patch that use MAP_FIXED_NOREPLACE during segment setup.
-
-It doesn't really matter how much of it is for the opt-in and how much
-is for the exec path itself.  The MAP_FIXED_NOREPLACE patch is only net
-+16 lines, so that's not the problem.
+> The conditionals in this function are now a mess.
+> 
+>> -	inner_hdr = ipv6_hdr(skb);
+>> +	if (skb->protocol == htons(ETH_P_IPV6))
+>> +		inner_hdr = ipv6_hdr(skb);
+>> +	else
+>> +		inner_ipv4_hdr = ip_hdr(skb);
+>> +
+> 
+> You assume that if skb->protocol is not ipv6 then it is ipv4.
+> 
+>> @@ -138,6 +143,10 @@ int seg6_do_srh_encap(struct sk_buff *skb, struct ipv6_sr_hdr *osrh, int proto)
+>>   		ip6_flow_hdr(hdr, ip6_tclass(ip6_flowinfo(inner_hdr)),
+>>   			     flowlabel);
+>>   		hdr->hop_limit = inner_hdr->hop_limit;
+>> +	} else if (skb->protocol == htons(ETH_P_IP)) {
+>> +		ip6_flow_hdr(hdr, inner_ipv4_hdr->tos, flowlabel);
+>> +		hdr->hop_limit = inner_ipv4_hdr->ttl;
+>> +		memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
+>>   	} else {
+>>   		ip6_flow_hdr(hdr, 0, flowlabel);
+>>   		hdr->hop_limit = ip6_dst_hoplimit(skb_dst(skb));
+> 
+> But this code did not make that assumption at all.
+> 
+> Only one of the two can be correct.
+> 
+> The conditional assignment is also very ugly, you have two pointers
+> conditionally initialized.  The compiler is going to have a hard time
+> figuring out that each pointer is only used in the code path where it
+> is guaranteed to be initialiazed.
+> 
+> And it can't do that, as far as the compiler knows, skb->protocol can
+> change between those two locations.  It MUST assume that can happen if
+> there are any functions calls whatsoever between these two code points.
+> 
+> This function has to be sanitized, with better handling of access to
+> the inner protocol header values, before I am willing to apply this.
+> 
