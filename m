@@ -2,166 +2,182 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A31EEC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EE9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 891F0208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:31:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Jrvy3o8X"
+	by mail.kernel.org (Postfix) with ESMTP id 704EC208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729472AbgGaTbZ (ORCPT
+        id S1729662AbgGaTdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 15:31:25 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:5286 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgGaTbY (ORCPT
+        Fri, 31 Jul 2020 15:33:53 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43511 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726757AbgGaTdw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 15:31:24 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f24712e0000>; Fri, 31 Jul 2020 12:29:50 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 31 Jul 2020 12:31:24 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 31 Jul 2020 12:31:24 -0700
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul
- 2020 19:31:23 +0000
-Subject: Re: [PATCH v4 6/6] mm/migrate: remove range invalidation in
- migrate_vma_pages()
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-CC:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
-        <nouveau@lists.freedesktop.org>, <kvm-ppc@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Jerome Glisse" <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Christoph Hellwig" <hch@lst.de>,
+        Fri, 31 Jul 2020 15:33:52 -0400
+Received: from mail-oo1-f72.google.com ([209.85.161.72])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <dann.frazier@canonical.com>)
+        id 1k1amr-0002Ir-Mm
+        for linux-kernel@vger.kernel.org; Fri, 31 Jul 2020 19:33:49 +0000
+Received: by mail-oo1-f72.google.com with SMTP id v21so12624642ooq.12
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 12:33:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/UfcxnqQXz45WSHJuykuGHWzN2VIv6JtmJCEatnLzos=;
+        b=rgUljsswn0Ow/eFo8GbqLpXq+M4AteQQCCfQITHsnGZcUdsChVMSnnsVaPh35uWxVK
+         CpbgnYAgjVgb0PkxymD1xDo1DfXqi/SHf8pYCEDgk9jiLY1uV+Myw80F8ocL0FoiX+Bf
+         qImm2YskLrao2fcWQIBM41jB7wGLP5oPNU34LPCD5uwvVPPNuQYbPxt3627bZKODVNjS
+         ow2PVKdNGans1lm4Q1ihdV2kysWqovEsvb+aTZ5YI0aa6nUE2rgWVJzyek81361TQBht
+         YiSHaXKy2xQ5aLxLXDSRJgAMOplCPthXcj9A1ZLINlV/aKfJwKxxgChHaayjhuGJtaSy
+         yZPw==
+X-Gm-Message-State: AOAM532oD/ALTFfpctHj8kJkF2qL9MwBuDf2v1xwEcl4UQHJxXGIhToe
+        hk/hKH81H2yPV4DhaCNo5UHO+kNacEuPVprBAbd1QDbsaQI7pTYIJSPiulCbDvSdq9EatGTf6js
+        0KDu1+iOVTyovG8TEFNP8fsDiyAwhegjpBpcxpfWmHQ==
+X-Received: by 2002:aca:1904:: with SMTP id l4mr128084oii.67.1596224028603;
+        Fri, 31 Jul 2020 12:33:48 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy6SVnCUx4j4tWOYOHp5bXL/UEbqVmdXAz2oYJ378BGhoFK8umq6n3SCpPF/jUvjUew6ye1Ww==
+X-Received: by 2002:aca:1904:: with SMTP id l4mr128070oii.67.1596224028188;
+        Fri, 31 Jul 2020 12:33:48 -0700 (PDT)
+Received: from xps13.dannf (c-71-56-235-36.hsd1.co.comcast.net. [71.56.235.36])
+        by smtp.gmail.com with ESMTPSA id p143sm1665093oop.14.2020.07.31.12.33.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 12:33:47 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 13:33:45 -0600
+From:   dann frazier <dann.frazier@canonical.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, Ben Skeggs <bskeggs@redhat.com>,
-        Bharata B Rao <bharata@linux.ibm.com>
-References: <20200723223004.9586-1-rcampbell@nvidia.com>
- <20200723223004.9586-7-rcampbell@nvidia.com>
- <20200728191940.GB159104@nvidia.com>
- <7f947311-0034-9148-1dca-fb9b9a10abc4@nvidia.com>
- <20200731191543.GJ24045@ziepe.ca>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <b8c35d45-91d0-1c99-390a-049867af17fb@nvidia.com>
-Date:   Fri, 31 Jul 2020 12:31:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Ian May <ian.may@canonical.com>
+Subject: Re: [for-next][PATCH 09/18] tracing: Move pipe reference to trace
+ array instead of current_tracer
+Message-ID: <20200731193345.GA54749@xps13.dannf>
+References: <20200702215812.428188663@goodmis.org>
+ <20200702215832.784471709@goodmis.org>
 MIME-Version: 1.0
-In-Reply-To: <20200731191543.GJ24045@ziepe.ca>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596223790; bh=MF4Np6kSGoTk93XreGGnpf8Lflbk/aQSd9CdXlm3gxg=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Jrvy3o8XJ2rY3h6bMQqWanvXTXrCvZz2LWHdo1X7SNs+nmekjNPqnyIhs7UtxJkuW
-         FMnHvtBQj8zr9jesv11SxggwiWhDu6842G9JagwXSjMizmbF/C+x2Ml8s6IOQs08nq
-         2n8TQS51oUHkTQcN2FCe7qo70Q8VKNVlgQ4qLtBkSQ9+ib1yW6Nc70SFp/jQcRjyxh
-         WxtFmZ16kXYh+Hq3mhLNHf/Y0PI4F+dahDYQaKaTitPTDBPbVjT0OVveLaQMuLEI/Z
-         pIPJrtAiTRbfiY7Pb5dn/ns2bCBOZa3fWf9TQyI6WuLHb8Jv/Fs6eww3WhAufsO/x5
-         njIu1bRlWI0iw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702215832.784471709@goodmis.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 02, 2020 at 05:58:21PM -0400, Steven Rostedt wrote:
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> 
+> If a process has the trace_pipe open on a trace_array, the current tracer
+> for that trace array should not be changed. This was original enforced by a
+> global lock, but when instances were introduced, it was moved to the
+> current_trace. But this structure is shared by all instances, and a
+> trace_pipe is for a single instance. There's no reason that a process that
+> has trace_pipe open on one instance should prevent another instance from
+> changing its current tracer. Move the reference counter to the trace_array
+> instead.
+> 
+> This is marked as "Fixes" but is more of a clean up than a true fix.
+> Backport if you want, but its not critical.
 
-On 7/31/20 12:15 PM, Jason Gunthorpe wrote:
-> On Tue, Jul 28, 2020 at 03:04:07PM -0700, Ralph Campbell wrote:
->>
->> On 7/28/20 12:19 PM, Jason Gunthorpe wrote:
->>> On Thu, Jul 23, 2020 at 03:30:04PM -0700, Ralph Campbell wrote:
->>>> When migrating the special zero page, migrate_vma_pages() calls
->>>> mmu_notifier_invalidate_range_start() before replacing the zero page
->>>> PFN in the CPU page tables. This is unnecessary since the range was
->>>> invalidated in migrate_vma_setup() and the page table entry is checked
->>>> to be sure it hasn't changed between migrate_vma_setup() and
->>>> migrate_vma_pages(). Therefore, remove the redundant invalidation.
->>>
->>> I don't follow this logic, the purpose of the invalidation is also to
->>> clear out anything that may be mirroring this VA, and "the page hasn't
->>> changed" doesn't seem to rule out that case?
->>>
->>> I'm also not sure I follow where the zero page came from?
->>
->> The zero page comes from an anonymous private VMA that is read-only
->> and the user level CPU process tries to read the page data (or any
->> other read page fault).
->>
->>> Jason
->>>
->>
->> The overall migration process is:
->>
->> mmap_read_lock()
->>
->> migrate_vma_setup()
->>        // invalidates range, locks/isolates pages, puts migration entry in page table
->>
->> <driver allocates destination pages and copies source to dest>
->>
->> migrate_vma_pages()
->>        // moves source struct page info to destination struct page info.
->>        // clears migration flag for pages that can't be migrated.
->>
->> <driver updates device page tables for pages still migrating, rollback pages not migrating>
->>
->> migrate_vma_finalize()
->>        // replaces migration page table entry with destination page PFN.
->>
->> mmap_read_unlock()
->>
->> Since the address range is invalidated in the migrate_vma_setup() stage,
->> and the page is isolated from the LRU cache, locked, unmapped, and the page table
->> holds a migration entry (so the page can't be faulted and the CPU page table set
->> valid again), and there are no extra page references (pins), the page
->> "should not be modified".
-> 
-> That is the physical page though, it doesn't prove nobody else is
-> reading the PTE.
->   
->> For pte_none()/is_zero_pfn() entries, migrate_vma_setup() leaves the
->> pte_none()/is_zero_pfn() entry in place but does still call
->> mmu_notifier_invalidate_range_start() for the whole range being migrated.
-> 
-> Ok..
-> 
->> In the migrate_vma_pages() step, the pte page table is locked and the
->> pte entry checked to be sure it is still pte_none/is_zero_pfn(). If not,
->> the new page isn't inserted. If it is still none/zero, the new device private
->> struct page is inserted into the page table, replacing the pte_none()/is_zero_pfn()
->> page table entry. The secondary MMUs were already invalidated in the migrate_vma_setup()
->> step and a pte_none() or zero page can't be modified so the only invalidation needed
->> is the CPU TLB(s) for clearing the special zero page PTE entry.
-> 
-> No, the secondary MMU was invalidated but the invalidation start/end
-> range was exited. That means a secondary MMU is immeidately able to
-> reload the zero page into its MMU cache.
-> 
-> When this code replaces the PTE that has a zero page it also has to
-> invalidate again so that secondary MMU's are guaranteed to pick up the
-> new PTE value.
-> 
-> So, I still don't understand how this is safe?
-> 
-> Jason
+Thanks Steven! In case it helps backport consideration, I wanted to
+note that this addresses an issue we've seen with users trying to
+change current_tracer when they happen to have rasdaemon
+installed. rasdaemon uses the trace_pipe interface at runtime, which
+therefore blocks changing the current tracer. But of course, unless
+you know about rasdaemon internals, it isn't exactly an obvious
+failure mode.
 
-Oops, you are right of course. I was only thinking of the device doing the migration
-and forgetting about a second device faulting on the same page.
-You can drop patch from the series.
+  -dann
+
+> Fixes: cf6ab6d9143b1 ("tracing: Add ref count to tracer for when they are being read by pipe")
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/trace.c | 12 ++++++------
+>  kernel/trace/trace.h |  2 +-
+>  2 files changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 8241d1448d70..64c5b8146cca 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -5891,7 +5891,7 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
+>  	}
+>  
+>  	/* If trace pipe files are being read, we can't change the tracer */
+> -	if (tr->current_trace->ref) {
+> +	if (tr->trace_ref) {
+>  		ret = -EBUSY;
+>  		goto out;
+>  	}
+> @@ -6107,7 +6107,7 @@ static int tracing_open_pipe(struct inode *inode, struct file *filp)
+>  
+>  	nonseekable_open(inode, filp);
+>  
+> -	tr->current_trace->ref++;
+> +	tr->trace_ref++;
+>  out:
+>  	mutex_unlock(&trace_types_lock);
+>  	return ret;
+> @@ -6126,7 +6126,7 @@ static int tracing_release_pipe(struct inode *inode, struct file *file)
+>  
+>  	mutex_lock(&trace_types_lock);
+>  
+> -	tr->current_trace->ref--;
+> +	tr->trace_ref--;
+>  
+>  	if (iter->trace->pipe_close)
+>  		iter->trace->pipe_close(iter);
+> @@ -7428,7 +7428,7 @@ static int tracing_buffers_open(struct inode *inode, struct file *filp)
+>  
+>  	filp->private_data = info;
+>  
+> -	tr->current_trace->ref++;
+> +	tr->trace_ref++;
+>  
+>  	mutex_unlock(&trace_types_lock);
+>  
+> @@ -7529,7 +7529,7 @@ static int tracing_buffers_release(struct inode *inode, struct file *file)
+>  
+>  	mutex_lock(&trace_types_lock);
+>  
+> -	iter->tr->current_trace->ref--;
+> +	iter->tr->trace_ref--;
+>  
+>  	__trace_array_put(iter->tr);
+>  
+> @@ -8737,7 +8737,7 @@ static int __remove_instance(struct trace_array *tr)
+>  	int i;
+>  
+>  	/* Reference counter for a newly created trace array = 1. */
+> -	if (tr->ref > 1 || (tr->current_trace && tr->current_trace->ref))
+> +	if (tr->ref > 1 || (tr->current_trace && tr->trace_ref))
+>  		return -EBUSY;
+>  
+>  	list_del(&tr->list);
+> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> index 13db4000af3f..f21607f87189 100644
+> --- a/kernel/trace/trace.h
+> +++ b/kernel/trace/trace.h
+> @@ -356,6 +356,7 @@ struct trace_array {
+>  	struct trace_event_file *trace_marker_file;
+>  	cpumask_var_t		tracing_cpumask; /* only trace on set CPUs */
+>  	int			ref;
+> +	int			trace_ref;
+>  #ifdef CONFIG_FUNCTION_TRACER
+>  	struct ftrace_ops	*ops;
+>  	struct trace_pid_list	__rcu *function_pids;
+> @@ -547,7 +548,6 @@ struct tracer {
+>  	struct tracer		*next;
+>  	struct tracer_flags	*flags;
+>  	int			enabled;
+> -	int			ref;
+>  	bool			print_max;
+>  	bool			allow_instances;
+>  #ifdef CONFIG_TRACER_MAX_TRACE
