@@ -2,115 +2,115 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 815FDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 03:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 03:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6183D206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 03:28:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BlWGLNcH"
+	by mail.kernel.org (Postfix) with ESMTP id C145C206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 03:34:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731286AbgGaD2h (ORCPT
+        id S1731289AbgGaDe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 23:28:37 -0400
-Received: from ozlabs.org ([203.11.71.1]:38525 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731175AbgGaD2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 23:28:37 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BHt6B2tGfz9sTC;
-        Fri, 31 Jul 2020 13:28:33 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596166114;
-        bh=Bexc+EUBRFfOwFY1RGCD8ItRDD2/Qns19CwYnGfgcmY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=BlWGLNcHdSrUe6xDCkWUe5H07xCTIN0wclnRWYBANERZVN6U2GJgHZuJ+2eLW5IQb
-         dPyWeN+7mnzwKkk3z+qcfb4O8soEXyaiQXqEB+KeONCcH8Q5UaIr+o5p60BDI+by1l
-         k9NX+qs2t9TZd+9/2rql0TXdsiqxnWv8F84AAxMkXHth/n1tTbie3wi2yNxNytBEaE
-         3RQZKKU9DWsYR5wrXpzWdPnisMpF4AUhjsNuZFC2AKW29LObscV5B+InFVqKQCFR0D
-         G1J+JKmPacb4kkJKeMFfEdQBPvgoSGthScxJiob6LBqo8VcR/YFzqaG68/xpizQ40g
-         naiYngtxxfEXQ==
-Date:   Fri, 31 Jul 2020 13:28:30 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        Wireless <linux-wireless@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Pedersen <thomas@adapt-ip.com>
-Subject: linux-next: build warnings after merge of the mac80211-next tree
-Message-ID: <20200731132830.75d7a905@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/.B7c2JVw=ftB8qCCNoqRfTd";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Thu, 30 Jul 2020 23:34:56 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:45324 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730820AbgGaDez (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 23:34:55 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U4HxHq._1596166492;
+Received: from aliy8.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U4HxHq._1596166492)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 31 Jul 2020 11:34:53 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mm/memcg: remove useless check on page->mem_cgroup
+Date:   Fri, 31 Jul 2020 11:34:40 +0800
+Message-Id: <1596166480-22814-1-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/.B7c2JVw=ftB8qCCNoqRfTd
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Since readahead page will be charged on memcg too. We don't need to
+check this exception now. Rmove them is safe as all user pages are
+charged before use.
 
-Hi all,
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: cgroups@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+---
+ mm/memcontrol.c | 21 ++++-----------------
+ 1 file changed, 4 insertions(+), 17 deletions(-)
 
-After merging the mac80211-next tree, today's linux-next build (x86_64
-allmodconfig) produced these warnings:
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index e84c2b5596f2..9e44ae22d591 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1322,12 +1322,7 @@ struct lruvec *mem_cgroup_page_lruvec(struct page *page, struct pglist_data *pgd
+ 	}
+ 
+ 	memcg = page->mem_cgroup;
+-	/*
+-	 * Swapcache readahead pages are added to the LRU - and
+-	 * possibly migrated - before they are charged.
+-	 */
+-	if (!memcg)
+-		memcg = root_mem_cgroup;
++	VM_BUG_ON_PAGE(!memcg, page);
+ 
+ 	mz = mem_cgroup_page_nodeinfo(memcg, page);
+ 	lruvec = &mz->lruvec;
+@@ -6897,10 +6892,8 @@ void mem_cgroup_migrate(struct page *oldpage, struct page *newpage)
+ 	if (newpage->mem_cgroup)
+ 		return;
+ 
+-	/* Swapcache readahead pages can get replaced before being charged */
+ 	memcg = oldpage->mem_cgroup;
+-	if (!memcg)
+-		return;
++	VM_BUG_ON_PAGE(!memcg, oldpage);
+ 
+ 	/* Force-charge the new page. The old one will be freed soon */
+ 	nr_pages = thp_nr_pages(newpage);
+@@ -7094,10 +7087,7 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
+ 		return;
+ 
+ 	memcg = page->mem_cgroup;
+-
+-	/* Readahead page, never charged */
+-	if (!memcg)
+-		return;
++	VM_BUG_ON_PAGE(!memcg, page);
+ 
+ 	/*
+ 	 * In case the memcg owning these pages has been offlined and doesn't
+@@ -7158,10 +7148,7 @@ int mem_cgroup_try_charge_swap(struct page *page, swp_entry_t entry)
+ 		return 0;
+ 
+ 	memcg = page->mem_cgroup;
+-
+-	/* Readahead page, never charged */
+-	if (!memcg)
+-		return 0;
++	VM_BUG_ON_PAGE(!memcg, page);
+ 
+ 	if (!entry.val) {
+ 		memcg_memory_event(memcg, MEMCG_SWAP_FAIL);
+-- 
+1.8.3.1
 
-drivers/net/wireless/ath/ath10k/mac.c: In function 'chan_to_phymode':
-drivers/net/wireless/ath/ath10k/mac.c:558:3: warning: enumeration value 'NL=
-80211_CHAN_WIDTH_1' not handled in switch [-Wswitch]
-  558 |   switch (chandef->width) {
-      |   ^~~~~~
-drivers/net/wireless/ath/ath10k/mac.c:558:3: warning: enumeration value 'NL=
-80211_CHAN_WIDTH_2' not handled in switch [-Wswitch]
-drivers/net/wireless/ath/ath10k/mac.c:558:3: warning: enumeration value 'NL=
-80211_CHAN_WIDTH_4' not handled in switch [-Wswitch]
-drivers/net/wireless/ath/ath10k/mac.c:558:3: warning: enumeration value 'NL=
-80211_CHAN_WIDTH_8' not handled in switch [-Wswitch]
-drivers/net/wireless/ath/ath10k/mac.c:558:3: warning: enumeration value 'NL=
-80211_CHAN_WIDTH_16' not handled in switch [-Wswitch]
-drivers/net/wireless/ath/ath10k/mac.c:581:3: warning: enumeration value 'NL=
-80211_CHAN_WIDTH_1' not handled in switch [-Wswitch]
-  581 |   switch (chandef->width) {
-      |   ^~~~~~
-drivers/net/wireless/ath/ath10k/mac.c:581:3: warning: enumeration value 'NL=
-80211_CHAN_WIDTH_2' not handled in switch [-Wswitch]
-drivers/net/wireless/ath/ath10k/mac.c:581:3: warning: enumeration value 'NL=
-80211_CHAN_WIDTH_4' not handled in switch [-Wswitch]
-drivers/net/wireless/ath/ath10k/mac.c:581:3: warning: enumeration value 'NL=
-80211_CHAN_WIDTH_8' not handled in switch [-Wswitch]
-drivers/net/wireless/ath/ath10k/mac.c:581:3: warning: enumeration value 'NL=
-80211_CHAN_WIDTH_16' not handled in switch [-Wswitch]
-
-Introduced by commit
-
-  e5cb3d34a66d ("nl80211: S1G band and channel definitions")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/.B7c2JVw=ftB8qCCNoqRfTd
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8jj94ACgkQAVBC80lX
-0GwpQggAlIYc8PA64dXCF3vyS5ERU+iiVRgxymcQNPRfd9M3VRLR9OimA4vHqkwC
-uQW8rxdQItirDyV1J/2UDhRwbNZxErRrH0dNcbSgHCtL9CAnnEgsveZqL1IM4jk6
-qdy2nmtU5oPCVVbWNU7+KFbwlQqt3WzL5DnKLfdNlKbaZhfCTxZ5SXpzmJ6NMwHa
-4URX+xvemqvO4+JrzBKwn7MoZ1b80ahs3dYtvi3cCRLhwQkPVvD9iOChAOqFXCbB
-u73yPXhAk34rljH7A3LNtImrqA6UBS2z2QpP8QBEUfx0BCDeMe3esoIclfXnyzke
-rDqp8ixDyOhzg4HaaTMfc7tln5NgsA==
-=G8SA
------END PGP SIGNATURE-----
-
---Sig_/.B7c2JVw=ftB8qCCNoqRfTd--
