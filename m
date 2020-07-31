@@ -2,139 +2,120 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F33C433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA6BC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E769C22B3F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:16:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596215803;
-	bh=KTaJrz9cOB7peEzwW1YQWYo6+kHy2WkhEKkVvTo+/NM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=tfeMgkQEg0guq82bHvPjqiz+bPT8y4T/bRDszQdNUtpSPqXu7RFVj71f1sPEFG9NT
-	 e+vwDcjnbzzGsCt6FZ9ne3r2zbk6Ai1Hao/iFjVtQXH6Rd55/cVGGRtdRSUaBySGGK
-	 Qpr+WpF15QlxTzIuWqFr+NnvUVdCtFAW73xOBMvU=
+	by mail.kernel.org (Postfix) with ESMTP id 1CB4A22B3F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:16:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mmal8FRz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387634AbgGaRQm (ORCPT
+        id S2387612AbgGaRQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 13:16:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387609AbgGaRQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 13:16:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F35D2074B;
-        Fri, 31 Jul 2020 17:16:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596215794;
-        bh=KTaJrz9cOB7peEzwW1YQWYo6+kHy2WkhEKkVvTo+/NM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=RN40sjF6IpM1vYpS8S9X9yfsBxIMgzDMNFH+BnoJhjtxbsm5uJExmnmvmRKsqz9Vt
-         wgOlVHi6PrNfhAtpsKFpFMfqKze5dbHqsp+M8lzBmwFvduv9tWHrxd0QZh1o37BBej
-         UFCBZpgS7sYu2UnQTncHF6muGi3uevSyulTJ2FRo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, jslaby@suse.cz,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 4.19.136
-Date:   Fri, 31 Jul 2020 19:16:15 +0200
-Message-Id: <159621577667130@kroah.com>
-X-Mailer: git-send-email 2.28.0
+        Fri, 31 Jul 2020 13:16:36 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:59464 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387580AbgGaRQb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 13:16:31 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06VHBvmu156609;
+        Fri, 31 Jul 2020 17:15:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=QLP5yum5fU8UgsIzhvQlNIqfGdJsDfckQfn3DAzacW8=;
+ b=mmal8FRzyoj+O8X9csReBhlK93p5+cMh/ETJ0OUmlvwnyInxLy+PDCUxfNp7SWT751Lz
+ wPFJZcEJb3ERLInaZIpcUlN3mgHrEILwqs8rAPYpjJLcAlq4bh9+OW6LOwIk4zNMEB84
+ hEofFiwTosRxp1RQZJV0f+9lAddx2h3vS6a4SlKHw5oum+g/sh5/KedgUE0YrS3/GXf0
+ Suhh4XB77kYufFl/+ZFn8CGMPkV3XqrkpTKaRMPdMYp4doN88E862Ka1ATMXw20FKtV/
+ +cog0eAkaVh1d9pc3uk56Akc7KQavBGp0fBcuauoBxwrK3pRyujlNJq62QmDEptEqyYm 3g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 32mf702hp7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jul 2020 17:15:50 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06VHCsS3048730;
+        Fri, 31 Jul 2020 17:15:50 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 32hu6064n3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 31 Jul 2020 17:15:49 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06VHFc2P019306;
+        Fri, 31 Jul 2020 17:15:38 GMT
+Received: from [10.39.235.87] (/10.39.235.87)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 31 Jul 2020 10:15:38 -0700
+Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
+        arnd@arndb.de, keescook@chromium.org, gerg@linux-m68k.org,
+        ktkhai@virtuozzo.com, christian.brauner@ubuntu.com,
+        peterz@infradead.org, esyr@redhat.com, christian@kellner.me,
+        areber@redhat.com, cyphar@cyphar.com
+References: <20200730152250.GG23808@casper.infradead.org>
+ <db3bdbae-eb0f-1ae3-94dd-045e37bc94ba@oracle.com>
+ <20200730171251.GI23808@casper.infradead.org>
+ <63a7404c-e4f6-a82e-257b-217585b0277f@oracle.com>
+ <20200730174956.GK23808@casper.infradead.org>
+ <ab7a25bf-3321-77c8-9bc3-28a223a14032@oracle.com>
+ <87y2n03brx.fsf@x220.int.ebiederm.org>
+ <689d6348-6029-5396-8de7-a26bc3c017e5@oracle.com>
+ <20200731152736.GP23808@casper.infradead.org>
+ <9ba26063-0098-e796-9431-8c1d0c076ffc@oracle.com>
+ <20200731165649.GG24045@ziepe.ca>
+From:   Steven Sistare <steven.sistare@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <71ddd3c1-bb59-3e63-e137-99b88ace454d@oracle.com>
+Date:   Fri, 31 Jul 2020 13:15:34 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200731165649.GG24045@ziepe.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9699 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ mlxscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007310129
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9699 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 suspectscore=0
+ spamscore=0 impostorscore=0 clxscore=1015 phishscore=0 priorityscore=1501
+ adultscore=0 mlxlogscore=999 malwarescore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007310129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm announcing the release of the 4.19.136 kernel.
+On 7/31/2020 12:56 PM, Jason Gunthorpe wrote:
+> On Fri, Jul 31, 2020 at 12:11:52PM -0400, Steven Sistare wrote:
+>>> Your preservation-across-exec use-case might or might not need the
+>>> VMA to be mapped at the same address.  
+>>
+>> It does.  qemu registers memory with vfio which remembers the va's in kernel
+>> metadata for the device.
+> 
+> Once the memory is registered with vfio the VA doesn't matter, vfio
+> will keep the iommu pointing at the same physical pages no matter
+> where they are mapped.
 
-All users of the 4.19 kernel series must upgrade.
+Yes, but there are other code paths that compute and use offsets between va and the
+base va.  Mapping at a different va in the new process breaks vfio; I have tried it.
 
-The updated 4.19.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.19.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
-
-thanks,
-
-greg k-h
-
-------------
-
- Makefile                             |    2 +-
- drivers/base/regmap/regmap-debugfs.c |    6 ++++++
- drivers/net/wan/x25_asy.c            |   21 ++++++++++++++-------
- include/linux/tcp.h                  |    4 +++-
- net/ax25/af_ax25.c                   |   10 ++++++++--
- net/core/dev.c                       |    2 +-
- net/core/net-sysfs.c                 |    2 +-
- net/core/rtnetlink.c                 |    3 ++-
- net/core/sock_reuseport.c            |    1 +
- net/ipv4/tcp_input.c                 |   11 ++++++-----
- net/ipv4/tcp_output.c                |   13 ++++++++-----
- net/ipv4/udp.c                       |   17 ++++++++++-------
- net/ipv6/ip6_gre.c                   |   11 ++++++-----
- net/ipv6/udp.c                       |   17 ++++++++++-------
- net/qrtr/qrtr.c                      |    1 +
- net/rxrpc/recvmsg.c                  |    2 +-
- net/rxrpc/sendmsg.c                  |    2 +-
- net/sctp/stream.c                    |   27 ++++++++++++++++++---------
- 18 files changed, 98 insertions(+), 54 deletions(-)
-
-Cong Wang (1):
-      qrtr: orphan socket in qrtr_release()
-
-Dan Carpenter (1):
-      AX.25: Prevent integer overflows in connect and sendmsg
-
-David Howells (1):
-      rxrpc: Fix sendmsg() returning EPIPE due to recvmsg() returning ENODATA
-
-Greg Kroah-Hartman (1):
-      Linux 4.19.136
-
-Kuniyuki Iwashima (2):
-      udp: Copy has_conns in reuseport_grow().
-      udp: Improve load balancing for SO_REUSEPORT.
-
-Miaohe Lin (1):
-      net: udp: Fix wrong clean up for IS_UDPLITE macro
-
-Peilin Ye (2):
-      AX.25: Fix out-of-bounds read in ax25_connect()
-      AX.25: Prevent out-of-bounds read in ax25_sendmsg()
-
-Peng Fan (1):
-      regmap: debugfs: check count when read regmap file
-
-Subash Abhinov Kasiviswanathan (1):
-      dev: Defer free of skbs in flush_backlog
-
-Wei Yongjun (1):
-      ip6_gre: fix null-ptr-deref in ip6gre_init_net()
-
-Weilong Chen (1):
-      rtnetlink: Fix memory(net_device) leak when ->newlink fails
-
-Xie He (1):
-      drivers/net/wan/x25_asy: Fix to make it work
-
-Xin Long (2):
-      sctp: shrink stream outq only when new outcnt < old outcnt
-      sctp: shrink stream outq when fails to do addstream reconf
-
-Xiongfeng Wang (1):
-      net-sysfs: add a newline when printing 'tx_timeout' by sysfs
-
-Yuchung Cheng (1):
-      tcp: allow at most one TLP probe per flight
-
+- Steve
