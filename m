@@ -2,226 +2,228 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AD8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 13:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E058BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 13:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 703552245C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 13:25:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EFgAoxc1"
+	by mail.kernel.org (Postfix) with ESMTP id A9C432245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 13:26:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596201968;
+	bh=kiABRkM+l4ig/cD2nH8sLh6Q2EQZatMUbedijCspTS8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lvprRue8vuVFaTjH8CJCdbkjYSHbgvr5mp8y0RlIwpiOF0Dx1fp1oxqDudU86VmfF
+	 tgWghd/imzKnm33MboR98d2/Eulxpb2qnGmwxJyvJ5EN88sfMNLr8NWliB82LyKZfW
+	 lT0jO6+jYe/zlmcXb8ljSeIDab1/fKU+Y3bwy118=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731098AbgGaNZm (ORCPT
+        id S1731359AbgGaN0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 09:25:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40904 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728087AbgGaNZl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 09:25:41 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F839C061575
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 06:25:41 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id i92so5244310pje.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 06:25:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JEI7QlNd+n7mCSlqUP8tfyoHThcUKaKtV6i9WVkU4rE=;
-        b=EFgAoxc1lBpnfSfRcu0ipTMSOcGQ7QweQKKGPauCln797EF9dMpL2jrHlvP3viERy7
-         6qFdcVq+tn90iXkFML2huGj/kTaqeYwd/tS810ojOyiuFUrhQFrwyxc/BeYr/842OzXU
-         rynPBE1lj5slETpR/oow2+ToDsadtR/BoUqLKLoYKWnwR+HH/2DB10GikHFfbj3t1v+m
-         N2DahEtaTYkIgdoQgbYSWJrCzpoBgZOPeTCxZnDOL16sPbRrhknatvMqejsiLYOKvu4w
-         Y2LKrE/WO8yydETeJfQxH1xUVrEduccDSUWqhacBZZisj+q50doQ8BMdgdT9lokDc13Q
-         qZ0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JEI7QlNd+n7mCSlqUP8tfyoHThcUKaKtV6i9WVkU4rE=;
-        b=Zt52Ks+e7u2J1ZJJdLcJda64h19cVr+XUKa+nFdjgAp6+ehD1bS6ZsXzjzuSjAS6Yf
-         v5XithErN9X5O3PThdIAVdAVCrTg8lNM+6D34rFfvjgvtLyCOCv3k7aDDG1Erbjm98LP
-         OTKZjieKaf+0C1ma1GCCqlVpzyL0wLdeeGvp0krQIuUGwTUBC4U8BUWK1ikQV1Y17hWQ
-         o52fW8TapI/sQUHrlQ/ediT4II3pLS/7cqgRYSwfOLGMW1AKxG3FOjl1hEALC1PaJPcW
-         rbMw8TAUJqrWQulSGuJvsaHQIDt5EpQ/dlsDuZ8MihT2XSScKqVIOxaCwyteblWlvbsN
-         DVLg==
-X-Gm-Message-State: AOAM531fTf5gXArGE++dUl4f8/IP3NzskT8hXycaGii7PO2uUMm+p3+z
-        POiW13qnrcM/oIvPltCLo6GlvBYF/z746cdcjEL0LQ==
-X-Google-Smtp-Source: ABdhPJwOM1X62UcHRYe5CnKGFs2rbUxLwcrdYvfymYqKedcGjdjR5g/NUfO5j/eCNp+kDkNJ/+yyjpopjON6YKGdS6w=
-X-Received: by 2002:a17:90a:6a8d:: with SMTP id u13mr3852021pjj.166.1596201940297;
- Fri, 31 Jul 2020 06:25:40 -0700 (PDT)
+        Fri, 31 Jul 2020 09:26:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37756 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728252AbgGaN0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 09:26:06 -0400
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84AD522BF3;
+        Fri, 31 Jul 2020 13:26:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596201965;
+        bh=kiABRkM+l4ig/cD2nH8sLh6Q2EQZatMUbedijCspTS8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HFIrJcQVIlRxhjRE5g2guG8BBTbB8gcY4mFfzRn6ftJBOOzaKG3r97YkZzZcFqWVp
+         C91LyF17sRKj0jnuP0iqt+z5BwQod9BugSBsC+vfz4fkLlcErxySo1ecxhoToH0Fqk
+         BO74fjI62dBL1TkQRhoodGL+PUFcPv9hattKw1yQ=
+Received: by mail-ot1-f43.google.com with SMTP id l26so6063664otj.4;
+        Fri, 31 Jul 2020 06:26:05 -0700 (PDT)
+X-Gm-Message-State: AOAM53117CMDtjJHTkpEY1UKjZmCK3IS+pkvOLSyFBOX0uT78rDCNntV
+        o5Igst0TboEHK2GAGX7GTBbpen2HKSY7JfIdRyI=
+X-Google-Smtp-Source: ABdhPJwqejim9uD7ymbbLYfkTjOqYSs8DwQcIR8vUokBpFtUDjoUc/mptlY54R9ubTh7sxn+dne50wJnW9nGTqi4byY=
+X-Received: by 2002:a05:6830:1094:: with SMTP id y20mr2790921oto.90.1596201964770;
+ Fri, 31 Jul 2020 06:26:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200731044242.1323143-1-davidgow@google.com>
-In-Reply-To: <20200731044242.1323143-1-davidgow@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Fri, 31 Jul 2020 15:25:29 +0200
-Message-ID: <CAAeHK+z0wJ-3+dXey9o3zysy9fPOqk-YdFFtVOB5==WcG3B8+Q@mail.gmail.com>
-Subject: Re: [PATCH v9 0/5] KASAN-KUnit Integration
-To:     David Gow <davidgow@google.com>
-Cc:     Patricia Alfonso <trishalfonso@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Shuah Khan <shuah@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        kunit-dev@googlegroups.com,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
+References: <20200729233635.14406-1-atish.patra@wdc.com>
+In-Reply-To: <20200729233635.14406-1-atish.patra@wdc.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Fri, 31 Jul 2020 16:25:53 +0300
+X-Gmail-Original-Message-ID: <CAMj1kXFC-mQRrr+U_HRSzDEYsub-2Gb_F0r1Teh=MB0oJ-de2g@mail.gmail.com>
+Message-ID: <CAMj1kXFC-mQRrr+U_HRSzDEYsub-2Gb_F0r1Teh=MB0oJ-de2g@mail.gmail.com>
+Subject: Re: [RFT PATCH v4 0/9] Add UEFI support for RISC-V
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Anup Patel <anup.patel@wdc.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Mike Rapoport <rppt@kernel.org>,
+        Nick Hu <nickhu@andestech.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Yash Shah <yash.shah@sifive.com>, Zong Li <zong.li@sifive.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 6:43 AM David Gow <davidgow@google.com> wrote:
+On Thu, 30 Jul 2020 at 02:36, Atish Patra <atish.patra@wdc.com> wrote:
 >
-> This patchset contains everything needed to integrate KASAN and KUnit.
+> This series adds UEFI support for RISC-V.
 >
-> KUnit will be able to:
-> (1) Fail tests when an unexpected KASAN error occurs
-> (2) Pass tests when an expected KASAN error occurs
+> Linux kernel: 5.8-rc7 + 1 exception vector setup patch (queued for for-next)
+> U-Boot: v2020.07
+> OpenSBI: master
 >
-> Convert KASAN tests to KUnit with the exception of copy_user_test
-> because KUnit is unable to test those.
+> This series depends on early setup of exeception vector patch
+> http://lists.infradead.org/pipermail/linux-riscv/2020-July/001207.html
 >
-> Add documentation on how to run the KASAN tests with KUnit and what to
-> expect when running these tests.
+> Patch 1-3 are generic riscv feature addition required for UEFI support.
+> Patch 4-7 adds the efi stub support for RISC-V which was reviewed few months back.
+> https://www.spinics.net/lists/linux-efi/msg19144.html
+> Patch 8 just renames arm-init code so that it can be used across different
+> architectures. Patch 11 adds the runtime services for RISC-V.
 >
-> This patchset depends on:
-> - "kunit: extend kunit resources API" [1]
->  - This is already present in the kselftest/kunit branch
+> The working set of patches can also be found in following git repo.
+> https://github.com/atishp04/linux/tree/uefi_riscv_5.9_v4
 >
-> I'd _really_ like to get this into 5.9 if possible: we also have some
-> other changes which depend on some things here.
-
-Hi David,
-
-You'll need to rebase this on top of the mm tree, which currently
-contains Walter's patch titled "kasan: fix KASAN unit tests for
-tag-based KASAN".
-
-There's also another patch that touches KASAN tests in the series I've
-just mailed titled "kasan: support stack instrumentation for tag-based
-mode".
-
-Thanks!
 
 
+Thanks Atish.
+
+I think these patches have now reached a state where you can stop
+sending out new revisions until you have something that works as
+expected in combination with EDK2 based firmware that implements  the
+UEFI runtime services fully.
+
+
+> The patches have been verified on Qemu/HiFive unleashed using bootefi command in
+> U-Boot for both RV32 and RV64.
 >
-> Changes from v8:
->  - Rebased on top of kselftest/kunit
->  - (Which, with this patchset, should rebase cleanly on 5.8-rc7)
->  - Renamed the KUnit test suite, config name to patch the proposed
->    naming guidelines for KUnit tests[6]
+> For RV32, maximum allocated memory should be 1G as RISC-V kernel can not map
+> beyond 1G of physical memory for RV32.
 >
-> Changes from v7:
->  - Rebased on top of kselftest/kunit
->  - Rebased on top of v4 of the kunit resources API[1]
->  - Rebased on top of v4 of the FORTIFY_SOURCE fix[2,3,4]
->  - Updated the Kconfig entry to support KUNIT_ALL_TESTS
+> Runtime services have been verified with fwts. Here is the snippet of the result.
 >
-> Changes from v6:
->  - Rebased on top of kselftest/kunit
->  - Rebased on top of Daniel Axtens' fix for FORTIFY_SOURCE
->    incompatibilites [2]
->  - Removed a redundant report_enabled() check.
->  - Fixed some places with out of date Kconfig names in the
->    documentation.
+> ***********************************************************************
+> This test run on 16/07/20 at 17:54:53 on host Linux fedora-riscv
+> 5.8.0-rc5-00015-g5e61441080fd-dirty #938 SMP Thu Jul 16 14:50:11 PDT 2020
+> riscv64.
 >
-> Changes from v5:
->  - Split out the panic_on_warn changes to a separate patch.
->  - Fix documentation to fewer to the new Kconfig names.
->  - Fix some changes which were in the wrong patch.
->  - Rebase on top of kselftest/kunit (currently identical to 5.7-rc1)
+> Command: "fwts uefirtvariable".
+> Running tests: uefirtvariable.
 >
-> Changes from v4:
->  - KASAN no longer will panic on errors if both panic_on_warn and
->    kasan_multishot are enabled.
->  - As a result, the KASAN tests will no-longer disable panic_on_warn.
->  - This also means panic_on_warn no-longer needs to be exported.
->  - The use of temporary "kasan_data" variables has been cleaned up
->    somewhat.
->  - A potential refcount/resource leak should multiple KASAN errors
->    appear during an assertion was fixed.
->  - Some wording changes to the KASAN test Kconfig entries.
+> uefirtvariable: UEFI Runtime service variable interface tests.
+> Test 1 of 9: Test UEFI RT service get variable interface.
+> SKIPPED: Test 1, Skipping test, SetVariable runtime service is not supported on
+> this platform.
 >
-> Changes from v3:
->  - KUNIT_SET_KASAN_DATA and KUNIT_DO_EXPECT_KASAN_FAIL have been
->  combined and included in KUNIT_DO_EXPECT_KASAN_FAIL() instead.
->  - Reordered logic in kasan_update_kunit_status() in report.c to be
->  easier to read.
->  - Added comment to not use the name "kasan_data" for any kunit tests
->  outside of KUNIT_EXPECT_KASAN_FAIL().
+> Test 2 of 9: Test UEFI RT service get next variable name interface.
+> The runtime service GetNextVariableName interface function test.
+> SKIPPED: Test 2, Skipping test, SetVariable runtime service is not supported on
+> this platform.
 >
-> Changes since v2:
->  - Due to Alan's changes in [1], KUnit can be built as a module.
->  - The name of the tests that could not be run with KUnit has been
->  changed to be more generic: test_kasan_module.
->  - Documentation on how to run the new KASAN tests and what to expect
->  when running them has been added.
->  - Some variables and functions are now static.
->  - Now save/restore panic_on_warn in a similar way to kasan_multi_shot
->  and renamed the init/exit functions to be more generic to accommodate.
->  - Due to [4] in kasan_strings, kasan_memchr, and
->  kasan_memcmp will fail if CONFIG_AMD_MEM_ENCRYPT is enabled so return
->  early and print message explaining this circumstance.
->  - Changed preprocessor checks to C checks where applicable.
+> ...
 >
-> Changes since v1:
->  - Make use of Alan Maguire's suggestion to use his patch that allows
->    static resources for integration instead of adding a new attribute to
->    the kunit struct
->  - All KUNIT_EXPECT_KASAN_FAIL statements are local to each test
->  - The definition of KUNIT_EXPECT_KASAN_FAIL is local to the
->    test_kasan.c file since it seems this is the only place this will
->    be used.
->  - Integration relies on KUnit being builtin
->  - copy_user_test has been separated into its own file since KUnit
->    is unable to test these. This can be run as a module just as before,
->    using CONFIG_TEST_KASAN_USER
->  - The addition to the current task has been separated into its own
->    patch as this is a significant enough change to be on its own.
+> Test 4 of 9: Test UEFI RT service query variable info interface.
+> SKIPPED: Test 4, Not support the QueryVariableInfo UEFI runtime interface:
+> cannot test.
 >
+> ADVICE: Firmware also needs to check if the revision of system table is correct
+> or not. Linux kernel returns EFI_UNSUPPORTED as well, if the FirmwareRevision of
+> system table is less than EFI_2_00_SYSTEM_TABLE_REVISION.
 >
-> [1] https://lore.kernel.org/linux-kselftest/CAFd5g46Uu_5TG89uOm0Dj5CMq+11cwjBnsd-k_CVy6bQUeU4Jw@mail.gmail.com/T/#t
-> [2] https://lore.kernel.org/linux-mm/20200424145521.8203-1-dja@axtens.net/
-> [3] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=adb72ae1915db28f934e9e02c18bfcea2f3ed3b7
-> [4] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=47227d27e2fcb01a9e8f5958d8997cf47a820afc
-> [5] https://bugzilla.kernel.org/show_bug.cgi?id=206337
-> [6] https://lore.kernel.org/linux-kselftest/20200620054944.167330-1-davidgow@google.com/
+> ...
+> ***********************************************************************
 >
+> Currently, U-Boot EFI implementation returns EFI_UNSUPPORTED for set_variable
+> service. That's why all tests have been skipped but I manually verified that the
+> value is returned from U-Boot not kernel :).
 >
-> David Gow (1):
->   mm: kasan: Do not panic if both panic_on_warn and kasan_multishot set
+> EDK2 can boot quite far into Linux with the current series. However, it crashes
+> before userspace because of a possible memory corruption by EDK2.
 >
-> Patricia Alfonso (4):
->   Add KUnit Struct to Current Task
->   KUnit: KASAN Integration
->   KASAN: Port KASAN Tests to KUnit
->   KASAN: Testing Documentation
+> Changes from v3->v4:
+> 1. Used pgd mapping to avoid copying DT to bss.
 >
->  Documentation/dev-tools/kasan.rst |  70 +++
->  include/kunit/test.h              |   5 +
->  include/linux/kasan.h             |   6 +
->  include/linux/sched.h             |   4 +
->  lib/Kconfig.kasan                 |  22 +-
->  lib/Makefile                      |   7 +-
->  lib/kunit/test.c                  |  13 +-
->  lib/test_kasan.c                  | 858 ------------------------------
->  mm/kasan/report.c                 |  34 +-
->  9 files changed, 147 insertions(+), 872 deletions(-)
->  delete mode 100644 lib/test_kasan.c
+> Changes from v2->v3:
+> 1. Fixed few bugs in run time services page table mapping.
+> 2. Dropped patch 1 as it is already taken into efi-tree.
+> 3. Sent few generic mmu fixes as a separate series to ease the merge conflicts.
+>
+> Changes from v1->v2:
+> 1. Removed patch 1 as it is already taken into efi-tree.
+> 2. Fixed compilation issues with patch 9.
+> 3. Moved few function prototype declaration to header file to keep kbuild happy.
+>
+> Changes from previous version:
+> 1. Added full ioremap support.
+> 2. Added efi runtime services support.
+> 3. Fixes mm issues
+>
+> Anup Patel (1):
+> RISC-V: Move DT mapping outof fixmap
+>
+> Atish Patra (8):
+> RISC-V: Add early ioremap support
+> RISC-V: Implement late mapping page table allocation functions
+> include: pe.h: Add RISC-V related PE definition
+> RISC-V: Add PE/COFF header for EFI stub
+> RISC-V: Add EFI stub support.
+> efi: Rename arm-init to efi-init common for all arch
+> RISC-V: Add EFI runtime services
+> RISC-V: Add page table dump support for uefi
+>
+> arch/riscv/Kconfig                            |  25 +++
+> arch/riscv/Makefile                           |   1 +
+> arch/riscv/configs/defconfig                  |   1 +
+> arch/riscv/include/asm/Kbuild                 |   1 +
+> arch/riscv/include/asm/efi.h                  |  56 +++++++
+> arch/riscv/include/asm/fixmap.h               |  16 +-
+> arch/riscv/include/asm/io.h                   |   1 +
+> arch/riscv/include/asm/mmu.h                  |   2 +
+> arch/riscv/include/asm/pgtable.h              |   5 +
+> arch/riscv/include/asm/sections.h             |  13 ++
+> arch/riscv/kernel/Makefile                    |   5 +
+> arch/riscv/kernel/efi-header.S                | 104 +++++++++++++
+> arch/riscv/kernel/efi.c                       | 105 +++++++++++++
+> arch/riscv/kernel/head.S                      |  17 ++-
+> arch/riscv/kernel/head.h                      |   2 -
+> arch/riscv/kernel/image-vars.h                |  51 +++++++
+> arch/riscv/kernel/setup.c                     |  17 ++-
+> arch/riscv/kernel/vmlinux.lds.S               |  22 ++-
+> arch/riscv/mm/init.c                          |  90 ++++++++---
+> arch/riscv/mm/ptdump.c                        |  48 +++++-
+> drivers/firmware/efi/Kconfig                  |   3 +-
+> drivers/firmware/efi/Makefile                 |   4 +-
+> .../firmware/efi/{arm-init.c => efi-init.c}   |   0
+> drivers/firmware/efi/libstub/Makefile         |  10 ++
+> drivers/firmware/efi/libstub/efi-stub.c       |  11 +-
+> drivers/firmware/efi/libstub/riscv-stub.c     | 110 ++++++++++++++
+> drivers/firmware/efi/riscv-runtime.c          | 143 ++++++++++++++++++
+> include/linux/pe.h                            |   3 +
+> 28 files changed, 825 insertions(+), 41 deletions(-)
+> create mode 100644 arch/riscv/include/asm/efi.h
+> create mode 100644 arch/riscv/include/asm/sections.h
+> create mode 100644 arch/riscv/kernel/efi-header.S
+> create mode 100644 arch/riscv/kernel/efi.c
+> create mode 100644 arch/riscv/kernel/image-vars.h
+> rename drivers/firmware/efi/{arm-init.c => efi-init.c} (100%)
+> create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
+> create mode 100644 drivers/firmware/efi/riscv-runtime.c
 >
 > --
-> 2.28.0.163.g6104cc2f0b6-goog
+> 2.24.0
 >
