@@ -2,131 +2,74 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4CDC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AAEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92AA322B3F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:16:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596223019;
-	bh=uZBsxMjv/LVf76C1qg/aXbjVQV+re7IP0Tfx88ohJqc=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=NusBHAywvBNfGpb4ncsF0tzh/L2WFwFhv4eUgIYXdWYA1ptlMw6dqxx0GgWkuNMDy
-	 2WY/2FoRxc/XaogN/cFz3vnSVlUNtjUqons/0cHiu9zNwes8Hfn9UfgWs1Xaxft1rE
-	 2kkPti0U4NbPh5M3UUudXrkPSWp4xewdMLgdDUa4=
+	by mail.kernel.org (Postfix) with ESMTP id 4F374208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:20:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730902AbgGaTQ6 (ORCPT
+        id S1730217AbgGaTUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 15:16:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36274 "EHLO mail.kernel.org"
+        Fri, 31 Jul 2020 15:20:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:36314 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730177AbgGaTQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 15:16:57 -0400
-Received: from localhost (router.4pisysteme.de [80.79.225.122])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A897D21744;
-        Fri, 31 Jul 2020 19:16:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596223017;
-        bh=uZBsxMjv/LVf76C1qg/aXbjVQV+re7IP0Tfx88ohJqc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=mp/3D3suDlIb1qj51uKmnlQPrBM0qHOQMvJ/qZvVS8K0sS+QhKee3/gMfS4EZMIlC
-         mQ9hjU+9Tl9uEw+Gp6mN3xOq6Aye8NOcvFJWVCQR/C8UvNz2bBNyYyDXy3ZStocoGM
-         UBUSe3jqszS5TzIg4PUqxiwoD3V1bcbcffP3lZtM=
-Date:   Fri, 31 Jul 2020 21:16:54 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PULL REQUEST] i2c for 5.8
-Message-ID: <20200731191654.GA14800@kunai>
+        id S1726726AbgGaTUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 15:20:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39FD31FB;
+        Fri, 31 Jul 2020 12:20:51 -0700 (PDT)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D0AB83F71F;
+        Fri, 31 Jul 2020 12:20:49 -0700 (PDT)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, morten.rasmussen@arm.com,
+        Quentin Perret <qperret@google.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 0/3] sched: Document capacity aware scheduling
+Date:   Fri, 31 Jul 2020 20:20:13 +0100
+Message-Id: <20200731192016.7484-1-valentin.schneider@arm.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="liOOAslEiF7prFVr"
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---liOOAslEiF7prFVr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This stems from John Mathew et al's documentation efforts; see the brief
+exchange between Dietmar and I at [1].
 
-Linus,
+This is written as a standalone documentation bit, the emphasis here being on
+the "why" and "what" rather than the "how". I can try to rebase that on top of
+John's series, but I think this could go in on its own.
 
-here are some I2C core improvements to prevent NULL pointer usage and a
-MAINTAINERS update.
+[1]: https://lkml.kernel.org/r/b974b959-7b9a-2874-dca6-674b74ad5b42@arm.com
 
-Please pull.
+Cheers,
+Valentin
 
-Thanks,
+Valentin Schneider (3):
+  sched: Document arch_scale_*_capacity()
+  sched/doc: Document capacity aware scheduling
+  sched/doc: Factorize bits between sched-energy.rst &
+    sched-capacity.rst
 
-   Wolfram
+ Documentation/scheduler/index.rst          |   1 +
+ Documentation/scheduler/sched-capacity.rst | 439 +++++++++++++++++++++
+ Documentation/scheduler/sched-energy.rst   |  12 +-
+ include/linux/sched/topology.h             |  10 +
+ kernel/sched/sched.h                       |  10 +
+ 5 files changed, 462 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/scheduler/sched-capacity.rst
 
+-- 
+2.27.0
 
-The following changes since commit 92ed301919932f777713b9172e525674157e983d:
-
-  Linux 5.8-rc7 (2020-07-26 14:14:06 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current
-
-for you to fetch changes up to 8808981baf96e1b3dea1f08461e4d958aa0dbde1:
-
-  i2c: slave: add sanity check when unregistering (2020-07-28 18:37:17 +0200)
-
-----------------------------------------------------------------
-Akash Asthana (1):
-      MAINTAINERS: Update GENI I2C maintainers list
-
-Wolfram Sang (3):
-      i2c: also convert placeholder function to return errno
-      i2c: slave: improve sanity check when registering
-      i2c: slave: add sanity check when unregistering
-
-
-with much appreciated quality assurance from
-----------------------------------------------------------------
-Alain Volmat (2):
-      (Rev.) i2c: slave: add sanity check when unregistering
-      (Rev.) i2c: slave: improve sanity check when registering
-
-Andy Shevchenko (1):
-      (Rev.) i2c: also convert placeholder function to return errno
-
- MAINTAINERS                  | 3 ++-
- drivers/i2c/i2c-core-slave.c | 7 ++++---
- include/linux/i2c.h          | 2 +-
- 3 files changed, 7 insertions(+), 5 deletions(-)
-
---liOOAslEiF7prFVr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8kbiIACgkQFA3kzBSg
-KbYt6RAAnqY3bxaqD7na5mS6hbXF4BpPnElXijeL8bdoglwCTFzTmVAVPUdEHq1J
-xXm3jCXVUkgwKmdQngWktQQu0ivaeGFwBitFSccydjRUYAWm/PkQs8OPjw1MLhxa
-WxTiAufcKvPqJ4tereUMWY7Xld2AEa2UfRwJ4O17jDmQKW2fhRw3/hSVzZIveSN7
-4PGpbd5O5P2RjbjDit7lkyuE6A6OI7jqFNn8pszmfIYdDrke4TKvXop7MK4UdDVJ
-c2j9WdHvd/I1hR1QQWtbMhFXxbHTIbwIC3TO+E86dBqqQLS7yWC16jgWeSX3qXWP
-+0mhWYG/0jGb1LQKB4g5ESpb6vMDPw4lTJwDgEj3SG+vH8uOl3NWiNp6LTMuBBb4
-ZleP3WyLrXbISfm+BYki1B4+tUNFPm4xMeXMieIc2i37vEPLzQqA4GSutB19aPVF
-e74vjgJDbqDuxi1okwd8Qih3BusShRX+m16lpnjq6nE7QWLBp/1AwQCROlbLPpmi
-0AMHd5WgszBgv4wam9a3/+6PD1Di00BDeELsIo9bTbmbo1DwzCrtlgqnFlFgB8AL
-5ypQTmKnxsEMIf9euStR/9uG13Q8MJKJqU2XCch6K4EAFwLdkQY1Gy9Y7gTWjLQ1
-0orvlgjcQFSZ0Y3xBO3QmUlYvqe0YLZYhDwYsXJ2Qc/zR74aLQI=
-=/pKd
------END PGP SIGNATURE-----
-
---liOOAslEiF7prFVr--
