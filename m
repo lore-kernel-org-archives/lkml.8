@@ -3,107 +3,149 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F28B7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65C4320791
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:33:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PpKrDqws"
+	by mail.kernel.org (Postfix) with ESMTP id CE23620791
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:34:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596238466;
+	bh=ITLemeA+7bIT0Gyumefb19FaUYhRK8aANpWoBIk24ak=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GZDOnTsOXGBWLhNOBhAymG1iV2hQyl0MRRqi1YW0aUY3XsggDq941vsmXlZOGHKTw
+	 5qReLRcS+J/sf+UJ7oZroNM+C4B6/w/GCR/hDiGd+5e1gsZCJkBMvZmITLFH1WpMoB
+	 Bz1Kl/Er5mFCz5erOSs1nTMoHns/ETURiNZ5+GVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgGaXdi (ORCPT
+        id S1727898AbgGaXeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 19:33:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727812AbgGaXdh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 19:33:37 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6C6AC06174A
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:33:37 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id t6so4701357pjr.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:33:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=d+nAbn95QFMNyC0khRAqZBOpjDeBLSM9xETqQyODpGI=;
-        b=PpKrDqwsyi4ds6f6Er7lLKpLa7EmX38iRMCZ4aeOpqqX96i0ozzxrSzMt9kRg9Xdeh
-         pixKEhi1q4w843Mq0Hd2BaJBZavap5ziwh6T1uXf4RwYYu3d0FIHBIm0W5BMQD1I1J70
-         WU8AU3P0Tfc9+Dto5f8ySIfYQOwT7iMpBIhhc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=d+nAbn95QFMNyC0khRAqZBOpjDeBLSM9xETqQyODpGI=;
-        b=fBOYtSaIZTijqdVdcxVaps7VLK7F1Da47FCOkNXJgTYKA0IevLSkCH1d5oCcChABdz
-         f3xSDoJfK7UUuo4tmbC18f5aIR6PXcHqUSQtBImV5hb+sQpTVy3tRzv6YqOtIniANVhq
-         yv9ovibRtOGf+WLB6F/rwlZpWLKEDGzSmCWzpIzyIk6U0kxK7vSbvdm3ciIkOFdMeawf
-         pIHQpeygDH71VCCq/xDXITi/ggBV86slAMlQp5xIM60ctaRiYVLqNLkWFAQ7+cTmHfzA
-         N7mt+yKVo5UQrdWJvJWFdEuYt/x5UtgvN6T2/2T1CRbt7iygXp5xri2wRZEkdO6teLBh
-         /CuA==
-X-Gm-Message-State: AOAM532hZScInFMKHGZh6to9fGwV8j77hvtVyitJbx11b8rSAPUlB9JF
-        TVJieGfDllczTODpw2OWQ09ymw==
-X-Google-Smtp-Source: ABdhPJwKfLJMgjnDicr37wQLS4YBsNmWRltJWSDIZvKgXW0gzFEALnjka+WnSww6WfmyPbIiUjmIyw==
-X-Received: by 2002:a17:902:7005:: with SMTP id y5mr5190726plk.342.1596238417500;
-        Fri, 31 Jul 2020 16:33:37 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m9sm10229027pjs.18.2020.07.31.16.33.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 16:33:36 -0700 (PDT)
-Date:   Fri, 31 Jul 2020 16:33:35 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/21] x86/kaslr: Cleanup and small bugfixes
-Message-ID: <202007311632.54A7554192@keescook>
-References: <20200727230801.3468620-1-nivedita@alum.mit.edu>
- <20200728225722.67457-1-nivedita@alum.mit.edu>
- <20200730180224.GA1203420@rani.riverdale.lan>
- <20200731092146.GB2956@gmail.com>
+        Fri, 31 Jul 2020 19:34:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48054 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726215AbgGaXeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 19:34:25 -0400
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FB8A22BEA
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 23:34:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596238464;
+        bh=ITLemeA+7bIT0Gyumefb19FaUYhRK8aANpWoBIk24ak=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PitolgIcwqhucedGVzrmbU+mixt9I+bZpDo1c+KN/xZR7qvwjD6rIm2BIN9PPr0hA
+         rwYsDXIJbqkEFv29YlLvNdTum8LQr4KHQNNUgihepRc0Dk855ZHBxx5QXog31r6gbh
+         GNtRZ1uBwdcxXfCE9v7u3y9dRvZBVaLTOsgo4Evc=
+Received: by mail-wm1-f50.google.com with SMTP id d190so9720573wmd.4
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:34:23 -0700 (PDT)
+X-Gm-Message-State: AOAM530jSMNnohTWZZ0vQtYeuxJFruaCLbsiKvk52owoifJ5ieZd48Ji
+        oUb+woK20SiW8BWAv05TyFqKMKNviza8qRnJLZIP4Q==
+X-Google-Smtp-Source: ABdhPJwHRJFpNjV4x8D1GMUC1YCOqAimw3vWn2FV0L8VSZMCzBymUACLIz90Tn5KcszLgZJWFdAUcRlC6fy1hhSBmbk=
+X-Received: by 2002:a1c:4c17:: with SMTP id z23mr948983wmf.49.1596238462535;
+ Fri, 31 Jul 2020 16:34:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200731092146.GB2956@gmail.com>
+References: <1594684087-61184-1-git-send-email-fenghua.yu@intel.com> <1594684087-61184-13-git-send-email-fenghua.yu@intel.com>
+In-Reply-To: <1594684087-61184-13-git-send-email-fenghua.yu@intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 31 Jul 2020 16:34:11 -0700
+X-Gmail-Original-Message-ID: <CALCETrXnO4oh+WyxtSM-j_pP4QgkSg24=y76OBEHxXxAfJtPhA@mail.gmail.com>
+Message-ID: <CALCETrXnO4oh+WyxtSM-j_pP4QgkSg24=y76OBEHxXxAfJtPhA@mail.gmail.com>
+Subject: Re: [PATCH v6 12/12] x86/traps: Fix up invalid PASID
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Joerg Roedel <joro@8bytes.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        H Peter Anvin <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, iommu <iommu@lists.linux-foundation.org>,
+        amd-gfx <amd-gfx@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 11:21:46AM +0200, Ingo Molnar wrote:
-> 
-> * Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> 
-> > On Tue, Jul 28, 2020 at 06:57:01PM -0400, Arvind Sankar wrote:
-> > > v2->v3:
-> > > - Fix the first patch: command line size should be strlen + 1 to account
-> > >   for terminating NUL. Avoid calling add_identity_map if cmdline was
-> > >   NULL, though it should do nothing in that case anyway.
-> > 
-> > Hi Ingo, I noticed that WIP.x86/kaslr and x86/kaslr both have the v2
-> > version of the first patch. That has a bug in the cmd_line_size
-> > calculation (missing the +1).
-> 
-> Indeed, well spotted. I rebased the affected 4 patches in x86/kaslr 
-> and used the opportunity to add Kees's Reviewed-by to the first 4 
-> patches as well.
-> 
-> I've zapped tip:x86/kaslr for now and put the whole series into 
-> tip:WIP.x86/kaslr, will move it into tip:x86/kaslr for a v5.9 merge 
-> once Kees is happy with the latest version.
-> 
-> Kees, AFAICS your type truncation and patch split-up review 
-> suggestions were resolved in v3?
+On Mon, Jul 13, 2020 at 4:48 PM Fenghua Yu <fenghua.yu@intel.com> wrote:
+>
+> A #GP fault is generated when ENQCMD instruction is executed without
+> a valid PASID value programmed in the current thread's PASID MSR. The
+> #GP fault handler will initialize the MSR if a PASID has been allocated
+> for this process.
+>
+> Decoding the user instruction is ugly and sets a bad architecture
+> precedent. It may not function if the faulting instruction is modified
+> after #GP.
+>
+> Thomas suggested to provide a reason for the #GP caused by executing ENQCMD
+> without a valid PASID value programmed. #GP error codes are 16 bits and all
+> 16 bits are taken. Refer to SDM Vol 3, Chapter 16.13 for details. The other
+> choice was to reflect the error code in an MSR. ENQCMD can also cause #GP
+> when loading from the source operand, so its not fully comprehending all
+> the reasons. Rather than special case the ENQCMD, in future Intel may
+> choose a different fault mechanism for such cases if recovery is needed on
+> #GP.
 
-I need to double-check, but I think so. I'm hoping to get to that on
-Monday. My orphan section series work took MUCH longer than I thought it
-was going to. :P
+Decoding the user instruction is ugly and sets a bad architecture
+precedent, but we already do it in #GP for UMIP.  So I'm unconvinced.
 
--- 
-Kees Cook
+Memo to Intel, though: you REALLY need to start thinking about what
+the heck an OS is supposed to do with all these new faults you're
+coming up with.  The new #NM for TILE is utterly nonsensical.  Sure,
+it works for an OS that does not use CR0.TS and as long as no one
+tries to extend the same mechanism for some new optional piece of
+state, but as soon as Intel tries to use the same mechanism for
+anything else, it falls apart.
+
+Please do better.
+
+> +
+> +/*
+> + * Write the current task's PASID MSR/state. This is called only when PASID
+> + * is enabled.
+> + */
+> +static void fpu__pasid_write(u32 pasid)
+> +{
+> +       u64 msr_val = pasid | MSR_IA32_PASID_VALID;
+> +
+> +       fpregs_lock();
+> +
+> +       /*
+> +        * If the MSR is active and owned by the current task's FPU, it can
+> +        * be directly written.
+> +        *
+> +        * Otherwise, write the fpstate.
+> +        */
+> +       if (!test_thread_flag(TIF_NEED_FPU_LOAD)) {
+> +               wrmsrl(MSR_IA32_PASID, msr_val);
+> +       } else {
+> +               struct ia32_pasid_state *ppasid_state;
+> +
+> +               ppasid_state = get_xsave_addr(&current->thread.fpu.state.xsave,
+> +                                             XFEATURE_PASID);
+> +               /*
+> +                * ppasid_state shouldn't be NULL because XFEATURE_PASID
+> +                * is enabled.
+> +                */
+> +               WARN_ON_ONCE(!ppasid_state);
+> +               ppasid_state->pasid = msr_val;
+
+WARN instead of BUG is nice, but you'll immediate oops if this fails.
+How about:
+
+if (!WARN_ON_ONCE(!ppasid_state))
+  ppasid_state->pasid = msr_val;
