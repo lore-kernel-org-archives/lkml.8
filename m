@@ -2,135 +2,146 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E47C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC246C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A1B12070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96CB5208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:07:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rCcTUY3b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726305AbgGaEGq (ORCPT
+        id S1726360AbgGaEHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 00:06:46 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:40725 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbgGaEGp (ORCPT
+        Fri, 31 Jul 2020 00:07:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbgGaEHM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 00:06:45 -0400
-Received: by mail-pj1-f68.google.com with SMTP id t15so6556585pjq.5;
-        Thu, 30 Jul 2020 21:06:45 -0700 (PDT)
+        Fri, 31 Jul 2020 00:07:12 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F02B9C061574
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 21:07:11 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id g26so27750294qka.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 21:07:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=mYWpP6aK/ldCf40apNtXCnGd6yexdgynubGjVo7Bfc0=;
+        b=rCcTUY3bGoSbaXPfkkI8cQEkGpV8mm9TAojYFnlSDFFQxMdNrvbPZIfcFchMNbearV
+         7ZaSEeAGxFkDmwMHmRyrNn9es5QiySm5OOJwdjUM40gdNTQjVJ68rgfr2cRyQ3BaEl0O
+         iE9sQQGEqNMkUF+ThPF64r8sPM/NtfQBt0JDfBDXj2BuNweOJoypQ1K4xJAZu4QNpeg0
+         iH/5qAMqtqSEtP6Imn0QR9X4bO1l0d9WZs68paIcsH1plhLY1wUAgaNVx4RnKQY5B7x0
+         Yp+K4hAV+abg1Og1kMAMRgGO4NDVNugoG/43m5+ybhzRYvTO/daSECZm1lZbnvGl3NtD
+         k0oA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=QQ35CE9yJFKcx/uvB2EsoL6aQNmrJJ39h4x1UksSOeI=;
-        b=oCx+OmtDmgcsKf4YV1IAtnHqhz2Y2qhro0Yby9520SONIWBEE4vGbr/7AEmTzsHiaC
-         ENPpUWZbkekLE0dIoQ2AMdn4UfxLEDJujY7rHCZGZiPXokRNbo7z2o98NSAidR2AmgQ7
-         Ev0s4tZJe85EkW5GeA5nZ2vvC8qa7Ik1jx26X6pNvlgDHab5ALPNAKkj+WxA6PfBMDy+
-         4pUAl3GnLEmAq92Jl+ERBx7zpGTO/s2hu/LKEsnpCf2hXEHhkyzaKYsqy9F0FJkmscj9
-         +o4ShmPav8WOVhuLbG8RiLpE+uwVVvF25ry4cyuhP0lmp7xwHEGtdyoTSYdZWHwMrfuK
-         8UAw==
-X-Gm-Message-State: AOAM530q1ohsa0E8RzsK4H2iDp3RM6SIZBb12aBcnuwXbxsTwXq4nCeS
-        7DMnmlmfnuvDlHvwaL0aCro=
-X-Google-Smtp-Source: ABdhPJzXnGsmXXgO8qRrgHFnZCn5E/++s0JbD0mUM5v850qtfGXGD2zI4A5vvBBtJhqa9flYfth/vQ==
-X-Received: by 2002:a17:902:ff13:: with SMTP id f19mr2147996plj.326.1596168404804;
-        Thu, 30 Jul 2020 21:06:44 -0700 (PDT)
-Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id r8sm8054046pfg.147.2020.07.30.21.06.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jul 2020 21:06:43 -0700 (PDT)
-Subject: Re: [PATCH v4] scsi: ufs: Cleanup completed request without interrupt
- notification
-To:     Stanley Chu <stanley.chu@mediatek.com>,
-        Avri Altman <Avri.Altman@wdc.com>
-Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
-        "andy.teng@mediatek.com" <andy.teng@mediatek.com>,
-        "chaotian.jing@mediatek.com" <chaotian.jing@mediatek.com>,
-        "cc.chou@mediatek.com" <cc.chou@mediatek.com>
-References: <20200724140246.19434-1-stanley.chu@mediatek.com>
- <SN6PR04MB4640B5FC06968244DDACB8BEFC720@SN6PR04MB4640.namprd04.prod.outlook.com>
- <1596159018.17247.53.camel@mtkswgap22>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <97f1dfb0-41b6-0249-3e82-cae480b0efb6@acm.org>
-Date:   Thu, 30 Jul 2020 21:06:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=mYWpP6aK/ldCf40apNtXCnGd6yexdgynubGjVo7Bfc0=;
+        b=M/wFvMXVkzm4Z8xcWPSGyY9mfxhTE1VbULK79n+84Tmuq8ovq1N9Itq5R2L11qdnGH
+         tygHw9b+u5fJ9Bra5QyVzBuxm7zqjf7kCOAlYPb7cQrH/3dN/CBrtDCuaXDTI19SsmKv
+         vBDx9J5k5FLwLgnF5ICkZovBjv+5FNjU53X6twi7eps4nmUcmVgUrVWULwkbcn41dX8g
+         EF6j4KD3j2BsEnuFbQb1CKKaV8cg76HBzzOlDmnqvRC1nvkRvpcV/ZYyP/dG75O9t0S2
+         mqSp4iMgd5JRv85VMtJBgIJKcpqtWEhza3epwD+HDl05isJynntGQzIZALjysURA+1WS
+         ngyA==
+X-Gm-Message-State: AOAM531eVg9+nj3YdgegbPFWYujRTircTCFfCnEpDedAoK373qakf6pH
+        KMrMMo37yTeefiqGyiZdidci5w==
+X-Google-Smtp-Source: ABdhPJyOoiZqlslLxA2ujG8dzjeJ5f5ctoJKJhUF/McMDPx+qqBiHnt4YRdGIA05rif77obkniedSw==
+X-Received: by 2002:a05:620a:2231:: with SMTP id n17mr2202771qkh.37.1596168430402;
+        Thu, 30 Jul 2020 21:07:10 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id 71sm6518634qkk.125.2020.07.30.21.07.07
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Thu, 30 Jul 2020 21:07:08 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 21:06:55 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Roman Gushchin <guro@fb.com>
+cc:     Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm: vmstat: fix /proc/sys/vm/stat_refresh generating
+ false warnings
+In-Reply-To: <20200730162348.GA679955@carbon.dhcp.thefacebook.com>
+Message-ID: <alpine.LSU.2.11.2007302018350.2410@eggly.anvils>
+References: <20200714173920.3319063-1-guro@fb.com> <alpine.LSU.2.11.2007291902340.6363@eggly.anvils> <20200730162348.GA679955@carbon.dhcp.thefacebook.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-In-Reply-To: <1596159018.17247.53.camel@mtkswgap22>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-30 18:30, Stanley Chu wrote:
-> On Mon, 2020-07-27 at 11:18 +0000, Avri Altman wrote:
->> Looks good to me.
->> But better wait and see if Bart have any further reservations.
+On Thu, 30 Jul 2020, Roman Gushchin wrote:
+> On Wed, Jul 29, 2020 at 08:45:47PM -0700, Hugh Dickins wrote:
+> > 
+> > But a better idea is perhaps to redefine the behavior of
+> > "echo >/proc/sys/vm/stat_refresh".  What if
+> > "echo someparticularstring >/proc/sys/vm/stat_refresh" were to
+> > disable or enable the warning (permanently? or just that time?):
+> > disable would be more "back-compatible", but I think it's okay
+> > if you prefer enable.  Or "someparticularstring" could actually
+> > specify the warning threshold you want to use - you might echo
+> > 125 or 16000, I might echo 0.  We can haggle over the default.
 > 
-> Would you have any further suggestions?
+> May I ask you, what kind of problems you have in your in mind,
+> which can be revealed by these warnings? Or maybe there is some
+> history attached?
 
-Today is the first time that I took a look at ufshcd_abort(). The
-approach of that function looks wrong to me. This is how I think that a
-SCSI LLD abort handler should work:
-(1) Serialize against the completion path
-(__ufshcd_transfer_req_compl()) such that it cannot happen that the
-abort handler and the regular completion path both call
-cmd->scsi_done(cmd) at the same time. I'm not sure whether an existing
-synchronization object can be used for this purpose or whether a new
-synchronization object has to be introduced to serialize scsi_done()
-calls from __ufshcd_transfer_req_compl() and ufshcd_abort().
-(2) While holding that synchronization object, check whether the SCSI
-command is still outstanding. If so, submit a SCSI abort TMR to the device.
-(3) If the command has been aborted, call scsi_done() and return
-SUCCESS. If aborting failed and the command is still in progress, return
-FAILED.
+Yes: 52b6f46bc163 mentions finding a bug of mine in NR_ISOLATED_FILE
+accounting, but IIRC (though I might be making this up) there was
+also a bug in the NR_ACTIVE or NR_INACTIVE FILE or ANON accounting.
 
-An example is available in srp_abort() in
-drivers/infiniband/ulp/srp/ib_srp.c.
+When one of the stats used for balancing or limiting in vmscan.c
+trends increasingly negative, it becomes increasingly difficult
+for those heuristics (adding on to others, comparing with others)
+to do what they're intended to do: they behave increasingly weirdly.
 
-Bart.
+Now the same (or the opposite) is true if one of those stats trends
+increasingly positive: but if it leaks positive, it's visible in
+/proc/vmstat; whereas if it leaks negative, it's presented there as 0.
+
+And most of the time (when unsynchronized) showing 0 is much better
+than showing a transient negative.  But to help fix bugs, we do need
+some way of seeing the negatives, and vm/stat_refresh provides an
+opportunity to do so, when it synchronizes.
+
+I'd be glad not to show the transients if I knew them: set a flag
+on any that go negative, and only show if negative twice or more
+in a row?  Perhaps, but I don't relish adding that, and think it
+would be over-engineering.
+
+It does sound to me like echoing the warning threshold into
+/proc/sys/vm/stat_refresh is the best way to satisfy us both.
+
+Though another alternative did occur to me overnight: we could
+scrap the logged warning, and show "nr_whatever -53" as output
+from /proc/sys/vm/stat_refresh: that too would be acceptable
+to me, and you redirect to /dev/null.
+
+(Why did I choose -53 in my example?  An in-joke: when I looked
+through our machines for these warnings, on old kernels with my
+old shmem hugepage implementation, there were a striking number
+with "nr_shmem_freeholes -53"; but I'm a few years too late to
+investigate what was going on there.)
+
+> 
+> If it's all about some particular counters, which are known to be
+> strictly positive, maybe we should do the opposite, and check only
+> those counters? Because in general it's not an indication of a problem.
+
+Yet it's very curious how few stats ever generate such warnings:
+you're convinced they're just transient noise, and you're probably right;
+but I am a little suspicious of whether they are accounted correctly.
+
+Hugh
