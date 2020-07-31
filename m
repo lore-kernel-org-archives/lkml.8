@@ -2,199 +2,141 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8339FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 841152067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:49:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Eb4adLDM"
+	by mail.kernel.org (Postfix) with ESMTP id 6B38F207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:52:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731804AbgGaHt6 (ORCPT
+        id S1731762AbgGaHwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 03:49:58 -0400
-Received: from ozlabs.org ([203.11.71.1]:55215 "EHLO ozlabs.org"
+        Fri, 31 Jul 2020 03:52:01 -0400
+Received: from mga17.intel.com ([192.55.52.151]:13718 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731684AbgGaHt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 03:49:57 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BHzvm3NhBz9sRK;
-        Fri, 31 Jul 2020 17:49:56 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1596181796;
-        bh=vgtrJGuvJCtQtz6V9aSKtpyUkKz3RW8OCC7iYMgVatA=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=Eb4adLDMncuvoJsfXDgzwZkTlK6c7QJEQpW9tDwGSEUqHy4195obPsJMK9r49D524
-         S3lNErNX6QpE0MVLd7JIMgC/3MwQcZWPqQ3zUDYdiwR4MYhISX9ciT4EnQ2gdpNoyC
-         vnsymo1WsK/FL7ynJyYVUMf8VZcPOWCrglYL85A5ZJMewCM9b/A44okPvsXEFtFRJw
-         TjmZXZiJuK3Jhbcf7+WhX3dQFL2lt9GAOHQtClBp43pCn/E4FfaNY3EfS9KgUiymve
-         39z2HJnIACR3a4d06P1QqXNe/kiWigwciGcE+fe9f5dyqcgYuk/oVHEzCk6904zFM/
-         eHl5fkSbXS7gg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Subject: Re: [PATCH v4 07/10] Powerpc/numa: Detect support for coregroup
-In-Reply-To: <20200727053230.19753-8-srikar@linux.vnet.ibm.com>
-References: <20200727053230.19753-1-srikar@linux.vnet.ibm.com> <20200727053230.19753-8-srikar@linux.vnet.ibm.com>
-Date:   Fri, 31 Jul 2020 17:49:55 +1000
-Message-ID: <8736585djw.fsf@mpe.ellerman.id.au>
+        id S1731644AbgGaHwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 03:52:01 -0400
+IronPort-SDR: 6F57SUpNbWNTm40CXnJtdn1M05WFAUOtrSL0Ul1g4cvc2uwA5hJXTwr3MBxhEMHHmJs5+1FrVM
+ scSaeswrG8fA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="131814521"
+X-IronPort-AV: E=Sophos;i="5.75,417,1589266800"; 
+   d="scan'208";a="131814521"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 00:52:01 -0700
+IronPort-SDR: M8ti5At6xlNbOSGTKMfP8IK/cxxE22unkj68z36ICBUkGC8VCRBD0WThjuxVIbb1ml6gDxvL8k
+ 1zdznFCc+EMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,417,1589266800"; 
+   d="scan'208";a="490942058"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by fmsmga006.fm.intel.com with ESMTP; 31 Jul 2020 00:51:59 -0700
+Date:   Fri, 31 Jul 2020 15:48:37 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     Tom Rix <trix@redhat.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lgoncalv@redhat.com
+Subject: Re: [PATCH v2 1/4] fpga: dfl: change data type of feature id to u16
+Message-ID: <20200731074837.GE1781@yilunxu-OptiPlex-7050>
+References: <1595556555-9903-1-git-send-email-yilun.xu@intel.com>
+ <1595556555-9903-2-git-send-email-yilun.xu@intel.com>
+ <316f86d4-7bba-f0c7-3dde-794df80d32e7@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <316f86d4-7bba-f0c7-3dde-794df80d32e7@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Srikar Dronamraju <srikar@linux.vnet.ibm.com> writes:
-> Add support for grouping cores based on the device-tree classification.
-> - The last domain in the associativity domains always refers to the
-> core.
-> - If primary reference domain happens to be the penultimate domain in
-> the associativity domains device-tree property, then there are no
-> coregroups. However if its not a penultimate domain, then there are
-> coregroups. There can be more than one coregroup. For now we would be
-> interested in the last or the smallest coregroups.
+On Sat, Jul 25, 2020 at 06:29:53AM -0700, Tom Rix wrote:
+> It would be good if the variable or element for the feature id had a consistent name.
+> 
+> 
+> > @@ -197,7 +197,7 @@ int dfl_fpga_check_port_id(struct platform_device *pdev, void *pport_id);
+> >   * @id: unique dfl private feature id.
+> >   */
+> >  struct dfl_feature_id {
+> > -	u64 id;
+> > +	u16 id;
+> >  };
+> 
+> Is this structure needed ?
+> 
+> Here is how it could be changed to 
+> 
+> struct dfl_feature_driver {
+> 
+> -    const dfl_feature_id *
+> 
+> +    const u16 *id_table;
 
-This still doesn't tell me what a coregroup actually represents.
+This structure is to represent an id type, which is used to match
+fme/port owned features. It could be extended if some feature drivers
+needs driver_data.
 
-I get that it's a grouping of cores, and that the device tree specifies
-it for us, but grouping based on what?
+Actually I see some example of device_ids with similar structure, like:
 
-I think the answer is we aren't being told by firmware, it's just a
-grouping based on some opaque performance characteristic and we just
-have to take that as given.
+  struct mips_cdmm_device_id {
+  	__u8	type;
+  };
 
-But please explain that clearly in the change log and the code comments.
+  struct tee_client_device_id {
+	uuid_t uuid;
+  };
 
-cheers
 
+Thanks,
+Yilun.
 
-> Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-> Cc: LKML <linux-kernel@vger.kernel.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Anton Blanchard <anton@ozlabs.org>
-> Cc: Oliver O'Halloran <oohall@gmail.com>
-> Cc: Nathan Lynch <nathanl@linux.ibm.com>
-> Cc: Michael Neuling <mikey@neuling.org>
-> Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Valentin Schneider <valentin.schneider@arm.com>
-> Cc: Jordan Niethe <jniethe5@gmail.com>
-> Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-> Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-> ---
-> Changelog v1 -> v2:
-> 	Explained Coregroup in commit msg (Michael Ellerman)
->
->  arch/powerpc/include/asm/smp.h |  1 +
->  arch/powerpc/kernel/smp.c      |  1 +
->  arch/powerpc/mm/numa.c         | 34 +++++++++++++++++++++-------------
->  3 files changed, 23 insertions(+), 13 deletions(-)
->
-> diff --git a/arch/powerpc/include/asm/smp.h b/arch/powerpc/include/asm/smp.h
-> index 49a25e2400f2..5bdc17a7049f 100644
-> --- a/arch/powerpc/include/asm/smp.h
-> +++ b/arch/powerpc/include/asm/smp.h
-> @@ -28,6 +28,7 @@
->  extern int boot_cpuid;
->  extern int spinning_secondaries;
->  extern u32 *cpu_to_phys_id;
-> +extern bool coregroup_enabled;
->  
->  extern void cpu_die(void);
->  extern int cpu_to_chip_id(int cpu);
-> diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-> index 3c5ccf6d2b1c..698000c7f76f 100644
-> --- a/arch/powerpc/kernel/smp.c
-> +++ b/arch/powerpc/kernel/smp.c
-> @@ -74,6 +74,7 @@ static DEFINE_PER_CPU(int, cpu_state) = { 0 };
->  
->  struct task_struct *secondary_current;
->  bool has_big_cores;
-> +bool coregroup_enabled;
->  
->  DEFINE_PER_CPU(cpumask_var_t, cpu_sibling_map);
->  DEFINE_PER_CPU(cpumask_var_t, cpu_smallcore_map);
-> diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
-> index 2298899a0f0a..51cb672f113b 100644
-> --- a/arch/powerpc/mm/numa.c
-> +++ b/arch/powerpc/mm/numa.c
-> @@ -886,7 +886,9 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
->  static void __init find_possible_nodes(void)
->  {
->  	struct device_node *rtas;
-> -	u32 numnodes, i;
-> +	const __be32 *domains;
-> +	int prop_length, max_nodes;
-> +	u32 i;
->  
->  	if (!numa_enabled)
->  		return;
-> @@ -895,25 +897,31 @@ static void __init find_possible_nodes(void)
->  	if (!rtas)
->  		return;
->  
-> -	if (of_property_read_u32_index(rtas, "ibm,current-associativity-domains",
-> -				min_common_depth, &numnodes)) {
-> -		/*
-> -		 * ibm,current-associativity-domains is a fairly recent
-> -		 * property. If it doesn't exist, then fallback on
-> -		 * ibm,max-associativity-domains. Current denotes what the
-> -		 * platform can support compared to max which denotes what the
-> -		 * Hypervisor can support.
-> -		 */
-> -		if (of_property_read_u32_index(rtas, "ibm,max-associativity-domains",
-> -				min_common_depth, &numnodes))
-> +	/*
-> +	 * ibm,current-associativity-domains is a fairly recent property. If
-> +	 * it doesn't exist, then fallback on ibm,max-associativity-domains.
-> +	 * Current denotes what the platform can support compared to max
-> +	 * which denotes what the Hypervisor can support.
-> +	 */
-> +	domains = of_get_property(rtas, "ibm,current-associativity-domains",
-> +					&prop_length);
-> +	if (!domains) {
-> +		domains = of_get_property(rtas, "ibm,max-associativity-domains",
-> +					&prop_length);
-> +		if (!domains)
->  			goto out;
->  	}
->  
-> -	for (i = 0; i < numnodes; i++) {
-> +	max_nodes = of_read_number(&domains[min_common_depth], 1);
-> +	for (i = 0; i < max_nodes; i++) {
->  		if (!node_possible(i))
->  			node_set(i, node_possible_map);
->  	}
->  
-> +	prop_length /= sizeof(int);
-> +	if (prop_length > min_common_depth + 2)
-> +		coregroup_enabled = 1;
-> +
->  out:
->  	of_node_put(rtas);
->  }
-> -- 
-> 2.17.1
+> 
+> ...
+> 
+> Tom
+> 
+> 
+> >  
+> >  /**
+> > @@ -240,7 +240,7 @@ struct dfl_feature_irq_ctx {
+> >   */
+> >  struct dfl_feature {
+> >  	struct platform_device *dev;
+> > -	u64 id;
+> > +	u16 id;
+> >  	int resource_index;
+> >  	void __iomem *ioaddr;
+> >  	struct dfl_feature_irq_ctx *irq_ctx;
+> > @@ -371,7 +371,7 @@ struct platform_device *dfl_fpga_inode_to_feature_dev(struct inode *inode)
+> >  	   (feature) < (pdata)->features + (pdata)->num; (feature)++)
+> >  
+> >  static inline
+> > -struct dfl_feature *dfl_get_feature_by_id(struct device *dev, u64 id)
+> > +struct dfl_feature *dfl_get_feature_by_id(struct device *dev, u16 id)
+> >  {
+> >  	struct dfl_feature_platform_data *pdata = dev_get_platdata(dev);
+> >  	struct dfl_feature *feature;
+> > @@ -384,7 +384,7 @@ struct dfl_feature *dfl_get_feature_by_id(struct device *dev, u64 id)
+> >  }
+> >  
+> >  static inline
+> > -void __iomem *dfl_get_feature_ioaddr_by_id(struct device *dev, u64 id)
+> > +void __iomem *dfl_get_feature_ioaddr_by_id(struct device *dev, u16 id)
+> >  {
+> >  	struct dfl_feature *feature = dfl_get_feature_by_id(dev, id);
+> >  
+> > @@ -395,7 +395,7 @@ void __iomem *dfl_get_feature_ioaddr_by_id(struct device *dev, u64 id)
+> >  	return NULL;
+> >  }
+> >  
+> > -static inline bool is_dfl_feature_present(struct device *dev, u64 id)
+> > +static inline bool is_dfl_feature_present(struct device *dev, u16 id)
+> >  {
+> >  	return !!dfl_get_feature_ioaddr_by_id(dev, id);
+> >  }
