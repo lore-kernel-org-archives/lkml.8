@@ -2,343 +2,149 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A5E1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2BEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D37BF2074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5807E21744
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:35:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="K9GZpXQX"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pEJNjH66"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730898AbgGaQeS (ORCPT
+        id S1731429AbgGaQfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 12:34:18 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:11853 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbgGaQeS (ORCPT
+        Fri, 31 Jul 2020 12:35:43 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:55268 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728771AbgGaQfm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 12:34:18 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2447da0000>; Fri, 31 Jul 2020 09:33:30 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 31 Jul 2020 09:34:17 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 31 Jul 2020 09:34:17 -0700
-Received: from [10.2.167.221] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul
- 2020 16:34:16 +0000
-Subject: Re: [PATCH v3 3/3] media: i2c: imx274: Add IMX274 power on and off
- sequence
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <frankc@nvidia.com>, <hverkuil@xs4all.nl>, <luca@lucaceresoli.net>,
-        <leonl@leopardimaging.com>, <robh+dt@kernel.org>,
-        <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1595264494-2400-1-git-send-email-skomatineni@nvidia.com>
- <1595264494-2400-3-git-send-email-skomatineni@nvidia.com>
- <20200731162611.GB6401@valkosipuli.retiisi.org.uk>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <b8819080-6585-c953-e7ad-9b0a10f1d821@nvidia.com>
-Date:   Fri, 31 Jul 2020 09:34:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200731162611.GB6401@valkosipuli.retiisi.org.uk>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596213211; bh=ImsShvZi2BlrnqE+BFzy6Y4uEy2DpiPRik5669MmGIc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=K9GZpXQXnCv8WivEnBxLw0sBJ1S5rjKStYb891lnSnL38vqFw4u2ttTpBJx5rWHzR
-         maCxxFgSGLM3vFR3IuCJdt0+HSeRo4qo03mnRUTQGxuZs1CmEbkoXLO7YvxrhGsTov
-         bWPadkQlcj/OsytTNRYFWdF3rmT+gXjMaURBHTrPGcQ1DPxggo8S1zcEX6J1qm76r+
-         dPHrEEQD9aTUjKqpE31afKCLTkejb7ZVK2SH/ppInpVMfvAbfbOeJZ5tGKmjBCQUAF
-         fa25AtY7LyxVDEtV2SyfOopep1S7FuwD2W04C4/c6hGVwpyFwikJbsj56t0I1DaA1R
-         BlBTqS7QzYkHw==
+        Fri, 31 Jul 2020 12:35:42 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06VGWxt2122023;
+        Fri, 31 Jul 2020 16:35:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id; s=corp-2020-01-29;
+ bh=iFzxc1YO/OI/8nca19/oqfeQYCQ0TL+B2R2ElCT9KrQ=;
+ b=pEJNjH66lU/piSACI7rNs0s8RQRezEvaLRR40OMANCGxg5WU2AfA57eYYuZ7MIG2/HmU
+ YE3EDf+qVkrzXdFdzA+wlrTZhlx0/hkqcTq3uS8DTYqn70MZ7ehVuL1Af6nqfIpyx/32
+ sZhOoolHNASSxymkgNxlIQoORSsqrZtHyBh2Pdx+jvWIJgEp1z34Y4wctUbXXlF9NDRv
+ s4jWBEXQBCoWp09b6a0RKi7Sb7LZnFk1W+SwFI0kymU/H0Lk/eGfkYIkWHIpnl8XpcnP
+ vGihp+7VkcFEj4RUiVwGF1IBYjKG+MEh0yg1FEb5a5Gl09URGwDVNvuKQvflnB9pl68x 7Q== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 32hu1jt06e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jul 2020 16:35:35 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06VGWiae067471;
+        Fri, 31 Jul 2020 16:33:35 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 32mf70raj3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 31 Jul 2020 16:33:34 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06VGXXUE001003;
+        Fri, 31 Jul 2020 16:33:33 GMT
+Received: from dhcp-10-152-34-21.usdhcp.oraclecorp.com.com (/10.152.34.21)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 31 Jul 2020 09:33:33 -0700
+From:   George Kennedy <george.kennedy@oracle.com>
+To:     george.kennedy@oracle.com, gregkh@linuxfoundation.org,
+        jirislaby@kernel.org, b.zolnierkie@samsung.com,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dan.carpenter@oracle.com, dhaval.giani@oracle.com
+Subject: [PATCH 1/2] fbcon: prevent user font height or width change from causing potential out-of-bounds access
+Date:   Fri, 31 Jul 2020 12:33:11 -0400
+Message-Id: <1596213192-6635-1-git-send-email-george.kennedy@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9699 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=4 spamscore=0
+ mlxlogscore=999 adultscore=53 malwarescore=0 mlxscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007310123
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9699 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=11 clxscore=1011
+ malwarescore=0 spamscore=0 suspectscore=4 bulkscore=0 priorityscore=1501
+ phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007310123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add a check to fbcon_resize() to ensure that a possible change to user font
+height or user font width will not allow a font data out-of-bounds access.
+NOTE: must use original charcount in calculation as font charcount can
+change and cannot be used to determine the font data allocated size.
 
-On 7/31/20 9:26 AM, Sakari Ailus wrote:
-> Hi Sowjanya,
->
-> Thanks for the patch.
->
-> On Mon, Jul 20, 2020 at 10:01:34AM -0700, Sowjanya Komatineni wrote:
->> IMX274 has VANA analog 2.8V supply, VDIG digital core 1.8V supply,
->> and VDDL digital io 1.2V supply which are optional based on camera
->> module design.
->>
->> IMX274 also need external 24Mhz clock and is optional based on
->> camera module design.
-> The sensor appears to be able to use other frequencies, too. Could you
-> check in the driver the frequency is correct? This should be found in DT
-> bindings, too.
+Signed-off-by: George Kennedy <george.kennedy@oracle.com>
+Reported-by: syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com
+---
+ drivers/video/fbdev/core/fbcon.c | 25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
-External input clock is not in DT. So added it as part of this series.
+diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
+index 8a31fc2..6616783 100644
+--- a/drivers/video/fbdev/core/fbcon.c
++++ b/drivers/video/fbdev/core/fbcon.c
+@@ -2191,6 +2191,9 @@ static void updatescrollmode(struct fbcon_display *p,
+ 	}
+ }
+ 
++#define PITCH(w) (((w) + 7) >> 3)
++#define CALC_FONTSZ(h, p, c) ((h) * (p) * (c)) /* size = height * pitch * charcount */
++
+ static int fbcon_resize(struct vc_data *vc, unsigned int width, 
+ 			unsigned int height, unsigned int user)
+ {
+@@ -2200,6 +2203,24 @@ static int fbcon_resize(struct vc_data *vc, unsigned int width,
+ 	struct fb_var_screeninfo var = info->var;
+ 	int x_diff, y_diff, virt_w, virt_h, virt_fw, virt_fh;
+ 
++	if (ops->p && ops->p->userfont && FNTSIZE(vc->vc_font.data)) {
++		int size;
++		int pitch = PITCH(vc->vc_font.width);
++
++		/*
++		 * If user font, ensure that a possible change to user font
++		 * height or width will not allow a font data out-of-bounds access.
++		 * NOTE: must use original charcount in calculation as font
++		 * charcount can change and cannot be used to determine the
++		 * font data allocated size.
++		 */
++		if (pitch <= 0)
++			return -EINVAL;
++		size = CALC_FONTSZ(vc->vc_font.height, pitch, FNTCHARCNT(vc->vc_font.data));
++		if (size > FNTSIZE(vc->vc_font.data))
++			return -EINVAL;
++	}
++
+ 	virt_w = FBCON_SWAP(ops->rotate, width, height);
+ 	virt_h = FBCON_SWAP(ops->rotate, height, width);
+ 	virt_fw = FBCON_SWAP(ops->rotate, vc->vc_font.width,
+@@ -2652,7 +2673,7 @@ static int fbcon_set_font(struct vc_data *vc, struct console_font *font,
+ 	int size;
+ 	int i, csum;
+ 	u8 *new_data, *data = font->data;
+-	int pitch = (font->width+7) >> 3;
++	int pitch = PITCH(font->width);
+ 
+ 	/* Is there a reason why fbconsole couldn't handle any charcount >256?
+ 	 * If not this check should be changed to charcount < 256 */
+@@ -2668,7 +2689,7 @@ static int fbcon_set_font(struct vc_data *vc, struct console_font *font,
+ 	if (fbcon_invalid_charcount(info, charcount))
+ 		return -EINVAL;
+ 
+-	size = h * pitch * charcount;
++	size = CALC_FONTSZ(h, pitch, charcount);
+ 
+ 	new_data = kmalloc(FONT_EXTRA_WORDS * sizeof(int) + size, GFP_USER);
+ 
+-- 
+1.8.3.1
 
-We are mostly using 24Mhz I/P with IMX274 on designs we have and also on=20
-leopard module which has onboard XTAL for 24Mhz
-
->> This patch adds support for IMX274 power on and off to enable and
->> disable these supplies and external clock.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   drivers/media/i2c/imx274.c | 132 +++++++++++++++++++++++++++++++++++++=
-++++++--
->>   1 file changed, 129 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/media/i2c/imx274.c b/drivers/media/i2c/imx274.c
->> index 55869ff..7157b1d 100644
->> --- a/drivers/media/i2c/imx274.c
->> +++ b/drivers/media/i2c/imx274.c
->> @@ -19,6 +19,7 @@
->>   #include <linux/module.h>
->>   #include <linux/of_gpio.h>
->>   #include <linux/regmap.h>
->> +#include <linux/regulator/consumer.h>
->>   #include <linux/slab.h>
->>   #include <linux/v4l2-mediabus.h>
->>   #include <linux/videodev2.h>
->> @@ -131,6 +132,15 @@
->>   #define IMX274_TABLE_WAIT_MS			0
->>   #define IMX274_TABLE_END			1
->>  =20
->> +/* regulator supplies */
->> +static const char * const imx274_supply_names[] =3D {
->> +	"VDDL",  /* IF (1.2V) supply */
->> +	"VDIG",  /* Digital Core (1.8V) supply */
->> +	"VANA",  /* Analog (2.8V) supply */
->> +};
->> +
->> +#define IMX274_NUM_SUPPLIES ARRAY_SIZE(imx274_supply_names)
-> Please use ARRAY_SIZE() directly.
->
->> +
->>   /*
->>    * imx274 I2C operation related structure
->>    */
->> @@ -501,6 +511,8 @@ struct imx274_ctrls {
->>    * @frame_rate: V4L2 frame rate structure
->>    * @regmap: Pointer to regmap structure
->>    * @reset_gpio: Pointer to reset gpio
->> + * @supplies: imx274 analog and digital supplies
->> + * @inck: input clock to imx274
->>    * @lock: Mutex structure
->>    * @mode: Parameters for the selected readout mode
->>    */
->> @@ -514,6 +526,8 @@ struct stimx274 {
->>   	struct v4l2_fract frame_interval;
->>   	struct regmap *regmap;
->>   	struct gpio_desc *reset_gpio;
->> +	struct regulator *supplies[IMX274_NUM_SUPPLIES];
->> +	struct clk *inck;
->>   	struct mutex lock; /* mutex lock for operations */
->>   	const struct imx274_mode *mode;
->>   };
->> @@ -767,6 +781,99 @@ static void imx274_reset(struct stimx274 *priv, int=
- rst)
->>   	usleep_range(IMX274_RESET_DELAY1, IMX274_RESET_DELAY2);
->>   }
->>  =20
->> +/*
->> + * imx274_power_on - Function called to power on the sensor
->> + * @imx274: Pointer to device structure
->> + */
->> +static int imx274_power_on(struct device *dev)
->> +{
->> +	struct i2c_client *client =3D to_i2c_client(dev);
->> +	struct v4l2_subdev *sd =3D i2c_get_clientdata(client);
->> +	struct stimx274 *imx274 =3D to_imx274(sd);
->> +	int i, ret;
->> +
->> +	ret =3D clk_prepare_enable(imx274->inck);
->> +	if (ret) {
->> +		dev_err(&imx274->client->dev,
->> +			"Failed to enable input clock: %d\n", ret);
->> +		return ret;
->> +	}
->> +
-> Could you use regulator_bulk_enable() instead? Same for disable.
-
-Using regulator_bulk_enable() makes these regulators mandatory.
-
-But not all camera module designs expect power supply externally.
-
-Leopard module don't need to enable these separately as their design has=20
-onboard supplies that get enabled without SW control for individually=20
-turning them on.
-
-Some custom designs depend on sourcing externally and SW should enable=20
-them like one of the other design module we have for Jetson TX1.=20
-Depending on camera module design, these supplies can be optional.
-
->
->> +	for (i =3D 0; i < IMX274_NUM_SUPPLIES; i++) {
->> +		if (imx274->supplies[i]) {
->> +			ret =3D regulator_enable(imx274->supplies[i]);
->> +			if (ret < 0) {
->> +				dev_err(&imx274->client->dev,
->> +					"Failed to enable %s supply: %d\n",
->> +					imx274_supply_names[i], ret);
->> +				goto fail_reg;
->> +			}
->> +		}
->> +	}
->> +
->> +	usleep_range(1, 2);
-> This is a very low value. Does that 1 =C2=B5s come from the sensor datash=
-eet?
->
->> +	imx274_reset(imx274, 1);
->> +
->> +	return 0;
->> +
->> +fail_reg:
->> +	for (--i; i >=3D 0; i--) {
->> +		if (imx274->supplies[i])
->> +			regulator_disable(imx274->supplies[i]);
->> +	}
->> +
->> +	clk_disable_unprepare(imx274->inck);
->> +	return ret;
->> +}
->> +
->> +/*
->> + * imx274_power_off - Function called to power off the sensor
->> + * @imx274: Pointer to device structure
->> + */
->> +static int imx274_power_off(struct device *dev)
->> +{
->> +	struct i2c_client *client =3D to_i2c_client(dev);
->> +	struct v4l2_subdev *sd =3D i2c_get_clientdata(client);
->> +	struct stimx274 *imx274 =3D to_imx274(sd);
->> +	int i;
->> +
->> +	imx274_reset(imx274, 0);
->> +
->> +	for (i =3D 0; i < IMX274_NUM_SUPPLIES; i++) {
->> +		if (imx274->supplies[i])
->> +			regulator_disable(imx274->supplies[i]);
->> +	}
->> +
->> +	clk_disable_unprepare(imx274->inck);
->> +
->> +	return 0;
->> +}
->> +
->> +static int imx274_get_regulators(struct device *dev, struct stimx274 *i=
-mx274)
->> +{
->> +	int i, err;
->> +	const char *supply;
->> +
->> +	for (i =3D 0; i < IMX274_NUM_SUPPLIES; i++) {
->> +		supply =3D imx274_supply_names[i];
->> +		imx274->supplies[i] =3D devm_regulator_get_optional(dev, supply);
->> +		if (!IS_ERR(imx274->supplies[i]))
->> +			continue;
->> +		err =3D PTR_ERR(imx274->supplies[i]);
->> +		if (err !=3D -ENODEV) {
->> +			if (err !=3D -EPROBE_DEFER)
->> +				dev_err(&imx274->client->dev,
->> +					"Failed to get %s supply: %d\n",
->> +					supply, err);
->> +			return err;
->> +		}
->> +
->> +		imx274->supplies[i] =3D NULL;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->>   /**
->>    * imx274_s_ctrl - This is used to set the imx274 V4L2 controls
->>    * @ctrl: V4L2 control to be set
->> @@ -1836,6 +1943,14 @@ static int imx274_probe(struct i2c_client *client=
-)
->>  =20
->>   	mutex_init(&imx274->lock);
->>  =20
->> +	imx274->inck =3D devm_clk_get_optional(&client->dev, "inck");
->> +	ret =3D imx274_get_regulators(&client->dev, imx274);
->> +	if (ret) {
->> +		dev_err(&client->dev,
->> +			"Failed to get power regulators, err: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->>   	/* initialize format */
->>   	imx274->mode =3D &imx274_modes[IMX274_DEFAULT_BINNING];
->>   	imx274->crop.width =3D IMX274_MAX_WIDTH;
->> @@ -1883,15 +1998,23 @@ static int imx274_probe(struct i2c_client *clien=
-t)
->>   		goto err_me;
->>   	}
->>  =20
->> -	/* pull sensor out of reset */
->> -	imx274_reset(imx274, 1);
->> +	/* keep sensor in reset before power on */
->> +	imx274_reset(imx274, 0);
->> +
->> +	/* power on the sensor */
->> +	ret =3D imx274_power_on(&client->dev);
-> This driver would really benefit from runtime PM support. I guess you
-> usually don't want to leave the device powered on when it's not in use?
->
-> Please see e.g. the ov8856 driver.
->
->> +	if (ret < 0) {
->> +		dev_err(&client->dev,
->> +			"%s : imx274 power on failed\n", __func__);
->> +		goto err_me;
->> +	}
->>  =20
->>   	/* initialize controls */
->>   	ret =3D v4l2_ctrl_handler_init(&imx274->ctrls.handler, 4);
->>   	if (ret < 0) {
->>   		dev_err(&client->dev,
->>   			"%s : ctrl handler init Failed\n", __func__);
->> -		goto err_me;
->> +		goto err_power_off;
->>   	}
->>  =20
->>   	imx274->ctrls.handler.lock =3D &imx274->lock;
->> @@ -1958,6 +2081,8 @@ static int imx274_probe(struct i2c_client *client)
->>  =20
->>   err_ctrls:
->>   	v4l2_ctrl_handler_free(&imx274->ctrls.handler);
->> +err_power_off:
->> +	imx274_power_off(&client->dev);
->>   err_me:
->>   	media_entity_cleanup(&sd->entity);
->>   err_regmap:
->> @@ -1975,6 +2100,7 @@ static int imx274_remove(struct i2c_client *client=
-)
->>  =20
->>   	v4l2_async_unregister_subdev(sd);
->>   	v4l2_ctrl_handler_free(&imx274->ctrls.handler);
->> +	imx274_power_off(&client->dev);
->>   	media_entity_cleanup(&sd->entity);
->>   	mutex_destroy(&imx274->lock);
->>   	return 0;
