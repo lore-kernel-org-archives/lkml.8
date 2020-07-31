@@ -2,136 +2,166 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 771C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EE8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CE472083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 245822083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:46:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y7vF9niF"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lFNkPzZP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387517AbgGaPpQ (ORCPT
+        id S2387533AbgGaPqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 11:45:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728693AbgGaPpO (ORCPT
+        Fri, 31 Jul 2020 11:46:39 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17452 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727933AbgGaPqi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 11:45:14 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 581FBC061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 08:45:14 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id a21so31849058ejj.10
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 08:45:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N7m+/JdShBAl8ZFhgGbxzIHmxleILf3IO0zdQ2ETCdA=;
-        b=Y7vF9niFn53UM3USo/9vLjcOj3BjbGGNGcNZNOYb+jWP9BM9+uecOaBedA8idf7Yui
-         Hncnfb6i0gcHFVCXqNFQ448xEQCg5ICDMd/gOnxaiLb4RFVL+ZLzDss9P04b5XiIK7XP
-         yT2lx/QZnv49aDXAMrILcUSTqjxhxDIfA+/cE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N7m+/JdShBAl8ZFhgGbxzIHmxleILf3IO0zdQ2ETCdA=;
-        b=Qm642o9tRf3mlzRD70rG9xAVPhBbNyeJkFKTuK353CL7RHPWVtmdbSx1sdecd+MDDa
-         m2kzBKrQB0et0Zq61oSKXmTOPG+d4ZUt8OCEbbC+OqPYzde4cgrt8xpi95yyHgI5SsmG
-         FZLW+MWblxNgSz1FYC9036eNChV1PjnEFRc58SmM9jpnULkUDhHRZmJxIR3hbnjoniLU
-         BfK9dM8bNnfyNC6P4Vj7SEBQfQJq4E45sW9bm3ItX5mSH2+W/SeP7wLxuQEuJ0wf8k4v
-         WiXWc6/4tHq1+XzoqiFB4YOzi4L1gV3eYBv+ug90RfjUGIlfb2WrvebyqGugBMspOlNM
-         clhA==
-X-Gm-Message-State: AOAM533U0SJv+CTPAxEEFCO3uy6froaJRVDixh73MLfKexDAv3sq0foD
-        /I1vJNWB1+31yFl/FaDuajABeOzh3Yk=
-X-Google-Smtp-Source: ABdhPJwTj0EJKglbuEzDsRSXqXBx2PYR6WywXfHXS3Mi5HdKntxrK71CLwPIBymiazySny4FKqJ9dA==
-X-Received: by 2002:a17:906:3a17:: with SMTP id z23mr4532008eje.238.1596210312784;
-        Fri, 31 Jul 2020 08:45:12 -0700 (PDT)
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com. [209.85.128.50])
-        by smtp.gmail.com with ESMTPSA id l9sm10043336edj.12.2020.07.31.08.45.11
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jul 2020 08:45:11 -0700 (PDT)
-Received: by mail-wm1-f50.google.com with SMTP id g8so8903846wmk.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 08:45:11 -0700 (PDT)
-X-Received: by 2002:a1c:e908:: with SMTP id q8mr4627256wmc.59.1596210310707;
- Fri, 31 Jul 2020 08:45:10 -0700 (PDT)
+        Fri, 31 Jul 2020 11:46:38 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f243cd00000>; Fri, 31 Jul 2020 08:46:25 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 31 Jul 2020 08:46:38 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 31 Jul 2020 08:46:38 -0700
+Received: from [10.2.167.221] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul
+ 2020 15:46:37 +0000
+Subject: Re: [RFC PATCH v6 09/10] media: tegra-video: Add CSI MIPI pads
+ calibration
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>
+References: <1596186169-18729-1-git-send-email-skomatineni@nvidia.com>
+ <1596186169-18729-10-git-send-email-skomatineni@nvidia.com>
+ <3ac158c4-7df7-e3c1-f0e1-33e7ef017762@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <f483329d-b5fe-fda5-e235-b8edb5fce440@nvidia.com>
+Date:   Fri, 31 Jul 2020 08:46:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200728151258.1222876-1-campello@chromium.org>
- <20200728230520.2011240-1-campello@chromium.org> <20200728170317.v2.7.Iecaa50e469918a385b3e5dab375e442540ea2ad4@changeid>
- <159598461271.1360974.15436404116157938506@swboyd.mtv.corp.google.com> <CAHp75Vc_3VYAkVcTCAXzqxqFnpQ4Qi=iPSFW_sUjYGO=o6YMtA@mail.gmail.com>
-In-Reply-To: <CAHp75Vc_3VYAkVcTCAXzqxqFnpQ4Qi=iPSFW_sUjYGO=o6YMtA@mail.gmail.com>
-From:   Daniel Campello <campello@chromium.org>
-Date:   Fri, 31 Jul 2020 09:44:34 -0600
-X-Gmail-Original-Message-ID: <CAHcu+VaKGNxAY_OQ4oS5NtkoDLGkv2x_VrQhZ7OvEFAnNbYZeg@mail.gmail.com>
-Message-ID: <CAHcu+VaKGNxAY_OQ4oS5NtkoDLGkv2x_VrQhZ7OvEFAnNbYZeg@mail.gmail.com>
-Subject: Re: [PATCH v2 07/14] iio: sx9310: Use long instead of int for channel bitmaps
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3ac158c4-7df7-e3c1-f0e1-33e7ef017762@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596210385; bh=LT7Rum+TVQ8i+yg00HUXL4JpRxYnF2QyXbgXIWuPmeU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=lFNkPzZP4nsuT2DXNN2EEOT0x95rCZEZVWQhkkOPFwtAjVPdHvlgRLpjZkE6WQ2bm
+         2008IJ0xIH2P1z1nNG/29TvpGL5sAhfjtMcaeE3QP+NlNHhF6Bwy7Xay7VbiyRSuMb
+         unl5Wlgq6K7JaLQJGIj0hyL6Yin09OycAu/1Bxw5j6G8RbL9nyqQ5TYyjP6TGQiOX9
+         Qs+wtOhLYsATerUT9trZ76xuTL+DweM+PsDpdHdbM5h4ksTQ2HrtOE1yr61fm+HOXU
+         IKQN0jjnGNDOSEreOeoo93WFnk7EWwj7Z0eKLg4P3EZGcBajuDTDZC61MMbvWgFGx1
+         aTt+jHx0VNctg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 1:00 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Wed, Jul 29, 2020 at 4:03 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> > Quoting Daniel Campello (2020-07-28 16:05:13)
-> > > Uses for_each_set_bit() macro to loop over channel bitmaps.
->
+
+On 7/31/20 4:39 AM, Dmitry Osipenko wrote:
+> 31.07.2020 12:02, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
 > ...
+>> @@ -249,13 +249,47 @@ static int tegra_csi_enable_stream(struct v4l2_sub=
+dev *subdev)
+>>   		return ret;
+>>   	}
+>>  =20
+>> +	if (csi_chan->mipi) {
+>> +		ret =3D tegra_mipi_enable(csi_chan->mipi);
+>> +		if (ret < 0) {
+>> +			dev_err(csi->dev,
+>> +				"failed to enable MIPI pads: %d\n", ret);
+>> +			goto rpm_put;
+>> +		}
+>> +
+>> +		/*
+>> +		 * CSI MIPI pads PULLUP, PULLDN and TERM impedances need to
+>> +		 * be calibrated after power on.
+>> +		 * So, trigger the calibration start here and results will
+>> +		 * be latched and applied to the pads when link is in LP11
+>> +		 * state during start of sensor streaming.
+>> +		 */
+>> +		ret =3D tegra_mipi_start_calibration(csi_chan->mipi);
+>> +		if (ret < 0) {
+>> +			dev_err(csi->dev,
+>> +				"failed to start MIPI calibration: %d\n", ret);
+>> +			goto disable_mipi;
+>> +		}
+> What would happen if CSI stream is enabled and then immediately disabled
+> without enabling camera sensor?
+
+Nothing will happen as during stream enable csi receiver is kept ready.
+
+But actual capture will not happen during that point.
+
 >
-> > > +       unsigned long chan_prox_stat;
-> >
-> > This can be DECLARE_BITMAP(chan_prox_stat, SX9310_NUM_CHANNELS)
->
-> > > +       unsigned long chan_read;
-> > > +       unsigned long chan_event;
-> >
-> > Same for these?
-All of these are eventually used by regmap_update_bits() which expects
-unsigned int. I believe the extra complexity is not worth it given the
-number of channels.
->
+>> +	}
+>> +
 > ...
+>>   static int tegra_channel_enable_stream(struct tegra_vi_channel *chan)
+>>   {
+>>   	struct v4l2_subdev *csi_subdev, *src_subdev;
+>> +	struct tegra_csi_channel *csi_chan;
+>>   	int ret;
+>>  =20
+>>   	/*
+>> @@ -206,13 +207,30 @@ static int tegra_channel_enable_stream(struct tegr=
+a_vi_channel *chan)
+>>   	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
+>>   		return 0;
+>>  =20
+>> +	csi_chan =3D v4l2_get_subdevdata(csi_subdev);
+>> +	/*
+>> +	 * TRM has incorrectly documented to wait for done status from
+>> +	 * calibration logic after CSI interface power on.
+>> +	 * As per the design, calibration results are latched and applied
+>> +	 * to the pads only when the link is in LP11 state which will happen
+>> +	 * during the sensor stream-on.
+>> +	 * CSI subdev stream-on triggers start of MIPI pads calibration.
+>> +	 * Wait for calibration to finish here after sensor subdev stream-on
+>> +	 * and in case of sensor stream-on failure, cancel the calibration.
+>> +	 */
+>>   	src_subdev =3D tegra_channel_get_remote_source_subdev(chan);
+> Is it possible to move the start_calibration() here?
+
+I think we can do start here as well I guess but currently I am=20
+following steps order as per design document.
+
+This is the reason I have updated in above comment as well.
+
 >
-> > > +       prox_changed = (data->chan_prox_stat ^ val) & data->chan_event;
-> >
-> > I was expecting:
-> >
-> >
-> >         bitmap_xor(&prox_changed, &data->chan_prox_stat, &val, SX9310_NUM_CHANNELS);
-> >         bitmap_and(&prox_changed, &data->chan_event, SX9310_NUM_CHANNELS);
->
-> I agree with this. On a small number of channels (up to 32) it will be
-> reduced to simple operations, but will leave a possibility to have
-> more with easy redefine.
->
-> (though _and() above misses one argument AFAICT)
->
-> ...
->
-> > > +       unsigned long channels = 0;
-> >
-> > Use DECLARE_BITMAP(channels, SX9310_NUM_CHANNELS)?
->
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+>>   	ret =3D v4l2_subdev_call(src_subdev, video, s_stream, true);
+>>   	if (ret < 0 && ret !=3D -ENOIOCTLCMD) {
+>> +		tegra_mipi_cancel_calibration(csi_chan->mipi);
+>>   		v4l2_subdev_call(csi_subdev, video, s_stream, false);
+>>   		return ret;
+>>   	}
+>>  =20
+>> +	ret =3D tegra_mipi_finish_calibration(csi_chan->mipi);
+>> +	if (ret < 0)
+>> +		dev_warn(csi_chan->csi->dev,
+>> +			 "MIPI calibration failed: %d\n", ret);
+>> +
+>>   	return 0;
+>>   }
+>>  =20
+>>
