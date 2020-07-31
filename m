@@ -2,172 +2,160 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 453C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7D2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29D982074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CB7C206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:11:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DIbX+0nI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387467AbgGaOKk (ORCPT
+        id S2387478AbgGaOLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 10:10:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58696 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728206AbgGaOKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 10:10:40 -0400
-Received: from gaia (unknown [95.146.230.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52369206DA;
-        Fri, 31 Jul 2020 14:10:34 +0000 (UTC)
-Date:   Fri, 31 Jul 2020 15:10:31 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Christopher Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, linux-riscv@lists.infradead.org,
-        x86@kernel.org
-Subject: Re: [PATCH v2 3/7] mm: introduce memfd_secret system call to create
- "secret" memory areas
-Message-ID: <20200731141031.GD29569@gaia>
-References: <20200727162935.31714-1-rppt@kernel.org>
- <20200727162935.31714-4-rppt@kernel.org>
- <20200730162209.GB3128@gaia>
- <20200730204409.GB534153@kernel.org>
+        Fri, 31 Jul 2020 10:11:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47970 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728206AbgGaOLm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 10:11:42 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3569DC06174A
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 07:11:42 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id o22so22751137qtt.13
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 07:11:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zXpZPwG3QbgNXE97/2cLGjIf1FCzQ19LC9h/m/WwwVs=;
+        b=DIbX+0nIyTNIDs1WHA8a4ipIxsqC7PW2mFt1JElyKYD6wSvmpQQTdzFJ5TQLeAWFin
+         Wc4xWl1vAewfC9Mt2ZGKPcAo8yISkbT6r1OIiLdrekXbkOMECjodVIejniTqfoz4qqJr
+         JxcjZvvoLn3sd2u5RI44glIsSUQPX9pVpc+fHAuXjUfLHMvDo9hVe74z0aaOO7uyALya
+         SEx1SGQNbDiqr5kgZ4TWJDSJkbmmsJUp98fDdgNcAA0U0whTsJhSYzt/alALC1ZrU9P3
+         qpItJysOvjdmMfygPOEgjphd2YjRabPfYOb3Bs+kZu7CxdCej/+jK+1hPXYkjyya/bCu
+         F0aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zXpZPwG3QbgNXE97/2cLGjIf1FCzQ19LC9h/m/WwwVs=;
+        b=V6JfEphsVEl1qJtD9d0Z5SOTo2TRo8OLVn+sgiWyLDfVBYMIOvqYapRUPVVFrY/GQc
+         XF7ThKOAOah4Y68n4AXlBDJOwmUTnC2QMMhEc5BrqIjuM205WwL5QcoAL8J+Kw/BA6F5
+         p4p+nZbhGw3G+xvWyn6HPY4pcCVfDD8iSZXYITKDEhBvgcTRRI0LL3bvIFHBiHlpJpoe
+         3PZlhYPOg6NBAGIlOuzQMylK1OZelXaf//543m4JejngRsfLxOkCbAe0qUijM4xBjxP5
+         tK03cpUG9KZOrYCtgQ5/4NtY+RPPUUbA55k+6bTWcSQjyDKdGjJc7Rrx/L+W+MOBy2KZ
+         4n8A==
+X-Gm-Message-State: AOAM530iHkAYZLNzuEl9m2d3i4PH6xccREaE6M1UzZeRPKJwyP/Tj0gc
+        2FZFAvAB+O1jBjIXbglmi5D+pnANZD2a7v/V9kURU4j4
+X-Google-Smtp-Source: ABdhPJwnmQyoXfzFX+W8K45D31R9RbniOEVvLK4NDZCe/SS88TfcmX7MQjEuWl25D353CCsRvk63E7rRxCErB9u6Sr4=
+X-Received: by 2002:ac8:6713:: with SMTP id e19mr3833232qtp.88.1596204701220;
+ Fri, 31 Jul 2020 07:11:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730204409.GB534153@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1595927918-19845-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1595927918-19845-4-git-send-email-grzegorz.jaszczyk@linaro.org> <c2695e63-dd4f-9eb9-afbc-fa52d7e88a86@lechnology.com>
+In-Reply-To: <c2695e63-dd4f-9eb9-afbc-fa52d7e88a86@lechnology.com>
+From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Date:   Fri, 31 Jul 2020 16:11:30 +0200
+Message-ID: <CAMxfBF5aQVE2YMKyBcSRaP-=NWHowSfzLz11WzEi=7ZeJDQLBw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] irqchip/irq-pruss-intc: Add logic for handling
+ reserved interrupts
+To:     David Lechner <david@lechnology.com>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net,
+        Marc Zyngier <maz@kernel.org>, "Anna, Suman" <s-anna@ti.com>,
+        robh+dt@kernel.org, Lee Jones <lee.jones@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "Mills, William" <wmills@ti.com>,
+        "Bajjuri, Praneeth" <praneeth@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 11:44:09PM +0300, Mike Rapoport wrote:
-> On Thu, Jul 30, 2020 at 05:22:10PM +0100, Catalin Marinas wrote:
-> > On Mon, Jul 27, 2020 at 07:29:31PM +0300, Mike Rapoport wrote:
-> > > For instance, the following example will create an uncached mapping (error
-> > > handling is omitted):
-> > > 
-> > > 	fd = memfd_secret(SECRETMEM_UNCACHED);
-> > > 	ftruncate(fd, MAP_SIZE);
-> > > 	ptr = mmap(NULL, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-[...]
-> > > +static int secretmem_mmap(struct file *file, struct vm_area_struct *vma)
-> > > +{
-> > > +	struct secretmem_ctx *ctx = file->private_data;
-> > > +	unsigned long mode = ctx->mode;
-> > > +	unsigned long len = vma->vm_end - vma->vm_start;
-> > > +
-> > > +	if (!mode)
-> > > +		return -EINVAL;
-> > > +
-> > > +	if ((vma->vm_flags & (VM_SHARED | VM_MAYSHARE)) == 0)
-> > > +		return -EINVAL;
-> > > +
-> > > +	if (mlock_future_check(vma->vm_mm, vma->vm_flags | VM_LOCKED, len))
-> > > +		return -EAGAIN;
-> > > +
-> > > +	switch (mode) {
-> > > +	case SECRETMEM_UNCACHED:
-> > > +		vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
-> > > +		fallthrough;
-> > > +	case SECRETMEM_EXCLUSIVE:
-> > > +		vma->vm_ops = &secretmem_vm_ops;
-> > > +		break;
-> > > +	default:
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > > +	vma->vm_flags |= VM_LOCKED;
-> > > +
-> > > +	return 0;
-> > > +}
-> > 
-> > I think the uncached mapping is not the right thing for arm/arm64. First
-> > of all, pgprot_noncached() gives us Strongly Ordered (Device memory)
-> > semantics together with not allowing unaligned accesses. I suspect the
-> > semantics are different on x86.
->  
-> Hmm, on x86 it's also Strongly Ordered, but I didn't find any alignment
-> restrictions. Is there a mode for arm64 that can provide similar
-> semantics?
-> 
-> Would it make sence to use something like
-> 
-> #define pgprot_uncached(prot) \
-> 	__pgprot_modify(prot, PTE_ATTRINDX_MASK, \
-> 			PTE_ATTRINDX(MT_NORMAL_NC) | PTE_PXN)
-> 
-> or is it too weak?
+On Wed, 29 Jul 2020 at 20:48, David Lechner <david@lechnology.com> wrote:
+>
+> On 7/28/20 4:18 AM, Grzegorz Jaszczyk wrote:
+> > From: Suman Anna <s-anna@ti.com>
+> >
+> > The PRUSS INTC has a fixed number of output interrupt lines that are
+> > connected to a number of processors or other PRUSS instances or other
+> > devices (like DMA) on the SoC. The output interrupt lines 2 through 9
+> > are usually connected to the main Arm host processor and are referred
+> > to as host interrupts 0 through 7 from ARM/MPU perspective.
+> >
+> > All of these 8 host interrupts are not always exclusively connected
+> > to the Arm interrupt controller. Some SoCs have some interrupt lines
+> > not connected to the Arm interrupt controller at all, while a few others
+> > have the interrupt lines connected to multiple processors in which they
+> > need to be partitioned as per SoC integration needs. For example, AM437x
+> > and 66AK2G SoCs have 2 PRUSS instances each and have the host interrupt 5
+> > connected to the other PRUSS, while AM335x has host interrupt 0 shared
+> > between MPU and TSC_ADC and host interrupts 6 & 7 shared between MPU and
+> > a DMA controller.
+> >
+> > Add logic to the PRUSS INTC driver to ignore both these shared and
+> > invalid interrupts.
+>
+> If a person wanted to use DMA with a PRU what will handle the mapping
+> of a PRU event to host interrupt 6 or 7 if they are being ignored here?
 
-Reading Elena's email, that's about preventing speculative loads. While
-the arm64 Normal NC is non-cacheable (equivalent to write-combine), a
-CPU is allowed to speculatively read from it. A carefully crafted gadget
-could leave an imprint on a different part of the cache via speculative
-execution based on a value in the secret memory. So IIUC, we want memory
-that cannot be speculatively loaded from and that would be Device memory
-on arm64 (with the alignment restrictions).
+Mapping can be handled independently: even if a given host interrupt
+is on irqs-reserved list, the mapping description for it can be
+provided (e.g. similar to the resource table case passed through rproc
+subsystem) and nothing prevents this driver from actually routing it.
 
-Now, I think we could relax this to Device_GRE. So maybe add a
-pgprot_nospec() and allow architectures to define whatever they find
-suitable. The exact semantics will be different between architectures.
+>
+> >
+> > Signed-off-by: Suman Anna <s-anna@ti.com>
+> > Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+> > ---
+> > v3->v4:
+> > - Due to changes in DT bindings which converts irqs-reserved
+> >    property from uint8-array to bitmask requested by Rob introduce
+> >    relevant changes in the driver.
+> > - Merge the irqs-reserved and irqs-shared to one property since they
+> >    can be handled by one logic (relevant change was introduced to DT
+> >    binding).
+> > - Update commit message.
+> > v2->v3:
+> > - Extra checks for (intc->irqs[i]) in error/remove path was moved from
+> >    "irqchip/irq-pruss-intc: Add a PRUSS irqchip driver for PRUSS
+> >    interrupts" to this patch
+> > v1->v2:
+> > - https://patchwork.kernel.org/patch/11069757/
+> > ---
+> >   drivers/irqchip/irq-pruss-intc.c | 29 ++++++++++++++++++++++++-----
+> >   1 file changed, 24 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/irqchip/irq-pruss-intc.c b/drivers/irqchip/irq-pruss-intc.c
+> > index 45b966a..cf9a59b 100644
+> > --- a/drivers/irqchip/irq-pruss-intc.c
+> > +++ b/drivers/irqchip/irq-pruss-intc.c
+> > @@ -474,7 +474,7 @@ static int pruss_intc_probe(struct platform_device *pdev)
+> >       struct pruss_intc *intc;
+> >       struct pruss_host_irq_data *host_data[MAX_NUM_HOST_IRQS] = { NULL };
+> >       int i, irq, ret;
+> > -     u8 max_system_events;
+> > +     u8 max_system_events, invalid_intr = 0;
+> >
+> >       data = of_device_get_match_data(dev);
+> >       if (!data)
+> > @@ -496,6 +496,16 @@ static int pruss_intc_probe(struct platform_device *pdev)
+> >               return PTR_ERR(intc->base);
+> >       }
+> >
+> > +     ret = of_property_read_u8(dev->of_node, "ti,irqs-reserved",
+> > +                               &invalid_intr);
+>
+> Why not make the variable name match the property name?
 
-> > The second, more serious problem, is that I can't find any place where
-> > the caches are flushed for the page mapped on fault. When a page is
-> > allocated, assuming GFP_ZERO, only the caches are guaranteed to be
-> > zeroed. Exposing this subsequently to user space as uncached would allow
-> > the user to read stale data prior to zeroing. The arm64
-> > set_direct_map_default_noflush() doesn't do any cache maintenance.
-> 
-> Well, the idea of uncached mappings came from Elena [1] to prevent
-> possibility of side channels that leak user space memory. So I think
-> even without cache flushing after the allocation, user space is
-> protected as all its memory accesses bypass cache so even after the page
-> is freed there won't be stale data in the cache.
-> 
-> I think that it makes sense to limit SECRETMEM_UNCACHED only for
-> architectures that define an appropriate protection, e.g.
-> pgprot_uncahced(). For x86 it can be aliased to pgprot_noncached() and
-> other architecures can define their versions.
+Sure, I will rename this variable.
 
-Indeed, though as I said above, maybe use a name that suggests no
-speculation since non-cacheable doesn't always guarantee that. Something
-like pgprot_nospec() and SECRETMEM_NOSPEC.
-
-However, your implementation still has the problem that such memory must
-have the caches flushed before being mapped in user-space, otherwise we
-leak other secrets via such pages to the caller. The only generic API we
-have in the kernel for such things is the DMA one. If hch doesn't mind,
-you could abuse it and call arch_dma_prep_coherent() prior to
-set_direct_map_invalid_noflush() (if the mapping is non-cacheable).
-
--- 
-Catalin
+Thank you for your review,
+Grzegorz
