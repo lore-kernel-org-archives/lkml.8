@@ -2,146 +2,154 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC246C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDEAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96CB5208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9050E2070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:08:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rCcTUY3b"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rpiunZ1P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbgGaEHM (ORCPT
+        id S1726523AbgGaEIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 00:07:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbgGaEHM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 00:07:12 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F02B9C061574
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 21:07:11 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id g26so27750294qka.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 21:07:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=mYWpP6aK/ldCf40apNtXCnGd6yexdgynubGjVo7Bfc0=;
-        b=rCcTUY3bGoSbaXPfkkI8cQEkGpV8mm9TAojYFnlSDFFQxMdNrvbPZIfcFchMNbearV
-         7ZaSEeAGxFkDmwMHmRyrNn9es5QiySm5OOJwdjUM40gdNTQjVJ68rgfr2cRyQ3BaEl0O
-         iE9sQQGEqNMkUF+ThPF64r8sPM/NtfQBt0JDfBDXj2BuNweOJoypQ1K4xJAZu4QNpeg0
-         iH/5qAMqtqSEtP6Imn0QR9X4bO1l0d9WZs68paIcsH1plhLY1wUAgaNVx4RnKQY5B7x0
-         Yp+K4hAV+abg1Og1kMAMRgGO4NDVNugoG/43m5+ybhzRYvTO/daSECZm1lZbnvGl3NtD
-         k0oA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=mYWpP6aK/ldCf40apNtXCnGd6yexdgynubGjVo7Bfc0=;
-        b=M/wFvMXVkzm4Z8xcWPSGyY9mfxhTE1VbULK79n+84Tmuq8ovq1N9Itq5R2L11qdnGH
-         tygHw9b+u5fJ9Bra5QyVzBuxm7zqjf7kCOAlYPb7cQrH/3dN/CBrtDCuaXDTI19SsmKv
-         vBDx9J5k5FLwLgnF5ICkZovBjv+5FNjU53X6twi7eps4nmUcmVgUrVWULwkbcn41dX8g
-         EF6j4KD3j2BsEnuFbQb1CKKaV8cg76HBzzOlDmnqvRC1nvkRvpcV/ZYyP/dG75O9t0S2
-         mqSp4iMgd5JRv85VMtJBgIJKcpqtWEhza3epwD+HDl05isJynntGQzIZALjysURA+1WS
-         ngyA==
-X-Gm-Message-State: AOAM531eVg9+nj3YdgegbPFWYujRTircTCFfCnEpDedAoK373qakf6pH
-        KMrMMo37yTeefiqGyiZdidci5w==
-X-Google-Smtp-Source: ABdhPJyOoiZqlslLxA2ujG8dzjeJ5f5ctoJKJhUF/McMDPx+qqBiHnt4YRdGIA05rif77obkniedSw==
-X-Received: by 2002:a05:620a:2231:: with SMTP id n17mr2202771qkh.37.1596168430402;
-        Thu, 30 Jul 2020 21:07:10 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id 71sm6518634qkk.125.2020.07.30.21.07.07
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Thu, 30 Jul 2020 21:07:08 -0700 (PDT)
-Date:   Thu, 30 Jul 2020 21:06:55 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Roman Gushchin <guro@fb.com>
-cc:     Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm: vmstat: fix /proc/sys/vm/stat_refresh generating
- false warnings
-In-Reply-To: <20200730162348.GA679955@carbon.dhcp.thefacebook.com>
-Message-ID: <alpine.LSU.2.11.2007302018350.2410@eggly.anvils>
-References: <20200714173920.3319063-1-guro@fb.com> <alpine.LSU.2.11.2007291902340.6363@eggly.anvils> <20200730162348.GA679955@carbon.dhcp.thefacebook.com>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        Fri, 31 Jul 2020 00:08:47 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:39795 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725800AbgGaEIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 00:08:46 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BHv0W6WxYz9sT6;
+        Fri, 31 Jul 2020 14:08:43 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596168524;
+        bh=uZwB7cpno5aYy/Lsh0yh9DPvAz94bXB5ET6Cu6Xj7Aw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rpiunZ1PjFCOeawWBhnTF8wgHD2oEDlHD4H+UYoK9GLNi6wA3zggNCaKZrG2gyvvc
+         /forncdGrvIbrdyObNLJHRX72+9xB/ps4BfYbpCsw1+UaibdEH5jdcaN6NGXnHTJW6
+         Yhx45C8lNSzL1HsMR68p2TNIRZSb5IqFQAR+dyA5Z/+PnXivxuLcBnbRovVmT9SFx4
+         bS5vL8PUlIk62Bjkt/ahQW2kliHwvXZCxWitcs8Fz1lPyHDMz+AY5DCIADOyOKK93d
+         0X+1wEA5OtQ1Y3vRBkCQpy7aAI1UV8WdJ3T+o9Z/Fr0g55W9VCxIlfefOguOIk7Doy
+         K/nPm8R/a/Y5A==
+Date:   Fri, 31 Jul 2020 14:08:42 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: linux-next: Tree for Jul 30 [build failure on arm64]
+Message-ID: <20200731140842.46abe589@canb.auug.org.au>
+In-Reply-To: <72b073ba-ee41-1a1c-ce6c-ffd8b5936b09@hisilicon.com>
+References: <20200730214659.0fbfdfc4@canb.auug.org.au>
+        <72b073ba-ee41-1a1c-ce6c-ffd8b5936b09@hisilicon.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: multipart/signed; boundary="Sig_/1sV7_S0uZ6QJUDIPXYW/iz1";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Jul 2020, Roman Gushchin wrote:
-> On Wed, Jul 29, 2020 at 08:45:47PM -0700, Hugh Dickins wrote:
-> > 
-> > But a better idea is perhaps to redefine the behavior of
-> > "echo >/proc/sys/vm/stat_refresh".  What if
-> > "echo someparticularstring >/proc/sys/vm/stat_refresh" were to
-> > disable or enable the warning (permanently? or just that time?):
-> > disable would be more "back-compatible", but I think it's okay
-> > if you prefer enable.  Or "someparticularstring" could actually
-> > specify the warning threshold you want to use - you might echo
-> > 125 or 16000, I might echo 0.  We can haggle over the default.
-> 
-> May I ask you, what kind of problems you have in your in mind,
-> which can be revealed by these warnings? Or maybe there is some
-> history attached?
+--Sig_/1sV7_S0uZ6QJUDIPXYW/iz1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Yes: 52b6f46bc163 mentions finding a bug of mine in NR_ISOLATED_FILE
-accounting, but IIRC (though I might be making this up) there was
-also a bug in the NR_ACTIVE or NR_INACTIVE FILE or ANON accounting.
+Hi all,
 
-When one of the stats used for balancing or limiting in vmscan.c
-trends increasingly negative, it becomes increasingly difficult
-for those heuristics (adding on to others, comparing with others)
-to do what they're intended to do: they behave increasingly weirdly.
+On Fri, 31 Jul 2020 10:46:52 +0800 Shaokun Zhang <zhangshaokun@hisilicon.co=
+m> wrote:
+>
+> There's a build failure on arm64:
+>=20
+> In file included from ./include/linux/compat.h:17:0,
+>                  from ./arch/arm64/include/asm/stat.h:13,
+>                  from ./include/linux/stat.h:6,
+>                  from ./include/linux/sysfs.h:22,
+>                  from ./include/linux/kobject.h:20,
+>                  from ./include/linux/of.h:17,
+>                  from ./include/linux/irqdomain.h:35,
+>                  from ./include/linux/acpi.h:13,
+>                  from ./include/acpi/apei.h:9,
+>                  from ./include/acpi/ghes.h:5,
+>                  from ./include/linux/arm_sdei.h:8,
+>                  from arch/arm64/kernel/asm-offsets.c:10:
+> ./include/linux/fs.h: In function =E2=80=98vfs_whiteout=E2=80=99:
+> ./include/linux/fs.h:1709:32: error: =E2=80=98S_IFCHR=E2=80=99 undeclared=
+ (first use in this function)
+>   return vfs_mknod(dir, dentry, S_IFCHR | WHITEOUT_MODE, WHITEOUT_DEV);
+>                                 ^
+> ./include/linux/fs.h:1709:32: note: each undeclared identifier is reporte=
+d only once for each
+> function it appears in
+> ./include/linux/fs.h: At top level:
+> ./include/linux/fs.h:1855:46: warning: =E2=80=98struct kstat=E2=80=99 dec=
+lared inside parameter list
+>   int (*getattr) (const struct path *, struct kstat *, u32, unsigned int);
+>                                               ^
+> ./include/linux/fs.h:1855:46: warning: its scope is only this definition =
+or declaration, which is
+> probably not what you want
+> ./include/linux/fs.h: In function =E2=80=98__mandatory_lock=E2=80=99:
+> ./include/linux/fs.h:2325:25: error: =E2=80=98S_ISGID=E2=80=99 undeclared=
+ (first use in this function)
+>   return (ino->i_mode & (S_ISGID | S_IXGRP)) =3D=3D S_ISGID;
+>                          ^
+> ./include/linux/fs.h:2325:35: error: =E2=80=98S_IXGRP=E2=80=99 undeclared=
+ (first use in this function)
+>   return (ino->i_mode & (S_ISGID | S_IXGRP)) =3D=3D S_ISGID;
+>                                    ^
+> ./include/linux/fs.h: In function =E2=80=98invalidate_remote_inode=E2=80=
+=99:
+> ./include/linux/fs.h:2588:6: error: implicit declaration of function =E2=
+=80=98S_ISREG=E2=80=99
+> [-Werror=3Dimplicit-function-declaration]
+>   if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
+>       ^
+> ./include/linux/fs.h:2588:32: error: implicit declaration of function =E2=
+=80=98S_ISDIR=E2=80=99
+> [-Werror=3Dimplicit-function-declaration]
+>   if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
+>                                 ^
+> ./include/linux/fs.h:2589:6: error: implicit declaration of function =E2=
+=80=98S_ISLNK=E2=80=99
+> [-Werror=3Dimplicit-function-declaration]
+>       S_ISLNK(inode->i_mode))
+>       ^
+> ./include/linux/fs.h: In function =E2=80=98execute_ok=E2=80=99:
+> ./include/linux/fs.h:2768:26: error: =E2=80=98S_IXUGO=E2=80=99 undeclared=
+ (first use in this function)
+>   return (inode->i_mode & S_IXUGO) || S_ISDIR(inode->i_mode);
 
-Now the same (or the opposite) is true if one of those stats trends
-increasingly positive: but if it leaks positive, it's visible in
-/proc/vmstat; whereas if it leaks negative, it's presented there as 0.
+Presumably caused by commit
 
-And most of the time (when unsynchronized) showing 0 is much better
-than showing a transient negative.  But to help fix bugs, we do need
-some way of seeing the negatives, and vm/stat_refresh provides an
-opportunity to do so, when it synchronizes.
+  b902bfb3f0e9 ("arm64: stop using <asm/compat.h> directly")
 
-I'd be glad not to show the transients if I knew them: set a flag
-on any that go negative, and only show if negative twice or more
-in a row?  Perhaps, but I don't relish adding that, and think it
-would be over-engineering.
+--=20
+Cheers,
+Stephen Rothwell
 
-It does sound to me like echoing the warning threshold into
-/proc/sys/vm/stat_refresh is the best way to satisfy us both.
+--Sig_/1sV7_S0uZ6QJUDIPXYW/iz1
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Though another alternative did occur to me overnight: we could
-scrap the logged warning, and show "nr_whatever -53" as output
-from /proc/sys/vm/stat_refresh: that too would be acceptable
-to me, and you redirect to /dev/null.
+-----BEGIN PGP SIGNATURE-----
 
-(Why did I choose -53 in my example?  An in-joke: when I looked
-through our machines for these warnings, on old kernels with my
-old shmem hugepage implementation, there were a striking number
-with "nr_shmem_freeholes -53"; but I'm a few years too late to
-investigate what was going on there.)
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8jmUoACgkQAVBC80lX
+0Gxu6wf/a6ZYNxY/5WSq7usFT3Yb8PAd4e3R+k2APABluKXQn8dts9wrL3vMVUvk
+HIjjuIYkDhmWad7P+Yuq7R2dFb2Z6DWL8GYfKWjT/aEGSoVE4gr8Gwry7/HZQnHx
+mY+wfOAGs7fFKxmkPKSdFJeJ0wX/On7ogIH49Mo2V9VQ57IEpspQbclE6LFFwk4l
+yLJbvYV86FnGNCIHmB3nZiarPZzAQNFfImBbIDmXq/FIgXH+XkuIj7JMHAD0P/dC
+cJPK1/bbiMKEj/dP8NqQjkmfSUsk29Ob7/UFTcVVo83PCbv7MSl4Okic14Q+Whqj
+YRoqxbE27JfCy/5hBK+vkQoxS3pZiA==
+=xJ8k
+-----END PGP SIGNATURE-----
 
-> 
-> If it's all about some particular counters, which are known to be
-> strictly positive, maybe we should do the opposite, and check only
-> those counters? Because in general it's not an indication of a problem.
-
-Yet it's very curious how few stats ever generate such warnings:
-you're convinced they're just transient noise, and you're probably right;
-but I am a little suspicious of whether they are accounted correctly.
-
-Hugh
+--Sig_/1sV7_S0uZ6QJUDIPXYW/iz1--
