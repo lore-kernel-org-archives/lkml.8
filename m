@@ -2,142 +2,71 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0313C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A53C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D87432087C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B10322B3F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:29:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596230962;
+	bh=ZLbhjQCA6Lr7WPMvsYnug+Z6zWPo3a5RksC7e/DM1fA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=P5zbNnOGZNWC76819tIjlKDbhxH+p8OqIdqXqr6Lgw1urs9N7EMSLTfY3jdokFe8C
+	 2vhG7t25/087JueuIkCO1RjPBYIUSrWWZWV+jN66OLVOQJ3naSxIyN4UykQei2jrm6
+	 z2TlCc4UlPkngK3qFdiHB9RBhB9cD+pjsjh7e9BA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgGaV2Y (ORCPT
+        id S1728508AbgGaV3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 17:28:24 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35412 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726806AbgGaV2Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 17:28:24 -0400
-Received: by mail-lf1-f67.google.com with SMTP id j22so11683172lfm.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 14:28:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2LM9wmlkgT4PsRWE1wCcqgQWCXbjCWE/5JCh3nJ0oCA=;
-        b=FdGu0jzP55VSvuvrqU/RWMTfZf6fu1vgUm4hY4m2jV580ml9lYmmqQghBcSlrhkTzR
-         KpxaKRwYqtEiHep/ODjxcaE7THQkaLucc2GCXxjXsJsVtnQTgd8bvVRU4w8XJBxVZ9oz
-         pO9JiEnhcOJYxekCkwE8+mC7SxU/T+Anm9ZZ24ExsU/i+DEtjDgRvgQ6qLa+V0UiqQMG
-         +xGUxtHyHVb2EcC+SM7IZ9IC7VwVL5ZfMzMarvsCX6yjZa3RhwYp7I3hT3Gz8kZgZjbK
-         ozxSMOrZzTHgL6opmfEW94tFLtwNvwFPC4MQFZo3L3DFRNH9Ie36zo+o3izmHEj9J0HF
-         ZAWA==
-X-Gm-Message-State: AOAM533VrlBiLAoM6bG9Rsub5oiZPqOmj2bDgagNNcoiEtCEaznJ2h5y
-        GqsWq6Btfs0K+sb6vBrr6VoUbNvVljg=
-X-Google-Smtp-Source: ABdhPJx5rpPcTf6BM7go7zcF82POs7Vn/gQAL/VNoJB8vwJy+X5By9cH+RyEn/BuffP3aKBK6Z020Q==
-X-Received: by 2002:a19:e50:: with SMTP id 77mr2864709lfo.188.1596230902010;
-        Fri, 31 Jul 2020 14:28:22 -0700 (PDT)
-Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.googlemail.com with ESMTPSA id y1sm2643326lfb.45.2020.07.31.14.28.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 14:28:21 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     Denis Efremov <efremov@linux.com>, cluster-devel@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] gfs2: Use kvmalloc instead of opencoded kmalloc/vmalloc
-Date:   Sat,  1 Aug 2020 00:28:18 +0300
-Message-Id: <20200731212818.10782-1-efremov@linux.com>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 31 Jul 2020 17:29:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726806AbgGaV3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 17:29:20 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E11572087C;
+        Fri, 31 Jul 2020 21:29:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596230960;
+        bh=ZLbhjQCA6Lr7WPMvsYnug+Z6zWPo3a5RksC7e/DM1fA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Q1vafZGOKmYfsr5pJBTDVcEEjUwbni9ZQ9kgigWtjQQpQodJ2WQuh0chgAAKqBz5Q
+         5s7pikAA9/q8ZMKsGa13LalkyHBux3OH0KlU/kFwgf3F0vSalf7cAC0h72fiyKGhzK
+         pI/uGrmtvYemcBN36TA8mNVTcQjafUFR6dALa0+8=
+Date:   Fri, 31 Jul 2020 14:29:19 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     paulmck@kernel.org
+Cc:     Matthew Wilcox <willy@infradead.org>, cl@linux.com,
+        penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
+        hannes@cmpxchg.org, urezki@gmail.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: Raw spinlocks and memory allocation
+Message-Id: <20200731142919.36c4c741189426db0f8b8514@linux-foundation.org>
+In-Reply-To: <20200731212457.GS9247@paulmck-ThinkPad-P72>
+References: <20200730231205.GA11265@paulmck-ThinkPad-P72>
+        <20200731133834.517fdfee99b7ed2239f576aa@linux-foundation.org>
+        <20200731204855.GR9247@paulmck-ThinkPad-P72>
+        <20200731205933.GT23808@casper.infradead.org>
+        <20200731212457.GS9247@paulmck-ThinkPad-P72>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use kvmalloc instead of opencoded kmalloc/vmalloc condition.
+On Fri, 31 Jul 2020 14:24:57 -0700 "Paul E. McKenney" <paulmck@kernel.org> wrote:
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- fs/gfs2/dir.c   | 23 ++++-------------------
- fs/gfs2/quota.c |  5 +----
- 2 files changed, 5 insertions(+), 23 deletions(-)
+> The reason for this restriction is that in -rt, the spin_lock(&zone->lock)
+> in rmqueue_bulk() can sleep.
 
-diff --git a/fs/gfs2/dir.c b/fs/gfs2/dir.c
-index c0f2875c946c..5d2a708fae9c 100644
---- a/fs/gfs2/dir.c
-+++ b/fs/gfs2/dir.c
-@@ -352,9 +352,7 @@ static __be64 *gfs2_dir_get_hash_table(struct gfs2_inode *ip)
- 		return ERR_PTR(-EIO);
- 	}
- 
--	hc = kmalloc(hsize, GFP_NOFS | __GFP_NOWARN);
--	if (hc == NULL)
--		hc = __vmalloc(hsize, GFP_NOFS);
-+	hc = kvmalloc(hsize, GFP_NOFS);
- 
- 	if (hc == NULL)
- 		return ERR_PTR(-ENOMEM);
-@@ -1320,18 +1318,6 @@ static int do_filldir_main(struct gfs2_inode *dip, struct dir_context *ctx,
- 	return 0;
- }
- 
--static void *gfs2_alloc_sort_buffer(unsigned size)
--{
--	void *ptr = NULL;
--
--	if (size < KMALLOC_MAX_SIZE)
--		ptr = kmalloc(size, GFP_NOFS | __GFP_NOWARN);
--	if (!ptr)
--		ptr = __vmalloc(size, GFP_NOFS);
--	return ptr;
--}
--
--
- static int gfs2_set_cookies(struct gfs2_sbd *sdp, struct buffer_head *bh,
- 			    unsigned leaf_nr, struct gfs2_dirent **darr,
- 			    unsigned entries)
-@@ -1409,7 +1395,8 @@ static int gfs2_dir_read_leaf(struct inode *inode, struct dir_context *ctx,
- 	 * 99 is the maximum number of entries that can fit in a single
- 	 * leaf block.
- 	 */
--	larr = gfs2_alloc_sort_buffer((leaves + entries + 99) * sizeof(void *));
-+	larr = kvmalloc_array(leaves + entries + 99,
-+			      sizeof(void *), GFP_NOFS);
- 	if (!larr)
- 		goto out;
- 	darr = (struct gfs2_dirent **)(larr + leaves);
-@@ -1985,9 +1972,7 @@ static int leaf_dealloc(struct gfs2_inode *dip, u32 index, u32 len,
- 
- 	memset(&rlist, 0, sizeof(struct gfs2_rgrp_list));
- 
--	ht = kzalloc(size, GFP_NOFS | __GFP_NOWARN);
--	if (ht == NULL)
--		ht = __vmalloc(size, GFP_NOFS | __GFP_NOWARN | __GFP_ZERO);
-+	ht = kvzalloc(size, GFP_NOFS);
- 	if (!ht)
- 		return -ENOMEM;
- 
-diff --git a/fs/gfs2/quota.c b/fs/gfs2/quota.c
-index 4b67d47a7e00..204b34f38e5c 100644
---- a/fs/gfs2/quota.c
-+++ b/fs/gfs2/quota.c
-@@ -1362,10 +1362,7 @@ int gfs2_quota_init(struct gfs2_sbd *sdp)
- 	bm_size = DIV_ROUND_UP(sdp->sd_quota_slots, 8 * sizeof(unsigned long));
- 	bm_size *= sizeof(unsigned long);
- 	error = -ENOMEM;
--	sdp->sd_quota_bitmap = kzalloc(bm_size, GFP_NOFS | __GFP_NOWARN);
--	if (sdp->sd_quota_bitmap == NULL)
--		sdp->sd_quota_bitmap = __vmalloc(bm_size, GFP_NOFS |
--						 __GFP_ZERO);
-+	sdp->sd_quota_bitmap = kvzalloc(bm_size, GFP_NOFS);
- 	if (!sdp->sd_quota_bitmap)
- 		return error;
- 
--- 
-2.26.2
-
+So if there is runtime overhead, this overhead could be restricted to
+-rt kernels with suitable ifdefs?
