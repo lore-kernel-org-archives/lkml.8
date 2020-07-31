@@ -2,187 +2,108 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 504F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB5DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BED32087C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:30:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596231033;
-	bh=NHsr3aFIVXcbgVNcABj+122r90mMVIkb6+W2zQXbddw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JmIhRV6pA927+8V4O5blsoQGf7KtF60pVvPH9TS/wW9yYsJuG1ZRC0yKQ78Sc3SA5
-	 mV4JI4Cp9sHgM+KlOK8OiexICxQ2I7Q6J+Grq3lLfggJDkGdXkEcYgg0W07DSyTHRz
-	 TzMgiL3iCd7Evb7iqKDBYBa3bK5vYw/XvjcJB4GI=
+	by mail.kernel.org (Postfix) with ESMTP id DCD7D22B42
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:31:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZqlUeZYl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbgGaVac (ORCPT
+        id S1728652AbgGaVbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 17:30:32 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45066 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727995AbgGaVab (ORCPT
+        Fri, 31 Jul 2020 17:31:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59046 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727995AbgGaVbV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 17:30:31 -0400
-Received: by mail-io1-f68.google.com with SMTP id e64so33030323iof.12;
-        Fri, 31 Jul 2020 14:30:31 -0700 (PDT)
+        Fri, 31 Jul 2020 17:31:21 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23186C061574;
+        Fri, 31 Jul 2020 14:31:21 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id q75so24895983iod.1;
+        Fri, 31 Jul 2020 14:31:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IPQ4YxQDiIfVNt/lLYL1uBZHZt0DN0r5SckeWlUL42o=;
+        b=ZqlUeZYlm3G5RmGJ/gBq3usEdl293NPeNsf49vRwQFLjpkFcMWw+/wHHQF6OC4lnEP
+         UYDZlF8vFK8pP7i3LP5yfgXYgTcpyUR4UwcUnE6SMXnXfcK4/ymgbvAloDaeW1XQ/7sF
+         mIoGy57n/qQO2ubYE7SWThSVcKDv9ygK/qFBuHnT+K103p4/RMBjdNGuzR8h/3BotrLk
+         SnIDwhtP7EWGGpssFryMLmnyNz0ZvHxRrqEA7eBsskIgqQkumayrOCdAFLfOvEnNbK1W
+         FNwJP/oozmm4xtxuJ+f8VMzsh2DtO8LvNBSg3tUjEuW/ft6bstP8wUjPiuE/+DZsY7Lz
+         n/ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+1TGdSM7ebRYhzsfJccNqgk5kV9sG3dUDdM4DYu83Fw=;
-        b=lsed4E8QbpJ03lvZjtNhqd5CJOiGre4CupwB1JlneF1/lcQcSXWktjaN3kWrZb+/OP
-         79gp8QSW0irq1Xukqug4O9KndQKSVYTaetvHBaraNxMf5fQfctCM9z8XBE5sqklZh1Bm
-         aUCj9GUBgChXoCf0v0n7rbbKBHW4X4GrKXxC69GlSk8kv09nIRo5qzXxH8c9RIEJXy0s
-         hO8D7VtB7Y0cKGbyFmz+b3OgYRAJy8hPjyQMbS37ghx8lY8wRz6W26ZVp/1qFsUz7s36
-         R7vzegyWiW3tIBOF4jIhYmPVAjL8K6ravpF/zUX7K23P12BNwgyY+rKtIumbXahoCgxb
-         hf2w==
-X-Gm-Message-State: AOAM530gqYkufbDbT24WD1x91hYpAWTuTihr/3ACx+/iYtL8IvbUXZ4+
-        vKO1GlOqbpBS3WheREMDiQ==
-X-Google-Smtp-Source: ABdhPJxXeVS0jZueBStQpy+cdWH/c/tpvRGzhw0OjxjNfquqY5ZbETuEj8pXTjXPXY5xHhqTIYPArg==
-X-Received: by 2002:a02:84ac:: with SMTP id f41mr2890486jai.56.1596231030696;
-        Fri, 31 Jul 2020 14:30:30 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id i9sm5682020ile.48.2020.07.31.14.30.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 14:30:30 -0700 (PDT)
-Received: (nullmailer pid 827984 invoked by uid 1000);
-        Fri, 31 Jul 2020 21:30:28 -0000
-Date:   Fri, 31 Jul 2020 15:30:28 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: sound: add DT bindings for Microchip
- S/PDIF TX Controller
-Message-ID: <20200731213028.GA824739@bogus>
-References: <20200729101922.3033616-1-codrin.ciubotariu@microchip.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IPQ4YxQDiIfVNt/lLYL1uBZHZt0DN0r5SckeWlUL42o=;
+        b=nVNWeuScYVXly+pKPeu42JlUvkjkT3jvPQ+bONHg4gxFunoEqppnAT/5IeOYXDlHzH
+         gSPtDHXOWB3k8F9vS5xBJuFguyTO5+op2whk+OO1cbTBm9ZF0T3T4LWuNDKiQ5wBUEO6
+         3lXNVSGuUKhpNHnJVcJTEHPj0BOAdI/a3zFRjAEJwzYlxhArbTqARKQx0VpmfCRdqsBb
+         3pFKbdlOdBulzfq8j2Zg2/e3D0+NRwe850wrEMNhr/x+2e4PLd+wmrbbLfnrnRM+jl9G
+         DWdior71SifO7poGCdJaQ23cvsPeslGVsTdTkA6/O+qTy+uk5tGXjR0zgMzL6Hob7sfM
+         8wHQ==
+X-Gm-Message-State: AOAM533HbBEDRQGlqxywQD4IKQd2C8Hu5QJty95eH6SlMvM+mwFPxJpL
+        T4Mb1lYp6SRBaHcXzabrg+cNNDp+ImGbwgDB5Ew=
+X-Google-Smtp-Source: ABdhPJwdLNEFCnWUSxtOXLRAFdZSVwbu2VSbb24NWwr7R+O5oVVHBXi1NoFBl5lk5aI8qoQlxhxMOXQ/bRMFkEeE1gI=
+X-Received: by 2002:a6b:da0d:: with SMTP id x13mr5550869iob.138.1596231080492;
+ Fri, 31 Jul 2020 14:31:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200729101922.3033616-1-codrin.ciubotariu@microchip.com>
+References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
+In-Reply-To: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Fri, 31 Jul 2020 14:31:09 -0700
+Message-ID: <CAKgT0UfMD1GytjJKYLQNCYzNFs1trdYFCtPkAhqnFhkW5ppYOg@mail.gmail.com>
+Subject: Re: [PATCH v17 00/21] per memcg lru lock
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Rong Chen <rong.a.chen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 01:19:21PM +0300, Codrin Ciubotariu wrote:
-> This patch adds DT bindings for the new Microchip S/PDIF TX Controller
-> embedded inside sama7g5 SoCs.
-> 
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-> ---
-> 
-> Changes in v2:
->  - replaced https with http
->  - reworked example, included bindings;
-> 
->  .../bindings/sound/mchp,spdiftx.yaml          | 80 +++++++++++++++++++
->  1 file changed, 80 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/mchp,spdiftx.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/mchp,spdiftx.yaml b/Documentation/devicetree/bindings/sound/mchp,spdiftx.yaml
-> new file mode 100644
-> index 000000000000..2b7c27391f0d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/mchp,spdiftx.yaml
-> @@ -0,0 +1,80 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/mchp,spdiftx.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Microchip S/PDIF Tx Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-> +
-> +description:
-> +        The Microchip Sony/Philips Digital Interface Transmitter is a
-> +        serial port compliant with the IEC-60958 standard.
-> +
-> +properties:
-> +  "#sound-dai-cells":
-> +    const: 0
-> +
-> +  compatible:
-> +    oneOf:
-> +      - const: microchip,sama7g5-spdiftx
+On Sat, Jul 25, 2020 at 6:00 AM Alex Shi <alex.shi@linux.alibaba.com> wrote:
+>
+> The new version which bases on v5.8-rc6. It includes Hugh Dickins fix in
+> mm/swap.c and mm/mlock.c fix which Alexander Duyck pointed out, then
+> removes 'mm/mlock: reorder isolation sequence during munlock'
+>
+> Hi Johanness & Hugh & Alexander & Willy,
+>
+> Could you like to give a reviewed by since you address much of issue and
+> give lots of suggestions! Many thanks!
+>
 
-No need for 'oneOf' when only 1 entry.
+I just finished getting a test pass done on the patches. I'm still
+seeing a regression on the will-it-scale/page_fault3 test but it is
+now only 3% instead of the 20% that it was so it may just be noise at
+this point.
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Peripheral Bus Clock
-> +      - description: Generic Clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: pclk
-> +      - const: gclk
-> +
-> +  dmas:
-> +    description: TX DMA Channel
+I'll try to make sure to get my review feedback wrapped up early next week.
 
-How many? (maxItems: 1)
+Thanks.
 
-> +
-> +  dma-names:
-> +    const: tx
-> +
-> +  pinctrl-0: true
-> +
-> +  pinctrl-names:
-> +    const: default
-
-You can drop pinctrl props. They are always allowed.
-
-> +
-> +required:
-> +  - "#sound-dai-cells"
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - dmas
-> +  - dma-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/at91.h>
-> +    #include <dt-bindings/dma/at91.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    spdiftx@e1618000 {
-> +        #sound-dai-cells = <0>;
-> +        compatible = "microchip,sama7g5-spdiftx";
-> +        reg = <0xe1618000 0x4000>;
-> +        interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-> +        dmas = <&dma0 AT91_XDMAC_DT_PERID(50)>;
-> +        dma-names = "tx";
-> +        clocks = <&pmc PMC_TYPE_PERIPHERAL 85>, <&pmc PMC_TYPE_GCK 85>;
-> +        clock-names = "pclk", "gclk";
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&pinctrl_spdiftx_default>;
-> +    };
-> -- 
-> 2.25.1
-> 
+- Alex
