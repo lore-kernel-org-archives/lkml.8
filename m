@@ -2,299 +2,185 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 931F8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A07C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 711F42067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A89120829
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:42:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fQ2YIZXs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731722AbgGaHmW (ORCPT
+        id S1731709AbgGaHml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 03:42:22 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:40984 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727851AbgGaHmV (ORCPT
+        Fri, 31 Jul 2020 03:42:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727851AbgGaHmk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 03:42:21 -0400
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1k1PgC-0001KE-6a; Fri, 31 Jul 2020 03:42:12 -0400
-Message-ID: <1609106d05a6a4a5938233e993548510f599d7d9.camel@surriel.com>
-Subject: CFS flat runqueue proposal fixes/update
-From:   Rik van Riel <riel@surriel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Paul Turner <pjt@google.com>,
-        "vincent.guittot" <vincent.guittot@linaro.org>, kernel-team@fb.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dietmar.eggeman" <dietmar.eggeman@arm.com>
-Date:   Fri, 31 Jul 2020 03:42:10 -0400
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-HqUfgquP2LeAlkjHK+wR"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Fri, 31 Jul 2020 03:42:40 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74733C061574;
+        Fri, 31 Jul 2020 00:42:40 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id k12so5193216otr.1;
+        Fri, 31 Jul 2020 00:42:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=uUxxuAaUM3IhS80H69+dAMfn0XD0l8mgz/kqOVjRY3I=;
+        b=fQ2YIZXs7donFRASvMsynBa5CcpLxDDJz0Cr3cFBg9UHav+7Lh7dekb7B4E6U13l5M
+         pfAarsMlgxPDIpL7PKCiI33EWLHCu7f/CIcFwrXh1oE4r5BjrxrQqWATZ6NT2M8JcyQW
+         tdKgRc+krOws5+FUHMa6h8aVU/dU2cawvt8BrrlPAMuYF7CbyhMUtCLhKClUUcPDT6Qy
+         qk4DJpfqoft8I3a76G+DW5wCt9OPzsxYJRjo9zFBAoByYu8I3SaZzbzd2pvTZ/aTv/1a
+         iUIcZSpxsogrzdrZbwkm15h0E3aGXURLPm054Ah8dBFAWtSTrlbJ7n1W9Vm6J56A2Xti
+         WHmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=uUxxuAaUM3IhS80H69+dAMfn0XD0l8mgz/kqOVjRY3I=;
+        b=nhrlNCBsvK7Zu6CqllKkO21dLqGOD1fDJeZuW4+MUatH56us1MpChww+etNdku4bTx
+         D08nkAZGByDxiVM19ARgQ/LKoHwo/RRmAwrdVOO8GBA5fahbjuVlOJkncjg3MJ1JrUwO
+         30sO09CL8lFrlYuA8c5AbT1eL+eMv1EF2eh38W9sP9etY4W7sZlooPf0Qjcyzc2ZGXBS
+         /+bFbA2T0892kBJ/89B6CCTmPPIySubrVFCMOlNPts5C0qM6XiFSmJSzadubZ1M3MBJ4
+         6v4mYubCtlDNRX134hs/1fHsEeWNyRvuGNMB/M0bJOjBgvrx6BHOgdvwfS0lAYWB/dB6
+         KVwQ==
+X-Gm-Message-State: AOAM532UTZMV8Lk0sypJKCLY61uni15EWhYVbPN1JvfzkgPgcTmT1waP
+        USTFTPyxYhAHHRubOx3ODmCdP/5PDv75x74JjPE=
+X-Google-Smtp-Source: ABdhPJwAs4xUqdcaj3HAoZdwT+nBk/AUjPDS6TK5BTAbMq2R/xq2CyItrrwmH3ZQUh977NQfhoGB6uZsQtZGMU1ekZM=
+X-Received: by 2002:a05:6830:23a1:: with SMTP id m1mr1982994ots.185.1596181359851;
+ Fri, 31 Jul 2020 00:42:39 -0700 (PDT)
 MIME-Version: 1.0
+References: <ece36eb1-253a-8ec6-c183-309c10bb35d5@redhat.com>
+ <CANRm+Cywhi1p5gYLfG=JcyTdYuWK+9bGqF6HD-LiBJM9Q5ykNQ@mail.gmail.com>
+ <CANRm+CwrT=gxxgkNdT3wFwzWYYh3FFrUU=aTqH8VT=MraU7jkw@mail.gmail.com>
+ <57ea501b-bf54-3fc0-4a8f-2820df623b14@redhat.com> <8c99291a-adf5-d357-f916-e86b5a0100aa@redhat.com>
+In-Reply-To: <8c99291a-adf5-d357-f916-e86b5a0100aa@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Fri, 31 Jul 2020 15:42:28 +0800
+Message-ID: <CANRm+CzAPnGRA8PTFsPQVVwpLnbdt=jwocgOB2CG5Ti8KWV9ig@mail.gmail.com>
+Subject: Re: WARNING: suspicious RCU usage - while installing a VM on a CPU
+ listed under nohz_full
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        "frederic@kernel.org" <frederic@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Juri Lelli <juri.lelli@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 31 Jul 2020 at 06:45, Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+>
+>
+> On 7/29/20 8:34 AM, Nitesh Narayan Lal wrote:
+> > On 7/28/20 10:38 PM, Wanpeng Li wrote:
+> >> Hi Nitesh=EF=BC=8C
+> >> On Wed, 29 Jul 2020 at 09:00, Wanpeng Li <kernellwp@gmail.com> wrote:
+> >>> On Tue, 28 Jul 2020 at 22:40, Nitesh Narayan Lal <nitesh@redhat.com> =
+wrote:
+> >>>> Hi,
+> >>>>
+> >>>> I have recently come across an RCU trace with the 5.8-rc7 kernel tha=
+t has the
+> >>>> debug configs enabled while installing a VM on a CPU that is listed =
+under
+> >>>> nohz_full.
+> >>>>
+> >>>> Based on some of the initial debugging, my impression is that the is=
+sue is
+> >>>> triggered because of the fastpath that is meant to optimize the writ=
+es to x2APIC
+> >>>> ICR that eventually leads to a virtual IPI in fixed delivery mode, i=
+s getting
+> >>>> invoked from the quiescent state.
+> >> Could you try latest linux-next tree? I guess maybe some patches are
+> >> pending in linux-next tree, I can't reproduce against linux-next tree.
+> > Sure, I will try this today.
+>
+> Hi Wanpeng,
+>
+> I am not seeing the issue getting reproduced with the linux-next tree.
+> Although, I am still seeing a Warning stack trace:
+>
+> [  139.220080] RIP: 0010:kvm_arch_vcpu_ioctl_run+0xb57/0x1320 [kvm]
+> [  139.226837] Code: e8 03 0f b6 04 18 84 c0 74 06 0f 8e 4a 03 00 00 41 c=
+6 85 48
+> 31 00 00 00 e9 24 f8 ff ff 4c 89 ef e8 7e ac 02 00 e9 3d f8 ff ff <0f> 0b=
+ e9 f2
+> f8 ff ff 48f
+> [  139.247828] RSP: 0018:ffff8889bc397cb8 EFLAGS: 00010202
+> [  139.253700] RAX: 0000000000000001 RBX: dffffc0000000000 RCX: ffffffffc=
+1fc3bef
+> [  139.261695] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff888f0=
+fa1a8a0
+> [  139.269692] RBP: ffff8889bc397d18 R08: ffffed113786a7d0 R09: ffffed113=
+786a7d0
+> [  139.277686] R10: ffff8889bc353e7f R11: ffffed113786a7cf R12: ffff8889b=
+c35423c
+> [  139.285682] R13: ffff8889bc353e40 R14: ffff8889bc353e6c R15: ffff88897=
+f536000
+> [  139.293678] FS:  00007f3d8a71c700(0000) GS:ffff888a3c400000(0000)
+> knlGS:0000000000000000
+> [  139.302742] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  139.309186] CR2: 0000000000000000 CR3: 00000009bc34c004 CR4: 000000000=
+03726e0
+> [  139.317180] Call Trace:
+> [  139.320002]  kvm_vcpu_ioctl+0x3ee/0xb10 [kvm]
+> [  139.324907]  ? sched_clock+0x5/0x10
+> [  139.328875]  ? kvm_io_bus_get_dev+0x1c0/0x1c0 [kvm]
+> [  139.334375]  ? ioctl_file_clone+0x120/0x120
+> [  139.339079]  ? selinux_file_ioctl+0x98/0x570
+> [  139.343895]  ? selinux_file_mprotect+0x5b0/0x5b0
+> [  139.349088]  ? irq_matrix_assign+0x360/0x430
+> [  139.353904]  ? rcu_read_lock_sched_held+0xe0/0xe0
+> [  139.359201]  ? __fget_files+0x1f0/0x300
+> [  139.363532]  __x64_sys_ioctl+0x128/0x18e
+> [  139.367948]  do_syscall_64+0x33/0x40
+> [  139.371974]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [  139.377643] RIP: 0033:0x7f3d98d0a88b
+>
+> Are you also triggering anything like this in your environment?
 
---=-HqUfgquP2LeAlkjHK+wR
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I see other issue when rmmod kvm modules. :)
 
-Hello,
-
-last year at Linux Plumbers conference, I presented on my work
-of turning the hierarchical CFS runqueue into a flat runqueue,
-and Paul Turner pointed out some corner cases that could not
-work with my design as it was last year.
-
-Paul pointed out two corner cases, and I have come up with a
-third one myself, but I believe they all revolve around the
-same issue, admission control, and can all be solved with the
-same solution.
-
-This is a fairly complex thing, so this email is long and
-in 3 parts:
-- hierarchical runqueue problem statement
-- quick design overview of the flat runqueue for CFS
-- overview of the problems pointed out by Paul Turner
-- description of a possible solution
-
-
-   hierarchical runqueue problem statement
-
-Currently CFS with the cgroups CPU controller uses a
-hierarchical design, which means that a task is enqueued
-on its cgroup's runqueu, that cgroup is enqueued on its
-parent's runqueue, etc all the way up to the root runqueue.
-This also means that every time a task in a cgroup wakes
-up or goes to sleep, the common case (1 task on the CPU)
-is that the entire hierarchy is enqueued or dequeued,
-resulting in significant overhead for workloads with lots
-of context switches.
-
-For example, the hierarchy in a system with equal priority
-cgroups A and B, with cgroup A subdivided in two unequal
-priority cgroups A1 and B2, and a task in each leaf cgroup
-would look like this:
-
-        /\
-       /  \
-      A    B
-     / \    \=20
-    A1 A2   t3
-   /     \
-  t1     t2
-
-The common case on most systems is that CPUs are idle
-some of the time, and CPUs usually have 0, 1, or 2
-running tasks at a time.
-
-That means when task t1 wakes up when the CPU is idle,
-t1 first gets enqueued on A1, which then gets enqueued
-on A2, which then gets enqueued on the root runqueue.
-When t1 goes back to sleep, the whole thing is torn back
-down.
-
-In case all three tasks are runnable at the same time,
-the scheduler will first choose between A and B in the
-root runqueue, and, in case it chose A, between A1 and A2
-the next level down.
-
-
-   CFS flat runqueue design
-
-The code I presented last year operates on the principle
-of separating determining hierarchical priority of a task,
-which is done periodically, from the runqueues, and using
-the hierarchical priority to scale the vruntime of a task
-like is done for nice levels.
-
-The hierarchical priority of a tasks is the fraction of
-the weight at each level in the runqueue hierarchy of the
-path to that task. In the example above, with equal priority
-levels for cgroups A, B, A1, and A2, and a total weight 1000
-for the root runqueue, tasks t1, t2, and t3 will have hierarchical
-weights of 250, 250, and 500 respectively.
-
-CFS tracks both wall clock run time and vruntime for each
-task, where vruntime is the wall clock run time scaled
-according to the task's priority. The vruntime of every
-entity on a runqueue advances at the same rate.
-
-The vruntime is calculated as follows:
-
- vruntime =3D exec_time * FIXED_POINT_ONE / priority
-
-That is, if the priority of the task is equal to the
-fixed point constant used, the vruntime corresponds
-to the executed wall clock time, while a lower priority
-task has its vruntime advance at a faster rate, and
-a higher priority task has its vruntime advance slower.
-
-With every entity on a runqueue having its vruntime
-advance at the same rate, that translates into higher
-priority tasks receiving more CPU time, and lower
-priority tasks receiving less CPU time.
-
-
-    Problems identified by Paul Turner
-
-Lets revisit the hierarchy from above, and assign priorities
-to the cgroups, with the fixed point one being 1000. Lets
-say cgroups A, A1, and B have priority 1000, while cgroup
-A2 has priority 1.
-
-        /\
-       /  \
-      A    B
-     / \    \=20
-    A1 A2   t3
-   /     \
-  t1     t2
-
-One consequence of this is that when t1, t2, and t3 each
-get a time slice, the vruntime of tasks t1 and t3 advances
-at roughly the same speed as the clock time, while the
-vruntime of task t2 advances 1000x faster.
-
-This is fine if all three tasks continue to be runnable,
-since t1, t2 and t3 each get their fair share of CPU time.
-
-However, if t1 goes to sleep, t2 is the only thing running
-inside cgroup A, which has the same priority as cgroup B,
-and tasks t2 and t3 should be getting the same amount of
-CPU time.
-
-They eventually will, but not before task t3 has used up
-enough CPU time to catch up with the enormous vruntime
-advance that t2 just suffered.
-
-That needs to be fixed, to get near-immediate convergence,
-and not convergence after some unknown (potentially long)
-period of time.
-
-
-There are similar issues with thundering herds and cgroup
-cpu.max throttling, where a large number of tasks can be
-woken up simultaneously.
-
-        /\
-       /  \
-      A    B
-     /      \
-    t1    t2 t3 t4 t5 ...
-t42
-
-In the current, hierarchical runqueue setup, CFS will
-time slice between cgroups A and B at the top level,
-which means task t1 will never go long without being
-scheduled.  Only the tasks in cgroup B suffer the
-latency effects of cgroup B being overloaded with way
-too many runnable tasks.
-
-A similar issue can happen when a cgroup is throttled
-with cpu.max, and wakes up with a large number of
-runnable tasks inside.
-
-It is desirable that fairness, both from a latency and
-a throughput point of view, converge quickly rather
-than slowly.
-
-
-    Possible solution
-
-A possible solution to the problems above consists of
-three parts:
-- Instead of accounting all used wall clock CPU time into
-  vruntime immediately, at the task's current hierarchical
-  priority, the vruntime can be accounted for piecemeal, for
-  example in amounts corresponding to "one timeslice at full
-  priority".
-- If there is only one runnable task on the runqueue,
-  all the runtime can be accounted into vruntime in one go.
-- Tasks that cannot account all of their used CPU time
-  into vruntime at once can be removed from the root runqueue,
-  and placed into the cgroup runqueue. A heap of cgroup
-  runqueues with "overloaded" tasks can be attached to the
-  main runqueue, where the left-most task from that heap of
-  heaps gets some vruntime accounted every time we go into
-  pick_next_task.
-- The difference between the vruntime of each task in that
-  heap and the vruntime of the root runqueue can help determine
-  how much vruntime can be accounted to that task at once.
-- If the task, or its runqueue, is no longer the left-most
-  in the heap after getting vruntime accounted, that runqueue
-  and the queue of runqueues can be resorted.
-- Once a task has accounted all of its outstanding delta
-  exec runtime into vruntime, it can be moved back to the
-  main runqueue.
-- This should solve the unequal task weight scenario Paul
-  Turner pointed out last year, because after task t1 goes
-  to sleep and only t2 and t3 remain on the CPU, t2 will
-  get its delta exec runtime converted into vruntime at
-  its new priority (equal to t3).
-- By only accounting delta exec runtime to vruntime for
-  the left-most task in the "overloaded" heap at one time,
-  we guarantee only one task at a time will be added back
-  into the root runqueue.
-- Every time a task is added to the root runqueue, that
-  slows down the rate at which vruntime advances, which
-  in turn reduces the rate at which tasks get added back
-  into the runqueue, and makes it more likely that a currently
-  running task with low hierarchical priority gets booted
-  off into the "overloaded" heap.
-
-To tackle the thundering herd at task wakeup time, another
-strategy may be needed. One thing we may be able to do
-there is place tasks into the "overloaded" heap immediately
-on wakeup, if the hierarchical priority of the task is so
-low that if the task were to run a minimal timeslice length,
-it would be unable to account that time into its vruntime
-in one go, AND the CPU already has a larger number of tasks
-on it.
-
-Because the common case on most systems is having just
-0, 1, or 2 runnable tasks on a CPU, this fancy scheme
-should rarely end up being used, and even when it is the
-overhead should be reasonable because most of the
-overloaded tasks will just sit there until pick_next_task
-gets around to them.
-
-Does this seem like something worth trying out?
-
-Did I overlook any other corner cases that would make this
-approach unworkable?
-
-Did I forget to explain anything that is needed to help
-understand the problem and the proposed solution better?
-
---=20
-All Rights Reversed.
-
---=-HqUfgquP2LeAlkjHK+wR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl8jy1IACgkQznnekoTE
-3oO38wgAvZOv78rqiHx6QIoBTyA4Xr3b1DUsGxRYlSGcj/OMuXuJFmQJMbwBQw5w
-dijJJcUth4QVz+sSAmEaTRAh3+te5YUDZw1NM4ufrHYqIOdueCkCUFQcMtG0GkYr
-VsqV9lGvi5SWGdEa4jgPXQA7IaHxVTHa9efgqSdIZwRchwAFv45F8bH675UJAI7k
-C7asBJawxLUlKgwcF7zCByyinNnV/OUMR90Ctt+CasOdrDhbDF/3gPiMUQyCIP0N
-Colbqt/zOt64wmwkgN7yvqkCiHTdjjH1JJlAp6T+TjtCXEhNcy7rZ9/wbK0PMV7G
-P4lcoXFv9hTDZb7eNzMciOJ8svw8HA==
-=nC3/
------END PGP SIGNATURE-----
-
---=-HqUfgquP2LeAlkjHK+wR--
-
+ ------------[ cut here ]------------
+ WARNING: CPU: 5 PID: 2837 at kernel/rcu/tree_plugin.h:1738 call_rcu+0xd3/0=
+x800
+ CPU: 5 PID: 2837 Comm: rmmod Not tainted 5.8.0-rc7-next-20200728 #1
+ RIP: 0010:call_rcu+0xd3/0x800
+ RSP: 0018:ffffae25c302bd90 EFLAGS: 00010002
+ RAX: 0000000000000001 RBX: ffffffff944e4f80 RCX: 0000000000000000
+ RDX: 0000000000000101 RSI: 000000000000009f RDI: ffffffff93308cef
+ RBP: ffffae25c302bdf0 R08: 000000000000074e R09: 0000000000002a2f
+ R10: 0000000000000002 R11: ffffffff944dcf80 R12: ffffffff936ef4c0
+ R13: ffff9702ce1fd900 R14: ffffffff920e2bd0 R15: 00000000ffff3849
+ FS:  00007fc99b242700(0000) GS:ffff9702ce000000(0000) knlGS:00000000000000=
+00
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 000055905332dd58 CR3: 00000003eeb46005 CR4: 00000000001706e0
+ Call Trace:
+  call_rcu_zapped+0x70/0x80
+  lockdep_unregister_key+0xa6/0xf0
+  destroy_workqueue+0x1b1/0x210
+  kvm_irqfd_exit+0x15/0x20 [kvm]
+  kvm_exit+0x78/0x80 [kvm]
+  vmx_exit+0x1e/0x50 [kvm_intel]
+  __x64_sys_delete_module+0x1e6/0x260
+  do_syscall_64+0x63/0x350
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ RIP: 0033:0x7fc99ad7b9e7
