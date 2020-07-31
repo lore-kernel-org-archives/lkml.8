@@ -2,78 +2,122 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC7AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9302AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E3A12245C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CCFE22B3F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596215718;
-	bh=cWx1hbEGaUUwS1JJFnOe3X+vRj6dABujYkU2GC/oakE=;
+	s=default; t=1596215763;
+	bh=9bNhpovPSTGi6X3LF9twzY/MMA9zySnTVDjOd55Ntxc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Lf1bMMQq72RSxOCRND2omn6Wf0IVitspGRlYGbbQGUuY2BJDpxFVJPa2rXc7u3uhW
-	 ZEfjl0ef2HDJiQ7Hx+EvvP0rdLxXqiDi4aK3GyFqeDWxbzBjROgCai0n3fPMcaEkVF
-	 neZJy9kXuYWpFlhpFjswGYn5HTVOR2nCDdXlXAzM=
+	b=ZJF+rcq66+BJViOJh6n4QHDpjtX4q29ymDD1NW98Mcly+1sarEu5m9YKbcSrAEHMg
+	 nyKlVKaEkZFPqkrQ1K0fAC87DGixbN+Ms7gDfewOsuy91N5iEpw9irL6nNzxuQdtWj
+	 tz8gIM4gSBaG36R98TSUhjN2bzSvN81W4nB7F1pg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733226AbgGaRPR (ORCPT
+        id S1733284AbgGaRQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 13:15:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33966 "EHLO mail.kernel.org"
+        Fri, 31 Jul 2020 13:16:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732710AbgGaRPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 13:15:17 -0400
+        id S1732973AbgGaRQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 13:16:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B8102074B;
-        Fri, 31 Jul 2020 17:15:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BDB62074B;
+        Fri, 31 Jul 2020 17:16:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596215716;
-        bh=cWx1hbEGaUUwS1JJFnOe3X+vRj6dABujYkU2GC/oakE=;
+        s=default; t=1596215761;
+        bh=9bNhpovPSTGi6X3LF9twzY/MMA9zySnTVDjOd55Ntxc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=z8Batu5lPaUADFtk2YKU0dGwnmNAwaJlBCPAHopU4fD4FFJvbU2/tsIgH2XxtdR3X
-         GSV9g73r7DSHzcHssgFtV+ZVm9wvUx9dmnDFO1UbwCP2zVaZ/VslUMZi6q1jaWfuaZ
-         z1zBwgDg8FHfI/LzqcI2WeqaVg6l/F+qoJWF+sUc=
-Date:   Fri, 31 Jul 2020 19:15:03 +0200
+        b=2dlBa5GvxepmB1bZWS6B4sDbxrGegsTyQ4h4AQ1rmaWhT1WYYuPVBcjLzEYBROrYs
+         eI8bf1euA96BCgOWN+O8i/1WbCxMhrQb/d5IwLpc+PWlibzAt7QRE5yyqaBRBahQpf
+         HKwa1SAokQSMNQqWrUcwplngTMoq0no3Ux2vRfxc=
+Date:   Fri, 31 Jul 2020 19:15:47 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.7 00/20] 5.7.12-rc1 review
-Message-ID: <20200731171503.GA2012979@kroah.com>
-References: <20200730074420.533211699@linuxfoundation.org>
- <20200730164823.GF57647@roeck-us.net>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Basil Eljuse <Basil.Eljuse@arm.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Christoph Lameter <cl@linux.com>, Roman Gushchin <guro@fb.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        linux-mm <linux-mm@kvack.org>, Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Cgroups <cgroups@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LTP List <ltp@lists.linux.it>
+Subject: Re: [PATCH 5.4 00/19] 5.4.55-rc1 review
+Message-ID: <20200731171547.GC2012979@kroah.com>
+References: <20200730074420.502923740@linuxfoundation.org>
+ <CA+G9fYvCPwwmF-k=Z9Z6P2KYrOMHurcORwa3RW2H1j6pq1QEDg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200730164823.GF57647@roeck-us.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYvCPwwmF-k=Z9Z6P2KYrOMHurcORwa3RW2H1j6pq1QEDg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 09:48:23AM -0700, Guenter Roeck wrote:
-> On Thu, Jul 30, 2020 at 10:03:50AM +0200, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.7.12 release.
-> > There are 20 patches in this series, all will be posted as a response
+On Fri, Jul 31, 2020 at 04:02:16PM +0530, Naresh Kamboju wrote:
+> On Thu, 30 Jul 2020 at 13:36, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.4.55 release.
+> > There are 19 patches in this series, all will be posted as a response
 > > to this one.  If anyone has any issues with these being applied, please
 > > let me know.
-> > 
+> >
 > > Responses should be made by Sat, 01 Aug 2020 07:44:05 +0000.
 > > Anything received after that time might be too late.
-> > 
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.55-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
 > 
-> Build results:
-> 	total: 155 pass: 155 fail: 0
-> Qemu test results:
-> 	total: 431 pass: 431 fail: 0
+> Results from Linaro’s test farm.
+> Regressions on arm64 Juno-r2 device running LTP controllers-tests
+> 
+> CONFIG_ARM64_64K_PAGES=y
+> 
+> Unable to handle kernel paging request at virtual address dead000000000108
+> [dead000000000108] address between user and kernel address ranges
+> Internal error: Oops: 96000044 [#1] PREEMPT SMP
+> 
+> pc : get_page_from_freelist+0xa64/0x1030
+> lr : get_page_from_freelist+0x9c4/0x1030
+> 
+> We are trying to reproduce this kernel panic and trying to narrow down to
+> specific test cases.
 
-Thanks for testing all of these and letting me know.
+If you come up with something that needs to be reverted, please let me
+know.
+
+Otherwise, thanks for testing all of these.
 
 greg k-h
