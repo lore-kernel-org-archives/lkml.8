@@ -2,134 +2,96 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E80E2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0E5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDA47208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:28:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UMmmLVbr"
+	by mail.kernel.org (Postfix) with ESMTP id 15BBB208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:29:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731323AbgGaG2O (ORCPT
+        id S1731387AbgGaG3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 02:28:14 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44502 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731224AbgGaG2O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 02:28:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596176892;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pao/Sd97gVfvKhK6/6ymDqnN+qhbbP53Wl+E49WNZXc=;
-        b=UMmmLVbrPFDz6BSpps/JgfN9LdN/zIO+YZTqzrRzYgwOZYjTta3IrbNGPDbZywl1ExXYmx
-        BGTP3sNbeaYJxWv9bervF18Q+tJOZM7kNjDvJX9IeSN0zDUb97RFRIAeqDGwB46YttpyZx
-        1q+lUgUTavw35/lx6Ufh3JAVC4xJdfQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-506-O3PKWmNBNGyrfEeyzkNZvg-1; Fri, 31 Jul 2020 02:28:10 -0400
-X-MC-Unique: O3PKWmNBNGyrfEeyzkNZvg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6B67107ACCA;
-        Fri, 31 Jul 2020 06:28:08 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 3C1DF712D9;
-        Fri, 31 Jul 2020 06:28:05 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri, 31 Jul 2020 08:28:08 +0200 (CEST)
-Date:   Fri, 31 Jul 2020 08:28:05 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>, Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [RFC][PATCH] exec: Conceal the other threads from wakeups during
- exec
-Message-ID: <20200731062804.GA26171@redhat.com>
-References: <87h7tsllgw.fsf@x220.int.ebiederm.org>
- <CAHk-=wj34Pq1oqFVg1iWYAq_YdhCyvhyCYxiy-CG-o76+UXydQ@mail.gmail.com>
- <87d04fhkyz.fsf@x220.int.ebiederm.org>
- <87h7trg4ie.fsf@x220.int.ebiederm.org>
- <CAHk-=wj+ynePRJC3U5Tjn+ZBRAE3y7=anc=zFhL=ycxyKP8BxA@mail.gmail.com>
- <878sf16t34.fsf@x220.int.ebiederm.org>
- <87pn8c1uj6.fsf_-_@x220.int.ebiederm.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87pn8c1uj6.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Fri, 31 Jul 2020 02:29:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42302 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731351AbgGaG3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 02:29:37 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id E8D4EB1F5;
+        Fri, 31 Jul 2020 06:29:48 +0000 (UTC)
+Date:   Fri, 31 Jul 2020 08:29:35 +0200
+Message-ID: <s5hlfj0b3jk.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Kaige Li <likaige@loongson.cn>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        Sameer Pujar <spujar@nvidia.com>,
+        Mohan Kumar <mkumard@nvidia.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [RFC] ALSA: hda: Add workaround to adapt to Loongson 7A1000 controller
+In-Reply-To: <1596163314-21808-1-git-send-email-likaige@loongson.cn>
+References: <1596163314-21808-1-git-send-email-likaige@loongson.cn>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Eric, I won't comment the intent, but I too do not understand this idea.
+On Fri, 31 Jul 2020 04:41:54 +0200,
+Kaige Li wrote:
+> 
+> There's some issues that cause palyback without a sound on Loongson
+> platform (3A3000 + 7A1000) with a Realtek ALC269 codec. After lengthy
+> debugging sessions, we solved it by adding workaround.
+> 
+> Signed-off-by: Kaige Li <likaige@loongson.cn>
 
-On 07/30, Eric W. Biederman wrote:
->
-> [This change requires more work to handle TASK_STOPPED and TASK_TRACED]
+Thanks for the patch.  But this can't be taken as is due to the design
+problem.  Namely...
 
-Yes. And it is not clear to me how can you solve this.
+> --- a/sound/hda/hdac_controller.c
+> +++ b/sound/hda/hdac_controller.c
+> @@ -9,6 +9,7 @@
+>  #include <sound/core.h>
+>  #include <sound/hdaudio.h>
+>  #include <sound/hda_register.h>
+> +#include "../pci/hda/hda_controller.h"
 
-> [This adds a new lock ordering dependency siglock -> pi_lock -> rq_lock ]
+... here already suspicious, and ...
 
-Not really, ttwu() can be safely called with siglock held and it takes
-pi_lock + rq_lock. Say, signal_wake_up().
+>  #include "local.h"
+>  
+>  /* clear CORB read pointer properly */
+> @@ -42,6 +43,8 @@ static void azx_clear_corbrp(struct hdac_bus *bus)
+>   */
+>  void snd_hdac_bus_init_cmd_io(struct hdac_bus *bus)
+>  {
+> +	struct azx *chip = bus_to_azx(bus);
 
-> +int make_task_wakekill(struct task_struct *p)
-> +{
-> +	unsigned long flags;
-> +	int cpu, success = 0;
-> +	struct rq_flags rf;
-> +	struct rq *rq;
-> +	long state;
-> +
-> +	/* Assumes p != current */
-> +	preempt_disable();
-> +	/*
-> +	 * If we are going to change a thread waiting for CONDITION we
-> +	 * need to ensure that CONDITION=1 done by the caller can not be
-> +	 * reordered with p->state check below. This pairs with mb() in
-> +	 * set_current_state() the waiting thread does.
-> +	 */
-> +	raw_spin_lock_irqsave(&p->pi_lock, flags);
-> +	smp_mb__after_spinlock();
-> +	state = p->state;
-> +
-> +	/* FIXME handle TASK_STOPPED and TASK_TRACED */
-> +	if ((state == TASK_KILLABLE) ||
-> +	    (state == TASK_INTERRUPTIBLE)) {
-> +		success = 1;
-> +		cpu = task_cpu(p);
-> +		rq = cpu_rq(cpu);
-> +		rq_lock(rq, &rf);
-> +		p->state = TASK_WAKEKILL;
+... here you cast the hdac_bus object to its child class.  This is
+disallowed, as it's a layer violation and would break if another child
+class like ASoC driver is used with this patch.
 
-You can only do this if the task was already deactivated. Just suppose it
-is preempted or does something like
+IOW, inside the code in sound/hda/*, you must not use the contents in
+sound/pci/hda/* and include/sound/hda_codec.h.
 
-	set_current_sate(TASK_INTERRUPTIBLE);
+If any new workaround is needed, introduce a new flag in struct
+hdac_bus.
 
-	if (CONDITION) {
-		// make_task_wakekill() sets state = TASK_WAKEKILL
-		__set_current_state(TASK_RUNNING);
-		return;
-	}
 
-	schedule();
+thanks,
 
-Oleg.
-
+Takashi
