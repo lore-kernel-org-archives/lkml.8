@@ -2,468 +2,200 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D4FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F34C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D43A42177B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0E362177B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:10:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387731AbgGaSJO (ORCPT
+        id S2387742AbgGaSKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 14:09:14 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41024 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730040AbgGaSJO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 14:09:14 -0400
-Received: from [IPv6:2804:431:e7dc:23eb::994] (unknown [IPv6:2804:431:e7dc:23eb::994])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: leandrohrb)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id DCB8F2991CE;
-        Fri, 31 Jul 2020 19:09:06 +0100 (BST)
-Subject: Re: [PATCH] drm/vkms: add missing drm_crtc_vblank_put to the get/put
- pair on flush
-To:     Melissa Wen <melissa.srw@gmail.com>,
-        Sidong Yang <realwakka@gmail.com>
-Cc:     Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kernel-usp@googlegroups.com
-References: <CAKMK7uHWCnJ+3YnP2FwVGH6cEDkmPnH9ALjY_1R51QVs0HPG0Q@mail.gmail.com>
- <20200725011737.GA2851@realwakka>
- <CAKMK7uEWPCzx+K=+nJsLT5HRBVJ+s8tqx30Ljkr4BCBDComyWQ@mail.gmail.com>
- <20200725174514.esh4gqek6oddizvh@smtp.gmail.com>
- <CAKMK7uEi0UFSwYTO7h6_YKN+UykOuVcmhMSG_ySy9uyo_7Pz-g@mail.gmail.com>
- <CAJeY4oGXbNbFQtBXSi8xo_mk48G1K7TOvxPqvRKFxGQxRnY=Wg@mail.gmail.com>
- <CAKMK7uEj=Se=cNwkapZtRLjrDAHpjJU_oOL7Y-2HyUaPn8vBnQ@mail.gmail.com>
- <20200730100901.daos4v6maqlcd2uj@smtp.gmail.com>
- <20200731090834.GR6419@phenom.ffwll.local> <20200731161314.GA21381@realwakka>
- <20200731164706.r62jjqu7nu3spyhx@smtp.gmail.com>
-From:   Leandro Ribeiro <leandro.ribeiro@collabora.com>
-Message-ID: <75e0ea68-ff66-fea8-c6dc-5bf06c655f0b@collabora.com>
-Date:   Fri, 31 Jul 2020 15:10:28 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        Fri, 31 Jul 2020 14:10:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:35830 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730040AbgGaSKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 14:10:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC48631B;
+        Fri, 31 Jul 2020 11:10:00 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.4.61])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BD9B03F71F;
+        Fri, 31 Jul 2020 11:09:58 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 19:09:55 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     madvenka@linux.microsoft.com
+Cc:     kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, oleg@redhat.com,
+        x86@kernel.org
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+Message-ID: <20200731180955.GC67415@C02TD0UTHF1T.local>
+References: <aefc85852ea518982e74b233e11e16d2e707bc32>
+ <20200728131050.24443-1-madvenka@linux.microsoft.com>
 MIME-Version: 1.0
-In-Reply-To: <20200731164706.r62jjqu7nu3spyhx@smtp.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728131050.24443-1-madvenka@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello everybody!
+Hi,
 
-I'm currently working on a writeback connector screenshooter for Weston. 
-In order to test it, I'm using VKMS with Rodrigo's writeback connector 
-patch: https://lkml.org/lkml/2020/5/11/449
+On Tue, Jul 28, 2020 at 08:10:46AM -0500, madvenka@linux.microsoft.com wrote:
+> From: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+> Trampoline code is placed either in a data page or in a stack page. In
+> order to execute a trampoline, the page it resides in needs to be mapped
+> with execute permissions. Writable pages with execute permissions provide
+> an attack surface for hackers. Attackers can use this to inject malicious
+> code, modify existing code or do other harm.
 
-Here is the link with the MR in Weston with more details of how I've 
-tested it: 
-https://gitlab.freedesktop.org/wayland/weston/-/merge_requests/458
+For the purpose of below, IIUC this assumes the adversary has an
+arbitrary write.
 
-The reason why I'm writing this is that in the first writeback connector 
-screenshot VKMS gets stuck. And I believe (from what I've tried to 
-debug) that what happens is that the writeback job gets stuck in the 
-queue waiting for a vsync signal. Then from the second screenshot on 
-everything works fine. So I believe this is related to this issue somehow.
+> To mitigate this, LSMs such as SELinux may not allow pages to have both
+> write and execute permissions. This prevents trampolines from executing
+> and blocks applications that use trampolines. To allow genuine applications
+> to run, exceptions have to be made for them (by setting execmem, etc).
+> In this case, the attack surface is just the pages of such applications.
+> 
+> An application that is not allowed to have writable executable pages
+> may try to load trampoline code into a file and map the file with execute
+> permissions. In this case, the attack surface is just the buffer that
+> contains trampoline code. However, a successful exploit may provide the
+> hacker with means to load his own code in a file, map it and execute it.
 
-Melissa's idea to add `drm_crtc_vblank_put(crtc)` made it work, although 
-VKMS started to print this warn message:
+It's not clear to me what power the adversary is assumed to have here,
+and consequently it's not clear to me how the proposal mitigates this.
 
-WARNING: CPU: 0 PID: 168 at drivers/gpu/drm/vkms/vkms_crtc.c:21 
-vkms_vblank_simulate+0x101/0x110
+For example, if the attack can control the arguments to syscalls, and
+has an arbitrary write as above, what prevents them from creating a
+trampfd of their own?
 
- From what I've read from this thread it seems like this is not the 
-right fix, but I've decided to share this info with you anyway, as it 
-may help. I'm also trying to understand what is happening.
+[...]
+
+> GCC has traditionally used trampolines for implementing nested
+> functions. The trampoline is placed on the user stack. So, the stack
+> needs to be executable.
+
+IIUC generally nested functions are avoided these days, specifically to
+prevent the creation of gadgets on the stack. So I don't think those are
+relevant as a cased to care about. Applications using them should move
+to not using them, and would be more secure generally for doing so.
+
+[...]
+
+> Trampoline File Descriptor (trampfd)
+> --------------------------
+> 
+> I am proposing a kernel API using anonymous file descriptors that
+> can be used to create and execute trampolines with the help of the
+> kernel. In this solution also, the kernel does the work of the trampoline.
+
+What's the rationale for the kernel emulating the trampoline here?
+
+In ther case of EMUTRAMP this was necessary to work with existing
+application binaries and kernel ABIs which placed instructions onto the
+stack, and the stack needed to remain RW for other reasons. That
+restriction doesn't apply here.
+
+Assuming trampfd creation is somehow authenticated, the code could be
+placed in a r-x page (which the kernel could refuse to add write
+permission), in order to prevent modification. If that's sufficient,
+it's not much of a leap to allow userspace to generate the code.
+
+> The kernel creates the trampoline mapping without any permissions. When
+> the trampoline is executed by user code, a page fault happens and the
+> kernel gets control. The kernel recognizes that this is a trampoline
+> invocation. It sets up the user registers based on the specified
+> register context, and/or pushes values on the user stack based on the
+> specified stack context, and sets the user PC to the requested target
+> PC. When the kernel returns, execution continues at the target PC.
+> So, the kernel does the work of the trampoline on behalf of the
+> application.
+> 
+> In this case, the attack surface is the context buffer. A hacker may
+> attack an application with a vulnerability and may be able to modify the
+> context buffer. So, when the register or stack context is set for
+> a trampoline, the values may have been tampered with. From an attack
+> surface perspective, this is similar to Trampoline Emulation. But
+> with trampfd, user code can retrieve a trampoline's context from the
+> kernel and add defensive checks to see if the context has been
+> tampered with.
+
+Can you elaborate on this: what sort of checks would be applied, and
+how?
+
+Why is this not possible in a r-x user page?
+
+[...]
+
+> - trampfd provides a basic framework. In the future, new trampoline types
+>   can be implemented, new contexts can be defined, and additional rules
+>   can be implemented for security purposes.
+
+From a kernel developer perspective, this reads as "this ABI will become
+more complex", which I think is worrisome.
+
+I'm also worried that this is liable to have nasty interaction with HW
+CFI mechanisms (e.g. PAC+BTI on arm64) either now or in future, and that
+we bake incompatibility into ABI.
+
+> - For instance, trampfd defines an "Allowed PCs" context in this initial
+>   work. As an example, libffi can create a read-only array of all ABI
+>   handlers for an architecture at build time. This array can be used to
+>   set the list of allowed PCs for a trampoline. This will mean that a hacker
+>   cannot hack the PC part of the register context and make it point to
+>   arbitrary locations.
+
+I'm not exactly sure what's meant here. Do you mean that this prevents
+userspace from branching into the middle of a trampoline, or that the
+trampfd code prevents where the trampoline itself can branch to?
+
+Both x86 and arm64 have upcoming HW CFI (CET and BTI) to deal with the
+former, and I believe the latter can also be implemented in userspace
+with defensive checks in the trampolines, provided that they are
+protected read-only.
+
+> - An SELinux setting called "exectramp" can be implemented along the
+>   lines of "execmem", "execstack" and "execheap" to selectively allow the
+>   use of trampolines on a per application basis.
+> 
+> - User code can add defensive checks in the code before invoking a
+>   trampoline to make sure that a hacker has not modified the context data.
+>   It can do this by getting the trampoline context from the kernel and
+>   double checking it.
+
+As above, without examples it's not clear to me what sort of chacks are
+possible nor where they wouild need to be made. So it's difficult to see
+whether that's actually possible or subject to TOCTTOU races and
+similar.
+
+> - In the future, if the kernel can be enhanced to use a safe code
+>   generation component, that code can be placed in the trampoline mapping
+>   pages. Then, the trampoline invocation does not have to incur a trip
+>   into the kernel.
+> 
+> - Also, if the kernel can be enhanced to use a safe code generation
+>   component, other forms of dynamic code such as JIT code can be
+>   addressed by the trampfd framework.
+
+I don't see why it's necessary for the kernel to generate code at all.
+If the trampfd creation requests can be trusted, what prevents trusting
+a sealed set of instructions generated in userspace?
+
+> - Trampolines can be shared across processes which can give rise to
+>   interesting uses in the future.
+
+This sounds like the use-case of a sealed memfd. Is a sealed executable
+memfd not sufficient?
 
 Thanks,
-Leandro Ribeiro
-
-On 7/31/20 1:47 PM, Melissa Wen wrote:
-> On 07/31, Sidong Yang wrote:
->> On Fri, Jul 31, 2020 at 11:08:34AM +0200, daniel@ffwll.ch wrote:
->>> On Thu, Jul 30, 2020 at 07:09:25AM -0300, Melissa Wen wrote:
->>>> On 07/29, Daniel Vetter wrote:
->>>>> On Wed, Jul 29, 2020 at 9:09 PM Melissa Wen <melissa.srw@gmail.com> wrote:
->>>>>>
->>>>>> Melissa Wen
->>>>>>
->>>>>> On Sat, Jul 25, 2020 at 3:12 PM Daniel Vetter <daniel@ffwll.ch> wrote:
->>>>>>>
->>>>>>> On Sat, Jul 25, 2020 at 7:45 PM Melissa Wen <melissa.srw@gmail.com> wrote:
->>>>>>>>
->>>>>>>> On 07/25, Daniel Vetter wrote:
->>>>>>>>> On Sat, Jul 25, 2020 at 5:12 AM Sidong Yang <realwakka@gmail.com> wrote:
->>>>>>>>>>
->>>>>>>>>> On Wed, Jul 22, 2020 at 05:17:05PM +0200, Daniel Vetter wrote:
->>>>>>>>>>> On Wed, Jul 22, 2020 at 4:06 PM Melissa Wen <melissa.srw@gmail.com> wrote:
->>>>>>>>>>>>
->>>>>>>>>>>> On 07/22, daniel@ffwll.ch wrote:
->>>>>>>>>>>>> On Wed, Jul 22, 2020 at 08:04:11AM -0300, Melissa Wen wrote:
->>>>>>>>>>>>>> This patch adds a missing drm_crtc_vblank_put op to the pair
->>>>>>>>>>>>>> drm_crtc_vblank_get/put (inc/decrement counter to guarantee vblanks).
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> It clears the execution of the following kms_cursor_crc subtests:
->>>>>>>>>>>>>> 1. pipe-A-cursor-[size,alpha-opaque, NxN-(on-screen, off-screen, sliding,
->>>>>>>>>>>>>>     random, fast-moving])] - successful when running individually.
->>>>>>>>>>>>>> 2. pipe-A-cursor-dpms passes again
->>>>>>>>>>>>>> 3. pipe-A-cursor-suspend also passes
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> The issue was initially tracked in the sequential execution of IGT
->>>>>>>>>>>>>> kms_cursor_crc subtest: when running the test sequence or one of its
->>>>>>>>>>>>>> subtests twice, the odd execs complete and the pairs get stuck in an
->>>>>>>>>>>>>> endless wait. In the IGT code, calling a wait_for_vblank before the start
->>>>>>>>>>>>>> of CRC capture prevented the busy-wait. But the problem persisted in the
->>>>>>>>>>>>>> pipe-A-cursor-dpms and -suspend subtests.
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> Checking the history, the pipe-A-cursor-dpms subtest was successful when,
->>>>>>>>>>>>>> in vkms_atomic_commit_tail, instead of using the flip_done op, it used
->>>>>>>>>>>>>> wait_for_vblanks. Another way to prevent blocking was wait_one_vblank when
->>>>>>>>>>>>>> enabling crtc. However, in both cases, pipe-A-cursor-suspend persisted
->>>>>>>>>>>>>> blocking in the 2nd start of CRC capture, which may indicate that
->>>>>>>>>>>>>> something got stuck in the step of CRC setup. Indeed, wait_one_vblank in
->>>>>>>>>>>>>> the crc setup was able to sync things and free all kms_cursor_crc
->>>>>>>>>>>>>> subtests.
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> Tracing and comparing a clean run with a blocked one:
->>>>>>>>>>>>>> - in a clean one, vkms_crtc_atomic_flush enables vblanks;
->>>>>>>>>>>>>> - when blocked, only in next op, vkms_crtc_atomic_enable, the vblanks
->>>>>>>>>>>>>> started. Moreover, a series of vkms_vblank_simulate flow out until
->>>>>>>>>>>>>> disabling vblanks.
->>>>>>>>>>>>>> Also watching the steps of vkms_crtc_atomic_flush, when the very first
->>>>>>>>>>>>>> drm_crtc_vblank_get returned an error, the subtest crashed. On the other
->>>>>>>>>>>>>> hand, when vblank_get succeeded, the subtest completed. Finally, checking
->>>>>>>>>>>>>> the flush steps: it increases counter to hold a vblank reference (get),
->>>>>>>>>>>>>> but there isn't a op to decreased it and release vblanks (put).
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> Cc: Daniel Vetter <daniel@ffwll.ch>
->>>>>>>>>>>>>> Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
->>>>>>>>>>>>>> Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
->>>>>>>>>>>>>> Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
->>>>>>>>>>>>>> ---
->>>>>>>>>>>>>>   drivers/gpu/drm/vkms/vkms_crtc.c | 1 +
->>>>>>>>>>>>>>   1 file changed, 1 insertion(+)
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
->>>>>>>>>>>>>> index ac85e17428f8..a99d6b4a92dd 100644
->>>>>>>>>>>>>> --- a/drivers/gpu/drm/vkms/vkms_crtc.c
->>>>>>>>>>>>>> +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
->>>>>>>>>>>>>> @@ -246,6 +246,7 @@ static void vkms_crtc_atomic_flush(struct drm_crtc *crtc,
->>>>>>>>>>>>>>
->>>>>>>>>>>>>>              spin_unlock(&crtc->dev->event_lock);
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> +           drm_crtc_vblank_put(crtc);
->>>>>>>>>>>>>
->>>>>>>>>>>>> Uh so I reviewed this a bit more carefully now, and I dont think this is
->>>>>>>>>>>>> the correct bugfix. From the kerneldoc of drm_crtc_arm_vblank_event():
->>>>>>>>>>>>>
->>>>>>>>>>>>>   * Caller must hold a vblank reference for the event @e acquired by a
->>>>>>>>>>>>>   * drm_crtc_vblank_get(), which will be dropped when the next vblank arrives.
->>>>>>>>>>>>>
->>>>>>>>>>>>> So when we call drm_crtc_arm_vblank_event then the vblank_put gets called
->>>>>>>>>>>>> for us. And that's the only case where we successfully acquired a vblank
->>>>>>>>>>>>> interrupt reference since on failure of drm_crtc_vblank_get (0 indicates
->>>>>>>>>>>>> success for that function, failure negative error number) we directly send
->>>>>>>>>>>>> out the event.
->>>>>>>>>>>>>
->>>>>>>>>>>>> So something else fishy is going on, and now I'm totally confused why this
->>>>>>>>>>>>> even happens.
->>>>>>>>>>>>>
->>>>>>>>>>>>> We also have a pile of WARN_ON checks in drm_crtc_vblank_put to make sure
->>>>>>>>>>>>> we don't underflow the refcount, so it's also not that I think (except if
->>>>>>>>>>>>> this patch creates more WARNING backtraces).
->>>>>>>>>>>>>
->>>>>>>>>>>>> But clearly it changes behaviour somehow ... can you try to figure out
->>>>>>>>>>>>> what changes? Maybe print out the vblank->refcount at various points in
->>>>>>>>>>>>> the driver, and maybe also trace when exactly the fake vkms vblank hrtimer
->>>>>>>>>>>>> is enabled/disabled ...
->>>>>>>>>>>>
->>>>>>>>>>>> :(
->>>>>>>>>>>>
->>>>>>>>>>>> I can check these, but I also have other suspicions. When I place the
->>>>>>>>>>>> drm_crct_vblank_put out of the if (at the end of flush), it not only solve
->>>>>>>>>>>> the issue of blocking on kms_cursor_crc, but also the WARN_ON on kms_flip
->>>>>>>>>>>> doesn't appear anymore (a total cleanup). Just after:
->>>>>>>>>>>>
->>>>>>>>>>>> vkms_output->composer_state = to_vkms_crtc_state(crtc->state);
->>>>>>>>>>>>
->>>>>>>>>>>> looks like there is something stuck around here.
->>>>>>>>>>>
->>>>>>>>>>> Hm do you have the full WARNING for this? Maybe this gives me an idea
->>>>>>>>>>> what's going wrong.
->>>>>>>>>>>
->>>>>>>>>>>> Besides, there is a lock at atomic_begin:
->>>>>>>>>>>>
->>>>>>>>>>>>    /* This lock is held across the atomic commit to block vblank timer
->>>>>>>>>>>>     * from scheduling vkms_composer_worker until the composer is updated
->>>>>>>>>>>>     */
->>>>>>>>>>>>    spin_lock_irq(&vkms_output->lock);
->>>>>>>>>>>>
->>>>>>>>>>>> that seems to be released on atomic_flush and make me suspect something
->>>>>>>>>>>> missing on the composer update.
->>>>>>>>>>>
->>>>>>>>>>> atomic_begin/atomic_flush are symmetric functions an always called
->>>>>>>>>>> around all the plane updates. So having the spin_lock in _begin and
->>>>>>>>>>> the spin_unlock in _flush should be symmetric and correct.
->>>>>>>>>>>
->>>>>>>>>>> If you want to make sure, recompile with CONFIG_PROVE_LOCKING, which
->>>>>>>>>>> should immmediately give you a huge splat in dmesg if there's anything
->>>>>>>>>>> unbalanced with locking.
->>>>>>>>>>>
->>>>>>>>>>>> I'll check all these things and come back with news (hope) :)
->>>>>>>>>>>
->>>>>>>>>>> Have fun chasing stuff :-)
->>>>>>>>>>>
->>>>>>>>>>> Cheers, Daniel
->>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>> Thanks,
->>>>>>>>>>>>
->>>>>>>>>>>> Melissa
->>>>>>>>>>>>>
->>>>>>>>>>>>> I'm totally confused about what's going on here now.
->>>>>>>>>>>>> -Daniel
->>>>>>>>>>
->>>>>>>>>> Hi Daniel, Melissa.
->>>>>>>>>> I found something about this problem.
->>>>>>>>>> I traced vblank->refcount that it's important in the problem.
->>>>>>>>>> In normal case, first test run calls commit_tail() and enable vblank in
->>>>>>>>>> atomic_flush(). in drm_vblank_get(), it enable vblank when refcount was zero.
->>>>>>>>>>
->>>>>>>>>> in first test run, it disable crtc for cleanup test. drm_crtc_vblank_off() was
->>>>>>>>>> called by atomic_disable. in this function vblank's refcount was increased for
->>>>>>>>>> prevent subsequent drm_vblank_get() from re-enabling the vblank interrupt.
->>>>>>>>>> and refcount goes one not zero for next test run.
->>>>>>>>>>
->>>>>>>>>> and next test run, drm_vblank_get() was called but it didn't enable vblank
->>>>>>>>>> because refcount was already one. drm_crtc_vblank_on() was called in next. but
->>>>>>>>>> it didn't enable vblank but just increase refcount only.
->>>>>>>>>>
->>>>>>>>>> I think this is why this problem happen. don't know how to fix this correctly.
->>>>>>>>>> should we force to enable vblank after enabling crtc?
->>>>>>>>>
->>>>>>>>> Hm, between drm_crtc_vblank_off and drm_crtc_vblank_on
->>>>>>>>> drm_crtc_vblank_get should fail (and leave the refcount unchanged).
->>>>>>>>> It's convoluted logic, but the check for vblank->enabled should catch
->>>>>>>>> that and return -EINVAL for this case. Does that not happen?
->>>>>>>>>
->>>>>>>>> It would indeed explain the bug (I think, I've been wrong way too many
->>>>>>>>> times with this).
->>>>>>>>> -Daniel
->>>>>>>>>
->>>>>>>> Hi Daniel and Sidong,
->>>>>>>>
->>>>>>>> I don't know if it will be confusing, but I will try to explain in a
->>>>>>>> little more detail (and newbie way) what I saw in this behavior of the
->>>>>>>> refcount (similar to what Sidong evaluated).
->>>>>>>>
->>>>>>>> 1. Starting with the loading of vkms is:
->>>>>>>> In vkms_init:
->>>>>>>> After drm_vblank_init (refcount=0), it calls:
->>>>>>>> vkms_modeset_init
->>>>>>>> --> vkms_output_init
->>>>>>>> ----> drm_mode_config_reset
->>>>>>>> -------> vkms_atomic_crtc_reset
->>>>>>>> (even more inside)--> drm_crtc_vblank_reset that bumps the refcount to
->>>>>>>> prevent vblank_get to enable vblank (refcount=1)
->>>>>>>>
->>>>>>>> 2. So, when we start a subtest, vblank is still disabled and in
->>>>>>>> commit_tail, commit_planes triggers a atomic_begin/flush->vblank_get that
->>>>>>>> return -EINVAL because !vblank->enabled (refcount ends 1) and send_vblank;
->>>>>>>> however the test fails before atomic_enable decrements refcount to 0 and
->>>>>>>> reset timestamp.
->>>>>>>> ** This warning also appears in this very first running:
->>>>>>>> WARNING: CPU: 0 PID: 708 at drivers/gpu/drm/vkms/vkms_crtc.c:91 vkms_get_vblank_timestamp+0x41/0x50 [vkms]
->>>>>>>
->>>>>>> Hm yeah I guess that's something we should paper over a bit, but maybe
->>>>>>> the bugfix will take care of that.
->>>>>>>
->>>>>>>> In the end, this sequence modeset_disable -> atomic_begin ->
->>>>>>>> atomic_flush: refcount going from 0 to 1 and than drm_vblank_enable
->>>>>>>> prepares to everything going well in the next subtest (because
->>>>>>>> atomic_disable is not called).
->>>>>>>>
->>>>>>>> 3. It could be nice, but in the next subtest (with success), as refcount +
->>>>>>>> vblank_enabled ok, after doind its job, it calls
->>>>>>>> atomic_disable->vblank_off and here refcount ends 1 and vblank disabled
->>>>>>>> (the problem returns).
->>>>>>>> So, we have a kind of good turn and bad turn.
->>>>>>>>
->>>>>>>> I tried different things, but the only relatively stable result was
->>>>>>>> putting the sequence modeset_disable + modeset_enables + commit_planes in
->>>>>>>> the commit_tail. That didn't convince me and then I keep trying things.
->>>>>>>
->>>>>>> This actually sounds like a good idea, I had the same one. Doing it
->>>>>>> this way should also resolve the WARNING you've pointed out I think?
->>>>>>
->>>>>> Hi Daniel,
->>>>>>
->>>>>> My uncertainty in this idea was related to a subtest, the cursor-suspend.
->>>>>> Although the reordering solves most of the blocking in kms-cursor-crc, the
->>>>>> suspend subtest fails because when vkms suspends, it disables vblank,
->>>>>> and when it resumes, vblank is not enabled in time. In this subtest, there is
->>>>>> a pipe-crc-start and adding a igt_wait_for_vblank solves... but again,
->>>>>> I know it is not the real fix.
->>>>>>
->>>>>> Would be the case to develop a specific feature of suspend/resume in vkms?
->>>>>> I mean, something to enable vblank when resume. I am trying to figure out how
->>>>>> to develop it, but still without success.
->>>>>
->>>>> Hm since it's all software I expected that the hrtimer will simply
->>>>> continue to run as if nothing happened. For real hw we'd need to use
->>>>> drm_mode_config_helper_suspend/resume, but for vkms I dont think
->>>>> that's required. Is the vblank hrtimer not working after resume? Or is
->>>>> it simply reporting a garbage timestamp and that's why the testcase
->>>>> fails?
->>>>
->>>> The testcase fails for the same timeout in waiting the first crc
->>>> (already applying the change in the commit_tail sequence):
->>>>
->>>> (kms_cursor_crc:732) igt_aux-DEBUG: Test requirement passed: (power_dir = open("/sys/power", O_RDONLY)) >= 0
->>>> (kms_cursor_crc:732) igt_aux-DEBUG: Test requirement passed: get_supported_suspend_states(power_dir) & (1 << state)
->>>> (kms_cursor_crc:732) igt_aux-DEBUG: Test requirement passed: test == SUSPEND_TEST_NONE || faccessat(power_dir, "pm_test", R_OK | W_OK, 0) == 0
->>>> (kms_cursor_crc:732) igt_aux-DEBUG: Test requirement passed: !(state == SUSPEND_STATE_DISK && !intel_get_total_swap_mb())
->>>> (kms_cursor_crc:732) igt_aux-DEBUG: Test requirement passed: ret == 0
->>>> (kms_cursor_crc:732) igt_core-INFO: [cmd] rtcwake: wakeup from "mem" using /dev/rtc0 at Thu Jul 30 09:23:59 2020
->>>> (kms_cursor_crc:732) igt_debugfs-DEBUG: Opening debugfs directory '/sys/kernel/debug/dri/0'
->>>> (kms_cursor_crc:732) igt_core-INFO: Timed out: Opening crc fd, and poll for first CRC.
->>>>
->>>> What I could check was, when suspend, vblanks are disabled (calling
->>>> vkms_disable_vblank), and when resume, the testcase fails and only after
->>>> the failure vblanks are enabled (vkms_enable_vblank) and
->>>> hrtimer_init/starts.
->>>
->>> Hm, what is disabling the vblank there? Can you grab a full backtrace for
->>> that? I have no idea why that's even happening ...
->>>
->>>> If I "force" enabling vblanks via testcase (adding a
->>>> igt_wait_for_vblank before igt_pipe_crc_start), things work fine.
->>>> This is why I thought about anticipating the restarting of activities by
->>>> placing a vblank "wakeup" in a resume function. Or perhaps prevent vblank
->>>> from being disabled when suspended, since that last attempt to place a
->>>> vblank_put at the end of the flush made this test case (suspend) work,
->>>> because it prevented the vblank from being disabled.
->>>>
->>>> This failure in suspend subtest is so closer to the previous ones, that I
->>>> was unsure if my attempt in fix by reordering commit_tail would be enough.
->>>> But maybe they are different situations that deserve different treats.
->>>> Do you think restarting a vblank in resume can make sense for vkms?
->>>
->>> tbh I'm just really confused what's going on :-/
->>
->> Hi Daniel, Mellisa.
->> I made up the situation Melissa said, and thought about what's going on now.
->> What pipe-A-cursor-suspend different from size-change is that it has some
->> suspend command just before disabling cursor in test. usually vblank is enabled
->> by drm_vblank_get() and it's handled by vblank interrupt (vkms_vblank_simulate
->> in vkms). by calling drm_crtc_handle_vblank(), drm_vblank_put() is called and it
->> disable vblank with disable timer. the timer will disable vblank after 5 seconds
->> (drm_vblank_offdelay) later in default. that time is enough to execute crc
->> command in simple size-change test. but in suspending situation, if suspend and
->> wakup command takes more than 5 seconds, vblank will disabled and also crc
->> command is failed from polling crc file. the test are passed if I make my
->> environment wake up earlier.
-> 
-> Oh, nice! I tested what you say extending the offdelay, and the test goes well.
-> But what would be the right way to fix?
-> 
-> Melissa
-> 
->> In the same way, if there is the code delaying crc command in igt test, it make
->> same problem even if it's in simple size-change.
->>
->> -Sidong
->>
->>> -Daniel
->>>
->>>>
->>>> Melissa
->>>>>
->>>>> Not sure how to wire it up for fake drivers like vkms, but maybe doing
->>>>> the suspend/resume like for real drivers helps. I think ideally we'd
->>>>> try to attach a platform driver to our platform device we create (but
->>>>> not sure how to do that).
->>>>> -Daniel
->>>>>
->>>>>>
->>>>>> Melissa
->>>>>>>
->>>>>>> But I'm still wondering why after step 3 we don't get -EINVAL from
->>>>>>> vblank_get() - after vblank_off() vblank->enabled should be false
->>>>>>> again, getting us back to the same state as after 1. Is that not
->>>>>>> happening?
->>>>>>> -Daniel
->>>>>>>
->>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Thanks
->>>>>>>>>> -Sidong
->>>>>>>>>>
->>>>>>>>>>>>>
->>>>>>>>>>>>>>              crtc->state->event = NULL;
->>>>>>>>>>>>>>      }
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> --
->>>>>>>>>>>>>> 2.27.0
->>>>>>>>>>>>>>
->>>>>>>>>>>>>
->>>>>>>>>>>>> --
->>>>>>>>>>>>> Daniel Vetter
->>>>>>>>>>>>> Software Engineer, Intel Corporation
->>>>>>>>>>>>> http://blog.ffwll.ch
->>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> --
->>>>>>>>>>> Daniel Vetter
->>>>>>>>>>> Software Engineer, Intel Corporation
->>>>>>>>>>> http://blog.ffwll.ch
->>>>>>>>>>> _______________________________________________
->>>>>>>>>>> dri-devel mailing list
->>>>>>>>>>> dri-devel@lists.freedesktop.org
->>>>>>>>>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> --
->>>>>>>>> Daniel Vetter
->>>>>>>>> Software Engineer, Intel Corporation
->>>>>>>>> http://blog.ffwll.ch
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>> --
->>>>>>> Daniel Vetter
->>>>>>> Software Engineer, Intel Corporation
->>>>>>> http://blog.ffwll.ch
->>>>>
->>>>>
->>>>>
->>>>> -- 
->>>>> Daniel Vetter
->>>>> Software Engineer, Intel Corporation
->>>>> http://blog.ffwll.ch
->>>
->>> -- 
->>> Daniel Vetter
->>> Software Engineer, Intel Corporation
->>> http://blog.ffwll.ch
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
+Mark.
