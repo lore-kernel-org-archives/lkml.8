@@ -2,132 +2,117 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5956FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D001AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 308D520829
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A13342074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:00:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OUwQa1/V"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SEgYugyq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732492AbgGaJ7x (ORCPT
+        id S1732521AbgGaKAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:59:53 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:41685 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732318AbgGaJ7w (ORCPT
+        Fri, 31 Jul 2020 06:00:11 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52650 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732292AbgGaKAK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:59:52 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200731095951euoutp01787e71ebcb777f68ca6adca3d1499784~mzfnn422t1976819768euoutp01e
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 09:59:51 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200731095951euoutp01787e71ebcb777f68ca6adca3d1499784~mzfnn422t1976819768euoutp01e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1596189591;
-        bh=/UTyw2WVp/qW81MDBjWkfGq6wWaWgdQ5KcsoHv0rets=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=OUwQa1/V/gYNXbWyToJqDSpAQiUW4mF4Qr42tTcb4BTpb1vtcSxrvBBEeuwCBmkwz
-         5t+Qzpmc2wYsb3EPTT3kbY0bGpo1jYMDObf+s3aJWtIwDR+6OpUZQ5adfwBXlTrxDL
-         /QqLUhE4G37RYKcBAF8KJ2kNvygojG6Zz0ja86uc=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200731095950eucas1p2119893fda0e9692ba35e8a48bb74f6ec~mzfnY70E_2084920849eucas1p22;
-        Fri, 31 Jul 2020 09:59:50 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 34.44.05997.69BE32F5; Fri, 31
-        Jul 2020 10:59:50 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200731095950eucas1p14f135c91930e8ab6a2fe40086fd846d0~mzfnDVqed3203832038eucas1p1E;
-        Fri, 31 Jul 2020 09:59:50 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200731095950eusmtrp28e1d8db7dd7ad625add3a6a537998e19~mzfnCelsK1695216952eusmtrp2U;
-        Fri, 31 Jul 2020 09:59:50 +0000 (GMT)
-X-AuditID: cbfec7f4-677ff7000000176d-0c-5f23eb960b7a
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id EA.98.06314.69BE32F5; Fri, 31
-        Jul 2020 10:59:50 +0100 (BST)
-Received: from [106.210.123.115] (unknown [106.210.123.115]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200731095949eusmtip1f3c1f903267bd22e85bb137adad7dfef~mzfmD46WJ0043800438eusmtip1x;
-        Fri, 31 Jul 2020 09:59:49 +0000 (GMT)
-Subject: Re: [PATCH v2 11/11] dt-bindings: media: Correct samsung-fimc
- parallel port numbering
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     kyungmin.park@samsung.com, mchehab@kernel.org, kgene@kernel.org,
-        krzk@kernel.org, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <7313c052-5bfb-3958-06a8-aa96f6950f36@samsung.com>
-Date:   Fri, 31 Jul 2020 11:59:48 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.11.0
+        Fri, 31 Jul 2020 06:00:10 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06V9qw7Y015363;
+        Fri, 31 Jul 2020 09:59:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=S9ve+QX3l80OyB6k9hGZRrisazhkSN61TPadeW92FAU=;
+ b=SEgYugyqhNyevsmB58/8dBw3UeEQKZZn4RGLKsfjMQGdB5w7poSmCCujgRo6lvNyP9J2
+ N6BlFv+evhhJgcXclTknHVtdHLqu2VEzhibj9GRqcDmfmSWUU5JeXzJPjdvFhxsIdS6x
+ yZafV/ElbdjOysvaMjddzIPbyQy0GMoe5f/bK4NU7pR16NFjs1rwbVCfbis9hw7X8DxM
+ wUO1jUuRdpbAEygEA3aHk/8hJbl0gXbPOHvR9RcyJqWGscZW7v2M48lyVejaheVou/Qc
+ 2ZjlWBT4ZeCxpFJkDwOp9keWcdG7bQg6HQt0Ol0SuLZZ1nsF+0pY7zx0wV/+3hu0k1s/ WQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 32hu1jr9sn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jul 2020 09:59:58 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06V9wiXB043580;
+        Fri, 31 Jul 2020 09:59:58 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 32mf706216-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jul 2020 09:59:58 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06V9xvtd046242;
+        Fri, 31 Jul 2020 09:59:57 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 32mf70620b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 31 Jul 2020 09:59:57 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06V9xsLW005845;
+        Fri, 31 Jul 2020 09:59:55 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 31 Jul 2020 02:59:54 -0700
+Date:   Fri, 31 Jul 2020 12:59:43 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak
+ in rds_notify_queue_get()
+Message-ID: <20200731095943.GI5493@kadam>
+References: <20200730192026.110246-1-yepeilin.cs@gmail.com>
+ <20200731045301.GI75549@unreal>
 MIME-Version: 1.0
-In-Reply-To: <BN6PR04MB0660B938349CA15DE7BCC5BBA3710@BN6PR04MB0660.namprd04.prod.outlook.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHKsWRmVeSWpSXmKPExsWy7djPc7rTXivHG0y6bWwx/8g5Vov+x6+Z
-        Lc6f38BucbbpDbvFpsfXWC0u75rDZtGzYSurxYzz+5gslm36w2TRuvcIu8XFiXdZHLg9Nq3q
-        ZPPYvKTeY9HNHywefVtWMXp83iQXwBrFZZOSmpNZllqkb5fAlfHzww7Ggt/MFQcWPGdpYJzK
-        3MXIySEhYCJxePJnti5GLg4hgRWMEj8urGeEcL4wSqyc85oJwvnMKHFmeicbTMvEZ4+YIRLL
-        GSU2vz3ADuF8ZJR48nc9O0iVsECCxOKutSxdjBwcIgLqEtef8oHUMAv0MUksfdHPCFLDJmAo
-        0Xu0D8zmFbCTWHnpIFgvi4CqxJ7rjWAHigrESWw9fpUJokZQ4uTMJywgNqdArMThXe2sIDaz
-        gLjErSfzmSBseYntb+eAXSchcIldYubpzywQZ7tIzNswEeoFYYlXx7ewQ9gyEv93zmeCaGhm
-        lOjZfZsdwpnAKHH/+AJGiCpriTvnfrGBvMMsoCmxfpc+iCkh4Chx6qklhMknceOtIMQNfBKT
-        tk1nhgjzSnS0CUHMUJH4vWo6E4QtJdH95D/LBEalWUg+m4Xkm1lIvpmFsHYBI8sqRvHU0uLc
-        9NRio7zUcr3ixNzi0rx0veT83E2MwFR1+t/xLzsYd/1JOsQowMGoxMObcEkpXog1say4MvcQ
-        owQHs5IIr9PZ03FCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeY0XvYwVEkhPLEnNTk0tSC2CyTJx
-        cEo1MNq519f6LlyguLg6rU5Lflb/wiMtX18FVf701Fw2TebFP/cS8w/rq71LSrU95VPjYtq+
-        /bu5RW3q73uaybkr56/L+r+p6bt95NyALSWFQVHGEaVZypJrqm59iph2dHa6xbX/WlUVi2pM
-        nC87uR+JiTwfu7tLW6D2dqhT/blMj4L9Qmw/n06pVWIpzkg01GIuKk4EAHxYlV1RAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPIsWRmVeSWpSXmKPExsVy+t/xu7rTXivHG8zrlraYf+Qcq0X/49fM
-        FufPb2C3ONv0ht1i0+NrrBaXd81hs+jZsJXVYsb5fUwWyzb9YbJo3XuE3eLixLssDtwem1Z1
-        snlsXlLvsejmDxaPvi2rGD0+b5ILYI3SsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaP
-        tTIyVdK3s0lJzcksSy3St0vQy/j5YQdjwW/migMLnrM0ME5l7mLk5JAQMJGY+OwRmC0ksJRR
-        4tCR4i5GDqC4lMT8FiWIEmGJP9e62LoYuYBK3jNKLDqwkhUkISyQILG4ay0LSL2IgLrE9ad8
-        IDXMAn1MEsfn32WBaLjDKPF99m9GkAY2AUOJ3qN9YDavgJ3EyksH2UFsFgFViT3XG8GOEBWI
-        k3jc+58ZokZQ4uTMJywgNqdArMThXe1gi5mBlv2Zd4kZwhaXuPVkPhOELS+x/e0c5gmMQrOQ
-        tM9C0jILScssJC0LGFlWMYqklhbnpucWG+oVJ+YWl+al6yXn525iBEbmtmM/N+9gvLQx+BCj
-        AAejEg9vwiWleCHWxLLiytxDjBIczEoivE5nT8cJ8aYkVlalFuXHF5XmpBYfYjQFem4is5Ro
-        cj4waeSVxBuaGppbWBqaG5sbm1koifN2CByMERJITyxJzU5NLUgtgulj4uCUamCUZqll1ntz
-        8P7xqf+CPv/t1fTuCfnfue/EIyHDhSqJr5OLnku/SzLh4e1cdsXXV9/qzeTPM46uMP3mEeN5
-        57h162TfC3Mq7th9fh/REcHUm8rYl/XqXWVaxG/JGy6/y41u2j8TWjtzWd77CMfUT7ICy5fa
-        nba6uOk4b0LfrKV5u57Xz2l6Z7dZiaU4I9FQi7moOBEAY+3oB+ICAAA=
-X-CMS-MailID: 20200731095950eucas1p14f135c91930e8ab6a2fe40086fd846d0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200730230226eucas1p289b3086e47eb52bcdfc02ef660abd0b9
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200730230226eucas1p289b3086e47eb52bcdfc02ef660abd0b9
-References: <20200730230114.8572-1-xc-racer2@live.ca>
-        <CGME20200730230226eucas1p289b3086e47eb52bcdfc02ef660abd0b9@eucas1p2.samsung.com>
-        <BN6PR04MB0660B938349CA15DE7BCC5BBA3710@BN6PR04MB0660.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200731045301.GI75549@unreal>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9698 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
+ malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
+ phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007310073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31.07.2020 01:01, Jonathan Bakker wrote:
-> The parallel port nodes should be numbered 1 and 2, not 0 and 1
-> for A and B respectively.  The driver has always implemented 1
-> and 2 and the in-tree Goni DTS uses 1 as port A as well.  Update
-> the documentation to match this behaviour.
+On Fri, Jul 31, 2020 at 07:53:01AM +0300, Leon Romanovsky wrote:
+> On Thu, Jul 30, 2020 at 03:20:26PM -0400, Peilin Ye wrote:
+> > rds_notify_queue_get() is potentially copying uninitialized kernel stack
+> > memory to userspace since the compiler may leave a 4-byte hole at the end
+> > of `cmsg`.
+> >
+> > In 2016 we tried to fix this issue by doing `= { 0 };` on `cmsg`, which
+> > unfortunately does not always initialize that 4-byte hole. Fix it by using
+> > memset() instead.
 > 
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> Of course, this is the difference between "{ 0 }" and "{}" initializations.
+> 
 
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+No, there is no difference.  Even struct assignments like:
 
-Thanks for all those improvements, whole series looks good to me.
+	foo = *bar;
 
--- 
-Regards,
-Sylwester
+can leave struct holes uninitialized.  Depending on the compiler the
+assignment can be implemented as a memset() or as a series of struct
+member assignments.
+
+regards,
+dan carpenter
+
