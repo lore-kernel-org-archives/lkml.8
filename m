@@ -2,122 +2,114 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85967C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66D59208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF25522B40
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:33:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596195220;
+	bh=nRMU61Aikd6d7OiSdk8nqrvF5kYZ8WTzMhfKjj86UAQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eLZDniK86PtaqSZ7nMytix90tml155gBEp4dOu3TtK+cRlZ905Zdg840QhHrrbxEL
+	 axmo8MC2XNTokz1DxYnqy1UNjTY1LXSQPiDMloDnxDV9xOLjIL2nxJFbLDX1AJ6sYt
+	 IpJyvTwwP9XlNr8c0x1TVeRK6hz64NhBe0jzHWmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732701AbgGaLcM (ORCPT
+        id S1732746AbgGaLdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 07:32:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:55506 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732104AbgGaLcL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 07:32:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F6951FB;
-        Fri, 31 Jul 2020 04:32:11 -0700 (PDT)
-Received: from [10.37.12.83] (unknown [10.37.12.83])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 33C213F71F;
-        Fri, 31 Jul 2020 04:32:09 -0700 (PDT)
-Subject: Re: [RFC PATCH 03/14] coresight: tpiu: Use coresight device access
- abstraction
-To:     mathieu.poirier@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mike.leach@linaro.org, coresight@lists.linaro.org
-References: <20200722172040.1299289-1-suzuki.poulose@arm.com>
- <20200722172040.1299289-4-suzuki.poulose@arm.com>
- <20200729210105.GC3073178@xps15>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <02f28b5f-d3d6-755f-066d-88b90aa35eef@arm.com>
-Date:   Fri, 31 Jul 2020 12:36:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Fri, 31 Jul 2020 07:33:39 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40075 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732104AbgGaLdi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 07:33:38 -0400
+Received: by mail-oi1-f195.google.com with SMTP id u24so16553690oiv.7;
+        Fri, 31 Jul 2020 04:33:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mpZwL9ptFKxq7FoZCH1xjumTWQNcssejfeTwP6RoxpQ=;
+        b=diuHMLwFGE03iB6FycWL3gzVKV7vJzuDP40K9hGRPOQcLzQIi9LpAbE+bb+iu1Zva7
+         b7hj6RtcnDvzlg7h3eYbSZvJLmYlNeNiRCKL900jpKHwv5KXYbY7L3g/VaYc1GjEyoJz
+         EE8UibbNHAQ2xvP8l3MH4L5l0FT4XlCfQzCJza6pD2tBjS5oTSksRX8gkBKX5BTHbyAj
+         SNrwrRNcYA3QhnfE9ylEFohlC84WnJz2erwTT4CWf6vKCMDutiNwj6fk+z3+F0SBtbNO
+         EugJdjKvoeNHJYWBqakqrimVl0NheHFYPhWy6JR2X2uYm3YS8xkhOyZaGfRIrMZeD5Ah
+         eHbA==
+X-Gm-Message-State: AOAM530dUNDrNfQUhFqddHrZ4wxeJDT4smiaX9qYbSJjy0kPyRTht2Sh
+        oStEZMDE27hETN8WPbTTQSjTqHdUHemGtOqXmik=
+X-Google-Smtp-Source: ABdhPJwjnTZ4vCcK+PJMw9f0cgXjEhaXp88nRbYUPJxc2xho6yL2W9vIsfi0PJ+loYFbKG0KfjHoOo6H/h7XzI4Nqoc=
+X-Received: by 2002:aca:a88e:: with SMTP id r136mr2704600oie.110.1596195217368;
+ Fri, 31 Jul 2020 04:33:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200729210105.GC3073178@xps15>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1596166744-2954-1-git-send-email-neal.liu@mediatek.com> <1596166744-2954-2-git-send-email-neal.liu@mediatek.com>
+In-Reply-To: <1596166744-2954-2-git-send-email-neal.liu@mediatek.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 31 Jul 2020 13:33:24 +0200
+Message-ID: <CAJZ5v0gk9a-PVr4+zerNWdBORyC563K8XgUdgxENAQ+Y5-85tg@mail.gmail.com>
+Subject: Re: [PATCH] acpi: fix 'return' with no value build warning
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/29/2020 10:01 PM, Mathieu Poirier wrote:
-> On Wed, Jul 22, 2020 at 06:20:29PM +0100, Suzuki K Poulose wrote:
->> TPIU driver access the device before the coresight device
->> is registered. In other words, before the drvdata->csdev
->> is valid. Thus, we need to make sure that the csdev_access
->> is valid for both the invocations. Switch to using the
->> csdev_access directly instead of relying on availability
->> of drvdata->csdev.
-> 
-> I'm not sure all of the above is needed and based on the wording I could easily
-> see this patch being selected for stable backport, which would be a mistak.
-> 
-> The gist of this patch is that we are moving to the access abstraction and the
-> changelog should reflect that.
+On Fri, Jul 31, 2020 at 5:39 AM Neal Liu <neal.liu@mediatek.com> wrote:
+>
+> Fixing CFI issue which introduced by commit efe9711214e6 is
+> incomplete.
+> Add return value to fix return-type build warning.
+>
+> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
 
-True, I will make it something like :
+Applied with edited subject and changelog, but ->
 
-"Prepare the TPIU driver to make use of the CoreSight device access
-abstraction layer. The driver touches the device even before the
-coresight device is registered. Thus we could be accessing the
-devices without a csdev. As we are about to use the abstraction
-layer for accessing the device, pass in the access directly
-to avoid having to deal with the un-initialised csdev.
+> ---
+>  drivers/acpi/processor_idle.c |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
+> index 6ffb6c9..6870020 100644
+> --- a/drivers/acpi/processor_idle.c
+> +++ b/drivers/acpi/processor_idle.c
+> @@ -664,11 +664,11 @@ static int acpi_idle_enter_s2idle(struct cpuidle_device *dev,
+>                 struct acpi_processor *pr = __this_cpu_read(processors);
+>
+>                 if (unlikely(!pr))
+> -                       return;
+> +                       return -EFAULT;
 
+-> there is no point returning an error code here, so I've made it
+just return 0.
 
->>   
->>   static int tpiu_disable(struct coresight_device *csdev)
->>   {
->> -	struct tpiu_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
->> -
->>   	if (atomic_dec_return(csdev->refcnt))
->>   		return -EBUSY;
->>   
->> -	tpiu_disable_hw(drvdata);
->> +	tpiu_disable_hw(&csdev->access);
->>   
->>   	dev_dbg(&csdev->dev, "TPIU disabled\n");
->>   	return 0;
->> @@ -152,7 +148,7 @@ static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
->>   	desc.access.base = base;
-> 
-> Any reason for introducing the above in patch 02?  I would have done that as
-> part of this patch...  Also part of this patch I would remove drvdata::base
-> since it is no longer needed.
-
-The patch 02 is not touching how the individual drivers access the
-device, yet. It only sets the way by introducing the layer. As per
-the proposed change, this is a preparation of the TPIU driver, so
-that we can convert the generic helper functions ( coresight_timeout())
-more easily and keep the patch 05 easier for review (just like the Patch
-4, which prepares the ETM driver).
-
-Cheers
-Suzuki
-
-
-> 
-> I'm out of time for today - I will continue tomorrow.
-> 
-> Regards,
-> Mathieu
-> 
->>   
->>   	/* Disable tpiu to support older devices */
->> -	tpiu_disable_hw(drvdata);
->> +	tpiu_disable_hw(&desc.access);
->>   
->>   	pdata = coresight_get_platform_data(dev);
->>   	if (IS_ERR(pdata))
->> -- 
->> 2.24.1
->>
-
+>
+>                 if (pr->flags.bm_check) {
+>                         acpi_idle_enter_bm(pr, cx, false);
+> -                       return;
+> +                       return 0;
+>                 } else {
+>                         ACPI_FLUSH_CPU_CACHE();
+>                 }
+> --
