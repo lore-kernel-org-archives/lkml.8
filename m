@@ -2,224 +2,251 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C72C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A4052250E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:01:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ODV/TbzT"
+	by mail.kernel.org (Postfix) with ESMTP id 2BE40207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:01:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596178870;
+	bh=waSGCZLpLqJudH+BLycSs/9v2ZDJaeAT4KfCWI6/Jvs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JDobrMAdNrdOrEkR8lMEuEvTO2PxDAkU5E/K62xtX+JKMjAURcgwZ+GWwW5Wc7vxE
+	 z1ltRSTrKceLKHvf0dQCBWV7ZMsQ66WkfsZJGKuER8SjdjmhbT9B6eH/ef7d1Ikp9o
+	 tJJmiJYd7hHp6KsvonEkwXTTnQb4XYK+fHSiqQSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731636AbgGaHBF (ORCPT
+        id S1731646AbgGaHBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 03:01:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45180 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731419AbgGaHBE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 03:01:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596178863;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RG/GMSG5hY2CeM2IJpEsZvrBScs2dfYRmekwad6Ke8k=;
-        b=ODV/TbzT5IXpao5+JUxGsp2oMa+pXksS7JjnLQ9TPnB+bvNy0edzlz4XMKGF9NEKEh1c/y
-        szFJgXIckgHmE1msgyZ3Tlbguy5VndXGmD4n9I1hY1ZtYqGLYUCXioqUYPKrueGuJFgRvL
-        MAfYhfuwCQ261FRjO87iaZ7AtR+9b5w=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-331-qBFxMeToOO-GZ9oDhHP9OQ-1; Fri, 31 Jul 2020 03:01:01 -0400
-X-MC-Unique: qBFxMeToOO-GZ9oDhHP9OQ-1
-Received: by mail-wr1-f72.google.com with SMTP id v4so8847640wrb.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 00:01:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RG/GMSG5hY2CeM2IJpEsZvrBScs2dfYRmekwad6Ke8k=;
-        b=SA9JaysKNVLPiA3Jv9+EkQYh6z1VOeWH2nZT8GRuOiS40csdieyXlky/oQRyN6qdBH
-         pKrN0J2Idfj8XeXv1MsF3rEGdPa8UupYw/hJ6EwZAAJP+IHmBNF7gE9PKrvYLLmD8zXo
-         QgI+Tgy7luHkMb+1E1bWYxYrH/zNohjmaICYVqsYuUZs3DbaooxoupblX7vY29/pPAwf
-         M1ROu/P5ecoG/1LEB0YnmWmLBizejIdyOZXHdJUDJrHpM/z+mYjXJQO285KBY69SuOQc
-         ptjYPmZyxjFuItPFB8HQkf3zdxvQBmdvRptCXZF220THDmXAskW9qlVFSmrczcKJiSoE
-         8Gqg==
-X-Gm-Message-State: AOAM5321vVAII/+3jZEQttt9YnANoWS0Mq+iol6Axd68UshfNNbKyBzO
-        uuTVNGEzYzXgzSRbCeZ+gc9K7JBGHWCpM+GuSeZLXDgtuGXZuAL0WrmF0bMfUDNvaI95pmxwuh0
-        1FFv1PWjw+k0Yt0fbYXVSLh2W
-X-Received: by 2002:a5d:6646:: with SMTP id f6mr2106892wrw.155.1596178860254;
-        Fri, 31 Jul 2020 00:01:00 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxXLMyyQ4Xr0ILUXquInQ8nQDbiyL3LOTLbIfxJsIlHlYVnzeA5yLC0XjZw/lAM8IS+HW+GiA==
-X-Received: by 2002:a5d:6646:: with SMTP id f6mr2106870wrw.155.1596178860048;
-        Fri, 31 Jul 2020 00:01:00 -0700 (PDT)
-Received: from ?IPv6:2a01:cb14:499:3d00:cd47:f651:9d80:157a? ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
-        by smtp.gmail.com with ESMTPSA id b139sm13191578wmd.19.2020.07.31.00.00.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jul 2020 00:00:59 -0700 (PDT)
-Subject: Re: [PATCH v2 9/9] objtool: Abstract unwind hint reading
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org, mbenes@suse.cz,
-        raphael.gault@arm.com, benh@kernel.crashing.org
-References: <20200730094652.28297-1-jthierry@redhat.com>
- <20200730094652.28297-10-jthierry@redhat.com>
- <20200730150341.udqnykbw7yfsjvin@treble>
-From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <1a078563-001d-c666-d2f5-9291f0efd35a@redhat.com>
-Date:   Fri, 31 Jul 2020 08:00:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 31 Jul 2020 03:01:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33396 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731419AbgGaHBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 03:01:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3816A2067D;
+        Fri, 31 Jul 2020 07:01:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596178865;
+        bh=waSGCZLpLqJudH+BLycSs/9v2ZDJaeAT4KfCWI6/Jvs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EjESepdU0cbJJG5YD4jBp/1oM4zWebkZpk5JYVTQTed644CZwt1qKILyc05IEKJxw
+         6aum4e1WObjV+VC8JHYkFGzfXzJk4xBbpSvxVgfXWgNtBCdnE1A4K8hAMr1kQ1s2LU
+         vk4y5W7s1wT0eYa+hbRebImDjEC+yGTvvkuJfeRo=
+Date:   Fri, 31 Jul 2020 09:00:53 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Daniel Gutson <daniel.gutson@eclypsium.com>
+Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Richard Hughes <hughsient@gmail.com>,
+        Alex Bazhaniuk <alex@eclypsium.com>
+Subject: Re: [PATCH] Platform lockdown information in SYSFS
+Message-ID: <20200731070053.GC1518178@kroah.com>
+References: <20200730214136.5534-1-daniel.gutson@eclypsium.com>
 MIME-Version: 1.0
-In-Reply-To: <20200730150341.udqnykbw7yfsjvin@treble>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730214136.5534-1-daniel.gutson@eclypsium.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/30/20 4:03 PM, Josh Poimboeuf wrote:
-> On Thu, Jul 30, 2020 at 10:46:52AM +0100, Julien Thierry wrote:
->> The type of unwind hints and the semantics associated with them depend
->> on the architecture. Let arch specific code convert unwind hints into
->> objtool stack state descriptions.
->>
->> Signed-off-by: Julien Thierry <jthierry@redhat.com>
->> ---
->>   tools/objtool/arch.h            |  5 +--
->>   tools/objtool/arch/x86/decode.c | 54 ++++++++++++++++++++++++++++++
->>   tools/objtool/cfi.h             |  3 +-
->>   tools/objtool/check.c           | 58 +++++----------------------------
->>   tools/objtool/orc_gen.c         |  4 ++-
->>   5 files changed, 71 insertions(+), 53 deletions(-)
->>
->> diff --git a/tools/objtool/arch.h b/tools/objtool/arch.h
->> index 2e2ce089b0e9..44107e9aab71 100644
->> --- a/tools/objtool/arch.h
->> +++ b/tools/objtool/arch.h
->> @@ -7,12 +7,11 @@
->>   #define _ARCH_H
->>   
->>   #include <stdbool.h>
->> +#include <linux/frame.h>
->>   #include <linux/list.h>
->>   #include "objtool.h"
->>   #include "cfi.h"
->>   
->> -#include <asm/orc_types.h>
->> -
->>   enum insn_type {
->>   	INSN_JUMP_CONDITIONAL,
->>   	INSN_JUMP_UNCONDITIONAL,
->> @@ -86,4 +85,6 @@ unsigned long arch_dest_reloc_offset(int addend);
->>   
->>   const char *arch_nop_insn(int len);
->>   
->> +int arch_decode_insn_hint(struct instruction *insn, struct unwind_hint *hint);
->> +
->>   #endif /* _ARCH_H */
->> diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
->> index 1967370440b3..2099809925af 100644
->> --- a/tools/objtool/arch/x86/decode.c
->> +++ b/tools/objtool/arch/x86/decode.c
->> @@ -6,6 +6,8 @@
->>   #include <stdio.h>
->>   #include <stdlib.h>
->>   
->> +#include <linux/frame.h>
->> +
->>   #define unlikely(cond) (cond)
->>   #include <asm/insn.h>
->>   #include "../../../arch/x86/lib/inat.c"
->> @@ -15,6 +17,7 @@
->>   #include "../../elf.h"
->>   #include "../../arch.h"
->>   #include "../../warn.h"
->> +#include <asm/orc_types.h>
->>   
->>   static unsigned char op_to_cfi_reg[][2] = {
->>   	{CFI_AX, CFI_R8},
->> @@ -583,3 +586,54 @@ const char *arch_nop_insn(int len)
->>   
->>   	return nops[len-1];
->>   }
->> +
->> +int arch_decode_insn_hint(struct instruction *insn, struct unwind_hint *hint)
->> +{
->> +	struct cfi_reg *cfa = &insn->cfi.cfa;
->> +
->> +	if (hint->type == UNWIND_HINT_TYPE_RET_OFFSET) {
->> +		insn->ret_offset = hint->sp_offset;
->> +		return 0;
->> +	}
->> +
->> +	insn->hint = true;
->> +
->> +	switch (hint->sp_reg) {
->> +	case ORC_REG_UNDEFINED:
->> +		cfa->base = CFI_UNDEFINED;
->> +		break;
->> +	case ORC_REG_SP:
->> +		cfa->base = CFI_SP;
->> +		break;
->> +	case ORC_REG_BP:
->> +		cfa->base = CFI_BP;
->> +		break;
->> +	case ORC_REG_SP_INDIRECT:
->> +		cfa->base = CFI_SP_INDIRECT;
->> +		break;
->> +	case ORC_REG_R10:
->> +		cfa->base = CFI_R10;
->> +		break;
->> +	case ORC_REG_R13:
->> +		cfa->base = CFI_R13;
->> +		break;
->> +	case ORC_REG_DI:
->> +		cfa->base = CFI_DI;
->> +		break;
->> +	case ORC_REG_DX:
->> +		cfa->base = CFI_DX;
->> +		break;
->> +	default:
->> +		WARN_FUNC("unsupported unwind_hint sp base reg %d",
->> +			  insn->sec, insn->offset, hint->sp_reg);
->> +		return -1;
->> +	}
->> +
->> +	cfa->offset = hint->sp_offset;
->> +	insn->cfi.hint_type = hint->type;
->> +	insn->cfi.end = hint->end;
->> +
->> +	insn->cfi.sp_only = hint->type == ORC_TYPE_REGS || hint->type == ORC_TYPE_REGS_IRET;
+On Thu, Jul 30, 2020 at 06:41:36PM -0300, Daniel Gutson wrote:
+> This patch exports information about the platform lockdown
+> firmware configuration in the sysfs filesystem.
+> In this initial patch, I include some configuration attributes
+> for the system SPI chip.
 > 
-> What does "sp" mean here in sp_only?
->
-
-Stack pointer, like in CFI_SP. When objtool encounters one of these 
-hints, it starts to only track the stack frame with the stack pointer 
-(no BP, no drap register, no move to temporary registers). Just trying 
-to make some sense of this corner case.
-
->> +		if (arch_decode_insn_hint(insn, hint)) {
->> +			WARN_FUNC("Bad unwind hint", insn->sec, insn->offset);
+> This initial version exports the BIOS Write Enable (bioswe),
+> BIOS Lock Enable (ble), and the SMM Bios Write Protect (SMM_BWP)
+> fields of the Bios Control register. The idea is to keep adding more
+> flags, not only from the BC but also from other registers in following
+> versions.
 > 
-> No need for a warning here, since the arch-specific function already
-> prints one.
+> The goal is that the attributes are avilable to fwupd when SecureBoot
+> is turned on.
 > 
+> The patch provides a new misc driver, as proposed in the previous patch,
+> that provides a registration function for HW Driver devices to register
+> class_attributes.
+> In this case, the intel SPI flash chip (intel-spi) registers three
+> class_attributes corresponding to the fields mentioned above.
 
-Right.
+Better, but you are abusing sysfs (note, no CAPS) a lot here...
 
-Thanks,
 
--- 
-Julien Thierry
+> 
+> Signed-off-by: Daniel Gutson <daniel.gutson@eclypsium.com>
+> ---
+>  .../ABI/stable/sysfs-class-platform-lockdown  | 23 +++++++
+>  MAINTAINERS                                   |  7 +++
+>  drivers/misc/Kconfig                          |  9 +++
+>  drivers/misc/Makefile                         |  1 +
+>  drivers/misc/platform-lockdown-attrs.c        | 57 +++++++++++++++++
+>  drivers/mtd/spi-nor/controllers/Kconfig       |  1 +
+>  .../mtd/spi-nor/controllers/intel-spi-pci.c   | 49 +++++++++++++++
+>  drivers/mtd/spi-nor/controllers/intel-spi.c   | 62 +++++++++++++++++++
+>  .../platform_data/platform-lockdown-attrs.h   | 19 ++++++
+>  9 files changed, 228 insertions(+)
+>  create mode 100644 Documentation/ABI/stable/sysfs-class-platform-lockdown
+>  create mode 100644 drivers/misc/platform-lockdown-attrs.c
+>  create mode 100644 include/linux/platform_data/platform-lockdown-attrs.h
+> 
+> diff --git a/Documentation/ABI/stable/sysfs-class-platform-lockdown b/Documentation/ABI/stable/sysfs-class-platform-lockdown
+> new file mode 100644
+> index 000000000000..6034d6cbefac
+> --- /dev/null
+> +++ b/Documentation/ABI/stable/sysfs-class-platform-lockdown
+> @@ -0,0 +1,23 @@
+> +What:		/sys/class/platform-lockdown/bioswe
+> +Date:		July 2020
+> +KernelVersion:	5.8.0
+> +Contact:	Daniel Gutson <daniel.gutson@eclypsium.com>
+> +Description:	If the system firmware set BIOS Write Enable.
+> +		0: writes disabled, 1: writes enabled.
+> +Users:		https://github.com/fwupd/fwupd
+> +
+> +What:		/sys/class/platform-lockdown/ble
+> +Date:		July 2020
+> +KernelVersion:	5.8.0
+> +Contact:	Daniel Gutson <daniel.gutson@eclypsium.com>
+> +Description:	If the system firmware set Bios Lock Enable.
+> +		0: SMM lock disabled, 1: SMM lock enabled.
+> +Users:		https://github.com/fwupd/fwupd
+> +
+> +What:		/sys/class/platform-lockdown/smm_bwp
+> +Date:		July 2020
+> +KernelVersion:	5.8.0
+> +Contact:	Daniel Gutson <daniel.gutson@eclypsium.com>
+> +Description:	If the system firmware set SMM Bios Write Protect.
+> +		0: writes disabled unless in SMM, 1: writes enabled.
+> +Users:		https://github.com/fwupd/fwupd
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f0569cf304ca..771ed1693d28 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13608,6 +13608,13 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml
+>  F:	drivers/iio/chemical/pms7003.c
+>  
+> +PLATFORM LOCKDOWN ATTRIBUTES MODULE
+> +M:	Daniel Gutson <daniel.gutson@eclypsium.com>
+> +S:	Supported
+> +F:	Documentation/ABI/sysfs-class-platform-lockdown
+> +F:	drivers/misc/platform-lockdown-attrs.c
+> +F:	include/linux/platform_data/platform-lockdown-attrs.h
+> +
+>  PLX DMA DRIVER
+>  M:	Logan Gunthorpe <logang@deltatee.com>
+>  S:	Maintained
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index e1b1ba5e2b92..058d4ba3cefd 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -456,6 +456,15 @@ config PVPANIC
+>  	  a paravirtualized device provided by QEMU; it lets a virtual machine
+>  	  (guest) communicate panic events to the host.
+>  
+> +config PLATFORM_LOCKDOWN_ATTRS
+> +	tristate "Platform lockdown information in the SYSFS"
 
+"Platform lockdown information for some hardware information displayed
+in sysfs" ?
+
+> +	depends on SYSFS
+> +	help
+> +	  This kernel module is a helper driver to provide information about
+> +	  platform lockdown settings and configuration.
+
+Is that what this really is?
+
+> +	  This module is used by other device drivers -such as the intel-spi-
+> +	  to publish the information in /sys/class/platform-lockdown.
+> +
+>  source "drivers/misc/c2port/Kconfig"
+>  source "drivers/misc/eeprom/Kconfig"
+>  source "drivers/misc/cb710/Kconfig"
+> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> index c7bd01ac6291..e29b45c564f9 100644
+> --- a/drivers/misc/Makefile
+> +++ b/drivers/misc/Makefile
+> @@ -57,3 +57,4 @@ obj-$(CONFIG_PVPANIC)   	+= pvpanic.o
+>  obj-$(CONFIG_HABANA_AI)		+= habanalabs/
+>  obj-$(CONFIG_UACCE)		+= uacce/
+>  obj-$(CONFIG_XILINX_SDFEC)	+= xilinx_sdfec.o
+> +obj-$(CONFIG_PLATFORM_LOCKDOWN_ATTRS)	+= platform-lockdown-attrs.o
+> diff --git a/drivers/misc/platform-lockdown-attrs.c b/drivers/misc/platform-lockdown-attrs.c
+> new file mode 100644
+> index 000000000000..d08b3d895064
+> --- /dev/null
+> +++ b/drivers/misc/platform-lockdown-attrs.c
+> @@ -0,0 +1,57 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Platform lockdown attributes kernel module
+> + *
+> + * Copyright (C) 2020 Daniel Gutson <daniel.gutson@eclypsium.com>
+> + * Copyright (C) 2020 Eclypsium Inc.
+> + */
+> +#include <linux/kobject.h>
+> +#include <linux/sysfs.h>
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+> +#include <linux/list.h>
+> +#include <linux/slab.h>
+> +#include <linux/platform_data/platform-lockdown-attrs.h>
+> +
+> +static struct class platform_lockdown_class = {
+> +	.name	= "platform-lockdown",
+> +	.owner	= THIS_MODULE,
+> +};
+> +
+> +int register_platform_lockdown_attribute(
+> +	struct class_attribute *lockdown_attribute)
+> +{
+> +	/* attempt to create the file: */
+> +	return class_create_file(&platform_lockdown_class,
+> +				   lockdown_attribute);
+> +}
+> +EXPORT_SYMBOL_GPL(register_platform_lockdown_attribute);
+
+nit, global symbols should put the noun first:
+	platform_lockdown_attribute_register()
+
+But, this all is not ok.
+
+You are trying to create/remove random sysfs files that end up in a
+single class.  What you want to do is create a device that is associated
+with this class, and make that device a child of the device you are
+registering these attributes for.
+
+Think of this as an input device.  You don't put the random input
+attributes all in one place, you create a new device that represents the
+input interface and register that.  Then userspace can iterate over all
+devices that are of the input class and see the individual attributes of
+them.
+
+Make more sense?
+
+So you need something like:
+	platform_lockdown_device_create()
+
+that returns a 'struct device' that is associated with the new class
+device.
+
+thanks,
+
+greg k-h
