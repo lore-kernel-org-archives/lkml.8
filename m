@@ -2,158 +2,109 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 760F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BADFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC0420829
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FE7020829
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:54:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tXwqiOLj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731963AbgGaIxo (ORCPT
+        id S1731979AbgGaIyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:53:44 -0400
-Received: from mga18.intel.com ([134.134.136.126]:26910 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731442AbgGaIxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 04:53:43 -0400
-IronPort-SDR: qIKDb51ICZUKA8k5LIIMzOBgfWzWGtLLWZdiGdvbWfDsNnft8BjuCKq1Upw9xh2JufStLcQK7p
- xJMMACXuYzbA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="139309445"
-X-IronPort-AV: E=Sophos;i="5.75,417,1589266800"; 
-   d="scan'208";a="139309445"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 01:53:41 -0700
-IronPort-SDR: yyfBDct6Obqupft3NDNGQ27SziobH1mPne5EdykN2TR7XBXi2bQ3TCe/X5+1cvP3W661GMlh9x
- rwbWVhONr1/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,417,1589266800"; 
-   d="scan'208";a="329189869"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 31 Jul 2020 01:53:38 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1k1QnK-005H6q-Sz; Fri, 31 Jul 2020 11:53:38 +0300
-Date:   Fri, 31 Jul 2020 11:53:38 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Kars Mulder <kerneldev@karsmulder.nl>
-Cc:     linux-kernel@vger.kernel.org, Eldad Zack <eldad@fogrefinery.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mans Rullgard <mans@mansr.com>, Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 1/2] kstrto*: correct documentation references to
- simple_strto*()
-Message-ID: <20200731085338.GG3703480@smile.fi.intel.com>
-References: <1ee1-5f234c00-f3-165a6440@234394593>
+        Fri, 31 Jul 2020 04:54:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730268AbgGaIyE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 04:54:04 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 796BCC061574;
+        Fri, 31 Jul 2020 01:54:04 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BJ1Kg0lDRz9sT6;
+        Fri, 31 Jul 2020 18:53:59 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596185641;
+        bh=OPz3lUOc+WyHCbq/hFk/WLugydGTZNR/iPYJhaE2exA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tXwqiOLj2tx5GjKOxkGES8vKfLtb1fHK8PYgnKDJZhMI/XQ64i5ep6MnAQ6/DfRgM
+         u67TQyJpDF8lmi3mTY/h8fAhAQ6vgrRpgEJ7IdGHjAXo0WpVJqfgMdN6jEd2yT7I+c
+         rG+8maiwVMslZZRHamAUBq2ZmnJwMv7oym1S6pH1QU0HxrtGzaUjgPvCv9/AufW1Q0
+         mx9yDimuRqrS3aoSuxI04f9wAFiuJBxWy9e3f7lIviCtNCffl/jbmf8EWafd4zV4Ph
+         4bBjzQzw3igvsDZ+d2rYx9s+ARCdG3Ycl0JOgeAj9RjbK4GWedMNnmO+l0aC7YPQr0
+         QZFTsY01UFxug==
+Date:   Fri, 31 Jul 2020 18:53:54 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, lkft-triage@lists.linaro.org
+Subject: Re: linux-next: Tree for Jul 30 [build failure on arm64]
+Message-ID: <20200731185354.70926525@canb.auug.org.au>
+In-Reply-To: <CA+G9fYvykg9Ly=tRXLrf4hvd4siYKAt5eM0EMnwMgqVDHnbVYQ@mail.gmail.com>
+References: <20200730214659.0fbfdfc4@canb.auug.org.au>
+        <72b073ba-ee41-1a1c-ce6c-ffd8b5936b09@hisilicon.com>
+        <20200731140842.46abe589@canb.auug.org.au>
+        <CA+G9fYvykg9Ly=tRXLrf4hvd4siYKAt5eM0EMnwMgqVDHnbVYQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1ee1-5f234c00-f3-165a6440@234394593>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: multipart/signed; boundary="Sig_/r30PAVB0NtZyI/i6pWUpT.k";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 12:38:58AM +0200, Kars Mulder wrote:
-> The documentation of the kstrto*() functions reference the simple_strtoull
-> function by "used as a replacement for [the obsolete] simple_strtoull".
-> All these functions describes themselves as replacements for the function
-> simple_strtoull, even though a function like kstrtol() would be more aptly
-> described as a replacement of simple_strtol().
-> 
-> Fix these references by making the documentation of kstrto*() reference
-> the closest simple_strto*() equivalent available. The functions
-> kstrto[u]int() do not have direct simple_strto[u]int() equivalences, so
-> these are made to refer to simple_strto[u]l() instead.
-> 
-> Furthermore, add parentheses after function names, as is standard in
-> kernel documentation.
+--Sig_/r30PAVB0NtZyI/i6pWUpT.k
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Hi Naresh,
 
-> Fixes: 4c925d6031f71 ("kstrto*: add documentation")
-> Signed-off-by: Kars Mulder <kerneldev@karsmulder.nl>
-> 
-> ---
->  include/linux/kernel.h | 4 ++--
->  lib/kstrtox.c          | 8 ++++----
->  2 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> index 82d91547d122..2d6050f12c64 100644
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -346,7 +346,7 @@ int __must_check kstrtoll(const char *s, unsigned int base, long long *res);
->   * @res: Where to write the result of the conversion on success.
->   *
->   * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-> - * Used as a replacement for the simple_strtoull. Return code must be checked.
-> + * Used as a replacement for the simple_strtoul(). Return code must be checked.
->  */
->  static inline int __must_check kstrtoul(const char *s, unsigned int base, unsigned long *res)
->  {
-> @@ -374,7 +374,7 @@ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsign
->   * @res: Where to write the result of the conversion on success.
->   *
->   * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-> - * Used as a replacement for the simple_strtoull. Return code must be checked.
-> + * Used as a replacement for the simple_strtol(). Return code must be checked.
->   */
->  static inline int __must_check kstrtol(const char *s, unsigned int base, long *res)
->  {
-> diff --git a/lib/kstrtox.c b/lib/kstrtox.c
-> index 1006bf70bf74..252ac414ba9a 100644
-> --- a/lib/kstrtox.c
-> +++ b/lib/kstrtox.c
-> @@ -115,7 +115,7 @@ static int _kstrtoull(const char *s, unsigned int base, unsigned long long *res)
->   * @res: Where to write the result of the conversion on success.
->   *
->   * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-> - * Used as a replacement for the obsolete simple_strtoull. Return code must
-> + * Used as a replacement for the obsolete simple_strtoull(). Return code must
->   * be checked.
->   */
->  int kstrtoull(const char *s, unsigned int base, unsigned long long *res)
-> @@ -139,7 +139,7 @@ EXPORT_SYMBOL(kstrtoull);
->   * @res: Where to write the result of the conversion on success.
->   *
->   * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-> - * Used as a replacement for the obsolete simple_strtoull. Return code must
-> + * Used as a replacement for the obsolete simple_strtoll(). Return code must
->   * be checked.
->   */
->  int kstrtoll(const char *s, unsigned int base, long long *res)
-> @@ -211,7 +211,7 @@ EXPORT_SYMBOL(_kstrtol);
->   * @res: Where to write the result of the conversion on success.
->   *
->   * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-> - * Used as a replacement for the obsolete simple_strtoull. Return code must
-> + * Used as a replacement for the obsolete simple_strtoul(). Return code must
->   * be checked.
->   */
->  int kstrtouint(const char *s, unsigned int base, unsigned int *res)
-> @@ -242,7 +242,7 @@ EXPORT_SYMBOL(kstrtouint);
->   * @res: Where to write the result of the conversion on success.
->   *
->   * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-> - * Used as a replacement for the obsolete simple_strtoull. Return code must
-> + * Used as a replacement for the obsolete simple_strtol(). Return code must
->   * be checked.
->   */
->  int kstrtoint(const char *s, unsigned int base, int *res)
-> --
-> 2.28.0
-> 
+On Fri, 31 Jul 2020 14:00:57 +0530 Naresh Kamboju <naresh.kamboju@linaro.or=
+g> wrote:
+>
+> > Presumably caused by commit
+> >
+> >   b902bfb3f0e9 ("arm64: stop using <asm/compat.h> directly") =20
+>=20
+> I have reverted this commit
+>   b902bfb3f0e9 ("arm64: stop using <asm/compat.h> directly")
+>=20
+> and rebuilt arm64 failed due to below errors/warnings.
 
--- 
-With Best Regards,
-Andy Shevchenko
+That commit was in preparation for the following 3 commits.  You would
+have to revert them as well to get a good build.
 
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/r30PAVB0NtZyI/i6pWUpT.k
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8j3CIACgkQAVBC80lX
+0GwGWQgAlFnQu2bDAJnwB6llA/2Ib2qDm+ZVqCP9BS1JI8XsfMNdAH8QXdShSw+f
+PZoWmeGW/YZXH//mSS4uS9dBDyltZ24W967oLRp8L2elzTWVlmWszFIR+V88I9PK
+oxBmAxrmKIEFE1k4IOg1B/EA2PK/J+jCNYBY+pCXIZ2Sw8ea7Y0c8rfpkydAYWza
+SWj6m3jgIzF+GXXDCQrM/DvcNF2Va9q0HVOX6Sxjg/zyTftCvqsEpsQxlwLztXt5
+AEIyn2+jXFCU/GQDB+9koIYyUcN6/QltQr1bNMXrNNP5Vx+S9/e2THqVSPw+b4Gd
+I6iD6KjE11WMQoHkOK5DKQGQxZ+9PA==
+=VH/t
+-----END PGP SIGNATURE-----
+
+--Sig_/r30PAVB0NtZyI/i6pWUpT.k--
