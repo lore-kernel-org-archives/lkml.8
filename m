@@ -8,37 +8,37 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B71C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CDDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E6E32087C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA0692087C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:32:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XHAljNAi"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FN+HPJG4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730795AbgGaVdC (ORCPT
+        id S1730285AbgGaVcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 17:33:02 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3020 "EHLO
+        Fri, 31 Jul 2020 17:32:51 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3028 "EHLO
         hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729516AbgGaVcb (ORCPT
+        with ESMTP id S1728695AbgGaVcd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 17:32:31 -0400
+        Fri, 31 Jul 2020 17:32:33 -0400
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f248dc00002>; Fri, 31 Jul 2020 14:31:44 -0700
+        id <B5f248dc20000>; Fri, 31 Jul 2020 14:31:46 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 31 Jul 2020 14:32:31 -0700
+  Fri, 31 Jul 2020 14:32:33 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 31 Jul 2020 14:32:31 -0700
+        by hqpgpgate101.nvidia.com on Fri, 31 Jul 2020 14:32:33 -0700
 Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul
- 2020 21:32:31 +0000
+ 2020 21:32:33 +0000
 Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
  (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 31 Jul 2020 21:32:31 +0000
+ Transport; Fri, 31 Jul 2020 21:32:33 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.221]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f248dee0002>; Fri, 31 Jul 2020 14:32:30 -0700
+        id <B5f248df00000>; Fri, 31 Jul 2020 14:32:32 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -47,9 +47,9 @@ To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
 CC:     <digetx@gmail.com>, <gregkh@linuxfoundation.org>,
         <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v7 05/10] media: tegra-video: Separate CSI stream enable and disable implementations
-Date:   Fri, 31 Jul 2020 14:32:19 -0700
-Message-ID: <1596231144-12554-6-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH v7 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till calibration is done
+Date:   Fri, 31 Jul 2020 14:32:22 -0700
+Message-ID: <1596231144-12554-9-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596231144-12554-1-git-send-email-skomatineni@nvidia.com>
 References: <1596231144-12554-1-git-send-email-skomatineni@nvidia.com>
@@ -57,104 +57,133 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596231104; bh=uZgxrGDkUOMRSXaG0qPPXkX0uRgXXAAvq4AEaGdQuMg=;
+        t=1596231106; bh=wDgMkeYCZVezNoEVbmypSzb8rMjS8a+LjilsX0gytzo=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=XHAljNAiqxIa4HfxGzbdF4sRHO72qzitdHaa5d9uEJGQebNONDE6mPCd8MTOvCiUo
-         b9kDiSp35MmW6e8vIKw3RfeTmiDoV6am8JJYtn3nkxtXh4JJ6u6FUwN0Rp+uVQae/w
-         q2z4bjjSnCh4y/TkAZUQpIpFhQ+Qv3VTcpI7+aUmUQtvX6NEw118tkqbs4STtPZZqJ
-         9pVfBYs/sPA84DqqQgPPB81WK+SFvff3RY0OyO/L6aHVdhgpLFMNGSDl0/Cm0Ox5YT
-         7sO9xtIzAoJA4bw1mqaw0hBYihefV/qahtgl/dd4cvoFdIl4zo138k2XscwCLT93r/
-         PCo4tIInePyaQ==
+        b=FN+HPJG4dpx1kXzkpwBt0vMRC7Hf3VZJNnEhE7MqtRWxI3px0rAuR1XvzVvEVcw+B
+         gT9S+lAaW/dhZ4KjrC6ck52vheOufoWz5gzX/sEZlEptAF8yX8DkdPBxGfFBVDTAHD
+         SQDwyRW483F0xdZjsuuqj3BwOvahxM6mMfBMzDj/Sl8x1l8gAwVX7Cn9Cnr2LU6tJY
+         yqxi+Z29hyLN71knVsxrB/9rAwaEITqUmerNRnhf3UxlOTS4oa/3PZJ6bcc7/tIOdq
+         g601FtUTnZicE1pDOfCE1pFVBE6b6QJG93tgWSeLjDvO8S7InrfdEMiPNzXtSNqguG
+         Y5l51UYAqorQA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch separates implementation of CSI stream enable and disable
-into separate functions for readability.
+With the split of MIPI calibration into tegra_mipi_calibrate() and
+tegra_mipi_wait(), MIPI clock is not kept enabled till the calibration
+is done.
+
+So, this patch skips disabling MIPI clock after triggering start of
+calibration and disables it only after waiting for done status from
+the calibration logic.
+
+This patch renames tegra_mipi_calibrate() as tegra_mipi_start_calibration()
+and tegra_mipi_wait() as tegra_mipi_finish_calibration() to be inline
+with their usage.
+
+As MIPI clock is left enabled and in case of any failures with CSI input
+streaming tegra_mipi_finish_calibration() will not get invoked.
+So added new API tegra_mipi_cancel_calibration() which disables MIPI clock
+and consumer drivers can call this in such cases.
 
 Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/staging/media/tegra-video/csi.c | 51 ++++++++++++++++++++++-----------
- 1 file changed, 35 insertions(+), 16 deletions(-)
+ drivers/gpu/drm/tegra/dsi.c |  4 ++--
+ drivers/gpu/host1x/mipi.c   | 19 ++++++++++---------
+ include/linux/host1x.h      |  5 +++--
+ 3 files changed, 15 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/staging/media/tegra-video/csi.c b/drivers/staging/media/tegra-video/csi.c
-index fb667df..cfe6187 100644
---- a/drivers/staging/media/tegra-video/csi.c
-+++ b/drivers/staging/media/tegra-video/csi.c
-@@ -232,34 +232,53 @@ static int tegra_csi_g_frame_interval(struct v4l2_subdev *subdev,
+diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+index 3820e8d..a7864e9 100644
+--- a/drivers/gpu/drm/tegra/dsi.c
++++ b/drivers/gpu/drm/tegra/dsi.c
+@@ -694,11 +694,11 @@ static int tegra_dsi_pad_calibrate(struct tegra_dsi *dsi)
+ 		DSI_PAD_PREEMP_PD(0x03) | DSI_PAD_PREEMP_PU(0x3);
+ 	tegra_dsi_writel(dsi, value, DSI_PAD_CONTROL_3);
+ 
+-	err = tegra_mipi_calibrate(dsi->mipi);
++	err = tegra_mipi_start_calibration(dsi->mipi);
+ 	if (err < 0)
+ 		return err;
+ 
+-	return tegra_mipi_wait(dsi->mipi);
++	return tegra_mipi_finish_calibration(dsi->mipi);
+ }
+ 
+ static void tegra_dsi_set_timeout(struct tegra_dsi *dsi, unsigned long bclk,
+diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
+index e606464..b15ab6e 100644
+--- a/drivers/gpu/host1x/mipi.c
++++ b/drivers/gpu/host1x/mipi.c
+@@ -293,17 +293,19 @@ int tegra_mipi_disable(struct tegra_mipi_device *dev)
+ }
+ EXPORT_SYMBOL(tegra_mipi_disable);
+ 
+-int tegra_mipi_wait(struct tegra_mipi_device *device)
++void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device)
++{
++	clk_disable(device->mipi->clk);
++}
++EXPORT_SYMBOL(tegra_mipi_cancel_calibration);
++
++int tegra_mipi_finish_calibration(struct tegra_mipi_device *device)
+ {
+ 	struct tegra_mipi *mipi = device->mipi;
+ 	void __iomem *status_reg = mipi->regs + (MIPI_CAL_STATUS << 2);
+ 	u32 value;
+ 	int err;
+ 
+-	err = clk_enable(device->mipi->clk);
+-	if (err < 0)
+-		return err;
+-
+ 	mutex_lock(&device->mipi->lock);
+ 
+ 	err = readl_relaxed_poll_timeout(status_reg, value,
+@@ -315,9 +317,9 @@ int tegra_mipi_wait(struct tegra_mipi_device *device)
+ 
+ 	return err;
+ }
+-EXPORT_SYMBOL(tegra_mipi_wait);
++EXPORT_SYMBOL(tegra_mipi_finish_calibration);
+ 
+-int tegra_mipi_calibrate(struct tegra_mipi_device *device)
++int tegra_mipi_start_calibration(struct tegra_mipi_device *device)
+ {
+ 	const struct tegra_mipi_soc *soc = device->mipi->soc;
+ 	unsigned int i;
+@@ -382,11 +384,10 @@ int tegra_mipi_calibrate(struct tegra_mipi_device *device)
+ 	tegra_mipi_writel(device->mipi, value, MIPI_CAL_CTRL);
+ 
+ 	mutex_unlock(&device->mipi->lock);
+-	clk_disable(device->mipi->clk);
+ 
  	return 0;
  }
+-EXPORT_SYMBOL(tegra_mipi_calibrate);
++EXPORT_SYMBOL(tegra_mipi_start_calibration);
  
--static int tegra_csi_s_stream(struct v4l2_subdev *subdev, int enable)
-+static int tegra_csi_enable_stream(struct v4l2_subdev *subdev)
- {
- 	struct tegra_vi_channel *chan = v4l2_get_subdev_hostdata(subdev);
- 	struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
- 	struct tegra_csi *csi = csi_chan->csi;
--	int ret = 0;
-+	int ret;
-+
-+	ret = pm_runtime_get_sync(csi->dev);
-+	if (ret < 0) {
-+		dev_err(csi->dev, "failed to get runtime PM: %d\n", ret);
-+		pm_runtime_put_noidle(csi->dev);
-+		return ret;
-+	}
+ static const struct tegra_mipi_pad tegra114_mipi_pads[] = {
+ 	{ .data = MIPI_CAL_CONFIG_CSIA },
+diff --git a/include/linux/host1x.h b/include/linux/host1x.h
+index 20c885d..b490dda 100644
+--- a/include/linux/host1x.h
++++ b/include/linux/host1x.h
+@@ -333,7 +333,8 @@ struct tegra_mipi_device *tegra_mipi_request(struct device *device,
+ void tegra_mipi_free(struct tegra_mipi_device *device);
+ int tegra_mipi_enable(struct tegra_mipi_device *device);
+ int tegra_mipi_disable(struct tegra_mipi_device *device);
+-int tegra_mipi_calibrate(struct tegra_mipi_device *device);
+-int tegra_mipi_wait(struct tegra_mipi_device *device);
++int tegra_mipi_start_calibration(struct tegra_mipi_device *device);
++int tegra_mipi_finish_calibration(struct tegra_mipi_device *device);
++void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device);
  
- 	csi_chan->pg_mode = chan->pg_mode;
--	if (enable) {
--		ret = pm_runtime_get_sync(csi->dev);
--		if (ret < 0) {
--			dev_err(csi->dev,
--				"failed to get runtime PM: %d\n", ret);
--			pm_runtime_put_noidle(csi->dev);
--			return ret;
--		}
-+	ret = csi->ops->csi_start_streaming(csi_chan);
-+	if (ret < 0)
-+		goto rpm_put;
- 
--		ret = csi->ops->csi_start_streaming(csi_chan);
--		if (ret < 0)
--			goto rpm_put;
-+	return 0;
- 
--		return 0;
--	}
-+rpm_put:
-+	pm_runtime_put(csi->dev);
-+	return ret;
-+}
-+
-+static int tegra_csi_disable_stream(struct v4l2_subdev *subdev)
-+{
-+	struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
-+	struct tegra_csi *csi = csi_chan->csi;
- 
- 	csi->ops->csi_stop_streaming(csi_chan);
- 
--rpm_put:
- 	pm_runtime_put(csi->dev);
-+
-+	return 0;
-+}
-+
-+static int tegra_csi_s_stream(struct v4l2_subdev *subdev, int enable)
-+{
-+	int ret;
-+
-+	if (enable)
-+		ret = tegra_csi_enable_stream(subdev);
-+	else
-+		ret = tegra_csi_disable_stream(subdev);
-+
- 	return ret;
- }
- 
+ #endif
 -- 
 2.7.4
 
