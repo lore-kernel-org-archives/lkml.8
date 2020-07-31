@@ -2,246 +2,534 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D17C722B43
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93A1D22B42
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:27:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iVABvhlL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387816AbgGaS1Y (ORCPT
+        id S2387839AbgGaS1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 14:27:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59016 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387805AbgGaS1T (ORCPT
+        Fri, 31 Jul 2020 14:27:45 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:26226 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387805AbgGaS1o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 14:27:19 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9E77C061574;
-        Fri, 31 Jul 2020 11:27:18 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: bbeckett)
-        with ESMTPSA id 47790299373
-From:   Robert Beckett <bob.beckett@collabora.com>
-To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     Robert Beckett <bob.beckett@collabora.com>
-Subject: [PATCH] drm/msm: Add vblank timestamp support for dpu1
-Date:   Fri, 31 Jul 2020 19:25:49 +0100
-Message-Id: <20200731182639.10949-1-bob.beckett@collabora.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 31 Jul 2020 14:27:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596220063; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=o7f3Xk/EixElVTO6+Uz9inas4c+cBqV/P656fdel21Y=; b=iVABvhlLLEbngubZshWzssB6u/vAG3zJhrftUznIXqaNLENKgCuL6Sox/rYV3JwMYTTQ3Q3f
+ 5Pyj+tyFCHZ2rTtw00WTcDyQLgThozwdgysDjv3RVZwLCaQUicEoY4woBop0iwsUoB3fpqDS
+ WOpCN8Uw+c239dTDfUt+5iL0s10=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
+ 5f24629d2dfc1b5cc2a50410 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 31 Jul 2020 18:27:41
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 50F4DC433A0; Fri, 31 Jul 2020 18:27:41 +0000 (UTC)
+Received: from pillair-linux.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BAE7DC433AD;
+        Fri, 31 Jul 2020 18:27:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BAE7DC433AD
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   Rakesh Pillai <pillair@codeaurora.org>
+To:     ath10k@lists.infradead.org
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org,
+        netdev@vger.kernel.org, Rakesh Pillai <pillair@codeaurora.org>
+Subject: [PATCH v2 1/3] ath10k: Add history for tracking certain events
+Date:   Fri, 31 Jul 2020 23:57:20 +0530
+Message-Id: <1596220042-2778-2-git-send-email-pillair@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596220042-2778-1-git-send-email-pillair@codeaurora.org>
+References: <1596220042-2778-1-git-send-email-pillair@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add vblank timestamp support via drm helpers
+Add history for tracking the below events
+- register read
+- register write
+- IRQ trigger
+- NAPI poll
+- CE service
+- WMI cmd
+- WMI event
+- WMI tx completion
 
-Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
+This will help in debugging any crash or any
+improper behaviour.
+
+Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c    | 71 ++++++++++++++++++++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c |  7 ++
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h |  5 ++
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c     | 10 ++-
- drivers/gpu/drm/msm/msm_drv.c               |  1 +
- 5 files changed, 92 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ath/ath10k/ce.c      |   1 +
+ drivers/net/wireless/ath/ath10k/core.h    |  74 +++++++++++++++++
+ drivers/net/wireless/ath/ath10k/debug.c   | 133 ++++++++++++++++++++++++++++++
+ drivers/net/wireless/ath/ath10k/debug.h   |  74 +++++++++++++++++
+ drivers/net/wireless/ath/ath10k/snoc.c    |  15 +++-
+ drivers/net/wireless/ath/ath10k/wmi-tlv.c |   1 +
+ drivers/net/wireless/ath/ath10k/wmi.c     |  10 +++
+ 7 files changed, 307 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-index f272a8d0f95b..b62552cad135 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-@@ -297,8 +297,8 @@ void dpu_crtc_vblank_callback(struct drm_crtc *crtc)
- 		dpu_crtc->vblank_cb_time = ktime_get();
- 	else
- 		dpu_crtc->vblank_cb_count++;
--	_dpu_crtc_complete_flip(crtc);
- 	drm_crtc_handle_vblank(crtc);
-+	_dpu_crtc_complete_flip(crtc);
- 	trace_dpu_crtc_vblank_cb(DRMID(crtc));
- }
+diff --git a/drivers/net/wireless/ath/ath10k/ce.c b/drivers/net/wireless/ath/ath10k/ce.c
+index 84ec80c..0f541de 100644
+--- a/drivers/net/wireless/ath/ath10k/ce.c
++++ b/drivers/net/wireless/ath/ath10k/ce.c
+@@ -1299,6 +1299,7 @@ void ath10k_ce_per_engine_service(struct ath10k *ar, unsigned int ce_id)
+ 	struct ath10k_hw_ce_host_wm_regs *wm_regs = ar->hw_ce_regs->wm_regs;
+ 	u32 ctrl_addr = ce_state->ctrl_addr;
  
-@@ -1320,6 +1320,73 @@ static void dpu_crtc_early_unregister(struct drm_crtc *crtc)
- 	debugfs_remove_recursive(dpu_crtc->debugfs_root);
- }
++	ath10k_record_ce_event(ar, ATH10K_CE_SERVICE, ce_id);
+ 	/*
+ 	 * Clear before handling
+ 	 *
+diff --git a/drivers/net/wireless/ath/ath10k/core.h b/drivers/net/wireless/ath/ath10k/core.h
+index 5c18f6c..46bd5aa 100644
+--- a/drivers/net/wireless/ath/ath10k/core.h
++++ b/drivers/net/wireless/ath/ath10k/core.h
+@@ -970,6 +970,75 @@ struct ath10k_bus_params {
+ 	bool hl_msdu_ids;
+ };
  
-+static struct drm_encoder *get_encoder_from_crtc(struct drm_crtc *crtc)
++#define ATH10K_REG_ACCESS_HISTORY_MAX	512
++#define ATH10K_CE_EVENT_HISTORY_MAX	1024
++#define ATH10K_WMI_EVENT_HISTORY_MAX	512
++#define ATH10K_WMI_CMD_HISTORY_MAX	256
++
++#define ATH10K_WMI_DATA_LEN	16
++
++enum ath10k_ce_event {
++	ATH10K_IRQ_TRIGGER,
++	ATH10K_NAPI_POLL,
++	ATH10K_CE_SERVICE,
++	ATH10K_NAPI_COMPLETE,
++	ATH10K_NAPI_RESCHED,
++	ATH10K_IRQ_SUMMARY,
++};
++
++enum ath10k_wmi_type {
++	ATH10K_WMI_EVENT,
++	ATH10K_WMI_CMD,
++	ATH10K_WMI_TX_COMPL,
++};
++
++struct ath10k_reg_access_entry {
++	u32 cpu_id;
++	bool write;
++	u32 offset;
++	u32 val;
++	u64 timestamp;
++};
++
++struct ath10k_wmi_event_entry {
++	u32 cpu_id;
++	enum ath10k_wmi_type type;
++	u32 id;
++	u64 timestamp;
++	unsigned char data[ATH10K_WMI_DATA_LEN];
++};
++
++struct ath10k_ce_event_entry {
++	u32 cpu_id;
++	enum ath10k_ce_event event_type;
++	u32 ce_id;
++	u64 timestamp;
++};
++
++struct ath10k_wmi_event_history {
++	struct ath10k_wmi_event_entry *record;
++	u32 max_entries;
++	atomic_t index;
++	/* lock for accessing wmi event history */
++	spinlock_t hist_lock;
++};
++
++struct ath10k_ce_event_history {
++	struct ath10k_ce_event_entry *record;
++	u32 max_entries;
++	atomic_t index;
++	/* lock for accessing ce event history */
++	spinlock_t hist_lock;
++};
++
++struct ath10k_reg_access_history {
++	struct ath10k_reg_access_entry *record;
++	u32 max_entries;
++	atomic_t index;
++	/* lock for accessing register access history */
++	spinlock_t hist_lock;
++};
++
+ struct ath10k {
+ 	struct ath_common ath_common;
+ 	struct ieee80211_hw *hw;
+@@ -1261,6 +1330,11 @@ struct ath10k {
+ 	bool coex_support;
+ 	int coex_gpio_pin;
+ 
++	struct ath10k_reg_access_history reg_access_history;
++	struct ath10k_ce_event_history ce_event_history;
++	struct ath10k_wmi_event_history wmi_event_history;
++	struct ath10k_wmi_event_history wmi_cmd_history;
++
+ 	/* must be last */
+ 	u8 drv_priv[] __aligned(sizeof(void *));
+ };
+diff --git a/drivers/net/wireless/ath/ath10k/debug.c b/drivers/net/wireless/ath/ath10k/debug.c
+index e8250a6..9105b0b 100644
+--- a/drivers/net/wireless/ath/ath10k/debug.c
++++ b/drivers/net/wireless/ath/ath10k/debug.c
+@@ -2722,4 +2722,137 @@ void ath10k_dbg_dump(struct ath10k *ar,
+ }
+ EXPORT_SYMBOL(ath10k_dbg_dump);
+ 
++int ath10k_core_reg_access_history_init(struct ath10k *ar, u32 max_entries)
 +{
-+	struct drm_device *dev = crtc->dev;
-+	struct drm_encoder *encoder;
++	ar->reg_access_history.record = vzalloc(max_entries *
++						sizeof(struct ath10k_reg_access_entry));
++	if (!ar->reg_access_history.record)
++		return -ENOMEM;
 +
-+	drm_for_each_encoder(encoder, dev)
-+		if (encoder->crtc == crtc)
-+			return encoder;
++	ar->reg_access_history.max_entries = max_entries;
++	atomic_set(&ar->reg_access_history.index, 0);
++	spin_lock_init(&ar->reg_access_history.hist_lock);
 +
-+	return NULL;
++	return 0;
 +}
++EXPORT_SYMBOL(ath10k_core_reg_access_history_init);
 +
-+static bool dpu_crtc_get_scanout_position(struct drm_crtc *crtc,
-+					   bool in_vblank_irq,
-+					   int *vpos, int *hpos,
-+					   ktime_t *stime, ktime_t *etime,
-+					   const struct drm_display_mode *mode)
++int ath10k_core_wmi_cmd_history_init(struct ath10k *ar, u32 max_entries)
 +{
-+	unsigned int pipe = crtc->index;
-+	struct drm_encoder *encoder;
-+	int line, vsw, vbp, vactive_start, vactive_end, vfp_end;
++	ar->wmi_cmd_history.record = vzalloc(max_entries *
++					     sizeof(struct ath10k_wmi_event_entry));
++	if (!ar->wmi_cmd_history.record)
++		return -ENOMEM;
 +
++	ar->wmi_cmd_history.max_entries = max_entries;
++	atomic_set(&ar->wmi_cmd_history.index, 0);
++	spin_lock_init(&ar->wmi_cmd_history.hist_lock);
 +
-+	encoder = get_encoder_from_crtc(crtc);
-+	if (!encoder) {
-+		DRM_ERROR("no encoder found for crtc %d\n", pipe);
-+		return false;
++	return 0;
++}
++EXPORT_SYMBOL(ath10k_core_wmi_cmd_history_init);
++
++int ath10k_core_wmi_event_history_init(struct ath10k *ar, u32 max_entries)
++{
++	ar->wmi_event_history.record = vzalloc(max_entries *
++					       sizeof(struct ath10k_wmi_event_entry));
++	if (!ar->wmi_event_history.record)
++		return -ENOMEM;
++
++	ar->wmi_event_history.max_entries = max_entries;
++	atomic_set(&ar->wmi_event_history.index, 0);
++	spin_lock_init(&ar->wmi_event_history.hist_lock);
++
++	return 0;
++}
++EXPORT_SYMBOL(ath10k_core_wmi_event_history_init);
++
++int ath10k_core_ce_event_history_init(struct ath10k *ar, u32 max_entries)
++{
++	ar->ce_event_history.record = vzalloc(max_entries *
++					      sizeof(struct ath10k_ce_event_entry));
++	if (!ar->ce_event_history.record)
++		return -ENOMEM;
++
++	ar->ce_event_history.max_entries = max_entries;
++	atomic_set(&ar->ce_event_history.index, 0);
++	spin_lock_init(&ar->ce_event_history.hist_lock);
++
++	return 0;
++}
++EXPORT_SYMBOL(ath10k_core_ce_event_history_init);
++
++void ath10k_record_reg_access(struct ath10k *ar, u32 offset, u32 val, bool write)
++{
++	struct ath10k_reg_access_entry *entry;
++	u32 idx;
++
++	if (!ar->reg_access_history.record)
++		return;
++
++	idx = ath10k_core_get_next_idx(&ar->reg_access_history.index,
++				       ar->reg_access_history.max_entries);
++	entry = &ar->reg_access_history.record[idx];
++
++	entry->timestamp = ath10k_core_get_timestamp();
++	entry->write = write;
++	entry->offset = offset;
++	entry->val = val;
++}
++EXPORT_SYMBOL(ath10k_record_reg_access);
++
++void ath10k_record_wmi_event(struct ath10k *ar, enum ath10k_wmi_type type,
++			     u32 id, unsigned char *data)
++{
++	struct ath10k_wmi_event_entry *entry;
++	u32 idx;
++
++	if (type == ATH10K_WMI_EVENT) {
++		if (!ar->wmi_event_history.record)
++			return;
++
++		spin_lock_bh(&ar->wmi_event_history.hist_lock);
++		idx = ath10k_core_get_next_idx(&ar->reg_access_history.index,
++					       ar->wmi_event_history.max_entries);
++		spin_unlock_bh(&ar->wmi_event_history.hist_lock);
++		entry = &ar->wmi_event_history.record[idx];
++	} else {
++		if (!ar->wmi_cmd_history.record)
++			return;
++
++		spin_lock_bh(&ar->wmi_cmd_history.hist_lock);
++		idx = ath10k_core_get_next_idx(&ar->reg_access_history.index,
++					       ar->wmi_cmd_history.max_entries);
++		spin_unlock_bh(&ar->wmi_cmd_history.hist_lock);
++		entry = &ar->wmi_cmd_history.record[idx];
 +	}
 +
-+	vsw = mode->crtc_vsync_end - mode->crtc_vsync_start;
-+	vbp = mode->crtc_vtotal - mode->crtc_vsync_end;
-+
-+	/*
-+	 * the line counter is 1 at the start of the VSYNC pulse and VTOTAL at
-+	 * the end of VFP. Translate the porch values relative to the line
-+	 * counter positions.
-+	 */
-+
-+	vactive_start = vsw + vbp + 1;
-+
-+	vactive_end = vactive_start + mode->crtc_vdisplay;
-+
-+	/* last scan line before VSYNC */
-+	vfp_end = mode->crtc_vtotal;
-+
-+	if (stime)
-+		*stime = ktime_get();
-+
-+	line = dpu_encoder_get_linecount(encoder);
-+
-+	if (line < vactive_start)
-+		line -= vactive_start;
-+	else if (line > vactive_end)
-+		line = line - vfp_end - vactive_start;
-+	else
-+		line -= vactive_start;
-+
-+	*vpos = line;
-+	*hpos = 0;
-+
-+	if (etime)
-+		*etime = ktime_get();
-+
-+	return true;
++	entry->timestamp = ath10k_core_get_timestamp();
++	entry->cpu_id = smp_processor_id();
++	entry->type = type;
++	entry->id = id;
++	memcpy(&entry->data, data + 4, ATH10K_WMI_DATA_LEN);
 +}
++EXPORT_SYMBOL(ath10k_record_wmi_event);
 +
-+
- static const struct drm_crtc_funcs dpu_crtc_funcs = {
- 	.set_config = drm_atomic_helper_set_config,
- 	.destroy = dpu_crtc_destroy,
-@@ -1331,6 +1398,7 @@ static const struct drm_crtc_funcs dpu_crtc_funcs = {
- 	.early_unregister = dpu_crtc_early_unregister,
- 	.enable_vblank  = msm_crtc_enable_vblank,
- 	.disable_vblank = msm_crtc_disable_vblank,
-+	.get_vblank_timestamp = drm_crtc_vblank_helper_get_vblank_timestamp,
- };
- 
- static const struct drm_crtc_helper_funcs dpu_crtc_helper_funcs = {
-@@ -1339,6 +1407,7 @@ static const struct drm_crtc_helper_funcs dpu_crtc_helper_funcs = {
- 	.atomic_check = dpu_crtc_atomic_check,
- 	.atomic_begin = dpu_crtc_atomic_begin,
- 	.atomic_flush = dpu_crtc_atomic_flush,
-+	.get_scanout_position = dpu_crtc_get_scanout_position,
- };
- 
- /* initialize crtc */
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index a97f6d2e5a08..1d7d676355ee 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -1659,6 +1659,13 @@ static u32 _dpu_encoder_calculate_linetime(struct dpu_encoder_virt *dpu_enc,
- 	return line_time;
- }
- 
-+int dpu_encoder_get_linecount(struct drm_encoder *encoder)
++void ath10k_record_ce_event(struct ath10k *ar, enum ath10k_ce_event event_type,
++			    int ce_id)
 +{
-+	struct dpu_encoder_virt *dpu_enc = to_dpu_encoder_virt(encoder);
++	struct ath10k_ce_event_entry *entry;
++	u32 idx;
 +
-+	return dpu_enc->cur_master->ops.get_line_count(dpu_enc->cur_master);
++	if (!ar->ce_event_history.record)
++		return;
++
++	idx = ath10k_core_get_next_idx(&ar->ce_event_history.index,
++				       ar->ce_event_history.max_entries);
++	entry = &ar->ce_event_history.record[idx];
++
++	entry->timestamp = ath10k_core_get_timestamp();
++	entry->cpu_id = smp_processor_id();
++	entry->event_type = event_type;
++	entry->ce_id = ce_id;
++}
++EXPORT_SYMBOL(ath10k_record_ce_event);
++
+ #endif /* CONFIG_ATH10K_DEBUG */
+diff --git a/drivers/net/wireless/ath/ath10k/debug.h b/drivers/net/wireless/ath/ath10k/debug.h
+index 997c1c8..c28aeb1 100644
+--- a/drivers/net/wireless/ath/ath10k/debug.h
++++ b/drivers/net/wireless/ath/ath10k/debug.h
+@@ -258,6 +258,38 @@ void ath10k_dbg_dump(struct ath10k *ar,
+ 		     enum ath10k_debug_mask mask,
+ 		     const char *msg, const char *prefix,
+ 		     const void *buf, size_t len);
++
++/* ========== History init APIs =========== */
++int ath10k_core_reg_access_history_init(struct ath10k *ar, u32 max_entries);
++int ath10k_core_wmi_cmd_history_init(struct ath10k *ar, u32 max_entries);
++int ath10k_core_wmi_event_history_init(struct ath10k *ar, u32 max_entries);
++int ath10k_core_ce_event_history_init(struct ath10k *ar, u32 max_entries);
++
++/* ========== History record APIs =========== */
++void ath10k_record_reg_access(struct ath10k *ar, u32 offset, u32 val,
++			      bool write);
++void ath10k_record_wmi_event(struct ath10k *ar, enum ath10k_wmi_type type,
++			     u32 id, unsigned char *data);
++void ath10k_record_ce_event(struct ath10k *ar,
++			    enum ath10k_ce_event event_type,
++			    int ce_id);
++
++static inline u64 ath10k_core_get_timestamp(void)
++{
++	struct timespec64 ts;
++
++	ktime_get_real_ts64(&ts);
++	return ((u64)ts.tv_sec * 1000000) + (ts.tv_nsec / 1000);
 +}
 +
- int dpu_encoder_vsync_time(struct drm_encoder *drm_enc, ktime_t *wakeup_time)
++static inline int ath10k_core_get_next_idx(atomic_t *index, u32 max_entries)
++{
++	u32 curr_idx;
++
++	curr_idx = atomic_fetch_inc(index);
++	return (curr_idx & (max_entries - 1));
++}
++
+ #else /* CONFIG_ATH10K_DEBUG */
+ 
+ static inline int __ath10k_dbg(struct ath10k *ar,
+@@ -273,6 +305,48 @@ static inline void ath10k_dbg_dump(struct ath10k *ar,
+ 				   const void *buf, size_t len)
  {
- 	struct drm_display_mode *mode;
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h
-index b4913465e602..f492ef0a2b2b 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h
-@@ -85,6 +85,11 @@ void dpu_encoder_trigger_kickoff_pending(struct drm_encoder *encoder);
-  */
- void dpu_encoder_kickoff(struct drm_encoder *encoder);
- 
-+/**
-+ * dpu_encoder_get_linecount - get the current scanline count for this encoder
-+ */
-+int dpu_encoder_get_linecount(struct drm_encoder *encoder);
-+
- /**
-  * dpu_encoder_wakeup_time - get the time of the next vsync
-  */
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index c0a4d4e16d82..db8a461a1786 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -14,6 +14,7 @@
- 
- #include <drm/drm_crtc.h>
- #include <drm/drm_file.h>
-+#include <drm/drm_vblank.h>
- 
- #include "msm_drv.h"
- #include "msm_mmu.h"
-@@ -337,6 +338,11 @@ static void dpu_kms_prepare_commit(struct msm_kms *kms,
- 	if (!kms)
- 		return;
- 
-+	for_each_new_crtc_in_state(state, crtc, crtc_state, i) {
-+		if (crtc_state->mode.crtc_clock)
-+			drm_crtc_vblank_get(crtc);
-+	}
-+
- 	/* Call prepare_commit for all affected encoders */
- 	for_each_new_crtc_in_state(state, crtc, crtc_state, i) {
- 		drm_for_each_encoder_mask(encoder, crtc->dev,
-@@ -389,8 +395,10 @@ static void dpu_kms_complete_commit(struct msm_kms *kms, unsigned crtc_mask)
- 
- 	DPU_ATRACE_BEGIN("kms_complete_commit");
- 
--	for_each_crtc_mask(dpu_kms->dev, crtc, crtc_mask)
-+	for_each_crtc_mask(dpu_kms->dev, crtc, crtc_mask) {
- 		dpu_crtc_complete_commit(crtc);
-+		drm_crtc_vblank_put(crtc);
-+	}
- 
- 	DPU_ATRACE_END("kms_complete_commit");
  }
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index 36d98d4116ca..01734191cd31 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -687,6 +687,7 @@ int msm_crtc_enable_vblank(struct drm_crtc *crtc)
- 	struct msm_kms *kms = priv->kms;
- 	if (!kms)
- 		return -ENXIO;
-+	drm_calc_timestamping_constants(crtc, &crtc->state->adjusted_mode);
- 	DBG("dev=%p, crtc=%u", dev, pipe);
- 	return vblank_ctrl_queue_work(priv, pipe, true);
++
++static inline int ath10k_core_reg_access_history_init(struct ath10k *ar,
++						      u32 max_entries)
++{
++	return 0;
++}
++
++static inline int ath10k_core_wmi_cmd_history_init(struct ath10k *ar,
++						   u32 max_entries)
++{
++	return 0;
++}
++
++static inline int ath10k_core_wmi_event_history_init(struct ath10k *ar,
++						     u32 max_entries)
++{
++	return 0;
++}
++
++static inline int ath10k_core_ce_event_history_init(struct ath10k *ar,
++						    u32 max_entries)
++{
++	return 0;
++}
++
++static inline void ath10k_record_reg_access(struct ath10k *ar, u32 offset,
++					    u32 val, bool write)
++{
++}
++
++static inline void ath10k_record_wmi_event(struct ath10k *ar,
++					   enum ath10k_wmi_type type,
++					   u32 id, unsigned char *data)
++{
++}
++
++static inline void ath10k_record_ce_event(struct ath10k *ar,
++					  enum ath10k_ce_event event_type,
++					  int ce_id)
++{
++}
++
+ #endif /* CONFIG_ATH10K_DEBUG */
+ 
+ /* Avoid calling __ath10k_dbg() if debug_mask is not set and tracing
+diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
+index 1ef5fdb..aa7ee32 100644
+--- a/drivers/net/wireless/ath/ath10k/snoc.c
++++ b/drivers/net/wireless/ath/ath10k/snoc.c
+@@ -473,6 +473,7 @@ static void ath10k_snoc_write32(struct ath10k *ar, u32 offset, u32 value)
+ {
+ 	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
+ 
++	ath10k_record_reg_access(ar, offset, value, true);
+ 	iowrite32(value, ar_snoc->mem + offset);
  }
+ 
+@@ -482,6 +483,7 @@ static u32 ath10k_snoc_read32(struct ath10k *ar, u32 offset)
+ 	u32 val;
+ 
+ 	val = ioread32(ar_snoc->mem + offset);
++	ath10k_record_reg_access(ar, offset, val, false);
+ 
+ 	return val;
+ }
+@@ -1159,6 +1161,7 @@ static irqreturn_t ath10k_snoc_per_engine_handler(int irq, void *arg)
+ 			    ce_id);
+ 		return IRQ_HANDLED;
+ 	}
++	ath10k_record_ce_event(ar, ATH10K_IRQ_TRIGGER, ce_id);
+ 
+ 	ath10k_ce_disable_interrupt(ar, ce_id);
+ 	set_bit(ce_id, ar_snoc->pending_ce_irqs);
+@@ -1175,6 +1178,7 @@ static int ath10k_snoc_napi_poll(struct napi_struct *ctx, int budget)
+ 	int done = 0;
+ 	int ce_id;
+ 
++	ath10k_record_ce_event(ar, ATH10K_NAPI_POLL, 0);
+ 	if (test_bit(ATH10K_FLAG_CRASH_FLUSH, &ar->dev_flags)) {
+ 		napi_complete(ctx);
+ 		return done;
+@@ -1188,8 +1192,12 @@ static int ath10k_snoc_napi_poll(struct napi_struct *ctx, int budget)
+ 
+ 	done = ath10k_htt_txrx_compl_task(ar, budget);
+ 
+-	if (done < budget)
++	if (done < budget) {
+ 		napi_complete(ctx);
++		ath10k_record_ce_event(ar, ATH10K_NAPI_COMPLETE, 0);
++	} else {
++		ath10k_record_ce_event(ar, ATH10K_NAPI_RESCHED, 0);
++	}
+ 
+ 	return done;
+ }
+@@ -1660,6 +1668,11 @@ static int ath10k_snoc_probe(struct platform_device *pdev)
+ 	ar->ce_priv = &ar_snoc->ce;
+ 	msa_size = drv_data->msa_size;
+ 
++	ath10k_core_reg_access_history_init(ar, ATH10K_REG_ACCESS_HISTORY_MAX);
++	ath10k_core_wmi_event_history_init(ar, ATH10K_WMI_EVENT_HISTORY_MAX);
++	ath10k_core_wmi_cmd_history_init(ar, ATH10K_WMI_CMD_HISTORY_MAX);
++	ath10k_core_ce_event_history_init(ar, ATH10K_CE_EVENT_HISTORY_MAX);
++
+ 	ath10k_snoc_quirks_init(ar);
+ 
+ 	ret = ath10k_snoc_resource_init(ar);
+diff --git a/drivers/net/wireless/ath/ath10k/wmi-tlv.c b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+index 932266d..9df5748 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi-tlv.c
++++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+@@ -627,6 +627,7 @@ static void ath10k_wmi_tlv_op_rx(struct ath10k *ar, struct sk_buff *skb)
+ 	if (skb_pull(skb, sizeof(struct wmi_cmd_hdr)) == NULL)
+ 		goto out;
+ 
++	ath10k_record_wmi_event(ar, ATH10K_WMI_EVENT, id, skb->data);
+ 	trace_ath10k_wmi_event(ar, id, skb->data, skb->len);
+ 
+ 	consumed = ath10k_tm_event_wmi(ar, id, skb);
+diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
+index a81a1ab..8ebd05c 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi.c
++++ b/drivers/net/wireless/ath/ath10k/wmi.c
+@@ -1802,6 +1802,15 @@ struct sk_buff *ath10k_wmi_alloc_skb(struct ath10k *ar, u32 len)
+ 
+ static void ath10k_wmi_htc_tx_complete(struct ath10k *ar, struct sk_buff *skb)
+ {
++	struct wmi_cmd_hdr *cmd_hdr;
++	enum wmi_tlv_event_id id;
++
++	cmd_hdr = (struct wmi_cmd_hdr *)skb->data;
++	id = MS(__le32_to_cpu(cmd_hdr->cmd_id), WMI_CMD_HDR_CMD_ID);
++
++	ath10k_record_wmi_event(ar, ATH10K_WMI_TX_COMPL, id,
++				skb->data + sizeof(struct wmi_cmd_hdr));
++
+ 	dev_kfree_skb(skb);
+ }
+ 
+@@ -1912,6 +1921,7 @@ int ath10k_wmi_cmd_send(struct ath10k *ar, struct sk_buff *skb, u32 cmd_id)
+ 
+ 	might_sleep();
+ 
++	ath10k_record_wmi_event(ar, ATH10K_WMI_CMD, cmd_id, skb->data);
+ 	if (cmd_id == WMI_CMD_UNSUPPORTED) {
+ 		ath10k_warn(ar, "wmi command %d is not supported by firmware\n",
+ 			    cmd_id);
 -- 
-2.20.1
+2.7.4
 
