@@ -2,105 +2,110 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2997C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBF0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4C6C2076B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:15:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AB872250E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:16:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596176209;
+	bh=WHR8jRh3qw/PGsoIxzFulqDz9Zu+JVeoIc2MSsUYN/M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rIzf49wBRl7rBLMm9p42hVDOKcM57X0X5CQk5bsGOq36sdsYv//7uYBNUU2hANnZ2
+	 gp9Im7vGD9efpE22CV9ogxWF4wUdBnfdegpzUmbV39im/q64VqDpIZrv155+m6tTiG
+	 iLKu6mG90XsEBUwFcm82yQZngyArwommqwNAbUp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731293AbgGaGP1 (ORCPT
+        id S1731340AbgGaGQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 02:15:27 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8864 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726972AbgGaGP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 02:15:27 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3B32FF126CD88B9C5463;
-        Fri, 31 Jul 2020 14:15:17 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.33) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Fri, 31 Jul 2020
- 14:15:14 +0800
-Subject: Re: [PATCH] drm/amdkfd: Put ACPI table after using it
-To:     Felix Kuehling <felix.kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-CC:     <linux-kernel@vger.kernel.org>
-References: <1595411308-15654-1-git-send-email-guohanjun@huawei.com>
- <443ace32-0860-f823-bc3f-3faafd5da54e@amd.com>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <4d220f68-e259-ee4d-127d-7f9056aa7aa6@huawei.com>
-Date:   Fri, 31 Jul 2020 14:15:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 31 Jul 2020 02:16:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731152AbgGaGQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 02:16:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D272F20663;
+        Fri, 31 Jul 2020 06:16:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596176207;
+        bh=WHR8jRh3qw/PGsoIxzFulqDz9Zu+JVeoIc2MSsUYN/M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OI5lVO20EM3bWyyFImTT9FJvGHHPbgWeedyvuONmw7eQzwK2guodFYtmM8wMtPQo7
+         84E9DviWGEsGT/vuijIg0pZsD91cb3fTYtBZzPAsf09vLA3IFwP3MyIMVuZC5x4YES
+         PRf7eWSVxUIqpW41z3Nb3Tm1G6btg7r5zEwIz+Do=
+Date:   Fri, 31 Jul 2020 08:16:34 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dongdong Yang <contribute.kernel@gmail.com>
+Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        devel@driverdev.osuosl.org, gulinghua@xiaomi.com,
+        tanggeliang@xiaomi.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yangdongdong@xiaomi.com,
+        duhui@xiaomi.com, zhangguoquan@xiaomi.com, fengwei@xiaomi.com,
+        taojun@xiaomi.com, rocking@linux.alibaba.com, huangqiwu@xiaomi.com
+Subject: Re: [PATCH] sched: Provide USF for the portable equipment.
+Message-ID: <20200731061634.GA1508201@kroah.com>
+References: <cover.1596101307.git.yangdongdong@xiaomi.com>
 MIME-Version: 1.0
-In-Reply-To: <443ace32-0860-f823-bc3f-3faafd5da54e@amd.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.179.33]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1596101307.git.yangdongdong@xiaomi.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/31 10:41, Felix Kuehling wrote:
-> Hi Hanjun,
+On Thu, Jul 30, 2020 at 09:35:42PM +0800, Dongdong Yang wrote:
+> From: Dongdong Yang <yangdongdong@xiaomi.com>
 > 
-> Sorry for the late reply.
+> This patch provides USF(User Sensitive Feedback factor)
+> auxiliary cpufreq governor to support high level layer
+> sysfs inodes setting for utils adjustment purpose from
+> the identified scenario on portable equipment.
+> Because the power consumption and UI response are more
+> cared for by portable equipment users. And the "screen
+> off" status stands for no request from the user, however,
+> the kernel is still expected to notify the user in time
+> on modem, network or powerkey events occur. USF provides
+> "sched_usf_non_ux_r" sysfs inode to cut down the utils
+> from user space tasks according to high level scenario.
+> In addition, it usually hints more cpufreq demand that
+> the preemptive counts of the tasks on the cpu burst and
+> over the user expecting completed time such as the ratio
+> sysctl_sched_latency to sysctl_sched_min_granularity
+> on "screen on" status, which more likely with more UI.
+> The sysfs inodes "sched_usf_up_l0_r" and "sched_usf_down_r"
+> have been provided to adjust the utils according to high
+> level identified scenario to alloc the cpufreq in time.
 > 
-> Thank you for the patch and the explanation. This seems to have been
-> broken since the first version of KFD in 2014. See one suggestion inline.
+> Dongdong Yang (1):
+>   sched: Provide USF for portable equipment.
 > 
-> Am 2020-07-22 um 5:48 a.m. schrieb Hanjun Guo:
->> The acpi_get_table() should be coupled with acpi_put_table() if
->> the mapped table is not used at runtime to release the table
->> mapping.
->>
->> In kfd_create_crat_image_acpi(), crat_table is copied to pcrat_image,
->> and in kfd_create_vcrat_image_cpu(), the acpi_table is only used to
->> get the OEM info, so those table mappings need to be release after
->> using it.
->>
->> Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
->> ---
->>   drivers/gpu/drm/amd/amdkfd/kfd_crat.c | 16 +++++++++++-----
->>   1 file changed, 11 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_crat.c b/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
->> index 1009a3b..d378e61 100644
->> --- a/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
->> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
->> @@ -756,6 +756,7 @@ int kfd_create_crat_image_acpi(void **crat_image, size_t *size)
->>   	struct acpi_table_header *crat_table;
->>   	acpi_status status;
->>   	void *pcrat_image;
->> +	int rc = 0;
->>   
->>   	if (!crat_image)
->>   		return -EINVAL;
->> @@ -776,17 +777,21 @@ int kfd_create_crat_image_acpi(void **crat_image, size_t *size)
->>   
->>   	if (ignore_crat) {
->>   		pr_info("CRAT table disabled by module option\n");
-> 
-> We should probably move this check to before we get the CRAT table.
-> There is not point getting and putting it if we're going to ignore it
-> anyway.
-> 
-> Do you want to send an updated patch with that change? Or maybe do it as
-> a 2-patch series?
+>  drivers/staging/Kconfig          |   2 +
+>  drivers/staging/Makefile         |   1 +
+>  drivers/staging/fbsched/Kconfig  |  10 ++
+>  drivers/staging/fbsched/Makefile |   2 +
+>  drivers/staging/fbsched/usf.c    | 351 +++++++++++++++++++++++++++++++++++++++
+>  kernel/sched/cpufreq_schedutil.c |  11 +-
+>  6 files changed, 376 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/staging/fbsched/Kconfig
+>  create mode 100644 drivers/staging/fbsched/Makefile
+>  create mode 100644 drivers/staging/fbsched/usf.c
 
-I will do it as 2-patch series and send a updated patch set.
+For new staging drivers/code, we need a TODO file that lists what
+remains to be done on the code to get it out of staging/
 
-Thanks
-Hanjun
+I don't see any good reason why this has to go to staging now, what
+prevents it from being merged to the "real" part of the kernel today?
 
+thanks,
+
+greg k-h
