@@ -2,187 +2,123 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B56BEC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9485622B40
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4BEE21744
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596210939;
-	bh=J9+siusKNMgqbpz/tIFkjD2Z8De5SqX8GkR1C4h8230=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=I9s3j8KCLgf+uLQGHpxmC+/EI+WhMBUx6pgJRtX3ShTi328CJUc7Mq4DA/W/gzZpP
-	 s4/ibHn/8tnTDkdf/NyiM+xSwnrq1OuI9TcoQqM59G8Y14QvxpogjdZYy5V5GyqmrF
-	 eeF6f4NV1SS8LksiO3CnpKOa1Qf8a6Evc07ahpis=
+	s=default; t=1596211006;
+	bh=4CWZD/ij8R9BtKjL6ojaDh9IWKcn3i0oTsH8uF6Etcg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=HSetjuNQ/8IuyJ5uUhMQpVqGhHLeh1hfSKvGRa6wuR+WwajW19uRN39IBcIKw/iHO
+	 MU/DVa/k0Y3Yib6+2XTMsfrkKIgZjUP9Y1WBtiYw6+bPSXoo0yViI5cEeVFmVkHymc
+	 geUPzZn6lEsFNtli12fYo0WzRJZZtYHBwFpg6nws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387523AbgGaPzh (ORCPT
+        id S2387566AbgGaP4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 11:55:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55830 "EHLO mail.kernel.org"
+        Fri, 31 Jul 2020 11:56:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726841AbgGaPzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 11:55:37 -0400
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+        id S1727997AbgGaP4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 11:56:39 -0400
+Received: from [192.168.1.28] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 724DD22B40;
-        Fri, 31 Jul 2020 15:55:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69AF121744;
+        Fri, 31 Jul 2020 15:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596210936;
-        bh=J9+siusKNMgqbpz/tIFkjD2Z8De5SqX8GkR1C4h8230=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dGIUQu1jbUUxwH5rNXVUSew0VW7xzb9z6seOM7jOMSR8GUvwf7QuYFyTKi8qefnzh
-         dcfB3/3KbfK0b4Y0V+NZDUf6Kvcrin+hg9mdRhQ/vYzVpaAp3uw0Ww0nO+KcUMKbBo
-         TNm9aew2dfnUY0dckAe9MYp/u3on5mWvf7WNbII8=
-Received: by mail-ed1-f49.google.com with SMTP id c15so13013092edj.3;
-        Fri, 31 Jul 2020 08:55:36 -0700 (PDT)
-X-Gm-Message-State: AOAM530+Rr7NBN6+CZlJAY9tIo/IM6gyQwuYBOSAVIbjDCpuq8sETQK6
-        /3nfzqo7IE7egRpKkPUldq5fqy0XjSL0/UtkqA==
-X-Google-Smtp-Source: ABdhPJyvCgp3yv2IchWxBuw3fUcmJODItQC77/XdI2+/aZn3y49etTW8MtFbnkKPj7yQQ025yPQkWTWNgUEveNWJWTw=
-X-Received: by 2002:a50:9e6f:: with SMTP id z102mr4608208ede.300.1596210935010;
- Fri, 31 Jul 2020 08:55:35 -0700 (PDT)
+        s=default; t=1596210998;
+        bh=4CWZD/ij8R9BtKjL6ojaDh9IWKcn3i0oTsH8uF6Etcg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=nUo3oE4daWv+9MG3HCriloKP+3+xPbi6h7iVXoD61kymD6lefYhLViXKY2lWlQEEB
+         ZFFUL5xJSdaTSmZ9uZQ7r/ntKdg+mptLHcdIyAWsjjGgXHaMvC2G0HQnQ79jZJnKHi
+         PMGKc9Qhr6sz2gBNzBLDNPbGT9k95EDtX0bb0IKU=
+Subject: Re: clocksource: dw_apb_timer: commit 6d2e16a3181b broke Arria10
+ platform
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        "Nguyen, Dinh" <dinh.nguyen@intel.com>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <SA0PR11MB4590258490EB0DD191778F04E4710@SA0PR11MB4590.namprd11.prod.outlook.com>
+ <20200731064858.ts22p4i5dqcdqpaj@mobilestation>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <5304f0ca-e098-a9f0-9f72-1485a286d93a@kernel.org>
+Date:   Fri, 31 Jul 2020 10:56:37 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1596010690-13178-1-git-send-email-neal.liu@mediatek.com>
- <1596010690-13178-3-git-send-email-neal.liu@mediatek.com> <CAAOTY_9HXv+OsSRF7P9=cRy9AYZ0vwffgo3Kc8V=qQ6ce90uJw@mail.gmail.com>
- <1596163970.3932.24.camel@mtkswgap22>
-In-Reply-To: <1596163970.3932.24.camel@mtkswgap22>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Fri, 31 Jul 2020 23:55:23 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_-3vs9VdAs3RHc_-MQJ7HbmqXKgULC_H0grr3q7oNDxMQ@mail.gmail.com>
-Message-ID: <CAAOTY_-3vs9VdAs3RHc_-MQJ7HbmqXKgULC_H0grr3q7oNDxMQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] soc: mediatek: add mtk-devapc driver
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200731064858.ts22p4i5dqcdqpaj@mobilestation>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Neal:
+Hi Serge,
 
-Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8831=E6=97=
-=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=8810:52=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hi Chun-Kuang,
->
-> On Fri, 2020-07-31 at 00:14 +0800, Chun-Kuang Hu wrote:
-> > Hi, Neal:
-> >
-> > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8829=E6=
-=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:29=E5=AF=AB=E9=81=93=EF=BC=9A
-> > >
-> > > MediaTek bus fabric provides TrustZone security support and data
-> > > protection to prevent slaves from being accessed by unexpected
-> > > masters.
-> > > The security violation is logged and sent to the processor for
-> > > further analysis or countermeasures.
-> > >
-> > > Any occurrence of security violation would raise an interrupt, and
-> > > it will be handled by mtk-devapc driver. The violation
-> > > information is printed in order to find the murderer.
-> > >
-> > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
-> > > ---
-> >
-> > [snip]
-> >
-> > > +
-> > > +/*
-> > > + * devapc_extract_vio_dbg - extract full violation information after=
- doing
-> > > + *                          shift mechanism.
-> > > + */
-> > > +static void devapc_extract_vio_dbg(struct mtk_devapc_context *ctx)
-> > > +{
-> > > +       const struct mtk_devapc_vio_dbgs *vio_dbgs;
-> > > +       struct mtk_devapc_vio_info *vio_info;
-> > > +       void __iomem *vio_dbg0_reg;
-> > > +       void __iomem *vio_dbg1_reg;
-> > > +       u32 dbg0;
-> > > +
-> > > +       vio_dbg0_reg =3D ctx->devapc_pd_base + ctx->offset->vio_dbg0;
-> > > +       vio_dbg1_reg =3D ctx->devapc_pd_base + ctx->offset->vio_dbg1;
-> > > +
-> > > +       vio_dbgs =3D ctx->vio_dbgs;
-> > > +       vio_info =3D ctx->vio_info;
-> > > +
-> > > +       /* Starts to extract violation information */
-> > > +       dbg0 =3D readl(vio_dbg0_reg);
-> > > +       vio_info->vio_addr =3D readl(vio_dbg1_reg);
-> > > +
-> > > +       vio_info->master_id =3D (dbg0 & vio_dbgs->mstid.mask) >>
-> > > +                             vio_dbgs->mstid.start;
-> > > +       vio_info->domain_id =3D (dbg0 & vio_dbgs->dmnid.mask) >>
-> > > +                             vio_dbgs->dmnid.start;
-> > > +       vio_info->write =3D ((dbg0 & vio_dbgs->vio_w.mask) >>
-> > > +                           vio_dbgs->vio_w.start) =3D=3D 1;
-> > > +       vio_info->read =3D ((dbg0 & vio_dbgs->vio_r.mask) >>
-> > > +                         vio_dbgs->vio_r.start) =3D=3D 1;
-> > > +       vio_info->vio_addr_high =3D (dbg0 & vio_dbgs->addr_h.mask) >>
-> > > +                                 vio_dbgs->addr_h.start;
-> >
-> >
-> > I would like to define the type of ctx->vio_info to be
-> >
-> > struct mtk_devapc_vio_dbgs {
-> >     u32 mstid:16;
-> >     u32 dmnid:6;
-> >     u32 vio_w:1;
-> >     u32 vio_r:1;
-> >     u32 addr_h:4;
-> >     u32 resv:4;
-> > };
-> >
-> > so the code would like the simple way
-> >
-> > ctx->vio_info =3D (struct mtk_devapc_vio_dbgs)readl(vio_dbg1_reg);
-> >
->
-> This idea looks great! Is there any possible to pass the bit layout by
-> DT data, and still make this operation simple?
-> Why am I asking this question is because this bit layout is platform
-> dependent.
+On 7/31/20 1:48 AM, Serge Semin wrote:
+> Hello Dinh,
+> It must be something wrong with your timer2 and timer3 declared in the Arria10
+> dts because the patch didn't change anything for the first two timers (timer0 and
+> timer1). It just permits to register all DW APB Timers found in dts.
+> 
+> If those timers are broken, then you should have disabled them in the dts in the
+> first place. If they are normal, then you need to investigate further why do
+> they cause the kernel panic.
+> 
 
-I doubt these info would be in a single 32-bits register for all
-future SoC. If they are not in single 32-bits register, you may create
-a vio_dbgs_type in DT data, and the code may be
+Indeed, the dts reg entry for timer3 was broken. Thanks alot for
+exposing the issue. Apologies for the noise.
 
-if (ctx->vio_dbgs_type =3D=3D VIO_DBGS_TYPE_MTxxxx) {
-    ctx->vio_info =3D (struct mtk_devapc_vio_dbgs)readl(vio_dbg1_reg);
-} else if (ctx->vio_dbgs_type =3D=3D VIO_DBGS_TYPE_MTyyyy) {
-    ctx->vio_info->mstid =3D readl(vio_mstid_reg);
-    ctx->vio_info->dmnid =3D readl(vio_dmnid_reg);
-    ctx->vio_info->vio_w =3D readl(vio_vio_w_reg);
-    ctx->vio_info->vio_r =3D readl(vio_vio_r_reg);
-}
-
-I think we need not to consider how the future would be. Once the
-second SoC driver is upstreaming, we could find out the best solution
-for it.
-
-Regards,
-Chun-Kuang.
-
->
-> > Regards,
-> > Chun-Kuang.
-> >
-> > > +
-> > > +       devapc_vio_info_print(ctx);
-> > > +}
-> > > +
->
+Dinh
