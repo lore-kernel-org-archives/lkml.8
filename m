@@ -2,118 +2,110 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22810C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F33BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0988A2087C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18A8E22B3F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:37:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EJjCRbjg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UHl+j2V9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387825AbgGaSfa (ORCPT
+        id S2387809AbgGaShu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 14:35:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60288 "EHLO
+        Fri, 31 Jul 2020 14:37:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730040AbgGaSfa (ORCPT
+        with ESMTP id S1730040AbgGaSht (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 14:35:30 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D25CDC061574;
-        Fri, 31 Jul 2020 11:35:29 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id w2so16459441pgg.10;
-        Fri, 31 Jul 2020 11:35:29 -0700 (PDT)
+        Fri, 31 Jul 2020 14:37:49 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D922C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 11:37:49 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id r9so21616832qtp.7
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 11:37:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9uPbLYEc3IE3xvGVWE7eVveI/WSw9PvenumczRVCi68=;
-        b=EJjCRbjgAzAp7WoiBsch0EchH5/33DCllbcP1OKa3mz0aFYizO8yiFYmiMGqevRSFw
-         di49dpI3OfdTe8cCvbBJz5DI5IhU71Og8X6/1UsJM2b9+qZ1XOkO1uIzxU9cWSv1QenN
-         BqzA2IYjwJvIoNaBARlRr1HtTxFkLfx3GmclbnTLQjoVlBJy4hFRIxR7yg4RtF00CCyw
-         LtOx4R5Rv49Q+/1gVc9kk4mv+mhVMX3N/l6jK4m8MEQsa9+6IDTSOWjdhNeCvh/q9fvM
-         G3Cgz/Bxbj757gysNZMXrpQ16zbt8fh/Imx7h1TK7RGMzepyEeykpezXSYwI8jTLl4RP
-         M60w==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=xWSYjHc+nNdSzqwJCR0Bklwg1NIcyWlbe0Z3kPyxnWY=;
+        b=UHl+j2V9dhsDIpXllhTd7jR0aoK7gz3zEDu2e8D2wo87p2jNh2PEv05B77btBa2WHg
+         t4q9x8YrBGZ9mWVt2w/JAycC+YM363ctKxR6EZAiLJ1H2iARbDjGX7llw1Nc+VeYE9es
+         yLcU/z3RRBx0nUqSGNv5//jg5qgnMt5Wu8m3R/7GIOqQxw0kKjBTswm1QjKpSO78MsPD
+         3QPrOmOcbwtKQa5BO4IsGOI0g/U7+2GEkC1glS9jR40LCLfy1gPodeZY8yYY8H+aPQMA
+         RSRRVYFCS/Ib7J0kJ1dmF/hxt8HVvPuyhMZglgFrgZH3/I5FkvLkG/kOCu9yAgBrbpJl
+         xHlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9uPbLYEc3IE3xvGVWE7eVveI/WSw9PvenumczRVCi68=;
-        b=TBn2KetnWrRM4sdrNMzmMDWtyHKW6Ux0L09LlUMfCDDgcGE87loOuhqDVTEMpJWACh
-         6lIuUCcPJGMYfFaBTVKD+zbRV1sbYkw6UkRE4NMS3w609r5/dvh5suY97F3dzMUIrH42
-         5d7hDIO/mZWqCNqXFomrw4JeWcj5HO5oHSpq8M6xCW3HGGCt71Zm9ClRpldActMTs3aE
-         W0qq0yrz51+lQIWSNDWTaCyAegnQPu0Z8PF5qjyeopFPjOtax8EnXiTLwo0CGCwdQoKn
-         EC8kYm3rJT+C18uJIGBnXvxD+harD5sFdQipk41rbs/Q6lxbzVOGFtps89/c/seL1S/j
-         AnkA==
-X-Gm-Message-State: AOAM532/1SZSzOgYKaq+EfhIIBdaS+E0JOATac4qbS0kHVTxLxh2f1sL
-        BNBmNRHcCQC6RJOUOmuJBLrn5uMyHvuwEfr2xZ0=
-X-Google-Smtp-Source: ABdhPJzyUPSRBxW207ilij7va2l3+pEgmV0Eo+vJRDpZefHXSYnAxLeyl5A9w/nUfeo4J3X/2drjcQ4habfC0HyaPgE=
-X-Received: by 2002:a63:a05f:: with SMTP id u31mr4876597pgn.4.1596220529070;
- Fri, 31 Jul 2020 11:35:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200731164853.3020946-1-campello@chromium.org> <20200731104555.v3.3.Idbfcd2e92d2fd89b6ed2e83211bd3e6c06852c33@changeid>
-In-Reply-To: <20200731104555.v3.3.Idbfcd2e92d2fd89b6ed2e83211bd3e6c06852c33@changeid>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 31 Jul 2020 21:35:12 +0300
-Message-ID: <CAHp75Vd=fU9O19DGjBGOcf3im_MVz4rAasTB87KgAfkRA-uMgA@mail.gmail.com>
-Subject: Re: [PATCH v3 03/15] iio: sx9310: Fix irq handling
-To:     Daniel Campello <campello@chromium.org>
-Cc:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-iio <linux-iio@vger.kernel.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=xWSYjHc+nNdSzqwJCR0Bklwg1NIcyWlbe0Z3kPyxnWY=;
+        b=Tv6wYv0GMpJEi8TP3y5qLTX0saI4gwqkH/Xud4L2YbTOaOn+H1XlLddGaTliKcwgcK
+         nYGrs6HbjsmRG0YGhpFiYIFDiqvXG5yiAs2pwty+HAxGm5NqjLI/z0dIkgiFIscQ/0aI
+         EGyPhhrkzUzTuTjH9q+2eXTyLnVYAlZCVaxtkclh9uBLa0ouvO5i8EOk5WJZ7SdBVDVm
+         /74ljA68wgSfcO7mz+3vnzlt/X8GoVadiQvUY0GUeKnbs6qkTcydGiBjATVvnh3+x/fL
+         +0Y4aEMtlVM1sgJWwPP9wb/WQHHO9b5otEJkoHak9tKv0oN6eUjb4xfY7lWc/0CB9BZa
+         6FfA==
+X-Gm-Message-State: AOAM531PMvMsXG3Irgkt2reuNOceIZlQDu7YuugzHgLIVcceNPuqbaHz
+        cA8TMxUNGDOo414oU3Z5FBneglPBaJBHOEY=
+X-Google-Smtp-Source: ABdhPJwXJL3gk9kvQMJJpLmkcSGCU6nZqceKkw9xlltDxuzwPaAHb7crDooksHey6e2zSNoOpkyE2MgqTt+x1Wk=
+X-Received: by 2002:a0c:d44e:: with SMTP id r14mr5459448qvh.105.1596220668284;
+ Fri, 31 Jul 2020 11:37:48 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 14:37:42 -0400
+Message-Id: <20200731183745.1669355-1-ckennelly@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+Subject: [PATCH 0/2 v2] Selecting Load Addresses According to p_align
+From:   Chris Kennelly <ckennelly@google.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Song Liu <songliubraving@fb.com>
+Cc:     David Rientjes <rientjes@google.com>,
+        Ian Rogers <irogers@google.com>,
+        Hugh Dickens <hughd@google.com>,
+        Andrew Morton <akpm@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chris Kennelly <ckennelly@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 7:49 PM Daniel Campello <campello@chromium.org> wrote:
->
-> Fixes enable/disable irq handling at various points. The driver needs to
-> only enable/disable irqs if there is an actual irq handler installed.
+The current ELF loading mechancism provides page-aligned mappings.  This
+can lead to the program being loaded in a way unsuitable for
+file-backed, transparent huge pages when handling PIE executables.
 
-...
+While specifying -z,max-page-size=0x200000 to the linker will generate
+suitably aligned segments for huge pages on x86_64, the executable needs
+to be loaded at a suitably aligned address as well.  This alignment
+requires the binary's cooperation, as distinct segments need to be
+appropriately paddded to be eligible for THP.
 
->  static int sx9310_enable_irq(struct sx9310_data *data, unsigned int irq)
->  {
-> -       return regmap_update_bits(data->regmap, SX9310_REG_IRQ_MSK, irq, irq);
-> +       if (data->client->irq)
-> +               return regmap_update_bits(data->regmap, SX9310_REG_IRQ_MSK, irq,
-> +                                         irq);
-> +       return 0;
+For binaries built with increased alignment, this limits the number of
+bits usable for ASLR, but provides some randomization over using fixed
+load addresses/non-PIE binaries.
 
-Wouldn't it be better to insert rather
-if (!irq)
-  return 0;
-than disrupting the entire function?
+Changes V1 -> V2:
+* Added test
 
->  }
->
->  static int sx9310_disable_irq(struct sx9310_data *data, unsigned int irq)
->  {
-> -       return regmap_update_bits(data->regmap, SX9310_REG_IRQ_MSK, irq, 0);
-> +       if (data->client->irq)
-> +               return regmap_update_bits(data->regmap, SX9310_REG_IRQ_MSK, irq,
-> +                                         0);
-> +       return 0;
+Chris Kennelly (2):
+  fs/binfmt_elf: Use PT_LOAD p_align values for suitable start address.
+  Add self-test for verifying load alignment.
 
-Ditto.
-
->  }
-
-
+ fs/binfmt_elf.c                             | 24 ++++++++
+ tools/testing/selftests/exec/.gitignore     |  1 +
+ tools/testing/selftests/exec/Makefile       |  9 ++-
+ tools/testing/selftests/exec/load_address.c | 68 +++++++++++++++++++++
+ 4 files changed, 100 insertions(+), 2 deletions(-)
+ create mode 100644 tools/testing/selftests/exec/load_address.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.28.0.163.g6104cc2f0b6-goog
+
