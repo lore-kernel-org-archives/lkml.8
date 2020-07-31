@@ -2,147 +2,90 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890F7C433EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA49C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B26B2074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:16:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596215807;
-	bh=2BYf3Q+EO9/vMl+5RyVl4Wpb9PJrGPS+ZU4ojsbRjmM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=CZ/NO2N3+rt277s7IWVtxT+E0tC+01GkKffNFpsiHFEByZK0JOs/y6XtxHyROcEeN
-	 z7QmfxOmpPVyZuG9GkOQar9FfPY7ytsV/7VunhGOHco8IuERrA/Zbzmf3TBuhV0+2s
-	 fiu09RGZ77R1GM6sfdukIWL0n5VTml2ZXjhaIcyU=
+	by mail.kernel.org (Postfix) with ESMTP id 504B02074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387648AbgGaRQq (ORCPT
+        id S2387683AbgGaRRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 13:16:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387609AbgGaRQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 13:16:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8F162074B;
-        Fri, 31 Jul 2020 17:16:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596215803;
-        bh=2BYf3Q+EO9/vMl+5RyVl4Wpb9PJrGPS+ZU4ojsbRjmM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Tt92Wa9bQDxv7PPdLUiAIawuRuQJFCz5q+SpiQ7YS4012Pq84j6dj+tS3VY4BbhJh
-         WCiOD3s+MGWio2NrREAhbdlLvXUAvos0fAW0LYSVkX5P2Xg8Wlc/OfimryWka4t0ar
-         9TDco+jBE4un1h2UVHHj+pL171yTZMn2t0SSHkek=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, jslaby@suse.cz,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 5.4.55
-Date:   Fri, 31 Jul 2020 19:16:28 +0200
-Message-Id: <1596215788160189@kroah.com>
-X-Mailer: git-send-email 2.28.0
+        Fri, 31 Jul 2020 13:17:08 -0400
+Received: from smtprelay0143.hostedemail.com ([216.40.44.143]:49472 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387465AbgGaRRF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 13:17:05 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id CD52E182CED5B;
+        Fri, 31 Jul 2020 17:17:03 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: vein84_180cbba26f85
+X-Filterd-Recvd-Size: 2243
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf01.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 31 Jul 2020 17:17:02 +0000 (UTC)
+Message-ID: <a2b0b4a44901674d46de9f949227f35afd21062b.camel@perches.com>
+Subject: Re: [PATCH] vim: linux-kernel: Increase columns highlighting to 100+
+From:   Joe Perches <joe@perches.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 31 Jul 2020 10:17:01 -0700
+In-Reply-To: <20200731170755.GB1726@embeddedor>
+References: <20200731163301.GA8004@embeddedor>
+         <4e30e2df7bec0fedf1a29f7825fbb4c12593eac9.camel@perches.com>
+         <20200731170755.GB1726@embeddedor>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm announcing the release of the 5.4.55 kernel.
+On Fri, 2020-07-31 at 12:07 -0500, Gustavo A. R. Silva wrote:
+> On Fri, Jul 31, 2020 at 09:35:42AM -0700, Joe Perches wrote:
+> > On Fri, 2020-07-31 at 11:33 -0500, Gustavo A. R. Silva wrote:
+> > > Increase columns highlighting to 100+ once the 80-column warning has
+> > > been deprecated in the Linux kernel[1].
+> > > 
+> > > [1] commit bdc48fa11e46 ("checkpatch/coding-style: deprecate 80-column warning")
+> > > 
+> > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > > ---
+> > >  plugin/linuxsty.vim | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/plugin/linuxsty.vim b/plugin/linuxsty.vim
+> > > index 6f7e331..c42ce72 100644
+> > > --- a/plugin/linuxsty.vim
+> > > +++ b/plugin/linuxsty.vim
+> > > @@ -62,7 +62,7 @@ function s:LinuxFormatting()
+> > >      setlocal tabstop=8
+> > >      setlocal shiftwidth=8
+> > >      setlocal softtabstop=8
+> > > -    setlocal textwidth=80
+> > > +    setlocal textwidth=100
+> > 
+> > This is not a good change.
+> > 80 columns is still _preferred_.
+> > 
+> 
+> Now that you mention that, I have mixed feelings about this.
+> Let's see if we can get more opinions...
 
-All users of the 5.4 kernel series must upgrade.
+I am not a vim user, but maybe remove this line
+altogether and add something like
 
-The updated 5.4.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.4.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+	setlocal colorcolumn=80,100
 
-thanks,
+and let people make their own wrapping decisions.
 
-greg k-h
-
-------------
-
- Makefile                                       |    2 -
- drivers/base/power/wakeup.c                    |    3 ++
- drivers/base/regmap/regmap-debugfs.c           |    6 +++++
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c |    2 -
- drivers/net/wan/x25_asy.c                      |   21 ++++++++++++-------
- include/linux/tcp.h                            |    4 ++-
- net/ax25/af_ax25.c                             |   10 +++++++--
- net/core/dev.c                                 |    2 -
- net/core/net-sysfs.c                           |    2 -
- net/core/rtnetlink.c                           |    3 +-
- net/core/sock_reuseport.c                      |    1 
- net/ipv4/tcp_input.c                           |   11 +++++-----
- net/ipv4/tcp_output.c                          |   13 +++++++-----
- net/ipv4/udp.c                                 |   17 +++++++++------
- net/ipv6/ip6_gre.c                             |   11 +++++-----
- net/ipv6/udp.c                                 |   17 +++++++++------
- net/qrtr/qrtr.c                                |    1 
- net/rxrpc/recvmsg.c                            |    2 -
- net/rxrpc/sendmsg.c                            |    2 -
- net/sctp/stream.c                              |   27 ++++++++++++++++---------
- 20 files changed, 102 insertions(+), 55 deletions(-)
-
-Cong Wang (1):
-      qrtr: orphan socket in qrtr_release()
-
-Dan Carpenter (1):
-      AX.25: Prevent integer overflows in connect and sendmsg
-
-David Howells (1):
-      rxrpc: Fix sendmsg() returning EPIPE due to recvmsg() returning ENODATA
-
-Greg Kroah-Hartman (1):
-      Linux 5.4.55
-
-Kuniyuki Iwashima (2):
-      udp: Copy has_conns in reuseport_grow().
-      udp: Improve load balancing for SO_REUSEPORT.
-
-Miaohe Lin (1):
-      net: udp: Fix wrong clean up for IS_UDPLITE macro
-
-Peilin Ye (2):
-      AX.25: Fix out-of-bounds read in ax25_connect()
-      AX.25: Prevent out-of-bounds read in ax25_sendmsg()
-
-Peng Fan (1):
-      regmap: debugfs: check count when read regmap file
-
-Subash Abhinov Kasiviswanathan (1):
-      dev: Defer free of skbs in flush_backlog
-
-Vladimir Oltean (1):
-      Revert "dpaa_eth: fix usage as DSA master, try 3"
-
-Wei Yongjun (1):
-      ip6_gre: fix null-ptr-deref in ip6gre_init_net()
-
-Weilong Chen (1):
-      rtnetlink: Fix memory(net_device) leak when ->newlink fails
-
-Xie He (1):
-      drivers/net/wan/x25_asy: Fix to make it work
-
-Xin Long (2):
-      sctp: shrink stream outq only when new outcnt < old outcnt
-      sctp: shrink stream outq when fails to do addstream reconf
-
-Xiongfeng Wang (1):
-      net-sysfs: add a newline when printing 'tx_timeout' by sysfs
-
-Yuchung Cheng (1):
-      tcp: allow at most one TLP probe per flight
-
-zhuguangqing (1):
-      PM: wakeup: Show statistics for deleted wakeup sources again
 
