@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FAAC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 890F7C433EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9288422B3F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B26B2074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596215821;
-	bh=dBNEMUtIH70fVNuw0kw9ztDoatireefNByLGYKZ+TcQ=;
+	s=default; t=1596215807;
+	bh=2BYf3Q+EO9/vMl+5RyVl4Wpb9PJrGPS+ZU4ojsbRjmM=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=UIF6vaGJNnj2pKP6ezxRC6QY/hF1x3jIFsDkVMLhZWPV54AsuSOeYngKpkzG+sQbp
-	 YkYKh33UrtdzzLszqulrgDRq8e1aKnEAtqahMqQ6OD9jUe/OD2SIaO28BEaYL/mth4
-	 vOY70yKP71/CyNTwBZCHXyAHnMYyYkVtLdjO8Bko=
+	b=CZ/NO2N3+rt277s7IWVtxT+E0tC+01GkKffNFpsiHFEByZK0JOs/y6XtxHyROcEeN
+	 z7QmfxOmpPVyZuG9GkOQar9FfPY7ytsV/7VunhGOHco8IuERrA/Zbzmf3TBuhV0+2s
+	 fiu09RGZ77R1GM6sfdukIWL0n5VTml2ZXjhaIcyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387673AbgGaRRA (ORCPT
+        id S2387648AbgGaRQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 13:17:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35366 "EHLO mail.kernel.org"
+        Fri, 31 Jul 2020 13:16:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387663AbgGaRQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 13:16:55 -0400
+        id S2387609AbgGaRQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 13:16:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C81722CBE;
-        Fri, 31 Jul 2020 17:16:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8F162074B;
+        Fri, 31 Jul 2020 17:16:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596215814;
-        bh=dBNEMUtIH70fVNuw0kw9ztDoatireefNByLGYKZ+TcQ=;
+        s=default; t=1596215803;
+        bh=2BYf3Q+EO9/vMl+5RyVl4Wpb9PJrGPS+ZU4ojsbRjmM=;
         h=From:To:Cc:Subject:Date:From;
-        b=k3RXhdQ1+HqYrTJVSvUm0KjVSi/URGoJhUB/M/Pk79REKLHMPXuQhy+tFG3RvlCfI
-         iD/uG+wFUtKVYIplzsZ8vQOR1+fb8+EhCVt7Tl+2dMoB/9oo0NaPVvlVL3p9CfFmDU
-         twNasyq1k+82b0vbcUahA2weI9Apepe5ko4YXeOw=
+        b=Tt92Wa9bQDxv7PPdLUiAIawuRuQJFCz5q+SpiQ7YS4012Pq84j6dj+tS3VY4BbhJh
+         WCiOD3s+MGWio2NrREAhbdlLvXUAvos0fAW0LYSVkX5P2Xg8Wlc/OfimryWka4t0ar
+         9TDco+jBE4un1h2UVHHj+pL171yTZMn2t0SSHkek=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
         torvalds@linux-foundation.org, stable@vger.kernel.org
 Cc:     lwn@lwn.net, jslaby@suse.cz,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 5.7.12
-Date:   Fri, 31 Jul 2020 19:16:36 +0200
-Message-Id: <1596215796117118@kroah.com>
+Subject: Linux 5.4.55
+Date:   Fri, 31 Jul 2020 19:16:28 +0200
+Message-Id: <1596215788160189@kroah.com>
 X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -55,12 +55,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm announcing the release of the 5.7.12 kernel.
+I'm announcing the release of the 5.4.55 kernel.
 
-All users of the 5.7 kernel series must upgrade.
+All users of the 5.4 kernel series must upgrade.
 
-The updated 5.7.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.7.y
+The updated 5.4.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.4.y
 and can be browsed at the normal kernel.org git web browser:
 	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
@@ -70,28 +70,27 @@ greg k-h
 
 ------------
 
- Makefile                             |    2 -
- drivers/base/regmap/regmap-debugfs.c |    6 ++++
- drivers/net/wan/x25_asy.c            |   21 ++++++++++-----
- fs/io_uring.c                        |   47 +++++++++++++++++++----------------
- include/linux/tcp.h                  |    4 ++
- net/ax25/af_ax25.c                   |   10 +++++--
- net/core/dev.c                       |    2 -
- net/core/net-sysfs.c                 |    2 -
- net/core/rtnetlink.c                 |    3 +-
- net/core/sock_reuseport.c            |    1 
- net/ipv4/tcp_input.c                 |   11 ++++----
- net/ipv4/tcp_output.c                |   13 +++++----
- net/ipv4/udp.c                       |   17 +++++++-----
- net/ipv6/ip6_gre.c                   |   11 ++++----
- net/ipv6/udp.c                       |   17 +++++++-----
- net/qrtr/qrtr.c                      |    1 
- net/rxrpc/recvmsg.c                  |    2 -
- net/rxrpc/sendmsg.c                  |    2 -
- net/sched/act_ct.c                   |   16 ++++++++++-
- net/sctp/stream.c                    |   27 +++++++++++++-------
- net/tipc/link.c                      |    2 -
- 21 files changed, 139 insertions(+), 78 deletions(-)
+ Makefile                                       |    2 -
+ drivers/base/power/wakeup.c                    |    3 ++
+ drivers/base/regmap/regmap-debugfs.c           |    6 +++++
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c |    2 -
+ drivers/net/wan/x25_asy.c                      |   21 ++++++++++++-------
+ include/linux/tcp.h                            |    4 ++-
+ net/ax25/af_ax25.c                             |   10 +++++++--
+ net/core/dev.c                                 |    2 -
+ net/core/net-sysfs.c                           |    2 -
+ net/core/rtnetlink.c                           |    3 +-
+ net/core/sock_reuseport.c                      |    1 
+ net/ipv4/tcp_input.c                           |   11 +++++-----
+ net/ipv4/tcp_output.c                          |   13 +++++++-----
+ net/ipv4/udp.c                                 |   17 +++++++++------
+ net/ipv6/ip6_gre.c                             |   11 +++++-----
+ net/ipv6/udp.c                                 |   17 +++++++++------
+ net/qrtr/qrtr.c                                |    1 
+ net/rxrpc/recvmsg.c                            |    2 -
+ net/rxrpc/sendmsg.c                            |    2 -
+ net/sctp/stream.c                              |   27 ++++++++++++++++---------
+ 20 files changed, 102 insertions(+), 55 deletions(-)
 
 Cong Wang (1):
       qrtr: orphan socket in qrtr_release()
@@ -103,10 +102,7 @@ David Howells (1):
       rxrpc: Fix sendmsg() returning EPIPE due to recvmsg() returning ENODATA
 
 Greg Kroah-Hartman (1):
-      Linux 5.7.12
-
-Jens Axboe (1):
-      io_uring: ensure double poll additions work with both request types
+      Linux 5.4.55
 
 Kuniyuki Iwashima (2):
       udp: Copy has_conns in reuseport_grow().
@@ -125,8 +121,8 @@ Peng Fan (1):
 Subash Abhinov Kasiviswanathan (1):
       dev: Defer free of skbs in flush_backlog
 
-Tung Nguyen (1):
-      tipc: allow to build NACK message in link timeout function
+Vladimir Oltean (1):
+      Revert "dpaa_eth: fix usage as DSA master, try 3"
 
 Wei Yongjun (1):
       ip6_gre: fix null-ptr-deref in ip6gre_init_net()
@@ -147,6 +143,6 @@ Xiongfeng Wang (1):
 Yuchung Cheng (1):
       tcp: allow at most one TLP probe per flight
 
-wenxu (1):
-      net/sched: act_ct: fix restore the qdisc_skb_cb after defrag
+zhuguangqing (1):
+      PM: wakeup: Show statistics for deleted wakeup sources again
 
