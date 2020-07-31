@@ -2,156 +2,223 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 289E9C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF2DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08CDD22CAD
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A7932067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:45:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KfyuTJ4G"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="jJvACsDT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731768AbgGaHni (ORCPT
+        id S1731727AbgGaHpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 03:43:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44710 "EHLO
+        Fri, 31 Jul 2020 03:45:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731743AbgGaHng (ORCPT
+        with ESMTP id S1731678AbgGaHpp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 03:43:36 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF3FCC061574;
-        Fri, 31 Jul 2020 00:43:35 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f1so26528969wro.2;
-        Fri, 31 Jul 2020 00:43:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WhzbRSw5E6SHkGA8pDiRZO+zNyS5dxi3MpLammaq7UA=;
-        b=KfyuTJ4Gtk4hGsA1Wq1IhjgVPtiQ36dnZa/t6fRXzAwwm6XusZGjrt5Ea7xLBjic6Z
-         u9qpiWc2x9xVKc16FqRRjcnOGajwNWfFR6BLGWdVI3fhZUMrRt8JiBxZJvEtquDid74q
-         Rzvdbp2T0e9TD+0uPaajJreFTbL04Yk0LjcDD30S77y4txCk4NDiwTfuUmL/ah4wwzLp
-         uJWyaKiu3PDXxAIcFwB7ajCKFtwUOCKCfiJCdh61NmS+chD8vx4Cq+bm4UOqujBFWc1m
-         JW+aCvrfEA0k8LOdbNs2T+9c5OlGQ05PMgA+/uH+lAMt7JZVI8UHY8qOy2NGI8aocRuL
-         txng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WhzbRSw5E6SHkGA8pDiRZO+zNyS5dxi3MpLammaq7UA=;
-        b=LISZDs1RAxWUyOaiT3/vGDkjYEov2r0pMX6z9bqnwpbvgSCPB7XirCi3Dm8DAuNgsV
-         vEgsNhB3Hi4+r9i8Id/rs1AfGP8kYmYxJ1nwg12No32QKWSC89ixTMiSQ1JmfF/StNJ8
-         Etm3hoI/Q7EOm7GU/tvlLSsm3D0M3mI+pb4df3p6mj2C/CYLfECcOuz375WBNVZWgwl4
-         nD9CxT8yhNlsmjHorzsl7gWNFJYw7Dt9cDaW4eroWkZQQ9BQKp64huGL51pLZTJ9po0I
-         xduV0gLqACZQQHWH9c4menY1hJyZrqt0uH432+0T/Dqkm84qNVx1jDVWqCJPh7pnsLKi
-         gyyQ==
-X-Gm-Message-State: AOAM530Ld69xUnptwiQE6Twwf89T7hu4iugQy/cd/8AxN7aDRmh/9/NO
-        pFaLqGUeGxjPa76nxM24027DWvy+UncfNw==
-X-Google-Smtp-Source: ABdhPJw4WcKfjS1GuA3Jd1DuXEjmQr39V60Xh485uf1E+Ip8EQDwNnO5vR32lZv2cfV8gs9SsIh9lQ==
-X-Received: by 2002:adf:ea85:: with SMTP id s5mr2451331wrm.55.1596181414749;
-        Fri, 31 Jul 2020 00:43:34 -0700 (PDT)
-Received: from stancioi.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
-        by smtp.gmail.com with ESMTPSA id 129sm12386124wmd.48.2020.07.31.00.43.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 00:43:34 -0700 (PDT)
-From:   Ioana-Ruxandra Stancioi <ioanaruxandra.stancioi@gmail.com>
-To:     david.lebrun@uclouvain.be, davem@davemloft.net,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     elver@google.com, glider@google.com,
-        =?UTF-8?q?Ioana-Ruxandra=20St=C4=83ncioi?= <stancioi@google.com>
-Subject: [PATCH v2] seg6_iptunnel: Refactor seg6_lwt_headroom out of uapi header
-Date:   Fri, 31 Jul 2020 07:40:32 +0000
-Message-Id: <20200731074032.293456-1-ioanaruxandra.stancioi@gmail.com>
-X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+        Fri, 31 Jul 2020 03:45:45 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D91DC061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 00:45:45 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BHzpt30HJz9sTC;
+        Fri, 31 Jul 2020 17:45:42 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1596181543;
+        bh=VEuy/KiA5hGn+AVseo5tlQxiC2CSqodE1h2fmmQal3M=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=jJvACsDTmDI9lVdq3hJFB2iU9IFVxWVFgw7BvuU8CKcAl1HiqJY6XSB2q2N4KwkX3
+         BmQ7CR+Wuo3qFlwQWdKoxvzZkaeEm1C6V4+nf7G0UQH3087jEoxn2FZr7aAvch6PfX
+         Q4OWRPk8cm0Bc2JNsybKxjRngWB8cqymCEhk+ZOhSnq2arAhxgAAZmmDIaFcyvJXXn
+         oKk7qJ3LyrZLM0gFTWhQU3urH8lAgorABFxQ0v0XlVGpXmzyp9mWoHKEoMsGm3iBq5
+         qtOUXpEKj6TIQacq174O4O+EGAsnk0/SYTc4BHO3SDEXKoyo6vNPJXyzLn4WNhiF5Z
+         FYuF2MkMJPdvA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jordan Niethe <jniethe5@gmail.com>
+Subject: Re: [PATCH v4 06/10] powerpc/smp: Generalize 2nd sched domain
+In-Reply-To: <20200727053230.19753-7-srikar@linux.vnet.ibm.com>
+References: <20200727053230.19753-1-srikar@linux.vnet.ibm.com> <20200727053230.19753-7-srikar@linux.vnet.ibm.com>
+Date:   Fri, 31 Jul 2020 17:45:37 +1000
+Message-ID: <875za45dr2.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ioana-Ruxandra Stăncioi <stancioi@google.com>
+Srikar Dronamraju <srikar@linux.vnet.ibm.com> writes:
+> Currently "CACHE" domain happens to be the 2nd sched domain as per
+> powerpc_topology. This domain will collapse if cpumask of l2-cache is
+> same as SMT domain. However we could generalize this domain such that it
+> could mean either be a "CACHE" domain or a "BIGCORE" domain.
+>
+> While setting up the "CACHE" domain, check if shared_cache is already
+> set.
 
-Refactor the function seg6_lwt_headroom out of the seg6_iptunnel.h uapi
-header, because it is only used in seg6_iptunnel.c. Moreover, it is only
-used in the kernel code, as indicated by the "#ifdef __KERNEL__".
+PeterZ asked for some overview of what you're doing and why, you
+responded to his mail, but I was expecting to see that text incorporated
+here somewhere.
 
-Suggested-by: David Miller <davem@davemloft.net>
-Signed-off-by: Ioana-Ruxandra Stăncioi <stancioi@google.com>
----
-v2:
-* Apply David's suggestion and just move the function.
----
- include/uapi/linux/seg6_iptunnel.h | 21 ---------------------
- net/ipv6/seg6_iptunnel.c           | 17 +++++++++++++++++
- 2 files changed, 17 insertions(+), 21 deletions(-)
+He also asked for some comments, which I would also like to see.
 
-diff --git a/include/uapi/linux/seg6_iptunnel.h b/include/uapi/linux/seg6_iptunnel.h
-index 09fb608a35ec..eb815e0d0ac3 100644
---- a/include/uapi/linux/seg6_iptunnel.h
-+++ b/include/uapi/linux/seg6_iptunnel.h
-@@ -37,25 +37,4 @@ enum {
- 	SEG6_IPTUN_MODE_L2ENCAP,
- };
- 
--#ifdef __KERNEL__
--
--static inline size_t seg6_lwt_headroom(struct seg6_iptunnel_encap *tuninfo)
--{
--	int head = 0;
--
--	switch (tuninfo->mode) {
--	case SEG6_IPTUN_MODE_INLINE:
--		break;
--	case SEG6_IPTUN_MODE_ENCAP:
--		head = sizeof(struct ipv6hdr);
--		break;
--	case SEG6_IPTUN_MODE_L2ENCAP:
--		return 0;
--	}
--
--	return ((tuninfo->srh->hdrlen + 1) << 3) + head;
--}
--
--#endif
--
- #endif
-diff --git a/net/ipv6/seg6_iptunnel.c b/net/ipv6/seg6_iptunnel.c
-index e0e9f48ab14f..d8aa9fdc5819 100644
---- a/net/ipv6/seg6_iptunnel.c
-+++ b/net/ipv6/seg6_iptunnel.c
-@@ -27,6 +27,23 @@
- #include <net/seg6_hmac.h>
- #endif
- 
-+static inline size_t seg6_lwt_headroom(struct seg6_iptunnel_encap *tuninfo)
-+{
-+	int head = 0;
-+
-+	switch (tuninfo->mode) {
-+	case SEG6_IPTUN_MODE_INLINE:
-+		break;
-+	case SEG6_IPTUN_MODE_ENCAP:
-+		head = sizeof(struct ipv6hdr);
-+		break;
-+	case SEG6_IPTUN_MODE_L2ENCAP:
-+		return 0;
-+	}
-+
-+	return ((tuninfo->srh->hdrlen + 1) << 3) + head;
-+}
-+
- struct seg6_lwt {
- 	struct dst_cache cache;
- 	struct seg6_iptunnel_encap tuninfo[];
--- 
-2.28.0.163.g6104cc2f0b6-goog
 
+I'm also not clear why we want to rename it to "bigcore", that's not a
+commonly understood term, I don't think it's clear to new readers what
+it means.
+
+Leaving it as the shared cache domain, and having a comment mentioning
+that "bigcores" share a cache, would be clearer I think.
+
+cheers
+
+
+> Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+> Cc: LKML <linux-kernel@vger.kernel.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Anton Blanchard <anton@ozlabs.org>
+> Cc: Oliver O'Halloran <oohall@gmail.com>
+> Cc: Nathan Lynch <nathanl@linux.ibm.com>
+> Cc: Michael Neuling <mikey@neuling.org>
+> Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: Jordan Niethe <jniethe5@gmail.com>
+> Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+> ---
+> Changelog v1 -> v2:
+> 	Moved shared_cache topology fixup to fixup_topology (Gautham)
+>
+>  arch/powerpc/kernel/smp.c | 48 +++++++++++++++++++++++++++------------
+>  1 file changed, 34 insertions(+), 14 deletions(-)
+>
+> diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
+> index d997c7411664..3c5ccf6d2b1c 100644
+> --- a/arch/powerpc/kernel/smp.c
+> +++ b/arch/powerpc/kernel/smp.c
+> @@ -85,6 +85,14 @@ EXPORT_PER_CPU_SYMBOL(cpu_l2_cache_map);
+>  EXPORT_PER_CPU_SYMBOL(cpu_core_map);
+>  EXPORT_SYMBOL_GPL(has_big_cores);
+>  
+> +enum {
+> +#ifdef CONFIG_SCHED_SMT
+> +	smt_idx,
+> +#endif
+> +	bigcore_idx,
+> +	die_idx,
+> +};
+> +
+>  #define MAX_THREAD_LIST_SIZE	8
+>  #define THREAD_GROUP_SHARE_L1   1
+>  struct thread_groups {
+> @@ -851,13 +859,7 @@ static int powerpc_shared_cache_flags(void)
+>   */
+>  static const struct cpumask *shared_cache_mask(int cpu)
+>  {
+> -	if (shared_caches)
+> -		return cpu_l2_cache_mask(cpu);
+> -
+> -	if (has_big_cores)
+> -		return cpu_smallcore_mask(cpu);
+> -
+> -	return per_cpu(cpu_sibling_map, cpu);
+> +	return per_cpu(cpu_l2_cache_map, cpu);
+>  }
+>  
+>  #ifdef CONFIG_SCHED_SMT
+> @@ -867,11 +869,16 @@ static const struct cpumask *smallcore_smt_mask(int cpu)
+>  }
+>  #endif
+>  
+> +static const struct cpumask *cpu_bigcore_mask(int cpu)
+> +{
+> +	return per_cpu(cpu_sibling_map, cpu);
+> +}
+> +
+>  static struct sched_domain_topology_level powerpc_topology[] = {
+>  #ifdef CONFIG_SCHED_SMT
+>  	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
+>  #endif
+> -	{ shared_cache_mask, powerpc_shared_cache_flags, SD_INIT_NAME(CACHE) },
+> +	{ cpu_bigcore_mask, SD_INIT_NAME(BIGCORE) },
+>  	{ cpu_cpu_mask, SD_INIT_NAME(DIE) },
+>  	{ NULL, },
+>  };
+> @@ -1311,7 +1318,6 @@ static void add_cpu_to_masks(int cpu)
+>  void start_secondary(void *unused)
+>  {
+>  	unsigned int cpu = smp_processor_id();
+> -	struct cpumask *(*sibling_mask)(int) = cpu_sibling_mask;
+>  
+>  	mmgrab(&init_mm);
+>  	current->active_mm = &init_mm;
+> @@ -1337,14 +1343,20 @@ void start_secondary(void *unused)
+>  	/* Update topology CPU masks */
+>  	add_cpu_to_masks(cpu);
+>  
+> -	if (has_big_cores)
+> -		sibling_mask = cpu_smallcore_mask;
+>  	/*
+>  	 * Check for any shared caches. Note that this must be done on a
+>  	 * per-core basis because one core in the pair might be disabled.
+>  	 */
+> -	if (!cpumask_equal(cpu_l2_cache_mask(cpu), sibling_mask(cpu)))
+> -		shared_caches = true;
+> +	if (!shared_caches) {
+> +		struct cpumask *(*sibling_mask)(int) = cpu_sibling_mask;
+> +		struct cpumask *mask = cpu_l2_cache_mask(cpu);
+> +
+> +		if (has_big_cores)
+> +			sibling_mask = cpu_smallcore_mask;
+> +
+> +		if (cpumask_weight(mask) > cpumask_weight(sibling_mask(cpu)))
+> +			shared_caches = true;
+> +	}
+>  
+>  	set_numa_node(numa_cpu_lookup_table[cpu]);
+>  	set_numa_mem(local_memory_node(numa_cpu_lookup_table[cpu]));
+> @@ -1375,9 +1387,17 @@ static void fixup_topology(void)
+>  #ifdef CONFIG_SCHED_SMT
+>  	if (has_big_cores) {
+>  		pr_info("Big cores detected but using small core scheduling\n");
+> -		powerpc_topology[0].mask = smallcore_smt_mask;
+> +		powerpc_topology[smt_idx].mask = smallcore_smt_mask;
+>  	}
+>  #endif
+> +	if (shared_caches) {
+> +		pr_info("Using shared cache scheduler topology\n");
+> +		powerpc_topology[bigcore_idx].mask = shared_cache_mask;
+> +		powerpc_topology[bigcore_idx].sd_flags = powerpc_shared_cache_flags;
+> +#ifdef CONFIG_SCHED_DEBUG
+> +		powerpc_topology[bigcore_idx].name = "CACHE";
+> +#endif
+> +	}
+>  }
+>  
+>  void __init smp_cpus_done(unsigned int max_cpus)
+> -- 
+> 2.17.1
