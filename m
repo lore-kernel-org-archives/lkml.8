@@ -2,196 +2,80 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 781A52245C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:15:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YdbRCHnc"
+	by mail.kernel.org (Postfix) with ESMTP id 926F522B3F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731517AbgGaQPd (ORCPT
+        id S1731424AbgGaQT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 12:15:33 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30391 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728779AbgGaQPc (ORCPT
+        Fri, 31 Jul 2020 12:19:28 -0400
+Received: from www62.your-server.de ([213.133.104.62]:34522 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbgGaQT1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 12:15:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596212130;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0OblQAb8zJLLzk+oGwOoJ6OELXYf9Y5L/lBSvmC1zhI=;
-        b=YdbRCHncT+8H20b4VaGEOM2BNN6cRMB+3hhHksxg6XCpX9LSO6XC3SDBq8bbba5YuvhylP
-        Eeb1q1Md20oFwYQaVmDp2M5C+FhWxrtZvMkb3Rh7NANFVP27prWPonfXuEyzeBV015UqM3
-        yuM6ykDEQwLTOsn9SuDHlEb/bjJoiJE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-408-lQGbkDLYOZm-Vu0SnXfsew-1; Fri, 31 Jul 2020 12:15:26 -0400
-X-MC-Unique: lQGbkDLYOZm-Vu0SnXfsew-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5C3C61005510;
-        Fri, 31 Jul 2020 16:15:23 +0000 (UTC)
-Received: from krava (unknown [10.40.192.26])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 27F1C10013D9;
-        Fri, 31 Jul 2020 16:15:19 +0000 (UTC)
-Date:   Fri, 31 Jul 2020 18:15:19 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        David Ahern <dsahern@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Ian Rogers <irogers@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        =?iso-8859-1?Q?Genevi=E8ve?= Bastien <gbastien@versatic.net>,
-        Wang Nan <wangnan0@huawei.com>,
-        Jeremie Galarneau <jgalar@efficios.com>
-Subject: Re: [PATCH 2/6] perf tools: Store clock references for -k/--clockid
- option
-Message-ID: <20200731161519.GB4296@krava>
-References: <20200730213950.1503773-1-jolsa@kernel.org>
- <20200730213950.1503773-3-jolsa@kernel.org>
- <9be7eb7b-4f73-84cc-95e9-e65101b30819@linux.intel.com>
+        Fri, 31 Jul 2020 12:19:27 -0400
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1k1XkY-0002nW-6m; Fri, 31 Jul 2020 18:19:14 +0200
+Received: from [178.196.57.75] (helo=pc-9.home)
+        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1k1XkX-0001k5-8D; Fri, 31 Jul 2020 18:19:13 +0200
+Subject: Re: [PATCH bpf-next v3] Documentation/bpf: Use valid and new links in
+ index.rst
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Tobin C. Harding" <me@tobin.cc>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1596184142-18476-1-git-send-email-yangtiezhu@loongson.cn>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <4217b24b-f33f-52f2-908a-25291e26c65a@iogearbox.net>
+Date:   Fri, 31 Jul 2020 18:19:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9be7eb7b-4f73-84cc-95e9-e65101b30819@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <1596184142-18476-1-git-send-email-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.3/25890/Fri Jul 31 17:04:57 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 06:52:36PM +0300, Alexey Budankov wrote:
+On 7/31/20 10:29 AM, Tiezhu Yang wrote:
+> There exists an error "404 Not Found" when I click the html link of
+> "Documentation/networking/filter.rst" in the BPF documentation [1],
+> fix it.
 > 
-> On 31.07.2020 0:39, Jiri Olsa wrote:
-> > Adding new CLOCK_DATA feature that stores reference times
-> > when -k/--clockid option is specified.
-> > 
-> > It contains clock id and its reference time together with
-> > wall clock time taken at the 'same time', both values are
-> > in nanoseconds.
-> > 
-> > The format of data is as below:
-> > 
-> >   struct {
-> >        u32 version;  /* version = 1 */
-> >        u32 clockid;
-> >        u64 clockid_time_ns;
-> >        u64 wall_clock_ns;
-> >   };
-> > 
-> > This clock reference times will be used in following changes
-> > to display wall clock for perf events.
-> > 
-> > It's available only for recording with clockid specified,
-> > because it's the only case where we can get reference time
-> > to wallclock time. It's can't do that with perf clock yet.
-> > 
-> > Original-patch-by: David Ahern <dsahern@gmail.com>
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  .../Documentation/perf.data-file-format.txt   |  13 ++
-> >  tools/perf/builtin-record.c                   |  41 +++++++
-> >  tools/perf/util/env.h                         |  12 ++
-> >  tools/perf/util/header.c                      | 112 ++++++++++++++++++
-> >  tools/perf/util/header.h                      |   1 +
-> >  5 files changed, 179 insertions(+)
-> > 
-> > diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
-> > index b6472e463284..c484e81987c7 100644
-> > --- a/tools/perf/Documentation/perf.data-file-format.txt
-> > +++ b/tools/perf/Documentation/perf.data-file-format.txt
-> > @@ -389,6 +389,19 @@ struct {
-> >  Example:
-> >   cpu pmu capabilities: branches=32, max_precise=3, pmu_name=icelake
-> >  
-> > +	HEADER_CLOCK_DATA = 29,
-> > +
-> > +	Contains clock id and its reference time together with wall clock
-> > +	time taken at the 'same time', both values are in nanoseconds.
-> > +	The format of data is as below.
-> > +
-> > +struct {
-> > +	u32 version;  /* version = 1 */
-> > +	u32 clockid;
-> > +	u64 clockid_time_ns;
-> > +	u64 wall_clock_ns;
-> > +};
-> > +
-> >  	other bits are reserved and should ignored for now
-> >  	HEADER_FEAT_BITS	= 256,
-> >  
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index 468c669519a6..f8280e721e1a 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -70,6 +70,7 @@
-> >  #include <linux/time64.h>
-> >  #include <linux/zalloc.h>
-> >  #include <linux/bitmap.h>
-> > +#include <sys/time.h>
-> >  
-> >  struct switch_output {
-> >  	bool		 enabled;
-> > @@ -1203,6 +1204,9 @@ static void record__init_features(struct record *rec)
-> >  	if (!(rec->opts.use_clockid && rec->opts.clockid_res_ns))
-> >  		perf_header__clear_feat(&session->header, HEADER_CLOCKID);
-> >  
-> > +	if (!rec->opts.use_clockid)
-> > +		perf_header__clear_feat(&session->header, HEADER_CLOCK_DATA);
-> > +
-> >  	perf_header__clear_feat(&session->header, HEADER_DIR_FORMAT);
-> >  	if (!record__comp_enabled(rec))
-> >  		perf_header__clear_feat(&session->header, HEADER_COMPRESSED);
-> > @@ -1551,6 +1555,40 @@ static int record__setup_sb_evlist(struct record *rec)
-> >  	return 0;
-> >  }
-> >  
-> > +static int record__init_clock(struct record *rec)
-> > +{
-> > +	struct perf_session *session = rec->session;
-> > +	struct timespec ref_clockid;
-> > +	struct timeval ref_tod;
-> > +	u64 ref;
-> > +
-> > +	if (!rec->opts.use_clockid)
-> > +		return 0;
-> > +
-> > +	session->header.env.clock.clockid = rec->opts.clockid;
-> > +
-> > +	if (gettimeofday(&ref_tod, NULL) != 0) {
-> > +		pr_err("gettimeofday failed, cannot set reference time.\n");
-> > +		return -1;
-> > +	}
-> > +
-> > +	if (clock_gettime(rec->opts.clockid, &ref_clockid)) {
-> > +		pr_err("clock_gettime failed, cannot set reference time.\n");
-> > +		return -1;
-> > +	}
+> Additionally, use the new links about "BPF and XDP Reference Guide"
+> and "bpf(2)" to avoid redirects.
 > 
-> It might also want to be implemented in a loop and iteration with minimal
-> time delta is chosen to improve synchronization accuracy and also mitigate
-> possible context switches between gettimeofday() and clock_gettime() calls.
+> [1] https://www.kernel.org/doc/html/latest/bpf/
+> 
+> Fixes: d9b9170a2653 ("docs: bpf: Rename README.rst to index.rst")
+> Fixes: cb3f0d56e153 ("docs: networking: convert filter.txt to ReST")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-right, we could make this more accurate.. I'll post some follow up
-change with that
-
-thanks,
-jirka
-
+That looks better, applied, thanks!
