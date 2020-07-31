@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6096C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC6BC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8228C2177B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F306322D05
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:51:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WpFdItwL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oyEx3PKz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387412AbgGaMvW (ORCPT
+        id S2387483AbgGaMvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 08:51:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35534 "EHLO
+        Fri, 31 Jul 2020 08:51:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730743AbgGaMvR (ORCPT
+        with ESMTP id S1728607AbgGaMvU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 08:51:17 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01E0FC061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 05:51:17 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id h19so32295460ljg.13
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 05:51:16 -0700 (PDT)
+        Fri, 31 Jul 2020 08:51:20 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13F10C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 05:51:20 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id s9so16810983lfs.4
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 05:51:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=hf2m1CaACgkl3i0FS0MjmjyDubimZdTD8G//CB5QIMY=;
-        b=WpFdItwLmE1h/jcPKXj3mRmyaF+TKN3FWkbAvN9i01/b/GBnQQrfqTYPD3KkCl+HER
-         4a3yBnoP8xZ1+beeiIJ9vfMIpoL/Uq0aKjRgj9n3gDAB35PWSD+52cvI8qsbw9MMxnde
-         Ogk+jE2mX/g7LFVkGpGWoSr7sD8Yog+cmIHDyOr5lEBZFzgPS2kU4Fuv8LCiEtAMJi4Y
-         V/MPagzOAVhsCHI/ruYoFU5NgrrL0yQ5Bln8moUVlTyOMw3rTQ7cCkra3lYcATWDogf/
-         jBRFwFf8eSKHB5WoChdB5jL9GonvtcReyID4iSV0w2pPa3lh5NAPcP/9Jan5UaU8YB8u
-         zvVQ==
+        bh=OegNMCy7sd4YzoHmkSxRWimW6gQOJebTWr9iC4Yy25M=;
+        b=oyEx3PKzdJIIXSy691f9LlHCTe0UkaNkvc6+33eXGtZ6qb6/BzMUd7PJCNP7erQpQf
+         rAbeFcLX9M5eRkOqb/GN/c1CmRHOAOEOK5r7MRycTck1COq2fLmWvFmyp7oQFEyT/x5j
+         vuUV/B5Ty8I62qWbpcz3LCBAk4v84PQL8J6u1lcQRA35bAkOUPttVTySf5KsWJikvCwr
+         cNSzJTK0NrEEbCN+LFmTzx7MFTTsUCfkWiQ642E7tVODBEXIKg15u6sHbqtHIJyY9Lyw
+         qo9/SrsLoigzUTcYp3I9HK92bM7fEFwbhQKbNXqoKrKVpqVP8iwYAdA7ReON8q1L41Ki
+         5pFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=hf2m1CaACgkl3i0FS0MjmjyDubimZdTD8G//CB5QIMY=;
-        b=SWK7tQ/XLO+rxbst2xx0TIa6jEH0AytNg73OcifyZ/EqhzwqJ5jh8PlUqtQ2jHvr2b
-         S1jv+Aixyy/wNQ8dDATZ14tWK8uwXYuysssxgn/87U/612qfYwouKPRza5tUJlhRU1r0
-         JwF3hVNNYuE2EOh74pyU+R6yKGBvUdss1fDNysY77caKzZ2iAT7VbXiEq0POHVB1Yxvq
-         Aup4Hf0Ppns7Vqna8ViwzfXd9/u0Gx9Ue+NM1TnlqjN6WTHUYWpzDHDJw7tB59Bgojn6
-         WpR237wzjKPMGG6+gDgqbiaxLGcHbLHDggk9+YXGCjn125TsM8w24CBvg0Cy4sgcX1K5
-         HxnQ==
-X-Gm-Message-State: AOAM533QvwNR5yESyN9I3WE63VQzyl05U1Q090PCY7SJgew0B3qJ9IMJ
-        nG3PhXmh63TLgEqlhHVkq8c=
-X-Google-Smtp-Source: ABdhPJyAr3EgNy6m0bxN5SP4DJ54ompCgY6CBLlI16M8yY4FlCVLhiNPKf3qPH+txZ2PmAgUTW2prA==
-X-Received: by 2002:a2e:9e43:: with SMTP id g3mr1932560ljk.309.1596199875447;
-        Fri, 31 Jul 2020 05:51:15 -0700 (PDT)
+        bh=OegNMCy7sd4YzoHmkSxRWimW6gQOJebTWr9iC4Yy25M=;
+        b=U0c3y4dzubNsVJRAD4YGZD2W8Gd1oymY7ObvzXZYL11WGeC6g2JUb2KgPD3edTkEbH
+         1tnrLCzLeaiatAAge2abyX0uz8ClKiQV/2lEnyeBOJH5K5R/6iA7TI7jpgg/Uc4NNQIA
+         InGAFug5OjNqFzby12lHps7f1T1uvBtfMUpws7YNpa/3DWnw9zTny7or7TrMVEkPDlrW
+         FNsTrazFroTxT4KmeUxeMRMpUuIe5crD5wNx0EUjW6G69KjRokYwC7O7IODCYkplXMXQ
+         N2agbBF8MgDRMxN9vD4J8UreqAbNO0kXQ8RLNQ/rE86zJxuBoCLLnRp8Z9R2BaIHr243
+         WvaA==
+X-Gm-Message-State: AOAM532aAtRyV5I/qSp1ROkPdO3QOH04FTcvB2GgDqpfQ+u6u3HD4n+M
+        /bjNsj9WGfut16LAf42xDUXo2nQSkLk=
+X-Google-Smtp-Source: ABdhPJy9Wqj5+XdlvDNNN+TvI5vrQTMO+5R57ssPhVVE/1YOzNCRvq0qSuixu5RL8ILDT5KUXx2aKg==
+X-Received: by 2002:a05:6512:3a5:: with SMTP id v5mr1944657lfp.138.1596199878393;
+        Fri, 31 Jul 2020 05:51:18 -0700 (PDT)
 Received: from a2klaptop.localdomain ([185.199.97.5])
-        by smtp.gmail.com with ESMTPSA id s2sm1923362lfs.4.2020.07.31.05.51.14
+        by smtp.gmail.com with ESMTPSA id s2sm1923362lfs.4.2020.07.31.05.51.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 05:51:14 -0700 (PDT)
+        Fri, 31 Jul 2020 05:51:17 -0700 (PDT)
 From:   Oleksandr Andrushchenko <andr2000@gmail.com>
 To:     xen-devel@lists.xenproject.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, boris.ostrovsky@oracle.com,
@@ -66,9 +66,9 @@ To:     xen-devel@lists.xenproject.org, dri-devel@lists.freedesktop.org,
 Cc:     sstabellini@kernel.org, dan.carpenter@oracle.com,
         intel-gfx@lists.freedesktop.org,
         Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-Subject: [PATCH 2/6] drm/xen-front: Fix misused IS_ERR_OR_NULL checks
-Date:   Fri, 31 Jul 2020 15:51:05 +0300
-Message-Id: <20200731125109.18666-3-andr2000@gmail.com>
+Subject: [PATCH 4/6] xen: Sync up with the canonical protocol definition in Xen
+Date:   Fri, 31 Jul 2020 15:51:07 +0300
+Message-Id: <20200731125109.18666-5-andr2000@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200731125109.18666-1-andr2000@gmail.com>
 References: <20200731125109.18666-1-andr2000@gmail.com>
@@ -79,104 +79,216 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
 
-The patch c575b7eeb89f: "drm/xen-front: Add support for Xen PV
-display frontend" from Apr 3, 2018, leads to the following static
-checker warning:
+This is the sync up with the canonical definition of the
+display protocol in Xen.
 
-	drivers/gpu/drm/xen/xen_drm_front_gem.c:140 xen_drm_front_gem_create()
-	warn: passing zero to 'ERR_CAST'
+1. Add protocol version as an integer
 
-drivers/gpu/drm/xen/xen_drm_front_gem.c
-   133  struct drm_gem_object *xen_drm_front_gem_create(struct drm_device *dev,
-   134                                                  size_t size)
-   135  {
-   136          struct xen_gem_object *xen_obj;
-   137
-   138          xen_obj = gem_create(dev, size);
-   139          if (IS_ERR_OR_NULL(xen_obj))
-   140                  return ERR_CAST(xen_obj);
+Version string, which is in fact an integer, is hard to handle in the
+code that supports different protocol versions. To simplify that
+also add the version as an integer.
 
-Fix this and the rest of misused places with IS_ERR_OR_NULL in the
-driver.
+2. Pass buffer offset with XENDISPL_OP_DBUF_CREATE
 
-Fixes:  c575b7eeb89f: "drm/xen-front: Add support for Xen PV display frontend"
+There are cases when display data buffer is created with non-zero
+offset to the data start. Handle such cases and provide that offset
+while creating a display buffer.
+
+3. Add XENDISPL_OP_GET_EDID command
+
+Add an optional request for reading Extended Display Identification
+Data (EDID) structure which allows better configuration of the
+display connectors over the configuration set in XenStore.
+With this change connectors may have multiple resolutions defined
+with respect to detailed timing definitions and additional properties
+normally provided by displays.
+
+If this request is not supported by the backend then visible area
+is defined by the relevant XenStore's "resolution" property.
+
+If backend provides extended display identification data (EDID) with
+XENDISPL_OP_GET_EDID request then EDID values must take precedence
+over the resolutions defined in XenStore.
+
+4. Bump protocol version to 2.
 
 Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 ---
- drivers/gpu/drm/xen/xen_drm_front.c     | 4 ++--
- drivers/gpu/drm/xen/xen_drm_front_gem.c | 8 ++++----
- drivers/gpu/drm/xen/xen_drm_front_kms.c | 2 +-
- 3 files changed, 7 insertions(+), 7 deletions(-)
+ include/xen/interface/io/displif.h | 91 +++++++++++++++++++++++++++++-
+ 1 file changed, 88 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/xen/xen_drm_front.c b/drivers/gpu/drm/xen/xen_drm_front.c
-index 3e660fb111b3..88db2726e8ce 100644
---- a/drivers/gpu/drm/xen/xen_drm_front.c
-+++ b/drivers/gpu/drm/xen/xen_drm_front.c
-@@ -400,8 +400,8 @@ static int xen_drm_drv_dumb_create(struct drm_file *filp,
- 	args->size = args->pitch * args->height;
+diff --git a/include/xen/interface/io/displif.h b/include/xen/interface/io/displif.h
+index fdc279dc4a88..c2d900186883 100644
+--- a/include/xen/interface/io/displif.h
++++ b/include/xen/interface/io/displif.h
+@@ -38,7 +38,8 @@
+  *                           Protocol version
+  ******************************************************************************
+  */
+-#define XENDISPL_PROTOCOL_VERSION	"1"
++#define XENDISPL_PROTOCOL_VERSION	"2"
++#define XENDISPL_PROTOCOL_VERSION_INT	 2
  
- 	obj = xen_drm_front_gem_create(dev, args->size);
--	if (IS_ERR_OR_NULL(obj)) {
--		ret = PTR_ERR_OR_ZERO(obj);
-+	if (IS_ERR(obj)) {
-+		ret = PTR_ERR(obj);
- 		goto fail;
- 	}
+ /*
+  ******************************************************************************
+@@ -202,6 +203,9 @@
+  *      Width and height of the connector in pixels separated by
+  *      XENDISPL_RESOLUTION_SEPARATOR. This defines visible area of the
+  *      display.
++ *      If backend provides extended display identification data (EDID) with
++ *      XENDISPL_OP_GET_EDID request then EDID values must take precedence
++ *      over the resolutions defined here.
+  *
+  *------------------ Connector Request Transport Parameters -------------------
+  *
+@@ -349,6 +353,8 @@
+ #define XENDISPL_OP_FB_DETACH		0x13
+ #define XENDISPL_OP_SET_CONFIG		0x14
+ #define XENDISPL_OP_PG_FLIP		0x15
++/* The below command is available in protocol version 2 and above. */
++#define XENDISPL_OP_GET_EDID		0x16
  
-diff --git a/drivers/gpu/drm/xen/xen_drm_front_gem.c b/drivers/gpu/drm/xen/xen_drm_front_gem.c
-index f0b85e094111..4ec8a49241e1 100644
---- a/drivers/gpu/drm/xen/xen_drm_front_gem.c
-+++ b/drivers/gpu/drm/xen/xen_drm_front_gem.c
-@@ -83,7 +83,7 @@ static struct xen_gem_object *gem_create(struct drm_device *dev, size_t size)
+ /*
+  ******************************************************************************
+@@ -377,6 +383,10 @@
+ #define XENDISPL_FIELD_BE_ALLOC		"be-alloc"
+ #define XENDISPL_FIELD_UNIQUE_ID	"unique-id"
  
- 	size = round_up(size, PAGE_SIZE);
- 	xen_obj = gem_create_obj(dev, size);
--	if (IS_ERR_OR_NULL(xen_obj))
-+	if (IS_ERR(xen_obj))
- 		return xen_obj;
++#define XENDISPL_EDID_BLOCK_SIZE	128
++#define XENDISPL_EDID_BLOCK_COUNT	256
++#define XENDISPL_EDID_MAX_SIZE		(XENDISPL_EDID_BLOCK_SIZE * XENDISPL_EDID_BLOCK_COUNT)
++
+ /*
+  ******************************************************************************
+  *                          STATUS RETURN CODES
+@@ -451,7 +461,9 @@
+  * +----------------+----------------+----------------+----------------+
+  * |                           gref_directory                          | 40
+  * +----------------+----------------+----------------+----------------+
+- * |                             reserved                              | 44
++ * |                             data_ofs                              | 44
++ * +----------------+----------------+----------------+----------------+
++ * |                             reserved                              | 48
+  * +----------------+----------------+----------------+----------------+
+  * |/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|
+  * +----------------+----------------+----------------+----------------+
+@@ -494,6 +506,7 @@
+  *   buffer size (buffer_sz) exceeds what can be addressed by this single page,
+  *   then reference to the next page must be supplied (see gref_dir_next_page
+  *   below)
++ * data_ofs - uint32_t, offset of the data in the buffer, octets
+  */
  
- 	if (drm_info->front_info->cfg.be_alloc) {
-@@ -117,7 +117,7 @@ static struct xen_gem_object *gem_create(struct drm_device *dev, size_t size)
- 	 */
- 	xen_obj->num_pages = DIV_ROUND_UP(size, PAGE_SIZE);
- 	xen_obj->pages = drm_gem_get_pages(&xen_obj->base);
--	if (IS_ERR_OR_NULL(xen_obj->pages)) {
-+	if (IS_ERR(xen_obj->pages)) {
- 		ret = PTR_ERR(xen_obj->pages);
- 		xen_obj->pages = NULL;
- 		goto fail;
-@@ -136,7 +136,7 @@ struct drm_gem_object *xen_drm_front_gem_create(struct drm_device *dev,
- 	struct xen_gem_object *xen_obj;
+ #define XENDISPL_DBUF_FLG_REQ_ALLOC	(1 << 0)
+@@ -506,6 +519,7 @@ struct xendispl_dbuf_create_req {
+ 	uint32_t buffer_sz;
+ 	uint32_t flags;
+ 	grant_ref_t gref_directory;
++	uint32_t data_ofs;
+ };
  
- 	xen_obj = gem_create(dev, size);
--	if (IS_ERR_OR_NULL(xen_obj))
-+	if (IS_ERR(xen_obj))
- 		return ERR_CAST(xen_obj);
+ /*
+@@ -731,6 +745,44 @@ struct xendispl_page_flip_req {
+ 	uint64_t fb_cookie;
+ };
  
- 	return &xen_obj->base;
-@@ -194,7 +194,7 @@ xen_drm_front_gem_import_sg_table(struct drm_device *dev,
++/*
++ * Request EDID - request EDID describing current connector:
++ *         0                1                 2               3        octet
++ * +----------------+----------------+----------------+----------------+
++ * |               id                | _OP_GET_EDID   |   reserved     | 4
++ * +----------------+----------------+----------------+----------------+
++ * |                             buffer_sz                             | 8
++ * +----------------+----------------+----------------+----------------+
++ * |                          gref_directory                           | 12
++ * +----------------+----------------+----------------+----------------+
++ * |                             reserved                              | 16
++ * +----------------+----------------+----------------+----------------+
++ * |/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|
++ * +----------------+----------------+----------------+----------------+
++ * |                             reserved                              | 64
++ * +----------------+----------------+----------------+----------------+
++ *
++ * Notes:
++ *   - This command is not available in protocol version 1 and should be
++ *     ignored.
++ *   - This request is optional and if not supported then visible area
++ *     is defined by the relevant XenStore's "resolution" property.
++ *   - Shared buffer, allocated for EDID storage, must not be less then
++ *     XENDISPL_EDID_MAX_SIZE octets.
++ *
++ * buffer_sz - uint32_t, buffer size to be allocated, octets
++ * gref_directory - grant_ref_t, a reference to the first shared page
++ *   describing EDID buffer references. See XENDISPL_OP_DBUF_CREATE for
++ *   grant page directory structure (struct xendispl_page_directory).
++ *
++ * See response format for this request.
++ */
++
++struct xendispl_get_edid_req {
++	uint32_t buffer_sz;
++	grant_ref_t gref_directory;
++};
++
+ /*
+  *---------------------------------- Responses --------------------------------
+  *
+@@ -753,6 +805,35 @@ struct xendispl_page_flip_req {
+  * id - uint16_t, private guest value, echoed from request
+  * status - int32_t, response status, zero on success and -XEN_EXX on failure
+  *
++ *
++ * Get EDID response - response for XENDISPL_OP_GET_EDID:
++ *         0                1                 2               3        octet
++ * +----------------+----------------+----------------+----------------+
++ * |               id                |    operation   |    reserved    | 4
++ * +----------------+----------------+----------------+----------------+
++ * |                              status                               | 8
++ * +----------------+----------------+----------------+----------------+
++ * |                             edid_sz                               | 12
++ * +----------------+----------------+----------------+----------------+
++ * |                             reserved                              | 16
++ * +----------------+----------------+----------------+----------------+
++ * |/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|
++ * +----------------+----------------+----------------+----------------+
++ * |                             reserved                              | 64
++ * +----------------+----------------+----------------+----------------+
++ *
++ * Notes:
++ *   - This response is not available in protocol version 1 and should be
++ *     ignored.
++ *
++ * edid_sz - uint32_t, size of the EDID, octets
++ */
++
++struct xendispl_get_edid_resp {
++	uint32_t edid_sz;
++};
++
++/*
+  *----------------------------------- Events ----------------------------------
+  *
+  * Events are sent via a shared page allocated by the front and propagated by
+@@ -804,6 +885,7 @@ struct xendispl_req {
+ 		struct xendispl_fb_detach_req fb_detach;
+ 		struct xendispl_set_config_req set_config;
+ 		struct xendispl_page_flip_req pg_flip;
++		struct xendispl_get_edid_req get_edid;
+ 		uint8_t reserved[56];
+ 	} op;
+ };
+@@ -813,7 +895,10 @@ struct xendispl_resp {
+ 	uint8_t operation;
+ 	uint8_t reserved;
+ 	int32_t status;
+-	uint8_t reserved1[56];
++	union {
++	    struct xendispl_get_edid_resp get_edid;
++	    uint8_t reserved1[56];
++	} op;
+ };
  
- 	size = attach->dmabuf->size;
- 	xen_obj = gem_create_obj(dev, size);
--	if (IS_ERR_OR_NULL(xen_obj))
-+	if (IS_ERR(xen_obj))
- 		return ERR_CAST(xen_obj);
- 
- 	ret = gem_alloc_pages_array(xen_obj, size);
-diff --git a/drivers/gpu/drm/xen/xen_drm_front_kms.c b/drivers/gpu/drm/xen/xen_drm_front_kms.c
-index 78096bbcd226..ef11b1e4de39 100644
---- a/drivers/gpu/drm/xen/xen_drm_front_kms.c
-+++ b/drivers/gpu/drm/xen/xen_drm_front_kms.c
-@@ -60,7 +60,7 @@ fb_create(struct drm_device *dev, struct drm_file *filp,
- 	int ret;
- 
- 	fb = drm_gem_fb_create_with_funcs(dev, filp, mode_cmd, &fb_funcs);
--	if (IS_ERR_OR_NULL(fb))
-+	if (IS_ERR(fb))
- 		return fb;
- 
- 	gem_obj = fb->obj[0];
+ struct xendispl_evt {
 -- 
 2.17.1
 
