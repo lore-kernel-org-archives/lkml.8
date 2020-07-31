@@ -2,89 +2,81 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A62CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3538BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E981F22B42
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:30:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="clNWgc9J"
+	by mail.kernel.org (Postfix) with ESMTP id 11EBC21744
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:30:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596234622;
+	bh=A2Jhu+La0kQMmpq+iGxTm4iOgqXSXSakDKJqIBAkyO4=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=fm88/NnnBs4DGDwEOM3ya5GfPBx8aB2yoKHTDGH+L87fcbNYwOXtfRrf7hljDz3wo
+	 /2G/4UpSPhYV3lqmW4CnMYpLiffFOJHRaUlcERGvak298j6Q+0xinMMgvchdeNe/Zy
+	 KtvNnjiSTdhgl2ZBKUkFuufjDdAHLs2R8UediyDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgGaWaR (ORCPT
+        id S1726878AbgGaWaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 31 Jul 2020 18:30:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51300 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726281AbgGaWaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 31 Jul 2020 18:30:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbgGaWaQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 18:30:16 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66006C06174A
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 15:30:16 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id p1so18067076pls.4
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 15:30:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FfGcQLJ2Sqok69x5gxVVylS7Wr5RIydzmx+YHan3CjY=;
-        b=clNWgc9JYnJ/mdLKMm0jCogLKTi6QPwtDDLQ7nO9XM0gy60vqHfPvkGo5adsJWf85g
-         v1RXWEstwuJRTrqcdZTaX9VF0HID8e3tYLh5vw7ZbXzR/xPGROTatn4Owe/ChAC/63iv
-         XeanwCDh9aR/oQ4Q5m8x2ANSCu1Sr8MkfntAL+toQjwYCtrE/esjCQ6vM52o6sxm28Rf
-         6S2X6SD3fm+ZkBRZXiLvd25yEWAZv4MjINw8GKCNemzp2wWagM4bUYrPkYvdp7VO8YMC
-         DFdP0t/KXIYQuF/C6bfe6PLaUs59C6l8E8dh26DP7RPUNecPN9g67gisEdt5hYzv6Ml7
-         a6IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FfGcQLJ2Sqok69x5gxVVylS7Wr5RIydzmx+YHan3CjY=;
-        b=prw/N4rnsKWDRenwJEdtQ9BEVzxGVru5Px0iyEnqWb/7Intp9hxiXo6VLB9AdaA07d
-         kRp39jpLVBck4FMKl19E77su9tQ/MwwOaT0ux/MpVuqI3MWTg5lg1rgGxpO71jtVzEXG
-         zV3Q/l76urwM5bwtm/c6BIBb3ujWeIWBuEQMB9Z9PNjkmWxrYh8hPSa7YhEd0T7MjIoq
-         fAS/4uy8b80A2rM2ZGSteHkHhsvUUwto4ibla4Y61u561IQd2Enzlf+Lkrxj+mAGSltZ
-         CjtqgBim6oPNs4PiqDEV5vXFxmfn/AVV2aZTOYkA8rftk30y7iPxczJQv3Ks6/JYM9gY
-         F9gQ==
-X-Gm-Message-State: AOAM53395iuC3y1fD+vuRd658JmeCBBR9IzG+9pR4IOP1bdZvnWXe2Ax
-        SPslOZ6IWr0Rjn8x5AWRarOJWw==
-X-Google-Smtp-Source: ABdhPJx8h43XHQwZb/u+7yBWVDr9w4tR1l34TlrkDEf9wM1n4rfAQvRgyYZ+O2ksdNCCOOfFKdTrUQ==
-X-Received: by 2002:a17:902:8d98:: with SMTP id v24mr5404583plo.301.1596234615699;
-        Fri, 31 Jul 2020 15:30:15 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c085:21c1::1a3a? ([2620:10d:c090:400::5:f6ff])
-        by smtp.gmail.com with ESMTPSA id w82sm10973686pff.7.2020.07.31.15.30.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jul 2020 15:30:15 -0700 (PDT)
-Subject: Re: [PATCH 0/7] block: delete or fix duplicated words
-To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
-Cc:     linux-block@vger.kernel.org
-References: <20200731014233.6418-1-rdunlap@infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <2029fc3b-f068-ed2e-7bd1-4d66ad4e47c2@kernel.dk>
-Date:   Fri, 31 Jul 2020 16:30:13 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2021921744;
+        Fri, 31 Jul 2020 22:30:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596234617;
+        bh=A2Jhu+La0kQMmpq+iGxTm4iOgqXSXSakDKJqIBAkyO4=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=1xnpjR8iFCz9z0h9wQsHGuoMDXr/Fjx2AKcZkrM+KPaFWB1eZ/Bqek9YNv0pmCa4k
+         FeW4i0Rv2Oq+9713pfqxikKnQINsQbp18lufhO0+r8gAMIVwg/DjHneSsWlTCwJKTd
+         HhC33Ml11cR6wvtb/VecAlhLSjT4kCJWax6zgg6s=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id E9F2435231D2; Fri, 31 Jul 2020 15:30:16 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 15:30:16 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Matthew Wilcox <willy@infradead.org>, cl@linux.com,
+        penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
+        hannes@cmpxchg.org, urezki@gmail.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: Raw spinlocks and memory allocation
+Message-ID: <20200731223016.GT9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200730231205.GA11265@paulmck-ThinkPad-P72>
+ <20200731133834.517fdfee99b7ed2239f576aa@linux-foundation.org>
+ <20200731204855.GR9247@paulmck-ThinkPad-P72>
+ <20200731205933.GT23808@casper.infradead.org>
+ <20200731212457.GS9247@paulmck-ThinkPad-P72>
+ <20200731142919.36c4c741189426db0f8b8514@linux-foundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20200731014233.6418-1-rdunlap@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200731142919.36c4c741189426db0f8b8514@linux-foundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/20 7:42 PM, Randy Dunlap wrote:
-> Drop doubled words or fix them to what they should be.
-> Also fix a few typos and kernel-doc notation.
+On Fri, Jul 31, 2020 at 02:29:19PM -0700, Andrew Morton wrote:
+> On Fri, 31 Jul 2020 14:24:57 -0700 "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> 
+> > The reason for this restriction is that in -rt, the spin_lock(&zone->lock)
+> > in rmqueue_bulk() can sleep.
+> 
+> So if there is runtime overhead, this overhead could be restricted to
+> -rt kernels with suitable ifdefs?
 
-Applied, thanks.
+In theory, yes.  In practice, with CONFIG_PROVE_RAW_LOCK_NESTING=y,
+lockdep will complain regardless of -rt or not.
 
--- 
-Jens Axboe
-
+							Thanx, Paul
