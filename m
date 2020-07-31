@@ -2,359 +2,247 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E10C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A26C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DB0221744
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4980921744
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:44:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="onHD0cfU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731204AbgGaCmN (ORCPT
+        id S1731187AbgGaCou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 22:42:13 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:57792 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730820AbgGaCmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 22:42:12 -0400
-Received: from bogon.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf97yhCNfT84CAA--.551S2;
-        Fri, 31 Jul 2020 10:41:55 +0800 (CST)
-From:   Kaige Li <likaige@loongson.cn>
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        Sameer Pujar <spujar@nvidia.com>,
-        Mohan Kumar <mkumard@nvidia.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [RFC] ALSA: hda: Add workaround to adapt to Loongson 7A1000 controller
-Date:   Fri, 31 Jul 2020 10:41:54 +0800
-Message-Id: <1596163314-21808-1-git-send-email-likaige@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dxf97yhCNfT84CAA--.551S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3KFW5Xw43GF47Xr18ZrWxtFb_yoWkGF18pw
-        40y3WrKFZrtF4Ivr4DKay0kF1ftFs7Ga43KrWSkw13Zw47Jr4Yqryj9r1xAFZ2kr909rW3
-        Xa12yr9rGay5WrUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9j14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
-        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-        6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
-        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
-        8cxan2IY04v7MxkIecxEwVAFwVW8JwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
-        WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
-        67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
-        IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1l
-        IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
-        C2KfnxnUUI43ZEXa7VUbb18PUUUUU==
-X-CM-SenderInfo: 5olntxtjh6z05rqj20fqof0/
+        Thu, 30 Jul 2020 22:44:50 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:2081 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731124AbgGaCou (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 22:44:50 -0400
+X-UUID: 5c99840599594c54b6a6bd6ec2031617-20200731
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=JYWucvu8fAAG2ORtxlgiGm4dserLunZm7uDjVXQdg8Q=;
+        b=onHD0cfUhYcka1Hxvg4AbQIQ6DA2b6vej5ys6A+mUBUOsFQnm5RaA44wbw3M7LEVre1JqEgM2/aNQlaAu4tGw8WKcjbUoOSelpEkDSeuCNFV7UXll5aZNOk5J4PVdKnVHoBR0XgM3jhilU5+YN9uNcvXQLtyPEproRhtY/Fux7g=;
+X-UUID: 5c99840599594c54b6a6bd6ec2031617-20200731
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 209702804; Fri, 31 Jul 2020 10:44:43 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 31 Jul 2020 10:44:36 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 31 Jul 2020 10:44:38 +0800
+Message-ID: <1596163478.3932.17.camel@mtkswgap22>
+Subject: Re: [PATCH v4 2/2] soc: mediatek: add mtk-devapc driver
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
+CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <devicetree@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Date:   Fri, 31 Jul 2020 10:44:38 +0800
+In-Reply-To: <CAAOTY_8bE8Qo5-0MA9J1gcEbN4DP=Wf2O6vOUVos=VkoODeayA@mail.gmail.com>
+References: <1596010690-13178-1-git-send-email-neal.liu@mediatek.com>
+         <1596010690-13178-3-git-send-email-neal.liu@mediatek.com>
+         <CAAOTY_8bE8Qo5-0MA9J1gcEbN4DP=Wf2O6vOUVos=VkoODeayA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 0C9F9D3942F214AAEECCF9AB13F4C8C7895848F0DED59C9523A2AC9BBBB6A6B72000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's some issues that cause palyback without a sound on Loongson
-platform (3A3000 + 7A1000) with a Realtek ALC269 codec. After lengthy
-debugging sessions, we solved it by adding workaround.
-
-Signed-off-by: Kaige Li <likaige@loongson.cn>
----
- sound/hda/hdac_controller.c    | 63 ++++++++++++++++++++++++++++++++++++------
- sound/hda/hdac_stream.c        | 22 +++++++++++++--
- sound/pci/hda/hda_controller.h |  2 +-
- sound/pci/hda/hda_intel.c      |  9 +++++-
- 4 files changed, 83 insertions(+), 13 deletions(-)
-
-diff --git a/sound/hda/hdac_controller.c b/sound/hda/hdac_controller.c
-index 011b17c..f60f49a 100644
---- a/sound/hda/hdac_controller.c
-+++ b/sound/hda/hdac_controller.c
-@@ -9,6 +9,7 @@
- #include <sound/core.h>
- #include <sound/hdaudio.h>
- #include <sound/hda_register.h>
-+#include "../pci/hda/hda_controller.h"
- #include "local.h"
- 
- /* clear CORB read pointer properly */
-@@ -42,6 +43,8 @@ static void azx_clear_corbrp(struct hdac_bus *bus)
-  */
- void snd_hdac_bus_init_cmd_io(struct hdac_bus *bus)
- {
-+	struct azx *chip = bus_to_azx(bus);
-+
- 	WARN_ON_ONCE(!bus->rb.area);
- 
- 	spin_lock_irq(&bus->reg_lock);
-@@ -58,11 +61,15 @@ void snd_hdac_bus_init_cmd_io(struct hdac_bus *bus)
- 
- 	/* reset the corb hw read pointer */
- 	snd_hdac_chip_writew(bus, CORBRP, AZX_CORBRP_RST);
--	if (!bus->corbrp_self_clear)
-+	if (chip->driver_caps & AZX_DCAPS_LOONGSON_HDA_WORKAROUND)
-+		snd_hdac_chip_writew(bus, CORBRP, 0);
-+	else if (!bus->corbrp_self_clear)
- 		azx_clear_corbrp(bus);
- 
- 	/* enable corb dma */
- 	snd_hdac_chip_writeb(bus, CORBCTL, AZX_CORBCTL_RUN);
-+	if (chip->driver_caps & AZX_DCAPS_LOONGSON_HDA_WORKAROUND)
-+		snd_hdac_chip_readb(bus, CORBCTL);
- 
- 	/* RIRB set up */
- 	bus->rirb.addr = bus->rb.addr + 2048;
-@@ -79,7 +86,12 @@ void snd_hdac_bus_init_cmd_io(struct hdac_bus *bus)
- 	/* set N=1, get RIRB response interrupt for new entry */
- 	snd_hdac_chip_writew(bus, RINTCNT, 1);
- 	/* enable rirb dma and response irq */
--	snd_hdac_chip_writeb(bus, RIRBCTL, AZX_RBCTL_DMA_EN | AZX_RBCTL_IRQ_EN);
-+	if (chip->driver_caps & AZX_DCAPS_LOONGSON_HDA_WORKAROUND) {
-+		snd_hdac_chip_writeb(bus, RIRBCTL, AZX_RBCTL_DMA_EN);
-+		snd_hdac_chip_readb(bus, RIRBCTL);
-+	} else {
-+		snd_hdac_chip_writeb(bus, RIRBCTL, AZX_RBCTL_DMA_EN | AZX_RBCTL_IRQ_EN);
-+	}
- 	/* Accept unsolicited responses */
- 	snd_hdac_chip_updatel(bus, GCTL, AZX_GCTL_UNSOL, AZX_GCTL_UNSOL);
- 	spin_unlock_irq(&bus->reg_lock);
-@@ -132,6 +144,18 @@ static unsigned int azx_command_addr(u32 cmd)
- 	return addr;
- }
- 
-+static unsigned int azx_response_addr(u32 res)
-+{
-+	unsigned int addr = res & 0xf;
-+
-+	if (addr >= AZX_MAX_CODECS) {
-+		snd_BUG();
-+		addr = 0;
-+	}
-+
-+	return addr;
-+}
-+
- /**
-  * snd_hdac_bus_send_cmd - send a command verb via CORB
-  * @bus: HD-audio core bus
-@@ -189,6 +213,7 @@ void snd_hdac_bus_update_rirb(struct hdac_bus *bus)
- 	unsigned int rp, wp;
- 	unsigned int addr;
- 	u32 res, res_ex;
-+	struct azx *chip = bus_to_azx(bus);
- 
- 	wp = snd_hdac_chip_readw(bus, RIRBWP);
- 	if (wp == 0xffff) {
-@@ -207,7 +232,11 @@ void snd_hdac_bus_update_rirb(struct hdac_bus *bus)
- 		rp = bus->rirb.rp << 1; /* an RIRB entry is 8-bytes */
- 		res_ex = le32_to_cpu(bus->rirb.buf[rp + 1]);
- 		res = le32_to_cpu(bus->rirb.buf[rp]);
--		addr = res_ex & 0xf;
-+		if (chip->driver_caps & AZX_DCAPS_LOONGSON_HDA_WORKAROUND) {
-+			addr = azx_response_addr(res_ex);
-+		} else {
-+			addr = res_ex & 0xf;
-+		}
- 		if (addr >= HDA_MAX_CODECS) {
- 			dev_err(bus->dev,
- 				"spurious response %#x:%#x, rp = %d, wp = %d",
-@@ -245,6 +274,7 @@ int snd_hdac_bus_get_response(struct hdac_bus *bus, unsigned int addr,
- 	unsigned long loopcounter;
- 	wait_queue_entry_t wait;
- 	bool warned = false;
-+	struct azx *chip = bus_to_azx(bus);
- 
- 	init_wait_entry(&wait, 0);
- 	timeout = jiffies + msecs_to_jiffies(1000);
-@@ -254,8 +284,11 @@ int snd_hdac_bus_get_response(struct hdac_bus *bus, unsigned int addr,
- 		if (!bus->polling_mode)
- 			prepare_to_wait(&bus->rirb_wq, &wait,
- 					TASK_UNINTERRUPTIBLE);
--		if (bus->polling_mode)
-+		if (bus->polling_mode) {
-+			if (chip->driver_caps & AZX_DCAPS_LOONGSON_HDA_WORKAROUND)
-+				bus->rirb.cmds[addr] %= AZX_MAX_RIRB_ENTRIES;
- 			snd_hdac_bus_update_rirb(bus);
-+		}
- 		if (!bus->rirb.cmds[addr]) {
- 			if (res)
- 				*res = bus->rirb.res[addr]; /* the last value */
-@@ -484,16 +517,24 @@ static void azx_int_disable(struct hdac_bus *bus)
- static void azx_int_clear(struct hdac_bus *bus)
- {
- 	struct hdac_stream *azx_dev;
-+	struct azx *chip = bus_to_azx(bus);
- 
- 	/* clear stream status */
--	list_for_each_entry(azx_dev, &bus->stream_list, list)
--		snd_hdac_stream_writeb(azx_dev, SD_STS, SD_INT_MASK);
-+	list_for_each_entry(azx_dev, &bus->stream_list, list) {
-+		if (chip->driver_caps & AZX_DCAPS_LOONGSON_HDA_WORKAROUND)
-+			snd_hdac_stream_updateb(azx_dev, SD_STS, 0, 0);
-+		else
-+			snd_hdac_stream_writeb(azx_dev, SD_STS, SD_INT_MASK);
-+	}
- 
- 	/* clear STATESTS */
- 	snd_hdac_chip_writew(bus, STATESTS, STATESTS_INT_MASK);
- 
- 	/* clear rirb status */
--	snd_hdac_chip_writeb(bus, RIRBSTS, RIRB_INT_MASK);
-+	if (chip->driver_caps & AZX_DCAPS_LOONGSON_HDA_WORKAROUND)
-+		snd_hdac_chip_updateb(bus, RIRBSTS, ~RIRB_INT_MASK, 0);
-+	else
-+		snd_hdac_chip_writeb(bus, RIRBSTS, RIRB_INT_MASK);
- 
- 	/* clear int status */
- 	snd_hdac_chip_writel(bus, INTSTS, AZX_INT_CTRL_EN | AZX_INT_ALL_STREAM);
-@@ -585,11 +626,17 @@ int snd_hdac_bus_handle_stream_irq(struct hdac_bus *bus, unsigned int status,
- 	struct hdac_stream *azx_dev;
- 	u8 sd_status;
- 	int handled = 0;
-+	struct azx *chip = bus_to_azx(bus);
- 
- 	list_for_each_entry(azx_dev, &bus->stream_list, list) {
- 		if (status & azx_dev->sd_int_sta_mask) {
- 			sd_status = snd_hdac_stream_readb(azx_dev, SD_STS);
--			snd_hdac_stream_writeb(azx_dev, SD_STS, SD_INT_MASK);
-+			if (chip->driver_caps & AZX_DCAPS_LOONGSON_HDA_WORKAROUND) {
-+				snd_hdac_stream_writeb(azx_dev, SD_STS, sd_status);
-+				snd_hdac_stream_readb(azx_dev, SD_STS);
-+			} else {
-+				snd_hdac_stream_writeb(azx_dev, SD_STS, SD_INT_MASK);
-+			}
- 			handled |= 1 << azx_dev->index;
- 			if (!azx_dev->substream || !azx_dev->running ||
- 			    !(sd_status & SD_INT_COMPLETE))
-diff --git a/sound/hda/hdac_stream.c b/sound/hda/hdac_stream.c
-index a38a2af..fa91832 100644
---- a/sound/hda/hdac_stream.c
-+++ b/sound/hda/hdac_stream.c
-@@ -12,6 +12,7 @@
- #include <sound/hdaudio.h>
- #include <sound/hda_register.h>
- #include "trace.h"
-+#include "../pci/hda/hda_controller.h"
- 
- /**
-  * snd_hdac_get_stream_stripe_ctl - get stripe control value
-@@ -83,6 +84,7 @@ EXPORT_SYMBOL_GPL(snd_hdac_stream_init);
- void snd_hdac_stream_start(struct hdac_stream *azx_dev, bool fresh_start)
- {
- 	struct hdac_bus *bus = azx_dev->bus;
-+	struct azx *chip = bus_to_azx(bus);
- 	int stripe_ctl;
- 
- 	trace_snd_hdac_stream_start(bus, azx_dev);
-@@ -105,7 +107,11 @@ void snd_hdac_stream_start(struct hdac_stream *azx_dev, bool fresh_start)
- 					stripe_ctl);
- 	}
- 	/* set DMA start and interrupt mask */
--	snd_hdac_stream_updateb(azx_dev, SD_CTL,
-+	if (chip->driver_caps & AZX_DCAPS_LOONGSON_HDA_WORKAROUND)
-+		snd_hdac_stream_updatel(azx_dev, SD_CTL,
-+				0, SD_CTL_DMA_START | SD_INT_MASK);
-+	else
-+		snd_hdac_stream_updateb(azx_dev, SD_CTL,
- 				0, SD_CTL_DMA_START | SD_INT_MASK);
- 	azx_dev->running = true;
- }
-@@ -190,6 +196,7 @@ int snd_hdac_stream_setup(struct hdac_stream *azx_dev)
- 	struct hdac_bus *bus = azx_dev->bus;
- 	struct snd_pcm_runtime *runtime;
- 	unsigned int val;
-+	struct azx *chip = bus_to_azx(bus);
- 
- 	if (azx_dev->substream)
- 		runtime = azx_dev->substream->runtime;
-@@ -206,8 +213,14 @@ int snd_hdac_stream_setup(struct hdac_stream *azx_dev)
- 	snd_hdac_stream_writel(azx_dev, SD_CTL, val);
- 
- 	/* program the length of samples in cyclic buffer */
--	snd_hdac_stream_writel(azx_dev, SD_CBL, azx_dev->bufsize);
--
-+	if (chip->driver_caps & AZX_DCAPS_LOONGSON_HDA_WORKAROUND) {
-+		if (azx_dev->substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-+			snd_hdac_stream_writel(azx_dev, SD_CBL, azx_dev->bufsize - 64);
-+		else
-+			snd_hdac_stream_writel(azx_dev, SD_CBL, azx_dev->bufsize - 16);
-+	} else {
-+		snd_hdac_stream_writel(azx_dev, SD_CBL, azx_dev->bufsize);
-+	}
- 	/* program the stream format */
- 	/* this value needs to be the same as the one programmed */
- 	snd_hdac_stream_writew(azx_dev, SD_FORMAT, azx_dev->format_val);
-@@ -412,6 +425,7 @@ int snd_hdac_stream_setup_periods(struct hdac_stream *azx_dev)
- 	__le32 *bdl;
- 	int i, ofs, periods, period_bytes;
- 	int pos_adj, pos_align;
-+	struct azx *chip = bus_to_azx(bus);
- 
- 	/* reset BDL address */
- 	snd_hdac_stream_writel(azx_dev, SD_BDLPL, 0);
-@@ -426,6 +440,8 @@ int snd_hdac_stream_setup_periods(struct hdac_stream *azx_dev)
- 	azx_dev->frags = 0;
- 
- 	pos_adj = bus->bdl_pos_adj;
-+	if (chip->driver_caps & AZX_DCAPS_LOONGSON_HDA_WORKAROUND)
-+		pos_adj = 0;
- 	if (!azx_dev->no_period_wakeup && pos_adj > 0) {
- 		pos_align = pos_adj;
- 		pos_adj = (pos_adj * runtime->rate + 47999) / 48000;
-diff --git a/sound/pci/hda/hda_controller.h b/sound/pci/hda/hda_controller.h
-index fe17168..74fae0b 100644
---- a/sound/pci/hda/hda_controller.h
-+++ b/sound/pci/hda/hda_controller.h
-@@ -36,7 +36,7 @@
- /* 19 unused */
- #define AZX_DCAPS_OLD_SSYNC	(1 << 20)	/* Old SSYNC reg for ICH */
- #define AZX_DCAPS_NO_ALIGN_BUFSIZE (1 << 21)	/* no buffer size alignment */
--/* 22 unused */
-+#define AZX_DCAPS_LOONGSON_HDA_WORKAROUND (1 << 22)   /* Loongson-HDA workaround */
- #define AZX_DCAPS_4K_BDLE_BOUNDARY (1 << 23)	/* BDLE in 4k boundary */
- /* 24 unused */
- #define AZX_DCAPS_COUNT_LPIB_DELAY  (1 << 25)	/* Take LPIB as delay */
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index ea1d535..573e12f 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -678,6 +678,8 @@ static int azx_position_ok(struct azx *chip, struct azx_dev *azx_dev)
- 	u32 wallclk;
- 	unsigned int pos;
- 
-+	if (chip->driver_caps & AZX_DCAPS_LOONGSON_HDA_WORKAROUND)
-+		return 1;
- 	wallclk = azx_readl(chip, WALLCLK) - azx_dev->core.start_wallclk;
- 	if (wallclk < (azx_dev->core.period_wallclk * 2) / 3)
- 		return -1;	/* bogus (too early) interrupt */
-@@ -1566,6 +1568,10 @@ static int check_position_fix(struct azx *chip, int fix)
- 		dev_dbg(chip->card->dev, "Using SKL position fix\n");
- 		return POS_FIX_SKL;
- 	}
-+	if (chip->driver_caps & AZX_DCAPS_LOONGSON_HDA_WORKAROUND) {
-+		dev_dbg(chip->card->dev, "Using LPIB position fix\n");
-+		return POS_FIX_LPIB;
-+	}
- 	return POS_FIX_AUTO;
- }
- 
-@@ -2736,7 +2742,8 @@ static const struct pci_device_id azx_ids[] = {
- 	/* Zhaoxin */
- 	{ PCI_DEVICE(0x1d17, 0x3288), .driver_data = AZX_DRIVER_ZHAOXIN },
- 	/* Loongson */
--	{ PCI_DEVICE(0x0014, 0x7a07), .driver_data = AZX_DRIVER_GENERIC },
-+	{ PCI_DEVICE(0x0014, 0x7a07),
-+	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_LOONGSON_HDA_WORKAROUND},
- 	{ 0, }
- };
- MODULE_DEVICE_TABLE(pci, azx_ids);
--- 
-2.1.0
+SGkgQ2h1bi1LdWFuZywNCg0KDQpPbiBUaHUsIDIwMjAtMDctMzAgYXQgMDA6MzggKzA4MDAsIENo
+dW4tS3VhbmcgSHUgd3JvdGU6DQo+IEhpLCBOZWFsOg0KPiANCj4gTmVhbCBMaXUgPG5lYWwubGl1
+QG1lZGlhdGVrLmNvbT4g5pa8IDIwMjDlubQ35pyIMjnml6Ug6YCx5LiJIOS4i+WNiDQ6Mjnlr6vp
+gZPvvJoNCj4gPg0KPiA+IE1lZGlhVGVrIGJ1cyBmYWJyaWMgcHJvdmlkZXMgVHJ1c3Rab25lIHNl
+Y3VyaXR5IHN1cHBvcnQgYW5kIGRhdGENCj4gPiBwcm90ZWN0aW9uIHRvIHByZXZlbnQgc2xhdmVz
+IGZyb20gYmVpbmcgYWNjZXNzZWQgYnkgdW5leHBlY3RlZA0KPiA+IG1hc3RlcnMuDQo+ID4gVGhl
+IHNlY3VyaXR5IHZpb2xhdGlvbiBpcyBsb2dnZWQgYW5kIHNlbnQgdG8gdGhlIHByb2Nlc3NvciBm
+b3INCj4gPiBmdXJ0aGVyIGFuYWx5c2lzIG9yIGNvdW50ZXJtZWFzdXJlcy4NCj4gPg0KPiA+IEFu
+eSBvY2N1cnJlbmNlIG9mIHNlY3VyaXR5IHZpb2xhdGlvbiB3b3VsZCByYWlzZSBhbiBpbnRlcnJ1
+cHQsIGFuZA0KPiA+IGl0IHdpbGwgYmUgaGFuZGxlZCBieSBtdGstZGV2YXBjIGRyaXZlci4gVGhl
+IHZpb2xhdGlvbg0KPiA+IGluZm9ybWF0aW9uIGlzIHByaW50ZWQgaW4gb3JkZXIgdG8gZmluZCB0
+aGUgbXVyZGVyZXIuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBOZWFsIExpdSA8bmVhbC5saXVA
+bWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiANCj4gW3NuaXBdDQo+IA0KPiA+ICsNCj4gPiArc3Rh
+dGljIGludCBnZXRfc2hpZnRfZ3JvdXAoc3RydWN0IG10a19kZXZhcGNfY29udGV4dCAqY3R4KQ0K
+PiA+ICt7DQo+ID4gKyAgICAgICB1MzIgdmlvX3NoaWZ0X3N0YTsNCj4gPiArICAgICAgIHZvaWQg
+X19pb21lbSAqcmVnOw0KPiA+ICsNCj4gPiArICAgICAgIHJlZyA9IGN0eC0+ZGV2YXBjX3BkX2Jh
+c2UgKyBjdHgtPm9mZnNldC0+dmlvX3NoaWZ0X3N0YTsNCj4gPiArICAgICAgIHZpb19zaGlmdF9z
+dGEgPSByZWFkbChyZWcpOw0KPiA+ICsNCj4gPiArICAgICAgIGlmICh2aW9fc2hpZnRfc3RhKQ0K
+PiA+ICsgICAgICAgICAgICAgICByZXR1cm4gX19mZnModmlvX3NoaWZ0X3N0YSk7DQo+ID4gKw0K
+PiA+ICsgICAgICAgcmV0dXJuIC1FSU87DQo+ID4gK30NCj4gDQo+IGdldF9zaGlmdF9ncm91cCgp
+IGlzIGEgc21hbGwgZnVuY3Rpb24sIEkgd291bGQgbGlrZSB0byBtZXJnZSB0aGlzDQo+IGZ1bmN0
+aW9uIGludG8gc3luY192aW9fZGJnKCkgdG8gbWFrZSBjb2RlIG1vcmUgc2ltcGxlLg0KDQpUaGlz
+IGZ1bmN0aW9uIGhhdmUgYSBzcGVjaWZpYyBmdW5jdGlvbmFsaXR5LiBBbmQgaXQgd291bGQgbWFr
+ZSB0aGlzDQpkcml2ZXIgbW9yZSByZWFkYWJpbGl0eS4gSSB3b3VsZCBsaWtlIHRvIGtlZXAgaXQg
+YXMgYSBmdW5jdGlvbi4gSXMgdGhhdA0Kb2theSBmb3IgeW91Pw0KDQo+IA0KPiA+ICsNCj4gDQo+
+IFtzbmlwXQ0KPiANCj4gPiArDQo+ID4gKyNkZWZpbmUgUEhZX0RFVkFQQ19USU1FT1VUICAgICAw
+eDEwMDAwDQo+ID4gKw0KPiA+ICsvKg0KPiA+ICsgKiBzeW5jX3Zpb19kYmcgLSBkbyAic2hpZnQi
+IG1lY2hhbnNpbSIgdG8gZ2V0IGZ1bGwgdmlvbGF0aW9uIGluZm9ybWF0aW9uLg0KPiA+ICsgKiAg
+ICAgICAgICAgICAgICBzaGlmdCBtZWNoYW5pc20gaXMgZGVwZW5kcyBvbiBkZXZhcGMgaGFyZHdh
+cmUgZGVzaWduLg0KPiA+ICsgKiAgICAgICAgICAgICAgICBNZWRpYXRlayBkZXZhcGMgc2V0IG11
+bHRpcGxlIHNsYXZlcyBhcyBhIGdyb3VwLiBXaGVuIHZpb2xhdGlvbg0KPiA+ICsgKiAgICAgICAg
+ICAgICAgICBpcyB0cmlnZ2VyZWQsIHZpb2xhdGlvbiBpbmZvIGlzIGtlcHQgaW5zaWRlIGRldmFw
+YyBoYXJkd2FyZS4NCj4gPiArICogICAgICAgICAgICAgICAgRHJpdmVyIHNob3VsZCBkbyBzaGlm
+dCBtZWNoYW5zaW0gdG8gInNoaWZ0IiBmdWxsIHZpb2xhdGlvbg0KPiA+ICsgKiAgICAgICAgICAg
+ICAgICBpbmZvIHRvIFZJT19EQkdzIHJlZ2lzdGVycy4NCj4gPiArICoNCj4gPiArICovDQo+ID4g
+K3N0YXRpYyBpbnQgc3luY192aW9fZGJnKHN0cnVjdCBtdGtfZGV2YXBjX2NvbnRleHQgKmN0eCwg
+dTMyIHNoaWZ0X2JpdCkNCj4gPiArew0KPiA+ICsgICAgICAgdm9pZCBfX2lvbWVtICpwZF92aW9f
+c2hpZnRfc3RhX3JlZzsNCj4gPiArICAgICAgIHZvaWQgX19pb21lbSAqcGRfdmlvX3NoaWZ0X3Nl
+bF9yZWc7DQo+ID4gKyAgICAgICB2b2lkIF9faW9tZW0gKnBkX3Zpb19zaGlmdF9jb25fcmVnOw0K
+PiA+ICsgICAgICAgaW50IHJldDsNCj4gPiArICAgICAgIHUzMiB2YWw7DQo+ID4gKw0KPiA+ICsg
+ICAgICAgcGRfdmlvX3NoaWZ0X3N0YV9yZWcgPSBjdHgtPmRldmFwY19wZF9iYXNlICsgY3R4LT5v
+ZmZzZXQtPnZpb19zaGlmdF9zdGE7DQo+ID4gKyAgICAgICBwZF92aW9fc2hpZnRfc2VsX3JlZyA9
+IGN0eC0+ZGV2YXBjX3BkX2Jhc2UgKyBjdHgtPm9mZnNldC0+dmlvX3NoaWZ0X3NlbDsNCj4gPiAr
+ICAgICAgIHBkX3Zpb19zaGlmdF9jb25fcmVnID0gY3R4LT5kZXZhcGNfcGRfYmFzZSArIGN0eC0+
+b2Zmc2V0LT52aW9fc2hpZnRfY29uOw0KPiA+ICsNCj4gPiArICAgICAgIC8qIEVuYWJsZSBzaGlm
+dCBtZWNoYW5zaW0gKi8NCj4gPiArICAgICAgIHdyaXRlbCgweDEgPDwgc2hpZnRfYml0LCBwZF92
+aW9fc2hpZnRfc2VsX3JlZyk7DQo+ID4gKyAgICAgICB3cml0ZWwoMHgxLCBwZF92aW9fc2hpZnRf
+Y29uX3JlZyk7DQo+ID4gKw0KPiA+ICsgICAgICAgcmV0ID0gcmVhZGxfcG9sbF90aW1lb3V0KHBk
+X3Zpb19zaGlmdF9jb25fcmVnLCB2YWwsIHZhbCA9PSAweDMsIDAsDQo+ID4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgUEhZX0RFVkFQQ19USU1FT1VUKTsNCj4gPiArICAgICAgIGlm
+IChyZXQpDQo+ID4gKyAgICAgICAgICAgICAgIGRldl9lcnIoY3R4LT5kZXYsICIlczogU2hpZnQg
+dmlvbGF0aW9uIGluZm8gZmFpbGVkXG4iLCBfX2Z1bmNfXyk7DQo+ID4gKw0KPiA+ICsgICAgICAg
+LyogRGlzYWJsZSBzaGlmdCBtZWNoYW5pc20gKi8NCj4gPiArICAgICAgIHdyaXRlbCgweDAsIHBk
+X3Zpb19zaGlmdF9jb25fcmVnKTsNCj4gPiArICAgICAgIHdyaXRlbCgweDAsIHBkX3Zpb19zaGlm
+dF9zZWxfcmVnKTsNCj4gPiArICAgICAgIHdyaXRlbCgweDEgPDwgc2hpZnRfYml0LCBwZF92aW9f
+c2hpZnRfc3RhX3JlZyk7DQo+ID4gKw0KPiA+ICsgICAgICAgcmV0dXJuIHJldDsNCj4gPiArfQ0K
+PiA+ICsNCj4gDQo+IFtzbmlwXQ0KPiANCj4gPiArDQo+ID4gKy8qDQo+ID4gKyAqIGRldmFwY19l
+eHRyYWN0X3Zpb19kYmcgLSBleHRyYWN0IGZ1bGwgdmlvbGF0aW9uIGluZm9ybWF0aW9uIGFmdGVy
+IGRvaW5nDQo+ID4gKyAqICAgICAgICAgICAgICAgICAgICAgICAgICBzaGlmdCBtZWNoYW5pc20u
+DQo+ID4gKyAqLw0KPiA+ICtzdGF0aWMgdm9pZCBkZXZhcGNfZXh0cmFjdF92aW9fZGJnKHN0cnVj
+dCBtdGtfZGV2YXBjX2NvbnRleHQgKmN0eCkNCj4gPiArew0KPiA+ICsgICAgICAgY29uc3Qgc3Ry
+dWN0IG10a19kZXZhcGNfdmlvX2RiZ3MgKnZpb19kYmdzOw0KPiA+ICsgICAgICAgc3RydWN0IG10
+a19kZXZhcGNfdmlvX2luZm8gKnZpb19pbmZvOw0KPiA+ICsgICAgICAgdm9pZCBfX2lvbWVtICp2
+aW9fZGJnMF9yZWc7DQo+ID4gKyAgICAgICB2b2lkIF9faW9tZW0gKnZpb19kYmcxX3JlZzsNCj4g
+PiArICAgICAgIHUzMiBkYmcwOw0KPiA+ICsNCj4gPiArICAgICAgIHZpb19kYmcwX3JlZyA9IGN0
+eC0+ZGV2YXBjX3BkX2Jhc2UgKyBjdHgtPm9mZnNldC0+dmlvX2RiZzA7DQo+ID4gKyAgICAgICB2
+aW9fZGJnMV9yZWcgPSBjdHgtPmRldmFwY19wZF9iYXNlICsgY3R4LT5vZmZzZXQtPnZpb19kYmcx
+Ow0KPiA+ICsNCj4gPiArICAgICAgIHZpb19kYmdzID0gY3R4LT52aW9fZGJnczsNCj4gPiArICAg
+ICAgIHZpb19pbmZvID0gY3R4LT52aW9faW5mbzsNCj4gPiArDQo+ID4gKyAgICAgICAvKiBTdGFy
+dHMgdG8gZXh0cmFjdCB2aW9sYXRpb24gaW5mb3JtYXRpb24gKi8NCj4gPiArICAgICAgIGRiZzAg
+PSByZWFkbCh2aW9fZGJnMF9yZWcpOw0KPiA+ICsgICAgICAgdmlvX2luZm8tPnZpb19hZGRyID0g
+cmVhZGwodmlvX2RiZzFfcmVnKTsNCj4gPiArDQo+ID4gKyAgICAgICB2aW9faW5mby0+bWFzdGVy
+X2lkID0gKGRiZzAgJiB2aW9fZGJncy0+bXN0aWQubWFzaykgPj4NCj4gPiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB2aW9fZGJncy0+bXN0aWQuc3RhcnQ7DQo+IA0KPiBXaGF0IGlzIG1h
+c3Rlcl9pZD8gSG93IGNvdWxkIHdlIHVzZSBpdCB0byBkZWJ1Zz8gRm9yIGV4YW1wbGUsIGlmIHdl
+DQo+IGdldCBhIG1hc3Rlcl9pZCA9IDEsIHdoYXQgc2hvdWxkIHdlIGRvIGZvciB0aGlzPw0KPiAN
+Cj4gPiArICAgICAgIHZpb19pbmZvLT5kb21haW5faWQgPSAoZGJnMCAmIHZpb19kYmdzLT5kbW5p
+ZC5tYXNrKSA+Pg0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZpb19kYmdzLT5k
+bW5pZC5zdGFydDsNCj4gDQo+IFdoYXQgaXMgZG9tYWluX2lkPyBIb3cgY291bGQgd2UgdXNlIGl0
+IHRvIGRlYnVnPyBGb3IgZXhhbXBsZSwgaWYgd2UNCj4gZ2V0IGEgZG9tYWluX2lkID0gMiwgd2hh
+dCBzaG91bGQgd2UgZG8gZm9yIHRoaXM/DQo+IA0KDQptYXN0ZXJfaWQgYW5kIGRvbWFpbl9pZCBi
+ZWxvbmdzIG91ciBidXMgc2lkZS1iYW5kIHNpZ25hbCBpbmZvLiBJdCBjYW4NCmhlbHAgdXMgdG8g
+ZmluZCB0aGUgdmlvbGF0aW9uIG1hc3Rlci4NCg0KPiA+ICsgICAgICAgdmlvX2luZm8tPndyaXRl
+ID0gKChkYmcwICYgdmlvX2RiZ3MtPnZpb193Lm1hc2spID4+DQo+ID4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIHZpb19kYmdzLT52aW9fdy5zdGFydCkgPT0gMTsNCj4gPiArICAgICAgIHZp
+b19pbmZvLT5yZWFkID0gKChkYmcwICYgdmlvX2RiZ3MtPnZpb19yLm1hc2spID4+DQo+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICB2aW9fZGJncy0+dmlvX3Iuc3RhcnQpID09IDE7DQo+ID4g
+KyAgICAgICB2aW9faW5mby0+dmlvX2FkZHJfaGlnaCA9IChkYmcwICYgdmlvX2RiZ3MtPmFkZHJf
+aC5tYXNrKSA+Pg0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2aW9fZGJn
+cy0+YWRkcl9oLnN0YXJ0Ow0KPiANCj4gV2hhdCBpcyB2aW9fYWRkcl9oaWdoPyBBcyBJIGtub3cg
+YWxsIHJlZ2lzdGVyIGFkZHJlc3MgYXJlIDMyIGJpdHMsIGlzDQo+IHZpb19hZGRyX2hpZ2ggdGhl
+IGFkZHJlc3MgYWJvdmUgMzIgYml0cz8NCg0KWWVzLCB5b3UgYXJlIHJpZ2h0LiBJbiBNVDY3Nzks
+IGFsbCByZWdpc3RlciBiYXNlIGFyZSAzMiBiaXRzLiBXZSBjYW4NCmlnbm9yZSB0aGlzIGluZm8g
+Zm9yIGN1cnJlbnQgZHJpdmVyLiBJJ2xsIHVwZGF0ZSBvbiBuZXh0IHBhdGNoLg0KVGhhbmtzICEN
+Cg0KPiANCj4gPiArDQo+ID4gKyAgICAgICBkZXZhcGNfdmlvX2luZm9fcHJpbnQoY3R4KTsNCj4g
+PiArfQ0KPiA+ICsNCj4gDQo+IFtzbmlwXQ0KPiANCj4gPiArDQo+ID4gKy8qDQo+ID4gKyAqIGRl
+dmFwY192aW9sYXRpb25faXJxIC0gdGhlIGRldmFwYyBJbnRlcnJ1cHQgU2VydmljZSBSb3V0aW5l
+IChJU1IpIHdpbGwgZHVtcA0KPiA+ICsgKiAgICAgICAgICAgICAgICAgICAgICAgIHZpb2xhdGlv
+biBpbmZvcm1hdGlvbiBpbmNsdWRpbmcgd2hpY2ggbWFzdGVyIHZpb2xhdGVzDQo+ID4gKyAqICAg
+ICAgICAgICAgICAgICAgICAgICAgYWNjZXNzIHNsYXZlLg0KPiA+ICsgKi8NCj4gPiArc3RhdGlj
+IGlycXJldHVybl90IGRldmFwY192aW9sYXRpb25faXJxKGludCBpcnFfbnVtYmVyLA0KPiA+ICsg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgbXRrX2RldmFwY19j
+b250ZXh0ICpjdHgpDQo+ID4gK3sNCj4gPiArICAgICAgIHUzMiB2aW9faWR4Ow0KPiA+ICsNCj4g
+PiArICAgICAgIC8qDQo+ID4gKyAgICAgICAgKiBNYXNrIHNsYXZlJ3MgaXJxIGJlZm9yZSBjbGVh
+cmluZyB2aW8gc3RhdHVzLg0KPiA+ICsgICAgICAgICogTXVzdCBkbyBpdCB0byBhdm9pZCBuZXN0
+ZWQgaW50ZXJydXB0IGFuZCBwcmV2ZW50DQo+ID4gKyAgICAgICAgKiB1bmV4cGVjdGVkIGJlaGF2
+aW9yLg0KPiA+ICsgICAgICAgICovDQo+ID4gKyAgICAgICBmb3IgKHZpb19pZHggPSAwOyB2aW9f
+aWR4IDwgY3R4LT52aW9faWR4X251bTsgdmlvX2lkeCsrKQ0KPiA+ICsgICAgICAgICAgICAgICBt
+YXNrX21vZHVsZV9pcnEoY3R4LCB2aW9faWR4LCB0cnVlKTsNCj4gDQo+IEkgd291bGQgbGlrZSB0
+byByZXdyaXRlIHRoaXMgZm9yLWxvb3AgYXMgYmVsb3cgdG8gcHJldmVudCB0b28gbWFueQ0KPiBm
+dW5jdGlvbiBjYWxsIGluIGlycSBoYW5kbGVyLg0KPiANCj4gZm9yIChpID0gMDsgaSA8IFZJT19N
+T0RfVE9fUkVHX0lORChjdHgtPnZpb19pZHhfbnVtKTsgaSsrKQ0KPiAgICAgd3JpdGVsKDB4ZmZm
+ZmZmZmYsIGN0eC0+ZGV2YXBjX3BkX2Jhc2UgKyBjdHgtPm9mZnNldC0+dmlvX21hc2sgKyA0ICog
+aSk7DQo+IA0KDQpUaGlzIGlkZWEgaXMgb2theSBmb3IgbWUuIElzIHRoZXJlIGFueSBtYWNybyB0
+byByZXBsYWNlIDB4ZmZmZmZmZmY/DQoNCj4gcmVnICA9IHJlYWRsKGN0eC0+ZGV2YXBjX3BkX2Jh
+c2UgKyBjdHgtPm9mZnNldC0+dmlvX21hc2sgKyA0ICogaSk7DQo+IHJlZyB8PSAxIDw8IChjdHgt
+PnZpb19pZHhfbnVtIC0gMzIgKiBpICsgMSkgLSAxOw0KPiB3cml0ZWwocmVnLCBjdHgtPmRldmFw
+Y19wZF9iYXNlICsgY3R4LT5vZmZzZXQtPnZpb19tYXNrICsgNCAqIGkpOw0KDQpBcmUgeW91IHRy
+eWluZyB0byBjbGVhciB0aGUgYml0cyB3aGljaCBvdmVyIHZpb19pZHhfbnVtPw0KSWYgeWVzLCBJ
+IHRoaW5rIHRoZSBzZWNvbmQgbGluZSBzaG91bGQgYmU6DQpyZWcgJj0gMSA8PCAoY3R4LT52aW9f
+aWR4X251bSAtIDMyICogaSkgLSAxOw0KDQpGb3IgZXhhbXBsZSwgaWYgdmlvX2lkeF9udW0gaXMg
+NDA6DQphZnRlciBmb3IgbG9vcDoNCnZpb19tYXNrMCA9IDB4ZmZmZmZmZmY7DQp2aW9fbWFzazEg
+PSAweGZmZmZmZmZmOw0KDQpyZWcgPSByZWFkbCh2aW9fbWFzazEpOw0KcmVnICY9ICgxIDw8IDgp
+IC0gMTsgKHdoaWNoIGlzIDB4MDAwMDAwZmYpDQpyZWcgd2lsbCBiZSAweGZmDQp3cml0ZWwocmVn
+LCB2aW9fbWFzazEpOw0KDQpEb2VzIGl0IG1ha2Ugc2Vuc2U/DQoNCkFjdHVhbGx5LCBpdCBpcyBv
+a2F5IHRvIG92ZXJ3cml0ZSB0aGUgdW51c2VkIHJlZ2lzdGVyIGJpdHMuDQpTbyBpdCdzIG5vIG1h
+dHRlciB0byBkbyB0aGlzIHN0ZXAuDQoNCj4gDQo+ID4gKw0KPiA+ICsgICAgICAgZGV2YXBjX2R1
+bXBfdmlvX2RiZyhjdHgpOw0KPiA+ICsNCj4gPiArICAgICAgIC8qDQo+ID4gKyAgICAgICAgKiBF
+bnN1cmUgdGhhdCB2aW9sYXRpb24gaW5mbyBhcmUgd3JpdHRlbg0KPiA+ICsgICAgICAgICogYmVm
+b3JlIGZ1cnRoZXIgb3BlcmF0aW9ucw0KPiA+ICsgICAgICAgICovDQo+ID4gKyAgICAgICBzbXBf
+bWIoKTsNCj4gPiArDQo+ID4gKyAgICAgICBmb3IgKHZpb19pZHggPSAwOyB2aW9faWR4IDwgY3R4
+LT52aW9faWR4X251bTsgdmlvX2lkeCsrKSB7DQo+ID4gKyAgICAgICAgICAgICAgIGNsZWFyX3Zp
+b19zdGF0dXMoY3R4LCB2aW9faWR4KTsNCj4gPiArICAgICAgICAgICAgICAgbWFza19tb2R1bGVf
+aXJxKGN0eCwgdmlvX2lkeCwgZmFsc2UpOw0KPiA+ICsgICAgICAgfQ0KPiANCj4gRGl0dG8gZm9y
+IHRoaXMgZm9yLWxvb3AuDQoNCkRpdHRvLg0KDQo+IA0KPiA+ICsNCj4gPiArICAgICAgIHJldHVy
+biBJUlFfSEFORExFRDsNCj4gPiArfQ0KPiA+ICsNCj4gDQo+IFtzbmlwXQ0KPiANCj4gPiArDQo+
+ID4gK3N0YXRpYyBpbnQgbXRrX2RldmFwY19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpw
+ZGV2KQ0KPiA+ICt7DQo+ID4gKyAgICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUgPSBwZGV2
+LT5kZXYub2Zfbm9kZTsNCj4gPiArICAgICAgIHN0cnVjdCBtdGtfZGV2YXBjX2NvbnRleHQgKmN0
+eDsNCj4gPiArICAgICAgIHN0cnVjdCBjbGsgKmRldmFwY19pbmZyYV9jbGs7DQo+ID4gKyAgICAg
+ICB1MzIgZGV2YXBjX2lycTsNCj4gPiArICAgICAgIGludCByZXQ7DQo+ID4gKw0KPiA+ICsgICAg
+ICAgaWYgKElTX0VSUihub2RlKSkNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9ERVY7
+DQo+ID4gKw0KPiA+ICsgICAgICAgY3R4ID0gZGV2bV9remFsbG9jKCZwZGV2LT5kZXYsIHNpemVv
+ZigqY3R4KSwgR0ZQX0tFUk5FTCk7DQo+ID4gKyAgICAgICBpZiAoIWN0eCkNCj4gPiArICAgICAg
+ICAgICAgICAgcmV0dXJuIC1FTk9NRU07DQo+ID4gKw0KPiA+ICsgICAgICAgY3R4ID0gKHN0cnVj
+dCBtdGtfZGV2YXBjX2NvbnRleHQgKilvZl9kZXZpY2VfZ2V0X21hdGNoX2RhdGEoJnBkZXYtPmRl
+dik7DQo+ID4gKyAgICAgICBjdHgtPmRldiA9ICZwZGV2LT5kZXY7DQo+ID4gKw0KPiA+ICsgICAg
+ICAgY3R4LT52aW9faW5mbyA9IGRldm1fa3phbGxvYygmcGRldi0+ZGV2LA0KPiA+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzaXplb2Yoc3RydWN0IG10a19kZXZhcGNfdmlv
+X2luZm8pLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBHRlBfS0VS
+TkVMKTsNCj4gPiArICAgICAgIGlmICghY3R4LT52aW9faW5mbykNCj4gPiArICAgICAgICAgICAg
+ICAgcmV0dXJuIC1FTk9NRU07DQo+ID4gKw0KPiA+ICsgICAgICAgY3R4LT5kZXZhcGNfcGRfYmFz
+ZSA9IG9mX2lvbWFwKG5vZGUsIDApOw0KPiA+ICsgICAgICAgaWYgKCFjdHgtPmRldmFwY19wZF9i
+YXNlKQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4gPiArDQo+ID4gKyAg
+ICAgICBkZXZhcGNfaXJxID0gaXJxX29mX3BhcnNlX2FuZF9tYXAobm9kZSwgMCk7DQo+ID4gKyAg
+ICAgICBpZiAoIWRldmFwY19pcnEpDQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiAtRUlOVkFM
+Ow0KPiA+ICsNCj4gPiArICAgICAgIGRldmFwY19pbmZyYV9jbGsgPSBkZXZtX2Nsa19nZXQoJnBk
+ZXYtPmRldiwgImRldmFwYy1pbmZyYS1jbG9jayIpOw0KPiA+ICsgICAgICAgaWYgKElTX0VSUihk
+ZXZhcGNfaW5mcmFfY2xrKSkNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7DQo+
+ID4gKw0KPiA+ICsgICAgICAgaWYgKGNsa19wcmVwYXJlX2VuYWJsZShkZXZhcGNfaW5mcmFfY2xr
+KSkNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7DQo+ID4gKw0KPiA+ICsgICAg
+ICAgcmV0ID0gZGV2bV9yZXF1ZXN0X2lycSgmcGRldi0+ZGV2LCBkZXZhcGNfaXJxLA0KPiA+ICsg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAoaXJxX2hhbmRsZXJfdClkZXZhcGNfdmlvbGF0
+aW9uX2lycSwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgSVJRRl9UUklHR0VS
+X05PTkUsICJkZXZhcGMiLCBjdHgpOw0KPiA+ICsgICAgICAgaWYgKHJldCkNCj4gDQo+IFlvdSBz
+aG91bGQgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGRldmFwY19pbmZyYV9jbGspOw0KDQpZZXMsIEkg
+bWlzcyB0aGlzIHBhcnQuIFRoYW5rcyBmb3IgeW91ciByZW1pbmQuDQpJJ2xsIHVwZGF0ZSBpdCBv
+biBuZXh0IHBhdGNoLg0KDQo+IA0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiA+
+ICsNCj4gPiArICAgICAgIHN0YXJ0X2RldmFwYyhjdHgpOw0KPiA+ICsNCj4gPiArICAgICAgIHJl
+dHVybiAwOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IG10a19kZXZhcGNfcmVtb3Zl
+KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKmRldikNCj4gPiArew0KPiANCj4gRGl0dG8uDQoNCkRp
+dHRvLg0KDQo+IA0KPiBSZWdhcmRzLA0KPiBDaHVuLUt1YW5nLg0KPiANCj4gPiArICAgICAgIHJl
+dHVybiAwOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZl
+ciBtdGtfZGV2YXBjX2RyaXZlciA9IHsNCj4gPiArICAgICAgIC5wcm9iZSA9IG10a19kZXZhcGNf
+cHJvYmUsDQo+ID4gKyAgICAgICAucmVtb3ZlID0gbXRrX2RldmFwY19yZW1vdmUsDQo+ID4gKyAg
+ICAgICAuZHJpdmVyID0gew0KPiA+ICsgICAgICAgICAgICAgICAubmFtZSA9IEtCVUlMRF9NT0RO
+QU1FLA0KPiA+ICsgICAgICAgICAgICAgICAub2ZfbWF0Y2hfdGFibGUgPSBtdGtfZGV2YXBjX2R0
+X21hdGNoLA0KPiA+ICsgICAgICAgfSwNCj4gPiArfTsNCj4gPiArDQo+ID4gK21vZHVsZV9wbGF0
+Zm9ybV9kcml2ZXIobXRrX2RldmFwY19kcml2ZXIpOw0KPiA+ICsNCg0K
 
