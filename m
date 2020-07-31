@@ -2,162 +2,147 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D98C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B66E8207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA7A92083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:38:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bowJQP2Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731135AbgGaCdc (ORCPT
+        id S1731174AbgGaCiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 22:33:32 -0400
-Received: from regular1.263xmail.com ([211.150.70.201]:32884 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730644AbgGaCdb (ORCPT
+        Thu, 30 Jul 2020 22:38:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54520 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbgGaCiY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 22:33:31 -0400
-Received: from localhost (unknown [192.168.167.235])
-        by regular1.263xmail.com (Postfix) with ESMTP id 2B7F9A60;
-        Fri, 31 Jul 2020 10:33:20 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [172.16.12.230] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P14615T140283744343808S1596162798780194_;
-        Fri, 31 Jul 2020 10:33:19 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <4a460cbde4c5ac07331aa2d6e4c56648>
-X-RL-SENDER: andy.yan@rock-chips.com
-X-SENDER: yxj@rock-chips.com
-X-LOGIN-NAME: andy.yan@rock-chips.com
-X-FST-TO: linux-kernel@vger.kernel.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-Subject: Re: [PATCH v2] drm/connector: Add of_drm_find_connector
-To:     daniel@ffwll.ch
-Cc:     airlied@linux.ie, maarten.lankhorst@linux.intel.com,
-        mripard@kernel.org, tzimmermann@suse.de,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20200703094506.22527-1-andy.yan@rock-chips.com>
-From:   Andy Yan <andy.yan@rock-chips.com>
-Message-ID: <3359f775-ba70-c116-e9b9-29b9ba692400@rock-chips.com>
-Date:   Fri, 31 Jul 2020 10:33:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 22:38:24 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7A55C061574;
+        Thu, 30 Jul 2020 19:38:23 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id j8so17983089ioe.9;
+        Thu, 30 Jul 2020 19:38:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Rlj5R58q1SSD6BWu0ll8WlrzBNntL/4AqB0ll8CArmU=;
+        b=bowJQP2ZES89AR+MaKOsb3Te1rTnH89iPRmo0Hsz9wxYU66dBy6YTKPKBdSoaAFkwK
+         3ODTgO2yOZAP7Khs88cmSicn3+/r+S3YJNDEWvCRZA+3SHJqmisiTaGyNpn3NDha2p3L
+         ERY9f6Ees06Q111Md111fszJM380ui9K6GtfSC+yaohG3w46/VWewPRj1TzFS/0CvwiE
+         KSMq2yoj0enlidEwjetH9AxTx+0MSBN27EuItVeDq4f3KwJWz32hvsjyLIfva8bdCsB/
+         iNuGkH/gnlA8+IepGj0W/H2XcPMZTl6MFuoWbNdQ3xnbVLT6CmZ0IKR/cS/0DVnzQLkZ
+         AFSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Rlj5R58q1SSD6BWu0ll8WlrzBNntL/4AqB0ll8CArmU=;
+        b=dErVPgCnIscwJ8vKIy0+PJLy3mC4XrBmVIXxxWI3KfOr+AETjGRtnwEkzZ2WxJvdag
+         DpK5jLYR3uUw0kGd+T8CGAaImANp2Q9qRjWb2X2PTtlYvB5X1ad5NQTAuP5A1ZhlUyxZ
+         VzCBnNK+qG3djJDCCbml6vjBYQcu47QX/UvuFUFFY5hreBDMbSQldoSUt+7UbHF9zCQn
+         ytbpC3I+DC/09mF2JhQuGcl6mbnzgNklRPqg6ynmqq0Bd9Y5PuMUWgmFokbNznmD63Ux
+         xlFiQAuuVy3qqLRtuNQS74mt14mo8LDb1ElqRgTr0mZ95RgOPA30kbjfwcTCgvHRKzs7
+         VwrQ==
+X-Gm-Message-State: AOAM532MGust6ESch/vSC8NWADyjcE3m7pU9T4Bt5eI3VeDqoy1SvYoW
+        351gXnvPITC6SAKY1msczt55fp3jWRaBiPU870RFdkx7uuQ=
+X-Google-Smtp-Source: ABdhPJyB17/NgFldZUX53F50gRd1tR07IBXS9uRCRXsXzZbzsTy1sfD4Rl+ZEHHgyU419avbVJvgrA9BKWc6pMgQITE=
+X-Received: by 2002:a02:a389:: with SMTP id y9mr2482521jak.82.1596163103259;
+ Thu, 30 Jul 2020 19:38:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200703094506.22527-1-andy.yan@rock-chips.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200730112242.31648-1-gmayyyha@gmail.com> <e9c69117a1ce870c2a96565d2a2d64d066a6604f.camel@kernel.org>
+In-Reply-To: <e9c69117a1ce870c2a96565d2a2d64d066a6604f.camel@kernel.org>
+From:   Yanhu Cao <gmayyyha@gmail.com>
+Date:   Fri, 31 Jul 2020 10:38:11 +0800
+Message-ID: <CAB9OAC0-6o73af7xjYpGHyT-BS+BNda6jRFvkgDm7S06uH1i8A@mail.gmail.com>
+Subject: Re: [PATCH] ceph: use frag's MDS in either mode
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping
+On Fri, Jul 31, 2020 at 12:46 AM Jeff Layton <jlayton@kernel.org> wrote:
+>
+> On Thu, 2020-07-30 at 19:22 +0800, Yanhu Cao wrote:
+> > if frag.mds != cap->session->s_mds, the client's req will be resent.
+> >
+> > e.g.
+> >
+> > file: mnt/cephfs/dir03/dir003 (0x10000000003)
+> > ceph.dir.pin="1"
+> >
+> > echo 'aaa' > /mnt/cephfs/dir03/dir003/file29
+> >
+> > kernel: ceph:  __choose_mds 00000000ca362c7a is_hash=1 (0x7c768b89) mode 2
+> > kernel: ceph:  __choose_mds 00000000ca362c7a 10000000003.fffffffffffffffe frag 0 mds1 (auth)
+> > kernel: ceph:  __choose_mds 00000000ca362c7a 10000000003.fffffffffffffffe mds0 (auth cap 00000000679c38e2)
+> > kernel: ceph:  __choose_mds using resend_mds mds1
+> >
+> > Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
+> > ---
+> >  fs/ceph/mds_client.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> >
+>
+> I think you're right that there is a bug here, but this patch
+> description is not terribly descriptive. Can you explain the problem and
+> solution a bit better?
 
-On 7/3/20 5:45 PM, Andy Yan wrote:
-> Add a function to look up a connector by
-> device tree node, like what of_drm_find_bridge/panel
-> does.
->
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-> Reported-by: kernel test robot <lkp@intel.com>
->
-> ---
->
-> Changes in v2:
-> - Add function declaration
->
->   drivers/gpu/drm/drm_connector.c | 33 +++++++++++++++++++++++++++++++++
->   include/drm/drm_connector.h     | 14 ++++++++++++++
->   2 files changed, 47 insertions(+)
->
-> diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connector.c
-> index d877ddc6dc57..516376cd1868 100644
-> --- a/drivers/gpu/drm/drm_connector.c
-> +++ b/drivers/gpu/drm/drm_connector.c
-> @@ -743,6 +743,39 @@ void drm_connector_list_iter_end(struct drm_connector_list_iter *iter)
->   }
->   EXPORT_SYMBOL(drm_connector_list_iter_end);
->   
-> +#ifdef CONFIG_OF
-> +/**
-> + * of_drm_find_connector - look up a connector using a device tree node
-> + * @np: device tree node of the connector
-> + *
-> + *
-> + * Return: A pointer to the connector which match the specified device tree
-> + * node or NULL if no panel matching the device tree node can be found, or
-> + * -ENODEV: the device is not available (status != "okay" or "ok")
-> + */
-> +struct drm_connector *of_drm_find_connector(struct drm_device *dev, const struct device_node *np)
-> +{
-> +	struct drm_connector *connector;
-> +	struct drm_connector_list_iter conn_iter;
-> +
-> +	if (!of_device_is_available(np))
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	drm_connector_list_iter_begin(dev, &conn_iter);
-> +	drm_for_each_connector_iter(connector, &conn_iter) {
-> +		if (connector->of_node == np) {
-> +			drm_connector_list_iter_end(&conn_iter);
-> +			return connector;
-> +		}
-> +	}
-> +	drm_connector_list_iter_end(&conn_iter);
-> +
-> +	return NULL;
-> +}
-> +EXPORT_SYMBOL(of_drm_find_connector);
-> +#endif
-> +
-> +
->   static const struct drm_prop_enum_list drm_subpixel_enum_list[] = {
->   	{ SubPixelUnknown, "Unknown" },
->   	{ SubPixelHorizontalRGB, "Horizontal RGB" },
-> diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-> index fd543d1db9b2..d249e0498375 100644
-> --- a/include/drm/drm_connector.h
-> +++ b/include/drm/drm_connector.h
-> @@ -1129,6 +1129,9 @@ struct drm_connector {
->   	/** @attr: sysfs attributes */
->   	struct device_attribute *attr;
->   
-> +	/** @of_node: device tree node */
-> +	struct device_node *of_node;
-> +
->   	/**
->   	 * @head:
->   	 *
-> @@ -1647,6 +1650,17 @@ void drm_connector_list_iter_end(struct drm_connector_list_iter *iter);
->   bool drm_connector_has_possible_encoder(struct drm_connector *connector,
->   					struct drm_encoder *encoder);
->   
-> +#if defined(CONFIG_OF)
-> +struct drm_connector *
-> +of_drm_find_connector(struct drm_device *dev, const struct device_node *np);
-> +#else
-> +static inline struct drm_connector *
-> +of_drm_find_connector(struct drm_device *dev, const struct device_node *np)
-> +{
-> +	return ERR_PTR(-ENODEV);
-> +}
-> +#endif
-> +
->   /**
->    * drm_for_each_connector_iter - connector_list iterator macro
->    * @connector: &struct drm_connector pointer used as cursor
+Sorry, just describing the steps to reproduce it.
+
+The problem is when doing some tests with multiple mds, there are many
+mds forwarding requests between them
+and then the client request is resent. So I analyze how the client
+chooses the target mds to send the request.
+
+If the request is a modification operation and the mode is set to USE_AUTH_MDS.
+Auth mds should be selected to handle the request, and if auth mds for
+frag is already set, it can be returned directly without the logic
+behind it.
+But the current logic doesn't return directly because the condition
+'mode == USE_AUTH_MDS',
+and sometimes frag's mds is not equal to cap's session mds, which then
+causes the request to be resent.
 
 
+I'll resubmit PR.
+
+Thanks.
+
+>
+> A good patch description should walk me through the problem and your
+> reasoning to fix it. Why is this wrong now, and how does your change
+> address it?
+>
+> Thanks,
+> Jeff
+>
+> > diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+> > index a50497142e59..b2255a9be7c0 100644
+> > --- a/fs/ceph/mds_client.c
+> > +++ b/fs/ceph/mds_client.c
+> > @@ -1103,8 +1103,7 @@ static int __choose_mds(struct ceph_mds_client *mdsc,
+> >                                    frag.frag, mds);
+> >                               if (ceph_mdsmap_get_state(mdsc->mdsmap, mds) >=
+> >                                   CEPH_MDS_STATE_ACTIVE) {
+> > -                                     if (mode == USE_ANY_MDS &&
+> > -                                         !ceph_mdsmap_is_laggy(mdsc->mdsmap,
+> > +                                     if (!ceph_mdsmap_is_laggy(mdsc->mdsmap,
+> >                                                                 mds))
+> >                                               goto out;
+> >                               }
+>
+> --
+> Jeff Layton <jlayton@kernel.org>
+>
