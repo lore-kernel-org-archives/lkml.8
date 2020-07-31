@@ -2,189 +2,164 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF26C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A48FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39165208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07D5A208A9
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:22:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="qLa9jk/L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731023AbgGaBPS convert rfc822-to-8bit (ORCPT
+        id S1730871AbgGaBVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 21:15:18 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:39684 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728080AbgGaBPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 21:15:17 -0400
-Received: from dggemi405-hub.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 6182BBEC6774B1DB2CF6;
-        Fri, 31 Jul 2020 08:51:26 +0800 (CST)
-Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.120]) by
- dggemi405-hub.china.huawei.com ([10.3.17.143]) with mapi id 14.03.0487.000;
- Fri, 31 Jul 2020 08:51:24 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Michal Nazarewicz <mina86@mina86.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        "Roman Gushchin" <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] cma: don't quit at first error when activating reserved
- areas
-Thread-Topic: [PATCH] cma: don't quit at first error when activating
- reserved areas
-Thread-Index: AQHWZo8CMi6/QpZbIkKrpG3q5y96kKkg21Tw
-Date:   Fri, 31 Jul 2020 00:51:23 +0000
-Message-ID: <B926444035E5E2439431908E3842AFD25CE8C2@DGGEMI525-MBS.china.huawei.com>
-References: <20200730163123.6451-1-mike.kravetz@oracle.com>
-In-Reply-To: <20200730163123.6451-1-mike.kravetz@oracle.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.201.208]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 30 Jul 2020 21:21:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42850 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728262AbgGaBVy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 21:21:54 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8802EC061575
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 18:21:54 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id x69so27518573qkb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 18:21:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=/j2YojXjp6X9HLdlD/RvksyoFdPKZnneEIBr33XwXdQ=;
+        b=qLa9jk/LSBAvtEZZ5ZFL3KjRk4IqwMmj8j5WFyD9NQvzOVnN80qOAqYJrwRSGdXYGJ
+         iD9OvBJPDPm/N9jCEBA5TISOSVkyaq0uuAmbv+sCkyz3RqTcCPDaBKcv3CbB7+TfHLEx
+         eksCtwPX2Z/g48Mkun69SquxbyaQ1dRyLIBFQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=/j2YojXjp6X9HLdlD/RvksyoFdPKZnneEIBr33XwXdQ=;
+        b=j1CAWixwB6Z2ajt63nX97pClw0sZGlVikoDKIfm6A1LIaU+4RFC5JY4zDyr9b8c0zV
+         Yxe8TkY4O/N8Fk+kepMpedLJTTLlaE7Kam8JBtAGwzGdESHfvrOXjSM4Y7xqsvPrwPlx
+         vLYw39fBdFcDKhu1nmCXkk2uNuhE0onei/X/DKYUMzLBSdh81L5zVsiXyjTCqOaDSNZo
+         j7BcsQvKmdduSSFtIRfiOw0ZFecQc2Pd8kjvOHbfFoXQfyAMd5rnqJFtq4xVDYgIgxCv
+         XVsEcJjVeQBV7ldnjv1JKgrUKdokdzyh0OUjcvi1M5YUDZvvFjnSnJLzMrYffCa96588
+         irbA==
+X-Gm-Message-State: AOAM530Eaq8e0zvMn/JXj4t2fOyGqKJjl8g10CgGRn+oCP+wiOQo1qnh
+        3GcN0fCvdOVp85av1xM9COJvEg==
+X-Google-Smtp-Source: ABdhPJzXAOl5o5JKy9CXp5X9KRwQBuWNKdlmJVlK56I52I4hu9SLT/emhyFHw3enEGMNBnCOj5xA7A==
+X-Received: by 2002:a05:620a:1292:: with SMTP id w18mr1813493qki.158.1596158513533;
+        Thu, 30 Jul 2020 18:21:53 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id x29sm6277053qtv.80.2020.07.30.18.21.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 18:21:52 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 21:21:52 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Neeraj Upadhyay <neeraju@codeaurora.org>,
+        rcu <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 2/2] rcu/tree: Clarify comments about FQS loop reporting
+ quiescent states
+Message-ID: <20200731012152.GC2336096@google.com>
+References: <20200730030221.705255-1-joel@joelfernandes.org>
+ <20200730030221.705255-2-joel@joelfernandes.org>
+ <CAEXW_YSbad9Cium_9f1eA1RfZ2Me9JcX2S-KMe-jRQo8W6AaBg@mail.gmail.com>
+ <20200730163520.GA9247@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200730163520.GA9247@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 30, 2020 at 09:35:20AM -0700, Paul E. McKenney wrote:
+> On Wed, Jul 29, 2020 at 11:25:19PM -0400, Joel Fernandes wrote:
+> > On Wed, Jul 29, 2020 at 11:02 PM Joel Fernandes (Google)
+> > <joel@joelfernandes.org> wrote:
+> > >
+> > > At least since v4.19, the FQS loop no longer reports quiescent states
+> > 
+> > I meant here, "FQS loop no longer reports quiescent states for offline CPUs."
+> > 
+> > Sorry,
+> 
+> You did have me going there for a bit.  ;-)
+> 
+> No period (".") at the end though, unless you fix up the following
+> to start a new sentence.
+
+Ok.
+
+> > > unless it is a dire situation where an offlined CPU failed to report
+> > > a quiescent state. Let us clarify the comment in rcu_gp_init() inorder
+> > > to keep the comment current.
+> 
+> How about the following for this last sentence?
+> 
+> "This commit therefore fixes the comment in rcu_gp_init() to match
+> the current code."
+
+As per:
+https://www.kernel.org/doc/html/v4.17/process/submitting-patches.html
+
+It says:
+Describe your changes in imperative mood, e.g. “make xyzzy do frotz” instead
+of “[This patch] makes xyzzy do frotz” or “[I] changed xyzzy to do frotz”, as
+if you are giving orders to the codebase to change its behaviour.
+
+May be I should make it "Fix the comment in rcu_gp_init() to match the
+current code"?
+
+> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > ---
+> > >  kernel/rcu/tree.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > index 1e51962b565b..929568ff5989 100644
+> > > --- a/kernel/rcu/tree.c
+> > > +++ b/kernel/rcu/tree.c
+> > > @@ -1701,8 +1701,8 @@ static bool rcu_gp_init(void)
+> > >
+> > >         /*
+> > >          * Apply per-leaf buffered online and offline operations to the
+> > > -        * rcu_node tree.  Note that this new grace period need not wait
+> > > -        * for subsequent online CPUs, and that quiescent-state forcing
+> > > +        * rcu_node tree.  Note that this new grace period need not wait for
+> > > +        * subsequent online CPUs, and that RCU hooks in CPU offlining path
+> > >          * will handle subsequent offline CPUs.
+> 
+> How about something like this?
+> 
+> 	...  Note that this new grace period ned not wait for subsequent
+> 	online CPUs, and that RCU hooks in the CPU offlining path, when
+> 	combined with checks in this function, will handle CPUs that
+> 	are currently going offline and that go offline later.
+
+Sounds good to me. I think s/and that go/or that go/ though.
+
+I will make these changes and send v3, let me know though if you object.
+
+thanks,
+
+ - Joel
 
 
-> -----Original Message-----
-> From: Mike Kravetz [mailto:mike.kravetz@oracle.com]
-> Sent: Friday, July 31, 2020 4:31 AM
-> To: linux-mm@kvack.org; linux-kernel@vger.kernel.org
-> Cc: Marek Szyprowski <m.szyprowski@samsung.com>; Michal Nazarewicz
-> <mina86@mina86.com>; Kyungmin Park <kyungmin.park@samsung.com>;
-> Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>; Roman Gushchin
-> <guro@fb.com>; Andrew Morton <akpm@linux-foundation.org>; Mike Kravetz
-> <mike.kravetz@oracle.com>; stable@vger.kernel.org
-> Subject: [PATCH] cma: don't quit at first error when activating reserved areas
+> 						Thanx, Paul
 > 
-> The routine cma_init_reserved_areas is designed to activate all reserved cma
-> areas.  It quits when it first encounters an error.
-> This can leave some areas in a state where they are reserved but not activated.
-> There is no feedback to code which performed the reservation.  Attempting to
-> allocate memory from areas in such a state will result in a BUG.
-> 
-> Modify cma_init_reserved_areas to always attempt to activate all areas.  The
-> called routine, cma_activate_area is responsible for leaving the area in a valid
-> state.  No one is making active use of returned error codes, so change the
-> routine to void.
-> 
-> How to reproduce:  This example uses kernelcore, hugetlb and cma as an easy
-> way to reproduce.  However, this is a more general cma issue.
-> 
-> Two node x86 VM 16GB total, 8GB per node Kernel command line parameters,
-> kernelcore=4G hugetlb_cma=8G Related boot time messages,
->   hugetlb_cma: reserve 8192 MiB, up to 4096 MiB per node
->   cma: Reserved 4096 MiB at 0x0000000100000000
->   hugetlb_cma: reserved 4096 MiB on node 0
->   cma: Reserved 4096 MiB at 0x0000000300000000
->   hugetlb_cma: reserved 4096 MiB on node 1
->   cma: CMA area hugetlb could not be activated
-> 
->  # echo 8 > /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
-> 
->   BUG: kernel NULL pointer dereference, address: 0000000000000000
->   #PF: supervisor read access in kernel mode
->   #PF: error_code(0x0000) - not-present page
->   PGD 0 P4D 0
->   Oops: 0000 [#1] SMP PTI
->   ...
->   Call Trace:
->     bitmap_find_next_zero_area_off+0x51/0x90
->     cma_alloc+0x1a5/0x310
->     alloc_fresh_huge_page+0x78/0x1a0
->     alloc_pool_huge_page+0x6f/0xf0
->     set_max_huge_pages+0x10c/0x250
->     nr_hugepages_store_common+0x92/0x120
->     ? __kmalloc+0x171/0x270
->     kernfs_fop_write+0xc1/0x1a0
->     vfs_write+0xc7/0x1f0
->     ksys_write+0x5f/0xe0
->     do_syscall_64+0x4d/0x90
->     entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> Fixes: c64be2bb1c6e ("drivers: add Contiguous Memory Allocator")
-> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: <stable@vger.kernel.org>
-
-Acked-by: Barry Song <song.bao.hua@hisilicon.com>
-
-> ---
->  mm/cma.c | 23 +++++++++--------------
->  1 file changed, 9 insertions(+), 14 deletions(-)
-> 
-> diff --git a/mm/cma.c b/mm/cma.c
-> index 26ecff818881..0963c0f9c502 100644
-> --- a/mm/cma.c
-> +++ b/mm/cma.c
-> @@ -93,17 +93,15 @@ static void cma_clear_bitmap(struct cma *cma,
-> unsigned long pfn,
->  	mutex_unlock(&cma->lock);
->  }
-> 
-> -static int __init cma_activate_area(struct cma *cma)
-> +static void __init cma_activate_area(struct cma *cma)
->  {
->  	unsigned long base_pfn = cma->base_pfn, pfn = base_pfn;
->  	unsigned i = cma->count >> pageblock_order;
->  	struct zone *zone;
-> 
->  	cma->bitmap = bitmap_zalloc(cma_bitmap_maxno(cma), GFP_KERNEL);
-> -	if (!cma->bitmap) {
-> -		cma->count = 0;
-> -		return -ENOMEM;
-> -	}
-> +	if (!cma->bitmap)
-> +		goto out_error;
-> 
->  	WARN_ON_ONCE(!pfn_valid(pfn));
->  	zone = page_zone(pfn_to_page(pfn));
-> @@ -133,25 +131,22 @@ static int __init cma_activate_area(struct cma
-> *cma)
->  	spin_lock_init(&cma->mem_head_lock);
->  #endif
-> 
-> -	return 0;
-> +	return;
-> 
->  not_in_zone:
-> -	pr_err("CMA area %s could not be activated\n", cma->name);
->  	bitmap_free(cma->bitmap);
-> +out_error:
->  	cma->count = 0;
-> -	return -EINVAL;
-> +	pr_err("CMA area %s could not be activated\n", cma->name);
-> +	return;
->  }
-> 
->  static int __init cma_init_reserved_areas(void)  {
->  	int i;
-> 
-> -	for (i = 0; i < cma_area_count; i++) {
-> -		int ret = cma_activate_area(&cma_areas[i]);
-> -
-> -		if (ret)
-> -			return ret;
-> -	}
-> +	for (i = 0; i < cma_area_count; i++)
-> +		cma_activate_area(&cma_areas[i]);
-> 
->  	return 0;
->  }
-> --
-> 2.25.4
-
+> > >          */
+> > >         rcu_state.gp_state = RCU_GP_ONOFF;
+> > > --
+> > > 2.28.0.rc0.142.g3c755180ce-goog
+> > >
