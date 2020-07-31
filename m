@@ -2,200 +2,189 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F34C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E1BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0E362177B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:10:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87A662177B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:14:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BaiJHYpM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387742AbgGaSKD (ORCPT
+        id S2387685AbgGaSO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 14:10:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:35830 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730040AbgGaSKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 14:10:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC48631B;
-        Fri, 31 Jul 2020 11:10:00 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.4.61])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BD9B03F71F;
-        Fri, 31 Jul 2020 11:09:58 -0700 (PDT)
-Date:   Fri, 31 Jul 2020 19:09:55 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     madvenka@linux.microsoft.com
-Cc:     kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, oleg@redhat.com,
-        x86@kernel.org
-Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-Message-ID: <20200731180955.GC67415@C02TD0UTHF1T.local>
-References: <aefc85852ea518982e74b233e11e16d2e707bc32>
- <20200728131050.24443-1-madvenka@linux.microsoft.com>
+        Fri, 31 Jul 2020 14:14:29 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59450 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730040AbgGaSO2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 14:14:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596219266;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=h5RCnyOaFSBCI3Qz6zkjCZ63e5lETgkYf1JyHMYznJQ=;
+        b=BaiJHYpMKLZRnY1SjACNT2k+MF92GGj96lIlWTLwR51gopxnf6sni6KFhmkkdcv+4mQLiK
+        KbAAHdEs1mPMiNcs+bXh04aUR866R6ZgO7yDKkje07duOZ7RYb9U1HPomVnoJLPODVErSm
+        MVcR27itljNKO6ZMQ5qyl6seRv8IpKI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-491-wSMzoo6iOy6LHz813pxjOA-1; Fri, 31 Jul 2020 14:14:22 -0400
+X-MC-Unique: wSMzoo6iOy6LHz813pxjOA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5CA0318839CD;
+        Fri, 31 Jul 2020 18:14:20 +0000 (UTC)
+Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 732831002388;
+        Fri, 31 Jul 2020 18:14:19 +0000 (UTC)
+Date:   Fri, 31 Jul 2020 12:14:18 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] iommu: Add iommu_aux_get_domain_for_dev()
+Message-ID: <20200731121418.0274afb8@x1.home>
+In-Reply-To: <06fd91c1-a978-d526-7e2b-fec619a458e4@linux.intel.com>
+References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
+        <20200714055703.5510-4-baolu.lu@linux.intel.com>
+        <20200729142507.182cd18a@x1.home>
+        <06fd91c1-a978-d526-7e2b-fec619a458e4@linux.intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728131050.24443-1-madvenka@linux.microsoft.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, 31 Jul 2020 14:30:03 +0800
+Lu Baolu <baolu.lu@linux.intel.com> wrote:
 
-On Tue, Jul 28, 2020 at 08:10:46AM -0500, madvenka@linux.microsoft.com wrote:
-> From: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-> Trampoline code is placed either in a data page or in a stack page. In
-> order to execute a trampoline, the page it resides in needs to be mapped
-> with execute permissions. Writable pages with execute permissions provide
-> an attack surface for hackers. Attackers can use this to inject malicious
-> code, modify existing code or do other harm.
-
-For the purpose of below, IIUC this assumes the adversary has an
-arbitrary write.
-
-> To mitigate this, LSMs such as SELinux may not allow pages to have both
-> write and execute permissions. This prevents trampolines from executing
-> and blocks applications that use trampolines. To allow genuine applications
-> to run, exceptions have to be made for them (by setting execmem, etc).
-> In this case, the attack surface is just the pages of such applications.
+> Hi Alex,
 > 
-> An application that is not allowed to have writable executable pages
-> may try to load trampoline code into a file and map the file with execute
-> permissions. In this case, the attack surface is just the buffer that
-> contains trampoline code. However, a successful exploit may provide the
-> hacker with means to load his own code in a file, map it and execute it.
-
-It's not clear to me what power the adversary is assumed to have here,
-and consequently it's not clear to me how the proposal mitigates this.
-
-For example, if the attack can control the arguments to syscalls, and
-has an arbitrary write as above, what prevents them from creating a
-trampfd of their own?
-
-[...]
-
-> GCC has traditionally used trampolines for implementing nested
-> functions. The trampoline is placed on the user stack. So, the stack
-> needs to be executable.
-
-IIUC generally nested functions are avoided these days, specifically to
-prevent the creation of gadgets on the stack. So I don't think those are
-relevant as a cased to care about. Applications using them should move
-to not using them, and would be more secure generally for doing so.
-
-[...]
-
-> Trampoline File Descriptor (trampfd)
-> --------------------------
+> On 2020/7/30 4:25, Alex Williamson wrote:
+> > On Tue, 14 Jul 2020 13:57:02 +0800
+> > Lu Baolu<baolu.lu@linux.intel.com>  wrote:
+> >   
+> >> The device driver needs an API to get its aux-domain. A typical usage
+> >> scenario is:
+> >>
+> >>          unsigned long pasid;
+> >>          struct iommu_domain *domain;
+> >>          struct device *dev = mdev_dev(mdev);
+> >>          struct device *iommu_device = vfio_mdev_get_iommu_device(dev);
+> >>
+> >>          domain = iommu_aux_get_domain_for_dev(dev);
+> >>          if (!domain)
+> >>                  return -ENODEV;
+> >>
+> >>          pasid = iommu_aux_get_pasid(domain, iommu_device);
+> >>          if (pasid <= 0)
+> >>                  return -EINVAL;
+> >>
+> >>           /* Program the device context */
+> >>           ....
+> >>
+> >> This adds an API for such use case.
+> >>
+> >> Suggested-by: Alex Williamson<alex.williamson@redhat.com>
+> >> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
+> >> ---
+> >>   drivers/iommu/iommu.c | 18 ++++++++++++++++++
+> >>   include/linux/iommu.h |  7 +++++++
+> >>   2 files changed, 25 insertions(+)
+> >>
+> >> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> >> index cad5a19ebf22..434bf42b6b9b 100644
+> >> --- a/drivers/iommu/iommu.c
+> >> +++ b/drivers/iommu/iommu.c
+> >> @@ -2817,6 +2817,24 @@ void iommu_aux_detach_group(struct iommu_domain *domain,
+> >>   }
+> >>   EXPORT_SYMBOL_GPL(iommu_aux_detach_group);
+> >>   
+> >> +struct iommu_domain *iommu_aux_get_domain_for_dev(struct device *dev)
+> >> +{
+> >> +	struct iommu_domain *domain = NULL;
+> >> +	struct iommu_group *group;
+> >> +
+> >> +	group = iommu_group_get(dev);
+> >> +	if (!group)
+> >> +		return NULL;
+> >> +
+> >> +	if (group->aux_domain_attached)
+> >> +		domain = group->domain;  
+> > Why wouldn't the aux domain flag be on the domain itself rather than
+> > the group?  Then if we wanted sanity checking in patch 1/ we'd only
+> > need to test the flag on the object we're provided.  
 > 
-> I am proposing a kernel API using anonymous file descriptors that
-> can be used to create and execute trampolines with the help of the
-> kernel. In this solution also, the kernel does the work of the trampoline.
-
-What's the rationale for the kernel emulating the trampoline here?
-
-In ther case of EMUTRAMP this was necessary to work with existing
-application binaries and kernel ABIs which placed instructions onto the
-stack, and the stack needed to remain RW for other reasons. That
-restriction doesn't apply here.
-
-Assuming trampfd creation is somehow authenticated, the code could be
-placed in a r-x page (which the kernel could refuse to add write
-permission), in order to prevent modification. If that's sufficient,
-it's not much of a leap to allow userspace to generate the code.
-
-> The kernel creates the trampoline mapping without any permissions. When
-> the trampoline is executed by user code, a page fault happens and the
-> kernel gets control. The kernel recognizes that this is a trampoline
-> invocation. It sets up the user registers based on the specified
-> register context, and/or pushes values on the user stack based on the
-> specified stack context, and sets the user PC to the requested target
-> PC. When the kernel returns, execution continues at the target PC.
-> So, the kernel does the work of the trampoline on behalf of the
-> application.
+> Agreed. Given that a group may contain both non-aux and aux devices,
+> adding such flag in iommu_group doesn't make sense.
 > 
-> In this case, the attack surface is the context buffer. A hacker may
-> attack an application with a vulnerability and may be able to modify the
-> context buffer. So, when the register or stack context is set for
-> a trampoline, the values may have been tampered with. From an attack
-> surface perspective, this is similar to Trampoline Emulation. But
-> with trampfd, user code can retrieve a trampoline's context from the
-> kernel and add defensive checks to see if the context has been
-> tampered with.
-
-Can you elaborate on this: what sort of checks would be applied, and
-how?
-
-Why is this not possible in a r-x user page?
-
-[...]
-
-> - trampfd provides a basic framework. In the future, new trampoline types
->   can be implemented, new contexts can be defined, and additional rules
->   can be implemented for security purposes.
-
-From a kernel developer perspective, this reads as "this ABI will become
-more complex", which I think is worrisome.
-
-I'm also worried that this is liable to have nasty interaction with HW
-CFI mechanisms (e.g. PAC+BTI on arm64) either now or in future, and that
-we bake incompatibility into ABI.
-
-> - For instance, trampfd defines an "Allowed PCs" context in this initial
->   work. As an example, libffi can create a read-only array of all ABI
->   handlers for an architecture at build time. This array can be used to
->   set the list of allowed PCs for a trampoline. This will mean that a hacker
->   cannot hack the PC part of the register context and make it point to
->   arbitrary locations.
-
-I'm not exactly sure what's meant here. Do you mean that this prevents
-userspace from branching into the middle of a trampoline, or that the
-trampfd code prevents where the trampoline itself can branch to?
-
-Both x86 and arm64 have upcoming HW CFI (CET and BTI) to deal with the
-former, and I believe the latter can also be implemented in userspace
-with defensive checks in the trampolines, provided that they are
-protected read-only.
-
-> - An SELinux setting called "exectramp" can be implemented along the
->   lines of "execmem", "execstack" and "execheap" to selectively allow the
->   use of trampolines on a per application basis.
+> > 
+> > If we had such a flag, we could create an iommu_domain_is_aux()
+> > function and then simply use iommu_get_domain_for_dev() and test that
+> > it's an aux domain in the example use case.  It seems like that would
+> > resolve the jump from a domain to an aux-domain just as well as adding
+> > this separate iommu_aux_get_domain_for_dev() interface.  The is_aux
+> > test might also be useful in other cases too.  
 > 
-> - User code can add defensive checks in the code before invoking a
->   trampoline to make sure that a hacker has not modified the context data.
->   It can do this by getting the trampoline context from the kernel and
->   double checking it.
-
-As above, without examples it's not clear to me what sort of chacks are
-possible nor where they wouild need to be made. So it's difficult to see
-whether that's actually possible or subject to TOCTTOU races and
-similar.
-
-> - In the future, if the kernel can be enhanced to use a safe code
->   generation component, that code can be placed in the trampoline mapping
->   pages. Then, the trampoline invocation does not have to incur a trip
->   into the kernel.
+> Let's rehearsal our use case.
 > 
-> - Also, if the kernel can be enhanced to use a safe code generation
->   component, other forms of dynamic code such as JIT code can be
->   addressed by the trampfd framework.
+>          unsigned long pasid;
+>          struct iommu_domain *domain;
+>          struct device *dev = mdev_dev(mdev);
+>          struct device *iommu_device = vfio_mdev_get_iommu_device(dev);
+> 
+> [1]     domain = iommu_get_domain_for_dev(dev);
+>          if (!domain)
+>                  return -ENODEV;
+> 
+> [2]     pasid = iommu_aux_get_pasid(domain, iommu_device);
+>          if (pasid <= 0)
+>                  return -EINVAL;
+> 
+>           /* Program the device context */
+>           ....
+> 
+> The reason why I add this iommu_aux_get_domain_for_dev() is that we need
+> to make sure the domain got at [1] is valid to be used at [2].
+> 
+> https://lore.kernel.org/linux-iommu/20200707150408.474d81f1@x1.home/
 
-I don't see why it's necessary for the kernel to generate code at all.
-If the trampfd creation requests can be trusted, what prevents trusting
-a sealed set of instructions generated in userspace?
+Yep, I thought that was a bit of a leap in logic.
 
-> - Trampolines can be shared across processes which can give rise to
->   interesting uses in the future.
+> When calling into iommu_aux_get_pasid(), the iommu driver should make
+> sure that @domain is a valid aux-domain for @iommu_device. Hence, for
+> our use case, it seems that there's no need for a is_aux_domain() api.
+> 
+> Anyway, I'm not against adding a new is_aux_domain() api if there's a
+> need elsewhere.
 
-This sounds like the use-case of a sealed memfd. Is a sealed executable
-memfd not sufficient?
+I think it could work either way, we could have an
+iommu_get_aux_domain_for_dev() which returns NULL if the domain is not
+an aux domain, or we could use iommu_get_domain_for_dev() and the
+caller could test the domain with iommu_is_aux_domain() if they need to
+confirm if it's an aux domain.  The former could even be written using
+the latter, a wrapper of iommu_get_domain_for_dev() that checks aux
+property before returning.  Thanks,
 
-Thanks,
-Mark.
+Alex
+
