@@ -2,132 +2,142 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1111EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E48EB2245C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E189E2245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:14:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BPU0S8RA"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="K/8KlAFL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732535AbgGaLMe (ORCPT
+        id S1732645AbgGaLOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 07:12:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732104AbgGaLMd (ORCPT
+        Fri, 31 Jul 2020 07:14:31 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:44088 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732104AbgGaLOb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 07:12:33 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73C52C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 04:12:33 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id r4so24670326wrx.9
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 04:12:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=SAJ/B5vlycsw95obezE/2ESChFtR1rGop3GZL1mr6Lo=;
-        b=BPU0S8RALM+4SBkU/ZFFEL3yo2qQphBGZUs+LshQF7KlODLeCvfG4d/JmT+U9ly/rs
-         W15FjoBZLQwg/HTpX0n/dZJcmeRnpoi1dtFF6Y91gg28NgbZolEHiuot9hYMuM6YOZ8u
-         twVVDL1Vtesepv3ut0O5olUjb+pzArd1T0Y7Nuut8AgObrEH8O6iIa2AgXU7RsPAj1it
-         ErQm+5MU3eIdG5EefdCKDWWNS2ej67t1BsZodVcp55+UOi5Rlbe0kYNYqncMRYs26DSp
-         O1mSR0Y4vONAczHDpGrGK3UQ97vSqxOCi+/ZtkE/opPOUCY7Pt5QjGhc/O+T1lUqDXL8
-         4QsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=SAJ/B5vlycsw95obezE/2ESChFtR1rGop3GZL1mr6Lo=;
-        b=kVSlSoNRb7py/akqGyIQMT6GWTulUMoQPGsZwr00JviYZPQIKHciRfxqkEQH1fDea5
-         i/JIdf6XUUsBw59nV+szBEXrjRjyJdgTaMIhn6KfT1aZdPajRAYIsK1XK8cT+fqQYYZh
-         Vf2L19Yihvv++NnagE5DX+usW2WxlA5qBDCXQ8B0E/0RwEVebTs/+JqldEnG2p2aPUIK
-         9zMWcsxZET/hu/rg9Lj7/dUK5CwVAANbTYYDgXf9pCBGYP6npdZyX31Sc2aUImdwQPBF
-         imViNJTypT4WefCTVtTZRBQNzmhxab5y7m8CNAtugpo3okxgII6lDy94sEDPUt5DXFaD
-         L/xA==
-X-Gm-Message-State: AOAM532TFrIvTmlZJZO4QorNHqDmJ+dWHJF3Tq5wLfqltUDwRAR5H/Ps
-        l+/LLcAsYSrqDMF44aTLtVM8CPA+r4s=
-X-Google-Smtp-Source: ABdhPJyPGJOocU0OBLIk1fAQ0XbvtfJ/7/7qXWo5zswrtd805FbFvKYD9kgSAcyUo4x7eobsLiv+sA==
-X-Received: by 2002:adf:cd12:: with SMTP id w18mr3148164wrm.352.1596193952052;
-        Fri, 31 Jul 2020 04:12:32 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id w2sm15366588wre.5.2020.07.31.04.12.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 04:12:31 -0700 (PDT)
-Date:   Fri, 31 Jul 2020 12:12:29 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Gene Chen <gene_chen@richtek.com>, benjamin.chao@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com
-Subject: Re: [PATCH v2 4/9] mfd: mt6360: Combine mt6360 pmic/ldo resouces
- into mt6360 regulator resources
-Message-ID: <20200731111229.GL2419169@dell>
-References: <1594983811-25908-1-git-send-email-gene.chen.richtek@gmail.com>
- <1594983811-25908-5-git-send-email-gene.chen.richtek@gmail.com>
- <20200727112921.GK1850026@dell>
- <CAE+NS36cxY9KqxxcmuctK_W_3ZmZnC_xK8VVVaTZqC3vSoqbUw@mail.gmail.com>
- <20200728065422.GB1850026@dell>
- <CAE+NS34OFVf36zp7Nn0ETZ5KEaTet-P_VdPMuiZgqo1HfNxeYA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAE+NS34OFVf36zp7Nn0ETZ5KEaTet-P_VdPMuiZgqo1HfNxeYA@mail.gmail.com>
+        Fri, 31 Jul 2020 07:14:31 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06VB758g138077;
+        Fri, 31 Jul 2020 11:14:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=RuuosTbYTCr8I08cs/W2a+vgUYd33wv3e8KZbejxVWM=;
+ b=K/8KlAFLEUGW81gpFqx4MCbbAEs0r2yk0oc7hMGtcPskWye9ivK9Et+Kl3sVCVoOCwKH
+ VzZBhpCak2oMkK2xOBlDfct7jALEHbBdaPCvnyon9+gLGKn4IoxIsq9UoRMAfYFE+xk2
+ 25JuLV52B4QK1U2LaqU7ae8pC8eOUcEbLYSXtkSEzd3H9e8w4MToeTeDfZPxNp6yxRIv
+ uWjuhjL2bnkfnouFdh0rei/OhY1TxqvSd/n6PdnX8Qmuj1yQEDAucDC8sHCl/GwTZfeJ
+ U3njJRO1BpNZ1Rma8Dh7ZAR9Wt/T/8/fAZsOAQOm6nqCDl0HnIa0M+aDo6GjChcI5/dm ZA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 32hu1jrhve-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jul 2020 11:14:20 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06VB8rN8135178;
+        Fri, 31 Jul 2020 11:14:20 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 32hu5yrj6t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jul 2020 11:14:20 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06VBEJNF163083;
+        Fri, 31 Jul 2020 11:14:19 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 32hu5yrj69-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 31 Jul 2020 11:14:19 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06VBEEbe008514;
+        Fri, 31 Jul 2020 11:14:14 GMT
+Received: from dhcp-10-175-172-80.vpn.oracle.com (/10.175.172.80)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 31 Jul 2020 04:14:14 -0700
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak
+ in rds_notify_queue_get()
+From:   =?utf-8?Q?H=C3=A5kon_Bugge?= <haakon.bugge@oracle.com>
+In-Reply-To: <20200731095943.GI5493@kadam>
+Date:   Fri, 31 Jul 2020 13:14:09 +0200
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        netdev@vger.kernel.org,
+        OFED mailing list <linux-rdma@vger.kernel.org>,
+        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <81B40AF5-EBCA-4628-8CF6-687C12134552@oracle.com>
+References: <20200730192026.110246-1-yepeilin.cs@gmail.com>
+ <20200731045301.GI75549@unreal> <20200731095943.GI5493@kadam>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9698 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
+ malwarescore=0 spamscore=0 suspectscore=3 bulkscore=0 priorityscore=1501
+ phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007310084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jul 2020, Gene Chen wrote:
 
-> Lee Jones <lee.jones@linaro.org> 於 2020年7月28日 週二 下午2:54寫道：
-> >
-> > On Tue, 28 Jul 2020, Gene Chen wrote:
-> >
-> > > Lee Jones <lee.jones@linaro.org> 於 2020年7月27日 週一 下午7:29寫道：
-> > > >
-> > > > On Fri, 17 Jul 2020, Gene Chen wrote:
-> > > >
-> > > > > From: Gene Chen <gene_chen@richtek.com>
-> > > > >
-> > > > > Combine mt6360 pmic/ldo resouces into mt6360 regulator resources
-> > > > > to simplify the similar resources object.
-> > > >
-> > > > Do the sub-devices actually share these resources, or are you doing
-> > > > this just to make the code simpler?
-> > > >
-> > >
-> > > They are different resources used by different bucks and ldos without
-> > > sharing relations.
-> > > I just to make the code simpler.
-> >
-> > I don't think that's sensible.
-> >
-> > You should only share resources with child devices that consume them.
-> >
-> 
-> At first, I separated regulators into two drivers, mt6360-pmic.c and
-> mt6360-ldo.c, according to default-on power or not.
-> Then, I merged two drivers into mt6360-regulator.c and merged their
-> resources as well.
-> Therefore, for every device of BUCK/LDO, I'll find resources according
-> to their name and request IRQs.
 
-Okay, so all of the resources are consumed by a single driver?
+> On 31 Jul 2020, at 11:59, Dan Carpenter <dan.carpenter@oracle.com> =
+wrote:
+>=20
+> On Fri, Jul 31, 2020 at 07:53:01AM +0300, Leon Romanovsky wrote:
+>> On Thu, Jul 30, 2020 at 03:20:26PM -0400, Peilin Ye wrote:
+>>> rds_notify_queue_get() is potentially copying uninitialized kernel =
+stack
+>>> memory to userspace since the compiler may leave a 4-byte hole at =
+the end
+>>> of `cmsg`.
+>>>=20
+>>> In 2016 we tried to fix this issue by doing `=3D { 0 };` on `cmsg`, =
+which
+>>> unfortunately does not always initialize that 4-byte hole. Fix it by =
+using
+>>> memset() instead.
+>>=20
+>> Of course, this is the difference between "{ 0 }" and "{}" =
+initializations.
+>>=20
+>=20
+> No, there is no difference.  Even struct assignments like:
+>=20
+> 	foo =3D *bar;
+>=20
+> can leave struct holes uninitialized.  Depending on the compiler the
+> assignment can be implemented as a memset() or as a series of struct
+> member assignments.
 
-That is fine then.
+What about:
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+struct rds_rdma_notify {
+	__u64                      user_token;
+	__s32                      status;
+} __attribute__((packed));
+
+
+Thxs, H=C3=A5kon
+
+
+> regards,
+> dan carpenter
+>=20
+
