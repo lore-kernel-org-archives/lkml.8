@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA56C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1911DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1133720836
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0B4E206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:09:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UOmfMzCm"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fsdMY+h/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgGaXJk (ORCPT
+        id S1728282AbgGaXJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 19:09:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45784 "EHLO
+        Fri, 31 Jul 2020 19:09:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727824AbgGaXIn (ORCPT
+        with ESMTP id S1727812AbgGaXIl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 19:08:43 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A0A8C0617A5
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:08:42 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id y206so4890916pfb.10
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:08:42 -0700 (PDT)
+        Fri, 31 Jul 2020 19:08:41 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7215DC0617A2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:08:41 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id p1so18101131pls.4
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:08:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/xo3Q84YrxwUiWcBw2aOaAxjUU+KH/ct5i4ArRZb6NA=;
-        b=UOmfMzCmziqUvRhPYa+yYqVSk1m4tQNkydUKWMwHOqa9jOGpy2SdYgaJLcq/mHaWXh
-         zacXLwriPv2Ri+BNefUVSy7N+waQxDV79aIcfmEBlB5x2MgmKl6KXLtRXHiNRlOgfhju
-         VFSHbOijca+jat3MDYqe3dO3/6omRradiMlw0=
+        bh=KU7M7UNmTUanucRcVkgs3oof+flMLCjuo6z/HYA95R0=;
+        b=fsdMY+h/HCrYg4s8js10KsjHgwZ/i2Vg6ElsNO+/5Zg2zIx4wvLEGL4/ETWMpuY8J2
+         o+9UZBPQ7ltcKYO+s4x4Ikr8sgtWBgda8uqQnEdYp395MQkyy9U4jdZbNXuXAWEcZT52
+         2LAHpspS3nzF4NKUhFVimmKrwzLeIv271myqM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/xo3Q84YrxwUiWcBw2aOaAxjUU+KH/ct5i4ArRZb6NA=;
-        b=CtdTnMWJO/MTdGn9a86G4ay0e/bk582GnVuHqXNLL2ftFVD+1ZSwCPwkoYeZuzfQSH
-         4bJBdFCP1K0I+Rw+8/qD+ozPucLDyciwl4cdHnUglg9aBsGPF4wjjb4C+4MLFyVp0Pod
-         hZUZ7VWKsijMIvMe5/CcmsANaPLtohNmiVhstVk/eYK3NiD4THSMO1pJgUWuaCXk5S5X
-         VKrK5DVddVrH7R7IGk/9afSAVW+KyeQLkw1Vm35PyMkpMcS8HJo3+WdgbMyAWRaG3LVY
-         kHJkcsVb0+164/00Jc6qKSQ0Zd/K+4cIXqOcCcde8qE2jkduyBftJY32D5DL0i/KWrDh
-         /+RA==
-X-Gm-Message-State: AOAM530f8d+//IR2vXG28XFZUJNoTww35W5WY/I/PuGPSsXj85/sJpMo
-        2snDw3qos3wz6y5CtQJGaAwf/w==
-X-Google-Smtp-Source: ABdhPJzj+UXk+6XOR8nQ2GzywdieZm9fcrAxd+t6miZrKiy5n0SgtqPnKj/QvJ0LP/t472pshpKEKA==
-X-Received: by 2002:a05:6a00:22c4:: with SMTP id f4mr5321141pfj.273.1596236921685;
+        bh=KU7M7UNmTUanucRcVkgs3oof+flMLCjuo6z/HYA95R0=;
+        b=ELPVQ9JvtjkGgjYBORfVAyNBCgf0oOZWgbwM9HCXsP8qfHy7A91dRn+fGEDkVT/vOG
+         rWVzbMC4+fzpzuwZ8A6Y6qiVxFDfUf4rEj3sqLI9LiF8ecaFBB0ufhrmRrhsriCgRPo7
+         qUgShzdsXXncpPVudy5RxenoygYXX040iGr+PSK+UX/IIdWpXr+sUD2sN4ZZ/FChCtCz
+         5V3bwmxaOqAGzXZnQRp7jSdogtnYZLrpvzV5Fsnqa9bCckDA5IsziHUa0MtFNLaDyxxe
+         ZQZL7beO+DJnanAGA9B5E22pLEKY7GBzVrcuFS7GnSb+wiyZJI9r1sXbKLQaL2sOokHp
+         LlFw==
+X-Gm-Message-State: AOAM533ALKdeofcOkYqUIVSpxbRqRnkysp3QrV5HoLb8UuVWdCma+3mu
+        +aSOqQqdbpkegNYNK/sACPJzcg==
+X-Google-Smtp-Source: ABdhPJzKgSd5o5SkMdibqlFZcnSauPEvdVFKBx4sb7CWulX3P8bH0S9YNVBj9d8bmnzdlj8aFKQVbQ==
+X-Received: by 2002:a17:902:221:: with SMTP id 30mr5688593plc.222.1596236921012;
         Fri, 31 Jul 2020 16:08:41 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i13sm9909036pjd.33.2020.07.31.16.08.35
+        by smtp.gmail.com with ESMTPSA id 17sm9984876pjl.30.2020.07.31.16.08.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 31 Jul 2020 16:08:36 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Fangrui Song <maskray@google.com>,
+Cc:     Kees Cook <keescook@chromium.org>, Marco Elver <elver@google.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Ard Biesheuvel <ardb@kernel.org>,
@@ -75,9 +75,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
         linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 12/36] vmlinux.lds.h: Add .symtab, .strtab, and .shstrtab to ELF_DETAILS
-Date:   Fri, 31 Jul 2020 16:07:56 -0700
-Message-Id: <20200731230820.1742553-13-keescook@chromium.org>
+Subject: [PATCH v5 10/36] vmlinux.lds.h: Avoid KASAN and KCSAN's unwanted sections
+Date:   Fri, 31 Jul 2020 16:07:54 -0700
+Message-Id: <20200731230820.1742553-11-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200731230820.1742553-1-keescook@chromium.org>
 References: <20200731230820.1742553-1-keescook@chromium.org>
@@ -88,40 +88,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When linking vmlinux with LLD, the synthetic sections .symtab, .strtab,
-and .shstrtab are listed as orphaned. Add them to the ELF_DETAILS section
-so there will be no warnings when --orphan-handling=warn is used more
-widely. (They are added above comment as it is the more common
-order[1].)
+KASAN (-fsanitize=kernel-address) and KCSAN (-fsanitize=thread)
+produce unwanted[1] .eh_frame and .init_array.* sections. Add them to
+COMMON_DISCARDS, except with CONFIG_CONSTRUCTORS, which wants to keep
+.init_array.* sections.
 
-ld.lld: warning: <internal>:(.symtab) is being placed in '.symtab'
-ld.lld: warning: <internal>:(.shstrtab) is being placed in '.shstrtab'
-ld.lld: warning: <internal>:(.strtab) is being placed in '.strtab'
+[1] https://bugs.llvm.org/show_bug.cgi?id=46478
 
-[1] https://lore.kernel.org/lkml/20200622224928.o2a7jkq33guxfci4@google.com/
-
-Reported-by: Fangrui Song <maskray@google.com>
+Tested-by: Marco Elver <elver@google.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/asm-generic/vmlinux.lds.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ include/asm-generic/vmlinux.lds.h | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
 diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 22c9a68c02ae..2593957f6e8b 100644
+index 22985cf02130..f236cf0fa779 100644
 --- a/include/asm-generic/vmlinux.lds.h
 +++ b/include/asm-generic/vmlinux.lds.h
-@@ -799,7 +799,10 @@
+@@ -930,7 +930,27 @@
+ 	EXIT_DATA
+ #endif
  
- /* Required sections not related to debugging. */
- #define ELF_DETAILS							\
--		.comment 0 : { *(.comment) }
-+		.comment 0 : { *(.comment) }				\
-+		.symtab 0 : { *(.symtab) }				\
-+		.strtab 0 : { *(.strtab) }				\
-+		.shstrtab 0 : { *(.shstrtab) }
- 
- #ifdef CONFIG_GENERIC_BUG
- #define BUG_TABLE							\
++/*
++ * Clang's -fsanitize=kernel-address and -fsanitize=thread produce
++ * unwanted sections (.eh_frame and .init_array.*), but
++ * CONFIG_CONSTRUCTORS wants to keep any .init_array.* sections.
++ * https://bugs.llvm.org/show_bug.cgi?id=46478
++ */
++#if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KCSAN)
++# ifdef CONFIG_CONSTRUCTORS
++#  define SANITIZER_DISCARDS						\
++	*(.eh_frame)
++# else
++#  define SANITIZER_DISCARDS						\
++	*(.init_array) *(.init_array.*)					\
++	*(.eh_frame)
++# endif
++#else
++# define SANITIZER_DISCARDS
++#endif
++
+ #define COMMON_DISCARDS							\
++	SANITIZER_DISCARDS						\
+ 	*(.discard)							\
+ 	*(.discard.*)							\
+ 	*(.modinfo)							\
 -- 
 2.25.1
 
