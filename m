@@ -2,80 +2,93 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 868D3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32476C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62A3E22B3F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:49:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FzUcUdR8"
+	by mail.kernel.org (Postfix) with ESMTP id 0E0BE22B42
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbgGaUts (ORCPT
+        id S1728608AbgGaUu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 16:49:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbgGaUtr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 16:49:47 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38EDDC061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 13:49:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=/q30urdzzKXnpoJ7dXdtjQrPbekj62/yJbF+tw5Z+LY=; b=FzUcUdR8C6VL3g1heE8U8qPOOz
-        skp4/ZS5oZ/jNXWB9AIGNkGq5yYjwRvWaaI+t9JzJUKMIz4OlhO9o633+W2DXzDBaQnUsn5f5U8N8
-        NTixXRNwq8Wq0Zcw04ROlFjkQMIXch+/ycVdIkpUBTrOtbglDRkfrTIlwHYjeTmENH/L525S5nVYY
-        lSVIZfrPPten5K1gomKBrrciuobW9nOO0TXH2Rkijc4iHARPxUpF1RXVpoQckjDLub/iTlaIGv0Ur
-        JpkKHg7qXfggG2fBxLwxWXLmfSrwTgiMi70LQIbd6P8wWCfYnTbd9UwmR4cV9KaAH7be+85bLiiX8
-        f+cb23Aw==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k1byH-00021t-4m; Fri, 31 Jul 2020 20:49:41 +0000
-Date:   Fri, 31 Jul 2020 21:49:41 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     qiang.zhang@windriver.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/dmapool.c: add WARN_ON() in dma_pool_destroy
-Message-ID: <20200731204941.GR23808@casper.infradead.org>
-References: <20200731023939.19206-1-qiang.zhang@windriver.com>
- <20200731023858.GO23808@casper.infradead.org>
- <20200731133215.73cf5ce464e2b894aeac0773@linux-foundation.org>
+        Fri, 31 Jul 2020 16:50:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39242 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726884AbgGaUu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 16:50:27 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50178208E4;
+        Fri, 31 Jul 2020 20:50:25 +0000 (UTC)
+Date:   Fri, 31 Jul 2020 16:50:23 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     peterz@infradead.org
+Cc:     Dongdong Yang <contribute.kernel@gmail.com>,
+        gregkh@linuxfoundation.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-pm@vger.kernel.org,
+        yangdongdong@xiaomi.com, tanggeliang@xiaomi.com, taojun@xiaomi.com,
+        huangqiwu@xiaomi.com, rocking@linux.alibaba.com,
+        fengwei@xiaomi.com, zhangguoquan@xiaomi.com, gulinghua@xiaomi.com,
+        duhui@xiaomi.com
+Subject: Re: [PATCH] sched: Provide USF for the portable equipment.
+Message-ID: <20200731165023.11eb5d5b@oasis.local.home>
+In-Reply-To: <20200731181538.GB2674@hirez.programming.kicks-ass.net>
+References: <cover.1596101307.git.yangdongdong@xiaomi.com>
+        <1596116273-2290-1-git-send-email-contribute.kernel@gmail.com>
+        <20200731181538.GB2674@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200731133215.73cf5ce464e2b894aeac0773@linux-foundation.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 01:32:15PM -0700, Andrew Morton wrote:
-> On Fri, 31 Jul 2020 03:38:58 +0100 Matthew Wilcox <willy@infradead.org> wrote:
+On Fri, 31 Jul 2020 20:15:38 +0200
+peterz@infradead.org wrote:
+
+> On Thu, Jul 30, 2020 at 09:35:43PM +0800, Dongdong Yang wrote:
+> > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+> > index 7fbaee2..7bc3429 100644
+> > --- a/kernel/sched/cpufreq_schedutil.c
+> > +++ b/kernel/sched/cpufreq_schedutil.c
+> > @@ -289,12 +289,21 @@ unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
+> >  	return min(max, util);
+> >  }
+> >  
+> > +#ifdef CONFIG_SCHED_USF
+> > +void (*adjust_task_pred_demand)(int cpuid, unsigned long *util,
+> > +	struct rq *rq) = NULL;
+> > +EXPORT_SYMBOL(adjust_task_pred_demand);
+> > +#endif
+> > +
+> >  static unsigned long sugov_get_util(struct sugov_cpu *sg_cpu)
+> >  {
+> >  	struct rq *rq = cpu_rq(sg_cpu->cpu);
+> >  	unsigned long util = cpu_util_cfs(rq);
+> >  	unsigned long max = arch_scale_cpu_capacity(sg_cpu->cpu);
+> > -
+> > +#ifdef CONFIG_SCHED_USF
+> > +	if (adjust_task_pred_demand)
+> > +		adjust_task_pred_demand(sg_cpu->cpu, &util, rq);
+> > +#endif
+> >  	sg_cpu->max = max;
+> >  	sg_cpu->bw_dl = cpu_bw_dl(rq);  
 > 
-> > On Fri, Jul 31, 2020 at 10:39:39AM +0800, qiang.zhang@windriver.com wrote:
-> > > The pool is being destroyed, all page which in the pool,
-> > > should be free. if some page is still be use by somebody,
-> > > we should not just output error logs, also should also add
-> > > a warning message.
-> > 
-> > There's already a warning message.  What value does this actually have?
-> 
-> Presumably so we get a backtrace in order to identify the errant
-> caller.  
+> NAK
 
-The existing message includes the name of the pool.  We don't typically
-have more than one place that destroys a pool.
+Peter,
 
-What might be helpful would be something that said who allocated and
-didn't free the object, but again, there's typically only one place which
-allocates from any given pool, so even that would be all that helpful.
+It's more informative if you include rational with a NAK.
 
-I'm not particularly impressed by these patches which don't actually
-justify themselves.
+-- Steve
+
