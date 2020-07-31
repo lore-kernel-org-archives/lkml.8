@@ -2,151 +2,148 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF0FC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D890C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD94C22B40
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72ADC22B40
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:04:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tdc87K9U"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LE0aKejB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733079AbgGaMCx (ORCPT
+        id S1732918AbgGaMES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 08:02:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733001AbgGaMCV (ORCPT
+        Fri, 31 Jul 2020 08:04:18 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32006 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732774AbgGaMER (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 08:02:21 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05544C061574;
-        Fri, 31 Jul 2020 05:02:21 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id bo3so8536415ejb.11;
-        Fri, 31 Jul 2020 05:02:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ml221r4dHqXe07i3xfLOyBkeN0U7ADgIKojP7DQw/XU=;
-        b=tdc87K9UnCJy6h8rTMzof2JLZE4gpUzsMej7iiUfVOUd8Id5xNJOXDAFSfsuz1w6u7
-         iPtFsNJnx1SkMUgFfvLUPtv9cu83vKOHYyRXtSmX7KgJcVnPQ3gnhE8Vn7frgHaIxoVi
-         Z+sknEjd13Z6IBnP0Jr1Gxd6tF5MYqxOo+hJMYp26pN1GTyaYHyecoyhHHtGfC0VobdR
-         mBKxZ07cIazEDKChb+I7ckeC2rc+uHvtBAkpedhjsjR469MF4Evszk9aoUuX/w/fp92p
-         VaLu2ghSiNVcmXKdZDtlEE5Eunx6Vqus4obfwNnNzChqQ/gvK3jUU6SEn0bMJjdZoz9a
-         s00A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ml221r4dHqXe07i3xfLOyBkeN0U7ADgIKojP7DQw/XU=;
-        b=VO/ZHz++ggkO+pZzm9eTS5b2vfxdGXT75PU0zHBT5WIBFppuBmqUp8V9qnlTQI/VVJ
-         nv7PJUUQeEzZsET6ZeSiK7uiP14M+ggjfBA0y7yqEnkT9CqavTltXov8uzwQGaPEeF2N
-         UqS1q5e7iL6Z3H69POQO0esEl54ZQKeRafBIn6Sg8RLu/9r6gYv/nZle4vJWdHUgbQCP
-         BJvJbEIIjMqTBerXA3Zvit58XF9LGFvMezdg/Cqc6Ar1N9wwbzs6sKeNxbob/USMMF/5
-         c31nvKEV85k2QHUptBkyRJzFzXoy6TJqrOxkX26fdDB4eiBsHslvBSs0aGMj+aDVk0s5
-         cs8Q==
-X-Gm-Message-State: AOAM533jhp02Z7kl5ZeUzfHPAv465O7ZvSo0NDgiHpFKKKRWtKAazGcq
-        EiD1y+0AVRUV25hdIZrueB+a7UDtjUwS2g==
-X-Google-Smtp-Source: ABdhPJzVmRwWuzV+in/VwaHSzymsIW0npTezXTXxbvP7G3I49+S4RYZeWtmVO3+jrmVNC2IMOL/qcQ==
-X-Received: by 2002:a17:906:a94b:: with SMTP id hh11mr3659252ejb.104.1596196939763;
-        Fri, 31 Jul 2020 05:02:19 -0700 (PDT)
-Received: from net.saheed (95C84E0A.dsl.pool.telekom.hu. [149.200.78.10])
-        by smtp.gmail.com with ESMTPSA id j5sm9091734ejk.87.2020.07.31.05.02.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 05:02:19 -0700 (PDT)
-From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-To:     helgaas@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        bjorn@helgaas.com, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 02/12] misc: rtsx: Check if pcie_capability_read_*() reads ~0
-Date:   Fri, 31 Jul 2020 13:02:30 +0200
-Message-Id: <20200731110240.98326-3-refactormyself@gmail.com>
-X-Mailer: git-send-email 2.18.4
-In-Reply-To: <20200731110240.98326-1-refactormyself@gmail.com>
-References: <20200731110240.98326-1-refactormyself@gmail.com>
+        Fri, 31 Jul 2020 08:04:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596197055;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=n6UIik3Jpq1xXTWaX2y8qVUYtIw2s9+k7YboRf56zbc=;
+        b=LE0aKejBA/2mf16u2B3/JCowVQ+15/8YLK91yhyunabrYJi6Gdsr3qTpPKvs8PX9d7aEtQ
+        qlFV0zI1QXoUw2gEYzTSADS86F+2RJIbu70cyFU0nAAxo0wlbp7XuFhQKIe4jH7CYo5Kw1
+        Phgyw9xh9B7qBoZtpNh9cJFJCmdheLY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-185-975TjRT3OgmhQDUfBRbiCA-1; Fri, 31 Jul 2020 08:04:11 -0400
+X-MC-Unique: 975TjRT3OgmhQDUfBRbiCA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 07F9F59;
+        Fri, 31 Jul 2020 12:04:10 +0000 (UTC)
+Received: from sandy.ghostprotocols.net (unknown [10.3.128.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B69695DA81;
+        Fri, 31 Jul 2020 12:04:08 +0000 (UTC)
+Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
+        id 9EBFF202; Fri, 31 Jul 2020 09:04:03 -0300 (BRT)
+Date:   Fri, 31 Jul 2020 09:04:03 -0300
+From:   Arnaldo Carvalho de Melo <acme@redhat.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Philippe Duplessis-Guindon <pduplessis@efficios.com>,
+        linux-trace-devel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tools lib traceevent: Fix memory leak in
+ process_dynamic_array_len
+Message-ID: <20200731120403.GA4414@redhat.com>
+References: <20200730150236.5392-1-pduplessis@efficios.com>
+ <20200730172843.653cd9f4@oasis.local.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730172843.653cd9f4@oasis.local.home>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.5.20 (2009-12-10)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On failure pcie_capability_read_word() sets it's last parameter, val
-to 0. In which case (val & PCI_EXP_DEVCTL2_LTR_EN) evaluates to 0.
-However, with Patch 12/12, it is possible that val is set to ~0 on
-failure. This would introduce a bug because (x & x) == (~0 & x).
+Em Thu, Jul 30, 2020 at 05:28:43PM -0400, Steven Rostedt escreveu:
+> 
+> Arnaldo,
+> 
+> Can you pull this into your tree under urgent?
+> 
+>  https://lore.kernel.org/linux-trace-devel/20200730150236.5392-1-pduplessis@efficios.com/
+> 
+> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Since ~0 is an invalid value here,
+Sure, will get it and try and send today,
 
-Add an extra check for ~0 to the if condition to ensure success.
-
-Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
----
- drivers/misc/cardreader/rts5227.c | 2 +-
- drivers/misc/cardreader/rts5249.c | 2 +-
- drivers/misc/cardreader/rts5260.c | 2 +-
- drivers/misc/cardreader/rts5261.c | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/misc/cardreader/rts5227.c b/drivers/misc/cardreader/rts5227.c
-index 3a9467aaa435..cab816639df1 100644
---- a/drivers/misc/cardreader/rts5227.c
-+++ b/drivers/misc/cardreader/rts5227.c
-@@ -106,7 +106,7 @@ static int rts5227_extra_init_hw(struct rtsx_pcr *pcr)
- 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, OLT_LED_CTL, 0x0F, 0x02);
- 	/* Configure LTR */
- 	pcie_capability_read_word(pcr->pci, PCI_EXP_DEVCTL2, &cap);
--	if (cap & PCI_EXP_DEVCTL2_LTR_EN)
-+	if ((cap != (u16)~0) && (cap & PCI_EXP_DEVCTL2_LTR_EN))
- 		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, LTR_CTL, 0xFF, 0xA3);
- 	/* Configure OBFF */
- 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, OBFF_CFG, 0x03, 0x03);
-diff --git a/drivers/misc/cardreader/rts5249.c b/drivers/misc/cardreader/rts5249.c
-index 6c6c9e95a29f..4382ac753fda 100644
---- a/drivers/misc/cardreader/rts5249.c
-+++ b/drivers/misc/cardreader/rts5249.c
-@@ -119,7 +119,7 @@ static void rts5249_init_from_cfg(struct rtsx_pcr *pcr)
- 		u16 val;
+- Arnaldo
  
- 		pcie_capability_read_word(pcr->pci, PCI_EXP_DEVCTL2, &val);
--		if (val & PCI_EXP_DEVCTL2_LTR_EN) {
-+		if ((val != (u16)~0) && (val & PCI_EXP_DEVCTL2_LTR_EN)) {
- 			option->ltr_enabled = true;
- 			option->ltr_active = true;
- 			rtsx_set_ltr_latency(pcr, option->ltr_active_latency);
-diff --git a/drivers/misc/cardreader/rts5260.c b/drivers/misc/cardreader/rts5260.c
-index 7a9dbb778e84..3d52c86aaaa3 100644
---- a/drivers/misc/cardreader/rts5260.c
-+++ b/drivers/misc/cardreader/rts5260.c
-@@ -519,7 +519,7 @@ static void rts5260_init_from_cfg(struct rtsx_pcr *pcr)
- 		u16 val;
- 
- 		pcie_capability_read_word(pcr->pci, PCI_EXP_DEVCTL2, &val);
--		if (val & PCI_EXP_DEVCTL2_LTR_EN) {
-+		if ((val != (u16)~0) && (val & PCI_EXP_DEVCTL2_LTR_EN)) {
- 			option->ltr_enabled = true;
- 			option->ltr_active = true;
- 			rtsx_set_ltr_latency(pcr, option->ltr_active_latency);
-diff --git a/drivers/misc/cardreader/rts5261.c b/drivers/misc/cardreader/rts5261.c
-index 195822ec858e..7e1188740194 100644
---- a/drivers/misc/cardreader/rts5261.c
-+++ b/drivers/misc/cardreader/rts5261.c
-@@ -440,7 +440,7 @@ static void rts5261_init_from_cfg(struct rtsx_pcr *pcr)
- 		u16 val;
- 
- 		pcie_capability_read_word(pcr->pci, PCI_EXP_DEVCTL2, &val);
--		if (val & PCI_EXP_DEVCTL2_LTR_EN) {
-+		if ((val != (u16)~0) && (val & PCI_EXP_DEVCTL2_LTR_EN)) {
- 			option->ltr_enabled = true;
- 			option->ltr_active = true;
- 			rtsx_set_ltr_latency(pcr, option->ltr_active_latency);
--- 
-2.18.4
+> -- Steve
+> 
+> 
+> On Thu, 30 Jul 2020 11:02:36 -0400
+> Philippe Duplessis-Guindon <pduplessis@efficios.com> wrote:
+> 
+> > I compiled with AddressSanitizer and I had these memory leaks while I
+> > was using the tep_parse_format function:
+> > 
+> >     Direct leak of 28 byte(s) in 4 object(s) allocated from:
+> >         #0 0x7fb07db49ffe in __interceptor_realloc (/lib/x86_64-linux-gnu/libasan.so.5+0x10dffe)
+> >         #1 0x7fb07a724228 in extend_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:985
+> >         #2 0x7fb07a724c21 in __read_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1140
+> >         #3 0x7fb07a724f78 in read_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1206
+> >         #4 0x7fb07a725191 in __read_expect_type /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1291
+> >         #5 0x7fb07a7251df in read_expect_type /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1299
+> >         #6 0x7fb07a72e6c8 in process_dynamic_array_len /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:2849
+> >         #7 0x7fb07a7304b8 in process_function /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3161
+> >         #8 0x7fb07a730900 in process_arg_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3207
+> >         #9 0x7fb07a727c0b in process_arg /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1786
+> >         #10 0x7fb07a731080 in event_read_print_args /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3285
+> >         #11 0x7fb07a731722 in event_read_print /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3369
+> >         #12 0x7fb07a740054 in __tep_parse_format /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:6335
+> >         #13 0x7fb07a74047a in __parse_event /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:6389
+> >         #14 0x7fb07a740536 in tep_parse_format /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:6431
+> >         #15 0x7fb07a785acf in parse_event ../../../src/fs-src/fs.c:251
+> >         #16 0x7fb07a785ccd in parse_systems ../../../src/fs-src/fs.c:284
+> >         #17 0x7fb07a786fb3 in read_metadata ../../../src/fs-src/fs.c:593
+> >         #18 0x7fb07a78760e in ftrace_fs_source_init ../../../src/fs-src/fs.c:727
+> >         #19 0x7fb07d90c19c in add_component_with_init_method_data ../../../../src/lib/graph/graph.c:1048
+> >         #20 0x7fb07d90c87b in add_source_component_with_initialize_method_data ../../../../src/lib/graph/graph.c:1127
+> >         #21 0x7fb07d90c92a in bt_graph_add_source_component ../../../../src/lib/graph/graph.c:1152
+> >         #22 0x55db11aa632e in cmd_run_ctx_create_components_from_config_components ../../../src/cli/babeltrace2.c:2252
+> >         #23 0x55db11aa6fda in cmd_run_ctx_create_components ../../../src/cli/babeltrace2.c:2347
+> >         #24 0x55db11aa780c in cmd_run ../../../src/cli/babeltrace2.c:2461
+> >         #25 0x55db11aa8a7d in main ../../../src/cli/babeltrace2.c:2673
+> >         #26 0x7fb07d5460b2 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x270b2)
+> > 
+> > The token variable in the process_dynamic_array_len function is
+> > allocated in the read_expect_type function, but is not freed before
+> > calling the read_token function.
+> > 
+> > Free the token variable before calling read_token in order to plug the
+> > leak.
+> > 
+> > Signed-off-by: Philippe Duplessis-Guindon <pduplessis@efficios.com>
+> > ---
+> >  tools/lib/traceevent/event-parse.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+> > index 5b36c589a029..ba4f33804af1 100644
+> > --- a/tools/lib/traceevent/event-parse.c
+> > +++ b/tools/lib/traceevent/event-parse.c
+> > @@ -2861,6 +2861,7 @@ process_dynamic_array_len(struct tep_event *event, struct tep_print_arg *arg,
+> >  	if (read_expected(TEP_EVENT_DELIM, ")") < 0)
+> >  		goto out_err;
+> >  
+> > +	free_token(token);
+> >  	type = read_token(&token);
+> >  	*tok = token;
+> >  
 
