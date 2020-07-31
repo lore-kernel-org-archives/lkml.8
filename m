@@ -2,123 +2,95 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3DAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D96C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC6BE21744
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:35:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vnX3xR9Q"
+	by mail.kernel.org (Postfix) with ESMTP id 187AD21744
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:35:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732466AbgGaQfo (ORCPT
+        id S1732603AbgGaQft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 12:35:44 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:54290 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728898AbgGaQfn (ORCPT
+        Fri, 31 Jul 2020 12:35:49 -0400
+Received: from smtprelay0101.hostedemail.com ([216.40.44.101]:36684 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728898AbgGaQfq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 12:35:43 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06VGVlkn078057;
-        Fri, 31 Jul 2020 16:35:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=kY7CmQPbJGPQ7Ca5hDfD6T9GR+fCzTCcIL6Wwh9TPds=;
- b=vnX3xR9Qgpa5JN6c6YptW9v/xDsENA4N6S2E0v1Z0ZVM210/e0jF0R0ahrtqEbm71oKF
- U7YLJlddHNc5x3sgNHfgE6+3AS8y1NAXIKlMoWBGiI1ZxWB2yo7up1JsqnpBR8LV8qrA
- 4/T9z7NiEnaMHVVlIgDhrR7d5DLanJgNgXR9derZy5W9tZu4swEtRM8ypvFJx5rS16IP
- aBoRCAGA/dj3hBC5wLOF4k8LEdlvdno+s7JOlHNA9xYpZfW7Gc9mK/WJAjUeUZ5dQgtR
- PX/TdH6OGWVLO2S+WKPGE6sjY8BnoiaMqjuG5KcEpa+AVjyakpRxu29oPrlio7cbZtB9 iw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 32mf9g2ak2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 Jul 2020 16:35:36 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06VGTUEG055165;
-        Fri, 31 Jul 2020 16:33:35 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 32hu600p3j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 Jul 2020 16:33:35 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06VGXY8t023570;
-        Fri, 31 Jul 2020 16:33:34 GMT
-Received: from dhcp-10-152-34-21.usdhcp.oraclecorp.com.com (/10.152.34.21)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 31 Jul 2020 09:33:34 -0700
-From:   George Kennedy <george.kennedy@oracle.com>
-To:     george.kennedy@oracle.com, gregkh@linuxfoundation.org,
-        jirislaby@kernel.org, b.zolnierkie@samsung.com,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dan.carpenter@oracle.com, dhaval.giani@oracle.com
-Subject: [PATCH 2/2] vt_ioctl: change VT_RESIZEX ioctl to check for error return from vc_resize()
-Date:   Fri, 31 Jul 2020 12:33:12 -0400
-Message-Id: <1596213192-6635-2-git-send-email-george.kennedy@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1596213192-6635-1-git-send-email-george.kennedy@oracle.com>
-References: <1596213192-6635-1-git-send-email-george.kennedy@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9699 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
- suspectscore=3 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007310123
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9699 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
- bulkscore=0 adultscore=0 spamscore=0 mlxlogscore=999 priorityscore=1501
- suspectscore=3 clxscore=1015 mlxscore=0 phishscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007310123
+        Fri, 31 Jul 2020 12:35:46 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id E9B06180A7FDA;
+        Fri, 31 Jul 2020 16:35:44 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: dogs56_551834026f85
+X-Filterd-Recvd-Size: 2396
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 31 Jul 2020 16:35:44 +0000 (UTC)
+Message-ID: <4e30e2df7bec0fedf1a29f7825fbb4c12593eac9.camel@perches.com>
+Subject: Re: [PATCH] vim: linux-kernel: Increase columns highlighting to 100+
+From:   Joe Perches <joe@perches.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Date:   Fri, 31 Jul 2020 09:35:42 -0700
+In-Reply-To: <20200731163301.GA8004@embeddedor>
+References: <20200731163301.GA8004@embeddedor>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vc_resize() can return with an error after failure. Change VT_RESIZEX ioctl
-to save struct vc_data values that are modified and restore the original
-values in case of error.
+On Fri, 2020-07-31 at 11:33 -0500, Gustavo A. R. Silva wrote:
+> Increase columns highlighting to 100+ once the 80-column warning has
+> been deprecated in the Linux kernel[1].
+> 
+> [1] commit bdc48fa11e46 ("checkpatch/coding-style: deprecate 80-column warning")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  plugin/linuxsty.vim | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/plugin/linuxsty.vim b/plugin/linuxsty.vim
+> index 6f7e331..c42ce72 100644
+> --- a/plugin/linuxsty.vim
+> +++ b/plugin/linuxsty.vim
+> @@ -62,7 +62,7 @@ function s:LinuxFormatting()
+>      setlocal tabstop=8
+>      setlocal shiftwidth=8
+>      setlocal softtabstop=8
+> -    setlocal textwidth=80
+> +    setlocal textwidth=100
 
-Signed-off-by: George Kennedy <george.kennedy@oracle.com>
-Reported-by: syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com
----
-Version of patch available for Mainline also.
+This is not a good change.
+80 columns is still _preferred_.
 
- drivers/tty/vt/vt_ioctl.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+It's just checkpatch will not emit a warning
+for lines longer than 80 columns but will
+for lines longer than 100 columns.
 
-diff --git a/drivers/tty/vt/vt_ioctl.c b/drivers/tty/vt/vt_ioctl.c
-index 91c3017..a4e520b 100644
---- a/drivers/tty/vt/vt_ioctl.c
-+++ b/drivers/tty/vt/vt_ioctl.c
-@@ -806,12 +806,22 @@ static int vt_resizex(struct vc_data *vc, struct vt_consize __user *cs)
- 		console_lock();
- 		vcp = vc_cons[i].d;
- 		if (vcp) {
-+			int ret;
-+			int save_scan_lines = vcp->vc_scan_lines;
-+			int save_font_height = vcp->vc_font.height;
-+
- 			if (v.v_vlin)
- 				vcp->vc_scan_lines = v.v_vlin;
- 			if (v.v_clin)
- 				vcp->vc_font.height = v.v_clin;
- 			vcp->vc_resize_user = 1;
--			vc_resize(vcp, v.v_cols, v.v_rows);
-+			ret = vc_resize(vcp, v.v_cols, v.v_rows);
-+			if (ret) {
-+				vcp->vc_scan_lines = save_scan_lines;
-+				vcp->vc_font.height = save_font_height;
-+				console_unlock();
-+				return ret;
-+			}
- 		}
- 		console_unlock();
- 	}
--- 
-1.8.3.1
+checkpatch will also not emit a warning on
+file checking at all.
+
+
+>      setlocal noexpandtab
+>  
+>      setlocal cindent
+> @@ -80,7 +80,7 @@ function s:LinuxHighlighting()
+>      highlight default link LinuxError ErrorMsg
+>  
+>      syn match LinuxError / \+\ze\t/     " spaces before tab
+> -    syn match LinuxError /\%>80v[^()\{\}\[\]<>]\+/ " virtual column 81 and more
+> +    syn match LinuxError /\%>100v[^()\{\}\[\]<>]\+/ " virtual column 101 and more
+>  
+>      " Highlight trailing whitespace, unless we're in insert mode and the
+>      " cursor's placed right after the whitespace. This prevents us from having
 
