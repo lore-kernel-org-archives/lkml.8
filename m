@@ -2,110 +2,216 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBF0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A83C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB872250E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:16:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596176209;
-	bh=WHR8jRh3qw/PGsoIxzFulqDz9Zu+JVeoIc2MSsUYN/M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rIzf49wBRl7rBLMm9p42hVDOKcM57X0X5CQk5bsGOq36sdsYv//7uYBNUU2hANnZ2
-	 gp9Im7vGD9efpE22CV9ogxWF4wUdBnfdegpzUmbV39im/q64VqDpIZrv155+m6tTiG
-	 iLKu6mG90XsEBUwFcm82yQZngyArwommqwNAbUp0=
+	by mail.kernel.org (Postfix) with ESMTP id E9D2A2083B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:16:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731340AbgGaGQs (ORCPT
+        id S1731372AbgGaGQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 02:16:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47746 "EHLO mail.kernel.org"
+        Fri, 31 Jul 2020 02:16:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:50114 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731152AbgGaGQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 02:16:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D272F20663;
-        Fri, 31 Jul 2020 06:16:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596176207;
-        bh=WHR8jRh3qw/PGsoIxzFulqDz9Zu+JVeoIc2MSsUYN/M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OI5lVO20EM3bWyyFImTT9FJvGHHPbgWeedyvuONmw7eQzwK2guodFYtmM8wMtPQo7
-         84E9DviWGEsGT/vuijIg0pZsD91cb3fTYtBZzPAsf09vLA3IFwP3MyIMVuZC5x4YES
-         PRf7eWSVxUIqpW41z3Nb3Tm1G6btg7r5zEwIz+Do=
-Date:   Fri, 31 Jul 2020 08:16:34 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dongdong Yang <contribute.kernel@gmail.com>
-Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        devel@driverdev.osuosl.org, gulinghua@xiaomi.com,
-        tanggeliang@xiaomi.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yangdongdong@xiaomi.com,
-        duhui@xiaomi.com, zhangguoquan@xiaomi.com, fengwei@xiaomi.com,
-        taojun@xiaomi.com, rocking@linux.alibaba.com, huangqiwu@xiaomi.com
-Subject: Re: [PATCH] sched: Provide USF for the portable equipment.
-Message-ID: <20200731061634.GA1508201@kroah.com>
-References: <cover.1596101307.git.yangdongdong@xiaomi.com>
+        id S1731152AbgGaGQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 02:16:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CCE41FB;
+        Thu, 30 Jul 2020 23:16:48 -0700 (PDT)
+Received: from net-arm-thunderx2-02.shanghai.arm.com (net-arm-thunderx2-02.shanghai.arm.com [10.169.210.119])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7F0923F66E;
+        Thu, 30 Jul 2020 23:16:45 -0700 (PDT)
+From:   Jianlin Lv <Jianlin.Lv@arm.com>
+To:     bpf@vger.kernel.org
+Cc:     davem@davemloft.net, kuba@kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, yhs@fb.com, Song.Zhu@arm.com,
+        Jianlin.Lv@arm.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH bpf-next] bpf: fix compilation warning of selftests
+Date:   Fri, 31 Jul 2020 14:16:00 +0800
+Message-Id: <20200731061600.18344-1-Jianlin.Lv@arm.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1596101307.git.yangdongdong@xiaomi.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 09:35:42PM +0800, Dongdong Yang wrote:
-> From: Dongdong Yang <yangdongdong@xiaomi.com>
-> 
-> This patch provides USF(User Sensitive Feedback factor)
-> auxiliary cpufreq governor to support high level layer
-> sysfs inodes setting for utils adjustment purpose from
-> the identified scenario on portable equipment.
-> Because the power consumption and UI response are more
-> cared for by portable equipment�users. And the "screen
-> off" status stands for no request from the user, however,
-> the kernel is still expected to notify the user in time
-> on modem, network or powerkey events occur. USF provides
-> "sched_usf_non_ux_r" sysfs inode to cut down the utils
-> from user space tasks according to high level scenario.
-> In addition, it usually hints more cpufreq demand that
-> the preemptive counts of the tasks on the cpu burst and
-> over the user expecting completed time such as the ratio
-> sysctl_sched_latency to sysctl_sched_min_granularity
-> on "screen on" status, which more likely with more UI.
-> The sysfs inodes "sched_usf_up_l0_r" and "sched_usf_down_r"
-> have been provided to adjust the utils according to high
-> level identified scenario to alloc the cpufreq in time.
-> 
-> Dongdong Yang (1):
->   sched: Provide USF for portable equipment.
-> 
->  drivers/staging/Kconfig          |   2 +
->  drivers/staging/Makefile         |   1 +
->  drivers/staging/fbsched/Kconfig  |  10 ++
->  drivers/staging/fbsched/Makefile |   2 +
->  drivers/staging/fbsched/usf.c    | 351 +++++++++++++++++++++++++++++++++++++++
->  kernel/sched/cpufreq_schedutil.c |  11 +-
->  6 files changed, 376 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/staging/fbsched/Kconfig
->  create mode 100644 drivers/staging/fbsched/Makefile
->  create mode 100644 drivers/staging/fbsched/usf.c
+Clang compiler version: 12.0.0
+The following warning appears during the selftests/bpf compilation:
 
-For new staging drivers/code, we need a TODO file that lists what
-remains to be done on the code to get it out of staging/
+prog_tests/send_signal.c:51:3: warning: ignoring return value of ‘write’,
+declared with attribute warn_unused_result [-Wunused-result]
+   51 |   write(pipe_c2p[1], buf, 1);
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+prog_tests/send_signal.c:54:3: warning: ignoring return value of ‘read’,
+declared with attribute warn_unused_result [-Wunused-result]
+   54 |   read(pipe_p2c[0], buf, 1);
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~
+......
 
-I don't see any good reason why this has to go to staging now, what
-prevents it from being merged to the "real" part of the kernel today?
+prog_tests/stacktrace_build_id_nmi.c:13:2: warning: ignoring return value
+of ‘fscanf’,declared with attribute warn_unused_result [-Wunused-resul]
+   13 |  fscanf(f, "%llu", &sample_freq);
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-thanks,
+test_tcpnotify_user.c:133:2: warning:ignoring return value of ‘system’,
+declared with attribute warn_unused_result [-Wunused-result]
+  133 |  system(test_script);
+      |  ^~~~~~~~~~~~~~~~~~~
+test_tcpnotify_user.c:138:2: warning:ignoring return value of ‘system’,
+declared with attribute warn_unused_result [-Wunused-result]
+  138 |  system(test_script);
+      |  ^~~~~~~~~~~~~~~~~~~
+test_tcpnotify_user.c:143:2: warning:ignoring return value of ‘system’,
+declared with attribute warn_unused_result [-Wunused-result]
+  143 |  system(test_script);
+      |  ^~~~~~~~~~~~~~~~~~~
 
-greg k-h
+Add code that fix compilation warning about ignoring return value and
+handles any errors; Check return value of library`s API make the code
+more secure.
+
+Signed-off-by: Jianlin Lv <Jianlin.Lv@arm.com>
+---
+ .../selftests/bpf/prog_tests/send_signal.c    | 37 ++++++++++++++-----
+ .../bpf/prog_tests/stacktrace_build_id_nmi.c  |  3 +-
+ .../selftests/bpf/test_tcpnotify_user.c       | 15 ++++++--
+ 3 files changed, 41 insertions(+), 14 deletions(-)
+
+diff --git a/tools/testing/selftests/bpf/prog_tests/send_signal.c b/tools/testing/selftests/bpf/prog_tests/send_signal.c
+index 504abb7bfb95..7a5272e4e810 100644
+--- a/tools/testing/selftests/bpf/prog_tests/send_signal.c
++++ b/tools/testing/selftests/bpf/prog_tests/send_signal.c
+@@ -48,22 +48,31 @@ static void test_send_signal_common(struct perf_event_attr *attr,
+ 		close(pipe_p2c[1]); /* close write */
+ 
+ 		/* notify parent signal handler is installed */
+-		write(pipe_c2p[1], buf, 1);
++		if (CHECK_FAIL(write(pipe_c2p[1], buf, 1) != 1)) {
++			perror("Child: write pipe error");
++			goto close_out;
++		}
+ 
+ 		/* make sure parent enabled bpf program to send_signal */
+-		read(pipe_p2c[0], buf, 1);
++		if (CHECK_FAIL(read(pipe_p2c[0], buf, 1) != 1)) {
++			perror("Child: read pipe error");
++			goto close_out;
++		}
+ 
+ 		/* wait a little for signal handler */
+ 		sleep(1);
+ 
+-		if (sigusr1_received)
+-			write(pipe_c2p[1], "2", 1);
+-		else
+-			write(pipe_c2p[1], "0", 1);
++		buf[0] = sigusr1_received ? '2' : '0';
++		if (CHECK_FAIL(write(pipe_c2p[1], buf, 1) != 1)) {
++			perror("Child: write pipe error");
++			goto close_out;
++		}
+ 
+ 		/* wait for parent notification and exit */
+-		read(pipe_p2c[0], buf, 1);
++		if (CHECK_FAIL(read(pipe_p2c[0], buf, 1) != 1))
++			perror("Child: read pipe error");
+ 
++close_out:
+ 		close(pipe_c2p[1]);
+ 		close(pipe_p2c[0]);
+ 		exit(0);
+@@ -99,7 +108,11 @@ static void test_send_signal_common(struct perf_event_attr *attr,
+ 	}
+ 
+ 	/* wait until child signal handler installed */
+-	read(pipe_c2p[0], buf, 1);
++	if (CHECK_FAIL(read(pipe_c2p[0], buf, 1) != 1)) {
++		perror("Parent: read pipe error");
++		goto disable_pmu;
++	}
++
+ 
+ 	/* trigger the bpf send_signal */
+ 	skel->bss->pid = pid;
+@@ -107,7 +120,10 @@ static void test_send_signal_common(struct perf_event_attr *attr,
+ 	skel->bss->signal_thread = signal_thread;
+ 
+ 	/* notify child that bpf program can send_signal now */
+-	write(pipe_p2c[1], buf, 1);
++	if (CHECK_FAIL(write(pipe_p2c[1], buf, 1) != 1)) {
++		perror("Parent: write pipe error");
++		goto disable_pmu;
++	}
+ 
+ 	/* wait for result */
+ 	err = read(pipe_c2p[0], buf, 1);
+@@ -121,7 +137,8 @@ static void test_send_signal_common(struct perf_event_attr *attr,
+ 	CHECK(buf[0] != '2', test_name, "incorrect result\n");
+ 
+ 	/* notify child safe to exit */
+-	write(pipe_p2c[1], buf, 1);
++	if (CHECK_FAIL(write(pipe_p2c[1], buf, 1) != 1))
++		perror("Parent: write pipe error");
+ 
+ disable_pmu:
+ 	close(pmu_fd);
+diff --git a/tools/testing/selftests/bpf/prog_tests/stacktrace_build_id_nmi.c b/tools/testing/selftests/bpf/prog_tests/stacktrace_build_id_nmi.c
+index f002e3090d92..a27de3d46e58 100644
+--- a/tools/testing/selftests/bpf/prog_tests/stacktrace_build_id_nmi.c
++++ b/tools/testing/selftests/bpf/prog_tests/stacktrace_build_id_nmi.c
+@@ -10,7 +10,8 @@ static __u64 read_perf_max_sample_freq(void)
+ 	f = fopen("/proc/sys/kernel/perf_event_max_sample_rate", "r");
+ 	if (f == NULL)
+ 		return sample_freq;
+-	fscanf(f, "%llu", &sample_freq);
++	if (CHECK_FAIL(fscanf(f, "%llu", &sample_freq) != 1))
++		perror("Get max sample rate fail, return default value: 5000\n");
+ 	fclose(f);
+ 	return sample_freq;
+ }
+diff --git a/tools/testing/selftests/bpf/test_tcpnotify_user.c b/tools/testing/selftests/bpf/test_tcpnotify_user.c
+index f9765ddf0761..869e28c92d73 100644
+--- a/tools/testing/selftests/bpf/test_tcpnotify_user.c
++++ b/tools/testing/selftests/bpf/test_tcpnotify_user.c
+@@ -130,17 +130,26 @@ int main(int argc, char **argv)
+ 	sprintf(test_script,
+ 		"iptables -A INPUT -p tcp --dport %d -j DROP",
+ 		TESTPORT);
+-	system(test_script);
++	if (system(test_script)) {
++		printf("FAILED: execute command: %s\n", test_script);
++		goto err;
++	}
+ 
+ 	sprintf(test_script,
+ 		"nc 127.0.0.1 %d < /etc/passwd > /dev/null 2>&1 ",
+ 		TESTPORT);
+-	system(test_script);
++	if (system(test_script)) {
++		printf("FAILED: execute command: %s\n", test_script);
++		goto err;
++	}
+ 
+ 	sprintf(test_script,
+ 		"iptables -D INPUT -p tcp --dport %d -j DROP",
+ 		TESTPORT);
+-	system(test_script);
++	if (system(test_script)) {
++		printf("FAILED: execute command: %s\n", test_script);
++		goto err;
++	}
+ 
+ 	rv = bpf_map_lookup_elem(bpf_map__fd(global_map), &key, &g);
+ 	if (rv != 0) {
+-- 
+2.17.1
+
