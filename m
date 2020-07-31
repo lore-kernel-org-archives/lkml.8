@@ -2,47 +2,50 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8102C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DADDCC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 830A822B42
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2A8722B42
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:28:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="J152i/Ga"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="omI6+pVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387870AbgGaS1z (ORCPT
+        id S2387879AbgGaS2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 14:27:55 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:17292 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387805AbgGaS1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 14:27:50 -0400
+        Fri, 31 Jul 2020 14:28:11 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:41608 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387854AbgGaS2K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 14:28:10 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596220069; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=S8XeKCmkQHOV3cQ6vfseomy/7CKwe+QQyLxczgc9k0M=; b=J152i/GaJy4+rjuJiplePLb/Mgnd4JtvH2WwI2QI97JK9JAvrFWC6sCmQt4eMRpkO4nlCzHV
- kTBGeu5HLbCpn3fTHEvFoHo7HaJJPoyHoM/xEeRRv3fy/rqLMdsbkO4pPnDfYIvvTfEHLVOc
- 3HYPrNABYUlLCRT82ZvLNRO3NJQ=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ s=smtp; t=1596220090; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=vjQiGVYzJ12zA+igqujOYlOj1OL8iIPU8CB8EiC7eQw=; b=omI6+pVZoY+QNy71tmY8FUFobt37aI4kRQMsyr+ET6SdZANQ7leAXHeolIwaDOsGvVJO3o79
+ Y2rKe2EsxHSEEt/Ez3AhwfvYhYzj7IozMvOH5yolqGgb/UGaICFTRcNjhr12opZDLTF6lWcm
+ An2z1xTeqVS0AucEQrJgx/DLYfI=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n18.prod.us-west-2.postgun.com with SMTP id
- 5f246299710a7a29d53b9961 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 31 Jul 2020 18:27:37
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5f2462a2eb556d49a65354bb (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 31 Jul 2020 18:27:46
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 529C1C433A0; Fri, 31 Jul 2020 18:27:36 +0000 (UTC)
+        id DC2F0C433A0; Fri, 31 Jul 2020 18:27:45 +0000 (UTC)
 Received: from pillair-linux.qualcomm.com (unknown [202.46.22.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3507DC433C6;
-        Fri, 31 Jul 2020 18:27:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3507DC433C6
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 875B1C433A1;
+        Fri, 31 Jul 2020 18:27:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 875B1C433A1
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
 From:   Rakesh Pillai <pillair@codeaurora.org>
@@ -50,40 +53,105 @@ To:     ath10k@lists.infradead.org
 Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org,
         netdev@vger.kernel.org, Rakesh Pillai <pillair@codeaurora.org>
-Subject: [PATCH v2 0/3] 
-Date:   Fri, 31 Jul 2020 23:57:19 +0530
-Message-Id: <1596220042-2778-1-git-send-email-pillair@codeaurora.org>
+Subject: [PATCH v2 3/3] ath10k: Add debugfs support to enable event history
+Date:   Fri, 31 Jul 2020 23:57:22 +0530
+Message-Id: <1596220042-2778-4-git-send-email-pillair@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596220042-2778-1-git-send-email-pillair@codeaurora.org>
+References: <1596220042-2778-1-git-send-email-pillair@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The history recording will be compiled only if
-ATH10K_DEBUG is enabled, and also enabled via
-the module parameter. Once the history recording
-is enabled via module parameter, it can be enabled
-or disabled runtime via debugfs.
+Add the support to enable/disable the recording of
+debug events history.
 
+The enable/disable of the history from debugfs will
+not make any affect if its not enabled via module
+parameter.
+
+Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
 ---
-Changes from v1:
-- Add module param and debugfs to enable/disable history recording.
+ drivers/net/wireless/ath/ath10k/debug.c | 56 +++++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
-Rakesh Pillai (3):
-  ath10k: Add history for tracking certain events
-  ath10k: Add module param to enable history
-  ath10k: Add debugfs support to enable event history
-
- drivers/net/wireless/ath/ath10k/ce.c      |   1 +
- drivers/net/wireless/ath/ath10k/core.c    |   3 +
- drivers/net/wireless/ath/ath10k/core.h    |  82 ++++++++++++
- drivers/net/wireless/ath/ath10k/debug.c   | 207 ++++++++++++++++++++++++++++++
- drivers/net/wireless/ath/ath10k/debug.h   |  75 +++++++++++
- drivers/net/wireless/ath/ath10k/snoc.c    |  15 ++-
- drivers/net/wireless/ath/ath10k/wmi-tlv.c |   1 +
- drivers/net/wireless/ath/ath10k/wmi.c     |  10 ++
- 8 files changed, 393 insertions(+), 1 deletion(-)
-
+diff --git a/drivers/net/wireless/ath/ath10k/debug.c b/drivers/net/wireless/ath/ath10k/debug.c
+index 5d08652..6785fae 100644
+--- a/drivers/net/wireless/ath/ath10k/debug.c
++++ b/drivers/net/wireless/ath/ath10k/debug.c
+@@ -610,6 +610,59 @@ static const struct file_operations fops_simulate_fw_crash = {
+ 	.llseek = default_llseek,
+ };
+ 
++static ssize_t ath10k_read_history_enable(struct file *file,
++					  char __user *user_buf,
++					  size_t count, loff_t *ppos)
++{
++	const char buf[] =
++		"To enable recording of certain event history, write to this file with the enable mask\n"
++		"BIT(0): Enable Reg Access history\n"
++		"	- Register write events\n"
++		"	- Register read events\n"
++		"BIT(1): Enable CE events history\n"
++		"	- ATH10K_IRQ_TRIGGER event\n"
++		"	- ATH10K_NAPI_POLL event\n"
++		"	- ATH10K_CE_SERVICE event\n"
++		"	- ATH10K_NAPI_COMPLETE event\n"
++		"	- ATH10K_NAPI_RESCHED event\n"
++		"	- ATH10K_IRQ_SUMMARY event\n"
++		"BIT(2): Enable WMI CMD history\n"
++		"	- WMI CMD event\n"
++		"	- WMI CMD TX completion event\n"
++		"BIT(3): Enable WMI events history\n"
++		"	- WMI Events event\n";
++
++	return simple_read_from_buffer(user_buf, count, ppos, buf, strlen(buf));
++}
++
++static ssize_t ath10k_write_history_enable(struct file *file,
++					   const char __user *user_buf,
++					   size_t count, loff_t *ppos)
++{
++	u32 history_enable_mask;
++	int i, ret;
++
++	ret = kstrtou32_from_user(user_buf, count, 0, &history_enable_mask);
++	if (ret)
++		return ret;
++
++	for (i = 0; i < ATH10K_HISTORY_MAX; i++)
++		if (history_enable_mask & BIT(i))
++			set_bit(i, &ath10k_history_enable_mask);
++		else
++			clear_bit(i, &ath10k_history_enable_mask);
++
++	return count;
++}
++
++static const struct file_operations fops_history_enable = {
++	.read = ath10k_read_history_enable,
++	.write = ath10k_write_history_enable,
++	.open = simple_open,
++	.owner = THIS_MODULE,
++	.llseek = default_llseek,
++};
++
+ static ssize_t ath10k_read_chip_id(struct file *file, char __user *user_buf,
+ 				   size_t count, loff_t *ppos)
+ {
+@@ -2658,6 +2711,9 @@ int ath10k_debug_register(struct ath10k *ar)
+ 	debugfs_create_file("reset_htt_stats", 0200, ar->debug.debugfs_phy, ar,
+ 			    &fops_reset_htt_stats);
+ 
++	debugfs_create_file("history_enable", 0644, ar->debug.debugfs_phy, ar,
++			    &fops_history_enable);
++
+ 	return 0;
+ }
+ 
 -- 
 2.7.4
 
