@@ -2,269 +2,134 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CF3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 646F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CAB321744
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 429222245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:51:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bH1oegfq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733255AbgGaMth (ORCPT
+        id S1730413AbgGaMvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 08:49:37 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38430 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730291AbgGaMtg (ORCPT
+        Fri, 31 Jul 2020 08:51:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35520 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728607AbgGaMvO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 08:49:36 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 8044A299215
-Message-ID: <64707c91cd4adc39050168dd2191513712c76ba8.camel@collabora.com>
-Subject: Re: [PATCH 06/10] media: uapi: h264: Cleanup DPB entry interface
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Jonas Karlman <jonas@kwiboo.se>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Date:   Fri, 31 Jul 2020 09:49:23 -0300
-In-Reply-To: <e435253e-67ea-fdec-bf18-059eb4c70a0e@kwiboo.se>
-References: <20200715202233.185680-1-ezequiel@collabora.com>
-         <20200715202233.185680-7-ezequiel@collabora.com>
-         <5726fac8-9d3b-d429-0894-cd8c02c288ee@kwiboo.se>
-         <6bac45d9b22deacf8ac7d68f5b51a5a6c30649f3.camel@collabora.com>
-         <e435253e-67ea-fdec-bf18-059eb4c70a0e@kwiboo.se>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3-1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 31 Jul 2020 08:51:14 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D57F8C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 05:51:13 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id h19so32295295ljg.13
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 05:51:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=B/WYQkneNHHasyBibLNJc39P94On0q0Yf/0dGxBiCnM=;
+        b=bH1oegfq4F1BjeNTK0Nmijn8MhoTBmIOgLZoaVfUGo0h2JoRT+aO14I78TeLvdBHYm
+         Pt4W0qwPJ4s9jm03v4G0XX/uCdXRfRLPIyYfE7mgknlRuHgczule6rCWmicdbvvZkVR5
+         FK1yg1ZEqij2/fftNtqZXSMUYpyr8RLHPKXEKIlnDfhXUcnkj7I+tcnqEu4OLCIdRvwU
+         kdCVHuuI5NS6sIq8V5pwcioRFKnchzzF27Gus5xnrUP4lSfxpu9uXYL8eh3rwklF60Hw
+         yDmB2W+Hz3BQ8SKUUY/ifYHZeaBqiQgP66TgtLdW15C+Z/XUEQZamtVRWmfGMyn6Brg4
+         z6Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=B/WYQkneNHHasyBibLNJc39P94On0q0Yf/0dGxBiCnM=;
+        b=Yzr1sMvHT+0CFh61Ra7c2ejIV663kejVym/Fm62Jg34GD0hOOAhY7+JnUACrRVdVoo
+         QnykqK0Qlu2KfdIaPczoDQzCRnT2fYVLnwVh0+UFTYoOxus9dVdu8tsMRhcr15IipbpQ
+         Z7ZieOuI7EicZcI9Dy7bsmZtho8qVoRWEhvSnm9F3Xf/SUI2dV/lLkNGpxKOoiPVctrR
+         t1+TS6YaZloTxYFXaRTwvx1Utcitz7ToMVvuOOBpRnG6VDjBn6/RwgXT6gTZCEuePzVK
+         ogL8MnDUT5Y+XYbJUHfwN5jnONzcGgKBsE3qC0qkw4YVI504Y4f8Jj8mopPXnKcnBpMy
+         iuHw==
+X-Gm-Message-State: AOAM5325p9YszWEJlMVs3CDgNokMlRAv8KOuTHGdTg0QS4VvLfqmImSW
+        QAdHYGODv8DhprdSbkI4ivE=
+X-Google-Smtp-Source: ABdhPJwQKJDe178RRgB019PdVZcaJRxYEd+DG5Tp68DUOkwsyOEYd5yGBw9xFWQf08QnB4cwBtO9VA==
+X-Received: by 2002:a2e:7a07:: with SMTP id v7mr1822750ljc.159.1596199872208;
+        Fri, 31 Jul 2020 05:51:12 -0700 (PDT)
+Received: from a2klaptop.localdomain ([185.199.97.5])
+        by smtp.gmail.com with ESMTPSA id s2sm1923362lfs.4.2020.07.31.05.51.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 05:51:11 -0700 (PDT)
+From:   Oleksandr Andrushchenko <andr2000@gmail.com>
+To:     xen-devel@lists.xenproject.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, boris.ostrovsky@oracle.com,
+        jgross@suse.com, airlied@linux.ie, daniel@ffwll.ch
+Cc:     sstabellini@kernel.org, dan.carpenter@oracle.com,
+        intel-gfx@lists.freedesktop.org,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+Subject: [PATCH 0/6] Fixes and improvements for Xen pvdrm
+Date:   Fri, 31 Jul 2020 15:51:03 +0300
+Message-Id: <20200731125109.18666-1-andr2000@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonas,
+From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
 
-On Mon, 2020-07-27 at 23:39 +0000, Jonas Karlman wrote:
-> Hi,
-> 
-> On 2020-07-24 21:08, Ezequiel Garcia wrote:
-> > Hello Jonas,
-> > 
-> > On Wed, 2020-07-22 at 21:52 +0000, Jonas Karlman wrote:
-> > > On 2020-07-15 22:22, Ezequiel Garcia wrote:
-> > > > As discussed recently, the current interface for the
-> > > > Decoded Picture Buffer is not enough to properly
-> > > > support field coding.
-> > > > 
-> > > > This commit introduces enough semantics to support
-> > > > frame and field coding, and to signal how DPB entries
-> > > > are "used for reference".
-> > > > 
-> > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > > > ---
-> > > >  .../media/v4l/ext-ctrls-codec.rst             | 46 ++++++++++++-------
-> > > >  drivers/media/v4l2-core/v4l2-h264.c           |  4 +-
-> > > >  drivers/staging/media/rkvdec/rkvdec-h264.c    |  8 ++--
-> > > >  include/media/h264-ctrls.h                    |  8 +++-
-> > > >  4 files changed, 42 insertions(+), 24 deletions(-)
-> > > > 
-> > > > diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > > > index dd8e5a2e8986..46d4c8c6ad47 100644
-> > > > --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > > > +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > > > @@ -2058,10 +2058,35 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
-> > > >      * - __s32
-> > > >        - ``bottom_field_order_cnt``
-> > > >        -
-> > > > +    * - enum :c:type:`v4l2_h264_dpb_reference`
-> > > > +      - ``reference``
-> > > > +      - Specifies how the DPB entry is referenced.
-> > > >      * - __u32
-> > > >        - ``flags``
-> > > >        - See :ref:`DPB Entry Flags <h264_dpb_flags>`
-> > > >  
-> > > > +.. c:type:: v4l2_h264_dpb_reference
-> > > > +
-> > > > +.. cssclass:: longtable
-> > > > +
-> > > > +.. flat-table::
-> > > > +    :header-rows:  0
-> > > > +    :stub-columns: 0
-> > > > +    :widths:       1 1 2
-> > > > +
-> > > > +    * - ``V4L2_H264_DPB_TOP_REF``
-> > > > +      - 0x1
-> > > > +      - The top field in field pair is used for
-> > > > +        short-term reference.
-> > > > +    * - ``V4L2_H264_DPB_BOTTOM_REF``
-> > > > +      - 0x2
-> > > > +      - The bottom field in field pair is used for
-> > > > +        short-term reference.
-> > > > +    * - ``V4L2_H264_DPB_FRAME_REF``
-> > > > +      - 0x3
-> > > > +      - The frame (or the top/bottom fields, if it's a field pair)
-> > > > +        is used for short-term reference.
-> > > > +
-> > > >  .. _h264_dpb_flags:
-> > > >  
-> > > >  ``DPB Entries Flags``
-> > > > @@ -2075,29 +2100,16 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
-> > > >  
-> > > >      * - ``V4L2_H264_DPB_ENTRY_FLAG_VALID``
-> > > >        - 0x00000001
-> > > > -      - The DPB entry is valid and should be considered
-> > > > +      - The DPB entry is valid (non-empty) and should be considered.
-> > > >      * - ``V4L2_H264_DPB_ENTRY_FLAG_ACTIVE``
-> > > >        - 0x00000002
-> > > > -      - The DPB entry is currently being used as a reference frame
-> > > > +      - The DPB entry is used for reference.
-> > > >      * - ``V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM``
-> > > >        - 0x00000004
-> > > > -      - The DPB entry is a long term reference frame
-> > > > +      - The DPB entry is used for long-term reference.
-> > > >      * - ``V4L2_H264_DPB_ENTRY_FLAG_FIELD``
-> > > >        - 0x00000008
-> > > > -      - The DPB entry is a field reference, which means only one of the field
-> > > > -        will be used when decoding the new frame/field. When not set the DPB
-> > > > -        entry is a frame reference (both fields will be used). Note that this
-> > > > -        flag does not say anything about the number of fields contained in the
-> > > > -        reference frame, it just describes the one used to decode the new
-> > > > -        field/frame
-> > > > -    * - ``V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD``
-> > > > -      - 0x00000010
-> > > > -      - The DPB entry is a bottom field reference (only the bottom field of the
-> > > > -        reference frame is needed to decode the new frame/field). Only valid if
-> > > > -        V4L2_H264_DPB_ENTRY_FLAG_FIELD is set. When
-> > > > -        V4L2_H264_DPB_ENTRY_FLAG_FIELD is set but
-> > > > -        V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD is not, that means the
-> > > > -        DPB entry is a top field reference
-> > > > +      - The DPB entry is a single field or a complementary field pair.
-> > > >  
-> > > >  ``V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE (enum)``
-> > > >      Specifies the decoding mode to use. Currently exposes slice-based and
-> > > > diff --git a/drivers/media/v4l2-core/v4l2-h264.c b/drivers/media/v4l2-core/v4l2-h264.c
-> > > > index edf6225f0522..306a51683606 100644
-> > > > --- a/drivers/media/v4l2-core/v4l2-h264.c
-> > > > +++ b/drivers/media/v4l2-core/v4l2-h264.c
-> > > > @@ -66,10 +66,10 @@ v4l2_h264_init_reflist_builder(struct v4l2_h264_reflist_builder *b,
-> > > >  		else
-> > > >  			b->refs[i].frame_num = dpb[i].frame_num;
-> > > >  
-> > > > -		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_FIELD))
-> > > > +		if (dpb[i].reference & V4L2_H264_DPB_FRAME_REF)
-> > > 
-> > > This looks wrong, should probably use ==,
-> > > 
-> > > dpb[i].reference == V4L2_H264_DPB_FRAME_REF
-> > > 
-> > > else this would match any reference value.
-> > > 
-> > > >  			pic_order_count = min(dpb[i].top_field_order_cnt,
-> > > >  					      dpb[i].bottom_field_order_cnt);
-> > > > -		else if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD)
-> > > > +		else if (dpb[i].reference & V4L2_H264_DPB_BOTTOM_REF)
-> > > >  			pic_order_count = dpb[i].bottom_field_order_cnt;
-> > > >  		else
-> > > >  			pic_order_count = dpb[i].top_field_order_cnt;
-> > > > diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
-> > > > index 7b66e2743a4f..57539c630422 100644
-> > > > --- a/drivers/staging/media/rkvdec/rkvdec-h264.c
-> > > > +++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
-> > > > @@ -953,11 +953,11 @@ static void config_registers(struct rkvdec_ctx *ctx,
-> > > >  			     RKVDEC_COLMV_USED_FLAG_REF;
-> > > >  
-> > > >  		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_FIELD))
-> > > > -			refer_addr |= RKVDEC_TOPFIELD_USED_REF |
-> > > > -				      RKVDEC_BOTFIELD_USED_REF;
-> > > > -		else if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD)
-> > > > +			refer_addr |= RKVDEC_FIELD_REF;
-> > > > +
-> > > > +		if (dpb[i].reference & V4L2_H264_DPB_TOP_REF)
-> > > >  			refer_addr |= RKVDEC_BOTFIELD_USED_REF;
-> > > > -		else
-> > > > +		else if (dpb[i].reference & V4L2_H264_DPB_BOTTOM_REF)
-> > > 
-> > > This should probably be if and not else if, and BOTFIELD/TOPFIELD_USED_REF
-> > > seems to be mixed up.
-> > > 
-> > > I have only taken a quick look so far, I will update ffmpeg and runtime test
-> > > later this weekend, will get back with result and full review on Sunday evening.
-> > > 
-> > 
-> > Thanks that would be useful.
-> > 
-> > However, keep in mind this series is specifically concerned
-> > with the uAPI review.
-> > 
-> > This is not supposed to fix the field coded support, or anything
-> > else in any driver.
-> > 
-> > IMO, at this stage, fixing drivers is somewhat lower priority
-> > than discussing and stabilizing the uAPI.
-> 
-> I have now tested rkvdec on a RK3328 device and needed to do 3 fixups, see [1].
-> Initial ffmpeg update using update h264 uapi is located at [2], the ffmpeg
-> update still needs to be tested with cedrus and hantro.
-> 
-> So far I have not seen any issue with the uapi changes.
-> 
+Hello,
 
-Great, thanks for the test.
+This series contains an assorted set of fixes and improvements for
+the Xen para-virtualized display driver and grant device driver which
+I have collected over the last couple of months:
 
-> Q: ffmpeg will not try to set SLICE_PARAMS or PRED_WEIGHT ctrls for
-> DECODE_MODE_SLICE_BASED,
+1. Minor fixes to grant device driver and drm/xen-front.
 
-You mean it will not try to set those controls for
-DECODE_MODE_FRAME_BASED?
+2. New format (YUYV) added to the list of the PV DRM supported formats
+which allows the driver to be used in zero-copying use-cases when
+a camera device is the source of the dma-bufs.
 
-I think that's correct, as we've discussed multiple times,
-frame-based drivers shouldn't need to use those controls,
-by definition.
+3. Synchronization with the latest para-virtualized protocol definition
+in Xen [1].
 
->  should userspace check if ctrl exists or is using
-> DECODE_MODE value okay?
-> 
+4. SGT offset is now propagated to the backend: while importing a dmabuf
+it is possible that the data of the buffer is put with offset which is
+indicated by the SGT offset. This is needed for some GPUs which have
+non-zero offset.
 
-If a driver supporting DECODE_MODE_SLICE_BASED doesn't 
-support SLICE_PARAMS, that can probably be considered
-a failure from the application side.
+5. Version 2 of the Xen displif protocol adds XENDISPL_OP_GET_EDID
+request which allows frontends to request EDID structure per
+connector. This request is optional and if not supported by the
+backend then visible area is still defined by the relevant
+XenStore's "resolution" property.
+If backend provides EDID with XENDISPL_OP_GET_EDID request then
+its values must take precedence over the resolutions defined in
+XenStore.
 
-If it doesn't support PRED_WEIGHTS controls, then
-strictly speaking it won't be able to decode slices
-that have a prediction weight table, i.e.:
+Thank you,
+Oleksandr Andrushchenko
 
-((weighted_pred_flag && (slice_type == P || slice_type == SP)) || \
-(weighted_bipred_idc == 1 && slice_type == B))
+[1] https://xenbits.xen.org/gitweb/?p=xen.git;a=commit;h=c27a184225eab54d20435c8cab5ad0ef384dc2c0
 
-I doubt we'll ever counter such case, so probably
-if the controls aren't supported, applications
-can just safely fail (and e.g. fallback to software).
+Oleksandr Andrushchenko (6):
+  xen/gntdev: Fix dmabuf import with non-zero sgt offset
+  drm/xen-front: Fix misused IS_ERR_OR_NULL checks
+  drm/xen-front: Add YUYV to supported formats
+  xen: Sync up with the canonical protocol definition in Xen
+  drm/xen-front: Pass dumb buffer data offset to the backend
+  drm/xen-front: Add support for EDID based configuration
 
-> I have also pushed an updated WIP branch at [3] containing high 10,
-> field encoded and hevc work.
-> 
-> [1] https://github.com/Kwiboo/linux-rockchip/compare/b6b91f27c0cb33520e954e7bb2550e0e07ed4d85...b82b6e93feb9ca44d2c677f25416cf6345f0114d
-> [2] https://github.com/Kwiboo/FFmpeg/commits/v4l2-request-hwaccel-4.3.1
-> [3] https://github.com/Kwiboo/linux-rockchip/commits/linuxtv-rkvdec-work-in-progress
-> 
-> Best regards,
-> Jonas
-> 
-> > Thanks,
-> > Ezequiel
-> > 
-> > 
+ drivers/gpu/drm/xen/xen_drm_front.c         | 72 +++++++++++++++-
+ drivers/gpu/drm/xen/xen_drm_front.h         | 11 ++-
+ drivers/gpu/drm/xen/xen_drm_front_cfg.c     | 82 +++++++++++++++++++
+ drivers/gpu/drm/xen/xen_drm_front_cfg.h     |  7 ++
+ drivers/gpu/drm/xen/xen_drm_front_conn.c    | 27 +++++-
+ drivers/gpu/drm/xen/xen_drm_front_evtchnl.c |  3 +
+ drivers/gpu/drm/xen/xen_drm_front_evtchnl.h |  3 +
+ drivers/gpu/drm/xen/xen_drm_front_gem.c     | 11 +--
+ drivers/gpu/drm/xen/xen_drm_front_kms.c     |  7 +-
+ drivers/xen/gntdev-dmabuf.c                 |  8 ++
+ include/xen/interface/io/displif.h          | 91 ++++++++++++++++++++-
+ 11 files changed, 305 insertions(+), 17 deletions(-)
 
+-- 
+2.17.1
 
