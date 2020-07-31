@@ -2,127 +2,126 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A61C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E49C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF7F720838
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF092072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:06:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HaVarrBS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Un/qHsaj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732170AbgGaJDp (ORCPT
+        id S1731990AbgGaJGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:03:45 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19125 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732030AbgGaJC5 (ORCPT
+        Fri, 31 Jul 2020 05:06:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731818AbgGaJGT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:02:57 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f23dde20008>; Fri, 31 Jul 2020 02:01:22 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 31 Jul 2020 02:02:56 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 31 Jul 2020 02:02:56 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul
- 2020 09:02:56 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 31 Jul 2020 09:02:56 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.221]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f23de3f0003>; Fri, 31 Jul 2020 02:02:56 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
-        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v6 03/10] media: tegra-video: Update format lookup to offset based
-Date:   Fri, 31 Jul 2020 02:02:42 -0700
-Message-ID: <1596186169-18729-4-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596186169-18729-1-git-send-email-skomatineni@nvidia.com>
-References: <1596186169-18729-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Fri, 31 Jul 2020 05:06:19 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3886AC061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 02:06:19 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a15so27275977wrh.10
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 02:06:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=lfnkQfm3GKzU95XwF2JxhE5x/N3AyvhM1u96HkPpQ6s=;
+        b=Un/qHsajtmNjsOmCb2mnNKCZnsB5UPu6XobhVc6xxd3nqxAzWj6t50hCNgEd4vTdGo
+         mvJ1bgtAOIVAMdbh82+osjwh9TPvAkn4Ge781EHgqcOq3+EeXqkni0j0/1htkPAbUj5f
+         OhrmFEFapzJ0E1to8b0HIKVZ1GQ1szmMS57VdH43oD25bjccRrDHN4W+zbI6C09/k3z0
+         PDA5t/WdD8bG6gtLLQxi7EJjzT7p72J8GxdLyc81X7vGZMx3UwyiSaXF+/INF6PpgVUY
+         lVsmFIihfDiCS9C4xNgXsYX2hHO/4x7e93WW7twv+zu/pZ5PRfmj4pyHC7kciNooqtIf
+         WGKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=lfnkQfm3GKzU95XwF2JxhE5x/N3AyvhM1u96HkPpQ6s=;
+        b=JpFHg9Wk2nWZi3AD9hkWuh2rNsCziO/1MhvlUI/U5EXVGMQMk4p4nh3GEzdXj0hfYi
+         DztcaANT3aoVZb9iuQLd2RM4aD90ZujAjLrnDxOvX6DZBCAz3aZdRSW4ou7Pk6CNZU8b
+         sTj6GUu9uzgxCoo2o8NOrEj4gvNzIcjjrRKQWDhZhSh/v2yiIXuXdu3pAPSpz2lrlyhw
+         Ffj19rTAxQaGNBb9j25wERwECXAp1Z2u8gKKRbmTRNIeqv2ZIaT060czjR+7JDl5f/br
+         wCu9fTttXi5hpUoJW/FxLQB/QIOWZJY4r/QjEDhnj1oid41eoJ5Ne8d1Di7TKcFF15v0
+         0GRg==
+X-Gm-Message-State: AOAM530mP1G7bb3FvXMPQdfC9kiBZn6v+3g0L2heQFOVJSQ1N+NCw1S8
+        aVgJ/LqGTgUI3lzh921S2zaJJA==
+X-Google-Smtp-Source: ABdhPJxvvy10AX5J00BsA51P9Ib9neAMULoBhvxJmXpVuThEekQJMPq47kHsZzAyKsIgo2uMvjo84w==
+X-Received: by 2002:a5d:6692:: with SMTP id l18mr2555849wru.211.1596186377988;
+        Fri, 31 Jul 2020 02:06:17 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id c24sm13316548wrb.11.2020.07.31.02.06.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 02:06:17 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 10:06:15 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Gene Chen <gene.chen.richtek@gmail.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Gene Chen <gene_chen@richtek.com>, benjamin.chao@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com
+Subject: Re: [PATCH v2 9/9] mfd: mt6360: Merge different sub-devices i2c
+ read/write
+Message-ID: <20200731090615.GK2419169@dell>
+References: <1594983811-25908-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1594983811-25908-10-git-send-email-gene.chen.richtek@gmail.com>
+ <20200727124306.GP1850026@dell>
+ <CAE+NS354H-j5UKa+JxHzvwinpPN9QR176ugFVt+UYyJFsOMg0w@mail.gmail.com>
+ <20200729101244.GH2419169@dell>
+ <CAE+NS37hURYnWqsewnc+T9yn62pFdSHUTqL4BvdsH_3mRf6Yrg@mail.gmail.com>
+ <CAE+NS35bHQkiQroRGOWGNv_jbCiW6p4FfwJXNieEuN40YHdf_w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596186082; bh=5U56MbpoGgbizDY87xBQZF5BWeIIcAyUuev+l62V8Co=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=HaVarrBScuUl2g24Cmi3KwvpBdXdSe+Ewvyl900IBeYqVh6okqW4CbJUtefW0+Z9m
-         SRMJIR0wvaczbOF61W5yv2Y6J+lXmswak4KG0wAdv9bfKWhgsUkMd4AVT7nauGL7FU
-         vE3GlzrdceHl5Gf4ro/0c/Iu5Wmq+E88RvGLTERXTrbRund5dNyIdVSSr6xjltSxlu
-         eiR/RveZQMGpInbb2qNaNAap+D4cNh9JP1N8+Wf0+HBlKiDR+Zo/4hNuSfdKI1HXjQ
-         sPb2nZzICns5IdsVSKN9Rt2QGmD6a4tUSbpIYo38UQHbiHzthvDEdaPPYer8H1xfKJ
-         s+MhPdNT02GyA==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAE+NS35bHQkiQroRGOWGNv_jbCiW6p4FfwJXNieEuN40YHdf_w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra VI supported video formats are more for non TPG and there
-can be multiple pixel formats for the same media bus format.
+[...]
 
-This patch updates the helper function for format lookup based on
-mbus code from pre-defined Tegra supported format list to look from
-the specified list index offset.
+> > > > > > +static const struct regmap_bus mt6360_regmap_bus = {
+> > > > > > +     .read           = mt6360_regmap_read,
+> > > > > > +     .write          = mt6360_regmap_write,
+> > > > > > +
+> > > > > > +     /* due to pmic and ldo crc access size limit */
+> > > > > > +     .max_raw_read   = 4,
+> > > > > > +     .max_raw_write  = 4,
+> > > > > > +};
+> > > > >
+> > > > > Why isn't all of the above in a Regmap driver?
+> > > > >
+> > > >
+> > > > Do you means split out like drivers/base/regmap/regmap-ac97.c?
+> > >
+> > > Yes, I do.
+> > >
+> > > [...]
+> > >
+> >
+> > ACK
+> >
+> 
+> After I implement first version of regmap-mt6360.c, I found out ac97
+> is a intel standard codec.
+> If device follow this spec, it can reuse this api.
+> But regmap-mt6360.c may single use only.
+> should I try sending patch once to regmap reviewer?
 
-Offset based look up is used with sensor device graph (non TPG)
-where format enumeration can list all supported formats for the
-specific sensor mbus codes.
+Single use is okay.  Putting Regmap code into MFD is not okay.
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/staging/media/tegra-video/vi.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
-index 0197f4e..52d751f 100644
---- a/drivers/staging/media/tegra-video/vi.c
-+++ b/drivers/staging/media/tegra-video/vi.c
-@@ -53,11 +53,12 @@ to_tegra_channel_buffer(struct vb2_v4l2_buffer *vb)
- }
- 
- static int tegra_get_format_idx_by_code(struct tegra_vi *vi,
--					unsigned int code)
-+					unsigned int code,
-+					unsigned int offset)
- {
- 	unsigned int i;
- 
--	for (i = 0; i < vi->soc->nformats; ++i) {
-+	for (i = offset; i < vi->soc->nformats; ++i) {
- 		if (vi->soc->video_formats[i].code == code)
- 			return i;
- 	}
-@@ -598,11 +599,12 @@ static void vi_tpg_fmts_bitmap_init(struct tegra_vi_channel *chan)
- 	bitmap_zero(chan->tpg_fmts_bitmap, MAX_FORMAT_NUM);
- 
- 	index = tegra_get_format_idx_by_code(chan->vi,
--					     MEDIA_BUS_FMT_SRGGB10_1X10);
-+					     MEDIA_BUS_FMT_SRGGB10_1X10, 0);
- 	bitmap_set(chan->tpg_fmts_bitmap, index, 1);
- 
- 	index = tegra_get_format_idx_by_code(chan->vi,
--					     MEDIA_BUS_FMT_RGB888_1X32_PADHI);
-+					     MEDIA_BUS_FMT_RGB888_1X32_PADHI,
-+					     0);
- 	bitmap_set(chan->tpg_fmts_bitmap, index, 1);
- }
- 
 -- 
-2.7.4
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
