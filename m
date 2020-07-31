@@ -2,122 +2,105 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9277C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C036C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B14E0208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AE8622B40
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:29:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QOJVzRaN"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="rU/7m59T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387573AbgGaP3L (ORCPT
+        id S2387583AbgGaP3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 11:29:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59838 "EHLO
+        Fri, 31 Jul 2020 11:29:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbgGaP3K (ORCPT
+        with ESMTP id S1726533AbgGaP3L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 11:29:10 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 500E2C061574;
-        Fri, 31 Jul 2020 08:29:10 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id k63so3120062oob.1;
-        Fri, 31 Jul 2020 08:29:10 -0700 (PDT)
+        Fri, 31 Jul 2020 11:29:11 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37899C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 08:29:11 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id c2so16779041edx.8
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 08:29:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=90N+DizNEGS1ke1z4ysD0xy01hNFDRmhSDp55LndzYM=;
-        b=QOJVzRaNwMysXEWmHwMrwn59HvXe+T9rwydI40AfnEtC9gpfhfaa7DRCnUlSzQMSUM
-         pfmoszmrhpDVi4bc3aiAEtduQTcnhXt3g4WJDlFQ8QVmExiLJ4TlS+RGvQq1S7qaCKwl
-         ckBYPkEWZq+JfO625y7KWPbQBF/jT1CmMAwQmGA3YWUK30fZJZV4fOcgWzcxi+S10Mor
-         /4jJ71p+gzbJVtVVKR+3ajL02mmH2sQkyDTNbO0ldVcdiR63Ctn++yrYmyVNt5igCZ3W
-         7fW6eqYYwbyKI1GdZO7iyHbm0DZbOtODptwGuyfHSBbxiXBrp/J7d5yFnI/rqOaH9kZO
-         buUQ==
+        bh=3k2Qozw9K7T3ULHctZF2uRyGbKqkev5Yvd3i8BwLL6Q=;
+        b=rU/7m59TNeq5RpPtiUF/ooEfv7y67ob0BFihzDNxqzyOmEpsLDWpdRWM7a1Ta8diX9
+         7/KmEpDzjGcJg/Pwvj5CJyOTsZLukJCMCLa8+AoMszs4qJ2ovqLeTB8tvugBUABNICT+
+         eDx8T4FKQBB7a3AF6wXJM4aILfpBArYOrJuEN4lkQy4uwl9e0jQGD8SXyeGbMZNORy2L
+         yAShufuKVBs3/3TERLOxaa0ePPEogNjB9YElAimeP98Z0X7DEawjgep2fVgs0yc7Su75
+         36fuiJkQisHXPKWkagRGrmyt7j/f6VdTzQ17F84MaIPjL3U9bAoqmxQ5O1LyXMSuNHUw
+         J1DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=90N+DizNEGS1ke1z4ysD0xy01hNFDRmhSDp55LndzYM=;
-        b=ODzwyW9B6PjI+qder304AZVWkeSx9qCOWXPFm81KTFEnhFGF639ULaZAWaT5/f22KF
-         WM3qsNJKa1jd1wn9B8SnHwPJiM9/bhgjQs1rnKxVEqUuszZMX8/K5vMg6rlzNTHACdpt
-         wFMoOBqU7eVapfpUUv+/oTNIhQAfdClLaI5sr3rjTjyNC/7cLjCbep103khPfUIsvVcK
-         Wyao75nXX0L94X2F843CzPN6KA66ybo7oK74g4qfIbhdKMADAktnQzcNXHOZiW2fgz1U
-         Vm7UZ8Tx+lEs2hKSDe2JWnib5nzHbWPjFnxcoewBFOkpn5AS5L1DIf3K+SkzicN8e6HK
-         +/Eg==
-X-Gm-Message-State: AOAM533gVVPrIowaXKhZiZmvF2lRoR4lvRM/zy25aYOCLXYKK5U7MFBD
-        U5aM5x0kpV3OrJx/ZIAFTJyR3Z/fjOfNFEkiivo=
-X-Google-Smtp-Source: ABdhPJzEn0VpY6nfOqay120JTISDPfrd/5KoUQgYqFFFObRAkqh9H6ImiJKN0dgt4rlSAcYkUp5IqBXW02/TiuardGw=
-X-Received: by 2002:a4a:a782:: with SMTP id l2mr3555935oom.62.1596209349753;
+        bh=3k2Qozw9K7T3ULHctZF2uRyGbKqkev5Yvd3i8BwLL6Q=;
+        b=ptDijIyMlCkOHq2FC0dMJKmq+bJA0gWpDZcbv7tHKt/PCK+EXPjFWZb5bZC3ghfjtk
+         Ham8c2aBevwmPt0/RCJWY4AnN7z7AP1/id9vT2CIRjeM9glbJj07ENfwFiwaCKobzsIR
+         boWvvLOVTF+xS23dkxg+PTAdGMdmqKZEREZWAdPZOxOiOP9KcXi4lQx5Baeh22bQXcEy
+         IZAJmv7Z0bdsSgKzxTF4hC9VSvYEBslnv2KwDxJvbyWXSKg1IwrJanxbUZoRtauTngH4
+         pcCPohwiS3UZYWKPpwLF0guuEDnghDRxOGzHdAXsBvRymI6gkmiJMygiiiutWoC5t/kp
+         TQLA==
+X-Gm-Message-State: AOAM530DBWpJAvKW5lcJjoPeZllp7DJ0Gw6y/8p1ygC3PfctIAkQgTFn
+        5pa147jo6vyYeleStgEOKCF/ue5gFuguD09YNNUNLg==
+X-Google-Smtp-Source: ABdhPJz0P/lPp3nduBpCI463CmMAzDxLqlASXNACZIK8CQVQjVPCG9CcO/+9HjqSM/KyFs+VY+csHhR3WhxQTYkaNqE=
+X-Received: by 2002:a50:d51e:: with SMTP id u30mr2058575edi.296.1596209349842;
  Fri, 31 Jul 2020 08:29:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <1596187487-31403-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1596187487-31403-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200731152353.GS13316@paasikivi.fi.intel.com>
-In-Reply-To: <20200731152353.GS13316@paasikivi.fi.intel.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 31 Jul 2020 16:28:43 +0100
-Message-ID: <CA+V-a8sQtM8MTBgLGdZR5wm_5PkKR8X5yxeK5Xdk-ZHWYAqjvw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] media: i2c: ov5640: Add support for BT656 mode
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        Hugues Fruchet <hugues.fruchet@st.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>
+References: <20200709020629.91671-1-justin.he@arm.com>
+In-Reply-To: <20200709020629.91671-1-justin.he@arm.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 31 Jul 2020 08:28:58 -0700
+Message-ID: <CAPcyv4iqkuzyU_u+VW1nsaK7tiy+HJtUxLtgAxtfX0aXXcKhfA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] Fix and enable pmem as RAM device on arm64
+To:     Jia He <justin.he@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        David Hildenbrand <david@redhat.com>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-ia64@vger.kernel.org, Linux-sh <linux-sh@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kaly Xin <Kaly.Xin@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sakari,
+On Wed, Jul 8, 2020 at 7:06 PM Jia He <justin.he@arm.com> wrote:
+>
+> This fixies a few issues when I tried to enable pmem as RAM device on arm64.
 
-Thank you for the review.
-
-On Fri, Jul 31, 2020 at 4:23 PM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
->
-> Hi Prabhakar,
->
-> On Fri, Jul 31, 2020 at 10:24:47AM +0100, Lad Prabhakar wrote:
-> > @@ -2875,8 +2891,10 @@ static int ov5640_s_stream(struct v4l2_subdev *sd, int enable)
-> >
-> >               if (sensor->ep.bus_type == V4L2_MBUS_CSI2_DPHY)
-> >                       ret = ov5640_set_stream_mipi(sensor, enable);
-> > -             else
-> > +             else if (sensor->ep.bus_type == V4L2_MBUS_PARALLEL)
-> >                       ret = ov5640_set_stream_dvp(sensor, enable);
-> > +             else
-> > +                     ret = ov5640_set_stream_bt656(sensor, enable);
->
-> I'd also check for the Bt.656 mode here, rather than assuming it.
->
-Sure will do.
-
-> Could you also update the DT bindings, given that the sensor appears to
-> support Bt.656 as well? I believe this requires the bus-type property, too.
->
-Aha I ignored because this wasnt updated when DVP support was added to
-the driver, but will do now.
-
-Cheers,
-Prabhakar
-
-> >
-> >               if (!ret)
-> >                       sensor->streaming = enable;
->
-> --
-> Kind regards,
->
-> Sakari Ailus
+What NVDIMM bus driver is being used in this case? The ACPI NFIT
+driver? I'm just looking to see if currently deployed
+phys_to_target_node() is sufficient, or if this is coming in a new
+driver?
