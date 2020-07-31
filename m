@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C2EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B61C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E4932177B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 589462177B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:08:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387709AbgGaSI3 (ORCPT
+        id S2387697AbgGaSI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 31 Jul 2020 14:08:29 -0400
-Received: from mga14.intel.com ([192.55.52.115]:31216 "EHLO mga14.intel.com"
+Received: from mga04.intel.com ([192.55.52.120]:9984 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730040AbgGaSI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387447AbgGaSI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 31 Jul 2020 14:08:29 -0400
-IronPort-SDR: CzKf95QFQG2oRDkWEDrkJJXjNA2UMnWkvo8Dvq17WpF61nlXb96qP6ydj3xWYOqvDTeJ+BAhan
- O8VD+M+9sWDw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="151048004"
+IronPort-SDR: /HH3Ud5u9C/4qiUAg+SHr2m280Aah0aMfuldRQeOyn48wEolRuV8B4GX43bNF43qAPQHNIXIJy
+ /iPyleKZfjzA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="149302911"
 X-IronPort-AV: E=Sophos;i="5.75,419,1589266800"; 
-   d="scan'208";a="151048004"
+   d="scan'208";a="149302911"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 11:08:28 -0700
-IronPort-SDR: Xla5EuKiNSVBnpCZQHOOD9RCXdefukV/S5ThOsac7bpxVOQ6YN+u8xN4ehBlKkv6/s2Yjjj2pE
- 9whxFIdVpcdA==
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 11:08:28 -0700
+IronPort-SDR: nWzQAVkG6AlxweHrEsSxaiB+Kvmvid+a67xDfrjm2R1Xi+VMJO6Q0x6jLz8ts+VgFBDkh5HLBB
+ XfU7PIuZi2dA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,419,1589266800"; 
-   d="scan'208";a="491079847"
+   d="scan'208";a="321467014"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 31 Jul 2020 11:08:26 -0700
+  by orsmga008.jf.intel.com with ESMTP; 31 Jul 2020 11:08:27 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 142F6119; Fri, 31 Jul 2020 21:08:25 +0300 (EEST)
+        id 2710A21D; Fri, 31 Jul 2020 21:08:26 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Petr Mladek <pmladek@suse.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
@@ -45,10 +45,12 @@ To:     Petr Mladek <pmladek@suse.com>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH v2 1/3] lib/vsprintf: Replace hidden BUILD_BUG_ON() with static_assert()
-Date:   Fri, 31 Jul 2020 21:08:22 +0300
-Message-Id: <20200731180825.30575-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 3/3] lib/vsprintf: Force type of flags value for gfp_t
+Date:   Fri, 31 Jul 2020 21:08:24 +0300
+Message-Id: <20200731180825.30575-3-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200731180825.30575-1-andriy.shevchenko@linux.intel.com>
+References: <20200731180825.30575-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,44 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-First of all, there is no compile time check for the SMALL
-to be ' ' (0x20, i.e. space). Second, for ZEROPAD the check
-is hidden in the code.
+Sparse is not happy about restricted type being assigned:
+  lib/vsprintf.c:1940:23: warning: incorrect type in assignment (different base types)
+  lib/vsprintf.c:1940:23:    expected unsigned long [assigned] flags
+  lib/vsprintf.c:1940:23:    got restricted gfp_t [usertype]
 
-For better maintenance replace BUILD_BUG_ON() with static_assert()
-for ZEROPAD and move it closer to the definition. While at it,
-introduce check for SMALL.
+Force type of flags value to make sparse happy.
 
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
-v2: replaced to have plain defined constant on left side, added tag (Steven)
- lib/vsprintf.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+v2: used explicit type to be forced to (Steven)
+ lib/vsprintf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 31a674dd2674..f90f09682977 100644
+index 182a3e2e1629..c155769559ab 100644
 --- a/lib/vsprintf.c
 +++ b/lib/vsprintf.c
-@@ -381,6 +381,9 @@ int num_to_str(char *buf, int size, unsigned long long num, unsigned int width)
- #define SMALL	32		/* use lowercase in hex (must be 32 == 0x20) */
- #define SPECIAL	64		/* prefix hex with "0x", octal with "0" */
- 
-+static_assert(ZEROPAD == ('0' - ' '));
-+static_assert(SMALL == ' ');
-+
- enum format_type {
- 	FORMAT_TYPE_NONE, /* Just a string part */
- 	FORMAT_TYPE_WIDTH,
-@@ -507,7 +510,7 @@ char *number(char *buf, char *end, unsigned long long num,
- 	/* zero or space padding */
- 	if (!(spec.flags & LEFT)) {
- 		char c = ' ' + (spec.flags & ZEROPAD);
--		BUILD_BUG_ON(' ' + ZEROPAD != '0');
-+
- 		while (--field_width >= 0) {
- 			if (buf < end)
- 				*buf = c;
+@@ -1937,7 +1937,7 @@ char *flags_string(char *buf, char *end, void *flags_ptr,
+ 		names = vmaflag_names;
+ 		break;
+ 	case 'g':
+-		flags = *(gfp_t *)flags_ptr;
++		flags = (__force unsigned long)(*(gfp_t *)flags_ptr);
+ 		names = gfpflag_names;
+ 		break;
+ 	default:
 -- 
 2.27.0
 
