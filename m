@@ -2,146 +2,135 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29AB8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E47C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F34A32072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:00:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YFBSpc4o"
+	by mail.kernel.org (Postfix) with ESMTP id 7A1B12070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:06:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbgGaEAV (ORCPT
+        id S1726305AbgGaEGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 00:00:21 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:46027 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbgGaEAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 00:00:20 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BHtpj6GDcz9sRN;
-        Fri, 31 Jul 2020 14:00:13 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596168015;
-        bh=IYnmS5SRsESSUPE13MZ6169T6bUwLsb8HLxQLRkNHo8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YFBSpc4oM0SeYkZYs/cgfF5nya0iOo2PRYRpDrBbOKN9Pr6lc2wCV1c7wsjW7b9/1
-         yVWWY+DKKPXQLbDBnQmioF5qBRWHvzI4LrmZ82F1oQ336hE6ITFowYbHMCOcf02ECO
-         jVw8LDep3ich1zbiBzBqtXb552qhwuH+a114H99KZCyIa3kbtXBi/8s7AIbBWVQQoK
-         Dgz/mFyK92zwnBnzPtWiBcbixO2zd079LXDoc+FWST8HqS+IgkiB2hG9DJ8NNY5R2+
-         n7kKz0H870Y4v4ncFhjXsj4FBRQlFAwjyOLwxUgv1b+MY8ZpEoX7Rmewi63ecQfu0T
-         lSEdVmjnnSmjw==
-Date:   Fri, 31 Jul 2020 14:00:12 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: linux-next: manual merge of the devfreq tree with the arm-soc
- tree
-Message-ID: <20200731140012.34ee461d@canb.auug.org.au>
-In-Reply-To: <20200727201600.7d3b31c8@canb.auug.org.au>
-References: <20200727201600.7d3b31c8@canb.auug.org.au>
+        Fri, 31 Jul 2020 00:06:46 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:40725 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbgGaEGp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 00:06:45 -0400
+Received: by mail-pj1-f68.google.com with SMTP id t15so6556585pjq.5;
+        Thu, 30 Jul 2020 21:06:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=QQ35CE9yJFKcx/uvB2EsoL6aQNmrJJ39h4x1UksSOeI=;
+        b=oCx+OmtDmgcsKf4YV1IAtnHqhz2Y2qhro0Yby9520SONIWBEE4vGbr/7AEmTzsHiaC
+         ENPpUWZbkekLE0dIoQ2AMdn4UfxLEDJujY7rHCZGZiPXokRNbo7z2o98NSAidR2AmgQ7
+         Ev0s4tZJe85EkW5GeA5nZ2vvC8qa7Ik1jx26X6pNvlgDHab5ALPNAKkj+WxA6PfBMDy+
+         4pUAl3GnLEmAq92Jl+ERBx7zpGTO/s2hu/LKEsnpCf2hXEHhkyzaKYsqy9F0FJkmscj9
+         +o4ShmPav8WOVhuLbG8RiLpE+uwVVvF25ry4cyuhP0lmp7xwHEGtdyoTSYdZWHwMrfuK
+         8UAw==
+X-Gm-Message-State: AOAM530q1ohsa0E8RzsK4H2iDp3RM6SIZBb12aBcnuwXbxsTwXq4nCeS
+        7DMnmlmfnuvDlHvwaL0aCro=
+X-Google-Smtp-Source: ABdhPJzXnGsmXXgO8qRrgHFnZCn5E/++s0JbD0mUM5v850qtfGXGD2zI4A5vvBBtJhqa9flYfth/vQ==
+X-Received: by 2002:a17:902:ff13:: with SMTP id f19mr2147996plj.326.1596168404804;
+        Thu, 30 Jul 2020 21:06:44 -0700 (PDT)
+Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id r8sm8054046pfg.147.2020.07.30.21.06.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jul 2020 21:06:43 -0700 (PDT)
+Subject: Re: [PATCH v4] scsi: ufs: Cleanup completed request without interrupt
+ notification
+To:     Stanley Chu <stanley.chu@mediatek.com>,
+        Avri Altman <Avri.Altman@wdc.com>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>,
+        "chaotian.jing@mediatek.com" <chaotian.jing@mediatek.com>,
+        "cc.chou@mediatek.com" <cc.chou@mediatek.com>
+References: <20200724140246.19434-1-stanley.chu@mediatek.com>
+ <SN6PR04MB4640B5FC06968244DDACB8BEFC720@SN6PR04MB4640.namprd04.prod.outlook.com>
+ <1596159018.17247.53.camel@mtkswgap22>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <97f1dfb0-41b6-0249-3e82-cae480b0efb6@acm.org>
+Date:   Thu, 30 Jul 2020 21:06:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/qsbv3btk.mRkXMN70G7UUS8";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <1596159018.17247.53.camel@mtkswgap22>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/qsbv3btk.mRkXMN70G7UUS8
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2020-07-30 18:30, Stanley Chu wrote:
+> On Mon, 2020-07-27 at 11:18 +0000, Avri Altman wrote:
+>> Looks good to me.
+>> But better wait and see if Bart have any further reservations.
+> 
+> Would you have any further suggestions?
 
-Hi all,
+Today is the first time that I took a look at ufshcd_abort(). The
+approach of that function looks wrong to me. This is how I think that a
+SCSI LLD abort handler should work:
+(1) Serialize against the completion path
+(__ufshcd_transfer_req_compl()) such that it cannot happen that the
+abort handler and the regular completion path both call
+cmd->scsi_done(cmd) at the same time. I'm not sure whether an existing
+synchronization object can be used for this purpose or whether a new
+synchronization object has to be introduced to serialize scsi_done()
+calls from __ufshcd_transfer_req_compl() and ufshcd_abort().
+(2) While holding that synchronization object, check whether the SCSI
+command is still outstanding. If so, submit a SCSI abort TMR to the device.
+(3) If the command has been aborted, call scsi_done() and return
+SUCCESS. If aborting failed and the command is still in progress, return
+FAILED.
 
-On Mon, 27 Jul 2020 20:16:00 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Today's linux-next merge of the devfreq tree got a conflict in:
->=20
->   MAINTAINERS
->=20
-> between commit:
->=20
->   8a9ff8758159 ("MAINTAINERS: Add Krzysztof Kozlowski as maintainer of me=
-mory controllers")
->=20
-> from the arm-soc tree and commit:
->=20
->   34886407581b ("PM / devfreq: tegra: Add Dmitry as a maintainer")
->=20
-> from the devfreq tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> diff --cc MAINTAINERS
-> index 2b1d2d3fbd4e,e2e95c877f0b..000000000000
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@@ -11202,13 -11086,15 +11202,22 @@@ F:	Documentation/core-api/boot-time=
--mm.
->   F:	include/linux/memblock.h
->   F:	mm/memblock.c
->  =20
->  +MEMORY CONTROLLER DRIVERS
->  +M:	Krzysztof Kozlowski <krzk@kernel.org>
->  +L:	linux-kernel@vger.kernel.org
->  +S:	Maintained
->  +F:	Documentation/devicetree/bindings/memory-controllers/
->  +F:	drivers/memory/
->  +
-> + MEMORY FREQUENCY SCALING DRIVERS FOR NVIDIA TEGRA
-> + M:	Dmitry Osipenko <digetx@gmail.com>
-> + L:	linux-pm@vger.kernel.org
-> + L:	linux-tegra@vger.kernel.org
-> + T:	git git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git
-> + S:	Maintained
-> + F:	drivers/devfreq/tegra20-devfreq.c
-> + F:	drivers/devfreq/tegra30-devfreq.c
-> +=20
->   MEMORY MANAGEMENT
->   M:	Andrew Morton <akpm@linux-foundation.org>
->   L:	linux-mm@kvack.org
+An example is available in srp_abort() in
+drivers/infiniband/ulp/srp/ib_srp.c.
 
-
-This is now a conflict between the pm and arm-soc trees.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/qsbv3btk.mRkXMN70G7UUS8
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8jl0wACgkQAVBC80lX
-0Gz8cwf/fmKmvAQ3/kX0yatHmq0S7WxLOHsKfm2+y0ElWDk7Rf+jE7ENo6Kb3E54
-kQ//XxPLlqGig9cyXiSdxsUKmJMg68TXN4kJYAoAZGQdbj5uc4HuDwuTRMh1h1cX
-2TdcVDiHgqF0g9QQaOLqNY6Avk9fgdUYm8wpj5TgVVi+J4lN8LTZ7h/NcoAbkPrs
-TPfQW65Kv3xA4P61NkK9rl8n0KvDqBnGKGaCcw/efP4974sd8Yc0bW+GV/M8TUT9
-A94HFVDjLya/8SoWyNyXuqCKjkgBZzwdQ25KyXZtP7JmCFudqVBzPsizdT6JrvMo
-tePjWt9Eoze7YF8O1MZvMD3xwAEIgA==
-=U0jt
------END PGP SIGNATURE-----
-
---Sig_/qsbv3btk.mRkXMN70G7UUS8--
+Bart.
