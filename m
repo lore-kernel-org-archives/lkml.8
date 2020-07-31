@@ -2,287 +2,133 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8FFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B61C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41A06208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:16:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="jmzvhFRO";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="bION3SPX"
+	by mail.kernel.org (Postfix) with ESMTP id 30DA02245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:31:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732500AbgGaKQz (ORCPT
+        id S1732530AbgGaKbX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 06:16:55 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:46887 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbgGaKQx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 06:16:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1596190612; x=1627726612;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=Nmd3tStm8IGLNMencPLDxyjOyeYYiabulntSB2azMpE=;
-  b=jmzvhFROVkutNLIt7Yn6ZoYYrhBueIFHVN6C54Jd8wYuvZibFrZjeb2m
-   NrwL+4QMm1JdsGXIWQrIANasUezukvugqj5wS6x6eK1GJ4mYIKA4kyhFK
-   RznfG+UXMiqe4859VBRVLY3X1KebRGjJLwFCtwFx1R4Z7ktsMl4Le04wH
-   TebTMnO2d9+40E2oiZ7EwhT2bDjAMRvmYfDhH/iePOfhxPMCELBIczWEY
-   haGwsW4/UxtmQ4703gkns1tHF5lOxdvAoDZeWmsWPVSBLJxXOxCySUPs1
-   2hwCSsoYnMDPqn3wr7sTW8UPjvQHnrOUB15q1DTRnv7YTOWZHiwL7g1GF
-   g==;
-IronPort-SDR: XUtWyBJNY3Qbg80WUIO7J60qRjjlTJhqACzG3qvGYVlQXZ7LEsbenmHqh/63lL8BKVlJF1gSn7
- CM5qUkrQthOOBmd+cYVi21mr4Q0liZIEzkvb0P84/wZ7bfARRmdF/XdEp2fNWnuPMHge3iNWLA
- v5phXqPCkIqEXeRFLVnZCpM3OI2PpGyjh5pjZgmyXYGLm9xfgo7zd15pOCoJAjlOM597mzKCun
- 4pzJ12hRMMz899LXJhMhTiWyrwJb55EqIYqJeS1sWOs/TrAlyg3O3ypre9uC4r1Nl8UH4iGJzW
- USs=
-X-IronPort-AV: E=Sophos;i="5.75,418,1589212800"; 
-   d="scan'208";a="143830479"
-Received: from mail-co1nam11lp2173.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.173])
-  by ob1.hgst.iphmx.com with ESMTP; 31 Jul 2020 18:16:51 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WgP7XC8IE8xePVBpdxZbXIJkOT4cp1KiGt2/U/LnySnbk4T0TCBxQ0o4UfIeK7suVVhgHP21IjetvwJEiNVSObubVkUimUml8Jc+e8Smpkx2gH4xeU8Zvb98Ca3JPHZScRybXEgSSeJ5QkDvCVF2GluEdv54HLp1nKMEvxPExXjpfsaj/FbPwn7Uxt8gjJUuJ4PQH7OZh4od14CM2vnZ+3Illu6F/9qDO9ualx7Y6sUEIlIP1krx16av7br4qAlhannO8ljQTrgLdHbu4gzLAsvPL7TNZGpiWipA7vYL+ZsI9RC5cF5Hc9/77JpgqPu057pSUFIT5/KydmmRScC4YA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GEJH4uRAKYW2mBJH4miH2eq7mG/QevBdd7N6GjmMOXI=;
- b=K8XaXocsEbGswajKUA7u1Aie/UgjeQRSV5vCZ1vl4LniClAwDM7BbMHNpifQwheNlG/R8AsLNJGd9O/j7JRYV+90W/dIUH1Jn8bUcwGJjWBJIeukQECB04gJWL7jwgX2EUGPxMKck/0ox0/0s/njPh1/AvtT+zqtypS8YOlHJGIoUEvgMQNBNPBzj6ZEPhpdplECGJjbku2zCIQb/lDvRGQlEXy8rmZbz26x+WAw05LrwydtIvtoNRuqfzvlxX3e5LnjdR2Omzl4GSjcFeOAUo1rzUA2wkQ0UefX2hN1mD51H4bx4RKjvJOHfp1wUf9KqDVYYlMslR4tnx1h/gNBrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GEJH4uRAKYW2mBJH4miH2eq7mG/QevBdd7N6GjmMOXI=;
- b=bION3SPXfAIzEPxWPx6DxJxJKXlwUYFUAqCQ/nViGC4j7sg4AB3/zCnTZhR+UZgLpde/DL0qpxqtrwGcs80T2XnyHAas7BgDORppbhdSYmMOp0FSlleZw+fudbD2T0zTXxqPto5+B+Dfo/kSOAfTzxvf9HMYXSVVyE+3WaM6Fh4=
-Received: from MWHPR04MB3758.namprd04.prod.outlook.com (2603:10b6:300:fb::8)
- by MWHPR04MB1039.namprd04.prod.outlook.com (2603:10b6:301:45::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Fri, 31 Jul
- 2020 10:16:49 +0000
-Received: from MWHPR04MB3758.namprd04.prod.outlook.com
- ([fe80::718a:d477:a4f1:c137]) by MWHPR04MB3758.namprd04.prod.outlook.com
- ([fe80::718a:d477:a4f1:c137%7]) with mapi id 15.20.3239.017; Fri, 31 Jul 2020
- 10:16:49 +0000
-From:   Damien Le Moal <Damien.LeMoal@wdc.com>
-To:     "hch@infradead.org" <hch@infradead.org>
-CC:     Kanchan Joshi <joshiiitr@gmail.com>, Jens Axboe <axboe@kernel.dk>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "bcrl@kvack.org" <bcrl@kvack.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-aio@kvack.org" <linux-aio@kvack.org>,
-        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        SelvaKumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>,
-        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
-        Naohiro Aota <Naohiro.Aota@wdc.com>
-Subject: Re: [PATCH v4 6/6] io_uring: add support for zone-append
-Thread-Topic: [PATCH v4 6/6] io_uring: add support for zone-append
-Thread-Index: AQHWYdbcc0q15qREKECGO7brHi6zEg==
-Date:   Fri, 31 Jul 2020 10:16:49 +0000
-Message-ID: <MWHPR04MB3758A4B2967DB1FABAAD9265E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
-References: <CA+1E3rJ3SoLU9aYcugAQgJnSPnJtcCwjZdMREXS3FTmXgy3yow@mail.gmail.com>
- <f030a338-cd52-2e83-e1da-bdbca910d49e@kernel.dk>
- <CA+1E3rKxZk2CatTuPcQq5d14vXL9_9LVb2_+AfR2m9xn2WTZdg@mail.gmail.com>
- <MWHPR04MB3758DC08EA17780E498E9EC0E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <20200731064526.GA25674@infradead.org>
- <MWHPR04MB37581344328A42EA7F5ED13EE74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <CA+1E3rLM4G4SwzD6RWsK6Ssp7NmhiPedZDjrqN3kORQr9fxCtw@mail.gmail.com>
- <MWHPR04MB375863C20C1EF2CB27E62703E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <20200731091416.GA29634@infradead.org>
- <MWHPR04MB37586D39CA389296CE0252A4E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <20200731094135.GA4104@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: infradead.org; dkim=none (message not signed)
- header.d=none;infradead.org; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [129.253.182.57]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5410a628-1376-45fc-5312-08d8353ad6a2
-x-ms-traffictypediagnostic: MWHPR04MB1039:
-x-ld-processed: b61c8803-16f3-4c35-9b17-6f65f441df86,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR04MB1039C98E3E5DE342D904ED45E74E0@MWHPR04MB1039.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fsug4IDMfZEc83iPSaHW5vCnoF0PX0k4aOM0z0WMdExQOH3Oqpz5NBr27gA//GLHLcHrtZqiDkXjsF4tN0XqQiiaVsyCfIhII9TJlA6JZgYOJt4XEkvLQ2JaobL4i7qOTWdzbYTjtvFVLT73tTwUtFbuTGESL3xeSuJ0Owe6s1L5u/fOaVJF0j15Uh6qfzAyY9qcS4c9KHhdKFTxr1+1ACjBQOuvwuUeuiqF/nsN5d0RqshY07zKAUxEMBktfFxSFlgj+T/I/aOURtS1ydEdGHhaNSnR1t6lZFcZ8z2mz/GDou+i3ibqi/5Vw4XhOwjjsDrl2xg1XQyh06Q3EiTbgw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR04MB3758.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(366004)(136003)(396003)(376002)(4326008)(52536014)(9686003)(5660300002)(53546011)(55016002)(7696005)(26005)(186003)(478600001)(6506007)(33656002)(71200400001)(54906003)(316002)(6916009)(8936002)(66946007)(66476007)(66556008)(64756008)(66446008)(2906002)(83380400001)(91956017)(76116006)(8676002)(7416002)(86362001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 6kp861OrOsXHmoxRfbSRWad0GW5yTY7jqoHS9XlvDdAO2ru1obTahliKMqKHxdiy4cFWW4BJrqSACEAu4DALt2yA1RAAFkapakfmEGJqVvDE13nZU5K8sKDcmaMnT2K8FWqbJYy1WZi6iTyF57u6f8Wetznic8t9V8USygTTOExvTaDtLXaxJ2oTy8NOUNc8qohFeq7ICg1J7xXm58XBq+9Cg9++a1bTzJWkvqW95SPYEkDP4Y/nnEGbRRdW0RfqhsD56esaByeDorR5d81VQWzbgO5Ci7fR/gGEVPhXUxduK2OQZRmwq3zeN6jjXeTIHOuy9idMVabJLVlhZnK+WeWd0E2ps3ovN8I1jSpjfxJzae8X0WFfO8GV85sbDUqvFOPvktMOer9edpNx1aarPOH/DNf79XS9mGKc6AdEKqa9SeBx2bkn555wuIMkCeAKy5N7jMeiqnqwck+u7k96cfCWE3g9gki4GOQMSOMvRacOg85KNG1j23xy0wJtwdxwpYucvaZTomVi353Jg+0UnSyCzgzzB099woOzXxZFrBWm0jRREC4To14eO5hwsfMQFaNWD/oy6+645rgQXhG3GUK/TK8vEmO60DmlDnEGhq8UFcXAfCCW5abhp0jityIcUAJaq2LsxjIW5yt2tQCffA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 31 Jul 2020 06:31:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52958 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732371AbgGaKbX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 06:31:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 4CD29AF95;
+        Fri, 31 Jul 2020 10:31:33 +0000 (UTC)
+Received: from localhost (brahms.olymp [local])
+        by brahms.olymp (OpenSMTPD) with ESMTPA id b5a0e791;
+        Fri, 31 Jul 2020 10:31:18 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.de>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: drm: list_add corruption followed by BUG (stack guard page was hit)
+Date:   Fri, 31 Jul 2020 11:31:18 +0100
+Message-ID: <87tuxof021.fsf@suse.de>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR04MB3758.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5410a628-1376-45fc-5312-08d8353ad6a2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2020 10:16:49.7513
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: v8el+wJ+IbVLJ5V57YDRZXxWa5pGm8yEdr+IHhNaQ8LxKpRKPwEl01npf3WKj3t/eE7ItufmvZzwFvJGy2oGuw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR04MB1039
+Content-Type: text/plain
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/07/31 18:41, hch@infradead.org wrote:=0A=
-> On Fri, Jul 31, 2020 at 09:34:50AM +0000, Damien Le Moal wrote:=0A=
->> Sync writes are done under the inode lock, so there cannot be other writ=
-ers at=0A=
->> the same time. And for the sync case, since the actual written offset is=
-=0A=
->> necessarily equal to the file size before the write, there is no need to=
- report=0A=
->> it (there is no system call that can report that anyway). For this sync =
-case,=0A=
->> the only change that the use of zone append introduces compared to regul=
-ar=0A=
->> writes is the potential for more short writes.=0A=
->>=0A=
->> Adding a flag for "report the actual offset for appending writes" is fin=
-e with=0A=
->> me, but do you also mean to use this flag for driving zone append write =
-vs=0A=
->> regular writes in zonefs ?=0A=
-> =0A=
-> Let's keep semantics and implementation separate.  For the case=0A=
-> where we report the actual offset we need a size imitation and no=0A=
-> short writes.=0A=
-=0A=
-OK. So the name of the flag confused me. The flag name should reflect "Do z=
-one=0A=
-append and report written offset", right ?=0A=
-=0A=
-Just to clarify, here was my thinking for zonefs:=0A=
-1) file open with O_APPEND/aio has RWF_APPEND: then it is OK to assume that=
- the=0A=
-application did not set the aio offset since APPEND means offset=3D=3Dfile =
-size. In=0A=
-that case, do zone append and report back the written offset.=0A=
-2) file open without O_APPEND/aio does not have RWF_APPEND: the application=
-=0A=
-specified an aio offset and we must respect it, write it that exact same or=
-der,=0A=
-so use regular writes.=0A=
-=0A=
-For regular file systems, with case (1) condition, the FS use whatever it w=
-ants=0A=
-for the implementation, and report back the written offset, which  will alw=
-ays=0A=
-be the file size at the time the aio was issued.=0A=
-=0A=
-Your method with a new flag to switch between (1) and (2) is OK with me, bu=
-t the=0A=
-"no short writes" may be difficult to achieve in a regular FS, no ? I do no=
-t=0A=
-think current FSes have such guarantees... Especially in the case of buffer=
-ed=0A=
-async writes I think.=0A=
-=0A=
-> Anything with those semantics can be implemented using Zone Append=0A=
-> trivially in zonefs, and we don't even need the exclusive lock in that=0A=
-> case.  But even without that flag anything that has an exclusive lock can=
-=0A=
-> at least in theory be implemented using Zone Append, it just need=0A=
-> support for submitting another request from the I/O completion handler=0A=
-> of the first.  I just don't think it is worth it - with the exclusive=0A=
-> lock we do have access to the zone serialied so a normal write works=0A=
-> just fine.  Both for the sync and async case.=0A=
-=0A=
-We did switch to have zonefs do append writes in the sync case, always. Hmm=
-m...=0A=
-Not sure anymore it was such a good idea.=0A=
-=0A=
-> =0A=
->> The fcntl or ioctl for getting the max atomic write size would be fine t=
-oo.=0A=
->> Given that zonefs is very close to the underlying zoned drive, I was ass=
-uming=0A=
->> that the application can simply consult the device sysfs zone_append_max=
-_bytes=0A=
->> queue attribute.=0A=
-> =0A=
-> For zonefs we can, yes.  But in many ways that is a lot more cumbersome=
-=0A=
-> that having an API that works on the fd you want to write on.=0A=
-=0A=
-Got it. Makes sense.=0A=
-=0A=
->> For regular file systems, this value would be used internally=0A=
->> only. I do not really see how it can be useful to applications. Furtherm=
-ore, the=0A=
->> file system may have a hard time giving that information to the applicat=
-ion=0A=
->> depending on its underlying storage configuration (e.g. erasure=0A=
->> coding/declustered RAID).=0A=
-> =0A=
-> File systems might have all kinds of limits of their own (e.g. extent=0A=
-> sizes).  And a good API that just works everywhere and is properly=0A=
-> documented is much better than heaps of cargo culted crap all over=0A=
-> applications.=0A=
-=0A=
-OK. Makes sense. That said, taking Naohiro's work on btrfs as an example, z=
-one=0A=
-append is used for every data write, no matter if it is O_APPEND/RWF_APPEND=
- or=0A=
-not. The size limitation for zone append writes is not needed at all by=0A=
-applications. Maximum extent size is aligned to the max append write size=
-=0A=
-internally, and if the application issued a larger write, it loops over mul=
-tiple=0A=
-extents, similarly to any regular write may do (if there is overwrite etc..=
-.).=0A=
-=0A=
-For the regular FS case, my thinking on the semantic really was: if asked t=
-o do=0A=
-so, return the written offset for a RWF_APPEND aios. And I think that=0A=
-implementing that does not depend in any way on what the FS does internally=
-.=0A=
-=0A=
-But I think I am starting to see the picture you are drawing here:=0A=
-1) Introduce a fcntl() to get "maximum size for atomic append writes"=0A=
-2) Introduce an aio flag specifying "Do atomic append write and report writ=
-ten=0A=
-offset"=0A=
-3) For an aio specifying "Do atomic append write and report written offset"=
-, if=0A=
-the aio is larger than "maximum size for atomic append writes", fail it on=
-=0A=
-submission, no short writes.=0A=
-4) For any other aio, it is business as usual, aio is processed as they are=
- now.=0A=
-=0A=
-And the implementation is actually completely free to use zone append write=
-s or=0A=
-regular writes regardless of the "Do atomic append write and report written=
-=0A=
-offset" being used or not.=0A=
-=0A=
-Is it your thinking ? That would work for me. That actually end up complete=
-ly=0A=
-unifying the interface behavior for zonefs and regular FS. Same semantic.=
-=0A=
-=0A=
-=0A=
--- =0A=
-Damien Le Moal=0A=
-Western Digital Research=0A=
+Hi!
+
+I've just got the following WARNING followed by a BUG on rc7.  Maybe it's
+already a known issue, but here it is anyway.
+
+Cheers,
+-- 
+Luis
+
+[   38.001304] ------------[ cut here ]------------
+[   38.001312] list_add corruption. prev->next should be next (ffff8fe713397b88), but was 0000000000000000. (prev=ffff8fe715fb9140).
+[   38.001337] WARNING: CPU: 3 PID: 501 at lib/list_debug.c:26 __list_add_valid+0x4d/0x70
+[   38.001340] Modules linked in: cdc_ether(E) usbnet(E) r8152(E) mii(E) hid_generic(E) usbhid(E) snd_hda_codec_hdmi(E) iwlmvm(E) dell_rbtn(E) mac80211(E) libarc4(E) snd_hda_codec_realtek(E) x86_pkg_temp_thermal(E) intel_powerclamp(E) snd_hda_codec_generic(E) coretemp(E) mei_wdt(E) dell_laptop(E) kvm_intel(E) ledtrig_audio(E) intel_rapl_msr(E) dell_smm_hwmon(E) snd_hda_intel(E) kvm(E) uvcvideo(E) snd_intel_dspcfg(E) videobuf2_vmalloc(E) irqbypass(E) iwlwifi(E) videobuf2_memops(E) rapl(E) snd_hda_codec(E) videobuf2_v4l2(E) intel_cstate(E) dell_wmi(E) joydev(E) snd_hwdep(E) pcspkr(E) serio_raw(E) intel_uncore(E) dell_smbios(E) videobuf2_common(E) dcdbas(E) snd_hda_core(E) iTCO_wdt(E) snd_pcm(E) videodev(E) wmi_bmof(E) snd_timer(E) dell_wmi_descriptor(E) intel_wmi_thunderbolt(E) iTCO_vendor_support(E) mei_me(E) snd(E) cfg80211(E) soundcore(E) tpm_crb(E) mc(E) rfkill(E) mei(E) intel_pch_thermal(E) sg(E) processor_thermal_device(E) intel_rapl_common(E) intel_soc_dts_iosf(E) battery(E) tpm
+ _tis(E)
+[   38.001397]  int3403_thermal(E) tpm_tis_core(E) tpm(E) dell_smo8800(E) intel_hid(E) evdev(E) rng_core(E) int3400_thermal(E) int3402_thermal(E) acpi_thermal_rel(E) int340x_thermal_zone(E) sparse_keymap(E) acpi_pad(E) ac(E) nft_counter(E) nft_ct(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E) i2c_dev(E) nf_tables(E) parport_pc(E) ppdev(E) nfnetlink(E) lp(E) parport(E) ip_tables(E) x_tables(E) autofs4(E) ext4(E) crc16(E) mbcache(E) jbd2(E) btrfs(E) blake2b_generic(E) xor(E) raid6_pq(E) libcrc32c(E) crc32c_generic(E) dm_crypt(E) cbc(E) encrypted_keys(E) dm_mod(E) sd_mod(E) t10_pi(E) rtsx_pci_sdmmc(E) crct10dif_pclmul(E) crc32_pclmul(E) crc32c_intel(E) ghash_clmulni_intel(E) mmc_core(E) aesni_intel(E) crypto_simd(E) cryptd(E) glue_helper(E) ahci(E) nouveau(E) i915(E) mxm_wmi(E) i2c_i801(E) i2c_smbus(E) libahci(E) ttm(E) i2c_algo_bit(E) rtsx_pci(E) xhci_pci(E) drm_kms_helper(E) intel_lpss_pci(E) libata(E) syscopyarea(E) intel_lpss(E) xhci_hcd(E) idma64(E) sysfillrect(E) virt_dma(
+ E)
+[   38.001461]  sysimgblt(E) scsi_mod(E) fb_sys_fops(E) mfd_core(E) usbcore(E) usb_common(E) drm(E) fan(E) thermal(E) i2c_hid(E) hid(E) wmi(E) video(E) button(E)
+[   38.001482] CPU: 3 PID: 501 Comm: kworker/3:4 Tainted: G            E     5.8.0-rc7 #43
+[   38.001485] Hardware name: Dell Inc. Precision 5510/0N8J4R, BIOS 1.14.2 05/25/2020
+[   38.001513] Workqueue: events_long drm_dp_mst_link_probe_work [drm_kms_helper]
+[   38.001521] RIP: 0010:__list_add_valid+0x4d/0x70
+[   38.001527] Code: c3 4c 89 c1 48 c7 c7 98 34 ed af e8 7f 16 c9 ff 0f 0b 31 c0 c3 48 89 d1 4c 89 c6 4c 89 ca 48 c7 c7 e8 34 ed af e8 65 16 c9 ff <0f> 0b 31 c0 c3 48 89 f2 4c 89 c1 48 89 fe 48 c7 c7 38 35 ed af e8
+[   38.001530] RSP: 0018:ffffa47680417ca0 EFLAGS: 00010286
+[   38.001535] RAX: 0000000000000000 RBX: ffff8fe713397b88 RCX: 0000000000000027
+[   38.001538] RDX: 0000000000000027 RSI: 0000000000000096 RDI: ffff8fe71e197b68
+[   38.001541] RBP: ffff8fe7133977e8 R08: ffff8fe71e197b60 R09: 0000000000000084
+[   38.001544] R10: ffffa47680417b48 R11: ffffa47680417b4d R12: ffff8fe71869f800
+[   38.001547] R13: ffff8fe715fb9140 R14: ffff8fe71869f940 R15: ffff8fe713397b68
+[   38.001551] FS:  0000000000000000(0000) GS:ffff8fe71e180000(0000) knlGS:0000000000000000
+[   38.001555] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   38.001558] CR2: 00007f9e3f7159d0 CR3: 000000040e60a004 CR4: 00000000003606e0
+[   38.001561] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   38.001563] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   38.001566] Call Trace:
+[   38.001593]  drm_dp_queue_down_tx+0x5c/0x110 [drm_kms_helper]
+[   38.001604]  ? i2c_register_adapter+0x1d0/0x390
+[   38.001627]  drm_dp_send_enum_path_resources+0x54/0x120 [drm_kms_helper]
+[   38.001650]  drm_dp_send_link_address+0x682/0x990 [drm_kms_helper]
+[   38.001657]  ? prepare_to_wait_event+0x7e/0x150
+[   38.001661]  ? finish_wait+0x3f/0x80
+[   38.001684]  drm_dp_check_and_send_link_address+0xad/0xd0 [drm_kms_helper]
+[   38.001707]  drm_dp_mst_link_probe_work+0x94/0x180 [drm_kms_helper]
+[   38.001714]  process_one_work+0x1ae/0x370
+[   38.001720]  worker_thread+0x50/0x3a0
+[   38.001725]  ? process_one_work+0x370/0x370
+[   38.001729]  kthread+0x11b/0x140
+[   38.001734]  ? kthread_associate_blkcg+0x90/0x90
+[   38.001741]  ret_from_fork+0x22/0x30
+[   38.001747] ---[ end trace ca03f107384f1adc ]---
+[   38.001759] BUG: stack guard page was hit at 0000000062c9d455 (stack is 00000000e3f6f298..0000000086ee600f)
+[   38.001766] kernel stack overflow (page fault): 0000 [#1] SMP PTI
+[   38.001771] CPU: 3 PID: 501 Comm: kworker/3:4 Tainted: G        W   E     5.8.0-rc7 #43
+[   38.001774] Hardware name: Dell Inc. Precision 5510/0N8J4R, BIOS 1.14.2 05/25/2020
+[   38.001797] Workqueue: events_long drm_dp_mst_link_probe_work [drm_kms_helper]
+[   38.001820] RIP: 0010:process_single_tx_qlock+0x364/0x4d0 [drm_kms_helper]
+[   38.001826] Code: f8 49 89 54 00 f8 4c 89 c2 48 29 ca 48 01 d0 49 29 d7 48 83 e0 f8 48 83 f8 08 0f 82 16 ff ff ff 48 83 e0 f8 31 d2 49 8b 34 17 <48> 89 34 11 48 83 c2 08 48 39 c2 72 ef e9 fa fe ff ff c6 44 24 4e
+[   38.001829] RSP: 0018:ffffa47680417bd0 EFLAGS: 00010207
+[   38.001833] RAX: fffffffffffffff0 RBX: 00000000fffffffc RCX: ffffa47680417c28
+[   38.001835] RDX: 00000000000003d8 RSI: 0000000000000000 RDI: ffffa47680417c20
+[   38.001838] RBP: ffff8fe715fb9000 R08: ffffa47680417c23 R09: 000000000000000a
+[   38.001841] R10: 0000000000000002 R11: 0000000000000001 R12: ffff8fe7133977e8
+[   38.001843] R13: 0000000000000000 R14: 0000000000000003 R15: ffff8fe715fb9009
+[   38.001847] FS:  0000000000000000(0000) GS:ffff8fe71e180000(0000) knlGS:0000000000000000
+[   38.001850] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   38.001853] CR2: ffffa47680418000 CR3: 000000040e60a004 CR4: 00000000003606e0
+[   38.001856] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   38.001858] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   38.001860] Call Trace:
+[   38.001871]  ? asm_exc_invalid_op+0x12/0x20
+[   38.001885] Modules linked in: cdc_ether(E) usbnet(E) r8152(E) mii(E) hid_generic(E) usbhid(E) snd_hda_codec_hdmi(E) iwlmvm(E) dell_rbtn(E) mac80211(E) libarc4(E) snd_hda_codec_realtek(E) x86_pkg_temp_thermal(E) intel_powerclamp(E) snd_hda_codec_generic(E) coretemp(E) mei_wdt(E) dell_laptop(E) kvm_intel(E) ledtrig_audio(E) intel_rapl_msr(E) dell_smm_hwmon(E) snd_hda_intel(E) kvm(E) uvcvideo(E) snd_intel_dspcfg(E) videobuf2_vmalloc(E) irqbypass(E) iwlwifi(E) videobuf2_memops(E) rapl(E) snd_hda_codec(E) videobuf2_v4l2(E) intel_cstate(E) dell_wmi(E) joydev(E) snd_hwdep(E) pcspkr(E) serio_raw(E) intel_uncore(E) dell_smbios(E) videobuf2_common(E) dcdbas(E) snd_hda_core(E) iTCO_wdt(E) snd_pcm(E) videodev(E) wmi_bmof(E) snd_timer(E) dell_wmi_descriptor(E) intel_wmi_thunderbolt(E) iTCO_vendor_support(E) mei_me(E) snd(E) cfg80211(E) soundcore(E) tpm_crb(E) mc(E) rfkill(E) mei(E) intel_pch_thermal(E) sg(E) processor_thermal_device(E) intel_rapl_common(E) intel_soc_dts_iosf(E) battery(E) tpm
+ _tis(E)
+[   38.001934]  int3403_thermal(E) tpm_tis_core(E) tpm(E) dell_smo8800(E) intel_hid(E) evdev(E) rng_core(E) int3400_thermal(E) int3402_thermal(E) acpi_thermal_rel(E) int340x_thermal_zone(E) sparse_keymap(E) acpi_pad(E) ac(E) nft_counter(E) nft_ct(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E) i2c_dev(E) nf_tables(E) parport_pc(E) ppdev(E) nfnetlink(E) lp(E) parport(E) ip_tables(E) x_tables(E) autofs4(E) ext4(E) crc16(E) mbcache(E) jbd2(E) btrfs(E) blake2b_generic(E) xor(E) raid6_pq(E) libcrc32c(E) crc32c_generic(E) dm_crypt(E) cbc(E) encrypted_keys(E) dm_mod(E) sd_mod(E) t10_pi(E) rtsx_pci_sdmmc(E) crct10dif_pclmul(E) crc32_pclmul(E) crc32c_intel(E) ghash_clmulni_intel(E) mmc_core(E) aesni_intel(E) crypto_simd(E) cryptd(E) glue_helper(E) ahci(E) nouveau(E) i915(E) mxm_wmi(E) i2c_i801(E) i2c_smbus(E) libahci(E) ttm(E) i2c_algo_bit(E) rtsx_pci(E) xhci_pci(E) drm_kms_helper(E) intel_lpss_pci(E) libata(E) syscopyarea(E) intel_lpss(E) xhci_hcd(E) idma64(E) sysfillrect(E) virt_dma(
+ E)
+[   38.001990]  sysimgblt(E) scsi_mod(E) fb_sys_fops(E) mfd_core(E) usbcore(E) usb_common(E) drm(E) fan(E) thermal(E) i2c_hid(E) hid(E) wmi(E) video(E) button(E)
+[   38.002008] ---[ end trace ca03f107384f1add ]---
+[   38.002031] RIP: 0010:process_single_tx_qlock+0x364/0x4d0 [drm_kms_helper]
+[   38.002036] Code: f8 49 89 54 00 f8 4c 89 c2 48 29 ca 48 01 d0 49 29 d7 48 83 e0 f8 48 83 f8 08 0f 82 16 ff ff ff 48 83 e0 f8 31 d2 49 8b 34 17 <48> 89 34 11 48 83 c2 08 48 39 c2 72 ef e9 fa fe ff ff c6 44 24 4e
+[   38.002039] RSP: 0018:ffffa47680417bd0 EFLAGS: 00010207
+[   38.002042] RAX: fffffffffffffff0 RBX: 00000000fffffffc RCX: ffffa47680417c28
+[   38.002045] RDX: 00000000000003d8 RSI: 0000000000000000 RDI: ffffa47680417c20
+[   38.002048] RBP: ffff8fe715fb9000 R08: ffffa47680417c23 R09: 000000000000000a
+[   38.002051] R10: 0000000000000002 R11: 0000000000000001 R12: ffff8fe7133977e8
+[   38.002053] R13: 0000000000000000 R14: 0000000000000003 R15: ffff8fe715fb9009
+[   38.002057] FS:  0000000000000000(0000) GS:ffff8fe71e180000(0000) knlGS:0000000000000000
+[   38.002060] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   38.002062] CR2: ffffa47680418000 CR3: 000000040e60a004 CR4: 00000000003606e0
+[   38.002065] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   38.002068] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
