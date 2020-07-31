@@ -2,82 +2,112 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB724C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B615AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4F8620838
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:21:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F54E2072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:21:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731956AbgGaIVU (ORCPT
+        id S1731952AbgGaIVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:21:20 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35048 "EHLO huawei.com"
+        Fri, 31 Jul 2020 04:21:51 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9306 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731510AbgGaIVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 04:21:20 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 83900546A0BE68C9AED0;
-        Fri, 31 Jul 2020 16:21:16 +0800 (CST)
-Received: from [127.0.0.1] (10.74.173.29) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Fri, 31 Jul 2020
- 16:21:08 +0800
-Subject: Re: [PATCH 03/10] crypto: hisilicon/zip - modify debugfs interface
- parameters
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-References: <1595648683-50590-1-git-send-email-shenyang39@huawei.com>
- <1595648683-50590-4-git-send-email-shenyang39@huawei.com>
- <20200731081227.GA20741@gondor.apana.org.au>
-CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <linux-crypto@vger.kernel.org>, <xuzaibo@huawei.com>,
-        <wangzhou1@hisilicon.com>
-From:   "shenyang (M)" <shenyang39@huawei.com>
-Message-ID: <41618b33-abd5-d265-4395-5bf4ece5a0cc@huawei.com>
-Date:   Fri, 31 Jul 2020 16:21:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S1731823AbgGaIVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 04:21:51 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C5B815532107EB983132;
+        Fri, 31 Jul 2020 16:21:48 +0800 (CST)
+Received: from [127.0.0.1] (10.174.186.173) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Fri, 31 Jul 2020
+ 16:21:41 +0800
+Subject: Re: [Question] the check of ioeventfd collision in
+ kvm_*assign_ioeventfd_idx
+To:     Paolo Bonzini <pbonzini@redhat.com>
+CC:     "S. Tsirkin, Michael" <mst@redhat.com>, <gleb@redhat.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kvm@vger.kernel.org>,
+        <kvmarm@lists.cs.columbia.edu>,
+        Xiexiangyou <xiexiangyou@huawei.com>
+References: <bbece68b-fb39-d599-9ba7-a8ee8be16525@huawei.com>
+ <CABgObfbFXYodCeGWSnKw0j_n2-QLxpnD_Uyc5r-_ApXv=x+qmw@mail.gmail.com>
+ <4aa75d90-f2d2-888c-8970-02a41f3733e4@huawei.com>
+ <cffcf9e1-6675-6815-ccfc-f48497ade818@redhat.com>
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+Message-ID: <18baa777-7f28-8f57-e815-11175bf4c59a@huawei.com>
+Date:   Fri, 31 Jul 2020 16:21:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20200731081227.GA20741@gondor.apana.org.au>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+In-Reply-To: <cffcf9e1-6675-6815-ccfc-f48497ade818@redhat.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.173.29]
+X-Originating-IP: [10.174.186.173]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020/7/31 16:12, Herbert Xu wrote:
-> On Sat, Jul 25, 2020 at 11:44:36AM +0800, Yang Shen wrote:
->> From: Shukun Tan <tanshukun1@huawei.com>
+On 2020/7/31 14:44, Paolo Bonzini wrote:
+> On 31/07/20 08:39, Zhenyu Ye wrote:
+>> On 2020/7/31 2:03, Paolo Bonzini wrote:
+>>> Yes, I think it's not needed. Probably the deassign check can be turned into an assertion?
+>>>
+>>> Paolo
+>>>
 >>
->> Update debugfs interface parameters
+>> I think we can do this in the same function, and turnt he check of
+>> p->eventfd into assertion in kvm_deassign_ioeventfd_idx(). Just like:
 >>
->> Signed-off-by: Shukun Tan <tanshukun1@huawei.com>
->> Signed-off-by: Yang Shen <shenyang39@huawei.com>
->> Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
->> ---
->>  drivers/crypto/hisilicon/zip/zip_main.c | 55 ++++++++++++++-------------------
->>  1 file changed, 24 insertions(+), 31 deletions(-)
+>> ---8<---
+>> static inline struct _ioeventfd *
+>> get_ioeventfd(struct kvm *kvm, enum kvm_bus bus_idx,
+>>               struct kvm_ioeventfd *args)
+>> {
+>>         static struct _ioeventfd *_p;
+>>         bool wildcard = !(args->flags & KVM_IOEVENTFD_FLAG_DATAMATCH);
+>>
+>>         list_for_each_entry(_p, &kvm->ioeventfds, list)
+>>                 if (_p->bus_idx == bus_idx &&
+>>                     _p->addr == args->addr &&
+>>                     (!_p->length || !args->len ||
+>>                      (_p->length == args->len &&
+>>                       (_p->wildcard || wildcard ||
+>>                        _p->datamatch == args->datamatch))))
+>>                         return _p;
+>>
+>>         return NULL;
+>> }
+>>
+>> kvm_deassign_ioeventfd_idx() {
+>> 	...
+>> 	p = get_ioeventfd(kvm, bus_idx, args);
+>> 	if (p) {
+>> 		assert(p->eventfd == eventfd);
+>> 		...
+>> 	}
+>>
+>> ---8<----
+>>
+>> This may be easier to understand (keep the same logic in assign/deassign).
+> 
+> I think you should also warn if:
+> 
+> 1) p->length != args->len
 >
-> This patch doesn't apply against cryptodev.
+> 2) p->wildcard != args->wildcard if p->length
 >
-> Plesae stop sending patch series that depend on others.
->
-> Thanks,
->
+> 3) p->datamatch != args->datamatch if p->length && !p->wildcard
+> 
+> but yeah it sounds like a plan.
+> 
 
-Sorry, this patchset depends on
-https://patchwork.kernel.org/cover/11680181/
-which cover letter is '[PATCH v3 00/10] crypto: hisilicon/qm - misc fixes'
+I will try to do this. :)
 
-I'm really sorry for the trouble.
-
-Thanks,
+Zhenyu
 
