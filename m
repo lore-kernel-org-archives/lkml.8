@@ -2,167 +2,146 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C5CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DB8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED1012072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CD31208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:33:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="bsRjpc5H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731602AbgGaIb6 (ORCPT
+        id S1731607AbgGaId0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:31:58 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33440 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728437AbgGaIb5 (ORCPT
+        Fri, 31 Jul 2020 04:33:26 -0400
+Received: from [115.28.160.31] ([115.28.160.31]:40014 "EHLO
+        mailbox.box.xen0n.name" rhost-flags-FAIL-FAIL-OK-OK)
+        by vger.kernel.org with ESMTP id S1728494AbgGaId0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 04:31:57 -0400
-Received: by mail-lj1-f195.google.com with SMTP id v4so21948773ljd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 01:31:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=cpRVizLQR4h0I4f8uQJBMekMv1Ywdpja1fizvkE3w6Q=;
-        b=pPTQLkhKf4flFUCtGgbFmAGCHXx/GLoHVcObOhLylmAhzYIjjacpA7kyd9FrNAb4sv
-         1oCteRB7RphUZRekyYEaE6AR73vJFbUBBebIYxw8bDMacLD7U+NvzytmUZ94dBmZUzJT
-         0b/8mKsOCXtAyqXrM/xmb8KtXBvSnZGFY4HGvBEP5ZtBejQdHvFPNx7rkkNwa4JepGtY
-         o+VktVzjO50Nsd9KoS08rmKqWZMHiocVZfSJr+in43u/C8HbdeIHtZoxG+lSjoq3/pUD
-         P3HM//IvRUIEcmDVPh+X6pHRTpNfIgSyo+xmwOHl3wVh2t+4aLfwnIDouT5+GqrfNguZ
-         hxzg==
-X-Gm-Message-State: AOAM531hSsVllvrMRaFS21KIgeeJkzgtCpBdTZl+cRf9fKLGXVgspuD3
-        cMGTRktmx3GK0UIMAdv0Jlo=
-X-Google-Smtp-Source: ABdhPJznfwQH46gzXh9XJYaypiJJpngM55WWn+CLYG0ALgCNGU8wCRNpV7LAz8vJ8N8Sjkqtgh4atg==
-X-Received: by 2002:a2e:920e:: with SMTP id k14mr1461031ljg.37.1596184313773;
-        Fri, 31 Jul 2020 01:31:53 -0700 (PDT)
-Received: from [10.68.32.147] (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.gmail.com with ESMTPSA id a30sm1755090lfo.1.2020.07.31.01.31.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jul 2020 01:31:53 -0700 (PDT)
-Reply-To: efremov@linux.com
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org,
-        Saeed Mahameed <saeedm@mellanox.com>
-References: <20200605204237.85055-1-efremov@linux.com>
- <20200730140751.8635-1-efremov@linux.com>
- <alpine.DEB.2.22.394.2007302235000.2548@hadrien>
-From:   Denis Efremov <efremov@linux.com>
-Autocrypt: addr=efremov@linux.com; keydata=
- mQINBFsJUXwBEADDnzbOGE/X5ZdHqpK/kNmR7AY39b/rR+2Wm/VbQHV+jpGk8ZL07iOWnVe1
- ZInSp3Ze+scB4ZK+y48z0YDvKUU3L85Nb31UASB2bgWIV+8tmW4kV8a2PosqIc4wp4/Qa2A/
- Ip6q+bWurxOOjyJkfzt51p6Th4FTUsuoxINKRMjHrs/0y5oEc7Wt/1qk2ljmnSocg3fMxo8+
- y6IxmXt5tYvt+FfBqx/1XwXuOSd0WOku+/jscYmBPwyrLdk/pMSnnld6a2Fp1zxWIKz+4VJm
- QEIlCTe5SO3h5sozpXeWS916VwwCuf8oov6706yC4MlmAqsQpBdoihQEA7zgh+pk10sCvviX
- FYM4gIcoMkKRex/NSqmeh3VmvQunEv6P+hNMKnIlZ2eJGQpz/ezwqNtV/przO95FSMOQxvQY
- 11TbyNxudW4FBx6K3fzKjw5dY2PrAUGfHbpI3wtVUNxSjcE6iaJHWUA+8R6FLnTXyEObRzTS
- fAjfiqcta+iLPdGGkYtmW1muy/v0juldH9uLfD9OfYODsWia2Ve79RB9cHSgRv4nZcGhQmP2
- wFpLqskh+qlibhAAqT3RQLRsGabiTjzUkdzO1gaNlwufwqMXjZNkLYu1KpTNUegx3MNEi2p9
- CmmDxWMBSMFofgrcy8PJ0jUnn9vWmtn3gz10FgTgqC7B3UvARQARAQABtCFEZW5pcyBFZnJl
- bW92IDxlZnJlbW92QGxpbnV4LmNvbT6JAlcEEwEIAEECGwMFCwkIBwIGFQoJCAsCBBYCAwEC
- HgECF4ACGQEWIQR2VAM2ApQN8ZIP5AO1IpWwM1AwHwUCXsQtuwUJB31DPwAKCRC1IpWwM1Aw
- H3dQD/9E/hFd2yPwWA5cJ5jmBeQt4lBi5wUXd2+9Y0mBIn40F17Xrjebo+D8E5y6S/wqfImW
- nSDYaMfIIljdjmUUanR9R7Cxd/Z548Qaa4F1AtB4XN3W1L49q21h942iu0yxSLZtq9ayeja6
- flCB7a+gKjHMWFDB4nRi4gEJvZN897wdJp2tAtUfErXvvxR2/ymKsIf5L0FZBnIaGpqRbfgG
- Slu2RSpCkvxqlLaYGeYwGODs0QR7X2i70QGeEzznN1w1MGKLOFYw6lLeO8WPi05fHzpm5pK6
- mTKkpZ53YsRfWL/HY3kLZPWm1cfAxa/rKvlhom+2V8cO4UoLYOzZLNW9HCFnNxo7zHoJ1shR
- gYcCq8XgiJBF6jfM2RZYkOAJd6E3mVUxctosNq6av3NOdsp1Au0CYdQ6Whi13azZ81pDlJQu
- Hdb0ZpDzysJKhORsf0Hr0PSlYKOdHuhl8fXKYOGQxpYrWpOnjrlEORl7NHILknXDfd8mccnf
- 4boKIZP7FbqSLw1RSaeoCnqH4/b+ntsIGvY3oJjzbQVq7iEpIhIoQLxeklFl1xvJAOuSQwII
- I9S0MsOm1uoT/mwq+wCYux4wQhALxSote/EcoUxK7DIW9ra4fCCo0bzaX7XJ+dJXBWb0Ixxm
- yLl39M+7gnhvZyU+wkTYERp1qBe9ngjd0QTZNVi7MbkCDQRbCVF8ARAA3ITFo8OvvzQJT2cY
- nPR718Npm+UL6uckm0Jr0IAFdstRZ3ZLW/R9e24nfF3A8Qga3VxJdhdEOzZKBbl1nadZ9kKU
- nq87te0eBJu+EbcuMv6+njT4CBdwCzJnBZ7ApFpvM8CxIUyFAvaz4EZZxkfEpxaPAivR1Sa2
- 2x7OMWH/78laB6KsPgwxV7fir45VjQEyJZ5ac5ydG9xndFmb76upD7HhV7fnygwf/uIPOzNZ
- YVElGVnqTBqisFRWg9w3Bqvqb/W6prJsoh7F0/THzCzp6PwbAnXDedN388RIuHtXJ+wTsPA0
- oL0H4jQ+4XuAWvghD/+RXJI5wcsAHx7QkDcbTddrhhGdGcd06qbXe2hNVgdCtaoAgpCEetW8
- /a8H+lEBBD4/iD2La39sfE+dt100cKgUP9MukDvOF2fT6GimdQ8TeEd1+RjYyG9SEJpVIxj6
- H3CyGjFwtIwodfediU/ygmYfKXJIDmVpVQi598apSoWYT/ltv+NXTALjyNIVvh5cLRz8YxoF
- sFI2VpZ5PMrr1qo+DB1AbH00b0l2W7HGetSH8gcgpc7q3kCObmDSa3aTGTkawNHzbceEJrL6
- mRD6GbjU4GPD06/dTRIhQatKgE4ekv5wnxBK6v9CVKViqpn7vIxiTI9/VtTKndzdnKE6C72+
- jTwSYVa1vMxJABtOSg8AEQEAAYkCPAQYAQgAJgIbDBYhBHZUAzYClA3xkg/kA7UilbAzUDAf
- BQJexC4MBQkHfUOQAAoJELUilbAzUDAfPYoQAJdBGd9WZIid10FCoI30QXA82SHmxWe0Xy7h
- r4bbZobDPc7GbTHeDIYmUF24jI15NZ/Xy9ADAL0TpEg3fNVad2eslhCwiQViWfKOGOLLMe7v
- zod9dwxYdGXnNRlW+YOCdFNVPMvPDr08zgzXaZ2+QJjp44HSyzxgONmHAroFcqCFUlfAqUDO
- T30gV5bQ8BHqvfWyEhJT+CS3JJyP8BmmSgPa0Adlp6Do+pRsOO1YNNO78SYABhMi3fEa7X37
- WxL31TrNCPnIauTgZtf/KCFQJpKaakC3ffEkPhyTjEl7oOE9xccNjccZraadi+2uHV0ULA1m
- ycHhb817A03n1I00QwLf2wOkckdqTqRbFFI/ik69hF9hemK/BmAHpShI+z1JsYT9cSs8D7wb
- aF/jQVy4URensgAPkgXsRiboqOj/rTz9F5mpd/gPU/IOUPFEMoo4TInt/+dEVECHioU3RRrW
- EahrGMfRngbdp/mKs9aBR56ECMfFFUPyI3VJsNbgpcIJjV/0N+JdJKQpJ/4uQ2zNm0wH/RU8
- CRJvEwtKemX6fp/zLI36Gvz8zJIjSBIEqCb7vdgvWarksrhmi6/Jay5zRZ03+k6YwiqgX8t7
- ANwvYa1h1dQ36OiTqm1cIxRCGl4wrypOVGx3OjCar7sBLD+NkwO4RaqFvdv0xuuy4x01VnOF
-Subject: Re: [PATCH v4] coccinelle: api: add kvfree script
-Message-ID: <dda490e5-35c8-f097-af2a-e42e7ba21ae0@linux.com>
-Date:   Fri, 31 Jul 2020 11:31:52 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 31 Jul 2020 04:33:26 -0400
+Received: from hanazono.local (unknown [116.236.177.53])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailbox.box.xen0n.name (Postfix) with ESMTPSA id C255260130;
+        Fri, 31 Jul 2020 16:33:21 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=xen0n.name; s=mail;
+        t=1596184402; bh=k/rgArit88h2OIcboYHgG+XD5TJS5EAhZcv7J3t+lVI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=bsRjpc5HvVev7q1qhFOKfcib8o1VPe5FXGjacL8nFgYY4IZG74bT826t7qK42JNkp
+         1ztaK5ZKjz1zHgOLU+9NncrSqwkdapZV09ZF+pNqWP3r8Ibd5G+KKT6NFg+a050jHJ
+         uUMqqtaW9Bq0x/ml1NXmH5Jldl5Zfxze9ufxyRag=
+Subject: Re: [PATCH] MIPS: Provide Kconfig option for default IEEE754
+ conformance mode
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Zhou Yanjie <zhouyanjie@zoho.com>,
+        =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>,
+        Liangliang Huang <huanglllzu@gmail.com>,
+        linux-kernel@vger.kernel.org
+References: <20200731041018.1381642-1-jiaxun.yang@flygoat.com>
+From:   WANG Xuerui <kernel@xen0n.name>
+Message-ID: <e314d7f4-56cb-950f-6f38-d49a00101f5f@xen0n.name>
+Date:   Fri, 31 Jul 2020 16:33:21 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:81.0)
+ Gecko/20100101 Thunderbird/81.0a1
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.22.394.2007302235000.2548@hadrien>
+In-Reply-To: <20200731041018.1381642-1-jiaxun.yang@flygoat.com>
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jiaxun,
+
+Nice catch! Only one minor nit. Otherwise:
+
+Reviewed-by: WANG Xuerui <git@xen0n.name>
 
 
-> With the current patch mode, I got some changes in a recent linux-next.
-> Have you sent patches for these issues?
+On 2020/7/31 12:10, Jiaxun Yang wrote:
+> Requested by downstream distros, a Kconfig option for default
+> IEEE754 conformance mode allows them to set their mode to
+> relaxed by default.
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  arch/mips/Kconfig            | 21 +++++++++++++++++++++
+>  arch/mips/kernel/cpu-probe.c | 12 +++++++++++-
+>  2 files changed, 32 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+> index f6bb446d30f0..ef5b2a177b1b 100644
+> --- a/arch/mips/Kconfig
+> +++ b/arch/mips/Kconfig
+> @@ -2877,6 +2877,27 @@ config MIPS_NR_CPU_NR_MAP
+>  	default 1024 if MIPS_NR_CPU_NR_MAP_1024
+>  	default NR_CPUS if !MIPS_NR_CPU_NR_MAP_1024
+>  
+> +choice
+> +	prompt "Default IEEE Std 754 conformance mode"
+> +	default IEEE754_DEFAULT_STRICT
+> +	help
+> +	  Default IEEE Std 754 conformance mode, see ieee754= kernel parameter
+> +	  for detail.
 
-For mellanox, I've sent these patches:
-https://lkml.org/lkml/2020/6/5/901
-https://lkml.org/lkml/2020/6/1/713
-They were accepted.
+Here and the title, "IEEE Std 754" can be just "IEEE 754". I don't
+remember seeing the "IEEE Std 754" phrase anywhere.
 
-I see two new places in mellanox driver in linux-next. It looks like this
-is new code that is not yet merged to the linux master branch.
+I suggest the following help message:
 
-diff -u -p a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec_fs.c b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec_fs.c
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec_fs.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec_fs.c
-@@ -228,8 +228,8 @@ static int rx_fs_create(struct mlx5e_pri
-fs_prot->miss_rule = miss_rule;
+"Sets the default IEEE 754 conformance mode, same as overriding the
+default value for the ieee754= kernel parameter. See the kernel
+parameter for details."
 
-out:
--       kfree(flow_group_in);
--       kfree(spec);
-+       kvfree(flow_group_in);
-+       kvfree(spec);
-return err;
-}
-
-diff -u -p a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/fs_tcp.c b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/fs_tcp.c
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/fs_tcp.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/fs_tcp.c
-@@ -191,7 +191,7 @@ static int accel_fs_tcp_create_groups(st
-ft->g = kcalloc(MLX5E_ACCEL_FS_TCP_NUM_GROUPS, sizeof(*ft->g), GFP_KERNEL);
-in = kvzalloc(inlen, GFP_KERNEL);
-if  (!in || !ft->g) {
--               kvfree(ft->g);
-+               kfree(ft->g);
-		kvfree(in);
-		return -ENOMEM;
-}
-
-I will send the fixes when the code will be merged to the linux master branch.
-Maybe it will be fixed already in net-next at that time.
-
-> 
-> Do the checks for the opportunities for kvmalloc really belong in this
-> rule?  That issue is not mentioned in the commit log or the description of
-> the semantic patch.
-
-I added this at the last moment. It was easy enough to add it based on existing
-patterns. I will add description for this warnings. Or do you want me to single
-out this warning to a separate rule?
-
-
-Regards,
-Denis
-
-
+> +
+> +	config IEEE754_DEFAULT_STRICT
+> +		bool "Strict"
+> +
+> +	config IEEE754_DEFAULT_LEGACY
+> +		bool "Legacy"
+> +
+> +	config IEEE754_DEFAULT_STD2008
+> +		bool "2008"
+> +
+> +	config IEEE754_DEFAULT_RELAXED
+> +		bool "Relaxed"
+> +
+> +endchoice
+> +
+>  #
+>  # Timer Interrupt Frequency Configuration
+>  #
+> diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
+> index d9e8d39a7289..03adeed58efb 100644
+> --- a/arch/mips/kernel/cpu-probe.c
+> +++ b/arch/mips/kernel/cpu-probe.c
+> @@ -157,7 +157,17 @@ static void cpu_set_fpu_2008(struct cpuinfo_mips *c)
+>   * IEEE 754 conformance mode to use.  Affects the NaN encoding and the
+>   * ABS.fmt/NEG.fmt execution mode.
+>   */
+> -static enum { STRICT, LEGACY, STD2008, RELAXED } ieee754 = STRICT;
+> +enum ieee754_mode { STRICT, LEGACY, STD2008, RELAXED };
+> +
+> +#if defined(CONFIG_IEEE754_DEFAULT_STRICT)
+> +static enum ieee754_mode ieee754 = STRICT;
+> +#elif defined(CONFIG_IEEE754_DEFAULT_LEGACY)
+> +static enum ieee754_mode ieee754 = LEGACY;
+> +#elif defined(CONFIG_IEEE754_DEFAULT_STD2008)
+> +static enum ieee754_mode ieee754 = STD2008;
+> +#elif defined(CONFIG_IEEE754_DEFAULT_RELAXED)
+> +static enum ieee754_mode ieee754 = RELAXED;
+> +#endif
+>  
+>  /*
+>   * Set the IEEE 754 NaN encodings and the ABS.fmt/NEG.fmt execution modes
