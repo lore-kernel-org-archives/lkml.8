@@ -2,126 +2,107 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11998C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2940AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D536F208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01F1E208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:27:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="DiYFsj2l"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="W05QWYxN";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Zd2PZiAG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732876AbgGaJ1e (ORCPT
+        id S1732630AbgGaJ1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:27:34 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:65091 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732094AbgGaJ1b (ORCPT
+        Fri, 31 Jul 2020 05:27:33 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56338 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732248AbgGaJXI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:27:31 -0400
-X-UUID: cbbaf8822e424bddb1c75be84ac7d6c7-20200731
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=au+qktezYgw+jt5L5XG7E4RAshRFGuWcZYnfoHyoQQY=;
-        b=DiYFsj2lfgst5j049P5VVFhtWVduxXYty6PAgtWFTp6+TIsF148sD43WcmGOEEXpltYvZgfkhhzNZ512aPm/Wigt+2oAo7Aiig8YALHB37x7oVtsa/+o4k7/8TH6BuSBM3KoH2T6cSUH/4H5Kc/WK9v3wfZm5VoiSxGe0cqFaro=;
-X-UUID: cbbaf8822e424bddb1c75be84ac7d6c7-20200731
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 367703745; Fri, 31 Jul 2020 17:27:25 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 31 Jul 2020 17:27:21 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 31 Jul 2020 17:27:22 +0800
-Message-ID: <1596187643.17247.62.camel@mtkswgap22>
-Subject: Re: [PATCH v4] scsi: ufs: Quiesce all scsi devices before shutdown
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Can Guo <cang@codeaurora.org>
-CC:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <bvanassche@acm.org>, <beanhuo@micron.com>,
-        <asutoshd@codeaurora.org>, <matthias.bgg@gmail.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Kuohong Wang =?UTF-8?Q?=28=E7=8E=8B=E5=9C=8B=E9=B4=BB=29?= 
-        <kuohong.wang@mediatek.com>,
-        Peter Wang =?UTF-8?Q?=28=E7=8E=8B=E4=BF=A1=E5=8F=8B=29?= 
-        <peter.wang@mediatek.com>,
-        Chun-Hung Wu =?UTF-8?Q?=28=E5=B7=AB=E9=A7=BF=E5=AE=8F=29?= 
-        <Chun-hung.Wu@mediatek.com>,
-        "Andy Teng ( =?ISO-8859-1?Q?=1B$B{}G!9(=1B?= (B)" 
-        <Andy.Teng@mediatek.com>,
-        Chaotian Jing =?UTF-8?Q?=28=E4=BA=95=E6=9C=9D=E5=A4=A9=29?= 
-        <Chaotian.Jing@mediatek.com>,
-        CC Chou =?UTF-8?Q?=28=E5=91=A8=E5=BF=97=E6=9D=B0=29?= 
-        <cc.chou@mediatek.com>
-Date:   Fri, 31 Jul 2020 17:27:23 +0800
-In-Reply-To: <1d74498da71ba54e23cd82ee6400dbd4@codeaurora.org>
-References: <20200724140140.18186-1-stanley.chu@mediatek.com>
-         <84510fc12ada0de8284e6a689b7a2358@codeaurora.org>
-         <1596183773.17247.60.camel@mtkswgap22>
-         <1d74498da71ba54e23cd82ee6400dbd4@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Fri, 31 Jul 2020 05:23:08 -0400
+Date:   Fri, 31 Jul 2020 09:23:06 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1596187387;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+        bh=vN4LX5+UNWWR0Tpvlc++XA8VPecElgwFcEcaOtarg50=;
+        b=W05QWYxNn99OmZB2jQbFQPBNM8sOPlfg0QOvheNcoMxf17z0keI6GT+gmIi7VqKJ+bWUNn
+        sbtwsB2v1/uyxDIM4Y3zkW/nuRlT7jQaGh3QAakOOLJ2c+i65Gzy6V07Xk6UlzQItewmMf
+        SojeQDdLLailKx5uJOjNKnz/tT4CMedPma86wjYY+JQIQND8bgkFPzgLjIRRcNEWIgNI1I
+        u0ezS9SbaJ/zxQ6GjzVODunAr9jEbYm3JBquo4t8tMxOd7DhU8QcrtsjGeqhd7JGaH7Auc
+        9P0B2zpyuqwiSfOCe432eI1BFb0GiHo7PTmFc/tXcfTLyW8thxnJ41y0LXtuoA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1596187387;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+        bh=vN4LX5+UNWWR0Tpvlc++XA8VPecElgwFcEcaOtarg50=;
+        b=Zd2PZiAGrbcrsmt6nnaDiaTvtMrfbPfyvRovtrwxDfLDuA5OJi0Rex9694vmp/G6gL7JAz
+        SHcFHHbzx6X73UAg==
+From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/rcu] refperf: Allow decimal nanoseconds
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Message-ID: <159618738645.4006.7605038959064014144.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2FuLA0KDQpPbiBGcmksIDIwMjAtMDctMzEgYXQgMTY6NTggKzA4MDAsIENhbiBHdW8gd3Jv
-dGU6DQo+IEhpIFN0YW5sZXksDQo+IA0KPiBPbiAyMDIwLTA3LTMxIDE2OjIyLCBTdGFubGV5IENo
-dSB3cm90ZToNCj4gPiBIaSBDYW4sDQo+ID4gDQo+ID4gT24gTW9uLCAyMDIwLTA3LTI3IGF0IDE1
-OjMwICswODAwLCBDYW4gR3VvIHdyb3RlOg0KPiA+PiBIaSBTdGFubGV5LA0KPiA+PiANCj4gPj4g
-T24gMjAyMC0wNy0yNCAyMjowMSwgU3RhbmxleSBDaHUgd3JvdGU6DQo+ID4+ID4gQ3VycmVudGx5
-IEkvTyByZXF1ZXN0IGNvdWxkIGJlIHN0aWxsIHN1Ym1pdHRlZCB0byBVRlMgZGV2aWNlIHdoaWxl
-DQo+ID4+ID4gVUZTIGlzIHdvcmtpbmcgb24gc2h1dGRvd24gZmxvdy4gVGhpcyBtYXkgbGVhZCB0
-byByYWNpbmcgYXMgYmVsb3cNCj4gPj4gPiBzY2VuYXJpb3MgYW5kIGZpbmFsbHkgc3lzdGVtIG1h
-eSBjcmFzaCBkdWUgdG8gdW5jbG9ja2VkIHJlZ2lzdGVyDQo+ID4+ID4gYWNjZXNzZXMuDQo+ID4+
-ID4NCj4gPj4gPiBUbyBmaXggdGhpcyBraW5kIG9mIGlzc3Vlcywgc3BlY2lmaWNhbGx5IHF1aWVz
-Y2UgYWxsIFNDU0kgZGV2aWNlcw0KPiA+PiA+IGJlZm9yZSBVRlMgc2h1dGRvd24gdG8gYmxvY2sg
-YWxsIEkvTyByZXF1ZXN0IHNlbmRpbmcgZnJvbSBibG9jaw0KPiA+PiA+IGxheWVyLg0KPiA+PiA+
-DQo+ID4+ID4gRXhhbXBsZSBvZiByYWNpbmcgc2NlbmFyaW86IFdoaWxlIFVGUyBkZXZpY2UgaXMg
-cnVudGltZS1zdXNwZW5kZWQNCj4gPj4gPg0KPiA+PiA+IFRocmVhZCAjMTogRXhlY3V0aW5nIFVG
-UyBzaHV0ZG93biBmbG93LCBlLmcuLA0KPiA+PiA+ICAgICAgICAgICAgdWZzaGNkX3N1c3BlbmQo
-VUZTX1NIVVRET1dOX1BNKQ0KPiA+PiA+IFRocmVhZCAjMjogRXhlY3V0aW5nIHJ1bnRpbWUgcmVz
-dW1lIGZsb3cgdHJpZ2dlcmVkIGJ5IEkvTyByZXF1ZXN0LA0KPiA+PiA+ICAgICAgICAgICAgZS5n
-LiwgdWZzaGNkX3Jlc3VtZShVRlNfUlVOVElNRV9QTSkNCj4gPj4gPg0KPiA+PiANCj4gPj4gSSBk
-b24ndCBxdWl0ZSBnZXQgaXQsIGhvdyBjYW4geW91IHByZXZlbnQgYmxvY2sgbGF5ZXIgUE0gZnJv
-bSBpbmlhdGluZw0KPiA+PiBoYmEgcnVudGltZSByZXN1bWUgYnkgcXVpZXNjaW5nIHRoZSBzY3Np
-IGRldmljZXM/IEJsb2NrIGxheWVyIFBNDQo+ID4+IGluaWF0ZXMgaGJhIGFzeW5jIHJ1bnRpbWUg
-cmVzdW1lIGluIGJsa19xdWV1ZV9lbnRlcigpLiBCdXQgcXVpZXNjaW5nDQo+ID4+IHRoZSBzY3Np
-IGRldmljZXMgY2FuIG9ubHkgcHJldmVudCBnZW5lcmFsIEkvTyByZXF1ZXN0cyBmcm9tIHBhc3Np
-bmcNCj4gPj4gdGhyb3VnaCBzY3NpX3F1ZXVlX3JxKCkgY2FsbGJhY2suDQo+ID4+IA0KPiA+PiBT
-YXkgaGJhIGlzIHJ1bnRpbWUgc3VzcGVuZGVkLCBpZiBhbiBJL08gcmVxdWVzdCB0byBzZGEgaXMg
-c2VudCBmcm9tDQo+ID4+IGJsb2NrIGxheWVyIChzZGEgbXVzdCBiZSBydW50aW1lIHN1c3BlbmRl
-ZCBhcyB3ZWxsIGF0IHRoaXMgdGltZSksDQo+ID4+IGJsa19xdWV1ZV9lbnRlcigpIGluaXRpYXRl
-cyBhc3luYyBydW50aW1lIHJlc3VtZSBmb3Igc2RhLiBCdXQgc2luY2UNCj4gPj4gc2RhJ3MgcGFy
-ZW50cyBhcmUgYWxzbyBydW50aW1lIHN1c3BlbmRlZCwgdGhlIFJQTSBmcmFtZXdvcmsgc2hhbGwg
-ZG8NCj4gPj4gcnVudGltZSByZXN1bWUgdG8gdGhlIGRldmljZXMgaW4gdGhlIHNlcXVlbmNlIGhi
-YS0+aG9zdC0+dGFyZ2V0LT5zZGEuDQo+ID4+IEluIHRoaXMgY2FzZSwgdWZzaGNkX3Jlc3VtZSgp
-IHN0aWxsIHJ1bnMgY29uY3VycmVudGx5LCBubz8NCj4gPj4gDQo+ID4gDQo+ID4gWW91IGFyZSBy
-aWdodC4gVGhpcyBwYXRjaCBjYW4gbm90IGZpeCB0aGUgY2FzZSB5b3UgbWVudGlvbmVkLiBJdCBq
-dXN0DQo+ID4gcHJldmVudHMgImdlbmVyYWwgSS9PIHJlcXVlc3RzIi4NCj4gPiANCj4gPiBTbyBw
-ZXJoYXBzIHdlIGFsc28gbmVlZCBiZWxvdyBwYXRjaD8NCj4gPiANCj4gPiAjMiBzY3NpOiB1ZnM6
-IFVzZSBwbV9ydW50aW1lX2dldF9zeW5jIGluIHNodXRkb3duIGZsb3cNCj4gPiBodHRwczovL3Bh
-dGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwOTY0MDk3Lw0KPiANCj4gVGhhdCBpcyB3aGF0IEkg
-YW0gdGFsa2luZyBhYm91dCwgd2UgZGVmaW5pdGVseSBuZWVkIHRoaXMuIFNpbmNlDQo+IHlvdSBh
-cmUgYWxyZWFkeSB3b3JraW5nIG9uIHRoZSBmaXhlcyB0byB0aGUgc2h1dGRvd24gcGF0aCwgSSB3
-aWxsDQo+IG5vdCB1cGxvYWQgbXkgZml4ZXMgKGJhc2ljYWxseSBsb29rIHNhbWUgd2l0aCB5b3Vy
-cykuIEhvd2V2ZXIsIGFzDQo+IHJlZ2FyZCBmb3IgdGhlIG5ldyBjaGFuZ2UsIGlmIHBtX3J1bnRp
-bWVfZ2V0X3N5bmMoaGJhLT5kZXYpIDwgMCwNCj4gaGJhIGNhbiBzdGlsbCBiZSBydW50aW1lIEFD
-VElWRSwgd2h5IGRpcmVjdGx5IGdvdG8gb3V0IHdpdGhvdXQgYQ0KPiBjaGVjayBvZiBoYmEncyBy
-dW50aW1lIHN0YXR1cz8NCj4gDQoNClRoYW5rcyBmb3IgcmVtaW5kaW5nIHRoaXMuIFRoZW4gSSB3
-aWxsIGZpeCBpdCBhbmQgcmVzZW5kIGJvdGggcGF0Y2hlcyBhcw0KYSBuZXcgc2VyaWVzIHRvIGZp
-eCB0aGUgc2h1dGRvd24gcGF0aC4NCg0KVGhhbmtzIHNvIG11Y2gsDQpTdGFubGV5IENodQ0KDQoN
-Cg==
+The following commit has been merged into the core/rcu branch of tip:
 
+Commit-ID:     83b88c86da0e5f97faeac5a9bb19fe32f8c0394b
+Gitweb:        https://git.kernel.org/tip/83b88c86da0e5f97faeac5a9bb19fe32f8c0394b
+Author:        Paul E. McKenney <paulmck@kernel.org>
+AuthorDate:    Mon, 25 May 2020 15:31:07 -07:00
+Committer:     Paul E. McKenney <paulmck@kernel.org>
+CommitterDate: Mon, 29 Jun 2020 12:00:44 -07:00
+
+refperf: Allow decimal nanoseconds
+
+The CONFIG_PREEMPT=n rcu_read_lock()/rcu_read_unlock() pair's overhead,
+even including loop overhead, is far less than one nanosecond.
+Since logscale plots are not all that happy with zero values, provide
+picoseconds as decimals.
+
+Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ kernel/rcu/refperf.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/rcu/refperf.c b/kernel/rcu/refperf.c
+index 57c7b7a..e991d48 100644
+--- a/kernel/rcu/refperf.c
++++ b/kernel/rcu/refperf.c
+@@ -375,7 +375,7 @@ static int main_func(void *arg)
+ 		if (torture_must_stop())
+ 			goto end;
+ 
+-		reader_tasks[exp].result_avg = process_durations(exp) / ((exp + 1) * loops);
++		reader_tasks[exp].result_avg = 1000 * process_durations(exp) / ((exp + 1) * loops);
+ 	}
+ 
+ 	// Print the average of all experiments
+@@ -386,7 +386,7 @@ static int main_func(void *arg)
+ 	strcat(buf, "Threads\tTime(ns)\n");
+ 
+ 	for (exp = 0; exp < nreaders; exp++) {
+-		sprintf(buf1, "%d\t%llu\n", exp + 1, reader_tasks[exp].result_avg);
++		sprintf(buf1, "%d\t%llu.%03d\n", exp + 1, reader_tasks[exp].result_avg / 1000, (int)(reader_tasks[exp].result_avg % 1000));
+ 		strcat(buf, buf1);
+ 	}
+ 
