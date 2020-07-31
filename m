@@ -2,140 +2,176 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3740CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85779C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E1A92177B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:21:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jWO1CmEE"
+	by mail.kernel.org (Postfix) with ESMTP id 68F092177B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:21:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732275AbgGaQVS (ORCPT
+        id S1732460AbgGaQVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 12:21:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39654 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727997AbgGaQVS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 12:21:18 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3696C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 09:21:17 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id j187so29233746qke.11
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 09:21:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BnIa4h+eeC65N1AqrnaLZXagsmYECUrJzGzZA8l9Vog=;
-        b=jWO1CmEEhnw0GFq2OGvufPGk74NyxUfeygR337leqjqyHX4cyFb81nafYu2ISO6mj1
-         bU5yB46TG4Lyu0nT17FkUlS4FEC/JQnEAN8htPljg4bg8AKhsUHt9t+dugohNeBUyLBF
-         jV1ybypWdVjh7uP7iWZuksUVxHYPx00u9roi2nMM3jj9F8D0rVJDlBh/41uDgIUYFvfH
-         iZLbN9nEwcOaJnDzsyhciZBy/x8OUpy6lPDmuXkrvqN5lqylZmkDQBlZob/inNUKYzuQ
-         MXX9lEkhuieTaQaPGkEvM73sH4YqIaESYsAOfurCwacisP0IrvShQq3TbI1SuZh4nGnA
-         LhIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BnIa4h+eeC65N1AqrnaLZXagsmYECUrJzGzZA8l9Vog=;
-        b=Bo2Atbyu9bzxJX1x0iMYmW9Z+jlV9noemeeYTbHrpXJH6RYvH64k4627+d6c9p/F71
-         97kItOZ2U53xFMtYRW3JXrT2wi0YfbWmFHz5dLDF18RZba5cZk7G8kv0Q3yIuvjQZNwD
-         qmrTvFDa68eR6ZhksUpfYHN14wjS6mQEuig+ey3o/bfaZ1xwGLjhwpN+UiD9F1eoykFV
-         BOslIbn9pzaHuBOtoIttwLHrdaK9lD7yt6pbvp9uOCfmg0fht3OhgvIy29Ge2zbDJ7wl
-         Bp0Ok7IhwN1hU8ory5/NXV4nIR82NE130AnSK82I1ChVgYX3YUIKojHoSJHES/jGawEM
-         3+Pg==
-X-Gm-Message-State: AOAM530a/k8sOT4Bk/C4LkpIX7g6L7CeRAAx8SqonD/bdomztwdhXAHF
-        RqpyNOCa14gTvQx+WkyEpc5Cp9jCyUz+1P4BivSiPQ==
-X-Google-Smtp-Source: ABdhPJxHdU0D5+yEm1ZJI+QkfXeJAK1ymL+C8OV8jdH6euBe6tZIUHhWHgBV+3Tvo3lqCfUUMcFYKNf4ZCNwx61rWt8=
-X-Received: by 2002:a37:8241:: with SMTP id e62mr4980469qkd.250.1596212476932;
- Fri, 31 Jul 2020 09:21:16 -0700 (PDT)
+        Fri, 31 Jul 2020 12:21:22 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2552 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727997AbgGaQVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 12:21:22 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 04B5D8FFCBA9E1A5A831;
+        Fri, 31 Jul 2020 17:21:20 +0100 (IST)
+Received: from localhost (10.52.124.83) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 31 Jul
+ 2020 17:21:19 +0100
+Date:   Fri, 31 Jul 2020 17:19:55 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Christian Eggers <ceggers@arri.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/2] iio: light: as73211: New driver
+Message-ID: <20200731171955.00000942@Huawei.com>
+In-Reply-To: <CAHp75VdSNXWCVVgX+8BCC5iWjO14KMUCNrYvZyFfez-fFerQsA@mail.gmail.com>
+References: <20200731070114.40471-1-ceggers@arri.de>
+        <20200731070114.40471-3-ceggers@arri.de>
+        <CAHp75VdDCnQLh0Qts8hsgLBy5TqibOKAYSeFxuV69XLroRBOEg@mail.gmail.com>
+        <2706267.JtmGt7LAV2@n95hx1g2>
+        <CAHp75VdSNXWCVVgX+8BCC5iWjO14KMUCNrYvZyFfez-fFerQsA@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <00000000000060adcb05abb71eb6@google.com> <CACT4Y+ZnHF_b6hKQ_npjJ2fW7atZ7sP8WeGh-TDhu9UB0dcnPQ@mail.gmail.com>
- <7e93543a-ff0c-2433-7bed-4053da59d5c2@infradead.org>
-In-Reply-To: <7e93543a-ff0c-2433-7bed-4053da59d5c2@infradead.org>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 31 Jul 2020 18:21:05 +0200
-Message-ID: <CACT4Y+avpJJdHBg2nKJ7CUON-8q9bqSnrAM=gHMJGVhvSrmnDw@mail.gmail.com>
-Subject: Re: upstream boot error: BUG: soft lockup in __do_softirq
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     syzbot <syzbot+8472ea265fe32cc3bf78@syzkaller.appspotmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.124.83]
+X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 6:08 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 7/30/20 11:50 PM, Dmitry Vyukov wrote:
-> > On Fri, Jul 31, 2020 at 8:44 AM syzbot
-> > <syzbot+8472ea265fe32cc3bf78@syzkaller.appspotmail.com> wrote:
-> >>
-> >> Hello,
-> >>
-> >> syzbot found the following issue on:
-> >>
-> >> HEAD commit:    92ed3019 Linux 5.8-rc7
-> >> git tree:       upstream
-> >> console output: https://syzkaller.appspot.com/x/log.txt?x=10e84cdf100000
-> >> kernel config:  https://syzkaller.appspot.com/x/.config?x=b45e47f6d958ae82
-> >> dashboard link: https://syzkaller.appspot.com/bug?extid=8472ea265fe32cc3bf78
-> >> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> >>
-> >> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> >> Reported-by: syzbot+8472ea265fe32cc3bf78@syzkaller.appspotmail.com
+On Fri, 31 Jul 2020 18:41:47 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+
+> On Fri, Jul 31, 2020 at 1:52 PM Christian Eggers <ceggers@arri.de> wrote:
+> 
+> > > W=1 (not V=1) runs kernel doc validation script.  
+> > without V=1, I get nothing. Neither excess nor missing members
+> > are reported on my system.  
+> 
+> It's strange.
+> 
+> ...
+> 
+> > > Perhaps add a definition above and comment here?
+> > >
+> > > #define AS73211_BASE_FREQ_1024KHZ   1024000  
+> > added similar define in v5. The array looks like the following now
 > >
-> > This is a qemu-kvm instance killing the host kernel somehow, the host
-> > kernel itself running qemu's is full of rcu stalls. I think this is
-> > not a bug in the tested kernel.
-> > We change rcu stall timeout to 120 seconds from the default 21s, but
-> > this happens only after boot using sysctls. I did not find any way to
-> > change the rcu timeout via cmdline/config (would be useful).
->
-> (adding Paul)
->
->
-> Documentation/RCU/stallwarn.rst says there is a Kconfig:
->
-> CONFIG_RCU_CPU_STALL_TIMEOUT
->
->         This kernel configuration parameter defines the period of time
->         that RCU will wait from the beginning of a grace period until it
->         issues an RCU CPU stall warning.  This time period is normally
->         21 seconds.
->
-> and Documentation/admin-guide/kernel-parameters.txt has 2 RCU stall timeouts,
-> one for CPU and one for tasks:
->
->         rcupdate.rcu_cpu_stall_timeout= [KNL]
->                         Set timeout for RCU CPU stall warning messages.
->
->         rcupdate.rcu_task_stall_timeout= [KNL]
->                         Set timeout in jiffies for RCU task stall warning
->                         messages.  Disable with a value less than or equal
->                         to zero.
+> > static const int as73211_samp_freq_avail[] = {  
+> 
+> >         AS73211_SAMPLE_FREQ_BASE,  
+> 
+> ' * 1'
+> 
+> >         AS73211_SAMPLE_FREQ_BASE * 2,
+> >         AS73211_SAMPLE_FREQ_BASE * 4,
+> >         AS73211_SAMPLE_FREQ_BASE * 8
+> > };  
+> 
+> ...
+> 
+> > > > +/* integration time in units of 1024 clock cycles */  
+> > >
+> > > Unify this with below one. Or the other way around, i.o.w. join one of
+> > > them into the other.
+> > >  
+> > > > +static unsigned int as73211_integration_time_1024cyc(struct as73211_data
+> > > > *data) +{
+> > > > +       /* integration time in CREG1 is in powers of 2 (x 1024 cycles) */
+> > > > +       return BIT(FIELD_GET(AS73211_CREG1_TIME_MASK, data->creg1));
+> > > > +}  
+> > I'm not sure, whether this is possible. as73211_integration_time_1024cyc()
+> > returns the current setting from hardware. as73211_integration_time_us()
+> > calculates the resulting time. But as73211_integration_time_us() is also
+> > called in as73211_integration_time_calc_avail() inside the loop.  
+> 
+> What I meant is solely comments to be joined, not the code.
+> 
+> ...
+> 
+       unsigned int time_us = as73211_integration_time_us(data, as73211_integration_time_1024cyc(data));  
+> > > One line?  
+> 
+> > checkpatch complains... ignore?  
+> 
+> Hmm... is it over 100? Or you are using some old tools to work with
+> the kernel...
 
-Hi Randy,
+It's over a 100... (about 103 by the handy scale at the top of my email client :)
 
-Thanks for looking into this.
-But I think I messed things up.  The config  has
-CONFIG_RCU_CPU_STALL_TIMEOUT=100, but this is not an RCU stall:
+> 
+> ...
+> 
+> > > > +               /* gain can be calculated from CREG1 as 2^(13 -
+> > > > CREG1_GAIN) */ +               reg_bits = 13 - ilog2(val);  
+> > >
+> > > 13 is the second time in the code. Deserves a descriptive definition.  
+> 
+> > I'm unsure how to solve this. Possible values for gain:
+> >
+> > CREG1[7:4]  | gain
+> > -----------------------------
+> > 0           | 2048x
+> > 1           | 1024x
+> > 2           |  512x
+> > ...         |  ...
+> > 13          |    1x
+> >
+> > #define AS73211_CREG1_GAIN_1_NON_SHIFTED 13  // this define is CREG1 related, but not shifted to the right position
+> >
+> > static unsigned int as73211_gain(struct as73211_data *data)
+> > {
+> >         /* gain can be calculated from CREG1 as 2^(13 - CREG1_GAIN) */
+> >         return BIT(AS73211_CREG1_GAIN_1_NON_SHIFTED - FIELD_GET(AS73211_CREG1_GAIN_MASK, data->creg1));
+> > }  
+> 
+> This way (w/o _NON_SHIFTED suffix) if both 13:s in the code are of the
+> same meaning.
+> 
+> ...
+> 
+> > > > +       indio_dev->dev.parent = dev;  
+> > >
+> > > Doesn't IIO core do this for you?  
+> > devm_iio_device_alloc() doesn't pass 'dev' to iio_device_alloc().
+> > I already looked around, but I didn't find. And after debugging
+> > v5.4, devm_iio_device_alloc() definitely doesn't do it.  
+> 
+> Why are you talking about v5.4? We are in v5.8 cycle contributing to v5.9.
 
-watchdog: BUG: soft lockup - CPU#3 stuck for 21s! [grep:4749]
+This will be 5.10 now.  5.9 cycle for new stuff via IIO effectively closed
+last week. 
 
-This is what is controlled by kernel.watchdog_thresh sysctl (?).
+> 
+> Recently IIO gained some features among which I think the one that
+> assigns parent devices.
+> 
+yup. This should be in linux-next now for the coming merge window (which probably opens on Sunday).
+
+Note that we have lots of time to tidy up loose ends for this one as it will only sit
+in my tree for next few weeks if I do pick it up.
+
+Jonathan
+
+
