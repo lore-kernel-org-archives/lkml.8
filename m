@@ -2,237 +2,84 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A70C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03517C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F013422B40
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C0B22B43
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:53:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596218028;
+	bh=YYLcZCHdY4A4VUdOJs2UDmzQcnxwkeaqns0wcevhtAM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vYzVuQ/vLqHjdyKb8j/7Vyq+IYcuaITMVbUmvt3W0fLwyAPzUvKVzXRY7lNRa3OJZ
+	 udb4AFRg0TKpD0S6p+Jf+ocpEd5+2gsif5/T0cqsdxiAtBmCHsfEXA/JvKg4Ics35b
+	 CSJL36CqAIxvcbR5/QdGZXPFpHPdqH/K8w0SEsFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387655AbgGaRwh (ORCPT
+        id S2387670AbgGaRxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 13:52:37 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:45052 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730069AbgGaRwg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 13:52:36 -0400
-Received: from 89-64-88-186.dynamic.chello.pl (89.64.88.186) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 4c83340291e74d03; Fri, 31 Jul 2020 19:52:33 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Francisco Jerez <currojerez@riseup.net>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Documentation <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Doug Smythies <dsmythies@telus.net>
-Subject: Re: [PATCH] cpufreq: intel_pstate: Implement passive mode with HWP enabled
-Date:   Fri, 31 Jul 2020 19:52:32 +0200
-Message-ID: <8215933.FmGRM78LtW@kreacher>
-In-Reply-To: <87a6zhg735.fsf@riseup.net>
-References: <3955470.QvD6XneCf3@kreacher> <4159348.LxVl7G3d3V@kreacher> <87a6zhg735.fsf@riseup.net>
+        Fri, 31 Jul 2020 13:53:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34036 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730069AbgGaRxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 13:53:47 -0400
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C28D722B43;
+        Fri, 31 Jul 2020 17:53:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596218026;
+        bh=YYLcZCHdY4A4VUdOJs2UDmzQcnxwkeaqns0wcevhtAM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=C4KlEpSgXN7Aaj5tK5AZK6HQgoKDrS1Y5tm93AImK925+eQz4jLa8x1freHiv91iy
+         trNbZb0ODUR0u3Ys2IIHU5SsTJ3li9svr87VFNlz00CqttOXC5wo9p1agzLKrJEoY1
+         gDZgK56jQ26VX0e0sURXYKuezY90OPwUEQzOcufQ=
+Received: by mail-oi1-f170.google.com with SMTP id v13so10804587oiv.13;
+        Fri, 31 Jul 2020 10:53:46 -0700 (PDT)
+X-Gm-Message-State: AOAM53074Ku4jzcI6M1QdgwTzYz5S7CbVqNLo98xGNWs6fSIsXUZ+BeN
+        APndfD/Ihl0CM6cib7nDULt0py3AQ0Y1wux/Ug==
+X-Google-Smtp-Source: ABdhPJyak9HSVsNL8SbsIPvigrG7TnsIRtLgH+VAaGhZvk5l27JI1wNfmLdXy63nRSFcEJbEIC19SD99QW9FiZu87tw=
+X-Received: by 2002:aca:190c:: with SMTP id l12mr3893214oii.147.1596218026159;
+ Fri, 31 Jul 2020 10:53:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20200729004757.1901107-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20200729004757.1901107-1-bjorn.andersson@linaro.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 31 Jul 2020 11:53:35 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKKQmLNwQDVJDOQdVZ9iYb4DXDCnfzsBE9q32jaRcefCg@mail.gmail.com>
+Message-ID: <CAL_JsqKKQmLNwQDVJDOQdVZ9iYb4DXDCnfzsBE9q32jaRcefCg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: hwlock: qcom: Remove invalid binding
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, July 30, 2020 2:49:34 AM CEST Francisco Jerez wrote:
-> 
+On Tue, Jul 28, 2020 at 6:48 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> The Qualcomm hwlock is described in DeviceTree either directly on the
+> mmio bus or split between a syscon and a mutex node, but as noted in
+> [1] the latter is not valid DT, so remove any traces of this from the
+> binding.
+>
+> [1] https://lore.kernel.org/r/CAL_JsqLa9GBtbgN6aL7AQ=A6V-YRtPgYqh6XgM2kpx532+r4Gg@mail.gmail.com/
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  .../bindings/hwlock/qcom-hwspinlock.yaml      | 25 +------------------
+>  1 file changed, 1 insertion(+), 24 deletions(-)
 
-[cut]
-
-> >> >
-> >> >> >> No, I explicitly dismissed that in my previous reply.
-> >> >> >
-> >> >> > But at the same time you seem to agree that without the non-CPU com=
-> pon=3D
-> >> ent
-> >> >> > (or thermal pressure) the existing CPU performance scaling would be
-> >> >> > sufficient.
-> >> >> >
-> >> >>=3D20
-> >> >> Yes, but not necessarily in order to allow the non-CPU component to d=
-> raw
-> >> >> more power as you said above, but also because the existence of a
-> >> >> bottleneck in a non-CPU component gives us an opportunity to improve =
-> the
-> >> >> energy efficiency of the CPU, regardless of whether that allows the
-> >> >> workload to run faster.
-> >> >
-> >> > But why would the bottleneck be there otherwise?
-> >> >
-> >>=20
-> >> Because some resource of the system (e.g. memory bandwidth, GPU fill
-> >> rate) may be close to 100% utilized, causing a bottleneck for reasons
-> >> unrelated to its energy usage.
-> >
-> > Well, not quite.  Or at least in that case the performance cannot be impr=
-> oved
-> > by limiting the CPU frequency below the frequency looked for by scaling
-> > governors, AFAICS.
-> >
-> 
-> Right, but it might still be possible to improve the energy efficiency
-> of the workload even if its throughput cannot be improved, which seems
-> like a worthwhile purpose in itself.
-
-My point is that in this case the energy-efficiency of the processor cannot
-be improved without decreasing performance.
-
-For the processors that are relevant here, the most energy-efficient way to
-run them is in the minimum P-state, but that rarely provides the required
-performance.  Without the knowledge on how much performance really is required
-we assume maximum achievable.  Anything else would need to involve some extra
-policy knobs (which are missing ATM) and that is another problem.
-
-I'm not saying that it is not a problem, but it is not possible to say how much
-performance to sacrifice without any input from the user on that.
-
-IOW, this is a topic for another discussion.
-
-> > Scaling governors generally look for the maximum frequency at which there=
->  is no
-> > CPU idle time in the workload.  At that frequency the CPU time required b=
-> y the
-> > workload to achieve the maximum performance is equal to the total CPU time
-> > available to it.  I till refer to that frequency as the maximum effective
-> > frequency (MEF) of the workload.
-> >
-> > By definition, running at frequencies above the MEF does not improve
-> > performance, but it causes CPU idle time to appear.  OTOH running at
-> > frequencies below the MEF increases the CPU time required by the workload
-> > to achieve the maximum performance, so effectively the workload does
-> > not get enough CPU time for the performance to be maximum, so it is lower
-> > than at the MEF.
-> >
-> 
-> Yes, we agree on that.
-> 
-> > Of course, the MEF is well-defined as long as the processor does not share
-> > the power budget with another component that is also used by the workload
-> > (say, a GPU).  Without the sharing of a power budget, the MEF can be dete=
-> rmined
-> > by looking at the CPU idle time (or CPU busy time, or CPU load, whichever=
->  is
-> > the most convenient) alone, because it already depends on the speed of any
-> > memory etc accessed by the workload and slowing down the processor doesn't
-> > improve the performance (because the other components don't run any faster
-> > as a result of that).
-> >
-> > However, if the processor is sharing the power budget with a GPU (say), it
-> > is not enough to look at the CPU idle time to determine the MEF, because
-> > slowing down the processor generally causes the GPU to get more power whi=
-> ch
-> > allows it to run faster and CPUs can do more work, because they spend less
-> > time waiting for the GPU, so the CPU time available to the workload effec=
-> tively
-> > increases and it can achieve the maximum performance at a lower frequency.
-> > So there is "effective MEF" depending on the relative performance balance
-> > between the processor and the GPU and on what "fraction" of the workload
-> > runs on the GPU.
-> >
-> 
-> That doesn't mean that the MEF isn't well-defined in systems with a
-> shared power budget.  If you define it as the lowest frequency at which
-> the workload reaches maximum throughput, then there still is one even if
-> the system is TDP-bound: the maximum frequency at which the CPU and
-> device maintain their optimal power balance -- Above it the power budget
-> of the device will be constrained, causing it to run at less than
-> optimal throughput, also causing the workload as a whole to run at less
-> than optimal throughput.
-
-That is what I am calling the "effective MEF" and the main point is that it
-cannot be determined by looking at the CPU idle time alone.
-
-> That said I agree with you that it takes more than looking at the CPU
-> utilization in order to determine the MEF in a system with a shared
-> power budget -- Until you've reached a steady state close enough to the
-> optimal power balance, at which point looking at the CPU utilization is
-> really all it takes in order for the governor to estimate the MEF.
-
-I'm not convinced, because in principle there may be many steady states
-at "boundary" frequencies, such that the CPU idle time goes from zero to
-nonzero when crossing the "boundary", in that case.
-
-That generally depends on what OPPs are available (physically) to the
-processor and the GPU (I'm using the GPU as an example, but that may be
-something else sharing the power budget with the processor, like an FPGA).
-
-For example, if increasing the CPU frequency above a "boundary" does not
-cause it to take up enough of the power budget to force the GPU to switch
-over to a lower-frequency OPP, it may very well cause some CPU idle time
-to appear, but that doesn't mean that the optimum power balance has been
-reached.
-
-In general, the GPU needs to be monitored as well as the CPU and that's
-why the GPU bottleneck detection in your patches is key.  But having
-that in place one could simply put an upper limit on the CPU frequency
-through the existing policy max QoS in the cpufreq framework in response
-to the GPU bottleneck without changing the scaling governors.
-
-> IOW, introducing additional power budget variables (in combination with
-> additional power curve information from both the CPU and device) *might*
-> help you reach the optimal steady state from a suboptimal state more
-> quickly in principle, but it won't have any effect on the optimality of
-> the final steady state as soon as it's reached.
-> 
-> Does that mean it's essential to introduce such power variables in order
-> for the controller to approach the optimal steady state?  No, because
-> any realistic controller attempting to approximate the MEF of the
-> workload (whether it's monitoring the power consumption variables or
-> not) necessarily needs to overshoot that MEF estimate by some factor in
-> order to avoid getting stuck at a low frequency whenever the load
-> fluctuates above the current MEF.  This means that even if at some point
-> the power balance is far enough from the optimal ratio that the initial
-> MEF estimate is off by a fraction greater than the overshoot factor of
-> the controller, the controller will get immediate feedback of the
-> situation as soon as the device throughput ramps up due to the released
-> power budget, allowing it to make a more accurate approximation of the
-> real MEF in a small number of iterations (of the order of 1 iteration
-> surprisingly frequently).
-> 
-> > This means that the power budget sharing is essential here and the "if the
-> > energy-efficiency of the processor is improved, the other components get
-> > more power as a bonus" argument is not really valid.
-> >
-> 
-> That was just a statement of my goals while working on the algorithm
-> [improve the energy efficiency of the CPU in presence of an IO
-> bottleneck], it's therefore axiomatic in nature rather than some sort of
-> logical conclusion that can be dismissed as invalid.  You might say you
-> have different goals in mind but that doesn't mean other people's are
-> not valid.
-
-Well, this really isn't about the goals but about understanding of what
-really happens.
-
-What I'm trying to say is that the sharing of energy budget is a necessary
-condition allowing the processor's energy-efficiency to be improved without
-sacrificing performance.
-
-> > The frequency of the processor gets limited in order for the other compon=
-> ents
-> > to get more power, which then allows the processor to do more work in the
-> > same time at the same frequency, so it becomes more energy-efficient.
-> 
-> Whenever the throughput of the workload is limited by its power budget,
-> then yes, sure, but even when that's not the case it can be valuable to
-> reduce the amount of energy the system is consuming in order to perform
-> a certain task.
-
-Yes, it is valuable, but this is a separate problem and addressing it
-requires taking additional user input (regarding the energy vs performance
-policy) into account.
-
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>
