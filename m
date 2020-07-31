@@ -2,126 +2,109 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79122C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 400A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55FA7206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:54:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A5D622BEA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:56:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="gIRjHM+p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732892AbgGaQyb (ORCPT
+        id S1732542AbgGaQ4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 12:54:31 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:54344 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732881AbgGaQyW (ORCPT
+        Fri, 31 Jul 2020 12:56:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729944AbgGaQ4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 12:54:22 -0400
-Received: by mail-io1-f69.google.com with SMTP id z25so13618873ioh.21
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 09:54:21 -0700 (PDT)
+        Fri, 31 Jul 2020 12:56:52 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E28BBC061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 09:56:51 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id g26so29437404qka.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 09:56:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Oxr5YTGpl3qCmnQ7jzJ1mzURsOCkDMcn0o5yKiLVjHk=;
+        b=gIRjHM+pqqI3fhGfhHetDCeS8wl+rUrVsc+3J0YFUBcz20bHIPwgLmOQY4NF2aH9r+
+         w29TYsuxRB8kX1umvuRt8rgqgg+zLqbG0T5mn7qENr3b9j9L/3gou6LceoOVF2sJrr5g
+         3cm8eJoDDyzXkAscEulakGjBhHgEyuCHQUHJbED5fbGyAMJ/Apcuv1UvzxpjL+krWgWk
+         ecEppJXJ2FCKKi10ZOuySLhYaW23mxakZAkKdRqA6zovDr0sCMIMJIJtrK5//XBLInj6
+         8/b80D3rcP4xfOyT82ZZ6OGyIq5yD3dNJG+dHFnEFFjDH3e8HxkAQ6d8ByfXja3H4fzq
+         a5Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ARDRp3KNxJ0Mur5k39eF0BHl1nLpOy5JRf/QHvN6dFk=;
-        b=CqqGtOZKX4KhlXxKhnTn+NCIbNHj/S0G8gCU/J87EDuKEwhV6zv/RTjj2u4L/mpgHF
-         HDSXSDwqmyfN4Tn7pjz8v735cfFiTzZor6PP6NgCApyrpe95+n29wnJb/IgkGo4jmacV
-         7/e+3zbHOPWRi9jt1AtqnpeViVfweTfPxg+0QAJFgfK/d2isE14WruDYAG0A/bY6IGwk
-         JzdmzKVDoQOirtH4daJxZ5fYd2RW2IVJQWwXkVvpkrDmfSJp/TDvyEBx+Za8QPAMstOV
-         yu3MBG3v+wSHgJLuQrb/9iW9pBnkrsWFvKErzDl/QHKuhR37aheFjaubo1fstthvPI5c
-         hypA==
-X-Gm-Message-State: AOAM531exGJZSnT18McXr3Pn1XFAiyRXZw96HkP6M3iS+FOab+Il839E
-        wQF+Yn031XS/1tO6kODp6bXLI0xFWSHace8vy0M1PeIOn758
-X-Google-Smtp-Source: ABdhPJxP2PbBB8deYKj2Tc4M1SS2BCEM0juaeT3FHB8Zzq3MURwrPnYltjduqem2f6JiZYRpGP2INyzeumkyJnqkAJRd8iw1hVjt
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Oxr5YTGpl3qCmnQ7jzJ1mzURsOCkDMcn0o5yKiLVjHk=;
+        b=YrCa2bkisBONrqbBjuz1bADTTZZBcMySmxM3H1A0quFQea/8M2u01VtcPprHPXRnWK
+         o7/p16Qr1kJo9MU9Of36jKmM9Z+Jc7HofNBh4DYIr9Tz37ejfYcLiWNjvXT2CHPrGJcV
+         ze95yWHx/gdYMUX1Oeu9bwxFG1m2BBYfjUTvu+284UGxFs2Z1GvwYISxRgRwmGG34nOx
+         F4e2wNAzmeyrLWqCVBnJalBZ2Ddr7UvTv6eC3xtcR1DqdVVUZJoqQyLiq+C+XU0TGPb0
+         VOKpBbm9WKcqSrEtBDEqZXZFYK/4+xf27wArcJUVeHbnDm5qMH+wMVpKuRx+gG9MsdTe
+         csyg==
+X-Gm-Message-State: AOAM530VX7BINc2T6hEtLK9VfRgSWIqqaPErQzFjyrmBfGfoUVadQedW
+        omccHEJ+bTbQzro7GLWaTYoysw==
+X-Google-Smtp-Source: ABdhPJwp4q4H+n2t8EwsSAIeoGxof5jqJr4YurxgVxQhOgcYX02rAHX3VKDNoNbEMZAJ+ao9mDe6Bg==
+X-Received: by 2002:a37:de15:: with SMTP id h21mr4809113qkj.77.1596214611012;
+        Fri, 31 Jul 2020 09:56:51 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id j16sm8994078qke.87.2020.07.31.09.56.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 09:56:50 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1k1YKv-0027Bk-Hr; Fri, 31 Jul 2020 13:56:49 -0300
+Date:   Fri, 31 Jul 2020 13:56:49 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Steven Sistare <steven.sistare@oracle.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
+        arnd@arndb.de, keescook@chromium.org, gerg@linux-m68k.org,
+        ktkhai@virtuozzo.com, christian.brauner@ubuntu.com,
+        peterz@infradead.org, esyr@redhat.com, christian@kellner.me,
+        areber@redhat.com, cyphar@cyphar.com
+Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
+Message-ID: <20200731165649.GG24045@ziepe.ca>
+References: <20200730152250.GG23808@casper.infradead.org>
+ <db3bdbae-eb0f-1ae3-94dd-045e37bc94ba@oracle.com>
+ <20200730171251.GI23808@casper.infradead.org>
+ <63a7404c-e4f6-a82e-257b-217585b0277f@oracle.com>
+ <20200730174956.GK23808@casper.infradead.org>
+ <ab7a25bf-3321-77c8-9bc3-28a223a14032@oracle.com>
+ <87y2n03brx.fsf@x220.int.ebiederm.org>
+ <689d6348-6029-5396-8de7-a26bc3c017e5@oracle.com>
+ <20200731152736.GP23808@casper.infradead.org>
+ <9ba26063-0098-e796-9431-8c1d0c076ffc@oracle.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:4407:: with SMTP id r7mr4409152ioa.77.1596214461310;
- Fri, 31 Jul 2020 09:54:21 -0700 (PDT)
-Date:   Fri, 31 Jul 2020 09:54:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f3b11a05abbfa345@google.com>
-Subject: INFO: trying to register non-static key in skb_dequeue
-From:   syzbot <syzbot+fadfba6a911f6bf71842@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9ba26063-0098-e796-9431-8c1d0c076ffc@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Jul 31, 2020 at 12:11:52PM -0400, Steven Sistare wrote:
+> > Your preservation-across-exec use-case might or might not need the
+> > VMA to be mapped at the same address.  
+> 
+> It does.  qemu registers memory with vfio which remembers the va's in kernel
+> metadata for the device.
 
-syzbot found the following issue on:
+Once the memory is registered with vfio the VA doesn't matter, vfio
+will keep the iommu pointing at the same physical pages no matter
+where they are mapped.
 
-HEAD commit:    83bdc727 random32: remove net_rand_state from the latent e..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=119bc404900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c0cfcf935bcc94d2
-dashboard link: https://syzkaller.appspot.com/bug?extid=fadfba6a911f6bf71842
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16ce9270900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1485c092900000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+fadfba6a911f6bf71842@syzkaller.appspotmail.com
-
-IPVS: ftp: loaded support on port[0] = 21
-INFO: trying to register non-static key.
-the code is fine but needs lockdep annotation.
-turning off the locking correctness validator.
-CPU: 1 PID: 6833 Comm: syz-executor596 Not tainted 5.8.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- assign_lock_key kernel/locking/lockdep.c:894 [inline]
- register_lock_class+0x157d/0x1630 kernel/locking/lockdep.c:1206
- __lock_acquire+0xfa/0x56e0 kernel/locking/lockdep.c:4259
- lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:4959
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0x8c/0xc0 kernel/locking/spinlock.c:159
- skb_dequeue+0x1c/0x180 net/core/skbuff.c:3038
- skb_queue_purge+0x21/0x30 net/core/skbuff.c:3076
- l2cap_chan_del+0x61d/0x1300 net/bluetooth/l2cap_core.c:657
- l2cap_conn_del+0x46a/0x9e0 net/bluetooth/l2cap_core.c:1890
- l2cap_disconn_cfm net/bluetooth/l2cap_core.c:8159 [inline]
- l2cap_disconn_cfm+0x85/0xa0 net/bluetooth/l2cap_core.c:8152
- hci_disconn_cfm include/net/bluetooth/hci_core.h:1355 [inline]
- hci_conn_hash_flush+0x114/0x220 net/bluetooth/hci_conn.c:1536
- hci_dev_do_close+0x5c6/0x1080 net/bluetooth/hci_core.c:1761
- hci_unregister_dev+0x1a3/0xe20 net/bluetooth/hci_core.c:3606
- vhci_release+0x70/0xe0 drivers/bluetooth/hci_vhci.c:340
- __fput+0x33c/0x880 fs/file_table.c:281
- task_work_run+0xdd/0x190 kernel/task_work.c:135
- exit_task_work include/linux/task_work.h:25 [inline]
- do_exit+0xb72/0x2a40 kernel/exit.c:805
- do_group_exit+0x125/0x310 kernel/exit.c:903
- __do_sys_exit_group kernel/exit.c:914 [inline]
- __se_sys_exit_group kernel/exit.c:912 [inline]
- __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:912
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x444fe8
-Code: Bad RIP value.
-RSP: 002b:00007ffde50eda98 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 0000000000444fe8
-RDX: 0000000000000001 RSI: 000000000000003c RDI: 0000000000000001
-RBP: 00000000004cce10 R08: 00000000000000e7 R09: ffffffffffffffd0
-R10: 00007f0c43ebb700 R11: 0000000000000246 R12: 0000000000000001
-R13: 00000000006e0200 R14: 0000000001898850 R15: 0000000000000001
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Jason
