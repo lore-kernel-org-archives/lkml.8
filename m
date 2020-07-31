@@ -2,114 +2,168 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF9EC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE43BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9916220838
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:56:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aE1OHoox"
+	by mail.kernel.org (Postfix) with ESMTP id B55CA20838
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732025AbgGaI4S (ORCPT
+        id S1732034AbgGaI4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:56:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731967AbgGaI4R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 04:56:17 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57156C06174A
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 01:56:17 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a15so27247499wrh.10
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 01:56:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uKHultmexfuWBdCK9WRDRk/vbhZ+37y2O3wAMlcu988=;
-        b=aE1OHooxwN4CtoTfKoukXZmAijnt7lUt7g2YEmORS3cT7AcMzMNPBMqe8jdLYclZBm
-         eOHaWEarxXuFCjto12aNCFolbMakz+DiEVyPF5mrDDnb4gRfoCRQPp7jBy5l2R7n/un1
-         nBoT11Vhvh4xhvgqwcqKCnGpBSQmKQyJHI6yE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uKHultmexfuWBdCK9WRDRk/vbhZ+37y2O3wAMlcu988=;
-        b=DJSE7gbLEsSCKBspkwRLEm5zCX4zlDoea8lYevQj21Qo4bH8ncHNBJUykEe/PfjLyu
-         /JQ6SY9ZKsCvicHrgHvE1Kx0tpmibZp6G+uxZGSNCW4P/SgDwQ8aijPZgBPf4ksGiBjt
-         AgQHgOSBYusvUcWyH8R40wBDinFJoVosVZVWTW4GdZqeeVqgaRbp3vnvZ+EZmYktrioE
-         +R5ggIjci7bUY2g+Xni5jvc/ojaE5GMdkAIKmECJ+KGbKDe7KgHw26tV0i20UTBGse61
-         hKiV3XMmuMIOK5BBHLJi2frHMLZhxDD+xOPL2EXweW8xYWjM6Myd21CCcXjLhQBmCGXm
-         w8lQ==
-X-Gm-Message-State: AOAM532Lh7qlClKapTtjG14F6JGGSWFilDxYoMcCMv7YvbQD8VeYj7tx
-        xYaKVkCkZsqRt9d+kP1q3H4tuuwSeZDC4aFs5kB7QA==
-X-Google-Smtp-Source: ABdhPJzWn3jZhPtcamUMQKgiq4Q2WoIJL296BZio2qPps8qapt7QAgo3rn4E433qso7peWw9XBVW+myXjp0sLi36trw=
-X-Received: by 2002:adf:e486:: with SMTP id i6mr2505317wrm.258.1596185775852;
- Fri, 31 Jul 2020 01:56:15 -0700 (PDT)
+        Fri, 31 Jul 2020 04:56:25 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50060 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730268AbgGaI4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 04:56:25 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 15A4E2E03E6C6E63C568;
+        Fri, 31 Jul 2020 16:56:22 +0800 (CST)
+Received: from [127.0.0.1] (10.67.76.251) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Fri, 31 Jul 2020
+ 16:56:17 +0800
+Subject: Re: linux-next: Tree for Jul 30 [build failure on arm64]
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Christoph Hellwig <hch@lst.de>
+CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Arnd Bergmann" <arnd@arndb.de>, <lkft-triage@lists.linaro.org>
+References: <20200730214659.0fbfdfc4@canb.auug.org.au>
+ <72b073ba-ee41-1a1c-ce6c-ffd8b5936b09@hisilicon.com>
+ <20200731140842.46abe589@canb.auug.org.au>
+ <CA+G9fYvykg9Ly=tRXLrf4hvd4siYKAt5eM0EMnwMgqVDHnbVYQ@mail.gmail.com>
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+Message-ID: <9b46f27a-2e5b-8519-31b6-01eaa9e1d822@hisilicon.com>
+Date:   Fri, 31 Jul 2020 16:56:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-References: <20200721104422.369368-1-cychiang@chromium.org>
- <20200721104422.369368-3-cychiang@chromium.org> <ce029818-5082-643b-ff63-25aafea3de6c@linaro.org>
- <20200723184432.GA321518@gerhold.net>
-In-Reply-To: <20200723184432.GA321518@gerhold.net>
-From:   Cheng-yi Chiang <cychiang@chromium.org>
-Date:   Fri, 31 Jul 2020 16:55:49 +0800
-Message-ID: <CAFv8Nw+Y7S2EWZMUYEeFeTmt+TdzBQUTBzgHDa7reWT9CiOA1Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] ASoC: qcom: sc7180: Add machine driver for sound
- card registration
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Dylan Reid <dgreid@chromium.org>,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>, Ajit Pandey <ajitp@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CA+G9fYvykg9Ly=tRXLrf4hvd4siYKAt5eM0EMnwMgqVDHnbVYQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.76.251]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 2:45 AM Stephan Gerhold <stephan@gerhold.net> wrote:
->
-> On Wed, Jul 22, 2020 at 10:25:14AM +0100, Srinivas Kandagatla wrote:
-> > > +static int sc7180_parse_of(struct snd_soc_card *card)
-> > > +{
-> >
-> > This code is getting duplicated in various places like apq8016_sbc_parse_of,
-> > it will be nice to common this up, if possible!
-> >
->
-> FYI, I started work on making apq8016_sbc use qcom_snd_parse_of()
-> a while ago already, but didn't find the time to finish it up.
-> I have now sent it, this should make it possible to use the common
-> qcom_snd_parse_of() function in this driver as well.
->
-> See: https://lore.kernel.org/alsa-devel/20200723183904.321040-1-stephan@gerhold.net/
->
-> Stephan
->
-Hi Stephan, thanks a lot for jumping on this to help.
-It indeed makes this new driver much cleaner.
-I have tested with your patches and it works great.
+Hi,
+
+在 2020/7/31 16:30, Naresh Kamboju 写道:
+> On Fri, 31 Jul 2020 at 09:38, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>>
+>> Hi all,
+>>
+>> On Fri, 31 Jul 2020 10:46:52 +0800 Shaokun Zhang <zhangshaokun@hisilicon.com> wrote:
+>>>
+>>> There's a build failure on arm64:
+>>>
+>>> In file included from ./include/linux/compat.h:17:0,
+>>>                  from ./arch/arm64/include/asm/stat.h:13,
+>>>                  from ./include/linux/stat.h:6,
+>>>                  from ./include/linux/sysfs.h:22,
+>>>                  from ./include/linux/kobject.h:20,
+>>>                  from ./include/linux/of.h:17,
+>>>                  from ./include/linux/irqdomain.h:35,
+>>>                  from ./include/linux/acpi.h:13,
+>>>                  from ./include/acpi/apei.h:9,
+>>>                  from ./include/acpi/ghes.h:5,
+>>>                  from ./include/linux/arm_sdei.h:8,
+>>>                  from arch/arm64/kernel/asm-offsets.c:10:
+>>> ./include/linux/fs.h: In function ‘vfs_whiteout’:
+>>> ./include/linux/fs.h:1709:32: error: ‘S_IFCHR’ undeclared (first use in this function)
+>>>   return vfs_mknod(dir, dentry, S_IFCHR | WHITEOUT_MODE, WHITEOUT_DEV);
+>>>                                 ^
+>>> ./include/linux/fs.h:1709:32: note: each undeclared identifier is reported only once for each
+>>> function it appears in
+>>> ./include/linux/fs.h: At top level:
+>>> ./include/linux/fs.h:1855:46: warning: ‘struct kstat’ declared inside parameter list
+>>>   int (*getattr) (const struct path *, struct kstat *, u32, unsigned int);
+>>>                                               ^
+>>> ./include/linux/fs.h:1855:46: warning: its scope is only this definition or declaration, which is
+>>> probably not what you want
+>>> ./include/linux/fs.h: In function ‘__mandatory_lock’:
+>>> ./include/linux/fs.h:2325:25: error: ‘S_ISGID’ undeclared (first use in this function)
+>>>   return (ino->i_mode & (S_ISGID | S_IXGRP)) == S_ISGID;
+>>>                          ^
+>>> ./include/linux/fs.h:2325:35: error: ‘S_IXGRP’ undeclared (first use in this function)
+>>>   return (ino->i_mode & (S_ISGID | S_IXGRP)) == S_ISGID;
+>>>                                    ^
+>>> ./include/linux/fs.h: In function ‘invalidate_remote_inode’:
+>>> ./include/linux/fs.h:2588:6: error: implicit declaration of function ‘S_ISREG’
+>>> [-Werror=implicit-function-declaration]
+>>>   if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
+>>>       ^
+>>> ./include/linux/fs.h:2588:32: error: implicit declaration of function ‘S_ISDIR’
+>>> [-Werror=implicit-function-declaration]
+>>>   if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
+>>>                                 ^
+>>> ./include/linux/fs.h:2589:6: error: implicit declaration of function ‘S_ISLNK’
+>>> [-Werror=implicit-function-declaration]
+>>>       S_ISLNK(inode->i_mode))
+>>>       ^
+>>> ./include/linux/fs.h: In function ‘execute_ok’:
+>>> ./include/linux/fs.h:2768:26: error: ‘S_IXUGO’ undeclared (first use in this function)
+>>>   return (inode->i_mode & S_IXUGO) || S_ISDIR(inode->i_mode);
+>>
+>> Presumably caused by commit
+>>
+>>   b902bfb3f0e9 ("arm64: stop using <asm/compat.h> directly")
+> 
+> I have reverted this commit
+>   b902bfb3f0e9 ("arm64: stop using <asm/compat.h> directly")
+> 
+> and rebuilt arm64 failed due to below errors/warnings.
+> 
+> make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=arm64
+> CROSS_COMPILE=aarch64-linux-gnu- HOSTCC=gcc CC="sccache
+> aarch64-linux-gnu-gcc" O=build Image
+> #
+> In file included from ../include/linux/stat.h:6,
+>                  from ../include/linux/sysfs.h:22,
+>                  from ../include/linux/kobject.h:20,
+>                  from ../include/linux/of.h:17,
+>                  from ../include/linux/irqdomain.h:35,
+>                  from ../include/linux/acpi.h:13,
+>                  from ../include/acpi/apei.h:9,
+>                  from ../include/acpi/ghes.h:5,
+>                  from ../include/linux/arm_sdei.h:8,
+>                  from ../arch/arm64/kernel/asm-offsets.c:10:
+> ../arch/arm64/include/asm/stat.h:20:2: error: unknown type name ‘compat_u64’
+>    20 |  compat_u64 st_dev;
+>       |  
+
+0a3a4497a1de <"compat: lift compat_s64 and compat_u64 to <linux/compat.h>">
+has removed the compat_s64 and compat_u64.
+
+Thanks,
+Shaokun
+
+^~~~~~~~~~
+> ../arch/arm64/include/asm/stat.h:31:2: error: unknown type name ‘compat_u64’
+>    31 |  compat_u64 st_rdev;
+>       |  ^~~~~~~~~~
+> ../arch/arm64/include/asm/stat.h:34:2: error: unknown type name ‘compat_s64’
+>    34 |  compat_s64 st_size;
+>       |  ^~~~~~~~~~
+> ../arch/arm64/include/asm/stat.h:36:2: error: unknown type name ‘compat_u64’
+>    36 |  compat_u64 st_blocks; /* Number of 512-byte blocks allocated. */
+>       |  ^~~~~~~~~~
+> ../arch/arm64/include/asm/stat.h:47:2: error: unknown type name ‘compat_u64’
+>    47 |  compat_u64 st_ino;
+>       |  ^~~~~~~~~~
+> make[2]: *** [../scripts/Makefile.build:114:
+> arch/arm64/kernel/asm-offsets.s] Error 1
+> 
+> - Naresh
+> 
+> .
+> 
+
