@@ -2,105 +2,265 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C036C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C26C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE8622B40
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B58E2245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:32:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="rU/7m59T"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="htDhrgG0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387583AbgGaP3O (ORCPT
+        id S1731430AbgGaPcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 11:29:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbgGaP3L (ORCPT
+        Fri, 31 Jul 2020 11:32:02 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:41642 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbgGaPcC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 11:29:11 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37899C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 08:29:11 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id c2so16779041edx.8
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 08:29:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3k2Qozw9K7T3ULHctZF2uRyGbKqkev5Yvd3i8BwLL6Q=;
-        b=rU/7m59TNeq5RpPtiUF/ooEfv7y67ob0BFihzDNxqzyOmEpsLDWpdRWM7a1Ta8diX9
-         7/KmEpDzjGcJg/Pwvj5CJyOTsZLukJCMCLa8+AoMszs4qJ2ovqLeTB8tvugBUABNICT+
-         eDx8T4FKQBB7a3AF6wXJM4aILfpBArYOrJuEN4lkQy4uwl9e0jQGD8SXyeGbMZNORy2L
-         yAShufuKVBs3/3TERLOxaa0ePPEogNjB9YElAimeP98Z0X7DEawjgep2fVgs0yc7Su75
-         36fuiJkQisHXPKWkagRGrmyt7j/f6VdTzQ17F84MaIPjL3U9bAoqmxQ5O1LyXMSuNHUw
-         J1DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3k2Qozw9K7T3ULHctZF2uRyGbKqkev5Yvd3i8BwLL6Q=;
-        b=ptDijIyMlCkOHq2FC0dMJKmq+bJA0gWpDZcbv7tHKt/PCK+EXPjFWZb5bZC3ghfjtk
-         Ham8c2aBevwmPt0/RCJWY4AnN7z7AP1/id9vT2CIRjeM9glbJj07ENfwFiwaCKobzsIR
-         boWvvLOVTF+xS23dkxg+PTAdGMdmqKZEREZWAdPZOxOiOP9KcXi4lQx5Baeh22bQXcEy
-         IZAJmv7Z0bdsSgKzxTF4hC9VSvYEBslnv2KwDxJvbyWXSKg1IwrJanxbUZoRtauTngH4
-         pcCPohwiS3UZYWKPpwLF0guuEDnghDRxOGzHdAXsBvRymI6gkmiJMygiiiutWoC5t/kp
-         TQLA==
-X-Gm-Message-State: AOAM530DBWpJAvKW5lcJjoPeZllp7DJ0Gw6y/8p1ygC3PfctIAkQgTFn
-        5pa147jo6vyYeleStgEOKCF/ue5gFuguD09YNNUNLg==
-X-Google-Smtp-Source: ABdhPJz0P/lPp3nduBpCI463CmMAzDxLqlASXNACZIK8CQVQjVPCG9CcO/+9HjqSM/KyFs+VY+csHhR3WhxQTYkaNqE=
-X-Received: by 2002:a50:d51e:: with SMTP id u30mr2058575edi.296.1596209349842;
- Fri, 31 Jul 2020 08:29:09 -0700 (PDT)
+        Fri, 31 Jul 2020 11:32:02 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CF64B53C;
+        Fri, 31 Jul 2020 17:31:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1596209519;
+        bh=dedesMR4np940AvQEP4rMEblUlg5e6+Hz09ETo0/cvc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=htDhrgG0SA0Uwfbh5CyNp/NEdUb8I4PdTHikstBMA1iIwywH+I8B+TuCuMbXkKbEu
+         Ticek8LFiLpktdEQ8QAN46mssXlgMBVCQiVQOwqrS4jFk/+X61Xo7KYGw5+9lIvc1Q
+         Co61mVRG6MG4b1GMSiid4xuCPlh4xrfOS0zjoiAg=
+Date:   Fri, 31 Jul 2020 18:31:49 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        Hugues Fruchet <hugues.fruchet@st.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [PATCH 1/2] media: i2c: ov5640: Enable data pins on startup for
+ DVP mode
+Message-ID: <20200731153149.GJ6218@pendragon.ideasonboard.com>
+References: <1596187487-31403-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1596187487-31403-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200731130315.GO13316@paasikivi.fi.intel.com>
+ <CA+V-a8u0dLJGP_1MXQYu2v6o55vBSxH49S3HRY=9gb2dcO8PnA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200709020629.91671-1-justin.he@arm.com>
-In-Reply-To: <20200709020629.91671-1-justin.he@arm.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 31 Jul 2020 08:28:58 -0700
-Message-ID: <CAPcyv4iqkuzyU_u+VW1nsaK7tiy+HJtUxLtgAxtfX0aXXcKhfA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] Fix and enable pmem as RAM device on arm64
-To:     Jia He <justin.he@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        David Hildenbrand <david@redhat.com>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Baoquan He <bhe@redhat.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org, Linux-sh <linux-sh@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kaly Xin <Kaly.Xin@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CA+V-a8u0dLJGP_1MXQYu2v6o55vBSxH49S3HRY=9gb2dcO8PnA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 7:06 PM Jia He <justin.he@arm.com> wrote:
->
-> This fixies a few issues when I tried to enable pmem as RAM device on arm64.
+Hi Prabhakar,
 
-What NVDIMM bus driver is being used in this case? The ACPI NFIT
-driver? I'm just looking to see if currently deployed
-phys_to_target_node() is sufficient, or if this is coming in a new
-driver?
+On Fri, Jul 31, 2020 at 02:18:12PM +0100, Lad, Prabhakar wrote:
+> On Fri, Jul 31, 2020 at 2:03 PM Sakari Ailus wrote:
+> > On Fri, Jul 31, 2020 at 10:24:46AM +0100, Lad Prabhakar wrote:
+> > > During testing this sensor on iW-RainboW-G21D-Qseven platform noticed the
+> > > capture worked only for first run and for subsequent runs it failed.
+> > >
+> > > This patch does the following in DVP mode:
+> > > 1: Enables data lines on power up
+> > > 2: Configures HVP lines on power up instead of configuring everytime on
+> > >    stream ON/OFF
+> > > 3: Disables MIPI interface.
+> > > 4: Puts the sensor in power down mode during stream OFF.
+> >
+> > Could you detail a little the underlying problem, the environment where it
+> > can be reproduced and how the patch addresses it, please?
+>
+> my bad.
+> 
+> > Are you using CSI-2 or the parallel interface, for instance?
+>
+> while using the sensor in parallel interface mode (DVP) 8-bit mode,
+> with rcar-vin bridge noticed the capture worked fine for the first run
+> (with yavta), but for subsequent runs the bridge driver waited for the
+> frame to be captured. Debugging further noticed the data lines were
+> enabled/disabled in stream on/off callback. But enabling the data
+> lines in startup (as done in the patch) fixed this issue.
+
+This looks like a hack though. We should disable the outputs somewhere,
+if not at stream off time, at least in ov5640_set_power(0). Leaving
+everything powered on will increase power consumption.
+
+This issue needs to be debugged further to understand what's going on,
+and a proper fix needs to then be submitted.
+
+> Without this patch I can confirm the i2c writes were happening in
+> stream on/off callback and the values were updated in the respective
+> register to enable/disable datalines. (I didn't find any information
+> relating to sequence of enabling the data lines in data sheet [1])
+> 
+> [1] https://cdn.sparkfun.com/datasheets/Sensors/LightImaging/OV5640_datasheet.pdf
+> 
+> > >
+> > > Fixes: f22996db44e2d ("media: ov5640: add support of DVP parallel interface")
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > > ---
+> > >  drivers/media/i2c/ov5640.c | 253 +++++++++++++++++++++------------------------
+> > >  1 file changed, 120 insertions(+), 133 deletions(-)
+> > >
+> > > diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+> > > index 2fe4a7a..ac305a5 100644
+> > > --- a/drivers/media/i2c/ov5640.c
+> > > +++ b/drivers/media/i2c/ov5640.c
+> > > @@ -274,7 +274,7 @@ static inline struct v4l2_subdev *ctrl_to_sd(struct v4l2_ctrl *ctrl)
+> > >  /* YUV422 UYVY VGA@30fps */
+> > >  static const struct reg_value ov5640_init_setting_30fps_VGA[] = {
+> > >       {0x3103, 0x11, 0, 0}, {0x3008, 0x82, 0, 5}, {0x3008, 0x42, 0, 0},
+> > > -     {0x3103, 0x03, 0, 0}, {0x3017, 0x00, 0, 0}, {0x3018, 0x00, 0, 0},
+> > > +     {0x3103, 0x03, 0, 0},
+> > >       {0x3630, 0x36, 0, 0},
+> > >       {0x3631, 0x0e, 0, 0}, {0x3632, 0xe2, 0, 0}, {0x3633, 0x12, 0, 0},
+> > >       {0x3621, 0xe0, 0, 0}, {0x3704, 0xa0, 0, 0}, {0x3703, 0x5a, 0, 0},
+> > > @@ -1210,96 +1210,7 @@ static int ov5640_set_autogain(struct ov5640_dev *sensor, bool on)
+> > >
+> > >  static int ov5640_set_stream_dvp(struct ov5640_dev *sensor, bool on)
+> > >  {
+> > > -     int ret;
+> > > -     unsigned int flags = sensor->ep.bus.parallel.flags;
+> > > -     u8 pclk_pol = 0;
+> > > -     u8 hsync_pol = 0;
+> > > -     u8 vsync_pol = 0;
+> > > -
+> > > -     /*
+> > > -      * Note about parallel port configuration.
+> > > -      *
+> > > -      * When configured in parallel mode, the OV5640 will
+> > > -      * output 10 bits data on DVP data lines [9:0].
+> > > -      * If only 8 bits data are wanted, the 8 bits data lines
+> > > -      * of the camera interface must be physically connected
+> > > -      * on the DVP data lines [9:2].
+> > > -      *
+> > > -      * Control lines polarity can be configured through
+> > > -      * devicetree endpoint control lines properties.
+> > > -      * If no endpoint control lines properties are set,
+> > > -      * polarity will be as below:
+> > > -      * - VSYNC:     active high
+> > > -      * - HREF:      active low
+> > > -      * - PCLK:      active low
+> > > -      */
+> > > -
+> > > -     if (on) {
+> > > -             /*
+> > > -              * configure parallel port control lines polarity
+> > > -              *
+> > > -              * POLARITY CTRL0
+> > > -              * - [5]:       PCLK polarity (0: active low, 1: active high)
+> > > -              * - [1]:       HREF polarity (0: active low, 1: active high)
+> > > -              * - [0]:       VSYNC polarity (mismatch here between
+> > > -              *              datasheet and hardware, 0 is active high
+> > > -              *              and 1 is active low...)
+> > > -              */
+> > > -             if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
+> > > -                     pclk_pol = 1;
+> > > -             if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
+> > > -                     hsync_pol = 1;
+> > > -             if (flags & V4L2_MBUS_VSYNC_ACTIVE_LOW)
+> > > -                     vsync_pol = 1;
+> > > -
+> > > -             ret = ov5640_write_reg(sensor,
+> > > -                                    OV5640_REG_POLARITY_CTRL00,
+> > > -                                    (pclk_pol << 5) |
+> > > -                                    (hsync_pol << 1) |
+> > > -                                    vsync_pol);
+> > > -
+> > > -             if (ret)
+> > > -                     return ret;
+> > > -     }
+> > > -
+> > > -     /*
+> > > -      * powerdown MIPI TX/RX PHY & disable MIPI
+> > > -      *
+> > > -      * MIPI CONTROL 00
+> > > -      * 4:    PWDN PHY TX
+> > > -      * 3:    PWDN PHY RX
+> > > -      * 2:    MIPI enable
+> > > -      */
+> > > -     ret = ov5640_write_reg(sensor,
+> > > -                            OV5640_REG_IO_MIPI_CTRL00, on ? 0x18 : 0);
+> > > -     if (ret)
+> > > -             return ret;
+> > > -
+> > > -     /*
+> > > -      * enable VSYNC/HREF/PCLK DVP control lines
+> > > -      * & D[9:6] DVP data lines
+> > > -      *
+> > > -      * PAD OUTPUT ENABLE 01
+> > > -      * - 6:         VSYNC output enable
+> > > -      * - 5:         HREF output enable
+> > > -      * - 4:         PCLK output enable
+> > > -      * - [3:0]:     D[9:6] output enable
+> > > -      */
+> > > -     ret = ov5640_write_reg(sensor,
+> > > -                            OV5640_REG_PAD_OUTPUT_ENABLE01,
+> > > -                            on ? 0x7f : 0);
+> > > -     if (ret)
+> > > -             return ret;
+> > > -
+> > > -     /*
+> > > -      * enable D[5:0] DVP data lines
+> > > -      *
+> > > -      * PAD OUTPUT ENABLE 02
+> > > -      * - [7:2]:     D[5:0] output enable
+> > > -      */
+> > > -     return ov5640_write_reg(sensor,
+> > > -                             OV5640_REG_PAD_OUTPUT_ENABLE02,
+> > > -                             on ? 0xfc : 0);
+> > > +     return ov5640_write_reg(sensor, OV5640_REG_SYS_CTRL0, on ? 0x2 : 0x42);
+> > >  }
+> > >
+> > >  static int ov5640_set_stream_mipi(struct ov5640_dev *sensor, bool on)
+> > > @@ -2003,6 +1914,10 @@ static void ov5640_set_power_off(struct ov5640_dev *sensor)
+> > >
+> > >  static int ov5640_set_power(struct ov5640_dev *sensor, bool on)
+> > >  {
+> > > +     unsigned int flags = sensor->ep.bus.parallel.flags;
+> > > +     u8 pclk_pol = 0;
+> > > +     u8 hsync_pol = 0;
+> > > +     u8 vsync_pol = 0;
+> > >       int ret = 0;
+> > >
+> > >       if (on) {
+> > > @@ -2014,52 +1929,124 @@ static int ov5640_set_power(struct ov5640_dev *sensor, bool on)
+> > >               if (ret)
+> > >                       goto power_off;
+> > >
+> > > -             /* We're done here for DVP bus, while CSI-2 needs setup. */
+> > > -             if (sensor->ep.bus_type != V4L2_MBUS_CSI2_DPHY)
+> > > -                     return 0;
+> > > +             /* CSI-2 setup. */
+> > > +             if (sensor->ep.bus_type == V4L2_MBUS_CSI2_DPHY) {
+> > > +                     /*
+> > > +                      * Power up MIPI HS Tx and LS Rx; 2 data lanes mode
+> > > +                      *
+> > > +                      * 0x300e = 0x40
+> > > +                      * [7:5] = 010  : 2 data lanes mode (see FIXME note in
+> > > +                      *                "ov5640_set_stream_mipi()")
+> > > +                      * [4] = 0      : Power up MIPI HS Tx
+> > > +                      * [3] = 0      : Power up MIPI LS Rx
+> > > +                      * [2] = 0      : MIPI interface disabled
+> > > +                      */
+> > > +                     ret = ov5640_write_reg(sensor, OV5640_REG_IO_MIPI_CTRL00, 0x40);
+> >
+> > Please wrap lines over 80 if it can be reasonably one.
+>
+> checkpatch doesn't complain about it  (size is increased to 100)?
+
+-- 
+Regards,
+
+Laurent Pinchart
