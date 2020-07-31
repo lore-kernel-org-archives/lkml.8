@@ -2,223 +2,117 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8657DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A7932067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:45:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="jJvACsDT"
+	by mail.kernel.org (Postfix) with ESMTP id 6489E20829
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:46:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731727AbgGaHpq (ORCPT
+        id S1731749AbgGaHqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 03:45:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731678AbgGaHpp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 03:45:45 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D91DC061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 00:45:45 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BHzpt30HJz9sTC;
-        Fri, 31 Jul 2020 17:45:42 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1596181543;
-        bh=VEuy/KiA5hGn+AVseo5tlQxiC2CSqodE1h2fmmQal3M=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=jJvACsDTmDI9lVdq3hJFB2iU9IFVxWVFgw7BvuU8CKcAl1HiqJY6XSB2q2N4KwkX3
-         BmQ7CR+Wuo3qFlwQWdKoxvzZkaeEm1C6V4+nf7G0UQH3087jEoxn2FZr7aAvch6PfX
-         Q4OWRPk8cm0Bc2JNsybKxjRngWB8cqymCEhk+ZOhSnq2arAhxgAAZmmDIaFcyvJXXn
-         oKk7qJ3LyrZLM0gFTWhQU3urH8lAgorABFxQ0v0XlVGpXmzyp9mWoHKEoMsGm3iBq5
-         qtOUXpEKj6TIQacq174O4O+EGAsnk0/SYTc4BHO3SDEXKoyo6vNPJXyzLn4WNhiF5Z
-         FYuF2MkMJPdvA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Subject: Re: [PATCH v4 06/10] powerpc/smp: Generalize 2nd sched domain
-In-Reply-To: <20200727053230.19753-7-srikar@linux.vnet.ibm.com>
-References: <20200727053230.19753-1-srikar@linux.vnet.ibm.com> <20200727053230.19753-7-srikar@linux.vnet.ibm.com>
-Date:   Fri, 31 Jul 2020 17:45:37 +1000
-Message-ID: <875za45dr2.fsf@mpe.ellerman.id.au>
+        Fri, 31 Jul 2020 03:46:08 -0400
+Received: from mga11.intel.com ([192.55.52.93]:55461 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731670AbgGaHqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 03:46:08 -0400
+IronPort-SDR: P0pTLrC5X5xLd5ERjA6tMkhJlgyVWn8dX9hAHM5E2bzNjcQyMkqjjtm4dBmLl4AfbvxSPxGbaO
+ /7nx2oWJCxFQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="149570521"
+X-IronPort-AV: E=Sophos;i="5.75,417,1589266800"; 
+   d="scan'208";a="149570521"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 00:46:08 -0700
+IronPort-SDR: UpyMh/lK9an/C14G0mcuFItCYfbx42J98CpGfhEs5WwhxLcoUUULVYX086lVu3do3W9g9gCw7V
+ 4WngttTE+nFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,417,1589266800"; 
+   d="scan'208";a="323160568"
+Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
+  by fmsmga002.fm.intel.com with ESMTP; 31 Jul 2020 00:46:05 -0700
+From:   Like Xu <like.xu@linux.intel.com>
+To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, wei.w.wang@intel.com,
+        linux-kernel@vger.kernel.org, Like Xu <like.xu@linux.intel.com>
+Subject: [PATCH 0/6] Guest Architectural LBR Enabling
+Date:   Fri, 31 Jul 2020 15:43:56 +0800
+Message-Id: <20200731074402.8879-1-like.xu@linux.intel.com>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Srikar Dronamraju <srikar@linux.vnet.ibm.com> writes:
-> Currently "CACHE" domain happens to be the 2nd sched domain as per
-> powerpc_topology. This domain will collapse if cpumask of l2-cache is
-> same as SMT domain. However we could generalize this domain such that it
-> could mean either be a "CACHE" domain or a "BIGCORE" domain.
->
-> While setting up the "CACHE" domain, check if shared_cache is already
-> set.
+Hi All (especially developers who use perf in guest),
 
-PeterZ asked for some overview of what you're doing and why, you
-responded to his mail, but I was expecting to see that text incorporated
-here somewhere.
+Please help review the ssuccessor pacthes to enable Arch LBR on KVM.
+(The prerequisite v13 LBR patchset [2] seems more eager to get
+the attention of reviewers and maintainer).
 
-He also asked for some comments, which I would also like to see.
+LBR (Last Branch Records) enables recording of software path history
+by logging taken branches and other control flows within architectural
+registers. Intel CPUs have had model-specific LBRs for quite some time
+but this evolves them into an architectural feature now.
 
+The Architectural Last Branch Records (LBRS) is already publiced
+in the 319433-040 release of Intel® Architecture Instruction
+Set Extensions and Future Features Programming Reference [0].
 
-I'm also not clear why we want to rename it to "bigcore", that's not a
-commonly understood term, I don't think it's clear to new readers what
-it means.
+The main advantages for the Arch LBR users are [1]:
+- Faster context switching due to XSAVES support and faster reset of
+  LBR MSRs via the new DEPTH MSR
+- Faster LBR read for a non-PEBS event due to XSAVES support, which
+  lowers the overhead of the NMI handler. (For a PEBS event, the LBR
+  information is recorded in the PEBS records. There is no impact on
+  the PEBS event.)
+- Linux kernel can support the LBR features without knowing the model
+  number of the current CPU.
 
-Leaving it as the shared cache domain, and having a comment mentioning
-that "bigcores" share a cache, would be clearer I think.
+The Kernel 5.9 will enable Arch LBR on the host based on
+tip/perf/core, so this patchset happens to enable it on KVM as well.
 
-cheers
+Before 'git am' this patchset, you may need merge the latest
+tip/perf/core branch and the legacy LBR enabling patches
+[PATCH v13 00/10] Guest Last Branch Recording Enabling [2].
+or just wait for the above pacthes to be merged upstream.
 
+[0] https://software.intel.com/content/www/us/en/develop/download/
+intel-architecture-instruction-set-extensions-and-future-features-programming-reference.html
+[1] https://lore.kernel.org/lkml/1593780569-62993-1-git-send-email-kan.liang@linux.intel.com/
+[2] https://lore.kernel.org/kvm/20200726153229.27149-1-like.xu@linux.intel.com/
 
-> Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-> Cc: LKML <linux-kernel@vger.kernel.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Anton Blanchard <anton@ozlabs.org>
-> Cc: Oliver O'Halloran <oohall@gmail.com>
-> Cc: Nathan Lynch <nathanl@linux.ibm.com>
-> Cc: Michael Neuling <mikey@neuling.org>
-> Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Valentin Schneider <valentin.schneider@arm.com>
-> Cc: Jordan Niethe <jniethe5@gmail.com>
-> Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-> ---
-> Changelog v1 -> v2:
-> 	Moved shared_cache topology fixup to fixup_topology (Gautham)
->
->  arch/powerpc/kernel/smp.c | 48 +++++++++++++++++++++++++++------------
->  1 file changed, 34 insertions(+), 14 deletions(-)
->
-> diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-> index d997c7411664..3c5ccf6d2b1c 100644
-> --- a/arch/powerpc/kernel/smp.c
-> +++ b/arch/powerpc/kernel/smp.c
-> @@ -85,6 +85,14 @@ EXPORT_PER_CPU_SYMBOL(cpu_l2_cache_map);
->  EXPORT_PER_CPU_SYMBOL(cpu_core_map);
->  EXPORT_SYMBOL_GPL(has_big_cores);
->  
-> +enum {
-> +#ifdef CONFIG_SCHED_SMT
-> +	smt_idx,
-> +#endif
-> +	bigcore_idx,
-> +	die_idx,
-> +};
-> +
->  #define MAX_THREAD_LIST_SIZE	8
->  #define THREAD_GROUP_SHARE_L1   1
->  struct thread_groups {
-> @@ -851,13 +859,7 @@ static int powerpc_shared_cache_flags(void)
->   */
->  static const struct cpumask *shared_cache_mask(int cpu)
->  {
-> -	if (shared_caches)
-> -		return cpu_l2_cache_mask(cpu);
-> -
-> -	if (has_big_cores)
-> -		return cpu_smallcore_mask(cpu);
-> -
-> -	return per_cpu(cpu_sibling_map, cpu);
-> +	return per_cpu(cpu_l2_cache_map, cpu);
->  }
->  
->  #ifdef CONFIG_SCHED_SMT
-> @@ -867,11 +869,16 @@ static const struct cpumask *smallcore_smt_mask(int cpu)
->  }
->  #endif
->  
-> +static const struct cpumask *cpu_bigcore_mask(int cpu)
-> +{
-> +	return per_cpu(cpu_sibling_map, cpu);
-> +}
-> +
->  static struct sched_domain_topology_level powerpc_topology[] = {
->  #ifdef CONFIG_SCHED_SMT
->  	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
->  #endif
-> -	{ shared_cache_mask, powerpc_shared_cache_flags, SD_INIT_NAME(CACHE) },
-> +	{ cpu_bigcore_mask, SD_INIT_NAME(BIGCORE) },
->  	{ cpu_cpu_mask, SD_INIT_NAME(DIE) },
->  	{ NULL, },
->  };
-> @@ -1311,7 +1318,6 @@ static void add_cpu_to_masks(int cpu)
->  void start_secondary(void *unused)
->  {
->  	unsigned int cpu = smp_processor_id();
-> -	struct cpumask *(*sibling_mask)(int) = cpu_sibling_mask;
->  
->  	mmgrab(&init_mm);
->  	current->active_mm = &init_mm;
-> @@ -1337,14 +1343,20 @@ void start_secondary(void *unused)
->  	/* Update topology CPU masks */
->  	add_cpu_to_masks(cpu);
->  
-> -	if (has_big_cores)
-> -		sibling_mask = cpu_smallcore_mask;
->  	/*
->  	 * Check for any shared caches. Note that this must be done on a
->  	 * per-core basis because one core in the pair might be disabled.
->  	 */
-> -	if (!cpumask_equal(cpu_l2_cache_mask(cpu), sibling_mask(cpu)))
-> -		shared_caches = true;
-> +	if (!shared_caches) {
-> +		struct cpumask *(*sibling_mask)(int) = cpu_sibling_mask;
-> +		struct cpumask *mask = cpu_l2_cache_mask(cpu);
-> +
-> +		if (has_big_cores)
-> +			sibling_mask = cpu_smallcore_mask;
-> +
-> +		if (cpumask_weight(mask) > cpumask_weight(sibling_mask(cpu)))
-> +			shared_caches = true;
-> +	}
->  
->  	set_numa_node(numa_cpu_lookup_table[cpu]);
->  	set_numa_mem(local_memory_node(numa_cpu_lookup_table[cpu]));
-> @@ -1375,9 +1387,17 @@ static void fixup_topology(void)
->  #ifdef CONFIG_SCHED_SMT
->  	if (has_big_cores) {
->  		pr_info("Big cores detected but using small core scheduling\n");
-> -		powerpc_topology[0].mask = smallcore_smt_mask;
-> +		powerpc_topology[smt_idx].mask = smallcore_smt_mask;
->  	}
->  #endif
-> +	if (shared_caches) {
-> +		pr_info("Using shared cache scheduler topology\n");
-> +		powerpc_topology[bigcore_idx].mask = shared_cache_mask;
-> +		powerpc_topology[bigcore_idx].sd_flags = powerpc_shared_cache_flags;
-> +#ifdef CONFIG_SCHED_DEBUG
-> +		powerpc_topology[bigcore_idx].name = "CACHE";
-> +#endif
-> +	}
->  }
->  
->  void __init smp_cpus_done(unsigned int max_cpus)
-> -- 
-> 2.17.1
+Please check more details in each commit and feel free to comment.
+
+Like Xu (6):
+  KVM: vmx/pmu: Add VMCS field check before exposing LBR_FMT
+  perf/x86/lbr: Unify LBR_INFO registers exposure check condition
+  KVM: vmx/pmu: Add MSR_ARCH_LBR_DEPTH emulation for Arch LBR
+  KVM: vmx/pmu: Add MSR_ARCH_LBR_CTL emulation for Arch LBR
+  KVM: vmx/pmu: Add Arch LBR emulation and its VMCS field
+  KVM: x86: Expose Architectural LBR CPUID and its XSAVES bit
+
+ arch/x86/events/intel/lbr.c     |  4 +-
+ arch/x86/include/asm/vmx.h      |  4 ++
+ arch/x86/kvm/cpuid.c            | 19 +++++++++
+ arch/x86/kvm/vmx/capabilities.h | 16 ++++++-
+ arch/x86/kvm/vmx/pmu_intel.c    | 74 +++++++++++++++++++++++++++++++--
+ arch/x86/kvm/vmx/vmx.c          | 16 ++++++-
+ arch/x86/kvm/vmx/vmx.h          |  3 ++
+ arch/x86/kvm/x86.c              |  6 +++
+ 8 files changed, 133 insertions(+), 9 deletions(-)
+
+-- 
+2.21.3
+
