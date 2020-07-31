@@ -2,204 +2,119 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2437C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F93C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9099B208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:50:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zQwULhus"
+	by mail.kernel.org (Postfix) with ESMTP id C33042074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:50:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596189044;
+	bh=/jiA/q5cja07oCt1SA2eqhIYLj7c+MQazz7G83Tc3rk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T277lV+wQsRPIsJUonGNeENkCZY78jSONHzrxFVhgJsFnmX+SGRTdOgntRAfZYHDk
+	 ZusSDNSPAGRXmiSzGfk/qD5cP/SnTduhQ+wPESWxvPmcWx73MaBA5wlexhMLn/WrIe
+	 ObfogEYcIQ5hSW9vNNJrPErsZzZxjSfqAPFhlumY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732389AbgGaJuC (ORCPT
+        id S1732422AbgGaJun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:50:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35992 "EHLO
+        Fri, 31 Jul 2020 05:50:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732134AbgGaJuB (ORCPT
+        with ESMTP id S1732080AbgGaJum (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:50:01 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7845C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 02:50:00 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id r4so24453177wrx.9
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 02:50:00 -0700 (PDT)
+        Fri, 31 Jul 2020 05:50:42 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95938C061574;
+        Fri, 31 Jul 2020 02:50:42 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id i26so18632504edv.4;
+        Fri, 31 Jul 2020 02:50:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XsUj5dJ1FR2Bc9ImoyfwbG4Ha/qrqBvHQTZOtQzXmEk=;
-        b=zQwULhusTy+cAQlBYSM6YJcuw0u7QQdy/mS/rEln7H4F5XYn5Ri2B14cJaiqx34Izg
-         KbMCoSDi7PFisiwB5jQrrZLMT55+icTw4nWJ9otveFZOuFb5z7yoyvJ8+4WVwrzgJSYt
-         GWuNsdc8VOhzT/Z9M8bjtpZI0Nzvpst0Fa4SbiuFbiHSJa+azq51qrXtxkrG4Gf0On6W
-         jAmNCcX+0mkaPZYVSE5f6ipC9t9WAAArRV9nl28gYNeAl42xus3+PT61QDPDlodT6FcV
-         nAw9WrmEDqAVzUaoWfuC6ApD3SaRjA13mmZskwskQ4/bvpBtIKXDG5b0xBM6iAOd1LMC
-         GmVw==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lN+Mx9aay7XP6owIiPIJdXITUl7rrQzYabhazGVQjB0=;
+        b=ERbE6A9+P9+sSZ5wog7WqOft6HDRUa1ZhGf4ZRjvaukvzVMRiUG28jyK2OCATqS6vK
+         NynZHCEDk2WZfmgXg+9UODifR4aNWeRzWSETatwKFKbTvGZGAhJpJJvBmB+eWDS4XSvv
+         4m2TrTKavdk1bEoKtgXC4+gJN67nnzpMvYYD8nfxNeBOhgPin0ioekSH+iNhWHQwET7p
+         gEWMqY03497GbhJoll3sZPdOKdDJ6MHRcQgR/UYC89VH471VKCcwhOqsAPUG97UUCVNk
+         /CMqfajIFl17v4iLIuppw/hYL4DGSJqDUq0jHBHflk1ew6KvfARh+Hv2ug5LcXuDSSL3
+         MdNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XsUj5dJ1FR2Bc9ImoyfwbG4Ha/qrqBvHQTZOtQzXmEk=;
-        b=TtbaGEcKCGvUdmY5XjY3EwP7zAVVM/iQduWYz5EJY41mv7P7oZmwNbf6BuchIz/lfv
-         Hpd09qawZLQtaU5Xagj84BuSN6IlSCCILUK3VIayyFFm3eYTSSJy15TbwpJR0t9k0dlh
-         mWupOQCVzFJeAAJKo7V8e1jBsrQKgQbQdGQ8bya3x5va+jApS6PeVMi4whKvq4twD9O6
-         heg/EkzHrLorp6n2QMt0k1o5f7lNaQArpxxwC87VlKhNt5mqREmToMx02TrpufnMrR5n
-         UnpxUevojtI8nA6Lr0+90qnllufVMVUneHqtHefjiInksr8OEval9vAPeLAmNMYnTclE
-         RH1w==
-X-Gm-Message-State: AOAM533R1oaWFwPjztACt8a1av49yLDDupQs4BhsKN/pKGbu2zFCCID4
-        iIXAht6PNy5R9jhO6ftzr9l98w==
-X-Google-Smtp-Source: ABdhPJySMoScYKBGOYCUQxI4+2uSPanbl2NvXCIiS2eiXzkTOaPcme6XAPVzHmhBksVISONvp3UQfA==
-X-Received: by 2002:a5d:6641:: with SMTP id f1mr2733793wrw.307.1596188999660;
-        Fri, 31 Jul 2020 02:49:59 -0700 (PDT)
-Received: from [192.168.1.9] ([195.24.90.54])
-        by smtp.googlemail.com with ESMTPSA id z127sm12754152wme.44.2020.07.31.02.49.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jul 2020 02:49:58 -0700 (PDT)
-Subject: Re: [PATCH 1/2] firmware: qcom_scm: Add memory protect virtual
- address ranges
-To:     Elliot Berman <eberman@codeaurora.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-References: <20200709115829.8194-1-stanimir.varbanov@linaro.org>
- <20200709115829.8194-2-stanimir.varbanov@linaro.org>
- <33a63665-2f75-1b58-8a0c-3b0a8979fb85@linaro.org>
- <46632fb9-e07e-fa40-5f13-fb45b4014e03@codeaurora.org>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <08538e8e-8558-66af-8120-279530ab158c@linaro.org>
-Date:   Fri, 31 Jul 2020 12:49:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=lN+Mx9aay7XP6owIiPIJdXITUl7rrQzYabhazGVQjB0=;
+        b=FBR0V0HhLG/vVwItl8ztq5iIi0O7zLHv699mCaZWSF/BlEICCz9eJc1VDMYIOfn1Xw
+         ABzGxw5lxfM8/hqfeh7xbNai4Ngro05SvwRhkSNLt4776olNu1chaiMZEilcyDBBTSKM
+         k+21hqP+IYrIaG83LRx7MQYR39Exp07aBcyhkInrfVZxzevEcnwnNkvV8KzmykCD0QQd
+         lbbUhfnVxYT5o49E9SV9r8TosGZK3SGE0URIvGQKjskzsSJbr3bh9ufCr0q1lx376s51
+         aIUAPbHAzNdilyEMNhcenFpfXaEpE+xPvQTxSZrh0eXjrvtIFVYq17pN0lIbf1lhzF+n
+         2Hag==
+X-Gm-Message-State: AOAM53317dZE4nzdH2SqLruQ8neOaGAe/LUL0feo6BCXUk8umayFZMlI
+        kgZp64wAf8m66O71+2DvW9LSnCCp
+X-Google-Smtp-Source: ABdhPJwmCNypLp/cJmGlfSoNI0jIRCvhxWxBZSth46gRORVwLKzhFrx+wasLhUi3axTtV6zM6AeCyw==
+X-Received: by 2002:a05:6402:1057:: with SMTP id e23mr3052058edu.11.1596189041336;
+        Fri, 31 Jul 2020 02:50:41 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id ov32sm1100890ejb.102.2020.07.31.02.50.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 02:50:40 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 11:50:38 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Nick Terrell <nickrterrell@gmail.com>,
+        Adam Borowski <kilobyte@angband.pl>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        Patrick Williams <patrick@stwcx.xyz>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Norbert Lange <nolange79@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alex Xu <alex_y_xu@yahoo.ca>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Terrell <terrelln@fb.com>
+Subject: Re: [PATCH v10 7/8] .gitignore: add ZSTD-compressed files
+Message-ID: <20200731095038.GA15126@gmail.com>
+References: <20200730190841.2071656-1-nickrterrell@gmail.com>
+ <20200730190841.2071656-8-nickrterrell@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <46632fb9-e07e-fa40-5f13-fb45b4014e03@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730190841.2071656-8-nickrterrell@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Elliot,
 
-Thanks for the comments!
+* Nick Terrell <nickrterrell@gmail.com> wrote:
 
-On 7/29/20 8:15 PM, Elliot Berman wrote:
-> ++
+> From: Adam Borowski <kilobyte@angband.pl>
 > 
-> On 7/24/2020 8:04 AM, Stanimir Varbanov wrote:
->> Hi,
->>
->> Gentle ping for review.
->>
->> On 7/9/20 2:58 PM, Stanimir Varbanov wrote:
->>> This adds a new SCM memprotect command to set virtual address ranges.
->>>
->>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
->>> ---
->>>  drivers/firmware/qcom_scm.c | 24 ++++++++++++++++++++++++
->>>  drivers/firmware/qcom_scm.h |  1 +
->>>  include/linux/qcom_scm.h    |  8 +++++++-
->>>  3 files changed, 32 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
->>> index 0e7233a20f34..a73870255c2e 100644
->>> --- a/drivers/firmware/qcom_scm.c
->>> +++ b/drivers/firmware/qcom_scm.c
->>> @@ -864,6 +864,30 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
->>>  }
->>>  EXPORT_SYMBOL(qcom_scm_assign_mem);
->>>  
->>> +int qcom_scm_mem_protect_video_var(u32 cp_start, u32 cp_size,
->>> +				   u32 cp_nonpixel_start,
->>> +				   u32 cp_nonpixel_size)
->>> +{
->>> +	int ret;
->>> +	struct qcom_scm_desc desc = {
->>> +		.svc = QCOM_SCM_SVC_MP,
->>> +		.cmd = QCOM_SCM_MP_VIDEO_VAR,
->>> +		.arginfo = QCOM_SCM_ARGS(4, QCOM_SCM_VAL, QCOM_SCM_VAL,
->>> +					 QCOM_SCM_VAL, QCOM_SCM_VAL),
->>> +		.args[0] = cp_start,
->>> +		.args[1] = cp_size,
->>> +		.args[2] = cp_nonpixel_start,
->>> +		.args[3] = cp_nonpixel_size,
->>> +		.owner = ARM_SMCCC_OWNER_SIP,
->>> +	};
->>> +	struct qcom_scm_res res;
->>> +
->>> +	ret = qcom_scm_call(__scm->dev, &desc, &res);
->>> +
->>> +	return ret ? : res.result[0];
->>> +}
->>> +EXPORT_SYMBOL(qcom_scm_mem_protect_video_var);
->>> +
+> For now, that's arch/x86/boot/compressed/vmlinux.bin.zst but probably more
+> will come, thus let's be consistent with all other compressors.
 > 
-> Small nit, can you bump the function above assign_mem? It would keep order aligned with
-> the macros in qcom_scm.h
+> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Nick Terrell <terrelln@fb.com>
+> Signed-off-by: Adam Borowski <kilobyte@angband.pl>
 
-Sure, I will do that.
+I presume Adam Borowski's Signed-off-by was intended to be added as 
+the first entry of the SOB chain?
 
-> 
->>>  /**
->>>   * qcom_scm_ocmem_lock_available() - is OCMEM lock/unlock interface available
->>>   */
->>> diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
->>> index d9ed670da222..14da834ac593 100644
->>> --- a/drivers/firmware/qcom_scm.h
->>> +++ b/drivers/firmware/qcom_scm.h
->>> @@ -97,6 +97,7 @@ extern int scm_legacy_call(struct device *dev, const struct qcom_scm_desc *desc,
->>>  #define QCOM_SCM_MP_RESTORE_SEC_CFG		0x02
->>>  #define QCOM_SCM_MP_IOMMU_SECURE_PTBL_SIZE	0x03
->>>  #define QCOM_SCM_MP_IOMMU_SECURE_PTBL_INIT	0x04
->>> +#define QCOM_SCM_MP_VIDEO_VAR			0x08
->>>  #define QCOM_SCM_MP_ASSIGN			0x16
->>>  
->>>  #define QCOM_SCM_SVC_OCMEM		0x0f
->>> diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
->>> index 3d6a24697761..19b5188d17f4 100644
->>> --- a/include/linux/qcom_scm.h
->>> +++ b/include/linux/qcom_scm.h
->>> @@ -81,7 +81,9 @@ extern int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
->>>  			       unsigned int *src,
->>>  			       const struct qcom_scm_vmperm *newvm,
->>>  			       unsigned int dest_cnt);
->>> -
->>> +extern int qcom_scm_mem_protect_video_var(u32 cp_start, u32 cp_size,
->>> +					  u32 cp_nonpixel_start,
->>> +					  u32 cp_nonpixel_size);
-> 
-> Same here.
-> 
->>>  extern bool qcom_scm_ocmem_lock_available(void);
->>>  extern int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset,
->>>  			       u32 size, u32 mode);
->>> @@ -131,6 +133,10 @@ static inline int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare)
->>>  static inline int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
->>>  		unsigned int *src, const struct qcom_scm_vmperm *newvm,
->>>  		unsigned int dest_cnt) { return -ENODEV; }
->>> +extern inline int qcom_scm_mem_protect_video_var(u32 cp_start, u32 cp_size,
->>> +						 u32 cp_nonpixel_start,
->>> +						 u32 cp_nonpixel_size)
->>> +		{ return -ENODEV; }
-> 
-> Same here.
-> 
->>>  
->>>  static inline bool qcom_scm_ocmem_lock_available(void) { return false; }
->>>  static inline int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset,
->>>
->>
-> 
+I've added it, please let me know if that's not OK.
 
--- 
-regards,
-Stan
+Thanks,
+
+	Ingo
