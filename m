@@ -2,133 +2,224 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B61C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555A4C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30DA02245C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F49C2245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:32:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q9Gcpkb5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732530AbgGaKbX convert rfc822-to-8bit (ORCPT
+        id S1732545AbgGaKca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 06:31:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52958 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732371AbgGaKbX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 06:31:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 4CD29AF95;
-        Fri, 31 Jul 2020 10:31:33 +0000 (UTC)
-Received: from localhost (brahms.olymp [local])
-        by brahms.olymp (OpenSMTPD) with ESMTPA id b5a0e791;
-        Fri, 31 Jul 2020 10:31:18 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.de>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: drm: list_add corruption followed by BUG (stack guard page was hit)
-Date:   Fri, 31 Jul 2020 11:31:18 +0100
-Message-ID: <87tuxof021.fsf@suse.de>
+        Fri, 31 Jul 2020 06:32:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42518 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732284AbgGaKc3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 06:32:29 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 018E6C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 03:32:29 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id p25so15487811vsg.4
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 03:32:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=KtukYjoQzTo5Uawi1f9Z99wCqsvjvWIajPsIH/DMHxU=;
+        b=Q9Gcpkb5/eDR2SCmKCxJFkRRneqgHXzgwpHaiC7GWF4iEP8Hx99StpyuOhd0dj5umY
+         CZREIEd0I9h57Hp+/QlV+inw0qI0V995N1w/5zYQV4TyKPoXscLxtOnnD0QQPDLpoQ8K
+         VtGf3Z2neeDdthloHxs6ZHqoeFW3MXnEDY9k8IsnEkfQ8oQ9vw+/DWcFoT5bzEBcQcuo
+         7K7gnnvg061qPpfIIkI9+3jRLLOXyDeCY4eBfVlSR9rEVqcfIjAL1ipVQ1SjtDR/WJsV
+         sChcwGQatRfxGeFLNvNW+LCPNkjzYbPrOzJnTWS3IDL7WNBEUsF0r8Pb7ERJIEF3hrtc
+         uCHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=KtukYjoQzTo5Uawi1f9Z99wCqsvjvWIajPsIH/DMHxU=;
+        b=QB9kh9iw03w1HtwsqEcS3AExEQu8jm8Ed/G5+H4VcbpA0xwsFVchCvvCTAlSpiJ7YZ
+         XC5H5Ba1F3qyd1BkucG7QkWvMzgPkDR42tyR7PUHBxB+kII7Qo75++v9/aBi+y4tW7cQ
+         Wk1qC8Y4mnMeq2FhkhdjrazFXrP27NFFATLrclfHsGd3N6b/Sw17rRf8wQMAGyq6f/yC
+         zOO5/R6eLaUyAWEUemoaXO9/RIic7fgMDjL28NBvdUfUV6pt2vlldiIl8QS3GC/TmhiU
+         QA5FjchKkf1sysQSlfqB9qeLiZEcXX7mLQNYwfKulRhZQFxs/LpBN7loV/HhI1CNIygl
+         4nrw==
+X-Gm-Message-State: AOAM532Eiivf38AO8PgTs6oI+sqrbk0MnF+tJXCkxK2+dA6N57EjLZxJ
+        0OZy3Bzhff4xfGWq5pnb5yz7Yzxjk3cr+8NLEYrOmw==
+X-Google-Smtp-Source: ABdhPJyjS3cHbdoEG+p1LSSdBqLLwHM10icJxLwEmHYWwEL7lQoQGqFzSuaT2pyDBdP2sObaHEGXBb2VKhKyLX1Vzv0=
+X-Received: by 2002:a67:f70c:: with SMTP id m12mr981520vso.238.1596191547952;
+ Fri, 31 Jul 2020 03:32:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8BIT
+References: <20200730074420.502923740@linuxfoundation.org>
+In-Reply-To: <20200730074420.502923740@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 31 Jul 2020 16:02:16 +0530
+Message-ID: <CA+G9fYvCPwwmF-k=Z9Z6P2KYrOMHurcORwa3RW2H1j6pq1QEDg@mail.gmail.com>
+Subject: Re: [PATCH 5.4 00/19] 5.4.55-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Basil Eljuse <Basil.Eljuse@arm.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Christoph Lameter <cl@linux.com>, Roman Gushchin <guro@fb.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        linux-mm <linux-mm@kvack.org>, Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Cgroups <cgroups@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LTP List <ltp@lists.linux.it>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On Thu, 30 Jul 2020 at 13:36, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.4.55 release.
+> There are 19 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 01 Aug 2020 07:44:05 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.55-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-I've just got the following WARNING followed by a BUG on rc7.  Maybe it's
-already a known issue, but here it is anyway.
+Results from Linaro=E2=80=99s test farm.
+Regressions on arm64 Juno-r2 device running LTP controllers-tests
 
-Cheers,
--- 
-Luis
+CONFIG_ARM64_64K_PAGES=3Dy
 
-[   38.001304] ------------[ cut here ]------------
-[   38.001312] list_add corruption. prev->next should be next (ffff8fe713397b88), but was 0000000000000000. (prev=ffff8fe715fb9140).
-[   38.001337] WARNING: CPU: 3 PID: 501 at lib/list_debug.c:26 __list_add_valid+0x4d/0x70
-[   38.001340] Modules linked in: cdc_ether(E) usbnet(E) r8152(E) mii(E) hid_generic(E) usbhid(E) snd_hda_codec_hdmi(E) iwlmvm(E) dell_rbtn(E) mac80211(E) libarc4(E) snd_hda_codec_realtek(E) x86_pkg_temp_thermal(E) intel_powerclamp(E) snd_hda_codec_generic(E) coretemp(E) mei_wdt(E) dell_laptop(E) kvm_intel(E) ledtrig_audio(E) intel_rapl_msr(E) dell_smm_hwmon(E) snd_hda_intel(E) kvm(E) uvcvideo(E) snd_intel_dspcfg(E) videobuf2_vmalloc(E) irqbypass(E) iwlwifi(E) videobuf2_memops(E) rapl(E) snd_hda_codec(E) videobuf2_v4l2(E) intel_cstate(E) dell_wmi(E) joydev(E) snd_hwdep(E) pcspkr(E) serio_raw(E) intel_uncore(E) dell_smbios(E) videobuf2_common(E) dcdbas(E) snd_hda_core(E) iTCO_wdt(E) snd_pcm(E) videodev(E) wmi_bmof(E) snd_timer(E) dell_wmi_descriptor(E) intel_wmi_thunderbolt(E) iTCO_vendor_support(E) mei_me(E) snd(E) cfg80211(E) soundcore(E) tpm_crb(E) mc(E) rfkill(E) mei(E) intel_pch_thermal(E) sg(E) processor_thermal_device(E) intel_rapl_common(E) intel_soc_dts_iosf(E) battery(E) tpm
- _tis(E)
-[   38.001397]  int3403_thermal(E) tpm_tis_core(E) tpm(E) dell_smo8800(E) intel_hid(E) evdev(E) rng_core(E) int3400_thermal(E) int3402_thermal(E) acpi_thermal_rel(E) int340x_thermal_zone(E) sparse_keymap(E) acpi_pad(E) ac(E) nft_counter(E) nft_ct(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E) i2c_dev(E) nf_tables(E) parport_pc(E) ppdev(E) nfnetlink(E) lp(E) parport(E) ip_tables(E) x_tables(E) autofs4(E) ext4(E) crc16(E) mbcache(E) jbd2(E) btrfs(E) blake2b_generic(E) xor(E) raid6_pq(E) libcrc32c(E) crc32c_generic(E) dm_crypt(E) cbc(E) encrypted_keys(E) dm_mod(E) sd_mod(E) t10_pi(E) rtsx_pci_sdmmc(E) crct10dif_pclmul(E) crc32_pclmul(E) crc32c_intel(E) ghash_clmulni_intel(E) mmc_core(E) aesni_intel(E) crypto_simd(E) cryptd(E) glue_helper(E) ahci(E) nouveau(E) i915(E) mxm_wmi(E) i2c_i801(E) i2c_smbus(E) libahci(E) ttm(E) i2c_algo_bit(E) rtsx_pci(E) xhci_pci(E) drm_kms_helper(E) intel_lpss_pci(E) libata(E) syscopyarea(E) intel_lpss(E) xhci_hcd(E) idma64(E) sysfillrect(E) virt_dma(
- E)
-[   38.001461]  sysimgblt(E) scsi_mod(E) fb_sys_fops(E) mfd_core(E) usbcore(E) usb_common(E) drm(E) fan(E) thermal(E) i2c_hid(E) hid(E) wmi(E) video(E) button(E)
-[   38.001482] CPU: 3 PID: 501 Comm: kworker/3:4 Tainted: G            E     5.8.0-rc7 #43
-[   38.001485] Hardware name: Dell Inc. Precision 5510/0N8J4R, BIOS 1.14.2 05/25/2020
-[   38.001513] Workqueue: events_long drm_dp_mst_link_probe_work [drm_kms_helper]
-[   38.001521] RIP: 0010:__list_add_valid+0x4d/0x70
-[   38.001527] Code: c3 4c 89 c1 48 c7 c7 98 34 ed af e8 7f 16 c9 ff 0f 0b 31 c0 c3 48 89 d1 4c 89 c6 4c 89 ca 48 c7 c7 e8 34 ed af e8 65 16 c9 ff <0f> 0b 31 c0 c3 48 89 f2 4c 89 c1 48 89 fe 48 c7 c7 38 35 ed af e8
-[   38.001530] RSP: 0018:ffffa47680417ca0 EFLAGS: 00010286
-[   38.001535] RAX: 0000000000000000 RBX: ffff8fe713397b88 RCX: 0000000000000027
-[   38.001538] RDX: 0000000000000027 RSI: 0000000000000096 RDI: ffff8fe71e197b68
-[   38.001541] RBP: ffff8fe7133977e8 R08: ffff8fe71e197b60 R09: 0000000000000084
-[   38.001544] R10: ffffa47680417b48 R11: ffffa47680417b4d R12: ffff8fe71869f800
-[   38.001547] R13: ffff8fe715fb9140 R14: ffff8fe71869f940 R15: ffff8fe713397b68
-[   38.001551] FS:  0000000000000000(0000) GS:ffff8fe71e180000(0000) knlGS:0000000000000000
-[   38.001555] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   38.001558] CR2: 00007f9e3f7159d0 CR3: 000000040e60a004 CR4: 00000000003606e0
-[   38.001561] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   38.001563] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   38.001566] Call Trace:
-[   38.001593]  drm_dp_queue_down_tx+0x5c/0x110 [drm_kms_helper]
-[   38.001604]  ? i2c_register_adapter+0x1d0/0x390
-[   38.001627]  drm_dp_send_enum_path_resources+0x54/0x120 [drm_kms_helper]
-[   38.001650]  drm_dp_send_link_address+0x682/0x990 [drm_kms_helper]
-[   38.001657]  ? prepare_to_wait_event+0x7e/0x150
-[   38.001661]  ? finish_wait+0x3f/0x80
-[   38.001684]  drm_dp_check_and_send_link_address+0xad/0xd0 [drm_kms_helper]
-[   38.001707]  drm_dp_mst_link_probe_work+0x94/0x180 [drm_kms_helper]
-[   38.001714]  process_one_work+0x1ae/0x370
-[   38.001720]  worker_thread+0x50/0x3a0
-[   38.001725]  ? process_one_work+0x370/0x370
-[   38.001729]  kthread+0x11b/0x140
-[   38.001734]  ? kthread_associate_blkcg+0x90/0x90
-[   38.001741]  ret_from_fork+0x22/0x30
-[   38.001747] ---[ end trace ca03f107384f1adc ]---
-[   38.001759] BUG: stack guard page was hit at 0000000062c9d455 (stack is 00000000e3f6f298..0000000086ee600f)
-[   38.001766] kernel stack overflow (page fault): 0000 [#1] SMP PTI
-[   38.001771] CPU: 3 PID: 501 Comm: kworker/3:4 Tainted: G        W   E     5.8.0-rc7 #43
-[   38.001774] Hardware name: Dell Inc. Precision 5510/0N8J4R, BIOS 1.14.2 05/25/2020
-[   38.001797] Workqueue: events_long drm_dp_mst_link_probe_work [drm_kms_helper]
-[   38.001820] RIP: 0010:process_single_tx_qlock+0x364/0x4d0 [drm_kms_helper]
-[   38.001826] Code: f8 49 89 54 00 f8 4c 89 c2 48 29 ca 48 01 d0 49 29 d7 48 83 e0 f8 48 83 f8 08 0f 82 16 ff ff ff 48 83 e0 f8 31 d2 49 8b 34 17 <48> 89 34 11 48 83 c2 08 48 39 c2 72 ef e9 fa fe ff ff c6 44 24 4e
-[   38.001829] RSP: 0018:ffffa47680417bd0 EFLAGS: 00010207
-[   38.001833] RAX: fffffffffffffff0 RBX: 00000000fffffffc RCX: ffffa47680417c28
-[   38.001835] RDX: 00000000000003d8 RSI: 0000000000000000 RDI: ffffa47680417c20
-[   38.001838] RBP: ffff8fe715fb9000 R08: ffffa47680417c23 R09: 000000000000000a
-[   38.001841] R10: 0000000000000002 R11: 0000000000000001 R12: ffff8fe7133977e8
-[   38.001843] R13: 0000000000000000 R14: 0000000000000003 R15: ffff8fe715fb9009
-[   38.001847] FS:  0000000000000000(0000) GS:ffff8fe71e180000(0000) knlGS:0000000000000000
-[   38.001850] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   38.001853] CR2: ffffa47680418000 CR3: 000000040e60a004 CR4: 00000000003606e0
-[   38.001856] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   38.001858] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   38.001860] Call Trace:
-[   38.001871]  ? asm_exc_invalid_op+0x12/0x20
-[   38.001885] Modules linked in: cdc_ether(E) usbnet(E) r8152(E) mii(E) hid_generic(E) usbhid(E) snd_hda_codec_hdmi(E) iwlmvm(E) dell_rbtn(E) mac80211(E) libarc4(E) snd_hda_codec_realtek(E) x86_pkg_temp_thermal(E) intel_powerclamp(E) snd_hda_codec_generic(E) coretemp(E) mei_wdt(E) dell_laptop(E) kvm_intel(E) ledtrig_audio(E) intel_rapl_msr(E) dell_smm_hwmon(E) snd_hda_intel(E) kvm(E) uvcvideo(E) snd_intel_dspcfg(E) videobuf2_vmalloc(E) irqbypass(E) iwlwifi(E) videobuf2_memops(E) rapl(E) snd_hda_codec(E) videobuf2_v4l2(E) intel_cstate(E) dell_wmi(E) joydev(E) snd_hwdep(E) pcspkr(E) serio_raw(E) intel_uncore(E) dell_smbios(E) videobuf2_common(E) dcdbas(E) snd_hda_core(E) iTCO_wdt(E) snd_pcm(E) videodev(E) wmi_bmof(E) snd_timer(E) dell_wmi_descriptor(E) intel_wmi_thunderbolt(E) iTCO_vendor_support(E) mei_me(E) snd(E) cfg80211(E) soundcore(E) tpm_crb(E) mc(E) rfkill(E) mei(E) intel_pch_thermal(E) sg(E) processor_thermal_device(E) intel_rapl_common(E) intel_soc_dts_iosf(E) battery(E) tpm
- _tis(E)
-[   38.001934]  int3403_thermal(E) tpm_tis_core(E) tpm(E) dell_smo8800(E) intel_hid(E) evdev(E) rng_core(E) int3400_thermal(E) int3402_thermal(E) acpi_thermal_rel(E) int340x_thermal_zone(E) sparse_keymap(E) acpi_pad(E) ac(E) nft_counter(E) nft_ct(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E) i2c_dev(E) nf_tables(E) parport_pc(E) ppdev(E) nfnetlink(E) lp(E) parport(E) ip_tables(E) x_tables(E) autofs4(E) ext4(E) crc16(E) mbcache(E) jbd2(E) btrfs(E) blake2b_generic(E) xor(E) raid6_pq(E) libcrc32c(E) crc32c_generic(E) dm_crypt(E) cbc(E) encrypted_keys(E) dm_mod(E) sd_mod(E) t10_pi(E) rtsx_pci_sdmmc(E) crct10dif_pclmul(E) crc32_pclmul(E) crc32c_intel(E) ghash_clmulni_intel(E) mmc_core(E) aesni_intel(E) crypto_simd(E) cryptd(E) glue_helper(E) ahci(E) nouveau(E) i915(E) mxm_wmi(E) i2c_i801(E) i2c_smbus(E) libahci(E) ttm(E) i2c_algo_bit(E) rtsx_pci(E) xhci_pci(E) drm_kms_helper(E) intel_lpss_pci(E) libata(E) syscopyarea(E) intel_lpss(E) xhci_hcd(E) idma64(E) sysfillrect(E) virt_dma(
- E)
-[   38.001990]  sysimgblt(E) scsi_mod(E) fb_sys_fops(E) mfd_core(E) usbcore(E) usb_common(E) drm(E) fan(E) thermal(E) i2c_hid(E) hid(E) wmi(E) video(E) button(E)
-[   38.002008] ---[ end trace ca03f107384f1add ]---
-[   38.002031] RIP: 0010:process_single_tx_qlock+0x364/0x4d0 [drm_kms_helper]
-[   38.002036] Code: f8 49 89 54 00 f8 4c 89 c2 48 29 ca 48 01 d0 49 29 d7 48 83 e0 f8 48 83 f8 08 0f 82 16 ff ff ff 48 83 e0 f8 31 d2 49 8b 34 17 <48> 89 34 11 48 83 c2 08 48 39 c2 72 ef e9 fa fe ff ff c6 44 24 4e
-[   38.002039] RSP: 0018:ffffa47680417bd0 EFLAGS: 00010207
-[   38.002042] RAX: fffffffffffffff0 RBX: 00000000fffffffc RCX: ffffa47680417c28
-[   38.002045] RDX: 00000000000003d8 RSI: 0000000000000000 RDI: ffffa47680417c20
-[   38.002048] RBP: ffff8fe715fb9000 R08: ffffa47680417c23 R09: 000000000000000a
-[   38.002051] R10: 0000000000000002 R11: 0000000000000001 R12: ffff8fe7133977e8
-[   38.002053] R13: 0000000000000000 R14: 0000000000000003 R15: ffff8fe715fb9009
-[   38.002057] FS:  0000000000000000(0000) GS:ffff8fe71e180000(0000) knlGS:0000000000000000
-[   38.002060] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   38.002062] CR2: ffffa47680418000 CR3: 000000040e60a004 CR4: 00000000003606e0
-[   38.002065] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   38.002068] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Unable to handle kernel paging request at virtual address dead000000000108
+[dead000000000108] address between user and kernel address ranges
+Internal error: Oops: 96000044 [#1] PREEMPT SMP
+
+pc : get_page_from_freelist+0xa64/0x1030
+lr : get_page_from_freelist+0x9c4/0x1030
+
+We are trying to reproduce this kernel panic and trying to narrow down to
+specific test cases.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.4.55-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.4.y
+git commit: 6666ca784e9e47288180a15935061d88debc9e4b
+git describe: v5.4.54-20-g6666ca784e9e
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
+ld/v5.4.54-20-g6666ca784e9e
+
+arm64 kernel config and details:
+config: https://builds.tuxbuild.com/iIsSV-1_WtyDUTe88iKaqw/kernel.config
+vmlinux: https://builds.tuxbuild.com/iIsSV-1_WtyDUTe88iKaqw/vmlinux.xz
+System.map: https://builds.tuxbuild.com/iIsSV-1_WtyDUTe88iKaqw/System.map
+
+steps to reproduce:
+- boot juno-r2 with 64k page size config
+- run ltp controllers
+  # cd /opt/ltp
+  # ./runltp -f controllers
+
+memcg_process: shmget() failed: Invalid argument
+[  248.372285] Unable to handle kernel paging request at virtual
+address dead000000000108
+[  248.380223] Mem abort info:
+[  248.383015]   ESR =3D 0x96000044
+[  248.386071]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+[  248.391387]   SET =3D 0, FnV =3D 0
+[  248.394440]   EA =3D 0, S1PTW =3D 0
+[  248.397580] Data abort info:
+[  248.400460]   ISV =3D 0, ISS =3D 0x00000044
+[  248.404296]   CM =3D 0, WnR =3D 1
+[  248.407264] [dead000000000108] address between user and kernel address r=
+anges
+[  248.414410] Internal error: Oops: 96000044 [#1] PREEMPT SMP
+[  248.419989] Modules linked in: tda998x drm_kms_helper drm crct10dif_ce f=
+use
+[  248.426975] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.55-rc1 #1
+[  248.433249] Hardware name: ARM Juno development board (r2) (DT)
+[  248.439178] pstate: a0000085 (NzCv daIf -PAN -UAO)
+[  248.443984] pc : get_page_from_freelist+0xa64/0x1030
+[  248.448955] lr : get_page_from_freelist+0x9c4/0x1030
+[  248.453923] sp : ffff80001000fbb0
+[  248.457238] x29: ffff80001000fbb0 x28: ffff00097fdbfe48
+[  248.462557] x27: 0000000000000010 x26: 0000000000000000
+[  248.467877] x25: ffff00097feabdc0 x24: 0000000000000000
+[  248.473196] x23: 0000000000000000 x22: 0000000000000000
+[  248.478515] x21: 0000fff680154180 x20: ffff00097fdbfe38
+[  248.483835] x19: 0000000000000000 x18: 0000000000000000
+[  248.489154] x17: 0000000000000000 x16: 0000000000000000
+[  248.494473] x15: 0000000000000000 x14: 0000000000000000
+[  248.499792] x13: 0000000000000000 x12: 0000000034d4d91d
+[  248.505111] x11: 0000000000000000 x10: 0000000000000000
+[  248.510430] x9 : ffff80096e790000 x8 : ffffffffffffff40
+[  248.515749] x7 : 0000000000000000 x6 : ffffffe002308b48
+[  248.521068] x5 : ffff00097fdbfe38 x4 : dead000000000100
+[  248.526387] x3 : 0000000000000000 x2 : 0000000000000000
+[  248.531706] x1 : 0000000000000000 x0 : ffffffe002308b40
+[  248.537026] Call trace:
+[  248.539475]  get_page_from_freelist+0xa64/0x1030
+[  248.544099]  __alloc_pages_nodemask+0x144/0x280
+[  248.548635]  page_frag_alloc+0x70/0x140
+[  248.552479]  __netdev_alloc_skb+0x158/0x188
+[  248.556667]  smsc911x_poll+0x90/0x268
+[  248.560342]  net_rx_action+0x114/0x340
+[  248.564096]  __do_softirq+0x120/0x25c
+[  248.567766]  irq_exit+0xb8/0xd8
+[  248.570910]  __handle_domain_irq+0x64/0xb8
+[  248.575010]  gic_handle_irq+0x50/0xa8
+[  248.578675]  el1_irq+0xb8/0x180
+[  248.581820]  tick_check_broadcast_expired+0x34/0x40
+[  248.586705]  do_idle+0x8c/0x280
+[  248.589848]  cpu_startup_entry+0x20/0x80
+[  248.593777]  rest_init+0xd4/0xe0
+[  248.597010]  arch_call_rest_init+0xc/0x14
+[  248.601024]  start_kernel+0x418/0x44c
+[  248.604693] Code: 54000a00 f10020c0 540009c0 a9400cc4 (f9000483)
+[  248.610803] ---[ end trace 358f513e280e4dfd ]---
+[  248.615426] Kernel panic - not syncing: Fatal exception in interrupt
+[  248.621789] SMP: stopping secondary CPUs
+[  249.740564] SMP: failed to stop secondary CPUs 0-2
+[  249.745359] Kernel Offset: disabled
+[  249.748849] CPU features: 0x0002,24006000
+[  249.752859] Memory Limit: none
+[  249.755921] ---[ end Kernel panic - not syncing: Fatal exception in
+interrupt ]---
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
