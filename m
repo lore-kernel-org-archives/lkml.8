@@ -2,29 +2,30 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4081C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA3C8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AED63205CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88A7C20791
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:14:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgGaXOA (ORCPT
+        id S1727035AbgGaXOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 19:14:00 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51760 "EHLO huawei.com"
+        Fri, 31 Jul 2020 19:14:03 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51780 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726347AbgGaXOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 19:14:00 -0400
+        id S1726471AbgGaXOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 19:14:01 -0400
 Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 8A401851346B47E39B2E;
+        by Forcepoint Email with ESMTP id 91941834FCF5FDC6B1C4;
         Sat,  1 Aug 2020 07:13:57 +0800 (CST)
 Received: from SWX921481.china.huawei.com (10.126.203.125) by
  DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 1 Aug 2020 07:13:47 +0800
+ 14.3.487.0; Sat, 1 Aug 2020 07:13:51 +0800
 From:   Barry Song <song.bao.hua@hisilicon.com>
 To:     <hch@lst.de>, <m.szyprowski@samsung.com>, <robin.murphy@arm.com>,
         <will@kernel.org>, <ganapatrao.kulkarni@cavium.com>,
@@ -32,11 +33,18 @@ To:     <hch@lst.de>, <m.szyprowski@samsung.com>, <robin.murphy@arm.com>,
 CC:     <iommu@lists.linux-foundation.org>, <linuxarm@huawei.com>,
         <linux-arm-kernel@lists.infradead.org>, <huangdaode@huawei.com>,
         <linux-kernel@vger.kernel.org>, <prime.zeng@hisilicon.com>,
-        Barry Song <song.bao.hua@hisilicon.com>
-Subject: [PATCH v5 0/2] make dma_alloc_coherent NUMA-aware by per-NUMA CMA
-Date:   Sat, 1 Aug 2020 11:11:17 +1200
-Message-ID: <20200731231119.10416-1-song.bao.hua@hisilicon.com>
+        Barry Song <song.bao.hua@hisilicon.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Steve Capper <steve.capper@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Mike Rapoport" <rppt@linux.ibm.com>
+Subject: [PATCH v5 1/2] dma-contiguous: provide the ability to reserve per-numa CMA
+Date:   Sat, 1 Aug 2020 11:11:18 +1200
+Message-ID: <20200731231119.10416-2-song.bao.hua@hisilicon.com>
 X-Mailer: git-send-email 2.21.0.windows.1
+In-Reply-To: <20200731231119.10416-1-song.bao.hua@hisilicon.com>
+References: <20200731231119.10416-1-song.bao.hua@hisilicon.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -47,34 +55,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ganapatrao Kulkarni has put some effort on making arm-smmu-v3 use local
-memory to save command queues[1]. I also did similar job in patch
-"iommu/arm-smmu-v3: allocate the memory of queues in local numa node"
-[2] while not realizing Ganapatrao has done that before.
+Right now, drivers like ARM SMMU are using dma_alloc_coherent() to get
+coherent DMA buffers to save their command queues and page tables. As
+there is only one default CMA in the whole system, SMMUs on nodes other
+than node0 will get remote memory. This leads to significant latency.
 
-But it seems it is much better to make dma_alloc_coherent() to be
-inherently NUMA-aware on NUMA-capable systems.
+This patch provides per-numa CMA so that drivers like SMMU can get local
+memory. Tests show localizing CMA can decrease dma_unmap latency much.
+For instance, before this patch, SMMU on node2  has to wait for more than
+560ns for the completion of CMD_SYNC in an empty command queue; with this
+patch, it needs 240ns only.
 
-Right now, smmu is using dma_alloc_coherent() to get memory to save queues
-and tables. Typically, on ARM64 server, there is a default CMA located at
-node0, which could be far away from node2, node3 etc.
-Saving queues and tables remotely will increase the latency of ARM SMMU
-significantly. For example, when SMMU is at node2 and the default global
-CMA is at node0, after sending a CMD_SYNC in an empty command queue, we
-have to wait more than 550ns for the completion of the command CMD_SYNC.
-However, if we save them locally, we only need to wait for 240ns.
+A positive side effect of this patch would be improving performance even
+further for those users who are worried about performance more than DMA
+security and use iommu.passthrough=1 to skip IOMMU. With local CMA, all
+drivers can get local coherent DMA buffers.
 
-with per-numa CMA, smmu will get memory from local numa node to save command
-queues and page tables. that means dma_unmap latency will be shrunk much.
-
-Meanwhile, when iommu.passthrough is on, device drivers which call dma_
-alloc_coherent() will also get local memory and avoid the travel between
-numa nodes.
-
-[1] https://lists.linuxfoundation.org/pipermail/iommu/2017-October/024455.html
-[2] https://www.spinics.net/lists/iommu/msg44767.html
-
--v5:
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc: Steve Capper <steve.capper@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+---
+ -v5:
  refine code according to Christoph Hellwig's comments
  * remove Kconfig option for pernuma cma size;
  * add Kconfig option for pernuma cma enable;
@@ -83,65 +93,212 @@ numa nodes.
  I haven't removed the cma NULL check code in cma_alloc() as it requires
  a bundle of other changes. So I prefer to handle this issue separately.
 
--v4:
- * rebase on top of Christoph Hellwig's patch:
- [PATCH v2] dma-contiguous: cleanup dma_alloc_contiguous
- https://lore.kernel.org/linux-iommu/20200723120133.94105-1-hch@lst.de/
- * cleanup according to Christoph's comment
- * rebase on top of linux-next to avoid arch/arm64 conflicts
- * reserve cma by checking N_MEMORY rather than N_ONLINE
-
--v3:
-  * move to use page_to_nid() while freeing cma with respect to Robin's
-  comment, but this will only work after applying my below patch:
-  "mm/cma.c: use exact_nid true to fix possible per-numa cma leak"
-  https://marc.info/?l=linux-mm&m=159333034726647&w=2
-
-  * handle the case count <= 1 more properly according to Robin's
-  comment;
-
-  * add pernuma_cma parameter to support dynamic setting of per-numa
-  cma size;
-  ideally we can leverage the CMA_SIZE_MBYTES, CMA_SIZE_PERCENTAGE and
-  "cma=" kernel parameter and avoid a new paramter separately for per-
-  numa cma. Practically, it is really too complicated considering the
-  below problems:
-  (1) if we leverage the size of default numa for per-numa, we have to
-  avoid creating two cma with same size in node0 since default cma is
-  probably on node0.
-  (2) default cma can consider the address limitation for old devices
-  while per-numa cma doesn't support GFP_DMA and GFP_DMA32. all
-  allocations with limitation flags will fallback to default one.
-  (3) hard to apply CMA_SIZE_PERCENTAGE to per-numa. it is hard to
-  decide if the percentage should apply to the whole memory size
-  or only apply to the memory size of a specific numa node.
-  (4) default cma size has CMA_SIZE_SEL_MIN and CMA_SIZE_SEL_MAX, it
-  makes things even more complicated to per-numa cma.
-
-  I haven't figured out a good way to leverage the size of default cma
-  for per-numa cma. it seems a separate parameter for per-numa could
-  make life easier.
-
-  * move dma_pernuma_cma_reserve() after hugetlb_cma_reserve() to
-  reuse the comment before hugetlb_cma_reserve() with respect to
-  Robin's comment
-
--v2: 
-  * fix some issues reported by kernel test robot
-  * fallback to default cma while allocation fails in per-numa cma
-     free memory properly
-
-Barry Song (2):
-  dma-contiguous: provide the ability to reserve per-numa CMA
-  arm64: mm: reserve per-numa CMA to localize coherent dma buffers
-
  .../admin-guide/kernel-parameters.txt         |   9 ++
- arch/arm64/mm/init.c                          |   2 +
  include/linux/dma-contiguous.h                |   6 ++
  kernel/dma/Kconfig                            |  10 ++
  kernel/dma/contiguous.c                       | 100 ++++++++++++++++--
- 5 files changed, 117 insertions(+), 10 deletions(-)
+ 4 files changed, 115 insertions(+), 10 deletions(-)
 
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index fc81ece1b5aa..adad5e944600 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -599,6 +599,15 @@
+ 			altogether. For more information, see
+ 			include/linux/dma-contiguous.h
+ 
++	pernuma_cma=nn[MG]@[start[MG][-end[MG]]]
++			[ARM,X86,KNL]
++			Sets the size of kernel per-numa memory area for
++			contiguous memory allocations. A value of 0 disables
++			per-numa CMA altogether. DMA users on node nid will
++			first try to allocate buffer from the pernuma area
++			which is located in node nid, if the allocation fails,
++			they will fallback to the global default memory area.
++
+ 	cmo_free_hint=	[PPC] Format: { yes | no }
+ 			Specify whether pages are marked as being inactive
+ 			when they are freed.  This is used in CMO environments
+diff --git a/include/linux/dma-contiguous.h b/include/linux/dma-contiguous.h
+index 03f8e98e3bcc..fe55e004f1f4 100644
+--- a/include/linux/dma-contiguous.h
++++ b/include/linux/dma-contiguous.h
+@@ -171,6 +171,12 @@ static inline void dma_free_contiguous(struct device *dev, struct page *page,
+ 
+ #endif
+ 
++#ifdef CONFIG_DMA_PERNUMA_CMA
++void dma_pernuma_cma_reserve(void);
++#else
++static inline void dma_pernuma_cma_reserve(void) { }
++#endif
++
+ #endif
+ 
+ #endif
+diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
+index 5d18456b5f01..fc20b8f3ef44 100644
+--- a/kernel/dma/Kconfig
++++ b/kernel/dma/Kconfig
+@@ -118,6 +118,16 @@ config DMA_CMA
+ 	  If unsure, say "n".
+ 
+ if  DMA_CMA
++
++config DMA_PERNUMA_CMA
++	bool "Enable separate DMA Contiguous Memory Area for each NUMA Node"
++	help
++	  Enable this option to get pernuma CMA areas so that devices like
++	  ARM SMMU can get local memory by DMA coherent APIs.
++
++	  You can disable pernuma CMA by specifying "pernuma_cma=0" on the
++	  kernel's command line.
++
+ comment "Default contiguous memory area size:"
+ 
+ config CMA_SIZE_MBYTES
+diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
+index cff7e60968b9..67cdd2cb4949 100644
+--- a/kernel/dma/contiguous.c
++++ b/kernel/dma/contiguous.c
+@@ -69,6 +69,19 @@ static int __init early_cma(char *p)
+ }
+ early_param("cma", early_cma);
+ 
++#ifdef CONFIG_DMA_PERNUMA_CMA
++
++static struct cma *dma_contiguous_pernuma_area[MAX_NUMNODES];
++static phys_addr_t pernuma_size_bytes __initdata;
++
++static int __init early_pernuma_cma(char *p)
++{
++	pernuma_size_bytes = memparse(p, &p);
++	return 0;
++}
++early_param("pernuma_cma", early_pernuma_cma);
++#endif
++
+ #ifdef CONFIG_CMA_SIZE_PERCENTAGE
+ 
+ static phys_addr_t __init __maybe_unused cma_early_percent_memory(void)
+@@ -96,6 +109,34 @@ static inline __maybe_unused phys_addr_t cma_early_percent_memory(void)
+ 
+ #endif
+ 
++#ifdef CONFIG_DMA_PERNUMA_CMA
++void __init dma_pernuma_cma_reserve(void)
++{
++	int nid;
++
++	if (!pernuma_size_bytes)
++		return;
++
++	for_each_node_state(nid, N_MEMORY) {
++		int ret;
++		char name[20];
++		struct cma **cma = &dma_contiguous_pernuma_area[nid];
++
++		snprintf(name, sizeof(name), "pernuma%d", nid);
++		ret = cma_declare_contiguous_nid(0, pernuma_size_bytes, 0, 0,
++						 0, false, name, cma, nid);
++		if (ret) {
++			pr_warn("%s: reservation failed: err %d, node %d", __func__,
++				ret, nid);
++			continue;
++		}
++
++		pr_debug("%s: reserved %llu MiB on node %d\n", __func__,
++			(unsigned long long)pernuma_size_bytes / SZ_1M, nid);
++	}
++}
++#endif
++
+ /**
+  * dma_contiguous_reserve() - reserve area(s) for contiguous memory handling
+  * @limit: End address of the reserved memory (optional, 0 for any).
+@@ -228,23 +269,44 @@ static struct page *cma_alloc_aligned(struct cma *cma, size_t size, gfp_t gfp)
+  * @size:  Requested allocation size.
+  * @gfp:   Allocation flags.
+  *
+- * This function allocates contiguous memory buffer for specified device. It
+- * tries to use device specific contiguous memory area if available, or the
+- * default global one.
++ * tries to use device specific contiguous memory area if available, or it
++ * tries to use per-numa cma, if the allocation fails, it will fallback to
++ * try default global one.
+  *
+- * Note that it byapss one-page size of allocations from the global area as
+- * the addresses within one page are always contiguous, so there is no need
+- * to waste CMA pages for that kind; it also helps reduce fragmentations.
++ * Note that it bypass one-page size of allocations from the per-numa and
++ * global area as the addresses within one page are always contiguous, so
++ * there is no need to waste CMA pages for that kind; it also helps reduce
++ * fragmentations.
+  */
+ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+ {
++#ifdef CONFIG_DMA_PERNUMA_CMA
++	int nid = dev_to_node(dev);
++#endif
++
+ 	/* CMA can be used only in the context which permits sleeping */
+ 	if (!gfpflags_allow_blocking(gfp))
+ 		return NULL;
+ 	if (dev->cma_area)
+ 		return cma_alloc_aligned(dev->cma_area, size, gfp);
+-	if (size <= PAGE_SIZE || !dma_contiguous_default_area)
++	if (size <= PAGE_SIZE)
++		return NULL;
++
++#ifdef CONFIG_DMA_PERNUMA_CMA
++	if (nid != NUMA_NO_NODE && !(gfp & (GFP_DMA | GFP_DMA32))) {
++		struct cma *cma = dma_contiguous_pernuma_area[nid];
++		struct page *page;
++
++		if (cma) {
++			page = cma_alloc_aligned(cma, size, gfp);
++			if (page)
++				return page;
++		}
++	}
++#endif
++	if (!dma_contiguous_default_area)
+ 		return NULL;
++
+ 	return cma_alloc_aligned(dma_contiguous_default_area, size, gfp);
+ }
+ 
+@@ -261,9 +323,27 @@ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+  */
+ void dma_free_contiguous(struct device *dev, struct page *page, size_t size)
+ {
+-	if (!cma_release(dev_get_cma_area(dev), page,
+-			 PAGE_ALIGN(size) >> PAGE_SHIFT))
+-		__free_pages(page, get_order(size));
++	unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
++
++	/* if dev has its own cma, free page from there */
++	if (dev->cma_area) {
++		if (cma_release(dev->cma_area, page, count))
++			return;
++	} else {
++		/*
++		 * otherwise, page is from either per-numa cma or default cma
++		 */
++#ifdef CONFIG_DMA_PERNUMA_CMA
++		if (cma_release(dma_contiguous_pernuma_area[page_to_nid(page)],
++					page, count))
++			return;
++#endif
++		if (cma_release(dma_contiguous_default_area, page, count))
++			return;
++	}
++
++	/* not in any cma, free from buddy */
++	__free_pages(page, get_order(size));
+ }
+ 
+ /*
 -- 
 2.27.0
 
