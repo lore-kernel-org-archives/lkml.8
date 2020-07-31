@@ -2,183 +2,204 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A55C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2437C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3228D208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9099B208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:50:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zQwULhus"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732328AbgGaJt6 (ORCPT
+        id S1732389AbgGaJuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:49:58 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46216 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732134AbgGaJt5 (ORCPT
+        Fri, 31 Jul 2020 05:50:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35992 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732134AbgGaJuB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:49:57 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06V9Wx6V120616;
-        Fri, 31 Jul 2020 05:49:46 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32md1ywv47-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 31 Jul 2020 05:49:45 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06V9jZRh014321;
-        Fri, 31 Jul 2020 09:49:44 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 32gcy4q3pt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 31 Jul 2020 09:49:44 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06V9ngBC28312018
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 Jul 2020 09:49:42 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E48F0A405F;
-        Fri, 31 Jul 2020 09:49:41 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 79B90A4054;
-        Fri, 31 Jul 2020 09:49:39 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Fri, 31 Jul 2020 09:49:39 +0000 (GMT)
-Date:   Fri, 31 Jul 2020 15:19:38 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Subject: Re: [PATCH v4 08/10] powerpc/smp: Allocate cpumask only after
- searching thread group
-Message-ID: <20200731094938.GA18776@linux.vnet.ibm.com>
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20200727053230.19753-1-srikar@linux.vnet.ibm.com>
- <20200727053230.19753-9-srikar@linux.vnet.ibm.com>
- <87zh7g3yvk.fsf@mpe.ellerman.id.au>
+        Fri, 31 Jul 2020 05:50:01 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7845C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 02:50:00 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id r4so24453177wrx.9
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 02:50:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XsUj5dJ1FR2Bc9ImoyfwbG4Ha/qrqBvHQTZOtQzXmEk=;
+        b=zQwULhusTy+cAQlBYSM6YJcuw0u7QQdy/mS/rEln7H4F5XYn5Ri2B14cJaiqx34Izg
+         KbMCoSDi7PFisiwB5jQrrZLMT55+icTw4nWJ9otveFZOuFb5z7yoyvJ8+4WVwrzgJSYt
+         GWuNsdc8VOhzT/Z9M8bjtpZI0Nzvpst0Fa4SbiuFbiHSJa+azq51qrXtxkrG4Gf0On6W
+         jAmNCcX+0mkaPZYVSE5f6ipC9t9WAAArRV9nl28gYNeAl42xus3+PT61QDPDlodT6FcV
+         nAw9WrmEDqAVzUaoWfuC6ApD3SaRjA13mmZskwskQ4/bvpBtIKXDG5b0xBM6iAOd1LMC
+         GmVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XsUj5dJ1FR2Bc9ImoyfwbG4Ha/qrqBvHQTZOtQzXmEk=;
+        b=TtbaGEcKCGvUdmY5XjY3EwP7zAVVM/iQduWYz5EJY41mv7P7oZmwNbf6BuchIz/lfv
+         Hpd09qawZLQtaU5Xagj84BuSN6IlSCCILUK3VIayyFFm3eYTSSJy15TbwpJR0t9k0dlh
+         mWupOQCVzFJeAAJKo7V8e1jBsrQKgQbQdGQ8bya3x5va+jApS6PeVMi4whKvq4twD9O6
+         heg/EkzHrLorp6n2QMt0k1o5f7lNaQArpxxwC87VlKhNt5mqREmToMx02TrpufnMrR5n
+         UnpxUevojtI8nA6Lr0+90qnllufVMVUneHqtHefjiInksr8OEval9vAPeLAmNMYnTclE
+         RH1w==
+X-Gm-Message-State: AOAM533R1oaWFwPjztACt8a1av49yLDDupQs4BhsKN/pKGbu2zFCCID4
+        iIXAht6PNy5R9jhO6ftzr9l98w==
+X-Google-Smtp-Source: ABdhPJySMoScYKBGOYCUQxI4+2uSPanbl2NvXCIiS2eiXzkTOaPcme6XAPVzHmhBksVISONvp3UQfA==
+X-Received: by 2002:a5d:6641:: with SMTP id f1mr2733793wrw.307.1596188999660;
+        Fri, 31 Jul 2020 02:49:59 -0700 (PDT)
+Received: from [192.168.1.9] ([195.24.90.54])
+        by smtp.googlemail.com with ESMTPSA id z127sm12754152wme.44.2020.07.31.02.49.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jul 2020 02:49:58 -0700 (PDT)
+Subject: Re: [PATCH 1/2] firmware: qcom_scm: Add memory protect virtual
+ address ranges
+To:     Elliot Berman <eberman@codeaurora.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+References: <20200709115829.8194-1-stanimir.varbanov@linaro.org>
+ <20200709115829.8194-2-stanimir.varbanov@linaro.org>
+ <33a63665-2f75-1b58-8a0c-3b0a8979fb85@linaro.org>
+ <46632fb9-e07e-fa40-5f13-fb45b4014e03@codeaurora.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <08538e8e-8558-66af-8120-279530ab158c@linaro.org>
+Date:   Fri, 31 Jul 2020 12:49:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <87zh7g3yvk.fsf@mpe.ellerman.id.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-31_03:2020-07-31,2020-07-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- clxscore=1015 priorityscore=1501 malwarescore=0 mlxlogscore=999
- adultscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0 suspectscore=2
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007310071
+In-Reply-To: <46632fb9-e07e-fa40-5f13-fb45b4014e03@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Michael Ellerman <mpe@ellerman.id.au> [2020-07-31 17:52:15]:
+Hi Elliot,
 
-> Srikar Dronamraju <srikar@linux.vnet.ibm.com> writes:
-> > If allocated earlier and the search fails, then cpumask need to be
-> > freed. However cpu_l1_cache_map can be allocated after we search thread
-> > group.
+Thanks for the comments!
+
+On 7/29/20 8:15 PM, Elliot Berman wrote:
+> ++
 > 
-> It's not freed anywhere AFAICS?
+> On 7/24/2020 8:04 AM, Stanimir Varbanov wrote:
+>> Hi,
+>>
+>> Gentle ping for review.
+>>
+>> On 7/9/20 2:58 PM, Stanimir Varbanov wrote:
+>>> This adds a new SCM memprotect command to set virtual address ranges.
+>>>
+>>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>>> ---
+>>>  drivers/firmware/qcom_scm.c | 24 ++++++++++++++++++++++++
+>>>  drivers/firmware/qcom_scm.h |  1 +
+>>>  include/linux/qcom_scm.h    |  8 +++++++-
+>>>  3 files changed, 32 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+>>> index 0e7233a20f34..a73870255c2e 100644
+>>> --- a/drivers/firmware/qcom_scm.c
+>>> +++ b/drivers/firmware/qcom_scm.c
+>>> @@ -864,6 +864,30 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+>>>  }
+>>>  EXPORT_SYMBOL(qcom_scm_assign_mem);
+>>>  
+>>> +int qcom_scm_mem_protect_video_var(u32 cp_start, u32 cp_size,
+>>> +				   u32 cp_nonpixel_start,
+>>> +				   u32 cp_nonpixel_size)
+>>> +{
+>>> +	int ret;
+>>> +	struct qcom_scm_desc desc = {
+>>> +		.svc = QCOM_SCM_SVC_MP,
+>>> +		.cmd = QCOM_SCM_MP_VIDEO_VAR,
+>>> +		.arginfo = QCOM_SCM_ARGS(4, QCOM_SCM_VAL, QCOM_SCM_VAL,
+>>> +					 QCOM_SCM_VAL, QCOM_SCM_VAL),
+>>> +		.args[0] = cp_start,
+>>> +		.args[1] = cp_size,
+>>> +		.args[2] = cp_nonpixel_start,
+>>> +		.args[3] = cp_nonpixel_size,
+>>> +		.owner = ARM_SMCCC_OWNER_SIP,
+>>> +	};
+>>> +	struct qcom_scm_res res;
+>>> +
+>>> +	ret = qcom_scm_call(__scm->dev, &desc, &res);
+>>> +
+>>> +	return ret ? : res.result[0];
+>>> +}
+>>> +EXPORT_SYMBOL(qcom_scm_mem_protect_video_var);
+>>> +
 > 
+> Small nit, can you bump the function above assign_mem? It would keep order aligned with
+> the macros in qcom_scm.h
 
-Yes, its never freed. Infact we are never checking if
-zalloc_cpumask_var_node fails. Its not just this cpumask, but historically
-all the other existing cpumasks in arch/powerpc/kernel/smp.c are never
-freed/checked. I did dig into this a bit and it appears that ..
-(Please do correct me if I am wrong!! )
+Sure, I will do that.
 
-Powerpc using cpumask_var_t for all of the percpu variables. And it dont seem
-to enable CONFIG_CPUMASK_OFFSTACK even from the MAXSMP config.
-
-So from include/linux/cpumask.h
-
-typedef struct cpumask cpumask_var_t[1];
-and
-zalloc_cpumask_var_node ends up being cpumask_clear
-
-So I think we are historically we seem to assume we are always
-!CPUMASK_OFFSTACK and hence we dont need to check for return as well as
-free..
-
-I would look forward to your comments on how we should handle this going
-forward. But I would keep this the same for this patchset.
-
-One of the questions that I have is if we most likely are to be in
-!CONFIG_CPUMASK_OFFSTACK, then should be migrate to cpumask_t for percpu
-variables. 
- 
-The reason being we end up using NR_CPU cpumask for each percpu cpumask
-variable instead of using NR_CPU cpumask_t pointer.
-
-> And even after this change there's still an error path that doesn't free
-> it, isn't there?
 > 
-> cheers
+>>>  /**
+>>>   * qcom_scm_ocmem_lock_available() - is OCMEM lock/unlock interface available
+>>>   */
+>>> diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
+>>> index d9ed670da222..14da834ac593 100644
+>>> --- a/drivers/firmware/qcom_scm.h
+>>> +++ b/drivers/firmware/qcom_scm.h
+>>> @@ -97,6 +97,7 @@ extern int scm_legacy_call(struct device *dev, const struct qcom_scm_desc *desc,
+>>>  #define QCOM_SCM_MP_RESTORE_SEC_CFG		0x02
+>>>  #define QCOM_SCM_MP_IOMMU_SECURE_PTBL_SIZE	0x03
+>>>  #define QCOM_SCM_MP_IOMMU_SECURE_PTBL_INIT	0x04
+>>> +#define QCOM_SCM_MP_VIDEO_VAR			0x08
+>>>  #define QCOM_SCM_MP_ASSIGN			0x16
+>>>  
+>>>  #define QCOM_SCM_SVC_OCMEM		0x0f
+>>> diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
+>>> index 3d6a24697761..19b5188d17f4 100644
+>>> --- a/include/linux/qcom_scm.h
+>>> +++ b/include/linux/qcom_scm.h
+>>> @@ -81,7 +81,9 @@ extern int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+>>>  			       unsigned int *src,
+>>>  			       const struct qcom_scm_vmperm *newvm,
+>>>  			       unsigned int dest_cnt);
+>>> -
+>>> +extern int qcom_scm_mem_protect_video_var(u32 cp_start, u32 cp_size,
+>>> +					  u32 cp_nonpixel_start,
+>>> +					  u32 cp_nonpixel_size);
 > 
-> > Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-> > Cc: LKML <linux-kernel@vger.kernel.org>
-> > Cc: Michael Ellerman <mpe@ellerman.id.au>
-> > Cc: Nicholas Piggin <npiggin@gmail.com>
-> > Cc: Anton Blanchard <anton@ozlabs.org>
-> > Cc: Oliver O'Halloran <oohall@gmail.com>
-> > Cc: Nathan Lynch <nathanl@linux.ibm.com>
-> > Cc: Michael Neuling <mikey@neuling.org>
-> > Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-> > Cc: Ingo Molnar <mingo@kernel.org>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Valentin Schneider <valentin.schneider@arm.com>
-> > Cc: Jordan Niethe <jniethe5@gmail.com>
-> > Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-> > Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-> > ---
-> >  arch/powerpc/kernel/smp.c | 7 +++----
-> >  1 file changed, 3 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-> > index 698000c7f76f..dab96a1203ec 100644
-> > --- a/arch/powerpc/kernel/smp.c
-> > +++ b/arch/powerpc/kernel/smp.c
-> > @@ -797,10 +797,6 @@ static int init_cpu_l1_cache_map(int cpu)
-> >  	if (err)
-> >  		goto out;
-> >  
-> > -	zalloc_cpumask_var_node(&per_cpu(cpu_l1_cache_map, cpu),
-> > -				GFP_KERNEL,
-> > -				cpu_to_node(cpu));
-> > -
-> >  	cpu_group_start = get_cpu_thread_group_start(cpu, &tg);
-> >  
-> >  	if (unlikely(cpu_group_start == -1)) {
-> > @@ -809,6 +805,9 @@ static int init_cpu_l1_cache_map(int cpu)
-> >  		goto out;
-> >  	}
-> >  
-> > +	zalloc_cpumask_var_node(&per_cpu(cpu_l1_cache_map, cpu),
-> > +				GFP_KERNEL, cpu_to_node(cpu));
-> > +
-> >  	for (i = first_thread; i < first_thread + threads_per_core; i++) {
-> >  		int i_group_start = get_cpu_thread_group_start(i, &tg);
-> >  
-> > -- 
-> > 2.17.1
+> Same here.
+> 
+>>>  extern bool qcom_scm_ocmem_lock_available(void);
+>>>  extern int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset,
+>>>  			       u32 size, u32 mode);
+>>> @@ -131,6 +133,10 @@ static inline int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare)
+>>>  static inline int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+>>>  		unsigned int *src, const struct qcom_scm_vmperm *newvm,
+>>>  		unsigned int dest_cnt) { return -ENODEV; }
+>>> +extern inline int qcom_scm_mem_protect_video_var(u32 cp_start, u32 cp_size,
+>>> +						 u32 cp_nonpixel_start,
+>>> +						 u32 cp_nonpixel_size)
+>>> +		{ return -ENODEV; }
+> 
+> Same here.
+> 
+>>>  
+>>>  static inline bool qcom_scm_ocmem_lock_available(void) { return false; }
+>>>  static inline int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset,
+>>>
+>>
+> 
 
 -- 
-Thanks and Regards
-Srikar Dronamraju
+regards,
+Stan
