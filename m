@@ -2,144 +2,111 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C857C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E63922B40
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6BC022CAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:59:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596196764;
+	bh=b+H2aGZZOROnQ/51JKv6Xi/z1ePZ0oxtoEognaZJMIQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=I8sgh+2s6qjo+5fD22PiHZRcQMEEgH+qXO7zfEr4DzA5zjMG7vKBfnhNWmVeQ/B6p
+	 UPwIiIwCwvsqbYWHubl7k2yi5KSjZ1N7782udQ62/xKEWsPnvrurX/9BKbply3AZ3P
+	 xvtzEGdOraMZTb3DyUjLQCotHj69qgSy5chuir0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732888AbgGaL7Q (ORCPT
+        id S1732927AbgGaL7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 07:59:16 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51810 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732689AbgGaL7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 07:59:15 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 400E1FFCCF478D1BCD9E;
-        Fri, 31 Jul 2020 19:59:09 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.63) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Fri, 31 Jul 2020
- 19:58:59 +0800
-Subject: Re: [PATCH -next] tools build: Check return value of fwrite_unlocked
- in jvmti_agent.c
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>
-CC:     <cj.chengjian@huawei.com>, Li Bin <huawei.libin@huawei.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-References: <20200724100706.48330-1-bobo.shaobowang@huawei.com>
- <CAP-5=fX9YUucA-3QMxO_jV954104UPNg04=_JGstuLekNJHzJw@mail.gmail.com>
- <20200730100357.GD424218@kernel.org>
-From:   "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
-Message-ID: <c83e1354-29a8-82d5-8963-96c71f4de1de@huawei.com>
-Date:   Fri, 31 Jul 2020 19:58:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Fri, 31 Jul 2020 07:59:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732689AbgGaL7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 07:59:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5757222B40;
+        Fri, 31 Jul 2020 11:59:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596196762;
+        bh=b+H2aGZZOROnQ/51JKv6Xi/z1ePZ0oxtoEognaZJMIQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cGisF+djPeQZoIGyDlgzXQSa9HruHrtWGR7CV62J+NtSeFm3+xLraywyTwdWedwLu
+         FtOiv0kaw5g7NAOAct73ZpIb+xgN1/fSFHo17CeZJwYihaMKUlPRcd5m+gKFyWPPqa
+         Sj7DvKxXFeso1O8xUXs0QcVnvmEoZe563KFz6qx0=
+Date:   Fri, 31 Jul 2020 13:59:09 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     =?iso-8859-1?Q?H=E5kon?= Bugge <haakon.bugge@oracle.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        netdev@vger.kernel.org,
+        OFED mailing list <linux-rdma@vger.kernel.org>,
+        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak
+ in rds_notify_queue_get()
+Message-ID: <20200731115909.GA1649637@kroah.com>
+References: <20200730192026.110246-1-yepeilin.cs@gmail.com>
+ <20200731045301.GI75549@unreal>
+ <20200731095943.GI5493@kadam>
+ <81B40AF5-EBCA-4628-8CF6-687C12134552@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20200730100357.GD424218@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.63]
-X-CFilter-Loop: Reflected
+In-Reply-To: <81B40AF5-EBCA-4628-8CF6-687C12134552@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 31, 2020 at 01:14:09PM +0200, H�kon Bugge wrote:
+> 
+> 
+> > On 31 Jul 2020, at 11:59, Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> > 
+> > On Fri, Jul 31, 2020 at 07:53:01AM +0300, Leon Romanovsky wrote:
+> >> On Thu, Jul 30, 2020 at 03:20:26PM -0400, Peilin Ye wrote:
+> >>> rds_notify_queue_get() is potentially copying uninitialized kernel stack
+> >>> memory to userspace since the compiler may leave a 4-byte hole at the end
+> >>> of `cmsg`.
+> >>> 
+> >>> In 2016 we tried to fix this issue by doing `= { 0 };` on `cmsg`, which
+> >>> unfortunately does not always initialize that 4-byte hole. Fix it by using
+> >>> memset() instead.
+> >> 
+> >> Of course, this is the difference between "{ 0 }" and "{}" initializations.
+> >> 
+> > 
+> > No, there is no difference.  Even struct assignments like:
+> > 
+> > 	foo = *bar;
+> > 
+> > can leave struct holes uninitialized.  Depending on the compiler the
+> > assignment can be implemented as a memset() or as a series of struct
+> > member assignments.
+> 
+> What about:
+> 
+> struct rds_rdma_notify {
+> 	__u64                      user_token;
+> 	__s32                      status;
+> } __attribute__((packed));
 
-在 2020/7/30 18:03, Arnaldo Carvalho de Melo 写道:
-> Em Wed, Jul 29, 2020 at 04:47:36PM -0700, Ian Rogers escreveu:
->> On Fri, Jul 24, 2020 at 3:07 AM Wang ShaoBo <bobo.shaobowang@huawei.com> wrote:
->>> Function jvmti_write_code called by compiled_method_load_cb may return
->>> error in using fwrite_unlocked, this failure should be captured and
->>> warned.
->>>
->>> Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
->>> ---
->>>   tools/perf/jvmti/jvmti_agent.c | 23 +++++++++++++++--------
->>>   1 file changed, 15 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/tools/perf/jvmti/jvmti_agent.c b/tools/perf/jvmti/jvmti_agent.c
->>> index 88108598d6e9..a1fe6aa16b6d 100644
->>> --- a/tools/perf/jvmti/jvmti_agent.c
->>> +++ b/tools/perf/jvmti/jvmti_agent.c
->>> @@ -363,7 +363,7 @@ jvmti_write_code(void *agent, char const *sym,
->>>          struct jr_code_load rec;
->>>          size_t sym_len;
->>>          FILE *fp = agent;
->>> -       int ret = -1;
->>> +       int ret;
->>>
->>>          /* don't care about 0 length function, no samples */
->>>          if (size == 0)
->>> @@ -401,16 +401,23 @@ jvmti_write_code(void *agent, char const *sym,
->>>          rec.code_index = code_generation++;
->>>
->>>          ret = fwrite_unlocked(&rec, sizeof(rec), 1, fp);
->>> -       fwrite_unlocked(sym, sym_len, 1, fp);
->>> +       if (ret)
->>> +               goto error;
->> Sorry, it seems I lost a reply to this. Won't ret here be the number
->> of items written and not an error code? Consequently all writes will
->> immediately goto error?
-> Yeah, I removed it from tmp.perf/core.
->
-> Wang, please address Ian review, and consider having just one out exit
-> label.
->
-> - Arnaldo
->   
+Why is this still a discussion at all?
 
-I am sorry I forgot what does fwrite_unlocked return, as same as fwrite 
-error happens,
+Try it and see, run pahole and see if there are holes in this structure
+(odds are no), you don't need us to say what is happening here...
 
-the return val is a short item count (or zero)  but not equals the items 
-written. I have fixed
+thanks,
 
-it and already sent v2 and address Ian review, thanks a lot.
-
-... and i refer to the writing of function jvmti_write_debug_info() for 
-giving out exit label,
-
-thanks again,
-
-- Wang ShaoBo
-
->> Thanks,
->> Ian
->>
->>> +       ret = fwrite_unlocked(sym, sym_len, 1, fp);
->>> +       if (ret)
->>> +               goto error;
->>>
->>> -       if (code)
->>> -               fwrite_unlocked(code, size, 1, fp);
->>> +       if (code) {
->>> +               ret = fwrite_unlocked(code, size, 1, fp);
->>> +               if (ret)
->>> +                       goto error;
->>> +       }
->>>
->>>          funlockfile(fp);
->>> -
->>> -       ret = 0;
->>> -
->>> -       return ret;
->>> +       return 0;
->>> +error:
->>> +       funlockfile(fp);
->>> +       return -1;
->>>   }
->>>
->>>   int
->>> --
->>> 2.17.1
->>>
-
+greg k-h
