@@ -2,35 +2,34 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CCFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E72EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDB3622B42
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5CC7208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:09:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbgGaUI4 (ORCPT
+        id S1727874AbgGaUJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 16:08:56 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:33470 "EHLO
+        Fri, 31 Jul 2020 16:09:01 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:33422 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726968AbgGaUIp (ORCPT
+        with ESMTP id S1726257AbgGaUIo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 16:08:45 -0400
+        Fri, 31 Jul 2020 16:08:44 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6B1428040A6B;
-        Fri, 31 Jul 2020 20:08:42 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id B1008803202D;
+        Fri, 31 Jul 2020 20:08:40 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id F02ocnSSBzsJ; Fri, 31 Jul 2020 23:08:41 +0300 (MSK)
+        with ESMTP id dTHP2IOxhPcs; Fri, 31 Jul 2020 23:08:39 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
@@ -39,11 +38,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Rob Herring <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 4/5] dmaengine: dw: Ignore burst setting for memory peripherals
-Date:   Fri, 31 Jul 2020 23:08:25 +0300
-Message-ID: <20200731200826.9292-5-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200731200826.9292-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200731200826.9292-1-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v2 0/5] dmaengine: dw: Introduce non-mem peripherals optimizations
+Date:   Fri, 31 Jul 2020 23:08:21 +0300
+Message-ID: <20200731200826.9292-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -53,64 +50,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the DW DMA controller Databook 2.18b (page 40 "3.5 Memory
-Peripherals") memory peripherals don't have handshaking interface
-connected to the controller, therefore they can never be a flow
-controller. Since the CTLx.SRC_MSIZE and CTLx.DEST_MSIZE are properties
-valid only for peripherals with a handshaking interface, we can freely
-zero these fields out if the memory peripheral is selected to be the
-source or the destination of the DMA transfers.
+After a lot of tests and thorough DW DMAC databook studying we've
+discovered that the driver can be optimized especially when it comes to
+working with non-memory peripherals.
 
-Note according to the databook, length of burst transfers to memory is
-always equal to the number of data items available in a channel FIFO or
-data items required to complete the block transfer, whichever is smaller;
-length of burst transfers from memory is always equal to the space
-available in a channel FIFO or number of data items required to complete
-the block transfer, whichever is smaller.
+First of all we've found out that since each DW DMAC channel can
+be synthesized with different parameters, then even when two of them
+are configured to perform the same DMA transactions they may execute them
+with different performance. Since some DMA client devices might be
+sensitive to such important parameter as performance, then it is a good
+idea to let them request only suitable DMA channels. In this patchset we
+introduce a functionality, which makes it possible by passing the DMA
+channels mask either over the "dmas" DT property or in the dw_dma_slave
+platform data descriptor.
+
+Secondly FIFO-mode of the "FIFO readiness" criterion is more suitable for
+the pure memory DMA transfers, since it minimizes the system bus
+utilization, but causes some performance drop. When it comes to working with
+non-memory peripherals the DMA engine performance comes to the first
+place. Since normally DMA client devices keep data in internal FIFOs, any
+latency at some critical moment may cause a FIFO being overflown and
+consequently losing data. So in order to minimize a chance of the DW DMAC
+internal FIFO being a bottle neck during the DMA transfers to and from
+non-memory peripherals we propose not to use FIFO-mode for them.
+
+Thirdly it has been discovered that using a DMA transaction length is
+redundant when calculating the destination transfer width for the
+dev-to-mem DMA communications. That shall increase performance of the DMA
+transfers with unaligned data length.
+
+Finally there is a small optimization in the burst length setting. In
+particular we've found out, that according to the DW DMAC databoot it's
+pointless to set one for the memory peripherals since they don't have
+handshaking interface connected to the DMA controller. So we suggest to
+just ignore the burst length config when it comes to setting the memory
+peripherals up.
+
+Link: https://lore.kernel.org/dmaengine/20200730154545.3965-1-Sergey.Semin@baikalelectronics.ru
+Changelog v2:
+- Add Databook version to the commits log.
+- Use the statement "slave.channels >= BIT(dw->pdata->nr_channels)" to
+  make sure the permitted DMA-channels pool is valid.
+- Describe new DW DMAC "channels" mask in a single line even though it
+  gets out of 80 columns limit.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: dmaengine@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
----
+Serge Semin (5):
+  dt-bindings: dma: dw: Add optional DMA-channels mask cell support
+  dmaengine: dw: Activate FIFO-mode for memory peripherals only
+  dmaengine: dw: Discard dlen from the dev-to-mem xfer width calculation
+  dmaengine: dw: Ignore burst setting for memory peripherals
+  dmaengine: dw: Add DMA-channels mask cell support
 
-Changelog v2:
-- Add Databook version to the commit log.
----
- drivers/dma/dw/dw.c     | 5 ++---
- drivers/dma/dw/idma32.c | 5 ++---
- 2 files changed, 4 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/dma/snps,dma-spear1340.yaml        | 7 +++++--
+ drivers/dma/dw/core.c                                      | 6 +++++-
+ drivers/dma/dw/dw.c                                        | 7 +++----
+ drivers/dma/dw/idma32.c                                    | 5 ++---
+ drivers/dma/dw/of.c                                        | 7 +++++--
+ include/linux/platform_data/dma-dw.h                       | 2 ++
+ 6 files changed, 22 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/dma/dw/dw.c b/drivers/dma/dw/dw.c
-index d9810980920a..a4862263ff14 100644
---- a/drivers/dma/dw/dw.c
-+++ b/drivers/dma/dw/dw.c
-@@ -67,9 +67,8 @@ static size_t dw_dma_block2bytes(struct dw_dma_chan *dwc, u32 block, u32 width)
- static u32 dw_dma_prepare_ctllo(struct dw_dma_chan *dwc)
- {
- 	struct dma_slave_config	*sconfig = &dwc->dma_sconfig;
--	bool is_slave = is_slave_direction(dwc->direction);
--	u8 smsize = is_slave ? sconfig->src_maxburst : DW_DMA_MSIZE_16;
--	u8 dmsize = is_slave ? sconfig->dst_maxburst : DW_DMA_MSIZE_16;
-+	u8 smsize = (dwc->direction == DMA_DEV_TO_MEM) ? sconfig->src_maxburst : 0;
-+	u8 dmsize = (dwc->direction == DMA_MEM_TO_DEV) ? sconfig->dst_maxburst : 0;
- 	u8 p_master = dwc->dws.p_master;
- 	u8 m_master = dwc->dws.m_master;
- 	u8 dms = (dwc->direction == DMA_MEM_TO_DEV) ? p_master : m_master;
-diff --git a/drivers/dma/dw/idma32.c b/drivers/dma/dw/idma32.c
-index f00657308811..3ce44de25d33 100644
---- a/drivers/dma/dw/idma32.c
-+++ b/drivers/dma/dw/idma32.c
-@@ -73,9 +73,8 @@ static size_t idma32_block2bytes(struct dw_dma_chan *dwc, u32 block, u32 width)
- static u32 idma32_prepare_ctllo(struct dw_dma_chan *dwc)
- {
- 	struct dma_slave_config	*sconfig = &dwc->dma_sconfig;
--	bool is_slave = is_slave_direction(dwc->direction);
--	u8 smsize = is_slave ? sconfig->src_maxburst : IDMA32_MSIZE_8;
--	u8 dmsize = is_slave ? sconfig->dst_maxburst : IDMA32_MSIZE_8;
-+	u8 smsize = (dwc->direction == DMA_DEV_TO_MEM) ? sconfig->src_maxburst : 0;
-+	u8 dmsize = (dwc->direction == DMA_MEM_TO_DEV) ? sconfig->dst_maxburst : 0;
- 
- 	return DWC_CTLL_LLP_D_EN | DWC_CTLL_LLP_S_EN |
- 	       DWC_CTLL_DST_MSIZE(dmsize) | DWC_CTLL_SRC_MSIZE(smsize);
 -- 
 2.27.0
 
