@@ -2,126 +2,71 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C63C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7740FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A016420829
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:24:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R+cwfOL6"
+	by mail.kernel.org (Postfix) with ESMTP id 537AF2072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:40:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596170412;
+	bh=zW3uIvbp2jGeCBbLWJPZ8htaHvyzIa3B5msiTGKNExc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=mOXNK1jVD1GXkdnnRdZaZVJzZsX91MiEODlldVWqI4ctKJXMTh40WWuZVOOK7m7iq
+	 q8rXxZmU6WEjCJFS652XRQLumkC3foAjiIUm6Dd/XhHEZ3Oyy9doGc2duby3X58Qfa
+	 Iy+TyXWN3k1ZGuiukqcg2s3l37q48L7EvN1qHc+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgGaEYL (ORCPT
+        id S1726586AbgGaEkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 00:24:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42470 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbgGaEYK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 00:24:10 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A74FC061574;
-        Thu, 30 Jul 2020 21:24:10 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ha11so6606857pjb.1;
-        Thu, 30 Jul 2020 21:24:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5XLltA1o6pc+ms03acl/cow8Wgm9MAL4rEVgQOQxOXs=;
-        b=R+cwfOL6NcJp8QGoq2xjIXflokIsVx622KY2RnJiZB47nBdk02++HS9e6aS+1PMzIY
-         nraLIWrZfkbYexzXytN7Jzh9jt3puoZhvsin46iMRCfP6felnjw2Rj8QtfNIFvdGIm2N
-         GNrWLRqnguVlwSZsgkACWyTZtoi4PY77xOB+QfaAXuV/SJiEkWhq2J0O2cmILmFBj8tp
-         Y+8G43/gIKYEVnWlnnRQvxOfz5Ge/mBqTJsP/SXd14TVYKFv5Gy5Oyfnio6/R47E63Fc
-         hfS0L+oE+dccYvVS52TkqUPd7aj/iyo1ukRdR77nIsWaJDT5QdTaXdqErF0GnO07uGcs
-         FMnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5XLltA1o6pc+ms03acl/cow8Wgm9MAL4rEVgQOQxOXs=;
-        b=pTiDCtoNNEmd7xluHeXJDlHy1z80Zd58bgzuERh1S4KNcox+ipr/adU0/9X9VV0WAI
-         u4+t5AyBK+3h/eAxKUHG5MOwyVdtcsIUzmGVpobNyObjAoYGi2WD4C2RwSS+WKMGht8j
-         6Lsff3bwf8BJiUtP7EmyJHWoRLP+ZS0JMVEHNh5lOSxqWFhvTYI/HyJIfjYDdWJtj7UV
-         QOLWdA3sWjzDIFGDOlADzE2dezBoIZJYUEXu1Qfoz7iRLQZFTfEPTh8Z/20cg6oeqczi
-         Q6MnjYRkLVVUqwbPHDinNsMjEJIe+FA0MdY0SqctC9Vp91b83ClUx48KHwXfU0KNUEVf
-         WZ0A==
-X-Gm-Message-State: AOAM533NYGt9kNJHL6iL0Bn/iK2aWSNGp7QFeU54d+t0BkTi7wTTC5fk
-        P2HM1LMQkPRqrhyupTHFn0A=
-X-Google-Smtp-Source: ABdhPJzn9ymAVeVuY+l9qZQU/oBRkPls19wH8CecqTiZHvsbi9pPXSDVLn0xlFP+JWf46iB4vrsaow==
-X-Received: by 2002:a63:6d48:: with SMTP id i69mr1984205pgc.354.1596169449711;
-        Thu, 30 Jul 2020 21:24:09 -0700 (PDT)
-Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id w3sm8149192pff.56.2020.07.30.21.24.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 21:24:09 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-mips@linux-mips.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM BMIPS MIPS
-        ARCHITECTURE),
-        linux-mips@vger.kernel.org (open list:BROADCOM BMIPS MIPS ARCHITECTURE),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] MIPS: BMIPS: Disable pref 30 for buggy CPUs
-Date:   Thu, 30 Jul 2020 21:24:01 -0700
-Message-Id: <20200731042401.22871-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 31 Jul 2020 00:40:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59394 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725800AbgGaEkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 00:40:04 -0400
+Subject: Re: [git pull] drm fixes for 5.8-rc8 (part 2)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596170403;
+        bh=zW3uIvbp2jGeCBbLWJPZ8htaHvyzIa3B5msiTGKNExc=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=EDid6naRhp1XSSOexs0W+GdjNYaDZBmfxP6AClxeKOngf4FN0k45P8w3VaDMEqc4C
+         FnnroWQiTlBwZxs9LqGcJFvwD2u7+8WeY6Rx5QTUrPmamKCQ9QPtjIFnkzKaGSNdqy
+         Ut26nlCvkejpHxZ2Kg8hGoiPqeiOCZV/Ue/JKZ4M=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAPM=9twq8wVE888GW3cQ12Fw=FEwtD-1tXWgMcrrnjdk3NJZfg@mail.gmail.com>
+References: <CAPM=9twq8wVE888GW3cQ12Fw=FEwtD-1tXWgMcrrnjdk3NJZfg@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAPM=9twq8wVE888GW3cQ12Fw=FEwtD-1tXWgMcrrnjdk3NJZfg@mail.gmail.com>
+X-PR-Tracked-Remote: git://anongit.freedesktop.org/drm/drm
+ tags/drm-fixes-2020-07-31
+X-PR-Tracked-Commit-Id: 887c909dd5d557c203a233ebbe238c18438a680a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d8b9faec54ae4bc2fff68bcd0befa93ace8256ce
+Message-Id: <159617040369.8551.2784979803005371450.pr-tracker-bot@kernel.org>
+Date:   Fri, 31 Jul 2020 04:40:03 +0000
+To:     Dave Airlie <airlied@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Disable pref 30 by utilizing the standard quirk method and matching the
-affected SoCs: 7344, 7346, 7425.
+The pull request you sent on Fri, 31 Jul 2020 13:44:54 +1000:
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- arch/mips/bmips/setup.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+> git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2020-07-31
 
-diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
-index 19308df5f577..df0efea12611 100644
---- a/arch/mips/bmips/setup.c
-+++ b/arch/mips/bmips/setup.c
-@@ -110,6 +110,20 @@ static void bcm6368_quirks(void)
- 	bcm63xx_fixup_cpu1();
- }
- 
-+static void bmips5000_pref30_quirk(void)
-+{
-+	__asm__ __volatile__(
-+	"	li	$8, 0x5a455048\n"
-+	"	.word	0x4088b00f\n"	/* mtc0 $8, $22, 15 */
-+	"	nop; nop; nop\n"
-+	"	.word	0x4008b008\n"	/* mfc0 $8, $22, 8 */
-+	/* disable "pref 30" on buggy CPUs */
-+	"	lui	$9, 0x0800\n"
-+	"	or	$8, $9\n"
-+	"	.word	0x4088b008\n"	/* mtc0 $8, $22, 8 */
-+	: : : "$8", "$9");
-+}
-+
- static const struct bmips_quirk bmips_quirk_list[] = {
- 	{ "brcm,bcm3368",		&bcm6358_quirks			},
- 	{ "brcm,bcm3384-viper",		&bcm3384_viper_quirks		},
-@@ -120,6 +134,9 @@ static const struct bmips_quirk bmips_quirk_list[] = {
- 	{ "brcm,bcm6368",		&bcm6368_quirks			},
- 	{ "brcm,bcm63168",		&bcm6368_quirks			},
- 	{ "brcm,bcm63268",		&bcm6368_quirks			},
-+	{ "brcm,bcm7344",		&bmips5000_pref30_quirk		},
-+	{ "brcm,bcm7346",		&bmips5000_pref30_quirk		},
-+	{ "brcm,bcm7425",		&bmips5000_pref30_quirk		},
- 	{ },
- };
- 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d8b9faec54ae4bc2fff68bcd0befa93ace8256ce
+
+Thank you!
+
 -- 
-2.25.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
