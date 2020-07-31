@@ -2,113 +2,223 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA4BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF8D62083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:19:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tXVqKIx9"
+	by mail.kernel.org (Postfix) with ESMTP id A80CA208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:19:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596176377;
+	bh=b1t9HytUhUU2EjOGArGZ1wc7s+rwEM++yuu4FJ5CmMo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sZAyJitdSBg9i+H7d/XUzuKsbcanRSGVjnonB88AaViIjjmVr0j4Poe5KeNu0s7zK
+	 mvSCkHGo0+wgCrjUSl7jiuOWF7DWQ+KpuIC6NPkhQD0FHJIlmXCOYGZQ9C88nOEr0x
+	 kq9uq0kjBnAkb6EtqdcbIX7vX2cP3msiF5VzTGx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731402AbgGaGTY (ORCPT
+        id S1731410AbgGaGTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 02:19:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731152AbgGaGTY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 02:19:24 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4F95C061574
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 23:19:23 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id q76so6965003wme.4
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 23:19:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=qPKXXpJdjKCrkxbnD31J9NcdUb/tXEBn+ARL8Y6Ysd8=;
-        b=tXVqKIx9YeutJTEwLUXbENDyhttvDO3dblr6fxNoUIoyOSofGamNKD+xTV0WpAfiEG
-         3ETCLAtRqNYrUxOT8PIb1nlELDzskGVDilJdLjyn69+hgV+lW/viQf+ympqGXsDJo9xD
-         sY/kqBtch/f0zMWm1AVKLTE9ZGdpSTtfzRjrkNU5oWnX/gbBMQNZJis6dQY9ZVuDr/Ph
-         tUPi0o6j4p5N89JlWf62pCKWk/t36X1Mdf/pz9wMf3LNac7hKSDW604IMOJJTNEiwg9l
-         xwiVZQ9EAUdWLT2hXFEUlY5jGh1Fz6m8IQORxoTZDMtO33eEQkiouNcCDRBj7zo8AGmt
-         K00Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=qPKXXpJdjKCrkxbnD31J9NcdUb/tXEBn+ARL8Y6Ysd8=;
-        b=iFRX3bOdZEdoyKoZeiEhDVq+/pdKTCljrAff0V0pD049PMfRGU+ZVo6tEyRmNi8CEt
-         ILS0NV4vLF8MN44ecoZ8c7zV0Q7D0hAiLIbOvw5l24yPKmRULk1xiEb8gp7/O4Od1CiZ
-         GQJKMTBco2JXiWqow8bKWEuz3ghB/TtiN5PVjBMcE02C2eUKA2QX+KdiG7QchEzsURG6
-         IFTlSbjtUny8UsGaDdvl1+LiRo5d7Ru2fZltNMOzmQ4na/eHHif4ZKuw4iranVHygM7+
-         MDCq55OuxF7WtZVBInspIGmJbBWy6cnTfzMw1zH3tSiKzUqz5+dQySKO7uT60gekUAUv
-         qKow==
-X-Gm-Message-State: AOAM530MrGg2E+TzS4k3UKrLGEaNyWGYwX74T73LjDGqhw+9sATnrD+a
-        9dz++5NNXyozzztiGXJN7YverA==
-X-Google-Smtp-Source: ABdhPJwcZeUYAOIT7hP4EH+JmFxHst2IgQ5lloYBKPkq4SUaU7RgmepyQcQ91JfPqooLOOrlqaMcEA==
-X-Received: by 2002:a1c:dc02:: with SMTP id t2mr2360258wmg.55.1596176362350;
-        Thu, 30 Jul 2020 23:19:22 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id n24sm4604652wmi.36.2020.07.30.23.19.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 23:19:21 -0700 (PDT)
-Date:   Fri, 31 Jul 2020 07:19:19 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Mark D Rustad <mrustad@gmail.com>
-Cc:     "David E. Box" <david.e.box@linux.intel.com>, dvhart@infradead.org,
-        andy@infradead.org, bhelgaas@google.com,
-        alexander.h.duyck@linux.intel.com,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH V4 2/3] mfd: Intel Platform Monitoring Technology support
-Message-ID: <20200731061919.GJ2419169@dell>
-References: <20200714062323.19990-1-david.e.box@linux.intel.com>
- <20200717190620.29821-3-david.e.box@linux.intel.com>
- <20200728075859.GH1850026@dell>
- <3DCA0A88-0890-49EE-8644-E6311E891C55@gmail.com>
+        Fri, 31 Jul 2020 02:19:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48952 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731359AbgGaGTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 02:19:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B92B52083B;
+        Fri, 31 Jul 2020 06:19:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596176375;
+        bh=b1t9HytUhUU2EjOGArGZ1wc7s+rwEM++yuu4FJ5CmMo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=w2PSvMy7G78srHkxam5ApiTQn83UAkyDjL9kZKmP1Vuy+P77dNewqL6rT1znwAJ1C
+         xZnbsNS9xRGVcOSwQzqHA5DWiMY21d6huPQTx4w1OVEt9vTJCc4CrqvNhzDp2Wi5ZS
+         h3rd85P9DViGe/dy4SHEl/gQfPnPSqqL6XWiPdsM=
+Date:   Fri, 31 Jul 2020 08:19:22 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dongdong Yang <contribute.kernel@gmail.com>
+Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-pm@vger.kernel.org, yangdongdong@xiaomi.com,
+        tanggeliang@xiaomi.com, taojun@xiaomi.com, huangqiwu@xiaomi.com,
+        rocking@linux.alibaba.com, fengwei@xiaomi.com,
+        zhangguoquan@xiaomi.com, gulinghua@xiaomi.com, duhui@xiaomi.com
+Subject: Re: [PATCH] sched: Provide USF for the portable equipment.
+Message-ID: <20200731061922.GB1508201@kroah.com>
+References: <cover.1596101307.git.yangdongdong@xiaomi.com>
+ <1596116273-2290-1-git-send-email-contribute.kernel@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3DCA0A88-0890-49EE-8644-E6311E891C55@gmail.com>
+In-Reply-To: <1596116273-2290-1-git-send-email-contribute.kernel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jul 2020, Mark D Rustad wrote:
-
-> at 12:58 AM, Lee Jones <lee.jones@linaro.org> wrote:
+On Thu, Jul 30, 2020 at 09:35:43PM +0800, Dongdong Yang wrote:
+> From: Dongdong Yang <yangdongdong@xiaomi.com>
 > 
-> > If you do:
-> > 
-> > 	do {
-> > 		int pos;
-> > 
-> > 		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC);
-> > 		if (!pos)
-> > 			break;
-> > 
-> > Then you can invoke pci_find_next_ext_capability() once, no?
+> The power consumption and UI response are more cared
+> for by the portable equipment�users. USF(User Sensitive
+> Feedback factor) auxiliary cpufreq governor is
+> providing more utils adjustment settings to a high
+> level by scenario identification.
 > 
-> Part of your suggestion here won't work, because pos needs to be initialized
-> to 0 the first time. As such it needs to be declared and initialized outside
-> the loop. Other than that it may be ok.
+> >From the view of portable equipment, screen off status
+> usually stands for no request from the user, however,
+> the kernel is still expected to notify the user
+> in time on modem, network or powerkey events occur.
+> In some scenarios, such as listening to music,
+> low power processors, such as DSP, take more actions
+> and CPU load requirements cut down.� It would bring
+> more power consumption benefit if high level have
+> interfaces to adjust utils according to the current
+> scenario and load.
+> 
+> In addition, the portable equipment user usually heavy
+> interact with devices by touch, and other peripherals.
+> The boost preemptive counts are marking the load
+> requirement urgent, vice versa. If such feedback
+> factor could be set to high level according to the
+> scenario, it would contribute to the power consumption
+> and UI response.
+> 
+> If no USF sysfs inode is set, and no screen on or
+> off event, adjust_task_pred_demand shall not be invoked.
+> Once sched_usf_up_l0_r/down_r/non_ux_r be set,
+> adjust_task_pred_demand_impl shall be called back
+> to update settings according to high level scenario
+> identification.
+> 
+> We can get about 17% mean power consumption save
+> at listening to music with speaker on "screen
+> off" scenario, as below statistical data from 7766
+> XiaoMi devices for two weeks with
+> sched_usf_non_ux_r be set:
 
-Right.  It was just an example I quickly hacked out.
 
-Feel free to move the variable, or make it static, etc.
+Nit, you can wrap your changelog text at 72 columns to make it easier to
+read.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> 
+>         day1         day2         day3         day4
+> count   7766.000000  7766.000000  7766.000000  7766.000000
+> mean    88.035525    85.500282    83.829305    86.054997
+> std     111.049980   108.258834   107.562583   108.558240
+> min     0.099000     0.037000     0.067000     0.045000
+> 25%     34.765500    34.021750    34.101500    34.423000
+> 50%     54.950000    55.286500    54.189500    54.248500
+> 75%     95.954000    93.942000    91.738000    94.0592500
+> 80%     114.675000   107.430000   106.378000   108.673000
+> 85%     137.851000   129.511000   127.156500   131.750750
+> 90%     179.669000   170.208500   164.027000   172.348000
+> 95%     272.395000   257.845500   247.750500   263.275750
+> 98%     399.034500   412.170400   391.484000   402.835600
+> 
+>         day5         day6        day7         day8
+> count   7766.000000  7766.00000  7766.000000  7766.000000
+> mean    82.532677    79.21923    77.611380    81.075081
+> std     104.870079   101.34819   103.140037   97.506221
+> min     0.051000     0.02900     0.007000     0.068000
+> 25%     32.873000    33.44400    31.965500    33.863500
+> 50%     52.180500    51.56550    50.806500    53.080000
+> 75%     90.905750    86.82625    83.859250    89.973000
+> 80%     105.455000   99.64700    97.271000    104.225000
+> 85%     128.300000   118.47825   116.570250   126.648250
+> 90%     166.647500   149.18000   150.649500   161.087000
+> 95%     247.208500   224.36050   226.380000   245.291250
+> 98%     393.002000   347.92060   369.791800   378.778600
+> 
+>         day9         day10        day11        day12
+> count   7766.000000  7766.000000  7766.000000  7766.000000
+> mean    79.989170    83.859417    78.032930    77.060542
+> std     104.226122   108.893043   102.561715   99.844276
+> min     0.118000     0.017000     0.028000     0.039000
+> 25%     32.056250    33.454500    31.176250    30.897750
+> 50%     51.506000    54.056000    48.969500    49.069000
+> 75%     88.513500    92.953500    83.506750    84.096000
+> 80%     102.876000   107.845000   97.717000    98.073000
+> 85%     124.363000   128.288000   118.366500   116.869250
+> 90%     160.557000   167.084000   154.342500   148.187500
+> 95%     231.149000   242.925750   236.759000   228.131250
+> 98%     367.206600   388.619100   385.269100   376.541600
+> 
+>         day13        day14
+> count   7766.000000  7766.000000
+> mean    75.528036    73.702878
+> std     90.750594    86.796016
+> min     0.066000     0.054000
+> 25%     31.170500    31.608500
+> 50%     48.758500    49.215000
+> 75%     84.522750    83.053000
+> 80%     97.879000    94.875000
+> 85%     116.680250   113.573750
+> 90%     149.083500   144.089500
+> 95%     226.177750   211.488750
+> 98%     347.011100   331.317100
+> 
+> Signed-off-by: Dongdong Yang <yangdongdong@xiaomi.com>
+> Signed-off-by: Jun Tao <taojun@xiaomi.com>
+> Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
+> Signed-off-by: Geliang Tang <tanggeliang@xiaomi.com>
+> Signed-off-by: Peng Wang <rocking@linux.alibaba.com>
+> ---
+>  drivers/staging/Kconfig          |   2 +
+>  drivers/staging/Makefile         |   1 +
+>  drivers/staging/fbsched/Kconfig  |  10 ++
+>  drivers/staging/fbsched/Makefile |   2 +
+>  drivers/staging/fbsched/usf.c    | 351 +++++++++++++++++++++++++++++++++++++++
+
+Why the different names, "fbsched" and "usf"?  what does "fbsched" mean?
+
+>  kernel/sched/cpufreq_schedutil.c |  11 +-
+
+Why are you touching code outside of drivers/staging/ at all?  That's
+usually a good sign that this should not be a staging driver as they
+should all be self-contained so nothing else in the kernel is messed
+with.
+
+> --- a/kernel/sched/cpufreq_schedutil.c
+> +++ b/kernel/sched/cpufreq_schedutil.c
+> @@ -289,12 +289,21 @@ unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
+>  	return min(max, util);
+>  }
+>  
+> +#ifdef CONFIG_SCHED_USF
+> +void (*adjust_task_pred_demand)(int cpuid, unsigned long *util,
+> +	struct rq *rq) = NULL;
+> +EXPORT_SYMBOL(adjust_task_pred_demand);
+> +#endif
+
+No #ifdef in .c code.  And why not EXPORT_SYMBOL_GPL?
+
+
+> +
+>  static unsigned long sugov_get_util(struct sugov_cpu *sg_cpu)
+>  {
+>  	struct rq *rq = cpu_rq(sg_cpu->cpu);
+>  	unsigned long util = cpu_util_cfs(rq);
+>  	unsigned long max = arch_scale_cpu_capacity(sg_cpu->cpu);
+> -
+> +#ifdef CONFIG_SCHED_USF
+> +	if (adjust_task_pred_demand)
+> +		adjust_task_pred_demand(sg_cpu->cpu, &util, rq);
+> +#endif
+
+Again, no #ifdef in .c code should be ever done, especially for
+something as simple as this.  Otherwise the code is totally
+unmaintainable over time.
+
+thanks,
+
+greg k-h
