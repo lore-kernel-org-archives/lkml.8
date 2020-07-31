@@ -2,119 +2,165 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A53C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 365FEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE872076B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:30:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="T9CGKxez"
+	by mail.kernel.org (Postfix) with ESMTP id 002DF208A9
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:34:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596159287;
+	bh=Ln8RgoD9LBDCVjUQZUfivLSz29Krd2/xbBE+CCZmDHw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Bi+A2GNlHY/cHB5J5SnJcyyMyxgKc9MKTEDfb3yyDcbuHqsLDLdmHxUSU78SQUCp7
+	 0yPZNw+3AFOBko17oITO0hORSOKrIXZEoSsz2ppRRTQp5TpSt2Fk9EjZJOlx5R5JiV
+	 Rju5yabTS//4KuZcl4H0U/yn4ZGht6Eiydg5qvR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731040AbgGaBa2 (ORCPT
+        id S1730969AbgGaBep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 21:30:28 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:57434 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727039AbgGaBa1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 21:30:27 -0400
-X-UUID: b4b96e76507a494883ded8abae69c6e2-20200731
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=25R/tw9vzd5F5fUTQ5kr+ADS9zBYCPAZwj9/d7vMggQ=;
-        b=T9CGKxezcUwjFFv0w8UR1KW8FDeNUufY6a6WivPAgApqaG8BGbKT8yKZ6dIqbTGUVHqjcNl28GlE/I14Uebl+QRM8gWOlkMNVPPxekbOQGz38CJfXtVPKQYmUuLZDRVCtGgS3/lbq0oaIjiCIuwsab25abEmwhWp1Lgpp3DpSGM=;
-X-UUID: b4b96e76507a494883ded8abae69c6e2-20200731
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1804963979; Fri, 31 Jul 2020 09:30:20 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 31 Jul 2020 09:30:17 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 31 Jul 2020 09:30:17 +0800
-Message-ID: <1596159018.17247.53.camel@mtkswgap22>
-Subject: RE: [PATCH v4] scsi: ufs: Cleanup completed request without
- interrupt notification
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Avri Altman <Avri.Altman@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
-        "andy.teng@mediatek.com" <andy.teng@mediatek.com>,
-        "chaotian.jing@mediatek.com" <chaotian.jing@mediatek.com>,
-        "cc.chou@mediatek.com" <cc.chou@mediatek.com>
-Date:   Fri, 31 Jul 2020 09:30:18 +0800
-In-Reply-To: <SN6PR04MB4640B5FC06968244DDACB8BEFC720@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <20200724140246.19434-1-stanley.chu@mediatek.com>
-         <SN6PR04MB4640B5FC06968244DDACB8BEFC720@SN6PR04MB4640.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 30 Jul 2020 21:34:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57226 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728080AbgGaBep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 21:34:45 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 390842076B;
+        Fri, 31 Jul 2020 01:34:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596159284;
+        bh=Ln8RgoD9LBDCVjUQZUfivLSz29Krd2/xbBE+CCZmDHw=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=EKf2aA8wtUVYth+jA4ZL5IJdYbx7I2mgKPCYEU1YiNzRKpZq+yhgZ2t9n4fVePNCS
+         wl5ULXxkkJHyZiqh8gUZbRLU6oZZo88XoIq2i3dqN7+XKG3ytzPHSCErFE9QlvHA1j
+         SOqirVawGbEa17bxyleID8Fqc1nHDAQNuvVy8N3E=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 0A4243521361; Thu, 30 Jul 2020 18:34:44 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 18:34:44 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Neeraj Upadhyay <neeraju@codeaurora.org>,
+        rcu <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 2/2] rcu/tree: Clarify comments about FQS loop reporting
+ quiescent states
+Message-ID: <20200731013443.GG9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200730030221.705255-1-joel@joelfernandes.org>
+ <20200730030221.705255-2-joel@joelfernandes.org>
+ <CAEXW_YSbad9Cium_9f1eA1RfZ2Me9JcX2S-KMe-jRQo8W6AaBg@mail.gmail.com>
+ <20200730163520.GA9247@paulmck-ThinkPad-P72>
+ <20200731012152.GC2336096@google.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 71FB6D29D6D2F90D2C8183B6D742B66C6D52B9406A7B5C1C22638F62489F611D2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200731012152.GC2336096@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQmFydCwNCg0KT24gTW9uLCAyMDIwLTA3LTI3IGF0IDExOjE4ICswMDAwLCBBdnJpIEFsdG1h
-biB3cm90ZToNCj4gTG9va3MgZ29vZCB0byBtZS4NCj4gQnV0IGJldHRlciB3YWl0IGFuZCBzZWUg
-aWYgQmFydCBoYXZlIGFueSBmdXJ0aGVyIHJlc2VydmF0aW9ucy4NCj4gDQoNCldvdWxkIHlvdSBo
-YXZlIGFueSBmdXJ0aGVyIHN1Z2dlc3Rpb25zPw0KDQpUaGFua3MgYSBsb3QsDQpTdGFubGV5IENo
-dQ0KDQo+IFRoYW5rcywNCj4gQXZyaSANCj4gPiANCj4gPiBJZiBzb21laG93IG5vIGludGVycnVw
-dCBub3RpZmljYXRpb24gaXMgcmFpc2VkIGZvciBhIGNvbXBsZXRlZCByZXF1ZXN0DQo+ID4gYW5k
-IGl0cyBkb29yYmVsbCBiaXQgaXMgY2xlYXJlZCBieSBob3N0LCBVRlMgZHJpdmVyIG5lZWRzIHRv
-IGNsZWFudXANCj4gPiBpdHMgb3V0c3RhbmRpbmcgYml0IGluIHVmc2hjZF9hYm9ydCgpLiBPdGhl
-cndpc2UsIHN5c3RlbSBtYXkgYmVoYXZlDQo+ID4gYWJub3JtYWxseSBieSBiZWxvdyBmbG93Og0K
-PiA+IA0KPiA+IEFmdGVyIHVmc2hjZF9hYm9ydCgpIHJldHVybnMsIHRoaXMgcmVxdWVzdCB3aWxs
-IGJlIHJlcXVldWVkIGJ5IFNDU0kNCj4gPiBsYXllciB3aXRoIGl0cyBvdXRzdGFuZGluZyBiaXQg
-c2V0LiBBbnkgZnV0dXJlIGNvbXBsZXRlZCByZXF1ZXN0DQo+ID4gd2lsbCB0cmlnZ2VyIHVmc2hj
-ZF90cmFuc2Zlcl9yZXFfY29tcGwoKSB0byBoYW5kbGUgYWxsICJjb21wbGV0ZWQNCj4gPiBvdXRz
-dGFuZGluZyBiaXRzIi4gSW4gdGhpcyB0aW1lLCB0aGUgImFibm9ybWFsIG91dHN0YW5kaW5nIGJp
-dCINCj4gPiB3aWxsIGJlIGRldGVjdGVkIGFuZCB0aGUgInJlcXVldWVkIHJlcXVlc3QiIHdpbGwg
-YmUgY2hvc2VuIHRvIGV4ZWN1dGUNCj4gPiByZXF1ZXN0IHBvc3QtcHJvY2Vzc2luZyBmbG93LiBU
-aGlzIGlzIHdyb25nIGJlY2F1c2UgdGhpcyByZXF1ZXN0IGlzDQo+ID4gc3RpbGwgImFsaXZlIi4N
-Cj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBTdGFubGV5IENodSA8c3RhbmxleS5jaHVAbWVkaWF0
-ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jIHwgMyArKy0N
-Cj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+
-IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jIGIvZHJpdmVycy9z
-Y3NpL3Vmcy91ZnNoY2QuYw0KPiA+IGluZGV4IDU3N2NjMGQ3NDg3Zi4uOWQxODBkYTc3NDg4IDEw
-MDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMNCj4gPiArKysgYi9kcml2
-ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQo+ID4gQEAgLTY0OTMsNyArNjQ5Myw3IEBAIHN0YXRpYyBp
-bnQgdWZzaGNkX2Fib3J0KHN0cnVjdCBzY3NpX2NtbmQgKmNtZCkNCj4gPiAgICAgICAgICAgICAg
-ICAgICAgICAgICAvKiBjb21tYW5kIGNvbXBsZXRlZCBhbHJlYWR5ICovDQo+ID4gICAgICAgICAg
-ICAgICAgICAgICAgICAgZGV2X2VycihoYmEtPmRldiwgIiVzOiBjbWQgYXQgdGFnICVkIHN1Y2Nl
-c3NmdWxseSBjbGVhcmVkIGZyb20NCj4gPiBEQi5cbiIsDQo+ID4gICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBfX2Z1bmNfXywgdGFnKTsNCj4gPiAtICAgICAgICAgICAgICAgICAgICAg
-ICBnb3RvIG91dDsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBnb3RvIGNsZWFudXA7DQo+
-ID4gICAgICAgICAgICAgICAgIH0gZWxzZSB7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAg
-ZGV2X2VycihoYmEtPmRldiwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICIl
-czogbm8gcmVzcG9uc2UgZnJvbSBkZXZpY2UuIHRhZyA9ICVkLCBlcnIgJWRcbiIsDQo+ID4gQEAg
-LTY1MjcsNiArNjUyNyw3IEBAIHN0YXRpYyBpbnQgdWZzaGNkX2Fib3J0KHN0cnVjdCBzY3NpX2Nt
-bmQgKmNtZCkNCj4gPiAgICAgICAgICAgICAgICAgZ290byBvdXQ7DQo+ID4gICAgICAgICB9DQo+
-ID4gDQo+ID4gK2NsZWFudXA6DQo+ID4gICAgICAgICBzY3NpX2RtYV91bm1hcChjbWQpOw0KPiA+
-IA0KPiA+ICAgICAgICAgc3Bpbl9sb2NrX2lycXNhdmUoaG9zdC0+aG9zdF9sb2NrLCBmbGFncyk7
-DQo+ID4gLS0NCj4gPiAyLjE4LjANCg0K
+On Thu, Jul 30, 2020 at 09:21:52PM -0400, Joel Fernandes wrote:
+> On Thu, Jul 30, 2020 at 09:35:20AM -0700, Paul E. McKenney wrote:
+> > On Wed, Jul 29, 2020 at 11:25:19PM -0400, Joel Fernandes wrote:
+> > > On Wed, Jul 29, 2020 at 11:02 PM Joel Fernandes (Google)
+> > > <joel@joelfernandes.org> wrote:
+> > > >
+> > > > At least since v4.19, the FQS loop no longer reports quiescent states
+> > > 
+> > > I meant here, "FQS loop no longer reports quiescent states for offline CPUs."
+> > > 
+> > > Sorry,
+> > 
+> > You did have me going there for a bit.  ;-)
+> > 
+> > No period (".") at the end though, unless you fix up the following
+> > to start a new sentence.
+> 
+> Ok.
+> 
+> > > > unless it is a dire situation where an offlined CPU failed to report
+> > > > a quiescent state. Let us clarify the comment in rcu_gp_init() inorder
+> > > > to keep the comment current.
+> > 
+> > How about the following for this last sentence?
+> > 
+> > "This commit therefore fixes the comment in rcu_gp_init() to match
+> > the current code."
+> 
+> As per:
+> https://www.kernel.org/doc/html/v4.17/process/submitting-patches.html
+> 
+> It says:
+> Describe your changes in imperative mood, e.g. “make xyzzy do frotz” instead
+> of “[This patch] makes xyzzy do frotz” or “[I] changed xyzzy to do frotz”, as
+> if you are giving orders to the codebase to change its behaviour.
+> 
+> May be I should make it "Fix the comment in rcu_gp_init() to match the
+> current code"?
 
+What submitting-patches.rst is objecting to is starting the commit
+log with "This patch...".  I am suggesting something quite different,
+namely providing a clear indication of the transition from problem
+statement to solution.
+
+> > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > > ---
+> > > >  kernel/rcu/tree.c | 4 ++--
+> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > > index 1e51962b565b..929568ff5989 100644
+> > > > --- a/kernel/rcu/tree.c
+> > > > +++ b/kernel/rcu/tree.c
+> > > > @@ -1701,8 +1701,8 @@ static bool rcu_gp_init(void)
+> > > >
+> > > >         /*
+> > > >          * Apply per-leaf buffered online and offline operations to the
+> > > > -        * rcu_node tree.  Note that this new grace period need not wait
+> > > > -        * for subsequent online CPUs, and that quiescent-state forcing
+> > > > +        * rcu_node tree.  Note that this new grace period need not wait for
+> > > > +        * subsequent online CPUs, and that RCU hooks in CPU offlining path
+> > > >          * will handle subsequent offline CPUs.
+> > 
+> > How about something like this?
+> > 
+> > 	...  Note that this new grace period ned not wait for subsequent
+> > 	online CPUs, and that RCU hooks in the CPU offlining path, when
+> > 	combined with checks in this function, will handle CPUs that
+> > 	are currently going offline and that go offline later.
+> 
+> Sounds good to me. I think s/and that go/or that go/ though.
+
+Good point!  Another approach would be s/and that/and those that/
+but yours works.
+
+> I will make these changes and send v3, let me know though if you object.
+
+Sounds good!
+
+							Thanx, Paul
+
+> thanks,
+> 
+>  - Joel
+> 
+> 
+> > 						Thanx, Paul
+> > 
+> > > >          */
+> > > >         rcu_state.gp_state = RCU_GP_ONOFF;
+> > > > --
+> > > > 2.28.0.rc0.142.g3c755180ce-goog
+> > > >
