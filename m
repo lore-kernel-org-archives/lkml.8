@@ -2,140 +2,195 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F10C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5280622BF3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:16:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="guQm0pLx"
+	by mail.kernel.org (Postfix) with ESMTP id 4DA1422BF3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:18:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733048AbgGaMQq (ORCPT
+        id S1732990AbgGaMS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 08:16:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732842AbgGaMQq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 08:16:46 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6DD1C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 05:16:45 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f18so27812555wrs.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 05:16:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=xABj9o/+LF58yiAkW0qlTl8H60o66EHmFAlpoGa2r4s=;
-        b=guQm0pLxZhuiFMgT/YoFDq1qAQEhYLykNn383MHzp5vyWxpMrZ36YkRNI78Ke5XpUO
-         wq1Q16/L+GkWgoNJLEf/o9HsPCU4002b1qrN9oB5YQTivbxhsh1zAj0g5r0ZMwxbvFs1
-         txNvI+MFOaQIhzLW6qF79AjMywqpt6i/uYmN/8D2yUkRL2lcCo6Gkf0uBOCa2BbXDEao
-         4qz9YkoQ+hEyjr96b5l/hRkD13LxOen7ADjs35KCziHBvXijJ+P1sTq5917Lqjz9Qhls
-         GuhtcRBBoFrYjiEniyu6H5zZ+JPnAkF9+FBAarSjzbmGdrE9u2Ki04mtXhJ06YEYcu5m
-         yA3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=xABj9o/+LF58yiAkW0qlTl8H60o66EHmFAlpoGa2r4s=;
-        b=TMLoo+eu+giQfmbwTQD+ecCgafQqzIwzWTt3LKtbyInWL+732ubsCel24H3ur2HD3k
-         a3dQnRWJcbMF3PW9YX9MEfnVvA7tlNZ3lwaTFyyogtyylsTrWJEQKGlneIpvS20sGxHO
-         lizASIcATIhikpz7EF88v8PHu9MzBN+2EeY1jmiI2cJZY/EXaWZXSWFsyAnyi2uEHyWB
-         ihNDBNExFfQ6brXKF1rYpP1Qd1tj3oT4n1J+U/WYbhlGGf2vRMQIiR8NgZ54uKzYqJ/A
-         tVj0NqPAVWecCjKbG70iRh8hypdEEH5jYpw2/oLgFJ1zmXt5X8+IpUvRaMvYehzBOhln
-         XZZw==
-X-Gm-Message-State: AOAM533Lsf03utXmd2mLw4nJgDRsMNxweBpTWvOSuewRctL1nrN2Leqq
-        8P253hyihjWjmWGJCVep+FC8UA==
-X-Google-Smtp-Source: ABdhPJwnWi9tvSXSrHuqSUu1kDUIIUV324uwyEKL0/F8EHAeFwamGr+7Nm01PLL6fMFhOXcprj35Sg==
-X-Received: by 2002:adf:e6cc:: with SMTP id y12mr3266378wrm.391.1596197804388;
-        Fri, 31 Jul 2020 05:16:44 -0700 (PDT)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id g126sm12527702wme.16.2020.07.31.05.16.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 05:16:43 -0700 (PDT)
-References: <20200723180533.220312-1-pierre-louis.bossart@linux.intel.com> <20200729154639.1983854-1-jbrunet@baylibre.com> <2ad13f95-434d-376a-bc38-b209623b461e@linux.intel.com> <1jft998jbe.fsf@starbuckisacylon.baylibre.com> <936d6e37-0ad0-b0d7-814a-1ace12087746@linux.intel.com> <20200730185229.GH5055@sirena.org.uk>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-kernel@vger.kernel.org, zhangn1985@outlook.com,
-        linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH] ASoC: core: restore dpcm flags semantics
-In-reply-to: <20200730185229.GH5055@sirena.org.uk>
-Date:   Fri, 31 Jul 2020 14:16:43 +0200
-Message-ID: <1j7duj98wk.fsf@starbuckisacylon.baylibre.com>
+        Fri, 31 Jul 2020 08:18:27 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43866 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732842AbgGaMS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 08:18:26 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 199D19A795D05647D42A;
+        Fri, 31 Jul 2020 20:18:17 +0800 (CST)
+Received: from [10.174.178.63] (10.174.178.63) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 31 Jul 2020 20:18:11 +0800
+Subject: Re: [PATCH 1/4] drivers/perf: Add support for ARMv8.3-SPE
+To:     Leo Yan <leo.yan@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+CC:     <adrian.hunter@intel.com>, <alexander.shishkin@linux.intel.com>,
+        <acme@kernel.org>, <catalin.marinas@arm.com>,
+        <James.Clark@arm.com>, <jolsa@redhat.com>, <mark.rutland@arm.com>,
+        <namhyung@kernel.org>, <will@kernel.org>,
+        <zhangshaokun@hisilicon.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mingo@redhat.com>,
+        <peterz@infradead.org>, <guohanjun@huawei.com>
+References: <20200724091607.41903-1-liwei391@huawei.com>
+ <20200724091607.41903-2-liwei391@huawei.com>
+ <a9c59cb6-80f7-1abe-cef4-33127f051488@arm.com>
+ <20200730081458.GA23324@leoy-ThinkPad-X240s>
+From:   "liwei (GF)" <liwei391@huawei.com>
+Message-ID: <92273648-8638-a56f-dbd1-9aaae089d1cc@huawei.com>
+Date:   Fri, 31 Jul 2020 20:18:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200730081458.GA23324@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.178.63]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On Thu 30 Jul 2020 at 20:52, Mark Brown <broonie@kernel.org> wrote:
 
-> On Thu, Jul 30, 2020 at 11:06:23AM -0500, Pierre-Louis Bossart wrote:
->> On 7/30/20 4:04 AM, Jerome Brunet wrote:
->> > On Wed 29 Jul 2020 at 17:56, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com> wrote:
->> > > On 7/29/20 10:46 AM, Jerome Brunet wrote:
->
->> > > > The flag previously allowed card drivers to disable a stream direction on
->> > > > a link (whether or not such feature is deemed useful).
->
-> Right, and I can see a use case for this if someone has a board that
-> for some reason didn't physically connect one of the directions for some
-> reason - perhaps they were running out of pins or something.  It's not
-> clear if anyone's actually doing that though.
->
->> > > > Forcing the flags to be aligned with DAI caps just make the information
->> > > > the flag carry redundant with DAI caps, breaking a few cards along the way.
->
->> > > > This change drops the added error conditions and restore the initial flag
->> > > > semantics.
->
-> I'm not 100% clear, have we actually found cases where the flags are
-> used or is this something found through inspection and review?
+On 2020/7/30 16:14, Leo Yan wrote:
+> Hi Suzuki,
+> 
+> On Wed, Jul 29, 2020 at 10:12:50AM +0100, Suzuki Kuruppassery Poulose wrote:
+>> On 07/24/2020 10:16 AM, Wei Li wrote:
+>>> Armv8.3 extends the SPE by adding:
+>>> - Alignment field in the Events packet, and filtering on this event
+>>>    using PMSEVFR_EL1.
+>>> - Support for the Scalable Vector Extension (SVE).
+>>>
+>>> The main additions for SVE are:
+>>> - Recording the vector length for SVE operations in the Operation Type
+>>>    packet. It is not possible to filter on vector length.
+>>> - Incomplete predicate and empty predicate fields in the Events packet,
+>>>    and filtering on these events using PMSEVFR_EL1.
+>>>
+>>> Update the check of pmsevfr for empty/partial predicated SVE and
+>>> alignment event in kernel driver.
+>>>
+>>> Signed-off-by: Wei Li <liwei391@huawei.com>
+>>> ---
+>>>   arch/arm64/include/asm/sysreg.h |  4 +++-
+>>>   drivers/perf/arm_spe_pmu.c      | 18 ++++++++++++++----
+>>>   2 files changed, 17 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+>>> index 463175f80341..be4c44ccdb56 100644
+>>> --- a/arch/arm64/include/asm/sysreg.h
+>>> +++ b/arch/arm64/include/asm/sysreg.h
+>>> @@ -281,7 +281,6 @@
+>>>   #define SYS_PMSFCR_EL1_ST_SHIFT		18
+>>>   #define SYS_PMSEVFR_EL1			sys_reg(3, 0, 9, 9, 5)
+>>> -#define SYS_PMSEVFR_EL1_RES0		0x0000ffff00ff0f55UL
+>>>   #define SYS_PMSLATFR_EL1		sys_reg(3, 0, 9, 9, 6)
+>>>   #define SYS_PMSLATFR_EL1_MINLAT_SHIFT	0
+>>> @@ -769,6 +768,9 @@
+>>>   #define ID_AA64DFR0_PMUVER_8_5		0x6
+>>>   #define ID_AA64DFR0_PMUVER_IMP_DEF	0xf
+>>> +#define ID_AA64DFR0_PMSVER_8_2		0x1
+>>> +#define ID_AA64DFR0_PMSVER_8_3		0x2
+>>> +
+>>>   #define ID_DFR0_PERFMON_SHIFT		24
+>>>   #define ID_DFR0_PERFMON_8_1		0x4
+>>> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+>>> index e51ddb6d63ed..5ec7ee0c8fa1 100644
+>>> --- a/drivers/perf/arm_spe_pmu.c
+>>> +++ b/drivers/perf/arm_spe_pmu.c
+>>> @@ -54,7 +54,7 @@ struct arm_spe_pmu {
+>>>   	struct hlist_node			hotplug_node;
+>>>   	int					irq; /* PPI */
+>>> -
+>>> +	int					pmuver;
+>>>   	u16					min_period;
+>>>   	u16					counter_sz;
+>>> @@ -80,6 +80,15 @@ struct arm_spe_pmu {
+>>>   /* Keep track of our dynamic hotplug state */
+>>>   static enum cpuhp_state arm_spe_pmu_online;
+>>> +static u64 sys_pmsevfr_el1_mask[] = {
+>>> +	[ID_AA64DFR0_PMSVER_8_2] = GENMASK_ULL(63, 48) | GENMASK_ULL(31, 24) |
+>>> +		GENMASK_ULL(15, 12) | BIT_ULL(7) | BIT_ULL(5) | BIT_ULL(3) |
+>>> +		BIT_ULL(1),
+>>> +	[ID_AA64DFR0_PMSVER_8_3] = GENMASK_ULL(63, 48) | GENMASK_ULL(31, 24) |
+>>> +		GENMASK_ULL(18, 17) | GENMASK_ULL(15, 11) | BIT_ULL(7) |
+>>> +		BIT_ULL(5) | BIT_ULL(3) | BIT_ULL(1),
+>>> +};
+>>> +
+>>>   enum arm_spe_pmu_buf_fault_action {
+>>>   	SPE_PMU_BUF_FAULT_ACT_SPURIOUS,
+>>>   	SPE_PMU_BUF_FAULT_ACT_FATAL,
+>>> @@ -670,7 +679,7 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
+>>>   	    !cpumask_test_cpu(event->cpu, &spe_pmu->supported_cpus))
+>>>   		return -ENOENT;
+>>> -	if (arm_spe_event_to_pmsevfr(event) & SYS_PMSEVFR_EL1_RES0)
+>>> +	if (arm_spe_event_to_pmsevfr(event) & ~sys_pmsevfr_el1_mask[spe_pmu->pmuver])
+>>>   		return -EOPNOTSUPP;
+>>>   	if (attr->exclude_idle)
+>>> @@ -937,6 +946,7 @@ static void __arm_spe_pmu_dev_probe(void *info)
+>>>   			fld, smp_processor_id());
+>>>   		return;
+>>>   	}
+>>> +	spe_pmu->pmuver = fld;
+>>
+>> How do we deal with cases where we have big.LITTLE system with differing
+>> SPE versions ?
+> 
+> Good point.
+> 
+> The first question we need to answer is: how to define SPE version?
+> From my understanding, if SPE uses the same sample specification and
+> the same packet format, then we should consider the SPE is the same
+> version cross CPUs.  So even some CPUs are ARMv8.2 and other CPUs are
+> ARMv8.3 variants, we still should take the SPE as the same version.
+> 
+> And when read the SPE driver in the file drivers/perf/arm_spe_pmu.c and
+> I concluded that so far the SPE perf driver is to only support SPE-v1
+> with single instance, it cannot support a complex usage case like
+> below:
+> 
+>   CPU0-3: ARMv8.2 architecture with SPE
+>   CPU4-7: ARMv8.3 architecture with SPE
+> 
+> For this case, if we take SPE as two different versions, let's say
+> SPE-8.2 and SPE-8.3, then should the SPE driver need to create multi
+> perf PMU events?  For example, we should create a perf PMU event
+> 'arm_spe_8.2' and another PMU event 'arm_spe_8.3'.
 
-One last thing I'd like to understand. Is this behavior of throwing an
-error going to applied to the non-DPCM case as well ? so at least thing
-are consistent between both cases ?
+As we have supported SPE v2 (ARMv8.3-SPE) now, if we add the new
+of_device_id: "arm,statistical-profiling-extension-v2" and the new
+platform_device_id: "arm,spe-v2", we may really support two instance now.
+Even two different versions of SPE pmus which work on different range of
+cores with the same PPI. Their functional scopes are the same as the PPI partitions.
 
-IOW:
- * An error is now throw if dpcm_capture is set on the link and the CPU
- DAI support playback_only
- * on non-DPCM links, will an error be thrown as well if playback_only
- is not set and the CPU on the link happen to not support capture ?
- 
->
->> >   * It worked for every user of DPCM so a far.
->
->> Not completely true, when Morimoto-san added snd_soc_dai_stream_valid() it
->> exposed tons of cases where the information on direction was not provided in
->> a reliable at the DAI level. I will assert that we are still finding out
->> cases with broken DAI configurations, and as a result we will also find
->> broken dailink configurations. Your picture of DPCM as a perfectly
->> functional system that I broke is a distortion of reality.
->
->> The reality is that we have to work in steps, first make sure all DAIs are
->> properly described, then work on the dailinks and optimize at a later point.
->> we will need warnings to find out what the problem cases are, and move
->> slowly.
->
-> This was all triggered by Morimoto-san's changes like you say.  DPCM has
-> quite a lot of problems in general, here IIRC the issues were that we
-> had multiple different ways of doing similar things which it wasn't
-> quite clear if people were even using.  The intention with the warnings
-> was to remove them one way or another, they're mainly intended to flush
-> out actual active usage of the flags as opposed to redundant usage of
-> them which could be confused/broken.
->
-> This could definitely have been clearer in the changelogs though.
+> Another option is we always take this as SPE-v1 and only create single
+> PMU event, just keep what's we are doing with the perf event
+> 'arm_spe_0', but the driver needs to dynamically detect SPE PMU version
+> number in the function arm_spe_pmu_event_init(), and then based on
+> version number to select corresponding mask for PMSEVFR.
 
+Thus, the driver will service two devices, and will also register two PMUs 'arm_spe_0' and
+'arm_spe_1', so i think there is no conflict here.
+
+Back to Suzuki's question, refer to the ACPI parsing code for SPE device, function
+arm_spe_acpi_register_device(), there is a check of hetero_id for all cores.
+It seems that we only support homogeneous ACPI/SPE machines, but i can't find the similar
+check in OF/SPE parsing code.
+
+> Thanks,
+> Leo
+> 
+> [1] https://lore.kernel.org/linux-arm-kernel/20200724071111.35593-1-liwei391@huawei.com/
+> 
+
+
+Thanks,
+Wei
