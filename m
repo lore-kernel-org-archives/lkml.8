@@ -2,119 +2,127 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F9A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D28C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FEB8208A9
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AAF0208A9
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:53:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kia3kxh/"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="v3IsjUzK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731241AbgGaCwz (ORCPT
+        id S1731252AbgGaCxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 22:52:55 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:47927 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731124AbgGaCwz (ORCPT
+        Thu, 30 Jul 2020 22:53:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731124AbgGaCxN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 22:52:55 -0400
-X-UUID: e8de2b2ae81e483e9073d83b4e937833-20200731
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=cFIZ7AH8wP53gxkMXNCyFCEQBG9OwGZTiAZ/fcp/WMM=;
-        b=kia3kxh/xLsY5o/LAnggUes2TxPWk6hh7M5Ketp2D/F3ooE+WYlo03VvAChdW63y/QhV5/pLE5BtARSuKGAh6FiVorWlJ0JRCn24JZfctEQIRhqeO3Rg3pgPi/RO1oHDKnMV66Uykf1mfV6VAsWtaJCZE3mGnZYGL9gepb3MdOY=;
-X-UUID: e8de2b2ae81e483e9073d83b4e937833-20200731
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1583896948; Fri, 31 Jul 2020 10:52:51 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 31 Jul 2020 10:52:48 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 31 Jul 2020 10:52:50 +0800
-Message-ID: <1596163970.3932.24.camel@mtkswgap22>
-Subject: Re: [PATCH v4 2/2] soc: mediatek: add mtk-devapc driver
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <devicetree@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Fri, 31 Jul 2020 10:52:50 +0800
-In-Reply-To: <CAAOTY_9HXv+OsSRF7P9=cRy9AYZ0vwffgo3Kc8V=qQ6ce90uJw@mail.gmail.com>
-References: <1596010690-13178-1-git-send-email-neal.liu@mediatek.com>
-         <1596010690-13178-3-git-send-email-neal.liu@mediatek.com>
-         <CAAOTY_9HXv+OsSRF7P9=cRy9AYZ0vwffgo3Kc8V=qQ6ce90uJw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 30 Jul 2020 22:53:13 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60F3FC061574
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 19:53:13 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id t6so2574830pjr.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 19:53:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=l+uP1W3s0IVnpqxnYvYPs1ilzRwp+d/Px1T0E6Ky5Ck=;
+        b=v3IsjUzK4d6pM7yq9hMm7rOU9fqC6NDmZxMWXHhysuQnFv3vTCfwFeIsNDP7cWlwkS
+         b3a/UKkZRC0eOy4Rh4/01Ljc9CBJrCkhywpPugYjmHPVqkPrngCACI06EslGsXit3KgG
+         k2tNPiLHhGNlLj8TGMYyQk29QW2VMb1avqactPLyPRCGHswWbv4KO1o3nXFCRt7ROVfj
+         xUdm1lv9qHTei7A+FP5b5RMHMVe7ryYKTyeRTppajpO6cMp0JT34GpDtEcbLM5dyOYTM
+         avuLVIMxEifZ4m+mL9pg2X1OfUWbXksxXjAp1zjwN+M0VLvSvWz5ZFVjs5x3BgaU+BLF
+         FbyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=l+uP1W3s0IVnpqxnYvYPs1ilzRwp+d/Px1T0E6Ky5Ck=;
+        b=YURHt1l/Gas5vAcM6ekcbbZkcui0/S4EKxmiECq+rDsjoGTS8SVg3enNCp+9Kw+JQk
+         r+Pzp3mykiTttFKzZpWlHSBwJIYEJG8ZuC8hH0l+4eqOV5mTrjXREzXewR1isRRn67kb
+         SLLGR1E/0T2uFhtS00yygnFDzXxKnm2o7ZbupDZ5XHy12IhyYq5F1DJuSYXWS85NRG7c
+         5MbWUFxwUtA3RWRBFvNQsKN7p9oV/5HDZoyl91SRU4qpGG+NXHUsQV0CHrZb0xEJffwO
+         jgED+jfE/axsfkPufwjnhDLQuhHNbFjfoMdwrbYjYSf4hHModG5dYyrxVsk6qX7BrSKS
+         p6vg==
+X-Gm-Message-State: AOAM531PAi0EA8X6ieVZH1k66vxKWWdGcHsAF0O1krmqlal0vzuQG518
+        18aAM7C6cvTacbWTtShaDCNGrg==
+X-Google-Smtp-Source: ABdhPJx64meobaKTgi0GjRMUmb6O9KpahKfmhFoA0xe7yKucBhLYjaL6ZJ9ML1dmtTIlR49E3OuD1A==
+X-Received: by 2002:a17:90a:2309:: with SMTP id f9mr1923822pje.235.1596163992775;
+        Thu, 30 Jul 2020 19:53:12 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id r77sm8390953pfc.193.2020.07.30.19.53.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jul 2020 19:53:12 -0700 (PDT)
+Subject: Re: KASAN: use-after-free Read in io_uring_setup (2)
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+9d46305e76057f30c74e@syzkaller.appspotmail.com>,
+        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk, Markus Elfring <Markus.Elfring@web.de>
+References: <20200731014541.11944-1-hdanton@sina.com>
+ <20200731022859.6372-1-hdanton@sina.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <89fcf8d1-3c87-bd07-b974-e9c012eb1eea@kernel.dk>
+Date:   Thu, 30 Jul 2020 20:53:10 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: DEF49C35DD5F7474C2C42C04E1153A4CCCB758172807FE52D0D1CF94F024EAA82000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200731022859.6372-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2h1bi1LdWFuZywNCg0KT24gRnJpLCAyMDIwLTA3LTMxIGF0IDAwOjE0ICswODAwLCBDaHVu
-LUt1YW5nIEh1IHdyb3RlOg0KPiBIaSwgTmVhbDoNCj4gDQo+IE5lYWwgTGl1IDxuZWFsLmxpdUBt
-ZWRpYXRlay5jb20+IOaWvCAyMDIw5bm0N+aciDI55pelIOmAseS4iSDkuIvljYg0OjI55a+r6YGT
-77yaDQo+ID4NCj4gPiBNZWRpYVRlayBidXMgZmFicmljIHByb3ZpZGVzIFRydXN0Wm9uZSBzZWN1
-cml0eSBzdXBwb3J0IGFuZCBkYXRhDQo+ID4gcHJvdGVjdGlvbiB0byBwcmV2ZW50IHNsYXZlcyBm
-cm9tIGJlaW5nIGFjY2Vzc2VkIGJ5IHVuZXhwZWN0ZWQNCj4gPiBtYXN0ZXJzLg0KPiA+IFRoZSBz
-ZWN1cml0eSB2aW9sYXRpb24gaXMgbG9nZ2VkIGFuZCBzZW50IHRvIHRoZSBwcm9jZXNzb3IgZm9y
-DQo+ID4gZnVydGhlciBhbmFseXNpcyBvciBjb3VudGVybWVhc3VyZXMuDQo+ID4NCj4gPiBBbnkg
-b2NjdXJyZW5jZSBvZiBzZWN1cml0eSB2aW9sYXRpb24gd291bGQgcmFpc2UgYW4gaW50ZXJydXB0
-LCBhbmQNCj4gPiBpdCB3aWxsIGJlIGhhbmRsZWQgYnkgbXRrLWRldmFwYyBkcml2ZXIuIFRoZSB2
-aW9sYXRpb24NCj4gPiBpbmZvcm1hdGlvbiBpcyBwcmludGVkIGluIG9yZGVyIHRvIGZpbmQgdGhl
-IG11cmRlcmVyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTmVhbCBMaXUgPG5lYWwubGl1QG1l
-ZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gDQo+IFtzbmlwXQ0KPiANCj4gPiArDQo+ID4gKy8qDQo+
-ID4gKyAqIGRldmFwY19leHRyYWN0X3Zpb19kYmcgLSBleHRyYWN0IGZ1bGwgdmlvbGF0aW9uIGlu
-Zm9ybWF0aW9uIGFmdGVyIGRvaW5nDQo+ID4gKyAqICAgICAgICAgICAgICAgICAgICAgICAgICBz
-aGlmdCBtZWNoYW5pc20uDQo+ID4gKyAqLw0KPiA+ICtzdGF0aWMgdm9pZCBkZXZhcGNfZXh0cmFj
-dF92aW9fZGJnKHN0cnVjdCBtdGtfZGV2YXBjX2NvbnRleHQgKmN0eCkNCj4gPiArew0KPiA+ICsg
-ICAgICAgY29uc3Qgc3RydWN0IG10a19kZXZhcGNfdmlvX2RiZ3MgKnZpb19kYmdzOw0KPiA+ICsg
-ICAgICAgc3RydWN0IG10a19kZXZhcGNfdmlvX2luZm8gKnZpb19pbmZvOw0KPiA+ICsgICAgICAg
-dm9pZCBfX2lvbWVtICp2aW9fZGJnMF9yZWc7DQo+ID4gKyAgICAgICB2b2lkIF9faW9tZW0gKnZp
-b19kYmcxX3JlZzsNCj4gPiArICAgICAgIHUzMiBkYmcwOw0KPiA+ICsNCj4gPiArICAgICAgIHZp
-b19kYmcwX3JlZyA9IGN0eC0+ZGV2YXBjX3BkX2Jhc2UgKyBjdHgtPm9mZnNldC0+dmlvX2RiZzA7
-DQo+ID4gKyAgICAgICB2aW9fZGJnMV9yZWcgPSBjdHgtPmRldmFwY19wZF9iYXNlICsgY3R4LT5v
-ZmZzZXQtPnZpb19kYmcxOw0KPiA+ICsNCj4gPiArICAgICAgIHZpb19kYmdzID0gY3R4LT52aW9f
-ZGJnczsNCj4gPiArICAgICAgIHZpb19pbmZvID0gY3R4LT52aW9faW5mbzsNCj4gPiArDQo+ID4g
-KyAgICAgICAvKiBTdGFydHMgdG8gZXh0cmFjdCB2aW9sYXRpb24gaW5mb3JtYXRpb24gKi8NCj4g
-PiArICAgICAgIGRiZzAgPSByZWFkbCh2aW9fZGJnMF9yZWcpOw0KPiA+ICsgICAgICAgdmlvX2lu
-Zm8tPnZpb19hZGRyID0gcmVhZGwodmlvX2RiZzFfcmVnKTsNCj4gPiArDQo+ID4gKyAgICAgICB2
-aW9faW5mby0+bWFzdGVyX2lkID0gKGRiZzAgJiB2aW9fZGJncy0+bXN0aWQubWFzaykgPj4NCj4g
-PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2aW9fZGJncy0+bXN0aWQuc3RhcnQ7DQo+
-ID4gKyAgICAgICB2aW9faW5mby0+ZG9tYWluX2lkID0gKGRiZzAgJiB2aW9fZGJncy0+ZG1uaWQu
-bWFzaykgPj4NCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2aW9fZGJncy0+ZG1u
-aWQuc3RhcnQ7DQo+ID4gKyAgICAgICB2aW9faW5mby0+d3JpdGUgPSAoKGRiZzAgJiB2aW9fZGJn
-cy0+dmlvX3cubWFzaykgPj4NCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgdmlvX2Ri
-Z3MtPnZpb193LnN0YXJ0KSA9PSAxOw0KPiA+ICsgICAgICAgdmlvX2luZm8tPnJlYWQgPSAoKGRi
-ZzAgJiB2aW9fZGJncy0+dmlvX3IubWFzaykgPj4NCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgIHZpb19kYmdzLT52aW9fci5zdGFydCkgPT0gMTsNCj4gPiArICAgICAgIHZpb19pbmZvLT52
-aW9fYWRkcl9oaWdoID0gKGRiZzAgJiB2aW9fZGJncy0+YWRkcl9oLm1hc2spID4+DQo+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZpb19kYmdzLT5hZGRyX2guc3RhcnQ7DQo+
-IA0KPiANCj4gSSB3b3VsZCBsaWtlIHRvIGRlZmluZSB0aGUgdHlwZSBvZiBjdHgtPnZpb19pbmZv
-IHRvIGJlDQo+IA0KPiBzdHJ1Y3QgbXRrX2RldmFwY192aW9fZGJncyB7DQo+ICAgICB1MzIgbXN0
-aWQ6MTY7DQo+ICAgICB1MzIgZG1uaWQ6NjsNCj4gICAgIHUzMiB2aW9fdzoxOw0KPiAgICAgdTMy
-IHZpb19yOjE7DQo+ICAgICB1MzIgYWRkcl9oOjQ7DQo+ICAgICB1MzIgcmVzdjo0Ow0KPiB9Ow0K
-PiANCj4gc28gdGhlIGNvZGUgd291bGQgbGlrZSB0aGUgc2ltcGxlIHdheQ0KPiANCj4gY3R4LT52
-aW9faW5mbyA9IChzdHJ1Y3QgbXRrX2RldmFwY192aW9fZGJncylyZWFkbCh2aW9fZGJnMV9yZWcp
-Ow0KPiANCg0KVGhpcyBpZGVhIGxvb2tzIGdyZWF0ISBJcyB0aGVyZSBhbnkgcG9zc2libGUgdG8g
-cGFzcyB0aGUgYml0IGxheW91dCBieQ0KRFQgZGF0YSwgYW5kIHN0aWxsIG1ha2UgdGhpcyBvcGVy
-YXRpb24gc2ltcGxlPw0KV2h5IGFtIEkgYXNraW5nIHRoaXMgcXVlc3Rpb24gaXMgYmVjYXVzZSB0
-aGlzIGJpdCBsYXlvdXQgaXMgcGxhdGZvcm0NCmRlcGVuZGVudC4NCg0KPiBSZWdhcmRzLA0KPiBD
-aHVuLUt1YW5nLg0KPiANCj4gPiArDQo+ID4gKyAgICAgICBkZXZhcGNfdmlvX2luZm9fcHJpbnQo
-Y3R4KTsNCj4gPiArfQ0KPiA+ICsNCg0K
+On 7/30/20 8:28 PM, Hillf Danton wrote:
+> 
+> On Thu, 30 Jul 2020 20:07:59 -0600 Jens Axboe wrote:
+>> On 7/30/20 7:45 PM, Hillf Danton wrote:
+>>>
+>>> Add the missing percpu_ref_get when creating ctx.
+>>>
+> [...]
+>> The error path doesn't care, the issue is only after fd install. Hence
+> 
+> Yes you are right.
+> 
+>> we don't need to grab a reference, just make sure we don't touch the ctx
+>> after fd install.
+> 
+> This is a cure, not a generic one as it maybe a potpit for anyone adding
+> changes here since on. But that's quite unlikely as this is a way one-off
+> path.
+> 
+>> Since you saw this one, you must have also seen my
+>> patch. Why not comment on that instead?
+> 
+> You know, it is unusually hard to add anything in your field, and I hit the
+> send button after staring at the screen for two minutes, given a different
+> approach.
+
+The patch was sent out 7h ago. My suggestion would be to at least see
+what other people may have commented or posted on the topic first, instead
+of just ignoring it point blank and sending something else out.
+
+A good way to start a discussion would be to reply to my email in this
+very thread, with why you think an alternate solution might be better.
+Or point out of there are errors in it. Just ignoring what else has been
+posted just comes off as rude, to be honest.
+
+You've got patches in for io_uring in the past, and I'd surely like to
+see that continue. But working together is helping each other out, not
+working in a vacuum, pretending not to see what else is being discussed
+or posted.
+
+-- 
+Jens Axboe
 
