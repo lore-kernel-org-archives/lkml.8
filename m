@@ -2,89 +2,127 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26231C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4416DC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB499208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12AE5208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:27:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bUfjRImb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732838AbgGaPX7 (ORCPT
+        id S2387536AbgGaP1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 11:23:59 -0400
-Received: from mga02.intel.com ([134.134.136.20]:4011 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726497AbgGaPX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 11:23:59 -0400
-IronPort-SDR: ieHzjBUvwhR+MmwCJ53Tj8TeGi1axH9txbeq/9/sQ3wGvWQItlj6pvngUJmyNW/vWWtuVdpVZM
- IQfRCuBtisrg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="139776760"
-X-IronPort-AV: E=Sophos;i="5.75,418,1589266800"; 
-   d="scan'208";a="139776760"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 08:23:58 -0700
-IronPort-SDR: bSb6tvJsAMoUmHEgucZC11pIyRmfpRA9zMhvYeL+rzLp6S00sj16uBLvwgPPAbnNwMQJhlSFhv
- 8md9gp1s7X2w==
-X-IronPort-AV: E=Sophos;i="5.75,418,1589266800"; 
-   d="scan'208";a="321423421"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 08:23:56 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 1F4F720722; Fri, 31 Jul 2020 18:23:54 +0300 (EEST)
-Date:   Fri, 31 Jul 2020 18:23:54 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        linux-media@vger.kernel.org,
-        Hugues Fruchet <hugues.fruchet@st.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 2/2] media: i2c: ov5640: Add support for BT656 mode
-Message-ID: <20200731152353.GS13316@paasikivi.fi.intel.com>
-References: <1596187487-31403-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1596187487-31403-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Fri, 31 Jul 2020 11:27:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59626 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387521AbgGaP1t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 11:27:49 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80C35C061574;
+        Fri, 31 Jul 2020 08:27:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Bsi9xPmSMWSxHDG9tcc/ZmIBBdGYL5RzEu0Vz8YRBRg=; b=bUfjRImbe/fazmrVUlDrO7qo7p
+        XgRpbbXCL+hV9Dqk/dBw8POrfT022WbSD15UpCQDAUPlUSCj2PAkbM6R27OpRxymm3L7YOi9/BRsE
+        bv2W18JgDF5Ly5bKpeM0CCQ7+yi743p5SNM7I+rvEAIj9H9IPF/tng3FU+e05ZLNmFhnNekqIlmza
+        vSvqMrer1bN0iDbn5NqpSaCs1kvaVoKWoWUp2Gpx77GizjAvaRAxBEUhnzKvD5XQqPT/XiLxluoz4
+        c9QcsZn1yG6uCThYdwdvrosh9soo50ts83HhDciRmV5KgPv5kXW8Xl0ou3kXFg9C6gLHxfHE1RCkv
+        ArFe76MA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k1Wwa-0002d9-3F; Fri, 31 Jul 2020 15:27:36 +0000
+Date:   Fri, 31 Jul 2020 16:27:36 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Steven Sistare <steven.sistare@oracle.com>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
+        arnd@arndb.de, keescook@chromium.org, gerg@linux-m68k.org,
+        ktkhai@virtuozzo.com, christian.brauner@ubuntu.com,
+        peterz@infradead.org, esyr@redhat.com, jgg@ziepe.ca,
+        christian@kellner.me, areber@redhat.com, cyphar@cyphar.com
+Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
+Message-ID: <20200731152736.GP23808@casper.infradead.org>
+References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
+ <20200730152250.GG23808@casper.infradead.org>
+ <db3bdbae-eb0f-1ae3-94dd-045e37bc94ba@oracle.com>
+ <20200730171251.GI23808@casper.infradead.org>
+ <63a7404c-e4f6-a82e-257b-217585b0277f@oracle.com>
+ <20200730174956.GK23808@casper.infradead.org>
+ <ab7a25bf-3321-77c8-9bc3-28a223a14032@oracle.com>
+ <87y2n03brx.fsf@x220.int.ebiederm.org>
+ <689d6348-6029-5396-8de7-a26bc3c017e5@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1596187487-31403-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <689d6348-6029-5396-8de7-a26bc3c017e5@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+On Fri, Jul 31, 2020 at 10:57:44AM -0400, Steven Sistare wrote:
+> Matthews sileby/mshare proposal has the same issue.  If a process opts-in
+> and mmap's an address in the shared region, then content becomes mapped at
+> a VA that was known to the pre-fork or pre-exec process.  Trust must still
+> be established.
 
-On Fri, Jul 31, 2020 at 10:24:47AM +0100, Lad Prabhakar wrote:
-> @@ -2875,8 +2891,10 @@ static int ov5640_s_stream(struct v4l2_subdev *sd, int enable)
->  
->  		if (sensor->ep.bus_type == V4L2_MBUS_CSI2_DPHY)
->  			ret = ov5640_set_stream_mipi(sensor, enable);
-> -		else
-> +		else if (sensor->ep.bus_type == V4L2_MBUS_PARALLEL)
->  			ret = ov5640_set_stream_dvp(sensor, enable);
-> +		else
-> +			ret = ov5640_set_stream_bt656(sensor, enable);
+It's up to the recipient whether they try to map it at the same address
+or at a fresh address.  The intended use case is a "semi-shared" address
+space between two processes (ie partway between a threaded, fully-shared
+address space and a forked un-shared address space), in which case
+there's a certain amount of trust and cooperation between the processes.
 
-I'd also check for the Bt.656 mode here, rather than assuming it. 
+Your preservation-across-exec use-case might or might not need the
+VMA to be mapped at the same address.  I don't know whether qemu stores
+pointers in this VMA which are absolute within the qemu address space.
+If it's just the emulated process's address space, then everything will
+be absolute within its own address space and everything will be opaque
+to qemu.  If qemu is storing its own pointers in it, then it has to be
+mapped at the same address.
 
-Could you also update the DT bindings, given that the sensor appears to
-support Bt.656 as well? I believe this requires the bus-type property, too.
+> > Here is another suggestion.
+> > 
+> > Have a very simple program that does:
+> > 
+> > 	for (;;) {
+> > 		handle = dlopen("/my/real/program");
+> > 		real_main = dlsym(handle, "main");
+> > 		real_main(argc, argv, envp);
+> > 		dlclose(handle);
+> > 	}
+> > 
+> > With whatever obvious adjustments are needed to fit your usecase.
+> > 
+> > That should give the same level of functionality, be portable to all
+> > unices, and not require you to duplicate code.  It belive it limits you
+> > to not upgrading libc, or librt but that is a comparatively small
+> > limitation.
+> > 
+> > 
+> > Given that in general the interesting work is done in userspace and that
+> > userspace has provided an interface for reusing that work already.
+> > I don't see the justification for adding anything to exec at this point. 
+> 
+> Thanks for the suggestion.  That is clever, and would make a fun project,
+> but I would not trust it for production.  These few lines are just
+> the first of many that it would take to reset the environment to the
+> well-defined post-exec initial conditions that all executables expect,
+> and incrementally tearing down state will be prone to bugs.  Getting a
+> clean slate from a kernel exec is a much more reliable design.  The use
+> case is creating long-lived apps that never go down, and the simplest
+> implementation will have the fewest bugs and is the best.  MADV_DOEXEC is
+> simple, and does not even require a new system call, and the kernel already
+> knows how to exec without bugs.
 
->  
->  		if (!ret)
->  			sensor->streaming = enable;
-
--- 
-Kind regards,
-
-Sakari Ailus
+It's a net increase of 200 lines of kernel code.  If 4 lines of userspace
+code removes 200 lines of kernel code, I think I know which I prefer ...
