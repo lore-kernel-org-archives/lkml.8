@@ -2,167 +2,102 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3880C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 03:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDF7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 03:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5A4D20829
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 03:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A09A2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 03:20:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e4LOTTGO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TIDl8Ys7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731290AbgGaDSO (ORCPT
+        id S1731318AbgGaDUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 23:18:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60652 "EHLO
+        Thu, 30 Jul 2020 23:20:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731193AbgGaDSO (ORCPT
+        with ESMTP id S1731262AbgGaDUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 23:18:14 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED077C061574;
-        Thu, 30 Jul 2020 20:18:13 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id o21so4870088oie.12;
-        Thu, 30 Jul 2020 20:18:13 -0700 (PDT)
+        Thu, 30 Jul 2020 23:20:18 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0C6CC061575
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 20:20:18 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id l1so30373519ioh.5
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 20:20:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=oDX5BL8Kg6dz4NIfSq2/kBQgUQBoWLV9b549kguz+k4=;
-        b=e4LOTTGO9VGAd0578jx3jnJEw7Knp2InuwW64gwhwP1NjzWkpHB9e2eEhIWvNHc7aL
-         bFXR3LSVwPDoKzSQYVRq35xDuEi3hxBAAG2WHpkTO1ShQEFnLi7m22ShXTsrlx9TcdmH
-         bAFUkGdivGbf+cgj7FBoK5Ik2JzTYzirMy/KkvCpq1XosjCB9kY9IuCZyd5x51CdkiJX
-         Jsaxi7FaDT+yAAEPu22fEyA/yKeBhys02Q4s/ALn2dEHGasPFeHeB6sa+Lxu35+tzpKN
-         nnu5WKwP19QTjzDNqpgpgk4pdsRGerPAOtiAndKrJWDN/ssFGxpg7L0DTnZ034WvjxTX
-         Rr8Q==
+        bh=9ENQWuwdn/hvmQ301dN3tmkkB+LAcEklgYZq8xuTSYw=;
+        b=TIDl8Ys7hSbhzPM2mHauS/ReeI+JqpSYdopU1RM4jHqMdHyOREE8Vlve22yEcLgG1g
+         507Ue8awfbRghdJ6vHS7inQajFgR44+iuLum18eYJ4hfDSN1S6KUduhnIMPL3ZmQXMEe
+         bXbTAT0L5i4kFIvbXtqJChwmEeU9jKVIXrzpt1k7cmweAl/VN+NibANBQewidfEf++u7
+         8dqcdFbcBpaTDSykn8SNEj0wY0IWGltFTuCoa05AD2Lo27I8s5PDEVm65Svb2mQs8Vpc
+         ircCbnkbzNISgoVFgfVWIh7282qoaV0k1q6yMjGZrfK+R9xL0dFRLf9mqvTL+amTzxpe
+         iRZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oDX5BL8Kg6dz4NIfSq2/kBQgUQBoWLV9b549kguz+k4=;
-        b=bjwrz8B81y4wF2sT0IMKGt7VfsB4hHUPg7Hxg6dGbUi4f7YLmZv/FVXlwpw7kuFq3y
-         YrAFAjHYVrxHP36r/O5OUzaWY5lyC/4GQ5mzaXwAhtaBDYetZtBsLI57uS1B2pbnMIEb
-         3MfDxgp3W/ncg8OOhqlxqJoW4cELd6UTuEs20jnH3AKisF6PmDYSCDmipB3x3GvkAO8N
-         OkR3Exdjxz9NNmwnR4yz5ggNEz1d5i/ckYot1Mk2sUwPGDHngeIC3yShsBVfxy8u8K0z
-         RUZW2Eakz+QR6iOv//JHoPsJ7yT67+2NFHIjfVMOkmSeV/RWeD2NVaYY4RxUUTL7tQFH
-         v20A==
-X-Gm-Message-State: AOAM532aOhqQto/vYDgKkaQ7Hx63oxwjsJYN08aJsz0DoDxuYqHRiKTj
-        w9Huv9VXZDi0T55qrv/4uy7N29ZkrqRXcPkzF4w=
-X-Google-Smtp-Source: ABdhPJw2eyVem6mXOUYU37azi0C4t08WajaLglV8LeaogMNa+yfvnZEon1nqN+ZrCYvFutA1eXx9OIXCTS2FFLtU1tk=
-X-Received: by 2002:a05:6808:b:: with SMTP id u11mr1499503oic.33.1596165493383;
- Thu, 30 Jul 2020 20:18:13 -0700 (PDT)
+        bh=9ENQWuwdn/hvmQ301dN3tmkkB+LAcEklgYZq8xuTSYw=;
+        b=Dz2QeKWDqAA0ECPTOytx9Hp6stq+VquxRo9e/2O6oc4uNDHTRdP1iMIC/FsOqTeE5o
+         FMiMYIiklx+qswr6bgSAUF1iqjamUTt9OMrwzEONIPbgCW7OdqTpKCGiuQgpSWVGCSnw
+         oJkZPpMy97YROOw57xCH2AZ2rj8+YrMZy485hx/q0PZisvQWc1YFg3UqoSLGisx+b+94
+         Rk1vwbUEcBhyoNlPe/867Z3aVPNZMfcN8CIesx6l4DeuL0YHrkLOIQzRyGQkBBXtYqZb
+         QKu4ym7cwj95f1vN1YhG+GK3OALHOXaHK9pT8HJFrGWzWr6Y3diFU8pUmtp9IMwlEqHS
+         cXfg==
+X-Gm-Message-State: AOAM532CF43DRknSkUDgD09VfuUsP6gYR7Z0DQA1w9ILNCOFA7oDSySz
+        wIKFc2vvyRO2h+O87wTYOq0CHnbMvzJr3XoBOldJzA==
+X-Google-Smtp-Source: ABdhPJz/t0Yu4F9Ndzp7QqxU21H3Aj0mRN+wMLbRFcabvVIIRE+bNPKaV47Hq6jCYL1LWhHyBhWTpfdfzh06hlBM+sI=
+X-Received: by 2002:a6b:c3cf:: with SMTP id t198mr1674974iof.164.1596165617501;
+ Thu, 30 Jul 2020 20:20:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <1595929506-9203-1-git-send-email-wanpengli@tencent.com>
- <1595929506-9203-3-git-send-email-wanpengli@tencent.com> <87k0ymldg9.fsf@vitty.brq.redhat.com>
- <CANRm+Cx-VM=QGcDNG0oRq7YX+2wmmw8yDjESrJGxTeEWkUUv0A@mail.gmail.com> <875za5l0cm.fsf@vitty.brq.redhat.com>
-In-Reply-To: <875za5l0cm.fsf@vitty.brq.redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Fri, 31 Jul 2020 11:18:02 +0800
-Message-ID: <CANRm+CyDr3hj_Gg0Q9FrbAJMvuJCiYam_gd4Y6the=9XjCbp4w@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] KVM: SVM: Fix disable pause loop exit/pause
- filtering capability on SVM
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+References: <20200729235929.379-1-graf@amazon.com> <20200729235929.379-2-graf@amazon.com>
+ <CALMp9eRq3QUG64BwSGLbehFr8k-OLSM3phcw7mhuZ9hVk_N2-A@mail.gmail.com>
+ <e7cbf218-fb01-2f30-6c5c-a4b6e441b5e4@amazon.com> <CALMp9eRQRaw7raxeH1nOTGr0rBk5bqbmoxUo7txGyQfaBs0=4g@mail.gmail.com>
+In-Reply-To: <CALMp9eRQRaw7raxeH1nOTGr0rBk5bqbmoxUo7txGyQfaBs0=4g@mail.gmail.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Thu, 30 Jul 2020 20:20:06 -0700
+Message-ID: <CALMp9eSSKra+Vic0U9kDeiT1y+Jfq6Vmrqsw+S8jqD0_oqH9zA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] KVM: x86: Deflect unknown MSR accesses to user space
+To:     Alexander Graf <graf@amazon.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
         Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
+        Joerg Roedel <joro@8bytes.org>,
+        KarimAllah Raslan <karahmed@amazon.de>,
+        kvm list <kvm@vger.kernel.org>, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Aaron Lewis <aaronlewis@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Jul 2020 at 19:16, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+On Thu, Jul 30, 2020 at 4:53 PM Jim Mattson <jmattson@google.com> wrote:
 >
-> Wanpeng Li <kernellwp@gmail.com> writes:
+> On Thu, Jul 30, 2020 at 4:08 PM Alexander Graf <graf@amazon.com> wrote:
+> > Do you have a particular situation in mind where that would not be the
+> > case and where we would still want to actually complete an MSR operation
+> > after the environment changed?
 >
-> > On Wed, 29 Jul 2020 at 20:21, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
-> >>
-> >> Wanpeng Li <kernellwp@gmail.com> writes:
-> >>
-> >> > From: Wanpeng Li <wanpengli@tencent.com>
-> >> >
-> >> > Commit 8566ac8b (KVM: SVM: Implement pause loop exit logic in SVM) drops
-> >> > disable pause loop exit/pause filtering capability completely, I guess it
-> >> > is a merge fault by Radim since disable vmexits capabilities and pause
-> >> > loop exit for SVM patchsets are merged at the same time. This patch
-> >> > reintroduces the disable pause loop exit/pause filtering capability
-> >> > support.
-> >> >
-> >> > We can observe 2.9% hackbench improvement for a 92 vCPUs guest on AMD
-> >> > Rome Server.
-> >> >
-> >> > Reported-by: Haiwei Li <lihaiwei@tencent.com>
-> >> > Tested-by: Haiwei Li <lihaiwei@tencent.com>
-> >> > Fixes: 8566ac8b (KVM: SVM: Implement pause loop exit logic in SVM)
-> >> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> >> > ---
-> >> >  arch/x86/kvm/svm/svm.c | 9 ++++++---
-> >> >  1 file changed, 6 insertions(+), 3 deletions(-)
-> >> >
-> >> > diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> >> > index c0da4dd..c20f127 100644
-> >> > --- a/arch/x86/kvm/svm/svm.c
-> >> > +++ b/arch/x86/kvm/svm/svm.c
-> >> > @@ -1090,7 +1090,7 @@ static void init_vmcb(struct vcpu_svm *svm)
-> >> >       svm->nested.vmcb = 0;
-> >> >       svm->vcpu.arch.hflags = 0;
-> >> >
-> >> > -     if (pause_filter_count) {
-> >> > +     if (pause_filter_count && !kvm_pause_in_guest(svm->vcpu.kvm)) {
-> >> >               control->pause_filter_count = pause_filter_count;
-> >> >               if (pause_filter_thresh)
-> >> >                       control->pause_filter_thresh = pause_filter_thresh;
-> >> > @@ -2693,7 +2693,7 @@ static int pause_interception(struct vcpu_svm *svm)
-> >> >       struct kvm_vcpu *vcpu = &svm->vcpu;
-> >> >       bool in_kernel = (svm_get_cpl(vcpu) == 0);
-> >> >
-> >> > -     if (pause_filter_thresh)
-> >> > +     if (!kvm_pause_in_guest(vcpu->kvm))
-> >> >               grow_ple_window(vcpu);
-> >> >
-> >> >       kvm_vcpu_on_spin(vcpu, in_kernel);
-> >> > @@ -3780,7 +3780,7 @@ static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu)
-> >> >
-> >> >  static void svm_sched_in(struct kvm_vcpu *vcpu, int cpu)
-> >> >  {
-> >> > -     if (pause_filter_thresh)
-> >> > +     if (!kvm_pause_in_guest(vcpu->kvm))
-> >> >               shrink_ple_window(vcpu);
-> >> >  }
-> >> >
-> >> > @@ -3958,6 +3958,9 @@ static void svm_vm_destroy(struct kvm *kvm)
-> >> >
-> >> >  static int svm_vm_init(struct kvm *kvm)
-> >> >  {
-> >> > +     if (!pause_filter_thresh)
-> >> > +             kvm->arch.pause_in_guest = true;
-> >>
-> >> Would it make sense to do
-> >>
-> >>         if (!pause_filter_count || !pause_filter_thresh)
-> >>                 kvm->arch.pause_in_guest = true;
-> >>
-> >> here and simplify the condition in init_vmcb()?
-> >
-> > kvm->arch.pause_in_guest can also be true when userspace sets the
-> > KVM_CAP_X86_DISABLE_EXITS capability, so we can't simplify the
-> > condition in init_vmcb().
-> >
->
-> I meant we simplify it to
->
-> if (!kvm_pause_in_guest(svm->vcpu.kvm))
->
-> as "!pause_filter_count" gets included.
+> As far as userspace is concerned, if it has replied with error=0, the
+> instruction has completed and retired. If the kernel executes a
+> different instruction at CS:RIP, the state is certainly inconsistent
+> for WRMSR exits. It would also be inconsistent for RDMSR exits if the
+> RDMSR emulation on the userspace side had any side-effects.
 
-Just do it in v3.
-
-    Wanpeng
+Actually, I think there's a potential problem with interrupt delivery
+even if the instruction bytes are the same. On the second pass, an
+interrupt could be delivered on the CS:IP of a WRMSR, even though
+userspace has already emulated the WRMSR instruction. This could be
+particularly awkward if the WRMSR was to the x2APIC TPR register, and
+in fact lowered the TPR sufficiently to allow a pending interrupt to
+be delivered.
