@@ -2,224 +2,175 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 555A4C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A55C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F49C2245C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 202A12074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:35:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q9Gcpkb5"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="jBub1IO1";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="fRCjWzgB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732545AbgGaKca (ORCPT
+        id S1732553AbgGaKf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 06:32:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42518 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732284AbgGaKc3 (ORCPT
+        Fri, 31 Jul 2020 06:35:27 -0400
+Received: from relay4.mymailcheap.com ([137.74.80.154]:44647 "EHLO
+        relay4.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731922AbgGaKf1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 06:32:29 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 018E6C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 03:32:29 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id p25so15487811vsg.4
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 03:32:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=KtukYjoQzTo5Uawi1f9Z99wCqsvjvWIajPsIH/DMHxU=;
-        b=Q9Gcpkb5/eDR2SCmKCxJFkRRneqgHXzgwpHaiC7GWF4iEP8Hx99StpyuOhd0dj5umY
-         CZREIEd0I9h57Hp+/QlV+inw0qI0V995N1w/5zYQV4TyKPoXscLxtOnnD0QQPDLpoQ8K
-         VtGf3Z2neeDdthloHxs6ZHqoeFW3MXnEDY9k8IsnEkfQ8oQ9vw+/DWcFoT5bzEBcQcuo
-         7K7gnnvg061qPpfIIkI9+3jRLLOXyDeCY4eBfVlSR9rEVqcfIjAL1ipVQ1SjtDR/WJsV
-         sChcwGQatRfxGeFLNvNW+LCPNkjzYbPrOzJnTWS3IDL7WNBEUsF0r8Pb7ERJIEF3hrtc
-         uCHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=KtukYjoQzTo5Uawi1f9Z99wCqsvjvWIajPsIH/DMHxU=;
-        b=QB9kh9iw03w1HtwsqEcS3AExEQu8jm8Ed/G5+H4VcbpA0xwsFVchCvvCTAlSpiJ7YZ
-         XC5H5Ba1F3qyd1BkucG7QkWvMzgPkDR42tyR7PUHBxB+kII7Qo75++v9/aBi+y4tW7cQ
-         Wk1qC8Y4mnMeq2FhkhdjrazFXrP27NFFATLrclfHsGd3N6b/Sw17rRf8wQMAGyq6f/yC
-         zOO5/R6eLaUyAWEUemoaXO9/RIic7fgMDjL28NBvdUfUV6pt2vlldiIl8QS3GC/TmhiU
-         QA5FjchKkf1sysQSlfqB9qeLiZEcXX7mLQNYwfKulRhZQFxs/LpBN7loV/HhI1CNIygl
-         4nrw==
-X-Gm-Message-State: AOAM532Eiivf38AO8PgTs6oI+sqrbk0MnF+tJXCkxK2+dA6N57EjLZxJ
-        0OZy3Bzhff4xfGWq5pnb5yz7Yzxjk3cr+8NLEYrOmw==
-X-Google-Smtp-Source: ABdhPJyjS3cHbdoEG+p1LSSdBqLLwHM10icJxLwEmHYWwEL7lQoQGqFzSuaT2pyDBdP2sObaHEGXBb2VKhKyLX1Vzv0=
-X-Received: by 2002:a67:f70c:: with SMTP id m12mr981520vso.238.1596191547952;
- Fri, 31 Jul 2020 03:32:27 -0700 (PDT)
+        Fri, 31 Jul 2020 06:35:27 -0400
+Received: from filter1.mymailcheap.com (filter1.mymailcheap.com [149.56.130.247])
+        by relay4.mymailcheap.com (Postfix) with ESMTPS id 101203F20A;
+        Fri, 31 Jul 2020 12:35:23 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by filter1.mymailcheap.com (Postfix) with ESMTP id 350752A3B8;
+        Fri, 31 Jul 2020 06:35:22 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+        s=default; t=1596191722;
+        bh=BLDS2oll/4tBNw82NF6+Q44e1HdnukGI9h57Kji6hCc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=jBub1IO1hIXu27C8R/SOoAQYIjaoGmKiqgA/OYad6vwSRer8d3ELXWI90LPO9dS2J
+         TUEeesrh+38an921mG5JqbomQ/8Nt25lYbRj35WooU45oTm3WQ6WRyMAREueJddtQN
+         faNulWHBn5eU0ezLQaQCGF2xNgGwEhwzJhvC62zU=
+X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
+Received: from filter1.mymailcheap.com ([127.0.0.1])
+        by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id TJ4L-x7a2eLQ; Fri, 31 Jul 2020 06:35:21 -0400 (EDT)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by filter1.mymailcheap.com (Postfix) with ESMTPS;
+        Fri, 31 Jul 2020 06:35:20 -0400 (EDT)
+Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
+        by mail20.mymailcheap.com (Postfix) with ESMTP id B4522419DE;
+        Fri, 31 Jul 2020 10:35:18 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com;
+        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="fRCjWzgB";
+        dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from [0.0.0.0] (unknown [203.86.239.91])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 9B04E419DE;
+        Fri, 31 Jul 2020 10:34:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
+        s=default; t=1596191660;
+        bh=BLDS2oll/4tBNw82NF6+Q44e1HdnukGI9h57Kji6hCc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=fRCjWzgBQcGj1SD3WDWcq2BmaBcYppYSrclEBvvYltGqA3d8pzF22JzB+l0Wboq1V
+         lbs6ZhR8dlD4L/mZuG5x1/iBHUwHrnkO7czDW0rQBb32R83XlYOcxHNxlD6FJUDjoR
+         cXwOgwbNCW1vythinJ91JKbvQd91aKLaqZ/iucRY=
+Subject: Re: [PATCH] MIPS: BMIPS: Disable pref 30 for buggy CPUs
+To:     Florian Fainelli <f.fainelli@gmail.com>, linux-mips@linux-mips.org
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
+        <linux-mips@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200731042401.22871-1-f.fainelli@gmail.com>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <21ad5472-1287-acba-5604-09f2e633c043@flygoat.com>
+Date:   Fri, 31 Jul 2020 18:34:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200730074420.502923740@linuxfoundation.org>
-In-Reply-To: <20200730074420.502923740@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 31 Jul 2020 16:02:16 +0530
-Message-ID: <CA+G9fYvCPwwmF-k=Z9Z6P2KYrOMHurcORwa3RW2H1j6pq1QEDg@mail.gmail.com>
-Subject: Re: [PATCH 5.4 00/19] 5.4.55-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Basil Eljuse <Basil.Eljuse@arm.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Christoph Lameter <cl@linux.com>, Roman Gushchin <guro@fb.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        linux-mm <linux-mm@kvack.org>, Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Cgroups <cgroups@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LTP List <ltp@lists.linux.it>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200731042401.22871-1-f.fainelli@gmail.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Rspamd-Queue-Id: B4522419DE
+X-Spamd-Result: default: False [1.40 / 10.00];
+         RCVD_VIA_SMTP_AUTH(0.00)[];
+         ARC_NA(0.00)[];
+         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
+         MID_RHS_MATCH_FROM(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         R_SPF_SOFTFAIL(0.00)[~all];
+         RCPT_COUNT_FIVE(0.00)[6];
+         ML_SERVERS(-3.10)[148.251.23.173];
+         DKIM_TRACE(0.00)[flygoat.com:+];
+         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
+         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
+         FREEMAIL_TO(0.00)[gmail.com,linux-mips.org];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
+         RCVD_COUNT_TWO(0.00)[2];
+         SUSPICIOUS_RECIPS(1.50)[];
+         HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
+X-Rspamd-Server: mail20.mymailcheap.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Jul 2020 at 13:36, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+
+
+ÔÚ 2020/7/31 ÏÂÎç12:24, Florian Fainelli Ð´µÀ:
+> Disable pref 30 by utilizing the standard quirk method and matching the
+> affected SoCs: 7344, 7346, 7425.
 >
-> This is the start of the stable review cycle for the 5.4.55 release.
-> There are 19 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>   arch/mips/bmips/setup.c | 17 +++++++++++++++++
+>   1 file changed, 17 insertions(+)
 >
-> Responses should be made by Sat, 01 Aug 2020 07:44:05 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.55-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+> diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
+> index 19308df5f577..df0efea12611 100644
+> --- a/arch/mips/bmips/setup.c
+> +++ b/arch/mips/bmips/setup.c
+> @@ -110,6 +110,20 @@ static void bcm6368_quirks(void)
+>   	bcm63xx_fixup_cpu1();
+>   }
+>   
+> +static void bmips5000_pref30_quirk(void)
+> +{
+> +	__asm__ __volatile__(
+> +	"	li	$8, 0x5a455048\n"
+> +	"	.word	0x4088b00f\n"	/* mtc0 $8, $22, 15 */
+> +	"	nop; nop; nop\n"
+> +	"	.word	0x4008b008\n"	/* mfc0 $8, $22, 8 */
+> +	/* disable "pref 30" on buggy CPUs */
+> +	"	lui	$9, 0x0800\n"
+> +	"	or	$8, $9\n"
+> +	"	.word	0x4088b008\n"	/* mtc0 $8, $22, 8 */
+> +	: : : "$8", "$9");
+> +}
+Hi,
 
-Results from Linaro=E2=80=99s test farm.
-Regressions on arm64 Juno-r2 device running LTP controllers-tests
+Is there any toolchain issue blocking read_c0_**** family helpers being
+used?
 
-CONFIG_ARM64_64K_PAGES=3Dy
+Use .word looks unreasonable.
 
-Unable to handle kernel paging request at virtual address dead000000000108
-[dead000000000108] address between user and kernel address ranges
-Internal error: Oops: 96000044 [#1] PREEMPT SMP
+Thanks
 
-pc : get_page_from_freelist+0xa64/0x1030
-lr : get_page_from_freelist+0x9c4/0x1030
+- Jiaxun
 
-We are trying to reproduce this kernel panic and trying to narrow down to
-specific test cases.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.4.55-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: 6666ca784e9e47288180a15935061d88debc9e4b
-git describe: v5.4.54-20-g6666ca784e9e
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4.54-20-g6666ca784e9e
-
-arm64 kernel config and details:
-config: https://builds.tuxbuild.com/iIsSV-1_WtyDUTe88iKaqw/kernel.config
-vmlinux: https://builds.tuxbuild.com/iIsSV-1_WtyDUTe88iKaqw/vmlinux.xz
-System.map: https://builds.tuxbuild.com/iIsSV-1_WtyDUTe88iKaqw/System.map
-
-steps to reproduce:
-- boot juno-r2 with 64k page size config
-- run ltp controllers
-  # cd /opt/ltp
-  # ./runltp -f controllers
-
-memcg_process: shmget() failed: Invalid argument
-[  248.372285] Unable to handle kernel paging request at virtual
-address dead000000000108
-[  248.380223] Mem abort info:
-[  248.383015]   ESR =3D 0x96000044
-[  248.386071]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
-[  248.391387]   SET =3D 0, FnV =3D 0
-[  248.394440]   EA =3D 0, S1PTW =3D 0
-[  248.397580] Data abort info:
-[  248.400460]   ISV =3D 0, ISS =3D 0x00000044
-[  248.404296]   CM =3D 0, WnR =3D 1
-[  248.407264] [dead000000000108] address between user and kernel address r=
-anges
-[  248.414410] Internal error: Oops: 96000044 [#1] PREEMPT SMP
-[  248.419989] Modules linked in: tda998x drm_kms_helper drm crct10dif_ce f=
-use
-[  248.426975] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.55-rc1 #1
-[  248.433249] Hardware name: ARM Juno development board (r2) (DT)
-[  248.439178] pstate: a0000085 (NzCv daIf -PAN -UAO)
-[  248.443984] pc : get_page_from_freelist+0xa64/0x1030
-[  248.448955] lr : get_page_from_freelist+0x9c4/0x1030
-[  248.453923] sp : ffff80001000fbb0
-[  248.457238] x29: ffff80001000fbb0 x28: ffff00097fdbfe48
-[  248.462557] x27: 0000000000000010 x26: 0000000000000000
-[  248.467877] x25: ffff00097feabdc0 x24: 0000000000000000
-[  248.473196] x23: 0000000000000000 x22: 0000000000000000
-[  248.478515] x21: 0000fff680154180 x20: ffff00097fdbfe38
-[  248.483835] x19: 0000000000000000 x18: 0000000000000000
-[  248.489154] x17: 0000000000000000 x16: 0000000000000000
-[  248.494473] x15: 0000000000000000 x14: 0000000000000000
-[  248.499792] x13: 0000000000000000 x12: 0000000034d4d91d
-[  248.505111] x11: 0000000000000000 x10: 0000000000000000
-[  248.510430] x9 : ffff80096e790000 x8 : ffffffffffffff40
-[  248.515749] x7 : 0000000000000000 x6 : ffffffe002308b48
-[  248.521068] x5 : ffff00097fdbfe38 x4 : dead000000000100
-[  248.526387] x3 : 0000000000000000 x2 : 0000000000000000
-[  248.531706] x1 : 0000000000000000 x0 : ffffffe002308b40
-[  248.537026] Call trace:
-[  248.539475]  get_page_from_freelist+0xa64/0x1030
-[  248.544099]  __alloc_pages_nodemask+0x144/0x280
-[  248.548635]  page_frag_alloc+0x70/0x140
-[  248.552479]  __netdev_alloc_skb+0x158/0x188
-[  248.556667]  smsc911x_poll+0x90/0x268
-[  248.560342]  net_rx_action+0x114/0x340
-[  248.564096]  __do_softirq+0x120/0x25c
-[  248.567766]  irq_exit+0xb8/0xd8
-[  248.570910]  __handle_domain_irq+0x64/0xb8
-[  248.575010]  gic_handle_irq+0x50/0xa8
-[  248.578675]  el1_irq+0xb8/0x180
-[  248.581820]  tick_check_broadcast_expired+0x34/0x40
-[  248.586705]  do_idle+0x8c/0x280
-[  248.589848]  cpu_startup_entry+0x20/0x80
-[  248.593777]  rest_init+0xd4/0xe0
-[  248.597010]  arch_call_rest_init+0xc/0x14
-[  248.601024]  start_kernel+0x418/0x44c
-[  248.604693] Code: 54000a00 f10020c0 540009c0 a9400cc4 (f9000483)
-[  248.610803] ---[ end trace 358f513e280e4dfd ]---
-[  248.615426] Kernel panic - not syncing: Fatal exception in interrupt
-[  248.621789] SMP: stopping secondary CPUs
-[  249.740564] SMP: failed to stop secondary CPUs 0-2
-[  249.745359] Kernel Offset: disabled
-[  249.748849] CPU features: 0x0002,24006000
-[  249.752859] Memory Limit: none
-[  249.755921] ---[ end Kernel panic - not syncing: Fatal exception in
-interrupt ]---
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
+> +
+>   static const struct bmips_quirk bmips_quirk_list[] = {
+>   	{ "brcm,bcm3368",		&bcm6358_quirks			},
+>   	{ "brcm,bcm3384-viper",		&bcm3384_viper_quirks		},
+> @@ -120,6 +134,9 @@ static const struct bmips_quirk bmips_quirk_list[] = {
+>   	{ "brcm,bcm6368",		&bcm6368_quirks			},
+>   	{ "brcm,bcm63168",		&bcm6368_quirks			},
+>   	{ "brcm,bcm63268",		&bcm6368_quirks			},
+> +	{ "brcm,bcm7344",		&bmips5000_pref30_quirk		},
+> +	{ "brcm,bcm7346",		&bmips5000_pref30_quirk		},
+> +	{ "brcm,bcm7425",		&bmips5000_pref30_quirk		},
+>   	{ },
+>   };
+>   
