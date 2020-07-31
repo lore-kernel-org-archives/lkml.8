@@ -2,130 +2,117 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAAAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 675E2C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA0C422D02
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:04:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Q6DR3qA2"
+	by mail.kernel.org (Postfix) with ESMTP id 4D67C206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:07:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732805AbgGaOEz (ORCPT
+        id S2387449AbgGaOHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 10:04:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732400AbgGaOEy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 10:04:54 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94090C061575
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 07:04:54 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id t23so19854180qto.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 07:04:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=781IgXX02TRDkWHahRceQKsFXQSmPskr3l/EDT57Vi4=;
-        b=Q6DR3qA2s07ap18NgbhUz2I65CJAcbZd0GqAm8NJxwCYrMe7KPboFzZXDRIW5lebPB
-         oPAHJk7XUdYIt6eLnbwRK5OsrvSiHbJroVQmKedNKll7+oQTEicW2nHi4Rn6BWyBvJmc
-         lEcbaN7HrczmvO3LYz4q8LcxNGlBJ3tUKlHS8B68jhZ9zFDhvmhI9wnD5QNOETP1shOL
-         79KgAqq62WlRj0VUpG9xstUqwVILBIlJ7fRjPbuyu2hRjsy7UxqmSM7o55hhWvcbtFih
-         IJ29FiOq3N/1C3oFhp4V5OwU8vwRHkhlq6ImCk398H1tIuyiht+hq6GxBMWm63ZYSugB
-         yLJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=781IgXX02TRDkWHahRceQKsFXQSmPskr3l/EDT57Vi4=;
-        b=XKFm4/ZABIpQF+C8NYI+sSILIKw6i6ALd+EmWstfFsaYhduTVOxrog4RrFyS4I2fQp
-         FZ7ZFh4KwHn9Gu3In6h9opQrMcVNukFVNYF6zr/2WbiV5juBsE5dyEoMt2030NYIls6A
-         m+21UeGhccbQxI/oOIGOKirFtQEyv8aiknspSmwIpaH6mOH9hevLwtceaUh9i6p7JnlY
-         o8Oi4AyDS0mRSXEMpUxSNlVipDPdQbSvozSl79fqCjbLRaUi3CKeDIBN35vr9LUgNy5z
-         Y4ae5wb3i77qjrOTMt5YmeVUC0GAH2R52flpepWXx2L1aWbacNOt+pOk4FQBPjqq86a+
-         ZnAw==
-X-Gm-Message-State: AOAM532yTD4Xff44wP6254KlFIJiZGHCeE47xmWu6kIgbUOobaUP56FM
-        NUeUJr+PIeeDedYNJzgQ0mHZ2A==
-X-Google-Smtp-Source: ABdhPJy1g859VdHLa7g09AW4SpHkI8nxyECHbw18XD+WYQwl6Uwee6XxVPfUS5+iBrmKK+EwP4CFMA==
-X-Received: by 2002:ac8:7383:: with SMTP id t3mr3755232qtp.160.1596204293590;
-        Fri, 31 Jul 2020 07:04:53 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id w27sm8432660qtv.68.2020.07.31.07.04.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 07:04:52 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1k1VeW-001u9f-23; Fri, 31 Jul 2020 11:04:52 -0300
-Date:   Fri, 31 Jul 2020 11:04:52 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Peilin Ye <yepeilin.cs@gmail.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak
- in rds_notify_queue_get()
-Message-ID: <20200731140452.GE24045@ziepe.ca>
-References: <20200730192026.110246-1-yepeilin.cs@gmail.com>
- <20200731045301.GI75549@unreal>
- <20200731053306.GA466103@kroah.com>
- <20200731053333.GB466103@kroah.com>
+        Fri, 31 Jul 2020 10:07:16 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2551 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730766AbgGaOHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 10:07:16 -0400
+Received: from lhreml718-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 2158DCE1B436D3FEB019;
+        Fri, 31 Jul 2020 15:07:14 +0100 (IST)
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml718-chm.china.huawei.com (10.201.108.69) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Fri, 31 Jul 2020 15:07:13 +0100
+Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
+ lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1913.007;
+ Fri, 31 Jul 2020 15:07:13 +0100
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     James Morse <james.morse@arm.com>
+CC:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>, "lenb@kernel.org" <lenb@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
+        "Wangkefeng (OS Kernel Lab)" <wangkefeng.wang@huawei.com>,
+        "jroedel@suse.de" <jroedel@suse.de>,
+        Linuxarm <linuxarm@huawei.com>,
+        yangyicong <yangyicong@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>
+Subject: RE: [PATCH v13 1/2] ACPI / APEI: Add a notifier chain for unknown
+ (vendor) CPER records
+Thread-Topic: [PATCH v13 1/2] ACPI / APEI: Add a notifier chain for unknown
+ (vendor) CPER records
+Thread-Index: AQHWYBeNEuC2snlLPEu+XBWu+0jruKkTg3ww///49wCADjUBgIAAES8A
+Date:   Fri, 31 Jul 2020 14:07:13 +0000
+Message-ID: <9b7f58f2d60549ad91bde2db4e4455ae@huawei.com>
+References: <20200722103952.1009-1-shiju.jose@huawei.com>
+ <20200722103952.1009-2-shiju.jose@huawei.com>
+ <20200722110146.GW3703480@smile.fi.intel.com>
+ <eb8336f0357f447baf5c37309d320f57@huawei.com>
+ <20200722125038.GZ3703480@smile.fi.intel.com>
+ <185f69dd-bfec-20ce-01d6-76947f553e45@arm.com>
+In-Reply-To: <185f69dd-bfec-20ce-01d6-76947f553e45@arm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.82.38]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200731053333.GB466103@kroah.com>
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 07:33:33AM +0200, Greg Kroah-Hartman wrote:
-> On Fri, Jul 31, 2020 at 07:33:06AM +0200, Greg Kroah-Hartman wrote:
-> > On Fri, Jul 31, 2020 at 07:53:01AM +0300, Leon Romanovsky wrote:
-> > > On Thu, Jul 30, 2020 at 03:20:26PM -0400, Peilin Ye wrote:
-> > > > rds_notify_queue_get() is potentially copying uninitialized kernel stack
-> > > > memory to userspace since the compiler may leave a 4-byte hole at the end
-> > > > of `cmsg`.
-> > > >
-> > > > In 2016 we tried to fix this issue by doing `= { 0 };` on `cmsg`, which
-> > > > unfortunately does not always initialize that 4-byte hole. Fix it by using
-> > > > memset() instead.
-> > > 
-> > > Of course, this is the difference between "{ 0 }" and "{}" initializations.
-> > 
-> > Really?  Neither will handle structures with holes in it, try it and
-> > see.
-> 
-> And if true, where in the C spec does it say that?
-
-The spec was updated in C11 to require zero'ing padding when doing
-partial initialization of aggregates (eg = {})
-
-"""if it is an aggregate, every member is initialized (recursively)
-according to these rules, and any padding is initialized to zero
-bits;"""
-
-The difference between {0} and the {} extension is only that {}
-reliably triggers partial initialization for all kinds of aggregates,
-while {0} has a number of edge cases where it can fail to compile.
-
-IIRC gcc has cleared the padding during aggregate initialization for a
-long time. Considering we have thousands of aggregate initializers it
-seems likely to me Linux also requires a compiler with this C11
-behavior to operate correctly.
-
-Does this patch actually fix anything? My compiler generates identical
-assembly code in either case.
-
-Jason
+SGkgSmFtZXMsIA0KDQo+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj5Gcm9tOiBsaW51eC1h
+Y3BpLW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOmxpbnV4LWFjcGktDQo+b3duZXJAdmdl
+ci5rZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgSmFtZXMgTW9yc2UNCj5TZW50OiAzMSBKdWx5IDIw
+MjAgMTQ6NDgNCj5UbzogU2hpanUgSm9zZSA8c2hpanUuam9zZUBodWF3ZWkuY29tPg0KPkNjOiBB
+bmR5IFNoZXZjaGVua28gPGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4LmludGVsLmNvbT47IGxpbnV4
+LQ0KPmFjcGlAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51
+eC0NCj5rZXJuZWxAdmdlci5rZXJuZWwub3JnOyByandAcmp3eXNvY2tpLm5ldDsgaGVsZ2Fhc0Br
+ZXJuZWwub3JnOw0KPmJwQGFsaWVuOC5kZTsgbGVuYkBrZXJuZWwub3JnOyB0b255Lmx1Y2tAaW50
+ZWwuY29tOw0KPmRhbi5jYXJwZW50ZXJAb3JhY2xlLmNvbTsgemhhbmdsaWd1YW5nQGxpbnV4LmFs
+aWJhYmEuY29tOyBXYW5na2VmZW5nDQo+KE9TIEtlcm5lbCBMYWIpIDx3YW5na2VmZW5nLndhbmdA
+aHVhd2VpLmNvbT47IGpyb2VkZWxAc3VzZS5kZTsNCj5MaW51eGFybSA8bGludXhhcm1AaHVhd2Vp
+LmNvbT47IHlhbmd5aWNvbmcgPHlhbmd5aWNvbmdAaHVhd2VpLmNvbT47DQo+Sm9uYXRoYW4gQ2Ft
+ZXJvbiA8am9uYXRoYW4uY2FtZXJvbkBodWF3ZWkuY29tPjsgdGFueGlhb2ZlaQ0KPjx0YW54aWFv
+ZmVpQGh1YXdlaS5jb20+DQo+U3ViamVjdDogUmU6IFtQQVRDSCB2MTMgMS8yXSBBQ1BJIC8gQVBF
+STogQWRkIGEgbm90aWZpZXIgY2hhaW4gZm9yIHVua25vd24NCj4odmVuZG9yKSBDUEVSIHJlY29y
+ZHMNCj4NCj5IaSBTaGlqdSwNCj4NCj5PbiAyMi8wNy8yMDIwIDEzOjUwLCBBbmR5IFNoZXZjaGVu
+a28gd3JvdGU6DQo+PiBPbiBXZWQsIEp1bCAyMiwgMjAyMCBhdCAxMjozNDoyM1BNICswMDAwLCBT
+aGlqdSBKb3NlIHdyb3RlOg0KPg0KPj4+Pj4gQ28tZGV2ZWxvcGVkLWJ5OiBKYW1lcyBNb3JzZSA8
+amFtZXMubW9yc2VAYXJtLmNvbT4NCj4+Pj4NCj4+Pj4gQ28tZGV2ZWxvcGVkLWJ5OiBpcyBnb2lu
+ZyBfaW4gY29uanVuY3Rpb24gd2l0aF8gU29CIHRhZyB3aGljaCBpcw0KPj4+PiBtaXNzaW5nIGhl
+cmUuDQo+Pj4gVGhpcyB0YWcgd2FzIGFkZGVkIGFzIHBlciBpbnN0cnVjdGlvbiBmcm9tIFJhZmFl
+bC4NCj4+PiBJIHdhcyB0b2xkIHRoYXQgSSBjYW5ub3QgYWRkIFNvQiB0YWcgZm9yIG90aGVycyB1
+bmxlc3Mgc3BlY2lmaWNhbGx5IGdpdmVuLg0KPj4+IFByb2JhYmx5IEkgd2lsbCBsZWF2ZSBpdCB3
+aXRoIFJhZmFlbC9KYW1lcyB0byBoZWxwIG9uIHRoaXMgU29CIHRhZyBhcw0KPj4+IFJhZmFlbCB3
+YXMgb2sgdG8gbWVyZ2UgdGhpcyBwYXRjaC4NCj4+DQo+PiBJIHRoaW5rIGl0J3MgYSBtaXN1bmRl
+cnN0YW5kaW5nIHNvbWV3aGVyZS4gQWNjb3JkaW5nIHRvIFsxXToNCj4+ICJTaW5jZSBDby1kZXZl
+bG9wZWQtYnk6IGRlbm90ZXMgYXV0aG9yc2hpcCwgZXZlcnkgQ28tZGV2ZWxvcGVkLWJ5Og0KPj4g
+bXVzdCBiZSBpbW1lZGlhdGVseSBmb2xsb3dlZCBieSBhIFNpZ25lZC1vZmYtYnk6IG9mIHRoZSBh
+c3NvY2lhdGVkIGNvLQ0KPmF1dGhvci4iDQo+Pg0KPj4gSXQgbWVhbnMgZWl0aGVyIGJvdGggb3Ig
+bm9uZS4NCj4+DQo+PiBbMV06DQo+PiBodHRwczovL3d3dy5rZXJuZWwub3JnL2RvYy9odG1sL2xh
+dGVzdC9wcm9jZXNzL3N1Ym1pdHRpbmctcGF0Y2hlcy5odG1sDQo+DQo+U29ycnkgZm9yIHRoaXMg
+bWVzcyEgTXkgaW50ZW50aW9uIHdhcyB0byBzdW1tYXJpc2UgbXkgc3VnZ2VzdGlvbiBpbiB0aGUN
+Cj5mb3JtIG9mIGEgcGF0Y2gsIEkgd2Fzbid0IGV4cGVjdGluZyB5b3UgdG8gcGljayBpdCB1cC4g
+KGFuZCBJIGRpZG4ndCBwb3N0IGl0DQo+YmVjYXVzZSB0aGVyZSB3YXMgb25nb2luZyBkaXNjdXNz
+aW9uIG9uIHRoZSBzZWNvbmQgcGFydCkNCj4NCj5JJ2xsIHJlcG9zdCB0aGlzIHdpdGggdGhlIENv
+LURldmVsb3BlZC1ieSBzdHVmZi4gWW91J2xsIG5lZWQgdG8gcmUtcG9zdCBpdCB3aXRoDQo+dGhl
+IHNlcmllcywgeW91J2xsIG5lZWQgdG8gbW92ZSB5b3VyIFNpZ25lZC1PZmYtQnkgdG8gYmUgbGFz
+dCB3aGVuIHlvdSBkbw0KPnRoYXQuDQoNClN1cmUuIFRoYW5rcy4NCkFsc28gcGxlYXNlIGNvbnNp
+ZGVyIG1ha2UgeW91IGFzIHRoZSBhdXRob3Igb2YgdGhpcyBwYXRjaCANCmJlY2F1c2UgaXQgaGFz
+IG1vcmUgY2hhbmdlcyBmcm9tIHlvdS4NCg0KPg0KPg0KPlRoYW5rcywNCj4NCj5KYW1lcw0KDQpU
+aGFua3MsDQpTaGlqdQ0K
