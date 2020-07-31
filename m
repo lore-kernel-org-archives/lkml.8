@@ -2,100 +2,130 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F515C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F173C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F5B62245C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 559DD22B3F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:16:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c1nSfus8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E4PyFhb0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387702AbgGaSQF (ORCPT
+        id S2387729AbgGaSQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 14:16:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57292 "EHLO
+        Fri, 31 Jul 2020 14:16:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730040AbgGaSQF (ORCPT
+        with ESMTP id S2387651AbgGaSQi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 14:16:05 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3F8DC061574;
-        Fri, 31 Jul 2020 11:16:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=WbtzOVCRlAfFjJFM2IifB/d+SPx9ULrVUgo17CsAxIk=; b=c1nSfus8ldaPmfvbONTg9B72M/
-        5obEFm0AxYVrEpBqZ5YyQc/gp8+2RT+5eVMnSoVxp0MQTMjSO98HJhIeqUK/LHi3jbky8gJduRFIu
-        Kpx5puS0FwnHYqgn08qUQfdNsMCeXO6RZ2ZiXBv4dXUqNMREKU9WxcrVSwXoN/nLj78AgDzZKD5Fv
-        mtr2930HRl9Eh3I9iKbhI4YXdPXQFRco8nVzv1sfneISnZTbvKUkIhUDyv81w9k3qEfJWDu5RLIIy
-        JY01QCELVFs5/SmjWnhqcLoWVPpixhQa5UcMNsC1SdIlR7SQuNOX4hab60WmSyY1THl0b2mMz0x59
-        e7BWzo6w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k1ZZG-0002Ky-Id; Fri, 31 Jul 2020 18:15:42 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B552330066E;
-        Fri, 31 Jul 2020 20:15:38 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9865E203C0A1B; Fri, 31 Jul 2020 20:15:38 +0200 (CEST)
-Date:   Fri, 31 Jul 2020 20:15:38 +0200
-From:   peterz@infradead.org
-To:     Dongdong Yang <contribute.kernel@gmail.com>
-Cc:     gregkh@linuxfoundation.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-pm@vger.kernel.org, yangdongdong@xiaomi.com,
-        tanggeliang@xiaomi.com, taojun@xiaomi.com, huangqiwu@xiaomi.com,
-        rocking@linux.alibaba.com, fengwei@xiaomi.com,
-        zhangguoquan@xiaomi.com, gulinghua@xiaomi.com, duhui@xiaomi.com
-Subject: Re: [PATCH] sched: Provide USF for the portable equipment.
-Message-ID: <20200731181538.GB2674@hirez.programming.kicks-ass.net>
-References: <cover.1596101307.git.yangdongdong@xiaomi.com>
- <1596116273-2290-1-git-send-email-contribute.kernel@gmail.com>
+        Fri, 31 Jul 2020 14:16:38 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B6B3C06174A
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 11:16:38 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k13so9995830plk.13
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 11:16:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TDjonBmuUQvyaWYJBgC/o+3/IEmbAX8AfV7I+TtewFc=;
+        b=E4PyFhb0Ar5YqNdxhxX2a8wKFZEu/2ST7bv4QIUoGaSgkHPvdACktcHN8BvF+SCGL8
+         gZJWGBtbJ1MutPmzg/MeNlYSrhO057Pj/J6ehg7IaGuZ0a9DQrTRDkr2F2AUHxyGQHaX
+         o5ShFgfIeLuy7MxsZOrcqX/TEMhQthtAB0JiHr2774RA3qNIALhx8H1uHTP/NC31E9OO
+         1sRdKk8GeU8qWga0AdkgKJ7aVu9Z38Gzq+ONP+rbl/VONE3s6VkbkgrgAE/99YuGzbma
+         qkC31644KiV7Oo89U+xeFBWKkaLzShUKTYXxiZ3dr1g1cvQdGWka9CgJ2SY/P/OpyITQ
+         orEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TDjonBmuUQvyaWYJBgC/o+3/IEmbAX8AfV7I+TtewFc=;
+        b=EBbGBbQMwSMqkPvNFAueNRMo4/KDBQgUhxEqPlF842cXTu3fdaM/J7bc6CLnLq6kcC
+         vHNB5r24YUYSnDNJV+ROK3T46m6hizOJ9F4Zs+OGnRjuVN3y41i1+/Yyc9x8kPjot2po
+         NlaI7qgkPB6PMxWtYs1BUaGfqXVJoFnnuwY4T2VwAi6rUHpfn0nH78A5sn2+n11C26ai
+         RyRt0JBTxLZ9WvyJAv4gz4BePoNwGQftOFISwU80P/2sAb5wQ9JlnmtM/L5ZKBJSLH4H
+         IV+gnyxgzdV4KIPA4ByOxQgn2dG5tjbiemBP7LatoVoKWbVsfCSRoS7NXEIxMpxlwnhv
+         NHwg==
+X-Gm-Message-State: AOAM5316qTwQ5pd6I9HmYdfBIaE3sIMTnIJKzzqfT8yiiihhsd36MYS+
+        ORmxge5+25xa++oohzM2G5/iFA==
+X-Google-Smtp-Source: ABdhPJy17ACnRhf/sGausTWgDf+SetvtMH9mGnHzTZzE1/rZpZ/uKspET9z1pmDSWMBXKgG8hmfHAg==
+X-Received: by 2002:a17:90b:514:: with SMTP id r20mr5377570pjz.82.1596219397381;
+        Fri, 31 Jul 2020 11:16:37 -0700 (PDT)
+Received: from google.com (56.4.82.34.bc.googleusercontent.com. [34.82.4.56])
+        by smtp.gmail.com with ESMTPSA id a24sm10542844pfg.113.2020.07.31.11.16.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 11:16:36 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 18:16:33 +0000
+From:   William Mcvicker <willmcvicker@google.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+Cc:     security@kernel.org, Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH 1/1] netfilter: nat: add range checks for access to
+ nf_nat_l[34]protos[]
+Message-ID: <20200731181633.GA1209076@google.com>
+References: <20200727175720.4022402-1-willmcvicker@google.com>
+ <20200727175720.4022402-2-willmcvicker@google.com>
+ <20200729214607.GA30831@salvia>
+ <20200731002611.GA1035680@google.com>
+ <20200731175115.GA16982@salvia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1596116273-2290-1-git-send-email-contribute.kernel@gmail.com>
+In-Reply-To: <20200731175115.GA16982@salvia>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 09:35:43PM +0800, Dongdong Yang wrote:
-> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> index 7fbaee2..7bc3429 100644
-> --- a/kernel/sched/cpufreq_schedutil.c
-> +++ b/kernel/sched/cpufreq_schedutil.c
-> @@ -289,12 +289,21 @@ unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
->  	return min(max, util);
->  }
->  
-> +#ifdef CONFIG_SCHED_USF
-> +void (*adjust_task_pred_demand)(int cpuid, unsigned long *util,
-> +	struct rq *rq) = NULL;
-> +EXPORT_SYMBOL(adjust_task_pred_demand);
-> +#endif
-> +
->  static unsigned long sugov_get_util(struct sugov_cpu *sg_cpu)
->  {
->  	struct rq *rq = cpu_rq(sg_cpu->cpu);
->  	unsigned long util = cpu_util_cfs(rq);
->  	unsigned long max = arch_scale_cpu_capacity(sg_cpu->cpu);
-> -
-> +#ifdef CONFIG_SCHED_USF
-> +	if (adjust_task_pred_demand)
-> +		adjust_task_pred_demand(sg_cpu->cpu, &util, rq);
-> +#endif
->  	sg_cpu->max = max;
->  	sg_cpu->bw_dl = cpu_bw_dl(rq);
+Hi Pablo,
 
-NAK
+> Note that this code does not exist in the tree anymore. I'm not sure
+> if this problem still exists upstream, this patch does not apply to
+> nf.git. This fix should only go for -stable maintainers.
+
+Right, the vulnerability has been fixed by the refactor commit fe2d0020994cd
+("netfilter: nat: remove l4proto->in_range"), but this patch is a part of
+a full re-work of the code and doesn't backport very cleanly to the LTS
+branches. So this fix is only applicable to the 4.19, 4.14, 4.9, and 4.4 LTS
+branches. I missed the -stable email, but will re-add it to this thread with
+the re-worked patch.
+
+Thanks,
+Will
+
+On 07/31/2020, Pablo Neira Ayuso wrote:
+> Hi William,
+> 
+> On Fri, Jul 31, 2020 at 12:26:11AM +0000, William Mcvicker wrote:
+> > Hi Pablo,
+> > 
+> > Yes, I believe this oops is only triggered by userspace when the user
+> > specifically passes in an invalid nf_nat_l3protos index. I'm happy to re-work
+> > the patch to check for this in ctnetlink_create_conntrack().
+> 
+> Great.
+> 
+> Note that this code does not exist in the tree anymore. I'm not sure
+> if this problem still exists upstream, this patch does not apply to
+> nf.git. This fix should only go for -stable maintainers.
+> 
+> > > BTW, do you have a Fixes: tag for this? This will be useful for
+> > > -stable maintainer to pick up this fix.
+> > 
+> > Regarding the Fixes: tag, I don't have one offhand since this bug was reported
+> > to me, but I can search through the code history to find the commit that
+> > exposed this vulnerability.
+> 
+> That would be great.
+> 
+> Thank you.
