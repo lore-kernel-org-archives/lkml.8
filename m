@@ -2,195 +2,458 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 691A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD65C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C0C3208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF35A2245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:13:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="qTCDi5DH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n6WcaA36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729839AbgGaQME (ORCPT
+        id S1731396AbgGaQN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 12:12:04 -0400
-Received: from m15111.mail.126.com ([220.181.15.111]:39310 "EHLO
-        m15111.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727819AbgGaQMD (ORCPT
+        Fri, 31 Jul 2020 12:13:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38414 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727819AbgGaQNZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 12:12:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=eWSI7
-        L8NGq/27v/T6lDLZQTISBFxShctwfHHbupILPw=; b=qTCDi5DHFwHcZrKqLpf2a
-        j7v+1QUAZke/Rm8d+7cQnzgAKFyvy2IYZ6oGugY4xEHzruyTdE6voPY3ZJL9z15C
-        dmn9JeDjPKT78uudy9Ye6733lPZzZFG4maT+VPX/Vf2CRngnviFZ1I3ymqKduAMF
-        ajBpExJvLuZ5XYSqNdvP6w=
-Received: from 192.168.137.249 (unknown [112.10.84.202])
-        by smtp1 (Coremail) with SMTP id C8mowACHv0dxQiRfuzR5IA--.15697S3;
-        Sat, 01 Aug 2020 00:10:28 +0800 (CST)
-From:   Xianting Tian <xianting_tian@126.com>
-To:     viro@zeniv.linux.org.uk, tytso@mit.edu, adilger.kernel@dilger.ca
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH] ext4: move buffer_mapped() to proper position
-Date:   Fri, 31 Jul 2020 12:10:25 -0400
-Message-Id: <1596211825-8750-1-git-send-email-xianting_tian@126.com>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 31 Jul 2020 12:13:25 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86D01C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 09:13:25 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id p8so172774pgn.13
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 09:13:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tnp+nb7nJhAg4ZdOQJ8/g5rdbavPL44BRUzyLfn/hOY=;
+        b=n6WcaA36lvLdDMekDT3NroeArCpKN6eHLiaJI7bRTV/MFDNrsMEHHE7jZUfusiNVNu
+         6XgyWyE/4CjiPv2jDgnmtOqWuwNN/7PhEaXrwh5uljOcr5w9x15tD/gPc0ed9NXHgTC/
+         nbhrKn9ZbN+JTZIikVJ/dfdh5OIlXHAjExk9vWICvspFnN7i4lqkBZMcy1gwtL/4xxNc
+         3dNIwrPTXGPLcOgZ0GU2/SWj/xEmzyuZyR08dL1E3GjRjN8fBCsTJg57Vl5GEvpoUZFA
+         makRatD/c23oh2uCPkrCkCkX6KOB4gcogZHBMW5zxCRnO6wu0WsXw14chysXZhw+tSC7
+         4Tcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tnp+nb7nJhAg4ZdOQJ8/g5rdbavPL44BRUzyLfn/hOY=;
+        b=kuDh2HutAomrOvB3nHuXjBsETAkaG9uobfQD+n+/paO4a5BXvtVxC4YTKL5YfQOjvZ
+         CjLXycYme4hXpjh9bdvLFzutiGzzc6GIb6Y9MlusbzaoXT3eGeXDRy9/W7O/DE+Wc2Xl
+         fVasW5LAiuH3/e3j5rd0s3MDBNRK0LZFApLGKstaocfCUXfY5XtK/yqmFM9Vq0oGnKv/
+         B268K7b2YeWpq1RQ8gfHZFjLoL3FWL45e/iElKQ58hBFcHns8NFer8b3x01TI8nG3TJz
+         hmcWuWaPLGWSKWX2Qsk1uVq/jsMO13dnJJWqWbNtPgYN03sIB+Dr3VS0dsr52L6YwgJY
+         nuTw==
+X-Gm-Message-State: AOAM532Uc0LwAa3Yv/MlXn549tLBHSwC9sAcY8Ocipwmv6Di4sewxke3
+        Hnhvp9j4xpYJ0lC6QUbK/0M=
+X-Google-Smtp-Source: ABdhPJwd3kEd+iIFTxtLuaED3Bj7pR1zZhZNPxNJPF6lLsmf3n3SBTj0ciTwu2Oan9QftHzkefvDmw==
+X-Received: by 2002:a62:164a:: with SMTP id 71mr4421898pfw.266.1596212004920;
+        Fri, 31 Jul 2020 09:13:24 -0700 (PDT)
+Received: from realwakka ([61.83.141.80])
+        by smtp.gmail.com with ESMTPSA id x6sm1612654pge.61.2020.07.31.09.13.21
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 31 Jul 2020 09:13:24 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 16:13:14 +0000
+From:   Sidong Yang <realwakka@gmail.com>
+To:     Melissa Wen <melissa.srw@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        twoerner@gmail.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kernel-usp@googlegroups.com
+Subject: Re: [PATCH] drm/vkms: add missing drm_crtc_vblank_put to the get/put
+ pair on flush
+Message-ID: <20200731161314.GA21381@realwakka>
+References: <20200722140604.27dfzfnzug5vb75r@smtp.gmail.com>
+ <CAKMK7uHWCnJ+3YnP2FwVGH6cEDkmPnH9ALjY_1R51QVs0HPG0Q@mail.gmail.com>
+ <20200725011737.GA2851@realwakka>
+ <CAKMK7uEWPCzx+K=+nJsLT5HRBVJ+s8tqx30Ljkr4BCBDComyWQ@mail.gmail.com>
+ <20200725174514.esh4gqek6oddizvh@smtp.gmail.com>
+ <CAKMK7uEi0UFSwYTO7h6_YKN+UykOuVcmhMSG_ySy9uyo_7Pz-g@mail.gmail.com>
+ <CAJeY4oGXbNbFQtBXSi8xo_mk48G1K7TOvxPqvRKFxGQxRnY=Wg@mail.gmail.com>
+ <CAKMK7uEj=Se=cNwkapZtRLjrDAHpjJU_oOL7Y-2HyUaPn8vBnQ@mail.gmail.com>
+ <20200730100901.daos4v6maqlcd2uj@smtp.gmail.com>
+ <20200731090834.GR6419@phenom.ffwll.local>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: C8mowACHv0dxQiRfuzR5IA--.15697S3
-X-Coremail-Antispam: 1Uf129KBjvJXoWxtw17Aw1furW7CF1fCryxGrg_yoW7tF47pr
-        nIkFWjgF4kJ3W29rsFvF4Yq3WrX3ZxZFyxWrnagr47ZFnrGF1aqryUtF48GFW5Xws7X342
-        qr15Gw18Kw1rJaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jw-B_UUUUU=
-X-Originating-IP: [112.10.84.202]
-X-CM-SenderInfo: h0ld03plqjs3xldqqiyswou0bp/1tbiwRRypFpD+6DxHgAAsu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200731090834.GR6419@phenom.ffwll.local>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As you know, commit a17712c8 has added below code to aviod a
-crash( 'BUG_ON(!buffer_mapped(bh))' in submit_bh_wbc) when
-device hot-removed(a physical device is unpluged from pcie slot
-or a nbd device's network is shutdown).
-static int ext4_commit_super():
- 	if (!sbh || block_device_ejected(sb))
- 		return error;
-+
-+	/*
-+	 * The superblock bh should be mapped, but it might not be if the
-+	 * device was hot-removed. Not much we can do but fail the I/O.
-+	 */
-+	if (!buffer_mapped(sbh))
-+		return error;
+On Fri, Jul 31, 2020 at 11:08:34AM +0200, daniel@ffwll.ch wrote:
+> On Thu, Jul 30, 2020 at 07:09:25AM -0300, Melissa Wen wrote:
+> > On 07/29, Daniel Vetter wrote:
+> > > On Wed, Jul 29, 2020 at 9:09 PM Melissa Wen <melissa.srw@gmail.com> wrote:
+> > > >
+> > > > Melissa Wen
+> > > >
+> > > > On Sat, Jul 25, 2020 at 3:12 PM Daniel Vetter <daniel@ffwll.ch> wrote:
+> > > > >
+> > > > > On Sat, Jul 25, 2020 at 7:45 PM Melissa Wen <melissa.srw@gmail.com> wrote:
+> > > > > >
+> > > > > > On 07/25, Daniel Vetter wrote:
+> > > > > > > On Sat, Jul 25, 2020 at 5:12 AM Sidong Yang <realwakka@gmail.com> wrote:
+> > > > > > > >
+> > > > > > > > On Wed, Jul 22, 2020 at 05:17:05PM +0200, Daniel Vetter wrote:
+> > > > > > > > > On Wed, Jul 22, 2020 at 4:06 PM Melissa Wen <melissa.srw@gmail.com> wrote:
+> > > > > > > > > >
+> > > > > > > > > > On 07/22, daniel@ffwll.ch wrote:
+> > > > > > > > > > > On Wed, Jul 22, 2020 at 08:04:11AM -0300, Melissa Wen wrote:
+> > > > > > > > > > > > This patch adds a missing drm_crtc_vblank_put op to the pair
+> > > > > > > > > > > > drm_crtc_vblank_get/put (inc/decrement counter to guarantee vblanks).
+> > > > > > > > > > > >
+> > > > > > > > > > > > It clears the execution of the following kms_cursor_crc subtests:
+> > > > > > > > > > > > 1. pipe-A-cursor-[size,alpha-opaque, NxN-(on-screen, off-screen, sliding,
+> > > > > > > > > > > >    random, fast-moving])] - successful when running individually.
+> > > > > > > > > > > > 2. pipe-A-cursor-dpms passes again
+> > > > > > > > > > > > 3. pipe-A-cursor-suspend also passes
+> > > > > > > > > > > >
+> > > > > > > > > > > > The issue was initially tracked in the sequential execution of IGT
+> > > > > > > > > > > > kms_cursor_crc subtest: when running the test sequence or one of its
+> > > > > > > > > > > > subtests twice, the odd execs complete and the pairs get stuck in an
+> > > > > > > > > > > > endless wait. In the IGT code, calling a wait_for_vblank before the start
+> > > > > > > > > > > > of CRC capture prevented the busy-wait. But the problem persisted in the
+> > > > > > > > > > > > pipe-A-cursor-dpms and -suspend subtests.
+> > > > > > > > > > > >
+> > > > > > > > > > > > Checking the history, the pipe-A-cursor-dpms subtest was successful when,
+> > > > > > > > > > > > in vkms_atomic_commit_tail, instead of using the flip_done op, it used
+> > > > > > > > > > > > wait_for_vblanks. Another way to prevent blocking was wait_one_vblank when
+> > > > > > > > > > > > enabling crtc. However, in both cases, pipe-A-cursor-suspend persisted
+> > > > > > > > > > > > blocking in the 2nd start of CRC capture, which may indicate that
+> > > > > > > > > > > > something got stuck in the step of CRC setup. Indeed, wait_one_vblank in
+> > > > > > > > > > > > the crc setup was able to sync things and free all kms_cursor_crc
+> > > > > > > > > > > > subtests.
+> > > > > > > > > > > >
+> > > > > > > > > > > > Tracing and comparing a clean run with a blocked one:
+> > > > > > > > > > > > - in a clean one, vkms_crtc_atomic_flush enables vblanks;
+> > > > > > > > > > > > - when blocked, only in next op, vkms_crtc_atomic_enable, the vblanks
+> > > > > > > > > > > > started. Moreover, a series of vkms_vblank_simulate flow out until
+> > > > > > > > > > > > disabling vblanks.
+> > > > > > > > > > > > Also watching the steps of vkms_crtc_atomic_flush, when the very first
+> > > > > > > > > > > > drm_crtc_vblank_get returned an error, the subtest crashed. On the other
+> > > > > > > > > > > > hand, when vblank_get succeeded, the subtest completed. Finally, checking
+> > > > > > > > > > > > the flush steps: it increases counter to hold a vblank reference (get),
+> > > > > > > > > > > > but there isn't a op to decreased it and release vblanks (put).
+> > > > > > > > > > > >
+> > > > > > > > > > > > Cc: Daniel Vetter <daniel@ffwll.ch>
+> > > > > > > > > > > > Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+> > > > > > > > > > > > Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
+> > > > > > > > > > > > Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+> > > > > > > > > > > > ---
+> > > > > > > > > > > >  drivers/gpu/drm/vkms/vkms_crtc.c | 1 +
+> > > > > > > > > > > >  1 file changed, 1 insertion(+)
+> > > > > > > > > > > >
+> > > > > > > > > > > > diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+> > > > > > > > > > > > index ac85e17428f8..a99d6b4a92dd 100644
+> > > > > > > > > > > > --- a/drivers/gpu/drm/vkms/vkms_crtc.c
+> > > > > > > > > > > > +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+> > > > > > > > > > > > @@ -246,6 +246,7 @@ static void vkms_crtc_atomic_flush(struct drm_crtc *crtc,
+> > > > > > > > > > > >
+> > > > > > > > > > > >             spin_unlock(&crtc->dev->event_lock);
+> > > > > > > > > > > >
+> > > > > > > > > > > > +           drm_crtc_vblank_put(crtc);
+> > > > > > > > > > >
+> > > > > > > > > > > Uh so I reviewed this a bit more carefully now, and I dont think this is
+> > > > > > > > > > > the correct bugfix. From the kerneldoc of drm_crtc_arm_vblank_event():
+> > > > > > > > > > >
+> > > > > > > > > > >  * Caller must hold a vblank reference for the event @e acquired by a
+> > > > > > > > > > >  * drm_crtc_vblank_get(), which will be dropped when the next vblank arrives.
+> > > > > > > > > > >
+> > > > > > > > > > > So when we call drm_crtc_arm_vblank_event then the vblank_put gets called
+> > > > > > > > > > > for us. And that's the only case where we successfully acquired a vblank
+> > > > > > > > > > > interrupt reference since on failure of drm_crtc_vblank_get (0 indicates
+> > > > > > > > > > > success for that function, failure negative error number) we directly send
+> > > > > > > > > > > out the event.
+> > > > > > > > > > >
+> > > > > > > > > > > So something else fishy is going on, and now I'm totally confused why this
+> > > > > > > > > > > even happens.
+> > > > > > > > > > >
+> > > > > > > > > > > We also have a pile of WARN_ON checks in drm_crtc_vblank_put to make sure
+> > > > > > > > > > > we don't underflow the refcount, so it's also not that I think (except if
+> > > > > > > > > > > this patch creates more WARNING backtraces).
+> > > > > > > > > > >
+> > > > > > > > > > > But clearly it changes behaviour somehow ... can you try to figure out
+> > > > > > > > > > > what changes? Maybe print out the vblank->refcount at various points in
+> > > > > > > > > > > the driver, and maybe also trace when exactly the fake vkms vblank hrtimer
+> > > > > > > > > > > is enabled/disabled ...
+> > > > > > > > > >
+> > > > > > > > > > :(
+> > > > > > > > > >
+> > > > > > > > > > I can check these, but I also have other suspicions. When I place the
+> > > > > > > > > > drm_crct_vblank_put out of the if (at the end of flush), it not only solve
+> > > > > > > > > > the issue of blocking on kms_cursor_crc, but also the WARN_ON on kms_flip
+> > > > > > > > > > doesn't appear anymore (a total cleanup). Just after:
+> > > > > > > > > >
+> > > > > > > > > > vkms_output->composer_state = to_vkms_crtc_state(crtc->state);
+> > > > > > > > > >
+> > > > > > > > > > looks like there is something stuck around here.
+> > > > > > > > >
+> > > > > > > > > Hm do you have the full WARNING for this? Maybe this gives me an idea
+> > > > > > > > > what's going wrong.
+> > > > > > > > >
+> > > > > > > > > > Besides, there is a lock at atomic_begin:
+> > > > > > > > > >
+> > > > > > > > > >   /* This lock is held across the atomic commit to block vblank timer
+> > > > > > > > > >    * from scheduling vkms_composer_worker until the composer is updated
+> > > > > > > > > >    */
+> > > > > > > > > >   spin_lock_irq(&vkms_output->lock);
+> > > > > > > > > >
+> > > > > > > > > > that seems to be released on atomic_flush and make me suspect something
+> > > > > > > > > > missing on the composer update.
+> > > > > > > > >
+> > > > > > > > > atomic_begin/atomic_flush are symmetric functions an always called
+> > > > > > > > > around all the plane updates. So having the spin_lock in _begin and
+> > > > > > > > > the spin_unlock in _flush should be symmetric and correct.
+> > > > > > > > >
+> > > > > > > > > If you want to make sure, recompile with CONFIG_PROVE_LOCKING, which
+> > > > > > > > > should immmediately give you a huge splat in dmesg if there's anything
+> > > > > > > > > unbalanced with locking.
+> > > > > > > > >
+> > > > > > > > > > I'll check all these things and come back with news (hope) :)
+> > > > > > > > >
+> > > > > > > > > Have fun chasing stuff :-)
+> > > > > > > > >
+> > > > > > > > > Cheers, Daniel
+> > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > > Thanks,
+> > > > > > > > > >
+> > > > > > > > > > Melissa
+> > > > > > > > > > >
+> > > > > > > > > > > I'm totally confused about what's going on here now.
+> > > > > > > > > > > -Daniel
+> > > > > > > >
+> > > > > > > > Hi Daniel, Melissa.
+> > > > > > > > I found something about this problem.
+> > > > > > > > I traced vblank->refcount that it's important in the problem.
+> > > > > > > > In normal case, first test run calls commit_tail() and enable vblank in
+> > > > > > > > atomic_flush(). in drm_vblank_get(), it enable vblank when refcount was zero.
+> > > > > > > >
+> > > > > > > > in first test run, it disable crtc for cleanup test. drm_crtc_vblank_off() was
+> > > > > > > > called by atomic_disable. in this function vblank's refcount was increased for
+> > > > > > > > prevent subsequent drm_vblank_get() from re-enabling the vblank interrupt.
+> > > > > > > > and refcount goes one not zero for next test run.
+> > > > > > > >
+> > > > > > > > and next test run, drm_vblank_get() was called but it didn't enable vblank
+> > > > > > > > because refcount was already one. drm_crtc_vblank_on() was called in next. but
+> > > > > > > > it didn't enable vblank but just increase refcount only.
+> > > > > > > >
+> > > > > > > > I think this is why this problem happen. don't know how to fix this correctly.
+> > > > > > > > should we force to enable vblank after enabling crtc?
+> > > > > > >
+> > > > > > > Hm, between drm_crtc_vblank_off and drm_crtc_vblank_on
+> > > > > > > drm_crtc_vblank_get should fail (and leave the refcount unchanged).
+> > > > > > > It's convoluted logic, but the check for vblank->enabled should catch
+> > > > > > > that and return -EINVAL for this case. Does that not happen?
+> > > > > > >
+> > > > > > > It would indeed explain the bug (I think, I've been wrong way too many
+> > > > > > > times with this).
+> > > > > > > -Daniel
+> > > > > > >
+> > > > > > Hi Daniel and Sidong,
+> > > > > >
+> > > > > > I don't know if it will be confusing, but I will try to explain in a
+> > > > > > little more detail (and newbie way) what I saw in this behavior of the
+> > > > > > refcount (similar to what Sidong evaluated).
+> > > > > >
+> > > > > > 1. Starting with the loading of vkms is:
+> > > > > > In vkms_init:
+> > > > > > After drm_vblank_init (refcount=0), it calls:
+> > > > > > vkms_modeset_init
+> > > > > > --> vkms_output_init
+> > > > > > ----> drm_mode_config_reset
+> > > > > > -------> vkms_atomic_crtc_reset
+> > > > > > (even more inside)--> drm_crtc_vblank_reset that bumps the refcount to
+> > > > > > prevent vblank_get to enable vblank (refcount=1)
+> > > > > >
+> > > > > > 2. So, when we start a subtest, vblank is still disabled and in
+> > > > > > commit_tail, commit_planes triggers a atomic_begin/flush->vblank_get that
+> > > > > > return -EINVAL because !vblank->enabled (refcount ends 1) and send_vblank;
+> > > > > > however the test fails before atomic_enable decrements refcount to 0 and
+> > > > > > reset timestamp.
+> > > > > > ** This warning also appears in this very first running:
+> > > > > > WARNING: CPU: 0 PID: 708 at drivers/gpu/drm/vkms/vkms_crtc.c:91 vkms_get_vblank_timestamp+0x41/0x50 [vkms]
+> > > > >
+> > > > > Hm yeah I guess that's something we should paper over a bit, but maybe
+> > > > > the bugfix will take care of that.
+> > > > >
+> > > > > > In the end, this sequence modeset_disable -> atomic_begin ->
+> > > > > > atomic_flush: refcount going from 0 to 1 and than drm_vblank_enable
+> > > > > > prepares to everything going well in the next subtest (because
+> > > > > > atomic_disable is not called).
+> > > > > >
+> > > > > > 3. It could be nice, but in the next subtest (with success), as refcount +
+> > > > > > vblank_enabled ok, after doind its job, it calls
+> > > > > > atomic_disable->vblank_off and here refcount ends 1 and vblank disabled
+> > > > > > (the problem returns).
+> > > > > > So, we have a kind of good turn and bad turn.
+> > > > > >
+> > > > > > I tried different things, but the only relatively stable result was
+> > > > > > putting the sequence modeset_disable + modeset_enables + commit_planes in
+> > > > > > the commit_tail. That didn't convince me and then I keep trying things.
+> > > > >
+> > > > > This actually sounds like a good idea, I had the same one. Doing it
+> > > > > this way should also resolve the WARNING you've pointed out I think?
+> > > >
+> > > > Hi Daniel,
+> > > >
+> > > > My uncertainty in this idea was related to a subtest, the cursor-suspend.
+> > > > Although the reordering solves most of the blocking in kms-cursor-crc, the
+> > > > suspend subtest fails because when vkms suspends, it disables vblank,
+> > > > and when it resumes, vblank is not enabled in time. In this subtest, there is
+> > > > a pipe-crc-start and adding a igt_wait_for_vblank solves... but again,
+> > > > I know it is not the real fix.
+> > > >
+> > > > Would be the case to develop a specific feature of suspend/resume in vkms?
+> > > > I mean, something to enable vblank when resume. I am trying to figure out how
+> > > > to develop it, but still without success.
+> > > 
+> > > Hm since it's all software I expected that the hrtimer will simply
+> > > continue to run as if nothing happened. For real hw we'd need to use
+> > > drm_mode_config_helper_suspend/resume, but for vkms I dont think
+> > > that's required. Is the vblank hrtimer not working after resume? Or is
+> > > it simply reporting a garbage timestamp and that's why the testcase
+> > > fails?
+> > 
+> > The testcase fails for the same timeout in waiting the first crc
+> > (already applying the change in the commit_tail sequence):
+> > 
+> > (kms_cursor_crc:732) igt_aux-DEBUG: Test requirement passed: (power_dir = open("/sys/power", O_RDONLY)) >= 0
+> > (kms_cursor_crc:732) igt_aux-DEBUG: Test requirement passed: get_supported_suspend_states(power_dir) & (1 << state)
+> > (kms_cursor_crc:732) igt_aux-DEBUG: Test requirement passed: test == SUSPEND_TEST_NONE || faccessat(power_dir, "pm_test", R_OK | W_OK, 0) == 0
+> > (kms_cursor_crc:732) igt_aux-DEBUG: Test requirement passed: !(state == SUSPEND_STATE_DISK && !intel_get_total_swap_mb())
+> > (kms_cursor_crc:732) igt_aux-DEBUG: Test requirement passed: ret == 0
+> > (kms_cursor_crc:732) igt_core-INFO: [cmd] rtcwake: wakeup from "mem" using /dev/rtc0 at Thu Jul 30 09:23:59 2020
+> > (kms_cursor_crc:732) igt_debugfs-DEBUG: Opening debugfs directory '/sys/kernel/debug/dri/0'
+> > (kms_cursor_crc:732) igt_core-INFO: Timed out: Opening crc fd, and poll for first CRC.
+> > 
+> > What I could check was, when suspend, vblanks are disabled (calling
+> > vkms_disable_vblank), and when resume, the testcase fails and only after
+> > the failure vblanks are enabled (vkms_enable_vblank) and
+> > hrtimer_init/starts.
+> 
+> Hm, what is disabling the vblank there? Can you grab a full backtrace for
+> that? I have no idea why that's even happening ...
+> 
+> > If I "force" enabling vblanks via testcase (adding a
+> > igt_wait_for_vblank before igt_pipe_crc_start), things work fine.
+> > This is why I thought about anticipating the restarting of activities by
+> > placing a vblank "wakeup" in a resume function. Or perhaps prevent vblank
+> > from being disabled when suspended, since that last attempt to place a
+> > vblank_put at the end of the flush made this test case (suspend) work,
+> > because it prevented the vblank from being disabled.
+> > 
+> > This failure in suspend subtest is so closer to the previous ones, that I
+> > was unsure if my attempt in fix by reordering commit_tail would be enough. 
+> > But maybe they are different situations that deserve different treats.
+> > Do you think restarting a vblank in resume can make sense for vkms?
+> 
+> tbh I'm just really confused what's going on :-/
 
-And the call trace, which leads to the crash, as below:
-ext4_commit_super()
-  __sync_dirty_buffer()
-    submit_bh()
-      submit_bh_wbc()
-        BUG_ON(!buffer_mapped(bh));
+Hi Daniel, Mellisa.
+I made up the situation Melissa said, and thought about what's going on now.  
+What pipe-A-cursor-suspend different from size-change is that it has some 
+suspend command just before disabling cursor in test. usually vblank is enabled 
+by drm_vblank_get() and it's handled by vblank interrupt (vkms_vblank_simulate 
+in vkms). by calling drm_crtc_handle_vblank(), drm_vblank_put() is called and it 
+disable vblank with disable timer. the timer will disable vblank after 5 seconds 
+(drm_vblank_offdelay) later in default. that time is enough to execute crc 
+command in simple size-change test. but in suspending situation, if suspend and 
+wakup command takes more than 5 seconds, vblank will disabled and also crc 
+command is failed from polling crc file. the test are passed if I make my 
+environment wake up earlier.
+In the same way, if there is the code delaying crc command in igt test, it make 
+same problem even if it's in simple size-change.
 
-But recently we met the same crash(with very low probability) when
-device hot-removed even though the kernel already contained
-above exception protection code. Still, the crash is caused by
-'BUG_ON(!buffer_mapped(bh))' in submit_bh_wbc(), and the same
-call trace as below.
+-Sidong
 
-As my understanding and below code，there are still some more
-codes needs to run between 'buffer_mapped(sbh)'(which is added
-by commit a17712c8) and 'BUG_ON(!buffer_mapped(bh))' in
-submit_bh_wbc(), especially lock_buffer is called two times(sometimes,
-it may take more times to get the lock). So when do the test of
-device hot-remove, there is low probability that the sbh is mapped
-when executing 'buffer_mapped(sbh)'(which is added by commit a17712c8)
-but sbh is not mapped when executing 'BUG_ON(!buffer_mapped(bh))'
-in submit_bh_wbc().
-Code path:
-ext4_commit_super
-    judge if 'buffer_mapped(sbh)' is false, return <== commit a17712c8
-          lock_buffer(sbh)
-          ...
-          unlock_buffer(sbh)
-               __sync_dirty_buffer(sbh,...
-                    lock_buffer(sbh)
-                        judge if 'buffer_mapped(sbh))' is false, return <== added by this patch
-                            submit_bh(...,sbh)
-                                submit_bh_wbc(...,sbh,...)
-
-This patch is to move the check of 'buffer_mapped(sbh)' to the place just
-before calling 'BUG_ON(!buffer_mapped(bh))' in submit_bh_wbc().
-
-[100722.966497] kernel BUG at fs/buffer.c:3095! <== BUG_ON(!buffer_mapped(bh))' in submit_bh_wbc()
-[100722.966503] invalid opcode: 0000 [#1] SMP
-[100722.966566] task: ffff8817e15a9e40 task.stack: ffffc90024744000
-[100722.966574] RIP: 0010:submit_bh_wbc+0x180/0x190
-[100722.966575] RSP: 0018:ffffc90024747a90 EFLAGS: 00010246
-[100722.966576] RAX: 0000000000620005 RBX: ffff8818a80603a8 RCX: 0000000000000000
-[100722.966576] RDX: ffff8818a80603a8 RSI: 0000000000020800 RDI: 0000000000000001
-[100722.966577] RBP: ffffc90024747ac0 R08: 0000000000000000 R09: ffff88207f94170d
-[100722.966578] R10: 00000000000437c8 R11: 0000000000000001 R12: 0000000000020800
-[100722.966578] R13: 0000000000000001 R14: 000000000bf9a438 R15: ffff88195f333000
-[100722.966580] FS:  00007fa2eee27700(0000) GS:ffff88203d840000(0000) knlGS:0000000000000000
-[100722.966580] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[100722.966581] CR2: 0000000000f0b008 CR3: 000000201a622003 CR4: 00000000007606e0
-[100722.966582] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[100722.966583] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[100722.966583] PKRU: 55555554
-[100722.966583] Call Trace:
-[100722.966588]  __sync_dirty_buffer+0x6e/0xd0
-[100722.966614]  ext4_commit_super+0x1d8/0x290 [ext4]
-[100722.966626]  __ext4_std_error+0x78/0x100 [ext4]
-[100722.966635]  ? __ext4_journal_get_write_access+0xca/0x120 [ext4]
-[100722.966646]  ext4_reserve_inode_write+0x58/0xb0 [ext4]
-[100722.966655]  ? ext4_dirty_inode+0x48/0x70 [ext4]
-[100722.966663]  ext4_mark_inode_dirty+0x53/0x1e0 [ext4]
-[100722.966671]  ? __ext4_journal_start_sb+0x6d/0xf0 [ext4]
-[100722.966679]  ext4_dirty_inode+0x48/0x70 [ext4]
-[100722.966682]  __mark_inode_dirty+0x17f/0x350
-[100722.966686]  generic_update_time+0x87/0xd0
-[100722.966687]  touch_atime+0xa9/0xd0
-[100722.966690]  generic_file_read_iter+0xa09/0xcd0
-[100722.966694]  ? page_cache_tree_insert+0xb0/0xb0
-[100722.966704]  ext4_file_read_iter+0x4a/0x100 [ext4]
-[100722.966707]  ? __inode_security_revalidate+0x4f/0x60
-[100722.966709]  __vfs_read+0xec/0x160
-[100722.966711]  vfs_read+0x8c/0x130
-[100722.966712]  SyS_pread64+0x87/0xb0
-[100722.966716]  do_syscall_64+0x67/0x1b0
-[100722.966719]  entry_SYSCALL64_slow_path+0x25/0x25
-
-Signed-off-by: Xianting Tian <xianting_tian@126.com>
----
- fs/buffer.c     | 9 +++++++++
- fs/ext4/super.c | 7 -------
- 2 files changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/fs/buffer.c b/fs/buffer.c
-index 64fe82e..75a8849 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -3160,6 +3160,15 @@ int __sync_dirty_buffer(struct buffer_head *bh, int op_flags)
- 	WARN_ON(atomic_read(&bh->b_count) < 1);
- 	lock_buffer(bh);
- 	if (test_clear_buffer_dirty(bh)) {
-+		/*
-+		 * The bh should be mapped, but it might not be if the
-+		 * device was hot-removed. Not much we can do but fail the I/O.
-+		 */
-+		if (!buffer_mapped(bh)) {
-+			unlock_buffer(bh);
-+			return -EIO;
-+		}
-+
- 		get_bh(bh);
- 		bh->b_end_io = end_buffer_write_sync;
- 		ret = submit_bh(REQ_OP_WRITE, op_flags, bh);
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 330957e..1c22044 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -5171,13 +5171,6 @@ static int ext4_commit_super(struct super_block *sb, int sync)
- 		return error;
- 
- 	/*
--	 * The superblock bh should be mapped, but it might not be if the
--	 * device was hot-removed. Not much we can do but fail the I/O.
--	 */
--	if (!buffer_mapped(sbh))
--		return error;
--
--	/*
- 	 * If the file system is mounted read-only, don't update the
- 	 * superblock write time.  This avoids updating the superblock
- 	 * write time when we are mounting the root file system
--- 
-1.8.3.1
-
+> -Daniel
+> 
+> > 
+> > Melissa
+> > > 
+> > > Not sure how to wire it up for fake drivers like vkms, but maybe doing
+> > > the suspend/resume like for real drivers helps. I think ideally we'd
+> > > try to attach a platform driver to our platform device we create (but
+> > > not sure how to do that).
+> > > -Daniel
+> > > 
+> > > >
+> > > > Melissa
+> > > > >
+> > > > > But I'm still wondering why after step 3 we don't get -EINVAL from
+> > > > > vblank_get() - after vblank_off() vblank->enabled should be false
+> > > > > again, getting us back to the same state as after 1. Is that not
+> > > > > happening?
+> > > > > -Daniel
+> > > > >
+> > > > > >
+> > > > > > > >
+> > > > > > > > Thanks
+> > > > > > > > -Sidong
+> > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > >             crtc->state->event = NULL;
+> > > > > > > > > > > >     }
+> > > > > > > > > > > >
+> > > > > > > > > > > > --
+> > > > > > > > > > > > 2.27.0
+> > > > > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > --
+> > > > > > > > > > > Daniel Vetter
+> > > > > > > > > > > Software Engineer, Intel Corporation
+> > > > > > > > > > > http://blog.ffwll.ch
+> > > > > > > > >
+> > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > --
+> > > > > > > > > Daniel Vetter
+> > > > > > > > > Software Engineer, Intel Corporation
+> > > > > > > > > http://blog.ffwll.ch
+> > > > > > > > > _______________________________________________
+> > > > > > > > > dri-devel mailing list
+> > > > > > > > > dri-devel@lists.freedesktop.org
+> > > > > > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > > > > > >
+> > > > > > >
+> > > > > > >
+> > > > > > > --
+> > > > > > > Daniel Vetter
+> > > > > > > Software Engineer, Intel Corporation
+> > > > > > > http://blog.ffwll.ch
+> > > > >
+> > > > >
+> > > > >
+> > > > > --
+> > > > > Daniel Vetter
+> > > > > Software Engineer, Intel Corporation
+> > > > > http://blog.ffwll.ch
+> > > 
+> > > 
+> > > 
+> > > -- 
+> > > Daniel Vetter
+> > > Software Engineer, Intel Corporation
+> > > http://blog.ffwll.ch
+> 
+> -- 
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
