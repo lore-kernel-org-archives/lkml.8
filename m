@@ -2,52 +2,52 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9271DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 03:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8232EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 03:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75A2B208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 03:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 557FB21744
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 03:14:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731332AbgGaDNb (ORCPT
+        id S1731333AbgGaDOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 23:13:31 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:34558 "EHLO
+        Thu, 30 Jul 2020 23:14:23 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:40199 "EHLO
         mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731279AbgGaDNY (ORCPT
+        with ESMTP id S1731224AbgGaDOW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 23:13:24 -0400
-Received: by mail-il1-f199.google.com with SMTP id o1so13336357ilk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 20:13:23 -0700 (PDT)
+        Thu, 30 Jul 2020 23:14:22 -0400
+Received: by mail-il1-f199.google.com with SMTP id z16so20633461ill.7
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 20:14:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=/pC2jX1hCFTSa0XcmmFAvUUMdwWwZxAez1TyfC9ev/c=;
-        b=VcNFHGUjQUNSK+cD66Gvm/pjd7Q+/lfMjhX/gwAQCXFWI2Udt6VWxQnF3GxeEts33y
-         CXkHqO++fKbFHjFIJOGR3g4f+jSDbyG60gusazySygRBzGq0t5I86FRzSAr6scbX0MMt
-         sajtU04Qc0p9a/wFWFOYqjdao6GFK6K1vWtPbbw9dO1U5EbER5ufA/Myk0bpRMBtZJBl
-         0dtNcDOfVOAs3A0x+7u+Pmw0sqmBzqGHt95vkNnnZw8BQGWJXUT3+r9O8H+phD34nkoX
-         2UqvRkEj5tOVW0UazkkBWzZV1imJ0la+cC5DXWof4adVLtYyoQyxqEPeNt8AgrU0Cdr2
-         tofw==
-X-Gm-Message-State: AOAM532zMiG5VWCuVo1x9C+DQs2aeXkcc+YsXiGsgVP/2SXehnc5dtWf
-        VkqlkYRBuDS8OdMDNw9cj+yjCGc0bnyeYxNDxqfxvC/LNOEM
-X-Google-Smtp-Source: ABdhPJw/Ch8WWG2O2qDM/9Jc5exVf6rgoPHKV5c9rE7Zq499OYcDuWvWDwZhuYN+Oj75uDd9AC4/tt54t2GmMmtveNwvxWia5tHP
+        bh=aDbaOWBAHLaPkmTLRxLNNFk54PZMakuGLolLviyvaOM=;
+        b=oIlb0I3roqF8abe/Zv+MTk+VS/KNB9iPgixAqcqD6zpAjWmWubp3of7Xgcim6xhkEB
+         qmZiavXSutt4PL7bWzO6cHYoma3Ne6hmQRVx5WCmp3lhSe5goZoWtUUMKKLlqINaiv9k
+         HCxp/X5ZAzsghhz/cbB2e3AeVbw2toOCjOJac7+UqfefOrFWL2/GwgSj1J91aSB5JUlM
+         UpDNx0+PWVMbJ8NmNuhbTHmd9AA7cez/+Gmk8H31CBSKwNS2D/uWXSROBquXqmmvCXIn
+         p3rMjXdthzqDTB3mlLfwMTf1+78rBUNowQLlpWbLSDumdc9NaphI0XxYXlYRH+c5wNYk
+         K44w==
+X-Gm-Message-State: AOAM533C9PQtvBI6OGFfoHMLjAY+PBXk/E4pUO1M2xnzk9OfkGDRhTtd
+        s69pn89G2/uA+K2JqeD0B8t2wW5UMfFjbknAapMEGgyr3a5t
+X-Google-Smtp-Source: ABdhPJx2p7JdBX5VB0joXmWL8838/GUAMNmi05HfnYEoTY6BqlqnspQji0WH9S5Vlsqzaxs8Mf1tRKrbO3Q6wOBr6ZNfu7pOYcqd
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:381:: with SMTP id f1mr1631261iov.193.1596165203333;
- Thu, 30 Jul 2020 20:13:23 -0700 (PDT)
-Date:   Thu, 30 Jul 2020 20:13:23 -0700
+X-Received: by 2002:a02:3b10:: with SMTP id c16mr2684440jaa.128.1596165260837;
+ Thu, 30 Jul 2020 20:14:20 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 20:14:20 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f298fc05abb42b70@google.com>
-Subject: WARNING: ODEBUG bug in cancel_delayed_work
-From:   syzbot <syzbot+338f014a98367a08a114@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000600a5c05abb42f03@google.com>
+Subject: BUG: unable to handle kernel paging request in __syscall_return_slowpath
+From:   syzbot <syzbot+8c37a0f3f00cf0dc8cfd@syzkaller.appspotmail.com>
+To:     bp@alien8.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
+        luto@kernel.org, mingo@redhat.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,77 +58,184 @@ Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    27a2145d ibmvnic: Fix IRQ mapping disposal in error path
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=14277848900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ca6448d2af2ba351
-dashboard link: https://syzkaller.appspot.com/bug?extid=338f014a98367a08a114
+HEAD commit:    04300d66 Merge tag 'riscv-for-linus-5.8-rc7' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13e6fb64900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f87a5e4232fdb267
+dashboard link: https://syzkaller.appspot.com/bug?extid=8c37a0f3f00cf0dc8cfd
 compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=168aec04900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11148e5c900000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14c88a9c900000
+
+Bisection is inconclusive: the issue happens on the oldest tested release.
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1101b8a8900000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=1301b8a8900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1501b8a8900000
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+338f014a98367a08a114@syzkaller.appspotmail.com
+Reported-by: syzbot+8c37a0f3f00cf0dc8cfd@syzkaller.appspotmail.com
 
-------------[ cut here ]------------
-ODEBUG: assert_init not available (active state 0) object type: timer_list hint: 0x0
-WARNING: CPU: 0 PID: 6858 at lib/debugobjects.c:485 debug_print_object+0x160/0x250 lib/debugobjects.c:485
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 6858 Comm: syz-executor296 Not tainted 5.8.0-rc6-syzkaller #0
+BUG: unable to handle page fault for address: fffffffffffffffe
+#PF: supervisor write access in kernel mode
+#PF: error_code(0x0002) - not-present page
+PGD 9a7c067 P4D 9a7c067 PUD 9a7e067 PMD 0 
+Oops: 0002 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 3892 Comm: systemd-udevd Not tainted 5.8.0-rc6-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__syscall_return_slowpath+0x0/0x280 arch/x86/entry/common.c:332
+Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc900015b7f38 EFLAGS: 00010283
+RAX: fffffffffffffffe RBX: 0000000000000015 RCX: 1ffff920002b6fd5
+RDX: ffff88809d834000 RSI: ffffffff81bcb65f RDI: ffffc900015b7f58
+RBP: ffffc900015b7f58 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+FS:  00007f0863b0d8c0(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffffffffffffffe CR3: 000000009a278000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:231
- __warn.cold+0x20/0x45 kernel/panic.c:600
- report_bug+0x1bd/0x210 lib/bug.c:198
- handle_bug+0x38/0x90 arch/x86/kernel/traps.c:235
- exc_invalid_op+0x13/0x40 arch/x86/kernel/traps.c:255
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:540
-RIP: 0010:debug_print_object+0x160/0x250 lib/debugobjects.c:485
-Code: dd a0 9f 93 88 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48 8b 14 dd a0 9f 93 88 48 c7 c7 00 95 93 88 e8 b2 ae a9 fd <0f> 0b 83 05 db 0b 14 07 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
-RSP: 0018:ffffc9000168f578 EFLAGS: 00010082
-RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000000000
-RDX: ffff888096dec4c0 RSI: ffffffff815d4ef7 RDI: fffff520002d1ea1
-RBP: 0000000000000001 R08: 0000000000000001 R09: ffff8880ae620fcb
-R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff89bcc540
-R13: ffffffff81630df0 R14: ffff888095382200 R15: 1ffff920002d1eba
- debug_object_assert_init lib/debugobjects.c:870 [inline]
- debug_object_assert_init+0x1f4/0x2e0 lib/debugobjects.c:841
- debug_timer_assert_init kernel/time/timer.c:736 [inline]
- debug_assert_init kernel/time/timer.c:781 [inline]
- del_timer+0x6d/0x110 kernel/time/timer.c:1207
- try_to_grab_pending kernel/workqueue.c:1249 [inline]
- __cancel_work kernel/workqueue.c:3221 [inline]
- cancel_delayed_work+0xe0/0x450 kernel/workqueue.c:3250
- l2cap_clear_timer include/net/bluetooth/l2cap.h:879 [inline]
- l2cap_chan_del+0x541/0x1300 net/bluetooth/l2cap_core.c:661
- l2cap_chan_close+0x118/0xb10 net/bluetooth/l2cap_core.c:824
- l2cap_sock_shutdown+0x3b8/0xe90 net/bluetooth/l2cap_sock.c:1339
- l2cap_sock_release+0x63/0x1d0 net/bluetooth/l2cap_sock.c:1382
- __sock_release+0xcd/0x280 net/socket.c:605
- sock_close+0x18/0x20 net/socket.c:1278
- __fput+0x33c/0x880 fs/file_table.c:281
- task_work_run+0xdd/0x190 kernel/task_work.c:135
- exit_task_work include/linux/task_work.h:25 [inline]
- do_exit+0xb72/0x2a40 kernel/exit.c:805
- do_group_exit+0x125/0x310 kernel/exit.c:903
- get_signal+0x40b/0x1ee0 kernel/signal.c:2743
- do_signal+0x82/0x2520 arch/x86/kernel/signal.c:810
- exit_to_usermode_loop arch/x86/entry/common.c:235 [inline]
- __prepare_exit_to_usermode+0x156/0x1f0 arch/x86/entry/common.c:269
  do_syscall_64+0x6c/0xe0 arch/x86/entry/common.c:393
  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x446d69
-Code: Bad RIP value.
-RSP: 002b:00007ffc69898b98 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-RAX: fffffffffffffffc RBX: 0000000000000003 RCX: 0000000000446d69
-RDX: 000000000000000e RSI: 0000000020000040 RDI: 0000000000000004
-RBP: 00007ffc69898bd0 R08: 0000000000000000 R09: 00000000000000ff
-R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000000004
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+#PF: supervisor write access in kernel mode
+#PF: error_code(0x0002) - not-present page
+PGD 0 P4D 0 
+Oops: 0002 [#2] PREEMPT SMP KASAN
+CPU: 1 PID: 3892 Comm: systemd-udevd Not tainted 5.8.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:in_gate_area_no_mm+0x0/0x6a arch/x86/entry/vsyscall/vsyscall_64.c:343
+Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc900015b74a0 EFLAGS: 00010093
+RAX: 0000000000000000 RBX: ffffc900015b7540 RCX: ffffffff816a6330
+RDX: ffff88809d834000 RSI: ffffffff816a635b RDI: 00007f08629809c7
+RBP: 00007f08629809c7 R08: ffffc900015b7650 R09: ffffffff8c8d7109
+R10: 00007f08629809c7 R11: 0000000000000000 R12: ffffc900015b7650
+R13: 0000000000000001 R14: 00007f08629809c7 R15: ffffc900015b7560
+FS:  00007f0863b0d8c0(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 000000009a278000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ is_kernel include/linux/kallsyms.h:44 [inline]
+ is_ksym_addr include/linux/kallsyms.h:50 [inline]
+ kallsyms_lookup+0xc3/0x2e0 kernel/kallsyms.c:290
+ __sprint_symbol+0x9c/0x1c0 kernel/kallsyms.c:363
+ symbol_string+0x14c/0x370 lib/vsprintf.c:969
+ pointer+0x185/0x970 lib/vsprintf.c:2226
+ vsnprintf+0x5b2/0x14f0 lib/vsprintf.c:2624
+ vscnprintf+0x29/0x80 lib/vsprintf.c:2723
+ vprintk_store+0x44/0x4a0 kernel/printk/printk.c:1942
+ vprintk_emit+0x139/0x770 kernel/printk/printk.c:2003
+ vprintk_func+0x8f/0x1a6 kernel/printk/printk_safe.c:393
+ printk+0xba/0xed kernel/printk/printk.c:2070
+ show_ip+0x22/0x30 arch/x86/kernel/dumpstack.c:131
+ show_iret_regs+0x10/0x32 arch/x86/kernel/dumpstack.c:138
+ __show_regs+0x18/0x50 arch/x86/kernel/process_64.c:72
+ show_trace_log_lvl+0x255/0x2b4 arch/x86/kernel/dumpstack.c:281
+ show_regs arch/x86/kernel/dumpstack.c:454 [inline]
+ __die_body arch/x86/kernel/dumpstack.c:400 [inline]
+ __die+0x51/0x90 arch/x86/kernel/dumpstack.c:414
+ no_context+0x56b/0x9f0 arch/x86/mm/fault.c:695
+ __bad_area_nosemaphore+0xa9/0x480 arch/x86/mm/fault.c:789
+ do_kern_addr_fault+0x5b/0x6f arch/x86/mm/fault.c:1130
+ handle_page_fault arch/x86/mm/fault.c:1363 [inline]
+ exc_page_fault+0x14c/0x170 arch/x86/mm/fault.c:1418
+ asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:542
+RIP: 0010:__syscall_return_slowpath+0x0/0x280 arch/x86/entry/common.c:332
+Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc900015b7f38 EFLAGS: 00010283
+RAX: fffffffffffffffe RBX: 0000000000000015 RCX: 1ffff920002b6fd5
+RDX: ffff88809d834000 RSI: ffffffff81bcb65f RDI: ffffc900015b7f58
+RBP: ffffc900015b7f58 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000000
 R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+ do_syscall_64+0x6c/0xe0 arch/x86/entry/common.c:393
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+#PF: supervisor write access in kernel mode
+#PF: error_code(0x0002) - not-present page
+PGD 0 P4D 0 
+Oops: 0002 [#3] PREEMPT SMP KASAN
+CPU: 1 PID: 3892 Comm: systemd-udevd Not tainted 5.8.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:in_gate_area_no_mm+0x0/0x6a arch/x86/entry/vsyscall/vsyscall_64.c:343
+Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc900015b6990 EFLAGS: 00010093
+RAX: 0000000000000000 RBX: ffffc900015b6a30 RCX: ffffffff816a6330
+RDX: ffff88809d834000 RSI: ffffffff816a635b RDI: 00007f08629809c7
+RBP: 00007f08629809c7 R08: ffffc900015b6b40 R09: ffff8880ae723d62
+R10: 00007f08629809c7 R11: 0000000000000001 R12: ffffc900015b6b40
+R13: 0000000000000001 R14: 00007f08629809c7 R15: ffffc900015b6a50
+FS:  00007f0863b0d8c0(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 000000009a278000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ is_kernel include/linux/kallsyms.h:44 [inline]
+ is_ksym_addr include/linux/kallsyms.h:50 [inline]
+ kallsyms_lookup+0xc3/0x2e0 kernel/kallsyms.c:290
+ __sprint_symbol+0x9c/0x1c0 kernel/kallsyms.c:363
+ symbol_string+0x14c/0x370 lib/vsprintf.c:969
+ pointer+0x185/0x970 lib/vsprintf.c:2226
+ vsnprintf+0x5b2/0x14f0 lib/vsprintf.c:2624
+ vscnprintf+0x29/0x80 lib/vsprintf.c:2723
+ printk_safe_log_store+0xf5/0x250 kernel/printk/printk_safe.c:94
+ vprintk_safe kernel/printk/printk_safe.c:347 [inline]
+ vprintk_func+0xef/0x1a6 kernel/printk/printk_safe.c:390
+ printk+0xba/0xed kernel/printk/printk.c:2070
+ show_ip+0x22/0x30 arch/x86/kernel/dumpstack.c:131
+ show_iret_regs+0x10/0x32 arch/x86/kernel/dumpstack.c:138
+ __show_regs+0x18/0x50 arch/x86/kernel/process_64.c:72
+ show_trace_log_lvl+0x255/0x2b4 arch/x86/kernel/dumpstack.c:281
+ show_regs arch/x86/kernel/dumpstack.c:454 [inline]
+ __die_body arch/x86/kernel/dumpstack.c:400 [inline]
+ __die+0x51/0x90 arch/x86/kernel/dumpstack.c:414
+ no_context+0x56b/0x9f0 arch/x86/mm/fault.c:695
+ __bad_area_nosemaphore+0xa9/0x480 arch/x86/mm/fault.c:789
+ do_user_addr_fault+0x783/0xd00 arch/x86/mm/fault.c:1171
+ handle_page_fault arch/x86/mm/fault.c:1365 [inline]
+ exc_page_fault+0xab/0x170 arch/x86/mm/fault.c:1418
+ asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:542
+RIP: 0010:in_gate_area_no_mm+0x0/0x6a arch/x86/entry/vsyscall/vsyscall_64.c:343
+Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc900015b74a0 EFLAGS: 00010093
+RAX: 0000000000000000 RBX: ffffc900015b7540 RCX: ffffffff816a6330
+RDX: ffff88809d834000 RSI: ffffffff816a635b RDI: 00007f08629809c7
+RBP: 00007f08629809c7 R08: ffffc900015b7650 R09: ffffffff8c8d7109
+R10: 00007f08629809c7 R11: 0000000000000000 R12: ffffc900015b7650
+R13: 0000000000000001 R14: 00007f08629809c7 R15: ffffc900015b7560
+ is_kernel include/linux/kallsyms.h:44 [inline]
+ is_ksym_addr include/linux/kallsyms.h:50 [inline]
+ kallsyms_lookup+0xc3/0x2e0 kernel/kallsyms.c:290
+ __sprint_symbol+0x9c/0x1c0 kernel/kallsyms.c:363
+ symbol_string+0x14c/0x370 lib/vsprintf.c:969
+ pointer+0x185/0x970 lib/vsprintf.c:2226
+ vsnprintf+0x5b2/0x14f0 lib/vsprintf.c:2624
+ vscnprintf+0x29/0x80 lib/vsprintf.c:2723
+ vprintk_store+0x44/0x4a0 kernel/printk/printk.c:1942
+ vprintk_emit+0x139/0x770 kernel/printk/printk.c:2003
+ vprintk_func+0x8f/0x1a6 kernel/printk/printk_safe.c:393
+ printk+0xba/0xed kernel/printk/printk.c:2070
+ show_ip+0x22/0x30 arch/x86/kernel/dumpstack.c:131
+ show_iret_regs+0x10/0x32 arch/x86/kernel/dumpstack.c:138
+ __show_regs+0x18/0x50 arch/x86/kernel/process_64.c:72
+ show_trace_log_lvl+0x255/0x2b4 arch/x86/kernel/dumpstack.c:281
+ show_regs arch/x86/kernel/dumpstack.c:454 [inline]
+ __die_body arch/x86/kernel/dumpstack.c:400 [inline]
+ __die+0x51/0x90 arch/x86/kernel/dumpstack.c:414
+ no_context+0x56b/0x9f0 arch/x86/mm/fault.c:695
+ __bad_area_nosemaphore+0xa9/0x480 arch/x86/mm/fault.c:789
+ do_kern_addr_fault+0x5b/0x6f arch/x86/mm/fault.c:1130
+ handle_page_fault arch/x86/mm/fault.c:1363 [inline]
+ exc_page_fault+0x14c/0x170 arch/x86/mm/fault.c:1418
+ asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:542
+RIP: 0010:__syscall_return_slowpath+0x0/0x280 arch/x86/entry/common.c:332
+Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Lost 40 message(s)!
 
 
 ---
@@ -138,5 +245,6 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this issue. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 syzbot can test patches for this issue, for details see:
 https://goo.gl/tpsmEJ#testing-patches
