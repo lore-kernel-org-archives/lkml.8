@@ -2,274 +2,142 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBF2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2197C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 052B82074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:34:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eICLEEfu"
+	by mail.kernel.org (Postfix) with ESMTP id 9E79B2074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:34:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731665AbgGaHeW (ORCPT
+        id S1731681AbgGaHed convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 03:34:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43270 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731560AbgGaHeV (ORCPT
+        Fri, 31 Jul 2020 03:34:33 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:60131 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731670AbgGaHec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 03:34:21 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18BE4C061574;
-        Fri, 31 Jul 2020 00:34:21 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id d1so16614320plr.8;
-        Fri, 31 Jul 2020 00:34:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xb0omRdLCCOfPt+/txYpi30U3/iAQj16OMiIXME8RHE=;
-        b=eICLEEfuqsvaqONwxsXU0zTjVt7XwYqtzlEdhkJWOrcd5QWruln7gDnvuaxTwcWNl/
-         7R5TSmM1aTljm0DOvpe/wMK7PpbNevNiRQZDmJMJe1Tm9SlKcnhUMQOKbzelrB2kUglb
-         AJ6QmNyv3F/07+qeauXqxWZShr1LnfxF6dTD/wB3fOpyiA66NzlJ2h7iS05ii0Fe9SEk
-         fMaj7NW3lSJmq2eHNwRAHUsXGXzfgzXF6D8ZX/pxoPrHaHV1b49tCAh8y+c+nJeVMsHi
-         wbZpfn8jfwHdaEwrGTmjix2XJXj8Y7uCvQ9qoyqgM9NA/w0XOdN24AveYQm1fx7OZF//
-         +UNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xb0omRdLCCOfPt+/txYpi30U3/iAQj16OMiIXME8RHE=;
-        b=l0AeicTyaEAyM/+nZDfD8hJ4RX+mjnZ/L7fsIl0op1cTX/P5RRI/KUpGWwjLG05CgH
-         H3rwOB24V2M/gLJZHN/eQE16/lUt58Yrt8XBiB7DlaAmFocPL+yTtzALt99A50aguzWw
-         xIASMx6UH1xzO4eIMFtVyAOguwhebPk+1cd7jOQANvPNi+cl7Q/2V7jm4930NGGTneBm
-         e4V4zjwDRtjuos/sfLrKWzOJaR0fP7HRCuR2aYBy3q/ReZUa1dsOwgJ5VtXCC+dnCf8a
-         m/urnIAqXMlqKT6QEDBjYehzCVjai1Bzp5xPxAx5UTLzxjmgAUXT6jRKKzpcCR2TqnvA
-         X+fQ==
-X-Gm-Message-State: AOAM532vPAw1aDSVua4gfN07NYmPb7RtU8CvYWQbwRNLmJZA8tyCFVyp
-        3eCwSRws1DMIKJSUsBLuHh4sw9okGbM56thu2yo=
-X-Google-Smtp-Source: ABdhPJyZHQKcB2t4Z1ootQs26PfgvB/0wuwI05c4XIXu3y8NhHk95Iu3B+XejQESRdlccgeDi6ARnjBWoWChet6hX/Y=
-X-Received: by 2002:a63:ce41:: with SMTP id r1mr2576822pgi.203.1596180860350;
- Fri, 31 Jul 2020 00:34:20 -0700 (PDT)
+        Fri, 31 Jul 2020 03:34:32 -0400
+Received: from mail-qk1-f175.google.com ([209.85.222.175]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MCayD-1jrp3N1wgN-009jOT for <linux-kernel@vger.kernel.org>; Fri, 31 Jul
+ 2020 09:34:30 +0200
+Received: by mail-qk1-f175.google.com with SMTP id j187so27937790qke.11
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 00:34:30 -0700 (PDT)
+X-Gm-Message-State: AOAM531xlJLtqPOQNTuFfPMDsAuB9a4aAW8wRU+WcFG37fP53WRIlbFm
+        yVBUmbeLaavu/59KP7pc5QOeyO6wJAL09G5fwaA=
+X-Google-Smtp-Source: ABdhPJxYk3wIyoxiO9LUCf/QsYM6dUKOpKBu16SsDD6IATmeJ5ingRMD/m8u2OxTjlKcCpmR5ojXc2QcoL/2khVzoU8=
+X-Received: by 2002:a37:b942:: with SMTP id j63mr2753181qkf.138.1596180869243;
+ Fri, 31 Jul 2020 00:34:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200731070114.40471-1-ceggers@arri.de> <20200731070114.40471-3-ceggers@arri.de>
-In-Reply-To: <20200731070114.40471-3-ceggers@arri.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 31 Jul 2020 10:34:02 +0300
-Message-ID: <CAHp75VdDCnQLh0Qts8hsgLBy5TqibOKAYSeFxuV69XLroRBOEg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] iio: light: as73211: New driver
-To:     Christian Eggers <ceggers@arri.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200728192924.441570-1-yepeilin.cs@gmail.com>
+ <30b2a31f-77c2-56c1-ecde-875c6eea99d5@gmail.com> <CADnq5_NXOiAc7q5gQqF_wwtJD1o6nHjXM4O3gY6EwAQe9iOtXw@mail.gmail.com>
+ <8c5cf518-12d2-7495-7822-c7ebf8e61972@amd.com>
+In-Reply-To: <8c5cf518-12d2-7495-7822-c7ebf8e61972@amd.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 31 Jul 2020 09:34:13 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2+Vv5=bKDR=NU8jcNgAoZRk+EKG11NU7bQSetyVDvn=w@mail.gmail.com>
+Message-ID: <CAK8P3a2+Vv5=bKDR=NU8jcNgAoZRk+EKG11NU7bQSetyVDvn=w@mail.gmail.com>
+Subject: Re: [Linux-kernel-mentees] [PATCH] drm/amdgpu: Prevent
+ kernel-infoleak in amdgpu_info_ioctl()
+To:     Luben Tuikov <luben.tuikov@amd.com>
+Cc:     Alex Deucher <alexdeucher@gmail.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Xiaojie Yuan <xiaojie.yuan@amd.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        =?UTF-8?B?TWFyZWsgT2zFocOhaw==?= <marek.olsak@amd.com>,
+        Hans de Goede <hdegoede@redhat.com>, Trek <trek00@inbox.ru>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, Daniel Vetter <daniel@ffwll.ch>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Evan Quan <evan.quan@amd.com>, Leo Liu <leo.liu@amd.com>,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:gJrIMeofloy2jpE2Bfl/I2r8jhJ/tDRSJXVBTwZwcgROj2LJk6q
+ 4bR+piArYZitwHX1goomtRE9jgXo8TWm40OijgLgVdnGDkiIKM5HAuS8IQynWw88f4O51vM
+ +bt4Eq3cCaEhWqQXrU99lw6FTi2ymkgWOq2FvKZdynvSY5fI0In7NsLzpZar1lLBCMoY/9s
+ x5yG/PHigPaAQouSTY2sg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5ByNqUGpY+8=:cziZjiHs/ma9W437MPbOK1
+ luERkLRmmSGdwZI6Kq4ryUowgRcQD0oeCfeiyOrIIY7XII3sIp7TDltXRV+48w4XNcUl/MAhh
+ urUjCtssjKWOSkBJaXVPQxaAi5OcTnFgg2hUx/pR+5QdBJFnuamvSSaSWR2jQ8Igs20rrTbEP
+ QW5Z41/poa7MkTGvowerd1kLIRiCxfM2EU5p50iZJhZkhnFHj+dlwhxF+OaFXEyft6PrcRXgA
+ zR02rccIihjKVk9Vin9H9nVT9Za4QAkQmFS850oOR5EI5DMTKuMU8YE+A2/IKOjoPPtpMSU8i
+ a+Y9epNiBAmpIo77+8dF3UkDxw1AchCARvTvIKdnVDwwufoPeauUYiRfhWA/gHgQKVzMGGl+s
+ yQHPmfACPVaC1AnrYLdhBetPvVeaIZdmbtcn1Rf/UxBnx1AIXyDKIXQxS3lr8Pf6JVRV0jRS+
+ vPsFNc9JpJUBn4RItzwiudWnso2x0fBA/4PJAFOZYemcBlxMlEG3paIgbhrtTnmPXt573sc5I
+ 1gpVMBu2Zj4JtG0b4RrHii+Ys03GJY9VkhcHwaUKiliZ2minOhFImDvIbPiso1He7R4PviVk2
+ 9fui6vPL3W7QCM5dkvZZKsYZIELeYeTnZfdVwjl7oJBp1yR2MV9pHJPhV6w7WPrRGNdqt8HKK
+ Hi/bd96l2nuo4amxtRQ0vuiaZJnJXI1ThbR0bO/b3cdr7tSYzgHoq6jlbAtsXAFsWeWIhjwU+
+ 4W6f9O/CemipsGJUMc/8ol5fnJ2ekM4MExWGZNF0OdDSPLYwvywSqrZ/Z00NmT7r5c6IC2Skd
+ SEfzOF4CjyOh6NPn38N/NF/1pP7OyA653hAH1wWHAPtfrrbYGabOR7ZR16cJ2cth1Rfycgjh4
+ saAUXdGPr9N6jPPyUseD3yehvGyyAvyFUnsCGOCEwDsds5PJ0oF4wEsbXZ5jUUETBRYU3gKfc
+ yvv71HeSKxXvUSUYNncQHCVdX7fdPvktyY2HRBcIU3lvMHNHB13fZ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 10:03 AM Christian Eggers <ceggers@arri.de> wrote:
+On Thu, Jul 30, 2020 at 11:09 PM Luben Tuikov <luben.tuikov@amd.com> wrote:
+> On 2020-07-29 9:49 a.m., Alex Deucher wrote:
+> > On Wed, Jul 29, 2020 at 4:11 AM Christian König
+> > <ckoenig.leichtzumerken@gmail.com> wrote:
+> >>
+> >> Am 28.07.20 um 21:29 schrieb Peilin Ye:
+> >>> Compiler leaves a 4-byte hole near the end of `dev_info`, causing
+> >>> amdgpu_info_ioctl() to copy uninitialized kernel stack memory to userspace
+> >>> when `size` is greater than 356.
+> >>>
+> >>> In 2015 we tried to fix this issue by doing `= {};` on `dev_info`, which
+> >>> unfortunately does not initialize that 4-byte hole. Fix it by using
+> >>> memset() instead.
+> >>>
+> >>> Cc: stable@vger.kernel.org
+> >>> Fixes: c193fa91b918 ("drm/amdgpu: information leak in amdgpu_info_ioctl()")
+> >>> Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
+> >>> Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+> >>> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+> >>
+> >> Reviewed-by: Christian König <christian.koenig@amd.com>
+> >>
+> >> I can't count how many of those we have fixed over the years.
+> >>
+> >> At some point we should probably document that using "= {}" or "= { 0 }"
+> >> in the kernel is a really bad idea and should be avoided.
+> >
+> > Moreover, it seems like different compilers seem to behave relatively
+> > differently with these and we often get reports of warnings with these
+> > on clang.  When in doubt, memset.
 >
-> Support for AMS AS73211 JENCOLOR(R) Digital XYZ Sensor.
+> There are quite a few of those under drivers/gpu/drm, for "amd/", "scheduler/"
+> drm*.c files,
 >
-> This driver has no built-in trigger. In order for making triggered
-> measurements, an external (software) trigger driver like
-> iio-trig-hrtimer or iio-trig-sysfs is required.
+> $find . \( -regex "./drm.*\.c" -or -regex "./amd/.*\.c" -or -regex "./scheduler/.*\.c" \) -exec egrep -n -- " *= *{ *(|NULL|0) *}" \{\} \+ | wc -l
+> 374
+> $_
 >
-> The sensor supports single and continuous measurement modes. The latter
-> is not used by design as this would require tight timing synchronization
-> between hardware and driver without much benefit.
-
-Thanks for an update. My comments below.
-
-...
-
-> +static const int as73211_samp_freq_avail[] = { 1024000, 2048000, 4096000, 8192000 };
-
-This looks related to the below mentioned 1.024MHz.
-
-Perhaps add a definition above and comment here?
-
-#define AS73211_BASE_FREQ_1024KHZ   1024000
-
-/* Available sample frequencies are power of two multiplier by 1.024MHz */
-(Rephrase it better)
-
-> +static const int as73211_hardwaregain_avail[] = { 1, 2, 4, 8, 16, 32, 64, 128,
-> +                                                  256, 512, 1024, 2048 };
-
-Indentation. Better is
-... foo = {
-  bar, baz,
-};
-
-And in both cases leave comma at the last value.
-
-...
-
-> +/**
-> + * struct as73211_data - Instance data for one AS73211
-> + * @client: I2C client.
-> + * @osr:    Cached Operational State Register.
-> + * @creg1:  Cached Configuration Register 1.
-> + * @creg2:  Cached Configuration Register 2.
-> + * @creg3:  Cached Configuration Register 3.
-
-> + * @mutex:  Keeps cached registers in synch with the device.
-
-sync
-
-> + * @completion: Completion to wait for interrupt.
-> + * @int_time_avail: Available integration times (depend on sampling frequency).
-> + */
-
-...
-
-> +/* integration time in units of 1024 clock cycles */
-Unify this with below one. Or the other way around, i.o.w. join one of
-them into the other.
-
-> +static unsigned int as73211_integration_time_1024cyc(struct as73211_data *data)
-> +{
-> +       /* integration time in CREG1 is in powers of 2 (x 1024 cycles) */
-> +       return BIT(FIELD_GET(AS73211_CREG1_TIME_MASK, data->creg1));
-> +}
-
-...
-
-> +static unsigned int as73211_integration_time_us(struct as73211_data *data,
-> +                                                unsigned int integration_time_1024cyc)
-> +{
-> +       /*
-> +        * f_samp is configured in CREG3 in powers of 2 (x 1.024 MHz)
-> +        * t_cycl is configured in CREG1 in powers of 2 (x 1024 cycles)
-> +        * t_int_us = 1 / (f_samp) * t_cycl * US_PER_SEC
-> +        *          = 1 / (2^CREG3_CCLK * 1,024,000) * 2^CREG1_CYCLES * 1,024 * US_PER_SEC
-> +        *          = 2^(-CREG3_CCLK) * 2^CREG1_CYCLES * 1,000
-
-> +        *            in order to get rid of negative exponents, we extend the
-> +        *            "fraction" by 2^3 (3 == CREG3_CCLK,max)
-
-In the parentheses swap left and right parts for better reading.
-
-Perhaps shift left to have formulas separated from text visually.
-
-> +        *          = 2^(3-CREG3_CCLK) * 2^CREG1_CYCLES * 125
-
-Okay, 125 = 1000/2^3.
-
-> +        */
-> +       return BIT(3 - FIELD_GET(AS73211_CREG3_CCLK_MASK, data->creg3)) *
-> +               integration_time_1024cyc * 125;
-> +}
-
-...
-
-> +               data->int_time_avail[i * 2] = time_us / USEC_PER_SEC;
-
-I would do + 0, but it's up to you (complete style preference).
-
-> +               data->int_time_avail[i * 2 + 1] = time_us % USEC_PER_SEC;
-
-...
-
-> +       unsigned int time_us = as73211_integration_time_us(data,
-> +                                                           as73211_integration_time_1024cyc(data));
-
-One line?
-
-...
-
-> +               /* f_samp is configured in CREG3 in powers of 2 (x 1.024 MHz) */
-> +               *val = BIT(FIELD_GET(AS73211_CREG3_CCLK_MASK, data->creg3)) * 1024000;
-
-As above mentioned, definition can be used.
-
-...
-
-
-> +               int reg_bits, freq_kHz = val / 1000 /* HZ_PER_KHZ */;  /* 1024, 2048, ... */
-> +
-> +               /* val must be 1024 * 2^x */
-> +               if (val < 0 || (freq_kHz * 1000 /* HZ_PER_KHZ */) != val ||
-> +                               !is_power_of_2(freq_kHz) || val2)
-> +                       return -EINVAL;
-
-Please, define HZ_PER_KHZ locally. It will really help when we move
-these definitions to a global level.
-
-...
-
-> +               /* gain can be calculated from CREG1 as 2^(13 - CREG1_GAIN) */
-> +               reg_bits = 13 - ilog2(val);
-
-13 is the second time in the code. Deserves a descriptive definition.
-
-...
-
-> +       indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
-> +       if (indio_dev == NULL)
-
-if (!indio_dev)
-
-> +               return -ENOMEM;
-
-...
-
-> +       indio_dev->dev.parent = dev;
-
-Doesn't IIO core do this for you?
-
-...
-
-> +       /* At the time of writing this driver, only DEVID 2 and MUT 1 is known. */
-
-are known
-
-...
-
-> +       /* enable device */
-
-This is confusing and by the fact useless.
-
-...
-
-> +       ret = devm_iio_device_register(dev, indio_dev);
-> +       if (ret < 0)
-> +               goto powerdown;
-> +
-> +       return 0;
-
-> +powerdown:
-> +       as73211_power(indio_dev, false);
-> +       return ret;
-
-devm_*() is tricky. Here you broke ordering heavily. So, consider to
-add this under devm_add_action_or_reset().
-
-...
-
-> +static int as73211_remove(struct i2c_client *client)
-> +{
-> +       struct iio_dev *indio_dev = i2c_get_clientdata(client);
-> +
-> +       as73211_power(indio_dev, false);
-> +
-> +       return 0;
-> +}
-
-And as a result of the above this will be gone.
-
--- 
-With Best Regards,
-Andy Shevchenko
+> Out of which only 16 are of the non-ISO C variety, "= {}",
+>
+> $find . \( -regex "./drm.*\.c" -or -regex "./amd/.*\.c" -or -regex "./scheduler/.*\.c" \) -exec egrep -n -- " *= *{ *}" \{\} \+ | wc -l
+> 16
+> $_
+
+That is an unrelated issue, those were introduced to deal with older compilers
+that do not accept '{0}' as an initializer for an aggregate whose
+first member is
+another aggregate. Generally speaking, '= { }' is better to use in the
+kernel than
+'= { 0 }' because all supported compilers interpret that the same way for all
+structures.
+
+     Arnd
