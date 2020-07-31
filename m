@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53926C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6096C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2652A2177B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8228C2177B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:51:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HbWhpWIC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WpFdItwL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731534AbgGaMvg (ORCPT
+        id S2387412AbgGaMvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 08:51:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35558 "EHLO
+        Fri, 31 Jul 2020 08:51:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387429AbgGaMvX (ORCPT
+        with ESMTP id S1730743AbgGaMvR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 08:51:23 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0418C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 05:51:22 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id t6so19378818ljk.9
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 05:51:22 -0700 (PDT)
+        Fri, 31 Jul 2020 08:51:17 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01E0FC061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 05:51:17 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h19so32295460ljg.13
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 05:51:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=7zQCi5vRKjnMMexLpqVO1+RGpDeDdG/krrqCxgZp1MI=;
-        b=HbWhpWICAKhm7ouBRWBGEzVp2Ly1gNg+XaeQigbOa3I7JrEoNstXZD9boIMFRnQvp/
-         NU+kKOCO8ZEkuhIpeiv19FHcfR+LRrWDdBo0BKaYl0w6PuwgkRt+X1aB9Ty3ZT9/RQKD
-         VF0eO+0ytLMLEII2QEMeQrHh3rQQ7nNFNIjdOGFs+D1gtNPbaqMv4NkpMtcalx5ngOxb
-         AVPvGT1YVb+CQmOcyVqg8MZbPt84wROetRpcP+4ExWdPSUcLWzfwHI16QZWgZznhFmFG
-         KGeg8W5vZqv2pTaLQkE2dxca5QdflMYeeUMbxBjnyWO4T6n1vj3pztQ8sYZG5ist3k/Y
-         bmxA==
+        bh=hf2m1CaACgkl3i0FS0MjmjyDubimZdTD8G//CB5QIMY=;
+        b=WpFdItwLmE1h/jcPKXj3mRmyaF+TKN3FWkbAvN9i01/b/GBnQQrfqTYPD3KkCl+HER
+         4a3yBnoP8xZ1+beeiIJ9vfMIpoL/Uq0aKjRgj9n3gDAB35PWSD+52cvI8qsbw9MMxnde
+         Ogk+jE2mX/g7LFVkGpGWoSr7sD8Yog+cmIHDyOr5lEBZFzgPS2kU4Fuv8LCiEtAMJi4Y
+         V/MPagzOAVhsCHI/ruYoFU5NgrrL0yQ5Bln8moUVlTyOMw3rTQ7cCkra3lYcATWDogf/
+         jBRFwFf8eSKHB5WoChdB5jL9GonvtcReyID4iSV0w2pPa3lh5NAPcP/9Jan5UaU8YB8u
+         zvVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=7zQCi5vRKjnMMexLpqVO1+RGpDeDdG/krrqCxgZp1MI=;
-        b=TTz55OCwx+KAmd2gTM0av4nB3pXPwiB7w9/oEuB8LKCPIBzuRTnn+ZZzeXpOFzmvhR
-         LrQ4rTJ8hr55+TEFtpHizt3rJVpXxSshP7H4gcX742Y6Rh0oqWKanafWa1JtH6Tpbq39
-         xMOdlUZJTiN1GndVPTBhFB4NvVYXb/j/ai2JGOPR6Wk0v6e/9IXuPka8rK0Kg1iA9bfm
-         mEMRmob9mMbpe+e37N9BO3ojd8cK+/g5U31VkGUsGGl++5mLL+NIivuVSjl/eFBcVa5n
-         fERzG60PBYuDcLbCz1yQ4LvCxqBD3SzIoTvTV45a2ZjScksGGgpkskJC9jBkNcTZ8y4R
-         jGlg==
-X-Gm-Message-State: AOAM532dIJRLuE9xvExPcS1wvn+gYMCcUbCRljQgb8uHOccpK7luKtP5
-        WI3FeyVLJj3RV709cucxVvxFxwZWOik=
-X-Google-Smtp-Source: ABdhPJxMttTK1ZQScjW7rj1U9b/hfyPJlPrb8YWiyNlNA+Bo6ic4x233upQgVSRTdPt8SYImIwdtLg==
-X-Received: by 2002:a2e:8689:: with SMTP id l9mr388219lji.467.1596199881377;
-        Fri, 31 Jul 2020 05:51:21 -0700 (PDT)
+        bh=hf2m1CaACgkl3i0FS0MjmjyDubimZdTD8G//CB5QIMY=;
+        b=SWK7tQ/XLO+rxbst2xx0TIa6jEH0AytNg73OcifyZ/EqhzwqJ5jh8PlUqtQ2jHvr2b
+         S1jv+Aixyy/wNQ8dDATZ14tWK8uwXYuysssxgn/87U/612qfYwouKPRza5tUJlhRU1r0
+         JwF3hVNNYuE2EOh74pyU+R6yKGBvUdss1fDNysY77caKzZ2iAT7VbXiEq0POHVB1Yxvq
+         Aup4Hf0Ppns7Vqna8ViwzfXd9/u0Gx9Ue+NM1TnlqjN6WTHUYWpzDHDJw7tB59Bgojn6
+         WpR237wzjKPMGG6+gDgqbiaxLGcHbLHDggk9+YXGCjn125TsM8w24CBvg0Cy4sgcX1K5
+         HxnQ==
+X-Gm-Message-State: AOAM533QvwNR5yESyN9I3WE63VQzyl05U1Q090PCY7SJgew0B3qJ9IMJ
+        nG3PhXmh63TLgEqlhHVkq8c=
+X-Google-Smtp-Source: ABdhPJyAr3EgNy6m0bxN5SP4DJ54ompCgY6CBLlI16M8yY4FlCVLhiNPKf3qPH+txZ2PmAgUTW2prA==
+X-Received: by 2002:a2e:9e43:: with SMTP id g3mr1932560ljk.309.1596199875447;
+        Fri, 31 Jul 2020 05:51:15 -0700 (PDT)
 Received: from a2klaptop.localdomain ([185.199.97.5])
-        by smtp.gmail.com with ESMTPSA id s2sm1923362lfs.4.2020.07.31.05.51.19
+        by smtp.gmail.com with ESMTPSA id s2sm1923362lfs.4.2020.07.31.05.51.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 05:51:20 -0700 (PDT)
+        Fri, 31 Jul 2020 05:51:14 -0700 (PDT)
 From:   Oleksandr Andrushchenko <andr2000@gmail.com>
 To:     xen-devel@lists.xenproject.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, boris.ostrovsky@oracle.com,
@@ -66,9 +66,9 @@ To:     xen-devel@lists.xenproject.org, dri-devel@lists.freedesktop.org,
 Cc:     sstabellini@kernel.org, dan.carpenter@oracle.com,
         intel-gfx@lists.freedesktop.org,
         Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-Subject: [PATCH 6/6] drm/xen-front: Add support for EDID based configuration
-Date:   Fri, 31 Jul 2020 15:51:09 +0300
-Message-Id: <20200731125109.18666-7-andr2000@gmail.com>
+Subject: [PATCH 2/6] drm/xen-front: Fix misused IS_ERR_OR_NULL checks
+Date:   Fri, 31 Jul 2020 15:51:05 +0300
+Message-Id: <20200731125109.18666-3-andr2000@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200731125109.18666-1-andr2000@gmail.com>
 References: <20200731125109.18666-1-andr2000@gmail.com>
@@ -79,369 +79,104 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
 
-Version 2 of the Xen displif protocol adds XENDISPL_OP_GET_EDID
-request which allows frontends to request EDID structure per
-connector. This request is optional and if not supported by the
-backend then visible area is still defined by the relevant
-XenStore's "resolution" property.
-If backend provides EDID with XENDISPL_OP_GET_EDID request then
-its values must take precedence over the resolutions defined in
-XenStore.
+The patch c575b7eeb89f: "drm/xen-front: Add support for Xen PV
+display frontend" from Apr 3, 2018, leads to the following static
+checker warning:
+
+	drivers/gpu/drm/xen/xen_drm_front_gem.c:140 xen_drm_front_gem_create()
+	warn: passing zero to 'ERR_CAST'
+
+drivers/gpu/drm/xen/xen_drm_front_gem.c
+   133  struct drm_gem_object *xen_drm_front_gem_create(struct drm_device *dev,
+   134                                                  size_t size)
+   135  {
+   136          struct xen_gem_object *xen_obj;
+   137
+   138          xen_obj = gem_create(dev, size);
+   139          if (IS_ERR_OR_NULL(xen_obj))
+   140                  return ERR_CAST(xen_obj);
+
+Fix this and the rest of misused places with IS_ERR_OR_NULL in the
+driver.
+
+Fixes:  c575b7eeb89f: "drm/xen-front: Add support for Xen PV display frontend"
 
 Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 ---
- drivers/gpu/drm/xen/xen_drm_front.c         | 62 ++++++++++++++++
- drivers/gpu/drm/xen/xen_drm_front.h         |  9 ++-
- drivers/gpu/drm/xen/xen_drm_front_cfg.c     | 82 +++++++++++++++++++++
- drivers/gpu/drm/xen/xen_drm_front_cfg.h     |  7 ++
- drivers/gpu/drm/xen/xen_drm_front_conn.c    | 26 ++++++-
- drivers/gpu/drm/xen/xen_drm_front_evtchnl.c |  3 +
- drivers/gpu/drm/xen/xen_drm_front_evtchnl.h |  3 +
- drivers/gpu/drm/xen/xen_drm_front_kms.c     |  5 ++
- 8 files changed, 194 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/xen/xen_drm_front.c     | 4 ++--
+ drivers/gpu/drm/xen/xen_drm_front_gem.c | 8 ++++----
+ drivers/gpu/drm/xen/xen_drm_front_kms.c | 2 +-
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/gpu/drm/xen/xen_drm_front.c b/drivers/gpu/drm/xen/xen_drm_front.c
-index 013c9e0e412c..cc5981bdbfb3 100644
+index 3e660fb111b3..88db2726e8ce 100644
 --- a/drivers/gpu/drm/xen/xen_drm_front.c
 +++ b/drivers/gpu/drm/xen/xen_drm_front.c
-@@ -381,6 +381,59 @@ void xen_drm_front_on_frame_done(struct xen_drm_front_info *front_info,
- 					fb_cookie);
- }
+@@ -400,8 +400,8 @@ static int xen_drm_drv_dumb_create(struct drm_file *filp,
+ 	args->size = args->pitch * args->height;
  
-+int xen_drm_front_get_edid(struct xen_drm_front_info *front_info,
-+			   int conn_idx, struct page **pages,
-+			   u32 buffer_sz, u32 *edid_sz)
-+{
-+	struct xen_drm_front_evtchnl *evtchnl;
-+	struct xen_front_pgdir_shbuf_cfg buf_cfg;
-+	struct xen_front_pgdir_shbuf shbuf;
-+	struct xendispl_req *req;
-+	unsigned long flags;
-+	int ret;
-+
-+	if (unlikely(conn_idx >= front_info->num_evt_pairs))
-+		return -EINVAL;
-+
-+	memset(&buf_cfg, 0, sizeof(buf_cfg));
-+	buf_cfg.xb_dev = front_info->xb_dev;
-+	buf_cfg.num_pages = DIV_ROUND_UP(buffer_sz, PAGE_SIZE);
-+	buf_cfg.pages = pages;
-+	buf_cfg.pgdir = &shbuf;
-+	buf_cfg.be_alloc = false;
-+
-+	ret = xen_front_pgdir_shbuf_alloc(&buf_cfg);
-+	if (ret < 0)
-+		return ret;
-+
-+	evtchnl = &front_info->evt_pairs[conn_idx].req;
-+
-+	mutex_lock(&evtchnl->u.req.req_io_lock);
-+
-+	spin_lock_irqsave(&front_info->io_lock, flags);
-+	req = be_prepare_req(evtchnl, XENDISPL_OP_GET_EDID);
-+	req->op.get_edid.gref_directory =
-+		xen_front_pgdir_shbuf_get_dir_start(&shbuf);
-+	req->op.get_edid.buffer_sz = buffer_sz;
-+
-+	ret = be_stream_do_io(evtchnl, req);
-+	spin_unlock_irqrestore(&front_info->io_lock, flags);
-+
-+	if (ret < 0)
-+		goto fail;
-+
-+	ret = be_stream_wait_io(evtchnl);
-+	if (ret < 0)
-+		goto fail;
-+
-+	*edid_sz = evtchnl->u.req.resp.get_edid.edid_sz;
-+
-+fail:
-+	mutex_unlock(&evtchnl->u.req.req_io_lock);
-+	xen_front_pgdir_shbuf_free(&shbuf);
-+	return ret;
-+}
-+
- static int xen_drm_drv_dumb_create(struct drm_file *filp,
- 				   struct drm_device *dev,
- 				   struct drm_mode_create_dumb *args)
-@@ -466,6 +519,7 @@ static void xen_drm_drv_release(struct drm_device *dev)
- 		xenbus_switch_state(front_info->xb_dev,
- 				    XenbusStateInitialising);
+ 	obj = xen_drm_front_gem_create(dev, args->size);
+-	if (IS_ERR_OR_NULL(obj)) {
+-		ret = PTR_ERR_OR_ZERO(obj);
++	if (IS_ERR(obj)) {
++		ret = PTR_ERR(obj);
+ 		goto fail;
+ 	}
  
-+	xen_drm_front_cfg_free(front_info, &front_info->cfg);
- 	kfree(drm_info);
- }
+diff --git a/drivers/gpu/drm/xen/xen_drm_front_gem.c b/drivers/gpu/drm/xen/xen_drm_front_gem.c
+index f0b85e094111..4ec8a49241e1 100644
+--- a/drivers/gpu/drm/xen/xen_drm_front_gem.c
++++ b/drivers/gpu/drm/xen/xen_drm_front_gem.c
+@@ -83,7 +83,7 @@ static struct xen_gem_object *gem_create(struct drm_device *dev, size_t size)
  
-@@ -562,6 +616,7 @@ static int xen_drm_drv_init(struct xen_drm_front_info *front_info)
- 	drm_mode_config_cleanup(drm_dev);
- 	drm_dev_put(drm_dev);
- fail:
-+	xen_drm_front_cfg_free(front_info, &front_info->cfg);
- 	kfree(drm_info);
- 	return ret;
- }
-@@ -622,7 +677,14 @@ static int displback_initwait(struct xen_drm_front_info *front_info)
+ 	size = round_up(size, PAGE_SIZE);
+ 	xen_obj = gem_create_obj(dev, size);
+-	if (IS_ERR_OR_NULL(xen_obj))
++	if (IS_ERR(xen_obj))
+ 		return xen_obj;
  
- static int displback_connect(struct xen_drm_front_info *front_info)
- {
-+	int ret;
-+
- 	xen_drm_front_evtchnl_set_state(front_info, EVTCHNL_STATE_CONNECTED);
-+
-+	/* We are all set to read additional configuration from the backend. */
-+	ret = xen_drm_front_cfg_tail(front_info, &front_info->cfg);
-+	if (ret < 0)
-+		return ret;
- 	return xen_drm_drv_init(front_info);
- }
+ 	if (drm_info->front_info->cfg.be_alloc) {
+@@ -117,7 +117,7 @@ static struct xen_gem_object *gem_create(struct drm_device *dev, size_t size)
+ 	 */
+ 	xen_obj->num_pages = DIV_ROUND_UP(size, PAGE_SIZE);
+ 	xen_obj->pages = drm_gem_get_pages(&xen_obj->base);
+-	if (IS_ERR_OR_NULL(xen_obj->pages)) {
++	if (IS_ERR(xen_obj->pages)) {
+ 		ret = PTR_ERR(xen_obj->pages);
+ 		xen_obj->pages = NULL;
+ 		goto fail;
+@@ -136,7 +136,7 @@ struct drm_gem_object *xen_drm_front_gem_create(struct drm_device *dev,
+ 	struct xen_gem_object *xen_obj;
  
-diff --git a/drivers/gpu/drm/xen/xen_drm_front.h b/drivers/gpu/drm/xen/xen_drm_front.h
-index 54486d89650e..be0c982f4d82 100644
---- a/drivers/gpu/drm/xen/xen_drm_front.h
-+++ b/drivers/gpu/drm/xen/xen_drm_front.h
-@@ -112,9 +112,12 @@ struct xen_drm_front_drm_pipeline {
- 	struct drm_simple_display_pipe pipe;
+ 	xen_obj = gem_create(dev, size);
+-	if (IS_ERR_OR_NULL(xen_obj))
++	if (IS_ERR(xen_obj))
+ 		return ERR_CAST(xen_obj);
  
- 	struct drm_connector conn;
--	/* These are only for connector mode checking */
-+	/* These are only for connector mode checking if no EDID present */
- 	int width, height;
+ 	return &xen_obj->base;
+@@ -194,7 +194,7 @@ xen_drm_front_gem_import_sg_table(struct drm_device *dev,
  
-+	/* Is not NULL if EDID is used for connector configuration. */
-+	struct edid *edid;
-+
- 	struct drm_pending_vblank_event *pending_event;
+ 	size = attach->dmabuf->size;
+ 	xen_obj = gem_create_obj(dev, size);
+-	if (IS_ERR_OR_NULL(xen_obj))
++	if (IS_ERR(xen_obj))
+ 		return ERR_CAST(xen_obj);
  
- 	struct delayed_work pflip_to_worker;
-@@ -160,4 +163,8 @@ int xen_drm_front_page_flip(struct xen_drm_front_info *front_info,
- void xen_drm_front_on_frame_done(struct xen_drm_front_info *front_info,
- 				 int conn_idx, u64 fb_cookie);
- 
-+int xen_drm_front_get_edid(struct xen_drm_front_info *front_info,
-+			   int conn_idx, struct page **pages,
-+			   u32 buffer_sz, u32 *edid_sz);
-+
- #endif /* __XEN_DRM_FRONT_H_ */
-diff --git a/drivers/gpu/drm/xen/xen_drm_front_cfg.c b/drivers/gpu/drm/xen/xen_drm_front_cfg.c
-index ec53b9cc9e0e..f7c45a2fdab3 100644
---- a/drivers/gpu/drm/xen/xen_drm_front_cfg.c
-+++ b/drivers/gpu/drm/xen/xen_drm_front_cfg.c
-@@ -45,6 +45,64 @@ static int cfg_connector(struct xen_drm_front_info *front_info,
- 	return 0;
- }
- 
-+static void
-+cfg_connector_free_edid(struct xen_drm_front_cfg_connector *connector)
-+{
-+	vfree(connector->edid);
-+	connector->edid = NULL;
-+}
-+
-+static void cfg_connector_edid(struct xen_drm_front_info *front_info,
-+			       struct xen_drm_front_cfg_connector *connector,
-+			       int index)
-+{
-+	struct page **pages;
-+	u32 edid_sz;
-+	int i, npages, ret = -ENOMEM;
-+
-+	connector->edid = vmalloc(XENDISPL_EDID_MAX_SIZE);
-+	if (!connector->edid)
-+		goto fail;
-+
-+	npages = DIV_ROUND_UP(XENDISPL_EDID_MAX_SIZE, PAGE_SIZE);
-+	pages = kvmalloc_array(npages, sizeof(struct page *), GFP_KERNEL);
-+	if (!pages)
-+		goto fail_free_edid;
-+
-+	for (i = 0; i < npages; i++)
-+		pages[i] = vmalloc_to_page((u8 *)connector->edid +
-+					   i * PAGE_SIZE);
-+
-+	ret = xen_drm_front_get_edid(front_info, index, pages,
-+				     XENDISPL_EDID_MAX_SIZE, &edid_sz);
-+
-+	kvfree(pages);
-+
-+	if (ret < 0)
-+		goto fail_free_edid;
-+
-+	ret = -EINVAL;
-+	if (!edid_sz || (edid_sz % EDID_LENGTH))
-+		goto fail_free_edid;
-+
-+	if (!drm_edid_is_valid(connector->edid))
-+		goto fail_free_edid;
-+
-+	DRM_INFO("Connector %s: using EDID for configuration, size %d\n",
-+		 connector->xenstore_path, edid_sz);
-+	return;
-+
-+fail_free_edid:
-+	cfg_connector_free_edid(connector);
-+fail:
-+	/*
-+	 * If any error this is not critical as we can still read
-+	 * connector settings from XenStore, so just warn.
-+	 */
-+	DRM_WARN("Connector %s: cannot read or wrong EDID: %d\n",
-+		 connector->xenstore_path, ret);
-+}
-+
- int xen_drm_front_cfg_card(struct xen_drm_front_info *front_info,
- 			   struct xen_drm_front_cfg *cfg)
- {
-@@ -75,3 +133,27 @@ int xen_drm_front_cfg_card(struct xen_drm_front_info *front_info,
- 	return 0;
- }
- 
-+int xen_drm_front_cfg_tail(struct xen_drm_front_info *front_info,
-+			   struct xen_drm_front_cfg *cfg)
-+{
-+	int i;
-+
-+	/*
-+	 * Try reading EDID(s) from the backend: it is not an error
-+	 * if backend doesn't support or provides no EDID.
-+	 */
-+	for (i = 0; i < cfg->num_connectors; i++)
-+		cfg_connector_edid(front_info, &cfg->connectors[i], i);
-+
-+	return 0;
-+}
-+
-+void xen_drm_front_cfg_free(struct xen_drm_front_info *front_info,
-+			    struct xen_drm_front_cfg *cfg)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(cfg->connectors); i++)
-+		cfg_connector_free_edid(&cfg->connectors[i]);
-+}
-+
-diff --git a/drivers/gpu/drm/xen/xen_drm_front_cfg.h b/drivers/gpu/drm/xen/xen_drm_front_cfg.h
-index aa8490ba9146..f80f47f14697 100644
---- a/drivers/gpu/drm/xen/xen_drm_front_cfg.h
-+++ b/drivers/gpu/drm/xen/xen_drm_front_cfg.h
-@@ -19,6 +19,7 @@ struct xen_drm_front_cfg_connector {
- 	int width;
- 	int height;
- 	char *xenstore_path;
-+	struct edid *edid;
- };
- 
- struct xen_drm_front_cfg {
-@@ -34,4 +35,10 @@ struct xen_drm_front_cfg {
- int xen_drm_front_cfg_card(struct xen_drm_front_info *front_info,
- 			   struct xen_drm_front_cfg *cfg);
- 
-+int xen_drm_front_cfg_tail(struct xen_drm_front_info *front_info,
-+						   struct xen_drm_front_cfg *cfg);
-+
-+void xen_drm_front_cfg_free(struct xen_drm_front_info *front_info,
-+							struct xen_drm_front_cfg *cfg);
-+
- #endif /* __XEN_DRM_FRONT_CFG_H_ */
-diff --git a/drivers/gpu/drm/xen/xen_drm_front_conn.c b/drivers/gpu/drm/xen/xen_drm_front_conn.c
-index 44f1f70c0aed..c98d989a005f 100644
---- a/drivers/gpu/drm/xen/xen_drm_front_conn.c
-+++ b/drivers/gpu/drm/xen/xen_drm_front_conn.c
-@@ -66,6 +66,16 @@ static int connector_get_modes(struct drm_connector *connector)
- 	struct videomode videomode;
- 	int width, height;
- 
-+	if (pipeline->edid) {
-+		int count;
-+
-+		drm_connector_update_edid_property(connector,
-+						   pipeline->edid);
-+		count = drm_add_edid_modes(connector, pipeline->edid);
-+		if (count)
-+			return count;
-+	}
-+
- 	mode = drm_mode_create(connector->dev);
- 	if (!mode)
- 		return 0;
-@@ -103,6 +113,7 @@ int xen_drm_front_conn_init(struct xen_drm_front_drm_info *drm_info,
- {
- 	struct xen_drm_front_drm_pipeline *pipeline =
- 			to_xen_drm_pipeline(connector);
-+	int ret;
- 
- 	drm_connector_helper_add(connector, &connector_helper_funcs);
- 
-@@ -111,6 +122,17 @@ int xen_drm_front_conn_init(struct xen_drm_front_drm_info *drm_info,
- 	connector->polled = DRM_CONNECTOR_POLL_CONNECT |
- 			DRM_CONNECTOR_POLL_DISCONNECT;
- 
--	return drm_connector_init(drm_info->drm_dev, connector,
--				  &connector_funcs, DRM_MODE_CONNECTOR_VIRTUAL);
-+	ret = drm_connector_init(drm_info->drm_dev, connector,
-+				 &connector_funcs, DRM_MODE_CONNECTOR_VIRTUAL);
-+	if (ret < 0)
-+		return ret;
-+
-+	/*
-+	 * Virtual connectors do not have EDID property, but we do,
-+	 * so add it manually if EDID is present.
-+	 */
-+	if (pipeline->edid)
-+		drm_connector_attach_edid_property(connector);
-+
-+	return 0;
- }
-diff --git a/drivers/gpu/drm/xen/xen_drm_front_evtchnl.c b/drivers/gpu/drm/xen/xen_drm_front_evtchnl.c
-index e10d95dddb99..af574ef16d84 100644
---- a/drivers/gpu/drm/xen/xen_drm_front_evtchnl.c
-+++ b/drivers/gpu/drm/xen/xen_drm_front_evtchnl.c
-@@ -44,6 +44,9 @@ static irqreturn_t evtchnl_interrupt_ctrl(int irq, void *dev_id)
- 			continue;
- 
- 		switch (resp->operation) {
-+		case XENDISPL_OP_GET_EDID:
-+			evtchnl->u.req.resp.get_edid =
-+				resp->op.get_edid;
- 		case XENDISPL_OP_PG_FLIP:
- 		case XENDISPL_OP_FB_ATTACH:
- 		case XENDISPL_OP_FB_DETACH:
-diff --git a/drivers/gpu/drm/xen/xen_drm_front_evtchnl.h b/drivers/gpu/drm/xen/xen_drm_front_evtchnl.h
-index b0af6994332b..8267f40b6549 100644
---- a/drivers/gpu/drm/xen/xen_drm_front_evtchnl.h
-+++ b/drivers/gpu/drm/xen/xen_drm_front_evtchnl.h
-@@ -53,6 +53,9 @@ struct xen_drm_front_evtchnl {
- 			struct completion completion;
- 			/* latest response status */
- 			int resp_status;
-+			union {
-+				struct xendispl_get_edid_resp get_edid;
-+			} resp;
- 			/* serializer for backend IO: request/response */
- 			struct mutex req_io_lock;
- 		} req;
+ 	ret = gem_alloc_pages_array(xen_obj, size);
 diff --git a/drivers/gpu/drm/xen/xen_drm_front_kms.c b/drivers/gpu/drm/xen/xen_drm_front_kms.c
-index ef11b1e4de39..d7ff1a656d40 100644
+index 78096bbcd226..ef11b1e4de39 100644
 --- a/drivers/gpu/drm/xen/xen_drm_front_kms.c
 +++ b/drivers/gpu/drm/xen/xen_drm_front_kms.c
-@@ -288,6 +288,10 @@ display_mode_valid(struct drm_simple_display_pipe *pipe,
- 			container_of(pipe, struct xen_drm_front_drm_pipeline,
- 				     pipe);
+@@ -60,7 +60,7 @@ fb_create(struct drm_device *dev, struct drm_file *filp,
+ 	int ret;
  
-+	/* We have nothing to check if EDID is present. */
-+	if (pipeline->edid)
-+		return MODE_OK;
-+
- 	if (mode->hdisplay != pipeline->width)
- 		return MODE_ERROR;
+ 	fb = drm_gem_fb_create_with_funcs(dev, filp, mode_cmd, &fb_funcs);
+-	if (IS_ERR_OR_NULL(fb))
++	if (IS_ERR(fb))
+ 		return fb;
  
-@@ -319,6 +323,7 @@ static int display_pipe_init(struct xen_drm_front_drm_info *drm_info,
- 	pipeline->index = index;
- 	pipeline->height = cfg->height;
- 	pipeline->width = cfg->width;
-+	pipeline->edid = cfg->edid;
- 
- 	INIT_DELAYED_WORK(&pipeline->pflip_to_worker, pflip_to_worker);
- 
+ 	gem_obj = fb->obj[0];
 -- 
 2.17.1
 
