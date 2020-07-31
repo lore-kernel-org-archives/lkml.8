@@ -2,168 +2,131 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA19CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4CDC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AFA521744
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:15:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="G/VpxuJU"
+	by mail.kernel.org (Postfix) with ESMTP id 92AA322B3F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:16:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596223019;
+	bh=uZBsxMjv/LVf76C1qg/aXbjVQV+re7IP0Tfx88ohJqc=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=NusBHAywvBNfGpb4ncsF0tzh/L2WFwFhv4eUgIYXdWYA1ptlMw6dqxx0GgWkuNMDy
+	 2WY/2FoRxc/XaogN/cFz3vnSVlUNtjUqons/0cHiu9zNwes8Hfn9UfgWs1Xaxft1rE
+	 2kkPti0U4NbPh5M3UUudXrkPSWp4xewdMLgdDUa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730800AbgGaTPr (ORCPT
+        id S1730902AbgGaTQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 15:15:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgGaTPp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 15:15:45 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E36BC061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 12:15:45 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id k18so23763056qtm.10
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 12:15:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Fq0Y+W4Lgf9ZSs2fq5dZEqY/mzSGk+8POFJ4bFdvCDk=;
-        b=G/VpxuJUEys50kS6M4S8wb2H1SZFH9TAe6PT9j9DjWLTOfJB5PNMU67K3dsNbEqa/T
-         f/t/ak0QhLCebd7u7VQEHzvhQW9JdWn6Q0zDWLUeVDy3t8XfK0bgdcd4pK6d11b8hDOJ
-         awmYIM72dgL0i2V7jQWPII+xmQ6s7xdvCa7yHe3VPproYPZLgxU/trvWLMs7TJ1a17zM
-         hkxnvRS2KHmbgVl2ohPFNxuIcOG5Hy4m6X5ZU/L5bcHwUkvXjAenwqP7ddqeXsdvNx8d
-         7a/WH0YQE0MirCzNS6Fv+Fw+tL8mCVhiagDDtra7MILsPqqCdx7raAC9vGeT/LHU24gG
-         VvfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Fq0Y+W4Lgf9ZSs2fq5dZEqY/mzSGk+8POFJ4bFdvCDk=;
-        b=ZgN9+lhv6u0Ky8Ix8b4Ad+qRU/ETfGAzC5myPVp/b8kgrA95TOnHDBZ/Toeh+IpIP0
-         bjTjhqSHV3rmjX03B4BjPkbAklVsqn0SjPYI34n9qSgy9kIGbvngMQAnocr+qSsMyd/k
-         hyq1YAIrltfgBJA7B19RQnNxWoqvhGTvnBnRlhGmg1WfHXg/brRh6JSHM2e8wVwzyFWA
-         DjEyOlZ7vvoblSkoTBx1C/J65XxNeeCpsEZCu1qm1zdlSNFSZrcC5xP4VKgn9wthhmVp
-         wvwZ1LxNIm5x7TZiBRmGd1sbcaz+kF5vzJipMnfuvOTbAob+5fxC+g1Zm0SfXJI0LLeU
-         AJvQ==
-X-Gm-Message-State: AOAM533TXreGxzN20vBWZcBQlNTo4NgDahlvlxSXmS+vjFw4O3e9qFQv
-        zgrpr0EszgjgDmKOyJtdxedk5w==
-X-Google-Smtp-Source: ABdhPJy80fPm/ep3Y4AxQL+NAp4HUm3l9/dB0ABYDlNS+XUMwzmiJ6PHh20/a5m/KIRuQsM16pnQBA==
-X-Received: by 2002:aed:3361:: with SMTP id u88mr5258595qtd.79.1596222944775;
-        Fri, 31 Jul 2020 12:15:44 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id q2sm10160900qtl.64.2020.07.31.12.15.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 12:15:44 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1k1aVL-002Bep-EX; Fri, 31 Jul 2020 16:15:43 -0300
-Date:   Fri, 31 Jul 2020 16:15:43 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     linux-rdma@vger.kernel.org, linux-mm@kvack.org,
-        nouveau@lists.freedesktop.org, kvm-ppc@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, Ben Skeggs <bskeggs@redhat.com>,
-        Bharata B Rao <bharata@linux.ibm.com>
-Subject: Re: [PATCH v4 6/6] mm/migrate: remove range invalidation in
- migrate_vma_pages()
-Message-ID: <20200731191543.GJ24045@ziepe.ca>
-References: <20200723223004.9586-1-rcampbell@nvidia.com>
- <20200723223004.9586-7-rcampbell@nvidia.com>
- <20200728191940.GB159104@nvidia.com>
- <7f947311-0034-9148-1dca-fb9b9a10abc4@nvidia.com>
+        Fri, 31 Jul 2020 15:16:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36274 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730177AbgGaTQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 15:16:57 -0400
+Received: from localhost (router.4pisysteme.de [80.79.225.122])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A897D21744;
+        Fri, 31 Jul 2020 19:16:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596223017;
+        bh=uZBsxMjv/LVf76C1qg/aXbjVQV+re7IP0Tfx88ohJqc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=mp/3D3suDlIb1qj51uKmnlQPrBM0qHOQMvJ/qZvVS8K0sS+QhKee3/gMfS4EZMIlC
+         mQ9hjU+9Tl9uEw+Gp6mN3xOq6Aye8NOcvFJWVCQR/C8UvNz2bBNyYyDXy3ZStocoGM
+         UBUSe3jqszS5TzIg4PUqxiwoD3V1bcbcffP3lZtM=
+Date:   Fri, 31 Jul 2020 21:16:54 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PULL REQUEST] i2c for 5.8
+Message-ID: <20200731191654.GA14800@kunai>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="liOOAslEiF7prFVr"
 Content-Disposition: inline
-In-Reply-To: <7f947311-0034-9148-1dca-fb9b9a10abc4@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 03:04:07PM -0700, Ralph Campbell wrote:
-> 
-> On 7/28/20 12:19 PM, Jason Gunthorpe wrote:
-> > On Thu, Jul 23, 2020 at 03:30:04PM -0700, Ralph Campbell wrote:
-> > > When migrating the special zero page, migrate_vma_pages() calls
-> > > mmu_notifier_invalidate_range_start() before replacing the zero page
-> > > PFN in the CPU page tables. This is unnecessary since the range was
-> > > invalidated in migrate_vma_setup() and the page table entry is checked
-> > > to be sure it hasn't changed between migrate_vma_setup() and
-> > > migrate_vma_pages(). Therefore, remove the redundant invalidation.
-> > 
-> > I don't follow this logic, the purpose of the invalidation is also to
-> > clear out anything that may be mirroring this VA, and "the page hasn't
-> > changed" doesn't seem to rule out that case?
-> > 
-> > I'm also not sure I follow where the zero page came from?
-> 
-> The zero page comes from an anonymous private VMA that is read-only
-> and the user level CPU process tries to read the page data (or any
-> other read page fault).
-> 
-> > Jason
-> > 
-> 
-> The overall migration process is:
-> 
-> mmap_read_lock()
-> 
-> migrate_vma_setup()
->       // invalidates range, locks/isolates pages, puts migration entry in page table
-> 
-> <driver allocates destination pages and copies source to dest>
-> 
-> migrate_vma_pages()
->       // moves source struct page info to destination struct page info.
->       // clears migration flag for pages that can't be migrated.
-> 
-> <driver updates device page tables for pages still migrating, rollback pages not migrating>
-> 
-> migrate_vma_finalize()
->       // replaces migration page table entry with destination page PFN.
-> 
-> mmap_read_unlock()
-> 
-> Since the address range is invalidated in the migrate_vma_setup() stage,
-> and the page is isolated from the LRU cache, locked, unmapped, and the page table
-> holds a migration entry (so the page can't be faulted and the CPU page table set
-> valid again), and there are no extra page references (pins), the page
-> "should not be modified".
 
-That is the physical page though, it doesn't prove nobody else is
-reading the PTE.
- 
-> For pte_none()/is_zero_pfn() entries, migrate_vma_setup() leaves the
-> pte_none()/is_zero_pfn() entry in place but does still call
-> mmu_notifier_invalidate_range_start() for the whole range being migrated.
+--liOOAslEiF7prFVr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Ok..
+Linus,
 
-> In the migrate_vma_pages() step, the pte page table is locked and the
-> pte entry checked to be sure it is still pte_none/is_zero_pfn(). If not,
-> the new page isn't inserted. If it is still none/zero, the new device private
-> struct page is inserted into the page table, replacing the pte_none()/is_zero_pfn()
-> page table entry. The secondary MMUs were already invalidated in the migrate_vma_setup()
-> step and a pte_none() or zero page can't be modified so the only invalidation needed
-> is the CPU TLB(s) for clearing the special zero page PTE entry.
+here are some I2C core improvements to prevent NULL pointer usage and a
+MAINTAINERS update.
 
-No, the secondary MMU was invalidated but the invalidation start/end
-range was exited. That means a secondary MMU is immeidately able to
-reload the zero page into its MMU cache.
+Please pull.
 
-When this code replaces the PTE that has a zero page it also has to
-invalidate again so that secondary MMU's are guaranteed to pick up the
-new PTE value.
+Thanks,
 
-So, I still don't understand how this is safe?
+   Wolfram
 
-Jason
+
+The following changes since commit 92ed301919932f777713b9172e525674157e983d:
+
+  Linux 5.8-rc7 (2020-07-26 14:14:06 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current
+
+for you to fetch changes up to 8808981baf96e1b3dea1f08461e4d958aa0dbde1:
+
+  i2c: slave: add sanity check when unregistering (2020-07-28 18:37:17 +0200)
+
+----------------------------------------------------------------
+Akash Asthana (1):
+      MAINTAINERS: Update GENI I2C maintainers list
+
+Wolfram Sang (3):
+      i2c: also convert placeholder function to return errno
+      i2c: slave: improve sanity check when registering
+      i2c: slave: add sanity check when unregistering
+
+
+with much appreciated quality assurance from
+----------------------------------------------------------------
+Alain Volmat (2):
+      (Rev.) i2c: slave: add sanity check when unregistering
+      (Rev.) i2c: slave: improve sanity check when registering
+
+Andy Shevchenko (1):
+      (Rev.) i2c: also convert placeholder function to return errno
+
+ MAINTAINERS                  | 3 ++-
+ drivers/i2c/i2c-core-slave.c | 7 ++++---
+ include/linux/i2c.h          | 2 +-
+ 3 files changed, 7 insertions(+), 5 deletions(-)
+
+--liOOAslEiF7prFVr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8kbiIACgkQFA3kzBSg
+KbYt6RAAnqY3bxaqD7na5mS6hbXF4BpPnElXijeL8bdoglwCTFzTmVAVPUdEHq1J
+xXm3jCXVUkgwKmdQngWktQQu0ivaeGFwBitFSccydjRUYAWm/PkQs8OPjw1MLhxa
+WxTiAufcKvPqJ4tereUMWY7Xld2AEa2UfRwJ4O17jDmQKW2fhRw3/hSVzZIveSN7
+4PGpbd5O5P2RjbjDit7lkyuE6A6OI7jqFNn8pszmfIYdDrke4TKvXop7MK4UdDVJ
+c2j9WdHvd/I1hR1QQWtbMhFXxbHTIbwIC3TO+E86dBqqQLS7yWC16jgWeSX3qXWP
++0mhWYG/0jGb1LQKB4g5ESpb6vMDPw4lTJwDgEj3SG+vH8uOl3NWiNp6LTMuBBb4
+ZleP3WyLrXbISfm+BYki1B4+tUNFPm4xMeXMieIc2i37vEPLzQqA4GSutB19aPVF
+e74vjgJDbqDuxi1okwd8Qih3BusShRX+m16lpnjq6nE7QWLBp/1AwQCROlbLPpmi
+0AMHd5WgszBgv4wam9a3/+6PD1Di00BDeELsIo9bTbmbo1DwzCrtlgqnFlFgB8AL
+5ypQTmKnxsEMIf9euStR/9uG13Q8MJKJqU2XCch6K4EAFwLdkQY1Gy9Y7gTWjLQ1
+0orvlgjcQFSZ0Y3xBO3QmUlYvqe0YLZYhDwYsXJ2Qc/zR74aLQI=
+=/pKd
+-----END PGP SIGNATURE-----
+
+--liOOAslEiF7prFVr--
