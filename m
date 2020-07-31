@@ -2,214 +2,159 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F24C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 900D9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 600ED20829
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7550720829
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:55:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731983AbgGaIyd (ORCPT
+        id S1731985AbgGaIzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:54:33 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:58908 "EHLO honk.sigxcpu.org"
+        Fri, 31 Jul 2020 04:55:32 -0400
+Received: from mga01.intel.com ([192.55.52.88]:41906 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728437AbgGaIyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 04:54:33 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id A3494FB04;
-        Fri, 31 Jul 2020 10:54:31 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 1fj0SNQLDrPP; Fri, 31 Jul 2020 10:54:29 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 5D1244537D; Fri, 31 Jul 2020 10:54:29 +0200 (CEST)
-Date:   Fri, 31 Jul 2020 10:54:29 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        lukas@mntmn.com
-Subject: Re: [PATCH v9 0/5] Add support for iMX8MQ Display Controller
- Subsystem
-Message-ID: <20200731085429.GD12560@bogon.m.sigxcpu.org>
-References: <20200731081836.3048-1-laurentiu.palcu@oss.nxp.com>
+        id S1731442AbgGaIzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 04:55:31 -0400
+IronPort-SDR: BBBlt642vWrM5ZPobpU6T6fIq0qDLMaiNDsYo4eVI3RYeSZUO2kwYx45qIxbfYA+QH0z3ewrFM
+ 7Zgo3gkwlYog==
+X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="169859896"
+X-IronPort-AV: E=Sophos;i="5.75,417,1589266800"; 
+   d="scan'208";a="169859896"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 01:55:30 -0700
+IronPort-SDR: nmb+XMoh02PUfQprcyXyK12f7cs2TJZ1rnJC+wHXlxz0GZKdWy7TrE/C5yDmNNPxGzzrkwFHxR
+ YzCCCsT7x3hQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,417,1589266800"; 
+   d="scan'208";a="304882293"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 31 Jul 2020 01:55:28 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1k1Qp5-005H7g-ML; Fri, 31 Jul 2020 11:55:27 +0300
+Date:   Fri, 31 Jul 2020 11:55:27 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Kars Mulder <kerneldev@karsmulder.nl>
+Cc:     linux-kernel@vger.kernel.org, Eldad Zack <eldad@fogrefinery.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Mans Rullgard <mans@mansr.com>, Petr Mladek <pmladek@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 2/2] kstrto*: do not describe simple_strto*() as
+ obsolete/replaced
+Message-ID: <20200731085527.GH3703480@smile.fi.intel.com>
+References: <1ee1-5f234c00-f3-165a6440@234394593>
+ <29b9-5f234c80-13-4e3aa200@244003027>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200731081836.3048-1-laurentiu.palcu@oss.nxp.com>
+In-Reply-To: <29b9-5f234c80-13-4e3aa200@244003027>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Fri, Jul 31, 2020 at 11:18:28AM +0300, Laurentiu Palcu wrote:
-> From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+On Fri, Jul 31, 2020 at 12:40:29AM +0200, Kars Mulder wrote:
+> The documentation of the kstrto*() functions describes kstrto*() as
+> "replacements" of the "obsolete" simple_strto*() functions. Both of
+> these terms are inaccurate: they're not replacements because they have
+> different behaviour, and the simple_strto*() are not obsolete because
+> there are cases where they have benefits over kstrto*().
 > 
-> Hi,
-> 
-> This patchset adds initial DCSS support for iMX8MQ chip. Initial support
-> includes only graphics plane support (no video planes), no HDR10 capabilities,
-> no graphics decompression (only linear, tiled and super-tiled buffers allowed).
-> 
-> Support for the rest of the features will be added incrementally, in subsequent
-> patches.
-> 
-> The patchset was tested with both HDP driver (in the downstream tree) and the upstream
-> MIPI-DSI driver (with a couple of patches on top, to make it work correctly with DCSS).
-> 
-> Thanks,
-> Laurentiu
-> 
-> Changes in v9:
->  * Fixed a compilation issue found by Guido in his setup: 'select
->    VIDEOMODE_HELPERS' was missing from Kconfig;
->  * Use imx8mq-clock.h in the bindings file so one can understand what
->    those clock values mean;
->  * no other changes done. Couldn't address the hang Guido reported as
->    it's not happening in my setup. However, in my tree, there are some
->    extra NWL and ADV patches applied on top of upstream ones... Also,
->    removing them and testing only with upstream, even if there's no
->    image out, does not produce a hang... :/
+> Remove usage of the terms "replacement" and "obsolete" in reference
+> to simple_strto*(), and instead use the term "preferred over".
 
-I don't think this should hold up merging.
-Cheers,
- -- Guido
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
+> Fixes: 4c925d6031f71 ("kstrto*: add documentation")
+> Fixes: 885e68e8b7b13 ("kernel.h: update comment about simple_strto<foo>() functions")
+> Signed-off-by: Kars Mulder <kerneldev@karsmulder.nl>
 > 
-> Changes in v8:
->  * Removed 'select RESET_CONTROLLER" from Kconfig as Philipp pointed
->    out. SRC is not used in DCSS driver;
->  * Nothing else changed;
+> ---
+>  include/linux/kernel.h |  4 ++--
+>  lib/kstrtox.c          | 12 ++++--------
+>  2 files changed, 6 insertions(+), 10 deletions(-)
 > 
-> Changes in v7:
->  * Added a patch to initialize the connector using the drm_bridge_connector
->    API as Sam suggested. Tested it using NWL_DSI and ADV7535 with
->    Guido's patch [1] applied and one fix for ADV [2]. Also, some extra
->    patches for ADV and NWL were needed, from our downstream tree, which
->    will be upstreamed soon by their author;
->  * Rest of the patches are untouched;
+> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> index 2d6050f12c64..35fd7e0e3f04 100644
+> --- a/include/linux/kernel.h
+> +++ b/include/linux/kernel.h
+> @@ -346,7 +346,7 @@ int __must_check kstrtoll(const char *s, unsigned int base, long long *res);
+>   * @res: Where to write the result of the conversion on success.
+>   *
+>   * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+> - * Used as a replacement for the simple_strtoul(). Return code must be checked.
+> + * Preferred over simple_strtoul(). Return code must be checked.
+>  */
+>  static inline int __must_check kstrtoul(const char *s, unsigned int base, unsigned long *res)
+>  {
+> @@ -374,7 +374,7 @@ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsign
+>   * @res: Where to write the result of the conversion on success.
+>   *
+>   * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+> - * Used as a replacement for the simple_strtol(). Return code must be checked.
+> + * Preferred over simple_strtol(). Return code must be checked.
+>   */
+>  static inline int __must_check kstrtol(const char *s, unsigned int base, long *res)
+>  {
+> diff --git a/lib/kstrtox.c b/lib/kstrtox.c
+> index 252ac414ba9a..a14ccf905055 100644
+> --- a/lib/kstrtox.c
+> +++ b/lib/kstrtox.c
+> @@ -115,8 +115,7 @@ static int _kstrtoull(const char *s, unsigned int base, unsigned long long *res)
+>   * @res: Where to write the result of the conversion on success.
+>   *
+>   * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+> - * Used as a replacement for the obsolete simple_strtoull(). Return code must
+> - * be checked.
+> + * Preferred over simple_strtoull(). Return code must be checked.
+>   */
+>  int kstrtoull(const char *s, unsigned int base, unsigned long long *res)
+>  {
+> @@ -139,8 +138,7 @@ EXPORT_SYMBOL(kstrtoull);
+>   * @res: Where to write the result of the conversion on success.
+>   *
+>   * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+> - * Used as a replacement for the obsolete simple_strtoll(). Return code must
+> - * be checked.
+> + * Preferred over simple_strtoll(). Return code must be checked.
+>   */
+>  int kstrtoll(const char *s, unsigned int base, long long *res)
+>  {
+> @@ -211,8 +209,7 @@ EXPORT_SYMBOL(_kstrtol);
+>   * @res: Where to write the result of the conversion on success.
+>   *
+>   * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+> - * Used as a replacement for the obsolete simple_strtoul(). Return code must
+> - * be checked.
+> + * Preferred over simple_strtoul(). Return code must be checked.
+>   */
+>  int kstrtouint(const char *s, unsigned int base, unsigned int *res)
+>  {
+> @@ -242,8 +239,7 @@ EXPORT_SYMBOL(kstrtouint);
+>   * @res: Where to write the result of the conversion on success.
+>   *
+>   * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+> - * Used as a replacement for the obsolete simple_strtol(). Return code must
+> - * be checked.
+> + * Preferred over simple_strtol(). Return code must be checked.
+>   */
+>  int kstrtoint(const char *s, unsigned int base, int *res)
+>  {
+> --
+> 2.28.0
 > 
-> [1] https://lists.freedesktop.org/archives/dri-devel/2020-July/273025.html
-> [2] https://lists.freedesktop.org/archives/dri-devel/2020-July/273132.html
-> 
-> Changes in v6:
->  * Addressed Rob's comment and added "additionalProperties: false" at
->    the end of the bindings' properties. However, this change surfaced
->    an issue with the assigned-clock* properties not being documented in
->    the properties section. Added the descriptions and the bindings patch
->    will need another review;
->  * Added an entry for DCSS driver in the MAINTAINERS file;
->  * Removed the component framework patch altogether;
-> 
-> Changes in v5:
->  * Rebased to latest;
->  * Took out component framework support and made it a separate patch so
->    that people can still test with HDP driver, which makes use of it.
->    But the idea is to get rid of it once HDP driver's next versions
->    will remove component framework as well;
->  * Slight improvement to modesetting: avoid cutting off the pixel clock
->    if the new mode and the old one are equal. Also, in this case, is
->    not necessary to wait for DTG to shut off. This would allow to switch
->    from 8b RGB to 12b YUV422, for example, with no interruptions (at least
->    from DCSS point of view);
->  * Do not fire off CTXLD when going to suspend, unless it still has
->    entries that need to be committed to DCSS;
->  * Addressed Rob's comments on bindings;
-> 
-> Changes in v4:
->  * Addressed Lucas and Philipp's comments:
->    * Added DRM_KMS_CMA_HELPER dependency in Kconfig;
->    * Removed usage of devm_ functions since I'm already doing all the
->      clean-up in the submodules_deinit();
->    * Moved the drm_crtc_arm_vblank_event() in dcss_crtc_atomic_flush();
->    * Removed en_completion variable from dcss_crtc since this was
->      introduced mainly to avoid vblank timeout warnings which were fixed
->      by arming the vblank event in flush() instead of begin();
->    * Removed clks_on and irq_enabled flags since all the calls to
->      enabling/disabling clocks and interrupts were balanced;
->    * Removed the custom atomic_commit callback and used the DRM core
->      helper and, in the process, got rid of a workqueue that wasn't
->      necessary anymore;
->    * Fixed some minor DT binding issues flagged by Philipp;
->    * Some other minor changes suggested by Lucas;
->  * Removed YUV formats from the supported formats as these cannot work
->    without the HDR10 module CSCs and LUTs. Will add them back when I
->    will add support for video planes;
-> 
-> Changes in v3:
->  * rebased to latest linux-next and made it compile as drmP.h was
->    removed;
->  * removed the patch adding the VIDEO2_PLL clock. It's already applied;
->  * removed an unnecessary 50ms sleep in the dcss_dtg_sync_set();
->  * fixed a a spurious hang reported by Lukas Hartmann and encountered
->    by me several times;
->  * mask DPR and DTG interrupts by default, as they may come enabled from
->    U-boot;
-> 
-> Changes in v2:
->  * Removed '0x' in node's unit-address both in DT and yaml;
->  * Made the address region size lowercase, to be consistent;
->  * Removed some left-over references to P010;
->  * Added a Kconfig dependency of DRM && ARCH_MXC. This will also silence compilation
->    issues reported by kbuild for other architectures;
-> 
-> 
-> Laurentiu Palcu (5):
->   drm/imx: compile imx directory by default
->   drm/imx: Add initial support for DCSS on iMX8MQ
->   drm/imx/dcss: use drm_bridge_connector API
->   MAINTAINERS: Add entry for i.MX 8MQ DCSS driver
->   dt-bindings: display: imx: add bindings for DCSS
-> 
->  .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 108 +++
->  MAINTAINERS                                   |   8 +
->  drivers/gpu/drm/Makefile                      |   2 +-
->  drivers/gpu/drm/imx/Kconfig                   |   2 +
->  drivers/gpu/drm/imx/Makefile                  |   1 +
->  drivers/gpu/drm/imx/dcss/Kconfig              |   9 +
->  drivers/gpu/drm/imx/dcss/Makefile             |   6 +
->  drivers/gpu/drm/imx/dcss/dcss-blkctl.c        |  70 ++
->  drivers/gpu/drm/imx/dcss/dcss-crtc.c          | 219 +++++
->  drivers/gpu/drm/imx/dcss/dcss-ctxld.c         | 424 +++++++++
->  drivers/gpu/drm/imx/dcss/dcss-dev.c           | 325 +++++++
->  drivers/gpu/drm/imx/dcss/dcss-dev.h           | 177 ++++
->  drivers/gpu/drm/imx/dcss/dcss-dpr.c           | 562 ++++++++++++
->  drivers/gpu/drm/imx/dcss/dcss-drv.c           | 138 +++
->  drivers/gpu/drm/imx/dcss/dcss-dtg.c           | 409 +++++++++
->  drivers/gpu/drm/imx/dcss/dcss-kms.c           | 198 +++++
->  drivers/gpu/drm/imx/dcss/dcss-kms.h           |  44 +
->  drivers/gpu/drm/imx/dcss/dcss-plane.c         | 405 +++++++++
->  drivers/gpu/drm/imx/dcss/dcss-scaler.c        | 826 ++++++++++++++++++
->  drivers/gpu/drm/imx/dcss/dcss-ss.c            | 180 ++++
->  20 files changed, 4112 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
->  create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
->  create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
-> 
-> -- 
-> 2.23.0
-> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
