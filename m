@@ -7,62 +7,58 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD076C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7B3A22B40
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9606B2068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:58:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387624AbgGaP6U (ORCPT
+        id S2387642AbgGaP6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 11:58:20 -0400
-Received: from elvis.franken.de ([193.175.24.41]:56730 "EHLO elvis.franken.de"
+        Fri, 31 Jul 2020 11:58:24 -0400
+Received: from elvis.franken.de ([193.175.24.41]:56742 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387504AbgGaP6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 11:58:19 -0400
+        id S2387634AbgGaP6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 11:58:21 -0400
 Received: from uucp (helo=alpha)
         by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1k1XQH-0000Ng-00; Fri, 31 Jul 2020 17:58:17 +0200
+        id 1k1XQH-0000Ng-01; Fri, 31 Jul 2020 17:58:17 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 900BEC0B21; Fri, 31 Jul 2020 17:45:39 +0200 (CEST)
-Date:   Fri, 31 Jul 2020 17:45:39 +0200
+        id A855FC0B3C; Fri, 31 Jul 2020 17:45:58 +0200 (CEST)
+Date:   Fri, 31 Jul 2020 17:45:58 +0200
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] of_address: Guard of_bus_pci_get_flags with CONFIG_PCI
-Message-ID: <20200731154539.GA16683@alpha.franken.de>
-References: <20200730005614.32302-1-jiaxun.yang@flygoat.com>
- <CAL_JsqKPO155zVMqvWbGd84e1Ypk1SJDySU8YCRRA+uy7wtcHA@mail.gmail.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-rpi-kernel@lists.infradead.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] of: address: Fix parser address/size cells initialization
+Message-ID: <20200731154558.GB16683@alpha.franken.de>
+References: <20200731100248.26982-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqKPO155zVMqvWbGd84e1Ypk1SJDySU8YCRRA+uy7wtcHA@mail.gmail.com>
+In-Reply-To: <20200731100248.26982-1-nsaenzjulienne@suse.de>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 08:27:55AM -0600, Rob Herring wrote:
-> On Wed, Jul 29, 2020 at 7:04 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
-> >
-> > After 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser"),
-> > the last user of of_bus_pci_get_flags when CONFIG_PCI is disabled had gone.
-> >
-> > This caused unused function warning when compiling without CONFIG_PCI.
-> > Fix by guarding it with CONFIG_PCI.
-> >
-> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
-> > ---
-> >  drivers/of/address.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, Jul 31, 2020 at 12:02:48PM +0200, Nicolas Saenz Julienne wrote:
+> bus->count_cells() parses cells starting from the node's parent. This is
+> not good enough for parser_init() which is generally parsing a bus node.
 > 
-> Acked-by: Rob Herring <robh@kernel.org>
+> Revert to previous behavior using of_bus_n_*_cells().
+> 
+> Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
+> Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>  drivers/of/address.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
 applied to mips-next.
 
