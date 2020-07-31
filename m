@@ -4,29 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E431C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D28C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F04212250E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AEA1207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:00:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731654AbgGaIAC (ORCPT
+        id S1731842AbgGaIAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:00:02 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:59670 "EHLO
+        Fri, 31 Jul 2020 04:00:08 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:59710 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731523AbgGaIAB (ORCPT
+        with ESMTP id S1731530AbgGaIAC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 04:00:01 -0400
+        Fri, 31 Jul 2020 04:00:02 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6D11E8030802;
-        Fri, 31 Jul 2020 07:59:58 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id B82B6803202D;
+        Fri, 31 Jul 2020 07:59:59 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id GpEVWY4Cvpdq; Fri, 31 Jul 2020 10:59:57 +0300 (MSK)
+        with ESMTP id dhj8sOxTMUso; Fri, 31 Jul 2020 10:59:59 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Mark Brown <broonie@kernel.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
@@ -40,9 +41,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Feng Tang <feng.tang@intel.com>, Vinod Koul <vkoul@kernel.org>,
         <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/8] spi: dw-dma: Set DMA Level registers on init
-Date:   Fri, 31 Jul 2020 10:59:46 +0300
-Message-ID: <20200731075953.14416-2-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH 3/8] spi: dw-dma: Configure the DMA channels in dma_setup
+Date:   Fri, 31 Jul 2020 10:59:48 +0300
+Message-ID: <20200731075953.14416-4-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200731075953.14416-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200731075953.14416-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -54,76 +55,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Indeed the registers content doesn't get cleared when the SPI controller
-is disabled and enabled. Max burst lengths aren't changed since the Rx and
-Tx DMA channels are requested on init stage and are kept acquired until
-the device is removed. Obviously SPI controller FIFO depth can't be
-changed. Due to all of that we can safely move the DMA Transmit and
-Receive data level registers initialization to the SPI controller DMA init
-stage (when the SPI controller is being probed) instead of doing it for
-each SPI transfer when dma_setup is called. This shall speed the DMA-based
-SPI transfer initialization up a bit, particularly if the APB bus is
-relatively slow.
+Mainly this is a preparation patch before adding one-by-one DMA SG entries
+transmission. But logically the Tx and Rx DMA channels setup should be
+performed in the dma_setup() callback anyway. So let's move the DMA slave
+channels src/dst burst lengths, address and address width configuration to
+the DMA setup stage. While at it make sure the return value of the
+dmaengine_slave_config() method is checked. It has been unnecessary in
+case if Dw DMAC is utilized as a DMA engine, since its device_config()
+callback always returns zero (though it might change in future). But since
+DW APB SSI driver now supports any DMA back-end we must make sure the
+DMA device configuration has been successful before proceeding with
+further setups.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 ---
- drivers/spi/spi-dw-dma.c | 29 ++++++++++++++---------------
- 1 file changed, 14 insertions(+), 15 deletions(-)
+ drivers/spi/spi-dw-dma.c | 42 +++++++++++++++++++++++++++++-----------
+ 1 file changed, 31 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/spi/spi-dw-dma.c b/drivers/spi/spi-dw-dma.c
-index bb390ff67d1d..440679fa0764 100644
+index ec721af61663..56496b659d62 100644
 --- a/drivers/spi/spi-dw-dma.c
 +++ b/drivers/spi/spi-dw-dma.c
-@@ -49,6 +49,7 @@ static void dw_spi_dma_maxburst_init(struct dw_spi *dws)
- 		max_burst = RX_BURST_LEVEL;
- 
- 	dws->rxburst = min(max_burst, def_burst);
-+	dw_writel(dws, DW_SPI_DMARDLR, dws->rxburst - 1);
- 
- 	ret = dma_get_slave_caps(dws->txchan, &caps);
- 	if (!ret && caps.max_burst)
-@@ -56,7 +57,20 @@ static void dw_spi_dma_maxburst_init(struct dw_spi *dws)
- 	else
- 		max_burst = TX_BURST_LEVEL;
- 
-+	/*
-+	 * Having a Rx DMA channel serviced with higher priority than a Tx DMA
-+	 * channel might not be enough to provide a well balanced DMA-based
-+	 * SPI transfer interface. There might still be moments when the Tx DMA
-+	 * channel is occasionally handled faster than the Rx DMA channel.
-+	 * That in its turn will eventually cause the SPI Rx FIFO overflow if
-+	 * SPI bus speed is high enough to fill the SPI Rx FIFO in before it's
-+	 * cleared by the Rx DMA channel. In order to fix the problem the Tx
-+	 * DMA activity is intentionally slowed down by limiting the SPI Tx
-+	 * FIFO depth with a value twice bigger than the Tx burst length
-+	 * calculated earlier by the dw_spi_dma_maxburst_init() method.
-+	 */
- 	dws->txburst = min(max_burst, def_burst);
-+	dw_writel(dws, DW_SPI_DMATDLR, dws->txburst);
+@@ -257,11 +257,9 @@ static void dw_spi_dma_tx_done(void *arg)
+ 	complete(&dws->dma_completion);
  }
  
- static int dw_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
-@@ -372,21 +386,6 @@ static int dw_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
+-static struct dma_async_tx_descriptor *
+-dw_spi_dma_prepare_tx(struct dw_spi *dws, struct spi_transfer *xfer)
++static int dw_spi_dma_config_tx(struct dw_spi *dws)
  {
- 	u16 imr = 0, dma_ctrl = 0;
+ 	struct dma_slave_config txconf;
+-	struct dma_async_tx_descriptor *txdesc;
  
--	/*
--	 * Having a Rx DMA channel serviced with higher priority than a Tx DMA
--	 * channel might not be enough to provide a well balanced DMA-based
--	 * SPI transfer interface. There might still be moments when the Tx DMA
--	 * channel is occasionally handled faster than the Rx DMA channel.
--	 * That in its turn will eventually cause the SPI Rx FIFO overflow if
--	 * SPI bus speed is high enough to fill the SPI Rx FIFO in before it's
--	 * cleared by the Rx DMA channel. In order to fix the problem the Tx
--	 * DMA activity is intentionally slowed down by limiting the SPI Tx
--	 * FIFO depth with a value twice bigger than the Tx burst length
--	 * calculated earlier by the dw_spi_dma_maxburst_init() method.
--	 */
--	dw_writel(dws, DW_SPI_DMARDLR, dws->rxburst - 1);
--	dw_writel(dws, DW_SPI_DMATDLR, dws->txburst);
+ 	memset(&txconf, 0, sizeof(txconf));
+ 	txconf.direction = DMA_MEM_TO_DEV;
+@@ -271,7 +269,13 @@ dw_spi_dma_prepare_tx(struct dw_spi *dws, struct spi_transfer *xfer)
+ 	txconf.dst_addr_width = dw_spi_dma_convert_width(dws->n_bytes);
+ 	txconf.device_fc = false;
+ 
+-	dmaengine_slave_config(dws->txchan, &txconf);
++	return dmaengine_slave_config(dws->txchan, &txconf);
++}
++
++static struct dma_async_tx_descriptor *
++dw_spi_dma_prepare_tx(struct dw_spi *dws, struct spi_transfer *xfer)
++{
++	struct dma_async_tx_descriptor *txdesc;
+ 
+ 	txdesc = dmaengine_prep_slave_sg(dws->txchan,
+ 				xfer->tx_sg.sgl,
+@@ -346,14 +350,9 @@ static void dw_spi_dma_rx_done(void *arg)
+ 	complete(&dws->dma_completion);
+ }
+ 
+-static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
+-		struct spi_transfer *xfer)
++static int dw_spi_dma_config_rx(struct dw_spi *dws)
+ {
+ 	struct dma_slave_config rxconf;
+-	struct dma_async_tx_descriptor *rxdesc;
 -
- 	if (xfer->tx_buf)
- 		dma_ctrl |= SPI_DMA_TDMAE;
+-	if (!xfer->rx_buf)
+-		return NULL;
+ 
+ 	memset(&rxconf, 0, sizeof(rxconf));
+ 	rxconf.direction = DMA_DEV_TO_MEM;
+@@ -363,7 +362,16 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
+ 	rxconf.src_addr_width = dw_spi_dma_convert_width(dws->n_bytes);
+ 	rxconf.device_fc = false;
+ 
+-	dmaengine_slave_config(dws->rxchan, &rxconf);
++	return dmaengine_slave_config(dws->rxchan, &rxconf);
++}
++
++static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
++		struct spi_transfer *xfer)
++{
++	struct dma_async_tx_descriptor *rxdesc;
++
++	if (!xfer->rx_buf)
++		return NULL;
+ 
+ 	rxdesc = dmaengine_prep_slave_sg(dws->rxchan,
+ 				xfer->rx_sg.sgl,
+@@ -382,10 +390,22 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
+ static int dw_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
+ {
+ 	u16 imr, dma_ctrl;
++	int ret;
+ 
+ 	if (!xfer->tx_buf)
+ 		return -EINVAL;
+ 
++	/* Setup DMA channels */
++	ret = dw_spi_dma_config_tx(dws);
++	if (ret)
++		return ret;
++
++	if (xfer->rx_buf) {
++		ret = dw_spi_dma_config_rx(dws);
++		if (ret)
++			return ret;
++	}
++
+ 	/* Set the DMA handshaking interface */
+ 	dma_ctrl = SPI_DMA_TDMAE;
  	if (xfer->rx_buf)
 -- 
 2.27.0
