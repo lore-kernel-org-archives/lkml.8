@@ -2,93 +2,111 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A290C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED82C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E9322076B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:36:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596224176;
-	bh=B65sW0H+uUHkgyDhUiECp6DwAZm3btlQpGTlkYkao8o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LNyZOqOW4aLcyOoMaWof2rLPiPlRpeBMichPYcmgG8QEiCLhQyqum35uZ/UcnTQU/
-	 sVFLxoozS/MNcpvMUbE9UioP/H6e9FP/cpIcYxDdFZF+lCW6TwAhrPT8aFaFL4jG3x
-	 Im16ArQafijt3ekCzC7n64aFlbeyKFzgxGLWw83s=
+	by mail.kernel.org (Postfix) with ESMTP id 83F7E22B42
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:38:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hRQTBt28"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730143AbgGaTgO (ORCPT
+        id S1730178AbgGaTiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 15:36:14 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:40656 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729209AbgGaTgN (ORCPT
+        Fri, 31 Jul 2020 15:38:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729325AbgGaTiU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 15:36:13 -0400
-Received: by mail-il1-f195.google.com with SMTP id x1so5953133ilp.7;
-        Fri, 31 Jul 2020 12:36:12 -0700 (PDT)
+        Fri, 31 Jul 2020 15:38:20 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4DE3C06174A
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 12:38:19 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id v13so11066588oiv.13
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 12:38:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cp3GygB7F0b136lUhJrRkyNW4lR2kBcOJ00svd2oGS0=;
+        b=hRQTBt285hvDUY6CCaz910g2/xt+HvaTmkAFVvlGGkdmkHiPE1mWrZ6J9b98CS3oFF
+         4rerhbQBqnGLLScHR+8hvSGAJGGP7HVCGfBf5URhTql94iKw/HXcIx853Ij74GkbeYQu
+         z72JXvTJ0rU8caEPLxCkBL4MRokdEX1NcN2rLbiWAK6JWMBWavJM9B38gI1PeAnyws1H
+         gt651BF1uJrsSvrDpQlZU+1dw83n7w3F0xuRWk1v5cWG4C7mhK2LPwtt5jkz94BhBR3d
+         L5Rbx5xMULzWXTOBpbK36qGb/u4/6bb7abBJrfUfRNub9BusEMQLIXoFn0BNqa57XgUE
+         OCdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wab/tJu5E5sJ5/QDRPXn9ffk/Ado7aM/lOvbhkRuf2o=;
-        b=nVAVmDfnvg0/AqPSLc177jsJwK0fQSZbyLz2RxEUOhGNMMIbB/U8gFoDfwU1GokKkM
-         S2UytBhPmbjbpwKS7VxOMr2mhSp+4cQpWaBBLjMMiMpzDwvGm38tZQAvh0mbQTD+CADp
-         sEgRR7FXOsTC16xBk+uwUQl19PbymHD1K4RnY5d1vlbKTE5z3FYmmSewr1RasgOWShtY
-         2OFOiTUocFsFwkK5HvvuPlb3s0rC0XRg4BJMbvLUJ+GYwMCvKC7wtyP/8GJcE2zHqjGj
-         Dw1bvi9fX7AHY9UkfLYp/MffX57ihPYylfENbWYrFlBcGq6aERoBJH9crve8p1bC9EQd
-         Qhrg==
-X-Gm-Message-State: AOAM532ebL9LvORM6iQCQD1D3pAvnoChFA5+fIo0bvJDb6pvLP0t0nzK
-        52XVr7s7KTV2odkP2TYl4A==
-X-Google-Smtp-Source: ABdhPJxd3lQOTaVRgxLwJUQxUo45C+8bAgkoIH99FoVPc4CMnGqeFkTWOBiQJFT3e7AswKOHVk7nWQ==
-X-Received: by 2002:a05:6e02:dd1:: with SMTP id l17mr5194141ilj.136.1596224172324;
-        Fri, 31 Jul 2020 12:36:12 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id h1sm5079948iob.8.2020.07.31.12.36.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 12:36:11 -0700 (PDT)
-Received: (nullmailer pid 643496 invoked by uid 1000);
-        Fri, 31 Jul 2020 19:36:09 -0000
-Date:   Fri, 31 Jul 2020 13:36:09 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Marcin Sloniewski <marcin.sloniewski@gmail.com>
-Cc:     heiko.stuebner@theobroma-systems.com, mcoquelin.stm32@gmail.com,
-        lkundrak@v3.sk, linux-stm32@st-md-mailman.stormreply.com,
-        alexandre.torgue@st.com, a.fatoum@pengutronix.de,
-        linus.walleij@linaro.org, allen.chen@ite.com.tw,
-        linux-arm-kernel@lists.infradead.org, stephan@gerhold.net,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        broonie@kernel.org, mani@kernel.org, sam@ravnborg.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 2/3] dt-bindings: arm: stm32: document Odyssey
- compatible
-Message-ID: <20200731193609.GA643298@bogus>
-References: <20200731143053.44866-1-marcin.sloniewski@gmail.com>
- <20200731143053.44866-2-marcin.sloniewski@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cp3GygB7F0b136lUhJrRkyNW4lR2kBcOJ00svd2oGS0=;
+        b=KKKTNtXRZS9gM1eW9J5ervG6Wj5FpqCWse/mZ0OfL2ka7/b6JzvWgkh0y6FkU2KCzg
+         R6r4OfqhYYeKGykcUW2Q7mYqId57ZrfpKLg+Fc+Z26hab2IfFK8V5sY33qOWjKkTjz61
+         6tc25VfvG7I+6RaVsHA4q2Pfjzl5ntDkbVAthxxiNd8kWYCoBpPedIAgPvovSsCnG+Eh
+         Evglz/nFN8d77WEUBZPcXUCFSKon9hOhkjt6/qMrWeaA+qClhkwqVNyCtd87bMKVcsm0
+         CUnExmq8yv9bqPXJv7ctlmUcV+t4XtPqJDx1k79qLLm2lQa5LCL8IO1OXrQ7EvgUG5SZ
+         MSTg==
+X-Gm-Message-State: AOAM533BMg0KHv0BajCU4sJPfTaP148RT0FdLor9gdUFTHlJBI91IPq0
+        t3CA7TZXP4sf5yKh5HRVD/UHB9xUAB4wrt/xeFdoBQ==
+X-Google-Smtp-Source: ABdhPJxRdmWM2JVXS+XJYjkXLwgmye2vV//B6mH9jWnOac/U12I6qldoTC6vypuWGHyySsNeb29bO+jhRX9xVpW97f0=
+X-Received: by 2002:aca:b5c3:: with SMTP id e186mr4344099oif.10.1596224299067;
+ Fri, 31 Jul 2020 12:38:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200731143053.44866-2-marcin.sloniewski@gmail.com>
+References: <1594948208-4739-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <CALAqxLXuJQOCXcpyWwyBFZGFK_dEgG0edEEf2=vOpAw6Ng8mBQ@mail.gmail.com> <eacfc713-e98a-78fa-b316-3943600813d0@socionext.com>
+In-Reply-To: <eacfc713-e98a-78fa-b316-3943600813d0@socionext.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Fri, 31 Jul 2020 12:38:07 -0700
+Message-ID: <CALAqxLVzUnc5CH_pA7h3ygXFPRz05KtNZx+_M3eAXXrm7hhGBQ@mail.gmail.com>
+Subject: Re: [PATCH] dma-buf: heaps: Introduce dma_heap_add_cma() for
+ non-default CMA heap
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        linux-media@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jul 2020 16:30:52 +0200, Marcin Sloniewski wrote:
-> Document device tree bindings of Seeed SoM and carrier board.
-> 
-> Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
-> ---
->  Documentation/devicetree/bindings/arm/stm32/stm32.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
+On Fri, Jul 31, 2020 at 2:32 AM Kunihiko Hayashi
+<hayashi.kunihiko@socionext.com> wrote:
+> On 2020/07/29 4:17, John Stultz wrote:
+> > Do you have a upstream driver that you plan to make use this new call?
+>
+> Unfortunately I don't have an upstream driver using this call.
+>
+> This call is called from dma-buf heaps "importer" or "customer",
+> and I only made an example (do nothing) importer driver
+> to test the call.
+>
+> > We want to have in-tree users of code added.
+>
+> I think this is a generic way to use non-default CMA heaps, however,
+> we need in-tree "importer" drivers to want to use non-default CMA heaps.
+> I don't find it from now.
+>
 
+Yea, I and again, I do agree this is functionality that will be
+needed. But we'll need to wait for a user (camera driver, etc which
+would utilize the reserved cma region) before we can merge it
+upstream. :(  Do let me know if you have an out of tree driver that
+would make use of it, and we can see what can be done to help upstream
+things.
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
-
+thanks
+-john
