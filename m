@@ -2,175 +2,95 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A55C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 061B5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 202A12074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C967F2074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:39:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="jBub1IO1";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="fRCjWzgB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NP3joG2e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732553AbgGaKf1 (ORCPT
+        id S1732541AbgGaKjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 06:35:27 -0400
-Received: from relay4.mymailcheap.com ([137.74.80.154]:44647 "EHLO
-        relay4.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731922AbgGaKf1 (ORCPT
+        Fri, 31 Jul 2020 06:39:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732397AbgGaKjA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 06:35:27 -0400
-Received: from filter1.mymailcheap.com (filter1.mymailcheap.com [149.56.130.247])
-        by relay4.mymailcheap.com (Postfix) with ESMTPS id 101203F20A;
-        Fri, 31 Jul 2020 12:35:23 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by filter1.mymailcheap.com (Postfix) with ESMTP id 350752A3B8;
-        Fri, 31 Jul 2020 06:35:22 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
-        s=default; t=1596191722;
-        bh=BLDS2oll/4tBNw82NF6+Q44e1HdnukGI9h57Kji6hCc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=jBub1IO1hIXu27C8R/SOoAQYIjaoGmKiqgA/OYad6vwSRer8d3ELXWI90LPO9dS2J
-         TUEeesrh+38an921mG5JqbomQ/8Nt25lYbRj35WooU45oTm3WQ6WRyMAREueJddtQN
-         faNulWHBn5eU0ezLQaQCGF2xNgGwEhwzJhvC62zU=
-X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
-Received: from filter1.mymailcheap.com ([127.0.0.1])
-        by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id TJ4L-x7a2eLQ; Fri, 31 Jul 2020 06:35:21 -0400 (EDT)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by filter1.mymailcheap.com (Postfix) with ESMTPS;
-        Fri, 31 Jul 2020 06:35:20 -0400 (EDT)
-Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
-        by mail20.mymailcheap.com (Postfix) with ESMTP id B4522419DE;
-        Fri, 31 Jul 2020 10:35:18 +0000 (UTC)
-Authentication-Results: mail20.mymailcheap.com;
-        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="fRCjWzgB";
-        dkim-atps=neutral
-AI-Spam-Status: Not processed
-Received: from [0.0.0.0] (unknown [203.86.239.91])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 9B04E419DE;
-        Fri, 31 Jul 2020 10:34:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
-        s=default; t=1596191660;
-        bh=BLDS2oll/4tBNw82NF6+Q44e1HdnukGI9h57Kji6hCc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=fRCjWzgBQcGj1SD3WDWcq2BmaBcYppYSrclEBvvYltGqA3d8pzF22JzB+l0Wboq1V
-         lbs6ZhR8dlD4L/mZuG5x1/iBHUwHrnkO7czDW0rQBb32R83XlYOcxHNxlD6FJUDjoR
-         cXwOgwbNCW1vythinJ91JKbvQd91aKLaqZ/iucRY=
-Subject: Re: [PATCH] MIPS: BMIPS: Disable pref 30 for buggy CPUs
-To:     Florian Fainelli <f.fainelli@gmail.com>, linux-mips@linux-mips.org
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
-        <linux-mips@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200731042401.22871-1-f.fainelli@gmail.com>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <21ad5472-1287-acba-5604-09f2e633c043@flygoat.com>
-Date:   Fri, 31 Jul 2020 18:34:13 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 31 Jul 2020 06:39:00 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84E48C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 03:39:00 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id w14so2100614ljj.4
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 03:39:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z79UlB74SFDGkVx/wf5z/xmQkiHttzepy/SROQkunds=;
+        b=NP3joG2eyPBwdPuBC5qMi8kkL6strW9nGbsOxkdGKVfI7BxLID1cEUkgnP+mlCWBxt
+         Oi+nhKOnN8wnmJSr3M2SroeZ9Qt4xUC+AT9vZKu6L6+68tugEIhkSESjZv69Xj1qQN8a
+         9auoue2YYBt5pDKoWjt7M0NeMZV7aSW696PIHQr9CV4Hc1DxV6ZYT+xu+nc71zXevASU
+         KVYQObh7ib1jYD4VBS/DMEGRCtRJ+v86MVx8LN2D2U8gsp6Sv3pAR4dktVdayVwiZu8s
+         QefOUUQIIjdbW9tb5HPWFerVWpd0bpdfcg1GsRWhLBRExqnXgLZkRubdIOEvxay8il3Q
+         Rc+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z79UlB74SFDGkVx/wf5z/xmQkiHttzepy/SROQkunds=;
+        b=t/yJRznQPsz13vLUtQFUTJsrLmAusn4BYSIaV2TdfpKvExXf0yY5D6VZ4H5f0QDNQd
+         MkJI4g7ZJRCdV5A7lpUD6unwB4/FCZSyftbI2HTCPPnMC8lfGQXy28zqKsP/zlGLWo0u
+         gJTq4gAOT/kceyCpRS+Wkn0mA5cGE8f9VmnmeiUtoISy7pocPt78nY6LEhhUFxzbIPs3
+         AQRceUVeFYpMfJo3+4hxGwYx+cejnAQnV5TOvnzbezOkROR85m0ePWsUkGMmAifokeZ4
+         5BrhfC8Det+KyXMcIBG4s3CtNgBniEjU1QyrG+4LpDE77acfzECNudxP29QRBVP6ZtG5
+         o1ww==
+X-Gm-Message-State: AOAM530Ixxwkrqhb4wGOzZ44eQnccK2m4gX2+Prb28q2D/h4e8oOrCGu
+        8y0kOLbnTAM9MhBgfDwsjVByEgMBIVpRRQVx/5s=
+X-Google-Smtp-Source: ABdhPJyTao9Lg7MGHS3w6J9lpe8D0qlnuOVVRbxEmgjJQIelAXZ79/aJ1SXFA2+uNtLKj3VoeR2KEKtfcSTSVW8aM3o=
+X-Received: by 2002:a2e:5cc9:: with SMTP id q192mr1646387ljb.452.1596191937433;
+ Fri, 31 Jul 2020 03:38:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200731042401.22871-1-f.fainelli@gmail.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Rspamd-Queue-Id: B4522419DE
-X-Spamd-Result: default: False [1.40 / 10.00];
-         RCVD_VIA_SMTP_AUTH(0.00)[];
-         ARC_NA(0.00)[];
-         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
-         MID_RHS_MATCH_FROM(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         R_SPF_SOFTFAIL(0.00)[~all];
-         RCPT_COUNT_FIVE(0.00)[6];
-         ML_SERVERS(-3.10)[148.251.23.173];
-         DKIM_TRACE(0.00)[flygoat.com:+];
-         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
-         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
-         FREEMAIL_TO(0.00)[gmail.com,linux-mips.org];
-         RCVD_NO_TLS_LAST(0.10)[];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
-         RCVD_COUNT_TWO(0.00)[2];
-         SUSPICIOUS_RECIPS(1.50)[];
-         HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
-X-Rspamd-Server: mail20.mymailcheap.com
+References: <1596176895-28724-1-git-send-email-shengjiu.wang@nxp.com>
+In-Reply-To: <1596176895-28724-1-git-send-email-shengjiu.wang@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Fri, 31 Jul 2020 07:38:46 -0300
+Message-ID: <CAOMZO5C89emJ91wZsWe-APJ3OpzX=3+jHx6DAEU5kQjNLLSc4Q@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: fsl_sai: Fix value of FSL_SAI_CR1_RFW_MASK
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Shengjiu,
 
-
-ÔÚ 2020/7/31 ÏÂÎç12:24, Florian Fainelli Ð´µÀ:
-> Disable pref 30 by utilizing the standard quirk method and matching the
-> affected SoCs: 7344, 7346, 7425.
+On Fri, Jul 31, 2020 at 3:32 AM Shengjiu Wang <shengjiu.wang@nxp.com> wrote:
 >
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->   arch/mips/bmips/setup.c | 17 +++++++++++++++++
->   1 file changed, 17 insertions(+)
+> The fifo_depth is 64 on i.MX8QM/i.MX8QXP, 128 on i.MX8MQ, 16 on
+> i.MX7ULP.
 >
-> diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
-> index 19308df5f577..df0efea12611 100644
-> --- a/arch/mips/bmips/setup.c
-> +++ b/arch/mips/bmips/setup.c
-> @@ -110,6 +110,20 @@ static void bcm6368_quirks(void)
->   	bcm63xx_fixup_cpu1();
->   }
->   
-> +static void bmips5000_pref30_quirk(void)
-> +{
-> +	__asm__ __volatile__(
-> +	"	li	$8, 0x5a455048\n"
-> +	"	.word	0x4088b00f\n"	/* mtc0 $8, $22, 15 */
-> +	"	nop; nop; nop\n"
-> +	"	.word	0x4008b008\n"	/* mfc0 $8, $22, 8 */
-> +	/* disable "pref 30" on buggy CPUs */
-> +	"	lui	$9, 0x0800\n"
-> +	"	or	$8, $9\n"
-> +	"	.word	0x4088b008\n"	/* mtc0 $8, $22, 8 */
-> +	: : : "$8", "$9");
-> +}
-Hi,
+> Original FSL_SAI_CR1_RFW_MASK value 0x1F is not suitable for
+> these platform, the FIFO watermark mask should be updated
+> according to the fifo_depth.
+>
+> Fixes: a860fac42097 ("ASoC: fsl_sai: Add support for imx7ulp/imx8mq")
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-Is there any toolchain issue blocking read_c0_**** family helpers being
-used?
-
-Use .word looks unreasonable.
-
-Thanks
-
-- Jiaxun
-
-> +
->   static const struct bmips_quirk bmips_quirk_list[] = {
->   	{ "brcm,bcm3368",		&bcm6358_quirks			},
->   	{ "brcm,bcm3384-viper",		&bcm3384_viper_quirks		},
-> @@ -120,6 +134,9 @@ static const struct bmips_quirk bmips_quirk_list[] = {
->   	{ "brcm,bcm6368",		&bcm6368_quirks			},
->   	{ "brcm,bcm63168",		&bcm6368_quirks			},
->   	{ "brcm,bcm63268",		&bcm6368_quirks			},
-> +	{ "brcm,bcm7344",		&bmips5000_pref30_quirk		},
-> +	{ "brcm,bcm7346",		&bmips5000_pref30_quirk		},
-> +	{ "brcm,bcm7425",		&bmips5000_pref30_quirk		},
->   	{ },
->   };
->   
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
