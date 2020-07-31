@@ -2,207 +2,136 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79976C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 13:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A430FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 13:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53AE8208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 13:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 833C121744
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 13:49:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596203394;
+	bh=IXwFqQHjP2sDj/CKwA+w73Rr9wgrcjVyVnpFMoC7OjU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kOoPjX3+LwdYDBT/qzZrfV9FvCWElvkZkt+UOSB9Hw/CoMRf9S/RgCxckag1VjzAS
+	 UU46XPWsSXmgbou+ykv65pIsBu3sI/nXaRq2n0ZuAfrjWVsqgGr1/4Lg9i83k1e15V
+	 JsscYhZDR/tfJPhBeKNiwMMolGU425HhZHQKzSsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732906AbgGaNsS (ORCPT
+        id S2387428AbgGaNtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 09:48:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:59516 "EHLO foss.arm.com"
+        Fri, 31 Jul 2020 09:49:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732397AbgGaNsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 09:48:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57911101E;
-        Fri, 31 Jul 2020 06:48:17 -0700 (PDT)
-Received: from [192.168.0.57] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CC2563F66E;
-        Fri, 31 Jul 2020 06:48:15 -0700 (PDT)
-Subject: Re: [PATCH] ACPI / APEI: do memory failure on the physical address
- reported by ARM processor error section
-To:     Xiaofei Tan <tanxiaofei@huawei.com>
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rjw@rjwysocki.net, lenb@kernel.org, tony.luck@intel.com,
-        bp@alien8.de, linuxarm@huawei.com, shiju.jose@huawei.com,
-        jonathan.cameron@huawei.com
-References: <1596094348-10230-1-git-send-email-tanxiaofei@huawei.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <9b340947-4fcf-30f3-f7e4-68a2753864c6@arm.com>
-Date:   Fri, 31 Jul 2020 14:48:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1727851AbgGaNtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 09:49:53 -0400
+Received: from localhost (router.4pisysteme.de [80.79.225.122])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0694C208E4;
+        Fri, 31 Jul 2020 13:49:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596203392;
+        bh=IXwFqQHjP2sDj/CKwA+w73Rr9wgrcjVyVnpFMoC7OjU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UBriO0JOczpijNoQcc6SIWS7AffbF+7ldQJy+zYnulcMLP8iwwdjPVVMcChn/guKy
+         F0oJ95Rwx8ArimT40TgjCIAGGNEf9lj8jsaCOBs1UDCZRbrDoSU9W4peFokXG1XMDw
+         0jsXfWF8aCKUM9PYHIfbiZ/10bvc4F0YjrtZyaYA=
+Date:   Fri, 31 Jul 2020 15:49:50 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Pu Wen <puwen@hygon.cn>
+Cc:     rjw@rjwysocki.net, lenb@kernel.org, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+Subject: Re: [PATCH] i2c: designware: Add device HID for Hygon I2C controller
+Message-ID: <20200731134950.GB1679@kunai>
+References: <20200731084845.24459-1-puwen@hygon.cn>
 MIME-Version: 1.0
-In-Reply-To: <1596094348-10230-1-git-send-email-tanxiaofei@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="K8nIJk4ghYZn606h"
+Content-Disposition: inline
+In-Reply-To: <20200731084845.24459-1-puwen@hygon.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tan,
 
-On 30/07/2020 08:32, Xiaofei Tan wrote:
-> After the following commit applied, user-mode SEA is preferentially
-> processed by APEI. Do memory failure to recover.
-> 
-> But there are some problems:
-> 1) The function apei_claim_sea() has processed an CPER, does not
-> mean that memory failure handling has done. Because the firmware-first
-> RAS error is reported by both producer and consumer. Mostly SEA uses
-> ARM processor error section to report as a consumer. (The producer could
-> be DDRC and cache, and use memory error section and other error section
-> to report). But memory failure handling for ARM processor error section
-> has not been supported. We should add it.
+--K8nIJk4ghYZn606h
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I can't follow what you are saying here.
+On Fri, Jul 31, 2020 at 04:48:45PM +0800, Pu Wen wrote:
+> Add device HID HYGO0010 to match the Hygon ACPI Vendor ID (HYGO) that
+> was registered in http://www.uefi.org/acpi_id_list, and the I2C
+> controller on Hygon paltform will use the HID.
+>=20
+> Signed-off-by: Pu Wen <puwen@hygon.cn>
 
-APEI doesn't parse the Processor Error records. This has always been true, its not a
-regression introduced by that commit.
+I can take this via I2C, but I'd need an ack from Rafael or Len.
 
+Or it can go via ACPI, fine with me
 
-> 2) Some hardware platforms can't record physical address each time. But
-> they could always have reported a firmware-first RAS error using ARM
-> processor error section. Such platform should update firmware. Don't
-> report the RAS error when physical address is not recorded.
+Acked-by: Wolfram Sang <wsa@kernel.org>
 
-Eh? If firmware fails to describe the error, we should carry on and pretend nothing happened?
+> ---
+>  drivers/acpi/acpi_apd.c                     | 1 +
+>  drivers/i2c/busses/i2c-designware-platdrv.c | 1 +
+>  2 files changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/acpi/acpi_apd.c b/drivers/acpi/acpi_apd.c
+> index ba2612e9a0eb..f24f6d3f1fa5 100644
+> --- a/drivers/acpi/acpi_apd.c
+> +++ b/drivers/acpi/acpi_apd.c
+> @@ -240,6 +240,7 @@ static const struct acpi_device_id acpi_apd_device_id=
+s[] =3D {
+>  	{ "AMDI0020", APD_ADDR(cz_uart_desc) },
+>  	{ "AMD0030", },
+>  	{ "AMD0040", APD_ADDR(st_misc_desc)},
+> +	{ "HYGO0010", APD_ADDR(wt_i2c_desc) },
+>  #endif
+>  #ifdef CONFIG_ARM64
+>  	{ "APMC0D0F", APD_ADDR(xgene_i2c_desc) },
+> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/bu=
+sses/i2c-designware-platdrv.c
+> index a71bc58fc03c..0dfeb2d11603 100644
+> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
+> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+> @@ -55,6 +55,7 @@ static const struct acpi_device_id dw_i2c_acpi_match[] =
+=3D {
+>  	{ "HISI02A1", 0 },
+>  	{ "HISI02A2", 0 },
+>  	{ "HISI02A3", 0 },
+> +	{ "HYGO0010", ACCESS_INTR_MASK },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(acpi, dw_i2c_acpi_match);
+> --=20
+> 2.23.0
+>=20
 
-I think if the APEI code gets CPER records that have the fields linux needs to handle the
-error, (for memory: that's the physical address), it should return an error to the caller,
-as the work hasn't been done.
+--K8nIJk4ghYZn606h
+Content-Type: application/pgp-signature; name="signature.asc"
 
-In the case of arm64's synchronous external abort, the response should be the
-apei_claim_sea() code not claiming the abort, as there is a problem with the records.
-Certainly the current behaviour can be improved.
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8kIX4ACgkQFA3kzBSg
+Kbapvg//XojrXKWxAnwxZ4yM08TGa5ZO4BFLsrF2TAc/GlLtSahmH5JO7t9fkYOB
+jn5HbtxIGEqYEP6uQLVMgT+WGdAdCu1kXI9BbzZNYG2Gm7J8EI7ui1CWrdXkXm8/
+R1yQ/AhszXe1BUm9Y3UWaioqpyTqN8bB5fgsgWTFEjuxneLNoA0T+kduXPiRsyTA
+nUqL/7rl/8BWCvpVd26aPGIUgQFXftFBXhjMBzyPRrBEZUcDITAdhYG5LoATQjz1
+O6kcRszY3wcNFtxiC84oI4KbMErnExHSvcugI7x7jIAFGyEeQBUubdRychckMLEN
+Oma3uXCDWt/AfkUc67fWAF75sToFV830StjoKmT+pqMQiLI7c8Nv4FjHdz/p/Quv
+UyrYhh2hynaq0+4UQATEqvCMulGdw5tchPhOVIMkNFGyw24iQkTh7guFkmA5jAwB
+/i7sPVt3AzyJ/u/JyG/aFPkHa3xAVD4RZd0EPwMNisL+tBnUQlTedaMkUMPuBEFU
+5/OymFfNhKYMjTAn/EHsVJtEZir3dT9bQyeCPyulOpo0SHHlBY87CbY0b74wMRNj
+m5J+TCn0xtiiILXe1+p6iwbj6vdALpsbQcLHx96JQxy9gfgUMmlx8MNZm4V3pucg
+KtlfyUfaUkw+/eSbCPm0U3iQWSVZTLCR7wscP6dlje+98+tz8Q8=
+=gqTO
+-----END PGP SIGNATURE-----
 
-> Fixes: 8fcc4ae6faf8 ("arm64: acpi: Make apei_claim_sea() synchronise with APEI's irq work")
-
-I don't see how parsing this extra record fixes a bug in this commit.
-Presumably you were depending on the arch code killing the thread regardless of whether
-APEI found work to do ... which masked the fact it finds work, but doesn't know what to do
-with it.
-
-
-I'm assuming your platform describes errors it detects in the cache as processor errors
-for the cache, instead of memory errors.
-
-
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 81bf71b..07bfa28 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -466,6 +466,44 @@ static bool ghes_handle_memory_failure(struct acpi_hest_generic_data *gdata,
->  	return false;
->  }
->  
-> +static bool ghes_handle_arm_hw_error(struct acpi_hest_generic_data *gdata, int sev)
-> +{
-> +	struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
-> +	struct cper_arm_err_info *err_info;
-> +	bool queued = false;
-> +	int sec_sev, i;
-> +
-> +	log_arm_hw_error(err);
-> +
-> +	if (!IS_ENABLED(CONFIG_ACPI_APEI_MEMORY_FAILURE))
-> +		return false;
-
-> +	sec_sev = ghes_severity(gdata->error_severity);
-> +	if (sev != GHES_SEV_RECOVERABLE || sec_sev != GHES_SEV_RECOVERABLE)
-> +		return false;
-
-This is to filter out corrected errors? What if this section is fatal?
-The panic on fatal code only looks as the severity in the Generic Error Status Block.
-
-I think the right thing to do is to explicitly test each "Cache error structure"'s bits
-for corrected/uncorrected instead.
-
-These top-level severities describe a group of records. You may have a corrected error
-event that still has latent faults left in the system.
-
-
-This thing has multiple variable length entries in it.
-Could we sanity test that 'err->err_info_num' doesn't take us outside err->section_length?
-(we already do this sort of thing in the probe code)
-
-
-> +	err_info = (struct cper_arm_err_info *) (err + 1);
-> +	for (i = 0; i < err->err_info_num; i++, err_info++) {
-> +		unsigned long pfn;
-
-Please check the type of this error, and only invoke memory_failure_queue() for caches.
-(does your firmware generate the other types too?)
-
-
-For a bus error, why are we complaining that this isn't memory?
-If this were a TLB error, what does the physical address mean? Is it part of the page
-tables or the final output address? (Who knows what the physical address means for a
-micro-architectural error!)
-
-I think these other types should print a ratelimited warning that this type isn't
-understood. We shouldn't pretend they are memory and hope for the best.
-
-
-Please check the corrected or uncorrected bit in the type-specific u64 for caches.
-
-
-> +		if (!(err_info->validation_bits & CPER_ARM_INFO_VALID_PHYSICAL_ADDR))
-> +			continue;
-
-
-> +		pfn = PHYS_PFN(err_info->physical_fault_addr);
-> +		if (!pfn_valid(pfn)) {
-
-> +			pr_warn(FW_WARN GHES_PFX
-
-ratelimit!
-
-> +				"Invalid address in generic error data: 0x%#llx\n",
-> +				err_info->physical_fault_addr);
-> +			continue;
-> +		}
-> +
-> +		memory_failure_queue(pfn, 0);
-> +		queued = true;
-
-This bit is almost the same as part of ghes_handle_memory_failure(), please pull that out
-to a common helper. I think you'll need to pass the flags for memory_failure_queue() in.
-
-
-
-Thanks,
-
-James
-
-> +	}
-> +
-> +	return queued;
-> +}
-> +
->  /*
->   * PCIe AER errors need to be sent to the AER driver for reporting and
->   * recovery. The GHES severities map to the following AER severities and
-> @@ -543,9 +581,7 @@ static bool ghes_do_proc(struct ghes *ghes,
->  			ghes_handle_aer(gdata);
->  		}
->  		else if (guid_equal(sec_type, &CPER_SEC_PROC_ARM)) {
-> -			struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
-> -
-> -			log_arm_hw_error(err);
-> +			queued = ghes_handle_arm_hw_error(gdata, sev);
->  		} else {
->  			void *err = acpi_hest_get_payload(gdata);
->  
-> 
-
+--K8nIJk4ghYZn606h--
