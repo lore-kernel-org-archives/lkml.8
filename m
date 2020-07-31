@@ -2,74 +2,75 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FDDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1248AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D56072245C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:41:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kzu4uiij"
+	by mail.kernel.org (Postfix) with ESMTP id E760E21744
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:42:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731140AbgGaQlG (ORCPT
+        id S1732326AbgGaQmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 12:41:06 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:60988 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729860AbgGaQlF (ORCPT
+        Fri, 31 Jul 2020 12:42:06 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:33088 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729074AbgGaQmG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 12:41:05 -0400
-Received: from viremana-dev.fwjladdvyuiujdukmejncen4mf.xx.internal.cloudapp.net (unknown [13.66.132.26])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 42CA620B4908;
-        Fri, 31 Jul 2020 09:41:05 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 42CA620B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1596213665;
-        bh=QiCtwckG2vlecyqkJ9uggElJgAkUp42WolJ2XV4u8BI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=kzu4uiijNX3VibaBuV7Oa5kLr4cqBTreqcq3OdXtgZj7WM/Ousq81OnIpX7VWDz+s
-         MksQMyTPBqG1ukv4NzJsA30GIZJis8xlfl43fHvsC+vQaC39gXVKu5bwQ1K3PYrPO6
-         HWYVO5U64RQ0OAbvtqZgyh4yd6hnL0XM1M0XP6BA=
-Date:   Fri, 31 Jul 2020 16:41:05 +0000
-From:   Vineeth Pillai <viremana@linux.microsoft.com>
-To:     Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, fweisbec@gmail.com,
-        keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Joel Fernandes <joelaf@google.com>, joel@joelfernandes.org,
-        vineethrp@gmail.com, Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [RFC PATCH 00/16] Core scheduling v6
-Message-ID: <20200731164105.d2emgswenqc6hqyp@viremana-dev.fwjladdvyuiujdukmejncen4mf.xx.internal.cloudapp.net>
+        Fri, 31 Jul 2020 12:42:06 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id BC1488030808;
+        Fri, 31 Jul 2020 16:41:58 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id XQN6kdJO9y5U; Fri, 31 Jul 2020 19:41:58 +0300 (MSK)
+Date:   Fri, 31 Jul 2020 19:41:57 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Dinh Nguyen <dinguyen@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        "Nguyen, Dinh" <dinh.nguyen@intel.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: clocksource: dw_apb_timer: commit 6d2e16a3181b broke Arria10
+ platform
+Message-ID: <20200731164157.4xuh3kwqs7sfuvmn@mobilestation>
+References: <SA0PR11MB4590258490EB0DD191778F04E4710@SA0PR11MB4590.namprd11.prod.outlook.com>
+ <20200731064858.ts22p4i5dqcdqpaj@mobilestation>
+ <5304f0ca-e098-a9f0-9f72-1485a286d93a@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <cover.1593530334.git.vpillai@digitalocean.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <5304f0ca-e098-a9f0-9f72-1485a286d93a@kernel.org>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/07/26 06:49AM, Vineeth Pillai wrote:
+On Fri, Jul 31, 2020 at 10:56:37AM -0500, Dinh Nguyen wrote:
+> Hi Serge,
 > 
+> On 7/31/20 1:48 AM, Serge Semin wrote:
+> > Hello Dinh,
+> > It must be something wrong with your timer2 and timer3 declared in the Arria10
+> > dts because the patch didn't change anything for the first two timers (timer0 and
+> > timer1). It just permits to register all DW APB Timers found in dts.
+> > 
+> > If those timers are broken, then you should have disabled them in the dts in the
+> > first place. If they are normal, then you need to investigate further why do
+> > they cause the kernel panic.
+> > 
 > 
-> Sixth iteration of the Core-Scheduling feature.
->
-I am no longer with DigitalOcean. Kindly use this email address for all
-future responses.
 
-Thanks,
-Vineeth
+> Indeed, the dts reg entry for timer3 was broken. Thanks alot for
+> exposing the issue. Apologies for the noise.
+
+No worries. Glad I could help.
+
+-Sergey
+
+> 
+> Dinh
