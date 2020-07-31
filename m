@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA9EC433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57AD1C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 911D122B3F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F302074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:16:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596215811;
-	bh=hlItZAQWJlxNflkr46VdpdqAXNfUZVDttGECeld9uHE=;
+	s=default; t=1596215817;
+	bh=vwKcDeUcgTWeIidvhlld4ke5swT+ULHh564WFNgdbbs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yQURPuqju2m8GiV0cBfX/PL20IlXh9eC+vAD54mPtTkyU0z6PibYHJHDXeAcCww6J
-	 r4bA0avtvhVLVNipZX9Jm6a1p+btifGkbWbDz99J/S4qJbrI/3cVZ/MdaYgpUE/66B
-	 zU07s0zKWF8t7Pf5lhCo1eAaw7S4OdJFeFDOUvTE=
+	b=Hek0zvZmn69e3B+mkvojsjSwWHR9pxBx5lvcHfFqxW8YGyzNqPLVb+W9CI4x8MGRp
+	 EWjnhiXGUHRw20SPlZeFRgpdLh5oHUixixBFUroWvoBQJzP/Vm56KUK0L4x8qXn6Ka
+	 jIwtJh8wV7tH9dJPZKwS+rL+glNdGjP+seVsexEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387657AbgGaRQu (ORCPT
+        id S2387667AbgGaRQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 13:16:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34796 "EHLO mail.kernel.org"
+        Fri, 31 Jul 2020 13:16:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387596AbgGaRQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 13:16:34 -0400
+        id S2387596AbgGaRQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 13:16:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94E9E22B42;
-        Fri, 31 Jul 2020 17:16:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 954762074B;
+        Fri, 31 Jul 2020 17:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596215792;
-        bh=hlItZAQWJlxNflkr46VdpdqAXNfUZVDttGECeld9uHE=;
+        s=default; t=1596215811;
+        bh=vwKcDeUcgTWeIidvhlld4ke5swT+ULHh564WFNgdbbs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jpI8p57eSdFGtdJdi5n/bygmK+ix3ua0FjQWZJE6uZFBc05LQRKeU1U5UWLF7XHcv
-         oZ+gWDWoSU07o2XdhJgSkP2WYY3aQ7IkhqYk0DLF+glO1STO4N6u08jjiFzpKSJ42X
-         RQsJWD/6jBw319yZIapLQfelYhLLxuZiJ58egnnM=
+        b=wozz6bj/jCZuZhfEDxpHQBUR1ocErMn7a86LRqZ6ZWBYoevYOxH01cUuvFlevavNX
+         PRGcAUkXlK8wy/Gp1Z3R+/p0eFMgmWlrHkOjgcKP/HdbyFiquf//yW8N8JGeGSOAbe
+         csfa8JXgrtXnCKqM9z6vHC9DUF1YehG9hOL5pz0o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
         torvalds@linux-foundation.org, stable@vger.kernel.org
 Cc:     lwn@lwn.net, jslaby@suse.cz,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: Linux 4.19.136
-Date:   Fri, 31 Jul 2020 19:16:16 +0200
-Message-Id: <1596215776220101@kroah.com>
+Subject: Re: Linux 5.4.55
+Date:   Fri, 31 Jul 2020 19:16:29 +0200
+Message-Id: <159621578812718@kroah.com>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <159621577667130@kroah.com>
-References: <159621577667130@kroah.com>
+In-Reply-To: <1596215788160189@kroah.com>
+References: <1596215788160189@kroah.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,23 +58,37 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 diff --git a/Makefile b/Makefile
-index 1253143f3f6f..a76c159bb605 100644
+index ea711f30de29..072fe0eaa740 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -1,7 +1,7 @@
  # SPDX-License-Identifier: GPL-2.0
- VERSION = 4
- PATCHLEVEL = 19
--SUBLEVEL = 135
-+SUBLEVEL = 136
+ VERSION = 5
+ PATCHLEVEL = 4
+-SUBLEVEL = 54
++SUBLEVEL = 55
  EXTRAVERSION =
- NAME = "People's Front"
+ NAME = Kleptomaniac Octopus
+ 
+diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+index 0bd9b291bb29..92f0960e9014 100644
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -1073,6 +1073,9 @@ static void *wakeup_sources_stats_seq_next(struct seq_file *m,
+ 		break;
+ 	}
+ 
++	if (!next_ws)
++		print_wakeup_source_stats(m, &deleted_ws);
++
+ 	return next_ws;
+ }
  
 diff --git a/drivers/base/regmap/regmap-debugfs.c b/drivers/base/regmap/regmap-debugfs.c
-index 056e34ce1edd..182b1908edec 100644
+index e16afa27700d..f58baff2be0a 100644
 --- a/drivers/base/regmap/regmap-debugfs.c
 +++ b/drivers/base/regmap/regmap-debugfs.c
-@@ -209,6 +209,9 @@ static ssize_t regmap_read_debugfs(struct regmap *map, unsigned int from,
+@@ -227,6 +227,9 @@ static ssize_t regmap_read_debugfs(struct regmap *map, unsigned int from,
  	if (*ppos < 0 || !count)
  		return -EINVAL;
  
@@ -84,7 +98,7 @@ index 056e34ce1edd..182b1908edec 100644
  	buf = kmalloc(count, GFP_KERNEL);
  	if (!buf)
  		return -ENOMEM;
-@@ -357,6 +360,9 @@ static ssize_t regmap_reg_ranges_read_file(struct file *file,
+@@ -371,6 +374,9 @@ static ssize_t regmap_reg_ranges_read_file(struct file *file,
  	if (*ppos < 0 || !count)
  		return -EINVAL;
  
@@ -94,8 +108,21 @@ index 056e34ce1edd..182b1908edec 100644
  	buf = kmalloc(count, GFP_KERNEL);
  	if (!buf)
  		return -ENOMEM;
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+index cd9d08695cc1..00c4beb760c3 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -2802,7 +2802,7 @@ static int dpaa_eth_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* Do this here, so we can be verbose early */
+-	SET_NETDEV_DEV(net_dev, dev->parent);
++	SET_NETDEV_DEV(net_dev, dev);
+ 	dev_set_drvdata(dev, net_dev);
+ 
+ 	priv = netdev_priv(net_dev);
 diff --git a/drivers/net/wan/x25_asy.c b/drivers/net/wan/x25_asy.c
-index 4f25c2d8fff0..6fe9695a5f18 100644
+index 914be5847386..cdcc380b4c26 100644
 --- a/drivers/net/wan/x25_asy.c
 +++ b/drivers/net/wan/x25_asy.c
 @@ -183,7 +183,7 @@ static inline void x25_asy_unlock(struct x25_asy *sl)
@@ -164,10 +191,10 @@ index 4f25c2d8fff0..6fe9695a5f18 100644
  		clear_bit(SLF_ESCAPE, &sl->flags);
  		sl->rcount = 0;
 diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-index 4374196b98ea..1192f1e76015 100644
+index 668e25a76d69..358deb4ff830 100644
 --- a/include/linux/tcp.h
 +++ b/include/linux/tcp.h
-@@ -225,6 +225,8 @@ struct tcp_sock {
+@@ -216,6 +216,8 @@ struct tcp_sock {
  	} rack;
  	u16	advmss;		/* Advertised MSS			*/
  	u8	compressed_ack;
@@ -176,20 +203,20 @@ index 4374196b98ea..1192f1e76015 100644
  	u32	chrono_start;	/* Start time in jiffies of a TCP chrono */
  	u32	chrono_stat[3];	/* Time in jiffies for chrono_stat stats */
  	u8	chrono_type:2,	/* current chronograph type */
-@@ -247,7 +249,7 @@ struct tcp_sock {
+@@ -238,7 +240,7 @@ struct tcp_sock {
  		save_syn:1,	/* Save headers of SYN packet */
  		is_cwnd_limited:1,/* forward progress limited by snd_cwnd? */
  		syn_smc:1;	/* SYN includes SMC */
 -	u32	tlp_high_seq;	/* snd_nxt at the time of TLP retransmit. */
 +	u32	tlp_high_seq;	/* snd_nxt at the time of TLP */
  
- /* RTT measurement */
- 	u64	tcp_mstamp;	/* most recent packet received/sent */
+ 	u32	tcp_tx_delay;	/* delay (in usec) added to TX packets */
+ 	u64	tcp_wstamp_ns;	/* departure time for next sent data packet */
 diff --git a/net/ax25/af_ax25.c b/net/ax25/af_ax25.c
-index 5c7a513bbaaa..a45db78eaf00 100644
+index e5a3dc28116d..2fdb1b573e8c 100644
 --- a/net/ax25/af_ax25.c
 +++ b/net/ax25/af_ax25.c
-@@ -1190,7 +1190,10 @@ static int __must_check ax25_connect(struct socket *sock,
+@@ -1187,7 +1187,10 @@ static int __must_check ax25_connect(struct socket *sock,
  	if (addr_len > sizeof(struct sockaddr_ax25) &&
  	    fsa->fsa_ax25.sax25_ndigis != 0) {
  		/* Valid number of digipeaters ? */
@@ -201,7 +228,7 @@ index 5c7a513bbaaa..a45db78eaf00 100644
  			err = -EINVAL;
  			goto out_release;
  		}
-@@ -1510,7 +1513,10 @@ static int ax25_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
+@@ -1507,7 +1510,10 @@ static int ax25_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
  			struct full_sockaddr_ax25 *fsa = (struct full_sockaddr_ax25 *)usax;
  
  			/* Valid number of digipeaters ? */
@@ -214,10 +241,10 @@ index 5c7a513bbaaa..a45db78eaf00 100644
  				goto out;
  			}
 diff --git a/net/core/dev.c b/net/core/dev.c
-index 4b1053057ca6..42ba150fa18d 100644
+index 727965565d31..25858f1f67cf 100644
 --- a/net/core/dev.c
 +++ b/net/core/dev.c
-@@ -5252,7 +5252,7 @@ static void flush_backlog(struct work_struct *work)
+@@ -5229,7 +5229,7 @@ static void flush_backlog(struct work_struct *work)
  	skb_queue_walk_safe(&sd->input_pkt_queue, skb, tmp) {
  		if (skb->dev->reg_state == NETREG_UNREGISTERING) {
  			__skb_unlink(skb, &sd->input_pkt_queue);
@@ -227,10 +254,10 @@ index 4b1053057ca6..42ba150fa18d 100644
  		}
  	}
 diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
-index 7614a4f42bfc..001d7f07e780 100644
+index 4c826b8bf9b1..2ebf9b252779 100644
 --- a/net/core/net-sysfs.c
 +++ b/net/core/net-sysfs.c
-@@ -1045,7 +1045,7 @@ static ssize_t tx_timeout_show(struct netdev_queue *queue, char *buf)
+@@ -1036,7 +1036,7 @@ static ssize_t tx_timeout_show(struct netdev_queue *queue, char *buf)
  	trans_timeout = queue->trans_timeout;
  	spin_unlock_irq(&queue->_xmit_lock);
  
@@ -240,21 +267,21 @@ index 7614a4f42bfc..001d7f07e780 100644
  
  static unsigned int get_netdev_queue_index(struct netdev_queue *queue)
 diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
-index f51973f458e4..935053ee7765 100644
+index 944acb1a9f29..b0c06a063776 100644
 --- a/net/core/rtnetlink.c
 +++ b/net/core/rtnetlink.c
-@@ -3146,7 +3146,8 @@ static int rtnl_newlink(struct sk_buff *skb, struct nlmsghdr *nlh,
- 			 */
- 			if (err < 0) {
- 				/* If device is not registered at all, free it now */
--				if (dev->reg_state == NETREG_UNINITIALIZED)
-+				if (dev->reg_state == NETREG_UNINITIALIZED ||
-+				    dev->reg_state == NETREG_UNREGISTERED)
- 					free_netdev(dev);
- 				goto out;
- 			}
+@@ -3231,7 +3231,8 @@ static int __rtnl_newlink(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 		 */
+ 		if (err < 0) {
+ 			/* If device is not registered at all, free it now */
+-			if (dev->reg_state == NETREG_UNINITIALIZED)
++			if (dev->reg_state == NETREG_UNINITIALIZED ||
++			    dev->reg_state == NETREG_UNREGISTERED)
+ 				free_netdev(dev);
+ 			goto out;
+ 		}
 diff --git a/net/core/sock_reuseport.c b/net/core/sock_reuseport.c
-index fd38cf1d2b02..9c85ef2b7e1d 100644
+index f3ceec93f392..40829111fe00 100644
 --- a/net/core/sock_reuseport.c
 +++ b/net/core/sock_reuseport.c
 @@ -112,6 +112,7 @@ static struct sock_reuseport *reuseport_grow(struct sock_reuseport *reuse)
@@ -266,10 +293,10 @@ index fd38cf1d2b02..9c85ef2b7e1d 100644
  	memcpy(more_reuse->socks, reuse->socks,
  	       reuse->num_socks * sizeof(struct sock *));
 diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 2896840618fa..9813d62de631 100644
+index 6d331307beca..5040f7ca37ec 100644
 --- a/net/ipv4/tcp_input.c
 +++ b/net/ipv4/tcp_input.c
-@@ -3489,10 +3489,8 @@ static void tcp_replace_ts_recent(struct tcp_sock *tp, u32 seq)
+@@ -3505,10 +3505,8 @@ static void tcp_replace_ts_recent(struct tcp_sock *tp, u32 seq)
  	}
  }
  
@@ -282,7 +309,7 @@ index 2896840618fa..9813d62de631 100644
   */
  static void tcp_process_tlp_ack(struct sock *sk, u32 ack, int flag)
  {
-@@ -3501,7 +3499,10 @@ static void tcp_process_tlp_ack(struct sock *sk, u32 ack, int flag)
+@@ -3517,7 +3515,10 @@ static void tcp_process_tlp_ack(struct sock *sk, u32 ack, int flag)
  	if (before(ack, tp->tlp_high_seq))
  		return;
  
@@ -295,10 +322,10 @@ index 2896840618fa..9813d62de631 100644
  		tp->tlp_high_seq = 0;
  	} else if (after(ack, tp->tlp_high_seq)) {
 diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index b4d0d0aa6b38..74fb211e0ea6 100644
+index 5dc7485c4076..4407193bd702 100644
 --- a/net/ipv4/tcp_output.c
 +++ b/net/ipv4/tcp_output.c
-@@ -2495,6 +2495,11 @@ void tcp_send_loss_probe(struct sock *sk)
+@@ -2564,6 +2564,11 @@ void tcp_send_loss_probe(struct sock *sk)
  	int pcount;
  	int mss = tcp_current_mss(sk);
  
@@ -310,7 +337,7 @@ index b4d0d0aa6b38..74fb211e0ea6 100644
  	skb = tcp_send_head(sk);
  	if (skb && tcp_snd_wnd_test(tp, skb, mss)) {
  		pcount = tp->packets_out;
-@@ -2512,10 +2517,6 @@ void tcp_send_loss_probe(struct sock *sk)
+@@ -2581,10 +2586,6 @@ void tcp_send_loss_probe(struct sock *sk)
  		return;
  	}
  
@@ -321,7 +348,7 @@ index b4d0d0aa6b38..74fb211e0ea6 100644
  	if (skb_still_in_host_queue(sk, skb))
  		goto rearm_timer;
  
-@@ -2537,10 +2538,12 @@ void tcp_send_loss_probe(struct sock *sk)
+@@ -2606,10 +2607,12 @@ void tcp_send_loss_probe(struct sock *sk)
  	if (__tcp_retransmit_skb(sk, skb, 1))
  		goto rearm_timer;
  
@@ -336,10 +363,10 @@ index b4d0d0aa6b38..74fb211e0ea6 100644
  	/* Reset s.t. tcp_rearm_rto will restart timer from now */
  	inet_csk(sk)->icsk_pending = 0;
 diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
-index 0ef04cda1b27..2aacf2b34834 100644
+index f3b7cb725c1b..5d016bbdf16e 100644
 --- a/net/ipv4/udp.c
 +++ b/net/ipv4/udp.c
-@@ -433,7 +433,7 @@ static struct sock *udp4_lib_lookup2(struct net *net,
+@@ -413,7 +413,7 @@ static struct sock *udp4_lib_lookup2(struct net *net,
  				     struct udp_hslot *hslot2,
  				     struct sk_buff *skb)
  {
@@ -348,9 +375,9 @@ index 0ef04cda1b27..2aacf2b34834 100644
  	int score, badness;
  	u32 hash = 0;
  
-@@ -443,17 +443,20 @@ static struct sock *udp4_lib_lookup2(struct net *net,
+@@ -423,17 +423,20 @@ static struct sock *udp4_lib_lookup2(struct net *net,
  		score = compute_score(sk, net, saddr, sport,
- 				      daddr, hnum, dif, sdif, exact_dif);
+ 				      daddr, hnum, dif, sdif);
  		if (score > badness) {
 +			reuseport_result = NULL;
 +
@@ -374,7 +401,7 @@ index 0ef04cda1b27..2aacf2b34834 100644
  		}
  	}
  	return result;
-@@ -1986,7 +1989,7 @@ static int udp_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
+@@ -2045,7 +2048,7 @@ static int udp_queue_rcv_one_skb(struct sock *sk, struct sk_buff *skb)
  	/*
  	 * 	UDP-Lite specific tests, ignored on UDP sockets
  	 */
@@ -384,10 +411,10 @@ index 0ef04cda1b27..2aacf2b34834 100644
  		/*
  		 * MIB statistics other than incrementing the error count are
 diff --git a/net/ipv6/ip6_gre.c b/net/ipv6/ip6_gre.c
-index f5144573c45c..7cc9cd83ecb5 100644
+index 04d76f043e18..44876509d215 100644
 --- a/net/ipv6/ip6_gre.c
 +++ b/net/ipv6/ip6_gre.c
-@@ -1580,17 +1580,18 @@ static void ip6gre_destroy_tunnels(struct net *net, struct list_head *head)
+@@ -1560,17 +1560,18 @@ static void ip6gre_destroy_tunnels(struct net *net, struct list_head *head)
  static int __net_init ip6gre_init_net(struct net *net)
  {
  	struct ip6gre_net *ign = net_generic(net, ip6gre_net_id);
@@ -410,7 +437,7 @@ index f5144573c45c..7cc9cd83ecb5 100644
  	dev_net_set(ign->fb_tunnel_dev, net);
  	/* FB netdevice is special: we have one, and only one per netns.
  	 * Allowing to move it to another netns is clearly unsafe.
-@@ -1610,7 +1611,7 @@ static int __net_init ip6gre_init_net(struct net *net)
+@@ -1590,7 +1591,7 @@ static int __net_init ip6gre_init_net(struct net *net)
  	return 0;
  
  err_reg_dev:
@@ -420,21 +447,21 @@ index f5144573c45c..7cc9cd83ecb5 100644
  	return err;
  }
 diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
-index 1979922bcf67..6799ad462be3 100644
+index 9fec580c968e..6762430280f5 100644
 --- a/net/ipv6/udp.c
 +++ b/net/ipv6/udp.c
-@@ -167,7 +167,7 @@ static struct sock *udp6_lib_lookup2(struct net *net,
- 		int dif, int sdif, bool exact_dif,
- 		struct udp_hslot *hslot2, struct sk_buff *skb)
+@@ -148,7 +148,7 @@ static struct sock *udp6_lib_lookup2(struct net *net,
+ 		int dif, int sdif, struct udp_hslot *hslot2,
+ 		struct sk_buff *skb)
  {
 -	struct sock *sk, *result;
 +	struct sock *sk, *result, *reuseport_result;
  	int score, badness;
  	u32 hash = 0;
  
-@@ -177,17 +177,20 @@ static struct sock *udp6_lib_lookup2(struct net *net,
+@@ -158,17 +158,20 @@ static struct sock *udp6_lib_lookup2(struct net *net,
  		score = compute_score(sk, net, saddr, sport,
- 				      daddr, hnum, dif, sdif, exact_dif);
+ 				      daddr, hnum, dif, sdif);
  		if (score > badness) {
 +			reuseport_result = NULL;
 +
@@ -458,7 +485,7 @@ index 1979922bcf67..6799ad462be3 100644
  			badness = score;
  		}
  	}
-@@ -606,7 +609,7 @@ static int udpv6_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
+@@ -643,7 +646,7 @@ static int udpv6_queue_rcv_one_skb(struct sock *sk, struct sk_buff *skb)
  	/*
  	 * UDP-Lite specific tests, ignored on UDP sockets (see net/ipv4/udp.c).
  	 */
@@ -468,10 +495,10 @@ index 1979922bcf67..6799ad462be3 100644
  		if (up->pcrlen == 0) {          /* full coverage was set  */
  			net_dbg_ratelimited("UDPLITE6: partial coverage %d while full coverage %d requested\n",
 diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
-index 0baffc9666e6..b5671966fa03 100644
+index 14c101e104ce..1ce1e710d025 100644
 --- a/net/qrtr/qrtr.c
 +++ b/net/qrtr/qrtr.c
-@@ -1013,6 +1013,7 @@ static int qrtr_release(struct socket *sock)
+@@ -1004,6 +1004,7 @@ static int qrtr_release(struct socket *sock)
  		sk->sk_state_change(sk);
  
  	sock_set_flag(sk, SOCK_DEAD);
@@ -480,10 +507,10 @@ index 0baffc9666e6..b5671966fa03 100644
  
  	if (!sock_flag(sk, SOCK_ZAPPED))
 diff --git a/net/rxrpc/recvmsg.c b/net/rxrpc/recvmsg.c
-index 0374b0623c8b..6e9d977f0797 100644
+index 8578c39ec839..6896a33ef842 100644
 --- a/net/rxrpc/recvmsg.c
 +++ b/net/rxrpc/recvmsg.c
-@@ -453,7 +453,7 @@ int rxrpc_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
+@@ -464,7 +464,7 @@ int rxrpc_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
  	    list_empty(&rx->recvmsg_q) &&
  	    rx->sk.sk_state != RXRPC_SERVER_LISTENING) {
  		release_sock(&rx->sk);
@@ -493,10 +520,10 @@ index 0374b0623c8b..6e9d977f0797 100644
  
  	if (list_empty(&rx->recvmsg_q)) {
 diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
-index 250d3dae8af4..caee7632c257 100644
+index 5e9c43d4a314..49d03c8c64da 100644
 --- a/net/rxrpc/sendmsg.c
 +++ b/net/rxrpc/sendmsg.c
-@@ -278,7 +278,7 @@ static int rxrpc_send_data(struct rxrpc_sock *rx,
+@@ -306,7 +306,7 @@ static int rxrpc_send_data(struct rxrpc_sock *rx,
  	/* this should be in poll */
  	sk_clear_bit(SOCKWQ_ASYNC_NOSPACE, sk);
  
@@ -506,12 +533,12 @@ index 250d3dae8af4..caee7632c257 100644
  
  	more = msg->msg_flags & MSG_MORE;
 diff --git a/net/sctp/stream.c b/net/sctp/stream.c
-index 87061a4bb44b..516bc48be5bc 100644
+index c1a100d2fed3..e13cbd5c0193 100644
 --- a/net/sctp/stream.c
 +++ b/net/sctp/stream.c
-@@ -97,17 +97,11 @@ static size_t fa_index(struct flex_array *fa, void *elem, size_t count)
- 	return index;
- }
+@@ -22,17 +22,11 @@
+ #include <net/sctp/sm.h>
+ #include <net/sctp/stream_sched.h>
  
 -/* Migrates chunks from stream queues to new stream queues if needed,
 - * but not across associations. Also, removes those chunks to streams
@@ -528,7 +555,7 @@ index 87061a4bb44b..516bc48be5bc 100644
  
  	asoc = container_of(stream, struct sctp_association, stream);
  	outq = &asoc->outqueue;
-@@ -131,6 +125,19 @@ static void sctp_stream_outq_migrate(struct sctp_stream *stream,
+@@ -56,6 +50,19 @@ static void sctp_stream_outq_migrate(struct sctp_stream *stream,
  
  		sctp_chunk_free(ch);
  	}
@@ -548,7 +575,7 @@ index 87061a4bb44b..516bc48be5bc 100644
  
  	if (new) {
  		/* Here we actually move the old ext stuff into the new
-@@ -1136,11 +1143,13 @@ struct sctp_chunk *sctp_process_strreset_resp(
+@@ -1038,11 +1045,13 @@ struct sctp_chunk *sctp_process_strreset_resp(
  		nums = ntohs(addstrm->number_of_streams);
  		number = stream->outcnt - nums;
  
