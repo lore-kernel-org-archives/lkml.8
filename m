@@ -2,84 +2,163 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C26EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 03:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6034C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45C94207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 03:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDAA42072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:00:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="jedJjKL2"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="SeUXU1Ot"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731362AbgGaDyL (ORCPT
+        id S1725910AbgGaEAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 23:54:11 -0400
-Received: from sonic316-55.consmr.mail.gq1.yahoo.com ([98.137.69.31]:36445
-        "EHLO sonic316-55.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730820AbgGaDyK (ORCPT
+        Fri, 31 Jul 2020 00:00:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgGaEAQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 23:54:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1596167650; bh=e1ptG1D791JJl8PSL08z3ayw20EnRWQZ+Ui9pEusVKU=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=jedJjKL22CSkEihifbFrur/93tlvsy57uLCo0S4tWStLPM5vMpDnZl/IGPIcYpKBkojqFdBn4uMvUQ3EulXVqskVPIiUq2nJMJrCwIcBV2/x3ak8AYi8wgkrgVfP44La5RXfq8fFJdu+rbDD0u2xEoIGK0oKND0B9nHPTivS4lZrpz4aDJy/8HZNgeQjkNB72GvXGA7mgrokOp/KRnR18BFN58b3X3853QDNlxzC3cLBJc6YgJU4zpsrlnrcLqfLV0rHbRYDEMmaJsNEXt6I6naEazKSouUUcJt0Z1j2nuQg462cdHlUFfoLvavxcDM8Wtuvbl7CRv68PHT2n5hC1A==
-X-YMail-OSG: ISP22rwVM1mMvnOi2MknChjsIFIDaXj_IaM1AOX93e_cp4wu80ANzHYPb5B09qS
- PRUKBAVCGOAl_nOA4iguOe9dlO4mdber5.hETt4EznAyM7YIAyaWQHGwz_bCd153W.G2CbwfPzja
- 1vOAl9mpQfbD4r99RpsEu8mGh12KLo3EKGDb4GnphKL5qShWJqpaZEEjHrzWoUytc6f0Qx.VcScZ
- 39Pr_0FN1yWuPg8BIHM.fAI.95.OgCnhWeHLzBnjTXsoPq1B5oWLDPbIr_X2OrlzhTt31lvj8VqB
- 3B.gTRxGVk2Ze0mwNI3ZnziLq2E57ohAYj7r._c6HUW4cvOO6AtG2bDCSm_93X4XjCiRfYWXTYzG
- HkQrYz6E_huJLqYkkPTGfYGZKII7G84PP5pt_fmxGufwwebHxFVO3tnRzD2xL0vWkPz5i6LP6lcR
- RYabzqwktit2zyjw.Yrc2nEP6pRrAtOGYj4dQXsAlnnnbszNf0RO4q2MMcTw5J5pZOP2KKCMh8Xa
- CUdt9G2Ho4pVsni_CsMmSHM6Z0YqD.EWFcOKS5D7_m_aQIv6Lm7OWx1NRQHplJYr1cTCh5c0pxkr
- QpH25AyKvMwtv1qYsx43D_kIkqIc0GTsrejP0odcOQR5U2HxcOerYIH7jFBYiyi81EoleDcVeAHa
- Jbp0HC5U_wGHvk82znzhCBwvkh4oNn0hc67TgssaZoS3IMGlupqimwX0KGZnp1qnUGhph0FezRQ6
- DQ_ct8e9VmF1wRJRtqejJ1zXw2Xo9ZzExRfO3j3tiigxTiPXzHcWMQWFqr1s6xjjgPRQDqwGHBxQ
- rlycpt8v7c4wgVBwjm6MFz982fxuacQfTWU_xSsGpIIGwx0dGyyWDv59ys0jrnnvUvG5tDaVlrG1
- 9ElyflJkja3xkvNWE8K7xptnThOGWvL17AB3C4n_GZuQ48km4NCxt4vL70PyM3xHbAcin.fl7Ub2
- nndfNEpzNh38HGz7JeKQvBGxHEL7n_OcqnFzJ9LsE294Amr8vOZgLArLzPfMqXMVm_Ttiopmi3FE
- Yc8nJlBCkw_LAXvZdNI7mkS5v29Wrif2USkjd06GsTWdIHC.44JjwLihsLnoeIAdJNrFYaO9KmwV
- 2FhIecvdNorJuxGmPXC_YFvAyDPZ9U4ZUa9wRCzPu3hMDxilAuidMqwbAP6OCr1WZNHNBsunKMa4
- u1WZMphYhZdCSE_UDnfSmC7NTE82IKXsE68RBU_msIQBebwAmQyNbleeDgyinFPxVsgLNge0wUVd
- F7b8VR0cHatpr1wSH8tuQxaWi4MW5moto6QVFh0gYodtVx46r4qGNYyq87TH7Hi8ep_GMWLLSuA.
- 5RS4nvmJOSqmboOb.JJWLdeXL8exoPE29XzAYWpFVgnY4PnLMECnEhnYMiJrRkNweRZEaXg--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.gq1.yahoo.com with HTTP; Fri, 31 Jul 2020 03:54:10 +0000
-Received: by smtp424.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 487ee864a61ff39844a03505ddc0ab34;
-          Fri, 31 Jul 2020 03:54:08 +0000 (UTC)
-Date:   Fri, 31 Jul 2020 11:54:03 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Gao Xiang <hsiangkao@redhat.com>, linux-erofs@lists.ozlabs.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] erofs: fold in used-once helper
- erofs_workgroup_unfreeze_final()
-Message-ID: <20200731035346.GA13780@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20200729180235.25443-1-hsiangkao@redhat.com>
- <0ead5f4b-87b6-6fac-9e79-629880dec155@huawei.com>
+        Fri, 31 Jul 2020 00:00:16 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7C2EC061574
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 21:00:15 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id k13so8352166plk.13
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 21:00:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=eOrHHEoLbmShZn06KY0pJBvl5BkGI3eW5SQrWZnkh+k=;
+        b=SeUXU1OtZXoWO6ae494d5HYy+HUe0M+mNFo026ChmcqHBAjcDs9V80/uhRP4a7PKjb
+         qXbYeRuXgDE4s7IQenxwhYy6uFhklQHZKvhbmOspwLZj1UI+wztYWXayBG/l5gis8xTa
+         f+i2JDgwOI5xmwctq1flN6q4eVaLXD5tQ2s/qJwT86hsUEihzpMY83aov2TOYy0Fxwtt
+         4tfLLZh7lpBfhCWe0jShT59UOskPmyAbzO4CGARlv8Yjqy/yqwW5N7R3/YJ10WlaURHz
+         nUlWlptQYZpQLvyXtYLdfVcmcbezVxVG0arkuLMzni2s0EIOsvsc+d7qpcuASOoOlozZ
+         18gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=eOrHHEoLbmShZn06KY0pJBvl5BkGI3eW5SQrWZnkh+k=;
+        b=WHzx3zQZHTZK9TO9EuHWxQHrrCxfskCCpuageMWtlW8Qq2bWUh1BbyMSkgCBD8niVo
+         TIUr5DpO0EISHHLioMs/O/sJ8jHZybyFAId7JJADFYxIQN/Zs3gKK+ZJ4YqZ6DLTaNgH
+         fDFjIZJ1TlxzX9JFWLSSiEiDbyf+d2GD/jfjXEZ/+ekjeU1Hb/3tJak5RYQg1/rseyeS
+         JFNflySn/dGwIn7dZx4wdj2xVIOHaZqsOGWSZm9Xh8vaWNDEH0c8Cd0eQ+4xBRm5E7v7
+         IC/pQN9YZPWG4x0Rm0nUWGMnwGfJ118VyVKnY0AcpV8SCLswPghVCNw7nNBpuyvl9/nQ
+         RG9g==
+X-Gm-Message-State: AOAM533d4zEtz2OD6j2+57rGtY5kYTYbtFfHClXD+DxlNDEWZ7rh+z2+
+        PHx2qR9XoOwIwLzGbuWzXED1AiGgBYqJWTUC
+X-Google-Smtp-Source: ABdhPJypDiBZdUEFJHNXox9cuGIFsD4pvvvYPGbty0wVpHF8S7scd+2yhjLSPoCPxE58vNL7G9kE4A==
+X-Received: by 2002:a05:6a00:2295:: with SMTP id f21mr1875024pfe.51.1596168015171;
+        Thu, 30 Jul 2020 21:00:15 -0700 (PDT)
+Received: from [10.91.184.194] ([103.136.220.73])
+        by smtp.gmail.com with ESMTPSA id y10sm8077014pff.187.2020.07.30.21.00.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jul 2020 21:00:14 -0700 (PDT)
+Subject: Re: [External] Re: [PATCH 1/2] ftrace: clear module from hash of all
+ ftrace ops
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
+        songmuchun@bytedance.com
+References: <20200728102720.46837-1-zhouchengming@bytedance.com>
+ <20200728085320.6b04e03f@oasis.local.home>
+ <557fa115-1247-e058-4a18-e73f6fb7d636@bytedance.com>
+ <20200728132630.678f94f7@oasis.local.home>
+From:   Chengming Zhou <zhouchengming@bytedance.com>
+Message-ID: <2d058d75-9f63-ff29-0bca-5ac267bc0bf2@bytedance.com>
+Date:   Fri, 31 Jul 2020 12:00:11 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0ead5f4b-87b6-6fac-9e79-629880dec155@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Mailer: WebService/1.1.16271 hermes_aol Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
+In-Reply-To: <20200728132630.678f94f7@oasis.local.home>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 11:49:04AM +0800, Chao Yu wrote:
-> On 2020/7/30 2:02, Gao Xiang wrote:
-> > It's expected that erofs_workgroup_unfreeze_final() won't
-> > be used in other places. Let's fold it to simplify the code.
-> > 
-> > Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
-> 
-> Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-Thanks for the review :)
+在 2020/7/29 上午1:26, Steven Rostedt 写道:
+> On Wed, 29 Jul 2020 00:59:33 +0800
+> Chengming Zhou <zhouchengming@bytedance.com> wrote:
+>
+>
+>>> i.e.
+>>>
+>>>   # echo some_module_function > set_ftrace_filter
+>>>   # rmmod module_with_that_function
+>>>   # insmod module_with_same_address_of_function
+>>>   # echo function > current_tracer
+>>>
+>>> Now the tr->ops->hash would still have the function of the original
+>>> module.  
+>> I thought all ftrace_ops has non empty func_hash are on the ftrace 
+>> global list...
+> Nope, the two are disjoint.
+>
+>> Well, so I just leave this function unmodified.
+>>
+>> Just call that new function register_ftrace_ops_hash() from 
+>> ftrace_release_mod.
+> I would say to have anything that uses one of the
+> ftrace_set_filter/notrace* functions, to also register itself for
+> module removal.
+>
+> 	register_ftrace_mod_removal(struct ftrace_ops *ops);
+>
+> and then also have a unregister_ftrace_mod_removal() as there needs to
+> be a way to remove it from the list before the ops gets freed.
+>
+> Then these functions would add the ops to a list, and this list is
+> traversed to remove modules. The trace_arrays can register their ops
+> too, so you can update that function.
+>
+> -- Steve
 
-Thanks,
-Gao Xiang
 
-> 
-> Thanks,
+I thought about this, and at last I think you are right that it's better
+the owner of the hash
+
+do the ip clean work instead of the ftrace system...  so we should fix
+kprobe's handling
+
+of module going, not in ftrace.
+
+Thanks!
+
+>
+>> Thanks!
+>>
+>>> Either have all owners of ftrace_ops handle this case, or add a helper
+>>> function to handle it for them. But using ftarce_ops_list is the wrong
+>>> place to do it.
+>>>
+>>> -- Steve
+>>>
+>>>  
+>>>> +	mutex_lock(&ftrace_lock);
+>>>> +
+>>>> +	do_for_each_ftrace_op(op, ftrace_ops_list) {
+>>>> +		if (!op->func_hash)
+>>>>   			continue;
+>>>> -		mutex_lock(&tr->ops->func_hash->regex_lock);
+>>>> -		clear_mod_from_hash(pg, tr->ops->func_hash->filter_hash);
+>>>> -		clear_mod_from_hash(pg, tr->ops->func_hash->notrace_hash);
+>>>> -		mutex_unlock(&tr->ops->func_hash->regex_lock);
+>>>> -	}
+>>>> -	mutex_unlock(&trace_types_lock);
+>>>> +		mutex_lock(&op->func_hash->regex_lock);
+>>>> +		clear_mod_from_hash(pg, op->func_hash->filter_hash);
+>>>> +		clear_mod_from_hash(pg, op->func_hash->notrace_hash);
+>>>> +		mutex_unlock(&op->func_hash->regex_lock);
+>>>> +	} while_for_each_ftrace_op(op);
+>>>> +
+>>>> +	mutex_unlock(&ftrace_lock);
+>>>>   }
+>>>>   
+>>>>   static void ftrace_free_mod_map(struct rcu_head *rcu)  
