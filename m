@@ -2,91 +2,126 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC76C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C63C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE6E208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A016420829
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:24:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NYpUOwon"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R+cwfOL6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgGaERd (ORCPT
+        id S1727830AbgGaEYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 00:17:33 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24506 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725800AbgGaERc (ORCPT
+        Fri, 31 Jul 2020 00:24:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbgGaEYK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 00:17:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596169051;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=reeNLg+TD55rsNB2iiTvcYYEevnQu1S+px9nBOesrWc=;
-        b=NYpUOwonBG8hjWFcVIf6hIdgUks9Mhvrj/1hvOkvN/16DTeXJpQ8fqgCKI46Ri7KzQ7fJZ
-        fX9aFPGGp1QCR7tCZSwlAf2FlwSgTkDjCTQHr9P6tXmhMjKBSpoe4Om2U2UD3CwFSfvhg/
-        ZNhXjPimtwqrTSncCRgqahpwdZahKM4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-302-MFzPlCQiNNC59nag-YGbIg-1; Fri, 31 Jul 2020 00:17:29 -0400
-X-MC-Unique: MFzPlCQiNNC59nag-YGbIg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DBF11800685;
-        Fri, 31 Jul 2020 04:17:27 +0000 (UTC)
-Received: from hp-dl380pg8-01.lab.eng.pek2.redhat.com (hp-dl380pg8-01.lab.eng.pek2.redhat.com [10.73.8.10])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9F8B7100238C;
-        Fri, 31 Jul 2020 04:17:22 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mst@redhat.com, Jason Wang <jasowang@redhat.com>
-Subject: [PATCH net-next] tun: add missing rcu annotation in tun_set_ebpf()
-Date:   Fri, 31 Jul 2020 00:17:20 -0400
-Message-Id: <20200731041720.61187-1-jasowang@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Fri, 31 Jul 2020 00:24:10 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A74FC061574;
+        Thu, 30 Jul 2020 21:24:10 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ha11so6606857pjb.1;
+        Thu, 30 Jul 2020 21:24:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5XLltA1o6pc+ms03acl/cow8Wgm9MAL4rEVgQOQxOXs=;
+        b=R+cwfOL6NcJp8QGoq2xjIXflokIsVx622KY2RnJiZB47nBdk02++HS9e6aS+1PMzIY
+         nraLIWrZfkbYexzXytN7Jzh9jt3puoZhvsin46iMRCfP6felnjw2Rj8QtfNIFvdGIm2N
+         GNrWLRqnguVlwSZsgkACWyTZtoi4PY77xOB+QfaAXuV/SJiEkWhq2J0O2cmILmFBj8tp
+         Y+8G43/gIKYEVnWlnnRQvxOfz5Ge/mBqTJsP/SXd14TVYKFv5Gy5Oyfnio6/R47E63Fc
+         hfS0L+oE+dccYvVS52TkqUPd7aj/iyo1ukRdR77nIsWaJDT5QdTaXdqErF0GnO07uGcs
+         FMnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5XLltA1o6pc+ms03acl/cow8Wgm9MAL4rEVgQOQxOXs=;
+        b=pTiDCtoNNEmd7xluHeXJDlHy1z80Zd58bgzuERh1S4KNcox+ipr/adU0/9X9VV0WAI
+         u4+t5AyBK+3h/eAxKUHG5MOwyVdtcsIUzmGVpobNyObjAoYGi2WD4C2RwSS+WKMGht8j
+         6Lsff3bwf8BJiUtP7EmyJHWoRLP+ZS0JMVEHNh5lOSxqWFhvTYI/HyJIfjYDdWJtj7UV
+         QOLWdA3sWjzDIFGDOlADzE2dezBoIZJYUEXu1Qfoz7iRLQZFTfEPTh8Z/20cg6oeqczi
+         Q6MnjYRkLVVUqwbPHDinNsMjEJIe+FA0MdY0SqctC9Vp91b83ClUx48KHwXfU0KNUEVf
+         WZ0A==
+X-Gm-Message-State: AOAM533NYGt9kNJHL6iL0Bn/iK2aWSNGp7QFeU54d+t0BkTi7wTTC5fk
+        P2HM1LMQkPRqrhyupTHFn0A=
+X-Google-Smtp-Source: ABdhPJzn9ymAVeVuY+l9qZQU/oBRkPls19wH8CecqTiZHvsbi9pPXSDVLn0xlFP+JWf46iB4vrsaow==
+X-Received: by 2002:a63:6d48:: with SMTP id i69mr1984205pgc.354.1596169449711;
+        Thu, 30 Jul 2020 21:24:09 -0700 (PDT)
+Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id w3sm8149192pff.56.2020.07.30.21.24.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 21:24:09 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-mips@linux-mips.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM BMIPS MIPS
+        ARCHITECTURE),
+        linux-mips@vger.kernel.org (open list:BROADCOM BMIPS MIPS ARCHITECTURE),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] MIPS: BMIPS: Disable pref 30 for buggy CPUs
+Date:   Thu, 30 Jul 2020 21:24:01 -0700
+Message-Id: <20200731042401.22871-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We expecte prog_p to be protected by rcu, so adding the rcu annotation
-to fix the following sparse warning:
+Disable pref 30 by utilizing the standard quirk method and matching the
+affected SoCs: 7344, 7346, 7425.
 
-drivers/net/tun.c:3003:36: warning: incorrect type in argument 2 (different address spaces)
-drivers/net/tun.c:3003:36:    expected struct tun_prog [noderef] __rcu **prog_p
-drivers/net/tun.c:3003:36:    got struct tun_prog **prog_p
-drivers/net/tun.c:3292:42: warning: incorrect type in argument 2 (different address spaces)
-drivers/net/tun.c:3292:42:    expected struct tun_prog **prog_p
-drivers/net/tun.c:3292:42:    got struct tun_prog [noderef] __rcu **
-drivers/net/tun.c:3296:42: warning: incorrect type in argument 2 (different address spaces)
-drivers/net/tun.c:3296:42:    expected struct tun_prog **prog_p
-drivers/net/tun.c:3296:42:    got struct tun_prog [noderef] __rcu **
-
-Reported-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Jason Wang <jasowang@redhat.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/net/tun.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/bmips/setup.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-index 7adeb91bd368..9b4b25358f9b 100644
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -2983,7 +2983,7 @@ static int tun_set_queue(struct file *file, struct ifreq *ifr)
- 	return ret;
+diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
+index 19308df5f577..df0efea12611 100644
+--- a/arch/mips/bmips/setup.c
++++ b/arch/mips/bmips/setup.c
+@@ -110,6 +110,20 @@ static void bcm6368_quirks(void)
+ 	bcm63xx_fixup_cpu1();
  }
  
--static int tun_set_ebpf(struct tun_struct *tun, struct tun_prog **prog_p,
-+static int tun_set_ebpf(struct tun_struct *tun, struct tun_prog __rcu **prog_p,
- 			void __user *data)
- {
- 	struct bpf_prog *prog;
++static void bmips5000_pref30_quirk(void)
++{
++	__asm__ __volatile__(
++	"	li	$8, 0x5a455048\n"
++	"	.word	0x4088b00f\n"	/* mtc0 $8, $22, 15 */
++	"	nop; nop; nop\n"
++	"	.word	0x4008b008\n"	/* mfc0 $8, $22, 8 */
++	/* disable "pref 30" on buggy CPUs */
++	"	lui	$9, 0x0800\n"
++	"	or	$8, $9\n"
++	"	.word	0x4088b008\n"	/* mtc0 $8, $22, 8 */
++	: : : "$8", "$9");
++}
++
+ static const struct bmips_quirk bmips_quirk_list[] = {
+ 	{ "brcm,bcm3368",		&bcm6358_quirks			},
+ 	{ "brcm,bcm3384-viper",		&bcm3384_viper_quirks		},
+@@ -120,6 +134,9 @@ static const struct bmips_quirk bmips_quirk_list[] = {
+ 	{ "brcm,bcm6368",		&bcm6368_quirks			},
+ 	{ "brcm,bcm63168",		&bcm6368_quirks			},
+ 	{ "brcm,bcm63268",		&bcm6368_quirks			},
++	{ "brcm,bcm7344",		&bmips5000_pref30_quirk		},
++	{ "brcm,bcm7346",		&bmips5000_pref30_quirk		},
++	{ "brcm,bcm7425",		&bmips5000_pref30_quirk		},
+ 	{ },
+ };
+ 
 -- 
-2.18.1
+2.25.1
 
