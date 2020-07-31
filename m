@@ -2,98 +2,270 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D906DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB7FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6F5A208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F27C22B42
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:55:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UZSCRrsN"
+	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="JLkaCVpX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbgGaUxr (ORCPT
+        id S1728158AbgGaUzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 16:53:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbgGaUxq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 16:53:46 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9789BC061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 13:53:46 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id z5so16651978pgb.6
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 13:53:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ASoX6rfz5bQ5FIRAlZmP6CuXAEI7tVxg2VHGvZXSf5k=;
-        b=UZSCRrsNvb7U/6sNOg0nmvM1lhYADZr3xElqLrwf1FAjVXCKUcYXAIB3qluyiUZIIg
-         s7Oq8+0gDmPXofchwzcv+GI6UllQAsKwyidQTh4v8czpYX2AUJdfxfRiODZQc/e25ejQ
-         4xkCeSRR30UicbY7lFNufWjGwYcHhIMy9yOwjC08T0y9wWFOQaWiAPEVeC1DBxSGRrTm
-         w4GiRFgXHOZATK+L7tbeqedgQNwoVvhpwp9oWpewbKI4GPB/NS3sCurlzLHWLrMQ+72B
-         3IJyUAei30wFb/kjH1F2VtiY/FNEusyd293eHctGgBsM5yuvoG66Ry1nP3iXobG/XcmW
-         Fr4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ASoX6rfz5bQ5FIRAlZmP6CuXAEI7tVxg2VHGvZXSf5k=;
-        b=lCDBrwD1Ep1o3wN1Ln4zrNFVMos2lzu4DS+NncIoS/+YVHm3agZqJeJy6FOHE2kyri
-         8WKMNxwsdyo4VT+f5DqWjpG4N/b4MzGd4t4q40Bpb7p+HTTJgg3cKgt8xVc94irOTuTs
-         JOmCxWTsIuztCCg/l/hJA3C5P2NfHAG6kp0E2FzytTM+icLIeSlPTKn3oQ51MmoLpn3a
-         qVqIrfz9RJnnMT0j7yVBFJPtr15/Wgwa89WBsP0K2CzxQtgElSQdW5rdy3TQQUBYkyn9
-         EA5f5c61+3efya8NAfqE9qbzXlAj4cEQ4EUmvmYtavgSsSlYanOJaWSdNhgoFVuVg4y+
-         PKRA==
-X-Gm-Message-State: AOAM5318XBMcd4VEkyAZzzqy9K+NF4bherBRqq9yobnhYgaR22VN4WNS
-        WFRJJkJDiFJ1JlbOauTcyQGXdj2frqacF4optTNjyA==
-X-Google-Smtp-Source: ABdhPJyGqtQD45YZn7SMj9UvX8QA2GrLrcjRcPgtKJyDQA1M9yb7pFOzWaaAvNB0t6w5NBwOk1uD61A2Sph/u4r9BdI=
-X-Received: by 2002:a62:6484:: with SMTP id y126mr5561234pfb.166.1596228825718;
- Fri, 31 Jul 2020 13:53:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200730121656.45302-1-98.arpi@gmail.com> <CAFd5g46wpYxF1=bs3LvXeVg6mPHrT6Ggp=QxScaf87O=yqcpBA@mail.gmail.com>
- <3aae0ade-1a61-5d28-94ee-6b0eee7c7be6@gmail.com>
-In-Reply-To: <3aae0ade-1a61-5d28-94ee-6b0eee7c7be6@gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Fri, 31 Jul 2020 13:53:34 -0700
-Message-ID: <CAFd5g46OBRKFbTAPgq63A5pTaL88D83NjuTP9vK_qwPFxBNBSg@mail.gmail.com>
-Subject: Re: [PATCH] lib: Convert test_uuid.c to KUnit
-To:     Arpitha Raghunandan <98.arpi@gmail.com>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
+        Fri, 31 Jul 2020 16:55:48 -0400
+Received: from mail-eopbgr140104.outbound.protection.outlook.com ([40.107.14.104]:39529
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726884AbgGaUzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 16:55:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EEEcgSqkN9T0dZ6nb1j4SFtq5b4rXFdbIBOpQ3LicC34uOqytQ3SEHvY4xL5vsh2loFfm/SGoZUvvzxvvaCiBoR8tFHYX0bUNxi0rZqziXDSrlrz6P2OA7r6q+DgLkndfrYMFpdzJvTJ39HgzZAghwRiOWZSRtNxOjnQ4P3Zu3AAvv9xSRwjtg/IBRjHe0CJtBs1T9q6niUT6W0ujmeV1HBMqSRTlqqaGp9GKDErKDQL1cX0U34SyoFtMFJ5AnHkHF65CSsFHH5Uzx9tRxJwcqoMb/7Sl8kMdYRLLE0HsiL5hAf3vrLOklaOziY9vUPp18DgWF3bwvrYlQSIYNCYXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XqF5Kxy3S3vmJlX3V5Hit/Wg0PKguKPFdln2bT9fmyA=;
+ b=j4tk9EzOb15TeO9jIhAstmsMADiYbwm4+vyRk8vLkMZlTNQgYEvG/GyDldH9nojsHb6KHcxu+b4uAGBH7IbHnkyTRIaF2R8/A1GyHlhhfVhv/v4VOjNJPrKmHJFKDP7RLFWs314UJK6uG7y2Bwy4Iv/lIVl4VLGK5CjiZEwkGuQ0zED0BA5VjrCOkEl16v616Bb+gbyRtA2YxqUpnt2aCjRNzjAT9QG0pCxvWvMKmLOUqlOLzF1sKjc7ZQbOy/DWKAbbwzJdYe/OgA7vNjWRjOw+Z5kYvPPC+R+OXVSXszVgQLrOuDs5mYFnrrCCsuzwf/JnVq+dF6wf5r97hTI5Hg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
+ dkim=pass header.d=plvision.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XqF5Kxy3S3vmJlX3V5Hit/Wg0PKguKPFdln2bT9fmyA=;
+ b=JLkaCVpXYoiR1SO5mLnzoGXqpV203FXfNXjOae39JT3U+54UWNl4lV5dVzWmc1CuW37RGTHOSYaQ7hFH5HEa07uQyRZxUIfReOZn86/R32WyJN6Da1lkRGgGKZB1h97uzHGb9daKiLHjvwnmIQiTnX2o2QbNx/Ch/dIwZwTtd1I=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=plvision.eu;
+Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:56::28) by
+ HE1P190MB0459.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:5b::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3239.16; Fri, 31 Jul 2020 20:55:42 +0000
+Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+ ([fe80::b1a4:e5e3:a12b:1305]) by HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+ ([fe80::b1a4:e5e3:a12b:1305%6]) with mapi id 15.20.3239.018; Fri, 31 Jul 2020
+ 20:55:41 +0000
+Date:   Fri, 31 Jul 2020 23:55:33 +0300
+From:   Vadym Kochan <vadym.kochan@plvision.eu>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev <netdev@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+        Mickey Rachamim <mickeyr@marvell.com>
+Subject: Re: [net-next v4 1/6] net: marvell: prestera: Add driver for
+ Prestera family ASIC devices
+Message-ID: <20200731205533.GA1159@plvision.eu>
+References: <20200727122242.32337-1-vadym.kochan@plvision.eu>
+ <20200727122242.32337-2-vadym.kochan@plvision.eu>
+ <CAHp75Ve-MyFg5QqHjywGk6X+v_F77HkRBuQsJ0Cx3WLJ5ZV43w@mail.gmail.com>
+ <20200731152201.GB10391@plvision.eu>
+ <CAHp75VcS4fEak3z0exODErs5FbDwf+Di1RJmf7JfMgnD8xgXOA@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcS4fEak3z0exODErs5FbDwf+Di1RJmf7JfMgnD8xgXOA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: AM6PR10CA0106.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:209:8c::47) To HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:7:56::28)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from plvision.eu (217.20.186.93) by AM6PR10CA0106.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:209:8c::47) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Fri, 31 Jul 2020 20:55:39 +0000
+X-Originating-IP: [217.20.186.93]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: fbc2c13b-10b6-4879-d16f-08d8359415e6
+X-MS-TrafficTypeDiagnostic: HE1P190MB0459:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <HE1P190MB0459F4260A2845F44C8A10B9954E0@HE1P190MB0459.EURP190.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: r9jqFuX5eLS9mewNhHFafeqERqt3TiWT5/HJ8zn+XRUnn+9+4YAi1x29r0KGo/XU7lCilvZtWdrcQVDrydeo7ppJq3uXMKq1pxVQ4ATRWNARJ+FqYcI0OafWRMFwX6slELxXI1ATlC+gp3rcVSH8YbLQJGiM7MW+aUn8+BBtZpL0P5RDncXtIfKdg6Ia4i3cV/dVuTXrI9KK1KPzm160BgHwZiyGYFVigJwp7Q6Nahuw10yYwyJ0/yshBfIr5JinCf9mW025D5ofjDm1PeTlr18l4Kw2UqijEy9jQWlJ47ZWQezSawTsuinicPqvMZnmA1NwKlbxgOaPMkoqWwLnAQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1P190MB0539.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(136003)(346002)(376002)(396003)(366004)(39830400003)(44832011)(66556008)(66946007)(52116002)(53546011)(26005)(2616005)(956004)(5660300002)(7696005)(33656002)(55016002)(66476007)(83380400001)(86362001)(186003)(16526019)(2906002)(6666004)(4326008)(8676002)(6916009)(8936002)(1076003)(36756003)(8886007)(508600001)(54906003)(316002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: 2cVQz0DfWgRWCBgA5NtG2S9bM3hxLebh/+pPnVNMC+5FJUSSvN6FYHAXpFmkVjsoGGuOEW4j76Oyxaytx+HnJyadr0N4W3W4LX+mFCW/9YEuQVrdQOOJpEQ2H7gP+leJG8RDLia8tdJ8d9AbmWcR6PDnyQH1VJo98Vx1Zoi3T4r3cRG3sys/Tthj12rFBw/FUzLQsVUGAXrFQ2di5AP4gDEFtfC5pkKyAkkRGd76DfFRyN7PxOm6+o0gyBU9//tutsccpzg/AfVvCAuGL5baQDv9hbiergzEt3O8sp+RMyr0PAKz12bPrJWuiPPDKj34VMBhFkPpIIMQw7zb2c0V9UXVHunMPkeugcJaf5fK3qMEsycNpeANlYx6kGoiPZjlfAv8/3ASH3L04SNGIlKOjSEDXOkbMC6NqTw2bQB9u3/RChMEDbf1ZNKpw4/7q6/M6dMSNbTzL7KAsDFsiuQRHKkc57hc/BD/XVB510Igc8fvpGte1U2BzFQAZsKcIcpTfJ70k9MfIvrPQ85JrEZD55JbLzlWgdmeI2pgmi2qS/9/y3lShDiCF7w5V9mGzuaxVxHCgHpTOZ0opvG9wQuTqsZyjtBJnOoN8M/DlZctPAdSIIYZJrA5yBQaSQaR9PVy0Es5QSIno9ajJLbOQYFV/w==
+X-OriginatorOrg: plvision.eu
+X-MS-Exchange-CrossTenant-Network-Message-Id: fbc2c13b-10b6-4879-d16f-08d8359415e6
+X-MS-Exchange-CrossTenant-AuthSource: HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jul 2020 20:55:41.7145
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: giIoQyYUWLotbd+mkbropBRc8+O36GiJLdfgh8NzcbElPY+RhE8R/13JpLQZZp3DYqNqsLjHVtWo6H39uV7sd6xx82No1Tw+mrRfzWKJNvc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1P190MB0459
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 3:02 AM Arpitha Raghunandan <98.arpi@gmail.com> wrote:
->
-> On 31/07/20 11:20 am, Brendan Higgins wrote:
-> > On Thu, Jul 30, 2020 at 5:18 AM Arpitha Raghunandan <98.arpi@gmail.com> wrote:
-> >>
-> >> Converts test lib/test_uuid.c to KUnit
-> >
-> > Can you add some more detail to the commit message? Maybe link to
-> > KUnit and say something about why this change is beneficial.
-> >
-> Sure, I will make this change.
-> >> Signed-off-by: Arpitha Raghunandan <98.arpi@gmail.com>
-> >
-> > Change mostly looks good to me.
-> > Thank you for the review.
->
-> On failure, the original test calls another function which prints a detailed error. I removed it when converting to KUnit. Is this required?
+Hi Andy,
 
-I think that's probably Andy's call. Do you mind calling out the
-segment of code in question?
+On Fri, Jul 31, 2020 at 07:02:47PM +0300, Andy Shevchenko wrote:
+> On Fri, Jul 31, 2020 at 6:22 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
+> > On Mon, Jul 27, 2020 at 03:59:13PM +0300, Andy Shevchenko wrote:
+> > > On Mon, Jul 27, 2020 at 3:23 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
+> 
+> ...
+> 
+> > > > Signed-off-by: Andrii Savka <andrii.savka@plvision.eu>
+> > > > Signed-off-by: Oleksandr Mazur <oleksandr.mazur@plvision.eu>
+> > > > Signed-off-by: Serhiy Boiko <serhiy.boiko@plvision.eu>
+> > > > Signed-off-by: Serhiy Pshyk <serhiy.pshyk@plvision.eu>
+> > > > Signed-off-by: Taras Chornyi <taras.chornyi@plvision.eu>
+> > > > Signed-off-by: Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>
+> > > > Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+> > >
+> > > This needs more work. You have to really understand the role of each
+> > > person in the above list.
+> > > I highly recommend (re-)read sections 11-13 of Submitting Patches.
+> > >
+> > At least looks like I need to add these persons as Co-author's.
+> 
+> I don't know, you are!
+> And I think you meant Co-developer's
+> 
+> ...
+> 
+> > > > +#include <linux/string.h>
+> > > > +#include <linux/bitops.h>
+> > > > +#include <linux/bitfield.h>
+> > > > +#include <linux/errno.h>
+> > >
+> > > Perhaps ordered?
+> > >
+> > alphabetical ?
+> 
+> Yes.
+> 
+> ...
+> 
+> > > > +       struct prestera_msg_event_port *hw_evt;
+> > > > +
+> > > > +       hw_evt = (struct prestera_msg_event_port *)msg;
+> > >
+> > > Can be one line I suppose.
+> > >
+> > Yes, but I am trying to avoid line-breaking because of 80 chars
+> > limitation.
+> 
+> We have 100, but okay.
+> 
+> ...
+> 
+> > > > +       if (evt->id == PRESTERA_PORT_EVENT_STATE_CHANGED)
+> > > > +               evt->port_evt.data.oper_state = hw_evt->param.oper_state;
+> > > > +       else
+> > > > +               return -EINVAL;
+> > > > +
+> > > > +       return 0;
+> > >
+> > > Perhaps traditional pattern, i.e.
+> > >
+> > >   if (...)
+> > >     return -EINVAL;
+> > >   ...
+> > >   return 0;
+> > >
+> > I am not sure if it is applicable here, because the error state here
+> > is if 'evt->id' did not matched after all checks. Actually this is
+> > simply a 'switch', but I use 'if' to have shorter code.
+> 
+> Then do it a switch-case. I can see that other reviewers/contributors
+> may stumble over this.
+> 
+> ...
+> 
+> > > > +       /* Only 0xFF mac addrs are supported */
+> > > > +       if (port->fp_id >= 0xFF)
+> > > > +               goto err_port_init;
+> > >
+> > > You meant 255, right?
+> > > Otherwise you have to mentioned is it byte limitation or what?
+> > >
+> > > ...
+> > Yes, 255 is a limitation because of max byte value.
+> 
+> But 255 itself is some kind of error value? Perhaps it deserves a definition.
+> 
+> ...
+> 
+> > > > +       np = of_find_compatible_node(NULL, NULL, "marvell,prestera");
+> > > > +       if (np) {
+> > > > +               base_mac_np = of_parse_phandle(np, "base-mac-provider", 0);
+> > > > +               if (base_mac_np) {
+> > > > +                       const char *base_mac;
+> > > > +
+> > > > +                       base_mac = of_get_mac_address(base_mac_np);
+> > > > +                       of_node_put(base_mac_np);
+> > > > +                       if (!IS_ERR(base_mac))
+> > > > +                               ether_addr_copy(sw->base_mac, base_mac);
+> > > > +               }
+> > > > +       }
+> > > > +
+> > > > +       if (!is_valid_ether_addr(sw->base_mac)) {
+> > > > +               eth_random_addr(sw->base_mac);
+> > > > +               dev_info(sw->dev->dev, "using random base mac address\n");
+> > > > +       }
+> > >
+> > > Isn't it device_get_mac_address() reimplementation?
+> > >
+> > device_get_mac_address() just tries to get mac via fwnode.
+> 
+> Yes, and how is it different from here? (consider
+> fwnode_get_mac_address() if it suits better).
+> 
+In this case of_get_mac_address() tries to get mac address from
+different sources:
+
+    1) device-tree - if it is defined here
+
+    2) nvmem device (eeprom) - if nvmem ref node was pointed in device-tree
+       and nvmem provider has the mac address cell.
+
+otherwise the driver will just use the random one.
+
+> ...
+> 
+> > > > +       new_skb = alloc_skb(len, GFP_ATOMIC | GFP_DMA);
+> > >
+> > > Atomic? Why?
+> > >
+> > TX path might be called from net_tx_action which is softirq.
+> 
+> Okay, but GFP_DMA is quite a limitation to the memory region. Can't  be 32-bit?
+> 
+Yes in this case there are a limitation when the device supports only
+30bit (this dma mask is used in prestera_pci.c), physical address range
+even on 64bit platform.
+
+And thankfully few months ago someone added such ability for RaspberryPI
+(aarch64) to support ZONE_DMA.
+
+> ...
+> 
+> > > > +       int tx_retry_num = 10 * tx_ring->max_burst;
+> > >
+> > > Magic!
+> > You mean the code is magic ? Yes, I am trying to relax the
+> > calling of SDMA engine.
+> 
+> Usually when reviewers tell you about magic it assumes magic numbers
+> whose meaning is not clear.
+> (Requires either to be defined or commented)
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
