@@ -2,93 +2,110 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32476C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB57C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0BE22B42
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE44E22B42
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:51:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728608AbgGaUu1 (ORCPT
+        id S1728845AbgGaUvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 16:50:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39242 "EHLO mail.kernel.org"
+        Fri, 31 Jul 2020 16:51:18 -0400
+Received: from mga12.intel.com ([192.55.52.136]:25207 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726884AbgGaUu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 16:50:27 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50178208E4;
-        Fri, 31 Jul 2020 20:50:25 +0000 (UTC)
-Date:   Fri, 31 Jul 2020 16:50:23 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     peterz@infradead.org
-Cc:     Dongdong Yang <contribute.kernel@gmail.com>,
-        gregkh@linuxfoundation.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-pm@vger.kernel.org,
-        yangdongdong@xiaomi.com, tanggeliang@xiaomi.com, taojun@xiaomi.com,
-        huangqiwu@xiaomi.com, rocking@linux.alibaba.com,
-        fengwei@xiaomi.com, zhangguoquan@xiaomi.com, gulinghua@xiaomi.com,
-        duhui@xiaomi.com
-Subject: Re: [PATCH] sched: Provide USF for the portable equipment.
-Message-ID: <20200731165023.11eb5d5b@oasis.local.home>
-In-Reply-To: <20200731181538.GB2674@hirez.programming.kicks-ass.net>
-References: <cover.1596101307.git.yangdongdong@xiaomi.com>
-        <1596116273-2290-1-git-send-email-contribute.kernel@gmail.com>
-        <20200731181538.GB2674@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1727782AbgGaUvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 16:51:18 -0400
+IronPort-SDR: 3/83gqLT5a1hxU6ShYEj8zvQGTA2tEw1lGNdV9YWEXAzgLOV4PJK3QrlJPYxwW2zgW2jEjKcxD
+ PCsW9/qMWHWQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="131435570"
+X-IronPort-AV: E=Sophos;i="5.75,419,1589266800"; 
+   d="scan'208";a="131435570"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 13:51:18 -0700
+IronPort-SDR: c5kp/zR5mS/FK+QSpEKU2MlhBeSqEi5dyMntHl6dWMCco2meH524leym/UdmY2jbPnAhBc3BnH
+ mbgsmZZcKo9A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,419,1589266800"; 
+   d="scan'208";a="329340987"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.160])
+  by FMSMGA003.fm.intel.com with ESMTP; 31 Jul 2020 13:51:16 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Brijesh Singh <brijesh.singh@amd.com>
+Subject: [RFC PATCH] KVM: SVM: Disallow SEV if NPT is disabled
+Date:   Fri, 31 Jul 2020 13:51:16 -0700
+Message-Id: <20200731205116.14891-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jul 2020 20:15:38 +0200
-peterz@infradead.org wrote:
+Forcefully turn off SEV if NPT is disabled, e.g. via module param.  SEV
+requires NPT as the C-bit only exists if NPT is active.
 
-> On Thu, Jul 30, 2020 at 09:35:43PM +0800, Dongdong Yang wrote:
-> > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> > index 7fbaee2..7bc3429 100644
-> > --- a/kernel/sched/cpufreq_schedutil.c
-> > +++ b/kernel/sched/cpufreq_schedutil.c
-> > @@ -289,12 +289,21 @@ unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
-> >  	return min(max, util);
-> >  }
-> >  
-> > +#ifdef CONFIG_SCHED_USF
-> > +void (*adjust_task_pred_demand)(int cpuid, unsigned long *util,
-> > +	struct rq *rq) = NULL;
-> > +EXPORT_SYMBOL(adjust_task_pred_demand);
-> > +#endif
-> > +
-> >  static unsigned long sugov_get_util(struct sugov_cpu *sg_cpu)
-> >  {
-> >  	struct rq *rq = cpu_rq(sg_cpu->cpu);
-> >  	unsigned long util = cpu_util_cfs(rq);
-> >  	unsigned long max = arch_scale_cpu_capacity(sg_cpu->cpu);
-> > -
-> > +#ifdef CONFIG_SCHED_USF
-> > +	if (adjust_task_pred_demand)
-> > +		adjust_task_pred_demand(sg_cpu->cpu, &util, rq);
-> > +#endif
-> >  	sg_cpu->max = max;
-> >  	sg_cpu->bw_dl = cpu_bw_dl(rq);  
-> 
-> NAK
+Fixes: e9df09428996f ("KVM: SVM: Add sev module_param")
+Cc: stable@vger.kernel.org
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Brijesh Singh <brijesh.singh@amd.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
 
-Peter,
+RFC as it's entirely possible that I am completely misunderstanding how
+SEV works.  Compile tested only.
 
-It's more informative if you include rational with a NAK.
+ arch/x86/kvm/svm/svm.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
--- Steve
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 783330d0e7b88..e30629593458b 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -860,8 +860,14 @@ static __init int svm_hardware_setup(void)
+ 		kvm_enable_efer_bits(EFER_SVME | EFER_LMSLE);
+ 	}
+ 
++	if (!boot_cpu_has(X86_FEATURE_NPT))
++		npt_enabled = false;
++
++	if (npt_enabled && !npt)
++		npt_enabled = false;
++
+ 	if (sev) {
+-		if (boot_cpu_has(X86_FEATURE_SEV) &&
++		if (boot_cpu_has(X86_FEATURE_SEV) && npt_enabled &&
+ 		    IS_ENABLED(CONFIG_KVM_AMD_SEV)) {
+ 			r = sev_hardware_setup();
+ 			if (r)
+@@ -879,12 +885,6 @@ static __init int svm_hardware_setup(void)
+ 			goto err;
+ 	}
+ 
+-	if (!boot_cpu_has(X86_FEATURE_NPT))
+-		npt_enabled = false;
+-
+-	if (npt_enabled && !npt)
+-		npt_enabled = false;
+-
+ 	kvm_configure_mmu(npt_enabled, PG_LEVEL_1G);
+ 	pr_info("kvm: Nested Paging %sabled\n", npt_enabled ? "en" : "dis");
+ 
+-- 
+2.28.0
 
