@@ -2,64 +2,120 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8049CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 00:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE050C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 00:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 657F12074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 00:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EC652074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 00:40:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ThWhSyzm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730967AbgGaAjo (ORCPT
+        id S1730973AbgGaAk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 20:39:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36324 "EHLO
+        Thu, 30 Jul 2020 20:40:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730932AbgGaAjn (ORCPT
+        with ESMTP id S1730892AbgGaAkZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 20:39:43 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A24EC061574;
-        Thu, 30 Jul 2020 17:39:43 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477:9e51:a893:b0fe:602a])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id AD0AD126C48C8;
-        Thu, 30 Jul 2020 17:22:57 -0700 (PDT)
-Date:   Thu, 30 Jul 2020 17:39:42 -0700 (PDT)
-Message-Id: <20200730.173942.1496956070313199707.davem@davemloft.net>
-To:     gustavoars@kernel.org
-Cc:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] net/sched: act_pedit: Use flex_array_size()
- helper in memcpy()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200730031700.GA23745@embeddedor>
-References: <20200730031700.GA23745@embeddedor>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 Jul 2020 17:22:58 -0700 (PDT)
+        Thu, 30 Jul 2020 20:40:25 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A9C1C061575
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 17:40:25 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id v22so15911715qtq.8
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 17:40:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IGvz6KgcHCmjoeuiCEDc9k+DvB64Lvr2o1q6GMYOtdM=;
+        b=ThWhSyzmYSzoj55OO1cqOh4Z0b/5GIVOMHygYBrkz1ZgXi/T0KKcIXC/4XiP+tt/Ph
+         8igXt3d5AbwIuXrIjE959nglAl+jMZF3dRnnLK7UhAF2VC8lNvjy3O9Q2jvW3xslGgBq
+         rMnQpmWSwu7+BWsJuLtTkXW1Sij0M6X3Iuldg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IGvz6KgcHCmjoeuiCEDc9k+DvB64Lvr2o1q6GMYOtdM=;
+        b=dfvlPtFz/zpUbzX1OPlK1Av5fhyIhinxd8yTopEQrxH0tIXLCIcM/lJ6bHImimHQYv
+         Q83j7ln0Wll8w9+HDu1MqkwSv/IqC1uZkdLKM2Tz6OhNqKL4N0+PVQpxeo5ZXEPUjhUZ
+         FK9csKVZM4bxL+uf0NvYVPLUOkw1irouQ5mbLySBmbl9oLMby7fPqazzTGC05moArwhq
+         7MUBuqmBGPm2du1ERuUcl1oYs4W3Br9osoNPwSxNFIkLW32JTAgKhCfkjZlQwhgxrxR9
+         Rv2gm1qRGb2BuKgySGI5Ve2e7H/kMu9dfdP7PLKlPv7TfG6mnYpQUVLpy26HFM5uR1IK
+         Qrew==
+X-Gm-Message-State: AOAM530PA47YX54t6cQeECvpCIOOF8gqMCqCoBABo9lQ32rnUKfD4gSO
+        B18ESBfOxaoKuE8bCgugM+eiOdc2aFc=
+X-Google-Smtp-Source: ABdhPJxitlKAKPUXjYHxM+04anYH6TpoXdjAIhxnrCPfFfio6hSv9F8Z+0kSzfIRsGuhCKL9PfL5pw==
+X-Received: by 2002:ac8:6713:: with SMTP id e19mr1367740qtp.88.1596156024251;
+        Thu, 30 Jul 2020 17:40:24 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id c5sm3077320qtp.62.2020.07.30.17.40.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 17:40:23 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Neeraj Upadhyay <neeraju@codeaurora.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH v2 1/3] rcu/tree: Add a warning if CPU being onlined did not report QS already
+Date:   Thu, 30 Jul 2020 20:40:10 -0400
+Message-Id: <20200731004012.2324147-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Date: Wed, 29 Jul 2020 22:17:00 -0500
+Add a warning if CPU being onlined did not report QS already. This is to
+simplify the code in the CPU onlining path and also to make clear about
+where QS is reported. The act of QS reporting in CPU onlining path is
+is likely unnecessary as shown by code reading and testing with
+rcutorture's TREE03 and hotplug parameters.
 
-> Make use of the flex_array_size() helper to calculate the size of a
-> flexible array member within an enclosing structure.
-> 
-> This helper offers defense-in-depth against potential integer
-> overflows, while at the same time makes it explicitly clear that
-> we are dealing with a flexible array member.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Cc: Neeraj Upadhyay <neeraju@codeaurora.org>
+Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-Applied.
+---
+ kernel/rcu/tree.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 65e1b5e92319..6b6fc28bb670 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3996,7 +3996,19 @@ void rcu_cpu_starting(unsigned int cpu)
+ 	rcu_gpnum_ovf(rnp, rdp); /* Offline-induced counter wrap? */
+ 	rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
+ 	rdp->rcu_onl_gp_flags = READ_ONCE(rcu_state.gp_flags);
+-	if (rnp->qsmask & mask) { /* RCU waiting on incoming CPU? */
++
++	/*
++	 * Delete QS reporting from here, by June 2021, if warning does not
++	 * fire, in order to make the rules for reporting QS for an offline CPUs
++	 * more clear. The CPU onlining path does not need to report QS for
++	 * an offline CPU. Either the QS should have reported during CPU
++	 * offlining, or during rcu_gp_init() if it detected a race with either
++	 * CPU offlining or task unblocking on previously offlined CPUs. Note
++	 * that to avoid hotplug notifier deadlocks,the FQS loop also does not
++	 * report QS for an offline CPU any longer (unless it splats due to an
++	 * offline CPU blocking the GP for too long).
++	 */
++	if (WARN_ON_ONCE(rnp->qsmask & mask)) { /* RCU waiting on incoming CPU? */
+ 		rcu_disable_urgency_upon_qs(rdp);
+ 		/* Report QS -after- changing ->qsmaskinitnext! */
+ 		rcu_report_qs_rnp(mask, rnp, rnp->gp_seq, flags);
+-- 
+2.28.0.163.g6104cc2f0b6-goog
+
