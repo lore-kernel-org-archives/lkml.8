@@ -2,145 +2,148 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAD8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82478C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C352620829
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:57:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IscAdJ8/"
+	by mail.kernel.org (Postfix) with ESMTP id 5E67F2074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:57:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596189461;
+	bh=ILVNYE1hS9VRq0SA0YddGcPwWd36YBYdClCwMc8CmNM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=V716rqfUYyndKSIeKmMn360nfTRNCGLwgUbjCKjh4g4D3EHThgShx4jdSe55QV1lt
+	 YXocquJr74cryTf4TFw7tPHizmrPu3lgAeREE3qQmrYHnT36FnHVQbIl8y9OXHYHA0
+	 HsSPZNXUZUWyzorb2AQwleUkyL9wzqUiThXGMR9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732413AbgGaJ5K (ORCPT
+        id S1732456AbgGaJ5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:57:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37092 "EHLO
+        Fri, 31 Jul 2020 05:57:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732075AbgGaJ5K (ORCPT
+        with ESMTP id S1732075AbgGaJ5k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:57:10 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2A6EC061574;
-        Fri, 31 Jul 2020 02:57:09 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id v6so11453020ota.13;
-        Fri, 31 Jul 2020 02:57:09 -0700 (PDT)
+        Fri, 31 Jul 2020 05:57:40 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFDC2C061574;
+        Fri, 31 Jul 2020 02:57:39 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id v22so11179851edy.0;
+        Fri, 31 Jul 2020 02:57:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=FyhCYi6g4YzyZpgKiE56nTAk512yZAZT9MByNiXh9aY=;
-        b=IscAdJ8/QI37J/xWoKdvhAHwTtMGr8z2w/2J4DyRBrBoPNLM0O8CVBNSJHNNuoVj3m
-         R40Tqw7xsrBvG8YmhQtBPCrM7ehFPR5lHo0lyPRIn/ZAbfQVkjiCHsihfviqeV/xrhJi
-         ycROQMv6/FiGneIB36YowjGvYUUB677RfZQ1MxyecIQFAls/KNm28J4Z86Kwbeo2bA0g
-         iASOj4T9yYFcttmdG1e0Qp9MKD1z9s3pS2tp7eZUql+wTpkjPhpuKvxJTRwJP4TDG8NL
-         7KVvmuHq5tZw4WSfGFPUAisysr9nd29FLY+UJyoXltG6gh5KuOi+fJKeREyrhyf23m93
-         kC6w==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Me3xUsDymhPcO8yIS2fJXOcLNayPPxl0UjufSAtk0QQ=;
+        b=kxvKFcF9IRX5p1OSQZuczXxcXxEMYfRyt4Pm1z90XzI2+/WzxFlriRtuJZyGXYRUxX
+         BGDyeoKMtubeiDg2SqjwNkJZkJbL77lM0lbeEQu76C6J3jJSPFYf+EZIUQvgkOo8ml8z
+         npjepN5IAiqt2j7MOtETuNQHBbNEpcz0sSxXlo/x9T9zbUi3M/FxF6h5A78fCFTh8HP8
+         tUewH8sn4bR1aLuELsw49b8cZN/k91KPy9VWCJb3G+gAFR6YPem9pyyc0RH/QQRMfOTH
+         4cvIn974A/8/Q83WIOYgLbZzmwpsNioebnkodxzFUDzY9uDtnSn3v3fhZPGfMrYzOOSK
+         T2pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=FyhCYi6g4YzyZpgKiE56nTAk512yZAZT9MByNiXh9aY=;
-        b=chEo02++naT5ocYn5fJJGxCD6KQqlYRiRPrIbN0KVQ0vb7W9+dBHoUE5Gv03/rQa6t
-         DvpYzqMQfEfmcHqUqLsUep6Yx78KHWwdEksX3NU3rbt4GznNrjlwn+2PMKJwcKLLqdJH
-         1lBr2c7VoDvXUfZP1nMfsEmq2PJV5MabP4VuCCucDZf0IAjSEJZU2l1STp8MQgHsZVDe
-         OgmdNRcoFO/9wWtCaacOD3APvyrUimSGePbqgoLre0Nww+88udx+NhFRQ6Pf+w+fGQvq
-         mcyoP4iP4EcfQAG9aUvha6XJG4+ZIGeJY70P4Uldratnv5WFDb/PdPEopzA1N5NsLI5p
-         7u6g==
-X-Gm-Message-State: AOAM531SewF6CYvfvLBRY+WAWSMkii2cTU5LNDd7rODdW867QRVfMJ7T
-        wv00cevZpvzUB/d7MnJ+IUWi96aZHCch5XoRpqQ=
-X-Google-Smtp-Source: ABdhPJzlP+lxlTp00U4Ru19RjqY2nXFlPVbvrCW8DYnGm2HCe340v8RToGMbM+LapxM5074rP6X50okluR/wbMaN2h8=
-X-Received: by 2002:a9d:5e5:: with SMTP id 92mr2412425otd.9.1596189429228;
- Fri, 31 Jul 2020 02:57:09 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=Me3xUsDymhPcO8yIS2fJXOcLNayPPxl0UjufSAtk0QQ=;
+        b=oAkMSfEBia0Rysm3gJ+IKi8sNZmC+erYleLjonG0p1AFoyr79MhBUiHA+kZ6KWmpLf
+         JdFo9llT1y/NCFxz/bedL6lJd/UqC8S3Rb+VJJ9iHz06rqY/fEAzTtjXfpTp3v5dKkFs
+         opcPtnykwVTjG5e1fGy+x+kZbCbW0xEZk5X1I8cMvtEwuj0YmIP39aGK6VU7njCU2/2C
+         HHnzgeDfEtRsmgsO2Y7jALg0zQMuDnDsHk0iXw9k2cNMRdkJQxorPju1ebXvGqz6wUi6
+         IIkiGWXy8v22RdfCtZDV8qPeGUFIUy56LVwjz97sJC7eN/53BDXeB/j5Ni66XC77/S2d
+         qWMw==
+X-Gm-Message-State: AOAM531eOitM3AvgGDlqmE8NsEPWYvOq28ZI70vuJ7KFopICMeyqk28q
+        i5kXHR8yfWxj5thR3ABa2rs=
+X-Google-Smtp-Source: ABdhPJyqGwsB+cD1JkZTq22ptAkNdzVHkba5i11cloSa6VMJPbzzy4zSRI9iaQHy8+erdxXDmnl7ag==
+X-Received: by 2002:a50:e1c5:: with SMTP id m5mr3160715edl.138.1596189458374;
+        Fri, 31 Jul 2020 02:57:38 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id u16sm9277119edb.97.2020.07.31.02.57.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 02:57:37 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 11:57:35 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: linux-next: build failure after merge of the tip tree
+Message-ID: <20200731095735.GB15126@gmail.com>
+References: <20200731155304.06c67b0c@canb.auug.org.au>
 MIME-Version: 1.0
-References: <CGME20200731071604epcas1p39fe86c3931c5adf9073817c12fb15f1d@epcas1p3.samsung.com>
- <002901d6670a$742e8cf0$5c8ba6d0$@samsung.com>
-In-Reply-To: <002901d6670a$742e8cf0$5c8ba6d0$@samsung.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Fri, 31 Jul 2020 11:56:57 +0200
-Message-ID: <CA+icZUX8KWtdDpMcmzqp461ndcyfvP13gaZK591OFpkp3nRHaQ@mail.gmail.com>
-Subject: Re: exfatprogs-1.0.4 version released
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, Eric Sandeen <sandeen@sandeen.net>,
-        Goldwyn Rodrigues <rgoldwyn@suse.com>,
-        Nicolas Boos <nicolas.boos@wanadoo.fr>,
-        Hyunchul Lee <hyc.lee@gmail.com>,
-        Luca Stefani <luca.stefani.ge1@gmail.com>,
-        Matthieu CASTET <castet.matthieu@free.fr>,
-        Sven Hoexter <sven@stormbind.net>,
-        Ethan Sommer <e5ten.arch@gmail.com>,
-        Hyeongseok Kim <hyeongseok@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200731155304.06c67b0c@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 9:16 AM Namjae Jeon <namjae.jeon@samsung.com> wrote:
->
-> Hi folk,
->
-> In this release, The performance of fsck have been much improved and
-> the new option in mkfs have been added to adjust boundary alignment.
->
-> As the result below, The fsck performance is improved close to windows's fsck
-> and much faster than the one in exfat-utils package.
->
-> We measured the performance on Samsung 64GB Pro microSDXC UHS-I Class 10 which
-> was filled up to 35GB with 9948 directories and 16506 files.
->
-> | Implementation       | version           | execution time (seconds) |
-> |--------------------- |-------------------|--------------------------|
-> | **exfatprogs fsck**  | 1.0.4             | 11.561                   |
-> | Windows fsck         | Windows 10 1809   | 11.449                   |
-> | [exfat-fuse fsck]    | 1.3.0             | 68.977                   |
->
 
-Hi Namjae Jeon (what is your First name and Family name?),
+* Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-congrats to version 1.0.4 and hope to see it in the Debian repositories soon.
+> Hi all,
+> 
+> After merging the tip tree, today's linux-next build (arm
+> multi_v7_defconfig) failed like this:
+> 
+> In file included from include/asm-generic/getorder.h:8,
+>                  from arch/arm/include/asm/page.h:166,
+>                  from arch/arm/include/asm/thread_info.h:14,
+>                  from arch/arm/include/asm/percpu.h:16,
+>                  from include/linux/irqflags.h:17,
+>                  from arch/arm/include/asm/bitops.h:28,
+>                  from include/linux/bitops.h:29,
+>                  from include/linux/kernel.h:12,
+>                  from include/asm-generic/bug.h:20,
+>                  from arch/arm/include/asm/bug.h:60,
+>                  from include/linux/bug.h:5,
+>                  from include/linux/page-flags.h:10,
+>                  from kernel/bounds.c:10:
+> include/linux/log2.h: In function '__ilog2_u32':
+> include/linux/log2.h:24:9: error: implicit declaration of function 'fls' [-Werror=implicit-function-declaration]
+>    24 |  return fls(n) - 1;
+>       |         ^~~
+> 
+> And so on ...
+> 
+> Caused by commit
+> 
+>   a21ee6055c30 ("lockdep: Change hardirq{s_enabled,_context} to per-cpu variables")
+> 
+> interacting with commit
+> 
+>   00a30a5c9e6b ("arm: include asm/thread_info.h in asm/percpu.h")
+> 
+> (which was a fix of mine but now the equivalent is in Linus' tree as commit
+> 
+>   aa54ea903abb ("ARM: percpu.h: fix build error")
+> )
+> 
+> I have reverted 00a30a5c9e6b since commit
+> 
+>   a6342915881a ("arm: Break cyclic percpu include")
+> 
+> (which precedes a21ee6055c30) acomplishes the same thing differently.
+> Something will be required when this is merged with Linus' tree, though.
 
-Great numbers for exfatprogs/fsck!
+I've merged Linus's latest into tip:locking/core, keeping the simpler 
+solution of a6342915881a and reducing the dependency hell.
 
-> And we have been preparing to add fsck repair feature in the next version.
-> Any feedback is welcome!:)
->
-> CHANGES :
->  * fsck.exfat: display sector, cluster, and volume sizes in the human
->    readable format.
->  * fsck.exfat: reduce the elapsed time using read-ahead.
->
-> NEW FEATURES :
->  * mkfs.exfat: generate pseudo unique serials while creating filesystems.
->  * mkfs.exfat: add the "-b" option to align the start offset of FAT and
->    data clusters.
->  * fsck.exfat: repair zero-byte files which have the NoFatChain attribute.
->
-> BUG FIXES :
->  * Fix memory leaks on error handling paths.
->  * fsck.exfat: fix the bug that cannot access space beyond 2TB.
->
-> The git tree is at:
->       https://github.com/exfatprogs/exfatprogs
->
-> The tarballs can be found at:
->       https://github.com/exfatprogs/exfatprogs/releases/download/1.0.4/exfatprogs-1.0.4.tar.gz
->
+Will push it all out hopefully later today (unrelated changes need 
+more testing), from that point on there should be no conflict in 
+-next.
 
-Just a small nit for the next announcement.
-Please point (also) to the tar.xz tarball and maybe to the releases
-tag in GitHub.
-( Today, I love/prefer to use ZSTD where possible - that is another story. )
+My plan would be to send that resolution to Linus, under the 
+assumption that a6342915881a is superior to the upstream aa54ea903abb 
+solution.
 
-Have more fun.
+Thanks,
 
-Regards,
-- Sedat -
-
-[1] https://github.com/exfatprogs/exfatprogs/releases/download/1.0.4/exfatprogs-1.0.4.tar.xz
-[2] https://github.com/exfatprogs/exfatprogs/releases/tag/1.0.4
+	Ingo
