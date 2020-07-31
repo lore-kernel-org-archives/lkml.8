@@ -2,144 +2,207 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 165AFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8ABC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F326A22B3F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C11EA22B3F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:52:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596225136;
+	bh=wYER8X6pKIITSbInuYXTfuSmaYgOJT3nPkWi0yJlRnM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=RhQYK9BnjFkZxtQahrTXwlMCcfFNvD7PvEIyWHYExhWqCqs++6zDEvWbgiv2tIaFr
+	 x1/WcnOJAtYHIi6JECHjR79fZ/sRtXtjemnu5XDS8RmFHn975F7sZBuYFjOBNpl/46
+	 dRciWdYZW9ZswJgGvsW+ENduVPD4L9vN8G42IGZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbgGaTrZ (ORCPT
+        id S1726890AbgGaTwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 15:47:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbgGaTrZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 15:47:25 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 281F2C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 12:47:25 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k1azu-0001Q4-JC; Fri, 31 Jul 2020 21:47:18 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k1azs-00073r-Kt; Fri, 31 Jul 2020 21:47:16 +0200
-Date:   Fri, 31 Jul 2020 21:47:16 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     linux-pwm@vger.kernel.org, lee.jones@linaro.org,
-        thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com
-Subject: Re: [PATCH v6 2/2] Add PWM fan controller driver for LGM SoC
-Message-ID: <20200731194716.xxin4cl672tk2bkc@pengutronix.de>
-References: <cover.1595926036.git.rahul.tanwar@linux.intel.com>
- <63e44ece4c0da860963d0ff09dd52912d557c7e0.1595926036.git.rahul.tanwar@linux.intel.com>
+        Fri, 31 Jul 2020 15:52:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44246 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725938AbgGaTwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 15:52:15 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0343F21744;
+        Fri, 31 Jul 2020 19:52:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596225134;
+        bh=wYER8X6pKIITSbInuYXTfuSmaYgOJT3nPkWi0yJlRnM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ug0xVmdlIo6eFa3xJ+SSwhCLZL6pPBKtQV0F6Vr8TQuXdvvaYfXUjw/71afpv7n1n
+         xlxC2bW85MxBothP465TRlOd+KWEN0mIXgrlw3l3ewSX2P1QtciASYqq9WWnzEbQTI
+         DuYxayxBjpOeCw588SOFZ4CelEEa/Okh+HtIGaZg=
+Date:   Fri, 31 Jul 2020 12:52:12 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Luo bin <luobin9@huawei.com>
+Cc:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
+        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
+        <chiqijun@huawei.com>
+Subject: Re: [PATCH net-next v2 1/2] hinic: add generating mailbox random
+ index support
+Message-ID: <20200731125212.4d58a90a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200731015642.17452-2-luobin9@huawei.com>
+References: <20200731015642.17452-1-luobin9@huawei.com>
+        <20200731015642.17452-2-luobin9@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rqwv5fncrzwpgutc"
-Content-Disposition: inline
-In-Reply-To: <63e44ece4c0da860963d0ff09dd52912d557c7e0.1595926036.git.rahul.tanwar@linux.intel.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 31 Jul 2020 09:56:41 +0800 Luo bin wrote:
+> add support to generate mailbox random id of VF to ensure that
+> mailbox messages PF received are from the correct VF.
+> 
+> Signed-off-by: Luo bin <luobin9@huawei.com>
 
---rqwv5fncrzwpgutc
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello,
-
-I only found a two minor issues this round, see below.
-
-On Tue, Jul 28, 2020 at 04:52:13PM +0800, Rahul Tanwar wrote:
-> +static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			 const struct pwm_state *state)
+> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_mbox.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_mbox.c
+> index 47c93f946b94..c72aa8e8bce8 100644
+> --- a/drivers/net/ethernet/huawei/hinic/hinic_hw_mbox.c
+> +++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_mbox.c
+> @@ -486,6 +486,111 @@ static void recv_mbox_handler(struct hinic_mbox_func_to_func *func_to_func,
+>  	kfree(rcv_mbox_temp);
+>  }
+>  
+> +static int set_vf_mbox_random_id(struct hinic_hwdev *hwdev, u16 func_id)
 > +{
-> +	struct lgm_pwm_chip *pc =3D to_lgm_pwm_chip(chip);
-> +	u32 duty_cycle, val;
+> +	struct hinic_mbox_func_to_func *func_to_func = hwdev->func_to_func;
+> +	struct hinic_set_random_id rand_info = {0};
+> +	u16 out_size = sizeof(rand_info);
+> +	struct hinic_pfhwdev *pfhwdev;
 > +	int ret;
 > +
-> +	/*
-> +	 * HW only supports only NORMAL polarity
-> +	 * HW supports fixed period
-
-there are too many "only"s here. What about:
-
-	/*
-	 * The hardware only supports
-	 * normal polarity and fixed period.
-	 */
-
-?
-
-> +	 */
-> +	if (state->polarity !=3D PWM_POLARITY_NORMAL ||
-> +	    state->period < pc->period)
-> +		return -EINVAL;
+> +	pfhwdev = container_of(hwdev, struct hinic_pfhwdev, hwdev);
 > +
-> +	if (!state->enabled) {
-> +		ret =3D lgm_pwm_enable(chip, 0);
-> +		return ret;
+> +	rand_info.version = HINIC_CMD_VER_FUNC_ID;
+> +	rand_info.func_idx = func_id;
+> +	rand_info.vf_in_pf = (u8)(func_id - hinic_glb_pf_vf_offset(hwdev->hwif));
+
+this cast is unnecessary
+
+> +	get_random_bytes(&rand_info.random_id, sizeof(u32));
+
+get_random_u32()
+
+> +
+> +	func_to_func->vf_mbx_rand_id[func_id] = rand_info.random_id;
+> +
+> +	ret = hinic_msg_to_mgmt(&pfhwdev->pf_to_mgmt, HINIC_MOD_COMM,
+> +				HINIC_MGMT_CMD_SET_VF_RANDOM_ID,
+> +				&rand_info, sizeof(rand_info),
+> +				&rand_info, &out_size, HINIC_MGMT_MSG_SYNC);
+> +	if ((rand_info.status != HINIC_MGMT_CMD_UNSUPPORTED &&
+> +	     rand_info.status) || !out_size || ret) {
+> +		dev_err(&hwdev->hwif->pdev->dev, "Set VF random id failed, err: %d, status: 0x%x, out size: 0x%x\n",
+> +			ret, rand_info.status, out_size);
+> +		return -EIO;
 > +	}
 > +
-> +	duty_cycle =3D min_t(u64, state->duty_cycle, pc->period);
-> +	val =3D duty_cycle * LGM_PWM_MAX_DUTY_CYCLE / pc->period;
+> +	if (rand_info.status == HINIC_MGMT_CMD_UNSUPPORTED)
+> +		return rand_info.status;
 > +
-> +	ret =3D regmap_update_bits(pc->regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_DC=
-_MSK,
-> +				 FIELD_PREP(LGM_PWM_FAN_DC_MSK, val));
-> +	if (ret)
-> +		return ret;
+> +	func_to_func->vf_mbx_old_rand_id[func_id] =
+> +				func_to_func->vf_mbx_rand_id[func_id];
 > +
-> +	if (state->enabled)
-> +		ret =3D lgm_pwm_enable(chip, 1);
-
-You can do this unconditionally, if state->enabled is false the function
-returns a few lines above already.
-
-> +
-> +	return ret;
+> +	return 0;
 > +}
 
-The rest looks fine.
+> +static bool check_vf_mbox_random_id(struct hinic_mbox_func_to_func *func_to_func,
+> +				    u8 *header)
+> +{
+> +	struct hinic_hwdev *hwdev = func_to_func->hwdev;
+> +	struct hinic_mbox_work *mbox_work = NULL;
+> +	u64 mbox_header = *((u64 *)header);
+> +	u16 offset, src;
+> +	u32 random_id;
+> +	int vf_in_pf;
+> +
+> +	src = HINIC_MBOX_HEADER_GET(mbox_header, SRC_GLB_FUNC_IDX);
+> +
+> +	if (IS_PF_OR_PPF_SRC(src) || !func_to_func->support_vf_random)
+> +		return true;
+> +
+> +	if (!HINIC_IS_PPF(hwdev->hwif)) {
+> +		offset = hinic_glb_pf_vf_offset(hwdev->hwif);
+> +		vf_in_pf = src - offset;
+> +
+> +		if (vf_in_pf < 1 || vf_in_pf > hwdev->nic_cap.max_vf) {
+> +			dev_warn(&hwdev->hwif->pdev->dev,
+> +				 "Receive vf id(0x%x) is invalid, vf id should be from 0x%x to 0x%x\n",
+> +				 src, offset + 1,
+> +				 hwdev->nic_cap.max_vf + offset);
+> +			return false;
+> +		}
+> +	}
+> +
+> +	random_id = be32_to_cpu(*(u32 *)(header + MBOX_SEG_LEN +
+> +					 MBOX_HEADER_SZ));
+> +
+> +	if (random_id == func_to_func->vf_mbx_rand_id[src] ||
+> +	    random_id == func_to_func->vf_mbx_old_rand_id[src])
 
-Best regards
-Uwe
+What guarantees src < MAX_FUNCTION_NUM ?
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+> +		return true;
+> +
+> +	dev_warn(&hwdev->hwif->pdev->dev,
+> +		 "The mailbox random id(0x%x) of func_id(0x%x) doesn't match with pf reservation(0x%x)\n",
+> +		 random_id, src, func_to_func->vf_mbx_rand_id[src]);
+> +
+> +	mbox_work = kzalloc(sizeof(*mbox_work), GFP_KERNEL);
+> +	if (!mbox_work)
+> +		return false;
+> +
+> +	mbox_work->func_to_func = func_to_func;
+> +	mbox_work->src_func_idx = src;
+> +
+> +	INIT_WORK(&mbox_work->work, update_random_id_work_handler);
+> +	queue_work(func_to_func->workq, &mbox_work->work);
+> +
+> +	return false;
+> +}
 
---rqwv5fncrzwpgutc
-Content-Type: application/pgp-signature; name="signature.asc"
+> +int hinic_vf_mbox_random_id_init(struct hinic_hwdev *hwdev)
+> +{
+> +	u8 vf_in_pf;
+> +	int err = 0;
+> +
+> +	if (HINIC_IS_VF(hwdev->hwif))
+> +		return 0;
+> +
+> +	for (vf_in_pf = 1; vf_in_pf <= hwdev->nic_cap.max_vf; vf_in_pf++) {
+> +		err = set_vf_mbox_random_id(hwdev, hinic_glb_pf_vf_offset
+> +					    (hwdev->hwif) + vf_in_pf);
 
------BEGIN PGP SIGNATURE-----
+Parenthesis around hwdev->hwif not necessary
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8kdUEACgkQwfwUeK3K
-7AlDuAf+OUQhgl11k0kBK4onw9aPuszKQmlS6tkxYg4C+HMThoc1U6OiLARNbsYp
-CU8S45+GGemAHqf40rAPUW1uX9SRBv4nRuge3p7Rm8XZwyJIIVfpW1agD+Efgv7n
-AXUnLh3vBEpMMsdGhfpqCn0138mddsyAjzxgB4+cYgJJd3kB5d0LiIz2X8dhJ0bK
-LKGNNo6UzlYsvGOgzNkjNbdWJS+T1tKvAsiLtPCNS7s5DjCJ2YRm1AisZMXzoU6I
-tnhRwTKXG+wMFTfrRyqPpj97RSL66uJr4JU6nemrRcmMchTCT7BsZvsX7b94Ej2q
-R6q/XH/q+/G3+jV8bzgZAa1ffflMGQ==
-=QVLW
------END PGP SIGNATURE-----
+> +		if (err)
+> +			break;
+> +	}
+> +
+> +	if (err == HINIC_MGMT_CMD_UNSUPPORTED) {
+> +		hwdev->func_to_func->support_vf_random = false;
 
---rqwv5fncrzwpgutc--
+So all VFs need to support the feature for it to be used?
+
+> +		err = 0;
+> +		dev_warn(&hwdev->hwif->pdev->dev, "Mgmt is unsupported to set VF%d random id\n",
+> +			 vf_in_pf - 1);
+> +	} else if (!err) {
+> +		hwdev->func_to_func->support_vf_random = true;
+> +		dev_info(&hwdev->hwif->pdev->dev, "PF Set VF random id success\n");
+
+Is this info message really necessary?
+
+> +	}
+
