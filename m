@@ -2,172 +2,85 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DD9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FFEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 327912083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:47:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Hyx44L8V"
+	by mail.kernel.org (Postfix) with ESMTP id 88030208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:51:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731221AbgGaCrr (ORCPT
+        id S1731213AbgGaCvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 22:47:47 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:17853 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730820AbgGaCrr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 22:47:47 -0400
-X-UUID: 46984ca6e30144b293dbd0331ec7fac1-20200731
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=5gxJSYGpogJvHq3MI6vYajWuhd8yPBPnByTkoBOC0pU=;
-        b=Hyx44L8VQ9IZKqLQqNKglwCD1wrnUGtXfQKCDOEmcIKCTU02HvUgoEgT5xMreW3wn77Wkbh+GGJDfLj1DissXnnaRhOl1CbyO5OfmEIvPcnP2fap5UpHk35geXuQGILEb0CNcuuxt88HqPxUtcpl5XWyuPAkb8u4pv94DwGB3e8=;
-X-UUID: 46984ca6e30144b293dbd0331ec7fac1-20200731
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 756326989; Fri, 31 Jul 2020 10:47:40 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 31 Jul 2020 10:47:37 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 31 Jul 2020 10:47:38 +0800
-Message-ID: <1596163658.3932.20.camel@mtkswgap22>
-Subject: Re: [PATCH v4 2/2] soc: mediatek: add mtk-devapc driver
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <devicetree@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Fri, 31 Jul 2020 10:47:38 +0800
-In-Reply-To: <CAAOTY_9dqcQdZd5x9ckE67KKh-4d_5gN9MQYDq7b4vGCWwHoDw@mail.gmail.com>
-References: <1596010690-13178-1-git-send-email-neal.liu@mediatek.com>
-         <1596010690-13178-3-git-send-email-neal.liu@mediatek.com>
-         <CAAOTY_9dqcQdZd5x9ckE67KKh-4d_5gN9MQYDq7b4vGCWwHoDw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 30 Jul 2020 22:51:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41270 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731124AbgGaCvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 22:51:09 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BCFF20829;
+        Fri, 31 Jul 2020 02:51:07 +0000 (UTC)
+Date:   Thu, 30 Jul 2020 22:51:06 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     <mingo@redhat.com>, <peterz@infradead.org>,
+        <juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
+        <dietmar.eggemann@arm.com>, <bsegall@google.com>,
+        <mgorman@suse.de>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sched: remove duplicated tick_nohz_full_enabled() check
+Message-ID: <20200730225106.241f0f36@oasis.local.home>
+In-Reply-To: <1595935075-14223-1-git-send-email-linmiaohe@huawei.com>
+References: <1595935075-14223-1-git-send-email-linmiaohe@huawei.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 2726352F45A91FD3D86C1DA16C7A07282E6A2ABB74F7AF015581EAF3E464051E2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2h1bi1LdWFuZywNCg0KDQpPbiBUaHUsIDIwMjAtMDctMzAgYXQgMDY6NDcgKzA4MDAsIENo
-dW4tS3VhbmcgSHUgd3JvdGU6DQo+IEhpLCBOZWFsOg0KPiANCj4gTmVhbCBMaXUgPG5lYWwubGl1
-QG1lZGlhdGVrLmNvbT4g5pa8IDIwMjDlubQ35pyIMjnml6Ug6YCx5LiJIOS4i+WNiDQ6Mjnlr6vp
-gZPvvJoNCj4gPg0KPiA+IE1lZGlhVGVrIGJ1cyBmYWJyaWMgcHJvdmlkZXMgVHJ1c3Rab25lIHNl
-Y3VyaXR5IHN1cHBvcnQgYW5kIGRhdGENCj4gPiBwcm90ZWN0aW9uIHRvIHByZXZlbnQgc2xhdmVz
-IGZyb20gYmVpbmcgYWNjZXNzZWQgYnkgdW5leHBlY3RlZA0KPiA+IG1hc3RlcnMuDQo+ID4gVGhl
-IHNlY3VyaXR5IHZpb2xhdGlvbiBpcyBsb2dnZWQgYW5kIHNlbnQgdG8gdGhlIHByb2Nlc3NvciBm
-b3INCj4gPiBmdXJ0aGVyIGFuYWx5c2lzIG9yIGNvdW50ZXJtZWFzdXJlcy4NCj4gPg0KPiA+IEFu
-eSBvY2N1cnJlbmNlIG9mIHNlY3VyaXR5IHZpb2xhdGlvbiB3b3VsZCByYWlzZSBhbiBpbnRlcnJ1
-cHQsIGFuZA0KPiA+IGl0IHdpbGwgYmUgaGFuZGxlZCBieSBtdGstZGV2YXBjIGRyaXZlci4gVGhl
-IHZpb2xhdGlvbg0KPiA+IGluZm9ybWF0aW9uIGlzIHByaW50ZWQgaW4gb3JkZXIgdG8gZmluZCB0
-aGUgbXVyZGVyZXIuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBOZWFsIExpdSA8bmVhbC5saXVA
-bWVkaWF0ZWsuY29tPg0KPiANCj4gW3NuaXBdDQo+IA0KPiA+ICsNCj4gPiArc3RhdGljIHZvaWQg
-ZGV2YXBjX3Zpb19pbmZvX3ByaW50KHN0cnVjdCBtdGtfZGV2YXBjX2NvbnRleHQgKmN0eCkNCj4g
-PiArew0KPiA+ICsgICAgICAgc3RydWN0IG10a19kZXZhcGNfdmlvX2luZm8gKnZpb19pbmZvID0g
-Y3R4LT52aW9faW5mbzsNCj4gPiArDQo+ID4gKyAgICAgICAvKiBQcmludCB2aW9sYXRpb24gaW5m
-b3JtYXRpb24gKi8NCj4gPiArICAgICAgIGlmICh2aW9faW5mby0+d3JpdGUpDQo+ID4gKyAgICAg
-ICAgICAgICAgIGRldl9pbmZvKGN0eC0+ZGV2LCAiV3JpdGUgVmlvbGF0aW9uXG4iKTsNCj4gPiAr
-ICAgICAgIGVsc2UgaWYgKHZpb19pbmZvLT5yZWFkKQ0KPiA+ICsgICAgICAgICAgICAgICBkZXZf
-aW5mbyhjdHgtPmRldiwgIlJlYWQgVmlvbGF0aW9uXG4iKTsNCj4gPiArDQo+ID4gKyAgICAgICBk
-ZXZfaW5mbyhjdHgtPmRldiwgIlZpbyBBZGRyOjB4JXgsIEhpZ2g6MHgleCwgQnVzIElEOjB4JXgs
-IERvbSBJRDoleFxuIiwNCj4gPiArICAgICAgICAgICAgICAgIHZpb19pbmZvLT52aW9fYWRkciwg
-dmlvX2luZm8tPnZpb19hZGRyX2hpZ2gsDQo+ID4gKyAgICAgICAgICAgICAgICB2aW9faW5mby0+
-bWFzdGVyX2lkLCB2aW9faW5mby0+ZG9tYWluX2lkKTsNCj4gPiArfQ0KPiANCj4gZGV2YXBjX3Zp
-b19pbmZvX3ByaW50KCkgaXMgc21hbGwgZnVuY3Rpb24gYW5kIG9ubHkgY2FsbGVkIGJ5DQo+IGRl
-dmFwY19leHRyYWN0X3Zpb19kYmcoKSwgc28gSSB3b3VsZCBsaWtlIHRvIG1lcmdlIHRoaXMgZnVu
-Y3Rpb24gaW50bw0KPiBkZXZhcGNfZXh0cmFjdF92aW9fZGJnKCkgYW5kIHlvdSBjb3VsZCBkcm9w
-IHN0cnVjdCBtdGtfZGV2YXBjX3Zpb19pbmZvDQo+IGJlY2F1c2UgaXRzIG1lbWJlciBhcmUgYWxs
-IGxvY2FsIHZhcmlhYmxlLg0KDQpUaGlzIGlkZWEgaXMgb2theSBmb3IgbWUuIEknbGwgdXBkYXRl
-IG9uIG5leHQgcGF0Y2guDQpUaGFua3MgIQ0KDQo+IA0KPiA+ICsNCj4gPiArLyoNCj4gPiArICog
-ZGV2YXBjX2V4dHJhY3RfdmlvX2RiZyAtIGV4dHJhY3QgZnVsbCB2aW9sYXRpb24gaW5mb3JtYXRp
-b24gYWZ0ZXIgZG9pbmcNCj4gPiArICogICAgICAgICAgICAgICAgICAgICAgICAgIHNoaWZ0IG1l
-Y2hhbmlzbS4NCj4gPiArICovDQo+ID4gK3N0YXRpYyB2b2lkIGRldmFwY19leHRyYWN0X3Zpb19k
-Ymcoc3RydWN0IG10a19kZXZhcGNfY29udGV4dCAqY3R4KQ0KPiA+ICt7DQo+ID4gKyAgICAgICBj
-b25zdCBzdHJ1Y3QgbXRrX2RldmFwY192aW9fZGJncyAqdmlvX2RiZ3M7DQo+ID4gKyAgICAgICBz
-dHJ1Y3QgbXRrX2RldmFwY192aW9faW5mbyAqdmlvX2luZm87DQo+ID4gKyAgICAgICB2b2lkIF9f
-aW9tZW0gKnZpb19kYmcwX3JlZzsNCj4gPiArICAgICAgIHZvaWQgX19pb21lbSAqdmlvX2RiZzFf
-cmVnOw0KPiA+ICsgICAgICAgdTMyIGRiZzA7DQo+ID4gKw0KPiA+ICsgICAgICAgdmlvX2RiZzBf
-cmVnID0gY3R4LT5kZXZhcGNfcGRfYmFzZSArIGN0eC0+b2Zmc2V0LT52aW9fZGJnMDsNCj4gPiAr
-ICAgICAgIHZpb19kYmcxX3JlZyA9IGN0eC0+ZGV2YXBjX3BkX2Jhc2UgKyBjdHgtPm9mZnNldC0+
-dmlvX2RiZzE7DQo+ID4gKw0KPiA+ICsgICAgICAgdmlvX2RiZ3MgPSBjdHgtPnZpb19kYmdzOw0K
-PiA+ICsgICAgICAgdmlvX2luZm8gPSBjdHgtPnZpb19pbmZvOw0KPiA+ICsNCj4gPiArICAgICAg
-IC8qIFN0YXJ0cyB0byBleHRyYWN0IHZpb2xhdGlvbiBpbmZvcm1hdGlvbiAqLw0KPiA+ICsgICAg
-ICAgZGJnMCA9IHJlYWRsKHZpb19kYmcwX3JlZyk7DQo+ID4gKyAgICAgICB2aW9faW5mby0+dmlv
-X2FkZHIgPSByZWFkbCh2aW9fZGJnMV9yZWcpOw0KPiA+ICsNCj4gPiArICAgICAgIHZpb19pbmZv
-LT5tYXN0ZXJfaWQgPSAoZGJnMCAmIHZpb19kYmdzLT5tc3RpZC5tYXNrKSA+Pg0KPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHZpb19kYmdzLT5tc3RpZC5zdGFydDsNCj4gPiArICAg
-ICAgIHZpb19pbmZvLT5kb21haW5faWQgPSAoZGJnMCAmIHZpb19kYmdzLT5kbW5pZC5tYXNrKSA+
-Pg0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZpb19kYmdzLT5kbW5pZC5zdGFy
-dDsNCj4gPiArICAgICAgIHZpb19pbmZvLT53cml0ZSA9ICgoZGJnMCAmIHZpb19kYmdzLT52aW9f
-dy5tYXNrKSA+Pg0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICB2aW9fZGJncy0+dmlv
-X3cuc3RhcnQpID09IDE7DQo+ID4gKyAgICAgICB2aW9faW5mby0+cmVhZCA9ICgoZGJnMCAmIHZp
-b19kYmdzLT52aW9fci5tYXNrKSA+Pg0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgdmlv
-X2RiZ3MtPnZpb19yLnN0YXJ0KSA9PSAxOw0KPiA+ICsgICAgICAgdmlvX2luZm8tPnZpb19hZGRy
-X2hpZ2ggPSAoZGJnMCAmIHZpb19kYmdzLT5hZGRyX2gubWFzaykgPj4NCj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgdmlvX2RiZ3MtPmFkZHJfaC5zdGFydDsNCj4gPiArDQo+
-ID4gKyAgICAgICBkZXZhcGNfdmlvX2luZm9fcHJpbnQoY3R4KTsNCj4gPiArfQ0KPiA+ICsNCj4g
-DQo+IFtzbmlwXQ0KPiANCj4gPiArDQo+ID4gKy8qDQo+ID4gKyAqIHN0YXJ0X2RldmFwYyAtIHVu
-bWFzayBzbGF2ZSdzIGlycSB0byBzdGFydCByZWNlaXZpbmcgZGV2YXBjIHZpb2xhdGlvbi4NCj4g
-PiArICovDQo+ID4gK3N0YXRpYyB2b2lkIHN0YXJ0X2RldmFwYyhzdHJ1Y3QgbXRrX2RldmFwY19j
-b250ZXh0ICpjdHgpDQo+ID4gK3sNCj4gPiArICAgICAgIHUzMiB2aW9faWR4Ow0KPiA+ICsNCj4g
-PiArICAgICAgIGZvciAodmlvX2lkeCA9IDA7IHZpb19pZHggPCBjdHgtPnZpb19pZHhfbnVtOyB2
-aW9faWR4KyspDQo+ID4gKyAgICAgICAgICAgICAgIG1hc2tfbW9kdWxlX2lycShjdHgsIHZpb19p
-ZHgsIGZhbHNlKTsNCj4gDQo+IEFyZSB0aGVzZSBiaXRzIGRlZmF1bHQgdHJ1ZT8gSWYgdGhleSBh
-cmUgZGVmYXVsdCBmYWxzZSwgeW91IG5lZWQgbm90DQo+IHRvIHNldHVwIGl0IHRvIGZhbHNlIGFn
-YWluLg0KDQpJdCdzIGRlZmF1bHQgdmFsdWUgaXMgdHJ1ZSwgd2hpY2ggaXMgbWFzay4NCldlIHRy
-eSB0byB1bm1hc2sgaXQgdG8gc3RhcnQgc2VydmljZS4NCg0KPiANCj4gPiArfQ0KPiA+ICsNCj4g
-DQo+IFtzbmlwXQ0KPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRr
-LWRldmFwYy5oIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWRldmFwYy5oDQo+ID4gbmV3IGZp
-bGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi43YmQ3ZTY2DQo+ID4gLS0tIC9kZXYv
-bnVsbA0KPiA+ICsrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1kZXZhcGMuaA0KPiA+IEBA
-IC0wLDAgKzEsNTQgQEANCj4gPiArLyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAg
-Ki8NCj4gPiArLyoNCj4gPiArICogQ29weXJpZ2h0IChDKSAyMDIwIE1lZGlhVGVrIEluYy4NCj4g
-PiArICovDQo+ID4gKw0KPiA+ICsjaWZuZGVmIF9fTVRLX0RFVkFQQ19IX18NCj4gPiArI2RlZmlu
-ZSBfX01US19ERVZBUENfSF9fDQo+ID4gKw0KPiA+ICsjZGVmaW5lIFZJT19NT0RfVE9fUkVHX0lO
-RChtKSAgKChtKSAvIDMyKQ0KPiA+ICsjZGVmaW5lIFZJT19NT0RfVE9fUkVHX09GRihtKSAgKCht
-KSAlIDMyKQ0KPiA+ICsNCj4gPiArc3RydWN0IG10a19kZXZhcGNfcGRfb2Zmc2V0IHsNCj4gPiAr
-ICAgICAgIHUzMiB2aW9fbWFzazsNCj4gPiArICAgICAgIHUzMiB2aW9fc3RhOw0KPiA+ICsgICAg
-ICAgdTMyIHZpb19kYmcwOw0KPiA+ICsgICAgICAgdTMyIHZpb19kYmcxOw0KPiA+ICsgICAgICAg
-dTMyIGFwY19jb247DQo+ID4gKyAgICAgICB1MzIgdmlvX3NoaWZ0X3N0YTsNCj4gPiArICAgICAg
-IHUzMiB2aW9fc2hpZnRfc2VsOw0KPiA+ICsgICAgICAgdTMyIHZpb19zaGlmdF9jb247DQo+ID4g
-K307DQo+ID4gKw0KPiA+ICtzdHJ1Y3QgbXRrX2RldmFwY192aW9fZGJnc19kZXNjIHsNCj4gPiAr
-ICAgICAgIHUzMiBtYXNrOw0KPiA+ICsgICAgICAgdTMyIHN0YXJ0Ow0KPiA+ICt9Ow0KPiA+ICsN
-Cj4gPiArc3RydWN0IG10a19kZXZhcGNfdmlvX2RiZ3Mgew0KPiA+ICsgICAgICAgc3RydWN0IG10
-a19kZXZhcGNfdmlvX2RiZ3NfZGVzYyBtc3RpZDsNCj4gPiArICAgICAgIHN0cnVjdCBtdGtfZGV2
-YXBjX3Zpb19kYmdzX2Rlc2MgZG1uaWQ7DQo+ID4gKyAgICAgICBzdHJ1Y3QgbXRrX2RldmFwY192
-aW9fZGJnc19kZXNjIHZpb193Ow0KPiA+ICsgICAgICAgc3RydWN0IG10a19kZXZhcGNfdmlvX2Ri
-Z3NfZGVzYyB2aW9fcjsNCj4gPiArICAgICAgIHN0cnVjdCBtdGtfZGV2YXBjX3Zpb19kYmdzX2Rl
-c2MgYWRkcl9oOw0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RydWN0IG10a19kZXZhcGNfdmlvX2lu
-Zm8gew0KPiA+ICsgICAgICAgYm9vbCByZWFkOw0KPiA+ICsgICAgICAgYm9vbCB3cml0ZTsNCj4g
-PiArICAgICAgIHUzMiB2aW9fYWRkcjsNCj4gPiArICAgICAgIHUzMiB2aW9fYWRkcl9oaWdoOw0K
-PiA+ICsgICAgICAgdTMyIG1hc3Rlcl9pZDsNCj4gPiArICAgICAgIHUzMiBkb21haW5faWQ7DQo+
-ID4gK307DQo+ID4gKw0KPiA+ICtzdHJ1Y3QgbXRrX2RldmFwY19jb250ZXh0IHsNCj4gPiArICAg
-ICAgIHN0cnVjdCBkZXZpY2UgKmRldjsNCj4gPiArICAgICAgIHUzMiB2aW9faWR4X251bTsNCj4g
-PiArICAgICAgIHZvaWQgX19pb21lbSAqZGV2YXBjX3BkX2Jhc2U7DQo+ID4gKyAgICAgICBzdHJ1
-Y3QgbXRrX2RldmFwY192aW9faW5mbyAqdmlvX2luZm87DQo+ID4gKyAgICAgICBjb25zdCBzdHJ1
-Y3QgbXRrX2RldmFwY19wZF9vZmZzZXQgKm9mZnNldDsNCj4gPiArICAgICAgIGNvbnN0IHN0cnVj
-dCBtdGtfZGV2YXBjX3Zpb19kYmdzICp2aW9fZGJnczsNCj4gPiArfTsNCj4gPiArDQo+ID4gKyNl
-bmRpZiAvKiBfX01US19ERVZBUENfSF9fICovDQo+IA0KPiBEYXRhIGluIHRoaXMgaGVhZGVyIGZp
-bGUgaXMgb25seSB1c2VkIGluIG10ay1kZXZhcGMuYyBhbmQgbXRrLWRldmFwYy5jDQo+IGlzIGEg
-c21hbGwgZmlsZSwgc28gSSB0aGluayBpdCdzIGJldHRlciB0byBtb3ZlIGRhdGEgaW4gaGVhZGVy
-IGZpbGUNCj4gaW50byAuYyBmaWxlIHRvIG1ha2UgY29kZSBzaW1wbGVyLg0KDQpUaGlzIGlkZWEg
-aXMgb2theSBmb3IgbWUuIEknbGwgdXBkYXRlIG9uIG5leHQgcGF0Y2guDQpUaGFua3MgIQ0KDQo+
-IA0KPiBSZWdhcmRzLA0KPiBDaHVuLUt1YW5nLg0KDQo=
+On Tue, 28 Jul 2020 19:17:55 +0800
+linmiaohe <linmiaohe@huawei.com> wrote:
+
+> From: Miaohe Lin <linmiaohe@huawei.com>
+> 
+> The func tick_nohz_full_enabled() is also called by tick_nohz_full_cpu().
+> So this one is duplicated and should be removed.
+
+Seems reasonable.
+
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- Steve
+
+> 
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>  kernel/sched/sched.h | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
+> 
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 877fb08eb1b0..02028f785f87 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -1930,12 +1930,7 @@ extern int __init sched_tick_offload_init(void);
+>   */
+>  static inline void sched_update_tick_dependency(struct rq *rq)
+>  {
+> -	int cpu;
+> -
+> -	if (!tick_nohz_full_enabled())
+> -		return;
+> -
+> -	cpu = cpu_of(rq);
+> +	int cpu = cpu_of(rq);
+>  
+>  	if (!tick_nohz_full_cpu(cpu))
+>  		return;
 
