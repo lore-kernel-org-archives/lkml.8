@@ -6,58 +6,71 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA29C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1914C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 187582074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C835A20791
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:54:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgGaXu7 (ORCPT
+        id S1727893AbgGaXyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 19:50:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52340 "EHLO
+        Fri, 31 Jul 2020 19:54:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgGaXu6 (ORCPT
+        with ESMTP id S1726099AbgGaXyX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 19:50:58 -0400
+        Fri, 31 Jul 2020 19:54:23 -0400
 Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EC68C06174A;
-        Fri, 31 Jul 2020 16:50:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3875CC06174A;
+        Fri, 31 Jul 2020 16:54:23 -0700 (PDT)
 Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id B5E0A11E58FA8;
-        Fri, 31 Jul 2020 16:34:12 -0700 (PDT)
-Date:   Fri, 31 Jul 2020 16:50:57 -0700 (PDT)
-Message-Id: <20200731.165057.1709367540726800070.davem@davemloft.net>
-To:     gustavoars@kernel.org
-Cc:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, gustavo@embeddedor.com
-Subject: Re: [PATCH][next] net/sched: cls_u32: Use struct_size() helper
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 20C1011E58FA6;
+        Fri, 31 Jul 2020 16:37:37 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 16:54:21 -0700 (PDT)
+Message-Id: <20200731.165421.653261887142519995.davem@davemloft.net>
+To:     yepeilin.cs@gmail.com
+Cc:     santosh.shilimkar@oracle.com, kuba@kernel.org,
+        dan.carpenter@oracle.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent
+ kernel-infoleak in rds_notify_queue_get()
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200730160314.GA30990@embeddedor>
-References: <20200730160314.GA30990@embeddedor>
+In-Reply-To: <20200730192026.110246-1-yepeilin.cs@gmail.com>
+References: <20200730192026.110246-1-yepeilin.cs@gmail.com>
 X-Mailer: Mew version 6.8 on Emacs 26.3
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 31 Jul 2020 16:34:13 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 31 Jul 2020 16:37:37 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Date: Thu, 30 Jul 2020 11:03:14 -0500
+From: Peilin Ye <yepeilin.cs@gmail.com>
+Date: Thu, 30 Jul 2020 15:20:26 -0400
 
-> Make use of the struct_size() helper, in multiple places, instead
-> of an open-coded version in order to avoid any potential type
-> mistakes and protect against potential integer overflows.
+> rds_notify_queue_get() is potentially copying uninitialized kernel stack
+> memory to userspace since the compiler may leave a 4-byte hole at the end
+> of `cmsg`.
 > 
-> Also, remove unnecessary object identifier size.
+> In 2016 we tried to fix this issue by doing `= { 0 };` on `cmsg`, which
+> unfortunately does not always initialize that 4-byte hole. Fix it by using
+> memset() instead.
 > 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Cc: stable@vger.kernel.org
+> Fixes: f037590fff30 ("rds: fix a leak of kernel memory")
+> Fixes: bdbe6fbc6a2f ("RDS: recv.c")
+> Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
 
-Applied, thank you.
+Applied and queued up for -stable, thanks.
+
+I saw a suggestion to use __packed but that breaks UAPI and is definitely
+not an option to solve this problem.
