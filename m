@@ -2,91 +2,139 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CFAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E877BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 974A422B40
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA056208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:32:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732180AbgGaJcB (ORCPT
+        id S1732217AbgGaJco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:32:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50948 "EHLO mail.kernel.org"
+        Fri, 31 Jul 2020 05:32:44 -0400
+Received: from mx.socionext.com ([202.248.49.38]:6163 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727096AbgGaJcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:32:01 -0400
-Received: from gaia (unknown [95.146.230.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C58BD208E4;
-        Fri, 31 Jul 2020 09:31:58 +0000 (UTC)
-Date:   Fri, 31 Jul 2020 10:31:56 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] arm64/alternatives: move length validation inside the
- subsection
-Message-ID: <20200731093155.GA29569@gaia>
-References: <20200729215152.662225-1-samitolvanen@google.com>
- <20200730122201.GM25149@gaia>
- <CABCJKucS-DXPkHMCPKpbFduZApRdw=1DL4+YhULAsUNn=o-dTA@mail.gmail.com>
- <20200730152330.GA3128@gaia>
- <20200731064915.GI1508201@kroah.com>
+        id S1731922AbgGaJco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 05:32:44 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 31 Jul 2020 18:32:42 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 4118360060;
+        Fri, 31 Jul 2020 18:32:42 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Fri, 31 Jul 2020 18:32:42 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id 1A69A40327;
+        Fri, 31 Jul 2020 18:32:42 +0900 (JST)
+Received: from [10.212.6.48] (unknown [10.212.6.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 79B53120498;
+        Fri, 31 Jul 2020 18:32:41 +0900 (JST)
+Subject: Re: [PATCH] dma-buf: heaps: Introduce dma_heap_add_cma() for
+ non-default CMA heap
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        linux-media@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <1594948208-4739-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <CALAqxLXuJQOCXcpyWwyBFZGFK_dEgG0edEEf2=vOpAw6Ng8mBQ@mail.gmail.com>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <eacfc713-e98a-78fa-b316-3943600813d0@socionext.com>
+Date:   Fri, 31 Jul 2020 18:32:41 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200731064915.GI1508201@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CALAqxLXuJQOCXcpyWwyBFZGFK_dEgG0edEEf2=vOpAw6Ng8mBQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 08:49:15AM +0200, Greg Kroah-Hartman wrote:
-> On Thu, Jul 30, 2020 at 04:23:31PM +0100, Catalin Marinas wrote:
-> > On Thu, Jul 30, 2020 at 08:13:05AM -0700, Sami Tolvanen wrote:
-> > > On Thu, Jul 30, 2020 at 5:22 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > > >
-> > > > On Wed, Jul 29, 2020 at 02:51:52PM -0700, Sami Tolvanen wrote:
-> > > > > Commit f7b93d42945c ("arm64/alternatives: use subsections for replacement
-> > > > > sequences") breaks LLVM's integrated assembler, because due to its
-> > > > > one-pass design, it cannot compute instruction sequence lengths before the
-> > > > > layout for the subsection has been finalized. This change fixes the build
-> > > > > by moving the .org directives inside the subsection, so they are processed
-> > > > > after the subsection layout is known.
-> > > > >
-> > > > > Link: https://github.com/ClangBuiltLinux/linux/issues/1078
-> > > > > Cc: <stable@vger.kernel.org> # 4.14+
-> > > >
-> > > > Commit f7b93d42945c went in 5.8-rc4. Why is this cc stable from 4.14? If
-> > > > Will picks it up for 5.8, it doesn't even need a cc stable.
-> > > 
-> > > Greg or Sasha can probably answer why, but this patch is in 4.14.189,
-> > > 4.19.134, 5.4.53, and 5.7.10, which ended up breaking some downstream
-> > > Android kernel builds.
-> > 
-> > I see but I don't think we need the explicit cc stable for 4.14. That's
-> > why the Fixes tag is important. If a patch was back-ported, the
-> > subsequent fixes should be picked by the stable maintainers as well.
+Hi John,
+Thank you for your comment.
+
+On 2020/07/29 4:17, John Stultz wrote:
+> On Thu, Jul 16, 2020 at 6:10 PM Kunihiko Hayashi
+> <hayashi.kunihiko@socionext.com> wrote:
+>>
+>> Current dma-buf heaps can handle only default CMA. This introduces
+>> dma_heap_add_cma() function to attach CMA heaps that belongs to a device.
+>>
+>> At first, the driver calls of_reserved_mem_device_init() to set
+>> memory-region property associated with reserved-memory defined as CMA
+>> to the device. And when the driver calls this dma_heap_add_cma(),
+>> the CMA will be added to dma-buf heaps.
+>>
+>> For example, prepare CMA node named "linux,cma@10000000" and
+>> specify the node for memory-region property. After the above calls
+>> in the driver, a device file "/dev/dma_heap/linux,cma@10000000"
+>> associated with the CMA become available as dma-buf heaps.
+>>
+>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>> ---
+>>   drivers/dma-buf/heaps/cma_heap.c | 12 ++++++++++++
+>>   include/linux/dma-heap.h         |  9 +++++++++
+>>   2 files changed, 21 insertions(+)
 > 
-> If you know it ahead of time, the explict "# kernel.version" hint is
-> always nice to have as it ensures I will try to backport it that far,
-> and if I have problems, I will ask for help.
+> Hey! Sorry for the slow response on this! I just realized I never replied!
 
-Good to know. Thanks for the clarification.
+I waited but no problem.
 
--- 
-Catalin
+> 
+>> diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma_heap.c
+>> index 626cf7f..5d2442e 100644
+>> --- a/drivers/dma-buf/heaps/cma_heap.c
+>> +++ b/drivers/dma-buf/heaps/cma_heap.c
+
+[snip]
+
+>> --
+>> 2.7.4
+> 
+> Looks sane to me.  Being able to expose different multiple CMA heaps
+> is needed, and I agree this way (as opposed to my earlier dts
+> appraoch) is probably the best approach. The only bit I'm so-so on is
+> adding the CMA heap specific call in the dma-heap.h, but at the same
+> time I can't justify adding a whole new header for a single function.
+
+I'm also a little worried about whether "CMA specific" call is in
+the dma-heap.h, however I can't find another solution.
+
+> Do you have a upstream driver that you plan to make use this new call?
+
+Unfortunately I don't have an upstream driver using this call.
+
+This call is called from dma-buf heaps "importer" or "customer",
+and I only made an example (do nothing) importer driver
+to test the call.
+
+> We want to have in-tree users of code added.
+
+I think this is a generic way to use non-default CMA heaps, however,
+we need in-tree "importer" drivers to want to use non-default CMA heaps.
+I don't find it from now.
+
+> But if so, feel free to add my:
+>    Acked-by: John Stultz <john.stultz@linaro.org>
+> To this patch when you submit the driver changes.
+
+Thank you,
+
+---
+Best Regards
+Kunihiko Hayashi
+
