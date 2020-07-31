@@ -2,138 +2,256 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C972C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 00:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 00:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BFA020663
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 00:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B06B20663
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 00:26:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sOOQDS6l"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="S1LZpTa7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730942AbgGaA0R (ORCPT
+        id S1730931AbgGaA0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 20:26:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730915AbgGaA0Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Jul 2020 20:26:16 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A96BC061575
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 17:26:16 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id p1so15764831pls.4
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 17:26:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Z3Lm1sGkWQwPe3NkE6iARE36RcrQ0xDQdl/rL+tDjI0=;
-        b=sOOQDS6l29PwJncVTdlZkzs7X7QSPkZPgnQAmSIwmUOgSvyL2/q0N7p90FYdSW2s8j
-         7CUVCSO8S+NAKPz3nxM6HhwyGHv+sbArXQoh5HbHlu8QYOGJbIQnOYENg9nXxXSjqXmE
-         b/NXnhhTJcnAncLg5glbJ16Gmu7U9R7QCPUgEmu8abMsBqnftD0pBFG9svq8rL0X1x/+
-         8QDgT9u9tf81CyG+A5/tzVxH58yQi4pFayRE1lwYeGvyydlZNXXPSUdjYJIU9bOJ2Y5Q
-         Duxb7LFSRiGHX9usLWXOtYqk0aAF6bIjq1IUM4JvYDAPcBT2UjU0aKEK9VPxeKVm1Hx4
-         PkFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Z3Lm1sGkWQwPe3NkE6iARE36RcrQ0xDQdl/rL+tDjI0=;
-        b=fyVcMM0baUhXTI7jTfijMFB5AQpre3KZ/WzapWtis0McoTDEZmeVCUgcUBWYZGoNG5
-         D0aqbqQnJbYjVwKx+nQ+mVfKFnRlxKK+J1SSLJsTTKsepVJHDa28VSBOZPPWlpcfRpyg
-         s22XXJFMIkYfqTDNKu44zt/GSsl8WMZmyOVcdNLzWKpxESg+Q89LnabCmtAPQOWpKscN
-         u9TVAgxFjdm8JDyp/bdyCYVDNA+LMfVIv7osSusJsZBZR0Oc44fXw4ota2hLvea7XWqR
-         uQNLTY4lYtqHfH5c9B1zyqpXXT5qVgtwLuUQo8Mi1atYdl2iDzNp+dKO8qCGMp17I0x4
-         cpdA==
-X-Gm-Message-State: AOAM531TdPJbDnDIelLjtD15OYIn+9m42Y7NQqjXCH4BirVv9Hq0FPiL
-        c+h5IVyCl5luIath8+1s3IR1yA==
-X-Google-Smtp-Source: ABdhPJwcr954AG1gqEdKpM5QuRqbV3+wB5pscU2NtJ0l5WoRi0tIaQ0FwOD7I+WVx/5rp3y/anJJGw==
-X-Received: by 2002:a63:8c5d:: with SMTP id q29mr1238398pgn.249.1596155175408;
-        Thu, 30 Jul 2020 17:26:15 -0700 (PDT)
-Received: from google.com (56.4.82.34.bc.googleusercontent.com. [34.82.4.56])
-        by smtp.gmail.com with ESMTPSA id p19sm7867698pgj.74.2020.07.30.17.26.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 17:26:14 -0700 (PDT)
-Date:   Fri, 31 Jul 2020 00:26:11 +0000
-From:   William Mcvicker <willmcvicker@google.com>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-Cc:     security@kernel.org, Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH 1/1] netfilter: nat: add range checks for access to
- nf_nat_l[34]protos[]
-Message-ID: <20200731002611.GA1035680@google.com>
-References: <20200727175720.4022402-1-willmcvicker@google.com>
- <20200727175720.4022402-2-willmcvicker@google.com>
- <20200729214607.GA30831@salvia>
+Received: from mga11.intel.com ([192.55.52.93]:12386 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730781AbgGaA0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 20:26:15 -0400
+IronPort-SDR: B61kyDO2A7zr1XEZTLKXTGJvJG6hUT/agHBYjywVBnGhrx3No1FrLOaiBS1D1232D6ykDfgRvb
+ yXFH8fdezE+Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="149542940"
+X-IronPort-AV: E=Sophos;i="5.75,416,1589266800"; 
+   d="scan'208";a="149542940"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 17:26:10 -0700
+IronPort-SDR: +rrzfOuU21xdQgYoO4zzH87MA5bD/Ub2rRq54X7cINi/lOcGKsk8Xv/Ss07HKhQDQXAMp2zIOp
+ 5nZmNhhXvymg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,416,1589266800"; 
+   d="scan'208";a="291061474"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga006.jf.intel.com with ESMTP; 30 Jul 2020 17:26:09 -0700
+Received: from fmsmsx606.amr.corp.intel.com (10.18.126.86) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 30 Jul 2020 17:26:08 -0700
+Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
+ fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 30 Jul 2020 17:26:08 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (104.47.44.59) by
+ edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Thu, 30 Jul 2020 17:26:08 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TEziJD9Xen+qnZgM2ULewexHMoy9Am1owOGzttZjZtbH2ZJ/9PJ0dy0aMZeKtoy80I/pxZ0r7Ew/McOZ+2dWEt0rFd/YjxMrr/BuWSc7XYl18+K9YL/0iZjctzGGZ3P76wDZbEJkGdj6CtXyUKZ+Hk/tv25QjTiTXZ/RxvNTH0J5n6d9Q5yrNBbNx5r5Pb3Jyy/KaWtJHlysDXRJnxzVpjv6b6yhMQiJ2HlUNG5rk2V3M2eho4y4a3hY1tlwszIyGL/BBCm1kw2mi91SpxRragjWMRvGya5ysiBhlHUDL6ieR706V6t567SRL7gAAkmmecPOwyKGCDyFNIQqd4acLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4VRWk4byTnHwy2eZ1o2Zt8gFM9RgXPcn04hcOlgUcHU=;
+ b=UZ+7KRtYkcY3/FCOxoOw1wN9clMS6UE/sTQUZJEeSH2eUcLEMKZ4MsXpFEHKbqIxcSRgDECwcaWR7LHO0+sZd7T7Hfj5FuOk0/ZngEVfGSaIFJI1aGzpfeVtsgYW0GXv5BN8TcT9YonW/1vHL6qkWnokzCZStyW0fXvCxt9pKQlp9lt9BRc8bd/f5+QQOP1BJb8kiCK82unhZ5QriujNVNPE9q2SgnZWCjcxPl1jrnAub0WNT7rLuZDozy+VqGB8zn2N2cBhMya88p1hzd4Kw2FKjKmZt7H+n+tEwHHQFnkZ4pAu7S7mW/Fnh4OzHIQwcZ/1dJEfvcNoEdylviqFFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4VRWk4byTnHwy2eZ1o2Zt8gFM9RgXPcn04hcOlgUcHU=;
+ b=S1LZpTa7UkiSchVFGckxM4Ui931KNfdXi3xwRXXv/WAp3ZhuskF8tkL+3ZdqVjE6X2R14qjVRZ+QFWfLGmC0eNcTJjeWbgN80dN15Zi08twWTcoP95TTe8WFdMBjHBXaUCQOYpJlw3mHsepwFsHVvuPMf+VgJlIqfEm8FyFqAIs=
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com (2603:10b6:301:b::12)
+ by MWHPR11MB1599.namprd11.prod.outlook.com (2603:10b6:301:e::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21; Fri, 31 Jul
+ 2020 00:26:06 +0000
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::9864:e0cb:af36:6feb]) by MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::9864:e0cb:af36:6feb%5]) with mapi id 15.20.3216.034; Fri, 31 Jul 2020
+ 00:26:06 +0000
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: RE: [PATCH v3 3/4] iommu: Add iommu_aux_get_domain_for_dev()
+Thread-Topic: [PATCH v3 3/4] iommu: Add iommu_aux_get_domain_for_dev()
+Thread-Index: AQHWWaRTwLJlmIhIiUK0CZQgQ7WVGKkfGWqAgAA12uCAAVpUgIAAQGTw
+Date:   Fri, 31 Jul 2020 00:26:06 +0000
+Message-ID: <MWHPR11MB16452F5E657F26B1137B80C98C4E0@MWHPR11MB1645.namprd11.prod.outlook.com>
+References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
+        <20200714055703.5510-4-baolu.lu@linux.intel.com>
+        <20200729142507.182cd18a@x1.home>
+        <MWHPR11MB1645736D9ED91A95D1D4519A8C700@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20200730141725.5f63b508@x1.home>
+In-Reply-To: <20200730141725.5f63b508@x1.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.5.1.3
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.210]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a1250e37-90cb-4004-b3e9-08d834e8509f
+x-ms-traffictypediagnostic: MWHPR11MB1599:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR11MB1599D2F67FCA648CC3138A7F8C4E0@MWHPR11MB1599.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: HilnXslHMvTRVwCYj8JsVZ4fvg3hPNLo3x2f2P7JLutDqFa6QRxz9BwC+kPJgr1P2qrP5R69ic03gDsX8NyeM5yunN50QiDTffbD1EA9TIdzQf6kGqG6G23NJn1OAyCFTCwihaNuGtgLYoj159D7RTrccoMlrec0gp69IYCIaO8ZmIx8Z7ih1aTM2q8NTMfleo3H0q6Vh0cekkBUUHfrAWOfLE67AaYDQJx2PZ563kzdTxgbOeTRdwDM21HuDCLZJP+9ckQd5WCw0+6Mp/D88n0s/uHln01fS4efkmFHBI2A3+PbE0bRX8rqDTIDSvafelPecftD5I/ELkJ5SzsB4Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(366004)(136003)(346002)(376002)(6506007)(6916009)(76116006)(5660300002)(4326008)(54906003)(2906002)(64756008)(55016002)(66946007)(52536014)(66476007)(7696005)(66446008)(66556008)(8676002)(316002)(9686003)(71200400001)(8936002)(26005)(478600001)(186003)(86362001)(33656002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: D9OZTaJkdTN4ge7+ejD4g2R60MZlrW1qd83Cu4wEHTAHIq9Kw7zQ96Bip7IVdhL7Ix8J6M82qitRbmyTDpsQPxML8hYr2I3ll3hi7oBN0eY2r4UyfTRPuNArA1c0LKQP0lPxMbtOkpVIuQjs0WN4MhOv1yo/6175pQ9/0EONqYyn1dD98Yr5zp2Yk8F3B5if598/xTn4etpvUX3vPiHujcOSkcOxVJd7jcyza9LeVW2VnSQJWeNw4u32zGiFU4BHGLTWUvBlr1IP+93TQbtCLF4nv16U16HW0m44i233/wsMSjseOo4jEE0fqkeXMUpYyozL2xZZXHE0Sm+V3zOIS7o3VB3AfWr8V71xBEq3S1xPlHQOkaUQh9XFbXRNuDYpK5NHx4VgSehMmE3Qvyi9qbj17BvrHCYrrr+tmkrhLnDPzxTWglwNgL3P09q9b3/4Zt7+idnhq/fsDU7tLVARjGfLlBy03ou2fShjRrWHqxTTXxH6On0cOgNuF4F9MkmO
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200729214607.GA30831@salvia>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1645.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1250e37-90cb-4004-b3e9-08d834e8509f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2020 00:26:06.1606
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: WnP98AdjfvhDfFatzazqCzG6Bu2xZo6e32bduGqkilW+1OEDIwYGQr6uKtOfbsqQR6kOcT2lR9tDBxEnEi2YbA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1599
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pablo,
+> From: Alex Williamson <alex.williamson@redhat.com>
+> Sent: Friday, July 31, 2020 4:17 AM
+>=20
+> On Wed, 29 Jul 2020 23:49:20 +0000
+> "Tian, Kevin" <kevin.tian@intel.com> wrote:
+>=20
+> > > From: Alex Williamson <alex.williamson@redhat.com>
+> > > Sent: Thursday, July 30, 2020 4:25 AM
+> > >
+> > > On Tue, 14 Jul 2020 13:57:02 +0800
+> > > Lu Baolu <baolu.lu@linux.intel.com> wrote:
+> > >
+> > > > The device driver needs an API to get its aux-domain. A typical usa=
+ge
+> > > > scenario is:
+> > > >
+> > > >         unsigned long pasid;
+> > > >         struct iommu_domain *domain;
+> > > >         struct device *dev =3D mdev_dev(mdev);
+> > > >         struct device *iommu_device =3D vfio_mdev_get_iommu_device(=
+dev);
+> > > >
+> > > >         domain =3D iommu_aux_get_domain_for_dev(dev);
+> > > >         if (!domain)
+> > > >                 return -ENODEV;
+> > > >
+> > > >         pasid =3D iommu_aux_get_pasid(domain, iommu_device);
+> > > >         if (pasid <=3D 0)
+> > > >                 return -EINVAL;
+> > > >
+> > > >          /* Program the device context */
+> > > >          ....
+> > > >
+> > > > This adds an API for such use case.
+> > > >
+> > > > Suggested-by: Alex Williamson <alex.williamson@redhat.com>
+> > > > Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> > > > ---
+> > > >  drivers/iommu/iommu.c | 18 ++++++++++++++++++
+> > > >  include/linux/iommu.h |  7 +++++++
+> > > >  2 files changed, 25 insertions(+)
+> > > >
+> > > > diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> > > > index cad5a19ebf22..434bf42b6b9b 100644
+> > > > --- a/drivers/iommu/iommu.c
+> > > > +++ b/drivers/iommu/iommu.c
+> > > > @@ -2817,6 +2817,24 @@ void iommu_aux_detach_group(struct
+> > > iommu_domain *domain,
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(iommu_aux_detach_group);
+> > > >
+> > > > +struct iommu_domain *iommu_aux_get_domain_for_dev(struct
+> device
+> > > *dev)
+> > > > +{
+> > > > +	struct iommu_domain *domain =3D NULL;
+> > > > +	struct iommu_group *group;
+> > > > +
+> > > > +	group =3D iommu_group_get(dev);
+> > > > +	if (!group)
+> > > > +		return NULL;
+> > > > +
+> > > > +	if (group->aux_domain_attached)
+> > > > +		domain =3D group->domain;
+> > >
+> > > Why wouldn't the aux domain flag be on the domain itself rather than
+> > > the group?  Then if we wanted sanity checking in patch 1/ we'd only
+> > > need to test the flag on the object we're provided.
+> > >
+> > > If we had such a flag, we could create an iommu_domain_is_aux()
+> > > function and then simply use iommu_get_domain_for_dev() and test that
+> > > it's an aux domain in the example use case.  It seems like that would
+> >
+> > IOMMU layer manages domains per parent device. Here given a
+>=20
+> Is this the IOMMU layer or the VT-d driver?  I don't see any notion of
+> managing domains relative to a parent in the IOMMU layer.  Please point
+> to something more specific if I'm wrong here.
 
-Yes, I believe this oops is only triggered by userspace when the user
-specifically passes in an invalid nf_nat_l3protos index. I'm happy to re-work
-the patch to check for this in ctnetlink_create_conntrack().
+it's maintained in VT-d driver (include/linux/intel-iommu.h)
 
-> BTW, do you have a Fixes: tag for this? This will be useful for
-> -stable maintainer to pick up this fix.
+struct device_domain_info {
+        struct list_head link;  /* link to domain siblings */
+        struct list_head global; /* link to global list */
+        struct list_head table; /* link to pasid table */
+        struct list_head auxiliary_domains; /* auxiliary domains
+                                             * attached to this device
+                                             */
+	...
 
-Regarding the Fixes: tag, I don't have one offhand since this bug was reported
-to me, but I can search through the code history to find the commit that
-exposed this vulnerability.
+>=20
+> > dev (of mdev), we need a way to find its associated domain under its
+> > parent device. And we cannot simply use iommu_get_domain_for_dev
+> > on the parent device of the mdev, as it will give us the primary domain
+> > of parent device.
+>=20
+> Not the parent device of the mdev, but the mdev_dev(mdev) device.
+> Isn't that what this series is enabling, being able to return the
+> domain from the group that contains the mdev_dev?  We shouldn't need to
+> leave breadcrumbs on the group to know about the domain, the domain
+> itself should be the source of knowledge, or provide a mechanism/ops to
+> learn that knowledge.  Thanks,
+>=20
+> Alex
 
-Thanks,
-Will
+It's the tradeoff between leaving breadcrumb in domain or in group.=20
+Today the domain has no knowledge of mdev. It just includes a list
+of physical devices which are attached to the domain (either due to
+the device is assigned in a whole or as the parent device of an assigned
+mdev). Then we have two choices. One is to save the mdev_dev info
+in device_domain_info and maintain a mapping between mdev_dev
+and related aux domain. The other is to record the domain info directly
+in group. Earlier we choose the latter one as it looks simpler. If you
+prefer to the former one, we can think more and have a try.
 
-On 07/29/2020, Pablo Neira Ayuso wrote:
-> Hi Will,
-> 
-> On Mon, Jul 27, 2020 at 05:57:20PM +0000, Will McVicker wrote:
-> > The indexes to the nf_nat_l[34]protos arrays come from userspace. So we
-> > need to make sure that before indexing the arrays, we verify the index
-> > is within the array bounds in order to prevent an OOB memory access.
-> > Here is an example kernel panic on 4.14.180 when userspace passes in an
-> > index greater than NFPROTO_NUMPROTO.
-> > 
-> > Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-> > Modules linked in:...
-> > Process poc (pid: 5614, stack limit = 0x00000000a3933121)
-> > CPU: 4 PID: 5614 Comm: poc Tainted: G S      W  O    4.14.180-g051355490483
-> > Hardware name: Qualcomm Technologies, Inc. SM8150 V2 PM8150 Google Inc. MSM
-> > task: 000000002a3dfffe task.stack: 00000000a3933121
-> > pc : __cfi_check_fail+0x1c/0x24
-> > lr : __cfi_check_fail+0x1c/0x24
-> > ...
-> > Call trace:
-> > __cfi_check_fail+0x1c/0x24
-> > name_to_dev_t+0x0/0x468
-> > nfnetlink_parse_nat_setup+0x234/0x258
-> 
-> If this oops is only triggerable from userspace, I think a sanity
-> check in nfnetlink_parse_nat_setup should suffice to reject
-> unsupported layer 3 and layer 4 protocols.
-> 
-> I mean, in this patch I see more chunks in the packet path, such as
-> nf_nat_l3proto_ipv4 that should never happen. I would just fix the
-> userspace ctnetlink path.
-> 
-> BTW, do you have a Fixes: tag for this? This will be useful for
-> -stable maintainer to pick up this fix.
-> 
-> Thanks.
+Thanks
+Kevin
