@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B16B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93683C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B0282063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64A4C2063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:09:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="erx5/Jpq"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kXpcLutZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgGaXJM (ORCPT
+        id S1728159AbgGaXJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 19:09:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45824 "EHLO
+        Fri, 31 Jul 2020 19:09:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727956AbgGaXIs (ORCPT
+        with ESMTP id S1727941AbgGaXIs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 31 Jul 2020 19:08:48 -0400
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6320C0617AB
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 205A9C0617A0
         for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:08:48 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id b186so4894567pfb.9
+Received: by mail-pg1-x544.google.com with SMTP id x6so1599966pgx.12
         for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:08:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=8vhxEY/3GLUdito3wLDKhA5WtBC+SXdkXa/hytPCigE=;
-        b=erx5/JpqhPcqTt2NRt7KYL2WjFYzLuGG8P3y0Er3rEKdM9crkTPu/ZeFlU0GCIVOMc
-         DiuJnOx0TWdOG3xCGBDcbldLx8jiF9vR+PM5/8GcMbuuzJl25XeRIG6137MXRlGMlfwL
-         YRvGL0llW8thsScXCRcN7FWXAu5q57sDHshm8=
+        bh=0GUjcxjsZxZ8lM3nHzNDLygJ5FIXra6/aspJ0PfOUm4=;
+        b=kXpcLutZEBDIK8r/VrXM0/S/M66OR5FIx7eppKkF/v1AAyqoIG1EcJSK+MAUIX1GFO
+         +VctBRcweBl+L7+RbRpkCnLdW+eB6f/AB/C7ovm8+db2FE3qYt6eJuyH5G4NG9EB2Nqy
+         kXp3k3nuHXo+uMdBCXjaRxsfyYI9gbQEgrOEY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=8vhxEY/3GLUdito3wLDKhA5WtBC+SXdkXa/hytPCigE=;
-        b=je7QLtl8xyrJhFiwn5awtzLXYuu6yLiy5yxMnOj7DqDJGN8BhEwPzw963Xwv1Wa1y+
-         7qAIJFzfNjuYHbQO4x9dR+eIfVNN7eSCVOK9vOuAmJbXnvbGh/1aOLH2l3henPx0emGP
-         U2flRlBUwQrKN79U00UQsjDIzfBXKk0yqbPTuaVXxmAwWUU5d7QbbvAMewoOD5QmoDS2
-         Y6QUUS7r9a2ympSxu3Rrm4AkQXboN+QdbslnPqmSml8myQjTWRh+O2cGDT/DRO5uiWd6
-         8dQbC46uQ50BtNlxsuQ57vi60XM4Wi9ql500RCeUkjb7NWPuGvdwdA7vDR+cT16JcJmR
-         ESHA==
-X-Gm-Message-State: AOAM532TLlZrWX5+6kbiylogMg+d1cSu6MU7b4XxCjnc6ksV4YEF9JDB
-        0gokV7A73mUuWTgMN30oTbaSUQ==
-X-Google-Smtp-Source: ABdhPJyLpLDveshlbN8sTzxQNU2pIN2ioMmjwXEATDhMsYZvm7qIKteqmlw+pfo4TpnxoNFX69boWQ==
-X-Received: by 2002:a65:6644:: with SMTP id z4mr5848694pgv.391.1596236928153;
-        Fri, 31 Jul 2020 16:08:48 -0700 (PDT)
+        bh=0GUjcxjsZxZ8lM3nHzNDLygJ5FIXra6/aspJ0PfOUm4=;
+        b=fpfoNQTXmYztLxGDHAkJsqTg/dahI2URlEtRQyPSXToN7/uJDj7z6eupNxTmmTVEGv
+         3CMxEtfPLO4U2JHhl4qMhSnULFWGPZQfL3fGVSfVNtqN9yHCqSHs5NQbQvx6ccImMKFY
+         P6ozok2V/e8sjc7D1oe3sEpTE36MY5dj4oZEHh9FzSffgeK/iuIwA4gH0V/XdsTMjlgA
+         Tztxqol0Mgvx8sbDrKRC1dkcjfZ4sbH7iKavYbMfaG/UKKE3UjJMVoEj4L8l3qlqfxk0
+         gm4DL1nNyRDaLADeo88rtBmzmgQO3JR/tAlA8xElu7thSNHBtvFD593t9tfRAX92xDjI
+         WSnQ==
+X-Gm-Message-State: AOAM5313Ebvgz8TRY6SzGD52FK8J3FVU+7qVrBDuQ4uGlVxZYb4580Vn
+        SBmNgJz3KWiTqZSXOJB/5Fk80g==
+X-Google-Smtp-Source: ABdhPJwiN0XXHdkflMLnP3OGR+ZptMLbM44ofV7XUW+Prs0tZqxumVQ+EVPIU7ICfg7NjYmYai6cfw==
+X-Received: by 2002:a63:4f1b:: with SMTP id d27mr5466462pgb.389.1596236927556;
+        Fri, 31 Jul 2020 16:08:47 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k21sm8098390pgl.0.2020.07.31.16.08.43
+        by smtp.gmail.com with ESMTPSA id 75sm649022pfx.187.2020.07.31.16.08.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 31 Jul 2020 16:08:44 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -74,9 +74,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
         linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 33/36] x86/boot/compressed: Remove, discard, or assert for unwanted sections
-Date:   Fri, 31 Jul 2020 16:08:17 -0700
-Message-Id: <20200731230820.1742553-34-keescook@chromium.org>
+Subject: [PATCH v5 31/36] x86/build: Warn on orphan section placement
+Date:   Fri, 31 Jul 2020 16:08:15 -0700
+Message-Id: <20200731230820.1742553-32-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200731230820.1742553-1-keescook@chromium.org>
 References: <20200731230820.1742553-1-keescook@chromium.org>
@@ -87,67 +87,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for warning on orphan sections, stop the linker from
-generating the .eh_frame* sections, discard unwanted non-zero-sized
-generated sections, and enforce other expected-to-be-zero-sized sections
-(since discarding them might hide problems with them suddenly gaining
-unexpected entries).
+We don't want to depend on the linker's orphan section placement
+heuristics as these can vary between linkers, and may change between
+versions. All sections need to be explicitly handled in the linker script.
+
+Now that all sections are explicitly handled, enable orphan section
+warnings.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/boot/compressed/Makefile      |  1 +
- arch/x86/boot/compressed/vmlinux.lds.S | 14 ++++++++++++--
- 2 files changed, 13 insertions(+), 2 deletions(-)
+ arch/x86/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 96d53e300ab6..43b49e1f5b6d 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -49,6 +49,7 @@ GCOV_PROFILE := n
- UBSAN_SANITIZE :=n
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 00e378de8bc0..f8a5b2333729 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -51,6 +51,10 @@ ifdef CONFIG_X86_NEED_RELOCS
+         LDFLAGS_vmlinux := --emit-relocs --discard-none
+ endif
  
- KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
-+KBUILD_LDFLAGS += $(call ld-option,--no-ld-generated-unwind-info)
- # Compressed kernel should be built as PIE since it may be loaded at any
- # address by the bootloader.
- LDFLAGS_vmlinux := -pie $(call ld-option, --no-dynamic-linker)
-diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-index 42dea70a5091..1fb9809a9e61 100644
---- a/arch/x86/boot/compressed/vmlinux.lds.S
-+++ b/arch/x86/boot/compressed/vmlinux.lds.S
-@@ -83,6 +83,11 @@ SECTIONS
- 	ELF_DETAILS
- 
- 	DISCARDS
-+	/DISCARD/ : {
-+		*(.dynamic) *(.dynsym) *(.dynstr) *(.dynbss)
-+		*(.hash) *(.gnu.hash)
-+		*(.note.*)
-+	}
- 
- 	/*
- 	 * Sections that should stay zero sized, which is safer to
-@@ -93,13 +98,18 @@ SECTIONS
- 	}
- 	ASSERT(SIZEOF(.got) == 0, "Unexpected GOT entries detected!")
- 
-+	.plt (NOLOAD) : {
-+		*(.plt) *(.plt.*)
-+	}
-+	ASSERT(SIZEOF(.plt) == 0, "Unexpected run-time procedure linkages detected!")
++# We never want expected sections to be placed heuristically by the
++# linker. All sections should be explicitly named in the linker script.
++LDFLAGS_vmlinux += --orphan-handling=warn
 +
- 	/* ld.lld does not like .rel* sections being made "NOLOAD". */
- 	.rel.dyn : {
--		*(.rel.*)
-+		*(.rel.*) *(.rel_*)
- 	}
- 	ASSERT(SIZEOF(.rel.dyn) == 0, "Unexpected run-time relocations (.rel) detected!")
- 	.rela.dyn : {
--		*(.rela.*)
-+		*(.rela.*) *(.rela_*)
- 	}
- 	ASSERT(SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations (.rela) detected!")
- }
+ #
+ # Prevent GCC from generating any FP code by mistake.
+ #
 -- 
 2.25.1
 
