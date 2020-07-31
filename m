@@ -2,80 +2,147 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E1FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 768DB208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C163D208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:25:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XBd+OOex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730169AbgGaTWH (ORCPT
+        id S1729910AbgGaTZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 15:22:07 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:40059 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgGaTWH (ORCPT
+        Fri, 31 Jul 2020 15:25:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbgGaTZF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 15:22:07 -0400
-Received: from mail-qt1-f170.google.com ([209.85.160.170]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MbBQU-1kd7HJ2768-00bYsV; Fri, 31 Jul 2020 21:22:05 +0200
-Received: by mail-qt1-f170.google.com with SMTP id e5so9772810qth.5;
-        Fri, 31 Jul 2020 12:22:05 -0700 (PDT)
-X-Gm-Message-State: AOAM531U25yWP4IVhLVN1bcjMmajZSEUKmxxvRC6V995dF/Viybm+BjO
-        Tl//jFAOY8NSjmskQabFwQQwwsiZ99VR9lUAUeM=
-X-Google-Smtp-Source: ABdhPJyuFPh2OD+eEy9S9KdQ+GPvofr/sZPZjrogQb73cQsUrsGw9ikC9N+ACXw8zufq6uO/bUNQzszNvuarP8lRTiQ=
-X-Received: by 2002:ac8:5195:: with SMTP id c21mr5280181qtn.304.1596223324287;
- Fri, 31 Jul 2020 12:22:04 -0700 (PDT)
+        Fri, 31 Jul 2020 15:25:05 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FBA3C061574;
+        Fri, 31 Jul 2020 12:25:05 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id bh1so4781684plb.12;
+        Fri, 31 Jul 2020 12:25:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9pK9YxNDC0/VTWpHCG22pJNOCDuzWfEcGOr/zEEo8BE=;
+        b=XBd+OOexs2Z8ND+gERscZBxLz213YJLlec75OS6XoV9oYuBZyefnW4FsZ7oSkTNqsC
+         Njzmi5cfhT14ZSJu22lnFcmQcewBjythBILINDLxtKku50PqDk+sgOu94WtvAIefZYVh
+         jaPeXjDWlgpvzWjY32EEq+D0GYJyUdmiaUZBZDgtpiFQ4CdFis2GYNdBR+O7f3DMUUwh
+         IjMNjSOHx3otvZScyWLhPKQTIdLSfPWgIWzxLIdV7EYY8UJFZQMpM68bWPyZqxj1LdQn
+         5yCIVj74Rxant6fyq25OlY8mhmPfU/qndyvUYUSpG5wPHDWITvEVwKbaTViSKlGzYY/4
+         ie6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9pK9YxNDC0/VTWpHCG22pJNOCDuzWfEcGOr/zEEo8BE=;
+        b=N92oHOe8RZsDFs7paXCWGb7jn2BskZzP5Nyrt0B5Y0a3svTKxpdKNKLOD78Zqe7xuB
+         3hrb3INprlcCKF2uDWpomo90bMCv8uPeYb9LqxyWrz6YT5G2SJmm5+VWXyMF1ueYHSzY
+         Tz+EkCMprr8Hz9Eto7709W+UBrSnd2Dp0BBmPlgPFmV3HabXguijjSJuWyyAXU7iNOT/
+         I7xH1DvkkWFeeeeQQwsFi1UJ4PtUOK620r8wNHrmDPL0bcAfXU83b4mmifkX/hNtJFmp
+         LXYvDQ05nK+tdHZcscv1hVEnMtRMSTgYmmegs5aGz5p9HwnVtTO783PK+T6xIQuQGA2O
+         QhZQ==
+X-Gm-Message-State: AOAM532Y2yCMjUZL9iJna2zWOpX6EK10ucqu+f8I6FhoQF/y6X4rY5J7
+        08yM76WeNAW597bjC+2t/Qf8oF1mxC90hwDTecU=
+X-Google-Smtp-Source: ABdhPJzldNWSlk3wi4UR9LswD7any2VUHzu8VTDpg8lxslzUz6fFySQbukK9E9DDQ6KhSM7g6PtQXVMiwnwUWWDBXmI=
+X-Received: by 2002:a17:902:4b:: with SMTP id 69mr5018619pla.18.1596223504622;
+ Fri, 31 Jul 2020 12:25:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200729150748.1945589-1-daniel@0x0f.com> <20200729150748.1945589-3-daniel@0x0f.com>
-In-Reply-To: <20200729150748.1945589-3-daniel@0x0f.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 31 Jul 2020 21:21:48 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2DY8kNMzZs6vpcsvpU1CaEQy6yCiHq40txEgUBn8d=wA@mail.gmail.com>
-Message-ID: <CAK8P3a2DY8kNMzZs6vpcsvpU1CaEQy6yCiHq40txEgUBn8d=wA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: arm: mstar: remove the binding
- description for mstar,pmsleep
-To:     Daniel Palmer <daniel@0x0f.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     SoC Team <soc@kernel.org>, DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
+References: <20200731164853.3020946-1-campello@chromium.org> <20200731104555.v3.6.I8accffd77d616cb55b29bc3021cb0f5e1da3b68a@changeid>
+In-Reply-To: <20200731104555.v3.6.I8accffd77d616cb55b29bc3021cb0f5e1da3b68a@changeid>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 31 Jul 2020 22:24:47 +0300
+Message-ID: <CAHp75VeMGtnhCEuMODNO3K6JfFTbm=gLr4yZdZHV-JsBW0eS_A@mail.gmail.com>
+Subject: Re: [PATCH v3 06/15] iio: sx9310: Fixes various memory handling
+To:     Daniel Campello <campello@chromium.org>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-iio <linux-iio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:vCQI2QiFOYMtBPokBrSUEZMR/u8y4jbMb9lQouPzNxGteUJlz1G
- YGFMWgAaZymszT3NLMx5fMmEWVi0NfLFj41mIlAIraa9fE89XPV2JYgi1HEMSZYSqHk5Ssa
- 2f+9FdPN7RQ3W5zzLu33ew+S/XwIUZ+7i+xYD1jDQonqQZv95KWZi6ma4VyUYn98TNZETA9
- ioyxenYCkWN6R7iPSSXcw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:jK3/XfaA6jY=:PyE+mVFUEXkthDhZHk7O32
- +cc5cfvliY+GSAYbO8KPweQew6UUMhKI0v+Du++YBPfc3vj7vkvdRTWg7zap5PR0JWqcYFFK5
- dEXOPhUi2FWM6tuoiD2i3M3SGyNmDDkIbChLR8brqycqKH7b2or4Cjc935JrCrhrlFv+JGkvo
- be6AZiEKWwmb1W0Bq2GYyIM5GfabONVJo06mRKLXrgfbehKqx1I5QiYGLHLm9tsuYhBlx1N3w
- OPsyy0VJ6gsqFNAy4pt/4iRQrLIcnXEYPOF8SJ3SL/7CKlQZkADBpBDBmMcUfXK5rV2/3ZE++
- bZHHuB0jR4bcF2//XKuivN4JG8zYGNPBvlpp5BiADC0Jr6sD3vAGJWNOg4p8SdBnUnd7GHLAf
- SfXTr2CviWApqGQFHb0D5+5TOb2BDWGcPeJWkE6IXGBPXVkKr5yQ63Si7qgE0XxlGTsevLDxW
- SjHMBRlJGohD2i1LK/nOez07ispOOr6WNuO9uq0ZU8OmQfW9P7WXS57Bq4ozPol2CBkAkCRlk
- XUqegd+VwNNhqw/GG1eiCgD/8UWWSJWvjaeorvlvLR6WCMHMyGlpy1bXHwMHLKN0OovSm/Wej
- QDQs5crLTLsv0pjJ1GcU0H+/OZJyJRaLWZ7u7zWSGjQWa1MMcKvihqVjZqtlM7K4BYF5RDTFp
- GMSpIcBYyvev6AFsrM2AjOMWJD8Jboki6FagIZPt3iTV4hLOW8dI3im/cbYRvzpRVih4SxvDp
- VsiyJl6YjIeVlu5pGluE0JcGH7F69YLpLJyP6X76gfohHvkoEaPV194srno63RvpnTagHhdic
- Xerf++YMtxlRQzgsRWjoWI5TsA6pZ1TtA19nPrgef61fU4lRPn6t6I/6e1/AOFQc44voQdc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 5:08 PM Daniel Palmer <daniel@0x0f.com> wrote:
+On Fri, Jul 31, 2020 at 7:49 PM Daniel Campello <campello@chromium.org> wrote:
 >
-> Remove the unneeded binding description.
-> Compatible string is in mfd/syscon.yaml now.
+> Makes use __aligned(8) to ensure that the timestamp is correctly aligned
+> when we call io_push_to_buffers_with_timestamp().
+> Also makes use of sizeof() for regmap_bulk_read instead of static value.
+
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> ---
 >
-> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
+> Changes in v3:
+>  - Changed buffer to struct type to align timestamp memory properly.
+>
+> Changes in v2:
+>  - Fixed commit message from "iio: sx9310: Align memory"
+>
+>  drivers/iio/proximity/sx9310.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+> index 2ed062d01634bc..c46584b4817b4a 100644
+> --- a/drivers/iio/proximity/sx9310.c
+> +++ b/drivers/iio/proximity/sx9310.c
+> @@ -132,8 +132,11 @@ struct sx9310_data {
+>          */
+>         bool prox_stat[SX9310_NUM_CHANNELS];
+>         bool trigger_enabled;
+> -       __be16 buffer[SX9310_NUM_CHANNELS +
+> -                     4]; /* 64-bit data + 64-bit timestamp */
+> +       /* Ensure correct alignment of timestamp when present. */
+> +       struct {
+> +               __be16 channels[SX9310_NUM_CHANNELS];
+> +               s64 ts __aligned(8);
+> +       } buffer;
+>         /* Remember enabled channels and sample rate during suspend. */
+>         unsigned int suspend_ctrl0;
+>         struct completion completion;
+> @@ -346,7 +349,7 @@ static int sx9310_read_prox_data(struct sx9310_data *data,
+>         if (ret < 0)
+>                 return ret;
+>
+> -       return regmap_bulk_read(data->regmap, chan->address, val, 2);
+> +       return regmap_bulk_read(data->regmap, chan->address, val, sizeof(*val));
+>  }
+>
+>  /*
+> @@ -697,10 +700,10 @@ static irqreturn_t sx9310_trigger_handler(int irq, void *private)
+>                 if (ret < 0)
+>                         goto out;
+>
+> -               data->buffer[i++] = val;
+> +               data->buffer.channels[i++] = val;
+>         }
+>
+> -       iio_push_to_buffers_with_timestamp(indio_dev, data->buffer,
+> +       iio_push_to_buffers_with_timestamp(indio_dev, data->buffer.channels,
+>                                            pf->timestamp);
+>
+>  out:
+> --
+> 2.28.0.163.g6104cc2f0b6-goog
+>
 
-This patch for some reason did not apply, so I ended up removing the
-file manually and using your changelog.
 
-      Arnd
+--
+With Best Regards,
+Andy Shevchenko
