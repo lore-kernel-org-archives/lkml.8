@@ -2,135 +2,129 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6511C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E431C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A63E3207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:58:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqcr9/BG"
+	by mail.kernel.org (Postfix) with ESMTP id F04212250E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731833AbgGaH6x (ORCPT
+        id S1731654AbgGaIAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 03:58:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731684AbgGaH6w (ORCPT
+        Fri, 31 Jul 2020 04:00:02 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:59670 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731523AbgGaIAB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 03:58:52 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B01BC061574;
-        Fri, 31 Jul 2020 00:58:52 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g8so7782904wmk.3;
-        Fri, 31 Jul 2020 00:58:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cTyazyYhJvUjN7a2Z4vhY4OPwuV7RiSwhqqKSl6uwS4=;
-        b=cqcr9/BGTVGV5eLNZYxJLpiQ9zQ9uUBx0U9phhALKfBmj3H1Ly5IjBDuCR8W6fB43t
-         Z/+OylPZCJR+MuNTHsIH2hggC/RuHaGQ6B0nlf/ZI0AcnhG1twITAS4fET/myTe8HQ9c
-         l33p4GTO7epKW9P+rpzY85naKonMEwkUBVbxsuQ4TQVmlJaGYBj3cjymi5aglGlEPS4Q
-         6scVBWiakVdV5WPNCQ8JNjoiQQFRRTfxiIyP/1DmUnZn4f93aE0oR8gSLGC5s79KaOYD
-         s1aXsGM6/VUA6w8NHWBfjIjWPFWhxFPsIq5yNMQqlyXoH/cmzyoPY1mKaOlwAzpuXNAN
-         BXZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cTyazyYhJvUjN7a2Z4vhY4OPwuV7RiSwhqqKSl6uwS4=;
-        b=rosesuFqrodKRlgvhlzq4nhl8nWOnv+CQYPAaflh7RWZWLCgCs3L3IyAeYKlCKVq6z
-         RSZR7jLjsJ8tiABwovNJOTX/wWM7n66DGZrZDhxo9xlSeS8Ni6iqy8zX46MG4s3yyfLE
-         LkXKSG9qg7gq8Pfr4Dr72E/JsB7aBQ3lbBRm5QLh3QF/zAPhAKikOZJ3wWoaFyEvhczX
-         LzRAW12y/LzS7freXEOl0YPwaei2nN7lRMB/dKCkC+AakWGu/9xAxpZQTNAjy8pVS6z9
-         Tior3FCvb1+RpCIV6JI5KBrCqoGGfVASSkdQWRzeLzaojhfuWI1ttE0k7n+5IdduhLvX
-         eI/w==
-X-Gm-Message-State: AOAM533sIU6CM9qFHWx/jshyL7IyyNqvYFqi62+Xovv3iy49rf4xmrVu
-        NJeDLAu0a6ILRzC633d1CtEXSJT1g2im+T9WWpA=
-X-Google-Smtp-Source: ABdhPJxNw7Svuw5TllltfhvwrWmcKb/9/XdA7oHnRTAloSkB3rov2jCYV3IjcA5AbRGDfz1qzi3lBfppauTNKt8MG64=
-X-Received: by 2002:a05:600c:21cd:: with SMTP id x13mr2898582wmj.155.1596182331066;
- Fri, 31 Jul 2020 00:58:51 -0700 (PDT)
+        Fri, 31 Jul 2020 04:00:01 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6D11E8030802;
+        Fri, 31 Jul 2020 07:59:58 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id GpEVWY4Cvpdq; Fri, 31 Jul 2020 10:59:57 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Feng Tang <feng.tang@intel.com>, Vinod Koul <vkoul@kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/8] spi: dw-dma: Set DMA Level registers on init
+Date:   Fri, 31 Jul 2020 10:59:46 +0300
+Message-ID: <20200731075953.14416-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200731075953.14416-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200731075953.14416-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-References: <b0b7159d-ed10-08ad-b6c7-b85d45f60d16@kernel.dk>
- <e871eef2-8a93-fdbc-b762-2923526a2db4@gmail.com> <80d27717-080a-1ced-50d5-a3a06cf06cd3@kernel.dk>
- <da4baa8c-76b0-7255-365c-d8b58e322fd0@gmail.com> <65a7e9a6-aede-31ce-705c-b7f94f079112@kernel.dk>
- <d4f9a5d3-1df2-1060-94fa-f77441a89299@gmail.com> <CA+1E3rJ3SoLU9aYcugAQgJnSPnJtcCwjZdMREXS3FTmXgy3yow@mail.gmail.com>
- <f030a338-cd52-2e83-e1da-bdbca910d49e@kernel.dk> <CA+1E3rKxZk2CatTuPcQq5d14vXL9_9LVb2_+AfR2m9xn2WTZdg@mail.gmail.com>
- <MWHPR04MB3758DC08EA17780E498E9EC0E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <20200731064526.GA25674@infradead.org> <MWHPR04MB37581344328A42EA7F5ED13EE74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
-In-Reply-To: <MWHPR04MB37581344328A42EA7F5ED13EE74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
-From:   Kanchan Joshi <joshiiitr@gmail.com>
-Date:   Fri, 31 Jul 2020 13:28:24 +0530
-Message-ID: <CA+1E3rLM4G4SwzD6RWsK6Ssp7NmhiPedZDjrqN3kORQr9fxCtw@mail.gmail.com>
-Subject: Re: [PATCH v4 6/6] io_uring: add support for zone-append
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     "hch@infradead.org" <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "bcrl@kvack.org" <bcrl@kvack.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-aio@kvack.org" <linux-aio@kvack.org>,
-        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        SelvaKumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 12:29 PM Damien Le Moal <Damien.LeMoal@wdc.com> wrote:
->
-> On 2020/07/31 15:45, hch@infradead.org wrote:
-> > On Fri, Jul 31, 2020 at 06:42:10AM +0000, Damien Le Moal wrote:
-> >>> - We may not be able to use RWF_APPEND, and need exposing a new
-> >>> type/flag (RWF_INDIRECT_OFFSET etc.) user-space. Not sure if this
-> >>> sounds outrageous, but is it OK to have uring-only flag which can be
-> >>> combined with RWF_APPEND?
-> >>
-> >> Why ? Where is the problem ? O_APPEND/RWF_APPEND is currently meaningless for
-> >> raw block device accesses. We could certainly define a meaning for these in the
-> >> context of zoned block devices.
-> >
-> > We can't just add a meaning for O_APPEND on block devices now,
-> > as it was previously silently ignored.  I also really don't think any
-> > of these semantics even fit the block device to start with.  If you
-> > want to work on raw zones use zonefs, that's what is exists for.
->
-> Which is fine with me. Just trying to say that I think this is exactly the
-> discussion we need to start with. What interface do we implement...
->
-> Allowing zone append only through zonefs as the raw block device equivalent, all
-> the O_APPEND/RWF_APPEND semantic is defined and the "return written offset"
-> implementation in VFS would be common for all file systems, including regular
-> ones. Beside that, there is I think the question of short writes... Not sure if
-> short writes can currently happen with async RWF_APPEND writes to regular files.
-> I think not but that may depend on the FS.
+Indeed the registers content doesn't get cleared when the SPI controller
+is disabled and enabled. Max burst lengths aren't changed since the Rx and
+Tx DMA channels are requested on init stage and are kept acquired until
+the device is removed. Obviously SPI controller FIFO depth can't be
+changed. Due to all of that we can safely move the DMA Transmit and
+Receive data level registers initialization to the SPI controller DMA init
+stage (when the SPI controller is being probed) instead of doing it for
+each SPI transfer when dma_setup is called. This shall speed the DMA-based
+SPI transfer initialization up a bit, particularly if the APB bus is
+relatively slow.
 
-generic_write_check_limits (called by generic_write_checks, used by
-most FS) may make it short, and AFAIK it does not depend on
-async/sync.
-This was one of the reason why we chose to isolate the operation by a
-different IOCB flag and not by IOCB_APPEND alone.
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+---
+ drivers/spi/spi-dw-dma.c | 29 ++++++++++++++---------------
+ 1 file changed, 14 insertions(+), 15 deletions(-)
 
-For block-device these checks are not done, but there is another place
-when it receives writes spanning beyond EOF and iov_iter_truncate()
-adjusts it before sending it down.
-And we return failure for that case in V4-  "Ref: [PATCH v4 3/6] uio:
-return status with iov truncation"
-
-
+diff --git a/drivers/spi/spi-dw-dma.c b/drivers/spi/spi-dw-dma.c
+index bb390ff67d1d..440679fa0764 100644
+--- a/drivers/spi/spi-dw-dma.c
++++ b/drivers/spi/spi-dw-dma.c
+@@ -49,6 +49,7 @@ static void dw_spi_dma_maxburst_init(struct dw_spi *dws)
+ 		max_burst = RX_BURST_LEVEL;
+ 
+ 	dws->rxburst = min(max_burst, def_burst);
++	dw_writel(dws, DW_SPI_DMARDLR, dws->rxburst - 1);
+ 
+ 	ret = dma_get_slave_caps(dws->txchan, &caps);
+ 	if (!ret && caps.max_burst)
+@@ -56,7 +57,20 @@ static void dw_spi_dma_maxburst_init(struct dw_spi *dws)
+ 	else
+ 		max_burst = TX_BURST_LEVEL;
+ 
++	/*
++	 * Having a Rx DMA channel serviced with higher priority than a Tx DMA
++	 * channel might not be enough to provide a well balanced DMA-based
++	 * SPI transfer interface. There might still be moments when the Tx DMA
++	 * channel is occasionally handled faster than the Rx DMA channel.
++	 * That in its turn will eventually cause the SPI Rx FIFO overflow if
++	 * SPI bus speed is high enough to fill the SPI Rx FIFO in before it's
++	 * cleared by the Rx DMA channel. In order to fix the problem the Tx
++	 * DMA activity is intentionally slowed down by limiting the SPI Tx
++	 * FIFO depth with a value twice bigger than the Tx burst length
++	 * calculated earlier by the dw_spi_dma_maxburst_init() method.
++	 */
+ 	dws->txburst = min(max_burst, def_burst);
++	dw_writel(dws, DW_SPI_DMATDLR, dws->txburst);
+ }
+ 
+ static int dw_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
+@@ -372,21 +386,6 @@ static int dw_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
+ {
+ 	u16 imr = 0, dma_ctrl = 0;
+ 
+-	/*
+-	 * Having a Rx DMA channel serviced with higher priority than a Tx DMA
+-	 * channel might not be enough to provide a well balanced DMA-based
+-	 * SPI transfer interface. There might still be moments when the Tx DMA
+-	 * channel is occasionally handled faster than the Rx DMA channel.
+-	 * That in its turn will eventually cause the SPI Rx FIFO overflow if
+-	 * SPI bus speed is high enough to fill the SPI Rx FIFO in before it's
+-	 * cleared by the Rx DMA channel. In order to fix the problem the Tx
+-	 * DMA activity is intentionally slowed down by limiting the SPI Tx
+-	 * FIFO depth with a value twice bigger than the Tx burst length
+-	 * calculated earlier by the dw_spi_dma_maxburst_init() method.
+-	 */
+-	dw_writel(dws, DW_SPI_DMARDLR, dws->rxburst - 1);
+-	dw_writel(dws, DW_SPI_DMATDLR, dws->txburst);
+-
+ 	if (xfer->tx_buf)
+ 		dma_ctrl |= SPI_DMA_TDMAE;
+ 	if (xfer->rx_buf)
 -- 
-Joshi
+2.27.0
+
