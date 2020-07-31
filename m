@@ -2,96 +2,141 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57AEFC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DCBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33468208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:02:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N3yiD5UX"
+	by mail.kernel.org (Postfix) with ESMTP id 5375F20829
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:10:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726502AbgGaWCf (ORCPT
+        id S1726289AbgGaWKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 18:02:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35580 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgGaWCd (ORCPT
+        Fri, 31 Jul 2020 18:10:25 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37418 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgGaWKZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 18:02:33 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA9FCC061756
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 15:02:32 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t10so12710527plz.10
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 15:02:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+oZo/9yW6Oqd3XkygyTtSo/s5WeOAvnnWz6QWKpx224=;
-        b=N3yiD5UX+cR8QG4jts4p8h7nRXkfrAJtBC0xtfsVUV82LwaqCgMsXSBhUCwDJcJzbs
-         mdahkoCEgT1sDyvHx9Y5FbWfXPDrIz13exeN+T1lkU1vAkeIA0lFp3l5iwgZjcqqHrl/
-         PNH02FY7/0pKPEKzsXmiuWhLaGzNca95VHWwE30dAZS3a9FPmFnWI/VZopd3K6amWRj1
-         vy6DazkMnzG6LR3qsz9x86pKa/WGzpTTXOjH3gs389randleAtOgHKrTf1OW8Y0DS98q
-         YohnolyZJAxVW4w13084HdqFr+oEnqDHSWKur7Pvm8zMukTISaPPp9EyWHw330MCtEgp
-         e9HQ==
+        Fri, 31 Jul 2020 18:10:25 -0400
+Received: by mail-lf1-f65.google.com with SMTP id s9so17634731lfs.4;
+        Fri, 31 Jul 2020 15:10:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+oZo/9yW6Oqd3XkygyTtSo/s5WeOAvnnWz6QWKpx224=;
-        b=sWneJKKUYsL6buSEorVAf1zzCDRKf1aV+Xcy/iLAMcNa+WIaw7COVeCLfXiMjUCjy6
-         AV/IJQ716i6Tw5DVjEqq5hNbqfWvAolxZfWyi0Pa5HGO0E9p8iNy4eLfm6aoCqxBS2Pp
-         P85fftiMWkwWtWE/VDqbD/wwry6Pj3Sc5fcVI8n17Dq2uNvu3vNWWUPMKOrmcsnuhsQS
-         AsrftXGZ8x7ChK93tg9ky3hwuQUN0wHPX4BfLi3UIVhOQqLltvziL08a6ivjqG3+CRzL
-         kK8bVC1ylQArMBCDUfFMPQAK3mLFMDC29sNTcj9bEuSi7xTyV/P+lcLHSMiRO6GXRGx5
-         R/Dg==
-X-Gm-Message-State: AOAM530DhCqJbnrOBQubBYYvZMwtE27DoykR7/4UAAaKffEKLi65gxTc
-        iGU7rZyvP6jXTOvESkh/e3+w0tElvS664O5cJtYbQQ==
-X-Google-Smtp-Source: ABdhPJxb+RpjHPrJNGDZfqqztRJW/O3fXdm2dXBzLYFHBMbAPCDbg8ExMB3zSjKygRyZPsE3Jd6zAnVmTf8B72/3F5s=
-X-Received: by 2002:a17:90a:33d1:: with SMTP id n75mr5066872pjb.217.1596232951079;
- Fri, 31 Jul 2020 15:02:31 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=YvWlsAjNuVUwYc2aw3/VDo/0eNLBzp24zVwCj2ccybU=;
+        b=Deu6Onj4jmihbN8pxlHBRpfzfEltJowjcu0+q5KR/fhddN90awabBNpVrIIxHaoPVE
+         CFCOwh+raBeP3AjqyL9BFMFiBz3S1FrS4IfvW6L/aDm5BOaWD/1j7jRcZPzCdkewpCil
+         4HeE3RiLj6LuoU0JU2fP151FqmpaLHhHrE1ADasoSEyJXnuZLBDt0HCYqk7LaF2v8pdY
+         jYJm3QN2k/1MvXwx+Fx72Y0bbWUWG1j/ekq7F0Vx30bOogMz8+jtE5WdKQg1m1dvwN/S
+         2+z52GPzkEhrLvvGAbZ9Ig9iAICXEUYkCDChrwsz8sEIWyYzwmTITpXdY+RwANoOIluG
+         jcqQ==
+X-Gm-Message-State: AOAM531gO2hrGy+oVNzW1+/a20Lnmb2T+mAn63KJ7YyHqqY35NSDvbRn
+        R6Xn8HDXsWccl+986UCyMyTKDn30MBY=
+X-Google-Smtp-Source: ABdhPJwfGJQE5pXFZekEgkhF3ydLRretas6acV91+1T4OBusBUg60ySf7cyqoGJ7N2EyJKlgtGDG5A==
+X-Received: by 2002:ac2:5f48:: with SMTP id 8mr2906571lfz.157.1596233421422;
+        Fri, 31 Jul 2020 15:10:21 -0700 (PDT)
+Received: from [10.68.32.192] (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
+        by smtp.gmail.com with ESMTPSA id y1sm2665908lfb.45.2020.07.31.15.10.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jul 2020 15:10:20 -0700 (PDT)
+Subject: Re: [PATCH] scsi: libcxgbi: use kvzalloc instead of opencoded
+ kzalloc/vzalloc
+To:     Joe Perches <joe@perches.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200731215524.14295-1-efremov@linux.com>
+ <33d943d2b83f17371df09b5962c856ea2d894954.camel@perches.com>
+From:   Denis Efremov <efremov@linux.com>
+Autocrypt: addr=efremov@linux.com; keydata=
+ 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
+Message-ID: <70fb8220-2102-adb5-bbe6-9c2ea74a0623@linux.com>
+Date:   Sat, 1 Aug 2020 01:10:19 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200702071416.1780522-1-davidgow@google.com>
-In-Reply-To: <20200702071416.1780522-1-davidgow@google.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Fri, 31 Jul 2020 15:02:20 -0700
-Message-ID: <CAFd5g45-UmaxBoNa9pY7LwOrDsRXN46uCO9JvK_CHNhfYdwS4g@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: kunit: Add naming guidelines
-To:     David Gow <davidgow@google.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Randy Dunlap <rd.dunlab@gmail.com>,
-        "Theodore Ts'o" <tytso@mit.edu>, Tim Bird <Tim.Bird@sony.com>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <33d943d2b83f17371df09b5962c856ea2d894954.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 2, 2020 at 12:14 AM David Gow <davidgow@google.com> wrote:
->
-> As discussed in [1], KUnit tests have hitherto not had a particularly
-> consistent naming scheme. This adds documentation outlining how tests
-> and test suites should be named, including how those names should be
-> used in Kconfig entries and filenames.
->
-> [1]:
-> https://lore.kernel.org/linux-kselftest/202006141005.BA19A9D3@keescook/t/#u
->
-> Signed-off-by: David Gow <davidgow@google.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Sorry for taking so long on this; nevertheless, looks great!
 
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+On 8/1/20 12:58 AM, Joe Perches wrote:
+> On Sat, 2020-08-01 at 00:55 +0300, Denis Efremov wrote:
+>> Remove cxgbi_alloc_big_mem(), cxgbi_free_big_mem() functions
+>> and use kvzalloc/kvfree instead.
+> 
+> Sensible, thanks.
+> 
+>> diff --git a/drivers/scsi/cxgbi/libcxgbi.c b/drivers/scsi/cxgbi/libcxgbi.c
+> []
+>> @@ -77,9 +77,9 @@ int cxgbi_device_portmap_create(struct cxgbi_device *cdev, unsigned int base,
+>>  {
+>>  	struct cxgbi_ports_map *pmap = &cdev->pmap;
+>>  
+>> -	pmap->port_csk = cxgbi_alloc_big_mem(max_conn *
+>> -					     sizeof(struct cxgbi_sock *),
+>> -					     GFP_KERNEL);
+>> +	pmap->port_csk = kvzalloc(array_size(max_conn,
+>> +					     sizeof(struct cxgbi_sock *)),
+>> +				  GFP_KERNEL);
+> 
+> missing __GFP_NOWARN
+> 
+
+kvmalloc_node adds __GFP_NOWARN internally to kmalloc call
+https://elixir.bootlin.com/linux/v5.8-rc4/source/mm/util.c#L568
+
+Thanks,
+Denis
