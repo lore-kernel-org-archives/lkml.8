@@ -2,156 +2,130 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DADDCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2A8722B42
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:28:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="omI6+pVZ"
+	by mail.kernel.org (Postfix) with ESMTP id D098C21744
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:31:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387879AbgGaS2L (ORCPT
+        id S2387791AbgGaSbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 14:28:11 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:41608 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387854AbgGaS2K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 14:28:10 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596220090; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=vjQiGVYzJ12zA+igqujOYlOj1OL8iIPU8CB8EiC7eQw=; b=omI6+pVZoY+QNy71tmY8FUFobt37aI4kRQMsyr+ET6SdZANQ7leAXHeolIwaDOsGvVJO3o79
- Y2rKe2EsxHSEEt/Ez3AhwfvYhYzj7IozMvOH5yolqGgb/UGaICFTRcNjhr12opZDLTF6lWcm
- An2z1xTeqVS0AucEQrJgx/DLYfI=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5f2462a2eb556d49a65354bb (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 31 Jul 2020 18:27:46
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DC2F0C433A0; Fri, 31 Jul 2020 18:27:45 +0000 (UTC)
-Received: from pillair-linux.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 875B1C433A1;
-        Fri, 31 Jul 2020 18:27:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 875B1C433A1
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
-From:   Rakesh Pillai <pillair@codeaurora.org>
-To:     ath10k@lists.infradead.org
-Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org,
-        netdev@vger.kernel.org, Rakesh Pillai <pillair@codeaurora.org>
-Subject: [PATCH v2 3/3] ath10k: Add debugfs support to enable event history
-Date:   Fri, 31 Jul 2020 23:57:22 +0530
-Message-Id: <1596220042-2778-4-git-send-email-pillair@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596220042-2778-1-git-send-email-pillair@codeaurora.org>
-References: <1596220042-2778-1-git-send-email-pillair@codeaurora.org>
+        Fri, 31 Jul 2020 14:31:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:36014 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730040AbgGaSbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 14:31:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0C9130E;
+        Fri, 31 Jul 2020 11:31:51 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.4.61])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 48D163F71F;
+        Fri, 31 Jul 2020 11:31:49 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 19:31:46 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+Message-ID: <20200731183146.GD67415@C02TD0UTHF1T.local>
+References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
+ <6540b4b7-3f70-adbf-c922-43886599713a@linux.microsoft.com>
+ <CALCETrWnNR5v3ZCLfBVQGYK8M0jAvQMaAc9uuO05kfZuh-4d6w@mail.gmail.com>
+ <46a1adef-65f0-bd5e-0b17-54856fb7e7ee@linux.microsoft.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <46a1adef-65f0-bd5e-0b17-54856fb7e7ee@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the support to enable/disable the recording of
-debug events history.
+On Fri, Jul 31, 2020 at 12:13:49PM -0500, Madhavan T. Venkataraman wrote:
+> On 7/30/20 3:54 PM, Andy Lutomirski wrote:
+> > On Thu, Jul 30, 2020 at 7:24 AM Madhavan T. Venkataraman
+> > <madvenka@linux.microsoft.com> wrote:
+> Dealing with multiple architectures
+> -----------------------------------------------
+> 
+> One good reason to use trampfd is multiple architecture support. The
+> trampoline table in a code page approach is neat. I don't deny that at
+> all. But my question is - can it be used in all cases?
+> 
+> It requires PC-relative data references. I have not worked on all architectures.
+> So, I need to study this. But do all ISAs support PC-relative data references?
 
-The enable/disable of the history from debugfs will
-not make any affect if its not enabled via module
-parameter.
+Not all do, but pretty much any recent ISA will as it's a practical
+necessity for fast position-independent code.
 
-Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+> Even in an ISA that supports it, there would be a maximum supported offset
+> from the current PC that can be reached for a data reference. That maximum
+> needs to be at least the size of a base page in the architecture. This is because
+> the code page and the data page need to be separate for security reasons.
+> Do all ISAs support a sufficiently large offset?
 
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
----
- drivers/net/wireless/ath/ath10k/debug.c | 56 +++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+ISAs with pc-relative addessing can usually generate PC-relative
+addresses into a GPR, from which they can apply an arbitrarily large
+offset.
 
-diff --git a/drivers/net/wireless/ath/ath10k/debug.c b/drivers/net/wireless/ath/ath10k/debug.c
-index 5d08652..6785fae 100644
---- a/drivers/net/wireless/ath/ath10k/debug.c
-+++ b/drivers/net/wireless/ath/ath10k/debug.c
-@@ -610,6 +610,59 @@ static const struct file_operations fops_simulate_fw_crash = {
- 	.llseek = default_llseek,
- };
- 
-+static ssize_t ath10k_read_history_enable(struct file *file,
-+					  char __user *user_buf,
-+					  size_t count, loff_t *ppos)
-+{
-+	const char buf[] =
-+		"To enable recording of certain event history, write to this file with the enable mask\n"
-+		"BIT(0): Enable Reg Access history\n"
-+		"	- Register write events\n"
-+		"	- Register read events\n"
-+		"BIT(1): Enable CE events history\n"
-+		"	- ATH10K_IRQ_TRIGGER event\n"
-+		"	- ATH10K_NAPI_POLL event\n"
-+		"	- ATH10K_CE_SERVICE event\n"
-+		"	- ATH10K_NAPI_COMPLETE event\n"
-+		"	- ATH10K_NAPI_RESCHED event\n"
-+		"	- ATH10K_IRQ_SUMMARY event\n"
-+		"BIT(2): Enable WMI CMD history\n"
-+		"	- WMI CMD event\n"
-+		"	- WMI CMD TX completion event\n"
-+		"BIT(3): Enable WMI events history\n"
-+		"	- WMI Events event\n";
-+
-+	return simple_read_from_buffer(user_buf, count, ppos, buf, strlen(buf));
-+}
-+
-+static ssize_t ath10k_write_history_enable(struct file *file,
-+					   const char __user *user_buf,
-+					   size_t count, loff_t *ppos)
-+{
-+	u32 history_enable_mask;
-+	int i, ret;
-+
-+	ret = kstrtou32_from_user(user_buf, count, 0, &history_enable_mask);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < ATH10K_HISTORY_MAX; i++)
-+		if (history_enable_mask & BIT(i))
-+			set_bit(i, &ath10k_history_enable_mask);
-+		else
-+			clear_bit(i, &ath10k_history_enable_mask);
-+
-+	return count;
-+}
-+
-+static const struct file_operations fops_history_enable = {
-+	.read = ath10k_read_history_enable,
-+	.write = ath10k_write_history_enable,
-+	.open = simple_open,
-+	.owner = THIS_MODULE,
-+	.llseek = default_llseek,
-+};
-+
- static ssize_t ath10k_read_chip_id(struct file *file, char __user *user_buf,
- 				   size_t count, loff_t *ppos)
- {
-@@ -2658,6 +2711,9 @@ int ath10k_debug_register(struct ath10k *ar)
- 	debugfs_create_file("reset_htt_stats", 0200, ar->debug.debugfs_phy, ar,
- 			    &fops_reset_htt_stats);
- 
-+	debugfs_create_file("history_enable", 0644, ar->debug.debugfs_phy, ar,
-+			    &fops_history_enable);
-+
- 	return 0;
- }
- 
--- 
-2.7.4
+> When the kernel generates the code for a trampoline, it can hard code data values
+> in the generated code itself so it does not need PC-relative data referencing.
+> 
+> And, for ISAs that do support the large offset, we do have to implement and
+> maintain the code page stuff for different ISAs for each application and library
+> if we did not use trampfd.
 
+Trampoline code is architecture specific today, so I don't see that as a
+major issue. Common structural bits can probably be shared even if the
+specifid machine code cannot.
+
+[...]
+
+> Security
+> -----------
+> 
+> With the user level trampoline table approach, the data part of the trampoline table
+> can be hacked by an attacker if an application has a vulnerability. Specifically, the
+> target PC can be altered to some arbitrary location. Trampfd implements an
+> "Allowed PCS" context. In the libffi changes, I have created a read-only array of
+> all ABI handlers used in closures for each architecture. This read-only array
+> can be used to restrict the PC values for libffi trampolines to prevent hacking.
+> 
+> To generalize, we can implement security rules/features if the trampoline
+> object is in the kernel.
+
+I don't follow this argument. If it's possible to statically define that
+in the kernel, it's also possible to do that in userspace without any
+new kernel support.
+
+[...]
+
+> Trampfd is a framework that can be used to implement multiple things. May be,
+> a few of those things can also be implemented in user land itself. But I think having
+> just one mechanism to execute dynamic code objects is preferable to having
+> multiple mechanisms not standardized across all applications.
+
+In abstract, having a common interface sounds nice, but in practice
+elements of this are always architecture-specific (e.g. interactiosn
+with HW CFI), and that common interface can result in more pain as it
+doesn't fit naturally into the context that ISAs were designed for (e.g. 
+where control-flow instructions are extended with new semantics).
+
+It also meass that you can't share the rough approach across OSs which
+do not implement an identical mechanism, so for code abstracting by ISA
+first, then by platform/ABI, there isn't much saving.
+
+Thanks,
+Mark.
