@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44887C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1144C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 224B620829
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B82A20829
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:17:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tzPCA8cb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fHL3/dWw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731822AbgGaIRk (ORCPT
+        id S1731876AbgGaIRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:17:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49956 "EHLO
+        Fri, 31 Jul 2020 04:17:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731522AbgGaIRj (ORCPT
+        with ESMTP id S1731522AbgGaIRl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 04:17:39 -0400
-Received: from mail-wr1-x44a.google.com (mail-wr1-x44a.google.com [IPv6:2a00:1450:4864:20::44a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ED60C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 01:17:39 -0700 (PDT)
-Received: by mail-wr1-x44a.google.com with SMTP id f14so8813887wrm.22
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 01:17:39 -0700 (PDT)
+        Fri, 31 Jul 2020 04:17:41 -0400
+Received: from mail-wm1-x349.google.com (mail-wm1-x349.google.com [IPv6:2a00:1450:4864:20::349])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D4A4C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 01:17:41 -0700 (PDT)
+Received: by mail-wm1-x349.google.com with SMTP id l5so3065710wml.7
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 01:17:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=3xl2dBv96+m8d7hzKFanUDmjJZM8uPb0EPNFmjdms4A=;
-        b=tzPCA8cbWnXegw9VILxXK/QZtsyH1DHhi/tNR75WvKQTh9g2aGpSmxbpK8/kvxalaf
-         j8wjqp5UdbidiB56p8w1xvCwsYbcwk7Tll74phR/vkrLHM9Vw/3os0vxHL2g9sKnfhHu
-         bZyLnRrs6kO5dCNSRe4cqrxCRkRxdjjZyVp3ulAQHxFjGRiGcR7IVMUip4yyiUTOLDoS
-         aBKyBEpzKyJrz/fCy+Tk+fsx23oE1JYcMS7VVBA8ICgTAiswSh8oi8+u3JVQK4uEcd7q
-         yNAXoCxaeLT+kpqBtwp22ViNqqediPBF5e6faejPr2KIcm1FC6dYiiN733+h3UGpD6te
-         1xFQ==
+        bh=wdHz4VAV7cWLg1rq1e/SyhC9acNNi0lj4Bxe95gHR1c=;
+        b=fHL3/dWw1EHVS7WtZlSGyIHWOwTlMq18graguqY/6X1lzcsC/OHyCgO/p3evFWUHID
+         SdMZKlATAp8ToqPHyAFJyIFqjYs6OBnAJZMGun+21mjHidCsOwsDbirsHUwcI0KiN6r5
+         TU+ZbuEqK0cbkkpj+lYu1CqDfXnBvqot/uMdQIN1bMTpFT8ZerxjFoOv1OBu7XP9wZiq
+         NJwYUB3veLy2rxXwVos/pbrvYU846iDAI3e5czG5WHkQQINTjTGx6O0q1JK+1waFg2G+
+         5ixPwRRmti87KhNYoVH58fRhPUpqMjMdn1S/3W0vJG/oRhBYiJ6JbniYM3zFP2MqMBxT
+         J5Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=3xl2dBv96+m8d7hzKFanUDmjJZM8uPb0EPNFmjdms4A=;
-        b=RkZRCCoKWc57Mmlvot/zA7s/f5448Q9y3+U5sz9+jiBA1IiGHoEEMkuyoOelJ0nFVl
-         jMzdlfGbZBu2FJJI6IzuI0RzETF+/QxeS2ZNbcPMLONnDeW1FQ+lAL4Ae06t/RVoRgCX
-         qTxz16LHOHz3ZsnmLbJNfNoT+Xz/McG0nS0TnN1yjH3f7LJMK2Hweqo1FGqrNiJUeTQj
-         PGdMWlTo6euA70onfjdn7TzHEfJsKrPkMHuQuHI0hvMg/67u/yM0zZQGZytaSMGHQttm
-         w7Vhwa3zRTdFFrNNHMp8BuMniHc5/o3sV+Ixuk3jGWpPqOaZc2FSbl8QXr5mDZX2ryRU
-         CrpA==
-X-Gm-Message-State: AOAM533Z1vx1UhSNtF6BQ6PIueCdSGCAZ2WqtQxn377/wJ8PKCsfmPuH
-        w5b67ZaxMUK8trniNfhONSWQ4suc+g==
-X-Google-Smtp-Source: ABdhPJyhbAjMHh9qUcABy/ESAddLoONWL6F2fU+N2Qn8p4ylDbQObA5EMmxJt6/MkXRYlItvO43Bsz07+Q==
-X-Received: by 2002:a1c:964d:: with SMTP id y74mr2912866wmd.80.1596183457812;
- Fri, 31 Jul 2020 01:17:37 -0700 (PDT)
-Date:   Fri, 31 Jul 2020 10:17:19 +0200
+        bh=wdHz4VAV7cWLg1rq1e/SyhC9acNNi0lj4Bxe95gHR1c=;
+        b=ScDuddy1HQ9W+dheUPQzJzHZSsWigP+Y4Gtb5O2fVt2EHI20oVuWFObifrVkbZyZou
+         Jx9iWbrDEo4jI6SxjRDVrsvvmRSO57zGcMNKrZg0yCP373hvlTzjbhI5COADp7yaLcZW
+         1EDQkzmwoUAtIArZQQxVegkZcatdQ8wlq6OuiWOmpq5/92TxiX1OPR3Y9iSfIkOtF/VF
+         k82NsGkCNY80mi1WIP5qk45Et2tcp3PcCweHOs+MjgYS7/y/3JgYqkCOn+iTR8Orlq4H
+         WpWxiC8Fd9vL1K0S4PwarigDtvAwk+ta4BMeQ2VC211fU7SsjWqTPHDeSgiYpHeMtiXt
+         H4Nw==
+X-Gm-Message-State: AOAM531ovcJbJ/yoWo0W7Kwh786sx449OhAis6jCmblqfbXyipzrXrin
+        S8FCuapjTf9LDPTJFpdXmY+8FVCeqQ==
+X-Google-Smtp-Source: ABdhPJxsMOnttopvDl1CgCKajkBHpZ9tKgAmNv+H7XNIvr9JN8M5ZQZjjFPezbpJk7Kaeb6BfBD859xnyw==
+X-Received: by 2002:a1c:c90d:: with SMTP id f13mr2954894wmb.185.1596183459822;
+ Fri, 31 Jul 2020 01:17:39 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 10:17:20 +0200
 In-Reply-To: <20200731081723.2181297-1-elver@google.com>
-Message-Id: <20200731081723.2181297-2-elver@google.com>
+Message-Id: <20200731081723.2181297-3-elver@google.com>
 Mime-Version: 1.0
 References: <20200731081723.2181297-1-elver@google.com>
 X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-Subject: [PATCH 1/5] kcsan: Simplify debugfs counter to name mapping
+Subject: [PATCH 2/5] kcsan: Simplify constant string handling
 From:   Marco Elver <elver@google.com>
 To:     elver@google.com, paulmck@kernel.org
 Cc:     dvyukov@google.com, glider@google.com, andreyknvl@google.com,
@@ -73,75 +73,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Simplify counter ID to name mapping by using an array with designated
-inits. This way, we can turn a run-time BUG() into a compile-time static
-assertion failure if a counter name is missing.
+Simplify checking prefixes and length calculation of constant strings.
+For the former, the kernel provides str_has_prefix(), and the latter we
+should just use strlen("..") because GCC and Clang have optimizations
+that optimize these into constants.
 
 No functional change intended.
 
 Signed-off-by: Marco Elver <elver@google.com>
 ---
- kernel/kcsan/debugfs.c | 33 +++++++++++++--------------------
- 1 file changed, 13 insertions(+), 20 deletions(-)
+ kernel/kcsan/debugfs.c | 8 ++++----
+ kernel/kcsan/report.c  | 4 ++--
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/kernel/kcsan/debugfs.c b/kernel/kcsan/debugfs.c
-index 023e49c58d55..3a9566addeff 100644
+index 3a9566addeff..116bdd8f050c 100644
 --- a/kernel/kcsan/debugfs.c
 +++ b/kernel/kcsan/debugfs.c
-@@ -19,6 +19,18 @@
-  * Statistics counters.
-  */
- static atomic_long_t counters[KCSAN_COUNTER_COUNT];
-+static const char *const counter_names[] = {
-+	[KCSAN_COUNTER_USED_WATCHPOINTS]		= "used_watchpoints",
-+	[KCSAN_COUNTER_SETUP_WATCHPOINTS]		= "setup_watchpoints",
-+	[KCSAN_COUNTER_DATA_RACES]			= "data_races",
-+	[KCSAN_COUNTER_ASSERT_FAILURES]			= "assert_failures",
-+	[KCSAN_COUNTER_NO_CAPACITY]			= "no_capacity",
-+	[KCSAN_COUNTER_REPORT_RACES]			= "report_races",
-+	[KCSAN_COUNTER_RACES_UNKNOWN_ORIGIN]		= "races_unknown_origin",
-+	[KCSAN_COUNTER_UNENCODABLE_ACCESSES]		= "unencodable_accesses",
-+	[KCSAN_COUNTER_ENCODING_FALSE_POSITIVES]	= "encoding_false_positives",
-+};
-+static_assert(ARRAY_SIZE(counter_names) == KCSAN_COUNTER_COUNT);
+@@ -300,16 +300,16 @@ debugfs_write(struct file *file, const char __user *buf, size_t count, loff_t *o
+ 		WRITE_ONCE(kcsan_enabled, true);
+ 	} else if (!strcmp(arg, "off")) {
+ 		WRITE_ONCE(kcsan_enabled, false);
+-	} else if (!strncmp(arg, "microbench=", sizeof("microbench=") - 1)) {
++	} else if (str_has_prefix(arg, "microbench=")) {
+ 		unsigned long iters;
  
- /*
-  * Addresses for filtering functions from reporting. This list can be used as a
-@@ -39,24 +51,6 @@ static struct {
- };
- static DEFINE_SPINLOCK(report_filterlist_lock);
+-		if (kstrtoul(&arg[sizeof("microbench=") - 1], 0, &iters))
++		if (kstrtoul(&arg[strlen("microbench=")], 0, &iters))
+ 			return -EINVAL;
+ 		microbenchmark(iters);
+-	} else if (!strncmp(arg, "test=", sizeof("test=") - 1)) {
++	} else if (str_has_prefix(arg, "test=")) {
+ 		unsigned long iters;
  
--static const char *counter_to_name(enum kcsan_counter_id id)
--{
--	switch (id) {
--	case KCSAN_COUNTER_USED_WATCHPOINTS:		return "used_watchpoints";
--	case KCSAN_COUNTER_SETUP_WATCHPOINTS:		return "setup_watchpoints";
--	case KCSAN_COUNTER_DATA_RACES:			return "data_races";
--	case KCSAN_COUNTER_ASSERT_FAILURES:		return "assert_failures";
--	case KCSAN_COUNTER_NO_CAPACITY:			return "no_capacity";
--	case KCSAN_COUNTER_REPORT_RACES:		return "report_races";
--	case KCSAN_COUNTER_RACES_UNKNOWN_ORIGIN:	return "races_unknown_origin";
--	case KCSAN_COUNTER_UNENCODABLE_ACCESSES:	return "unencodable_accesses";
--	case KCSAN_COUNTER_ENCODING_FALSE_POSITIVES:	return "encoding_false_positives";
--	case KCSAN_COUNTER_COUNT:
--		BUG();
--	}
--	return NULL;
--}
--
- void kcsan_counter_inc(enum kcsan_counter_id id)
- {
- 	atomic_long_inc(&counters[id]);
-@@ -271,8 +265,7 @@ static int show_info(struct seq_file *file, void *v)
- 	/* show stats */
- 	seq_printf(file, "enabled: %i\n", READ_ONCE(kcsan_enabled));
- 	for (i = 0; i < KCSAN_COUNTER_COUNT; ++i)
--		seq_printf(file, "%s: %ld\n", counter_to_name(i),
--			   atomic_long_read(&counters[i]));
-+		seq_printf(file, "%s: %ld\n", counter_names[i], atomic_long_read(&counters[i]));
+-		if (kstrtoul(&arg[sizeof("test=") - 1], 0, &iters))
++		if (kstrtoul(&arg[strlen("test=")], 0, &iters))
+ 			return -EINVAL;
+ 		test_thread(iters);
+ 	} else if (!strcmp(arg, "whitelist")) {
+diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
+index d05052c23261..15add93ff12e 100644
+--- a/kernel/kcsan/report.c
++++ b/kernel/kcsan/report.c
+@@ -279,8 +279,8 @@ static int get_stack_skipnr(const unsigned long stack_entries[], int num_entries
  
- 	/* show filter functions, and filter type */
- 	spin_lock_irqsave(&report_filterlist_lock, flags);
+ 		cur = strnstr(buf, "kcsan_", len);
+ 		if (cur) {
+-			cur += sizeof("kcsan_") - 1;
+-			if (strncmp(cur, "test", sizeof("test") - 1))
++			cur += strlen("kcsan_");
++			if (!str_has_prefix(cur, "test"))
+ 				continue; /* KCSAN runtime function. */
+ 			/* KCSAN related test. */
+ 		}
 -- 
 2.28.0.163.g6104cc2f0b6-goog
 
