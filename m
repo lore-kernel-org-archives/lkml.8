@@ -2,122 +2,193 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A17C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4355AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77A612245C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20620206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:15:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bNVZRRmX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Uy3fPRUd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733114AbgGaMOU (ORCPT
+        id S1733003AbgGaMPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 08:14:20 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:18970 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732784AbgGaMOS (ORCPT
+        Fri, 31 Jul 2020 08:15:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58276 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732842AbgGaMPo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 08:14:18 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f240ab80000>; Fri, 31 Jul 2020 05:12:44 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 31 Jul 2020 05:14:18 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 31 Jul 2020 05:14:18 -0700
-Received: from [10.26.73.28] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul
- 2020 12:14:12 +0000
-Subject: Re: [PATCH 1/2] cpufreq: tegra186: Fix initial frequency
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200712100645.13927-1-jonathanh@nvidia.com>
- <20200713032554.cykywnygxln6ukrl@vireshk-i7>
- <3d6091f2-6b04-185f-6c23-e39a34b87877@nvidia.com>
- <20200714034635.2zdv3wzmftjg2t4a@vireshk-i7>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <8c6d3c32-c142-3981-3a52-6560e885f4c9@nvidia.com>
-Date:   Fri, 31 Jul 2020 13:14:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 31 Jul 2020 08:15:44 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29618C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 05:15:44 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id 4so9444275vsf.11
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 05:15:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=1gowMH0CRwwMnTHOVHU5jY/2lEG6qeP7P342f23hLe8=;
+        b=Uy3fPRUd0/4F2GahA2w1QyYu+RiazzcsITzsOpRGCrz//KczrF1IFtYoww4zguNEI6
+         ndyjHmV+yXgrT69dIDVKbiqx/hvpAKv1JUMz3M2lzgtl3DG2OHP6ZS7nWEEQcWqO9JQj
+         XsfrMjTS0xZYOeXT8QcCBJC0N6io339/+cdmOyUfARxXVyW8vuPInnkcX0TX73rVSzju
+         jI2nZVD/os+rJjrz+tnuuEUqTZY53UOXszbavlZ+dpPNJPZLJhreW+oMYVxYALvWJPWn
+         bwwTeQKpDwBYy57drWjXNVF+Tb/p7FS5/QDPxdSGFbolZ+l1flT79HfryLOHhLxICPEz
+         6bTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1gowMH0CRwwMnTHOVHU5jY/2lEG6qeP7P342f23hLe8=;
+        b=UlQVfX81J+GEZUlThqUVcVNKlpxlcDBcIfRbeK+XMEWzSgbr2zTXUvy17V3noOlEQL
+         KJ59PkEoPlv1J7C38DpqThzD5cmXdIui/Ad/+Stl54fx1gM4CgQyDihStG9WH/c7Focw
+         wpH2ptiwPOnUjxbX2yuUqZRuv05l68t477BJ0upVXwykN7AWiC8NKI6IvWkWxggOIMLd
+         QJ59kKh5Tw5CxQw0CNWXUmkyKTTYk3N3UBZlJVU3xnsvoaICZDLrUGyyKZqNsTRLfC6Q
+         q36b/DP6XDUG/ujbgRNCqht7XjNXChfDmwR8s21Vr/o8SNAQ0A1oUfCYUFpcD0GJXrdg
+         EKpg==
+X-Gm-Message-State: AOAM533stYiYV9irNridv0QBk74oOCZEXTWx+/s8ReG3opeAhDJgZrZ8
+        mG37eg7EYIL0IGjaJUrsJg+AeAOeNf098tMihlIM1g==
+X-Google-Smtp-Source: ABdhPJwqa3AabQ8T7tGM5gvXPn/waAtUx7Bx6tpvelDIEjRtH3c5BSOGnIJ7IJCjmtRRgG9WBTERlbBA78mRy1LKeEs=
+X-Received: by 2002:a67:e412:: with SMTP id d18mr2862509vsf.41.1596197743258;
+ Fri, 31 Jul 2020 05:15:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200714034635.2zdv3wzmftjg2t4a@vireshk-i7>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596197564; bh=y7zPiwOFyQtt0rLys/IwA3DQdByn03F5BY9HhZm1uGU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=bNVZRRmX8+2ltVanZS1OMvKhphVdXl2odp8h+VQBK+Rwo/7AbIg5b3/oKCxt6q3Ky
-         vhaxHJqlX1X3eQFeUvfgfurUP5sKw58bG0CayL5BDrcVgMDvQcRdNdVPSRlBdTekC4
-         zP0180OGr3VINBKhzwxQSgIvyrEoIofunWApjlz5IWzpsa3aG0Lmgk8UyKma1KfA9C
-         uHBYDluv8wViENYf0tuf47ekrkut5EkiVzdF/+bSTBwdi2RAxtF5UXfqyUsyios84b
-         0Nh0iHe0swdwAjDplU8hn5nK+LTm+UUE+3PFxPJv+CQRSLn2flTyjc8HvuVztXMkqn
-         llKsF3Gu5pGtg==
+References: <20200730074418.882736401@linuxfoundation.org>
+In-Reply-To: <20200730074418.882736401@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 31 Jul 2020 17:45:31 +0530
+Message-ID: <CA+G9fYvKSWvopcjec-+eczak44XUsKf3Qb00uMOE9-iFfq_xVw@mail.gmail.com>
+Subject: Re: [PATCH 4.14 00/14] 4.14.191-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Viresh,
+On Thu, 30 Jul 2020 at 13:38, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.14.191 release.
+> There are 14 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 01 Aug 2020 07:44:05 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.14.191-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-On 14/07/2020 04:46, Viresh Kumar wrote:
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-...
+Summary
+------------------------------------------------------------------------
 
-> The get() callback is supposed to read the frequency from hardware and
-> return it, no cached value here. policy->cur may end up being wrong in
-> case there is a bug.
+kernel: 4.14.191-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: f743b8ea46fbaa440f9ccf7a4da9fa4a874941b0
+git describe: v4.14.190-15-gf743b8ea46fb
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.190-15-gf743b8ea46fb
 
-I have been doing some more testing on Tegra, I noticed that when
-reading the current CPU frequency via the sysfs scaling_cur_freq entry,
-this always returns the cached value (at least for Tegra). Looking at
-the implementation of scaling_cur_freq I see ...
+No regressions (compared to build v4.14.189-80-gf743b8ea46fb)
 
-static ssize_t show_scaling_cur_freq(struct cpufreq_policy *policy, char *buf)
-{
-        ssize_t ret; 
-        unsigned int freq;
+No fixes (compared to build v4.14.189-80-gf743b8ea46fb)
 
-        freq = arch_freq_get_on_cpu(policy->cpu);
-        if (freq)
-                ret = sprintf(buf, "%u\n", freq);
-        else if (cpufreq_driver && cpufreq_driver->setpolicy &&
-                        cpufreq_driver->get)
-                ret = sprintf(buf, "%u\n", cpufreq_driver->get(policy->cpu));
-        else
-                ret = sprintf(buf, "%u\n", policy->cur);
-        return ret; 
-}
+Ran 34716 total tests in the following environments and test suites.
 
-The various Tegra CPU frequency drivers do not implement the
-set_policy callback and hence why we always get the cached value. I
-see the following commit added this and before it simply return the
-cached value ...
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
 
-commit c034b02e213d271b98c45c4a7b54af8f69aaac1e
-Author: Dirk Brandewie <dirk.j.brandewie@intel.com>
-Date:   Mon Oct 13 08:37:40 2014 -0700
+Test Suites
+-----------
+* build
+* igt-gpu-tools
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-dio-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-mm-tests
+* perf
+* v4l2-compliance
+* kvm-unit-tests
+* ltp-commands-tests
+* ltp-controllers-tests
+* ltp-cve-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+* ssuite
 
-    cpufreq: expose scaling_cur_freq sysfs file for set_policy() drivers
-
-Is this intentional? 
-
-Cheers
-Jon
-
--- 
-nvpublic
+--=20
+Linaro LKFT
+https://lkft.linaro.org
