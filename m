@@ -4,57 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E165FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAEEC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B443E22B40
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83A82208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:27:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1ou+Awsa";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZXtviY9/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IP4OPtYe";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CJ0NU8CT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732609AbgGaJ1B (ORCPT
+        id S1732831AbgGaJ1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:27:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60074 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732410AbgGaJXQ (ORCPT
+        Fri, 31 Jul 2020 05:27:03 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56476 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732402AbgGaJXP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:23:16 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4891C061574;
-        Fri, 31 Jul 2020 02:23:15 -0700 (PDT)
+        Fri, 31 Jul 2020 05:23:15 -0400
 Date:   Fri, 31 Jul 2020 09:23:13 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596187394;
+        s=2020; t=1596187393;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=+AhZ83rScIbJ4rlxI2njPEzDwd/0anHUrr5iVxs4/KY=;
-        b=1ou+AwsaJbcr3W3M26D7MmUjeNLyngGcvbbzQBMY4/AzFYgH88zrdulHNqM8VBV/Y1pwJr
-        bNh3/8j/N2NCP74bW0LKNplbMofPmn2G1BSSC+VyUPeCcup5lcKiIuxkkNfMrNzOcTs2Hn
-        K8dE+bTbZOAYLoUpycOJ6B67CfWUQ9p5uW9PuRv7Z9fkL1Fab1xMK3TkxSHoeIYIgAEvrs
-        sjQKtmmPX2fMXuLuTsx7W/YIRa0aMRhdCJabvNOJhotMU+X7nTdLivHg1vgKxg/+DquWUU
-        PN0J6oXB26YtmlBnUBoqQ/TAeICQNaPqTm/pG9g75TZaUhcg4dmSyhgWMIlxIQ==
+        bh=Ps+wi6/GEwDM4g13RRDQn2qglgbsxy6g1tAgD+sKb18=;
+        b=IP4OPtYeztCbcPJ1vdLOOZ5qkC8aDIMRHPjhKILm9jrl0CT+ALTP4WwH4ohc/1yxZQ/n2i
+        W9Rh8sWoXFYHiCtTr+TpUMQPZVMUPI7ARrLplOeRaFqbcQZDSCtpfONXVgnbBbrWTTkSC8
+        YB6JUgDiglCw6F07gb6rguY22CGGaMl3GHor0G/4BVIFx0uFzAPCsxiyTqlOGEF0oru26u
+        IqGSnkcj4ZUe9k0gZ9VOkPo1ARYEUHWwRETL3FJQ/fiU33nPYOLlVDGO5AuoHv5SCkO2K+
+        AwPhY6RX/mYXPCQL8MF7A4z0bkwedvijheF7OPEP/zLG5mC3qocN7g7QaqqhqQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596187394;
+        s=2020e; t=1596187393;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=+AhZ83rScIbJ4rlxI2njPEzDwd/0anHUrr5iVxs4/KY=;
-        b=ZXtviY9/EiCc5ugkPVTYshYS3DidHASulAETnPiHi0wwjqK/6hZVS2Aka+8UBEl+5KhoCX
-        sWR46RH6V7Flk3Bw==
+        bh=Ps+wi6/GEwDM4g13RRDQn2qglgbsxy6g1tAgD+sKb18=;
+        b=CJ0NU8CT58qI2QSJ95atglUMRLaZMjiSFGFrzbopt8QfTvOqF6Nno7SZ5YrK3h6k+NdTvw
+        qt8G6sFg+6JEVPAg==
 From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcu-tasks: Convert sleeps to idle priority
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: core/rcu] rcu-tasks: Make rcu_tasks_postscan() be static
+Cc:     kbuild test robot <lkp@intel.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <159618739387.4006.1540485796816983638.tip-bot2@tip-bot2>
+Message-ID: <159618739323.4006.6625252484111206095.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -66,53 +64,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     ea6eed9f7d7382c7230202d4c3bf74185f193394
-Gitweb:        https://git.kernel.org/tip/ea6eed9f7d7382c7230202d4c3bf74185f193394
+Commit-ID:     04a3c5aa7a8cb2ce97f9beb627ba742bc8b0fe03
+Gitweb:        https://git.kernel.org/tip/04a3c5aa7a8cb2ce97f9beb627ba742bc8b0fe03
 Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Thu, 07 May 2020 16:47:13 -07:00
+AuthorDate:    Thu, 28 May 2020 19:27:06 -07:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
 CommitterDate: Mon, 29 Jun 2020 12:00:22 -07:00
 
-rcu-tasks: Convert sleeps to idle priority
+rcu-tasks: Make rcu_tasks_postscan() be static
 
-This commit converts the long-standing schedule_timeout_interruptible()
-and schedule_timeout_uninterruptible() calls used by the various Tasks
-RCU's grace-period kthreads to schedule_timeout_idle().  This conversion
-avoids polluting the load-average with Tasks-RCU-related sleeping.
+The rcu_tasks_postscan() function is not used outside of RCU's tasks.h
+file, so this commit makes it be static.
 
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tasks.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/rcu/tasks.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-index ce23f6c..91fee81 100644
+index 91fee81..da200e5 100644
 --- a/kernel/rcu/tasks.h
 +++ b/kernel/rcu/tasks.h
-@@ -205,7 +205,7 @@ static int __noreturn rcu_tasks_kthread(void *arg)
- 			if (!rtp->cbs_head) {
- 				WARN_ON(signal_pending(current));
- 				set_tasks_gp_state(rtp, RTGS_WAIT_WAIT_CBS);
--				schedule_timeout_interruptible(HZ/10);
-+				schedule_timeout_idle(HZ/10);
- 			}
- 			continue;
- 		}
-@@ -227,7 +227,7 @@ static int __noreturn rcu_tasks_kthread(void *arg)
- 			cond_resched();
- 		}
- 		/* Paranoid sleep to keep this from entering a tight loop */
--		schedule_timeout_uninterruptible(HZ/10);
-+		schedule_timeout_idle(HZ/10);
+@@ -402,7 +402,7 @@ static void rcu_tasks_pertask(struct task_struct *t, struct list_head *hop)
+ }
  
- 		set_tasks_gp_state(rtp, RTGS_WAIT_CBS);
- 	}
-@@ -336,7 +336,7 @@ static void rcu_tasks_wait_gp(struct rcu_tasks *rtp)
- 
- 		/* Slowly back off waiting for holdouts */
- 		set_tasks_gp_state(rtp, RTGS_WAIT_SCAN_HOLDOUTS);
--		schedule_timeout_interruptible(HZ/fract);
-+		schedule_timeout_idle(HZ/fract);
- 
- 		if (fract > 1)
- 			fract--;
+ /* Processing between scanning taskslist and draining the holdout list. */
+-void rcu_tasks_postscan(struct list_head *hop)
++static void rcu_tasks_postscan(struct list_head *hop)
+ {
+ 	/*
+ 	 * Wait for tasks that are in the process of exiting.  This
