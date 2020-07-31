@@ -2,189 +2,93 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F86C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5824208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9165F208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:38:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b="gjjMMDfF"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wpz9JxHr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387888AbgGaSiZ (ORCPT
+        id S2387893AbgGaSic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 14:38:25 -0400
-Received: from mail2.candelatech.com ([208.74.158.173]:51824 "EHLO
-        mail3.candelatech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387676AbgGaSiZ (ORCPT
+        Fri, 31 Jul 2020 14:38:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60756 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387890AbgGaSib (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 14:38:25 -0400
-Received: from [192.168.254.5] (unknown [50.34.202.127])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail3.candelatech.com (Postfix) with ESMTPSA id 342EA13C2B0;
-        Fri, 31 Jul 2020 11:38:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com 342EA13C2B0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
-        s=default; t=1596220697;
-        bh=0qBeodkViCQFY2Awt7MbLc4IcFIEjXjXkHdae8WCSKk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=gjjMMDfFSkJOOhylBkDoMIfCzbfbfpAX9P0rDoC31s+cixVaU4ey+C/m1s0B+iVxV
-         zRrhGAcxHXt78sgZ4N4nF05ULZDGfxKZvHPab2slUyif46aYgewq0s2NCVPhb/Mq4N
-         u2kNicYnNEDoIAglakCzMsT5HnlpGsdAQQReHYJs=
-Subject: Re: [PATCH v2 1/3] ath10k: Add history for tracking certain events
-To:     Rakesh Pillai <pillair@codeaurora.org>, ath10k@lists.infradead.org
-Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org,
-        netdev@vger.kernel.org
-References: <1596220042-2778-1-git-send-email-pillair@codeaurora.org>
- <1596220042-2778-2-git-send-email-pillair@codeaurora.org>
-From:   Ben Greear <greearb@candelatech.com>
-Organization: Candela Technologies
-Message-ID: <bedc5fe0-1904-d045-4a84-0869ee1b0b2e@candelatech.com>
-Date:   Fri, 31 Jul 2020 11:38:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 31 Jul 2020 14:38:31 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12AC1C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 11:38:31 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id t10so12501912plz.10
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 11:38:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=SNpK+3wWVxGTyist2fLUSgIvEfDZxw0Tclt5ni7TW34=;
+        b=Wpz9JxHr67aJk9mP3sR63H5t7ksI0PpWbEtowXXceem2XblTkxAx8ias5Io1IBdyKN
+         CjVfnyIxnhcqoGWGvljAocxdC415cvlFjbooBpvH6B0T3sy6m4BtCkJnTVub7/AFnfUP
+         NbjjtPwPpjjOY31HqZpPNkFPDLKK5gOzbetc4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=SNpK+3wWVxGTyist2fLUSgIvEfDZxw0Tclt5ni7TW34=;
+        b=gI9iUYEOj20cG4fDr/X2/9uJn7+UL4e4mmanxn0LhuhF17h/PxakGW6huCWtaXllZY
+         IkWOIFEvVTT6zmKJtL6JesyzY59oLeJZfXS4OnlD3H12bbtXgc91RGrUI2HvdN78S/Lu
+         z1XHb/zSTwYxpNN800wIq1OtSo+sXOOTIouE6JNBgWByt7u1ylCyE6pyITDqn3z/dUdi
+         eDDfEUARdH+WUpVSY4EJwcDpLwc/VL9kPEbg/yHBX0l4/RibJod8aFE/hGlnkIS71JBl
+         GyO8y+SmEwZ9afFQvM3dzm6ihJKF0dVB9W4IXcep/UbXZfDM9QqEUCR0//HBLNc9h2yV
+         3zxw==
+X-Gm-Message-State: AOAM531ePcoVbUbmJwYBwBpb+Xnh1nlk2YE55Sgw11GP/ka0aQ9CEGXp
+        RZKiIPyTBkYg+nhuCldzqJX9Lg==
+X-Google-Smtp-Source: ABdhPJxWQH37ntc/c6bbP/1fWoO0uz6UdFlR3yqVZ7s1qSuwG9SpA1iRMLMBBX4cHatU4Pafdwg3tQ==
+X-Received: by 2002:a17:90a:31ce:: with SMTP id j14mr5205373pjf.65.1596220710601;
+        Fri, 31 Jul 2020 11:38:30 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id 137sm12324262pgg.72.2020.07.31.11.38.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 11:38:30 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <1596220042-2778-2-git-send-email-pillair@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200731104555.v3.7.Iecaa50e469918a385b3e5dab375e442540ea2ad4@changeid>
+References: <20200731164853.3020946-1-campello@chromium.org> <20200731104555.v3.7.Iecaa50e469918a385b3e5dab375e442540ea2ad4@changeid>
+Subject: Re: [PATCH v3 07/15] iio: sx9310: Use long instead of int for channel bitmaps
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Daniel Campello <campello@chromium.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+To:     Daniel Campello <campello@chromium.org>,
+        LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Fri, 31 Jul 2020 11:38:28 -0700
+Message-ID: <159622070873.1360974.241649023719158449@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/31/20 11:27 AM, Rakesh Pillai wrote:
-> Add history for tracking the below events
-> - register read
-> - register write
-> - IRQ trigger
-> - NAPI poll
-> - CE service
-> - WMI cmd
-> - WMI event
-> - WMI tx completion
-> 
-> This will help in debugging any crash or any
-> improper behaviour.
-> 
-> Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
-> 
-> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+Quoting Daniel Campello (2020-07-31 09:48:44)
+> Uses for_each_set_bit() macro to loop over channel bitmaps.
+>=20
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 > ---
->   drivers/net/wireless/ath/ath10k/ce.c      |   1 +
->   drivers/net/wireless/ath/ath10k/core.h    |  74 +++++++++++++++++
->   drivers/net/wireless/ath/ath10k/debug.c   | 133 ++++++++++++++++++++++++++++++
->   drivers/net/wireless/ath/ath10k/debug.h   |  74 +++++++++++++++++
->   drivers/net/wireless/ath/ath10k/snoc.c    |  15 +++-
->   drivers/net/wireless/ath/ath10k/wmi-tlv.c |   1 +
->   drivers/net/wireless/ath/ath10k/wmi.c     |  10 +++
->   7 files changed, 307 insertions(+), 1 deletion(-)
-> 
 
-> +void ath10k_record_wmi_event(struct ath10k *ar, enum ath10k_wmi_type type,
-> +			     u32 id, unsigned char *data)
-> +{
-> +	struct ath10k_wmi_event_entry *entry;
-> +	u32 idx;
-> +
-> +	if (type == ATH10K_WMI_EVENT) {
-> +		if (!ar->wmi_event_history.record)
-> +			return;
-
-This check above is duplicated below, add it once at top of the method
-instead.
-
-> +
-> +		spin_lock_bh(&ar->wmi_event_history.hist_lock);
-> +		idx = ath10k_core_get_next_idx(&ar->reg_access_history.index,
-> +					       ar->wmi_event_history.max_entries);
-> +		spin_unlock_bh(&ar->wmi_event_history.hist_lock);
-> +		entry = &ar->wmi_event_history.record[idx];
-> +	} else {
-> +		if (!ar->wmi_cmd_history.record)
-> +			return;
-> +
-> +		spin_lock_bh(&ar->wmi_cmd_history.hist_lock);
-> +		idx = ath10k_core_get_next_idx(&ar->reg_access_history.index,
-> +					       ar->wmi_cmd_history.max_entries);
-> +		spin_unlock_bh(&ar->wmi_cmd_history.hist_lock);
-> +		entry = &ar->wmi_cmd_history.record[idx];
-> +	}
-> +
-> +	entry->timestamp = ath10k_core_get_timestamp();
-> +	entry->cpu_id = smp_processor_id();
-> +	entry->type = type;
-> +	entry->id = id;
-> +	memcpy(&entry->data, data + 4, ATH10K_WMI_DATA_LEN);
-> +}
-> +EXPORT_SYMBOL(ath10k_record_wmi_event);
-
-> @@ -1660,6 +1668,11 @@ static int ath10k_snoc_probe(struct platform_device *pdev)
->   	ar->ce_priv = &ar_snoc->ce;
->   	msa_size = drv_data->msa_size;
->   
-> +	ath10k_core_reg_access_history_init(ar, ATH10K_REG_ACCESS_HISTORY_MAX);
-> +	ath10k_core_wmi_event_history_init(ar, ATH10K_WMI_EVENT_HISTORY_MAX);
-> +	ath10k_core_wmi_cmd_history_init(ar, ATH10K_WMI_CMD_HISTORY_MAX);
-> +	ath10k_core_ce_event_history_init(ar, ATH10K_CE_EVENT_HISTORY_MAX);
-
-Maybe only enable this once user turns it on?  It sucks up a bit of memory?
-
-> +
->   	ath10k_snoc_quirks_init(ar);
->   
->   	ret = ath10k_snoc_resource_init(ar);
-> diff --git a/drivers/net/wireless/ath/ath10k/wmi-tlv.c b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-> index 932266d..9df5748 100644
-> --- a/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-> +++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-> @@ -627,6 +627,7 @@ static void ath10k_wmi_tlv_op_rx(struct ath10k *ar, struct sk_buff *skb)
->   	if (skb_pull(skb, sizeof(struct wmi_cmd_hdr)) == NULL)
->   		goto out;
->   
-> +	ath10k_record_wmi_event(ar, ATH10K_WMI_EVENT, id, skb->data);
->   	trace_ath10k_wmi_event(ar, id, skb->data, skb->len);
->   
->   	consumed = ath10k_tm_event_wmi(ar, id, skb);
-> diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
-> index a81a1ab..8ebd05c 100644
-> --- a/drivers/net/wireless/ath/ath10k/wmi.c
-> +++ b/drivers/net/wireless/ath/ath10k/wmi.c
-> @@ -1802,6 +1802,15 @@ struct sk_buff *ath10k_wmi_alloc_skb(struct ath10k *ar, u32 len)
->   
->   static void ath10k_wmi_htc_tx_complete(struct ath10k *ar, struct sk_buff *skb)
->   {
-> +	struct wmi_cmd_hdr *cmd_hdr;
-> +	enum wmi_tlv_event_id id;
-> +
-> +	cmd_hdr = (struct wmi_cmd_hdr *)skb->data;
-> +	id = MS(__le32_to_cpu(cmd_hdr->cmd_id), WMI_CMD_HDR_CMD_ID);
-> +
-> +	ath10k_record_wmi_event(ar, ATH10K_WMI_TX_COMPL, id,
-> +				skb->data + sizeof(struct wmi_cmd_hdr));
-> +
->   	dev_kfree_skb(skb);
->   }
-
-I think guard the above new code with if (unlikely(ar->ce_event_history.record)) { ... }
-
-All in all, I think I'd want to compile this out (while leaving other debug compiled
-in) since it seems this stuff would be rarely used and it adds method calls to hot
-paths.
-
-That is a decision for Kalle though, so see what he says...
-
-Thanks,
-Ben
-
-
--- 
-Ben Greear <greearb@candelatech.com>
-Candela Technologies Inc  http://www.candelatech.com
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
