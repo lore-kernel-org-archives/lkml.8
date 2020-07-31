@@ -2,105 +2,224 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D1EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21924C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D11B620829
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9BEC20829
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:08:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jBa+2bim"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="KoXVTiaI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731106AbgGaCF5 (ORCPT
+        id S1731122AbgGaCIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 22:05:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49574 "EHLO
+        Thu, 30 Jul 2020 22:08:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730904AbgGaCF5 (ORCPT
+        with ESMTP id S1731075AbgGaCIE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 22:05:57 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA624C061574;
-        Thu, 30 Jul 2020 19:05:56 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id 2so23435040qkf.10;
-        Thu, 30 Jul 2020 19:05:56 -0700 (PDT)
+        Thu, 30 Jul 2020 22:08:04 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFA53C061575
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 19:08:02 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id w17so15951177ply.11
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 19:08:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=i1QyVPNifl3QjxH5nvaDLQ3b4H6Y0SRuASS7QiD7pvY=;
-        b=jBa+2bimj10N2QUadnPQoQbL5Xkp1Fa+6vvOGfuCTrl/RJMXjx449rzMWAsrlnNv8T
-         3f7Gj8FroRaQPjBYT2Vito0ySIHeYaHPKRKH2XYRsv2aGLa5PWC87iCR35zjxyEWmWEi
-         FQrZ4vko9kA6cBRxFXbZf31TirTtrhO1rdw3pyWs8AhmrnGvul+BKDP/YCEaur4l5M7x
-         dT1xRMV2toaYPDn7TWMqsPa2Vt5rHDH1ERBIqBegE48K0dyZK9WrTKGPt+p5juKNcpsH
-         /LlN5il62Oiafmjcrl2NuUbWIVAPA5cfMBG2gjUqtjvdnGOjEjXhJwvmVqgPE3Ia/wos
-         Jr6Q==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nLMVNXFtpHSwzxcoLcpKiB2ROQqZU2Vxtotq7jh7W6E=;
+        b=KoXVTiaINuYY0E/RH91J0MvozsPDygrPr+7aRqO9B/i3tLk6/C70KqShJFbpZfe/Mh
+         SQ2wy4EWzK3mEtZJJc6evwSIFDnknQBoPshGPz9TS1MQHKFAbXT1a7U++nTN9bDUXoCk
+         EirlXrsY79UY7IXdsxwVR6vGWTYMED0UdcqrUX+tm3NaYso2Py/MHWbRfuJduK85beDN
+         nQAVEg+eijWwh3EV6NZM9LuM/Tvwqpm9RZvwDRTzcpm4IwmNxIkfemv1vMTTPCy1m/Ok
+         Cn4SVzdIGijeRRxZrQTu20SUc9L5hEF98Zxtj1qCimXH/eE3EjS1H2ydTAOFQamsTcRf
+         diTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=i1QyVPNifl3QjxH5nvaDLQ3b4H6Y0SRuASS7QiD7pvY=;
-        b=Aj2pD9u22x5XpglN23GS5c/Wro6eNPn7l0b9KnEMLRiP9mQUJPOL8KIiAcHpo0eJDN
-         qRmCDD1r19BEglqKUtLMs7ilchT4T7sPrCvGEFzsMFQQsFCgAUkavdOsTYlpegxVbj7Z
-         eNv9D/hROBMBSt0kcvbRg4SnzoFZFjKPEo5y1F0SEKhwMUKgNYeMpp72BGIHUXy+x4YD
-         7U2aDaL9zDhP5ITsHzQ9wUAcAdoHWo5BzU5H8ffnkc/p+Z2dX5pjjazP0RcQonZDzMNh
-         2LODzPPEJO19fD4u/2TelKXumAmbdcwrrVOz7SxeICiaER1rUo6M/As3MMhAbEmtTOmA
-         KhRg==
-X-Gm-Message-State: AOAM5307SEhX5iVbdSq7VfUNZFQkNNmRvFZPYDU3EaNk2qRsNsudRs1X
-        4HHHF8svXgr7YZ5vRCZrTfU=
-X-Google-Smtp-Source: ABdhPJzCS1HwBM6mrSflCoyKkTQvL/yTVNmELH1OWT+K+PGcqI3ub3AmSpE7BPNqrmqHX17HiUYIYQ==
-X-Received: by 2002:a37:aa56:: with SMTP id t83mr1993883qke.150.1596161155820;
-        Thu, 30 Jul 2020 19:05:55 -0700 (PDT)
-Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
-        by smtp.gmail.com with ESMTPSA id c5sm3349233qtp.62.2020.07.30.19.05.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 19:05:55 -0700 (PDT)
-Date:   Thu, 30 Jul 2020 19:05:53 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Matthias Brugger <mbrugger@suse.com>, pbrobinson@gmail.com,
-        kernel-list@raspberrypi.com,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] clk: bcm2835: Do not use prediv with bcm2711's PLLs
-Message-ID: <20200731020553.GA3762310@ubuntu-n2-xlarge-x86>
-References: <20200730182619.23246-1-nsaenzjulienne@suse.de>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nLMVNXFtpHSwzxcoLcpKiB2ROQqZU2Vxtotq7jh7W6E=;
+        b=jQvA4QOV8LCm+xNg52jiN20PWiNEbxjFQ7oFMubarEqVD+N7CXbIy4zE007/4txcOD
+         wAf7keG4qLdx9qhzTEB3DSziyhhAZ/sC4SIRmoC6Nwzgvr1qQ1gyZQGpsn6pr2+EWm/5
+         nxyHmslSvtxq0nx6BpQGEFFZRAh4STXF52aNl4PhgyNtUIvbOST9OB5A86A6Pat6J4dH
+         mWdkZmDWX0YsmTQBskzAHDxTqyq/Mv77oqMscQ7/lop0Gzn1pjo/oWrKxWMZAomQWnzW
+         4r1igwM80AzFYx15zYlwNHFn6zdj8Zh+dUufkhc8mGgyFF8d/1iQZgl7esCBEaIWF8Aa
+         xfTA==
+X-Gm-Message-State: AOAM532jJEiVQmzSkd+4UELgjQz5uMh8bs3FXts4P4yS4E+s/oGs+5dv
+        jGWbkDgIDyU5czcL8H2y+Rk40A==
+X-Google-Smtp-Source: ABdhPJyjFrG6R7wOWaWSmH7CBiI5qqg+IwqUSN64uX34Ls0PqERrqQHYCeRvZqWemOUKG8RaWFH2ZA==
+X-Received: by 2002:a17:90a:e551:: with SMTP id ei17mr1897767pjb.224.1596161282053;
+        Thu, 30 Jul 2020 19:08:02 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id i21sm7983578pfa.18.2020.07.30.19.08.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jul 2020 19:08:01 -0700 (PDT)
+Subject: Re: KASAN: use-after-free Read in io_uring_setup (2)
+To:     Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+9d46305e76057f30c74e@syzkaller.appspotmail.com>
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk, Markus Elfring <Markus.Elfring@web.de>
+References: <20200731014541.11944-1-hdanton@sina.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <51f9fd65-c4ef-3ee6-c4dc-e76c88446350@kernel.dk>
+Date:   Thu, 30 Jul 2020 20:07:59 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730182619.23246-1-nsaenzjulienne@suse.de>
+In-Reply-To: <20200731014541.11944-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 08:26:19PM +0200, Nicolas Saenz Julienne wrote:
-> Contrary to previous SoCs, bcm2711 doesn't have a prescaler in the PLL
-> feedback loop. Bypass it by zeroing fb_prediv_mask when running on
-> bcm2711.
+On 7/30/20 7:45 PM, Hillf Danton wrote:
 > 
-> Note that, since the prediv configuration bits were re-purposed, this
-> was triggering miscalculations on all clocks hanging from the VPU clock,
-> notably the aux UART, making its output unintelligible.
+> Thu, 30 Jul 2020 12:21:18 -0700
+>> syzbot found the following issue on:
+>>
+>> HEAD commit:    04b45717 Add linux-next specific files for 20200729
+>> git tree:       linux-next
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=173774b8900000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=ec68f65b459f1ed
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=9d46305e76057f30c74e
+>> compiler:       gcc (GCC) 10.1.0-syz 20200507
+>>
+>> Unfortunately, I don't have any reproducer for this issue yet.
+>>
+>> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+>> Reported-by: syzbot+9d46305e76057f30c74e@syzkaller.appspotmail.com
+>>
+>> ==================================================================
+>> BUG: KASAN: use-after-free in io_account_mem fs/io_uring.c:7397 [inline]
+>> BUG: KASAN: use-after-free in io_uring_create fs/io_uring.c:8369 [inline]
+>> BUG: KASAN: use-after-free in io_uring_setup+0x2797/0x2910 fs/io_uring.c:8400
+>> Read of size 1 at addr ffff888087a41044 by task syz-executor.5/18145
+>>
+>> CPU: 0 PID: 18145 Comm: syz-executor.5 Not tainted 5.8.0-rc7-next-20200729-syzkaller #0
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+>> Call Trace:
+>>  __dump_stack lib/dump_stack.c:77 [inline]
+>>  dump_stack+0x18f/0x20d lib/dump_stack.c:118
+>>  print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
+>>  __kasan_report mm/kasan/report.c:513 [inline]
+>>  kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+>>  io_account_mem fs/io_uring.c:7397 [inline]
+>>  io_uring_create fs/io_uring.c:8369 [inline]
+>>  io_uring_setup+0x2797/0x2910 fs/io_uring.c:8400
+>>  do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+>>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>> RIP: 0033:0x45c429
+>> Code: 8d b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+>> RSP: 002b:00007f8f121d0c78 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
+>> RAX: ffffffffffffffda RBX: 0000000000008540 RCX: 000000000045c429
+>> RDX: 0000000000000000 RSI: 0000000020000040 RDI: 0000000000000196
+>> RBP: 000000000078bf38 R08: 0000000000000000 R09: 0000000000000000
+>> R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bf0c
+>> R13: 00007fff86698cff R14: 00007f8f121d19c0 R15: 000000000078bf0c
+>>
+>> Allocated by task 18145:
+>>  kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+>>  kasan_set_track mm/kasan/common.c:56 [inline]
+>>  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
+>>  kmem_cache_alloc_trace+0x16e/0x2c0 mm/slab.c:3550
+>>  kmalloc include/linux/slab.h:554 [inline]
+>>  kzalloc include/linux/slab.h:666 [inline]
+>>  io_ring_ctx_alloc fs/io_uring.c:1042 [inline]
+>>  io_uring_create fs/io_uring.c:8313 [inline]
+>>  io_uring_setup+0x4df/0x2910 fs/io_uring.c:8400
+>>  do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+>>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>
+>> Freed by task 15583:
+>>  kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+>>  kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
+>>  kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
+>>  __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
+>>  __cache_free mm/slab.c:3418 [inline]
+>>  kfree+0x103/0x2c0 mm/slab.c:3756
+>>  process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+>>  worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+>>  kthread+0x3b5/0x4a0 kernel/kthread.c:292
+>>  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+>>
+>> Last call_rcu():
+>>  kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+>>  kasan_record_aux_stack+0x82/0xb0 mm/kasan/generic.c:346
+>>  __call_rcu kernel/rcu/tree.c:2883 [inline]
+>>  call_rcu+0x14f/0x7e0 kernel/rcu/tree.c:2957
+>>  __percpu_ref_switch_to_atomic lib/percpu-refcount.c:192 [inline]
+>>  __percpu_ref_switch_mode+0x365/0x700 lib/percpu-refcount.c:237
+>>  percpu_ref_kill_and_confirm+0x94/0x350 lib/percpu-refcount.c:350
+>>  percpu_ref_kill include/linux/percpu-refcount.h:136 [inline]
+>>  io_ring_ctx_wait_and_kill+0x38/0x600 fs/io_uring.c:7799
+>>  io_uring_release+0x3e/0x50 fs/io_uring.c:7831
+>>  __fput+0x285/0x920 fs/file_table.c:281
+>>  task_work_run+0xdd/0x190 kernel/task_work.c:135
+>>  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+>>  exit_to_user_mode_loop kernel/entry/common.c:139 [inline]
+>>  exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:166
+>>  syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:241
+>>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>
+>> The buggy address belongs to the object at ffff888087a41000
+>>  which belongs to the cache kmalloc-2k of size 2048
+>> The buggy address is located 68 bytes inside of
+>>  2048-byte region [ffff888087a41000, ffff888087a41800)
+>> The buggy address belongs to the page:
+>> page:000000007a29a6b9 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x87a41
+>> flags: 0xfffe0000000200(slab)
+>> raw: 00fffe0000000200 ffffea0002386288 ffffea000253c0c8 ffff8880aa000800
+>> raw: 0000000000000000 ffff888087a41000 0000000100000001 0000000000000000
+>> page dumped because: kasan: bad access detected
+>>
+>> Memory state around the buggy address:
+>>  ffff888087a40f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>>  ffff888087a40f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>>> ffff888087a41000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>>                                            ^
+>>  ffff888087a41080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>>  ffff888087a41100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>> ==================================================================
 > 
-> Fixes: 42de9ad400af ("clk: bcm2835: Add BCM2711_CLOCK_EMMC2 support")
-> Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Add the missing percpu_ref_get when creating ctx.
+> 
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -8318,6 +8318,7 @@ static int io_uring_create(unsigned entr
+>  		free_uid(user);
+>  		return -ENOMEM;
+>  	}
+> +	percpu_ref_get(&ctx->refs);
+>  	ctx->compat = in_compat_syscall();
+>  	ctx->user = user;
+>  	ctx->creds = get_current_cred();
+> @@ -8369,8 +8370,10 @@ static int io_uring_create(unsigned entr
+>  	io_account_mem(ctx, ring_pages(p->sq_entries, p->cq_entries),
+>  		       ACCT_LOCKED);
+>  	ctx->limit_mem = limit_mem;
+> +	percpu_ref_put(&ctx->refs);
+>  	return ret;
+>  err:
+> +	percpu_ref_put(&ctx->refs);
+>  	io_ring_ctx_wait_and_kill(ctx);
+>  	return ret;
+>  }
 
-I updated to the latest version of the firmware
-(668419cb9876474053574b2b1dc20ca996e14cc8) and my serial console
-works :) thank you for the quick fix!
+The error path doesn't care, the issue is only after fd install. Hence
+we don't need to grab a reference, just make sure we don't touch the ctx
+after fd install. Since you saw this one, you must have also seen my
+patch. Why not comment on that instead?
 
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+-- 
+Jens Axboe
+
