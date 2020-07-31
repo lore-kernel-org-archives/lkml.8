@@ -2,124 +2,102 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C93C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E565C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93841208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DAE820829
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:42:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PCla3Z6g"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OX7uox3i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732309AbgGaJlp (ORCPT
+        id S1732337AbgGaJmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:41:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34684 "EHLO
+        Fri, 31 Jul 2020 05:42:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732254AbgGaJlo (ORCPT
+        with ESMTP id S1732140AbgGaJmJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:41:44 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D52C061574;
-        Fri, 31 Jul 2020 02:41:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=yW1amiISh90U+7G4GBjuyuOrXFidnl8gA0+LdBOz9oA=; b=PCla3Z6gdsm86AfGkcADwFVzi7
-        HbRDcD/SlnJelgcZZgvKBC3Ql5xFrnfPU53TlnpOhyuqNPY0gRqBVZHrJErJQ6/0OxQh5jljdTgpt
-        Dq8IW7p01tolCCIxV+ujqh/2/gMdQC8c50YpxU6jYEPW4N/QeIEzLVkcWACdArfP93u6TJ2IA7ZdW
-        x1hM1O8AffyTzSNYYE5auRSwkCZ2DJk5XTHo+y7bTtgsqFVsTd9ai36CVFqTnnpUFH7BsyIiDiv0q
-        08S2tip82hsIVDzqLV5YY1RADfyKJr1+7sA0BN1VU0xvjvVXnH9WKFBAP0ulwffDKp7YfFvrxhsoB
-        5sfSebfA==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k1RXj-0001Yr-IF; Fri, 31 Jul 2020 09:41:35 +0000
-Date:   Fri, 31 Jul 2020 10:41:35 +0100
-From:   "hch@infradead.org" <hch@infradead.org>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     "hch@infradead.org" <hch@infradead.org>,
-        Kanchan Joshi <joshiiitr@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "bcrl@kvack.org" <bcrl@kvack.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-aio@kvack.org" <linux-aio@kvack.org>,
-        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        SelvaKumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>,
-        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-Subject: Re: [PATCH v4 6/6] io_uring: add support for zone-append
-Message-ID: <20200731094135.GA4104@infradead.org>
-References: <CA+1E3rJ3SoLU9aYcugAQgJnSPnJtcCwjZdMREXS3FTmXgy3yow@mail.gmail.com>
- <f030a338-cd52-2e83-e1da-bdbca910d49e@kernel.dk>
- <CA+1E3rKxZk2CatTuPcQq5d14vXL9_9LVb2_+AfR2m9xn2WTZdg@mail.gmail.com>
- <MWHPR04MB3758DC08EA17780E498E9EC0E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <20200731064526.GA25674@infradead.org>
- <MWHPR04MB37581344328A42EA7F5ED13EE74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <CA+1E3rLM4G4SwzD6RWsK6Ssp7NmhiPedZDjrqN3kORQr9fxCtw@mail.gmail.com>
- <MWHPR04MB375863C20C1EF2CB27E62703E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <20200731091416.GA29634@infradead.org>
- <MWHPR04MB37586D39CA389296CE0252A4E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+        Fri, 31 Jul 2020 05:42:09 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B9BDC061574;
+        Fri, 31 Jul 2020 02:42:09 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BJ2P95zscz9sRK;
+        Fri, 31 Jul 2020 19:42:05 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596188527;
+        bh=E7SYofs3sMW60tu/UxfrKDzGsA1UHnaHaqiI9IRnDCE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OX7uox3ieemeIFlj4JzZZPDg0Nc2CggTVvpwCebcwFw2EZibEIbbIU53OXnw2rr8V
+         bmBGOn3oFio2eSIdoLcViGP88eSvT9wDmeJDuGvch1kfDpNAwBTbjnQttQS/3nZAdF
+         n8Vj0tUejgEYGnyN/TH2RcxrqJVaOvNIpr3uPdpof9S3PIHbgiwHZfY/G+PSRajCFG
+         U521TKfr1WHLCjWswW0McSlXnX13S384/1CN3YJnJ60tDjMH2m8Z5qUY737CIv0sC6
+         lwLY1jw/6kA7b3wS2DK2GtZ5EIoZMAXqliUSpKDZs7c82KsbJYw8gqgUz9WJhefRqb
+         1CH7s+MHSdZ3Q==
+Date:   Fri, 31 Jul 2020 19:42:04 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, lkft-triage@lists.linaro.org
+Subject: Re: linux-next: Tree for Jul 30 [build failure on arm64]
+Message-ID: <20200731194204.1db950e4@canb.auug.org.au>
+In-Reply-To: <20200731090022.GB12930@lst.de>
+References: <20200730214659.0fbfdfc4@canb.auug.org.au>
+        <72b073ba-ee41-1a1c-ce6c-ffd8b5936b09@hisilicon.com>
+        <20200731140842.46abe589@canb.auug.org.au>
+        <CA+G9fYvykg9Ly=tRXLrf4hvd4siYKAt5eM0EMnwMgqVDHnbVYQ@mail.gmail.com>
+        <20200731185354.70926525@canb.auug.org.au>
+        <20200731090022.GB12930@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MWHPR04MB37586D39CA389296CE0252A4E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: multipart/signed; boundary="Sig_/c0WH2LaAi1TEoKiPoKTkYm3";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 09:34:50AM +0000, Damien Le Moal wrote:
-> Sync writes are done under the inode lock, so there cannot be other writers at
-> the same time. And for the sync case, since the actual written offset is
-> necessarily equal to the file size before the write, there is no need to report
-> it (there is no system call that can report that anyway). For this sync case,
-> the only change that the use of zone append introduces compared to regular
-> writes is the potential for more short writes.
-> 
-> Adding a flag for "report the actual offset for appending writes" is fine with
-> me, but do you also mean to use this flag for driving zone append write vs
-> regular writes in zonefs ?
+--Sig_/c0WH2LaAi1TEoKiPoKTkYm3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Let's keep semantics and implementation separate.  For the case
-where we report the actual offset we need a size imitation and no
-short writes.
+Hi Christoph,
 
-Anything with those semantics can be implemented using Zone Append
-trivially in zonefs, and we don't even need the exclusive lock in that
-case.  But even without that flag anything that has an exclusive lock can
-at least in theory be implemented using Zone Append, it just need
-support for submitting another request from the I/O completion handler
-of the first.  I just don't think it is worth it - with the exclusive
-lock we do have access to the zone serialied so a normal write works
-just fine.  Both for the sync and async case.
+On Fri, 31 Jul 2020 11:00:22 +0200 Christoph Hellwig <hch@lst.de> wrote:
+>
+> Please just drop the branch for now.
 
-> The fcntl or ioctl for getting the max atomic write size would be fine too.
-> Given that zonefs is very close to the underlying zoned drive, I was assuming
-> that the application can simply consult the device sysfs zone_append_max_bytes
-> queue attribute.
+I will revert those 4 commits from today's linux-next and all Al needs
+to do is reset his for-next branch to its parent.
 
-For zonefs we can, yes.  But in many ways that is a lot more cumbersome
-that having an API that works on the fd you want to write on.
+--=20
+Cheers,
+Stephen Rothwell
 
-> For regular file systems, this value would be used internally
-> only. I do not really see how it can be useful to applications. Furthermore, the
-> file system may have a hard time giving that information to the application
-> depending on its underlying storage configuration (e.g. erasure
-> coding/declustered RAID).
+--Sig_/c0WH2LaAi1TEoKiPoKTkYm3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-File systems might have all kinds of limits of their own (e.g. extent
-sizes).  And a good API that just works everywhere and is properly
-documented is much better than heaps of cargo culted crap all over
-applications.
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8j520ACgkQAVBC80lX
+0GzV8wf+OMAo3yzw67nuD1HXpg7J0cniGhaLNEZgsmnpcDmx141rZubVlhDIlqcI
+M7ehnnLRU42941YvFYHJpFHzIBxKDAKovv7rCoDb///oQLTCUsm875F5xcXSgrdv
+Pq3nI3+NvPOOe3p5MzzIVKrbwzIzrdZTMcw4m7Kbqd0Ss2iaV5njoM/Q45fCj7/8
+OC0UXDW8Roz0Gw0Oy8fXGY1X7J4ZNFz5RBIxr96VacTKXDNEZMnqD/T1oXKAtjby
++MPscqToVP6RGrpeIzWwrdCEaEo0GvyMW+8l4/Hn/V63dDrMaBRhF+17mSmYJk9m
+g8FukOz0RD91f3yi6hfwUxgQRhTskA==
+=uoE7
+-----END PGP SIGNATURE-----
+
+--Sig_/c0WH2LaAi1TEoKiPoKTkYm3--
