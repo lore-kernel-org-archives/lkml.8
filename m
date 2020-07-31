@@ -2,138 +2,110 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE80C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C75D21883
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47493208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:21:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596187312;
+	bh=fEkgmR7JykmZIABEmsxw/RbH/+WeDb5aN/r+gG+nbSc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ep1uWxWaA0Bt3Z/OV+CArv2L2trNggAPvYqLXeCofyJriSvXsoLwbYjtzqjzsA72z
+	 EqIC5jvfTf3tRiw5Nxpo2HB517+ycrJAPNSsCh/gdr1nEOfA/FQC4n0nwqhkX+HbGL
+	 CmrAUMv9QV71GghNH5cnfIR8WlHlNmsLmvZe9A6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732199AbgGaJTW (ORCPT
+        id S1732098AbgGaJVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:19:22 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35638 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731991AbgGaJTW (ORCPT
+        Fri, 31 Jul 2020 05:21:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732076AbgGaJVu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:19:22 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06V92TAr083266;
-        Fri, 31 Jul 2020 05:19:08 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32ma2psb0m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 31 Jul 2020 05:19:07 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06V9IfRR126224;
-        Fri, 31 Jul 2020 05:19:07 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32ma2psayc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 31 Jul 2020 05:19:07 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06V9Exfp001391;
-        Fri, 31 Jul 2020 09:19:04 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma02fra.de.ibm.com with ESMTP id 32gcq0vbv6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 31 Jul 2020 09:19:04 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06V9HaPP64946670
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 Jul 2020 09:17:37 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 771ADAE04D;
-        Fri, 31 Jul 2020 09:19:02 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 31C24AE045;
-        Fri, 31 Jul 2020 09:19:00 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Fri, 31 Jul 2020 09:19:00 +0000 (GMT)
-Date:   Fri, 31 Jul 2020 14:48:59 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Subject: Re: [PATCH v4 07/10] Powerpc/numa: Detect support for coregroup
-Message-ID: <20200731091859.GG14603@linux.vnet.ibm.com>
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20200727053230.19753-1-srikar@linux.vnet.ibm.com>
- <20200727053230.19753-8-srikar@linux.vnet.ibm.com>
- <8736585djw.fsf@mpe.ellerman.id.au>
+        Fri, 31 Jul 2020 05:21:50 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34192C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 02:21:50 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id jp10so4192338ejb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 02:21:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dNrpXoN0P7Mw0lDt7PtL/XatWZHmnShSjWiq3ODdZQ4=;
+        b=W8rDMRmVvDEfiMxVSsc0Ry+ZIZvEJDoUHD/XK9c6dGxB5rJYdWq8Th1/LAZTaiQCYC
+         pb/YQ0gEAv1CNWhjD/qgrbxiq37mnqInHyZrBBtwm6yhaCm0Xbzgd8zet0tKCHLNnYXl
+         ceWYTQy7CfHX1M7tezpJJUpATZQHf7CQ0ve/a2NpksQoGjz+7TbAcputXAhJAEZt7I98
+         q5L+vJQQXt7y/Bb/RjuFJRRndLkLBxvTDoJ5zgLxaqtASfg+gD4XCxTnYtTPk0X6Us94
+         vl3UPgV9KpgRa0z9A/JsA5cEWzXqNoc92I06OehYRzF6osx/3WzPsUNVPteJ+gAKn5qE
+         IZuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=dNrpXoN0P7Mw0lDt7PtL/XatWZHmnShSjWiq3ODdZQ4=;
+        b=kUZ7fSsqpeVWxxmJNqxp33sXDMR5shdW9G8qgtFGKakI8LDbj4OS/OuoBlkqDf99cP
+         kAYp49vSB+1fPwUDihIA1/S8xMdKhLYxOGmEW5yod85u0QjxUPP57Qxo37qNeNVu3y1Z
+         asrtjjJenHWyXO6Uu1XmFE6DwZ2gC15LgbgwvnozLKeR0iTnlLdErp4sqjEEsSBWAhxn
+         g3tbdAiYQWjy3jg2bVJqbM5kBwAb88Yd+QFgp3RqbZESvANjCxsL3ClmDKHpYt2SGFKR
+         OK+7849BPM+wf/jXDTe8t/u0tXdTGWVnCo+S1TFOQxFP2KuXnRRTY6XOQBxlAxjvOdvw
+         wxtA==
+X-Gm-Message-State: AOAM5320lgbo3cr43vEFYFVqpA1BOHjSWKG/jPJOQ2jevWtaNgtDU1Ia
+        h6ZDsFnBMct4xy1NPt0dmGk=
+X-Google-Smtp-Source: ABdhPJyoHgKwGuOqlVKlywxoBoE3NxNmtPffJ/2SwIbf3MB9FzpYde1gUCFSGbCwWng6GuOh3hEWLg==
+X-Received: by 2002:a17:906:1106:: with SMTP id h6mr3165422eja.200.1596187308997;
+        Fri, 31 Jul 2020 02:21:48 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id s4sm8736775ejx.94.2020.07.31.02.21.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 02:21:48 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 11:21:46 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Kees Cook <keescook@chromium.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/21] x86/kaslr: Cleanup and small bugfixes
+Message-ID: <20200731092146.GB2956@gmail.com>
+References: <20200727230801.3468620-1-nivedita@alum.mit.edu>
+ <20200728225722.67457-1-nivedita@alum.mit.edu>
+ <20200730180224.GA1203420@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8736585djw.fsf@mpe.ellerman.id.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-31_02:2020-07-31,2020-07-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 malwarescore=0 mlxlogscore=971 lowpriorityscore=0
- impostorscore=0 mlxscore=0 suspectscore=0 bulkscore=0 spamscore=0
- clxscore=1015 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007310063
+In-Reply-To: <20200730180224.GA1203420@rani.riverdale.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Michael Ellerman <mpe@ellerman.id.au> [2020-07-31 17:49:55]:
 
-> Srikar Dronamraju <srikar@linux.vnet.ibm.com> writes:
-> > Add support for grouping cores based on the device-tree classification.
-> > - The last domain in the associativity domains always refers to the
-> > core.
-> > - If primary reference domain happens to be the penultimate domain in
-> > the associativity domains device-tree property, then there are no
-> > coregroups. However if its not a penultimate domain, then there are
-> > coregroups. There can be more than one coregroup. For now we would be
-> > interested in the last or the smallest coregroups.
+* Arvind Sankar <nivedita@alum.mit.edu> wrote:
+
+> On Tue, Jul 28, 2020 at 06:57:01PM -0400, Arvind Sankar wrote:
+> > v2->v3:
+> > - Fix the first patch: command line size should be strlen + 1 to account
+> >   for terminating NUL. Avoid calling add_identity_map if cmdline was
+> >   NULL, though it should do nothing in that case anyway.
 > 
-> This still doesn't tell me what a coregroup actually represents.
-> 
-> I get that it's a grouping of cores, and that the device tree specifies
-> it for us, but grouping based on what?
-> 
+> Hi Ingo, I noticed that WIP.x86/kaslr and x86/kaslr both have the v2
+> version of the first patch. That has a bug in the cmd_line_size
+> calculation (missing the +1).
 
-We have just abstracted the fact that we are creating a sub-group of cores
-within a DIE. We are limiting to one sub-group per core. However this would
-allow the firmware the flexibility to vary the grouping. Once the firmware
-starts using this group, we could add more code to detect the type of
-grouping and adjust the sd domain flags accordingly.
+Indeed, well spotted. I rebased the affected 4 patches in x86/kaslr 
+and used the opportunity to add Kees's Reviewed-by to the first 4 
+patches as well.
 
-> I think the answer is we aren't being told by firmware, it's just a
-> grouping based on some opaque performance characteristic and we just
-> have to take that as given.
-> 
+I've zapped tip:x86/kaslr for now and put the whole series into 
+tip:WIP.x86/kaslr, will move it into tip:x86/kaslr for a v5.9 merge 
+once Kees is happy with the latest version.
 
-This is partially true. At this time, we dont have firmwares that can
-exploit this code. Once the firmwares start using this grouping, we could
-add more code to align the grouping to the scheduler topology.
+Kees, AFAICS your type truncation and patch split-up review 
+suggestions were resolved in v3?
 
-> But please explain that clearly in the change log and the code comments.
-> 
+Thanks,
 
-Okay, I will do the needful.
-
-> cheers
-> 
-
--- 
-Thanks and Regards
-Srikar Dronamraju
+	Ingo
