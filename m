@@ -2,244 +2,147 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4081C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC9AE20836
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:10:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NzZUDe7i"
+	by mail.kernel.org (Postfix) with ESMTP id AED63205CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:14:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728344AbgGaXKG (ORCPT
+        id S1726906AbgGaXOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 19:10:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45742 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbgGaXIe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 19:08:34 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C700C061757
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:08:34 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id q17so18085570pls.9
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:08:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gOuHhkP4k6lGlo9NwRnrjymhpQ+iLTcLVy67EHO0tLQ=;
-        b=NzZUDe7iAm67VQMOKpyD0BT7sJZoGjYuUhmzenDozFom2d1F/HRnlG/ZBJY5eawEvc
-         E0n37aArltq+4l4myD951tS6uvqRjvAXeMfP7eCStHMi5YUZaE/adhsWqgj43zn0ixh9
-         LahBtGMifU+Qbp9+BTdqhw8Sr92IcNsyJaTqo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gOuHhkP4k6lGlo9NwRnrjymhpQ+iLTcLVy67EHO0tLQ=;
-        b=SP3+nt2mmmkLoGf0EWHzabwiBp+tr/Bf4rOaYBHxYZsZrYZi44cRDN1CMkszc9yHb9
-         bGpJAQ+TplNmBjag1UEzzXXzSujAsqFoFcmGZnMHRiXTZOm2uvuqhQN8n48V5tZ2vHTt
-         PwZo9hoe5XaCa7500pS8vc0h3mBUHyq6YKGawbYiAqDyPuW58u3yBolSNrkUYm+jJh3n
-         2ydCp0EDWjforo/IDPBjvy1djv2Y9q6DuZDB1bucetG7dHL+65fIBr9wnZBVleO12Wf5
-         CsmacMnOTz0jFehU8xqRm6tCybVjE8wQDIhhDJVSXiBQ30Ch1wwooufZeVeNsQa76yva
-         yI6Q==
-X-Gm-Message-State: AOAM5320TdQAXexfCFekvk7qMONyKDSfWT0uptKo/86JD/fDtXGAO0Vl
-        SbB9WVE0Ij+EN2JTHb9t/hA4Fw==
-X-Google-Smtp-Source: ABdhPJz3fXyytD9EO07YlzPodHLiEZDHHyttLv6MM7s5IQHc8USlFwFYwYDbELejqRupf7YkNtJmug==
-X-Received: by 2002:a17:90a:db53:: with SMTP id u19mr6145819pjx.13.1596236913938;
-        Fri, 31 Jul 2020 16:08:33 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b22sm9843691pju.26.2020.07.31.16.08.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 16:08:30 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 00/36] Warn on orphan section placement
-Date:   Fri, 31 Jul 2020 16:07:44 -0700
-Message-Id: <20200731230820.1742553-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
+        Fri, 31 Jul 2020 19:14:00 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51760 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726347AbgGaXOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 19:14:00 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8A401851346B47E39B2E;
+        Sat,  1 Aug 2020 07:13:57 +0800 (CST)
+Received: from SWX921481.china.huawei.com (10.126.203.125) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 1 Aug 2020 07:13:47 +0800
+From:   Barry Song <song.bao.hua@hisilicon.com>
+To:     <hch@lst.de>, <m.szyprowski@samsung.com>, <robin.murphy@arm.com>,
+        <will@kernel.org>, <ganapatrao.kulkarni@cavium.com>,
+        <catalin.marinas@arm.com>
+CC:     <iommu@lists.linux-foundation.org>, <linuxarm@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>, <huangdaode@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <prime.zeng@hisilicon.com>,
+        Barry Song <song.bao.hua@hisilicon.com>
+Subject: [PATCH v5 0/2] make dma_alloc_coherent NUMA-aware by per-NUMA CMA
+Date:   Sat, 1 Aug 2020 11:11:17 +1200
+Message-ID: <20200731231119.10416-1-song.bao.hua@hisilicon.com>
+X-Mailer: git-send-email 2.21.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.126.203.125]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=linker/orphans/warn/v5
+Ganapatrao Kulkarni has put some effort on making arm-smmu-v3 use local
+memory to save command queues[1]. I also did similar job in patch
+"iommu/arm-smmu-v3: allocate the memory of queues in local numa node"
+[2] while not realizing Ganapatrao has done that before.
 
-v5:
-- rebase from -rc2 to -rc7 to avoid build failures on Clang vs binutils
-- include Arvind's GOT fix-up series[3], since it touches many similar areas
-- add PGO/AutoFDO section patch[4]
-- split up x86 and arm changes into more digestable steps
-- move several sections out of DISCARD and into zero-size asserts
-- introduce COMMON_DISCARDS to improve ARM's linker scripts
-v4: https://lore.kernel.org/lkml/20200629061840.4065483-1-keescook@chromium.org/
-v3: https://lore.kernel.org/lkml/20200624014940.1204448-1-keescook@chromium.org/
-v2: https://lore.kernel.org/lkml/20200622205815.2988115-1-keescook@chromium.org/
-v1: https://lore.kernel.org/lkml/20200228002244.15240-1-keescook@chromium.org/
+But it seems it is much better to make dma_alloc_coherent() to be
+inherently NUMA-aware on NUMA-capable systems.
 
-A recent bug[1] was solved for builds linked with ld.lld, and tracking
-it down took way longer than it needed to (a year). Ultimately, it
-boiled down to differences between ld.bfd and ld.lld's handling of
-orphan sections. Similar situation have continued to recur, and it's
-clear the kernel build needs to be much more explicit about linker
-sections. Similarly, the recent FGKASLR series brought up orphan section
-handling too[2]. In all cases, it would have been nice if the linker was
-running with --orphan-handling=warn so that surprise sections wouldn't
-silently get mapped into the kernel image at locations up to the whim
-of the linker's orphan handling logic. Instead, all desired sections
-should be explicitly identified in the linker script (to be either kept,
-discarded, or verified to be zero-sized) with any orphans throwing a
-warning. The powerpc architecture has actually been doing this for some
-time, so this series just extends that coverage to x86, arm, and arm64.
+Right now, smmu is using dma_alloc_coherent() to get memory to save queues
+and tables. Typically, on ARM64 server, there is a default CMA located at
+node0, which could be far away from node2, node3 etc.
+Saving queues and tables remotely will increase the latency of ARM SMMU
+significantly. For example, when SMMU is at node2 and the default global
+CMA is at node0, after sending a CMD_SYNC in an empty command queue, we
+have to wait more than 550ns for the completion of the command CMD_SYNC.
+However, if we save them locally, we only need to wait for 240ns.
 
-This has gotten sucecssful build testing under the following matrix:
+with per-numa CMA, smmu will get memory from local numa node to save command
+queues and page tables. that means dma_unmap latency will be shrunk much.
 
-compiler/linker: gcc+ld.bfd, clang+ld.lld
-targets: defconfig, allmodconfig
-architectures: x86, i386, arm64, arm
-versions: v5.8-rc7, next-20200731 (with various build fixes[7][8])
+Meanwhile, when iommu.passthrough is on, device drivers which call dma_
+alloc_coherent() will also get local memory and avoid the travel between
+numa nodes.
 
-Two known-failure exceptions (unchanged by this series) being:
-- clang+arm/arm64 needs CONFIG_CPU_BIG_ENDIAN=n to pass allmodconfig[5]
-- clang+i386 only builds in -next, which was recently fixed[6]
+[1] https://lists.linuxfoundation.org/pipermail/iommu/2017-October/024455.html
+[2] https://www.spinics.net/lists/iommu/msg44767.html
 
-All three architectures depend on the first several commits to
-vmlinux.lds.h. x86 depends on Arvind's GOT series[3], so I collected it
-into this version of my series, as it hadn't been taken into -tip yet.
-arm64 depends on the efi/libstub patch. As such, I'd like to land this
-series as a whole. Given that two thirds of it is in the arm universe,
-perhaps this can land via the arm64 tree? If x86 -tip is preferred, that
-works too. If I don't hear otherwise, I will just carry this myself in
--next. In all cases, I would really appreciate reviews/acks/etc. :)
+-v5:
+ refine code according to Christoph Hellwig's comments
+ * remove Kconfig option for pernuma cma size;
+ * add Kconfig option for pernuma cma enable;
+ * code cleanup like line over 80 char
 
-Thanks!
+ I haven't removed the cma NULL check code in cma_alloc() as it requires
+ a bundle of other changes. So I prefer to handle this issue separately.
 
--Kees
+-v4:
+ * rebase on top of Christoph Hellwig's patch:
+ [PATCH v2] dma-contiguous: cleanup dma_alloc_contiguous
+ https://lore.kernel.org/linux-iommu/20200723120133.94105-1-hch@lst.de/
+ * cleanup according to Christoph's comment
+ * rebase on top of linux-next to avoid arch/arm64 conflicts
+ * reserve cma by checking N_MEMORY rather than N_ONLINE
 
-[1] https://github.com/ClangBuiltLinux/linux/issues/282
-[2] https://lore.kernel.org/lkml/202002242122.AA4D1B8@keescook/
-[3] https://lore.kernel.org/lkml/20200715004133.1430068-1-nivedita@alum.mit.edu/
-[4] https://lore.kernel.org/lkml/20200625184752.73095-1-ndesaulniers@google.com/
-[5] https://github.com/ClangBuiltLinux/linux/issues/1071
-[6] https://github.com/ClangBuiltLinux/linux/issues/194
-[7] https://lore.kernel.org/lkml/1596166744-2954-2-git-send-email-neal.liu@mediatek.com/
-[8] https://lore.kernel.org/lkml/82f750c4-d423-1ed8-a158-e75153745e07@huawei.com/
+-v3:
+  * move to use page_to_nid() while freeing cma with respect to Robin's
+  comment, but this will only work after applying my below patch:
+  "mm/cma.c: use exact_nid true to fix possible per-numa cma leak"
+  https://marc.info/?l=linux-mm&m=159333034726647&w=2
 
+  * handle the case count <= 1 more properly according to Robin's
+  comment;
 
-Ard Biesheuvel (3):
-  x86/boot/compressed: Move .got.plt entries out of the .got section
-  x86/boot/compressed: Force hidden visibility for all symbol references
-  x86/boot/compressed: Get rid of GOT fixup code
+  * add pernuma_cma parameter to support dynamic setting of per-numa
+  cma size;
+  ideally we can leverage the CMA_SIZE_MBYTES, CMA_SIZE_PERCENTAGE and
+  "cma=" kernel parameter and avoid a new paramter separately for per-
+  numa cma. Practically, it is really too complicated considering the
+  below problems:
+  (1) if we leverage the size of default numa for per-numa, we have to
+  avoid creating two cma with same size in node0 since default cma is
+  probably on node0.
+  (2) default cma can consider the address limitation for old devices
+  while per-numa cma doesn't support GFP_DMA and GFP_DMA32. all
+  allocations with limitation flags will fallback to default one.
+  (3) hard to apply CMA_SIZE_PERCENTAGE to per-numa. it is hard to
+  decide if the percentage should apply to the whole memory size
+  or only apply to the memory size of a specific numa node.
+  (4) default cma size has CMA_SIZE_SEL_MIN and CMA_SIZE_SEL_MAX, it
+  makes things even more complicated to per-numa cma.
 
-Arvind Sankar (4):
-  x86/boot: Add .text.* to setup.ld
-  x86/boot: Remove run-time relocations from .head.text code
-  x86/boot: Remove run-time relocations from head_{32,64}.S
-  x86/boot: Check that there are no run-time relocations
+  I haven't figured out a good way to leverage the size of default cma
+  for per-numa cma. it seems a separate parameter for per-numa could
+  make life easier.
 
-Kees Cook (28):
-  vmlinux.lds.h: Create COMMON_DISCARDS
-  vmlinux.lds.h: Add .gnu.version* to COMMON_DISCARDS
-  vmlinux.lds.h: Avoid KASAN and KCSAN's unwanted sections
-  vmlinux.lds.h: Split ELF_DETAILS from STABS_DEBUG
-  vmlinux.lds.h: Add .symtab, .strtab, and .shstrtab to ELF_DETAILS
-  efi/libstub: Disable -mbranch-protection
-  arm64/mm: Remove needless section quotes
-  arm64/kernel: Remove needless Call Frame Information annotations
-  arm64/build: Remove .eh_frame* sections due to unwind tables
-  arm64/build: Use common DISCARDS in linker script
-  arm64/build: Add missing DWARF sections
-  arm64/build: Assert for unwanted sections
-  arm64/build: Warn on orphan section placement
-  arm/build: Refactor linker script headers
-  arm/build: Explicitly keep .ARM.attributes sections
-  arm/build: Add missing sections
-  arm/build: Warn on orphan section placement
-  arm/boot: Handle all sections explicitly
-  arm/boot: Warn on orphan section placement
-  x86/asm: Avoid generating unused kprobe sections
-  x86/build: Enforce an empty .got.plt section
-  x86/build: Assert for unwanted sections
-  x86/build: Warn on orphan section placement
-  x86/boot/compressed: Reorganize zero-size section asserts
-  x86/boot/compressed: Remove, discard, or assert for unwanted sections
-  x86/boot/compressed: Add missing debugging sections to output
-  x86/boot/compressed: Warn on orphan section placement
-  arm/build: Assert for unwanted sections
+  * move dma_pernuma_cma_reserve() after hugetlb_cma_reserve() to
+  reuse the comment before hugetlb_cma_reserve() with respect to
+  Robin's comment
 
-Nick Desaulniers (1):
-  vmlinux.lds.h: add PGO and AutoFDO input sections
+-v2: 
+  * fix some issues reported by kernel test robot
+  * fallback to default cma while allocation fails in per-numa cma
+     free memory properly
 
- arch/alpha/kernel/vmlinux.lds.S               |   1 +
- arch/arc/kernel/vmlinux.lds.S                 |   1 +
- arch/arm/Makefile                             |   4 +
- arch/arm/boot/compressed/Makefile             |   2 +
- arch/arm/boot/compressed/vmlinux.lds.S        |  20 +--
- .../arm/{kernel => include/asm}/vmlinux.lds.h |  29 ++-
- arch/arm/kernel/vmlinux-xip.lds.S             |   8 +-
- arch/arm/kernel/vmlinux.lds.S                 |   8 +-
- arch/arm64/Makefile                           |   9 +-
- arch/arm64/kernel/smccc-call.S                |   2 -
- arch/arm64/kernel/vmlinux.lds.S               |  28 ++-
- arch/arm64/mm/mmu.c                           |   2 +-
- arch/csky/kernel/vmlinux.lds.S                |   1 +
- arch/hexagon/kernel/vmlinux.lds.S             |   1 +
- arch/ia64/kernel/vmlinux.lds.S                |   1 +
- arch/mips/kernel/vmlinux.lds.S                |   1 +
- arch/nds32/kernel/vmlinux.lds.S               |   1 +
- arch/nios2/kernel/vmlinux.lds.S               |   1 +
- arch/openrisc/kernel/vmlinux.lds.S            |   1 +
- arch/parisc/boot/compressed/vmlinux.lds.S     |   1 +
- arch/parisc/kernel/vmlinux.lds.S              |   1 +
- arch/powerpc/kernel/vmlinux.lds.S             |   2 +-
- arch/riscv/kernel/vmlinux.lds.S               |   1 +
- arch/s390/kernel/vmlinux.lds.S                |   1 +
- arch/sh/kernel/vmlinux.lds.S                  |   1 +
- arch/sparc/kernel/vmlinux.lds.S               |   1 +
- arch/um/kernel/dyn.lds.S                      |   2 +-
- arch/um/kernel/uml.lds.S                      |   2 +-
- arch/unicore32/kernel/vmlinux.lds.S           |   1 +
- arch/x86/Makefile                             |   4 +
- arch/x86/boot/compressed/Makefile             |  41 +----
- arch/x86/boot/compressed/head_32.S            |  99 ++++-------
- arch/x86/boot/compressed/head_64.S            | 165 +++++++-----------
- arch/x86/boot/compressed/mkpiggy.c            |   6 +
- arch/x86/boot/compressed/vmlinux.lds.S        |  48 ++++-
- arch/x86/boot/setup.ld                        |   2 +-
- arch/x86/include/asm/asm.h                    |   6 +-
- arch/x86/kernel/vmlinux.lds.S                 |  39 ++++-
- drivers/firmware/efi/libstub/Makefile         |  11 +-
- drivers/firmware/efi/libstub/hidden.h         |   6 -
- include/asm-generic/vmlinux.lds.h             |  49 +++++-
- include/linux/hidden.h                        |  19 ++
- 42 files changed, 377 insertions(+), 252 deletions(-)
- rename arch/arm/{kernel => include/asm}/vmlinux.lds.h (84%)
- delete mode 100644 drivers/firmware/efi/libstub/hidden.h
- create mode 100644 include/linux/hidden.h
+Barry Song (2):
+  dma-contiguous: provide the ability to reserve per-numa CMA
+  arm64: mm: reserve per-numa CMA to localize coherent dma buffers
+
+ .../admin-guide/kernel-parameters.txt         |   9 ++
+ arch/arm64/mm/init.c                          |   2 +
+ include/linux/dma-contiguous.h                |   6 ++
+ kernel/dma/Kconfig                            |  10 ++
+ kernel/dma/contiguous.c                       | 100 ++++++++++++++++--
+ 5 files changed, 117 insertions(+), 10 deletions(-)
 
 -- 
-2.25.1
+2.27.0
+
 
