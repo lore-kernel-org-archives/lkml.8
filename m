@@ -2,122 +2,144 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3D4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 165AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF0922087C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:47:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZgyyXZz"
+	by mail.kernel.org (Postfix) with ESMTP id F326A22B3F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 19:47:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgGaTrN (ORCPT
+        id S1726842AbgGaTrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 15:47:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43056 "EHLO
+        Fri, 31 Jul 2020 15:47:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgGaTrN (ORCPT
+        with ESMTP id S1726709AbgGaTrZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 15:47:13 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C1CBC061574;
-        Fri, 31 Jul 2020 12:47:13 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t10so12570453plz.10;
-        Fri, 31 Jul 2020 12:47:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CCtzz/ikDkJ40Y/Or+xxVZzqpUQAfxOSoGmmOXHGcF0=;
-        b=kZgyyXZzlTSotlgAD3426upKCbCWC8tIK3CDvULUFCFRt2C5J8Y60BGLkoyLmbrwDB
-         1bKOcMzeCkT7P71wRZMeodZQbczAFXiTr5o4wVPCeHqoZ35KjV9xsG/WBA1ikQfZQnjR
-         yQBqIfYq4jE9tm1TG0vQpVa5qKTSSDO2PQgqPl5IF6yopJLXKk+ncUkx9VdXHw4ULV/C
-         +tvmnTVjCnbSpDB2vcHkSIIk+V52ulaIis8UqN6K2a/TE96jg5dOLnnI5R+fwC1dJkmy
-         Ubh4Ym97N9r3mk+lctxG2p2gY0Pdpn5LcG8gwSn0LRF+JAw/3/YpCMr4lo3mKS8ezwH6
-         T68Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CCtzz/ikDkJ40Y/Or+xxVZzqpUQAfxOSoGmmOXHGcF0=;
-        b=AXPTRC6ktOvjf/WHvEtq7zBSzR5vXixaufCBAVhB3s8eRznyeVxd++0KPC8gFdBvnZ
-         4FRw45B/WVWphlkHARfVmee99DVbzDvXNzSFr/hLUCu+R/tiuHhzzIVXXO91uDdyCB/y
-         az35DVMBwBQcEzaT3eYd+FCWXT/Uj5ELLPMO/rofjx/Ir3q55fzfHw5gp1Qa2af1iz6j
-         Om5pFKINEEK6OABf+xLomD/N38IzVoRgGexY8jiCouYykbaSualxhfci+bf9HuODl5Bz
-         p8d4xNnz9fNF4Yo7w8OLEKO31O6eHXTTxDRBGyoRgkUw9hoXR23NkU87NCSdONxd9ui6
-         GDhg==
-X-Gm-Message-State: AOAM530Lhf8WGEVa0cRdqinTNbo/Lstn12qRREpr9bQrjy75ifLJtN41
-        Z2hKxfhpzzy2FATqNNZJHsJ8WOmHV44IY6QWSrA=
-X-Google-Smtp-Source: ABdhPJyDJn9A53QZee7pWSd5gmobL0PoAUBAt3fINUbvQ28dAdLqpDrPWrPnlfdzaRiwkcEDasBWqEIKqNkA4AZ84m0=
-X-Received: by 2002:a17:90a:fa06:: with SMTP id cm6mr5729991pjb.129.1596224832360;
- Fri, 31 Jul 2020 12:47:12 -0700 (PDT)
+        Fri, 31 Jul 2020 15:47:25 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 281F2C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 12:47:25 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k1azu-0001Q4-JC; Fri, 31 Jul 2020 21:47:18 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k1azs-00073r-Kt; Fri, 31 Jul 2020 21:47:16 +0200
+Date:   Fri, 31 Jul 2020 21:47:16 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     linux-pwm@vger.kernel.org, lee.jones@linaro.org,
+        thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com
+Subject: Re: [PATCH v6 2/2] Add PWM fan controller driver for LGM SoC
+Message-ID: <20200731194716.xxin4cl672tk2bkc@pengutronix.de>
+References: <cover.1595926036.git.rahul.tanwar@linux.intel.com>
+ <63e44ece4c0da860963d0ff09dd52912d557c7e0.1595926036.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
-References: <20200731164853.3020946-1-campello@chromium.org> <20200731104555.v3.15.I4c344a6793007001bbb3c1c08e96d3acf893b36b@changeid>
-In-Reply-To: <20200731104555.v3.15.I4c344a6793007001bbb3c1c08e96d3acf893b36b@changeid>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 31 Jul 2020 22:46:55 +0300
-Message-ID: <CAHp75Vcyv_sbgEWEzFeSnmoMzQqrS+obogKJhjPajX1FDutF4w@mail.gmail.com>
-Subject: Re: [PATCH v3 15/15] iio: sx9310: Use irq trigger flags from firmware
-To:     Daniel Campello <campello@chromium.org>
-Cc:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rqwv5fncrzwpgutc"
+Content-Disposition: inline
+In-Reply-To: <63e44ece4c0da860963d0ff09dd52912d557c7e0.1595926036.git.rahul.tanwar@linux.intel.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 7:49 PM Daniel Campello <campello@chromium.org> wrote:
->
-> From: Stephen Boyd <swboyd@chromium.org>
->
-> We shouldn't need to set default irq trigger flags here as the firmware
-> should have properly indicated the trigger type, i.e. level low, in the
-> DT or ACPI tables.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+--rqwv5fncrzwpgutc
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Daniel Campello <campello@chromium.org>
-> ---
->
-> Changes in v3:
->  - Added irq trigger flags commit to the series.
->
-> Changes in v2: None
->
->  drivers/iio/proximity/sx9310.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-> index a20cd6a4dad729..c41fa7f6558e3f 100644
-> --- a/drivers/iio/proximity/sx9310.c
-> +++ b/drivers/iio/proximity/sx9310.c
-> @@ -951,7 +951,7 @@ static int sx9310_probe(struct i2c_client *client)
->                 ret = devm_request_threaded_irq(dev, client->irq,
->                                                 sx9310_irq_handler,
->                                                 sx9310_irq_thread_handler,
-> -                                               IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-> +                                               IRQF_ONESHOT,
->                                                 "sx9310_event", indio_dev);
->                 if (ret)
->                         return ret;
-> --
-> 2.28.0.163.g6104cc2f0b6-goog
->
+Hello,
 
+I only found a two minor issues this round, see below.
 
--- 
-With Best Regards,
-Andy Shevchenko
+On Tue, Jul 28, 2020 at 04:52:13PM +0800, Rahul Tanwar wrote:
+> +static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			 const struct pwm_state *state)
+> +{
+> +	struct lgm_pwm_chip *pc =3D to_lgm_pwm_chip(chip);
+> +	u32 duty_cycle, val;
+> +	int ret;
+> +
+> +	/*
+> +	 * HW only supports only NORMAL polarity
+> +	 * HW supports fixed period
+
+there are too many "only"s here. What about:
+
+	/*
+	 * The hardware only supports
+	 * normal polarity and fixed period.
+	 */
+
+?
+
+> +	 */
+> +	if (state->polarity !=3D PWM_POLARITY_NORMAL ||
+> +	    state->period < pc->period)
+> +		return -EINVAL;
+> +
+> +	if (!state->enabled) {
+> +		ret =3D lgm_pwm_enable(chip, 0);
+> +		return ret;
+> +	}
+> +
+> +	duty_cycle =3D min_t(u64, state->duty_cycle, pc->period);
+> +	val =3D duty_cycle * LGM_PWM_MAX_DUTY_CYCLE / pc->period;
+> +
+> +	ret =3D regmap_update_bits(pc->regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_DC=
+_MSK,
+> +				 FIELD_PREP(LGM_PWM_FAN_DC_MSK, val));
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (state->enabled)
+> +		ret =3D lgm_pwm_enable(chip, 1);
+
+You can do this unconditionally, if state->enabled is false the function
+returns a few lines above already.
+
+> +
+> +	return ret;
+> +}
+
+The rest looks fine.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--rqwv5fncrzwpgutc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8kdUEACgkQwfwUeK3K
+7AlDuAf+OUQhgl11k0kBK4onw9aPuszKQmlS6tkxYg4C+HMThoc1U6OiLARNbsYp
+CU8S45+GGemAHqf40rAPUW1uX9SRBv4nRuge3p7Rm8XZwyJIIVfpW1agD+Efgv7n
+AXUnLh3vBEpMMsdGhfpqCn0138mddsyAjzxgB4+cYgJJd3kB5d0LiIz2X8dhJ0bK
+LKGNNo6UzlYsvGOgzNkjNbdWJS+T1tKvAsiLtPCNS7s5DjCJ2YRm1AisZMXzoU6I
+tnhRwTKXG+wMFTfrRyqPpj97RSL66uJr4JU6nemrRcmMchTCT7BsZvsX7b94Ej2q
+R6q/XH/q+/G3+jV8bzgZAa1ffflMGQ==
+=QVLW
+-----END PGP SIGNATURE-----
+
+--rqwv5fncrzwpgutc--
