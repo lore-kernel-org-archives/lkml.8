@@ -2,210 +2,108 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97486C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F26C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76B26208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:08:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XrlpXigk"
+	by mail.kernel.org (Postfix) with ESMTP id 6681C22B42
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:08:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgGaUIJ (ORCPT
+        id S1726963AbgGaUIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 16:08:09 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:59126 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgGaUII (ORCPT
+        Fri, 31 Jul 2020 16:08:43 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:33436 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbgGaUIm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 16:08:08 -0400
-Received: from [192.168.254.32] (unknown [47.187.206.220])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 8F98020B4908;
-        Fri, 31 Jul 2020 13:08:05 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8F98020B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1596226086;
-        bh=BzxRDURpPFIQaBCWZsO87lgV7qvPlaNivY6IUul72sY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=XrlpXigkn6bU5xuUTbQRlJfW6yzJbq7uRYTMoJq8q3VWqUC7ZDS3pWmNoDaicUDfV
-         zXCvAxPHu5u9RozKS9Wzxmhxou+HoxZEGRW37Csu3vcbL5AcmA/8HgY1RJUynLtmgW
-         eChUlQGbTTgm6IyyUl/tQHlRkQAIKXYXe2GE+2+0=
-Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, oleg@redhat.com,
-        x86@kernel.org
-References: <aefc85852ea518982e74b233e11e16d2e707bc32>
- <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <20200731180955.GC67415@C02TD0UTHF1T.local>
-From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Message-ID: <4e96a3f6-1995-404c-ed44-45200a4ee582@linux.microsoft.com>
-Date:   Fri, 31 Jul 2020 15:08:04 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 31 Jul 2020 16:08:42 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 153928030808;
+        Fri, 31 Jul 2020 20:08:41 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id fMG0FJN5piFD; Fri, 31 Jul 2020 23:08:40 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 2/5] dmaengine: dw: Activate FIFO-mode for memory peripherals only
+Date:   Fri, 31 Jul 2020 23:08:23 +0300
+Message-ID: <20200731200826.9292-3-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200731200826.9292-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200731200826.9292-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <20200731180955.GC67415@C02TD0UTHF1T.local>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the comments. I will respond to these and your next
-email on Monday.
+CFGx.FIFO_MODE field controls a DMA-controller "FIFO readiness" criterion.
+In other words it determines when to start pushing data out of a DW
+DMAC channel FIFO to a destination peripheral or from a source
+peripheral to the DW DMAC channel FIFO. Currently FIFO-mode is set to one
+for all DW DMAC channels. It means they are tuned to flush data out of
+FIFO (to a memory peripheral or by accepting the burst transaction
+requests) when FIFO is at least half-full (except at the end of the block
+transfer, when FIFO-flush mode is activated) and are configured to get
+data to the FIFO when it's at least half-empty.
 
-Madhavan
+Such configuration is a good choice when there is no slave device involved
+in the DMA transfers. In that case the number of bursts per block is less
+than when CFGx.FIFO_MODE = 0 and, hence, the bus utilization will improve.
+But the latency of DMA transfers may increase when CFGx.FIFO_MODE = 1,
+since DW DMAC will wait for the channel FIFO contents to be either
+half-full or half-empty depending on having the destination or the source
+transfers. Such latencies might be dangerous in case if the DMA transfers
+are expected to be performed from/to a slave device. Since normally
+peripheral devices keep data in internal FIFOs, any latency at some
+critical moment may cause one being overflown and consequently losing
+data. This especially concerns a case when either a peripheral device is
+relatively fast or the DW DMAC engine is relatively slow with respect to
+the incoming data pace.
 
-On 7/31/20 1:09 PM, Mark Rutland wrote:
-> Hi,
->
-> On Tue, Jul 28, 2020 at 08:10:46AM -0500, madvenka@linux.microsoft.com wrote:
->> From: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
->> Trampoline code is placed either in a data page or in a stack page. In
->> order to execute a trampoline, the page it resides in needs to be mapped
->> with execute permissions. Writable pages with execute permissions provide
->> an attack surface for hackers. Attackers can use this to inject malicious
->> code, modify existing code or do other harm.
-> For the purpose of below, IIUC this assumes the adversary has an
-> arbitrary write.
->
->> To mitigate this, LSMs such as SELinux may not allow pages to have both
->> write and execute permissions. This prevents trampolines from executing
->> and blocks applications that use trampolines. To allow genuine applications
->> to run, exceptions have to be made for them (by setting execmem, etc).
->> In this case, the attack surface is just the pages of such applications.
->>
->> An application that is not allowed to have writable executable pages
->> may try to load trampoline code into a file and map the file with execute
->> permissions. In this case, the attack surface is just the buffer that
->> contains trampoline code. However, a successful exploit may provide the
->> hacker with means to load his own code in a file, map it and execute it.
-> It's not clear to me what power the adversary is assumed to have here,
-> and consequently it's not clear to me how the proposal mitigates this.
->
-> For example, if the attack can control the arguments to syscalls, and
-> has an arbitrary write as above, what prevents them from creating a
-> trampfd of their own?
->
-> [...]
->
->> GCC has traditionally used trampolines for implementing nested
->> functions. The trampoline is placed on the user stack. So, the stack
->> needs to be executable.
-> IIUC generally nested functions are avoided these days, specifically to
-> prevent the creation of gadgets on the stack. So I don't think those are
-> relevant as a cased to care about. Applications using them should move
-> to not using them, and would be more secure generally for doing so.
->
-> [...]
->
->> Trampoline File Descriptor (trampfd)
->> --------------------------
->>
->> I am proposing a kernel API using anonymous file descriptors that
->> can be used to create and execute trampolines with the help of the
->> kernel. In this solution also, the kernel does the work of the trampoline.
-> What's the rationale for the kernel emulating the trampoline here?
->
-> In ther case of EMUTRAMP this was necessary to work with existing
-> application binaries and kernel ABIs which placed instructions onto the
-> stack, and the stack needed to remain RW for other reasons. That
-> restriction doesn't apply here.
->
-> Assuming trampfd creation is somehow authenticated, the code could be
-> placed in a r-x page (which the kernel could refuse to add write
-> permission), in order to prevent modification. If that's sufficient,
-> it's not much of a leap to allow userspace to generate the code.
->
->> The kernel creates the trampoline mapping without any permissions. When
->> the trampoline is executed by user code, a page fault happens and the
->> kernel gets control. The kernel recognizes that this is a trampoline
->> invocation. It sets up the user registers based on the specified
->> register context, and/or pushes values on the user stack based on the
->> specified stack context, and sets the user PC to the requested target
->> PC. When the kernel returns, execution continues at the target PC.
->> So, the kernel does the work of the trampoline on behalf of the
->> application.
->>
->> In this case, the attack surface is the context buffer. A hacker may
->> attack an application with a vulnerability and may be able to modify the
->> context buffer. So, when the register or stack context is set for
->> a trampoline, the values may have been tampered with. From an attack
->> surface perspective, this is similar to Trampoline Emulation. But
->> with trampfd, user code can retrieve a trampoline's context from the
->> kernel and add defensive checks to see if the context has been
->> tampered with.
-> Can you elaborate on this: what sort of checks would be applied, and
-> how?
->
-> Why is this not possible in a r-x user page?
->
-> [...]
->
->> - trampfd provides a basic framework. In the future, new trampoline types
->>   can be implemented, new contexts can be defined, and additional rules
->>   can be implemented for security purposes.
-> >From a kernel developer perspective, this reads as "this ABI will become
-> more complex", which I think is worrisome.
->
-> I'm also worried that this is liable to have nasty interaction with HW
-> CFI mechanisms (e.g. PAC+BTI on arm64) either now or in future, and that
-> we bake incompatibility into ABI.
->
->> - For instance, trampfd defines an "Allowed PCs" context in this initial
->>   work. As an example, libffi can create a read-only array of all ABI
->>   handlers for an architecture at build time. This array can be used to
->>   set the list of allowed PCs for a trampoline. This will mean that a hacker
->>   cannot hack the PC part of the register context and make it point to
->>   arbitrary locations.
-> I'm not exactly sure what's meant here. Do you mean that this prevents
-> userspace from branching into the middle of a trampoline, or that the
-> trampfd code prevents where the trampoline itself can branch to?
->
-> Both x86 and arm64 have upcoming HW CFI (CET and BTI) to deal with the
-> former, and I believe the latter can also be implemented in userspace
-> with defensive checks in the trampolines, provided that they are
-> protected read-only.
->
->> - An SELinux setting called "exectramp" can be implemented along the
->>   lines of "execmem", "execstack" and "execheap" to selectively allow the
->>   use of trampolines on a per application basis.
->>
->> - User code can add defensive checks in the code before invoking a
->>   trampoline to make sure that a hacker has not modified the context data.
->>   It can do this by getting the trampoline context from the kernel and
->>   double checking it.
-> As above, without examples it's not clear to me what sort of chacks are
-> possible nor where they wouild need to be made. So it's difficult to see
-> whether that's actually possible or subject to TOCTTOU races and
-> similar.
->
->> - In the future, if the kernel can be enhanced to use a safe code
->>   generation component, that code can be placed in the trampoline mapping
->>   pages. Then, the trampoline invocation does not have to incur a trip
->>   into the kernel.
->>
->> - Also, if the kernel can be enhanced to use a safe code generation
->>   component, other forms of dynamic code such as JIT code can be
->>   addressed by the trampfd framework.
-> I don't see why it's necessary for the kernel to generate code at all.
-> If the trampfd creation requests can be trusted, what prevents trusting
-> a sealed set of instructions generated in userspace?
->
->> - Trampolines can be shared across processes which can give rise to
->>   interesting uses in the future.
-> This sounds like the use-case of a sealed memfd. Is a sealed executable
-> memfd not sufficient?
->
-> Thanks,
-> Mark.
+In order to solve problems, which might be caused by the latencies
+described above, let's enable the FIFO half-full/half-empty "FIFO
+readiness" criterion only for DMA transfers with no slave device involved.
+Thanks to the commit 99ba8b9b0d97 ("dmaengine: dw: Initialize channel
+before each transfer") we can freely do that in the generic
+dw_dma_initialize_chan() method.
+
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/dma/dw/dw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/dma/dw/dw.c b/drivers/dma/dw/dw.c
+index 7a085b3c1854..d9810980920a 100644
+--- a/drivers/dma/dw/dw.c
++++ b/drivers/dma/dw/dw.c
+@@ -14,7 +14,7 @@
+ static void dw_dma_initialize_chan(struct dw_dma_chan *dwc)
+ {
+ 	struct dw_dma *dw = to_dw_dma(dwc->chan.device);
+-	u32 cfghi = DWC_CFGH_FIFO_MODE;
++	u32 cfghi = is_slave_direction(dwc->direction) ? 0 : DWC_CFGH_FIFO_MODE;
+ 	u32 cfglo = DWC_CFGL_CH_PRIOR(dwc->priority);
+ 	bool hs_polarity = dwc->dws.hs_polarity;
+ 
+-- 
+2.27.0
 
