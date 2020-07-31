@@ -2,103 +2,86 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B471C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9292C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0C0E22CF8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90F822245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:39:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VZDali6v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387421AbgGaMc2 (ORCPT
+        id S1733171AbgGaMjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 08:32:28 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:60674 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733299AbgGaMc2 (ORCPT
+        Fri, 31 Jul 2020 08:39:22 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55608 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1733093AbgGaMjV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 08:32:28 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 5DB418040A6A;
-        Fri, 31 Jul 2020 12:32:25 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id vekC1aX7fldT; Fri, 31 Jul 2020 15:32:24 +0300 (MSK)
-Date:   Fri, 31 Jul 2020 15:32:23 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Mark Brown <broonie@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Feng Tang <feng.tang@intel.com>, Vinod Koul <vkoul@kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/8] spi: dw-dma: Configure the DMA channels in dma_setup
-Message-ID: <20200731123223.kdbbcwabi5b72bem@mobilestation>
-References: <20200731075953.14416-1-Sergey.Semin@baikalelectronics.ru>
- <20200731075953.14416-4-Sergey.Semin@baikalelectronics.ru>
- <20200731091638.GJ3703480@smile.fi.intel.com>
+        Fri, 31 Jul 2020 08:39:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596199160;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=uNeA04+1XYPzyOhWw2oc2hqG+CGv2cApApUzSqaPtB8=;
+        b=VZDali6vwAbbQJ1/Np6mAcq9KLbxC4TuJIBqJfGWprQyWZiI5Z2a/xNaR8FtsO5ITsYBwr
+        331qIwtC4GGX6k4F3hT30HPAFfUrcJP/GUuQNamFZi/rdonz7jPxT4IRj6PNci9m4CNJdZ
+        muUE8xfNprEWk6558FS5N1HtaMg3ILU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-463-6PsxlUCyO-qEuopFkCWz6w-1; Fri, 31 Jul 2020 08:39:18 -0400
+X-MC-Unique: 6PsxlUCyO-qEuopFkCWz6w-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 49CE0801A03;
+        Fri, 31 Jul 2020 12:39:17 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.196])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 7059719C58;
+        Fri, 31 Jul 2020 12:39:14 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 31 Jul 2020 14:39:16 +0200 (CEST)
+Date:   Fri, 31 Jul 2020 14:39:13 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [patch V3 0/3] posix-cpu-timers: Move expiry into task work
+ context
+Message-ID: <20200731123912.GA13775@redhat.com>
+References: <20200730101404.956367860@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200731091638.GJ3703480@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200730101404.956367860@linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 12:16:38PM +0300, Andy Shevchenko wrote:
-> On Fri, Jul 31, 2020 at 10:59:48AM +0300, Serge Semin wrote:
-> > Mainly this is a preparation patch before adding one-by-one DMA SG entries
-> > transmission. But logically the Tx and Rx DMA channels setup should be
-> > performed in the dma_setup() callback anyway. So let's move the DMA slave
-> > channels src/dst burst lengths, address and address width configuration to
-> > the DMA setup stage. While at it make sure the return value of the
-> > dmaengine_slave_config() method is checked. It has been unnecessary in
-> > case if Dw DMAC is utilized as a DMA engine, since its device_config()
-> > callback always returns zero (though it might change in future). But since
-> > DW APB SSI driver now supports any DMA back-end we must make sure the
-> > DMA device configuration has been successful before proceeding with
-> > further setups.
-> 
-> ...
-> 
+On 07/30, Thomas Gleixner wrote:
+>
+>  arch/x86/Kconfig               |    1 
+>  include/linux/posix-timers.h   |   17 +++
+>  include/linux/sched.h          |    4 
+>  include/linux/seccomp.h        |    3 
+>  kernel/entry/common.c          |    4 
+>  kernel/time/Kconfig            |    9 +
+>  kernel/time/posix-cpu-timers.c |  216 ++++++++++++++++++++++++++++++++++++-----
+>  kernel/time/timer.c            |    1 
+>  8 files changed, 227 insertions(+), 28 deletions(-)
 
-Part 1:
-> > +	if (!xfer->rx_buf)
-> > +		return NULL;
-> 
-> ...
-> 
+FWIW,
 
-Part 2:
-> > +	if (xfer->rx_buf) {
-> 
-> > +	}
-> 
-> This looks like a separate change to drop one of them and not hide in the next patch.
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 
-Both of these changes are a part of the single alteration introduced to detach two
-methods from each other: dw_spi_dma_{config,prepare}_{rx,tx}(). Part 1 is a
-statement, which belongs to the method dw_spi_dma_prepare_rx() and is left there
-after dw_spi_dma_config_rx() has been detached from it. Part 2 is a logical
-part, which must be presented in dw_spi_dma_setup() since we don't need to configure
-the Rx DMA channel if rx_buf isn't specified.
-
-Please, read more carefully the commit log. I didn't introduce anything other
-than the changes described there.
-
--Sergey
-
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
