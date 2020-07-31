@@ -2,324 +2,162 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85068C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE88C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D2E12245C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD6E208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:11:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j5BCiRw+"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="NjZrhuVA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732914AbgGaMJA (ORCPT
+        id S1732967AbgGaMLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 08:09:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732776AbgGaMI7 (ORCPT
+        Fri, 31 Jul 2020 08:11:06 -0400
+Received: from mx07-00178001.pphosted.com ([185.132.182.106]:22274 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732719AbgGaMLF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 08:08:59 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A35ABC061575
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 05:08:58 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id df16so5860016edb.9
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 05:08:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qrIvFFFLQgJ+wOtTOJrVCrzJgyAjVEkVe42TSriGtHo=;
-        b=j5BCiRw+8dnqTCVEQ7eBHOIi16HFlxS/y+/9uA3B3T3QLrRhH9krKpa36AzeA1Ai6M
-         PnHQiVGbJ4y6ZBPQMsZlRO7G4A6bRkRwmfMRQldHoqzNOCLzJuD5Huw4TPapTCeT5Ae5
-         hA46xf6q2lA3nyzz1bsKb+Z8HAseneokZyg5M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qrIvFFFLQgJ+wOtTOJrVCrzJgyAjVEkVe42TSriGtHo=;
-        b=nlHU44HAQ+FOIhX4m8kobpG+pIupEh+bh2etAlfYDkwU3b5h+7aOFPQOS8mTtsBJTg
-         bBataM8jSjWKyeCkgCI5vDHnD3ef4LKowIi5IC7GjsZTNewmtnOVsJID3IY7i2JoYCr9
-         EdfU3OwsH4rDXkAJ/B4cSniQLkDiJvdeveo9zaiZOf7jhKDwJjD8QQ3Bosqol4U8g2cD
-         9eoskAlIhhwqtfgfllW2EIqS8sEh+va+CO2f1k3iZ+Knc+i0T7pILbY3uNdNt7WZUXtn
-         1lfHgXhxK8TPPhrF+LlhEbxlDjTY9M363q4QBjWoo8kJ5gaDOZCydAfaQRHWpPU/paiS
-         DOQg==
-X-Gm-Message-State: AOAM533h4Xvb7HNP72y2BdTrD0ApoCoTemkoWLymSPin4Xh7J6OWq9zc
-        LiMaeRXpWAdYztdcwbYSqVGeJYuwlqnsAw==
-X-Google-Smtp-Source: ABdhPJxXn168xhcJJSOMcMHvZFFuGB2/SRSJxOp6Pa29ibMk4y9dTpxsXRCuoXsV9RMgHH9vaxFr8Q==
-X-Received: by 2002:a50:fc13:: with SMTP id i19mr3538204edr.363.1596197336814;
-        Fri, 31 Jul 2020 05:08:56 -0700 (PDT)
-Received: from [192.168.2.66] ([81.6.44.51])
-        by smtp.gmail.com with ESMTPSA id q19sm9124292ejo.93.2020.07.31.05.08.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jul 2020 05:08:56 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-Subject: Re: [PATCH bpf-next v7 5/7] bpf: Implement bpf_local_storage for
- inodes
-To:     Martin KaFai Lau <kafai@fb.com>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>
-References: <20200730140716.404558-1-kpsingh@chromium.org>
- <20200730140716.404558-6-kpsingh@chromium.org>
- <20200731010822.fctk5lawnr3p7blf@kafai-mbp.dhcp.thefacebook.com>
-Message-ID: <adbfc73e-bd32-d9ba-4dab-4ccc39b40fdd@chromium.org>
-Date:   Fri, 31 Jul 2020 14:08:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 31 Jul 2020 08:11:05 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06VC84VN026410;
+        Fri, 31 Jul 2020 14:11:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=BIDMQCn2Xt/p6Gejfis8MlD0wl710CqmLRL6yrznlSo=;
+ b=NjZrhuVARUXQ7waNuEutUIWyLyVS99XZC6odY3M9oXy6TIbcM5O0sBs8w6iUCFDrrfvq
+ aROlVubV8C80rVYojfkHIOnq919Pr9l0okOkDu+YKNt6sasIOAFPx7UEQUWCY9gANG+h
+ xMQpuIdqYtw3pN1U9eJsAPaMFHtJALP5wAWNx3AschSEdrWn/XRrCTW/cpZCd3u7OOO5
+ CB6GIh68MWkgq3Yuswbn/98zrX3TO3TwqNY9DtGsqgIpGKW0CAZ6hXHvFysx+XSmmvJ9
+ Pyw9rq/pW4hHhYumIRU2JPPMaeS8QR0mD0Q4PA0XUW5KIM7rv7hq5NcDP8f+8l5C/UG4 +Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 32gagvnd0a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 31 Jul 2020 14:11:00 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2811410002A;
+        Fri, 31 Jul 2020 14:11:00 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 128512AE6DD;
+        Fri, 31 Jul 2020 14:11:00 +0200 (CEST)
+Received: from localhost (10.75.127.46) by SFHDAG3NODE1.st.com (10.75.127.7)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul 2020 14:10:59
+ +0200
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <arnaud.pouliquen@st.com>
+Subject: [PATCH 00/13] introduce IOCTL interface for RPMsg channel management
+Date:   Fri, 31 Jul 2020 14:10:30 +0200
+Message-ID: <20200731121043.24199-1-arnaud.pouliquen@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200731010822.fctk5lawnr3p7blf@kafai-mbp.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-31_04:2020-07-31,2020-07-31 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This serie is inspired by the RPMsg char driver. The RPMsg char driver
+provides interfaces that:
+- expose a char RPMsg device for communication with the remote processor
+- expose controls interface for applications to create and release channels
 
+The purpose of this series is to decorrelate the two interfaces:
+ - provide a char device for a RPMsg raw service similar to the rpmsg_char
+   but that can be probed by a RPMsg bus on a ns announcement
+ - generalize the use of the ioctl for all RPMsg services.
 
-On 31.07.20 03:08, Martin KaFai Lau wrote:
-> On Thu, Jul 30, 2020 at 04:07:14PM +0200, KP Singh wrote:
->> From: KP Singh <kpsingh@google.com>
->>
->> Similar to bpf_local_storage for sockets, add local storage for inodes.
->> The life-cycle of storage is managed with the life-cycle of the inode.
->> i.e. the storage is destroyed along with the owning inode.
->>
->> The BPF LSM allocates an __rcu pointer to the bpf_local_storage in the
->> security blob which are now stackable and can co-exist with other LSMs.
->>
-> 
-> [ ... ]
-> 
->> +static int bpf_fd_inode_storage_update_elem(struct bpf_map *map, void *key,
->> +					 void *value, u64 map_flags)
->> +{
->> +	struct bpf_local_storage_data *sdata;
->> +	struct file *f;
->> +	int fd;
->> +
->> +	fd = *(int *)key;
->> +	f = fcheck(fd);
->> +	if (!f)
->> +		return -EINVAL;
->> +
->> +	sdata = bpf_local_storage_update(f->f_inode, map, value, map_flags);
-> n00b question.  inode will not be going away here (like another
-> task calls close(fd))?  and there is no chance that bpf_local_storage_update()
-> will be adding new storage after bpf_inode_storage_free() was called?
+1) rpmsg raw driver: rpmsg_raw.c
+For legacy reason, I created a new file instead of modifying the rpmsg_char
+driver. But the rework of the rpmsg_char driver to only support the RPMsg
+raw service could be an alternative
+Few differences can be found:
+    - The rpmsg class has not been implemented. The associated attributes
+      are already available in /sys/bus/rpmsg/.
+    - The eptdev device is now an RPMsg device probed by a RPMsg bus driver
+      (probed only by the ioctl in rpmsg_char driver).
+    - The associated endpoint is now created by the bus no more on the
+      devfs open.
 
-Good catch, I think we need to guard this update by grabbing a reference 
-to the file here.
+2) RPMsg control driver: rpmsg_ctrl.c
+  This driver is based on the control part of the RPMsg_char driver. 
+  On probe a /dev/rpmsg_ctrl<X> interface is created to allow to manage the
+  channels.
+  The principles are the following:
+  - The RPMsg service driver registers it's name and the associated service
+    using the rpmsg_ctrl_unregister_ctl API. The list of supported services
+    is defined in  include/uapi/linux/rpmsg.h and exposed to the
+    application thanks to a new field in rpmsg_endpoint_info struct.
+  - On the RPMsg bus probe(e.g virtio bus) an rpmsg_ctrl device is
+    registered that creates the control interface.
+  - The application can then create or release a channel by specifying:
+       - the name service
+       - the source address (default: RPMSG_ADDR_ANY)
+       - the destination address ( default: RPMSG_ADDR_ANY)
+       - the associated service (new)
+  - The rpmsg_ctrl uses the same interface than the ns announcement to
+    create and release the channel but using the driver_override field to
+    force the service name.
+    The  "driver_override" allows to force the name service associated to
+    an RPMsg driver, bypassing the rpmsg_device_id based match check.
+  - At least for virtio bus, an associated ns announcement is sent to the
+    remote side.  
 
-> 
-> A few comments will be useful here.
-> 
->> +	return PTR_ERR_OR_ZERO(sdata);
->> +}
->> +
->> +static int inode_storage_delete(struct inode *inode, struct bpf_map *map)
->> +{
->> +	struct bpf_local_storage_data *sdata;
->> +
->> +	sdata = inode_storage_lookup(inode, map, false);
->> +	if (!sdata)
->> +		return -ENOENT;
->> +
->> +	bpf_selem_unlink(SELEM(sdata));
->> +
->> +	return 0;
->> +}
->> +
->> +static int bpf_fd_inode_storage_delete_elem(struct bpf_map *map, void *key)
->> +{
->> +	struct file *f;
->> +	int fd;
->> +
->> +	fd = *(int *)key;
->> +	f = fcheck(fd);
->> +	if (!f)
->> +		return -EINVAL;
->> +
->> +	return inode_storage_delete(f->f_inode, map);
->> +}
->> +
->> +BPF_CALL_4(bpf_inode_storage_get, struct bpf_map *, map, struct inode *, inode,
->> +	   void *, value, u64, flags)
->> +{
->> +	struct bpf_local_storage_data *sdata;
->> +
->> +	if (flags & ~(BPF_LOCAL_STORAGE_GET_F_CREATE))
->> +		return (unsigned long)NULL;
->> +
->> +	sdata = inode_storage_lookup(inode, map, true);
->> +	if (sdata)
->> +		return (unsigned long)sdata->data;
->> +
->> +	if (flags & BPF_LOCAL_STORAGE_GET_F_CREATE) {
->> +		sdata = bpf_local_storage_update(inode, map, value,
->> +						 BPF_NOEXIST);
-> The same question here
+Know current Limitations:
+- Tested only with virtio RPMsg bus and for one vdev instance.
+- rpmsg_device_match does not allow to match a local endpoint created by
+  ioctl with a same service requested by the ns announcement callback.
+- Current implementation of the release makes it possible to release any
+  endpoint, even not created by the ioctl. Should we limit the release to
+  the RPMsg channel created with the ioctl? 
 
-This is slightly different. The helper gets called from the BPF program.
-We are only allowing this from LSM hooks which have better guarantees
-w.r.t the lifetime of the object unlike tracing programs.
+This serie can be applied in Bjorn's rpmsg-next branch on top of the
+RPMsg_ns series.
 
-I will add a comment that explains this. Once we have sleepable BPF we can
-also grab a reference to the inode here.
+This series can be tested using rpmsgexport tools updated according to the
+ioctl update and available here: https://github.com/arnopo/rpmsgexport. 
 
-> 
->> +		return IS_ERR(sdata) ? (unsigned long)NULL :
->> +					     (unsigned long)sdata->data;
->> +	}
->> +
->> +	return (unsigned long)NULL;
->> +}
->> +
->> +BPF_CALL_2(bpf_inode_storage_delete,
->> +	   struct bpf_map *, map, struct inode *, inode)
->> +{
->> +	return inode_storage_delete(inode, map);
->> +}
->> +
->> +static int notsupp_get_next_key(struct bpf_map *map, void *key,
->> +				void *next_key)
->> +{
->> +	return -ENOTSUPP;
->> +}
->> +
->> +static struct bpf_map *inode_storage_map_alloc(union bpf_attr *attr)
->> +{
->> +	struct bpf_local_storage_map *smap;
->> +
->> +	smap = bpf_local_storage_map_alloc(attr);
->> +	if (IS_ERR(smap))
->> +		return ERR_CAST(smap);
->> +
->> +	smap->cache_idx = bpf_local_storage_cache_idx_get(&inode_cache);
->> +	return &smap->map;
->> +}
->> +
->> +static void inode_storage_map_free(struct bpf_map *map)
->> +{
->> +	struct bpf_local_storage_map *smap;
->> +
->> +	smap = (struct bpf_local_storage_map *)map;
->> +	bpf_local_storage_cache_idx_free(&inode_cache, smap->cache_idx);
->> +	bpf_local_storage_map_free(smap);
->> +}
->> +
->> +static int sk_storage_map_btf_id;
+Arnaud Pouliquen (13):
+  rpmsg: introduce rpmsg raw driver
+  rpmsg: introduce rpmsg_control driver for channel creation
+  rpmsg: add helper to create the rpmsg ctrl device
+  rpmsg: virtio: probe the rpmsg_ctrl device
+  rpmsg: uapi: add service param for create destroy ioctls
+  rpmsg: add RPMsg control info structure
+  rpmsg: control: add driver registration API
+  rpmsg: raw: register service to the rpmsg control
+  rpmsg: add override field in channel info
+  rpmsg: ns: initialize channel info override field
+  rpmsg: virtio: use the driver_override in channel creation
+  rpmsg: control: implement the ioctrl function to create device
+  rpmsg: ctrl: add support of the endpoints release
 
-This name needs to be fixed as well.
+ drivers/rpmsg/Kconfig            |  17 ++
+ drivers/rpmsg/Makefile           |   2 +
+ drivers/rpmsg/rpmsg_ctrl.c       | 314 ++++++++++++++++++++++++++
+ drivers/rpmsg/rpmsg_internal.h   |  18 ++
+ drivers/rpmsg/rpmsg_ns.c         |   1 +
+ drivers/rpmsg/rpmsg_raw.c        | 364 +++++++++++++++++++++++++++++++
+ drivers/rpmsg/virtio_rpmsg_bus.c |  37 +++-
+ include/linux/rpmsg.h            |  15 ++
+ include/uapi/linux/rpmsg.h       |  17 ++
+ 9 files changed, 784 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/rpmsg/rpmsg_ctrl.c
+ create mode 100644 drivers/rpmsg/rpmsg_raw.c
 
->> +const struct bpf_map_ops inode_storage_map_ops = {
->> +	.map_alloc_check = bpf_local_storage_map_alloc_check,
->> +	.map_alloc = inode_storage_map_alloc,
->> +	.map_free = inode_storage_map_free,
->> +	.map_get_next_key = notsupp_get_next_key,
->> +	.map_lookup_elem = bpf_fd_inode_storage_lookup_elem,
->> +	.map_update_elem = bpf_fd_inode_storage_update_elem,
->> +	.map_delete_elem = bpf_fd_inode_storage_delete_elem,
->> +	.map_check_btf = bpf_local_storage_map_check_btf,
->> +	.map_btf_name = "bpf_local_storage_map",
->> +	.map_btf_id = &sk_storage_map_btf_id,
->> +	.map_owner_storage_ptr = inode_storage_ptr,
->> +};
->> +
->> +BTF_ID_LIST(bpf_inode_storage_get_btf_ids)
->> +BTF_ID(struct, inode)
-> The ARG_PTR_TO_BTF_ID is the second arg instead of the first
-> arg in bpf_inode_storage_get_proto.
-> Does it just happen to work here without needing BTF_ID_UNUSED?
+-- 
+2.17.1
 
-
-Yeah, this surprised me as to why it worked, so I did some debugging:
-
-
-diff --git a/kernel/bpf/bpf_lsm.c b/kernel/bpf/bpf_lsm.c
-index 9cd1428c7199..95e84bcf1a74 100644
---- a/kernel/bpf/bpf_lsm.c
-+++ b/kernel/bpf/bpf_lsm.c
-@@ -52,6 +52,8 @@ bpf_lsm_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- {
-        switch (func_id) {
-        case BPF_FUNC_inode_storage_get:
-+               pr_err("btf_ids[0]=%d\n", bpf_inode_storage_get_proto.btf_id[0]);
-+               pr_err("btf_ids[1]=%d\n", bpf_inode_storage_get_proto.btf_id[1]);
-                return &bpf_inode_storage_get_proto;
-        case BPF_FUNC_inode_storage_delete:
-                return &bpf_inode_storage_delete_proto;
-
-./test_progs -t test_local_storage
-
-[   21.694473] btf_ids[0]=915
-[   21.694974] btf_ids[1]=915
-
-btf  dump file /sys/kernel/btf/vmlinux | grep "STRUCT 'inode'"
-"[915] STRUCT 'inode' size=984 vlen=48
-
-So it seems like btf_id[0] and btf_id[1] are set to the BTF ID
-for inode. Now I think this might just be a coincidence as
-the next helper (bpf_inode_storage_delete) 
-also has a BTF argument of type inode.
-
-and sure enough if I call:
-
-bpf_inode_storage_delete from my selftests program, 
-it does not load:
-
-arg#0 type is not a struct
-Unrecognized arg#0 type PTR
-; int BPF_PROG(unlink_hook, struct inode *dir, struct dentry *victim)
-0: (79) r6 = *(u64 *)(r1 +8)
-func 'bpf_lsm_inode_unlink' arg1 has btf_id 912 type STRUCT 'dentry'
-; __u32 pid = bpf_get_current_pid_tgid() >> 32;
-
-[...]
-
-So, The BTF_ID_UNUSED is actually needed here. I also added a call to
-bpf_inode_storage_delete in my test to catch any issues with it.
-
-After adding BTF_ID_UNUSED, the result is what we expect:
-
-./test_progs -t test_local_storage
-[   20.577223] btf_ids[0]=0
-[   20.577702] btf_ids[1]=915
-
-Thanks for noticing this! 
-
-- KP
-
-> 
->> +
->> +const struct bpf_func_proto bpf_inode_storage_get_proto = {
->> +	.func		= bpf_inode_storage_get,
->> +	.gpl_only	= false,
->> +	.ret_type	= RET_PTR_TO_MAP_VALUE_OR_NULL,
->> +	.arg1_type	= ARG_CONST_MAP_PTR,
->> +	.arg2_type	= ARG_PTR_TO_BTF_ID,
->> +	.arg3_type	= ARG_PTR_TO_MAP_VALUE_OR_NULL,
->> +	.arg4_type	= ARG_ANYTHING,
->> +	.btf_id		= bpf_inode_storage_get_btf_ids,
->> +};
->> +
->> +BTF_ID_LIST(bpf_inode_storage_delete_btf_ids)
->> +BTF_ID(struct, inode)
->> +
->> +const struct bpf_func_proto bpf_inode_storage_delete_proto = {
->> +	.func		= bpf_inode_storage_delete,
->> +	.gpl_only	= false,
->> +	.ret_type	= RET_INTEGER,
->> +	.arg1_type	= ARG_CONST_MAP_PTR,
->> +	.arg2_type	= ARG_PTR_TO_BTF_ID,
->> +	.btf_id		= bpf_inode_storage_delete_btf_ids,
->> +};
