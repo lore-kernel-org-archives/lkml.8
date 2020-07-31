@@ -2,228 +2,152 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E058BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 13:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E82C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 13:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9C432245C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 13:26:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596201968;
-	bh=kiABRkM+l4ig/cD2nH8sLh6Q2EQZatMUbedijCspTS8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lvprRue8vuVFaTjH8CJCdbkjYSHbgvr5mp8y0RlIwpiOF0Dx1fp1oxqDudU86VmfF
-	 tgWghd/imzKnm33MboR98d2/Eulxpb2qnGmwxJyvJ5EN88sfMNLr8NWliB82LyKZfW
-	 lT0jO6+jYe/zlmcXb8ljSeIDab1/fKU+Y3bwy118=
+	by mail.kernel.org (Postfix) with ESMTP id 7AC7B2245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 13:26:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="tUZQrB59"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731359AbgGaN0H (ORCPT
+        id S1731461AbgGaN01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 09:26:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37756 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728252AbgGaN0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 09:26:06 -0400
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84AD522BF3;
-        Fri, 31 Jul 2020 13:26:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596201965;
-        bh=kiABRkM+l4ig/cD2nH8sLh6Q2EQZatMUbedijCspTS8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HFIrJcQVIlRxhjRE5g2guG8BBTbB8gcY4mFfzRn6ftJBOOzaKG3r97YkZzZcFqWVp
-         C91LyF17sRKj0jnuP0iqt+z5BwQod9BugSBsC+vfz4fkLlcErxySo1ecxhoToH0Fqk
-         BO74fjI62dBL1TkQRhoodGL+PUFcPv9hattKw1yQ=
-Received: by mail-ot1-f43.google.com with SMTP id l26so6063664otj.4;
-        Fri, 31 Jul 2020 06:26:05 -0700 (PDT)
-X-Gm-Message-State: AOAM53117CMDtjJHTkpEY1UKjZmCK3IS+pkvOLSyFBOX0uT78rDCNntV
-        o5Igst0TboEHK2GAGX7GTBbpen2HKSY7JfIdRyI=
-X-Google-Smtp-Source: ABdhPJwqejim9uD7ymbbLYfkTjOqYSs8DwQcIR8vUokBpFtUDjoUc/mptlY54R9ubTh7sxn+dne50wJnW9nGTqi4byY=
-X-Received: by 2002:a05:6830:1094:: with SMTP id y20mr2790921oto.90.1596201964770;
- Fri, 31 Jul 2020 06:26:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200729233635.14406-1-atish.patra@wdc.com>
-In-Reply-To: <20200729233635.14406-1-atish.patra@wdc.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 31 Jul 2020 16:25:53 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXFC-mQRrr+U_HRSzDEYsub-2Gb_F0r1Teh=MB0oJ-de2g@mail.gmail.com>
-Message-ID: <CAMj1kXFC-mQRrr+U_HRSzDEYsub-2Gb_F0r1Teh=MB0oJ-de2g@mail.gmail.com>
-Subject: Re: [RFT PATCH v4 0/9] Add UEFI support for RISC-V
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anup Patel <anup.patel@wdc.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Mike Rapoport <rppt@kernel.org>,
-        Nick Hu <nickhu@andestech.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
+        Fri, 31 Jul 2020 09:26:27 -0400
+Received: from mail-am6eur05on2068.outbound.protection.outlook.com ([40.107.22.68]:7520
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728252AbgGaN00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 09:26:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Fvl3IfAIhTuNZskvahn7ezKRobI3hYNIEatSasMOikx/xPGs/fkVgjiUK0pVUEzhdTw/cxgLp0s6LJ/CAc8wtMf5jHu6igUptN64k2coRqxPwa/I813If5oTEjGUucA5OOMuRHjUNT5w2Pye57yjUeJxWHoSdeYHKmdsrk6bnoqGDnUAaAn1PrlH8fov9uMQZTExAznr83lE3/8KH4bwBY/CMpv5E1yan/vtnDZ8rRwPndksdXPPunsPZJkj5hueJKQ8we3aUiBRxCwIEPX060EyZKubUBWo4DBCxPKsFh+ZHgX5HlUAWRZ9u1OGTB0ALgLqvUI1bXcfIo3D8HwzHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=27CDr72NqOLE3fWrVG23iLfVAXz3w/9hVHD3Na3G6rY=;
+ b=kNEZmz8BV8+fWYLA4egi90AEJDHkGum5nA6jiFzZVolQ39Tk5lFZo26wKhuPZf7h6MWbLAirQv51YjTDhfDRyI4Cy/PxMykaPLAj/F/2ep6wUQSgO4pQZwwvRbPcbF7pb9heGz6seSdlcqu2qtpNIOUktGEUoty0K7xSv4xUf/BEyNLc/GuefRyG2rPbqHsMM7nGRrXPytJkbk9dJ2v7dHLKC1UVsdPYXiVmU61JSdAypG0TIQu+0iHxYwgyQ3t6j1ZUe8aUrsAtZTBb872s4z4EFBy00JhGte8CG+4gpBZWVvPD+i81HN+zbUUSizRIBKBSITUiQTWzX24ckXvJaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=27CDr72NqOLE3fWrVG23iLfVAXz3w/9hVHD3Na3G6rY=;
+ b=tUZQrB59tdfl7c+f+INCfEJv6ofv/8fIi1YyPydbMazwnRu+TRQ+NeZ32YSDmGwfEWt/jysloTPp/cFRqyJ9zoLDdVlB2SsR+VFmPo+o9N6RQ/EBbTNbEe0r9hpSeYz0+U4pITBf1g5t7RLkA1Uy5GEkxSQT3qukFyqwQLwyqNI=
+Received: from DB8PR10MB3436.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:e9::10)
+ by DBAPR10MB4185.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:1c4::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Fri, 31 Jul
+ 2020 13:26:23 +0000
+Received: from DB8PR10MB3436.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::9913:d1be:cd0f:a620]) by DB8PR10MB3436.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::9913:d1be:cd0f:a620%6]) with mapi id 15.20.3239.020; Fri, 31 Jul 2020
+ 13:26:22 +0000
+From:   Roy Im <roy.im.opensource@diasemi.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Roy Im <roy.im.opensource@diasemi.com>
+CC:     Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Rob Herring <robh@kernel.org>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yash Shah <yash.shah@sifive.com>, Zong Li <zong.li@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+Subject: RE: [PATCH v18 3/3] Input: new da7280 haptic driver
+Thread-Topic: [PATCH v18 3/3] Input: new da7280 haptic driver
+Thread-Index: AQHWZVgP/N9464pJ20GmrAtQIjgduqkeGogAgAB+nQCAAPuTgIACGZZA
+Date:   Fri, 31 Jul 2020 13:26:22 +0000
+Message-ID: <DB8PR10MB3436DCEFD5A4FDF66B9839EE854E0@DB8PR10MB3436.EURPRD10.PROD.OUTLOOK.COM>
+References: <cover.1595991580.git.Roy.Im@diasemi.com>
+ <23b3470401ec5cf525add8e1227cb67586b9f294.1595991580.git.Roy.Im@diasemi.com>
+ <20200729063638.GY1665100@dtor-ws>
+ <DB8PR10MB3436EF37E1F1581BDB7996C785700@DB8PR10MB3436.EURPRD10.PROD.OUTLOOK.COM>
+ <20200730051013.GB1665100@dtor-ws>
+In-Reply-To: <20200730051013.GB1665100@dtor-ws>
+Accept-Language: ko-KR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=diasemi.com;
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [1.234.57.56]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4af37b7f-ced9-42b1-113e-08d835555186
+x-ms-traffictypediagnostic: DBAPR10MB4185:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DBAPR10MB41859E2FD48B6CDAFF8E7A97A24E0@DBAPR10MB4185.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: uyjEt1guyDH8ygl9oHOtHp1c6a7wGhXQQBFgnWrHmCECFW3LOVy+/084VOac1ZM2X5zSe+pnBPtSHzaPJUERvbeSGo5AS6tH/ptURBuEMvSIynGeIjiDjYRyNcmZncvmz9Wh4dNT2KxlrEBmSDHUN0cwGMsIQ9HO0oeueb9RqxJxhqD4k9cso8DHHbDsZtam8zfBA6U6uApcKIBjzPbNiXHoPNsJv9hIfDx1TsV9SpHG52nzKZBs0d/zeHPj5K14pwL5j31CkcjysiB2qNCXCNoObX28jPnrjeVeQfhDvKT8sQX7iF4b37/8fSHppJijBscCipaL6Knp6H92OdTktQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR10MB3436.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(366004)(376002)(39860400002)(346002)(55016002)(8936002)(7416002)(316002)(110136005)(186003)(54906003)(52536014)(6506007)(26005)(86362001)(9686003)(71200400001)(2906002)(8676002)(7696005)(5660300002)(33656002)(83380400001)(76116006)(66946007)(66446008)(64756008)(66556008)(66476007)(4326008)(478600001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: NcTOEZUbPpIMd3wtRVsifphlUaYxJqbntSWj2TtzZ37paxYzZqD5cW+LNT5QqPaKGDvKI4/NzsXxs+R88UAdKIa4PuJi6WTUY1O7m6BOMPGu9/F5BEtQYktz9cl8KfGjT3xJjiJK8PYlwgZdddj0olJUnsLrcVklYFf7uitwoj8UKOW0uZSBjbA35GigSYdZoSCVvZvSYWJGzVsF5GzMCst7OHA7eT4oc6UfdcVnnwsZrB3w8SEFMGQRx1nfu8PPnsEfQ0yIeR/63iFT6HmjG6h9Brl8z3jzCPMrGSN2tJbUDauruprkiE4P0s7w/Q6f7x81yVeHWutLLnag+bzSFRpTjUQAlHWajeF2jNBFwiiV+wR6WlA4SiL3Z56Rl8AYn+p5BvSf2FFLpe78z/H+f9CXzCZx1Fgwkvdw7TZYgdKhr/mBsI6ao3T4TZIOTIwkm5C0a1euBx8ogmAnUzmQhg/10dBihL5NDv+RR/yAJEBq8qhxNE3gBYXJQEKiH0rOHS66+OaME9z7x2KckPnYDNKk9Ikhk7qHTcrBPwtpllc0X3Jl9wXeO36n5COc81J1nC5EvIQ044izrCz0uJ0BE4IFR2glakpY5yFJuNYxdOlNs16c/hBwbxNG/Mur1yXypXpMO0oGyvfs5NbnzWrNOQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB8PR10MB3436.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4af37b7f-ced9-42b1-113e-08d835555186
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2020 13:26:22.8038
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: b61pf1YwTISkytQ++w3NXXFJ0VUU+NBtMiP178Bh3XNniFnIsxpTYzq4k1CbxWkT7jrKS8OmeUgKJY44tCG8kw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR10MB4185
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Jul 2020 at 02:36, Atish Patra <atish.patra@wdc.com> wrote:
->
-> This series adds UEFI support for RISC-V.
->
-> Linux kernel: 5.8-rc7 + 1 exception vector setup patch (queued for for-next)
-> U-Boot: v2020.07
-> OpenSBI: master
->
-> This series depends on early setup of exeception vector patch
-> http://lists.infradead.org/pipermail/linux-riscv/2020-July/001207.html
->
-> Patch 1-3 are generic riscv feature addition required for UEFI support.
-> Patch 4-7 adds the efi stub support for RISC-V which was reviewed few months back.
-> https://www.spinics.net/lists/linux-efi/msg19144.html
-> Patch 8 just renames arm-init code so that it can be used across different
-> architectures. Patch 11 adds the runtime services for RISC-V.
->
-> The working set of patches can also be found in following git repo.
-> https://github.com/atishp04/linux/tree/uefi_riscv_5.9_v4
->
 
+On Thu, July 30, 2020 2:10 PM, Dmitry Torokhov
+> On Wed, Jul 29, 2020 at 02:09:48PM +0000, Roy Im wrote:
+> > Wednesday, July 29, 2020 3:37 PM, Dmitry Torokhov wrote:
+> > > On Wed, Jul 29, 2020 at 11:59:40AM +0900, Roy Im wrote:
+> > > > v11:
+> > > > 	- Updated the pwm related code, comments and typo.
+> > > > v10:
+> > > > 	- Updated the pwm related function and added some comments.
+> > > > v9:
+> > > > 	- Removed the header file and put the definitions into the c file.
+> > > > 	- Updated the pwm code and error logs with %pE
+> > >
+> > > I believe the %pE is to format an escaped buffer, you probably want
+> > > to %pe (lowercase) to print errors. I am also not quite sure if we wa=
+nt to use it in cases when we have non-pointer error, or
+> we should stick with %d as most of the kernel does.
+> >
+> > Right, it should be %pe as you and Uwe said, Uwe suggested %pe to under=
+stand easier.. do you still prefer to stick with %d?
+>=20
+> Depends on the situation. If you already have ERR_PTR-encoded error there=
+ is no reason for not using %pe, but if you have
+> integer error, or you have already converted pointer to integer I'd prefe=
+r we stick with %d.
+>=20
+> As I mentioned in another message maybe we should consider adding '%de'
+> or similar for formatting integer errors.
 
-Thanks Atish.
+I have seen the discussion messages in another email, then I am not still q=
+uite sure what could be good for now.
+Do you still prefer to be with %d if I have already converted pointer to in=
+teger and with %pe for something that I already have ERR_PTR-encoded error?
 
-I think these patches have now reached a state where you can stop
-sending out new revisions until you have something that works as
-expected in combination with EDK2 based firmware that implements  the
-UEFI runtime services fully.
-
-
-> The patches have been verified on Qemu/HiFive unleashed using bootefi command in
-> U-Boot for both RV32 and RV64.
->
-> For RV32, maximum allocated memory should be 1G as RISC-V kernel can not map
-> beyond 1G of physical memory for RV32.
->
-> Runtime services have been verified with fwts. Here is the snippet of the result.
->
-> ***********************************************************************
-> This test run on 16/07/20 at 17:54:53 on host Linux fedora-riscv
-> 5.8.0-rc5-00015-g5e61441080fd-dirty #938 SMP Thu Jul 16 14:50:11 PDT 2020
-> riscv64.
->
-> Command: "fwts uefirtvariable".
-> Running tests: uefirtvariable.
->
-> uefirtvariable: UEFI Runtime service variable interface tests.
-> Test 1 of 9: Test UEFI RT service get variable interface.
-> SKIPPED: Test 1, Skipping test, SetVariable runtime service is not supported on
-> this platform.
->
-> Test 2 of 9: Test UEFI RT service get next variable name interface.
-> The runtime service GetNextVariableName interface function test.
-> SKIPPED: Test 2, Skipping test, SetVariable runtime service is not supported on
-> this platform.
->
-> ...
->
-> Test 4 of 9: Test UEFI RT service query variable info interface.
-> SKIPPED: Test 4, Not support the QueryVariableInfo UEFI runtime interface:
-> cannot test.
->
-> ADVICE: Firmware also needs to check if the revision of system table is correct
-> or not. Linux kernel returns EFI_UNSUPPORTED as well, if the FirmwareRevision of
-> system table is less than EFI_2_00_SYSTEM_TABLE_REVISION.
->
-> ...
-> ***********************************************************************
->
-> Currently, U-Boot EFI implementation returns EFI_UNSUPPORTED for set_variable
-> service. That's why all tests have been skipped but I manually verified that the
-> value is returned from U-Boot not kernel :).
->
-> EDK2 can boot quite far into Linux with the current series. However, it crashes
-> before userspace because of a possible memory corruption by EDK2.
->
-> Changes from v3->v4:
-> 1. Used pgd mapping to avoid copying DT to bss.
->
-> Changes from v2->v3:
-> 1. Fixed few bugs in run time services page table mapping.
-> 2. Dropped patch 1 as it is already taken into efi-tree.
-> 3. Sent few generic mmu fixes as a separate series to ease the merge conflicts.
->
-> Changes from v1->v2:
-> 1. Removed patch 1 as it is already taken into efi-tree.
-> 2. Fixed compilation issues with patch 9.
-> 3. Moved few function prototype declaration to header file to keep kbuild happy.
->
-> Changes from previous version:
-> 1. Added full ioremap support.
-> 2. Added efi runtime services support.
-> 3. Fixes mm issues
->
-> Anup Patel (1):
-> RISC-V: Move DT mapping outof fixmap
->
-> Atish Patra (8):
-> RISC-V: Add early ioremap support
-> RISC-V: Implement late mapping page table allocation functions
-> include: pe.h: Add RISC-V related PE definition
-> RISC-V: Add PE/COFF header for EFI stub
-> RISC-V: Add EFI stub support.
-> efi: Rename arm-init to efi-init common for all arch
-> RISC-V: Add EFI runtime services
-> RISC-V: Add page table dump support for uefi
->
-> arch/riscv/Kconfig                            |  25 +++
-> arch/riscv/Makefile                           |   1 +
-> arch/riscv/configs/defconfig                  |   1 +
-> arch/riscv/include/asm/Kbuild                 |   1 +
-> arch/riscv/include/asm/efi.h                  |  56 +++++++
-> arch/riscv/include/asm/fixmap.h               |  16 +-
-> arch/riscv/include/asm/io.h                   |   1 +
-> arch/riscv/include/asm/mmu.h                  |   2 +
-> arch/riscv/include/asm/pgtable.h              |   5 +
-> arch/riscv/include/asm/sections.h             |  13 ++
-> arch/riscv/kernel/Makefile                    |   5 +
-> arch/riscv/kernel/efi-header.S                | 104 +++++++++++++
-> arch/riscv/kernel/efi.c                       | 105 +++++++++++++
-> arch/riscv/kernel/head.S                      |  17 ++-
-> arch/riscv/kernel/head.h                      |   2 -
-> arch/riscv/kernel/image-vars.h                |  51 +++++++
-> arch/riscv/kernel/setup.c                     |  17 ++-
-> arch/riscv/kernel/vmlinux.lds.S               |  22 ++-
-> arch/riscv/mm/init.c                          |  90 ++++++++---
-> arch/riscv/mm/ptdump.c                        |  48 +++++-
-> drivers/firmware/efi/Kconfig                  |   3 +-
-> drivers/firmware/efi/Makefile                 |   4 +-
-> .../firmware/efi/{arm-init.c => efi-init.c}   |   0
-> drivers/firmware/efi/libstub/Makefile         |  10 ++
-> drivers/firmware/efi/libstub/efi-stub.c       |  11 +-
-> drivers/firmware/efi/libstub/riscv-stub.c     | 110 ++++++++++++++
-> drivers/firmware/efi/riscv-runtime.c          | 143 ++++++++++++++++++
-> include/linux/pe.h                            |   3 +
-> 28 files changed, 825 insertions(+), 41 deletions(-)
-> create mode 100644 arch/riscv/include/asm/efi.h
-> create mode 100644 arch/riscv/include/asm/sections.h
-> create mode 100644 arch/riscv/kernel/efi-header.S
-> create mode 100644 arch/riscv/kernel/efi.c
-> create mode 100644 arch/riscv/kernel/image-vars.h
-> rename drivers/firmware/efi/{arm-init.c => efi-init.c} (100%)
-> create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
-> create mode 100644 drivers/firmware/efi/riscv-runtime.c
->
-> --
-> 2.24.0
->
+Kind regards,
+Roy
