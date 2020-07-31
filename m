@@ -2,475 +2,135 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8050DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5898B22CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50E50208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:14:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="q8GOR9mp"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="PiZsXOsY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733189AbgGaML6 (ORCPT
+        id S1733053AbgGaMOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 08:11:58 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:4514 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732886AbgGaMLG (ORCPT
+        Fri, 31 Jul 2020 08:14:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732784AbgGaMOR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 08:11:06 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06VC7cQn011783;
-        Fri, 31 Jul 2020 14:11:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=cVheV20ZNKPxcFr0xDJ7TW1uuXFbr75eOpa/Iq2uNJ8=;
- b=q8GOR9mpzUsC3ATCIQiAiPYdCDBfrnecGzKrKzS6TKjRfqHwORQXWt/T6+hSfUfTLgOa
- WPCc/YCPR123dRFwOf654hQcj8oarmxRrQyWbY6OZf9wSV4BHIUUJXFeLNOI1BSTFS7s
- O86a4bBV1Lg376VG73M7ozfO7A3KSehy2Y2L9XQb26Y/uc5usNPamwsUmUPKGp+W1lId
- wDg3nBQe1m14hesq0T/Rsm03jsx7WSVWFpmMRsPYcerBFit+78bjAY5kQkChYdgjj3+x
- w6L5YaTzXFaVPQMvfNjbYPpJtxH+AfgRKnFMp3DfJeIRWaTaqFXwYghHQZLDa4C9TvDu FA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32g9v9xku7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 31 Jul 2020 14:11:02 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A5E7110002A;
-        Fri, 31 Jul 2020 14:11:01 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 96BEA2AE6DD;
-        Fri, 31 Jul 2020 14:11:01 +0200 (CEST)
-Received: from localhost (10.75.127.45) by SFHDAG3NODE1.st.com (10.75.127.7)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul 2020 14:11:00
- +0200
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <arnaud.pouliquen@st.com>
-Subject: [PATCH 01/13] rpmsg: introduce rpmsg raw driver
-Date:   Fri, 31 Jul 2020 14:10:31 +0200
-Message-ID: <20200731121043.24199-2-arnaud.pouliquen@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200731121043.24199-1-arnaud.pouliquen@st.com>
-References: <20200731121043.24199-1-arnaud.pouliquen@st.com>
+        Fri, 31 Jul 2020 08:14:17 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3216FC061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 05:14:17 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BJ5ml2LN3z9s1x;
+        Fri, 31 Jul 2020 22:14:15 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1596197655;
+        bh=zl7Kp+BGNFfBts1EjllIogLiwRs96Vwctn66ZH8tpps=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=PiZsXOsYAL7n272reYQOMNJhDNwWpssZqR1XrI9PcXNOm9miwoQzY7vkbAczMA2mR
+         veL4hHCGhckOA1fppwEAIThEN3r5XfV4NKi5jqtuCxcXEIxIe9pvKsKKxYq5TQe8Xv
+         gjklhM/2lahd6X83wJ+VLZPJYw8K5WkT4DUqsLFY8YYoTtVt7Vp/g/8EIRDb09/oxS
+         ACMesE+gaswVgRyyeOEGG4wYa7xYeQ0gMtl6v+ciaHNN2k1GHilVClzDvKlJDScYOF
+         0HiZvfLU7BLTB2wHqH5Pt1uGqRFGNrlMbYn7gLYoIVJdrwm3ZVZxuqh5H53tWqjmQz
+         hvqP6f482dgkQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jordan Niethe <jniethe5@gmail.com>
+Subject: Re: [PATCH v4 08/10] powerpc/smp: Allocate cpumask only after searching thread group
+In-Reply-To: <20200731094938.GA18776@linux.vnet.ibm.com>
+References: <20200727053230.19753-1-srikar@linux.vnet.ibm.com> <20200727053230.19753-9-srikar@linux.vnet.ibm.com> <87zh7g3yvk.fsf@mpe.ellerman.id.au> <20200731094938.GA18776@linux.vnet.ibm.com>
+Date:   Fri, 31 Jul 2020 22:14:11 +1000
+Message-ID: <87o8nv51bg.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-31_04:2020-07-31,2020-07-31 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver is a copy past of the rpmsg_char driver with following
-update:
-- The control part has been removed.
-- The rpmsg class has been removed because the information already
-  available in /sys/bus.
-- The device is now an RPMsg device probed by a RPMsg bus driver.
-- The associated endpoint is now created by the bus not on the fs open.
+Srikar Dronamraju <srikar@linux.vnet.ibm.com> writes:
+> * Michael Ellerman <mpe@ellerman.id.au> [2020-07-31 17:52:15]:
+>
+>> Srikar Dronamraju <srikar@linux.vnet.ibm.com> writes:
+>> > If allocated earlier and the search fails, then cpumask need to be
+>> > freed. However cpu_l1_cache_map can be allocated after we search thread
+>> > group.
+>> 
+>> It's not freed anywhere AFAICS?
+>
+> Yes, its never freed. Infact we are never checking if
+> zalloc_cpumask_var_node fails. Its not just this cpumask, but historically
+> all the other existing cpumasks in arch/powerpc/kernel/smp.c are never
+> freed/checked. I did dig into this a bit and it appears that ..
+> (Please do correct me if I am wrong!! )
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
----
- drivers/rpmsg/Kconfig     |   9 +
- drivers/rpmsg/Makefile    |   1 +
- drivers/rpmsg/rpmsg_raw.c | 347 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 357 insertions(+)
- create mode 100644 drivers/rpmsg/rpmsg_raw.c
+That's correct.
 
-diff --git a/drivers/rpmsg/Kconfig b/drivers/rpmsg/Kconfig
-index 0143c9864c45..900ec8f54081 100644
---- a/drivers/rpmsg/Kconfig
-+++ b/drivers/rpmsg/Kconfig
-@@ -23,6 +23,15 @@ config RPMSG_NS
- 	  channel that probes the associate RPMsg device on remote endpoint
- 	  service announcement.
- 
-+config RPMSG_RAW
-+	tristate "RPMSG raw service driver"
-+	depends on RPMSG
-+	depends on NET
-+	help
-+	  Say Y here to export rpmsg endpoints as char device files, found
-+	  in /dev. They make it possible for user-space programs to send and
-+	  receive rpmsg packets through a basic char device.
-+
- config RPMSG_MTK_SCP
- 	tristate "MediaTek SCP"
- 	depends on MTK_SCP
-diff --git a/drivers/rpmsg/Makefile b/drivers/rpmsg/Makefile
-index 8d452656f0ee..d75f0a65e71d 100644
---- a/drivers/rpmsg/Makefile
-+++ b/drivers/rpmsg/Makefile
-@@ -9,3 +9,4 @@ obj-$(CONFIG_RPMSG_QCOM_GLINK_RPM) += qcom_glink_rpm.o
- obj-$(CONFIG_RPMSG_QCOM_GLINK_SMEM) += qcom_glink_smem.o
- obj-$(CONFIG_RPMSG_QCOM_SMD)	+= qcom_smd.o
- obj-$(CONFIG_RPMSG_VIRTIO)	+= virtio_rpmsg_bus.o
-+obj-$(CONFIG_RPMSG_RAW)	+= rpmsg_raw.o
-diff --git a/drivers/rpmsg/rpmsg_raw.c b/drivers/rpmsg/rpmsg_raw.c
-new file mode 100644
-index 000000000000..8684a78ab4d1
---- /dev/null
-+++ b/drivers/rpmsg/rpmsg_raw.c
-@@ -0,0 +1,347 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) STMicroelectronics 2020 - All Rights Reserved
-+ *
-+ * Based on rpmsg_char driver.
-+ */
-+#include <linux/cdev.h>
-+#include <linux/device.h>
-+#include <linux/fs.h>
-+#include <linux/idr.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/poll.h>
-+#include <linux/rpmsg.h>
-+#include <linux/skbuff.h>
-+#include <linux/slab.h>
-+#include <linux/uaccess.h>
-+#include <uapi/linux/rpmsg.h>
-+
-+#include "rpmsg_internal.h"
-+
-+#define RPMSG_DEV_MAX	(MINORMASK + 1)
-+
-+#define dev_to_eptdev(dev) container_of(dev, struct rpmsg_raw, dev)
-+#define cdev_to_eptdev(i_cdev) container_of(i_cdev, struct rpmsg_raw, cdev)
-+
-+static dev_t rpmsg_raw_major;
-+
-+static DEFINE_IDA(rpmsg_minor_ida);
-+static DEFINE_IDA(rpmsg_ept_ida);
-+
-+/**
-+ * struct rpmsg_raw - endpoint device context
-+ * @dev:	endpoint device
-+ * @cdev:	cdev for the endpoint device
-+ * @rpdev:	underlaying rpmsg device
-+ * @ept_lock:	synchronization of @ept modifications
-+ * @queue_lock:	synchronization of @queue operations
-+ * @queue:	incoming message queue
-+ * @readq:	wait object for incoming queue
-+ */
-+struct rpmsg_raw {
-+	struct device dev;
-+	struct cdev cdev;
-+	struct rpmsg_device *rpdev;
-+	struct mutex ept_lock;
-+	spinlock_t queue_lock;
-+	struct sk_buff_head queue;
-+	wait_queue_head_t readq;
-+};
-+
-+static int rpmsg_raw_cb(struct rpmsg_device *rpdev, void *buf, int len,
-+			void *priv, u32 addr)
-+{
-+	struct rpmsg_raw *eptdev = dev_get_drvdata(&rpdev->dev);
-+	struct sk_buff *skb;
-+
-+	skb = alloc_skb(len, GFP_ATOMIC);
-+	if (!skb)
-+		return -ENOMEM;
-+
-+	skb_put_data(skb, buf, len);
-+
-+	spin_lock(&eptdev->queue_lock);
-+	skb_queue_tail(&eptdev->queue, skb);
-+	spin_unlock(&eptdev->queue_lock);
-+
-+	/* wake up any blocking processes, waiting for new data */
-+	wake_up_interruptible(&eptdev->readq);
-+
-+	return 0;
-+}
-+
-+static int rpmsg_raw_open(struct inode *inode, struct file *filp)
-+{
-+	struct rpmsg_raw *eptdev = cdev_to_eptdev(inode->i_cdev);
-+	struct device *dev = &eptdev->dev;
-+
-+	get_device(dev);
-+
-+	filp->private_data = eptdev;
-+
-+	return 0;
-+}
-+
-+static int rpmsg_raw_release(struct inode *inode, struct file *filp)
-+{
-+	struct rpmsg_raw *eptdev = cdev_to_eptdev(inode->i_cdev);
-+
-+	/* Discard all SKBs */
-+	skb_queue_purge(&eptdev->queue);
-+
-+	put_device(&eptdev->dev);
-+
-+	return 0;
-+}
-+
-+static ssize_t rpmsg_raw_read_iter(struct kiocb *iocb, struct iov_iter *to)
-+{
-+	struct file *filp = iocb->ki_filp;
-+	struct rpmsg_raw *eptdev = filp->private_data;
-+	unsigned long flags;
-+	struct sk_buff *skb;
-+	int use;
-+
-+	if (!eptdev->rpdev->ept)
-+		return -EPIPE;
-+
-+	spin_lock_irqsave(&eptdev->queue_lock, flags);
-+
-+	/* Wait for data in the queue */
-+	if (skb_queue_empty(&eptdev->queue)) {
-+		spin_unlock_irqrestore(&eptdev->queue_lock, flags);
-+
-+		if (filp->f_flags & O_NONBLOCK)
-+			return -EAGAIN;
-+
-+		/* Wait until we get data or the endpoint goes away */
-+		if (wait_event_interruptible(eptdev->readq,
-+					     !skb_queue_empty(&eptdev->queue) ||
-+					     !eptdev->rpdev->ept))
-+			return -ERESTARTSYS;
-+
-+		/* We lost the endpoint while waiting */
-+		if (!eptdev->rpdev->ept)
-+			return -EPIPE;
-+
-+		spin_lock_irqsave(&eptdev->queue_lock, flags);
-+	}
-+
-+	skb = skb_dequeue(&eptdev->queue);
-+	spin_unlock_irqrestore(&eptdev->queue_lock, flags);
-+	if (!skb)
-+		return -EFAULT;
-+
-+	use = min_t(size_t, iov_iter_count(to), skb->len);
-+	if (copy_to_iter(skb->data, use, to) != use)
-+		use = -EFAULT;
-+
-+	kfree_skb(skb);
-+
-+	return use;
-+}
-+
-+static ssize_t rpmsg_raw_write_iter(struct kiocb *iocb, struct iov_iter *from)
-+{
-+	struct file *filp = iocb->ki_filp;
-+	struct rpmsg_raw *eptdev = filp->private_data;
-+	size_t len = iov_iter_count(from);
-+	void *kbuf;
-+	int ret;
-+
-+	kbuf = kzalloc(len, GFP_KERNEL);
-+	if (!kbuf)
-+		return -ENOMEM;
-+
-+	if (!copy_from_iter_full(kbuf, len, from)) {
-+		ret = -EFAULT;
-+		goto free_kbuf;
-+	}
-+
-+	if (mutex_lock_interruptible(&eptdev->ept_lock)) {
-+		ret = -ERESTARTSYS;
-+		goto free_kbuf;
-+	}
-+
-+	if (!eptdev->rpdev->ept) {
-+		ret = -EPIPE;
-+		goto unlock_eptdev;
-+	}
-+
-+	if (filp->f_flags & O_NONBLOCK)
-+		ret = rpmsg_trysend(eptdev->rpdev->ept, kbuf, len);
-+	else
-+		ret = rpmsg_send(eptdev->rpdev->ept, kbuf, len);
-+
-+unlock_eptdev:
-+	mutex_unlock(&eptdev->ept_lock);
-+
-+free_kbuf:
-+	kfree(kbuf);
-+	return ret < 0 ? ret : len;
-+}
-+
-+static __poll_t rpmsg_raw_poll(struct file *filp, poll_table *wait)
-+{
-+	struct rpmsg_raw *eptdev = filp->private_data;
-+	__poll_t mask = 0;
-+
-+	if (!eptdev->rpdev->ept)
-+		return EPOLLERR;
-+
-+	poll_wait(filp, &eptdev->readq, wait);
-+
-+	if (!skb_queue_empty(&eptdev->queue))
-+		mask |= EPOLLIN | EPOLLRDNORM;
-+
-+	mask |= rpmsg_poll(eptdev->rpdev->ept, filp, wait);
-+
-+	return mask;
-+}
-+
-+static void rpmsg_raw_release_device(struct device *dev)
-+{
-+	struct rpmsg_raw *eptdev = dev_to_eptdev(dev);
-+
-+	ida_simple_remove(&rpmsg_ept_ida, dev->id);
-+	ida_simple_remove(&rpmsg_minor_ida, MINOR(eptdev->dev.devt));
-+	cdev_del(&eptdev->cdev);
-+	kfree(eptdev);
-+}
-+
-+static const struct file_operations rpmsg_raw_fops = {
-+	.owner = THIS_MODULE,
-+	.open = rpmsg_raw_open,
-+	.release = rpmsg_raw_release,
-+	.read_iter = rpmsg_raw_read_iter,
-+	.write_iter = rpmsg_raw_write_iter,
-+	.poll = rpmsg_raw_poll,
-+};
-+
-+static int rpmsg_raw_probe(struct rpmsg_device *rpdev)
-+{
-+	struct rpmsg_raw *eptdev;
-+	struct device *dev;
-+	int ret;
-+
-+	eptdev = kzalloc(sizeof(*eptdev), GFP_KERNEL);
-+	if (!eptdev)
-+		return -ENOMEM;
-+
-+	dev = &eptdev->dev;
-+	eptdev->rpdev = rpdev;
-+
-+	mutex_init(&eptdev->ept_lock);
-+	spin_lock_init(&eptdev->queue_lock);
-+	skb_queue_head_init(&eptdev->queue);
-+	init_waitqueue_head(&eptdev->readq);
-+
-+	device_initialize(dev);
-+	dev->parent = &rpdev->dev;
-+	dev_set_drvdata(dev, eptdev);
-+
-+	cdev_init(&eptdev->cdev, &rpmsg_raw_fops);
-+	eptdev->cdev.owner = THIS_MODULE;
-+
-+	ret = ida_simple_get(&rpmsg_minor_ida, 0, RPMSG_DEV_MAX, GFP_KERNEL);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to get IDA (%d)\n", ret);
-+		goto free_eptdev;
-+	}
-+
-+	dev->devt = MKDEV(MAJOR(rpmsg_raw_major), ret);
-+
-+	ret = ida_simple_get(&rpmsg_ept_ida, 0, 0, GFP_KERNEL);
-+	if (ret < 0)
-+		goto free_minor_ida;
-+	dev->id = ret;
-+	dev_set_name(dev, "rpmsg%d", dev->id);
-+
-+	ret = cdev_add(&eptdev->cdev, dev->devt, 1);
-+	if (ret) {
-+		ida_simple_remove(&rpmsg_minor_ida, MINOR(dev->devt));
-+		dev_err(&rpdev->dev, "failed to add char device(%d)\n", ret);
-+		goto free_ept_ida;
-+	}
-+
-+	/* We can now rely on the release function for cleanup */
-+	dev->release = rpmsg_raw_release_device;
-+
-+	ret = device_add(dev);
-+	if (ret) {
-+		dev_err(dev, "device_add failed: %d\n", ret);
-+		put_device(dev);
-+	}
-+
-+	dev_set_drvdata(&rpdev->dev, eptdev);
-+
-+	return ret;
-+
-+free_ept_ida:
-+	ida_simple_remove(&rpmsg_ept_ida, dev->id);
-+free_minor_ida:
-+	ida_simple_remove(&rpmsg_minor_ida, MINOR(dev->devt));
-+free_eptdev:
-+	put_device(dev);
-+	kfree(eptdev);
-+
-+	return ret;
-+}
-+
-+static void rpmsg_raw_remove(struct rpmsg_device *rpdev)
-+{
-+	struct rpmsg_raw *eptdev = dev_get_drvdata(&rpdev->dev);
-+
-+	/* wake up any blocked readers */
-+	wake_up_interruptible(&eptdev->readq);
-+
-+	device_del(&eptdev->dev);
-+
-+	put_device(&eptdev->dev);
-+}
-+
-+static struct rpmsg_device_id rpmsg_driver_sample_id_table[] = {
-+	{ .name	= "rpmsg-raw" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(rpmsg, rpmsg_driver_sample_id_table);
-+
-+static struct rpmsg_driver rpmsg_raw_client = {
-+	.drv.name	= KBUILD_MODNAME,
-+	.id_table	= rpmsg_driver_sample_id_table,
-+	.probe		= rpmsg_raw_probe,
-+	.callback	= rpmsg_raw_cb,
-+	.remove		= rpmsg_raw_remove,
-+};
-+
-+static int rpmsg_raw_init(void)
-+{
-+	int ret;
-+
-+	ret = alloc_chrdev_region(&rpmsg_raw_major, 0, RPMSG_DEV_MAX,
-+				  "rpmsg");
-+	if (ret < 0) {
-+		pr_err("rpmsg: failed to allocate char dev region\n");
-+		return ret;
-+	}
-+
-+	ret = register_rpmsg_driver(&rpmsg_raw_client);
-+	if (ret < 0)
-+		unregister_chrdev_region(rpmsg_raw_major, RPMSG_DEV_MAX);
-+
-+	return ret;
-+}
-+module_init(rpmsg_raw_init);
-+
-+static void rpmsg_raw_exit(void)
-+{
-+	unregister_rpmsg_driver(&rpmsg_raw_client);
-+	unregister_chrdev_region(rpmsg_raw_major, RPMSG_DEV_MAX);
-+}
-+module_exit(rpmsg_raw_exit);
-+
-+MODULE_DESCRIPTION("RPMSG raw service driver");
-+MODULE_AUTHOR("Arnaud Pouliquen <arnaud.pouliquen@st.com>");
-+MODULE_ALIAS("rpmsg_raw");
-+MODULE_LICENSE("GPL v2");
--- 
-2.17.1
+> Powerpc using cpumask_var_t for all of the percpu variables. And it dont seem
+> to enable CONFIG_CPUMASK_OFFSTACK even from the MAXSMP config.
 
+I remember Rusty adding that code, but I don't know if we ever
+considered enabling CPUMASK_OFFSTACK.
+
+Probably we meant to but never got around to doing it.
+
+> So from include/linux/cpumask.h
+>
+> typedef struct cpumask cpumask_var_t[1];
+> and
+> zalloc_cpumask_var_node ends up being cpumask_clear
+>
+> So I think we are historically we seem to assume we are always
+> !CPUMASK_OFFSTACK and hence we dont need to check for return as well as
+> free..
+
+Right.
+
+> I would look forward to your comments on how we should handle this going
+> forward. But I would keep this the same for this patchset.
+
+Agreed, just clarify in the change log that it's not freed at the moment
+because of CPU_MASK_OFFSTACK=n
+
+> One of the questions that I have is if we most likely are to be in
+> !CONFIG_CPUMASK_OFFSTACK, then should be migrate to cpumask_t for percpu
+> variables. 
+
+I don't think so, cpumask_t is semi-deprecated AIUI.
+  
+> The reason being we end up using NR_CPU cpumask for each percpu cpumask
+> variable instead of using NR_CPU cpumask_t pointer.
+
+Our current defconfigs have NR_CPUS=2048, which is probably just small
+enough to continue using OFFSTACK=n.
+
+But we allow configuring NR_CPUS up to 8192, which surely would need
+OFFSTACK=y in order to work.
+
+So I think we need to stick with cpumask_var_t, but we should test with
+OFFSTACK=y, and should probably be a bit more careful with checking the
+allocations succeed.
+
+And then we should select OFFSTACK=y for NR_CPUS above some threshold.
+
+cheers
