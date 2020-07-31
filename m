@@ -5,72 +5,72 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 277A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB28C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F28242245C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A5E21744
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:49:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DpaVc2FJ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jYHgiVLG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387443AbgGaQtp (ORCPT
+        id S2387571AbgGaQtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 12:49:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43976 "EHLO
+        Fri, 31 Jul 2020 12:49:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733149AbgGaQtH (ORCPT
+        with ESMTP id S1733142AbgGaQtH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 31 Jul 2020 12:49:07 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F448C0617A5
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 09:49:04 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id l17so32281914iok.7
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 09:49:04 -0700 (PDT)
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D516C0617A2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 09:49:03 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id l17so32281862iok.7
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 09:49:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BwAReB8lsy+rPQCZhZhulAU/mezw6aB9DphpfGrKsXA=;
-        b=DpaVc2FJN7Swl31cGGDdLNd4QDLtExtHQj252cOFmNyIqooLOWYJmFglNMOr6wFov0
-         hdwQ++5zCA9AFeX1zD2mTLGt40tD3a6xg06PXhvTAsxQU5Ki6UiIi30bKx/5NIkDvoGd
-         nBj/Fn/ui2Uqj1BdkQbufjE+j2eWvjszcgkE0=
+        bh=V3XXXr/NVFbGCC1s552cmz/bn1PN5K8vbmeSX/RmmQA=;
+        b=jYHgiVLGCivn2lpFjTjutITT5r7/YUbo907n+JTdEXyCb1Oi7qDGABbh+LqutCFSbe
+         5fxC//D/hHepp1hReEI1Nf89X0dMpGjgTSevMXhE+iChXZubvfni9nOCfIOOVfMQd27T
+         6h0FxaFlLhUyZDs/P0eAX0WuCl4P5sTHz5EqQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=BwAReB8lsy+rPQCZhZhulAU/mezw6aB9DphpfGrKsXA=;
-        b=BHU3niZfG+wTs6JYEOwgSizrJhbpoUChHZs4eJMXwWvW+Sv5FEu7IDmNogaivjB2rd
-         2hUXqz2+PFwX70kgz2uTATem9cu3zIS673C9HLvynGTfERTEOlm2g8EwdbPAuCIhWy4n
-         1oFT1GvKuKJvy3sDV8u483PM0Vvw5trq3Q7WDCFarpe0tGy8FLlui3WPP0r6hTZoXvBf
-         g1Ky0SofC6pTPy4maFCwPkY/uYK6r66CMhCCkG3BMUCpYl0tT0qgp6poLNjDcq3y+noF
-         Bq8tzh2w8tyzc+ej4XdJSf8VNIA6QwFVCbDBKciRDacXv9UCg/QN0cr+vubZ9x+weI61
-         5P3g==
-X-Gm-Message-State: AOAM532lrGovHcPS89R/I++lrP1M7fiKkyO/NOgjJMcY1Td8UF+qzCW8
-        etFRbHpWcO3kGaTMa9VZRkORRg==
-X-Google-Smtp-Source: ABdhPJwDqDNbJYF/O0QOkukZA9dNH0oHiP8mGGylbwTNtnTYzUmKbKgFMs8zTehITqBwiQHyYFCEzw==
-X-Received: by 2002:a5e:c607:: with SMTP id f7mr4364214iok.2.1596214143665;
-        Fri, 31 Jul 2020 09:49:03 -0700 (PDT)
+        bh=V3XXXr/NVFbGCC1s552cmz/bn1PN5K8vbmeSX/RmmQA=;
+        b=cLgwFGWr3ymHGjLjQqZjPd/qf56IBcmBRWNNPMR25K6ocd2u0SP7yyqUO5S0p6a9X2
+         q4u8EiCBtxeZVtCJe51V3KNoBIv+967Gvzif2ml+QYgusmRzuhrFqhCwNoV64iNbKggm
+         +MZkeW0rbxa++5sVXTtVSUXqY4Hy09og+uycLUEldN6wMGactfj1ksxVZtWaIRxa/Z89
+         UoQ5L7ndOGA1RGVUwY9vnzQu8RuWiLEQj8phZfLaTUBzG7BM0/706jQtlLnEEn9tr2dP
+         1Qvwmf681I7Ee7QJzWNnHipbv2DA2lGK/k7c+YPWx9DjofkqSwEI+Z9TzFjm+nnFb4PU
+         4rkw==
+X-Gm-Message-State: AOAM532VHy2GbkaohHoYfYp56U7W1WlBONRwIVFlsrRsb1AOKZm3+6CK
+        CjSfFRNQbIqGnDdue81Q4rhAtg==
+X-Google-Smtp-Source: ABdhPJwMh/TdbR8qXBpIumlJzrxe6FttNGIgLCMSpknQ3wVnexGeXAtyJY4eUK8Q3sCnzSttkAEDww==
+X-Received: by 2002:a02:2445:: with SMTP id q5mr6101205jae.104.1596214142669;
+        Fri, 31 Jul 2020 09:49:02 -0700 (PDT)
 Received: from derch.Home (97-122-92-59.hlrn.qwest.net. [97.122.92.59])
-        by smtp.gmail.com with ESMTPSA id e84sm5122083ill.60.2020.07.31.09.49.02
+        by smtp.gmail.com with ESMTPSA id e84sm5122083ill.60.2020.07.31.09.49.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 09:49:03 -0700 (PDT)
+        Fri, 31 Jul 2020 09:49:02 -0700 (PDT)
 From:   Daniel Campello <campello@chromium.org>
 To:     LKML <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 Cc:     Jonathan Cameron <jic23@kernel.org>,
         Daniel Campello <campello@chromium.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Stephen Boyd <swboyd@chromium.org>,
         Douglas Anderson <dianders@chromium.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org
-Subject: [PATCH v3 06/15] iio: sx9310: Fixes various memory handling
-Date:   Fri, 31 Jul 2020 10:48:43 -0600
-Message-Id: <20200731104555.v3.6.I8accffd77d616cb55b29bc3021cb0f5e1da3b68a@changeid>
+        linux-iio@vger.kernel.org
+Subject: [PATCH v3 05/15] iio: sx9310: Change from .probe to .probe_new
+Date:   Fri, 31 Jul 2020 10:48:42 -0600
+Message-Id: <20200731104555.v3.5.Ieb5fdf7381764835dad0b3099c7b19ba754e4c47@changeid>
 X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
 In-Reply-To: <20200731164853.3020946-1-campello@chromium.org>
 References: <20200731164853.3020946-1-campello@chromium.org>
@@ -81,62 +81,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Makes use __aligned(8) to ensure that the timestamp is correctly aligned
-when we call io_push_to_buffers_with_timestamp().
-Also makes use of sizeof() for regmap_bulk_read instead of static value.
+Uses .probe_new in place of .probe. Also uses device_get_match_data()
+for whoami matching.
 
 Signed-off-by: Daniel Campello <campello@chromium.org>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 ---
 
-Changes in v3:
- - Changed buffer to struct type to align timestamp memory properly.
-
+Changes in v3: None
 Changes in v2:
- - Fixed commit message from "iio: sx9310: Align memory"
+ - Added '\n' to dev_err()
 
- drivers/iio/proximity/sx9310.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/iio/proximity/sx9310.c | 39 ++++++++++++----------------------
+ 1 file changed, 14 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-index 2ed062d01634bc..c46584b4817b4a 100644
+index 66f7050d63ae97..2ed062d01634bc 100644
 --- a/drivers/iio/proximity/sx9310.c
 +++ b/drivers/iio/proximity/sx9310.c
-@@ -132,8 +132,11 @@ struct sx9310_data {
- 	 */
- 	bool prox_stat[SX9310_NUM_CHANNELS];
- 	bool trigger_enabled;
--	__be16 buffer[SX9310_NUM_CHANNELS +
--		      4]; /* 64-bit data + 64-bit timestamp */
-+	/* Ensure correct alignment of timestamp when present. */
-+	struct {
-+		__be16 channels[SX9310_NUM_CHANNELS];
-+		s64 ts __aligned(8);
-+	} buffer;
- 	/* Remember enabled channels and sample rate during suspend. */
- 	unsigned int suspend_ctrl0;
+@@ -139,7 +139,7 @@ struct sx9310_data {
  	struct completion completion;
-@@ -346,7 +349,7 @@ static int sx9310_read_prox_data(struct sx9310_data *data,
+ 	unsigned int chan_read, chan_event;
+ 	int channel_users[SX9310_NUM_CHANNELS];
+-	int whoami;
++	unsigned int whoami;
+ };
+ 
+ static const struct iio_event_spec sx9310_events[] = {
+@@ -861,24 +861,15 @@ static int sx9310_init_device(struct iio_dev *indio_dev)
+ 
+ static int sx9310_set_indio_dev_name(struct device *dev,
+ 				     struct iio_dev *indio_dev,
+-				     const struct i2c_device_id *id, int whoami)
++				     unsigned int whoami)
+ {
+-	const struct acpi_device_id *acpi_id;
+-
+-	/* id will be NULL when enumerated via ACPI */
+-	if (id) {
+-		if (id->driver_data != whoami)
+-			dev_err(dev, "WHOAMI does not match i2c_device_id: %s",
+-				id->name);
+-	} else if (ACPI_HANDLE(dev)) {
+-		acpi_id = acpi_match_device(dev->driver->acpi_match_table, dev);
+-		if (!acpi_id)
+-			return -ENODEV;
+-		if (acpi_id->driver_data != whoami)
+-			dev_err(dev, "WHOAMI does not match acpi_device_id: %s",
+-				acpi_id->id);
+-	} else
++	unsigned int long ddata;
++
++	ddata = (uintptr_t)device_get_match_data(dev);
++	if (ddata != whoami) {
++		dev_err(dev, "WHOAMI does not match device data: %u\n", whoami);
+ 		return -ENODEV;
++	}
+ 
+ 	switch (whoami) {
+ 	case SX9310_WHOAMI_VALUE:
+@@ -888,15 +879,14 @@ static int sx9310_set_indio_dev_name(struct device *dev,
+ 		indio_dev->name = "sx9311";
+ 		break;
+ 	default:
+-		dev_err(dev, "unexpected WHOAMI response: %u", whoami);
++		dev_err(dev, "unexpected WHOAMI response: %u\n", whoami);
+ 		return -ENODEV;
+ 	}
+ 
+ 	return 0;
+ }
+ 
+-static int sx9310_probe(struct i2c_client *client,
+-			const struct i2c_device_id *id)
++static int sx9310_probe(struct i2c_client *client)
+ {
+ 	int ret;
+ 	struct iio_dev *indio_dev;
+@@ -922,8 +912,7 @@ static int sx9310_probe(struct i2c_client *client,
+ 		return ret;
+ 	}
+ 
+-	ret = sx9310_set_indio_dev_name(&client->dev, indio_dev, id,
+-					data->whoami);
++	ret = sx9310_set_indio_dev_name(&client->dev, indio_dev, data->whoami);
  	if (ret < 0)
  		return ret;
  
--	return regmap_bulk_read(data->regmap, chan->address, val, 2);
-+	return regmap_bulk_read(data->regmap, chan->address, val, sizeof(*val));
- }
+@@ -1036,8 +1025,8 @@ static const struct acpi_device_id sx9310_acpi_match[] = {
+ MODULE_DEVICE_TABLE(acpi, sx9310_acpi_match);
  
- /*
-@@ -697,10 +700,10 @@ static irqreturn_t sx9310_trigger_handler(int irq, void *private)
- 		if (ret < 0)
- 			goto out;
- 
--		data->buffer[i++] = val;
-+		data->buffer.channels[i++] = val;
- 	}
- 
--	iio_push_to_buffers_with_timestamp(indio_dev, data->buffer,
-+	iio_push_to_buffers_with_timestamp(indio_dev, data->buffer.channels,
- 					   pf->timestamp);
- 
- out:
+ static const struct of_device_id sx9310_of_match[] = {
+-	{ .compatible = "semtech,sx9310" },
+-	{ .compatible = "semtech,sx9311" },
++	{ .compatible = "semtech,sx9310", (void *)SX9310_WHOAMI_VALUE },
++	{ .compatible = "semtech,sx9311", (void *)SX9311_WHOAMI_VALUE },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, sx9310_of_match);
+@@ -1056,7 +1045,7 @@ static struct i2c_driver sx9310_driver = {
+ 		.of_match_table = sx9310_of_match,
+ 		.pm = &sx9310_pm_ops,
+ 	},
+-	.probe		= sx9310_probe,
++	.probe_new	= sx9310_probe,
+ 	.id_table	= sx9310_id,
+ };
+ module_i2c_driver(sx9310_driver);
 -- 
 2.28.0.163.g6104cc2f0b6-goog
 
