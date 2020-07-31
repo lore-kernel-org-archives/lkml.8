@@ -2,129 +2,113 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAFAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C86FCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52ADD2083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A53E421744
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:52:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W1l4rgtz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W1WM7Swv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387595AbgGaPuE (ORCPT
+        id S2387598AbgGaPwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 11:50:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34792 "EHLO
+        Fri, 31 Jul 2020 11:52:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbgGaPuD (ORCPT
+        with ESMTP id S1726841AbgGaPwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 11:50:03 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92DE7C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 08:50:03 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id t6so16243135pgq.1
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 08:50:03 -0700 (PDT)
+        Fri, 31 Jul 2020 11:52:18 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A5C9C061574;
+        Fri, 31 Jul 2020 08:52:18 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id t10so12317542plz.10;
+        Fri, 31 Jul 2020 08:52:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5GteyqVzcNAX2itNRoyDkmeye14Tqf18SySo0jud0Dk=;
-        b=W1l4rgtz7Y4d7hXcWcRvZNxvmGqMGcC/F6rYohWSrBwmVrcoGD6h/xmyfE/mBs/7Ag
-         IhIYY4aROpVRWYpSwd3OJB+m2/so9P9Gg8lHJU6+y9YovsGdRLOZrxHrqutgNXBgJ1kG
-         j8+bAhyBWyP9SRlHh6RrrdNlUr3rCtYpJXc6KZpxRKcV/4Jjxy2/o8xP+ChMyzpE5c2u
-         BGsK99gcYBeIzrWfXXq/fNlzOBE8ZgTSE9Mi/Yx3d36D12K8uS4SmNyh7SNZ9Krf+2v2
-         71Oy5cCI2/xTabjyiqg1dhHm7NseyO9juof3nb4cVxN5nUh3gsouB1P6bidRa7nEdkAy
-         eAnA==
+        bh=jppr8gO+oYSsBQjmvASbgGn6v8zjouS1E/rNTCOyFfU=;
+        b=W1WM7SwvjDrTYShvzz81Bf1zNEhW/XcxE3lW52TQ3XB+SjzY1TXZj86UsmeDGcoHj+
+         JS5RZSLo1ZK85ko+5Wes3WjkCMw421mlswP8Y7n1axo/HTBZph4fukJm0xeIEa6s0IsN
+         AedyEJBnHmB1k6Agjp/8PKuRZGHxGAOtrGLHV0MGp6lWvcLrrmECdnX/R/vt7gliZLFd
+         RpFiC0k/Jj9wn4mWXtpD9XaGOgwluplijTLv8RWmn1ACf2jmlb+hPOj4p8WRNyQEIPQE
+         XGm1dmFqZ1IfVG6hVjCVWtkevDZm+FXSBJq58k2cyLOFwD+IDMfxProXY+z3Q6w7UP/T
+         RzVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5GteyqVzcNAX2itNRoyDkmeye14Tqf18SySo0jud0Dk=;
-        b=hDeCHIv6g1+b1A/YZ589WqNHeyUDFjd64a6zq4GC9UocSUOdQJ3MSHw99khTyJ/i9T
-         w0/FC6aC1LAJhSAI7EgrW0Q729gtPjm8f/iHhu+EEmdrohGnhQrGPiKxBgYxWIJohsKU
-         jN1EnwGqa+uTE9gSrdb4mQtTuqGOBaEN3JIqQMk6yEgIqXqnxrDwylcRCekC640PKej+
-         bEeM+XPmdCrvxd00qpJjB+u1L8dix7ZKRs0rU5jwreIKCROyyzoM1/gvVlwkJlKYBGb7
-         5+PIJg4Dx8M8noOhJj+klN2Yjuvly69EdtxXOBsaO9atFS7Sb2sjJQGGwiEYiZIwyJf3
-         sxdQ==
-X-Gm-Message-State: AOAM5320wwJ8hhsHAGl+NAI9pzI0LnV7ok/bJJAz1TDkI8RQZddPw118
-        3CYwX29bHbXsmF2yEqF0Z9oUsRhoPP7sZjagqFw=
-X-Google-Smtp-Source: ABdhPJzZeiJRZyHJHMN66n+tRCcBMq0YClT1r2co6/VsMwaYYp3qDeFsAXrw2WUTf3LvlwiKvzydYM3A7ym8f1X2hYw=
-X-Received: by 2002:a62:7b4e:: with SMTP id w75mr4141148pfc.130.1596210602821;
- Fri, 31 Jul 2020 08:50:02 -0700 (PDT)
+        bh=jppr8gO+oYSsBQjmvASbgGn6v8zjouS1E/rNTCOyFfU=;
+        b=LlvxCiLaLGHI52Md1gV6JVt1u/CVGCcL/2DaMQ0dVz9+fdvGyfUjECTTytWJlmT/F9
+         cIWhIc7lF7GfI3JnVP/6yr+Oo+SZlLPYFJZupeKKRqbtD+Chy1BJu3Ni2MtdJYjNaGwO
+         9Z5tjs0sF8rWNnUCYRzkJQpspxK4UEKyDeYv/h7jLooKL9ef5Iqvgyh+wF34MkZm0K4J
+         53UV605nMpYIxLEIiQXJlkEjm56IKPh7HCoREuK2FK4fMJlJvFcEQIuxqGWVVNds7YzS
+         Qsjdy/CcF3z1fNU3Hx9mPP3RPtfNO5nA4BCheu2+QjAKu6u3YGrbE7Ni2IjM9ry1Tu6E
+         BAPA==
+X-Gm-Message-State: AOAM530stjdU+WmO52u4eQSvhnqX+xNF2ELyLV0CWSPbA+xC6pJuR1p8
+        /0kFuZAuzZwrkvyK0T0ZdmS36eUBC0wG7BDam1U=
+X-Google-Smtp-Source: ABdhPJyuHLtjMmPKrplNVTpqkQVVio6fhm7SPCLrgUtF3PiOALVRV7K1x/iTGB5+BtooFM3RqUcK7ALncdj3FtxiZVc=
+X-Received: by 2002:a17:90a:fa06:: with SMTP id cm6mr4849916pjb.129.1596210737952;
+ Fri, 31 Jul 2020 08:52:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200731123145.22357-1-andriy.shevchenko@linux.intel.com>
- <20200731123145.22357-3-andriy.shevchenko@linux.intel.com> <20200731113450.4f31c3e6@oasis.local.home>
-In-Reply-To: <20200731113450.4f31c3e6@oasis.local.home>
+References: <20200728151258.1222876-1-campello@chromium.org>
+ <20200728230520.2011240-1-campello@chromium.org> <20200728170317.v2.7.Iecaa50e469918a385b3e5dab375e442540ea2ad4@changeid>
+ <159598461271.1360974.15436404116157938506@swboyd.mtv.corp.google.com>
+ <CAHp75Vc_3VYAkVcTCAXzqxqFnpQ4Qi=iPSFW_sUjYGO=o6YMtA@mail.gmail.com> <CAHcu+VaKGNxAY_OQ4oS5NtkoDLGkv2x_VrQhZ7OvEFAnNbYZeg@mail.gmail.com>
+In-Reply-To: <CAHcu+VaKGNxAY_OQ4oS5NtkoDLGkv2x_VrQhZ7OvEFAnNbYZeg@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 31 Jul 2020 18:49:46 +0300
-Message-ID: <CAHp75VdSz1ny1pkTMKWMB-Ok_2csoqtaC6zZkCj2aoHew-+NgQ@mail.gmail.com>
-Subject: Re: [PATCH v1 3/3] lib/vsprintf: Force type of flags for gfp_t
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Date:   Fri, 31 Jul 2020 18:52:00 +0300
+Message-ID: <CAHp75VeoS-K7v=iJLuFqXQJpqUjmdopJraUGOiOURekCh0=QTA@mail.gmail.com>
+Subject: Re: [PATCH v2 07/14] iio: sx9310: Use long instead of int for channel bitmaps
+To:     Daniel Campello <campello@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 6:38 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Fri, 31 Jul 2020 15:31:45 +0300
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
->
-> > Sparse is not happy about restricted type being assigned:
-> >   lib/vsprintf.c:1940:23: warning: incorrect type in assignment (different base types)
-> >   lib/vsprintf.c:1940:23:    expected unsigned long [assigned] flags
-> >   lib/vsprintf.c:1940:23:    got restricted gfp_t [usertype]
+On Fri, Jul 31, 2020 at 6:45 PM Daniel Campello <campello@chromium.org> wrote:
+> On Wed, Jul 29, 2020 at 1:00 AM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
 > >
-> > Force type of flags to make sparse happy.
+> > On Wed, Jul 29, 2020 at 4:03 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > > Quoting Daniel Campello (2020-07-28 16:05:13)
+> > > > Uses for_each_set_bit() macro to loop over channel bitmaps.
 > >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  lib/vsprintf.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > ...
 > >
-> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> > index 90d818ef03c5..118e2727d058 100644
-> > --- a/lib/vsprintf.c
-> > +++ b/lib/vsprintf.c
-> > @@ -1937,7 +1937,7 @@ char *flags_string(char *buf, char *end, void *flags_ptr,
-> >               names = vmaflag_names;
-> >               break;
-> >       case 'g':
-> > -             flags = *(gfp_t *)flags_ptr;
-> > +             flags = (__force typeof(flags))(*(gfp_t *)flags_ptr);
->
-> Do we really need to say "typeof(flags)" ? What about simply using
-> flags' type?
+> > > > +       unsigned long chan_prox_stat;
+> > >
+> > > This can be DECLARE_BITMAP(chan_prox_stat, SX9310_NUM_CHANNELS)
+> >
+> > > > +       unsigned long chan_read;
+> > > > +       unsigned long chan_event;
+> > >
+> > > Same for these?
+> All of these are eventually used by regmap_update_bits() which expects
+> unsigned int. I believe the extra complexity is not worth it given the
+> number of channels.
 
-Whatever you prefer. I actually came with the latter and switched to the former.
-So, I'll switch back for v2.
+Okay then. Good to have some build check for the limitation, so, what
+about adding
 
->
->                 flags = (__force unsigned long)(*(gfp_t *)flags_ptr);
->
-> ?
->
-> I mean, it's not like flags is a global. It's defined a few lines above.
->
-> -- Steve
->
->
-> >               names = gfpflag_names;
-> >               break;
-> >       default:
->
-
+static_assert(..._NUM_CHANNELS < BITS_PER_LONG);
+after the _NUM_CHANNELS definition?
 
 -- 
 With Best Regards,
