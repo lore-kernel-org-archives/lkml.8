@@ -2,180 +2,108 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA5BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28C6D20791
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65C4320791
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:33:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aIFbPxKz"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PpKrDqws"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgGaXdW (ORCPT
+        id S1727855AbgGaXdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 19:33:22 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:26426 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726807AbgGaXdU (ORCPT
+        Fri, 31 Jul 2020 19:33:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727812AbgGaXdh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 19:33:20 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596238399; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=vF/ZfSy0GW8C+ioPXlIi2t6ZaQN9VfKaJ+Oof9fc1KQ=; b=aIFbPxKziWtkbFxytgYbUaEWPOGFc2jgXVwp3DPh2qN/dh8cI8mVsRk/eou+/SpG9tCq3w59
- bmWTJIn+8mTqdoTsQPA9HGtQL6EKNXzk4h27iIP5PdPfNH5DumWf9mSEENkAn5dQfZWb5pzW
- gnZPfS3jneH8Pkt9QoEtgPOLD5M=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-east-1.postgun.com with SMTP id
- 5f24a9d990893260dd39d2f0 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 31 Jul 2020 23:31:37
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7DBDAC43395; Fri, 31 Jul 2020 23:31:36 +0000 (UTC)
-Received: from [10.110.121.73] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C569EC433C9;
-        Fri, 31 Jul 2020 23:31:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C569EC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH v6 1/4] usb: typec: Add QCOM PMIC typec detection driver
-To:     Stephen Boyd <sboyd@kernel.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, gregkh@linuxfoundation.org,
-        heikki.krogerus@linux.intel.com, robh+dt@kernel.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        jackp@codeaurora.org
-References: <20200729071340.7673-1-wcheng@codeaurora.org>
- <20200729071340.7673-2-wcheng@codeaurora.org>
- <159601160976.1360974.10172804658083744292@swboyd.mtv.corp.google.com>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <e11fc325-7f82-b13f-3e8a-f444ddc50257@codeaurora.org>
-Date:   Fri, 31 Jul 2020 16:31:33 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 31 Jul 2020 19:33:37 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6C6AC06174A
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:33:37 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id t6so4701357pjr.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:33:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=d+nAbn95QFMNyC0khRAqZBOpjDeBLSM9xETqQyODpGI=;
+        b=PpKrDqwsyi4ds6f6Er7lLKpLa7EmX38iRMCZ4aeOpqqX96i0ozzxrSzMt9kRg9Xdeh
+         pixKEhi1q4w843Mq0Hd2BaJBZavap5ziwh6T1uXf4RwYYu3d0FIHBIm0W5BMQD1I1J70
+         WU8AU3P0Tfc9+Dto5f8ySIfYQOwT7iMpBIhhc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=d+nAbn95QFMNyC0khRAqZBOpjDeBLSM9xETqQyODpGI=;
+        b=fBOYtSaIZTijqdVdcxVaps7VLK7F1Da47FCOkNXJgTYKA0IevLSkCH1d5oCcChABdz
+         f3xSDoJfK7UUuo4tmbC18f5aIR6PXcHqUSQtBImV5hb+sQpTVy3tRzv6YqOtIniANVhq
+         yv9ovibRtOGf+WLB6F/rwlZpWLKEDGzSmCWzpIzyIk6U0kxK7vSbvdm3ciIkOFdMeawf
+         pIHQpeygDH71VCCq/xDXITi/ggBV86slAMlQp5xIM60ctaRiYVLqNLkWFAQ7+cTmHfzA
+         N7mt+yKVo5UQrdWJvJWFdEuYt/x5UtgvN6T2/2T1CRbt7iygXp5xri2wRZEkdO6teLBh
+         /CuA==
+X-Gm-Message-State: AOAM532hZScInFMKHGZh6to9fGwV8j77hvtVyitJbx11b8rSAPUlB9JF
+        TVJieGfDllczTODpw2OWQ09ymw==
+X-Google-Smtp-Source: ABdhPJwKfLJMgjnDicr37wQLS4YBsNmWRltJWSDIZvKgXW0gzFEALnjka+WnSww6WfmyPbIiUjmIyw==
+X-Received: by 2002:a17:902:7005:: with SMTP id y5mr5190726plk.342.1596238417500;
+        Fri, 31 Jul 2020 16:33:37 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m9sm10229027pjs.18.2020.07.31.16.33.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 16:33:36 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 16:33:35 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/21] x86/kaslr: Cleanup and small bugfixes
+Message-ID: <202007311632.54A7554192@keescook>
+References: <20200727230801.3468620-1-nivedita@alum.mit.edu>
+ <20200728225722.67457-1-nivedita@alum.mit.edu>
+ <20200730180224.GA1203420@rani.riverdale.lan>
+ <20200731092146.GB2956@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <159601160976.1360974.10172804658083744292@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200731092146.GB2956@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/29/2020 1:33 AM, Stephen Boyd wrote:
-> Quoting Wesley Cheng (2020-07-29 00:13:37)
->> diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
->> index 559dd06117e7..3e375f82849d 100644
->> --- a/drivers/usb/typec/Kconfig
->> +++ b/drivers/usb/typec/Kconfig
->> @@ -73,6 +73,18 @@ config TYPEC_TPS6598X
->>           If you choose to build this driver as a dynamically linked module, the
->>           module will be called tps6598x.ko.
->>  
->> +config TYPEC_QCOM_PMIC
->> +       tristate "Qualcomm PMIC USB Type-C driver"
->> +       depends on ARCH_QCOM
+On Fri, Jul 31, 2020 at 11:21:46AM +0200, Ingo Molnar wrote:
 > 
-> Can you add || COMPILE_TEST here?
+> * Arvind Sankar <nivedita@alum.mit.edu> wrote:
 > 
+> > On Tue, Jul 28, 2020 at 06:57:01PM -0400, Arvind Sankar wrote:
+> > > v2->v3:
+> > > - Fix the first patch: command line size should be strlen + 1 to account
+> > >   for terminating NUL. Avoid calling add_identity_map if cmdline was
+> > >   NULL, though it should do nothing in that case anyway.
+> > 
+> > Hi Ingo, I noticed that WIP.x86/kaslr and x86/kaslr both have the v2
+> > version of the first patch. That has a bug in the cmd_line_size
+> > calculation (missing the +1).
+> 
+> Indeed, well spotted. I rebased the affected 4 patches in x86/kaslr 
+> and used the opportunity to add Kees's Reviewed-by to the first 4 
+> patches as well.
+> 
+> I've zapped tip:x86/kaslr for now and put the whole series into 
+> tip:WIP.x86/kaslr, will move it into tip:x86/kaslr for a v5.9 merge 
+> once Kees is happy with the latest version.
+> 
+> Kees, AFAICS your type truncation and patch split-up review 
+> suggestions were resolved in v3?
 
-Sure, will do.
-
->> +#include <linux/err.h>
->> +#include <linux/regmap.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/slab.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/of_irq.h>
-> 
-> Is this include used?
-> 
->> +#include <linux/platform_device.h>
->> +#include <linux/of_device.h>
-> 
-> Is this include used?
-> 
-
-Reviewed which includes I used, and removed the ones that were not needed.
-
->> +static void qcom_pmic_typec_enable_vbus_regulator(struct qcom_pmic_typec
->> +                                                       *qcom_usb, bool enable)
->> +{
->> +       int ret = 0;
-> 
-> Please don't assign and then reassign before testing this variable.
-> 
-
-I will just remove the assignment here.
-
->> +       if (stat & CC_ATTACHED) {
->> +               orientation = ((stat & CC_ORIENTATION) >> 1) ?
-> 
-> Do we really need to shift >> by 1? Seems useless for a test.
-> 
-
-Agreed, we can remove the shift.
-
->> +       ret = of_property_read_u32(dev->of_node, "reg", &reg);
->> +       if (ret < 0) {
->> +               dev_err(dev, "missing base address");
-> 
-> Please add newlines at the end of printk messages.
-> 
-
-Done.
-
->> +       irq = platform_get_irq(pdev, 0);
->> +       if (irq < 0) {
->> +               dev_err(dev, "Failed to get CC irq\n");
-> 
-> platform_get_irq() already prints an error message. Please remove this.
-> 
-
-Got it.
-
->> +static const struct of_device_id qcom_pmic_typec_table[] = {
->> +       { .compatible = "qcom,pm8150b-usb-typec" },
->> +       { },
-> 
-> Nitpick: Drop the comma here so nothing can come after without causing a
-> compile error.
-> 
-
-Sure.
-
->> +static struct platform_driver qcom_pmic_typec = {
->> +       .driver = {
->> +               .name = "qcom,pmic-typec",
->> +               .of_match_table = qcom_pmic_typec_table,
->> +       },
->> +       .probe = qcom_pmic_typec_probe,
->> +       .remove = qcom_pmic_typec_remove,
->> +};
->> +
-> 
-> Another nitpick: Drop the newline and make module_platform_driver()
-> follow directly after the driver.
-> 
-
-Ok, will do.
-
-Thanks for the review/feedback, Stephen.
+I need to double-check, but I think so. I'm hoping to get to that on
+Monday. My orphan section series work took MUCH longer than I thought it
+was going to. :P
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Kees Cook
