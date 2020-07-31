@@ -2,78 +2,78 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC7AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58FA02074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E3A12245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:15:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596215718;
+	bh=cWx1hbEGaUUwS1JJFnOe3X+vRj6dABujYkU2GC/oakE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Lf1bMMQq72RSxOCRND2omn6Wf0IVitspGRlYGbbQGUuY2BJDpxFVJPa2rXc7u3uhW
+	 ZEfjl0ef2HDJiQ7Hx+EvvP0rdLxXqiDi4aK3GyFqeDWxbzBjROgCai0n3fPMcaEkVF
+	 neZJy9kXuYWpFlhpFjswGYn5HTVOR2nCDdXlXAzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733007AbgGaRNy (ORCPT
+        id S1733226AbgGaRPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 13:13:54 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39314 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730924AbgGaRNx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 13:13:53 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1k1YbH-0006cL-66; Fri, 31 Jul 2020 17:13:43 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Steve French <sfrench@samba.org>, Aurelien Aptel <aaptel@suse.com>,
-        Paulo Alcantara <pc@cjr.nz>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] cifs: fix double free error on share and prefix
-Date:   Fri, 31 Jul 2020 18:13:42 +0100
-Message-Id: <20200731171342.36636-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0
+        Fri, 31 Jul 2020 13:15:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33966 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732710AbgGaRPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 13:15:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B8102074B;
+        Fri, 31 Jul 2020 17:15:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596215716;
+        bh=cWx1hbEGaUUwS1JJFnOe3X+vRj6dABujYkU2GC/oakE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=z8Batu5lPaUADFtk2YKU0dGwnmNAwaJlBCPAHopU4fD4FFJvbU2/tsIgH2XxtdR3X
+         GSV9g73r7DSHzcHssgFtV+ZVm9wvUx9dmnDFO1UbwCP2zVaZ/VslUMZi6q1jaWfuaZ
+         z1zBwgDg8FHfI/LzqcI2WeqaVg6l/F+qoJWF+sUc=
+Date:   Fri, 31 Jul 2020 19:15:03 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.7 00/20] 5.7.12-rc1 review
+Message-ID: <20200731171503.GA2012979@kroah.com>
+References: <20200730074420.533211699@linuxfoundation.org>
+ <20200730164823.GF57647@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730164823.GF57647@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Thu, Jul 30, 2020 at 09:48:23AM -0700, Guenter Roeck wrote:
+> On Thu, Jul 30, 2020 at 10:03:50AM +0200, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.7.12 release.
+> > There are 20 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sat, 01 Aug 2020 07:44:05 +0000.
+> > Anything received after that time might be too late.
+> > 
+> 
+> Build results:
+> 	total: 155 pass: 155 fail: 0
+> Qemu test results:
+> 	total: 431 pass: 431 fail: 0
 
-Currently if the call dfs_cache_get_tgt_share fails we cannot
-fully guarantee that share and prefix are set to NULL and the
-next iteration of the loop can end up potentially double freeing
-these pointers. Since the semantics of dfs_cache_get_tgt_share
-are ambiguous for failure cases with the setting of share and
-prefix (currently now and the possibly the future), it seems
-prudent to set the pointers to NULL when the objects are
-free'd to avoid any double frees.
+Thanks for testing all of these and letting me know.
 
-Addresses-Coverity: ("Double free")
-Fixes: 96296c946a2a ("cifs: handle RESP_GET_DFS_REFERRAL.PathConsumed in reconnect")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- fs/cifs/connect.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 3c4dd4e1b9eb..4b2f5f5b3a8e 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -5574,6 +5574,8 @@ int cifs_tree_connect(const unsigned int xid, struct cifs_tcon *tcon, const stru
- 
- 		kfree(share);
- 		kfree(prefix);
-+		share = NULL;
-+		prefix = NULL;
- 
- 		rc = dfs_cache_get_tgt_share(tcon->dfs_path + 1, it, &share, &prefix);
- 		if (rc) {
--- 
-2.27.0
-
+greg k-h
