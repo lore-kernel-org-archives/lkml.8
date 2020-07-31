@@ -2,103 +2,105 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD6CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FADC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 558422074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A522074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:02:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GzhGLmt9"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Nw8HPU51"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732325AbgGaKCs (ORCPT
+        id S1732452AbgGaKCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 06:02:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37960 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732080AbgGaKCr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 06:02:47 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15CE6C061574;
-        Fri, 31 Jul 2020 03:02:47 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id k1so6913559pjt.5;
-        Fri, 31 Jul 2020 03:02:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YU2YU11NcpqAnb5BnC0Bw1oS+Y3NACnLXP9l9d7nU8o=;
-        b=GzhGLmt9WCFC+8A67PIckUK/e+i3LY4XZqkhzFjXVGTEo2vHV87lte/KN81O63v/dc
-         NsnUHhYx4eC041lzXmkd1Ok9Wo3iMdVDEAcG8l/qzRLHwuBASmpBkF4b7S4RdeAs2Lk4
-         Ztlg7Ns8qaX1mXakicU0V5QUjrYtsxGevZNSPRi+nj6zgT1Ln4XtgEOLmeOwpQ7qWC4V
-         IogmK6oqwsTZfwtiXFgoOK7TPLNy+ZlzU/ZzLGktlAgJF7TjBENklHq1F1P+NgLqqqLK
-         onOjsCsGbosS1eh1tuvZ+MPRBHFzq1WgfHF88Vs80eG4zcyHXMo7UUzUj6LV3kWf0Xpc
-         rLNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YU2YU11NcpqAnb5BnC0Bw1oS+Y3NACnLXP9l9d7nU8o=;
-        b=oIlsAjms0d4duiNl2M044CZCYHwpLS4r0Tb67gX4Z7y4pci+fRYFPAuzQrlIvGxWES
-         yIK8xCynBeZQ02LfOXDm0ptkGgV8pbwd697VBeovBu2YHZRyjp8vfEamI0WKbavmOI8y
-         xN021SzlpVlySF7CDNJVTi1FEQM/kYlBgiNJonJ7AN5hbvYxBIWpzFou4pja3BgSijsR
-         4Ie8mFxi55tbaVwwCBeFwsD85XbQX67qZIVWaXD2pk2QLnXOkNZYuEIoHGzONnUVqoKH
-         iWD0fQfAahyzEFVOgWNE/hRoPWkaHDrVm0QJjyeIgIL8b3VPWp++xidRlPwmJ+H2BUde
-         E2kQ==
-X-Gm-Message-State: AOAM530VH/CQ810sWC5EdmzNMh88ZJh5Oc14pE7vjDN2LK9wC/YQrmk8
-        W5QfObH8ESe7weaM4PfTtptxf38DjfYxJw==
-X-Google-Smtp-Source: ABdhPJwLQyaxvLsQABdV5E9Y7urq4jyaMU3+KOb6FiTJ4OR/0Daa00b9QChobxuBLLHVvnqs+Tvssg==
-X-Received: by 2002:a63:fc52:: with SMTP id r18mr3090503pgk.334.1596189766470;
-        Fri, 31 Jul 2020 03:02:46 -0700 (PDT)
-Received: from [192.168.86.81] ([49.206.12.123])
-        by smtp.gmail.com with ESMTPSA id u14sm9247222pgf.51.2020.07.31.03.02.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jul 2020 03:02:45 -0700 (PDT)
-Subject: Re: [PATCH] lib: Convert test_uuid.c to KUnit
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
+        Fri, 31 Jul 2020 06:02:55 -0400
+Received: from ozlabs.org ([203.11.71.1]:45941 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732371AbgGaKCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 06:02:55 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BJ2s72nvnz9sRK;
+        Fri, 31 Jul 2020 20:02:51 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596189773;
+        bh=cJ7Fx+1T8KQngnkpW8UTqNH1iSl1SEwAI6erXiCWh2c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Nw8HPU51CUksknfbpdLzbKZNzH1MN9mTw50gnRr/hIEoW06RAbtAyD1ykkCv5bieL
+         9G9EdkoJNaYQxEHdD+YprkX2v/hLyPyGxtnuF1RJM83YyfzoNkkUhOAk+vGklFrnRK
+         +Ft1yEvm+90rPCDwDzhxUEA6YOKl9fGayN32c+MOXcGTrYwPJvBvDbNkDmr/8YS4O+
+         OTFt/RA1SyA+X0pStTI5tuqbs3ssZwJ0lPImyBgAr58/wlOG+SRdHhOOdl709k4fA2
+         ugB6uReezf+xPpyDED+9w4EKY73qA+nneGXV1gIdHh6VqkFQuPIAJJtGOIX1Qm3cjR
+         ujtTrNLT+FY4Q==
+Date:   Fri, 31 Jul 2020 20:02:50 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-References: <20200730121656.45302-1-98.arpi@gmail.com>
- <CAFd5g46wpYxF1=bs3LvXeVg6mPHrT6Ggp=QxScaf87O=yqcpBA@mail.gmail.com>
-From:   Arpitha Raghunandan <98.arpi@gmail.com>
-Message-ID: <3aae0ade-1a61-5d28-94ee-6b0eee7c7be6@gmail.com>
-Date:   Fri, 31 Jul 2020 15:32:40 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: linux-next: build failure after merge of the tip tree
+Message-ID: <20200731200250.10150100@canb.auug.org.au>
+In-Reply-To: <20200731095735.GB15126@gmail.com>
+References: <20200731155304.06c67b0c@canb.auug.org.au>
+        <20200731095735.GB15126@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAFd5g46wpYxF1=bs3LvXeVg6mPHrT6Ggp=QxScaf87O=yqcpBA@mail.gmail.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/gj8XUanrCFZDAmq6x=kGhVz";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/07/20 11:20 am, Brendan Higgins wrote:
-> On Thu, Jul 30, 2020 at 5:18 AM Arpitha Raghunandan <98.arpi@gmail.com> wrote:
->>
->> Converts test lib/test_uuid.c to KUnit
-> 
-> Can you add some more detail to the commit message? Maybe link to
-> KUnit and say something about why this change is beneficial.
-> 
-Sure, I will make this change.
->> Signed-off-by: Arpitha Raghunandan <98.arpi@gmail.com>
-> 
-> Change mostly looks good to me.
-> Thank you for the review.
+--Sig_/gj8XUanrCFZDAmq6x=kGhVz
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On failure, the original test calls another function which prints a detailed error. I removed it when converting to KUnit. Is this required?
+Hi Ingo,
+
+On Fri, 31 Jul 2020 11:57:35 +0200 Ingo Molnar <mingo@kernel.org> wrote:
+>
+> I've merged Linus's latest into tip:locking/core, keeping the simpler=20
+> solution of a6342915881a and reducing the dependency hell.
+>=20
+> Will push it all out hopefully later today (unrelated changes need=20
+> more testing), from that point on there should be no conflict in=20
+> -next.
+>=20
+> My plan would be to send that resolution to Linus, under the=20
+> assumption that a6342915881a is superior to the upstream aa54ea903abb=20
+> solution.
+
+Sounds good to me, thanks.
+
+(though, no rush on my account as I won't do another linux-next until
+Monday)
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/gj8XUanrCFZDAmq6x=kGhVz
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8j7EoACgkQAVBC80lX
+0GzogwgAn/L0BwVfEWiCcOfzsDzk/bvcjPWvKo7EfK2hMb1lqUSaVXgW0DluqS2r
++5/5OrGdGXW/bXoQUSEUsQiIXsmiKDWy5OFS3H0PQ/sqxm0iPLQAvKjTImndJFRo
+mAezo00EfKLgJ/G1RZuaKe2/MayXJasU7HV7+I9nOJ4Y7N7+kxcBKgSFhQiaisHr
+G5XmxYGYtk6HU1uWcUh77Aw8KyFXduZcJA+x1VGGfCXp6ArY2hDkUn4wo3RZdlfM
+nsH8pqIvCsho00tMNJLEO+P+fK4e+DSFiDvBjgxRtKIYOIyGPIUPtcCOZCFCjVe5
+Ebsbn1nPovzNKIB2wBTXT0WlEt+kvQ==
+=tepQ
+-----END PGP SIGNATURE-----
+
+--Sig_/gj8XUanrCFZDAmq6x=kGhVz--
