@@ -2,86 +2,162 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9292C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B5FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90F822245C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:39:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VZDali6v"
+	by mail.kernel.org (Postfix) with ESMTP id 57BF521744
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733171AbgGaMjW (ORCPT
+        id S1733213AbgGaMkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 08:39:22 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55608 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733093AbgGaMjV (ORCPT
+        Fri, 31 Jul 2020 08:40:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33792 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733093AbgGaMkA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 08:39:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596199160;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=uNeA04+1XYPzyOhWw2oc2hqG+CGv2cApApUzSqaPtB8=;
-        b=VZDali6vwAbbQJ1/Np6mAcq9KLbxC4TuJIBqJfGWprQyWZiI5Z2a/xNaR8FtsO5ITsYBwr
-        331qIwtC4GGX6k4F3hT30HPAFfUrcJP/GUuQNamFZi/rdonz7jPxT4IRj6PNci9m4CNJdZ
-        muUE8xfNprEWk6558FS5N1HtaMg3ILU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-463-6PsxlUCyO-qEuopFkCWz6w-1; Fri, 31 Jul 2020 08:39:18 -0400
-X-MC-Unique: 6PsxlUCyO-qEuopFkCWz6w-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 49CE0801A03;
-        Fri, 31 Jul 2020 12:39:17 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.196])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 7059719C58;
-        Fri, 31 Jul 2020 12:39:14 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri, 31 Jul 2020 14:39:16 +0200 (CEST)
-Date:   Fri, 31 Jul 2020 14:39:13 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [patch V3 0/3] posix-cpu-timers: Move expiry into task work
- context
-Message-ID: <20200731123912.GA13775@redhat.com>
-References: <20200730101404.956367860@linutronix.de>
+        Fri, 31 Jul 2020 08:40:00 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84039C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 05:40:00 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <afa@pengutronix.de>)
+        id 1k1UKI-0000kD-5f; Fri, 31 Jul 2020 14:39:54 +0200
+Received: from afa by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <afa@pengutronix.de>)
+        id 1k1UKH-0002d3-3w; Fri, 31 Jul 2020 14:39:53 +0200
+From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Thierry Reding <treding@nvidia.com>
+Cc:     kernel@pengutronix.de, Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] gpio: don't use same lockdep class for all devm_gpiochip_add_data users
+Date:   Fri, 31 Jul 2020 14:38:36 +0200
+Message-Id: <20200731123835.8003-1-a.fatoum@pengutronix.de>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730101404.956367860@linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: afa@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/30, Thomas Gleixner wrote:
->
->  arch/x86/Kconfig               |    1 
->  include/linux/posix-timers.h   |   17 +++
->  include/linux/sched.h          |    4 
->  include/linux/seccomp.h        |    3 
->  kernel/entry/common.c          |    4 
->  kernel/time/Kconfig            |    9 +
->  kernel/time/posix-cpu-timers.c |  216 ++++++++++++++++++++++++++++++++++++-----
->  kernel/time/timer.c            |    1 
->  8 files changed, 227 insertions(+), 28 deletions(-)
+Commit 959bc7b22bd2 ("gpio: Automatically add lockdep keys") documents
+in its commits message its intention to "create a unique class key for
+each driver".
 
-FWIW,
+It does so by having gpiochip_add_data add in-place the definition of
+two static lockdep classes for LOCKDEP use. That way, every caller of
+the macro adds their gpiochip with unique lockdep classes.
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+There are many indirect callers of gpiochip_add_data, however, via
+use of devm_gpiochip_add_data. devm_gpiochip_add_data has external
+linkage and all its users will share the same lockdep classes, which
+probably is not intended.
+
+Fix this by replicating the gpio_chip_add_data statics-in-macro for
+the devm_ version as well.
+
+Fixes: 959bc7b22bd2 ("gpio: Automatically add lockdep keys")
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+---
+This doesn't fix any particular problem I ran into, but the code
+looked buggy, at least to my lockdep-user-not-developer eyes.
+---
+ drivers/gpio/gpiolib-devres.c | 13 ++++++++-----
+ include/linux/gpio/driver.h   | 13 +++++++++++--
+ 2 files changed, 19 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
+index 5c91c4365da1..7dbce4c4ebdf 100644
+--- a/drivers/gpio/gpiolib-devres.c
++++ b/drivers/gpio/gpiolib-devres.c
+@@ -487,10 +487,12 @@ static void devm_gpio_chip_release(struct device *dev, void *res)
+ }
+ 
+ /**
+- * devm_gpiochip_add_data() - Resource managed gpiochip_add_data()
++ * devm_gpiochip_add_data_with_key() - Resource managed gpiochip_add_data_with_key()
+  * @dev: pointer to the device that gpio_chip belongs to.
+  * @gc: the GPIO chip to register
+  * @data: driver-private data associated with this chip
++ * @lock_key: lockdep class for IRQ lock
++ * @request_key: lockdep class for IRQ request
+  *
+  * Context: potentially before irqs will work
+  *
+@@ -501,8 +503,9 @@ static void devm_gpio_chip_release(struct device *dev, void *res)
+  * gc->base is invalid or already associated with a different chip.
+  * Otherwise it returns zero as a success code.
+  */
+-int devm_gpiochip_add_data(struct device *dev, struct gpio_chip *gc,
+-			   void *data)
++int devm_gpiochip_add_data_with_key(struct device *dev, struct gpio_chip *gc, void *data,
++				    struct lock_class_key *lock_key,
++				    struct lock_class_key *request_key)
+ {
+ 	struct gpio_chip **ptr;
+ 	int ret;
+@@ -512,7 +515,7 @@ int devm_gpiochip_add_data(struct device *dev, struct gpio_chip *gc,
+ 	if (!ptr)
+ 		return -ENOMEM;
+ 
+-	ret = gpiochip_add_data(gc, data);
++	ret = gpiochip_add_data_with_key(gc, data, lock_key, request_key);
+ 	if (ret < 0) {
+ 		devres_free(ptr);
+ 		return ret;
+@@ -523,4 +526,4 @@ int devm_gpiochip_add_data(struct device *dev, struct gpio_chip *gc,
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(devm_gpiochip_add_data);
++EXPORT_SYMBOL_GPL(devm_gpiochip_add_data_with_key);
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index c4f272af7af5..e6217d8e2e9f 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -509,8 +509,16 @@ extern int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 		gpiochip_add_data_with_key(gc, data, &lock_key, \
+ 					   &request_key);	  \
+ 	})
++#define devm_gpiochip_add_data(dev, gc, data) ({ \
++		static struct lock_class_key lock_key;	\
++		static struct lock_class_key request_key;	  \
++		devm_gpiochip_add_data_with_key(dev, gc, data, &lock_key, \
++					   &request_key);	  \
++	})
+ #else
+ #define gpiochip_add_data(gc, data) gpiochip_add_data_with_key(gc, data, NULL, NULL)
++#define devm_gpiochip_add_data(dev, gc, data) \
++	devm_gpiochip_add_data_with_key(dev, gc, data, NULL, NULL)
+ #endif /* CONFIG_LOCKDEP */
+ 
+ static inline int gpiochip_add(struct gpio_chip *gc)
+@@ -518,8 +526,9 @@ static inline int gpiochip_add(struct gpio_chip *gc)
+ 	return gpiochip_add_data(gc, NULL);
+ }
+ extern void gpiochip_remove(struct gpio_chip *gc);
+-extern int devm_gpiochip_add_data(struct device *dev, struct gpio_chip *gc,
+-				  void *data);
++extern int devm_gpiochip_add_data_with_key(struct device *dev, struct gpio_chip *gc, void *data,
++					   struct lock_class_key *lock_key,
++					   struct lock_class_key *request_key);
+ 
+ extern struct gpio_chip *gpiochip_find(void *data,
+ 			      int (*match)(struct gpio_chip *gc, void *data));
+-- 
+2.27.0
 
