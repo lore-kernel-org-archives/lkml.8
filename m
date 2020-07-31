@@ -2,90 +2,97 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3D8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0218DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62E3C22B42
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:47:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596228427;
-	bh=U3+YdKd/o0xKGnVnd+lhGv3R2WD20Bn1oF44G9YKiI0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sJpj+8CGovX0JyccQs1gVCFx6gaiQiet28nT8v2WqQrGArlebl0SCd67cyHhIZdKO
-	 QHXDPwhJA4n9To3u2peV2+Y7Sel3N6N8P3wsuwi9otqh/dj0PhUylguhZl9xEQAPYo
-	 EnLmIUS8StRKQjuhGZ0BhcV/ZG57gTZYPZv6OWPA=
+	by mail.kernel.org (Postfix) with ESMTP id D0AFC22B42
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:48:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgGaUrG (ORCPT
+        id S1727991AbgGaUsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 16:47:06 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34544 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbgGaUrG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 16:47:06 -0400
-Received: by mail-io1-f67.google.com with SMTP id q75so24792693iod.1;
-        Fri, 31 Jul 2020 13:47:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RB00g1jQXZ6Bb9+PZy/KFtGEl3EC1jQ5rDd2W8wczN0=;
-        b=uVsHWJYOs/XPmltwCT2EhzVxEdxPJLPvP0R4WxxFOiwRv0hiJIlp05YTyb8/2e+9qe
-         N5XPf8ccUc5FpTy9CE3c9H/U51b8mH6lFBS/ftLnauuz+ZlEYd3dGwohHgTd+bsG42HR
-         uzUtOhjpnWYIsyaXZCO+SjfWLVILPgTT4A/Z68Ojh7f5a8egH9QWnvS0ECZa8zHXWMyv
-         43phgDkNoiLkd60Mb89yKGM5XttemvkZFrp4JuDfp8ssMco1PFiTr6jHC5zMkOvpHcxF
-         gjSUBoi/o83QCAaygfmWWuzVaGEvu+Eg8QxtCZub6KjJZQSzGCtQ7EkX3drqLrvngNnt
-         cJFg==
-X-Gm-Message-State: AOAM530V2qdhETGw2M70ttXIGhRlh13tRW8AKPIAaTfGWFhFF3SHRakF
-        LAYbVo/7Plpb1TpYVxWrWQ==
-X-Google-Smtp-Source: ABdhPJwEcVesRAv6xuF9lKc82DjJG0leBtkckB+qcJCfeV9wmVrA4IGlp/jkc/uo9o5uUf2NwHzVXQ==
-X-Received: by 2002:a5e:c703:: with SMTP id f3mr5245265iop.185.1596228424954;
-        Fri, 31 Jul 2020 13:47:04 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id e84sm5550872ill.60.2020.07.31.13.47.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 13:47:04 -0700 (PDT)
-Received: (nullmailer pid 756710 invoked by uid 1000);
-        Fri, 31 Jul 2020 20:47:00 -0000
-Date:   Fri, 31 Jul 2020 14:47:00 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     Odelu Kukatla <okukatla@codeaurora.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 1/7] dt-bindings: interconnect: single yaml file for
- RPMh interconnect drivers
-Message-ID: <20200731204700.GA756344@bogus>
-References: <20200728023811.5607-1-jonathan@marek.ca>
- <20200728023811.5607-2-jonathan@marek.ca>
+        Fri, 31 Jul 2020 16:48:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37500 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727951AbgGaUsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 16:48:12 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AB1821744;
+        Fri, 31 Jul 2020 20:48:11 +0000 (UTC)
+Date:   Fri, 31 Jul 2020 16:48:09 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Rob Herring <robh@kernel.org>,
+        Grant Likely <grant.likely@arm.com>
+Subject: Re: [PATCH v2 2/3] lib/vsprintf: Replace custom spec to print
+ decimals with generic one
+Message-ID: <20200731164809.352f4b89@oasis.local.home>
+In-Reply-To: <f8f423cd6afeca88cfa635f20a0b2bf85ddda3c5.camel@perches.com>
+References: <20200731180825.30575-1-andriy.shevchenko@linux.intel.com>
+        <20200731180825.30575-2-andriy.shevchenko@linux.intel.com>
+        <f8f423cd6afeca88cfa635f20a0b2bf85ddda3c5.camel@perches.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728023811.5607-2-jonathan@marek.ca>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jul 2020 22:38:00 -0400, Jonathan Marek wrote:
-> These two bindings are almost identical, so combine them into one. This
-> will make it easier to add the sm8150 and sm8250 interconnect bindings.
+On Fri, 31 Jul 2020 11:20:21 -0700
+Joe Perches <joe@perches.com> wrote:
+
+> On Fri, 2020-07-31 at 21:08 +0300, Andy Shevchenko wrote:
+> > When printing phandle via %pOFp the custom spec is used. First of all,
+> > it has a SMALL flag which makes no sense for decimal numbers. Second,
+> > we have already default spec for decimal numbers. Use the latter in
+> > the %pOFp case as well.  
+> []
+> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c  
+> []
+> > @@ -1979,12 +1979,6 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+> >  	char *buf_start = buf;
+> >  	struct property *prop;
+> >  	bool has_mult, pass;
+> > -	static const struct printf_spec num_spec = {
+> > -		.flags = SMALL,
+> > -		.field_width = -1,
+> > -		.precision = -1,
+> > -		.base = 10,
+> > -	};
+> >  
+> >  	struct printf_spec str_spec = spec;
+> >  	str_spec.field_width = -1;
+> > @@ -2024,7 +2018,7 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+> >  			str_spec.precision = precision;
+> >  			break;
+> >  		case 'p':	/* phandle */
+> > -			buf = number(buf, end, (unsigned int)dn->phandle, num_spec);
+> > +			buf = number(buf, end, (unsigned int)dn->phandle, default_dec_spec);  
 > 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->  .../{qcom,sdm845.yaml => qcom,rpmh.yaml}      | 20 ++++-
->  .../bindings/interconnect/qcom,sc7180.yaml    | 85 -------------------
->  2 files changed, 17 insertions(+), 88 deletions(-)
->  rename Documentation/devicetree/bindings/interconnect/{qcom,sdm845.yaml => qcom,rpmh.yaml} (76%)
->  delete mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+> Could changing .precision = -1 to 0 change any output?
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+static const struct printf_spec default_dec_spec = {
+	.base = 10,
+	.precision = -1,
+};
+
+
+It's the field_width that changes from -1 to 0, which shouldn't cause
+any issue.
+
+-- Steve
