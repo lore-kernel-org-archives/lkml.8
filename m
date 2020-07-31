@@ -2,165 +2,112 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5932C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C3D920663
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:05:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iZX7Ayql"
+	by mail.kernel.org (Postfix) with ESMTP id BDC5F20663
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:05:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733116AbgGaMF1 (ORCPT
+        id S1733124AbgGaMFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 08:05:27 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49014 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733108AbgGaMFY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 08:05:24 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06VC2wKA036678;
-        Fri, 31 Jul 2020 12:05:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=wQSjVYBw/TnpmeaVef5NuD3Sb07fZXefhlktIO+86VE=;
- b=iZX7AyqlTaeG0sax9PxX4B4ZcMa2vT0UZ7l/Y+qmA1wZlGMKLak5Bs9GINU76b0lfvYm
- ey6lmKPyGj3kt6rI2z71n217FQ72/y7ayy7rFtbD7yEjPFW5ph4B+/DwvW4S1WNvK0EJ
- 87xTp9jGelyP01Vqr2pJIJww6jcOHz8AU/g/VLB4NRxrrmkHCyMmGvBqXiOJun+04Q6z
- JyQNhQ3VhAIoSRf1E2CbKlUGYo0+/ayHFWK8VIFxcPoqV+v1WMPN8fdwF+K/p3KbpHT1
- k7K+7KOHh8FFAn6Jzq+mfTB8y5hdo9Qzvx/v+HfwZKpsv5Zt8R13N8ZzegxlMOu051qn WA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 32hu1jrqca-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 Jul 2020 12:05:13 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06VC2bSk150843;
-        Fri, 31 Jul 2020 12:03:13 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3020.oracle.com with ESMTP id 32hu63wuxt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 Jul 2020 12:03:13 +0000
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06VC3Cr1152622;
-        Fri, 31 Jul 2020 12:03:12 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 32hu63wuv5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 Jul 2020 12:03:12 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06VC3Anq029674;
-        Fri, 31 Jul 2020 12:03:10 GMT
-Received: from dhcp-10-175-172-80.vpn.oracle.com (/10.175.172.80)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 31 Jul 2020 05:03:10 -0700
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak
- in rds_notify_queue_get()
-From:   =?utf-8?Q?H=C3=A5kon_Bugge?= <haakon.bugge@oracle.com>
-In-Reply-To: <20200731115909.GA1649637@kroah.com>
-Date:   Fri, 31 Jul 2020 14:03:06 +0200
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Peilin Ye <yepeilin.cs@gmail.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        netdev@vger.kernel.org,
-        OFED mailing list <linux-rdma@vger.kernel.org>,
-        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <866B1B5B-0156-4EED-9599-51BEF5661DA9@oracle.com>
-References: <20200730192026.110246-1-yepeilin.cs@gmail.com>
- <20200731045301.GI75549@unreal> <20200731095943.GI5493@kadam>
- <81B40AF5-EBCA-4628-8CF6-687C12134552@oracle.com>
- <20200731115909.GA1649637@kroah.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9698 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1015
- malwarescore=0 spamscore=0 suspectscore=3 bulkscore=0 priorityscore=1501
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007310090
+        Fri, 31 Jul 2020 08:05:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:56274 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733089AbgGaMFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 08:05:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DA7F1FB;
+        Fri, 31 Jul 2020 05:05:17 -0700 (PDT)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 23DF83F71F;
+        Fri, 31 Jul 2020 05:05:16 -0700 (PDT)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        morten.rasmussen@arm.com, Quentin Perret <qperret@google.com>
+Subject: [PATCH v4 10/10] sched/topology: Use prebuilt SD flag degeneration mask
+Date:   Fri, 31 Jul 2020 12:55:02 +0100
+Message-Id: <20200731115502.12954-11-valentin.schneider@arm.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200731115502.12954-1-valentin.schneider@arm.com>
+References: <20200731115502.12954-1-valentin.schneider@arm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Leverage SD_DEGENERATE_GROUPS_MASK in sd_degenerate() and
+sd_parent_degenerate(). The negation of SD_DEGENERATE_GROUPS_MASK is used
+as the mask of flags not requiring groups, which is equivalent to
+SD_WAKE_AFFINE, IOW is the same as what we have now.
 
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+---
+ kernel/sched/topology.c | 33 +++++++--------------------------
+ 1 file changed, 7 insertions(+), 26 deletions(-)
 
-> On 31 Jul 2020, at 13:59, Greg Kroah-Hartman =
-<gregkh@linuxfoundation.org> wrote:
->=20
-> On Fri, Jul 31, 2020 at 01:14:09PM +0200, H=C3=A5kon Bugge wrote:
->>=20
->>=20
->>> On 31 Jul 2020, at 11:59, Dan Carpenter <dan.carpenter@oracle.com> =
-wrote:
->>>=20
->>> On Fri, Jul 31, 2020 at 07:53:01AM +0300, Leon Romanovsky wrote:
->>>> On Thu, Jul 30, 2020 at 03:20:26PM -0400, Peilin Ye wrote:
->>>>> rds_notify_queue_get() is potentially copying uninitialized kernel =
-stack
->>>>> memory to userspace since the compiler may leave a 4-byte hole at =
-the end
->>>>> of `cmsg`.
->>>>>=20
->>>>> In 2016 we tried to fix this issue by doing `=3D { 0 };` on =
-`cmsg`, which
->>>>> unfortunately does not always initialize that 4-byte hole. Fix it =
-by using
->>>>> memset() instead.
->>>>=20
->>>> Of course, this is the difference between "{ 0 }" and "{}" =
-initializations.
->>>>=20
->>>=20
->>> No, there is no difference.  Even struct assignments like:
->>>=20
->>> 	foo =3D *bar;
->>>=20
->>> can leave struct holes uninitialized.  Depending on the compiler the
->>> assignment can be implemented as a memset() or as a series of struct
->>> member assignments.
->>=20
->> What about:
->>=20
->> struct rds_rdma_notify {
->> 	__u64                      user_token;
->> 	__s32                      status;
->> } __attribute__((packed));
->=20
-> Why is this still a discussion at all?
->=20
-> Try it and see, run pahole and see if there are holes in this =
-structure
-> (odds are no), you don't need us to say what is happening here...
-
-An older posting had this:
-
-$ pahole -C "rds_rdma_notify" net/rds/recv.o
-struct rds_rdma_notify {
-	__u64                      user_token;           /*     0     8 =
-*/
-	__s32                      status;               /*     8     4 =
-*/
-
-	/* size: 16, cachelines: 1, members: 2 */
-	/* padding: 4 */
-	/* last cacheline: 16 bytes */
-};
-
-
-Thxs, H=C3=A5kon
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index c6ecc395c76c..0cc5ce5cd034 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -160,22 +160,12 @@ static int sd_degenerate(struct sched_domain *sd)
+ 		return 1;
+ 
+ 	/* Following flags need at least 2 groups */
+-	if (sd->flags & (SD_BALANCE_NEWIDLE |
+-			 SD_BALANCE_WAKE |
+-			 SD_BALANCE_FORK |
+-			 SD_BALANCE_EXEC |
+-			 SD_ASYM_PACKING |
+-			 SD_SHARE_CPUCAPACITY |
+-			 SD_ASYM_CPUCAPACITY |
+-			 SD_SHARE_PKG_RESOURCES |
+-			 SD_OVERLAP |
+-			 SD_PREFER_SIBLING)) {
+-		if (sd->groups != sd->groups->next)
+-			return 0;
+-	}
++	if ((sd->flags & SD_DEGENERATE_GROUPS_MASK) &&
++	    (sd->groups != sd->groups->next))
++		return 0;
+ 
+ 	/* Following flags don't use groups */
+-	if (sd->flags & (SD_WAKE_AFFINE))
++	if (sd->flags & ~SD_DEGENERATE_GROUPS_MASK)
+ 		return 0;
+ 
+ 	return 1;
+@@ -193,18 +183,9 @@ sd_parent_degenerate(struct sched_domain *sd, struct sched_domain *parent)
+ 		return 0;
+ 
+ 	/* Flags needing groups don't count if only 1 group in parent */
+-	if (parent->groups == parent->groups->next) {
+-		pflags &= ~(SD_BALANCE_NEWIDLE |
+-			    SD_BALANCE_WAKE |
+-			    SD_BALANCE_FORK |
+-			    SD_BALANCE_EXEC |
+-			    SD_ASYM_PACKING |
+-			    SD_ASYM_CPUCAPACITY |
+-			    SD_SHARE_CPUCAPACITY |
+-			    SD_SHARE_PKG_RESOURCES |
+-			    SD_OVERLAP |
+-			    SD_PREFER_SIBLING);
+-	}
++	if (parent->groups == parent->groups->next)
++		pflags &= ~SD_DEGENERATE_GROUPS_MASK;
++
+ 	if (~cflags & pflags)
+ 		return 0;
+ 
+-- 
+2.27.0
 
