@@ -2,120 +2,565 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA6BC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA9EC433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB4A22B3F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:16:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mmal8FRz"
+	by mail.kernel.org (Postfix) with ESMTP id 911D122B3F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:16:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596215811;
+	bh=hlItZAQWJlxNflkr46VdpdqAXNfUZVDttGECeld9uHE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=yQURPuqju2m8GiV0cBfX/PL20IlXh9eC+vAD54mPtTkyU0z6PibYHJHDXeAcCww6J
+	 r4bA0avtvhVLVNipZX9Jm6a1p+btifGkbWbDz99J/S4qJbrI/3cVZ/MdaYgpUE/66B
+	 zU07s0zKWF8t7Pf5lhCo1eAaw7S4OdJFeFDOUvTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387612AbgGaRQg (ORCPT
+        id S2387657AbgGaRQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 13:16:36 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:59464 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387580AbgGaRQb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 13:16:31 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06VHBvmu156609;
-        Fri, 31 Jul 2020 17:15:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=QLP5yum5fU8UgsIzhvQlNIqfGdJsDfckQfn3DAzacW8=;
- b=mmal8FRzyoj+O8X9csReBhlK93p5+cMh/ETJ0OUmlvwnyInxLy+PDCUxfNp7SWT751Lz
- wPFJZcEJb3ERLInaZIpcUlN3mgHrEILwqs8rAPYpjJLcAlq4bh9+OW6LOwIk4zNMEB84
- hEofFiwTosRxp1RQZJV0f+9lAddx2h3vS6a4SlKHw5oum+g/sh5/KedgUE0YrS3/GXf0
- Suhh4XB77kYufFl/+ZFn8CGMPkV3XqrkpTKaRMPdMYp4doN88E862Ka1ATMXw20FKtV/
- +cog0eAkaVh1d9pc3uk56Akc7KQavBGp0fBcuauoBxwrK3pRyujlNJq62QmDEptEqyYm 3g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 32mf702hp7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 Jul 2020 17:15:50 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06VHCsS3048730;
-        Fri, 31 Jul 2020 17:15:50 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 32hu6064n3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 Jul 2020 17:15:49 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06VHFc2P019306;
-        Fri, 31 Jul 2020 17:15:38 GMT
-Received: from [10.39.235.87] (/10.39.235.87)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 31 Jul 2020 10:15:38 -0700
-Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
-        arnd@arndb.de, keescook@chromium.org, gerg@linux-m68k.org,
-        ktkhai@virtuozzo.com, christian.brauner@ubuntu.com,
-        peterz@infradead.org, esyr@redhat.com, christian@kellner.me,
-        areber@redhat.com, cyphar@cyphar.com
-References: <20200730152250.GG23808@casper.infradead.org>
- <db3bdbae-eb0f-1ae3-94dd-045e37bc94ba@oracle.com>
- <20200730171251.GI23808@casper.infradead.org>
- <63a7404c-e4f6-a82e-257b-217585b0277f@oracle.com>
- <20200730174956.GK23808@casper.infradead.org>
- <ab7a25bf-3321-77c8-9bc3-28a223a14032@oracle.com>
- <87y2n03brx.fsf@x220.int.ebiederm.org>
- <689d6348-6029-5396-8de7-a26bc3c017e5@oracle.com>
- <20200731152736.GP23808@casper.infradead.org>
- <9ba26063-0098-e796-9431-8c1d0c076ffc@oracle.com>
- <20200731165649.GG24045@ziepe.ca>
-From:   Steven Sistare <steven.sistare@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <71ddd3c1-bb59-3e63-e137-99b88ace454d@oracle.com>
-Date:   Fri, 31 Jul 2020 13:15:34 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 31 Jul 2020 13:16:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34796 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387596AbgGaRQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 13:16:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94E9E22B42;
+        Fri, 31 Jul 2020 17:16:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596215792;
+        bh=hlItZAQWJlxNflkr46VdpdqAXNfUZVDttGECeld9uHE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jpI8p57eSdFGtdJdi5n/bygmK+ix3ua0FjQWZJE6uZFBc05LQRKeU1U5UWLF7XHcv
+         oZ+gWDWoSU07o2XdhJgSkP2WYY3aQ7IkhqYk0DLF+glO1STO4N6u08jjiFzpKSJ42X
+         RQsJWD/6jBw319yZIapLQfelYhLLxuZiJ58egnnM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, jslaby@suse.cz,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: Linux 4.19.136
+Date:   Fri, 31 Jul 2020 19:16:16 +0200
+Message-Id: <1596215776220101@kroah.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <159621577667130@kroah.com>
+References: <159621577667130@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20200731165649.GG24045@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9699 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- mlxscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007310129
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9699 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 suspectscore=0
- spamscore=0 impostorscore=0 clxscore=1015 phishscore=0 priorityscore=1501
- adultscore=0 mlxlogscore=999 malwarescore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007310129
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/31/2020 12:56 PM, Jason Gunthorpe wrote:
-> On Fri, Jul 31, 2020 at 12:11:52PM -0400, Steven Sistare wrote:
->>> Your preservation-across-exec use-case might or might not need the
->>> VMA to be mapped at the same address.  
->>
->> It does.  qemu registers memory with vfio which remembers the va's in kernel
->> metadata for the device.
-> 
-> Once the memory is registered with vfio the VA doesn't matter, vfio
-> will keep the iommu pointing at the same physical pages no matter
-> where they are mapped.
-
-Yes, but there are other code paths that compute and use offsets between va and the
-base va.  Mapping at a different va in the new process breaks vfio; I have tried it.
-
-- Steve
+diff --git a/Makefile b/Makefile
+index 1253143f3f6f..a76c159bb605 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ VERSION = 4
+ PATCHLEVEL = 19
+-SUBLEVEL = 135
++SUBLEVEL = 136
+ EXTRAVERSION =
+ NAME = "People's Front"
+ 
+diff --git a/drivers/base/regmap/regmap-debugfs.c b/drivers/base/regmap/regmap-debugfs.c
+index 056e34ce1edd..182b1908edec 100644
+--- a/drivers/base/regmap/regmap-debugfs.c
++++ b/drivers/base/regmap/regmap-debugfs.c
+@@ -209,6 +209,9 @@ static ssize_t regmap_read_debugfs(struct regmap *map, unsigned int from,
+ 	if (*ppos < 0 || !count)
+ 		return -EINVAL;
+ 
++	if (count > (PAGE_SIZE << (MAX_ORDER - 1)))
++		count = PAGE_SIZE << (MAX_ORDER - 1);
++
+ 	buf = kmalloc(count, GFP_KERNEL);
+ 	if (!buf)
+ 		return -ENOMEM;
+@@ -357,6 +360,9 @@ static ssize_t regmap_reg_ranges_read_file(struct file *file,
+ 	if (*ppos < 0 || !count)
+ 		return -EINVAL;
+ 
++	if (count > (PAGE_SIZE << (MAX_ORDER - 1)))
++		count = PAGE_SIZE << (MAX_ORDER - 1);
++
+ 	buf = kmalloc(count, GFP_KERNEL);
+ 	if (!buf)
+ 		return -ENOMEM;
+diff --git a/drivers/net/wan/x25_asy.c b/drivers/net/wan/x25_asy.c
+index 4f25c2d8fff0..6fe9695a5f18 100644
+--- a/drivers/net/wan/x25_asy.c
++++ b/drivers/net/wan/x25_asy.c
+@@ -183,7 +183,7 @@ static inline void x25_asy_unlock(struct x25_asy *sl)
+ 	netif_wake_queue(sl->dev);
+ }
+ 
+-/* Send one completely decapsulated IP datagram to the IP layer. */
++/* Send an LAPB frame to the LAPB module to process. */
+ 
+ static void x25_asy_bump(struct x25_asy *sl)
+ {
+@@ -195,13 +195,12 @@ static void x25_asy_bump(struct x25_asy *sl)
+ 	count = sl->rcount;
+ 	dev->stats.rx_bytes += count;
+ 
+-	skb = dev_alloc_skb(count+1);
++	skb = dev_alloc_skb(count);
+ 	if (skb == NULL) {
+ 		netdev_warn(sl->dev, "memory squeeze, dropping packet\n");
+ 		dev->stats.rx_dropped++;
+ 		return;
+ 	}
+-	skb_push(skb, 1);	/* LAPB internal control */
+ 	skb_put_data(skb, sl->rbuff, count);
+ 	skb->protocol = x25_type_trans(skb, sl->dev);
+ 	err = lapb_data_received(skb->dev, skb);
+@@ -209,7 +208,6 @@ static void x25_asy_bump(struct x25_asy *sl)
+ 		kfree_skb(skb);
+ 		printk(KERN_DEBUG "x25_asy: data received err - %d\n", err);
+ 	} else {
+-		netif_rx(skb);
+ 		dev->stats.rx_packets++;
+ 	}
+ }
+@@ -356,12 +354,21 @@ static netdev_tx_t x25_asy_xmit(struct sk_buff *skb,
+  */
+ 
+ /*
+- *	Called when I frame data arrives. We did the work above - throw it
+- *	at the net layer.
++ *	Called when I frame data arrive. We add a pseudo header for upper
++ *	layers and pass it to upper layers.
+  */
+ 
+ static int x25_asy_data_indication(struct net_device *dev, struct sk_buff *skb)
+ {
++	if (skb_cow(skb, 1)) {
++		kfree_skb(skb);
++		return NET_RX_DROP;
++	}
++	skb_push(skb, 1);
++	skb->data[0] = X25_IFACE_DATA;
++
++	skb->protocol = x25_type_trans(skb, dev);
++
+ 	return netif_rx(skb);
+ }
+ 
+@@ -657,7 +664,7 @@ static void x25_asy_unesc(struct x25_asy *sl, unsigned char s)
+ 	switch (s) {
+ 	case X25_END:
+ 		if (!test_and_clear_bit(SLF_ERROR, &sl->flags) &&
+-		    sl->rcount > 2)
++		    sl->rcount >= 2)
+ 			x25_asy_bump(sl);
+ 		clear_bit(SLF_ESCAPE, &sl->flags);
+ 		sl->rcount = 0;
+diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+index 4374196b98ea..1192f1e76015 100644
+--- a/include/linux/tcp.h
++++ b/include/linux/tcp.h
+@@ -225,6 +225,8 @@ struct tcp_sock {
+ 	} rack;
+ 	u16	advmss;		/* Advertised MSS			*/
+ 	u8	compressed_ack;
++	u8	tlp_retrans:1,	/* TLP is a retransmission */
++		unused_1:7;
+ 	u32	chrono_start;	/* Start time in jiffies of a TCP chrono */
+ 	u32	chrono_stat[3];	/* Time in jiffies for chrono_stat stats */
+ 	u8	chrono_type:2,	/* current chronograph type */
+@@ -247,7 +249,7 @@ struct tcp_sock {
+ 		save_syn:1,	/* Save headers of SYN packet */
+ 		is_cwnd_limited:1,/* forward progress limited by snd_cwnd? */
+ 		syn_smc:1;	/* SYN includes SMC */
+-	u32	tlp_high_seq;	/* snd_nxt at the time of TLP retransmit. */
++	u32	tlp_high_seq;	/* snd_nxt at the time of TLP */
+ 
+ /* RTT measurement */
+ 	u64	tcp_mstamp;	/* most recent packet received/sent */
+diff --git a/net/ax25/af_ax25.c b/net/ax25/af_ax25.c
+index 5c7a513bbaaa..a45db78eaf00 100644
+--- a/net/ax25/af_ax25.c
++++ b/net/ax25/af_ax25.c
+@@ -1190,7 +1190,10 @@ static int __must_check ax25_connect(struct socket *sock,
+ 	if (addr_len > sizeof(struct sockaddr_ax25) &&
+ 	    fsa->fsa_ax25.sax25_ndigis != 0) {
+ 		/* Valid number of digipeaters ? */
+-		if (fsa->fsa_ax25.sax25_ndigis < 1 || fsa->fsa_ax25.sax25_ndigis > AX25_MAX_DIGIS) {
++		if (fsa->fsa_ax25.sax25_ndigis < 1 ||
++		    fsa->fsa_ax25.sax25_ndigis > AX25_MAX_DIGIS ||
++		    addr_len < sizeof(struct sockaddr_ax25) +
++		    sizeof(ax25_address) * fsa->fsa_ax25.sax25_ndigis) {
+ 			err = -EINVAL;
+ 			goto out_release;
+ 		}
+@@ -1510,7 +1513,10 @@ static int ax25_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
+ 			struct full_sockaddr_ax25 *fsa = (struct full_sockaddr_ax25 *)usax;
+ 
+ 			/* Valid number of digipeaters ? */
+-			if (usax->sax25_ndigis < 1 || usax->sax25_ndigis > AX25_MAX_DIGIS) {
++			if (usax->sax25_ndigis < 1 ||
++			    usax->sax25_ndigis > AX25_MAX_DIGIS ||
++			    addr_len < sizeof(struct sockaddr_ax25) +
++			    sizeof(ax25_address) * usax->sax25_ndigis) {
+ 				err = -EINVAL;
+ 				goto out;
+ 			}
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 4b1053057ca6..42ba150fa18d 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -5252,7 +5252,7 @@ static void flush_backlog(struct work_struct *work)
+ 	skb_queue_walk_safe(&sd->input_pkt_queue, skb, tmp) {
+ 		if (skb->dev->reg_state == NETREG_UNREGISTERING) {
+ 			__skb_unlink(skb, &sd->input_pkt_queue);
+-			kfree_skb(skb);
++			dev_kfree_skb_irq(skb);
+ 			input_queue_head_incr(sd);
+ 		}
+ 	}
+diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+index 7614a4f42bfc..001d7f07e780 100644
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -1045,7 +1045,7 @@ static ssize_t tx_timeout_show(struct netdev_queue *queue, char *buf)
+ 	trans_timeout = queue->trans_timeout;
+ 	spin_unlock_irq(&queue->_xmit_lock);
+ 
+-	return sprintf(buf, "%lu", trans_timeout);
++	return sprintf(buf, fmt_ulong, trans_timeout);
+ }
+ 
+ static unsigned int get_netdev_queue_index(struct netdev_queue *queue)
+diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
+index f51973f458e4..935053ee7765 100644
+--- a/net/core/rtnetlink.c
++++ b/net/core/rtnetlink.c
+@@ -3146,7 +3146,8 @@ static int rtnl_newlink(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 			 */
+ 			if (err < 0) {
+ 				/* If device is not registered at all, free it now */
+-				if (dev->reg_state == NETREG_UNINITIALIZED)
++				if (dev->reg_state == NETREG_UNINITIALIZED ||
++				    dev->reg_state == NETREG_UNREGISTERED)
+ 					free_netdev(dev);
+ 				goto out;
+ 			}
+diff --git a/net/core/sock_reuseport.c b/net/core/sock_reuseport.c
+index fd38cf1d2b02..9c85ef2b7e1d 100644
+--- a/net/core/sock_reuseport.c
++++ b/net/core/sock_reuseport.c
+@@ -112,6 +112,7 @@ static struct sock_reuseport *reuseport_grow(struct sock_reuseport *reuse)
+ 	more_reuse->prog = reuse->prog;
+ 	more_reuse->reuseport_id = reuse->reuseport_id;
+ 	more_reuse->bind_inany = reuse->bind_inany;
++	more_reuse->has_conns = reuse->has_conns;
+ 
+ 	memcpy(more_reuse->socks, reuse->socks,
+ 	       reuse->num_socks * sizeof(struct sock *));
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index 2896840618fa..9813d62de631 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -3489,10 +3489,8 @@ static void tcp_replace_ts_recent(struct tcp_sock *tp, u32 seq)
+ 	}
+ }
+ 
+-/* This routine deals with acks during a TLP episode.
+- * We mark the end of a TLP episode on receiving TLP dupack or when
+- * ack is after tlp_high_seq.
+- * Ref: loss detection algorithm in draft-dukkipati-tcpm-tcp-loss-probe.
++/* This routine deals with acks during a TLP episode and ends an episode by
++ * resetting tlp_high_seq. Ref: TLP algorithm in draft-ietf-tcpm-rack
+  */
+ static void tcp_process_tlp_ack(struct sock *sk, u32 ack, int flag)
+ {
+@@ -3501,7 +3499,10 @@ static void tcp_process_tlp_ack(struct sock *sk, u32 ack, int flag)
+ 	if (before(ack, tp->tlp_high_seq))
+ 		return;
+ 
+-	if (flag & FLAG_DSACKING_ACK) {
++	if (!tp->tlp_retrans) {
++		/* TLP of new data has been acknowledged */
++		tp->tlp_high_seq = 0;
++	} else if (flag & FLAG_DSACKING_ACK) {
+ 		/* This DSACK means original and TLP probe arrived; no loss */
+ 		tp->tlp_high_seq = 0;
+ 	} else if (after(ack, tp->tlp_high_seq)) {
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index b4d0d0aa6b38..74fb211e0ea6 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -2495,6 +2495,11 @@ void tcp_send_loss_probe(struct sock *sk)
+ 	int pcount;
+ 	int mss = tcp_current_mss(sk);
+ 
++	/* At most one outstanding TLP */
++	if (tp->tlp_high_seq)
++		goto rearm_timer;
++
++	tp->tlp_retrans = 0;
+ 	skb = tcp_send_head(sk);
+ 	if (skb && tcp_snd_wnd_test(tp, skb, mss)) {
+ 		pcount = tp->packets_out;
+@@ -2512,10 +2517,6 @@ void tcp_send_loss_probe(struct sock *sk)
+ 		return;
+ 	}
+ 
+-	/* At most one outstanding TLP retransmission. */
+-	if (tp->tlp_high_seq)
+-		goto rearm_timer;
+-
+ 	if (skb_still_in_host_queue(sk, skb))
+ 		goto rearm_timer;
+ 
+@@ -2537,10 +2538,12 @@ void tcp_send_loss_probe(struct sock *sk)
+ 	if (__tcp_retransmit_skb(sk, skb, 1))
+ 		goto rearm_timer;
+ 
++	tp->tlp_retrans = 1;
++
++probe_sent:
+ 	/* Record snd_nxt for loss detection. */
+ 	tp->tlp_high_seq = tp->snd_nxt;
+ 
+-probe_sent:
+ 	NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPLOSSPROBES);
+ 	/* Reset s.t. tcp_rearm_rto will restart timer from now */
+ 	inet_csk(sk)->icsk_pending = 0;
+diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
+index 0ef04cda1b27..2aacf2b34834 100644
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -433,7 +433,7 @@ static struct sock *udp4_lib_lookup2(struct net *net,
+ 				     struct udp_hslot *hslot2,
+ 				     struct sk_buff *skb)
+ {
+-	struct sock *sk, *result;
++	struct sock *sk, *result, *reuseport_result;
+ 	int score, badness;
+ 	u32 hash = 0;
+ 
+@@ -443,17 +443,20 @@ static struct sock *udp4_lib_lookup2(struct net *net,
+ 		score = compute_score(sk, net, saddr, sport,
+ 				      daddr, hnum, dif, sdif, exact_dif);
+ 		if (score > badness) {
++			reuseport_result = NULL;
++
+ 			if (sk->sk_reuseport &&
+ 			    sk->sk_state != TCP_ESTABLISHED) {
+ 				hash = udp_ehashfn(net, daddr, hnum,
+ 						   saddr, sport);
+-				result = reuseport_select_sock(sk, hash, skb,
+-							sizeof(struct udphdr));
+-				if (result && !reuseport_has_conns(sk, false))
+-					return result;
++				reuseport_result = reuseport_select_sock(sk, hash, skb,
++									 sizeof(struct udphdr));
++				if (reuseport_result && !reuseport_has_conns(sk, false))
++					return reuseport_result;
+ 			}
++
++			result = reuseport_result ? : sk;
+ 			badness = score;
+-			result = sk;
+ 		}
+ 	}
+ 	return result;
+@@ -1986,7 +1989,7 @@ static int udp_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
+ 	/*
+ 	 * 	UDP-Lite specific tests, ignored on UDP sockets
+ 	 */
+-	if ((is_udplite & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
++	if ((up->pcflag & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
+ 
+ 		/*
+ 		 * MIB statistics other than incrementing the error count are
+diff --git a/net/ipv6/ip6_gre.c b/net/ipv6/ip6_gre.c
+index f5144573c45c..7cc9cd83ecb5 100644
+--- a/net/ipv6/ip6_gre.c
++++ b/net/ipv6/ip6_gre.c
+@@ -1580,17 +1580,18 @@ static void ip6gre_destroy_tunnels(struct net *net, struct list_head *head)
+ static int __net_init ip6gre_init_net(struct net *net)
+ {
+ 	struct ip6gre_net *ign = net_generic(net, ip6gre_net_id);
++	struct net_device *ndev;
+ 	int err;
+ 
+ 	if (!net_has_fallback_tunnels(net))
+ 		return 0;
+-	ign->fb_tunnel_dev = alloc_netdev(sizeof(struct ip6_tnl), "ip6gre0",
+-					  NET_NAME_UNKNOWN,
+-					  ip6gre_tunnel_setup);
+-	if (!ign->fb_tunnel_dev) {
++	ndev = alloc_netdev(sizeof(struct ip6_tnl), "ip6gre0",
++			    NET_NAME_UNKNOWN, ip6gre_tunnel_setup);
++	if (!ndev) {
+ 		err = -ENOMEM;
+ 		goto err_alloc_dev;
+ 	}
++	ign->fb_tunnel_dev = ndev;
+ 	dev_net_set(ign->fb_tunnel_dev, net);
+ 	/* FB netdevice is special: we have one, and only one per netns.
+ 	 * Allowing to move it to another netns is clearly unsafe.
+@@ -1610,7 +1611,7 @@ static int __net_init ip6gre_init_net(struct net *net)
+ 	return 0;
+ 
+ err_reg_dev:
+-	free_netdev(ign->fb_tunnel_dev);
++	free_netdev(ndev);
+ err_alloc_dev:
+ 	return err;
+ }
+diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
+index 1979922bcf67..6799ad462be3 100644
+--- a/net/ipv6/udp.c
++++ b/net/ipv6/udp.c
+@@ -167,7 +167,7 @@ static struct sock *udp6_lib_lookup2(struct net *net,
+ 		int dif, int sdif, bool exact_dif,
+ 		struct udp_hslot *hslot2, struct sk_buff *skb)
+ {
+-	struct sock *sk, *result;
++	struct sock *sk, *result, *reuseport_result;
+ 	int score, badness;
+ 	u32 hash = 0;
+ 
+@@ -177,17 +177,20 @@ static struct sock *udp6_lib_lookup2(struct net *net,
+ 		score = compute_score(sk, net, saddr, sport,
+ 				      daddr, hnum, dif, sdif, exact_dif);
+ 		if (score > badness) {
++			reuseport_result = NULL;
++
+ 			if (sk->sk_reuseport &&
+ 			    sk->sk_state != TCP_ESTABLISHED) {
+ 				hash = udp6_ehashfn(net, daddr, hnum,
+ 						    saddr, sport);
+ 
+-				result = reuseport_select_sock(sk, hash, skb,
+-							sizeof(struct udphdr));
+-				if (result && !reuseport_has_conns(sk, false))
+-					return result;
++				reuseport_result = reuseport_select_sock(sk, hash, skb,
++									 sizeof(struct udphdr));
++				if (reuseport_result && !reuseport_has_conns(sk, false))
++					return reuseport_result;
+ 			}
+-			result = sk;
++
++			result = reuseport_result ? : sk;
+ 			badness = score;
+ 		}
+ 	}
+@@ -606,7 +609,7 @@ static int udpv6_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
+ 	/*
+ 	 * UDP-Lite specific tests, ignored on UDP sockets (see net/ipv4/udp.c).
+ 	 */
+-	if ((is_udplite & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
++	if ((up->pcflag & UDPLITE_RECV_CC)  &&  UDP_SKB_CB(skb)->partial_cov) {
+ 
+ 		if (up->pcrlen == 0) {          /* full coverage was set  */
+ 			net_dbg_ratelimited("UDPLITE6: partial coverage %d while full coverage %d requested\n",
+diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
+index 0baffc9666e6..b5671966fa03 100644
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -1013,6 +1013,7 @@ static int qrtr_release(struct socket *sock)
+ 		sk->sk_state_change(sk);
+ 
+ 	sock_set_flag(sk, SOCK_DEAD);
++	sock_orphan(sk);
+ 	sock->sk = NULL;
+ 
+ 	if (!sock_flag(sk, SOCK_ZAPPED))
+diff --git a/net/rxrpc/recvmsg.c b/net/rxrpc/recvmsg.c
+index 0374b0623c8b..6e9d977f0797 100644
+--- a/net/rxrpc/recvmsg.c
++++ b/net/rxrpc/recvmsg.c
+@@ -453,7 +453,7 @@ int rxrpc_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
+ 	    list_empty(&rx->recvmsg_q) &&
+ 	    rx->sk.sk_state != RXRPC_SERVER_LISTENING) {
+ 		release_sock(&rx->sk);
+-		return -ENODATA;
++		return -EAGAIN;
+ 	}
+ 
+ 	if (list_empty(&rx->recvmsg_q)) {
+diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
+index 250d3dae8af4..caee7632c257 100644
+--- a/net/rxrpc/sendmsg.c
++++ b/net/rxrpc/sendmsg.c
+@@ -278,7 +278,7 @@ static int rxrpc_send_data(struct rxrpc_sock *rx,
+ 	/* this should be in poll */
+ 	sk_clear_bit(SOCKWQ_ASYNC_NOSPACE, sk);
+ 
+-	if (sk->sk_err || (sk->sk_shutdown & SEND_SHUTDOWN))
++	if (sk->sk_shutdown & SEND_SHUTDOWN)
+ 		return -EPIPE;
+ 
+ 	more = msg->msg_flags & MSG_MORE;
+diff --git a/net/sctp/stream.c b/net/sctp/stream.c
+index 87061a4bb44b..516bc48be5bc 100644
+--- a/net/sctp/stream.c
++++ b/net/sctp/stream.c
+@@ -97,17 +97,11 @@ static size_t fa_index(struct flex_array *fa, void *elem, size_t count)
+ 	return index;
+ }
+ 
+-/* Migrates chunks from stream queues to new stream queues if needed,
+- * but not across associations. Also, removes those chunks to streams
+- * higher than the new max.
+- */
+-static void sctp_stream_outq_migrate(struct sctp_stream *stream,
+-				     struct sctp_stream *new, __u16 outcnt)
++static void sctp_stream_shrink_out(struct sctp_stream *stream, __u16 outcnt)
+ {
+ 	struct sctp_association *asoc;
+ 	struct sctp_chunk *ch, *temp;
+ 	struct sctp_outq *outq;
+-	int i;
+ 
+ 	asoc = container_of(stream, struct sctp_association, stream);
+ 	outq = &asoc->outqueue;
+@@ -131,6 +125,19 @@ static void sctp_stream_outq_migrate(struct sctp_stream *stream,
+ 
+ 		sctp_chunk_free(ch);
+ 	}
++}
++
++/* Migrates chunks from stream queues to new stream queues if needed,
++ * but not across associations. Also, removes those chunks to streams
++ * higher than the new max.
++ */
++static void sctp_stream_outq_migrate(struct sctp_stream *stream,
++				     struct sctp_stream *new, __u16 outcnt)
++{
++	int i;
++
++	if (stream->outcnt > outcnt)
++		sctp_stream_shrink_out(stream, outcnt);
+ 
+ 	if (new) {
+ 		/* Here we actually move the old ext stuff into the new
+@@ -1136,11 +1143,13 @@ struct sctp_chunk *sctp_process_strreset_resp(
+ 		nums = ntohs(addstrm->number_of_streams);
+ 		number = stream->outcnt - nums;
+ 
+-		if (result == SCTP_STRRESET_PERFORMED)
++		if (result == SCTP_STRRESET_PERFORMED) {
+ 			for (i = number; i < stream->outcnt; i++)
+ 				SCTP_SO(stream, i)->state = SCTP_STREAM_OPEN;
+-		else
++		} else {
++			sctp_stream_shrink_out(stream, number);
+ 			stream->outcnt = number;
++		}
+ 
+ 		*evp = sctp_ulpevent_make_stream_change_event(asoc, flags,
+ 			0, nums, GFP_ATOMIC);
