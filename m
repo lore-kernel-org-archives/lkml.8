@@ -2,96 +2,131 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C819C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D404FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04532208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFFA522B49
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596205526;
+	bh=5OePpMUc96MIIKS1qPqIJ3nj0Nwl9OY7IfxHx/uE/c0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Ks7kp0XkKq89s2czpXECtFwtc4vFiyn6SXxDsbZ4a5UdZdSq82upChSgQcwePAktT
+	 dCFuN2yGtQ99dPcQurGsLOLLf3zwzz+x8rA8F3S3MHp+fVw0gbvr1gVh+MdNMXHEmd
+	 SqANNoysgHI2AdcM6e+VLR9XSKk3VqUZ+GZsfmMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbgGaOWN (ORCPT
+        id S1729107AbgGaOZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 10:22:13 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:56441 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1729195AbgGaOWN (ORCPT
+        Fri, 31 Jul 2020 10:25:25 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37639 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728713AbgGaOZZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 10:22:13 -0400
-Received: (qmail 37750 invoked by uid 1000); 31 Jul 2020 10:22:12 -0400
-Date:   Fri, 31 Jul 2020 10:22:12 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Macpaul Lin <macpaul.lin@mediatek.com>
-Cc:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Eddie Hung <eddie.hung@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Macpaul Lin <macpaul.lin@gmail.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v2] usb: mtu3: fix panic in mtu3_gadget_disconnect()
-Message-ID: <20200731142212.GE36650@rowland.harvard.edu>
-References: <1596177366-12029-1-git-send-email-macpaul.lin@mediatek.com>
- <1596185878-24360-1-git-send-email-macpaul.lin@mediatek.com>
+        Fri, 31 Jul 2020 10:25:25 -0400
+Received: by mail-oi1-f195.google.com with SMTP id e6so6627474oii.4;
+        Fri, 31 Jul 2020 07:25:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LUq1ijDD9SyO2ufTXKPW9//vrm+uL0JQvV8OQ7tDtyA=;
+        b=euny89LaKj/ti2o9A9iETv+dPKl7u/fbq7O0uhp3G4jRWPy2bhLjCCsj0j8ExW6UMQ
+         H7u52fAfOLmEJP1TYyaXIyDsPptIjEQM6TNHWNcHfBQJEHQvi2BuBvwOY/oYdRdlWvV8
+         54MU9pUGegIj14pgoWSnpA7FCcLiE1TFsSj9ODoxWoLdZ21aWFp3l/41whzoYOfzwwf+
+         WmvJ0byILi3dqT+8S4BQS4L3Nl7SZF8B3PXcHLNu1h0bwY2TnWrhmL0oKRd7G/dMMVxp
+         Iph+WUpF9ZmULJjI2WkVOciYmV9r20zlhfCiD/+F4x2Yp35o+g78jKzQLea3LK50i1m7
+         wRlw==
+X-Gm-Message-State: AOAM532Hd4NAG1/QXjDc4NI/VHEHG2+6ZYeeqYW0K+POuyP7CiPznUE9
+        ejxgQIZGMG3GlT2LDDMv+mUN/gHWJw1B2GwIiwc=
+X-Google-Smtp-Source: ABdhPJwXQdnG1otKOfzVxyL9Pv5KPx5Dv3MAzyWKLAJcQfKXU/RGMyj9PAedIsxXvXnE+QB4qD60adxhPMBESDi6fDY=
+X-Received: by 2002:aca:a88e:: with SMTP id r136mr3259373oie.110.1596205523967;
+ Fri, 31 Jul 2020 07:25:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1596185878-24360-1-git-send-email-macpaul.lin@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200717191009.GA3387@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <5464f384-d4b4-73f0-d39e-60ba9800d804@oracle.com> <20200721000348.GA19610@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <408d3ce9-2510-2950-d28d-fdfe8ee41a54@oracle.com> <alpine.DEB.2.21.2007211640500.17562@sstabellini-ThinkPad-T480s>
+ <20200722180229.GA32316@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <alpine.DEB.2.21.2007221645430.17562@sstabellini-ThinkPad-T480s>
+ <20200723225745.GB32316@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <alpine.DEB.2.21.2007241431280.17562@sstabellini-ThinkPad-T480s>
+ <66a9b838-70ed-0807-9260-f2c31343a081@oracle.com> <20200730230634.GA17221@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <53b577a3-6af9-5587-7e47-485be38b3653@oracle.com>
+In-Reply-To: <53b577a3-6af9-5587-7e47-485be38b3653@oracle.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 31 Jul 2020 16:25:12 +0200
+Message-ID: <CAJZ5v0j2kqgEfbiQchiA_USwGKC-UFkn2J3bUU2xCWU=+1p9Mw@mail.gmail.com>
+Subject: Re: [PATCH v2 01/11] xen/manage: keep track of the on-going suspend mode
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc:     Anchal Agarwal <anchalag@amazon.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        "Kamata, Munehisa" <kamatam@amazon.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        roger.pau@citrix.com, Jens Axboe <axboe@kernel.dk>,
+        David Miller <davem@davemloft.net>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Eduardo Valentin <eduval@amazon.com>,
+        "Singh, Balbir" <sblbir@amazon.com>,
+        xen-devel@lists.xenproject.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 04:57:58PM +0800, Macpaul Lin wrote:
-> This patch fixes a possible issue when mtu3_gadget_stop()
-> already assigned NULL to mtu->gadget_driver during mtu_gadget_disconnect().
+On Fri, Jul 31, 2020 at 4:14 PM Boris Ostrovsky
+<boris.ostrovsky@oracle.com> wrote:
+>
+> On 7/30/20 7:06 PM, Anchal Agarwal wrote:
+> > On Mon, Jul 27, 2020 at 06:08:29PM -0400, Boris Ostrovsky wrote:
+> >> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> >>
+> >>
+> >>
+> >> On 7/24/20 7:01 PM, Stefano Stabellini wrote:
+> >>> Yes, it does, thank you. I'd rather not introduce unknown regressions so
+> >>> I would recommend to add an arch-specific check on registering
+> >>> freeze/thaw/restore handlers. Maybe something like the following:
+> >>>
+> >>> #ifdef CONFIG_X86
+> >>>     .freeze = blkfront_freeze,
+> >>>     .thaw = blkfront_restore,
+> >>>     .restore = blkfront_restore
+> >>> #endif
+> >>>
+> >>>
+> >>> maybe Boris has a better suggestion on how to do it
+> >>
+> >> An alternative might be to still install pm notifier in
+> >> drivers/xen/manage.c (I think as result of latest discussions we decided
+> >> we won't need it) and return -ENOTSUPP for ARM for
+> >> PM_HIBERNATION_PREPARE and friends. Would that work?
+> >>
+> > I think the question here is for registering driver specific freeze/thaw/restore
+> > callbacks for x86 only. I have dropped the pm_notifier in the v3 still pending
+> > testing. So I think just registering driver specific callbacks for x86 only is a
+> > good option. What do you think?
+>
+>
+> I suggested using the notifier under assumption that if it returns an
+> error then that will prevent callbacks to be called because hibernation
+> will be effectively disabled.
 
-> 
-> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
-> Cc: stable@vger.kernel.org
-> ---
-> Changes for v2:
->   - Check mtu_gadget_driver out of spin_lock might still not work.
->     We use a temporary pointer to keep the callback function.
-> 
->  drivers/usb/mtu3/mtu3_gadget.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/mtu3/mtu3_gadget.c b/drivers/usb/mtu3/mtu3_gadget.c
-> index 68ea4395f871..40cb6626f496 100644
-> --- a/drivers/usb/mtu3/mtu3_gadget.c
-> +++ b/drivers/usb/mtu3/mtu3_gadget.c
-> @@ -840,10 +840,17 @@ void mtu3_gadget_suspend(struct mtu3 *mtu)
->  /* called when VBUS drops below session threshold, and in other cases */
->  void mtu3_gadget_disconnect(struct mtu3 *mtu)
->  {
-> +	struct usb_gadget_driver *driver;
-> +
->  	dev_dbg(mtu->dev, "gadget DISCONNECT\n");
->  	if (mtu->gadget_driver && mtu->gadget_driver->disconnect) {
-> +		driver = mtu->gadget_driver;
->  		spin_unlock(&mtu->lock);
-> -		mtu->gadget_driver->disconnect(&mtu->g);
-> +		/*
-> +		 * avoid kernel panic because mtu3_gadget_stop() assigned NULL
-> +		 * to mtu->gadget_driver.
-> +		 */
-> +		driver->disconnect(&mtu->g);
->  		spin_lock(&mtu->lock);
->  	}
-
-This is not the right approach; it might race with the gadget driver 
-unregistering itself.
-
-Instead, mtu3_gadget_stop() should call synchronize_irq() after 
-releasing the IRQ line.  When synchronize_irq() returns, you'll know any 
-IRQ handlers have finished running, so you won't receive any more 
-disconnect notifications.  Then it will be safe to acquire the spinlock 
-and set mtu->gadget_driver to NULL.
-
-Alan Stern
+That's correct.
