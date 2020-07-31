@@ -2,109 +2,139 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD05C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E32C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5135208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:29:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VrdBZsZk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5WE72D1n"
+	by mail.kernel.org (Postfix) with ESMTP id A8BBD22B40
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:29:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732464AbgGaJ3Y (ORCPT
+        id S1732963AbgGaJ32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:29:24 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56350 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732168AbgGaJWl (ORCPT
+        Fri, 31 Jul 2020 05:29:28 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61450 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732168AbgGaJ30 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:22:41 -0400
-Date:   Fri, 31 Jul 2020 09:22:39 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596187360;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=MWAxGCueX1FQdbJ7JSi9wuo+tqOZpsiCZBaHv5+iEYs=;
-        b=VrdBZsZkxl32mq87IbzyFnIxtPZH3yQjeyYkHfiG5VXU9nraQZF/UIQBkFiJJafjBogMlA
-        M/2IDf/6c4ZvMfet1t3oHAWMqFkxiUaE1wYlQS2H181mtsJltVn9BSewd6xsbS/BpRoAEU
-        NltabNC7Yzq1TyHUrJi2Ys5P8P4QUpfcJ0F0aogAUfdo97Rat6xnqFdVpRocuhI9U5nk8u
-        1SSgWkxaUJXsTMqnQHEr0teNrBM2sHBukQ0HW850r7/10Z2L9feILAq23yZbykexZd+uSE
-        L3BYGUrzlO1uXWNA+tvXsThN3XFExLVnrHU+lFoR+ufSVfZ58fPpdNJm3PSc1g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596187360;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=MWAxGCueX1FQdbJ7JSi9wuo+tqOZpsiCZBaHv5+iEYs=;
-        b=5WE72D1nxifz/rVRzPXejsUUv+OAYBQubttWVdqw5XbIzuRN63RltgdKqfHGBUyrMllkVM
-        DPyJw4cadx67nlBg==
-From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] torture: Correctly summarize build-only runs
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Fri, 31 Jul 2020 05:29:26 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06V92i4g129877;
+        Fri, 31 Jul 2020 05:29:10 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32md5bdnmt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 31 Jul 2020 05:29:10 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06V9CM0f156530;
+        Fri, 31 Jul 2020 05:29:09 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32md5bdnkt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 31 Jul 2020 05:29:09 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06V9Kru6007361;
+        Fri, 31 Jul 2020 09:29:07 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma02fra.de.ibm.com with ESMTP id 32gcq0vc0r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 31 Jul 2020 09:29:06 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06V9T4ta58130526
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 31 Jul 2020 09:29:04 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B4AFAA4040;
+        Fri, 31 Jul 2020 09:29:04 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 768DBA404D;
+        Fri, 31 Jul 2020 09:29:02 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Fri, 31 Jul 2020 09:29:02 +0000 (GMT)
+Date:   Fri, 31 Jul 2020 14:59:01 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jordan Niethe <jniethe5@gmail.com>
+Subject: Re: [PATCH v4 06/10] powerpc/smp: Generalize 2nd sched domain
+Message-ID: <20200731092901.GH14603@linux.vnet.ibm.com>
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20200727053230.19753-1-srikar@linux.vnet.ibm.com>
+ <20200727053230.19753-7-srikar@linux.vnet.ibm.com>
+ <875za45dr2.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Message-ID: <159618735949.4006.1360754623608472870.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <875za45dr2.fsf@mpe.ellerman.id.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-31_02:2020-07-31,2020-07-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
+ suspectscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ malwarescore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007310068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/rcu branch of tip:
+* Michael Ellerman <mpe@ellerman.id.au> [2020-07-31 17:45:37]:
 
-Commit-ID:     6bcaf2a0876633b6a7c5e70ee88801e16280210a
-Gitweb:        https://git.kernel.org/tip/6bcaf2a0876633b6a7c5e70ee88801e16280210a
-Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Tue, 16 Jun 2020 10:02:54 -07:00
-Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Mon, 29 Jun 2020 12:01:44 -07:00
+> Srikar Dronamraju <srikar@linux.vnet.ibm.com> writes:
+> > Currently "CACHE" domain happens to be the 2nd sched domain as per
+> > powerpc_topology. This domain will collapse if cpumask of l2-cache is
+> > same as SMT domain. However we could generalize this domain such that it
+> > could mean either be a "CACHE" domain or a "BIGCORE" domain.
+> >
+> > While setting up the "CACHE" domain, check if shared_cache is already
+> > set.
+> 
+> PeterZ asked for some overview of what you're doing and why, you
+> responded to his mail, but I was expecting to see that text incorporated
+> here somewhere.
+> 
 
-torture: Correctly summarize build-only runs
+Okay, do you want that as part of the code or documentation dir or the
+changelog?
 
-Currently, kvm-recheck.sh complains that qemu failed for --buildonly
-runs, which is sort of true given that qemu can hardly succeed if not
-invoked in the first place.  Nevertheless, this commit swaps the order
-of checks in kvm-recheck.sh so that --buildonly runs will be summarized
-more straightforwardly.
+> He also asked for some comments, which I would also like to see.
+> 
+> 
+> I'm also not clear why we want to rename it to "bigcore", that's not a
+> commonly understood term, I don't think it's clear to new readers what
+> it means.
+> 
+> Leaving it as the shared cache domain, and having a comment mentioning
+> that "bigcores" share a cache, would be clearer I think.
+> 
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- tools/testing/selftests/rcutorture/bin/kvm-recheck.sh | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Today, Shared cache is equal to Big Core. However in not too distant future,
+Shared cache domain and Big Core may not be the same. For example lets
+assume that L2 cache were to Shrink per small core with the firmware
+exposing the core as a bigcore. Then with the current design, we have a SMT
+== SHARED CACHE, and a DIE. We would not have any domain at the publicised 8
+thread level. Keeping the Bigcore as a domain and mapping the shared
+cache, (I am resetting the domain name as CACHE if BIGCORE==SHARED_CACHE),
+helps us in this scenario.
 
-diff --git a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
-index 2261aa6..357899c 100755
---- a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
-+++ b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
-@@ -56,15 +56,15 @@ do
- 				cat $i/Warnings
- 			fi
- 		else
--			if test -f "$i/qemu-cmd"
--			then
--				print_bug qemu failed
--				echo "   $i"
--			elif test -f "$i/buildonly"
-+			if test -f "$i/buildonly"
- 			then
- 				echo Build-only run, no boot/test
- 				configcheck.sh $i/.config $i/ConfigFragment
- 				parse-build.sh $i/Make.out $configfile
-+			elif test -f "$i/qemu-cmd"
-+			then
-+				print_bug qemu failed
-+				echo "   $i"
- 			else
- 				print_bug Build failed
- 				echo "   $i"
+> cheers
+> 
+
+-- 
+Thanks and Regards
+Srikar Dronamraju
