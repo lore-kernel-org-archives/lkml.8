@@ -2,118 +2,126 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52076C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4201C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B06C2076B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:36:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596159370;
-	bh=g1quuKAY02DWMAdeKKN9Yi71IxJiJ9RAEH+eVpo4FxA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Npqh38WV89/GUZ4pcIKxposKzqpTjFXFOCC4whPVqfAIB7l2w1fBaXfs3WC6Q9gNC
-	 bCKrcJpkDB8+8Y/xBMBF88Fg89tMEdyCfYgwH3r4yv4pb17dfBxEQDtYB4MdcmxQT5
-	 spViZy3K/swzB1YeQ1q6rAx+TA81ByqcamqIOGPE=
+	by mail.kernel.org (Postfix) with ESMTP id 7E82520663
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:36:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L1u1vSnI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731031AbgGaBgI (ORCPT
+        id S1731063AbgGaBgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 21:36:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57394 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728080AbgGaBgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 21:36:07 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6136620663;
-        Fri, 31 Jul 2020 01:36:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596159367;
-        bh=g1quuKAY02DWMAdeKKN9Yi71IxJiJ9RAEH+eVpo4FxA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=kEyq63J0eBsHXUOGldm3VfPkGfglpd3hp+3+xq/gvbXoG+f4cqozrFP5o79K6NtV2
-         DR8BtTr158viU8thoqFDv7VhU7bTLAX36ZS97A6Bwcz0rYo2dKugWSkv7GDHuGFMG0
-         rkt/u4jT91oaTrvux4PhAOJRkGChiSV7zFiAanJA=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 3EBC63521361; Thu, 30 Jul 2020 18:36:07 -0700 (PDT)
-Date:   Thu, 30 Jul 2020 18:36:07 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Neeraj Upadhyay <neeraju@codeaurora.org>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v2 3/3] rcu/tree: Make FQS complaining about offline CPU
- more aggressive
-Message-ID: <20200731013607.GH9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200731004012.2324147-1-joel@joelfernandes.org>
- <20200731004012.2324147-3-joel@joelfernandes.org>
+        Thu, 30 Jul 2020 21:36:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728080AbgGaBgg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 21:36:36 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A8BBC061574;
+        Thu, 30 Jul 2020 18:36:36 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id m16so15899740pls.5;
+        Thu, 30 Jul 2020 18:36:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=unNkakX66uz1a8NwuDIWTVZkGEyN5ilSTI7FY3j0SNA=;
+        b=L1u1vSnIvxCrTsbprGLnPNvMYpTghiUZV9ALHMPH/7GGcpcXgAkqsU/NHJ1vvMrck5
+         eAdHIPnKemAt37IRtdNBI6CN4RpCUiLxt/TRxso0w4MoHB4ojXMBdC1v1ebqYyKxe53y
+         HNOHUXc9YjZffpb2dYNdlywhJg3y3CHsX2YmrGYzTsRazISvKoCWMMgBZOxL3QHcMeEL
+         iFTKkkOpibBFDnNqOwZlPNPuoOzcXXZmvikjntTvHVA+ajhwh3wxmBWSy7Dnm9Fw/JNX
+         Lde2+mZcbbo9Mg8FR0UVbg5G+sZdcITWW1fs1AlQOjQm4O4rBA1ZCn9Tf3PJhFxvWIty
+         7IDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=unNkakX66uz1a8NwuDIWTVZkGEyN5ilSTI7FY3j0SNA=;
+        b=cwPNBjm302yaoWye58I2qxYn3tWv0qc/JDbF+8ZA++TWewrE3BuzKtDbIhtxTar+lT
+         paIXt/HZy6A6wvvFGqwsqU8vOmo0YU5BRSNVDwqoryAd/0wvW5HHMvgR8rjc7OciHubd
+         qBP8I3W7/GDnnPuRVPHm+Pxwky/WMmipJT9TOxLESuH978/SC8oNpHs+Wvqte3cWa4k8
+         w1LcXyMxenoqhBdihMqBDbOm26aqhVNBUs8amyP28oT2o1d6WuroLrSMIqCf8d0MPMzv
+         MFnAP83p/v331CiLxOQ+rcoNgwvZd/37ZLgwhDhezpdbFznVJDWuPJYNvUAaXIfsOpZM
+         +lhg==
+X-Gm-Message-State: AOAM5331PyA0xL/YwOJQ0KxDV7h7qaJkEu1c9HanCYnbNHjaosTaWmkn
+        QHie1VHnICfLkwZbpokW5C6HHtw/xgWOcUDmGGYsZskY
+X-Google-Smtp-Source: ABdhPJzVA+O/8B02DuuSBuOGAZP7Ze1ToCSzfGnOyyBIPv80gzyS07s2MKeTbAYxBcysu6qbfmsN3xD6FR+kU5LkJ3I=
+X-Received: by 2002:a63:e057:: with SMTP id n23mr1471867pgj.368.1596159395958;
+ Thu, 30 Jul 2020 18:36:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200731004012.2324147-3-joel@joelfernandes.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200730073702.16887-1-xie.he.0141@gmail.com>
+In-Reply-To: <20200730073702.16887-1-xie.he.0141@gmail.com>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Thu, 30 Jul 2020 18:36:25 -0700
+Message-ID: <CAJht_ENjHRExBEHx--xmqnOy1MXY_6F5XZ_exinSfa6xU_XDJg@mail.gmail.com>
+Subject: Re: [PATCH v2] drivers/net/wan/lapbether: Use needed_headroom instead
+ of hard_header_len
+To:     Willem de Bruijn <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux X25 <linux-x25@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 08:40:12PM -0400, Joel Fernandes (Google) wrote:
-> Make FQS loop consider it an immediate failure if the case of an offline CPU
-> reporting QS is detected, instead of a full second.
-> 
-> This is because rcu_report_dead() already reports quiescent states and
-> updates ->qsmaskinitnext under node lock.
-> 
-> Light testing with TREE03 and hotplug shows no warnings.
-> 
-> Convert the warning as well to WARN_ON_ONCE() to reduce log spam.
+I'm really sorry to have re-sent the patch when the patch is still in
+review. I don't intend to be disrespectful to anyone. And I apologize
+for any disrespectfulness this might appear. Sorry.
 
-I will give you a chance to upgrade the above on your V3.
-And the comment below.
+I'm also sorry for not having sent the patch with the proper subject
+prefixed with "net" or "net-next". If anyone requests I can re-send
+this patch with the proper subject "PATCH net".
 
-I do very much like the change to WARN_ON_ONCE(), by the way!
+This patch actually fixes a kernel panic when this driver is used with
+a AF_PACKET/RAW socket. This driver runs on top of Ethernet
+interfaces. So I created a pair of virtual Ethernet (veth) interfaces,
+loaded this driver to create a pair of X.25 interfaces on top of them,
+and wrote C programs to use AF_PACKET sockets to send/receive data
+through them.
 
-							Thanx, Paul
+At first I used AF_PACKET/DGRAM sockets. I prepared packet data
+according to the requirements of X.25 drivers. I first sent an
+one-byte packet ("\x01") to instruct the driver to connect, then I
+sent data prefixed with an one-byte pseudo header ("\x00") to instruct
+the driver to send the data, and then I sent another one-byte packet
+("\x02") to instruct the driver to disconnect.
 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  kernel/rcu/tree.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index a621932cc385..39bdd744ba97 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -1208,13 +1208,15 @@ static int rcu_implicit_dynticks_qs(struct rcu_data *rdp)
->  		return 1;
->  	}
->  
-> -	/* If waiting too long on an offline CPU, complain. */
-> -	if (!(rdp->grpmask & rcu_rnp_online_cpus(rnp)) &&
-> -	    time_after(jiffies, rcu_state.gp_start + HZ)) {
-> +	/*
-> +	 * Complain if an offline CPU by RCU's books has not reported QS. Node
-> +	 * lock is held ensuring offlining does not race here.
-> +	 */
-> +	if (!(rdp->grpmask & rcu_rnp_online_cpus(rnp))) {
->  		bool onl;
->  		struct rcu_node *rnp1;
->  
-> -		WARN_ON(1);  /* Offline CPUs are supposed to report QS! */
-> +		WARN_ON_ONCE(1);  /* Offline CPUs are supposed to report QS! */
->  		pr_info("%s: grp: %d-%d level: %d ->gp_seq %ld ->completedqs %ld\n",
->  			__func__, rnp->grplo, rnp->grphi, rnp->level,
->  			(long)rnp->gp_seq, (long)rnp->completedqs);
-> -- 
-> 2.28.0.163.g6104cc2f0b6-goog
-> 
+This works fine with AF_PACKET/DGRAM sockets. However, when I change
+it to AF_PACKET/RAW sockets, kernel panic occurs. The stack trace is
+as follows. We can see the kernel panicked because of insufficient
+header space when pushing the Ethernet header.
+
+[  168.399197] skbuff: skb_under_panic: text:ffffffff819d95fb len:20
+put:14 head:ffff8882704c0a00 data:ffff8882704c09fd tail:0x11 end:0xc0
+dev:veth0
+...
+[  168.399255] Call Trace:
+[  168.399259]  skb_push.cold+0x14/0x24
+[  168.399262]  eth_header+0x2b/0xc0
+[  168.399267]  lapbeth_data_transmit+0x9a/0xb0 [lapbether]
+[  168.399275]  lapb_data_transmit+0x22/0x2c [lapb]
+[  168.399277]  lapb_transmit_buffer+0x71/0xb0 [lapb]
+[  168.399279]  lapb_kick+0xe3/0x1c0 [lapb]
+[  168.399281]  lapb_data_request+0x76/0xc0 [lapb]
+[  168.399283]  lapbeth_xmit+0x56/0x90 [lapbether]
+[  168.399286]  dev_hard_start_xmit+0x91/0x1f0
+[  168.399289]  ? irq_init_percpu_irqstack+0xc0/0x100
+[  168.399291]  __dev_queue_xmit+0x721/0x8e0
+[  168.399295]  ? packet_parse_headers.isra.0+0xd2/0x110
+[  168.399297]  dev_queue_xmit+0x10/0x20
+[  168.399298]  packet_sendmsg+0xbf0/0x19b0
+......
+
+After applying this patch, the kernel panic no longer appears, and
+AF_PACKET/RAW sockets would then behave the same as AF_PACKET/DGRAM
+sockets.
