@@ -2,144 +2,129 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A686C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10587C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6720F20829
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E341620829
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:41:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="l3PHEQd9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732273AbgGaJlb (ORCPT
+        id S1732290AbgGaJlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:41:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:53892 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732257AbgGaJla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:41:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57AEC31B;
-        Fri, 31 Jul 2020 02:41:30 -0700 (PDT)
-Received: from [10.37.12.83] (unknown [10.37.12.83])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C54463F66E;
-        Fri, 31 Jul 2020 02:41:28 -0700 (PDT)
-Subject: Re: [RFC PATCH 06/14] coresight: Convert claim and lock operations to
- use access wrappers
-To:     mathieu.poirier@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mike.leach@linaro.org, coresight@lists.linaro.org
-References: <20200722172040.1299289-1-suzuki.poulose@arm.com>
- <20200722172040.1299289-7-suzuki.poulose@arm.com>
- <20200730195450.GC3155687@xps15>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <453196b1-7549-dca5-169a-eff98f8d720e@arm.com>
-Date:   Fri, 31 Jul 2020 10:46:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Fri, 31 Jul 2020 05:41:37 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:34929 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732255AbgGaJlg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 05:41:36 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200731094134euoutp01142214ddb761f977b24beb54e0f04cf2~mzPqdZJVo0386103861euoutp01S
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 09:41:34 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200731094134euoutp01142214ddb761f977b24beb54e0f04cf2~mzPqdZJVo0386103861euoutp01S
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1596188494;
+        bh=GbJBbeJR03bXyFa1MMhre4R+cY8zmKVFAv+IxUgW3lY=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=l3PHEQd9eAGlq79XPadT89u/Vlbzzk/feLp5HJ7p6Zoct5DKsYUmNObm8DuztaG1C
+         vjw3eSlVxe4vF4vJkYUnLks5bwo/8JbHYyrfPQqT4FLDWjYFg1WF2zli8XCa+SCWLE
+         9P8yYqlNVWgSyh42LDHSpwj1vgF9p1dk9bBE9rZw=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200731094134eucas1p2cc877d2721c083b35afcf08b0326491e~mzPqOultR2742427424eucas1p2h;
+        Fri, 31 Jul 2020 09:41:34 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 47.8F.06456.E47E32F5; Fri, 31
+        Jul 2020 10:41:34 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200731094134eucas1p2901617e5a4bc391cde77db276f0e7e93~mzPp6TTi91805118051eucas1p24;
+        Fri, 31 Jul 2020 09:41:34 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200731094134eusmtrp207c3fddb994001b6a01207e3f65e0546~mzPp5o89e0594305943eusmtrp2k;
+        Fri, 31 Jul 2020 09:41:34 +0000 (GMT)
+X-AuditID: cbfec7f2-809ff70000001938-9d-5f23e74e7089
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 15.36.06314.D47E32F5; Fri, 31
+        Jul 2020 10:41:34 +0100 (BST)
+Received: from [106.210.123.115] (unknown [106.210.123.115]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200731094133eusmtip26b9016d1143d62093808ba7eaa560dc5~mzPpK4WEH2703327033eusmtip2P;
+        Fri, 31 Jul 2020 09:41:33 +0000 (GMT)
+Subject: Re: [PATCH v2 04/11] media: exynos4-is: Correct missing entity
+ function initialization
+To:     Jonathan Bakker <xc-racer2@live.ca>, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     kyungmin.park@samsung.com, mchehab@kernel.org, kgene@kernel.org,
+        krzk@kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <c1b7b54c-6c97-e430-daec-f7815b54a33e@samsung.com>
+Date:   Fri, 31 Jul 2020 11:41:32 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200730195450.GC3155687@xps15>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <BN6PR04MB066098E34801126939AB0EF6A3710@BN6PR04MB0660.namprd04.prod.outlook.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm2znbOa5m36bhq0nBsqAgzezHgUQsDPZDQoKCBC+nPKi0Tdu8
+        9qehZt7TbuoUZ1oWa3lZTvNShqhDvJWWZF6iFDTNbtrFNM3tJPnveZ73eb73eeGjCdkzoRsd
+        rY7jNGpWKReJyYaupf4DJ6Z3hx2sL3RlDB39Qubq5BzBDAzUUkxfykeKMU8OC5mh5lIRk1Nr
+        ETJFA08FTJV5RcBcftJBMS8Kxkn/LQqzMVOkeHTnkqJi5BepyKs3IsWCeWeQMFjsG8EpoxM4
+        jZdfuDjKUNlIxU4QSSuWJaEOZRJZyIEGfBhWxqtFWUhMy/B9BPkPqwU8WURg7X5A8GQBQWnr
+        knAjont3k+QH9xB0FbcgnnxFcKvjisDmcsIsVI8t2ePOuAZB1fUv9ocJnI6g7I+OsrlE2Bty
+        O/PW4zQtwX5w1xRkk0m8B5pGDaQNb8ehYLG+sj8qwVLoLp6y6w44BBqHFu2VCOwCb6YMAh7v
+        gsb5UvtiwMMUtH7OF/C9A2ChcJzksRPMWuspHrvDWpNBwAdSEeS0jFI8yUfw1lqOeNcRGOv/
+        LbI1JfA+qGn24uWj0LtYR9pkwI7wel7Kl3CEaw2FBC9LICNdxrs9YNlY+K+OG2RPrZH5SK7f
+        dJp+0zn6Tefo/+8tR6QRuXDxWlUkp/VWc4meWlaljVdHep6LUZnR+r/qWbV+e4y+D55tR5hG
+        8q2S8EF5mEzIJmiTVe0IaELuLDnW1xMqk0SwyRc5TUyYJl7JadvRDpqUu0h8Kj6EyHAkG8ed
+        57hYTrMxFdAObjrkujx7OiUjLTDJXVzUM2NJmVBLR1yCVaYqY05e5d7ArEiTrCphzten7Xjm
+        tln/luARU91t3Y9e73ZpebZbrvTkyvsSiyV9CBJXEwp8jJ9C2k4ta0rq6BnfrDKL+/TPQ2fm
+        X95IXu5sTnMwKtmS5IALz1NlSo/dlN4vcJ52FQ/LSW0U672f0GjZv+Ozv2tTAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAIsWRmVeSWpSXmKPExsVy+t/xe7p+z5XjDXrvMFrMP3KO1aL/8Wtm
+        i/PnN7BbnG16w26x6fE1VovLu+awWfRs2MpqMeP8PiaLZZv+MFm07j3CbnFx4l0WB26PTas6
+        2Tw2L6n3WHTzB4tH35ZVjB6fN8kFsEbp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvH
+        WhmZKunb2aSk5mSWpRbp2yXoZcxfvJ294B5zxZ+tP1kbGDuZuxg5OSQETCQaHk5l6WLk4hAS
+        WMoocefaG6AEB1BCSmJ+ixJEjbDEn2tdbBA17xklPrafYQVJCAskSqy78xNskIjAekaJAyfE
+        QIqYBdoYJSZvnsQE0XEHqOPIbyaQKjYBQ4neo32MIBt4Bewklq4JAAmzCKhK7Lw9nwXEFhWI
+        k3jc+x9sKK+AoMTJmU/A4pwCsRLbL38BW8wsoC7xZ94lZghbXOLWk/lMELa8xPa3c5gnMArN
+        QtI+C0nLLCQts5C0LGBkWcUoklpanJueW2yoV5yYW1yal66XnJ+7iREYm9uO/dy8g/HSxuBD
+        jAIcjEo8vAmXlOKFWBPLiitzDzFKcDArifA6nT0dJ8SbklhZlVqUH19UmpNafIjRFOi5icxS
+        osn5wLSRVxJvaGpobmFpaG5sbmxmoSTO2yFwMEZIID2xJDU7NbUgtQimj4mDU6qB0YDZbn3a
+        zDkLJ2/4NTV1ff7a4mnLyidqn18Z5V6w6//BWxG8T8+m3Jj3o2WPon+8XM+0q8qc5rteKl5S
+        2ZbRedh3Nee14IvRXpbm66NPbxCva/Q+rTfXZPHEqzM2uoUae1Zz3PXaPK9rzxGJt0r3v36e
+        eG4Xp155sm/0Y3cX0dkWyco39MyiJyuxFGckGmoxFxUnAgAD3M8h4wIAAA==
+X-CMS-MailID: 20200731094134eucas1p2901617e5a4bc391cde77db276f0e7e93
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200730230243eucas1p210d67c908a76e5fdfbb159e3179a7cec
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200730230243eucas1p210d67c908a76e5fdfbb159e3179a7cec
+References: <20200730230114.8572-1-xc-racer2@live.ca>
+        <CGME20200730230243eucas1p210d67c908a76e5fdfbb159e3179a7cec@eucas1p2.samsung.com>
+        <BN6PR04MB066098E34801126939AB0EF6A3710@BN6PR04MB0660.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/30/2020 08:54 PM, Mathieu Poirier wrote:
-> On Wed, Jul 22, 2020 at 06:20:32PM +0100, Suzuki K Poulose wrote:
->> Convert the CoreSight CLAIM set/clear, LOCK/UNLOCK operations to
->> use the coresight device access abstraction.
->>
->> Mostly a mechanical change.
->>
->> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Cc: Mike Leach <mike.leach@linaro.org>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> ---
->>   drivers/hwtracing/coresight/coresight-catu.c  | 14 ++--
->>   .../hwtracing/coresight/coresight-cpu-debug.c | 26 ++++++--
->>   .../hwtracing/coresight/coresight-cti-sysfs.c |  4 +-
->>   drivers/hwtracing/coresight/coresight-cti.c   | 30 +++++----
->>   drivers/hwtracing/coresight/coresight-etb10.c | 20 +++---
->>   .../coresight/coresight-etm3x-sysfs.c         |  8 +--
->>   drivers/hwtracing/coresight/coresight-etm3x.c | 44 ++++++++-----
->>   drivers/hwtracing/coresight/coresight-etm4x.c | 44 ++++++++-----
->>   .../hwtracing/coresight/coresight-funnel.c    | 18 ++---
->>   drivers/hwtracing/coresight/coresight-priv.h  |  9 +--
->>   .../coresight/coresight-replicator.c          | 27 +++++---
->>   drivers/hwtracing/coresight/coresight-stm.c   | 46 ++++++++-----
->>   .../hwtracing/coresight/coresight-tmc-etf.c   | 36 ++++++----
->>   .../hwtracing/coresight/coresight-tmc-etr.c   | 19 +++---
->>   drivers/hwtracing/coresight/coresight-tpiu.c  |  9 +--
->>   drivers/hwtracing/coresight/coresight.c       | 66 +++++++++++--------
->>   include/linux/coresight.h                     | 16 ++---
->>   17 files changed, 266 insertions(+), 170 deletions(-)
->>
-
-...
-
->> diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
->> index 67fc3e3b77d8..d61ffbfe0a5c 100644
->> --- a/drivers/hwtracing/coresight/coresight-funnel.c
->> +++ b/drivers/hwtracing/coresight/coresight-funnel.c
->> @@ -52,13 +52,14 @@ static int dynamic_funnel_enable_hw(struct funnel_drvdata *drvdata, int port)
->>   {
->>   	u32 functl;
->>   	int rc = 0;
->> +	struct coresight_device *csdev = drvdata->csdev;
->>   
->> -	CS_UNLOCK(drvdata->base);
->> +	CS_UNLOCK(&csdev->access);
->>   
->>   	functl = readl_relaxed(drvdata->base + FUNNEL_FUNCTL);
->>   	/* Claim the device only when we enable the first slave */
->>   	if (!(functl & FUNNEL_ENSx_MASK)) {
->> -		rc = coresight_claim_device_unlocked(drvdata->base);
->> +		rc = coresight_claim_device_unlocked(csdev);
->>   		if (rc)
->>   			goto done;
->>   	}
->> @@ -69,7 +70,7 @@ static int dynamic_funnel_enable_hw(struct funnel_drvdata *drvdata, int port)
->>   	writel_relaxed(functl, drvdata->base + FUNNEL_FUNCTL);
->>   	writel_relaxed(drvdata->priority, drvdata->base + FUNNEL_PRICTL);
->>   done:
->> -	CS_LOCK(drvdata->base);
->> +	CS_LOCK(&csdev->access);
->>   	return rc;
->>   }
->>   
->> @@ -101,8 +102,9 @@ static void dynamic_funnel_disable_hw(struct funnel_drvdata *drvdata,
->>   				      int inport)
->>   {
->>   	u32 functl;
->> +	struct coresight_device *csdev = drvdata->csdev;
+On 31.07.2020 01:01, Jonathan Bakker wrote:
+> Commit bae4500399c4 ("[media] exynos4-is: Add missing entity function
+> initialization") tried to suppress the warnings such as
 > 
-> Sometimes a csdev variable is declared, sometimes not as in get_funnel_ctrl_hw()
-> below and this makes it hard to review all these changes.  Please select a
-> heuristic and keep with it.  I prefer this version but not dead set on it.
-
-Agreed, will change.
-
-
+> s5p-fimc-md camera: Entity type for entity FIMC.0 was not initialized!
 > 
-> Also please split in two, on for CS_LOCK/UNLOCK() and another one for the claim
-> tag functions.
+> However, this missed setting for the subdev.  Set it now to avoid the
+> ugly warnings on boot.
+> 
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
 
-There is a minor dependency here. CS_LOCK/UNLOCK is issued from the 
-coresight_{dis}claim_device() versions. One option is to choose the
-following order:
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-1) convert claim/disclaim to accept csdev.
-    And use csdev->access->base for CS_LOCK/UNLOCK.
-
-2) Convert all CS_LOCK/UNLOCK to work on csdev->access.
-
-I thought having this at one go might look better. But I agree, it is
-better to split this one. I will give it a go.
-
-Cheers
-Suzuki
