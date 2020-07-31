@@ -2,129 +2,92 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60290C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F176CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42CED20663
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB7AE2087C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:03:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UPpGg3mJ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JV5DQKXh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387561AbgGaR4B (ORCPT
+        id S2387628AbgGaSDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 13:56:01 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:33436 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729753AbgGaR4A (ORCPT
+        Fri, 31 Jul 2020 14:03:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55330 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733265AbgGaSDM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 13:56:00 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06VHrWai066567;
-        Fri, 31 Jul 2020 17:55:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=AP9h6jrjCU1OjVmOCvpM4eFekSUAOycCcjScthug83M=;
- b=UPpGg3mJlO7OVSFRYiWx/QIzbPiIeXZ5n1e7DUV5L7gjjZYgAwkdAPkhPwcG2YHNcrIO
- xAUWyMRppnetCs5lEZ7pEjauoEjPSVZfExSGJN+PS325wRq8BNL0KOOjwA0m7FCZAa4v
- oXHEcmHkqoJza0rqdOLNSNdq4mGkJ3DCsDci0R6vEOIpZDw7K0bk3xNwyxGIeBL7MjnC
- tswpRDpfcyvX0GxAmwWnIROpydlimNLsnATFqvKrve+ajhput0UO7jksXs8gJ4y0qxTk
- 4ezsnyMOe7BaYcnBgSF3sdb6iBp95Wl35V0UW6bNBlcBFGU1/D3RdLQCLy79pWn/Lh8v 4w== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 32hu1jtcbx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 Jul 2020 17:55:17 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06VHrVxn173950;
-        Fri, 31 Jul 2020 17:55:17 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 32hu605r83-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 Jul 2020 17:55:17 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06VHtCao008827;
-        Fri, 31 Jul 2020 17:55:12 GMT
-Received: from [10.39.235.87] (/10.39.235.87)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 31 Jul 2020 10:55:11 -0700
-Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
-        arnd@arndb.de, keescook@chromium.org, gerg@linux-m68k.org,
-        ktkhai@virtuozzo.com, christian.brauner@ubuntu.com,
-        peterz@infradead.org, esyr@redhat.com, christian@kellner.me,
-        areber@redhat.com, cyphar@cyphar.com
-References: <20200730171251.GI23808@casper.infradead.org>
- <63a7404c-e4f6-a82e-257b-217585b0277f@oracle.com>
- <20200730174956.GK23808@casper.infradead.org>
- <ab7a25bf-3321-77c8-9bc3-28a223a14032@oracle.com>
- <87y2n03brx.fsf@x220.int.ebiederm.org>
- <689d6348-6029-5396-8de7-a26bc3c017e5@oracle.com>
- <20200731152736.GP23808@casper.infradead.org>
- <9ba26063-0098-e796-9431-8c1d0c076ffc@oracle.com>
- <20200731165649.GG24045@ziepe.ca>
- <71ddd3c1-bb59-3e63-e137-99b88ace454d@oracle.com>
- <20200731174837.GH24045@ziepe.ca>
-From:   Steven Sistare <steven.sistare@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <f4ce3f4a-bdee-ec43-986c-8e4d8b1d2ddc@oracle.com>
-Date:   Fri, 31 Jul 2020 13:55:07 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 31 Jul 2020 14:03:12 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2271C061756
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 11:03:11 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id ha11so8226637pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 11:03:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=ZjrJAzYswZqCVSVIaoyYZxr9XduXpUTxG9r/FHGE6cQ=;
+        b=JV5DQKXhPEbZKTdY/8xEmnRUaJnFZ7LpRkFNdVg882PxA6eUu7EJ+xs95vbhlWnBAy
+         zhZODJsM0wtKe982BnYqX16laW9iIQpvT2uxERVmPiP8PSa7mob3ZaZJs5f5PAsxMQ2u
+         /B+DYSkBO5j/d8fsT1tndObpzg3oXpgAa6UVk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=ZjrJAzYswZqCVSVIaoyYZxr9XduXpUTxG9r/FHGE6cQ=;
+        b=LwmRWwHn7yW+hJNsF7RGN/XIaoudlVtSWOLJIkPdcoYymcF/bV2o4BycwpcXgurNrY
+         nCAyu/2990WLkLMiqw3AAMsP0Qwtz4NONkKMDEVq6y7z5xeIvsnorbr9yPu21zTaP2qg
+         WHNUCfmgZVGysLLcBluwmn1/427UuXfiWZXqUhuN5keaTb5puPklkMLUvESlAJfPT0Wz
+         Lu+1XCIPvXuEUNFRQRa4aMz5ihGYgOed/8uJwDyKzL4Cs+OWzwExqvAcwxgKD1VVU+p8
+         KCOOygJgBVywcKrSNgsCtjg5JEqn4hQn6F8ehQDuwmkyycdvRO0a1b1MsfZSj2BfL8Vv
+         SwBg==
+X-Gm-Message-State: AOAM530cPNM1PAUWBflxh2l3SRIc5eRl8lHON9HAhUcj+9tuS/zUaRkl
+        KZt8//x7uwybDK1kxQwCwiTHQw==
+X-Google-Smtp-Source: ABdhPJymp5GnPhZUtJTMWMSmAeJ7UyHP5HdsLB4so0CKriPHdFZEzBcgwvs9bW2i0cZF8tcS94m/hQ==
+X-Received: by 2002:a17:90a:8a87:: with SMTP id x7mr4536026pjn.81.1596218591350;
+        Fri, 31 Jul 2020 11:03:11 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id e65sm10140754pfe.91.2020.07.31.11.03.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 11:03:10 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200731174837.GH24045@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9699 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
- suspectscore=0 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007310135
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9699 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1015
- malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007310135
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200731104555.v3.3.Idbfcd2e92d2fd89b6ed2e83211bd3e6c06852c33@changeid>
+References: <20200731164853.3020946-1-campello@chromium.org> <20200731104555.v3.3.Idbfcd2e92d2fd89b6ed2e83211bd3e6c06852c33@changeid>
+Subject: Re: [PATCH v3 03/15] iio: sx9310: Fix irq handling
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Daniel Campello <campello@chromium.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+To:     Daniel Campello <campello@chromium.org>,
+        LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Fri, 31 Jul 2020 11:03:09 -0700
+Message-ID: <159621858968.1360974.3370824821343276249@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/31/2020 1:48 PM, Jason Gunthorpe wrote:
-> On Fri, Jul 31, 2020 at 01:15:34PM -0400, Steven Sistare wrote:
->> On 7/31/2020 12:56 PM, Jason Gunthorpe wrote:
->>> On Fri, Jul 31, 2020 at 12:11:52PM -0400, Steven Sistare wrote:
->>>>> Your preservation-across-exec use-case might or might not need the
->>>>> VMA to be mapped at the same address.  
->>>>
->>>> It does.  qemu registers memory with vfio which remembers the va's in kernel
->>>> metadata for the device.
->>>
->>> Once the memory is registered with vfio the VA doesn't matter, vfio
->>> will keep the iommu pointing at the same physical pages no matter
->>> where they are mapped.
->>
->> Yes, but there are other code paths that compute and use offsets between va and the
->> base va.  Mapping at a different va in the new process breaks vfio; I have tried it.
-> 
-> Maybe you could fix vfio instead of having this adventure, if vfio is
-> the only motivation.
+Quoting Daniel Campello (2020-07-31 09:48:40)
+> Fixes enable/disable irq handling at various points. The driver needs to
+> only enable/disable irqs if there is an actual irq handler installed.
+>=20
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> ---
 
-Maybe.  We still need to preserve an anonymous segment, though.  MADV_DOEXEC, or mshare,
-or something else.  And I think the ability to preserve memory containing pointers to itself
-is an interesting use case, though not ours.
-
-- Steve
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
