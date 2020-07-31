@@ -2,126 +2,175 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4201C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E82520663
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:36:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L1u1vSnI"
+	by mail.kernel.org (Postfix) with ESMTP id 4AB2A207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:37:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731063AbgGaBgh (ORCPT
+        id S1731070AbgGaBh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 21:36:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728080AbgGaBgg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 21:36:36 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A8BBC061574;
-        Thu, 30 Jul 2020 18:36:36 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id m16so15899740pls.5;
-        Thu, 30 Jul 2020 18:36:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=unNkakX66uz1a8NwuDIWTVZkGEyN5ilSTI7FY3j0SNA=;
-        b=L1u1vSnIvxCrTsbprGLnPNvMYpTghiUZV9ALHMPH/7GGcpcXgAkqsU/NHJ1vvMrck5
-         eAdHIPnKemAt37IRtdNBI6CN4RpCUiLxt/TRxso0w4MoHB4ojXMBdC1v1ebqYyKxe53y
-         HNOHUXc9YjZffpb2dYNdlywhJg3y3CHsX2YmrGYzTsRazISvKoCWMMgBZOxL3QHcMeEL
-         iFTKkkOpibBFDnNqOwZlPNPuoOzcXXZmvikjntTvHVA+ajhwh3wxmBWSy7Dnm9Fw/JNX
-         Lde2+mZcbbo9Mg8FR0UVbg5G+sZdcITWW1fs1AlQOjQm4O4rBA1ZCn9Tf3PJhFxvWIty
-         7IDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=unNkakX66uz1a8NwuDIWTVZkGEyN5ilSTI7FY3j0SNA=;
-        b=cwPNBjm302yaoWye58I2qxYn3tWv0qc/JDbF+8ZA++TWewrE3BuzKtDbIhtxTar+lT
-         paIXt/HZy6A6wvvFGqwsqU8vOmo0YU5BRSNVDwqoryAd/0wvW5HHMvgR8rjc7OciHubd
-         qBP8I3W7/GDnnPuRVPHm+Pxwky/WMmipJT9TOxLESuH978/SC8oNpHs+Wvqte3cWa4k8
-         w1LcXyMxenoqhBdihMqBDbOm26aqhVNBUs8amyP28oT2o1d6WuroLrSMIqCf8d0MPMzv
-         MFnAP83p/v331CiLxOQ+rcoNgwvZd/37ZLgwhDhezpdbFznVJDWuPJYNvUAaXIfsOpZM
-         +lhg==
-X-Gm-Message-State: AOAM5331PyA0xL/YwOJQ0KxDV7h7qaJkEu1c9HanCYnbNHjaosTaWmkn
-        QHie1VHnICfLkwZbpokW5C6HHtw/xgWOcUDmGGYsZskY
-X-Google-Smtp-Source: ABdhPJzVA+O/8B02DuuSBuOGAZP7Ze1ToCSzfGnOyyBIPv80gzyS07s2MKeTbAYxBcysu6qbfmsN3xD6FR+kU5LkJ3I=
-X-Received: by 2002:a63:e057:: with SMTP id n23mr1471867pgj.368.1596159395958;
- Thu, 30 Jul 2020 18:36:35 -0700 (PDT)
+        Thu, 30 Jul 2020 21:37:58 -0400
+Received: from mga05.intel.com ([192.55.52.43]:2302 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728080AbgGaBh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 21:37:57 -0400
+IronPort-SDR: /nrDOpw+TTPOgMZDd7QyeWooSXv5Sy7NY72a0i++oQq6BcQ5++7WDYe8GV3Vl8FX/qJm53y72Q
+ YLQGmXk3hM6g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="236583572"
+X-IronPort-AV: E=Sophos;i="5.75,416,1589266800"; 
+   d="scan'208";a="236583572"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 18:37:55 -0700
+IronPort-SDR: C4nlYMd2RtUa+DJQ4qoS2N44MujtHUJ9kxKI/jBVJHKVtFJeFAVhfFnLdOtn97p1AbzrtlsNXo
+ 37JHSkdU4Eug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,416,1589266800"; 
+   d="scan'208";a="365369710"
+Received: from lkp-server02.sh.intel.com (HELO d4d86dd808e0) ([10.239.97.151])
+  by orsmga001.jf.intel.com with ESMTP; 30 Jul 2020 18:37:53 -0700
+Received: from kbuild by d4d86dd808e0 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k1Jzc-0000N0-7G; Fri, 31 Jul 2020 01:37:52 +0000
+Date:   Fri, 31 Jul 2020 09:36:56 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Torsten Duwe <duwe@suse.de>
+Subject: arch/parisc/kernel/module.c:965:8: warning: Uninitialized variable:
+ err
+Message-ID: <202007310943.xN5qRKad%lkp@intel.com>
 MIME-Version: 1.0
-References: <20200730073702.16887-1-xie.he.0141@gmail.com>
-In-Reply-To: <20200730073702.16887-1-xie.he.0141@gmail.com>
-From:   Xie He <xie.he.0141@gmail.com>
-Date:   Thu, 30 Jul 2020 18:36:25 -0700
-Message-ID: <CAJht_ENjHRExBEHx--xmqnOy1MXY_6F5XZ_exinSfa6xU_XDJg@mail.gmail.com>
-Subject: Re: [PATCH v2] drivers/net/wan/lapbether: Use needed_headroom instead
- of hard_header_len
-To:     Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux X25 <linux-x25@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm really sorry to have re-sent the patch when the patch is still in
-review. I don't intend to be disrespectful to anyone. And I apologize
-for any disrespectfulness this might appear. Sorry.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   e2c46b5762c616c249201688d3b9846627f78d2c
+commit: a1326b17ac03a9012cb3d01e434aacb4d67a416c module/ftrace: handle patchable-function-entry
+date:   9 months ago
+compiler: hppa-linux-gcc (GCC) 9.3.0
 
-I'm also sorry for not having sent the patch with the proper subject
-prefixed with "net" or "net-next". If anyone requests I can re-send
-this patch with the proper subject "PATCH net".
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
-This patch actually fixes a kernel panic when this driver is used with
-a AF_PACKET/RAW socket. This driver runs on top of Ethernet
-interfaces. So I created a pair of virtual Ethernet (veth) interfaces,
-loaded this driver to create a pair of X.25 interfaces on top of them,
-and wrote C programs to use AF_PACKET sockets to send/receive data
-through them.
 
-At first I used AF_PACKET/DGRAM sockets. I prepared packet data
-according to the requirements of X.25 drivers. I first sent an
-one-byte packet ("\x01") to instruct the driver to connect, then I
-sent data prefixed with an one-byte pseudo header ("\x00") to instruct
-the driver to send the data, and then I sent another one-byte packet
-("\x02") to instruct the driver to disconnect.
+cppcheck warnings: (new ones prefixed by >>)
 
-This works fine with AF_PACKET/DGRAM sockets. However, when I change
-it to AF_PACKET/RAW sockets, kernel panic occurs. The stack trace is
-as follows. We can see the kernel panicked because of insufficient
-header space when pushing the Ethernet header.
+>> arch/parisc/kernel/module.c:965:8: warning: Uninitialized variable: err [uninitvar]
+      if (err)
+          ^
 
-[  168.399197] skbuff: skb_under_panic: text:ffffffff819d95fb len:20
-put:14 head:ffff8882704c0a00 data:ffff8882704c09fd tail:0x11 end:0xc0
-dev:veth0
-...
-[  168.399255] Call Trace:
-[  168.399259]  skb_push.cold+0x14/0x24
-[  168.399262]  eth_header+0x2b/0xc0
-[  168.399267]  lapbeth_data_transmit+0x9a/0xb0 [lapbether]
-[  168.399275]  lapb_data_transmit+0x22/0x2c [lapb]
-[  168.399277]  lapb_transmit_buffer+0x71/0xb0 [lapb]
-[  168.399279]  lapb_kick+0xe3/0x1c0 [lapb]
-[  168.399281]  lapb_data_request+0x76/0xc0 [lapb]
-[  168.399283]  lapbeth_xmit+0x56/0x90 [lapbether]
-[  168.399286]  dev_hard_start_xmit+0x91/0x1f0
-[  168.399289]  ? irq_init_percpu_irqstack+0xc0/0x100
-[  168.399291]  __dev_queue_xmit+0x721/0x8e0
-[  168.399295]  ? packet_parse_headers.isra.0+0xd2/0x110
-[  168.399297]  dev_queue_xmit+0x10/0x20
-[  168.399298]  packet_sendmsg+0xbf0/0x19b0
-......
+vim +965 arch/parisc/kernel/module.c
 
-After applying this patch, the kernel panic no longer appears, and
-AF_PACKET/RAW sockets would then behave the same as AF_PACKET/DGRAM
-sockets.
+^1da177e4c3f41 Linus Torvalds 2005-04-16  884  
+^1da177e4c3f41 Linus Torvalds 2005-04-16  885  	register_unwind_table(me, sechdrs);
+^1da177e4c3f41 Linus Torvalds 2005-04-16  886  
+^1da177e4c3f41 Linus Torvalds 2005-04-16  887  	/* haven't filled in me->symtab yet, so have to find it
+^1da177e4c3f41 Linus Torvalds 2005-04-16  888  	 * ourselves */
+^1da177e4c3f41 Linus Torvalds 2005-04-16  889  	for (i = 1; i < hdr->e_shnum; i++) {
+^1da177e4c3f41 Linus Torvalds 2005-04-16  890  		if(sechdrs[i].sh_type == SHT_SYMTAB
+fe579c69c6d437 Julia Lawall   2009-08-04  891  		   && (sechdrs[i].sh_flags & SHF_ALLOC)) {
+^1da177e4c3f41 Linus Torvalds 2005-04-16  892  			int strindex = sechdrs[i].sh_link;
+6ca6366220ed28 Sven Schnelle  2019-06-05  893  			symindex = i;
+^1da177e4c3f41 Linus Torvalds 2005-04-16  894  			/* FIXME: AWFUL HACK
+^1da177e4c3f41 Linus Torvalds 2005-04-16  895  			 * The cast is to drop the const from
+^1da177e4c3f41 Linus Torvalds 2005-04-16  896  			 * the sechdrs pointer */
+^1da177e4c3f41 Linus Torvalds 2005-04-16  897  			symhdr = (Elf_Shdr *)&sechdrs[i];
+^1da177e4c3f41 Linus Torvalds 2005-04-16  898  			strtab = (char *)sechdrs[strindex].sh_addr;
+^1da177e4c3f41 Linus Torvalds 2005-04-16  899  			break;
+^1da177e4c3f41 Linus Torvalds 2005-04-16  900  		}
+^1da177e4c3f41 Linus Torvalds 2005-04-16  901  	}
+^1da177e4c3f41 Linus Torvalds 2005-04-16  902  
+6183d68b8b01e3 Sven Schnelle  2019-06-05  903  	pr_debug("module %s: strtab %p, symhdr %p\n",
+^1da177e4c3f41 Linus Torvalds 2005-04-16  904  	       me->name, strtab, symhdr);
+^1da177e4c3f41 Linus Torvalds 2005-04-16  905  
+^1da177e4c3f41 Linus Torvalds 2005-04-16  906  	if(me->arch.got_count > MAX_GOTS) {
+f8fc18a1323c3f Helge Deller   2006-10-18  907  		printk(KERN_ERR "%s: Global Offset Table overflow (used %ld, allowed %d)\n",
+f8fc18a1323c3f Helge Deller   2006-10-18  908  				me->name, me->arch.got_count, MAX_GOTS);
+^1da177e4c3f41 Linus Torvalds 2005-04-16  909  		return -EINVAL;
+^1da177e4c3f41 Linus Torvalds 2005-04-16  910  	}
+^1da177e4c3f41 Linus Torvalds 2005-04-16  911  
+c298be74492bec Helge Deller   2009-01-01  912  	kfree(me->arch.section);
+c298be74492bec Helge Deller   2009-01-01  913  	me->arch.section = NULL;
+c298be74492bec Helge Deller   2009-01-01  914  
+^1da177e4c3f41 Linus Torvalds 2005-04-16  915  	/* no symbol table */
+^1da177e4c3f41 Linus Torvalds 2005-04-16  916  	if(symhdr == NULL)
+^1da177e4c3f41 Linus Torvalds 2005-04-16  917  		return 0;
+^1da177e4c3f41 Linus Torvalds 2005-04-16  918  
+^1da177e4c3f41 Linus Torvalds 2005-04-16  919  	oldptr = (void *)symhdr->sh_addr;
+^1da177e4c3f41 Linus Torvalds 2005-04-16  920  	newptr = oldptr + 1;	/* we start counting at 1 */
+^1da177e4c3f41 Linus Torvalds 2005-04-16  921  	nsyms = symhdr->sh_size / sizeof(Elf_Sym);
+6183d68b8b01e3 Sven Schnelle  2019-06-05  922  	pr_debug("OLD num_symtab %lu\n", nsyms);
+^1da177e4c3f41 Linus Torvalds 2005-04-16  923  
+^1da177e4c3f41 Linus Torvalds 2005-04-16  924  	for (i = 1; i < nsyms; i++) {
+^1da177e4c3f41 Linus Torvalds 2005-04-16  925  		oldptr++;	/* note, count starts at 1 so preincrement */
+^1da177e4c3f41 Linus Torvalds 2005-04-16  926  		if(strncmp(strtab + oldptr->st_name,
+^1da177e4c3f41 Linus Torvalds 2005-04-16  927  			      ".L", 2) == 0)
+^1da177e4c3f41 Linus Torvalds 2005-04-16  928  			continue;
+^1da177e4c3f41 Linus Torvalds 2005-04-16  929  
+^1da177e4c3f41 Linus Torvalds 2005-04-16  930  		if(newptr != oldptr)
+^1da177e4c3f41 Linus Torvalds 2005-04-16  931  			*newptr++ = *oldptr;
+^1da177e4c3f41 Linus Torvalds 2005-04-16  932  		else
+^1da177e4c3f41 Linus Torvalds 2005-04-16  933  			newptr++;
+^1da177e4c3f41 Linus Torvalds 2005-04-16  934  
+^1da177e4c3f41 Linus Torvalds 2005-04-16  935  	}
+^1da177e4c3f41 Linus Torvalds 2005-04-16  936  	nsyms = newptr - (Elf_Sym *)symhdr->sh_addr;
+6183d68b8b01e3 Sven Schnelle  2019-06-05  937  	pr_debug("NEW num_symtab %lu\n", nsyms);
+^1da177e4c3f41 Linus Torvalds 2005-04-16  938  	symhdr->sh_size = nsyms * sizeof(Elf_Sym);
+8cc28269b95741 Helge Deller   2018-11-10  939  
+8cc28269b95741 Helge Deller   2018-11-10  940  	/* find .altinstructions section */
+8cc28269b95741 Helge Deller   2018-11-10  941  	secstrings = (void *)hdr + sechdrs[hdr->e_shstrndx].sh_offset;
+8cc28269b95741 Helge Deller   2018-11-10  942  	for (s = sechdrs; s < sechdrs + hdr->e_shnum; s++) {
+8cc28269b95741 Helge Deller   2018-11-10  943  		void *aseg = (void *) s->sh_addr;
+8cc28269b95741 Helge Deller   2018-11-10  944  		char *secname = secstrings + s->sh_name;
+8cc28269b95741 Helge Deller   2018-11-10  945  
+8cc28269b95741 Helge Deller   2018-11-10  946  		if (!strcmp(".altinstructions", secname))
+8cc28269b95741 Helge Deller   2018-11-10  947  			/* patch .altinstructions */
+8cc28269b95741 Helge Deller   2018-11-10  948  			apply_alternatives(aseg, aseg + s->sh_size, me->name);
+8cc28269b95741 Helge Deller   2018-11-10  949  
+a1326b17ac03a9 Mark Rutland   2019-10-16  950  #ifdef CONFIG_DYNAMIC_FTRACE
+6ca6366220ed28 Sven Schnelle  2019-06-05  951  		/* For 32 bit kernels we're compiling modules with
+6ca6366220ed28 Sven Schnelle  2019-06-05  952  		 * -ffunction-sections so we must relocate the addresses in the
+a1326b17ac03a9 Mark Rutland   2019-10-16  953  		 *  ftrace callsite section.
+6ca6366220ed28 Sven Schnelle  2019-06-05  954  		 */
+a1326b17ac03a9 Mark Rutland   2019-10-16  955  		if (symindex != -1 && !strcmp(secname, FTRACE_CALLSITE_SECTION)) {
+a1326b17ac03a9 Mark Rutland   2019-10-16  956  			int err;
+6ca6366220ed28 Sven Schnelle  2019-06-05  957  			if (s->sh_type == SHT_REL)
+6ca6366220ed28 Sven Schnelle  2019-06-05  958  				err = apply_relocate((Elf_Shdr *)sechdrs,
+6ca6366220ed28 Sven Schnelle  2019-06-05  959  							strtab, symindex,
+6ca6366220ed28 Sven Schnelle  2019-06-05  960  							s - sechdrs, me);
+6ca6366220ed28 Sven Schnelle  2019-06-05  961  			else if (s->sh_type == SHT_RELA)
+6ca6366220ed28 Sven Schnelle  2019-06-05  962  				err = apply_relocate_add((Elf_Shdr *)sechdrs,
+6ca6366220ed28 Sven Schnelle  2019-06-05  963  							strtab, symindex,
+6ca6366220ed28 Sven Schnelle  2019-06-05  964  							s - sechdrs, me);
+6ca6366220ed28 Sven Schnelle  2019-06-05 @965  			if (err)
+6ca6366220ed28 Sven Schnelle  2019-06-05  966  				return err;
+6ca6366220ed28 Sven Schnelle  2019-06-05  967  		}
+a1326b17ac03a9 Mark Rutland   2019-10-16  968  #endif
+6ca6366220ed28 Sven Schnelle  2019-06-05  969  	}
+5336377d622595 Linus Torvalds 2010-10-05  970  	return 0;
+^1da177e4c3f41 Linus Torvalds 2005-04-16  971  }
+^1da177e4c3f41 Linus Torvalds 2005-04-16  972  
+
+:::::: The code at line 965 was first introduced by commit
+:::::: 6ca6366220ed285e29ee22f4cf5c68a0397cb005 parisc: add dynamic ftrace
+
+:::::: TO: Sven Schnelle <svens@stackframe.org>
+:::::: CC: Helge Deller <deller@gmx.de>
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
