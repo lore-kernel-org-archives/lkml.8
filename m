@@ -2,154 +2,165 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5242DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFDCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C30E207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A42D82074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:06:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wxS4YMU2"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="paELUECn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731788AbgGaICn (ORCPT
+        id S1731573AbgGaIGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:02:43 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:59141 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731616AbgGaICm (ORCPT
+        Fri, 31 Jul 2020 04:06:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731436AbgGaIGG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 04:02:42 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596182561; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=MKSQY5RVrXIwpdJw6RKFSgNCGEE7ar+hIe83C8B0HxA=;
- b=wxS4YMU2VfrNUJH58mNK1eVaQzRZ84zP2Zh7wGtU7ZWvlbTf6MghF+oUUGpQXV2nCpfga1lK
- hhETzrEq3ozmCC46rB4A1az5S4Gp21jemOomhpSddpFZBmnSo48jtlFsBDaAWQjJaqtaQyyf
- rqMKIKb3BTi9fbEB4h+wCE0L7AM=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
- 5f23cfa014acd1952be8fde7 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 31 Jul 2020 08:00:32
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DF499C433A1; Fri, 31 Jul 2020 08:00:31 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 881C9C4339C;
-        Fri, 31 Jul 2020 08:00:28 +0000 (UTC)
+        Fri, 31 Jul 2020 04:06:06 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BDCFC061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 01:06:06 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id 88so27113662wrh.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 01:06:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=fucMGEr5CXFfOMcRe7EoTEOJr1Kr4QCI6uUDYVzs0gU=;
+        b=paELUECntKBbuSCyCcBVLOaExS6IKoAliKkoF5FO2Vx4ae1xzSit3j2MPx+WVR+MVK
+         zaZ97aVOzr+rKYKirG+gD6cR0v04FzDc6B5ygXWb1JXdKTzDsq1s8YL+kMqlPzHx+uYq
+         bDPB70KKa6GlMjDvyz/4JdTWKHxlYVXB9+w7f4k3yTX722eL5WLL+5uMHaCXA9zx6Ujk
+         E543xx2Kq/QfbljQhO9bln/Proogp8rAe1XWwfjZ3x9S3wHfY0u+gXUN8JSoUfrC1ORK
+         wdXqXbDwIpZ6MS3sThUTAa6zbDEMedNXGowA0RrhSgs4Sd1aQcEIGXCkT3k7ztrH1PH8
+         7B7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=fucMGEr5CXFfOMcRe7EoTEOJr1Kr4QCI6uUDYVzs0gU=;
+        b=XF4AM5aSj45eLFsjlldt3o8b+7qHebEEk59sZ8jSZSQClA10H7pxlmvrN7sKGBs95e
+         Eul9c9Q25qihPo2XUBfv53bPZb8sJ2jnNWM5yjxQiXD5HOZuTWw0k+mbQaezZfO82ssA
+         BI3Mio68FovH8sYkQ4KP5ZzJaeYemGwwV14D2AinDzEx9pixxKMVkLCpFrMomTQ9CckA
+         SR5kznh/urHJqvr/lIeHgB6622ZAyl4SSsPJEAZuPSNoygPaawNT/4lFLBxqLV8J8m4O
+         sPT/Xetbz4rsMpOrQPorRujDnTFl+mPZ/sN4n7nNjtaviPiHksuoqz/1oOIABx58bZiQ
+         YVmQ==
+X-Gm-Message-State: AOAM532fm27UdQARsu3V6SgbXKRHeU++epAFUN/TDehbnbapipYSacCH
+        o5PwQacqfb7N5HQOKLotn5ypqkVbWszYnA==
+X-Google-Smtp-Source: ABdhPJzz8HoujDESE97UeMx7i6gLDYDp1lPxuV8yNkRjvFTZsrr0L0KA7Q2WsV9AlEgH/0FFtZL4Pw==
+X-Received: by 2002:adf:9e90:: with SMTP id a16mr2541831wrf.40.1596182764941;
+        Fri, 31 Jul 2020 01:06:04 -0700 (PDT)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id z63sm13311387wmb.2.2020.07.31.01.06.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 01:06:04 -0700 (PDT)
+References: <20200723180533.220312-1-pierre-louis.bossart@linux.intel.com> <20200729154639.1983854-1-jbrunet@baylibre.com> <2ad13f95-434d-376a-bc38-b209623b461e@linux.intel.com> <1jft998jbe.fsf@starbuckisacylon.baylibre.com> <936d6e37-0ad0-b0d7-814a-1ace12087746@linux.intel.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     alsa-devel@alsa-project.org, Stephan Gerhold <stephan@gerhold.net>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-kernel@vger.kernel.org, zhangn1985@outlook.com,
+        linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH] ASoC: core: restore dpcm flags semantics
+In-reply-to: <936d6e37-0ad0-b0d7-814a-1ace12087746@linux.intel.com>
+Date:   Fri, 31 Jul 2020 10:06:03 +0200
+Message-ID: <1ja6zg85xw.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 31 Jul 2020 16:00:28 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Stanley Chu <stanley.chu@mediatek.com>,
-        Avri Altman <Avri.Altman@wdc.com>, linux-scsi@vger.kernel.org,
-        martin.petersen@oracle.com, alim.akhtar@samsung.com,
-        jejb@linux.ibm.com, beanhuo@micron.com, asutoshd@codeaurora.org,
-        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
-        chaotian.jing@mediatek.com, cc.chou@mediatek.com
-Subject: Re: [PATCH v4] scsi: ufs: Cleanup completed request without interrupt
- notification
-In-Reply-To: <97f1dfb0-41b6-0249-3e82-cae480b0efb6@acm.org>
-References: <20200724140246.19434-1-stanley.chu@mediatek.com>
- <SN6PR04MB4640B5FC06968244DDACB8BEFC720@SN6PR04MB4640.namprd04.prod.outlook.com>
- <1596159018.17247.53.camel@mtkswgap22>
- <97f1dfb0-41b6-0249-3e82-cae480b0efb6@acm.org>
-Message-ID: <8b0a158a7c3ee2165e09290996521ffc@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bart,
 
-On 2020-07-31 12:06, Bart Van Assche wrote:
-> On 2020-07-30 18:30, Stanley Chu wrote:
->> On Mon, 2020-07-27 at 11:18 +0000, Avri Altman wrote:
->>> Looks good to me.
->>> But better wait and see if Bart have any further reservations.
->> 
->> Would you have any further suggestions?
-> 
-> Today is the first time that I took a look at ufshcd_abort(). The
-> approach of that function looks wrong to me. This is how I think that a
-> SCSI LLD abort handler should work:
-> (1) Serialize against the completion path
-> (__ufshcd_transfer_req_compl()) such that it cannot happen that the
-> abort handler and the regular completion path both call
-> cmd->scsi_done(cmd) at the same time. I'm not sure whether an existing
-> synchronization object can be used for this purpose or whether a new
-> synchronization object has to be introduced to serialize scsi_done()
-> calls from __ufshcd_transfer_req_compl() and ufshcd_abort().
-> (2) While holding that synchronization object, check whether the SCSI
-> command is still outstanding. If so, submit a SCSI abort TMR to the 
-> device.
-> (3) If the command has been aborted, call scsi_done() and return
-> SUCCESS. If aborting failed and the command is still in progress, 
-> return
-> FAILED.
-> 
-> An example is available in srp_abort() in
-> drivers/infiniband/ulp/srp/ib_srp.c.
-> 
-> Bart.
+On Thu 30 Jul 2020 at 18:06, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com> wrote:
 
+> On 7/30/20 4:04 AM, Jerome Brunet wrote:
+>>
+>> On Wed 29 Jul 2020 at 17:56, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com> wrote:
+>>
+>>> On 7/29/20 10:46 AM, Jerome Brunet wrote:
+>>>> commit b73287f0b0745 ('ASoC: soc-pcm: dpcm: fix playback/capture checks')
+>>>> changed dpcm_playback and dpcm_capture semantic by throwing an error if
+>>>> these flags are not aligned with DAIs capabilities on the link.
+>>>>
+>>>> The former semantic did not force the flags and DAI caps to be aligned.
+>>>> The flag previously allowed card drivers to disable a stream direction on
+>>>> a link (whether or not such feature is deemed useful).
+>>>>
+>>>> With change ('ASoC: core: use less strict tests for dailink capabilities')
+>>>> an error is thrown if the flags and and the DAI caps are not aligned. Those
+>>>> parameters were not meant to aligned initially. No technical reason was
+>>>> given about why cards should now be considered "broken" in such condition
+>>>> is not met, or why it should be considered to be an improvement to enforce
+>>>> that.
+>>>>
+>>>> Forcing the flags to be aligned with DAI caps just make the information
+>>>> the flag carry redundant with DAI caps, breaking a few cards along the way.
+>>>>
+>>>> This change drops the added error conditions and restore the initial flag
+>>>> semantics.
+>>>
+>>> or rather lack thereof.
+>>
+>> Again, why ? All there is so far is your personal preference. no facts.
+>
+> What would be the meaning/purpose of a dailink with .dpcm_capture set, with
+> only dais that support playback only?
+>
+> What would be the meaning/purpose of a dailink with .capture_only set, but
+> with a dai that supports playback?
 
-AFAIK, sychronization of scsi_done is not a problem here, because scsi 
-layer
-use the atomic state, namely SCMD_STATE_COMPLETE, of a scsi cmd to 
-prevent
-the concurrency of abort and real completion of it.
+You get to throw an error in those case
 
-Check func scsi_times_out(), hope it helps.
+>
+> What happens if none of these flags are set?
 
-enum blk_eh_timer_return scsi_times_out(struct request *req)
-{
-...
-         if (rtn == BLK_EH_DONE) {
-                 /*
-                  * Set the command to complete first in order to prevent 
-a real
-                  * completion from releasing the command while error 
-handling
-                  * is using it. If the command was already completed, 
-then the
-                  * lower level driver beat the timeout handler, and it 
-is safe
-                  * to return without escalating error recovery.
-                  *
-                  * If timeout handling lost the race to a real 
-completion, the
-                  * block layer may ignore that due to a fake timeout 
-injection,
-                  * so return RESET_TIMER to allow error handling another 
-shot
-                  * at this command.
-                  */
-                 if (test_and_set_bit(SCMD_STATE_COMPLETE, &scmd->state))
-                         return BLK_EH_RESET_TIMER;
-                 if (scsi_abort_command(scmd) != SUCCESS) {
-                         set_host_byte(scmd, DID_TIME_OUT);
-                         scsi_eh_scmd_add(scmd);
-                 }
-         }
-}
+I think I already suggested to throw an error in the initial review of
+your patch
 
-Thanks,
+>
+> What happens when all these flags are set?
 
-Can Guo.
+I don't see the problem here
+
+>
+> No one seems to know, so my suggestion is to align first on consistent
+> configurations, then see what can be removed.
+>
+>>   * What we had gave capabilities to the link, independent of the DAI
+>>     components. ASoC just computes the intersection of all that to
+>>     determine which direction needs to be enabled. Seems rather simple
+>>     and straight forward.
+>
+> that's what my last patch did, and when there is no intersection it
+> complains. Please clarify what you expect when there is no overlap between
+> dai and dailink capabilities. Keep in mind that we have a mix of hard-codec
+> configuration and DT-created ones, your case is not the general one.
+>
+>>   * It worked for every user of DPCM so a far.
+>
+> Not completely true, when Morimoto-san added snd_soc_dai_stream_valid() it
+> exposed tons of cases where the information on direction was not provided
+> in a reliable at the DAI level. I will assert that we are still finding out
+> cases with broken DAI configurations, and as a result we will also find
+> broken dailink configurations. Your picture of DPCM as a perfectly
+> functional system that I broke is a distortion of reality.
+
+If it was not working, it was certainly not clear in the changelog.
+What's clear is the regression it caused
+
+>
+> The reality is that we have to work in steps, first make sure all DAIs are
+> properly described, then work on the dailinks and optimize at a later
+> point. we will need warnings to find out what the problem cases are, and
+> move slowly.
+
+Sure, have it your way
