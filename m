@@ -2,236 +2,165 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A4BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94AA12076B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C3D920663
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:05:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iZX7Ayql"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733106AbgGaMFX (ORCPT
+        id S1733116AbgGaMF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 08:05:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:56264 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733073AbgGaMFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 08:05:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E29BE101E;
-        Fri, 31 Jul 2020 05:05:15 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C90BD3F71F;
-        Fri, 31 Jul 2020 05:05:14 -0700 (PDT)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        morten.rasmussen@arm.com, Quentin Perret <qperret@google.com>
-Subject: [PATCH v4 09/10] sched/topology: Introduce SD metaflag for flags needing > 1 groups
-Date:   Fri, 31 Jul 2020 12:55:01 +0100
-Message-Id: <20200731115502.12954-10-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200731115502.12954-1-valentin.schneider@arm.com>
-References: <20200731115502.12954-1-valentin.schneider@arm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 31 Jul 2020 08:05:27 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:49014 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733108AbgGaMFY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 08:05:24 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06VC2wKA036678;
+        Fri, 31 Jul 2020 12:05:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=wQSjVYBw/TnpmeaVef5NuD3Sb07fZXefhlktIO+86VE=;
+ b=iZX7AyqlTaeG0sax9PxX4B4ZcMa2vT0UZ7l/Y+qmA1wZlGMKLak5Bs9GINU76b0lfvYm
+ ey6lmKPyGj3kt6rI2z71n217FQ72/y7ayy7rFtbD7yEjPFW5ph4B+/DwvW4S1WNvK0EJ
+ 87xTp9jGelyP01Vqr2pJIJww6jcOHz8AU/g/VLB4NRxrrmkHCyMmGvBqXiOJun+04Q6z
+ JyQNhQ3VhAIoSRf1E2CbKlUGYo0+/ayHFWK8VIFxcPoqV+v1WMPN8fdwF+K/p3KbpHT1
+ k7K+7KOHh8FFAn6Jzq+mfTB8y5hdo9Qzvx/v+HfwZKpsv5Zt8R13N8ZzegxlMOu051qn WA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 32hu1jrqca-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jul 2020 12:05:13 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06VC2bSk150843;
+        Fri, 31 Jul 2020 12:03:13 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3020.oracle.com with ESMTP id 32hu63wuxt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jul 2020 12:03:13 +0000
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06VC3Cr1152622;
+        Fri, 31 Jul 2020 12:03:12 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 32hu63wuv5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 31 Jul 2020 12:03:12 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06VC3Anq029674;
+        Fri, 31 Jul 2020 12:03:10 GMT
+Received: from dhcp-10-175-172-80.vpn.oracle.com (/10.175.172.80)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 31 Jul 2020 05:03:10 -0700
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak
+ in rds_notify_queue_get()
+From:   =?utf-8?Q?H=C3=A5kon_Bugge?= <haakon.bugge@oracle.com>
+In-Reply-To: <20200731115909.GA1649637@kroah.com>
+Date:   Fri, 31 Jul 2020 14:03:06 +0200
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        netdev@vger.kernel.org,
+        OFED mailing list <linux-rdma@vger.kernel.org>,
+        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <866B1B5B-0156-4EED-9599-51BEF5661DA9@oracle.com>
+References: <20200730192026.110246-1-yepeilin.cs@gmail.com>
+ <20200731045301.GI75549@unreal> <20200731095943.GI5493@kadam>
+ <81B40AF5-EBCA-4628-8CF6-687C12134552@oracle.com>
+ <20200731115909.GA1649637@kroah.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9698 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1015
+ malwarescore=0 spamscore=0 suspectscore=3 bulkscore=0 priorityscore=1501
+ phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007310090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation of cleaning up the sd_degenerate*() functions, mark flags
-that are only relevant when their associated domain has more than a single
-group. With this, build a compile-time mask of those SD flags.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
----
- include/linux/sched/sd_flags.h | 69 ++++++++++++++++++++++------------
- include/linux/sched/topology.h |  7 ++++
- 2 files changed, 53 insertions(+), 23 deletions(-)
 
-diff --git a/include/linux/sched/sd_flags.h b/include/linux/sched/sd_flags.h
-index 9d0fb8924181..6c70af066995 100644
---- a/include/linux/sched/sd_flags.h
-+++ b/include/linux/sched/sd_flags.h
-@@ -8,7 +8,7 @@
- #endif
- 
- /*
-- * Expected flag uses
-+ * Hierarchical metaflags
-  *
-  * SHARED_CHILD: These flags are meant to be set from the base domain upwards.
-  * If a domain has this flag set, all of its children should have it set. This
-@@ -29,36 +29,50 @@
-  * certain level (e.g. domain starts spanning CPUs outside of the base CPU's
-  * socket).
-  */
--#define SDF_SHARED_CHILD 0x1
--#define SDF_SHARED_PARENT 0x2
-+#define SDF_SHARED_CHILD       0x1
-+#define SDF_SHARED_PARENT      0x2
-+
-+/*
-+ * Behavioural metaflags
-+ *
-+ * NEEDS_GROUPS: These flags are only relevant if the domain they are set on has
-+ * more than one group. This is usually for balancing flags (load balancing
-+ * involves equalizing a metric between groups), or for flags describing some
-+ * shared resource (which would be shared between groups).
-+ */
-+#define SDF_NEEDS_GROUPS       0x4
- 
- /*
-  * Balance when about to become idle
-  *
-  * SHARED_CHILD: Set from the base domain up to cpuset.sched_relax_domain_level.
-+ * NEEDS_GROUPS: Load balancing flag.
-  */
--SD_FLAG(SD_BALANCE_NEWIDLE,     0, SDF_SHARED_CHILD)
-+SD_FLAG(SD_BALANCE_NEWIDLE,     0, SDF_SHARED_CHILD | SDF_NEEDS_GROUPS)
- 
- /*
-  * Balance on exec
-  *
-  * SHARED_CHILD: Set from the base domain up to the NUMA reclaim level.
-+ * NEEDS_GROUPS: Load balancing flag.
-  */
--SD_FLAG(SD_BALANCE_EXEC,        1, SDF_SHARED_CHILD)
-+SD_FLAG(SD_BALANCE_EXEC,        1, SDF_SHARED_CHILD | SDF_NEEDS_GROUPS)
- 
- /*
-  * Balance on fork, clone
-  *
-  * SHARED_CHILD: Set from the base domain up to the NUMA reclaim level.
-+ * NEEDS_GROUPS: Load balancing flag.
-  */
--SD_FLAG(SD_BALANCE_FORK,        2, SDF_SHARED_CHILD)
-+SD_FLAG(SD_BALANCE_FORK,        2, SDF_SHARED_CHILD | SDF_NEEDS_GROUPS)
- 
- /*
-  * Balance on wakeup
-  *
-  * SHARED_CHILD: Set from the base domain up to cpuset.sched_relax_domain_level.
-+ * NEEDS_GROUPS: Load balancing flag.
-  */
--SD_FLAG(SD_BALANCE_WAKE,        3, SDF_SHARED_CHILD)
-+SD_FLAG(SD_BALANCE_WAKE,        3, SDF_SHARED_CHILD | SDF_NEEDS_GROUPS)
- 
- /*
-  * Consider waking task on waking CPU.
-@@ -71,63 +85,72 @@ SD_FLAG(SD_WAKE_AFFINE,         4, SDF_SHARED_CHILD)
-  * Domain members have different CPU capacities
-  *
-  * SHARED_PARENT: Set from the topmost domain down to the first domain where
-- * asymmetry is detected.
-+ *                asymmetry is detected.
-+ * NEEDS_GROUPS: Per-CPU capacity is asymmetric between groups.
-  */
--SD_FLAG(SD_ASYM_CPUCAPACITY,    5, SDF_SHARED_PARENT)
-+SD_FLAG(SD_ASYM_CPUCAPACITY,    5, SDF_SHARED_PARENT | SDF_NEEDS_GROUPS)
- 
- /*
-  * Domain members share CPU capacity (i.e. SMT)
-  *
-  * SHARED_CHILD: Set from the base domain up until spanned CPUs no longer share
-- * CPU capacity.
-+ *               CPU capacity.
-+ * NEEDS_GROUPS: Capacity is shared between groups.
-  */
--SD_FLAG(SD_SHARE_CPUCAPACITY,   6, SDF_SHARED_CHILD)
-+SD_FLAG(SD_SHARE_CPUCAPACITY,   6, SDF_SHARED_CHILD | SDF_NEEDS_GROUPS)
- 
- /*
-  * Domain members share CPU package resources (i.e. caches)
-  *
-  * SHARED_CHILD: Set from the base domain up until spanned CPUs no longer share
-- * the same cache(s).
-+ *               the same cache(s).
-+ * NEEDS_GROUPS: Caches are shared between groups.
-  */
--SD_FLAG(SD_SHARE_PKG_RESOURCES, 7, SDF_SHARED_CHILD)
-+SD_FLAG(SD_SHARE_PKG_RESOURCES, 7, SDF_SHARED_CHILD | SDF_NEEDS_GROUPS)
- 
- /*
-  * Only a single load balancing instance
-  *
-  * SHARED_PARENT: Set for all NUMA levels above NODE. Could be set from a
-- * different level upwards, but it doesn't change that if a domain has this flag
-- * set, then all of its parents need to have it too (otherwise the serialization
-- * doesn't make sense).
-+ *                different level upwards, but it doesn't change that if a
-+ *                domain has this flag set, then all of its parents need to have
-+ *                it too (otherwise the serialization doesn't make sense).
-+ * NEEDS_GROUPS: No point in preserving domain if it has a single group.
-  */
--SD_FLAG(SD_SERIALIZE,           8, SDF_SHARED_PARENT)
-+SD_FLAG(SD_SERIALIZE,           8, SDF_SHARED_PARENT | SDF_NEEDS_GROUPS)
- 
- /*
-  * Place busy tasks earlier in the domain
-  *
-  * SHARED_CHILD: Usually set on the SMT level. Technically could be set further
-- * up, but currently assumed to be set from the base domain upwards (see
-- * update_top_cache_domain()).
-+ *               up, but currently assumed to be set from the base domain
-+ *               upwards (see update_top_cache_domain()).
-+ * NEEDS_GROUPS: Load balancing flag.
-  */
--SD_FLAG(SD_ASYM_PACKING,        9, SDF_SHARED_CHILD)
-+SD_FLAG(SD_ASYM_PACKING,        9, SDF_SHARED_CHILD | SDF_NEEDS_GROUPS)
- 
- /*
-  * Prefer to place tasks in a sibling domain
-  *
-  * Set up until domains start spanning NUMA nodes. Close to being a SHARED_CHILD
-  * flag, but cleared below domains with SD_ASYM_CPUCAPACITY.
-+ *
-+ * NEEDS_GROUPS: Load balancing flag.
-  */
--SD_FLAG(SD_PREFER_SIBLING,      10, 0)
-+SD_FLAG(SD_PREFER_SIBLING,      10, SDF_NEEDS_GROUPS)
- 
- /*
-  * sched_groups of this level overlap
-  *
-  * SHARED_PARENT: Set for all NUMA levels above NODE.
-+ * NEEDS_GROUPS: Overlaps can only exist with more than one group.
-  */
--SD_FLAG(SD_OVERLAP,             11, SDF_SHARED_PARENT)
-+SD_FLAG(SD_OVERLAP,             11, SDF_SHARED_PARENT | SDF_NEEDS_GROUPS)
- 
- /*
-  * cross-node balancing
-  *
-  * SHARED_PARENT: Set for all NUMA levels above NODE.
-+ * NEEDS_GROUPS: No point in preserving domain if it has a single group.
-  */
--SD_FLAG(SD_NUMA,                12, SDF_SHARED_PARENT)
-+SD_FLAG(SD_NUMA,                12, SDF_SHARED_PARENT | SDF_NEEDS_GROUPS)
-diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
-index 99b16d4c03f2..74e6ec32a413 100644
---- a/include/linux/sched/topology.h
-+++ b/include/linux/sched/topology.h
-@@ -16,6 +16,13 @@
- #include <linux/sched/sd_flags.h>
- #undef SD_FLAG
- 
-+/* Generate a mask of SD flags with the SDF_NEEDS_GROUPS metaflag */
-+#define SD_FLAG(name, idx, mflags) (BIT(idx) * !!((mflags) & SDF_NEEDS_GROUPS)) |
-+static const unsigned int SD_DEGENERATE_GROUPS_MASK =
-+#include <linux/sched/sd_flags.h>
-+0;
-+#undef SD_FLAG
-+
- #ifdef CONFIG_SCHED_DEBUG
- #define SD_FLAG(_name, idx, mflags) [idx] = {.meta_flags = mflags, .name = #_name},
- static const struct {
--- 
-2.27.0
+> On 31 Jul 2020, at 13:59, Greg Kroah-Hartman =
+<gregkh@linuxfoundation.org> wrote:
+>=20
+> On Fri, Jul 31, 2020 at 01:14:09PM +0200, H=C3=A5kon Bugge wrote:
+>>=20
+>>=20
+>>> On 31 Jul 2020, at 11:59, Dan Carpenter <dan.carpenter@oracle.com> =
+wrote:
+>>>=20
+>>> On Fri, Jul 31, 2020 at 07:53:01AM +0300, Leon Romanovsky wrote:
+>>>> On Thu, Jul 30, 2020 at 03:20:26PM -0400, Peilin Ye wrote:
+>>>>> rds_notify_queue_get() is potentially copying uninitialized kernel =
+stack
+>>>>> memory to userspace since the compiler may leave a 4-byte hole at =
+the end
+>>>>> of `cmsg`.
+>>>>>=20
+>>>>> In 2016 we tried to fix this issue by doing `=3D { 0 };` on =
+`cmsg`, which
+>>>>> unfortunately does not always initialize that 4-byte hole. Fix it =
+by using
+>>>>> memset() instead.
+>>>>=20
+>>>> Of course, this is the difference between "{ 0 }" and "{}" =
+initializations.
+>>>>=20
+>>>=20
+>>> No, there is no difference.  Even struct assignments like:
+>>>=20
+>>> 	foo =3D *bar;
+>>>=20
+>>> can leave struct holes uninitialized.  Depending on the compiler the
+>>> assignment can be implemented as a memset() or as a series of struct
+>>> member assignments.
+>>=20
+>> What about:
+>>=20
+>> struct rds_rdma_notify {
+>> 	__u64                      user_token;
+>> 	__s32                      status;
+>> } __attribute__((packed));
+>=20
+> Why is this still a discussion at all?
+>=20
+> Try it and see, run pahole and see if there are holes in this =
+structure
+> (odds are no), you don't need us to say what is happening here...
+
+An older posting had this:
+
+$ pahole -C "rds_rdma_notify" net/rds/recv.o
+struct rds_rdma_notify {
+	__u64                      user_token;           /*     0     8 =
+*/
+	__s32                      status;               /*     8     4 =
+*/
+
+	/* size: 16, cachelines: 1, members: 2 */
+	/* padding: 4 */
+	/* last cacheline: 16 bytes */
+};
+
+
+Thxs, H=C3=A5kon
 
