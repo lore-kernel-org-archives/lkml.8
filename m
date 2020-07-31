@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2BFC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 05:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5ECC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 05:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79A0421744
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 05:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD280208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 05:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596173593;
-	bh=Ey9Sbx63l35tpZRAlTqbhj39QlhEfAk6lnnRJ0GbmKc=;
+	s=default; t=1596173618;
+	bh=SrMzJYfTMQLBsXyhVjLLCmvenkRswzPK65sqy1cHK2g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jwoqwSO84SR8/VsatHEj+GcpFb7d92AXf6kw113gsSsQ5cVChKZXJfrShYUmLvGca
-	 N0kRSx7kTyYHOiJWFl/oAw6lQgvj4OcJKv7LzCs5w5Na2QIHqhynfS9eRzLjwUMHvF
-	 /9vj5XC7RDZmQiWK/ufB0jq6sF2GVah1mtgYi3n4=
+	b=URGTanCy7GOgt8BSOEwOvq4bDsPnIRIPvJK77rrB/BcznVxwEcEDff/WLNdRSz7I9
+	 lgqU4rkAqx/frU1aCbiFSzf8JtaMSil9qRfYJnOcd3bqx6Mn53/kDhTpcKCH08T/xF
+	 6BxejPjikKfHu2XGH9FY1v69qCzktasDQmxGvmw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730993AbgGaFdM (ORCPT
+        id S1731199AbgGaFdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 01:33:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38384 "EHLO mail.kernel.org"
+        Fri, 31 Jul 2020 01:33:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726972AbgGaFdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 01:33:10 -0400
+        id S1726972AbgGaFdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 01:33:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76248208E4;
-        Fri, 31 Jul 2020 05:33:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6D79208E4;
+        Fri, 31 Jul 2020 05:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596173590;
-        bh=Ey9Sbx63l35tpZRAlTqbhj39QlhEfAk6lnnRJ0GbmKc=;
+        s=default; t=1596173616;
+        bh=SrMzJYfTMQLBsXyhVjLLCmvenkRswzPK65sqy1cHK2g=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kFeznJvlJLIKGU7a+xR/vPryMW1/HRaqLnnUF8/Qo9g6GwLSGNzszKYgVuTEhqbG6
-         0/R1y0qxc/7LAYy7huXZwxN+Y9gTkHmcNjKtknfvJBjTzGimo7HvXBtoTBhj+Fgb1a
-         vbwF4a5Fi9jQ/BLnkYOhKx9ZOxfSppQidXBY8AvU=
-Date:   Fri, 31 Jul 2020 07:33:06 +0200
+        b=FwnmgM0LtXhYrZbihPSWdfHqpy+DSzZ09TwFtOWT8N9S6rPrAdA2tKlVwkYDVpYI7
+         /WGlgrGBWt6dS8efzXij7J2/2EIt43xsBoMyJbQjG+ff8WnhikCXp0JZMHcr82mxWq
+         +EWy9cKwBRc78VgQG7aPqhbBW+dx32cNhinrGwQk=
+Date:   Fri, 31 Jul 2020 07:33:33 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     Leon Romanovsky <leon@kernel.org>
 Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
@@ -52,32 +52,36 @@ Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
         rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
 Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak
  in rds_notify_queue_get()
-Message-ID: <20200731053306.GA466103@kroah.com>
+Message-ID: <20200731053333.GB466103@kroah.com>
 References: <20200730192026.110246-1-yepeilin.cs@gmail.com>
  <20200731045301.GI75549@unreal>
+ <20200731053306.GA466103@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200731045301.GI75549@unreal>
+In-Reply-To: <20200731053306.GA466103@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 07:53:01AM +0300, Leon Romanovsky wrote:
-> On Thu, Jul 30, 2020 at 03:20:26PM -0400, Peilin Ye wrote:
-> > rds_notify_queue_get() is potentially copying uninitialized kernel stack
-> > memory to userspace since the compiler may leave a 4-byte hole at the end
-> > of `cmsg`.
-> >
-> > In 2016 we tried to fix this issue by doing `= { 0 };` on `cmsg`, which
-> > unfortunately does not always initialize that 4-byte hole. Fix it by using
-> > memset() instead.
+On Fri, Jul 31, 2020 at 07:33:06AM +0200, Greg Kroah-Hartman wrote:
+> On Fri, Jul 31, 2020 at 07:53:01AM +0300, Leon Romanovsky wrote:
+> > On Thu, Jul 30, 2020 at 03:20:26PM -0400, Peilin Ye wrote:
+> > > rds_notify_queue_get() is potentially copying uninitialized kernel stack
+> > > memory to userspace since the compiler may leave a 4-byte hole at the end
+> > > of `cmsg`.
+> > >
+> > > In 2016 we tried to fix this issue by doing `= { 0 };` on `cmsg`, which
+> > > unfortunately does not always initialize that 4-byte hole. Fix it by using
+> > > memset() instead.
+> > 
+> > Of course, this is the difference between "{ 0 }" and "{}" initializations.
 > 
-> Of course, this is the difference between "{ 0 }" and "{}" initializations.
+> Really?  Neither will handle structures with holes in it, try it and
+> see.
 
-Really?  Neither will handle structures with holes in it, try it and
-see.
+And if true, where in the C spec does it say that?
 
 thanks,
 
