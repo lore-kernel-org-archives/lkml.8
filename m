@@ -2,122 +2,103 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 242D3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF455C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F17A1208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:42:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="haQKNtVf"
+	by mail.kernel.org (Postfix) with ESMTP id 940252087C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:43:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732709AbgGaLmf (ORCPT
+        id S1732768AbgGaLnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 07:42:35 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:57761 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732104AbgGaLme (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 07:42:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1596195753; x=1627731753;
-  h=to:cc:references:from:message-id:date:mime-version:
-   in-reply-to:content-transfer-encoding:subject;
-  bh=K3AiM2F/clmnqut2Znxq+qWVgeBAAqvTi2Syfi39/mc=;
-  b=haQKNtVfFf/YQk+GfU0r0g1LgmT4zGoF9mpmDbnnNnCjFTpN9yGtvbAf
-   4QiFaenwp7BGhgZ2NbRfZpc78Q5yrvDa7hv69l+39lmZq7RjAV1oYHfXK
-   FSFZ0SUy8En6RwK6KmPNlryEy83BiLSLabGypXa8epX3/kvo2SjEA0ZvH
-   w=;
-IronPort-SDR: LC8zCw1EdTzbrGurmmeoqTUHqPnnCNOnTYTVsS/5NQhpGOFuhOowz3TYeExDKBsBSb7ISZT/KS
- 6CSRvBNR49Tg==
-X-IronPort-AV: E=Sophos;i="5.75,418,1589241600"; 
-   d="scan'208";a="46683797"
-Subject: Re: [PATCH v2 1/3] KVM: x86: Deflect unknown MSR accesses to user space
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 31 Jul 2020 11:42:32 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id 19CCB241D46;
-        Fri, 31 Jul 2020 11:42:28 +0000 (UTC)
-Received: from EX13D20UWC002.ant.amazon.com (10.43.162.163) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 31 Jul 2020 11:42:28 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.161.34) by
- EX13D20UWC002.ant.amazon.com (10.43.162.163) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 31 Jul 2020 11:42:25 +0000
-To:     Jim Mattson <jmattson@google.com>
-CC:     Paolo Bonzini <pbonzini@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        KarimAllah Raslan <karahmed@amazon.de>,
-        kvm list <kvm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Aaron Lewis <aaronlewis@google.com>
-References: <20200729235929.379-1-graf@amazon.com>
- <20200729235929.379-2-graf@amazon.com>
- <CALMp9eRq3QUG64BwSGLbehFr8k-OLSM3phcw7mhuZ9hVk_N2-A@mail.gmail.com>
- <e7cbf218-fb01-2f30-6c5c-a4b6e441b5e4@amazon.com>
- <CALMp9eRQRaw7raxeH1nOTGr0rBk5bqbmoxUo7txGyQfaBs0=4g@mail.gmail.com>
- <CALMp9eSSKra+Vic0U9kDeiT1y+Jfq6Vmrqsw+S8jqD0_oqH9zA@mail.gmail.com>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <8d0bae24-c83d-df89-01cb-e52cddd8ba92@amazon.com>
-Date:   Fri, 31 Jul 2020 13:42:22 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        Fri, 31 Jul 2020 07:43:03 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34692 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732734AbgGaLnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 07:43:03 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C1593DFAFDA3F5F6E2A6;
+        Fri, 31 Jul 2020 19:42:41 +0800 (CST)
+Received: from huawei.com (10.175.124.27) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Fri, 31 Jul 2020
+ 19:42:34 +0800
+From:   Wang ShaoBo <bobo.shaobowang@huawei.com>
+CC:     <cj.chengjian@huawei.com>, <acme@kernel.org>, <irogers@google.com>,
+        <huawei.libin@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>
+Subject: [PATCH v2 -next] tools build: Check return value of fwrite_unlocked in jvmti_agent.c
+Date:   Fri, 31 Jul 2020 19:42:14 +0800
+Message-ID: <20200731114214.25654-1-bobo.shaobowang@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <CALMp9eSSKra+Vic0U9kDeiT1y+Jfq6Vmrqsw+S8jqD0_oqH9zA@mail.gmail.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.161.34]
-X-ClientProxiedBy: EX13D04UWB001.ant.amazon.com (10.43.161.46) To
- EX13D20UWC002.ant.amazon.com (10.43.162.163)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.27]
+X-CFilter-Loop: Reflected
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAzMS4wNy4yMCAwNToyMCwgSmltIE1hdHRzb24gd3JvdGU6Cj4gQ0FVVElPTjogVGhpcyBl
-bWFpbCBvcmlnaW5hdGVkIGZyb20gb3V0c2lkZSBvZiB0aGUgb3JnYW5pemF0aW9uLiBEbyBub3Qg
-Y2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91IGNhbiBjb25maXJtIHRo
-ZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4KPiAKPiAKPiAKPiBPbiBUaHUs
-IEp1bCAzMCwgMjAyMCBhdCA0OjUzIFBNIEppbSBNYXR0c29uIDxqbWF0dHNvbkBnb29nbGUuY29t
-PiB3cm90ZToKPj4KPj4gT24gVGh1LCBKdWwgMzAsIDIwMjAgYXQgNDowOCBQTSBBbGV4YW5kZXIg
-R3JhZiA8Z3JhZkBhbWF6b24uY29tPiB3cm90ZToKPj4+IERvIHlvdSBoYXZlIGEgcGFydGljdWxh
-ciBzaXR1YXRpb24gaW4gbWluZCB3aGVyZSB0aGF0IHdvdWxkIG5vdCBiZSB0aGUKPj4+IGNhc2Ug
-YW5kIHdoZXJlIHdlIHdvdWxkIHN0aWxsIHdhbnQgdG8gYWN0dWFsbHkgY29tcGxldGUgYW4gTVNS
-IG9wZXJhdGlvbgo+Pj4gYWZ0ZXIgdGhlIGVudmlyb25tZW50IGNoYW5nZWQ/Cj4+Cj4+IEFzIGZh
-ciBhcyB1c2Vyc3BhY2UgaXMgY29uY2VybmVkLCBpZiBpdCBoYXMgcmVwbGllZCB3aXRoIGVycm9y
-PTAsIHRoZQo+PiBpbnN0cnVjdGlvbiBoYXMgY29tcGxldGVkIGFuZCByZXRpcmVkLiBJZiB0aGUg
-a2VybmVsIGV4ZWN1dGVzIGEKPj4gZGlmZmVyZW50IGluc3RydWN0aW9uIGF0IENTOlJJUCwgdGhl
-IHN0YXRlIGlzIGNlcnRhaW5seSBpbmNvbnNpc3RlbnQKPj4gZm9yIFdSTVNSIGV4aXRzLiBJdCB3
-b3VsZCBhbHNvIGJlIGluY29uc2lzdGVudCBmb3IgUkRNU1IgZXhpdHMgaWYgdGhlCj4+IFJETVNS
-IGVtdWxhdGlvbiBvbiB0aGUgdXNlcnNwYWNlIHNpZGUgaGFkIGFueSBzaWRlLWVmZmVjdHMuCj4g
-Cj4gQWN0dWFsbHksIEkgdGhpbmsgdGhlcmUncyBhIHBvdGVudGlhbCBwcm9ibGVtIHdpdGggaW50
-ZXJydXB0IGRlbGl2ZXJ5Cj4gZXZlbiBpZiB0aGUgaW5zdHJ1Y3Rpb24gYnl0ZXMgYXJlIHRoZSBz
-YW1lLiBPbiB0aGUgc2Vjb25kIHBhc3MsIGFuCj4gaW50ZXJydXB0IGNvdWxkIGJlIGRlbGl2ZXJl
-ZCBvbiB0aGUgQ1M6SVAgb2YgYSBXUk1TUiwgZXZlbiB0aG91Z2gKPiB1c2Vyc3BhY2UgaGFzIGFs
-cmVhZHkgZW11bGF0ZWQgdGhlIFdSTVNSIGluc3RydWN0aW9uLiBUaGlzIGNvdWxkIGJlCj4gcGFy
-dGljdWxhcmx5IGF3a3dhcmQgaWYgdGhlIFdSTVNSIHdhcyB0byB0aGUgeDJBUElDIFRQUiByZWdp
-c3RlciwgYW5kCj4gaW4gZmFjdCBsb3dlcmVkIHRoZSBUUFIgc3VmZmljaWVudGx5IHRvIGFsbG93
-IGEgcGVuZGluZyBpbnRlcnJ1cHQgdG8KPiBiZSBkZWxpdmVyZWQuCgpPaywgeW91IGdvdCBtZSBj
-b252aW5jZWQgaGVyZSA6KS4gVGhlIGZvbGxvd2luZyBmbG93IGJyZWFrcyB3aXRoIG15IG1vZGVs
-OgoKICAgKiByZG1zciBvbiAweDEyMywgdHJhcHMgdG8gdXNlciBzcGFjZQogICAqIHVzZXIgc3Bh
-Y2UgaGFuZGxlcyBpdCwgd3JpdGVzIGRhdGEgaW50byBydW4tPm1zcgogICAqIGtlcm5lbCBpbmpl
-Y3RzIHBlbmRpbmcgSVJRCiAgICogSVJRIGhhbmRsZXIgZG9lcyByZG1zciBvbiAweDEyNCwgd2hp
-Y2ggd291bGQgYmUgaGFuZGxlZCBieSB1c2VyIHNwYWNlCiAgICoga2VybmVsIHJldHVybnMgdmFs
-dWUgZm9yIDB4MTIzIHRvIHRoZSByZWFkCgpTbyB5ZXMsIEkgYWdyZWUsIHdlIGhhdmUgdG8gZmlu
-aXNoIHRoZSBpbnN0cnVjdGlvbiBoYW5kbGluZyBiZWZvcmUgd2UgCmNhbiBnbyBiYWNrIGludG8g
-bm9ybWFsIG9wZXJhdGlvbiBmbG93LgoKCkFsZXgKCgoKQW1hem9uIERldmVsb3BtZW50IENlbnRl
-ciBHZXJtYW55IEdtYkgKS3JhdXNlbnN0ci4gMzgKMTAxMTcgQmVybGluCkdlc2NoYWVmdHNmdWVo
-cnVuZzogQ2hyaXN0aWFuIFNjaGxhZWdlciwgSm9uYXRoYW4gV2Vpc3MKRWluZ2V0cmFnZW4gYW0g
-QW10c2dlcmljaHQgQ2hhcmxvdHRlbmJ1cmcgdW50ZXIgSFJCIDE0OTE3MyBCClNpdHo6IEJlcmxp
-bgpVc3QtSUQ6IERFIDI4OSAyMzcgODc5CgoK
+Function jvmti_write_code called by compiled_method_load_cb may return
+error in using fwrite_unlocked, this failure should be captured and
+warned.
+
+Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
+---
+ tools/perf/jvmti/jvmti_agent.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
+
+diff --git a/tools/perf/jvmti/jvmti_agent.c b/tools/perf/jvmti/jvmti_agent.c
+index 88108598d6e9..dfb6cb8564cb 100644
+--- a/tools/perf/jvmti/jvmti_agent.c
++++ b/tools/perf/jvmti/jvmti_agent.c
+@@ -363,7 +363,7 @@ jvmti_write_code(void *agent, char const *sym,
+ 	struct jr_code_load rec;
+ 	size_t sym_len;
+ 	FILE *fp = agent;
+-	int ret = -1;
++	int sret;
+ 
+ 	/* don't care about 0 length function, no samples */
+ 	if (size == 0)
+@@ -400,17 +400,24 @@ jvmti_write_code(void *agent, char const *sym,
+ 	 */
+ 	rec.code_index = code_generation++;
+ 
+-	ret = fwrite_unlocked(&rec, sizeof(rec), 1, fp);
+-	fwrite_unlocked(sym, sym_len, 1, fp);
++	sret = fwrite_unlocked(&rec, sizeof(rec), 1, fp);
++	if (sret != 1)
++		goto error;
++	sret = fwrite_unlocked(sym, sym_len, 1, fp);
++	if (sret != 1)
++		goto error;
+ 
+-	if (code)
+-		fwrite_unlocked(code, size, 1, fp);
++	if (code) {
++		sret = fwrite_unlocked(code, size, 1, fp);
++		if (sret != 1)
++			goto error;
++	}
+ 
+ 	funlockfile(fp);
+-
+-	ret = 0;
+-
+-	return ret;
++	return 0;
++error:
++	funlockfile(fp);
++	return -1;
+ }
+ 
+ int
+-- 
+2.25.1
 
