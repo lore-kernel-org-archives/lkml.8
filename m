@@ -2,195 +2,103 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7007DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BF7C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45DAC22B42
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B6C7208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:42:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596235232;
-	bh=mRsDkvKKu62Z1BCY0fD3PXr87Jikl9HYK4xq5PgIOas=;
+	s=default; t=1596235337;
+	bh=GM7w4fSGA5eLJWWTIwyAIzVxBjrnBapL6vLov6nQa2Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c9WiL86iXJ+t+J6R8fBrODmRwgDsG5IbhTt751jvd5edZ1eho5k1D7ISRwSg5g1cW
-	 +I8eK1989ho+YHS/Ydo/kw+9SRFJ5G+48v4TlPKkpz6lggZdxprBB91q5v6V2Jj+6h
-	 omxLKaQbGUHbcvp3SJAZdwgff4+FYufwUKGv/370=
+	b=BuMm4N78Ym850mhJQ4VJYP3L8uJPTYo9F/SCwWogPB33/7n8dakE4UwfijlD+INAp
+	 nCg7kGLYYdBu7SGdUR4U1Sm7DZboRNmaNhPvHkbUzIcKT3YKGMxWkFyPeLQSE5aM2H
+	 Pz0gsvzOHw1FzX22TcYJR1RtezWJIv/uq7Ev5rrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbgGaWkb (ORCPT
+        id S1726571AbgGaWmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 18:40:31 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:43376 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgGaWka (ORCPT
+        Fri, 31 Jul 2020 18:42:16 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44593 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgGaWmP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 18:40:30 -0400
-Received: by mail-il1-f196.google.com with SMTP id y18so18188358ilp.10;
-        Fri, 31 Jul 2020 15:40:29 -0700 (PDT)
+        Fri, 31 Jul 2020 18:42:15 -0400
+Received: by mail-io1-f66.google.com with SMTP id v6so17940088iow.11;
+        Fri, 31 Jul 2020 15:42:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=HfW9s2DGUedr2mUFf7i55ndR1OuYzXAhoJ0w+EZ2kis=;
-        b=im4nv6tYwP1mMyXBPqVrs1BBmlWOYzz+RRVg1AkoNNyEQ0XrnPa2cOwjSaRT728IgL
-         Eq4RCGAtZtWB39s4L22rM24sXssBBqMM0xdxRwGvStUyQI8i2sDMyQsdusmxPfT3PJh8
-         azlQ2z1KRCfMX+UuV6nJjNgGLlu0BXXtrNTzwLETVyKsIP/Nk4UboMuWRn+8eMulDcQH
-         gE+8On0L0tJubKNlpIG5104y2CAEzJRsZF6o/VJd5Wr+uPpHu3qECk/i4ar0xlZUVVwR
-         s/Tj2aDA2UAse6aJI2xLHUAAYwh0sc9A0SPfJo0MTAcM4ZRj3ais6JwKYOK1kueFydQV
-         sENA==
-X-Gm-Message-State: AOAM533Eitjmdzc3vRdIbq40m2CP6qZbDKCOwnNDuLe4Y/p95RP0UU8J
-        +Uz5RgkKjLWXZjBak9Le9w==
-X-Google-Smtp-Source: ABdhPJz6JvYVALKdg2VfBfWJh0CybxGekwW/qKcCum31wkZgSbPinffbdp+6olAeka8X9SswHlgntw==
-X-Received: by 2002:a92:150d:: with SMTP id v13mr5738888ilk.93.1596235229311;
-        Fri, 31 Jul 2020 15:40:29 -0700 (PDT)
+        bh=soM3XiGlqMF6wRO5kAd80dwyaXMFhHTLobhFQyhs1VA=;
+        b=i+RGnrcuC2hsYROT/ugS4m/8mErVz0A1C87rw8b6CdneVCSPYntNncZ3m+o/e/HeJ2
+         O1VYa20E0EZ7I6IVJTyAjs7g2RPvE0jv217+cVpy21PBQiKPiXF6L4RAL64BdqaRflHT
+         acbGUcs5jEWmhzIbkz1DC+aMfgK4cIEaY94GLzGxW2OOKO0DvNiQZxlYuyn/fDkWP468
+         8Dfc8gqYfNgNoXTS40tdqxl7H1p8qUrOl/SBmtkiPk4qe2LJLZVuauu2WBiN8C12px5Z
+         cWjmgRqiqWs50ntyqnaHRmOJz2AXUuuIBD3sE/t8DljwOJAh4CRbv3N3u4WBocmkMFlg
+         mrNQ==
+X-Gm-Message-State: AOAM532dE/KGLgMISlxevweUw7s1bI0VSdZjU+lAu6piw5X18aeqYq5y
+        gCkKKFSXDYSKVvFG0t0/cQ==
+X-Google-Smtp-Source: ABdhPJzCLkAb9cmGZT9KOsWAc2uFkDU6xbg3zFNhGW9fmSZ0oPYORZm5j3NYhoSrUh/mtFccShqV6w==
+X-Received: by 2002:a02:3e13:: with SMTP id s19mr7569352jas.95.1596235334866;
+        Fri, 31 Jul 2020 15:42:14 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id b2sm5569581ilf.0.2020.07.31.15.40.28
+        by smtp.gmail.com with ESMTPSA id x12sm5715381ile.14.2020.07.31.15.42.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 15:40:28 -0700 (PDT)
-Received: (nullmailer pid 938876 invoked by uid 1000);
-        Fri, 31 Jul 2020 22:40:27 -0000
-Date:   Fri, 31 Jul 2020 16:40:27 -0600
+        Fri, 31 Jul 2020 15:42:14 -0700 (PDT)
+Received: (nullmailer pid 941715 invoked by uid 1000);
+        Fri, 31 Jul 2020 22:42:13 -0000
+Date:   Fri, 31 Jul 2020 16:42:13 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     sre@kernel.org, devicetree@vger.kernel.org, r-rivera-matos@ti.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: power: Add the bq25790 dt bindings
-Message-ID: <20200731224027.GA923778@bogus>
-References: <20200730145834.29227-1-dmurphy@ti.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        linux-kernel@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>,
+        devicetree@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>
+Subject: Re: [PATCH 1/5] dt-bindings: dma: dw: Add optional DMA-channels mask
+ cell support
+Message-ID: <20200731224213.GA941640@bogus>
+References: <20200730154545.3965-1-Sergey.Semin@baikalelectronics.ru>
+ <20200730154545.3965-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200730145834.29227-1-dmurphy@ti.com>
+In-Reply-To: <20200730154545.3965-2-Sergey.Semin@baikalelectronics.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 09:58:33AM -0500, Dan Murphy wrote:
-> Add the bindings for the bq25790.
+On Thu, 30 Jul 2020 18:45:41 +0300, Serge Semin wrote:
+> Each DW DMA controller channel can be synthesized with different
+> parameters like maximum burst-length, multi-block support, maximum data
+> width, etc. Most of these parameters determine the DW DMAC channels
+> performance in its own aspect. On the other hand these parameters can
+> be implicitly responsible for the channels performance degradation
+> (for instance multi-block support is a very useful feature, but having
+> it disabled during the DW DMAC synthesize will provide a more optimized
+> core). Since DMA slave devices may have critical dependency on the DMA
+> engine performance, let's provide a way for the slave devices to have
+> the DMA-channels allocated from a pool of the channels, which according
+> to the system engineer fulfill their performance requirements.
 > 
-> Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> The pool is determined by a mask optionally specified in the fifth
+> DMA-cell of the DMA DT-property. If the fifth cell is omitted from the
+> phandle arguments or the mask is zero, then the allocation will be
+> performed from a set of all channels provided by the DMA controller.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > ---
->  .../bindings/power/supply/bq25790.yaml        | 87 +++++++++++++++++++
->  1 file changed, 87 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/bq25790.yaml
+>  .../devicetree/bindings/dma/snps,dma-spear1340.yaml        | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/power/supply/bq25790.yaml b/Documentation/devicetree/bindings/power/supply/bq25790.yaml
-> new file mode 100644
-> index 000000000000..97dd539c1625
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/bq25790.yaml
-> @@ -0,0 +1,87 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2020 Texas Instruments Incorporated
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/power/supply/bq25790.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: TI BQ25790 Switch Mode Buck-Boost Charger
-> +
-> +maintainers:
-> +  - Dan Murphy <dmurphy@ti.com>
-> +
-> +description: |
-> +  BQ25790 is a highly integrated switch-mode buck-boost charger for 1-4 cell
-> +  Li-ion batteries and Li-polymer batteries. The device charges a battery from a
-> +  wide range of input sources including legacy USB adapters to high voltage USB
-> +  PD adapters and traditional barrel adapters.
-> +
-> +allOf:
-> +  - $ref: power-supply.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,bq25790
-> +      - ti,bq25792
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  ti,watchdog-timer:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Watchdog timer in milli seconds. 0 (default) disables the watchdog.
 
-Add a standard unit suffix and you can drop the type. And maybe 
-s/timer/timeout/ would be a bit clearer.
-
-Also:
-
-default: 0
-
-> +    minimum: 0
-> +    maximum: 160000
-> +    enum: [ 0, 500, 1000, 2000, 20000, 40000, 80000, 160000]
-> +
-> +  input-voltage-limit-microvolt:
-> +    description: |
-> +      Minimum input voltage limit in micro volts with a 100000 micro volt step.
-> +    minimum: 3600000
-> +    maximum: 22000000
-> +
-> +  input-current-limit-microamp:
-> +    description: |
-> +      Maximum input current limit in micro amps with a 100000 micro amp step.
-> +    minimum: 100000
-> +    maximum: 3300000
-> +
-> +  monitored-battery:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: phandle to the battery node being monitored
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - monitored-battery
-
-Add:
-
-unevaluatedProperties: false
-
-> +
-> +examples:
-> +  - |
-> +    bat: battery {
-> +      compatible = "simple-battery";
-> +      constant-charge-current-max-microamp = <2000000>;
-> +      constant-charge-voltage-max-microvolt = <4200000>;
-> +      precharge-current-microamp = <160000>;
-> +      charge-term-current-microamp = <160000>;
-> +    };
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    i2c0 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      bq25790: charger@6b {
-> +          compatible = "ti,bq25790";
-> +          reg = <0x6b>;
-> +          interrupt-parent = <&gpio1>;
-> +          interrupts = <16 IRQ_TYPE_EDGE_FALLING>;
-
-Not documented.
-
-> +          ti,watchdog-timer = <2000>;
-> +          input-current-limit = <3000000>;
-> +          input-voltage-limit = <4500000>;
-
-Doesn't match the schema.
-
-> +          monitored-battery = <&bat>;
-> +      };
-> +    };
-> +
-> +...
-> -- 
-> 2.28.0
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
