@@ -2,176 +2,128 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B99C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F1AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92095206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 572192067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:36:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p6cjWGM7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gWxQJWcK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731714AbgGaHfi (ORCPT
+        id S1731716AbgGaHgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 03:35:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43478 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731706AbgGaHfh (ORCPT
+        Fri, 31 Jul 2020 03:36:33 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47037 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731649AbgGaHgc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 03:35:37 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 910E1C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 00:35:37 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id u10so7129010plr.7
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 00:35:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=fz5EvzWcsoicVDmNg73Hue/6iS5qANYWrgBKFYsm2Zk=;
-        b=p6cjWGM7sl0zlXQANnmmK2pluQpa12wDI/791cNq4b6MOShBvRCZEEQP5DIXgqJV0h
-         iWDU5I3sKZxfLbmoY372/fADoK6qr8ExQ/vRQn0yY3Jd4sqp+wWissRwbrRH7pYk/zS+
-         dfTaKuQYwhLBINAUDVvGbB2uWnSKfpDpWKsNU4G5T7VrHHCB3/oR/ynoPeDn9DKENrlN
-         9xli6W4OdNu9V8Fpiu48wkcjFiiM8LZUMgxrsYMXkjvSuWjWYp0gYPEsQJz6Ivlnr2gf
-         p4036Fpz9ulmfypc1Zq0KpvVy33oV1M0RWf5UhSrFPmwV5v1aGOXrQBwN47VSYZnhA0Y
-         C3Vw==
+        Fri, 31 Jul 2020 03:36:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596180990;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=553KQ1qNVymmVc2Jbs3bPD4YZyJND+P5R8Nz7Iw3uxY=;
+        b=gWxQJWcKWMRqsEmV6rmV34vl1w/EIlulavU3LmnhHMdTMQPxUke9ZXMNPAuAmySm3V3zIg
+        EP/2k9BJl035U11Pbhl7jAoN7XccsZASNfjK2NfURxAPyf7Av03NGvPqbbWsmdD+nkLSQr
+        9aOyJbGcKEtDzjvBG21Y7Ph5AbfYDQs=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-316-07UMWe3HMke9RT92JxvYag-1; Fri, 31 Jul 2020 03:36:27 -0400
+X-MC-Unique: 07UMWe3HMke9RT92JxvYag-1
+Received: by mail-wr1-f71.google.com with SMTP id w1so6829379wro.4
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 00:36:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=fz5EvzWcsoicVDmNg73Hue/6iS5qANYWrgBKFYsm2Zk=;
-        b=GtRKFha1mrKHqiLGjVbEF8qOVZsan8Cx6A2677VyhxTpRhKfxhjR0NGhiJj0EOx7Sr
-         8P/Lh8CCKjwkFmgG0RYWPpSn9ybv+fCMaRxJLk5yagA/M6bDhBTYJS43bQ80pGUdfPJW
-         W/fxvXMe2vkELdhYQbBaOfYeO1zsF5qpkUORHuhxRTh27FPW5y8UvCYIUuzJS7yqkxLF
-         21lH5LekAxJhCkK6Zlv8QYu/SeuSFZlhczs79zZu/uxqW/YUlqGf1ipVWqUKvQIIjz4T
-         zD6APx8A12Cx2KCeIhMhMMDNRYYqisq4yvzd0mvMm/AQfzvXsVkQVS7RXEV4O9YILOmD
-         OiKw==
-X-Gm-Message-State: AOAM530K1ir+IAkfPLmEXIV0zqVEbXLIFZoeeX3uSL5O01EI535aNZGT
-        2YRIqQ7oJ6wzJ2fBaK7/HsM=
-X-Google-Smtp-Source: ABdhPJzpHCy21D2TSln0lf0yWFRkxFEHawCHi92eFry8Gc2RG7tB3k+D/dChftMGTjry5R/agH4Ufw==
-X-Received: by 2002:a17:90b:46c1:: with SMTP id jx1mr2972537pjb.125.1596180937167;
-        Fri, 31 Jul 2020 00:35:37 -0700 (PDT)
-Received: from localhost.localdomain ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id 13sm8355522pfp.3.2020.07.31.00.35.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 Jul 2020 00:35:36 -0700 (PDT)
-From:   js1304@gmail.com
-X-Google-Original-From: iamjoonsoo.kim@lge.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-team@lge.com, Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: [PATCH v3 3/3] mm/gup: use a standard migration target allocation callback
-Date:   Fri, 31 Jul 2020 16:35:06 +0900
-Message-Id: <1596180906-8442-3-git-send-email-iamjoonsoo.kim@lge.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596180906-8442-1-git-send-email-iamjoonsoo.kim@lge.com>
-References: <1596180906-8442-1-git-send-email-iamjoonsoo.kim@lge.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=553KQ1qNVymmVc2Jbs3bPD4YZyJND+P5R8Nz7Iw3uxY=;
+        b=QNoygVZmPOEz4/twoZBdmgM3tyaDD3PPHAsyK7MBWt366Y7zwvtaElDTaDjj/s3toB
+         YT1yjtIPzfzTQosOTN7rkrHxtKY5EEgBbdk5eRNs0THfNV4UaQfgSImC2y8knG8kTAmC
+         bjJ5xQH9B0rrK04dGOVuvgG2XcTMpZHgh2fScx1y4EjySQda+u1fn5N1PzSnWKN188O7
+         CB1jQQwT1QUF2P4+qgq9ofArBC3B1LrlOYiaXSCQbr8Z3eAlVPcvW4/RUOG8GjZyLADi
+         Tg9E1HYJjxmf325ceZiLWwK0k9CATfUdqV508Znv8lU5KSLHLu6TXC1BF9Dz1Z0IW6oo
+         fD2g==
+X-Gm-Message-State: AOAM5321Yastc+1+Qc6QDcKN2ytPF2ayc2eXhII24iJTd5Ow10f5AFxy
+        tJef5QAe8wRcPhMWyJ8mc6oufBLV8TLJn8NAXPYM6VivQDMt5Nfbne9woZUI+xsoE9Qau1u7eQM
+        d8P9eqhiu2AcuORoTb1OwBKfM
+X-Received: by 2002:a5d:5609:: with SMTP id l9mr2180877wrv.86.1596180985662;
+        Fri, 31 Jul 2020 00:36:25 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyK5Kv8TZaxnsghX4+eREYu/xA6eXNCFl4Iau4DmmrIF5oz1lEHRcJA6j4qFKcbXil6qN/DmQ==
+X-Received: by 2002:a5d:5609:: with SMTP id l9mr2180862wrv.86.1596180985472;
+        Fri, 31 Jul 2020 00:36:25 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:90a5:f767:5f9f:3445? ([2001:b07:6468:f312:90a5:f767:5f9f:3445])
+        by smtp.gmail.com with ESMTPSA id t11sm11878979wrs.66.2020.07.31.00.36.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jul 2020 00:36:24 -0700 (PDT)
+Subject: Re: [PATCH -next] emulate:Fix build error
+To:     Peng Wu <wupeng58@huawei.com>, tsbogend@alpha.franken.de
+Cc:     chenhc@lemote.com, aleksandar.qemu.devel@gmail.com,
+        colin.king@canonical.com, tianjia.zhang@linux.alibaba.com,
+        huanglllzu@gmail.com, linux-mips@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1596179807-17713-1-git-send-email-wupeng58@huawei.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <ddee30c4-6190-5cbc-6340-c138bd1550b5@redhat.com>
+Date:   Fri, 31 Jul 2020 09:36:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <1596179807-17713-1-git-send-email-wupeng58@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+On 31/07/20 09:16, Peng Wu wrote:
+> The declaration of function kvm_mips_complete_mmio_load
+> has only one formal parameter,but two parameters are passed
+> when called. So, the following error is seen while building
+> emulate.c
+> 
+> arch/mips/kvm/emulate.c: In function ‘kvm_mips_emulate_load’:
+> arch/mips/kvm/emulate.c:2130:3: error: too many arguments
+> to function ‘kvm_mips_complete_mmio_load’
+>    kvm_mips_complete_mmio_load(vcpu, run);
+>    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+> In file included from linux/include/linux/kvm_host.h:36,
+>                  from linux/arch/mips/kvm/emulate.c:15:
+> arch/mips/include/asm/kvm_host.h:1072:30: note: declared here
+> extern enum emulation_result
+> 	kvm_mips_complete_mmio_load(struct kvm_vcpu *vcpu);
+> 
+> Signed-off-by: Peng Wu <wupeng58@huawei.com>
+> ---
+>  arch/mips/kvm/emulate.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/mips/kvm/emulate.c b/arch/mips/kvm/emulate.c
+> index 1d41965..7037823 100644
+> --- a/arch/mips/kvm/emulate.c
+> +++ b/arch/mips/kvm/emulate.c
+> @@ -2127,7 +2127,7 @@ enum emulation_result kvm_mips_emulate_load(union mips_instruction inst,
+>  			run->mmio.phys_addr, run->mmio.len, run->mmio.data);
+>  
+>  	if (!r) {
+> -		kvm_mips_complete_mmio_load(vcpu, run);
+> +		kvm_mips_complete_mmio_load(vcpu);
+>  		vcpu->mmio_needed = 0;
+>  		return EMULATE_DONE;
+>  	}
+> 
 
-There is a well-defined migration target allocation callback. Use it.
+This is queued already, I' will push it shortly.  Thanks!
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
----
- mm/gup.c | 54 ++++++------------------------------------------------
- 1 file changed, 6 insertions(+), 48 deletions(-)
-
-diff --git a/mm/gup.c b/mm/gup.c
-index 7b63d72..ae096ea 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1590,52 +1590,6 @@ static bool check_dax_vmas(struct vm_area_struct **vmas, long nr_pages)
- }
- 
- #ifdef CONFIG_CMA
--static struct page *new_non_cma_page(struct page *page, unsigned long private)
--{
--	/*
--	 * We want to make sure we allocate the new page from the same node
--	 * as the source page.
--	 */
--	int nid = page_to_nid(page);
--	/*
--	 * Trying to allocate a page for migration. Ignore allocation
--	 * failure warnings. We don't force __GFP_THISNODE here because
--	 * this node here is the node where we have CMA reservation and
--	 * in some case these nodes will have really less non CMA
--	 * allocation memory.
--	 *
--	 * Note that CMA region is prohibited by allocation scope.
--	 */
--	gfp_t gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_NOWARN;
--
--	if (PageHighMem(page))
--		gfp_mask |= __GFP_HIGHMEM;
--
--#ifdef CONFIG_HUGETLB_PAGE
--	if (PageHuge(page)) {
--		struct hstate *h = page_hstate(page);
--
--		gfp_mask = htlb_modify_alloc_mask(h, gfp_mask);
--		return alloc_huge_page_nodemask(h, nid, NULL, gfp_mask);
--	}
--#endif
--	if (PageTransHuge(page)) {
--		struct page *thp;
--		/*
--		 * ignore allocation failure warnings
--		 */
--		gfp_t thp_gfpmask = GFP_TRANSHUGE | __GFP_NOWARN;
--
--		thp = __alloc_pages_node(nid, thp_gfpmask, HPAGE_PMD_ORDER);
--		if (!thp)
--			return NULL;
--		prep_transhuge_page(thp);
--		return thp;
--	}
--
--	return __alloc_pages_node(nid, gfp_mask, 0);
--}
--
- static long check_and_migrate_cma_pages(struct mm_struct *mm,
- 					unsigned long start,
- 					unsigned long nr_pages,
-@@ -1649,6 +1603,10 @@ static long check_and_migrate_cma_pages(struct mm_struct *mm,
- 	bool migrate_allow = true;
- 	LIST_HEAD(cma_page_list);
- 	long ret = nr_pages;
-+	struct migration_target_control mtc = {
-+		.nid = NUMA_NO_NODE,
-+		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_NOWARN,
-+	};
- 
- check_again:
- 	for (i = 0; i < nr_pages;) {
-@@ -1694,8 +1652,8 @@ static long check_and_migrate_cma_pages(struct mm_struct *mm,
- 		for (i = 0; i < nr_pages; i++)
- 			put_page(pages[i]);
- 
--		if (migrate_pages(&cma_page_list, new_non_cma_page,
--				  NULL, 0, MIGRATE_SYNC, MR_CONTIG_RANGE)) {
-+		if (migrate_pages(&cma_page_list, alloc_migration_target, NULL,
-+			(unsigned long)&mtc, MIGRATE_SYNC, MR_CONTIG_RANGE)) {
- 			/*
- 			 * some of the pages failed migration. Do get_user_pages
- 			 * without migration.
--- 
-2.7.4
+Paolo
 
