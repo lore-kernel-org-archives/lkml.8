@@ -2,141 +2,79 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74509C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D22C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE52208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:32:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596209559;
-	bh=wYzf+2brtM3bwigWDhYjt0sg7jxC8tK4H51bPDfvYJk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ODFEVO6IArXZUc0SCqnvsSTl9jcbWdCoJtyG+amEdHZtoe2RX9vBmojk9DfousaZd
-	 lj0VUu5v4Xr2MSKmKWCpgPrbFGaAOdIiAciw9wd/Ljp0AfAkX9bX6+MTqHQ5ddrXjS
-	 T7fQBrFddz0mCs05CUFZGL/QFLPEfE80qN/DUKm8=
+	by mail.kernel.org (Postfix) with ESMTP id 8D325208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:33:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732596AbgGaPci (ORCPT
+        id S2387494AbgGaPdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 11:32:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51626 "EHLO mail.kernel.org"
+        Fri, 31 Jul 2020 11:33:38 -0400
+Received: from mga02.intel.com ([134.134.136.20]:4921 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726502AbgGaPch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 11:32:37 -0400
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 763BD2245C;
-        Fri, 31 Jul 2020 15:32:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596209556;
-        bh=wYzf+2brtM3bwigWDhYjt0sg7jxC8tK4H51bPDfvYJk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=H+3Nm7MBMWlmBuU09BMx36oPZGaIrk7x2MdF652Y3zm0mrPT2XLC4yh/7y+d4nfsu
-         KFf9txu4PstMlhhHGqbmZaRSyqjwHqr3CyLx8HD5cQ9rQ1vVYYElkiG1Vo5yu3V7XN
-         KZf/uJCoc8iC3Gvx0L/XW7zyNkVsLRpttC7IZjfs=
-Received: by mail-oi1-f170.google.com with SMTP id k4so27056218oik.2;
-        Fri, 31 Jul 2020 08:32:36 -0700 (PDT)
-X-Gm-Message-State: AOAM533Xpnla2IrELpV3NP/1/X1UFYj4Uv8+Htw79pBDnPHI0y/W6mpJ
-        re6p4CFMilkQ4xhRJidLjncVSctHMIUGhEp5ow==
-X-Google-Smtp-Source: ABdhPJyyRnLBA0WxHZIzpHMNV7YoainKdcdBPAdzF/GqsTsiGD5j0V7vSDrqcYePaPbUzanCEfEhJaQdzhpEaD9uqkA=
-X-Received: by 2002:aca:4844:: with SMTP id v65mr3474230oia.152.1596209555800;
- Fri, 31 Jul 2020 08:32:35 -0700 (PDT)
+        id S1726907AbgGaPdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 11:33:37 -0400
+IronPort-SDR: cHEKKO/EI8hStQxA1EeOqYnS5vI1WK9bMHQfepdFdDUEbjWgR+gmoV5Pl7wnG+QvKTF97YIy2g
+ jM7iXzKfx1Ug==
+X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="139778113"
+X-IronPort-AV: E=Sophos;i="5.75,418,1589266800"; 
+   d="scan'208";a="139778113"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 08:33:37 -0700
+IronPort-SDR: 2hslcI54DbfZjmPQl1pu1Esh1A8rzh6xr9es06Y4An/M8HNKWq8XKblHTgkdcuRGlzpErv6FWJ
+ vt4ZKvpT35Xg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,418,1589266800"; 
+   d="scan'208";a="304966113"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by orsmga002.jf.intel.com with ESMTP; 31 Jul 2020 08:33:37 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 3A09B301C02; Fri, 31 Jul 2020 08:33:37 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 08:33:37 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        David Ahern <dsahern@gmail.com>,
+        =?iso-8859-1?Q?Genevi=E8ve?= Bastien <gbastien@versatic.net>,
+        Wang Nan <wangnan0@huawei.com>,
+        Jeremie Galarneau <jgalar@efficios.com>
+Subject: Re: [PATCH 1/6] perf tools: Add clockid_name function
+Message-ID: <20200731153337.GB1299820@tassilo.jf.intel.com>
+References: <20200730213950.1503773-1-jolsa@kernel.org>
+ <20200730213950.1503773-2-jolsa@kernel.org>
 MIME-Version: 1.0
-References: <20200731033956.6058-1-mark.tomlinson@alliedtelesis.co.nz> <20200731033956.6058-2-mark.tomlinson@alliedtelesis.co.nz>
-In-Reply-To: <20200731033956.6058-2-mark.tomlinson@alliedtelesis.co.nz>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 31 Jul 2020 09:32:24 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJgD_Ys3xjoJYuQ3R9bL7gUC+NKwkq71eTngj5uvcpk6Q@mail.gmail.com>
-Message-ID: <CAL_JsqJgD_Ys3xjoJYuQ3R9bL7gUC+NKwkq71eTngj5uvcpk6Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] PCI: Reduce warnings on possible RW1C corruption
-To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-Cc:     Ray Jui <ray.jui@broadcom.com>, Bjorn Helgaas <helgaas@kernel.org>,
-        Scott Branden <sbranden@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730213950.1503773-2-jolsa@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 9:40 PM Mark Tomlinson
-<mark.tomlinson@alliedtelesis.co.nz> wrote:
->
-> For hardware that only supports 32-bit writes to PCI there is the
-> possibility of clearing RW1C (write-one-to-clear) bits. A rate-limited
-> messages was introduced by fb2659230120, but rate-limiting is not the
-> best choice here. Some devices may not show the warnings they should if
-> another device has just produced a bunch of warnings. Also, the number
-> of messages can be a nuisance on devices which are otherwise working
-> fine.
->
-> This patch changes the ratelimit to a single warning per bus. This
-> ensures no bus is 'starved' of emitting a warning and also that there
-> isn't a continuous stream of warnings. It would be preferable to have a
-> warning per device, but the pci_dev structure is not available here, and
-> a lookup from devfn would be far too slow.
-
-If we don't want to just warn when a 8 or 16 bit access occurs (I'm
-not sure if 32-bit only accesses is possible or common. Seems like
-PCI_COMMAND would always get written?), then a simple way to do this
-is just move this out of line and do something like this where the bus
-or device is created/registered:
-
-if (bus->ops->write == pci_generic_config_write32)
-    warn()
-
->
-> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-> Fixes: fb2659230120 ("PCI: Warn on possible RW1C corruption for sub-32 bit config writes")
-> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-> ---
->  drivers/pci/access.c | 9 ++++++---
->  include/linux/pci.h  | 1 +
->  2 files changed, 7 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-> index 79c4a2ef269a..ab85cb7df9b6 100644
-> --- a/drivers/pci/access.c
-> +++ b/drivers/pci/access.c
-> @@ -160,9 +160,12 @@ int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
->          * write happen to have any RW1C (write-one-to-clear) bits set, we
->          * just inadvertently cleared something we shouldn't have.
->          */
-> -       dev_warn_ratelimited(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
-> -                            size, pci_domain_nr(bus), bus->number,
-> -                            PCI_SLOT(devfn), PCI_FUNC(devfn), where);
-> +       if (!bus->unsafe_warn) {
-> +               dev_warn(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
-> +                        size, pci_domain_nr(bus), bus->number,
-> +                        PCI_SLOT(devfn), PCI_FUNC(devfn), where);
-> +               bus->unsafe_warn = true;
-> +       }
->
->         mask = ~(((1 << (size * 8)) - 1) << ((where & 0x3) * 8));
->         tmp = readl(addr) & mask;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 34c1c4f45288..5b6ab593ae09 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -613,6 +613,7 @@ struct pci_bus {
->         unsigned char   primary;        /* Number of primary bridge */
->         unsigned char   max_bus_speed;  /* enum pci_bus_speed */
->         unsigned char   cur_bus_speed;  /* enum pci_bus_speed */
-> +       bool            unsafe_warn;    /* warned about RW1C config write */
-
-Make this a bitfield next to 'is_added'.
-
->  #ifdef CONFIG_PCI_DOMAINS_GENERIC
->         int             domain_nr;
+> diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
+> index f486fdd3a538..126dad238ee3 100644
+> --- a/tools/perf/util/util.h
+> +++ b/tools/perf/util/util.h
+> @@ -62,4 +62,6 @@ char *perf_exe(char *buf, int len);
 >  #endif
-> --
-> 2.28.0
->
+>  #endif
+>  
+> +const char *clockid_name(clockid_t clk_id);
+
+If it's a generic "util" it probably shouldn't live in builtin-record.c
+
+-Andi
