@@ -2,138 +2,119 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D63C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A53C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C90E7208A9
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FE872076B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:30:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BHp2ipeZ"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="T9CGKxez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731015AbgGaB3r (ORCPT
+        id S1731040AbgGaBa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 21:29:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbgGaB3q (ORCPT
+        Thu, 30 Jul 2020 21:30:28 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:57434 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727039AbgGaBa1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 21:29:46 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69B77C061574;
-        Thu, 30 Jul 2020 18:29:46 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ha11so6259531pjb.1;
-        Thu, 30 Jul 2020 18:29:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BPX14SfgZIqanMjmDVIeyMD8ehnyG/kjpUhwRu/f6rQ=;
-        b=BHp2ipeZ58rNCZXiTbuFYzN3/UUzDE4xRhyn4L5TXcE7Zd9Yrb9xUk9PMk9cZgp5tL
-         GBLU4JizBTs60MEHH6uBeZPyjDcgtJ23sa4+qduV9YbUI05YrZQjNuDdK7c872RUcbgm
-         Lmw6eAqBNhO/ZwF7Va1hP224Q4+i0uABlQLv1UISs67lRkgUodTSMMX9CB5GrD//G3Ov
-         CWmvtXq9vklvj4ECGv5l4YJoZ9qZjU8a6mkj0NP51mQyklFon/uFx7A4eWmCXqUg1kFH
-         MxI3YozfdOdZvzE6pNdZ2dT0wizGuXwRLywbWNG9XBTPPKCqaueL+j9WfAUIXoRHBPA2
-         iRcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BPX14SfgZIqanMjmDVIeyMD8ehnyG/kjpUhwRu/f6rQ=;
-        b=RroAQOlq0q7iSWoDUkaDYaGObQETqR/sKjFofXmgcfeik5zlQSyHV2LCOPKFqaXr+T
-         uYzi7e/NjCYGPqF3IQ2x7tMUFQVejGLnd+/vol4uy8jYz2KUXZ/nCTLPvs5FahRYmgDG
-         jGvDocHYFSBBwlNvAZ8LEPBkFkczlBPYk8i6imO9yiY6O7yPjn8f/WdwjoCvXt2G07yZ
-         ry38ACA4m5OpopMlbjW6X8+naP7wvB8CI2L2CwsWFWMIhWa40AOu+tyrEdh1cdS9HaNN
-         bVRV63C0DzgZDCuV+DtCKx+UNVxwfeHjJidWG0HgIK1JJYWkBZd8X+rH4SQzc+0PDsXx
-         IdSw==
-X-Gm-Message-State: AOAM531DM6DLVlmPTBV1fFH98EE9C97PlHLZGTKIXuatypV8u+BJEb/R
-        xHMCMoxVSDMNUekv8gwXQddTrMb6MqE=
-X-Google-Smtp-Source: ABdhPJxMSuhsi9iAXJl9/S+bfy/y45icxXoATN7aJ/1sUWGAXybv9EWOwKXp489telv249Z2R7vwpQ==
-X-Received: by 2002:a17:902:830a:: with SMTP id bd10mr1636513plb.206.1596158985620;
-        Thu, 30 Jul 2020 18:29:45 -0700 (PDT)
-Received: from ?IPv6:2404:7a87:83e0:f800:3191:c776:c32a:7a53? ([2404:7a87:83e0:f800:3191:c776:c32a:7a53])
-        by smtp.gmail.com with ESMTPSA id f18sm7656107pgv.84.2020.07.30.18.29.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jul 2020 18:29:45 -0700 (PDT)
-Subject: Re: [PATCH] exfat: retain 'VolumeFlags' properly
-To:     Namjae Jeon <namjae.jeon@samsung.com>,
-        Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp
-Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
-        Motai.Hirotaka@aj.MitsubishiElectric.co.jp,
-        'Sungjong Seo' <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CGME20200708095813epcas1p2277cdf7de6a8bb20c27bcd030eec431f@epcas1p2.samsung.com>
- <20200708095746.4179-1-kohada.t2@gmail.com>
- <005101d658d1$7202e5d0$5608b170$@samsung.com>
- <TY2PR01MB2875C88DD10CC13D0C70DE1690610@TY2PR01MB2875.jpnprd01.prod.outlook.com>
- <015801d65a4a$ebedd380$c3c97a80$@samsung.com>
- <ad0beeab-48ba-ee6d-f4cf-de19ec35a405@gmail.com>
- <fa122230-e0fd-6ed6-5473-31b17b56260c@gmail.com>
- <015e01d6663e$e99e4ec0$bcdaec40$@samsung.com>
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-Message-ID: <a33a4315-973d-4216-4b7d-714486ef415f@gmail.com>
-Date:   Fri, 31 Jul 2020 10:29:41 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 21:30:27 -0400
+X-UUID: b4b96e76507a494883ded8abae69c6e2-20200731
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=25R/tw9vzd5F5fUTQ5kr+ADS9zBYCPAZwj9/d7vMggQ=;
+        b=T9CGKxezcUwjFFv0w8UR1KW8FDeNUufY6a6WivPAgApqaG8BGbKT8yKZ6dIqbTGUVHqjcNl28GlE/I14Uebl+QRM8gWOlkMNVPPxekbOQGz38CJfXtVPKQYmUuLZDRVCtGgS3/lbq0oaIjiCIuwsab25abEmwhWp1Lgpp3DpSGM=;
+X-UUID: b4b96e76507a494883ded8abae69c6e2-20200731
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1804963979; Fri, 31 Jul 2020 09:30:20 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 31 Jul 2020 09:30:17 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 31 Jul 2020 09:30:17 +0800
+Message-ID: <1596159018.17247.53.camel@mtkswgap22>
+Subject: RE: [PATCH v4] scsi: ufs: Cleanup completed request without
+ interrupt notification
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Avri Altman <Avri.Altman@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>,
+        "chaotian.jing@mediatek.com" <chaotian.jing@mediatek.com>,
+        "cc.chou@mediatek.com" <cc.chou@mediatek.com>
+Date:   Fri, 31 Jul 2020 09:30:18 +0800
+In-Reply-To: <SN6PR04MB4640B5FC06968244DDACB8BEFC720@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <20200724140246.19434-1-stanley.chu@mediatek.com>
+         <SN6PR04MB4640B5FC06968244DDACB8BEFC720@SN6PR04MB4640.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <015e01d6663e$e99e4ec0$bcdaec40$@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 71FB6D29D6D2F90D2C8183B6D742B66C6D52B9406A7B5C1C22638F62489F611D2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/07/30 15:59, Namjae Jeon wrote:
->> Ping..
-> Hi Tetsuhiro,
+SGkgQmFydCwNCg0KT24gTW9uLCAyMDIwLTA3LTI3IGF0IDExOjE4ICswMDAwLCBBdnJpIEFsdG1h
+biB3cm90ZToNCj4gTG9va3MgZ29vZCB0byBtZS4NCj4gQnV0IGJldHRlciB3YWl0IGFuZCBzZWUg
+aWYgQmFydCBoYXZlIGFueSBmdXJ0aGVyIHJlc2VydmF0aW9ucy4NCj4gDQoNCldvdWxkIHlvdSBo
+YXZlIGFueSBmdXJ0aGVyIHN1Z2dlc3Rpb25zPw0KDQpUaGFua3MgYSBsb3QsDQpTdGFubGV5IENo
+dQ0KDQo+IFRoYW5rcywNCj4gQXZyaSANCj4gPiANCj4gPiBJZiBzb21laG93IG5vIGludGVycnVw
+dCBub3RpZmljYXRpb24gaXMgcmFpc2VkIGZvciBhIGNvbXBsZXRlZCByZXF1ZXN0DQo+ID4gYW5k
+IGl0cyBkb29yYmVsbCBiaXQgaXMgY2xlYXJlZCBieSBob3N0LCBVRlMgZHJpdmVyIG5lZWRzIHRv
+IGNsZWFudXANCj4gPiBpdHMgb3V0c3RhbmRpbmcgYml0IGluIHVmc2hjZF9hYm9ydCgpLiBPdGhl
+cndpc2UsIHN5c3RlbSBtYXkgYmVoYXZlDQo+ID4gYWJub3JtYWxseSBieSBiZWxvdyBmbG93Og0K
+PiA+IA0KPiA+IEFmdGVyIHVmc2hjZF9hYm9ydCgpIHJldHVybnMsIHRoaXMgcmVxdWVzdCB3aWxs
+IGJlIHJlcXVldWVkIGJ5IFNDU0kNCj4gPiBsYXllciB3aXRoIGl0cyBvdXRzdGFuZGluZyBiaXQg
+c2V0LiBBbnkgZnV0dXJlIGNvbXBsZXRlZCByZXF1ZXN0DQo+ID4gd2lsbCB0cmlnZ2VyIHVmc2hj
+ZF90cmFuc2Zlcl9yZXFfY29tcGwoKSB0byBoYW5kbGUgYWxsICJjb21wbGV0ZWQNCj4gPiBvdXRz
+dGFuZGluZyBiaXRzIi4gSW4gdGhpcyB0aW1lLCB0aGUgImFibm9ybWFsIG91dHN0YW5kaW5nIGJp
+dCINCj4gPiB3aWxsIGJlIGRldGVjdGVkIGFuZCB0aGUgInJlcXVldWVkIHJlcXVlc3QiIHdpbGwg
+YmUgY2hvc2VuIHRvIGV4ZWN1dGUNCj4gPiByZXF1ZXN0IHBvc3QtcHJvY2Vzc2luZyBmbG93LiBU
+aGlzIGlzIHdyb25nIGJlY2F1c2UgdGhpcyByZXF1ZXN0IGlzDQo+ID4gc3RpbGwgImFsaXZlIi4N
+Cj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBTdGFubGV5IENodSA8c3RhbmxleS5jaHVAbWVkaWF0
+ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jIHwgMyArKy0N
+Cj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+
+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jIGIvZHJpdmVycy9z
+Y3NpL3Vmcy91ZnNoY2QuYw0KPiA+IGluZGV4IDU3N2NjMGQ3NDg3Zi4uOWQxODBkYTc3NDg4IDEw
+MDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMNCj4gPiArKysgYi9kcml2
+ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQo+ID4gQEAgLTY0OTMsNyArNjQ5Myw3IEBAIHN0YXRpYyBp
+bnQgdWZzaGNkX2Fib3J0KHN0cnVjdCBzY3NpX2NtbmQgKmNtZCkNCj4gPiAgICAgICAgICAgICAg
+ICAgICAgICAgICAvKiBjb21tYW5kIGNvbXBsZXRlZCBhbHJlYWR5ICovDQo+ID4gICAgICAgICAg
+ICAgICAgICAgICAgICAgZGV2X2VycihoYmEtPmRldiwgIiVzOiBjbWQgYXQgdGFnICVkIHN1Y2Nl
+c3NmdWxseSBjbGVhcmVkIGZyb20NCj4gPiBEQi5cbiIsDQo+ID4gICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBfX2Z1bmNfXywgdGFnKTsNCj4gPiAtICAgICAgICAgICAgICAgICAgICAg
+ICBnb3RvIG91dDsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBnb3RvIGNsZWFudXA7DQo+
+ID4gICAgICAgICAgICAgICAgIH0gZWxzZSB7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAg
+ZGV2X2VycihoYmEtPmRldiwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICIl
+czogbm8gcmVzcG9uc2UgZnJvbSBkZXZpY2UuIHRhZyA9ICVkLCBlcnIgJWRcbiIsDQo+ID4gQEAg
+LTY1MjcsNiArNjUyNyw3IEBAIHN0YXRpYyBpbnQgdWZzaGNkX2Fib3J0KHN0cnVjdCBzY3NpX2Nt
+bmQgKmNtZCkNCj4gPiAgICAgICAgICAgICAgICAgZ290byBvdXQ7DQo+ID4gICAgICAgICB9DQo+
+ID4gDQo+ID4gK2NsZWFudXA6DQo+ID4gICAgICAgICBzY3NpX2RtYV91bm1hcChjbWQpOw0KPiA+
+IA0KPiA+ICAgICAgICAgc3Bpbl9sb2NrX2lycXNhdmUoaG9zdC0+aG9zdF9sb2NrLCBmbGFncyk7
+DQo+ID4gLS0NCj4gPiAyLjE4LjANCg0K
 
-Thank you for your reply.
-
-
->> On 2020/07/15 19:06, Tetsuhiro Kohada wrote:
->>>> It looks complicated. It would be better to simply set/clear VOLUME DIRTY bit.
->>>
->>> I think exfat_set_vol_flags() gets a little complicated, because it
->>> needs the followings (with bit operation)
->>>    a) Set/Clear VOLUME_DIRTY.
->>>    b) Set MEDIA_FAILUR.
->>
->> How about splitting these into separate functions  as below?
->>
->>
->> exfat_set_volume_dirty()
->> 	exfat_set_vol_flags(sb, sbi->vol_flag | VOLUME_DIRTY);
->>
->> exfat_clear_volume_dirty()
->> 	exfat_set_vol_flags(sb, sbi->vol_flag & ~VOLUME_DIRTY);
-> Looks good.
-> 
->>
->> exfat_set_media_failure()
->> 	exfat_set_vol_flags(sb, sbi->vol_flag | MEDIA_FAILURE);
-> Where will this function be called? We don't need to create unused functions in advance...
-
-
-Sorry. I ran ahead without explaining.
-I would like to set MEDIA_FAILURE when a format error is detected so that fsck will be run on the next mount.
-This patch is the basis for setting MEDIA_FAILURE.
-
-But, I have no reason to implement this right now, as you say.
-I'll add it in a patch that sets MEDIA_FAILURE.
-
-
-BTW
-I would like your opinion on the timing of clearing VOLUME_DIRTY.
-https://lore.kernel.org/linux-fsdevel/c635e965-6b78-436a-3959-e4777e1732c1@gmail.com/#t
-
-BR
----
-Tetsuhiro Kohada <kohada.t2@gmail.com>
-> 
