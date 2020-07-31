@@ -2,139 +2,176 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D45C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5114C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2BA522B43
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94FBB21744
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:42:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iBgR0RQZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u78uyT/d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgGaUku (ORCPT
+        id S1729391AbgGaUme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 16:40:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51254 "EHLO
+        Fri, 31 Jul 2020 16:42:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728305AbgGaUku (ORCPT
+        with ESMTP id S1727053AbgGaUme (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 16:40:50 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8294C061574;
-        Fri, 31 Jul 2020 13:40:49 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id t6so16639450pgq.1;
-        Fri, 31 Jul 2020 13:40:49 -0700 (PDT)
+        Fri, 31 Jul 2020 16:42:34 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF01DC061574;
+        Fri, 31 Jul 2020 13:42:33 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id v12so3403741ljc.10;
+        Fri, 31 Jul 2020 13:42:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uD+/m62r6hde+eEk8FbuyWYY9SyQ1g17seylKKn4ScI=;
-        b=iBgR0RQZdQSu15Ft8/oJQoP9cEOetjtrQ2DYEy8vrt9bg0N6ImHfJ5G4tzTnBSDwwV
-         OqbD94zJDNtSkGg8VurDmpRZZflbt1A2soYYurx8/lEFyPjBoc19t6NAM1InEDvaCfDD
-         i3lwVE9CtYG6PWVB9xufUB6hNFhaS5ynuHiAoQx0fqcmH/05Rx4zC5FaJrZ+SRAyTOj8
-         DbP/KmFrtbH6DcbpN6XrBos5uG2gfwn+EMxweqKBhMbAafz9RCUPJTWZmtOvI75LuZQt
-         IKGaO6XFxSLFTq7ti3cUC9nF+2YAvW90OxiYe5434JT0gd0Y1et0acwcpOJY4UpvNaLw
-         heqQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bteal2gJqaWT5iiU6PduiP6X6F7TRM1Ny/RVrHPf5ic=;
+        b=u78uyT/dQZCoztTrF83RD6Ml+May5x7tHMpyV+KWZ95mQJwIbX1ZdMC4Sc+t3OJoGa
+         Qqj8D++3421SEOuITs9LN9IFZXyY9iWq9k2f4WSAjn3cGNClr0OLnYGvZB3tJ3ft4qAL
+         ead7pQYF0iMaCQLZMtnXMThyMyN0aMowTSrnOQlFHj7hBhQ945KqbRJ3cmUAR/VpH30W
+         85Sv6tSbhCSxjuETdue7siVqkXuq4fy7JiWCbyT6bZ1WuKzPbUe46McJ6gSa19ZTd4mZ
+         xJ43A8NDOr/XtOpsaEfqdOPBMFeAP8fqxvtqsiV1//dP6uRxwfTEJQXkwFNkjx+2iX8b
+         xjJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uD+/m62r6hde+eEk8FbuyWYY9SyQ1g17seylKKn4ScI=;
-        b=SpN64rYtunS/Ijbl9WWnUffk49Y9MWh3ETInCdj63bXnuocLoRkYdqyfu2nE2BrWYr
-         h2cex8+AtRiqpDRS1cYCkjOsdxIxUwiSMzQKlZBk8GJs8r710fPdrnNrwP6JT08VJoZc
-         wRSedLJpZDoqrs2/PfasTpXqJL8h5kvqYvLxNqrHnkm6O35VJuq9eDjoRQ4BsuFccgSN
-         NGePoLbPk46F9gvgZIc+INudgyiXxEERnpbRy6nG7/vNswhH1XWnDCR4L/eC9O5xGeGV
-         WNcAMfNTWcHBuwqFQfZCo/dMl4AhR8LDusjC+JZUt1ToqGkJtxfeR/nNXg4IEbCsxKP3
-         7ryw==
-X-Gm-Message-State: AOAM5326d4sv9/j8nAvVcigngTa0Rv31tQbpDREg7xZd2S4e0AUDgH0r
-        jh7HVYvAUETcD5ozIrDDns4ERoApVb/UBIoR7iM=
-X-Google-Smtp-Source: ABdhPJxl7UE1bCuoejHmzFxHhSfREEUBQv3M3qrA7myeRvLdF3dKjAz8lup4FLl49cufksfLjIPMbhtCE/TpkQeV/JM=
-X-Received: by 2002:a63:e057:: with SMTP id n23mr5191974pgj.368.1596228049471;
- Fri, 31 Jul 2020 13:40:49 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bteal2gJqaWT5iiU6PduiP6X6F7TRM1Ny/RVrHPf5ic=;
+        b=O2m0b5TaPFlNULAjXn6xF3lTT9uGu3wFJZ9B5tctQN/oqIA01ktS+7mpR7R2KM9wsD
+         jZPesmfR7C6jswyYhbtJl9GAA2QgHY2wi1/zwMcTxObKAwJfkuY2fuq/kBM0tCYLgBJA
+         qizLn7ZVQ5/TPtqr0t4J4K9NyoKQTcBiHGHZQkFS+Db9BvNw3mICXQ4OplBwA47yo3Id
+         ZmjefDrpBehPY24zjdPKMdU+2kmOE/C8tH2mXDQmZrK5vyFL+emRmjpnyoMToeNm0KpL
+         AfSYKJM26nS1pWPgXiwU4qVjd35B1jbzMhlEttL47h07FgSPKJy2EfJYKxVAN3EA9++q
+         WhZA==
+X-Gm-Message-State: AOAM53394FsGUf8L4fkMREAkJ5wUdWWCdErUiCqwDI2AR3nBstF8pfhi
+        ioxxjvkfa2aWRmiXBVvXxTZ/oUu2
+X-Google-Smtp-Source: ABdhPJw8OkY8GR33ds2cRLW1HDkgp0+VDYrE+lybqbYAevvPJlg3lAQGkx6GmBW11mQzGJGbYoHgjw==
+X-Received: by 2002:a2e:3619:: with SMTP id d25mr2553082lja.204.1596228151922;
+        Fri, 31 Jul 2020 13:42:31 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
+        by smtp.googlemail.com with ESMTPSA id 193sm2608104lfa.90.2020.07.31.13.42.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jul 2020 13:42:31 -0700 (PDT)
+Subject: Re: [RFC PATCH v6 09/10] media: tegra-video: Add CSI MIPI pads
+ calibration
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com
+Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1596186169-18729-1-git-send-email-skomatineni@nvidia.com>
+ <1596186169-18729-10-git-send-email-skomatineni@nvidia.com>
+ <3ac158c4-7df7-e3c1-f0e1-33e7ef017762@gmail.com>
+ <f483329d-b5fe-fda5-e235-b8edb5fce440@nvidia.com>
+ <a08af0e8-80d8-0bd0-87a3-adfc8e70a92a@gmail.com>
+ <ace047fe-8a1a-666a-b91b-9d63b1d68567@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <7d904a86-3189-7ef8-a7b9-1a84564f9278@gmail.com>
+Date:   Fri, 31 Jul 2020 23:42:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200730073702.16887-1-xie.he.0141@gmail.com> <CAJht_ENjHRExBEHx--xmqnOy1MXY_6F5XZ_exinSfa6xU_XDJg@mail.gmail.com>
- <CA+FuTSf_nuiah6rFy-KC1Taw+Wc4z0G7LzkAm-+Ms4FzYmTPEw@mail.gmail.com>
-In-Reply-To: <CA+FuTSf_nuiah6rFy-KC1Taw+Wc4z0G7LzkAm-+Ms4FzYmTPEw@mail.gmail.com>
-From:   Xie He <xie.he.0141@gmail.com>
-Date:   Fri, 31 Jul 2020 13:40:38 -0700
-Message-ID: <CAJht_ENYxy4pseOO9gY=0R0bvPPvs4GKrGJOUMx6=LPwBa2+Bg@mail.gmail.com>
-Subject: Re: [PATCH v2] drivers/net/wan/lapbether: Use needed_headroom instead
- of hard_header_len
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux X25 <linux-x25@vger.kernel.org>,
-        Brian Norris <briannorris@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ace047fe-8a1a-666a-b91b-9d63b1d68567@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you for your thorough review comment!
+31.07.2020 19:29, Sowjanya Komatineni пишет:
+> 
+> On 7/31/20 9:14 AM, Dmitry Osipenko wrote:
+>> 31.07.2020 18:46, Sowjanya Komatineni пишет:
+>>> On 7/31/20 4:39 AM, Dmitry Osipenko wrote:
+>>>> 31.07.2020 12:02, Sowjanya Komatineni пишет:
+>>>> ...
+>>>>> @@ -249,13 +249,47 @@ static int tegra_csi_enable_stream(struct
+>>>>> v4l2_subdev *subdev)
+>>>>>            return ret;
+>>>>>        }
+>>>>>    +    if (csi_chan->mipi) {
+>>>>> +        ret = tegra_mipi_enable(csi_chan->mipi);
+>>>>> +        if (ret < 0) {
+>>>>> +            dev_err(csi->dev,
+>>>>> +                "failed to enable MIPI pads: %d\n", ret);
+>>>>> +            goto rpm_put;
+>>>>> +        }
+>>>>> +
+>>>>> +        /*
+>>>>> +         * CSI MIPI pads PULLUP, PULLDN and TERM impedances need to
+>>>>> +         * be calibrated after power on.
+>>>>> +         * So, trigger the calibration start here and results will
+>>>>> +         * be latched and applied to the pads when link is in LP11
+>>>>> +         * state during start of sensor streaming.
+>>>>> +         */
+>>>>> +        ret = tegra_mipi_start_calibration(csi_chan->mipi);
+>>>>> +        if (ret < 0) {
+>>>>> +            dev_err(csi->dev,
+>>>>> +                "failed to start MIPI calibration: %d\n", ret);
+>>>>> +            goto disable_mipi;
+>>>>> +        }
+>>>> What would happen if CSI stream is enabled and then immediately
+>>>> disabled
+>>>> without enabling camera sensor?
+>>> Nothing will happen as during stream enable csi receiver is kept ready.
+>>>
+>>> But actual capture will not happen during that point.
+>> Could you please show how the full call chain looks like? It's not clear
+>> to me what keeps CSI stream "ready".
+> 
+> VI is the main video input (video device) and on streaming it starts
+> stream of CSI subdev prior to stream of Sensor.
+> 
+> HW path, sensor stream (CSI TX) -> CSI stream (RX)
+> 
+> During CSI stream on, CSI PHY receiver is enabled to start receiving the
+> data but internally capture assembled to active state will happen only
+> when Tegra VI single shot is issues where VI thru pixel parser gets
+> captures data into the memory
 
-On Fri, Jul 31, 2020 at 7:13 AM Willem de Bruijn
-<willemdebruijn.kernel@gmail.com> wrote:
->
-> Thanks for fixing a kernel panic. The existing line was added recently
-> in commit 9dc829a135fb ("drivers/net/wan/lapbether: Fixed the value of
-> hard_header_len"). I assume a kernel with that commit reverted also
-> panics? It does looks like it would.
+Alright, I see now.
 
-Yes, that commit also fixed kernel panic. But that patch only fixed
-kernel panic when using AF_PACKET/DGRAM sockets. It didn't fix kernel
-panic when using AF_PACKET/RAW sockets. This patch attempts to fix
-kernel panic when using AF_PACKET/RAW sockets, too.
+Will be great if you could change this hunk:
 
-> If this driver submits a modified packet to an underlying eth device,
-> it is akin to tunnel drivers. The hard_header_len vs needed_headroom
-> discussion also came up there recently [1]. That discussion points to
-> commit c95b819ad75b ("gre: Use needed_headroom"). So the general
-> approach in this patch is fine. Do note the point about mtu
-> calculations -- but this device just hardcodes a 1000 byte dev->mtu
-> irrespective of underlying ethernet device mtu, so I guess it has
-> bigger issues on that point.
+{
+  ret = v4l2_subdev_call(src_subdev, video, s_stream, true);
+  if (ret < 0 && ret != -ENOIOCTLCMD) {
+    tegra_mipi_cancel_calibration(csi_chan->mipi);
+    v4l2_subdev_call(csi_subdev, video, s_stream, false);
+    return ret;
+  }
+}
 
-Yes, I didn't consider the issue of mtu calculation. Maybe we need to
-calculate the mtu of this device based on the underlying Ethernet
-device, too.
+to look like this:
 
-We may also need to handle the situation where the mtu of the
-underlying Ethernet device changes.
+{
+  err = v4l2_subdev_call(src_subdev, video, s_stream, true);
+  if (err < 0 && err != -ENOIOCTLCMD)
+    goto err_disable_csi_stream;
+...
+  return 0;
 
-I'm not sure if the mtu of the device can be changed by the user
-without explicit support from the driver. If it can, we may also need
-to set max_mtu and min_mtu properly to prevent the user from setting
-it to invalid values.
+err_disable_csi_stream:
+  tegra_mipi_cancel_calibration(csi_chan->mipi);
 
-> But, packet sockets with SOCK_RAW have to pass a fully formed packet
-> with all the headers the ndo_start_xmit expects, i.e., it should be
-> safe for the device to just pull that many bytes. X25 requires the
-> peculiar one byte pseudo header you mention: lapbeth_xmit
-> unconditionally reads skb->data[0] and then calls skb_pull(skb, 1).
-> This could be considered the device hard header len.
+  v4l2_subdev_call(csi_subdev, video, s_stream, false);
 
-Yes, I agree that we can use hard_header_len (and min_header_len) to
-prevent packets shorter than 1 byte from passing.
+  return err;
+}
 
-But because af_packet.c reserves a header space of needed_headroom for
-RAW sockets, but hard_header_len + needed_headroom for DGRAM sockets,
-it appears to me that af_packet.c expects hard_header_len to be the
-header length created by dev_hard_header. We can, however, set
-hard_header_len to 1 and let dev_hard_header generate a 0-sized
-header, but this makes af_packet.c to reserve an extra unused 1-byte
-header space for DGRAM sockets, and DGRAM sockets will not be
-protected by the 1-byte minimum length check like RAW sockets.
 
-The best solution might be to implement header_ops for X.25 drivers
-and let dev_hard_header create this 1-byte header, so that
-hard_header_len can equal to the header length created by
-dev_hard_header. This might be the best way to fit the logic of
-af_packet.c. But this requires changing the interface of X.25 drivers
-so it might be a big change.
+It should make code a bit easier to read and follow.
+
+Otherwise this patch looks good to me, thanks.
