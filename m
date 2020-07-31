@@ -2,226 +2,155 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C484EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 228E6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AC3221744
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB59122B3F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:11:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fFFPMMK7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="clMU7IKy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731422AbgGaPIE (ORCPT
+        id S1732438AbgGaPLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 11:08:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56574 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728697AbgGaPIE (ORCPT
+        Fri, 31 Jul 2020 11:11:08 -0400
+Received: from gateway21.websitewelcome.com ([192.185.45.210]:41509 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728697AbgGaPLI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 11:08:04 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF326C061574;
-        Fri, 31 Jul 2020 08:08:03 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z18so24745934wrm.12;
-        Fri, 31 Jul 2020 08:08:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=85y9XZIAhdFrSxuJrcnrzsatwqiXZnaeoI8u9MGBgtM=;
-        b=fFFPMMK7xEeboEuM9TpGf+G/ZYPfTaKG5i5Ejhza78kDiyr3MIdoNI5Ufz4P4NysJO
-         dZTF7XL8KamTxce/IZmn4sFOHHJVnO8YsNWsCkyQ532iHs1alDBhwO1zuDQnl9YUCygD
-         uSf3UF9/7insMKOSTynpcef+WwYjqbLO9442pOMHg+jWcnjTXPEOmmeIUZngmzMCcR/d
-         og0U0K5miCxuVk1ovO6NF3mhVtGchiWnyvzVLM/SICzzSnt5rTCxrrDll4VMtl9GuiQl
-         iliRGORh32YdOJH2IzKFVyN9MKQMhH4aacClAj9sYru6PPRv+xs6aCLdcfmGgxbfdZjv
-         MuQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=85y9XZIAhdFrSxuJrcnrzsatwqiXZnaeoI8u9MGBgtM=;
-        b=r/Hea3E0oix0fWMJZl+wVnhM7jRk/JYjdpJN7SbsDyYhzqaTwZqddzHHaNDEpSxkGt
-         qDETXvJPysNhCiE0ec18XYnx98g3KAD5mCJxsb9iGTT8vyXg6PxSROd6p5fHaJbU9yVf
-         02nWcDSoLKuXV6Wh2md5kV2CpC2EPqGEKcp+AVIooQLR9pwDBzKLCK+Vqq7E1xQx73wx
-         7uzCUmcrdjgHzP/34hNVpKhGqwt5cVThhkXsePWMgHTAfQfH3lC8zvie1R+kMkTW8Too
-         23MFe0MDNvb3IEgY91cNUrvDhA5Q2wBlZd2Cgw5tJZAvPqw4kqyF/J4dCpc0ZXhaaHhG
-         ezXA==
-X-Gm-Message-State: AOAM531EXZEwZEGR0dCamI0ptG1c0cFrDUsbglyQMh6BlxMTRAxSJnvM
-        IycLKrI0gxmYMOscp8bkwO5CzbD8t45fgEEiJqA=
-X-Google-Smtp-Source: ABdhPJzxaoTSidV3fwT9KU1KuP5Nfoicm9e8ljT1UwmUKcsEKIGiIUz4tXNjnKaseFpyXNKlAauBimsG/8bxFAtElAM=
-X-Received: by 2002:a5d:4a0b:: with SMTP id m11mr3804806wrq.407.1596208082356;
- Fri, 31 Jul 2020 08:08:02 -0700 (PDT)
+        Fri, 31 Jul 2020 11:11:08 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 949A740239367
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 10:11:05 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 1WgbkTiCiBD8b1Wgbk93F9; Fri, 31 Jul 2020 10:11:05 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=NtOOaU2IOh+DFdzRm6zE6ndbzjGQDjTonq0CzMwCsrg=; b=clMU7IKyGeVlDqeof9YkLc+WBU
+        fO3spgD3qKAEKoTtNGjGWkT3ZJeQ7gtH5IHk2yLJw2mNmW+SDQckn9VHta/2EOQdG0+UVlRjK4GEW
+        5DVVcnN5q5BlqDgvFjghUmdASARHUeRCXlms6Ac2mMTK9xFOJa3n72mnVYVVawr/r6UPxaV62tgP5
+        x3fqi2Xyd8pyTl5luUAIw9LrNkIbsMEqGBTAhfac0ztQje+qHrSPe7yVj2cfyII+4tahXN5oBMp4c
+        favQRQyKVBfnrFn3GURZ4WgyrJfWa3OTVjMhYbY7Vfh5U5mTRv//pBDoqgu//8Ov2d1YXJSiZirSd
+        h/tftMLg==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:43084 helo=[192.168.15.3])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1k1Wgb-000gic-4a; Fri, 31 Jul 2020 10:11:05 -0500
+Subject: Re: [PATCH][next] crypto: sa2ul - Fix inconsistent IS_ERR and PTR_ERR
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Keerthy <j-keerthy@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200724165027.GA18496@embeddedor>
+ <20200731133230.GH14360@gondor.apana.org.au>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ AP7RWS474w==
+Message-ID: <3c20515b-73e2-dc75-6e4e-f912aee9a252@embeddedor.com>
+Date:   Fri, 31 Jul 2020 10:17:09 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <MWHPR04MB3758DC08EA17780E498E9EC0E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <20200731064526.GA25674@infradead.org> <MWHPR04MB37581344328A42EA7F5ED13EE74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <CA+1E3rLM4G4SwzD6RWsK6Ssp7NmhiPedZDjrqN3kORQr9fxCtw@mail.gmail.com>
- <MWHPR04MB375863C20C1EF2CB27E62703E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <20200731091416.GA29634@infradead.org> <MWHPR04MB37586D39CA389296CE0252A4E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <20200731094135.GA4104@infradead.org> <MWHPR04MB3758A4B2967DB1FABAAD9265E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <20200731125110.GA11500@infradead.org> <20200731130802.GA16665@infradead.org>
-In-Reply-To: <20200731130802.GA16665@infradead.org>
-From:   Kanchan Joshi <joshiiitr@gmail.com>
-Date:   Fri, 31 Jul 2020 20:37:35 +0530
-Message-ID: <CA+1E3r+7ZChHK+ZH06LitijEbZ0=UhOtAzLpw4SWVY1ZN4HOSw@mail.gmail.com>
-Subject: Re: [PATCH v4 6/6] io_uring: add support for zone-append
-To:     "hch@infradead.org" <hch@infradead.org>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "bcrl@kvack.org" <bcrl@kvack.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-aio@kvack.org" <linux-aio@kvack.org>,
-        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        SelvaKumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>,
-        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
-        Naohiro Aota <Naohiro.Aota@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200731133230.GH14360@gondor.apana.org.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1k1Wgb-000gic-4a
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.3]) [187.162.31.110]:43084
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 7
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 6:38 PM hch@infradead.org <hch@infradead.org> wrote:
->
-> And FYI, this is what I'd do for a hacky aio-only prototype (untested):
->
->
-> diff --git a/fs/aio.c b/fs/aio.c
-> index 91e7cc4a9f179b..42b1934e38758b 100644
-> --- a/fs/aio.c
-> +++ b/fs/aio.c
-> @@ -1438,7 +1438,10 @@ static void aio_complete_rw(struct kiocb *kiocb, long res, long res2)
->         }
->
->         iocb->ki_res.res = res;
-> -       iocb->ki_res.res2 = res2;
-> +       if ((kiocb->ki_flags & IOCB_REPORT_OFFSET) && res > 0)
-> +               iocb->ki_res.res2 = kiocb->ki_pos - res;
-> +       else
-> +               iocb->ki_res.res2 = res2;
->         iocb_put(iocb);
->  }
->
-> @@ -1452,6 +1455,8 @@ static int aio_prep_rw(struct kiocb *req, const struct iocb *iocb)
->         req->ki_flags = iocb_flags(req->ki_filp);
->         if (iocb->aio_flags & IOCB_FLAG_RESFD)
->                 req->ki_flags |= IOCB_EVENTFD;
-> +       if (iocb->aio_flags & IOCB_FLAG_REPORT_OFFSET)
-> +               req->ki_flags |= IOCB_REPORT_OFFSET;
->         req->ki_hint = ki_hint_validate(file_write_hint(req->ki_filp));
->         if (iocb->aio_flags & IOCB_FLAG_IOPRIO) {
->                 /*
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index f5abba86107d86..522b0a3437d420 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -316,6 +316,7 @@ enum rw_hint {
->  #define IOCB_WRITE             (1 << 6)
->  #define IOCB_NOWAIT            (1 << 7)
->  #define IOCB_NOIO              (1 << 9)
-> +#define IOCB_REPORT_OFFSET     (1 << 10)
->
->  struct kiocb {
->         struct file             *ki_filp;
-> diff --git a/include/uapi/linux/aio_abi.h b/include/uapi/linux/aio_abi.h
-> index 8387e0af0f768a..e4313d7aa3b7e7 100644
-> --- a/include/uapi/linux/aio_abi.h
-> +++ b/include/uapi/linux/aio_abi.h
-> @@ -55,6 +55,7 @@ enum {
->   */
->  #define IOCB_FLAG_RESFD                (1 << 0)
->  #define IOCB_FLAG_IOPRIO       (1 << 1)
-> +#define IOCB_FLAG_REPORT_OFFSET        (1 << 2)
->
->  /* read() from /dev/aio returns these structures. */
->  struct io_event {
 
-Looks good, but it drops io_uring.
-How about two flags -
-1. RWF_REPORT_OFFSET (only for aio)  ----> aio fails the second one
-2. RWF_REPORT_OFFSET_INDIRECT (for io_uring).  ----> uring fails the first one
-Since these are RWF flags, they can be used by other sync/async
-transports also in future if need be.
-Either of these flags will set single IOCB_REPORT_OFFSET, which can be
-used by FS/Block etc (they don't have to worry how uring/aio sends it
-up).
 
-This is what I mean in code -
+On 7/31/20 08:32, Herbert Xu wrote:
+> On Fri, Jul 24, 2020 at 11:50:27AM -0500, Gustavo A. R. Silva wrote:
+>> Fix inconsistent IS_ERR and PTR_ERR in sa_dma_init(). The proper pointer
+>> to be passed as argument to PTR_ERR() is dd->dma_tx.
+>>
+>> This bug was detected with the help of Coccinelle.
+>>
+>> Fixes: 7694b6ca649f ("crypto: sa2ul - Add crypto driver")
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> ---
+>>  drivers/crypto/sa2ul.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Patch applied.  Thanks.
+> 
 
-diff --git a/fs/aio.c b/fs/aio.c
-index 91e7cc4a9f17..307dfbfb04f7 100644
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -1472,6 +1472,11 @@ static int aio_prep_rw(struct kiocb *req, const
-struct iocb *iocb)
-        ret = kiocb_set_rw_flags(req, iocb->aio_rw_flags);
-        if (unlikely(ret))
-                return ret;
-+       /* support only direct offset */
-+       if (unlikely(iocb->aio_rw_flags & RWF_REPORT_OFFSET_INDIRECT))
-+               return -EOPNOTSUPP;
-+
-        req->ki_flags &= ~IOCB_HIPRI; /* no one is going to poll for this I/O */
-        return 0;
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 3e406bc1f855..5fa21644251f 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2451,6 +2451,7 @@ static int io_prep_rw(struct io_kiocb *req,
-const struct io_uring_sqe *sqe,
-        struct kiocb *kiocb = &req->rw.kiocb;
-        unsigned ioprio;
-        int ret;
-+       rwf_t rw_flags;
+Awesome. :)
 
-        if (S_ISREG(file_inode(req->file)->i_mode))
-                req->flags |= REQ_F_ISREG;
-@@ -2462,9 +2463,13 @@ static int io_prep_rw(struct io_kiocb *req,
-const struct io_uring_sqe *sqe,
-        }
-        kiocb->ki_hint = ki_hint_validate(file_write_hint(kiocb->ki_filp));
-        kiocb->ki_flags = iocb_flags(kiocb->ki_filp);
--       ret = kiocb_set_rw_flags(kiocb, READ_ONCE(sqe->rw_flags));
-+       rw_flags = READ_ONCE(sqe->rw_flags);
-+       ret = kiocb_set_rw_flags(kiocb, rw_flags);
-        if (unlikely(ret))
-                return ret;
-+       /* support only indirect offset */
-+       if (unlikely(rw_flags & RWF_REPORT_OFFSET_DIRECT))
-+               return -EOPNOTSUPP;
-
-        ioprio = READ_ONCE(sqe->ioprio);
-        if (ioprio) {
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 8a00ba99284e..fe2f1f5c5d33 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3296,8 +3296,17 @@ static inline int kiocb_set_rw_flags(struct
-kiocb *ki, rwf_t flags)
-                ki->ki_flags |= IOCB_DSYNC;
-        if (flags & RWF_SYNC)
-                ki->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
--       if (flags & RWF_APPEND)
-+       if (flags & RWF_APPEND) {
-                ki->ki_flags |= IOCB_APPEND;
-+               /*
-+                * 1. These flags do not make sense when used standalone
-+                * 2. RWF_REPORT_OFFSET_DIRECT = report result
-directly (for aio)
-+                * 3. RWF_REPORT_INDIRECT_OFFSER = use pointer (for io_uring)
-+                * */
-+               if (flags & RWF_REPORT_OFFSET_DIRECT ||
-+                               flags & RWF_REPORT_OFFSET_INDIRECT)
-+                       ki->ki_flags |= IOCB_REPORT_OFFSET;
+Thanks
+--
+Gustavo
