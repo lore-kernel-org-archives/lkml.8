@@ -2,137 +2,154 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A22E4C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BB5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8072021744
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADB0B206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:54:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="s7e5W0fX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9qW9HTv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728824AbgGaOwt (ORCPT
+        id S1729034AbgGaOx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 10:52:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54250 "EHLO
+        Fri, 31 Jul 2020 10:53:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726925AbgGaOwt (ORCPT
+        with ESMTP id S1726925AbgGaOx4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 10:52:49 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5123C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 07:52:48 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id di22so15375170edb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 07:52:48 -0700 (PDT)
+        Fri, 31 Jul 2020 10:53:56 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71AE7C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 07:53:56 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id l6so28983847qkc.6
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 07:53:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7xbkWYnKB5bD8Dx+A3hqQvuyFQl9+LQz6yTL7Vvq6w0=;
-        b=s7e5W0fXDILLB6ZWbNuQf571n49wktNjevDIf5ymOQ4TmVGXG/ZXEhdZ5d2V2CSlGz
-         SQFONr4GotVUcj7ixDNsa/uashyzLwpPDHZD254BElUXOnbseZXkDpKdmlzJHzGcW5lN
-         HvkEPK1kV8BwVkzcYf2T62N3V+yUFc1TSsAWKyqD7cET6pOYxMk/unAf2w3OhIWXlwJC
-         iQPf5U3ideRZ3LCcsaE5QbRva7XwFMZadtyqvvng1ODDFENc/f5u3wI+RXzsiF+dYn32
-         5YUMF86zfXDGdwXniwrzfwZf3DBgyBPfFya+TKVIhW0JLlMZ2fz/t76egk/7KVNrEX59
-         7bUw==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CJ7CXsexIR3+9NabGND9XyABX4+Hw57eKjQc2Kl4LME=;
+        b=A9qW9HTvWb5TMKIBHkwF+nHMq0EEp/M0lpNFJnRJhc+5+m20+yemUBtQ+blY79ZuPp
+         pNCofC9u6kyF6/Fi98ATHwhiCraxftkHJuIsiDYUWQyVfJtpKKGugbQIsSZikdxfLh+K
+         dczzXJm/kTUwaFUouAcgyxmxqq+Jkw6YfZ0I6r5Ca2E3FLWdJJElNf6ckc7MbkdWT30M
+         KrbToNlaPtffRB3bkq+xpKmsDBpMywrLbP1zETaM6MR0vH+p/8OwjZ3+mq1d6/JDTOFm
+         b/yMaJuHhLp/kBfku+JP5RrCip1++cJZwlqPkGujKdt1qcgjYizZBQbqVkeX5Cjqa8MH
+         cZxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7xbkWYnKB5bD8Dx+A3hqQvuyFQl9+LQz6yTL7Vvq6w0=;
-        b=n9dTe1YiEaRYaJThKRPnzVVFyc2FFGt93eHunseyKq1A1dkA4NIVRYU0srGO45GSpJ
-         suDiSRSl9VyExnxLyqXIRFoSPigH156oWWaqBsBuymAsMOHf1OjpxpOxoETCfY9eY3lv
-         Ec86Hzb4zmkUwVdWs/mZw+ji3gHVt09rZVgnYLZLLdDjLzEyt716dmTcXacK/3zX1UML
-         6dtRMs6yHNuCO7D0XoNleNRJk83eRGP6WEX0C7noOKG5idcF+oQYfIT4iKzqFJIlrodo
-         O7V5gehSWwt9zBbKAU2saY/WDQrGPjG4ty1K6obbyOdgTv5lAxXA+zarCJj2cM6XKa8k
-         akEg==
-X-Gm-Message-State: AOAM532osxzCK/ehiVw6WaVTjQ9qKC67zHmtLQFsdcFdYBxfW0FKDW7e
-        4CUWc+WQHM5aljMygbXOkIjw6YlLqbKPFzaV7VrLzQ==
-X-Google-Smtp-Source: ABdhPJzWcMODSLzAdKZ6q1frH2GXeDvyC+w2kZfqO8Lo3sAsT7hyYeTYxvBgCwoinitzwZZZSd9uSFR6RseVBdrmti8=
-X-Received: by 2002:a50:fb06:: with SMTP id d6mr4114200edq.165.1596207167258;
- Fri, 31 Jul 2020 07:52:47 -0700 (PDT)
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=CJ7CXsexIR3+9NabGND9XyABX4+Hw57eKjQc2Kl4LME=;
+        b=poI5jl/0qvxXxuojP/R7lR0hoDBYa+duJtEdyr00mKnrX0ptzOtUEuSJ46XBQNGF8m
+         nZusDDIEOlrhdFK4DGYj+n2zZOlt+zk6ubjcSeMsN8f1kZOYA9huXeW1NxhVy9b8d4S8
+         ZUpMfltASci5HV+LUANvXfNtQVayd5lAcfYMNT8oupu4liko5zomHai8laCUp5cf6a4H
+         bQEVcawP/JkjdkrCEUeYcqTvnhtpzKjGX3AmmxClRbcgoKhkaed301lw9YKakTNeDbKp
+         gQ0HoJRQ9Bn14xMMVF/WSjm8U/Z22Wm1GVdk7mxLF07+66c4ZQuvev9T2ad0FvIVha7o
+         35iw==
+X-Gm-Message-State: AOAM532A9XYyLWCANySKeQoR2HhJPcpJIlJfZ1x8VbihyPBOXhb2vGZC
+        dbnK4ZsOPYYbTn41fILJQ6E=
+X-Google-Smtp-Source: ABdhPJyMQGUBWTQtLayJ0miwc05/cfZlgv+Ibu5+r4bjkAlTloh2VO4o5H6Lqadvfi2PIkh5nI6BHQ==
+X-Received: by 2002:a05:620a:22ee:: with SMTP id p14mr4542341qki.223.1596207235574;
+        Fri, 31 Jul 2020 07:53:55 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id x29sm8713166qtv.80.2020.07.31.07.53.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 07:53:54 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Fri, 31 Jul 2020 10:53:52 -0400
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "H . J . Lu" <hjl@sourceware.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 0/7] x86/boot: Remove run-time relocations from
+ compressed kernel
+Message-ID: <20200731145352.GA2076085@rani.riverdale.lan>
+References: <20200714023836.2310569-1-nivedita@alum.mit.edu>
+ <20200715004133.1430068-1-nivedita@alum.mit.edu>
+ <20200717134654.GA3187880@rani.riverdale.lan>
+ <CAKwvOdnTbatx8VB-rJSzyFPwfYnkMYK28yLBn1G+hUu8dyfYRA@mail.gmail.com>
+ <CAMj1kXGeSFXnuO7Y94pyBU9qfSgtsLvMoCZSfDk476BBs2ejcw@mail.gmail.com>
+ <202007241624.D59FB48@keescook>
 MIME-Version: 1.0
-References: <20200716172913.19658-1-joao.m.martins@oracle.com> <20200716172913.19658-3-joao.m.martins@oracle.com>
-In-Reply-To: <20200716172913.19658-3-joao.m.martins@oracle.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 31 Jul 2020 07:52:36 -0700
-Message-ID: <CAPcyv4iueciTchM+tkhHZd6PhmbgKhQuBWaxm2Ff2bvvZWBBOw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/4] device-dax: Add an 'align' attribute
-To:     Joao Martins <joao.m.martins@oracle.com>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202007241624.D59FB48@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 10:31 AM Joao Martins <joao.m.martins@oracle.com> wrote:
->
-> Introduce a device align attribute. While doing so,
-> rename the region align attribute to be more explicitly
-> named as so, but keep it named as @align to retain the API
-> for tools like daxctl.
->
-> Changes on align may not always be valid, when say certain
-> mappings were created with 2M and then we switch to 1G. So, we
-> validate all ranges against the new value being attempted,
-> post resizing.
->
-> Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
-> ---
->  drivers/dax/bus.c | 101 +++++++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 92 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-> index 2578651c596e..eb384dd6a376 100644
-> --- a/drivers/dax/bus.c
-> +++ b/drivers/dax/bus.c
-> @@ -230,14 +230,15 @@ static ssize_t region_size_show(struct device *dev,
->  static struct device_attribute dev_attr_region_size = __ATTR(size, 0444,
->                 region_size_show, NULL);
->
-> -static ssize_t align_show(struct device *dev,
-> +static ssize_t region_align_show(struct device *dev,
->                 struct device_attribute *attr, char *buf)
->  {
->         struct dax_region *dax_region = dev_get_drvdata(dev);
->
->         return sprintf(buf, "%u\n", dax_region->align);
->  }
-> -static DEVICE_ATTR_RO(align);
-> +static struct device_attribute dev_attr_region_align =
-> +               __ATTR(align, 0400, region_align_show, NULL);
->
->  #define for_each_dax_region_resource(dax_region, res) \
->         for (res = (dax_region)->res.child; res; res = res->sibling)
-> @@ -488,7 +489,7 @@ static umode_t dax_region_visible(struct kobject *kobj, struct attribute *a,
->  static struct attribute *dax_region_attributes[] = {
->         &dev_attr_available_size.attr,
->         &dev_attr_region_size.attr,
-> -       &dev_attr_align.attr,
-> +       &dev_attr_region_align.attr,
->         &dev_attr_create.attr,
->         &dev_attr_seed.attr,
->         &dev_attr_delete.attr,
-> @@ -855,14 +856,13 @@ static ssize_t size_show(struct device *dev,
->         return sprintf(buf, "%llu\n", size);
->  }
->
-> -static bool alloc_is_aligned(struct dax_region *dax_region,
-> -               resource_size_t size)
-> +static bool alloc_is_aligned(resource_size_t size, unsigned long align)
+On Fri, Jul 24, 2020 at 04:25:20PM -0700, Kees Cook wrote:
+> On Sat, Jul 18, 2020 at 08:44:50AM +0300, Ard Biesheuvel wrote:
+> > On Fri, 17 Jul 2020 at 21:17, Nick Desaulniers <ndesaulniers@google.com> wrote:
+> > >
+> > > On Fri, Jul 17, 2020 at 6:46 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> > > >
+> > > > On Tue, Jul 14, 2020 at 08:41:26PM -0400, Arvind Sankar wrote:
+> > > > > The compressed kernel currently contains bogus run-time relocations in
+> > > > > the startup code in head_{32,64}.S, which are generated by the linker,
+> > > > > but must not actually be processed at run-time.
+> > > > >
+> > > > > This generates warnings when linking with the BFD linker, and errors
+> > > > > with LLD, which defaults to erroring on run-time relocations in read-only
+> > > > > sections. It also requires the -z noreloc-overflow hack for the 64-bit
+> > > > > kernel, which prevents us from linking it as -pie on an older BFD linker
+> > > > > (<= 2.26) or on LLD, because the locations that are to be apparently
+> > > > > relocated are only 32-bits in size and so cannot really have
+> > > > > R_X86_64_RELATIVE relocations.
+> > > > >
+> > > > > This series aims to get rid of these relocations. I've build- and
+> > > > > boot-tested with combinations of clang/gcc-10 with lld/bfd-2.34, and
+> > > > > gcc-4.9.0 with bfd-2.24, skipping clang on 32-bit because it currently
+> > > > > has other issues [0].
+> > > > >
+> > > >
+> > > > Hi Thomas, Ingo, Borislav, would you be able to take a look over this
+> > > > series in time for 5.9?
+> > >
+> > > Hi Arvind, thanks for the series; I'm behind on testing.  When I try
+> > > to apply this series on top of linux-next, I get a collision in
+> > > drivers/firmware/efi/libstub/Makefile:27 when applying "0002
+> > > x86/boot/compressed: Force hidden visibility for all symbol
+> > > references". Would you mind refreshing the series to avoid that
+> > > collision?
+> > 
+> > That is not the right way to deal with conflicts against -next.
+> > 
+> > This series targets the -tip tree, and applies fine against it. If you
+> > want to apply it on some other tree and test it, that is fine, and
+> > highly appreciated, but 'refreshing' the series against -next means it
+> > no longer applies to -tip, and may be based on unidentified conflict
+> > resolutions performed by Stephen that the maintainers will have to
+> > deal with.
+> > 
+> > Boris, Ingo, Thomas,
+> > 
+> > Mind taking v5 of this series? (With Nick's Tested-by) I think these
+> > patches have been simmering long enough. Do note there is a conflict
+> > against the kbuild tree, but the resolution should be straightforward.
+> 
+> I would love that; I need to rebase my orphan series on this too...
+> 
+> -- 
+> Kees Cook
 
-For type safety, let's make this take @dev_dax as a parameter. For the
-dev_dax_set_align() case I think it is ok to provisionally adjust
-dev_dax->align under the lock before entry and revert to the old
-alignment on failure.
-
-I can fix that up locally on applying.
+Ping?
