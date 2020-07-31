@@ -2,172 +2,107 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDA9C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D210C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4E4322B40
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 295B8208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:41:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TG+7iCM5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qYJcKTPW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732230AbgGaJjD (ORCPT
+        id S1732182AbgGaJlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:39:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34258 "EHLO
+        Fri, 31 Jul 2020 05:41:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732110AbgGaJjD (ORCPT
+        with ESMTP id S1732088AbgGaJlT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:39:03 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F26D5C061574;
-        Fri, 31 Jul 2020 02:39:02 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id p14so8032396wmg.1;
-        Fri, 31 Jul 2020 02:39:02 -0700 (PDT)
+        Fri, 31 Jul 2020 05:41:19 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3725C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 02:41:18 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id a5so17423116wrm.6
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 02:41:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1w/of8ZlYRk9ugq4qMwBl1GQ4reDEWsPjXKoxsmxWRQ=;
-        b=TG+7iCM5H5RU/WHaLCqzBi67//MYgY3g+ksq8nIRjlq0WBWUdAmD5GYYAS7Xn7Ad3H
-         4jHUFyTaxxUkfGZssR2ZgaTEs8y9LpVLU577CAqMdRyk2O9J/kb8sBDKftNmcpjBiz48
-         6mb8bIVd6Lb7VwqqZnhZDbC5t0sUAbb4ABBN8SjUbEb8HscFuGsEMKYVcgqJ0d01VvMa
-         4v2KHr/WBStns3BiRLunjBDoT3hf/iXlGbZg9lr/CRuJ1P1oC29v+LU0RH8Vqa2xBCtB
-         zc3Ilf1xHwFpKehrjACLIhM/XGv4nona8ObQ3mS78VRsY8ZtBAElQbSioJY/tu4QcSB2
-         qC5w==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=blK2S6cH6qikd/XbUA6HFppZyi5UmFkTzQjVm4HqLu8=;
+        b=qYJcKTPWZ/tbOoxgiSar9u8OlLsqIHNM2w7j0r/MKDA9uWzeRrLmOrBQMNLyThxO8+
+         WdjRAwWDyig9Pe2KYm7WTkfn16dgYWGhGWWJJpdNH3oVhT54Hhbn5MA04BN3B4Vfcxx7
+         BGQwJZkoPmj/pniMy9VKUAG5drnY86/yjhvW5zMMZejVLSbJbn36KxPMwtVQ31om84DV
+         7gP3+QlT/SHSP0gwvagI6Oo/WOlba0fNglBmXUk1QuET0uUBN41VwqZeBVk+9L57rGGc
+         Dl00XU9ZPofnh/BPtIbyJtimImNfx6bzbN1rjoegQyLThRCRMlX2/DLKVIWBDTXFDUaW
+         tcVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1w/of8ZlYRk9ugq4qMwBl1GQ4reDEWsPjXKoxsmxWRQ=;
-        b=R24u3ga0zEMc1Xw3aN0QqAnsJwW9OmikHxwS4CELNK/Dkrm188w3LzmG2W3hBTKHZk
-         IkTKpsN3b820LlGqL4DCgl3304NFafCDAR7H7+J15AYGLm24BuBPhCnuMXpEDdGeVj5r
-         6np78PdTexekEDLeJ5rScv8g4zFOKw82W0HjXy1FSfPZUrjjVabPjwnNEXfUcOrl6t2K
-         ouVHVFrorYHE6/K+pVzXXL3S1OYcr2mUHCRj6uEp2omJxibvP/7xyuE029zxzcGibDq4
-         1xxu9eN+ID7DN0W0myM6hjpbSiooofbOi6mjVG/ZlYArVDbPwcY6ZFCMqZib3qriBgJz
-         5fMg==
-X-Gm-Message-State: AOAM53172nxdIY0VDsXM7qBQe/WPc21nyEOzL+QyglNiSNmlmRpvkTPm
-        VhCSmkfiyuBdLMt92fsCNKly2m96quvqE/nslz4=
-X-Google-Smtp-Source: ABdhPJwb6uEWAAlpHrCaqfpQvpw9AKSziF8K6/uF3TzM0sbzpImikm9+rmCwa4yxBjQSYhXVZZnoA7UwVgmBxZU3B9M=
-X-Received: by 2002:a1c:32c3:: with SMTP id y186mr3027201wmy.15.1596188341428;
- Fri, 31 Jul 2020 02:39:01 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=blK2S6cH6qikd/XbUA6HFppZyi5UmFkTzQjVm4HqLu8=;
+        b=mS01hdnvwRIABgponSFDEixGQL7z5Wc68/5DwmcQDvTCwDB4RP0i1BxOwCQo9pfe3x
+         mNrnjrUhJGSgbveoP2v5NyFNCyAoDU/JUa5QqcPQVKFd0EYFpbBE+iA3mIXRoKCj/n50
+         CCeS8JC/X9gwc+/rLVGB4SQPYkqqReO2LGA11b+rAl2/TT9pLO/ktYtVueqqtyys1wJ5
+         LF9bW2u/KfJZxwempdLcN1zy2PMRUmGCjgHCyH2nnojuCGH6fcVPaP87q9+Fd75Ptc2K
+         JggdusiPxhC+7J0PHTYNknsgVLzuKJ/MJKBh4caFw/hNYBxESKE5AMwefV5g5IOs345x
+         yDMA==
+X-Gm-Message-State: AOAM53380lMed0Z/2mXLqIfieJZYYZXS7AIxnHqDX+PneahQFRD8sxYd
+        fTvw233BvZQxvaUK3n2gvvbHJw==
+X-Google-Smtp-Source: ABdhPJwNSLofjJwuFuHlU7XMv9pf4+e12egPsBdGARtG7JOGdvQEnjlxZrj7kRD3mLXivOz+KUA1JA==
+X-Received: by 2002:a5d:60c5:: with SMTP id x5mr2772718wrt.67.1596188477304;
+        Fri, 31 Jul 2020 02:41:17 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:e484:a7d1:6931:9059? ([2a01:e34:ed2f:f020:e484:a7d1:6931:9059])
+        by smtp.googlemail.com with ESMTPSA id t202sm11904350wmt.20.2020.07.31.02.41.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jul 2020 02:41:16 -0700 (PDT)
+Subject: Re: Aw: Re: [PATCH v2 2/2] thermal: mediatek: add tsensor support for
+ V2 thermal system
+To:     Frank Wunderlich <frank-w@public-files.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Henry Yen <henry.yen@mediatek.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Steven Liu <steven.liu@mediatek.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Kao <michael.kao@mediatek.com>,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+References: <1588238074-19338-1-git-send-email-henry.yen@mediatek.com>
+ <1588238074-19338-3-git-send-email-henry.yen@mediatek.com>
+ <f086c86e-7d7b-50c4-baf2-66022301adc7@gmail.com>
+ <trinity-a82d184c-1a5a-4f73-84c7-bcba3d84d5a4-1596131147519@3c-app-gmx-bs42>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <ccfa7b46-1663-3891-a7fe-76759c708a6d@linaro.org>
+Date:   Fri, 31 Jul 2020 11:41:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <b0b7159d-ed10-08ad-b6c7-b85d45f60d16@kernel.dk>
- <e871eef2-8a93-fdbc-b762-2923526a2db4@gmail.com> <80d27717-080a-1ced-50d5-a3a06cf06cd3@kernel.dk>
- <da4baa8c-76b0-7255-365c-d8b58e322fd0@gmail.com> <65a7e9a6-aede-31ce-705c-b7f94f079112@kernel.dk>
- <d4f9a5d3-1df2-1060-94fa-f77441a89299@gmail.com> <CA+1E3rJ3SoLU9aYcugAQgJnSPnJtcCwjZdMREXS3FTmXgy3yow@mail.gmail.com>
- <f030a338-cd52-2e83-e1da-bdbca910d49e@kernel.dk> <CA+1E3rKxZk2CatTuPcQq5d14vXL9_9LVb2_+AfR2m9xn2WTZdg@mail.gmail.com>
- <MWHPR04MB3758DC08EA17780E498E9EC0E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <20200731064526.GA25674@infradead.org> <MWHPR04MB37581344328A42EA7F5ED13EE74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <CA+1E3rLM4G4SwzD6RWsK6Ssp7NmhiPedZDjrqN3kORQr9fxCtw@mail.gmail.com> <MWHPR04MB375863C20C1EF2CB27E62703E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
-In-Reply-To: <MWHPR04MB375863C20C1EF2CB27E62703E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
-From:   Kanchan Joshi <joshiiitr@gmail.com>
-Date:   Fri, 31 Jul 2020 15:08:34 +0530
-Message-ID: <CA+1E3rJasyUAcDZZFPjFSckUuLKu7rMkn0bmLJWdywxTC0u-7w@mail.gmail.com>
-Subject: Re: [PATCH v4 6/6] io_uring: add support for zone-append
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     "hch@infradead.org" <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "bcrl@kvack.org" <bcrl@kvack.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-aio@kvack.org" <linux-aio@kvack.org>,
-        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        SelvaKumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>,
-        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <trinity-a82d184c-1a5a-4f73-84c7-bcba3d84d5a4-1596131147519@3c-app-gmx-bs42>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 1:44 PM Damien Le Moal <Damien.LeMoal@wdc.com> wrote:
->
-> On 2020/07/31 16:59, Kanchan Joshi wrote:
-> > On Fri, Jul 31, 2020 at 12:29 PM Damien Le Moal <Damien.LeMoal@wdc.com> wrote:
-> >>
-> >> On 2020/07/31 15:45, hch@infradead.org wrote:
-> >>> On Fri, Jul 31, 2020 at 06:42:10AM +0000, Damien Le Moal wrote:
-> >>>>> - We may not be able to use RWF_APPEND, and need exposing a new
-> >>>>> type/flag (RWF_INDIRECT_OFFSET etc.) user-space. Not sure if this
-> >>>>> sounds outrageous, but is it OK to have uring-only flag which can be
-> >>>>> combined with RWF_APPEND?
-> >>>>
-> >>>> Why ? Where is the problem ? O_APPEND/RWF_APPEND is currently meaningless for
-> >>>> raw block device accesses. We could certainly define a meaning for these in the
-> >>>> context of zoned block devices.
-> >>>
-> >>> We can't just add a meaning for O_APPEND on block devices now,
-> >>> as it was previously silently ignored.  I also really don't think any
-> >>> of these semantics even fit the block device to start with.  If you
-> >>> want to work on raw zones use zonefs, that's what is exists for.
-> >>
-> >> Which is fine with me. Just trying to say that I think this is exactly the
-> >> discussion we need to start with. What interface do we implement...
-> >>
-> >> Allowing zone append only through zonefs as the raw block device equivalent, all
-> >> the O_APPEND/RWF_APPEND semantic is defined and the "return written offset"
-> >> implementation in VFS would be common for all file systems, including regular
-> >> ones. Beside that, there is I think the question of short writes... Not sure if
-> >> short writes can currently happen with async RWF_APPEND writes to regular files.
-> >> I think not but that may depend on the FS.
-> >
-> > generic_write_check_limits (called by generic_write_checks, used by
-> > most FS) may make it short, and AFAIK it does not depend on
-> > async/sync.
->
-> Johannes has a patch (not posted yet) fixing all this for zonefs,
-> differentiating sync and async cases, allow short writes or not, etc. This was
-> done by not using generic_write_check_limits() and instead writing a
-> zonefs_check_write() function that is zone append friendly.
->
-> We can post that as a base for the discussion on semantic if you want...
+On 30/07/2020 19:45, Frank Wunderlich wrote:
+> Tested on bpi-r64 and r2, i hope this can be merged to next / 5.9
+> 
+> Tested-By: Frank Wunderlich <frank-w@public-files.de>
 
-There is no problem in about how-to-do-it. That part is simple - we
-have the iocb, and sync/async can be known whether ki_complete
-callback is set.
-This point to be discussed was whether-to-allow-short-write-or-not if
-we are talking about a generic file-append-returning-location.
 
-That said, since we are talking about moving to indirect-offset in
-io-uring, short-write is not an issue anymore I suppose (it goes back
-to how it was).
-But the unsettled thing is -  whether we can use O/RWF_APPEND with
-indirect-offset (pointer) scheme.
+Thanks for testing, applied for v5.9
 
-> > This was one of the reason why we chose to isolate the operation by a
-> > different IOCB flag and not by IOCB_APPEND alone.
->
-> For zonefs, the plan is:
-> * For the sync write case, zone append is always used.
-> * For the async write case, if we see IOCB_APPEND, then zone append BIOs are
-> used. If not, regular write BIOs are used.
->
-> Simple enough I think. No need for a new flag.
 
-Maybe simple if we only think of ZoneFS (how user-space sends
-async-append and gets result is a common problem).
-Add Block I/O in scope -  it gets slightly more complicated because it
-has to cater to non-zoned devices. And there already is a
-well-established understanding that append does nothing...so  code
-like "if (flags & IOCB_APPEND) { do something; }" in block I/O path
-may surprise someone resuming after a hiatus.
-Add File I/O in scope - It gets further complicated. I think it would
-make sense to make it opt-in rather than compulsory, but most of them
-already implement a behavior for IOCB_APPEND. How to make it opt-in
-without new flags.
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-New flags (FMODE_SOME_NAME, IOCB_SOME_NAME) serve that purpose.
-Please assess the need (for isolation) considering all three cases.
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
