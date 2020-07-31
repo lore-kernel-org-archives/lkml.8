@@ -2,129 +2,376 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA9FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 05:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 437FDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 05:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 095432084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 05:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B7E82084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 05:58:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="p0Emrj/v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gqbhEdWr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731299AbgGaFxN (ORCPT
+        id S1731186AbgGaF6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 01:53:13 -0400
-Received: from ozlabs.org ([203.11.71.1]:54127 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730170AbgGaFxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 01:53:12 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BHxJz3Z41z9sT6;
-        Fri, 31 Jul 2020 15:53:06 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596174789;
-        bh=pGGWHKfJtL+KMXjTL1ISgluxe8SpdKWugmuEWvZtynA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=p0Emrj/vu5vPMkzXOSsZIPoNM3xHMDOVWWsKo/OaXQenIiRUeEwsHS+7xs8iRif64
-         zo1ODSQ/V9bCZll6PZt/vdOpW4W6RtCxRogz1vnnXfbBH6iU+EtHTLpJVyUrVqAorO
-         WfXV2jfQo36o1YOCydoWPwbvierkZivJq8B77IRN7qdl9lRRepR3cVXAz7WfK5IZLR
-         oXhOCbDX0T0ud2ZV2kf9xd7NrjOpcii+Xx8pfYcs8CJLW/jWu70zdyxJ+pD6qIkTAR
-         Fgo4mfdRUWIZypAYC3f2+NYTddCVTU6eRH24HXRLyuxPVPEhtsMn56ljZqsY6MH2lF
-         wRQzBVdAutBBQ==
-Date:   Fri, 31 Jul 2020 15:53:04 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: linux-next: build failure after merge of the tip tree
-Message-ID: <20200731155304.06c67b0c@canb.auug.org.au>
+        Fri, 31 Jul 2020 01:58:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726972AbgGaF6x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 01:58:53 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E760AC061574;
+        Thu, 30 Jul 2020 22:58:52 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id d1so16404038plr.8;
+        Thu, 30 Jul 2020 22:58:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QZzFLuCVPzlle1jrEWbCNmXDRNwYYDUlotjiTA7eDoI=;
+        b=gqbhEdWrzdaVKReunP51i1hEfexT8r20a0jx3jX164EM/aG6WwWHS8SdiYWEa6Ad1w
+         IeIsJWjPJdVrVnLmW+scmIWWdo4a7YhYCwIiLJQuddqHIBn7mOZWW83XSDf7f/SeA8vr
+         kmYlrplOBlxXyQfKRY7BedyBl/dvLnJGJmUKBYNKmqpTgNsIyCXLUzr4clf8Hc9vTlNR
+         HEeBGxD9HJTasT+AsFi91dYeZXSjYi9OqI0ZmSMvAUtJly8PsMbZVJxbAkiKCe0HP/wt
+         W2NL7DtJCILhR1QE/SWwlBHhe/oMQbCJ1JBmgrhfwwQW2TewaHCea9vymJNyGHtXAngX
+         hSng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QZzFLuCVPzlle1jrEWbCNmXDRNwYYDUlotjiTA7eDoI=;
+        b=LOPmN8rCDh9tg4b5uCvzio7SlzCD5pxb75RULHUEqN3X5W73eSYz2vxR63h3GHTsG/
+         k48L+Gmwh0G0pd+Mg3PqhoX17CCqqpOfymZivDWfYE8wknLz/zCtywKBVWnvxeH2Mn+1
+         2Ox/4ThRG1cRP4N1DsS7mE1Op8Jpo5KMELjvtTyGy0zP8TEro7pVVJSmZwErKYE/30e8
+         4efIozWmDk67oHDJ26tLg5g6Zs0gCllprdgW/76FFGos7aTf/JCttx03XSX7mGWyntZr
+         modlodWUDP7HZhIL6ZWSeNHvAA98rdHMuzPQOCEsacX9rJF+AxZkQc+zAU+myDGWs/vD
+         5Ziw==
+X-Gm-Message-State: AOAM531KCjqKN5vkcNFl+j1It5AlXE3XPi4UYvqSdnbnIntPEEkeTlUV
+        qAOaeXYmMIoQZWErI/kcfqUjlK59+QA=
+X-Google-Smtp-Source: ABdhPJxsLPmeszAHgyrm9QeqOR9I6OaTd0IAWbAilgTSpqcG7O2pxFP0SyIj2g5wjzToWAnZ3Cr3JA==
+X-Received: by 2002:a63:5d54:: with SMTP id o20mr2163499pgm.253.1596175132269;
+        Thu, 30 Jul 2020 22:58:52 -0700 (PDT)
+Received: from dc803.localdomain (flh2-125-196-131-224.osk.mesh.ad.jp. [125.196.131.224])
+        by smtp.gmail.com with ESMTPSA id d22sm8442353pfd.42.2020.07.30.22.58.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 22:58:51 -0700 (PDT)
+From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
+To:     kohada.t2@gmail.com
+Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
+        mori.takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] exfat: retain 'VolumeFlags' properly
+Date:   Fri, 31 Jul 2020 14:58:26 +0900
+Message-Id: <20200731055827.493-1-kohada.t2@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/TzJyvr.CQ.dHYVGgaA=aARk";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/TzJyvr.CQ.dHYVGgaA=aARk
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Retain ActiveFat, MediaFailure and ClearToZero fields.
+And, never clear VolumeDirty, if it is dirty at mount.
 
-Hi all,
+In '3.1.13.3 Media Failure Field' of exfat specification says ...
+ If, upon mounting a volume, the value of this field is 1, implementations
+ which scan the entire volume for media failures and record all failures as
+ "bad" clusters in the FAT (or otherwise resolve media failures) may clear
+ the value of this field to 0.
+Therefore, should not clear MediaFailure without scanning volume.
 
-After merging the tip tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+In '8.1 Recommended Write Ordering' of exfat specification says ...
+ Clear the value of the VolumeDirty field to 0, if its value prior to the
+ first step was 0
+Therefore, should not clear VolumeDirty when mounted.
 
-In file included from include/asm-generic/getorder.h:8,
-                 from arch/arm/include/asm/page.h:166,
-                 from arch/arm/include/asm/thread_info.h:14,
-                 from arch/arm/include/asm/percpu.h:16,
-                 from include/linux/irqflags.h:17,
-                 from arch/arm/include/asm/bitops.h:28,
-                 from include/linux/bitops.h:29,
-                 from include/linux/kernel.h:12,
-                 from include/asm-generic/bug.h:20,
-                 from arch/arm/include/asm/bug.h:60,
-                 from include/linux/bug.h:5,
-                 from include/linux/page-flags.h:10,
-                 from kernel/bounds.c:10:
-include/linux/log2.h: In function '__ilog2_u32':
-include/linux/log2.h:24:9: error: implicit declaration of function 'fls' [-=
-Werror=3Dimplicit-function-declaration]
-   24 |  return fls(n) - 1;
-      |         ^~~
+Also, rename ERR_MEDIUM to MEDIA_FAILURE.
 
-And so on ...
+Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
+---
+Changes in v2
+ - Add exfat_set_volume_dirty() & exfat_clear_volume_dirty()
+ - Rename vol_flags_noclear to vol_flags_persistent
+ - Rename MED_FAILURE to MEDIA_FAILURE
+ - Rename VOL_DIRTY to VOLUME_DIRTY
+ - Remove VOL_CLEAN
 
-Caused by commit
+ fs/exfat/exfat_fs.h  |  6 ++++--
+ fs/exfat/exfat_raw.h |  5 ++---
+ fs/exfat/file.c      |  4 ++--
+ fs/exfat/inode.c     |  4 ++--
+ fs/exfat/namei.c     | 20 ++++++++++----------
+ fs/exfat/super.c     | 36 +++++++++++++++++++++++++++---------
+ 6 files changed, 47 insertions(+), 28 deletions(-)
 
-  a21ee6055c30 ("lockdep: Change hardirq{s_enabled,_context} to per-cpu var=
-iables")
+diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
+index cb51d6e83199..95d717f8620c 100644
+--- a/fs/exfat/exfat_fs.h
++++ b/fs/exfat/exfat_fs.h
+@@ -224,7 +224,8 @@ struct exfat_sb_info {
+ 	unsigned int num_FAT_sectors; /* num of FAT sectors */
+ 	unsigned int root_dir; /* root dir cluster */
+ 	unsigned int dentries_per_clu; /* num of dentries per cluster */
+-	unsigned int vol_flag; /* volume dirty flag */
++	unsigned int vol_flags; /* volume flags */
++	unsigned int vol_flags_persistent; /* volume flags to retain */
+ 	struct buffer_head *boot_bh; /* buffer_head of BOOT sector */
+ 
+ 	unsigned int map_clu; /* allocation bitmap start cluster */
+@@ -380,7 +381,8 @@ static inline int exfat_sector_to_cluster(struct exfat_sb_info *sbi,
+ }
+ 
+ /* super.c */
+-int exfat_set_vol_flags(struct super_block *sb, unsigned short new_flag);
++int exfat_set_volume_dirty(struct super_block *sb);
++int exfat_clear_volume_dirty(struct super_block *sb);
+ 
+ /* fatent.c */
+ #define exfat_get_next_cluster(sb, pclu) exfat_ent_get(sb, *(pclu), pclu)
+diff --git a/fs/exfat/exfat_raw.h b/fs/exfat/exfat_raw.h
+index 350ce59cc324..6aec6288e1f2 100644
+--- a/fs/exfat/exfat_raw.h
++++ b/fs/exfat/exfat_raw.h
+@@ -14,9 +14,8 @@
+ 
+ #define EXFAT_MAX_FILE_LEN	255
+ 
+-#define VOL_CLEAN		0x0000
+-#define VOL_DIRTY		0x0002
+-#define ERR_MEDIUM		0x0004
++#define VOLUME_DIRTY		0x0002
++#define MEDIA_FAILURE		0x0004
+ 
+ #define EXFAT_EOF_CLUSTER	0xFFFFFFFFu
+ #define EXFAT_BAD_CLUSTER	0xFFFFFFF7u
+diff --git a/fs/exfat/file.c b/fs/exfat/file.c
+index 6bdabfd4b134..f41f523a58ad 100644
+--- a/fs/exfat/file.c
++++ b/fs/exfat/file.c
+@@ -106,7 +106,7 @@ int __exfat_truncate(struct inode *inode, loff_t new_size)
+ 	if (ei->type != TYPE_FILE && ei->type != TYPE_DIR)
+ 		return -EPERM;
+ 
+-	exfat_set_vol_flags(sb, VOL_DIRTY);
++	exfat_set_volume_dirty(sb);
+ 
+ 	num_clusters_new = EXFAT_B_TO_CLU_ROUND_UP(i_size_read(inode), sbi);
+ 	num_clusters_phys =
+@@ -220,7 +220,7 @@ int __exfat_truncate(struct inode *inode, loff_t new_size)
+ 	if (exfat_free_cluster(inode, &clu))
+ 		return -EIO;
+ 
+-	exfat_set_vol_flags(sb, VOL_CLEAN);
++	exfat_clear_volume_dirty(sb);
+ 
+ 	return 0;
+ }
+diff --git a/fs/exfat/inode.c b/fs/exfat/inode.c
+index f0160a7892a8..7f90204adef5 100644
+--- a/fs/exfat/inode.c
++++ b/fs/exfat/inode.c
+@@ -39,7 +39,7 @@ static int __exfat_write_inode(struct inode *inode, int sync)
+ 	if (is_dir && ei->dir.dir == sbi->root_dir && ei->entry == -1)
+ 		return 0;
+ 
+-	exfat_set_vol_flags(sb, VOL_DIRTY);
++	exfat_set_volume_dirty(sb);
+ 
+ 	/* get the directory entry of given file or directory */
+ 	es = exfat_get_dentry_set(sb, &(ei->dir), ei->entry, ES_ALL_ENTRIES);
+@@ -167,7 +167,7 @@ static int exfat_map_cluster(struct inode *inode, unsigned int clu_offset,
+ 	}
+ 
+ 	if (*clu == EXFAT_EOF_CLUSTER) {
+-		exfat_set_vol_flags(sb, VOL_DIRTY);
++		exfat_set_volume_dirty(sb);
+ 
+ 		new_clu.dir = (last_clu == EXFAT_EOF_CLUSTER) ?
+ 				EXFAT_EOF_CLUSTER : last_clu + 1;
+diff --git a/fs/exfat/namei.c b/fs/exfat/namei.c
+index 126ed3ba8f47..e73f20f66cb2 100644
+--- a/fs/exfat/namei.c
++++ b/fs/exfat/namei.c
+@@ -562,10 +562,10 @@ static int exfat_create(struct inode *dir, struct dentry *dentry, umode_t mode,
+ 	int err;
+ 
+ 	mutex_lock(&EXFAT_SB(sb)->s_lock);
+-	exfat_set_vol_flags(sb, VOL_DIRTY);
++	exfat_set_volume_dirty(sb);
+ 	err = exfat_add_entry(dir, dentry->d_name.name, &cdir, TYPE_FILE,
+ 		&info);
+-	exfat_set_vol_flags(sb, VOL_CLEAN);
++	exfat_clear_volume_dirty(sb);
+ 	if (err)
+ 		goto unlock;
+ 
+@@ -834,7 +834,7 @@ static int exfat_unlink(struct inode *dir, struct dentry *dentry)
+ 	num_entries++;
+ 	brelse(bh);
+ 
+-	exfat_set_vol_flags(sb, VOL_DIRTY);
++	exfat_set_volume_dirty(sb);
+ 	/* update the directory entry */
+ 	if (exfat_remove_entries(dir, &cdir, entry, 0, num_entries)) {
+ 		err = -EIO;
+@@ -843,7 +843,7 @@ static int exfat_unlink(struct inode *dir, struct dentry *dentry)
+ 
+ 	/* This doesn't modify ei */
+ 	ei->dir.dir = DIR_DELETED;
+-	exfat_set_vol_flags(sb, VOL_CLEAN);
++	exfat_clear_volume_dirty(sb);
+ 
+ 	inode_inc_iversion(dir);
+ 	dir->i_mtime = dir->i_atime = current_time(dir);
+@@ -873,10 +873,10 @@ static int exfat_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
+ 	int err;
+ 
+ 	mutex_lock(&EXFAT_SB(sb)->s_lock);
+-	exfat_set_vol_flags(sb, VOL_DIRTY);
++	exfat_set_volume_dirty(sb);
+ 	err = exfat_add_entry(dir, dentry->d_name.name, &cdir, TYPE_DIR,
+ 		&info);
+-	exfat_set_vol_flags(sb, VOL_CLEAN);
++	exfat_clear_volume_dirty(sb);
+ 	if (err)
+ 		goto unlock;
+ 
+@@ -1001,14 +1001,14 @@ static int exfat_rmdir(struct inode *dir, struct dentry *dentry)
+ 	num_entries++;
+ 	brelse(bh);
+ 
+-	exfat_set_vol_flags(sb, VOL_DIRTY);
++	exfat_set_volume_dirty(sb);
+ 	err = exfat_remove_entries(dir, &cdir, entry, 0, num_entries);
+ 	if (err) {
+ 		exfat_err(sb, "failed to exfat_remove_entries : err(%d)", err);
+ 		goto unlock;
+ 	}
+ 	ei->dir.dir = DIR_DELETED;
+-	exfat_set_vol_flags(sb, VOL_CLEAN);
++	exfat_clear_volume_dirty(sb);
+ 
+ 	inode_inc_iversion(dir);
+ 	dir->i_mtime = dir->i_atime = current_time(dir);
+@@ -1300,7 +1300,7 @@ static int __exfat_rename(struct inode *old_parent_inode,
+ 	if (ret)
+ 		goto out;
+ 
+-	exfat_set_vol_flags(sb, VOL_DIRTY);
++	exfat_set_volume_dirty(sb);
+ 
+ 	if (olddir.dir == newdir.dir)
+ 		ret = exfat_rename_file(new_parent_inode, &olddir, dentry,
+@@ -1355,7 +1355,7 @@ static int __exfat_rename(struct inode *old_parent_inode,
+ 		 */
+ 		new_ei->dir.dir = DIR_DELETED;
+ 	}
+-	exfat_set_vol_flags(sb, VOL_CLEAN);
++	exfat_clear_volume_dirty(sb);
+ out:
+ 	return ret;
+ }
+diff --git a/fs/exfat/super.c b/fs/exfat/super.c
+index b5bf6dedbe11..3b6a1659892f 100644
+--- a/fs/exfat/super.c
++++ b/fs/exfat/super.c
+@@ -63,7 +63,7 @@ static int exfat_sync_fs(struct super_block *sb, int wait)
+ 	/* If there are some dirty buffers in the bdev inode */
+ 	mutex_lock(&sbi->s_lock);
+ 	sync_blockdev(sb->s_bdev);
+-	if (exfat_set_vol_flags(sb, VOL_CLEAN))
++	if (exfat_clear_volume_dirty(sb))
+ 		err = -EIO;
+ 	mutex_unlock(&sbi->s_lock);
+ 	return err;
+@@ -96,17 +96,20 @@ static int exfat_statfs(struct dentry *dentry, struct kstatfs *buf)
+ 	return 0;
+ }
+ 
+-int exfat_set_vol_flags(struct super_block *sb, unsigned short new_flag)
++static int exfat_set_vol_flags(struct super_block *sb, unsigned short new_flags)
+ {
+ 	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+ 	struct boot_sector *p_boot = (struct boot_sector *)sbi->boot_bh->b_data;
+ 	bool sync;
+ 
++	/* retain persistent-flags */
++	new_flags |= sbi->vol_flags_persistent;
++
+ 	/* flags are not changed */
+-	if (sbi->vol_flag == new_flag)
++	if (sbi->vol_flags == new_flags)
+ 		return 0;
+ 
+-	sbi->vol_flag = new_flag;
++	sbi->vol_flags = new_flags;
+ 
+ 	/* skip updating volume dirty flag,
+ 	 * if this volume has been mounted with read-only
+@@ -114,9 +117,9 @@ int exfat_set_vol_flags(struct super_block *sb, unsigned short new_flag)
+ 	if (sb_rdonly(sb))
+ 		return 0;
+ 
+-	p_boot->vol_flags = cpu_to_le16(new_flag);
++	p_boot->vol_flags = cpu_to_le16(new_flags);
+ 
+-	if (new_flag == VOL_DIRTY && !buffer_dirty(sbi->boot_bh))
++	if ((new_flags & VOLUME_DIRTY) && !buffer_dirty(sbi->boot_bh))
+ 		sync = true;
+ 	else
+ 		sync = false;
+@@ -129,6 +132,20 @@ int exfat_set_vol_flags(struct super_block *sb, unsigned short new_flag)
+ 	return 0;
+ }
+ 
++int exfat_set_volume_dirty(struct super_block *sb)
++{
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++
++	return exfat_set_vol_flags(sb, sbi->vol_flags | VOLUME_DIRTY);
++}
++
++int exfat_clear_volume_dirty(struct super_block *sb)
++{
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++
++	return exfat_set_vol_flags(sb, sbi->vol_flags & ~VOLUME_DIRTY);
++}
++
+ static int exfat_show_options(struct seq_file *m, struct dentry *root)
+ {
+ 	struct super_block *sb = root->d_sb;
+@@ -457,7 +474,8 @@ static int exfat_read_boot_sector(struct super_block *sb)
+ 	sbi->dentries_per_clu = 1 <<
+ 		(sbi->cluster_size_bits - DENTRY_SIZE_BITS);
+ 
+-	sbi->vol_flag = le16_to_cpu(p_boot->vol_flags);
++	sbi->vol_flags = le16_to_cpu(p_boot->vol_flags);
++	sbi->vol_flags_persistent = sbi->vol_flags & (VOLUME_DIRTY | MEDIA_FAILURE);
+ 	sbi->clu_srch_ptr = EXFAT_FIRST_CLUSTER;
+ 	sbi->used_clusters = EXFAT_CLUSTERS_UNTRACKED;
+ 
+@@ -472,9 +490,9 @@ static int exfat_read_boot_sector(struct super_block *sb)
+ 		exfat_err(sb, "bogus data start sector");
+ 		return -EINVAL;
+ 	}
+-	if (sbi->vol_flag & VOL_DIRTY)
++	if (sbi->vol_flags & VOLUME_DIRTY)
+ 		exfat_warn(sb, "Volume was not properly unmounted. Some data may be corrupt. Please run fsck.");
+-	if (sbi->vol_flag & ERR_MEDIUM)
++	if (sbi->vol_flags & MEDIA_FAILURE)
+ 		exfat_warn(sb, "Medium has reported failures. Some data may be lost.");
+ 
+ 	/* exFAT file size is limited by a disk volume size */
+-- 
+2.25.1
 
-interacting with commit
-
-  00a30a5c9e6b ("arm: include asm/thread_info.h in asm/percpu.h")
-
-(which was a fix of mine but now the equivalent is in Linus' tree as commit
-
-  aa54ea903abb ("ARM: percpu.h: fix build error")
-)
-
-I have reverted 00a30a5c9e6b since commit
-
-  a6342915881a ("arm: Break cyclic percpu include")
-
-(which precedes a21ee6055c30) acomplishes the same thing differently.
-Something will be required when this is merged with Linus' tree, though.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/TzJyvr.CQ.dHYVGgaA=aARk
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8jscAACgkQAVBC80lX
-0Gy+kgf9EDGqQV7aphtZZtiWJBwQR1Y8XGTY5JLUbZfQN3WvcCKSuEdTi9tZ6U2i
-ITjVoHPHrYc9VBrXtYt6FF+Mt59aL6OWtuTVr2+EA/yM871awqzU01XdJM/dZP57
-pF8StLRbggMm8esbOC8eLLgXSj39hUadrWNSUE6x9DGSQkz96EFbOgTzfNh3pIms
-+S6xC1Cfacn+oeimBXpWULnyCVtvNkCqZQbsVpy9Qv4UvnYSrZ27tjHaVROKO878
-9lmJRSWp8eQBSAMKY+0JjMstVRnyvongMLXXEMMdrni7vm41l7YkH9sYo0mHV9sB
-xg3i+FJqC/jZW3aBivEY81zM9P8yeQ==
-=T7kK
------END PGP SIGNATURE-----
-
---Sig_/TzJyvr.CQ.dHYVGgaA=aARk--
