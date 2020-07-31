@@ -6,83 +6,96 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CFBC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77261C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03E89208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A91422BEA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:48:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596235678;
-	bh=b5JO+/JgUpSFXa4/rz7ZFekRFLfuwg/2wbt6wlTIbdk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NNY1IGPUSPZCspsDkWKqnNf3xFdxqtlxbrFIKhqtI0okxYWvAQFJYr9WvyelPsSim
-	 SwhkVi4OzJLSbPflFa8bJ3idG6O5IYrLg9B4i9oej4XL69VHsMYyxAutfJtN7ONUe+
-	 XOrHKm0Gj8zsDzz2O74EauJb5N1xDPjnUTSpGjvE=
+	s=default; t=1596235684;
+	bh=7zoatPktEeFd4a01HdiZ4u3EZK/Rx8lm3/qIT39XfTk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fmJxsqD1m9ckXBY2cV0PpE1RfAF8XLfYzuvkSWYGiSNUpHtUqXXxN2OOdzZlb9VHc
+	 2u1ULMm0/26bOco7C7vLG2OLgFNGAG/SrnPMYJjhzgyAP59ksbh2bQChgRhYd5YrlB
+	 3YWCCDJ2xc/AgWGOqwO5BO223niW1DouI+jDGsy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbgGaWr5 (ORCPT
+        id S1727113AbgGaWsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 18:47:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55312 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726099AbgGaWr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 18:47:56 -0400
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BC2B22CA1;
-        Fri, 31 Jul 2020 22:47:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596235676;
-        bh=b5JO+/JgUpSFXa4/rz7ZFekRFLfuwg/2wbt6wlTIbdk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=g2+ALqyCuTAB0Vlzzea2WFmhBAXWs1yW33mD+aSeC9rO/2W02RLQKoPfyEo6wA8z/
-         GE0fWf5k2JRCK+lMSRRStQjsryj7h1ZsaiNMco3I9YEVC8qNIJ5XW5wL7zL35HapvH
-         MiGUM/9yfxfErxfsKKBq8q2hubm0r9ZTmBFOA5u8=
-Received: by mail-lf1-f42.google.com with SMTP id b11so17655201lfe.10;
-        Fri, 31 Jul 2020 15:47:56 -0700 (PDT)
-X-Gm-Message-State: AOAM533atkeVpoGATXJ8Af25DhcJV3Z8lNGe6MUrN0vxrYe5r8Nvbt68
-        ejb/NfrjbTD2Pthe1cPm2bh1xVXV9v/cVfwbbUg=
-X-Google-Smtp-Source: ABdhPJxuo4sNEX2s+7M7UJBHmg90CO4wbasCESFdqa24wlRtwstPHpt4DRutCpTxoUn7zgxETgwNCfpdb+2vdKkUoAA=
-X-Received: by 2002:a19:be53:: with SMTP id o80mr3015618lff.33.1596235674356;
- Fri, 31 Jul 2020 15:47:54 -0700 (PDT)
+        Fri, 31 Jul 2020 18:48:03 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37062 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgGaWsB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 18:48:01 -0400
+Received: by mail-io1-f65.google.com with SMTP id w12so19590354iom.4;
+        Fri, 31 Jul 2020 15:48:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/d64ZvxnYLAa4ivT6GpHFLsQPwpa3um8E44Lb+XHnVM=;
+        b=WnWfwIp6To646z8ZYHnJGO6dQerk9DrXRfx8fb8kWdkPimrbnL6c/igoDsYoRsTPdL
+         yFnwTrTv7RfqJ2WycsipAVA191gftyWcbr3KouhOdtUGPzsB7UtSVRDybQ9lTfelkwRp
+         Wp3LHNvL3ZpKInqLJmdm2BFQFYLKeBsKiaNtjyVadpFtKW4grwVbka1QB3TaMj/Ohmwe
+         A6Q5QQml4vc/Xzc0EdO/NKdGpY3yTznB8i6HSNXz5mD5U0qF/KjtRVgrl0ncKCy3ZQMv
+         8tf5CBspfBM4zwoeV+G4HI7PWZ3wm+PgdszjJj7CJYFjkGAaBC3SPwqGAJ59HAmwzxJL
+         XMIw==
+X-Gm-Message-State: AOAM532nI4PQYwJAAal/AdsMBKXYhNahRyM0qnRp1oV+K1d2PesPs1Fe
+        Uxbtu7xpxZV6wH2MhJ7MKw==
+X-Google-Smtp-Source: ABdhPJzEyDvTpEnTuMpltjNhY3vCPr2jJn8FZNM5dRXRCf0C3CB3SCaZx1OhN3DDkgnP1FTWuFefXg==
+X-Received: by 2002:a6b:700d:: with SMTP id l13mr5685565ioc.135.1596235680423;
+        Fri, 31 Jul 2020 15:48:00 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id h9sm5465140ilc.59.2020.07.31.15.47.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 15:47:59 -0700 (PDT)
+Received: (nullmailer pid 951611 invoked by uid 1000);
+        Fri, 31 Jul 2020 22:47:58 -0000
+Date:   Fri, 31 Jul 2020 16:47:58 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Daniel Campello <campello@chromium.org>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 01/15] dt-bindings: iio: Add bindings for sx9310 sensor
+Message-ID: <20200731224758.GA951535@bogus>
+References: <20200731164853.3020946-1-campello@chromium.org>
+ <20200731104555.v3.1.I0925046377211b8b6f06764857f03b4ab592bddb@changeid>
 MIME-Version: 1.0
-References: <20200730212310.2609108-1-guro@fb.com> <20200730212310.2609108-28-guro@fb.com>
-In-Reply-To: <20200730212310.2609108-28-guro@fb.com>
-From:   Song Liu <song@kernel.org>
-Date:   Fri, 31 Jul 2020 15:47:43 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW60O0=QuU2sgf96JLqacddfdDwyrQuOQVtaNFjog9E1gg@mail.gmail.com>
-Message-ID: <CAPhsuW60O0=QuU2sgf96JLqacddfdDwyrQuOQVtaNFjog9E1gg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 27/29] bpf: eliminate rlimit-based memory
- accounting infra for bpf maps
-To:     Roman Gushchin <guro@fb.com>
-Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200731104555.v3.1.I0925046377211b8b6f06764857f03b4ab592bddb@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 2:27 PM Roman Gushchin <guro@fb.com> wrote:
->
-> Remove rlimit-based accounting infrastructure code, which is not used
-> anymore.
->
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-
-The code is good, so
-
-Acked-by: Song Liu <songliubraving@fb.com>
-
-However, I am still nervous as we deprecate memlock.
-
+On Fri, 31 Jul 2020 10:48:38 -0600, Daniel Campello wrote:
+> Adds device tree bandings for sx9310 sensor.
+> 
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> Cc: Hartmut Knaack <knaack.h@gmx.de>
+> Cc: Lars-Peter Clausen <lars@metafoo.de>
+> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> [swboyd@chromium.org: Add both regulators and make them optional]
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 > ---
->  include/linux/bpf.h                           | 12 ----
->  kernel/bpf/syscall.c                          | 64 +------------------
->  .../selftests/bpf/progs/map_ptr_kern.c        |  5 --
->  3 files changed, 2 insertions(+), 79 deletions(-)
+> 
+> Changes in v3: None
+> Changes in v2:
+>  - Added #io-channel-cells as a required property
+> 
+>  .../iio/proximity/semtech,sx9310.yaml         | 65 +++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+> 
 
-[...]
+Reviewed-by: Rob Herring <robh@kernel.org>
