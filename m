@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9727C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10545C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D49922B42
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D427E206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596212654;
+	s=default; t=1596212820;
 	bh=He4lRX7qUXd0rGaWvtl8uJvJvotCXPBWhv6zQbIkFB0=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=2hZbE0A6HSAs0MVzreIe3U7IX+VuPQ+SYm4ns2H82Q2X9fsJrPiOvxW69pIGP3jC1
-	 J4mT8oKDDONXBSMgZQHZqobt2H7ysqJVfDyHueWwEY1zbZLeWtC/DdmhgSDY03s07E
-	 oPzCQVpRlM447ztNeT8a7oVYwbHL8QZ7QRkkwfRU=
+	b=NRq6XIBcocu/kvL5KJyAComm6h/REJ8166AxkmOZaRojfIn1rbp5BvTa9F0gS6jlu
+	 gK7ZwfHsM1UlZkUSFRW/fiHrvKVw/PI+87sn5R6ckiojxr8HjHOkL8GeS9y04+tceT
+	 kyf54Dx+LhEhkkfku3K5PU/yhm8iCyJ9bC83gx+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732196AbgGaQYN (ORCPT
+        id S1730766AbgGaQ07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 12:24:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34570 "EHLO mail.kernel.org"
+        Fri, 31 Jul 2020 12:26:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728927AbgGaQYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 12:24:12 -0400
+        id S1726502AbgGaQ06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 12:26:58 -0400
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF32D2177B;
-        Fri, 31 Jul 2020 16:24:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E971206FA;
+        Fri, 31 Jul 2020 16:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596212652;
+        s=default; t=1596212818;
         bh=He4lRX7qUXd0rGaWvtl8uJvJvotCXPBWhv6zQbIkFB0=;
         h=Date:From:To:Cc:Subject:From;
-        b=YKFJ07NPiUmy4q4bbxyUhCFTy+UWzeRu3MDxCdhvvC7MKJuMrzh42CYPwjcJVQukG
-         TaIS07ODq3b67Vv3FphWsEZJGGPWGBYYp4z50zGm1vlMTWpeVVTaxF7aqtUkA6Y0S7
-         i1837uj8TrgvKv1K/S467IAUcCXOpF4SlMxj4WFA=
-Date:   Fri, 31 Jul 2020 11:30:15 -0500
+        b=M0WSFCpKAnhA83bM/pdqVZiLzksxw8fZkLYMLVh91oELvbLa269Is2w3Ji9ubiM4E
+         q2L3WvQSStBBHzAfuR81x+wGAPiHadf03qkNLP22jruzQPbhfDJZpiDUeRfYVrYKaV
+         s1SuXQYoQ3DR4M1xutQpfYxNcVUk3890SiA6HDig=
+Date:   Fri, 31 Jul 2020 11:33:01 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Vivien Didelot <vivien.didelot@savoirfairelinux.com>
+To:     Vivien Didelot <vivien.didelot@gmail.com>
 Cc:     linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Subject: [PATCH] vim: linux-kernel: Increase columns highlighting to 100+
-Message-ID: <20200731163015.GA7922@embeddedor>
+Message-ID: <20200731163301.GA8004@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
