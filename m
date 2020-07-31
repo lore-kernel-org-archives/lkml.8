@@ -2,141 +2,142 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44573C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21467C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2841B21744
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 016672087C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:31:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NwmBChcM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733224AbgGaMau (ORCPT
+        id S1733235AbgGaMbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 08:30:50 -0400
-Received: from mga05.intel.com ([192.55.52.43]:14340 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733165AbgGaMat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 08:30:49 -0400
-IronPort-SDR: qso0NXiYmIYGRL9sBAHvzKYD5ogzs9Nur3tYLTSv/lTFVh/Y/SuxSrevimSWY1F9eH99QCQLBE
- H8H165BaG7oQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="236630446"
-X-IronPort-AV: E=Sophos;i="5.75,418,1589266800"; 
-   d="scan'208";a="236630446"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 05:30:49 -0700
-IronPort-SDR: tBj6JDEK8ejNGpSr8gZ1dVM+t2WX/vR5FImmYsuAiPYGCPcU5PYRFf+B24IFK6YaDH71gxt5Z9
- cZmfCbwdAmtQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,418,1589266800"; 
-   d="scan'208";a="365483191"
-Received: from brentlu-desk0.itwn.intel.com ([10.5.253.11])
-  by orsmga001.jf.intel.com with ESMTP; 31 Jul 2020 05:30:45 -0700
-From:   Brent Lu <brent.lu@intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Brent Lu <brent.lu@intel.com>, linux-kernel@vger.kernel.org,
-        Daniel Stuart <daniel.stuart14@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Sam McNally <sammc@chromium.org>,
-        Damian van Soelen <dj.vsoelen@gmail.com>
-Subject: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago board
-Date:   Fri, 31 Jul 2020 20:26:05 +0800
-Message-Id: <1596198365-10105-3-git-send-email-brent.lu@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596198365-10105-1-git-send-email-brent.lu@intel.com>
-References: <1596020585-11517-1-git-send-email-brent.lu@intel.com>
- <1596198365-10105-1-git-send-email-brent.lu@intel.com>
+        Fri, 31 Jul 2020 08:31:09 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:37810 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732902AbgGaMbJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 08:31:09 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06VCGwmO061038;
+        Fri, 31 Jul 2020 12:30:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=S2FJno61QIe7o+ADEVkw0UIBI1L/nLqkAaDZ/z8Qr6k=;
+ b=NwmBChcM+3JNewyStFy+vkarODb/HYYdFDltyNBaR51ceaCT5S9eVvCstCNlLZVxIXuR
+ UmXfiX+Az5pShvnQQeLux65Ed2nRalT9S4kZXprJI345agXlBMERaeBb7Lem1TAUYbPp
+ oHfoaQ01047dWh8It22ii2Ts51k4s+mn1pePT0ZkIWUAGJbl68JejQDBX0Bzkw/aRYxg
+ 9GwtEg4SvPQhanNNvNyHqx+G7lYwV+XtR8sNCqEYi+qwNAN4Q0v2eribCme069Lf+nPF
+ LCOTYxgEz1pHLyKl/TdZ1pWmThA7Uk3MQ/KqZeAx1Z7tA221t+iB29hXylljlVlJQ4UW Eg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 32hu1jrte7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jul 2020 12:30:56 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06VCIdvP009788;
+        Fri, 31 Jul 2020 12:30:55 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 32hu63yr0p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 31 Jul 2020 12:30:55 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06VCUrjT000606;
+        Fri, 31 Jul 2020 12:30:54 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 31 Jul 2020 05:30:53 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH -next] nfsd: use DEFINE_SPINLOCK() for spinlock
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20200725085642.98356-1-miaoqinglang@huawei.com>
+Date:   Fri, 31 Jul 2020 08:30:52 -0400
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <161A0175-C77B-4252-9D1E-22FEC7EEADE9@oracle.com>
+References: <20200725085642.98356-1-miaoqinglang@huawei.com>
+To:     Qinglang Miao <miaoqinglang@huawei.com>,
+        Bruce Fields <bfields@fieldses.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9698 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 adultscore=0 bulkscore=0
+ malwarescore=0 mlxscore=0 spamscore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007310092
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9698 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
+ malwarescore=0 spamscore=0 suspectscore=2 bulkscore=0 priorityscore=1501
+ phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007310092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Hello-
 
-The CRAS server does not set the period size in hw_param so ALSA will
-calculate a value for period size which is based on the buffer size
-and other parameters. The value may not always be aligned with Atom's
-dsp design so a constraint is added to make sure the board always has
-a good value.
+> On Jul 25, 2020, at 4:56 AM, Qinglang Miao <miaoqinglang@huawei.com> wrote:
+> 
+> nfsd_drc_lock can be initialized automatically with
+> DEFINE_SPINLOCK() rather than explicitly calling spin_lock_init().
+> 
+> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
 
-Cyan uses chtmax98090 and others(banon, celes, edgar, kefka...) use
-rt5650.
+Thanks for your patch.
 
-Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Signed-off-by: Brent Lu <brent.lu@intel.com>
----
- sound/soc/intel/boards/cht_bsw_max98090_ti.c | 14 +++++++++++++-
- sound/soc/intel/boards/cht_bsw_rt5645.c      | 14 +++++++++++++-
- 2 files changed, 26 insertions(+), 2 deletions(-)
+I am quite honestly on the fence about this one. It doesn't
+seem to make a difference behaviorally or in terms of code
+legibility.
 
-diff --git a/sound/soc/intel/boards/cht_bsw_max98090_ti.c b/sound/soc/intel/boards/cht_bsw_max98090_ti.c
-index 835e9bd..bf67254 100644
---- a/sound/soc/intel/boards/cht_bsw_max98090_ti.c
-+++ b/sound/soc/intel/boards/cht_bsw_max98090_ti.c
-@@ -283,8 +283,20 @@ static int cht_codec_fixup(struct snd_soc_pcm_runtime *rtd,
- 
- static int cht_aif1_startup(struct snd_pcm_substream *substream)
- {
--	return snd_pcm_hw_constraint_single(substream->runtime,
-+	int err;
-+
-+	/* Set period size to 240 to align with Atom design */
-+	err = snd_pcm_hw_constraint_minmax(substream->runtime,
-+			SNDRV_PCM_HW_PARAM_PERIOD_SIZE, 240, 240);
-+	if (err < 0)
-+		return err;
-+
-+	err = snd_pcm_hw_constraint_single(substream->runtime,
- 			SNDRV_PCM_HW_PARAM_RATE, 48000);
-+	if (err < 0)
-+		return err;
-+
-+	return 0;
- }
- 
- static int cht_max98090_headset_init(struct snd_soc_component *component)
-diff --git a/sound/soc/intel/boards/cht_bsw_rt5645.c b/sound/soc/intel/boards/cht_bsw_rt5645.c
-index b53c024..6e62f0d 100644
---- a/sound/soc/intel/boards/cht_bsw_rt5645.c
-+++ b/sound/soc/intel/boards/cht_bsw_rt5645.c
-@@ -414,8 +414,20 @@ static int cht_codec_fixup(struct snd_soc_pcm_runtime *rtd,
- 
- static int cht_aif1_startup(struct snd_pcm_substream *substream)
- {
--	return snd_pcm_hw_constraint_single(substream->runtime,
-+	int err;
-+
-+	/* Set period size to 240 to align with Atom design */
-+	err = snd_pcm_hw_constraint_minmax(substream->runtime,
-+			SNDRV_PCM_HW_PARAM_PERIOD_SIZE, 240, 240);
-+	if (err < 0)
-+		return err;
-+
-+	err = snd_pcm_hw_constraint_single(substream->runtime,
- 			SNDRV_PCM_HW_PARAM_RATE, 48000);
-+	if (err < 0)
-+		return err;
-+
-+	return 0;
- }
- 
- static const struct snd_soc_ops cht_aif1_ops = {
--- 
-2.7.4
+A broader clean-up that moves set_max_drc and those global
+variables into nfs4state.c might be better, but again, there
+isn't much to justify such a change.
+
+Bruce, any thoughts?
+
+
+> ---
+> fs/nfsd/nfssvc.c | 3 +--
+> 1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index b603dfcdd..20f0a27fe 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -88,7 +88,7 @@ DEFINE_MUTEX(nfsd_mutex);
+>  * version 4.1 DRC caches.
+>  * nfsd_drc_pages_used tracks the current version 4.1 DRC memory usage.
+>  */
+> -spinlock_t	nfsd_drc_lock;
+> +DEFINE_SPINLOCK(nfsd_drc_lock);
+> unsigned long	nfsd_drc_max_mem;
+> unsigned long	nfsd_drc_mem_used;
+> 
+> @@ -568,7 +568,6 @@ static void set_max_drc(void)
+> 	nfsd_drc_max_mem = (nr_free_buffer_pages()
+> 					>> NFSD_DRC_SIZE_SHIFT) * PAGE_SIZE;
+> 	nfsd_drc_mem_used = 0;
+> -	spin_lock_init(&nfsd_drc_lock);
+> 	dprintk("%s nfsd_drc_max_mem %lu \n", __func__, nfsd_drc_max_mem);
+> }
+> 
+> -- 
+> 2.25.1
+> 
+
+--
+Chuck Lever
+
+
 
