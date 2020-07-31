@@ -2,82 +2,129 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 795DEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B714C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 577A3206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:28:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596205690;
-	bh=2DDzoTEvi2mddxT9lLfRARLxUxmdBVeTrTZs1z+/sLU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Q4b80ZBgqF78LLL5oMZEY3gPEqsYWrRHXRvd6MabOtGwZxP+yfrNWodSAFlRMJw+q
-	 Y+v+OSRPb6snk8HaA+RpwsEw0Er64G1yd0hCG9wJsm09hN1zeL3nn2/VyJChYKDEsn
-	 C418svNgrcmzm272BdPCaskr4lJ/Z08tRbyFOACM=
+	by mail.kernel.org (Postfix) with ESMTP id 2F0D4206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:29:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729211AbgGaO2I (ORCPT
+        id S1729354AbgGaO3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 10:28:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35128 "EHLO mail.kernel.org"
+        Fri, 31 Jul 2020 10:29:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:32900 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728697AbgGaO2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 10:28:08 -0400
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D117206FA;
-        Fri, 31 Jul 2020 14:28:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596205687;
-        bh=2DDzoTEvi2mddxT9lLfRARLxUxmdBVeTrTZs1z+/sLU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NPWMkPYv0d+YdRDtV7ZBl8VYCUsKUtuGzZ3lcGY7B64pu58SxCDiVfPGBXr/dsE7U
-         xoyIp+1aJl7qSCBoNgAsrywkaVn/i88E9BpRI7oCF3kY00jcAXVHkl5N+Gk/C+VcTy
-         mqgV+ffMMkSaJlZSg51sHrhcmYR+DThu1nVEkci0=
-Received: by mail-ot1-f47.google.com with SMTP id r21so12235382ota.10;
-        Fri, 31 Jul 2020 07:28:07 -0700 (PDT)
-X-Gm-Message-State: AOAM530IoZle1aDx09HhOl750z2VneBzo5MCAT9VClaMHVik2JJ1N66G
-        qzOMKPc4J1gFKxyGeqQnuxmb+eEsl1ngXrGbFg==
-X-Google-Smtp-Source: ABdhPJxGxwIJ86oXli/RPhBXKuV6VyqST1I6tsLPJ1zlSE/S8vl2zIrkuDu8zGTs/3U8ENQJSqIiq5Xg8IcrYDqoUzM=
-X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr2964725ote.107.1596205686998;
- Fri, 31 Jul 2020 07:28:06 -0700 (PDT)
+        id S1728697AbgGaO3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 10:29:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D1A831B;
+        Fri, 31 Jul 2020 07:29:20 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.4.61])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C2B863F66E;
+        Fri, 31 Jul 2020 07:29:13 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 15:29:05 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, linux-riscv@lists.infradead.org,
+        x86@kernel.org
+Subject: Re: [PATCH v2 3/7] mm: introduce memfd_secret system call to create
+ "secret" memory areas
+Message-ID: <20200731142905.GA67415@C02TD0UTHF1T.local>
+References: <20200727162935.31714-1-rppt@kernel.org>
+ <20200727162935.31714-4-rppt@kernel.org>
+ <20200730162209.GB3128@gaia>
 MIME-Version: 1.0
-References: <20200730005614.32302-1-jiaxun.yang@flygoat.com>
-In-Reply-To: <20200730005614.32302-1-jiaxun.yang@flygoat.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 31 Jul 2020 08:27:55 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKPO155zVMqvWbGd84e1Ypk1SJDySU8YCRRA+uy7wtcHA@mail.gmail.com>
-Message-ID: <CAL_JsqKPO155zVMqvWbGd84e1Ypk1SJDySU8YCRRA+uy7wtcHA@mail.gmail.com>
-Subject: Re: [PATCH] of_address: Guard of_bus_pci_get_flags with CONFIG_PCI
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730162209.GB3128@gaia>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 7:04 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->
-> After 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser"),
-> the last user of of_bus_pci_get_flags when CONFIG_PCI is disabled had gone.
->
-> This caused unused function warning when compiling without CONFIG_PCI.
-> Fix by guarding it with CONFIG_PCI.
->
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
-> ---
->  drivers/of/address.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, Jul 30, 2020 at 05:22:10PM +0100, Catalin Marinas wrote:
+> On Mon, Jul 27, 2020 at 07:29:31PM +0300, Mike Rapoport wrote:
 
-Acked-by: Rob Herring <robh@kernel.org>
+> > +static int secretmem_mmap(struct file *file, struct vm_area_struct *vma)
+> > +{
+> > +	struct secretmem_ctx *ctx = file->private_data;
+> > +	unsigned long mode = ctx->mode;
+> > +	unsigned long len = vma->vm_end - vma->vm_start;
+> > +
+> > +	if (!mode)
+> > +		return -EINVAL;
+> > +
+> > +	if ((vma->vm_flags & (VM_SHARED | VM_MAYSHARE)) == 0)
+> > +		return -EINVAL;
+> > +
+> > +	if (mlock_future_check(vma->vm_mm, vma->vm_flags | VM_LOCKED, len))
+> > +		return -EAGAIN;
+> > +
+> > +	switch (mode) {
+> > +	case SECRETMEM_UNCACHED:
+> > +		vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+> > +		fallthrough;
+> > +	case SECRETMEM_EXCLUSIVE:
+> > +		vma->vm_ops = &secretmem_vm_ops;
+> > +		break;
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	vma->vm_flags |= VM_LOCKED;
+> > +
+> > +	return 0;
+> > +}
+> 
+> I think the uncached mapping is not the right thing for arm/arm64. First
+> of all, pgprot_noncached() gives us Strongly Ordered (Device memory)
+> semantics together with not allowing unaligned accesses. I suspect the
+> semantics are different on x86.
+
+> The second, more serious problem, is that I can't find any place where
+> the caches are flushed for the page mapped on fault. When a page is
+> allocated, assuming GFP_ZERO, only the caches are guaranteed to be
+> zeroed. Exposing this subsequently to user space as uncached would allow
+> the user to read stale data prior to zeroing. The arm64
+> set_direct_map_default_noflush() doesn't do any cache maintenance.
+
+It's also worth noting that in a virtual machine this is liable to be
+either broken (with a potential loss of coherency if the host has a
+cacheable alias as existing KVM hosts have), or pointless (if the host
+uses S2FWB to upgrade Stage-1 attribues to cacheable as existing KVM
+hosts also have).
+
+I think that trying to avoid the data caches creates many more problems
+than it solves, and I don't think there's a strong justification for
+trying to support that on arm64 to begin with, so I'd rather entirely
+opt-out on supporting SECRETMEM_UNCACHED.
+
+Thanks,
+Mark.
