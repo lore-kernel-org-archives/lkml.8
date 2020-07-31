@@ -2,158 +2,111 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C5EC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B71CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BACAC22CA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 867E522CAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:25:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aJM02Jra";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OTMzygH7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732728AbgGaJZS (ORCPT
+        id S1732506AbgGaJXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:25:18 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:59301 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732711AbgGaJZO (ORCPT
+        Fri, 31 Jul 2020 05:23:35 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56338 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732342AbgGaJXG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:25:14 -0400
-X-IronPort-AV: E=Sophos;i="5.75,417,1589209200"; 
-   d="scan'208";a="53330059"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 31 Jul 2020 18:25:13 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id D0B9E400C9E4;
-        Fri, 31 Jul 2020 18:25:10 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Jacopo Mondi <jacopo@jmondi.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org,
-        Hugues Fruchet <hugues.fruchet@st.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 2/2] media: i2c: ov5640: Add support for BT656 mode
-Date:   Fri, 31 Jul 2020 10:24:47 +0100
-Message-Id: <1596187487-31403-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596187487-31403-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1596187487-31403-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Fri, 31 Jul 2020 05:23:06 -0400
+Date:   Fri, 31 Jul 2020 09:23:03 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1596187384;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+        bh=oLuv+KFWW1VBCour/O+GL0PkOXzk8yrV3Sj9/H16A2k=;
+        b=aJM02JrareaQM7o44A3rIWztdOVuurpXYanXOUl2bddlzHFqpSg1AWJwpDtf+/m/iFAqxv
+        KEB5lEtKrs07D3fCQ+2tnaUtUs6sga0zSUiGwFQGIoVMTtJE8brchAOH2koHKAC31rOmL1
+        RkPwkv/0wK7OsA5H5AfIAttzDr0rRGscjsnxryuZ3UVgobdRaT0TZhuTonieF8ksMI38p9
+        br6FkwITsvJz2M+wn7I3SG8UDkTWIe50PipsnrHFLN/qKmN/p5Qpen8RHAofgPPch9Zncp
+        GRj/C0beE2snOpUHFjNXNnehf1k7u2YjxlXWqoYHrQ6R4smbFvXA62nvqkCEiw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1596187384;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+        bh=oLuv+KFWW1VBCour/O+GL0PkOXzk8yrV3Sj9/H16A2k=;
+        b=OTMzygH72W+GLD9O6rOtjfxxkoFyXvfdTrxVB9Wfryldainpaksm0SebzJ2SlJgKJotNc6
+        T2WCDMYjuBVjdxDQ==
+From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/rcu] refperf: Dynamically allocate thread-summary output buffer
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+MIME-Version: 1.0
+Message-ID: <159618738373.4006.8609303107692541900.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable support for BT656 mode.
+The following commit has been merged into the core/rcu branch of tip:
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+Commit-ID:     2e90de76f226f11fe26c871aa321be28152f565a
+Gitweb:        https://git.kernel.org/tip/2e90de76f226f11fe26c871aa321be28152f565a
+Author:        Paul E. McKenney <paulmck@kernel.org>
+AuthorDate:    Mon, 25 May 2020 17:45:03 -07:00
+Committer:     Paul E. McKenney <paulmck@kernel.org>
+CommitterDate: Mon, 29 Jun 2020 12:00:44 -07:00
+
+refperf: Dynamically allocate thread-summary output buffer
+
+Currently, the buffer used to accumulate the thread-summary output is
+fixed size, which will cause problems if someone decides to run on a large
+number of PCUs.  This commit therefore dynamically allocates this buffer.
+
+[ paulmck: Fix memory allocation as suggested by KASAN. ]
+Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- drivers/media/i2c/ov5640.c | 48 +++++++++++++++++++++++++++++++---------------
- 1 file changed, 33 insertions(+), 15 deletions(-)
+ kernel/rcu/refperf.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-index ac305a5..2b23988 100644
---- a/drivers/media/i2c/ov5640.c
-+++ b/drivers/media/i2c/ov5640.c
-@@ -82,6 +82,7 @@
- #define OV5640_REG_VFIFO_HSIZE		0x4602
- #define OV5640_REG_VFIFO_VSIZE		0x4604
- #define OV5640_REG_JPG_MODE_SELECT	0x4713
-+#define OV5640_REG_CCIR656_CTRL00	0x4730
- #define OV5640_REG_POLARITY_CTRL00	0x4740
- #define OV5640_REG_MIPI_CTRL00		0x4800
- #define OV5640_REG_DEBUG_MODE		0x4814
-@@ -1213,6 +1214,17 @@ static int ov5640_set_stream_dvp(struct ov5640_dev *sensor, bool on)
- 	return ov5640_write_reg(sensor, OV5640_REG_SYS_CTRL0, on ? 0x2 : 0x42);
+diff --git a/kernel/rcu/refperf.c b/kernel/rcu/refperf.c
+index 75b9cce..fc940e3 100644
+--- a/kernel/rcu/refperf.c
++++ b/kernel/rcu/refperf.c
+@@ -301,9 +301,12 @@ u64 process_durations(int n)
+ 	int i;
+ 	struct reader_task *rt;
+ 	char buf1[64];
+-	char buf[512];
++	char *buf;
+ 	u64 sum = 0;
+ 
++	buf = kmalloc(128 + nreaders * 32, GFP_KERNEL);
++	if (!buf)
++		return 0;
+ 	buf[0] = 0;
+ 	sprintf(buf, "Experiment #%d (Format: <THREAD-NUM>:<Total loop time in ns>)",
+ 		exp_idx);
+@@ -322,6 +325,7 @@ u64 process_durations(int n)
+ 
+ 	PERFOUT("%s\n", buf);
+ 
++	kfree(buf);
+ 	return sum;
  }
  
-+static int ov5640_set_stream_bt656(struct ov5640_dev *sensor, bool on)
-+{
-+	int ret;
-+
-+	ret = ov5640_write_reg(sensor, OV5640_REG_CCIR656_CTRL00, on ? 0x1 : 0x00);
-+	if (ret)
-+		return ret;
-+
-+	return ov5640_write_reg(sensor, OV5640_REG_SYS_CTRL0, on ? 0x2 : 0x42);
-+}
-+
- static int ov5640_set_stream_mipi(struct ov5640_dev *sensor, bool on)
- {
- 	int ret;
-@@ -1998,18 +2010,21 @@ static int ov5640_set_power(struct ov5640_dev *sensor, bool on)
- 			 *		datasheet and hardware, 0 is active high
- 			 *		and 1 is active low...)
- 			 */
--			if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
--				pclk_pol = 1;
--			if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
--				hsync_pol = 1;
--			if (flags & V4L2_MBUS_VSYNC_ACTIVE_LOW)
--				vsync_pol = 1;
--
--			ret = ov5640_write_reg(sensor, OV5640_REG_POLARITY_CTRL00,
--					       (pclk_pol << 5) | (hsync_pol << 1) | vsync_pol);
--
--			if (ret)
--				goto power_off;
-+			if (sensor->ep.bus_type == V4L2_MBUS_PARALLEL) {
-+				if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
-+					pclk_pol = 1;
-+				if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
-+					hsync_pol = 1;
-+				if (flags & V4L2_MBUS_VSYNC_ACTIVE_LOW)
-+					vsync_pol = 1;
-+
-+				ret = ov5640_write_reg(sensor, OV5640_REG_POLARITY_CTRL00,
-+						       (pclk_pol << 5) | (hsync_pol << 1) |
-+						       vsync_pol);
-+
-+				if (ret)
-+					goto power_off;
-+			}
- 
- 			/*
- 			 * powerdown MIPI TX/RX PHY & disable MIPI
-@@ -2033,7 +2048,9 @@ static int ov5640_set_power(struct ov5640_dev *sensor, bool on)
- 			 * - 4:		PCLK output enable
- 			 * - [3:0]:	D[9:6] output enable
- 			 */
--			ret = ov5640_write_reg(sensor, OV5640_REG_PAD_OUTPUT_ENABLE01, 0x7f);
-+			ret = ov5640_write_reg(sensor, OV5640_REG_PAD_OUTPUT_ENABLE01,
-+					       sensor->ep.bus_type == V4L2_MBUS_PARALLEL ?
-+					       0x7f : 0x1f);
- 			if (ret)
- 				goto power_off;
- 
-@@ -2047,7 +2064,6 @@ static int ov5640_set_power(struct ov5640_dev *sensor, bool on)
- 			if (ret)
- 				goto power_off;
- 		}
--
- 	} else {
- 		if (sensor->ep.bus_type == V4L2_MBUS_CSI2_DPHY) {
- 			/* Reset MIPI bus settings to their default values. */
-@@ -2875,8 +2891,10 @@ static int ov5640_s_stream(struct v4l2_subdev *sd, int enable)
- 
- 		if (sensor->ep.bus_type == V4L2_MBUS_CSI2_DPHY)
- 			ret = ov5640_set_stream_mipi(sensor, enable);
--		else
-+		else if (sensor->ep.bus_type == V4L2_MBUS_PARALLEL)
- 			ret = ov5640_set_stream_dvp(sensor, enable);
-+		else
-+			ret = ov5640_set_stream_bt656(sensor, enable);
- 
- 		if (!ret)
- 			sensor->streaming = enable;
--- 
-2.7.4
-
