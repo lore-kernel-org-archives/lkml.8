@@ -2,92 +2,106 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 776C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB87C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 514E822B43
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE7BC22B43
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:18:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596230289;
+	bh=yO2aq83Ay8qjDrLoaG8lpE5C81kE8QUbpm/Ey7TkHkU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xe+EoalNKOj/vZCfo0QPvbVQ18HBqDchYPsXm9n6nhQ/8RlAfqP73EBxqHBc9A5t8
+	 /paa3wpUn6Np56Z3O6e+r2/Ra9Eiz/Txqui43Y19QfPB9NOqt5bttpGAo+iXRlZdsh
+	 UazeRsT2+BpsGO23bP21Slle0SdNWcLIflczVsXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbgGaVRf (ORCPT
+        id S1728307AbgGaVSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 17:17:35 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:45963 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725968AbgGaVRe (ORCPT
+        Fri, 31 Jul 2020 17:18:07 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:46371 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727888AbgGaVSG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 17:17:34 -0400
-Received: from mail-wr1-f70.google.com ([209.85.221.70])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <dann.frazier@canonical.com>)
-        id 1k1cPE-0002bb-HW
-        for linux-kernel@vger.kernel.org; Fri, 31 Jul 2020 21:17:32 +0000
-Received: by mail-wr1-f70.google.com with SMTP id j16so9595398wrw.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 14:17:32 -0700 (PDT)
+        Fri, 31 Jul 2020 17:18:06 -0400
+Received: by mail-il1-f196.google.com with SMTP id l17so16274609ilq.13;
+        Fri, 31 Jul 2020 14:18:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BhvoNmpg9YoaWp6/8Gcf6qNFVkrMSaEZ42s1iuHLLhI=;
-        b=ClZ7I7gTlKqAUAfG+IXrTepDT8Cg/KfjCMbhzo5fXgf4SdEAiLX9vu0+8vqcazf/RA
-         XeTOTlJnBMnjdOlEZ0qMC8GSJzH3tQbt5eBLhU9ZT3KqtOMjSKROF0cJWHxbYGnYp7Gt
-         9GUDBmpF9N4RYaFgB7F3MLMim3xnpj8jvU5ASGcmOKpoIgW9MGiy+iE1FOoQpdK5K6vr
-         XezCGA2B9wc+CUNGnCMH3XMmBUk5miB0/XS/idtHpVKY3Jx2SbsthEpBHtNJKyJhGAD+
-         vDSC2A/+CdX+3UHWcT3UTKmLN3xgEMHr97zFoyfeNspjQ03Ox4loGkIOTqr38amAB3T7
-         tCEA==
-X-Gm-Message-State: AOAM530REsCOzh9GzM+Oh1kecdu87mCfnWZeWhAfsllJYbmg2aUx/cn7
-        6XVQcYVsoW+WE08TIA7wg1Vy36VOhWQdC2EK+V8+RInyN/u9W8YIZixSZgwvsOhkQlrora55Amk
-        TEk1P5KwkMwuYc4SLnfYKZWwYUJN1t4ZFaVajDDHWtzmTO4GwBL6suCVyQg==
-X-Received: by 2002:a5d:6a4a:: with SMTP id t10mr5280856wrw.360.1596230252211;
-        Fri, 31 Jul 2020 14:17:32 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwVzbiVJGDW3izCpbkUPC5Gw0CD22JF9WGK330ZmUV97C5Rinp/qP6XmGPYgBIOAfT7U7usKQScwuxSCGo5EQE=
-X-Received: by 2002:a5d:6a4a:: with SMTP id t10mr5280841wrw.360.1596230251908;
- Fri, 31 Jul 2020 14:17:31 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9zt1WWOJv6KHzl6qN7CaUN/fc2umfOL3d6uDteZs6jA=;
+        b=BnH3RciWDbbtw3XbD449fBTOsKXi12HK3YKsMa8RMuhbdfL32hGJ2CRreJ9J+qA+ID
+         Dqqp1pxAN2OCAJbNe2jjRQ3VeEo8Zt6Ucysn8P26vzuhOg8WfIs6UkdHpfTxkYhMblej
+         uAFFmi6MAr286oD9DRkoR24GZgLLh0BDxskWIVIGKY16Ii6t+SdEyY3/wQDP/PlRWOaM
+         dQyHni+wMuBRWjLZNz5x2uNuIM+dwIhw2MYOZzJPo39TVnUYUiVbWVYxfls+YArtG8AB
+         +3S13kqtzlInxXyBPv/4MJ977w3gscOdMqOwjKHqmqM7o68ONJa0+KdC+gdaM1B3zaqf
+         isHQ==
+X-Gm-Message-State: AOAM532ZRGqkTTAbOqXtcZST1gqBkY6vRkMKMym4O97cGxnCh4MnkgRm
+        33UTILBVduKNBAGMsIId8g==
+X-Google-Smtp-Source: ABdhPJynQI9WqRNzaRsItOcQhHNxDoIigLcg9RLOG/NXO4xp7VTDdej2dtZw0aY7JbU0EVCQWYuM2g==
+X-Received: by 2002:a92:494e:: with SMTP id w75mr5744907ila.115.1596230286048;
+        Fri, 31 Jul 2020 14:18:06 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id c15sm5617312ill.19.2020.07.31.14.18.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 14:18:05 -0700 (PDT)
+Received: (nullmailer pid 808330 invoked by uid 1000);
+        Fri, 31 Jul 2020 21:18:03 -0000
+Date:   Fri, 31 Jul 2020 15:18:03 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Saravanan Sekar <sravanhome@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] dt-bindings: regulator: mp886x: support
+ mps,switch-frequency
+Message-ID: <20200731211803.GA806331@bogus>
+References: <20200729130839.10a9bf88@xhacker>
+ <20200729130952.260671f1@xhacker>
 MIME-Version: 1.0
-References: <20200702215812.428188663@goodmis.org> <20200702215832.784471709@goodmis.org>
- <20200731193345.GA54749@xps13.dannf> <20200731171626.2c51e818@oasis.local.home>
-In-Reply-To: <20200731171626.2c51e818@oasis.local.home>
-From:   dann frazier <dann.frazier@canonical.com>
-Date:   Fri, 31 Jul 2020 15:17:20 -0600
-Message-ID: <CALdTtntOjg6zdYAYJAY_87Zpf7OYB-ZTp_BSWVOJva5Vx2acPQ@mail.gmail.com>
-Subject: Re: [for-next][PATCH 09/18] tracing: Move pipe reference to trace
- array instead of current_tracer
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ian May <ian.may@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200729130952.260671f1@xhacker>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 3:16 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Fri, 31 Jul 2020 13:33:45 -0600
-> dann frazier <dann.frazier@canonical.com> wrote:
->
-> > > This is marked as "Fixes" but is more of a clean up than a true fix.
-> > > Backport if you want, but its not critical.
-> >
-> > Thanks Steven! In case it helps backport consideration, I wanted to
-> > note that this addresses an issue we've seen with users trying to
-> > change current_tracer when they happen to have rasdaemon
-> > installed. rasdaemon uses the trace_pipe interface at runtime, which
-> > therefore blocks changing the current tracer. But of course, unless
-> > you know about rasdaemon internals, it isn't exactly an obvious
-> > failure mode.
->
-> Ah, then this should probably be backported.
->
-> When I push to Linus (during the next merge window) and it gets into
-> Linus's tree. Feel free to send stable@vger.kernel.org the sha1 of this
-> commit, and ask for it to be backported for the above stated reason.
+On Wed, Jul 29, 2020 at 01:09:52PM +0800, Jisheng Zhang wrote:
+> From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> 
+> Both MP8867 and MP8869 support different switch frequency.
+> 
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> ---
+>  Documentation/devicetree/bindings/regulator/mp886x.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/mp886x.txt b/Documentation/devicetree/bindings/regulator/mp886x.txt
+> index 551867829459..e747000cebba 100644
+> --- a/Documentation/devicetree/bindings/regulator/mp886x.txt
+> +++ b/Documentation/devicetree/bindings/regulator/mp886x.txt
+> @@ -9,6 +9,10 @@ Required properties:
+>  - mps,fb-voltage-divider: An array of two integers containing the resistor
+>    values R1 and R2 of the feedback voltage divider in kilo ohms.
+>  
+> +Optional properties:
+> +- mps,switch-frequency: The valid switch frequency in Hertz. Available values
 
-Will do.
+mps,switch-frequency-hz
 
- -dann
+> +  are: 500000, 750000, 1000000, 1250000, 1500000
+> +
+>  Any property defined as part of the core regulator binding, defined in
+>  ./regulator.txt, can also be used.
+>  
+> -- 
+> 2.28.0.rc1
+> 
+> 
