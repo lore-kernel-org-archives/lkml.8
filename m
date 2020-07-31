@@ -4,56 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B45C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85138C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC7F22B40
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:24:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5756122BF3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:24:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iisX2wSo";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5JiSe5Pm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DqgG4Wzy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gTvfxXCG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732319AbgGaJY1 (ORCPT
+        id S1732625AbgGaJYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:24:27 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56642 "EHLO
+        Fri, 31 Jul 2020 05:24:12 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56476 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732533AbgGaJXm (ORCPT
+        with ESMTP id S1732482AbgGaJXd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:23:42 -0400
-Date:   Fri, 31 Jul 2020 09:23:40 -0000
+        Fri, 31 Jul 2020 05:23:33 -0400
+Date:   Fri, 31 Jul 2020 09:23:30 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596187421;
+        s=2020; t=1596187411;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=9qWS5pWhc3a8udLuVtW5FvcOUvcP3JoDnfC2vjPUg2s=;
-        b=iisX2wSomoWY30p4MJohASt8XHWIcDBLHKeqnhfKKR40OmCif3IewpmsudbjKsdKD/AEkl
-        eRdht/THXFIlh8zp3Z7wKJMMqP0uEdRi5Q1tVrIvaStwC+e1NmRzvFQBD+QDqGU8+TJ6RQ
-        r6zBRaQIDfXTuZMp0CPMRcgLauZafEMvq/m7SkYqkt7p+TaqfR3rRk8Rr15I/YF/16KSwF
-        6/r8Pw8u9A2QA2s/q1/qiaHrvAmV1Llm7MAHxCuDmXuvqt3ufzzrmXiEWjOrCH7YXdAIJm
-        +3/gKfaC1Cc0i/97bNUDGUGP+a96b3bOonYG7qGtGmFlnLY4h2P3Dsg9pnK7lw==
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0KgVErvS4zYfMOo0kghBf5qhs87t54iZnK/iBrfC4MM=;
+        b=DqgG4WzyNSO8UibuI+V9uzWXIo3EQAXF4BMxYEACjM421IRUfE75w1NdxsdHhkKcfaSo8F
+        kC9D2BSBWtelKzieVGfSI1bXYJDtUwzVg8VLEjnockSQ+BQaDfoCVvDbo8GhGw3wdPW1J+
+        Cxa1gq/89ZIdXtyzaPqm+6rfjlRudmXC8/fmZ733JYcwyYWXmPKaAdbuox34ubPFJ2glUN
+        /vPI9AwPn0mdvU50Z4FCloYDW9rgIhX2ttvhbqkdGwDT6bo9PNV41cLEIy0/QOgbbMntDb
+        jlscY6YYPLMh4YwRylDpZiK/hBODkhjw96z+BZXmRvrZwv211axUt3GaycoHUg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596187421;
+        s=2020e; t=1596187411;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=9qWS5pWhc3a8udLuVtW5FvcOUvcP3JoDnfC2vjPUg2s=;
-        b=5JiSe5PmX3etTai278Y9V4e7hkNhHmp4hZtEyk0CTxaezR8gpMpcY2QSJxpY7/Ezf0KJMO
-        roStEkG+xhU0naDQ==
-From:   "tip-bot2 for Wei Yang" <tip-bot2@linutronix.de>
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0KgVErvS4zYfMOo0kghBf5qhs87t54iZnK/iBrfC4MM=;
+        b=gTvfxXCGLXWCswwUYatvquvpQRsNFKTc5GifxeRTrUcqsOdSwK118ZUSwMMPn+LLarDdGJ
+        IXaYny69D6g1TxDA==
+From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcu: Initialize and destroy rcu_synchronize only when
- necessary
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
+Subject: [tip: core/rcu] lockdep: Complain only once about RCU in extended
+ quiescent state
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
         "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <87wo4wnpzb.fsf@nanos.tec.linutronix.de>
+References: <87wo4wnpzb.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Message-ID: <159618742069.4006.16122222312681884202.tip-bot2@tip-bot2>
+Message-ID: <159618741060.4006.12964143796256427824.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -65,58 +72,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     7ee880b7bf1dea88d0a472b775aebdb4fb6bf860
-Gitweb:        https://git.kernel.org/tip/7ee880b7bf1dea88d0a472b775aebdb4fb6bf860
-Author:        Wei Yang <richard.weiyang@gmail.com>
-AuthorDate:    Wed, 15 Apr 2020 22:26:55 
+Commit-ID:     d29e0b26b020422cc51b5b51733cc50fcf443965
+Gitweb:        https://git.kernel.org/tip/d29e0b26b020422cc51b5b51733cc50fcf443965
+Author:        Paul E. McKenney <paulmck@kernel.org>
+AuthorDate:    Thu, 28 May 2020 08:49:29 -07:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Mon, 29 Jun 2020 11:58:49 -07:00
+CommitterDate: Mon, 29 Jun 2020 11:58:51 -07:00
 
-rcu: Initialize and destroy rcu_synchronize only when necessary
+lockdep: Complain only once about RCU in extended quiescent state
 
-The __wait_rcu_gp() function unconditionally initializes and cleans up
-each element of rs_array[], whether used or not.  This is slightly
-wasteful and rather confusing, so this commit skips both initialization
-and cleanup for duplicate callback functions.
+Currently, lockdep_rcu_suspicious() complains twice about RCU read-side
+critical sections being invoked from within extended quiescent states,
+for example:
 
-Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+	RCU used illegally from idle CPU!
+	rcu_scheduler_active = 2, debug_locks = 1
+	RCU used illegally from extended quiescent state!
+
+This commit therefore saves a couple lines of code and one line of
+console-log output by eliminating the first of these two complaints.
+
+Link: https://lore.kernel.org/lkml/87wo4wnpzb.fsf@nanos.tec.linutronix.de
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Will Deacon <will@kernel.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/update.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ kernel/locking/lockdep.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-index 84843ad..f5a82e1 100644
---- a/kernel/rcu/update.c
-+++ b/kernel/rcu/update.c
-@@ -390,13 +390,14 @@ void __wait_rcu_gp(bool checktiny, int n, call_rcu_func_t *crcu_array,
- 			might_sleep();
- 			continue;
- 		}
--		init_rcu_head_on_stack(&rs_array[i].head);
--		init_completion(&rs_array[i].completion);
- 		for (j = 0; j < i; j++)
- 			if (crcu_array[j] == crcu_array[i])
- 				break;
--		if (j == i)
-+		if (j == i) {
-+			init_rcu_head_on_stack(&rs_array[i].head);
-+			init_completion(&rs_array[i].completion);
- 			(crcu_array[i])(&rs_array[i].head, wakeme_after_rcu);
-+		}
- 	}
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 29a8de4..0a7549d 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -5851,9 +5851,7 @@ void lockdep_rcu_suspicious(const char *file, const int line, const char *s)
+ 	pr_warn("\n%srcu_scheduler_active = %d, debug_locks = %d\n",
+ 	       !rcu_lockdep_current_cpu_online()
+ 			? "RCU used illegally from offline CPU!\n"
+-			: !rcu_is_watching()
+-				? "RCU used illegally from idle CPU!\n"
+-				: "",
++			: "",
+ 	       rcu_scheduler_active, debug_locks);
  
- 	/* Wait for all callbacks to be invoked. */
-@@ -407,9 +408,10 @@ void __wait_rcu_gp(bool checktiny, int n, call_rcu_func_t *crcu_array,
- 		for (j = 0; j < i; j++)
- 			if (crcu_array[j] == crcu_array[i])
- 				break;
--		if (j == i)
-+		if (j == i) {
- 			wait_for_completion(&rs_array[i].completion);
--		destroy_rcu_head_on_stack(&rs_array[i].head);
-+			destroy_rcu_head_on_stack(&rs_array[i].head);
-+		}
- 	}
- }
- EXPORT_SYMBOL_GPL(__wait_rcu_gp);
+ 	/*
