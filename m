@@ -2,235 +2,80 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99540C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D09CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB2F2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F2DF2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:43:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t7N/7Kpw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731158AbgGaBnH (ORCPT
+        id S1731164AbgGaBnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 21:43:07 -0400
-Received: from mga05.intel.com ([192.55.52.43]:2827 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731117AbgGaBmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 21:42:52 -0400
-IronPort-SDR: SxvUoYKdax5X9AfLlU1H9b5hghdhW8kJrW14XIOu7JnNws3+9gtq2UGmPMe/bRtvITDflEd4WN
- y3FSCSFhsckQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="236583891"
-X-IronPort-AV: E=Sophos;i="5.75,416,1589266800"; 
-   d="scan'208";a="236583891"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 18:42:51 -0700
-IronPort-SDR: baMEzDWRkgxeQuoFC0ybDsUEFaxwWr9nxeCh/3VHi+mgCilOH1oafwKyMbMVumsNmjAqaPVQ+l
- EHJVYFGGSXFw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,416,1589266800"; 
-   d="scan'208";a="395179041"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by fmsmga001.fm.intel.com with ESMTP; 30 Jul 2020 18:42:48 -0700
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] vfio/type1: Use iommu_aux_at(de)tach_group() APIs
-To:     Alex Williamson <alex.williamson@redhat.com>
-References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
- <20200714055703.5510-5-baolu.lu@linux.intel.com>
- <20200729143258.22533170@x1.home>
- <af6c95a7-3238-1cbd-8656-014c12498587@linux.intel.com>
- <20200730151703.5daf8ad4@x1.home>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <7caa6533-b980-8135-6dba-2aac5b0bb23f@linux.intel.com>
-Date:   Fri, 31 Jul 2020 09:37:52 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 21:43:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731098AbgGaBmr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 21:42:47 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A600C061574;
+        Thu, 30 Jul 2020 18:42:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=esxQlXFemcr0J9/J6h/Xl8BkBKuFSpvLIp+w4lZ9qpA=; b=t7N/7KpwTpq5qJx9LprrqN/Kf3
+        Hrze9bqHB3RVdqPZScC522+mOAFrdjNwCQlrF4ZDQjU7U2NmSd9spXtTaXUhDdqz7+lASI07zQeRb
+        +JxfQyhHOdsAKACK5E9HtFcpuQKqNygrIavrHINMuXV5t29AXBG7Zl6Y6Cx1xkSwmBo5azaDWPYzW
+        K6eFxzD9lGGPBggVZnGFsLqVRoT6T94Iq/KpJBsamfc/l8PbeBaH58HxGdYJawM1I5omZXCzh7B5k
+        wuKim94L11iAMn3PHqN5oHSL2VY7fWKkYcHbS7FFowaF0xsCjFovLijN4B2VIXRosgDQtNLqXyBHw
+        f/89Fkrw==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac] (helo=smtpauth.infradead.org)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k1K4K-0006bc-Ps; Fri, 31 Jul 2020 01:42:45 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org
+Subject: [PATCH 3/7] block: elevator: delete duplicated word and fix typos
+Date:   Thu, 30 Jul 2020 18:42:29 -0700
+Message-Id: <20200731014233.6418-4-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200731014233.6418-1-rdunlap@infradead.org>
+References: <20200731014233.6418-1-rdunlap@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200730151703.5daf8ad4@x1.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+Drop the repeated word "the".
+Fix typos of "features" and "specified".
 
-On 7/31/20 5:17 AM, Alex Williamson wrote:
-> On Thu, 30 Jul 2020 10:41:32 +0800
-> Lu Baolu <baolu.lu@linux.intel.com> wrote:
-> 
->> Hi Alex,
->>
->> On 7/30/20 4:32 AM, Alex Williamson wrote:
->>> On Tue, 14 Jul 2020 13:57:03 +0800
->>> Lu Baolu <baolu.lu@linux.intel.com> wrote:
->>>    
->>>> Replace iommu_aux_at(de)tach_device() with iommu_aux_at(de)tach_group().
->>>> It also saves the IOMMU_DEV_FEAT_AUX-capable physcail device in the
->>>> vfio_group data structure so that it could be reused in other places.
->>>>
->>>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->>>> ---
->>>>    drivers/vfio/vfio_iommu_type1.c | 44 ++++++---------------------------
->>>>    1 file changed, 7 insertions(+), 37 deletions(-)
->>>>
->>>> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
->>>> index 5e556ac9102a..f8812e68de77 100644
->>>> --- a/drivers/vfio/vfio_iommu_type1.c
->>>> +++ b/drivers/vfio/vfio_iommu_type1.c
->>>> @@ -100,6 +100,7 @@ struct vfio_dma {
->>>>    struct vfio_group {
->>>>    	struct iommu_group	*iommu_group;
->>>>    	struct list_head	next;
->>>> +	struct device		*iommu_device;
->>>>    	bool			mdev_group;	/* An mdev group */
->>>>    	bool			pinned_page_dirty_scope;
->>>>    };
->>>> @@ -1627,45 +1628,13 @@ static struct device *vfio_mdev_get_iommu_device(struct device *dev)
->>>>    	return NULL;
->>>>    }
->>>>    
->>>> -static int vfio_mdev_attach_domain(struct device *dev, void *data)
->>>> -{
->>>> -	struct iommu_domain *domain = data;
->>>> -	struct device *iommu_device;
->>>> -
->>>> -	iommu_device = vfio_mdev_get_iommu_device(dev);
->>>> -	if (iommu_device) {
->>>> -		if (iommu_dev_feature_enabled(iommu_device, IOMMU_DEV_FEAT_AUX))
->>>> -			return iommu_aux_attach_device(domain, iommu_device);
->>>> -		else
->>>> -			return iommu_attach_device(domain, iommu_device);
->>>> -	}
->>>> -
->>>> -	return -EINVAL;
->>>> -}
->>>> -
->>>> -static int vfio_mdev_detach_domain(struct device *dev, void *data)
->>>> -{
->>>> -	struct iommu_domain *domain = data;
->>>> -	struct device *iommu_device;
->>>> -
->>>> -	iommu_device = vfio_mdev_get_iommu_device(dev);
->>>> -	if (iommu_device) {
->>>> -		if (iommu_dev_feature_enabled(iommu_device, IOMMU_DEV_FEAT_AUX))
->>>> -			iommu_aux_detach_device(domain, iommu_device);
->>>> -		else
->>>> -			iommu_detach_device(domain, iommu_device);
->>>> -	}
->>>> -
->>>> -	return 0;
->>>> -}
->>>> -
->>>>    static int vfio_iommu_attach_group(struct vfio_domain *domain,
->>>>    				   struct vfio_group *group)
->>>>    {
->>>>    	if (group->mdev_group)
->>>> -		return iommu_group_for_each_dev(group->iommu_group,
->>>> -						domain->domain,
->>>> -						vfio_mdev_attach_domain);
->>>> +		return iommu_aux_attach_group(domain->domain,
->>>> +					      group->iommu_group,
->>>> +					      group->iommu_device);
->>>
->>> No, we previously iterated all devices in the group and used the aux
->>> interface only when we have an iommu_device supporting aux.  If we
->>> simply assume an mdev group only uses an aux domain we break existing
->>> users, ex. SR-IOV VF backed mdevs.  Thanks,
->>
->> Oh, yes. Sorry! I didn't consider the physical device backed mdevs
->> cases.
->>
->> Looked into this part of code, it seems that there's a lock issue here.
->> The group->mutex is held in iommu_group_for_each_dev() and will be
->> acquired again in iommu_attach_device().
-> 
-> These are two different groups.  We walk the devices in the mdev's
-> group with iommu_group_for_each_dev(), holding the mdev's group lock,
-> but we call iommu_attach_device() with iommu_device, which results in
-> acquiring the lock for the iommu_device's group.
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org
+---
+ block/elevator.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-You are right. Sorry for the noise. Please ignore it.
-
-> 
->> How about making it like:
->>
->> static int vfio_iommu_attach_group(struct vfio_domain *domain,
->>                                      struct vfio_group *group)
->> {
->>           if (group->mdev_group) {
->>                   struct device *iommu_device = group->iommu_device;
->>
->>                   if (WARN_ON(!iommu_device))
->>                           return -EINVAL;
->>
->>                   if (iommu_dev_feature_enabled(iommu_device,
->> IOMMU_DEV_FEAT_AUX))
->>                           return iommu_aux_attach_device(domain->domain,
->> iommu_device);
->>                   else
->>                           return iommu_attach_device(domain->domain,
->> iommu_device);
->>           } else {
->>                   return iommu_attach_group(domain->domain,
->> group->iommu_group);
->>           }
->> }
->>
->> The caller (vfio_iommu_type1_attach_group) has guaranteed that all mdevs
->> in an iommu group should be derived from a same physical device.
-> 
-> Have we?
-
-We have done this with below.
-
-static int vfio_mdev_iommu_device(struct device *dev, void *data)
-{
-         struct device **old = data, *new;
-
-         new = vfio_mdev_get_iommu_device(dev);
-         if (!new || (*old && *old != new))
-                 return -EINVAL;
-
-         *old = new;
-
-         return 0;
-}
-
-But I agree that as a generic iommu aux-domain api, we shouldn't put
-this limited assumption in it.
-
-> iommu_attach_device() will fail if the group is not
-> singleton, but that's just encouraging us to use the _attach_group()
-> interface where the _attach_device() interface is relegated to special
-> cases.  Ideally we'd get out of those special cases and create an
-> _attach_group() for aux that doesn't further promote these notions.
-
-Yes. Fair enough.
-
-> 
->> Any thoughts?
-> 
-> See my reply to Kevin, I'm thinking we need to provide a callback that
-> can enlighten the IOMMU layer to be able to do _attach_group() with
-> aux or separate IOMMU backed devices.
-
-Thanks for the guide. I will check your reply.
-
-Best regards,
-baolu
+--- linux-next-20200730.orig/block/elevator.c
++++ linux-next-20200730/block/elevator.c
+@@ -95,8 +95,8 @@ static inline bool elv_support_features(
+  * @name: Elevator name to test
+  * @required_features: Features that the elevator must provide
+  *
+- * Return true is the elevator @e name matches @name and if @e provides all the
+- * the feratures spcified by @required_features.
++ * Return true if the elevator @e name matches @name and if @e provides all
++ * the features specified by @required_features.
+  */
+ static bool elevator_match(const struct elevator_type *e, const char *name,
+ 			   unsigned int required_features)
