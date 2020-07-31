@@ -2,122 +2,106 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF5EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F331FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3A3D2074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C28DF2074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596171188;
-	bh=MnEbR4t/xoxAN93gD+qE5jCDyQ4vcBjhtQp8diZ/N88=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OmZevE1QWQ6pTesl/xSprxB+OHrOtCDlkfdkkPxQVza9ErjfF5fMNzDgHVDX0GODI
-	 UwOMYPXMpUBXg6xhQKPm9FuVJHyCcVvISs+SyuUMSXQ4DtqsAnsQViLY0WRfK3bmp+
-	 vsS9qWqEAkAXFIfzCbXgOUeYAFPb1tVfgyYkIuZY=
+	s=default; t=1596171379;
+	bh=AC63P4IWBeE5EROTpGwALPeMLOjLL+r2lsJMJNyApEs=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=IwglX2jxzfB4po9ZiNG0yRcxjVWbKsob3WcI0JeOFE467P97L5O4qknEcjfappKuk
+	 xPKP9oZWdfExWUTIbfNK4JGbOQdSqqbMB83fw3JkjykaJUwMGarfkOHwIMnFtLQ+0N
+	 rN53le4Gd1Kw8GiQEO5mlacWEq0kudkavmF4th2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729788AbgGaExH (ORCPT
+        id S1730157AbgGaE4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 00:53:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725800AbgGaExG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 00:53:06 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50CE12074B;
-        Fri, 31 Jul 2020 04:53:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596171186;
-        bh=MnEbR4t/xoxAN93gD+qE5jCDyQ4vcBjhtQp8diZ/N88=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ugZ+u62GbxspOh76EELUql3biENANGq3nTvcDrY1aGLphdm1mxDObpR/WAHU3Upvn
-         I6lfZeT+cGvAyIdNSrO/BfjIlqiTUE6aaA+CVw0L9tF5MEzpHH9faVIlaS8keDBqB8
-         hn6iSlGtBHbLSPJg0Yb5zkpCpXC//r+57UaXAD0s=
-Date:   Fri, 31 Jul 2020 07:53:01 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-Cc:     Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak
- in rds_notify_queue_get()
-Message-ID: <20200731045301.GI75549@unreal>
-References: <20200730192026.110246-1-yepeilin.cs@gmail.com>
+        Fri, 31 Jul 2020 00:56:19 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35892 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbgGaE4S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 00:56:18 -0400
+Received: by mail-ed1-f67.google.com with SMTP id c15so11839958edj.3;
+        Thu, 30 Jul 2020 21:56:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4H+oRSmTvEm6CIUgIK4P0aR3vjANz1UROQflSVQivnc=;
+        b=b/m9SZFU0Lkek9YdHHL6wkC5R/nhiQftFO33jVk6TY2GsBZ1NCDNzFrPzX+D5iQ3/p
+         PTBXHVzJnxCDL7hJxaN/wHiaiq2gNnTEXUbA0BAGxwhCh1yGqACWb3GNKTohUWL5ovg2
+         xOSfDTJFhJsyJaYdaWXaCk47T4I1BXcEeie9AlPk/YlwRWQt99TvhD3gVEUtqoKEuRKs
+         pHT6VdrDqlM3q88oong0Y/nRjDS5SIfq98zHurEN059oaAvZYwdUbXY98+f2Fp/wtoQC
+         VObsmAfyhizTcSQh+AQk7/GHw2Zw8NEkJDCm8CX6LfgBeyB6a51ZouNfu+BX99+i8BYE
+         gtPg==
+X-Gm-Message-State: AOAM530nvv2LNDglg03SmTik0lA78z5wz8VlmF1bn+OCw7CXF3yS+K2n
+        QSPyjt0keV/k1yHWCPUiTpU=
+X-Google-Smtp-Source: ABdhPJyEGl1t8oZSMXGGJywcFvB6YfHnbZsZ2I+VAQnNpB4AzoQ2ukdWZucjy94em1xriCvhfy3x4A==
+X-Received: by 2002:a05:6402:3110:: with SMTP id dc16mr2202194edb.218.1596171377036;
+        Thu, 30 Jul 2020 21:56:17 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
+        by smtp.gmail.com with ESMTPSA id c7sm8096414ejr.77.2020.07.30.21.56.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jul 2020 21:56:16 -0700 (PDT)
+Subject: Re: [PATCH] vgacon: Fix an out-of-bounds in
+ vgacon_scrollback_update()
+To:     Yang Yingliang <yangyingliang@huawei.com>, b.zolnierkie@samsung.com
+Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?B?5byg5LqR5rW3?= <zhangyunhai@nsfocus.com>
+References: <20200713105730.550334-1-yangyingliang@huawei.com>
+ <220220f1-48f7-46f6-952f-ab41fa57d6a1@kernel.org>
+ <c3714d73-d5fe-c77a-e554-bb1ff4fd6980@huawei.com>
+ <9aecd7ac-5060-6b8d-61f8-393431eb243f@kernel.org>
+ <3df26fed-5ade-df26-6417-380401b9650b@huawei.com>
+From:   Jiri Slaby <jirislaby@kernel.org>
+Message-ID: <42bd14e3-ae2f-0c14-5d42-e3e7aeb11c78@kernel.org>
+Date:   Fri, 31 Jul 2020 06:56:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730192026.110246-1-yepeilin.cs@gmail.com>
+In-Reply-To: <3df26fed-5ade-df26-6417-380401b9650b@huawei.com>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 03:20:26PM -0400, Peilin Ye wrote:
-> rds_notify_queue_get() is potentially copying uninitialized kernel stack
-> memory to userspace since the compiler may leave a 4-byte hole at the end
-> of `cmsg`.
->
-> In 2016 we tried to fix this issue by doing `= { 0 };` on `cmsg`, which
-> unfortunately does not always initialize that 4-byte hole. Fix it by using
-> memset() instead.
+Hi,
 
-Of course, this is the difference between "{ 0 }" and "{}" initializations.
+On 31. 07. 20, 5:23, Yang Yingliang wrote:
+> void execute_one(void)
+> {
+> 		intptr_t res = 0;
+> 	res = syz_open_dev(0xc, 4, 1);
 
->
-> Cc: stable@vger.kernel.org
-> Fixes: f037590fff30 ("rds: fix a leak of kernel memory")
-> Fixes: bdbe6fbc6a2f ("RDS: recv.c")
-> Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-> ---
-> Note: the "real" copy_to_user() happens in put_cmsg(), where
-> `cmlen - sizeof(*cm)` equals to `sizeof(cmsg)`.
->
-> Reference: https://lwn.net/Articles/417989/
->
-> $ pahole -C "rds_rdma_notify" net/rds/recv.o
-> struct rds_rdma_notify {
-> 	__u64                      user_token;           /*     0     8 */
-> 	__s32                      status;               /*     8     4 */
->
-> 	/* size: 16, cachelines: 1, members: 2 */
-> 	/* padding: 4 */
-> 	/* last cacheline: 16 bytes */
-> };
->
->  net/rds/recv.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/net/rds/recv.c b/net/rds/recv.c
-> index c8404971d5ab..aba4afe4dfed 100644
-> --- a/net/rds/recv.c
-> +++ b/net/rds/recv.c
-> @@ -450,12 +450,13 @@ static int rds_still_queued(struct rds_sock *rs, struct rds_incoming *inc,
->  int rds_notify_queue_get(struct rds_sock *rs, struct msghdr *msghdr)
->  {
->  	struct rds_notifier *notifier;
-> -	struct rds_rdma_notify cmsg = { 0 }; /* fill holes with zero */
-> +	struct rds_rdma_notify cmsg;
->  	unsigned int count = 0, max_messages = ~0U;
->  	unsigned long flags;
->  	LIST_HEAD(copy);
->  	int err = 0;
->
-> +	memset(&cmsg, 0, sizeof(cmsg));	/* fill holes with zero */
+open(/dev/tty1)
 
-It works, but the right solution is to drop 0 from cmsg initialization
-and write "struct rds_rdma_notify cmsg = {};" without any memset.
+> 	if (res != -1)
+> 		r[0] = res;
+> *(uint16_t*)0x20000000 = 0xc;
+> *(uint16_t*)0x20000002 = 0x373;
+> *(uint16_t*)0x20000004 = 0x1442;
+> 	syscall(__NR_ioctl, r[0], 0x5609ul, 0x20000000ul);
 
-Thanks
+VT_RESIZE(12, 883)
+
+> memcpy((void*)0x20003500, "\x7f\x45\x4c\x46\x00\x00\x00...
+> 	syscall(__NR_write, r[0], 0x20003500ul, 0x381ul);
+
+Write 381 bytes of some ELF to the tty.
+
+OK, that's it. Thanks.
+
+-- 
+js
