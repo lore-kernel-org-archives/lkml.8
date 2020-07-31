@@ -2,397 +2,476 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A794C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3190BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E542A20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02F5F20838
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:41:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W9x34TSK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VhXTI/wk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731853AbgGaIlA (ORCPT
+        id S1731893AbgGaIlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:41:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53544 "EHLO
+        Fri, 31 Jul 2020 04:41:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731809AbgGaIlA (ORCPT
+        with ESMTP id S1731112AbgGaIlZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 04:41:00 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02D99C06174A
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 01:41:00 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id w17so16756999ply.11
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 01:40:59 -0700 (PDT)
+        Fri, 31 Jul 2020 04:41:25 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6162C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 01:41:24 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id y8so9091576vsq.8
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 01:41:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Rb70W975+C/iAqLLSHqwJ9OFqLhl15EtR1OKhg4dAPI=;
-        b=W9x34TSKNkDwF6cqDPYxzsF6UfDPfYWWHkr9XOPOtRxPKnP+Cs73elRPBWTGHIce4C
-         W4Yd+aP0cQrNYkeLzN+P0OLLZFbe8fBTm5eeOmSAs0PAsWof6pcP8RyG7xvrV4EY6rn6
-         suJ4VpyPJKk7WLoh2cSOGaSDfxbF46ImCm2EQ=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=y63oAJuw+Me3PZc6ce5WsDrbSV4mt+J1F7499sphZYM=;
+        b=VhXTI/wkMh6FSf+lij/Wc0W8VW9FEWZAk9akoxgJRV3UCXTvH0vgvfFOXO6OuUIODQ
+         ovABBlVaLIIbZ7I/2I0gZKLwRk0aWHyhn4uPzTeLLYrX8rsd6sVLZ8z7ztT1DVf6dy8j
+         H7t2RC4o2LMBrCaElZpZqKwUjIaZ7Gbdqi/0UkQMhOYDCTmq6lXcPoCB/J/Xsz2deIeu
+         fLWOOKHUltesrhyqvGAoEcxgWmLP0FVN2bVs27vgbo6em7ooU8GofSdvOLJ0/b1sM2VN
+         CEx9g8cLbU+XWL7U2bHXkNKSXUHG0wi5U9lj0OBBUGPFQ4+OurahPGpcxq7SUz1mW4HT
+         6bew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Rb70W975+C/iAqLLSHqwJ9OFqLhl15EtR1OKhg4dAPI=;
-        b=Zpp2j+GN7vA9Ty1Id5ts6NzuI8ylDLqsVPB529XkQnLsvZtKzbuwzKlvvymJK3PNtM
-         7k7XMSkjrWDmxoS/jxTVLIkwTxUfB4uk/VMpNiM0geZOTrlRA5L3Ht9THIRIFHk04LdS
-         dEEnCAylvV8o3IKkj3CLmXYmRvZg7n74TUXGxA/aqBEiOVta3A859xx4uWhV9Ei0qoLP
-         AjrDn6tGpC/1bCP/5UwXKspb0gZzZlTLPSudDIc6I41QLG0hNUCxMQQew/rflESR+KHk
-         kJGToXzoV5kezb/Q1usErwemWgjG3SvBP1Ikm+ZLxDRt7xKiuEYS4P5yQlXw6WjH8V1I
-         KCdg==
-X-Gm-Message-State: AOAM533nRFOLTGphZB1dEwlkUY6Bzq24qgM600YDiqY6X44On7JLaIMB
-        j95VCkY8ufjY2RW/OEMvaSjOT0+565pnSg==
-X-Google-Smtp-Source: ABdhPJzXAhThRXPZaeWlIbK/k/LI1ah3aw2f+bDSCykwLkLF0SCweGrqR1C7LAGMFCkBzoHP4aOqLA==
-X-Received: by 2002:a17:902:7c92:: with SMTP id y18mr2886805pll.10.1596184859090;
-        Fri, 31 Jul 2020 01:40:59 -0700 (PDT)
-Received: from localhost ([2401:fa00:1:10:de4a:3eff:fe7d:d39c])
-        by smtp.gmail.com with ESMTPSA id w130sm4707391pfd.104.2020.07.31.01.40.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jul 2020 01:40:58 -0700 (PDT)
-From:   Cheng-Yi Chiang <cychiang@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Mark Brown <broonie@kernel.org>, Taniya Das <tdas@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>, dianders@chromium.org,
-        dgreid@chromium.org, tzungbi@chromium.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org, Ajit Pandey <ajitp@codeaurora.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>
-Subject: [PATCH v3 2/2] ASoC: qcom: sc7180: Add machine driver for sound card registration
-Date:   Fri, 31 Jul 2020 16:40:23 +0800
-Message-Id: <20200731084023.2678931-3-cychiang@chromium.org>
-X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-In-Reply-To: <20200731084023.2678931-1-cychiang@chromium.org>
-References: <20200731084023.2678931-1-cychiang@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=y63oAJuw+Me3PZc6ce5WsDrbSV4mt+J1F7499sphZYM=;
+        b=JAJxmZbMgfN5XoPkVB3CPQOyArotYMSb4lPaUG7jdXTu+jGH3C7ZXnqRBhB7WzXOsd
+         KV1kAi/LX1pwrJ9vfXxYqDMvAOKnX3QkIi/MQFrKrrHNLzt1CTWe89r0f2NlR89CMGu/
+         iAmGVjPeiSd5tFZm6jfvzC6Ia4rgYQvaASoupyb14NTl7zsNPAhjczkbkeybUPpTN5v4
+         FH7RI87L3Rxoggv/ixAfwmFAUCJ4wrq3fG9jG1VhxapbuHcksnWUskSTSKf9gRNVToUR
+         YEitKf4hmwWTvmLRy4SqM2Gx2YOoeTGRd6G6F2dQjSV/CRU+Ydp6ICEHegN80lFP1d32
+         yZEw==
+X-Gm-Message-State: AOAM531wUVMZHVscejBx3B9iG8FdLkktTD0EtB+3r9ufPFZwzWLyJRhH
+        wVVwhrNMzKjeMzvsTwCfbrH7CL6FMQE16V+DM1LDSQ==
+X-Google-Smtp-Source: ABdhPJyMv/+GMEvEskdPMp4oeXoWW0VaZBNK6A0V7CnAuElnA7ojDXe0TGgKMVchrDxSKyCk0pP5oMjr37TXEGLJ5FU=
+X-Received: by 2002:a67:e412:: with SMTP id d18mr2316019vsf.41.1596184883711;
+ Fri, 31 Jul 2020 01:41:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200726160401.311569-1-hch@lst.de> <20200726160401.311569-2-hch@lst.de>
+ <20200730173437.GA1172439@ubuntu-n2-xlarge-x86>
+In-Reply-To: <20200730173437.GA1172439@ubuntu-n2-xlarge-x86>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 31 Jul 2020 14:11:11 +0530
+Message-ID: <CA+G9fYs0ZJCp39qh2Zs6v=Pb6S=1PYDEA1+Dk7Q8=RL45_P7NQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] arm64: stop using <asm/compat.h> directly
+To:     Christoph Hellwig <hch@lst.de>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Cc:     X86 ML <x86@kernel.org>, Jan Kara <jack@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        lkft-triage@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ajit Pandey <ajitp@codeaurora.org>
+On Thu, 30 Jul 2020 at 23:04, Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> On Sun, Jul 26, 2020 at 06:03:58PM +0200, Christoph Hellwig wrote:
+> > Always use <linux/compat.h> so that we can move more declarations to
+> > common code.  In two of the three cases the asm include was in addition
+> > to an existing one for <linux/compat.h> anyway.
+> >
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >  arch/arm64/include/asm/stat.h | 2 +-
+> >  arch/arm64/kernel/process.c   | 1 -
+> >  arch/arm64/kernel/ptrace.c    | 1 -
+> >  3 files changed, 1 insertion(+), 3 deletions(-)
+> >
+> > diff --git a/arch/arm64/include/asm/stat.h b/arch/arm64/include/asm/sta=
+t.h
+> > index 3b4a62f5aeb0c3..1b5ac1ef5d04cc 100644
+> > --- a/arch/arm64/include/asm/stat.h
+> > +++ b/arch/arm64/include/asm/stat.h
+> > @@ -10,7 +10,7 @@
+> >  #ifdef CONFIG_COMPAT
+> >
+> >  #include <linux/time.h>
+> > -#include <asm/compat.h>
+> > +#include <linux/compat.h>
+>
+> This breaks arm64 defconfig:
+>
+> $ make -skj"$(nproc)" ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux- distcle=
+an defconfig init/main.o
+> In file included from ./include/linux/compat.h:17,
+>                  from ./arch/arm64/include/asm/stat.h:13,
+>                  from ./include/linux/stat.h:6,
+>                  from ./include/linux/sysfs.h:22,
+>                  from ./include/linux/kobject.h:20,
+>                  from ./include/linux/of.h:17,
+>                  from ./include/linux/irqdomain.h:35,
+>                  from ./include/linux/acpi.h:13,
+>                  from ./include/acpi/apei.h:9,
+>                  from ./include/acpi/ghes.h:5,
+>                  from ./include/linux/arm_sdei.h:8,
+>                  from arch/arm64/kernel/asm-offsets.c:10:
+> ./include/linux/fs.h: In function 'vfs_whiteout':
+> ./include/linux/fs.h:1736:32: error: 'S_IFCHR' undeclared (first use in t=
+his function)
+>  1736 |  return vfs_mknod(dir, dentry, S_IFCHR | WHITEOUT_MODE, WHITEOUT_=
+DEV);
+>       |                                ^~~~~~~
+> ./include/linux/fs.h:1736:32: note: each undeclared identifier is reporte=
+d only once for each function it appears in
+> ./include/linux/fs.h: At top level:
+> ./include/linux/fs.h:1886:46: warning: 'struct kstat' declared inside par=
+ameter list will not be visible outside of this definition or declaration
+>  1886 |  int (*getattr) (const struct path *, struct kstat *, u32, unsign=
+ed int);
+>       |                                              ^~~~~
+> ./include/linux/fs.h: In function '__mandatory_lock':
+> ./include/linux/fs.h:2372:25: error: 'S_ISGID' undeclared (first use in t=
+his function); did you mean 'SIGIO'?
+>  2372 |  return (ino->i_mode & (S_ISGID | S_IXGRP)) =3D=3D S_ISGID;
+>       |                         ^~~~~~~
+>       |                         SIGIO
+> ./include/linux/fs.h:2372:35: error: 'S_IXGRP' undeclared (first use in t=
+his function)
+>  2372 |  return (ino->i_mode & (S_ISGID | S_IXGRP)) =3D=3D S_ISGID;
+>       |                                   ^~~~~~~
+> ...
+>
+> $ git bisect log
+> # bad: [7b287a5c6ac518c415a258f2aa7b1ebb25c263d2] Add linux-next specific=
+ files for 20200730
+> # good: [d3590ebf6f91350192737dd1d1b219c05277f067] Merge tag 'audit-pr-20=
+200729' of git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/audit
+> git bisect start '7b287a5c6ac518c415a258f2aa7b1ebb25c263d2' 'd3590ebf6f91=
+350192737dd1d1b219c05277f067'
+> # bad: [1f1ed12be70e9eb4e05ac206c6ad6a5a31f5b921] Merge remote-tracking b=
+ranch 'crypto/master'
+> git bisect bad 1f1ed12be70e9eb4e05ac206c6ad6a5a31f5b921
+> # bad: [07fad673c2f1a02440c879c34f8182b12786a735] Merge remote-tracking b=
+ranch 'hid/for-next'
+> git bisect bad 07fad673c2f1a02440c879c34f8182b12786a735
+> # good: [7a77c92312546a74d3507484b256ae17bfb2cfe2] Merge remote-tracking =
+branch 'm68knommu/for-next'
+> git bisect good 7a77c92312546a74d3507484b256ae17bfb2cfe2
+> # good: [40dd62f180e38317e744d7f82c98af31a24fd2c9] Merge remote-tracking =
+branch 'f2fs/dev'
+> git bisect good 40dd62f180e38317e744d7f82c98af31a24fd2c9
+> # bad: [52138dfdd2192bcfc7d3bc2e79475966ee4b20c4] Merge remote-tracking b=
+ranch 'printk/for-next'
+> git bisect bad 52138dfdd2192bcfc7d3bc2e79475966ee4b20c4
+> # good: [a37c3e37fa3fa1381e03d918d708f82927ddd160] Merge remote-tracking =
+branch 'xfs/for-next'
+> git bisect good a37c3e37fa3fa1381e03d918d708f82927ddd160
+> # good: [4e523547e2bf755d40cb10e85795c2f9620ff3fb] nvme-pci: add a blank =
+line after declarations
+> git bisect good 4e523547e2bf755d40cb10e85795c2f9620ff3fb
+> # bad: [5066741180729f7bad9401de34efda3766c3274a] Merge branches 'fixes' =
+and 'work.quota-compat' into for-next
+> git bisect bad 5066741180729f7bad9401de34efda3766c3274a
+> # good: [4ff8a356daafaafbf90141ee7a3b8fdc18e560a8] ia64: switch to ->regs=
+et_get()
+> git bisect good 4ff8a356daafaafbf90141ee7a3b8fdc18e560a8
+> # good: [ce327e1c54119179066d6f3573a28001febc9265] regset: kill user_regs=
+et_copyout{,_zero}()
+> git bisect good ce327e1c54119179066d6f3573a28001febc9265
+> # good: [1697a322e28ba96d35953c5d824540d172546d36] [elf-fdpic] switch cor=
+edump to regsets
+> git bisect good 1697a322e28ba96d35953c5d824540d172546d36
+> # good: [259bf01c1bd1f049958496a089c4f334fe0c8a48] Merge branches 'work.m=
+isc', 'work.regset' and 'work.fdpic' into for-next
+> git bisect good 259bf01c1bd1f049958496a089c4f334fe0c8a48
+> # bad: [0a3a4497a1de8e68e809a693b549c7ec2f195301] compat: lift compat_s64=
+ and compat_u64 to <linux/compat.h>
+> git bisect bad 0a3a4497a1de8e68e809a693b549c7ec2f195301
+> # bad: [b902bfb3f0e9d07ec9f48256e57e5c5de6108f8c] arm64: stop using <asm/=
+compat.h> directly
+> git bisect bad b902bfb3f0e9d07ec9f48256e57e5c5de6108f8c
+> # first bad commit: [b902bfb3f0e9d07ec9f48256e57e5c5de6108f8c] arm64: sto=
+p using <asm/compat.h> directly
+>
+> I assume the stat header order should be messed around with but I am not
+> sure what exactly that would entail to make sure that nothing else
+> breaks, hence just the report.
 
-Add new driver to register sound card on sc7180 trogdor board and
-do the required configuration for lpass cpu dai and external codecs
-connected over MI2S interfaces.
+FYI,
+We have also noticed this arm64 build break on linux next 20200730
+with gcc-8.x, gcc-9.x and gcc-10.x
 
-Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
-Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
----
- sound/soc/qcom/Kconfig  |  12 ++
- sound/soc/qcom/Makefile |   2 +
- sound/soc/qcom/sc7180.c | 244 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 258 insertions(+)
- create mode 100644 sound/soc/qcom/sc7180.c
+make -sk KBUILD_BUILD_USER=3DTuxBuild -C/linux -j16 ARCH=3Darm64
+CROSS_COMPILE=3Daarch64-linux-gnu- HOSTCC=3Dgcc CC=3D"sccache
+aarch64-linux-gnu-gcc" O=3Dbuild Image
+#
+In file included from ../include/linux/compat.h:17,
+                 from ../arch/arm64/include/asm/stat.h:13,
+                 from ../include/linux/stat.h:6,
+                 from ../include/linux/sysfs.h:22,
+                 from ../include/linux/kobject.h:20,
+                 from ../include/linux/of.h:17,
+                 from ../include/linux/irqdomain.h:35,
+                 from ../include/linux/acpi.h:13,
+                 from ../include/acpi/apei.h:9,
+                 from ../include/acpi/ghes.h:5,
+                 from ../include/linux/arm_sdei.h:8,
+                 from ../arch/arm64/kernel/asm-offsets.c:10:
+../include/linux/fs.h: In function =E2=80=98vfs_whiteout=E2=80=99:
+../include/linux/fs.h:1709:32: error: =E2=80=98S_IFCHR=E2=80=99 undeclared =
+(first use
+in this function)
+ 1709 |  return vfs_mknod(dir, dentry, S_IFCHR | WHITEOUT_MODE, WHITEOUT_DE=
+V);
+      |                                ^~~~~~~
+../include/linux/fs.h:1709:32: note: each undeclared identifier is
+reported only once for each function it appears in
+../include/linux/fs.h: At top level:
+../include/linux/fs.h:1855:46: warning: =E2=80=98struct kstat=E2=80=99 decl=
+ared inside
+parameter list will not be visible outside of this definition or
+declaration
+ 1855 |  int (*getattr) (const struct path *, struct kstat *, u32,
+unsigned int);
+      |                                              ^~~~~
+../include/linux/fs.h: In function =E2=80=98__mandatory_lock=E2=80=99:
+../include/linux/fs.h:2325:25: error: =E2=80=98S_ISGID=E2=80=99 undeclared =
+(first use
+in this function); did you mean =E2=80=98SIGIO=E2=80=99?
+ 2325 |  return (ino->i_mode & (S_ISGID | S_IXGRP)) =3D=3D S_ISGID;
+      |                         ^~~~~~~
+      |                         SIGIO
+../include/linux/fs.h:2325:35: error: =E2=80=98S_IXGRP=E2=80=99 undeclared =
+(first use
+in this function)
+ 2325 |  return (ino->i_mode & (S_ISGID | S_IXGRP)) =3D=3D S_ISGID;
+      |                                   ^~~~~~~
+../include/linux/fs.h: In function =E2=80=98invalidate_remote_inode=E2=80=
+=99:
+../include/linux/fs.h:2588:6: error: implicit declaration of function
+=E2=80=98S_ISREG=E2=80=99 [-Werror=3Dimplicit-function-declaration]
+ 2588 |  if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
+      |      ^~~~~~~
+../include/linux/fs.h:2588:32: error: implicit declaration of function
+=E2=80=98S_ISDIR=E2=80=99; did you mean =E2=80=98EISDIR=E2=80=99?
+[-Werror=3Dimplicit-function-declaration]
+ 2588 |  if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
+      |                                ^~~~~~~
+      |                                EISDIR
+../include/linux/fs.h:2589:6: error: implicit declaration of function
+=E2=80=98S_ISLNK=E2=80=99 [-Werror=3Dimplicit-function-declaration]
+ 2589 |      S_ISLNK(inode->i_mode))
+      |      ^~~~~~~
+../include/linux/fs.h: In function =E2=80=98execute_ok=E2=80=99:
+../include/linux/fs.h:2768:26: error: =E2=80=98S_IXUGO=E2=80=99 undeclared =
+(first use
+in this function)
+ 2768 |  return (inode->i_mode & S_IXUGO) || S_ISDIR(inode->i_mode);
+      |                          ^~~~~~~
+In file included from ../include/linux/compat.h:17,
+                 from ../arch/arm64/include/asm/stat.h:13,
+                 from ../include/linux/stat.h:6,
+                 from ../include/linux/sysfs.h:22,
+                 from ../include/linux/kobject.h:20,
+                 from ../include/linux/of.h:17,
+                 from ../include/linux/irqdomain.h:35,
+                 from ../include/linux/acpi.h:13,
+                 from ../include/acpi/apei.h:9,
+                 from ../include/acpi/ghes.h:5,
+                 from ../include/linux/arm_sdei.h:8,
+                 from ../arch/arm64/kernel/asm-offsets.c:10:
+../include/linux/fs.h: At top level:
+../include/linux/fs.h:3141:53: warning: =E2=80=98struct kstat=E2=80=99 decl=
+ared inside
+parameter list will not be visible outside of this definition or
+declaration
+ 3141 | extern void generic_fillattr(struct inode *, struct kstat *);
+      |                                                     ^~~~~
+../include/linux/fs.h:3142:58: warning: =E2=80=98struct kstat=E2=80=99 decl=
+ared inside
+parameter list will not be visible outside of this definition or
+declaration
+ 3142 | extern int vfs_getattr_nosec(const struct path *, struct kstat
+*, u32, unsigned int);
+      |                                                          ^~~~~
+../include/linux/fs.h:3143:52: warning: =E2=80=98struct kstat=E2=80=99 decl=
+ared inside
+parameter list will not be visible outside of this definition or
+declaration
+ 3143 | extern int vfs_getattr(const struct path *, struct kstat *,
+u32, unsigned int);
+      |                                                    ^~~~~
+../include/linux/fs.h:3160:60: warning: =E2=80=98struct kstat=E2=80=99 decl=
+ared inside
+parameter list will not be visible outside of this definition or
+declaration
+ 3160 | extern int vfs_statx(int, const char __user *, int, struct
+kstat *, u32);
+      |                                                            ^~~~~
+../include/linux/fs.h:3161:46: warning: =E2=80=98struct kstat=E2=80=99 decl=
+ared inside
+parameter list will not be visible outside of this definition or
+declaration
+ 3161 | extern int vfs_statx_fd(unsigned int, struct kstat *, u32,
+unsigned int);
+      |                                              ^~~~~
+../include/linux/fs.h:3163:64: warning: =E2=80=98struct kstat=E2=80=99 decl=
+ared inside
+parameter list will not be visible outside of this definition or
+declaration
+ 3163 | static inline int vfs_stat(const char __user *filename, struct
+kstat *stat)
+      |                                                                ^~~~=
+~
+../include/linux/fs.h: In function =E2=80=98vfs_stat=E2=80=99:
+../include/linux/fs.h:3166:11: error: =E2=80=98STATX_BASIC_STATS=E2=80=99 u=
+ndeclared
+(first use in this function)
+ 3166 |     stat, STATX_BASIC_STATS);
+      |           ^~~~~~~~~~~~~~~~~
+../include/linux/fs.h:3166:5: error: passing argument 4 of =E2=80=98vfs_sta=
+tx=E2=80=99
+from incompatible pointer type [-Werror=3Dincompatible-pointer-types]
+ 3166 |     stat, STATX_BASIC_STATS);
+      |     ^~~~
+      |     |
+      |     struct kstat *
+../include/linux/fs.h:3160:53: note: expected =E2=80=98struct kstat *=E2=80=
+=99 but
+argument is of type =E2=80=98struct kstat *=E2=80=99
+ 3160 | extern int vfs_statx(int, const char __user *, int, struct
+kstat *, u32);
+      |                                                     ^~~~~~~~~~~~~~
+../include/linux/fs.h: At top level:
+../include/linux/fs.h:3168:61: warning: =E2=80=98struct kstat=E2=80=99 decl=
+ared inside
+parameter list will not be visible outside of this definition or
+declaration
+ 3168 | static inline int vfs_lstat(const char __user *name, struct kstat *=
+stat)
+      |                                                             ^~~~~
+../include/linux/fs.h: In function =E2=80=98vfs_lstat=E2=80=99:
+../include/linux/fs.h:3171:11: error: =E2=80=98STATX_BASIC_STATS=E2=80=99 u=
+ndeclared
+(first use in this function)
+ 3171 |     stat, STATX_BASIC_STATS);
+      |           ^~~~~~~~~~~~~~~~~
+../include/linux/fs.h:3171:5: error: passing argument 4 of =E2=80=98vfs_sta=
+tx=E2=80=99
+from incompatible pointer type [-Werror=3Dincompatible-pointer-types]
+ 3171 |     stat, STATX_BASIC_STATS);
+      |     ^~~~
+      |     |
+      |     struct kstat *
+../include/linux/fs.h:3160:53: note: expected =E2=80=98struct kstat *=E2=80=
+=99 but
+argument is of type =E2=80=98struct kstat *=E2=80=99
+ 3160 | extern int vfs_statx(int, const char __user *, int, struct
+kstat *, u32);
+      |                                                     ^~~~~~~~~~~~~~
+../include/linux/fs.h: At top level:
+../include/linux/fs.h:3174:17: warning: =E2=80=98struct kstat=E2=80=99 decl=
+ared inside
+parameter list will not be visible outside of this definition or
+declaration
+ 3174 |          struct kstat *stat, int flags)
+      |                 ^~~~~
+../include/linux/fs.h: In function =E2=80=98vfs_fstatat=E2=80=99:
+../include/linux/fs.h:3177:11: error: =E2=80=98STATX_BASIC_STATS=E2=80=99 u=
+ndeclared
+(first use in this function)
+ 3177 |     stat, STATX_BASIC_STATS);
+      |           ^~~~~~~~~~~~~~~~~
+../include/linux/fs.h:3177:5: error: passing argument 4 of =E2=80=98vfs_sta=
+tx=E2=80=99
+from incompatible pointer type [-Werror=3Dincompatible-pointer-types]
+ 3177 |     stat, STATX_BASIC_STATS);
+      |     ^~~~
+      |     |
+      |     struct kstat *
+../include/linux/fs.h:3160:53: note: expected =E2=80=98struct kstat *=E2=80=
+=99 but
+argument is of type =E2=80=98struct kstat *=E2=80=99
+ 3160 | extern int vfs_statx(int, const char __user *, int, struct
+kstat *, u32);
+      |                                                     ^~~~~~~~~~~~~~
+../include/linux/fs.h: At top level:
+../include/linux/fs.h:3179:44: warning: =E2=80=98struct kstat=E2=80=99 decl=
+ared inside
+parameter list will not be visible outside of this definition or
+declaration
+ 3179 | static inline int vfs_fstat(int fd, struct kstat *stat)
+      |                                            ^~~~~
+../include/linux/fs.h: In function =E2=80=98vfs_fstat=E2=80=99:
+../include/linux/fs.h:3181:32: error: =E2=80=98STATX_BASIC_STATS=E2=80=99 u=
+ndeclared
+(first use in this function)
+ 3181 |  return vfs_statx_fd(fd, stat, STATX_BASIC_STATS, 0);
+      |                                ^~~~~~~~~~~~~~~~~
+../include/linux/fs.h:3181:26: error: passing argument 2 of
+=E2=80=98vfs_statx_fd=E2=80=99 from incompatible pointer type
+[-Werror=3Dincompatible-pointer-types]
+ 3181 |  return vfs_statx_fd(fd, stat, STATX_BASIC_STATS, 0);
+      |                          ^~~~
+      |                          |
+      |                          struct kstat *
+../include/linux/fs.h:3161:39: note: expected =E2=80=98struct kstat *=E2=80=
+=99 but
+argument is of type =E2=80=98struct kstat *=E2=80=99
+ 3161 | extern int vfs_statx_fd(unsigned int, struct kstat *, u32,
+unsigned int);
+      |                                       ^~~~~~~~~~~~~~
+../include/linux/fs.h: At top level:
+../include/linux/fs.h:3206:55: warning: =E2=80=98struct kstat=E2=80=99 decl=
+ared inside
+parameter list will not be visible outside of this definition or
+declaration
+ 3206 | extern int simple_getattr(const struct path *, struct kstat *,
+u32, unsigned int);
+      |                                                       ^~~~~
+../include/linux/fs.h: In function =E2=80=98vma_is_fsdax=E2=80=99:
+../include/linux/fs.h:3289:6: error: implicit declaration of function
+=E2=80=98S_ISCHR=E2=80=99 [-Werror=3Dimplicit-function-declaration]
+ 3289 |  if (S_ISCHR(inode->i_mode))
+      |      ^~~~~~~
+../include/linux/fs.h: In function =E2=80=98is_sxid=E2=80=99:
+../include/linux/fs.h:3428:17: error: =E2=80=98S_ISUID=E2=80=99 undeclared =
+(first use
+in this function)
+ 3428 |  return (mode & S_ISUID) || ((mode & S_ISGID) && (mode & S_IXGRP));
+      |                 ^~~~~~~
+../include/linux/fs.h:3428:38: error: =E2=80=98S_ISGID=E2=80=99 undeclared =
+(first use
+in this function); did you mean =E2=80=98SIGIO=E2=80=99?
+ 3428 |  return (mode & S_ISUID) || ((mode & S_ISGID) && (mode & S_IXGRP));
+      |                                      ^~~~~~~
+      |                                      SIGIO
+../include/linux/fs.h:3428:58: error: =E2=80=98S_IXGRP=E2=80=99 undeclared =
+(first use
+in this function)
+ 3428 |  return (mode & S_ISUID) || ((mode & S_ISGID) && (mode & S_IXGRP));
+      |                                                          ^~~~~~~
+../include/linux/fs.h: In function =E2=80=98check_sticky=E2=80=99:
+../include/linux/fs.h:3433:22: error: =E2=80=98S_ISVTX=E2=80=99 undeclared =
+(first use
+in this function)
+ 3433 |  if (!(dir->i_mode & S_ISVTX))
+      |                      ^~~~~~~
+cc1: some warnings being treated as errors
+make[2]: *** [../scripts/Makefile.build:114:
+arch/arm64/kernel/asm-offsets.s] Error 1
 
-diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
-index 5d6b2466a2f2..54aa2ede229c 100644
---- a/sound/soc/qcom/Kconfig
-+++ b/sound/soc/qcom/Kconfig
-@@ -110,3 +110,15 @@ config SND_SOC_SDM845
- 	  To add support for audio on Qualcomm Technologies Inc.
- 	  SDM845 SoC-based systems.
- 	  Say Y if you want to use audio device on this SoCs.
-+
-+config SND_SOC_SC7180
-+	tristate "SoC Machine driver for SC7180 boards"
-+	depends on SND_SOC_QCOM
-+	select SND_SOC_QCOM_COMMON
-+	select SND_SOC_LPASS_SC7180
-+	select SND_SOC_MAX98357A
-+	select SND_SOC_RT5682
-+	help
-+	 To add support for audio on Qualcomm Technologies Inc.
-+	 SC7180 SoC-based systems.
-+	 Say Y if you want to use audio device on this SoCs.
-diff --git a/sound/soc/qcom/Makefile b/sound/soc/qcom/Makefile
-index 41b2c7a23a4d..3f6275d90526 100644
---- a/sound/soc/qcom/Makefile
-+++ b/sound/soc/qcom/Makefile
-@@ -15,12 +15,14 @@ snd-soc-storm-objs := storm.o
- snd-soc-apq8016-sbc-objs := apq8016_sbc.o
- snd-soc-apq8096-objs := apq8096.o
- snd-soc-sdm845-objs := sdm845.o
-+snd-soc-sc7180-objs := sc7180.o
- snd-soc-qcom-common-objs := common.o
- 
- obj-$(CONFIG_SND_SOC_STORM) += snd-soc-storm.o
- obj-$(CONFIG_SND_SOC_APQ8016_SBC) += snd-soc-apq8016-sbc.o
- obj-$(CONFIG_SND_SOC_MSM8996) += snd-soc-apq8096.o
- obj-$(CONFIG_SND_SOC_SDM845) += snd-soc-sdm845.o
-+obj-$(CONFIG_SND_SOC_SC7180) += snd-soc-sc7180.o
- obj-$(CONFIG_SND_SOC_QCOM_COMMON) += snd-soc-qcom-common.o
- 
- #DSP lib
-diff --git a/sound/soc/qcom/sc7180.c b/sound/soc/qcom/sc7180.c
-new file mode 100644
-index 000000000000..7849376f63ba
---- /dev/null
-+++ b/sound/soc/qcom/sc7180.c
-@@ -0,0 +1,244 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+//
-+// Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+//
-+// sc7180.c -- ALSA SoC Machine driver for SC7180
-+
-+#include <dt-bindings/sound/sc7180-lpass.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <sound/core.h>
-+#include <sound/jack.h>
-+#include <sound/pcm.h>
-+#include <sound/pcm_params.h>
-+#include <sound/soc.h>
-+#include <uapi/linux/input-event-codes.h>
-+
-+#include "../codecs/rt5682.h"
-+#include "common.h"
-+#include "lpass.h"
-+
-+#define DEFAULT_SAMPLE_RATE_48K		48000
-+#define DEFAULT_MCLK_RATE		19200000
-+#define RT5682_PLL1_FREQ (48000 * 512)
-+
-+struct sc7180_snd_data {
-+	struct snd_soc_jack jack;
-+	u32 pri_mi2s_clk_count;
-+};
-+
-+static void sc7180_jack_free(struct snd_jack *jack)
-+{
-+	struct snd_soc_component *component = jack->private_data;
-+
-+	snd_soc_component_set_jack(component, NULL, NULL);
-+}
-+
-+static int sc7180_headset_init(struct snd_soc_component *component)
-+{
-+	struct snd_soc_card *card = component->card;
-+	struct sc7180_snd_data *pdata = snd_soc_card_get_drvdata(card);
-+	struct snd_jack *jack;
-+	int rval;
-+
-+	rval = snd_soc_card_jack_new(
-+			card, "Headset Jack",
-+			SND_JACK_HEADSET |
-+			SND_JACK_HEADPHONE |
-+			SND_JACK_BTN_0 | SND_JACK_BTN_1 |
-+			SND_JACK_BTN_2 | SND_JACK_BTN_3,
-+			&pdata->jack, NULL, 0);
-+
-+	if (rval < 0) {
-+		dev_err(card->dev, "Unable to add Headset Jack\n");
-+		return rval;
-+	}
-+
-+	jack = pdata->jack.jack;
-+
-+	snd_jack_set_key(jack, SND_JACK_BTN_0, KEY_PLAYPAUSE);
-+	snd_jack_set_key(jack, SND_JACK_BTN_1, KEY_VOICECOMMAND);
-+	snd_jack_set_key(jack, SND_JACK_BTN_2, KEY_VOLUMEUP);
-+	snd_jack_set_key(jack, SND_JACK_BTN_3, KEY_VOLUMEDOWN);
-+
-+	jack->private_data = component;
-+	jack->private_free = sc7180_jack_free;
-+
-+	rval = snd_soc_component_set_jack(component,
-+					  &pdata->jack, NULL);
-+	if (rval != 0 && rval != -EOPNOTSUPP) {
-+		dev_warn(card->dev, "Failed to set jack: %d\n", rval);
-+		return rval;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct snd_soc_aux_dev sc7180_headset_dev = {
-+	.dlc = COMP_EMPTY(),
-+	.init = sc7180_headset_init,
-+};
-+
-+static int sc7180_snd_startup(struct snd_pcm_substream *substream)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_card *card = rtd->card;
-+	struct sc7180_snd_data *data = snd_soc_card_get_drvdata(card);
-+	struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
-+	struct snd_soc_dai *codec_dai = asoc_rtd_to_codec(rtd, 0);
-+	int ret;
-+
-+	switch (cpu_dai->id) {
-+	case MI2S_PRIMARY:
-+		if (++data->pri_mi2s_clk_count == 1) {
-+			snd_soc_dai_set_sysclk(cpu_dai,
-+					       LPASS_MCLK0,
-+					       DEFAULT_MCLK_RATE,
-+					       SNDRV_PCM_STREAM_PLAYBACK);
-+		}
-+
-+		snd_soc_dai_set_fmt(codec_dai,
-+				    SND_SOC_DAIFMT_CBS_CFS |
-+				    SND_SOC_DAIFMT_NB_NF |
-+				    SND_SOC_DAIFMT_I2S);
-+
-+		/* Configure PLL1 for codec */
-+		ret = snd_soc_dai_set_pll(codec_dai, 0, RT5682_PLL1_S_MCLK,
-+					  DEFAULT_MCLK_RATE, RT5682_PLL1_FREQ);
-+		if (ret) {
-+			dev_err(rtd->dev, "can't set codec pll: %d\n", ret);
-+			return ret;
-+		}
-+
-+		/* Configure sysclk for codec */
-+		ret = snd_soc_dai_set_sysclk(codec_dai, RT5682_SCLK_S_PLL1,
-+					     RT5682_PLL1_FREQ,
-+					     SND_SOC_CLOCK_IN);
-+		if (ret)
-+			dev_err(rtd->dev, "snd_soc_dai_set_sysclk err = %d\n",
-+				ret);
-+
-+		break;
-+	case MI2S_SECONDARY:
-+		break;
-+	default:
-+		dev_err(rtd->dev, "%s: invalid dai id 0x%x\n", __func__,
-+			cpu_dai->id);
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static void sc7180_snd_shutdown(struct snd_pcm_substream *substream)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_card *card = rtd->card;
-+	struct sc7180_snd_data *data = snd_soc_card_get_drvdata(card);
-+	struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
-+
-+	switch (cpu_dai->id) {
-+	case MI2S_PRIMARY:
-+		if (--data->pri_mi2s_clk_count == 0) {
-+			snd_soc_dai_set_sysclk(cpu_dai,
-+					       LPASS_MCLK0,
-+					       0,
-+					       SNDRV_PCM_STREAM_PLAYBACK);
-+		}
-+		break;
-+	case MI2S_SECONDARY:
-+		break;
-+	default:
-+		dev_err(rtd->dev, "%s: invalid dai id 0x%x\n", __func__,
-+			cpu_dai->id);
-+		break;
-+	}
-+}
-+
-+static const struct snd_soc_ops sc7180_ops = {
-+	.startup = sc7180_snd_startup,
-+	.shutdown = sc7180_snd_shutdown,
-+};
-+
-+static const struct snd_soc_dapm_widget sc7180_snd_widgets[] = {
-+	SND_SOC_DAPM_HP("Headphone Jack", NULL),
-+	SND_SOC_DAPM_MIC("Headset Mic", NULL),
-+};
-+
-+static struct snd_soc_card sc7180_card = {
-+	.owner = THIS_MODULE,
-+	.aux_dev = &sc7180_headset_dev,
-+	.num_aux_devs = 1,
-+	.dapm_widgets = sc7180_snd_widgets,
-+	.num_dapm_widgets = ARRAY_SIZE(sc7180_snd_widgets),
-+};
-+
-+static int sc7180_parse_aux_of(struct device *dev)
-+{
-+	sc7180_headset_dev.dlc.of_node = of_parse_phandle(
-+			dev->of_node, "aux-dev", 0);
-+
-+	if (!sc7180_headset_dev.dlc.of_node)
-+		return -EINVAL;
-+	return 0;
-+}
-+
-+static void sc7180_add_ops(struct snd_soc_card *card)
-+{
-+	struct snd_soc_dai_link *link;
-+	int i;
-+
-+	for_each_card_prelinks(card, i, link)
-+		link->ops = &sc7180_ops;
-+}
-+
-+static int sc7180_snd_platform_probe(struct platform_device *pdev)
-+{
-+	struct snd_soc_card *card = &sc7180_card;
-+	struct sc7180_snd_data *data;
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	/* Allocate the private data */
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	card->dev = dev;
-+
-+	ret = qcom_snd_parse_of(card);
-+	if (ret) {
-+		dev_err(dev, "Error parsing OF data\n");
-+		return ret;
-+	}
-+
-+	snd_soc_card_set_drvdata(card, data);
-+
-+	sc7180_add_ops(card);
-+
-+	ret = sc7180_parse_aux_of(dev);
-+	if (ret) {
-+		dev_err(dev, "Failed to parse OF for jack device\n");
-+		return ret;
-+	}
-+
-+	return devm_snd_soc_register_card(dev, card);
-+}
-+
-+static const struct of_device_id sc7180_snd_device_id[]  = {
-+	{ .compatible = "qcom,sc7180-sndcard" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, sc7180_snd_device_id);
-+
-+static struct platform_driver sc7180_snd_driver = {
-+	.probe = sc7180_snd_platform_probe,
-+	.driver = {
-+		.name = "msm-snd-sc7180",
-+		.of_match_table = sc7180_snd_device_id,
-+	},
-+};
-+module_platform_driver(sc7180_snd_driver);
-+
-+MODULE_DESCRIPTION("sc7180 ASoC Machine Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.28.0.163.g6104cc2f0b6-goog
 
+kernel config:
+https://builds.tuxbuild.com/BsPWKexQQ3JXC2WwDQSoQg/kernel.config
+
+- Naresh
+>
+> Cheers,
+> Nathan
