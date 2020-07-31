@@ -2,176 +2,90 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5114C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3D8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94FBB21744
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:42:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u78uyT/d"
+	by mail.kernel.org (Postfix) with ESMTP id 62E3C22B42
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:47:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596228427;
+	bh=U3+YdKd/o0xKGnVnd+lhGv3R2WD20Bn1oF44G9YKiI0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sJpj+8CGovX0JyccQs1gVCFx6gaiQiet28nT8v2WqQrGArlebl0SCd67cyHhIZdKO
+	 QHXDPwhJA4n9To3u2peV2+Y7Sel3N6N8P3wsuwi9otqh/dj0PhUylguhZl9xEQAPYo
+	 EnLmIUS8StRKQjuhGZ0BhcV/ZG57gTZYPZv6OWPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729391AbgGaUme (ORCPT
+        id S1727915AbgGaUrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 16:42:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51522 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbgGaUme (ORCPT
+        Fri, 31 Jul 2020 16:47:06 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34544 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726884AbgGaUrG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 16:42:34 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF01DC061574;
-        Fri, 31 Jul 2020 13:42:33 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id v12so3403741ljc.10;
-        Fri, 31 Jul 2020 13:42:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bteal2gJqaWT5iiU6PduiP6X6F7TRM1Ny/RVrHPf5ic=;
-        b=u78uyT/dQZCoztTrF83RD6Ml+May5x7tHMpyV+KWZ95mQJwIbX1ZdMC4Sc+t3OJoGa
-         Qqj8D++3421SEOuITs9LN9IFZXyY9iWq9k2f4WSAjn3cGNClr0OLnYGvZB3tJ3ft4qAL
-         ead7pQYF0iMaCQLZMtnXMThyMyN0aMowTSrnOQlFHj7hBhQ945KqbRJ3cmUAR/VpH30W
-         85Sv6tSbhCSxjuETdue7siVqkXuq4fy7JiWCbyT6bZ1WuKzPbUe46McJ6gSa19ZTd4mZ
-         xJ43A8NDOr/XtOpsaEfqdOPBMFeAP8fqxvtqsiV1//dP6uRxwfTEJQXkwFNkjx+2iX8b
-         xjJw==
+        Fri, 31 Jul 2020 16:47:06 -0400
+Received: by mail-io1-f67.google.com with SMTP id q75so24792693iod.1;
+        Fri, 31 Jul 2020 13:47:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bteal2gJqaWT5iiU6PduiP6X6F7TRM1Ny/RVrHPf5ic=;
-        b=O2m0b5TaPFlNULAjXn6xF3lTT9uGu3wFJZ9B5tctQN/oqIA01ktS+7mpR7R2KM9wsD
-         jZPesmfR7C6jswyYhbtJl9GAA2QgHY2wi1/zwMcTxObKAwJfkuY2fuq/kBM0tCYLgBJA
-         qizLn7ZVQ5/TPtqr0t4J4K9NyoKQTcBiHGHZQkFS+Db9BvNw3mICXQ4OplBwA47yo3Id
-         ZmjefDrpBehPY24zjdPKMdU+2kmOE/C8tH2mXDQmZrK5vyFL+emRmjpnyoMToeNm0KpL
-         AfSYKJM26nS1pWPgXiwU4qVjd35B1jbzMhlEttL47h07FgSPKJy2EfJYKxVAN3EA9++q
-         WhZA==
-X-Gm-Message-State: AOAM53394FsGUf8L4fkMREAkJ5wUdWWCdErUiCqwDI2AR3nBstF8pfhi
-        ioxxjvkfa2aWRmiXBVvXxTZ/oUu2
-X-Google-Smtp-Source: ABdhPJw8OkY8GR33ds2cRLW1HDkgp0+VDYrE+lybqbYAevvPJlg3lAQGkx6GmBW11mQzGJGbYoHgjw==
-X-Received: by 2002:a2e:3619:: with SMTP id d25mr2553082lja.204.1596228151922;
-        Fri, 31 Jul 2020 13:42:31 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
-        by smtp.googlemail.com with ESMTPSA id 193sm2608104lfa.90.2020.07.31.13.42.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jul 2020 13:42:31 -0700 (PDT)
-Subject: Re: [RFC PATCH v6 09/10] media: tegra-video: Add CSI MIPI pads
- calibration
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1596186169-18729-1-git-send-email-skomatineni@nvidia.com>
- <1596186169-18729-10-git-send-email-skomatineni@nvidia.com>
- <3ac158c4-7df7-e3c1-f0e1-33e7ef017762@gmail.com>
- <f483329d-b5fe-fda5-e235-b8edb5fce440@nvidia.com>
- <a08af0e8-80d8-0bd0-87a3-adfc8e70a92a@gmail.com>
- <ace047fe-8a1a-666a-b91b-9d63b1d68567@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <7d904a86-3189-7ef8-a7b9-1a84564f9278@gmail.com>
-Date:   Fri, 31 Jul 2020 23:42:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RB00g1jQXZ6Bb9+PZy/KFtGEl3EC1jQ5rDd2W8wczN0=;
+        b=uVsHWJYOs/XPmltwCT2EhzVxEdxPJLPvP0R4WxxFOiwRv0hiJIlp05YTyb8/2e+9qe
+         N5XPf8ccUc5FpTy9CE3c9H/U51b8mH6lFBS/ftLnauuz+ZlEYd3dGwohHgTd+bsG42HR
+         uzUtOhjpnWYIsyaXZCO+SjfWLVILPgTT4A/Z68Ojh7f5a8egH9QWnvS0ECZa8zHXWMyv
+         43phgDkNoiLkd60Mb89yKGM5XttemvkZFrp4JuDfp8ssMco1PFiTr6jHC5zMkOvpHcxF
+         gjSUBoi/o83QCAaygfmWWuzVaGEvu+Eg8QxtCZub6KjJZQSzGCtQ7EkX3drqLrvngNnt
+         cJFg==
+X-Gm-Message-State: AOAM530V2qdhETGw2M70ttXIGhRlh13tRW8AKPIAaTfGWFhFF3SHRakF
+        LAYbVo/7Plpb1TpYVxWrWQ==
+X-Google-Smtp-Source: ABdhPJwEcVesRAv6xuF9lKc82DjJG0leBtkckB+qcJCfeV9wmVrA4IGlp/jkc/uo9o5uUf2NwHzVXQ==
+X-Received: by 2002:a5e:c703:: with SMTP id f3mr5245265iop.185.1596228424954;
+        Fri, 31 Jul 2020 13:47:04 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id e84sm5550872ill.60.2020.07.31.13.47.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 13:47:04 -0700 (PDT)
+Received: (nullmailer pid 756710 invoked by uid 1000);
+        Fri, 31 Jul 2020 20:47:00 -0000
+Date:   Fri, 31 Jul 2020 14:47:00 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     Odelu Kukatla <okukatla@codeaurora.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/7] dt-bindings: interconnect: single yaml file for
+ RPMh interconnect drivers
+Message-ID: <20200731204700.GA756344@bogus>
+References: <20200728023811.5607-1-jonathan@marek.ca>
+ <20200728023811.5607-2-jonathan@marek.ca>
 MIME-Version: 1.0
-In-Reply-To: <ace047fe-8a1a-666a-b91b-9d63b1d68567@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728023811.5607-2-jonathan@marek.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-31.07.2020 19:29, Sowjanya Komatineni пишет:
+On Mon, 27 Jul 2020 22:38:00 -0400, Jonathan Marek wrote:
+> These two bindings are almost identical, so combine them into one. This
+> will make it easier to add the sm8150 and sm8250 interconnect bindings.
 > 
-> On 7/31/20 9:14 AM, Dmitry Osipenko wrote:
->> 31.07.2020 18:46, Sowjanya Komatineni пишет:
->>> On 7/31/20 4:39 AM, Dmitry Osipenko wrote:
->>>> 31.07.2020 12:02, Sowjanya Komatineni пишет:
->>>> ...
->>>>> @@ -249,13 +249,47 @@ static int tegra_csi_enable_stream(struct
->>>>> v4l2_subdev *subdev)
->>>>>            return ret;
->>>>>        }
->>>>>    +    if (csi_chan->mipi) {
->>>>> +        ret = tegra_mipi_enable(csi_chan->mipi);
->>>>> +        if (ret < 0) {
->>>>> +            dev_err(csi->dev,
->>>>> +                "failed to enable MIPI pads: %d\n", ret);
->>>>> +            goto rpm_put;
->>>>> +        }
->>>>> +
->>>>> +        /*
->>>>> +         * CSI MIPI pads PULLUP, PULLDN and TERM impedances need to
->>>>> +         * be calibrated after power on.
->>>>> +         * So, trigger the calibration start here and results will
->>>>> +         * be latched and applied to the pads when link is in LP11
->>>>> +         * state during start of sensor streaming.
->>>>> +         */
->>>>> +        ret = tegra_mipi_start_calibration(csi_chan->mipi);
->>>>> +        if (ret < 0) {
->>>>> +            dev_err(csi->dev,
->>>>> +                "failed to start MIPI calibration: %d\n", ret);
->>>>> +            goto disable_mipi;
->>>>> +        }
->>>> What would happen if CSI stream is enabled and then immediately
->>>> disabled
->>>> without enabling camera sensor?
->>> Nothing will happen as during stream enable csi receiver is kept ready.
->>>
->>> But actual capture will not happen during that point.
->> Could you please show how the full call chain looks like? It's not clear
->> to me what keeps CSI stream "ready".
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> ---
+>  .../{qcom,sdm845.yaml => qcom,rpmh.yaml}      | 20 ++++-
+>  .../bindings/interconnect/qcom,sc7180.yaml    | 85 -------------------
+>  2 files changed, 17 insertions(+), 88 deletions(-)
+>  rename Documentation/devicetree/bindings/interconnect/{qcom,sdm845.yaml => qcom,rpmh.yaml} (76%)
+>  delete mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
 > 
-> VI is the main video input (video device) and on streaming it starts
-> stream of CSI subdev prior to stream of Sensor.
-> 
-> HW path, sensor stream (CSI TX) -> CSI stream (RX)
-> 
-> During CSI stream on, CSI PHY receiver is enabled to start receiving the
-> data but internally capture assembled to active state will happen only
-> when Tegra VI single shot is issues where VI thru pixel parser gets
-> captures data into the memory
 
-Alright, I see now.
-
-Will be great if you could change this hunk:
-
-{
-  ret = v4l2_subdev_call(src_subdev, video, s_stream, true);
-  if (ret < 0 && ret != -ENOIOCTLCMD) {
-    tegra_mipi_cancel_calibration(csi_chan->mipi);
-    v4l2_subdev_call(csi_subdev, video, s_stream, false);
-    return ret;
-  }
-}
-
-to look like this:
-
-{
-  err = v4l2_subdev_call(src_subdev, video, s_stream, true);
-  if (err < 0 && err != -ENOIOCTLCMD)
-    goto err_disable_csi_stream;
-...
-  return 0;
-
-err_disable_csi_stream:
-  tegra_mipi_cancel_calibration(csi_chan->mipi);
-
-  v4l2_subdev_call(csi_subdev, video, s_stream, false);
-
-  return err;
-}
-
-
-It should make code a bit easier to read and follow.
-
-Otherwise this patch looks good to me, thanks.
+Reviewed-by: Rob Herring <robh@kernel.org>
