@@ -5,79 +5,78 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05720C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77697C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD48E22D00
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F0D2063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:08:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I2t5q3EB"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="De36nKOt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgGaXIg (ORCPT
+        id S1727838AbgGaXIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 19:08:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45736 "EHLO
+        Fri, 31 Jul 2020 19:08:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726906AbgGaXId (ORCPT
+        with ESMTP id S1727061AbgGaXIh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 19:08:33 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6435FC06174A
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:08:33 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id mt12so8075778pjb.4
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:08:33 -0700 (PDT)
+        Fri, 31 Jul 2020 19:08:37 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5C0EC06179F
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:08:37 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id y206so4890850pfb.10
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:08:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Oj0JTp0iqi1GihJzW9z0GKQvDoXirBrdmVyY4Bh4CEw=;
-        b=I2t5q3EBqwnltmAS7q0OrrPpY094M59hezmnLcIULkMGdVotacbwos0bUyNY8Qo7UW
-         5B9WjiE9krbE0gsR7FuEHHXJHXmpjyUbGd3nncly9xJmQWGhXPY7dG9Zxaxp9z9A9mGY
-         a/sT85HyPr6nBhcoJFB/7T8s3fi6jGiEvsAMk=
+        bh=trKW+y6QNGDib0LNTvVtHw5m6UTBgmGvLbmxtpBgaL0=;
+        b=De36nKOtpwsMqO/u4tRAWqVBvir2dLkSaohu1f53IavT3wv9lR7e0hWZSL83j1HWKZ
+         rY9B4gPBpbNmb8nPsaGi7A0vFOBYN9VMjC2dQMJB0cZqVHEEmlhv4MftBmYpUmCh97rG
+         af7Dn2HaS1FdHmrNihpjv3LcQzJOvb78J2620=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Oj0JTp0iqi1GihJzW9z0GKQvDoXirBrdmVyY4Bh4CEw=;
-        b=cAjDQUjeao2Ls696i5oaeALNBYB1pWPbR9R7asrSgkGkKwpxgP0NaaWBLDQUQASI2T
-         xbmYp+Morg7W3ayh6rd8kd7PTpXDxgBcteld1r/2B3Bz84nXDSVTf0dVmUQQ+q0hXlbo
-         IVgIwiifWUaOvKS9EDYUsMJf9UMoelVJSuEW2BMgn00lQBsmhQcH1E8Au0vAVf1wwO7H
-         wrghZj/KinSElXY+7t3sVOnV/R3+irHYzgR7ZHPnomBbHIjMkZ1Sbwt2ixnt2wl9rJca
-         iNfds5kOPlB6WL72GoSh+cw48sW9GUJ80ej1qMLg66ZzV6zL8lB5wjBpUXEvA13MsPca
-         ba6w==
-X-Gm-Message-State: AOAM531YyjV4V68xXU8vN+o+1EBL3f61rNP+VIry/cMU8xcDNIzm9Lks
-        Evx0qzOKiO3M9iL2IzJl3zgw/g==
-X-Google-Smtp-Source: ABdhPJwYw/AUh2eGojEQV7vm2t+ZXdHCR6d3LIaxKtl06xeidhJja+cbMxLWJ3Pii/Hx94KOAGh76A==
-X-Received: by 2002:a17:902:b489:: with SMTP id y9mr5166444plr.99.1596236912355;
-        Fri, 31 Jul 2020 16:08:32 -0700 (PDT)
+        bh=trKW+y6QNGDib0LNTvVtHw5m6UTBgmGvLbmxtpBgaL0=;
+        b=iD9yesqMh4z/1TZjcbaOP3FwY/NIsh+fbs02Y78vzZDQqJr/+a/8DMWY8VLKjwoI8p
+         5qwnqs9PnAU+kDXlHCaJChfjDV55C67AXoAKgAJpgBF21flUWR0Pe4wfefNx2kg98Ghs
+         5GzSeqVHYlmjSRXTfozAlXHGtxDKjeTul4j4+4r2V90P7ibZvCdIIII+yq3hIYELApt7
+         tPsDmL2dt2XgB1PT085OT68intPq6XC4i86tA/VN5z+NPHpyV5gemnrRnFLdgru3H7UC
+         H6Vtl//gjiOLoAELjtJHqjWp9e0aYa/nc3qgRmoh6Xhl6X2jKLBh26H5M6jZZ0bp2prL
+         qojg==
+X-Gm-Message-State: AOAM532aOfRksD95sapbM+l8yO50xGK0bvOzVm2J8R4RL7fcPaJA7sVE
+        +ixSEHza0r5YQhGW/K5osJQlpA==
+X-Google-Smtp-Source: ABdhPJxNYU1OV0bbGH5LVe0igil+VUHzo3wFC8ED7HbZKWsssjYo+rn362BnedNm2DgfjyOMkog94g==
+X-Received: by 2002:a05:6a00:2247:: with SMTP id i7mr5645713pfu.217.1596236917400;
+        Fri, 31 Jul 2020 16:08:37 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b185sm11019488pfa.148.2020.07.31.16.08.30
+        by smtp.gmail.com with ESMTPSA id p9sm11680681pgc.77.2020.07.31.16.08.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 16:08:30 -0700 (PDT)
+        Fri, 31 Jul 2020 16:08:35 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
         Peter Collingbourne <pcc@google.com>,
         James Morse <james.morse@arm.com>,
         Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
         Russell King <linux@armlinux.org.uk>,
         Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
         Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
         clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
         linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 02/36] x86/boot/compressed: Force hidden visibility for all symbol references
-Date:   Fri, 31 Jul 2020 16:07:46 -0700
-Message-Id: <20200731230820.1742553-3-keescook@chromium.org>
+Subject: [PATCH v5 08/36] vmlinux.lds.h: Create COMMON_DISCARDS
+Date:   Fri, 31 Jul 2020 16:07:52 -0700
+Message-Id: <20200731230820.1742553-9-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200731230820.1742553-1-keescook@chromium.org>
 References: <20200731230820.1742553-1-keescook@chromium.org>
@@ -88,110 +87,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+Collect the common DISCARD sections for architectures that need more
+specialized discard control than what the standard DISCARDS section
+provides.
 
-Eliminate all GOT entries in the decompressor binary, by forcing hidden
-visibility for all symbol references, which informs the compiler that
-such references will be resolved at link time without the need for
-allocating GOT entries.
-
-To ensure that no GOT entries will creep back in, add an assertion to
-the decompressor linker script that will fire if the .got section has
-a non-zero size.
-
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Acked-by: Arvind Sankar <nivedita@alum.mit.edu>
-Link: https://lore.kernel.org/r/20200523120021.34996-3-ardb@kernel.org
-[Arvind: move hidden.h to include/linux instead of making a copy]
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/boot/compressed/Makefile      |  1 +
- arch/x86/boot/compressed/vmlinux.lds.S |  1 +
- drivers/firmware/efi/libstub/Makefile  |  2 +-
- drivers/firmware/efi/libstub/hidden.h  |  6 ------
- include/linux/hidden.h                 | 19 +++++++++++++++++++
- 5 files changed, 22 insertions(+), 7 deletions(-)
- delete mode 100644 drivers/firmware/efi/libstub/hidden.h
- create mode 100644 include/linux/hidden.h
+ include/asm-generic/vmlinux.lds.h | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 5a828fde7a42..489fea16bcfb 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -42,6 +42,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
- KBUILD_CFLAGS += -Wno-pointer-sign
- KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
- KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
-+KBUILD_CFLAGS += -include $(srctree)/include/linux/hidden.h
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 052e0f05a984..ff65a20faf4c 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -930,13 +930,16 @@
+ 	EXIT_DATA
+ #endif
  
- KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
- GCOV_PROFILE := n
-diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-index b17d218ccdf9..4bcc943842ab 100644
---- a/arch/x86/boot/compressed/vmlinux.lds.S
-+++ b/arch/x86/boot/compressed/vmlinux.lds.S
-@@ -81,6 +81,7 @@ SECTIONS
- 	DISCARDS
- }
- 
-+ASSERT(SIZEOF(.got) == 0, "Unexpected GOT entries detected!")
- #ifdef CONFIG_X86_64
- ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT entries detected!")
- #else
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index 75daaf20374e..b4f8c80cc591 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -26,7 +26,7 @@ cflags-$(CONFIG_ARM)		:= $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
- cflags-$(CONFIG_EFI_GENERIC_STUB) += -I$(srctree)/scripts/dtc/libfdt
- 
- KBUILD_CFLAGS			:= $(cflags-y) -Os -DDISABLE_BRANCH_PROFILING \
--				   -include $(srctree)/drivers/firmware/efi/libstub/hidden.h \
-+				   -include $(srctree)/include/linux/hidden.h \
- 				   -D__NO_FORTIFY \
- 				   $(call cc-option,-ffreestanding) \
- 				   $(call cc-option,-fno-stack-protector) \
-diff --git a/drivers/firmware/efi/libstub/hidden.h b/drivers/firmware/efi/libstub/hidden.h
-deleted file mode 100644
-index 3493b041f419..000000000000
---- a/drivers/firmware/efi/libstub/hidden.h
-+++ /dev/null
-@@ -1,6 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * To prevent the compiler from emitting GOT-indirected (and thus absolute)
-- * references to any global symbols, override their visibility as 'hidden'
-- */
--#pragma GCC visibility push(hidden)
-diff --git a/include/linux/hidden.h b/include/linux/hidden.h
-new file mode 100644
-index 000000000000..49a17b6b5962
---- /dev/null
-+++ b/include/linux/hidden.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * When building position independent code with GCC using the -fPIC option,
-+ * (or even the -fPIE one on older versions), it will assume that we are
-+ * building a dynamic object (either a shared library or an executable) that
-+ * may have symbol references that can only be resolved at load time. For a
-+ * variety of reasons (ELF symbol preemption, the CoW footprint of the section
-+ * that is modified by the loader), this results in all references to symbols
-+ * with external linkage to go via entries in the Global Offset Table (GOT),
-+ * which carries absolute addresses which need to be fixed up when the
-+ * executable image is loaded at an offset which is different from its link
-+ * time offset.
-+ *
-+ * Fortunately, there is a way to inform the compiler that such symbol
-+ * references will be satisfied at link time rather than at load time, by
-+ * giving them 'hidden' visibility.
-+ */
++#define COMMON_DISCARDS							\
++	*(.discard)							\
++	*(.discard.*)							\
++	*(.modinfo)
 +
-+#pragma GCC visibility push(hidden)
+ #define DISCARDS							\
+ 	/DISCARD/ : {							\
+ 	EXIT_DISCARDS							\
+ 	EXIT_CALL							\
+-	*(.discard)							\
+-	*(.discard.*)							\
+-	*(.modinfo)							\
++	COMMON_DISCARDS							\
+ 	}
+ 
+ /**
 -- 
 2.25.1
 
