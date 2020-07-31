@@ -2,85 +2,88 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09069C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B99E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5B4A208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:44:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D1DE206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 22:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596235478;
-	bh=W5nkBvrIYrcIrXp3q1AUKXs8AhLBeqcL1xyl4kHKlgk=;
+	s=default; t=1596235532;
+	bh=ysIL8CUpCBDEcaRveclFzGcR6igVFzVoCMxu88QAHOg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JuS9AjwzSjTexAk2HCic2tL9qzRDFqtIwiunBZoA6D9myAZnc0e4dWyE6PQFZkWoX
-	 NQg5iaPqdOT1qNmWOJzqXxabZdrL6xr7rCxj56YyraXWE5KzGRM6nBHEYyawfPJVDO
-	 OykRJHieZdOxFD76XG3S0H2I+Kf/13jqpoxb4Lgs=
+	b=Y/Syk6/5brRdKSVVeDgq1DriJDq+YvlWyi6jlpNU82u3WsnRBka93grXF1OoBa+Y9
+	 Yq5UfFP/1JI3t/Y2Zss0sbwMMC9SwEOWfVIvzKJAismS+pmXRelI6O5Ow1mmERfHmk
+	 AhtXmWTLf2yIVAMzbM2HLJ13N+HqWl6goqO8YNfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgGaWoh (ORCPT
+        id S1726961AbgGaWpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 18:44:37 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41326 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgGaWoh (ORCPT
+        Fri, 31 Jul 2020 18:45:31 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:41011 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgGaWpb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 18:44:37 -0400
-Received: by mail-io1-f68.google.com with SMTP id g19so21121556ioh.8;
-        Fri, 31 Jul 2020 15:44:36 -0700 (PDT)
+        Fri, 31 Jul 2020 18:45:31 -0400
+Received: by mail-il1-f195.google.com with SMTP id c16so14822603ils.8;
+        Fri, 31 Jul 2020 15:45:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=0Eay8kjQnrIuhPEG9oH1+vrTaTdwhXM7e7UTfAEwOIw=;
-        b=VoU4OZ1vf4BK75QhcDwJhftbOfsvYkyaZXm8XcyArmkj4ISXpIQY+u6kcDFzf8h8D6
-         7761UnEtIYTXJEdSahF1I6xCUxJjuEZt/96cC26gyB+OQNlc7i2p3uE93+WipBFOiJLr
-         jThExtVwJxu1QNK45oFr79weqcpLLcNzzjCkZu3ybaWZerwtrwErgApUFcOJfLvdlScg
-         7mRo5PzQyEdODyMam5e159qkJ1VUxTVnhvRXyy/ttO+Bk7sECrJvyB8SC3XEyPC1vhip
-         OBMA2NAQRO9uAdtC/IC6GgOGGeHTGxKc6sBVhT0/WjnnK/369aIewpoYBMraDfwOlEN+
-         c9eg==
-X-Gm-Message-State: AOAM531TPI0an5J6wPvEP8vZTXzhwzsHVVBEUjzpK38WDw/o5vRn96Lc
-        vf++LFs2ktV/j+wEqOBSlQ==
-X-Google-Smtp-Source: ABdhPJzFb2HaTHyrPqSC2d8V4U1e07M0GSWLAWyCSh5gjgFTaPc+eYhyPhPcGIT2wQW0A2xZaRXp0w==
-X-Received: by 2002:a02:7815:: with SMTP id p21mr7687550jac.32.1596235476396;
-        Fri, 31 Jul 2020 15:44:36 -0700 (PDT)
+        bh=/62+2LrfLQT0Wio5oXnhSxrSTyxUtQDFhcFeyCSFH40=;
+        b=GuhEaSjG2XWe8mmNKmQbnQHJU4b809tTf44rSPGDh6sciUyOSV15mX747/nDNiCiMX
+         0K/Y8F+FuJuTWyT8wM8LVYvJo0mnb/pLtkYi9C3AJ8DEorN9LZwKHEO5oDULuRCdjDk9
+         JxjD+tVLPn1SloZVRNA0DcyhLI7vFVTzXaZWNYip7w0cYUsrtoUKV3s53KjF2pyPclZf
+         68XD+utaspqa/t5P3iw2t3NaQz5Qfk/TKa3VJvhlmXqkXXqAZ8iFAnseLjylPmUKF8hR
+         4zWVFJ7vNYPeW2JqlN6o9RpL5SaNvp9VAD8XU3H1xLCQHR6LKCNgKBS98UFirvWH9bZS
+         gFmQ==
+X-Gm-Message-State: AOAM532FGr4a+hBWD+zWs47FUHWNm5vjtiNmP7Za6ujputvcnIDqNQiQ
+        lrbW86G8afA1Zmw0E/7+mg==
+X-Google-Smtp-Source: ABdhPJyGt4spjmmlW5dZt6Xs0uA12XMhIH7TYUjvbsB8G838qR7JMflgBvbuKMrex0JCOgSulkV4Dg==
+X-Received: by 2002:a92:cb0a:: with SMTP id s10mr6019719ilo.22.1596235530489;
+        Fri, 31 Jul 2020 15:45:30 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id r8sm5555496ilt.54.2020.07.31.15.44.35
+        by smtp.gmail.com with ESMTPSA id v4sm5578867ilo.44.2020.07.31.15.45.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 15:44:35 -0700 (PDT)
-Received: (nullmailer pid 945789 invoked by uid 1000);
-        Fri, 31 Jul 2020 22:44:34 -0000
-Date:   Fri, 31 Jul 2020 16:44:34 -0600
+        Fri, 31 Jul 2020 15:45:29 -0700 (PDT)
+Received: (nullmailer pid 947335 invoked by uid 1000);
+        Fri, 31 Jul 2020 22:45:29 -0000
+Date:   Fri, 31 Jul 2020 16:45:29 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     devicetree@vger.kernel.org, Linux-imx@nxp.com, krzk@kernel.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org
-Subject: Re: [PATCH] dt-bindings: memory-controllers: Convert mmdc to
- json-schema
-Message-ID: <20200731224434.GA945685@bogus>
-References: <1596161184-24266-1-git-send-email-Anson.Huang@nxp.com>
+To:     Christian Eggers <ceggers@arri.de>
+Cc:     Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: iio: light: add AMS AS73211 support
+Message-ID: <20200731224529.GA947274@bogus>
+References: <20200731070114.40471-1-ceggers@arri.de>
+ <20200731070114.40471-2-ceggers@arri.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1596161184-24266-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20200731070114.40471-2-ceggers@arri.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jul 2020 10:06:24 +0800, Anson Huang wrote:
-> Convert the MMDC memory controller binding to DT schema format using
-> json-schema.
+On Fri, 31 Jul 2020 09:01:13 +0200, Christian Eggers wrote:
+> Add DT bindings for AMS AS73211 XYZ True Color Sensor.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Christian Eggers <ceggers@arri.de>
 > ---
->  .../bindings/memory-controllers/fsl/mmdc.txt       | 35 ----------------
->  .../bindings/memory-controllers/fsl/mmdc.yaml      | 49 ++++++++++++++++++++++
->  2 files changed, 49 insertions(+), 35 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/memory-controllers/fsl/mmdc.txt
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/fsl/mmdc.yaml
+>  .../bindings/iio/light/ams,as73211.yaml       | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/ams,as73211.yaml
 > 
 
-Applied, thanks!
+Reviewed-by: Rob Herring <robh@kernel.org>
