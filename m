@@ -5,58 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A9BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AC0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1711A2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AACF2063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:09:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JAuYbSst"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NSM4iLNC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgGaXJD (ORCPT
+        id S1728074AbgGaXJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 19:09:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45826 "EHLO
+        Fri, 31 Jul 2020 19:09:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727978AbgGaXIv (ORCPT
+        with ESMTP id S1727965AbgGaXIu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 19:08:51 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BAC9C0617A5
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:08:51 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id t10so12768081plz.10
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:08:51 -0700 (PDT)
+        Fri, 31 Jul 2020 19:08:50 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0042AC0617A1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:08:49 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id k13so10284446plk.13
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:08:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1/odabPwHQ2/Ek+CjiibQWaFn9uH/zMNlMmZjncvN+I=;
-        b=JAuYbSstQfukYE+Gb0Ne3AWJsz3y+BlIBQzjuLdwl34WW/5cbPcD0t5CHhdrnYt4P3
-         xCUUA6EqSYHRyEaYtQDNEDCQom38Ssx+gnWJzailUIVVZGprbqvIEm49kDNsHFrs+06/
-         VGIh/ScEhC/6EEEQyATwr44GVOS6GPHdqpL10=
+        bh=PuSQYLk8rDTcldYHXnDKkaosbMzbCM9W/MwjNJB3VcU=;
+        b=NSM4iLNCt+PSZ5hBbvabEzpJMd1hF6J/aIjXJAdH5r95qlIezJOL072waTPx269b/t
+         VJ+YGliWX0o2ljvRIiFg0BXQ8UsnDJZGud3+eV+6jqhaEi2NoGhj3XMvM1zGexRcCA8N
+         FCSROmuOt7+fbj9lG4wnKvZY3Nzk/gWgfpQUA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1/odabPwHQ2/Ek+CjiibQWaFn9uH/zMNlMmZjncvN+I=;
-        b=o0IpeEmaiJdHQTHmNDG4QCiFBIe4wK7v4sbqrqXe8ZB6pqYo7PlEt8svnqQa1H/9pc
-         wUWWR/VrobRraiGKsevOd2lTjesDl5KZ+9TxrWqcJlrG1UwbjtUquu4a9Jbs1dXtJ4K8
-         znNOjKgk5Q5Kwr8i0I+R/Qmga0rHccNclXrRgjhUbdnfft5rehdffdOIwSn37UeAQ1SQ
-         tNiF4cchqmo1KLBK4mIe//8rUx8O/73LNzb1HSEtKtNXJJ3X2OAwens460QsXcLZwJMk
-         FoMtERajWUut/yXjve+4AdpBFP8YRy4C56xHtGyBlw4e7DCNvKRcrR7q+GoHxiZJb+Rm
-         MclA==
-X-Gm-Message-State: AOAM531LGnM/dXC7zhFRZ2YG0QOPREkY6wumKQ9TpgHu1lOJHz6QybSo
-        FIG0KJqVwwq2xVbDWs2JV9wURQ==
-X-Google-Smtp-Source: ABdhPJxMsEgUP85f2oRI5I8YFPTSXC9amM4W7Q94F6/Za32NnrZP42b5jtXzGrIuUujHM4rhfoKpRQ==
-X-Received: by 2002:a17:90a:dc06:: with SMTP id i6mr5914699pjv.161.1596236930832;
-        Fri, 31 Jul 2020 16:08:50 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b20sm4306905pfo.88.2020.07.31.16.08.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=PuSQYLk8rDTcldYHXnDKkaosbMzbCM9W/MwjNJB3VcU=;
+        b=cjUh2uyyk7B/egb5dM5aIe5cLh9UepEGhGRUUzJVdsIuJN6Q/5NoOG0OjgfJ/PulHT
+         2OCAa+xExJY33UXOoStGgxtJgjNd0/a4hYBO5XDZ8WHof3y1IQr8jPZjov9XmCYN8nAu
+         LOgl3xtIDc8fut8w1sR9d7nOLOlnliC9s6sgcISGDBHLXzMiVzpPvMV9z9Qt0+ZkjLzk
+         3FoC/LY5tx1jr9IhkXSizGiWAevDEVJvMujeOMQKqAB6a2QD5FoC/PdSp+D0vlfJiIbd
+         qTv+s09DK4R3hOYpKuC0m7xpkJomtzl4ifY9Z9Isk/34aqihYCCQvUZ2EZzlsg8kdHN2
+         1Fsg==
+X-Gm-Message-State: AOAM531pm5hGS1KAa/q0iXiTydYRgFRTV2acqX/YmV0/cfIk5jd0MzQ4
+        /Tq815vhzBw4vCslm9D2qLugCw==
+X-Google-Smtp-Source: ABdhPJzXJUWqCrkj1WaxJQEgHP2rE3r7Clf90BCuwH6WeoGyW0Z+5DDM353CVntBZ2TEmf3Y7y3zVg==
+X-Received: by 2002:a17:90a:18c:: with SMTP id 12mr6239206pjc.74.1596236929572;
         Fri, 31 Jul 2020 16:08:49 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x18sm3935045pfm.201.2020.07.31.16.08.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 16:08:44 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -75,9 +74,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
         linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 36/36] arm/build: Assert for unwanted sections
-Date:   Fri, 31 Jul 2020 16:08:20 -0700
-Message-Id: <20200731230820.1742553-37-keescook@chromium.org>
+Subject: [PATCH v5 34/36] x86/boot/compressed: Add missing debugging sections to output
+Date:   Fri, 31 Jul 2020 16:08:18 -0700
+Message-Id: <20200731230820.1742553-35-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200731230820.1742553-1-keescook@chromium.org>
 References: <20200731230820.1742553-1-keescook@chromium.org>
@@ -88,64 +87,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for warning on orphan sections, enforce
-expected-to-be-zero-sized sections (since discarding them might hide
-problems with them suddenly gaining unexpected entries).
+Include the missing DWARF and STABS sections in the compressed image,
+when they are present.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/arm/include/asm/vmlinux.lds.h | 10 ++++++++++
- arch/arm/kernel/vmlinux-xip.lds.S  |  2 ++
- arch/arm/kernel/vmlinux.lds.S      |  2 ++
- 3 files changed, 14 insertions(+)
+ arch/x86/boot/compressed/vmlinux.lds.S | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/include/asm/vmlinux.lds.h b/arch/arm/include/asm/vmlinux.lds.h
-index 6624dd97475c..e0d49fd756f7 100644
---- a/arch/arm/include/asm/vmlinux.lds.h
-+++ b/arch/arm/include/asm/vmlinux.lds.h
-@@ -52,6 +52,16 @@
- 		ARM_MMU_DISCARD(*(__ex_table))				\
- 		COMMON_DISCARDS
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index 1fb9809a9e61..a7a68415b999 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -80,6 +80,8 @@ SECTIONS
+ 	. = ALIGN(PAGE_SIZE);	/* keep ZO size page aligned */
+ 	_end = .;
  
-+/*
-+ * Sections that should stay zero sized, which is safer to explicitly
-+ * check instead of blindly discarding.
-+ */
-+#define ARM_ASSERTS							\
-+	.plt (NOLOAD) : {						\
-+		*(.iplt) *(.rel.iplt) *(.iplt) *(.igot.plt)		\
-+	}								\
-+	ASSERT(SIZEOF(.plt) == 0, "Unexpected run-time procedure linkages detected!")
-+
- #define ARM_DETAILS							\
- 		ELF_DETAILS						\
- 		.ARM.attributes 0 : { *(.ARM.attributes) }
-diff --git a/arch/arm/kernel/vmlinux-xip.lds.S b/arch/arm/kernel/vmlinux-xip.lds.S
-index 11ffa79751da..50136828f5b5 100644
---- a/arch/arm/kernel/vmlinux-xip.lds.S
-+++ b/arch/arm/kernel/vmlinux-xip.lds.S
-@@ -152,6 +152,8 @@ SECTIONS
- 	STABS_DEBUG
- 	DWARF_DEBUG
- 	ARM_DETAILS
-+
-+	ARM_ASSERTS
- }
++	STABS_DEBUG
++	DWARF_DEBUG
+ 	ELF_DETAILS
  
- /*
-diff --git a/arch/arm/kernel/vmlinux.lds.S b/arch/arm/kernel/vmlinux.lds.S
-index dc672fe35de3..5f4922e858d0 100644
---- a/arch/arm/kernel/vmlinux.lds.S
-+++ b/arch/arm/kernel/vmlinux.lds.S
-@@ -151,6 +151,8 @@ SECTIONS
- 	STABS_DEBUG
- 	DWARF_DEBUG
- 	ARM_DETAILS
-+
-+	ARM_ASSERTS
- }
- 
- #ifdef CONFIG_STRICT_KERNEL_RWX
+ 	DISCARDS
 -- 
 2.25.1
 
