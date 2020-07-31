@@ -2,128 +2,97 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAD2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 596412074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 074E122B3F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 17:20:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LrZ1HXS6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387495AbgGaRTo (ORCPT
+        id S2387499AbgGaRU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 13:19:44 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:59002 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732817AbgGaRTm (ORCPT
+        Fri, 31 Jul 2020 13:20:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48786 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729944AbgGaRU1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 13:19:42 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1k1Yh1-005yTT-FM; Fri, 31 Jul 2020 11:19:39 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1k1Yh0-0005CV-Mh; Fri, 31 Jul 2020 11:19:39 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>, Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linux PM <linux-pm@vger.kernel.org>
-References: <87h7tsllgw.fsf@x220.int.ebiederm.org>
-        <CAHk-=wj34Pq1oqFVg1iWYAq_YdhCyvhyCYxiy-CG-o76+UXydQ@mail.gmail.com>
-        <87d04fhkyz.fsf@x220.int.ebiederm.org>
-        <87h7trg4ie.fsf@x220.int.ebiederm.org>
-        <CAHk-=wj+ynePRJC3U5Tjn+ZBRAE3y7=anc=zFhL=ycxyKP8BxA@mail.gmail.com>
-        <878sf16t34.fsf@x220.int.ebiederm.org>
-        <87pn8c1uj6.fsf_-_@x220.int.ebiederm.org>
-        <CAHk-=wjMcHGDh8Wx+dwaYHOGVNN+zzCPEKZEc5qb3spsEydNKg@mail.gmail.com>
-Date:   Fri, 31 Jul 2020 12:16:29 -0500
-In-Reply-To: <CAHk-=wjMcHGDh8Wx+dwaYHOGVNN+zzCPEKZEc5qb3spsEydNKg@mail.gmail.com>
-        (Linus Torvalds's message of "Thu, 30 Jul 2020 16:17:50 -0700")
-Message-ID: <87pn8by58y.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 31 Jul 2020 13:20:27 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38EEEC061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 10:20:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=6BEQZGFz2zyuCgyEWRRLllezcZ3YAqzZtIi2etzzWTQ=; b=LrZ1HXS6ViVyE0DVAAxdJiejyl
+        cW+KEbW1oIx22XnqVTnPeI5ujto/D4SotYTJ6deM5ly0wsy55hWHeXGOq3wlh317U3TIYyJCvJquB
+        kcnvrgcR6JFdj3OASMJWcFdPRKP3Q3flMKHMdkUP8j7TU0c1m4I4PE7qZZnrpRCch/mz1lFAPT55m
+        543U9IBFMMuMlcYF7hiTt2jK0PULpqTghGr0lnBIAaBeGIIbSHGSyO3GZ7fLXvzlWgEW5IricnjSq
+        Vus25K8dz3GJ/6egXFsoaC584e/iOEGdxqbrW/enwZc1ouS6erSc6Yc0LLaNm71/7mrBri9R+IaQJ
+        /kd48RzQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k1YhV-0005y4-Ne; Fri, 31 Jul 2020 17:20:09 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4A1993050F0;
+        Fri, 31 Jul 2020 19:20:06 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 15627203C0A49; Fri, 31 Jul 2020 19:20:06 +0200 (CEST)
+Date:   Fri, 31 Jul 2020 19:20:06 +0200
+From:   peterz@infradead.org
+To:     David Ahern <dsahern@gmail.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        =?iso-8859-1?Q?Genevi=E8ve?= Bastien <gbastien@versatic.net>,
+        Wang Nan <wangnan0@huawei.com>,
+        Jeremie Galarneau <jgalar@efficios.com>
+Subject: Re: [PATCH 0/6] perf tools: Add wallclock time conversion support
+Message-ID: <20200731172006.GJ2638@hirez.programming.kicks-ass.net>
+References: <20200730213950.1503773-1-jolsa@kernel.org>
+ <20200730221423.GH2638@hirez.programming.kicks-ass.net>
+ <a59b833f-bcb7-3d1b-6e0c-8758b47b93a3@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1k1Yh0-0005CV-Mh;;;mid=<87pn8by58y.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/myGxaPwVa4s7NNKG9jDuSCrMBG7MsRNg=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [RFC][PATCH] exec: Conceal the other threads from wakeups during exec
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a59b833f-bcb7-3d1b-6e0c-8758b47b93a3@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
+On Thu, Jul 30, 2020 at 07:21:54PM -0600, David Ahern wrote:
+> On 7/30/20 4:14 PM, peterz@infradead.org wrote:
+> > On Thu, Jul 30, 2020 at 11:39:44PM +0200, Jiri Olsa wrote:
+> > 
+> >> The patchset is adding the ability to display TOD/wallclock timestamp
+> >> in 'perf script' output and in 'perf data convert --to-ctf' subcommand,
+> >> so the converted CTF data contain TOD/wallclock timestamps.
+> > 
+> > But why? Wallclock is a horrible piece of crap. Why would you want to do
+> > this?
+> > 
+> 
+> Same reason I brought this up 9+ years ago: userspace lives on
+> time-of-day, and troubleshooting is based on correlating timestamps from
+> multiple sources. To correlate a perf event to syslog or an application
+> log, we need time-of-day.
 
-> On Thu, Jul 30, 2020 at 4:00 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->>
->> The key is the function make_task_wakekill which could probably
->> benefit from a little more review and refinement but appears to
->> be basically correct.
->
-> You really need to explain a lot more why you think this is all a good idea.
->
-> For example, what if one of those other threads is waiting in line for
-> a critical lock, and the wait-queue you basically disabled was the
-> exclusive wait after lock handoff?
->
-> That means that the lock will now effectively be held by that thread.
-> No, it wasn't woken up, but it had the lock handed to it, and it's now
-> entirely unresponsive until it is killed.
->
-> How is that different from the deadlocks you're actually trying to fix?
->
-> These are the kinds of problems that the freezer() code had too, with
-> freezing things that held locks etc.
->
-> This approach does seem better than the freezer thing, and if I read
-> it right it will gather things in the signal handler code, but it's
-> not obvious that gathering them in random places where they sleep for
-> random reasons is safe or a good idea.
->
-> I can imagine _so_ many dead systems if you just basically froze
-> something that holds the mmap lock and is sleeping on a page fault,
-> for example.
->
-> Maybe I'm missing something, but I really think your "let's freeze
-> things" is seriously misguided. You're concentrating on some small
-> problem and trying to solve that, and not seeign the HUGE HONKING
-> problems that your approach is fundamentally introducing.
-
-Very good point.  That would be a priority inversion on mmap_lock.
-Without great care that could indeed result in lockups.
-
-That definitely requires the points where things are already sleeping
-that can be converted to be opt-in.  Which potentially makes things much
-more work.
-
-Thanks, that helps kill my bright idea as I expressed it.
-
-Part of what I was trying to solve (because I ran into the problem while
-I was reading the code) was that the freezer, the cgroup v2 freezer, and
-other waits do not compose nicely.
-
-Even limited to opt-in locations I think the trick of being able to
-transform the wait-state may solve that composition problem.
+You need a sync'ed CLOCK_MONOTONIC for that, CLOCK_REALTIME 'aka'
+wallclock is a trainwreck, you don't ever want that.
 
 
-That said I was really just posting this so if the ideas were good they
-could inspire future code, and if the ideas were bad they could be sunk.
-When it comes to sorting out future especially in exec I will know which
-ideas don't fly, so it will be easier to make the case for ideas that
-will work.
-
-Eric
 
