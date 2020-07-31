@@ -7,55 +7,53 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68936C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B45C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD6322B40
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BC7F22B40
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:24:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nLbpSaU3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4ntfbXmK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iisX2wSo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5JiSe5Pm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732664AbgGaJYY (ORCPT
+        id S1732319AbgGaJY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:24:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60160 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732534AbgGaJXl (ORCPT
+        Fri, 31 Jul 2020 05:24:27 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56642 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732533AbgGaJXm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:23:41 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EAB3C061574;
-        Fri, 31 Jul 2020 02:23:41 -0700 (PDT)
-Date:   Fri, 31 Jul 2020 09:23:39 -0000
+        Fri, 31 Jul 2020 05:23:42 -0400
+Date:   Fri, 31 Jul 2020 09:23:40 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596187420;
+        s=2020; t=1596187421;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=DvoLE/JY5LwefemuH9CN/d633R7C50AHRegQTdSbONs=;
-        b=nLbpSaU3sHh2JkdjGnQM49P9AHOqglyRn4cvUgeLQKVrAOD8FNy7BIc3BgEzD8/cDoZrWM
-        N/mXa5u/BHPSZ7AAW3rG4RBnNezAmvv/bKFMsTS67kkES9z0O53ZyN7hPbic09dmZsvLi3
-        ofYF6mZZGMqllMqQrWim/uQ3dCQ+WKWleaigkYloj3m7ypEBO/f8fyEKKVcaIoU3ZuOWVt
-        Oy4qNQfPqgtS4DAHCCvJwwzVY2S9Lew/nPFDvGx36pCviOxEwAGu5WygDJLUzfrZoL7CFE
-        lNeiscLcfl/s1X0Ty1Cbd/NOY0pYhm/PrrVtkDAINHevRLs8Bfw/b84Sw2nSBg==
+        bh=9qWS5pWhc3a8udLuVtW5FvcOUvcP3JoDnfC2vjPUg2s=;
+        b=iisX2wSomoWY30p4MJohASt8XHWIcDBLHKeqnhfKKR40OmCif3IewpmsudbjKsdKD/AEkl
+        eRdht/THXFIlh8zp3Z7wKJMMqP0uEdRi5Q1tVrIvaStwC+e1NmRzvFQBD+QDqGU8+TJ6RQ
+        r6zBRaQIDfXTuZMp0CPMRcgLauZafEMvq/m7SkYqkt7p+TaqfR3rRk8Rr15I/YF/16KSwF
+        6/r8Pw8u9A2QA2s/q1/qiaHrvAmV1Llm7MAHxCuDmXuvqt3ufzzrmXiEWjOrCH7YXdAIJm
+        +3/gKfaC1Cc0i/97bNUDGUGP+a96b3bOonYG7qGtGmFlnLY4h2P3Dsg9pnK7lw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596187420;
+        s=2020e; t=1596187421;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=DvoLE/JY5LwefemuH9CN/d633R7C50AHRegQTdSbONs=;
-        b=4ntfbXmK04euoSKU7wXpDTMc20OEq8225UU1H3PfLuJ25zEb1rKSJTmPv7jAQUoZ7B7d1P
-        aOaI5RkJOgrg7lCg==
+        bh=9qWS5pWhc3a8udLuVtW5FvcOUvcP3JoDnfC2vjPUg2s=;
+        b=5JiSe5PmX3etTai278Y9V4e7hkNhHmp4hZtEyk0CTxaezR8gpMpcY2QSJxpY7/Ezf0KJMO
+        roStEkG+xhU0naDQ==
 From:   "tip-bot2 for Wei Yang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcu: Simplify the calculation of rcu_state.ncpus
+Subject: [tip: core/rcu] rcu: Initialize and destroy rcu_synchronize only when
+ necessary
 Cc:     Wei Yang <richard.weiyang@gmail.com>,
         "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <159618741942.4006.16696150175049470222.tip-bot2@tip-bot2>
+Message-ID: <159618742069.4006.16122222312681884202.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -67,54 +65,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     abfce0414814149f716e1d30da1fb3140d1b3473
-Gitweb:        https://git.kernel.org/tip/abfce0414814149f716e1d30da1fb3140d1b3473
+Commit-ID:     7ee880b7bf1dea88d0a472b775aebdb4fb6bf860
+Gitweb:        https://git.kernel.org/tip/7ee880b7bf1dea88d0a472b775aebdb4fb6bf860
 Author:        Wei Yang <richard.weiyang@gmail.com>
-AuthorDate:    Sun, 19 Apr 2020 21:57:15 
+AuthorDate:    Wed, 15 Apr 2020 22:26:55 
 Committer:     Paul E. McKenney <paulmck@kernel.org>
 CommitterDate: Mon, 29 Jun 2020 11:58:49 -07:00
 
-rcu: Simplify the calculation of rcu_state.ncpus
+rcu: Initialize and destroy rcu_synchronize only when necessary
 
-There is only 1 bit set in mask, which means that the only difference
-between oldmask and the new one will be at the position where the bit is
-set in mask.  This commit therefore updates rcu_state.ncpus by checking
-whether the bit in mask is already set in rnp->expmaskinitnext.
+The __wait_rcu_gp() function unconditionally initializes and cleans up
+each element of rs_array[], whether used or not.  This is slightly
+wasteful and rather confusing, so this commit skips both initialization
+and cleanup for duplicate callback functions.
 
 Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree.c |  9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ kernel/rcu/update.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 6c6569e..bef1dc9 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -3842,10 +3842,9 @@ void rcu_cpu_starting(unsigned int cpu)
- {
- 	unsigned long flags;
- 	unsigned long mask;
--	int nbits;
--	unsigned long oldmask;
- 	struct rcu_data *rdp;
- 	struct rcu_node *rnp;
-+	bool newcpu;
+diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
+index 84843ad..f5a82e1 100644
+--- a/kernel/rcu/update.c
++++ b/kernel/rcu/update.c
+@@ -390,13 +390,14 @@ void __wait_rcu_gp(bool checktiny, int n, call_rcu_func_t *crcu_array,
+ 			might_sleep();
+ 			continue;
+ 		}
+-		init_rcu_head_on_stack(&rs_array[i].head);
+-		init_completion(&rs_array[i].completion);
+ 		for (j = 0; j < i; j++)
+ 			if (crcu_array[j] == crcu_array[i])
+ 				break;
+-		if (j == i)
++		if (j == i) {
++			init_rcu_head_on_stack(&rs_array[i].head);
++			init_completion(&rs_array[i].completion);
+ 			(crcu_array[i])(&rs_array[i].head, wakeme_after_rcu);
++		}
+ 	}
  
- 	if (per_cpu(rcu_cpu_started, cpu))
- 		return;
-@@ -3857,12 +3856,10 @@ void rcu_cpu_starting(unsigned int cpu)
- 	mask = rdp->grpmask;
- 	raw_spin_lock_irqsave_rcu_node(rnp, flags);
- 	WRITE_ONCE(rnp->qsmaskinitnext, rnp->qsmaskinitnext | mask);
--	oldmask = rnp->expmaskinitnext;
-+	newcpu = !(rnp->expmaskinitnext & mask);
- 	rnp->expmaskinitnext |= mask;
--	oldmask ^= rnp->expmaskinitnext;
--	nbits = bitmap_weight(&oldmask, BITS_PER_LONG);
- 	/* Allow lockless access for expedited grace periods. */
--	smp_store_release(&rcu_state.ncpus, rcu_state.ncpus + nbits); /* ^^^ */
-+	smp_store_release(&rcu_state.ncpus, rcu_state.ncpus + newcpu); /* ^^^ */
- 	ASSERT_EXCLUSIVE_WRITER(rcu_state.ncpus);
- 	rcu_gpnum_ovf(rnp, rdp); /* Offline-induced counter wrap? */
- 	rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
+ 	/* Wait for all callbacks to be invoked. */
+@@ -407,9 +408,10 @@ void __wait_rcu_gp(bool checktiny, int n, call_rcu_func_t *crcu_array,
+ 		for (j = 0; j < i; j++)
+ 			if (crcu_array[j] == crcu_array[i])
+ 				break;
+-		if (j == i)
++		if (j == i) {
+ 			wait_for_completion(&rs_array[i].completion);
+-		destroy_rcu_head_on_stack(&rs_array[i].head);
++			destroy_rcu_head_on_stack(&rs_array[i].head);
++		}
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(__wait_rcu_gp);
