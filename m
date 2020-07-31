@@ -2,164 +2,107 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A48FC433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C9DC433DF
 	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07D5A208A9
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 244F921775
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 01:22:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="qLa9jk/L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J5qSEmko"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730871AbgGaBVz (ORCPT
+        id S1730926AbgGaBV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 21:21:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42850 "EHLO
+        Thu, 30 Jul 2020 21:21:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728262AbgGaBVy (ORCPT
+        with ESMTP id S1728262AbgGaBV5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 21:21:54 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8802EC061575
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 18:21:54 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id x69so27518573qkb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 18:21:54 -0700 (PDT)
+        Thu, 30 Jul 2020 21:21:57 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF9FFC061574
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 18:21:56 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id v21so14278326otj.9
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 18:21:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=/j2YojXjp6X9HLdlD/RvksyoFdPKZnneEIBr33XwXdQ=;
-        b=qLa9jk/LSBAvtEZZ5ZFL3KjRk4IqwMmj8j5WFyD9NQvzOVnN80qOAqYJrwRSGdXYGJ
-         iD9OvBJPDPm/N9jCEBA5TISOSVkyaq0uuAmbv+sCkyz3RqTcCPDaBKcv3CbB7+TfHLEx
-         eksCtwPX2Z/g48Mkun69SquxbyaQ1dRyLIBFQ=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WhCSkMbJs+BIgp6gsZopFGoFqV6gwEHPHN197f+fHXw=;
+        b=J5qSEmkoxPyRKsnwzDMkVy2jWwMJUfSbD8cEq3Qk+H5OHZTfEVpiBMc1Dora2PkQTt
+         3nA6g8XZVREicL4c+ym12YbHp/t5ZCQECm5BUQ4yxrQ6HGSb2YreWauJOlzwZmcg24HS
+         8GXvDZ0kGYdfeJq2zY+Tr57vuI2zHIUABrjGZp4nuAulzVukth4rBpe3VGD42kSO71jp
+         ztNiQycHcIXzlmXHBnyYWa49oFYmVGfYyGrbQDKKZczaxzy4mC7gE0GsogHqw6zBCpr1
+         LHJX6UG5vcBeZsgB6an0ua/5b8WxokI+m7DbhlQa9ChbT6tQb6OLA2usMsjhdDNUjsTJ
+         jXbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=/j2YojXjp6X9HLdlD/RvksyoFdPKZnneEIBr33XwXdQ=;
-        b=j1CAWixwB6Z2ajt63nX97pClw0sZGlVikoDKIfm6A1LIaU+4RFC5JY4zDyr9b8c0zV
-         Yxe8TkY4O/N8Fk+kepMpedLJTTLlaE7Kam8JBtAGwzGdESHfvrOXjSM4Y7xqsvPrwPlx
-         vLYw39fBdFcDKhu1nmCXkk2uNuhE0onei/X/DKYUMzLBSdh81L5zVsiXyjTCqOaDSNZo
-         j7BcsQvKmdduSSFtIRfiOw0ZFecQc2Pd8kjvOHbfFoXQfyAMd5rnqJFtq4xVDYgIgxCv
-         XVsEcJjVeQBV7ldnjv1JKgrUKdokdzyh0OUjcvi1M5YUDZvvFjnSnJLzMrYffCa96588
-         irbA==
-X-Gm-Message-State: AOAM530Eaq8e0zvMn/JXj4t2fOyGqKJjl8g10CgGRn+oCP+wiOQo1qnh
-        3GcN0fCvdOVp85av1xM9COJvEg==
-X-Google-Smtp-Source: ABdhPJzXAOl5o5JKy9CXp5X9KRwQBuWNKdlmJVlK56I52I4hu9SLT/emhyFHw3enEGMNBnCOj5xA7A==
-X-Received: by 2002:a05:620a:1292:: with SMTP id w18mr1813493qki.158.1596158513533;
-        Thu, 30 Jul 2020 18:21:53 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id x29sm6277053qtv.80.2020.07.30.18.21.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 18:21:52 -0700 (PDT)
-Date:   Thu, 30 Jul 2020 21:21:52 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Neeraj Upadhyay <neeraju@codeaurora.org>,
-        rcu <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 2/2] rcu/tree: Clarify comments about FQS loop reporting
- quiescent states
-Message-ID: <20200731012152.GC2336096@google.com>
-References: <20200730030221.705255-1-joel@joelfernandes.org>
- <20200730030221.705255-2-joel@joelfernandes.org>
- <CAEXW_YSbad9Cium_9f1eA1RfZ2Me9JcX2S-KMe-jRQo8W6AaBg@mail.gmail.com>
- <20200730163520.GA9247@paulmck-ThinkPad-P72>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WhCSkMbJs+BIgp6gsZopFGoFqV6gwEHPHN197f+fHXw=;
+        b=nm/Uo5rFdDfs16rS6zY7QwAFE8AFC92hJLonpKo5h5CcQVufA1RligBr8tiqMUqaK3
+         WKYKkvxqlbPzUdAp2UGpEYGt/BqVhsuPPb9pRrcmzrUtNV1Xu0xzqLjYq2Yu/xboH1sD
+         NxNhAdPe6ACcfkd0Qt4pPHTVju0tdr6UV4AGnP7qgK4OLeSph19OfSrBTmBHQVPn3aW4
+         artdNkbfm2BqFMKnCoaQot0vCXmi2aE+MIvLhuDuskPpTzHjWvjGN7FSYKN4XXr22Jr8
+         L9zCgssADmWVPwOK+LLqGxE/l9V6sey6+3epn/VN/Zer6TEnZxmobLIvz0USxV3waxAP
+         VAuA==
+X-Gm-Message-State: AOAM531hafes2k9MOTs8qxH1bOTPeSt5tVLSrWa/clp7MEzSrbsyYV+Z
+        xbBorJ01XTK9X1JAFnh9IMM=
+X-Google-Smtp-Source: ABdhPJxXO+IkVsgpc+8vFcsgkgtc3AwIYa5p+xgFZ1TRYgAl0p+r15Jb6EiVFZcTXcFDcvFvlB6dfw==
+X-Received: by 2002:a05:6830:14d4:: with SMTP id t20mr1097641otq.166.1596158516190;
+        Thu, 30 Jul 2020 18:21:56 -0700 (PDT)
+Received: from Davids-MacBook-Pro.local ([2601:284:8202:10b0:5917:9d89:e57d:b88d])
+        by smtp.googlemail.com with ESMTPSA id 92sm1124053otg.32.2020.07.30.18.21.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jul 2020 18:21:55 -0700 (PDT)
+Subject: Re: [PATCH 0/6] perf tools: Add wallclock time conversion support
+To:     peterz@infradead.org, Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        =?UTF-8?Q?Genevi=c3=a8ve_Bastien?= <gbastien@versatic.net>,
+        Wang Nan <wangnan0@huawei.com>,
+        Jeremie Galarneau <jgalar@efficios.com>
+References: <20200730213950.1503773-1-jolsa@kernel.org>
+ <20200730221423.GH2638@hirez.programming.kicks-ass.net>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <a59b833f-bcb7-3d1b-6e0c-8758b47b93a3@gmail.com>
+Date:   Thu, 30 Jul 2020 19:21:54 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200730221423.GH2638@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200730163520.GA9247@paulmck-ThinkPad-P72>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 09:35:20AM -0700, Paul E. McKenney wrote:
-> On Wed, Jul 29, 2020 at 11:25:19PM -0400, Joel Fernandes wrote:
-> > On Wed, Jul 29, 2020 at 11:02 PM Joel Fernandes (Google)
-> > <joel@joelfernandes.org> wrote:
-> > >
-> > > At least since v4.19, the FQS loop no longer reports quiescent states
-> > 
-> > I meant here, "FQS loop no longer reports quiescent states for offline CPUs."
-> > 
-> > Sorry,
+On 7/30/20 4:14 PM, peterz@infradead.org wrote:
+> On Thu, Jul 30, 2020 at 11:39:44PM +0200, Jiri Olsa wrote:
 > 
-> You did have me going there for a bit.  ;-)
+>> The patchset is adding the ability to display TOD/wallclock timestamp
+>> in 'perf script' output and in 'perf data convert --to-ctf' subcommand,
+>> so the converted CTF data contain TOD/wallclock timestamps.
 > 
-> No period (".") at the end though, unless you fix up the following
-> to start a new sentence.
-
-Ok.
-
-> > > unless it is a dire situation where an offlined CPU failed to report
-> > > a quiescent state. Let us clarify the comment in rcu_gp_init() inorder
-> > > to keep the comment current.
+> But why? Wallclock is a horrible piece of crap. Why would you want to do
+> this?
 > 
-> How about the following for this last sentence?
-> 
-> "This commit therefore fixes the comment in rcu_gp_init() to match
-> the current code."
 
-As per:
-https://www.kernel.org/doc/html/v4.17/process/submitting-patches.html
-
-It says:
-Describe your changes in imperative mood, e.g. “make xyzzy do frotz” instead
-of “[This patch] makes xyzzy do frotz” or “[I] changed xyzzy to do frotz”, as
-if you are giving orders to the codebase to change its behaviour.
-
-May be I should make it "Fix the comment in rcu_gp_init() to match the
-current code"?
-
-> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > ---
-> > >  kernel/rcu/tree.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > index 1e51962b565b..929568ff5989 100644
-> > > --- a/kernel/rcu/tree.c
-> > > +++ b/kernel/rcu/tree.c
-> > > @@ -1701,8 +1701,8 @@ static bool rcu_gp_init(void)
-> > >
-> > >         /*
-> > >          * Apply per-leaf buffered online and offline operations to the
-> > > -        * rcu_node tree.  Note that this new grace period need not wait
-> > > -        * for subsequent online CPUs, and that quiescent-state forcing
-> > > +        * rcu_node tree.  Note that this new grace period need not wait for
-> > > +        * subsequent online CPUs, and that RCU hooks in CPU offlining path
-> > >          * will handle subsequent offline CPUs.
-> 
-> How about something like this?
-> 
-> 	...  Note that this new grace period ned not wait for subsequent
-> 	online CPUs, and that RCU hooks in the CPU offlining path, when
-> 	combined with checks in this function, will handle CPUs that
-> 	are currently going offline and that go offline later.
-
-Sounds good to me. I think s/and that go/or that go/ though.
-
-I will make these changes and send v3, let me know though if you object.
-
-thanks,
-
- - Joel
-
-
-> 						Thanx, Paul
-> 
-> > >          */
-> > >         rcu_state.gp_state = RCU_GP_ONOFF;
-> > > --
-> > > 2.28.0.rc0.142.g3c755180ce-goog
-> > >
+Same reason I brought this up 9+ years ago: userspace lives on
+time-of-day, and troubleshooting is based on correlating timestamps from
+multiple sources. To correlate a perf event to syslog or an application
+log, we need time-of-day.
