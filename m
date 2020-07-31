@@ -2,115 +2,255 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE59CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26144C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B88F72177B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF6CB2177B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 14:36:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WoRuLYGX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dXYC4xyQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729554AbgGaOgj (ORCPT
+        id S1729831AbgGaOgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 10:36:39 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:51630 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728961AbgGaOgi (ORCPT
+        Fri, 31 Jul 2020 10:36:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728961AbgGaOgv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 10:36:38 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06VEZUqm112601;
-        Fri, 31 Jul 2020 09:35:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596206130;
-        bh=GRu9XzAMRe4+pci8Uhro7LyH72wWLts+VnuOKHzpVv8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=WoRuLYGXbjzuuoqKVAWXrgHgTQTEY7FKptdrHeOuhCdEEDSnEh5Uvs1P1yMO11DKa
-         7KJZxf8ZxVKQ/knSJ3RkD9zxrm63AJqFcaeEvvhtn5PQjTW7bjdzywXVFDILttLDwa
-         waJCyQdaKkEevxWywh0ZYVyvUjRGLhxU4oBG2zsE=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06VEZUdk110843
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 Jul 2020 09:35:30 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 31
- Jul 2020 09:35:30 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 31 Jul 2020 09:35:30 -0500
-Received: from [10.250.34.248] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06VEZTnO047666;
-        Fri, 31 Jul 2020 09:35:29 -0500
-Subject: Re: [PATCH v4 1/5] dt-bindings: irqchip: Add PRU-ICSS interrupt
- controller bindings
-To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
-        David Lechner <david@lechnology.com>
-CC:     <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Bajjuri, Praneeth" <praneeth@ti.com>,
-        "Andrew F . Davis" <afd@ti.com>, Roger Quadros <rogerq@ti.com>
-References: <1595927918-19845-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <1595927918-19845-2-git-send-email-grzegorz.jaszczyk@linaro.org>
- <01bac597-c1a0-1851-b630-a79929777a16@lechnology.com>
- <CAMxfBF6Ru1Fm1oWDyrSM=kBdCUe+eUDChqDgoYo4ziVr-8c50Q@mail.gmail.com>
- <19fbf4f6-ea75-3eb7-7e95-c7c9ce987996@lechnology.com>
- <CAMxfBF4jvWiT8CH+--OBxLiptiN42-WOMHAZhP7VM51GzgHWnA@mail.gmail.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <36a1157e-4f59-9de5-c9d8-05bcdd67e125@ti.com>
-Date:   Fri, 31 Jul 2020 09:35:29 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 31 Jul 2020 10:36:51 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 366F5C061574;
+        Fri, 31 Jul 2020 07:36:51 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id 93so12622000otx.2;
+        Fri, 31 Jul 2020 07:36:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=0s74CoRQx9G2oGbEWX9C4xO3AxwKq60685FFXFdf9YE=;
+        b=dXYC4xyQNXW+ZlZmJxASnoGlRMvgFEggncOqjkLK7FymRc/yLhqvrqAPPIreaudJbA
+         NIxYJaOI5T+0b+Jd5jpJvsV60p96Z+b2hz+fnR1jR+H3yGcagUfYBAsRLrFrmGyaiIwC
+         j+PFVtg3V0ekmziJPn2unQTHp0jr1CuwpwMyyFstPENmL5FbsbWUfdx7TG3PhtKsC8Fc
+         AqHi0i9e5euVQYmwHzMWFHpOmsFAUYA+MS0w11vE6FjZgJzz0v6u5HeaLCegsEyhXjft
+         E8ukExHq8EpnC1smuw8WYGWZN4jjoNIGIcBWb7rED14E4gwpBTpIvKf+GzPwZJ/3gDb+
+         HWQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=0s74CoRQx9G2oGbEWX9C4xO3AxwKq60685FFXFdf9YE=;
+        b=kxPp89JMp2/mWUFfHg0lgSsf/xBrX6RvQ6EtyoHHo+lTwLBEphNx7DTzfNQxv5zBU1
+         ZPHclUNykPviInjzwy3CpR6Ip0YWUlKHbIQlqgbUYhZocmyjo+nwGGCdEpXt9g2KbfSL
+         IWktiKSHPM8UiKl+jxaq6gLX/zgLw4Kqki3+aR+8AQxDthz5lD5xGDcmbI0nrXOgjMxT
+         eMJdeFldzrrdaRIZZPsTJuU8mu35qDeNK03nsb+tOYu7DYUP6f3pK59senGMOjdCCemv
+         JQs5WpWQ1+QrHdWus2PxRsNFQ7MqBAHn2zMM0Vy2WI7ogEf43PrWeDYfeIFv+BRuYEso
+         xZMg==
+X-Gm-Message-State: AOAM533IWP5I+GaxIzu77ybdaExfG0ZQdOPgM/cwfW76m5FM4lFk+MeB
+        Wk2u/DwmL22TJImB/p7OFccn1Y//GAGBH/0UOFo=
+X-Google-Smtp-Source: ABdhPJwaHK6ReBPoDVG6TtMdV2nbhGWOR5+HYYEzZfMAsCrT2JpR3y5cRk/2YwX3rMdaoAqtx4qj3+Iljuyxq5iNVsE=
+X-Received: by 2002:a9d:5e5:: with SMTP id 92mr3411933otd.9.1596206210481;
+ Fri, 31 Jul 2020 07:36:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAMxfBF4jvWiT8CH+--OBxLiptiN42-WOMHAZhP7VM51GzgHWnA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200730190841.2071656-1-nickrterrell@gmail.com>
+In-Reply-To: <20200730190841.2071656-1-nickrterrell@gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Fri, 31 Jul 2020 16:36:39 +0200
+Message-ID: <CA+icZUV4FOMG0vAyoEPcqbjmNYEE0oPDw=A2kYD=s72K=0GpTA@mail.gmail.com>
+Subject: Re: [GIT PULL][PATCH v10 0/8] Add support for ZSTD-compressed kernel
+ and initramfs
+To:     Nick Terrell <nickrterrell@gmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
+        Norbert Lange <nolange79@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alex Xu <alex_y_xu@yahoo.ca>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Terrell <terrelln@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+On Thu, Jul 30, 2020 at 9:11 PM Nick Terrell <nickrterrell@gmail.com> wrote:
+>
+> From: Nick Terrell <terrelln@fb.com>
+>
+> Please pull from
+>
+>   git@github.com:terrelln/linux.git tags/v10-zstd
+>
+> to get these changes. Alternatively the patchset is included.
+>
+> Hi all,
+>
+> This patch set adds support for a ZSTD-compressed kernel, ramdisk, and
+> initramfs in the kernel boot process. ZSTD-compressed ramdisk and initramfs
+> are supported on all architectures. The ZSTD-compressed kernel is only
+> hooked up to x86 in this patch set.
+>
+> Zstandard requires slightly more memory during the kernel decompression
+> on x86 (192 KB vs 64 KB), and the memory usage is independent of the
+> window size.
+>
+> Zstandard requires memory proprortional to the window size used during
+> compression for decompressing the ramdisk image, since streaming mode is
+> used. Newer versions of zstd (1.3.2+) list the window size of a file
+> with `zstd -lv <file>'. The absolute maximum amount of memory required
+> is just over 8 MB, but it can be controlled at compression time.
+>
+> This patch set has been boot tested with buildroot and QEMU based off
+> of linux-5.6-rc6.
+>
+> On i386 and x86_64 I have tested the following configurations:
+> * zstd compressed kernel and a separate zstd compressed initramfs
+> * zstd compressed kernel and a built-in zstd compressed initramfs
+> * gzip compressed kernel and a separate gzip compressed initramfs
+> * gzip compressed kernel and a built-in gzip compressed initramfs
+>
+> On arm and aarch64 I tested the same configurations, except that the kernel is
+> always gzip compressed.
+>
+> Facebook has been using v1 of these patches on x86_64 devices for more than 6
+> months. When we switched from a xz compressed initramfs to a zstd compressed
+> initramfs decompression time shrunk from 12 seconds to 3 seconds. When we
+> switched from a xz compressed kernel to a zstd compressed kernel we saved 2
+> seconds of boot time.
+>
+> Facebook has been using v2 of these patches on aarch64 devices for a few weeks.
+> When we switched from an lzma compressed initramfs to a zstd compressed initramfs
+> decompression time shrunk from 27 seconds to 8 seconds.
+>
+> The zstd compressed kernel is smaller than the gzip compressed kernel but larger
+> than the xz or lzma compressed kernels, and it decompresses faster than
+> everything except lz4. See the table below for the measurement of an x86_64
+> kernel ordered by compressed size:
+>
+> algo    size
+> xz       6,509,792
+> lzma     6,856,576
+> zstd     7,399,157
+> gzip     8,522,527
+> bzip     8,629,603
+> lzo      9,808,035
+> lz4     10,705,570
+> none    32,565,672
+>
+> Alex Xu ran benchmarks in https://lkml.org/lkml/2020/7/1/722.
+>
+> v1 -> v2:
+> - Rebase
+>   - usr/Makefile and init/Kconfig were changed so the patches were updated
+> - No functional changes except to rebase
+> - Split the patches up into smaller chunks
+>
+> v2 -> v3:
+> - Add *.zst to the .gitignore in patch 8
+> - Style nits in patch 3
+> - Rename the PREBOOT macro to ZSTD_PREBOOT and XXH_PREBOOT in patches
+>   1 through 3
+>
+> v3 -> v4:
+> - Increase the ZSTD_IOBUF_SIZE from 4KB to 128KB to improve performance.
+>   With this change I switch from malloc() to large_malloc() for the
+>   buffers.
+> - Increase the maximum allowed window size from 8 MB to 128 MB, which is
+>   the max that zstd in the kernel supports.
+>
+> v4 -> v5:
+> - Update commit message for patch 6 in response to comments
+> - Rebase onto next-20200408
+>
+> v5 -> v6:
+> - Rebase onto v5.8-rc4
+>
+> v6 -> v7:
+> - (1/7) Don't define or use 'ZSTD_PREBOOT' to hide exports
+> - (2/8) Drop 'lib: prepare xxhash for preboot environment'
+> - (2/7) Use '__DISABLE_EXPORTS' in unzstd to hide exports
+> - (3/7) Update zstd compression cmd to follow other compressors
+> - (3/7) Add zstd22 cmd
+> - (6/7) Use zstd -22 --ultra (zstd22) for x86 kernel compression
+>
+> v7 -> v8:
+> - (2/7) Don't define '__DISABLE_EXPORTS'
+> - (6/7) Define '__DISABLE_EXPORTS' in misc.c
+>
+> v8 -> v9:
+> - Rebase onto v5.8-rc7
+> - (2/7) Fix nits about comment style & typos
+> - (3/7) Fix typo in init/Kconfig description
+> - (6/7) Explain BOOT_HEAP_SIZE increase and define __DISABLE_EXPORTS in
+>         Makefile KBUILD_CFLAGS and remove definitions from kaslr.c and misc.c
+>
+> v9 -> v10:
+> - (6/8) Fix commit message regarding __DISABLE_EXPORTS
+> - (8/8) Add .zst files to Documentation/dontdiff
+>
 
-On 7/31/20 9:16 AM, Grzegorz Jaszczyk wrote:
-> On Fri, 31 Jul 2020 at 16:09, David Lechner <david@lechnology.com> wrote:
->>
->> On 7/31/20 6:48 AM, Grzegorz Jaszczyk wrote:
->>> On Wed, 29 Jul 2020 at 19:34, David Lechner <david@lechnology.com> wrote:
->>>> It is not clear what the meaning of each cell is. Looking at later patches, it
->>>> looks like the first cell is the PRU system event number, the second cell is the
->>>> channel and the third cell is the host event number.
->>>
->>> Ok, how about updating above description like this:
->>> Client users shall use the PRU System event number (the interrupt source
->>> that the client is interested in) [cell 1], PRU channel [cell 2] and PRU
->>> host_intr (target) [cell 3] as the value of the interrupts property in their
->>> node.  The system events can be mapped to some output host interrupts through 2
->>> levels of many-to-one mapping i.e. events to channel mapping and channels to
->>> host interrupts so through this property entire mapping is provided.
->>
->> Cell 3 is host_intr0-7? How would we map to other host events?
-> 
-> Again this is due to misleading TRM nomenclature: host_intr vs host
-> interrupts (one that we discuss in patch #2). I will use "and PRU host
-> event (target) [cell 3]...". Sorry for my mistake.
+Looks like v10 was pushed to <tip.git#x86/boot>.
 
-Idea is to do the event mapping for other host interrupts using the 
-irq_create_fwspec_mapping() function from the PRU remoteproc driver. We 
-can't use DT to represent them, or atleast can't use "interrupts" 
-property for them since they are not targeted towards the Linux host 
-processor.
+Thanks to all involved people!
 
-regards
-Suman
+- Sedat -
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=x86/boot
+
+> Best,
+> Nick Terrell
+>
+> Adam Borowski (1):
+>   .gitignore: add ZSTD-compressed files
+>
+> Nick Terrell (7):
+>   lib: prepare zstd for preboot environment
+>   lib: add zstd support to decompress
+>   init: add support for zstd compressed kernel
+>   usr: add support for zstd compressed initramfs
+>   x86: bump ZO_z_extra_bytes margin for zstd
+>   x86: Add support for ZSTD compressed kernel
+>   Documentation: dontdiff: Add zstd compressed files
+>
+>  .gitignore                        |   1 +
+>  Documentation/dontdiff            |   1 +
+>  Documentation/x86/boot.rst        |   6 +-
+>  Makefile                          |   3 +-
+>  arch/x86/Kconfig                  |   1 +
+>  arch/x86/boot/compressed/Makefile |   6 +-
+>  arch/x86/boot/compressed/kaslr.c  |   7 -
+>  arch/x86/boot/compressed/misc.c   |   4 +
+>  arch/x86/boot/header.S            |   8 +-
+>  arch/x86/include/asm/boot.h       |  11 +-
+>  include/linux/decompress/unzstd.h |  11 +
+>  init/Kconfig                      |  15 +-
+>  lib/Kconfig                       |   4 +
+>  lib/Makefile                      |   1 +
+>  lib/decompress.c                  |   5 +
+>  lib/decompress_unzstd.c           | 345 ++++++++++++++++++++++++++++++
+>  lib/zstd/fse_decompress.c         |   9 +-
+>  lib/zstd/zstd_internal.h          |  14 +-
+>  scripts/Makefile.lib              |  22 ++
+>  usr/Kconfig                       |  20 ++
+>  usr/Makefile                      |   1 +
+>  21 files changed, 469 insertions(+), 26 deletions(-)
+>  create mode 100644 include/linux/decompress/unzstd.h
+>  create mode 100644 lib/decompress_unzstd.c
+>
+> --
+> 2.27.0
+>
