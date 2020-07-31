@@ -6,112 +6,125 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C63A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 05:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA9FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 05:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3EE12084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 05:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 095432084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 05:53:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T+HPx65f"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="p0Emrj/v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731276AbgGaFwj (ORCPT
+        id S1731299AbgGaFxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 01:52:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55928 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730644AbgGaFwi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 01:52:38 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6B43C061575
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 22:52:38 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id e4so3119752pjd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 22:52:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Is9oz0WcdC4oayT0KXurF1vgNIwYI6FKERnV58px2yQ=;
-        b=T+HPx65fgNudEBURjrQX4qo0u8tnu0dj3iDP1cV+BTCL8y/j4LUor93lChMKi1Jsk+
-         vdg9mhmNbqrhL9/udDjUihbN5Bolx1RV8wDqTi5lomByyhQ8dJ4yBgxcielqGHS62Ea7
-         rx9xxs5NmTukhbJaOzLTmx/OknOZlhE1tHBWwB0Bi45k68GIGqA7DH65mPwxMsc4OJIe
-         GvZvqU28Mnpfeynbn4fyApxImnpsNCDKfN78nVugs8mWGW0rEHNnd0a/vN0NvkpDtyU4
-         nrKtl3z8E6o8rnS8LVFBrZh2yKKD006qOH/vwY4THo3iltRqVVrYWuUafHyOnmLnzuIE
-         xRyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Is9oz0WcdC4oayT0KXurF1vgNIwYI6FKERnV58px2yQ=;
-        b=ddXpIb5X8EQPDEFeMw7UbbclpBvslCbrUjYmrbP2Fh/98a5ZStYeHTlwI5VRs+86DR
-         VXszRjCSnE3MTo3onqXON9RsiY8jHa7gnPrWE357aYlqeaszwi9NzyKST9L0gU5z/GeB
-         +tZtmCLTeDAaktmq5HZdLOjVBWkHk2I3iEGYUgOx6h+CeswVym7ipAm6vnlgdM/2zzvL
-         E94hTwjiv+u9xMUeyz+Xq3+xQr48wqpahyjYPSrcz6Qi6C9rxtPF5gQS7Ms5kF/gXseA
-         wo6D1W3j0PrK3+cShYiYLZq3GUtTullIBvPA7Q5XiNANctDTVO6FuUJo8sJEBuXtTD2U
-         bXRw==
-X-Gm-Message-State: AOAM531+q2+qhHMFxsgJf7YJ0cXPsngF7GhCABHJgwb5MfpQBZz/II56
-        spFZdYfkj/NOiB8dPzhpmZaWpw==
-X-Google-Smtp-Source: ABdhPJwx3vBThEbfSeGBoL9hNvNZyU1Q4RNIGLqBu9j0WBIoW6X1bMtfz0R1dAPxFdWb26AAhctwbQ==
-X-Received: by 2002:a17:90a:fd82:: with SMTP id cx2mr2664842pjb.67.1596174757993;
-        Thu, 30 Jul 2020 22:52:37 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id k6sm4360389pfp.87.2020.07.30.22.52.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 22:52:37 -0700 (PDT)
-Date:   Thu, 30 Jul 2020 22:48:50 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     Will Deacon <will@kernel.org>, skrzynka@konradybcio.pl,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org,
-        DTML <devicetree@vger.kernel.org>,
+        Fri, 31 Jul 2020 01:53:13 -0400
+Received: from ozlabs.org ([203.11.71.1]:54127 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730170AbgGaFxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 01:53:12 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BHxJz3Z41z9sT6;
+        Fri, 31 Jul 2020 15:53:06 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596174789;
+        bh=pGGWHKfJtL+KMXjTL1ISgluxe8SpdKWugmuEWvZtynA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=p0Emrj/vu5vPMkzXOSsZIPoNM3xHMDOVWWsKo/OaXQenIiRUeEwsHS+7xs8iRif64
+         zo1ODSQ/V9bCZll6PZt/vdOpW4W6RtCxRogz1vnnXfbBH6iU+EtHTLpJVyUrVqAorO
+         WfXV2jfQo36o1YOCydoWPwbvierkZivJq8B77IRN7qdl9lRRepR3cVXAz7WfK5IZLR
+         oXhOCbDX0T0ud2ZV2kf9xd7NrjOpcii+Xx8pfYcs8CJLW/jWu70zdyxJ+pD6qIkTAR
+         Fgo4mfdRUWIZypAYC3f2+NYTddCVTU6eRH24HXRLyuxPVPEhtsMn56ljZqsY6MH2lF
+         wRQzBVdAutBBQ==
+Date:   Fri, 31 Jul 2020 15:53:04 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH 1/1] iommu/arm-smmu: Implement qcom,skip-init
-Message-ID: <20200731054850.GA20825@builder.lan>
-References: <20200704122809.73794-1-konradybcio@gmail.com>
- <20200704130922.GB21333@willie-the-truck>
- <20200705033511.GR388985@builder.lan>
- <CAMS8qEWO-1mNd12Zs-2WogCrgNF5=6RkF=Z1pTeOZxSuKjx+qg@mail.gmail.com>
- <20200721154415.GA5758@jcrouse1-lnx.qualcomm.com>
- <CAMS8qEXNh6n9SpMkPAr8cPneasPvJPELD2TZ4gxUf0byxNePbg@mail.gmail.com>
- <20200721235650.GN388985@builder.lan>
- <CAMS8qEVXGddTdbrPwK3NJMx71HH0hoVyqiJG6-g9tiBRMRYZ8w@mail.gmail.com>
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: linux-next: build failure after merge of the tip tree
+Message-ID: <20200731155304.06c67b0c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMS8qEVXGddTdbrPwK3NJMx71HH0hoVyqiJG6-g9tiBRMRYZ8w@mail.gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/TzJyvr.CQ.dHYVGgaA=aARk";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 22 Jul 13:11 PDT 2020, Konrad Dybcio wrote:
+--Sig_/TzJyvr.CQ.dHYVGgaA=aARk
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> >Is the problem on SDM630 that when you write to SMR/S2CR the device
-> >reboots? Or that when you start writing out the context bank
-> >configuration that trips the display and the device reboots?
-> 
-> I added some debug prints and the phone hangs after reaching the
-> seventh CB (with i=6) at
-> 
-> arm_smmu_cb_write(smmu, i, ARM_SMMU_CB_FSR, ARM_SMMU_FSR_FAULT);
-> 
-> line in arm_smmu_device_reset.
-> 
+Hi all,
 
-Sounds like things are progressing nicely for a while there, presumably
-until the next time the display is being refreshed.
+After merging the tip tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
 
-Would you be willing to try out the following work in progress:
-https://lore.kernel.org/linux-arm-msm/20200717001619.325317-1-bjorn.andersson@linaro.org/
+In file included from include/asm-generic/getorder.h:8,
+                 from arch/arm/include/asm/page.h:166,
+                 from arch/arm/include/asm/thread_info.h:14,
+                 from arch/arm/include/asm/percpu.h:16,
+                 from include/linux/irqflags.h:17,
+                 from arch/arm/include/asm/bitops.h:28,
+                 from include/linux/bitops.h:29,
+                 from include/linux/kernel.h:12,
+                 from include/asm-generic/bug.h:20,
+                 from arch/arm/include/asm/bug.h:60,
+                 from include/linux/bug.h:5,
+                 from include/linux/page-flags.h:10,
+                 from kernel/bounds.c:10:
+include/linux/log2.h: In function '__ilog2_u32':
+include/linux/log2.h:24:9: error: implicit declaration of function 'fls' [-=
+Werror=3Dimplicit-function-declaration]
+   24 |  return fls(n) - 1;
+      |         ^~~
 
-You need to adjust drivers/iommu/arm-smmu-impl.c so that
-arm_smmu_impl_init() will invoke qcom_smmu_impl_init() as it spots your
-apps smmu.
+And so on ...
 
-Regards,
-Bjorn
+Caused by commit
+
+  a21ee6055c30 ("lockdep: Change hardirq{s_enabled,_context} to per-cpu var=
+iables")
+
+interacting with commit
+
+  00a30a5c9e6b ("arm: include asm/thread_info.h in asm/percpu.h")
+
+(which was a fix of mine but now the equivalent is in Linus' tree as commit
+
+  aa54ea903abb ("ARM: percpu.h: fix build error")
+)
+
+I have reverted 00a30a5c9e6b since commit
+
+  a6342915881a ("arm: Break cyclic percpu include")
+
+(which precedes a21ee6055c30) acomplishes the same thing differently.
+Something will be required when this is merged with Linus' tree, though.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/TzJyvr.CQ.dHYVGgaA=aARk
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8jscAACgkQAVBC80lX
+0Gy+kgf9EDGqQV7aphtZZtiWJBwQR1Y8XGTY5JLUbZfQN3WvcCKSuEdTi9tZ6U2i
+ITjVoHPHrYc9VBrXtYt6FF+Mt59aL6OWtuTVr2+EA/yM871awqzU01XdJM/dZP57
+pF8StLRbggMm8esbOC8eLLgXSj39hUadrWNSUE6x9DGSQkz96EFbOgTzfNh3pIms
++S6xC1Cfacn+oeimBXpWULnyCVtvNkCqZQbsVpy9Qv4UvnYSrZ27tjHaVROKO878
+9lmJRSWp8eQBSAMKY+0JjMstVRnyvongMLXXEMMdrni7vm41l7YkH9sYo0mHV9sB
+xg3i+FJqC/jZW3aBivEY81zM9P8yeQ==
+=T7kK
+-----END PGP SIGNATURE-----
+
+--Sig_/TzJyvr.CQ.dHYVGgaA=aARk--
