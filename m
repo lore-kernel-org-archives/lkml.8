@@ -2,108 +2,121 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB5DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CE8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCD7D22B42
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB2222B42
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:32:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZqlUeZYl"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kf7dh7xB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728652AbgGaVbV (ORCPT
+        id S1729299AbgGaVca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 17:31:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59046 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727995AbgGaVbV (ORCPT
+        Fri, 31 Jul 2020 17:32:30 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18234 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728055AbgGaVc3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 17:31:21 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23186C061574;
-        Fri, 31 Jul 2020 14:31:21 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id q75so24895983iod.1;
-        Fri, 31 Jul 2020 14:31:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IPQ4YxQDiIfVNt/lLYL1uBZHZt0DN0r5SckeWlUL42o=;
-        b=ZqlUeZYlm3G5RmGJ/gBq3usEdl293NPeNsf49vRwQFLjpkFcMWw+/wHHQF6OC4lnEP
-         UYDZlF8vFK8pP7i3LP5yfgXYgTcpyUR4UwcUnE6SMXnXfcK4/ymgbvAloDaeW1XQ/7sF
-         mIoGy57n/qQO2ubYE7SWThSVcKDv9ygK/qFBuHnT+K103p4/RMBjdNGuzR8h/3BotrLk
-         SnIDwhtP7EWGGpssFryMLmnyNz0ZvHxRrqEA7eBsskIgqQkumayrOCdAFLfOvEnNbK1W
-         FNwJP/oozmm4xtxuJ+f8VMzsh2DtO8LvNBSg3tUjEuW/ft6bstP8wUjPiuE/+DZsY7Lz
-         n/ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IPQ4YxQDiIfVNt/lLYL1uBZHZt0DN0r5SckeWlUL42o=;
-        b=nVNWeuScYVXly+pKPeu42JlUvkjkT3jvPQ+bONHg4gxFunoEqppnAT/5IeOYXDlHzH
-         gSPtDHXOWB3k8F9vS5xBJuFguyTO5+op2whk+OO1cbTBm9ZF0T3T4LWuNDKiQ5wBUEO6
-         3lXNVSGuUKhpNHnJVcJTEHPj0BOAdI/a3zFRjAEJwzYlxhArbTqARKQx0VpmfCRdqsBb
-         3pFKbdlOdBulzfq8j2Zg2/e3D0+NRwe850wrEMNhr/x+2e4PLd+wmrbbLfnrnRM+jl9G
-         DWdior71SifO7poGCdJaQ23cvsPeslGVsTdTkA6/O+qTy+uk5tGXjR0zgMzL6Hob7sfM
-         8wHQ==
-X-Gm-Message-State: AOAM533HbBEDRQGlqxywQD4IKQd2C8Hu5QJty95eH6SlMvM+mwFPxJpL
-        T4Mb1lYp6SRBaHcXzabrg+cNNDp+ImGbwgDB5Ew=
-X-Google-Smtp-Source: ABdhPJwdLNEFCnWUSxtOXLRAFdZSVwbu2VSbb24NWwr7R+O5oVVHBXi1NoFBl5lk5aI8qoQlxhxMOXQ/bRMFkEeE1gI=
-X-Received: by 2002:a6b:da0d:: with SMTP id x13mr5550869iob.138.1596231080492;
- Fri, 31 Jul 2020 14:31:20 -0700 (PDT)
+        Fri, 31 Jul 2020 17:32:29 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f248ddf0000>; Fri, 31 Jul 2020 14:32:15 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 31 Jul 2020 14:32:28 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 31 Jul 2020 14:32:28 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul
+ 2020 21:32:28 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 31 Jul 2020 21:32:28 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.221]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f248deb0000>; Fri, 31 Jul 2020 14:32:28 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v7 01/10] media: tegra-video: Fix channel format alignment
+Date:   Fri, 31 Jul 2020 14:32:15 -0700
+Message-ID: <1596231144-12554-2-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596231144-12554-1-git-send-email-skomatineni@nvidia.com>
+References: <1596231144-12554-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
-In-Reply-To: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Fri, 31 Jul 2020 14:31:09 -0700
-Message-ID: <CAKgT0UfMD1GytjJKYLQNCYzNFs1trdYFCtPkAhqnFhkW5ppYOg@mail.gmail.com>
-Subject: Re: [PATCH v17 00/21] per memcg lru lock
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Rong Chen <rong.a.chen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596231135; bh=8GJbUvoTqNXQhoilqMQO06MgCPv5IgO6eahUeR7/0ig=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=kf7dh7xBvwW7kBNLqeMyPx2jK1tq4ZBEFVe9o/GJEeZoTFkcqIpKwG/HLMkAMYHIO
+         eMD1BjVDyWtpGZWSnUPdrAO0P/0iUrP+jIsJ08kawQdTDHqBQqyjUJrA9ugFXoli+H
+         osiVlxU4i8wraZxhXp1NYkDJ4xgMJEJ2gkmu7AkYPw+ClDmXbRJe5xcUdkqKBvfCD0
+         L1wfrO/T2xU+FQtNHFVhFcg3KE5BdUaja7UiZ4/0NgjDJvLJa9s0iM475CnsbNP+HE
+         ihEwfgmL5pfPDs3AHgwdFQyy64Yx8/UpIZxk4Q1/p+KxyVIjqgKoI05tEZfOID+7fR
+         YzPyry4zuUXEQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 6:00 AM Alex Shi <alex.shi@linux.alibaba.com> wrote:
->
-> The new version which bases on v5.8-rc6. It includes Hugh Dickins fix in
-> mm/swap.c and mm/mlock.c fix which Alexander Duyck pointed out, then
-> removes 'mm/mlock: reorder isolation sequence during munlock'
->
-> Hi Johanness & Hugh & Alexander & Willy,
->
-> Could you like to give a reviewed by since you address much of issue and
-> give lots of suggestions! Many thanks!
->
+Pixel format width is mistakenly aligned to surface align bytes
+and altering width to aligned value may force sensor mode change
+other than the requested one and also cause mismatch in width
+programmed between sensor and vi which can lead to capture errors.
 
-I just finished getting a test pass done on the patches. I'm still
-seeing a regression on the will-it-scale/page_fault3 test but it is
-now only 3% instead of the 20% that it was so it may just be noise at
-this point.
+This patch removes width alignment and clamps width as per Tegra
+minimum and maximum limits.
 
-I'll try to make sure to get my review feedback wrapped up early next week.
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ drivers/staging/media/tegra-video/vi.c | 16 +++-------------
+ 1 file changed, 3 insertions(+), 13 deletions(-)
 
-Thanks.
+diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
+index 1b5e660..d621ebc 100644
+--- a/drivers/staging/media/tegra-video/vi.c
++++ b/drivers/staging/media/tegra-video/vi.c
+@@ -359,25 +359,15 @@ static void tegra_channel_fmt_align(struct tegra_vi_channel *chan,
+ 				    struct v4l2_pix_format *pix,
+ 				    unsigned int bpp)
+ {
+-	unsigned int align;
+-	unsigned int min_width;
+-	unsigned int max_width;
+-	unsigned int width;
+ 	unsigned int min_bpl;
+ 	unsigned int max_bpl;
+ 	unsigned int bpl;
+ 
+ 	/*
+-	 * The transfer alignment requirements are expressed in bytes. Compute
+-	 * minimum and maximum values, clamp the requested width and convert
+-	 * it back to pixels. Use bytesperline to adjust the width.
++	 * The transfer alignment requirements are expressed in bytes.
++	 * Clamp the requested width and height to the limits.
+ 	 */
+-	align = lcm(SURFACE_ALIGN_BYTES, bpp);
+-	min_width = roundup(TEGRA_MIN_WIDTH, align);
+-	max_width = rounddown(TEGRA_MAX_WIDTH, align);
+-	width = roundup(pix->width * bpp, align);
+-
+-	pix->width = clamp(width, min_width, max_width) / bpp;
++	pix->width = clamp(pix->width, TEGRA_MIN_WIDTH, TEGRA_MAX_WIDTH);
+ 	pix->height = clamp(pix->height, TEGRA_MIN_HEIGHT, TEGRA_MAX_HEIGHT);
+ 
+ 	/* Clamp the requested bytes per line value. If the maximum bytes per
+-- 
+2.7.4
 
-- Alex
