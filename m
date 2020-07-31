@@ -2,95 +2,141 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74509C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82ACE208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EE52208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:32:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596209559;
+	bh=wYzf+2brtM3bwigWDhYjt0sg7jxC8tK4H51bPDfvYJk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ODFEVO6IArXZUc0SCqnvsSTl9jcbWdCoJtyG+amEdHZtoe2RX9vBmojk9DfousaZd
+	 lj0VUu5v4Xr2MSKmKWCpgPrbFGaAOdIiAciw9wd/Ljp0AfAkX9bX6+MTqHQ5ddrXjS
+	 T7fQBrFddz0mCs05CUFZGL/QFLPEfE80qN/DUKm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387480AbgGaPcH (ORCPT
+        id S1732596AbgGaPci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 11:32:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:34546 "EHLO foss.arm.com"
+        Fri, 31 Jul 2020 11:32:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726497AbgGaPcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 11:32:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 943611FB;
-        Fri, 31 Jul 2020 08:32:05 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.4.61])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A97423F66E;
-        Fri, 31 Jul 2020 08:32:03 -0700 (PDT)
-Date:   Fri, 31 Jul 2020 16:32:01 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Maninder Singh <maninder1.s@samsung.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, james.morse@arm.com,
-        akpm@linux-foundation.org, Dave.Martin@arm.com,
-        0x7f454c46@gmail.com, peterz@infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        a.sahrawat@samsung.com, v.narang@samsung.com
-Subject: Re: [PATCH 1/1] arm64: use IRQ_STACK_SIZE instead of THREAD_SIZE for
- irq stack
-Message-ID: <20200731153201.GB67415@C02TD0UTHF1T.local>
-References: <CGME20200731121259epcas5p11248853c0578f2e426ab828310c9e855@epcas5p1.samsung.com>
- <1596196190-14141-1-git-send-email-maninder1.s@samsung.com>
+        id S1726502AbgGaPch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 11:32:37 -0400
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 763BD2245C;
+        Fri, 31 Jul 2020 15:32:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596209556;
+        bh=wYzf+2brtM3bwigWDhYjt0sg7jxC8tK4H51bPDfvYJk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=H+3Nm7MBMWlmBuU09BMx36oPZGaIrk7x2MdF652Y3zm0mrPT2XLC4yh/7y+d4nfsu
+         KFf9txu4PstMlhhHGqbmZaRSyqjwHqr3CyLx8HD5cQ9rQ1vVYYElkiG1Vo5yu3V7XN
+         KZf/uJCoc8iC3Gvx0L/XW7zyNkVsLRpttC7IZjfs=
+Received: by mail-oi1-f170.google.com with SMTP id k4so27056218oik.2;
+        Fri, 31 Jul 2020 08:32:36 -0700 (PDT)
+X-Gm-Message-State: AOAM533Xpnla2IrELpV3NP/1/X1UFYj4Uv8+Htw79pBDnPHI0y/W6mpJ
+        re6p4CFMilkQ4xhRJidLjncVSctHMIUGhEp5ow==
+X-Google-Smtp-Source: ABdhPJyyRnLBA0WxHZIzpHMNV7YoainKdcdBPAdzF/GqsTsiGD5j0V7vSDrqcYePaPbUzanCEfEhJaQdzhpEaD9uqkA=
+X-Received: by 2002:aca:4844:: with SMTP id v65mr3474230oia.152.1596209555800;
+ Fri, 31 Jul 2020 08:32:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1596196190-14141-1-git-send-email-maninder1.s@samsung.com>
+References: <20200731033956.6058-1-mark.tomlinson@alliedtelesis.co.nz> <20200731033956.6058-2-mark.tomlinson@alliedtelesis.co.nz>
+In-Reply-To: <20200731033956.6058-2-mark.tomlinson@alliedtelesis.co.nz>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 31 Jul 2020 09:32:24 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJgD_Ys3xjoJYuQ3R9bL7gUC+NKwkq71eTngj5uvcpk6Q@mail.gmail.com>
+Message-ID: <CAL_JsqJgD_Ys3xjoJYuQ3R9bL7gUC+NKwkq71eTngj5uvcpk6Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] PCI: Reduce warnings on possible RW1C corruption
+To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Cc:     Ray Jui <ray.jui@broadcom.com>, Bjorn Helgaas <helgaas@kernel.org>,
+        Scott Branden <sbranden@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 05:19:50PM +0530, Maninder Singh wrote:
-> IRQ_STACK_SIZE can be made different from THREAD_SIZE,
+On Thu, Jul 30, 2020 at 9:40 PM Mark Tomlinson
+<mark.tomlinson@alliedtelesis.co.nz> wrote:
+>
+> For hardware that only supports 32-bit writes to PCI there is the
+> possibility of clearing RW1C (write-one-to-clear) bits. A rate-limited
+> messages was introduced by fb2659230120, but rate-limiting is not the
+> best choice here. Some devices may not show the warnings they should if
+> another device has just produced a bunch of warnings. Also, the number
+> of messages can be a nuisance on devices which are otherwise working
+> fine.
+>
+> This patch changes the ratelimit to a single warning per bus. This
+> ensures no bus is 'starved' of emitting a warning and also that there
+> isn't a continuous stream of warnings. It would be preferable to have a
+> warning per device, but the pci_dev structure is not available here, and
+> a lookup from devfn would be far too slow.
 
-While that's true in theory, IRQ_STACK_SIZE is defined as:
+If we don't want to just warn when a 8 or 16 bit access occurs (I'm
+not sure if 32-bit only accesses is possible or common. Seems like
+PCI_COMMAND would always get written?), then a simple way to do this
+is just move this out of line and do something like this where the bus
+or device is created/registered:
 
-|  #define IRQ_STACK_SIZE          THREAD_SIZE
+if (bus->ops->write == pci_generic_config_write32)
+    warn()
 
-... which *must* be the case or the overflow detction will either miss
-some overflows, or spuriously detect overflows where there are none.
-
-Pleased beware if you are changing this locally.
-
-> and as IRQ_STACK_SIZE is used while irq stack allocation,
-> same define should be used while printing information of irq stack.
-> 
-> Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
-
-Regardless of the above, it is best to use the more specific mnemonic,
-so:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-I'll leave it to Catalin and Will to pick this up.
-
-Mark.
-
+>
+> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+> Fixes: fb2659230120 ("PCI: Warn on possible RW1C corruption for sub-32 bit config writes")
+> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
 > ---
->  arch/arm64/kernel/traps.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-> index 47f651d..13ebd5c 100644
-> --- a/arch/arm64/kernel/traps.c
-> +++ b/arch/arm64/kernel/traps.c
-> @@ -855,7 +855,7 @@ asmlinkage void handle_bad_stack(struct pt_regs *regs)
->  	pr_emerg("Task stack:     [0x%016lx..0x%016lx]\n",
->  		 tsk_stk, tsk_stk + THREAD_SIZE);
->  	pr_emerg("IRQ stack:      [0x%016lx..0x%016lx]\n",
-> -		 irq_stk, irq_stk + THREAD_SIZE);
-> +		 irq_stk, irq_stk + IRQ_STACK_SIZE);
->  	pr_emerg("Overflow stack: [0x%016lx..0x%016lx]\n",
->  		 ovf_stk, ovf_stk + OVERFLOW_STACK_SIZE);
->  
-> -- 
-> 1.9.1
-> 
+>  drivers/pci/access.c | 9 ++++++---
+>  include/linux/pci.h  | 1 +
+>  2 files changed, 7 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> index 79c4a2ef269a..ab85cb7df9b6 100644
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -160,9 +160,12 @@ int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
+>          * write happen to have any RW1C (write-one-to-clear) bits set, we
+>          * just inadvertently cleared something we shouldn't have.
+>          */
+> -       dev_warn_ratelimited(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
+> -                            size, pci_domain_nr(bus), bus->number,
+> -                            PCI_SLOT(devfn), PCI_FUNC(devfn), where);
+> +       if (!bus->unsafe_warn) {
+> +               dev_warn(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
+> +                        size, pci_domain_nr(bus), bus->number,
+> +                        PCI_SLOT(devfn), PCI_FUNC(devfn), where);
+> +               bus->unsafe_warn = true;
+> +       }
+>
+>         mask = ~(((1 << (size * 8)) - 1) << ((where & 0x3) * 8));
+>         tmp = readl(addr) & mask;
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 34c1c4f45288..5b6ab593ae09 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -613,6 +613,7 @@ struct pci_bus {
+>         unsigned char   primary;        /* Number of primary bridge */
+>         unsigned char   max_bus_speed;  /* enum pci_bus_speed */
+>         unsigned char   cur_bus_speed;  /* enum pci_bus_speed */
+> +       bool            unsafe_warn;    /* warned about RW1C config write */
+
+Make this a bitfield next to 'is_added'.
+
+>  #ifdef CONFIG_PCI_DOMAINS_GENERIC
+>         int             domain_nr;
+>  #endif
+> --
+> 2.28.0
+>
