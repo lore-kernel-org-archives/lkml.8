@@ -7,61 +7,56 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18674C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBF1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8D1422B40
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B71C208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:23:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lMCI4PZd";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="H8UrTeDl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OdVtZirS";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ickxYHOC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732404AbgGaJXO (ORCPT
+        id S1732415AbgGaJXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:23:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60024 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732299AbgGaJW6 (ORCPT
+        Fri, 31 Jul 2020 05:23:17 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56344 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732294AbgGaJW7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:22:58 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C23BC061575;
-        Fri, 31 Jul 2020 02:22:58 -0700 (PDT)
-Date:   Fri, 31 Jul 2020 09:22:55 -0000
+        Fri, 31 Jul 2020 05:22:59 -0400
+Date:   Fri, 31 Jul 2020 09:22:56 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596187376;
+        s=2020; t=1596187377;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=pJCbdw0apZCnC/JUOExJ817JlivpTmQAsz+sQzoYaV4=;
-        b=lMCI4PZdwWgXUIv5tIKjnOQk+miS0FUtpQJD/YlZcyD6+suislfvNVp8Y0OB2gsZF8FR/a
-        EjuhtEEwAoXjU8CdjavB5ggYLBrcdOXe3N3eeZz1gU+EPRIP1xFkMoAMx5P5kg/DfM10LQ
-        n3FTbmyudtm9dcC+VWvpMng1j42i7LeXJw0Rprbydqnqyb3ZntRwROXiWtzKoLkywZ9IGl
-        wPBqvdRjFn/T6RBMDhz+FjqK/bFHL+sJ9cUslJfDc9iUWqV9Eed7gApkeP/Tav9c1yYgDI
-        Gve2iqFdVT2ZNN9kzhKDpO4UDMwPhSsmzTcmph74wJndkidHDURmujskodpOXg==
+        bh=n45tXQtk9gACvW83Q2OYZpK0lXR88cuRw4dUM/hytfs=;
+        b=OdVtZirS07vuYbYNbHNFeGIbu0Hn+IjaYf4p0/+q05I4cWhUz8ad+NSzOGZ7kVMQaZkXcO
+        x1J6qD5oIwG5BlMbhLKTnY0XVJnA3sBb6HYAv5KV2e9ENNJzQMytRNVJJQVlep+ifzv+aM
+        xbQK8Ve+AWrv843nXVfHGq88mwihIwGodKd425cOz20Pe5ErhSOBsKr76R9+F3d9EiLZdy
+        ZNAeGyjg3hZVvFTgzQKwjjI6MT5JGpTBmfeRZk7wMrx2oRpTrabvcWA+9Ni0AaH2L1sZu7
+        fKQC5NuC+2l6YaqDNCp6FDkoVbCcEQ429h3MFnjFdn5+9RUC7U8Zp7YFiei48w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596187376;
+        s=2020e; t=1596187377;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=pJCbdw0apZCnC/JUOExJ817JlivpTmQAsz+sQzoYaV4=;
-        b=H8UrTeDlfJpNQLG/zjjsnDP8Xz1QdQKr/NbstQTdV3NUwKHlFLql2Zim6ePKxCqC2Q4cX+
-        csFh7nwXMlB/v4CA==
-From:   "tip-bot2 for Arnd Bergmann" <tip-bot2@linutronix.de>
+        bh=n45tXQtk9gACvW83Q2OYZpK0lXR88cuRw4dUM/hytfs=;
+        b=ickxYHOCufrKdyb00o8PDHdyiM1ASYCzEk3RYZcvIolrtxsm0+6nXPKRFUPAI4bzVzFrZ/
+        Iqqw1Iqfqu9oaLAQ==
+From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] refperf: Work around 64-bit division
-Cc:     kbuild test robot <lkp@intel.com>, valdis.kletnieks@vt.edu,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
+Subject: [tip: core/rcu] doc: Document rcuperf's module parameters
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <159618737593.4006.17865090440810592655.tip-bot2@tip-bot2>
+Message-ID: <159618737657.4006.5408066836721192390.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -69,63 +64,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     7c944d7c67daee84e3c756bb74ad2f32b28c41cf
-Gitweb:        https://git.kernel.org/tip/7c944d7c67daee84e3c756bb74ad2f32b28=
-c41cf
-Author:        Arnd Bergmann <arnd@arndb.de>
-AuthorDate:    Fri, 29 May 2020 14:36:26 -07:00
+Commit-ID:     847dd70aa971a67b4dfdb8f131428dfb90d88714
+Gitweb:        https://git.kernel.org/tip/847dd70aa971a67b4dfdb8f131428dfb90d88714
+Author:        Paul E. McKenney <paulmck@kernel.org>
+AuthorDate:    Fri, 29 May 2020 14:24:03 -07:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
 CommitterDate: Mon, 29 Jun 2020 12:00:45 -07:00
 
-refperf: Work around 64-bit division
+doc: Document rcuperf's module parameters
 
-A 64-bit division was introduced in refperf, breaking compilation
-on all 32-bit architectures:
+This commit adds documentation for the rcuperf module parameters.
 
-kernel/rcu/refperf.o: in function `main_func':
-refperf.c:(.text+0x57c): undefined reference to `__aeabi_uldivmod'
-
-Fix this by using div_u64 to mark the expensive operation.
-
-[ paulmck: Update primitive and format per Nathan Chancellor. ]
-Fixes: bd5b16d6c88d ("refperf: Allow decimal nanoseconds")
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Valdis Kl=C4=93tnieks <valdis.kletnieks@vt.edu>
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/refperf.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ Documentation/admin-guide/kernel-parameters.txt | 36 ++++++++++++++++-
+ 1 file changed, 36 insertions(+)
 
-diff --git a/kernel/rcu/refperf.c b/kernel/rcu/refperf.c
-index 063eeb0..80d4490 100644
---- a/kernel/rcu/refperf.c
-+++ b/kernel/rcu/refperf.c
-@@ -478,7 +478,7 @@ static int main_func(void *arg)
- 		if (torture_must_stop())
- 			goto end;
-=20
--		result_avg[exp] =3D 1000 * process_durations(nreaders) / (nreaders * loops=
-);
-+		result_avg[exp] =3D div_u64(1000 * process_durations(nreaders), nreaders *=
- loops);
- 	}
-=20
- 	// Print the average of all experiments
-@@ -489,9 +489,13 @@ static int main_func(void *arg)
- 	strcat(buf, "Runs\tTime(ns)\n");
-=20
- 	for (exp =3D 0; exp < nruns; exp++) {
-+		u64 avg;
-+		u32 rem;
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index fb95fad..20cd00b 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4407,6 +4407,42 @@
+ 			      reboot_cpu is s[mp]#### with #### being the processor
+ 					to be used for rebooting.
+ 
++	refperf.holdoff= [KNL]
++			Set test-start holdoff period.  The purpose of
++			this parameter is to delay the start of the
++			test until boot completes in order to avoid
++			interference.
 +
- 		if (errexit)
- 			break;
--		sprintf(buf1, "%d\t%llu.%03d\n", exp + 1, result_avg[exp] / 1000, (int)(re=
-sult_avg[exp] % 1000));
-+		avg =3D div_u64_rem(result_avg[exp], 1000, &rem);
-+		sprintf(buf1, "%d\t%llu.%03u\n", exp + 1, avg, rem);
- 		strcat(buf, buf1);
- 	}
-=20
++	refperf.loops= [KNL]
++			Set the number of loops over the synchronization
++			primitive under test.  Increasing this number
++			reduces noise due to loop start/end overhead,
++			but the default has already reduced the per-pass
++			noise to a handful of picoseconds on ca. 2020
++			x86 laptops.
++
++	refperf.nreaders= [KNL]
++			Set number of readers.  The default value of -1
++			selects N, where N is roughly 75% of the number
++			of CPUs.  A value of zero is an interesting choice.
++
++	refperf.nruns= [KNL]
++			Set number of runs, each of which is dumped onto
++			the console log.
++
++	refperf.readdelay= [KNL]
++			Set the read-side critical-section duration,
++			measured in microseconds.
++
++	refperf.shutdown= [KNL]
++			Shut down the system at the end of the performance
++			test.  This defaults to 1 (shut it down) when
++			rcuperf is built into the kernel and to 0 (leave
++			it running) when rcuperf is built as a module.
++
++	refperf.verbose= [KNL]
++			Enable additional printk() statements.
++
+ 	relax_domain_level=
+ 			[KNL, SMP] Set scheduler's default relax_domain_level.
+ 			See Documentation/admin-guide/cgroup-v1/cpusets.rst.
