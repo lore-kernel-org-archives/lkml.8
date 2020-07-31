@@ -2,31 +2,32 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE28C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6536DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AED320829
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D70C207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:00:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731718AbgGaIAF (ORCPT
+        id S1731894AbgGaIAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:00:05 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:59648 "EHLO
+        Fri, 31 Jul 2020 04:00:24 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:59748 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731384AbgGaIAD (ORCPT
+        with ESMTP id S1731523AbgGaIAE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 04:00:03 -0400
+        Fri, 31 Jul 2020 04:00:04 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 348BA8030866;
-        Fri, 31 Jul 2020 07:59:58 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 07D3A8040A69;
+        Fri, 31 Jul 2020 08:00:01 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id T9BwIsQNMf_F; Fri, 31 Jul 2020 10:59:57 +0300 (MSK)
+        with ESMTP id 4aeNiTJ4Y1iU; Fri, 31 Jul 2020 11:00:00 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Mark Brown <broonie@kernel.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
@@ -40,9 +41,11 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Feng Tang <feng.tang@intel.com>, Vinod Koul <vkoul@kernel.org>,
         <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 0/8] spi: dw-dma: Add max SG entries burst capability support
-Date:   Fri, 31 Jul 2020 10:59:45 +0300
-Message-ID: <20200731075953.14416-1-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH 5/8] spi: dw-dma: Detach DMA transfer into a dedicated method
+Date:   Fri, 31 Jul 2020 10:59:50 +0300
+Message-ID: <20200731075953.14416-6-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200731075953.14416-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200731075953.14416-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -52,118 +55,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mainly this series is about fixing a very nasty problem discovered in the
-DW APB SSI driver working in a couple with DW DMAC, which doesn't have
-multi-block capability support (a.k.a. accelerated SG list entries
-traversal/burst, or automatic LLP entries reload, etc.).
-
-DW DMA IP-core and its DMA channel on the synthesize stage can be tuned by
-setting a vast number of the model parameters, some of which are provided
-to create a more optimized/performant controller. In particular two of
-those parameters are DMAH_CHx_MULTI_BLK_EN and DMAH_CHx_HC_LLP. If at
-least one of them is set to zero (false) then the target DMA controller
-will be smaller and faster but will lack of the DMA blocks chaining
-support. In the kernel notation it means that the controller won't be able
-to automatically reload a next SG-list entry, when a current one is
-finished. Since Linux kernel DMA subsystem interface requires to have the
-SG-lists execution supported, the DW DMA engine driver is developed in a
-way so to resubmit each SG-list entry one-by-one by software means: each
-SG-list entry execution finish is tracked by the DW DMA controller
-interrupt, which handler executes a tasklet, which then re-charges a DW
-DMA channel with a next SG-list entry if one is available.  Such
-implementation is a normal design and works well for the most of the DW
-DMAC client devices. But it may cause problems for devices, which send and
-receive data by means of internal FIFOs. That requires having several DMA
-channels working synchronously in order to prevent the FIFOs overflow.
-
-A bright example of such device is the DW APB SSI controller. It has Tx
-and Rx FIFOs, which first need to be filled in with data before data
-sending out or receiving in. But those FIFOs are inter-dependent because
-of the SPI nature and its shift-register design. So each sent over Tx FIFO
-byte immediately causes getting a byte from the SPI bus into the Rx FIFO.
-It makes a strategy of working with the SPI controller a bit tricky. The
-more data we push into the Tx FIFO and the faster the SPI bus is, the more
-careful we have to be in pulling data from Rx FIFO since if software or
-DMA engine misses a moment when Rx FIFO is full, for instance, due to
-being busy with some other activity or due to being blocked if system bus
-is busy with doing something else or just due to being too slow to keep up
-with incoming data, then Rx FIFO will be overflown, which consequently
-causes data loss. Needless to say that such situation is fatal and mustn't
-be tolerated for a bus like SPI.
-
-In application to the DW APB SSI driver the problem above may happen when
-DW DMAC is synthesized with no multi-block capability support and it's
-enabled to be working with DW APB SSI for full-duplex transfers. DW APB
-SSI driver allocates two DW DMAC channels to perform Tx and Rx SPI
-transfers, initializes them, submits Tx and Rx SG-lists for execution and
-then waits until the DMA transfers are finished. The issue happens when Rx
-SG-list consists of more than one entry. Since the multi-block capability
-is unsupported the DW DMAC driver will use the software-based SG-list
-entries traverse implementation, which by design may cause
-non-deterministic latency during the Rx SG-list entries re-charge. During
-the entries re-charge procedure the DMA Tx channel will keep pushing data
-into the SPI Tx FIFO. DW APB SSI controller in its turn will keep pushing
-data out from the Tx FIFO to the SPI bus, and will immediately fill in the
-Rx FIFO. So if the latency is big enough, then we'll eventually end up
-with Rx FIFO overflow.
-
-One of the possible solution of the problem denoted above is to feed the
-DMA engine with the Tx and Rx SG-list entries one-by-one. This series
-provides an implementation of that approach. First it moves the requested
-DMA channels configuration into the dma_setup() callback, which should
-have been there in the first place. Then it's better to move the DMA
-transfers submission into the DMA-preparation methods to collect all the
-setups in a single method. After that the current implementation of a
-straightforward SG-lists DMA transfer should be unpinned into a dedicated
-method dw_spi_dma_transfer_all() since we are about to introduce an
-alternative DMA-based SPI transfer approach. Since DMA-transfers finish is
-now locally detected we can simplify the driver code a bit and move the
-DMAC register cleanup to a single place in the dw_spi_dma_transfer_all()
-method. In order to re-use the DMA-{wait, submit Tx, submit Rx} methods we
-have to alter their prototypes, so they would accept SG-lists instead of
-the SPI-transfer structure. Finally we introduce a new DMA-based
-SPI-transfer method, which traverses the SG-list entries in a loop and
-synchronously submits each of then to the Tx and Rx DMA channels in a way
-so the DMA engine wouldn't need to activate the prone to errors in our
-case SG-list entries re-charge implementation. That new method is utilized
-only for the DMA controllers, which can't handle all Tx and Rx SPI
-transfer SG-lists in a single DMA transaction without software
-intervention, and for the full-duplex SPI-transfers.
-
-Note since the DMA-engine subsystem in kernel 5.8-rcX doesn't have the
-max_sg_burst capability supported, this series is intended to be applied
-only after the "next"-branch of the DMA-engine repository is merged into
-the mainline repo. Alternatively the series could be merged in through the
-DMA-engine repo.
+In order to add an alternative method of DMA-based SPI transfer first we
+need to detach the currently available one from the common code. Here we
+move the normal DMA-based SPI transfer execution functionality into a
+dedicated method. It will be utilized if either the DMA engine supports
+an unlimited number SG entries or Tx-only SPI transfer is requested. But
+currently just use it for any SPI transfer.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: linux-spi@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+---
+ drivers/spi/spi-dw-dma.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-Serge Semin (8):
-  spi: dw-dma: Set DMA Level registers on init
-  spi: dw-dma: Fail DMA-based transfer if no Tx-buffer specified
-  spi: dw-dma: Configure the DMA channels in dma_setup
-  spi: dw-dma: Move DMA transfers submission to the channels prep
-    methods
-  spi: dw-dma: Detach DMA transfer into a dedicated method
-  spi: dw-dma: Move DMAC register cleanup to DMA transfer method
-  spi: dw-dma: Pass exact data to the DMA submit and wait methods
-  spi: dw-dma: Add one-by-one SG list entries transfer
-
- drivers/spi/spi-dw-dma.c | 309 ++++++++++++++++++++++++++++++---------
- drivers/spi/spi-dw.h     |   1 +
- 2 files changed, 238 insertions(+), 72 deletions(-)
-
+diff --git a/drivers/spi/spi-dw-dma.c b/drivers/spi/spi-dw-dma.c
+index 366978086781..32ef7913a73d 100644
+--- a/drivers/spi/spi-dw-dma.c
++++ b/drivers/spi/spi-dw-dma.c
+@@ -434,7 +434,8 @@ static int dw_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
+ 	return 0;
+ }
+ 
+-static int dw_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
++static int dw_spi_dma_transfer_all(struct dw_spi *dws,
++				   struct spi_transfer *xfer)
+ {
+ 	int ret;
+ 
+@@ -455,7 +456,14 @@ static int dw_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
+ 
+ 	dma_async_issue_pending(dws->txchan);
+ 
+-	ret = dw_spi_dma_wait(dws, xfer);
++	return dw_spi_dma_wait(dws, xfer);
++}
++
++static int dw_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
++{
++	int ret;
++
++	ret = dw_spi_dma_transfer_all(dws, xfer);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.27.0
 
