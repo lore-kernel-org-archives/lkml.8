@@ -2,169 +2,179 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF1FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D6BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B39E22B3F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 502F1206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:08:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="kWBlJYhj"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KfTF6oqb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgGaXDs (ORCPT
+        id S1726937AbgGaXId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 19:03:48 -0400
-Received: from mail-co1nam11on2056.outbound.protection.outlook.com ([40.107.220.56]:10369
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726215AbgGaXDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 19:03:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gKZhBwgKRACXJSXsygdiwBfB1RMUQ9/wc9PTSn3cRkYK9CDh/RW8nM/TtlBrxJ8gqmv0j6UuS3r07g2HZ8vDWVgQiBh8JnAb/w/unY8GjyOvYpcsuf2Qa1y+4YotcS1LszUOGvvC9udnOgYmTjnk2QR8WGg835tnX6IiTL6jhv0qnYWmAnuXJsyaFY83Kuto1DAoQKpUM8ndVm1BEqSSJtFUR3OMnbTbd3eO4pIIAHONxcFYBOpO7jhYH0A67K5LPIrdLGkiUzinGpNYpvgWYtB5pdtE+H99qL+ccmZmFU6GWH1s4DKlEyziK+3NBcYpBvpLsYKwB/h6B6JYl4OiDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=alQ8S84XnD7wvc1d1fVM8KAP83Iy0kZJR2Zpg7Dq75I=;
- b=mexvUkwkBZ/1vbWy1c1zppVCrHW26aqlPNSil5HF2XkwK0EHJcy9rAwUC2/uzcSR+uZtx24eokA8UaNJvLa+jy/st1Yb8br/6oiOpeAZzoIzSykf8ZfH2oJ1HEy2Y+zr3h1TRGpFp9LI2jc23NB2QlOym8s3ZPWS9SHHmLdn55rPptBUkvHKOzk+WuxeE9xQd9d3HQkM/7bnXKtwOQ3G7FX+a3I3Nc3qja4eMWoApFgCrNxa0dKVWaiYk3jIQyEcykNrThXeAfQEL59MkvqYpV9HwsSDpt00LHh+tt16M82egKHBPIRW4W85InrGdDw8TrNCce09aDkJPlNbpp1iGg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=linaro.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Fri, 31 Jul 2020 19:08:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45724 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbgGaXIc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 19:08:32 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62A39C061756
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:08:32 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id p8so680397pgn.13
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 16:08:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=alQ8S84XnD7wvc1d1fVM8KAP83Iy0kZJR2Zpg7Dq75I=;
- b=kWBlJYhjVa0g/Sjf2zi2qJnpKhoj6iFX0vcXEslsZTSd3albn3hYX9+SiJAs/dfQMO7cRnLEpBftbyiMG/BugxM0wbb8ILpy67SlRvt832Q0mih063MkSCHnThaJZ8LlzHAhTuX3yuHUhE269i3/lCYk7rpn1FUH5Jae1kejr80=
-Received: from DM5PR21CA0011.namprd21.prod.outlook.com (2603:10b6:3:ac::21) by
- BYAPR02MB4822.namprd02.prod.outlook.com (2603:10b6:a03:48::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3216.21; Fri, 31 Jul 2020 23:03:44 +0000
-Received: from CY1NAM02FT031.eop-nam02.prod.protection.outlook.com
- (2603:10b6:3:ac:cafe::f8) by DM5PR21CA0011.outlook.office365.com
- (2603:10b6:3:ac::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.3 via Frontend
- Transport; Fri, 31 Jul 2020 23:03:43 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT031.mail.protection.outlook.com (10.152.75.180) with Microsoft SMTP
- Server id 15.20.3239.17 via Frontend Transport; Fri, 31 Jul 2020 23:03:43
- +0000
-Received: from [149.199.38.66] (port=37155 helo=smtp.xilinx.com)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <stefano.stabellini@xilinx.com>)
-        id 1k1e1x-0000TN-I9; Fri, 31 Jul 2020 16:01:37 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <stefano.stabellini@xilinx.com>)
-        id 1k1e3z-0000Xe-HT; Fri, 31 Jul 2020 16:03:43 -0700
-Received: from [10.23.121.225] (helo=localhost)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <stefanos@xilinx.com>)
-        id 1k1e3u-0000VV-4n; Fri, 31 Jul 2020 16:03:38 -0700
-Date:   Fri, 31 Jul 2020 16:03:37 -0700 (PDT)
-From:   Stefano Stabellini <stefano.stabellini@xilinx.com>
-X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-cc:     Ben Levinsky <ben.levinsky@xilinx.com>, ohad@wizery.com,
-        bjorn.andersson@linaro.org, michals@xilinx.com, JOLLYS@xilinx.com,
-        RAJANV@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-remoteproc@vger.kernel.org,
-        linux-arm-kernell@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jliang@xilinx.com,
-        stefanos@xilinx.com, Wendy Liang <wendy.liang@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Ed Mooring <ed.mooring@xilinx.com>, Jason Wu <j.wu@xilinx.com>
-Subject: Re: [PATCH v6 5/5] remoteproc: Add initial zynqmp R5 remoteproc
- driver
-In-Reply-To: <20200728210002.GA2413713@xps15>
-Message-ID: <alpine.DEB.2.21.2007311104400.1767@sstabellini-ThinkPad-T480s>
-References: <20200715153317.25643-1-ben.levinsky@xilinx.com> <20200715153317.25643-6-ben.levinsky@xilinx.com> <20200728210002.GA2413713@xps15>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=nYf6T7ak2fI7+X5dAIz+6RF2nee0gRVAMZVc45IKWXs=;
+        b=KfTF6oqbUoVJephh1DS5MUSdhHbSjJv9s6nkBB1vsL6c45/MdK9Cq2XCVdexSGxfu4
+         THOiI7QqRzwP2n/90cHzxefypDi0PdbyoRZKlyz2/Qj20hx79mrA03A6yogeGoWcWyd8
+         emQqAuw5FziO/zi0EelZrjIZdVBbEEEaBDj+U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=nYf6T7ak2fI7+X5dAIz+6RF2nee0gRVAMZVc45IKWXs=;
+        b=RjyR80tWk50TKobo2+qdxe6uljmNgIfwfLT1bXDtaGl22Xku3uh2NaP5kU/2+AeWoN
+         ZefIBtOTFh7+YobrfZDTnjEWEofVBcT9OtGOppPHyvJnZLU6uLYD2777oTI2HtLeJ5iR
+         rxsT12zULWvkVTbhgiWlzqKk0Y/YvCFEKLM9YW7XE2qvUMNSvPZi+WovAD+Sro7DUWwm
+         LGbScsuuQcre7Qgx36ciEmK+0d81F0rxfcChXdu0mAF3NPSI+m3kS+aLrFEsAh2q7WvK
+         KKRzRvxBzCqEXGHAyqQplocne4qHhHiwfLG5UwACNPYBSK/jMo8Qla9KsepwwNUv+YJt
+         iqRg==
+X-Gm-Message-State: AOAM533CBbnYgexRPLQazWzw/OQR29yIq/atevqqDoF55V3aeao6oueP
+        yBolWnuwwLX43bP1RvO2AkhSIA==
+X-Google-Smtp-Source: ABdhPJy7266h+F7pMy3NP04oOwoKlnNEEd7sTQ64K+tVZoujHRZTB7RMSvGovfv1MI4oIe9oKwOwQQ==
+X-Received: by 2002:aa7:8143:: with SMTP id d3mr5616752pfn.97.1596236911855;
+        Fri, 31 Jul 2020 16:08:31 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b25sm8429813pft.134.2020.07.31.16.08.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 16:08:30 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Fangrui Song <maskray@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 04/36] x86/boot: Add .text.* to setup.ld
+Date:   Fri, 31 Jul 2020 16:07:48 -0700
+Message-Id: <20200731230820.1742553-5-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200731230820.1742553-1-keescook@chromium.org>
+References: <20200731230820.1742553-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 68154215-d20d-4532-309e-08d835a5f919
-X-MS-TrafficTypeDiagnostic: BYAPR02MB4822:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB482247E9027BA7EC2E7486ACA04E0@BYAPR02MB4822.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: lkGHS6K758r/Ay/lFLjrc4t9ttMgDZsqbarGaMcPpD56kRCECEsC9FJzAqAClVrBZgVH2aS18moFaS5S3OCiXuRgD/6RTyPLF5Q4QLj+rv/PaZQYlA0RcPqDpouzxFXisb+xnSqg1RPWpDYFoVoim1P2tWCnhV7u0oLLr5hrUOcycrJ/qWqnHompPacLHtivbmPRv2xGtMXuS+FpJBv2ZWm18xyZlfVpyrmVLujBtrKKOVdL5uuGlqnRk5yfcVhpN0oW6+6Om4/bMXyug/6HDItng65xEwInxQMZyNfp80ejoUlp+ge6n58lnbdyo+WCAgvhD83vS8/36QWz9uW3pgerojYmd5ZIVLmwQcLtFaZgn5E9JX8C85Qrx0w8VQ8all0dONnTN4plyXBsLGKgsg==
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(7916004)(39860400002)(376002)(136003)(346002)(396003)(46966005)(47076004)(70206006)(82740400003)(54906003)(316002)(82310400002)(26005)(5660300002)(70586007)(2906002)(4326008)(8936002)(426003)(44832011)(6916009)(107886003)(33716001)(8676002)(9786002)(356005)(83380400001)(186003)(81166007)(9686003)(478600001)(336012);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jul 2020 23:03:43.7858
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68154215-d20d-4532-309e-08d835a5f919
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: CY1NAM02FT031.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4822
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Jul 2020, Mathieu Poirier wrote:
-> On Wed, Jul 15, 2020 at 08:33:17AM -0700, Ben Levinsky wrote:
-> > R5 is included in Xilinx Zynq UltraScale MPSoC so by adding this
-> > remotproc driver, we can boot the R5 sub-system in different
-> > configurations.
-> > 
-> > Acked-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
-> > Acked-by: Ben Levinsky <ben.levinsky@xilinx.com>
-> > Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> > Signed-off-by: Ben Levinsky <ben.levinsky@xilinx.com>
-> > Signed-off-by: Wendy Liang <wendy.liang@xilinx.com>
-> > Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> > Signed-off-by: Ed Mooring <ed.mooring@xilinx.com>
-> > Signed-off-by: Jason Wu <j.wu@xilinx.com>
-> > Tested-by: Ben Levinsky <ben.levinsky@xilinx.com>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-[...]
+gcc puts the main function into .text.startup when compiled with -Os (or
+-O2). This results in arch/x86/boot/main.c having a .text.startup
+section which is currently not included explicitly in the linker script
+setup.ld in the same directory.
 
-> > +static int zynqmp_r5_remoteproc_probe(struct platform_device *pdev)
-> > +{
-> > +	int ret, i = 0;
-> > +	u32 *lockstep_mode;
-> > +	struct device *dev = &pdev->dev;
-> > +	struct device_node *nc;
-> > +	struct zynqmp_r5_pdata *pdata;
-> > +
-> > +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-> > +	lockstep_mode = devm_kzalloc(dev, sizeof(u32 *), GFP_KERNEL);
-> > +	if (!pdata || !lockstep_mode)
-> > +		return -ENOMEM;
-> > +
-> > +	platform_set_drvdata(pdev, pdata);
-> 
-> As far as I can tell the above, along with allocating memory for @pdata, is not
-> needed since zynqmp_r5_remoteproc_remove() uses rpus[].
-> 
-> I have only reviewed the _probe() function and already encountered a fair amount
-> of fundemantal errors.  As such I will stop my review here. I will need to see a
-> reviewed-by tag (on the mailing list) by Stephano or Michal before reviewing the
-> next set. 
+The BFD linker places this orphan section immediately after .text, so
+this still works. However, LLD git, since [1], is choosing to place it
+immediately after the .bstext section instead (this is the first code
+section). This plays havoc with the section layout that setup.elf
+requires to create the setup header, for eg on 64-bit:
 
-Let me take this opportunity to say that my Acked-by on this version of
-the series was an unintentional miscommunication: I didn't give my
-Acked-by as I haven't even read the patches yet.
+    LD      arch/x86/boot/setup.elf
+  ld.lld: error: section .text.startup file range overlaps with .header
+  >>> .text.startup range is [0x200040, 0x2001FE]
+  >>> .header range is [0x2001EF, 0x20026B]
 
-I'll circle back with Michal and we'll make sure for either of us to do
-a round of public reviews on the next version.
+  ld.lld: error: section .header file range overlaps with .bsdata
+  >>> .header range is [0x2001EF, 0x20026B]
+  >>> .bsdata range is [0x2001FF, 0x200398]
+
+  ld.lld: error: section .bsdata file range overlaps with .entrytext
+  >>> .bsdata range is [0x2001FF, 0x200398]
+  >>> .entrytext range is [0x20026C, 0x2002D3]
+
+  ld.lld: error: section .text.startup virtual address range overlaps
+  with .header
+  >>> .text.startup range is [0x40, 0x1FE]
+  >>> .header range is [0x1EF, 0x26B]
+
+  ld.lld: error: section .header virtual address range overlaps with
+  .bsdata
+  >>> .header range is [0x1EF, 0x26B]
+  >>> .bsdata range is [0x1FF, 0x398]
+
+  ld.lld: error: section .bsdata virtual address range overlaps with
+  .entrytext
+  >>> .bsdata range is [0x1FF, 0x398]
+  >>> .entrytext range is [0x26C, 0x2D3]
+
+  ld.lld: error: section .text.startup load address range overlaps with
+  .header
+  >>> .text.startup range is [0x40, 0x1FE]
+  >>> .header range is [0x1EF, 0x26B]
+
+  ld.lld: error: section .header load address range overlaps with
+  .bsdata
+  >>> .header range is [0x1EF, 0x26B]
+  >>> .bsdata range is [0x1FF, 0x398]
+
+  ld.lld: error: section .bsdata load address range overlaps with
+  .entrytext
+  >>> .bsdata range is [0x1FF, 0x398]
+  >>> .entrytext range is [0x26C, 0x2D3]
+
+Add .text.* to the .text output section to fix this, and also prevent
+any future surprises if the compiler decides to create other such
+sections.
+
+[1] https://reviews.llvm.org/D75225
+
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Reviewed-by: Fangrui Song <maskray@google.com>
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/x86/boot/setup.ld | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/boot/setup.ld b/arch/x86/boot/setup.ld
+index 24c95522f231..49546c247ae2 100644
+--- a/arch/x86/boot/setup.ld
++++ b/arch/x86/boot/setup.ld
+@@ -20,7 +20,7 @@ SECTIONS
+ 	.initdata	: { *(.initdata) }
+ 	__end_init = .;
+ 
+-	.text		: { *(.text) }
++	.text		: { *(.text .text.*) }
+ 	.text32		: { *(.text32) }
+ 
+ 	. = ALIGN(16);
+-- 
+2.25.1
+
