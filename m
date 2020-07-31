@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBC0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE69C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 810132087C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9536A2087C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:24:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729564AbgGaVXg (ORCPT
+        id S1730099AbgGaVYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 17:23:36 -0400
-Received: from mga14.intel.com ([192.55.52.115]:50227 "EHLO mga14.intel.com"
+        Fri, 31 Jul 2020 17:24:02 -0400
+Received: from mga14.intel.com ([192.55.52.115]:50224 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729214AbgGaVXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 17:23:31 -0400
-IronPort-SDR: jSvX9znS4jgPNzwY9fCSJhN0VZliV99ABokru1ltozaS+1akuyWSu++E65Hqzp7gy/xJgNByaY
- mIhFa2rtwCMQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9699"; a="151075133"
+        id S1728186AbgGaVX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 17:23:27 -0400
+IronPort-SDR: tZgs9q8IUzK8Ad1NG6weuFbnExjtjlVbyBHxdI/hpbNV2aYGGrJcBe5BlCHAzmC1RWuvNp7iqO
+ qKDqrNw2SPqw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9699"; a="151075128"
 X-IronPort-AV: E=Sophos;i="5.75,419,1589266800"; 
-   d="scan'208";a="151075133"
+   d="scan'208";a="151075128"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
   by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 14:23:27 -0700
-IronPort-SDR: n1XueUoeOVIDoIt4dEfR0g+zYAgDwHeFJJXQMA5ZiC6TDIlzXDPottjMbmZ0iNmQd0bWxq4Y0d
- BJKSY2GQ8QJg==
+IronPort-SDR: XgiYUcAvmq0d0KmB7mBPZFVTJZBsdfcE9u47qGuK/O4qUyua/RAdqnnhdnPfjJbgAJA4QwNSaH
+ nPhpyV9KSfUw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,419,1589266800"; 
-   d="scan'208";a="331191315"
+   d="scan'208";a="331191298"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.160])
   by orsmga007.jf.intel.com with ESMTP; 31 Jul 2020 14:23:26 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -46,9 +46,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         linux-kernel@vger.kernel.org,
         eric van tassell <Eric.VanTassell@amd.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [RFC PATCH 7/8] KVM: x86/mmu: Introduce kvm_mmu_map_tdp_page() for use by SEV
-Date:   Fri, 31 Jul 2020 14:23:22 -0700
-Message-Id: <20200731212323.21746-8-sean.j.christopherson@intel.com>
+Subject: [RFC PATCH 2/8] KVM: x86/mmu: Use bits 2:0 to check for present SPTEs
+Date:   Fri, 31 Jul 2020 14:23:17 -0700
+Message-Id: <20200731212323.21746-3-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200731212323.21746-1-sean.j.christopherson@intel.com>
 References: <20200731212323.21746-1-sean.j.christopherson@intel.com>
@@ -59,68 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a helper to directly (pun intended) fault-in a TDP page
-without having to go through the full page fault path.  This allows
-SEV to pin pages before booting the guest, provides the resulting pfn to
-vendor code if should be needed in the future, and allows the RET_PF_*
-enums to stay in mmu.c where they belong.
+Use what are effectively EPT's RWX bits to detect present SPTEs instead
+of simply looking for a non-zero value.  This will allow using a
+non-zero initial value for SPTEs as well as using not-present SPTEs to
+track metadata for zapped private SPTEs.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/mmu.h     |  3 +++
- arch/x86/kvm/mmu/mmu.c | 25 +++++++++++++++++++++++++
- 2 files changed, 28 insertions(+)
+ arch/x86/kvm/mmu/mmu.c         | 9 +++++++--
+ arch/x86/kvm/mmu/paging_tmpl.h | 3 ++-
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
-index 9f6554613babc..06f4475b8aad8 100644
---- a/arch/x86/kvm/mmu.h
-+++ b/arch/x86/kvm/mmu.h
-@@ -108,6 +108,9 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
- 	return vcpu->arch.mmu->page_fault(vcpu, cr2_or_gpa, err, prefault);
- }
- 
-+kvm_pfn_t kvm_mmu_map_tdp_page(struct kvm_vcpu *vcpu, gpa_t gpa,
-+			       u32 error_code, int max_level);
-+
- /*
-  * Currently, we have two sorts of write-protection, a) the first one
-  * write-protects guest page to sync the guest modification, b) another one is
 diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 92b133d7b1713..06dbc1bb79a6a 100644
+index d737042fea55e..82f69a7456004 100644
 --- a/arch/x86/kvm/mmu/mmu.c
 +++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4271,6 +4271,31 @@ int kvm_tdp_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
- 				 max_level, true, &pfn);
+@@ -625,9 +625,14 @@ static int is_nx(struct kvm_vcpu *vcpu)
+ 	return vcpu->arch.efer & EFER_NX;
  }
  
-+kvm_pfn_t kvm_mmu_map_tdp_page(struct kvm_vcpu *vcpu, gpa_t gpa,
-+			       u32 error_code, int max_level)
-+{
-+	kvm_pfn_t pfn;
-+	int r;
-+
-+	if (mmu_topup_memory_caches(vcpu, false))
-+		return KVM_PFN_ERR_FAULT;
-+
-+	/*
-+	 * Loop on the page fault path to handle the case where an mmu_notifier
-+	 * invalidation triggers RET_PF_RETRY.  In the normal page fault path,
-+	 * KVM needs to resume the guest in case the invalidation changed any
-+	 * of the page fault properties, i.e. the gpa or error code.  For this
-+	 * path, the gpa and error code are fixed by the caller, and the caller
-+	 * expects failure if and only if the page fault can't be fixed.
-+	 */
-+	do {
-+		r = direct_page_fault(vcpu, gpa, error_code, false, max_level,
-+				      true, &pfn);
-+	} while (r == RET_PF_RETRY && !is_error_noslot_pfn(pfn));
-+	return pfn;
-+}
-+EXPORT_SYMBOL_GPL(kvm_mmu_map_tdp_page);
-+
- static void nonpaging_init_context(struct kvm_vcpu *vcpu,
- 				   struct kvm_mmu *context)
+-static int is_shadow_present_pte(u64 pte)
++static inline bool __is_shadow_present_pte(u64 pte)
  {
+-	return (pte != 0) && !is_mmio_spte(pte);
++	return !!(pte & 0x7);
++}
++
++static bool is_shadow_present_pte(u64 pte)
++{
++	return __is_shadow_present_pte(pte) && !is_mmio_spte(pte);
+ }
+ 
+ static int is_large_pte(u64 pte)
+diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
+index 0172a949f6a75..57813e92ea8e0 100644
+--- a/arch/x86/kvm/mmu/paging_tmpl.h
++++ b/arch/x86/kvm/mmu/paging_tmpl.h
+@@ -1024,7 +1024,8 @@ static int FNAME(sync_page)(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp)
+ 		gpa_t pte_gpa;
+ 		gfn_t gfn;
+ 
+-		if (!sp->spt[i])
++		if (!__is_shadow_present_pte(sp->spt[i]) &&
++		    !is_mmio_spte(sp->spt[i]))
+ 			continue;
+ 
+ 		pte_gpa = first_pte_gpa + i * sizeof(pt_element_t);
 -- 
 2.28.0
 
