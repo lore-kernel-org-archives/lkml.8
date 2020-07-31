@@ -2,212 +2,161 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5655C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32946C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B3E521744
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DE3D2245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:18:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cJ5D4Ub0"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="vmpN/XsH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728707AbgGaPRL (ORCPT
+        id S1728876AbgGaPR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 11:17:11 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:29935 "EHLO nat-hk.nvidia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726764AbgGaPRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 11:17:10 -0400
-Received: from hkpgpgate101.nvidia.com (Not Verified[10.18.92.77]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2435f30000>; Fri, 31 Jul 2020 23:17:07 +0800
-Received: from HKMAIL103.nvidia.com ([10.18.16.12])
-  by hkpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 31 Jul 2020 08:17:07 -0700
-X-PGP-Universal: processed;
-        by hkpgpgate101.nvidia.com on Fri, 31 Jul 2020 08:17:07 -0700
-Received: from HKMAIL103.nvidia.com (10.18.16.12) by HKMAIL103.nvidia.com
- (10.18.16.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul
- 2020 15:17:06 +0000
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.55) by
- HKMAIL103.nvidia.com (10.18.16.12) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Fri, 31 Jul 2020 15:17:06 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HSGiefaJqtNTmHhGe+WV8EE95bc47dmC4Ip10rS5iIaoTgLrwiwlCMTZ7Z7y7iHegIVXyiIeN/oM7ystzOPVk7C9DqMXJmv85vRmej2ko1aZChfT0i5KZSkLa3xmo1Z0tI8mNPUE2SjEIKpaH1018vT+GnG9zYZApnnKJ/qbTvjCj5TnzFHrf9qFuychH0FVNRY9TXFjWo2Jsq7CBiG2DLYPWv6p83Tidbo0csXyNJt0lekJ/1kRWxRfDbAWa6QG19ZJQ890mxCayeRirhAzN8yGUvgYjUJa38RUcIMd1gBt9ocVvystxrCdjfBXMv3O9yOO7fDi8enxu9E0kvQc1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r9uhR1ZM2v/WSrrZwf71Ot3niNays4xcPe+uJo87CNA=;
- b=VedDMdMBWikJMCrCdsLraSM1RtPtTM3Kttq6uQ3dNV+Jt31+3jTl2XOEFK81bDIrsEVBxYIUXSJWFn+DoqdsbuYeE+AHB11AerGX0IddjcjlgSAfY1Ir0bFUX1Nz+Rtswsi8TQcRi1yozNLcHYJhP9eCJAlNKQ9+47vrrJ6vwjawVf64CXgvhOLLcYWEGF5cKk52c3l2FjynCf1C+c0aSg12YQCAcwmyg8fubBv/YVEO5b5ZJ5UnVVA7kKF9kMPflGJi4LR+iEy3Cx95dq1Fs6WOT84BPb9WGNQJP4EnrKBS/EynaqXmI8NKKdIWMG9RA0n9a39BhsYSYXxHSkRmog==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: linux-foundation.org; dkim=none (message not signed)
- header.d=none;linux-foundation.org; dmarc=none action=none
- header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM5PR1201MB0107.namprd12.prod.outlook.com (2603:10b6:4:55::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Fri, 31 Jul
- 2020 15:17:04 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3239.020; Fri, 31 Jul 2020
- 15:17:04 +0000
-Date:   Fri, 31 Jul 2020 12:17:02 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Doug Ledford <dledford@redhat.com>
-CC:     <linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Please pull RDMA subsystem changes
-Message-ID: <20200731151702.GA498584@nvidia.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
-Content-Disposition: inline
-X-ClientProxiedBy: MN2PR22CA0019.namprd22.prod.outlook.com
- (2603:10b6:208:238::24) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        Fri, 31 Jul 2020 11:17:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbgGaPR7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 11:17:59 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 322A3C06174A
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 08:17:59 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id h7so29051706qkk.7
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 08:17:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pNskHEW12lh46n0Zlsd60MF+6OVuuX4EV9sgDes5FR4=;
+        b=vmpN/XsHGRmAJzX5ODCmQOdU9dwEyRp4t7ZUCD4yk9xdf2LrjaQbv+MGtE58Gw5Hk0
+         fCc1sTUG9N2JEiTEPZ02eEnWasxmDlL+3cufg1hkd5Br741rCh0DLfqCA12pW9rmoS5w
+         S2sLfPoLcfilrvfhKBcLMpVBeLGqe3V5nPNIcPIPTjtGEVHhmBxlFHl033WuVronNsQT
+         CMJWEYn2c7vUpTzI1ChIzAoJXE7ERBOkILmts0mZvxCifvZDsDuRBSUTs6RYS0BbfSIi
+         FRv4zq27dRtme/tQsrb1pIB2YY/c2B8VEBWij6lB4lORsAREM0tk9dV7ZmS9bSEQKZUO
+         38Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pNskHEW12lh46n0Zlsd60MF+6OVuuX4EV9sgDes5FR4=;
+        b=AkoGF9awusF6HF5dUOtbBAgkhyr0h4+RsFEiFG6WbDfQk+eJ3y5oJ2iToHc2/iMVu6
+         H7qdQhsMnrdr3+OiKvY8vGMpAmT8WMd8Tp3dTrLhttUZqgnV5zIpZO6gyCbLOTDwdFjE
+         oMZqLJePB6SqCCvecYpGpy6V6zYSBJgrBSLecERNZOkyxhA2vbbcSde8SayzA4vNZ7pF
+         c/6pvLHt/4lmv2jDk9Vrzjk+eYIt6xFY5z0nKMdAbi5eM1MXcFhbuluaKx/dv0hXf6wq
+         CfYlMY8QaqImzizQ8WGsdKuNqbKjfWL+O3u2cZNjLbkLH4rLwo+2/sRG6tN8OVu92Pus
+         JZ7g==
+X-Gm-Message-State: AOAM533i9e/GzTLbUjgo6JUO3oDPAkLGJXMsunPiVM1S06POAxOjEaru
+        CMzMTVnGYnVYSKx3NmNNh7e2gw==
+X-Google-Smtp-Source: ABdhPJyiF3c2kk77NFw/RswzR9D58w6iAB6/VDp+1WDgbwVvj9yXCVCuU1nROvR45TchoNFVAq+dvg==
+X-Received: by 2002:a05:620a:12cf:: with SMTP id e15mr4256707qkl.459.1596208678297;
+        Fri, 31 Jul 2020 08:17:58 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:11a4])
+        by smtp.gmail.com with ESMTPSA id n81sm8397098qke.11.2020.07.31.08.17.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 08:17:57 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 11:16:55 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/memcg: remove useless check on page->mem_cgroup
+Message-ID: <20200731151655.GB491801@cmpxchg.org>
+References: <1596166480-22814-1-git-send-email-alex.shi@linux.alibaba.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR22CA0019.namprd22.prod.outlook.com (2603:10b6:208:238::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Fri, 31 Jul 2020 15:17:03 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k1WmM-0025jJ-Iq; Fri, 31 Jul 2020 12:17:02 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 91ee9e12-5847-4bb7-998c-08d83564c7bd
-X-MS-TrafficTypeDiagnostic: DM5PR1201MB0107:
-X-Microsoft-Antispam-PRVS: <DM5PR1201MB0107DDD05AFF68317A53FECBC24E0@DM5PR1201MB0107.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1060;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6suBuhIG5FVAkh3vP/IxY+Z+8HzxWXr1AMk70E1CV/zP2DKEkqkrAomb2+S/FUp7j4uDTYrZlE+gkad5NwZ9dpgs+JcaNGIMiLy5RMRIVVD9CxLNH2TT85/hBWrQhaZbvxOAAspp0JXQJVO9GB1G0HmGb0qADjUU1M5WkbL9AeJZqoouxYhf7lZS8If5nlveHLoTFFogLsjZlfkSO7+MhYL2ufI+wkihdYbo3OoHiD/rKs/efQTlonHY3gZfSEIl/RSXBAOlawAKf4+U+pHoDW1FrqpPpfN2OWwY7Z4lDrIMVs1ihXiOq8yG2en1pBqgBLmnPyXAF0GrYzNStKeO7wUFaXuatrR+2zMsVX2PIDF6goXv+EVCmJaC+rvQlr295tSSiOpn3pwRWHAhxvhTFg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(39860400002)(396003)(366004)(136003)(9786002)(9746002)(36756003)(186003)(4326008)(2906002)(26005)(83380400001)(316002)(33656002)(426003)(110136005)(478600001)(44144004)(5660300002)(66946007)(66556008)(21480400003)(1076003)(8936002)(2616005)(66476007)(86362001)(8676002)(27376004)(2700100001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 1TaxzhtU2zs1KxyqAH6y8opqmwpbFbar9ovNoNlMr/DfBbGJy4ENo5RL0g/Mhh0NqGHv6p52But1MwWKth9gNfb1DNmWtmba5eu4i+o0ysSIpNmGJL9s+HmBj46NorEs++9ysgdyNciPdVscpDP0vmp/Bi9o9iceU4UP3TRFjR06/HJI0jvjNYlsU1w1DwSLYDuqKDeEFCzySx43w6qMNx0TdMqS90+G2q50RWvwQkPcuQ3zzswiScGXv2Wb5qd45zjXUrmCdlDaBXoiksWZoswblwuKucyYFMCDAqE69cwTPVrkszhljvYTTEQIDRAW2VblY7CkDlqFmeqoTmAqGGWGLOI/i7hJO+g4pmPoBb4x6X7yS6uImcXZTbOvP3riX7W6Bg3+gXt2E2kSo/wX4DsIilAGgO5+LuDnKso76v36YvVXhD4sChcMccViBT0Kg8Lmba+WSQxxaK5PAcmxnk+UP6Q/loUDiZ16q0viUsw=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91ee9e12-5847-4bb7-998c-08d83564c7bd
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jul 2020 15:17:03.9117
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Eys7Qzgs6HsjwNJI3AM+2vEPNm6tPzYy53gUFMwXhFn2uVELzyQKomqeasXUha1E
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB0107
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596208627; bh=r9uhR1ZM2v/WSrrZwf71Ot3niNays4xcPe+uJo87CNA=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:Content-Type:Content-Disposition:
-         X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
-         X-MS-Oob-TLC-OOBClassifiers:X-MS-Exchange-SenderADCheck:
-         X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-         X-Forefront-Antispam-Report:X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=cJ5D4Ub0MS9iau0pzEVFtCPzTRNGsykKwtqS8oAeJlERFFwQUJb0m4cPVndS7TwkR
-         94UEDITH5txuvgtHYvq+IcqXoPpO1zzzlOSmCYLTqwvOOI+qHI5IUj3i8ak2qSazCi
-         IyTUBoxCCxl6wNgfklPrjX/OR9ai0+E2LEGfnB+vo9rSzW0dNsgN8DPH/EAW/0bQXQ
-         VokXGq3vnOIAoUl8taLI/rw/Ibiv9+NmwdpleRXY/7aGzMJUGYmA1p3S7vhZ6KLXVU
-         ixLt8EJJTrArrDMlEO9lSrUP7Ic2lqSK7MVr5zcYx0vuV0GfYE+VDbuGCsksxdbfVI
-         K7t1NVoQm1yeQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1596166480-22814-1-git-send-email-alex.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---M9NhX3UHpAaciwkO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Fri, Jul 31, 2020 at 11:34:40AM +0800, Alex Shi wrote:
+> Since readahead page will be charged on memcg too. We don't need to
+> check this exception now. Rmove them is safe as all user pages are
+> charged before use.
+> 
+> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: cgroups@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  mm/memcontrol.c | 21 ++++-----------------
+>  1 file changed, 4 insertions(+), 17 deletions(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index e84c2b5596f2..9e44ae22d591 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -1322,12 +1322,7 @@ struct lruvec *mem_cgroup_page_lruvec(struct page *page, struct pglist_data *pgd
+>  	}
+>  
+>  	memcg = page->mem_cgroup;
+> -	/*
+> -	 * Swapcache readahead pages are added to the LRU - and
+> -	 * possibly migrated - before they are charged.
+> -	 */
+> -	if (!memcg)
+> -		memcg = root_mem_cgroup;
+> +	VM_BUG_ON_PAGE(!memcg, page);
+>  
+>  	mz = mem_cgroup_page_nodeinfo(memcg, page);
+>  	lruvec = &mz->lruvec;
+> @@ -6897,10 +6892,8 @@ void mem_cgroup_migrate(struct page *oldpage, struct page *newpage)
+>  	if (newpage->mem_cgroup)
+>  		return;
+>  
+> -	/* Swapcache readahead pages can get replaced before being charged */
+>  	memcg = oldpage->mem_cgroup;
+> -	if (!memcg)
+> -		return;
+> +	VM_BUG_ON_PAGE(!memcg, oldpage);
+>  
+>  	/* Force-charge the new page. The old one will be freed soon */
+>  	nr_pages = thp_nr_pages(newpage);
+> @@ -7094,10 +7087,7 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
+>  		return;
+>  
+>  	memcg = page->mem_cgroup;
+> -
+> -	/* Readahead page, never charged */
+> -	if (!memcg)
+> -		return;
+> +	VM_BUG_ON_PAGE(!memcg, page);
+>  
+>  	/*
+>  	 * In case the memcg owning these pages has been offlined and doesn't
+> @@ -7158,10 +7148,7 @@ int mem_cgroup_try_charge_swap(struct page *page, swp_entry_t entry)
+>  		return 0;
+>  
+>  	memcg = page->mem_cgroup;
+> -
+> -	/* Readahead page, never charged */
+> -	if (!memcg)
+> -		return 0;
+> +	VM_BUG_ON_PAGE(!memcg, page);
+>  
+>  	if (!entry.val) {
+>  		memcg_memory_event(memcg, MEMCG_SWAP_FAIL);
 
-Hi Linus,
+Uncharged readahead pages are gone, but I'm not 100% sure uncharged
+pages in general are gone. ISTR that the !page->mem_cgroup check in
+mem_cgroup_uncharge() prevented a crash - although that is of course a
+much broader interface, whereas the ones you change should only apply
+to LRU pages (which are hopefully all charged).
 
-Still a few regressions from the merge window and the usual collection of
-fixes.
-
-The following changes since commit 92ed301919932f777713b9172e525674157e983d:
-
-  Linux 5.8-rc7 (2020-07-26 14:14:06 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
-
-for you to fetch changes up to fb448ce87a4a9482b084e67faf804aec79ed9b43:
-
-  RDMA/core: Free DIM memory in error unwind (2020-07-30 11:03:33 -0300)
-
-----------------------------------------------------------------
-RDMA fourth 5.8 rc pull request
-
-Two more merge window regressions, a corruption bug in hfi1 and a few
-other small fixes.
-
-- Missing user input validation regression in ucma
-
-- Disallowing a previously allowed user combination regression in mlx5
-
-- ODP prefetch memory leaking triggerable by userspace
-
-- Memory corruption in hf1 due to faulty ring buffer logic
-
-- Missed mutex initialization crash in mlx5
-
-- Two small defects with RDMA DIM
-
-----------------------------------------------------------------
-Jason Gunthorpe (2):
-      RDMA/cm: Add min length checks to user structure copies
-      RDMA/mlx5: Fix prefetch memory leak if get_prefetchable_mr fails
-
-Leon Romanovsky (4):
-      RDMA/mlx5: Allow providing extra scatter CQE QP flag
-      RDMA/mlx5: Initialize QP mutex for the debug kernels
-      RDMA/core: Stop DIM before destroying CQ
-      RDMA/core: Free DIM memory in error unwind
-
-Mike Marciniszyn (1):
-      IB/rdmavt: Fix RQ counting issues causing use of an invalid RWQE
-
- drivers/infiniband/core/cq.c      | 14 +++++++++++---
- drivers/infiniband/core/ucma.c    |  4 ++++
- drivers/infiniband/hw/mlx5/odp.c  |  5 ++---
- drivers/infiniband/hw/mlx5/qp.c   | 29 ++++++++++++++++-------------
- drivers/infiniband/sw/rdmavt/qp.c | 33 ++++-----------------------------
- drivers/infiniband/sw/rdmavt/rc.c |  4 +---
- include/rdma/rdmavt_qp.h          | 19 +++++++++++++++++++
- 7 files changed, 57 insertions(+), 51 deletions(-)
-
---M9NhX3UHpAaciwkO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEfB7FMLh+8QxL+6i3OG33FX4gmxoFAl8kNewACgkQOG33FX4g
-mxoP+g/8Dn7gXjy6A+5sCdgeqa0xJt2fFCNkWcdxls1/RzbXg8WLLKmE7MKzLWPd
-QgK7Bor3/Sawkf92Pn/pUqVZ/+1xQFuDKl/QfBcw3vREbQFHsigO1ZW5jHr4/L+l
-B/hGV+zYl0gXHa40VTmhgF7qXpyh2/UdofX83EP83g0wweadFLyz0+Sqcaan3W2/
-7zSnl1c/0l/sEEbcTK3deyTTcNVhe8crewigSiyVWAmJ2EiY3O3zP/oY+u9RwqKo
-BFhw7cbkS0sNfvhZf/fVtOLmOPV4WoH41hB/NhoxpgV/EczmTJ0NtHsSUfzgS+qA
-BHDw/KIgm+uAUzvYZ8qResZRfL+/D1sRniN6VxsZrsIoMib7CNaKh91iLWnrz1zv
-AW+v9lQ8JH07ThGXCNFrY5HE2r70socqTWpkv7lEhS/VMDlb4WuEWqwrn0efc5qL
-ZBxrS8+w4PPuJF050l+d6V982VNLTAZlOgdGrfaISaQRaN8YFFTL3spR5NuFTznt
-npdcy8lTSAP48uZ8mG7/gY0DfSoAPOX2DVGKqfjhbzBoDCU1DJH2uo7PKIcZKW2g
-nBm3Nq2jj/UMsmZChqM2EZ1CWIS05fuUPgEoBnPT2uUV93hT8bUF00ZBA7IFrTiZ
-aiBDTxCSKECrgcNLrOwcLRu4hfNjrAn6Jacul2ldtreLamKAGNE=
-=YkD9
------END PGP SIGNATURE-----
-
---M9NhX3UHpAaciwkO--
+Nevertheless, to avoid unnecessary crashes if we discover that we've
+been wrong, how about leaving the branches for now, but adding a (new)
+VM_WARN_ON_ONCE_PAGE() to them?
