@@ -2,225 +2,111 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D33EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD17C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 030AB21744
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7D8821744
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:03:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nOax9z++"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="ZRpsKcQV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbgGaQDG (ORCPT
+        id S1729220AbgGaQDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 12:03:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36816 "EHLO
+        Fri, 31 Jul 2020 12:03:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728227AbgGaQDF (ORCPT
+        with ESMTP id S1727819AbgGaQDj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 12:03:05 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4B91C061574;
-        Fri, 31 Jul 2020 09:03:05 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id mt12so7643854pjb.4;
-        Fri, 31 Jul 2020 09:03:05 -0700 (PDT)
+        Fri, 31 Jul 2020 12:03:39 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BA13C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 09:03:39 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id w19so4684117plq.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 09:03:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iYvGYTkdQgoVTh/dtVt2dvyzxryEKrw2EXoP7UGiVxk=;
-        b=nOax9z++BMJIjjgIJINW9jTGuDEAQNZsS5GMlcdXqwg6jVlmB01Zzj84pVjhDeqaIw
-         wLsE98143QeDLquFDkNNBj8kyQg/kug2sBhOPTwcXjJVhajn5RskcHkGBWJ3zOR7rYXZ
-         sautvUR3RDJQlP3fNIGlMAPhvGK4n0dNXzZYk272nXjpYITLlhkp3TnMSSDayUysG0Oc
-         xkass4Q+hIEQeif3uNqKu3vPnuOyPYiVyU8ePU15GRRNjQCUAHqreC2Lts3tHMLdqiah
-         eaJfrVxBFPG0uoorKHNbKXORtokNQYIyXFhGdqPpqvddbzfCC5T+ZE47mUiRy0ijXgWP
-         /O5w==
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7NnDVKa1cF7e0zsWKXYtHJtMsUaxtGL6uhXlzpSA0oM=;
+        b=ZRpsKcQVzZqnRkLvjFW8Nd3BTNpxwAP+QnQOFIw0jtLYZX8/4e7LczWdWWLguJrzZL
+         rwc77ezaW6jl4YpiRs1s9/HqPV/o4t8AGTcd6GUVe8Mc52Th0casS5JIDQwfPrwdOAqx
+         VCgoCKYsdvz+f8H19YVIYY5wLHNSvw+FnRqQA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iYvGYTkdQgoVTh/dtVt2dvyzxryEKrw2EXoP7UGiVxk=;
-        b=LjnRVbGTwpLYPDP+4BnlkiuBQGpsPwz2poZ0sGwF3AAF7MWH19Ob4sQz1vLtkkFote
-         VbKBVNH1le0pIrbFypUsuPgBAoHncJR3yDNtbnBeOCV6EuRnJ2vA7YN1nH/ueQaJVBIc
-         98trAGd3PxYM49jfwwxegHSOpL7Cw98c00fCvSWlUOGCZTEuPlqFGoCwYG0YnLngIxsb
-         SSkMq02LgUVAKdFGnMn65js/wt+fre5ctIwS+80F8RXMlOtWLtwkg4Nw5DZTNu0gVHpD
-         1c08DYisgjlRGnshX7zTVdOCxai6GREuE/Gqn2GnDhq6cjPmINAuPGjbKn+jNOl8Z/VW
-         ej8g==
-X-Gm-Message-State: AOAM533qqmtsTx4i9t6HztmfGtdBTu9vxr0/VahgQLQ/2dY/YmaEvm75
-        pQIkbGkDoifzO9O8QC9vF9H6IZQQKKmWXr/ohSU=
-X-Google-Smtp-Source: ABdhPJzZaNwaUAO4vP2YkFvg0hEjBxU8yJCZOGD1ok8Y50UEr23X0ROaPprgVfD+9v77va7XSyopab0N+G7y6EikuDc=
-X-Received: by 2002:a17:90a:390f:: with SMTP id y15mr4619690pjb.181.1596211385078;
- Fri, 31 Jul 2020 09:03:05 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7NnDVKa1cF7e0zsWKXYtHJtMsUaxtGL6uhXlzpSA0oM=;
+        b=Nl3Vv5j+QlqmqsqDvOgJyqESs3IiNYTUDeIzivrvxZE9+nx058iNs9MeR/9p09jufE
+         Ei6+6Bj1xPb6OwaqY0fUfl9bKPteQBWFk6mEL/y8v9NgjltoJHqGhQFoQFP1r2lsbWDj
+         yPSqjpqlSKnXPd4qI05ve3PG/Krq5dZLAiGuj9XyDmuWUGAW1NSxgC8HLh05+/hUnsgS
+         VhNHzaaZxamOaun5uQvdyQEJdgHkkMFIYHKvobfvv+miWfxhWihkVXAp8GRBhFUCGF10
+         DzFegaB4EoiyrHFnt6lfcofffFoTTWhcs0NsZ4ZFVEbMw8Tw/PRlqFZaimcCsWv6Za7p
+         ayQQ==
+X-Gm-Message-State: AOAM5300DOO9G+1r4heYSYuRlSrGnRVxB/enahbd6LUkToWNsKLC0prz
+        pqF4DkjYvY3fkvQ9jcPJiJ2IyA==
+X-Google-Smtp-Source: ABdhPJwgBpL8EF8WbFdh57/y7iuOtfgTx3MOD4nNn4ci1f/RTDgynbqx8R2LiAFPTctBnQeJCPZTzQ==
+X-Received: by 2002:a17:90b:1116:: with SMTP id gi22mr223467pjb.209.1596211418932;
+        Fri, 31 Jul 2020 09:03:38 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:c809:c7d5:28b1:5f25:711f:141])
+        by smtp.gmail.com with ESMTPSA id 199sm11701826pgc.79.2020.07.31.09.03.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 09:03:38 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Heiko Stuebner <heiko@sntech.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Suniel Mahesh <sunil@amarulasolutions.com>
+Subject: [PATCH v2] arm64: defconfig: Enable REGULATOR_MP8859
+Date:   Fri, 31 Jul 2020 21:33:24 +0530
+Message-Id: <20200731160324.142097-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200727122242.32337-1-vadym.kochan@plvision.eu>
- <20200727122242.32337-2-vadym.kochan@plvision.eu> <CAHp75Ve-MyFg5QqHjywGk6X+v_F77HkRBuQsJ0Cx3WLJ5ZV43w@mail.gmail.com>
- <20200731152201.GB10391@plvision.eu>
-In-Reply-To: <20200731152201.GB10391@plvision.eu>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 31 Jul 2020 19:02:47 +0300
-Message-ID: <CAHp75VcS4fEak3z0exODErs5FbDwf+Di1RJmf7JfMgnD8xgXOA@mail.gmail.com>
-Subject: Re: [net-next v4 1/6] net: marvell: prestera: Add driver for Prestera
- family ASIC devices
-To:     Vadym Kochan <vadym.kochan@plvision.eu>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mickey Rachamim <mickeyr@marvell.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 6:22 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
-> On Mon, Jul 27, 2020 at 03:59:13PM +0300, Andy Shevchenko wrote:
-> > On Mon, Jul 27, 2020 at 3:23 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
+RK3399 boards like ROC-RK3399-PC is using MP8859 DC/DC converter
+for 12V supply.
 
-...
+roc-rk3399-pc initially used 12V fixed regulator for this supply,
+but the below commit has switched to use MP8859.
 
-> > > Signed-off-by: Andrii Savka <andrii.savka@plvision.eu>
-> > > Signed-off-by: Oleksandr Mazur <oleksandr.mazur@plvision.eu>
-> > > Signed-off-by: Serhiy Boiko <serhiy.boiko@plvision.eu>
-> > > Signed-off-by: Serhiy Pshyk <serhiy.pshyk@plvision.eu>
-> > > Signed-off-by: Taras Chornyi <taras.chornyi@plvision.eu>
-> > > Signed-off-by: Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>
-> > > Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
-> >
-> > This needs more work. You have to really understand the role of each
-> > person in the above list.
-> > I highly recommend (re-)read sections 11-13 of Submitting Patches.
-> >
-> At least looks like I need to add these persons as Co-author's.
+commit <1fc61ed04d309b0b8b3562acf701ab988eee12de> "arm64: dts: rockchip:
+Enable mp8859 regulator on rk3399-roc-pc"
 
-I don't know, you are!
-And I think you meant Co-developer's
+So, enable bydefault on the defconfig.
 
-...
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Tested-by: Suniel Mahesh <sunil@amarulasolutions.com>
+---
+Changes for v2:
+- none
 
-> > > +#include <linux/string.h>
-> > > +#include <linux/bitops.h>
-> > > +#include <linux/bitfield.h>
-> > > +#include <linux/errno.h>
-> >
-> > Perhaps ordered?
-> >
-> alphabetical ?
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Yes.
-
-...
-
-> > > +       struct prestera_msg_event_port *hw_evt;
-> > > +
-> > > +       hw_evt = (struct prestera_msg_event_port *)msg;
-> >
-> > Can be one line I suppose.
-> >
-> Yes, but I am trying to avoid line-breaking because of 80 chars
-> limitation.
-
-We have 100, but okay.
-
-...
-
-> > > +       if (evt->id == PRESTERA_PORT_EVENT_STATE_CHANGED)
-> > > +               evt->port_evt.data.oper_state = hw_evt->param.oper_state;
-> > > +       else
-> > > +               return -EINVAL;
-> > > +
-> > > +       return 0;
-> >
-> > Perhaps traditional pattern, i.e.
-> >
-> >   if (...)
-> >     return -EINVAL;
-> >   ...
-> >   return 0;
-> >
-> I am not sure if it is applicable here, because the error state here
-> is if 'evt->id' did not matched after all checks. Actually this is
-> simply a 'switch', but I use 'if' to have shorter code.
-
-Then do it a switch-case. I can see that other reviewers/contributors
-may stumble over this.
-
-...
-
-> > > +       /* Only 0xFF mac addrs are supported */
-> > > +       if (port->fp_id >= 0xFF)
-> > > +               goto err_port_init;
-> >
-> > You meant 255, right?
-> > Otherwise you have to mentioned is it byte limitation or what?
-> >
-> > ...
-> Yes, 255 is a limitation because of max byte value.
-
-But 255 itself is some kind of error value? Perhaps it deserves a definition.
-
-...
-
-> > > +       np = of_find_compatible_node(NULL, NULL, "marvell,prestera");
-> > > +       if (np) {
-> > > +               base_mac_np = of_parse_phandle(np, "base-mac-provider", 0);
-> > > +               if (base_mac_np) {
-> > > +                       const char *base_mac;
-> > > +
-> > > +                       base_mac = of_get_mac_address(base_mac_np);
-> > > +                       of_node_put(base_mac_np);
-> > > +                       if (!IS_ERR(base_mac))
-> > > +                               ether_addr_copy(sw->base_mac, base_mac);
-> > > +               }
-> > > +       }
-> > > +
-> > > +       if (!is_valid_ether_addr(sw->base_mac)) {
-> > > +               eth_random_addr(sw->base_mac);
-> > > +               dev_info(sw->dev->dev, "using random base mac address\n");
-> > > +       }
-> >
-> > Isn't it device_get_mac_address() reimplementation?
-> >
-> device_get_mac_address() just tries to get mac via fwnode.
-
-Yes, and how is it different from here? (consider
-fwnode_get_mac_address() if it suits better).
-
-...
-
-> > > +       new_skb = alloc_skb(len, GFP_ATOMIC | GFP_DMA);
-> >
-> > Atomic? Why?
-> >
-> TX path might be called from net_tx_action which is softirq.
-
-Okay, but GFP_DMA is quite a limitation to the memory region. Can't  be 32-bit?
-
-...
-
-> > > +       int tx_retry_num = 10 * tx_ring->max_burst;
-> >
-> > Magic!
-> You mean the code is magic ? Yes, I am trying to relax the
-> calling of SDMA engine.
-
-Usually when reviewers tell you about magic it assumes magic numbers
-whose meaning is not clear.
-(Requires either to be defined or commented)
-
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 883e8bace3ed..62bcbf987a70 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -556,6 +556,7 @@ CONFIG_REGULATOR_HI6421V530=y
+ CONFIG_REGULATOR_HI655X=y
+ CONFIG_REGULATOR_MAX77620=y
+ CONFIG_REGULATOR_MAX8973=y
++CONFIG_REGULATOR_MP8859=y
+ CONFIG_REGULATOR_PFUZE100=y
+ CONFIG_REGULATOR_PWM=y
+ CONFIG_REGULATOR_QCOM_RPMH=y
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.1
+
