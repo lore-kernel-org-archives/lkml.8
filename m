@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0889C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E298C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8655122B40
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F169222CAE
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:23:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3TX2hWTa";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oVY4DJxy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="h8C//oYN";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Iey89HPX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732536AbgGaJXl (ORCPT
+        id S1732548AbgGaJXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:23:41 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56476 "EHLO
+        Fri, 31 Jul 2020 05:23:44 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56410 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732360AbgGaJXJ (ORCPT
+        with ESMTP id S1732364AbgGaJXJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 31 Jul 2020 05:23:09 -0400
 Date:   Fri, 31 Jul 2020 09:23:07 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596187387;
+        s=2020; t=1596187388;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=XHShiH3HGiwOKZPIK0HOruHbQ85i7mLLpjLSFC31wPk=;
-        b=3TX2hWTa1T0zGDV4thhRFlgP2imqJACegFMztwQH4w2nWxOBYL1IRnqtnIN9K1pQIt49h8
-        0ZFHbVfj9siuWxONFaYFHCyp3iuHcjgwHu8lR0mIs4uoC14oni5jWo3JyV8yo6RcPPrk4X
-        ozSqmWt4Blj1IneSMVOXutdSz8FT34x9uGXSxgcOcOs6bzmMQ6esq0Xev1yUUntOAlTcg5
-        28w9AfKV9tX0RcUoHyoWBt1aePXBiXO7m/owTGO1nkMV3RyXNQviwZMMRmbBEGdmNgQ4Te
-        JdZcRlls7RHUaZZqRPDXO6Iq8zFN5iqRMKGPLj+DC1ByWXLWRT7iI4W7q2qNVg==
+        bh=9f7+HADjGZgioR/2hriGc2ulFhMoHyxqxAyB3AwFWks=;
+        b=h8C//oYNG4qZIAIynr+Qlub+9RxY69xVhmXGk7DQS3TnbBJgORofKdnMy6G4cUk8K4Ibiq
+        TzPKdmOwqL0kAo5b3NnjJxqRIQXMFCEfFCvWEGVmNQHNZlCz9TlEGZVjLt5GAjmJ/Brx5P
+        QCPXRDsoikzDd7GgWK14zPIHlnwbF42EIemGSu/dYd9FM+Tf+IaqM1UE7frtDjKi5AWVpO
+        gKaoOb+/hrikm0xJw10A5BHpWqGoSSjCRUmudW61qMWz+bZPmiIeFJbPGz5UQPzVcp24GR
+        CRA0FW1CaBJMf95W6XA7hdoVkBaBjEUmQAHHCE9hsWba8yqjeR0IAg+d9cE8jA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596187387;
+        s=2020e; t=1596187388;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=XHShiH3HGiwOKZPIK0HOruHbQ85i7mLLpjLSFC31wPk=;
-        b=oVY4DJxy0nsDrmu4GeMVsBjTSd6hV7gr+5iV5IjqNkS9mHv/f3DN+Pc0W4OWa83HqU0gz8
-        F6D5oO3hnSRKGWAA==
+        bh=9f7+HADjGZgioR/2hriGc2ulFhMoHyxqxAyB3AwFWks=;
+        b=Iey89HPXVy8anXBgxNY8QVKZPeUcugSQVnH3KgbyVgADSnlFarWNgtplMI5UjMNcA+D3wr
+        E9+H8NOwlTNP8BDw==
 From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] refperf: Hoist function-pointer calls out of the loop
+Subject: [tip: core/rcu] refperf: Add holdoff parameter to allow CPUs to come online
 Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <159618738713.4006.8044423386724260636.tip-bot2@tip-bot2>
+Message-ID: <159618738776.4006.4993083960474428810.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -64,216 +64,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     75dd8efef56ed5959c398974c785026f84aa0d1a
-Gitweb:        https://git.kernel.org/tip/75dd8efef56ed5959c398974c785026f84aa0d1a
+Commit-ID:     777a54c908ec69fa0eccab54068a49ecda38ffde
+Gitweb:        https://git.kernel.org/tip/777a54c908ec69fa0eccab54068a49ecda38ffde
 Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Mon, 25 May 2020 14:59:06 -07:00
+AuthorDate:    Mon, 25 May 2020 14:16:44 -07:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
 CommitterDate: Mon, 29 Jun 2020 12:00:44 -07:00
 
-refperf: Hoist function-pointer calls out of the loop
+refperf: Add holdoff parameter to allow CPUs to come online
 
-Current runs show PREEMPT=n rcu_read_lock()/rcu_read_unlock() pairs
-consuming between 20 and 30 nanoseconds, when in fact the actual value is
-zero, give or take the barrier() asm's effect on compiler optimizations.
-The additional overhead is caused by function calls through pointers
-(especially in these days of Spectre mitigations) and perhaps also
-needless argument passing, a non-const loop limit, and an upcounting loop.
+This commit adds an rcuperf module parameter named "holdoff" that
+defaults to 10 seconds if refperf is built in and to zero otherwise.
+The assumption is that all the CPUs are online by the time that the
+modprobe and insmod commands are going to do anything, and that normal
+systems will have all the CPUs online within ten seconds.
 
-This commit therefore combines the ->readlock() and ->readunlock()
-function pointers into a single ->readsection() function pointer that
-takes the loop count as a const parameter and keeps any data passed
-from the read-lock to the read-unlock internal to this new function.
-
-These changes reduce the measured overhead of the aforementioned
-PREEMPT=n rcu_read_lock()/rcu_read_unlock() pairs from between 20 and
-30 nanoseconds to somewhere south of 500 picoseconds.
+Larger systems may take many tens of seconds or even minutes to get
+to this point, hence this being a module parameter instead of being a
+hard-coded constant.
 
 Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/refperf.c | 92 +++++++++++++++++--------------------------
- 1 file changed, 38 insertions(+), 54 deletions(-)
+ kernel/rcu/refperf.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/rcu/refperf.c b/kernel/rcu/refperf.c
-index 4d686fd..57c7b7a 100644
+index 6116153..4d686fd 100644
 --- a/kernel/rcu/refperf.c
 +++ b/kernel/rcu/refperf.c
-@@ -108,23 +108,20 @@ static int exp_idx;
- struct ref_perf_ops {
- 	void (*init)(void);
- 	void (*cleanup)(void);
--	int (*readlock)(void);
--	void (*readunlock)(int idx);
-+	void (*readsection)(const int nloops);
- 	const char *name;
- };
+@@ -57,7 +57,10 @@ MODULE_PARM_DESC(perf_type, "Type of test (rcu, srcu, refcnt, rwsem, rwlock.");
  
- static struct ref_perf_ops *cur_ops;
+ torture_param(int, verbose, 0, "Enable verbose debugging printk()s");
  
--// Definitions for RCU ref perf testing.
--static int ref_rcu_read_lock(void) __acquires(RCU)
-+static void ref_rcu_read_section(const int nloops)
+-// Number of loops per experiment, all readers execute an operation concurrently
++// Wait until there are multiple CPUs before starting test.
++torture_param(int, holdoff, IS_BUILTIN(CONFIG_RCU_REF_PERF_TEST) ? 10 : 0,
++	      "Holdoff time before test start (s)");
++// Number of loops per experiment, all readers execute operations concurrently.
+ torture_param(long, loops, 10000000, "Number of loops per experiment.");
+ 
+ #ifdef MODULE
+@@ -248,6 +251,8 @@ ref_perf_reader(void *arg)
+ 	set_cpus_allowed_ptr(current, cpumask_of(me % nr_cpu_ids));
+ 	set_user_nice(current, MAX_NICE);
+ 	atomic_inc(&n_init);
++	if (holdoff)
++		schedule_timeout_interruptible(holdoff * HZ);
+ repeat:
+ 	VERBOSE_PERFOUT("ref_perf_reader %ld: waiting to start next experiment on cpu %d", me, smp_processor_id());
+ 
+@@ -357,6 +362,8 @@ static int main_func(void *arg)
+ 
+ 	// Wait for all threads to start.
+ 	wait_event(main_wq, atomic_read(&n_init) == (nreaders + 1));
++	if (holdoff)
++		schedule_timeout_interruptible(holdoff * HZ);
+ 
+ 	// Start exp readers up per experiment
+ 	for (exp = 0; exp < nreaders && !torture_must_stop(); exp++) {
+@@ -420,8 +427,8 @@ static void
+ ref_perf_print_module_parms(struct ref_perf_ops *cur_ops, const char *tag)
  {
--	rcu_read_lock();
--	return 0;
--}
-+	int i;
- 
--static void ref_rcu_read_unlock(int idx) __releases(RCU)
--{
--	rcu_read_unlock();
-+	for (i = nloops; i >= 0; i--) {
-+		rcu_read_lock();
-+		rcu_read_unlock();
-+	}
+ 	pr_alert("%s" PERF_FLAG
+-		 "--- %s:  verbose=%d shutdown=%d loops=%ld\n", perf_type, tag,
+-		 verbose, shutdown, loops);
++		 "--- %s:  verbose=%d shutdown=%d holdoff=%d loops=%ld\n", perf_type, tag,
++		 verbose, shutdown, holdoff, loops);
  }
  
- static void rcu_sync_perf_init(void)
-@@ -133,8 +130,7 @@ static void rcu_sync_perf_init(void)
- 
- static struct ref_perf_ops rcu_ops = {
- 	.init		= rcu_sync_perf_init,
--	.readlock	= ref_rcu_read_lock,
--	.readunlock	= ref_rcu_read_unlock,
-+	.readsection	= ref_rcu_read_section,
- 	.name		= "rcu"
- };
- 
-@@ -143,42 +139,39 @@ static struct ref_perf_ops rcu_ops = {
- DEFINE_STATIC_SRCU(srcu_refctl_perf);
- static struct srcu_struct *srcu_ctlp = &srcu_refctl_perf;
- 
--static int srcu_ref_perf_read_lock(void) __acquires(srcu_ctlp)
-+static void srcu_ref_perf_read_section(int nloops)
- {
--	return srcu_read_lock(srcu_ctlp);
--}
-+	int i;
-+	int idx;
- 
--static void srcu_ref_perf_read_unlock(int idx) __releases(srcu_ctlp)
--{
--	srcu_read_unlock(srcu_ctlp, idx);
-+	for (i = nloops; i >= 0; i--) {
-+		idx = srcu_read_lock(srcu_ctlp);
-+		srcu_read_unlock(srcu_ctlp, idx);
-+	}
- }
- 
- static struct ref_perf_ops srcu_ops = {
- 	.init		= rcu_sync_perf_init,
--	.readlock	= srcu_ref_perf_read_lock,
--	.readunlock	= srcu_ref_perf_read_unlock,
-+	.readsection	= srcu_ref_perf_read_section,
- 	.name		= "srcu"
- };
- 
- // Definitions for reference count
- static atomic_t refcnt;
- 
--static int srcu_ref_perf_refcnt_lock(void)
-+static void ref_perf_refcnt_section(const int nloops)
- {
--	atomic_inc(&refcnt);
--	return 0;
--}
-+	int i;
- 
--static void srcu_ref_perf_refcnt_unlock(int idx) __releases(srcu_ctlp)
--{
--	atomic_dec(&refcnt);
--	srcu_read_unlock(srcu_ctlp, idx);
-+	for (i = nloops; i >= 0; i--) {
-+		atomic_inc(&refcnt);
-+		atomic_dec(&refcnt);
-+	}
- }
- 
- static struct ref_perf_ops refcnt_ops = {
- 	.init		= rcu_sync_perf_init,
--	.readlock	= srcu_ref_perf_refcnt_lock,
--	.readunlock	= srcu_ref_perf_refcnt_unlock,
-+	.readsection	= ref_perf_refcnt_section,
- 	.name		= "refcnt"
- };
- 
-@@ -190,21 +183,19 @@ static void ref_perf_rwlock_init(void)
- 	rwlock_init(&test_rwlock);
- }
- 
--static int ref_perf_rwlock_lock(void)
-+static void ref_perf_rwlock_section(const int nloops)
- {
--	read_lock(&test_rwlock);
--	return 0;
--}
-+	int i;
- 
--static void ref_perf_rwlock_unlock(int idx)
--{
--	read_unlock(&test_rwlock);
-+	for (i = nloops; i >= 0; i--) {
-+		read_lock(&test_rwlock);
-+		read_unlock(&test_rwlock);
-+	}
- }
- 
- static struct ref_perf_ops rwlock_ops = {
- 	.init		= ref_perf_rwlock_init,
--	.readlock	= ref_perf_rwlock_lock,
--	.readunlock	= ref_perf_rwlock_unlock,
-+	.readsection	= ref_perf_rwlock_section,
- 	.name		= "rwlock"
- };
- 
-@@ -216,21 +207,19 @@ static void ref_perf_rwsem_init(void)
- 	init_rwsem(&test_rwsem);
- }
- 
--static int ref_perf_rwsem_lock(void)
-+static void ref_perf_rwsem_section(const int nloops)
- {
--	down_read(&test_rwsem);
--	return 0;
--}
-+	int i;
- 
--static void ref_perf_rwsem_unlock(int idx)
--{
--	up_read(&test_rwsem);
-+	for (i = nloops; i >= 0; i--) {
-+		down_read(&test_rwsem);
-+		up_read(&test_rwsem);
-+	}
- }
- 
- static struct ref_perf_ops rwsem_ops = {
- 	.init		= ref_perf_rwsem_init,
--	.readlock	= ref_perf_rwsem_lock,
--	.readunlock	= ref_perf_rwsem_unlock,
-+	.readsection	= ref_perf_rwsem_section,
- 	.name		= "rwsem"
- };
- 
-@@ -242,8 +231,6 @@ ref_perf_reader(void *arg)
- 	unsigned long flags;
- 	long me = (long)arg;
- 	struct reader_task *rt = &(reader_tasks[me]);
--	unsigned long spincnt;
--	int idx;
- 	u64 start;
- 	s64 duration;
- 
-@@ -275,10 +262,7 @@ repeat:
- 
- 	VERBOSE_PERFOUT("ref_perf_reader %ld: experiment %d started", me, exp_idx);
- 
--	for (spincnt = 0; spincnt < loops; spincnt++) {
--		idx = cur_ops->readlock();
--		cur_ops->readunlock(idx);
--	}
-+	cur_ops->readsection(loops);
- 
- 	duration = ktime_get_mono_fast_ns() - start;
- 	local_irq_restore(flags);
+ static void
