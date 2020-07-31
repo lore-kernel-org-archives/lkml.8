@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB116C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 129A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3EFB208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEFF3208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:11:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="08LbaMDn"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="yDugJ9ha"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733148AbgGaMLd (ORCPT
+        id S1733183AbgGaMLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 08:11:33 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:38550 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733081AbgGaMLR (ORCPT
+        Fri, 31 Jul 2020 08:11:50 -0400
+Received: from mx07-00178001.pphosted.com ([185.132.182.106]:35923 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733054AbgGaMLO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 08:11:17 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06VC6YNX009379;
-        Fri, 31 Jul 2020 14:11:14 +0200
+        Fri, 31 Jul 2020 08:11:14 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06VC8fuX011305;
+        Fri, 31 Jul 2020 14:11:09 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=7rSky8J/GLIf+EHvfA+pSMdQZv7hy7gixNL5RCvSGqs=;
- b=08LbaMDnfDx0Uc9V7+QkFjCyL6T6mxE6tTMRGik1yuiaMSpH4unF348V3+HN006hp1Yl
- p9eVM4ox4BpWQrpdXOWvzJvQTLi2qU4taHK4ddmZR/mTjcVQqNKy5CTWYXAAxOAc3KpX
- zvs3wzSZImh+b852IxJGh7s4ZXes0YZPnr54190n4a6BwsU1hvZMdrogvKg9KioTawtR
- EaActcYEwwTcZeAWag4pvZynacW55Npg7QFjG5IWppJlXTbEZkrDVFFNohzG5Tyf021f
- y9ly15vJq9uIFdeAQmnFZyeavarAK97vsoL26ClXwFSdmnMVszJDwdKMBq8EQhLGRgIJ jA== 
+ bh=VkOlCxczALyBGyhK0x3jjVQY6384tdF2+bl3dLOk1VU=;
+ b=yDugJ9hasKAJgsud6QlBjPHtuqquAH3tqYNNZZcW39WVwNPOxC4/V7Ow7G0MlS0qxQNA
+ QbxINUKyjoCeVwpxz5+iVJs3KbqZEwr8XD2Cg/HmsxM18PG0DPZEBjBSYLskz7tnEIxM
+ MmRl5eRIqKCbC91rXGxRrEQLe/zJvx93wlphJKQAAt0EteJlMRHOBF1lBF8KpHu5k2Jr
+ wrw+6oWsF9cJaA/gNVY1HktpkhOR8z9S/xUAmrwBR1Sff3Kn60MPg0Q3VaNT+T6SurJA
+ L9U3aC0PR3gPbvKc+FyjLtYmVjHiVCkkooY1fwqgomcrbpWHhaWdMzFTnxgaGwurZD11 3g== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32gbmgp98w-1
+        by mx07-00178001.pphosted.com with ESMTP id 32ga72dcba-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 31 Jul 2020 14:11:13 +0200
+        Fri, 31 Jul 2020 14:11:09 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7389B10002A;
-        Fri, 31 Jul 2020 14:11:13 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2919F10002A;
+        Fri, 31 Jul 2020 14:11:09 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 68FA32AE6DD;
-        Fri, 31 Jul 2020 14:11:13 +0200 (CEST)
-Received: from localhost (10.75.127.47) by SFHDAG3NODE1.st.com (10.75.127.7)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul 2020 14:11:12
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1E01C2AE6DD;
+        Fri, 31 Jul 2020 14:11:09 +0200 (CEST)
+Received: from localhost (10.75.127.45) by SFHDAG3NODE1.st.com (10.75.127.7)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul 2020 14:11:08
  +0200
 From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -55,16 +55,16 @@ To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
 CC:     <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <arnaud.pouliquen@st.com>
-Subject: [PATCH 12/13] rpmsg: control: implement the ioctrl function to create device
-Date:   Fri, 31 Jul 2020 14:10:42 +0200
-Message-ID: <20200731121043.24199-13-arnaud.pouliquen@st.com>
+Subject: [PATCH 08/13] rpmsg: raw: register service to the rpmsg control
+Date:   Fri, 31 Jul 2020 14:10:38 +0200
+Message-ID: <20200731121043.24199-9-arnaud.pouliquen@st.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200731121043.24199-1-arnaud.pouliquen@st.com>
 References: <20200731121043.24199-1-arnaud.pouliquen@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE1.st.com
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG3NODE1.st.com
  (10.75.127.7)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-31_04:2020-07-31,2020-07-31 signatures=0
@@ -73,68 +73,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement the ioctrl function that parses the list of
-rpmsg drivers registered to create an associated device.
+Register the RPMSG_RAW_SERVICE service to the RPMsg control
 
 Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
 ---
- drivers/rpmsg/rpmsg_ctrl.c | 39 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 37 insertions(+), 2 deletions(-)
+ drivers/rpmsg/rpmsg_raw.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/rpmsg/rpmsg_ctrl.c b/drivers/rpmsg/rpmsg_ctrl.c
-index 8773c8395401..d2a6dbb8798f 100644
---- a/drivers/rpmsg/rpmsg_ctrl.c
-+++ b/drivers/rpmsg/rpmsg_ctrl.c
-@@ -55,12 +55,47 @@ static int rpmsg_ctrl_dev_open(struct inode *inode, struct file *filp)
- 	return 0;
- }
- 
-+static const char *rpmsg_ctrl_get_drv_name(u32 service)
-+{
-+	struct rpmsg_ctl_info *drv_info;
-+
-+	list_for_each_entry(drv_info, &rpmsg_drv_list, node) {
-+		if (drv_info->ctrl->service == service)
-+			return drv_info->ctrl->drv_name;
-+	}
-+
-+	return NULL;
-+}
-+
- static long rpmsg_ctrl_dev_ioctl(struct file *fp, unsigned int cmd,
- 				 unsigned long arg)
- {
- 	struct rpmsg_ctrl_dev *ctrldev = fp->private_data;
--
--	dev_info(&ctrldev->dev, "Control not yet implemented\n");
-+	void __user *argp = (void __user *)arg;
-+	struct rpmsg_channel_info chinfo;
-+	struct rpmsg_endpoint_info eptinfo;
-+	struct rpmsg_device *newch;
-+
-+	if (cmd != RPMSG_CREATE_EPT_IOCTL)
-+		return -EINVAL;
-+
-+	if (copy_from_user(&eptinfo, argp, sizeof(eptinfo)))
-+		return -EFAULT;
-+
-+	chinfo.driver_override = rpmsg_ctrl_get_drv_name(eptinfo.service);
-+	if (!chinfo.driver_override)
-+		return -ENODEV;
-+
-+	memcpy(chinfo.name, eptinfo.name, RPMSG_NAME_SIZE);
-+	chinfo.name[RPMSG_NAME_SIZE - 1] = '\0';
-+	chinfo.src = eptinfo.src;
-+	chinfo.dst = eptinfo.dst;
-+
-+	newch = rpmsg_create_channel(ctrldev->rpdev, &chinfo);
-+	if (!newch) {
-+		dev_err(&ctrldev->dev, "rpmsg_create_channel failed\n");
-+		return -ENXIO;
-+	}
- 
- 	return 0;
+diff --git a/drivers/rpmsg/rpmsg_raw.c b/drivers/rpmsg/rpmsg_raw.c
+index 8684a78ab4d1..117da0c566ed 100644
+--- a/drivers/rpmsg/rpmsg_raw.c
++++ b/drivers/rpmsg/rpmsg_raw.c
+@@ -315,6 +315,11 @@ static struct rpmsg_driver rpmsg_raw_client = {
+ 	.remove		= rpmsg_raw_remove,
  };
+ 
++const struct rpmsg_drv_ctrl_info  rpmsg_raw_ctl_info = {
++	.drv_name = KBUILD_MODNAME,
++	.service = RPMSG_RAW_SERVICE,
++};
++
+ static int rpmsg_raw_init(void)
+ {
+ 	int ret;
+@@ -328,7 +333,18 @@ static int rpmsg_raw_init(void)
+ 
+ 	ret = register_rpmsg_driver(&rpmsg_raw_client);
+ 	if (ret < 0)
+-		unregister_chrdev_region(rpmsg_raw_major, RPMSG_DEV_MAX);
++		goto free_region;
++
++	ret = rpmsg_ctrl_register_ctl(&rpmsg_raw_ctl_info);
++	if (ret < 0)
++		goto free_rpmsg;
++
++	return 0;
++
++free_rpmsg:
++	unregister_rpmsg_driver(&rpmsg_raw_client);
++free_region:
++	unregister_chrdev_region(rpmsg_raw_major, RPMSG_DEV_MAX);
+ 
+ 	return ret;
+ }
+@@ -336,6 +352,7 @@ module_init(rpmsg_raw_init);
+ 
+ static void rpmsg_raw_exit(void)
+ {
++	rpmsg_ctrl_unregister_ctl(&rpmsg_raw_ctl_info);
+ 	unregister_rpmsg_driver(&rpmsg_raw_client);
+ 	unregister_chrdev_region(rpmsg_raw_major, RPMSG_DEV_MAX);
+ }
 -- 
 2.17.1
 
