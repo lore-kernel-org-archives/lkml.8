@@ -2,57 +2,96 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FD5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 13:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 13:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82852208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 13:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5048D208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 13:36:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="pjreoHF7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730236AbgGaNgf (ORCPT
+        id S1730786AbgGaNgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 09:36:35 -0400
-Received: from mga03.intel.com ([134.134.136.65]:1326 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726058AbgGaNge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 09:36:34 -0400
-IronPort-SDR: DrOC4b9mTkNdTGBpZdcFQGhQGu0O3nOd6EZ6xXWB9uRFHUSY9dR4uYqNpq2TnmoSLXsPWrACfl
- /5hMF3QoB2kw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="151741994"
-X-IronPort-AV: E=Sophos;i="5.75,418,1589266800"; 
-   d="scan'208";a="151741994"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 06:36:34 -0700
-IronPort-SDR: S62zBOUguJJ4GKCUVqdcSsTnw6NtzTSyiaqyJtukNHMOmxW+QgZuoaXu0zO69oVP7zOmwANK/g
- 2h6Z98k56Y8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,418,1589266800"; 
-   d="scan'208";a="395307344"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 31 Jul 2020 06:36:30 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 31 Jul 2020 16:36:30 +0300
-Date:   Fri, 31 Jul 2020 16:36:30 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Azhar Shaikh <azhar.shaikh@intel.com>
-Cc:     bleung@chromium.org, enric.balletbo@collabora.com,
-        groeck@chromium.org, pmalani@chromium.org,
-        linux-kernel@vger.kernel.org, utkarsh.h.patel@intel.com,
-        casey.g.bowman@intel.com, rajmohan.mani@intel.com
-Subject: Re: [PATCH] platform/chrome: cros_ec_typec: Avoid setting usb role
- twice during disconnect
-Message-ID: <20200731133630.GR883641@kuha.fi.intel.com>
-References: <20200730225257.7208-1-azhar.shaikh@intel.com>
- <20200730225257.7208-3-azhar.shaikh@intel.com>
+        Fri, 31 Jul 2020 09:36:46 -0400
+Received: from mail-co1nam11on2063.outbound.protection.outlook.com ([40.107.220.63]:49825
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730448AbgGaNgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 09:36:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mdU7AexYeoB3UCMOTWYjftuvNVGgE9Ec+eiwOHVO4glYDWMPXdUrDJAF7v18t60qarXIYn9bFfA/vazl1ggjDSGAmDYonKt9Meo0HfkmTjw1FFsToL8Kg0p5hrdhOTrZD7k0NsVZ2u9veU3yhI1WGgXBchuBsdvgktBLfemMdvRo6Y5upxJf3ZIQj5BBHYb/GF56dLc/cO1s7lPldA9FeCLq/1tk6xWr/iugirOkS6vcMzJB4XSIxEN4ga7mIXmJylO7yeQ3hzxfR8yCYsY+u6Ld3i/2+MyCtDXyETvP4PjOsEY4CnuYx+9XkMaXXBojrdfqXyl0WM00I5UmXgK6Gw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YMWnHgql7PQgxAcGhB3FbkbBCsQk0pqWEdreeU+XIOE=;
+ b=HfHPrEG7AOYivsBgJynml7e8MckH0Cmf+QzbS9j12ttKCz3m5nN8SHiUh6bUqye/ZPjigo6RM+mW/W4oHVql8aX/zz5u1kR7P1d7RUeV+/u8bvElGtTxM/JD4Q2ykeyk5ZVRhQS5d2TVuJDU4A0N1U7rbC+IWSJP+5HYxooFsG8Cv6P3iT5W2q0Z3lYVX1OZJHIdAicbimXCcEt39GBPKtPiBppmyNQgWRj5qgejFTR1F2Sqf1N0wndTfGXP96qYGxdI73LD5qAjAlQ79Ojb96rZ4n4x3QES94rADWa27Q+FCtmau8XM2JQ4AMOO5zMomYU5Hu5ztW/7Q55NeJLuBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YMWnHgql7PQgxAcGhB3FbkbBCsQk0pqWEdreeU+XIOE=;
+ b=pjreoHF7qvUQhW8+82jJFJ3iiolhpA/PtX1cdbHwb5G4p4vkn86AOYlQqMJ7/Y38ESWof3ppMseCALKPrZze+WdRBZXLp30aeENRS98JvnHU/EW0dWOZqHQ31xgqltgT5zcFvKFoGtHues7iRHVfk4EQ7E+1Ho4m3T85/L/0WQM=
+Authentication-Results: amd.com; dkim=none (message not signed)
+ header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR1201MB0188.namprd12.prod.outlook.com (2603:10b6:4:56::12)
+ by DM6PR12MB3257.namprd12.prod.outlook.com (2603:10b6:5:184::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Fri, 31 Jul
+ 2020 13:36:43 +0000
+Received: from DM5PR1201MB0188.namprd12.prod.outlook.com
+ ([fe80::4df1:4ad8:38cd:128c]) by DM5PR1201MB0188.namprd12.prod.outlook.com
+ ([fe80::4df1:4ad8:38cd:128c%7]) with mapi id 15.20.3239.020; Fri, 31 Jul 2020
+ 13:36:43 +0000
+From:   Akshu Agrawal <akshu.agrawal@amd.com>
+To:     akshu.agrawal@amd.com
+Cc:     sboyd@kernel.org, rafael@kernel.org, rjw@rjwysocki.net,
+        lenb@kernel.org, mturquette@baylibre.com,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, rahul.tanwar@linux.intel.com
+Subject: [0/4] Extend AMD SoC general purpose clk for all versions
+Date:   Fri, 31 Jul 2020 19:06:00 +0530
+Message-Id: <20200731133604.12512-1-akshu.agrawal@amd.com>
+X-Mailer: git-send-email 2.20.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MAXPR01CA0072.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:49::14) To DM5PR1201MB0188.namprd12.prod.outlook.com
+ (2603:10b6:4:56::12)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730225257.7208-3-azhar.shaikh@intel.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from local.mshome.net (122.179.42.211) by MAXPR01CA0072.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:49::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Fri, 31 Jul 2020 13:36:40 +0000
+X-Mailer: git-send-email 2.20.1
+X-Originating-IP: [122.179.42.211]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 70c3b6bf-dac5-4e7b-6658-08d83556c339
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3257:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB3257E36EB1B6714FB73295BCF84E0@DM6PR12MB3257.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sYPwIj4oSv3TECtLU4Pe1ta0OQEGEBh5Ek2X2FpyRPhmhC60Zict5EqL1e3KeAGzJ7a17U7jmbX/e1KWlmmte9UseBFUCDajDHyRrZOOjg0WnyJP+4QytrP/JBzoDoSq9JABeVrQC7OJlUtLk1gIWUY3wa/tBxvtChCgEoBvmzpmO+7ErrXwAIFDDoMPsREY3mw8KPyl8zPDrgwVGwuo5wCeKyr1ZLtDOvvVkn0Fbsva1YS4LJrUST8002Qn7lZ+/4KysFtDXTnQMIloYB+fXWw2AyHGyfiNMIYFRIqYS3cPfRt1DoFS8dngJjPEq9zu
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR1201MB0188.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(396003)(376002)(366004)(346002)(66476007)(66556008)(66946007)(4326008)(44832011)(52116002)(36756003)(6506007)(34206002)(2616005)(316002)(956004)(186003)(26005)(16526019)(37006003)(1076003)(6486002)(478600001)(6666004)(2906002)(8676002)(83380400001)(4744005)(5660300002)(8936002)(86362001)(6512007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: jW1sIuxzhmI3vL67M1PAhH3uAc/f+4PnL6kgbMO7pLW4KjYI7NLO4c9vCRQGlDzgsZk3Rez3IFiRTtJmL4vmvsebUEnYJLMfL4rfx9u+wvaFDEZBDYxrlP87YsHz8bhZwDuRvwpMbmR8ffYzrpl2ptyC8JQE8h3tLv7/WFGH0svn0fRyzfAhcfYvb3WH5oSXrL8dIRa5xJpGNBW8LuG+8U0B0/pjnqK4ZDKLsPtqGohtVNKLbXgU4GtV3yfVsOKMdhpgawG9iCe+OR54lCcL9K+VqJ5Gm6qT8pVv+PCbCT/4j8jBjhEbDdpaM6i7WCBenjbaT1SqQnq4Ltb3nHbKZNHrk2nwsEOhZWZkDRbRoCKpS8xBk9f6gV4JRuQH2LTR29+7/zYFtWrpqEPS/Go7A8eDE2SbYOzt8UUOtMT2HfSlPJCxrZvrzbh/eoB9T3lKLBsDhfuDUUYyPz29gl3IfrXVPiv3z0rws3+lRLoYyEjYLLWphp0fHQPdxT+Pytf8d+zKJ1C/wBhJ1a8wM3mOYWHzXnMpki3xu7MaYdI7+ONSnVhsQDsDs6tY+fXJBcuZWJMfra79FyZw8NhQlBHQzX7rM854D4p7mZqzOPcl7U5G5w59siskMgIZebSxQsRvdeNwz8wHxCaA6qI8P4YvMQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70c3b6bf-dac5-4e7b-6658-08d83556c339
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR1201MB0188.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jul 2020 13:36:43.6731
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Jl4qGKvTzNw+YW2Bkigz1pT4FfYlIG1RWGIMDaEJ3FZmyoGf3wj/SRPDTs+O8ULTaDW9Uu622s/Tvpje/rXp8Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3257
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,55 +99,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-I guess this is was supposed to be PATCH v2 2/2, right?
+This series of patch does the following:
+1. Changes the name of the AMD SoC general purpose clk
+from ST(a version of SoC) to FCH (name of the IP).
+2. Then make the drivers support both older and newer versions of
+SoC.
 
-On Thu, Jul 30, 2020 at 03:52:57PM -0700, Azhar Shaikh wrote:
-> On disconnect port partner is removed and usb role is set to NONE.
-> But then in cros_typec_port_update() the role is set again.
-> Avoid this by moving usb_role_switch_set_role() to
-> cros_typec_configure_mux().
-> 
-> Signed-off-by: Azhar Shaikh <azhar.shaikh@intel.com>
-> Suggested-by: Prashant Malani <pmalani@chromium.org>
+Thanks,
+Akshu
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Akshu Agrawal (4):
+  ACPI: APD: Change name from ST to FCH
+  clk: x86: Change name from ST to FCH
+  ACPI: APD: Add a fmw property is_raven
+  clk: x86: Support RV architecture
 
-> ---
->  drivers/platform/chrome/cros_ec_typec.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-> index eb4713b7ae14..df97431b2275 100644
-> --- a/drivers/platform/chrome/cros_ec_typec.c
-> +++ b/drivers/platform/chrome/cros_ec_typec.c
-> @@ -515,6 +515,12 @@ static int cros_typec_configure_mux(struct cros_typec_data *typec, int port_num,
->  	if (ret)
->  		return ret;
->  
-> +	ret = usb_role_switch_set_role(typec->ports[port_num]->role_sw,
-> +				       pd_ctrl->role & PD_CTRL_RESP_ROLE_DATA
-> +				       ? USB_ROLE_HOST : USB_ROLE_DEVICE);
-> +	if (ret)
-> +		return ret;
-> +
->  	if (mux_flags & USB_PD_MUX_TBT_COMPAT_ENABLED) {
->  		ret = cros_typec_enable_tbt(typec, port_num, pd_ctrl);
->  	} else if (mux_flags & USB_PD_MUX_DP_ENABLED) {
-> @@ -589,9 +595,7 @@ static int cros_typec_port_update(struct cros_typec_data *typec, int port_num)
->  	if (ret)
->  		dev_warn(typec->dev, "Configure muxes failed, err = %d\n", ret);
->  
-> -	return usb_role_switch_set_role(typec->ports[port_num]->role_sw,
-> -				       resp.role & PD_CTRL_RESP_ROLE_DATA
-> -				       ? USB_ROLE_HOST : USB_ROLE_DEVICE);
-> +	return ret;
->  }
->  
->  static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
-> -- 
-> 2.17.1
-
-thanks,
+ drivers/acpi/acpi_apd.c                       |  18 ++--
+ drivers/clk/x86/Makefile                      |   2 +-
+ drivers/clk/x86/clk-fch.c                     | 101 ++++++++++++++++++
+ drivers/clk/x86/clk-st.c                      |  78 --------------
+ .../platform_data/{clk-st.h => clk-fch.h}     |  11 +-
+ 5 files changed, 119 insertions(+), 91 deletions(-)
+ create mode 100644 drivers/clk/x86/clk-fch.c
+ delete mode 100644 drivers/clk/x86/clk-st.c
+ rename include/linux/platform_data/{clk-st.h => clk-fch.h} (51%)
 
 -- 
-heikki
+2.20.1
+
