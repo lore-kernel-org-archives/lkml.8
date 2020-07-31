@@ -2,109 +2,214 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BADFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F24C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE7020829
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:54:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tXwqiOLj"
+	by mail.kernel.org (Postfix) with ESMTP id 600ED20829
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:54:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731979AbgGaIyF (ORCPT
+        id S1731983AbgGaIyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:54:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55548 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730268AbgGaIyE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 04:54:04 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 796BCC061574;
-        Fri, 31 Jul 2020 01:54:04 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BJ1Kg0lDRz9sT6;
-        Fri, 31 Jul 2020 18:53:59 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596185641;
-        bh=OPz3lUOc+WyHCbq/hFk/WLugydGTZNR/iPYJhaE2exA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=tXwqiOLj2tx5GjKOxkGES8vKfLtb1fHK8PYgnKDJZhMI/XQ64i5ep6MnAQ6/DfRgM
-         u67TQyJpDF8lmi3mTY/h8fAhAQ6vgrRpgEJ7IdGHjAXo0WpVJqfgMdN6jEd2yT7I+c
-         rG+8maiwVMslZZRHamAUBq2ZmnJwMv7oym1S6pH1QU0HxrtGzaUjgPvCv9/AufW1Q0
-         mx9yDimuRqrS3aoSuxI04f9wAFiuJBxWy9e3f7lIviCtNCffl/jbmf8EWafd4zV4Ph
-         4bBjzQzw3igvsDZ+d2rYx9s+ARCdG3Ycl0JOgeAj9RjbK4GWedMNnmO+l0aC7YPQr0
-         QZFTsY01UFxug==
-Date:   Fri, 31 Jul 2020 18:53:54 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, lkft-triage@lists.linaro.org
-Subject: Re: linux-next: Tree for Jul 30 [build failure on arm64]
-Message-ID: <20200731185354.70926525@canb.auug.org.au>
-In-Reply-To: <CA+G9fYvykg9Ly=tRXLrf4hvd4siYKAt5eM0EMnwMgqVDHnbVYQ@mail.gmail.com>
-References: <20200730214659.0fbfdfc4@canb.auug.org.au>
-        <72b073ba-ee41-1a1c-ce6c-ffd8b5936b09@hisilicon.com>
-        <20200731140842.46abe589@canb.auug.org.au>
-        <CA+G9fYvykg9Ly=tRXLrf4hvd4siYKAt5eM0EMnwMgqVDHnbVYQ@mail.gmail.com>
+        Fri, 31 Jul 2020 04:54:33 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:58908 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728437AbgGaIyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 04:54:33 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id A3494FB04;
+        Fri, 31 Jul 2020 10:54:31 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 1fj0SNQLDrPP; Fri, 31 Jul 2020 10:54:29 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 5D1244537D; Fri, 31 Jul 2020 10:54:29 +0200 (CEST)
+Date:   Fri, 31 Jul 2020 10:54:29 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        lukas@mntmn.com
+Subject: Re: [PATCH v9 0/5] Add support for iMX8MQ Display Controller
+ Subsystem
+Message-ID: <20200731085429.GD12560@bogon.m.sigxcpu.org>
+References: <20200731081836.3048-1-laurentiu.palcu@oss.nxp.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/r30PAVB0NtZyI/i6pWUpT.k";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200731081836.3048-1-laurentiu.palcu@oss.nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/r30PAVB0NtZyI/i6pWUpT.k
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
+On Fri, Jul 31, 2020 at 11:18:28AM +0300, Laurentiu Palcu wrote:
+> From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> 
+> Hi,
+> 
+> This patchset adds initial DCSS support for iMX8MQ chip. Initial support
+> includes only graphics plane support (no video planes), no HDR10 capabilities,
+> no graphics decompression (only linear, tiled and super-tiled buffers allowed).
+> 
+> Support for the rest of the features will be added incrementally, in subsequent
+> patches.
+> 
+> The patchset was tested with both HDP driver (in the downstream tree) and the upstream
+> MIPI-DSI driver (with a couple of patches on top, to make it work correctly with DCSS).
+> 
+> Thanks,
+> Laurentiu
+> 
+> Changes in v9:
+>  * Fixed a compilation issue found by Guido in his setup: 'select
+>    VIDEOMODE_HELPERS' was missing from Kconfig;
+>  * Use imx8mq-clock.h in the bindings file so one can understand what
+>    those clock values mean;
+>  * no other changes done. Couldn't address the hang Guido reported as
+>    it's not happening in my setup. However, in my tree, there are some
+>    extra NWL and ADV patches applied on top of upstream ones... Also,
+>    removing them and testing only with upstream, even if there's no
+>    image out, does not produce a hang... :/
 
-Hi Naresh,
-
-On Fri, 31 Jul 2020 14:00:57 +0530 Naresh Kamboju <naresh.kamboju@linaro.or=
-g> wrote:
->
-> > Presumably caused by commit
-> >
-> >   b902bfb3f0e9 ("arm64: stop using <asm/compat.h> directly") =20
->=20
-> I have reverted this commit
->   b902bfb3f0e9 ("arm64: stop using <asm/compat.h> directly")
->=20
-> and rebuilt arm64 failed due to below errors/warnings.
-
-That commit was in preparation for the following 3 commits.  You would
-have to revert them as well to get a good build.
-
---=20
+I don't think this should hold up merging.
 Cheers,
-Stephen Rothwell
+ -- Guido
 
---Sig_/r30PAVB0NtZyI/i6pWUpT.k
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8j3CIACgkQAVBC80lX
-0GwGWQgAlFnQu2bDAJnwB6llA/2Ib2qDm+ZVqCP9BS1JI8XsfMNdAH8QXdShSw+f
-PZoWmeGW/YZXH//mSS4uS9dBDyltZ24W967oLRp8L2elzTWVlmWszFIR+V88I9PK
-oxBmAxrmKIEFE1k4IOg1B/EA2PK/J+jCNYBY+pCXIZ2Sw8ea7Y0c8rfpkydAYWza
-SWj6m3jgIzF+GXXDCQrM/DvcNF2Va9q0HVOX6Sxjg/zyTftCvqsEpsQxlwLztXt5
-AEIyn2+jXFCU/GQDB+9koIYyUcN6/QltQr1bNMXrNNP5Vx+S9/e2THqVSPw+b4Gd
-I6iD6KjE11WMQoHkOK5DKQGQxZ+9PA==
-=VH/t
------END PGP SIGNATURE-----
-
---Sig_/r30PAVB0NtZyI/i6pWUpT.k--
+> 
+> Changes in v8:
+>  * Removed 'select RESET_CONTROLLER" from Kconfig as Philipp pointed
+>    out. SRC is not used in DCSS driver;
+>  * Nothing else changed;
+> 
+> Changes in v7:
+>  * Added a patch to initialize the connector using the drm_bridge_connector
+>    API as Sam suggested. Tested it using NWL_DSI and ADV7535 with
+>    Guido's patch [1] applied and one fix for ADV [2]. Also, some extra
+>    patches for ADV and NWL were needed, from our downstream tree, which
+>    will be upstreamed soon by their author;
+>  * Rest of the patches are untouched;
+> 
+> [1] https://lists.freedesktop.org/archives/dri-devel/2020-July/273025.html
+> [2] https://lists.freedesktop.org/archives/dri-devel/2020-July/273132.html
+> 
+> Changes in v6:
+>  * Addressed Rob's comment and added "additionalProperties: false" at
+>    the end of the bindings' properties. However, this change surfaced
+>    an issue with the assigned-clock* properties not being documented in
+>    the properties section. Added the descriptions and the bindings patch
+>    will need another review;
+>  * Added an entry for DCSS driver in the MAINTAINERS file;
+>  * Removed the component framework patch altogether;
+> 
+> Changes in v5:
+>  * Rebased to latest;
+>  * Took out component framework support and made it a separate patch so
+>    that people can still test with HDP driver, which makes use of it.
+>    But the idea is to get rid of it once HDP driver's next versions
+>    will remove component framework as well;
+>  * Slight improvement to modesetting: avoid cutting off the pixel clock
+>    if the new mode and the old one are equal. Also, in this case, is
+>    not necessary to wait for DTG to shut off. This would allow to switch
+>    from 8b RGB to 12b YUV422, for example, with no interruptions (at least
+>    from DCSS point of view);
+>  * Do not fire off CTXLD when going to suspend, unless it still has
+>    entries that need to be committed to DCSS;
+>  * Addressed Rob's comments on bindings;
+> 
+> Changes in v4:
+>  * Addressed Lucas and Philipp's comments:
+>    * Added DRM_KMS_CMA_HELPER dependency in Kconfig;
+>    * Removed usage of devm_ functions since I'm already doing all the
+>      clean-up in the submodules_deinit();
+>    * Moved the drm_crtc_arm_vblank_event() in dcss_crtc_atomic_flush();
+>    * Removed en_completion variable from dcss_crtc since this was
+>      introduced mainly to avoid vblank timeout warnings which were fixed
+>      by arming the vblank event in flush() instead of begin();
+>    * Removed clks_on and irq_enabled flags since all the calls to
+>      enabling/disabling clocks and interrupts were balanced;
+>    * Removed the custom atomic_commit callback and used the DRM core
+>      helper and, in the process, got rid of a workqueue that wasn't
+>      necessary anymore;
+>    * Fixed some minor DT binding issues flagged by Philipp;
+>    * Some other minor changes suggested by Lucas;
+>  * Removed YUV formats from the supported formats as these cannot work
+>    without the HDR10 module CSCs and LUTs. Will add them back when I
+>    will add support for video planes;
+> 
+> Changes in v3:
+>  * rebased to latest linux-next and made it compile as drmP.h was
+>    removed;
+>  * removed the patch adding the VIDEO2_PLL clock. It's already applied;
+>  * removed an unnecessary 50ms sleep in the dcss_dtg_sync_set();
+>  * fixed a a spurious hang reported by Lukas Hartmann and encountered
+>    by me several times;
+>  * mask DPR and DTG interrupts by default, as they may come enabled from
+>    U-boot;
+> 
+> Changes in v2:
+>  * Removed '0x' in node's unit-address both in DT and yaml;
+>  * Made the address region size lowercase, to be consistent;
+>  * Removed some left-over references to P010;
+>  * Added a Kconfig dependency of DRM && ARCH_MXC. This will also silence compilation
+>    issues reported by kbuild for other architectures;
+> 
+> 
+> Laurentiu Palcu (5):
+>   drm/imx: compile imx directory by default
+>   drm/imx: Add initial support for DCSS on iMX8MQ
+>   drm/imx/dcss: use drm_bridge_connector API
+>   MAINTAINERS: Add entry for i.MX 8MQ DCSS driver
+>   dt-bindings: display: imx: add bindings for DCSS
+> 
+>  .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 108 +++
+>  MAINTAINERS                                   |   8 +
+>  drivers/gpu/drm/Makefile                      |   2 +-
+>  drivers/gpu/drm/imx/Kconfig                   |   2 +
+>  drivers/gpu/drm/imx/Makefile                  |   1 +
+>  drivers/gpu/drm/imx/dcss/Kconfig              |   9 +
+>  drivers/gpu/drm/imx/dcss/Makefile             |   6 +
+>  drivers/gpu/drm/imx/dcss/dcss-blkctl.c        |  70 ++
+>  drivers/gpu/drm/imx/dcss/dcss-crtc.c          | 219 +++++
+>  drivers/gpu/drm/imx/dcss/dcss-ctxld.c         | 424 +++++++++
+>  drivers/gpu/drm/imx/dcss/dcss-dev.c           | 325 +++++++
+>  drivers/gpu/drm/imx/dcss/dcss-dev.h           | 177 ++++
+>  drivers/gpu/drm/imx/dcss/dcss-dpr.c           | 562 ++++++++++++
+>  drivers/gpu/drm/imx/dcss/dcss-drv.c           | 138 +++
+>  drivers/gpu/drm/imx/dcss/dcss-dtg.c           | 409 +++++++++
+>  drivers/gpu/drm/imx/dcss/dcss-kms.c           | 198 +++++
+>  drivers/gpu/drm/imx/dcss/dcss-kms.h           |  44 +
+>  drivers/gpu/drm/imx/dcss/dcss-plane.c         | 405 +++++++++
+>  drivers/gpu/drm/imx/dcss/dcss-scaler.c        | 826 ++++++++++++++++++
+>  drivers/gpu/drm/imx/dcss/dcss-ss.c            | 180 ++++
+>  20 files changed, 4112 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+>  create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
+>  create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
+> 
+> -- 
+> 2.23.0
+> 
