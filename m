@@ -2,126 +2,159 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47360C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD6CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD3321744
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:33:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA17421744
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:50:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JJeGopF0"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nB3wO3EG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730858AbgGaVdK (ORCPT
+        id S1728209AbgGaVuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 17:33:10 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18242 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729085AbgGaVca (ORCPT
+        Fri, 31 Jul 2020 17:50:07 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:19920 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726881AbgGaVuG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 17:32:30 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f248de00000>; Fri, 31 Jul 2020 14:32:16 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 31 Jul 2020 14:32:30 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 31 Jul 2020 14:32:30 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul
- 2020 21:32:29 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 31 Jul 2020 21:32:29 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.221]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f248ded0000>; Fri, 31 Jul 2020 14:32:29 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <gregkh@linuxfoundation.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v7 03/10] media: tegra-video: Update format lookup to offset based
-Date:   Fri, 31 Jul 2020 14:32:17 -0700
-Message-ID: <1596231144-12554-4-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596231144-12554-1-git-send-email-skomatineni@nvidia.com>
-References: <1596231144-12554-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Fri, 31 Jul 2020 17:50:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1596232206; x=1627768206;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=TCl662mUkal176BNY6VRMbOf0sBUN6kp6uCGLE85bLE=;
+  b=nB3wO3EGTr7NQEKhWraOY5/Cf8kz/DhvIoHKKyNf2yhObAeLpYYcqfAB
+   Y6uR8R9W60XqpD2oHr5AnW8/hchfMKgVKbz8Q4HK3wtjUQJZLgmQfMTIm
+   y2byfiU/hbWBvzftEaedGboAsmX55SASj5bHAy5PMyfxPIy6dHX12YrYV
+   8=;
+IronPort-SDR: oUPSmJGeLX2JoT+MfwiALEgEB86WPd23cJ0UzlfwclfAJLNTuYnXLpMRU7jlYkr6mN5h+jYvRa
+ m5CMGeWGBxfQ==
+X-IronPort-AV: E=Sophos;i="5.75,419,1589241600"; 
+   d="scan'208";a="56451571"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-27fb8269.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 31 Jul 2020 21:50:03 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-27fb8269.us-east-1.amazon.com (Postfix) with ESMTPS id D5063A2026;
+        Fri, 31 Jul 2020 21:49:58 +0000 (UTC)
+Received: from EX13D20UWC002.ant.amazon.com (10.43.162.163) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 31 Jul 2020 21:49:58 +0000
+Received: from u79c5a0a55de558.ant.amazon.com (10.43.160.100) by
+ EX13D20UWC002.ant.amazon.com (10.43.162.163) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 31 Jul 2020 21:49:55 +0000
+From:   Alexander Graf <graf@amazon.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+CC:     Jonathan Corbet <corbet@lwn.net>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        "Joerg Roedel" <joro@8bytes.org>,
+        KarimAllah Raslan <karahmed@amazon.de>,
+        Aaron Lewis <aaronlewis@google.com>, <kvm@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 0/3] Allow user space to restrict and augment MSR emulation
+Date:   Fri, 31 Jul 2020 23:49:44 +0200
+Message-ID: <20200731214947.16885-1-graf@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596231136; bh=5U56MbpoGgbizDY87xBQZF5BWeIIcAyUuev+l62V8Co=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=JJeGopF049eZTUnv0zWOF7Zme+1GELMwKVGM2TBdKPwNXcBZik9977k5TN9NskB5c
-         4Vw4p2WtkWnPq7GP4VuNBJ01ZVSXrLpVSxrFqxYwH9bUGgNQ7oVj1v5+6ygJo0Gvq2
-         fM4xLmOvbY+PcGdgWLGIso7r0DHvjuw/otwJ42ETsKh0G6l0yrgLXWhzqUTmw3XkVN
-         bDoAJbLrZ5omssUc4wQEm3zJjTg8jZd5l37MuQxa6umdvIWgO9/peZI6rrmT3LUpxZ
-         0ErsVe+6sJeU7XhGhLTn7jeCfBngsrqgDQHmY6sGWupZ86WxLAMcy8Vn3sBB+cnJm8
-         jghSxN3twbSbg==
+X-Originating-IP: [10.43.160.100]
+X-ClientProxiedBy: EX13D48UWA001.ant.amazon.com (10.43.163.52) To
+ EX13D20UWC002.ant.amazon.com (10.43.162.163)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra VI supported video formats are more for non TPG and there
-can be multiple pixel formats for the same media bus format.
+While tying to add support for the MSR_CORE_THREAD_COUNT MSR in KVM,
+I realized that we were still in a world where user space has no control
+over what happens with MSR emulation in KVM.
 
-This patch updates the helper function for format lookup based on
-mbus code from pre-defined Tegra supported format list to look from
-the specified list index offset.
+That is bad for multiple reasons. In my case, I wanted to emulate the
+MSR in user space, because it's a CPU specific register that does not
+exist on older CPUs and that really only contains informational data that
+is on the package level, so it's a natural fit for user space to provide
+it.
 
-Offset based look up is used with sensor device graph (non TPG)
-where format enumeration can list all supported formats for the
-specific sensor mbus codes.
+However, it is also bad on a platform compatibility level. Currrently,
+KVM has no way to expose different MSRs based on the selected target CPU
+type.
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/staging/media/tegra-video/vi.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+This patch set introduces a way for user space to indicate to KVM which
+MSRs should be handled in kernel space. With that, we can solve part of
+the platform compatibility story. Or at least we can not handle AMD specific
+MSRs on an Intel platform and vice versa.
 
-diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
-index 0197f4e..52d751f 100644
---- a/drivers/staging/media/tegra-video/vi.c
-+++ b/drivers/staging/media/tegra-video/vi.c
-@@ -53,11 +53,12 @@ to_tegra_channel_buffer(struct vb2_v4l2_buffer *vb)
- }
- 
- static int tegra_get_format_idx_by_code(struct tegra_vi *vi,
--					unsigned int code)
-+					unsigned int code,
-+					unsigned int offset)
- {
- 	unsigned int i;
- 
--	for (i = 0; i < vi->soc->nformats; ++i) {
-+	for (i = offset; i < vi->soc->nformats; ++i) {
- 		if (vi->soc->video_formats[i].code == code)
- 			return i;
- 	}
-@@ -598,11 +599,12 @@ static void vi_tpg_fmts_bitmap_init(struct tegra_vi_channel *chan)
- 	bitmap_zero(chan->tpg_fmts_bitmap, MAX_FORMAT_NUM);
- 
- 	index = tegra_get_format_idx_by_code(chan->vi,
--					     MEDIA_BUS_FMT_SRGGB10_1X10);
-+					     MEDIA_BUS_FMT_SRGGB10_1X10, 0);
- 	bitmap_set(chan->tpg_fmts_bitmap, index, 1);
- 
- 	index = tegra_get_format_idx_by_code(chan->vi,
--					     MEDIA_BUS_FMT_RGB888_1X32_PADHI);
-+					     MEDIA_BUS_FMT_RGB888_1X32_PADHI,
-+					     0);
- 	bitmap_set(chan->tpg_fmts_bitmap, index, 1);
- }
- 
+In addition, it introduces a way for user space to get into the loop
+when an MSR access would generate a #GP fault, such as when KVM finds an
+MSR that is not handled by the in-kernel MSR emulation or when the guest
+is trying to access reserved registers.
+
+In combination with the allow list, the user space trapping allows us
+to emulate arbitrary MSRs in user space, paving the way for target CPU
+specific MSR implementations from user space.
+
+v1 -> v2:
+
+  - s/ETRAP_TO_USER_SPACE/ENOENT/g
+  - deflect all #GP injection events to user space, not just unknown MSRs.
+    That was we can also deflect allowlist errors later
+  - fix emulator case
+  - new patch: KVM: x86: Introduce allow list for MSR emulation
+  - new patch: KVM: selftests: Add test for user space MSR handling
+
+v2 -> v3:
+
+  - return r if r == X86EMUL_IO_NEEDED
+  - s/KVM_EXIT_RDMSR/KVM_EXIT_X86_RDMSR/g
+  - s/KVM_EXIT_WRMSR/KVM_EXIT_X86_WRMSR/g
+  - Use complete_userspace_io logic instead of reply field
+  - Simplify trapping code
+  - document flags for KVM_X86_ADD_MSR_ALLOWLIST
+  - generalize exit path, always unlock when returning
+  - s/KVM_CAP_ADD_MSR_ALLOWLIST/KVM_CAP_X86_MSR_ALLOWLIST/g
+  - Add KVM_X86_CLEAR_MSR_ALLOWLIST
+  - Add test to clear whitelist
+  - Adjust to reply-less API
+  - Fix asserts
+  - Actually trap on MSR_IA32_POWER_CTL writes
+
+Alexander Graf (3):
+  KVM: x86: Deflect unknown MSR accesses to user space
+  KVM: x86: Introduce allow list for MSR emulation
+  KVM: selftests: Add test for user space MSR handling
+
+ Documentation/virt/kvm/api.rst                | 153 +++++++++++
+ arch/x86/include/asm/kvm_host.h               |  16 ++
+ arch/x86/include/uapi/asm/kvm.h               |  15 ++
+ arch/x86/kvm/emulate.c                        |  18 +-
+ arch/x86/kvm/x86.c                            | 241 +++++++++++++++++-
+ include/trace/events/kvm.h                    |   2 +-
+ include/uapi/linux/kvm.h                      |  15 ++
+ tools/testing/selftests/kvm/Makefile          |   1 +
+ .../selftests/kvm/x86_64/user_msr_test.c      | 221 ++++++++++++++++
+ 9 files changed, 675 insertions(+), 7 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/x86_64/user_msr_test.c
+
 -- 
-2.7.4
+2.17.1
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
 
