@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A17B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 531EEC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88C12208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3428B20829
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731887AbgGaIAX (ORCPT
+        id S1731878AbgGaIAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:00:23 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:59752 "EHLO
+        Fri, 31 Jul 2020 04:00:22 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:59730 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731671AbgGaIAE (ORCPT
+        with ESMTP id S1731539AbgGaIAE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 31 Jul 2020 04:00:04 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id E898E8040A6C;
-        Fri, 31 Jul 2020 08:00:01 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 74B308030808;
+        Fri, 31 Jul 2020 08:00:00 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id qMeaNV9clg4S; Fri, 31 Jul 2020 11:00:01 +0300 (MSK)
+        with ESMTP id QbiS43k0K67d; Fri, 31 Jul 2020 10:59:59 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Mark Brown <broonie@kernel.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
@@ -41,9 +41,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Feng Tang <feng.tang@intel.com>, Vinod Koul <vkoul@kernel.org>,
         <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 6/8] spi: dw-dma: Move DMAC register cleanup to DMA transfer method
-Date:   Fri, 31 Jul 2020 10:59:51 +0300
-Message-ID: <20200731075953.14416-7-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH 4/8] spi: dw-dma: Move DMA transfers submission to the channels prep methods
+Date:   Fri, 31 Jul 2020 10:59:49 +0300
+Message-ID: <20200731075953.14416-5-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200731075953.14416-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200731075953.14416-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -55,101 +55,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DW APB SSI DMA driver doesn't use the native SPI core wait API since
-commit bdbdf0f06337 ("spi: dw: Locally wait for the DMA transfers
-completion"). Due to that the driver can now clear the DMAC register
-in a single place synchronously with the DMA transactions completion
-or failure. After that all the possible code paths are still covered:
-1) DMA completion callbacks are executed in case if the corresponding DMA
-transactions are finished. When they are, one of them will eventually wake
-the SPI messages pump kernel thread and dw_spi_dma_transfer_all() method
-will clean the DMAC register as implied by this patch.
-2) dma_stop is called when the SPI core detects an error either returned
-from the transfer_one() callback or set in the SPI message status field.
-Both types of errors will be noticed by the dw_spi_dma_transfer_all()
-method.
-3) dma_exit is called when either SPI controller driver or the
-corresponding device is removed. In any case the SPI core will first
-flush the SPI messages pump kernel thread, so any pending or in-fly
-SPI transfers will be finished before that.
+Indeed we can freely move the dmaengine_submit() method invocation and the
+Tx and Rx busy flag setting into the DMA Tx/Rx prepare methods. By doing
+so first we implement another preparation before adding the one-by-one DMA
+SG entries transmission, second we now have the dma_async_tx_descriptor
+descriptor used locally only in the new DMA transfers submitition methods,
+which makes the code less complex with no passing around the DMA Tx
+descriptors, third we make the generic transfer method more readable, where
+now the functionality of submission, execution and wait procedures is
+transparently split up instead of having a preparation, intermixed
+submission/execution and wait procedures. While at it we also add the
+dmaengine_submit() return value test. It has been unnecessary for
+DW DMAC, but should be done to support the generic DMA interface.
 
-Due to all of that let's simplify the DW APB SSI DMA driver a bit and
-move the DMAC register cleanup to a single place in the
-dw_spi_dma_transfer_all() method.
+Note since the DMA channels preparation methods are now responsible for
+the DMA transactions submission, we also rename them to
+dw_spi_dma_submit_{tx,rx}().
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 ---
- drivers/spi/spi-dw-dma.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ drivers/spi/spi-dw-dma.c | 56 ++++++++++++++++++++++------------------
+ 1 file changed, 31 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/spi/spi-dw-dma.c b/drivers/spi/spi-dw-dma.c
-index 32ef7913a73d..f8508c0c7978 100644
+index 56496b659d62..366978086781 100644
 --- a/drivers/spi/spi-dw-dma.c
 +++ b/drivers/spi/spi-dw-dma.c
-@@ -153,8 +153,6 @@ static void dw_spi_dma_exit(struct dw_spi *dws)
- 		dmaengine_terminate_sync(dws->rxchan);
- 		dma_release_channel(dws->rxchan);
- 	}
--
--	dw_writel(dws, DW_SPI_DMACR, 0);
+@@ -272,10 +272,11 @@ static int dw_spi_dma_config_tx(struct dw_spi *dws)
+ 	return dmaengine_slave_config(dws->txchan, &txconf);
  }
  
- static irqreturn_t dw_spi_dma_transfer_handler(struct dw_spi *dws)
-@@ -253,7 +251,6 @@ static void dw_spi_dma_tx_done(void *arg)
- 	if (test_bit(RX_BUSY, &dws->dma_chan_busy))
- 		return;
+-static struct dma_async_tx_descriptor *
+-dw_spi_dma_prepare_tx(struct dw_spi *dws, struct spi_transfer *xfer)
++static int dw_spi_dma_submit_tx(struct dw_spi *dws, struct spi_transfer *xfer)
+ {
+ 	struct dma_async_tx_descriptor *txdesc;
++	dma_cookie_t cookie;
++	int ret;
  
--	dw_writel(dws, DW_SPI_DMACR, 0);
- 	complete(&dws->dma_completion);
- }
+ 	txdesc = dmaengine_prep_slave_sg(dws->txchan,
+ 				xfer->tx_sg.sgl,
+@@ -283,12 +284,17 @@ dw_spi_dma_prepare_tx(struct dw_spi *dws, struct spi_transfer *xfer)
+ 				DMA_MEM_TO_DEV,
+ 				DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+ 	if (!txdesc)
+-		return NULL;
++		return -ENOMEM;
  
-@@ -352,7 +349,6 @@ static void dw_spi_dma_rx_done(void *arg)
- 	if (test_bit(TX_BUSY, &dws->dma_chan_busy))
- 		return;
+ 	txdesc->callback = dw_spi_dma_tx_done;
+ 	txdesc->callback_param = dws;
  
--	dw_writel(dws, DW_SPI_DMACR, 0);
- 	complete(&dws->dma_completion);
- }
- 
-@@ -442,13 +438,13 @@ static int dw_spi_dma_transfer_all(struct dw_spi *dws,
- 	/* Submit DMA Tx transfer */
- 	ret = dw_spi_dma_submit_tx(dws, xfer);
- 	if (ret)
--		return ret;
-+		goto err_clear_dmac;
- 
- 	/* Submit DMA Rx transfer if required */
- 	if (xfer->rx_buf) {
- 		ret = dw_spi_dma_submit_rx(dws, xfer);
- 		if (ret)
--			return ret;
-+			goto err_clear_dmac;
- 
- 		/* rx must be started before tx due to spi instinct */
- 		dma_async_issue_pending(dws->rxchan);
-@@ -456,7 +452,12 @@ static int dw_spi_dma_transfer_all(struct dw_spi *dws,
- 
- 	dma_async_issue_pending(dws->txchan);
- 
--	return dw_spi_dma_wait(dws, xfer);
-+	ret = dw_spi_dma_wait(dws, xfer);
-+
-+err_clear_dmac:
-+	dw_writel(dws, DW_SPI_DMACR, 0);
+-	return txdesc;
++	cookie = dmaengine_submit(txdesc);
++	ret = dma_submit_error(cookie);
++	if (!ret)
++		set_bit(TX_BUSY, &dws->dma_chan_busy);
 +
 +	return ret;
  }
  
- static int dw_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
-@@ -489,8 +490,6 @@ static void dw_spi_dma_stop(struct dw_spi *dws)
- 		dmaengine_terminate_sync(dws->rxchan);
- 		clear_bit(RX_BUSY, &dws->dma_chan_busy);
- 	}
--
--	dw_writel(dws, DW_SPI_DMACR, 0);
+ static inline bool dw_spi_dma_rx_busy(struct dw_spi *dws)
+@@ -365,13 +371,11 @@ static int dw_spi_dma_config_rx(struct dw_spi *dws)
+ 	return dmaengine_slave_config(dws->rxchan, &rxconf);
  }
  
- static const struct dw_spi_dma_ops dw_spi_dma_mfld_ops = {
+-static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
+-		struct spi_transfer *xfer)
++static int dw_spi_dma_submit_rx(struct dw_spi *dws, struct spi_transfer *xfer)
+ {
+ 	struct dma_async_tx_descriptor *rxdesc;
+-
+-	if (!xfer->rx_buf)
+-		return NULL;
++	dma_cookie_t cookie;
++	int ret;
+ 
+ 	rxdesc = dmaengine_prep_slave_sg(dws->rxchan,
+ 				xfer->rx_sg.sgl,
+@@ -379,12 +383,17 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
+ 				DMA_DEV_TO_MEM,
+ 				DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+ 	if (!rxdesc)
+-		return NULL;
++		return -ENOMEM;
+ 
+ 	rxdesc->callback = dw_spi_dma_rx_done;
+ 	rxdesc->callback_param = dws;
+ 
+-	return rxdesc;
++	cookie = dmaengine_submit(rxdesc);
++	ret = dma_submit_error(cookie);
++	if (!ret)
++		set_bit(RX_BUSY, &dws->dma_chan_busy);
++
++	return ret;
+ }
+ 
+ static int dw_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
+@@ -427,26 +436,23 @@ static int dw_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
+ 
+ static int dw_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
+ {
+-	struct dma_async_tx_descriptor *txdesc, *rxdesc;
+ 	int ret;
+ 
+-	/* Prepare the TX dma transfer */
+-	txdesc = dw_spi_dma_prepare_tx(dws, xfer);
+-	if (!txdesc)
+-		return -EINVAL;
++	/* Submit DMA Tx transfer */
++	ret = dw_spi_dma_submit_tx(dws, xfer);
++	if (ret)
++		return ret;
+ 
+-	/* Prepare the RX dma transfer */
+-	rxdesc = dw_spi_dma_prepare_rx(dws, xfer);
++	/* Submit DMA Rx transfer if required */
++	if (xfer->rx_buf) {
++		ret = dw_spi_dma_submit_rx(dws, xfer);
++		if (ret)
++			return ret;
+ 
+-	/* rx must be started before tx due to spi instinct */
+-	if (rxdesc) {
+-		set_bit(RX_BUSY, &dws->dma_chan_busy);
+-		dmaengine_submit(rxdesc);
++		/* rx must be started before tx due to spi instinct */
+ 		dma_async_issue_pending(dws->rxchan);
+ 	}
+ 
+-	set_bit(TX_BUSY, &dws->dma_chan_busy);
+-	dmaengine_submit(txdesc);
+ 	dma_async_issue_pending(dws->txchan);
+ 
+ 	ret = dw_spi_dma_wait(dws, xfer);
+@@ -459,7 +465,7 @@ static int dw_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
+ 			return ret;
+ 	}
+ 
+-	if (rxdesc && dws->master->cur_msg->status == -EINPROGRESS)
++	if (xfer->rx_buf && dws->master->cur_msg->status == -EINPROGRESS)
+ 		ret = dw_spi_dma_wait_rx_done(dws);
+ 
+ 	return ret;
 -- 
 2.27.0
 
