@@ -2,223 +2,150 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 485D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18516206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:51:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="b+grd5Gz"
+	by mail.kernel.org (Postfix) with ESMTP id 2C822206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:52:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732487AbgGaQve (ORCPT
+        id S1733138AbgGaQwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 12:51:34 -0400
-Received: from enterprise02.smtp.diehl.com ([193.201.238.220]:9809 "EHLO
-        enterprise02.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732474AbgGaQv0 (ORCPT
+        Fri, 31 Jul 2020 12:52:01 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:47036 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732474AbgGaQwA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 12:51:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
-  t=1596214285; x=1627750285;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=9im/ryNwa77q+W0U0nQsF0clIs2BoxnyZNJa+ycU9Pw=;
-  b=b+grd5GzjP+6TY7XlUNx9nIpBnsqLwuiDJSLOburZbsM4Hg+KJdQEH6P
-   InVSeNlXNPapVs/aN3m8D4riR1QlBj8Be5ytZdH8BwYW1J3qrOMEhdEha
-   Y1P4dhW0LoBXGsEDBTTdUUx4P5XSaOWYCK12zcQ7LKn4eOzLBCmh2pqjh
-   v7TVVg+GBOk9SngKVHz1bneYV5QMPvN4fV6XoY0wodhc5qfiOV8nX382K
-   yn4q3Bi/cX+odWRki6PCh1yR8b3Twn0E84ii2FXOktyNu51kHrUO/mSPh
-   LTVSrMsXSHpBiCB8GwJNnCGD5HNEd5NSu5SgqKHj71UAY1iFVVink6miU
-   g==;
-IronPort-SDR: c0eRmP+6OX//ndFc9V7Zn2tTMsDelRISJIt7jYxrxjgbe+aBzk5y1jDEVzuKnrZqIhfNzH0w9q
- bMlny+cV5KKA==
-X-IronPort-AV: E=Sophos;i="5.75,418,1589234400"; 
-   d="scan'208";a="65153518"
-From:   Denis Osterland-Heim <denis.osterland@diehl.com>
-To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Denis Osterland-Heim" <denis.osterland@diehl.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: [PATCH v7 1/3] leds: move default_state read from fwnode to core
-Thread-Topic: [PATCH v7 1/3] leds: move default_state read from fwnode to core
-Thread-Index: AQHWZ1rRGh0zx45XjEmzN6NiUu4AEg==
-Date:   Fri, 31 Jul 2020 16:51:21 +0000
-Message-ID: <20200731164945.19515-2-Denis.Osterland@diehl.com>
-References: <20200731164945.19515-1-Denis.Osterland@diehl.com>
-In-Reply-To: <20200731164945.19515-1-Denis.Osterland@diehl.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 31 Jul 2020 12:52:00 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 74so6501039pfx.13;
+        Fri, 31 Jul 2020 09:52:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=oLGYhoUWlZqZmJCTlVuU9mouFujuKTKpwuXuSMKojnI=;
+        b=BBG/xB/DMyV3FaYTWXz8oaJa602pAMYrGJ0SgzGhGCFQIilGJhoR29kp7DtFYfoRJC
+         UvcTheAFVyiqWybSV2BfXLLat+85nlrYunuXx8VF0/tjBDOs9Tg67SuxsSGE3I9qWZDG
+         3kO/61aCK5+eDR+FDAW1h63N7wIiI3rzAsL33rBlbbPxAPz4Mde04/Y1k1cXSAKNjDqD
+         owDD2WNCiR2+iATEsV3igGeN/KZ4jka1lwHr+FRmwYij7NkdmpGpfQC64z5dO+zIoGwQ
+         pyVlYhrPZvOE6HGGMnpsx9l4uoQFWa+dAuXWY5jwmxdss2Nzq3pE6s+yfaDX4tvcYfx+
+         KFTg==
+X-Gm-Message-State: AOAM533IDj88B53JA+E0rWb7s9bwDp5qaSbrtje54h4YE3Wb8QeJpuYl
+        5iLXFwDXPKeggwJ7d60yvKdwugeD
+X-Google-Smtp-Source: ABdhPJw/GlPhqI9UPgRqOyeeiqcSnBJM5M+mvxD3mXOcyoZbqwUDiLDZrVecwx0Ue40ds8Pdm8f1LQ==
+X-Received: by 2002:a63:5b5d:: with SMTP id l29mr4578617pgm.206.1596214319572;
+        Fri, 31 Jul 2020 09:51:59 -0700 (PDT)
+Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id w82sm10344378pff.7.2020.07.31.09.51.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jul 2020 09:51:57 -0700 (PDT)
+Subject: Re: [PATCH v4] scsi: ufs: Cleanup completed request without interrupt
+ notification
+To:     Can Guo <cang@codeaurora.org>
+Cc:     Stanley Chu <stanley.chu@mediatek.com>,
+        Avri Altman <Avri.Altman@wdc.com>, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, alim.akhtar@samsung.com,
+        jejb@linux.ibm.com, beanhuo@micron.com, asutoshd@codeaurora.org,
+        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
+        chaotian.jing@mediatek.com, cc.chou@mediatek.com
+References: <20200724140246.19434-1-stanley.chu@mediatek.com>
+ <SN6PR04MB4640B5FC06968244DDACB8BEFC720@SN6PR04MB4640.namprd04.prod.outlook.com>
+ <1596159018.17247.53.camel@mtkswgap22>
+ <97f1dfb0-41b6-0249-3e82-cae480b0efb6@acm.org>
+ <8b0a158a7c3ee2165e09290996521ffc@codeaurora.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <f45c6c47-ffc5-3f8e-3234-9e5989dbf996@acm.org>
+Date:   Fri, 31 Jul 2020 09:51:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-TrailerSkip: 1
-X-GBS-PROC: 5x5xXKsZ7k4sJw6jWwvS4uZcHK5bu42RN30SnBLCwEex4wX9j8rroIL85q/h5+oQ
+In-Reply-To: <8b0a158a7c3ee2165e09290996521ffc@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduces a new function to read initial
-default_state from fwnode.
+On 2020-07-31 01:00, Can Guo wrote:
+> AFAIK, sychronization of scsi_done is not a problem here, because scsi
+> layer
+> use the atomic state, namely SCMD_STATE_COMPLETE, of a scsi cmd to prevent
+> the concurrency of abort and real completion of it.
+> 
+> Check func scsi_times_out(), hope it helps.
+> 
+> enum blk_eh_timer_return scsi_times_out(struct request *req)
+> {
+> ...
+>         if (rtn == BLK_EH_DONE) {
+>                 /*
+>                  * Set the command to complete first in order to prevent
+> a real
+>                  * completion from releasing the command while error
+> handling
+>                  * is using it. If the command was already completed,
+> then the
+>                  * lower level driver beat the timeout handler, and it
+> is safe
+>                  * to return without escalating error recovery.
+>                  *
+>                  * If timeout handling lost the race to a real
+> completion, the
+>                  * block layer may ignore that due to a fake timeout
+> injection,
+>                  * so return RESET_TIMER to allow error handling another
+> shot
+>                  * at this command.
+>                  */
+>                 if (test_and_set_bit(SCMD_STATE_COMPLETE, &scmd->state))
+>                         return BLK_EH_RESET_TIMER;
+>                 if (scsi_abort_command(scmd) != SUCCESS) {
+>                         set_host_byte(scmd, DID_TIME_OUT);
+>                         scsi_eh_scmd_add(scmd);
+>                 }
+>         }
+> }
 
-Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
----
- drivers/leds/led-core.c  | 15 +++++++++++++++
- drivers/leds/leds-gpio.c | 12 ++----------
- drivers/leds/leds.h      |  1 +
- include/linux/leds.h     | 12 +++++++++---
- 4 files changed, 27 insertions(+), 13 deletions(-)
+I am familiar with this mechanism. My concern is that both the regular
+completion path and the abort handler must call scsi_dma_unmap() before
+calling cmd->scsi_done(cmd). I don't see how
+test_and_set_bit(SCMD_STATE_COMPLETE, &scmd->state) could prevent that
+the regular completion path and the abort handler call scsi_dma_unmap()
+concurrently since both calls happen before the SCMD_STATE_COMPLETE bit
+is set?
 
-diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-index 846248a0693d..0ef220c154e4 100644
---- a/drivers/leds/led-core.c
-+++ b/drivers/leds/led-core.c
-@@ -478,3 +478,18 @@ int led_compose_name(struct device *dev, struct led_=
-init_data *init_data,
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(led_compose_name);
-+
-+enum led_default_state led_init_default_state_get(struct fwnode_handle *=
-fwnode)
-+{
-+	const char *state =3D NULL;
-+
-+	if (!fwnode_property_read_string(fwnode, =22default-state=22, &state)) =
-{
-+		if (!strcmp(state, =22keep=22))
-+			return LEDS_DEFSTATE_KEEP;
-+		if (!strcmp(state, =22on=22))
-+			return LEDS_DEFSTATE_ON;
-+	}
-+
-+	return LEDS_DEFSTATE_OFF;
-+}
-+EXPORT_SYMBOL_GPL(led_init_default_state_get);
-diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
-index cf84096d88ce..564a7f497ac0 100644
---- a/drivers/leds/leds-gpio.c
-+++ b/drivers/leds/leds-gpio.c
-@@ -16,6 +16,7 @@
- #include <linux/platform_device.h>
- #include <linux/property.h>
- #include <linux/slab.h>
-+#include =22leds.h=22
-=20
- struct gpio_led_data {
- 	struct led_classdev cdev;
-@@ -143,7 +144,6 @@ static struct gpio_leds_priv *gpio_leds_create(struct=
- platform_device *pdev)
- 	device_for_each_child_node(dev, child) {
- 		struct gpio_led_data *led_dat =3D &priv->leds[priv->num_leds];
- 		struct gpio_led led =3D {};
--		const char *state =3D NULL;
-=20
- 		/*
- 		 * Acquire gpiod from DT with uninitialized label, which
-@@ -163,15 +163,7 @@ static struct gpio_leds_priv *gpio_leds_create(struc=
-t platform_device *pdev)
- 		fwnode_property_read_string(child, =22linux,default-trigger=22,
- 					    &led.default_trigger);
-=20
--		if (!fwnode_property_read_string(child, =22default-state=22,
--						 &state)) {
--			if (!strcmp(state, =22keep=22))
--				led.default_state =3D LEDS_GPIO_DEFSTATE_KEEP;
--			else if (!strcmp(state, =22on=22))
--				led.default_state =3D LEDS_GPIO_DEFSTATE_ON;
--			else
--				led.default_state =3D LEDS_GPIO_DEFSTATE_OFF;
--		}
-+		led.default_state =3D led_init_default_state_get(child);
-=20
- 		if (fwnode_property_present(child, =22retain-state-suspended=22))
- 			led.retain_state_suspended =3D 1;
-diff --git a/drivers/leds/leds.h b/drivers/leds/leds.h
-index 2d9eb48bbed9..73451f64e916 100644
---- a/drivers/leds/leds.h
-+++ b/drivers/leds/leds.h
-@@ -29,6 +29,7 @@ ssize_t led_trigger_read(struct file *filp, struct kobj=
-ect *kobj,
- ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
- 			struct bin_attribute *bin_attr, char *buf,
- 			loff_t pos, size_t count);
-+enum led_default_state led_init_default_state_get(struct fwnode_handle *=
-fwnode);
-=20
- extern struct rw_semaphore leds_list_lock;
- extern struct list_head leds_list;
-diff --git a/include/linux/leds.h b/include/linux/leds.h
-index 6a8d6409c993..db16c3ebc6b4 100644
---- a/include/linux/leds.h
-+++ b/include/linux/leds.h
-@@ -33,6 +33,12 @@ enum led_brightness {
- 	LED_FULL	=3D 255,
- };
-=20
-+enum led_default_state {
-+	LEDS_DEFSTATE_OFF	=3D 0,
-+	LEDS_DEFSTATE_ON	=3D 1,
-+	LEDS_DEFSTATE_KEEP	=3D 2,
-+};
-+
- struct led_init_data {
- 	/* device fwnode handle */
- 	struct fwnode_handle *fwnode;
-@@ -522,9 +528,9 @@ struct gpio_led {
- 	/* default_state should be one of LEDS_GPIO_DEFSTATE_(ON|OFF|KEEP) */
- 	struct gpio_desc *gpiod;
- };
--#define LEDS_GPIO_DEFSTATE_OFF		0
--#define LEDS_GPIO_DEFSTATE_ON		1
--#define LEDS_GPIO_DEFSTATE_KEEP		2
-+#define LEDS_GPIO_DEFSTATE_OFF		LEDS_DEFSTATE_OFF
-+#define LEDS_GPIO_DEFSTATE_ON		LEDS_DEFSTATE_ON
-+#define LEDS_GPIO_DEFSTATE_KEEP		LEDS_DEFSTATE_KEEP
-=20
- struct gpio_led_platform_data {
- 	int 		num_leds;
---=20
-2.28.0
+Thanks,
 
-
-
-Diehl Connectivity Solutions GmbH
-Gesch=E4ftsf=FChrung: Horst Leonberger
-Sitz der Gesellschaft: N=FCrnberg - Registergericht: Amtsgericht
-N=FCrnberg: HRB 32315
-_________________________________________________________________________=
-__________________________
-
-Der Inhalt der vorstehenden E-Mail ist nicht rechtlich bindend. Diese E-M=
-ail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen.
-Informieren Sie uns bitte, wenn Sie diese E-Mail faelschlicherweise erhal=
-ten haben. Bitte loeschen Sie in diesem Fall die Nachricht.
-Jede unerlaubte Form der Reproduktion, Bekanntgabe, Aenderung, Verteilung=
- und/oder Publikation dieser E-Mail ist strengstens untersagt.
-- Informationen zum Datenschutz, insbesondere zu Ihren Rechten, erhalten =
-Sie unter https://www.diehl.com/group/de/transparenz-und-informationspfli=
-chten/
-
-The contents of the above mentioned e-mail is not legally binding. This e=
--mail contains confidential and/or legally protected information. Please =
-inform us if you have received this e-mail by
-mistake and delete it in such a case. Each unauthorized reproduction, dis=
-closure, alteration, distribution and/or publication of this e-mail is st=
-rictly prohibited.=20
-- For general information on data protection and your respective rights p=
-lease visit https://www.diehl.com/group/en/transparency-and-information-o=
-bligations/
+Bart.
