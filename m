@@ -2,149 +2,108 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 353AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8669C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2A520829
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:44:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SVQZMutR"
+	by mail.kernel.org (Postfix) with ESMTP id AD86020663
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:46:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732348AbgGaJo6 (ORCPT
+        id S1732258AbgGaJqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:44:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732281AbgGaJo5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:44:57 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FD9BC061574;
-        Fri, 31 Jul 2020 02:44:57 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id a65so13041155otc.8;
-        Fri, 31 Jul 2020 02:44:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JNG62fy69ZNDxq3ty1WqRJY8LhS3HHaZ7FOcyMliKZM=;
-        b=SVQZMutRleHjpanJu5BLyhMUxWrVl6B4uU9D8HzlgqQvftLkuaf1ZFxkrnfd3GTyIa
-         7qMaYgJMcz1N70WksGO0QX5QEfBzArA7Msr29OOkMygRVRtBW2zr9df7Z0VjxawHcd90
-         7hbViw5+VwaGhAWYmNqFAF7AQvIn2kRzXK08uL/bj3y7LovP6cqtXyqlwM9oLA2hqpXM
-         hjp/B+i7M+WNl4hathfkLJ8JpfCr7IV3jKw9LV+6HCfvdeiMoDgBBi5CxyPDZNVAhIkz
-         Y5P5l9gQHMN0YG51tUfZkow23JVYMIbLQ7cNyFGDSekWsiwp3xcSpskf3f3LHsDR8iBD
-         nYUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JNG62fy69ZNDxq3ty1WqRJY8LhS3HHaZ7FOcyMliKZM=;
-        b=Fl9hNteVGX8T9VSTR/arBj/wWMaZJyZ4sL82pp2EUTljUpJ+dKOnJQQu6rf1XJ9agI
-         WRqnJYZ8p2iTNke5JJGzxOeiTJEexXGPJP+NtryZ5DLCuwI3MVZh+UHUNyg4upTZKJc/
-         epoyXovVOV91ttJHBmVoT//cysE2kAJs/E+w8L40WS81rwt+kNI5ayAMRnJM5SDYYZlC
-         nHErbtk6dMwkWdX0oBSor4LxZ3zCJdiyPCZI+2ocykMyOerJRq2z8DuTGfJcUae5Tvba
-         OdO0W1NMjZwe/D5Qg9hYoFSDrN7UZyGS7JYMwt6yu4d4MDuJafgEA9H89/gDqAOvjUT+
-         Tb0w==
-X-Gm-Message-State: AOAM532lFUaGebOqX/wF3YslUEb7EVPTk7ERUmzMMCHkvZsIEgXBBgL1
-        RzQI8fRmZvhtfUZLm2waPkkaqMHaHLo9TOLsNwA=
-X-Google-Smtp-Source: ABdhPJyk0OiozpueLcIMLCpdph1GFde0a0IXBcDx9lCYtZP5FOhvy+APGIVDBOdPrSkJVtpSG/Fy51YApZ+mPki83X0=
-X-Received: by 2002:a05:6830:23a1:: with SMTP id m1mr2303106ots.185.1596188696574;
- Fri, 31 Jul 2020 02:44:56 -0700 (PDT)
+        Fri, 31 Jul 2020 05:46:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:54028 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731922AbgGaJqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 05:46:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 40F7E31B;
+        Fri, 31 Jul 2020 02:46:23 -0700 (PDT)
+Received: from [10.37.12.83] (unknown [10.37.12.83])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EECEE3F718;
+        Fri, 31 Jul 2020 02:46:21 -0700 (PDT)
+Subject: Re: [RFC PATCH 09/14] coresight: etm4x: Add sysreg access helpers
+To:     mathieu.poirier@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mike.leach@linaro.org, coresight@lists.linaro.org
+References: <20200722172040.1299289-1-suzuki.poulose@arm.com>
+ <20200722172040.1299289-10-suzuki.poulose@arm.com>
+ <20200730214110.GF3155687@xps15>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <f1d869e2-73bc-aebc-d4ce-79c324a7a36c@arm.com>
+Date:   Fri, 31 Jul 2020 10:51:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-References: <1596165141-28874-1-git-send-email-wanpengli@tencent.com>
- <1596165141-28874-3-git-send-email-wanpengli@tencent.com> <ae8bf85f-00ee-c59c-e543-e0364481526c@redhat.com>
-In-Reply-To: <ae8bf85f-00ee-c59c-e543-e0364481526c@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Fri, 31 Jul 2020 17:44:45 +0800
-Message-ID: <CANRm+CzgB2G5TqcBYikq3JserkbBkNr5a9Q8Fw8E6s49TtrmvA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] KVM: SVM: Fix disable pause loop exit/pause
- filtering capability on SVM
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200730214110.GF3155687@xps15>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jul 2020 at 15:21, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 31/07/20 05:12, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > 'Commit 8566ac8b8e7c ("KVM: SVM: Implement pause loop exit logic in SVM")'
-> > drops disable pause loop exit/pause filtering capability completely, I
-> > guess it is a merge fault by Radim since disable vmexits capabilities and
-> > pause loop exit for SVM patchsets are merged at the same time. This patch
-> > reintroduces the disable pause loop exit/pause filtering capability support.
-> >
-> > Reported-by: Haiwei Li <lihaiwei@tencent.com>
-> > Tested-by: Haiwei Li <lihaiwei@tencent.com>
-> > Fixes: 8566ac8b (KVM: SVM: Implement pause loop exit logic in SVM)
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> > v2 -> v3:
-> >  * simplify the condition in init_vmcb()
-> >
-> >  arch/x86/kvm/svm/svm.c | 9 ++++++---
-> >  1 file changed, 6 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> > index c0da4dd..bf77f90 100644
-> > --- a/arch/x86/kvm/svm/svm.c
-> > +++ b/arch/x86/kvm/svm/svm.c
-> > @@ -1090,7 +1090,7 @@ static void init_vmcb(struct vcpu_svm *svm)
-> >       svm->nested.vmcb = 0;
-> >       svm->vcpu.arch.hflags = 0;
-> >
-> > -     if (pause_filter_count) {
-> > +     if (!kvm_pause_in_guest(svm->vcpu.kvm)) {
-> >               control->pause_filter_count = pause_filter_count;
-> >               if (pause_filter_thresh)
-> >                       control->pause_filter_thresh = pause_filter_thresh;
-> > @@ -2693,7 +2693,7 @@ static int pause_interception(struct vcpu_svm *svm)
-> >       struct kvm_vcpu *vcpu = &svm->vcpu;
-> >       bool in_kernel = (svm_get_cpl(vcpu) == 0);
-> >
-> > -     if (pause_filter_thresh)
-> > +     if (!kvm_pause_in_guest(vcpu->kvm))
-> >               grow_ple_window(vcpu);
-> >
-> >       kvm_vcpu_on_spin(vcpu, in_kernel);
-> > @@ -3780,7 +3780,7 @@ static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu)
-> >
-> >  static void svm_sched_in(struct kvm_vcpu *vcpu, int cpu)
-> >  {
-> > -     if (pause_filter_thresh)
-> > +     if (!kvm_pause_in_guest(vcpu->kvm))
-> >               shrink_ple_window(vcpu);
-> >  }
-> >
-> > @@ -3958,6 +3958,9 @@ static void svm_vm_destroy(struct kvm *kvm)
-> >
-> >  static int svm_vm_init(struct kvm *kvm)
-> >  {
-> > +     if (!pause_filter_count || !pause_filter_thresh)
-> > +             kvm->arch.pause_in_guest = true;
-> > +
-> >       if (avic) {
-> >               int ret = avic_vm_init(kvm);
-> >               if (ret)
-> >
->
-> Queued all three, thanks.  Please do send a testcase for patch 1
-> however, I only queued it in order to have it in 5.8.
+On 07/30/2020 10:41 PM, Mathieu Poirier wrote:
+> On Wed, Jul 22, 2020 at 06:20:35PM +0100, Suzuki K Poulose wrote:
+>> ETMv4.4 architecture defines the system instructions for accessing
+>> ETM via register accesses. Add basic support for accessing a given
+>> register via system instructions.
+>>
+>> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+>> Cc: Mike Leach <mike.leach@linaro.org>
+>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> ---
+>>   drivers/hwtracing/coresight/coresight-etm4x.c |  39 ++
+>>   drivers/hwtracing/coresight/coresight-etm4x.h | 379 ++++++++++++++++--
+>>   2 files changed, 394 insertions(+), 24 deletions(-)
+>>
+>> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
 
-Thanks, will do in the next week, today is too busy. :)
 
-    Wanpeng
+>>   static void etm4_os_unlock_csa(struct etmv4_drvdata *drvdata, struct csdev_access *csa)
+>>   {
+>>   	/* Writing 0 to TRCOSLAR unlocks the trace registers */
+>> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.h b/drivers/hwtracing/coresight/coresight-etm4x.h
+>> index 2b51d03ab6d7..f5d708206339 100644
+>> --- a/drivers/hwtracing/coresight/coresight-etm4x.h
+>> +++ b/drivers/hwtracing/coresight/coresight-etm4x.h
+
+		0x1FC
+>> -/* Resource selection registers */
+>> +/*
+>> + * Resource selection registers, n = 2-31.
+>> + * First pair (regs 0, 1) is always present and is reserved.
+>> + */
+>>   #define TRCRSCTLRn(n)			(0x200 + (n * 4))
+>> -/* Single-shot comparator registers */
+>> +/* Single-shot comparator registers, n = 0-7 */
+>>   #define TRCSSCCRn(n)			(0x280 + (n * 4))
+>>   #define TRCSSCSRn(n)			(0x2A0 + (n * 4))
+>>   #define TRCSSPCICRn(n)			(0x2C0 + (n * 4))
+>> @@ -80,11 +83,13 @@
+>>   #define TRCPDCR				0x310
+>>   #define TRCPDSR				0x314
+>>   /* Trace registers (0x318-0xEFC) */
+>> -/* Comparator registers */
+>> +/* Address Comparator registers n = 0-15 */
+>>   #define TRCACVRn(n)			(0x400 + (n * 8))
+>>   #define TRCACATRn(n)			(0x480 + (n * 8))
+>> +/* Data Value Comparator Value registers, n = 0-7 */
+>>   #define TRCDVCVRn(n)			(0x500 + (n * 16))
+>>   #define TRCDVCMRn(n)			(0x580 + (n * 16))
+>> +/* ContextID/Virtual ContextID comparators, n = 0-7 */
+> 
+> Extra documentation is good but it has to be in a separate patch.
+> 
+
+Sure, will split this. It was partly for making sure that I don't
+miss a case for a register in the list.
+
+Cheers
+Suzuki
+
