@@ -2,55 +2,62 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C0DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D04C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0643E206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A9B12245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:51:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="DApR5PXf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="hb/AW1Ap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732959AbgGaQv1 (ORCPT
+        id S1733030AbgGaQva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 12:51:27 -0400
-Received: from enterprise01.smtp.diehl.com ([193.201.238.219]:47081 "EHLO
+        Fri, 31 Jul 2020 12:51:30 -0400
+Received: from enterprise01.smtp.diehl.com ([193.201.238.219]:47076 "EHLO
         enterprise01.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731565AbgGaQvZ (ORCPT
+        by vger.kernel.org with ESMTP id S1729910AbgGaQv0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 12:51:25 -0400
+        Fri, 31 Jul 2020 12:51:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
-  t=1596214284; x=1627750284;
-  h=from:to:cc:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=/M/VdMoglksq9/Q9o63RpLEQxjFrpzvCcVVWvvdiT0s=;
-  b=DApR5PXf7fHTGqxd/W7+lFcAVlVzatqen2+8cFmqhlJhk2rkUNwpkzzB
-   ZjqJpTLNHYd7rP8PNV06a1+75cAkFqVYczWaUZjjEmRIvLUj8H427t/q0
-   Cl3IQgZR0j7XZUfiYA6vabr/mHvj692/51B0X374YYame3eLSQNhGyyGH
-   g5rnmG5c+Py14Wz8O5vMQmBgqUzyumbjV9KEW5Jst2BUDbXMm1O5tpzTv
-   m9QXuhB5BZ6gn5U+wreKV1tLJnONLMCU0aq2RSKffLsRRQMNDKrrleSnq
-   uMsTZ60V07rhuZXMJhrkmNkB+j8dEvF9bgc5/42cLvPQ7aNKsusqrXIOH
+  t=1596214283; x=1627750283;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=N/rnszOrJJ1bhhZKh1f2/GEXIZPrIDcWvxdEGYmNLhQ=;
+  b=hb/AW1ApDa11DWF+9Pl7TPqQsU3D36VIZFxzDNY40dGVbrDjKEZFx0R1
+   vpVSB3NfYNW9Srj9N3J4YJcdctcoi0g0oiIPraXqUT9uYvUi61xOY8ow1
+   TSoO2sbkBOWyaqRIyLCQ1By2PCyzNMy1+MktuOwZkyTERTAQ7MB0Ti3hI
+   r9kV0PaeBRQgVeehZiCNWI2fGaydguMXOqlAk42gM81g5DbOr0P+O7mEg
+   HbwjCyT5P28+jv82m0lPyWo5UD1Uk3/Hfk7huVEFNt2pEmkjRRJAWaAse
+   +5yED26evdTKWzWBMMkVjmkvdO++J/icfGgrpnjb9gu0z/tEu4cLIpL5A
    g==;
-IronPort-SDR: QTgIEfBu4Isb59dke7qGPt/ac+sqEBDBSCkEbBUbfWcCJg87vDUyXz+TAuZ51OD7zmDxqXBgkw
- QOULMALdFQoQ==
+IronPort-SDR: 7nYQ8Kee1zymT34XdFySmZT3P7uCRuG7zIh/58/R4C9QVqGyz2pYxTterXODr94xS9taxDVYKL
+ icx6LU67b9HA==
 X-IronPort-AV: E=Sophos;i="5.75,418,1589234400"; 
-   d="scan'208";a="40421618"
+   d="scan'208";a="40421617"
 From:   Denis Osterland-Heim <denis.osterland@diehl.com>
 To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
         "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+CC:     "robh@kernel.org" <robh@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Denis Osterland-Heim <denis.osterland@diehl.com>,
         "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
         "robh+dt@kernel.org" <robh+dt@kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: [PATCH v7 0/3] leds: pwm: add support for default-state device
-Thread-Topic: [PATCH v7 0/3] leds: pwm: add support for default-state device
-Thread-Index: AQHWZ1rRFxbKa90VkEqpICDUHdmLhQ==
+Subject: [PATCH v7 3/3] leds: pwm: add reference to common leds for
+ default-state
+Thread-Topic: [PATCH v7 3/3] leds: pwm: add reference to common leds for
+ default-state
+Thread-Index: AQHWZ1rQrOuS7hWX9EqgwlpAGfo+FQ==
 Date:   Fri, 31 Jul 2020 16:51:20 +0000
-Message-ID: <20200731164945.19515-1-Denis.Osterland@diehl.com>
+Message-ID: <20200731164945.19515-4-Denis.Osterland@diehl.com>
+References: <20200731164945.19515-1-Denis.Osterland@diehl.com>
+In-Reply-To: <20200731164945.19515-1-Denis.Osterland@diehl.com>
 Accept-Language: de-DE, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -61,31 +68,38 @@ Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-TrailerSkip: 1
-X-GBS-PROC: PkB65aL1SqtESF35r/jQnxtgDjFz6f85lRVDwolbbm+V/0xjLOfaQZtnGblCB/P9
+X-GBS-PROC: 5x5xXKsZ7k4sJw6jWwvS4uZcHK5bu42RN30SnBLCwEfgbEQQ4fPA/nPKnEGEBJ0k
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v6 -> v7: apply comments from Jacek
-           refactore default state read to separate function
-           and use it in leds-gpio and leds-pwm
+The default-state is now supported for PWM leds.
 
-@Pavel I hope that it is okay to keep your acked-by on 2/3,
-       the logic is the same but with switch, in favour of if
+Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/leds/leds-pwm.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
- .../devicetree/bindings/leds/leds-pwm.txt          |  2 +
- drivers/leds/led-core.c                            | 15 +++++++
- drivers/leds/leds-gpio.c                           | 12 +-----
- drivers/leds/leds-pwm.c                            | 49 ++++++++++++++++=
-+++---
- drivers/leds/leds.h                                |  1 +
- include/linux/leds.h                               | 12 ++++--
- 6 files changed, 72 insertions(+), 19 deletions(-)
-
-Message-Id: <20200713054259.7608-1-Denis.Osterland@diehl.com>
-base-commit: 2742b4192a279c6ec72e55d5474c4c07756c7845
-
+diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.txt b/Docume=
+ntation/devicetree/bindings/leds/leds-pwm.txt
+index 6c6583c35f2f..d0f489680594 100644
+--- a/Documentation/devicetree/bindings/leds/leds-pwm.txt
++++ b/Documentation/devicetree/bindings/leds/leds-pwm.txt
+@@ -19,6 +19,8 @@ LED sub-node properties:
+   see Documentation/devicetree/bindings/leds/common.txt
+ - linux,default-trigger :  (optional)
+   see Documentation/devicetree/bindings/leds/common.txt
++- default-state : (optional)
++  see Documentation/devicetree/bindings/leds/common.yaml
+=20
+ Example:
+=20
+--=20
+2.28.0
 
 
 
