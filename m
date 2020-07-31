@@ -2,78 +2,155 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1525C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DBEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B800B2177B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E9372245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:19:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596219588;
+	bh=Ykrt0TpMOf2UR6z2kT0yhuqq9hUjqmTK3T7uB4LWp1k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JM6Iic5no4mjpfMfGDi0XGjlkt9i3jWAYLLOYp7FgnVdIj6SzUiSQHkbuujQq0oB5
+	 XFa8iQp8FRsRl4s4tVr2WhOR5os7AgveKhTE9VH1B3HntSKuK2e7XzUrNhpGRofW+L
+	 2CX2JCVtqGTIChzVKJrjEe42OTqkD7P+1q3mz8V8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387749AbgGaSTB (ORCPT
+        id S2387752AbgGaSTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 14:19:01 -0400
-Received: from mga07.intel.com ([134.134.136.100]:28768 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387469AbgGaSTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 14:19:01 -0400
-IronPort-SDR: /I1ARLBqlZkq8xTxCx2a3INUSTL7pW5xRDCSEGVXuSBKJmk9Axg4hi94YX1Or+uJwF0yKnPZXZ
- n+utIFWhPIdw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="216290800"
-X-IronPort-AV: E=Sophos;i="5.75,419,1589266800"; 
-   d="scan'208";a="216290800"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 11:18:46 -0700
-IronPort-SDR: LLJ2N6V333Drvt0ak9qegxOHH6/16NIozjU4ajTxzwwX7lzbIA6m6eDGRs1rie1KSK1vhQRUD9
- csWZ5OcBv3YQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,419,1589266800"; 
-   d="scan'208";a="273263176"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 31 Jul 2020 11:18:44 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1k1ZcB-005MAP-Dq; Fri, 31 Jul 2020 21:18:43 +0300
-Date:   Fri, 31 Jul 2020 21:18:43 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Rob Herring <robh@kernel.org>, Joe Perches <joe@perches.com>,
-        Grant Likely <grant.likely@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v2 2/3] lib/vsprintf: Replace custom spec to print
- decimals with generic one
-Message-ID: <20200731181843.GO3703480@smile.fi.intel.com>
-References: <20200731180825.30575-1-andriy.shevchenko@linux.intel.com>
- <20200731180825.30575-2-andriy.shevchenko@linux.intel.com>
+        Fri, 31 Jul 2020 14:19:47 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39728 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730040AbgGaSTq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 14:19:46 -0400
+Received: by mail-io1-f65.google.com with SMTP id z6so32611205iow.6;
+        Fri, 31 Jul 2020 11:19:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NE4ItpfU50AFnsYbpWCsE7WvzgCYnBK1y1+JGXE6Q40=;
+        b=TKKp0dqEZ3CAp6E3iAp9GpPu0MxJ7Bl/vPAmOZiKNJeTUJ4+wJWZOXJGH4CL/kmAtl
+         MJCrchpbu5RQMwGE5/IP15yqPu7Cmg2bJP+1p3jf1ab2Kv2KEV0OJC/9gDPxAwsAlxt2
+         h+HaYJme9Q6NQRuLMHO3SeXSX6RjUBYE3/IJ5mT2MiyKnHlTYHxNv/U1tQfvKF2fjNgO
+         2l8xIlI4feXNUQRcV4WAGyb77Be2qBF29vbD8ZO2zpWCt0FfptUqb63zTdOij+Xzfq0g
+         OyS6klqFtd+FM5EzD0b8CwSB8W1EtBek399qd/Q7Vmv3Z5N+oeSLpgHJvNtrUbcoo8RQ
+         NQng==
+X-Gm-Message-State: AOAM532y579myfjSvKLgo5Y41RcGRAZQzFs899bYwvOnV0vTGpDfoW0Q
+        nIiw8Vz+P46hjR/ELa8Iiw==
+X-Google-Smtp-Source: ABdhPJyx9267dTDySktREsgujV9q07VAPNW96EA3a/g1w3qYHEMQwM4OoSOAXV+7++XbEX4LpbUhWQ==
+X-Received: by 2002:a02:c789:: with SMTP id n9mr6408918jao.40.1596219585405;
+        Fri, 31 Jul 2020 11:19:45 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id y12sm5038300ilg.84.2020.07.31.11.19.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 11:19:44 -0700 (PDT)
+Received: (nullmailer pid 519607 invoked by uid 1000);
+        Fri, 31 Jul 2020 18:19:44 -0000
+Date:   Fri, 31 Jul 2020 12:19:44 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com
+Subject: Re: [PATCH v6 1/2] Add DT bindings YAML schema for PWM fan
+ controller of LGM SoC
+Message-ID: <20200731181944.GB516550@bogus>
+References: <cover.1595926036.git.rahul.tanwar@linux.intel.com>
+ <e61e6a05353f6242f5450da130b042f195ac7620.1595926036.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200731180825.30575-2-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <e61e6a05353f6242f5450da130b042f195ac7620.1595926036.git.rahul.tanwar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 09:08:23PM +0300, Andy Shevchenko wrote:
-> When printing phandle via %pOFp the custom spec is used. First of all,
-> it has a SMALL flag which makes no sense for decimal numbers. Second,
-> we have already default spec for decimal numbers. Use the latter in
-> the %pOFp case as well.
+On Tue, Jul 28, 2020 at 04:52:12PM +0800, Rahul Tanwar wrote:
+> Intel's LGM(Lightning Mountain) SoC contains a PWM fan controller
+> which is only used to control the fan attached to the system. This
+> PWM controller does not have any other consumer other than fan.
+> Add DT bindings documentation for this PWM fan controller.
+> 
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> ---
+>  .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     | 54 ++++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+> new file mode 100644
+> index 000000000000..9879972470dc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+> @@ -0,0 +1,54 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/intel,lgm-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: LGM SoC PWM fan controller
+> +
+> +maintainers:
+> +  - Rahul Tanwar <rahul.tanwar@intel.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: intel,lgm-pwm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#pwm-cells":
+> +    const: 2
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  intel,fan-wire:
+> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+> +    description: Specifies fan mode. Default when unspecified is 2.
+> +
+> +  intel,max-rpm:
+> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+> +    description:
+> +      Specifies maximum RPM of fan attached to the system.
+> +      Default when unspecified is 4000.
 
-Forgot to mention that the patch (and actually the series) has been tested
-against test_printf and OF unittest modules.
+Again, these are properties of a fan, not the pwm controller. They 
+belong in a fan node.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> +
+> ++required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - resets
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pwm: pwm@e0d00000 {
+> +        compatible = "intel,lgm-pwm";
+> +        reg = <0xe0d00000 0x30>;
+> +        #pwm-cells = <2>;
+> +        clocks = <&cgu0 126>;
+> +        resets = <&rcu0 0x30 21>;
+> +    };
+> -- 
+> 2.11.0
+> 
