@@ -2,134 +2,119 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 913B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A00E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7046A20829
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:00:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Db2WsUck"
+	by mail.kernel.org (Postfix) with ESMTP id 7EA1520829
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:00:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596178839;
+	bh=qjwGoIyl/wBff+iYMlZWx9H6G4svCrkKR/WF1d5EkDQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RQXSPERiM4jEDZGzuaD2oxtJTCArCaux9wllmckST+ZuMwNAqVAOvVG3wRw9cgV2q
+	 VfBRMOtl0lodKF+YLAsNguf/T622taSBjWBSubLbGFmqVH6FfbBnTV/95pMGbexib5
+	 Pp2i5m9J0ajorH3rnPNMjj7Id3Z5fCNuyd5K/RvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731562AbgGaG7t (ORCPT
+        id S1731630AbgGaHAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 02:59:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37928 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731545AbgGaG7q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 02:59:46 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BED95C06174A
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 23:59:45 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id r197so2219478vkf.13
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 23:59:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1Dzb4qikGnC7PJc3yHKTz13us3kdcfG1rOFTmBMSQwo=;
-        b=Db2WsUckgXvkpgsukQSgRbIsZRyOiXhG1OVbXKRN6hIiui1861e4zH+ggX4jEwHPYF
-         pgoAXPIpvfAzJMRJKP6I40Q9K57Qy3Dium732+ysCRaRsFi2BlHIL8gkvvA0EEh8sQ2f
-         LXpKGuKYosVTw1N3Wxkw1kWP2nvyPFGmDMNAzIEsxfaGRFwsEVvAmU1vS2lHlprw29CC
-         hKg2H7ZRwoRpCVQ/dvIXsKFYwhc/ozuGtWcizhaXRctAzBijm6v80RKksTXWCOlUdAlS
-         lhvwVHyOABtVAdYK/CvtmV5dYzQINqOP9fbA3EuOgEP7ywoqx+IE8hQBoU+y5iy2Ocxt
-         ELYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1Dzb4qikGnC7PJc3yHKTz13us3kdcfG1rOFTmBMSQwo=;
-        b=Yw4RpeyAC9K14shoG4CKPNidkEFU7Uy4a7VQMMG8ub5tav6E80k04icVvcRD1KMpFu
-         1vaBsQuQ9rQdaGPRiGc1YCetbGbMBQ0cexPj91BAZZcP8WsWlzpctHlcbHq5xoSW09/n
-         1nlN5qPvQMpIfl6EQQr6o1pajzzRvlRp0yFAJgCNNdFhOZLIRcxmoPfFFzzUw0SfiPaX
-         TUuoK/WuKkrOzjgu0G9mjciOZA0lg7fT8s/ndhCq3sbZ9sFpoDA3U/FrNnR0iWDLH3DV
-         NKG30QYB+I1TC4DuFhTJ5pcR9sMcCViOMKsk5TCekQedE2H2GD9KWQFmZqQjTaIxHqe/
-         PwYg==
-X-Gm-Message-State: AOAM532v66ahqZ0+nf//cmdooB0OaLhoXnEunYK0EisWWb4eG3SBK8Mv
-        0hQnVzLMqCo4t7oNUQ1tjPpm/MD+pp0LNlq5fT1/Pg==
-X-Google-Smtp-Source: ABdhPJz4xTSNBFzKm8MK/dWshaCLtJsQmyXj9v/1SQl7ouSkIU3MSRKmN2e3pzeqtSiN8SoMdvp33CGLgFgV3pEO9aU=
-X-Received: by 2002:a1f:de81:: with SMTP id v123mr1704997vkg.92.1596178784465;
- Thu, 30 Jul 2020 23:59:44 -0700 (PDT)
+        Fri, 31 Jul 2020 03:00:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33196 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731628AbgGaHAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 03:00:34 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 368BA207F5;
+        Fri, 31 Jul 2020 07:00:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596178833;
+        bh=qjwGoIyl/wBff+iYMlZWx9H6G4svCrkKR/WF1d5EkDQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VNADuhxWnvWY3HlDYEqwJOC2grlnuHBoTybqGmuHW2dHkFl33dnqSNHyLA5NnBiCS
+         SznzbcsXaju719ksD8EHEj9EUzSR87MTzfi9mMLb/2m2jqv6tM+42guU0Am/Iev5Vp
+         UrdN4yUeMTOR1AJlgj+7/HAFxem1vSHfmSmby0m8=
+Date:   Fri, 31 Jul 2020 10:00:30 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "linux-kernel-mentees@lists.linuxfoundation.org" 
+        <linux-kernel-mentees@lists.linuxfoundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak
+ in rds_notify_queue_get()
+Message-ID: <20200731070030.GJ75549@unreal>
+References: <20200730192026.110246-1-yepeilin.cs@gmail.com>
+ <20200731045301.GI75549@unreal>
+ <20200731053306.GA466103@kroah.com>
+ <20200731053333.GB466103@kroah.com>
+ <CAHp75Vdr2HC_ogNhBCxxGut9=Z6pQMFiA0w-268OQv+5unYOTg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200730072531.3171984-1-badhri@google.com> <20200730123431.GO883641@kuha.fi.intel.com>
- <33bec771-7255-517f-fb5f-9c4e7320837d@roeck-us.net>
-In-Reply-To: <33bec771-7255-517f-fb5f-9c4e7320837d@roeck-us.net>
-From:   Badhri Jagan Sridharan <badhri@google.com>
-Date:   Thu, 30 Jul 2020 23:59:08 -0700
-Message-ID: <CAPTae5L8UGUqCg4h6BuGRk7_OH1HkXmoirACqzGKRhJfj6ZuHA@mail.gmail.com>
-Subject: Re: [PATCH v4] usb: typec: tcpm: Migrate workqueue to RT priority for
- processing events
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        USB <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vdr2HC_ogNhBCxxGut9=Z6pQMFiA0w-268OQv+5unYOTg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for catching that !!
+On Fri, Jul 31, 2020 at 09:29:27AM +0300, Andy Shevchenko wrote:
+> On Friday, July 31, 2020, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> wrote:
+>
+> > On Fri, Jul 31, 2020 at 07:33:06AM +0200, Greg Kroah-Hartman wrote:
+> > > On Fri, Jul 31, 2020 at 07:53:01AM +0300, Leon Romanovsky wrote:
+> > > > On Thu, Jul 30, 2020 at 03:20:26PM -0400, Peilin Ye wrote:
+> > > > > rds_notify_queue_get() is potentially copying uninitialized kernel
+> > stack
+> > > > > memory to userspace since the compiler may leave a 4-byte hole at
+> > the end
+> > > > > of `cmsg`.
+> > > > >
+> > > > > In 2016 we tried to fix this issue by doing `= { 0 };` on `cmsg`,
+> > which
+> > > > > unfortunately does not always initialize that 4-byte hole. Fix it by
+> > using
+> > > > > memset() instead.
+> > > >
+> > > > Of course, this is the difference between "{ 0 }" and "{}"
+> > initializations.
+> > >
+> > > Really?  Neither will handle structures with holes in it, try it and
+> > > see.
+>
+>
+> {} is a GCC extension, but I never thought it works differently.
 
-On Thu, Jul 30, 2020 at 9:05 AM Guenter Roeck <linux@roeck-us.net> wrote:
+Yes, this is GCC extension and kernel relies on them very heavily.
+
+Thanks
+
 >
-> On 7/30/20 5:34 AM, Heikki Krogerus wrote:
-> > Hi,
+>
+>
 > >
-> > One more nitpick below...
-> >
-> > On Thu, Jul 30, 2020 at 12:25:31AM -0700, Badhri Jagan Sridharan wrote:
-> >> @@ -4786,10 +4807,28 @@ static int devm_tcpm_psy_register(struct tcpm_port *port)
-> >>      return PTR_ERR_OR_ZERO(port->psy);
-> >>  }
-> >>
-> >> +static enum hrtimer_restart state_machine_timer_handler(struct hrtimer *timer)
-> >> +{
-> >> +    struct tcpm_port *port = container_of(timer, struct tcpm_port, state_machine_timer);
-> >> +
-> >> +    kthread_queue_work(port->wq, &port->state_machine);
-> >> +    return HRTIMER_NORESTART;
-> >> +}
-> >> +
-> >> +static enum hrtimer_restart vdm_state_machine_timer_handler(struct hrtimer *timer)
-> >> +{
-> >> +    struct tcpm_port *port = container_of(timer, struct tcpm_port, vdm_state_machine_timer);
-> >> +
-> >> +    kthread_queue_work(port->wq, &port->vdm_state_machine);
-> >> +    return HRTIMER_NORESTART;
-> >> +}
-> >> +
-> >>  struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
-> >>  {
-> >>      struct tcpm_port *port;
-> >>      int err;
-> >> +    /* Priority just lower than default irq thread priority */
-> >> +    struct sched_param param = {.sched_priority = (MAX_USER_RT_PRIO / 2) + 1,};
-> >
-> > Move that outside the function and constify it:
-> >
->
-> Good catch. With this change applied:
->
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
->
-> >         static const struct sched_param param {
-> >                 .shed_priority = (MAX_USER_RT_PRIO / 2) + 1,
->
-> Caution: s/shed/sched/
->
-> >         };
-> >
-> >>      if (!dev || !tcpc ||
-> >>          !tcpc->get_vbus || !tcpc->set_cc || !tcpc->get_cc ||
+> > And if true, where in the C spec does it say that?
 > >
 > > thanks,
 > >
+> > greg k-h
+> >
 >
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
