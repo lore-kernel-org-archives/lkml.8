@@ -2,127 +2,139 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D28C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8A5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AAF0208A9
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:53:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="v3IsjUzK"
+	by mail.kernel.org (Postfix) with ESMTP id E4CBE21775
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:57:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731252AbgGaCxO (ORCPT
+        id S1731214AbgGaC5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 22:53:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731124AbgGaCxN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 22:53:13 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60F3FC061574
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 19:53:13 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id t6so2574830pjr.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 19:53:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=l+uP1W3s0IVnpqxnYvYPs1ilzRwp+d/Px1T0E6Ky5Ck=;
-        b=v3IsjUzK4d6pM7yq9hMm7rOU9fqC6NDmZxMWXHhysuQnFv3vTCfwFeIsNDP7cWlwkS
-         b3a/UKkZRC0eOy4Rh4/01Ljc9CBJrCkhywpPugYjmHPVqkPrngCACI06EslGsXit3KgG
-         k2tNPiLHhGNlLj8TGMYyQk29QW2VMb1avqactPLyPRCGHswWbv4KO1o3nXFCRt7ROVfj
-         xUdm1lv9qHTei7A+FP5b5RMHMVe7ryYKTyeRTppajpO6cMp0JT34GpDtEcbLM5dyOYTM
-         avuLVIMxEifZ4m+mL9pg2X1OfUWbXksxXjAp1zjwN+M0VLvSvWz5ZFVjs5x3BgaU+BLF
-         FbyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=l+uP1W3s0IVnpqxnYvYPs1ilzRwp+d/Px1T0E6Ky5Ck=;
-        b=YURHt1l/Gas5vAcM6ekcbbZkcui0/S4EKxmiECq+rDsjoGTS8SVg3enNCp+9Kw+JQk
-         r+Pzp3mykiTttFKzZpWlHSBwJIYEJG8ZuC8hH0l+4eqOV5mTrjXREzXewR1isRRn67kb
-         SLLGR1E/0T2uFhtS00yygnFDzXxKnm2o7ZbupDZ5XHy12IhyYq5F1DJuSYXWS85NRG7c
-         5MbWUFxwUtA3RWRBFvNQsKN7p9oV/5HDZoyl91SRU4qpGG+NXHUsQV0CHrZb0xEJffwO
-         jgED+jfE/axsfkPufwjnhDLQuhHNbFjfoMdwrbYjYSf4hHModG5dYyrxVsk6qX7BrSKS
-         p6vg==
-X-Gm-Message-State: AOAM531PAi0EA8X6ieVZH1k66vxKWWdGcHsAF0O1krmqlal0vzuQG518
-        18aAM7C6cvTacbWTtShaDCNGrg==
-X-Google-Smtp-Source: ABdhPJx64meobaKTgi0GjRMUmb6O9KpahKfmhFoA0xe7yKucBhLYjaL6ZJ9ML1dmtTIlR49E3OuD1A==
-X-Received: by 2002:a17:90a:2309:: with SMTP id f9mr1923822pje.235.1596163992775;
-        Thu, 30 Jul 2020 19:53:12 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id r77sm8390953pfc.193.2020.07.30.19.53.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jul 2020 19:53:12 -0700 (PDT)
-Subject: Re: KASAN: use-after-free Read in io_uring_setup (2)
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+9d46305e76057f30c74e@syzkaller.appspotmail.com>,
-        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk, Markus Elfring <Markus.Elfring@web.de>
-References: <20200731014541.11944-1-hdanton@sina.com>
- <20200731022859.6372-1-hdanton@sina.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <89fcf8d1-3c87-bd07-b974-e9c012eb1eea@kernel.dk>
-Date:   Thu, 30 Jul 2020 20:53:10 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200731022859.6372-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 30 Jul 2020 22:57:39 -0400
+Received: from mga17.intel.com ([192.55.52.151]:49992 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731162AbgGaC5j (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 22:57:39 -0400
+IronPort-SDR: ko4lvX06MtdGadiPlhxL+4UDWQSq0mlRzM2H9cRVJZE4+cnkPb78OXpngwEaUVYP1XXjGrDRXd
+ XGQxctZ5mGLw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="131794857"
+X-IronPort-AV: E=Sophos;i="5.75,416,1589266800"; 
+   d="scan'208";a="131794857"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 19:57:38 -0700
+IronPort-SDR: R5rSCbzYycekZZ4HukUJXuEdWw3IRG+3nauNBPwTSbGgK3VNWZ/mHX0Wcv311vI/HwJIwgZuV8
+ uWogfHfxWkIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,416,1589266800"; 
+   d="scan'208";a="323103310"
+Received: from kbl-ppc.sh.intel.com ([10.239.159.118])
+  by fmsmga002.fm.intel.com with ESMTP; 30 Jul 2020 19:57:34 -0700
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     peterz@infradead.org, mingo@redhat.com, oleg@redhat.com,
+        acme@kernel.org, jolsa@kernel.org
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        alexander.shishkin@linux.intel.com, mark.rutland@arm.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v1 1/2] Missing instruction_pointer_set() instances
+Date:   Fri, 31 Jul 2020 10:56:16 +0800
+Message-Id: <20200731025617.16243-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/20 8:28 PM, Hillf Danton wrote:
-> 
-> On Thu, 30 Jul 2020 20:07:59 -0600 Jens Axboe wrote:
->> On 7/30/20 7:45 PM, Hillf Danton wrote:
->>>
->>> Add the missing percpu_ref_get when creating ctx.
->>>
-> [...]
->> The error path doesn't care, the issue is only after fd install. Hence
-> 
-> Yes you are right.
-> 
->> we don't need to grab a reference, just make sure we don't touch the ctx
->> after fd install.
-> 
-> This is a cure, not a generic one as it maybe a potpit for anyone adding
-> changes here since on. But that's quite unlikely as this is a way one-off
-> path.
-> 
->> Since you saw this one, you must have also seen my
->> patch. Why not comment on that instead?
-> 
-> You know, it is unusually hard to add anything in your field, and I hit the
-> send button after staring at the screen for two minutes, given a different
-> approach.
+There is a potential security issue that perf kernel samples
+may be leaked even though kernel sampling is disabled. For fixing
+the potential leakage, the idea is to use instruction_pointer_set
+to set invalid ip address in leaked perf samples in some cases.
 
-The patch was sent out 7h ago. My suggestion would be to at least see
-what other people may have commented or posted on the topic first, instead
-of just ignoring it point blank and sending something else out.
+But instruction_pointer_set is missing on some architectures.
+Define instruction_pointer_set for these architectures.
 
-A good way to start a discussion would be to reply to my email in this
-very thread, with why you think an alternate solution might be better.
-Or point out of there are errors in it. Just ignoring what else has been
-posted just comes off as rude, to be honest.
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+---
+ arch/alpha/include/asm/ptrace.h  | 6 ++++++
+ arch/arc/include/asm/ptrace.h    | 6 ++++++
+ arch/nds32/include/asm/ptrace.h  | 7 +++++++
+ arch/xtensa/include/asm/ptrace.h | 6 ++++++
+ 4 files changed, 25 insertions(+)
 
-You've got patches in for io_uring in the past, and I'd surely like to
-see that continue. But working together is helping each other out, not
-working in a vacuum, pretending not to see what else is being discussed
-or posted.
-
+diff --git a/arch/alpha/include/asm/ptrace.h b/arch/alpha/include/asm/ptrace.h
+index df5f317ab3fc..c464d525c110 100644
+--- a/arch/alpha/include/asm/ptrace.h
++++ b/arch/alpha/include/asm/ptrace.h
+@@ -25,4 +25,10 @@ static inline unsigned long regs_return_value(struct pt_regs *regs)
+ 	return regs->r0;
+ }
+ 
++static inline void instruction_pointer_set(struct pt_regs *regs,
++					   unsigned long val)
++{
++	regs->pc = val;
++}
++
+ #endif
+diff --git a/arch/arc/include/asm/ptrace.h b/arch/arc/include/asm/ptrace.h
+index 2fdb87addadc..8869a6c0fe8c 100644
+--- a/arch/arc/include/asm/ptrace.h
++++ b/arch/arc/include/asm/ptrace.h
+@@ -154,6 +154,12 @@ static inline long regs_return_value(struct pt_regs *regs)
+ 	return (long)regs->r0;
+ }
+ 
++static inline void instruction_pointer_set(struct pt_regs *regs,
++					   unsigned long val)
++{
++	regs->ret = val;
++}
++
+ #endif /* !__ASSEMBLY__ */
+ 
+ #endif /* __ASM_PTRACE_H */
+diff --git a/arch/nds32/include/asm/ptrace.h b/arch/nds32/include/asm/ptrace.h
+index 919ee223620c..19a916bef7f5 100644
+--- a/arch/nds32/include/asm/ptrace.h
++++ b/arch/nds32/include/asm/ptrace.h
+@@ -62,6 +62,13 @@ static inline unsigned long regs_return_value(struct pt_regs *regs)
+ {
+ 	return regs->uregs[0];
+ }
++
++static inline void instruction_pointer_set(struct pt_regs *regs,
++					   unsigned long val)
++{
++	regs->ipc = val;
++}
++
+ extern void show_regs(struct pt_regs *);
+ /* Avoid circular header include via sched.h */
+ struct task_struct;
+diff --git a/arch/xtensa/include/asm/ptrace.h b/arch/xtensa/include/asm/ptrace.h
+index b109416dc07e..82ab1ba99259 100644
+--- a/arch/xtensa/include/asm/ptrace.h
++++ b/arch/xtensa/include/asm/ptrace.h
+@@ -90,6 +90,12 @@ struct pt_regs {
+ # define return_pointer(regs) (MAKE_PC_FROM_RA((regs)->areg[0], \
+ 					       (regs)->areg[1]))
+ 
++static inline void instruction_pointer_set(struct pt_regs *regs,
++					   unsigned long val)
++{
++	regs->pc = val;
++}
++
+ # ifndef CONFIG_SMP
+ #  define profile_pc(regs) instruction_pointer(regs)
+ # else
 -- 
-Jens Axboe
+2.17.1
 
