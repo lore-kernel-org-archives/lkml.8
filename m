@@ -2,257 +2,105 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F6BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF428C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF422074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB28F2074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 04:59:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mS7C+vvA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PgT2vspg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731143AbgGaE5x (ORCPT
+        id S1731184AbgGaE7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 00:57:53 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:28148 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730905AbgGaE5w (ORCPT
+        Fri, 31 Jul 2020 00:59:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbgGaE7W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 00:57:52 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596171472; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=g13fmLH5MWoCaZ2CBH1tKm0KPDV4tSk0QYM43fNfZuY=; b=mS7C+vvAhsZvA1RqYvptbgcdGvJquIUn2KeZwq+GQCJjg8r0Gye1yaNQfnGvxLoDDUdaPxmJ
- SRbxD+9kwkJRjgE9e8L/ISlNDbV+37cIkFdXWJ2Tpzf5xbDl4DT4RsytA9lMaQ8hmLPrUiyh
- zQ30Qm99+ubTYe2hN954OeSChgE=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-east-1.postgun.com with SMTP id
- 5f23a4af90893260ddaac3a9 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 31 Jul 2020 04:57:19
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 44EEFC433C9; Fri, 31 Jul 2020 04:57:18 +0000 (UTC)
-Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 26E51C433CB;
-        Fri, 31 Jul 2020 04:57:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 26E51C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-From:   Wesley Cheng <wcheng@codeaurora.org>
-To:     bjorn.andersson@linaro.org, kishon@ti.com, vkoul@kernel.org,
-        agross@kernel.org, balbi@kernel.org, gregkh@linuxfoundation.org,
-        robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        jackp@codeaurora.org, Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH 2/3] phy: qcom-qmp: Register as a typec switch for orientation detection
-Date:   Thu, 30 Jul 2020 21:57:11 -0700
-Message-Id: <20200731045712.28495-3-wcheng@codeaurora.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200731045712.28495-1-wcheng@codeaurora.org>
-References: <20200731045712.28495-1-wcheng@codeaurora.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 31 Jul 2020 00:59:22 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11113C061574;
+        Thu, 30 Jul 2020 21:59:22 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id 6so22160272qtt.0;
+        Thu, 30 Jul 2020 21:59:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=wMzcDNzPNQFVBnT9vBrYiAAkQh9MpynCIj9JP/G7Esk=;
+        b=PgT2vspg0VN/b9KGbRTAo+Lvfig+smQY2toKv4A9vnRBTQT/X/M2KskqwHmFp/eNeU
+         g4+ieBHcP8z7oruqGAEW6evM65BD7CUSwY1arwjo0wwBlIvJGeHg5TWO97JUU0Hli+r1
+         BdGyzPDdlhfYpqD9y6LjScUxu9C2970/S6rcJJ7sJeBz+1CapmYJgxHVR9XaaCbS7W/6
+         KUxT1EMxtnfKu9vf0yWn0433cXbaSHAGeIagkNS1zQf7aiYF0Yv3Enm9nElfGpj2c32m
+         8bwbUN/VgJ4S3MTiacehSLic9UrFDDH1Np19UIVdBmqSBoi0z5NYc0uLpXQYBDMDza1/
+         cE3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=wMzcDNzPNQFVBnT9vBrYiAAkQh9MpynCIj9JP/G7Esk=;
+        b=WmwXsjQOQDmfesHywQ9BXSCkVf92e7iVm12g5Q0Z4dPpCDq7zLGxcxZYFi69NAZsvt
+         hKy907BcoB18HOkZP3WTE2Y39ePQLbGcTzWPSeiI9ucqwAWGzjUCUkArfKZNBBzZl+E+
+         KP3qX3n5AC7Tz2NBzdpYdqmDl29b42tsMS26shLCDoNxYgXci91s21u2ypq6zL4Uhktp
+         YR1BfOCYj/vQQOyad9YAnbfsBtc/G98RIVHfMigyPFfmnv0uP/XscPV1aBVp3M18WJoQ
+         ZYHIz2cFezaCbmNaz8aiBTOKs5LDlfDoyECEhNChZ1Di5rvgb4Ry5JcctPIZ068fUf6B
+         X0VQ==
+X-Gm-Message-State: AOAM533UPGI9YpGgIvyBYfvdvEaKjITa055UWilJrSAhxZhVDs119zK3
+        qnD1MkPqBnO/RlaI6/8yc1o=
+X-Google-Smtp-Source: ABdhPJxU0i8aiB0tt/jF69mofMSXtBERepvQqrwyj7VT5pp4MpA0d3Fg8SQxV5nEmeHlBm7T1ecE6A==
+X-Received: by 2002:ac8:428f:: with SMTP id o15mr1838167qtl.213.1596171561346;
+        Thu, 30 Jul 2020 21:59:21 -0700 (PDT)
+Received: from linux.home ([2604:2000:1344:41d:104e:9490:d5b7:450d])
+        by smtp.googlemail.com with ESMTPSA id z197sm6950725qkb.66.2020.07.30.21.59.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 21:59:20 -0700 (PDT)
+From:   Gaurav Singh <gaurav1086@gmail.com>
+To:     gaurav1086@gmail.com, "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Aya Levin <ayal@mellanox.com>,
+        netdev@vger.kernel.org (open list:NETWORKING [GENERAL]),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] [net/ethtool] ethnl_set_linkmodes: remove redundant null check
+Date:   Fri, 31 Jul 2020 00:58:44 -0400
+Message-Id: <20200731045908.32466-1-gaurav1086@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The lane select switch for USB typec orientation is within the USB QMP PHY.
-the current device.  It could be connected through an endpoint, to an
-independent device handling the typec detection, ie the QCOM SPMI typec
-driver.
+info cannot be NULL here since its being accessed earlier
+in the function: nlmsg_parse(info->nlhdr...). Remove this
+redundant NULL check.
 
-Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
 ---
- drivers/phy/qualcomm/Kconfig        | 11 +++++
- drivers/phy/qualcomm/phy-qcom-qmp.c | 70 +++++++++++++++++++++++++++--
- 2 files changed, 78 insertions(+), 3 deletions(-)
+ net/ethtool/linkmodes.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/phy/qualcomm/Kconfig b/drivers/phy/qualcomm/Kconfig
-index 928db510b86c..43f46a1b3db1 100644
---- a/drivers/phy/qualcomm/Kconfig
-+++ b/drivers/phy/qualcomm/Kconfig
-@@ -48,6 +48,17 @@ config PHY_QCOM_QMP
- 	  Enable this to support the QMP PHY transceiver that is used
- 	  with controllers such as PCIe, UFS, and USB on Qualcomm chips.
+diff --git a/net/ethtool/linkmodes.c b/net/ethtool/linkmodes.c
+index fd4f3e58c6f6..b595d87fa880 100644
+--- a/net/ethtool/linkmodes.c
++++ b/net/ethtool/linkmodes.c
+@@ -406,8 +406,7 @@ int ethnl_set_linkmodes(struct sk_buff *skb, struct genl_info *info)
  
-+if PHY_QCOM_QMP
-+config PHY_QCOM_QMP_TYPEC
-+	bool "Enable QCOM QMP PHY Type C Switch Support"
-+	depends on PHY_QCOM_QMP=y && TYPEC=y || PHY_QCOM_QMP=m && TYPEC
-+	help
-+	  Register a type C switch from the QMP PHY driver for type C
-+	  orientation support.  This has dependencies with if the type C kernel
-+	  configuration is enabled or not.  This support will not be present if
-+	  USB type C is disabled.
-+endif
-+
- config PHY_QCOM_QUSB2
- 	tristate "Qualcomm QUSB2 PHY Driver"
- 	depends on OF && (ARCH_QCOM || COMPILE_TEST)
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 562053ce9455..29d8a3570328 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -19,6 +19,7 @@
- #include <linux/regulator/consumer.h>
- #include <linux/reset.h>
- #include <linux/slab.h>
-+#include <linux/usb/typec_mux.h>
- 
- #include <dt-bindings/phy/phy.h>
- 
-@@ -66,6 +67,9 @@
- /* QPHY_V3_PCS_MISC_CLAMP_ENABLE register bits */
- #define CLAMP_EN				BIT(0) /* enables i/o clamp_n */
- 
-+#define SW_PORTSELECT_VAL			BIT(0)
-+#define SW_PORTSELECT_MUX			BIT(1)
-+
- #define PHY_INIT_COMPLETE_TIMEOUT		10000
- #define POWER_DOWN_DELAY_US_MIN			10
- #define POWER_DOWN_DELAY_US_MAX			11
-@@ -1845,6 +1849,8 @@ struct qmp_phy {
-  * @phy_initialized: indicate if PHY has been initialized
-  * @mode: current PHY mode
-  * @ufs_reset: optional UFS PHY reset handle
-+ * @sw: typec switch for receiving orientation changes
-+ * @orientation: carries current CC orientation
-  */
- struct qcom_qmp {
- 	struct device *dev;
-@@ -1864,6 +1870,8 @@ struct qcom_qmp {
- 	enum phy_mode mode;
- 
- 	struct reset_control *ufs_reset;
-+	struct typec_switch *sw;
-+	enum typec_orientation orientation;
- };
- 
- static inline void qphy_setbits(void __iomem *base, u32 offset, u32 val)
-@@ -2485,6 +2493,7 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
- 	void __iomem *pcs = qphy->pcs;
- 	void __iomem *dp_com = qmp->dp_com;
- 	int ret, i;
-+	unsigned int val;
- 
- 	mutex_lock(&qmp->phy_mutex);
- 	if (qmp->init_count++) {
-@@ -2534,6 +2543,13 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
- 		qphy_setbits(dp_com, QPHY_V3_DP_COM_PHY_MODE_CTRL,
- 			     USB3_MODE | DP_MODE);
- 
-+		if (cfg->is_dual_lane_phy) {
-+			val = SW_PORTSELECT_MUX;
-+			if (qmp->orientation == TYPEC_ORIENTATION_REVERSE)
-+				val |= SW_PORTSELECT_VAL;
-+			qphy_setbits(dp_com, QPHY_V3_DP_COM_TYPEC_CTRL, val);
-+		}
-+
- 		/* bring both QMP USB and QMP DP PHYs PCS block out of reset */
- 		qphy_clrbits(dp_com, QPHY_V3_DP_COM_RESET_OVRD_CTRL,
- 			     SW_DPPHY_RESET_MUX | SW_DPPHY_RESET |
-@@ -2559,7 +2575,7 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
- 
- 	if (cfg->has_phy_com_ctrl) {
- 		void __iomem *status;
--		unsigned int mask, val;
-+		unsigned int mask;
- 
- 		qphy_clrbits(serdes, cfg->regs[QPHY_COM_SW_RESET], SW_RESET);
- 		qphy_setbits(serdes, cfg->regs[QPHY_COM_START_CONTROL],
-@@ -3242,6 +3258,47 @@ static const struct dev_pm_ops qcom_qmp_phy_pm_ops = {
- 			   qcom_qmp_phy_runtime_resume, NULL)
- };
- 
-+#if IS_ENABLED(CONFIG_PHY_QCOM_QMP_TYPEC)
-+static int qcom_qmp_phy_typec_switch_set(struct typec_switch *sw,
-+					 enum typec_orientation orientation)
-+{
-+	struct qcom_qmp *qmp = typec_switch_get_drvdata(sw);
-+	struct qmp_phy *qphy = qmp->phys[0];
-+
-+	qmp->orientation = orientation;
-+	if (qmp->phy_initialized) {
-+		qcom_qmp_phy_disable(qphy->phy);
-+		qcom_qmp_phy_enable(qphy->phy);
-+	}
-+
-+	return 0;
-+}
-+
-+static int qcom_qmp_phy_typec_switch_register(struct qcom_qmp *qmp)
-+{
-+	struct typec_switch_desc sw_desc;
-+	struct device *dev = qmp->dev;
-+
-+	if (qmp->cfg->is_dual_lane_phy) {
-+		sw_desc.drvdata = qmp;
-+		sw_desc.fwnode = dev->fwnode;
-+		sw_desc.set = qcom_qmp_phy_typec_switch_set;
-+		qmp->sw = typec_switch_register(dev, &sw_desc);
-+		if (IS_ERR(qmp->sw)) {
-+			dev_err(dev, "Error registering typec switch: %ld\n",
-+				PTR_ERR(qmp->sw));
-+		}
-+	}
-+
-+	return 0;
-+}
-+#else
-+static int qcom_qmp_phy_typec_switch_register(struct qcom_qmp *qmp)
-+{
-+	return 0;
-+}
-+#endif
-+
- static int qcom_qmp_phy_probe(struct platform_device *pdev)
- {
- 	struct qcom_qmp *qmp;
-@@ -3250,7 +3307,7 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
- 	struct device_node *child;
- 	struct phy_provider *phy_provider;
- 	void __iomem *base;
--	int num, id;
-+	int num = 0, id;
- 	int ret;
- 
- 	qmp = devm_kzalloc(dev, sizeof(*qmp), GFP_KERNEL);
-@@ -3302,7 +3359,11 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
- 		return ret;
+ 	ret = __ethtool_get_link_ksettings(dev, &ksettings);
+ 	if (ret < 0) {
+-		if (info)
+-			GENL_SET_ERR_MSG(info, "failed to retrieve link settings");
++		GENL_SET_ERR_MSG(info, "failed to retrieve link settings");
+ 		goto out_ops;
  	}
  
--	num = of_get_available_child_count(dev->of_node);
-+	qcom_qmp_phy_typec_switch_register(qmp);
-+	for_each_available_child_of_node(dev->of_node, child) {
-+		if (!strncmp("lanes", child->name, 5))
-+			num++;
-+	}
- 	/* do we have a rogue child node ? */
- 	if (num > qmp->cfg->nlanes)
- 		return -EINVAL;
-@@ -3322,6 +3383,9 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
- 
- 	for_each_available_child_of_node(dev->of_node, child) {
- 		/* Create per-lane phy */
-+		if (strncmp("lanes", child->name, 5))
-+			continue;
-+
- 		ret = qcom_qmp_phy_create(dev, child, id);
- 		if (ret) {
- 			dev_err(dev, "failed to create lane%d phy, %d\n",
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.17.1
 
