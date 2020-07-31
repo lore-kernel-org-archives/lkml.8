@@ -2,129 +2,225 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C779C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D33EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A56321744
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 030AB21744
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:03:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="DxFLoarD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nOax9z++"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387645AbgGaP7U (ORCPT
+        id S1729054AbgGaQDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 11:59:20 -0400
-Received: from vern.gendns.com ([98.142.107.122]:39878 "EHLO vern.gendns.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732550AbgGaP7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 11:59:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=KoJsXkNu7DAyQrTk2uXCbdsXihbEgsCL9cGJchq1F8w=; b=DxFLoarDW+UuMDyz9jYWipRkY3
-        E0+/N6ADKZlfSxwYVwlYL9IFUd26TMCrm24Whg0uRq93F22NOPdgw527QldMFn4FtDKlhcVq2+xqu
-        B1RQ3xbMhWmG61tM/TzOPce7D8GSkWl5tXB7jwjNR04G1yiofyVI2RjgnXwTfNXs99OJo/bBGNesT
-        e54frMGNfIpIEx4Pkon90PYqG99hwKMuD8RfUCP/kEDzOzTMe44Rs/JpbLwMms0KktWgAsLvUaROz
-        3hjpcYvmZSJi5C6N73CIlLjdUdaY4rbo5SiSDs7E39vsC47u0C+m95iu69Lt+7m6Mc39vgtFPa0iH
-        EBVGfJ4g==;
-Received: from [2600:1700:4830:165f::19e] (port=60758)
-        by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <david@lechnology.com>)
-        id 1k1XRE-0004QC-7q; Fri, 31 Jul 2020 11:59:16 -0400
-Subject: Re: [PATCH v4 4/5] irqchip/irq-pruss-intc: Implement
- irq_{get,set}_irqchip_state ops
-To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     tglx@linutronix.de, jason@lakedaemon.net,
-        "Anna, Suman" <s-anna@ti.com>, robh+dt@kernel.org,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        "Mills, William" <wmills@ti.com>,
-        "Bajjuri, Praneeth" <praneeth@ti.com>
-References: <1595927918-19845-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <1595927918-19845-5-git-send-email-grzegorz.jaszczyk@linaro.org>
- <f65c6b32-7754-9880-1912-3b0b30a3d6d4@lechnology.com>
- <CAMxfBF4--kP=tt-1LqMB=W8B6gHYu1vFFMtnLPgc-akeLiK-Yw@mail.gmail.com>
-From:   David Lechner <david@lechnology.com>
-Message-ID: <71007a86-0a62-a180-33b7-7d963d39f84b@lechnology.com>
-Date:   Fri, 31 Jul 2020 10:59:13 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 31 Jul 2020 12:03:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728227AbgGaQDF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 12:03:05 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4B91C061574;
+        Fri, 31 Jul 2020 09:03:05 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id mt12so7643854pjb.4;
+        Fri, 31 Jul 2020 09:03:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iYvGYTkdQgoVTh/dtVt2dvyzxryEKrw2EXoP7UGiVxk=;
+        b=nOax9z++BMJIjjgIJINW9jTGuDEAQNZsS5GMlcdXqwg6jVlmB01Zzj84pVjhDeqaIw
+         wLsE98143QeDLquFDkNNBj8kyQg/kug2sBhOPTwcXjJVhajn5RskcHkGBWJ3zOR7rYXZ
+         sautvUR3RDJQlP3fNIGlMAPhvGK4n0dNXzZYk272nXjpYITLlhkp3TnMSSDayUysG0Oc
+         xkass4Q+hIEQeif3uNqKu3vPnuOyPYiVyU8ePU15GRRNjQCUAHqreC2Lts3tHMLdqiah
+         eaJfrVxBFPG0uoorKHNbKXORtokNQYIyXFhGdqPpqvddbzfCC5T+ZE47mUiRy0ijXgWP
+         /O5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iYvGYTkdQgoVTh/dtVt2dvyzxryEKrw2EXoP7UGiVxk=;
+        b=LjnRVbGTwpLYPDP+4BnlkiuBQGpsPwz2poZ0sGwF3AAF7MWH19Ob4sQz1vLtkkFote
+         VbKBVNH1le0pIrbFypUsuPgBAoHncJR3yDNtbnBeOCV6EuRnJ2vA7YN1nH/ueQaJVBIc
+         98trAGd3PxYM49jfwwxegHSOpL7Cw98c00fCvSWlUOGCZTEuPlqFGoCwYG0YnLngIxsb
+         SSkMq02LgUVAKdFGnMn65js/wt+fre5ctIwS+80F8RXMlOtWLtwkg4Nw5DZTNu0gVHpD
+         1c08DYisgjlRGnshX7zTVdOCxai6GREuE/Gqn2GnDhq6cjPmINAuPGjbKn+jNOl8Z/VW
+         ej8g==
+X-Gm-Message-State: AOAM533qqmtsTx4i9t6HztmfGtdBTu9vxr0/VahgQLQ/2dY/YmaEvm75
+        pQIkbGkDoifzO9O8QC9vF9H6IZQQKKmWXr/ohSU=
+X-Google-Smtp-Source: ABdhPJzZaNwaUAO4vP2YkFvg0hEjBxU8yJCZOGD1ok8Y50UEr23X0ROaPprgVfD+9v77va7XSyopab0N+G7y6EikuDc=
+X-Received: by 2002:a17:90a:390f:: with SMTP id y15mr4619690pjb.181.1596211385078;
+ Fri, 31 Jul 2020 09:03:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAMxfBF4--kP=tt-1LqMB=W8B6gHYu1vFFMtnLPgc-akeLiK-Yw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+References: <20200727122242.32337-1-vadym.kochan@plvision.eu>
+ <20200727122242.32337-2-vadym.kochan@plvision.eu> <CAHp75Ve-MyFg5QqHjywGk6X+v_F77HkRBuQsJ0Cx3WLJ5ZV43w@mail.gmail.com>
+ <20200731152201.GB10391@plvision.eu>
+In-Reply-To: <20200731152201.GB10391@plvision.eu>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 31 Jul 2020 19:02:47 +0300
+Message-ID: <CAHp75VcS4fEak3z0exODErs5FbDwf+Di1RJmf7JfMgnD8xgXOA@mail.gmail.com>
+Subject: Re: [net-next v4 1/6] net: marvell: prestera: Add driver for Prestera
+ family ASIC devices
+To:     Vadym Kochan <vadym.kochan@plvision.eu>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mickey Rachamim <mickeyr@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/31/20 7:28 AM, Grzegorz Jaszczyk wrote:
-> On Wed, 29 Jul 2020 at 21:23, David Lechner <david@lechnology.com> wrote:
->>
->> On 7/28/20 4:18 AM, Grzegorz Jaszczyk wrote:
->>> From: David Lechner <david@lechnology.com>
->>>
->>> This implements the irq_get_irqchip_state and irq_set_irqchip_state
->>> callbacks for the TI PRUSS INTC driver. The set callback can be used
->>> by drivers to "kick" a PRU by injecting a PRU system event.
->>>
->>> Example:
->>
->> We could improve this example by showing a device tree node of a
->> firmware-defined device implemented in the PRU:
->>
->>          /* Software-defined UART in PRU */
->>          pru_uart: serial@XXXX {
->>                  compatible = "ti,pru-uart";
->>                  ...
->>                  interrupt-parent = <&pruss_intc>;
->>                  /* PRU system event 31, channel 0, host event 0 */
->>                  interrupts = <31 0 0>, ...;
->>                  interrupt-names = "kick", ...;
->>                  ...
->>          },
->>
->> Then driver would request the IRQ during probe:
->>
->>          data->kick_irq = of_irq_get_byname(dev, "kick");
->>          if (data->kick_irq < 0)
->>                  ...
->>
->>
->> And later the driver would use the IRQ to kick the PRU:
->>
->>          irq_set_irqchip_state(data->kick_irq, IRQCHIP_STATE_PENDING, true);
->>
->>
-> 
-> We could but I am not sure if this kind of complex example should land
-> in the commit log.
-> Marc could you please comment how you want to see this?
-> 
-> Thank you,
-> Grzegorz
-> 
+On Fri, Jul 31, 2020 at 6:22 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
+> On Mon, Jul 27, 2020 at 03:59:13PM +0300, Andy Shevchenko wrote:
+> > On Mon, Jul 27, 2020 at 3:23 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
 
-Based on the discussion in the device tree binding patch, the expanded
-example I gave is incorrect, so we can just drop it.
+...
+
+> > > Signed-off-by: Andrii Savka <andrii.savka@plvision.eu>
+> > > Signed-off-by: Oleksandr Mazur <oleksandr.mazur@plvision.eu>
+> > > Signed-off-by: Serhiy Boiko <serhiy.boiko@plvision.eu>
+> > > Signed-off-by: Serhiy Pshyk <serhiy.pshyk@plvision.eu>
+> > > Signed-off-by: Taras Chornyi <taras.chornyi@plvision.eu>
+> > > Signed-off-by: Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>
+> > > Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+> >
+> > This needs more work. You have to really understand the role of each
+> > person in the above list.
+> > I highly recommend (re-)read sections 11-13 of Submitting Patches.
+> >
+> At least looks like I need to add these persons as Co-author's.
+
+I don't know, you are!
+And I think you meant Co-developer's
+
+...
+
+> > > +#include <linux/string.h>
+> > > +#include <linux/bitops.h>
+> > > +#include <linux/bitfield.h>
+> > > +#include <linux/errno.h>
+> >
+> > Perhaps ordered?
+> >
+> alphabetical ?
+
+Yes.
+
+...
+
+> > > +       struct prestera_msg_event_port *hw_evt;
+> > > +
+> > > +       hw_evt = (struct prestera_msg_event_port *)msg;
+> >
+> > Can be one line I suppose.
+> >
+> Yes, but I am trying to avoid line-breaking because of 80 chars
+> limitation.
+
+We have 100, but okay.
+
+...
+
+> > > +       if (evt->id == PRESTERA_PORT_EVENT_STATE_CHANGED)
+> > > +               evt->port_evt.data.oper_state = hw_evt->param.oper_state;
+> > > +       else
+> > > +               return -EINVAL;
+> > > +
+> > > +       return 0;
+> >
+> > Perhaps traditional pattern, i.e.
+> >
+> >   if (...)
+> >     return -EINVAL;
+> >   ...
+> >   return 0;
+> >
+> I am not sure if it is applicable here, because the error state here
+> is if 'evt->id' did not matched after all checks. Actually this is
+> simply a 'switch', but I use 'if' to have shorter code.
+
+Then do it a switch-case. I can see that other reviewers/contributors
+may stumble over this.
+
+...
+
+> > > +       /* Only 0xFF mac addrs are supported */
+> > > +       if (port->fp_id >= 0xFF)
+> > > +               goto err_port_init;
+> >
+> > You meant 255, right?
+> > Otherwise you have to mentioned is it byte limitation or what?
+> >
+> > ...
+> Yes, 255 is a limitation because of max byte value.
+
+But 255 itself is some kind of error value? Perhaps it deserves a definition.
+
+...
+
+> > > +       np = of_find_compatible_node(NULL, NULL, "marvell,prestera");
+> > > +       if (np) {
+> > > +               base_mac_np = of_parse_phandle(np, "base-mac-provider", 0);
+> > > +               if (base_mac_np) {
+> > > +                       const char *base_mac;
+> > > +
+> > > +                       base_mac = of_get_mac_address(base_mac_np);
+> > > +                       of_node_put(base_mac_np);
+> > > +                       if (!IS_ERR(base_mac))
+> > > +                               ether_addr_copy(sw->base_mac, base_mac);
+> > > +               }
+> > > +       }
+> > > +
+> > > +       if (!is_valid_ether_addr(sw->base_mac)) {
+> > > +               eth_random_addr(sw->base_mac);
+> > > +               dev_info(sw->dev->dev, "using random base mac address\n");
+> > > +       }
+> >
+> > Isn't it device_get_mac_address() reimplementation?
+> >
+> device_get_mac_address() just tries to get mac via fwnode.
+
+Yes, and how is it different from here? (consider
+fwnode_get_mac_address() if it suits better).
+
+...
+
+> > > +       new_skb = alloc_skb(len, GFP_ATOMIC | GFP_DMA);
+> >
+> > Atomic? Why?
+> >
+> TX path might be called from net_tx_action which is softirq.
+
+Okay, but GFP_DMA is quite a limitation to the memory region. Can't  be 32-bit?
+
+...
+
+> > > +       int tx_retry_num = 10 * tx_ring->max_burst;
+> >
+> > Magic!
+> You mean the code is magic ? Yes, I am trying to relax the
+> calling of SDMA engine.
+
+Usually when reviewers tell you about magic it assumes magic numbers
+whose meaning is not clear.
+(Requires either to be defined or commented)
+
+-- 
+With Best Regards,
+Andy Shevchenko
