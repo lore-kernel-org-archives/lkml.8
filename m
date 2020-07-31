@@ -2,115 +2,85 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 03:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B71F7C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 03:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C145C206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 03:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D384208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 03:39:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YM3g9zUh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731289AbgGaDe4 (ORCPT
+        id S1731314AbgGaDjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 23:34:56 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:45324 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730820AbgGaDez (ORCPT
+        Thu, 30 Jul 2020 23:39:11 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:20282 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731199AbgGaDjJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 23:34:55 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U4HxHq._1596166492;
-Received: from aliy8.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U4HxHq._1596166492)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 31 Jul 2020 11:34:53 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mm/memcg: remove useless check on page->mem_cgroup
-Date:   Fri, 31 Jul 2020 11:34:40 +0800
-Message-Id: <1596166480-22814-1-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 30 Jul 2020 23:39:09 -0400
+X-UUID: 900d5a9cec694ea3b38005d46e34a007-20200731
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=1ERRm3aXwOnbFAuF3CGICnm9rLGKEtIUDiGMxxFg0OM=;
+        b=YM3g9zUhNE4RO4twTYyzLRvTU/yLXrKX82OY6uk5FyK3tNtzp0YKC5b9c4KEOEsTMQj6J2gsRsRjyf2ZWL0S1onBr08e1UN5VtOTBGn0aGpXvFhsD7iCFWsk/E58zse21Sssboaj2JHdLJdyJ8XuIB5WKn4TqRdkU6vWV2Fzlwk=;
+X-UUID: 900d5a9cec694ea3b38005d46e34a007-20200731
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1071401226; Fri, 31 Jul 2020 11:39:06 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 31 Jul 2020 11:39:04 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 31 Jul 2020 11:39:06 +0800
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sami Tolvanen <samitolvanen@google.com>
+CC:     Neal Liu <neal.liu@mediatek.com>, <linux-acpi@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
+Subject: [PATCH] acpi: fix 'return' with no value build warning
+Date:   Fri, 31 Jul 2020 11:39:04 +0800
+Message-ID: <1596166744-2954-2-git-send-email-neal.liu@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1596166744-2954-1-git-send-email-neal.liu@mediatek.com>
+References: <1596166744-2954-1-git-send-email-neal.liu@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since readahead page will be charged on memcg too. We don't need to
-check this exception now. Rmove them is safe as all user pages are
-charged before use.
-
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: cgroups@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
- mm/memcontrol.c | 21 ++++-----------------
- 1 file changed, 4 insertions(+), 17 deletions(-)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index e84c2b5596f2..9e44ae22d591 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1322,12 +1322,7 @@ struct lruvec *mem_cgroup_page_lruvec(struct page *page, struct pglist_data *pgd
- 	}
- 
- 	memcg = page->mem_cgroup;
--	/*
--	 * Swapcache readahead pages are added to the LRU - and
--	 * possibly migrated - before they are charged.
--	 */
--	if (!memcg)
--		memcg = root_mem_cgroup;
-+	VM_BUG_ON_PAGE(!memcg, page);
- 
- 	mz = mem_cgroup_page_nodeinfo(memcg, page);
- 	lruvec = &mz->lruvec;
-@@ -6897,10 +6892,8 @@ void mem_cgroup_migrate(struct page *oldpage, struct page *newpage)
- 	if (newpage->mem_cgroup)
- 		return;
- 
--	/* Swapcache readahead pages can get replaced before being charged */
- 	memcg = oldpage->mem_cgroup;
--	if (!memcg)
--		return;
-+	VM_BUG_ON_PAGE(!memcg, oldpage);
- 
- 	/* Force-charge the new page. The old one will be freed soon */
- 	nr_pages = thp_nr_pages(newpage);
-@@ -7094,10 +7087,7 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
- 		return;
- 
- 	memcg = page->mem_cgroup;
--
--	/* Readahead page, never charged */
--	if (!memcg)
--		return;
-+	VM_BUG_ON_PAGE(!memcg, page);
- 
- 	/*
- 	 * In case the memcg owning these pages has been offlined and doesn't
-@@ -7158,10 +7148,7 @@ int mem_cgroup_try_charge_swap(struct page *page, swp_entry_t entry)
- 		return 0;
- 
- 	memcg = page->mem_cgroup;
--
--	/* Readahead page, never charged */
--	if (!memcg)
--		return 0;
-+	VM_BUG_ON_PAGE(!memcg, page);
- 
- 	if (!entry.val) {
- 		memcg_memory_event(memcg, MEMCG_SWAP_FAIL);
--- 
-1.8.3.1
+Rml4aW5nIENGSSBpc3N1ZSB3aGljaCBpbnRyb2R1Y2VkIGJ5IGNvbW1pdCBlZmU5NzExMjE0ZTYg
+aXMNCmluY29tcGxldGUuDQpBZGQgcmV0dXJuIHZhbHVlIHRvIGZpeCByZXR1cm4tdHlwZSBidWls
+ZCB3YXJuaW5nLg0KDQpTaWduZWQtb2ZmLWJ5OiBOZWFsIExpdSA8bmVhbC5saXVAbWVkaWF0ZWsu
+Y29tPg0KLS0tDQogZHJpdmVycy9hY3BpL3Byb2Nlc3Nvcl9pZGxlLmMgfCAgICA0ICsrLS0NCiAx
+IGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9hY3BpL3Byb2Nlc3Nvcl9pZGxlLmMgYi9kcml2ZXJzL2FjcGkvcHJvY2Vz
+c29yX2lkbGUuYw0KaW5kZXggNmZmYjZjOS4uNjg3MDAyMCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMv
+YWNwaS9wcm9jZXNzb3JfaWRsZS5jDQorKysgYi9kcml2ZXJzL2FjcGkvcHJvY2Vzc29yX2lkbGUu
+Yw0KQEAgLTY2NCwxMSArNjY0LDExIEBAIHN0YXRpYyBpbnQgYWNwaV9pZGxlX2VudGVyX3MyaWRs
+ZShzdHJ1Y3QgY3B1aWRsZV9kZXZpY2UgKmRldiwNCiAJCXN0cnVjdCBhY3BpX3Byb2Nlc3NvciAq
+cHIgPSBfX3RoaXNfY3B1X3JlYWQocHJvY2Vzc29ycyk7DQogDQogCQlpZiAodW5saWtlbHkoIXBy
+KSkNCi0JCQlyZXR1cm47DQorCQkJcmV0dXJuIC1FRkFVTFQ7DQogDQogCQlpZiAocHItPmZsYWdz
+LmJtX2NoZWNrKSB7DQogCQkJYWNwaV9pZGxlX2VudGVyX2JtKHByLCBjeCwgZmFsc2UpOw0KLQkJ
+CXJldHVybjsNCisJCQlyZXR1cm4gMDsNCiAJCX0gZWxzZSB7DQogCQkJQUNQSV9GTFVTSF9DUFVf
+Q0FDSEUoKTsNCiAJCX0NCi0tIA0KMS43LjkuNQ0K
 
