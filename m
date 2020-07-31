@@ -2,114 +2,165 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9DBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4FBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF25522B40
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:33:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596195220;
-	bh=nRMU61Aikd6d7OiSdk8nqrvF5kYZ8WTzMhfKjj86UAQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eLZDniK86PtaqSZ7nMytix90tml155gBEp4dOu3TtK+cRlZ905Zdg840QhHrrbxEL
-	 axmo8MC2XNTokz1DxYnqy1UNjTY1LXSQPiDMloDnxDV9xOLjIL2nxJFbLDX1AJ6sYt
-	 IpJyvTwwP9XlNr8c0x1TVeRK6hz64NhBe0jzHWmw=
+	by mail.kernel.org (Postfix) with ESMTP id 7D8B722CA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:39:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X9V6zA56"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732746AbgGaLdj (ORCPT
+        id S1732725AbgGaLjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 07:33:39 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40075 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732104AbgGaLdi (ORCPT
+        Fri, 31 Jul 2020 07:39:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52634 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732297AbgGaLjF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 07:33:38 -0400
-Received: by mail-oi1-f195.google.com with SMTP id u24so16553690oiv.7;
-        Fri, 31 Jul 2020 04:33:37 -0700 (PDT)
+        Fri, 31 Jul 2020 07:39:05 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 272D4C061574;
+        Fri, 31 Jul 2020 04:39:05 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id x9so32131332ljc.5;
+        Fri, 31 Jul 2020 04:39:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=e83eJTcVv/UaeyPlCsr6UUJefX33U2iVn2MgdxsKQTQ=;
+        b=X9V6zA56PqyXwOT0CNOco7VPG50Pkbt7KmbI/ojIgjq+CFYp9qHMCY6bdOTnK3x3QR
+         OE+41YFe8nwh73tpj+YDYVwNBrRap4JePkrUOhKd4jaWk7wSnBWCl7732Jd7H6DaGbnw
+         zYZznHVkJ+wzuPxNavlP1QnUHUl4L/5CnblTm0LKK4baDeLDU7iO0MvH1d5WF49frrNV
+         4s4Z7gSD9t/AK5UjBUcXCUQgwkHXsFpS5YxHjXRkueVpGgFZ19L24ENrdnL2MpZ35z0i
+         bEruw/yDZ7CttkXNOu5ZFif5fmKXTFCMfyO8/YF8ZucVV6ESxnHc5KUMmUtQPSQdUUY2
+         v06A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mpZwL9ptFKxq7FoZCH1xjumTWQNcssejfeTwP6RoxpQ=;
-        b=diuHMLwFGE03iB6FycWL3gzVKV7vJzuDP40K9hGRPOQcLzQIi9LpAbE+bb+iu1Zva7
-         b7hj6RtcnDvzlg7h3eYbSZvJLmYlNeNiRCKL900jpKHwv5KXYbY7L3g/VaYc1GjEyoJz
-         EE8UibbNHAQ2xvP8l3MH4L5l0FT4XlCfQzCJza6pD2tBjS5oTSksRX8gkBKX5BTHbyAj
-         SNrwrRNcYA3QhnfE9ylEFohlC84WnJz2erwTT4CWf6vKCMDutiNwj6fk+z3+F0SBtbNO
-         EugJdjKvoeNHJYWBqakqrimVl0NheHFYPhWy6JR2X2uYm3YS8xkhOyZaGfRIrMZeD5Ah
-         eHbA==
-X-Gm-Message-State: AOAM530dUNDrNfQUhFqddHrZ4wxeJDT4smiaX9qYbSJjy0kPyRTht2Sh
-        oStEZMDE27hETN8WPbTTQSjTqHdUHemGtOqXmik=
-X-Google-Smtp-Source: ABdhPJwjnTZ4vCcK+PJMw9f0cgXjEhaXp88nRbYUPJxc2xho6yL2W9vIsfi0PJ+loYFbKG0KfjHoOo6H/h7XzI4Nqoc=
-X-Received: by 2002:aca:a88e:: with SMTP id r136mr2704600oie.110.1596195217368;
- Fri, 31 Jul 2020 04:33:37 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=e83eJTcVv/UaeyPlCsr6UUJefX33U2iVn2MgdxsKQTQ=;
+        b=ej8bhhUdAkEttZUthgtmpb7y7Ex3JCulFPgGQkAJ8paI9kH47mZJIhl0AwJiyOEeuc
+         1HhhJSRxoKT78T6IgcTop0IQeXeJ2+4fu1KihOh9+GxFxnSVW5bRLAfXFVrcLzFurR68
+         AesxLWVL1aMSREzbRMfRaux4SKlulISWSntT4UqIu+ueuT4VXMGuRxpqdMH1ktSmIjfF
+         IC9EF/bh2VvyklGE5kTEmK7CqpNMVy9aBIS41FuB3fnTXLtqyLca+4rWq+xZJYddGdQT
+         NLyXzUqO9jFuTFUL52fqzrhcbWfMrYBf2ag5lJrI8l6VlmmiLwM5GWAtPjbiGXy/KChi
+         S/aA==
+X-Gm-Message-State: AOAM5337xIupLhJ+CJNo/dnKdOtmHk2O+bsHOERXXJQOLbuZrdNsdEwT
+        lswJLbhag41NN5CDcIBqVxAWFztQ
+X-Google-Smtp-Source: ABdhPJyGjMx9FtTEpEohXiAFoq57WavNYhs3eJc0pNbnjhC7LxeGw815xYO7ZEtnLAVlZoq41lXvWQ==
+X-Received: by 2002:a2e:991:: with SMTP id 139mr1647045ljj.314.1596195543293;
+        Fri, 31 Jul 2020 04:39:03 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
+        by smtp.googlemail.com with ESMTPSA id k12sm1870240lfe.68.2020.07.31.04.39.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jul 2020 04:39:02 -0700 (PDT)
+Subject: Re: [RFC PATCH v6 09/10] media: tegra-video: Add CSI MIPI pads
+ calibration
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com
+Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+References: <1596186169-18729-1-git-send-email-skomatineni@nvidia.com>
+ <1596186169-18729-10-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <3ac158c4-7df7-e3c1-f0e1-33e7ef017762@gmail.com>
+Date:   Fri, 31 Jul 2020 14:39:01 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1596166744-2954-1-git-send-email-neal.liu@mediatek.com> <1596166744-2954-2-git-send-email-neal.liu@mediatek.com>
-In-Reply-To: <1596166744-2954-2-git-send-email-neal.liu@mediatek.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 31 Jul 2020 13:33:24 +0200
-Message-ID: <CAJZ5v0gk9a-PVr4+zerNWdBORyC563K8XgUdgxENAQ+Y5-85tg@mail.gmail.com>
-Subject: Re: [PATCH] acpi: fix 'return' with no value build warning
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1596186169-18729-10-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 5:39 AM Neal Liu <neal.liu@mediatek.com> wrote:
->
-> Fixing CFI issue which introduced by commit efe9711214e6 is
-> incomplete.
-> Add return value to fix return-type build warning.
->
-> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+31.07.2020 12:02, Sowjanya Komatineni пишет:
+...
+> @@ -249,13 +249,47 @@ static int tegra_csi_enable_stream(struct v4l2_subdev *subdev)
+>  		return ret;
+>  	}
+>  
+> +	if (csi_chan->mipi) {
+> +		ret = tegra_mipi_enable(csi_chan->mipi);
+> +		if (ret < 0) {
+> +			dev_err(csi->dev,
+> +				"failed to enable MIPI pads: %d\n", ret);
+> +			goto rpm_put;
+> +		}
+> +
+> +		/*
+> +		 * CSI MIPI pads PULLUP, PULLDN and TERM impedances need to
+> +		 * be calibrated after power on.
+> +		 * So, trigger the calibration start here and results will
+> +		 * be latched and applied to the pads when link is in LP11
+> +		 * state during start of sensor streaming.
+> +		 */
+> +		ret = tegra_mipi_start_calibration(csi_chan->mipi);
+> +		if (ret < 0) {
+> +			dev_err(csi->dev,
+> +				"failed to start MIPI calibration: %d\n", ret);
+> +			goto disable_mipi;
+> +		}
 
-Applied with edited subject and changelog, but ->
+What would happen if CSI stream is enabled and then immediately disabled
+without enabling camera sensor?
 
-> ---
->  drivers/acpi/processor_idle.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
-> index 6ffb6c9..6870020 100644
-> --- a/drivers/acpi/processor_idle.c
-> +++ b/drivers/acpi/processor_idle.c
-> @@ -664,11 +664,11 @@ static int acpi_idle_enter_s2idle(struct cpuidle_device *dev,
->                 struct acpi_processor *pr = __this_cpu_read(processors);
->
->                 if (unlikely(!pr))
-> -                       return;
-> +                       return -EFAULT;
+> +	}
+> +
+...
+>  static int tegra_channel_enable_stream(struct tegra_vi_channel *chan)
+>  {
+>  	struct v4l2_subdev *csi_subdev, *src_subdev;
+> +	struct tegra_csi_channel *csi_chan;
+>  	int ret;
+>  
+>  	/*
+> @@ -206,13 +207,30 @@ static int tegra_channel_enable_stream(struct tegra_vi_channel *chan)
+>  	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
+>  		return 0;
+>  
+> +	csi_chan = v4l2_get_subdevdata(csi_subdev);
+> +	/*
+> +	 * TRM has incorrectly documented to wait for done status from
+> +	 * calibration logic after CSI interface power on.
+> +	 * As per the design, calibration results are latched and applied
+> +	 * to the pads only when the link is in LP11 state which will happen
+> +	 * during the sensor stream-on.
+> +	 * CSI subdev stream-on triggers start of MIPI pads calibration.
+> +	 * Wait for calibration to finish here after sensor subdev stream-on
+> +	 * and in case of sensor stream-on failure, cancel the calibration.
+> +	 */
+>  	src_subdev = tegra_channel_get_remote_source_subdev(chan);
 
--> there is no point returning an error code here, so I've made it
-just return 0.
+Is it possible to move the start_calibration() here?
 
->
->                 if (pr->flags.bm_check) {
->                         acpi_idle_enter_bm(pr, cx, false);
-> -                       return;
-> +                       return 0;
->                 } else {
->                         ACPI_FLUSH_CPU_CACHE();
->                 }
-> --
+>  	ret = v4l2_subdev_call(src_subdev, video, s_stream, true);
+>  	if (ret < 0 && ret != -ENOIOCTLCMD) {
+> +		tegra_mipi_cancel_calibration(csi_chan->mipi);
+>  		v4l2_subdev_call(csi_subdev, video, s_stream, false);
+>  		return ret;
+>  	}
+>  
+> +	ret = tegra_mipi_finish_calibration(csi_chan->mipi);
+> +	if (ret < 0)
+> +		dev_warn(csi_chan->csi->dev,
+> +			 "MIPI calibration failed: %d\n", ret);
+> +
+>  	return 0;
+>  }
+>  
+> 
+
