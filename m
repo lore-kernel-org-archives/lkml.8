@@ -2,195 +2,162 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AC6C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACC5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E49BC20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:59:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zZ/6Ye+e"
+	by mail.kernel.org (Postfix) with ESMTP id DFA2F20829
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:59:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731997AbgGaI7q (ORCPT
+        id S1732027AbgGaI7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:59:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731964AbgGaI7o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 04:59:44 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99E61C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 01:59:44 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id m18so6758840vkk.7
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 01:59:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=z8Xu+FX3vlXULJTWcBGUe7ReMn74wRDKFVBN6S82qMg=;
-        b=zZ/6Ye+e0Pem9PtWM44VX1wITKYBKMV3+aR2XFHBPQkaWs8cNwAU7x62RXKIZpsXA2
-         axfBSBahQAfdpFGp1K4Qnfyf8n8W4Xe4h1R1D5ZLuyNWfCbqNPGcwBRVl42X1xR4QIYJ
-         PG1/jPDmFcquDb4JOe6nfIRcyJ39DJaGlCkFe2/9xOTwUwJtLNf6/AGAWAO12F2eW/ln
-         qhIY0dLLVQl0i6P+KYcaEXFHp6F9oAjx94LkyCtzSWh9nHuBGulu4fT/rLQJgYiQpPkZ
-         KbsbSjymzOD9OMwgu5aGje/16uiDTfHxpvGSkL9EM+ek3V22CpTckwRwB++F9/wbyLj/
-         29ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=z8Xu+FX3vlXULJTWcBGUe7ReMn74wRDKFVBN6S82qMg=;
-        b=YUj+x5xFI3uA1BoGeiW8XkQ04cMx0IVUHRcx1Gim+ReGP0fPdCK3yKuM/eei+QBXtq
-         4nlu+oEgCrs9ktKzPSuY3ZHC9NkXVVdMHhKa0+2DzoKQAnfeJdvj1arMmmOnKQZnR/JF
-         u4dk+a7yLCCLYyJ3PNaVUqXpZmJJZYwlNxJCuFVDHGRn2lLWioQpXyd/+9V53/8AM8Bk
-         Z8XPXWx8w05ObiOZEY49CbvMBsbbSZNp+64wVWWAZGmsU1zUoKWhcqQZFVGjZfISKd9G
-         X1YtEzKSt4dumGYQwjQHHFt63+8ErNJKNL72Gtkewq4oR0v6tjGvRiMJSwfYnoZ3Apmo
-         Cb8w==
-X-Gm-Message-State: AOAM532HMjMjjzWmMAV9Y0MtvYf+Xt9Tmqvftge9UETuvUJnPu2dtqQU
-        kBxIFUJH7kL+a4coczGNXUmipJkdTKR2xI8EZhvGhg==
-X-Google-Smtp-Source: ABdhPJyw8jEYGmDmw9BgpnFafNjFLXk3E+ITQh4G53dONHiKLj2/HaIo+lf0O/dvghtjcTHPVpgxFnqHAc/qQPLhEvQ=
-X-Received: by 2002:a1f:a20c:: with SMTP id l12mr1943048vke.94.1596185983081;
- Fri, 31 Jul 2020 01:59:43 -0700 (PDT)
+        Fri, 31 Jul 2020 04:59:54 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:54584 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732002AbgGaI7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 04:59:54 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8D30C5935469A8C5426D;
+        Fri, 31 Jul 2020 16:59:51 +0800 (CST)
+Received: from DESKTOP-KKJBAGG.china.huawei.com (10.174.186.173) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 31 Jul 2020 16:59:43 +0800
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+To:     <pbonzini@redhat.com>
+CC:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yezhenyu2@huawei.com>, <xiexiangyou@huawei.com>
+Subject: [PATCH v1] ioeventfd: introduce get_ioeventfd()
+Date:   Fri, 31 Jul 2020 16:59:39 +0800
+Message-ID: <20200731085939.629-1-yezhenyu2@huawei.com>
+X-Mailer: git-send-email 2.22.0.windows.1
 MIME-Version: 1.0
-References: <20200730074420.533211699@linuxfoundation.org>
-In-Reply-To: <20200730074420.533211699@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 31 Jul 2020 14:29:31 +0530
-Message-ID: <CA+G9fYtLSsoX1RXZ8jAw4+vjaii46RiCJL0bjepghq4JSpZw9A@mail.gmail.com>
-Subject: Re: [PATCH 5.7 00/20] 5.7.12-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.186.173]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Jul 2020 at 13:35, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.7.12 release.
-> There are 20 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 01 Aug 2020 07:44:05 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.7.12-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.7.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Get corresponding ioeventfd from kvm->ioeventfds. If no match
+is found, return NULL.  This is used in kvm_assign_ioeventfd_idx()
+and kvm_deassign_ioeventfd_idx().
+
+Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+---
+ virt/kvm/eventfd.c | 53 ++++++++++++++++++++++++----------------------
+ 1 file changed, 28 insertions(+), 25 deletions(-)
+
+diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
+index ef7ed916ad4a..77f7d81c1138 100644
+--- a/virt/kvm/eventfd.c
++++ b/virt/kvm/eventfd.c
+@@ -28,6 +28,11 @@
+ 
+ #include <kvm/iodev.h>
+ 
++#define warn_if(expr, msg) do {				\
++	if (expr)					\
++		pr_warn("ioeventfd: %s\n", msg);	\
++} while (0)
++
+ #ifdef CONFIG_HAVE_KVM_IRQFD
+ 
+ static struct workqueue_struct *irqfd_cleanup_wq;
+@@ -756,21 +761,23 @@ static const struct kvm_io_device_ops ioeventfd_ops = {
+ };
+ 
+ /* assumes kvm->slots_lock held */
+-static bool
+-ioeventfd_check_collision(struct kvm *kvm, struct _ioeventfd *p)
++static inline struct _ioeventfd *
++get_ioeventfd(struct kvm *kvm, enum kvm_bus bus_idx,
++	      struct kvm_ioeventfd *args)
+ {
+-	struct _ioeventfd *_p;
++	static struct _ioeventfd *_p;
++	bool wildcard = !(args->flags & KVM_IOEVENTFD_FLAG_DATAMATCH);
+ 
+ 	list_for_each_entry(_p, &kvm->ioeventfds, list)
+-		if (_p->bus_idx == p->bus_idx &&
+-		    _p->addr == p->addr &&
+-		    (!_p->length || !p->length ||
+-		     (_p->length == p->length &&
+-		      (_p->wildcard || p->wildcard ||
+-		       _p->datamatch == p->datamatch))))
+-			return true;
++		if (_p->bus_idx == bus_idx &&
++		    _p->addr == args->addr &&
++		    (!_p->length || !args->len ||
++		     (_p->length == args->len &&
++		      (_p->wildcard || wildcard ||
++		       _p->datamatch == args->datamatch))))
++			return _p;
+ 
+-	return false;
++	return NULL;
+ }
+ 
+ static enum kvm_bus ioeventfd_bus_from_flags(__u32 flags)
+@@ -816,7 +823,7 @@ static int kvm_assign_ioeventfd_idx(struct kvm *kvm,
+ 	mutex_lock(&kvm->slots_lock);
+ 
+ 	/* Verify that there isn't a match already */
+-	if (ioeventfd_check_collision(kvm, p)) {
++	if (get_ioeventfd(kvm, bus_idx, args)) {
+ 		ret = -EEXIST;
+ 		goto unlock_fail;
+ 	}
+@@ -849,7 +856,7 @@ static int
+ kvm_deassign_ioeventfd_idx(struct kvm *kvm, enum kvm_bus bus_idx,
+ 			   struct kvm_ioeventfd *args)
+ {
+-	struct _ioeventfd        *p, *tmp;
++	struct _ioeventfd        *p;
+ 	struct eventfd_ctx       *eventfd;
+ 	struct kvm_io_bus	 *bus;
+ 	int                       ret = -ENOENT;
+@@ -860,18 +867,15 @@ kvm_deassign_ioeventfd_idx(struct kvm *kvm, enum kvm_bus bus_idx,
+ 
+ 	mutex_lock(&kvm->slots_lock);
+ 
+-	list_for_each_entry_safe(p, tmp, &kvm->ioeventfds, list) {
++	p = get_ioeventfd(kvm, bus_idx, args);
++	if (p) {
+ 		bool wildcard = !(args->flags & KVM_IOEVENTFD_FLAG_DATAMATCH);
+-
+-		if (p->bus_idx != bus_idx ||
+-		    p->eventfd != eventfd  ||
+-		    p->addr != args->addr  ||
+-		    p->length != args->len ||
+-		    p->wildcard != wildcard)
+-			continue;
+-
+-		if (!p->wildcard && p->datamatch != args->datamatch)
+-			continue;
++		warn_if(p->eventfd != eventfd, "eventfd should be the same!");
++		warn_if(p->length != args->len,	"length should be the same!");
++		warn_if(p->length && p->wildcard != wildcard,
++				"wildcard should be the same!");
++		warn_if(p->length && !p->wildcard && p->datamatch != args->datamatch,
++				"datamatch should be the same!");
+ 
+ 		kvm_io_bus_unregister_dev(kvm, bus_idx, &p->dev);
+ 		bus = kvm_get_bus(kvm, bus_idx);
+@@ -879,7 +883,6 @@ kvm_deassign_ioeventfd_idx(struct kvm *kvm, enum kvm_bus bus_idx,
+ 			bus->ioeventfd_count--;
+ 		ioeventfd_release(p);
+ 		ret = 0;
+-		break;
+ 	}
+ 
+ 	mutex_unlock(&kvm->slots_lock);
+-- 
+2.19.1
 
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.7.12-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.7.y
-git commit: 3d6db9c814407889db6cd20aba0aabe36e463171
-git describe: v5.7.11-21-g3d6db9c81440
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.7-oe/bui=
-ld/v5.7.11-21-g3d6db9c81440
-
-No regressions (compared to build v5.7.10-199-g3d6db9c81440)
-
-No fixes (compared to build v5.7.10-199-g3d6db9c81440)
-
-Ran 36182 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* linux-log-parser
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-controllers-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* v4l2-compliance
-* kvm-unit-tests
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-sched-tests
-* ltp-open-posix-tests
-* network-basic-tests
-* igt-gpu-tools
-* ssuite
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
