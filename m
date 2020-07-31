@@ -2,151 +2,130 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AB7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC45C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADDE5207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:50:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IbGgkqHg"
+	by mail.kernel.org (Postfix) with ESMTP id 16E892084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:53:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596178417;
+	bh=fNT75IpsFv23vL5vXayzc9tXmlPArXQFzFYd85vUNc4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=McNb3YqMXPlAjMzOJRMD3EMNwoV/1NC/aZdm0qfBYPutu4WynyMv53G2bPvqzcshs
+	 Z15P6/FPjer4uIPQogsoB9uXoVm9AqynoksmGA9OTyTkHesiHu+cMBRMBnYRXpq2vZ
+	 4CHCfZ/49o5VRrnazvAV4pY2+C0JMCNauD055F0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731501AbgGaGui (ORCPT
+        id S1731432AbgGaGxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 02:50:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731365AbgGaGuh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 02:50:37 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6721DC061574
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 23:50:37 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id dd12so8659872qvb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 23:50:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WngGGnonvpFH+7HxvPSvcZRCNtYHz0yk1OEZnIMEESY=;
-        b=IbGgkqHgIiEw/hTzDLLcAGVf9zgHEnHz00uKm4YLRY7/mON834YzH3vnQFLCtcJBot
-         lxpku1E+EEWqG9nxOM+O6FxT7gnkEOeqAPEKpB3mmPuK6NNNPh/Fvq8d2+h6H3G+St1Q
-         Yr6lGSvAJFBp2Ii61lPHEJt7rSQhGdj/4oYewHFCdWcivd8xGGG9JI70WEs4F9cNWRVx
-         nwBavGGvc8chVB6X/IH6kbljGafQPt4oQOkBCZxh0wQbPqPZWQkZySuPioLPv6uL2BpV
-         Z7xg+vIoUi0VfIDNdyI5g5phpnyD3XwhsiIdKFBmEPXohQ9lx6uNCEBgeBJLzyxs5buJ
-         M0DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WngGGnonvpFH+7HxvPSvcZRCNtYHz0yk1OEZnIMEESY=;
-        b=T1gaeHo0s/5rhaltHHBpp/fuYKmogtfFqaK0hi/mKTrtLfwsx/RjfdyuQTCMUnPwp5
-         cXErfvSWOiCikeXZ+vDYBpIhbQDoSmJYsjzB9hXKMAOnfeqsKwPul86bJ5GKOcXyO8Z+
-         XKVhsYsqbmm5jxeqZJ2Iwg1+eHZLp85j9D2XHybYOycxoH4zbQ6/X17W0103QkuiTZuQ
-         Wl0859xSjww+7BglYQTtAyKZ0vPN0BMKG8gVqPUL+jPRkDhcvjB4EcIeLnH1yBDBoaKF
-         ztHbErZ1PgMGHTpUeXhQGSWkGoyfvw+ZHdmm+VXK3fxD/fpulE+p5lb1/XmnxYDTbspb
-         Xk0A==
-X-Gm-Message-State: AOAM531excrZGOI+6lS4ox8nZsW4bLlgJSvIgyd2OnPg+c5BiO+CREUV
-        X2WYRVhVC14o/rt+DhHISJNokb2+zYeGtkVrYctQFA==
-X-Google-Smtp-Source: ABdhPJxC6S0iBdEspvZgSadQkuzvLg58Lw0HSz7+nwhiEF8Iu7xIVUpU61rNUgtC8NBEDJSoO+ypuqgUXskBdmR7AcA=
-X-Received: by 2002:a0c:c60b:: with SMTP id v11mr2756513qvi.122.1596178236176;
- Thu, 30 Jul 2020 23:50:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <00000000000060adcb05abb71eb6@google.com>
-In-Reply-To: <00000000000060adcb05abb71eb6@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 31 Jul 2020 08:50:24 +0200
-Message-ID: <CACT4Y+ZnHF_b6hKQ_npjJ2fW7atZ7sP8WeGh-TDhu9UB0dcnPQ@mail.gmail.com>
-Subject: Re: upstream boot error: BUG: soft lockup in __do_softirq
-To:     syzbot <syzbot+8472ea265fe32cc3bf78@syzkaller.appspotmail.com>
-Cc:     Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Fri, 31 Jul 2020 02:53:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731224AbgGaGxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 02:53:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 000FD207F5;
+        Fri, 31 Jul 2020 06:53:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596178414;
+        bh=fNT75IpsFv23vL5vXayzc9tXmlPArXQFzFYd85vUNc4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wHsdC/0fAKiD9YbaIfsbFj8p03yJkr9qnBoWo/Ix5UbCr1RLfihp7pEzhGtHbguq1
+         /+FDpBO2nfeS+ZtSS/W9SOgSdCKVKLvWJj7x0Qj3xcRhHThBaXQK9DVnnYL5tnK/Bu
+         baaUYQoJUnWUKqyyFkdRXWivQ8nvj9uuW3vAVtas=
+Date:   Fri, 31 Jul 2020 08:53:22 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Luben Tuikov <luben.tuikov@amd.com>
+Cc:     Alex Deucher <alexdeucher@gmail.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Xiaojie Yuan <xiaojie.yuan@amd.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Arnd Bergmann <arnd@arndb.de>, David Airlie <airlied@linux.ie>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Marek =?utf-8?B?T2zFocOhaw==?= <marek.olsak@amd.com>,
+        Hans de Goede <hdegoede@redhat.com>, Trek <trek00@inbox.ru>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, Daniel Vetter <daniel@ffwll.ch>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Evan Quan <evan.quan@amd.com>, Leo Liu <leo.liu@amd.com>,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [Linux-kernel-mentees] [PATCH] drm/amdgpu: Prevent
+ kernel-infoleak in amdgpu_info_ioctl()
+Message-ID: <20200731065322.GA1518178@kroah.com>
+References: <20200728192924.441570-1-yepeilin.cs@gmail.com>
+ <30b2a31f-77c2-56c1-ecde-875c6eea99d5@gmail.com>
+ <CADnq5_NXOiAc7q5gQqF_wwtJD1o6nHjXM4O3gY6EwAQe9iOtXw@mail.gmail.com>
+ <8c5cf518-12d2-7495-7822-c7ebf8e61972@amd.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8c5cf518-12d2-7495-7822-c7ebf8e61972@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 8:44 AM syzbot
-<syzbot+8472ea265fe32cc3bf78@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following issue on:
->
-> HEAD commit:    92ed3019 Linux 5.8-rc7
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10e84cdf100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=b45e47f6d958ae82
-> dashboard link: https://syzkaller.appspot.com/bug?extid=8472ea265fe32cc3bf78
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
->
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+8472ea265fe32cc3bf78@syzkaller.appspotmail.com
+On Thu, Jul 30, 2020 at 05:09:07PM -0400, Luben Tuikov wrote:
+> On 2020-07-29 9:49 a.m., Alex Deucher wrote:
+> > On Wed, Jul 29, 2020 at 4:11 AM Christian König
+> > <ckoenig.leichtzumerken@gmail.com> wrote:
+> >>
+> >> Am 28.07.20 um 21:29 schrieb Peilin Ye:
+> >>> Compiler leaves a 4-byte hole near the end of `dev_info`, causing
+> >>> amdgpu_info_ioctl() to copy uninitialized kernel stack memory to userspace
+> >>> when `size` is greater than 356.
+> >>>
+> >>> In 2015 we tried to fix this issue by doing `= {};` on `dev_info`, which
+> >>> unfortunately does not initialize that 4-byte hole. Fix it by using
+> >>> memset() instead.
+> >>>
+> >>> Cc: stable@vger.kernel.org
+> >>> Fixes: c193fa91b918 ("drm/amdgpu: information leak in amdgpu_info_ioctl()")
+> >>> Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
+> >>> Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+> >>> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+> >>
+> >> Reviewed-by: Christian König <christian.koenig@amd.com>
+> >>
+> >> I can't count how many of those we have fixed over the years.
+> >>
+> >> At some point we should probably document that using "= {}" or "= { 0 }"
+> >> in the kernel is a really bad idea and should be avoided.
+> > 
+> > Moreover, it seems like different compilers seem to behave relatively
+> > differently with these and we often get reports of warnings with these
+> > on clang.  When in doubt, memset.
+> 
+> There are quite a few of those under drivers/gpu/drm, for "amd/", "scheduler/"
+> drm*.c files,
+> 
+> $find . \( -regex "./drm.*\.c" -or -regex "./amd/.*\.c" -or -regex "./scheduler/.*\.c" \) -exec egrep -n -- " *= *{ *(|NULL|0) *}" \{\} \+ | wc -l
+> 374
+> $_
+> 
+> Out of which only 16 are of the non-ISO C variety, "= {}",
+> 
+> $find . \( -regex "./drm.*\.c" -or -regex "./amd/.*\.c" -or -regex "./scheduler/.*\.c" \) -exec egrep -n -- " *= *{ *}" \{\} \+ | wc -l
+> 16
+> $_
+> 
+> Perhaps the latter are the more pressing ones, since it is a C++ initializer and not a ISO C one.
 
-This is a qemu-kvm instance killing the host kernel somehow, the host
-kernel itself running qemu's is full of rcu stalls. I think this is
-not a bug in the tested kernel.
-We change rcu stall timeout to 120 seconds from the default 21s, but
-this happens only after boot using sysctls. I did not find any way to
-change the rcu timeout via cmdline/config (would be useful).
+It only matters when we care copying the data to userspace, if it all
+stays in the kernel, all is fine.
 
-> hrtimer: interrupt took 42698779 ns
-> random: crng init done
-> watchdog: BUG: soft lockup - CPU#3 stuck for 21s! [grep:4749]
-> Modules linked in:
-> hardirqs last  enabled at (2780): [<ffffffff88200204>] __do_softirq+0x204/0xa60 kernel/softirq.c:276
-> hardirqs last disabled at (2781): [<ffffffff87e5b2ed>] idtentry_enter_cond_rcu+0x1d/0x50 arch/x86/entry/common.c:649
-> softirqs last  enabled at (2760): [<ffffffff88200748>] __do_softirq+0x748/0xa60 kernel/softirq.c:319
-> softirqs last disabled at (2779): [<ffffffff88000f0f>] asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
-> CPU: 3 PID: 4749 Comm: grep Not tainted 5.8.0-rc7-syzkaller #0
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-> RIP: 0010:__do_softirq+0x22f/0xa60 kernel/softirq.c:278
-> Code: c7 c0 98 e0 b4 89 48 c1 e8 03 42 80 3c 30 00 0f 85 70 07 00 00 48 83 3d 76 de 94 01 00 0f 84 4a 06 00 00 fb 66 0f 1f 44 00 00 <48> c7 44 24 08 c0 90 a0 89 b8 ff ff ff ff 0f bc 04 24 83 c0 01 89
-> RSP: 0000:ffffc90000598f70 EFLAGS: 00000286
-> RAX: 1ffffffff1369c13 RBX: ffff8880294683c0 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff88200204
-> R10: 0000000000000001 R11: 0000000000000000 R12: ffffffff88000c3a
-> R13: 0000000000000000 R14: dffffc0000000000 R15: 0000000000000000
-> FS:  00007fe02dd23700(0000) GS:ffff88802d100000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000f5d1e8 CR3: 000000001efc6000 CR4: 0000000000340ee0
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  <IRQ>
->  </IRQ>
->  invoke_softirq kernel/softirq.c:387 [inline]
->  __irq_exit_rcu kernel/softirq.c:417 [inline]
->  irq_exit_rcu+0x229/0x270 kernel/softirq.c:429
->  sysvec_apic_timer_interrupt+0x54/0x120 arch/x86/kernel/apic/apic.c:1091
->  asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:585
-> Code: ba 63 03 00 00 e8 f5 bf 00 00 0f 1f 44 00 00 48 89 5c 24 e0 48 89 6c 24 e8 48 89 fb 4c 89 64 24 f0 4c 89 6c 24 f8 48 83 ec 38 <0f> b6 47 04 83 e0 0f 83 f8 06 0f 85 3e 01 00 00 31 d2 66 83 7b 06
-> RSP: 002b:00007ffd13103ee0 EFLAGS: 00010202
-> RAX: 00000000000003b7 RBX: 00007fe02d584588 RCX: 0000000000000000
-> RDX: 00007fe02d57d94c RSI: 0000000000000edc RDI: 00007fe02d584588
-> RBP: 00007fe02dd2aef8 R08: 00000000004282a7 R09: 0000000000000004
-> R10: 00007ffd13103f70 R11: 00007ffd13103f70 R12: 0000000000000004
-> R13: 0000000010a0a9c4 R14: 0000000000000002 R15: 00007ffd131040f8
->
->
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/00000000000060adcb05abb71eb6%40google.com.
+thanks,
+
+greg k-h
