@@ -2,158 +2,198 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 892CFC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D7EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B7EA20829
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:51:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596185499;
-	bh=W3HZW84Ix2MkhDjlv5CUIFUZ5sFHn0QPUE9KC2in2aw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ddxNRA0MqFz7dVs5nt+5O/hcupziVwrGJNCmhO/OAJhWzsJeUeFglpnmiYBsnH8F9
-	 9TqVTmGhEMBk7IhETL2HOevVANP8W72pQh+u5nL2Ilmp/A4AB02TLMs++bKLIN+idz
-	 juFdJS4Aqc5BLXCfOwRBRHe4blt6WaycuFCQYOLA=
+	by mail.kernel.org (Postfix) with ESMTP id 2C55922B48
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:53:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731943AbgGaIvf (ORCPT
+        id S1731949AbgGaIw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:51:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45090 "EHLO mail.kernel.org"
+        Fri, 31 Jul 2020 04:52:59 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:58872 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728412AbgGaIve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 04:51:34 -0400
-Received: from linux-8ccs (p57a236d4.dip0.t-ipconnect.de [87.162.54.212])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E20220829;
-        Fri, 31 Jul 2020 08:51:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596185493;
-        bh=W3HZW84Ix2MkhDjlv5CUIFUZ5sFHn0QPUE9KC2in2aw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RCUIvmbpt+boXvQcDvfeh/kMJGZBBCu2UPBqxq/7LxsrE0SCQV8WIYyYDT1/cxUXS
-         86Iv8aEbxYxrqLSh8xlbbW8YcFX0kNre2wH8i8LbM60TUfo3imWprglIDVE81Q3NBK
-         J+8AMvkNHfTEb2rCAkFKALfV80/GWYR6SBKv04HQ=
-Date:   Fri, 31 Jul 2020 10:51:30 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 8/8] modules: inherit TAINT_PROPRIETARY_MODULE
-Message-ID: <20200731085129.GA20130@linux-8ccs>
-References: <20200730061027.29472-1-hch@lst.de>
- <20200730061027.29472-9-hch@lst.de>
- <20200730141232.GA31539@linux-8ccs>
- <20200730162957.GA22469@lst.de>
+        id S1728437AbgGaIw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 04:52:59 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id F021EFB04;
+        Fri, 31 Jul 2020 10:52:56 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id IQOtMZwUpzP6; Fri, 31 Jul 2020 10:52:55 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id AB0654537D; Fri, 31 Jul 2020 10:52:54 +0200 (CEST)
+Date:   Fri, 31 Jul 2020 10:52:54 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>, lukas@mntmn.com,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v9 5/5] dt-bindings: display: imx: add bindings for DCSS
+Message-ID: <20200731085254.GC12560@bogon.m.sigxcpu.org>
+References: <20200731081836.3048-1-laurentiu.palcu@oss.nxp.com>
+ <20200731081836.3048-6-laurentiu.palcu@oss.nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200730162957.GA22469@lst.de>
-X-OS:   Linux linux-8ccs 5.5.0-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200731081836.3048-6-laurentiu.palcu@oss.nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Christoph Hellwig [30/07/20 18:29 +0200]:
->On Thu, Jul 30, 2020 at 04:12:32PM +0200, Jessica Yu wrote:
->>> +	if (owner && test_bit(TAINT_PROPRIETARY_MODULE, &owner->taints)) {
->>> +		if (mod->using_gplonly_symbols) {
->>> +			sym = NULL;
->>> +			goto getname;
->>> +		}
->>> +		add_taint_module(mod, TAINT_PROPRIETARY_MODULE,
->>> +				 LOCKDEP_NOW_UNRELIABLE);
->>> +	}
->>
->> Sorry that I didn't think of this yesterday, but I'm wondering if we
->> should print a warning before add_taint_module(). Maybe something
->> along the lines of, "%s: module uses symbols from proprietary module
->> %s, inheriting taint.", with %s being mod->name, owner->name. We can
->> check mod->taints for TAINT_PROPRIETARY_MODULE and print the warning once.
->>
->> Additionally, maybe it's a good idea to print an error before goto
->> getname (e.g., "%s: module using GPL-only symbols uses symbols from
->> proprietary module %s."), so one would know why the module load
->> failed, right now this manifests itself as an unknown symbol error.
->>
->> Otherwise, this patchset looks good to me and I agree with it in
->> principle. Thanks Christoph!
->
->What about this version?  It also factors the code out into a new
->helper, and replaces the add_taint_module with a simple set_bit,
->as the system-wide tain must have been set before by definition:
+Hi,
+On Fri, Jul 31, 2020 at 11:18:33AM +0300, Laurentiu Palcu wrote:
+> From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> 
+> Add bindings for iMX8MQ Display Controller Subsystem.
+> 
+> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> ---
+> Changes in v9:
+>  * Include imx8mq-clock.h in the example so we can use clock names
+>    instead of their values;
 
-Yep, this version looks much better. See below for nits.
+Reviewed-by: Guido Günther <agx@sigxcpu.org> 
 
->---
->From 25e928b6b691911717d30b3449e56fca3e13dba9 Mon Sep 17 00:00:00 2001
->From: Christoph Hellwig <hch@lst.de>
->Date: Tue, 28 Jul 2020 23:33:33 +0200
->Subject: modules: inherit TAINT_PROPRIETARY_MODULE
->
->If a TAINT_PROPRIETARY_MODULE exports symbol, inherit the taint flag
->for all modules importing these symbols, and don't allow loading
->symbols from TAINT_PROPRIETARY_MODULE modules if the module previously
->imported gplonly symbols.  Add a anti-circumvention devices so people
->don't accidentally get themselves into trouble this way.
->
->Comment from Greg:
->  "Ah, the proven-to-be-illegal "GPL Condom" defense :)"
->
->Signed-off-by: Christoph Hellwig <hch@lst.de>
->Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->---
-> include/linux/module.h |  1 +
-> kernel/module.c        | 26 ++++++++++++++++++++++++++
-> 2 files changed, 27 insertions(+)
->
->diff --git a/include/linux/module.h b/include/linux/module.h
->index 30b0f5fcdb3c37..e30ed5fa33a738 100644
->--- a/include/linux/module.h
->+++ b/include/linux/module.h
->@@ -389,6 +389,7 @@ struct module {
-> 	unsigned int num_gpl_syms;
-> 	const struct kernel_symbol *gpl_syms;
-> 	const s32 *gpl_crcs;
->+	bool using_gplonly_symbols;
->
-> #ifdef CONFIG_UNUSED_SYMBOLS
-> 	/* unused exported symbols. */
->diff --git a/kernel/module.c b/kernel/module.c
->index afb2bfdd5134b3..81d5facce28c14 100644
->--- a/kernel/module.c
->+++ b/kernel/module.c
->@@ -1431,6 +1431,24 @@ static int verify_namespace_is_imported(const struct load_info *info,
-> 	return 0;
-> }
->
->+static bool inherit_taint(struct module *mod, struct module *owner)
->+{
->+	if (!owner || !test_bit(TAINT_PROPRIETARY_MODULE, &owner->taints))
->+		return true;
->+
->+	if (mod->using_gplonly_symbols) {
->+		pr_info("%s: module using GPL-only symbols uses symbols from proprietary module %s.\n",
->+			mod->name, owner->name);
-
-pr_err() maybe?
-
->+		return false;
->+	}
->+
->+	if (!test_bit(TAINT_PROPRIETARY_MODULE, &mod->taints)) {
->+		pr_info("%s: module uses symbols from proprietary module %s, inheriting taint.\n",
->+			mod->name, owner->name);
-
-and pr_warn()? But otherwise this looks much better.
-
-Thanks,
-
-Jessica
+(and passed DT bindings check for me)
+ -- Guido
+> 
+>  .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 108 ++++++++++++++++++
+>  1 file changed, 108 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> new file mode 100644
+> index 000000000000..f1f25aa794d9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> @@ -0,0 +1,108 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 NXP
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/display/imx/nxp,imx8mq-dcss.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: iMX8MQ Display Controller Subsystem (DCSS)
+> +
+> +maintainers:
+> +  - Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> +
+> +description:
+> +
+> +  The DCSS (display controller sub system) is used to source up to three
+> +  display buffers, compose them, and drive a display using HDMI 2.0a(with HDCP
+> +  2.2) or MIPI-DSI. The DCSS is intended to support up to 4kp60 displays. HDR10
+> +  image processing capabilities are included to provide a solution capable of
+> +  driving next generation high dynamic range displays.
+> +
+> +properties:
+> +  compatible:
+> +    const: nxp,imx8mq-dcss
+> +
+> +  reg:
+> +    items:
+> +      - description: DCSS base address and size, up to IRQ steer start
+> +      - description: DCSS BLKCTL base address and size
+> +
+> +  interrupts:
+> +    items:
+> +      - description: Context loader completion and error interrupt
+> +      - description: DTG interrupt used to signal context loader trigger time
+> +      - description: DTG interrupt for Vblank
+> +
+> +  interrupt-names:
+> +    items:
+> +      - const: ctxld
+> +      - const: ctxld_kick
+> +      - const: vblank
+> +
+> +  clocks:
+> +    items:
+> +      - description: Display APB clock for all peripheral PIO access interfaces
+> +      - description: Display AXI clock needed by DPR, Scaler, RTRAM_CTRL
+> +      - description: RTRAM clock
+> +      - description: Pixel clock, can be driven either by HDMI phy clock or MIPI
+> +      - description: DTRC clock, needed by video decompressor
+> +
+> +  clock-names:
+> +    items:
+> +      - const: apb
+> +      - const: axi
+> +      - const: rtrm
+> +      - const: pix
+> +      - const: dtrc
+> +
+> +  assigned-clocks:
+> +    items:
+> +      - description: Phandle and clock specifier of IMX8MQ_CLK_DISP_AXI_ROOT
+> +      - description: Phandle and clock specifier of IMX8MQ_CLK_DISP_RTRM
+> +      - description: Phandle and clock specifier of either IMX8MQ_VIDEO2_PLL1_REF_SEL or
+> +                     IMX8MQ_VIDEO_PLL1_REF_SEL
+> +
+> +  assigned-clock-parents:
+> +    items:
+> +      - description: Phandle and clock specifier of IMX8MQ_SYS1_PLL_800M
+> +      - description: Phandle and clock specifier of IMX8MQ_SYS1_PLL_800M
+> +      - description: Phandle and clock specifier of IMX8MQ_CLK_27M
+> +
+> +  assigned-clock-rates:
+> +    items:
+> +      - description: Must be 800 MHz
+> +      - description: Must be 400 MHz
+> +
+> +  port:
+> +    type: object
+> +    description:
+> +      A port node pointing to the input port of a HDMI/DP or MIPI display bridge.
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/imx8mq-clock.h>
+> +    dcss: display-controller@32e00000 {
+> +        compatible = "nxp,imx8mq-dcss";
+> +        reg = <0x32e00000 0x2d000>, <0x32e2f000 0x1000>;
+> +        interrupts = <6>, <8>, <9>;
+> +        interrupt-names = "ctxld", "ctxld_kick", "vblank";
+> +        interrupt-parent = <&irqsteer>;
+> +        clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>, <&clk IMX8MQ_CLK_DISP_AXI_ROOT>,
+> +                 <&clk IMX8MQ_CLK_DISP_RTRM_ROOT>, <&clk IMX8MQ_VIDEO2_PLL_OUT>,
+> +                 <&clk IMX8MQ_CLK_DISP_DTRC>;
+> +        clock-names = "apb", "axi", "rtrm", "pix", "dtrc";
+> +        assigned-clocks = <&clk IMX8MQ_CLK_DISP_AXI>, <&clk IMX8MQ_CLK_DISP_RTRM>,
+> +                          <&clk IMX8MQ_VIDEO2_PLL1_REF_SEL>;
+> +        assigned-clock-parents = <&clk IMX8MQ_SYS1_PLL_800M>, <&clk IMX8MQ_SYS1_PLL_800M>,
+> +                                 <&clk IMX8MQ_CLK_27M>;
+> +        assigned-clock-rates = <800000000>,
+> +                               <400000000>;
+> +        port {
+> +            dcss_out: endpoint {
+> +                remote-endpoint = <&hdmi_in>;
+> +            };
+> +        };
+> +    };
+> +
+> -- 
+> 2.23.0
+> 
