@@ -2,117 +2,103 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D001AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD6CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A13342074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 558422074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 10:02:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SEgYugyq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GzhGLmt9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732521AbgGaKAL (ORCPT
+        id S1732325AbgGaKCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 06:00:11 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:52650 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732292AbgGaKAK (ORCPT
+        Fri, 31 Jul 2020 06:02:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37960 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732080AbgGaKCr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 06:00:10 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06V9qw7Y015363;
-        Fri, 31 Jul 2020 09:59:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=S9ve+QX3l80OyB6k9hGZRrisazhkSN61TPadeW92FAU=;
- b=SEgYugyqhNyevsmB58/8dBw3UeEQKZZn4RGLKsfjMQGdB5w7poSmCCujgRo6lvNyP9J2
- N6BlFv+evhhJgcXclTknHVtdHLqu2VEzhibj9GRqcDmfmSWUU5JeXzJPjdvFhxsIdS6x
- yZafV/ElbdjOysvaMjddzIPbyQy0GMoe5f/bK4NU7pR16NFjs1rwbVCfbis9hw7X8DxM
- wUO1jUuRdpbAEygEA3aHk/8hJbl0gXbPOHvR9RcyJqWGscZW7v2M48lyVejaheVou/Qc
- 2ZjlWBT4ZeCxpFJkDwOp9keWcdG7bQg6HQt0Ol0SuLZZ1nsF+0pY7zx0wV/+3hu0k1s/ WQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 32hu1jr9sn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 Jul 2020 09:59:58 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06V9wiXB043580;
-        Fri, 31 Jul 2020 09:59:58 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3020.oracle.com with ESMTP id 32mf706216-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 Jul 2020 09:59:58 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06V9xvtd046242;
-        Fri, 31 Jul 2020 09:59:57 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 32mf70620b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 Jul 2020 09:59:57 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06V9xsLW005845;
-        Fri, 31 Jul 2020 09:59:55 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 31 Jul 2020 02:59:54 -0700
-Date:   Fri, 31 Jul 2020 12:59:43 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak
- in rds_notify_queue_get()
-Message-ID: <20200731095943.GI5493@kadam>
-References: <20200730192026.110246-1-yepeilin.cs@gmail.com>
- <20200731045301.GI75549@unreal>
+        Fri, 31 Jul 2020 06:02:47 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15CE6C061574;
+        Fri, 31 Jul 2020 03:02:47 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id k1so6913559pjt.5;
+        Fri, 31 Jul 2020 03:02:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YU2YU11NcpqAnb5BnC0Bw1oS+Y3NACnLXP9l9d7nU8o=;
+        b=GzhGLmt9WCFC+8A67PIckUK/e+i3LY4XZqkhzFjXVGTEo2vHV87lte/KN81O63v/dc
+         NsnUHhYx4eC041lzXmkd1Ok9Wo3iMdVDEAcG8l/qzRLHwuBASmpBkF4b7S4RdeAs2Lk4
+         Ztlg7Ns8qaX1mXakicU0V5QUjrYtsxGevZNSPRi+nj6zgT1Ln4XtgEOLmeOwpQ7qWC4V
+         IogmK6oqwsTZfwtiXFgoOK7TPLNy+ZlzU/ZzLGktlAgJF7TjBENklHq1F1P+NgLqqqLK
+         onOjsCsGbosS1eh1tuvZ+MPRBHFzq1WgfHF88Vs80eG4zcyHXMo7UUzUj6LV3kWf0Xpc
+         rLNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YU2YU11NcpqAnb5BnC0Bw1oS+Y3NACnLXP9l9d7nU8o=;
+        b=oIlsAjms0d4duiNl2M044CZCYHwpLS4r0Tb67gX4Z7y4pci+fRYFPAuzQrlIvGxWES
+         yIK8xCynBeZQ02LfOXDm0ptkGgV8pbwd697VBeovBu2YHZRyjp8vfEamI0WKbavmOI8y
+         xN021SzlpVlySF7CDNJVTi1FEQM/kYlBgiNJonJ7AN5hbvYxBIWpzFou4pja3BgSijsR
+         4Ie8mFxi55tbaVwwCBeFwsD85XbQX67qZIVWaXD2pk2QLnXOkNZYuEIoHGzONnUVqoKH
+         iWD0fQfAahyzEFVOgWNE/hRoPWkaHDrVm0QJjyeIgIL8b3VPWp++xidRlPwmJ+H2BUde
+         E2kQ==
+X-Gm-Message-State: AOAM530VH/CQ810sWC5EdmzNMh88ZJh5Oc14pE7vjDN2LK9wC/YQrmk8
+        W5QfObH8ESe7weaM4PfTtptxf38DjfYxJw==
+X-Google-Smtp-Source: ABdhPJwLQyaxvLsQABdV5E9Y7urq4jyaMU3+KOb6FiTJ4OR/0Daa00b9QChobxuBLLHVvnqs+Tvssg==
+X-Received: by 2002:a63:fc52:: with SMTP id r18mr3090503pgk.334.1596189766470;
+        Fri, 31 Jul 2020 03:02:46 -0700 (PDT)
+Received: from [192.168.86.81] ([49.206.12.123])
+        by smtp.gmail.com with ESMTPSA id u14sm9247222pgf.51.2020.07.31.03.02.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jul 2020 03:02:45 -0700 (PDT)
+Subject: Re: [PATCH] lib: Convert test_uuid.c to KUnit
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+References: <20200730121656.45302-1-98.arpi@gmail.com>
+ <CAFd5g46wpYxF1=bs3LvXeVg6mPHrT6Ggp=QxScaf87O=yqcpBA@mail.gmail.com>
+From:   Arpitha Raghunandan <98.arpi@gmail.com>
+Message-ID: <3aae0ade-1a61-5d28-94ee-6b0eee7c7be6@gmail.com>
+Date:   Fri, 31 Jul 2020 15:32:40 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200731045301.GI75549@unreal>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9698 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
- malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007310073
+In-Reply-To: <CAFd5g46wpYxF1=bs3LvXeVg6mPHrT6Ggp=QxScaf87O=yqcpBA@mail.gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 07:53:01AM +0300, Leon Romanovsky wrote:
-> On Thu, Jul 30, 2020 at 03:20:26PM -0400, Peilin Ye wrote:
-> > rds_notify_queue_get() is potentially copying uninitialized kernel stack
-> > memory to userspace since the compiler may leave a 4-byte hole at the end
-> > of `cmsg`.
-> >
-> > In 2016 we tried to fix this issue by doing `= { 0 };` on `cmsg`, which
-> > unfortunately does not always initialize that 4-byte hole. Fix it by using
-> > memset() instead.
+On 31/07/20 11:20 am, Brendan Higgins wrote:
+> On Thu, Jul 30, 2020 at 5:18 AM Arpitha Raghunandan <98.arpi@gmail.com> wrote:
+>>
+>> Converts test lib/test_uuid.c to KUnit
 > 
-> Of course, this is the difference between "{ 0 }" and "{}" initializations.
+> Can you add some more detail to the commit message? Maybe link to
+> KUnit and say something about why this change is beneficial.
 > 
+Sure, I will make this change.
+>> Signed-off-by: Arpitha Raghunandan <98.arpi@gmail.com>
+> 
+> Change mostly looks good to me.
+> Thank you for the review.
 
-No, there is no difference.  Even struct assignments like:
-
-	foo = *bar;
-
-can leave struct holes uninitialized.  Depending on the compiler the
-assignment can be implemented as a memset() or as a series of struct
-member assignments.
-
-regards,
-dan carpenter
-
+On failure, the original test calls another function which prints a detailed error. I removed it when converting to KUnit. Is this required?
