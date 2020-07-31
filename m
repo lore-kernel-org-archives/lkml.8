@@ -2,108 +2,122 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85967C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F179208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:31:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="j9+9K8UJ"
+	by mail.kernel.org (Postfix) with ESMTP id 66D59208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:32:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732760AbgGaLbR (ORCPT
+        id S1732701AbgGaLcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 07:31:17 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:46921 "EHLO ozlabs.org"
+        Fri, 31 Jul 2020 07:32:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:55506 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732104AbgGaLbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 07:31:16 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BJ4q64xhRz9sTM;
-        Fri, 31 Jul 2020 21:31:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1596195074;
-        bh=sEHXx5GmyjktVn/nBfOnSByax6uQ2hzqiMlXONEK7HE=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=j9+9K8UJvsoOJPGC52wJJ8GBd4ZXcwaQdD4S6QXKl+SpP33BYz+OKTOgncwB/iZtu
-         0LNW01IfHgVvOx+w8gEc6alSQjNJ5V5TxgzBAznm57vQ2SkKu0SdfqxriJ2r6l/JV4
-         C2a0u0/P78Yn3f9bp7/4RhsG52eLOQDoizTdx5BoZCHMFMnYtjm4zlMS0KLiyi11tn
-         Fsqcr3rpPQE1YFPQoTrFzcAyG/y5MJ9G25Zn0KyOVtXuMuCtmi9pOxTPWWqaDvosMo
-         sipNLZxyMiDxo4S6hkVJai1hutnkrmhOsz6PK2WIQU/IOjYcMkB8+ZFmkYPoWQoR5v
-         oW5m3k+uPQs9A==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Subject: Re: [PATCH v4 07/10] Powerpc/numa: Detect support for coregroup
-In-Reply-To: <20200731091859.GG14603@linux.vnet.ibm.com>
-References: <20200727053230.19753-1-srikar@linux.vnet.ibm.com> <20200727053230.19753-8-srikar@linux.vnet.ibm.com> <8736585djw.fsf@mpe.ellerman.id.au> <20200731091859.GG14603@linux.vnet.ibm.com>
-Date:   Fri, 31 Jul 2020 21:31:13 +1000
-Message-ID: <87r1sr53b2.fsf@mpe.ellerman.id.au>
+        id S1732104AbgGaLcL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 07:32:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F6951FB;
+        Fri, 31 Jul 2020 04:32:11 -0700 (PDT)
+Received: from [10.37.12.83] (unknown [10.37.12.83])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 33C213F71F;
+        Fri, 31 Jul 2020 04:32:09 -0700 (PDT)
+Subject: Re: [RFC PATCH 03/14] coresight: tpiu: Use coresight device access
+ abstraction
+To:     mathieu.poirier@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mike.leach@linaro.org, coresight@lists.linaro.org
+References: <20200722172040.1299289-1-suzuki.poulose@arm.com>
+ <20200722172040.1299289-4-suzuki.poulose@arm.com>
+ <20200729210105.GC3073178@xps15>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <02f28b5f-d3d6-755f-066d-88b90aa35eef@arm.com>
+Date:   Fri, 31 Jul 2020 12:36:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200729210105.GC3073178@xps15>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Srikar Dronamraju <srikar@linux.vnet.ibm.com> writes:
-> * Michael Ellerman <mpe@ellerman.id.au> [2020-07-31 17:49:55]:
->
->> Srikar Dronamraju <srikar@linux.vnet.ibm.com> writes:
->> > Add support for grouping cores based on the device-tree classification.
->> > - The last domain in the associativity domains always refers to the
->> > core.
->> > - If primary reference domain happens to be the penultimate domain in
->> > the associativity domains device-tree property, then there are no
->> > coregroups. However if its not a penultimate domain, then there are
->> > coregroups. There can be more than one coregroup. For now we would be
->> > interested in the last or the smallest coregroups.
->> 
->> This still doesn't tell me what a coregroup actually represents.
->> 
->> I get that it's a grouping of cores, and that the device tree specifies
->> it for us, but grouping based on what?
->
-> We have just abstracted the fact that we are creating a sub-group of cores
-> within a DIE. We are limiting to one sub-group per core. However this would
-> allow the firmware the flexibility to vary the grouping. Once the firmware
-> starts using this group, we could add more code to detect the type of
-> grouping and adjust the sd domain flags accordingly.
+On 07/29/2020 10:01 PM, Mathieu Poirier wrote:
+> On Wed, Jul 22, 2020 at 06:20:29PM +0100, Suzuki K Poulose wrote:
+>> TPIU driver access the device before the coresight device
+>> is registered. In other words, before the drvdata->csdev
+>> is valid. Thus, we need to make sure that the csdev_access
+>> is valid for both the invocations. Switch to using the
+>> csdev_access directly instead of relying on availability
+>> of drvdata->csdev.
+> 
+> I'm not sure all of the above is needed and based on the wording I could easily
+> see this patch being selected for stable backport, which would be a mistak.
+> 
+> The gist of this patch is that we are moving to the access abstraction and the
+> changelog should reflect that.
 
-OK. That's good info to have in the change log.
+True, I will make it something like :
 
->> I think the answer is we aren't being told by firmware, it's just a
->> grouping based on some opaque performance characteristic and we just
->> have to take that as given.
->> 
->
-> This is partially true. At this time, we dont have firmwares that can
-> exploit this code. Once the firmwares start using this grouping, we could
-> add more code to align the grouping to the scheduler topology.
->
->> But please explain that clearly in the change log and the code comments.
->> 
->
-> Okay, I will do the needful.
+"Prepare the TPIU driver to make use of the CoreSight device access
+abstraction layer. The driver touches the device even before the
+coresight device is registered. Thus we could be accessing the
+devices without a csdev. As we are about to use the abstraction
+layer for accessing the device, pass in the access directly
+to avoid having to deal with the un-initialised csdev.
 
-Thanks.
 
-cheers
+>>   
+>>   static int tpiu_disable(struct coresight_device *csdev)
+>>   {
+>> -	struct tpiu_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+>> -
+>>   	if (atomic_dec_return(csdev->refcnt))
+>>   		return -EBUSY;
+>>   
+>> -	tpiu_disable_hw(drvdata);
+>> +	tpiu_disable_hw(&csdev->access);
+>>   
+>>   	dev_dbg(&csdev->dev, "TPIU disabled\n");
+>>   	return 0;
+>> @@ -152,7 +148,7 @@ static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
+>>   	desc.access.base = base;
+> 
+> Any reason for introducing the above in patch 02?  I would have done that as
+> part of this patch...  Also part of this patch I would remove drvdata::base
+> since it is no longer needed.
+
+The patch 02 is not touching how the individual drivers access the
+device, yet. It only sets the way by introducing the layer. As per
+the proposed change, this is a preparation of the TPIU driver, so
+that we can convert the generic helper functions ( coresight_timeout())
+more easily and keep the patch 05 easier for review (just like the Patch
+4, which prepares the ETM driver).
+
+Cheers
+Suzuki
+
+
+> 
+> I'm out of time for today - I will continue tomorrow.
+> 
+> Regards,
+> Mathieu
+> 
+>>   
+>>   	/* Disable tpiu to support older devices */
+>> -	tpiu_disable_hw(drvdata);
+>> +	tpiu_disable_hw(&desc.access);
+>>   
+>>   	pdata = coresight_get_platform_data(dev);
+>>   	if (IS_ERR(pdata))
+>> -- 
+>> 2.24.1
+>>
+
