@@ -2,165 +2,122 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 242D3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D8B722CA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F17A1208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 11:42:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X9V6zA56"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="haQKNtVf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732725AbgGaLjG (ORCPT
+        id S1732709AbgGaLmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 07:39:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52634 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732297AbgGaLjF (ORCPT
+        Fri, 31 Jul 2020 07:42:35 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:57761 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732104AbgGaLme (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 07:39:05 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 272D4C061574;
-        Fri, 31 Jul 2020 04:39:05 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id x9so32131332ljc.5;
-        Fri, 31 Jul 2020 04:39:05 -0700 (PDT)
+        Fri, 31 Jul 2020 07:42:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=e83eJTcVv/UaeyPlCsr6UUJefX33U2iVn2MgdxsKQTQ=;
-        b=X9V6zA56PqyXwOT0CNOco7VPG50Pkbt7KmbI/ojIgjq+CFYp9qHMCY6bdOTnK3x3QR
-         OE+41YFe8nwh73tpj+YDYVwNBrRap4JePkrUOhKd4jaWk7wSnBWCl7732Jd7H6DaGbnw
-         zYZznHVkJ+wzuPxNavlP1QnUHUl4L/5CnblTm0LKK4baDeLDU7iO0MvH1d5WF49frrNV
-         4s4Z7gSD9t/AK5UjBUcXCUQgwkHXsFpS5YxHjXRkueVpGgFZ19L24ENrdnL2MpZ35z0i
-         bEruw/yDZ7CttkXNOu5ZFif5fmKXTFCMfyO8/YF8ZucVV6ESxnHc5KUMmUtQPSQdUUY2
-         v06A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=e83eJTcVv/UaeyPlCsr6UUJefX33U2iVn2MgdxsKQTQ=;
-        b=ej8bhhUdAkEttZUthgtmpb7y7Ex3JCulFPgGQkAJ8paI9kH47mZJIhl0AwJiyOEeuc
-         1HhhJSRxoKT78T6IgcTop0IQeXeJ2+4fu1KihOh9+GxFxnSVW5bRLAfXFVrcLzFurR68
-         AesxLWVL1aMSREzbRMfRaux4SKlulISWSntT4UqIu+ueuT4VXMGuRxpqdMH1ktSmIjfF
-         IC9EF/bh2VvyklGE5kTEmK7CqpNMVy9aBIS41FuB3fnTXLtqyLca+4rWq+xZJYddGdQT
-         NLyXzUqO9jFuTFUL52fqzrhcbWfMrYBf2ag5lJrI8l6VlmmiLwM5GWAtPjbiGXy/KChi
-         S/aA==
-X-Gm-Message-State: AOAM5337xIupLhJ+CJNo/dnKdOtmHk2O+bsHOERXXJQOLbuZrdNsdEwT
-        lswJLbhag41NN5CDcIBqVxAWFztQ
-X-Google-Smtp-Source: ABdhPJyGjMx9FtTEpEohXiAFoq57WavNYhs3eJc0pNbnjhC7LxeGw815xYO7ZEtnLAVlZoq41lXvWQ==
-X-Received: by 2002:a2e:991:: with SMTP id 139mr1647045ljj.314.1596195543293;
-        Fri, 31 Jul 2020 04:39:03 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
-        by smtp.googlemail.com with ESMTPSA id k12sm1870240lfe.68.2020.07.31.04.39.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jul 2020 04:39:02 -0700 (PDT)
-Subject: Re: [RFC PATCH v6 09/10] media: tegra-video: Add CSI MIPI pads
- calibration
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1596186169-18729-1-git-send-email-skomatineni@nvidia.com>
- <1596186169-18729-10-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <3ac158c4-7df7-e3c1-f0e1-33e7ef017762@gmail.com>
-Date:   Fri, 31 Jul 2020 14:39:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1596195753; x=1627731753;
+  h=to:cc:references:from:message-id:date:mime-version:
+   in-reply-to:content-transfer-encoding:subject;
+  bh=K3AiM2F/clmnqut2Znxq+qWVgeBAAqvTi2Syfi39/mc=;
+  b=haQKNtVfFf/YQk+GfU0r0g1LgmT4zGoF9mpmDbnnNnCjFTpN9yGtvbAf
+   4QiFaenwp7BGhgZ2NbRfZpc78Q5yrvDa7hv69l+39lmZq7RjAV1oYHfXK
+   FSFZ0SUy8En6RwK6KmPNlryEy83BiLSLabGypXa8epX3/kvo2SjEA0ZvH
+   w=;
+IronPort-SDR: LC8zCw1EdTzbrGurmmeoqTUHqPnnCNOnTYTVsS/5NQhpGOFuhOowz3TYeExDKBsBSb7ISZT/KS
+ 6CSRvBNR49Tg==
+X-IronPort-AV: E=Sophos;i="5.75,418,1589241600"; 
+   d="scan'208";a="46683797"
+Subject: Re: [PATCH v2 1/3] KVM: x86: Deflect unknown MSR accesses to user space
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 31 Jul 2020 11:42:32 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id 19CCB241D46;
+        Fri, 31 Jul 2020 11:42:28 +0000 (UTC)
+Received: from EX13D20UWC002.ant.amazon.com (10.43.162.163) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 31 Jul 2020 11:42:28 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.161.34) by
+ EX13D20UWC002.ant.amazon.com (10.43.162.163) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 31 Jul 2020 11:42:25 +0000
+To:     Jim Mattson <jmattson@google.com>
+CC:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        KarimAllah Raslan <karahmed@amazon.de>,
+        kvm list <kvm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Aaron Lewis <aaronlewis@google.com>
+References: <20200729235929.379-1-graf@amazon.com>
+ <20200729235929.379-2-graf@amazon.com>
+ <CALMp9eRq3QUG64BwSGLbehFr8k-OLSM3phcw7mhuZ9hVk_N2-A@mail.gmail.com>
+ <e7cbf218-fb01-2f30-6c5c-a4b6e441b5e4@amazon.com>
+ <CALMp9eRQRaw7raxeH1nOTGr0rBk5bqbmoxUo7txGyQfaBs0=4g@mail.gmail.com>
+ <CALMp9eSSKra+Vic0U9kDeiT1y+Jfq6Vmrqsw+S8jqD0_oqH9zA@mail.gmail.com>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <8d0bae24-c83d-df89-01cb-e52cddd8ba92@amazon.com>
+Date:   Fri, 31 Jul 2020 13:42:22 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <1596186169-18729-10-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CALMp9eSSKra+Vic0U9kDeiT1y+Jfq6Vmrqsw+S8jqD0_oqH9zA@mail.gmail.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.161.34]
+X-ClientProxiedBy: EX13D04UWB001.ant.amazon.com (10.43.161.46) To
+ EX13D20UWC002.ant.amazon.com (10.43.162.163)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-31.07.2020 12:02, Sowjanya Komatineni пишет:
-...
-> @@ -249,13 +249,47 @@ static int tegra_csi_enable_stream(struct v4l2_subdev *subdev)
->  		return ret;
->  	}
->  
-> +	if (csi_chan->mipi) {
-> +		ret = tegra_mipi_enable(csi_chan->mipi);
-> +		if (ret < 0) {
-> +			dev_err(csi->dev,
-> +				"failed to enable MIPI pads: %d\n", ret);
-> +			goto rpm_put;
-> +		}
-> +
-> +		/*
-> +		 * CSI MIPI pads PULLUP, PULLDN and TERM impedances need to
-> +		 * be calibrated after power on.
-> +		 * So, trigger the calibration start here and results will
-> +		 * be latched and applied to the pads when link is in LP11
-> +		 * state during start of sensor streaming.
-> +		 */
-> +		ret = tegra_mipi_start_calibration(csi_chan->mipi);
-> +		if (ret < 0) {
-> +			dev_err(csi->dev,
-> +				"failed to start MIPI calibration: %d\n", ret);
-> +			goto disable_mipi;
-> +		}
-
-What would happen if CSI stream is enabled and then immediately disabled
-without enabling camera sensor?
-
-> +	}
-> +
-...
->  static int tegra_channel_enable_stream(struct tegra_vi_channel *chan)
->  {
->  	struct v4l2_subdev *csi_subdev, *src_subdev;
-> +	struct tegra_csi_channel *csi_chan;
->  	int ret;
->  
->  	/*
-> @@ -206,13 +207,30 @@ static int tegra_channel_enable_stream(struct tegra_vi_channel *chan)
->  	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
->  		return 0;
->  
-> +	csi_chan = v4l2_get_subdevdata(csi_subdev);
-> +	/*
-> +	 * TRM has incorrectly documented to wait for done status from
-> +	 * calibration logic after CSI interface power on.
-> +	 * As per the design, calibration results are latched and applied
-> +	 * to the pads only when the link is in LP11 state which will happen
-> +	 * during the sensor stream-on.
-> +	 * CSI subdev stream-on triggers start of MIPI pads calibration.
-> +	 * Wait for calibration to finish here after sensor subdev stream-on
-> +	 * and in case of sensor stream-on failure, cancel the calibration.
-> +	 */
->  	src_subdev = tegra_channel_get_remote_source_subdev(chan);
-
-Is it possible to move the start_calibration() here?
-
->  	ret = v4l2_subdev_call(src_subdev, video, s_stream, true);
->  	if (ret < 0 && ret != -ENOIOCTLCMD) {
-> +		tegra_mipi_cancel_calibration(csi_chan->mipi);
->  		v4l2_subdev_call(csi_subdev, video, s_stream, false);
->  		return ret;
->  	}
->  
-> +	ret = tegra_mipi_finish_calibration(csi_chan->mipi);
-> +	if (ret < 0)
-> +		dev_warn(csi_chan->csi->dev,
-> +			 "MIPI calibration failed: %d\n", ret);
-> +
->  	return 0;
->  }
->  
-> 
+CgpPbiAzMS4wNy4yMCAwNToyMCwgSmltIE1hdHRzb24gd3JvdGU6Cj4gQ0FVVElPTjogVGhpcyBl
+bWFpbCBvcmlnaW5hdGVkIGZyb20gb3V0c2lkZSBvZiB0aGUgb3JnYW5pemF0aW9uLiBEbyBub3Qg
+Y2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91IGNhbiBjb25maXJtIHRo
+ZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4KPiAKPiAKPiAKPiBPbiBUaHUs
+IEp1bCAzMCwgMjAyMCBhdCA0OjUzIFBNIEppbSBNYXR0c29uIDxqbWF0dHNvbkBnb29nbGUuY29t
+PiB3cm90ZToKPj4KPj4gT24gVGh1LCBKdWwgMzAsIDIwMjAgYXQgNDowOCBQTSBBbGV4YW5kZXIg
+R3JhZiA8Z3JhZkBhbWF6b24uY29tPiB3cm90ZToKPj4+IERvIHlvdSBoYXZlIGEgcGFydGljdWxh
+ciBzaXR1YXRpb24gaW4gbWluZCB3aGVyZSB0aGF0IHdvdWxkIG5vdCBiZSB0aGUKPj4+IGNhc2Ug
+YW5kIHdoZXJlIHdlIHdvdWxkIHN0aWxsIHdhbnQgdG8gYWN0dWFsbHkgY29tcGxldGUgYW4gTVNS
+IG9wZXJhdGlvbgo+Pj4gYWZ0ZXIgdGhlIGVudmlyb25tZW50IGNoYW5nZWQ/Cj4+Cj4+IEFzIGZh
+ciBhcyB1c2Vyc3BhY2UgaXMgY29uY2VybmVkLCBpZiBpdCBoYXMgcmVwbGllZCB3aXRoIGVycm9y
+PTAsIHRoZQo+PiBpbnN0cnVjdGlvbiBoYXMgY29tcGxldGVkIGFuZCByZXRpcmVkLiBJZiB0aGUg
+a2VybmVsIGV4ZWN1dGVzIGEKPj4gZGlmZmVyZW50IGluc3RydWN0aW9uIGF0IENTOlJJUCwgdGhl
+IHN0YXRlIGlzIGNlcnRhaW5seSBpbmNvbnNpc3RlbnQKPj4gZm9yIFdSTVNSIGV4aXRzLiBJdCB3
+b3VsZCBhbHNvIGJlIGluY29uc2lzdGVudCBmb3IgUkRNU1IgZXhpdHMgaWYgdGhlCj4+IFJETVNS
+IGVtdWxhdGlvbiBvbiB0aGUgdXNlcnNwYWNlIHNpZGUgaGFkIGFueSBzaWRlLWVmZmVjdHMuCj4g
+Cj4gQWN0dWFsbHksIEkgdGhpbmsgdGhlcmUncyBhIHBvdGVudGlhbCBwcm9ibGVtIHdpdGggaW50
+ZXJydXB0IGRlbGl2ZXJ5Cj4gZXZlbiBpZiB0aGUgaW5zdHJ1Y3Rpb24gYnl0ZXMgYXJlIHRoZSBz
+YW1lLiBPbiB0aGUgc2Vjb25kIHBhc3MsIGFuCj4gaW50ZXJydXB0IGNvdWxkIGJlIGRlbGl2ZXJl
+ZCBvbiB0aGUgQ1M6SVAgb2YgYSBXUk1TUiwgZXZlbiB0aG91Z2gKPiB1c2Vyc3BhY2UgaGFzIGFs
+cmVhZHkgZW11bGF0ZWQgdGhlIFdSTVNSIGluc3RydWN0aW9uLiBUaGlzIGNvdWxkIGJlCj4gcGFy
+dGljdWxhcmx5IGF3a3dhcmQgaWYgdGhlIFdSTVNSIHdhcyB0byB0aGUgeDJBUElDIFRQUiByZWdp
+c3RlciwgYW5kCj4gaW4gZmFjdCBsb3dlcmVkIHRoZSBUUFIgc3VmZmljaWVudGx5IHRvIGFsbG93
+IGEgcGVuZGluZyBpbnRlcnJ1cHQgdG8KPiBiZSBkZWxpdmVyZWQuCgpPaywgeW91IGdvdCBtZSBj
+b252aW5jZWQgaGVyZSA6KS4gVGhlIGZvbGxvd2luZyBmbG93IGJyZWFrcyB3aXRoIG15IG1vZGVs
+OgoKICAgKiByZG1zciBvbiAweDEyMywgdHJhcHMgdG8gdXNlciBzcGFjZQogICAqIHVzZXIgc3Bh
+Y2UgaGFuZGxlcyBpdCwgd3JpdGVzIGRhdGEgaW50byBydW4tPm1zcgogICAqIGtlcm5lbCBpbmpl
+Y3RzIHBlbmRpbmcgSVJRCiAgICogSVJRIGhhbmRsZXIgZG9lcyByZG1zciBvbiAweDEyNCwgd2hp
+Y2ggd291bGQgYmUgaGFuZGxlZCBieSB1c2VyIHNwYWNlCiAgICoga2VybmVsIHJldHVybnMgdmFs
+dWUgZm9yIDB4MTIzIHRvIHRoZSByZWFkCgpTbyB5ZXMsIEkgYWdyZWUsIHdlIGhhdmUgdG8gZmlu
+aXNoIHRoZSBpbnN0cnVjdGlvbiBoYW5kbGluZyBiZWZvcmUgd2UgCmNhbiBnbyBiYWNrIGludG8g
+bm9ybWFsIG9wZXJhdGlvbiBmbG93LgoKCkFsZXgKCgoKQW1hem9uIERldmVsb3BtZW50IENlbnRl
+ciBHZXJtYW55IEdtYkgKS3JhdXNlbnN0ci4gMzgKMTAxMTcgQmVybGluCkdlc2NoYWVmdHNmdWVo
+cnVuZzogQ2hyaXN0aWFuIFNjaGxhZWdlciwgSm9uYXRoYW4gV2Vpc3MKRWluZ2V0cmFnZW4gYW0g
+QW10c2dlcmljaHQgQ2hhcmxvdHRlbmJ1cmcgdW50ZXIgSFJCIDE0OTE3MyBCClNpdHo6IEJlcmxp
+bgpVc3QtSUQ6IERFIDI4OSAyMzcgODc5CgoK
 
