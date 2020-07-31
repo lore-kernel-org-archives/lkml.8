@@ -2,107 +2,123 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D210C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E40C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 295B8208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7EDF208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:41:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qYJcKTPW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jFUk/3lg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732182AbgGaJlU (ORCPT
+        id S1732247AbgGaJlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:41:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34610 "EHLO
+        Fri, 31 Jul 2020 05:41:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732088AbgGaJlT (ORCPT
+        with ESMTP id S1732080AbgGaJlX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:41:19 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3725C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 02:41:18 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id a5so17423116wrm.6
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 02:41:18 -0700 (PDT)
+        Fri, 31 Jul 2020 05:41:23 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DD3BC061574;
+        Fri, 31 Jul 2020 02:41:23 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id bh1so3791750plb.12;
+        Fri, 31 Jul 2020 02:41:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=blK2S6cH6qikd/XbUA6HFppZyi5UmFkTzQjVm4HqLu8=;
-        b=qYJcKTPWZ/tbOoxgiSar9u8OlLsqIHNM2w7j0r/MKDA9uWzeRrLmOrBQMNLyThxO8+
-         WdjRAwWDyig9Pe2KYm7WTkfn16dgYWGhGWWJJpdNH3oVhT54Hhbn5MA04BN3B4Vfcxx7
-         BGQwJZkoPmj/pniMy9VKUAG5drnY86/yjhvW5zMMZejVLSbJbn36KxPMwtVQ31om84DV
-         7gP3+QlT/SHSP0gwvagI6Oo/WOlba0fNglBmXUk1QuET0uUBN41VwqZeBVk+9L57rGGc
-         Dl00XU9ZPofnh/BPtIbyJtimImNfx6bzbN1rjoegQyLThRCRMlX2/DLKVIWBDTXFDUaW
-         tcVQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=60oA9rNnse/fDL09mT4gNyvwtlkjkgn68ejSkWL01U4=;
+        b=jFUk/3lgMKRsuw2kqebmjsqO3kZlYUfWJDtyz7dnP7klnelndxxizX1YTwf1x6TM2R
+         O1lgLRyPxdNgntgUQJexNMdBjlD+BqsqKwpT9VelCtT40egjJ4ldVWBfu8Nhw9R65JJ0
+         LVY09ZubTy0a09ES38ILxS6WZg/nkZr1DQicrZdzpHDvTrdA2oMqwr/NDkD7em1lra5Y
+         CF6HjTo7QB6XxCpWfZEA1UU/XuxbvrE9lDmlqtCLC33e2Oi8+1N/Jtzixb7fhiwaYJMp
+         +Bv7tociKsr2tF6b3fa3I/8aPu5hShX37foP6lyH37KpNsGRzzpMOTlnkx8CmODYL0iH
+         Dpdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=blK2S6cH6qikd/XbUA6HFppZyi5UmFkTzQjVm4HqLu8=;
-        b=mS01hdnvwRIABgponSFDEixGQL7z5Wc68/5DwmcQDvTCwDB4RP0i1BxOwCQo9pfe3x
-         mNrnjrUhJGSgbveoP2v5NyFNCyAoDU/JUa5QqcPQVKFd0EYFpbBE+iA3mIXRoKCj/n50
-         CCeS8JC/X9gwc+/rLVGB4SQPYkqqReO2LGA11b+rAl2/TT9pLO/ktYtVueqqtyys1wJ5
-         LF9bW2u/KfJZxwempdLcN1zy2PMRUmGCjgHCyH2nnojuCGH6fcVPaP87q9+Fd75Ptc2K
-         JggdusiPxhC+7J0PHTYNknsgVLzuKJ/MJKBh4caFw/hNYBxESKE5AMwefV5g5IOs345x
-         yDMA==
-X-Gm-Message-State: AOAM53380lMed0Z/2mXLqIfieJZYYZXS7AIxnHqDX+PneahQFRD8sxYd
-        fTvw233BvZQxvaUK3n2gvvbHJw==
-X-Google-Smtp-Source: ABdhPJwNSLofjJwuFuHlU7XMv9pf4+e12egPsBdGARtG7JOGdvQEnjlxZrj7kRD3mLXivOz+KUA1JA==
-X-Received: by 2002:a5d:60c5:: with SMTP id x5mr2772718wrt.67.1596188477304;
-        Fri, 31 Jul 2020 02:41:17 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:e484:a7d1:6931:9059? ([2a01:e34:ed2f:f020:e484:a7d1:6931:9059])
-        by smtp.googlemail.com with ESMTPSA id t202sm11904350wmt.20.2020.07.31.02.41.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jul 2020 02:41:16 -0700 (PDT)
-Subject: Re: Aw: Re: [PATCH v2 2/2] thermal: mediatek: add tsensor support for
- V2 thermal system
-To:     Frank Wunderlich <frank-w@public-files.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Henry Yen <henry.yen@mediatek.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Steven Liu <steven.liu@mediatek.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Kao <michael.kao@mediatek.com>,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <1588238074-19338-1-git-send-email-henry.yen@mediatek.com>
- <1588238074-19338-3-git-send-email-henry.yen@mediatek.com>
- <f086c86e-7d7b-50c4-baf2-66022301adc7@gmail.com>
- <trinity-a82d184c-1a5a-4f73-84c7-bcba3d84d5a4-1596131147519@3c-app-gmx-bs42>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <ccfa7b46-1663-3891-a7fe-76759c708a6d@linaro.org>
-Date:   Fri, 31 Jul 2020 11:41:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=60oA9rNnse/fDL09mT4gNyvwtlkjkgn68ejSkWL01U4=;
+        b=CiZ0vmpJl8BYck6ljAIGvcF0bJCPqPxs6Uz0I8CtIR5tRG4YUkEzi9gF65S4P6P0KV
+         2jIekKnTJo3M9meX7l0VEdHhlXszx4fevhifXYGBjaWRTrpNCyMlqAXmfxb+4K6cGC6c
+         /sD41gE9Di/FVx/eEwJiU7KaQ3bpmWsuO29HfLG4emyswjE0Ehp7JpyHsz0uWrEt6LZE
+         NnIOy2CuJS2bDvkysZHRBLEdeqRaI04TmC7kBSLfFNCC4islQQDnlpFCXRYxupeyig0d
+         JL3vclfMy2OyjhVeIl4IMyGoCBVIPE2NTmAv4JjUeMWgAtUjCgwr1Y3ZMBME9HGHC1WG
+         VhEA==
+X-Gm-Message-State: AOAM530wJQcfWPlHz3TxNt3zr5qHUtrijTtcZF5hxQjU5wLNBltlOwFi
+        Ttu1r1rccPFU77FOAEIDEZI6hdR2OfCpMel/1FwQMBjw
+X-Google-Smtp-Source: ABdhPJxcqKLMLWULglf9HaGDtkBv3V/+Irpwu3izGZjgy3swW/REesBO3cHyi7PIGB2vTTxtdDvdfyXPkcJBDeX5wTM=
+X-Received: by 2002:a63:ce41:: with SMTP id r1mr2998288pgi.203.1596188482768;
+ Fri, 31 Jul 2020 02:41:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <trinity-a82d184c-1a5a-4f73-84c7-bcba3d84d5a4-1596131147519@3c-app-gmx-bs42>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200730193510.578309-1-jusual@redhat.com> <CAHp75VcyRjAr3ugmAWYcKMrAeea6ioQOPfJnj-Srntdg_W8ScQ@mail.gmail.com>
+ <873658kpj2.fsf@vitty.brq.redhat.com>
+In-Reply-To: <873658kpj2.fsf@vitty.brq.redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 31 Jul 2020 12:41:06 +0300
+Message-ID: <CAHp75Vfp8aabZo_NW78kM-OLLKDgK1CwvLZNwmPZyQgaw6bXtQ@mail.gmail.com>
+Subject: Re: [PATCH] KVM: x86: Use MMCONFIG for all PCI config space accesses
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Julia Suvorova <jusual@redhat.com>,
+        "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/07/2020 19:45, Frank Wunderlich wrote:
-> Tested on bpi-r64 and r2, i hope this can be merged to next / 5.9
-> 
-> Tested-By: Frank Wunderlich <frank-w@public-files.de>
+On Fri, Jul 31, 2020 at 12:22 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+> Andy Shevchenko <andy.shevchenko@gmail.com> writes:
+> > On Thu, Jul 30, 2020 at 10:37 PM Julia Suvorova <jusual@redhat.com> wrote:
 
+...
 
-Thanks for testing, applied for v5.9
+> >> +static int __init kvm_pci_arch_init(void)
+> >> +{
+> >> +       if (raw_pci_ext_ops &&
 
+> >> +               return 0;
+> >> +       }
+> >
+> >> +       return 1;
+> >
+> > Hmm... I don't remember what positive codes means there. Perhaps you
+> > need to return a rather error code?
+>
+> If I'm reading the code correctly,
+>
+> pci_arch_init() has the following:
+>
+>         if (x86_init.pci.arch_init && !x86_init.pci.arch_init())
+>                 return 0;
+>
+>
+> so returning '1' here means 'continue' and this seems to be
+> correct. (E.g. Hyper-V's hv_pci_init() does the same). What I'm not sure
+> about is 'return 0' above as this will result in skipping the rest of
+> pci_arch_init(). Was this desired or should we return '1' in both cases?
+
+I think it depends what you want. In complex cases we recognize three
+possibilities
+
+-ERRNO: function failed, we have to stop and bailout with error from callee
+0: function OK, stop and return 0
+1: function OK, continue the rest in callee
+
+Do we have needs in this or is the current enough for all (exist) callees?
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+With Best Regards,
+Andy Shevchenko
