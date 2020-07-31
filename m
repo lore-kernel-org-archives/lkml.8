@@ -4,134 +4,140 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A430FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 13:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5277AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 13:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 833C121744
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 13:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F34222B40
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 13:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596203394;
-	bh=IXwFqQHjP2sDj/CKwA+w73Rr9wgrcjVyVnpFMoC7OjU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kOoPjX3+LwdYDBT/qzZrfV9FvCWElvkZkt+UOSB9Hw/CoMRf9S/RgCxckag1VjzAS
-	 UU46XPWsSXmgbou+ykv65pIsBu3sI/nXaRq2n0ZuAfrjWVsqgGr1/4Lg9i83k1e15V
-	 JsscYhZDR/tfJPhBeKNiwMMolGU425HhZHQKzSsc=
+	s=default; t=1596203728;
+	bh=vYmjK8mMYkxQN9Q5kjSg6X+4qsltfw1XYti+2tjxa/4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=ul1MuPllWTiANVxT22UM77CbbX06mpNZ2DcYO/9ZWGsodthuQ0Jbp63qHkQCmzbva
+	 LujS5AwkLj+++Vs4kO9P5UsNfW/yLzbh22H3Vzo1FHU+cyIM/cfM8RcysBSb09zXRY
+	 qdshUB5h2TGsBFQn+/J3JKorD6+/Xl4GWL9pm3PA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387428AbgGaNtx (ORCPT
+        id S1732237AbgGaNz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 09:49:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54456 "EHLO mail.kernel.org"
+        Fri, 31 Jul 2020 09:55:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727851AbgGaNtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 09:49:53 -0400
-Received: from localhost (router.4pisysteme.de [80.79.225.122])
+        id S1730706AbgGaNz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 09:55:26 -0400
+Received: from localhost (mobile-166-175-186-42.mycingular.net [166.175.186.42])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0694C208E4;
-        Fri, 31 Jul 2020 13:49:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CF0C206DA;
+        Fri, 31 Jul 2020 13:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596203392;
-        bh=IXwFqQHjP2sDj/CKwA+w73Rr9wgrcjVyVnpFMoC7OjU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UBriO0JOczpijNoQcc6SIWS7AffbF+7ldQJy+zYnulcMLP8iwwdjPVVMcChn/guKy
-         F0oJ95Rwx8ArimT40TgjCIAGGNEf9lj8jsaCOBs1UDCZRbrDoSU9W4peFokXG1XMDw
-         0jsXfWF8aCKUM9PYHIfbiZ/10bvc4F0YjrtZyaYA=
-Date:   Fri, 31 Jul 2020 15:49:50 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Pu Wen <puwen@hygon.cn>
-Cc:     rjw@rjwysocki.net, lenb@kernel.org, jarkko.nikula@linux.intel.com,
-        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-Subject: Re: [PATCH] i2c: designware: Add device HID for Hygon I2C controller
-Message-ID: <20200731134950.GB1679@kunai>
-References: <20200731084845.24459-1-puwen@hygon.cn>
+        s=default; t=1596203725;
+        bh=vYmjK8mMYkxQN9Q5kjSg6X+4qsltfw1XYti+2tjxa/4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Mmszk77KtX/XuyJPvUeBF+uSMjC3wMTXVesDiMr1rqTPEibn4GlNI1dHLpdRa7Sl+
+         K+gM6afW6Fp5XeCSnC07IMsYqculLdCzaaTRS86Mi/gu9fmp8W75ncG97tp7g1TtvI
+         VsUEIYwFaaR3pr2CWtVYygMUe62iVp1ky5BhBHvc=
+Date:   Fri, 31 Jul 2020 08:55:23 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, bjorn@helgaas.com,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>,
+        Ian Kumlien <ian.kumlien@gmail.com>,
+        Puranjay Mohan <puranjay12@gmail.com>
+Subject: Re: [PATCH v4 01/12] IB/hfi1: Check if pcie_capability_read_*()
+ reads ~0
+Message-ID: <20200731135523.GA3717@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="K8nIJk4ghYZn606h"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200731084845.24459-1-puwen@hygon.cn>
+In-Reply-To: <20200731110240.98326-2-refactormyself@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[+cc Michael, Ashutosh, Ian, Puranjay]
 
---K8nIJk4ghYZn606h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jul 31, 2020 at 04:48:45PM +0800, Pu Wen wrote:
-> Add device HID HYGO0010 to match the Hygon ACPI Vendor ID (HYGO) that
-> was registered in http://www.uefi.org/acpi_id_list, and the I2C
-> controller on Hygon paltform will use the HID.
->=20
-> Signed-off-by: Pu Wen <puwen@hygon.cn>
-
-I can take this via I2C, but I'd need an ack from Rafael or Len.
-
-Or it can go via ACPI, fine with me
-
-Acked-by: Wolfram Sang <wsa@kernel.org>
-
+On Fri, Jul 31, 2020 at 01:02:29PM +0200, Saheed O. Bolarinwa wrote:
+> On failure pcie_capability_read_dword() sets it's last parameter,
+> val to 0. In this case dn and up will be 0, so aspm_hw_l1_supported()
+> will return false.
+> However, with Patch 12/12, it is possible that val is set to ~0 on
+> failure. This would introduce a bug because (x & x) == (~0 & x). So
+> with dn and up being 0x02, a true value is return when the read has
+> actually failed.
+> 
+> Since, the value ~0 is invalid here,
+> 
+> Reset dn and up to 0 when a value of ~0 is read into them, this
+> ensures false is returned on failure in this case.
+> 
+> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+> Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
 > ---
->  drivers/acpi/acpi_apd.c                     | 1 +
->  drivers/i2c/busses/i2c-designware-platdrv.c | 1 +
->  2 files changed, 2 insertions(+)
->=20
-> diff --git a/drivers/acpi/acpi_apd.c b/drivers/acpi/acpi_apd.c
-> index ba2612e9a0eb..f24f6d3f1fa5 100644
-> --- a/drivers/acpi/acpi_apd.c
-> +++ b/drivers/acpi/acpi_apd.c
-> @@ -240,6 +240,7 @@ static const struct acpi_device_id acpi_apd_device_id=
-s[] =3D {
->  	{ "AMDI0020", APD_ADDR(cz_uart_desc) },
->  	{ "AMD0030", },
->  	{ "AMD0040", APD_ADDR(st_misc_desc)},
-> +	{ "HYGO0010", APD_ADDR(wt_i2c_desc) },
->  #endif
->  #ifdef CONFIG_ARM64
->  	{ "APMC0D0F", APD_ADDR(xgene_i2c_desc) },
-> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/bu=
-sses/i2c-designware-platdrv.c
-> index a71bc58fc03c..0dfeb2d11603 100644
-> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
-> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-> @@ -55,6 +55,7 @@ static const struct acpi_device_id dw_i2c_acpi_match[] =
-=3D {
->  	{ "HISI02A1", 0 },
->  	{ "HISI02A2", 0 },
->  	{ "HISI02A3", 0 },
-> +	{ "HYGO0010", ACCESS_INTR_MASK },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(acpi, dw_i2c_acpi_match);
-> --=20
-> 2.23.0
->=20
+> 
+>  drivers/infiniband/hw/hfi1/aspm.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/infiniband/hw/hfi1/aspm.c b/drivers/infiniband/hw/hfi1/aspm.c
+> index a3c53be4072c..9605b2145d19 100644
+> --- a/drivers/infiniband/hw/hfi1/aspm.c
+> +++ b/drivers/infiniband/hw/hfi1/aspm.c
+> @@ -33,13 +33,13 @@ static bool aspm_hw_l1_supported(struct hfi1_devdata *dd)
+>  		return false;
+>  
+>  	pcie_capability_read_dword(dd->pcidev, PCI_EXP_LNKCAP, &dn);
+> -	dn = ASPM_L1_SUPPORTED(dn);
+> +	dn = (dn == (u32)~0) ? 0 : ASPM_L1_SUPPORTED(dn);
+>  
+>  	pcie_capability_read_dword(parent, PCI_EXP_LNKCAP, &up);
+> -	up = ASPM_L1_SUPPORTED(up);
+> +	up = (up == (u32)~0) ? 0 : ASPM_L1_SUPPORTED(up);
 
---K8nIJk4ghYZn606h
-Content-Type: application/pgp-signature; name="signature.asc"
+I don't want to change this.  The driver shouldn't be mucking with
+ASPM at all.  The PCI core should take care of this automatically.  If
+it doesn't, we need to fix the core.
 
------BEGIN PGP SIGNATURE-----
+If the driver needs to disable ASPM to work around device errata or
+something, the core has an interface for that.  But the driver should
+not override the system-wide policy for managing ASPM.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8kIX4ACgkQFA3kzBSg
-Kbapvg//XojrXKWxAnwxZ4yM08TGa5ZO4BFLsrF2TAc/GlLtSahmH5JO7t9fkYOB
-jn5HbtxIGEqYEP6uQLVMgT+WGdAdCu1kXI9BbzZNYG2Gm7J8EI7ui1CWrdXkXm8/
-R1yQ/AhszXe1BUm9Y3UWaioqpyTqN8bB5fgsgWTFEjuxneLNoA0T+kduXPiRsyTA
-nUqL/7rl/8BWCvpVd26aPGIUgQFXftFBXhjMBzyPRrBEZUcDITAdhYG5LoATQjz1
-O6kcRszY3wcNFtxiC84oI4KbMErnExHSvcugI7x7jIAFGyEeQBUubdRychckMLEN
-Oma3uXCDWt/AfkUc67fWAF75sToFV830StjoKmT+pqMQiLI7c8Nv4FjHdz/p/Quv
-UyrYhh2hynaq0+4UQATEqvCMulGdw5tchPhOVIMkNFGyw24iQkTh7guFkmA5jAwB
-/i7sPVt3AzyJ/u/JyG/aFPkHa3xAVD4RZd0EPwMNisL+tBnUQlTedaMkUMPuBEFU
-5/OymFfNhKYMjTAn/EHsVJtEZir3dT9bQyeCPyulOpo0SHHlBY87CbY0b74wMRNj
-m5J+TCn0xtiiILXe1+p6iwbj6vdALpsbQcLHx96JQxy9gfgUMmlx8MNZm4V3pucg
-KtlfyUfaUkw+/eSbCPm0U3iQWSVZTLCR7wscP6dlje+98+tz8Q8=
-=gqTO
------END PGP SIGNATURE-----
+Ah, some archaeology finds affa48de8417 ("staging/rdma/hfi1: Add
+support for enabling/disabling PCIe ASPM"), which says:
 
---K8nIJk4ghYZn606h--
+  hfi1 HW has a high PCIe ASPM L1 exit latency and also advertises an
+  acceptable latency less than actual ASPM latencies.
+
+That suggests that either there is a device defect, e.g., advertising
+incorrect ASPM latencies, or a PCI core defect, e.g., incorrectly
+enabling ASPM when the path exit latency exceeds that hfi1 can
+tolerate.
+
+Coincidentally, Ian recently debugged a problem in how the PCI core
+computes exit latencies over a path [1].
+
+Can anybody supply details about the hfi1 ASPM parameters, e.g., the
+output of "sudo lspci -vv"?  Any details about the configuration where
+the problem occurs?  Is there a switch in the path?
+
+[1] https://lore.kernel.org/r/20200727213045.2117855-1-ian.kumlien@gmail.com
+
+>  	/* ASPM works on A-step but is reported as not supported */
+> -	return (!!dn || is_ax(dd)) && !!up;
+> +	return (dn || is_ax(dd)) && up;
+>  }
+>  
+>  /* Set L1 entrance latency for slower entry to L1 */
+> -- 
+> 2.18.4
+> 
