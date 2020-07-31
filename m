@@ -2,421 +2,212 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2C3C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5655C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05C6421744
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B3E521744
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 15:17:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cJ5D4Ub0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgGaPPt (ORCPT
+        id S1728707AbgGaPRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 11:15:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:34422 "EHLO foss.arm.com"
+        Fri, 31 Jul 2020 11:17:11 -0400
+Received: from nat-hk.nvidia.com ([203.18.50.4]:29935 "EHLO nat-hk.nvidia.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726764AbgGaPPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 11:15:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A5BA1FB;
-        Fri, 31 Jul 2020 08:15:47 -0700 (PDT)
-Received: from e119603-lin.cambridge.arm.com (unknown [10.57.36.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E7643F66E;
-        Fri, 31 Jul 2020 08:15:45 -0700 (PDT)
-Date:   Fri, 31 Jul 2020 16:15:57 +0100
-From:   Cristian Marussi <cristian.marussi@arm.com>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, rjw@rjwysocki.net
-Subject: Re: [PATCH 2/4] scmi: perf: Extend protocol to support performance
- statistics
-Message-ID: <20200731151557.GA19880@e119603-lin.cambridge.arm.com>
-References: <20200729151208.27737-1-lukasz.luba@arm.com>
- <20200729151208.27737-3-lukasz.luba@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        id S1726764AbgGaPRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 11:17:10 -0400
+Received: from hkpgpgate101.nvidia.com (Not Verified[10.18.92.77]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f2435f30000>; Fri, 31 Jul 2020 23:17:07 +0800
+Received: from HKMAIL103.nvidia.com ([10.18.16.12])
+  by hkpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 31 Jul 2020 08:17:07 -0700
+X-PGP-Universal: processed;
+        by hkpgpgate101.nvidia.com on Fri, 31 Jul 2020 08:17:07 -0700
+Received: from HKMAIL103.nvidia.com (10.18.16.12) by HKMAIL103.nvidia.com
+ (10.18.16.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul
+ 2020 15:17:06 +0000
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.55) by
+ HKMAIL103.nvidia.com (10.18.16.12) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Fri, 31 Jul 2020 15:17:06 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HSGiefaJqtNTmHhGe+WV8EE95bc47dmC4Ip10rS5iIaoTgLrwiwlCMTZ7Z7y7iHegIVXyiIeN/oM7ystzOPVk7C9DqMXJmv85vRmej2ko1aZChfT0i5KZSkLa3xmo1Z0tI8mNPUE2SjEIKpaH1018vT+GnG9zYZApnnKJ/qbTvjCj5TnzFHrf9qFuychH0FVNRY9TXFjWo2Jsq7CBiG2DLYPWv6p83Tidbo0csXyNJt0lekJ/1kRWxRfDbAWa6QG19ZJQ890mxCayeRirhAzN8yGUvgYjUJa38RUcIMd1gBt9ocVvystxrCdjfBXMv3O9yOO7fDi8enxu9E0kvQc1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r9uhR1ZM2v/WSrrZwf71Ot3niNays4xcPe+uJo87CNA=;
+ b=VedDMdMBWikJMCrCdsLraSM1RtPtTM3Kttq6uQ3dNV+Jt31+3jTl2XOEFK81bDIrsEVBxYIUXSJWFn+DoqdsbuYeE+AHB11AerGX0IddjcjlgSAfY1Ir0bFUX1Nz+Rtswsi8TQcRi1yozNLcHYJhP9eCJAlNKQ9+47vrrJ6vwjawVf64CXgvhOLLcYWEGF5cKk52c3l2FjynCf1C+c0aSg12YQCAcwmyg8fubBv/YVEO5b5ZJ5UnVVA7kKF9kMPflGJi4LR+iEy3Cx95dq1Fs6WOT84BPb9WGNQJP4EnrKBS/EynaqXmI8NKKdIWMG9RA0n9a39BhsYSYXxHSkRmog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: linux-foundation.org; dkim=none (message not signed)
+ header.d=none;linux-foundation.org; dmarc=none action=none
+ header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM5PR1201MB0107.namprd12.prod.outlook.com (2603:10b6:4:55::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Fri, 31 Jul
+ 2020 15:17:04 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3239.020; Fri, 31 Jul 2020
+ 15:17:04 +0000
+Date:   Fri, 31 Jul 2020 12:17:02 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Doug Ledford <dledford@redhat.com>
+CC:     <linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] Please pull RDMA subsystem changes
+Message-ID: <20200731151702.GA498584@nvidia.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
 Content-Disposition: inline
-In-Reply-To: <20200729151208.27737-3-lukasz.luba@arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: MN2PR22CA0019.namprd22.prod.outlook.com
+ (2603:10b6:208:238::24) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR22CA0019.namprd22.prod.outlook.com (2603:10b6:208:238::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Fri, 31 Jul 2020 15:17:03 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k1WmM-0025jJ-Iq; Fri, 31 Jul 2020 12:17:02 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 91ee9e12-5847-4bb7-998c-08d83564c7bd
+X-MS-TrafficTypeDiagnostic: DM5PR1201MB0107:
+X-Microsoft-Antispam-PRVS: <DM5PR1201MB0107DDD05AFF68317A53FECBC24E0@DM5PR1201MB0107.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1060;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6suBuhIG5FVAkh3vP/IxY+Z+8HzxWXr1AMk70E1CV/zP2DKEkqkrAomb2+S/FUp7j4uDTYrZlE+gkad5NwZ9dpgs+JcaNGIMiLy5RMRIVVD9CxLNH2TT85/hBWrQhaZbvxOAAspp0JXQJVO9GB1G0HmGb0qADjUU1M5WkbL9AeJZqoouxYhf7lZS8If5nlveHLoTFFogLsjZlfkSO7+MhYL2ufI+wkihdYbo3OoHiD/rKs/efQTlonHY3gZfSEIl/RSXBAOlawAKf4+U+pHoDW1FrqpPpfN2OWwY7Z4lDrIMVs1ihXiOq8yG2en1pBqgBLmnPyXAF0GrYzNStKeO7wUFaXuatrR+2zMsVX2PIDF6goXv+EVCmJaC+rvQlr295tSSiOpn3pwRWHAhxvhTFg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(39860400002)(396003)(366004)(136003)(9786002)(9746002)(36756003)(186003)(4326008)(2906002)(26005)(83380400001)(316002)(33656002)(426003)(110136005)(478600001)(44144004)(5660300002)(66946007)(66556008)(21480400003)(1076003)(8936002)(2616005)(66476007)(86362001)(8676002)(27376004)(2700100001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 1TaxzhtU2zs1KxyqAH6y8opqmwpbFbar9ovNoNlMr/DfBbGJy4ENo5RL0g/Mhh0NqGHv6p52But1MwWKth9gNfb1DNmWtmba5eu4i+o0ysSIpNmGJL9s+HmBj46NorEs++9ysgdyNciPdVscpDP0vmp/Bi9o9iceU4UP3TRFjR06/HJI0jvjNYlsU1w1DwSLYDuqKDeEFCzySx43w6qMNx0TdMqS90+G2q50RWvwQkPcuQ3zzswiScGXv2Wb5qd45zjXUrmCdlDaBXoiksWZoswblwuKucyYFMCDAqE69cwTPVrkszhljvYTTEQIDRAW2VblY7CkDlqFmeqoTmAqGGWGLOI/i7hJO+g4pmPoBb4x6X7yS6uImcXZTbOvP3riX7W6Bg3+gXt2E2kSo/wX4DsIilAGgO5+LuDnKso76v36YvVXhD4sChcMccViBT0Kg8Lmba+WSQxxaK5PAcmxnk+UP6Q/loUDiZ16q0viUsw=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 91ee9e12-5847-4bb7-998c-08d83564c7bd
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jul 2020 15:17:03.9117
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Eys7Qzgs6HsjwNJI3AM+2vEPNm6tPzYy53gUFMwXhFn2uVELzyQKomqeasXUha1E
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB0107
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596208627; bh=r9uhR1ZM2v/WSrrZwf71Ot3niNays4xcPe+uJo87CNA=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:Content-Type:Content-Disposition:
+         X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
+         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
+         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
+         X-MS-Oob-TLC-OOBClassifiers:X-MS-Exchange-SenderADCheck:
+         X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+         X-Forefront-Antispam-Report:X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=cJ5D4Ub0MS9iau0pzEVFtCPzTRNGsykKwtqS8oAeJlERFFwQUJb0m4cPVndS7TwkR
+         94UEDITH5txuvgtHYvq+IcqXoPpO1zzzlOSmCYLTqwvOOI+qHI5IUj3i8ak2qSazCi
+         IyTUBoxCCxl6wNgfklPrjX/OR9ai0+E2LEGfnB+vo9rSzW0dNsgN8DPH/EAW/0bQXQ
+         VokXGq3vnOIAoUl8taLI/rw/Ibiv9+NmwdpleRXY/7aGzMJUGYmA1p3S7vhZ6KLXVU
+         ixLt8EJJTrArrDMlEO9lSrUP7Ic2lqSK7MVr5zcYx0vuV0GfYE+VDbuGCsksxdbfVI
+         K7t1NVoQm1yeQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+--M9NhX3UHpAaciwkO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, Jul 29, 2020 at 04:12:06PM +0100, Lukasz Luba wrote:
-> The firmware is able to maintain performance statistics and share with OS
-> via shared memory. The memory region can be interpreted by the SCMI perf
-> protocol after receiving and mapping the proper addresses from FW.
-> This patch aims to provide needed infrastructure and setup necessary
-> mechanisms in the protocol layer.
-> 
-> It also extends API functions for the upper layer (cpufreq, devfreq)
-> with a new callback, which allows to retrieve the statistics for a
-> particular performance domain. The new structure scmi_perf_domain_stats
-> added in the header works as a glue for these two layers.
-> 
-> The data processing code for the shared memory is aligned with SCMI v2
-> specification (DEN0056B) and handles the required endianness. It can
-> be changed in future not disturbing the upper layer.
-> 
-> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
-> ---
->  drivers/firmware/arm_scmi/perf.c | 210 +++++++++++++++++++++++++++++++
->  include/linux/scmi_protocol.h    |  11 ++
->  2 files changed, 221 insertions(+)
-> 
-> diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
-> index 3e1e87012c95..761067bb6237 100644
-> --- a/drivers/firmware/arm_scmi/perf.c
-> +++ b/drivers/firmware/arm_scmi/perf.c
-> @@ -19,6 +19,9 @@
->  #include "common.h"
->  #include "notify.h"
->  
-> +#define PERF_DOMAIN_STATS_OFFSETS_BASE		0x10
-> +#define PERF_DOMAIN_COUNT_BASE			0x8
-> +
->  enum scmi_performance_protocol_cmd {
->  	PERF_DOMAIN_ATTRIBUTES = 0x3,
->  	PERF_DESCRIBE_LEVELS = 0x4,
-> @@ -32,11 +35,27 @@ enum scmi_performance_protocol_cmd {
->  };
->  
->  struct scmi_opp {
-> +	u32 id;
->  	u32 perf;
->  	u32 power;
->  	u32 trans_latency_us;
->  };
->  
-> +struct scmi_perf_level_raw_stats {
-> +	__le32 perf_level_id;
-> +	__le32 reserved;
-> +	__le64 usage_count;
-> +	__le64 total_residency_us;
-> +};
-> +
-> +struct scmi_perf_domain_raw_stats {
-> +	__le16 perf_level_count;
-> +	__le16 curr_perf_level_id;
-> +	__le32 extended_stats_offset;
-> +	__le64 ts_last_change_us;
-> +	struct scmi_perf_level_raw_stats perf_level[];
-> +};
-> +
->  struct scmi_msg_resp_perf_attributes {
->  	__le16 num_domains;
->  	__le16 flags;
-> @@ -161,13 +180,26 @@ struct perf_dom_info {
->  	struct scmi_fc_info *fc_info;
->  };
->  
-> +struct scmi_perf_domain_stats_desc {
-> +	void __iomem *addr;
-> +	int *opp_map;
-> +	int size;
-> +};
-> +
-> +struct scmi_perf_stats_desc {
-> +	uint16_t domain_count;
-> +	struct scmi_perf_domain_stats_desc *domain_stats;
-> +};
-> +
->  struct scmi_perf_info {
->  	u32 version;
->  	int num_domains;
->  	bool power_scale_mw;
->  	u64 stats_addr;
->  	u32 stats_size;
-> +	void __iomem *stats_virt_addr;
->  	struct perf_dom_info *dom_info;
-> +	struct scmi_perf_stats_desc *stats_desc;
->  };
->  
->  static enum scmi_performance_protocol_cmd evt_2_cmd[] = {
-> @@ -175,6 +207,55 @@ static enum scmi_performance_protocol_cmd evt_2_cmd[] = {
->  	PERF_NOTIFY_LEVEL,
->  };
->  
-> +static int scmi_perf_stats_init(const struct scmi_handle *handle,
-> +				struct scmi_perf_info *pi)
-> +{
-> +	struct scmi_perf_domain_stats_desc *domain_stats;
-> +	int i, domain_count;
-> +	__le32 offset;
-> +
+Hi Linus,
 
-LGTM by I'd add also the check for the Signature field first of all, to rule
-out misconfigured/misaligned memory when integrating with fw.
-Regarding revision and attributes, they are just zero and, as of now, not exposed
-to upper layers but I'm wondering if we should not parse and expose them too already
-to be future proof (since future SCMIv3 is near really and it will change this mechanism
-and bump revision field.)
+Still a few regressions from the merge window and the usual collection of
+fixes.
 
-> +	domain_count = le16_to_cpu(ioread16(pi->stats_virt_addr +
-> +					    PERF_DOMAIN_COUNT_BASE));
-> +
+The following changes since commit 92ed301919932f777713b9172e525674157e983d:
 
-Would be worth to check this against pinfo->num_domains ? (real question)
-I suppose that if the platform limits the visible domains to this agent
-it should be consistent between stats and messages.
+  Linux 5.8-rc7 (2020-07-26 14:14:06 -0700)
 
-> +	pi->stats_desc = devm_kzalloc(handle->dev,
-> +				      sizeof(struct scmi_perf_stats_desc),
-> +				      GFP_KERNEL);
-> +	if (!pi->stats_desc)
-> +		return -ENOMEM;
-> +
-> +	pi->stats_desc->domain_stats = devm_kzalloc(handle->dev, domain_count *
-> +				sizeof(struct scmi_perf_domain_stats_desc),
+are available in the Git repository at:
 
-nit: ... sizeof(*domain_stats) ?
+  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
 
-> +				GFP_KERNEL);
-> +	if (!pi->stats_desc->domain_stats)
-> +		return -ENOMEM;
-> +
-> +	pi->stats_desc->domain_count = domain_count;
-> +
-> +	for (i = 0; i < domain_count; i++) {
-> +		int stats_size;
-> +		__le16 opp_count;
-> +
-> +		offset = ioread32(pi->stats_virt_addr +
-> +				PERF_DOMAIN_STATS_OFFSETS_BASE + i * 4);
-> +		if (!offset)
-> +			continue;
-> +
-> +		domain_stats = &pi->stats_desc->domain_stats[i];
-> +
-> +		domain_stats->addr = pi->stats_virt_addr + le32_to_cpu(offset);
-> +
-> +		/* The first field is the performance level count. */
-> +		opp_count = le16_to_cpu(ioread16(domain_stats->addr));
-> +		stats_size = sizeof(struct scmi_perf_domain_raw_stats);
-> +		stats_size += sizeof(struct scmi_perf_level_raw_stats) *
-> +				opp_count;
-> +
-> +		domain_stats->size = stats_size;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int scmi_perf_attributes_get(const struct scmi_handle *handle,
->  				    struct scmi_perf_info *pi)
->  {
-> @@ -198,6 +279,14 @@ static int scmi_perf_attributes_get(const struct scmi_handle *handle,
->  		pi->stats_addr = le32_to_cpu(attr->stats_addr_low) |
->  				(u64)le32_to_cpu(attr->stats_addr_high) << 32;
->  		pi->stats_size = le32_to_cpu(attr->stats_size);
-> +		if (pi->stats_addr && pi->stats_size) {
-> +			pi->stats_virt_addr = devm_ioremap(handle->dev,
-> +					pi->stats_addr, pi->stats_size);
-> +			if (pi->stats_virt_addr)
-> +				ret = scmi_perf_stats_init(handle, pi);
-> +			else
-> +				ret = -ENOMEM;
-> +		}
->  	}
->  
->  	scmi_xfer_put(handle, t);
-> @@ -298,6 +387,7 @@ scmi_perf_describe_levels_get(const struct scmi_handle *handle, u32 domain,
->  			opp->power = le32_to_cpu(level_info->opp[cnt].power);
->  			opp->trans_latency_us = le16_to_cpu
->  				(level_info->opp[cnt].transition_latency_us);
-> +			opp->id = tot_opp_cnt + cnt;
->  
->  			dev_dbg(handle->dev, "Level %d Power %d Latency %dus\n",
->  				opp->perf, opp->power, opp->trans_latency_us);
-> @@ -748,6 +838,125 @@ static bool scmi_fast_switch_possible(const struct scmi_handle *handle,
->  	return dom->fc_info && dom->fc_info->level_set_addr;
->  }
->  
-> +static int scmi_dvfs_setup_opps_mapping(const struct scmi_handle *handle,
-> +					u32 domain_id)
-> +{
-> +	struct scmi_perf_domain_stats_desc *domain_stats;
-> +	struct scmi_perf_info *pi = handle->perf_priv;
-> +	struct perf_dom_info *dom;
-> +	struct scmi_opp *opp;
-> +	int idx, *mapping;
-> +
-> +	dom = pi->dom_info + domain_id;
-> +	if (!dom)
-> +		return -EIO;
-This is a bit scary without something like dom < pi->num_domains :D
+for you to fetch changes up to fb448ce87a4a9482b084e67faf804aec79ed9b43:
 
-> +
-> +	mapping = devm_kzalloc(handle->dev, sizeof(int) * dom->opp_count,
-> +			       GFP_KERNEL);
-> +	if (!mapping)
-> +		return -ENOMEM;
-> +
-> +	/* Construct LUT with FW OPP ids as an index */
-> +	for (opp = dom->opp, idx = 0; idx < dom->opp_count; idx++, opp++)
-> +		mapping[opp->id] = idx;
-> +
-> +	domain_stats = &pi->stats_desc->domain_stats[domain_id];
-> +	domain_stats->opp_map = mapping;
-> +
-> +	return 0;
-> +}
-> +
-> +static int
-> +scmi_dvfs_stats_get(const struct scmi_handle *handle, u32 domain_id,
-> +		    struct scmi_perf_domain_stats *stats)
-> +{
-> +	struct scmi_perf_domain_stats_desc *domain_stats;
-> +	struct scmi_perf_domain_raw_stats *raw_stats[2];
-> +	struct scmi_perf_info *pi = handle->perf_priv;
-> +	struct scmi_perf_level_raw_stats *perf;
-> +	int i, index, ret = -EINVAL;
-> +	struct perf_dom_info *dom;
-> +	u64 transition_count = 0;
-> +	struct scmi_opp *opp;
-> +
-> +	if (!stats)
-> +		return -EINVAL;
-> +
-> +	if (!pi->stats_virt_addr || !pi->stats_desc ||
-> +		!pi->stats_desc->domain_stats)
-> +		return -ENOENT;
-> +
-> +	if (pi->stats_desc->domain_count <= domain_id ||
-> +		!pi->stats_desc->domain_stats[domain_id].addr)
-> +		return -ENOENT;
-> +
-> +	dom = pi->dom_info + domain_id;
+  RDMA/core: Free DIM memory in error unwind (2020-07-30 11:03:33 -0300)
 
-same ....scary without something like dom < pi->num_domains, even more
-because this comes from the handle->statisticts_get() straight away
+----------------------------------------------------------------
+RDMA fourth 5.8 rc pull request
 
-> +	if (!dom)
-> +		return -EIO;
-> +
-> +	domain_stats = &pi->stats_desc->domain_stats[domain_id];
-> +
-> +	if (!domain_stats->opp_map) {
-> +		ret = scmi_dvfs_setup_opps_mapping(handle, domain_id);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	raw_stats[0] = vmalloc(domain_stats->size);
-> +	if (!raw_stats[0])
-> +		return -ENOMEM;
-> +
-> +	raw_stats[1] = vmalloc(domain_stats->size);
-> +	if (!raw_stats[1]) {
-> +		vfree(raw_stats[0]);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	/*
-> +	 * Let's try 10 times. If two consecutive reads are the same - done.
-> +	 * This approach is aligned with SCMI v2 specification.
-> +	 */
-> +	for (i = 0; i < 10; i++) {
-> +		memcpy_fromio(raw_stats[0], domain_stats->addr,
-> +			      domain_stats->size);
-> +		memcpy_fromio(raw_stats[1], domain_stats->addr,
-> +			      domain_stats->size);
-> +		if (!memcmp(raw_stats[0], raw_stats[1], domain_stats->size)) {
-> +			ret = 0;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (ret)
-> +		goto free_buf;
-> +
-> +	for (i = 0; i < dom->opp_count; i++) {
-> +		perf = &raw_stats[0]->perf_level[i];
-> +
-> +		transition_count += __le64_to_cpu(perf->usage_count);
-> +		stats->time_in_state[i] =
-> +				__le64_to_cpu(perf->total_residency_us);
-> +
-> +		/* Speed-up and initialize the frequencies only once. */
-> +		if (stats->freq_table[i] == 0) {
-> +			index = domain_stats->opp_map[i];
-> +			opp = &dom->opp[index];
-> +			stats->freq_table[i] = opp->perf * dom->mult_factor;
-> +		}
-> +	}
-> +
-> +	stats->total_trans = transition_count;
-> +
-> +	stats->last_index = __le16_to_cpu(raw_stats[0]->curr_perf_level_id);
-> +	stats->last_time = __le64_to_cpu(raw_stats[0]->ts_last_change_us);
-> +
-> +free_buf:
-> +	vfree(raw_stats[1]);
-> +	vfree(raw_stats[0]);
-> +
-> +	return ret;
-> +}
-> +
->  static struct scmi_perf_ops perf_ops = {
->  	.limits_set = scmi_perf_limits_set,
->  	.limits_get = scmi_perf_limits_get,
-> @@ -760,6 +969,7 @@ static struct scmi_perf_ops perf_ops = {
->  	.freq_get = scmi_dvfs_freq_get,
->  	.est_power_get = scmi_dvfs_est_power_get,
->  	.fast_switch_possible = scmi_fast_switch_possible,
-> +	.statistics_get = scmi_dvfs_stats_get,
->  };
->  
->  static int scmi_perf_set_notify_enabled(const struct scmi_handle *handle,
-> diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-> index 7e5dd7d1e221..3316ff4f9d34 100644
-> --- a/include/linux/scmi_protocol.h
-> +++ b/include/linux/scmi_protocol.h
-> @@ -55,6 +55,15 @@ struct scmi_clock_info {
->  	};
->  };
->  
-> +struct scmi_perf_domain_stats {
-> +	unsigned long long last_time;
-> +	unsigned long long last_index;
-> +	unsigned int total_trans;
-> +	unsigned int state_num;
-> +	u64 *time_in_state;
+Two more merge window regressions, a corruption bug in hfi1 and a few
+other small fixes.
 
-...got some recent negative feedback on mixing fixed-size fileds like u64 with
-generic like unsigned long/int etc...so maybe unsigned long long is better here
-since it is big enough; being this a time you could use ktime_t in other scenarios
-BUT I suppose here derives from the nice 64bit microseconds fields in shared mem
-stats so unsigned long long seems more clear (and ktime_t is signed and nanoseconds).
+- Missing user input validation regression in ucma
 
-Thanks
+- Disallowing a previously allowed user combination regression in mlx5
 
-Cristian
+- ODP prefetch memory leaking triggerable by userspace
 
-> +	unsigned int *freq_table;
-> +};
-> +
->  struct scmi_handle;
->  
->  /**
-> @@ -121,6 +130,8 @@ struct scmi_perf_ops {
->  			     unsigned long *rate, unsigned long *power);
->  	bool (*fast_switch_possible)(const struct scmi_handle *handle,
->  				     struct device *dev);
-> +	int (*statistics_get)(const struct scmi_handle *handle, u32 domain_id,
-> +			      struct scmi_perf_domain_stats *stats);
->  };
->  
->  /**
-> -- 
-> 2.17.1
+- Memory corruption in hf1 due to faulty ring buffer logic
 
+- Missed mutex initialization crash in mlx5
 
-> 
+- Two small defects with RDMA DIM
+
+----------------------------------------------------------------
+Jason Gunthorpe (2):
+      RDMA/cm: Add min length checks to user structure copies
+      RDMA/mlx5: Fix prefetch memory leak if get_prefetchable_mr fails
+
+Leon Romanovsky (4):
+      RDMA/mlx5: Allow providing extra scatter CQE QP flag
+      RDMA/mlx5: Initialize QP mutex for the debug kernels
+      RDMA/core: Stop DIM before destroying CQ
+      RDMA/core: Free DIM memory in error unwind
+
+Mike Marciniszyn (1):
+      IB/rdmavt: Fix RQ counting issues causing use of an invalid RWQE
+
+ drivers/infiniband/core/cq.c      | 14 +++++++++++---
+ drivers/infiniband/core/ucma.c    |  4 ++++
+ drivers/infiniband/hw/mlx5/odp.c  |  5 ++---
+ drivers/infiniband/hw/mlx5/qp.c   | 29 ++++++++++++++++-------------
+ drivers/infiniband/sw/rdmavt/qp.c | 33 ++++-----------------------------
+ drivers/infiniband/sw/rdmavt/rc.c |  4 +---
+ include/rdma/rdmavt_qp.h          | 19 +++++++++++++++++++
+ 7 files changed, 57 insertions(+), 51 deletions(-)
+
+--M9NhX3UHpAaciwkO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEfB7FMLh+8QxL+6i3OG33FX4gmxoFAl8kNewACgkQOG33FX4g
+mxoP+g/8Dn7gXjy6A+5sCdgeqa0xJt2fFCNkWcdxls1/RzbXg8WLLKmE7MKzLWPd
+QgK7Bor3/Sawkf92Pn/pUqVZ/+1xQFuDKl/QfBcw3vREbQFHsigO1ZW5jHr4/L+l
+B/hGV+zYl0gXHa40VTmhgF7qXpyh2/UdofX83EP83g0wweadFLyz0+Sqcaan3W2/
+7zSnl1c/0l/sEEbcTK3deyTTcNVhe8crewigSiyVWAmJ2EiY3O3zP/oY+u9RwqKo
+BFhw7cbkS0sNfvhZf/fVtOLmOPV4WoH41hB/NhoxpgV/EczmTJ0NtHsSUfzgS+qA
+BHDw/KIgm+uAUzvYZ8qResZRfL+/D1sRniN6VxsZrsIoMib7CNaKh91iLWnrz1zv
+AW+v9lQ8JH07ThGXCNFrY5HE2r70socqTWpkv7lEhS/VMDlb4WuEWqwrn0efc5qL
+ZBxrS8+w4PPuJF050l+d6V982VNLTAZlOgdGrfaISaQRaN8YFFTL3spR5NuFTznt
+npdcy8lTSAP48uZ8mG7/gY0DfSoAPOX2DVGKqfjhbzBoDCU1DJH2uo7PKIcZKW2g
+nBm3Nq2jj/UMsmZChqM2EZ1CWIS05fuUPgEoBnPT2uUV93hT8bUF00ZBA7IFrTiZ
+aiBDTxCSKECrgcNLrOwcLRu4hfNjrAn6Jacul2ldtreLamKAGNE=
+=YkD9
+-----END PGP SIGNATURE-----
+
+--M9NhX3UHpAaciwkO--
