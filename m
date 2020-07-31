@@ -2,38 +2,38 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09197C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAABC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4BD32087C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D21821744
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:23:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730038AbgGaVXm (ORCPT
+        id S1729786AbgGaVXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 17:23:42 -0400
+        Fri, 31 Jul 2020 17:23:38 -0400
 Received: from mga14.intel.com ([192.55.52.115]:50224 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728163AbgGaVX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 17:23:29 -0400
-IronPort-SDR: t9we91MTc4fYZIVkp+B0V0VSVMJQxIvjXH1WOizERGiEnKnoOOue9IPQBe00JTmm4ENEXkFJ3q
- CI0TMCZU1lig==
-X-IronPort-AV: E=McAfee;i="6000,8403,9699"; a="151075130"
+        id S1729197AbgGaVXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 17:23:31 -0400
+IronPort-SDR: QlZ05md2KNPYIzpbAmiKQbyIGgBXkeRSKYVEeu6fHUZuIl+fUPqDNgtdYOnT6pDFQnqCWuKbDw
+ MPqm4m31ynRg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9699"; a="151075134"
 X-IronPort-AV: E=Sophos;i="5.75,419,1589266800"; 
-   d="scan'208";a="151075130"
+   d="scan'208";a="151075134"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
   by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 14:23:27 -0700
-IronPort-SDR: 2YkxLunpQZauh/yQCbzPCFkS86bbTRCTTyschYDC27EpCAGA9l89xiiKJtIXrTZP5KiiRqwwqk
- ET8nkNbeMUdQ==
+IronPort-SDR: cyySMoQBdLD4wZpxqY0qAajzuUxlrh3m7BtU7M5kj5Q6OmwQ6m+4iDeqyrT+RMOmRBlTHLGPB1
+ eQfhzUHiTzWA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,419,1589266800"; 
-   d="scan'208";a="331191305"
+   d="scan'208";a="331191319"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.160])
   by orsmga007.jf.intel.com with ESMTP; 31 Jul 2020 14:23:26 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -46,9 +46,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         linux-kernel@vger.kernel.org,
         eric van tassell <Eric.VanTassell@amd.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [RFC PATCH 4/8] KVM: x86/mmu: Add infrastructure for pinning PFNs on demand
-Date:   Fri, 31 Jul 2020 14:23:19 -0700
-Message-Id: <20200731212323.21746-5-sean.j.christopherson@intel.com>
+Subject: [RFC PATCH 8/8] KVM: SVM: Pin SEV pages in MMU during sev_launch_update_data()
+Date:   Fri, 31 Jul 2020 14:23:23 -0700
+Message-Id: <20200731212323.21746-9-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200731212323.21746-1-sean.j.christopherson@intel.com>
 References: <20200731212323.21746-1-sean.j.christopherson@intel.com>
@@ -61,319 +61,159 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h |   7 ++
- arch/x86/kvm/mmu/mmu.c          | 111 ++++++++++++++++++++++++++------
- 2 files changed, 99 insertions(+), 19 deletions(-)
+ arch/x86/kvm/svm/sev.c | 117 +++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 112 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 1bab87a444d78..b14864f3e8e74 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1138,6 +1138,13 @@ struct kvm_x86_ops {
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index f640b8beb443e..eb95914578497 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -15,6 +15,7 @@
+ #include <linux/pagemap.h>
+ #include <linux/swap.h>
  
- 	void (*load_mmu_pgd)(struct kvm_vcpu *vcpu, unsigned long cr3);
++#include "mmu.h"
+ #include "x86.h"
+ #include "svm.h"
  
-+	bool (*pin_spte)(struct kvm_vcpu *vcpu, gfn_t gfn, int level,
-+			 kvm_pfn_t pfn);
-+	void (*drop_pinned_spte)(struct kvm *kvm, gfn_t gfn, int level,
-+				 kvm_pfn_t pfn);
-+	void (*zap_pinned_spte)(struct kvm *kvm, gfn_t gfn, int level);
-+	void (*unzap_pinned_spte)(struct kvm *kvm, gfn_t gfn, int level);
-+
- 	bool (*has_wbinvd_exit)(void);
- 
- 	/* Returns actual tsc_offset set in active VMCS */
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 182f398036248..cab3b2f2f49c3 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -133,6 +133,9 @@ module_param(dbg, bool, 0644);
- #define SPTE_AD_WRPROT_ONLY_MASK (2ULL << 52)
- #define SPTE_MMIO_MASK (3ULL << 52)
- 
-+/* Special SPTEs flags that can only be used for non-MMIO SPTEs. */
-+#define SPTE_PINNED_MASK	BIT_ULL(62)
-+
- #define PT64_LEVEL_BITS 9
- 
- #define PT64_LEVEL_SHIFT(level) \
-@@ -211,6 +214,7 @@ enum {
- 	RET_PF_EMULATE = 1,
- 	RET_PF_INVALID = 2,
- 	RET_PF_FIXED = 3,
-+	RET_PF_UNZAPPED = 4,
- };
- 
- struct pte_list_desc {
-@@ -635,6 +639,11 @@ static bool is_shadow_present_pte(u64 pte)
- 	return __is_shadow_present_pte(pte) && !is_mmio_spte(pte);
+@@ -415,6 +416,107 @@ static unsigned long get_num_contig_pages(unsigned long idx,
+ 	return pages;
  }
  
-+static bool is_pinned_pte(u64 pte)
++#define SEV_PFERR (PFERR_WRITE_MASK | PFERR_USER_MASK)
++
++static void *sev_alloc_pages(unsigned long size, unsigned long *npages)
 +{
-+	return !!(pte & SPTE_PINNED_MASK);
++	/* TODO */
++	*npages = 0;
++	return NULL;
 +}
 +
- static int is_large_pte(u64 pte)
- {
- 	return pte & PT_PAGE_SIZE_MASK;
-@@ -937,15 +946,15 @@ static bool mmu_spte_update(u64 *sptep, u64 new_spte)
-  * state bits, it is used to clear the last level sptep.
-  * Returns the old PTE.
-  */
--static u64 mmu_spte_clear_track_bits(u64 *sptep)
-+static u64 __mmu_spte_clear_track_bits(u64 *sptep, u64 clear_value)
- {
- 	kvm_pfn_t pfn;
- 	u64 old_spte = *sptep;
- 
- 	if (!spte_has_volatile_bits(old_spte))
--		__update_clear_spte_fast(sptep, 0ull);
-+		__update_clear_spte_fast(sptep, clear_value);
- 	else
--		old_spte = __update_clear_spte_slow(sptep, 0ull);
-+		old_spte = __update_clear_spte_slow(sptep, clear_value);
- 
- 	if (!is_shadow_present_pte(old_spte))
- 		return old_spte;
-@@ -968,6 +977,11 @@ static u64 mmu_spte_clear_track_bits(u64 *sptep)
- 	return old_spte;
- }
- 
-+static inline u64 mmu_spte_clear_track_bits(u64 *sptep)
++static struct kvm_memory_slot *hva_to_memslot(struct kvm *kvm,
++					      unsigned long hva)
 +{
-+	return __mmu_spte_clear_track_bits(sptep, 0ull);
++	struct kvm_memslots *slots = kvm_memslots(kvm);
++	struct kvm_memory_slot *memslot;
++
++	kvm_for_each_memslot(memslot, slots) {
++		if (hva >= memslot->userspace_addr &&
++			hva < memslot->userspace_addr +
++				(memslot->npages << PAGE_SHIFT))
++			return memslot;
++	}
++
++	return NULL;
 +}
 +
- /*
-  * Rules for using mmu_spte_clear_no_track:
-  * Directly clear spte without caring the state bits of sptep,
-@@ -1399,7 +1413,7 @@ static int rmap_add(struct kvm_vcpu *vcpu, u64 *spte, gfn_t gfn)
- 	return pte_list_add(vcpu, spte, rmap_head);
- }
- 
--static void rmap_remove(struct kvm *kvm, u64 *spte)
-+static void rmap_remove(struct kvm *kvm, u64 *spte, u64 old_spte)
- {
- 	struct kvm_mmu_page *sp;
- 	gfn_t gfn;
-@@ -1409,6 +1423,10 @@ static void rmap_remove(struct kvm *kvm, u64 *spte)
- 	gfn = kvm_mmu_page_get_gfn(sp, spte - sp->spt);
- 	rmap_head = gfn_to_rmap(kvm, gfn, sp);
- 	__pte_list_remove(spte, rmap_head);
-+
-+	if (is_pinned_pte(old_spte))
-+		kvm_x86_ops.drop_pinned_spte(kvm, gfn, sp->role.level - 1,
-+					     spte_to_pfn(old_spte));
- }
- 
- /*
-@@ -1446,7 +1464,7 @@ static u64 *rmap_get_first(struct kvm_rmap_head *rmap_head,
- 	iter->pos = 0;
- 	sptep = iter->desc->sptes[iter->pos];
- out:
--	BUG_ON(!is_shadow_present_pte(*sptep));
-+	BUG_ON(!is_shadow_present_pte(*sptep) && !is_pinned_pte(*sptep));
- 	return sptep;
- }
- 
-@@ -1491,8 +1509,8 @@ static void drop_spte(struct kvm *kvm, u64 *sptep)
- {
- 	u64 old_spte = mmu_spte_clear_track_bits(sptep);
- 
--	if (is_shadow_present_pte(old_spte))
--		rmap_remove(kvm, sptep);
-+	if (is_shadow_present_pte(old_spte) || is_pinned_pte(old_spte))
-+		rmap_remove(kvm, sptep, old_spte);
- }
- 
- 
-@@ -1730,17 +1748,49 @@ static bool rmap_write_protect(struct kvm_vcpu *vcpu, u64 gfn)
- 	return kvm_mmu_slot_gfn_write_protect(vcpu->kvm, slot, gfn);
- }
- 
-+static bool kvm_mmu_zap_pinned_spte(struct kvm *kvm, u64 *sptep)
++static bool hva_to_gpa(struct kvm *kvm, unsigned long hva)
 +{
-+	struct kvm_mmu_page *sp;
++	struct kvm_memory_slot *memslot;
++	gpa_t gpa_offset;
++
++	memslot = hva_to_memslot(kvm, hva);
++	if (!memslot)
++		return UNMAPPED_GVA;
++
++	gpa_offset = hva - memslot->userspace_addr;
++	return ((memslot->base_gfn << PAGE_SHIFT) + gpa_offset);
++}
++
++static struct page **sev_pin_memory_in_mmu(struct kvm *kvm, unsigned long addr,
++					   unsigned long size,
++					   unsigned long *npages)
++{
++	struct kvm_vcpu *vcpu;
++	struct page **pages;
++	unsigned long i;
 +	kvm_pfn_t pfn;
-+	gfn_t gfn;
++	int idx, ret;
++	gpa_t gpa;
 +
-+	if (!(*sptep & SPTE_PINNED_MASK))
-+		return false;
++	pages = sev_alloc_pages(size, npages);
++	if (!pages)
++		return ERR_PTR(-ENOMEM);
 +
-+	sp = sptep_to_sp(sptep);
-+	gfn = kvm_mmu_page_get_gfn(sp, sptep - sp->spt);
-+	pfn = spte_to_pfn(*sptep);
++	vcpu = kvm_get_vcpu(kvm, 0);
++	if (mutex_lock_killable(&vcpu->mutex)) {
++		kvfree(pages);
++		return ERR_PTR(-EINTR);
++	}
 +
-+	if (kvm_x86_ops.zap_pinned_spte)
-+		kvm_x86_ops.zap_pinned_spte(kvm, gfn, sp->role.level - 1);
++	vcpu_load(vcpu);
++	idx = srcu_read_lock(&kvm->srcu);
 +
-+	__mmu_spte_clear_track_bits(sptep, SPTE_PINNED_MASK | pfn << PAGE_SHIFT);
-+	return true;
-+}
++	kvm_mmu_load(vcpu);
 +
- static bool kvm_zap_rmapp(struct kvm *kvm, struct kvm_rmap_head *rmap_head)
- {
- 	u64 *sptep;
- 	struct rmap_iterator iter;
- 	bool flush = false;
- 
--	while ((sptep = rmap_get_first(rmap_head, &iter))) {
-+restart:
-+	for_each_rmap_spte(rmap_head, &iter, sptep) {
- 		rmap_printk("%s: spte %p %llx.\n", __func__, sptep, *sptep);
- 
-+		if (!is_shadow_present_pte(*sptep)) {
-+			WARN_ON_ONCE(!is_pinned_pte(*sptep));
-+			continue;
++	for (i = 0; i < *npages; i++, addr += PAGE_SIZE) {
++		if (signal_pending(current)) {
++			ret = -ERESTARTSYS;
++			goto err;
 +		}
 +
-+		flush = true;
++		if (need_resched())
++			cond_resched();
 +
-+		/* Keep the rmap if the SPTE is pinned. */
-+		if (kvm_mmu_zap_pinned_spte(kvm, sptep))
-+			continue;
++		gpa = hva_to_gpa(kvm, addr);
++		if (gpa == UNMAPPED_GVA) {
++			ret = -EFAULT;
++			goto err;
++		}
++		pfn = kvm_mmu_map_tdp_page(vcpu, gpa, SEV_PFERR, PG_LEVEL_4K);
++		if (is_error_noslot_pfn(pfn)) {
++			ret = -EFAULT;
++			goto err;
++		}
++		pages[i] = pfn_to_page(pfn);
++		get_page(pages[i]);
++	}
 +
- 		pte_list_remove(rmap_head, sptep);
--		flush = true;
-+		goto restart;
++	srcu_read_unlock(&kvm->srcu, idx);
++	vcpu_put(vcpu);
++
++	mutex_unlock(&vcpu->mutex);
++	return pages;
++
++err:
++	for ( ; i; --i)
++		put_page(pages[i-1]);
++
++	kvfree(pages);
++	return ERR_PTR(ret);
++}
++
+ static int sev_launch_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ {
+ 	unsigned long vaddr, vaddr_end, next_vaddr, npages, pages, size, i;
+@@ -439,9 +541,12 @@ static int sev_launch_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ 	vaddr_end = vaddr + size;
+ 
+ 	/* Lock the user memory. */
+-	inpages = sev_pin_memory(kvm, vaddr, size, &npages, 1);
+-	if (!inpages) {
+-		ret = -ENOMEM;
++	if (atomic_read(&kvm->online_vcpus))
++		inpages = sev_pin_memory_in_mmu(kvm, vaddr, size, &npages);
++	else
++		inpages = sev_pin_memory(kvm, vaddr, size, &npages, 1);
++	if (IS_ERR(inpages)) {
++		ret = PTR_ERR(inpages);
+ 		goto e_free;
  	}
  
- 	return flush;
-@@ -1774,6 +1824,10 @@ static int kvm_set_pte_rmapp(struct kvm *kvm, struct kvm_rmap_head *rmap_head,
+@@ -449,9 +554,11 @@ static int sev_launch_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ 	 * The LAUNCH_UPDATE command will perform in-place encryption of the
+ 	 * memory content (i.e it will write the same memory region with C=1).
+ 	 * It's possible that the cache may contain the data with C=0, i.e.,
+-	 * unencrypted so invalidate it first.
++	 * unencrypted so invalidate it first.  Flushing is automatically
++	 * handled if the pages can be pinned in the MMU.
+ 	 */
+-	sev_clflush_pages(inpages, npages);
++	if (!atomic_read(&kvm->online_vcpus))
++		sev_clflush_pages(inpages, npages);
  
- 		need_flush = 1;
- 
-+		/* Pinned pages should not be relocated (obviously). */
-+		if (WARN_ON_ONCE(is_pinned_pte(*sptep)))
-+			continue;
-+
- 		if (pte_write(*ptep)) {
- 			pte_list_remove(rmap_head, sptep);
- 			goto restart;
-@@ -2630,7 +2684,7 @@ static bool mmu_page_zap_pte(struct kvm *kvm, struct kvm_mmu_page *sp,
- 	struct kvm_mmu_page *child;
- 
- 	pte = *spte;
--	if (is_shadow_present_pte(pte)) {
-+	if (is_shadow_present_pte(pte) || is_pinned_pte(pte)) {
- 		if (is_last_spte(pte, sp->role.level)) {
- 			drop_spte(kvm, spte);
- 			if (is_large_pte(pte))
-@@ -2639,7 +2693,7 @@ static bool mmu_page_zap_pte(struct kvm *kvm, struct kvm_mmu_page *sp,
- 			child = to_shadow_page(pte & PT64_BASE_ADDR_MASK);
- 			drop_parent_pte(child, spte);
- 		}
--		return true;
-+		return is_shadow_present_pte(pte);
- 	}
- 
- 	if (is_mmio_spte(pte))
-@@ -2987,10 +3041,13 @@ static int set_spte(struct kvm_vcpu *vcpu, u64 *sptep,
- 	u64 spte = 0;
- 	int ret = 0;
- 	struct kvm_mmu_page *sp;
-+	bool is_mmio_pfn;
- 
- 	if (set_mmio_spte(vcpu, sptep, gfn, pfn, pte_access))
- 		return 0;
- 
-+	is_mmio_pfn = kvm_is_mmio_pfn(pfn);
-+
- 	sp = sptep_to_sp(sptep);
- 	if (sp_ad_disabled(sp))
- 		spte |= SPTE_AD_DISABLED_MASK;
-@@ -3023,15 +3080,14 @@ static int set_spte(struct kvm_vcpu *vcpu, u64 *sptep,
- 	if (level > PG_LEVEL_4K)
- 		spte |= PT_PAGE_SIZE_MASK;
- 	if (tdp_enabled)
--		spte |= kvm_x86_ops.get_mt_mask(vcpu, gfn,
--			kvm_is_mmio_pfn(pfn));
-+		spte |= kvm_x86_ops.get_mt_mask(vcpu, gfn, is_mmio_pfn);
- 
- 	if (host_writable)
- 		spte |= SPTE_HOST_WRITEABLE;
- 	else
- 		pte_access &= ~ACC_WRITE_MASK;
- 
--	if (!kvm_is_mmio_pfn(pfn))
-+	if (!is_mmio_pfn)
- 		spte |= shadow_me_mask;
- 
- 	spte |= (u64)pfn << PAGE_SHIFT;
-@@ -3065,6 +3121,12 @@ static int set_spte(struct kvm_vcpu *vcpu, u64 *sptep,
- 	if (speculative)
- 		spte = mark_spte_for_access_track(spte);
- 
-+	if (is_pinned_pte(*sptep) ||
-+	    (vcpu->arch.mmu->direct_map && !is_mmio_pfn &&
-+	     kvm_x86_ops.pin_spte &&
-+	     kvm_x86_ops.pin_spte(vcpu, gfn, level, pfn)))
-+		spte |= SPTE_PINNED_MASK;
-+
- set_pte:
- 	if (mmu_spte_update(sptep, spte))
- 		ret |= SET_SPTE_NEED_REMOTE_TLB_FLUSH;
-@@ -3081,29 +3143,33 @@ static int mmu_set_spte(struct kvm_vcpu *vcpu, u64 *sptep,
- 	int set_spte_ret;
- 	int ret = RET_PF_FIXED;
- 	bool flush = false;
-+	u64 pte = *sptep;
- 
- 	pgprintk("%s: spte %llx write_fault %d gfn %llx\n", __func__,
- 		 *sptep, write_fault, gfn);
- 
--	if (is_shadow_present_pte(*sptep)) {
-+	if (is_shadow_present_pte(pte)) {
- 		/*
- 		 * If we overwrite a PTE page pointer with a 2MB PMD, unlink
- 		 * the parent of the now unreachable PTE.
- 		 */
--		if (level > PG_LEVEL_4K && !is_large_pte(*sptep)) {
-+		if (level > PG_LEVEL_4K && !is_large_pte(pte)) {
- 			struct kvm_mmu_page *child;
--			u64 pte = *sptep;
- 
- 			child = to_shadow_page(pte & PT64_BASE_ADDR_MASK);
- 			drop_parent_pte(child, sptep);
- 			flush = true;
--		} else if (pfn != spte_to_pfn(*sptep)) {
-+		} else if (pfn != spte_to_pfn(pte)) {
- 			pgprintk("hfn old %llx new %llx\n",
--				 spte_to_pfn(*sptep), pfn);
-+				 spte_to_pfn(pte), pfn);
- 			drop_spte(vcpu->kvm, sptep);
- 			flush = true;
- 		} else
- 			was_rmapped = 1;
-+	} else if (is_pinned_pte(pte)) {
-+		WARN_ON_ONCE(pfn != spte_to_pfn(pte));
-+		ret = RET_PF_UNZAPPED;
-+		was_rmapped = 1;
- 	}
- 
- 	set_spte_ret = set_spte(vcpu, sptep, pte_access, level, gfn, pfn,
-@@ -3136,6 +3202,9 @@ static int mmu_set_spte(struct kvm_vcpu *vcpu, u64 *sptep,
- 			rmap_recycle(vcpu, sptep, gfn);
- 	}
- 
-+	if (ret == RET_PF_UNZAPPED && kvm_x86_ops.unzap_pinned_spte)
-+		kvm_x86_ops.unzap_pinned_spte(vcpu->kvm, gfn, level - 1);
-+
- 	return ret;
- }
- 
-@@ -5921,6 +5990,10 @@ static bool kvm_mmu_zap_collapsible_spte(struct kvm *kvm,
- 		sp = sptep_to_sp(sptep);
- 		pfn = spte_to_pfn(*sptep);
- 
-+		/* Pinned page dirty logging is not supported. */
-+		if (WARN_ON_ONCE(is_pinned_pte(*sptep)))
-+			continue;
-+
- 		/*
- 		 * We cannot do huge page mapping for indirect shadow pages,
- 		 * which are found on the last rmap (level = 1) when not using
+ 	for (i = 0; vaddr < vaddr_end; vaddr = next_vaddr, i += pages) {
+ 		int offset, len;
 -- 
 2.28.0
 
