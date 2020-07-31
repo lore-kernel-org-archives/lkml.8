@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 289F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B8CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0ACED22D04
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C112087C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 21:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbgGaVX2 (ORCPT
+        id S1729415AbgGaVXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 17:23:28 -0400
-Received: from mga14.intel.com ([192.55.52.115]:50224 "EHLO mga14.intel.com"
+        Fri, 31 Jul 2020 17:23:32 -0400
+Received: from mga14.intel.com ([192.55.52.115]:50227 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728655AbgGaVX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 17:23:28 -0400
-IronPort-SDR: RcyqnpSecoO/Ccf9TaeG6VdztrKD+CF578Zgm+BOiHrpDQZgyFOTz6QrkEtf1hLJvP6+Ia8/On
- ZIK3n9Ctg60Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9699"; a="151075129"
+        id S1728950AbgGaVX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 17:23:29 -0400
+IronPort-SDR: 0hVkYU3aPNT2LRzsPdvexGqZ08NSnATDz7OEIW0jTQXlCdoQE7brbjJH9j5y6RpmW6Gt2gzq3B
+ 4L27yS7wOWlQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9699"; a="151075131"
 X-IronPort-AV: E=Sophos;i="5.75,419,1589266800"; 
-   d="scan'208";a="151075129"
+   d="scan'208";a="151075131"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
   by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 14:23:27 -0700
-IronPort-SDR: RSAMy2OpJI1Dt0mMuQewKa8YeQBi06oPFkDh8y7woTwL97jtt2H4A+yYsdoNwAFpV7Wy3ntjF+
- wlx3vGuGYHyA==
+IronPort-SDR: FxnBvKfSaMOxsQS0SIA0SbI2MiRb3HdU0ywlypcOM9y16r0V9SdDurFsfBCMmQCZrv+sZbBylU
+ f8JMTscKh5AA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,419,1589266800"; 
-   d="scan'208";a="331191301"
+   d="scan'208";a="331191308"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.160])
   by orsmga007.jf.intel.com with ESMTP; 31 Jul 2020 14:23:26 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -46,9 +46,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         linux-kernel@vger.kernel.org,
         eric van tassell <Eric.VanTassell@amd.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [RFC PATCH 3/8] KVM: x86/mmu: Refactor handling of not-present SPTEs in mmu_set_spte()
-Date:   Fri, 31 Jul 2020 14:23:18 -0700
-Message-Id: <20200731212323.21746-4-sean.j.christopherson@intel.com>
+Subject: [RFC PATCH 5/8] KVM: SVM: Use the KVM MMU SPTE pinning hooks to pin pages on demand
+Date:   Fri, 31 Jul 2020 14:23:20 -0700
+Message-Id: <20200731212323.21746-6-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200731212323.21746-1-sean.j.christopherson@intel.com>
 References: <20200731212323.21746-1-sean.j.christopherson@intel.com>
@@ -59,40 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Return early from mmu_set_spte() if the new SPTE is not-present so as to
-reduce the indentation of the code that performs metadata updates, e.g.
-rmap manipulation.  Additional metadata updates will soon follow...
-
+Cc: eric van tassell <Eric.VanTassell@amd.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/mmu/mmu.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ arch/x86/kvm/svm/sev.c | 24 ++++++++++++++++++++++++
+ arch/x86/kvm/svm/svm.c |  3 +++
+ arch/x86/kvm/svm/svm.h |  3 +++
+ 3 files changed, 30 insertions(+)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 82f69a7456004..182f398036248 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -3126,12 +3126,14 @@ static int mmu_set_spte(struct kvm_vcpu *vcpu, u64 *sptep,
- 	if (!was_rmapped && is_large_pte(*sptep))
- 		++vcpu->kvm->stat.lpages;
- 
--	if (is_shadow_present_pte(*sptep)) {
--		if (!was_rmapped) {
--			rmap_count = rmap_add(vcpu, sptep, gfn);
--			if (rmap_count > RMAP_RECYCLE_THRESHOLD)
--				rmap_recycle(vcpu, sptep, gfn);
--		}
-+	/* No additional tracking necessary for not-present SPTEs. */
-+	if (!is_shadow_present_pte(*sptep))
-+		return ret;
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index f7f1f4ecf08e3..f640b8beb443e 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -1193,3 +1193,27 @@ void pre_sev_run(struct vcpu_svm *svm, int cpu)
+ 	svm->vmcb->control.tlb_ctl = TLB_CONTROL_FLUSH_ASID;
+ 	vmcb_mark_dirty(svm->vmcb, VMCB_ASID);
+ }
 +
-+	if (!was_rmapped) {
-+		rmap_count = rmap_add(vcpu, sptep, gfn);
-+		if (rmap_count > RMAP_RECYCLE_THRESHOLD)
-+			rmap_recycle(vcpu, sptep, gfn);
- 	}
++bool sev_pin_spte(struct kvm_vcpu *vcpu, gfn_t gfn, int level, kvm_pfn_t pfn)
++{
++	if (!sev_guest(vcpu->kvm))
++		return false;
++
++	get_page(pfn_to_page(pfn));
++
++	/*
++	 * Flush any cached lines of the page being added since "ownership" of
++	 * it will be transferred from the host to an encrypted guest.
++	 */
++	clflush_cache_range(__va(pfn << PAGE_SHIFT), page_level_size(level));
++
++	return true;
++}
++
++void sev_drop_pinned_spte(struct kvm *kvm, gfn_t gfn, int level, kvm_pfn_t pfn)
++{
++	if (WARN_ON_ONCE(!sev_guest(kvm)))
++		return;
++
++	put_page(pfn_to_page(pfn));
++}
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 0ae20af3a1677..a9f7515b4eff3 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -4150,6 +4150,9 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
+ 	.need_emulation_on_page_fault = svm_need_emulation_on_page_fault,
  
- 	return ret;
+ 	.apic_init_signal_blocked = svm_apic_init_signal_blocked,
++
++	.pin_spte = sev_pin_spte,
++	.drop_pinned_spte = sev_drop_pinned_spte,
+ };
+ 
+ static struct kvm_x86_init_ops svm_init_ops __initdata = {
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index a798e17317094..3060e3e529cbc 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -489,4 +489,7 @@ void pre_sev_run(struct vcpu_svm *svm, int cpu);
+ int __init sev_hardware_setup(void);
+ void sev_hardware_teardown(void);
+ 
++bool sev_pin_spte(struct kvm_vcpu *vcpu, gfn_t gfn, int level, kvm_pfn_t pfn);
++void sev_drop_pinned_spte(struct kvm *kvm, gfn_t gfn, int level, kvm_pfn_t pfn);
++
+ #endif
 -- 
 2.28.0
 
