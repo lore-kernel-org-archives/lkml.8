@@ -2,160 +2,292 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1210EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE80FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E506C22B48
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:08:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596182927;
-	bh=ePd6/OiZMprcl9UYE3J0Y5KODPdza6wJ4suF4gQ0YE0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=dMrNA/3RwU86gT6ZjNTZl0hLEhpAEhLozLCt0EkOKuZEbmPqhMhrKZaTtRdNOW2jN
-	 Y4+ZTXHyD5IhOJVOtxCSDUhhWBYhTYuW8Cd9r2NnOmR19gvpKt9jEg6ILCfCi/hR3u
-	 7fTjejVbmEc1y1hsLibsYmAPIBQg5cl7pBnYDe7g=
+	by mail.kernel.org (Postfix) with ESMTP id BDF8D20829
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:09:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731917AbgGaIIq (ORCPT
+        id S1731921AbgGaIJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:08:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58156 "EHLO mail.kernel.org"
+        Fri, 31 Jul 2020 04:09:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50342 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731910AbgGaIIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 04:08:43 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30278208E4;
-        Fri, 31 Jul 2020 08:08:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596182923;
-        bh=ePd6/OiZMprcl9UYE3J0Y5KODPdza6wJ4suF4gQ0YE0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=S4O4USj/OsragoUwjFAOdBOCSc0dwYBpbk8I+RVd4HSI3lQSaNEg6oVED2z0vW97t
-         A4p36MujPR9llHXhPzzeEsjrTJ47/bOWmvC2SqbiufCa4khYSz3COHB1AIyyAWn/IK
-         2fjxAIA7GTpknwV3MhV7HAJ9cFzSoOqyJsjsA+zM=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k1Q5p-00GTKI-P7; Fri, 31 Jul 2020 09:08:41 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 31 Jul 2020 09:08:41 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
-Subject: Re: [PATCH v2 2/2] irqchip/gic-v2, v3: Prevent SW resends entirely
-In-Reply-To: <jhjmu3gim0g.mognet@arm.com>
-References: <20200730170321.31228-1-valentin.schneider@arm.com>
- <20200730170321.31228-3-valentin.schneider@arm.com>
- <ba26464de5e82eace97924121d7bcd1d@kernel.org> <jhjmu3gim0g.mognet@arm.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <10da73b8a8937b08b0993513d6c20e98@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: valentin.schneider@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de, jason@lakedaemon.net, Lorenzo.Pieralisi@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        id S1731607AbgGaIJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 04:09:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 1A657AD2C;
+        Fri, 31 Jul 2020 08:09:27 +0000 (UTC)
+Date:   Fri, 31 Jul 2020 10:09:14 +0200
+Message-ID: <s5h7dukayxh.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] sound fixes for 5.8
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Valentin,
+Linus,
 
-On 2020-07-31 01:08, Valentin Schneider wrote:
-> Hi Marc,
-> 
-> On 30/07/20 19:10, Marc Zyngier wrote:
-> [...]
->>> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
->>> index e2b4cae88bce..a91ce1e73bd2 100644
->>> --- a/drivers/irqchip/irq-gic.c
->>> +++ b/drivers/irqchip/irq-gic.c
->>> @@ -983,6 +983,7 @@ static int gic_irq_domain_map(struct irq_domain
->>> *d, unsigned int irq,
->>>                              irq_hw_number_t hw)
->>>  {
->>>      struct gic_chip_data *gic = d->host_data;
->>> +	struct irq_data *irqd = irq_desc_get_irq_data(irq_to_desc(irq));
->>> 
->>>      if (hw < 32) {
->>>              irq_set_percpu_devid(irq);
->>> @@ -992,8 +993,11 @@ static int gic_irq_domain_map(struct irq_domain
->>> *d, unsigned int irq,
->>>              irq_domain_set_info(d, irq, hw, &gic->chip, 
->>> d->host_data,
->>>                                  handle_fasteoi_irq, NULL, NULL);
->>>              irq_set_probe(irq);
->>> -		irqd_set_single_target(irq_desc_get_irq_data(irq_to_desc(irq)));
->>> +		irqd_set_single_target(irqd);
->>>      }
->>> +
->>> +	/* Prevents SW retriggers which mess up the ACK/EOI ordering */
->>> +	irqd_set_handle_enforce_irqctx(irqd);
->>>      return 0;
->>>  }
->> 
->> I'm OK with this in principle, but this requires additional changes
->> in the rest of the GIC universe. The ITS driver needs to provide its 
->> own
->> retrigger function for LPIs (queuing an INT command), and any of the
->> SPI generating widgets that can be stacked on top of a GIC (GICv3-MBI,
->> GICv2m, and all the other Annapurna/Marvell/NVDIA wonders need to gain
->> directly or indirectly a call to irq_chip_retrigger_hierarchy().
->> 
-> 
-> Eep, yes indeed... I didn't see that can was full of worms, though even 
-> if
-> it only really matters for eoimode=0 I think it might still be worth it
-> (if only to respect the spec).
+please pull sound fixes for v5.8 from:
 
-Well, given that we are using EOImode=0 for all guests at the moment,
-there is some value it getting it right! ;-)
+  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.8
 
-> 
->> We can probably avoid changing the MSI widgets by teaching the MSI
->> code about the HW retrigger, but a number of other non-MSI drivers
->> will need some help...
->> 
->> I'll have a look tomorrow.
->> 
-> 
-> For LPIs AFAICT we could directly reuse its_irq_set_irqchip_state() - I 
-> see
-> the VPE side of things already has a HW retrigger callback.
+The topmost commit is 5649625344fe1f4695eace7c37d011e317bf66d5
 
-Yes, that's the idea (in general, if you implement the PENDING side of
-irq_set_irqchip_state(), retrigger comes for free).
+----------------------------------------------------------------
 
-> For gicv2m, I *think* we'd want irq_chip_retrigger_hierarchy() on both 
-> MSI
-> domains (which IIUC you suggest might be doable by adding the retrigger 
-> as
-> a default MSI chip op).
+sound fixes for 5.8-final or -rc8
 
-Yes, that was my idea.
+A few wrap-up small fixes for the usual HD-audio and USB-audio stuff:
+- A regression fix for S3 suspend on old Intel platforms
+- A fix for possible Oops in ASoC HD-audio binding
+- Trivial quirks for various devices
 
-> I'm not very familiar with the rest of the fauna, so I'll have to do 
-> some
-> reading tomorrow as well; it's probably high time for me to actually 
-> read
-> up on LPIs & ITS while I'm at it...
+----------------------------------------------------------------
 
-Look for anything that performs an interrupt allocation by calling
-into the parent with a 3 cell (DT case) fwspec. There is a bunch
-of them.
+Armas Spann (2):
+      ALSA: hda/realtek: enable headset mic of ASUS ROG Zephyrus G15(GA502) series with ALC289
+      ALSA: hda/realtek: typo_fix: enable headset mic of ASUS ROG Zephyrus G14(GA401) series with ALC289
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Kailang Yang (1):
+      ALSA: hda/realtek - Fixed HP right speaker no sound
+
+Laurence Tratt (1):
+      ALSA: usb-audio: Add implicit feedback quirk for SSL2
+
+PeiSen Hou (1):
+      ALSA: hda/realtek: Fix add a "ultra_low_power" function for intel reference board (alc256)
+
+Ranjani Sridharan (1):
+      ALSA: hda: fix NULL pointer dereference during suspend
+
+Takashi Iwai (2):
+      ALSA: hda: Workaround for spurious wakeups on some Intel platforms
+      ALSA: hda/hdmi: Fix keep_power assignment for non-component devices
+
+---
+ sound/pci/hda/hda_codec.c      |  8 ++++++++
+ sound/pci/hda/hda_controller.h |  2 +-
+ sound/pci/hda/hda_intel.c      | 17 ++++++++++++++---
+ sound/pci/hda/patch_hdmi.c     |  2 +-
+ sound/pci/hda/patch_realtek.c  | 36 +++++++++++++++++++++++++++++++-----
+ sound/usb/pcm.c                |  1 +
+ 6 files changed, 56 insertions(+), 10 deletions(-)
+
+diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
+index 7e3ae4534df9..803978d69e3c 100644
+--- a/sound/pci/hda/hda_codec.c
++++ b/sound/pci/hda/hda_codec.c
+@@ -2935,6 +2935,10 @@ static int hda_codec_runtime_suspend(struct device *dev)
+ 	struct hda_codec *codec = dev_to_hda_codec(dev);
+ 	unsigned int state;
+ 
++	/* Nothing to do if card registration fails and the component driver never probes */
++	if (!codec->card)
++		return 0;
++
+ 	cancel_delayed_work_sync(&codec->jackpoll_work);
+ 	state = hda_call_codec_suspend(codec);
+ 	if (codec->link_down_at_suspend ||
+@@ -2949,6 +2953,10 @@ static int hda_codec_runtime_resume(struct device *dev)
+ {
+ 	struct hda_codec *codec = dev_to_hda_codec(dev);
+ 
++	/* Nothing to do if card registration fails and the component driver never probes */
++	if (!codec->card)
++		return 0;
++
+ 	codec_display_power(codec, true);
+ 	snd_hdac_codec_link_up(&codec->core);
+ 	hda_call_codec_resume(codec);
+diff --git a/sound/pci/hda/hda_controller.h b/sound/pci/hda/hda_controller.h
+index 82e26442724b..a356fb0e5773 100644
+--- a/sound/pci/hda/hda_controller.h
++++ b/sound/pci/hda/hda_controller.h
+@@ -41,7 +41,7 @@
+ /* 24 unused */
+ #define AZX_DCAPS_COUNT_LPIB_DELAY  (1 << 25)	/* Take LPIB as delay */
+ #define AZX_DCAPS_PM_RUNTIME	(1 << 26)	/* runtime PM support */
+-/* 27 unused */
++#define AZX_DCAPS_SUSPEND_SPURIOUS_WAKEUP (1 << 27) /* Workaround for spurious wakeups after suspend */
+ #define AZX_DCAPS_CORBRP_SELF_CLEAR (1 << 28)	/* CORBRP clears itself after reset */
+ #define AZX_DCAPS_NO_MSI64      (1 << 29)	/* Stick to 32-bit MSIs */
+ #define AZX_DCAPS_SEPARATE_STREAM_TAG	(1 << 30) /* capture and playback use separate stream tag */
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 3565e2ab0965..3fbba2e51e36 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -298,7 +298,8 @@ enum {
+ /* PCH for HSW/BDW; with runtime PM */
+ /* no i915 binding for this as HSW/BDW has another controller for HDMI */
+ #define AZX_DCAPS_INTEL_PCH \
+-	(AZX_DCAPS_INTEL_PCH_BASE | AZX_DCAPS_PM_RUNTIME)
++	(AZX_DCAPS_INTEL_PCH_BASE | AZX_DCAPS_PM_RUNTIME |\
++	 AZX_DCAPS_SUSPEND_SPURIOUS_WAKEUP)
+ 
+ /* HSW HDMI */
+ #define AZX_DCAPS_INTEL_HASWELL \
+@@ -1028,7 +1029,14 @@ static int azx_suspend(struct device *dev)
+ 	chip = card->private_data;
+ 	bus = azx_bus(chip);
+ 	snd_power_change_state(card, SNDRV_CTL_POWER_D3hot);
+-	pm_runtime_force_suspend(dev);
++	/* An ugly workaround: direct call of __azx_runtime_suspend() and
++	 * __azx_runtime_resume() for old Intel platforms that suffer from
++	 * spurious wakeups after S3 suspend
++	 */
++	if (chip->driver_caps & AZX_DCAPS_SUSPEND_SPURIOUS_WAKEUP)
++		__azx_runtime_suspend(chip);
++	else
++		pm_runtime_force_suspend(dev);
+ 	if (bus->irq >= 0) {
+ 		free_irq(bus->irq, chip);
+ 		bus->irq = -1;
+@@ -1057,7 +1065,10 @@ static int azx_resume(struct device *dev)
+ 	if (azx_acquire_irq(chip, 1) < 0)
+ 		return -EIO;
+ 
+-	pm_runtime_force_resume(dev);
++	if (chip->driver_caps & AZX_DCAPS_SUSPEND_SPURIOUS_WAKEUP)
++		__azx_runtime_resume(chip, false);
++	else
++		pm_runtime_force_resume(dev);
+ 	snd_power_change_state(card, SNDRV_CTL_POWER_D0);
+ 
+ 	trace_azx_resume(chip);
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index 41eaa89660c3..cd46247988e4 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -2440,6 +2440,7 @@ static void generic_acomp_notifier_set(struct drm_audio_component *acomp,
+ 	mutex_lock(&spec->bind_lock);
+ 	spec->use_acomp_notifier = use_acomp;
+ 	spec->codec->relaxed_resume = use_acomp;
++	spec->codec->bus->keep_power = 0;
+ 	/* reprogram each jack detection logic depending on the notifier */
+ 	for (i = 0; i < spec->num_pins; i++)
+ 		reprogram_jack_detect(spec->codec,
+@@ -2534,7 +2535,6 @@ static void generic_acomp_init(struct hda_codec *codec,
+ 	if (!snd_hdac_acomp_init(&codec->bus->core, &spec->drm_audio_ops,
+ 				 match_bound_vga, 0)) {
+ 		spec->acomp_registered = true;
+-		codec->bus->keep_power = 0;
+ 	}
+ }
+ 
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 1b2d8e56390a..29f5878f0c50 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5975,6 +5975,16 @@ static void alc_fixup_disable_mic_vref(struct hda_codec *codec,
+ 		snd_hda_codec_set_pin_target(codec, 0x19, PIN_VREFHIZ);
+ }
+ 
++static void  alc285_fixup_hp_gpio_amp_init(struct hda_codec *codec,
++			      const struct hda_fixup *fix, int action)
++{
++	if (action != HDA_FIXUP_ACT_INIT)
++		return;
++
++	msleep(100);
++	alc_write_coef_idx(codec, 0x65, 0x0);
++}
++
+ /* for hda_fixup_thinkpad_acpi() */
+ #include "thinkpad_helper.c"
+ 
+@@ -6152,8 +6162,10 @@ enum {
+ 	ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS,
+ 	ALC269VC_FIXUP_ACER_HEADSET_MIC,
+ 	ALC269VC_FIXUP_ACER_MIC_NO_PRESENCE,
+-	ALC289_FIXUP_ASUS_G401,
++	ALC289_FIXUP_ASUS_GA401,
++	ALC289_FIXUP_ASUS_GA502,
+ 	ALC256_FIXUP_ACER_MIC_NO_PRESENCE,
++	ALC285_FIXUP_HP_GPIO_AMP_INIT,
+ };
+ 
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -7363,7 +7375,14 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC269_FIXUP_HEADSET_MIC
+ 	},
+-	[ALC289_FIXUP_ASUS_G401] = {
++	[ALC289_FIXUP_ASUS_GA401] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x19, 0x03a11020 }, /* headset mic with jack detect */
++			{ }
++		},
++	},
++	[ALC289_FIXUP_ASUS_GA502] = {
+ 		.type = HDA_FIXUP_PINS,
+ 		.v.pins = (const struct hda_pintbl[]) {
+ 			{ 0x19, 0x03a11020 }, /* headset mic with jack detect */
+@@ -7379,6 +7398,12 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC256_FIXUP_ASUS_HEADSET_MODE
+ 	},
++	[ALC285_FIXUP_HP_GPIO_AMP_INIT] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc285_fixup_hp_gpio_amp_init,
++		.chained = true,
++		.chain_id = ALC285_FIXUP_HP_GPIO_LED
++	},
+ };
+ 
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -7529,7 +7554,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x103c, 0x84e7, "HP Pavilion 15", ALC269_FIXUP_HP_MUTE_LED_MIC3),
+ 	SND_PCI_QUIRK(0x103c, 0x869d, "HP", ALC236_FIXUP_HP_MUTE_LED),
+ 	SND_PCI_QUIRK(0x103c, 0x8729, "HP", ALC285_FIXUP_HP_GPIO_LED),
+-	SND_PCI_QUIRK(0x103c, 0x8736, "HP", ALC285_FIXUP_HP_GPIO_LED),
++	SND_PCI_QUIRK(0x103c, 0x8736, "HP", ALC285_FIXUP_HP_GPIO_AMP_INIT),
+ 	SND_PCI_QUIRK(0x103c, 0x877a, "HP", ALC285_FIXUP_HP_MUTE_LED),
+ 	SND_PCI_QUIRK(0x103c, 0x877d, "HP", ALC236_FIXUP_HP_MUTE_LED),
+ 	SND_PCI_QUIRK(0x1043, 0x103e, "ASUS X540SA", ALC256_FIXUP_ASUS_MIC),
+@@ -7561,7 +7586,8 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1043, 0x1bbd, "ASUS Z550MA", ALC255_FIXUP_ASUS_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1043, 0x1c23, "Asus X55U", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
+ 	SND_PCI_QUIRK(0x1043, 0x1ccd, "ASUS X555UB", ALC256_FIXUP_ASUS_MIC),
+-	SND_PCI_QUIRK(0x1043, 0x1f11, "ASUS Zephyrus G14", ALC289_FIXUP_ASUS_G401),
++	SND_PCI_QUIRK(0x1043, 0x1e11, "ASUS Zephyrus G15", ALC289_FIXUP_ASUS_GA502),
++	SND_PCI_QUIRK(0x1043, 0x1f11, "ASUS Zephyrus G14", ALC289_FIXUP_ASUS_GA401),
+ 	SND_PCI_QUIRK(0x1043, 0x3030, "ASUS ZN270IE", ALC256_FIXUP_ASUS_AIO_GPIO2),
+ 	SND_PCI_QUIRK(0x1043, 0x831a, "ASUS P901", ALC269_FIXUP_STEREO_DMIC),
+ 	SND_PCI_QUIRK(0x1043, 0x834a, "ASUS S101", ALC269_FIXUP_STEREO_DMIC),
+@@ -7581,7 +7607,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x10cf, 0x1629, "Lifebook U7x7", ALC255_FIXUP_LIFEBOOK_U7x7_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x10cf, 0x1845, "Lifebook U904", ALC269_FIXUP_LIFEBOOK_EXTMIC),
+ 	SND_PCI_QUIRK(0x10ec, 0x10f2, "Intel Reference board", ALC700_FIXUP_INTEL_REFERENCE),
+-	SND_PCI_QUIRK(0x10ec, 0x1230, "Intel Reference board", ALC225_FIXUP_HEADSET_JACK),
++	SND_PCI_QUIRK(0x10ec, 0x1230, "Intel Reference board", ALC295_FIXUP_CHROME_BOOK),
+ 	SND_PCI_QUIRK(0x10f7, 0x8338, "Panasonic CF-SZ6", ALC269_FIXUP_HEADSET_MODE),
+ 	SND_PCI_QUIRK(0x144d, 0xc109, "Samsung Ativ book 9 (NP900X3G)", ALC269_FIXUP_INV_DMIC),
+ 	SND_PCI_QUIRK(0x144d, 0xc169, "Samsung Notebook 9 Pen (NP930SBE-K01US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
+index 40b7cd13fed9..a69d9e75f66f 100644
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -367,6 +367,7 @@ static int set_sync_ep_implicit_fb_quirk(struct snd_usb_substream *subs,
+ 		ifnum = 0;
+ 		goto add_sync_ep_from_ifnum;
+ 	case USB_ID(0x07fd, 0x0008): /* MOTU M Series */
++	case USB_ID(0x31e9, 0x0001): /* Solid State Logic SSL2 */
+ 	case USB_ID(0x31e9, 0x0002): /* Solid State Logic SSL2+ */
+ 	case USB_ID(0x0d9a, 0x00df): /* RTX6001 */
+ 		ep = 0x81;
