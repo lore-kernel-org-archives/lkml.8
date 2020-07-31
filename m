@@ -2,88 +2,90 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9809C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575ABC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80E8D208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41080208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:46:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731941AbgGaIpI (ORCPT
+        id S1731879AbgGaIq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:45:08 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:42864
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730233AbgGaIpI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 04:45:08 -0400
-X-IronPort-AV: E=Sophos;i="5.75,417,1589234400"; 
-   d="scan'208";a="355689191"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 10:45:05 +0200
-Date:   Fri, 31 Jul 2020 10:45:05 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Denis Efremov <efremov@linux.com>,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH v4] coccinelle: api: add kvfree script
-In-Reply-To: <96a71d0e-ae6f-9355-b02a-b1a084376f1e@web.de>
-Message-ID: <alpine.DEB.2.22.394.2007311044340.2439@hadrien>
-References: <75532a99-4498-c64a-de34-c9033782aa9e@web.de> <alpine.DEB.2.22.394.2007302125580.2548@hadrien> <96a71d0e-ae6f-9355-b02a-b1a084376f1e@web.de>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Fri, 31 Jul 2020 04:46:29 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:58706 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730233AbgGaIq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 04:46:29 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id B3116FB03;
+        Fri, 31 Jul 2020 10:46:26 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id vohb_geD2LhT; Fri, 31 Jul 2020 10:46:25 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 4408F4537D; Fri, 31 Jul 2020 10:46:25 +0200 (CEST)
+Date:   Fri, 31 Jul 2020 10:46:25 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, l.stach@pengutronix.de,
+        lukas@mntmn.com, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com
+Subject: Re: [PATCH v9 1/5] drm/imx: compile imx directory by default
+Message-ID: <20200731084625.GA12560@bogon.m.sigxcpu.org>
+References: <20200731081836.3048-1-laurentiu.palcu@oss.nxp.com>
+ <20200731081836.3048-2-laurentiu.palcu@oss.nxp.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-701465646-1596185105=:2439"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200731081836.3048-2-laurentiu.palcu@oss.nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi,
+On Fri, Jul 31, 2020 at 11:18:29AM +0300, Laurentiu Palcu wrote:
+> From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> 
+> Currently the drm/imx/ directory is compiled only if DRM_IMX is set. Adding a
+> new IMX related IP in the same directory would need DRM_IMX to be set, which would
+> bring in also IPUv3 core driver...
+> 
+> The current patch would allow adding new IPs in the imx/ directory without needing
+> to set DRM_IMX.
 
---8323329-701465646-1596185105=:2439
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Reviewed-by: Guido G�nther <agx@sigxcpu.org> 
 
-
-
-On Fri, 31 Jul 2020, Markus Elfring wrote:
-
-> >>> +msg = "WARNING: kmalloc is used to allocate this memory at line %s" % (k[0].line)
-> >>> +coccilib.org.print_todo(p[0], msg)
-> >>
-> >> * I find the diagnostic text insufficient.
-> >
-> > I also find the message not very informative.
->
-> Is it interesting how quick such views can change?
-
-Yes.  If one looks at something in context, one and understand it better
-than the extract that you provided.
-
-julia
-
-> https://lore.kernel.org/cocci/alpine.DEB.2.22.394.2007302214160.2548@hadrien/
-> https://systeme.lip6.fr/pipermail/cocci/2020-July/008041.html
-> https://lkml.org/lkml/2020/7/30/1015
->
-> “…
-> Actually, the message looks fine.  Sorry for the noise about that.
-> …”
->
->
-> Can such notifications become more helpful?
->
-> Regards,
-> Markus
->
---8323329-701465646-1596185105=:2439--
+> 
+> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+> ---
+>  drivers/gpu/drm/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+> index 2f31579f91d4..81569009f884 100644
+> --- a/drivers/gpu/drm/Makefile
+> +++ b/drivers/gpu/drm/Makefile
+> @@ -100,7 +100,7 @@ obj-$(CONFIG_DRM_MSM) += msm/
+>  obj-$(CONFIG_DRM_TEGRA) += tegra/
+>  obj-$(CONFIG_DRM_STM) += stm/
+>  obj-$(CONFIG_DRM_STI) += sti/
+> -obj-$(CONFIG_DRM_IMX) += imx/
+> +obj-y 			+= imx/
+>  obj-$(CONFIG_DRM_INGENIC) += ingenic/
+>  obj-$(CONFIG_DRM_MEDIATEK) += mediatek/
+>  obj-$(CONFIG_DRM_MESON)	+= meson/
+> -- 
+> 2.23.0
+> 
