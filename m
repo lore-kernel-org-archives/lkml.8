@@ -2,74 +2,82 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7121C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB724C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD477206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F8620838
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:21:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731995AbgGaIUU (ORCPT
+        id S1731956AbgGaIVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:20:20 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9305 "EHLO huawei.com"
+        Fri, 31 Jul 2020 04:21:20 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35048 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731510AbgGaIUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 04:20:20 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9DCCE504443213A5E4B4;
-        Fri, 31 Jul 2020 16:20:17 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Fri, 31 Jul 2020
- 16:20:10 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <chunfeng.yun@mediatek.com>, <gregkh@linuxfoundation.org>
-CC:     <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] usb: mtu3: Remove unsused inline function is_first_entry
-Date:   Fri, 31 Jul 2020 16:20:08 +0800
-Message-ID: <20200731082008.33016-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S1731510AbgGaIVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 04:21:20 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 83900546A0BE68C9AED0;
+        Fri, 31 Jul 2020 16:21:16 +0800 (CST)
+Received: from [127.0.0.1] (10.74.173.29) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Fri, 31 Jul 2020
+ 16:21:08 +0800
+Subject: Re: [PATCH 03/10] crypto: hisilicon/zip - modify debugfs interface
+ parameters
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+References: <1595648683-50590-1-git-send-email-shenyang39@huawei.com>
+ <1595648683-50590-4-git-send-email-shenyang39@huawei.com>
+ <20200731081227.GA20741@gondor.apana.org.au>
+CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
+        <linux-crypto@vger.kernel.org>, <xuzaibo@huawei.com>,
+        <wangzhou1@hisilicon.com>
+From:   "shenyang (M)" <shenyang39@huawei.com>
+Message-ID: <41618b33-abd5-d265-4395-5bf4ece5a0cc@huawei.com>
+Date:   Fri, 31 Jul 2020 16:21:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.174.179.108]
+In-Reply-To: <20200731081227.GA20741@gondor.apana.org.au>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.173.29]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is never used, so can be removed.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/usb/mtu3/mtu3.h | 6 ------
- 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/usb/mtu3/mtu3.h b/drivers/usb/mtu3/mtu3.h
-index 71f4f02c05c6..aef0a0bba25a 100644
---- a/drivers/usb/mtu3/mtu3.h
-+++ b/drivers/usb/mtu3/mtu3.h
-@@ -370,12 +370,6 @@ static inline struct mtu3 *gadget_to_mtu3(struct usb_gadget *g)
- 	return container_of(g, struct mtu3, g);
- }
- 
--static inline int is_first_entry(const struct list_head *list,
--	const struct list_head *head)
--{
--	return list_is_last(head, list);
--}
--
- static inline struct mtu3_request *to_mtu3_request(struct usb_request *req)
- {
- 	return req ? container_of(req, struct mtu3_request, request) : NULL;
--- 
-2.17.1
+On 2020/7/31 16:12, Herbert Xu wrote:
+> On Sat, Jul 25, 2020 at 11:44:36AM +0800, Yang Shen wrote:
+>> From: Shukun Tan <tanshukun1@huawei.com>
+>>
+>> Update debugfs interface parameters
+>>
+>> Signed-off-by: Shukun Tan <tanshukun1@huawei.com>
+>> Signed-off-by: Yang Shen <shenyang39@huawei.com>
+>> Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
+>> ---
+>>  drivers/crypto/hisilicon/zip/zip_main.c | 55 ++++++++++++++-------------------
+>>  1 file changed, 24 insertions(+), 31 deletions(-)
+>
+> This patch doesn't apply against cryptodev.
+>
+> Plesae stop sending patch series that depend on others.
+>
+> Thanks,
+>
 
+Sorry, this patchset depends on
+https://patchwork.kernel.org/cover/11680181/
+which cover letter is '[PATCH v3 00/10] crypto: hisilicon/qm - misc fixes'
+
+I'm really sorry for the trouble.
+
+Thanks,
 
