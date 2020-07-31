@@ -2,96 +2,138 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E48C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BCEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94DA522B42
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:26:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596220014;
-	bh=aF/K7GiblNRv2qyADnt0bFTFutu2SpB2MhNNgPXSX2s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qPDnRTD1Gho7yueaPMlw5LUWMhkOu0JQRVr7feaIC4kbdsmIizL+MkignDPKZEBvn
-	 SeobOLkmFriQO372vQc6YfTh8YjbjYTgDGZ5ITVy52gam2Wh2yJ0a0ngYpUsSJge0l
-	 gi06inhsOPAx1cTRCfctbVcM6sKMl0c/9jVXTgFM=
+	by mail.kernel.org (Postfix) with ESMTP id 5ECD722B43
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:27:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="jirAyMKB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387778AbgGaS0x (ORCPT
+        id S2387781AbgGaS1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 14:26:53 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44487 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387652AbgGaS0x (ORCPT
+        Fri, 31 Jul 2020 14:27:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58996 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387652AbgGaS1O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 14:26:53 -0400
-Received: by mail-io1-f66.google.com with SMTP id v6so17324394iow.11;
-        Fri, 31 Jul 2020 11:26:52 -0700 (PDT)
+        Fri, 31 Jul 2020 14:27:14 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21079C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 11:27:14 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id 6so23696755qtt.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 11:27:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tV7sc6wflPo/OY3J/lFfg1ZRZlhKID3SNfnVWUEEij0=;
+        b=jirAyMKBcEnHMUKDFUsSmCToGT23RCdr6mO7c82AJACLIFDcftcqtQv7Y0rpjSOAZa
+         0Hh+Gkg0mXocP7OYRjdIhqSzcbiRWDUjAWJRAlUl4vtGGsHuEh74PRbLnc0uSwtOpuy/
+         +u+c664zqSnJ3ocdEv65VSLvGtOu1+TA+Le6rXbzmPjN1kTHwfPSCstj6EusTPHr06Ew
+         tdI/nddtwUQsYmraBl7AGJhzOmKShzGAPGhJiypVRfJbrcIlL6IAyoF6oM05IjxYsHb0
+         HBkqvC6HByoBCfOx3KJBz8HksYdfzNIAYp7926RYYrbyoGblBM7e1pjBe8gPKE4MlaFM
+         CWjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=KuRbjLAdk2qF/sclDpIueUjPnM2F0YR1YcWElNzgbpU=;
-        b=t6cwFtKE6N8y6jrpzbOq+VAzwZht9JT2wKANhmal7xL7kl8InN3Nhe6EXTvVPCKdLW
-         /LYXLUWu1rAKhhCeNiU2Vm+4019ELQP8BcAF+ogu3wHqzuMyUzxqIfzksT/+Gl4NWGNg
-         6XGR6k/AxeZMhup8AnT07P9zHxcS1d6+9Oxd2Rss+dxK68eqxmUwTzHCFreqI+SqygqV
-         BniSVwtdXhiHq1SzUKqvwlJL0FfjTXnaCRkenLqjfJLRjb33Gz+mtU1iqXta771EaRDA
-         oI30RWQv0X/VSkXqVSiGM/FSumX/1wkMKnZ6NRvyVumBkh1fO8dx9Yq8us/3HhbZhV0p
-         7LHQ==
-X-Gm-Message-State: AOAM531C8iV0SZiIrs0nqHOO0f0ydCnDhw7m7v/OAQo2fsGVGXetDts7
-        L53CTEcaPgteB7ayzYUO3A==
-X-Google-Smtp-Source: ABdhPJyQ+8uvOFgjmwMbjdzK/nhCeKXR4ECMzLtnQXdzQAe67dqY7s5ndxY9dXDf+RshQZN4g44q9A==
-X-Received: by 2002:a05:6602:150:: with SMTP id v16mr4742498iot.80.1596220012124;
-        Fri, 31 Jul 2020 11:26:52 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id t17sm2378512ilq.69.2020.07.31.11.26.50
+        bh=tV7sc6wflPo/OY3J/lFfg1ZRZlhKID3SNfnVWUEEij0=;
+        b=IVWHU/3aKjZ2koqoU+KDw3oPpbNwVJQvXKExSVj79W3Cg9WNwhIO3Gr0ukyLwBJ/Oh
+         3uveJ9lkOUAMSUWh0ffvuTFsUSZnEanfTvJ/BUOPqjRtnBoK/23GbsqkYTipp7q7nj0f
+         l8lIDRV0eSk4y4JPwI7QEcMOfXi0GX1YVmepTsSYUY25wPp3S/EKt6jynz1sXEua2RLY
+         5dZ8OkwpFf1iLo3UOmoAPcDa2FQVEeX5ZLHtp0P2xgn6LwKLfajAe3Lu5RAmLaagtZ3b
+         H484URcq6xYy/0f4zyCAwPq7gIeSWL5ezQgLt+n9w8qhpNqV+1vZq3Z44yki9+CUsfLM
+         PZaA==
+X-Gm-Message-State: AOAM530iMUy8Q7SFfvI9E8TImiCkbhCaBwEswLLcmZk3vRUXFAcxKhRe
+        JOtwnducUc7j4KF4jbEbavKN+g==
+X-Google-Smtp-Source: ABdhPJwzQPkhbiQL7KlW31VPxmlTv3PTAEP2UbW2gPotPOEEZgW2ADBjjJCvh6rUtEiaGporHH73jw==
+X-Received: by 2002:ac8:8b3:: with SMTP id v48mr2085093qth.274.1596220033350;
+        Fri, 31 Jul 2020 11:27:13 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id x67sm9513983qke.136.2020.07.31.11.27.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 11:26:51 -0700 (PDT)
-Received: (nullmailer pid 531147 invoked by uid 1000);
-        Fri, 31 Jul 2020 18:26:50 -0000
-Date:   Fri, 31 Jul 2020 12:26:50 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Hanks Chen <hanks.chen@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Loda Chou <loda.chou@mediatek.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org,
-        CC Hwang <cc.hwang@mediatek.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        Andy Teng <andy.teng@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v10 1/3] dt-bindings: pinctrl: add bindings for MediaTek
- MT6779 SoC
-Message-ID: <20200731182650.GA531094@bogus>
-References: <1596115816-11758-1-git-send-email-hanks.chen@mediatek.com>
- <1596115816-11758-2-git-send-email-hanks.chen@mediatek.com>
+        Fri, 31 Jul 2020 11:27:12 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1k1ZkO-002AoB-41; Fri, 31 Jul 2020 15:27:12 -0300
+Date:   Fri, 31 Jul 2020 15:27:12 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak
+ in rds_notify_queue_get()
+Message-ID: <20200731182712.GI24045@ziepe.ca>
+References: <20200730192026.110246-1-yepeilin.cs@gmail.com>
+ <20200731045301.GI75549@unreal>
+ <20200731053306.GA466103@kroah.com>
+ <20200731053333.GB466103@kroah.com>
+ <20200731140452.GE24045@ziepe.ca>
+ <20200731142148.GA1718799@kroah.com>
+ <20200731143604.GF24045@ziepe.ca>
+ <20200731171924.GA2014207@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1596115816-11758-2-git-send-email-hanks.chen@mediatek.com>
+In-Reply-To: <20200731171924.GA2014207@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Jul 2020 21:30:14 +0800, Hanks Chen wrote:
-> From: Andy Teng <andy.teng@mediatek.com>
-> 
-> Add devicetree bindings for MediaTek MT6779 pinctrl driver.
-> 
-> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
-> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
-> ---
->  .../pinctrl/mediatek,mt6779-pinctrl.yaml      | 202 ++++++++++++++++++
->  1 file changed, 202 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
-> 
+On Fri, Jul 31, 2020 at 07:19:24PM +0200, Greg Kroah-Hartman wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> > I tried for a bit and didn't find a way to get even old gcc 4.4 to not
+> > initialize the holes.
+> 
+> Odd, so it is just the "= {0};" that does not zero out the holes?
+
+Nope, it seems to work fine too. I tried a number of situations and I
+could not get the compiler to not zero holes, even back to gcc 4.4
+
+It is not just accidental either, take this:
+
+	struct rds_rdma_notify {
+		unsigned long user_token;
+		unsigned char status;
+		unsigned long user_token1 __attribute__((aligned(32)));
+	} foo = {0};
+
+Which has quite a big hole, clang generates:
+
+	movq	$0, 56(%rdi)
+	movq	$0, 48(%rdi)
+	movq	$0, 40(%rdi)
+	movq	$0, 32(%rdi)
+	movq	$0, 24(%rdi)
+	movq	$0, 16(%rdi)
+	movq	$0, 8(%rdi)
+	movq	$0, (%rdi)
+
+Deliberate extra instructions to fill both holes. gcc 10 does the
+same, older gcc's do create a rep stosq over the whole thing.
+
+Some fiddling with godbolt shows quite a variety of output, but I
+didn't see anything that looks like a compiler not filling
+padding. Even godbolt's gcc 4.1 filled the padding, which is super old.
+
+In several cases it seems the aggregate initializer produced better
+code than memset, in other cases it didn't
+
+Without an actual example where this doesn't work right it is hard to
+say anything more..
+
+Jason
