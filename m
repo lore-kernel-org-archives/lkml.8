@@ -5,187 +5,196 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C26CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7C1E20829
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 841152067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 07:49:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="OUGn9+lO"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Eb4adLDM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731805AbgGaHsi (ORCPT
+        id S1731804AbgGaHt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 03:48:38 -0400
-Received: from mail-eopbgr80044.outbound.protection.outlook.com ([40.107.8.44]:17294
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731738AbgGaHsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 03:48:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TMg6t9qjcH5EC3gU9ZFg8azk6+jrAs+KqlmYPGcyhaS3XGrxFQlkmdYdmz5cuNl0qlmUrnQk01ew8SNhHaBz3D8LgsA9gZ+9IZBa0MvdFkbElyLvpPrOmFfOMl4md1K237L112gxUoHIMUbSy1Muvj0RxTdqhLqPcHE08DYE5iAxfMcpcP9yx1SekpyJvFKOM6G1YP75mOot5oIVPPbQO303/7scNGYXnwLR1NTfgwbHN8UjapeW1ziLdc+VH8AV61KfTwwxaHHOSPArhavLC1GwBMRp3kbtsaMqhxBhvnpiCpLOXOHRYphQMqlW4WNxq/76ezdwl2Jcmv3iCcFlDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wXj41I+kmhEnQ3DTOTzgfkE0ubI+vrYEo+gJ+M87KKg=;
- b=OJuls1kmN4u4KxiiRKMaAG4iq2clVOuebDaz5Ua7OfEC/TkhTwZxf+VqlcMIS4T2l1242DV8XrU+qNhJjKkv09CS+Xuuf3J9Hupj6X8b+MfTSC57YXLkGzKIc0VpBDWDIFDySKvE3sXkJk652mImoK//96pvo2AZsplNGaib8s+Ctbh/UKo6sGchO3G7+NMCJqdxnngDQQgCTQB93vDEeGOofNbTeAwSZnrvOy1tds4eDSljj4UD8o6Wv3ulyQ/OPfo7Tdhcocal6CyQ59s/wcWCn15g6G6BeHkAK02eaY6E/dr+3Wb87DbBDsCrBG9el14VuPLN3dyLJBhpNMmHYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wXj41I+kmhEnQ3DTOTzgfkE0ubI+vrYEo+gJ+M87KKg=;
- b=OUGn9+lOu3usjVPoJ9XyPEOb6xVhKjPs6UjHwKQsUWRLo7Nr53MADm4opiLZ+Sh6Csk0wUqSRd+uOFQA1biu37C0GrxbDBXY1lo+xz+fkFzs1BAm8oQ/OfyzBQYzpHsg3RA/cZQOjSZxm7fJ/bYHrOqKE59aPMBkk8DIldxJLF4=
-Received: from AM6PR04MB3976.eurprd04.prod.outlook.com (2603:10a6:209:3f::17)
- by AM6PR04MB5080.eurprd04.prod.outlook.com (2603:10a6:20b:2::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Fri, 31 Jul
- 2020 07:48:34 +0000
-Received: from AM6PR04MB3976.eurprd04.prod.outlook.com
- ([fe80::f5cb:bc18:1991:c31f]) by AM6PR04MB3976.eurprd04.prod.outlook.com
- ([fe80::f5cb:bc18:1991:c31f%2]) with mapi id 15.20.3239.020; Fri, 31 Jul 2020
- 07:48:34 +0000
-From:   Madalin Bucur <madalin.bucur@nxp.com>
-To:     Florinel Iordache <florinel.iordache@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net 4/5] fsl/fman: check dereferencing null pointer
-Thread-Topic: [PATCH net 4/5] fsl/fman: check dereferencing null pointer
-Thread-Index: AQHWZwZeOzBzxxS0S0aifMgnGj4ms6khT8LA
-Date:   Fri, 31 Jul 2020 07:48:34 +0000
-Message-ID: <AM6PR04MB397680E5084359739F2FC08EEC4E0@AM6PR04MB3976.eurprd04.prod.outlook.com>
-References: <1596177969-27645-1-git-send-email-florinel.iordache@nxp.com>
- <1596177969-27645-5-git-send-email-florinel.iordache@nxp.com>
-In-Reply-To: <1596177969-27645-5-git-send-email-florinel.iordache@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [82.76.227.152]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ce190a7f-285f-480c-d21e-08d8352620a2
-x-ms-traffictypediagnostic: AM6PR04MB5080:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB50804514DE2A99D1DF47F6E1EC4E0@AM6PR04MB5080.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2803;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: JDzaa6yVKfqlHbXtZIpW3Yh6q7kKvyhryEpBFzqPxZKRM76MZm6vBfrlTPUdz7Cod4J5yncyWxs58jm94bsBAJkCPO/1Tw5LIEL0Hoi2T7ah6/+uBO2aHtk3tcnIDItfyI86I8bM/Lp+z3dscRxRgjiNSqsDluPrg0lwXzEHxXixh31OeYBvgcbA+Q5JXUmEGnSlbGwZBKksANgsC5Myyd702ABw27yQOCrMAjK4p+HxC9EoGKzCeVl/ebdpNUNXi1m4c8Zoc3vf08K4o3+6PoZR7+mvnXjGWl7EbvQLJmluWvdSWzFes/+Sgr2RwGxfqAroXjxRoX99hD/Kl2oLqw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB3976.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(346002)(366004)(136003)(39860400002)(7696005)(66946007)(8676002)(316002)(186003)(76116006)(26005)(52536014)(66446008)(478600001)(6506007)(53546011)(66476007)(110136005)(64756008)(71200400001)(66556008)(4326008)(8936002)(55016002)(9686003)(5660300002)(2906002)(83380400001)(33656002)(44832011)(86362001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: YkywNaQwSpu3pF38lsrk/9o2JTXaZCpMcGSMprudV2vlP88Vi1pQ3t1WC1+Xii1JElGO2gkhZ/U+ihNP3e+gPGRrEIAwjXFirqe4MFmIpf8ofKRsH/Yr/7lVBvhkSzamtHlWjmBTEc1BszRg21VUA4ceeze74VSz1trFPF5qHkSwXVuc3MUkLISuuWWicMnLdmS6ahhBnw1Aw+LUKwh1cT1mxrlAXTw9TurwjelJths/O0AAwVPUs+vl+FDUZNKvfKXCgKdyXMFwb0bZwm0vuTqZ6/Mi11Mad4hIuoE85kcjM6RG2oFOc8DIShBdCrIYAd/cnRAasgSXpiswnUqbhJ8LiAKZAAG9QAhXhN4d06eJHZdKsjPtRkk3mZRQz9cwFRmLhvyAMrurtjY9HvP6rh/k8M3EQ4GCV65B6VPn/Trr8pQVuubdLSrfICeCdC57JBBLyRaqFoPrL0Y4IQAHOl3WqxDnW48RUqioc2hjZ8c=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 31 Jul 2020 03:49:58 -0400
+Received: from ozlabs.org ([203.11.71.1]:55215 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731684AbgGaHt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 03:49:57 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BHzvm3NhBz9sRK;
+        Fri, 31 Jul 2020 17:49:56 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1596181796;
+        bh=vgtrJGuvJCtQtz6V9aSKtpyUkKz3RW8OCC7iYMgVatA=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=Eb4adLDMncuvoJsfXDgzwZkTlK6c7QJEQpW9tDwGSEUqHy4195obPsJMK9r49D524
+         S3lNErNX6QpE0MVLd7JIMgC/3MwQcZWPqQ3zUDYdiwR4MYhISX9ciT4EnQ2gdpNoyC
+         vnsymo1WsK/FL7ynJyYVUMf8VZcPOWCrglYL85A5ZJMewCM9b/A44okPvsXEFtFRJw
+         TjmZXZiJuK3Jhbcf7+WhX3dQFL2lt9GAOHQtClBp43pCn/E4FfaNY3EfS9KgUiymve
+         39z2HJnIACR3a4d06P1QqXNe/kiWigwciGcE+fe9f5dyqcgYuk/oVHEzCk6904zFM/
+         eHl5fkSbXS7gg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jordan Niethe <jniethe5@gmail.com>
+Subject: Re: [PATCH v4 07/10] Powerpc/numa: Detect support for coregroup
+In-Reply-To: <20200727053230.19753-8-srikar@linux.vnet.ibm.com>
+References: <20200727053230.19753-1-srikar@linux.vnet.ibm.com> <20200727053230.19753-8-srikar@linux.vnet.ibm.com>
+Date:   Fri, 31 Jul 2020 17:49:55 +1000
+Message-ID: <8736585djw.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB3976.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce190a7f-285f-480c-d21e-08d8352620a2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2020 07:48:34.4746
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TQ8PUiomkzl/1zrnuUINiPEyYi2AGHYgi5dgQ9f6fV9cppVpKUEo6iMP6YNG6bA0uLZQsrXDtlqRXCJhW/eU5w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5080
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Florinel Iordache <florinel.iordache@nxp.com>
-> Sent: 31 July 2020 09:46
-> To: Madalin Bucur <madalin.bucur@nxp.com>; davem@davemloft.net;
-> kuba@kernel.org; netdev@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org; Florinel Iordache
-> <florinel.iordache@nxp.com>
-> Subject: [PATCH net 4/5] fsl/fman: check dereferencing null pointer
->=20
-> Add a safe check to avoid dereferencing null pointer
->=20
-> Fixes: 57ba4c9b ("fsl/fman: Add FMan MAC support")
->=20
-> Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
+Srikar Dronamraju <srikar@linux.vnet.ibm.com> writes:
+> Add support for grouping cores based on the device-tree classification.
+> - The last domain in the associativity domains always refers to the
+> core.
+> - If primary reference domain happens to be the penultimate domain in
+> the associativity domains device-tree property, then there are no
+> coregroups. However if its not a penultimate domain, then there are
+> coregroups. There can be more than one coregroup. For now we would be
+> interested in the last or the smallest coregroups.
+
+This still doesn't tell me what a coregroup actually represents.
+
+I get that it's a grouping of cores, and that the device tree specifies
+it for us, but grouping based on what?
+
+I think the answer is we aren't being told by firmware, it's just a
+grouping based on some opaque performance characteristic and we just
+have to take that as given.
+
+But please explain that clearly in the change log and the code comments.
+
+cheers
+
+
+> Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+> Cc: LKML <linux-kernel@vger.kernel.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Anton Blanchard <anton@ozlabs.org>
+> Cc: Oliver O'Halloran <oohall@gmail.com>
+> Cc: Nathan Lynch <nathanl@linux.ibm.com>
+> Cc: Michael Neuling <mikey@neuling.org>
+> Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: Jordan Niethe <jniethe5@gmail.com>
+> Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+> Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 > ---
->  drivers/net/ethernet/freescale/fman/fman_dtsec.c | 4 ++--
->  drivers/net/ethernet/freescale/fman/fman_memac.c | 3 ++-
->  drivers/net/ethernet/freescale/fman/fman_tgec.c  | 2 +-
->  3 files changed, 5 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/net/ethernet/freescale/fman/fman_dtsec.c
-> b/drivers/net/ethernet/freescale/fman/fman_dtsec.c
-> index 004c266..bce3c93 100644
-> --- a/drivers/net/ethernet/freescale/fman/fman_dtsec.c
-> +++ b/drivers/net/ethernet/freescale/fman/fman_dtsec.c
-> @@ -1200,7 +1200,7 @@ int dtsec_del_hash_mac_address(struct fman_mac
-> *dtsec, enet_addr_t *eth_addr)
->  		list_for_each(pos,
->  			      &dtsec->multicast_addr_hash->lsts[bucket]) {
->  			hash_entry =3D ETH_HASH_ENTRY_OBJ(pos);
-> -			if (hash_entry->addr =3D=3D addr) {
-> +			if (hash_entry && hash_entry->addr =3D=3D addr) {
->  				list_del_init(&hash_entry->node);
->  				kfree(hash_entry);
->  				break;
-> @@ -1213,7 +1213,7 @@ int dtsec_del_hash_mac_address(struct fman_mac
-> *dtsec, enet_addr_t *eth_addr)
->  		list_for_each(pos,
->  			      &dtsec->unicast_addr_hash->lsts[bucket]) {
->  			hash_entry =3D ETH_HASH_ENTRY_OBJ(pos);
-> -			if (hash_entry->addr =3D=3D addr) {
-> +			if (hash_entry && hash_entry->addr =3D=3D addr) {
->  				list_del_init(&hash_entry->node);
->  				kfree(hash_entry);
->  				break;
-> diff --git a/drivers/net/ethernet/freescale/fman/fman_memac.c
-> b/drivers/net/ethernet/freescale/fman/fman_memac.c
-> index bb02b37..52ee982 100644
-> --- a/drivers/net/ethernet/freescale/fman/fman_memac.c
-> +++ b/drivers/net/ethernet/freescale/fman/fman_memac.c
-> @@ -852,6 +852,7 @@ int memac_set_tx_pause_frames(struct fman_mac *memac,
-> u8 priority,
->=20
->  	tmp =3D ioread32be(&regs->command_config);
->  	tmp &=3D ~CMD_CFG_PFC_MODE;
-> +	priority =3D 0;
-
-This line seems to be added by mistake.
-
->=20
->  	iowrite32be(tmp, &regs->command_config);
->=20
-> @@ -981,7 +982,7 @@ int memac_del_hash_mac_address(struct fman_mac *memac=
-,
-> enet_addr_t *eth_addr)
->=20
->  	list_for_each(pos, &memac->multicast_addr_hash->lsts[hash]) {
->  		hash_entry =3D ETH_HASH_ENTRY_OBJ(pos);
-> -		if (hash_entry->addr =3D=3D addr) {
-> +		if (hash_entry && hash_entry->addr =3D=3D addr) {
->  			list_del_init(&hash_entry->node);
->  			kfree(hash_entry);
->  			break;
-> diff --git a/drivers/net/ethernet/freescale/fman/fman_tgec.c
-> b/drivers/net/ethernet/freescale/fman/fman_tgec.c
-> index 8c7eb87..41946b1 100644
-> --- a/drivers/net/ethernet/freescale/fman/fman_tgec.c
-> +++ b/drivers/net/ethernet/freescale/fman/fman_tgec.c
-> @@ -626,7 +626,7 @@ int tgec_del_hash_mac_address(struct fman_mac *tgec,
-> enet_addr_t *eth_addr)
->=20
->  	list_for_each(pos, &tgec->multicast_addr_hash->lsts[hash]) {
->  		hash_entry =3D ETH_HASH_ENTRY_OBJ(pos);
-> -		if (hash_entry->addr =3D=3D addr) {
-> +		if (hash_entry && hash_entry->addr =3D=3D addr) {
->  			list_del_init(&hash_entry->node);
->  			kfree(hash_entry);
->  			break;
-> --
-> 1.9.1
-
+> Changelog v1 -> v2:
+> 	Explained Coregroup in commit msg (Michael Ellerman)
+>
+>  arch/powerpc/include/asm/smp.h |  1 +
+>  arch/powerpc/kernel/smp.c      |  1 +
+>  arch/powerpc/mm/numa.c         | 34 +++++++++++++++++++++-------------
+>  3 files changed, 23 insertions(+), 13 deletions(-)
+>
+> diff --git a/arch/powerpc/include/asm/smp.h b/arch/powerpc/include/asm/smp.h
+> index 49a25e2400f2..5bdc17a7049f 100644
+> --- a/arch/powerpc/include/asm/smp.h
+> +++ b/arch/powerpc/include/asm/smp.h
+> @@ -28,6 +28,7 @@
+>  extern int boot_cpuid;
+>  extern int spinning_secondaries;
+>  extern u32 *cpu_to_phys_id;
+> +extern bool coregroup_enabled;
+>  
+>  extern void cpu_die(void);
+>  extern int cpu_to_chip_id(int cpu);
+> diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
+> index 3c5ccf6d2b1c..698000c7f76f 100644
+> --- a/arch/powerpc/kernel/smp.c
+> +++ b/arch/powerpc/kernel/smp.c
+> @@ -74,6 +74,7 @@ static DEFINE_PER_CPU(int, cpu_state) = { 0 };
+>  
+>  struct task_struct *secondary_current;
+>  bool has_big_cores;
+> +bool coregroup_enabled;
+>  
+>  DEFINE_PER_CPU(cpumask_var_t, cpu_sibling_map);
+>  DEFINE_PER_CPU(cpumask_var_t, cpu_smallcore_map);
+> diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+> index 2298899a0f0a..51cb672f113b 100644
+> --- a/arch/powerpc/mm/numa.c
+> +++ b/arch/powerpc/mm/numa.c
+> @@ -886,7 +886,9 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
+>  static void __init find_possible_nodes(void)
+>  {
+>  	struct device_node *rtas;
+> -	u32 numnodes, i;
+> +	const __be32 *domains;
+> +	int prop_length, max_nodes;
+> +	u32 i;
+>  
+>  	if (!numa_enabled)
+>  		return;
+> @@ -895,25 +897,31 @@ static void __init find_possible_nodes(void)
+>  	if (!rtas)
+>  		return;
+>  
+> -	if (of_property_read_u32_index(rtas, "ibm,current-associativity-domains",
+> -				min_common_depth, &numnodes)) {
+> -		/*
+> -		 * ibm,current-associativity-domains is a fairly recent
+> -		 * property. If it doesn't exist, then fallback on
+> -		 * ibm,max-associativity-domains. Current denotes what the
+> -		 * platform can support compared to max which denotes what the
+> -		 * Hypervisor can support.
+> -		 */
+> -		if (of_property_read_u32_index(rtas, "ibm,max-associativity-domains",
+> -				min_common_depth, &numnodes))
+> +	/*
+> +	 * ibm,current-associativity-domains is a fairly recent property. If
+> +	 * it doesn't exist, then fallback on ibm,max-associativity-domains.
+> +	 * Current denotes what the platform can support compared to max
+> +	 * which denotes what the Hypervisor can support.
+> +	 */
+> +	domains = of_get_property(rtas, "ibm,current-associativity-domains",
+> +					&prop_length);
+> +	if (!domains) {
+> +		domains = of_get_property(rtas, "ibm,max-associativity-domains",
+> +					&prop_length);
+> +		if (!domains)
+>  			goto out;
+>  	}
+>  
+> -	for (i = 0; i < numnodes; i++) {
+> +	max_nodes = of_read_number(&domains[min_common_depth], 1);
+> +	for (i = 0; i < max_nodes; i++) {
+>  		if (!node_possible(i))
+>  			node_set(i, node_possible_map);
+>  	}
+>  
+> +	prop_length /= sizeof(int);
+> +	if (prop_length > min_common_depth + 2)
+> +		coregroup_enabled = 1;
+> +
+>  out:
+>  	of_node_put(rtas);
+>  }
+> -- 
+> 2.17.1
