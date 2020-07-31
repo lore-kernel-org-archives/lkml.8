@@ -2,123 +2,144 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E40C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A686C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7EDF208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:41:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jFUk/3lg"
+	by mail.kernel.org (Postfix) with ESMTP id 6720F20829
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:41:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732247AbgGaJlY (ORCPT
+        id S1732273AbgGaJlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:41:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732080AbgGaJlX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:41:23 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DD3BC061574;
-        Fri, 31 Jul 2020 02:41:23 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id bh1so3791750plb.12;
-        Fri, 31 Jul 2020 02:41:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=60oA9rNnse/fDL09mT4gNyvwtlkjkgn68ejSkWL01U4=;
-        b=jFUk/3lgMKRsuw2kqebmjsqO3kZlYUfWJDtyz7dnP7klnelndxxizX1YTwf1x6TM2R
-         O1lgLRyPxdNgntgUQJexNMdBjlD+BqsqKwpT9VelCtT40egjJ4ldVWBfu8Nhw9R65JJ0
-         LVY09ZubTy0a09ES38ILxS6WZg/nkZr1DQicrZdzpHDvTrdA2oMqwr/NDkD7em1lra5Y
-         CF6HjTo7QB6XxCpWfZEA1UU/XuxbvrE9lDmlqtCLC33e2Oi8+1N/Jtzixb7fhiwaYJMp
-         +Bv7tociKsr2tF6b3fa3I/8aPu5hShX37foP6lyH37KpNsGRzzpMOTlnkx8CmODYL0iH
-         Dpdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=60oA9rNnse/fDL09mT4gNyvwtlkjkgn68ejSkWL01U4=;
-        b=CiZ0vmpJl8BYck6ljAIGvcF0bJCPqPxs6Uz0I8CtIR5tRG4YUkEzi9gF65S4P6P0KV
-         2jIekKnTJo3M9meX7l0VEdHhlXszx4fevhifXYGBjaWRTrpNCyMlqAXmfxb+4K6cGC6c
-         /sD41gE9Di/FVx/eEwJiU7KaQ3bpmWsuO29HfLG4emyswjE0Ehp7JpyHsz0uWrEt6LZE
-         NnIOy2CuJS2bDvkysZHRBLEdeqRaI04TmC7kBSLfFNCC4islQQDnlpFCXRYxupeyig0d
-         JL3vclfMy2OyjhVeIl4IMyGoCBVIPE2NTmAv4JjUeMWgAtUjCgwr1Y3ZMBME9HGHC1WG
-         VhEA==
-X-Gm-Message-State: AOAM530wJQcfWPlHz3TxNt3zr5qHUtrijTtcZF5hxQjU5wLNBltlOwFi
-        Ttu1r1rccPFU77FOAEIDEZI6hdR2OfCpMel/1FwQMBjw
-X-Google-Smtp-Source: ABdhPJxcqKLMLWULglf9HaGDtkBv3V/+Irpwu3izGZjgy3swW/REesBO3cHyi7PIGB2vTTxtdDvdfyXPkcJBDeX5wTM=
-X-Received: by 2002:a63:ce41:: with SMTP id r1mr2998288pgi.203.1596188482768;
- Fri, 31 Jul 2020 02:41:22 -0700 (PDT)
+        Fri, 31 Jul 2020 05:41:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:53892 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732257AbgGaJla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 05:41:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57AEC31B;
+        Fri, 31 Jul 2020 02:41:30 -0700 (PDT)
+Received: from [10.37.12.83] (unknown [10.37.12.83])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C54463F66E;
+        Fri, 31 Jul 2020 02:41:28 -0700 (PDT)
+Subject: Re: [RFC PATCH 06/14] coresight: Convert claim and lock operations to
+ use access wrappers
+To:     mathieu.poirier@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mike.leach@linaro.org, coresight@lists.linaro.org
+References: <20200722172040.1299289-1-suzuki.poulose@arm.com>
+ <20200722172040.1299289-7-suzuki.poulose@arm.com>
+ <20200730195450.GC3155687@xps15>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <453196b1-7549-dca5-169a-eff98f8d720e@arm.com>
+Date:   Fri, 31 Jul 2020 10:46:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-References: <20200730193510.578309-1-jusual@redhat.com> <CAHp75VcyRjAr3ugmAWYcKMrAeea6ioQOPfJnj-Srntdg_W8ScQ@mail.gmail.com>
- <873658kpj2.fsf@vitty.brq.redhat.com>
-In-Reply-To: <873658kpj2.fsf@vitty.brq.redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 31 Jul 2020 12:41:06 +0300
-Message-ID: <CAHp75Vfp8aabZo_NW78kM-OLLKDgK1CwvLZNwmPZyQgaw6bXtQ@mail.gmail.com>
-Subject: Re: [PATCH] KVM: x86: Use MMCONFIG for all PCI config space accesses
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Julia Suvorova <jusual@redhat.com>,
-        "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200730195450.GC3155687@xps15>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 12:22 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
-> Andy Shevchenko <andy.shevchenko@gmail.com> writes:
-> > On Thu, Jul 30, 2020 at 10:37 PM Julia Suvorova <jusual@redhat.com> wrote:
+On 07/30/2020 08:54 PM, Mathieu Poirier wrote:
+> On Wed, Jul 22, 2020 at 06:20:32PM +0100, Suzuki K Poulose wrote:
+>> Convert the CoreSight CLAIM set/clear, LOCK/UNLOCK operations to
+>> use the coresight device access abstraction.
+>>
+>> Mostly a mechanical change.
+>>
+>> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+>> Cc: Mike Leach <mike.leach@linaro.org>
+>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> ---
+>>   drivers/hwtracing/coresight/coresight-catu.c  | 14 ++--
+>>   .../hwtracing/coresight/coresight-cpu-debug.c | 26 ++++++--
+>>   .../hwtracing/coresight/coresight-cti-sysfs.c |  4 +-
+>>   drivers/hwtracing/coresight/coresight-cti.c   | 30 +++++----
+>>   drivers/hwtracing/coresight/coresight-etb10.c | 20 +++---
+>>   .../coresight/coresight-etm3x-sysfs.c         |  8 +--
+>>   drivers/hwtracing/coresight/coresight-etm3x.c | 44 ++++++++-----
+>>   drivers/hwtracing/coresight/coresight-etm4x.c | 44 ++++++++-----
+>>   .../hwtracing/coresight/coresight-funnel.c    | 18 ++---
+>>   drivers/hwtracing/coresight/coresight-priv.h  |  9 +--
+>>   .../coresight/coresight-replicator.c          | 27 +++++---
+>>   drivers/hwtracing/coresight/coresight-stm.c   | 46 ++++++++-----
+>>   .../hwtracing/coresight/coresight-tmc-etf.c   | 36 ++++++----
+>>   .../hwtracing/coresight/coresight-tmc-etr.c   | 19 +++---
+>>   drivers/hwtracing/coresight/coresight-tpiu.c  |  9 +--
+>>   drivers/hwtracing/coresight/coresight.c       | 66 +++++++++++--------
+>>   include/linux/coresight.h                     | 16 ++---
+>>   17 files changed, 266 insertions(+), 170 deletions(-)
+>>
 
 ...
 
-> >> +static int __init kvm_pci_arch_init(void)
-> >> +{
-> >> +       if (raw_pci_ext_ops &&
+>> diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
+>> index 67fc3e3b77d8..d61ffbfe0a5c 100644
+>> --- a/drivers/hwtracing/coresight/coresight-funnel.c
+>> +++ b/drivers/hwtracing/coresight/coresight-funnel.c
+>> @@ -52,13 +52,14 @@ static int dynamic_funnel_enable_hw(struct funnel_drvdata *drvdata, int port)
+>>   {
+>>   	u32 functl;
+>>   	int rc = 0;
+>> +	struct coresight_device *csdev = drvdata->csdev;
+>>   
+>> -	CS_UNLOCK(drvdata->base);
+>> +	CS_UNLOCK(&csdev->access);
+>>   
+>>   	functl = readl_relaxed(drvdata->base + FUNNEL_FUNCTL);
+>>   	/* Claim the device only when we enable the first slave */
+>>   	if (!(functl & FUNNEL_ENSx_MASK)) {
+>> -		rc = coresight_claim_device_unlocked(drvdata->base);
+>> +		rc = coresight_claim_device_unlocked(csdev);
+>>   		if (rc)
+>>   			goto done;
+>>   	}
+>> @@ -69,7 +70,7 @@ static int dynamic_funnel_enable_hw(struct funnel_drvdata *drvdata, int port)
+>>   	writel_relaxed(functl, drvdata->base + FUNNEL_FUNCTL);
+>>   	writel_relaxed(drvdata->priority, drvdata->base + FUNNEL_PRICTL);
+>>   done:
+>> -	CS_LOCK(drvdata->base);
+>> +	CS_LOCK(&csdev->access);
+>>   	return rc;
+>>   }
+>>   
+>> @@ -101,8 +102,9 @@ static void dynamic_funnel_disable_hw(struct funnel_drvdata *drvdata,
+>>   				      int inport)
+>>   {
+>>   	u32 functl;
+>> +	struct coresight_device *csdev = drvdata->csdev;
+> 
+> Sometimes a csdev variable is declared, sometimes not as in get_funnel_ctrl_hw()
+> below and this makes it hard to review all these changes.  Please select a
+> heuristic and keep with it.  I prefer this version but not dead set on it.
 
-> >> +               return 0;
-> >> +       }
-> >
-> >> +       return 1;
-> >
-> > Hmm... I don't remember what positive codes means there. Perhaps you
-> > need to return a rather error code?
->
-> If I'm reading the code correctly,
->
-> pci_arch_init() has the following:
->
->         if (x86_init.pci.arch_init && !x86_init.pci.arch_init())
->                 return 0;
->
->
-> so returning '1' here means 'continue' and this seems to be
-> correct. (E.g. Hyper-V's hv_pci_init() does the same). What I'm not sure
-> about is 'return 0' above as this will result in skipping the rest of
-> pci_arch_init(). Was this desired or should we return '1' in both cases?
+Agreed, will change.
 
-I think it depends what you want. In complex cases we recognize three
-possibilities
 
--ERRNO: function failed, we have to stop and bailout with error from callee
-0: function OK, stop and return 0
-1: function OK, continue the rest in callee
+> 
+> Also please split in two, on for CS_LOCK/UNLOCK() and another one for the claim
+> tag functions.
 
-Do we have needs in this or is the current enough for all (exist) callees?
+There is a minor dependency here. CS_LOCK/UNLOCK is issued from the 
+coresight_{dis}claim_device() versions. One option is to choose the
+following order:
 
--- 
-With Best Regards,
-Andy Shevchenko
+1) convert claim/disclaim to accept csdev.
+    And use csdev->access->base for CS_LOCK/UNLOCK.
+
+2) Convert all CS_LOCK/UNLOCK to work on csdev->access.
+
+I thought having this at one go might look better. But I agree, it is
+better to split this one. I will give it a go.
+
+Cheers
+Suzuki
