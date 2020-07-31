@@ -2,189 +2,100 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E1BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F515C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87A662177B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F5B62245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 18:16:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BaiJHYpM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c1nSfus8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387685AbgGaSO3 (ORCPT
+        id S2387702AbgGaSQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 14:14:29 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59450 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730040AbgGaSO2 (ORCPT
+        Fri, 31 Jul 2020 14:16:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730040AbgGaSQF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 14:14:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596219266;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=h5RCnyOaFSBCI3Qz6zkjCZ63e5lETgkYf1JyHMYznJQ=;
-        b=BaiJHYpMKLZRnY1SjACNT2k+MF92GGj96lIlWTLwR51gopxnf6sni6KFhmkkdcv+4mQLiK
-        KbAAHdEs1mPMiNcs+bXh04aUR866R6ZgO7yDKkje07duOZ7RYb9U1HPomVnoJLPODVErSm
-        MVcR27itljNKO6ZMQ5qyl6seRv8IpKI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-491-wSMzoo6iOy6LHz813pxjOA-1; Fri, 31 Jul 2020 14:14:22 -0400
-X-MC-Unique: wSMzoo6iOy6LHz813pxjOA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5CA0318839CD;
-        Fri, 31 Jul 2020 18:14:20 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 732831002388;
-        Fri, 31 Jul 2020 18:14:19 +0000 (UTC)
-Date:   Fri, 31 Jul 2020 12:14:18 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] iommu: Add iommu_aux_get_domain_for_dev()
-Message-ID: <20200731121418.0274afb8@x1.home>
-In-Reply-To: <06fd91c1-a978-d526-7e2b-fec619a458e4@linux.intel.com>
-References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
-        <20200714055703.5510-4-baolu.lu@linux.intel.com>
-        <20200729142507.182cd18a@x1.home>
-        <06fd91c1-a978-d526-7e2b-fec619a458e4@linux.intel.com>
-Organization: Red Hat
+        Fri, 31 Jul 2020 14:16:05 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3F8DC061574;
+        Fri, 31 Jul 2020 11:16:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=WbtzOVCRlAfFjJFM2IifB/d+SPx9ULrVUgo17CsAxIk=; b=c1nSfus8ldaPmfvbONTg9B72M/
+        5obEFm0AxYVrEpBqZ5YyQc/gp8+2RT+5eVMnSoVxp0MQTMjSO98HJhIeqUK/LHi3jbky8gJduRFIu
+        Kpx5puS0FwnHYqgn08qUQfdNsMCeXO6RZ2ZiXBv4dXUqNMREKU9WxcrVSwXoN/nLj78AgDzZKD5Fv
+        mtr2930HRl9Eh3I9iKbhI4YXdPXQFRco8nVzv1sfneISnZTbvKUkIhUDyv81w9k3qEfJWDu5RLIIy
+        JY01QCELVFs5/SmjWnhqcLoWVPpixhQa5UcMNsC1SdIlR7SQuNOX4hab60WmSyY1THl0b2mMz0x59
+        e7BWzo6w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k1ZZG-0002Ky-Id; Fri, 31 Jul 2020 18:15:42 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B552330066E;
+        Fri, 31 Jul 2020 20:15:38 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9865E203C0A1B; Fri, 31 Jul 2020 20:15:38 +0200 (CEST)
+Date:   Fri, 31 Jul 2020 20:15:38 +0200
+From:   peterz@infradead.org
+To:     Dongdong Yang <contribute.kernel@gmail.com>
+Cc:     gregkh@linuxfoundation.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-pm@vger.kernel.org, yangdongdong@xiaomi.com,
+        tanggeliang@xiaomi.com, taojun@xiaomi.com, huangqiwu@xiaomi.com,
+        rocking@linux.alibaba.com, fengwei@xiaomi.com,
+        zhangguoquan@xiaomi.com, gulinghua@xiaomi.com, duhui@xiaomi.com
+Subject: Re: [PATCH] sched: Provide USF for the portable equipment.
+Message-ID: <20200731181538.GB2674@hirez.programming.kicks-ass.net>
+References: <cover.1596101307.git.yangdongdong@xiaomi.com>
+ <1596116273-2290-1-git-send-email-contribute.kernel@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1596116273-2290-1-git-send-email-contribute.kernel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jul 2020 14:30:03 +0800
-Lu Baolu <baolu.lu@linux.intel.com> wrote:
+On Thu, Jul 30, 2020 at 09:35:43PM +0800, Dongdong Yang wrote:
+> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+> index 7fbaee2..7bc3429 100644
+> --- a/kernel/sched/cpufreq_schedutil.c
+> +++ b/kernel/sched/cpufreq_schedutil.c
+> @@ -289,12 +289,21 @@ unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
+>  	return min(max, util);
+>  }
+>  
+> +#ifdef CONFIG_SCHED_USF
+> +void (*adjust_task_pred_demand)(int cpuid, unsigned long *util,
+> +	struct rq *rq) = NULL;
+> +EXPORT_SYMBOL(adjust_task_pred_demand);
+> +#endif
+> +
+>  static unsigned long sugov_get_util(struct sugov_cpu *sg_cpu)
+>  {
+>  	struct rq *rq = cpu_rq(sg_cpu->cpu);
+>  	unsigned long util = cpu_util_cfs(rq);
+>  	unsigned long max = arch_scale_cpu_capacity(sg_cpu->cpu);
+> -
+> +#ifdef CONFIG_SCHED_USF
+> +	if (adjust_task_pred_demand)
+> +		adjust_task_pred_demand(sg_cpu->cpu, &util, rq);
+> +#endif
+>  	sg_cpu->max = max;
+>  	sg_cpu->bw_dl = cpu_bw_dl(rq);
 
-> Hi Alex,
-> 
-> On 2020/7/30 4:25, Alex Williamson wrote:
-> > On Tue, 14 Jul 2020 13:57:02 +0800
-> > Lu Baolu<baolu.lu@linux.intel.com>  wrote:
-> >   
-> >> The device driver needs an API to get its aux-domain. A typical usage
-> >> scenario is:
-> >>
-> >>          unsigned long pasid;
-> >>          struct iommu_domain *domain;
-> >>          struct device *dev = mdev_dev(mdev);
-> >>          struct device *iommu_device = vfio_mdev_get_iommu_device(dev);
-> >>
-> >>          domain = iommu_aux_get_domain_for_dev(dev);
-> >>          if (!domain)
-> >>                  return -ENODEV;
-> >>
-> >>          pasid = iommu_aux_get_pasid(domain, iommu_device);
-> >>          if (pasid <= 0)
-> >>                  return -EINVAL;
-> >>
-> >>           /* Program the device context */
-> >>           ....
-> >>
-> >> This adds an API for such use case.
-> >>
-> >> Suggested-by: Alex Williamson<alex.williamson@redhat.com>
-> >> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
-> >> ---
-> >>   drivers/iommu/iommu.c | 18 ++++++++++++++++++
-> >>   include/linux/iommu.h |  7 +++++++
-> >>   2 files changed, 25 insertions(+)
-> >>
-> >> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> >> index cad5a19ebf22..434bf42b6b9b 100644
-> >> --- a/drivers/iommu/iommu.c
-> >> +++ b/drivers/iommu/iommu.c
-> >> @@ -2817,6 +2817,24 @@ void iommu_aux_detach_group(struct iommu_domain *domain,
-> >>   }
-> >>   EXPORT_SYMBOL_GPL(iommu_aux_detach_group);
-> >>   
-> >> +struct iommu_domain *iommu_aux_get_domain_for_dev(struct device *dev)
-> >> +{
-> >> +	struct iommu_domain *domain = NULL;
-> >> +	struct iommu_group *group;
-> >> +
-> >> +	group = iommu_group_get(dev);
-> >> +	if (!group)
-> >> +		return NULL;
-> >> +
-> >> +	if (group->aux_domain_attached)
-> >> +		domain = group->domain;  
-> > Why wouldn't the aux domain flag be on the domain itself rather than
-> > the group?  Then if we wanted sanity checking in patch 1/ we'd only
-> > need to test the flag on the object we're provided.  
-> 
-> Agreed. Given that a group may contain both non-aux and aux devices,
-> adding such flag in iommu_group doesn't make sense.
-> 
-> > 
-> > If we had such a flag, we could create an iommu_domain_is_aux()
-> > function and then simply use iommu_get_domain_for_dev() and test that
-> > it's an aux domain in the example use case.  It seems like that would
-> > resolve the jump from a domain to an aux-domain just as well as adding
-> > this separate iommu_aux_get_domain_for_dev() interface.  The is_aux
-> > test might also be useful in other cases too.  
-> 
-> Let's rehearsal our use case.
-> 
->          unsigned long pasid;
->          struct iommu_domain *domain;
->          struct device *dev = mdev_dev(mdev);
->          struct device *iommu_device = vfio_mdev_get_iommu_device(dev);
-> 
-> [1]     domain = iommu_get_domain_for_dev(dev);
->          if (!domain)
->                  return -ENODEV;
-> 
-> [2]     pasid = iommu_aux_get_pasid(domain, iommu_device);
->          if (pasid <= 0)
->                  return -EINVAL;
-> 
->           /* Program the device context */
->           ....
-> 
-> The reason why I add this iommu_aux_get_domain_for_dev() is that we need
-> to make sure the domain got at [1] is valid to be used at [2].
-> 
-> https://lore.kernel.org/linux-iommu/20200707150408.474d81f1@x1.home/
-
-Yep, I thought that was a bit of a leap in logic.
-
-> When calling into iommu_aux_get_pasid(), the iommu driver should make
-> sure that @domain is a valid aux-domain for @iommu_device. Hence, for
-> our use case, it seems that there's no need for a is_aux_domain() api.
-> 
-> Anyway, I'm not against adding a new is_aux_domain() api if there's a
-> need elsewhere.
-
-I think it could work either way, we could have an
-iommu_get_aux_domain_for_dev() which returns NULL if the domain is not
-an aux domain, or we could use iommu_get_domain_for_dev() and the
-caller could test the domain with iommu_is_aux_domain() if they need to
-confirm if it's an aux domain.  The former could even be written using
-the latter, a wrapper of iommu_get_domain_for_dev() that checks aux
-property before returning.  Thanks,
-
-Alex
-
+NAK
