@@ -2,159 +2,289 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 900D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31371C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7550720829
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0869420838
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 08:55:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gJ1DQMpp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731985AbgGaIzc (ORCPT
+        id S1732000AbgGaIzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:55:32 -0400
-Received: from mga01.intel.com ([192.55.52.88]:41906 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731442AbgGaIzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 04:55:31 -0400
-IronPort-SDR: BBBlt642vWrM5ZPobpU6T6fIq0qDLMaiNDsYo4eVI3RYeSZUO2kwYx45qIxbfYA+QH0z3ewrFM
- 7Zgo3gkwlYog==
-X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="169859896"
-X-IronPort-AV: E=Sophos;i="5.75,417,1589266800"; 
-   d="scan'208";a="169859896"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 01:55:30 -0700
-IronPort-SDR: nmb+XMoh02PUfQprcyXyK12f7cs2TJZ1rnJC+wHXlxz0GZKdWy7TrE/C5yDmNNPxGzzrkwFHxR
- YzCCCsT7x3hQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,417,1589266800"; 
-   d="scan'208";a="304882293"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002.jf.intel.com with ESMTP; 31 Jul 2020 01:55:28 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1k1Qp5-005H7g-ML; Fri, 31 Jul 2020 11:55:27 +0300
-Date:   Fri, 31 Jul 2020 11:55:27 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Kars Mulder <kerneldev@karsmulder.nl>
-Cc:     linux-kernel@vger.kernel.org, Eldad Zack <eldad@fogrefinery.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mans Rullgard <mans@mansr.com>, Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 2/2] kstrto*: do not describe simple_strto*() as
- obsolete/replaced
-Message-ID: <20200731085527.GH3703480@smile.fi.intel.com>
-References: <1ee1-5f234c00-f3-165a6440@234394593>
- <29b9-5f234c80-13-4e3aa200@244003027>
+        Fri, 31 Jul 2020 04:55:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731989AbgGaIze (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 04:55:34 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50A37C061575
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 01:55:34 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id a14so27287638wra.5
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 01:55:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PyioNdq8CYBvYgbkg8UuSG7Wqo4MUTr2xfEMOw9a9rE=;
+        b=gJ1DQMppeYGWIl/xt4mhVBRMBU0vPPeIW+lpH27Uv8zpU3m+ggx5euP9ZtcQhQF/OX
+         E64+yzIOVHvWUNyqhXWsVm5YOOfibgDqUixJyt6FHUGiARBRyr4pilLoh8vKs2cWjOsS
+         w2zgqojCdQtg0rcRAYhI3V6W7ePsunHAc0g9U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PyioNdq8CYBvYgbkg8UuSG7Wqo4MUTr2xfEMOw9a9rE=;
+        b=bH8R048KVIf64PCtbFqUUbRTPFZ1u4vZvN4BaNz6GEkuXazIwYoWx1XCaWYbUW5nvE
+         hj3EcFDui1VFUwbzXw1rpBkWEP2ICYxDDkRUSBYTxhYWDQbK9At3v5NI+7kJKW34XuqI
+         +L3vj4sdF2B+8Qd9VfXF6iqwVo/SMtrR2yZt+bKnA6kxYKUvp64mpP/n//uDVgEyn8lE
+         E09UnxnfX0H+/FTJ7qyIqkUNwHtxurWF5/1ccCmF8fO3L9A6CGiBVFk31G0kGig/6AHr
+         ccL/LLeY2eEMFULmokKZpQsPIsvyWh5Z9/4DyIap+eoYZ3DvPT/HdEfDgVH8dXscFxo0
+         j6Qw==
+X-Gm-Message-State: AOAM531g9ywLe+90PG2YMDpu1EDWvfQFnOFFE4Mmb1XOF1vdpJEwKvvR
+        PYQVSYbLBasp4yyjWW9WTVsnV8DE0pzRuRwiK4m/pg==
+X-Google-Smtp-Source: ABdhPJyRhrXp3l6RU/5xr+rqhFrRNMWDU/mr680vSH+27w5AXxfytNKMGTBpF7RmL2K+p94pKbqb9iePJ20hmgfEMro=
+X-Received: by 2002:a5d:4bc8:: with SMTP id l8mr2466765wrt.159.1596185732557;
+ Fri, 31 Jul 2020 01:55:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <29b9-5f234c80-13-4e3aa200@244003027>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200721104422.369368-1-cychiang@chromium.org>
+ <20200721104422.369368-2-cychiang@chromium.org> <c270a068-c96b-63ae-a5ca-ec2081924dac@linaro.org>
+In-Reply-To: <c270a068-c96b-63ae-a5ca-ec2081924dac@linaro.org>
+From:   Cheng-yi Chiang <cychiang@chromium.org>
+Date:   Fri, 31 Jul 2020 16:55:04 +0800
+Message-ID: <CAFv8NwJBqndBozdc9DOr2T67VTnJ1LLEwvze2nJD6xNXh1a+gw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] ASoC: qcom: dt-bindings: Add sc7180 machine bindings
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Rohit kumar <rohitkr@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Patrick Lai <plai@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Dylan Reid <dgreid@chromium.org>,
+        Tzung-Bi Shih <tzungbi@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 12:40:29AM +0200, Kars Mulder wrote:
-> The documentation of the kstrto*() functions describes kstrto*() as
-> "replacements" of the "obsolete" simple_strto*() functions. Both of
-> these terms are inaccurate: they're not replacements because they have
-> different behaviour, and the simple_strto*() are not obsolete because
-> there are cases where they have benefits over kstrto*().
-> 
-> Remove usage of the terms "replacement" and "obsolete" in reference
-> to simple_strto*(), and instead use the term "preferred over".
+On Wed, Jul 22, 2020 at 5:25 PM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+>
+>
+>
+> On 21/07/2020 11:44, Cheng-Yi Chiang wrote:
+> > Add devicetree bindings documentation file for sc7180 sound card.
+> >
+> > Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+> > ---
+> >   .../bindings/sound/qcom,sc7180.yaml           | 130 ++++++++++++++++++
+> >   1 file changed, 130 insertions(+)
+> >   create mode 100644 Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+> > new file mode 100644
+> > index 000000000000..82f9483276eb
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+> > @@ -0,0 +1,130 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/sound/qcom,sc7180.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Qualcomm Technologies Inc. SC7180 ASoC sound card driver
+> > +
+> > +maintainers:
+> > +  - Rohit kumar <rohitkr@codeaurora.org>
+> > +  - Cheng-Yi Chiang <cychiang@chromium.org>
+> > +
+> > +description:
+> > +  This binding describes the SC7180 sound card which uses LPASS for audio.
+> > +
+> > +definitions:
+> > +
+> > +  dai:
+> > +    type: object
+> > +    properties:
+> > +      sound-dai:
+> > +        maxItems: 1
+> > +        $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +        description: phandle array of the codec or CPU DAI
+> > +
+> > +    required:
+> > +      - sound-dai
+> > +
+> > +properties:
+> > +  compatible:
+> > +    contains:
+> > +      const: qcom,sc7180-sndcard
+> > +
+> > +  audio-routing:
+> > +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
+> > +    description:
+> > +      A list of the connections between audio components. Each entry is a
+> > +      pair of strings, the first being the connection's sink, the second
+> > +      being the connection's source.
+> > +
+> > +  model:
+> > +    $ref: /schemas/types.yaml#/definitions/string
+> > +    description: User specified audio sound card name
+> > +
+> > +  aux-dev:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description: phandle of the codec for headset detection
+>
+>
+> Why do we need this? You should be able to set the jack for codec
+> snd_soc_component_set_jack()?
+>
+>
+I put my explanation in the machine driver patch since there is more
+context there.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > +
+> > +patternProperties:
+> > +  "^dai-link(@[0-9]+)?$":
+> > +    description:
+> > +      Each subnode represents a dai link. Subnodes of each dai links would be
+> > +      cpu/codec dais.
+> > +
+> > +    type: object
+> > +
+> > +    properties:
+> > +      link-name:
+> > +        description: Indicates dai-link name and PCM stream name.
+> > +        $ref: /schemas/types.yaml#/definitions/string
+> > +        maxItems: 1
+> > +
+> > +      reg:
+> > +        description: dai link address.
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        maxItems: 1
+>
+> Why do we need this?? I have not seen the parsing code using this.
+>
+>
+When checking the yaml file using dt_binding_check, I got this warnings:
 
-> Fixes: 4c925d6031f71 ("kstrto*: add documentation")
-> Fixes: 885e68e8b7b13 ("kernel.h: update comment about simple_strto<foo>() functions")
-> Signed-off-by: Kars Mulder <kerneldev@karsmulder.nl>
-> 
-> ---
->  include/linux/kernel.h |  4 ++--
->  lib/kstrtox.c          | 12 ++++--------
->  2 files changed, 6 insertions(+), 10 deletions(-)
-> 
-> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> index 2d6050f12c64..35fd7e0e3f04 100644
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -346,7 +346,7 @@ int __must_check kstrtoll(const char *s, unsigned int base, long long *res);
->   * @res: Where to write the result of the conversion on success.
->   *
->   * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-> - * Used as a replacement for the simple_strtoul(). Return code must be checked.
-> + * Preferred over simple_strtoul(). Return code must be checked.
->  */
->  static inline int __must_check kstrtoul(const char *s, unsigned int base, unsigned long *res)
->  {
-> @@ -374,7 +374,7 @@ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsign
->   * @res: Where to write the result of the conversion on success.
->   *
->   * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-> - * Used as a replacement for the simple_strtol(). Return code must be checked.
-> + * Preferred over simple_strtol(). Return code must be checked.
->   */
->  static inline int __must_check kstrtol(const char *s, unsigned int base, long *res)
->  {
-> diff --git a/lib/kstrtox.c b/lib/kstrtox.c
-> index 252ac414ba9a..a14ccf905055 100644
-> --- a/lib/kstrtox.c
-> +++ b/lib/kstrtox.c
-> @@ -115,8 +115,7 @@ static int _kstrtoull(const char *s, unsigned int base, unsigned long long *res)
->   * @res: Where to write the result of the conversion on success.
->   *
->   * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-> - * Used as a replacement for the obsolete simple_strtoull(). Return code must
-> - * be checked.
-> + * Preferred over simple_strtoull(). Return code must be checked.
->   */
->  int kstrtoull(const char *s, unsigned int base, unsigned long long *res)
->  {
-> @@ -139,8 +138,7 @@ EXPORT_SYMBOL(kstrtoull);
->   * @res: Where to write the result of the conversion on success.
->   *
->   * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-> - * Used as a replacement for the obsolete simple_strtoll(). Return code must
-> - * be checked.
-> + * Preferred over simple_strtoll(). Return code must be checked.
->   */
->  int kstrtoll(const char *s, unsigned int base, long long *res)
->  {
-> @@ -211,8 +209,7 @@ EXPORT_SYMBOL(_kstrtol);
->   * @res: Where to write the result of the conversion on success.
->   *
->   * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-> - * Used as a replacement for the obsolete simple_strtoul(). Return code must
-> - * be checked.
-> + * Preferred over simple_strtoul(). Return code must be checked.
->   */
->  int kstrtouint(const char *s, unsigned int base, unsigned int *res)
->  {
-> @@ -242,8 +239,7 @@ EXPORT_SYMBOL(kstrtouint);
->   * @res: Where to write the result of the conversion on success.
->   *
->   * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-> - * Used as a replacement for the obsolete simple_strtol(). Return code must
-> - * be checked.
-> + * Preferred over simple_strtol(). Return code must be checked.
->   */
->  int kstrtoint(const char *s, unsigned int base, int *res)
->  {
-> --
-> 2.28.0
-> 
+$  make dt_binding_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+  CHKDT   Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+  SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yaml
+  DTC     Documentation/devicetree/bindings/sound/qcom,sc7180.example.dt.yaml
+Documentation/devicetree/bindings/sound/qcom,sc7180.example.dts:32.24-41.15:
+Warning (unit_address_vs_reg): /example-0/sound/dai-link@0: node has a
+unit name, but no reg or ranges property
+Documentation/devicetree/bindings/sound/qcom,sc7180.example.dts:43.24-52.15:
+Warning (unit_address_vs_reg): /example-0/sound/dai-link@1: node has a
+unit name, but no reg or ranges property
+  CHECK   Documentation/devicetree/bindings/sound/qcom,sc7180.example.dt.yaml
 
--- 
-With Best Regards,
-Andy Shevchenko
+Should I ignore these warnings because reg is not used in the driver ?
+
+> > +
+> > +      playback-only:
+> > +        description: Specify that the dai link is only for playback.
+> > +        $ref: /schemas/types.yaml#/definitions/flag
+> > +
+> > +      capture-only:
+> > +        description: Specify that the dai link is only for capture.
+> > +        $ref: /schemas/types.yaml#/definitions/flag
+> > +
+>
+> Are these because the cpu/codec dais are single directional?
+>
+> If so you can extend snd_soc_dai_link_set_capabilities() and use this
+> function.
+
+I found that this is not needed since soc_new_pcm already takes care
+of checking capture/playback capability in non-dpcm cases.
+
+>
+>
+> --srini
+>
+
+Thanks for reviewing the patch!
 
 
+
+> > +      cpu:
+> > +        $ref: "#/definitions/dai"
+> > +
+> > +      codec:
+> > +        $ref: "#/definitions/dai"
+> > +
+> > +    required:
+> > +      - link-name
+> > +      - reg
+> > +      - cpu
+> > +      - codec
+> > +
+> > +    additionalProperties: false
+> > +
+> > +examples:
+> > +
+> > +  - |
+> > +    sound {
+> > +        compatible = "qcom,sc7180-sndcard";
+> > +        model = "sc7180-snd-card";
+> > +
+> > +        audio-routing =
+> > +                    "Headphone Jack", "HPOL",
+> > +                    "Headphone Jack", "HPOR";
+> > +
+> > +        aux-dev = <&alc5682>;
+> > +
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        dai-link@0 {
+> > +            reg = <0>;
+> > +            link-name = "MultiMedia0";
+> > +            cpu {
+> > +                sound-dai = <&lpass_cpu 0>;
+> > +            };
+> > +
+> > +            codec {
+> > +                sound-dai = <&alc5682 0>;
+> > +            };
+> > +        };
+> > +
+> > +        dai-link@1 {
+> > +            reg = <1>;
+> > +            link-name = "MultiMedia1";
+> > +            playback-only;
+> > +            cpu {
+> > +                sound-dai = <&lpass_cpu 1>;
+> > +            };
+> > +
+> > +            codec {
+> > +                sound-dai = <&max98357a>;
+> > +            };
+> > +        };
+> > +    };
+> >
