@@ -2,270 +2,158 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB7FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE83C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F27C22B42
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:55:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="JLkaCVpX"
+	by mail.kernel.org (Postfix) with ESMTP id AC027208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 20:58:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596229089;
+	bh=OvRm8Q1e12fMuVUSKr8GbmykdmZaR8prGqUEdd04wyg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bR7kYVXcnARFamDlpfXoQEVIX6jeIQdi+24hHt4tcOBAjDtvuDqY7ugehZJGb0wWc
+	 0sFWSF4xwR0QVfZ1S3KdR5JNfShGJhy2dMBp0hDF/q36sf4LGxsUjcyb9pcfq0MDfO
+	 iMIuzCy2gv/1i+KbYRU74i5t2EJ7q7IRsX1zHbAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbgGaUzs (ORCPT
+        id S1728114AbgGaU6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 16:55:48 -0400
-Received: from mail-eopbgr140104.outbound.protection.outlook.com ([40.107.14.104]:39529
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726884AbgGaUzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 16:55:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EEEcgSqkN9T0dZ6nb1j4SFtq5b4rXFdbIBOpQ3LicC34uOqytQ3SEHvY4xL5vsh2loFfm/SGoZUvvzxvvaCiBoR8tFHYX0bUNxi0rZqziXDSrlrz6P2OA7r6q+DgLkndfrYMFpdzJvTJ39HgzZAghwRiOWZSRtNxOjnQ4P3Zu3AAvv9xSRwjtg/IBRjHe0CJtBs1T9q6niUT6W0ujmeV1HBMqSRTlqqaGp9GKDErKDQL1cX0U34SyoFtMFJ5AnHkHF65CSsFHH5Uzx9tRxJwcqoMb/7Sl8kMdYRLLE0HsiL5hAf3vrLOklaOziY9vUPp18DgWF3bwvrYlQSIYNCYXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XqF5Kxy3S3vmJlX3V5Hit/Wg0PKguKPFdln2bT9fmyA=;
- b=j4tk9EzOb15TeO9jIhAstmsMADiYbwm4+vyRk8vLkMZlTNQgYEvG/GyDldH9nojsHb6KHcxu+b4uAGBH7IbHnkyTRIaF2R8/A1GyHlhhfVhv/v4VOjNJPrKmHJFKDP7RLFWs314UJK6uG7y2Bwy4Iv/lIVl4VLGK5CjiZEwkGuQ0zED0BA5VjrCOkEl16v616Bb+gbyRtA2YxqUpnt2aCjRNzjAT9QG0pCxvWvMKmLOUqlOLzF1sKjc7ZQbOy/DWKAbbwzJdYe/OgA7vNjWRjOw+Z5kYvPPC+R+OXVSXszVgQLrOuDs5mYFnrrCCsuzwf/JnVq+dF6wf5r97hTI5Hg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
- dkim=pass header.d=plvision.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XqF5Kxy3S3vmJlX3V5Hit/Wg0PKguKPFdln2bT9fmyA=;
- b=JLkaCVpXYoiR1SO5mLnzoGXqpV203FXfNXjOae39JT3U+54UWNl4lV5dVzWmc1CuW37RGTHOSYaQ7hFH5HEa07uQyRZxUIfReOZn86/R32WyJN6Da1lkRGgGKZB1h97uzHGb9daKiLHjvwnmIQiTnX2o2QbNx/Ch/dIwZwTtd1I=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=plvision.eu;
-Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:56::28) by
- HE1P190MB0459.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:5b::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3239.16; Fri, 31 Jul 2020 20:55:42 +0000
-Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
- ([fe80::b1a4:e5e3:a12b:1305]) by HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
- ([fe80::b1a4:e5e3:a12b:1305%6]) with mapi id 15.20.3239.018; Fri, 31 Jul 2020
- 20:55:41 +0000
-Date:   Fri, 31 Jul 2020 23:55:33 +0300
-From:   Vadym Kochan <vadym.kochan@plvision.eu>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mickey Rachamim <mickeyr@marvell.com>
-Subject: Re: [net-next v4 1/6] net: marvell: prestera: Add driver for
- Prestera family ASIC devices
-Message-ID: <20200731205533.GA1159@plvision.eu>
-References: <20200727122242.32337-1-vadym.kochan@plvision.eu>
- <20200727122242.32337-2-vadym.kochan@plvision.eu>
- <CAHp75Ve-MyFg5QqHjywGk6X+v_F77HkRBuQsJ0Cx3WLJ5ZV43w@mail.gmail.com>
- <20200731152201.GB10391@plvision.eu>
- <CAHp75VcS4fEak3z0exODErs5FbDwf+Di1RJmf7JfMgnD8xgXOA@mail.gmail.com>
+        Fri, 31 Jul 2020 16:58:08 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:34017 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726884AbgGaU6I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 16:58:08 -0400
+Received: by mail-il1-f193.google.com with SMTP id t4so26428537iln.1;
+        Fri, 31 Jul 2020 13:58:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rcyOW7qIuRoMGsE2+TVNMGv+PyvtkKSZN/cGvDKDZM8=;
+        b=VWw24Dvxr4w7gL6a7KNXwsV+UoRi1ZxcnRwXl0/XxQz5nRV8ZqTYWPdCiZVJYL5bY2
+         apeHBdXoVa1tLkuLDkswRut1zrLxDOXs5bsVc6FtkFUpc+59GFVq2kurxunx//IGW2YR
+         m1KF1bkRlBtKKnyrWZ5t9CXytkEXORew2hGtbYi3LEUg6GROLWQKMdO3UEphxj1iTzFb
+         7NQAMeDKA0/C8l21m/qanPU2GfugtIDtmS15H3ijnCXPr9/2zGPnUBvdpS+3T65dwzLi
+         5L5J76R5rSsPUsg+JSyb+uT/zZOacWqlMTs7KA0pkDBhpnhHc8UFLvIs6xCn0+zPxLNo
+         pjDA==
+X-Gm-Message-State: AOAM530SLyjxs562g7Zg07mP/7rKoTKYfGWYkKoBfXSG3TzRSQkhLAf+
+        2Zw8wVnZDTuiiUPr0xImOQ==
+X-Google-Smtp-Source: ABdhPJxmGDIK2n0F7LcntLADTKoB+yOnyNpREExJ0pYlohQMXlRlUSjxE4KX9ssiGMxjIpXnztV4ag==
+X-Received: by 2002:a92:c5c1:: with SMTP id s1mr5514077ilt.144.1596229087153;
+        Fri, 31 Jul 2020 13:58:07 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id v5sm5213848ilg.88.2020.07.31.13.58.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 13:58:05 -0700 (PDT)
+Received: (nullmailer pid 774077 invoked by uid 1000);
+        Fri, 31 Jul 2020 20:58:04 -0000
+Date:   Fri, 31 Jul 2020 14:58:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Claire Chang <tientzu@chromium.org>
+Cc:     frowand.list@gmail.com, hch@lst.de, m.szyprowski@samsung.com,
+        robin.murphy@arm.com, treding@nvidia.com,
+        gregkh@linuxfoundation.org, saravanak@google.com,
+        suzuki.poulose@arm.com, dan.j.williams@intel.com,
+        heikki.krogerus@linux.intel.com, bgolaszewski@baylibre.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, drinkcat@chromium.org,
+        tfiga@chromium.org
+Subject: Re: [RFC v2 4/5] dt-bindings: of: Add plumbing for restricted DMA
+ pool
+Message-ID: <20200731205804.GB756942@bogus>
+References: <20200728050140.996974-1-tientzu@chromium.org>
+ <20200728050140.996974-5-tientzu@chromium.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75VcS4fEak3z0exODErs5FbDwf+Di1RJmf7JfMgnD8xgXOA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: AM6PR10CA0106.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:209:8c::47) To HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:7:56::28)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from plvision.eu (217.20.186.93) by AM6PR10CA0106.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:209:8c::47) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Fri, 31 Jul 2020 20:55:39 +0000
-X-Originating-IP: [217.20.186.93]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fbc2c13b-10b6-4879-d16f-08d8359415e6
-X-MS-TrafficTypeDiagnostic: HE1P190MB0459:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <HE1P190MB0459F4260A2845F44C8A10B9954E0@HE1P190MB0459.EURP190.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: r9jqFuX5eLS9mewNhHFafeqERqt3TiWT5/HJ8zn+XRUnn+9+4YAi1x29r0KGo/XU7lCilvZtWdrcQVDrydeo7ppJq3uXMKq1pxVQ4ATRWNARJ+FqYcI0OafWRMFwX6slELxXI1ATlC+gp3rcVSH8YbLQJGiM7MW+aUn8+BBtZpL0P5RDncXtIfKdg6Ia4i3cV/dVuTXrI9KK1KPzm160BgHwZiyGYFVigJwp7Q6Nahuw10yYwyJ0/yshBfIr5JinCf9mW025D5ofjDm1PeTlr18l4Kw2UqijEy9jQWlJ47ZWQezSawTsuinicPqvMZnmA1NwKlbxgOaPMkoqWwLnAQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1P190MB0539.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(136003)(346002)(376002)(396003)(366004)(39830400003)(44832011)(66556008)(66946007)(52116002)(53546011)(26005)(2616005)(956004)(5660300002)(7696005)(33656002)(55016002)(66476007)(83380400001)(86362001)(186003)(16526019)(2906002)(6666004)(4326008)(8676002)(6916009)(8936002)(1076003)(36756003)(8886007)(508600001)(54906003)(316002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: 2cVQz0DfWgRWCBgA5NtG2S9bM3hxLebh/+pPnVNMC+5FJUSSvN6FYHAXpFmkVjsoGGuOEW4j76Oyxaytx+HnJyadr0N4W3W4LX+mFCW/9YEuQVrdQOOJpEQ2H7gP+leJG8RDLia8tdJ8d9AbmWcR6PDnyQH1VJo98Vx1Zoi3T4r3cRG3sys/Tthj12rFBw/FUzLQsVUGAXrFQ2di5AP4gDEFtfC5pkKyAkkRGd76DfFRyN7PxOm6+o0gyBU9//tutsccpzg/AfVvCAuGL5baQDv9hbiergzEt3O8sp+RMyr0PAKz12bPrJWuiPPDKj34VMBhFkPpIIMQw7zb2c0V9UXVHunMPkeugcJaf5fK3qMEsycNpeANlYx6kGoiPZjlfAv8/3ASH3L04SNGIlKOjSEDXOkbMC6NqTw2bQB9u3/RChMEDbf1ZNKpw4/7q6/M6dMSNbTzL7KAsDFsiuQRHKkc57hc/BD/XVB510Igc8fvpGte1U2BzFQAZsKcIcpTfJ70k9MfIvrPQ85JrEZD55JbLzlWgdmeI2pgmi2qS/9/y3lShDiCF7w5V9mGzuaxVxHCgHpTOZ0opvG9wQuTqsZyjtBJnOoN8M/DlZctPAdSIIYZJrA5yBQaSQaR9PVy0Es5QSIno9ajJLbOQYFV/w==
-X-OriginatorOrg: plvision.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: fbc2c13b-10b6-4879-d16f-08d8359415e6
-X-MS-Exchange-CrossTenant-AuthSource: HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jul 2020 20:55:41.7145
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: giIoQyYUWLotbd+mkbropBRc8+O36GiJLdfgh8NzcbElPY+RhE8R/13JpLQZZp3DYqNqsLjHVtWo6H39uV7sd6xx82No1Tw+mrRfzWKJNvc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1P190MB0459
+In-Reply-To: <20200728050140.996974-5-tientzu@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+On Tue, Jul 28, 2020 at 01:01:39PM +0800, Claire Chang wrote:
+> Introduce the new compatible string, device-swiotlb-pool, for restricted
+> DMA. One can specify the address and length of the device swiotlb memory
+> region by device-swiotlb-pool in the device tree.
+> 
+> Signed-off-by: Claire Chang <tientzu@chromium.org>
+> ---
+>  .../reserved-memory/reserved-memory.txt       | 35 +++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> index 4dd20de6977f..78850896e1d0 100644
+> --- a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> +++ b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> @@ -51,6 +51,24 @@ compatible (optional) - standard definition
+>            used as a shared pool of DMA buffers for a set of devices. It can
+>            be used by an operating system to instantiate the necessary pool
+>            management subsystem if necessary.
+> +        - device-swiotlb-pool: This indicates a region of memory meant to be
 
-On Fri, Jul 31, 2020 at 07:02:47PM +0300, Andy Shevchenko wrote:
-> On Fri, Jul 31, 2020 at 6:22 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
-> > On Mon, Jul 27, 2020 at 03:59:13PM +0300, Andy Shevchenko wrote:
-> > > On Mon, Jul 27, 2020 at 3:23 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
-> 
-> ...
-> 
-> > > > Signed-off-by: Andrii Savka <andrii.savka@plvision.eu>
-> > > > Signed-off-by: Oleksandr Mazur <oleksandr.mazur@plvision.eu>
-> > > > Signed-off-by: Serhiy Boiko <serhiy.boiko@plvision.eu>
-> > > > Signed-off-by: Serhiy Pshyk <serhiy.pshyk@plvision.eu>
-> > > > Signed-off-by: Taras Chornyi <taras.chornyi@plvision.eu>
-> > > > Signed-off-by: Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>
-> > > > Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
-> > >
-> > > This needs more work. You have to really understand the role of each
-> > > person in the above list.
-> > > I highly recommend (re-)read sections 11-13 of Submitting Patches.
-> > >
-> > At least looks like I need to add these persons as Co-author's.
-> 
-> I don't know, you are!
-> And I think you meant Co-developer's
-> 
-> ...
-> 
-> > > > +#include <linux/string.h>
-> > > > +#include <linux/bitops.h>
-> > > > +#include <linux/bitfield.h>
-> > > > +#include <linux/errno.h>
-> > >
-> > > Perhaps ordered?
-> > >
-> > alphabetical ?
-> 
-> Yes.
-> 
-> ...
-> 
-> > > > +       struct prestera_msg_event_port *hw_evt;
-> > > > +
-> > > > +       hw_evt = (struct prestera_msg_event_port *)msg;
-> > >
-> > > Can be one line I suppose.
-> > >
-> > Yes, but I am trying to avoid line-breaking because of 80 chars
-> > limitation.
-> 
-> We have 100, but okay.
-> 
-> ...
-> 
-> > > > +       if (evt->id == PRESTERA_PORT_EVENT_STATE_CHANGED)
-> > > > +               evt->port_evt.data.oper_state = hw_evt->param.oper_state;
-> > > > +       else
-> > > > +               return -EINVAL;
-> > > > +
-> > > > +       return 0;
-> > >
-> > > Perhaps traditional pattern, i.e.
-> > >
-> > >   if (...)
-> > >     return -EINVAL;
-> > >   ...
-> > >   return 0;
-> > >
-> > I am not sure if it is applicable here, because the error state here
-> > is if 'evt->id' did not matched after all checks. Actually this is
-> > simply a 'switch', but I use 'if' to have shorter code.
-> 
-> Then do it a switch-case. I can see that other reviewers/contributors
-> may stumble over this.
-> 
-> ...
-> 
-> > > > +       /* Only 0xFF mac addrs are supported */
-> > > > +       if (port->fp_id >= 0xFF)
-> > > > +               goto err_port_init;
-> > >
-> > > You meant 255, right?
-> > > Otherwise you have to mentioned is it byte limitation or what?
-> > >
-> > > ...
-> > Yes, 255 is a limitation because of max byte value.
-> 
-> But 255 itself is some kind of error value? Perhaps it deserves a definition.
-> 
-> ...
-> 
-> > > > +       np = of_find_compatible_node(NULL, NULL, "marvell,prestera");
-> > > > +       if (np) {
-> > > > +               base_mac_np = of_parse_phandle(np, "base-mac-provider", 0);
-> > > > +               if (base_mac_np) {
-> > > > +                       const char *base_mac;
-> > > > +
-> > > > +                       base_mac = of_get_mac_address(base_mac_np);
-> > > > +                       of_node_put(base_mac_np);
-> > > > +                       if (!IS_ERR(base_mac))
-> > > > +                               ether_addr_copy(sw->base_mac, base_mac);
-> > > > +               }
-> > > > +       }
-> > > > +
-> > > > +       if (!is_valid_ether_addr(sw->base_mac)) {
-> > > > +               eth_random_addr(sw->base_mac);
-> > > > +               dev_info(sw->dev->dev, "using random base mac address\n");
-> > > > +       }
-> > >
-> > > Isn't it device_get_mac_address() reimplementation?
-> > >
-> > device_get_mac_address() just tries to get mac via fwnode.
-> 
-> Yes, and how is it different from here? (consider
-> fwnode_get_mac_address() if it suits better).
-> 
-In this case of_get_mac_address() tries to get mac address from
-different sources:
+swiotlb is a Linux thing. The binding should be independent.
 
-    1) device-tree - if it is defined here
+> +          used as a pool of device swiotlb buffers for a given device. When
+> +          using this, the no-map and reusable properties must not be set, so the
+> +          operating system can create a virtual mapping that will be used for
+> +          synchronization. Also, there must be a restricted-dma property in the
+> +          device node to specify the indexes of reserved-memory nodes. One can
+> +          specify two reserved-memory nodes in the device tree. One with
+> +          shared-dma-pool to handle the coherent DMA buffer allocation, and
+> +          another one with device-swiotlb-pool for regular DMA to/from system
+> +          memory, which would be subject to bouncing. The main purpose for
+> +          restricted DMA is to mitigate the lack of DMA access control on
+> +          systems without an IOMMU, which could result in the DMA accessing the
+> +          system memory at unexpected times and/or unexpected addresses,
+> +          possibly leading to data leakage or corruption. The feature on its own
+> +          provides a basic level of protection against the DMA overwriting buffer
+> +          contents at unexpected times. However, to protect against general data
+> +          leakage and system memory corruption, the system needs to provide a
+> +          way to restrict the DMA to a predefined memory region.
 
-    2) nvmem device (eeprom) - if nvmem ref node was pointed in device-tree
-       and nvmem provider has the mac address cell.
+I'm pretty sure we already support per device carveouts and I don't 
+understand how this is different.
 
-otherwise the driver will just use the random one.
+What is the last sentence supposed to imply? You need an IOMMU?
 
-> ...
-> 
-> > > > +       new_skb = alloc_skb(len, GFP_ATOMIC | GFP_DMA);
-> > >
-> > > Atomic? Why?
-> > >
-> > TX path might be called from net_tx_action which is softirq.
-> 
-> Okay, but GFP_DMA is quite a limitation to the memory region. Can't  be 32-bit?
-> 
-Yes in this case there are a limitation when the device supports only
-30bit (this dma mask is used in prestera_pci.c), physical address range
-even on 64bit platform.
-
-And thankfully few months ago someone added such ability for RaspberryPI
-(aarch64) to support ZONE_DMA.
-
-> ...
-> 
-> > > > +       int tx_retry_num = 10 * tx_ring->max_burst;
-> > >
-> > > Magic!
-> > You mean the code is magic ? Yes, I am trying to relax the
-> > calling of SDMA engine.
-> 
-> Usually when reviewers tell you about magic it assumes magic numbers
-> whose meaning is not clear.
-> (Requires either to be defined or commented)
-> 
+>          - vendor specific string in the form <vendor>,[<device>-]<usage>
+>  no-map (optional) - empty property
+>      - Indicates the operating system must not create a virtual mapping
+> @@ -117,6 +135,16 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
+>  			compatible = "acme,multimedia-memory";
+>  			reg = <0x77000000 0x4000000>;
+>  		};
+> +
+> +		wifi_coherent_mem_region: wifi_coherent_mem_region {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x50000000 0x400000>;
+> +		};
+> +
+> +		wifi_device_swiotlb_region: wifi_device_swiotlb_region {
+> +			compatible = "device-swiotlb-pool";
+> +			reg = <0x50400000 0x4000000>;
+> +		};
+>  	};
+>  
+>  	/* ... */
+> @@ -135,4 +163,11 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
+>  		memory-region = <&multimedia_reserved>;
+>  		/* ... */
+>  	};
+> +
+> +	pcie_wifi: pcie_wifi@0,0 {
+> +		memory-region = <&wifi_coherent_mem_region>,
+> +			 <&wifi_device_swiotlb_region>;
+> +		restricted-dma = <0>, <1>;
+> +		/* ... */
+> +	};
+>  };
 > -- 
-> With Best Regards,
-> Andy Shevchenko
+> 2.28.0.rc0.142.g3c755180ce-goog
+> 
