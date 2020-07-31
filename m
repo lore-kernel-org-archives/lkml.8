@@ -2,168 +2,128 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C750C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E10C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D4872054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 845B6206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 23:59:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="utYyUXWF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgGaXzE (ORCPT
+        id S1726977AbgGaX7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 19:55:04 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:40170 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726099AbgGaXzE (ORCPT
+        Fri, 31 Jul 2020 19:59:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53604 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgGaX7N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 19:55:04 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0U4Ln6pe_1596239697;
-Received: from IT-FVFX43SYHV2H.lan(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U4Ln6pe_1596239697)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 01 Aug 2020 07:54:59 +0800
-Subject: Re: [PATCH RFC] mm: Add function for testing if the current lruvec
- lock is valid
-To:     alexander.h.duyck@intel.com
-Cc:     akpm@linux-foundation.org, alexander.duyck@gmail.com,
-        aryabinin@virtuozzo.com, cgroups@vger.kernel.org,
-        daniel.m.jordan@oracle.com, hannes@cmpxchg.org, hughd@google.com,
-        iamjoonsoo.kim@lge.com, khlebnikov@yandex-team.ru,
-        kirill@shutemov.name, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, lkp@intel.com, mgorman@techsingularity.net,
-        richard.weiyang@gmail.com, rong.a.chen@intel.com,
-        shakeelb@google.com, tglx@linutronix.de, tj@kernel.org,
-        willy@infradead.org, yang.shi@linux.alibaba.com
-References: <1595681998-19193-19-git-send-email-alex.shi@linux.alibaba.com>
- <159622999150.2576729.14455020813024958573.stgit@ahduyck-desk1.jf.intel.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <0c0a415a-52a0-5c06-b4be-80cbd3cb49c2@linux.alibaba.com>
-Date:   Sat, 1 Aug 2020 07:54:48 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Fri, 31 Jul 2020 19:59:13 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6364C06174A;
+        Fri, 31 Jul 2020 16:59:12 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id v12so3768602ljc.10;
+        Fri, 31 Jul 2020 16:59:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UsimTWbIrqsHqWHrugIeQHRl2pI9arEz0nqny+Jdx80=;
+        b=utYyUXWFBG19iMOaqbTjqZjscEIXbcx7v1vLol18jiKTYRhX+ajiGTEdZkIZbE1xGO
+         ya6Dt/2zN3bJNoJPSrNavs9KiDD63R33H1D/Y29D0J4nO/RFpd+o+QptgGwz4JHjuC50
+         h5QZUpXltw5YzDfyd63hjnCpN/5gYLydc9ly/GEDT0UFBf+o8M6IL1ikTIU7tlO3pzux
+         86SGQeXcqI/vEuxrQEG9h+CbQSNlc4Vv2Fo5SasGBGzyEZ58UOzVv5zJjjGy4GwwKl7k
+         aE6233UfVWhErWQgbSjVOg+GvRej2+8k4SCdTRczeb1rghlxzKkgUDcrG8eFQlfzWDSI
+         J+VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UsimTWbIrqsHqWHrugIeQHRl2pI9arEz0nqny+Jdx80=;
+        b=aEPX+bueXCqd6rtnSu+dmyl+J83MJA74ebTU+oML0JwlNnmKow3jkDOmESBODX2fQ5
+         ISa5YTi039/X+J+czVmw1y+fBpf7CygCfoySQFPApQIVWdVuVv3bTThbJfXC5YuINhyx
+         X6BWpguOHmFZKnHghKg4N+LJ8v+cSSz+us1bxHDzJDCuhN42enDs1Yh1KgGGfo06FKPz
+         bPDIteCGlownQ9P6ZCwv09E1zh3yz7XOBRpM+FDB1n7GS0w0P5vY8jiqnijqn9/gl6F0
+         K+JYYBf3e/9qpD2JoQMZHN+37SY8s3C3FdtaDJuP/xJlYrTJP9nvBZ8ZJfhuRaEijCz1
+         Yviw==
+X-Gm-Message-State: AOAM532LrYWiOwFsSNu/B3fWcceVltTNAqQ3OuUFzcSslABO72sayVEN
+        IMf7tJGzlntt8vBEUvczr/480w23SpZrRx4bqGxoARH4
+X-Google-Smtp-Source: ABdhPJyuFPum9EZ4xPwGLLRNhsfcctEtKyXIrIFwRlk9aXs5vD/fJgPGGo+5lZGA8s4Wgzgm9WPoKYSWNuEjwSxFSr0=
+X-Received: by 2002:a2e:6e0a:: with SMTP id j10mr2736087ljc.389.1596239951119;
+ Fri, 31 Jul 2020 16:59:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <159622999150.2576729.14455020813024958573.stgit@ahduyck-desk1.jf.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+References: <20200729093450.28585-1-zhang.lyra@gmail.com>
+In-Reply-To: <20200729093450.28585-1-zhang.lyra@gmail.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Sat, 1 Aug 2020 07:58:56 +0800
+Message-ID: <CADBw62p=aB3EZYkMm44Zx4Krww21SS9vCsMnPOq0pn2DgA8VkQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: sprd: Clear interrupt when setting the type as edge
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Taiping Lai <taiping.lai@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It looks much better than mine. and could replace 'mm/lru: introduce the relock_page_lruvec function'
-with your author signed. :)
-
-BTW,
-it's the rcu_read_lock cause the will-it-scale/page_fault3 regression which you mentained in another
-letter?
-
-Thanks
-Alex
-
-在 2020/8/1 上午5:14, alexander.h.duyck@intel.com 写道:
-> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> 
-> When testing for relock we can avoid the need for RCU locking if we simply
-> compare the page pgdat and memcg pointers versus those that the lruvec is
-> holding. By doing this we can avoid the extra pointer walks and accesses of
-> the memory cgroup.
-> 
-> In addition we can avoid the checks entirely if lruvec is currently NULL.
-> 
-> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+On Wed, Jul 29, 2020 at 5:35 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+>
+> From: Taiping Lai <taiping.lai@unisoc.com>
+>
+> The raw interrupt status of GPIO maybe set before the interrupt is enabled,
+> which would trigger the interrupt event once enabled it from user side.
+> This is the case for edge interrupts only. Adding a clear operation when
+> setting interrupt type can avoid that.
+>
+> Fixes: 9a3821c2bb47 ("gpio: Add GPIO driver for Spreadtrum SC9860 platform")
+> Signed-off-by: Taiping Lai <taiping.lai@unisoc.com>
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 > ---
->  include/linux/memcontrol.h |   52 +++++++++++++++++++++++++++-----------------
->  1 file changed, 32 insertions(+), 20 deletions(-)
-> 
-> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> index 6e670f991b42..7a02f00bf3de 100644
-> --- a/include/linux/memcontrol.h
-> +++ b/include/linux/memcontrol.h
-> @@ -405,6 +405,22 @@ static inline struct lruvec *mem_cgroup_lruvec(struct mem_cgroup *memcg,
->  
->  struct lruvec *mem_cgroup_page_lruvec(struct page *, struct pglist_data *);
->  
-> +static inline bool lruvec_holds_page_lru_lock(struct page *page,
-> +					      struct lruvec *lruvec)
-> +{
-> +	pg_data_t *pgdat = page_pgdat(page);
-> +	const struct mem_cgroup *memcg;
-> +	struct mem_cgroup_per_node *mz;
-> +
-> +	if (mem_cgroup_disabled())
-> +		return lruvec == &pgdat->__lruvec;
-> +
-> +	mz = container_of(lruvec, struct mem_cgroup_per_node, lruvec);
-> +	memcg = page->mem_cgroup ? : root_mem_cgroup;
-> +
-> +	return lruvec->pgdat == pgdat && mz->memcg == memcg;
-> +}
-> +
->  struct mem_cgroup *mem_cgroup_from_task(struct task_struct *p);
->  
->  struct mem_cgroup *get_mem_cgroup_from_mm(struct mm_struct *mm);
-> @@ -880,6 +896,14 @@ static inline struct lruvec *mem_cgroup_page_lruvec(struct page *page,
->  	return &pgdat->__lruvec;
->  }
->  
-> +static inline bool lruvec_holds_page_lru_lock(struct page *page,
-> +					      struct lruvec *lruvec)
-> +{
-> +		pg_data_t *pgdat = page_pgdat(page);
-> +
-> +		return lruvec == &pgdat->__lruvec;
-> +}
-> +
->  static inline struct mem_cgroup *parent_mem_cgroup(struct mem_cgroup *memcg)
->  {
->  	return NULL;
-> @@ -1317,18 +1341,12 @@ static inline void unlock_page_lruvec_irqrestore(struct lruvec *lruvec,
->  static inline struct lruvec *relock_page_lruvec_irq(struct page *page,
->  		struct lruvec *locked_lruvec)
->  {
-> -	struct pglist_data *pgdat = page_pgdat(page);
-> -	bool locked;
-> +	if (locked_lruvec) {
-> +		if (lruvec_holds_page_lru_lock(page, locked_lruvec))
-> +			return locked_lruvec;
->  
-> -	rcu_read_lock();
-> -	locked = mem_cgroup_page_lruvec(page, pgdat) == locked_lruvec;
-> -	rcu_read_unlock();
-> -
-> -	if (locked)
-> -		return locked_lruvec;
-> -
-> -	if (locked_lruvec)
->  		unlock_page_lruvec_irq(locked_lruvec);
-> +	}
->  
->  	return lock_page_lruvec_irq(page);
->  }
-> @@ -1337,18 +1355,12 @@ static inline struct lruvec *relock_page_lruvec_irq(struct page *page,
->  static inline struct lruvec *relock_page_lruvec_irqsave(struct page *page,
->  		struct lruvec *locked_lruvec, unsigned long *flags)
->  {
-> -	struct pglist_data *pgdat = page_pgdat(page);
-> -	bool locked;
-> -
-> -	rcu_read_lock();
-> -	locked = mem_cgroup_page_lruvec(page, pgdat) == locked_lruvec;
-> -	rcu_read_unlock();
-> -
-> -	if (locked)
-> -		return locked_lruvec;
-> +	if (locked_lruvec) {
-> +		if (lruvec_holds_page_lru_lock(page, locked_lruvec))
-> +			return locked_lruvec;
->  
-> -	if (locked_lruvec)
->  		unlock_page_lruvec_irqrestore(locked_lruvec, *flags);
-> +	}
->  
->  	return lock_page_lruvec_irqsave(page, flags);
->  }
-> 
+>  drivers/gpio/gpio-sprd.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/gpio/gpio-sprd.c b/drivers/gpio/gpio-sprd.c
+> index d7314d39ab65..36ea8a3bd451 100644
+> --- a/drivers/gpio/gpio-sprd.c
+> +++ b/drivers/gpio/gpio-sprd.c
+> @@ -149,17 +149,20 @@ static int sprd_gpio_irq_set_type(struct irq_data *data,
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 1);
+> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
+
+I think you should move this abonormal interrupt clearing operation to
+sprd_gpio_request(), when users request a GPIO.
+
+>                 irq_set_handler_locked(data, handle_edge_irq);
+>                 break;
+>         case IRQ_TYPE_EDGE_FALLING:
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 0);
+> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
+>                 irq_set_handler_locked(data, handle_edge_irq);
+>                 break;
+>         case IRQ_TYPE_EDGE_BOTH:
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
+>                 sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 1);
+> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
+>                 irq_set_handler_locked(data, handle_edge_irq);
+>                 break;
+>         case IRQ_TYPE_LEVEL_HIGH:
+> --
+> 2.20.1
+>
+
+
+-- 
+Baolin Wang
