@@ -2,78 +2,78 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D81D2C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C1CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE31922B49
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F5822BF3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 16:49:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EScaqkNK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JvsYnhep"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733020AbgGaQs7 (ORCPT
+        id S1733088AbgGaQtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 12:48:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43936 "EHLO
+        Fri, 31 Jul 2020 12:49:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729902AbgGaQs6 (ORCPT
+        with ESMTP id S1733036AbgGaQtA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 12:48:58 -0400
-Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0DB6C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 09:48:57 -0700 (PDT)
-Received: by mail-il1-x136.google.com with SMTP id s21so25854942ilk.5
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 09:48:57 -0700 (PDT)
+        Fri, 31 Jul 2020 12:49:00 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1FDCC061574
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 09:48:59 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id w12so18674025iom.4
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 09:48:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cVetK5nIesi0/Ex17cIGWVsuuHEr6h7cl14V2jBj1nw=;
-        b=EScaqkNKGSq4QWuRYxrAYaJnwueDUzxHY9mh/cVF4h346RmZKs6v8yUUzinpjg1sxt
-         xpiyD4LFKIgMxVcsBcRonrv9bM2uyKdt8HLbkCq88gE+EJUV8Vd+1UFr4ZlVAco8LbFx
-         4fUWktLLe3pdf3v9+YFZ2l4a/KLMp8tHAwkwg=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LKIkrCHSlHiP9mdXJyXq26+gaHuBbJcyBgDB2tSCq48=;
+        b=JvsYnhepMo8clUVA18lJhr4hTYhJfVTICy3x7LxeeGnQ828Q2DcAqv112c6WGC2SZH
+         Nv9YFqJzltINaUfe0BO/sI5IIZauyEbwW3coWSBth12Ly/MEO43K6WVi4sVJUb7H1EKP
+         vInp6ezs7BVriRaGjStqg0gotWNOJboRVF9dM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cVetK5nIesi0/Ex17cIGWVsuuHEr6h7cl14V2jBj1nw=;
-        b=BXfngM51p7oq7bp0d4pnjjCRSZHklX8mBkWXu4Fqt+wBaDAr70omQvc8Y3LnM7e1VH
-         mgRQ6+UyRQ8Yf2wCNPn8F6AEnS551NsYwBa329odFxYhunmB8iSPB68tTbycCT8IQP1u
-         Wh3FMHv6y/5v2TSUcbX6Y+UnCozgKVfC6RkqDGhBlJxN89ZqV8uwVQGtUVKztCDs2ZtQ
-         RD8zUDsvt1FOQRlJa3J9BgPYGbKaIUhaYD21w7nLzucVG0g409tKBM7klp6s37F/XSLF
-         qI786B36EpYJxL6YTVShzMYqcLZ9633wSYFAN74xzOiZFJaj4o8v45Z3kDy9Yx7RjplX
-         f0Hg==
-X-Gm-Message-State: AOAM5315iIEE9lDvn9iaIUO/evd3DNMyTetuTU4v9m+hcmQ2h1RY4RQF
-        P18VhLbdLx9NRgQ1OBkwZ2UMzg==
-X-Google-Smtp-Source: ABdhPJzSTciSjMie7Y8xMLo8OjSsZRynipy4vTPB1gJIA+BvbQFMFzw5TxwsN5UF9GjSScakMrKZXg==
-X-Received: by 2002:a92:c8c5:: with SMTP id c5mr4653054ilq.47.1596214137205;
-        Fri, 31 Jul 2020 09:48:57 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LKIkrCHSlHiP9mdXJyXq26+gaHuBbJcyBgDB2tSCq48=;
+        b=oQNjWn2m9JKXNI29cMQIr/LbtINe7MIz1A9rO6AGiMG4tl6MWKTifaxkXvVlDNQYb2
+         mla2FIQsmYYhZnzgDQMFFJxEjFb8O3l1Yr86sIlxjnoc/WGAsB4vmhKkVAGqjoA4L+6f
+         ltHOf0v2nbIymilRNGfAyOvu0Y0VyDL+7+VEK4YtQ/gtKxZ96diCWoPpuMeaHHzik9kz
+         EM9Lxme0oCy2pzTAnPUTvN/cvvRO2mmZNda+q/i8bCPiVhrG9/TsP0/dm9FHn3/ZvWT7
+         Lo+1NFsdYI4qBiOU7cTDYGQmkVYVG5Qw+TM2ssirUZxZoQna+FOYPN6qAzKr3evk32oM
+         eqYw==
+X-Gm-Message-State: AOAM533LQHVv7tomp4NfuNUwofxNV2+X0PJptqOZgQMSZfGF1PcP0eQt
+        jlAvxIFudydn7fZaKh3j/0Rkdg==
+X-Google-Smtp-Source: ABdhPJzILU8L74+W7y1aIxlUn8Dgjx9+X4goYczjgnYtLKaQ+OCJJQIsdi3exXg9AMMT8emrFOs9LA==
+X-Received: by 2002:a6b:b555:: with SMTP id e82mr4383529iof.56.1596214139299;
+        Fri, 31 Jul 2020 09:48:59 -0700 (PDT)
 Received: from derch.Home (97-122-92-59.hlrn.qwest.net. [97.122.92.59])
-        by smtp.gmail.com with ESMTPSA id e84sm5122083ill.60.2020.07.31.09.48.55
+        by smtp.gmail.com with ESMTPSA id e84sm5122083ill.60.2020.07.31.09.48.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 09:48:56 -0700 (PDT)
+        Fri, 31 Jul 2020 09:48:58 -0700 (PDT)
 From:   Daniel Campello <campello@chromium.org>
 To:     LKML <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 Cc:     Jonathan Cameron <jic23@kernel.org>,
         Daniel Campello <campello@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Douglas Anderson <dianders@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org
-Subject: [PATCH v3 00/15] sx9310 iio driver updates
-Date:   Fri, 31 Jul 2020 10:48:37 -0600
-Message-Id: <20200731164853.3020946-1-campello@chromium.org>
+        linux-iio@vger.kernel.org
+Subject: [PATCH v3 02/15] iio: sx9310: Update macros declarations
+Date:   Fri, 31 Jul 2020 10:48:39 -0600
+Message-Id: <20200731104555.v3.2.I30721195b2f20ec785715f7a2757930302a2a7e8@changeid>
 X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+In-Reply-To: <20200731164853.3020946-1-campello@chromium.org>
+References: <20200731164853.3020946-1-campello@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,56 +81,309 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The first patch resends the DT binding for the driver that was merged in
-v5.8-rc1 with a small change to update for proper regulators. The second
-through the eleventh patch fixes several issues dropped from v8 to v9
-when the initial patch was merged.  The twelveth patch drops
-channel_users because it's unused. The thirteenth patch adds support to
-enable the svdd and vdd supplies so that this driver can work on a board
-where the svdd supply isn't enabled at boot and needs to be turned on
-before this driver starts to communicate with the chip. The final patch
-updates irq trigger flags.
+Follows spec sheet for macro declarations.
 
-Changes in v3:
- - Moved irq presence check down to lower methods
- - Changed buffer to struct type to align timestamp memory properly.
- - Added static assert for number of channels.
- - Added irq trigger flags commit to the series.
+Signed-off-by: Daniel Campello <campello@chromium.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+---
 
-Changes in v2:
- - Added #io-channel-cells as a required property
- - Reordered error handling on sx9310_resume()
- - Added #include <linux/mod_devicetable.h>
- - Added '\n' to dev_err()
- - Fixed commit message from "iio: sx9310: Align memory"
- - Changed prox_stat to chan_prox_stat bitmap.
- - Fixed dev_err() message
- - Added '\n' to dev_err()
+Changes in v3: None
+Changes in v2: None
 
-Daniel Campello (12):
-  dt-bindings: iio: Add bindings for sx9310 sensor
-  iio: sx9310: Update macros declarations
-  iio: sx9310: Fix irq handling
-  iio: sx9310: Remove acpi and of table macros
-  iio: sx9310: Change from .probe to .probe_new
-  iio: sx9310: Fixes various memory handling
-  iio: sx9310: Use long instead of int for channel bitmaps
-  iio: sx9310: Use regmap_read_poll_timeout() for compensation
-  iio: sx9310: Update copyright
-  iio: sx9310: Simplify error return handling
-  iio: sx9310: Use variable to hold &client->dev
-  iio: sx9310: Miscellaneous format fixes
+ drivers/iio/proximity/sx9310.c | 143 +++++++++++++++------------------
+ 1 file changed, 67 insertions(+), 76 deletions(-)
 
-Stephen Boyd (3):
-  iio: sx9310: Drop channel_users[]
-  iio: sx9310: Enable vdd and svdd regulators at probe
-  iio: sx9310: Use irq trigger flags from firmware
-
- .../iio/proximity/semtech,sx9310.yaml         |  65 +++
- drivers/iio/proximity/sx9310.c                | 429 +++++++++---------
- 2 files changed, 282 insertions(+), 212 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-
---
+diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+index d161f3061e353d..07895d4b935d12 100644
+--- a/drivers/iio/proximity/sx9310.c
++++ b/drivers/iio/proximity/sx9310.c
+@@ -33,45 +33,45 @@
+ #define SX9310_REG_IRQ_SRC				0x00
+ #define SX9310_REG_STAT0				0x01
+ #define SX9310_REG_STAT1				0x02
++#define SX9310_REG_STAT1_COMPSTAT_MASK			GENMASK(3, 0)
+ #define SX9310_REG_IRQ_MSK				0x03
+ #define   SX9310_CONVDONE_IRQ				BIT(3)
+ #define   SX9310_FAR_IRQ				BIT(5)
+ #define   SX9310_CLOSE_IRQ				BIT(6)
+-#define   SX9310_EVENT_IRQ				(SX9310_FAR_IRQ | \
+-							 SX9310_CLOSE_IRQ)
+ #define SX9310_REG_IRQ_FUNC				0x04
+ 
+ #define SX9310_REG_PROX_CTRL0				0x10
+-#define   SX9310_REG_PROX_CTRL0_PROXSTAT2		0x10
+-#define   SX9310_REG_PROX_CTRL0_EN_MASK			0x0F
++#define   SX9310_REG_PROX_CTRL0_SENSOREN_MASK		GENMASK(3, 0)
++#define   SX9310_REG_PROX_CTRL0_SCANPERIOD_MASK		GENMASK(7, 4)
++#define   SX9310_REG_PROX_CTRL0_SCANPERIOD_SHIFT	4
++#define   SX9310_REG_PROX_CTRL0_SCANPERIOD_15MS		0x01
+ #define SX9310_REG_PROX_CTRL1				0x11
+ #define SX9310_REG_PROX_CTRL2				0x12
+-#define   SX9310_REG_PROX_CTRL2_COMBMODE_ALL		0x80
+-#define   SX9310_REG_PROX_CTRL2_SHIELDEN_DYNAMIC	0x04
++#define   SX9310_REG_PROX_CTRL2_COMBMODE_CS1_CS2	(0x02 << 6)
++#define   SX9310_REG_PROX_CTRL2_SHIELDEN_DYNAMIC	(0x01 << 2)
+ #define SX9310_REG_PROX_CTRL3				0x13
+-#define   SX9310_REG_PROX_CTRL3_GAIN0_X8		0x0c
++#define   SX9310_REG_PROX_CTRL3_GAIN0_X8		(0x03 << 2)
+ #define   SX9310_REG_PROX_CTRL3_GAIN12_X4		0x02
+ #define SX9310_REG_PROX_CTRL4				0x14
+ #define   SX9310_REG_PROX_CTRL4_RESOLUTION_FINEST	0x07
+ #define SX9310_REG_PROX_CTRL5				0x15
+-#define   SX9310_REG_PROX_CTRL5_RANGE_SMALL		0xc0
+-#define   SX9310_REG_PROX_CTRL5_STARTUPSENS_CS1		0x04
++#define   SX9310_REG_PROX_CTRL5_RANGE_SMALL		(0x03 << 6)
++#define   SX9310_REG_PROX_CTRL5_STARTUPSENS_CS1		(0x01 << 2)
+ #define   SX9310_REG_PROX_CTRL5_RAWFILT_1P25		0x02
+ #define SX9310_REG_PROX_CTRL6				0x16
+-#define   SX9310_REG_PROX_CTRL6_COMP_COMMON		0x20
++#define   SX9310_REG_PROX_CTRL6_AVGTHRESH_DEFAULT	0x20
+ #define SX9310_REG_PROX_CTRL7				0x17
+-#define   SX9310_REG_PROX_CTRL7_AVGNEGFILT_2		0x08
++#define   SX9310_REG_PROX_CTRL7_AVGNEGFILT_2		(0x01 << 3)
+ #define   SX9310_REG_PROX_CTRL7_AVGPOSFILT_512		0x05
+ #define SX9310_REG_PROX_CTRL8				0x18
+ #define SX9310_REG_PROX_CTRL9				0x19
+-#define   SX9310_REG_PROX_CTRL8_9_PTHRESH12_28		0x40
+-#define   SX9310_REG_PROX_CTRL8_9_PTHRESH_96		0x88
++#define   SX9310_REG_PROX_CTRL8_9_PTHRESH_28		(0x08 << 3)
++#define   SX9310_REG_PROX_CTRL8_9_PTHRESH_96		(0x11 << 3)
+ #define   SX9310_REG_PROX_CTRL8_9_BODYTHRESH_900	0x03
+ #define   SX9310_REG_PROX_CTRL8_9_BODYTHRESH_1500	0x05
+ #define SX9310_REG_PROX_CTRL10				0x1a
+-#define   SX9310_REG_PROX_CTRL10_HYST_6PCT		0x10
+-#define   SX9310_REG_PROX_CTRL10_CLOSE_DEBOUNCE_8	0x12
+-#define   SX9310_REG_PROX_CTRL10_FAR_DEBOUNCE_8		0x03
++#define   SX9310_REG_PROX_CTRL10_HYST_6PCT		(0x01 << 4)
++#define   SX9310_REG_PROX_CTRL10_FAR_DEBOUNCE_2		0x01
+ #define SX9310_REG_PROX_CTRL11				0x1b
+ #define SX9310_REG_PROX_CTRL12				0x1c
+ #define SX9310_REG_PROX_CTRL13				0x1d
+@@ -82,8 +82,8 @@
+ #define SX9310_REG_PROX_CTRL18				0x22
+ #define SX9310_REG_PROX_CTRL19				0x23
+ #define SX9310_REG_SAR_CTRL0				0x2a
+-#define   SX9310_REG_SAR_CTRL0_SARDEB_4_SAMPLES		0x40
+-#define   SX9310_REG_SAR_CTRL0_SARHYST_8		0x10
++#define   SX9310_REG_SAR_CTRL0_SARDEB_4_SAMPLES		(0x02 << 5)
++#define   SX9310_REG_SAR_CTRL0_SARHYST_8		(0x02 << 3)
+ #define SX9310_REG_SAR_CTRL1				0x2b
+ /* Each increment of the slope register is 0.0078125. */
+ #define   SX9310_REG_SAR_CTRL1_SLOPE(_hnslope)		(_hnslope / 78125)
+@@ -107,7 +107,7 @@
+ #define SX9310_REG_SAR_MSB				0x39
+ #define SX9310_REG_SAR_LSB				0x3a
+ 
+-#define SX9310_REG_I2CADDR				0x40
++#define SX9310_REG_I2C_ADDR				0x40
+ #define SX9310_REG_PAUSE				0x41
+ #define SX9310_REG_WHOAMI				0x42
+ #define   SX9310_WHOAMI_VALUE				0x01
+@@ -116,14 +116,9 @@
+ #define SX9310_REG_RESET				0x7f
+ #define   SX9310_SOFT_RESET				0xde
+ 
+-#define SX9310_SCAN_PERIOD_MASK				GENMASK(7, 4)
+-#define SX9310_SCAN_PERIOD_SHIFT			4
+-
+-#define SX9310_COMPSTAT_MASK				GENMASK(3, 0)
+ 
+ /* 4 hardware channels, as defined in STAT0: COMB, CS2, CS1 and CS0. */
+ #define SX9310_NUM_CHANNELS				4
+-#define SX9310_CHAN_ENABLED_MASK			GENMASK(3, 0)
+ 
+ struct sx9310_data {
+ 	/* Serialize access to registers and channel configuration */
+@@ -251,7 +246,7 @@ static const struct regmap_range sx9310_readable_reg_ranges[] = {
+ 	regmap_reg_range(SX9310_REG_PROX_CTRL0, SX9310_REG_PROX_CTRL19),
+ 	regmap_reg_range(SX9310_REG_SAR_CTRL0, SX9310_REG_SAR_CTRL2),
+ 	regmap_reg_range(SX9310_REG_SENSOR_SEL, SX9310_REG_SAR_LSB),
+-	regmap_reg_range(SX9310_REG_I2CADDR, SX9310_REG_WHOAMI),
++	regmap_reg_range(SX9310_REG_I2C_ADDR, SX9310_REG_WHOAMI),
+ 	regmap_reg_range(SX9310_REG_RESET, SX9310_REG_RESET),
+ };
+ 
+@@ -292,7 +287,7 @@ static int sx9310_update_chan_en(struct sx9310_data *data,
+ 
+ 	if ((data->chan_read | data->chan_event) != (chan_read | chan_event)) {
+ 		ret = regmap_update_bits(data->regmap, SX9310_REG_PROX_CTRL0,
+-					 SX9310_CHAN_ENABLED_MASK,
++					 SX9310_REG_PROX_CTRL0_SENSOREN_MASK,
+ 					 chan_read | chan_event);
+ 		if (ret)
+ 			return ret;
+@@ -361,7 +356,8 @@ static int sx9310_wait_for_sample(struct sx9310_data *data)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	val = (val & SX9310_SCAN_PERIOD_MASK) >> SX9310_SCAN_PERIOD_SHIFT;
++	val = (val & SX9310_REG_PROX_CTRL0_SCANPERIOD_MASK) >>
++	      SX9310_REG_PROX_CTRL0_SCANPERIOD_SHIFT;
+ 
+ 	msleep(sx9310_scan_period_table[val]);
+ 
+@@ -435,7 +431,8 @@ static int sx9310_read_samp_freq(struct sx9310_data *data, int *val, int *val2)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	regval = (regval & SX9310_SCAN_PERIOD_MASK) >> SX9310_SCAN_PERIOD_SHIFT;
++	regval = (regval & SX9310_REG_PROX_CTRL0_SCANPERIOD_MASK) >>
++		 SX9310_REG_PROX_CTRL0_SCANPERIOD_SHIFT;
+ 	*val = sx9310_samp_freq_table[regval].val;
+ 	*val2 = sx9310_samp_freq_table[regval].val2;
+ 
+@@ -483,8 +480,8 @@ static int sx9310_set_samp_freq(struct sx9310_data *data, int val, int val2)
+ 	mutex_lock(&data->mutex);
+ 
+ 	ret = regmap_update_bits(data->regmap, SX9310_REG_PROX_CTRL0,
+-				 SX9310_SCAN_PERIOD_MASK,
+-				 i << SX9310_SCAN_PERIOD_SHIFT);
++				 SX9310_REG_PROX_CTRL0_SCANPERIOD_MASK,
++				 i << SX9310_REG_PROX_CTRL0_SCANPERIOD_SHIFT);
+ 
+ 	mutex_unlock(&data->mutex);
+ 
+@@ -572,7 +569,7 @@ static irqreturn_t sx9310_irq_thread_handler(int irq, void *private)
+ 		goto out;
+ 	}
+ 
+-	if (val & SX9310_EVENT_IRQ)
++	if (val & (SX9310_FAR_IRQ | SX9310_CLOSE_IRQ))
+ 		sx9310_push_events(indio_dev);
+ 
+ 	if (val & SX9310_CONVDONE_IRQ)
+@@ -600,6 +597,7 @@ static int sx9310_write_event_config(struct iio_dev *indio_dev,
+ 				     enum iio_event_direction dir, int state)
+ {
+ 	struct sx9310_data *data = iio_priv(indio_dev);
++	unsigned int eventirq = SX9310_FAR_IRQ | SX9310_CLOSE_IRQ;
+ 	int ret;
+ 
+ 	/* If the state hasn't changed, there's nothing to do. */
+@@ -612,7 +610,7 @@ static int sx9310_write_event_config(struct iio_dev *indio_dev,
+ 		if (ret < 0)
+ 			goto out_unlock;
+ 		if (!(data->chan_event & ~BIT(chan->channel))) {
+-			ret = sx9310_enable_irq(data, SX9310_EVENT_IRQ);
++			ret = sx9310_enable_irq(data, eventirq);
+ 			if (ret < 0)
+ 				sx9310_put_event_channel(data, chan->channel);
+ 		}
+@@ -621,7 +619,7 @@ static int sx9310_write_event_config(struct iio_dev *indio_dev,
+ 		if (ret < 0)
+ 			goto out_unlock;
+ 		if (!data->chan_event) {
+-			ret = sx9310_disable_irq(data, SX9310_EVENT_IRQ);
++			ret = sx9310_disable_irq(data, eventirq);
+ 			if (ret < 0)
+ 				sx9310_get_event_channel(data, chan->channel);
+ 		}
+@@ -746,53 +744,46 @@ struct sx9310_reg_default {
+ 	u8 def;
+ };
+ 
+-#define SX_INIT(_reg, _def)			\
+-	{					\
+-		.reg = SX9310_REG_##_reg,	\
+-		.def = _def,			\
+-	}
+-
+ static const struct sx9310_reg_default sx9310_default_regs[] = {
+-	SX_INIT(IRQ_MSK, 0x00),
+-	SX_INIT(IRQ_FUNC, 0x00),
++	{ SX9310_REG_IRQ_MSK, 0x00 },
++	{ SX9310_REG_IRQ_FUNC, 0x00 },
+ 	/*
+ 	 * The lower 4 bits should not be set as it enable sensors measurements.
+ 	 * Turning the detection on before the configuration values are set to
+ 	 * good values can cause the device to return erroneous readings.
+ 	 */
+-	SX_INIT(PROX_CTRL0, SX9310_REG_PROX_CTRL0_PROXSTAT2),
+-	SX_INIT(PROX_CTRL1, 0x00),
+-	SX_INIT(PROX_CTRL2, SX9310_REG_PROX_CTRL2_COMBMODE_ALL |
+-			    SX9310_REG_PROX_CTRL2_SHIELDEN_DYNAMIC),
+-	SX_INIT(PROX_CTRL3, SX9310_REG_PROX_CTRL3_GAIN0_X8 |
+-			    SX9310_REG_PROX_CTRL3_GAIN12_X4),
+-	SX_INIT(PROX_CTRL4, SX9310_REG_PROX_CTRL4_RESOLUTION_FINEST),
+-	SX_INIT(PROX_CTRL5, SX9310_REG_PROX_CTRL5_RANGE_SMALL |
+-			    SX9310_REG_PROX_CTRL5_STARTUPSENS_CS1 |
+-			    SX9310_REG_PROX_CTRL5_RAWFILT_1P25),
+-	SX_INIT(PROX_CTRL6, SX9310_REG_PROX_CTRL6_COMP_COMMON),
+-	SX_INIT(PROX_CTRL7, SX9310_REG_PROX_CTRL7_AVGNEGFILT_2 |
+-			    SX9310_REG_PROX_CTRL7_AVGPOSFILT_512),
+-	SX_INIT(PROX_CTRL8, SX9310_REG_PROX_CTRL8_9_PTHRESH_96 |
+-			    SX9310_REG_PROX_CTRL8_9_BODYTHRESH_1500),
+-	SX_INIT(PROX_CTRL9, SX9310_REG_PROX_CTRL8_9_PTHRESH12_28 |
+-			    SX9310_REG_PROX_CTRL8_9_BODYTHRESH_900),
+-	SX_INIT(PROX_CTRL10, SX9310_REG_PROX_CTRL10_HYST_6PCT |
+-			     SX9310_REG_PROX_CTRL10_CLOSE_DEBOUNCE_8 |
+-			     SX9310_REG_PROX_CTRL10_FAR_DEBOUNCE_8),
+-	SX_INIT(PROX_CTRL11, 0x00),
+-	SX_INIT(PROX_CTRL12, 0x00),
+-	SX_INIT(PROX_CTRL13, 0x00),
+-	SX_INIT(PROX_CTRL14, 0x00),
+-	SX_INIT(PROX_CTRL15, 0x00),
+-	SX_INIT(PROX_CTRL16, 0x00),
+-	SX_INIT(PROX_CTRL17, 0x00),
+-	SX_INIT(PROX_CTRL18, 0x00),
+-	SX_INIT(PROX_CTRL19, 0x00),
+-	SX_INIT(SAR_CTRL0, SX9310_REG_SAR_CTRL0_SARDEB_4_SAMPLES |
+-			   SX9310_REG_SAR_CTRL0_SARHYST_8),
+-	SX_INIT(SAR_CTRL1, SX9310_REG_SAR_CTRL1_SLOPE(10781250)),
+-	SX_INIT(SAR_CTRL2, SX9310_REG_SAR_CTRL2_SAROFFSET_DEFAULT),
++	{ SX9310_REG_PROX_CTRL0, SX9310_REG_PROX_CTRL0_SCANPERIOD_15MS },
++	{ SX9310_REG_PROX_CTRL1, 0x00 },
++	{ SX9310_REG_PROX_CTRL2, SX9310_REG_PROX_CTRL2_COMBMODE_CS1_CS2 |
++				 SX9310_REG_PROX_CTRL2_SHIELDEN_DYNAMIC },
++	{ SX9310_REG_PROX_CTRL3, SX9310_REG_PROX_CTRL3_GAIN0_X8 |
++				 SX9310_REG_PROX_CTRL3_GAIN12_X4 },
++	{ SX9310_REG_PROX_CTRL4, SX9310_REG_PROX_CTRL4_RESOLUTION_FINEST },
++	{ SX9310_REG_PROX_CTRL5, SX9310_REG_PROX_CTRL5_RANGE_SMALL |
++				 SX9310_REG_PROX_CTRL5_STARTUPSENS_CS1 |
++				 SX9310_REG_PROX_CTRL5_RAWFILT_1P25 },
++	{ SX9310_REG_PROX_CTRL6, SX9310_REG_PROX_CTRL6_AVGTHRESH_DEFAULT },
++	{ SX9310_REG_PROX_CTRL7, SX9310_REG_PROX_CTRL7_AVGNEGFILT_2 |
++				 SX9310_REG_PROX_CTRL7_AVGPOSFILT_512 },
++	{ SX9310_REG_PROX_CTRL8, SX9310_REG_PROX_CTRL8_9_PTHRESH_96 |
++				 SX9310_REG_PROX_CTRL8_9_BODYTHRESH_1500 },
++	{ SX9310_REG_PROX_CTRL9, SX9310_REG_PROX_CTRL8_9_PTHRESH_28 |
++				 SX9310_REG_PROX_CTRL8_9_BODYTHRESH_900 },
++	{ SX9310_REG_PROX_CTRL10, SX9310_REG_PROX_CTRL10_HYST_6PCT |
++				  SX9310_REG_PROX_CTRL10_FAR_DEBOUNCE_2 },
++	{ SX9310_REG_PROX_CTRL11, 0x00 },
++	{ SX9310_REG_PROX_CTRL12, 0x00 },
++	{ SX9310_REG_PROX_CTRL13, 0x00 },
++	{ SX9310_REG_PROX_CTRL14, 0x00 },
++	{ SX9310_REG_PROX_CTRL15, 0x00 },
++	{ SX9310_REG_PROX_CTRL16, 0x00 },
++	{ SX9310_REG_PROX_CTRL17, 0x00 },
++	{ SX9310_REG_PROX_CTRL18, 0x00 },
++	{ SX9310_REG_PROX_CTRL19, 0x00 },
++	{ SX9310_REG_SAR_CTRL0, SX9310_REG_SAR_CTRL0_SARDEB_4_SAMPLES |
++				SX9310_REG_SAR_CTRL0_SARHYST_8 },
++	{ SX9310_REG_SAR_CTRL1, SX9310_REG_SAR_CTRL1_SLOPE(10781250) },
++	{ SX9310_REG_SAR_CTRL2, SX9310_REG_SAR_CTRL2_SAROFFSET_DEFAULT },
+ };
+ 
+ /* Activate all channels and perform an initial compensation. */
+@@ -809,7 +800,7 @@ static int sx9310_init_compensation(struct iio_dev *indio_dev)
+ 
+ 	/* run the compensation phase on all channels */
+ 	ret = regmap_write(data->regmap, SX9310_REG_PROX_CTRL0,
+-			   ctrl0 | SX9310_REG_PROX_CTRL0_EN_MASK);
++			   ctrl0 | SX9310_REG_PROX_CTRL0_SENSOREN_MASK);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -992,7 +983,7 @@ static int __maybe_unused sx9310_suspend(struct device *dev)
+ 	if (ret)
+ 		goto out;
+ 
+-	ctrl0 = data->suspend_ctrl0 & ~SX9310_REG_PROX_CTRL0_EN_MASK;
++	ctrl0 = data->suspend_ctrl0 & ~SX9310_REG_PROX_CTRL0_SENSOREN_MASK;
+ 	ret = regmap_write(data->regmap, SX9310_REG_PROX_CTRL0, ctrl0);
+ 	if (ret)
+ 		goto out;
+-- 
 2.28.0.163.g6104cc2f0b6-goog
 
