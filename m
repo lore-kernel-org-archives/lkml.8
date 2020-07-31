@@ -2,98 +2,67 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC06C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB495C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD1C208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:11:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="dVuZGPfm"
+	by mail.kernel.org (Postfix) with ESMTP id BB580208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 12:11:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733170AbgGaMLj (ORCPT
+        id S1733177AbgGaMLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 08:11:39 -0400
-Received: from mx07-00178001.pphosted.com ([185.132.182.106]:17276 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733073AbgGaMLR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 08:11:17 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06VC8lRS011696;
-        Fri, 31 Jul 2020 14:11:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=Pb04KRp/CHv7AubmM5WkWb6DmIPNpc8iKS6+GMia3j0=;
- b=dVuZGPfmA8OnN77TPjYb1baQvnuZUQ0IeqACwuZCQKpMp4hImQxhS+BuL1CM9KHFV4wB
- W5KiMogmqvGhke10FrnNYhZOpqsvAhKV5xNwYGjyAtWcerKRS9uU2hNvkJDhznem2w9e
- xMiPHOw0zy/yTtdpW5dgKBp07yI89dFTwnAUoiMtQTT8bdSVJ+wHPso0zWvSNDcW9d1c
- WzcSBgvS3Akjci7XSED7aXuv4HcbmIjbjY2sMNEbSmFNX3MKjj6q8zQBTmehfHpq3bMQ
- s+Pr+QEnI/tGsAspQZcvJhEAUUyZqA6rGnEF4Xl74sAIpefjAU/BpqmO/YH50pxnJxAy bw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32ga72dcbf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 31 Jul 2020 14:11:11 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 318B310002A;
-        Fri, 31 Jul 2020 14:11:11 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 264252AE6DD;
-        Fri, 31 Jul 2020 14:11:11 +0200 (CEST)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE1.st.com (10.75.127.7)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul 2020 14:11:10
- +0200
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <arnaud.pouliquen@st.com>
-Subject: [PATCH 10/13] rpmsg: ns: initialize channel info override field
-Date:   Fri, 31 Jul 2020 14:10:40 +0200
-Message-ID: <20200731121043.24199-11-arnaud.pouliquen@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200731121043.24199-1-arnaud.pouliquen@st.com>
-References: <20200731121043.24199-1-arnaud.pouliquen@st.com>
+        Fri, 31 Jul 2020 08:11:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:56386 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733082AbgGaMLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 08:11:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F02601FB;
+        Fri, 31 Jul 2020 05:11:14 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 131753F71F;
+        Fri, 31 Jul 2020 05:11:13 -0700 (PDT)
+References: <20200730170321.31228-1-valentin.schneider@arm.com> <20200730170321.31228-3-valentin.schneider@arm.com> <ba26464de5e82eace97924121d7bcd1d@kernel.org> <jhjmu3gim0g.mognet@arm.com> <10da73b8a8937b08b0993513d6c20e98@kernel.org> <8dfeb7782d7ffaa1f107a8e4aca10840@kernel.org>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+Subject: Re: [PATCH v2 2/2] irqchip/gic-v2, v3: Prevent SW resends entirely
+In-reply-to: <8dfeb7782d7ffaa1f107a8e4aca10840@kernel.org>
+Date:   Fri, 31 Jul 2020 13:11:08 +0100
+Message-ID: <jhjk0yjj34z.mognet@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-31_04:2020-07-31,2020-07-31 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By default driver_override should be 0 to avoid to force
-the channel creation with a specified name.The local variable
-is not initialized.
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
----
- drivers/rpmsg/rpmsg_ns.c | 1 +
- 1 file changed, 1 insertion(+)
+On 31/07/20 12:27, Marc Zyngier wrote:
+>> Look for anything that performs an interrupt allocation by calling
+>> into the parent with a 3 cell (DT case) fwspec. There is a bunch
+>> of them.
+>
+> For what it is worth, I have just pushed out a branch[1] containing some
+> of this rework as well as your patches.
+>
 
-diff --git a/drivers/rpmsg/rpmsg_ns.c b/drivers/rpmsg/rpmsg_ns.c
-index b478e2b55213..ace237854f88 100644
---- a/drivers/rpmsg/rpmsg_ns.c
-+++ b/drivers/rpmsg/rpmsg_ns.c
-@@ -103,6 +103,7 @@ static int rpmsg_ns_cb(struct rpmsg_device *rpdev, void *data, int len,
- 	strncpy(chinfo.name, msg->name, sizeof(chinfo.name));
- 	chinfo.src = RPMSG_ADDR_ANY;
- 	chinfo.dst = le32_to_cpu(msg->addr);
-+	chinfo.driver_override = NULL;
- 
- 	dev_info(dev, "%sing channel %s addr 0x%x\n",
- 		 flags & RPMSG_NS_DESTROY ? "destroy" : "creat",
--- 
-2.17.1
+Brilliant, thanks for taking a shot at this! I'll try to look for stragglers.
 
+> The only tricky part is the GICv4.1 doorbell retriggering, which just
+> can't be re-injected. It shouldn't matter though. Same for vSGIs, they
+> never fire on the host.
+>
+> Thanks,
+>
+>          M.
+>
+> [1]
+> https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=irq/gic-retrigger
