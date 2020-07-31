@@ -2,175 +2,172 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DABB2C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DD9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1D5B2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 327912083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:47:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Hyx44L8V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731212AbgGaCq7 (ORCPT
+        id S1731221AbgGaCrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 22:46:59 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:54982 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731166AbgGaCq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 22:46:58 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 22E119063A47108A3EA6;
-        Fri, 31 Jul 2020 10:46:56 +0800 (CST)
-Received: from [127.0.0.1] (10.67.76.251) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Fri, 31 Jul 2020
- 10:46:52 +0800
-Subject: Re: linux-next: Tree for Jul 30 [build failure on arm64]
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200730214659.0fbfdfc4@canb.auug.org.au>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <72b073ba-ee41-1a1c-ce6c-ffd8b5936b09@hisilicon.com>
-Date:   Fri, 31 Jul 2020 10:46:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Thu, 30 Jul 2020 22:47:47 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:17853 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730820AbgGaCrr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 22:47:47 -0400
+X-UUID: 46984ca6e30144b293dbd0331ec7fac1-20200731
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=5gxJSYGpogJvHq3MI6vYajWuhd8yPBPnByTkoBOC0pU=;
+        b=Hyx44L8VQ9IZKqLQqNKglwCD1wrnUGtXfQKCDOEmcIKCTU02HvUgoEgT5xMreW3wn77Wkbh+GGJDfLj1DissXnnaRhOl1CbyO5OfmEIvPcnP2fap5UpHk35geXuQGILEb0CNcuuxt88HqPxUtcpl5XWyuPAkb8u4pv94DwGB3e8=;
+X-UUID: 46984ca6e30144b293dbd0331ec7fac1-20200731
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 756326989; Fri, 31 Jul 2020 10:47:40 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 31 Jul 2020 10:47:37 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 31 Jul 2020 10:47:38 +0800
+Message-ID: <1596163658.3932.20.camel@mtkswgap22>
+Subject: Re: [PATCH v4 2/2] soc: mediatek: add mtk-devapc driver
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
+CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <devicetree@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Date:   Fri, 31 Jul 2020 10:47:38 +0800
+In-Reply-To: <CAAOTY_9dqcQdZd5x9ckE67KKh-4d_5gN9MQYDq7b4vGCWwHoDw@mail.gmail.com>
+References: <1596010690-13178-1-git-send-email-neal.liu@mediatek.com>
+         <1596010690-13178-3-git-send-email-neal.liu@mediatek.com>
+         <CAAOTY_9dqcQdZd5x9ckE67KKh-4d_5gN9MQYDq7b4vGCWwHoDw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <20200730214659.0fbfdfc4@canb.auug.org.au>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.76.251]
-X-CFilter-Loop: Reflected
+X-TM-SNTS-SMTP: 2726352F45A91FD3D86C1DA16C7A07282E6A2ABB74F7AF015581EAF3E464051E2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-There's a build failure on arm64:
-
-In file included from ./include/linux/compat.h:17:0,
-                 from ./arch/arm64/include/asm/stat.h:13,
-                 from ./include/linux/stat.h:6,
-                 from ./include/linux/sysfs.h:22,
-                 from ./include/linux/kobject.h:20,
-                 from ./include/linux/of.h:17,
-                 from ./include/linux/irqdomain.h:35,
-                 from ./include/linux/acpi.h:13,
-                 from ./include/acpi/apei.h:9,
-                 from ./include/acpi/ghes.h:5,
-                 from ./include/linux/arm_sdei.h:8,
-                 from arch/arm64/kernel/asm-offsets.c:10:
-./include/linux/fs.h: In function ‘vfs_whiteout’:
-./include/linux/fs.h:1709:32: error: ‘S_IFCHR’ undeclared (first use in this function)
-  return vfs_mknod(dir, dentry, S_IFCHR | WHITEOUT_MODE, WHITEOUT_DEV);
-                                ^
-./include/linux/fs.h:1709:32: note: each undeclared identifier is reported only once for each
-function it appears in
-./include/linux/fs.h: At top level:
-./include/linux/fs.h:1855:46: warning: ‘struct kstat’ declared inside parameter list
-  int (*getattr) (const struct path *, struct kstat *, u32, unsigned int);
-                                              ^
-./include/linux/fs.h:1855:46: warning: its scope is only this definition or declaration, which is
-probably not what you want
-./include/linux/fs.h: In function ‘__mandatory_lock’:
-./include/linux/fs.h:2325:25: error: ‘S_ISGID’ undeclared (first use in this function)
-  return (ino->i_mode & (S_ISGID | S_IXGRP)) == S_ISGID;
-                         ^
-./include/linux/fs.h:2325:35: error: ‘S_IXGRP’ undeclared (first use in this function)
-  return (ino->i_mode & (S_ISGID | S_IXGRP)) == S_ISGID;
-                                   ^
-./include/linux/fs.h: In function ‘invalidate_remote_inode’:
-./include/linux/fs.h:2588:6: error: implicit declaration of function ‘S_ISREG’
-[-Werror=implicit-function-declaration]
-  if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
-      ^
-./include/linux/fs.h:2588:32: error: implicit declaration of function ‘S_ISDIR’
-[-Werror=implicit-function-declaration]
-  if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
-                                ^
-./include/linux/fs.h:2589:6: error: implicit declaration of function ‘S_ISLNK’
-[-Werror=implicit-function-declaration]
-      S_ISLNK(inode->i_mode))
-      ^
-./include/linux/fs.h: In function ‘execute_ok’:
-./include/linux/fs.h:2768:26: error: ‘S_IXUGO’ undeclared (first use in this function)
-  return (inode->i_mode & S_IXUGO) || S_ISDIR(inode->i_mode);
-
-Thanks,
-Shaokun
-
-在 2020/7/30 19:46, Stephen Rothwell 写道:
-> Hi all,
-> 
-> Changes since 20200729:
-> 
-> My fixes tree contains:
-> 
->   dbf24e30ce2e ("device_cgroup: Fix RCU list debugging warning")
-> 
-> Linus' tree gained a build failure for which I revertd a commit.
-> 
-> The vfs tree lost its build failure.
-> 
-> The printk tree lost its build failure.
-> 
-> The net-next tree lost its build failure.
-> 
-> The security tree still had its build failure for which I reverted
-> 3 commits.
-> 
-> The iommu tree gained a conflict against the dma-mapping tree.
-> 
-> The tip tree still had its build failure for which I reverted a
-> commit.
-> 
-> The vhost tree lost its build failure but gained more for which I applied
-> a patch.
-> 
-> The hmm tree gained conflicts against the drm and kvm-ppc trees.
-> 
-> Non-merge commits (relative to Linus' tree): 11751
->  12254 files changed, 603002 insertions(+), 226737 deletions(-)
-> 
-> ----------------------------------------------------------------------------
-> 
-> I have created today's linux-next tree at
-> git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> (patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
-> are tracking the linux-next tree using git, you should not use "git pull"
-> to do so as that will try to merge the new linux-next release with the
-> old one.  You should use "git fetch" and checkout or reset to the new
-> master.
-> 
-> You can see which trees have been included by looking in the Next/Trees
-> file in the source.  There are also quilt-import.log and merge.log
-> files in the Next directory.  Between each merge, the tree was built
-> with a ppc64_defconfig for powerpc, an allmodconfig for x86_64, a
-> multi_v7_defconfig for arm and a native build of tools/perf. After
-> the final fixups (if any), I do an x86_64 modules_install followed by
-> builds for x86_64 allnoconfig, powerpc allnoconfig (32 and 64 bit),
-> ppc44x_defconfig, allyesconfig and pseries_le_defconfig and i386, sparc
-> and sparc64 defconfig and htmldocs. And finally, a simple boot test
-> of the powerpc pseries_le_defconfig kernel in qemu (with and without
-> kvm enabled).
-> 
-> Below is a summary of the state of the merge.
-> 
-> I am currently merging 328 trees (counting Linus' and 85 trees of bug
-> fix patches pending for the current merge release).
-> 
-> Stats about the size of the tree over time can be seen at
-> http://neuling.org/linux-next-size.html .
-> 
-> Status of my local build tests will be at
-> http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
-> advice about cross compilers/configs that work, we are always open to add
-> more builds.
-> 
-> Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
-> Gortmaker for triage and bug fixes.
-> 
+SGkgQ2h1bi1LdWFuZywNCg0KDQpPbiBUaHUsIDIwMjAtMDctMzAgYXQgMDY6NDcgKzA4MDAsIENo
+dW4tS3VhbmcgSHUgd3JvdGU6DQo+IEhpLCBOZWFsOg0KPiANCj4gTmVhbCBMaXUgPG5lYWwubGl1
+QG1lZGlhdGVrLmNvbT4g5pa8IDIwMjDlubQ35pyIMjnml6Ug6YCx5LiJIOS4i+WNiDQ6Mjnlr6vp
+gZPvvJoNCj4gPg0KPiA+IE1lZGlhVGVrIGJ1cyBmYWJyaWMgcHJvdmlkZXMgVHJ1c3Rab25lIHNl
+Y3VyaXR5IHN1cHBvcnQgYW5kIGRhdGENCj4gPiBwcm90ZWN0aW9uIHRvIHByZXZlbnQgc2xhdmVz
+IGZyb20gYmVpbmcgYWNjZXNzZWQgYnkgdW5leHBlY3RlZA0KPiA+IG1hc3RlcnMuDQo+ID4gVGhl
+IHNlY3VyaXR5IHZpb2xhdGlvbiBpcyBsb2dnZWQgYW5kIHNlbnQgdG8gdGhlIHByb2Nlc3NvciBm
+b3INCj4gPiBmdXJ0aGVyIGFuYWx5c2lzIG9yIGNvdW50ZXJtZWFzdXJlcy4NCj4gPg0KPiA+IEFu
+eSBvY2N1cnJlbmNlIG9mIHNlY3VyaXR5IHZpb2xhdGlvbiB3b3VsZCByYWlzZSBhbiBpbnRlcnJ1
+cHQsIGFuZA0KPiA+IGl0IHdpbGwgYmUgaGFuZGxlZCBieSBtdGstZGV2YXBjIGRyaXZlci4gVGhl
+IHZpb2xhdGlvbg0KPiA+IGluZm9ybWF0aW9uIGlzIHByaW50ZWQgaW4gb3JkZXIgdG8gZmluZCB0
+aGUgbXVyZGVyZXIuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBOZWFsIExpdSA8bmVhbC5saXVA
+bWVkaWF0ZWsuY29tPg0KPiANCj4gW3NuaXBdDQo+IA0KPiA+ICsNCj4gPiArc3RhdGljIHZvaWQg
+ZGV2YXBjX3Zpb19pbmZvX3ByaW50KHN0cnVjdCBtdGtfZGV2YXBjX2NvbnRleHQgKmN0eCkNCj4g
+PiArew0KPiA+ICsgICAgICAgc3RydWN0IG10a19kZXZhcGNfdmlvX2luZm8gKnZpb19pbmZvID0g
+Y3R4LT52aW9faW5mbzsNCj4gPiArDQo+ID4gKyAgICAgICAvKiBQcmludCB2aW9sYXRpb24gaW5m
+b3JtYXRpb24gKi8NCj4gPiArICAgICAgIGlmICh2aW9faW5mby0+d3JpdGUpDQo+ID4gKyAgICAg
+ICAgICAgICAgIGRldl9pbmZvKGN0eC0+ZGV2LCAiV3JpdGUgVmlvbGF0aW9uXG4iKTsNCj4gPiAr
+ICAgICAgIGVsc2UgaWYgKHZpb19pbmZvLT5yZWFkKQ0KPiA+ICsgICAgICAgICAgICAgICBkZXZf
+aW5mbyhjdHgtPmRldiwgIlJlYWQgVmlvbGF0aW9uXG4iKTsNCj4gPiArDQo+ID4gKyAgICAgICBk
+ZXZfaW5mbyhjdHgtPmRldiwgIlZpbyBBZGRyOjB4JXgsIEhpZ2g6MHgleCwgQnVzIElEOjB4JXgs
+IERvbSBJRDoleFxuIiwNCj4gPiArICAgICAgICAgICAgICAgIHZpb19pbmZvLT52aW9fYWRkciwg
+dmlvX2luZm8tPnZpb19hZGRyX2hpZ2gsDQo+ID4gKyAgICAgICAgICAgICAgICB2aW9faW5mby0+
+bWFzdGVyX2lkLCB2aW9faW5mby0+ZG9tYWluX2lkKTsNCj4gPiArfQ0KPiANCj4gZGV2YXBjX3Zp
+b19pbmZvX3ByaW50KCkgaXMgc21hbGwgZnVuY3Rpb24gYW5kIG9ubHkgY2FsbGVkIGJ5DQo+IGRl
+dmFwY19leHRyYWN0X3Zpb19kYmcoKSwgc28gSSB3b3VsZCBsaWtlIHRvIG1lcmdlIHRoaXMgZnVu
+Y3Rpb24gaW50bw0KPiBkZXZhcGNfZXh0cmFjdF92aW9fZGJnKCkgYW5kIHlvdSBjb3VsZCBkcm9w
+IHN0cnVjdCBtdGtfZGV2YXBjX3Zpb19pbmZvDQo+IGJlY2F1c2UgaXRzIG1lbWJlciBhcmUgYWxs
+IGxvY2FsIHZhcmlhYmxlLg0KDQpUaGlzIGlkZWEgaXMgb2theSBmb3IgbWUuIEknbGwgdXBkYXRl
+IG9uIG5leHQgcGF0Y2guDQpUaGFua3MgIQ0KDQo+IA0KPiA+ICsNCj4gPiArLyoNCj4gPiArICog
+ZGV2YXBjX2V4dHJhY3RfdmlvX2RiZyAtIGV4dHJhY3QgZnVsbCB2aW9sYXRpb24gaW5mb3JtYXRp
+b24gYWZ0ZXIgZG9pbmcNCj4gPiArICogICAgICAgICAgICAgICAgICAgICAgICAgIHNoaWZ0IG1l
+Y2hhbmlzbS4NCj4gPiArICovDQo+ID4gK3N0YXRpYyB2b2lkIGRldmFwY19leHRyYWN0X3Zpb19k
+Ymcoc3RydWN0IG10a19kZXZhcGNfY29udGV4dCAqY3R4KQ0KPiA+ICt7DQo+ID4gKyAgICAgICBj
+b25zdCBzdHJ1Y3QgbXRrX2RldmFwY192aW9fZGJncyAqdmlvX2RiZ3M7DQo+ID4gKyAgICAgICBz
+dHJ1Y3QgbXRrX2RldmFwY192aW9faW5mbyAqdmlvX2luZm87DQo+ID4gKyAgICAgICB2b2lkIF9f
+aW9tZW0gKnZpb19kYmcwX3JlZzsNCj4gPiArICAgICAgIHZvaWQgX19pb21lbSAqdmlvX2RiZzFf
+cmVnOw0KPiA+ICsgICAgICAgdTMyIGRiZzA7DQo+ID4gKw0KPiA+ICsgICAgICAgdmlvX2RiZzBf
+cmVnID0gY3R4LT5kZXZhcGNfcGRfYmFzZSArIGN0eC0+b2Zmc2V0LT52aW9fZGJnMDsNCj4gPiAr
+ICAgICAgIHZpb19kYmcxX3JlZyA9IGN0eC0+ZGV2YXBjX3BkX2Jhc2UgKyBjdHgtPm9mZnNldC0+
+dmlvX2RiZzE7DQo+ID4gKw0KPiA+ICsgICAgICAgdmlvX2RiZ3MgPSBjdHgtPnZpb19kYmdzOw0K
+PiA+ICsgICAgICAgdmlvX2luZm8gPSBjdHgtPnZpb19pbmZvOw0KPiA+ICsNCj4gPiArICAgICAg
+IC8qIFN0YXJ0cyB0byBleHRyYWN0IHZpb2xhdGlvbiBpbmZvcm1hdGlvbiAqLw0KPiA+ICsgICAg
+ICAgZGJnMCA9IHJlYWRsKHZpb19kYmcwX3JlZyk7DQo+ID4gKyAgICAgICB2aW9faW5mby0+dmlv
+X2FkZHIgPSByZWFkbCh2aW9fZGJnMV9yZWcpOw0KPiA+ICsNCj4gPiArICAgICAgIHZpb19pbmZv
+LT5tYXN0ZXJfaWQgPSAoZGJnMCAmIHZpb19kYmdzLT5tc3RpZC5tYXNrKSA+Pg0KPiA+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHZpb19kYmdzLT5tc3RpZC5zdGFydDsNCj4gPiArICAg
+ICAgIHZpb19pbmZvLT5kb21haW5faWQgPSAoZGJnMCAmIHZpb19kYmdzLT5kbW5pZC5tYXNrKSA+
+Pg0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZpb19kYmdzLT5kbW5pZC5zdGFy
+dDsNCj4gPiArICAgICAgIHZpb19pbmZvLT53cml0ZSA9ICgoZGJnMCAmIHZpb19kYmdzLT52aW9f
+dy5tYXNrKSA+Pg0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICB2aW9fZGJncy0+dmlv
+X3cuc3RhcnQpID09IDE7DQo+ID4gKyAgICAgICB2aW9faW5mby0+cmVhZCA9ICgoZGJnMCAmIHZp
+b19kYmdzLT52aW9fci5tYXNrKSA+Pg0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgdmlv
+X2RiZ3MtPnZpb19yLnN0YXJ0KSA9PSAxOw0KPiA+ICsgICAgICAgdmlvX2luZm8tPnZpb19hZGRy
+X2hpZ2ggPSAoZGJnMCAmIHZpb19kYmdzLT5hZGRyX2gubWFzaykgPj4NCj4gPiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgdmlvX2RiZ3MtPmFkZHJfaC5zdGFydDsNCj4gPiArDQo+
+ID4gKyAgICAgICBkZXZhcGNfdmlvX2luZm9fcHJpbnQoY3R4KTsNCj4gPiArfQ0KPiA+ICsNCj4g
+DQo+IFtzbmlwXQ0KPiANCj4gPiArDQo+ID4gKy8qDQo+ID4gKyAqIHN0YXJ0X2RldmFwYyAtIHVu
+bWFzayBzbGF2ZSdzIGlycSB0byBzdGFydCByZWNlaXZpbmcgZGV2YXBjIHZpb2xhdGlvbi4NCj4g
+PiArICovDQo+ID4gK3N0YXRpYyB2b2lkIHN0YXJ0X2RldmFwYyhzdHJ1Y3QgbXRrX2RldmFwY19j
+b250ZXh0ICpjdHgpDQo+ID4gK3sNCj4gPiArICAgICAgIHUzMiB2aW9faWR4Ow0KPiA+ICsNCj4g
+PiArICAgICAgIGZvciAodmlvX2lkeCA9IDA7IHZpb19pZHggPCBjdHgtPnZpb19pZHhfbnVtOyB2
+aW9faWR4KyspDQo+ID4gKyAgICAgICAgICAgICAgIG1hc2tfbW9kdWxlX2lycShjdHgsIHZpb19p
+ZHgsIGZhbHNlKTsNCj4gDQo+IEFyZSB0aGVzZSBiaXRzIGRlZmF1bHQgdHJ1ZT8gSWYgdGhleSBh
+cmUgZGVmYXVsdCBmYWxzZSwgeW91IG5lZWQgbm90DQo+IHRvIHNldHVwIGl0IHRvIGZhbHNlIGFn
+YWluLg0KDQpJdCdzIGRlZmF1bHQgdmFsdWUgaXMgdHJ1ZSwgd2hpY2ggaXMgbWFzay4NCldlIHRy
+eSB0byB1bm1hc2sgaXQgdG8gc3RhcnQgc2VydmljZS4NCg0KPiANCj4gPiArfQ0KPiA+ICsNCj4g
+DQo+IFtzbmlwXQ0KPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRr
+LWRldmFwYy5oIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWRldmFwYy5oDQo+ID4gbmV3IGZp
+bGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi43YmQ3ZTY2DQo+ID4gLS0tIC9kZXYv
+bnVsbA0KPiA+ICsrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1kZXZhcGMuaA0KPiA+IEBA
+IC0wLDAgKzEsNTQgQEANCj4gPiArLyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAg
+Ki8NCj4gPiArLyoNCj4gPiArICogQ29weXJpZ2h0IChDKSAyMDIwIE1lZGlhVGVrIEluYy4NCj4g
+PiArICovDQo+ID4gKw0KPiA+ICsjaWZuZGVmIF9fTVRLX0RFVkFQQ19IX18NCj4gPiArI2RlZmlu
+ZSBfX01US19ERVZBUENfSF9fDQo+ID4gKw0KPiA+ICsjZGVmaW5lIFZJT19NT0RfVE9fUkVHX0lO
+RChtKSAgKChtKSAvIDMyKQ0KPiA+ICsjZGVmaW5lIFZJT19NT0RfVE9fUkVHX09GRihtKSAgKCht
+KSAlIDMyKQ0KPiA+ICsNCj4gPiArc3RydWN0IG10a19kZXZhcGNfcGRfb2Zmc2V0IHsNCj4gPiAr
+ICAgICAgIHUzMiB2aW9fbWFzazsNCj4gPiArICAgICAgIHUzMiB2aW9fc3RhOw0KPiA+ICsgICAg
+ICAgdTMyIHZpb19kYmcwOw0KPiA+ICsgICAgICAgdTMyIHZpb19kYmcxOw0KPiA+ICsgICAgICAg
+dTMyIGFwY19jb247DQo+ID4gKyAgICAgICB1MzIgdmlvX3NoaWZ0X3N0YTsNCj4gPiArICAgICAg
+IHUzMiB2aW9fc2hpZnRfc2VsOw0KPiA+ICsgICAgICAgdTMyIHZpb19zaGlmdF9jb247DQo+ID4g
+K307DQo+ID4gKw0KPiA+ICtzdHJ1Y3QgbXRrX2RldmFwY192aW9fZGJnc19kZXNjIHsNCj4gPiAr
+ICAgICAgIHUzMiBtYXNrOw0KPiA+ICsgICAgICAgdTMyIHN0YXJ0Ow0KPiA+ICt9Ow0KPiA+ICsN
+Cj4gPiArc3RydWN0IG10a19kZXZhcGNfdmlvX2RiZ3Mgew0KPiA+ICsgICAgICAgc3RydWN0IG10
+a19kZXZhcGNfdmlvX2RiZ3NfZGVzYyBtc3RpZDsNCj4gPiArICAgICAgIHN0cnVjdCBtdGtfZGV2
+YXBjX3Zpb19kYmdzX2Rlc2MgZG1uaWQ7DQo+ID4gKyAgICAgICBzdHJ1Y3QgbXRrX2RldmFwY192
+aW9fZGJnc19kZXNjIHZpb193Ow0KPiA+ICsgICAgICAgc3RydWN0IG10a19kZXZhcGNfdmlvX2Ri
+Z3NfZGVzYyB2aW9fcjsNCj4gPiArICAgICAgIHN0cnVjdCBtdGtfZGV2YXBjX3Zpb19kYmdzX2Rl
+c2MgYWRkcl9oOw0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RydWN0IG10a19kZXZhcGNfdmlvX2lu
+Zm8gew0KPiA+ICsgICAgICAgYm9vbCByZWFkOw0KPiA+ICsgICAgICAgYm9vbCB3cml0ZTsNCj4g
+PiArICAgICAgIHUzMiB2aW9fYWRkcjsNCj4gPiArICAgICAgIHUzMiB2aW9fYWRkcl9oaWdoOw0K
+PiA+ICsgICAgICAgdTMyIG1hc3Rlcl9pZDsNCj4gPiArICAgICAgIHUzMiBkb21haW5faWQ7DQo+
+ID4gK307DQo+ID4gKw0KPiA+ICtzdHJ1Y3QgbXRrX2RldmFwY19jb250ZXh0IHsNCj4gPiArICAg
+ICAgIHN0cnVjdCBkZXZpY2UgKmRldjsNCj4gPiArICAgICAgIHUzMiB2aW9faWR4X251bTsNCj4g
+PiArICAgICAgIHZvaWQgX19pb21lbSAqZGV2YXBjX3BkX2Jhc2U7DQo+ID4gKyAgICAgICBzdHJ1
+Y3QgbXRrX2RldmFwY192aW9faW5mbyAqdmlvX2luZm87DQo+ID4gKyAgICAgICBjb25zdCBzdHJ1
+Y3QgbXRrX2RldmFwY19wZF9vZmZzZXQgKm9mZnNldDsNCj4gPiArICAgICAgIGNvbnN0IHN0cnVj
+dCBtdGtfZGV2YXBjX3Zpb19kYmdzICp2aW9fZGJnczsNCj4gPiArfTsNCj4gPiArDQo+ID4gKyNl
+bmRpZiAvKiBfX01US19ERVZBUENfSF9fICovDQo+IA0KPiBEYXRhIGluIHRoaXMgaGVhZGVyIGZp
+bGUgaXMgb25seSB1c2VkIGluIG10ay1kZXZhcGMuYyBhbmQgbXRrLWRldmFwYy5jDQo+IGlzIGEg
+c21hbGwgZmlsZSwgc28gSSB0aGluayBpdCdzIGJldHRlciB0byBtb3ZlIGRhdGEgaW4gaGVhZGVy
+IGZpbGUNCj4gaW50byAuYyBmaWxlIHRvIG1ha2UgY29kZSBzaW1wbGVyLg0KDQpUaGlzIGlkZWEg
+aXMgb2theSBmb3IgbWUuIEknbGwgdXBkYXRlIG9uIG5leHQgcGF0Y2guDQpUaGFua3MgIQ0KDQo+
+IA0KPiBSZWdhcmRzLA0KPiBDaHVuLUt1YW5nLg0KDQo=
 
