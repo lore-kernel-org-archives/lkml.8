@@ -2,104 +2,134 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FC8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80E2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC3C120838
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:21:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596176473;
-	bh=Blyl629R0rSAITfg2RV8ZN7IJy1nXeWFtckxB9vWUvg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2aZCp+LpnJQ6wjx+t3lfB6B1zyzWsNL6C/UxOddQ6O4ulH50nsf/vN43AgPZQ+LbL
-	 p366WlslwFWu2s11clA+5bViPLURofl0KMMMqvndeh4V1OKX9PozUICKxH+WF/Qf1Z
-	 FdNrv9w/JCIs26v1xshCg7Daf0iRzk5a3FsIAcQY=
+	by mail.kernel.org (Postfix) with ESMTP id BDA47208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 06:28:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UMmmLVbr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731366AbgGaGVL (ORCPT
+        id S1731323AbgGaG2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 02:21:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49742 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731152AbgGaGVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 02:21:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 31 Jul 2020 02:28:14 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44502 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731224AbgGaG2O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 02:28:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596176892;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=pao/Sd97gVfvKhK6/6ymDqnN+qhbbP53Wl+E49WNZXc=;
+        b=UMmmLVbrPFDz6BSpps/JgfN9LdN/zIO+YZTqzrRzYgwOZYjTta3IrbNGPDbZywl1ExXYmx
+        BGTP3sNbeaYJxWv9bervF18Q+tJOZM7kNjDvJX9IeSN0zDUb97RFRIAeqDGwB46YttpyZx
+        1q+lUgUTavw35/lx6Ufh3JAVC4xJdfQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-506-O3PKWmNBNGyrfEeyzkNZvg-1; Fri, 31 Jul 2020 02:28:10 -0400
+X-MC-Unique: O3PKWmNBNGyrfEeyzkNZvg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22F55207F5;
-        Fri, 31 Jul 2020 06:21:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596176470;
-        bh=Blyl629R0rSAITfg2RV8ZN7IJy1nXeWFtckxB9vWUvg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KbiLWGbTe5xiVd/jsXPTlxW6rM4LsoqTLKCGKz8fvq76VkTkBH0KLvtXeLKpo93EO
-         zRSJ5YV/enJL6IKR7UjWmBFW6gVVvUV0JZJSQ3id7vzzu2f+34E+W6vjFae4l3uhNE
-         pxi5FlBjpzGoMnb6bhlosGz8RTnbqN/6ECSmHxOk=
-Date:   Fri, 31 Jul 2020 08:20:57 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Oded Gabbay <oded.gabbay@gmail.com>
-Cc:     Colin King <colin.king@canonical.com>,
-        Arnd Bergmann <arnd@arndb.de>, Tomer Tayar <ttayar@habana.ai>,
-        Omer Shpigelman <oshpigelman@habana.ai>,
-        Ofir Bitton <obitton@habana.ai>,
-        kernel-janitors@vger.kernel.org,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] habanalabs: fix incorrect check on failed
- workqueue create
-Message-ID: <20200731062057.GC1508201@kroah.com>
-References: <20200730082022.5557-1-colin.king@canonical.com>
- <CAFCwf101gsf3GK6f_ggNgPeKTFXEDdCYz-LugNq5mY342zc2Hw@mail.gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6B67107ACCA;
+        Fri, 31 Jul 2020 06:28:08 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 3C1DF712D9;
+        Fri, 31 Jul 2020 06:28:05 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 31 Jul 2020 08:28:08 +0200 (CEST)
+Date:   Fri, 31 Jul 2020 08:28:05 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>, Pavel Machek <pavel@ucw.cz>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: [RFC][PATCH] exec: Conceal the other threads from wakeups during
+ exec
+Message-ID: <20200731062804.GA26171@redhat.com>
+References: <87h7tsllgw.fsf@x220.int.ebiederm.org>
+ <CAHk-=wj34Pq1oqFVg1iWYAq_YdhCyvhyCYxiy-CG-o76+UXydQ@mail.gmail.com>
+ <87d04fhkyz.fsf@x220.int.ebiederm.org>
+ <87h7trg4ie.fsf@x220.int.ebiederm.org>
+ <CAHk-=wj+ynePRJC3U5Tjn+ZBRAE3y7=anc=zFhL=ycxyKP8BxA@mail.gmail.com>
+ <878sf16t34.fsf@x220.int.ebiederm.org>
+ <87pn8c1uj6.fsf_-_@x220.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFCwf101gsf3GK6f_ggNgPeKTFXEDdCYz-LugNq5mY342zc2Hw@mail.gmail.com>
+In-Reply-To: <87pn8c1uj6.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 01:51:48PM +0300, Oded Gabbay wrote:
-> On Thu, Jul 30, 2020 at 11:20 AM Colin King <colin.king@canonical.com> wrote:
-> >
-> > From: Colin Ian King <colin.king@canonical.com>
-> >
-> > The null check on a failed workqueue create is currently null checking
-> > hdev->cq_wq rather than the pointer hdev->cq_wq[i] and so the test
-> > will never be true on a failed workqueue create. Fix this by checking
-> > hdev->cq_wq[i].
-> >
-> > Addresses-Coverity: ("Dereference before null check")
-> > Fixes: 5574cb2194b1 ("habanalabs: Assign each CQ with its own work queue")
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > ---
-> >  drivers/misc/habanalabs/common/device.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/misc/habanalabs/common/device.c b/drivers/misc/habanalabs/common/device.c
-> > index be16b75bdfdb..35214a186913 100644
-> > --- a/drivers/misc/habanalabs/common/device.c
-> > +++ b/drivers/misc/habanalabs/common/device.c
-> > @@ -288,7 +288,7 @@ static int device_early_init(struct hl_device *hdev)
-> >         for (i = 0 ; i < hdev->asic_prop.completion_queues_count ; i++) {
-> >                 snprintf(workq_name, 32, "hl-free-jobs-%u", i);
-> >                 hdev->cq_wq[i] = create_singlethread_workqueue(workq_name);
-> > -               if (hdev->cq_wq == NULL) {
-> > +               if (hdev->cq_wq[i] == NULL) {
-> >                         dev_err(hdev->dev, "Failed to allocate CQ workqueue\n");
-> >                         rc = -ENOMEM;
-> >                         goto free_cq_wq;
-> > --
-> > 2.27.0
-> >
-> 
-> This patch is:
-> Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-> 
-> Greg, can you please apply it directly to the char-misc-next branch ?
-> I don't want to send a pull request for 1 patch.
+Eric, I won't comment the intent, but I too do not understand this idea.
 
-Already merged :)
+On 07/30, Eric W. Biederman wrote:
+>
+> [This change requires more work to handle TASK_STOPPED and TASK_TRACED]
+
+Yes. And it is not clear to me how can you solve this.
+
+> [This adds a new lock ordering dependency siglock -> pi_lock -> rq_lock ]
+
+Not really, ttwu() can be safely called with siglock held and it takes
+pi_lock + rq_lock. Say, signal_wake_up().
+
+> +int make_task_wakekill(struct task_struct *p)
+> +{
+> +	unsigned long flags;
+> +	int cpu, success = 0;
+> +	struct rq_flags rf;
+> +	struct rq *rq;
+> +	long state;
+> +
+> +	/* Assumes p != current */
+> +	preempt_disable();
+> +	/*
+> +	 * If we are going to change a thread waiting for CONDITION we
+> +	 * need to ensure that CONDITION=1 done by the caller can not be
+> +	 * reordered with p->state check below. This pairs with mb() in
+> +	 * set_current_state() the waiting thread does.
+> +	 */
+> +	raw_spin_lock_irqsave(&p->pi_lock, flags);
+> +	smp_mb__after_spinlock();
+> +	state = p->state;
+> +
+> +	/* FIXME handle TASK_STOPPED and TASK_TRACED */
+> +	if ((state == TASK_KILLABLE) ||
+> +	    (state == TASK_INTERRUPTIBLE)) {
+> +		success = 1;
+> +		cpu = task_cpu(p);
+> +		rq = cpu_rq(cpu);
+> +		rq_lock(rq, &rf);
+> +		p->state = TASK_WAKEKILL;
+
+You can only do this if the task was already deactivated. Just suppose it
+is preempted or does something like
+
+	set_current_sate(TASK_INTERRUPTIBLE);
+
+	if (CONDITION) {
+		// make_task_wakekill() sets state = TASK_WAKEKILL
+		__set_current_state(TASK_RUNNING);
+		return;
+	}
+
+	schedule();
+
+Oleg.
+
