@@ -2,64 +2,99 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BCEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD87C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B923721883
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A80021883
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 09:14:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Wb69ooOn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732059AbgGaJOY (ORCPT
+        id S1732092AbgGaJO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:14:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60100 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728437AbgGaJOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:14:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C8158B622;
-        Fri, 31 Jul 2020 09:14:35 +0000 (UTC)
-Date:   Fri, 31 Jul 2020 11:14:21 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Julien Thierry <jthierry@redhat.com>
-cc:     linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-        peterz@infradead.org, raphael.gault@arm.com,
-        benh@kernel.crashing.org
-Subject: Re: [PATCH v2 0/9] Make check implementation arch agnostic
-In-Reply-To: <20200730094652.28297-1-jthierry@redhat.com>
-Message-ID: <alpine.LSU.2.21.2007311113140.19678@pobox.suse.cz>
-References: <20200730094652.28297-1-jthierry@redhat.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Fri, 31 Jul 2020 05:14:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58692 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728437AbgGaJO0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 05:14:26 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93E0BC061574;
+        Fri, 31 Jul 2020 02:14:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=DyRuVZfVmZ9wXsAnKUw/UMKGK/DVEVi7XnnFZ86g4Ac=; b=Wb69ooOnWGz7Vx9BWYBwagnAEF
+        9ZX96XA6F1W/DYv23WaUXijf6RhwSHjXkuLLG27H4Kd0LUGp2F7fhzVAfT/KghFYl9DqMzWW3Vjz/
+        DJaMvACKZoFV1EQ/IOxctYvT10DOg7B13E8M0MUmNguWSWijUjPcS5xQZ+USsTsitqFm94eArPrG/
+        3q5G7bV7qwQkMDBFLJ3gzyEqCL3I+w8WwIGzwEErIZimbW7yZTHTFegeVHL4hoJOk+BgIlupPihjY
+        qUBxwTDiVss3ydUiqnqSFrzEZOJPhZI5ANFelzxIy/efJEzfAIP4g8gaR3Db+UUBb0+4kaZi+grI6
+        2oADgoQg==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k1R7I-0007uO-GQ; Fri, 31 Jul 2020 09:14:16 +0000
+Date:   Fri, 31 Jul 2020 10:14:16 +0100
+From:   "hch@infradead.org" <hch@infradead.org>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     Kanchan Joshi <joshiiitr@gmail.com>,
+        "hch@infradead.org" <hch@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Kanchan Joshi <joshi.k@samsung.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "bcrl@kvack.org" <bcrl@kvack.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        SelvaKumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>,
+        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+Subject: Re: [PATCH v4 6/6] io_uring: add support for zone-append
+Message-ID: <20200731091416.GA29634@infradead.org>
+References: <65a7e9a6-aede-31ce-705c-b7f94f079112@kernel.dk>
+ <d4f9a5d3-1df2-1060-94fa-f77441a89299@gmail.com>
+ <CA+1E3rJ3SoLU9aYcugAQgJnSPnJtcCwjZdMREXS3FTmXgy3yow@mail.gmail.com>
+ <f030a338-cd52-2e83-e1da-bdbca910d49e@kernel.dk>
+ <CA+1E3rKxZk2CatTuPcQq5d14vXL9_9LVb2_+AfR2m9xn2WTZdg@mail.gmail.com>
+ <MWHPR04MB3758DC08EA17780E498E9EC0E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <20200731064526.GA25674@infradead.org>
+ <MWHPR04MB37581344328A42EA7F5ED13EE74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <CA+1E3rLM4G4SwzD6RWsK6Ssp7NmhiPedZDjrqN3kORQr9fxCtw@mail.gmail.com>
+ <MWHPR04MB375863C20C1EF2CB27E62703E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MWHPR04MB375863C20C1EF2CB27E62703E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I've push both series base on top of tip/objtool/core at [3].
+On Fri, Jul 31, 2020 at 08:14:22AM +0000, Damien Le Moal wrote:
 > 
-> - The first two patches make it simpler for new arches to provide their
-> list of kernel headers, without worrying about modifications in the x86
-> headers.
-> - Patch 3 Moves arch specific macros to more suitable location
-> - Patches 4 and 5 add abstraction to handle alternatives
-> - Patch 6 adds abstraction to handle jump table
-> - Patches 7-9 abstracts the use of unwind hints, so some definitions
->   can be shared across architectures while keeping arch specific
->   semantics
+> > This was one of the reason why we chose to isolate the operation by a
+> > different IOCB flag and not by IOCB_APPEND alone.
 > 
-> Changes since v1 [4]:
-> - Rebased on recent tip/objtool/core
-> - Split the unwind hint rework into multiple patches as suggested by
->   Miroslav
+> For zonefs, the plan is:
+> * For the sync write case, zone append is always used.
+> * For the async write case, if we see IOCB_APPEND, then zone append BIOs are
+> used. If not, regular write BIOs are used.
+> 
+> Simple enough I think. No need for a new flag.
 
-For remaining patches 7-9
-
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-
-M
+Simple, but wrong.  Sync vs async really doesn't matter, even sync
+writes will have problems if there are other writers.  We need a flag
+for "report the actual offset for appending writes", and based on that
+flag we need to not allow short writes (or split extents for real
+file systems).  We also need a fcntl or ioctl to report this max atomic
+write size so that applications can rely on it.
