@@ -2,94 +2,76 @@ Return-Path: <SRS0=S/iQ=BK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4977DC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 038BEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3397920829
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBE6B20829
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jul 2020 02:17:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731144AbgGaCOd (ORCPT
+        id S1731149AbgGaCRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 22:14:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50882 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730904AbgGaCOb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 22:14:31 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0715DC061574;
-        Thu, 30 Jul 2020 19:14:30 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k1KYy-006321-If; Fri, 31 Jul 2020 02:14:24 +0000
-Date:   Fri, 31 Jul 2020 03:14:24 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: add file system helpers that take kernel pointers for the init
- code v4
-Message-ID: <20200731021424.GG1236603@ZenIV.linux.org.uk>
-References: <20200728163416.556521-1-hch@lst.de>
- <20200729195117.GE951209@ZenIV.linux.org.uk>
- <20200730062524.GA17980@lst.de>
+        Thu, 30 Jul 2020 22:17:23 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:39213 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730962AbgGaCRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 22:17:23 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 06V2GV0g008250;
+        Fri, 31 Jul 2020 04:16:31 +0200
+Date:   Fri, 31 Jul 2020 04:16:31 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Theodore Ts'o" <tytso@mit.edu>, Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, Emese Revfy <re.emese@gmail.com>,
+        hsinyi@chromium.org, Will Deacon <will@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: arm64: pointer_auth.h:40:3: error: implicit declaration of
+ function 'get_random_bytes'; did you mean 'get_random_once'?
+Message-ID: <20200731021631.GA8247@1wt.eu>
+References: <CA+G9fYvSyXnfGmK1FLRtraWWre7QjUoGE_qiwM8XPUBXjnudWA@mail.gmail.com>
+ <20200730211522.1ea3561f@canb.auug.org.au>
+ <d23eba90-ee2c-efe0-0cb6-88e99fb22e54@ti.com>
+ <CAHk-=whn8OB-QbxpffK=Lhh6Mhj+Y2ALFZ1asCgtnQOnmQgWUw@mail.gmail.com>
+ <7b0c0f44-f56d-5e71-cf86-dbdea190267a@ti.com>
+ <CAHk-=whX7gPBn+jthX8bbfz9kU+0CbYwTxbASwPRCZ1bhVqrOw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200730062524.GA17980@lst.de>
+In-Reply-To: <CAHk-=whX7gPBn+jthX8bbfz9kU+0CbYwTxbASwPRCZ1bhVqrOw@mail.gmail.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 08:25:24AM +0200, Christoph Hellwig wrote:
-> On Wed, Jul 29, 2020 at 08:51:17PM +0100, Al Viro wrote:
-> > On Tue, Jul 28, 2020 at 06:33:53PM +0200, Christoph Hellwig wrote:
-> > > Hi Al and Linus,
-> > > 
-> > > currently a lot of the file system calls in the early in code (and the
-> > > devtmpfs kthread) rely on the implicit set_fs(KERNEL_DS) during boot.
-> > > This is one of the few last remaining places we need to deal with to kill
-> > > off set_fs entirely, so this series adds new helpers that take kernel
-> > > pointers.  These helpers are in init/ and marked __init and thus will
-> > > be discarded after bootup.  A few also need to be duplicated in devtmpfs,
-> > > though unfortunately.
-> > >
-> > > The series sits on top of my previous
-> > > 
-> > >   "decruft the early init / initrd / initramfs code v2"
-> > 
-> > Could you fold the fixes in the parent branch to avoid the bisect hazards?
-> > As it is, you have e.g. "initd: pass a non-f_pos offset to kernel_read/kernel_write"
-> > that ought to go into "initrd: switch initrd loading to struct file based APIs"...
+On Thu, Jul 30, 2020 at 12:40:01PM -0700, Linus Torvalds wrote:
+> On Thu, Jul 30, 2020 at 12:05 PM Grygorii Strashko
+> <grygorii.strashko@ti.com> wrote:
+> >
+> > FYI. Below diff seems fixes build:
 > 
-> I'm not a huge fan of rebasing after it has been out for a long time and
-> with pending other patches on top of it.  But at your request I've now
-> folded the fixes and force pushed it.
+> Thanks, I'll do that instead, it looks like the right thing to do regardless.
+> 
+> Mind sending me a sign-off for it (and commit message would be lovely
+> too, but I can make something up)? Yeah, it's just a one-liner, but
+> let's do this right.
 
-Um...
+Don't you want to take Mark's patch anyway in addition to all this ? In
+case anyone meets yet another build issue, they'd have more luck trying
+to revert any other patch. Right now if they revert one, it breaks the
+build in a different way and doesn't help much.
 
-Christoph Hellwig (28):
-[snip]
-      initramfs: switch initramfs unpacking to struct file based APIs
-      initramfs: switch initramfs unpacking to struct file based APIs
-[snip]
-
-It's not a bisect hazard, of course, but if you don't fold those
-together, you might at least want to give the second one a different
-commit summary...  I hadn't been able to find an analogue of #init_path on
-top of that either.
-
-As it is, #init-user-pointers is fine (aside of that SNAFU with unfolded
-pair of commits), and so's the contents of #init_path part following what
-used to be #init-user-pointers, but it'll be an awful mess on merge in
-the current shape.
-
-I can sort it out myself, if you don't mind that; again, I'm OK with
-the contents and I've no problem with doing reordering/folding.
+Willy
