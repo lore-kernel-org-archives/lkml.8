@@ -2,208 +2,132 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E00C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 13:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8103DC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 13:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE4D52087C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 13:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AA392087C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 13:06:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nL9gNmMx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729103AbgHANGX (ORCPT
+        id S1729127AbgHANGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 09:06:23 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8748 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728770AbgHANGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 09:06:15 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2F5C34CE450590F118BA;
-        Sat,  1 Aug 2020 21:06:10 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 1 Aug 2020 21:05:59 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <catalin.marinas@arm.com>, <will@kernel.org>,
-        <james.morse@arm.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
-        <dyoung@redhat.com>, <bhe@redhat.com>, <corbet@lwn.net>,
-        <John.P.donnelly@oracle.com>, <prabhakar.pkin@gmail.com>,
-        <bhsharma@redhat.com>
-CC:     <horms@verge.net.au>, <robh+dt@kernel.org>, <arnd@arndb.de>,
-        <nsaenzjulienne@suse.de>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
-        <linux-doc@vger.kernel.org>, <chenzhou10@huawei.com>,
-        <guohanjun@huawei.com>, <xiexiuqi@huawei.com>,
-        <huawei.libin@huawei.com>, <wangkefeng.wang@huawei.com>
-Subject: [PATCH v11 3/5] arm64: kdump: reimplement crashkernel=X
-Date:   Sat, 1 Aug 2020 21:08:54 +0800
-Message-ID: <20200801130856.86625-4-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200801130856.86625-1-chenzhou10@huawei.com>
-References: <20200801130856.86625-1-chenzhou10@huawei.com>
+        Sat, 1 Aug 2020 09:06:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60628 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729105AbgHANGt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 09:06:49 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D5B8C06174A
+        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 06:06:49 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id w14so5265349ljj.4
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 06:06:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ax/Pwtq3Y2qHbJF4PNVmYOhd6N3XKnpfypY6/+4jDSQ=;
+        b=nL9gNmMxybnQZTmKhmktw6ICgX7KYugtpBE1pauZoZD9eeGW6gkjbvePdNAVQVcgG3
+         g9qZRJwtZ23WuyMGsXNSRD44IexYLcUfhMqszXYfTR5tKOClBIv5dFEvEk0AeMGi9HYy
+         crNOrZmu9cYlA6TUqd4aLbcXbj0snsu3dN0yu9svNqj3MY06jpf959nKDLqQIxjLz84N
+         D9ySzdRAPpJhp7PXyDRd5xBSGep1jjutiBfOsXsNBjwF7ojSxey4/3ZcfZMQLzZKSVeH
+         qa1/V8NwLgh+JuCxQ/3ttqW+4koxZb34hJT6ZSrbN7wHh/JT9YGB4ybXsu+OyhwN3QAS
+         pnWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ax/Pwtq3Y2qHbJF4PNVmYOhd6N3XKnpfypY6/+4jDSQ=;
+        b=YCQaMeMgpBU1DT0EPaI60IIQEtd8sEJAfW7ZhchbCjclYcSBxgl+ouemEHfXBeEVR8
+         xB5vdE204q/DnXIrapb1tDkhcKEvT3NDUTdAj1SWSP2f6mqmtLe+JZReczXosswbpdqm
+         mGOjbOdF7d/QDTa8x4IGsZbtQteIW4QzFB+Xb5NnU8EVMUu2aYDpBTgZq+gZs90LgYiN
+         J8eNKm2OnX91mfBzieVE/LqGDudoKtzk3hJ3raLCvPa9fQNrPtaqs/pK7xRHGeRpzbcH
+         IjVXB7boRkffKnYpBugR3RxfnhM9AtVjZF3Yf1Nv96J11Aaz+haGD6Iq0QNzUoyOsekv
+         NFvQ==
+X-Gm-Message-State: AOAM5329imMGzdH5Fy1Ucn4oYOMooSx+Hu0567wFdEB/ZqmAEjT3El3D
+        QEktYC4vqwYzQoXX81YPpAYsZUBa
+X-Google-Smtp-Source: ABdhPJwkxTq9dQhrA86Zsgn0YMviwS47EPdxu8xVn+mmvAaIcYc+JWEmxqpqj/gaU/UJzqu/RrgBhw==
+X-Received: by 2002:a2e:88d4:: with SMTP id a20mr4006508ljk.326.1596287207222;
+        Sat, 01 Aug 2020 06:06:47 -0700 (PDT)
+Received: from [192.168.0.160] (10.177.smarthome.spb.ru. [109.71.177.10])
+        by smtp.gmail.com with ESMTPSA id u21sm896714ljl.11.2020.08.01.06.06.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Aug 2020 06:06:46 -0700 (PDT)
+Subject: Re: [PATCH] staging: r8188eu: replace rtw_netdev_priv define with
+ inline function
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
+        devel@driverdev.osuosl.org, B K Karthik <bkkarthik@pesu.pes.edu>,
+        linux-kernel@vger.kernel.org
+References: <20200801094707.13449-1-insafonov@gmail.com>
+ <20200801095108.GA2840539@kroah.com>
+From:   Ivan Safonov <insafonov@gmail.com>
+Message-ID: <968d30fc-4e5f-b495-e986-b18b05e9a895@gmail.com>
+Date:   Sat, 1 Aug 2020 16:11:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200801095108.GA2840539@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are following issues in arm64 kdump:
-1. We use crashkernel=X to reserve crashkernel below 4G, which
-will fail when there is no enough low memory.
-2. If reserving crashkernel above 4G, in this case, crash dump
-kernel will boot failure because there is no low memory available
-for allocation.
-3. Since commit 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32"),
-if the memory reserved for crash dump kernel falled in ZONE_DMA32,
-the devices in crash dump kernel need to use ZONE_DMA will alloc
-fail.
+On 8/1/20 12:51 PM, Greg Kroah-Hartman wrote:
+> On Sat, Aug 01, 2020 at 12:47:07PM +0300, Ivan Safonov wrote:
+>> The function guarantees type checking of arguments and return value.
+>>
+>> Signed-off-by: Ivan Safonov <insafonov@gmail.com>
+>> ---
+>>   drivers/staging/rtl8188eu/include/osdep_service.h | 6 ++++--
+>>   1 file changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/staging/rtl8188eu/include/osdep_service.h b/drivers/staging/rtl8188eu/include/osdep_service.h
+>> index 31d897f1d21f..e0ccafdea9cd 100644
+>> --- a/drivers/staging/rtl8188eu/include/osdep_service.h
+>> +++ b/drivers/staging/rtl8188eu/include/osdep_service.h
+>> @@ -71,8 +71,10 @@ struct rtw_netdev_priv_indicator {
+>>   };
+>>   struct net_device *rtw_alloc_etherdev_with_old_priv(void *old_priv);
+>>   
+>> -#define rtw_netdev_priv(netdev)					\
+>> -	(((struct rtw_netdev_priv_indicator *)netdev_priv(netdev))->priv)
+>> +static inline struct adapter *rtw_netdev_priv(struct net_device *dev)
+>> +{
+>> +	return (((struct rtw_netdev_priv_indicator *)netdev_priv(dev))->priv);
+>> +}
+>>   void rtw_free_netdev(struct net_device *netdev);
+> 
+> Is the cast really needed?
 
-To solve these issues, change the behavior of crashkernel=X.
-crashkernel=X tries low allocation in ZONE_DMA, and fall back to
-high allocation if it fails.
+(struct rtw_netdev_priv_indicator *) cast needed for access to '->priv'.
 
-If requized size X is too large and leads to very little free memory
-in ZONE_DMA after low allocation, the system may not work normally.
-So add a threshold and go for high allocation directly if the required
-size is too large. The value of threshold is set as the half of
-the low memory.
+The (struct adapter *) return type is a starting point for simplify
+     struct adapter *padapter = (struct adapter *)rtw_netdev_priv(dev);
+constructions.
 
-If crash_base is outside ZONE_DMA, try to allocate at least 256M in
-ZONE_DMA automatically. "crashkernel=Y,low" can be used to allocate
-specified size low memory.
+> 
+> And no blank line before the next function prototype?
 
-For non-RPi4 platforms, change ZONE_DMA memtioned above to ZONE_DMA32.
+In v2.
 
-Another minor change, there may be two regions reserved for crash
-dump kernel, in order to distinct from the high region and make no
-effect to the use of existing kexec-tools, rename the low region as
-"Crash kernel (low)".
+> 
+> And is this really needed?  Type checking is already happening as this
+> is a "simple" macro, right?
 
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- arch/arm64/include/asm/kexec.h |  4 +++
- arch/arm64/kernel/setup.c      |  8 +++++-
- arch/arm64/mm/init.c           | 51 ++++++++++++++++++++++++++++++----
- 3 files changed, 57 insertions(+), 6 deletions(-)
+1. The flexibility of macros is not needed here.
+2. The macro silently assigns ->priv to any pointer, while the function 
+indicates such a compile-time error.
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 1a2f27f12794..92ed53d0bf21 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -28,7 +28,11 @@
- /* 2M alignment for crash kernel regions */
- #define CRASH_ALIGN	SZ_2M
- 
-+#ifdef CONFIG_ZONE_DMA
-+#define CRASH_ADDR_LOW_MAX	arm64_dma_phys_limit
-+#else
- #define CRASH_ADDR_LOW_MAX	arm64_dma32_phys_limit
-+#endif
- 
- #ifndef __ASSEMBLY__
- 
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 93b3844cf442..4dc51a2ac012 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -238,7 +238,13 @@ static void __init request_standard_resources(void)
- 		    kernel_data.end <= res->end)
- 			request_resource(res, &kernel_data);
- #ifdef CONFIG_KEXEC_CORE
--		/* Userspace will find "Crash kernel" region in /proc/iomem. */
-+		/*
-+		 * Userspace will find "Crash kernel" region in /proc/iomem.
-+		 * Note: the low region is renamed as Crash kernel (low).
-+		 */
-+		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
-+				crashk_low_res.end <= res->end)
-+			request_resource(res, &crashk_low_res);
- 		if (crashk_res.end && crashk_res.start >= res->start &&
- 		    crashk_res.end <= res->end)
- 			request_resource(res, &crashk_res);
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index a3d0193f6a0a..53c8916fd32f 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -70,6 +70,14 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
- phys_addr_t arm64_dma32_phys_limit __ro_after_init;
- 
- #ifdef CONFIG_KEXEC_CORE
-+
-+/*
-+ * Add a threshold for required memory size of crashkernel. If required memory
-+ * size is greater than threshold, just go for high allocation directly. The
-+ * value of threshold is set as half of the total low memory.
-+ */
-+#define REQUIRED_MEMORY_THRESHOLD	(memblock_mem_size(CRASH_ADDR_LOW_MAX >> \
-+			PAGE_SHIFT) >> 1)
- /*
-  * reserve_crashkernel() - reserves memory for crash kernel
-  *
-@@ -90,11 +98,22 @@ static void __init reserve_crashkernel(void)
- 
- 	crash_size = PAGE_ALIGN(crash_size);
- 
--	if (crash_base == 0) {
--		/* Current arm64 boot protocol requires 2MB alignment */
--		crash_base = memblock_find_in_range(0, CRASH_ADDR_LOW_MAX,
--				crash_size, CRASH_ALIGN);
--		if (crash_base == 0) {
-+	if (!crash_base) {
-+		/*
-+		 * Current arm64 boot protocol requires 2MB alignment.
-+		 * If required memory size is greater than threshold, just go
-+		 * for high allocation directly.
-+		 * If required memory size is less than or equal to threshold,
-+		 * try low allocation firstly, and then fall back to high allocation
-+		 * if it fails.
-+		 */
-+		if (crash_size <= REQUIRED_MEMORY_THRESHOLD)
-+			crash_base = memblock_find_in_range(0, CRASH_ADDR_LOW_MAX,
-+					crash_size, CRASH_ALIGN);
-+		if (!crash_base)
-+			crash_base = memblock_find_in_range(0, MEMBLOCK_ALLOC_ACCESSIBLE,
-+					crash_size, SZ_2M);
-+		if (!crash_base) {
- 			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
- 				crash_size);
- 			return;
-@@ -118,6 +137,28 @@ static void __init reserve_crashkernel(void)
- 	}
- 	memblock_reserve(crash_base, crash_size);
- 
-+	if (crash_base >= CRASH_ADDR_LOW_MAX) {
-+		const char *rename = "Crash kernel (low)";
-+
-+		if (reserve_crashkernel_low()) {
-+			memblock_free(crash_base, crash_size);
-+			return;
-+		}
-+
-+		/*
-+		 * In order to distinct from the high region and make no effect
-+		 * to the use of existing kexec-tools, rename the low region as
-+		 * "Crash kernel (low)".
-+		 */
-+		crashk_low_res.name = rename;
-+		/*
-+		 * The low region is intended to be used for crash dump kernel
-+		 * devices, just mark the low region as "nomap" simply.
-+		 */
-+		memblock_mark_nomap(crashk_low_res.start,
-+				    resource_size(&crashk_low_res));
-+	}
-+
- 	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
- 		crash_base, crash_base + crash_size, crash_size >> 20);
- 
--- 
-2.20.1
-
+Ivan Safonov.
