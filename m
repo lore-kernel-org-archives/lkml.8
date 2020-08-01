@@ -2,172 +2,88 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E157C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6952CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D11C2072A
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:27:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lDrKUAaQ"
+	by mail.kernel.org (Postfix) with ESMTP id 4AC0B2072A
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:29:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbgHAR1u (ORCPT
+        id S1726847AbgHAR3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 13:27:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43972 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgHAR1u (ORCPT
+        Sat, 1 Aug 2020 13:29:03 -0400
+Received: from smtprelay0146.hostedemail.com ([216.40.44.146]:55014 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726534AbgHAR3D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 13:27:50 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEDC7C06174A;
-        Sat,  1 Aug 2020 10:27:49 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id j10so8896624qvo.13;
-        Sat, 01 Aug 2020 10:27:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=sH4ZgoE2+krh+pccRrSZUcqU9PhKP/eT8yH9LsNvEAE=;
-        b=lDrKUAaQxNvYx4tI3nODZhJ8NcdsIkFV5oX3fhol8e4eN7e+SiVw939+t1R8UOsx01
-         NSBpVkU25zrVoic7dwx7vwPpt2Aoqluvpt9j57py3CrKQWNWRW/0ocBMD52snn+v8caX
-         M5EIHqZBjgjmuY1sMynhvFwF9WFUnBJY9U/R0onHK6bADrVu5jsdfo7KQi7I+b3rmiyH
-         I94kcHuWo7JSHfdbKTGM6SWqwPkurjVD4/oFL2UnQJjspmk2pVz1JyEb9FbK2c5RyjH8
-         e8Hlx4C+F+z+XQ3k78QRq/hE1RDG6ofkeYYFzko1A5R84bKXmrmY/eSIefXtxSAK4nDW
-         K76Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=sH4ZgoE2+krh+pccRrSZUcqU9PhKP/eT8yH9LsNvEAE=;
-        b=MTPYBAxVbM1E8LjLl+ZvzGea48iUR/V7PiezQ6Q6mmlYL8nDAZFHUuFdvTipXQsVB9
-         ftPFXn4YSQgwuGziioJnk3B2SCfvQ0RxCqaL4SzxTlZFN/4PsNjZBOSTTNONl44im0ZO
-         fWQx8VJt3dHpL3eHmWpxvFaPv0KMpMw0xr1N5JLEj6oSmaBY67qk3hy3ZSHiIohninTi
-         MxUPm5RmDUok5fDdUnpgR+Va2vRqMJsaHscR1N83TvgnRoV2v6DEghs/iHtggByZGwn1
-         df8kRCpkISIjqWW3WhHueN37jduN+B07IqBVwXo8cwkoMsIkol/jqniJC2cjgktJwhlv
-         9gag==
-X-Gm-Message-State: AOAM530AK+4zEsGiJFJCjSZGvpEtVGqo3tJDBP1hvo74Y3M6VcHvbFZm
-        K2dkZRpuKmTx8fT0lkwFpvs=
-X-Google-Smtp-Source: ABdhPJzHOFdwhm3qJs8SrnZpWK+1UKvwkZdOAaQkwtzYxCu1nPpleYVo2pqxw+5n/1qFGKkbypbvDA==
-X-Received: by 2002:ad4:43c9:: with SMTP id o9mr9657897qvs.217.1596302868608;
-        Sat, 01 Aug 2020 10:27:48 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id z197sm13658960qkb.66.2020.08.01.10.27.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Aug 2020 10:27:48 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Sat, 1 Aug 2020 13:27:46 -0400
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jian Cai <jiancai@google.com>,
-        =?utf-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>,
-        Luis Lozano <llozano@google.com>,
-        Manoj Gupta <manojgupta@google.com>, stable@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>
-Subject: Re: [PATCH v5 13/36] vmlinux.lds.h: add PGO and AutoFDO input
- sections
-Message-ID: <20200801172746.GC3249534@rani.riverdale.lan>
-References: <20200731230820.1742553-1-keescook@chromium.org>
- <20200731230820.1742553-14-keescook@chromium.org>
- <20200801035128.GB2800311@rani.riverdale.lan>
- <202007312237.4F385EB3@keescook>
+        Sat, 1 Aug 2020 13:29:03 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 953F718029137;
+        Sat,  1 Aug 2020 17:29:02 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: pets72_5b1482626f8e
+X-Filterd-Recvd-Size: 2194
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf13.hostedemail.com (Postfix) with ESMTPA;
+        Sat,  1 Aug 2020 17:29:01 +0000 (UTC)
+Message-ID: <8a8d14b2dc7a977fbda6f5f96ffd08f167c085d7.camel@perches.com>
+Subject: Re: [PATCH v2] staging: r8188eu: replace rtw_netdev_priv define
+ with inline function
+From:   Joe Perches <joe@perches.com>
+To:     Ivan Safonov <insafonov@gmail.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        B K Karthik <bkkarthik@pesu.pes.edu>,
+        Michael Straube <straube.linux@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Date:   Sat, 01 Aug 2020 10:29:00 -0700
+In-Reply-To: <20200801165220.29208-1-insafonov@gmail.com>
+References: <20200801165220.29208-1-insafonov@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202007312237.4F385EB3@keescook>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 11:18:02PM -0700, Kees Cook wrote:
-> On Fri, Jul 31, 2020 at 11:51:28PM -0400, Arvind Sankar wrote:
-> > 
-> > This also changes the ordering to place all hot resp unlikely sections separate
-> > from other text, while currently it places the hot/unlikely bits of each file
-> > together with the rest of the code in that file. That seems like a reasonable
+On Sat, 2020-08-01 at 19:52 +0300, Ivan Safonov wrote:
+> The function guarantees type checking of arguments and return value.
 > 
-> Oh, hmm, yes, we aren't explicitly using SORT() here. Does that mean the
-> input sections were entirely be ordered in compilation unit link order,
-> even in the case of orphan sections? (And I think either way, the answer
-> isn't the same between bfd and lld.) I actually thought the like-named
-> input sections were collected together first with lld, but bfd strictly
-> appended to the output section. I guess it's time for me to stare at -M
-> output from ld...
+> Result of rtw_netdev_priv macro can be assigned to pointer
+> with incompatible type without warning. The function allow compiler
+> to perform this check.
+[]
+> diff --git a/drivers/staging/rtl8188eu/include/osdep_service.h b/drivers/staging/rtl8188eu/include/osdep_service.h
+[]
+> @@ -71,8 +71,11 @@ struct rtw_netdev_priv_indicator {
+>  };
+>  struct net_device *rtw_alloc_etherdev_with_old_priv(void *old_priv);
+>  
+> -#define rtw_netdev_priv(netdev)					\
+> -	(((struct rtw_netdev_priv_indicator *)netdev_priv(netdev))->priv)
+> +static inline struct adapter *rtw_netdev_priv(struct net_device *dev)
+> +{
+> +	return (((struct rtw_netdev_priv_indicator *)netdev_priv(dev))->priv);
+> +}
 
-I don't know what happened to the orphans previously. But .text.hot and
-.text.unlikely will now change ordering. It sounds from below like this
-wasn't intentional? Though it does seem to be how BFD's default linker
-scripts lay it out.
+To be similar to existing uses, this variable name should be
+netdev not dev.  There are also unnecessary parentheses.
 
-> 
-> Regardless, this patch is attempting to fix the problem where bfd and lld
-> lay out the orphans differently (as mentioned above, lld seems to sort
-> them in a way that is not strictly appended, and bfd seems to sort them
-> strictly appended). In the case of being appended to the .text output
-> section, this would cause boot failures due to _etext not covering the
-> resulting sections (which this[1] also encountered and fixed to be more
-> robust for such appended collection -- that series actually _depends_ on
-> orphan handling doing the appending, because there is no current way
-> to map wildcard input sections to their own separate output sections).
-> 
-> > change and should be mentioned in the commit message.
-> > 
-> > However, the history of their being together comes from
-> > 
-> >   9bebe9e5b0f3 ("kbuild: Fix .text.unlikely placement")
-> > 
-> > which seems to indicate there was some problem with having them separated out,
-> > although I don't quite understand what the issue was from the commit message.
-> 
-> Looking at this again, I actually wonder if we have bigger issues here
-> with dead code elimination:
-> 
-> #ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
-> #define TEXT_MAIN .text .text.[0-9a-zA-Z_]*
-> ...
-> 
-> that would catch: .text.hot .text.fixup .text.unlikely and .text.unknown
-> but not .text.hot.*, etc (i.e. the third dot isn't matched, which is,
-> I assume, why Clang switched to adding a trailing dot). However, this
-> patch lists .text.hot .text.hot.* first, so they'd get pulled to the
-> front correctly, but the trailing ones (with 2 dots) would not, since
-> they'd match the TEXT_MAIN wildcard first. (This problem actually existed
-> before this patch too, and is not the fault of 9bebe9e5b0f3, but rather
-> the addition of TEXT_MAIN, which could potentially match .text.unlikely
-> and .text.fixup)
+>  void rtw_free_netdev(struct net_device *netdev);
 
-The existing comment on TEXT_TEXT mentions that issue. However, note
-that the dead code stuff is only available currently on mips and ppc,
-and is hidden behind EXPERT for those, so I'm not sure if anyone
-actually uses it.
+Better to use netdev like this one.
 
-9bebe9e5b0f3 predates LD_DEAD_CODE_DATA_ELIMINATION, and there were no
-wildcards I can see in .text at the time, which is why I don't
-understand what problem is referred to in the commit message.
+---
+static inline struct adapter *rtw_netdev_priv(struct net_device *netdev)
+{
+	return ((struct rtw_netdev_priv_indicator *)netdev_priv(netdev))->priv;
+}
 
-Btw, for the FGKASLR stuff, instead of keeping the output sections per
-function, couldn't you generate a table of functions with sizes, and use
-that when randomizing the order? Then the sections themselves could be
-collected into .text explicitly.
+
+
