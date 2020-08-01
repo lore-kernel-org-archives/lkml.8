@@ -2,152 +2,112 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 18:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 832DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 18:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50A452076A
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 18:49:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tieGcHAU"
+	by mail.kernel.org (Postfix) with ESMTP id 67481206E6
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 18:55:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgHAStk (ORCPT
+        id S1727006AbgHASzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 14:49:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56416 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgHAStj (ORCPT
+        Sat, 1 Aug 2020 14:55:22 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:48454 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726624AbgHASzV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 14:49:39 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52398C06174A
-        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 11:49:39 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id t14so6810215wmi.3
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 11:49:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=MxpRTOZ+a9Yk8BaelNAvYzSAx53X3UQsDpK+3T01PFk=;
-        b=tieGcHAUi5zaeQVURRe2RYpMe1e61SVS/e8Cnuf+0wtR7Fk11ZyWKs787++NVY67/7
-         hZ+IpG5kTZ7aPOQEQClYgToiGaMQSgYLFa3HKUqKfqtCtkLyTvzqvn/QlkHEyDWutOsy
-         tqL8qudVO/2RWkr3/lBBqHQPQeCWpiQ1dQobjYp7zYLw3WFUtjJxrGcpoqKFzx9L/Wqb
-         TL2rlGXkGsX9RKa+PfmlYwz3FbEthxjsw72rsF37Kf1n/wLZ0IBy3u8jqTuxMPjmAiFf
-         6SsHl5ItKPNGMClsv00zvktKC3uGYFzxgJoCwL+ut41yIcYDk/I3ltxgfgBcteo1WHkl
-         HP5A==
+        Sat, 1 Aug 2020 14:55:21 -0400
+Received: by mail-il1-f199.google.com with SMTP id w23so13813389ila.15
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 11:55:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=MxpRTOZ+a9Yk8BaelNAvYzSAx53X3UQsDpK+3T01PFk=;
-        b=RA7q3jmpZw8T89yPRH2mdy4UPheuUtGgw6ajZNLWgcPAeDkf8dxTRyQliZP/fwE5MH
-         b8RLZxhzTWxqIeqHPOmoTG/Sm+9g05sbVl0o1/9BzycRLMeYnzsy+4TZyzjxzr6Q880s
-         JoDOiOw0dY6PSOAi9YqZnAxuei1BCxmPVQMMdqPOaCS9IMolLYn9cfp3ODHTdCdeBsXi
-         0vRErj5YTsoflt+b6IOy1EeSXMsO2tQ6l3+FwL7TniJ9bwGLdqDNCR2oRmUVjr5KNWpj
-         vLBEtjF0p1ideFmj5Kqk8wxHJ6e6ye+QBH2FHhwgCj4XhkgUmtZP2ENNHZFKvmLrhU/3
-         LtGw==
-X-Gm-Message-State: AOAM5304suznqStXvTHFPbKUkBh4yIafTUE4DpuG8Zr862H2AC5S4E0R
-        fqz/QQjVvSIOWmqBlW8Vhak=
-X-Google-Smtp-Source: ABdhPJxdXVLKSbEh46C6FdcV3pFdoQMjxG1UfSDRcGPjlrNW6T1XLmE0B9rMRQ7e4vGdfQ1fICHBZQ==
-X-Received: by 2002:a1c:484:: with SMTP id 126mr8844477wme.9.1596307778064;
-        Sat, 01 Aug 2020 11:49:38 -0700 (PDT)
-Received: from smtp.gmail.com (a95-92-181-29.cpe.netcabo.pt. [95.92.181.29])
-        by smtp.gmail.com with ESMTPSA id s19sm20089660wrb.54.2020.08.01.11.49.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Aug 2020 11:49:37 -0700 (PDT)
-Date:   Sat, 1 Aug 2020 15:49:29 -0300
-From:   Melissa Wen <melissa.srw@gmail.com>
-To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Sidong Yang <realwakka@gmail.com>
-Cc:     twoerner@gmail.com, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: [PATCH] drm/vkms: guarantee vblank when capturing crc
-Message-ID: <20200801184929.2eaxyoq6fm3nk4ey@smtp.gmail.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=qQIA2QYUDlIkIkoCeDn3ShR5eJP9B1EyOlqL+wH8+eg=;
+        b=pzp1pI0kKf2/MUyHbkq46UUbVMjqryz6tEfJtQqcF0WK6uagK+9rPHvgHVZkL0N1MC
+         mh0zQlAFRr+LLayG8zMvsMZ/51U7Lco6x+SdnIFeQu1uwXDha0vf0Tfh9uOJSclcKLfo
+         Vzz84yzkH1W9E6Obo7bjSSttnvuqpMOEnT6WaMr9G7u/Nsj3ivBYk9znlP7h1rFEuv//
+         5cjJqXz7fBe5t6UIE7YsR//uo68gk+gwn/Nht1Fla5ycDhmLM7OapjsFyrV0rnzfCgUC
+         PBcR5DNa5H55Nc+J18KC+lnGpVpc6o0YHrE0lNRRGUygxWZNAajjnl1IHlnyoVy8QLOg
+         CkUQ==
+X-Gm-Message-State: AOAM531AVfTxbiBvRFLvF8sdvCO9BnnziFot450cAZzwkFAAJkO5wmIO
+        QBYA7vWVTszfknvCD7DcPHdB4eKSD5dsbGcd+HdIdoLLmSkv
+X-Google-Smtp-Source: ABdhPJyAnxuWi0Ar7UbGU8cFxZxOdqtZIrd/H1i1Lo4eIUgzWQ+QRZgqjc2PIeKovrr2D9XmJyB9FwIQP4/m6yOXch6deouJO2cF
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Received: by 2002:a92:ad01:: with SMTP id w1mr10198997ilh.301.1596308120160;
+ Sat, 01 Aug 2020 11:55:20 -0700 (PDT)
+Date:   Sat, 01 Aug 2020 11:55:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007450a405abd572a8@google.com>
+Subject: WARNING in hci_conn_timeout
+From:   syzbot <syzbot+2446dd3cb07277388db6@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VKMS needs vblank interrupts enabled to capture CRC. When vblank is
-disabled, tests like kms_cursor_crc and kms_pipe_crc_basic getting stuck
-waiting for a capture that will not occur until vkms wakes up. This
-patch ensures that vblank remains enabled as long as the CRC capture is
-needed.
+Hello,
 
-It clears the execution of the following kms_cursor_crc subtests:
-1. pipe-A-cursor-[size,alpha-opaque, NxN-(on-screen, off-screen, sliding,
-random, fast-moving])] - successful when running individually.
-2. pipe-A-cursor-dpms passes again
-3. pipe-A-cursor-suspend also passes
+syzbot found the following issue on:
 
-The issue was initially tracked in the sequential execution of IGT
-kms_cursor_crc subtest: when running the test sequence or one of its
-subtests twice, the odd execs complete and the pairs get stuck in an
-endless wait. In the IGT code, calling a wait_for_vblank on preparing
-for CRC capture prevented the busy-wait. But the problem persisted in
-the pipe-A-cursor-dpms and -suspend subtests.
+HEAD commit:    7dc6fd0f Merge branch 'i2c/for-current' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12a70832900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e59ee776d5aa8d55
+dashboard link: https://syzkaller.appspot.com/bug?extid=2446dd3cb07277388db6
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13f781d4900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=116a0c14900000
 
-Checking the history, the pipe-A-cursor-dpms subtest was successful
-when, in vkms_atomic_commit_tail, instead of using the flip_done op, it
-used wait_for_vblanks. Another way to prevent blocking was
-wait_one_vblank when enabling crtc. However, in both cases,
-pipe-A-cursor-suspend persisted blocking in the 2nd start of CRC
-capture, which may indicate that something got stuck in the step of CRC
-setup. Indeed, wait_one_vblank in the crc setup was able to sync things
-and free all kms_cursor_crc subtests.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+2446dd3cb07277388db6@syzkaller.appspotmail.com
 
-Besides, other alternatives to force enabling vblanks or prevent
-disabling them such as calling drm_crtc_put_vblank or modeset_enables
-before commit_planes + offdelay = 0, also unlock all subtests
-executions. These facts together converge on the lack of vblank to
-unblock the crc capture.
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 6953 at net/bluetooth/hci_conn.c:412 hci_conn_timeout+0x20f/0x290 net/bluetooth/hci_conn.c:412
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 6953 Comm: kworker/u5:2 Not tainted 5.8.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: hci0 hci_conn_timeout
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1f0/0x31e lib/dump_stack.c:118
+ panic+0x264/0x7a0 kernel/panic.c:231
+ __warn+0x227/0x250 kernel/panic.c:600
+ report_bug+0x1b1/0x2e0 lib/bug.c:198
+ handle_bug+0x42/0x80 arch/x86/kernel/traps.c:235
+ exc_invalid_op+0x16/0x40 arch/x86/kernel/traps.c:255
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:540
+RIP: 0010:hci_conn_timeout+0x20f/0x290 net/bluetooth/hci_conn.c:412
+Code: c7 50 4d 8d 89 e8 71 d0 5f fa 48 8b 35 6a 7c 39 02 bf 40 00 00 00 4c 89 f2 5b 41 5c 41 5e 41 5f e9 46 69 f8 f9 e8 61 c1 20 fa <0f> 0b e9 5c fe ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c 1a fe ff
+RSP: 0018:ffffc90001577cc8 EFLAGS: 00010293
+RAX: ffffffff8753d0ff RBX: 00000000ffffffff RCX: ffff888092948440
+RDX: 0000000000000000 RSI: 00000000ffffffff RDI: 0000000000000000
+RBP: ffff8880a9b7b008 R08: ffffffff8753cf3b R09: ffffed1010da5003
+R10: ffffed1010da5003 R11: 0000000000000000 R12: ffff8880a7290d00
+R13: ffff8880a7290d18 R14: ffff888086d28128 R15: dffffc0000000000
+ process_one_work+0x789/0xfc0 kernel/workqueue.c:2269
+ worker_thread+0xaa4/0x1460 kernel/workqueue.c:2415
+ kthread+0x37e/0x3a0 drivers/block/aoe/aoecmd.c:1234
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-Finally, considering the vkms's dependence on vblank interruptions to
-perform tasks, this patch acquires a vblank ref when setup CRC source
-and releases ref when disabling crc capture, ensuring vblanks happen to
-compute CRC.
 
-Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
-Co-developed-by: Sidong Yang <realwakka@gmail.com>
-Signed-off-by: Sidong Yang <realwakka@gmail.com>
-Co-developed-by: Daniel Vetter <daniel@ffwll.ch>
-Signed-off-by: Daniel Vetter <daniel@ffwll.ch>
-Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
 ---
- drivers/gpu/drm/vkms/vkms_composer.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-index 4af2f19480f4..1161eaa383f1 100644
---- a/drivers/gpu/drm/vkms/vkms_composer.c
-+++ b/drivers/gpu/drm/vkms/vkms_composer.c
-@@ -241,6 +241,14 @@ int vkms_set_crc_source(struct drm_crtc *crtc, const char *src_name)
- 
- 	ret = vkms_crc_parse_source(src_name, &enabled);
- 
-+	/* Ensure that vblank interruptions are enabled for crc capture */
-+	/* Enabling CRC: acquire vblank ref */
-+	if (enabled)
-+		drm_crtc_vblank_get(crtc);
-+	/* Disabling CRC: release vblank ref */
-+	if (!src_name)
-+		drm_crtc_vblank_put(crtc);
-+
- 	spin_lock_irq(&out->lock);
- 	out->composer_enabled = enabled;
- 	spin_unlock_irq(&out->lock);
--- 
-2.27.0
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
