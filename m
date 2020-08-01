@@ -2,140 +2,169 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE967C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 07:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89363C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 07:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE792071E
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 07:17:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VO0K6rya"
+	by mail.kernel.org (Postfix) with ESMTP id 60CCA20888
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 07:21:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgHAHRu (ORCPT
+        id S1728334AbgHAHVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 03:17:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35742 "EHLO
+        Sat, 1 Aug 2020 03:21:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgHAHRt (ORCPT
+        with ESMTP id S1725283AbgHAHVi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 03:17:49 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B074C061756
-        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 00:17:49 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id r2so24705119wrs.8
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 00:17:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9TWNF9js53PcdlvlEQGLSj775mBS94SUQ30AaksVxoQ=;
-        b=VO0K6ryau/F3M3Dq1GKbT+Ju+3xjYUSKkECGfWdRqLobEciqL0RcUz4/iC4W8lVZ1q
-         QA65GiZKQRJr/myRRsw4n89yDhKQQOONOJwQnTjs+pu3xamfaa5Ztrhg1KJ7WQ6hqxwT
-         HpvI5KkYtiS+X3q/w9LUpob+E8OmwtQpPwY41OJOatDMZ4FJ2ajQnBJeHFXQEI2IBXM7
-         MDUn65w+5blACPpkaQSuWTxoz6eBj+Z525rXmhOva11Ma9iXX49xrtd/jnFAqRdGvaJV
-         bwnx1R+Q4aZqlB/MlC6CMAFZqmfYn0i6aTCn07ZkMzdpUVfq9VE49aHj6u4s5Br5Zexc
-         mwew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9TWNF9js53PcdlvlEQGLSj775mBS94SUQ30AaksVxoQ=;
-        b=HyZUOsyA3vK7UxX66gSh3MC8EmW2y6zP1huLQbngj+9Yn9tq2b5kM2fLHfXOE+41Ja
-         EJ5Se7eIDx+kCBDgKtG/GWB5iZqIvahN+/Zvo56xzSmkpoLtmUGIJdK1cUX9PVxALE6t
-         V9jZnjR1tVDOxwUtPJWBOqkC9xfEJFUOKIcMukxmjTWIsFluZAwz/9CEk4Mp3ATuH0SI
-         JetwKL/zOgAGrtp772R7wb+vBjpWRdCIKrw5gwzItAk4Ql/kXfe+BBb6lu+xz3UE1KyY
-         +Yh4oo1GwrQulFByxW9si5NysVpCueZL5LiNlXw5LmHvaTts3GQ8uP9ZO8jtDOq/wXzc
-         FAiQ==
-X-Gm-Message-State: AOAM53185dwMivGNqsoGjYSRzePdcPSMtpkp83IeCTOQKeOWgPIPNHan
-        LKizW2TPoSF7NX+Qni5d0N2DzcQtBa0JYR3hDKbzJg==
-X-Google-Smtp-Source: ABdhPJzq/rzZHdZ2pAKBHdqSrbybtRNlexfh0RgiZS1svnsLG/Wioiod4eAFn6JHc7/uJob0VxLcIqfDs+pDzu5POMw=
-X-Received: by 2002:a5d:4e8c:: with SMTP id e12mr6436942wru.19.1596266267633;
- Sat, 01 Aug 2020 00:17:47 -0700 (PDT)
+        Sat, 1 Aug 2020 03:21:38 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A400FC06174A
+        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 00:21:38 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k1lpj-0005h2-W5; Sat, 01 Aug 2020 09:21:32 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k1lpi-0001it-Gr; Sat, 01 Aug 2020 09:21:30 +0200
+Date:   Sat, 1 Aug 2020 09:21:30 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>
+Subject: Re: [PATCH v3 4/6] pwm: cros-ec: Accept more error codes from
+ cros_ec_cmd_xfer_status
+Message-ID: <20200801072130.tmm7b4vtizshmmyo@pengutronix.de>
+References: <20200726220101.29059-1-linux@roeck-us.net>
+ <20200726220101.29059-5-linux@roeck-us.net>
 MIME-Version: 1.0
-References: <20200731044242.1323143-1-davidgow@google.com> <CAAeHK+z0wJ-3+dXey9o3zysy9fPOqk-YdFFtVOB5==WcG3B8+Q@mail.gmail.com>
-In-Reply-To: <CAAeHK+z0wJ-3+dXey9o3zysy9fPOqk-YdFFtVOB5==WcG3B8+Q@mail.gmail.com>
-From:   David Gow <davidgow@google.com>
-Date:   Sat, 1 Aug 2020 15:17:36 +0800
-Message-ID: <CABVgOSnFanyCtBFaFAdrArr+hkXCdNu5vCNmciLP0ftQRgAsXQ@mail.gmail.com>
-Subject: Re: [PATCH v9 0/5] KASAN-KUnit Integration
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Patricia Alfonso <trishalfonso@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Shuah Khan <shuah@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3weddawyjtsgyw2o"
+Content-Disposition: inline
+In-Reply-To: <20200726220101.29059-5-linux@roeck-us.net>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 9:25 PM 'Andrey Konovalov' via kasan-dev
-<kasan-dev@googlegroups.com> wrote:
->
-> On Fri, Jul 31, 2020 at 6:43 AM David Gow <davidgow@google.com> wrote:
-> >
-> > This patchset contains everything needed to integrate KASAN and KUnit.
-> >
-> > KUnit will be able to:
-> > (1) Fail tests when an unexpected KASAN error occurs
-> > (2) Pass tests when an expected KASAN error occurs
-> >
-> > Convert KASAN tests to KUnit with the exception of copy_user_test
-> > because KUnit is unable to test those.
-> >
-> > Add documentation on how to run the KASAN tests with KUnit and what to
-> > expect when running these tests.
-> >
-> > This patchset depends on:
-> > - "kunit: extend kunit resources API" [1]
-> >  - This is already present in the kselftest/kunit branch
-> >
-> > I'd _really_ like to get this into 5.9 if possible: we also have some
-> > other changes which depend on some things here.
->
-> Hi David,
->
-> You'll need to rebase this on top of the mm tree, which currently
-> contains Walter's patch titled "kasan: fix KASAN unit tests for
-> tag-based KASAN".
->
-> There's also another patch that touches KASAN tests in the series I've
-> just mailed titled "kasan: support stack instrumentation for tag-based
-> mode".
->
-> Thanks!
->
 
-I've rebased this on top of a linux-next (with the pending KUnit
-patches from kselftest/kunit and the "kasan: support stack
-instrumentation for tag-based mode" patchset applied):
-https://lore.kernel.org/linux-kselftest/20200801070924.1786166-1-davidgow@google.com/T/#u
+--3weddawyjtsgyw2o
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Note that the RCU test doesn't seem to be compatible with KUnit's
-KASAN integration at present: I'm no expert on RCU, but it looks like
-the current test context might not be propagated to the callback, so
-expecting the failure doesn't work. Given that KUnit also doesn't look
-for the aux stacks (just that a failure occurred), it seemed best to
-avoid trying to port that one to KUnit, so I've left it in the
-test_kasan_module.c file. It may be possible to port it at a later
-date.
+On Sun, Jul 26, 2020 at 03:00:59PM -0700, Guenter Roeck wrote:
+> Since commit c5cd2b47b203 ("platform/chrome: cros_ec_proto: Report command
+> not supported") we can no longer assume that cros_ec_cmd_xfer_status()
+> reports -EPROTO for all errors returned by the EC itself. A follow-up
+> patch will change cros_ec_cmd_xfer_status() to report additional errors
+> reported by the EC as distinguished Linux error codes.
+>=20
+> Handle this change by no longer assuming that only -EPROTO is used
+> to report all errors returned by the EC itself. Instead, support both
+> the old and the new error codes.
+>=20
+> Cc: Gwendal Grignou <gwendal@chromium.org>
+> Cc: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+> Cc: Prashant Malani <pmalani@chromium.org>
+> Cc: Brian Norris <briannorris@chromium.org>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+> v3: Added patch
+>=20
+>  drivers/pwm/pwm-cros-ec.c | 21 ++++++++++++++-------
+>  1 file changed, 14 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-cros-ec.c b/drivers/pwm/pwm-cros-ec.c
+> index 09c08dee099e..ef05fba1bd37 100644
+> --- a/drivers/pwm/pwm-cros-ec.c
+> +++ b/drivers/pwm/pwm-cros-ec.c
+> @@ -213,20 +213,27 @@ static int cros_ec_num_pwms(struct cros_ec_device *=
+ec)
+>  		u32 result =3D 0;
+> =20
+>  		ret =3D __cros_ec_pwm_get_duty(ec, i, &result);
+> -		/* We want to parse EC protocol errors */
+> -		if (ret < 0 && !(ret =3D=3D -EPROTO && result))
+> -			return ret;
+> -
+>  		/*
+>  		 * We look for SUCCESS, INVALID_COMMAND, or INVALID_PARAM
+>  		 * responses; everything else is treated as an error.
+>  		 */
 
-Note that I don't have an arm64 setup here, so I haven't actually
-tested the tag-based KASAN stuff yet.
+This comment is at least misleading now.
 
-Cheers,
--- David
+> -		if (result =3D=3D EC_RES_INVALID_COMMAND)
+> +		switch (ret) {
+> +		case -EOPNOTSUPP:	/* invalid command */
+>  			return -ENODEV;
+
+My first reaction here was to wonder why -EOPNOTSUPP isn't passed to the
+upper layer. OK, this is a loop to test the number of available devices.
+
+> -		else if (result =3D=3D EC_RES_INVALID_PARAM)
+> +		case -EINVAL:		/* invalid parameter */
+>  			return i;
+> -		else if (result)
+> +		case -EPROTO:
+> +			/* Old or new error return code: Handle both */
+> +			if (result =3D=3D EC_RES_INVALID_COMMAND)
+> +				return -ENODEV;
+> +			else if (result =3D=3D EC_RES_INVALID_PARAM)
+> +				return i;
+
+If I understand correctly this surprising calling convention (output
+parameter is filled even though the function returned an error) is the
+old one that is to be fixed.
+
+>  			return -EPROTO;
+> +		default:
+> +			if (ret < 0)
+> +				return ret;
+> +			break;
+> +		}
+>  	}
+> =20
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--3weddawyjtsgyw2o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8lF/cACgkQwfwUeK3K
+7Aljxwf8CdiR6S9sD/CztU399KIbaE0uKqUCKCvY1/0R0KU7g8DOkHY3cQiONyZa
+FxSU5PoBJygDvyyIxIH/IMJ1EM1LIQICzLEg+M+13vlIo8uJFLqZo2CmjjDGhRfw
+svh2w9hQvw/g2nXiNm5AlAvmWfKdmd5Z0ltOpefhPmJxGFe8wqgpkN4bYmbA4VcD
+MEQz4A6+67fqrbEpIXlGSN7wflWFqkYFyG1dfPnBuP0CLxt8jrwCO2w79ljqEggE
+b0Y7FEXtgp9vVOodHFrmq4+MWvdhneoBk3xz2FTjON3UzZs2UfmGI5QwIIipkcvs
+1TZNyp5DFlpOciTzPyZCccXgP70jMg==
+=226A
+-----END PGP SIGNATURE-----
+
+--3weddawyjtsgyw2o--
