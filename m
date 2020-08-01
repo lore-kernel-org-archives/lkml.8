@@ -2,88 +2,156 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6952CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3C7C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC0B2072A
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EDCD2065E
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:38:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgHAR3D (ORCPT
+        id S1726748AbgHARi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 13:29:03 -0400
-Received: from smtprelay0146.hostedemail.com ([216.40.44.146]:55014 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726534AbgHAR3D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 13:29:03 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 953F718029137;
-        Sat,  1 Aug 2020 17:29:02 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: pets72_5b1482626f8e
-X-Filterd-Recvd-Size: 2194
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Sat,  1 Aug 2020 17:29:01 +0000 (UTC)
-Message-ID: <8a8d14b2dc7a977fbda6f5f96ffd08f167c085d7.camel@perches.com>
-Subject: Re: [PATCH v2] staging: r8188eu: replace rtw_netdev_priv define
- with inline function
-From:   Joe Perches <joe@perches.com>
-To:     Ivan Safonov <insafonov@gmail.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        B K Karthik <bkkarthik@pesu.pes.edu>,
-        Michael Straube <straube.linux@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Date:   Sat, 01 Aug 2020 10:29:00 -0700
-In-Reply-To: <20200801165220.29208-1-insafonov@gmail.com>
-References: <20200801165220.29208-1-insafonov@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Sat, 1 Aug 2020 13:38:56 -0400
+Received: from mga04.intel.com ([192.55.52.120]:10253 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbgHARiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 13:38:55 -0400
+IronPort-SDR: t5dyDFe/5NI3Mg2MbfsLG4qAI6UTcvSGyhuWUvQwl2DR1PfthWLEKLp2rp65WG2+zNAHWHO0yX
+ Sn6z4U32XNrA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9699"; a="149394069"
+X-IronPort-AV: E=Sophos;i="5.75,423,1589266800"; 
+   d="scan'208";a="149394069"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2020 10:38:54 -0700
+IronPort-SDR: KRjjdqdzFj6+0PzdZWkJsUEcbjVt3ZTshu8heTogL8MViDiBwCfEOXZz4d+BLX+oJd/bX90qKU
+ M+b1xREghqEg==
+X-IronPort-AV: E=Sophos;i="5.75,423,1589266800"; 
+   d="scan'208";a="395632580"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2020 10:38:54 -0700
+Subject: [PATCH v8 0/2]  Renovate memcpy_mcsafe with copy_mc_to_{user,
+ kernel}
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     tglx@linutronix.de, mingo@redhat.com, vishal.l.verma@intel.com
+Cc:     Tony Luck <tony.luck@intel.com>, Vivek Goyal <vgoyal@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Borislav Petkov <bp@alien8.de>, stable@vger.kernel.org,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Erwin Tsaur <erwin.tsaur@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Date:   Sat, 01 Aug 2020 10:22:36 -0700
+Message-ID: <159630255616.3143511.18110575960499749012.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-08-01 at 19:52 +0300, Ivan Safonov wrote:
-> The function guarantees type checking of arguments and return value.
-> 
-> Result of rtw_netdev_priv macro can be assigned to pointer
-> with incompatible type without warning. The function allow compiler
-> to perform this check.
-[]
-> diff --git a/drivers/staging/rtl8188eu/include/osdep_service.h b/drivers/staging/rtl8188eu/include/osdep_service.h
-[]
-> @@ -71,8 +71,11 @@ struct rtw_netdev_priv_indicator {
->  };
->  struct net_device *rtw_alloc_etherdev_with_old_priv(void *old_priv);
->  
-> -#define rtw_netdev_priv(netdev)					\
-> -	(((struct rtw_netdev_priv_indicator *)netdev_priv(netdev))->priv)
-> +static inline struct adapter *rtw_netdev_priv(struct net_device *dev)
-> +{
-> +	return (((struct rtw_netdev_priv_indicator *)netdev_priv(dev))->priv);
-> +}
+Changes since v7 [1]:
+- Rebased on v5.8-rc5 to resolve a conflict with commit eb25de276505
+  ("tools arch: Update arch/x86/lib/memcpy_64.S copy used in 'perf bench
+    mem memcpy'")
 
-To be similar to existing uses, this variable name should be
-netdev not dev.  There are also unnecessary parentheses.
-
->  void rtw_free_netdev(struct net_device *netdev);
-
-Better to use netdev like this one.
+[1]: http://lore.kernel.org/r/159408043801.2272533.17485467640602344900.stgit@dwillia2-desk3.amr.corp.intel.com
 
 ---
-static inline struct adapter *rtw_netdev_priv(struct net_device *netdev)
-{
-	return ((struct rtw_netdev_priv_indicator *)netdev_priv(netdev))->priv;
-}
+Vishal, since this patch set has experienced unprecedented silence from
+x86 folks I expect you will need to send it to Linus directly during the
+merge window. It merges cleanly with recent -next.
+
+Thomas, Ingo, Boris, please chime in to save Vishal from that
+awkwardness. I am only going to be sporadically online for the next few
+weeks.
+
+---
+
+The primary motivation to go touch memcpy_mcsafe() is that the existing
+benefit of doing slow and careful copies is obviated on newer CPUs. That
+fact solves the problem of needing to detect machine-check recovery
+capability. Now the old "mcsafe_key" opt-in to careful copying can be made
+an opt-out from the default fast copy implementation.
+
+The discussion with Linus further made clear that this facility had
+already lost its x86-machine-check specificity starting with commit
+2c89130a56a ("x86/asm/memcpy_mcsafe: Add write-protection-fault
+handling"). The new changes to not require a "careful copy" further
+de-emphasizes the role that x86-MCA plays in the implementation to just
+one more source of recoverable trap during the operation.
+
+With the above realizations the name "mcsafe" is no longer accurate and
+copy_safe() is proposed as its replacement. x86 grows a copy_safe_fast()
+implementation as a default implementation that is independent of
+detecting the presence of x86-MCA.
+
+---
+
+Dan Williams (2):
+      x86, powerpc: Rename memcpy_mcsafe() to copy_mc_to_{user,kernel}()
+      x86/copy_mc: Introduce copy_mc_generic()
 
 
+ arch/powerpc/Kconfig                               |    2 
+ arch/powerpc/include/asm/string.h                  |    2 
+ arch/powerpc/include/asm/uaccess.h                 |   40 +++--
+ arch/powerpc/lib/Makefile                          |    2 
+ arch/powerpc/lib/copy_mc_64.S                      |    4 
+ arch/x86/Kconfig                                   |    2 
+ arch/x86/Kconfig.debug                             |    2 
+ arch/x86/include/asm/copy_mc_test.h                |   75 +++++++++
+ arch/x86/include/asm/mcsafe_test.h                 |   75 ---------
+ arch/x86/include/asm/string_64.h                   |   32 ----
+ arch/x86/include/asm/uaccess.h                     |   21 +++
+ arch/x86/include/asm/uaccess_64.h                  |   20 --
+ arch/x86/kernel/cpu/mce/core.c                     |    8 -
+ arch/x86/kernel/quirks.c                           |    9 -
+ arch/x86/lib/Makefile                              |    1 
+ arch/x86/lib/copy_mc.c                             |   64 ++++++++
+ arch/x86/lib/copy_mc_64.S                          |  165 ++++++++++++++++++++
+ arch/x86/lib/memcpy_64.S                           |  115 --------------
+ arch/x86/lib/usercopy_64.c                         |   21 ---
+ drivers/md/dm-writecache.c                         |   15 +-
+ drivers/nvdimm/claim.c                             |    2 
+ drivers/nvdimm/pmem.c                              |    6 -
+ include/linux/string.h                             |    9 -
+ include/linux/uaccess.h                            |    9 +
+ include/linux/uio.h                                |   10 +
+ lib/Kconfig                                        |    7 +
+ lib/iov_iter.c                                     |   43 +++--
+ tools/arch/x86/include/asm/mcsafe_test.h           |   13 --
+ tools/arch/x86/lib/memcpy_64.S                     |  115 --------------
+ tools/objtool/check.c                              |    5 -
+ tools/perf/bench/Build                             |    1 
+ tools/perf/bench/mem-memcpy-x86-64-lib.c           |   24 ---
+ tools/testing/nvdimm/test/nfit.c                   |   48 +++---
+ .../testing/selftests/powerpc/copyloops/.gitignore |    2 
+ tools/testing/selftests/powerpc/copyloops/Makefile |    6 -
+ .../selftests/powerpc/copyloops/copy_mc_64.S       |    1 
+ .../selftests/powerpc/copyloops/memcpy_mcsafe_64.S |    1 
+ 37 files changed, 451 insertions(+), 526 deletions(-)
+ rename arch/powerpc/lib/{memcpy_mcsafe_64.S => copy_mc_64.S} (98%)
+ create mode 100644 arch/x86/include/asm/copy_mc_test.h
+ delete mode 100644 arch/x86/include/asm/mcsafe_test.h
+ create mode 100644 arch/x86/lib/copy_mc.c
+ create mode 100644 arch/x86/lib/copy_mc_64.S
+ delete mode 100644 tools/arch/x86/include/asm/mcsafe_test.h
+ delete mode 100644 tools/perf/bench/mem-memcpy-x86-64-lib.c
+ create mode 120000 tools/testing/selftests/powerpc/copyloops/copy_mc_64.S
+ delete mode 120000 tools/testing/selftests/powerpc/copyloops/memcpy_mcsafe_64.S
 
+base-commit: 11ba468877bb23f28956a35e896356252d63c983
