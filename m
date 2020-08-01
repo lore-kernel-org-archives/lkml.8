@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E859C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 01:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E29CDC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 01:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 615132087C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 01:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBD572087C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 01:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596244487;
-	bh=j0J/7ja9WKirDvkyCZhO+IkvePr5ZhC8vW7o8X/Z79Q=;
+	s=default; t=1596244504;
+	bh=TWpobEkUFwXJvKEdpKXErUrWoH8ngSAggu3Jl9MuW5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XZz8bNMaiEjbYjj5KZjt4I9AGexhZqZkURN2s8kdmLp5/lSgGDULz6ZC+n8CLnBGA
-	 6faNtpvK0+ucKmMFeBYAQaooXNj4lWCDBpfsY9nEPhg66vqoOUpXkYBd8NlGGPHULK
-	 2yfL+AGtBXp28lGCWVFcMkQd6zn42yBP6DnwdoOE=
+	b=MRSdzCJVEXAqa1p6ZH5HMMJbYXFAr5ZjqYhalYwGIH63Ilv3YK6jJRgt2Tq10Vtr3
+	 4nxlGLm9F+TPKN0Vbm1DCoCuReldJ47CrFwfj6/z5z2JW0NFj1ng7RRyRawVbKIsJr
+	 I/P7r+xm63hC3PlW6s+FRpqE5jshLetNV4aHv65o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbgHABOp (ORCPT
+        id S1728390AbgHABPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 21:14:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43600 "EHLO mail.kernel.org"
+        Fri, 31 Jul 2020 21:15:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727093AbgHABOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 21:14:43 -0400
+        id S1728333AbgHABPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 21:15:00 -0400
 Received: from localhost.localdomain (unknown [89.208.247.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5717020836;
-        Sat,  1 Aug 2020 01:14:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52FC12245C;
+        Sat,  1 Aug 2020 01:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596244483;
-        bh=j0J/7ja9WKirDvkyCZhO+IkvePr5ZhC8vW7o8X/Z79Q=;
+        s=default; t=1596244499;
+        bh=TWpobEkUFwXJvKEdpKXErUrWoH8ngSAggu3Jl9MuW5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kt+tmwIcuYE7tpUt9GeGeGveSU9iDm7kG4bzlkXSgx4xvJi3dj+cCnwxXUCt8Fiwn
-         GCohKZwTWXb+WqDB6nNIsVxPs/r2N4Ar9sI4uGA177oXTI7PvemhnaEY91iGLkMbZ+
-         srr88712l+re/AK/wWYOtDSpePCHpPZVo2OrDuNQ=
+        b=S6Q/jdWiQCZpT0jDmYtqsUzjIUIfZUeCpwOk/DCjVy0Vl10HgWounANL8FTq2Wvfa
+         ApoNDiqhiRg12KpmeZrG65cYn7f8xT0gB+U0WpjONKq202xsNdKsvcR444WGUA+AWO
+         iPMMoQfZQA7CDyvouGPzBKxpY+gYte7Bbcq2eD9s=
 From:   guoren@kernel.org
 To:     guoren@kernel.org, arnd@arndb.de
 Cc:     linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
         linux-arch@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>
-Subject: [PATCH 03/13] csky: Add cpu feature register hint for smp
-Date:   Sat,  1 Aug 2020 01:14:03 +0000
-Message-Id: <1596244453-98575-4-git-send-email-guoren@kernel.org>
+Subject: [PATCH 12/13] csky: Add arch_show_interrupts for IPI interrupts
+Date:   Sat,  1 Aug 2020 01:14:12 +0000
+Message-Id: <1596244453-98575-13-git-send-email-guoren@kernel.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596244453-98575-1-git-send-email-guoren@kernel.org>
 References: <1596244453-98575-1-git-send-email-guoren@kernel.org>
@@ -56,44 +56,120 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Guo Ren <guoren@linux.alibaba.com>
 
-CPU features registers are setup by customers' bootloader, but
-Linux must help transfer them from the primary to secondary cores.
-This patch add hint2 CPU feature register supported.
+Here is the result:
+
+ cat /proc/interrupts
+           CPU0       CPU1       CPU2       CPU3
+ 15:       1348       1299        952       1076  C-SKY SMP Intc  15  IPI Interrupt
+ 16:       1203       1825       1598       1307  C-SKY SMP Intc  16  csky_mp_timer
+ 43:        292          0          0          0  C-SKY SMP Intc  43  ttyS0
+ 57:        106          0          0          0  C-SKY SMP Intc  57  virtio0
+IPI0:         0          0          0          0  Empty interrupts
+IPI1:        19         41         45         27  Rescheduling interrupts
+IPI2:      1330       1259        908       1050  Function call interrupts
+IPI3:         0          0          0          0  Irq work interrupts
 
 Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 Cc: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/csky/kernel/smp.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/csky/kernel/smp.c | 49 +++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 41 insertions(+), 8 deletions(-)
 
 diff --git a/arch/csky/kernel/smp.c b/arch/csky/kernel/smp.c
-index b5c5bc3..1945fb2 100644
+index 60f2ab1..e7425e6 100644
 --- a/arch/csky/kernel/smp.c
 +++ b/arch/csky/kernel/smp.c
-@@ -156,6 +156,7 @@ void __init setup_smp(void)
- extern void _start_smp_secondary(void);
+@@ -15,6 +15,7 @@
+ #include <linux/irq_work.h>
+ #include <linux/irqdomain.h>
+ #include <linux/of.h>
++#include <linux/seq_file.h>
+ #include <linux/sched/task_stack.h>
+ #include <linux/sched/mm.h>
+ #include <linux/sched/hotplug.h>
+@@ -27,11 +28,6 @@
+ #include <abi/fpu.h>
+ #endif
  
- volatile unsigned int secondary_hint;
-+volatile unsigned int secondary_hint2;
- volatile unsigned int secondary_ccr;
- volatile unsigned int secondary_stack;
+-struct ipi_data_struct {
+-	unsigned long bits ____cacheline_aligned;
+-};
+-static DEFINE_PER_CPU(struct ipi_data_struct, ipi_data);
+-
+ enum ipi_message_type {
+ 	IPI_EMPTY,
+ 	IPI_RESCHEDULE,
+@@ -40,8 +36,16 @@ enum ipi_message_type {
+ 	IPI_MAX
+ };
  
-@@ -168,6 +169,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *tidle)
- 	secondary_stack =
- 		(unsigned int) task_stack_page(tidle) + THREAD_SIZE - 8;
- 	secondary_hint = mfcr("cr31");
-+	secondary_hint2 = mfcr("cr<21, 1>");
- 	secondary_ccr  = mfcr("cr18");
- 	secondary_msa1 = read_mmu_msa1();
++struct ipi_data_struct {
++	unsigned long bits ____cacheline_aligned;
++	unsigned long stats[IPI_MAX] ____cacheline_aligned;
++};
++static DEFINE_PER_CPU(struct ipi_data_struct, ipi_data);
++
+ static irqreturn_t handle_ipi(int irq, void *dev)
+ {
++	unsigned long *stats = this_cpu_ptr(&ipi_data)->stats;
++
+ 	while (true) {
+ 		unsigned long ops;
  
-@@ -209,6 +211,7 @@ void csky_start_secondary(void)
- 	unsigned int cpu = smp_processor_id();
+@@ -49,14 +53,20 @@ static irqreturn_t handle_ipi(int irq, void *dev)
+ 		if (ops == 0)
+ 			return IRQ_HANDLED;
  
- 	mtcr("cr31", secondary_hint);
-+	mtcr("cr<21, 1>", secondary_hint2);
- 	mtcr("cr18", secondary_ccr);
+-		if (ops & (1 << IPI_RESCHEDULE))
++		if (ops & (1 << IPI_RESCHEDULE)) {
++			stats[IPI_RESCHEDULE]++;
+ 			scheduler_ipi();
++		}
  
- 	mtcr("vbr", vec_base);
+-		if (ops & (1 << IPI_CALL_FUNC))
++		if (ops & (1 << IPI_CALL_FUNC)) {
++			stats[IPI_CALL_FUNC]++;
+ 			generic_smp_call_function_interrupt();
++		}
+ 
+-		if (ops & (1 << IPI_IRQ_WORK))
++		if (ops & (1 << IPI_IRQ_WORK)) {
++			stats[IPI_IRQ_WORK]++;
+ 			irq_work_run();
++		}
+ 
+ 		BUG_ON((ops >> IPI_MAX) != 0);
+ 	}
+@@ -88,6 +98,29 @@ send_ipi_message(const struct cpumask *to_whom, enum ipi_message_type operation)
+ 	send_arch_ipi(to_whom);
+ }
+ 
++static const char * const ipi_names[] = {
++	[IPI_EMPTY]		= "Empty interrupts",
++	[IPI_RESCHEDULE]	= "Rescheduling interrupts",
++	[IPI_CALL_FUNC]		= "Function call interrupts",
++	[IPI_IRQ_WORK]		= "Irq work interrupts",
++};
++
++int arch_show_interrupts(struct seq_file *p, int prec)
++{
++	unsigned int cpu, i;
++
++	for (i = 0; i < IPI_MAX; i++) {
++		seq_printf(p, "%*s%u:%s", prec - 1, "IPI", i,
++			   prec >= 4 ? " " : "");
++		for_each_online_cpu(cpu)
++			seq_printf(p, "%10lu ",
++				per_cpu_ptr(&ipi_data, cpu)->stats[i]);
++		seq_printf(p, " %s\n", ipi_names[i]);
++	}
++
++	return 0;
++}
++
+ void arch_send_call_function_ipi_mask(struct cpumask *mask)
+ {
+ 	send_ipi_message(mask, IPI_CALL_FUNC);
 -- 
 2.7.4
 
