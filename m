@@ -2,150 +2,148 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4DEC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 19:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3A2C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 19:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD0A20719
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 19:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E055A206E9
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 19:46:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmh.eng.br header.i=@hmh.eng.br header.b="23iR1+LC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S5bQhytb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HIEyUOLP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgHATnu (ORCPT
+        id S1727861AbgHATqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 15:43:50 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:44463 "EHLO
-        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725939AbgHATnt (ORCPT
+        Sat, 1 Aug 2020 15:46:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbgHATqY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 15:43:49 -0400
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailnew.west.internal (Postfix) with ESMTP id E6134C18;
-        Sat,  1 Aug 2020 15:43:47 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Sat, 01 Aug 2020 15:43:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hmh.eng.br; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=tHKDE1Y2PpmdsfuJ9iiPoAeslyc
-        vidfTfqXrtYPUbi4=; b=23iR1+LCg/+h2u7RUcKVZESBr5CcbHFfESfRkc5HKgG
-        5vUZhC8lAaI8oYJFHakuCTYKKua7+b867naBlyb/kQ4WJqyH5hzTJA9B/yy50wfy
-        ctblZN055PEJIhxLB4WOcDeiGzBFGVOqaYcavAUFYcvuYmXiB3ELaqO22FnKqWk2
-        RVU31oUUzKvbeQz+ddf442I89/mlO2XkPZ/ZCL8gV00as3pyJBrUOWW9Nxwy0qF8
-        XFD1DwMPQ/VVnmMQgpZhDNmbT9vJQIl1Nh+tqW/jaHKxvnhyHY5SfNh8iy4Rdcan
-        fKgiU71kDl4hNUfgqPTQLjTfKQ1hS9qNkMfod9R16mg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=tHKDE1
-        Y2PpmdsfuJ9iiPoAeslycvidfTfqXrtYPUbi4=; b=S5bQhytbObH6T8occOCzn8
-        ps99E6RyKeeNOzYmINIPb2fhsvg8bTrQunI2a2KQqunPM4hhg/knpWfE2/ERsoyh
-        6U+gtpC1txgxU6gFQCr1r1TH5QJxx0BirCEaO4h8nby3vhujPolhGlJNAuZW2qm7
-        3XkNm3XNvPgQJPNvcTzwiDn4VToC/xk00AE9eFOWyUX84iHRYI85oMFQHm+vouzO
-        OBbZsYGK3A3TWP8CIE0X9Kq93g7W5woJvCN56Rysj3BfB7ifq4ojcrqdNJeFpcqH
-        FD9COw8QzMdcixxl0jnhBeq/L9T2xxfNbqV3/EJfZNckAXzHmZ+YOiqAS/G6PbFA
-        ==
-X-ME-Sender: <xms:8sUlXyqoBxDm-ibvZPN6YxIZcE6IcpM0gmadJqEr2lyerCOTFERqVQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrjedtgddugedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdttddttdervdenucfhrhhomhepjfgvnhhr
-    ihhquhgvucguvgcuofhorhgrvghsucfjohhlshgthhhuhhcuoehhmhhhsehhmhhhrdgvnh
-    hgrdgsrheqnecuggftrfgrthhtvghrnhepveduteejgeeiudefuefgieehleejkeefudfh
-    jeefgeekheekvddvheehleegveeinecukfhppedujeejrdduleegrdejrdefvdenucevlh
-    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehhmhhhsehhmhhh
-    rdgvnhhgrdgsrh
-X-ME-Proxy: <xmx:8sUlXwpyBm-l0Cu0r-dwAuFIwAtRjtsp1eF6k4sXK7O5huhcDp3fhg>
-    <xmx:8sUlX3Piy9R6CBycvvkKvm84z53wkPVYVFzdk8tjwgbigV4HHa9dkA>
-    <xmx:8sUlXx4pKolqadNek1hErofL8Tkijff2WdsC2l5SQRi8uIvdyWa0IQ>
-    <xmx:88UlX7tNVJMDg9GRPxflN-dR88utVzw26GxDmbActG3O9EGF9D0cH4nOmhA>
-Received: from khazad-dum.debian.net (unknown [177.194.7.32])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1821A306005F;
-        Sat,  1 Aug 2020 15:43:46 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by localhost.khazad-dum.debian.net (Postfix) with ESMTP id 5B674340163A;
-        Sat,  1 Aug 2020 16:43:44 -0300 (-03)
-X-Virus-Scanned: Debian amavisd-new at khazad-dum.debian.net
-Received: from khazad-dum.debian.net ([127.0.0.1])
-        by localhost (khazad-dum2.khazad-dum.debian.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id 0SZCIBDTFX4O; Sat,  1 Aug 2020 16:43:42 -0300 (-03)
-Received: by khazad-dum.debian.net (Postfix, from userid 1000)
-        id CD5943400161; Sat,  1 Aug 2020 16:43:42 -0300 (-03)
-Date:   Sat, 1 Aug 2020 16:43:42 -0300
-From:   Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Marco Trevisan <marco.trevisan@canonical.com>,
-        Mark Pearson <mpearson@lenovo.com>,
-        Christian Kellner <ckellner@redhat.com>,
-        Benjamin Berg <bberg@redhat.com>,
-        Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/3] Add 3 new keycodes and use them for 3 new hotkeys on
- new Lenovo Thinkpads
-Message-ID: <20200801194342.GB10318@khazad-dum.debian.net>
-References: <20200717114155.56222-1-hdegoede@redhat.com>
- <20200719225649.GA4341@khazad-dum.debian.net>
- <20200722054144.GQ1665100@dtor-ws>
- <20200727005049.GA10254@khazad-dum.debian.net>
- <f67ede61-c9d4-6abc-9b59-a5b2b615d1b6@redhat.com>
- <CAHp75VdvhC5HJ-BjqjDxU_Z_7_i8MV5UDN4FgWHvZfSD5=smqg@mail.gmail.com>
- <CAHp75VfCqHdZBTe8HB2C0whONCS2HgVgPPZNGRgypMiSwm0+DQ@mail.gmail.com>
+        Sat, 1 Aug 2020 15:46:24 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0BCCC06174A;
+        Sat,  1 Aug 2020 12:46:23 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id ed14so15704056qvb.2;
+        Sat, 01 Aug 2020 12:46:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ujYsQMCZbecD6bJOJC4Hkc6cL1ixRi2Hw1s2+qYZ8Ac=;
+        b=HIEyUOLPHv84IyjfJfi3d8BatiT6NbFRFo4ij+cTD9CJeCkKTEmiTauwNMEbVi8j5H
+         WUZk8m1BLwfiRWVb/wKvdceJhb+sY6NCjWQVGC56HCCpLqP8zDWFjm4kNyQhRqidxJK/
+         GrbwW9CqiPTw3gwxE4WQTnfvh5FV2F6v/RG3ky/Ehr3oRjhInC6MwSGDAT8Tu7+ySwQB
+         7TPBs+ODPpzT1BgGkvhTYQNjj3SRHZGocz9wc2pyerSBVQd9LsATV+T2rl2ZZV8DS4t6
+         Ad5bWemDX+rR3mc/tjNrx1Skb3x52oGEei/Dj7QD3NQ8w8GxHtqhJ8E/YQtdDX0rIWBJ
+         OVqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ujYsQMCZbecD6bJOJC4Hkc6cL1ixRi2Hw1s2+qYZ8Ac=;
+        b=HpN+mWIJyZcxs6qyrW+HwJ9rhkc9BcZVwqNgSfWyEx+ioDe847+yQmxiYU6RhChNWg
+         /bzb1aCgCOsUagDWLq18jr+QFOFnmxacevECEOb7sxXECe4JCNpqImQS6df1mLCHIQ3R
+         vsY4WDjRL7ZPJ8EyAjSXY4qr7zYQ1Cx0u8l2ppd1Q9gQxqJcrtiEn3Kk0+b/wfzgbapJ
+         +4fbDH8v6bsnD8LquXC2Ji9bqaoNSNTN5kBQVfg4evroAEdDDVArZQ8KzaNaGwmxj1M6
+         G66r6pJtmHf0nxopRmp1ltKMABFdUc+ZDPpGJda5F+nQ3eK1AwMWdkhASQSxaI8ruO1k
+         hUpQ==
+X-Gm-Message-State: AOAM532wEaNNawhoa2A4TSyHHpERAxlIpPYL+SJBYoSEqQOTxqoSpMNa
+        SgI6hn2GuhmmGKbIKEdbxg==
+X-Google-Smtp-Source: ABdhPJzDVgh81xMg4udcLC8TIzADu8oMa6/Aiz82VsTpmlIIxc01ZpgOmmLKGcMXX1gdukgbZPM0XA==
+X-Received: by 2002:a0c:d7c9:: with SMTP id g9mr10286039qvj.83.1596311183058;
+        Sat, 01 Aug 2020 12:46:23 -0700 (PDT)
+Received: from localhost.localdomain (146-115-88-66.s3894.c3-0.sbo-ubr1.sbo.ma.cable.rcncustomer.com. [146.115.88.66])
+        by smtp.gmail.com with ESMTPSA id q17sm7791343qte.61.2020.08.01.12.46.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Aug 2020 12:46:22 -0700 (PDT)
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Ursula Braun <ubraun@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Hans Wippel <hwippel@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: [Linux-kernel-mentees] [PATCH net] net/smc: Prevent kernel-infoleak in __smc_diag_dump()
+Date:   Sat,  1 Aug 2020 15:44:40 -0400
+Message-Id: <20200801194440.246747-1-yepeilin.cs@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfCqHdZBTe8HB2C0whONCS2HgVgPPZNGRgypMiSwm0+DQ@mail.gmail.com>
-X-GPG-Fingerprint1: 4096R/0x0BD9E81139CB4807: C467 A717 507B BAFE D3C1  6092
- 0BD9 E811 39CB 4807
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jul 2020, Andy Shevchenko wrote:
-> On Mon, Jul 27, 2020 at 10:49 AM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Mon, Jul 27, 2020 at 10:45 AM Hans de Goede <hdegoede@redhat.com> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On 7/27/20 2:50 AM, Henrique de Moraes Holschuh wrote:
-> > > > On Tue, 21 Jul 2020, Dmitry Torokhov wrote:
-> > > >> On Sun, Jul 19, 2020 at 07:56:49PM -0300, Henrique de Moraes Holschuh wrote:
-> > > >>> On Fri, 17 Jul 2020, Hans de Goede wrote:
-> > > >>>> This is a simple patch-series adding support for 3 new hotkeys found
-> > > >>>> on various new Lenovo Thinkpad models.
-> > > >>>
-> > > >>> For all three patches, pending an ack for the new keycodes by the input
-> > > >>> maintainers:
-> > > >>>
-> > > >>> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-> > > >>
-> > > >> Do you want me to merge all 3 through input tree?
-> > > >
-> > > > Hans, Daren, Andy, what do you prefer?
-> > >
-> > > Taking all this upstream through Dmitry's input tree is fine with
-> > > me, but this really is up to Andy and/or Daren.
-> >
-> > Fine with me.
-> 
-> To be clear, I assume it will go thru input tree.
-> If my formal tag needed, use
-> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+__smc_diag_dump() is potentially copying uninitialized kernel stack memory
+into socket buffers, since the compiler may leave a 4-byte hole near the
+beginning of `struct smcd_diag_dmbinfo`. Fix it by initializing `dinfo`
+with memset().
 
-Also,
-Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: stable@vger.kernel.org
+Fixes: 4b1b7d3b30a6 ("net/smc: add SMC-D diag support")
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+---
+Reference: https://lwn.net/Articles/417989/
 
+$ pahole -C "smcd_diag_dmbinfo" net/smc/smc_diag.o
+struct smcd_diag_dmbinfo {
+	__u32                      linkid;               /*     0     4 */
+
+	/* XXX 4 bytes hole, try to pack */
+
+	__u64                      peer_gid __attribute__((__aligned__(8))); /*     8     8 */
+	__u64                      my_gid __attribute__((__aligned__(8))); /*    16     8 */
+	__u64                      token __attribute__((__aligned__(8))); /*    24     8 */
+	__u64                      peer_token __attribute__((__aligned__(8))); /*    32     8 */
+
+	/* size: 40, cachelines: 1, members: 5 */
+	/* sum members: 36, holes: 1, sum holes: 4 */
+	/* forced alignments: 4, forced holes: 1, sum forced holes: 4 */
+	/* last cacheline: 40 bytes */
+} __attribute__((__aligned__(8)));
+$ _
+
+ net/smc/smc_diag.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/net/smc/smc_diag.c b/net/smc/smc_diag.c
+index e1f64f4ba236..da9ba6d1679b 100644
+--- a/net/smc/smc_diag.c
++++ b/net/smc/smc_diag.c
+@@ -170,13 +170,15 @@ static int __smc_diag_dump(struct sock *sk, struct sk_buff *skb,
+ 	    (req->diag_ext & (1 << (SMC_DIAG_DMBINFO - 1))) &&
+ 	    !list_empty(&smc->conn.lgr->list)) {
+ 		struct smc_connection *conn = &smc->conn;
+-		struct smcd_diag_dmbinfo dinfo = {
+-			.linkid = *((u32 *)conn->lgr->id),
+-			.peer_gid = conn->lgr->peer_gid,
+-			.my_gid = conn->lgr->smcd->local_gid,
+-			.token = conn->rmb_desc->token,
+-			.peer_token = conn->peer_token
+-		};
++		struct smcd_diag_dmbinfo dinfo;
++
++		memset(&dinfo, 0, sizeof(dinfo));
++
++		dinfo.linkid = *((u32 *)conn->lgr->id);
++		dinfo.peer_gid = conn->lgr->peer_gid;
++		dinfo.my_gid = conn->lgr->smcd->local_gid;
++		dinfo.token = conn->rmb_desc->token;
++		dinfo.peer_token = conn->peer_token;
+ 
+ 		if (nla_put(skb, SMC_DIAG_DMBINFO, sizeof(dinfo), &dinfo) < 0)
+ 			goto errout;
 -- 
-  Henrique Holschuh
+2.25.1
+
