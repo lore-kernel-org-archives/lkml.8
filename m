@@ -2,194 +2,109 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8319FC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 03:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 234DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 03:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C84F20836
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 03:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00DE120836
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 03:52:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iUUSE8iL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="koeUikLM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728667AbgHADvd (ORCPT
+        id S1728694AbgHADwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 23:51:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60700 "EHLO
+        Fri, 31 Jul 2020 23:52:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728459AbgHADvc (ORCPT
+        with ESMTP id S1728459AbgHADwh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 23:51:32 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C7FCC06174A;
-        Fri, 31 Jul 2020 20:51:32 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id l23so30808831qkk.0;
-        Fri, 31 Jul 2020 20:51:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=PayQ/qqXfalVrPUBjKqmyKH4cdevaDuV7wVHaPmWgJ4=;
-        b=iUUSE8iLfcI6s6NX41YiqlZCybbN3zgkT1DuyL6+KDDMRGZhvzbo331ZnhNM9lM7C9
-         b5iGfRpwAEEwA6Y24PPe/6Kt8N/ZODHeXv3dplknicJPcvNee7YKffeSoTb/XMjwwD9Z
-         HGbWF18J44yhay/XWRYWrrDUgjL5MWGJl4kSctIcEWH3iEdpIczrjVlAfWwBfpoj1tGV
-         D53H+UcLqF+flpYca6OyjcRHDBkYJ+vvIgqPTVrk/DihkJcf+gtodS3QTOMgN3h6daZX
-         G6ybC5mq4kXpx9XNZmGuCvIEGYUbKN+wQwSPDHP02LqTESmCjvtZ4aN7gCqH63XheylX
-         OU6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=PayQ/qqXfalVrPUBjKqmyKH4cdevaDuV7wVHaPmWgJ4=;
-        b=Fk+ngXDO0gw9WRzO3m4n1jT6EYQMn4eaRT0LSOL68vBod/q1PXY1Gv9tvOLVUZsI03
-         0VnpgP8crWZmHiyeFdciZmAXVyt4DmdiGQxPm+w0w5D69MfP6VMKc5DWLWlyVk3ar9BB
-         r2Fvv9nItydqmuZG32LyApY9rfZrVLZ8s10gmLjFNfX61m52zZYsDSg1XpcUcyy1tb7+
-         oAIEfUxyeSRhlh2Ex7S8eiAHQeUE3QGfwAVWwvlDGUi4ha9Mv0B4rTtcV+wFeQSJKrO0
-         hdvlIRQwmclqB5GbmUNhbn91KeDdgLC28ELxqeNJsz2RH3+qLGPo62CgbTSF+aRF/uJv
-         /mHQ==
-X-Gm-Message-State: AOAM532PhsKoaL8inh3EX2A1O7PoCvbVnhyFAjpB7x7JHaKqi3oyYI7g
-        nWEfSI6fBv2aAQv4iUP+JqA=
-X-Google-Smtp-Source: ABdhPJzmPdzsMhqNPMTyf2fTToKhn6MYA8bBHK8a+Vko2Q6LhFht8yVEAh9qElAVkuMNUyUQPE21fA==
-X-Received: by 2002:a37:a187:: with SMTP id k129mr6752037qke.196.1596253891434;
-        Fri, 31 Jul 2020 20:51:31 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id 139sm9716015qkl.13.2020.07.31.20.51.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 20:51:30 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 31 Jul 2020 23:51:28 -0400
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jian Cai <jiancai@google.com>,
-        =?utf-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>,
-        Luis Lozano <llozano@google.com>,
-        Manoj Gupta <manojgupta@google.com>, stable@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: Re: [PATCH v5 13/36] vmlinux.lds.h: add PGO and AutoFDO input
- sections
-Message-ID: <20200801035128.GB2800311@rani.riverdale.lan>
-References: <20200731230820.1742553-1-keescook@chromium.org>
- <20200731230820.1742553-14-keescook@chromium.org>
+        Fri, 31 Jul 2020 23:52:37 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 987BFC06174A;
+        Fri, 31 Jul 2020 20:52:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=Gnn9lbsi+QeiyHza8FsKfu17u4FjzzG+2+QxHKbvkV0=; b=koeUikLM4YRg0XyDmY1BhwjSlF
+        uor/b+viYycgrcVXM4guo6CwQeLIHEQxmH4CguPqoRNS+l4qsDN/2PmO8M2FxWgLjyHjgjLENGqNr
+        iT/GuKtmO5h6TH29C4GDiXSa0w8yZgN95XONwaxD52KbEb70ReRnZoxHp6g7jiqfRYf9vtJAy56sr
+        6CL/s96LlsZw6RGuqg/iwyB42lheEbryt0uA0AVDWDCT7RGfp2+RWThBjuwsVaGh3aivdUtH6Sbb3
+        FZL2tGXhLopnbwsqjbGDFyfocKIduTC6u1sS9/o/RS1kLbm+9ziQrzgQ3bNMX+ZzFh/TmzAit9517
+        taP6gV3A==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k1iZV-0005AU-5K; Sat, 01 Aug 2020 03:52:33 +0000
+Subject: Re: [PATCH net-next] fib: fix another fib_rules_ops indirect call
+ wrapper problem
+To:     Brian Vazquez <brianvv@google.com>,
+        Brian Vazquez <brianvv.kernel@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+References: <20200801030110.747164-1-brianvv@google.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <55292447-c426-8421-3147-ef7fa6e4b471@infradead.org>
+Date:   Fri, 31 Jul 2020 20:52:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200801030110.747164-1-brianvv@google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200731230820.1742553-14-keescook@chromium.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 04:07:57PM -0700, Kees Cook wrote:
-> From: Nick Desaulniers <ndesaulniers@google.com>
+On 7/31/20 8:01 PM, Brian Vazquez wrote:
+> It turns out that on commit 41d707b7332f ("fib: fix fib_rules_ops
+> indirect calls wrappers") I forgot to include the case when
+> CONFIG_IP_MULTIPLE_TABLES is not set.
 > 
-> Basically, consider .text.{hot|unlikely|unknown}.* part of .text, too.
-> 
-> When compiling with profiling information (collected via PGO
-> instrumentations or AutoFDO sampling), Clang will separate code into
-> .text.hot, .text.unlikely, or .text.unknown sections based on profiling
-> information. After D79600 (clang-11), these sections will have a
-> trailing `.` suffix, ie.  .text.hot., .text.unlikely., .text.unknown..
-> 
-> When using -ffunction-sections together with profiling infomation,
-> either explicitly (FGKASLR) or implicitly (LTO), code may be placed in
-> sections following the convention:
-> .text.hot.<foo>, .text.unlikely.<bar>, .text.unknown.<baz>
-> where <foo>, <bar>, and <baz> are functions.  (This produces one section
-> per function; we generally try to merge these all back via linker script
-> so that we don't have 50k sections).
-> 
-> For the above cases, we need to teach our linker scripts that such
-> sections might exist and that we'd explicitly like them grouped
-> together, otherwise we can wind up with code outside of the
-> _stext/_etext boundaries that might not be mapped properly for some
-> architectures, resulting in boot failures.
-> 
-> If the linker script is not told about possible input sections, then
-> where the section is placed as output is a heuristic-laiden mess that's
-> non-portable between linkers (ie. BFD and LLD), and has resulted in many
-> hard to debug bugs.  Kees Cook is working on cleaning this up by adding
-> --orphan-handling=warn linker flag used in ARCH=powerpc to additional
-> architectures. In the case of linker scripts, borrowing from the Zen of
-> Python: explicit is better than implicit.
-> 
-> Also, ld.bfd's internal linker script considers .text.hot AND
-> .text.hot.* to be part of .text, as well as .text.unlikely and
-> .text.unlikely.*. I didn't see support for .text.unknown.*, and didn't
-> see Clang producing such code in our kernel builds, but I see code in
-> LLVM that can produce such section names if profiling information is
-> missing. That may point to a larger issue with generating or collecting
-> profiles, but I would much rather be safe and explicit than have to
-> debug yet another issue related to orphan section placement.
-> 
-> Reported-by: Jian Cai <jiancai@google.com>
-> Suggested-by: Fāng-ruì Sòng <maskray@google.com>
-> Tested-by: Luis Lozano <llozano@google.com>
-> Tested-by: Manoj Gupta <manojgupta@google.com>
-> Acked-by: Kees Cook <keescook@chromium.org>
-> Cc: stable@vger.kernel.org
-> Link: https://sourceware.org/git/?p=binutils-gdb.git;a=commitdiff;h=add44f8d5c5c05e08b11e033127a744d61c26aee
-> Link: https://sourceware.org/git/?p=binutils-gdb.git;a=commitdiff;h=1de778ed23ce7492c523d5850c6c6dbb34152655
-> Link: https://reviews.llvm.org/D79600
-> Link: https://bugs.chromium.org/p/chromium/issues/detail?id=1084760
-> Debugged-by: Luis Lozano <llozano@google.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Fixes: 41d707b7332f ("fib: fix fib_rules_ops indirect calls wrappers")
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Brian Vazquez <brianvv@google.com>
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+
+Thanks.
+
 > ---
->  include/asm-generic/vmlinux.lds.h | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  net/core/fib_rules.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> index 2593957f6e8b..af5211ca857c 100644
-> --- a/include/asm-generic/vmlinux.lds.h
-> +++ b/include/asm-generic/vmlinux.lds.h
-> @@ -561,7 +561,10 @@
->   */
->  #define TEXT_TEXT							\
->  		ALIGN_FUNCTION();					\
-> -		*(.text.hot TEXT_MAIN .text.fixup .text.unlikely)	\
-> +		*(.text.hot .text.hot.*)				\
-> +		*(TEXT_MAIN .text.fixup)				\
-> +		*(.text.unlikely .text.unlikely.*)			\
-> +		*(.text.unknown .text.unknown.*)			\
->  		NOINSTR_TEXT						\
->  		*(.text..refcount)					\
->  		*(.ref.text)						\
-> -- 
-> 2.25.1
+> diff --git a/net/core/fib_rules.c b/net/core/fib_rules.c
+> index fce645f6b9b10..a7a3f500a857b 100644
+> --- a/net/core/fib_rules.c
+> +++ b/net/core/fib_rules.c
+> @@ -17,10 +17,16 @@
+>  #include <linux/indirect_call_wrapper.h>
+>  
+>  #ifdef CONFIG_IPV6_MULTIPLE_TABLES
+> +#ifdef CONFIG_IP_MULTIPLE_TABLES
+>  #define INDIRECT_CALL_MT(f, f2, f1, ...) \
+>  	INDIRECT_CALL_INET(f, f2, f1, __VA_ARGS__)
+>  #else
+> +#define INDIRECT_CALL_MT(f, f2, f1, ...) INDIRECT_CALL_1(f, f2, __VA_ARGS__)
+> +#endif
+> +#elif CONFIG_IP_MULTIPLE_TABLES
+>  #define INDIRECT_CALL_MT(f, f2, f1, ...) INDIRECT_CALL_1(f, f1, __VA_ARGS__)
+> +#else
+> +#define INDIRECT_CALL_MT(f, f2, f1, ...) f(__VA_ARGS__)
+>  #endif
+>  
+>  static const struct fib_kuid_range fib_kuid_range_unset = {
 > 
 
-This also changes the ordering to place all hot resp unlikely sections separate
-from other text, while currently it places the hot/unlikely bits of each file
-together with the rest of the code in that file. That seems like a reasonable
-change and should be mentioned in the commit message.
 
-However, the history of their being together comes from
-
-  9bebe9e5b0f3 ("kbuild: Fix .text.unlikely placement")
-
-which seems to indicate there was some problem with having them separated out,
-although I don't quite understand what the issue was from the commit message.
-
-Cc Andi and Michal to see if they remember.
+-- 
+~Randy
