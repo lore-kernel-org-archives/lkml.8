@@ -2,213 +2,216 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-25.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD635C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 18:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 942DEC433E3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 18:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B88A12067D
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 18:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 749432076A
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 18:09:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Npllj9n2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbgHASJX (ORCPT
+        id S1727006AbgHASJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 14:09:23 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:35190 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725803AbgHASJX (ORCPT
+        Sat, 1 Aug 2020 14:09:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50340 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725803AbgHASJm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 14:09:23 -0400
-Received: by mail-io1-f71.google.com with SMTP id s5so18220692iow.2
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 11:09:21 -0700 (PDT)
+        Sat, 1 Aug 2020 14:09:42 -0400
+Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C83EC06174A
+        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 11:09:42 -0700 (PDT)
+Received: by mail-pl1-x64a.google.com with SMTP id p4so24681978pls.16
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 11:09:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=KBK3iODiHqCfZW9cfD4X0Y+4sS0bjVew+4Qx1E5a8fw=;
+        b=Npllj9n2Q669VxD0v/McKELqdTmGuLlT0ULCUEsQcW69X2g34NXPXQF05paRHixr6V
+         bX70YTowWkT+yAUkFo4BfbmdtLljszspRuDpyhnjhQeyA08dgLlsUnMdRRGRgMG25ffx
+         JZVTGsrYyVVBdh3x43ReVvKzjkpQyLruiRhnb/BEXLDVa5Larg9NLBza85P3A55nZTOK
+         82MLnM4O9eg4Bx8M5eD0BcOpwfFDYUwBwLMhD+8CxcSvvOQhGOlmuQB0O74DxtZDvfDR
+         klNw64Qm1qxWMS36ufDr9m24xrqnPOgzm66J80vuB/DcGNtj6bWEiyNwNBSPNrOupkGa
+         F5jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=9llcT2pZnOMv9DmqWx1s87LJ9KxajrFrlns8As6qYn4=;
-        b=J6vHVXZLfXX8NdHIUC0R3GZiZtyxxfW1vJtJIfYRGoDXGrNa+Y/fEQIa/E/TNnso7v
-         LrlysIkebcRL6s5zLJ1T5Z1anX9BfojzUhW86feXYHRk3q5bgkUbyrADA4DIoHjkBv/m
-         ot4gKlRT5FfUobwzG8Aj0WU+8h4hozQeWNrKUA/epBZqgI1Dl96es5Y/dlBUAEArqSPg
-         JXhtsMjbMWJ72B1nIq49knbjysGr8MhROWjQPv/PRotfhKaOwajn7zbiUtLbI5doRbBa
-         m7p8OAGxJo6ZVheyCjP5Fv2wSYk9/Sf3YgaEWU9HnUpqp7oQ78o9BJ7o84gaqgLbRtEL
-         CapQ==
-X-Gm-Message-State: AOAM533bw0YSIdTNP82DRSEKXr/V64Hxh36En41EF3vIBZw3a/jVP0EU
-        UaR6WLoIhChisoFJlC9OtI/yAtsptUEq1s7a4v+XkF0UJyhR
-X-Google-Smtp-Source: ABdhPJwZY41qdL6lAPlUlIIEbJ8qJKoijkJWYbJe99sdAjGGzLqVhG0xUBKL0siVk2LBBMJwyEDRlAhAIP3p5hbwuIAp2ZfiLZAz
-MIME-Version: 1.0
-X-Received: by 2002:a02:ce4b:: with SMTP id y11mr11547711jar.144.1596305361638;
- Sat, 01 Aug 2020 11:09:21 -0700 (PDT)
-Date:   Sat, 01 Aug 2020 11:09:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000897ba05abd4ce25@google.com>
-Subject: BUG: stack guard page was hit in arch_stack_walk
-From:   syzbot <syzbot+c05e6eff86f7a430fa73@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, jpoimboe@redhat.com,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        viro@zeniv.linux.org.uk, x86@kernel.org
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=KBK3iODiHqCfZW9cfD4X0Y+4sS0bjVew+4Qx1E5a8fw=;
+        b=UPrDmnX9W8HcHFoZPdgsE5mzy4/v/rM/eWKGDVkd4GDq8Jvnvs0nDRH8eGvilfc22p
+         sPRxkjULvC3C5LQe2I4b/UrjzkJfTnFWtzZ7XJUb/OaCir1qDOP0NGSwwEQ4AEOWw33h
+         MUDl21Lm7rJwx3hkmc8bcjrJiOafQV8tldeBG6guW7YmrIbfS5bqZwrbNsVHBl2eWtMp
+         NwnGAg/+6BShNe24uDM0nmbWJ2mfIB+3EheDxRJebWgNTrzBDeySQyWoSkC8HnhtupmQ
+         TWuNzv76DdT5d6H7JieYZ99WFP6jGSpI+LbWxFdoukmNZ9KXklBCFrUEOq6bPZavA21j
+         yYXg==
+X-Gm-Message-State: AOAM533JG6KX0IBqld/EFbsDkyXwGv1gDYlgXGJBylTjIu7wgZly6+gA
+        0TYKELfRf9U6qHwFtQaEeIjOGcwc9D2Q
+X-Google-Smtp-Source: ABdhPJy5jsU0pIobtxHllnUwJ+xvJEUWnzrK1fYorGZy0IGRzLNd0pSuOijyJ1eJIcTrqpd/Qfzj1BiHFSGa
+X-Received: by 2002:a63:5821:: with SMTP id m33mr8888598pgb.43.1596305381999;
+ Sat, 01 Aug 2020 11:09:41 -0700 (PDT)
+Date:   Sat,  1 Aug 2020 11:09:27 -0700
+Message-Id: <20200801180927.1003340-1-brianvv@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+Subject: [PATCH V2 bpf-next] bpf: make __htab_lookup_and_delete_batch faster
+ when map is almost empty
+From:   Brian Vazquez <brianvv@google.com>
+To:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Brian Vazquez <brianvv@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Luigi Rizzo <lrizzo@google.com>,
+        Yonghong Song <yhs@fb.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+While running some experiments it was observed that map_lookup_batch was 2x
+slower than get_next_key + lookup when the syscall overhead is minimal.
+This was because the map_lookup_batch implementation was more expensive
+traversing empty buckets, this can be really costly when the pre-allocated
+map is too big.
 
-syzbot found the following issue on:
+This patch optimizes the case when the bucket is empty so we can move
+quickly to next bucket.
 
-HEAD commit:    92ed3019 Linux 5.8-rc7
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12c98f28900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=84f076779e989e69
-dashboard link: https://syzkaller.appspot.com/bug?extid=c05e6eff86f7a430fa73
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+The Benchmark was generated using the google/benchmark library[1]. When
+the benckmark is executed the number of iterations is governed by the
+amount of time the benckmarks takes, the number of iterations is at
+least 1 and not more than 1e9, until CPU time(of the entire binary, not
+just the part to measure), is greater than 0.5s. Time and CPU reported
+are the average of a single iteration over the iteration runs.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+The experiments to exercise the empty buckets are as follows:
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c05e6eff86f7a430fa73@syzkaller.appspotmail.com
+-The map was populated with a single entry to make sure that the syscall
+overhead is not helping the map_batch_lookup.
+-The size of the preallocated map was increased to show the effect of
+traversing empty buckets.
 
-BUG: stack guard page was hit at 000000009157a0b1 (stack is 000000007cb00dab..0000000055f9d23d)
-kernel stack overflow (double-fault): 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 13871 Comm: syz-executor.4 Not tainted 5.8.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:arch_stack_walk+0x0/0xf0 arch/x86/kernel/stacktrace.c:17
-Code: 8b eb c0 e6 82 89 fa ee ee 8d 57 01 ee ee eb cd e6 81 eb f1 e6 87 eb ed e6 83 eb e9 cc cc cc cc cc cc cc cc cc cc cc cc cc cc <55> 48 89 e5 41 56 49 89 d6 41 55 49 89 cd 41 54 49 89 f4 53 48 89
-RSP: 0018:ffffc90008b18000 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: fffff52001163001 RCX: 0000000000000000
-RDX: ffff88802b30e480 RSI: ffffc90008b18028 RDI: ffffffff8162c090
-RBP: 0000000000000cc0 R08: ffffed1006f83078 R09: ffffed1006f83094
-R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000cc0
-R13: 0000000000000000 R14: ffff88821b77f8c0 R15: 00000000000000e0
-FS:  00007f7369ba8700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffc90008b17ff8 CR3: 00000000a21ec000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- stack_trace_save+0x8c/0xc0 kernel/stacktrace.c:123
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
- slab_post_alloc_hook mm/slab.h:586 [inline]
- slab_alloc_node mm/slab.c:3263 [inline]
- kmem_cache_alloc_node+0x130/0x3c0 mm/slab.c:3575
- __alloc_skb+0x71/0x550 net/core/skbuff.c:198
- alloc_skb include/linux/skbuff.h:1083 [inline]
- nlmsg_new include/net/netlink.h:940 [inline]
- rtmsg_ifinfo_build_skb+0x72/0x1a0 net/core/rtnetlink.c:3702
- rtmsg_ifinfo_event net/core/rtnetlink.c:3738 [inline]
- rtmsg_ifinfo_event net/core/rtnetlink.c:3729 [inline]
- rtnetlink_event+0x123/0x1d0 net/core/rtnetlink.c:5512
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
- call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
- call_netdevice_notifiers net/core/dev.c:2053 [inline]
- netdev_features_change net/core/dev.c:1443 [inline]
- netdev_sync_lower_features net/core/dev.c:9056 [inline]
- __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
- netdev_change_features+0x61/0xb0 net/core/dev.c:9259
- bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
- bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
- call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
- call_netdevice_notifiers net/core/dev.c:2053 [inline]
- netdev_features_change net/core/dev.c:1443 [inline]
- netdev_sync_lower_features net/core/dev.c:9056 [inline]
- __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
- netdev_change_features+0x61/0xb0 net/core/dev.c:9259
- bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
- bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
- call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
- call_netdevice_notifiers net/core/dev.c:2053 [inline]
- netdev_features_change net/core/dev.c:1443 [inline]
- netdev_sync_lower_features net/core/dev.c:9056 [inline]
- __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
- netdev_change_features+0x61/0xb0 net/core/dev.c:9259
- bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
- bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
- call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
- call_netdevice_notifiers net/core/dev.c:2053 [inline]
- netdev_features_change net/core/dev.c:1443 [inline]
- netdev_sync_lower_features net/core/dev.c:9056 [inline]
- __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
- netdev_change_features+0x61/0xb0 net/core/dev.c:9259
- bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
- bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
- call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
- call_netdevice_notifiers net/core/dev.c:2053 [inline]
- netdev_features_change net/core/dev.c:1443 [inline]
- netdev_sync_lower_features net/core/dev.c:9056 [inline]
- __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
- netdev_change_features+0x61/0xb0 net/core/dev.c:9259
- bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
- bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
- call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
- call_netdevice_notifiers net/core/dev.c:2053 [inline]
- netdev_features_change net/core/dev.c:1443 [inline]
- netdev_sync_lower_features net/core/dev.c:9056 [inline]
- __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
- netdev_change_features+0x61/0xb0 net/core/dev.c:9259
- bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
- bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
- call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
- call_netdevice_notifiers net/core/dev.c:2053 [inline]
- netdev_features_change net/core/dev.c:1443 [inline]
- netdev_sync_lower_features net/core/dev.c:9056 [inline]
- __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
- netdev_change_features+0x61/0xb0 net/core/dev.c:9259
- bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
- bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
- call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
- call_netdevice_notifiers net/core/dev.c:2053 [inline]
- netdev_features_change net/core/dev.c:1443 [inline]
- netdev_sync_lower_features net/core/dev.c:9056 [inline]
- __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
- netdev_change_features+0x61/0xb0 net/core/dev.c:9259
- bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
-Lost 536 message(s)!
----[ end trace 00f7ed0d29de9cad ]---
-RIP: 0010:arch_stack_walk+0x0/0xf0 arch/x86/kernel/stacktrace.c:17
-Code: 8b eb c0 e6 82 89 fa ee ee 8d 57 01 ee ee eb cd e6 81 eb f1 e6 87 eb ed e6 83 eb e9 cc cc cc cc cc cc cc cc cc cc cc cc cc cc <55> 48 89 e5 41 56 49 89 d6 41 55 49 89 cd 41 54 49 89 f4 53 48 89
-RSP: 0018:ffffc90008b18000 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: fffff52001163001 RCX: 0000000000000000
-RDX: ffff88802b30e480 RSI: ffffc90008b18028 RDI: ffffffff8162c090
-RBP: 0000000000000cc0 R08: ffffed1006f83078 R09: ffffed1006f83094
-R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000cc0
-R13: 0000000000000000 R14: ffff88821b77f8c0 R15: 00000000000000e0
-FS:  00007f7369ba8700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffc90008b17ff8 CR3: 00000000a21ec000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+To interpret the results, Benchmark is the name of the experiment where
+the first number correspond to the number of elements in the map, and
+the next one correspond to the size of the pre-allocated map. Time and
+CPU are average and correspond to the time elapsed per iteration and the
+system time consumtion per iteration.
 
+Results:
 
+  Using get_next_key + lookup:
+
+  Benchmark                Time(ns)        CPU(ns)     Iteration
+  ---------------------------------------------------------------
+  BM_DumpHashMap/1/1k          3593           3586         192680
+  BM_DumpHashMap/1/4k          6004           5972         100000
+  BM_DumpHashMap/1/16k        15755          15710          44341
+  BM_DumpHashMap/1/64k        59525          59376          10000
+
+  Using htab_lookup_batch before this patch:
+  Benchmark                Time(ns)        CPU(ns)     Iterations
+  ---------------------------------------------------------------
+  BM_DumpHashMap/1/1k          3933           3927         177978
+  BM_DumpHashMap/1/4k          9192           9177          73951
+  BM_DumpHashMap/1/16k        42011          41970          16789
+  BM_DumpHashMap/1/64k       117895         117661           6135
+
+  Using htab_lookup_batch with this patch:
+  Benchmark                Time(ns)        CPU(ns)     Iterations
+  ---------------------------------------------------------------
+  BM_DumpHashMap/1/1k          2809           2803         249212
+  BM_DumpHashMap/1/4k          5318           5316         100000
+  BM_DumpHashMap/1/16k        14925          14895          47448
+  BM_DumpHashMap/1/64k        58870          58674          10000
+
+[1] https://github.com/google/benchmark.git
+
+Changelog:
+
+v1 -> v2:
+ - Add more information about how to interpret the results
+
+Suggested-by: Luigi Rizzo <lrizzo@google.com>
+Cc: Yonghong Song <yhs@fb.com>
+Signed-off-by: Brian Vazquez <brianvv@google.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ kernel/bpf/hashtab.c | 23 ++++++++---------------
+ 1 file changed, 8 insertions(+), 15 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
+index 024276787055..b6d28bd6345b 100644
+--- a/kernel/bpf/hashtab.c
++++ b/kernel/bpf/hashtab.c
+@@ -1349,7 +1349,6 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
+ 	struct hlist_nulls_head *head;
+ 	struct hlist_nulls_node *n;
+ 	unsigned long flags = 0;
+-	bool locked = false;
+ 	struct htab_elem *l;
+ 	struct bucket *b;
+ 	int ret = 0;
+@@ -1408,19 +1407,19 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
+ 	dst_val = values;
+ 	b = &htab->buckets[batch];
+ 	head = &b->head;
+-	/* do not grab the lock unless need it (bucket_cnt > 0). */
+-	if (locked)
+-		flags = htab_lock_bucket(htab, b);
+ 
++	l = hlist_nulls_entry_safe(rcu_dereference_raw(hlist_nulls_first_rcu(head)),
++					struct htab_elem, hash_node);
++	if (!l && (batch + 1 < htab->n_buckets)) {
++		batch++;
++		goto again_nocopy;
++	}
++
++	flags = htab_lock_bucket(htab, b);
+ 	bucket_cnt = 0;
+ 	hlist_nulls_for_each_entry_rcu(l, n, head, hash_node)
+ 		bucket_cnt++;
+ 
+-	if (bucket_cnt && !locked) {
+-		locked = true;
+-		goto again_nocopy;
+-	}
+-
+ 	if (bucket_cnt > (max_count - total)) {
+ 		if (total == 0)
+ 			ret = -ENOSPC;
+@@ -1446,10 +1445,6 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
+ 		goto alloc;
+ 	}
+ 
+-	/* Next block is only safe to run if you have grabbed the lock */
+-	if (!locked)
+-		goto next_batch;
+-
+ 	hlist_nulls_for_each_entry_safe(l, n, head, hash_node) {
+ 		memcpy(dst_key, l->key, key_size);
+ 
+@@ -1492,7 +1487,6 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
+ 	}
+ 
+ 	htab_unlock_bucket(htab, b, flags);
+-	locked = false;
+ 
+ 	while (node_to_free) {
+ 		l = node_to_free;
+@@ -1500,7 +1494,6 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
+ 		bpf_lru_push_free(&htab->lru, &l->lru_node);
+ 	}
+ 
+-next_batch:
+ 	/* If we are not copying data, we can go to next bucket and avoid
+ 	 * unlocking the rcu.
+ 	 */
+-- 
+2.28.0.163.g6104cc2f0b6-goog
+
