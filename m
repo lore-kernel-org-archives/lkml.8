@@ -2,188 +2,219 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A32B6C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 12:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E562C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 12:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 825E22076A
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 12:32:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bdwznQt/"
+	by mail.kernel.org (Postfix) with ESMTP id 241532080C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 12:34:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596285246;
+	bh=aTvPSQqI0tqEGLWhHkbcbZSRAVoeM633/v0d7clCOr0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TvWrc1PQRtCuDawDiThDYKWDOKCVpNDqBQc8yIyCzrZTZf6A/T5q5dpaRb8nzCJS6
+	 o3s/Jo37SNVrrfGlthI8h/mcoWrZxzDH0ct/nKNfQSsxtgivYJbllTwZhdRM3hU2wh
+	 Uz1C2M5vKcoODziInYN9/lkyGTnkbN6YmEF01bAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbgHAMcK (ORCPT
+        id S1728949AbgHAMeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 08:32:10 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:14255 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729164AbgHAMcK (ORCPT
+        Sat, 1 Aug 2020 08:34:05 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:44397 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728609AbgHAMeE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 08:32:10 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596285129; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=vOImtBgeqdRnUROqMwdyXuAZ1BNGZF6kDhd29hTqD0E=; b=bdwznQt/T1eswkLYP2Yzn0naxOwTOzOoW6FwFHvG35lZK45p5CTQWgptdFWi0mbsmxgR2KjQ
- k2yxB0+yP/b8cgLx9apn4Zg0n3UpooeZ2VTnHOH6gpVzr8jF08uHNhpjKzIXklI5c03x9b0+
- snJ7NyELrqiRnA/rJgCf+st+SyA=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5f25608f2c24b37bbe5ba023 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 01 Aug 2020 12:31:11
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3812CC433CB; Sat,  1 Aug 2020 12:31:11 +0000 (UTC)
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E7FF0C43391;
-        Sat,  1 Aug 2020 12:31:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E7FF0C43391
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     robh+dt@kernel.org, georgi.djakov@linaro.org
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, jonathan@marek.ca,
-        linux-pm@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 3/7] interconnect: qcom: Lay the groundwork for adding EPSS support
-Date:   Sat,  1 Aug 2020 18:00:45 +0530
-Message-Id: <20200801123049.32398-4-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200801123049.32398-1-sibis@codeaurora.org>
-References: <20200801123049.32398-1-sibis@codeaurora.org>
+        Sat, 1 Aug 2020 08:34:04 -0400
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 071CXk9h006581;
+        Sat, 1 Aug 2020 21:33:46 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 071CXk9h006581
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1596285227;
+        bh=L+wjmNkKDft8GKG9TLffZw2+e6y2VA945fN99WOCg5k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QSIXbanbw4HoVNfr4UXFTo03tYgdYRWf9AA16G9OBEfzhYdaSpa5kn9VIXWqQZRay
+         D5VVW6o9MLlMBVe7S1d0c7Wa6xNzGA6USl7kMsJ877xSt2iCkFfg5mp1TYmyhOX1ha
+         Y8HCAvccOu2gPXCyHt2qx6bCfDXelevv27BZ/42rkBa5x0Ac3vbmIg5giKDWhboS0I
+         wOc78Xg0vU5Z1GPUUcoRKzrKjgthSTIEdo/kmerKYyme8uErmXIK8o5CpSxnJ0goDY
+         94uTKhOdb+srpwqHqOEhtUVrd66bdKFrPJ7ODzV1MsdLfMTKvUQaHrAzZBjkMZWqNy
+         lusGUvRWJQfMQ==
+X-Nifty-SrcIP: [209.85.222.52]
+Received: by mail-ua1-f52.google.com with SMTP id e20so3219158uav.3;
+        Sat, 01 Aug 2020 05:33:46 -0700 (PDT)
+X-Gm-Message-State: AOAM531GqUGq41H8oWrf8rHKV0TawWcJkRpqQcywClvE2sFqV7hCbjp6
+        aZ+W1XQrB5wpLPXK3SxgjfMgQos70R+dKihBJi0=
+X-Google-Smtp-Source: ABdhPJzBsWqcTxd9WXWZUr7YBXQMw70o2ON5ypBMDI6XvCn9Co2N4uE2yk+11RzTLCuS6ikDu4zranuKXhb8p3HrUyk=
+X-Received: by 2002:ab0:5b91:: with SMTP id y17mr5816923uae.95.1596285225231;
+ Sat, 01 Aug 2020 05:33:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200719194602.61387-1-grandmaster@al2klimov.de>
+In-Reply-To: <20200719194602.61387-1-grandmaster@al2klimov.de>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sat, 1 Aug 2020 21:33:08 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQywudK9hJLeAT+Z3HWt4bgR+Tf3PWWtqkc7LT=eKBMyA@mail.gmail.com>
+Message-ID: <CAK7LNAQywudK9hJLeAT+Z3HWt4bgR+Tf3PWWtqkc7LT=eKBMyA@mail.gmail.com>
+Subject: Re: [PATCH for v5.9] kbuild: Replace HTTP links with HTTPS ones
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lay the groundwork for adding Epoch Subsystem (EPSS) L3 support on
-SM8250.
+On Mon, Jul 20, 2020 at 4:46 AM Alexander A. Klimov
+<grandmaster@al2klimov.de> wrote:
+>
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+>
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+>
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- drivers/interconnect/qcom/osm-l3.c | 37 +++++++++++++++++++++---------
- 1 file changed, 26 insertions(+), 11 deletions(-)
+Applied to linux-kbuild. Thanks.
 
-diff --git a/drivers/interconnect/qcom/osm-l3.c b/drivers/interconnect/qcom/osm-l3.c
-index 00831c33e0fe5..27c9ece52efda 100644
---- a/drivers/interconnect/qcom/osm-l3.c
-+++ b/drivers/interconnect/qcom/osm-l3.c
-@@ -21,13 +21,13 @@
- #define LUT_MAX_ENTRIES			40U
- #define LUT_SRC				GENMASK(31, 30)
- #define LUT_L_VAL			GENMASK(7, 0)
--#define LUT_ROW_SIZE			32
- #define CLK_HW_DIV			2
- 
--/* Register offsets */
-+/* OSM Register offsets */
- #define REG_ENABLE			0x0
--#define REG_FREQ_LUT			0x110
--#define REG_PERF_STATE			0x920
-+#define OSM_LUT_ROW_SIZE		32
-+#define OSM_REG_FREQ_LUT		0x110
-+#define OSM_REG_PERF_STATE		0x920
- 
- #define OSM_L3_MAX_LINKS		1
- 
-@@ -37,6 +37,7 @@
- struct qcom_osm_l3_icc_provider {
- 	void __iomem *base;
- 	unsigned int max_state;
-+	unsigned int reg_perf_state;
- 	unsigned long lut_tables[LUT_MAX_ENTRIES];
- 	struct icc_provider provider;
- };
-@@ -60,6 +61,9 @@ struct qcom_icc_node {
- struct qcom_icc_desc {
- 	struct qcom_icc_node **nodes;
- 	size_t num_nodes;
-+	unsigned int lut_row_size;
-+	unsigned int reg_freq_lut;
-+	unsigned int reg_perf_state;
- };
- 
- #define DEFINE_QNODE(_name, _id, _buswidth, ...)			\
-@@ -82,6 +86,9 @@ static struct qcom_icc_node *sdm845_osm_l3_nodes[] = {
- static const struct qcom_icc_desc sdm845_icc_osm_l3 = {
- 	.nodes = sdm845_osm_l3_nodes,
- 	.num_nodes = ARRAY_SIZE(sdm845_osm_l3_nodes),
-+	.lut_row_size = OSM_LUT_ROW_SIZE,
-+	.reg_freq_lut = OSM_REG_FREQ_LUT,
-+	.reg_perf_state = OSM_REG_PERF_STATE,
- };
- 
- DEFINE_QNODE(sc7180_osm_apps_l3, SC7180_MASTER_OSM_L3_APPS, 16, SC7180_SLAVE_OSM_L3);
-@@ -95,6 +102,9 @@ static struct qcom_icc_node *sc7180_osm_l3_nodes[] = {
- static const struct qcom_icc_desc sc7180_icc_osm_l3 = {
- 	.nodes = sc7180_osm_l3_nodes,
- 	.num_nodes = ARRAY_SIZE(sc7180_osm_l3_nodes),
-+	.lut_row_size = OSM_LUT_ROW_SIZE,
-+	.reg_freq_lut = OSM_REG_FREQ_LUT,
-+	.reg_perf_state = OSM_REG_PERF_STATE,
- };
- 
- DEFINE_QNODE(sm8150_osm_apps_l3, SM8150_MASTER_OSM_L3_APPS, 32, SM8150_SLAVE_OSM_L3);
-@@ -108,6 +118,9 @@ static struct qcom_icc_node *sm8150_osm_l3_nodes[] = {
- static const struct qcom_icc_desc sm8150_icc_osm_l3 = {
- 	.nodes = sm8150_osm_l3_nodes,
- 	.num_nodes = ARRAY_SIZE(sm8150_osm_l3_nodes),
-+	.lut_row_size = OSM_LUT_ROW_SIZE,
-+	.reg_freq_lut = OSM_REG_FREQ_LUT,
-+	.reg_perf_state = OSM_REG_PERF_STATE,
- };
- 
- static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
-@@ -138,7 +151,7 @@ static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
- 			break;
- 	}
- 
--	writel_relaxed(index, qp->base + REG_PERF_STATE);
-+	writel_relaxed(index, qp->base + qp->reg_perf_state);
- 
- 	return 0;
- }
-@@ -193,9 +206,15 @@ static int qcom_osm_l3_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
-+	desc = device_get_match_data(&pdev->dev);
-+	if (!desc)
-+		return -EINVAL;
-+
-+	qp->reg_perf_state = desc->reg_perf_state;
-+
- 	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
--		info = readl_relaxed(qp->base + REG_FREQ_LUT +
--				     i * LUT_ROW_SIZE);
-+		info = readl_relaxed(qp->base + desc->reg_freq_lut +
-+				     i * desc->lut_row_size);
- 		src = FIELD_GET(LUT_SRC, info);
- 		lval = FIELD_GET(LUT_L_VAL, info);
- 		if (src)
-@@ -214,10 +233,6 @@ static int qcom_osm_l3_probe(struct platform_device *pdev)
- 	}
- 	qp->max_state = i;
- 
--	desc = device_get_match_data(&pdev->dev);
--	if (!desc)
--		return -EINVAL;
--
- 	qnodes = desc->nodes;
- 	num_nodes = desc->num_nodes;
- 
+
+
+>  Continuing my work started at 93431e0607e5.
+>  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>  (Actually letting a shell for loop submit all this stuff for me.)
+>
+>  If there are any URLs to be removed completely
+>  or at least not (just) HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
+>
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+>
+>  If you apply the patch, please let me know.
+>
+>  Sorry again to all maintainers who complained about subject lines.
+>  Now I realized that you want an actually perfect prefixes,
+>  not just subsystem ones.
+>  I tried my best...
+>  And yes, *I could* (at least half-)automate it.
+>  Impossible is nothing! :)
+>
+>
+>  Documentation/kbuild/Kconfig.recursion-issue-02 |  2 +-
+>  Documentation/kbuild/kconfig-language.rst       | 14 +++++++-------
+>  Documentation/kbuild/llvm.rst                   |  2 +-
+>  scripts/package/mkdebian                        |  2 +-
+>  scripts/package/mkspec                          |  2 +-
+>  5 files changed, 11 insertions(+), 11 deletions(-)
+>
+> diff --git a/Documentation/kbuild/Kconfig.recursion-issue-02 b/Documentation/kbuild/Kconfig.recursion-issue-02
+> index b9fd56c4b57e..df245fd7670d 100644
+> --- a/Documentation/kbuild/Kconfig.recursion-issue-02
+> +++ b/Documentation/kbuild/Kconfig.recursion-issue-02
+> @@ -42,7 +42,7 @@
+>  # "select FW_LOADER" [0], in the end the simple alternative solution to this
+>  # problem consisted on matching semantics with newly introduced features.
+>  #
+> -# [0] http://lkml.kernel.org/r/1432241149-8762-1-git-send-email-mcgrof@do-not-panic.com
+> +# [0] https://lkml.kernel.org/r/1432241149-8762-1-git-send-email-mcgrof@do-not-panic.com
+>
+>  mainmenu "Simple example to demo cumulative kconfig recursive dependency implication"
+>
+> diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
+> index a1601ec3317b..41bee6a171e3 100644
+> --- a/Documentation/kbuild/kconfig-language.rst
+> +++ b/Documentation/kbuild/kconfig-language.rst
+> @@ -688,10 +688,10 @@ and real world requirements were not well understood. As it stands though
+>  only reverse engineering techniques have been used to deduce semantics from
+>  variability modeling languages such as Kconfig [3]_.
+>
+> -.. [0] http://www.eng.uwaterloo.ca/~shshe/kconfig_semantics.pdf
+> -.. [1] http://gsd.uwaterloo.ca/sites/default/files/vm-2013-berger.pdf
+> -.. [2] http://gsd.uwaterloo.ca/sites/default/files/ase241-berger_0.pdf
+> -.. [3] http://gsd.uwaterloo.ca/sites/default/files/icse2011.pdf
+> +.. [0] https://www.eng.uwaterloo.ca/~shshe/kconfig_semantics.pdf
+> +.. [1] https://gsd.uwaterloo.ca/sites/default/files/vm-2013-berger.pdf
+> +.. [2] https://gsd.uwaterloo.ca/sites/default/files/ase241-berger_0.pdf
+> +.. [3] https://gsd.uwaterloo.ca/sites/default/files/icse2011.pdf
+>
+>  Full SAT solver for Kconfig
+>  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> @@ -710,10 +710,10 @@ such efforts somehow on Kconfig. There is enough interest from mentors of
+>  existing projects to not only help advise how to integrate this work upstream
+>  but also help maintain it long term. Interested developers should visit:
+>
+> -http://kernelnewbies.org/KernelProjects/kconfig-sat
+> +https://kernelnewbies.org/KernelProjects/kconfig-sat
+>
+> -.. [4] http://www.cs.cornell.edu/~sabhar/chapters/SATSolvers-KR-Handbook.pdf
+> -.. [5] http://gsd.uwaterloo.ca/sites/default/files/vm-2013-berger.pdf
+> +.. [4] https://www.cs.cornell.edu/~sabhar/chapters/SATSolvers-KR-Handbook.pdf
+> +.. [5] https://gsd.uwaterloo.ca/sites/default/files/vm-2013-berger.pdf
+>  .. [6] https://cados.cs.fau.de
+>  .. [7] https://vamos.cs.fau.de
+>  .. [8] https://undertaker.cs.fau.de
+> diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
+> index c776b6eee969..2aac50b97921 100644
+> --- a/Documentation/kbuild/llvm.rst
+> +++ b/Documentation/kbuild/llvm.rst
+> @@ -76,7 +76,7 @@ Getting Help
+>  Getting LLVM
+>  -------------
+>
+> -- http://releases.llvm.org/download.html
+> +- https://releases.llvm.org/download.html
+>  - https://github.com/llvm/llvm-project
+>  - https://llvm.org/docs/GettingStarted.html
+>  - https://llvm.org/docs/CMake.html
+> diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
+> index df1adbfb8ead..48fbd3d0284a 100755
+> --- a/scripts/package/mkdebian
+> +++ b/scripts/package/mkdebian
+> @@ -175,7 +175,7 @@ Section: kernel
+>  Priority: optional
+>  Maintainer: $maintainer
+>  Build-Depends: bc, rsync, kmod, cpio, bison, flex | flex:native $extra_build_depends
+> -Homepage: http://www.kernel.org/
+> +Homepage: https://www.kernel.org/
+>
+>  Package: $packagename
+>  Architecture: $debarch
+> diff --git a/scripts/package/mkspec b/scripts/package/mkspec
+> index 8640c278f1aa..7c477ca7dc98 100755
+> --- a/scripts/package/mkspec
+> +++ b/scripts/package/mkspec
+> @@ -46,7 +46,7 @@ sed -e '/^DEL/d' -e 's/^\t*//' <<EOF
+>         License: GPL
+>         Group: System Environment/Kernel
+>         Vendor: The Linux Community
+> -       URL: http://www.kernel.org
+> +       URL: https://www.kernel.org
+>  $S     Source: kernel-$__KERNELRELEASE.tar.gz
+>         Provides: $PROVIDES
+>         %define __spec_install_post /usr/lib/rpm/brp-compress || :
+> --
+> 2.27.0
+>
+
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+Best Regards
+Masahiro Yamada
