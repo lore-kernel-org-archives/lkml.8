@@ -2,240 +2,470 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA86C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96126C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49748207FB
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596297328;
-	bh=tZ5XajEXBDCNdvkEIUQd7cfRvOz8RKCWcDoXMi9uMf4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bCjK+OySzZVERXvjU2HZVyfYedGamI2liXMZ9d80jJ5HtFi9y37bBmzu7WDM+rznV
-	 KNKrdc4JryTodT/flRxKk2k6iIWx4BkTP0pCQPzf1L6TjL9smWy9GcltMchGVUKsaG
-	 0/EBwbn+6FMPP4HSIazgss0a8dHFy+FHv0LYkv5U=
+	by mail.kernel.org (Postfix) with ESMTP id 6C69D207BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:55:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SAcuan/g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgHAPz1 (ORCPT
+        id S1726978AbgHAPzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 11:55:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52916 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725841AbgHAPz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 11:55:26 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4F2E207BC;
-        Sat,  1 Aug 2020 15:55:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596297326;
-        bh=tZ5XajEXBDCNdvkEIUQd7cfRvOz8RKCWcDoXMi9uMf4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Lydeae+w/HcXvgmKM+YtX2uEnZzIDaso1sFDwddswOfnEq1WqS3W/Yq5C5Pcbrz4o
-         yPKHynn/DDjbqquIKM5N8fM88eGWidXBvBcgMtd8OirnWdPVwP8rV4MYxUnLRpz6V3
-         ux4R/3ElDxw2HWNr/Qk2CE/+uNud8vnx7AFy21Gc=
-Date:   Sat, 1 Aug 2020 16:55:20 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Christian Eggers <ceggers@arri.de>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sat, 1 Aug 2020 11:55:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58110 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbgHAPzs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 11:55:48 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EAD1C061756
+        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 08:55:48 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id m8so9080466pfh.3
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 08:55:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=0Wn78/296Qy1st3iknU+pUA9jwJA0s8u3uTb8Py5Nes=;
+        b=SAcuan/gmMsOgDsEIp52jsbTxE7MosBclJGep0D4ltA1w4VymmjoKjvBObK1hmjDcK
+         aHwYC2NGbHQ/yvPXpNGxXWxcE/dezKns2DWd/pY+aRSvksjqThSMBF2B12RoLzI56R0n
+         6o7TECI4W1lvt8D+XgAcgvyPp9TG9x6Vza4FSkcI/UAhedbvLLYA+Cw3WuYT1D21uw10
+         +8nkAxoH6Ck+jmIADZ2h4YlVEP3uTP17JnAIYSeCtPMsUNK/OKTlHK2WMKsn+nb89kOA
+         nIVOaQbe41mX/8ftNlK4J1GM9ZVKzmjglA38a2g3AZwwIvoLLzxgRrD0kxz9WGyKKZyk
+         bVxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0Wn78/296Qy1st3iknU+pUA9jwJA0s8u3uTb8Py5Nes=;
+        b=n5Z6e3lJf1EDDVefb3zoCy8Ac5Zw8U/6lidzBsJ/T6ZyKDoHWnbEu7MAihN5JnsZKH
+         4mvXltMbTyyn57bvYK8FYfBO4rxgjW9dsX3MIwRyFO79CgvBecFSEUKjysp3wU1mHYO1
+         jkoYdpEIcVtgDnzXewhLaTaTk5UB4UzGTGXo+n+4Q+ADB8DC8VgyHltOqKPzo9EZj+DX
+         Ccr/R8/gedEn1I4yh/PrxxrjS2Xg9jaeUx1522S2hC4i6Muq15Q86C8VIupYWWsQwCQq
+         E6JgPGMRLeiiEmPJAQ+TxqGitTZQ5YmZ9V5ker4+XymoNow5RDhDrvFAL2MqHVY2BPL7
+         w1sg==
+X-Gm-Message-State: AOAM533oXM1TRoO+GxyOvEE6Xs59qG7x6ecaTm72V9SZGvhpuA2CtRHP
+        Yp0hLl26WZKZqFD5vpFHgMB1DA==
+X-Google-Smtp-Source: ABdhPJx6IzoI6dimScoHAofUj1L5DxSy5BEGij39n/MtnZJYZ8yqPWToroiddoVEWXOkbYtXVE/thg==
+X-Received: by 2002:a63:3fc2:: with SMTP id m185mr8486191pga.426.1596297347706;
+        Sat, 01 Aug 2020 08:55:47 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:6803:6805:2abe:7330:1229:6bc])
+        by smtp.gmail.com with ESMTPSA id 21sm13828213pfa.4.2020.08.01.08.55.44
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 01 Aug 2020 08:55:46 -0700 (PDT)
+From:   Amit Pundir <amit.pundir@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] iio: light: as73211: New driver
-Message-ID: <20200801165520.56b73fc2@archlinux>
-In-Reply-To: <2665878.D8vGGo3OXt@n95hx1g2>
-References: <20200728062831.1143-1-ceggers@arri.de>
-        <20200728062831.1143-3-ceggers@arri.de>
-        <20200728190114.00004636@Huawei.com>
-        <2665878.D8vGGo3OXt@n95hx1g2>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        John Stultz <john.stultz@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dt <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3] arm64: dts: qcom: Add support for Xiaomi Poco F1 (Beryllium)
+Date:   Sat,  1 Aug 2020 21:25:41 +0530
+Message-Id: <1596297341-13549-1-git-send-email-amit.pundir@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Jul 2020 12:18:56 +0200
-Christian Eggers <ceggers@arri.de> wrote:
+Add initial dts support for Xiaomi Poco F1 (Beryllium).
 
-> Hi Jonathan.
->=20
-> got your review nearly simultaneous with Andy's. There are many overlaps
-> between both. Most is already integrated, below I left only the open poin=
-ts.
->=20
-> On Tuesday, 28 July 2020, 20:01:14 CEST, Jonathan Cameron wrote:
-> > Hi Christian,
-> >
-> > I took a fairly quick look. Not divided into the datasheet or anything =
-yet! =20
->=20
-> > Christian Eggers <ceggers@arri.de> wrote: =20
-> > > +/**
-> > > + * struct as73211_data - Instance data for one AS73211
-> > > + * @client: I2C client.
-> > > + * @osr:    Cached Operational State Register.
-> > > + * @creg1:  Cached Configuration Register 1.
-> > > + * @creg2:  Cached Configuration Register 2.
-> > > + * @creg3:  Cached Configuration Register 3. =20
-> >
-> > Just a thought, but why not creg[3]?; =20
-> creg[3] would be indexed from 0 to 2. But the datasheet names them 1 to 3.
->=20
-> > > + * @buffer: Buffer for triggered measurements. =20
-> >
-> > ?  Run kernel-doc, or build with W=3D1 and to check docs. =20
-> I ran "make htmldoc" and enabled W=3D1. Are there any errors I should see?
->=20
-> > > +static unsigned int as73211_integration_time_us(struct as73211_data
-> > > *data)
-> > > +{
-> > > +   /* Integration time has 15 steps, the step size depends on the =20
-> clock. */
-> > > +   unsigned int mul =3D 1 << (3 - (data->creg3 & 0b11));  /* 8 =3D 1=
-.024 =20
-> MHz, 4
-> > > =3D 2.048 MHz ...*/ + unsigned int time_cycles =3D
-> > > as73211_integration_time_cycles(data); +    unsigned int time_us =3D
-> > > time_cycles * 125 * mul; =20
-> >
-> > This would be easier to read as
-> >
-> >       unsigned int mul, time_cycles;
-> >
-> >       mul =3D ...
-> >
-> >       return time_cycles * 125 * mul;
-> > =20
-> changed this according to Andy's proposal.
->=20
-> > > +static int as73211_read_raw(struct iio_dev *indio_dev,
-> > > +                   struct iio_chan_spec const *chan,
-> > > +                   int *val, int *val2, long mask) =20
-> >
-> > Align parameters with opening bracket. =20
-> Mixed tabs(8) and spaces or only spaces?
+This initial support is based on upstream Dragonboard 845c
+(sdm845) device. With this dts, Beryllium boots AOSP up to
+ADB shell over USB-C.
 
-Tabs and spaces.
+Supported functionality includes UFS, USB-C (peripheral),
+microSD card and Vol+/Vol-/power keys. Bluetooth should work
+too but couldn't be verified from adb command line, it is
+verified when enabled from UI with few WIP display patches.
 
->=20
-> > > +static int _as73211_write_raw(struct iio_dev *indio_dev,
-> > > +                   struct iio_chan_spec const *chan =20
-> __always_unused,
-> >
-> > Whilst true, what's the benefit of marking that as __always_unused?
-> > =20
-> I read somewhere in the process docs that I should build with EXTRA_CFLAG=
-S=3D-W
+Just like initial db845c support, initializing the SMMU is
+clearing the mapping used for the splash screen framebuffer,
+which causes the device to hang during boot and recovery
+needs a hard power reset. This can be worked around using:
 
-Probably a bit paranoid for a callback, but doesn't really matter.
+    fastboot oem select-display-panel none
 
->=20
-> > > +           } else {
-> > > +                   /* saturate all channels (useful for =20
-> overflows) */
-> > > +                   iio_buffer[1] =3D 0xffff;
-> > > +                   iio_buffer[2] =3D 0xffff;
-> > > +                   iio_buffer[3] =3D 0xffff; =20
-> >
-> > That is rather non standard. =20
-> How do other drivers handle measurement errors in buffered mode? The
-> application needs to know about measurement overflows as the integration
-> time and gain have to be adjusted in case.
+To switch ON the display back run:
 
-It's actually pretty rare to have a device that reports and error.
-Many just saturate.  So it's probably fine to mimic that here as long
-as the issue is definitely saturation rather than some other error.
-If it's another error, don't push data and log some sort of message.
-Unfortunately there isn't really a standard interface for
-reporting hardware faults in these sort of devices.
+    fastboot oem select-display-panel
 
-=46rom what you have said I'll assume we are just looking at overflow
-so can mimic saturation. In which case what you have done is fine.
+But this only works on Beryllium devices running bootloader
+version BOOT.XF.2.0-00369-SDM845LZB-1 that shipped with
+Android-9 based release. Newer bootloader version do not
+support switching OFF the display panel at all. So we need
+a few additional smmu patches (under review) from here to
+boot to shell:
+https://github.com/pundiramit/linux/commits/beryllium-mainline
 
->=20
-> > > +static IIO_DEV_ATTR_SAMP_FREQ_AVAIL(as73211_show_samp_freq_available=
-);
-> > > +static IIO_DEV_ATTR_INT_TIME_AVAIL(as73211_show_int_time_available);
-> > > +static IIO_DEVICE_ATTR(hardwaregain_available, S_IRUGO,
-> > > +           as73211_show_hardwaregain_available, NULL, 0);
-> > > +static IIO_CONST_ATTR_TEMP_OFFSET("-66.9");
-> > > +static IIO_CONST_ATTR_TEMP_SCALE("0.05");
-> > > +
-> > > +static struct attribute *as73211_attributes[] =3D {
-> > > +   &iio_dev_attr_sampling_frequency_available.dev_attr.attr,
-> > > +   &iio_dev_attr_integration_time_available.dev_attr.attr,
-> > > +   &iio_dev_attr_hardwaregain_available.dev_attr.attr,
-> > > +   &iio_const_attr_in_temp_offset.dev_attr.attr,
-> > > +   &iio_const_attr_in_temp_scale.dev_attr.attr, =20
-> >
-> > These should be handled via read_raw. =20
-> Only the last two ones?
-Yup
->=20
-> > Ideally do the _available ones via the core callbacks
-> > and _avail masks as well. For the more complex values,
-> > compute the table on first read or at probe and cache it. =20
-> The list of available values can depend on the setting of other attributes
-> (e.g. available integration times depends on sampling frequency).
-That's not that unusual.  It's fine to calculate the values
-returned as needed, or pick from a selection of options.
+Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
+---
+v3: Added a reserved-memory region from downstream kernel to fix
+    a boot regression with recent dma-pool changes in v5.8-rc6.
+v2: Updated machine compatible string for seemingly inevitable
+    future quirks.
 
->=20
-> > > +   indio_dev->dev.parent =3D &client->dev; =20
-> >
-> > That is now set by the IIO core, so no need to set it manually. =20
-> Can you please give me a pointer? Before removing this in my branch, I ne=
-ed to
-> make sure that this is already available in the kernel I'm using (5.4.lat=
-est).
-I think I mentioned in a later thread, that's in linux-next now.
-Though there was a bit of a messup where we added it then accidentally broke
-it again, then fixed it finally.
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ arch/arm64/boot/dts/qcom/sdm845-beryllium.dts | 331 ++++++++++++++++++++++++++
+ 2 files changed, 332 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm845-beryllium.dts
 
-Jonathan
-
->=20
-> > > +buffer_cleanup:
-> > > +   iio_triggered_buffer_cleanup(indio_dev); =20
-> >
-> > Should we not powerdown on error? =20
-> yes, we should.
->=20
-> > Also rather feels like we should have a trivial powerup function to
-> > match with powerdown. =20
-> changed as73211_powerdown() to as73211_power()
->=20
-> regards
-> Christian
->=20
->=20
->=20
-> ________________________________
->  [http://assets.arri.com/media/sign/2020-04-03-E-mail-signature-Stellar2_=
-V1.jpg] <https://microsites.arri.com/stellar/>
->=20
-> Get all the latest information from www.arri.com<https://www.arri.com/>, =
-Facebook<https://www.facebook.com/TeamARRI>, Twitter<https://twitter.com/AR=
-RIChannel>, Instagram<https://instagram.com/arri> and YouTube<https://www.y=
-outube.com/user/ARRIChannel>.
->=20
-> Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
-> Sitz: M=C3=BCnchen - Registergericht: Amtsgericht M=C3=BCnchen - Handelsr=
-egisternummer: HRA 57918
-> Pers=C3=B6nlich haftender Gesellschafter: Arnold & Richter Cine Technik G=
-mbH
-> Sitz: M=C3=BCnchen - Registergericht: Amtsgericht M=C3=BCnchen - Handelsr=
-egisternummer: HRB 54477
-> Gesch=C3=A4ftsf=C3=BChrer: Dr. Michael Neuh=C3=A4user; Stephan Schenk; Wa=
-lter Trauninger; Markus Zeiler
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 0f2c33d611df..3ef1b48bc0cb 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -21,6 +21,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r1.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-beryllium.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-beryllium.dts b/arch/arm64/boot/dts/qcom/sdm845-beryllium.dts
+new file mode 100644
+index 000000000000..af66459712fe
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sdm845-beryllium.dts
+@@ -0,0 +1,331 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
++#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
++#include "sdm845.dtsi"
++#include "pm8998.dtsi"
++#include "pmi8998.dtsi"
++
++/ {
++	model = "Xiaomi Technologies Inc. Beryllium";
++	compatible = "xiaomi,beryllium", "qcom,sdm845";
++
++	/* required for bootloader to select correct board */
++	qcom,board-id = <69 0>;
++	qcom,msm-id = <321 0x20001>;
++
++	aliases {
++		hsuart0 = &uart6;
++	};
++
++	dc12v: dc12v-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "DC12V";
++		regulator-min-microvolt = <12000000>;
++		regulator-max-microvolt = <12000000>;
++		regulator-always-on;
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		autorepeat;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&vol_up_pin_a>;
++
++		vol-up {
++			label = "Volume Up";
++			linux,code = <KEY_VOLUMEUP>;
++			gpios = <&pm8998_gpio 6 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	vbat: vbat-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VBAT";
++
++		vin-supply = <&dc12v>;
++		regulator-min-microvolt = <4200000>;
++		regulator-max-microvolt = <4200000>;
++		regulator-always-on;
++	};
++
++	vbat_som: vbat-som-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VBAT_SOM";
++
++		vin-supply = <&dc12v>;
++		regulator-min-microvolt = <4200000>;
++		regulator-max-microvolt = <4200000>;
++		regulator-always-on;
++	};
++
++	vdc_3v3: vdc-3v3-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VDC_3V3";
++		vin-supply = <&dc12v>;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	vdc_5v: vdc-5v-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VDC_5V";
++
++		vin-supply = <&dc12v>;
++		regulator-min-microvolt = <500000>;
++		regulator-max-microvolt = <500000>;
++		regulator-always-on;
++	};
++
++	vreg_s4a_1p8: vreg-s4a-1p8 {
++		compatible = "regulator-fixed";
++		regulator-name = "vreg_s4a_1p8";
++
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++	};
++};
++
++&apps_rsc {
++	pm8998-rpmh-regulators {
++		compatible = "qcom,pm8998-rpmh-regulators";
++		qcom,pmic-id = "a";
++
++		vreg_l1a_0p875: ldo1 {
++			regulator-min-microvolt = <880000>;
++			regulator-max-microvolt = <880000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l7a_1p8: ldo7 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l12a_1p8: ldo12 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l13a_2p95: ldo13 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <2960000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l17a_1p3: ldo17 {
++			regulator-min-microvolt = <1304000>;
++			regulator-max-microvolt = <1304000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l20a_2p95: ldo20 {
++			regulator-min-microvolt = <2960000>;
++			regulator-max-microvolt = <2968000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l21a_2p95: ldo21 {
++			regulator-min-microvolt = <2960000>;
++			regulator-max-microvolt = <2968000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l24a_3p075: ldo24 {
++			regulator-min-microvolt = <3088000>;
++			regulator-max-microvolt = <3088000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l25a_3p3: ldo25 {
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3312000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l26a_1p2: ldo26 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++	};
++};
++
++&gcc {
++	protected-clocks = <GCC_QSPI_CORE_CLK>,
++			   <GCC_QSPI_CORE_CLK_SRC>,
++			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
++};
++
++/* Reserved memory changes from downstream */
++/ {
++	reserved-memory {
++		removed_region: memory@88f00000 {
++			no-map;
++			reg = <0 0x88f00000 0 0x1A00000>;
++		};
++	};
++};
++
++&pm8998_gpio {
++	vol_up_pin_a: vol-up-active {
++		pins = "gpio6";
++		function = "normal";
++		input-enable;
++		bias-pull-up;
++		qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
++	};
++};
++
++&pm8998_pon {
++	resin {
++		compatible = "qcom,pm8941-resin";
++		interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
++		debounce = <15625>;
++		bias-pull-up;
++		linux,code = <KEY_VOLUMEDOWN>;
++	};
++};
++
++&qupv3_id_0 {
++	status = "okay";
++};
++
++&sdhc_2 {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdc2_default_state &sdc2_card_det_n>;
++
++	vmmc-supply = <&vreg_l21a_2p95>;
++	vqmmc-supply = <&vreg_l13a_2p95>;
++
++	bus-width = <4>;
++	cd-gpios = <&tlmm 126 GPIO_ACTIVE_HIGH>;
++};
++
++&tlmm {
++	gpio-reserved-ranges = <0 4>, <81 4>;
++
++	sdc2_default_state: sdc2-default {
++		clk {
++			pins = "sdc2_clk";
++			bias-disable;
++
++			/*
++			 * It seems that mmc_test reports errors if drive
++			 * strength is not 16 on clk, cmd, and data pins.
++			 */
++			drive-strength = <16>;
++		};
++
++		cmd {
++			pins = "sdc2_cmd";
++			bias-pull-up;
++			drive-strength = <10>;
++		};
++
++		data {
++			pins = "sdc2_data";
++			bias-pull-up;
++			drive-strength = <10>;
++		};
++	};
++
++	sdc2_card_det_n: sd-card-det-n {
++		pins = "gpio126";
++		function = "gpio";
++		bias-pull-up;
++	};
++};
++
++&uart6 {
++	status = "okay";
++
++	bluetooth {
++		compatible = "qcom,wcn3990-bt";
++
++		vddio-supply = <&vreg_s4a_1p8>;
++		vddxo-supply = <&vreg_l7a_1p8>;
++		vddrf-supply = <&vreg_l17a_1p3>;
++		vddch0-supply = <&vreg_l25a_3p3>;
++		max-speed = <3200000>;
++	};
++};
++
++&usb_1 {
++	status = "okay";
++};
++
++&usb_1_dwc3 {
++	dr_mode = "peripheral";
++};
++
++&usb_1_hsphy {
++	status = "okay";
++
++	vdd-supply = <&vreg_l1a_0p875>;
++	vdda-pll-supply = <&vreg_l12a_1p8>;
++	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
++
++	qcom,imp-res-offset-value = <8>;
++	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
++	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
++	qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
++};
++
++&usb_1_qmpphy {
++	status = "okay";
++
++	vdda-phy-supply = <&vreg_l26a_1p2>;
++	vdda-pll-supply = <&vreg_l1a_0p875>;
++};
++
++&ufs_mem_hc {
++	status = "okay";
++
++	reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
++
++	vcc-supply = <&vreg_l20a_2p95>;
++	vcc-max-microamp = <800000>;
++};
++
++&ufs_mem_phy {
++	status = "okay";
++
++	vdda-phy-supply = <&vreg_l1a_0p875>;
++	vdda-pll-supply = <&vreg_l26a_1p2>;
++};
++
++/* PINCTRL - additions to nodes defined in sdm845.dtsi */
++
++&qup_uart6_default {
++	pinmux {
++		pins = "gpio45", "gpio46", "gpio47", "gpio48";
++		function = "qup6";
++	};
++
++	cts {
++		pins = "gpio45";
++		bias-disable;
++	};
++
++	rts-tx {
++		pins = "gpio46", "gpio47";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	rx {
++		pins = "gpio48";
++		bias-pull-up;
++	};
++};
+-- 
+2.7.4
 
