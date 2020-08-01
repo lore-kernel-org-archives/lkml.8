@@ -2,73 +2,123 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0939FC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 05:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 237A7C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 05:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAC90206D7
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 05:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E953F20716
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 05:10:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Nk0lPJLa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725951AbgHAFDx convert rfc822-to-8bit (ORCPT
+        id S1726610AbgHAFKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 01:03:53 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:53827 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725601AbgHAFDw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 01:03:52 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=cambda@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0U4MsdmN_1596258228;
-Received: from 10.150.185.158(mailfrom:cambda@linux.alibaba.com fp:SMTPD_---0U4MsdmN_1596258228)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 01 Aug 2020 13:03:50 +0800
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-From:   Cambda Zhu <cambda@linux.alibaba.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re:  [PATCH] checkpatch: skip macros when finding missing switch/case break
-Message-Id: <46F62293-BC9E-4428-94BD-186B0E3D3A5E@linux.alibaba.com>
-Date:   Sat, 1 Aug 2020 13:03:48 +0800
-Cc:     linux-kernel@vger.kernel.org
-To:     Joe Perches <joe@perches.com>
-X-Mailer: iPhone Mail (17G68)
+        Sat, 1 Aug 2020 01:10:14 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:34661 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725876AbgHAFKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 01:10:13 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596258613; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Sender; bh=+wYIer0V10xv0NSE/QIM8w7LTq7I6dxcydeczBC4CNA=; b=Nk0lPJLa5sxXvAvmtSdqWypyVQHCV7CJfumg8qx/BIF7ujxRx+TD52KJqwfGiySO+EdtBhCu
+ mYLpHtm82bQUIew8Jv9CJ4qBJdYptfDcQNmBEQ2Xbi/9N5rtyjqDnGTmEoyYweBTa3Qd1tim
+ rw+TtiQUSoL66/PzBYWHQyoWy2w=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5f24f934798b102968c07984 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 01 Aug 2020 05:10:12
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 533EAC433CB; Sat,  1 Aug 2020 05:10:11 +0000 (UTC)
+Received: from Pillair (unknown [49.205.240.202])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8B40FC433C9;
+        Sat,  1 Aug 2020 05:10:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8B40FC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   "Rakesh Pillai" <pillair@codeaurora.org>
+To:     "'Florian Fainelli'" <f.fainelli@gmail.com>,
+        <ath10k@lists.infradead.org>
+Cc:     <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kvalo@codeaurora.org>, <davem@davemloft.net>, <kuba@kernel.org>,
+        <netdev@vger.kernel.org>
+References: <1596220042-2778-1-git-send-email-pillair@codeaurora.org> <c6c5b3c5-f862-9cee-6863-24f666cc28f5@gmail.com>
+In-Reply-To: <c6c5b3c5-f862-9cee-6863-24f666cc28f5@gmail.com>
+Subject: RE: [PATCH v2 0/3]
+Date:   Sat, 1 Aug 2020 10:40:03 +0530
+Message-ID: <000701d667c2$0782fe70$1688fb50$@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQG33jQ4R3ZVYFu9l+A0slgX59AuwQM6QXA+qUX1HuA=
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-﻿I agree with you. Actually there are some false warnings not mentioned in my patch, such as:
 
-case xxx: {
-   if () {
-       return;
-   } else {
-           if () {
-               return;
-           } else {
-               return;
-           }
-   }
-}
-case xxx:
-   ...
 
-Since compiler can do this now, I think this test should be removed.
+> -----Original Message-----
+> From: Florian Fainelli <f.fainelli@gmail.com>
+> Sent: Saturday, August 1, 2020 12:17 AM
+> To: Rakesh Pillai <pillair@codeaurora.org>; ath10k@lists.infradead.org
+> Cc: linux-wireless@vger.kernel.org; linux-kernel@vger.kernel.org;
+> kvalo@codeaurora.org; davem@davemloft.net; kuba@kernel.org;
+> netdev@vger.kernel.org
+> Subject: Re: [PATCH v2 0/3]
+>=20
+> On 7/31/20 11:27 AM, Rakesh Pillai wrote:
+> > The history recording will be compiled only if
+> > ATH10K_DEBUG is enabled, and also enabled via
+> > the module parameter. Once the history recording
+> > is enabled via module parameter, it can be enabled
+> > or disabled runtime via debugfs.
+>=20
+> Why not use trace prints and retrieving them via the function tracer?
+> This seems very ad-hoc.
 
-Regards,
-Cambda
+Tracing needs to be enabled to capture the events.
+But these events can be turned on in some kind of a debug build and =
+capture the history to help us debug in case there is a crash.
+It wont even allocate memory if not enabled via module parameter.
 
-> 在 2020年8月1日，02:05，Joe Perches <joe@perches.com> 写道：
-> 
-> ﻿On Wed, 2020-07-29 at 20:59 +0800, Cambda Zhu wrote:
->> The checkpatch.pl only searches 3 previous lines when finding missing
->> switch/case break, and macros are treated as normal statements. If the
->> cases are surrounded with CONFIG, checkpatch.pl may report false
->> warnings. For example:
-> 
-> Likely this test should be removed altogether as
-> it's never really worked well and now compilers
-> find this and emit warnings.
+>=20
+> >
+> > ---
+> > Changes from v1:
+> > - Add module param and debugfs to enable/disable history recording.
+> >
+> > Rakesh Pillai (3):
+> >   ath10k: Add history for tracking certain events
+> >   ath10k: Add module param to enable history
+> >   ath10k: Add debugfs support to enable event history
+> >
+> >  drivers/net/wireless/ath/ath10k/ce.c      |   1 +
+> >  drivers/net/wireless/ath/ath10k/core.c    |   3 +
+> >  drivers/net/wireless/ath/ath10k/core.h    |  82 ++++++++++++
+> >  drivers/net/wireless/ath/ath10k/debug.c   | 207
+> ++++++++++++++++++++++++++++++
+> >  drivers/net/wireless/ath/ath10k/debug.h   |  75 +++++++++++
+> >  drivers/net/wireless/ath/ath10k/snoc.c    |  15 ++-
+> >  drivers/net/wireless/ath/ath10k/wmi-tlv.c |   1 +
+> >  drivers/net/wireless/ath/ath10k/wmi.c     |  10 ++
+> >  8 files changed, 393 insertions(+), 1 deletion(-)
+> >
+>=20
+>=20
+> --
+> Florian
 
