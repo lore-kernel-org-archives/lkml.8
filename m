@@ -2,77 +2,142 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D900C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 09:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59085C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 09:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81EF0206F6
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 09:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 386EE20725
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 09:28:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="FQWoRHd0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728755AbgHAJ2A (ORCPT
+        id S1728801AbgHAJ2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 05:28:00 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:42438 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725931AbgHAJ17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 05:27:59 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 261123654803EDEC5C17;
-        Sat,  1 Aug 2020 17:27:57 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Sat, 1 Aug 2020
- 17:27:48 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <fw@strlen.de>,
-        <pshelar@ovn.org>, <martin.varghese@nokia.com>,
-        <pabeni@redhat.com>, <edumazet@google.com>, <dcaratti@redhat.com>,
-        <steffen.klassert@secunet.com>, <shmulik@metanetworks.com>,
-        <kyk.segfault@gmail.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linmiaohe@huawei.com>
-Subject: [PATCH] net: Use __skb_pagelen() directly in skb_cow_data()
-Date:   Sat, 1 Aug 2020 17:30:23 +0800
-Message-ID: <1596274223-24555-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Sat, 1 Aug 2020 05:28:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55566 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725931AbgHAJ2E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 05:28:04 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F4AAC06174A
+        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 02:28:04 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id x5so10344852wmi.2
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 02:28:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=B1mN8564CaEdT6pvNLdTQVULf9KDq5pz1XDgMNRT910=;
+        b=FQWoRHd0BcdiPCnL0D1+eDAcsOwi/+aB/kW6re4TQ9GEE/gFZM5ydnGpwRDSrDlrAA
+         vE0Wb+vjJ9Qa6Tjt6BO4Zc05tLLyCzxh84eji37m0Taf1AdZ3BO14tjJY2ee7RsDgFDs
+         GJekNUCfYRMTgVsh3myjZM5euGCL5c+nSJHuU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=B1mN8564CaEdT6pvNLdTQVULf9KDq5pz1XDgMNRT910=;
+        b=iLg+2si4gGARusutoIs2Opd3PY8Gp8GJ3N+f317u/0z+mDhl2mf4i9M+C1WNg/Pvza
+         VGTwOacpEIKGeEycJT9Db8L9KeK8kS1MpYCIUiKymFc0lPl20lN4cvPlkEYGfq0CSJ+d
+         PlRZSTvm2pr3Zs4ZgtRqiwfvnoWgm403HGJeWo4BkzZikNIgee9noz4P+9+s+kM/gThy
+         F1neCkzeFlrRDxRzwE2VB9zmneOIhzimBp1ZULybMzBKTVfhdxNyzGw3PXeUwKZRXKuC
+         Ibxnbxu3gUa4gtKAmeLOHqJxu+QMDOTuG/Wt4Bswh2JdEc6N/PKCzMvrvW7l1xPn8/C2
+         DzXg==
+X-Gm-Message-State: AOAM5323e40FIlhQjjFdPwygSUbaxeQmRbi/kA8unw/AuMhJtG9FpYTq
+        QdPGWcExxTPJptZyy2ULBkWXtoXtQQA=
+X-Google-Smtp-Source: ABdhPJzqoZg7QECsMjE4NgtabggJaa5B2EruQyl1cEAXPJlRrt1l/dIdNlAH17f9MEC0un6QR2wXyw==
+X-Received: by 2002:a1c:81c7:: with SMTP id c190mr7918789wmd.129.1596274082956;
+        Sat, 01 Aug 2020 02:28:02 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id a10sm15857494wrx.15.2020.08.01.02.28.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Aug 2020 02:28:02 -0700 (PDT)
+Date:   Sat, 1 Aug 2020 11:28:00 +0200
+From:   daniel@ffwll.ch
+Cc:     airlied@linux.ie, daniel@ffwll.ch,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        tzimmermann@suse.de, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vgaarb: mark vga_tryget static
+Message-ID: <20200801092800.GE6419@phenom.ffwll.local>
+Mail-Followup-To: Christoph Hellwig <hch@lst.de>, airlied@linux.ie,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        tzimmermann@suse.de, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <20200801061713.307434-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.101.6]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200801061713.307434-1-hch@lst.de>
+X-Operating-System: Linux phenom 5.7.0-1-amd64 
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+On Sat, Aug 01, 2020 at 08:17:13AM +0200, Christoph Hellwig wrote:
+> This symbols isn't used anywhere outside of vgaarb.c.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-In fact, skb_pagelen() - skb_headlen() is equal to __skb_pagelen(), use it
-directly to avoid unnecessary skb_headlen() call.
+Nice catch, patch queued up for 5.9.
 
-Also fix the CHECK note of checkpatch.pl:
-    Comparison to NULL could be written "!__pskb_pull_tail"
+Thanks, Daniel
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- net/core/skbuff.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> ---
+>  drivers/gpu/vga/vgaarb.c | 3 +--
+>  include/linux/vgaarb.h   | 6 ------
+>  2 files changed, 1 insertion(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpu/vga/vgaarb.c b/drivers/gpu/vga/vgaarb.c
+> index f2f3ef8af2710f..5180c5687ee530 100644
+> --- a/drivers/gpu/vga/vgaarb.c
+> +++ b/drivers/gpu/vga/vgaarb.c
+> @@ -529,7 +529,7 @@ EXPORT_SYMBOL(vga_get);
+>   *
+>   * 0 on success, negative error code on failure.
+>   */
+> -int vga_tryget(struct pci_dev *pdev, unsigned int rsrc)
+> +static int vga_tryget(struct pci_dev *pdev, unsigned int rsrc)
+>  {
+>  	struct vga_device *vgadev;
+>  	unsigned long flags;
+> @@ -554,7 +554,6 @@ int vga_tryget(struct pci_dev *pdev, unsigned int rsrc)
+>  	spin_unlock_irqrestore(&vga_lock, flags);
+>  	return rc;
+>  }
+> -EXPORT_SYMBOL(vga_tryget);
+>  
+>  /**
+>   * vga_put - release lock on legacy VGA resources
+> diff --git a/include/linux/vgaarb.h b/include/linux/vgaarb.h
+> index 553b34c8b5f700..977caf96c8d2a3 100644
+> --- a/include/linux/vgaarb.h
+> +++ b/include/linux/vgaarb.h
+> @@ -109,12 +109,6 @@ static inline int vga_get_uninterruptible(struct pci_dev *pdev,
+>         return vga_get(pdev, rsrc, 0);
+>  }
+>  
+> -#if defined(CONFIG_VGA_ARB)
+> -extern int vga_tryget(struct pci_dev *pdev, unsigned int rsrc);
+> -#else
+> -static inline int vga_tryget(struct pci_dev *pdev, unsigned int rsrc) { return 0; }
+> -#endif
+> -
+>  #if defined(CONFIG_VGA_ARB)
+>  extern void vga_put(struct pci_dev *pdev, unsigned int rsrc);
+>  #else
+> -- 
+> 2.27.0
+> 
 
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index b8afefe6f6b6..3219c26ddfae 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -4413,7 +4413,7 @@ int skb_cow_data(struct sk_buff *skb, int tailbits, struct sk_buff **trailer)
- 	 * at the moment even if they are anonymous).
- 	 */
- 	if ((skb_cloned(skb) || skb_shinfo(skb)->nr_frags) &&
--	    __pskb_pull_tail(skb, skb_pagelen(skb)-skb_headlen(skb)) == NULL)
-+	    !__pskb_pull_tail(skb, __skb_pagelen(skb)))
- 		return -ENOMEM;
- 
- 	/* Easy case. Most of packets will go this way. */
 -- 
-2.19.1
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
