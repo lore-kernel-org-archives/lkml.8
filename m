@@ -4,37 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BC0C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 21:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B85C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 22:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AFB5206E9
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 21:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9BEC206E9
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 22:02:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgHAV7e (ORCPT
+        id S1727779AbgHAWCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 17:59:34 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:9221 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbgHAV7e (ORCPT
+        Sat, 1 Aug 2020 18:02:24 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:33657 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726748AbgHAWCY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 17:59:34 -0400
-X-Originating-IP: 178.240.22.159
+        Sat, 1 Aug 2020 18:02:24 -0400
 Received: from localhost.localdomain (unknown [178.240.22.159])
         (Authenticated sender: cengiz@kernel.wtf)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 3482B240004;
-        Sat,  1 Aug 2020 21:59:27 +0000 (UTC)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 7B83E200008;
+        Sat,  1 Aug 2020 22:02:17 +0000 (UTC)
 From:   Cengiz Can <cengiz@kernel.wtf>
 To:     andy.shevchenko@gmail.com
 Cc:     cengiz@kernel.wtf, dan.carpenter@oracle.com,
         devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
         linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
         mchehab@kernel.org, sakari.ailus@linux.intel.com
-Subject: [PATCH v5] staging: atomisp: move null check to earlier point
-Date:   Sun,  2 Aug 2020 00:58:07 +0300
-Message-Id: <20200801215806.2659-1-cengiz@kernel.wtf>
+Subject: [PATCH v6] staging: atomisp: move null check to earlier point
+Date:   Sun,  2 Aug 2020 01:01:02 +0300
+Message-Id: <20200801220101.2783-1-cengiz@kernel.wtf>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200731083856.GF3703480@smile.fi.intel.com>
 References: <20200731083856.GF3703480@smile.fi.intel.com>
@@ -67,7 +66,6 @@ for the sake of debugging.
 Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
 Reported-by: Coverity Static Analyzer CID 1465536
 Suggested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
-Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
 ---
 
  Please do note that this change introduces a new return value to
@@ -80,10 +78,11 @@ Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
        - according to PMIC type, return result of `axp_regulator_set`
          or `gmin_i2c_write`.
        - return -EINVAL if unknown PMIC type.
- 
+
  Patch Changelog:
    v4: Fix minor typo in commit message
    v5: Remove typo from email subject
+   v6: Remove duplicate Signed-off-by tag
 
  drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c | 5 ++++-
  1 file changed, 4 insertions(+), 1 deletion(-)
