@@ -2,72 +2,127 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2A7C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB14A2071E
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:37:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dSY5QXHa"
+	by mail.kernel.org (Postfix) with ESMTP id 89632207FB
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:38:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596296300;
+	bh=R9Rinnbiavbu4gLpa/mmI6LL+DEK5QDx/kYCTyiidc0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gGy8cghPS1Yl9AoVY1+YuQ1m0sxlFhNkHNFY38K4cCNeS764tMq8BvaZGr8RCiL1m
+	 hBz5A9F/0YTaBUK7gdV5X1wmuKM7bKmTmAuZI/DTkE+qwtigWc7PO3Z0TRAY06nNS+
+	 BkvBUM9wp1KDfbO7VHcKKikLrxJfD6+sF6RmmnWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbgHAPhQ (ORCPT
+        id S1726906AbgHAPiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 11:37:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55266 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725841AbgHAPhP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 11:37:15 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86674C06174A;
-        Sat,  1 Aug 2020 08:37:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=yI7TX5klAseKr0Z3D3BS8xEKHJ+ORcK03f7IAlX4iJU=; b=dSY5QXHatS2DCto5C80rS/BTwQ
-        r59sRNJL3/z73ZC2XXhgHHXFhGGnxhCdtCXqiYHlYeQTGIuERgE4x9FjlpxN+Zjo0jOHHjFwrDf7o
-        KmcY4X/Ko7sAbiXgsJkHu3p4M2+FseQ8XBNYeBxPgjyoFLKhW/QA40DaA4MreUshLgoLzR15NWRVp
-        F3V9QM/eUfURIKoXUaF8KBH88NSOHQ+wgqLRNpVwBel1qrVFdH3YV/SQs0pHxt1fLuKMR76TKD5HH
-        hAV5YaL+0F8AIU1cnL9OZYvDuBBMCkAZPXvdpM3pkU+so/aW7B0OO0EWTxm+TdmBS84Rt1C4lP3sT
-        EWUe8Gzw==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k1tZP-0004jB-U1; Sat, 01 Aug 2020 15:37:11 +0000
-Date:   Sat, 1 Aug 2020 16:37:11 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Pavel Begunkov <asml.silence@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs: optimise kiocb_set_rw_flags()
-Message-ID: <20200801153711.GV23808@casper.infradead.org>
-References: <e523f51f59ad6ecdad4ad22c560cb9c913e96e1a.1596277420.git.asml.silence@gmail.com>
+        Sat, 1 Aug 2020 11:38:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725841AbgHAPiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 11:38:18 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90FFE2071E;
+        Sat,  1 Aug 2020 15:38:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596296298;
+        bh=R9Rinnbiavbu4gLpa/mmI6LL+DEK5QDx/kYCTyiidc0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=uMPxyJJDjNSGBv0D/zupPMuJGNEvHiF/uosVwn+FNrKfKWa7teOSIjKbNPpc7TKJl
+         Io5c/genfnkgnGyZCIvDnPh2sC8XfytS4yaYUEklUE+Q/4ECB+IvPRi1SvUb6S5Vei
+         EVey38G27iPNAEPoMGUH2NMi0suxqvRX2dKhuork=
+Date:   Sat, 1 Aug 2020 16:38:13 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Ankit Baluni <b18007@students.iitmandi.ac.in>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -v2] Staging: iio: Fixed a punctuation and a spelling
+ mistake.
+Message-ID: <20200801163813.12bc746b@archlinux>
+In-Reply-To: <CAHp75VdCBWLLMT7jm0CO+oK8eZf7cSMOM5sb9xZ1Po1_YFAMxw@mail.gmail.com>
+References: <CAHp75VcmMf5dt7mu9N0C=6Rej-WzZ0EpzntHYCQkgNLVZkPbgg@mail.gmail.com>
+        <20200729081155.3228-1-b18007@students.iitmandi.ac.in>
+        <CAHp75VdCBWLLMT7jm0CO+oK8eZf7cSMOM5sb9xZ1Po1_YFAMxw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e523f51f59ad6ecdad4ad22c560cb9c913e96e1a.1596277420.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 01, 2020 at 01:36:33PM +0300, Pavel Begunkov wrote:
-> Use a local var to collect flags in kiocb_set_rw_flags(). That spares
-> some memory writes and allows to replace most of the jumps with MOVEcc.
+On Wed, 29 Jul 2020 13:38:28 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+
+> On Wed, Jul 29, 2020 at 11:12 AM Ankit Baluni
+> <b18007@students.iitmandi.ac.in> wrote:
+> >
+> > Added a missing comma and changed 'it it useful' to 'it is useful'.  
 > 
-> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Gah. I had kind of forgotten these docs existed and they have
+rotted pretty badly from a quick glance.   Sometime soon I'll take
+a look and see if there is anything worth moving over to the main docs.
 
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+In meantime, nothing wrong with cleaning them up a little as you Ankit
+has done here.
 
-If you want to improve the codegen here further, I would suggest that
-renumbering the IOCB flags to match the RWF flags would lead to better
-codegen (can't do it the other way around; RWF flags are userspace ABI,
-IOCB flags are not).  iocb_flags() probably doesn't get any worse because
-the IOCB_ flags don't have the same numbers as the O_ bits (which differ
-by arch anyway).
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to ignore them.
+
+Thanks,
+
+Jonathan
+
+> 
+> > Signed-off-by: Ankit Baluni <b18007@students.iitmandi.ac.in>
+> > ---
+> > Changes in -v2:
+> >         -Remove space before ':' in subject line.
+> >
+> >  drivers/staging/iio/Documentation/overview.txt | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/staging/iio/Documentation/overview.txt b/drivers/staging/iio/Documentation/overview.txt
+> > index ebdc64f451d7..00409d5dab4e 100644
+> > --- a/drivers/staging/iio/Documentation/overview.txt
+> > +++ b/drivers/staging/iio/Documentation/overview.txt
+> > @@ -9,7 +9,7 @@ The aim is to fill the gap between the somewhat similar hwmon and
+> >  input subsystems.  Hwmon is very much directed at low sample rate
+> >  sensors used in applications such as fan speed control and temperature
+> >  measurement.  Input is, as its name suggests focused on input
+> > -devices. In some cases there is considerable overlap between these and
+> > +devices. In some cases, there is considerable overlap between these and
+> >  IIO.
+> >
+> >  A typical device falling into this category would be connected via SPI
+> > @@ -38,7 +38,7 @@ series and Analog Devices ADXL345 accelerometers.  Each buffer supports
+> >  polling to establish when data is available.
+> >
+> >  * Trigger and software buffer support. In many data analysis
+> > -applications it it useful to be able to capture data based on some
+> > +applications it is useful to be able to capture data based on some
+> >  external signal (trigger).  These triggers might be a data ready
+> >  signal, a gpio line connected to some external system or an on
+> >  processor periodic interrupt.  A single trigger may initialize data
+> > --
+> > 2.25.1
+> >  
+> 
+> 
 
