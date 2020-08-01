@@ -2,157 +2,240 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCFDC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA86C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45B4B207BC
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49748207FB
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:55:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596297328;
+	bh=tZ5XajEXBDCNdvkEIUQd7cfRvOz8RKCWcDoXMi9uMf4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=bCjK+OySzZVERXvjU2HZVyfYedGamI2liXMZ9d80jJ5HtFi9y37bBmzu7WDM+rznV
+	 KNKrdc4JryTodT/flRxKk2k6iIWx4BkTP0pCQPzf1L6TjL9smWy9GcltMchGVUKsaG
+	 0/EBwbn+6FMPP4HSIazgss0a8dHFy+FHv0LYkv5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgHAPvH (ORCPT
+        id S1726878AbgHAPz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 11:51:07 -0400
-Received: from smtprelay0070.hostedemail.com ([216.40.44.70]:60722 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726432AbgHAPvH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 11:51:07 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id EA2C2837F24D;
-        Sat,  1 Aug 2020 15:51:05 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: flag31_57050f426f8d
-X-Filterd-Recvd-Size: 4502
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Sat,  1 Aug 2020 15:51:04 +0000 (UTC)
-Message-ID: <e45d15ad36a0c9a994b5a1136c72518215c99f7a.camel@perches.com>
-Subject: [PATCH] via-velocity: Add missing KERN_<LEVEL> where needed
-From:   Joe Perches <joe@perches.com>
-To:     Francois Romieu <romieu@fr.zoreil.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Sat, 01 Aug 2020 08:51:03 -0700
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Sat, 1 Aug 2020 11:55:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52916 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725841AbgHAPz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 11:55:26 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4F2E207BC;
+        Sat,  1 Aug 2020 15:55:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596297326;
+        bh=tZ5XajEXBDCNdvkEIUQd7cfRvOz8RKCWcDoXMi9uMf4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Lydeae+w/HcXvgmKM+YtX2uEnZzIDaso1sFDwddswOfnEq1WqS3W/Yq5C5Pcbrz4o
+         yPKHynn/DDjbqquIKM5N8fM88eGWidXBvBcgMtd8OirnWdPVwP8rV4MYxUnLRpz6V3
+         ux4R/3ElDxw2HWNr/Qk2CE/+uNud8vnx7AFy21Gc=
+Date:   Sat, 1 Aug 2020 16:55:20 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Christian Eggers <ceggers@arri.de>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] iio: light: as73211: New driver
+Message-ID: <20200801165520.56b73fc2@archlinux>
+In-Reply-To: <2665878.D8vGGo3OXt@n95hx1g2>
+References: <20200728062831.1143-1-ceggers@arri.de>
+        <20200728062831.1143-3-ceggers@arri.de>
+        <20200728190114.00004636@Huawei.com>
+        <2665878.D8vGGo3OXt@n95hx1g2>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Link status is emitted on multiple lines as it does not use
-KERN_CONT.
+On Thu, 30 Jul 2020 12:18:56 +0200
+Christian Eggers <ceggers@arri.de> wrote:
 
-Coalesce the multi-part logging into a single line output and
-add missing KERN_<LEVEL> to a couple logging calls.
+> Hi Jonathan.
+>=20
+> got your review nearly simultaneous with Andy's. There are many overlaps
+> between both. Most is already integrated, below I left only the open poin=
+ts.
+>=20
+> On Tuesday, 28 July 2020, 20:01:14 CEST, Jonathan Cameron wrote:
+> > Hi Christian,
+> >
+> > I took a fairly quick look. Not divided into the datasheet or anything =
+yet! =20
+>=20
+> > Christian Eggers <ceggers@arri.de> wrote: =20
+> > > +/**
+> > > + * struct as73211_data - Instance data for one AS73211
+> > > + * @client: I2C client.
+> > > + * @osr:    Cached Operational State Register.
+> > > + * @creg1:  Cached Configuration Register 1.
+> > > + * @creg2:  Cached Configuration Register 2.
+> > > + * @creg3:  Cached Configuration Register 3. =20
+> >
+> > Just a thought, but why not creg[3]?; =20
+> creg[3] would be indexed from 0 to 2. But the datasheet names them 1 to 3.
+>=20
+> > > + * @buffer: Buffer for triggered measurements. =20
+> >
+> > ?  Run kernel-doc, or build with W=3D1 and to check docs. =20
+> I ran "make htmldoc" and enabled W=3D1. Are there any errors I should see?
+>=20
+> > > +static unsigned int as73211_integration_time_us(struct as73211_data
+> > > *data)
+> > > +{
+> > > +   /* Integration time has 15 steps, the step size depends on the =20
+> clock. */
+> > > +   unsigned int mul =3D 1 << (3 - (data->creg3 & 0b11));  /* 8 =3D 1=
+.024 =20
+> MHz, 4
+> > > =3D 2.048 MHz ...*/ + unsigned int time_cycles =3D
+> > > as73211_integration_time_cycles(data); +    unsigned int time_us =3D
+> > > time_cycles * 125 * mul; =20
+> >
+> > This would be easier to read as
+> >
+> >       unsigned int mul, time_cycles;
+> >
+> >       mul =3D ...
+> >
+> >       return time_cycles * 125 * mul;
+> > =20
+> changed this according to Andy's proposal.
+>=20
+> > > +static int as73211_read_raw(struct iio_dev *indio_dev,
+> > > +                   struct iio_chan_spec const *chan,
+> > > +                   int *val, int *val2, long mask) =20
+> >
+> > Align parameters with opening bracket. =20
+> Mixed tabs(8) and spaces or only spaces?
 
-This also reduces object size.
+Tabs and spaces.
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
- drivers/net/ethernet/via/via-velocity.c | 46 ++++++++++++++++++++++-----------
- 1 file changed, 31 insertions(+), 15 deletions(-)
+>=20
+> > > +static int _as73211_write_raw(struct iio_dev *indio_dev,
+> > > +                   struct iio_chan_spec const *chan =20
+> __always_unused,
+> >
+> > Whilst true, what's the benefit of marking that as __always_unused?
+> > =20
+> I read somewhere in the process docs that I should build with EXTRA_CFLAG=
+S=3D-W
 
-diff --git a/drivers/net/ethernet/via/via-velocity.c b/drivers/net/ethernet/via/via-velocity.c
-index 713dbc04b25b..84d456464b88 100644
---- a/drivers/net/ethernet/via/via-velocity.c
-+++ b/drivers/net/ethernet/via/via-velocity.c
-@@ -927,12 +927,12 @@ static int velocity_set_media_mode(struct velocity_info *vptr, u32 mii_status)
- 		if (mii_status & VELOCITY_DUPLEX_FULL) {
- 			CHIPGCR |= CHIPGCR_FCFDX;
- 			writeb(CHIPGCR, &regs->CHIPGCR);
--			VELOCITY_PRT(MSG_LEVEL_INFO, "set Velocity to forced full mode\n");
-+			VELOCITY_PRT(MSG_LEVEL_INFO, KERN_INFO "set Velocity to forced full mode\n");
- 			if (vptr->rev_id < REV_ID_VT3216_A0)
- 				BYTE_REG_BITS_OFF(TCR_TB2BDIS, &regs->TCR);
- 		} else {
- 			CHIPGCR &= ~CHIPGCR_FCFDX;
--			VELOCITY_PRT(MSG_LEVEL_INFO, "set Velocity to forced half mode\n");
-+			VELOCITY_PRT(MSG_LEVEL_INFO, KERN_INFO "set Velocity to forced half mode\n");
- 			writeb(CHIPGCR, &regs->CHIPGCR);
- 			if (vptr->rev_id < REV_ID_VT3216_A0)
- 				BYTE_REG_BITS_ON(TCR_TB2BDIS, &regs->TCR);
-@@ -985,45 +985,61 @@ static int velocity_set_media_mode(struct velocity_info *vptr, u32 mii_status)
-  */
- static void velocity_print_link_status(struct velocity_info *vptr)
- {
-+	const char *link;
-+	const char *speed;
-+	const char *duplex;
- 
- 	if (vptr->mii_status & VELOCITY_LINK_FAIL) {
- 		VELOCITY_PRT(MSG_LEVEL_INFO, KERN_NOTICE "%s: failed to detect cable link\n", vptr->netdev->name);
--	} else if (vptr->options.spd_dpx == SPD_DPX_AUTO) {
--		VELOCITY_PRT(MSG_LEVEL_INFO, KERN_NOTICE "%s: Link auto-negotiation", vptr->netdev->name);
-+		return;
-+	}
-+
-+	if (vptr->options.spd_dpx == SPD_DPX_AUTO) {
-+		link = "auto-negotiation";
- 
- 		if (vptr->mii_status & VELOCITY_SPEED_1000)
--			VELOCITY_PRT(MSG_LEVEL_INFO, " speed 1000M bps");
-+			speed = "1000";
- 		else if (vptr->mii_status & VELOCITY_SPEED_100)
--			VELOCITY_PRT(MSG_LEVEL_INFO, " speed 100M bps");
-+			speed = "100";
- 		else
--			VELOCITY_PRT(MSG_LEVEL_INFO, " speed 10M bps");
-+			speed = "10";
- 
- 		if (vptr->mii_status & VELOCITY_DUPLEX_FULL)
--			VELOCITY_PRT(MSG_LEVEL_INFO, " full duplex\n");
-+			duplex = "full";
- 		else
--			VELOCITY_PRT(MSG_LEVEL_INFO, " half duplex\n");
-+			duplex = "half";
- 	} else {
--		VELOCITY_PRT(MSG_LEVEL_INFO, KERN_NOTICE "%s: Link forced", vptr->netdev->name);
-+		link = "forced";
-+
- 		switch (vptr->options.spd_dpx) {
- 		case SPD_DPX_1000_FULL:
--			VELOCITY_PRT(MSG_LEVEL_INFO, " speed 1000M bps full duplex\n");
-+			speed = "1000";
-+			duplex = "full";
- 			break;
- 		case SPD_DPX_100_HALF:
--			VELOCITY_PRT(MSG_LEVEL_INFO, " speed 100M bps half duplex\n");
-+			speed = "100";
-+			duplex = "half";
- 			break;
- 		case SPD_DPX_100_FULL:
--			VELOCITY_PRT(MSG_LEVEL_INFO, " speed 100M bps full duplex\n");
-+			speed = "100";
-+			duplex = "full";
- 			break;
- 		case SPD_DPX_10_HALF:
--			VELOCITY_PRT(MSG_LEVEL_INFO, " speed 10M bps half duplex\n");
-+			speed = "10";
-+			duplex = "half";
- 			break;
- 		case SPD_DPX_10_FULL:
--			VELOCITY_PRT(MSG_LEVEL_INFO, " speed 10M bps full duplex\n");
-+			speed = "10";
-+			duplex = "full";
- 			break;
- 		default:
-+			speed = "unknown";
-+			duplex = "unknown";
- 			break;
- 		}
- 	}
-+	VELOCITY_PRT(MSG_LEVEL_INFO, KERN_NOTICE "%s: Link %s speed %sM bps %s duplex\n",
-+		     vptr->netdev->name, link, speed, duplex);
- }
- 
- /**
+Probably a bit paranoid for a callback, but doesn't really matter.
 
+>=20
+> > > +           } else {
+> > > +                   /* saturate all channels (useful for =20
+> overflows) */
+> > > +                   iio_buffer[1] =3D 0xffff;
+> > > +                   iio_buffer[2] =3D 0xffff;
+> > > +                   iio_buffer[3] =3D 0xffff; =20
+> >
+> > That is rather non standard. =20
+> How do other drivers handle measurement errors in buffered mode? The
+> application needs to know about measurement overflows as the integration
+> time and gain have to be adjusted in case.
+
+It's actually pretty rare to have a device that reports and error.
+Many just saturate.  So it's probably fine to mimic that here as long
+as the issue is definitely saturation rather than some other error.
+If it's another error, don't push data and log some sort of message.
+Unfortunately there isn't really a standard interface for
+reporting hardware faults in these sort of devices.
+
+=46rom what you have said I'll assume we are just looking at overflow
+so can mimic saturation. In which case what you have done is fine.
+
+>=20
+> > > +static IIO_DEV_ATTR_SAMP_FREQ_AVAIL(as73211_show_samp_freq_available=
+);
+> > > +static IIO_DEV_ATTR_INT_TIME_AVAIL(as73211_show_int_time_available);
+> > > +static IIO_DEVICE_ATTR(hardwaregain_available, S_IRUGO,
+> > > +           as73211_show_hardwaregain_available, NULL, 0);
+> > > +static IIO_CONST_ATTR_TEMP_OFFSET("-66.9");
+> > > +static IIO_CONST_ATTR_TEMP_SCALE("0.05");
+> > > +
+> > > +static struct attribute *as73211_attributes[] =3D {
+> > > +   &iio_dev_attr_sampling_frequency_available.dev_attr.attr,
+> > > +   &iio_dev_attr_integration_time_available.dev_attr.attr,
+> > > +   &iio_dev_attr_hardwaregain_available.dev_attr.attr,
+> > > +   &iio_const_attr_in_temp_offset.dev_attr.attr,
+> > > +   &iio_const_attr_in_temp_scale.dev_attr.attr, =20
+> >
+> > These should be handled via read_raw. =20
+> Only the last two ones?
+Yup
+>=20
+> > Ideally do the _available ones via the core callbacks
+> > and _avail masks as well. For the more complex values,
+> > compute the table on first read or at probe and cache it. =20
+> The list of available values can depend on the setting of other attributes
+> (e.g. available integration times depends on sampling frequency).
+That's not that unusual.  It's fine to calculate the values
+returned as needed, or pick from a selection of options.
+
+>=20
+> > > +   indio_dev->dev.parent =3D &client->dev; =20
+> >
+> > That is now set by the IIO core, so no need to set it manually. =20
+> Can you please give me a pointer? Before removing this in my branch, I ne=
+ed to
+> make sure that this is already available in the kernel I'm using (5.4.lat=
+est).
+I think I mentioned in a later thread, that's in linux-next now.
+Though there was a bit of a messup where we added it then accidentally broke
+it again, then fixed it finally.
+
+Jonathan
+
+>=20
+> > > +buffer_cleanup:
+> > > +   iio_triggered_buffer_cleanup(indio_dev); =20
+> >
+> > Should we not powerdown on error? =20
+> yes, we should.
+>=20
+> > Also rather feels like we should have a trivial powerup function to
+> > match with powerdown. =20
+> changed as73211_powerdown() to as73211_power()
+>=20
+> regards
+> Christian
+>=20
+>=20
+>=20
+> ________________________________
+>  [http://assets.arri.com/media/sign/2020-04-03-E-mail-signature-Stellar2_=
+V1.jpg] <https://microsites.arri.com/stellar/>
+>=20
+> Get all the latest information from www.arri.com<https://www.arri.com/>, =
+Facebook<https://www.facebook.com/TeamARRI>, Twitter<https://twitter.com/AR=
+RIChannel>, Instagram<https://instagram.com/arri> and YouTube<https://www.y=
+outube.com/user/ARRIChannel>.
+>=20
+> Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+> Sitz: M=C3=BCnchen - Registergericht: Amtsgericht M=C3=BCnchen - Handelsr=
+egisternummer: HRA 57918
+> Pers=C3=B6nlich haftender Gesellschafter: Arnold & Richter Cine Technik G=
+mbH
+> Sitz: M=C3=BCnchen - Registergericht: Amtsgericht M=C3=BCnchen - Handelsr=
+egisternummer: HRB 54477
+> Gesch=C3=A4ftsf=C3=BChrer: Dr. Michael Neuh=C3=A4user; Stephan Schenk; Wa=
+lter Trauninger; Markus Zeiler
 
