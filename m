@@ -2,182 +2,183 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CD9C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 05:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED74C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 05:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4620B20725
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 05:34:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C62F2206E9
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 05:35:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P10FY8t9"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cFCUN8WX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbgHAFeH (ORCPT
+        id S1728118AbgHAFfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 01:34:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48096 "EHLO
+        Sat, 1 Aug 2020 01:35:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725833AbgHAFeG (ORCPT
+        with ESMTP id S1726062AbgHAFfQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 01:34:06 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62017C06174A;
-        Fri, 31 Jul 2020 22:34:06 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k13so10534328plk.13;
-        Fri, 31 Jul 2020 22:34:06 -0700 (PDT)
+        Sat, 1 Aug 2020 01:35:16 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A710C061757
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 22:35:16 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id j20so15484084pfe.5
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 22:35:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1TQDWlhtOphocCqRWnO12Oowtj66Ozztswpjd6Br1ME=;
-        b=P10FY8t9DFhbP2LrF/seKSO64NGjM0Fxh8iyoxHYEka9Cjs31RQSglzPn7M9K1PSHE
-         tNFbvxBTwG89WvCNZRTNvksbKApNNNUb3TRfWjnRLF6FNi515lD7h9x0364dRr2AJxkz
-         GVytwGczXN8CEV2ds8VLJeGY2E2Regz9SGYUdkD2HExdUKXG6K9b0HXnSGtEpl4jZmM3
-         I9daV2466gKRtOKZKE4clHILqgLMQG1vQnp01W+B5gKBZ+hzTE8TVWBDx1dK3sDlkS4B
-         pcYvD8vyCwTj7bdDVX7WsUtIo5rwRWI1CEg0rO8e5DzYn5BmYvZh/pxxcAjQmO+W8+yL
-         uxxA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=sBcnbrjbFajVyHxfld/Fszj/ZWv73cYyddExdUQ2/uM=;
+        b=cFCUN8WXYxpQmHqvnAsD23Rv5tXKfwQzwAyoxQ1/JYow58GgNyXFPX7XCri2QGRyOz
+         fMUDsZUFNJ1c3ZWyB9hIi75jCK6E730XjbidYpIfiKW9JQgUuI+PdO+zmUr54szeh1Sp
+         bAMamjFO4xz22zoSMDGpRAWZ5EifvoT6RMeQU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1TQDWlhtOphocCqRWnO12Oowtj66Ozztswpjd6Br1ME=;
-        b=M7Mgo4A9qbMMSLZzLXnAxn30uVBjy0hOcrZCPmvkBnTYxvOTyn5aqW2Ksra639fY39
-         GniGCkRGrqlNiDx1lvzhIRcPqKoExAknaWLU9v6EqgqpaYhT+tB8njS6EfBHf+hW8y8/
-         pTPrH6fc98MexEh/NyeR1HK3VCGLOSYNa966XlBJlC2d3PwzYCLDxn60czEPyINpfGsV
-         5Et22KUhxctb1fcVIykBvdRTc85CMsLXLlrLTwNRJe3seUMtMNQm5rLLT0uSkO+V9rGf
-         46mSDD0F/EO/zTrFlSe2fFNn2eM38bDox4UDjMlz2JK/6aXsGoVYJTmLio+cuCpj2dPk
-         Xvdw==
-X-Gm-Message-State: AOAM530i3e2Wq6vwvpAXpbe1+g98BlB1JhHs6v9dZ344ECSnQDvWNOPL
-        pwNj0tIZTfNrYtOHHdPxJc0=
-X-Google-Smtp-Source: ABdhPJynN7v62CK8YvHCBJB81lE9wGVDwVtkZZiIaUMWckfcBezDzoCoI13qYX9ssOHoQcD+9CfhNA==
-X-Received: by 2002:a17:90a:fa8c:: with SMTP id cu12mr7498920pjb.229.1596260045906;
-        Fri, 31 Jul 2020 22:34:05 -0700 (PDT)
-Received: from [192.168.86.81] ([49.206.12.123])
-        by smtp.gmail.com with ESMTPSA id 144sm8745967pfx.116.2020.07.31.22.34.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jul 2020 22:34:05 -0700 (PDT)
-Subject: Re: [PATCH] lib: Convert test_uuid.c to KUnit
-To:     brendanhiggins@google.com, skhan@linuxfoundation.org,
-        andriy.shevchenko@linux.intel.com
-Cc:     kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-References: <20200730121656.45302-1-98.arpi@gmail.com>
-From:   Arpitha Raghunandan <98.arpi@gmail.com>
-Message-ID: <4747b45c-0429-bf2e-8c64-3f4bc6b95749@gmail.com>
-Date:   Sat, 1 Aug 2020 11:04:01 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sBcnbrjbFajVyHxfld/Fszj/ZWv73cYyddExdUQ2/uM=;
+        b=JZI5zfDbvKpJ/YFA8wygM+zqIbqC7vGkaJIJ8lTAP7V2XoiWDWUwEbKEBY2tmUj/kd
+         RTKF+CuiHChkmNDawUOQznU/vuLQzfePaQoNO2qM6qybodDTtscXZNGpYOSZxRV3MJG1
+         GwAYISAvdAOaINT1BstZaHnFS/qLY69mo8egSaKTqg0s+LkE2MaZZoDbOZZSPUUtr/IZ
+         u9x9noUc0W/jFol83J9KLIuLKtCInYrowisp18+4WyOM2kZFs4GiGU3khAR/QG3suE+2
+         FcFZ7MV/AHoHXLAjSkJyQyOsT+L7aBF2VWNHMN03io2v0vfMPivBxldI9ynHwZQ5jjNF
+         MKCA==
+X-Gm-Message-State: AOAM531CvtB+4AV5invfTadVEqKSY7uU6mqLNqA19cDkvabfGBllViwI
+        sOCltMDSwOptGXEg9wKq1+cEJA==
+X-Google-Smtp-Source: ABdhPJzmUkHyL0osdBwrYpqVmxuELT6zFultPsT6Drkr31FLEpKF10iLb5ALASMh1jJ636fIC2pkxQ==
+X-Received: by 2002:a62:164a:: with SMTP id 71mr6825401pfw.266.1596260115966;
+        Fri, 31 Jul 2020 22:35:15 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id i21sm12412582pfa.18.2020.07.31.22.35.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 22:35:15 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 22:35:14 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 32/36] x86/boot/compressed: Reorganize zero-size
+ section asserts
+Message-ID: <202007312233.1BA0E2EFC@keescook>
+References: <20200731230820.1742553-1-keescook@chromium.org>
+ <20200731230820.1742553-33-keescook@chromium.org>
+ <20200801014755.GA2700342@rani.riverdale.lan>
 MIME-Version: 1.0
-In-Reply-To: <20200730121656.45302-1-98.arpi@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200801014755.GA2700342@rani.riverdale.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/07/20 5:46 pm, Arpitha Raghunandan wrote:
-> Converts test lib/test_uuid.c to KUnit
+On Fri, Jul 31, 2020 at 09:47:55PM -0400, Arvind Sankar wrote:
+> On Fri, Jul 31, 2020 at 04:08:16PM -0700, Kees Cook wrote:
+> > For readability, move the zero-sized sections to the end after DISCARDS
+> > and mark them NOLOAD for good measure.
+> > 
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  arch/x86/boot/compressed/vmlinux.lds.S | 42 +++++++++++++++-----------
+> >  1 file changed, 25 insertions(+), 17 deletions(-)
+> > 
+> > diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+> > index 3c2ee9a5bf43..42dea70a5091 100644
+> > --- a/arch/x86/boot/compressed/vmlinux.lds.S
+> > +++ b/arch/x86/boot/compressed/vmlinux.lds.S
+> > @@ -42,18 +42,16 @@ SECTIONS
+> >  		*(.rodata.*)
+> >  		_erodata = . ;
+> >  	}
+> > -	.rel.dyn : {
+> > -		*(.rel.*)
+> > -	}
+> > -	.rela.dyn : {
+> > -		*(.rela.*)
+> > -	}
+> > -	.got : {
+> > -		*(.got)
+> > -	}
+> >  	.got.plt : {
+> >  		*(.got.plt)
+> >  	}
+> > +	ASSERT(SIZEOF(.got.plt) == 0 ||
+> > +#ifdef CONFIG_X86_64
+> > +	       SIZEOF(.got.plt) == 0x18,
+> > +#else
+> > +	       SIZEOF(.got.plt) == 0xc,
+> > +#endif
+> > +	       "Unexpected GOT/PLT entries detected!")
+> >  
+> >  	.data :	{
+> >  		_data = . ;
+> > @@ -85,13 +83,23 @@ SECTIONS
+> >  	ELF_DETAILS
+> >  
+> >  	DISCARDS
+> > -}
+> >  
+> > -ASSERT(SIZEOF(.got) == 0, "Unexpected GOT entries detected!")
+> > -#ifdef CONFIG_X86_64
+> > -ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT entries detected!")
+> > -#else
+> > -ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc, "Unexpected GOT/PLT entries detected!")
+> > -#endif
+> > +	/*
+> > +	 * Sections that should stay zero sized, which is safer to
+> > +	 * explicitly check instead of blindly discarding.
+> > +	 */
+> > +	.got (NOLOAD) : {
+> > +		*(.got)
+> > +	}
+> > +	ASSERT(SIZEOF(.got) == 0, "Unexpected GOT entries detected!")
+> >  
+> > -ASSERT(SIZEOF(.rel.dyn) == 0 && SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations detected!")
+> > +	/* ld.lld does not like .rel* sections being made "NOLOAD". */
+> > +	.rel.dyn : {
+> > +		*(.rel.*)
+> > +	}
+> > +	ASSERT(SIZEOF(.rel.dyn) == 0, "Unexpected run-time relocations (.rel) detected!")
+> > +	.rela.dyn : {
+> > +		*(.rela.*)
+> > +	}
+> > +	ASSERT(SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations (.rela) detected!")
+> > +}
+> > -- 
+> > 2.25.1
+> > 
 > 
-> Signed-off-by: Arpitha Raghunandan <98.arpi@gmail.com>
-> ---
->  lib/Kconfig.debug                 |  7 +--
->  lib/Makefile                      |  2 +-
->  lib/{test_uuid.c => uuid_kunit.c} | 84 +++++++++----------------------
->  3 files changed, 28 insertions(+), 65 deletions(-)
->  rename lib/{test_uuid.c => uuid_kunit.c} (48%)
-> 
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index f174f8887ae7..330c0d1de50b 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -2070,9 +2070,6 @@ config TEST_BITFIELD
->  
->  	  If unsure, say N.
->  
-> -config TEST_UUID
-> -	tristate "Test functions located in the uuid module at runtime"
-> -
->  config TEST_XARRAY
->  	tristate "Test the XArray code at runtime"
->  
-> @@ -2273,6 +2270,10 @@ config BITS_TEST
->  
->  	  If unsure, say N.
->  
-> +config UUID_KUNIT_TEST
-> +	tristate "KUnit test for functions located in the uuid module at runtime"
-> +	depends on KUNIT
-> +
->  config TEST_UDELAY
->  	tristate "udelay test driver"
->  	help
-> diff --git a/lib/Makefile b/lib/Makefile
-> index 032cc6c71a3a..62ef383c7563 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -81,7 +81,6 @@ obj-$(CONFIG_TEST_PRINTF) += test_printf.o
->  obj-$(CONFIG_TEST_BITMAP) += test_bitmap.o
->  obj-$(CONFIG_TEST_STRSCPY) += test_strscpy.o
->  obj-$(CONFIG_TEST_BITFIELD) += test_bitfield.o
-> -obj-$(CONFIG_TEST_UUID) += test_uuid.o
->  obj-$(CONFIG_TEST_XARRAY) += test_xarray.o
->  obj-$(CONFIG_TEST_PARMAN) += test_parman.o
->  obj-$(CONFIG_TEST_KMOD) += test_kmod.o
-> @@ -342,5 +341,6 @@ obj-$(CONFIG_PLDMFW) += pldmfw/
->  obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
->  obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
->  obj-$(CONFIG_BITS_TEST) += test_bits.o
-> +obj-$(CONFIG_UUID_KUNIT_TEST) += uuid_kunit.o
->  
->  obj-$(CONFIG_GENERIC_LIB_DEVMEM_IS_ALLOWED) += devmem_is_allowed.o
-> diff --git a/lib/test_uuid.c b/lib/uuid_kunit.c
-> similarity index 48%
-> rename from lib/test_uuid.c
-> rename to lib/uuid_kunit.c
-> index cd819c397dc7..f7f219ddecc2 100644
-> --- a/lib/test_uuid.c
-> +++ b/lib/uuid_kunit.c
-> @@ -3,6 +3,7 @@
->   */
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  
-> +#include <kunit/test.h>
->  #include <linux/init.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> @@ -39,95 +40,56 @@ static const char * const test_uuid_wrong_data[] = {
->  	"0cb4ddff-a545-4401-9d06-688af53e",	/* not enough data */
->  };
->  
-> -static unsigned total_tests __initdata;
-> -static unsigned failed_tests __initdata;
-> -
-> -static void __init test_uuid_failed(const char *prefix, bool wrong, bool be,
-> -				    const char *data, const char *actual)
-> -{
-> -	pr_err("%s test #%u %s %s data: '%s'\n",
-> -	       prefix,
-> -	       total_tests,
-> -	       wrong ? "passed on wrong" : "failed on",
-> -	       be ? "BE" : "LE",
-> -	       data);
-> -	if (actual && *actual)
-> -		pr_err("%s test #%u actual data: '%s'\n",
-> -		       prefix,
-> -		       total_tests,
-> -		       actual);
-> -	failed_tests++;
-> -}
-> -
+> There's no point in marking zero-size sections NOLOAD -- if the ASSERT's
+> passed, they won't be present in the file at all anyway.
 
+I did not find that universally true. I found some sections be written
+out with a 0 size. Some I could remove from disk with NOLOAD, others did
+not like that so much.
 
-I have removed the above test_uuid_failed function while converting to KUnit, as mentioned earlier. Is this required?
+> The only section for which there might be a point is .got.plt, which is
+> non-empty on 32-bit, and only if it is first moved to the end. That
+> saves a few bytes.
 
+What do you mean about "only if it is first moved to the end"? Would it
+be zero-sized if it was closer to .text?
+
+-- 
+Kees Cook
