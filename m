@@ -2,40 +2,40 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 360ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 08:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 08:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 138F420725
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 08:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 807F420725
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 08:49:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="TQhOkKHS"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="dZRQys+Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728551AbgHAItx (ORCPT
+        id S1728384AbgHAItz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 04:49:53 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:16480 "EHLO
+        Sat, 1 Aug 2020 04:49:55 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:34970 "EHLO
         mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728490AbgHAItw (ORCPT
+        by vger.kernel.org with ESMTP id S1726364AbgHAIty (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 04:49:52 -0400
+        Sat, 1 Aug 2020 04:49:54 -0400
 Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0718evfk027206
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0718evfl027206
         for <linux-kernel@vger.kernel.org>; Sat, 1 Aug 2020 01:49:51 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=facebook;
- bh=5RPWFtVuXAxEQqbG8nvPzo+ekxrYzxIosVhRDbbFtRc=;
- b=TQhOkKHSxPnkUVPxz91FcLwJvwey5tZM7TUz1+PwNo+ehPKmNc1xYDZrpq1OEI1T9hyh
- s0sLm7PKtMTS1ZMEMEolruK6FEosPR6W++9wMqWCnSrFFuhUzNvP00glO2531JocY36h
- 7s/cqIPeWr9Fx4PWvXvpEVHi0JQrf6FZ0LA= 
+ bh=WIgQmJTcjQAh1WZkR5Yt3/IhXJ/pNkVpepRij4ldUnk=;
+ b=dZRQys+YRCMJEE+UCAQx77GSGd+RHBQXMZ76QTGDLhrxNEYSAOEJewNzf7S/NM/fPBMV
+ vvkA8UEc9+53nVsJdmtVAbUeDq7Cij4FmbIxAwkIEF6hFKETdGppB9xl51OkkUaSpN47
+ m7zTjRqy0sMb0sL/HqpejIPhGT723LvllfA= 
 Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 32m8dyeg62-6
+        by mx0a-00082601.pphosted.com with ESMTP id 32m8dyeg62-7
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
         for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 01:49:51 -0700
 Received: from intmgw002.03.ash8.facebook.com (2620:10d:c0a8:1b::d) by
@@ -43,7 +43,7 @@ Received: from intmgw002.03.ash8.facebook.com (2620:10d:c0a8:1b::d) by
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
  15.1.1979.3; Sat, 1 Aug 2020 01:49:49 -0700
 Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 52B3862E53D6; Sat,  1 Aug 2020 01:47:33 -0700 (PDT)
+        id A474562E53C3; Sat,  1 Aug 2020 01:47:25 -0700 (PDT)
 Smtp-Origin-Hostprefix: devbig
 From:   Song Liu <songliubraving@fb.com>
 Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
@@ -54,9 +54,9 @@ CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
         <brouer@redhat.com>, <dlxu@fb.com>,
         Song Liu <songliubraving@fb.com>
 Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH bpf-next 5/5] selftests/bpf: add benchmark for uprobe vs. user_prog
-Date:   Sat, 1 Aug 2020 01:47:21 -0700
-Message-ID: <20200801084721.1812607-6-songliubraving@fb.com>
+Subject: [PATCH bpf-next 1/5] bpf: introduce BPF_PROG_TYPE_USER
+Date:   Sat, 1 Aug 2020 01:47:17 -0700
+Message-ID: <20200801084721.1812607-2-songliubraving@fb.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200801084721.1812607-1-songliubraving@fb.com>
 References: <20200801084721.1812607-1-songliubraving@fb.com>
@@ -77,175 +77,304 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a benchmark to compare performance of
-  1) uprobe;
-  2) user program w/o args;
-  3) user program w/ args;
-  4) user program w/ args on random cpu.
+As of today, to trigger BPF program from user space, the common practise
+is to create a uprobe on a special function and calls that function. For
+example, bpftrace uses BEGIN_trigger and END_trigger for the BEGIN and EN=
+D
+programs.
 
-Sample output:
+However, uprobe is not ideal for this use case. First, uprobe uses trap,
+which adds non-trivial overhead. Second, uprobe requires calculating
+function offset at runtime, which is not very reliable. bpftrace has
+seen issues with this:
+  https://github.com/iovisor/bpftrace/pull/1438
+  https://github.com/iovisor/bpftrace/issues/1440
 
-./test_progs -t uprobe_vs_user_prog -v
-test_uprobe_vs_user_prog:PASS:uprobe_vs_user_prog__open_and_load 0 nsec
-test_uprobe_vs_user_prog:PASS:get_base_addr 0 nsec
-test_uprobe_vs_user_prog:PASS:attach_uprobe 0 nsec
-run_perf_test:PASS:uprobe 0 nsec
-Each uprobe uses 1419 nanoseconds
-run_perf_test:PASS:user_prog_no_args 0 nsec
-Each user_prog_no_args uses 313 nanoseconds
-run_perf_test:PASS:user_prog_with_args 0 nsec
-Each user_prog_with_args uses 335 nanoseconds
-run_perf_test:PASS:user_prog_with_args_on_cpu 0 nsec
-Each user_prog_with_args_on_cpu uses 2821 nanoseconds
-Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
+This patch introduces a new BPF program type BPF_PROG_TYPE_USER, or "user
+program". User program is triggered via sys_bpf(BPF_PROG_TEST_RUN), which
+is significant faster than a trap.
+
+To make user program more flexible, we enabled the following features:
+  1. The user can specify on which cpu the program should run. If the
+     target cpu is not current cpu, the program is triggered via IPI.
+  2. User can pass optional argument to user program. Currently, the
+     argument can only be 5x u64 numbers.
+
+User program has access to helper functions in bpf_tracing_func_proto()
+and bpf_get_stack|stackid().
 
 Signed-off-by: Song Liu <songliubraving@fb.com>
 ---
- .../bpf/prog_tests/uprobe_vs_user_prog.c      | 101 ++++++++++++++++++
- .../selftests/bpf/progs/uprobe_vs_user_prog.c |  21 ++++
- 2 files changed, 122 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/prog_tests/uprobe_vs_user=
-_prog.c
- create mode 100644 tools/testing/selftests/bpf/progs/uprobe_vs_user_prog=
-.c
+ include/linux/bpf_types.h      |   2 +
+ include/uapi/linux/bpf.h       |  19 ++++++
+ kernel/bpf/syscall.c           |   3 +-
+ kernel/trace/bpf_trace.c       | 121 +++++++++++++++++++++++++++++++++
+ tools/include/uapi/linux/bpf.h |  19 ++++++
+ 5 files changed, 163 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_vs_user_prog.c=
- b/tools/testing/selftests/bpf/prog_tests/uprobe_vs_user_prog.c
-new file mode 100644
-index 0000000000000..dadd7b56e69ec
---- /dev/null
-+++ b/tools/testing/selftests/bpf/prog_tests/uprobe_vs_user_prog.c
-@@ -0,0 +1,101 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <test_progs.h>
-+#include "uprobe_vs_user_prog.skel.h"
+diff --git a/include/linux/bpf_types.h b/include/linux/bpf_types.h
+index a52a5688418e5..3c52f3207aced 100644
+--- a/include/linux/bpf_types.h
++++ b/include/linux/bpf_types.h
+@@ -76,6 +76,8 @@ BPF_PROG_TYPE(BPF_PROG_TYPE_EXT, bpf_extension,
+ BPF_PROG_TYPE(BPF_PROG_TYPE_LSM, lsm,
+ 	       void *, void *)
+ #endif /* CONFIG_BPF_LSM */
++BPF_PROG_TYPE(BPF_PROG_TYPE_USER, user,
++	       void *, void *)
+ #endif
+=20
+ BPF_MAP_TYPE(BPF_MAP_TYPE_ARRAY, array_map_ops)
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index eb5e0c38eb2cf..f6b9d4e7eeb4e 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -190,6 +190,7 @@ enum bpf_prog_type {
+ 	BPF_PROG_TYPE_EXT,
+ 	BPF_PROG_TYPE_LSM,
+ 	BPF_PROG_TYPE_SK_LOOKUP,
++	BPF_PROG_TYPE_USER,
+ };
+=20
+ enum bpf_attach_type {
+@@ -556,6 +557,12 @@ union bpf_attr {
+ 						 */
+ 		__aligned_u64	ctx_in;
+ 		__aligned_u64	ctx_out;
++		__u32		cpu_plus;	/* run this program on cpu
++						 * (cpu_plus - 1).
++						 * If cpu_plus =3D=3D 0, run on
++						 * current cpu. Only valid
++						 * for BPF_PROG_TYPE_USER.
++						 */
+ 	} test;
+=20
+ 	struct { /* anonymous struct used by BPF_*_GET_*_ID */
+@@ -4441,4 +4448,16 @@ struct bpf_sk_lookup {
+ 	__u32 local_port;	/* Host byte order */
+ };
+=20
++struct pt_regs;
 +
-+#define REPEAT_CNT 10000ULL
++#define BPF_USER_PROG_MAX_ARGS 5
++struct bpf_user_prog_args {
++	__u64 args[BPF_USER_PROG_MAX_ARGS];
++};
 +
-+static int duration;
++struct bpf_user_prog_ctx {
++	struct pt_regs *regs;
++	__u64 args[BPF_USER_PROG_MAX_ARGS];
++};
 +
-+static noinline void uprobe_target(void)
+ #endif /* _UAPI__LINUX_BPF_H__ */
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index cd3d599e9e90e..f5a28fd8a9bc2 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -2078,6 +2078,7 @@ static bool is_perfmon_prog_type(enum bpf_prog_type=
+ prog_type)
+ 	case BPF_PROG_TYPE_LSM:
+ 	case BPF_PROG_TYPE_STRUCT_OPS: /* has access to struct sock */
+ 	case BPF_PROG_TYPE_EXT: /* extends any prog */
++	case BPF_PROG_TYPE_USER:
+ 		return true;
+ 	default:
+ 		return false;
+@@ -2969,7 +2970,7 @@ static int bpf_prog_query(const union bpf_attr *att=
+r,
+ 	}
+ }
+=20
+-#define BPF_PROG_TEST_RUN_LAST_FIELD test.ctx_out
++#define BPF_PROG_TEST_RUN_LAST_FIELD test.cpu_plus
+=20
+ static int bpf_prog_test_run(const union bpf_attr *attr,
+ 			     union bpf_attr __user *uattr)
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index cb91ef902cc43..cbe789bc1b986 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -16,6 +16,7 @@
+ #include <linux/error-injection.h>
+ #include <linux/btf_ids.h>
+=20
++#include <asm/irq_regs.h>
+ #include <asm/tlb.h>
+=20
+ #include "trace_probe.h"
+@@ -1740,6 +1741,126 @@ const struct bpf_verifier_ops perf_event_verifier=
+_ops =3D {
+ const struct bpf_prog_ops perf_event_prog_ops =3D {
+ };
+=20
++struct bpf_user_prog_test_run_info {
++	struct bpf_prog *prog;
++	struct bpf_user_prog_ctx ctx;
++	u32 retval;
++};
++
++static void
++__bpf_prog_test_run_user(struct bpf_user_prog_test_run_info *info)
 +{
-+	asm ("");
++	rcu_read_lock();
++	migrate_disable();
++	info->retval =3D BPF_PROG_RUN(info->prog, &info->ctx);
++	migrate_enable();
++	rcu_read_unlock();
 +}
 +
-+struct bpf_prog_test_run_attr attr;
-+
-+static void call_user_prog(void)
++static void _bpf_prog_test_run_user(void *data)
 +{
-+	bpf_prog_test_run_xattr(&attr);
++	struct bpf_user_prog_test_run_info *info =3D data;
++
++	info->ctx.regs =3D get_irq_regs();
++	__bpf_prog_test_run_user(info);
 +}
 +
-+static int numcpu;
-+
-+static void call_user_prog_on_cpu(void)
++static int bpf_prog_test_run_user(struct bpf_prog *prog,
++				  const union bpf_attr *kattr,
++				  union bpf_attr __user *uattr)
 +{
-+	static int cpu =3D 0;
++	void __user *data_in =3D u64_to_user_ptr(kattr->test.data_in);
++	__u32 data_size =3D kattr->test.data_size_in;
++	struct bpf_user_prog_test_run_info info;
++	int cpu =3D kattr->test.cpu_plus - 1;
++	int err;
 +
-+	attr.cpu_plus =3D cpu + 1;
-+	bpf_prog_test_run_xattr(&attr);
-+	cpu =3D (cpu + 1) % numcpu;
-+}
++	if (kattr->test.ctx_in || kattr->test.ctx_out ||
++	    kattr->test.duration || kattr->test.repeat ||
++	    kattr->test.data_out)
++		return -EINVAL;
 +
-+typedef void (__run_func)(void);
++	if ((data_in && !data_size) || (!data_in && data_size))
++		return -EINVAL;
 +
-+static void run_perf_test(struct uprobe_vs_user_prog *skel,
-+			  __run_func func, const char *name)
-+{
-+	__u64 start_time, total_time;
-+	int i;
++	/* if provided, data_in should be struct bpf_user_prog_args */
++	if (data_size > 0 && data_size !=3D sizeof(struct bpf_user_prog_args))
++		return -EINVAL;
 +
-+	skel->bss->sum =3D 0;
++	if (kattr->test.data_size_in) {
++		if (copy_from_user(&info.ctx.args, data_in,
++				   sizeof(struct bpf_user_prog_args)))
++			return -EFAULT;
++	} else {
++		memset(&info.ctx.args, 0, sizeof(struct bpf_user_prog_args));
++	}
 +
-+	start_time =3D time_get_ns();
-+	for (i =3D 0; i < REPEAT_CNT; i++)
-+		func();
-+	total_time =3D time_get_ns() - start_time;
++	info.prog =3D prog;
 +
-+	CHECK(skel->bss->sum !=3D REPEAT_CNT, name,
-+	      "missed %llu times\n", REPEAT_CNT - skel->bss->sum);
-+	printf("Each %s uses %llu nanoseconds\n", name, total_time / REPEAT_CNT=
-);
-+}
++	if (!kattr->test.cpu_plus || cpu =3D=3D smp_processor_id()) {
++		/* non-IPI, use regs from perf_fetch_caller_regs */
++		info.ctx.regs =3D get_bpf_raw_tp_regs();
++		if (IS_ERR(info.ctx.regs))
++			return PTR_ERR(info.ctx.regs);
++		perf_fetch_caller_regs(info.ctx.regs);
++		__bpf_prog_test_run_user(&info);
++		put_bpf_raw_tp_regs();
++	} else {
++		err =3D smp_call_function_single(cpu, _bpf_prog_test_run_user,
++					       &info, 1);
++		if (err)
++			return err;
++	}
 +
-+void test_uprobe_vs_user_prog(void)
-+{
-+	struct bpf_user_prog_args args =3D {};
-+	struct uprobe_vs_user_prog *skel;
-+	struct bpf_link *uprobe_link;
-+	size_t uprobe_offset;
-+	ssize_t base_addr;
++	if (copy_to_user(&uattr->test.retval, &info.retval, sizeof(u32)))
++		return -EFAULT;
 +
-+	skel =3D uprobe_vs_user_prog__open_and_load();
-+
-+	if (CHECK(!skel, "uprobe_vs_user_prog__open_and_load",
-+		  "skeleton open_and_laod failed\n"))
-+		return;
-+
-+	base_addr =3D get_base_addr();
-+	if (CHECK(base_addr < 0, "get_base_addr",
-+		  "failed to find base addr: %zd", base_addr))
-+		return;
-+	uprobe_offset =3D (size_t)&uprobe_target - base_addr;
-+	uprobe_link =3D bpf_program__attach_uprobe(skel->progs.handle_uprobe,
-+						 false /* retprobe */,
-+						 0 /* self pid */,
-+						 "/proc/self/exe",
-+						 uprobe_offset);
-+
-+	if (CHECK(IS_ERR(uprobe_link), "attach_uprobe",
-+		  "err %ld\n", PTR_ERR(uprobe_link)))
-+		goto cleanup;
-+	skel->links.handle_uprobe =3D uprobe_link;
-+
-+	run_perf_test(skel, uprobe_target, "uprobe");
-+
-+	attr.prog_fd =3D bpf_program__fd(skel->progs.user_prog);
-+	run_perf_test(skel, call_user_prog, "user_prog_no_args");
-+
-+	attr.data_size_in =3D sizeof(args);
-+	attr.data_in =3D &args;
-+	run_perf_test(skel, call_user_prog, "user_prog_with_args");
-+
-+	numcpu =3D libbpf_num_possible_cpus();
-+
-+	if (numcpu <=3D 0)
-+		goto cleanup;
-+
-+	run_perf_test(skel, call_user_prog_on_cpu,
-+		      "user_prog_with_args_on_cpu");
-+
-+cleanup:
-+	uprobe_vs_user_prog__destroy(skel);
-+}
-diff --git a/tools/testing/selftests/bpf/progs/uprobe_vs_user_prog.c b/to=
-ols/testing/selftests/bpf/progs/uprobe_vs_user_prog.c
-new file mode 100644
-index 0000000000000..8b327b7cee30d
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/uprobe_vs_user_prog.c
-@@ -0,0 +1,21 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2017 Facebook
-+#include "vmlinux.h"
-+#include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
-+
-+volatile __u64 sum =3D 0;
-+
-+SEC("uprobe/func")
-+int handle_uprobe(struct pt_regs *ctx)
-+{
-+	sum++;
 +	return 0;
 +}
 +
-+SEC("user")
-+int user_prog(struct pt_regs *ctx)
++static bool user_prog_is_valid_access(int off, int size, enum bpf_access=
+_type type,
++				      const struct bpf_prog *prog,
++				      struct bpf_insn_access_aux *info)
 +{
-+	sum++;
-+	return 0;
++	const int size_u64 =3D sizeof(u64);
++
++	if (off < 0 || off >=3D sizeof(struct bpf_user_prog_ctx))
++		return false;
++
++	switch (off) {
++	case bpf_ctx_range(struct bpf_user_prog_ctx, regs):
++		bpf_ctx_record_field_size(info, size_u64);
++		if (!bpf_ctx_narrow_access_ok(off, size, size_u64))
++			return false;
++		break;
++	default:
++		break;
++	}
++	return true;
 +}
++
++static const struct bpf_func_proto *
++user_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *pr=
+og)
++{
++	switch (func_id) {
++	case BPF_FUNC_get_stackid:
++		return &bpf_get_stackid_proto;
++	case BPF_FUNC_get_stack:
++		return &bpf_get_stack_proto;
++	default:
++		return bpf_tracing_func_proto(func_id, prog);
++	}
++}
++
++const struct bpf_verifier_ops user_verifier_ops =3D {
++	.get_func_proto		=3D user_prog_func_proto,
++	.is_valid_access	=3D user_prog_is_valid_access,
++};
++
++const struct bpf_prog_ops user_prog_ops =3D {
++	.test_run	=3D bpf_prog_test_run_user,
++};
++
+ static DEFINE_MUTEX(bpf_event_mutex);
+=20
+ #define BPF_TRACE_MAX_PROGS 64
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bp=
+f.h
+index eb5e0c38eb2cf..f6b9d4e7eeb4e 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -190,6 +190,7 @@ enum bpf_prog_type {
+ 	BPF_PROG_TYPE_EXT,
+ 	BPF_PROG_TYPE_LSM,
+ 	BPF_PROG_TYPE_SK_LOOKUP,
++	BPF_PROG_TYPE_USER,
+ };
+=20
+ enum bpf_attach_type {
+@@ -556,6 +557,12 @@ union bpf_attr {
+ 						 */
+ 		__aligned_u64	ctx_in;
+ 		__aligned_u64	ctx_out;
++		__u32		cpu_plus;	/* run this program on cpu
++						 * (cpu_plus - 1).
++						 * If cpu_plus =3D=3D 0, run on
++						 * current cpu. Only valid
++						 * for BPF_PROG_TYPE_USER.
++						 */
+ 	} test;
+=20
+ 	struct { /* anonymous struct used by BPF_*_GET_*_ID */
+@@ -4441,4 +4448,16 @@ struct bpf_sk_lookup {
+ 	__u32 local_port;	/* Host byte order */
+ };
+=20
++struct pt_regs;
++
++#define BPF_USER_PROG_MAX_ARGS 5
++struct bpf_user_prog_args {
++	__u64 args[BPF_USER_PROG_MAX_ARGS];
++};
++
++struct bpf_user_prog_ctx {
++	struct pt_regs *regs;
++	__u64 args[BPF_USER_PROG_MAX_ARGS];
++};
++
+ #endif /* _UAPI__LINUX_BPF_H__ */
 --=20
 2.24.1
 
