@@ -2,159 +2,97 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4236C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 10:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C94B8C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 11:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85F682080C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 10:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A56E02063A
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 11:00:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BmlLtxY8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbgHAK5G (ORCPT
+        id S1728879AbgHALAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 06:57:06 -0400
-Received: from comms.puri.sm ([159.203.221.185]:39370 "EHLO comms.puri.sm"
+        Sat, 1 Aug 2020 07:00:37 -0400
+Received: from ozlabs.org ([203.11.71.1]:52379 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725931AbgHAK5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 06:57:05 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id D05C0E0334;
-        Sat,  1 Aug 2020 03:57:04 -0700 (PDT)
-Received: from comms.puri.sm ([127.0.0.1])
-        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Um1oPM5zChNS; Sat,  1 Aug 2020 03:57:03 -0700 (PDT)
-Subject: Re: [PATCH v5 3/3] dt-bindings: arm: fsl: Add the librem 5 phone
-To:     Rob Herring <robh@kernel.org>
-Cc:     agx@sigxcpu.org, kernel@puri.sm, Anson.Huang@nxp.com,
-        shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, kernel@pengutronix.de, angus@akkea.ca,
-        broonie@kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, s.hauer@pengutronix.de, festevam@gmail.com,
-        mchehab@kernel.org
-References: <20200731082725.21878-1-martin.kepplinger@puri.sm>
- <20200731082725.21878-3-martin.kepplinger@puri.sm>
- <20200731193523.GA642071@bogus>
-From:   Martin Kepplinger <martin.kepplinger@puri.sm>
-Autocrypt: addr=martin.kepplinger@puri.sm; keydata=
- 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
- ekMtxgNYb/8oDry09UFHbGHLsWn6oBo=
-Message-ID: <a5670756-ee3a-bde0-e3cb-553c38429268@puri.sm>
-Date:   Sat, 1 Aug 2020 12:56:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <20200731193523.GA642071@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1728255AbgHALAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 07:00:37 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BJh5D47qRz9sR4;
+        Sat,  1 Aug 2020 21:00:32 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596279634;
+        bh=rNDU9ZqkpSMNiNaQ8gyomZuB+Xr4hAmobVLVMtFHhyo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=BmlLtxY8F8+7K4TBzwEwfwnB48Q/l4b+Cxyx5Rxlt11R402x8ktYLuM7mBBbyEy2W
+         RjpkoMSoroxjDLg7i53d7T65m7xA/MB45vujHtPQHvc89+o01ksJSex0IEBZDGRmAY
+         38MrbY9h3Y3yk8xj18d1kt26wXHp/fyeBoxYxrHb6GoY2/059UxCkebkS34MCmeSTt
+         KcTNls1NcRMuoO0s4Vy1uiYSAMDaSlD+7bcXk7qmlKCcnJa7061pKmL4wKWtx4gBYX
+         pHQZGm75PB/FJdBLPplH/vJd6yXlWuMI9vC2xQs/XDP0W1SfbIjM3YajwJq4SZgQ/T
+         eZIUCUEUeYqHg==
+Date:   Sat, 1 Aug 2020 21:00:30 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jerry Crunchtime <jerry.c.t@web.de>
+Subject: linux-next: Fixes tag needs some work in the bpf-next tree
+Message-ID: <20200801210030.05d28152@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/X56+PooCIpC4xOjZOqGHdb.";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31.07.20 21:35, Rob Herring wrote:
-> On Fri, 31 Jul 2020 10:27:25 +0200, Martin Kepplinger wrote:
->> Add entries for the imx8mq based Librem 5 phone. The "Birch" and
->> "Chestnut" hardware revisions are supported by r2. The "Dogwood"
->> revision by r3.
->> See https://puri.sm/products/librem-5/ and https://developer.puri.sm/Librem5/
->> for the schematics and more information.
->>
->> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
->> ---
->>  Documentation/devicetree/bindings/arm/fsl.yaml | 2 ++
->>  1 file changed, 2 insertions(+)
->>
-> 
-> 
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
-> 
-> If a tag was not added on purpose, please state why and what changed.
-> 
+--Sig_/X56+PooCIpC4xOjZOqGHdb.
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I'm very sorry. I forgot to add to this patch:
+Hi all,
 
-Acked-by: Rob Herring <robh@kernel.org>
+In commit
 
-It was not done on purposes and I'll add it to a next series and equally
-hope that this note would make a maintainer add it in case this series
-turns out to be ready.
+  1acf8f90ea7e ("libbpf: Fix register in PT_REGS MIPS macros")
 
-thanks for the explanation and again, sorry.
+Fixes tag
 
-                           martin
+  Fixes: c1932cd ("bpf: Add MIPS support to samples/bpf.")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/X56+PooCIpC4xOjZOqGHdb.
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8lS04ACgkQAVBC80lX
+0Gzi1ggAjjzzBU3p40cpQvEVbcLEc241JohCGWtIcuZtsv5YKysqxl0k8BNaEtsA
+HCltt+stH0STJ2FDloj+HEMTyvSnblA+QdIgeg1bGhI0OmEnUXsf1KbpYcBdGpML
+cOvK61llvOx8YeKx/l4u3RCWA0PriX3gW+loa+i66sFR3KUPfDYPIYI4Ojn0s5vn
+4kP+TKZqrbyDmVCULTEI7JJtSNUy4UbD7a0QxxumcD0Gfx3BsTeDHeGDHG3q3ZX6
+EwDnfCfJvW2tl95wdw2XqPB5xuRZJeNcMBNkcic2tlZ/WxOf06OWpuj2GSOburOl
+A4LksETNz87kvrlzvYaBjPXgKeF82A==
+=MEA2
+-----END PGP SIGNATURE-----
+
+--Sig_/X56+PooCIpC4xOjZOqGHdb.--
