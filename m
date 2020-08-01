@@ -2,153 +2,201 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF71C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 01:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 269D1C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 01:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A343C2083B
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 01:45:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596246311;
-	bh=sjM/fAEGxClBOS+U8ynUmUP8+Aqqz5vPbhJDNMh/upo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1UTDz0GDLqWI/UbRpMOwSg/odONXvfWYucsWAxfX5z5Tpjhdfgq1uJ+bW2L92akyc
-	 9f7ettxu9aNoTAmaaAh8tZMOM7VKUlxB6Dd/Q34ghjGuwOn3XpkJuIxvJs3XmJ4r+O
-	 jnv9Ohdn+OEIyBJPZLhXV3o/mht+KBHWFthShVeo=
+	by mail.kernel.org (Postfix) with ESMTP id 02EF72087C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 01:47:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uHPJ8JTD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbgHABpK (ORCPT
+        id S1728248AbgHABru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 21:45:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726794AbgHABpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 21:45:09 -0400
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A1E422CAE
-        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 01:45:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596246308;
-        bh=sjM/fAEGxClBOS+U8ynUmUP8+Aqqz5vPbhJDNMh/upo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TMfWmch3BHPGsKcmy0Xb3lWNIXId60zUQ4P7jKkHpfpohSZFUzpdhYxCWO7h1u/yp
-         LR/8wQwopDHtZeuUmU+G0vINxBGwhh7MxPt/ni2U9lGvBmKjVX/kSd3zFwcW1znLeM
-         KUKomZnt2pgq6e6qwBKjUdwKvcc+kJIAMNNOtCCo=
-Received: by mail-wr1-f44.google.com with SMTP id r4so26496302wrx.9
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 18:45:08 -0700 (PDT)
-X-Gm-Message-State: AOAM531if0yO3UG38/Aa3zgNIrhkGR3ywRY5wFp6rGbYSy92pSuXdL8P
-        xxH9x+tD/qv0+qOHEFeuHJecOiUgpFSECFMEkWn+nQ==
-X-Google-Smtp-Source: ABdhPJyh2ARx8wi/UN9nL/otfHQZd5+RGHN7quC5P7hkzkPIb5B7BkSWz9rivA5myA2qOsQl6oEslOsrzUBxG9umpGs=
-X-Received: by 2002:adf:fa85:: with SMTP id h5mr5822401wrr.18.1596246306953;
- Fri, 31 Jul 2020 18:45:06 -0700 (PDT)
+        Fri, 31 Jul 2020 21:47:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726794AbgHABru (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 21:47:50 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDB7AC06174A
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 18:47:49 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id c80so9880458wme.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 18:47:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vJnx156cIb/ocnmEd5ytGaOA79Apq7RDxlvXJ4tSsU4=;
+        b=uHPJ8JTDI5M2xkK0OfVUZ91EQVxWN9DazwFxWTFkpAifi13mVt9bCnKisGvl27mBUC
+         OvFoO0m9UX7sogSIhzYAPwMYSPIjRGt5zHfRme+S+/umFocYOjjZ6tvedl0AcH+sOl3z
+         aKk7Lf0PwIXr/0Ko9KpWw/xp/82CeFEHrKHDiBfuQFzXZa4aYximl0LKOPKR0rJ+N9mR
+         sDdNIsAXRz4PBBWeb4t+bU7xX1+0g8pDHK7nwycuN+CjwIsvIKZV71mQYKII4BhjYrZ1
+         Gm5IJPuhc7Hxx1eAmJvcYpBf9FSF3RLj/kkhrFfgu3pkBAKReMXgrG72QAixGcCBGWSz
+         xIeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vJnx156cIb/ocnmEd5ytGaOA79Apq7RDxlvXJ4tSsU4=;
+        b=chnumuma5boCMiZBJ31iRuxD32RxT04oOD/47Hln3INUZKGsqN+Mic1QNMsjK6C7vP
+         fZzLPNvfU3llI/pkHNrxzw7rtZNU2LJ3zJy3hzKvCe+X0Hh/hjmKwhSIJ7VF0QXmguEq
+         o2Ah3oL8pLchGYcHxH0jTSVpTtX0X5Im6vOBlhCtRLnoXJar+hrbTQ0yFgoPcwf9e9d0
+         pW27DfXrXTu4q1gkNXKwwIz3dbm217erQeEEPVc+LlJ2jqEIvUDcXz5I1qCuBim5XLHb
+         SocXvqH0g1JB8JBYXrH4wjnYKjkfVfGyVsrVpNSX3ief4bT1knD2cq3mKbAPU72ahPsv
+         rtLw==
+X-Gm-Message-State: AOAM532rtKMyVwPpxb0bIfdu9sBEmg1FNY3u12+ag8oMe3gf1ETQfiWE
+        8uPn+IWPRdHdxFMin79rSMOgZ9Uedn+S0n/chBTPTA==
+X-Google-Smtp-Source: ABdhPJxNN8XPrym2dtCX5BafY9kl52WklwSBrh4rLPbkpscRMCdHbrC3skywII6y3C2tPoKBJWnof6EfF9rGIng1dxQ=
+X-Received: by 2002:a1c:a9ce:: with SMTP id s197mr5914617wme.58.1596246468111;
+ Fri, 31 Jul 2020 18:47:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <1594684087-61184-1-git-send-email-fenghua.yu@intel.com> <1594684087-61184-10-git-send-email-fenghua.yu@intel.com>
-In-Reply-To: <1594684087-61184-10-git-send-email-fenghua.yu@intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 31 Jul 2020 18:44:55 -0700
-X-Gmail-Original-Message-ID: <CALCETrVZiCG4rcdMrs2F437oyBooQ2xt+feZLeK7qPk90gmOSw@mail.gmail.com>
-Message-ID: <CALCETrVZiCG4rcdMrs2F437oyBooQ2xt+feZLeK7qPk90gmOSw@mail.gmail.com>
-Subject: Re: [PATCH v6 09/12] x86/process: Clear PASID state for a newly
- forked/cloned thread
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Joerg Roedel <joro@8bytes.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        H Peter Anvin <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Jacob Jun Pan <jacob.jun.pan@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Sohil Mehta <sohil.mehta@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, iommu <iommu@lists.linux-foundation.org>,
-        amd-gfx <amd-gfx@lists.freedesktop.org>
+References: <20200722054314.2103880-1-irogers@google.com> <CAEf4BzaBYaFJ3eUinS9nHeykJ0xEbZpwLts33ZDp1PT=bkyjww@mail.gmail.com>
+In-Reply-To: <CAEf4BzaBYaFJ3eUinS9nHeykJ0xEbZpwLts33ZDp1PT=bkyjww@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 31 Jul 2020 18:47:36 -0700
+Message-ID: <CAP-5=fXMUWFs6YtQVuxjenCrOmKtKYCqZE3YofwdR=ArDYSwbQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] bpftool btf: Add prefix option to dump C
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Jakub Kicinski <kuba@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Stanislav Fomichev <sdf@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 4:48 PM Fenghua Yu <fenghua.yu@intel.com> wrote:
+On Tue, Jul 21, 2020 at 11:58 PM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
 >
-> The PASID state has to be cleared on forks, since the child has a
-> different address space. The PASID is also cleared for thread clone. While
-> it would be correct to inherit the PASID in this case, it is unknown
-> whether the new task will use ENQCMD. Giving it the PASID "just in case"
-> would have the downside of increased context switch overhead to setting
-> the PASID MSR.
+> On Tue, Jul 21, 2020 at 10:44 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > When bpftool dumps types and enum members into a header file for
+> > inclusion the names match those in the original source. If the same
+> > header file needs to be included in the original source and the bpf
+> > program, the names of structs, unions, typedefs and enum members will
+> > have naming collisions.
 >
-> Since #GP faults have to be handled on any threads that were created before
-> the PASID was assigned to the mm of the process, newly created threads
-> might as well be treated in a consistent way.
+> vmlinux.h is not really intended to be used from user-space, because
+> it's incompatible with pretty much any other header that declares any
+> type. Ideally we should make this better, but that might require some
+> compiler support. We've been discussing with Yonghong extending Clang
+> with a compile-time check for whether some type is defined or not,
+> which would allow to guard every type and only declare it
+> conditionally, if it's missing. But that's just an idea at this point.
 
-Just how much context switch overhead are we talking about here?
-Unless the CPU works differently than I expect, I would guess you are
-saving exactly zero cycles.  What am I missing?
+Thanks Andrii! We're not looking at user-space code but the BPF code.
+The prefix idea comes from a way to solve this problem in C++ with
+namespaces:
 
---Andy
+namespace vmlinux {
+#include "vmlinux.h"
+}
 
+As the BPF programs are C code then the prefix acts like the
+namespace. It seems strange to need to extend the language.
 
+> Regardless, vmlinux.h is also very much Clang-specific, and shouldn't
+> work well with GCC. Could you elaborate on the specifics of the use
+> case you have in mind? That could help me see what might be the right
+> solution. Thanks!
+
+So the use-case is similar to btf_iter.h:
+https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/tree/tools/testing/selftests/bpf/progs/bpf_iter.h
+To avoid collisions with somewhat cleaner macro or not games.
+
+Prompted by your concern I was looking into changing bpf_iter.h to use
+a prefix to show what the difference would be like. I also think that
+there may be issues with our kernel and tool set up that may mean that
+the prefix is unnecessary, if I fix something else. Anyway, to give an
+example I needed to build the selftests but this is failing for me.
+What I see is:
+
+$ git clone git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git
+$ cd bpf-next
+$ make defconfig
+$ cat >>.config <<EOF
+CONFIG_DEBUG_INFO=y
+CONFIG_DEBUG_INFO_BTF=y
+EOF
+$ make -j all
+$ mkdir /tmp/selftests
+$ make O=/tmp/selftests/ TARGETS=bpf kselftest
+...
+  CLANG    /tmp/selftests//kselftest/bpf/tools/build/bpftool/profiler.bpf.o
+skeleton/profiler.bpf.c:18:21: error: invalid application of 'sizeof'
+to an incomplete type 'struct bpf_perf_event_value'
+        __uint(value_size, sizeof(struct bpf_perf_event_value));
+                           ^     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Checking with bpftool the vmlinux lacks struct bpf_perf_event_value
+but as this is unconditionally defined in bpf.h this seems wrong. Do
+you have any suggestions and getting a working build?
+
+> > To avoid these collisions an approach is to redeclare the header file
+> > types and enum members, which leads to duplication and possible
+> > inconsistencies. Another approach is to use preprocessor macros
+> > to rename conflicting names, but this can be cumbersome if there are
+> > many conflicts.
+> >
+> > This patch adds a prefix option for the dumped names. Use of this option
+> > can avoid name conflicts and compile time errors.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  .../bpf/bpftool/Documentation/bpftool-btf.rst |  7 ++++++-
+> >  tools/bpf/bpftool/btf.c                       | 18 ++++++++++++++---
+> >  tools/lib/bpf/btf.h                           |  1 +
+> >  tools/lib/bpf/btf_dump.c                      | 20 +++++++++++++------
+> >  4 files changed, 36 insertions(+), 10 deletions(-)
+> >
 >
-> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> ---
-> v2:
-> - Modify init_task_pasid().
+> [...]
 >
->  arch/x86/kernel/process.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+> > diff --git a/tools/lib/bpf/btf.h b/tools/lib/bpf/btf.h
+> > index 491c7b41ffdc..fea4baab00bd 100644
+> > --- a/tools/lib/bpf/btf.h
+> > +++ b/tools/lib/bpf/btf.h
+> > @@ -117,6 +117,7 @@ struct btf_dump;
+> >
+> >  struct btf_dump_opts {
+> >         void *ctx;
+> > +       const char *name_prefix;
+> >  };
 >
-> diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-> index f362ce0d5ac0..1b1492e337a6 100644
-> --- a/arch/x86/kernel/process.c
-> +++ b/arch/x86/kernel/process.c
-> @@ -121,6 +121,21 @@ static int set_new_tls(struct task_struct *p, unsigned long tls)
->                 return do_set_thread_area_64(p, ARCH_SET_FS, tls);
->  }
+> BTW, we can't do that, this breaks ABI. btf_dump_opts were added
+> before we understood the problem of backward/forward  compatibility of
+> libbpf APIs, unfortunately.
+
+This could be fixed by adding a "new" API for the parameter, which
+would be unfortunate compared to just amending the existing API. There
+may be solutions that are less duplicative.
+
+Thanks,
+Ian
+
+> >
+> >  typedef void (*btf_dump_printf_fn_t)(void *ctx, const char *fmt, va_list args);
+> > diff --git a/tools/lib/bpf/btf_dump.c b/tools/lib/bpf/btf_dump.c
+> > index e1c344504cae..baf2b4d82e1e 100644
+> > --- a/tools/lib/bpf/btf_dump.c
+> > +++ b/tools/lib/bpf/btf_dump.c
 >
-> +/* Initialize the PASID state for the forked/cloned thread. */
-> +static void init_task_pasid(struct task_struct *task)
-> +{
-> +       struct ia32_pasid_state *ppasid;
-> +
-> +       /*
-> +        * Initialize the PASID state so that the PASID MSR will be
-> +        * initialized to its initial state (0) by XRSTORS when the task is
-> +        * scheduled for the first time.
-> +        */
-> +       ppasid = get_xsave_addr(&task->thread.fpu.state.xsave, XFEATURE_PASID);
-> +       if (ppasid)
-> +               ppasid->pasid = INIT_PASID;
-> +}
-> +
->  int copy_thread_tls(unsigned long clone_flags, unsigned long sp,
->                     unsigned long arg, struct task_struct *p, unsigned long tls)
->  {
-> @@ -174,6 +189,9 @@ int copy_thread_tls(unsigned long clone_flags, unsigned long sp,
->         task_user_gs(p) = get_user_gs(current_pt_regs());
->  #endif
->
-> +       if (static_cpu_has(X86_FEATURE_ENQCMD))
-> +               init_task_pasid(p);
-> +
->         /* Set a new TLS for the child thread? */
->         if (clone_flags & CLONE_SETTLS)
->                 ret = set_new_tls(p, tls);
-> --
-> 2.19.1
->
+> [...]
