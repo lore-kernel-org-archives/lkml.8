@@ -2,169 +2,214 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3ECBC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A756DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3664207FB
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:06:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596294407;
-	bh=BHg3chiPoxQ/27EGS+plLWHJ5NrAl3ON9q1ebHGA7/U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xrxRXvwfltleKL1nHrKet7+tGgg2UgKYwl013LXbHwPY1DTxEFC3vNuj4GhCmgqBv
-	 P5hbRUZgHegueZCtfSDzDJNqD0r6OAYcimoe80+3FNWbW72t0azc6Nzwat9U7SStMe
-	 arf+kZISfAC2JpLbKD0uVzSHUieOWWauNbPJeo0M=
+	by mail.kernel.org (Postfix) with ESMTP id 72DBF207BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:09:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IaWHYaZM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgHAPGo (ORCPT
+        id S1726773AbgHAPJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 11:06:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58846 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbgHAPGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 11:06:44 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 384C7207BC;
-        Sat,  1 Aug 2020 15:06:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596294403;
-        bh=BHg3chiPoxQ/27EGS+plLWHJ5NrAl3ON9q1ebHGA7/U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=vOkDUCZP4Gwlk14aphgZ9psj9O2YHgeS+SijCd5eM0JoBr2VfFMcSQ5IgMcvVVb9K
-         1jVuzEc/svwW9+PYxJYRFb2Ls8wnjBhvrhUtWLyYpLj1xMhakOnNDcIiJoiGtcX4B+
-         cX8YGHDNYqCNxMcguseVS5HD9vn3E9HxhXr386i0=
-Date:   Sat, 1 Aug 2020 16:06:39 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Daniel Campello <campello@chromium.org>
-Cc:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org
-Subject: Re: [PATCH v3 01/15] dt-bindings: iio: Add bindings for sx9310
- sensor
-Message-ID: <20200801160639.1410944e@archlinux>
-In-Reply-To: <20200731104555.v3.1.I0925046377211b8b6f06764857f03b4ab592bddb@changeid>
-References: <20200731164853.3020946-1-campello@chromium.org>
-        <20200731104555.v3.1.I0925046377211b8b6f06764857f03b4ab592bddb@changeid>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 1 Aug 2020 11:09:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51052 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbgHAPJ2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 11:09:28 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 021D3C06174A
+        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 08:09:27 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id b25so25243151qto.2
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 08:09:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=AnUnEw7ce9H3qhe28a6R96K/BnlU0zb3g4leH5fYies=;
+        b=IaWHYaZMB5TD+ZQcsllGb890DGQ658jE5DNKFYFaUPNsRW3ushkrkDfszkG+JwLfVT
+         +DzHKRueuVVmG27M8CPJD+rGbb1T0yMJm+Fv+nfJLi+rDE1UaYbJucTI3yDXr7Renj9L
+         659GJwCDctmyZ1N6NXXIlnLivYkuXXVXUXA3bxUVNC0X7GO/svm13WfelQGvCTCCbuNd
+         sm6jls2Ql0UXm14BgPgt3SIjYWu4WmXf8DmMpVjvADqIGHY1Db/axR2Rzq5N7FWm9csT
+         uRG4gh8n+PeionvH7r+6CHH9Ex4tNTkk47JTyyz6avJ7Vmdpp5U/W53a8sLLfQJEvYJH
+         6uiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AnUnEw7ce9H3qhe28a6R96K/BnlU0zb3g4leH5fYies=;
+        b=TdmtRxCyjQOWrqWHX0gNtwzd1T5XymXlkEznL/jXNtpQFkQ6PfDUOqhmiJQEqpuxHU
+         WTFAz6rXaYatfHYgkr+DN2ygup14pO1/TVdUC/I9Ev18vhk5UvnWeDdZJPQt3dKsl3VI
+         KNFIvMdjKmuqQjx7TxqoX43Ry2+AmOrkt/Fhlyydcj1K6yFd4TzsMjIzzwrP6YQ1jVuQ
+         ZIzy5BLIssf9eWQeQJE7DzMbFrQ5ab/2+v2I4cfRIcvWlt+0zYOlAHGmIsTPrOY5xXZj
+         rb/Fom/9kUnTdhowcrOfFhqRwu761nJOHsDdXus65ccVYVjOzjUoXV+/jSlR+vwPwBvO
+         50cg==
+X-Gm-Message-State: AOAM531o7zfbuASK1R3q5NPuyXP2t+Rg09l2sNUhxWNBMsq+Xd4Sx45m
+        CmGf1HKiCN6tQMPE+U+sHg==
+X-Google-Smtp-Source: ABdhPJwVrd8QjBPMSvl4se7MrhK152HJ7JbrprmBFUZb5nWD8fw1Ls3Gv2euWj8SmTqBJwDRXlex5w==
+X-Received: by 2002:ac8:4558:: with SMTP id z24mr9131991qtn.241.1596294566246;
+        Sat, 01 Aug 2020 08:09:26 -0700 (PDT)
+Received: from PWN (146-115-88-66.s3894.c3-0.sbo-ubr1.sbo.ma.cable.rcncustomer.com. [146.115.88.66])
+        by smtp.gmail.com with ESMTPSA id p4sm12300599qkj.135.2020.08.01.08.09.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Aug 2020 08:09:25 -0700 (PDT)
+Date:   Sat, 1 Aug 2020 11:09:19 -0400
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     "Dmitry V. Levin" <ldv@altlinux.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Elvira Khabirova <lineprinter@altlinux.org>,
+        Eugene Syromyatnikov <evgsyr@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH v2] ptrace: Prevent
+ kernel-infoleak in ptrace_get_syscall_info()
+Message-ID: <20200801150919.GA229082@PWN>
+References: <20200727213644.328662-1-yepeilin.cs@gmail.com>
+ <20200801020841.227522-1-yepeilin.cs@gmail.com>
+ <20200801110646.GA1705@altlinux.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200801110646.GA1705@altlinux.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jul 2020 10:48:38 -0600
-Daniel Campello <campello@chromium.org> wrote:
-
-> Adds device tree bandings for sx9310 sensor.
+On Sat, Aug 01, 2020 at 02:06:46PM +0300, Dmitry V. Levin wrote:
+> On Fri, Jul 31, 2020 at 10:08:41PM -0400, Peilin Ye wrote:
+> > ptrace_get_syscall_info() is potentially copying uninitialized stack
+> > memory to userspace, since the compiler may leave a 3-byte hole near the
+> > beginning of `info`. Fix it by adding a padding field to `struct
+> > ptrace_syscall_info`.
+> > 
+> > Cc: stable@vger.kernel.org
+> > Fixes: 201766a20e30 ("ptrace: add PTRACE_GET_SYSCALL_INFO request")
+> > Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+> > ---
+> > Change in v2:
+> >     - Add a padding field to `struct ptrace_syscall_info`, instead of
+> >       doing memset() on `info`. (Suggested by Dmitry V. Levin
+> >       <ldv@altlinux.org>)
+> > 
+> > Reference: https://lwn.net/Articles/417989/
+> > 
+> > $ # before:
+> > $ pahole -C "ptrace_syscall_info" kernel/ptrace.o
+> > struct ptrace_syscall_info {
+> > 	__u8                       op;                   /*     0     1 */
+> > 
+> > 	/* XXX 3 bytes hole, try to pack */
+> > 
+> > 	__u32                      arch __attribute__((__aligned__(4))); /*     4     4 */
+> > 	__u64                      instruction_pointer;  /*     8     8 */
+> > 	__u64                      stack_pointer;        /*    16     8 */
+> > 	union {
+> > 		struct {
+> > 			__u64      nr;                   /*    24     8 */
+> > 			__u64      args[6];              /*    32    48 */
+> > 		} entry;                                 /*    24    56 */
+> > 		struct {
+> > 			__s64      rval;                 /*    24     8 */
+> > 			__u8       is_error;             /*    32     1 */
+> > 		} exit;                                  /*    24    16 */
+> > 		struct {
+> > 			__u64      nr;                   /*    24     8 */
+> > 			__u64      args[6];              /*    32    48 */
+> > 			/* --- cacheline 1 boundary (64 bytes) was 16 bytes ago --- */
+> > 			__u32      ret_data;             /*    80     4 */
+> > 		} seccomp;                               /*    24    64 */
+> > 	};                                               /*    24    64 */
+> > 
+> > 	/* size: 88, cachelines: 2, members: 5 */
+> > 	/* sum members: 85, holes: 1, sum holes: 3 */
+> > 	/* forced alignments: 1, forced holes: 1, sum forced holes: 3 */
+> > 	/* last cacheline: 24 bytes */
+> > } __attribute__((__aligned__(8)));
+> > $
+> > $ # after:
+> > $ pahole -C "ptrace_syscall_info" kernel/ptrace.o
+> > struct ptrace_syscall_info {
+> > 	__u8                       op;                   /*     0     1 */
+> > 	__u8                       pad[3];               /*     1     3 */
+> > 	__u32                      arch __attribute__((__aligned__(4))); /*     4     4 */
+> > 	__u64                      instruction_pointer;  /*     8     8 */
+> > 	__u64                      stack_pointer;        /*    16     8 */
+> > 	union {
+> > 		struct {
+> > 			__u64      nr;                   /*    24     8 */
+> > 			__u64      args[6];              /*    32    48 */
+> > 		} entry;                                 /*    24    56 */
+> > 		struct {
+> > 			__s64      rval;                 /*    24     8 */
+> > 			__u8       is_error;             /*    32     1 */
+> > 		} exit;                                  /*    24    16 */
+> > 		struct {
+> > 			__u64      nr;                   /*    24     8 */
+> > 			__u64      args[6];              /*    32    48 */
+> > 			/* --- cacheline 1 boundary (64 bytes) was 16 bytes ago --- */
+> > 			__u32      ret_data;             /*    80     4 */
+> > 		} seccomp;                               /*    24    64 */
+> > 	};                                               /*    24    64 */
+> > 
+> > 	/* size: 88, cachelines: 2, members: 6 */
+> > 	/* forced alignments: 1 */
+> > 	/* last cacheline: 24 bytes */
+> > } __attribute__((__aligned__(8)));
+> > $ _
+> > 
+> >  include/uapi/linux/ptrace.h | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/include/uapi/linux/ptrace.h b/include/uapi/linux/ptrace.h
+> > index a71b6e3b03eb..a518ba514bac 100644
+> > --- a/include/uapi/linux/ptrace.h
+> > +++ b/include/uapi/linux/ptrace.h
+> > @@ -81,6 +81,7 @@ struct seccomp_metadata {
+> >  
+> >  struct ptrace_syscall_info {
+> >  	__u8 op;	/* PTRACE_SYSCALL_INFO_* */
+> > +	__u8 pad[3];
+> >  	__u32 arch __attribute__((__aligned__(sizeof(__u32))));
+> >  	__u64 instruction_pointer;
+> >  	__u64 stack_pointer;
 > 
-> Signed-off-by: Daniel Campello <campello@chromium.org>
-> Cc: Hartmut Knaack <knaack.h@gmx.de>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>
-> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> [swboyd@chromium.org: Add both regulators and make them optional]
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
+> Funnily enough, but in first editions of PTRACE_GET_SYSCALL_INFO
+> patchset [1] this was looking very similar:
 > 
-> Changes in v3: None
-> Changes in v2:
->  - Added #io-channel-cells as a required property
+> +struct ptrace_syscall_info {
+> +	__u8 op;        /* PTRACE_SYSCALL_INFO_* */
+> +	__u8 __pad0[3];
+> +	__u32 arch;
 > 
->  .../iio/proximity/semtech,sx9310.yaml         | 65 +++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+> But later we decided [2][3] to replace the pad with a hole.
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-> new file mode 100644
-> index 00000000000000..5739074d3592fe
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-> @@ -0,0 +1,65 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/proximity/semtech,sx9310.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Semtech's SX9310 capacitive proximity sensor
-> +
-> +maintainers:
-> +  - Daniel Campello <campello@chromium.org>
-> +
-> +description: |
-> +  Semtech's SX9310/SX9311 capacitive proximity/button solution.
-> +
-> +  Specifications about the devices can be found at:
-> +  https://www.semtech.com/products/smart-sensing/sar-sensors/sx9310
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - semtech,sx9310
-> +      - semtech,sx9311
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description:
-> +      The sole interrupt generated by the device used to announce the
-> +      preceding reading request has finished and that data is
-> +      available or that a close/far proximity event has happened.
-> +    maxItems: 1
-> +
-> +  vdd-supply:
-> +    description: Main power supply
-> +
-> +  svdd-supply:
-> +    description: Host interface power supply
-> +
-> +  "#io-channel-cells":
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#io-channel-cells"
+> Note that the sole purpose of the __aligned__ attribute on the field that
+> follows the hole is to guarantee that the hole has the same size across
+> architectures.  As this hole is being replaced back with a pad, that
+> __aligned__ attribute is no longer needed and can be omitted along with
+> adding the pad.
 
-Missed this in earlier review (only noticed when I saw whilst santity
-checking earlier versions.
+Ah, I see. I will remove that in v3.
 
-Fairly sure we should only need #io-channel-cells if we have
-a consumer of a channel somewhere else in DT.  So it's not
-required as far as I can see.
+Thank you,
+Peilin Ye
 
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    i2c {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      proximity@28 {
-> +        compatible = "semtech,sx9310";
-> +        reg = <0x28>;
-> +        interrupt-parent = <&pio>;
-> +        interrupts = <5 IRQ_TYPE_LEVEL_LOW 5>;
-> +        vdd-supply = <&pp3300_a>;
-> +        svdd-supply = <&pp1800_prox>;
-> +        #io-channel-cells = <1>;
-> +      };
-> +    };
-
+> [1] https://lore.kernel.org/linux-api/20181125022150.46258a20@akathisia/
+> [2] https://lore.kernel.org/linux-api/20181211162305.GA480@altlinux.org/
+> [3] https://lore.kernel.org/linux-api/20181213171833.GA5240@altlinux.org/
+> 
+> 
+> -- 
+> ldv
