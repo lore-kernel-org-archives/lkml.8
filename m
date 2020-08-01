@@ -2,173 +2,91 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A304C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 04:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED62C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 04:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F977206FA
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 04:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCBE420716
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 04:33:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="bkvMTwgR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgHAELX (ORCPT
+        id S1725883AbgHAEdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 00:11:23 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:40586 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725280AbgHAELX (ORCPT
+        Sat, 1 Aug 2020 00:33:44 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:22047 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725601AbgHAEdo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 00:11:23 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07425;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U4N-V5x_1596255078;
-Received: from IT-FVFX43SYHV2H.lan(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U4N-V5x_1596255078)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 01 Aug 2020 12:11:19 +0800
-Subject: Re: [PATCH 1/4] mm/thp: move lru_add_page_tail func to huge_memory.c
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Hugh Dickins <hughd@google.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <1596254957-22560-1-git-send-email-alex.shi@linux.alibaba.com>
-Message-ID: <69b09ccd-e353-9310-7fb2-41dc20374eb0@linux.alibaba.com>
-Date:   Sat, 1 Aug 2020 12:11:10 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Sat, 1 Aug 2020 00:33:44 -0400
+X-UUID: 3ccb1420bc4d473cbce0582b0181a449-20200801
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=VSXHzuVe7TyPrG7V1dalxToyvgZ0VM2OicojizCUcAM=;
+        b=bkvMTwgRrP94DoVh4i+wuu9QvGZCkPx5NrjE2GXcbY71+vAERFZTOuUz2wofZuc9D9cxg4wZPMBlfA0U9A9nEBPvNQKsnBJTx6CNmWgxF2cyuoFaAzlslghEpglP8uO+nShUl1bLrGFFRV9fO+yz8GxsHFcPdeZ/wGDRsnHXHvM=;
+X-UUID: 3ccb1420bc4d473cbce0582b0181a449-20200801
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <zhiyong.tao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 548145483; Sat, 01 Aug 2020 12:33:39 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Sat, 1 Aug 2020 12:33:36 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Sat, 1 Aug 2020 12:33:36 +0800
+From:   Zhiyong Tao <zhiyong.tao@mediatek.com>
+To:     <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
+        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
+        <sean.wang@kernel.org>
+CC:     <srv_heupstream@mediatek.com>, <zhiyong.tao@mediatek.com>,
+        <hui.liu@mediatek.com>, <eddie.huang@mediatek.com>,
+        <chuanjia.liu@mediatek.com>, <biao.huang@mediatek.com>,
+        <hongzhou.yang@mediatek.com>, <erin.lo@mediatek.com>,
+        <sean.wang@mediatek.com>, <sj.huang@mediatek.com>,
+        <seiya.wang@mediatek.com>, <jg_poxu@mediatek.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>
+Subject: [PATCH v2 0/3] Mediatek pinctrl patch on mt8192 
+Date:   Sat, 1 Aug 2020 12:33:00 +0800
+Message-ID: <20200801043303.32149-1-zhiyong.tao@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-In-Reply-To: <1596254957-22560-1-git-send-email-alex.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: B470880E776B38862319ED4C7CBD9BC1D5990EA650C3814ADCD0175DDF9A736D2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+VGhpcyBzZXJpZXMgaW5jbHVkZXMgMyBwYXRjaGVzOg0KMS5hZGQgcGluY3RybCBmaWxlIG9uIG10
+ODE5Mi4NCjIuYWRkIHBpbmN0cmwgYmluZGluZyBkb2N1bWVudCBvbiBtdDgxOTIuDQozLmFkZCBw
+aW5jdHJsIGRyaXZlciBvbiBNVDgxOTIuDQoNCkNoYW5nZXMgaW4gcGF0Y2ggdjI6DQoxKWNoYW5n
+ZSBtYWludGFpbmVycyBuYW1lIGluIHBpbmN0cmwtbXQ4MTkyLnlhbWwuDQoyKXJlbW92ZSB1bnVz
+ZWQgZGVzY3JpcHRpb24gZm9yICJyZWctbmFtZXMiLg0KMyljaGFuZ2UgJ3N1Ym5vZGUgZm9ybWF0
+Oicgd2hpY2ggaXMgbm90IGEgY2hpbGQgbmFtZSB0byAiXnBpbnMiLg0KNClhZGQgKCd8JykgYWZ0
+ZXIgImRlc2NyaXB0aW9uOiIuDQo1KXJlbW92ZSAiaTJjMF9waW5zX2E6IGkyYzAiIGFuZCAiaTJj
+MF9waW5zX2E6IGkyYzEiLg0KNilhZGQgcHJvcGVydGllcyBmb3IgcGluIGNvbmZpZ3VyYXRpb24g
+bm9kZXMuDQoNClpoaXlvbmcgVGFvICgzKToNCiAgZHQtYmluZGluZ3M6IHBpbmN0cmw6IG10ODE5
+MjogYWRkIHBpbmN0cmwgZmlsZQ0KICBkdC1iaW5kaW5nczogcGluY3RybDogbXQ4MTkyOiBhZGQg
+YmluZGluZyBkb2N1bWVudA0KICBwaW5jdHJsOiBhZGQgcGluY3RybCBkcml2ZXIgb24gbXQ4MTky
+DQoNCiAuLi4vYmluZGluZ3MvcGluY3RybC9waW5jdHJsLW10ODE5Mi55YW1sICAgICAgfCAgMTUx
+ICsrDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL0tjb25maWcgICAgICAgICAgICAgIHwgICAg
+NyArDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL01ha2VmaWxlICAgICAgICAgICAgIHwgICAg
+MSArDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXQ4MTkyLmMgICAgIHwgMTQ1
+MyArKysrKysrKysrKw0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ay1tdDgx
+OTIuaCB8IDIyMjggKysrKysrKysrKysrKysrKysNCiBpbmNsdWRlL2R0LWJpbmRpbmdzL3BpbmN0
+cmwvbXQ4MTkyLXBpbmZ1bmMuaCAgfCAxMzQ0ICsrKysrKysrKysNCiA2IGZpbGVzIGNoYW5nZWQs
+IDUxODQgaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9waW5jdHJsLW10ODE5Mi55YW1sDQogY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ODE5Mi5jDQogY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ay1tdDgx
+OTIuaA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2R0LWJpbmRpbmdzL3BpbmN0cmwvbXQ4
+MTkyLXBpbmZ1bmMuaA0KDQotLQ0KMi4xOC4wDQoNCg==
 
-This patchset is just cleanup and get reviewed by Kirill, is it cath up 5.9?
-
-Thanks
-Alex
-
-ÔÚ 2020/8/1 ÏÂÎç12:09, Alex Shi Ð´µÀ:
-> The func is only used in huge_memory.c, defining it in other file with a
-> CONFIG_TRANSPARENT_HUGEPAGE macro restrict just looks weird.
-> 
-> Let's move it THP. And make it static as Hugh Dickin suggested.
-> 
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> ---
->  include/linux/swap.h |  2 --
->  mm/huge_memory.c     | 30 ++++++++++++++++++++++++++++++
->  mm/swap.c            | 33 ---------------------------------
->  3 files changed, 30 insertions(+), 35 deletions(-)
-> 
-> diff --git a/include/linux/swap.h b/include/linux/swap.h
-> index 661046994db4..43e6b3458f58 100644
-> --- a/include/linux/swap.h
-> +++ b/include/linux/swap.h
-> @@ -338,8 +338,6 @@ extern void lru_note_cost(struct lruvec *lruvec, bool file,
->  			  unsigned int nr_pages);
->  extern void lru_note_cost_page(struct page *);
->  extern void lru_cache_add(struct page *);
-> -extern void lru_add_page_tail(struct page *page, struct page *page_tail,
-> -			 struct lruvec *lruvec, struct list_head *head);
->  extern void activate_page(struct page *);
->  extern void mark_page_accessed(struct page *);
->  extern void lru_add_drain(void);
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 90733cefa528..bc905e7079bf 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -2315,6 +2315,36 @@ static void remap_page(struct page *page)
->  	}
->  }
->  
-> +static void lru_add_page_tail(struct page *page, struct page *page_tail,
-> +				struct lruvec *lruvec, struct list_head *list)
-> +{
-> +	VM_BUG_ON_PAGE(!PageHead(page), page);
-> +	VM_BUG_ON_PAGE(PageCompound(page_tail), page);
-> +	VM_BUG_ON_PAGE(PageLRU(page_tail), page);
-> +	lockdep_assert_held(&lruvec_pgdat(lruvec)->lru_lock);
-> +
-> +	if (!list)
-> +		SetPageLRU(page_tail);
-> +
-> +	if (likely(PageLRU(page)))
-> +		list_add_tail(&page_tail->lru, &page->lru);
-> +	else if (list) {
-> +		/* page reclaim is reclaiming a huge page */
-> +		get_page(page_tail);
-> +		list_add_tail(&page_tail->lru, list);
-> +	} else {
-> +		/*
-> +		 * Head page has not yet been counted, as an hpage,
-> +		 * so we must account for each subpage individually.
-> +		 *
-> +		 * Put page_tail on the list at the correct position
-> +		 * so they all end up in order.
-> +		 */
-> +		add_page_to_lru_list_tail(page_tail, lruvec,
-> +					  page_lru(page_tail));
-> +	}
-> +}
-> +
->  static void __split_huge_page_tail(struct page *head, int tail,
->  		struct lruvec *lruvec, struct list_head *list)
->  {
-> diff --git a/mm/swap.c b/mm/swap.c
-> index d16d65d9b4e0..c674fb441fe9 100644
-> --- a/mm/swap.c
-> +++ b/mm/swap.c
-> @@ -935,39 +935,6 @@ void __pagevec_release(struct pagevec *pvec)
->  }
->  EXPORT_SYMBOL(__pagevec_release);
->  
-> -#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> -/* used by __split_huge_page_refcount() */
-> -void lru_add_page_tail(struct page *page, struct page *page_tail,
-> -		       struct lruvec *lruvec, struct list_head *list)
-> -{
-> -	VM_BUG_ON_PAGE(!PageHead(page), page);
-> -	VM_BUG_ON_PAGE(PageCompound(page_tail), page);
-> -	VM_BUG_ON_PAGE(PageLRU(page_tail), page);
-> -	lockdep_assert_held(&lruvec_pgdat(lruvec)->lru_lock);
-> -
-> -	if (!list)
-> -		SetPageLRU(page_tail);
-> -
-> -	if (likely(PageLRU(page)))
-> -		list_add_tail(&page_tail->lru, &page->lru);
-> -	else if (list) {
-> -		/* page reclaim is reclaiming a huge page */
-> -		get_page(page_tail);
-> -		list_add_tail(&page_tail->lru, list);
-> -	} else {
-> -		/*
-> -		 * Head page has not yet been counted, as an hpage,
-> -		 * so we must account for each subpage individually.
-> -		 *
-> -		 * Put page_tail on the list at the correct position
-> -		 * so they all end up in order.
-> -		 */
-> -		add_page_to_lru_list_tail(page_tail, lruvec,
-> -					  page_lru(page_tail));
-> -	}
-> -}
-> -#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
-> -
->  static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec,
->  				 void *arg)
->  {
-> 
