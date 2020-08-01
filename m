@@ -2,72 +2,128 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6863C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 10:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C89FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 10:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FBF220888
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 10:34:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596278070;
-	bh=Bi3huejpw8NgGMyehxO6oNuEkeDNsr1fgsLXQR9lQGY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bi//6pOFmSEpJf3Jj5uFZhkv8jADw82GTISbyV9S1C34AVoulax4n/eRJO9yHiEiz
-	 oLIogz6N8tEXjephCwWFmEXsv/ByTJxUKym7lUGu7+pt9++TitsxPDM+fGI6YS7j71
-	 BWkh0X1G8p9elPs3kB1mHKe8US3lfvNun9EhVAkY=
+	by mail.kernel.org (Postfix) with ESMTP id 141C420716
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 10:38:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="POK204Ku"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgHAKe3 (ORCPT
+        id S1728696AbgHAKii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 06:34:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45456 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728249AbgHAKe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 06:34:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D727820716;
-        Sat,  1 Aug 2020 10:34:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596278068;
-        bh=Bi3huejpw8NgGMyehxO6oNuEkeDNsr1fgsLXQR9lQGY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=S9C6S4POMKeArgRTn1RnQRXEDjeWlgJ7jUHYkSPEIkGGHs2l9BftopC5fFsM+ZQom
-         JtdVS6QAnvgpL4qh4xMXK57/bschoP4FJP5zJYQQYuFhUCR1xNEoqPppC2d2P5Y/ac
-         icLokWeiPYQ1YrUbVCEDOXW0KvYApHjY6PWT3nbg=
-Date:   Sat, 1 Aug 2020 12:34:13 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     huangrandall@google.com, stable-commits@vger.kernel.org
-Subject: Re: Patch "f2fs: fix to avoid memory leakage in f2fs_listxattr" has
- been added to the 4.9-stable tree
-Message-ID: <20200801103413.GE3309560@kroah.com>
-References: <20200801010828.34E412083B@mail.kernel.org>
+        Sat, 1 Aug 2020 06:38:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725931AbgHAKii (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 06:38:38 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6F61C06174A;
+        Sat,  1 Aug 2020 03:38:37 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id jp10so7304531ejb.0;
+        Sat, 01 Aug 2020 03:38:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Kqz4aqY/bLtRz86OcwNjOWqVFrJQP1RdLh4tx8zW7E4=;
+        b=POK204KueaZ+f8craETK8myo945mHWVOy3UWIcucqFxpWOfAmFh80MHV6UMpKDRkEj
+         /e2nsSAvjlQpyJ0KQBJZfX8ae0KgBr+ftk1Agxv9BOlNnDg5kz7HUfPULDOgWEjLf8Sv
+         FIuHH13PuFZRYRknv6afWtT23A0K/xcrJm9Ox9kwes5YfUV2W7f0PretjRJ8i8Kogxb6
+         Yuu/AWF5S0uEFYKva6NLiQjV3IKvgz27vkWemlgxUzO7hJmP80CdRkTp/FUWc+14W+7E
+         JHvtdoGpG65bPmKo3yJi/svqlgTZa5xu90vD8JjQrTXLHwsn0eYn8txmKkUThbBflW5f
+         JZmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Kqz4aqY/bLtRz86OcwNjOWqVFrJQP1RdLh4tx8zW7E4=;
+        b=h+D901Kv046yp+JBTqLu1tbjot4DWd6JhCF80MKq7HlF+GQ2Lht4Q95rDXVVGQLFkt
+         M47zyAoUCJgnMmLRgZ6m9P1yKrm8UK69C4g7ALctTwStz+vcsrsHfoFRQIOV/Cywo8Iq
+         3nMeCG2rtnUQZ0EMAeYotR7H/8TtuCA9vcHvkP9cJpPrOk+FJuY7GOtZDKSpJajgGmHt
+         ShkhFWqkHjhLH4Yg7t8187I3fcDw+AwjZFBZHAACPfvX7no50azx6RkMiJ62f7yPekHJ
+         AyoJaxiPqdO2MIyNmGYfo1GLVOsFYPEmW48KjvITJsUauM+xnVvDnC0401ETVOxa74vC
+         Nn0w==
+X-Gm-Message-State: AOAM530kEO5AGZstedDSVKizXkB/ykeORm0fJ/ho7ulTe36DpJM/sVW9
+        NOLRLflkExfGK/ybAKyQJ5e3JFUF
+X-Google-Smtp-Source: ABdhPJxk4XwPcfn0jWfUZRR6GWHyrJcd47ExA1Y7nzAb0VJDqjsXNQjECMaJPQqI4JRR8VsWxxJOrg==
+X-Received: by 2002:a17:906:8d5:: with SMTP id o21mr8570861eje.155.1596278316325;
+        Sat, 01 Aug 2020 03:38:36 -0700 (PDT)
+Received: from localhost.localdomain ([5.100.193.69])
+        by smtp.gmail.com with ESMTPSA id w20sm11133375eds.21.2020.08.01.03.38.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Aug 2020 03:38:35 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fs: optimise kiocb_set_rw_flags()
+Date:   Sat,  1 Aug 2020 13:36:33 +0300
+Message-Id: <e523f51f59ad6ecdad4ad22c560cb9c913e96e1a.1596277420.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200801010828.34E412083B@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 09:08:27PM -0400, Sasha Levin wrote:
-> This is a note to let you know that I've just added the patch titled
-> 
->     f2fs: fix to avoid memory leakage in f2fs_listxattr
-> 
-> to the 4.9-stable tree which can be found at:
->     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-> 
-> The filename of the patch is:
->      f2fs-fix-to-avoid-memory-leakage-in-f2fs_listxattr.patch
-> and it can be found in the queue-4.9 subdirectory.
-> 
-> If you, or anyone else, feels it should not be added to the stable tree,
-> please let <stable@vger.kernel.org> know about it.
+Use a local var to collect flags in kiocb_set_rw_flags(). That spares
+some memory writes and allows to replace most of the jumps with MOVEcc.
 
-Also breaks the build, so now dropped :(
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+
+v2: fast exit on flags == 0 (Matthew Wilcox)
+
+ include/linux/fs.h | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 8a00ba99284e..b7f1f1b7d691 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3282,22 +3282,28 @@ static inline int iocb_flags(struct file *file)
+ 
+ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
+ {
++	int kiocb_flags = 0;
++
++	if (!flags)
++		return 0;
+ 	if (unlikely(flags & ~RWF_SUPPORTED))
+ 		return -EOPNOTSUPP;
+ 
+ 	if (flags & RWF_NOWAIT) {
+ 		if (!(ki->ki_filp->f_mode & FMODE_NOWAIT))
+ 			return -EOPNOTSUPP;
+-		ki->ki_flags |= IOCB_NOWAIT;
++		kiocb_flags |= IOCB_NOWAIT;
+ 	}
+ 	if (flags & RWF_HIPRI)
+-		ki->ki_flags |= IOCB_HIPRI;
++		kiocb_flags |= IOCB_HIPRI;
+ 	if (flags & RWF_DSYNC)
+-		ki->ki_flags |= IOCB_DSYNC;
++		kiocb_flags |= IOCB_DSYNC;
+ 	if (flags & RWF_SYNC)
+-		ki->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
++		kiocb_flags |= (IOCB_DSYNC | IOCB_SYNC);
+ 	if (flags & RWF_APPEND)
+-		ki->ki_flags |= IOCB_APPEND;
++		kiocb_flags |= IOCB_APPEND;
++
++	ki->ki_flags |= kiocb_flags;
+ 	return 0;
+ }
+ 
+-- 
+2.24.0
+
