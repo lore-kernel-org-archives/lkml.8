@@ -2,133 +2,216 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58797C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 08:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F039C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 08:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34A7D20725
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 08:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEABF20725
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 08:49:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kzByH5RM"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="cuFAjrHR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgHAIqt (ORCPT
+        id S1728433AbgHAIts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 04:46:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49302 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725931AbgHAIqt (ORCPT
+        Sat, 1 Aug 2020 04:49:48 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:3636 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725931AbgHAItr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 04:46:49 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA9A7C06174A;
-        Sat,  1 Aug 2020 01:46:48 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id e6so8680170oii.4;
-        Sat, 01 Aug 2020 01:46:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LvnyGVeUjGWadk3ZVAQoTtKApflkP6KKdC8V+79XjCY=;
-        b=kzByH5RMmkN5dX4SEqlgMoU7EF/8BAHSOtEYgk9ifU1g0sLAr/jKU4t4gHZ3j7CzA0
-         bsECy82RqHDDp3MMESymvIwu5zB5xeT2Fiu/eLIz0zxZeT1dvO1kiRkm1l/tNOiEzTuZ
-         iBnj1H9GSAm88xfej1E+D6zwrfQCWADN7Yhd22BXbrEx0QqCBW3krgOqo0uPZDDsHBbs
-         tbpe/lKu6SUW9iczPSjO35JYQ9QVI4HR1hhAnBN8TitRbUwXfR3uWUMsQoiUPMLfagfQ
-         7od5J4wyrniEd6q6tuwudT+o2kZEgyMvVVx4yfYOEPoQcz3/eucW4wfCtlSrOShMJ7Ib
-         b3xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LvnyGVeUjGWadk3ZVAQoTtKApflkP6KKdC8V+79XjCY=;
-        b=VzDwP+65fTjvlYda4s6mdZJyKxtS3IN5U5I016hbkKHoi1j+mvSXCkOV3qmduAu/64
-         iuUvNwXUZGNzX0nkerem0G30CMojT9WPdAQQtCLxOmFJTwsP5vy9bQSmsaZk+OG7HuVi
-         fBaA7YlGpGfQJehPHW4p7dWDGUJ3d+d0a7N3bkposACyVo/90xo9IhF16F7MOAvInuTX
-         MQd/POz3Un5/gxmguF/f6WMowCjxMmSf8gDHLY26AECHIvaIMPEbLsCj5MMOtZLATn4o
-         JBJNRAkXyK+hd92h7AijiTkYZ4sd/ALrpPjjOEnEtevLb3Vix/TbCdJjxHuKFiIceP8S
-         2Ydg==
-X-Gm-Message-State: AOAM5313XUbL6xfdy/Ym6wB2Oogg0zuirgYxhN8HYgGJhg6DimC2UZ2t
-        uD/g6NvNf/cHep1dDJiOCWHypwU53QEVP8li7FboQ60z
-X-Google-Smtp-Source: ABdhPJzKpBZtVaWtDYhPgwHQGlWVLrMoha27btXi1GiLikwDXEV47A4q+KhahgHhqxG3hiBXzn3IUR7C0nwucJIq6b4=
-X-Received: by 2002:aca:b7d5:: with SMTP id h204mr5872694oif.62.1596271608362;
- Sat, 01 Aug 2020 01:46:48 -0700 (PDT)
+        Sat, 1 Aug 2020 04:49:47 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 0718mPN9022611
+        for <linux-kernel@vger.kernel.org>; Sat, 1 Aug 2020 01:49:46 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=vdX/GltbK6AC9lvrmsjSBcxCEJYHeciHw/4RADdW77s=;
+ b=cuFAjrHR5I9sZl4Z1iJgTR5Y8zF5eZi75vwq4pilOBG2HVma+rJixB6kTFzMR1/lbYM7
+ 6jSAbaouC2mmECFQQrm2eXufBiQYTy1UDPA3iqrQEjDYPSeO27+WAfe0xeDvKbJTLAXI
+ dEQ9v3Nzljl8pi+z3f7mDAlHCk2NPgHZOMM= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0001303.ppops.net with ESMTP id 32n42m05vp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 01:49:46 -0700
+Received: from intmgw005.03.ash8.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Sat, 1 Aug 2020 01:49:46 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id 42C0362E53CC; Sat,  1 Aug 2020 01:47:29 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <netdev@vger.kernel.org>
+CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
+        <john.fastabend@gmail.com>, <kpsingh@chromium.org>,
+        <brouer@redhat.com>, <dlxu@fb.com>,
+        Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH bpf-next 3/5] selftests/bpf: add selftest for BPF_PROG_TYPE_USER
+Date:   Sat, 1 Aug 2020 01:47:19 -0700
+Message-ID: <20200801084721.1812607-4-songliubraving@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200801084721.1812607-1-songliubraving@fb.com>
+References: <20200801084721.1812607-1-songliubraving@fb.com>
 MIME-Version: 1.0
-References: <1596187487-31403-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1596187487-31403-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200731152744.GI6218@pendragon.ideasonboard.com>
-In-Reply-To: <20200731152744.GI6218@pendragon.ideasonboard.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Sat, 1 Aug 2020 09:46:22 +0100
-Message-ID: <CA+V-a8tOMWKAmJU3sGJn6ieLN3FAQQvpVXwd0h0AFHVFGzZ+xg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] media: i2c: ov5640: Enable data pins on startup for
- DVP mode
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        Hugues Fruchet <hugues.fruchet@st.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-01_07:2020-07-31,2020-08-01 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 bulkscore=0
+ suspectscore=0 mlxlogscore=999 spamscore=0 phishscore=0 adultscore=0
+ malwarescore=0 impostorscore=0 lowpriorityscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008010068
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+This test checks the correctness of BPF_PROG_TYPE_USER program, including=
+:
+running on the right cpu, passing in correct args, returning retval, and
+being able to call bpf_get_stack|stackid.
 
-Thank you for the review.
+Signed-off-by: Song Liu <songliubraving@fb.com>
+---
+ .../selftests/bpf/prog_tests/user_prog.c      | 52 +++++++++++++++++
+ tools/testing/selftests/bpf/progs/user_prog.c | 56 +++++++++++++++++++
+ 2 files changed, 108 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/user_prog.c
+ create mode 100644 tools/testing/selftests/bpf/progs/user_prog.c
 
-On Fri, Jul 31, 2020 at 4:27 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Prabhakar,
->
-> Thank you for the patch.
->
-> On Fri, Jul 31, 2020 at 10:24:46AM +0100, Lad Prabhakar wrote:
-<snip>
-> > +                      * - 6:         VSYNC output enable
-> > +                      * - 5:         HREF output enable
-> > +                      * - 4:         PCLK output enable
-> > +                      * - [3:0]:     D[9:6] output enable
-> > +                      */
-> > +                     ret = ov5640_write_reg(sensor, OV5640_REG_PAD_OUTPUT_ENABLE01, 0x7f);
-> > +                     if (ret)
-> > +                             goto power_off;
-> >
-> > -             /* Give lanes some time to coax into LP11 state. */
-> > -             usleep_range(500, 1000);
-> > +                     /*
-> > +                      * enable D[5:0] DVP data lines
-> > +                      *
-> > +                      * PAD OUTPUT ENABLE 02
-> > +                      * - [7:2]:     D[5:0] output enable
-> > +                      */
-> > +                     ret = ov5640_write_reg(sensor, OV5640_REG_PAD_OUTPUT_ENABLE02, 0xfc);
-> > +                     if (ret)
-> > +                             goto power_off;
-> > +             }
->
-> I'd split this to two separate functions, one for CSI-2, one for
-> parallel, as this is getting difficult to read.
->
-Sure I'll split this up in v2..
+diff --git a/tools/testing/selftests/bpf/prog_tests/user_prog.c b/tools/t=
+esting/selftests/bpf/prog_tests/user_prog.c
+new file mode 100644
+index 0000000000000..416707b3bff01
+--- /dev/null
++++ b/tools/testing/selftests/bpf/prog_tests/user_prog.c
+@@ -0,0 +1,52 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2020 Facebook */
++#include <test_progs.h>
++#include "user_prog.skel.h"
++
++static int duration;
++
++void test_user_prog(void)
++{
++	struct bpf_user_prog_args args =3D {{0, 1, 2, 3, 4}};
++	struct bpf_prog_test_run_attr attr =3D {};
++	struct user_prog *skel;
++	int i, numcpu, ret;
++
++	skel =3D user_prog__open_and_load();
++
++	if (CHECK(!skel, "user_prog__open_and_load",
++		  "skeleton open_and_laod failed\n"))
++		return;
++
++	numcpu =3D libbpf_num_possible_cpus();
++
++	attr.prog_fd =3D bpf_program__fd(skel->progs.user_func);
++	attr.data_size_in =3D sizeof(args);
++	attr.data_in =3D &args;
++
++	/* start from -1, so we test cpu_plus =3D=3D 0 */
++	for (i =3D -1; i < numcpu; i++) {
++		args.args[0] =3D i + 1;
++		attr.cpu_plus =3D i + 1;
++		ret =3D bpf_prog_test_run_xattr(&attr);
++		CHECK(ret, "bpf_prog_test_run_xattr", "returns error\n");
++
++		/* skip two tests for i =3D=3D -1 */
++		if (i =3D=3D -1)
++			continue;
++		CHECK(attr.retval !=3D i + 2, "bpf_prog_test_run_xattr",
++		      "doesn't get expected retval\n");
++		CHECK(skel->data->sum !=3D 11 + i, "user_prog_args_test",
++		      "sum of args doesn't match\n");
++	}
++
++	CHECK(skel->data->cpu_match =3D=3D 0, "cpu_match_test", "failed\n");
++	CHECK(skel->bss->get_stack_success !=3D numcpu + 1, "test_bpf_get_stack=
+",
++	      "failed on %d cores\n", numcpu - skel->bss->get_stack_success);
++	CHECK(skel->bss->get_stackid_success !=3D numcpu + 1,
++	      "test_bpf_get_stackid",
++	      "failed on %d cores\n",
++	      numcpu + 1 - skel->bss->get_stackid_success);
++
++	user_prog__destroy(skel);
++}
+diff --git a/tools/testing/selftests/bpf/progs/user_prog.c b/tools/testin=
+g/selftests/bpf/progs/user_prog.c
+new file mode 100644
+index 0000000000000..cf320e97f107a
+--- /dev/null
++++ b/tools/testing/selftests/bpf/progs/user_prog.c
+@@ -0,0 +1,56 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2020 Facebook */
++#include "vmlinux.h"
++#include <bpf/bpf_helpers.h>
++#include <bpf/bpf_tracing.h>
++
++char _license[] SEC("license") =3D "GPL";
++
++#ifndef PERF_MAX_STACK_DEPTH
++#define PERF_MAX_STACK_DEPTH         127
++#endif
++
++typedef __u64 stack_trace_t[PERF_MAX_STACK_DEPTH];
++
++struct {
++	__uint(type, BPF_MAP_TYPE_STACK_TRACE);
++	__uint(max_entries, 16384);
++	__uint(key_size, sizeof(__u32));
++	__uint(value_size, sizeof(stack_trace_t));
++} stackmap SEC(".maps");
++
++volatile int cpu_match =3D 1;
++volatile __u64 sum =3D 1;
++volatile int get_stack_success =3D 0;
++volatile int get_stackid_success =3D 0;
++volatile __u64 stacktrace[PERF_MAX_STACK_DEPTH];
++
++SEC("user")
++int user_func(struct bpf_user_prog_ctx *ctx)
++{
++	int cpu =3D bpf_get_smp_processor_id();
++	__u32 key =3D cpu;
++	long stackid, err;
++
++	/* check the program runs on the right cpu */
++	if (ctx->args[0] && ctx->args[0] !=3D cpu + 1)
++		cpu_match =3D 0;
++
++	/* check the sum of arguments are correct */
++	sum =3D ctx->args[0] + ctx->args[1] + ctx->args[2] +
++		ctx->args[3] + ctx->args[4];
++
++	/* check bpf_get_stackid works */
++	stackid =3D bpf_get_stackid(ctx, &stackmap, 0);
++	if (stackid >=3D 0)
++		get_stackid_success++;
++
++	/* check bpf_get_stack works */
++	err =3D bpf_get_stack(ctx, (void *)stacktrace,
++			    PERF_MAX_STACK_DEPTH * sizeof(__u64),
++			    BPF_F_USER_STACK);
++	if (err >=3D 0)
++		get_stack_success++;
++
++	return cpu + 2;
++}
+--=20
+2.24.1
 
-Cheers,
-Prabhakar
-
-> >
-> >       } else {
-> >               if (sensor->ep.bus_type == V4L2_MBUS_CSI2_DPHY) {
->
-> --
-> Regards,
->
-> Laurent Pinchart
