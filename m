@@ -2,116 +2,175 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C53C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 00:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D182C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 00:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE6AF20829
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 00:35:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ddecffKl"
+	by mail.kernel.org (Postfix) with ESMTP id 2146920829
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 00:42:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgHAAfM (ORCPT
+        id S1728027AbgHAAmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 20:35:12 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43911 "EHLO ozlabs.org"
+        Fri, 31 Jul 2020 20:42:11 -0400
+Received: from mga03.intel.com ([134.134.136.65]:62565 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726099AbgHAAfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 20:35:12 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BJQCc1Qg1z9sRN;
-        Sat,  1 Aug 2020 10:35:07 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596242109;
-        bh=qptL9rZVDvCzlSjehblBU29W+67xUM1GmzHjZXT5Hb0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ddecffKljWBCOn6MIZkGZmxanfhqh9J98Hp1GTbJBJY0eWTVGWz5p45nkGtHMfY/U
-         mO9aACcEOOxDIOaIFzp0a1FgkoHff6xghfvw+wL7ZJZbZl2zS5q1JMKmvhGLZFDnq+
-         GfOxSLbDgFRTzbc1ENRQMf0Dtbs5FqRdnFDGducMX229ey4Lj/3Byt6NJ/ow7bYiwa
-         nOR00vdTWJPvJ2yDZyidQ65veIVLzKv3qPrJxPLjdtLOq1YJtustkn0bfgesJ2Wn4L
-         Bhgmh/F7sXexC3aK9uf98/3WNWBkouLELP96BOWkJ0UtsUC2q2Vgm7rAczXiXcVzQl
-         5/9+UpckrNc1g==
-Date:   Sat, 1 Aug 2020 10:35:07 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        linux-decnet-user@lists.sourceforge.net,
-        Brian Vazquez <brianvv@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: linux-next: Tree for Jul 31 (net/decnet/ & FIB_RULES)
-Message-ID: <20200801103507.03ae069b@canb.auug.org.au>
-In-Reply-To: <4c6abcd0-e51b-0cf3-92de-5538c366e685@infradead.org>
-References: <20200731211909.33b550ec@canb.auug.org.au>
-        <4c6abcd0-e51b-0cf3-92de-5538c366e685@infradead.org>
+        id S1726099AbgHAAmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 20:42:10 -0400
+IronPort-SDR: 4Hn59rEN1boew/7WW2S5t5EkMs5R2R7z4kt1D+PD5fXxoYjkC2N4jJx4nf/ujP/J/dJb39fi2i
+ eBzN3789wZ7A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9699"; a="151859753"
+X-IronPort-AV: E=Sophos;i="5.75,420,1589266800"; 
+   d="scan'208";a="151859753"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 17:42:09 -0700
+IronPort-SDR: P6H3jEK43GdS1/8t4/7dSlDlGHhnsqkKpcsT+VzyPTLx2laDWwmcvrMJ+8mkdacBSts+EB4NII
+ 1VV+17pJzvng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,420,1589266800"; 
+   d="scan'208";a="329450720"
+Received: from otcwcpicx6.sc.intel.com ([172.25.55.29])
+  by FMSMGA003.fm.intel.com with ESMTP; 31 Jul 2020 17:42:08 -0700
+Date:   Sat, 1 Aug 2020 00:42:08 +0000
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joerg Roedel <joro@8bytes.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        H Peter Anvin <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, iommu <iommu@lists.linux-foundation.org>,
+        amd-gfx <amd-gfx@lists.freedesktop.org>
+Subject: Re: [PATCH v6 12/12] x86/traps: Fix up invalid PASID
+Message-ID: <20200801004208.GA324365@otcwcpicx6.sc.intel.com>
+References: <1594684087-61184-1-git-send-email-fenghua.yu@intel.com>
+ <1594684087-61184-13-git-send-email-fenghua.yu@intel.com>
+ <CALCETrXnO4oh+WyxtSM-j_pP4QgkSg24=y76OBEHxXxAfJtPhA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/aAhoT0OmEEIdQxMbbWMirMx";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrXnO4oh+WyxtSM-j_pP4QgkSg24=y76OBEHxXxAfJtPhA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/aAhoT0OmEEIdQxMbbWMirMx
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi, Andy,
 
-Hi Randy,
+On Fri, Jul 31, 2020 at 04:34:11PM -0700, Andy Lutomirski wrote:
+> On Mon, Jul 13, 2020 at 4:48 PM Fenghua Yu <fenghua.yu@intel.com> wrote:
+> >
+> > A #GP fault is generated when ENQCMD instruction is executed without
+> > a valid PASID value programmed in the current thread's PASID MSR. The
+> > #GP fault handler will initialize the MSR if a PASID has been allocated
+> > for this process.
+> >
+> > Decoding the user instruction is ugly and sets a bad architecture
+> > precedent. It may not function if the faulting instruction is modified
+> > after #GP.
+> >
+> > Thomas suggested to provide a reason for the #GP caused by executing ENQCMD
+> > without a valid PASID value programmed. #GP error codes are 16 bits and all
+> > 16 bits are taken. Refer to SDM Vol 3, Chapter 16.13 for details. The other
+> > choice was to reflect the error code in an MSR. ENQCMD can also cause #GP
+> > when loading from the source operand, so its not fully comprehending all
+> > the reasons. Rather than special case the ENQCMD, in future Intel may
+> > choose a different fault mechanism for such cases if recovery is needed on
+> > #GP.
+> 
+> Decoding the user instruction is ugly and sets a bad architecture
+> precedent, but we already do it in #GP for UMIP.  So I'm unconvinced.
 
-On Fri, 31 Jul 2020 08:53:09 -0700 Randy Dunlap <rdunlap@infradead.org> wro=
-te:
->
-> on i386:
->=20
-> ld: net/core/fib_rules.o: in function `fib_rules_lookup':
-> fib_rules.c:(.text+0x16b8): undefined reference to `fib4_rule_match'
-> ld: fib_rules.c:(.text+0x16bf): undefined reference to `fib4_rule_match'
-> ld: fib_rules.c:(.text+0x170d): undefined reference to `fib4_rule_action'
-> ld: fib_rules.c:(.text+0x171e): undefined reference to `fib4_rule_action'
-> ld: fib_rules.c:(.text+0x1751): undefined reference to `fib4_rule_suppres=
-s'
-> ld: fib_rules.c:(.text+0x175d): undefined reference to `fib4_rule_suppres=
-s'
->=20
-> CONFIG_DECNET=3Dy
-> CONFIG_DECNET_ROUTER=3Dy
->=20
-> DECNET_ROUTER selects FIB_RULES.
+Maybe just remove the "Decoding the user instruction ... bad architecture
+precedent" sentence? The sentence is vague.
 
-I assume that CONFIG_IP_MULTIPLE_TABLES was not set for that build?
+As described in the following "It may not function ..." sentence, the real
+issue of parsing the instruction is the instruction may be modified by
+another processor before it's parsed in the #GP handler.
 
-Caused by commit
+If just keep the "It may not function ..." sentence, is that good enough to
+explain why we don't parse the faulting instruction?
 
-  b9aaec8f0be5 ("fib: use indirect call wrappers in the most common fib_rul=
-es_ops")
+> 
+> Memo to Intel, though: you REALLY need to start thinking about what
+> the heck an OS is supposed to do with all these new faults you're
+> coming up with.  The new #NM for TILE is utterly nonsensical.  Sure,
+> it works for an OS that does not use CR0.TS and as long as no one
+> tries to extend the same mechanism for some new optional piece of
+> state, but as soon as Intel tries to use the same mechanism for
+> anything else, it falls apart.
+> 
+> Please do better.
 
-from the net-next tree.
---=20
-Cheers,
-Stephen Rothwell
+Internally we did discuss the error code in #GP for PASID with HW architects.
+But due to some uarch reason, it's not simple to report the error code for
+PASID:( Please see previous discussion on the error code for PASID:
+https://lore.kernel.org/lkml/20200427224646.GA103955@otc-nc-03/
 
---Sig_/aAhoT0OmEEIdQxMbbWMirMx
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+It's painful for our SW guys to check exception reasons if hardware
+doesn't explicitly tell us.
 
------BEGIN PGP SIGNATURE-----
+Hopefully the heuristics (fixup the PASID MSR if the process already has
+a valid PASID but the MSR doesn't have one yet) in this patch is acceptable.
+ 
+> 
+> > +
+> > +/*
+> > + * Write the current task's PASID MSR/state. This is called only when PASID
+> > + * is enabled.
+> > + */
+> > +static void fpu__pasid_write(u32 pasid)
+> > +{
+> > +       u64 msr_val = pasid | MSR_IA32_PASID_VALID;
+> > +
+> > +       fpregs_lock();
+> > +
+> > +       /*
+> > +        * If the MSR is active and owned by the current task's FPU, it can
+> > +        * be directly written.
+> > +        *
+> > +        * Otherwise, write the fpstate.
+> > +        */
+> > +       if (!test_thread_flag(TIF_NEED_FPU_LOAD)) {
+> > +               wrmsrl(MSR_IA32_PASID, msr_val);
+> > +       } else {
+> > +               struct ia32_pasid_state *ppasid_state;
+> > +
+> > +               ppasid_state = get_xsave_addr(&current->thread.fpu.state.xsave,
+> > +                                             XFEATURE_PASID);
+> > +               /*
+> > +                * ppasid_state shouldn't be NULL because XFEATURE_PASID
+> > +                * is enabled.
+> > +                */
+> > +               WARN_ON_ONCE(!ppasid_state);
+> > +               ppasid_state->pasid = msr_val;
+> 
+> WARN instead of BUG is nice, but you'll immediate oops if this fails.
+> How about:
+> 
+> if (!WARN_ON_ONCE(!ppasid_state))
+>   ppasid_state->pasid = msr_val;
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8kuLsACgkQAVBC80lX
-0GwErAf/aR9OAWhgszrLS/SC/5se79Mhs6m5ahnU1CLo12hq2AxnEEiew0lv+rGy
-QuhEd2bGfRXA3msswury9J1+9gD52q9aME6Wfer9Uc7/hLwCJg6yAvc46l3K3T6N
-+wQZdTLHTakS4d0CGxz4DEFnYivWo134xPb6EwhI9q0BTYtuWStZBHXsROim8WT0
-jzYbmPTSdi+K/YQy1b7hzHcyBj0OOQIopn4YcmkfGYZL7quB0ZRkMxzQW+nalCp6
-LbcgbIxUzFKP4DnOBAStji+X8+dQi0JtN0lQ+dAgiDklzVMf+qD+SJw6+0xzaHUF
-kd8e26RJAx863nNjCNPtNi7z5Hqq7w==
-=38aF
------END PGP SIGNATURE-----
+OK. I will fix this issue.
 
---Sig_/aAhoT0OmEEIdQxMbbWMirMx--
+Thank you very much for your review!
+
+-Fenghua
