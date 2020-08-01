@@ -2,114 +2,135 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B85C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 22:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83465C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 22:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9BEC206E9
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 22:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F39206F6
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 22:19:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgHAWCY (ORCPT
+        id S1727058AbgHAWTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 18:02:24 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:33657 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726748AbgHAWCY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 18:02:24 -0400
-Received: from localhost.localdomain (unknown [178.240.22.159])
-        (Authenticated sender: cengiz@kernel.wtf)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 7B83E200008;
-        Sat,  1 Aug 2020 22:02:17 +0000 (UTC)
-From:   Cengiz Can <cengiz@kernel.wtf>
-To:     andy.shevchenko@gmail.com
-Cc:     cengiz@kernel.wtf, dan.carpenter@oracle.com,
-        devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        mchehab@kernel.org, sakari.ailus@linux.intel.com
-Subject: [PATCH v6] staging: atomisp: move null check to earlier point
-Date:   Sun,  2 Aug 2020 01:01:02 +0300
-Message-Id: <20200801220101.2783-1-cengiz@kernel.wtf>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200731083856.GF3703480@smile.fi.intel.com>
-References: <20200731083856.GF3703480@smile.fi.intel.com>
+        Sat, 1 Aug 2020 18:19:03 -0400
+Received: from mga11.intel.com ([192.55.52.93]:25562 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726545AbgHAWTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 18:19:03 -0400
+IronPort-SDR: Zok2cQw0IxrpJfOn/o2Tj3yDs2W4yBzstLcVYlxY6JqrtN1z6Jk39Frq2vnMAqIsK0wyevd0iB
+ LYiV7I372eyw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9700"; a="149766141"
+X-IronPort-AV: E=Sophos;i="5.75,424,1589266800"; 
+   d="scan'208";a="149766141"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2020 15:18:57 -0700
+IronPort-SDR: rauja/wBQiesmbmRGdJWhFcR7VDtT8zjRPNNpoJpShgj4RamFHZT3oCIcntDUiNCQQUCnATDfI
+ 9BGmpi3jKNaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,424,1589266800"; 
+   d="scan'208";a="321805504"
+Received: from lkp-server01.sh.intel.com (HELO e21119890065) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 01 Aug 2020 15:18:55 -0700
+Received: from kbuild by e21119890065 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k1zqA-0001Q4-Nc; Sat, 01 Aug 2020 22:18:54 +0000
+Date:   Sun, 2 Aug 2020 06:18:19 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Johnny Chuang <johnny.chuang@emc.com.tw>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Hutterer <peter.hutterer@who-t.net>
+Subject: drivers/input/touchscreen/elants_i2c.c:859:45: warning: Clarify
+ calculation precedence for '&' and
+Message-ID: <202008020615.7WF7Tnj9%lkp@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-`find_gmin_subdev()` that returns a pointer to `struct
-gmin_subdev` can return NULL.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   d52daa8620c65960e1ef882adc1f92061326bd7a
+commit: f27ad8932725f8dd0cd1a46763de4a40377b1ae6 Input: elants_i2c - support palm detection
+date:   4 months ago
+compiler: xtensa-linux-gcc (GCC) 9.3.0
 
-In `gmin_v2p8_ctrl()` there's a call to this function but the
-possibility of a NULL was not checked before its being dereferenced,
-i.e.:
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
-  /* Acquired here --------v */
-  struct gmin_subdev *gs = find_gmin_subdev(subdev);
 
-  /*  v------Dereferenced here */
-  if (gs->v2p8_gpio >= 0) {
-      ...
-  }
+cppcheck warnings: (new ones prefixed by >>)
 
-With this change we're null checking `find_gmin_subdev()` result
-and we return an error if that's the case. We also WARN()
-for the sake of debugging.
+>> drivers/input/touchscreen/elants_i2c.c:859:45: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
+    tool_type = buf[FW_POS_TOOL_TYPE] & BIT(0) ?
+                                               ^
 
-Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
-Reported-by: Coverity Static Analyzer CID 1465536
-Suggested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+vim +859 drivers/input/touchscreen/elants_i2c.c
+
+   838	
+   839	/*
+   840	 * Event reporting.
+   841	 */
+   842	
+   843	static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf)
+   844	{
+   845		struct input_dev *input = ts->input;
+   846		unsigned int n_fingers;
+   847		unsigned int tool_type;
+   848		u16 finger_state;
+   849		int i;
+   850	
+   851		n_fingers = buf[FW_POS_STATE + 1] & 0x0f;
+   852		finger_state = ((buf[FW_POS_STATE + 1] & 0x30) << 4) |
+   853				buf[FW_POS_STATE];
+   854	
+   855		dev_dbg(&ts->client->dev,
+   856			"n_fingers: %u, state: %04x\n",  n_fingers, finger_state);
+   857	
+   858		/* Note: all fingers have the same tool type */
+ > 859		tool_type = buf[FW_POS_TOOL_TYPE] & BIT(0) ?
+   860				MT_TOOL_FINGER : MT_TOOL_PALM;
+   861	
+   862		for (i = 0; i < MAX_CONTACT_NUM && n_fingers; i++) {
+   863			if (finger_state & 1) {
+   864				unsigned int x, y, p, w;
+   865				u8 *pos;
+   866	
+   867				pos = &buf[FW_POS_XY + i * 3];
+   868				x = (((u16)pos[0] & 0xf0) << 4) | pos[1];
+   869				y = (((u16)pos[0] & 0x0f) << 8) | pos[2];
+   870				p = buf[FW_POS_PRESSURE + i];
+   871				w = buf[FW_POS_WIDTH + i];
+   872	
+   873				dev_dbg(&ts->client->dev, "i=%d x=%d y=%d p=%d w=%d\n",
+   874					i, x, y, p, w);
+   875	
+   876				input_mt_slot(input, i);
+   877				input_mt_report_slot_state(input, tool_type, true);
+   878				input_event(input, EV_ABS, ABS_MT_POSITION_X, x);
+   879				input_event(input, EV_ABS, ABS_MT_POSITION_Y, y);
+   880				input_event(input, EV_ABS, ABS_MT_PRESSURE, p);
+   881				input_event(input, EV_ABS, ABS_MT_TOUCH_MAJOR, w);
+   882	
+   883				n_fingers--;
+   884			}
+   885	
+   886			finger_state >>= 1;
+   887		}
+   888	
+   889		input_mt_sync_frame(input);
+   890		input_sync(input);
+   891	}
+   892	
+
 ---
-
- Please do note that this change introduces a new return value to
- `gmin_v2p8_ctrl()`.
-
- [NEW] - raise a WARN and return -ENODEV if there are no subdevices.
-       - return result of `gpio_request` or `gpio_direction_output`.
-       - return 0 if GPIO is ON.
-       - return results of `regulator_enable` or `regulator_disable`.
-       - according to PMIC type, return result of `axp_regulator_set`
-         or `gmin_i2c_write`.
-       - return -EINVAL if unknown PMIC type.
-
- Patch Changelog:
-   v4: Fix minor typo in commit message
-   v5: Remove typo from email subject
-   v6: Remove duplicate Signed-off-by tag
-
- drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-index 0df46a1af5f0..1ad0246764a6 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-@@ -871,6 +871,9 @@ static int gmin_v2p8_ctrl(struct v4l2_subdev *subdev, int on)
- 	int ret;
- 	int value;
- 
-+	if (WARN_ON(!gs))
-+		return -ENODEV;
-+
- 	if (gs->v2p8_gpio >= 0) {
- 		pr_info("atomisp_gmin_platform: 2.8v power on GPIO %d\n",
- 			gs->v2p8_gpio);
-@@ -881,7 +884,7 @@ static int gmin_v2p8_ctrl(struct v4l2_subdev *subdev, int on)
- 			pr_err("V2P8 GPIO initialization failed\n");
- 	}
- 
--	if (!gs || gs->v2p8_on == on)
-+	if (gs->v2p8_on == on)
- 		return 0;
- 	gs->v2p8_on = on;
- 
--- 
-2.27.0
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
