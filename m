@@ -2,117 +2,222 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77783C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 16:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F612C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 16:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 572D62076B
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 16:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 655A32068F
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 16:59:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c/tnSkc0"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="PopKwG2j";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="KgPNHbgd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727037AbgHAQra (ORCPT
+        id S1727087AbgHAQ7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 12:47:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726494AbgHAQr3 (ORCPT
+        Sat, 1 Aug 2020 12:59:31 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:55568 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726534AbgHAQ7a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 12:47:29 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACCE0C06174A
-        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 09:47:27 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id w25so13691ljo.12
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 09:47:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3DYnTPT4/sYGcNhT4ZL721tJCBoXUCz3sR7pfzy1uU0=;
-        b=c/tnSkc0+P8PGPhCHlwixhH5M9Che6g4W8HnOizbI6Bpixtff5DuH18eT/ljOHzTZ/
-         t+eDhWKmmPKLNMad9VH+bRBcXXeA8swopsk3kr3VSmj3SuOAAQSGWuCdLNIuVTqVGMIl
-         oPyohLjcoZsQBIAYmyRHnDwPn7bXnAAy7duzbgP0hHiXTYLyj9QFz9VPv+u1cbl13ob+
-         18CEdaJvjCpt2JU8yAmexPZA4+Oc9B9foDs0lo/X2XwhlftUZj+kHWQ3zLp1cnlbpU1n
-         NJsrS5Uk2Y9BkyK/mQMkW9zjZaTFm2yw++QbEKwAKQ6NKJZ+1HqH9F6/VI07Y4w4p9oT
-         wjAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3DYnTPT4/sYGcNhT4ZL721tJCBoXUCz3sR7pfzy1uU0=;
-        b=XMF3dNLpNL/538FMSnTBMgaYSi69ZNNJVsJQbmm83XStEk7dIycQNxddgvmS7K8nea
-         aILwwuwX+uouJuj4R5nKWwZI7JN2joM6J4U6EPcDxyMjWYR6fU95sBeli4c3/ZfE6NpF
-         aQQ9eQW13VJEHDwccVLD/Vd1thq0tTjOkNZ+yn5qfwTcGicqha17YB5d2Gl1aBleRvM0
-         o8m/Uv1Ko3GnasLvDoZh6O3xM/V1BZrBB6QLBnVDsl5lQKxr398DyuwDhu13MGozfyJC
-         goNPIJPxTfrr3r4C1Rhw5Tsa8SrhJzPYcLRUWiDGft3PgSmPf1V7poNGpjVRu86Ib6Kb
-         PgQg==
-X-Gm-Message-State: AOAM531Z/XZgAsmOMimBtimymRukjc931e+pNEeX/phcq1t1oI3ykyYC
-        JpP99R0UzjfU8XzNaZWSMj9evLM9
-X-Google-Smtp-Source: ABdhPJzLHuK/EGTjnr1mOGNp3uIYy6X9Kb7gQhzwVs1jqCpxMaVoelez70TMWpA2JnrgK9HfLqbhcg==
-X-Received: by 2002:a2e:9f10:: with SMTP id u16mr4362676ljk.130.1596300446230;
-        Sat, 01 Aug 2020 09:47:26 -0700 (PDT)
-Received: from alpha (10.177.smarthome.spb.ru. [109.71.177.10])
-        by smtp.gmail.com with ESMTPSA id e12sm2452360ljk.74.2020.08.01.09.47.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Aug 2020 09:47:25 -0700 (PDT)
-Received: (nullmailer pid 29254 invoked by uid 1000);
-        Sat, 01 Aug 2020 16:52:33 -0000
-From:   Ivan Safonov <insafonov@gmail.com>
-To:     Larry Finger <Larry.Finger@lwfinger.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        B K Karthik <bkkarthik@pesu.pes.edu>,
-        Michael Straube <straube.linux@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Ivan Safonov <insafonov@gmail.com>
-Subject: [PATCH v2] staging: r8188eu: replace rtw_netdev_priv define with inline function
-Date:   Sat,  1 Aug 2020 19:52:20 +0300
-Message-Id: <20200801165220.29208-1-insafonov@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Sat, 1 Aug 2020 12:59:30 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 071Guek1027785;
+        Sat, 1 Aug 2020 09:59:11 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=H2d+78OzCYClx7y0SN6NzdFkmPS1ehTSmsuCfOjLhyY=;
+ b=PopKwG2jj77oRcx5TDBDfqjDMYCTMwOfWJ7e9QQw9DQqOoqmZtMrtFsGATIvmZFVbUvJ
+ lk6GIxZL09cyTZj6uBf0Q72hrPSCtLUPFOwPGr8A+3vESDcf21b6ah3tS/rNaW5EwY9E
+ k2rfW3JP5TpTqFOBqlYlsGRbKOZsstZcmx8= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 32n7sb0p48-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Sat, 01 Aug 2020 09:59:11 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Sat, 1 Aug 2020 09:59:10 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gfkyTXihE50u7i8vrqAW9JjKv2xYKQCkYIeKoK6fmy6zuFH3ssJk0dkWfVAikVOE2rCVxCdEd/vWVzFvsFJgZQgoIJDgNfGcIIMgHciN4JW+eg8nAKERyWIEfqiZGUw6KpB1Xw0S2yNp8mHqF2Vz7iQS95AXVnXJd7I5uC7YCuV+SvYbt+mv5YxWdxfWHKex5Klb+hwnf10MLXl/kTaDJ7waSU37bv0oGc0quLxYIPsHGpaq58u+Sv/kf3tHGvQKS7CwvQaZRXnBODTWWeN9DlN+y1PNsm2M37JomeQvU1ljS8FuLnr659atKx00+azxwqxnQzvXPdKVBKrBmk+GFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H2d+78OzCYClx7y0SN6NzdFkmPS1ehTSmsuCfOjLhyY=;
+ b=bLfYQ45OYEqVD0URoNXcemSrxGcZjA/wgVv4RnFQgKWJmebLLmeqsp/9sZOWldw6HhfpKX2PAv4nL2v4ILtgGPpiCOeeMLTPG03bJq/H/3PV1z/FCkpt1/dv/zH9M93/ue1IRsLhQL+QQz4wA5xJ5VicyYgZ3sNbXE2WrIiEbm9/k0quhK/gdmPZMrEWdfyyTsrXaVXTm2lweFfb/dep1fCEUcAl/Fb6TqqmHMXpR/i933VGWC/A6Q7maFA+sMe2hLYa3xnjL11IDafSwd2U2PLpVw7VWUNgL6zXfLK1obO1ezIptVqXEQotrz1ZpvMfKkb/nqsfSSvPYexeL8HF7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H2d+78OzCYClx7y0SN6NzdFkmPS1ehTSmsuCfOjLhyY=;
+ b=KgPNHbgdxFX5L/n+rvAfCwqIeAi6HlOpJJGdSQZ2wyPNbRGY3pee9Hj32Sr472gF0kL2NKf6zqGK7y7DAM/HmxcpLjabYTJPl7PaqiMlI4/5mXfxred/U2DD6lS1ShDuzl88fJF682prT6pra0uyRff18R3XTCb+gN7MXjEuR4A=
+Authentication-Results: google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
+ by BYAPR15MB2328.namprd15.prod.outlook.com (2603:10b6:a02:8b::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Sat, 1 Aug
+ 2020 16:58:55 +0000
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::56b:2925:8762:2d80]) by BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::56b:2925:8762:2d80%7]) with mapi id 15.20.3239.021; Sat, 1 Aug 2020
+ 16:58:55 +0000
+Subject: Re: [PATCH bpf-next] bpf: make __htab_lookup_and_delete_batch faster
+ when map is almost empty
+To:     Brian Vazquez <brianvv@google.com>,
+        Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <bpf@vger.kernel.org>, Luigi Rizzo <lrizzo@google.com>
+References: <20200801045722.877331-1-brianvv@google.com>
+From:   Yonghong Song <yhs@fb.com>
+Message-ID: <4cd10805-b056-21a7-fdc2-d3f66e94dcf6@fb.com>
+Date:   Sat, 1 Aug 2020 09:58:53 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
+In-Reply-To: <20200801045722.877331-1-brianvv@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR05CA0041.namprd05.prod.outlook.com
+ (2603:10b6:a03:74::18) To BYAPR15MB4088.namprd15.prod.outlook.com
+ (2603:10b6:a02:c3::18)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2620:10d:c085:21e8::1041] (2620:10d:c090:400::5:c6a0) by BYAPR05CA0041.namprd05.prod.outlook.com (2603:10b6:a03:74::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.13 via Frontend Transport; Sat, 1 Aug 2020 16:58:54 +0000
+X-Originating-IP: [2620:10d:c090:400::5:c6a0]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3d822043-2d0e-4e80-62ab-08d8363c2c92
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2328:
+X-Microsoft-Antispam-PRVS: <BYAPR15MB2328DDDA1A1BE55D84D6FE37D34F0@BYAPR15MB2328.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: U6eCTKyhA3DF00CDmb6vvW8IzkjS6CDpjJhZh+SyPxGRbvrNuddGZzR3egQO1eUqZkgnOTZXpYwupPWARZo3Ur/aE2N/0iVQq4kVFRyQFYwEuX+Z2dCM+Kcez4Bo+1lVC09M8w+VpMboyLpQkPKrwYwT3c3EsSDRFrVr/gi2UgALqrmjtn1GTwBbQgGwGGrWUeMx5CzfCTbMRFmxNotDhotFwGUlOvZs9Eu2bLhKcX/G3Q4+1NX+6JLzeo48UrNHiVMQhxXQ8g2e6Xrh7Kvzm25EaSNxuG1Ep7Xmj47x740TL5awjbZzu6/w2UaR2PTMtswAO3BBKsrLlto8KXH/a/w7FB1gmO8oAPugTevICRsGx+juBnpY/NmPEggUdLi5
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(39860400002)(346002)(366004)(136003)(396003)(478600001)(66946007)(2616005)(83380400001)(66476007)(66556008)(19627235002)(36756003)(86362001)(31696002)(2906002)(316002)(31686004)(52116002)(4326008)(53546011)(8676002)(8936002)(110136005)(186003)(16526019)(5660300002)(6486002)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: lbex/R9rUjCkZsaxVgNsdk/uUubqXKlF9/haZODFr9lUWXQq5W/Juk3cIeuPSlw60eUchueywtBO1cZHmdyoRcCXYfkpfsVIjXVAq0VaGKySC6NslT1zRcqFZJdgmdfUc8IYx4XjNlcadwYhe75SFlGZutao4QCXjszRZs/O6JS+ObPMa9V7MMqO71tgZxdilNt8r+i/Lk+UANuaCyy2IloXE7LvCE3kXcIBrMJNdIQbgKxZwf+E5WQ5k3KTM0/lRlAR+5XAiblSyLmodCtl0jUI8KXkgPfYSEocosv54JW2OhVhRaijeo/JZklbnLqbei+Yps8sf+CpdT++geLvzOlvXz9pYQm1PDX5rgUFMw/8I2s6vzGlcwdf7P1Eo5EGESt8Jep7DjKtvxF69wIb/12EYhtkb5q9xAj8GopWnT9SrQWgPjkgOtbp+Gtox/bFxU0/PdxWgBnxq8fJq3hd/hzywO6V/MZJ0/clsbBbnJeMDkZzo8vJCQCWA87BqeFUskwlJSclr2FoW4McwcuCzTgXJZLaMgPoZIvINlImXGhqbLyMOpsl+kicJ7YxjX/0NfAea3celG7FGr8ROgbotUl2wfBExfZM0iFB7isrr/kj7MBsjl6bK5SbsyVTj+QYaOuko7ldllz3P1LaqRJMY/KPQL7vEO7BI0SZN7SAxpw=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d822043-2d0e-4e80-62ab-08d8363c2c92
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4088.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Aug 2020 16:58:55.2850
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3aeNneL9qXOo1o8njUH2cLQHiONyu1Eac/fFPZVdheiU3inb+l3RwnaeaCQOuREJ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2328
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-01_13:2020-07-31,2020-08-01 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
+ impostorscore=0 clxscore=1011 lowpriorityscore=0 adultscore=0 spamscore=0
+ mlxscore=0 bulkscore=0 priorityscore=1501 phishscore=0 mlxlogscore=953
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008010132
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function guarantees type checking of arguments and return value.
 
-Result of rtw_netdev_priv macro can be assigned to pointer
-with incompatible type without warning. The function allow compiler
-to perform this check.
 
-Signed-off-by: Ivan Safonov <insafonov@gmail.com>
----
-Changes in v2:
-  - add blank line after function definition;
-  - improve commit message.
----
- drivers/staging/rtl8188eu/include/osdep_service.h | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+On 7/31/20 9:57 PM, Brian Vazquez wrote:
+> While running some experiments it was observed that map_lookup_batch was much
+> slower than get_next_key + lookup when the syscall overhead is minimal.
+> This was because the map_lookup_batch implementation was more expensive
+> traversing empty buckets, this can be really costly when the pre-allocated
+> map is too big.
+> 
+> This patch optimizes the case when the bucket is empty so we can move quickly
+> to next bucket.
+> 
+> The benchmark to exercise this is as follows:
+> 
+> -The map was populate with a single entry to make sure that the syscall overhead
+> is not helping the map_batch_lookup.
+> -The size of the preallocated map was increased to show the effect of
+> traversing empty buckets.
+> 
+> Results:
+> 
+>    Using get_next_key + lookup:
+> 
+>    Benchmark                Time(ns)        CPU(ns)     Iteration
+>    ---------------------------------------------------------------
+>    BM_DumpHashMap/1/1k          3593           3586         192680
+>    BM_DumpHashMap/1/4k          6004           5972         100000
+>    BM_DumpHashMap/1/16k        15755          15710          44341
+>    BM_DumpHashMap/1/64k        59525          59376          10000
 
-diff --git a/drivers/staging/rtl8188eu/include/osdep_service.h b/drivers/staging/rtl8188eu/include/osdep_service.h
-index 31d897f1d21f..6ca79b5fb638 100644
---- a/drivers/staging/rtl8188eu/include/osdep_service.h
-+++ b/drivers/staging/rtl8188eu/include/osdep_service.h
-@@ -71,8 +71,11 @@ struct rtw_netdev_priv_indicator {
- };
- struct net_device *rtw_alloc_etherdev_with_old_priv(void *old_priv);
- 
--#define rtw_netdev_priv(netdev)					\
--	(((struct rtw_netdev_priv_indicator *)netdev_priv(netdev))->priv)
-+static inline struct adapter *rtw_netdev_priv(struct net_device *dev)
-+{
-+	return (((struct rtw_netdev_priv_indicator *)netdev_priv(dev))->priv);
-+}
-+
- void rtw_free_netdev(struct net_device *netdev);
- 
- #define FUNC_NDEV_FMT "%s(%s)"
--- 
-2.26.2
+I think "BM_DumpHashMap/1/64k" means the program "BM_DumpHashMap",
+the map having only "1" entry, and the map preallocated size is "64k"?
+What is the "Iteration" here? The number of runs with the same dump?
+The CPU(ns) is the system cpu consumption, right? The Time/CPU is for
+all iterations, not just one, right? It would be good
+if the above results can be described better, so people can
+understand the results better.
 
+> 
+>    Using htab_lookup_batch before this patch:
+>    Benchmark                Time(ns)        CPU(ns)     Iterations
+>    ---------------------------------------------------------------
+>    BM_DumpHashMap/1/1k          3933           3927         177978
+>    BM_DumpHashMap/1/4k          9192           9177          73951
+>    BM_DumpHashMap/1/16k        42011          41970          16789
+>    BM_DumpHashMap/1/64k       117895         117661           6135
+> 
+>    Using htab_lookup_batch with this patch:
+>    Benchmark                Time(ns)        CPU(ns)     Iterations
+>    ---------------------------------------------------------------
+>    BM_DumpHashMap/1/1k          2809           2803         249212
+>    BM_DumpHashMap/1/4k          5318           5316         100000
+>    BM_DumpHashMap/1/16k        14925          14895          47448
+>    BM_DumpHashMap/1/64k        58870          58674          10000
+> 
+> Suggested-by: Luigi Rizzo <lrizzo@google.com>
+> Cc: Yonghong Song <yhs@fb.com>
+> Signed-off-by: Brian Vazquez <brianvv@google.com>
+> ---
+>   kernel/bpf/hashtab.c | 23 ++++++++---------------
+>   1 file changed, 8 insertions(+), 15 deletions(-)
+> 
+> diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
+> index 2137e2200d95..150015ea6737 100644
+> --- a/kernel/bpf/hashtab.c
+> +++ b/kernel/bpf/hashtab.c
+> @@ -1351,7 +1351,6 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
+>   	struct hlist_nulls_head *head;
+>   	struct hlist_nulls_node *n;
+>   	unsigned long flags = 0;
+> -	bool locked = false;
+>   	struct htab_elem *l;
+>   	struct bucket *b;
+>   	int ret = 0;
+> @@ -1410,19 +1409,19 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
+>   	dst_val = values;
+>   	b = &htab->buckets[batch];
+>   	head = &b->head;
+> -	/* do not grab the lock unless need it (bucket_cnt > 0). */
+> -	if (locked)
+> -		flags = htab_lock_bucket(htab, b);
+>   
+> +	l = hlist_nulls_entry_safe(rcu_dereference_raw(hlist_nulls_first_rcu(head)),
+> +					struct htab_elem, hash_node);
+> +	if (!l && (batch + 1 < htab->n_buckets)) {
+> +		batch++;
+> +		goto again_nocopy;
+> +	}
+> +
+> +	flags = htab_lock_bucket(htab, b);
+[...]
