@@ -2,149 +2,127 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A47C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 16:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1D1C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 16:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 821122071E
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 16:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC0AF2071E
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 16:30:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="QpBmy8JE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gmwiPuLf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbgHAQ0O (ORCPT
+        id S1727051AbgHAQaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 12:26:14 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:38890 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725841AbgHAQ0N (ORCPT
+        Sat, 1 Aug 2020 12:30:00 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:37301 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726300AbgHAQ37 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 12:26:13 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 277651C0BD4; Sat,  1 Aug 2020 18:26:11 +0200 (CEST)
-Date:   Sat, 1 Aug 2020 18:26:10 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     kernel list <linux-kernel@vger.kernel.org>, tony@atomide.com,
-        merlijn@wizzup.org, martin_rysavy@centrum.cz,
-        maemo-leste@lists.dyne.org
-Subject: Re: [maemo-leste] Modem on Droid 4 (mdm6600) in recent mainline
-Message-ID: <20200801162610.GA11576@amd>
-References: <20200729220803.GA553@amd>
- <20200729225409.wqboxq77ryvmmxhe@duo.ucw.cz>
+        Sat, 1 Aug 2020 12:29:59 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 08F835C00CD;
+        Sat,  1 Aug 2020 12:29:58 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Sat, 01 Aug 2020 12:29:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm3; bh=FhcIa5vl19H1Q
+        blhkWUef9NQmw0YCfpphgojts1RzX8=; b=QpBmy8JELAjTsoUSWhhnQ8Xsdarfx
+        j45BkSPOB3LmOa0asJz/gYTMUMp5RIRFpnsT4ckK0XkbW0KtxgNAzAlY2MQDaAD7
+        uKnqjuJs9BxSAAbvY68kZipHASbjPK+VBpKO3Pu/8vyaHKke9447zy1H1py4od+Y
+        4PdihZQL/7lj9/oAr5KL98gFrioLT5d+cfUTjR6e7Ssl6KI8C0EhPmcxz7n6Db87
+        0R+oCAEauWH0HZUXuwAmO7v63EyZXCTj1V1zH5WxLh3IjlaNqjGMGPFZ7mucaXUt
+        EVqlxbFtq4+QPd9sGV1jhe48Vqgls/5khhHO2I5GoUQByr410L+DPgqLQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=FhcIa5vl19H1QblhkWUef9NQmw0YCfpphgojts1RzX8=; b=gmwiPuLf
+        ty1/QDRZRbPvvrv/SqW6plo6h4QMXFosA6rGaWIqn8N6gdztx5cuQTZVzZLktmVA
+        UzI8GGNGoZl1o1Y7Zt38/f2oPhDVt42ac6erQVMjl2q6dFmvyAjnhFq2h70bAuaF
+        S4P+b+aQ3VhZOzXYqhrCFbmLwxJOn8Y79II4dCRVc7NRmdXNBvHfKmH7z+R2czZt
+        6vloy6fyudN8+JJyosbv5cLijoRtAjiqfo2khnRwPkJ2QQx84NGAjiMijvz5YFtk
+        qfzAjzsSJoXp683vK/FPektO9wso9u/I07yMZXV+zQoSpcdRqYO5ng/Tlzb9IIe6
+        q6tdD6wXVLjJhg==
+X-ME-Sender: <xms:hZglX-zzVCEIuYxrRQvlXZ8ffFA6pNqOl_gOufbNw3j0_q9YLt2sBg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrjedtgddutdefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgv
+    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucggtf
+    frrghtthgvrhhnpeduhfejfedvhffgfeehtefghfeiiefgfeehgfdvvdevfeegjeehjedv
+    gfejheeuieenucfkphepjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghn
+    ugdrohhrgh
+X-ME-Proxy: <xmx:hZglX6T_11FImR_VqxvSK0Okm5jIBH_klhrlqv9zyWj_hA634qyI9Q>
+    <xmx:hZglXwWJNcNxBH1tNwasgUlcibr1fHyeAFS4EQ73qV2G7YXn06gsNg>
+    <xmx:hZglX0hBZSKGFCDdYP9I8oN_N2P-bAz0oNynOsuI3zc6vkGhya9IKA>
+    <xmx:hpglXzO6UewIaOa9yafvbfqzrlXCpHXMfd0901VORoXUHbO40w85lg>
+Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8C2C23060067;
+        Sat,  1 Aug 2020 12:29:57 -0400 (EDT)
+From:   Samuel Holland <samuel@sholland.org>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Cc:     Gustavo Padovan <gustavo.padovan@collabora.co.uk>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Samuel Holland <samuel@sholland.org>
+Subject: [PATCH 2/2] Bluetooth: hci_ldisc/hci_serdev: Cancel init work before unregistering
+Date:   Sat,  1 Aug 2020 11:29:56 -0500
+Message-Id: <20200801162956.22610-2-samuel@sholland.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200801162956.22610-1-samuel@sholland.org>
+References: <20200801162956.22610-1-samuel@sholland.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="YiEDa0DAkWCtVeE4"
-Content-Disposition: inline
-In-Reply-To: <20200729225409.wqboxq77ryvmmxhe@duo.ucw.cz>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+If hci_uart_tty_close() or hci_uart_unregister_device() is called while
+hu->init_ready is scheduled, hci_register_dev() could be called after
+the hci_uart is torn down. Avoid this by ensuring the work is complete
+or canceled before checking the HCI_UART_REGISTERED flag.
 
---YiEDa0DAkWCtVeE4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: 9f2aee848fe6 ("Bluetooth: Add delayed init sequence support for UART controllers")
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+---
+ drivers/bluetooth/hci_ldisc.c  | 1 +
+ drivers/bluetooth/hci_serdev.c | 2 ++
+ 2 files changed, 3 insertions(+)
 
-Hi!
+diff --git a/drivers/bluetooth/hci_ldisc.c b/drivers/bluetooth/hci_ldisc.c
+index 85a30fb9177b..f83d67eafc9f 100644
+--- a/drivers/bluetooth/hci_ldisc.c
++++ b/drivers/bluetooth/hci_ldisc.c
+@@ -538,6 +538,7 @@ static void hci_uart_tty_close(struct tty_struct *tty)
+ 		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
+ 		percpu_up_write(&hu->proto_lock);
+ 
++		cancel_work_sync(&hu->init_ready);
+ 		cancel_work_sync(&hu->write_work);
+ 
+ 		if (hdev) {
+diff --git a/drivers/bluetooth/hci_serdev.c b/drivers/bluetooth/hci_serdev.c
+index 7b233312e723..3977bba485c2 100644
+--- a/drivers/bluetooth/hci_serdev.c
++++ b/drivers/bluetooth/hci_serdev.c
+@@ -355,6 +355,8 @@ void hci_uart_unregister_device(struct hci_uart *hu)
+ 	struct hci_dev *hdev = hu->hdev;
+ 
+ 	clear_bit(HCI_UART_PROTO_READY, &hu->flags);
++
++	cancel_work_sync(&hu->init_ready);
+ 	if (test_bit(HCI_UART_REGISTERED, &hu->flags))
+ 		hci_unregister_dev(hdev);
+ 	hci_free_dev(hdev);
+-- 
+2.26.2
 
-> > There's something very wrong with /dev/ttyUSB4 in recent kernels:
-> > unsolicited incoming data from the modem are getting lost; I believe
-> > it means also SMS notifications, but it is very easy to reproduce with
-> > incoming call notifications.
-> >=20
-> > They just don't come.
-> >=20
-> > But if you keep pasting "AT" into minicom, they actually do.
-> >=20
-> > Of course... that means that trying to debug ofono is ... "interesting".
-> >=20
-> > I tried playing with
-> > /sys/bus/platform/drivers/phy-mapphone-mdm6600/usb-phy\@1/power/control
-> > files and timeouts, but could not get it to work.
-> >=20
-> > Any idea what could be wrong there?
-> >=20
-> > Is there easy way to disable power management for testing?
->=20
-> I tried this... and it did not fix the problem :-(.
-
-This does fix the problem:
-
-# writing to ttyUSB3 eventually crashes the modem
-# ttyUSB0 -- works w/o delay for an hour.
-date
-DEV=3D/dev/ttyUSB0
-while test -e $DEV; do
-  echo > $DEV
-    sleep .3
-      done
-      date
-
-=2E..and with that:
-
-1) AT commands work over ttyUSB4; yes that interface is far away from
-fully compliant with the standard.
-
-2) AFAICT, there are attempts at delivering SMS messages over QMI:
-
-ofonod[16913]: src/network.c:ofono_netreg_strength_notify() strength
-60
-
-
-ofonod[16913]: QMI: < 01 89 00 80 05 01 04 00 00 01 00 7d 00 11 7a 00
-=2E..........}..z.
-ofonod[16913]: QMI:   00 00 00 00 00 06 72 00 04 14 d0 d4 f2 7c fc 6e
-=2E.....r......|.n
-ofonod[16913]: QMI:   bf c5 69 76 19 00 00 02 80 10 81 61 21 80 68 d6
-=2E.iv.......a!.h.
-ofonod[16913]: QMI:   b0 be ec ce 83 f4 e1 75 58 ef 4e af eb 2c 90 38
-=2E......uX.N..,.8
-ofonod[16913]: QMI:   cf 7e 83 ac e1 36 c8 9e 3f 97 dd 65 f9 db 1e 76
-=2E~...6..?..e...v
-ofonod[16913]: QMI:   97 41 ee f0 9c 5d 26 d7 d5 e9 71 1a a4 2e 93 dd
-=2EA...]&...q.....
-ofonod[16913]: QMI:   6f 79 58 ff b6 97 41 e8 f2 9c fd 06 c1 e5 6f 10
-oyX...A.......o.
-ofonod[16913]: QMI:   5c 9e 9e d3 eb 70 10 f9 0d 9a 87 db ef b7 78 ce
-\....p........x.
-ofonod[16913]: QMI:   ae a3 f3 3a d0 8d 96 8b c5 70
-=2E..:.....p
-ofonod[16913]: QMI:     WMS_ind msg=3D1 len=3D125
-[client=3D1,type=3D4,tid=3D0,len=3D137]
-ofonod[16913]: QMI:        {type=3D17,len=3D122}
-ofonod[16913]: drivers/qmimodem/sms.c:event_notify()
-ofonod[16913]: drivers/qmimodem/sms.c:event_notify() ack_required 0
-transaction id 0
-ofonod[16913]: drivers/qmimodem/sms.c:event_notify() msg format 6 PDU
-length 114
-ofonod[16913]: src/sms.c:ofono_sms_deliver_notify() len 114 tpdu len
-114
-ofonod[16913]: src/sms.c:handle_deliver()
-ofonod[16913]: src/sms.c:sms_dispatch()
-ofonod[16913]: src/sms.c:sms_dispatch() dst -1 src -1
-ofonod[16913]: Aborting (signal 11) [src/ofonod]
-user@devuan:/my/ofono$
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---YiEDa0DAkWCtVeE4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl8ll6IACgkQMOfwapXb+vKwrgCfQXdUVsmCFqXei5+vsZjgKqvw
-eHcAn3R/vQTQrd94sxldzTwHgbez1zAZ
-=U4P9
------END PGP SIGNATURE-----
-
---YiEDa0DAkWCtVeE4--
