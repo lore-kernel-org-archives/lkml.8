@@ -2,165 +2,117 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FBBC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 16:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9A4C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 16:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 860712076B
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 16:35:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596299744;
-	bh=mslJL+QZ9w3cgAbtxFNEcDATC0aP9GWwaBPrIDRGBFE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qX1lkC4m4pKztfdsvZRKGHvqr9U++okYVde4KJyaK66TtZiXxmNOBmyHNbDvM8a4+
-	 A4+NFVV+aQtkyQq9168A0gL9fV9SlDL4gzdxjMRXx/g+Mwd313iRRFnCnNphzrufpg
-	 LxVFB8LEfM7pAvkg33wMm/FCBHBLJK04beFymH7A=
+	by mail.kernel.org (Postfix) with ESMTP id A6E9A2080C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 16:37:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="sLJ2YymD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgHAQfn (ORCPT
+        id S1727087AbgHAQhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 12:35:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40138 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726300AbgHAQfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 12:35:43 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F8D62076B;
-        Sat,  1 Aug 2020 16:35:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596299742;
-        bh=mslJL+QZ9w3cgAbtxFNEcDATC0aP9GWwaBPrIDRGBFE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=P6NKBUMqG/QieprKQIwJVyq+mfEyJ2y/waL7pbOsSDAQukwqPzyakQ2EL2GBw7M1u
-         OwrGOGiSqwLtWInZXGy51hC7Uf9oli5APvRfNb5We8o3BLvDvUDphyoYI2nVPkning
-         QzwmU4HdXhjSqHZen8k44FcZA4aPVGjrUawSg0eE=
-Date:   Sat, 1 Aug 2020 17:35:38 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Nishant Malpani <nish.malpani25@gmail.com>
-Cc:     robh+dt@kernel.org, dragos.bogdan@analog.com,
-        darius.berghe@analog.com, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [v4 2/2] dt-bindings: iio: gyro: Add DT binding doc for
- ADXRS290
-Message-ID: <20200801173538.381f6463@archlinux>
-In-Reply-To: <20200726141026.2888-1-nish.malpani25@gmail.com>
-References: <20200726141026.2888-1-nish.malpani25@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 1 Aug 2020 12:37:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726456AbgHAQhB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 12:37:01 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DEAEC06174A
+        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 09:37:00 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id o23so6978474ejr.1
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 09:37:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7nWoFZS16KHN7ELInZM3NkAqbsw8HmgfQtV5PkaAdOs=;
+        b=sLJ2YymDgCE2aYqkgcFgGI6naddEomHT1AI/LblO1I2CIpKzR/X4HC0D8kFfsN6b+L
+         XCYiypkgq9U/ws9p617+waX57F8r3r9xw2IEJINKnzTBI1kuSBY9ijEvHwlcNtuSjqeZ
+         Hc2tgLSldiumX+1XnZPsDgJMdf1x61SK6XNyMc3TiFxkjVUQDHk06pK8LV6TXULby89E
+         Q+sc+6B4I8vfJLc3o9x4Nzoa4qysw9eANsa9JKWVrWyM3DFMjubaz5YpI0uzS2O4ob16
+         LSXsaZKRopTp92npa1jce/IFsU1kV5YolRnKSOBrqMK/vKjOiSQ1Nztp40qAyj1R/fd9
+         WV0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7nWoFZS16KHN7ELInZM3NkAqbsw8HmgfQtV5PkaAdOs=;
+        b=LZLkzcJP3KXQeRT3Tb5xVMoqEcTkCJJR1+kypp4hm5uYYce6o+RfIkaBeonwr6NbHE
+         N565Ii2PaWt5XfM0ksEr+GjI+Js8BX9FI/Tr8RFNNNf4Spk6a80FcaLwOAWexb3poLXP
+         SHDoapvfxNk7CbH3JGDKr8IkurFsL8EHwlN2DVaDMmc3d46iwWYr0kStm8unaJdzrdGA
+         0TpRmX3ARPdi/fPZxRWgTFmL2YxyI+wIgrEbFybFrwu0KAo4Dw6ap7WxSDK6SDSNnoge
+         0GW5pvUGEFdS40W0XdZUEcvsCvY/Js0ZMr7gUIzrrh1+r5cYZGMYJqQ9/jvnx6R4kKp6
+         +6FA==
+X-Gm-Message-State: AOAM530tPzDJHJcrHXzQpRs2+ZkndRSrR53hJr8PvN8vTNCmo0C3vNzK
+        Mzp/o0sSh9u12V3D/6HvSkOivr1SZfJ+IYXae4Alkg==
+X-Google-Smtp-Source: ABdhPJxOFGsY8qnjWmioIMQMzSoQMpAmcXHTZevYKI2hHLGadP9/WqNGAW9biPUhi7/KRXBONqPTrbpeIRc4H0g10M8=
+X-Received: by 2002:a17:907:72c8:: with SMTP id du8mr9038155ejc.237.1596299819131;
+ Sat, 01 Aug 2020 09:36:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <159625229779.3040297.11363509688097221416.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <159625231266.3040297.2759117253481288037.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <545078f8-d6d3-5db7-02f6-648218513752@infradead.org>
+In-Reply-To: <545078f8-d6d3-5db7-02f6-648218513752@infradead.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sat, 1 Aug 2020 09:36:48 -0700
+Message-ID: <CAPcyv4iUtQ1Edau5e7GQumu1MxcAvorSNwnw9HGhzFDNuBS7=Q@mail.gmail.com>
+Subject: Re: [PATCH v3 02/23] x86/numa: Add 'nohmat' option
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, X86 ML <x86@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 26 Jul 2020 19:40:26 +0530
-Nishant Malpani <nish.malpani25@gmail.com> wrote:
+On Fri, Jul 31, 2020 at 8:51 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 7/31/20 8:25 PM, Dan Williams wrote:
+> > Disable parsing of the HMAT for debug, to workaround broken platform
+> > instances, or cases where it is otherwise not wanted.
+> >
+> > ---
+> >  arch/x86/mm/numa.c       |    2 ++
+> >  drivers/acpi/numa/hmat.c |    8 +++++++-
+> >  include/acpi/acpi_numa.h |    8 ++++++++
+> >  3 files changed, 17 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> > index 87c52822cc44..f3805bbaa784 100644
+> > --- a/arch/x86/mm/numa.c
+> > +++ b/arch/x86/mm/numa.c
+> > @@ -41,6 +41,8 @@ static __init int numa_setup(char *opt)
+> >               return numa_emu_cmdline(opt + 5);
+> >       if (!strncmp(opt, "noacpi", 6))
+> >               disable_srat();
+> > +     if (!strncmp(opt, "nohmat", 6))
+> > +             disable_hmat();
+>
+> Hopefully that will be documented in
+> Documentation/x86/x86_64/boot-options.rst.
 
-> Add devicetree binding document for ADXRS290, a dual-axis MEMS gyroscope.
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
-Applied to the togreg branch of iio.git and pushed out as testing for the
-autobuilders to play with them.
-
-Note this won't make the coming merge window, so will go in next cycle.
-
-Thanks,
-
-Jonathan
-
-> ---
-> 
-> No changes in v4.
-> 
-> No changes in v3.
-> 
-> Changes in v2:
->   - use 'const' instead of 'enum' while setting the compatible string
->     since only a single item is expected
->   - add 'additionalProperties: false'
-> ---
->  .../bindings/iio/gyroscope/adi,adxrs290.yaml  | 53 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
-> new file mode 100644
-> index 000000000000..61adb2c2454b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
-> @@ -0,0 +1,53 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2020 Analog Devices Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/gyroscope/adi,adxrs290.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices ADXRS290 Dual-Axis MEMS Gyroscope
-> +
-> +maintainers:
-> +  - Nishant Malpani <nish.malpani25@gmail.com>
-> +
-> +description: |
-> +  Bindings for the Analog Devices ADXRS290 dual-axis MEMS gyroscope device.
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADXRS290.pdf
-> +
-> +properties:
-> +  compatible:
-> +    const: adi,adxrs290
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  spi-max-frequency:
-> +    maximum: 5000000
-> +
-> +  spi-cpol: true
-> +
-> +  spi-cpha: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - spi-max-frequency
-> +  - spi-cpol
-> +  - spi-cpha
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    spi {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        gyro@0 {
-> +                   compatible = "adi,adxrs290";
-> +                   reg = <0>;
-> +                   spi-max-frequency = <5000000>;
-> +                   spi-cpol;
-> +                   spi-cpha;
-> +        };
-> +    };
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 71ae9b184179..bb2cd4ee140c 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1103,6 +1103,7 @@ M:	Nishant Malpani <nish.malpani25@gmail.com>
->  L:	linux-iio@vger.kernel.org
->  S:	Supported
->  F:	drivers/iio/gyro/adxrs290.c
-> +F:	Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
->  
->  ANALOG DEVICES INC ASOC CODEC DRIVERS
->  M:	Lars-Peter Clausen <lars@metafoo.de>
-
+Sorry, yes, you gave that feedback before. I can do a quick respin
+with this and the kbuild-robot compile fixups.
