@@ -2,151 +2,134 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97677C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 14:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 178AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74B04207FB
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 14:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E766A2071E
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596293566;
-	bh=4S0kIiBlEp7ju38+PP8R+cgjFKqK5pJylWhbCNVeObU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=riVkh6vLdIYkwNmCVAwH5E4tclEfNmpDtdB3r6OR9hcGSEejQymgmJQFEbZi+qn93
-	 cSoqNEIqY7UoLhBCiPBGEbw2SmHDBzBUVm4qJTBz/gmBYRLSfYprwenlsgYo+7qv86
-	 zfYUYsmQnsAnwElrxxsk9nTquoCiY81/gTXcKP6M=
+	s=default; t=1596294093;
+	bh=h+QvBZvTQeHckmI/tg4qrDAcMtAVOXBhTfcgC17m434=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=auq5N7GEyj0/DtmC/ki2pLBuLAloAAwesvobwzhijSH/8oAyAXnWH8ZSa9LCFrbHj
+	 B0n4SV1eZ428lKieLk3TOy8kdMEf7xHI4Rd0sP92o18p7gJEhl7pPLXUMtOTfKFSAl
+	 B7vaPGcs1qsLSM/TKFFIyPWbypYX4XqC3g8GeU8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgHAOwp (ORCPT
+        id S1726494AbgHAPB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 10:52:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55946 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbgHAOwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 10:52:44 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91FD32071E;
-        Sat,  1 Aug 2020 14:52:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596293564;
-        bh=4S0kIiBlEp7ju38+PP8R+cgjFKqK5pJylWhbCNVeObU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=P6CLjjBtrCsK6bjdoyX69reUFmz2dXUAsQVqqeJtkaW/qvTE4ZBOpOIfSXXJC7orj
-         DcvVq3KcWB6AsLT/kwxh0IiafnL+MuaKUEGPTy8w9mSwYCN7mLypVBgBzTMfDTUWGi
-         B/h5PFEhdtmsc8GWrePbowubqiybkYegqwhPedi4=
-Date:   Sat, 1 Aug 2020 15:52:39 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Daniel Campello <campello@chromium.org>,
-        LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-iio <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH v3 06/15] iio: sx9310: Fixes various memory handling
-Message-ID: <20200801155239.463917db@archlinux>
-In-Reply-To: <CAHp75VeMGtnhCEuMODNO3K6JfFTbm=gLr4yZdZHV-JsBW0eS_A@mail.gmail.com>
-References: <20200731164853.3020946-1-campello@chromium.org>
-        <20200731104555.v3.6.I8accffd77d616cb55b29bc3021cb0f5e1da3b68a@changeid>
-        <CAHp75VeMGtnhCEuMODNO3K6JfFTbm=gLr4yZdZHV-JsBW0eS_A@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 1 Aug 2020 11:01:27 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:52858 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbgHAPB1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 11:01:27 -0400
+Received: from oscar.flets-west.jp (softbank126025067101.bbtec.net [126.25.67.101]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 071F0q52015446;
+        Sun, 2 Aug 2020 00:00:54 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 071F0q52015446
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1596294054;
+        bh=tOAxt/j1JhH6AssVaD3P2jNNLUCqu0fvMz1gL/uy2Nc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Aew+XXgxDTsJJ+V71E9b8rdKrHNtDcwTn0g3ojdbmH52hnHTtUFalzg4JL69ChJSh
+         R0IV/GLNMHQoiT4xTCOjDcC28oFx5ejl02iUY+Y5eUIh5J47lCYiTk1q/+V9l+hfeQ
+         rnfusbF1Xo+WRk2t2UFKO52vUcQieL6yf8nWNd6Ll53P8Bpy7APDa9Rog8xqnok+1u
+         BT/IIBDbUzQDaiqeIEfpzh8qvzk+QG6T67tbAY57s7yd0uEbxPMUBOXSmfvV9DOwjd
+         r5VHi+YqedEPQH+W4q97TbZU64/w6W0ZWHKgtsdFAOuq1JBM/XXb97bZ0u0qWN3zkE
+         678fXUPU76/LA==
+X-Nifty-SrcIP: [126.25.67.101]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: [PATCH 2/2] kbuild: stop filtering out $(GCC_PLUGINS_CFLAGS) from cc-option base
+Date:   Sun,  2 Aug 2020 00:00:50 +0900
+Message-Id: <20200801150050.767038-2-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200801150050.767038-1-masahiroy@kernel.org>
+References: <20200801150050.767038-1-masahiroy@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jul 2020 22:24:47 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+Commit d26e94149276 ("kbuild: no gcc-plugins during cc-option tests")
+was neeeded because scripts/Makefile.gcc-plugins was too early.
 
-> On Fri, Jul 31, 2020 at 7:49 PM Daniel Campello <campello@chromium.org> wrote:
-> >
-> > Makes use __aligned(8) to ensure that the timestamp is correctly aligned
-> > when we call io_push_to_buffers_with_timestamp().
-> > Also makes use of sizeof() for regmap_bulk_read instead of static value.  
-> 
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> 
-> > Signed-off-by: Daniel Campello <campello@chromium.org>
-> > ---
-> >
-> > Changes in v3:
-> >  - Changed buffer to struct type to align timestamp memory properly.
-> >
-> > Changes in v2:
-> >  - Fixed commit message from "iio: sx9310: Align memory"
-> >
-> >  drivers/iio/proximity/sx9310.c | 13 ++++++++-----
-> >  1 file changed, 8 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-> > index 2ed062d01634bc..c46584b4817b4a 100644
-> > --- a/drivers/iio/proximity/sx9310.c
-> > +++ b/drivers/iio/proximity/sx9310.c
-> > @@ -132,8 +132,11 @@ struct sx9310_data {
-> >          */
-> >         bool prox_stat[SX9310_NUM_CHANNELS];
-> >         bool trigger_enabled;
-> > -       __be16 buffer[SX9310_NUM_CHANNELS +
-> > -                     4]; /* 64-bit data + 64-bit timestamp */
-> > +       /* Ensure correct alignment of timestamp when present. */
-> > +       struct {
-> > +               __be16 channels[SX9310_NUM_CHANNELS];
-> > +               s64 ts __aligned(8);
-> > +       } buffer;
-> >         /* Remember enabled channels and sample rate during suspend. */
-> >         unsigned int suspend_ctrl0;
-> >         struct completion completion;
-> > @@ -346,7 +349,7 @@ static int sx9310_read_prox_data(struct sx9310_data *data,
-> >         if (ret < 0)
-> >                 return ret;
-> >
-> > -       return regmap_bulk_read(data->regmap, chan->address, val, 2);
-> > +       return regmap_bulk_read(data->regmap, chan->address, val, sizeof(*val));
-> >  }
-> >
-> >  /*
-> > @@ -697,10 +700,10 @@ static irqreturn_t sx9310_trigger_handler(int irq, void *private)
-> >                 if (ret < 0)
-> >                         goto out;
-> >
-> > -               data->buffer[i++] = val;
-> > +               data->buffer.channels[i++] = val;
-> >         }
-> >
-> > -       iio_push_to_buffers_with_timestamp(indio_dev, data->buffer,
-> > +       iio_push_to_buffers_with_timestamp(indio_dev, data->buffer.channels,
+This is unneeded by including scripts/Makefile.gcc-plugins last,
+and being careful to not add cc-option tests after it.
 
-Whilst it's the same address, it makes more sense to push &data->buffer
-Technically buffer.channels isn't large enough to meant the requirements
-of iio_push_to_buffers_with_timestamp.
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-Otherwise, looks good.
+ Makefile               |  5 ++++-
+ scripts/Kbuild.include | 10 +++-------
+ 2 files changed, 7 insertions(+), 8 deletions(-)
 
-Thanks,
-
-
-Jonathan
-
-> >                                            pf->timestamp);
-> >
-> >  out:
-> > --
-> > 2.28.0.163.g6104cc2f0b6-goog
-> >  
-> 
-> 
-> --
-> With Best Regards,
-> Andy Shevchenko
+diff --git a/Makefile b/Makefile
+index 483456d5dd3e..712206381a27 100644
+--- a/Makefile
++++ b/Makefile
+@@ -506,7 +506,6 @@ KBUILD_CFLAGS_MODULE  := -DMODULE
+ KBUILD_LDFLAGS_MODULE :=
+ export KBUILD_LDS_MODULE := $(srctree)/scripts/module-common.lds
+ KBUILD_LDFLAGS :=
+-GCC_PLUGINS_CFLAGS :=
+ CLANG_FLAGS :=
+ 
+ export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE LD CC
+@@ -955,6 +954,10 @@ include-$(CONFIG_GCC_PLUGINS)	+= scripts/Makefile.gcc-plugins
+ 
+ include $(addprefix $(srctree)/, $(include-y))
+ 
++# scripts/Makefile.gcc-plugins is intentionally included last.
++# Do not add $(call cc-option,...) below this line. When you build the kernel
++# from the clean source tree, the GCC plugins do not exist at this point.
++
+ # Add user supplied CPPFLAGS, AFLAGS and CFLAGS as the last assignments
+ KBUILD_CPPFLAGS += $(KCPPFLAGS)
+ KBUILD_AFLAGS   += $(KAFLAGS)
+diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
+index 9a15fbf66aa1..83a1637417e5 100644
+--- a/scripts/Kbuild.include
++++ b/scripts/Kbuild.include
+@@ -119,25 +119,21 @@ as-instr = $(call try-run,\
+ __cc-option = $(call try-run,\
+ 	$(1) -Werror $(2) $(3) -c -x c /dev/null -o "$$TMP",$(3),$(4))
+ 
+-# Do not attempt to build with gcc plugins during cc-option tests.
+-# (And this uses delayed resolution so the flags will be up to date.)
+-CC_OPTION_CFLAGS = $(filter-out $(GCC_PLUGINS_CFLAGS),$(KBUILD_CFLAGS))
+-
+ # cc-option
+ # Usage: cflags-y += $(call cc-option,-march=winchip-c6,-march=i586)
+ 
+ cc-option = $(call __cc-option, $(CC),\
+-	$(KBUILD_CPPFLAGS) $(CC_OPTION_CFLAGS),$(1),$(2))
++	$(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS),$(1),$(2))
+ 
+ # cc-option-yn
+ # Usage: flag := $(call cc-option-yn,-march=winchip-c6)
+ cc-option-yn = $(call try-run,\
+-	$(CC) -Werror $(KBUILD_CPPFLAGS) $(CC_OPTION_CFLAGS) $(1) -c -x c /dev/null -o "$$TMP",y,n)
++	$(CC) -Werror $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS) $(1) -c -x c /dev/null -o "$$TMP",y,n)
+ 
+ # cc-disable-warning
+ # Usage: cflags-y += $(call cc-disable-warning,unused-but-set-variable)
+ cc-disable-warning = $(call try-run,\
+-	$(CC) -Werror $(KBUILD_CPPFLAGS) $(CC_OPTION_CFLAGS) -W$(strip $(1)) -c -x c /dev/null -o "$$TMP",-Wno-$(strip $(1)))
++	$(CC) -Werror $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS) -W$(strip $(1)) -c -x c /dev/null -o "$$TMP",-Wno-$(strip $(1)))
+ 
+ # cc-ifversion
+ # Usage:  EXTRA_CFLAGS += $(call cc-ifversion, -lt, 0402, -O1)
+-- 
+2.25.1
 
