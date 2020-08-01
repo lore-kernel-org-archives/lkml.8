@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AE0C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 09:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EC8C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 09:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A25BE2076A
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 09:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DC85206E9
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 09:11:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbgHAJKc (ORCPT
+        id S1728724AbgHAJLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 05:10:32 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9309 "EHLO huawei.com"
+        Sat, 1 Aug 2020 05:11:40 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56580 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725876AbgHAJKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 05:10:31 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A583C5CD1EA15CCC1FE4;
-        Sat,  1 Aug 2020 17:10:11 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Sat, 1 Aug 2020
- 17:10:03 +0800
+        id S1725876AbgHAJLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 05:11:40 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4A2C6BBC4E29DDDCD8A5;
+        Sat,  1 Aug 2020 17:11:29 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Sat, 1 Aug 2020
+ 17:11:18 +0800
 From:   linmiaohe <linmiaohe@huawei.com>
-To:     <johannes@sipsolutions.net>, <davem@davemloft.net>,
-        <kuba@kernel.org>
-CC:     <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linmiaohe@huawei.com>
-Subject: [PATCH] mac80211: use eth_zero_addr() to clear mac address
-Date:   Sat, 1 Aug 2020 17:12:38 +0800
-Message-ID: <1596273158-24183-1-git-send-email-linmiaohe@huawei.com>
+To:     <aelior@marvell.com>, <GR-everest-linux-l2@marvell.com>,
+        <davem@davemloft.net>, <kuba@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linmiaohe@huawei.com>
+Subject: [PATCH] net: qede: use eth_zero_addr() to clear mac address
+Date:   Sat, 1 Aug 2020 17:13:54 +0800
+Message-ID: <1596273234-24230-1-git-send-email-linmiaohe@huawei.com>
 X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -50,23 +50,24 @@ Use eth_zero_addr() to clear mac address instead of memset().
 
 Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 ---
- net/mac80211/trace.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/qlogic/qede/qede_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/mac80211/trace.h b/net/mac80211/trace.h
-index 1b4709694d2a..50ab5b9d8eab 100644
---- a/net/mac80211/trace.h
-+++ b/net/mac80211/trace.h
-@@ -22,7 +22,8 @@
- #define LOCAL_PR_ARG	__entry->wiphy_name
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
+index 29e285430f99..e1617a67a714 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_main.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
+@@ -2678,8 +2678,8 @@ static void qede_get_generic_tlv_data(void *dev, struct qed_generic_tlvs *data)
+ 		data->feat_flags |= QED_TLV_LSO;
  
- #define STA_ENTRY	__array(char, sta_addr, ETH_ALEN)
--#define STA_ASSIGN	(sta ? memcpy(__entry->sta_addr, sta->addr, ETH_ALEN) : memset(__entry->sta_addr, 0, ETH_ALEN))
-+#define STA_ASSIGN	(sta ? memcpy(__entry->sta_addr, sta->addr, ETH_ALEN) : \
-+				eth_zero_addr(__entry->sta_addr))
- #define STA_NAMED_ASSIGN(s)	memcpy(__entry->sta_addr, (s)->addr, ETH_ALEN)
- #define STA_PR_FMT	" sta:%pM"
- #define STA_PR_ARG	__entry->sta_addr
+ 	ether_addr_copy(data->mac[0], edev->ndev->dev_addr);
+-	memset(data->mac[1], 0, ETH_ALEN);
+-	memset(data->mac[2], 0, ETH_ALEN);
++	eth_zero_addr(data->mac[1]);
++	eth_zero_addr(data->mac[2]);
+ 	/* Copy the first two UC macs */
+ 	netif_addr_lock_bh(edev->ndev);
+ 	i = 1;
 -- 
 2.19.1
 
