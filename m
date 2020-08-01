@@ -2,225 +2,163 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 160D3C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A09CEC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0D9D2067D
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CA112065E
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:39:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596303564;
+	bh=eitnSn1HofMPcqPujOxMkcZVhG44/Qc7IlihtXJgUNA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MdNvNlv/E2nfPg3WDUzjdyYQFEgnIb58nT2BecbWD/OrAqQSb2/D6AGUS2j2nx7FM
+	 cWoqNynqVuxL0ud+xMX6cSpumfcIK4xBPDz0mF65kV5tFgc8rvQGtw9hJ0DRd7NFX4
+	 2aTySvh3JftswX9EnuQQRQeiSkZ2KQaXWktJtAq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbgHARjI (ORCPT
+        id S1727063AbgHARjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 13:39:08 -0400
-Received: from mga07.intel.com ([134.134.136.100]:54364 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726906AbgHARjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 13:39:07 -0400
-IronPort-SDR: xXH/GV+rI3U5l6mBDdNFdYD2Eq9gUUZn0tRos1DnG3QK+ivGvgvT2MXo9iYBvfCub57cinV5a7
- m+yO4C7LQz5w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9700"; a="216379187"
-X-IronPort-AV: E=Sophos;i="5.75,423,1589266800"; 
-   d="scan'208";a="216379187"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2020 10:39:06 -0700
-IronPort-SDR: L58xj0bzWq/qheUBGFf9msfEY0MSHcK0VH/SK/anKb5cKsUtcW3tp5XqVrqk0A66xq4HJQF+r0
- 1XfJNpYAjztA==
-X-IronPort-AV: E=Sophos;i="5.75,423,1589266800"; 
-   d="scan'208";a="435752695"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2020 10:39:06 -0700
-Subject: [PATCH v8 2/2] x86/copy_mc: Introduce copy_mc_generic()
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     tglx@linutronix.de, mingo@redhat.com, vishal.l.verma@intel.com
-Cc:     x86@kernel.org, stable@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Erwin Tsaur <erwin.tsaur@intel.com>,
-        Erwin Tsaur <erwin.tsaur@intel.com>, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-Date:   Sat, 01 Aug 2020 10:22:48 -0700
-Message-ID: <159630256804.3143511.8894023468833792004.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <159630255616.3143511.18110575960499749012.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <159630255616.3143511.18110575960499749012.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        Sat, 1 Aug 2020 13:39:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45728 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbgHARjU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 13:39:20 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3560BC061756
+        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 10:39:20 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id i10so795849ljn.2
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 10:39:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jSMz53TZKQ6sk3S4b6W05ZI4+3GXVw8jD2Gw4lqXtXk=;
+        b=K1nTPli+t7wJ57gIA/1k20l1xjyfXxoXZKinZ0qdkj2q3y2vQec3aGF0Dur6AHEU5/
+         pivQjYNyYfJthJRDoNpzMRNNPRvQk1oKe+Fya2s79I6atkeOXqlXpdpyIMcpgFvAuh9J
+         i9MICiVjdmLnaHL2z5fNku9gi8HwGErLcJEss=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jSMz53TZKQ6sk3S4b6W05ZI4+3GXVw8jD2Gw4lqXtXk=;
+        b=bpw4FtNXMl8RPLNVSDn9eFfysCatM+EPKwYKCCmvDBuy4qmeg6ru+3bRS2Vwta3lY2
+         daGzM1xEKQuQYNgz2vTajEjb8PEwL7AQsdim9Tk/cytTnXUnlgJLru+KPHtkx9YrIQzH
+         1uZrKwPCN5oQz1uhAyHk+prQILPYw5U/1VlcPcAFsfSR6kmUF0afQRvJdXR0ca2iR9g1
+         PzO2PfOOGSJM/HeOZAlBPorYGvB760Ph3/5Sn/SMi/MjwVf2keWuhJkSFoGwqC5apYz9
+         ox3dN7LX5DDlcIYsSZB6SkoMUYCWt2wv+iSW2/gtaNprkRHKW4n6G+ek1l9aMUd15lBy
+         jkag==
+X-Gm-Message-State: AOAM530MNfB3OCL4VTdRI8bYx9SAvo99sxsL7PNPQTqwX4WtnlFNjEgX
+        1Gtt8Qg02jZklxgE3M+aZtyTFHoJpwA=
+X-Google-Smtp-Source: ABdhPJyBlQmQyqVnJjhEGFsNRdTwlnbkuoEP/WsogTtFk6NmAPE2jDtd9JUKpXi2BRJ9c3uXz28+eg==
+X-Received: by 2002:a2e:7e0d:: with SMTP id z13mr3072440ljc.12.1596303558062;
+        Sat, 01 Aug 2020 10:39:18 -0700 (PDT)
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
+        by smtp.gmail.com with ESMTPSA id p25sm495328ljn.58.2020.08.01.10.39.16
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Aug 2020 10:39:16 -0700 (PDT)
+Received: by mail-lf1-f42.google.com with SMTP id i19so18436824lfj.8
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 10:39:16 -0700 (PDT)
+X-Received: by 2002:a19:c206:: with SMTP id l6mr4698688lfc.152.1596303556090;
+ Sat, 01 Aug 2020 10:39:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <00000000000045b3fe05abcced2f@google.com> <fc097a54-0384-9d21-323f-c3ca52cdb956@I-love.SAKURA.ne.jp>
+In-Reply-To: <fc097a54-0384-9d21-323f-c3ca52cdb956@I-love.SAKURA.ne.jp>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 1 Aug 2020 10:39:00 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj15SDiHjP2wPiC=Ru-RrUjOuT4AoULj6N_9pVvSXaWiw@mail.gmail.com>
+Message-ID: <CAHk-=wj15SDiHjP2wPiC=Ru-RrUjOuT4AoULj6N_9pVvSXaWiw@mail.gmail.com>
+Subject: Re: INFO: task hung in pipe_read (2)
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Andrea Arcangeli <aarcange@redhat.com>
+Cc:     syzbot <syzbot+96cc7aba7e969b1d305c@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: multipart/mixed; boundary="0000000000006a4f6205abd462ab"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The original copy_mc_fragile() implementation had negative performance
-implications since it did not use the fast-string instruction sequence
-to perform copies. For this reason copy_mc_to_kernel() fell back to
-plain memcpy() to preserve performance on platform that did not indicate
-the capability to recover from machine check exceptions. However, that
-capability detection was not architectural and now that some platforms
-can recover from fast-string consumption of memory errors the memcpy()
-fallback now causes these more capable platforms to fail.
+--0000000000006a4f6205abd462ab
+Content-Type: text/plain; charset="UTF-8"
 
-Introduce copy_mc_generic() as the fast default implementation of
-copy_mc_to_kernel() and finalize the transition of copy_mc_fragile() to
-be a platform quirk to indicate 'fragility'. With this in place
-copy_mc_to_kernel() is fast and recovery-ready by default regardless of
-hardware capability.
+On Sat, Aug 1, 2020 at 8:30 AM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
+>
+> Waiting for response at https://lkml.kernel.org/r/45a9b2c8-d0b7-8f00-5b30-0cfe3e028b28@I-love.SAKURA.ne.jp .
 
-Thanks to Vivek for identifying that copy_user_generic() is not suitable
-as the copy_mc_to_user() backend since the #MC handler explicitly checks
-ex_has_fault_handler().
+I think handle_userfault() should have a (shortish) timeout, and just
+return VM_FAULT_RETRY.
 
-Cc: x86@kernel.org
-Cc: <stable@vger.kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reported-by: Erwin Tsaur <erwin.tsaur@intel.com>
-Tested-by: Erwin Tsaur <erwin.tsaur@intel.com>
-Fixes: 92b0729c34ca ("x86/mm, x86/mce: Add memcpy_mcsafe()")
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- arch/x86/include/asm/uaccess.h |    3 +++
- arch/x86/lib/copy_mc.c         |   12 +++++-------
- arch/x86/lib/copy_mc_64.S      |   40 ++++++++++++++++++++++++++++++++++++++++
- tools/objtool/check.c          |    1 +
- 4 files changed, 49 insertions(+), 7 deletions(-)
+The code is overly complex anyway, because it predates the "just return RETRY".
 
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index 4b2082b61e3e..b038eda58958 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -464,6 +464,9 @@ copy_mc_to_user(void *to, const void *from, unsigned len);
- 
- unsigned long __must_check
- copy_mc_fragile(void *dst, const void *src, unsigned cnt);
-+
-+unsigned long __must_check
-+copy_mc_generic(void *dst, const void *src, unsigned cnt);
- #else
- static inline void enable_copy_mc_fragile(void)
- {
-diff --git a/arch/x86/lib/copy_mc.c b/arch/x86/lib/copy_mc.c
-index cdb8f5dc403d..9e6fac1ab72e 100644
---- a/arch/x86/lib/copy_mc.c
-+++ b/arch/x86/lib/copy_mc.c
-@@ -23,7 +23,7 @@ void enable_copy_mc_fragile(void)
-  *
-  * Call into the 'fragile' version on systems that have trouble
-  * actually do machine check recovery. Everyone else can just
-- * use memcpy().
-+ * use copy_mc_generic().
-  *
-  * Return 0 for success, or number of bytes not copied if there was an
-  * exception.
-@@ -33,8 +33,7 @@ copy_mc_to_kernel(void *dst, const void *src, unsigned cnt)
- {
- 	if (static_branch_unlikely(&copy_mc_fragile_key))
- 		return copy_mc_fragile(dst, src, cnt);
--	memcpy(dst, src, cnt);
--	return 0;
-+	return copy_mc_generic(dst, src, cnt);
- }
- EXPORT_SYMBOL_GPL(copy_mc_to_kernel);
- 
-@@ -56,11 +55,10 @@ copy_mc_to_user(void *to, const void *from, unsigned len)
- {
- 	unsigned long ret;
- 
--	if (!static_branch_unlikely(&copy_mc_fragile_key))
--		return copy_user_generic(to, from, len);
--
- 	__uaccess_begin();
--	ret = copy_mc_fragile(to, from, len);
-+	if (static_branch_unlikely(&copy_mc_fragile_key))
-+		ret = copy_mc_fragile(to, from, len);
-+	ret = copy_mc_generic(to, from, len);
- 	__uaccess_end();
- 	return ret;
- }
-diff --git a/arch/x86/lib/copy_mc_64.S b/arch/x86/lib/copy_mc_64.S
-index 35a67c50890b..a08e7a4d9e28 100644
---- a/arch/x86/lib/copy_mc_64.S
-+++ b/arch/x86/lib/copy_mc_64.S
-@@ -2,7 +2,9 @@
- /* Copyright(c) 2016-2020 Intel Corporation. All rights reserved. */
- 
- #include <linux/linkage.h>
-+#include <asm/alternative-asm.h>
- #include <asm/copy_mc_test.h>
-+#include <asm/cpufeatures.h>
- #include <asm/export.h>
- #include <asm/asm.h>
- 
-@@ -122,4 +124,42 @@ EXPORT_SYMBOL_GPL(copy_mc_fragile)
- 	_ASM_EXTABLE(.L_write_leading_bytes, .E_leading_bytes)
- 	_ASM_EXTABLE(.L_write_words, .E_write_words)
- 	_ASM_EXTABLE(.L_write_trailing_bytes, .E_trailing_bytes)
-+
-+/*
-+ * copy_mc_generic - memory copy with exception handling
-+ *
-+ * Fast string copy + fault / exception handling. If the CPU does
-+ * support machine check exception recovery, but does not support
-+ * recovering from fast-string exceptions then this CPU needs to be
-+ * added to the copy_mc_fragile_key set of quirks. Otherwise, absent any
-+ * machine check recovery support this version should be no slower than
-+ * standard memcpy.
-+ */
-+SYM_FUNC_START(copy_mc_generic)
-+	ALTERNATIVE "jmp copy_mc_fragile", "", X86_FEATURE_ERMS
-+	movq %rdi, %rax
-+	movq %rdx, %rcx
-+.L_copy:
-+	rep movsb
-+	/* Copy successful. Return zero */
-+	xorl %eax, %eax
-+	ret
-+SYM_FUNC_END(copy_mc_generic)
-+EXPORT_SYMBOL_GPL(copy_mc_generic)
-+
-+	.section .fixup, "ax"
-+.E_copy:
-+	/*
-+	 * On fault %rcx is updated such that the copy instruction could
-+	 * optionally be restarted at the fault position, i.e. it
-+	 * contains 'bytes remaining'. A non-zero return indicates error
-+	 * to copy_mc_generic() users, or indicate short transfers to
-+	 * user-copy routines.
-+	 */
-+	movq %rcx, %rax
-+	ret
-+
-+	.previous
-+
-+	_ASM_EXTABLE_FAULT(.L_copy, .E_copy)
- #endif
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 17cb0933bf42..d2e1f01df10b 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -548,6 +548,7 @@ static const char *uaccess_safe_builtin[] = {
- 	"__ubsan_handle_shift_out_of_bounds",
- 	/* misc */
- 	"csum_partial_copy_generic",
-+	"copy_mc_generic",
- 	"copy_mc_fragile",
- 	"copy_mc_fragile_handle_tail",
- 	"ftrace_likely_update", /* CONFIG_TRACE_BRANCH_PROFILING */
+And because we can't wait forever when the source of the fault is a
+kernel exception, I think we should add some extra logic to just say
+"if this is a retry, we've already done this once, just return an
+error".
 
+This is a TEST PATCH ONLY. I think we'll actually have to do something
+like this, but I think the final version might need to allow a couple
+of retries, rather than just give up after just one second.
+
+But for testing your case, this patch might be enough to at least show
+that "yeah, this kind of approach works".
+
+Andrea? Comments? As mentioned, this is probably much too aggressive,
+but I do think we need to limit the time that the kernel will wait for
+page faults.
+
+Because userfaultfd has become a huge source of security holes as a
+way to time kernel faults or delay them indefinitely.
+
+                     Linus
+
+--0000000000006a4f6205abd462ab
+Content-Type: application/octet-stream; name=patch
+Content-Disposition: attachment; filename=patch
+Content-Transfer-Encoding: base64
+Content-ID: <f_kdbxwnv70>
+X-Attachment-Id: f_kdbxwnv70
+
+IGZzL3VzZXJmYXVsdGZkLmMgfCAzNSArKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LQogMSBmaWxlIGNoYW5nZWQsIDEyIGluc2VydGlvbnMoKyksIDIzIGRlbGV0aW9ucygtKQoKZGlm
+ZiAtLWdpdCBhL2ZzL3VzZXJmYXVsdGZkLmMgYi9mcy91c2VyZmF1bHRmZC5jCmluZGV4IDUyZGUy
+OTAwMGM3ZS4uYmQ3Mzk0ODhiYjI5IDEwMDY0NAotLS0gYS9mcy91c2VyZmF1bHRmZC5jCisrKyBi
+L2ZzL3VzZXJmYXVsdGZkLmMKQEAgLTQ3Myw2ICs0NzMsMTYgQEAgdm1fZmF1bHRfdCBoYW5kbGVf
+dXNlcmZhdWx0KHN0cnVjdCB2bV9mYXVsdCAqdm1mLCB1bnNpZ25lZCBsb25nIHJlYXNvbikKIAkJ
+Z290byBvdXQ7CiAJfQogCisJLyoKKwkgKiBJZiB0aGlzIGlzIGEga2VybmVsIGZhdWx0LCBhbmQg
+d2UncmUgcmV0cnlpbmcsIGNvbnNpZGVyCisJICogaXQgZmF0YWwuIE90aGVyd2lzZSB3ZSBoYXZl
+IGRlYWRsb2NrcyBhbmQgb3RoZXIgbmFzdHkKKwkgKiBzdHVmZi4KKwkgKi8KKwlpZiAodm1mLT5m
+bGFncyAmIEZBVUxUX0ZMQUdfVFJJRUQpIHsKKwkJaWYgKFdBUk5fT05fT05DRSghKHZtZi0+Zmxh
+Z3MgJiBGQVVMVF9GTEFHX1VTRVIpKSkKKwkJCWdvdG8gb3V0OworCX0KKwogCS8qCiAJICogSGFu
+ZGxlIG5vd2FpdCwgbm90IG11Y2ggdG8gZG8gb3RoZXIgdGhhbiB0ZWxsIGl0IHRvIHJldHJ5CiAJ
+ICogYW5kIHdhaXQuCkBAIC01MTYsMzMgKzUyNiwxMiBAQCB2bV9mYXVsdF90IGhhbmRsZV91c2Vy
+ZmF1bHQoc3RydWN0IHZtX2ZhdWx0ICp2bWYsIHVuc2lnbmVkIGxvbmcgcmVhc29uKQogCQkJCQkJ
+ICAgICAgIHZtZi0+ZmxhZ3MsIHJlYXNvbik7CiAJbW1hcF9yZWFkX3VubG9jayhtbSk7CiAKKwkv
+KiBXZSdsbCB3YWl0IGZvciB1cCB0byBhIHNlY29uZCwgYW5kIHRoZW4gcmV0dXJuIFZNX0ZBVUxU
+X1JFVFJZICovCiAJaWYgKGxpa2VseShtdXN0X3dhaXQgJiYgIVJFQURfT05DRShjdHgtPnJlbGVh
+c2VkKSAmJgogCQkgICAhdXNlcmZhdWx0ZmRfc2lnbmFsX3BlbmRpbmcodm1mLT5mbGFncykpKSB7
+CiAJCXdha2VfdXBfcG9sbCgmY3R4LT5mZF93cWgsIEVQT0xMSU4pOwotCQlzY2hlZHVsZSgpOwor
+CQlzY2hlZHVsZV90aW1lb3V0KEhaKTsKIAkJcmV0IHw9IFZNX0ZBVUxUX01BSk9SOwotCi0JCS8q
+Ci0JCSAqIEZhbHNlIHdha2V1cHMgY2FuIG9yZ2luYXRlIGV2ZW4gZnJvbSByd3NlbSBiZWZvcmUK
+LQkJICogdXBfcmVhZCgpIGhvd2V2ZXIgdXNlcmZhdWx0cyB3aWxsIHdhaXQgZWl0aGVyIGZvciBh
+Ci0JCSAqIHRhcmdldGVkIHdha2V1cCBvbiB0aGUgc3BlY2lmaWMgdXdxIHdhaXRxdWV1ZSBmcm9t
+Ci0JCSAqIHdha2VfdXNlcmZhdWx0KCkgb3IgZm9yIHNpZ25hbHMgb3IgZm9yIHVmZmQKLQkJICog
+cmVsZWFzZS4KLQkJICovCi0JCXdoaWxlICghUkVBRF9PTkNFKHV3cS53YWtlbikpIHsKLQkJCS8q
+Ci0JCQkgKiBUaGlzIG5lZWRzIHRoZSBmdWxsIHNtcF9zdG9yZV9tYigpCi0JCQkgKiBndWFyYW50
+ZWUgYXMgdGhlIHN0YXRlIHdyaXRlIG11c3QgYmUKLQkJCSAqIHZpc2libGUgdG8gb3RoZXIgQ1BV
+cyBiZWZvcmUgcmVhZGluZwotCQkJICogdXdxLndha2VuIGZyb20gb3RoZXIgQ1BVcy4KLQkJCSAq
+LwotCQkJc2V0X2N1cnJlbnRfc3RhdGUoYmxvY2tpbmdfc3RhdGUpOwotCQkJaWYgKFJFQURfT05D
+RSh1d3Eud2FrZW4pIHx8Ci0JCQkgICAgUkVBRF9PTkNFKGN0eC0+cmVsZWFzZWQpIHx8Ci0JCQkg
+ICAgdXNlcmZhdWx0ZmRfc2lnbmFsX3BlbmRpbmcodm1mLT5mbGFncykpCi0JCQkJYnJlYWs7Ci0J
+CQlzY2hlZHVsZSgpOwotCQl9CiAJfQogCiAJX19zZXRfY3VycmVudF9zdGF0ZShUQVNLX1JVTk5J
+TkcpOwo=
+--0000000000006a4f6205abd462ab--
