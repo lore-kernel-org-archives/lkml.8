@@ -2,206 +2,172 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 086B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 20:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 20:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFBE920719
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 20:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 427CC20719
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 20:10:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgHAUFE (ORCPT
+        id S1727023AbgHAUK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 16:05:04 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:35463 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgHAUFD (ORCPT
+        Sat, 1 Aug 2020 16:10:28 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42887 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbgHAUK2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 16:05:03 -0400
-Received: from fsav104.sakura.ne.jp (fsav104.sakura.ne.jp [27.133.134.231])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 071K4nvF072403;
-        Sun, 2 Aug 2020 05:04:49 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav104.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav104.sakura.ne.jp);
- Sun, 02 Aug 2020 05:04:49 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav104.sakura.ne.jp)
-Received: from localhost.localdomain (121.252.232.153.ap.dti.ne.jp [153.232.252.121])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 071K4h2M072388
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Sun, 2 Aug 2020 05:04:49 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Subject: [PATCH] arm64: dts: rockchip: enable HDMI sound nodes for rk3328-rock64
-Date:   Sun,  2 Aug 2020 05:04:33 +0900
-Message-Id: <20200801200433.2617429-1-katsuhiro@katsuster.net>
-X-Mailer: git-send-email 2.27.0
+        Sat, 1 Aug 2020 16:10:28 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1k1xpe-00044g-DI; Sat, 01 Aug 2020 20:10:14 +0000
+Date:   Sat, 1 Aug 2020 22:10:13 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "Dmitry V. Levin" <ldv@altlinux.org>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+        Elvira Khabirova <lineprinter@altlinux.org>,
+        Eugene Syromyatnikov <evgsyr@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH v3] ptrace: Prevent
+ kernel-infoleak in ptrace_get_syscall_info()
+Message-ID: <20200801201013.gjqj4digttp2rtmj@wittgenstein>
+References: <20200801020841.227522-1-yepeilin.cs@gmail.com>
+ <20200801152044.230416-1-yepeilin.cs@gmail.com>
+ <20200801160818.GB4964@altlinux.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200801160818.GB4964@altlinux.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch enables HDMI sound (I2S0) and Analog sound (I2S1) which
-are defined in rk3328.dtsi, and replace SPDIF nodes.
+On Sat, Aug 01, 2020 at 07:08:19PM +0300, Dmitry V. Levin wrote:
+> On Sat, Aug 01, 2020 at 11:20:44AM -0400, Peilin Ye wrote:
+> > ptrace_get_syscall_info() is potentially copying uninitialized stack
+> > memory to userspace, since the compiler may leave a 3-byte hole near the
+> > beginning of `info`. Fix it by adding a padding field to `struct
+> > ptrace_syscall_info`.
+> > 
+> > Cc: stable@vger.kernel.org
+> > Fixes: 201766a20e30 ("ptrace: add PTRACE_GET_SYSCALL_INFO request")
+> > Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+> > ---
+> > Change in v3:
+> >     - Remove unnecessary `__aligned__` attribute. (Suggested by
+> >       Dmitry V. Levin <ldv@altlinux.org>)
+> > 
+> > Change in v2:
+> >     - Add a padding field to `struct ptrace_syscall_info`, instead of
+> >       doing memset() on `info`. (Suggested by Dmitry V. Levin
+> >       <ldv@altlinux.org>)
+> > 
+> > Reference: https://lwn.net/Articles/417989/
+> > 
+> > $ # before:
+> > $ pahole -C "ptrace_syscall_info" kernel/ptrace.o
+> > struct ptrace_syscall_info {
+> > 	__u8                       op;                   /*     0     1 */
+> > 
+> > 	/* XXX 3 bytes hole, try to pack */
+> > 
+> > 	__u32                      arch __attribute__((__aligned__(4))); /*     4     4 */
+> > 	__u64                      instruction_pointer;  /*     8     8 */
+> > 	__u64                      stack_pointer;        /*    16     8 */
+> > 	union {
+> > 		struct {
+> > 			__u64      nr;                   /*    24     8 */
+> > 			__u64      args[6];              /*    32    48 */
+> > 		} entry;                                 /*    24    56 */
+> > 		struct {
+> > 			__s64      rval;                 /*    24     8 */
+> > 			__u8       is_error;             /*    32     1 */
+> > 		} exit;                                  /*    24    16 */
+> > 		struct {
+> > 			__u64      nr;                   /*    24     8 */
+> > 			__u64      args[6];              /*    32    48 */
+> > 			/* --- cacheline 1 boundary (64 bytes) was 16 bytes ago --- */
+> > 			__u32      ret_data;             /*    80     4 */
+> > 		} seccomp;                               /*    24    64 */
+> > 	};                                               /*    24    64 */
+> > 
+> > 	/* size: 88, cachelines: 2, members: 5 */
+> > 	/* sum members: 85, holes: 1, sum holes: 3 */
+> > 	/* forced alignments: 1, forced holes: 1, sum forced holes: 3 */
+> > 	/* last cacheline: 24 bytes */
+> > } __attribute__((__aligned__(8)));
+> > $
+> > $ # after:
+> > $ pahole -C "ptrace_syscall_info" kernel/ptrace.o
+> > struct ptrace_syscall_info {
+> > 	__u8                       op;                   /*     0     1 */
+> > 	__u8                       pad[3];               /*     1     3 */
+> > 	__u32                      arch;                 /*     4     4 */
+> > 	__u64                      instruction_pointer;  /*     8     8 */
+> > 	__u64                      stack_pointer;        /*    16     8 */
+> > 	union {
+> > 		struct {
+> > 			__u64      nr;                   /*    24     8 */
+> > 			__u64      args[6];              /*    32    48 */
+> > 		} entry;                                 /*    24    56 */
+> > 		struct {
+> > 			__s64      rval;                 /*    24     8 */
+> > 			__u8       is_error;             /*    32     1 */
+> > 		} exit;                                  /*    24    16 */
+> > 		struct {
+> > 			__u64      nr;                   /*    24     8 */
+> > 			__u64      args[6];              /*    32    48 */
+> > 			/* --- cacheline 1 boundary (64 bytes) was 16 bytes ago --- */
+> > 			__u32      ret_data;             /*    80     4 */
+> > 		} seccomp;                               /*    24    64 */
+> > 	};                                               /*    24    64 */
+> > 
+> > 	/* size: 88, cachelines: 2, members: 6 */
+> > 	/* last cacheline: 24 bytes */
+> > };
+> > $ _
+> > 
+> >  include/uapi/linux/ptrace.h | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/include/uapi/linux/ptrace.h b/include/uapi/linux/ptrace.h
+> > index a71b6e3b03eb..83ee45fa634b 100644
+> > --- a/include/uapi/linux/ptrace.h
+> > +++ b/include/uapi/linux/ptrace.h
+> > @@ -81,7 +81,8 @@ struct seccomp_metadata {
+> >  
+> >  struct ptrace_syscall_info {
+> >  	__u8 op;	/* PTRACE_SYSCALL_INFO_* */
+> > -	__u32 arch __attribute__((__aligned__(sizeof(__u32))));
+> > +	__u8 pad[3];
+> > +	__u32 arch;
+> >  	__u64 instruction_pointer;
+> >  	__u64 stack_pointer;
+> >  	union {
+> 
+> Reviewed-by: Dmitry V. Levin <ldv@altlinux.org>
 
-We can use SPDIF passthrough with suitable ALSA settings and on
-mpv or other media players.
-  - Settings: https://github.com/LibreELEC/LibreELEC.tv/blob/master/projects/Rockchip/filesystem/usr/share/alsa/cards/SPDIF.conf
-  - Ex.: mpv foo.ac3 --audio-spdif=ac3 --audio-device='alsa/SPDIF.pcm.iec958.0:SPDIF'
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-[Why use simple-audio-card for SPDIF?]
+Oh fun.
+I'd pick this up and run the ptrace tests that we have for this. If they
+pass I'd apply to my fixes branch and send after the merge window unless
+I hear objections.
 
-For newly adding nodes, ASoC guys recommend to use audio-graph-card.
-But all other sound nodes for rk3328 have already been defined by
-simple-audio-card. In this time, I chose consistency of sound nodes.
+Fwiw, what was the original reason for using
+__attribute__((__aligned__(sizeof(__u32))))?
+b4 mbox is failing to download the relevant thread(s) for me.
 
-[DMA allocation problem]
-
-After apply this patch, UART2 will fail to allocate DMA resources
-but UART driver can work fine without DMA.
-
-This error is related to the DMAC of rk3328 (pl330 or compatible).
-DMAC connected to 16 DMA sources. Each sources have ID number that is
-called 'Req number' in rk3328 TRM. After apply this patch total 7
-sources will be activated as follows:
-
-| Req number | Source | Required  |
-|            |        | channels  |
-|------------+--------+-----------|
-|  8,  9     | SPI0   | 2ch       |
-| 11, 12     | I2S0   | 2ch       |
-| 14, 15     | I2S1   | 2ch       |
-|     10     | SPDIF  | 1ch       |
-|------------+--------+-----------|
-|            | Total  | 7ch       |
-|------------+--------+-----------|
-|  6,  7     | UART2  | 2ch       | -> cannot get DMA channels
-
-Due to rk3328 DMAC specification we can use max 8 channels at same
-time. If SPI0/I2S0/I2S1/SPDIF will be activated by this patch,
-required DMAC channels reach to 7. So last two channels (for UART2)
-cannot get DMA resources.
-
-Virt-dma mechanism for pl0330 DMAC driver is needed to fix this
-problem.
-
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
----
- .../arm64/boot/dts/rockchip/rk3328-rock64.dts | 58 +++++++++----------
- 1 file changed, 26 insertions(+), 32 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-index 86cfb5c50a94..4608f8fc6ff3 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-@@ -84,34 +84,34 @@ standby_led: led-1 {
- 		};
- 	};
- 
--	sound {
--		compatible = "audio-graph-card";
--		label = "rockchip,rk3328";
--		dais = <&i2s1_p0
--			&spdif_p0>;
-+	spdif_sound: spdif-sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "SPDIF";
-+		status = "okay";
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&spdif>;
-+		};
-+
-+		simple-audio-card,codec {
-+			sound-dai = <&spdif_dit>;
-+		};
- 	};
- 
--	spdif-dit {
-+	spdif_dit: spdif-dit {
- 		compatible = "linux,spdif-dit";
- 		#sound-dai-cells = <0>;
--
--		port {
--			dit_p0_0: endpoint {
--				remote-endpoint = <&spdif_p0_0>;
--			};
--		};
-+		status = "okay";
- 	};
- };
- 
-+&analog_sound {
-+	status = "okay";
-+};
-+
- &codec {
- 	mute-gpios = <&grf_gpio 0 GPIO_ACTIVE_LOW>;
- 	status = "okay";
--
--	port@0 {
--		codec_p0_0: endpoint {
--			remote-endpoint = <&i2s1_p0_0>;
--		};
--	};
- };
- 
- &cpu0 {
-@@ -163,6 +163,10 @@ &hdmi {
- 	status = "okay";
- };
- 
-+&hdmi_sound {
-+	status = "okay";
-+};
-+
- &hdmiphy {
- 	status = "okay";
- };
-@@ -278,16 +282,12 @@ regulator-state-mem {
- 	};
- };
- 
--&i2s1 {
-+&i2s0 {
- 	status = "okay";
-+};
- 
--	i2s1_p0: port {
--		i2s1_p0_0: endpoint {
--			dai-format = "i2s";
--			mclk-fs = <256>;
--			remote-endpoint = <&codec_p0_0>;
--		};
--	};
-+&i2s1 {
-+	status = "okay";
- };
- 
- &io_domains {
-@@ -337,12 +337,6 @@ &sdmmc {
- &spdif {
- 	pinctrl-0 = <&spdifm0_tx>;
- 	status = "okay";
--
--	spdif_p0: port {
--		spdif_p0_0: endpoint {
--			remote-endpoint = <&dit_p0_0>;
--		};
--	};
- };
- 
- &spi0 {
--- 
-2.27.0
-
+Thanks!
+Christian
