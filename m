@@ -2,172 +2,146 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 20:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7020AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 20:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 427CC20719
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 20:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49C2D20738
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 20:35:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgHAUK2 (ORCPT
+        id S1727116AbgHAUZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 16:10:28 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42887 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgHAUK2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 16:10:28 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1k1xpe-00044g-DI; Sat, 01 Aug 2020 20:10:14 +0000
-Date:   Sat, 1 Aug 2020 22:10:13 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Dmitry V. Levin" <ldv@altlinux.org>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-        Elvira Khabirova <lineprinter@altlinux.org>,
-        Eugene Syromyatnikov <evgsyr@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v3] ptrace: Prevent
- kernel-infoleak in ptrace_get_syscall_info()
-Message-ID: <20200801201013.gjqj4digttp2rtmj@wittgenstein>
-References: <20200801020841.227522-1-yepeilin.cs@gmail.com>
- <20200801152044.230416-1-yepeilin.cs@gmail.com>
- <20200801160818.GB4964@altlinux.org>
+        Sat, 1 Aug 2020 16:25:04 -0400
+Received: from mga05.intel.com ([192.55.52.43]:64680 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbgHAUZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 16:25:04 -0400
+IronPort-SDR: jekXsi2FFocTM81AVhylK1BkjHEzGleHqP89XJeWBVwyRXATyhhTmb/aIMmBZHE+olmO8KEAA1
+ IU+3iXYu47EA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9700"; a="236824398"
+X-IronPort-AV: E=Sophos;i="5.75,423,1589266800"; 
+   d="scan'208";a="236824398"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2020 13:25:03 -0700
+IronPort-SDR: 62NAZ/W1U7Q49Y+VXsvcwQdezbTP/fbT5w/3iubECJrFH8RFVSy3igWDdgFroC1ZdPgleEAdOs
+ ElBR8boKzXTQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,423,1589266800"; 
+   d="scan'208";a="435774213"
+Received: from lkp-server01.sh.intel.com (HELO e21119890065) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 01 Aug 2020 13:25:02 -0700
+Received: from kbuild by e21119890065 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k1y3x-0000vR-SX; Sat, 01 Aug 2020 20:25:01 +0000
+Date:   Sun, 02 Aug 2020 04:23:29 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:sched/core] BUILD SUCCESS
+ 949bcb8135a96a6923e676646bd29cbe69e8350f
+Message-ID: <5f25cf41.J9eb8cAtqcKNZJJh%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200801160818.GB4964@altlinux.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 01, 2020 at 07:08:19PM +0300, Dmitry V. Levin wrote:
-> On Sat, Aug 01, 2020 at 11:20:44AM -0400, Peilin Ye wrote:
-> > ptrace_get_syscall_info() is potentially copying uninitialized stack
-> > memory to userspace, since the compiler may leave a 3-byte hole near the
-> > beginning of `info`. Fix it by adding a padding field to `struct
-> > ptrace_syscall_info`.
-> > 
-> > Cc: stable@vger.kernel.org
-> > Fixes: 201766a20e30 ("ptrace: add PTRACE_GET_SYSCALL_INFO request")
-> > Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-> > ---
-> > Change in v3:
-> >     - Remove unnecessary `__aligned__` attribute. (Suggested by
-> >       Dmitry V. Levin <ldv@altlinux.org>)
-> > 
-> > Change in v2:
-> >     - Add a padding field to `struct ptrace_syscall_info`, instead of
-> >       doing memset() on `info`. (Suggested by Dmitry V. Levin
-> >       <ldv@altlinux.org>)
-> > 
-> > Reference: https://lwn.net/Articles/417989/
-> > 
-> > $ # before:
-> > $ pahole -C "ptrace_syscall_info" kernel/ptrace.o
-> > struct ptrace_syscall_info {
-> > 	__u8                       op;                   /*     0     1 */
-> > 
-> > 	/* XXX 3 bytes hole, try to pack */
-> > 
-> > 	__u32                      arch __attribute__((__aligned__(4))); /*     4     4 */
-> > 	__u64                      instruction_pointer;  /*     8     8 */
-> > 	__u64                      stack_pointer;        /*    16     8 */
-> > 	union {
-> > 		struct {
-> > 			__u64      nr;                   /*    24     8 */
-> > 			__u64      args[6];              /*    32    48 */
-> > 		} entry;                                 /*    24    56 */
-> > 		struct {
-> > 			__s64      rval;                 /*    24     8 */
-> > 			__u8       is_error;             /*    32     1 */
-> > 		} exit;                                  /*    24    16 */
-> > 		struct {
-> > 			__u64      nr;                   /*    24     8 */
-> > 			__u64      args[6];              /*    32    48 */
-> > 			/* --- cacheline 1 boundary (64 bytes) was 16 bytes ago --- */
-> > 			__u32      ret_data;             /*    80     4 */
-> > 		} seccomp;                               /*    24    64 */
-> > 	};                                               /*    24    64 */
-> > 
-> > 	/* size: 88, cachelines: 2, members: 5 */
-> > 	/* sum members: 85, holes: 1, sum holes: 3 */
-> > 	/* forced alignments: 1, forced holes: 1, sum forced holes: 3 */
-> > 	/* last cacheline: 24 bytes */
-> > } __attribute__((__aligned__(8)));
-> > $
-> > $ # after:
-> > $ pahole -C "ptrace_syscall_info" kernel/ptrace.o
-> > struct ptrace_syscall_info {
-> > 	__u8                       op;                   /*     0     1 */
-> > 	__u8                       pad[3];               /*     1     3 */
-> > 	__u32                      arch;                 /*     4     4 */
-> > 	__u64                      instruction_pointer;  /*     8     8 */
-> > 	__u64                      stack_pointer;        /*    16     8 */
-> > 	union {
-> > 		struct {
-> > 			__u64      nr;                   /*    24     8 */
-> > 			__u64      args[6];              /*    32    48 */
-> > 		} entry;                                 /*    24    56 */
-> > 		struct {
-> > 			__s64      rval;                 /*    24     8 */
-> > 			__u8       is_error;             /*    32     1 */
-> > 		} exit;                                  /*    24    16 */
-> > 		struct {
-> > 			__u64      nr;                   /*    24     8 */
-> > 			__u64      args[6];              /*    32    48 */
-> > 			/* --- cacheline 1 boundary (64 bytes) was 16 bytes ago --- */
-> > 			__u32      ret_data;             /*    80     4 */
-> > 		} seccomp;                               /*    24    64 */
-> > 	};                                               /*    24    64 */
-> > 
-> > 	/* size: 88, cachelines: 2, members: 6 */
-> > 	/* last cacheline: 24 bytes */
-> > };
-> > $ _
-> > 
-> >  include/uapi/linux/ptrace.h | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/include/uapi/linux/ptrace.h b/include/uapi/linux/ptrace.h
-> > index a71b6e3b03eb..83ee45fa634b 100644
-> > --- a/include/uapi/linux/ptrace.h
-> > +++ b/include/uapi/linux/ptrace.h
-> > @@ -81,7 +81,8 @@ struct seccomp_metadata {
-> >  
-> >  struct ptrace_syscall_info {
-> >  	__u8 op;	/* PTRACE_SYSCALL_INFO_* */
-> > -	__u32 arch __attribute__((__aligned__(sizeof(__u32))));
-> > +	__u8 pad[3];
-> > +	__u32 arch;
-> >  	__u64 instruction_pointer;
-> >  	__u64 stack_pointer;
-> >  	union {
-> 
-> Reviewed-by: Dmitry V. Levin <ldv@altlinux.org>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  sched/core
+branch HEAD: 949bcb8135a96a6923e676646bd29cbe69e8350f  sched/doc: Factorize bits between sched-energy.rst & sched-capacity.rst
 
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+elapsed time: 724m
 
-Oh fun.
-I'd pick this up and run the ptrace tests that we have for this. If they
-pass I'd apply to my fixes branch and send after the merge window unless
-I hear objections.
+configs tested: 76
+configs skipped: 2
 
-Fwiw, what was the original reason for using
-__attribute__((__aligned__(sizeof(__u32))))?
-b4 mbox is failing to download the relevant thread(s) for me.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Thanks!
-Christian
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                         cm_x300_defconfig
+sh                          kfr2r09_defconfig
+arm                            pleb_defconfig
+mips                  mips_paravirt_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a006-20200802
+x86_64               randconfig-a001-20200802
+x86_64               randconfig-a004-20200802
+x86_64               randconfig-a003-20200802
+x86_64               randconfig-a002-20200802
+x86_64               randconfig-a005-20200802
+i386                 randconfig-a005-20200731
+i386                 randconfig-a004-20200731
+i386                 randconfig-a006-20200731
+i386                 randconfig-a002-20200731
+i386                 randconfig-a001-20200731
+i386                 randconfig-a003-20200731
+x86_64               randconfig-a015-20200731
+x86_64               randconfig-a014-20200731
+x86_64               randconfig-a016-20200731
+x86_64               randconfig-a012-20200731
+x86_64               randconfig-a013-20200731
+x86_64               randconfig-a011-20200731
+i386                 randconfig-a016-20200731
+i386                 randconfig-a012-20200731
+i386                 randconfig-a014-20200731
+i386                 randconfig-a015-20200731
+i386                 randconfig-a011-20200731
+i386                 randconfig-a013-20200731
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
