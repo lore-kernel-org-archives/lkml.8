@@ -2,101 +2,130 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E667C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 12:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 13:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE7E22080C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 12:56:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="n/7VNWjN"
+	by mail.kernel.org (Postfix) with ESMTP id 9570C2076A
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 13:06:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbgHAM4t (ORCPT
+        id S1728629AbgHANGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 08:56:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59100 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726471AbgHAM4q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 08:56:46 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 666AAC06174A;
-        Sat,  1 Aug 2020 05:56:46 -0700 (PDT)
-Received: from nazgul.tnic (unknown [78.130.214.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B8CAE1EC02FA;
-        Sat,  1 Aug 2020 14:56:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1596286602;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=NfmlZOrLaBmBGlzbXE5z6x4RKpqqJJmlzC4+91fmYUA=;
-        b=n/7VNWjNwrVYldmM5JNyqQEVZd3Vp3hpjJSMuFhfSkrW8mQhIHtpfasKy9w1BEromsKKyZ
-        /CdJ8nlcvZTCqyn05aBVgUH+WGtmqEhe61zMEoDcH8PmujGuHYORgBg9sVbSuZSh5qLljK
-        uihuEhdcnAWg6tPbjyrRXoOKhqTEw/0=
-Date:   Sat, 1 Aug 2020 14:56:57 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-Cc:     helgaas@kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Joerg Roedel <joro@8bytes.org>, bjorn@helgaas.com,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-mtd@lists.infradead.org, iommu@lists.linux-foundation.org,
-        linux-rdma@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        linux-gpio@vger.kernel.org, linux-fpga@vger.kernel.org,
-        linux-edac@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-crypto@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net
-Subject: Re: [RFC PATCH 00/17] Drop uses of pci_read_config_*() return value
-Message-ID: <20200801125657.GA25391@nazgul.tnic>
-References: <20200801112446.149549-1-refactormyself@gmail.com>
+        Sat, 1 Aug 2020 09:06:10 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8746 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725778AbgHANGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 09:06:09 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4E1FAB1F11033AFD53E9;
+        Sat,  1 Aug 2020 21:06:05 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 1 Aug 2020 21:05:57 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <catalin.marinas@arm.com>, <will@kernel.org>,
+        <james.morse@arm.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
+        <dyoung@redhat.com>, <bhe@redhat.com>, <corbet@lwn.net>,
+        <John.P.donnelly@oracle.com>, <prabhakar.pkin@gmail.com>,
+        <bhsharma@redhat.com>
+CC:     <horms@verge.net.au>, <robh+dt@kernel.org>, <arnd@arndb.de>,
+        <nsaenzjulienne@suse.de>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
+        <linux-doc@vger.kernel.org>, <chenzhou10@huawei.com>,
+        <guohanjun@huawei.com>, <xiexiuqi@huawei.com>,
+        <huawei.libin@huawei.com>, <wangkefeng.wang@huawei.com>
+Subject: [PATCH v11 1/5] arm64: kdump: add macro CRASH_ALIGN and CRASH_ADDR_LOW_MAX
+Date:   Sat, 1 Aug 2020 21:08:52 +0800
+Message-ID: <20200801130856.86625-2-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200801130856.86625-1-chenzhou10@huawei.com>
+References: <20200801130856.86625-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200801112446.149549-1-refactormyself@gmail.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 01, 2020 at 01:24:29PM +0200, Saheed O. Bolarinwa wrote:
-> The return value of pci_read_config_*() may not indicate a device error.
-> However, the value read by these functions is more likely to indicate
-> this kind of error. This presents two overlapping ways of reporting
-> errors and complicates error checking.
+Expose variable arm64_dma32_phys_limit for followup, and add macro
+CRASH_ALIGN for alignment, macro CRASH_ADDR_LOW_MAX for upper bound
+of low crash memory. Use macros instead.
 
-So why isn't the *value check done in the pci_read_config_* functions
-instead of touching gazillion callers?
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ arch/arm64/include/asm/kexec.h     | 5 +++++
+ arch/arm64/include/asm/processor.h | 1 +
+ arch/arm64/mm/init.c               | 8 ++++----
+ 3 files changed, 10 insertions(+), 4 deletions(-)
 
-For example, pci_conf{1,2}_read() could check whether the u32 *value it
-just read depending on the access method, whether that value is ~0 and
-return proper PCIBIOS_ error in that case.
-
-The check you're replicating
-
-	if (val32 == (u32)~0)
-
-everywhere, instead, is just ugly and tests a naked value ~0 which
-doesn't mean anything...
-
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index d24b527e8c00..1a2f27f12794 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -25,6 +25,11 @@
+ 
+ #define KEXEC_ARCH KEXEC_ARCH_AARCH64
+ 
++/* 2M alignment for crash kernel regions */
++#define CRASH_ALIGN	SZ_2M
++
++#define CRASH_ADDR_LOW_MAX	arm64_dma32_phys_limit
++
+ #ifndef __ASSEMBLY__
+ 
+ /**
+diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
+index 240fe5e5b720..af71063f352c 100644
+--- a/arch/arm64/include/asm/processor.h
++++ b/arch/arm64/include/asm/processor.h
+@@ -95,6 +95,7 @@
+ #endif /* CONFIG_ARM64_FORCE_52BIT */
+ 
+ extern phys_addr_t arm64_dma_phys_limit;
++extern phys_addr_t arm64_dma32_phys_limit;
+ #define ARCH_LOW_ADDRESS_LIMIT	(arm64_dma_phys_limit - 1)
+ 
+ struct debug_info {
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 1e93cfc7c47a..a3d0193f6a0a 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -67,7 +67,7 @@ EXPORT_SYMBOL(vmemmap);
+  * bit addressable memory area.
+  */
+ phys_addr_t arm64_dma_phys_limit __ro_after_init;
+-static phys_addr_t arm64_dma32_phys_limit __ro_after_init;
++phys_addr_t arm64_dma32_phys_limit __ro_after_init;
+ 
+ #ifdef CONFIG_KEXEC_CORE
+ /*
+@@ -92,8 +92,8 @@ static void __init reserve_crashkernel(void)
+ 
+ 	if (crash_base == 0) {
+ 		/* Current arm64 boot protocol requires 2MB alignment */
+-		crash_base = memblock_find_in_range(0, arm64_dma32_phys_limit,
+-				crash_size, SZ_2M);
++		crash_base = memblock_find_in_range(0, CRASH_ADDR_LOW_MAX,
++				crash_size, CRASH_ALIGN);
+ 		if (crash_base == 0) {
+ 			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
+ 				crash_size);
+@@ -111,7 +111,7 @@ static void __init reserve_crashkernel(void)
+ 			return;
+ 		}
+ 
+-		if (!IS_ALIGNED(crash_base, SZ_2M)) {
++		if (!IS_ALIGNED(crash_base, CRASH_ALIGN)) {
+ 			pr_warn("cannot reserve crashkernel: base address is not 2MB aligned\n");
+ 			return;
+ 		}
 -- 
-Regards/Gruss,
-    Boris.
+2.20.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
