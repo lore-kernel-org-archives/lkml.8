@@ -3,156 +3,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09072C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 23:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA70AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 23:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0DA7206F6
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 23:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB13A20725
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 23:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596324999;
-	bh=jKcmiVnyhX7ZMjwFG8uJA1WfaDH8Ynl7u9BiO2s1YC4=;
-	h=In-Reply-To:References:From:Date:Subject:To:Cc:List-ID:From;
-	b=DyXxAT3A5BgN6BnVYigYvBAjj9ss1Ja9TaoqfzdZ6UtlSCf04rR+GV55MLHKPTkf3
-	 EBdvl2Dtz0hypmGFbhhPRDQyHR1tqyq6SdS4U+Hgmz+mIl0MnjgkPTQ9/NBXPJqHJj
-	 JXsNEN6TSrqDNhsYEh7tBb0snlP7cKCK7zbmKinE=
+	s=default; t=1596325573;
+	bh=zYsyUiUX0PHs8aunpWNaI82XTqvtd8SEIEvMLnW3Jx8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=p08yxivMMIiLOmFzCmksjVe+HfivlU3vHtQU92DXOk/Nab6zcCOzrw6e9ykaIfXUH
+	 lcEv8ebitsMoe4BjuU0MnmM6GexakZyImbAKhryEHNR3P/MbUf2m4pn7h84hw+KCuc
+	 dowfMV1kqzRSKoVTdcKrip8kY62tINOVq2TPCVps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgHAXgh (ORCPT
+        id S1727917AbgHAXqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 19:36:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbgHAXgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 19:36:36 -0400
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A963A20888;
-        Sat,  1 Aug 2020 23:36:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596324995;
-        bh=jKcmiVnyhX7ZMjwFG8uJA1WfaDH8Ynl7u9BiO2s1YC4=;
-        h=In-Reply-To:References:From:Date:Subject:To:Cc:From;
-        b=rZheyni+lAHzs+CQMwfRnP1HENyNQDkHQ/vl64Tu7CqSyADn/DkgOYj3j9fo6OI4e
-         zlRqj85XB+azY/8XYFBiQFX7yCzYpJB/DextHt31dR7WOzhgw3J7OYzN9eEBwKt2Gd
-         sFlMf9+vlWyC4j9OnCeGJVp2aV1bruqG0SDLDRHA=
-Received: by mail-oi1-f181.google.com with SMTP id b22so4191474oic.8;
-        Sat, 01 Aug 2020 16:36:35 -0700 (PDT)
-X-Gm-Message-State: AOAM530efL4bNBzHFoBNfPdbOZpmDpKCVuHfp4cV81cghwWZdDBFutKj
-        2kPsLbmXUvqOvr1FUH6MyXX6xGb6LLcJSoU6j7U=
-X-Google-Smtp-Source: ABdhPJwpfKPTdvd6Lc82P75TrzmAWSMEtx+KOlXM6xx6ELxRw45Qn2z+cM3lFxlRxrTz3+ZI9m8hOyoettzvVmhAO6s=
-X-Received: by 2002:aca:3957:: with SMTP id g84mr6289817oia.62.1596324994894;
- Sat, 01 Aug 2020 16:36:34 -0700 (PDT)
+        Sat, 1 Aug 2020 19:46:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45006 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgHAXqK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 19:46:10 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 434F0C061756
+        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 16:46:10 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id i80so18669982lfi.13
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 16:46:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZZMOGkwyk+2uEnUplsOHluFyRACy5ZEHgGFqZFevp/I=;
+        b=ELVOJ1KLBrj+PsJAkUsND/KaMhcdbWYA2ubAmUPGagezmMEKvCPdO+jw3XIidJp5LB
+         nKykDgvzoEo2v/DoR5fNqAvq2ENIMiAm/XEqfdIOzM92UHS6R8y6Fx21LKGDobCVNT9t
+         ofUTocgD7MIBWDf/AFebKW9iYUhjbcX3++8dk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZZMOGkwyk+2uEnUplsOHluFyRACy5ZEHgGFqZFevp/I=;
+        b=sa0V82KERGPDDjohD+wJPQjN+OwY0gyN+TEJ1llihSqcEhSuKbxdZMbesqa4r5w63L
+         K3p1j0d8FGLwh3XxWwfgDsq3vmrwx5hI4DVYd6XLpREhZqhrKkVeiThz70xApxUwmMma
+         3QRYdYiYYwuvC/FcHMLDL6NApGlkUx66a0ixReWvqeMc9necC+tEGwIRDqBX163rhQsn
+         ABzUQCOiL96v49mSfP4L/M8pn3NNUbBQG7ArIEb5/PkzVK9jIqxKUc2bJYhaTtNMVYCs
+         tgwM/W04/GUpDptJXypDwos2z/gQwwxboU2/3K5iaY30WZ7uoNQ82JEbU5o/1D4AKxcp
+         S7+Q==
+X-Gm-Message-State: AOAM532z6kkySgQcBCL29FWoXlBQU4KIXhCsUq1dTGnD9pmdA9+jDcKr
+        nMJN8yCROotdNfOqn5GRpnyWmoiNgV8=
+X-Google-Smtp-Source: ABdhPJz41HnFrd3gFV6HiO4sJhNRIS9JypDXKLqst1/CU5/llAaHvDvd/oLXJ7roQ6k25a4cyDyX2A==
+X-Received: by 2002:a19:7f94:: with SMTP id a142mr5078007lfd.43.1596325567985;
+        Sat, 01 Aug 2020 16:46:07 -0700 (PDT)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id i3sm2674891ljj.64.2020.08.01.16.46.05
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Aug 2020 16:46:05 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id g6so23410618ljn.11
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 16:46:05 -0700 (PDT)
+X-Received: by 2002:a2e:2e04:: with SMTP id u4mr313806lju.102.1596325565372;
+ Sat, 01 Aug 2020 16:46:05 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:ac9:6102:0:0:0:0:0 with HTTP; Sat, 1 Aug 2020 16:36:33 -0700 (PDT)
-In-Reply-To: <CA+icZUX8KWtdDpMcmzqp461ndcyfvP13gaZK591OFpkp3nRHaQ@mail.gmail.com>
-References: <CGME20200731071604epcas1p39fe86c3931c5adf9073817c12fb15f1d@epcas1p3.samsung.com>
- <002901d6670a$742e8cf0$5c8ba6d0$@samsung.com> <CA+icZUX8KWtdDpMcmzqp461ndcyfvP13gaZK591OFpkp3nRHaQ@mail.gmail.com>
-From:   Namjae Jeon <linkinjeon@kernel.org>
-Date:   Sun, 2 Aug 2020 08:36:33 +0900
-X-Gmail-Original-Message-ID: <CAKYAXd-VCQrJqP_dfM+wPEf4nPhuqhu3F=9cGeNCOGzFmPZwjw@mail.gmail.com>
-Message-ID: <CAKYAXd-VCQrJqP_dfM+wPEf4nPhuqhu3F=9cGeNCOGzFmPZwjw@mail.gmail.com>
-Subject: Re: exfatprogs-1.0.4 version released
-To:     sedat.dilek@gmail.com
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, Eric Sandeen <sandeen@sandeen.net>,
-        Goldwyn Rodrigues <rgoldwyn@suse.com>,
-        Nicolas Boos <nicolas.boos@wanadoo.fr>,
-        Hyunchul Lee <hyc.lee@gmail.com>,
-        Luca Stefani <luca.stefani.ge1@gmail.com>,
-        Matthieu CASTET <castet.matthieu@free.fr>,
-        Sven Hoexter <sven@stormbind.net>,
-        Ethan Sommer <e5ten.arch@gmail.com>,
-        Hyeongseok Kim <hyeongseok@gmail.com>
+References: <20200801.143631.1794965770015082550.davem@davemloft.net>
+In-Reply-To: <20200801.143631.1794965770015082550.davem@davemloft.net>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 1 Aug 2020 16:45:49 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whiwBCM-a=k8bd4_umR2Od6gf7d8Do3ryGAaFneNRGFng@mail.gmail.com>
+Message-ID: <CAHk-=whiwBCM-a=k8bd4_umR2Od6gf7d8Do3ryGAaFneNRGFng@mail.gmail.com>
+Subject: Re: [GIT] Networking
+To:     David Miller <davem@davemloft.net>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020-07-31 18:56 GMT+09:00, Sedat Dilek <sedat.dilek@gmail.com>:
-> On Fri, Jul 31, 2020 at 9:16 AM Namjae Jeon <namjae.jeon@samsung.com>
-> wrote:
->>
->> Hi folk,
->>
->> In this release, The performance of fsck have been much improved and
->> the new option in mkfs have been added to adjust boundary alignment.
->>
->> As the result below, The fsck performance is improved close to windows's
->> fsck
->> and much faster than the one in exfat-utils package.
->>
->> We measured the performance on Samsung 64GB Pro microSDXC UHS-I Class 10
->> which
->> was filled up to 35GB with 9948 directories and 16506 files.
->>
->> | Implementation       | version           | execution time (seconds) |
->> |--------------------- |-------------------|--------------------------|
->> | **exfatprogs fsck**  | 1.0.4             | 11.561                   |
->> | Windows fsck         | Windows 10 1809   | 11.449                   |
->> | [exfat-fuse fsck]    | 1.3.0             | 68.977                   |
->>
+On Sat, Aug 1, 2020 at 2:36 PM David Miller <davem@davemloft.net> wrote:
 >
-> Hi Namjae Jeon (what is your First name and Family name?),
-Hi Sedat,
-First name : Namjae, Last name : Jeon
->
-> congrats to version 1.0.4 and hope to see it in the Debian repositories
-> soon.
-Thanks:)
->
-> Great numbers for exfatprogs/fsck!
->
->> And we have been preparing to add fsck repair feature in the next
->> version.
->> Any feedback is welcome!:)
->>
->> CHANGES :
->>  * fsck.exfat: display sector, cluster, and volume sizes in the human
->>    readable format.
->>  * fsck.exfat: reduce the elapsed time using read-ahead.
->>
->> NEW FEATURES :
->>  * mkfs.exfat: generate pseudo unique serials while creating filesystems.
->>  * mkfs.exfat: add the "-b" option to align the start offset of FAT and
->>    data clusters.
->>  * fsck.exfat: repair zero-byte files which have the NoFatChain
->> attribute.
->>
->> BUG FIXES :
->>  * Fix memory leaks on error handling paths.
->>  * fsck.exfat: fix the bug that cannot access space beyond 2TB.
->>
->> The git tree is at:
->>       https://github.com/exfatprogs/exfatprogs
->>
->> The tarballs can be found at:
->>
->> https://github.com/exfatprogs/exfatprogs/releases/download/1.0.4/exfatprogs-1.0.4.tar.gz
->>
->
-> Just a small nit for the next announcement.
-> Please point (also) to the tar.xz tarball and maybe to the releases
-> tag in GitHub.
-Sure. I will do that on next release.
-> ( Today, I love/prefer to use ZSTD where possible - that is another story.
-> )
-I'm not sure if it is meaningful to provide various compression for
-small archive file. In particular, I wonder if other distribution
-maintainers want it.
->
-> Have more fun.
-Nice day!
->
-> Regards,
-> - Sedat -
->
-> [1]
-> https://github.com/exfatprogs/exfatprogs/releases/download/1.0.4/exfatprogs-1.0.4.tar.xz
-> [2] https://github.com/exfatprogs/exfatprogs/releases/tag/1.0.4
->
+>   git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
+
+How is this wrt an rc8 or a final?
+
+I have another possible small reason to do an rc8 right now. And this
+roughly doubles my current diff.
+
+On a very much related note, I really wish you didn't send the
+networking fixes the day before a release is scheduled.
+
+If it's really quiet., send them on (say) Wed/Thu. And then on
+Saturday, send a note saying "no, important stuff", hold on. Or say
+"nothing new".
+
+Because right now the "last-minute network pull request" has become a
+pattern, and I have a very hard time judging whether I should delay a
+release for it.
+
+                 Linus
