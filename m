@@ -2,176 +2,129 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0050FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 01:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BA6C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 01:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C935E2072A
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 01:48:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rweOnJ01"
+	by mail.kernel.org (Postfix) with ESMTP id ADEE620836
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 01:54:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgHABr7 (ORCPT
+        id S1728043AbgHAByp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 21:47:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726794AbgHABr7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 21:47:59 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FEE5C06174A;
-        Fri, 31 Jul 2020 18:47:59 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id x69so30662244qkb.1;
-        Fri, 31 Jul 2020 18:47:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DfgKTVMFpic0lvlFw/heJsrWIE3jTqCxvCbC4XpQbAk=;
-        b=rweOnJ01nmAYHvLiHAsMtHB4+7hGTuaJgfJNv4cNQR23MLI6XWzYJm998XxMdchzjb
-         XP4uBBQ5hwdPxd6HssESos6Ze2840JD+nBoiNC1+o6lDoNSW1crF6SQerJ0gxEdFCuLG
-         LH7QCe3A1iy1DnieHTPYK9cI7zjJPIfI2QGcedKZHgo5MPVbSs8LdkHi+57rF6ZYYnaQ
-         gVj6YGiUijeqhq0UUv6/w4xWUaTZctRZMRrItn2ELY5/fdRCXk3ectjVDoZxiNeGJ1hG
-         2qyBdH7NzqeWpPTNaPbRmxqcasJlNT8Bb+rJr04NECEWL5n1970lqzlt/DWOLOWSsARa
-         mF6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=DfgKTVMFpic0lvlFw/heJsrWIE3jTqCxvCbC4XpQbAk=;
-        b=Bc/58wkr8DjVghcyxvgsBD84cBNxkxthf2XHUcq1MXnjltWjsOrWfbqXvkwF/hetS6
-         IAtVU3ALP5555VxYlh8Sv3Or+DGVy0N93YKyPJb4EtSNJVaicEUdXHnmCsfAuhmb63jT
-         hjvREU/QECyCR6kRRMyRi4ADpHBgBMKytx0SZ7ruGHg2TVY5Dnx3I2PEaXOU9uycnZ18
-         ZKHUstnEIbLdNMU95eV55qYI+50eAHqWUEFJIhfhffBFvwL3RANJcHgbVZZkKMMtz+o5
-         YntkquouBiSycxDGNwvwG+t17cvNk4BifPQ/yXbVWxX8EnSViAH87jOh4Ti7RrhOFaHD
-         W0HQ==
-X-Gm-Message-State: AOAM532ZvgCNyMaTo/YpjIM3eN7U+kasPU7d+o9iRHVHP2njmEcpcqaa
-        ugNxR60W9a2vfNvcAYOcjjg=
-X-Google-Smtp-Source: ABdhPJxliEC7tkuTaMnDy7cW9516HhJz7m8xvAVOsPuOEMr9SnyUOcCZu77gHA7uT4OL8j3TRvlNSQ==
-X-Received: by 2002:a37:62d4:: with SMTP id w203mr6547799qkb.463.1596246478260;
-        Fri, 31 Jul 2020 18:47:58 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id o37sm12377089qte.9.2020.07.31.18.47.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 18:47:57 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 31 Jul 2020 21:47:55 -0400
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 32/36] x86/boot/compressed: Reorganize zero-size
- section asserts
-Message-ID: <20200801014755.GA2700342@rani.riverdale.lan>
-References: <20200731230820.1742553-1-keescook@chromium.org>
- <20200731230820.1742553-33-keescook@chromium.org>
+        Fri, 31 Jul 2020 21:54:45 -0400
+Received: from mga17.intel.com ([192.55.52.151]:54462 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726794AbgHAByp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 21:54:45 -0400
+IronPort-SDR: MDpn8FcBlzeOSpnnMQpbzhfEe4Y4VVF+6zWDpamX8mSxmhzRQpzMLNCaNaX7BdWP4N/eyLZ59w
+ 9wFXWhBQ9znA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9699"; a="131959841"
+X-IronPort-AV: E=Sophos;i="5.75,420,1589266800"; 
+   d="scan'208";a="131959841"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 18:54:44 -0700
+IronPort-SDR: Tl5QQepecrA3auUMETKGZRd3DePmMCT48Exe5Rrc2ZUX0CUQ7Yt48pWQOyb224ITJeZGB3OiQY
+ rRv+gilspRhQ==
+X-IronPort-AV: E=Sophos;i="5.75,420,1589266800"; 
+   d="scan'208";a="331340904"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 18:54:44 -0700
+Subject: [PATCH] ACPI: NFIT: Fix ARS zero-sized allocation
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     vishal.l.verma@intel.com
+Cc:     Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Date:   Fri, 31 Jul 2020 18:38:26 -0700
+Message-ID: <159624590643.3037264.14157533719042907758.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200731230820.1742553-33-keescook@chromium.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 04:08:16PM -0700, Kees Cook wrote:
-> For readability, move the zero-sized sections to the end after DISCARDS
-> and mark them NOLOAD for good measure.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/x86/boot/compressed/vmlinux.lds.S | 42 +++++++++++++++-----------
->  1 file changed, 25 insertions(+), 17 deletions(-)
-> 
-> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-> index 3c2ee9a5bf43..42dea70a5091 100644
-> --- a/arch/x86/boot/compressed/vmlinux.lds.S
-> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
-> @@ -42,18 +42,16 @@ SECTIONS
->  		*(.rodata.*)
->  		_erodata = . ;
->  	}
-> -	.rel.dyn : {
-> -		*(.rel.*)
-> -	}
-> -	.rela.dyn : {
-> -		*(.rela.*)
-> -	}
-> -	.got : {
-> -		*(.got)
-> -	}
->  	.got.plt : {
->  		*(.got.plt)
->  	}
-> +	ASSERT(SIZEOF(.got.plt) == 0 ||
-> +#ifdef CONFIG_X86_64
-> +	       SIZEOF(.got.plt) == 0x18,
-> +#else
-> +	       SIZEOF(.got.plt) == 0xc,
-> +#endif
-> +	       "Unexpected GOT/PLT entries detected!")
->  
->  	.data :	{
->  		_data = . ;
-> @@ -85,13 +83,23 @@ SECTIONS
->  	ELF_DETAILS
->  
->  	DISCARDS
-> -}
->  
-> -ASSERT(SIZEOF(.got) == 0, "Unexpected GOT entries detected!")
-> -#ifdef CONFIG_X86_64
-> -ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT entries detected!")
-> -#else
-> -ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc, "Unexpected GOT/PLT entries detected!")
-> -#endif
-> +	/*
-> +	 * Sections that should stay zero sized, which is safer to
-> +	 * explicitly check instead of blindly discarding.
-> +	 */
-> +	.got (NOLOAD) : {
-> +		*(.got)
-> +	}
-> +	ASSERT(SIZEOF(.got) == 0, "Unexpected GOT entries detected!")
->  
-> -ASSERT(SIZEOF(.rel.dyn) == 0 && SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations detected!")
-> +	/* ld.lld does not like .rel* sections being made "NOLOAD". */
-> +	.rel.dyn : {
-> +		*(.rel.*)
-> +	}
-> +	ASSERT(SIZEOF(.rel.dyn) == 0, "Unexpected run-time relocations (.rel) detected!")
-> +	.rela.dyn : {
-> +		*(.rela.*)
-> +	}
-> +	ASSERT(SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations (.rela) detected!")
-> +}
-> -- 
-> 2.25.1
-> 
+Pending commit in -next "devres: handle zero size in devm_kmalloc()"
+triggers a boot regression due to the ARS implementation expecting NULL
+from a zero-sized allocation. Avoid the zero-sized allocation by
+skipping ARS, otherwise crashes with the following signature when
+de-referencing ZERO_SIZE_PTR.
 
-There's no point in marking zero-size sections NOLOAD -- if the ASSERT's
-passed, they won't be present in the file at all anyway.
+     BUG: kernel NULL pointer dereference, address: 0000000000000018
+     #PF: supervisor read access in kernel mode
+     #PF: error_code(0x0000) - not-present page
+     RIP: 0010:__acpi_nfit_scrub+0x28a/0x350 [nfit]
+     [..]
+     Call Trace:
+       ? acpi_nfit_query_poison+0x6a/0x180 [nfit]
+       acpi_nfit_scrub+0x36/0xb0 [nfit]
+       process_one_work+0x23c/0x580
+       worker_thread+0x50/0x3b0
 
-The only section for which there might be a point is .got.plt, which is
-non-empty on 32-bit, and only if it is first moved to the end. That
-saves a few bytes.
+Otherwise the implementation correctly aborts when NULL is returned from
+devm_kzalloc() in ars_status_alloc().
+
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ drivers/acpi/nfit/core.c |   15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
+index fb775b967c52..26dd208a0d63 100644
+--- a/drivers/acpi/nfit/core.c
++++ b/drivers/acpi/nfit/core.c
+@@ -3334,7 +3334,7 @@ static void acpi_nfit_init_ars(struct acpi_nfit_desc *acpi_desc,
+ static int acpi_nfit_register_regions(struct acpi_nfit_desc *acpi_desc)
+ {
+ 	struct nfit_spa *nfit_spa;
+-	int rc;
++	int rc, do_sched_ars = 0;
+ 
+ 	set_bit(ARS_VALID, &acpi_desc->scrub_flags);
+ 	list_for_each_entry(nfit_spa, &acpi_desc->spas, list) {
+@@ -3346,7 +3346,7 @@ static int acpi_nfit_register_regions(struct acpi_nfit_desc *acpi_desc)
+ 		}
+ 	}
+ 
+-	list_for_each_entry(nfit_spa, &acpi_desc->spas, list)
++	list_for_each_entry(nfit_spa, &acpi_desc->spas, list) {
+ 		switch (nfit_spa_type(nfit_spa->spa)) {
+ 		case NFIT_SPA_VOLATILE:
+ 		case NFIT_SPA_PM:
+@@ -3354,6 +3354,13 @@ static int acpi_nfit_register_regions(struct acpi_nfit_desc *acpi_desc)
+ 			rc = ars_register(acpi_desc, nfit_spa);
+ 			if (rc)
+ 				return rc;
++
++			/*
++			 * Kick off background ARS if at least one
++			 * region successfully registered ARS
++			 */
++			if (!test_bit(ARS_FAILED, &nfit_spa->ars_state))
++				do_sched_ars++;
+ 			break;
+ 		case NFIT_SPA_BDW:
+ 			/* nothing to register */
+@@ -3372,8 +3379,10 @@ static int acpi_nfit_register_regions(struct acpi_nfit_desc *acpi_desc)
+ 			/* don't register unknown regions */
+ 			break;
+ 		}
++	}
+ 
+-	sched_ars(acpi_desc);
++	if (do_sched_ars)
++		sched_ars(acpi_desc);
+ 	return 0;
+ }
+ 
+
