@@ -2,120 +2,151 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49429C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 14:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97677C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 14:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D12E2076B
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 14:49:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kEI+g4g0"
+	by mail.kernel.org (Postfix) with ESMTP id 74B04207FB
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 14:52:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596293566;
+	bh=4S0kIiBlEp7ju38+PP8R+cgjFKqK5pJylWhbCNVeObU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=riVkh6vLdIYkwNmCVAwH5E4tclEfNmpDtdB3r6OR9hcGSEejQymgmJQFEbZi+qn93
+	 cSoqNEIqY7UoLhBCiPBGEbw2SmHDBzBUVm4qJTBz/gmBYRLSfYprwenlsgYo+7qv86
+	 zfYUYsmQnsAnwElrxxsk9nTquoCiY81/gTXcKP6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgHAOtz (ORCPT
+        id S1726534AbgHAOwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 10:49:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgHAOty (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 10:49:54 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8727C06174A;
-        Sat,  1 Aug 2020 07:49:54 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id j8so22108452ioe.9;
-        Sat, 01 Aug 2020 07:49:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UVNdjfkuEymtlCMjYVhcJ1dm1EhRpHn4gFio0XQo7YU=;
-        b=kEI+g4g0e4gyRGxDXB6HuB4aGlGy4Lm3cI4tsQCYmzgt4A3SiVkWv6KTOGppNfi6Zh
-         u5aOg5BDskxdER9ke/NyCE4oP3jqdOYU5Gr9KcgYG/+xIy0JN4FAbOggeOYXSZRi2dru
-         7RDosvnh8Erp/OC0akp3krFR8J97rsJL65i8jTueW5i8MipD/KYOW300Wb2bL6dvtAvE
-         AaTzBJu+gSI0SXChEoYIxjGiNrbZqp7EBql4Th9kIslh7Vd950kVD0OLqhewLixPKIkv
-         5lUzvGyk3nOYpBmjCstlHi+kYT5TRQghw9RXAo7xWORz2egPO1kzKNibz7VWvsyd0NGH
-         8THg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UVNdjfkuEymtlCMjYVhcJ1dm1EhRpHn4gFio0XQo7YU=;
-        b=b2hmqnMksJGftC/uOFeRq5Kh+wgbNFpo4IRnvfIGYMlITogvpGncRdfrjC4Nevv0V7
-         krOL35d8/b28qnA97XeQEAIjIRX2hDILNq8tLkLcbQZrqUa9rZ8Qg2xZgap74TuUB4Cq
-         g6Ebs3RK59sRZmfBW419Xe4BzAIIjlSVM1urFneH/LNqlPnOSD2wd2iES2qB12xF/Zce
-         YWM+fwqoTOzMjK27rwvuUQxeWHDEpeVskuZsARH06OaTlKfCUpMP0dJprEYZnmnVZuqQ
-         DRy8FEhtaYV5OZtE3ZCrYbuCXbgMM/W+9yJ4LInhBQNzWEW7y5/AFqSLxISxfxoVzhQ1
-         I17w==
-X-Gm-Message-State: AOAM530ozUHUCD+88gaAT63WlX/yp8hPZiCHgASjFTlmixfwPDl52LRE
-        mETNJQ+M5XokSH+b/m8KrpJf8CwgcDW23/XuvSM5h3kS
-X-Google-Smtp-Source: ABdhPJx/jOwTXIJbiM7v1rANDakrJ2QmDFARmK57MOV3E6LasX1X6K+1lQca48VHVG+yOiEIFE8ph0FlqouO8Eq1wEc=
-X-Received: by 2002:a5e:a607:: with SMTP id q7mr8479532ioi.16.1596293394048;
- Sat, 01 Aug 2020 07:49:54 -0700 (PDT)
+        Sat, 1 Aug 2020 10:52:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725804AbgHAOwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 10:52:44 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91FD32071E;
+        Sat,  1 Aug 2020 14:52:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596293564;
+        bh=4S0kIiBlEp7ju38+PP8R+cgjFKqK5pJylWhbCNVeObU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=P6CLjjBtrCsK6bjdoyX69reUFmz2dXUAsQVqqeJtkaW/qvTE4ZBOpOIfSXXJC7orj
+         DcvVq3KcWB6AsLT/kwxh0IiafnL+MuaKUEGPTy8w9mSwYCN7mLypVBgBzTMfDTUWGi
+         B/h5PFEhdtmsc8GWrePbowubqiybkYegqwhPedi4=
+Date:   Sat, 1 Aug 2020 15:52:39 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Daniel Campello <campello@chromium.org>,
+        LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-iio <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH v3 06/15] iio: sx9310: Fixes various memory handling
+Message-ID: <20200801155239.463917db@archlinux>
+In-Reply-To: <CAHp75VeMGtnhCEuMODNO3K6JfFTbm=gLr4yZdZHV-JsBW0eS_A@mail.gmail.com>
+References: <20200731164853.3020946-1-campello@chromium.org>
+        <20200731104555.v3.6.I8accffd77d616cb55b29bc3021cb0f5e1da3b68a@changeid>
+        <CAHp75VeMGtnhCEuMODNO3K6JfFTbm=gLr4yZdZHV-JsBW0eS_A@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200731171342.36636-1-colin.king@canonical.com>
-In-Reply-To: <20200731171342.36636-1-colin.king@canonical.com>
-From:   Steve French <smfrench@gmail.com>
-Date:   Sat, 1 Aug 2020 09:49:43 -0500
-Message-ID: <CAH2r5mv8pWOcQfKknec=JksKVLvLTu2NbowAKwSguAb5-eojSw@mail.gmail.com>
-Subject: Re: [PATCH][next] cifs: fix double free error on share and prefix
-To:     Colin King <colin.king@canonical.com>
-Cc:     Steve French <sfrench@samba.org>, Aurelien Aptel <aaptel@suse.com>,
-        Paulo Alcantara <pc@cjr.nz>, CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        kernel-janitors <kernel-janitors@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-merged into cifs-2.6.git for-next
+On Fri, 31 Jul 2020 22:24:47 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-On Fri, Jul 31, 2020 at 12:15 PM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> Currently if the call dfs_cache_get_tgt_share fails we cannot
-> fully guarantee that share and prefix are set to NULL and the
-> next iteration of the loop can end up potentially double freeing
-> these pointers. Since the semantics of dfs_cache_get_tgt_share
-> are ambiguous for failure cases with the setting of share and
-> prefix (currently now and the possibly the future), it seems
-> prudent to set the pointers to NULL when the objects are
-> free'd to avoid any double frees.
->
-> Addresses-Coverity: ("Double free")
-> Fixes: 96296c946a2a ("cifs: handle RESP_GET_DFS_REFERRAL.PathConsumed in reconnect")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  fs/cifs/connect.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-> index 3c4dd4e1b9eb..4b2f5f5b3a8e 100644
-> --- a/fs/cifs/connect.c
-> +++ b/fs/cifs/connect.c
-> @@ -5574,6 +5574,8 @@ int cifs_tree_connect(const unsigned int xid, struct cifs_tcon *tcon, const stru
->
->                 kfree(share);
->                 kfree(prefix);
-> +               share = NULL;
-> +               prefix = NULL;
->
->                 rc = dfs_cache_get_tgt_share(tcon->dfs_path + 1, it, &share, &prefix);
->                 if (rc) {
-> --
-> 2.27.0
->
+> On Fri, Jul 31, 2020 at 7:49 PM Daniel Campello <campello@chromium.org> wrote:
+> >
+> > Makes use __aligned(8) to ensure that the timestamp is correctly aligned
+> > when we call io_push_to_buffers_with_timestamp().
+> > Also makes use of sizeof() for regmap_bulk_read instead of static value.  
+> 
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> 
+> > Signed-off-by: Daniel Campello <campello@chromium.org>
+> > ---
+> >
+> > Changes in v3:
+> >  - Changed buffer to struct type to align timestamp memory properly.
+> >
+> > Changes in v2:
+> >  - Fixed commit message from "iio: sx9310: Align memory"
+> >
+> >  drivers/iio/proximity/sx9310.c | 13 ++++++++-----
+> >  1 file changed, 8 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+> > index 2ed062d01634bc..c46584b4817b4a 100644
+> > --- a/drivers/iio/proximity/sx9310.c
+> > +++ b/drivers/iio/proximity/sx9310.c
+> > @@ -132,8 +132,11 @@ struct sx9310_data {
+> >          */
+> >         bool prox_stat[SX9310_NUM_CHANNELS];
+> >         bool trigger_enabled;
+> > -       __be16 buffer[SX9310_NUM_CHANNELS +
+> > -                     4]; /* 64-bit data + 64-bit timestamp */
+> > +       /* Ensure correct alignment of timestamp when present. */
+> > +       struct {
+> > +               __be16 channels[SX9310_NUM_CHANNELS];
+> > +               s64 ts __aligned(8);
+> > +       } buffer;
+> >         /* Remember enabled channels and sample rate during suspend. */
+> >         unsigned int suspend_ctrl0;
+> >         struct completion completion;
+> > @@ -346,7 +349,7 @@ static int sx9310_read_prox_data(struct sx9310_data *data,
+> >         if (ret < 0)
+> >                 return ret;
+> >
+> > -       return regmap_bulk_read(data->regmap, chan->address, val, 2);
+> > +       return regmap_bulk_read(data->regmap, chan->address, val, sizeof(*val));
+> >  }
+> >
+> >  /*
+> > @@ -697,10 +700,10 @@ static irqreturn_t sx9310_trigger_handler(int irq, void *private)
+> >                 if (ret < 0)
+> >                         goto out;
+> >
+> > -               data->buffer[i++] = val;
+> > +               data->buffer.channels[i++] = val;
+> >         }
+> >
+> > -       iio_push_to_buffers_with_timestamp(indio_dev, data->buffer,
+> > +       iio_push_to_buffers_with_timestamp(indio_dev, data->buffer.channels,
 
+Whilst it's the same address, it makes more sense to push &data->buffer
+Technically buffer.channels isn't large enough to meant the requirements
+of iio_push_to_buffers_with_timestamp.
 
--- 
+Otherwise, looks good.
+
 Thanks,
 
-Steve
+
+Jonathan
+
+> >                                            pf->timestamp);
+> >
+> >  out:
+> > --
+> > 2.28.0.163.g6104cc2f0b6-goog
+> >  
+> 
+> 
+> --
+> With Best Regards,
+> Andy Shevchenko
+
