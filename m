@@ -2,100 +2,160 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 14:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC7DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 14:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2A7205CB
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 14:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DD862076B
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 14:40:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m3RvS7W1"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Sle3mw/0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgHAO1q (ORCPT
+        id S1726509AbgHAOke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 10:27:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44718 "EHLO
+        Sat, 1 Aug 2020 10:40:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725778AbgHAO1p (ORCPT
+        with ESMTP id S1725280AbgHAOkd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 10:27:45 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE06C06174A
-        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 07:27:45 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id v15so13757142lfg.6
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 07:27:45 -0700 (PDT)
+        Sat, 1 Aug 2020 10:40:33 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07DDCC06174A
+        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 07:40:33 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id x69so31550990qkb.1
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 07:40:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AFX3q5UL/Hekj1Owrf1DlrLYV1j+LXmw4rViBH4wBA0=;
-        b=m3RvS7W1RMIL7cIUF/3oGEnko2s0QlxcPiKEWwofhtIxpE1+qlBQSh5JhXkMo5E1bj
-         tMGKBKPrEnDTY8rkKLiA9xqA6g4RsyuVDoEHdoGGLEC+o8cbU2pO+it0l8ZYhpd+9qVt
-         GNcBM4ewwLtLPM7mLA5mtNiloJxl9rxL4480BgpKuW6V6z4NdUgTtlHPCwM5S/8/NTXh
-         ro5xhj5HGhSRljkaCuLbwrXTAxhQ2NxEt9HyAGGgAMONfWfD/eoWNh0mQjQJGac2ki4p
-         ZL8UwPAd45dsSpy9e1NrQ/fcthLHkik0/YAtDL5jZuS9BrpxcIZRxGPfRhlVJgWa9PGw
-         fDMA==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mRmB4+8PRxBevydZGBnRlc3z9/QvoJxis+WEAA2l688=;
+        b=Sle3mw/0UURgSSq5deGhktvSJ9UQXTd9fDmY2doUhJQ3xiPm3nxmtC8U/ayxaSKVwd
+         6XH1TNg4uHvRdKlCr3i2GfW4yFjDZCIpGm9rOZwquuIGRMoN4u30hBUXPvrXHrv4d1fp
+         vCsYQuv/8VodNDTU/+zdMznVROHKV3h5mkrrBDQ3urmyAhroscFDZBOvL2QGLeJkvLK3
+         hGTqu853GgkLnhg1d9PK9ilpO8AIWQOlyr7cxGQQtBtXGhTO8im8YCn6G4zD6+nndoBo
+         LuaBGqzqxKZ122RDlCvtk7MhPLRMTqS0ZBWTXQ7y/iodvvBmD/ehmrLLck+DGX55MV3l
+         jyTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AFX3q5UL/Hekj1Owrf1DlrLYV1j+LXmw4rViBH4wBA0=;
-        b=VMECM+ABZajDteBKxVdYYmgn53bOC18Qc4Dnf+zd/fHssBk9a622mMFTlA65VAxicb
-         Jt62IJ6S0RJt7+lydVlFx8bBVkWxJViu9CmRcozCiu3Zlv4525PHgsgvKIpdXG75Wsim
-         rjuoL3XVHxNSvACBSXAr+EIty9HKGAjzYAQZsti4GFpQhS+yYEbjDAH3YF58Zyy3eI6G
-         QUtCGbRANdmK3+NCDsk15uAcQd/ePLs1K4vsj1MO9uwxH3C3tpC7UY5uIldioJmSGMOH
-         /8M4O8HDhzdCt7H3UhrcpvCZ2kNdHd5HtkmWvo6AOVTRjsdOpJl39SKiIyF7JIXZ6j66
-         KWYg==
-X-Gm-Message-State: AOAM531XJljhDoiQxPK4XAZJHEPKIWYqZe0i5wK1gJo+R+BZubNFIIoS
-        7LS7BweBpe+j5O2H0xprmXCu2L7QqPHk9pfmjBqYXQ==
-X-Google-Smtp-Source: ABdhPJyCsygFe37NY/t6SmyWsmcsVwZV/zyocjXdCnPbtYirvRY3A/8Zv0rdYuwoHTtlhA5YN9mBudELMfm1uUYdesU=
-X-Received: by 2002:ac2:5e26:: with SMTP id o6mr4425871lfg.194.1596292063603;
- Sat, 01 Aug 2020 07:27:43 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mRmB4+8PRxBevydZGBnRlc3z9/QvoJxis+WEAA2l688=;
+        b=ebaan2uJFH5a/betygl0AKSnLcOCGC9oPD6ymNqgkk1Iqe1QKm+hBwNXvGfdYjChMW
+         /5SMhUfdfmQyuqp25G6YI4PfxsgcwKORR3GGiJeNyEXrr7gzM9nqUI+BH4x1PcNxj/rT
+         kaYpO42XNLgwfJiOIZYEcU+yRkRHt9ECbMacKKQ6T2zTTqllok1XmQoiChpUC3amPrEj
+         jkQ+ZpXN1Y1BAAoUXVGpCtMTsYEMgD2npgkVNg0U5WkdX7RW0MmrB7lK8WKOIvDRqfDR
+         H+k6yzYXurepeIgDl6AKZr95lx3vdMOasxxODDPMX9ch1sGkNVylnM5+p+dkUjYSZ1RU
+         ecDw==
+X-Gm-Message-State: AOAM531l54TzjXtBXZNpQdcXIwVnNRej9yfe7B+3YurGn0us1MBQwubw
+        6KjfqK4QRbMMLf1IeroxjIgqlA==
+X-Google-Smtp-Source: ABdhPJzbwskN0/DtlHJAnLQ+QGQOrP7nWCPTapxvskUZYyaFE6IclN+YtQFx90fJdJW1BNlHHFUELw==
+X-Received: by 2002:a05:620a:150f:: with SMTP id i15mr8871793qkk.152.1596292832181;
+        Sat, 01 Aug 2020 07:40:32 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id f53sm14352016qta.84.2020.08.01.07.40.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Aug 2020 07:40:31 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1k1sgY-002RlQ-Ap; Sat, 01 Aug 2020 11:40:30 -0300
+Date:   Sat, 1 Aug 2020 11:40:30 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak
+ in rds_notify_queue_get()
+Message-ID: <20200801144030.GM24045@ziepe.ca>
+References: <20200730192026.110246-1-yepeilin.cs@gmail.com>
+ <20200731045301.GI75549@unreal>
+ <20200731053306.GA466103@kroah.com>
+ <20200731053333.GB466103@kroah.com>
+ <20200731140452.GE24045@ziepe.ca>
+ <20200731142148.GA1718799@kroah.com>
+ <20200731143604.GF24045@ziepe.ca>
+ <20200731171924.GA2014207@kroah.com>
+ <20200731182712.GI24045@ziepe.ca>
+ <20200801080026.GJ5493@kadam>
 MIME-Version: 1.0
-References: <20200801120216.8488-1-bernard@vivo.com>
-In-Reply-To: <20200801120216.8488-1-bernard@vivo.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 1 Aug 2020 16:27:32 +0200
-Message-ID: <CACRpkdasUurLu_zvUQ7jwyGDsGhFqeDA9oJ0qsTHVOXx0NT2rQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/panel: remove return value of function drm_panel_add
-To:     Bernard Zhao <bernard@vivo.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Stefan Mavrodiev <stefan@olimex.com>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        opensource.kernel@vivo.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200801080026.GJ5493@kadam>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 1, 2020 at 2:02 PM Bernard Zhao <bernard@vivo.com> wrote:
+On Sat, Aug 01, 2020 at 11:00:26AM +0300, Dan Carpenter wrote:
+> > Without an actual example where this doesn't work right it is hard to
+> > say anything more..
+> 
+> Here is the example that set off the recent patches:
+> 
+> https://lkml.org/lkml/2020/7/27/199
 
-> The function "int drm_panel_add(struct drm_panel *panel)"
-> always returns 0, this return value is meaningless.
-> Also, there is no need to check return value which calls
-> "drm_panel_add and", error branch code will never run.
->
-> Signed-off-by: Bernard Zhao <bernard@vivo.com>
+Oh, that is something completely different. This thread was talking
+about '= {}'.
 
-Makes sense.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+From a C11 perspective the above link is complete initialization of an
+aggregate and does not trigger the rule requiring that padding be
+zero'd.
 
-Yours,
-Linus Walleij
+C11 only zeros padding during *partial* initialization of an aggregate.
+
+ie this does not zero padding:
+
+void test(void)
+{
+        extern void copy(const void *ptr, size_t len);
+	struct rds_rdma_notify {
+		unsigned long user_token;
+		unsigned char status __attribute__((aligned(32)));
+	} foo = {1, 1};
+
+	// Padding NOT zeroed
+	copy(&foo, sizeof(foo));
+}
+
+While the addition of a xxx member to make it partial initialization
+does zero:
+
+void test(void)
+{
+        extern void copy(const void *ptr, size_t len);
+	struct rds_rdma_notify {
+		unsigned long user_token;
+		unsigned char status __attribute__((aligned(32)));
+		unsigned long xx;
+	} foo = {1, 1};
+
+	// Padding NOT zeroed
+	copy(&foo, sizeof(foo));
+}
+
+(and godbolt confirms this on a wide range of compilers)
+
+> The rest of these patches were based on static analysis from Smatch.
+> They're all "theoretical" bugs based on the C standard but it's
+> impossible to know if and when they'll turn into real life bugs.
+
+Any patches replaing '= {}' (and usually '= {0}') with memset are not
+fixing anything.
+
+The C11 standard requires zeroing padding in these case. It is just
+useless churn and in some cases results in worse codegen.
+
+smatch should only warn about this if the aggregate initialization is
+not partial.
+
+Jason
