@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B632EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 09:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7FDC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 09:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D3DD206F6
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 09:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F082206F6
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 09:34:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbgHAJec (ORCPT
+        id S1728833AbgHAJen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 05:34:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59330 "EHLO mx2.suse.de"
+        Sat, 1 Aug 2020 05:34:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59388 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725931AbgHAJec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 05:34:32 -0400
+        id S1725931AbgHAJen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 05:34:43 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id E7065ABF1;
-        Sat,  1 Aug 2020 09:34:44 +0000 (UTC)
-Date:   Sat, 01 Aug 2020 11:34:30 +0200
-Message-ID: <s5ha6ze90bd.wl-tiwai@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id 5F188AC94;
+        Sat,  1 Aug 2020 09:34:55 +0000 (UTC)
+Date:   Sat, 01 Aug 2020 11:34:41 +0200
+Message-ID: <s5h8sey90b2.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
 To:     Julia Lawall <Julia.Lawall@inria.fr>
 Cc:     Jaroslav Kysela <perex@perex.cz>, kernel-janitors@vger.kernel.org,
         Takashi Iwai <tiwai@suse.com>,
         Jonathan Corbet <corbet@lwn.net>, alsa-devel@alsa-project.org,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: doc: use correct config variable name
-In-Reply-To: <1596223701-7558-1-git-send-email-Julia.Lawall@inria.fr>
-References: <1596223701-7558-1-git-send-email-Julia.Lawall@inria.fr>
+Subject: Re: [PATCH] ALSA: docs: fix typo
+In-Reply-To: <1596224129-7699-1-git-send-email-Julia.Lawall@inria.fr>
+References: <1596224129-7699-1-git-send-email-Julia.Lawall@inria.fr>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -44,10 +44,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jul 2020 21:28:21 +0200,
+On Fri, 31 Jul 2020 21:35:29 +0200,
 Julia Lawall wrote:
 > 
-> CONFIG_PCM_XRUN_DEBUG should be CONFIG_SND_PCM_XRUN_DEBUG
+> GFP_KRENEL -> GFP_KERNEL
 > 
 > Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
