@@ -2,114 +2,89 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E050CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BE3C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF1112071E
+	by mail.kernel.org (Postfix) with ESMTP id DB530206E9
 	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgHARuK (ORCPT
+        id S1726955AbgHARvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 13:50:10 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:37968 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725803AbgHARuK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 13:50:10 -0400
-Received: from fsav107.sakura.ne.jp (fsav107.sakura.ne.jp [27.133.134.234])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 071HntOn032520;
-        Sun, 2 Aug 2020 02:49:56 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav107.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav107.sakura.ne.jp);
- Sun, 02 Aug 2020 02:49:55 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav107.sakura.ne.jp)
-Received: from localhost.localdomain (121.252.232.153.ap.dti.ne.jp [153.232.252.121])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 071HnrDO032513
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Sun, 2 Aug 2020 02:49:55 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Subject: [PATCH] arm64: dts: rockchip: add SPDIF node for rk3399-rockpro64
-Date:   Sun,  2 Aug 2020 02:49:50 +0900
-Message-Id: <20200801174950.2309273-1-katsuhiro@katsuster.net>
-X-Mailer: git-send-email 2.27.0
+        Sat, 1 Aug 2020 13:51:11 -0400
+Received: from mga17.intel.com ([192.55.52.151]:40851 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbgHARvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 13:51:10 -0400
+IronPort-SDR: j9aOGPZoXJA/GlSS3Tnlyjz8AylDIiOtNRPtqlhDL3zR7ckVAdMYuNuklg8lQ1Ju8E3UrdsTRg
+ jQyy4PXcRbMA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9700"; a="132006354"
+X-IronPort-AV: E=Sophos;i="5.75,423,1589266800"; 
+   d="scan'208";a="132006354"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2020 10:51:10 -0700
+IronPort-SDR: eKzzKAP34nw+zm16F3aePLIEVEsH+akO3pfC7qCweLbc/DwFNOkrWSUKvo7vKrgMyuMn3KZapy
+ urhDAh66Rnaw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,423,1589266800"; 
+   d="scan'208";a="491883798"
+Received: from lkp-server01.sh.intel.com (HELO e21119890065) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 01 Aug 2020 10:51:08 -0700
+Received: from kbuild by e21119890065 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k1vf2-0000ZK-48; Sat, 01 Aug 2020 17:51:08 +0000
+Date:   Sun, 2 Aug 2020 01:50:57 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Oded Gabbay <oded.gabbay@gmail.com>, linux-kernel@vger.kernel.org,
+        SW_Drivers@habana.ai
+Cc:     kbuild-all@lists.01.org, Ofir Bitton <obitton@habana.ai>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: [RFC PATCH] habanalabs: hl_fence_release() can be static
+Message-ID: <20200801175057.GA49250@68026f9d7d78>
+References: <20200730131347.30261-1-oded.gabbay@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730131347.30261-1-oded.gabbay@gmail.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds 'disabled' SPDIF sound node and related settings
-for rk3399-rockpro64.
 
-There are 2 reasons:
-  - All RK3399 dma-bus channels have been already used by I2S0/1/2
-  - RockPro64 does not have SPDIF optical nor coaxial connector,
-    just have 3pins
-
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Signed-off-by: kernel test robot <lkp@intel.com>
 ---
- .../boot/dts/rockchip/rk3399-rockpro64.dtsi   | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ command_submission.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
-index 6e553ff47534..e35b30f8a46e 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
-@@ -76,6 +76,23 @@ sound {
- 		dais = <&i2s1_p0>;
- 	};
+diff --git a/drivers/misc/habanalabs/common/command_submission.c b/drivers/misc/habanalabs/common/command_submission.c
+index d19ac641b1719..e482d8d135602 100644
+--- a/drivers/misc/habanalabs/common/command_submission.c
++++ b/drivers/misc/habanalabs/common/command_submission.c
+@@ -38,7 +38,7 @@ void hl_sob_reset_error(struct kref *ref)
+ 			hw_sob->q_idx, hw_sob->sob_id);
+ }
  
-+	sound-dit {
-+		compatible = "audio-graph-card";
-+		label = "rockchip,rk3399";
-+		dais = <&spdif_p0>;
-+	};
-+
-+	spdif-dit {
-+		compatible = "linux,spdif-dit";
-+		#sound-dai-cells = <0>;
-+
-+		port {
-+			dit_p0_0: endpoint {
-+				remote-endpoint = <&spdif_p0_0>;
-+			};
-+		};
-+	};
-+
- 	vcc12v_dcin: vcc12v-dcin {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc12v_dcin";
-@@ -698,6 +715,17 @@ &sdhci {
- 	status = "okay";
- };
+-void hl_fence_release(struct kref *kref)
++static void hl_fence_release(struct kref *kref)
+ {
+ 	struct hl_fence *fence =
+ 		container_of(kref, struct hl_fence, refcount);
+@@ -98,7 +98,7 @@ void hl_fence_get(struct hl_fence *fence)
+ 		kref_get(&fence->refcount);
+ }
  
-+&spdif {
-+	pinctrl-0 = <&spdif_bus_1>;
-+	status = "disabled";
-+
-+	spdif_p0: port {
-+		spdif_p0_0: endpoint {
-+			remote-endpoint = <&dit_p0_0>;
-+		};
-+	};
-+};
-+
- &spi1 {
- 	status = "okay";
- 
--- 
-2.27.0
-
+-void hl_fence_init(struct hl_fence *fence)
++static void hl_fence_init(struct hl_fence *fence)
+ {
+ 	kref_init(&fence->refcount);
+ 	fence->error = 0;
