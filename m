@@ -2,162 +2,318 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C647AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 19:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18574C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 19:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 995B72076C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 19:22:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596309746;
-	bh=rlJCylVlbM081y0pIpdhVynEEDi6K6/kpXHr8d9UHEo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PcSx8WCaBqfDu8FH94/dIy8/B+08H55OSy287SvvhzE8GTYPnmVEvZqZVpWvmhrf/
-	 MSxGikkJY6QytOBeU6EvpfYEv7VvDo9STChKZ/3IhvPT1o9lhOVReUJ2YX9wp6Hg34
-	 LjQVUGdv84JfZNVvOX5W5ZLg043qlwepbYsrDc3Y=
+	by mail.kernel.org (Postfix) with ESMTP id DE2FE20781
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 19:22:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AYRgmSwl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbgHATWZ (ORCPT
+        id S1727109AbgHATWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 15:22:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48312 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbgHATWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 15:22:24 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F339A2072A;
-        Sat,  1 Aug 2020 19:22:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596309744;
-        bh=rlJCylVlbM081y0pIpdhVynEEDi6K6/kpXHr8d9UHEo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HXs88p0vT78AeUBfiYw4ecuojQwqW7RQIwdGaq5zHnOt/Xk0bht+cXArc8r0yS37C
-         FepRy3DZXvmKBeom6+9IA0fvWhROfWXWP3bl18s7dbqrYViDMR6TSZFEfN4ePsU5C1
-         Km/H82F0sTXO8CAK7CgkJXxr+BJsq4Ia7IxkGZV0=
-Date:   Sat, 1 Aug 2020 12:22:22 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
-        Daeho Jeong <daehojeong@google.com>
-Subject: Re: [PATCH] f2fs: fix deadlock between quota writes and checkpoint
-Message-ID: <20200801192222.GA85352@sol.localdomain>
-References: <20200729070244.584518-1-jaegeuk@kernel.org>
+        Sat, 1 Aug 2020 15:22:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33246 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726916AbgHATWy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 15:22:54 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A75DC06174A
+        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 12:22:54 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id j187so31883572qke.11
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 12:22:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=q4GZi4Kf5DXEeMyZGvNSCtr8zsFMta44KzAXttHuuE0=;
+        b=AYRgmSwlCbhmP5pYZUUR4sCshvWjsdzOlDg0JxdJkej1euzDxG9WHW7ZVtWaId1iqf
+         ZS0yTLi84i/6FC6dE4H6+jLAfmgUnms8dcvO+xepLw3Oo0yigsqosur9lXmjT2Rq0Hn6
+         URq+4lf74PrL0UCa/E09EmtF2JbmMQOez4iOg20hhoHisc/U8i3MwOj1Ow6jc/X8ub0j
+         ePncokutdFbDs3FcwJ77BG9yVZ9uYT9A3LSd8uOgFhXRFvbaOv0GHb0tpKki289HRHOr
+         HT0O/I0OgTDpqbrCWm+a+zgoBH/NKOudR9TYhShmL3EIz5x1W7OqqcJm09vkXV+W4doG
+         4kkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=q4GZi4Kf5DXEeMyZGvNSCtr8zsFMta44KzAXttHuuE0=;
+        b=Zy3NzPzbB1oqc6z1MyjnGtxddW87iRjjb9hxSr8svqUEcVMCERecY1HpEawlCVReHt
+         z4DHcRuGX3scPAEHS86N1rUMzcGSMGM7Q2kMDlYipv2RoKXWOna1fhUT35PGGpMdsO94
+         jgHzc86GQ8daB8Ix/RqulIkAIm8zE/E44r02ShYqGH2YAYkcUdwZgpq+7msof3pS3Hl2
+         dNLWSKiPBzhdKPYULzOfVSTwGnPrv5ojKRRD1KRbVwpgGe9G5SuRp7s9ltPPfI0iJzIY
+         cQsYGByYy44owhtjOydsZGcMTdeqxH4VdP8z9bFk48RaB42Az3/HfpCx1TrF0DtETRig
+         tKuw==
+X-Gm-Message-State: AOAM530l3tc20rLVoWikNmZOXr8vTa24taFmJmyR8FPvboNaYvSApPb+
+        CfmdRQmXRnFahaOGf8QT/0g4/Q==
+X-Google-Smtp-Source: ABdhPJy2uyI6oHAdI+296hCenAVQ2MQXwWTG7fao7gJpbyKCsf10jRdI/Zu/AjOJc0C2TFXKG1dmTg==
+X-Received: by 2002:a05:620a:22ee:: with SMTP id p14mr10088938qki.223.1596309773350;
+        Sat, 01 Aug 2020 12:22:53 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id 15sm5761877qkm.112.2020.08.01.12.22.50
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Sat, 01 Aug 2020 12:22:51 -0700 (PDT)
+Date:   Sat, 1 Aug 2020 12:22:27 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Chris Down <chris@chrisdown.name>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH v7 1/2] tmpfs: Per-superblock i_ino support
+In-Reply-To: <1986b9d63b986f08ec07a4aa4b2275e718e47d8a.1594661218.git.chris@chrisdown.name>
+Message-ID: <alpine.LSU.2.11.2008011131200.10700@eggly.anvils>
+References: <cover.1594661218.git.chris@chrisdown.name> <1986b9d63b986f08ec07a4aa4b2275e718e47d8a.1594661218.git.chris@chrisdown.name>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200729070244.584518-1-jaegeuk@kernel.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 12:02:44AM -0700, Jaegeuk Kim wrote:
-> f2fs_write_data_pages(quota_mapping)
->  __f2fs_write_data_pages             f2fs_write_checkpoint
->   * blk_start_plug(&plug);
->   * add bio in write_io[DATA]
->                                       - block_operations
->                                       - skip syncing quota by
->                                                 >DEFAULT_RETRY_QUOTA_FLUSH_COUNT
->                                       - down_write(&sbi->node_write);
->   - f2fs_write_single_data_page
->     - f2fs_do_write_data_page
->       - f2fs_outplace_write_data
->         - do_write_page
->            - f2fs_allocate_data_block
->             - down_write(node_write)
->                                       - f2fs_wait_on_all_pages(F2FS_WB_CP_DATA);
+On Mon, 13 Jul 2020, Chris Down wrote:
+
+> get_next_ino has a number of problems:
 > 
-> Signed-off-by: Daeho Jeong <daehojeong@google.com>
-> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> - It uses and returns a uint, which is susceptible to become overflowed
+>   if a lot of volatile inodes that use get_next_ino are created.
+> - It's global, with no specificity per-sb or even per-filesystem. This
+>   means it's not that difficult to cause inode number wraparounds on a
+>   single device, which can result in having multiple distinct inodes
+>   with the same inode number.
+> 
+> This patch adds a per-superblock counter that mitigates the second case.
+> This design also allows us to later have a specific i_ino size
+> per-device, for example, allowing users to choose whether to use 32- or
+> 64-bit inodes for each tmpfs mount. This is implemented in the next
+> commit.
+> 
+> For internal shmem mounts which may be less tolerant to spinlock delays,
+> we implement a percpu batching scheme which only takes the stat_lock at
+> each batch boundary.
+> 
+> Signed-off-by: Chris Down <chris@chrisdown.name>
+> Cc: Amir Goldstein <amir73il@gmail.com>
+> Cc: Hugh Dickins <hughd@google.com>
+
+Acked-by: Hugh Dickins <hughd@google.com>
+
+Thanks for coming back and completing this, Chris.
+Some comments below, nothing to detract from that Ack, more notes to
+myself: things I might change slightly when I get back here later on.
+I'm glad to see Andrew pulled your 0/2 text into this 1/2.
+
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Jeff Layton <jlayton@kernel.org>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: linux-mm@kvack.org
+> Cc: linux-fsdevel@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: kernel-team@fb.com
 > ---
->  fs/f2fs/checkpoint.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  include/linux/fs.h       | 15 +++++++++
+>  include/linux/shmem_fs.h |  2 ++
+>  mm/shmem.c               | 66 +++++++++++++++++++++++++++++++++++++---
+>  3 files changed, 78 insertions(+), 5 deletions(-)
 > 
-> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> index 8c782d3f324f0..99c8061da55b9 100644
-> --- a/fs/f2fs/checkpoint.c
-> +++ b/fs/f2fs/checkpoint.c
-> @@ -1269,6 +1269,8 @@ void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type)
->  		if (type == F2FS_DIRTY_META)
->  			f2fs_sync_meta_pages(sbi, META, LONG_MAX,
->  							FS_CP_META_IO);
-> +		else if (type == F2FS_WB_CP_DATA)
-> +			f2fs_submit_merged_write(sbi, DATA);
->  		io_schedule_timeout(DEFAULT_IO_TIMEOUT);
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index f15848899945..b70b334f8e16 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2961,6 +2961,21 @@ extern void discard_new_inode(struct inode *);
+>  extern unsigned int get_next_ino(void);
+>  extern void evict_inodes(struct super_block *sb);
+>  
+> +/*
+> + * Userspace may rely on the the inode number being non-zero. For example, glibc
+> + * simply ignores files with zero i_ino in unlink() and other places.
+> + *
+> + * As an additional complication, if userspace was compiled with
+> + * _FILE_OFFSET_BITS=32 on a 64-bit kernel we'll only end up reading out the
+> + * lower 32 bits, so we need to check that those aren't zero explicitly. With
+> + * _FILE_OFFSET_BITS=64, this may cause some harmless false-negatives, but
+> + * better safe than sorry.
+> + */
+> +static inline bool is_zero_ino(ino_t ino)
+> +{
+> +	return (u32)ino == 0;
+> +}
+
+Hmm, okay. The value of this unnecessary, and inaccurately named,
+wrapper is in the great comment above it: which then suffers a bit
+from being hidden away in a header file.  I'd understand its placing
+better if you had also changed get_next_ino() to use it.
+
+And I have another reason for wondering whether this function is
+the right thing to abstract out: 1 is also somewhat special, being
+the ino of the root.  It seems a little unfortunate, when we recycle
+through the 32-bit space, to reuse the one ino that is certain to be
+still in use (maybe all the others get "rm -rf"ed every day).  But
+I haven't yet decided whether that's worth bothering about at all.
+
+> +
+>  extern void __iget(struct inode * inode);
+>  extern void iget_failed(struct inode *);
+>  extern void clear_inode(struct inode *);
+> diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
+> index 7a35a6901221..eb628696ec66 100644
+> --- a/include/linux/shmem_fs.h
+> +++ b/include/linux/shmem_fs.h
+> @@ -36,6 +36,8 @@ struct shmem_sb_info {
+>  	unsigned char huge;	    /* Whether to try for hugepages */
+>  	kuid_t uid;		    /* Mount uid for root directory */
+>  	kgid_t gid;		    /* Mount gid for root directory */
+> +	ino_t next_ino;		    /* The next per-sb inode number to use */
+> +	ino_t __percpu *ino_batch;  /* The next per-cpu inode number to use */
+>  	struct mempolicy *mpol;     /* default memory policy for mappings */
+>  	spinlock_t shrinklist_lock;   /* Protects shrinklist */
+>  	struct list_head shrinklist;  /* List of shinkable inodes */
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index a0dbe62f8042..0ae250b4da28 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -260,18 +260,67 @@ bool vma_is_shmem(struct vm_area_struct *vma)
+>  static LIST_HEAD(shmem_swaplist);
+>  static DEFINE_MUTEX(shmem_swaplist_mutex);
+>  
+> -static int shmem_reserve_inode(struct super_block *sb)
+> +/*
+> + * shmem_reserve_inode() performs bookkeeping to reserve a shmem inode, and
+> + * produces a novel ino for the newly allocated inode.
+> + *
+> + * It may also be called when making a hard link to permit the space needed by
+> + * each dentry. However, in that case, no new inode number is needed since that
+> + * internally draws from another pool of inode numbers (currently global
+> + * get_next_ino()). This case is indicated by passing NULL as inop.
+> + */
+> +#define SHMEM_INO_BATCH 1024
+> +static int shmem_reserve_inode(struct super_block *sb, ino_t *inop)
+>  {
+>  	struct shmem_sb_info *sbinfo = SHMEM_SB(sb);
+> -	if (sbinfo->max_inodes) {
+> +	ino_t ino;
+> +
+> +	if (!(sb->s_flags & SB_KERNMOUNT)) {
+
+I was disappointed to find that this is still decided by SB_KERNMOUNT
+instead of max_inodes, as we had discussed previously.  But it may just
+be me who sees that as a regression (taking stat_lock when minimizing
+stat_lock was the mounter's choice), so I'll accept responsibility to
+follow that up later (and in no great hurry).  And I may discover why
+you didn't make the change - remount with different options might
+well turn out to be a pain, and may entail some compromises.
+
+>  		spin_lock(&sbinfo->stat_lock);
+>  		if (!sbinfo->free_inodes) {
+>  			spin_unlock(&sbinfo->stat_lock);
+>  			return -ENOSPC;
+>  		}
+>  		sbinfo->free_inodes--;
+> +		if (inop) {
+> +			ino = sbinfo->next_ino++;
+> +			if (unlikely(is_zero_ino(ino)))
+> +				ino = sbinfo->next_ino++;
+> +			if (unlikely(ino > UINT_MAX)) {
+> +				/*
+> +				 * Emulate get_next_ino uint wraparound for
+> +				 * compatibility
+> +				 */
+> +				ino = 1;
+> +			}
+> +			*inop = ino;
+> +		}
+>  		spin_unlock(&sbinfo->stat_lock);
+> +	} else if (inop) {
+> +		/*
+> +		 * __shmem_file_setup, one of our callers, is lock-free: it
+> +		 * doesn't hold stat_lock in shmem_reserve_inode since
+> +		 * max_inodes is always 0, and is called from potentially
+> +		 * unknown contexts. As such, use a per-cpu batched allocator
+> +		 * which doesn't require the per-sb stat_lock unless we are at
+> +		 * the batch boundary.
+> +		 */
+> +		ino_t *next_ino;
+> +		next_ino = per_cpu_ptr(sbinfo->ino_batch, get_cpu());
+> +		ino = *next_ino;
+> +		if (unlikely(ino % SHMEM_INO_BATCH == 0)) {
+> +			spin_lock(&sbinfo->stat_lock);
+> +			ino = sbinfo->next_ino;
+> +			sbinfo->next_ino += SHMEM_INO_BATCH;
+> +			spin_unlock(&sbinfo->stat_lock);
+> +			if (unlikely(is_zero_ino(ino)))
+> +				ino++;
+> +		}
+> +		*inop = ino;
+> +		*next_ino = ++ino;
+> +		put_cpu();
 >  	}
->  	finish_wait(&sbi->cp_wait, &wait);
-
-This patch is causing the following WARNING when I try to run xfstests:
-
-[   20.157753] ------------[ cut here ]------------
-[   20.158393] do not call blocking ops when !TASK_RUNNING; state=2 set at [<0000000096354225>] prepare_to_wait+0xcd/0x430
-[   20.159858] WARNING: CPU: 1 PID: 1152 at kernel/sched/core.c:7142 __might_sleep+0x149/0x1a0
-[   20.160762] Modules linked in:
-[   20.161119] CPU: 1 PID: 1152 Comm: umount Not tainted 5.8.0-rc7-next-20200731 #1
-[   20.161924] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20200516_175120-felixonmars2 04/01/2014
-[   20.163110] RIP: 0010:__might_sleep+0x149/0x1a0
-[   20.163709] Code: 65 48 8b 1c 25 c0 ed 01 00 48 8d 7b 10 48 89 fe 48 c1 ee 03 80 3c 06 00 75 2b 48 8b 73 10 48 c7 c7 a0 bc 66 83 e8 0
-[   20.166083] RSP: 0018:ffffc900015a7868 EFLAGS: 00010286
-[   20.166759] RAX: 0000000000000000 RBX: ffff88806805c500 RCX: 0000000000000000
-[   20.167658] RDX: 0000000000000004 RSI: 0000000000000008 RDI: fffff520002b4eff
-[   20.168557] RBP: ffffc900015a7898 R08: 0000000000000001 R09: ffff88806d32f44f
-[   20.169481] R10: ffffed100da65e89 R11: 1ffff1100d00b9a1 R12: ffffffff83674ba0
-[   20.170389] R13: 00000000000005fa R14: 0000000000000000 R15: ffff8880638200a0
-[   20.171291] FS:  00007f3da4b2f080(0000) GS:ffff88806d300000(0000) knlGS:0000000000000000
-[   20.172311] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   20.173061] CR2: 000055734e8b2638 CR3: 0000000067069000 CR4: 00000000003506e0
-[   20.173965] Call Trace:
-[   20.174295]  ? lockdep_hardirqs_on_prepare.part.0+0x22f/0x430
-[   20.175022]  down_write+0x77/0x150
-[   20.175464]  ? rwsem_down_read_slowpath+0xd40/0xd40
-[   20.176110]  __submit_merged_write_cond+0x191/0x310
-[   20.176739]  f2fs_submit_merged_write+0x18/0x20
-[   20.177323]  f2fs_wait_on_all_pages+0x269/0x2d0
-[   20.177899]  ? block_operations+0x980/0x980
-[   20.178441]  ? __kasan_check_read+0x11/0x20
-[   20.178975]  ? finish_wait+0x260/0x260
-[   20.179488]  ? percpu_counter_set+0x147/0x230
-[   20.180049]  do_checkpoint+0x1757/0x2a50
-[   20.180558]  f2fs_write_checkpoint+0x840/0xaf0
-[   20.181126]  f2fs_sync_fs+0x287/0x4a0
-[   20.181602]  ? kill_f2fs_super+0x310/0x310
-[   20.182127]  ? dput+0x3bf/0x570
-[   20.182565]  sync_filesystem+0x165/0x200
-[   20.183075]  generic_shutdown_super+0x69/0x320
-[   20.183651]  kill_block_super+0x97/0xe0
-[   20.184144]  kill_f2fs_super+0x21f/0x310
-[   20.184656]  ? f2fs_dquot_commit+0xc0/0xc0
-[   20.185179]  ? kfree+0xcc/0x320
-[   20.185594]  ? unregister_shrinker+0x163/0x220
-[   20.186185]  deactivate_locked_super+0x7b/0xf0
-[   20.186763]  deactivate_super+0x71/0x80
-[   20.187262]  cleanup_mnt+0x362/0x540
-[   20.187722]  __cleanup_mnt+0xd/0x10
-[   20.188172]  task_work_run+0xca/0x170
-[   20.188647]  exit_to_user_mode_loop+0x98/0xa0
-[   20.189226]  exit_to_user_mode_prepare+0xb4/0x110
-[   20.189838]  syscall_exit_to_user_mode+0x37/0x90
-[   20.190435]  do_syscall_64+0x3f/0x50
-[   20.190895]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[   20.191539] RIP: 0033:0x7f3da4f55507
-[   20.192000] Code: 19 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 31 f6 e9 09 00 00 00 66 0f 1f 84 00 00 00 00 00 b8 a6 00 8
-[   20.194359] RSP: 002b:00007ffc043b0018 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
-[   20.195319] RAX: 0000000000000000 RBX: 000055fbd27c6970 RCX: 00007f3da4f55507
-[   20.196239] RDX: 0000000000000001 RSI: 0000000000000000 RDI: 000055fbd27cacd0
-[   20.197142] RBP: 0000000000000000 R08: 000055fbd27cac40 R09: 00007f3da4fd6e80
-[   20.198042] R10: 0000000000000000 R11: 0000000000000246 R12: 000055fbd27cacd0
-[   20.198942] R13: 00007f3da507b1c4 R14: 000055fbd27c6a68 R15: 000055fbd27c6b80
-[   20.199866] irq event stamp: 4503
-[   20.200307] hardirqs last  enabled at (4511): [<ffffffff81358743>] console_unlock+0x4d3/0x630
-[   20.201381] hardirqs last disabled at (4518): [<ffffffff813583e6>] console_unlock+0x176/0x630
-[   20.202479] softirqs last  enabled at (4010): [<ffffffff83200ebf>] asm_call_on_stack+0xf/0x20
-[   20.203556] softirqs last disabled at (3549): [<ffffffff83200ebf>] asm_call_on_stack+0xf/0x20
-[   20.204631] ---[ end trace 6d3d87d9846869f6 ]---
-
+> +
+>  	return 0;
+>  }
+>  
+> @@ -2222,13 +2271,14 @@ static struct inode *shmem_get_inode(struct super_block *sb, const struct inode
+>  	struct inode *inode;
+>  	struct shmem_inode_info *info;
+>  	struct shmem_sb_info *sbinfo = SHMEM_SB(sb);
+> +	ino_t ino;
+>  
+> -	if (shmem_reserve_inode(sb))
+> +	if (shmem_reserve_inode(sb, &ino))
+>  		return NULL;
+>  
+>  	inode = new_inode(sb);
+>  	if (inode) {
+> -		inode->i_ino = get_next_ino();
+> +		inode->i_ino = ino;
+>  		inode_init_owner(inode, dir, mode);
+>  		inode->i_blocks = 0;
+>  		inode->i_atime = inode->i_mtime = inode->i_ctime = current_time(inode);
+> @@ -2932,7 +2982,7 @@ static int shmem_link(struct dentry *old_dentry, struct inode *dir, struct dentr
+>  	 * first link must skip that, to get the accounting right.
+>  	 */
+>  	if (inode->i_nlink) {
+> -		ret = shmem_reserve_inode(inode->i_sb);
+> +		ret = shmem_reserve_inode(inode->i_sb, NULL);
+>  		if (ret)
+>  			goto out;
+>  	}
+> @@ -3584,6 +3634,7 @@ static void shmem_put_super(struct super_block *sb)
+>  {
+>  	struct shmem_sb_info *sbinfo = SHMEM_SB(sb);
+>  
+> +	free_percpu(sbinfo->ino_batch);
+>  	percpu_counter_destroy(&sbinfo->used_blocks);
+>  	mpol_put(sbinfo->mpol);
+>  	kfree(sbinfo);
+> @@ -3626,6 +3677,11 @@ static int shmem_fill_super(struct super_block *sb, struct fs_context *fc)
+>  #endif
+>  	sbinfo->max_blocks = ctx->blocks;
+>  	sbinfo->free_inodes = sbinfo->max_inodes = ctx->inodes;
+> +	if (sb->s_flags & SB_KERNMOUNT) {
+> +		sbinfo->ino_batch = alloc_percpu(ino_t);
+> +		if (!sbinfo->ino_batch)
+> +			goto failed;
+> +	}
+>  	sbinfo->uid = ctx->uid;
+>  	sbinfo->gid = ctx->gid;
+>  	sbinfo->mode = ctx->mode;
+> -- 
+> 2.27.0
