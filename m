@@ -2,82 +2,183 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDB2C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 02:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C300C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 02:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2255720838
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 02:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3913E20838
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 02:53:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="fvD9Vkcp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rmevkkZp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbgHACxI (ORCPT
+        id S1728441AbgHACxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 22:53:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51808 "EHLO
+        Fri, 31 Jul 2020 22:53:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbgHACxI (ORCPT
+        with ESMTP id S1727047AbgHACx3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 22:53:08 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1D47C061756
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 19:53:07 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id a5so19560789wrm.6
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 19:53:07 -0700 (PDT)
+        Fri, 31 Jul 2020 22:53:29 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D523C06174A;
+        Fri, 31 Jul 2020 19:53:29 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id b2so4489418qvp.9;
+        Fri, 31 Jul 2020 19:53:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xQw/GDvZAdqgK8PngDZUR70WBhENQwa4VO5dO5VMRYQ=;
-        b=fvD9VkcpIpmLGOc0RN16Q3g+MDuB1wAVsNPB1I3qdv6BXascnBQB4/jFZkdPGFNPlb
-         Ic2arZ3utbXNqLm5oNcWE388GCL0ou46KCU6Du0kkjr+1cndmEfqqXaeY24F59LG42u3
-         IgGAnx1zhThprobHe2gfEmlVlaxeA0GpoVsVI=
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qQWOKnsvuGAQthwsVhbKAAVxRkrCLknLmfWwO2EQo/0=;
+        b=rmevkkZp5ggJO7jft1muP1MvMxO25crEs8f10wHPc61/gQKrozxih1B/VYK6LG0xTd
+         FCN6o88kweQ+PcUrzYbBKnrPnqyBSX39y6i7VliZJx2/1q2HopeQ6LKwrzJEr5VRpv7j
+         daXppJVg0m8mj0/gP38wKrrNpLf4N8MJxun6npq2C3xxNDPOK1mxpe3q6pKzuKTSKJMq
+         WkI7NcEAKCPHBeqnhvsdUJkfZBGI+jOVhN5fR6j+HzXv6xluLLANoYNy0iszcvVXGe2t
+         NqJldwET6SEe09TvdDekJwbwsWGmKXiSdEMf0Dq6ShNroR0pNerL2UG3QotbZTTmnh9H
+         5Ihw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xQw/GDvZAdqgK8PngDZUR70WBhENQwa4VO5dO5VMRYQ=;
-        b=XK5Hg/50zYKWRA2Hx8Ru2RZ2Kfy1iPXZgu5Fi9PPGmdHv6TO2vhx6OZ47Bo/9FjeSi
-         Wexajq79QcV2hjLLkhYK4Jv4m9gu5++vtY6g8j9aXfiO3GdN3zltlg4Tg+rg6zuXyDWl
-         cJaNfuGbAyQ7iXsBiDD8gSt5Ta1SQkOeg1tAD1ULoCQC5qVxH75YZZYTfkzZYlKrQaIX
-         5hJ5iljK+wxTFkiRvsIARcrwzKGiL4e9IaS7qB02bR+Hf4aQSWE4s8oEppiTgmt1a0V9
-         JpmLZHjXvjh/tOFeyDjcfuwQyn+tQrdqD4NV7YyGnYWFPYCr+4llLJg4Z2RwYy+0pffy
-         6TYw==
-X-Gm-Message-State: AOAM5322BeEfmfRc9byxjhgjTztiV9uJxPx1dTnACRieVsUFd6OP2BV9
-        xgKVjkBz1VRbCOu7uyI5BmqgtA/itq112fs71h1kWA==
-X-Google-Smtp-Source: ABdhPJzYPKm/erB6sVI52cjRD9FHiQr2nWVZVyOZjhc+4s1LOvf5ZcI3PFb7AEEsBm6nMUykRgV5fktNAgsesrmbuZs=
-X-Received: by 2002:a5d:6641:: with SMTP id f1mr5731384wrw.307.1596250386460;
- Fri, 31 Jul 2020 19:53:06 -0700 (PDT)
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=qQWOKnsvuGAQthwsVhbKAAVxRkrCLknLmfWwO2EQo/0=;
+        b=k6li/Io2XU8a7aeRWwFWYPVonExPQ91PLqgEuKJhwEEbt1oEwcoKAdNJ0Y6xj5vyLb
+         oQyIV/5dk6nkxhJZHbGgMYQFn6kSUo5lCMDBmArN8n+ibSDqZqGlXVl8zvysXeguesnr
+         L1VXJ8cRtPXrW2r7scnk04X+xGCsea02r+qTYwxmilI8MZjI0HdMPqXwag8ZjNaHIbQM
+         JnB1t/8YPAEHlJfkyUGufaPJ4mDTmvvyHZs56+urSlqtajSv+x67W6jN2C9TVqFRiCke
+         Y0gnpmG5wKftD0J4czdnzBa/5I/VTOc5nrUFpmK3QfrjCyxJfmzNnjLE/Y+QSGlk2btl
+         UXGg==
+X-Gm-Message-State: AOAM532rTR/Np/onlPbcCsme+ob/fsUWCUPfpIkVAE3IcAobwe6s09AS
+        1qSnft1gcnuT4uDL5KxuTHE=
+X-Google-Smtp-Source: ABdhPJwqSOTDzt4tDALOq8VA8bpiDdKZyI7ovImSVRmx2aM/LDe+a/txpmB1g9N6DIJ1pubWV5fv/Q==
+X-Received: by 2002:a0c:b999:: with SMTP id v25mr6978810qvf.32.1596250408454;
+        Fri, 31 Jul 2020 19:53:28 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id p33sm9274408qtp.49.2020.07.31.19.53.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 19:53:27 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Fri, 31 Jul 2020 22:53:25 -0400
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 32/36] x86/boot/compressed: Reorganize zero-size
+ section asserts
+Message-ID: <20200801025325.GA2800311@rani.riverdale.lan>
+References: <20200731230820.1742553-1-keescook@chromium.org>
+ <20200731230820.1742553-33-keescook@chromium.org>
+ <20200801014755.GA2700342@rani.riverdale.lan>
 MIME-Version: 1.0
-References: <20200729150748.1945589-1-daniel@0x0f.com> <20200729150748.1945589-3-daniel@0x0f.com>
- <CAK8P3a2DY8kNMzZs6vpcsvpU1CaEQy6yCiHq40txEgUBn8d=wA@mail.gmail.com>
-In-Reply-To: <CAK8P3a2DY8kNMzZs6vpcsvpU1CaEQy6yCiHq40txEgUBn8d=wA@mail.gmail.com>
-From:   Daniel Palmer <daniel@0x0f.com>
-Date:   Sat, 1 Aug 2020 11:53:10 +0900
-Message-ID: <CAFr9PXmNLMXDXGOF+XDK1dPVY5OO6PfSvy54tLw-Wj-gdb8wBA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: arm: mstar: remove the binding
- description for mstar,pmsleep
-To:     Arnd Bergmann <arnd@arndb.de>
-List-Id: <soc.lore.kernel.org>
-Cc:     SoC Team <soc@kernel.org>, DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200801014755.GA2700342@rani.riverdale.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 1 Aug 2020 at 04:22, Arnd Bergmann <arnd@arndb.de> wrote:
+On Fri, Jul 31, 2020 at 09:47:55PM -0400, Arvind Sankar wrote:
+> On Fri, Jul 31, 2020 at 04:08:16PM -0700, Kees Cook wrote:
+> > For readability, move the zero-sized sections to the end after DISCARDS
+> > and mark them NOLOAD for good measure.
+> > 
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  arch/x86/boot/compressed/vmlinux.lds.S | 42 +++++++++++++++-----------
+> >  1 file changed, 25 insertions(+), 17 deletions(-)
+> > 
+> > diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+> > index 3c2ee9a5bf43..42dea70a5091 100644
+> > --- a/arch/x86/boot/compressed/vmlinux.lds.S
+> > +++ b/arch/x86/boot/compressed/vmlinux.lds.S
+> > @@ -42,18 +42,16 @@ SECTIONS
+> >  		*(.rodata.*)
+> >  		_erodata = . ;
+> >  	}
+> > -	.rel.dyn : {
+> > -		*(.rel.*)
+> > -	}
+> > -	.rela.dyn : {
+> > -		*(.rela.*)
+> > -	}
+> > -	.got : {
+> > -		*(.got)
+> > -	}
+> >  	.got.plt : {
+> >  		*(.got.plt)
+> >  	}
+> > +	ASSERT(SIZEOF(.got.plt) == 0 ||
+> > +#ifdef CONFIG_X86_64
+> > +	       SIZEOF(.got.plt) == 0x18,
+> > +#else
+> > +	       SIZEOF(.got.plt) == 0xc,
+> > +#endif
+> > +	       "Unexpected GOT/PLT entries detected!")
+> >  
+> >  	.data :	{
+> >  		_data = . ;
+> > @@ -85,13 +83,23 @@ SECTIONS
+> >  	ELF_DETAILS
+> >  
+> >  	DISCARDS
+> > -}
+> >  
+> > -ASSERT(SIZEOF(.got) == 0, "Unexpected GOT entries detected!")
+> > -#ifdef CONFIG_X86_64
+> > -ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT entries detected!")
+> > -#else
+> > -ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc, "Unexpected GOT/PLT entries detected!")
+> > -#endif
+> > +	/*
+> > +	 * Sections that should stay zero sized, which is safer to
+> > +	 * explicitly check instead of blindly discarding.
+> > +	 */
+> > +	.got (NOLOAD) : {
+> > +		*(.got)
+> > +	}
+> > +	ASSERT(SIZEOF(.got) == 0, "Unexpected GOT entries detected!")
+> >  
+> > -ASSERT(SIZEOF(.rel.dyn) == 0 && SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations detected!")
+> > +	/* ld.lld does not like .rel* sections being made "NOLOAD". */
+> > +	.rel.dyn : {
+> > +		*(.rel.*)
+> > +	}
+> > +	ASSERT(SIZEOF(.rel.dyn) == 0, "Unexpected run-time relocations (.rel) detected!")
+> > +	.rela.dyn : {
+> > +		*(.rela.*)
+> > +	}
+> > +	ASSERT(SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations (.rela) detected!")
+> > +}
+> > -- 
+> > 2.25.1
+> > 
+> 
+> There's no point in marking zero-size sections NOLOAD -- if the ASSERT's
+> passed, they won't be present in the file at all anyway.
+> 
+> The only section for which there might be a point is .got.plt, which is
+> non-empty on 32-bit, and only if it is first moved to the end. That
+> saves a few bytes.
 
-> This patch for some reason did not apply, so I ended up removing the
-> file manually and using your changelog.
->
->       Arnd
-
-Thanks Arnd.
+Btw, you should move .got.plt also to the end anyway for readability,
+it's unused even if non-empty. And with the ASSERT being placed
+immediately after it, it's even more distracting from the actual section
+layout.
