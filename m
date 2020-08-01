@@ -2,117 +2,104 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30EE1C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 01:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AA5C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 01:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD9120829
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 01:04:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MuKtyiNA"
+	by mail.kernel.org (Postfix) with ESMTP id 62C462087C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 01:14:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596244482;
+	bh=PQfX+PSdqHHbhMvoTezcj4xpwm42W5uOLu+fiU9vkck=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=cfEsARvS0W9drbAFSMjn+19iDWk+xwBMlFqtaWyQmiBdmkSwPk6ubVYZQigYhrbm3
+	 u9sCj/kYI0Trf6RPoaIBa3UJHa4VjvtVgaSJ6kmltWUUqoOMCcD1U3zDZbpV73qBGq
+	 YAvI5FD36GT43n1zYPsrE0Qx9wUh+sYSBdIAH/gU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgHABEn (ORCPT
+        id S1727846AbgHABOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 21:04:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgHABEm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 21:04:42 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F2A6C06174A;
-        Fri, 31 Jul 2020 18:04:42 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id h19so34171579ljg.13;
-        Fri, 31 Jul 2020 18:04:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BTY9ORqa/NmqSxiM+l8GOdfpcDj/aETw/P73xCc8UJI=;
-        b=MuKtyiNAOzSSMiYf9c9kVOiNl848JLDig08Iaen4r1+vLninQtqjaCZEu82SqvOcL9
-         Z/b+3CyiSzRswyAeID/F4sft6xeFHQqbv0sUpbgpktxdXffJfmJM0W9tiIpJPqN6yB5G
-         pRW+C5GXQbNmOWU5tVEb9i7qIXCoJVXMIFUSoE65uePDNFtkiZTNmRHaNtf6HFtPa5Sa
-         AyVix/fqnD39fNomNFwZ/5wSzD2pnLzL68aslTuArnHnvNhGvheXTc31bpF27aX3gfxW
-         jYdEc4+Tsi1wlLH42qaKDMF0Qz/gd2je7cyxRX3aaKvrTb1k6UCr/7L+KylakmEOJoJi
-         eIyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BTY9ORqa/NmqSxiM+l8GOdfpcDj/aETw/P73xCc8UJI=;
-        b=B0Jvbki/7uaxpgeoyWwLmDZPyky1gYRs7pB2PGIuzQtHtCUIKJskDTSiP2YRVXqGLp
-         BteaKoDAlYEwEX28dFOMI/W3gDEFmlE3kG95ZjQ/lKQ1ftbGOzz4bxB2hyfVE2vxuOD2
-         nIziJ6hlc6Cab3dpxhdavIRyfbNZM7Zyij45mPAmQjcEZQCLLIDqf6V6eQ9fN1GziL3e
-         zGq9e+pSr4wa95O1EIOFOVugwvJqrGcfbwYzHszfvTUbYX/yQv9107xFErxbxMEHQ0vq
-         y+ixsM/QoU1AjmYoxxY+5Chacin2IuGIlpRGXpIyUmLgW+UheJzXRUd/PHuxzPC6/hrM
-         IkrQ==
-X-Gm-Message-State: AOAM532oPE3RCWoF3vGOmsVwaOoa4sj07Pf8/ZUUgFtiwrkyd+ww4AyB
-        4LuKadwoZlAilhVUdhIotSHAcu2W
-X-Google-Smtp-Source: ABdhPJwMMHcg26eE0myeFk9RESHLJob8e/K4WadrXIFVgqT8N73wBX3U3uT2G54QvHRdFiwKWEUS0g==
-X-Received: by 2002:a2e:2f16:: with SMTP id v22mr2843603ljv.39.1596243880459;
-        Fri, 31 Jul 2020 18:04:40 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
-        by smtp.googlemail.com with ESMTPSA id s4sm526850lja.124.2020.07.31.18.04.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jul 2020 18:04:39 -0700 (PDT)
-Subject: Re: [PATCH v7 09/10] media: tegra-video: Add CSI MIPI pads
- calibration
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1596231144-12554-1-git-send-email-skomatineni@nvidia.com>
- <1596231144-12554-10-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <af5506d4-52a4-8693-b95b-d1e0a9a53e79@gmail.com>
-Date:   Sat, 1 Aug 2020 04:04:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <1596231144-12554-10-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Fri, 31 Jul 2020 21:14:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43538 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726794AbgHABOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 21:14:38 -0400
+Received: from localhost.localdomain (unknown [89.208.247.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEF9D20836;
+        Sat,  1 Aug 2020 01:14:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596244478;
+        bh=PQfX+PSdqHHbhMvoTezcj4xpwm42W5uOLu+fiU9vkck=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bxoyrA87nZwr5WszCQhmAoQ57bW3yZyO70WbXtLvBxmXdw9EMirCoZTWcmXNSuWUb
+         IvFB+Covy7o9WsI7juAFvwy0CBw90IxpMeAF2QCeEomAqtl9y44XxHsd40rUX/p64g
+         lC7cTbJxltr5tdMuU1g/8/uCRKCsI4qDpS+qBS/g=
+From:   guoren@kernel.org
+To:     guoren@kernel.org, arnd@arndb.de
+Cc:     linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
+        linux-arch@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>
+Subject: [PATCH 00/13] Update csky subsystem for linux-5.9-rc1
+Date:   Sat,  1 Aug 2020 01:14:00 +0000
+Message-Id: <1596244453-98575-1-git-send-email-guoren@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-01.08.2020 00:32, Sowjanya Komatineni пишет:
-> CSI MIPI pads need to be enabled and calibrated for capturing from
-> the external sensor or transmitter.
-> 
-> MIPI CAL unit calibrates MIPI pads pull-up, pull-down and termination
-> impedances. Calibration is done by co-work of MIPI BIAS pad and MIPI
-> CAL control unit.
-> 
-> Triggering calibration start can happen any time after MIPI pads are
-> enabled but calibration results will be latched and applied to MIPI
-> pads by MIPI CAL unit only when the link is in LP11 state and then
-> calibration status register gets updated.
-> 
-> This patch enables CSI MIPI pads and calibrates them during streaming.
-> 
-> Tegra CSI receiver is able to catch the very first clock transition.
-> So, CSI receiver is always enabled prior to sensor streaming and
-> trigger of calibration start is done during CSI subdev streaming and
-> status of calibration is verified after sensor stream on.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/staging/media/tegra-video/TODO  |  1 -
->  drivers/staging/media/tegra-video/csi.c | 61 +++++++++++++++++++++++++++++++--
->  drivers/staging/media/tegra-video/csi.h |  2 ++
->  drivers/staging/media/tegra-video/vi.c  | 28 ++++++++++++---
->  4 files changed, 84 insertions(+), 8 deletions(-)
+From: Guo Ren <guoren@linux.alibaba.com>
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Here are the patchess for the next linux version. Add features
+(seccomp-filter, err-injection, top-down&random mmap-layout, irq_work,
+show_ipi, context-tracking), and fixup (kprobe_on_ftrace, ...),
+Optimize (fault print, ...).
+
+I think we'll finish most of features for arch/csky this year :) 
+
+Guo Ren (12):
+  csky: Add SECCOMP_FILTER supported
+  csky: Add cpu feature register hint for smp
+  csky: Fixup duplicated restore sp in RESTORE_REGS_FTRACE
+  csky: Fixup kprobes handler couldn't change pc
+  csky: Add support for function error injection
+  csky: Optimize the trap processing flow
+  csky: Use top-down mmap layout
+  csky: Set CONFIG_NR_CPU 4 as default
+  csky: Fixup warning by EXPORT_SYMBOL(kmap)
+  csky: Add irq_work support
+  csky: Add arch_show_interrupts for IPI interrupts
+  csky: Add context tracking support
+
+Tobias Klauser (1):
+  csky: remove unusued thread_saved_pc and *_segments functions/macros
+
+ arch/csky/Kconfig                             |  29 +++-
+ arch/csky/abiv2/inc/abi/entry.h               |   3 -
+ arch/csky/abiv2/mcount.S                      |   4 +-
+ arch/csky/include/asm/Kbuild                  |   1 +
+ arch/csky/include/asm/bug.h                   |   3 +-
+ arch/csky/include/asm/irq_work.h              |  11 ++
+ arch/csky/include/asm/processor.h             |   6 -
+ arch/csky/include/asm/ptrace.h                |   7 +
+ arch/csky/include/asm/thread_info.h           |   2 +-
+ arch/csky/kernel/entry.S                      |  26 +++
+ arch/csky/kernel/process.c                    |  10 --
+ arch/csky/kernel/ptrace.c                     |  37 +----
+ arch/csky/kernel/smp.c                        |  62 ++++++-
+ arch/csky/kernel/traps.c                      | 223 +++++++++++++++++---------
+ arch/csky/lib/Makefile                        |   1 +
+ arch/csky/lib/error-inject.c                  |  10 ++
+ arch/csky/mm/fault.c                          |  10 +-
+ arch/csky/mm/highmem.c                        |   2 -
+ tools/testing/selftests/seccomp/seccomp_bpf.c |  13 +-
+ 19 files changed, 317 insertions(+), 143 deletions(-)
+ create mode 100644 arch/csky/include/asm/irq_work.h
+ create mode 100644 arch/csky/lib/error-inject.c
+
+-- 
+2.7.4
+
