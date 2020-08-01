@@ -2,76 +2,136 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D171FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 03:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A1CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 03:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B043B20836
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 03:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0BF42076A
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 03:32:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jh0Waq5Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgHADZM (ORCPT
+        id S1728462AbgHADc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 23:25:12 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59296 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727824AbgHADZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 23:25:12 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D03D634FCD7D356B5745;
-        Sat,  1 Aug 2020 11:24:59 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Sat, 1 Aug 2020
- 11:24:52 +0800
-From:   Zhihao Cheng <chengzhihao1@huawei.com>
-To:     <jaegeuk@kernel.org>, <chao@kernel.org>, <yi.zhang@huawei.com>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
-Subject: [f2fs-dev][PATCH] f2fs: update_sit_entry: Make the judgment condition of f2fs_bug_on more intuitive
-Date:   Sat, 1 Aug 2020 11:24:50 +0800
-Message-ID: <20200801032450.3028986-1-chengzhihao1@huawei.com>
-X-Mailer: git-send-email 2.25.4
+        Fri, 31 Jul 2020 23:32:29 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:25011 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727824AbgHADc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 23:32:29 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596252748; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=4F33MECp3PLMA5dVQe508bFwLJi13Gd+zPp0VmPVuUU=; b=jh0Waq5Qok2ckWrPDPmfaFomad5prMTft0qODwEEqbifq+f8q7WfBT+EAxGYHBJ3XuX5Cbsi
+ VWv2TzA2xuFPZUkqw3PuJG39L4bRMWO7QyhJRnEcskA5HMvGoL3OFBtlvaT+ohvsObL+csIx
+ PMNQu6EIGAi+NZxsWg4Wctx6fAw=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
+ 5f24e24cba6d142d1cdfc71d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 01 Aug 2020 03:32:28
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0F653C43391; Sat,  1 Aug 2020 03:32:28 +0000 (UTC)
+Received: from mdtipton-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mdtipton)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4BAF0C433CB;
+        Sat,  1 Aug 2020 03:32:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4BAF0C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mdtipton@codeaurora.org
+From:   Mike Tipton <mdtipton@codeaurora.org>
+To:     georgi.djakov@linaro.org
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Tipton <mdtipton@codeaurora.org>
+Subject: [PATCH v3 6/6] interconnect: qcom: Fix small BW votes being truncated to zero
+Date:   Fri, 31 Jul 2020 20:32:15 -0700
+Message-Id: <20200801033215.1440-7-mdtipton@codeaurora.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200801033215.1440-1-mdtipton@codeaurora.org>
+References: <20200801033215.1440-1-mdtipton@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current judgment condition of f2fs_bug_on in function update_sit_entry():
-  new_vblocks >> (sizeof(unsigned short) << 3) ||
-	new_vblocks > sbi->blocks_per_seg
+Small BW votes that translate to less than a single BCM unit are
+currently truncated to zero. Ensure that non-zero BW requests always
+result in at least a vote of 1 to BCM.
 
-which equivalents to:
-  new_vblocks < 0 || new_vblocks > sbi->blocks_per_seg
-
-The latter is more intuitive.
-
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
-Reported-by: Jack Qiu <jack.qiu@huawei.com>
+Fixes: 976daac4a1c5 ("interconnect: qcom: Consolidate interconnect RPMh support")
+Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
 ---
- fs/f2fs/segment.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/interconnect/qcom/bcm-voter.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 196f31503511..41836447418d 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -2140,7 +2140,7 @@ static void update_sit_entry(struct f2fs_sb_info *sbi, block_t blkaddr, int del)
- 	new_vblocks = se->valid_blocks + del;
- 	offset = GET_BLKOFF_FROM_SEG0(sbi, blkaddr);
+diff --git a/drivers/interconnect/qcom/bcm-voter.c b/drivers/interconnect/qcom/bcm-voter.c
+index be7660b95ccc..887d13721e52 100644
+--- a/drivers/interconnect/qcom/bcm-voter.c
++++ b/drivers/interconnect/qcom/bcm-voter.c
+@@ -54,8 +54,20 @@ static int cmp_vcd(void *priv, struct list_head *a, struct list_head *b)
+ 		return 1;
+ }
  
--	f2fs_bug_on(sbi, (new_vblocks >> (sizeof(unsigned short) << 3) ||
-+	f2fs_bug_on(sbi, (new_vblocks < 0 ||
- 				(new_vblocks > sbi->blocks_per_seg)));
++static u64 bcm_div(u64 num, u32 base)
++{
++	/* Ensure that small votes aren't lost. */
++	if (num && num < base)
++		return 1;
++
++	do_div(num, base);
++
++	return num;
++}
++
+ static void bcm_aggregate(struct qcom_icc_bcm *bcm)
+ {
++	struct qcom_icc_node *node;
+ 	size_t i, bucket;
+ 	u64 agg_avg[QCOM_ICC_NUM_BUCKETS] = {0};
+ 	u64 agg_peak[QCOM_ICC_NUM_BUCKETS] = {0};
+@@ -63,22 +75,21 @@ static void bcm_aggregate(struct qcom_icc_bcm *bcm)
  
- 	se->valid_blocks = new_vblocks;
+ 	for (bucket = 0; bucket < QCOM_ICC_NUM_BUCKETS; bucket++) {
+ 		for (i = 0; i < bcm->num_nodes; i++) {
+-			temp = bcm->nodes[i]->sum_avg[bucket] * bcm->aux_data.width;
+-			do_div(temp, bcm->nodes[i]->buswidth * bcm->nodes[i]->channels);
++			node = bcm->nodes[i];
++			temp = bcm_div(node->sum_avg[bucket] * bcm->aux_data.width,
++				       node->buswidth * node->channels);
+ 			agg_avg[bucket] = max(agg_avg[bucket], temp);
+ 
+-			temp = bcm->nodes[i]->max_peak[bucket] * bcm->aux_data.width;
+-			do_div(temp, bcm->nodes[i]->buswidth);
++			temp = bcm_div(node->max_peak[bucket] * bcm->aux_data.width,
++				       node->buswidth);
+ 			agg_peak[bucket] = max(agg_peak[bucket], temp);
+ 		}
+ 
+ 		temp = agg_avg[bucket] * bcm->vote_scale;
+-		do_div(temp, bcm->aux_data.unit);
+-		bcm->vote_x[bucket] = temp;
++		bcm->vote_x[bucket] = bcm_div(temp, bcm->aux_data.unit);
+ 
+ 		temp = agg_peak[bucket] * bcm->vote_scale;
+-		do_div(temp, bcm->aux_data.unit);
+-		bcm->vote_y[bucket] = temp;
++		bcm->vote_y[bucket] = bcm_div(temp, bcm->aux_data.unit);
+ 	}
+ 
+ 	if (bcm->keepalive && bcm->vote_x[QCOM_ICC_BUCKET_AMC] == 0 &&
 -- 
-2.25.4
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
