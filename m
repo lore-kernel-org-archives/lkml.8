@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD108C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 21:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E911C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 21:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96545206E9
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 21:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09C9C206E9
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 21:57:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgHAVws (ORCPT
+        id S1727794AbgHAV5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 17:52:48 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:53305 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgHAVwr (ORCPT
+        Sat, 1 Aug 2020 17:57:06 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:58387 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726978AbgHAV5G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 17:52:47 -0400
+        Sat, 1 Aug 2020 17:57:06 -0400
 X-Originating-IP: 178.240.22.159
 Received: from localhost.localdomain (unknown [178.240.22.159])
         (Authenticated sender: cengiz@kernel.wtf)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 56FB3E0002;
-        Sat,  1 Aug 2020 21:52:42 +0000 (UTC)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id E15A71C0003;
+        Sat,  1 Aug 2020 21:56:59 +0000 (UTC)
 From:   Cengiz Can <cengiz@kernel.wtf>
 To:     andy.shevchenko@gmail.com
 Cc:     cengiz@kernel.wtf, dan.carpenter@oracle.com,
         devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
         linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
         mchehab@kernel.org, sakari.ailus@linux.intel.com
-Subject: [PATCH v3] staging: atomisp: move null check to earlier point
-Date:   Sun,  2 Aug 2020 00:51:25 +0300
-Message-Id: <20200801215124.2350-1-cengiz@kernel.wtf>
+Subject: [PATCHi v4] staging: atomisp: move null check to earlier point
+Date:   Sun,  2 Aug 2020 00:55:42 +0300
+Message-Id: <20200801215541.2554-1-cengiz@kernel.wtf>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200731083856.GF3703480@smile.fi.intel.com>
 References: <20200731083856.GF3703480@smile.fi.intel.com>
@@ -61,17 +61,18 @@ i.e.:
   }
 
 With this change we're null checking `find_gmin_subdev()` result
-and return we return an error if that's the case. We also WARN()
+and we return an error if that's the case. We also WARN()
 for the sake of debugging.
 
 Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
 Reported-by: Coverity Static Analyzer CID 1465536
 Suggested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
 ---
 
-Please do note that this change introduces a new return value to
+ Please do note that this change introduces a new return value to
  `gmin_v2p8_ctrl`.
- 
+
  [NEW] - raise a WARN and return -ENODEV if there are no subdevices.
        - return result of `gpio_request` or `gpio_direction_output`.
        - return 0 if GPIO is ON.
@@ -79,6 +80,9 @@ Please do note that this change introduces a new return value to
        - according to PMIC type, return result of `axp_regulator_set`
          or `gmin_i2c_write`.
        - return -EINVAL if unknown PMIC type.
+ 
+ Patch Changelog:
+   v4: Fix minor typo in commit message
 
  drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c | 5 ++++-
  1 file changed, 4 insertions(+), 1 deletion(-)
