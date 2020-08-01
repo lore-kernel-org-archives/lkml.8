@@ -8,67 +8,69 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E715C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 18:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A03E5C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 18:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CDC92072A
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 18:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E84D2072A
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 18:46:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TiffGE6F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jchYExzC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgHASql (ORCPT
+        id S1727829AbgHASqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 14:46:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55954 "EHLO
+        Sat, 1 Aug 2020 14:46:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727063AbgHASqj (ORCPT
+        with ESMTP id S1727063AbgHASqm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 14:46:39 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5887CC06174A
-        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 11:46:39 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id r4so27736034wrx.9
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 11:46:39 -0700 (PDT)
+        Sat, 1 Aug 2020 14:46:42 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5431C06174A
+        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 11:46:41 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id 184so12018574wmb.0
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 11:46:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DoAzX0mPxKwifGhIAYoV8gWIU4fgddXvYUu1szasbME=;
-        b=TiffGE6FOY11z2ZpFyKJWmRbhR+8VYGGHcuUJ2pDvXdKyRco3smaDAN7F/caupCQkc
-         k0m9zesmoKK6rIZxl3Wb0XqfTX+PQsj659jowXgbnzebu+f8IsBf9k5L1UdJwQPeZxGu
-         +ZCS42FWf+6muHgIkq6eqFNCs9DCLOPYyqeHoNk6eFXcu/qaWEGLPKZz6h/Gve16PF54
-         n+g9l3zUSyLvOKoD6rDdpvCWylCe4ECJBVqIHOqM+u1I4/ik/JriIKDPI8yOh8ByrQeh
-         8pgk6GZMuVYk0hh7I3y8XmcixdNLD9H0pmvdJcQ2TFip4b1QW5NJLipU9MN+gABvrTTn
-         GaGg==
+        bh=i6ic/oET+3gSWAf5LX0GShGl++u6aR0SY5x3/TYTLcg=;
+        b=jchYExzC5VePtGHjihJDBDhju1KCuN5Fp3UCitHba3iW5NzRK8nXnM9TNY7pODxK/a
+         xZZ+pYpFMFS/nwePYZJwgo1m8PHcoS8AJvG3AgljXbBOQUYTIYdUJ7zDrPtjigaOnOR6
+         ojZyh345gq+prLeYnYOTmMMc77WvYcGHCWjbjs7lWPtcISJqA7dqbT+2XToc2Kich9Cz
+         JweYtQ634aB5tcEQLmPA3gfD4mOupq3QZjibV4HgA87gAl+Gy+BT9vJNJbiJm9+/RW93
+         18jVaNRNLmCDgpZVcfmIqVIteWUkHQZdqOfYbDvSHQ21Xwn4vhjZ/mfs+zeKTICty/Sx
+         sizQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DoAzX0mPxKwifGhIAYoV8gWIU4fgddXvYUu1szasbME=;
-        b=RRX+/DStpc4M/74hp4sZP6OyQYjsGbWMddLz5orfEcxrV8DsLaEnW+D93MKrdW9oZH
-         Mtvvs2+Nvhrs9nXbO2fS4btTI3OXo1tN4p+6W+t6T81TDXVNOxt0IA/VfAI4F6YGOzln
-         bz8RbBwnTH9TV+oWzxONEvCFjemFv2ovst+2U+E+6WhulD+ADrnAmxSz+VkyqDVssWP9
-         4RInPlYZ0Lqd34vwoP/yTFt16FJDkB+wZahtBwCq+v0xIAB0poeyXkttU7EQ8oi0e/tv
-         1IGIkfE7KX8aIpbZvmg6Q6DZkjPgpKUZV00UGF3Bs9rBgIDGlGV9tuQ6vO7jSQdOoSDd
-         QERQ==
-X-Gm-Message-State: AOAM53219I+x8DqSFFomVyM3demxr1KmcjhZoZ8TZLZlMq5jxQu8yviB
-        X4ejak4rliFJOm2C5D0lp8kmPlSUd5De
-X-Google-Smtp-Source: ABdhPJyftIU1s71JqoytPv8/QTAqp8h9/0euUzcWCNTNP34ycJ0FWWaTZ4liZzlyVwNckRuyLLlHrQ==
-X-Received: by 2002:a5d:438c:: with SMTP id i12mr8998288wrq.210.1596307597696;
-        Sat, 01 Aug 2020 11:46:37 -0700 (PDT)
+        bh=i6ic/oET+3gSWAf5LX0GShGl++u6aR0SY5x3/TYTLcg=;
+        b=QbhlwRl8ZUWQ9Q1CfX1ft6ORqCSJ/5qRPyJclHXcpL5jSuwqB429N9RRqG9k5G/aeH
+         /08Nr8BS/9jIqzgJQJddPlQhCYSgR9TPtu6feIzeJazX43pzfmY1Wwik+yJK8bzVbhy1
+         hgNf00eQS3ioAN2HuTp/CFPxRmJaf3PJCmOhBvpmtfn0Yb0U80HJMi6n6kChHFkvZquu
+         RRob39jl9e3cAGQJtIcSF4y1U5OFO/dpIZOz8SlYlMwP9Y3cauQBsHtFR54Y6vDM9uX8
+         Y/YUccWQ9I7GRbXbL1SiyoElxjOsF+vEtxQbQeZaO3K+nPfdqhWQV8CeUnrnVlzNVcms
+         mxow==
+X-Gm-Message-State: AOAM530MUCCRrf6vY7vpG74R8V4bUiA6XjBBG9ujCbB5VNQkKdDQyt+Q
+        BrjSbY4gPsXEhdYWA/XNXqO/FlLUUnqs1uA=
+X-Google-Smtp-Source: ABdhPJz4/wYiSEOjIwyNO4xLdm7s7XClnCHgwPaPx25MJpXvu4L1uXfaxmqSAlrZHUmJue4rOzL9cA==
+X-Received: by 2002:a1c:2ec4:: with SMTP id u187mr8778854wmu.188.1596307600282;
+        Sat, 01 Aug 2020 11:46:40 -0700 (PDT)
 Received: from localhost.lan (host-92-25-238-49.as13285.net. [92.25.238.49])
-        by smtp.gmail.com with ESMTPSA id g7sm17468447wrv.82.2020.08.01.11.46.36
+        by smtp.gmail.com with ESMTPSA id g7sm17468447wrv.82.2020.08.01.11.46.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Aug 2020 11:46:37 -0700 (PDT)
+        Sat, 01 Aug 2020 11:46:39 -0700 (PDT)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Jules Irenge <jbi.octave@gmail.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@redhat.com>,
-        linux-audit@redhat.com (moderated list:AUDIT SUBSYSTEM)
-Subject: [PATCH 3/4] audit: uninitialize static variables
-Date:   Sat,  1 Aug 2020 19:46:02 +0100
-Message-Id: <20200801184603.310769-4-jbi.octave@gmail.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH 4/4] context_tracking: uninitialize static variables
+Date:   Sat,  1 Aug 2020 19:46:03 +0100
+Message-Id: <20200801184603.310769-5-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200801184603.310769-1-jbi.octave@gmail.com>
 References: <0/4>
@@ -80,53 +82,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Checkpatch tool reports an error at variable declaration
+Checkpatch tool reports an error at a staic variable declaration
 
-"ERROR: do not initialise statics to 0"
+"ERROR: do not initialise statics to false"
 
-This is due to the fact that these variables are stored in the buffer
+This is due to the fact that this variable is stored in the buffer
 In the .bss section, one can not set an initial value
-Here we can trust the compiler to automatically set them to zero.
+Here we can trust the compiler to automatically set them to false.
 The variable has since been uninitialized.
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- kernel/audit.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ kernel/context_tracking.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/audit.c b/kernel/audit.c
-index 7b1a38a211a9..7d79ecb58b01 100644
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -311,8 +311,8 @@ void audit_panic(const char *message)
+diff --git a/kernel/context_tracking.c b/kernel/context_tracking.c
+index 36a98c48aedc..21881c534152 100644
+--- a/kernel/context_tracking.c
++++ b/kernel/context_tracking.c
+@@ -190,7 +190,7 @@ NOKPROBE_SYMBOL(context_tracking_user_exit);
  
- static inline int audit_rate_check(void)
+ void __init context_tracking_cpu_set(int cpu)
  {
--	static unsigned long	last_check = 0;
--	static int		messages   = 0;
-+	static unsigned long	last_check;
-+	static int		messages;
- 	static DEFINE_SPINLOCK(lock);
- 	unsigned long		flags;
- 	unsigned long		now;
-@@ -348,7 +348,7 @@ static inline int audit_rate_check(void)
- */
- void audit_log_lost(const char *message)
- {
--	static unsigned long	last_msg = 0;
-+	static unsigned long	last_msg;
- 	static DEFINE_SPINLOCK(lock);
- 	unsigned long		flags;
- 	unsigned long		now;
-@@ -713,7 +713,7 @@ static int kauditd_send_queue(struct sock *sk, u32 portid,
- {
- 	int rc = 0;
- 	struct sk_buff *skb;
--	static unsigned int failed = 0;
-+	static unsigned int failed;
+-	static __initdata bool initialized = false;
++	static __initdata bool initialized;
  
- 	/* NOTE: kauditd_thread takes care of all our locking, we just use
- 	 *       the netlink info passed to us (e.g. sk and portid) */
+ 	if (!per_cpu(context_tracking.active, cpu)) {
+ 		per_cpu(context_tracking.active, cpu) = true;
 -- 
 2.26.2
 
