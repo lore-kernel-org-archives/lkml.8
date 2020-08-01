@@ -2,136 +2,136 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE211C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 01:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E6CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 01:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEF8320838
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 01:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 018BA20838
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 01:28:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MGWdNGvG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbgHABZ4 (ORCPT
+        id S1728047AbgHAB2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 21:25:56 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:48054 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726535AbgHABZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 21:25:55 -0400
-Received: from bogon.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxb96dxCRfxTEDAA--.2948S2;
-        Sat, 01 Aug 2020 09:25:50 +0800 (CST)
-From:   Xingxing Su <suxingxing@loongson.cn>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: Don't use Printk in raw_spinlocks
-Date:   Sat,  1 Aug 2020 09:25:49 +0800
-Message-Id: <1596245149-28628-1-git-send-email-suxingxing@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dxb96dxCRfxTEDAA--.2948S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxGryDJF48Jw15tr4rXF4xZwb_yoWrKryxpr
-        yYqryxGr40yry8JF4Utay5tFy0kr4qyay7Jr18Xw15ZFsrur1UJr17tF4Skw1DJr45JF9r
-        Jr4qyr4jgrWUGw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUyab7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4
-        A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I
-        3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
-        WUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
-        wI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcI
-        k0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
-        Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU5PpnJUUUUU==
-X-CM-SenderInfo: pvx0x0xj0l0wo6or00hjvr0hdfq/1tbiAQAPC13QvMJ82QAAsT
+        Fri, 31 Jul 2020 21:28:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727095AbgHAB2J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 21:28:09 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C20A8C06174A
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 18:28:09 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id s23so24429671qtq.12
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 18:28:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=R7S9crGkSS+zqKV+6akgjVw/AncewqiAu9qufG43ZRg=;
+        b=MGWdNGvG/aOp4sfcJNv9ej1bqPcyavBaerB+JRyI7t8uLrCovVqmRKcPD1uuesEusk
+         0j9Wt+msOoIvdm+dldTktOMUtsoXcShCNG5wp+MuOynQPyVqRxWu1ylr0X65BnRUQxDZ
+         TDvNAjWeAuF2K3ewYReTC1YgwUXRqZXuMKotqLSja/lQePnureOJtpItKp4KOF52f2R+
+         46EU23VbTQWiRZL+CBCOA89oZRlwoPWkIBjs22I9NzI/6dRX+ugZBjscqdF29ftmz1rF
+         td4N2M2Vn+bNwNwzCHEjGkmu1RaPZtTUjwUUU7HxZ7qeOvdM1zVg1nCejSXouGJAWQo8
+         7DBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=R7S9crGkSS+zqKV+6akgjVw/AncewqiAu9qufG43ZRg=;
+        b=TP76Kc8LLs9E+rPGPZDypBlqggkD2FVtV9A5AIULj7vfm3TeRsxkuEiy/x40QLvh1i
+         5i14+QdSa1GtauOpjKGW42vJ6KojdgAb21KVwRUnU1V1XyiNHzyxhkDcXwpkvBG+a4U2
+         +HD+TIVDEf0Qr87vMYuM7feyYn5b3Lef4g6Ingb9xy9/deYcTJ0iiuyGHnPgX/ehwDV8
+         xtj6oJsTysdKNNh2dmWMN50ZoQNE3tdNC6Gc7c1cZy3T9TYQj+cFR9rDNHxVe2q2rkp+
+         eGdurhAAiAhvR2dmhyec5lZeE1AVnTC5EPLxl5bvq3dOErEjZMuwpgifU4ZH/Bu8bUfi
+         G4SQ==
+X-Gm-Message-State: AOAM5339HbkpRukgTQAW29L/v3ZVZLRCSQhcloQkcft7gpkPl4FvOP6q
+        uTO1ZeQzlAihldj7RGHDV6oZSd0=
+X-Google-Smtp-Source: ABdhPJzHkgeXS0w0cpyOPKzY+6am7auQymCChpQrw8/7uitwJAiROxAIfoTnmyhkUUcR2IRCfBQDxA==
+X-Received: by 2002:ac8:65cd:: with SMTP id t13mr6681148qto.368.1596245288751;
+        Fri, 31 Jul 2020 18:28:08 -0700 (PDT)
+Received: from PWN (146-115-88-66.s3894.c3-0.sbo-ubr1.sbo.ma.cable.rcncustomer.com. [146.115.88.66])
+        by smtp.gmail.com with ESMTPSA id r6sm8484023qkc.43.2020.07.31.18.28.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 18:28:08 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 21:28:04 -0400
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     "Dmitry V. Levin" <ldv@altlinux.org>
+Cc:     Elvira Khabirova <lineprinter@altlinux.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH] ptrace: Prevent kernel-infoleak
+ in ptrace_get_syscall_info()
+Message-ID: <20200801012804.GA220239@PWN>
+References: <20200727213644.328662-1-yepeilin.cs@gmail.com>
+ <20200801002142.GA27762@altlinux.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200801002142.GA27762@altlinux.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not use printk in raw_spinlocks, 
-it will cause BUG: Invalid wait context.
+On Sat, Aug 01, 2020 at 03:21:42AM +0300, Dmitry V. Levin wrote:
+> On Mon, Jul 27, 2020 at 05:36:44PM -0400, Peilin Ye wrote:
+> > ptrace_get_syscall_info() is copying uninitialized stack memory to
+> > userspace due to the compiler not initializing holes in statically
+> > allocated structures. Fix it by initializing `info` with memset().
+> > 
+> > Cc: stable@vger.kernel.org
+> > Fixes: 201766a20e30 ("ptrace: add PTRACE_GET_SYSCALL_INFO request")
+> > Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+> > ---
+> >  kernel/ptrace.c | 14 ++++++++------
+> >  1 file changed, 8 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+> > index 43d6179508d6..e48d05b765b5 100644
+> > --- a/kernel/ptrace.c
+> > +++ b/kernel/ptrace.c
+> > @@ -960,15 +960,17 @@ ptrace_get_syscall_info(struct task_struct *child, unsigned long user_size,
+> >  			void __user *datavp)
+> >  {
+> >  	struct pt_regs *regs = task_pt_regs(child);
+> > -	struct ptrace_syscall_info info = {
+> > -		.op = PTRACE_SYSCALL_INFO_NONE,
+> > -		.arch = syscall_get_arch(child),
+> > -		.instruction_pointer = instruction_pointer(regs),
+> > -		.stack_pointer = user_stack_pointer(regs),
+> > -	};
+> > +	struct ptrace_syscall_info info;
+> >  	unsigned long actual_size = offsetof(struct ptrace_syscall_info, entry);
+> >  	unsigned long write_size;
+> >  
+> > +	memset(&info, 0, sizeof(info));
+> > +
+> > +	info.op	= PTRACE_SYSCALL_INFO_NONE;
+> > +	info.arch = syscall_get_arch(child);
+> > +	info.instruction_pointer = instruction_pointer(regs);
+> > +	info.stack_pointer = user_stack_pointer(regs);
+> > +
+> 
+> No, please don't do it this way.  If there is a hole in the structure that
+> the compiler is unable to initialize properly (and there is a 3-byte hole
+> in the beginning indeed), please plug the hole by turning it into
+> something that the compiler is capable of initializing.
 
-The trace reported by lockdep follows.
+I see. I will do that and send a v2.
 
-[    2.986113] =============================
-[    2.986115] [ BUG: Invalid wait context ]
-[    2.986116] 5.8.0-rc1+ #11 Not tainted
-[    2.986118] -----------------------------
-[    2.986120] swapper/0/1 is trying to lock:
-[    2.986122] ffffffff80f5ddd8 (console_owner){....}-{3:3}, at: console_unlock+0x284/0x820
-[    2.986130] other info that might help us debug this:
-[    2.986132] context-{5:5}
-[    2.986134] 3 locks held by swapper/0/1:
-[    2.986135]  #0: 98000007fa03c990 (&dev->mutex){....}-{0:0}, at: device_driver_attach+0x28/0x90
-[    2.986144]  #1: ffffffff80fb83a8 (pci_lock){....}-{2:2}, at: pci_bus_write_config_word+0x60/0xb8
-[    2.986152]  #2: ffffffff80f5ded0 (console_lock){+.+.}-{0:0}, at: vprintk_emit+0x1b0/0x3b8
-[    2.986161] stack backtrace:
-[    2.986163] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc1+ #11
-[    2.986164] Stack : 0000000000001d67 98000000030be9b0 0000000000000001 7b2aba74f6c4785b
-[    2.986172]         7b2aba74f6c4785b 0000000000000000 98000007f89cb438 ffffffff80e7dc80
-[    2.986181]         0000000000000001 000000000000000a 0000000000000001 0000000000000001
-[    2.986189]         ffffffff80f4e156 fffffffffffffffd ffffffff80cc2d98 fffffffff8000000
-[    2.986197]         0000000024000000 ffffffff80f40000 0000000000000000 0000000000000000
-[    2.986205]         ffffffff9500cce0 0000000000000000 ffffffff80f50000 ffffffff81546318
-[    2.986213]         ffffffff81c4c3c0 0000000000000018 ffffffffbc000000 0000000000000000
-[    2.986221]         ffffffff81340000 98000007f89c8000 98000007f89cb430 98000007f8a00000
-[    2.986229]         ffffffff806be568 0000000000000000 0000000000000000 0000000000000000
-[    2.986237]         0000000000000000 0000000000000000 ffffffff80211c1c 7b2aba74f6c4785b
-[    2.986245]         ...
-[    2.986250] Call Trace:
-[    2.986251] [<ffffffff80211c1c>] show_stack+0x9c/0x130
-[    2.986253] [<ffffffff806be568>] dump_stack+0xe8/0x150
-[    2.986255] [<ffffffff802ad408>] __lock_acquire+0x570/0x3250
-[    2.986257] [<ffffffff802abed0>] lock_acquire+0x118/0x558
-[    2.986259] [<ffffffff802be764>] console_unlock+0x2e4/0x820
-[    2.986261] [<ffffffff802c0a68>] vprintk_emit+0x1c0/0x3b8
-[    2.986263] [<ffffffff807f45a8>] dev_vprintk_emit+0x1c8/0x210
-[    2.986265] [<ffffffff807f462c>] dev_printk_emit+0x3c/0x60
-[    2.986267] [<ffffffff807f499c>] _dev_warn+0x5c/0x80
-[    2.986269] [<ffffffff806eea9c>] pci_generic_config_write32+0x154/0x160
-[    2.986271] [<ffffffff806edca4>] pci_bus_write_config_word+0x84/0xb8
-[    2.986273] [<ffffffff806f1664>] pci_setup_device+0x22c/0x768
-[    2.986275] [<ffffffff806f26a0>] pci_scan_single_device+0xc8/0x100
-[    2.986277] [<ffffffff806f2788>] pci_scan_slot+0xb0/0x178
-[    2.986279] [<ffffffff806f3ae4>] pci_scan_child_bus_extend+0x5c/0x370
-[    2.986281] [<ffffffff806f407c>] pci_scan_root_bus_bridge+0x6c/0xf0
-[    2.986283] [<ffffffff806f411c>] pci_host_probe+0x1c/0xd8
-[    2.986285] [<ffffffff807fa03c>] platform_drv_probe+0x54/0xb8
-[    2.986287] [<ffffffff807f71f8>] really_probe+0x130/0x388
-[    2.986289] [<ffffffff807f7594>] driver_probe_device+0x64/0xd8
-[    2.986291] [<ffffffff807f7844>] device_driver_attach+0x84/0x90
-[    2.986293] [<ffffffff807f7918>] __driver_attach+0xc8/0x128
-[    2.986295] [<ffffffff807f4cac>] bus_for_each_dev+0x74/0xd8
-[    2.986297] [<ffffffff807f6408>] bus_add_driver+0x170/0x250
-[    2.986299] [<ffffffff807f899c>] driver_register+0x84/0x150
-[    2.986301] [<ffffffff80200b08>] do_one_initcall+0x98/0x458
-[    2.986303] [<ffffffff810212dc>] kernel_init_freeable+0x2c0/0x36c
-[    2.986305] [<ffffffff80be7540>] kernel_init+0x10/0x128
-[    2.986307] [<ffffffff80209d44>] ret_from_kernel_thread+0x14/0x1c
+> Also, please do not forget to Cc authors of the commit you are fixing.
 
-Signed-off-by: Xingxing Su <suxingxing@loongson.cn>
----
- drivers/pci/access.c | 3 ---
- 1 file changed, 3 deletions(-)
+Sorry, I forgot about that. Thank you for pointing it out!
 
-diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index 79c4a2e..b3fc164 100644
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -160,9 +160,6 @@ int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
- 	 * write happen to have any RW1C (write-one-to-clear) bits set, we
- 	 * just inadvertently cleared something we shouldn't have.
- 	 */
--	dev_warn_ratelimited(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
--			     size, pci_domain_nr(bus), bus->number,
--			     PCI_SLOT(devfn), PCI_FUNC(devfn), where);
- 
- 	mask = ~(((1 << (size * 8)) - 1) << ((where & 0x3) * 8));
- 	tmp = readl(addr) & mask;
--- 
-2.1.0
-
+Peilin Ye
