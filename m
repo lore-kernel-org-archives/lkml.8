@@ -2,105 +2,184 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B65C6C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 02:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C979C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 02:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86467207DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 02:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6564C207DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 02:33:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H95qmqkL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AS8Q6OA7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728302AbgHACdI (ORCPT
+        id S1728347AbgHACds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 22:33:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48770 "EHLO
+        Fri, 31 Jul 2020 22:33:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726888AbgHACdH (ORCPT
+        with ESMTP id S1728310AbgHACdr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 22:33:07 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5135DC06174A
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 19:33:07 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id h12so5590099pgf.7
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 19:33:07 -0700 (PDT)
+        Fri, 31 Jul 2020 22:33:47 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C1F6C061756
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 19:33:47 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id d27so24512380qtg.4
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 19:33:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vDtO0Okrnr12+McGOxB2uAxG63eMShlMxD428sFJ6/M=;
-        b=H95qmqkLgB3oB0V5c9fU1FxBJIMVMRvMopQLYp4vKbPNVMyQuGfHG5EzX10axH2J/q
-         5BONL8lpaK6CwgLBTxfFFrWGHUNnDo06ae2V2LpVsihXDNsdLhYwcWtpYOA3J0kNp5WW
-         7KtbsFnF70VE88VoLV919G7lcRgP4MnUEidnfHOCRWHQybcGh4CB8QvHt6/BzGvq97JI
-         oFFfgQ4gf9BhcHt8Rwh0zf0QUTrSCz34/F+S14h64rKSXI1fQ5QZF1sHBfYyfBI7INh4
-         DXr8xESRHF5Lui005s8tTfT7cgo2RovENUjdB8ZvqwaxtyKn0Cl/IanzN+yWSdW9pwK0
-         YIRA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wo/sjI8j94LhAs4vx5XNhrSguJuseQ++7dWpkZeVEI8=;
+        b=AS8Q6OA7/AOd3V3yXn/q9HLFUPzItzWKEQnBI8ytvd5Pi8YsJJpT6SdRLf3nG3+iao
+         FkY7F6PVWVp+uGlm8ylb9oH4UGQcZ4b6kZjiZQkSnA3AdwSzhpkSs4o16a3Gjn8MZxbY
+         iQFRtMk75j0esZK824Ca6oDhV9p37Jl7sGe0W7Q6tze/dzB2yJ0u3TY3apwOXh37sT58
+         jDgfp69t/AgsPYYTVe7wGQK37nPkbPmOhFonejcMVmQjnBS0JM3WGQ+jn71L8vKvAWw/
+         rdj5EqyuGIQdFMsNKFNzoqFhFONkEyXSHEpE2IZfLbMUSAdDhaRJ5BVn9nxxooahT4HO
+         Y40g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vDtO0Okrnr12+McGOxB2uAxG63eMShlMxD428sFJ6/M=;
-        b=FxQ14cVc5myeIMxyWpn7Dta6r4NfKVDEFsDbROZvg3iGvHtXSSOuCcpYihR8E9JyCz
-         iRYrKjmyu6NG0JIyR7xzOFrOwO0ekBPOFYkF1m1f/1jg+YtFTLcVFcDgqmWCBumknTC/
-         FGZh+Fo67G9JW74JeazTJ/xbgSZVXjYXNwNB4agnHn4LphxIPie34vB1wt1Ypna4I8qw
-         Suw0/DCuqm+TTQCXirgLMVR4OD1gChMpkc0NUY7sAwsAIIBydF/fA7I9tWM+kLAa41Yg
-         PBZ8Qm/wTBwib65nSgWyxvUNHAbIP9MYX+trvHTNwdBV9d4OHqPQ6uLc9hR9/Dbvvfmq
-         s81g==
-X-Gm-Message-State: AOAM533EEjShCu+AWcAIgcPIcUxJQAtXFWz2/+7T2TR+9N5zCA0QZU1U
-        HHa1w4R5fmDiCk/f3aI1xWs=
-X-Google-Smtp-Source: ABdhPJwf883MYIdZut9nUjmx73O9Ji69NFHFb2ct+NPoteKPGRsn7jwT5QuBHv4+R01AU2yFXIBaNg==
-X-Received: by 2002:a62:2785:: with SMTP id n127mr4910513pfn.303.1596249186764;
-        Fri, 31 Jul 2020 19:33:06 -0700 (PDT)
-Received: from localhost.localdomain ([103.7.29.8])
-        by smtp.gmail.com with ESMTPSA id h7sm11994674pfq.15.2020.07.31.19.33.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 Jul 2020 19:33:06 -0700 (PDT)
-From:   Jiang Biao <benbjiang@gmail.com>
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org
-Cc:     dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org,
-        Jiang Biao <benbjiang@tencent.com>
-Subject: [PATCH] sched/fair: reduce preemption with IDLE tasks runable
-Date:   Sat,  1 Aug 2020 10:32:48 +0800
-Message-Id: <20200801023248.90104-1-benbjiang@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wo/sjI8j94LhAs4vx5XNhrSguJuseQ++7dWpkZeVEI8=;
+        b=CJyq3VP4WbJorcUPhE+zcbbZCBZGD+f6E1d2jQTR6625n0wIXnbApNumyTPgIk4ojZ
+         /iDBYitDviKOaEn7k1iroANs2lqoMuotb5VBScmT2/3P2Q/DGTFje9Oo8UcTQUheBmVU
+         W4rbsmrEwc8/eAxfVyUcWmXvu6AOsUa6fGCUtojlZ9No1lJE8QQm+txtcAosadFsjr9u
+         pdZJeBuM44WBWRxUvTlgp5NxoD47+wcdMjkw5Er5brcjVN2CXF0DLf+ctECK15RTu+v5
+         NTsAq3bJqJ3fNzXxccpbqmJEDuQqUU9BqR86E7QpduzQTj/mGLyLjob+4NEtd6/hxqlJ
+         h2bw==
+X-Gm-Message-State: AOAM531XDstX3pQZnsXKYgaWXBAXbiRLBwfyk0zSUmzDtSJgl1/1jZxH
+        9RhxBvs8shH03fyiI3rQ7y1L4Hdu
+X-Google-Smtp-Source: ABdhPJz/eun3zp4JJ25rxhg5NFt/8lBK0z/qFGt9ZbV19eJR2feP16TA9dzWi5+GFS4NomKvCV85mw==
+X-Received: by 2002:aed:38c3:: with SMTP id k61mr6655985qte.11.1596249225646;
+        Fri, 31 Jul 2020 19:33:45 -0700 (PDT)
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
+        by smtp.gmail.com with ESMTPSA id q2sm11763051qtl.64.2020.07.31.19.33.44
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jul 2020 19:33:44 -0700 (PDT)
+Received: by mail-yb1-f174.google.com with SMTP id a34so12172971ybj.9
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 19:33:44 -0700 (PDT)
+X-Received: by 2002:a25:3802:: with SMTP id f2mr10438626yba.428.1596249223979;
+ Fri, 31 Jul 2020 19:33:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200730073702.16887-1-xie.he.0141@gmail.com> <CAJht_ENjHRExBEHx--xmqnOy1MXY_6F5XZ_exinSfa6xU_XDJg@mail.gmail.com>
+ <CA+FuTSf_nuiah6rFy-KC1Taw+Wc4z0G7LzkAm-+Ms4FzYmTPEw@mail.gmail.com> <CAJht_ENYxy4pseOO9gY=0R0bvPPvs4GKrGJOUMx6=LPwBa2+Bg@mail.gmail.com>
+In-Reply-To: <CAJht_ENYxy4pseOO9gY=0R0bvPPvs4GKrGJOUMx6=LPwBa2+Bg@mail.gmail.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Fri, 31 Jul 2020 22:33:07 -0400
+X-Gmail-Original-Message-ID: <CA+FuTSeusqdfkqZihFhTE9vhcL5or6DEh8UffaKM2Px82z6BZQ@mail.gmail.com>
+Message-ID: <CA+FuTSeusqdfkqZihFhTE9vhcL5or6DEh8UffaKM2Px82z6BZQ@mail.gmail.com>
+Subject: Re: [PATCH v2] drivers/net/wan/lapbether: Use needed_headroom instead
+ of hard_header_len
+To:     Xie He <xie.he.0141@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux X25 <linux-x25@vger.kernel.org>,
+        Brian Norris <briannorris@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiang Biao <benbjiang@tencent.com>
+On Fri, Jul 31, 2020 at 4:41 PM Xie He <xie.he.0141@gmail.com> wrote:
+>
+> Thank you for your thorough review comment!
+>
+> On Fri, Jul 31, 2020 at 7:13 AM Willem de Bruijn
+> <willemdebruijn.kernel@gmail.com> wrote:
+> >
+> > Thanks for fixing a kernel panic. The existing line was added recently
+> > in commit 9dc829a135fb ("drivers/net/wan/lapbether: Fixed the value of
+> > hard_header_len"). I assume a kernel with that commit reverted also
+> > panics? It does looks like it would.
+>
+> Yes, that commit also fixed kernel panic. But that patch only fixed
+> kernel panic when using AF_PACKET/DGRAM sockets. It didn't fix kernel
+> panic when using AF_PACKET/RAW sockets. This patch attempts to fix
+> kernel panic when using AF_PACKET/RAW sockets, too.
 
-No need to preempt when there are only one runable CFS task with
-other IDLE tasks on runqueue. The only one CFS task would always
-be picked in that case.
+Ah, okay. That's good to know.
 
-Signed-off-by: Jiang Biao <benbjiang@tencent.com>
----
- kernel/sched/fair.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+While this protocol is old and seemingly unmaintained, it probably is
+still in use. But the packet interface is not the common datapath. We
+have to be careful not to introduce regressions to that.
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 04fa8dbcfa4d..8fb80636b010 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4527,7 +4527,7 @@ entity_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr, int queued)
- 		return;
- #endif
- 
--	if (cfs_rq->nr_running > 1)
-+	if (cfs_rq->nr_running > cfs_rq.idle_h_nr_running + 1)
- 		check_preempt_tick(cfs_rq, curr);
- }
- 
--- 
-2.21.0
+> > If this driver submits a modified packet to an underlying eth device,
+> > it is akin to tunnel drivers. The hard_header_len vs needed_headroom
+> > discussion also came up there recently [1]. That discussion points to
+> > commit c95b819ad75b ("gre: Use needed_headroom"). So the general
+> > approach in this patch is fine. Do note the point about mtu
+> > calculations -- but this device just hardcodes a 1000 byte dev->mtu
+> > irrespective of underlying ethernet device mtu, so I guess it has
+> > bigger issues on that point.
+>
+> Yes, I didn't consider the issue of mtu calculation. Maybe we need to
+> calculate the mtu of this device based on the underlying Ethernet
+> device, too.
+>
+> We may also need to handle the situation where the mtu of the
+> underlying Ethernet device changes.
+>
+> I'm not sure if the mtu of the device can be changed by the user
+> without explicit support from the driver. If it can, we may also need
+> to set max_mtu and min_mtu properly to prevent the user from setting
+> it to invalid values.
 
+I suggest to ignore mtu. It is out of scope of this patch, which does
+address an unrelated real kernel panic.
+
+> > But, packet sockets with SOCK_RAW have to pass a fully formed packet
+> > with all the headers the ndo_start_xmit expects, i.e., it should be
+> > safe for the device to just pull that many bytes. X25 requires the
+> > peculiar one byte pseudo header you mention: lapbeth_xmit
+> > unconditionally reads skb->data[0] and then calls skb_pull(skb, 1).
+> > This could be considered the device hard header len.
+>
+> Yes, I agree that we can use hard_header_len (and min_header_len) to
+> prevent packets shorter than 1 byte from passing.
+>
+> But because af_packet.c reserves a header space of needed_headroom for
+> RAW sockets, but hard_header_len + needed_headroom for DGRAM sockets,
+> it appears to me that af_packet.c expects hard_header_len to be the
+> header length created by dev_hard_header. We can, however, set
+> hard_header_len to 1 and let dev_hard_header generate a 0-sized
+> header, but this makes af_packet.c to reserve an extra unused 1-byte
+> header space for DGRAM sockets, and DGRAM sockets will not be
+> protected by the 1-byte minimum length check like RAW sockets.
+
+Good point.
+
+> The best solution might be to implement header_ops for X.25 drivers
+> and let dev_hard_header create this 1-byte header, so that
+> hard_header_len can equal to the header length created by
+> dev_hard_header. This might be the best way to fit the logic of
+> af_packet.c. But this requires changing the interface of X.25 drivers
+> so it might be a big change.
+
+Agreed.
+
+I quickly scanned the main x.25 datapath code. Specifically
+x25_establish_link, x25_terminate_link and x25_send_frame. These all
+write this 1 byte header. It appears to be an in-band communication
+means between the network and data link layer, never actually ending
+up on the wire?
+
+Either lapbeth_xmit has to have a guard against 0 byte packets before
+reading skb->data[0], or packet sockets should not be able to generate
+those (is this actually possible today through PF_PACKET? not sure)
+
+If SOCK_DGRAM has to always select one of the three values (0x00:
+data, 0x01: establish, 0x02: terminate) the first seems most sensible.
+Though if there is no way to establish a connection with
+PF_PACKET/SOCK_DGRAM, that whole interface may still be academic.
+Maybe eventually either 0x00 or 0x01 could be selected based on
+lapb->state.. That however is out of scope of this fix.
+
+Normally a fix should aim to have a Fixes: tag, but all this code
+precedes git history, so that is not feasible here.
