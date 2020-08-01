@@ -2,230 +2,104 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF39AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 430FCC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B40E1206E9
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 230FC206E9
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:01:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nUZWj8j7"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="qJvC55oD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgHARAy (ORCPT
+        id S1727863AbgHARBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 13:00:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39864 "EHLO
+        Sat, 1 Aug 2020 13:01:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbgHARAy (ORCPT
+        with ESMTP id S1727037AbgHARBl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 13:00:54 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6743C06174A;
-        Sat,  1 Aug 2020 10:00:53 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id g26so31780280qka.3;
-        Sat, 01 Aug 2020 10:00:53 -0700 (PDT)
+        Sat, 1 Aug 2020 13:01:41 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BB1AC061756
+        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 10:01:41 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id f193so5584941pfa.12
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 10:01:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mJ6hTZT24AWhGEqcPC20wN8kBdsxrLI/peNCFh80II0=;
-        b=nUZWj8j7d2X5T3sH7PVKVcJ/tJMEQcJ4psgs1gcLJol13d1RvdpJ4+3wBuHldXvZBk
-         SjZOvjpj18wRh7IwgoW/w72o85g6VIRQqsdhKjeIodtrCeem5YngLBL+85bAezTuvvQ9
-         gEA47e7rp1XiVJR6GxAXnZ2zwYbpQ+pT01pVgaUCkcAdJldxGCrlhU5wzfAzTNrVtyoU
-         4P/Sa+lAMZnq3EELOqy7A33g+g3Vfw0ZCcJ8dsIqesEfsByzZ6GVh9zuW/kiQbWuhoYR
-         vFRgJxZpHOWpv2hrariGEk0FnyOTVNVtkFKl2PLFAHHG4yf9tW71qTdizyL74bOdX69I
-         0Ttw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+PxwhlYwCuE9vpR6eFkH2yWrmfz/AznBDZGYrMjxyzI=;
+        b=qJvC55oDMsvRufkXV/nYX2jzTVwfRz0BB8sRjqmBBtDWN7gYn0xBngG1/IBFUZewdc
+         PUQpInS0ReZRlxhBfTDuBiG0MPW6CdU5Kly4Q1xxnXx2iWxu7D+UmOeEIu4e3kX95HU7
+         aj+v1UIehBO8EsvvmW/J6a0NTd2qEk5iJR93eTzNqJLIrtKwkp+m/9+EVzDKKhUsMPku
+         oihU/QrBcjwqdF0X4EbuNwCjUgIoEi3NnTkWyDDP/7c5ZV6IeoeQ/MhidDhCLSbFFclw
+         buGaqFpFw+BQr2CusP4T5H8hygVCalRZoOGAQPdCAOBkW8imxkMRSGvb/Z3pbcqGiXrH
+         6GrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=mJ6hTZT24AWhGEqcPC20wN8kBdsxrLI/peNCFh80II0=;
-        b=VM39u3hJ9qDcsincVg70EDwD/D8+B/9JietPzOHR+dlqoI0BdVl5fIS5PAqahIRxxm
-         C0v4H/ZDrqcPVZXNy7t7uV+ue24NSPNtd9vnAAIrGjxt3X+WhfWjY2rbjyc2NVMKvDGy
-         QFyQVg1QbZdaFcWJ14EySTREDTFZkEkTDmdUT947wrzpCONYoGPNt9FTe/YN04xLSP8S
-         06oQpN14oVwwXQkIevmq2s9kTcsdtLy/NvZOo/10CIemg31JsV+wMvHp4UQN7oZT1EqR
-         wdstypXGTKefNJVRoFb5rafQLA5t319mAa/BVu49yhKBdW35TKDBqTisuBz+P4aHFtyB
-         Ag4w==
-X-Gm-Message-State: AOAM530qy3R5c3DEZNoFJP1Wt2ziLYJFYH+v0riqKzjtVnfrKRR9paAw
-        ZGxZUNFmsUxa0CU/x7ybR/o=
-X-Google-Smtp-Source: ABdhPJzCKZ2YWRRKt7EbAjYlMwe4HoJyEC/wkWrDWjL843q2i/oFkciOE/2KezdZ9h6RIJbu6Yv/dQ==
-X-Received: by 2002:a37:aa56:: with SMTP id t83mr9283794qke.150.1596301252633;
-        Sat, 01 Aug 2020 10:00:52 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id m26sm14886142qtc.83.2020.08.01.10.00.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Aug 2020 10:00:51 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Sat, 1 Aug 2020 13:00:49 -0400
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 32/36] x86/boot/compressed: Reorganize zero-size
- section asserts
-Message-ID: <20200801170049.GA3249534@rani.riverdale.lan>
-References: <20200731230820.1742553-1-keescook@chromium.org>
- <20200731230820.1742553-33-keescook@chromium.org>
- <20200801014755.GA2700342@rani.riverdale.lan>
- <202007312233.1BA0E2EFC@keescook>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+PxwhlYwCuE9vpR6eFkH2yWrmfz/AznBDZGYrMjxyzI=;
+        b=ENbJrDNwe5fhQHkxxqjm9X+HN5pRzwh4ufd+mDphTc6BalPL0pdExoKa4NBP13xH4l
+         bVkoO4J/J7bF92mQxVP6vXrCck/4FJpQ2feqJ6fpv/9XwDtMAYffEjLXsoEn80X8DQZT
+         xAd+RehuxhAPS3DOMIvHC9JT3CQY22Aox0fZrLZgNqR3Em8s0kcHA8msq/1kORaj8Fry
+         iD5nuRR2lCozlhMs49Xy7dJAssRBT3wglV40J2AIU8Sto4ZrXEWvcnMONESR0ln6UC8C
+         nT/pU95cRdKa4Tzb02mgeFosSKcpYVnZWC1/qSfSi04BIKC9RHbKuWAF8de3gKCOEw/s
+         ar9A==
+X-Gm-Message-State: AOAM5313NYsWwHF9iJ7cKnyY8l3+uq3wS4Wi+mH/+CJgG12fc/k78cbm
+        GZI/gPwHzSnd2SmLhc2p8BoQnf5pclA=
+X-Google-Smtp-Source: ABdhPJyBZUtBVHRQU5HCEhS1TkxxnGkUnCedmMiMah7+33vLzFRKPv/bOOVkrcNpamN7sepVDhoxig==
+X-Received: by 2002:a62:1505:: with SMTP id 5mr847706pfv.41.1596301300314;
+        Sat, 01 Aug 2020 10:01:40 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id jb1sm11175740pjb.9.2020.08.01.10.01.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Aug 2020 10:01:39 -0700 (PDT)
+Subject: Re: [PATCH] fs: optimise kiocb_set_rw_flags()
+To:     Matthew Wilcox <willy@infradead.org>,
+        Pavel Begunkov <asml.silence@gmail.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <e523f51f59ad6ecdad4ad22c560cb9c913e96e1a.1596277420.git.asml.silence@gmail.com>
+ <20200801153711.GV23808@casper.infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <debd12e1-8ba5-723d-75ad-47af99db05a0@kernel.dk>
+Date:   Sat, 1 Aug 2020 11:01:38 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200801153711.GV23808@casper.infradead.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202007312233.1BA0E2EFC@keescook>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 10:35:14PM -0700, Kees Cook wrote:
-> On Fri, Jul 31, 2020 at 09:47:55PM -0400, Arvind Sankar wrote:
-> > On Fri, Jul 31, 2020 at 04:08:16PM -0700, Kees Cook wrote:
-> > > For readability, move the zero-sized sections to the end after DISCARDS
-> > > and mark them NOLOAD for good measure.
-> > > 
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > >  arch/x86/boot/compressed/vmlinux.lds.S | 42 +++++++++++++++-----------
-> > >  1 file changed, 25 insertions(+), 17 deletions(-)
-> > > 
-> > > diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-> > > index 3c2ee9a5bf43..42dea70a5091 100644
-> > > --- a/arch/x86/boot/compressed/vmlinux.lds.S
-> > > +++ b/arch/x86/boot/compressed/vmlinux.lds.S
-> > > @@ -42,18 +42,16 @@ SECTIONS
-> > >  		*(.rodata.*)
-> > >  		_erodata = . ;
-> > >  	}
-> > > -	.rel.dyn : {
-> > > -		*(.rel.*)
-> > > -	}
-> > > -	.rela.dyn : {
-> > > -		*(.rela.*)
-> > > -	}
-> > > -	.got : {
-> > > -		*(.got)
-> > > -	}
-> > >  	.got.plt : {
-> > >  		*(.got.plt)
-> > >  	}
-> > > +	ASSERT(SIZEOF(.got.plt) == 0 ||
-> > > +#ifdef CONFIG_X86_64
-> > > +	       SIZEOF(.got.plt) == 0x18,
-> > > +#else
-> > > +	       SIZEOF(.got.plt) == 0xc,
-> > > +#endif
-> > > +	       "Unexpected GOT/PLT entries detected!")
-> > >  
-> > >  	.data :	{
-> > >  		_data = . ;
-> > > @@ -85,13 +83,23 @@ SECTIONS
-> > >  	ELF_DETAILS
-> > >  
-> > >  	DISCARDS
-> > > -}
-> > >  
-> > > -ASSERT(SIZEOF(.got) == 0, "Unexpected GOT entries detected!")
-> > > -#ifdef CONFIG_X86_64
-> > > -ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT entries detected!")
-> > > -#else
-> > > -ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc, "Unexpected GOT/PLT entries detected!")
-> > > -#endif
-> > > +	/*
-> > > +	 * Sections that should stay zero sized, which is safer to
-> > > +	 * explicitly check instead of blindly discarding.
-> > > +	 */
-> > > +	.got (NOLOAD) : {
-> > > +		*(.got)
-> > > +	}
-> > > +	ASSERT(SIZEOF(.got) == 0, "Unexpected GOT entries detected!")
-> > >  
-> > > -ASSERT(SIZEOF(.rel.dyn) == 0 && SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations detected!")
-> > > +	/* ld.lld does not like .rel* sections being made "NOLOAD". */
-> > > +	.rel.dyn : {
-> > > +		*(.rel.*)
-> > > +	}
-> > > +	ASSERT(SIZEOF(.rel.dyn) == 0, "Unexpected run-time relocations (.rel) detected!")
-> > > +	.rela.dyn : {
-> > > +		*(.rela.*)
-> > > +	}
-> > > +	ASSERT(SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations (.rela) detected!")
-> > > +}
-> > > -- 
-> > > 2.25.1
-> > > 
-> > 
-> > There's no point in marking zero-size sections NOLOAD -- if the ASSERT's
-> > passed, they won't be present in the file at all anyway.
+On 8/1/20 9:37 AM, Matthew Wilcox wrote:
+> On Sat, Aug 01, 2020 at 01:36:33PM +0300, Pavel Begunkov wrote:
+>> Use a local var to collect flags in kiocb_set_rw_flags(). That spares
+>> some memory writes and allows to replace most of the jumps with MOVEcc.
+>>
+>> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 > 
-> I did not find that universally true. I found some sections be written
-> out with a 0 size. Some I could remove from disk with NOLOAD, others did
-> not like that so much.
-
-Neither LLD nor BFD is creating 0-sized .got or .rel sections in my
-builds. In any case, if they're 0-sized, NOLOAD shouldn't affect
-anything: it doesn't remove them from disk, it stops them being loaded
-into memory, which is a nop if it was 0-sized.
-
+> Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 > 
-> > The only section for which there might be a point is .got.plt, which is
-> > non-empty on 32-bit, and only if it is first moved to the end. That
-> > saves a few bytes.
-> 
-> What do you mean about "only if it is first moved to the end"? Would it
-> be zero-sized if it was closer to .text?
-> 
-> -- 
-> Kees Cook
+> If you want to improve the codegen here further, I would suggest that
+> renumbering the IOCB flags to match the RWF flags would lead to better
+> codegen (can't do it the other way around; RWF flags are userspace ABI,
+> IOCB flags are not).  iocb_flags() probably doesn't get any worse because
+> the IOCB_ flags don't have the same numbers as the O_ bits (which differ
+> by arch anyway).
 
-Sorry, my sentence is confusingly worded: it's always non-empty on
-x86-32. I meant, move .got.plt to the end (after _end), add (INFO) to
-it, and it might save a few bytes, or not, depending on alignment
-padding. If it's left in the middle, it still pushes the addresses of
-the remaining sections out, so it doesn't save anything.
+Yeah that's not a bad idea, would kill a lot of branches.
 
-I'd tested that out the last time we talked about this, but left it out
-of my series as Fangrui was negative about the idea.
+-- 
+Jens Axboe
 
-I tested with NOLOAD instead of INFO, and at least ld.bfd actually
-errors out if .got.plt is marked NOLOAD, no matter where it's located.
-
-	  LDS     arch/x86/boot/compressed/vmlinux.lds
-	  LD      arch/x86/boot/compressed/vmlinux
-	ld: final link failed: section has no contents
-
-Side note: I also discovered something peculiar with the gcc/lld combo.
-On x86-64, it turns out that this still generates a .got.plt section,
-which was unexpected as _GLOBAL_OFFSET_TABLE_ shouldn't be referenced on
-64-bit. It turns out that when gcc (or even clang) generates an
-out-of-line call to memcpy from a __builtin_memcpy call, it doesn't
-declare the memcpy as hidden even with Ard's hidden.h, or even if memcpy
-was explicitly declared with hidden visibility. It uses memcpy@PLT
-instead of memcpy, and this generates a reference to
-_GLOBAL_OFFSET_TABLE_ in the .o file.  The linker later converts this to
-a direct call to the function, but LLD leaves .got.plt in the
-executable, while BFD strips it out.
-
-It also turns out that clang's integrated assembler, unlike gas, does
-not generate a reference to _GLOBAL_OFFSET_TABLE for a foo@PLT call. And
-because we redefine KBUILD_CFLAGS in boot/compressed Makefile, we lose
-the -no-integrated-as option, and clang is using its integrated
-assembler when building the compressed kernel.
