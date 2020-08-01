@@ -5,70 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 241EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 12:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0681C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 12:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2F082076A
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 12:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 901FE2076A
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 12:25:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P98yQ73Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QHi5Tbht"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729289AbgHAMZe (ORCPT
+        id S1729301AbgHAMZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 08:25:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54208 "EHLO
+        Sat, 1 Aug 2020 08:25:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729012AbgHAMYe (ORCPT
+        with ESMTP id S1728949AbgHAMY0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 08:24:34 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75374C06179E;
-        Sat,  1 Aug 2020 05:24:34 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id l4so33946565ejd.13;
-        Sat, 01 Aug 2020 05:24:34 -0700 (PDT)
+        Sat, 1 Aug 2020 08:24:26 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71499C06174A;
+        Sat,  1 Aug 2020 05:24:26 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id o23so6562719ejr.1;
+        Sat, 01 Aug 2020 05:24:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=I8dAqn3oyLTlTqhf29Z52aIjqvD0eEwBI3IdJNmTAKE=;
-        b=P98yQ73QpNAHyJH0DhgL+VteQsL8cJWvez4VBskT+6Zy0ViH186MuBu4nRvGYARUqd
-         PDUMf38OLCl5PvGAT/41B7GiPvDcOBsaM4Y1R+BKMYY18/LuAuqv44mpAEG6r1fYWcfY
-         QMKLZygpMvWntgZg8e/oF7zNlaPq9OSG4dNlG19C7ej6vNjo4PPJFjvpXAMHr399/xBl
-         DpMbGY848f6RaiM4HfSP1a5QFTkzZ4mmVUxFUE7Gz2pAIE0+Lq9sZeuQW4ZeMeTnwEFo
-         1ZSzd6yuE5ADI8ephhkCQ2Wubpv7kQZm+Cihm/tzF0n0DyDFoVPmGuUYNiBglsxS6GpR
-         f1fQ==
+        bh=BywL0jlhvMnVFDfC0ze8h5LlMNFaT8aAv2rtyExEJSw=;
+        b=QHi5Tbht062uQl2CgFExEPFUSOMEeggyKWMdFMaxe6+Ih4MGawd4RuVAGo9gayKr/D
+         2yHM3GwaZiead9mkPgX6CmWqtJbVMVrs1ivY/NsgsQYDy259Sl3XZbv/YgzUgCEEqs/l
+         1wsrUeMhNsz49YAxVBQhfhiIj9RG9ULztEQd4Q8H0R1duiNIIlpXMswb/m7QfOuNR+W7
+         PzhiKRCjDzvqB1woNt4nMSfQ4i7ZYPwKrKGD1c4qVxpaPGDRJJa1GAWZwDRByPlEFt8o
+         ZwW6DJ21TN+PbO9dKjKlAV0aNVKmWm6tq8l2jd4PPsh2rNZxPgV7qhiiUwBiy6U/4PQq
+         iFbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=I8dAqn3oyLTlTqhf29Z52aIjqvD0eEwBI3IdJNmTAKE=;
-        b=r7xOiiXnrp1GqNkyZZUCZd041mhMXrTUzS5SRHaX3kS8TLomgPuNYX9/qNTGercbBU
-         DK7ksOUBQjJd4gcFc855O7qi8HAAWXAiGiiwSwTh/yGY9DVa4zM58i7NR1VSPrCx8FVN
-         K3zOf2m0OtEYso9dT5AdNX99y7Pzw2hPf/gVYCZg+J+ub7L/WwO0RLsi8gE8SERgoQlX
-         vo7bx9j7BO15t+dEF9Ry257Kghtvn0aZ1Dc1yhDOvyRmpEhFbcOELeO1La94lXVaaCv5
-         n6uN1CKTPsW997QrlUO/bXQ0ed+CFqknnwiGh0IwYVPVlaD0GwoXxjX+d4ACIVr50/MZ
-         yUYQ==
-X-Gm-Message-State: AOAM532ElYbnRbZaFLQcLaL+CKuBEutbB4eGTpn+m0E8g+poqmAnnKMD
-        j63gSkDqLNa6W5wqwm797BM=
-X-Google-Smtp-Source: ABdhPJyaQUgDgaB0qqpXNRYm/8ED4kbE0a2gf50gNexDXYKCzC2jeZw2r4pLhpg9owqfBDJdG1DmpA==
-X-Received: by 2002:a17:906:6a5b:: with SMTP id n27mr8123629ejs.221.1596284673233;
-        Sat, 01 Aug 2020 05:24:33 -0700 (PDT)
+        bh=BywL0jlhvMnVFDfC0ze8h5LlMNFaT8aAv2rtyExEJSw=;
+        b=WwMuk4MJhSn/Z5RPIZ57fVWY8yEB4a8yze6sf0DNdA+h1WurNiHWkzxpXodZrLxxAR
+         yM3UkKhLkjW6kKkqN3ysA8Gi8h0CwZ+rTBUscqSuGsBqewK+tL89k6rf4T88ek+CaNIC
+         HerMYnHx3/hFoMFExtWL0cDfGx8PEMjrSMc/jxra72kDuKNNoNdwUQYXngIGFtMfj8DE
+         hUKW+vwyVHNfN/u9PeibbnYaOi7LkuvA5XO5TLpAiwpUwAcWb6AmANqLL9KIVOHT9JFb
+         8wcHjuytOOjeIBkS7PnmetfIHwV47/yzNNTXvcKg/dpffrWKCfXG6WMRMCMUfvUvRxPc
+         ihJQ==
+X-Gm-Message-State: AOAM533cb3gYLjraMelXrRdK3j7o/WQZJoaO68aW2kJI3SRkWyNPxdRR
+        ZGBAf0OJbjNr12dtWn3Sm+E=
+X-Google-Smtp-Source: ABdhPJz7rYxC2q7EJUBMGW38zssfKtQqC5IyJS7xjTc/otiniFOliqfObCiKTOcL0cPPw/LW53NfQw==
+X-Received: by 2002:a17:906:1756:: with SMTP id d22mr8343053eje.29.1596284665171;
+        Sat, 01 Aug 2020 05:24:25 -0700 (PDT)
 Received: from net.saheed (95C84E0A.dsl.pool.telekom.hu. [149.200.78.10])
-        by smtp.gmail.com with ESMTPSA id a101sm12083131edf.76.2020.08.01.05.24.32
+        by smtp.gmail.com with ESMTPSA id a101sm12083131edf.76.2020.08.01.05.24.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Aug 2020 05:24:32 -0700 (PDT)
+        Sat, 01 Aug 2020 05:24:24 -0700 (PDT)
 From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-To:     helgaas@kernel.org, Moritz Fischer <mdf@kernel.org>
+To:     helgaas@kernel.org, Jens Axboe <axboe@kernel.dk>
 Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
         bjorn@helgaas.com, skhan@linuxfoundation.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fpga@vger.kernel.org
-Subject: [RFC PATCH 07/17] fpga: altera-cvp: Drop uses of pci_read_config_*() return value
-Date:   Sat,  1 Aug 2020 13:24:36 +0200
-Message-Id: <20200801112446.149549-8-refactormyself@gmail.com>
+        linux-ide@vger.kernel.org
+Subject: [RFC PATCH 01/17] ata: Drop uses of pci_read_config_*() return value
+Date:   Sat,  1 Aug 2020 13:24:30 +0200
+Message-Id: <20200801112446.149549-2-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.18.4
 In-Reply-To: <20200801112446.149549-1-refactormyself@gmail.com>
 References: <20200801112446.149549-1-refactormyself@gmail.com>
@@ -87,39 +87,60 @@ dependency on the return value of these functions is removed, then it
 can later be made to return void.
 
 Remove all uses of the return value of pci_read_config_*().
-Check the actual value read for ~0. In this case, ~0 is an invalid
-value thus it indicates some kind of error.
+Check the actual value read for ~0. In this case, ~0 is an invalid value
+thus it indicates some kind of error.
+
+drivers/ata/pata_cs5536.c cs5536_read() :
+None of the callers of cs5536_read() uses the return value. The obtained
+value can be checked for validity to confirm success.
+
+Change the return type of cs5536_read() to void.
 
 Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
 Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
 ---
- drivers/fpga/altera-cvp.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/ata/pata_cs5536.c | 6 +++---
+ drivers/ata/pata_rz1000.c | 3 ++-
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/fpga/altera-cvp.c b/drivers/fpga/altera-cvp.c
-index 4e0edb60bfba..99c6e0754f8b 100644
---- a/drivers/fpga/altera-cvp.c
-+++ b/drivers/fpga/altera-cvp.c
-@@ -96,15 +96,15 @@ struct cvp_priv {
- static int altera_read_config_byte(struct altera_cvp_conf *conf,
- 				   int where, u8 *val)
+diff --git a/drivers/ata/pata_cs5536.c b/drivers/ata/pata_cs5536.c
+index 760ac6e65216..c204215e239f 100644
+--- a/drivers/ata/pata_cs5536.c
++++ b/drivers/ata/pata_cs5536.c
+@@ -83,16 +83,16 @@ static const struct dmi_system_id udma_quirk_dmi_table[] = {
+ 	{ }
+ };
+ 
+-static int cs5536_read(struct pci_dev *pdev, int reg, u32 *val)
++static void cs5536_read(struct pci_dev *pdev, int reg, u32 *val)
  {
--	return pci_read_config_byte(conf->pci_dev, conf->vsec_offset + where,
--				    val);
-+	pci_read_config_byte(conf->pci_dev, conf->vsec_offset + where, val);
-+	return (val == (u8)~0) ? -ENODEV : 0;
+ 	if (unlikely(use_msr)) {
+ 		u32 dummy __maybe_unused;
+ 
+ 		rdmsr(MSR_IDE_CFG + reg, *val, dummy);
+-		return 0;
++		return;
+ 	}
+ 
+-	return pci_read_config_dword(pdev, PCI_IDE_CFG + reg * 4, val);
++	pci_read_config_dword(pdev, PCI_IDE_CFG + reg * 4, val);
  }
  
- static int altera_read_config_dword(struct altera_cvp_conf *conf,
- 				    int where, u32 *val)
+ static int cs5536_write(struct pci_dev *pdev, int reg, int val)
+diff --git a/drivers/ata/pata_rz1000.c b/drivers/ata/pata_rz1000.c
+index 3722a67083fd..e0b3de376357 100644
+--- a/drivers/ata/pata_rz1000.c
++++ b/drivers/ata/pata_rz1000.c
+@@ -64,7 +64,8 @@ static int rz1000_fifo_disable(struct pci_dev *pdev)
  {
--	return pci_read_config_dword(conf->pci_dev, conf->vsec_offset + where,
--				     val);
-+	pci_read_config_dword(conf->pci_dev, conf->vsec_offset + where, val);
-+	return (val == (u32)~0) ? -ENODEV : 0;
- }
- 
- static int altera_write_config_dword(struct altera_cvp_conf *conf,
+ 	u16 reg;
+ 	/* Be exceptionally paranoid as we must be sure to apply the fix */
+-	if (pci_read_config_word(pdev, 0x40, &reg) != 0)
++	pci_read_config_word(pdev, 0x40, &reg);
++	if (reg == (u16)~0)
+ 		return -1;
+ 	reg &= 0xDFFF;
+ 	if (pci_write_config_word(pdev, 0x40, reg) != 0)
 -- 
 2.18.4
 
