@@ -3,79 +3,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 12:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E667C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 12:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65B03206E9
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 12:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE7E22080C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 12:56:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iLuWNKE0"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="n/7VNWjN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgHAMui (ORCPT
+        id S1729004AbgHAM4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 08:50:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58168 "EHLO
+        Sat, 1 Aug 2020 08:56:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbgHAMuh (ORCPT
+        with ESMTP id S1726471AbgHAM4q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 08:50:37 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAD19C06174A;
-        Sat,  1 Aug 2020 05:50:36 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id v4so25410485ljd.0;
-        Sat, 01 Aug 2020 05:50:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IqClmlC3LlAm3Xey7EC8Tw9GBmxSznPUo4DzWC4sUS8=;
-        b=iLuWNKE0OuxwTdlpWutGCACBMoNvEnpvkOl2bv4v8aI80LSYSHcd2hYHfabBoevd12
-         2Psb90f3bVmwzIC7FvfmpaapnRLf3uNUDrueEBoppCJt9+0wkOb6w8PBXXoNluN72pHG
-         11p2UCnD5HJVyyClSaxy80pex1LZ8KoKFqjfRsK24iTUnez5t6FxPC9P2+wPhaiojygq
-         0ZPgxBTdmTPweYKPbF+Sua4uYdXv9DO8MM2kLPy5xGzaVvzoz9LxrUeRi19l7mem8+YU
-         gPCL+5X5CmpaG8XUyLGYoCQnchEjD8QrEKSAQCjljD9c3mWjfhMUCcRgyL7UzvAQ/MNz
-         xpuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IqClmlC3LlAm3Xey7EC8Tw9GBmxSznPUo4DzWC4sUS8=;
-        b=chLmQ74ay2Jqf+oVItugLMEzAm1ohvU6uEsZwy07jC+uMzRT83HTq22OgP88WINRDd
-         gXt+Es87guMMH8sR1cbqOv9gfBnLqQOAznH5E6lEjVYhnwkZqKlMp23PqsjURvJm3K7w
-         3yhYbgSgko5gIeFX4y3rZM60AIxY5OVyHKvo+9ixpSIx74CtIFhrbfxUh4gMxPBeAiu6
-         96fNJkGYsygnm1/rGP7Ake7fv+YpdG49bl4jc+cKutXnLKkwkPEmrz8WKhyBlEi7inFj
-         5ZV2u0PBzdY0r7qxiyOWSGd8agwb55Vw7cs6uCAt/ob41b2+DruaY+FCAk1b+7ZFXZwG
-         SQ5Q==
-X-Gm-Message-State: AOAM532Eynipxt5/2DST3jONd54804PO4qq09nunBtThjUvuqbFJq7np
-        B+KsfmMXLpZnPL9hkXVFzr56ZANEXEUtKG0ClMKrOA==
-X-Google-Smtp-Source: ABdhPJy0GAoIzwM3RjlqAq4gd4Iba8EMceGiCkI1SC9ZAJmwI+D/oI+tmSZ9b95MMo5uhDyGr0qYo9nKHXqidjdJO4w=
-X-Received: by 2002:a2e:b814:: with SMTP id u20mr3740179ljo.202.1596286235379;
- Sat, 01 Aug 2020 05:50:35 -0700 (PDT)
+        Sat, 1 Aug 2020 08:56:46 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 666AAC06174A;
+        Sat,  1 Aug 2020 05:56:46 -0700 (PDT)
+Received: from nazgul.tnic (unknown [78.130.214.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B8CAE1EC02FA;
+        Sat,  1 Aug 2020 14:56:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1596286602;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=NfmlZOrLaBmBGlzbXE5z6x4RKpqqJJmlzC4+91fmYUA=;
+        b=n/7VNWjNwrVYldmM5JNyqQEVZd3Vp3hpjJSMuFhfSkrW8mQhIHtpfasKy9w1BEromsKKyZ
+        /CdJ8nlcvZTCqyn05aBVgUH+WGtmqEhe61zMEoDcH8PmujGuHYORgBg9sVbSuZSh5qLljK
+        uihuEhdcnAWg6tPbjyrRXoOKhqTEw/0=
+Date:   Sat, 1 Aug 2020 14:56:57 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+Cc:     helgaas@kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Joerg Roedel <joro@8bytes.org>, bjorn@helgaas.com,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-mtd@lists.infradead.org, iommu@lists.linux-foundation.org,
+        linux-rdma@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        linux-gpio@vger.kernel.org, linux-fpga@vger.kernel.org,
+        linux-edac@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-crypto@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net
+Subject: Re: [RFC PATCH 00/17] Drop uses of pci_read_config_*() return value
+Message-ID: <20200801125657.GA25391@nazgul.tnic>
+References: <20200801112446.149549-1-refactormyself@gmail.com>
 MIME-Version: 1.0
-References: <20200801122718.543376-1-masahiroy@kernel.org>
-In-Reply-To: <20200801122718.543376-1-masahiroy@kernel.org>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Sat, 1 Aug 2020 14:50:24 +0200
-Message-ID: <CANiq72ke=j4DQ4=YA0ZdnYRzJf-XOjPbvwugUdn6afM8wK8YNg@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: introduce hostprogs-always-y and userprogs-always-y
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200801112446.149549-1-refactormyself@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 1, 2020 at 2:28 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
->  samples/auxdisplay/Makefile         |  3 +--
+On Sat, Aug 01, 2020 at 01:24:29PM +0200, Saheed O. Bolarinwa wrote:
+> The return value of pci_read_config_*() may not indicate a device error.
+> However, the value read by these functions is more likely to indicate
+> this kind of error. This presents two overlapping ways of reporting
+> errors and complicates error checking.
 
-Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+So why isn't the *value check done in the pci_read_config_* functions
+instead of touching gazillion callers?
 
-Cheers,
-Miguel
+For example, pci_conf{1,2}_read() could check whether the u32 *value it
+just read depending on the access method, whether that value is ~0 and
+return proper PCIBIOS_ error in that case.
+
+The check you're replicating
+
+	if (val32 == (u32)~0)
+
+everywhere, instead, is just ugly and tests a naked value ~0 which
+doesn't mean anything...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
