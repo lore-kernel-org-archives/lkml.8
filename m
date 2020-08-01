@@ -2,78 +2,91 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAADC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 08:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B442EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 08:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF7E420716
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 08:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CCC320725
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 08:37:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgHAIQh convert rfc822-to-8bit (ORCPT
+        id S1727813AbgHAIht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 04:16:37 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:6145 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbgHAIQh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 04:16:37 -0400
-X-Originating-IP: 50.39.163.217
-Received: from [127.0.0.1] (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
-        (Authenticated sender: josh@joshtriplett.org)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id C7AFB240005;
-        Sat,  1 Aug 2020 08:16:33 +0000 (UTC)
-Date:   Sat, 01 Aug 2020 01:16:30 -0700
-From:   Josh Triplett <josh@joshtriplett.org>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: inherit TAINT_PROPRIETARY_MODULE v2
-In-Reply-To: <20200801065308.GA1930@lst.de>
-References: <20200730061027.29472-1-hch@lst.de> <20200731201146.GA34345@localhost> <20200801065308.GA1930@lst.de>
-Message-ID: <10747512-3CA1-49BE-85CE-BA5C46C16E76@joshtriplett.org>
+        Sat, 1 Aug 2020 04:37:49 -0400
+Received: from mga03.intel.com ([134.134.136.65]:16502 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725931AbgHAIhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 04:37:48 -0400
+IronPort-SDR: R1iFPdgJBQq8TS7Sv5buFBqdc0QdTVogWBnOKvEG++dn0KaR4uK/+hCDv4e4Bhim0Jfc4Vw8fh
+ mBD0GixQEymA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9699"; a="151885370"
+X-IronPort-AV: E=Sophos;i="5.75,420,1589266800"; 
+   d="scan'208";a="151885370"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2020 01:37:48 -0700
+IronPort-SDR: 3rIhv1RTDGof2gdk7vtoKxsmN5ZmrWZlx8LzoOfE/xErds9IIESqEgaFh1buDNDeDep81weoAD
+ tfidI26tF+bQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,420,1589266800"; 
+   d="scan'208";a="273471456"
+Received: from lkp-server01.sh.intel.com (HELO e21119890065) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 01 Aug 2020 01:37:46 -0700
+Received: from kbuild by e21119890065 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k1n1V-0000Nr-Mn; Sat, 01 Aug 2020 08:37:45 +0000
+Date:   Sat, 1 Aug 2020 16:36:54 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc:     kbuild-all@lists.01.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        Darren Hart <dvhart@infradead.org>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH linux-next] platform/x86: thinkpad_acpi:
+ dev_attr_charge_start_threshold can be static
+Message-ID: <20200801083654.GA31368@144836a6079b>
+References: <202008011649.b8CEYWIz%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202008011649.b8CEYWIz%lkp@intel.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On July 31, 2020 11:53:08 PM PDT, Christoph Hellwig <hch@lst.de> wrote:
->[note: private reply now to start a flame fest with the usual suspects]
 
-[You still CCed LKML.]
+Fixes: e33929537b76 ("platform/x86: thinkpad_acpi: use standard charge control attribute names")
+Signed-off-by: kernel test robot <lkp@intel.com>
+---
+ thinkpad_acpi.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
->On Fri, Jul 31, 2020 at 01:11:46PM -0700, josh@joshtriplett.org wrote:
->> Christoph Hellwig wrote:
->> > we've had a bug in our resolution of _GPL modules since day one, that
->> > is a module can claim to be GPL licensed and use _GPL exports, while
->> > it also depends on symbols from non-GPL modules.  This is used as a
->> > circumvention of the _GPL exports by using a small shim module using
->> > the _GPL exports and the other functionality.
->> 
->> This looks great. You might also consider doing the reverse: if a module
->> imports any EXPORT_SYMBOL_GPL symbols, any symbols that module in turn
->> exports shouldn't be importable by any module that doesn't explicitly
->> claim to be GPL-compatible. Effectively, if a module imports any
->> EXPORT_SYMBOL_GPL symbols, all of its exported symbols would then be
->> treated as EXPORT_SYMBOL_GPL.
->> 
->> This would catch the case of attempting to "wrap" EXPORT_SYMBOL_GPL
->> symbols in the other direction, by re-exporting the same or similar
->> functions to another module. (This would help catch mistakes, not just
->> intentional malice.)
->
->I'd personally 100% agree with that, but I'd rather clear it with Linus
->privately first.  This would basically make most of the usual
->modular subsystems unavailable to proprietary modules as all of them
->use _GPL driver core exports, and I suspect he'd cave into the screaming.
-
-As a start, what about applying that logic specifically to out-of-tree modules? That would address the shim problem. The justification would be that in-tree modules have at least gone through some level of review on what they're exporting.
-
-(Standard disclaimer: suggesting enhancements to the symbol licensing framework should not be taken as implicit endorsement of any legitimacy for non-GPL-compatible modules.)
-
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 9eda2f84a3cf98..4864a5c189d464 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -9633,13 +9633,13 @@ static ssize_t charge_control_end_threshold_store(struct device *dev,
+ 
+ static DEVICE_ATTR_RW(charge_control_start_threshold);
+ static DEVICE_ATTR_RW(charge_control_end_threshold);
+-struct device_attribute dev_attr_charge_start_threshold = __ATTR(
++static struct device_attribute dev_attr_charge_start_threshold = __ATTR(
+ 	charge_start_threshold,
+ 	0644,
+ 	charge_control_start_threshold_show,
+ 	charge_control_start_threshold_store
+ );
+-struct device_attribute dev_attr_charge_stop_threshold = __ATTR(
++static struct device_attribute dev_attr_charge_stop_threshold = __ATTR(
+ 	charge_stop_threshold,
+ 	0644,
+ 	charge_control_end_threshold_show,
