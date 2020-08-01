@@ -2,90 +2,130 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E82EC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0207AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04A1320725
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D25FA2071E
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:06:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="xoGV0gXl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="BICu8/je"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbgHARC0 (ORCPT
+        id S1727846AbgHARGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 13:02:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40108 "EHLO
+        Sat, 1 Aug 2020 13:06:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727074AbgHARC0 (ORCPT
+        with ESMTP id S1726534AbgHARGH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 13:02:26 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80220C061756
-        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 10:02:26 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id g19so6201523plq.0
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 10:02:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=gVjl1fxVk2phmm6E3dsUk+Vd8Kon2yS4EGOlu+DC8qA=;
-        b=xoGV0gXlv0W7TosbAf87l0OGfBJMV7uZa+lmmZpczEuAWDna/mwq+dGD1Luj2HWsJ/
-         r/incAFP942ignqie8l3t+1D25tkhIb5d8rFNgEN6UNwCqrmCPk2BWTkRgJemUPcgXEH
-         nrblQmguOw6tZ+0cylPpmFuh86sYQs665GcdjWO8/ZFXRC12pBkfvgvr505huIp73Qfb
-         LUMQBKgXDJPzOxETWdHmlpBqvlcxtWWZhGNNzt2O088uGtZvrCDOdxKqJUQSrLVV6lcC
-         /Od5XWQ+3r6czO9wjniVOXkVvjokqhpdjgCIxEHme4ozSQqQ/DHQrQL9NoyYHPFRV5dz
-         8JPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gVjl1fxVk2phmm6E3dsUk+Vd8Kon2yS4EGOlu+DC8qA=;
-        b=ph14/kkGmqoqGKHKcwLJnPSr8h/DR8NiybKEfs6t/pcWEcl24djU0bFF4ce5UVyuaP
-         nTokq6u1mZeuij6eHXR7Jnq3FVmXDm86ZKz0H3hkMbBgF4IG1B+ryPay9PBWLCXuWJFl
-         YPOCGy1VM7V6ssT5OY9rie43t8mY2IkjCz6SfRJKpbbj5zZlVEntlIbN3lLTumqUpMQY
-         9sMFePFM54V0N8ccqp0FsHcxioRsBBi1xVQqBs4LIFpZX0coyrrMU9Hnkjz0zP5Y1JUx
-         Wb42OUXMLqldmHG7xnN8DglnrXwYXq7QBSdWgubz9FYStl8GsjFwXw4dUiYl9YMNdVWm
-         o1CA==
-X-Gm-Message-State: AOAM531zdQb2Wd/5KJ5MQxafpDNOYOZuZng2SoX7iuLDec60keoxPong
-        Ej+UvtEkthsBh8Bwhkl58bnyObMv4+c=
-X-Google-Smtp-Source: ABdhPJxHlTc2y+Bx7N7BqErBz0zEsNyD0GOHmEURfyOD725Rvk/bWYX4uIqsf9dLKUMjXxcQHdC2FA==
-X-Received: by 2002:a17:902:b706:: with SMTP id d6mr8251008pls.244.1596301345796;
-        Sat, 01 Aug 2020 10:02:25 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id oc4sm9226846pjb.51.2020.08.01.10.02.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 Aug 2020 10:02:25 -0700 (PDT)
-Subject: Re: [PATCH] fs: optimise kiocb_set_rw_flags()
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <e523f51f59ad6ecdad4ad22c560cb9c913e96e1a.1596277420.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <636faf6f-4c85-0582-2482-b99002888d0d@kernel.dk>
-Date:   Sat, 1 Aug 2020 11:02:23 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sat, 1 Aug 2020 13:06:07 -0400
+Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBFAFC06174A;
+        Sat,  1 Aug 2020 10:06:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
+        :To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=l7n3N/xd8cqylKwJ3mj18/IUyO+Bl2axCb31+YW7eLw=; b=BICu8/jeR64ZaNuproFAvKTpfD
+        IW+KNRTZKsaxK0wTrzAmHZ/bPnaShFaG3fDirWFu2GPRZ3+NSjdzxh41B+E14C3gcaYfPvh9xdors
+        QplVxxcmScIqhn/tFGhOch8Qe4inUfHlbxZMUi+5Ou7oICPqhqUH5pEglU2TeJOYYJckWch0gtUF2
+        K59BoyLvNpQ9o6AkXxSxm6eC34IIXKmh9icl3rcHpCnSoczncyMgznpE3OVVzMGKWsZGJ+F3y2f4E
+        r7A6kMaZcZ5pVCB0s+dkh9fmZFqq+7UgQRlvjnbGR45iZdWENqfzbNjwaGCvKLmbp7CCcOq795yYm
+        G2Jo721A==;
+Received: from noodles by the.earth.li with local (Exim 4.92)
+        (envelope-from <noodles@earth.li>)
+        id 1k1uxG-0006n0-MM; Sat, 01 Aug 2020 18:05:54 +0100
+Date:   Sat, 1 Aug 2020 18:05:54 +0100
+From:   Jonathan McDowell <noodles@earth.li>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Matthew Hagan <mnhagan88@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v3 1/2] net: dsa: qca8k: Add define for port VID
+Message-ID: <08fd70c48668544408bdb7932ef23e13d1080ad1.1596301468.git.noodles@earth.li>
+References: <20200721171624.GK23489@earth.li>
 MIME-Version: 1.0
-In-Reply-To: <e523f51f59ad6ecdad4ad22c560cb9c913e96e1a.1596277420.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200721171624.GK23489@earth.li>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/1/20 4:36 AM, Pavel Begunkov wrote:
-> Use a local var to collect flags in kiocb_set_rw_flags(). That spares
-> some memory writes and allows to replace most of the jumps with MOVEcc.
+Rather than using a magic value of 1 when configuring the port VIDs add
+a QCA8K_PORT_VID_DEF define and use that instead. Also fix up the
+bitmask in the process; the top 4 bits are reserved so this wasn't a
+problem, but only masking 12 bits is the correct approach.
 
-I've picked this one up.
+Signed-off-by: Jonathan McDowell <noodles@earth.li>
+---
+ drivers/net/dsa/qca8k.c | 11 ++++++-----
+ drivers/net/dsa/qca8k.h |  2 ++
+ 2 files changed, 8 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
+index a5566de82853..3ebc4da63074 100644
+--- a/drivers/net/dsa/qca8k.c
++++ b/drivers/net/dsa/qca8k.c
+@@ -663,10 +663,11 @@ qca8k_setup(struct dsa_switch *ds)
+ 			 * default egress vid
+ 			 */
+ 			qca8k_rmw(priv, QCA8K_EGRESS_VLAN(i),
+-				  0xffff << shift, 1 << shift);
++				  0xfff << shift,
++				  QCA8K_PORT_VID_DEF << shift);
+ 			qca8k_write(priv, QCA8K_REG_PORT_VLAN_CTRL0(i),
+-				    QCA8K_PORT_VLAN_CVID(1) |
+-				    QCA8K_PORT_VLAN_SVID(1));
++				    QCA8K_PORT_VLAN_CVID(QCA8K_PORT_VID_DEF) |
++				    QCA8K_PORT_VLAN_SVID(QCA8K_PORT_VID_DEF));
+ 		}
+ 	}
+ 
+@@ -1133,7 +1134,7 @@ qca8k_port_fdb_insert(struct qca8k_priv *priv, const u8 *addr,
+ {
+ 	/* Set the vid to the port vlan id if no vid is set */
+ 	if (!vid)
+-		vid = 1;
++		vid = QCA8K_PORT_VID_DEF;
+ 
+ 	return qca8k_fdb_add(priv, addr, port_mask, vid,
+ 			     QCA8K_ATU_STATUS_STATIC);
+@@ -1157,7 +1158,7 @@ qca8k_port_fdb_del(struct dsa_switch *ds, int port,
+ 	u16 port_mask = BIT(port);
+ 
+ 	if (!vid)
+-		vid = 1;
++		vid = QCA8K_PORT_VID_DEF;
+ 
+ 	return qca8k_fdb_del(priv, addr, port_mask, vid);
+ }
+diff --git a/drivers/net/dsa/qca8k.h b/drivers/net/dsa/qca8k.h
+index 31439396401c..92216a52daa5 100644
+--- a/drivers/net/dsa/qca8k.h
++++ b/drivers/net/dsa/qca8k.h
+@@ -22,6 +22,8 @@
+ 
+ #define QCA8K_CPU_PORT					0
+ 
++#define QCA8K_PORT_VID_DEF				1
++
+ /* Global control registers */
+ #define QCA8K_REG_MASK_CTRL				0x000
+ #define   QCA8K_MASK_CTRL_ID_M				0xff
 -- 
-Jens Axboe
+2.20.1
 
