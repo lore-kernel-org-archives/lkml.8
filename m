@@ -2,127 +2,174 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34EBC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89632207FB
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:38:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596296300;
-	bh=R9Rinnbiavbu4gLpa/mmI6LL+DEK5QDx/kYCTyiidc0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=gGy8cghPS1Yl9AoVY1+YuQ1m0sxlFhNkHNFY38K4cCNeS764tMq8BvaZGr8RCiL1m
-	 hBz5A9F/0YTaBUK7gdV5X1wmuKM7bKmTmAuZI/DTkE+qwtigWc7PO3Z0TRAY06nNS+
-	 BkvBUM9wp1KDfbO7VHcKKikLrxJfD6+sF6RmmnWo=
+	by mail.kernel.org (Postfix) with ESMTP id 92B512071E
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 15:41:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GMNOdfV8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgHAPiT (ORCPT
+        id S1726816AbgHAPlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 11:38:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42560 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725841AbgHAPiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 11:38:18 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90FFE2071E;
-        Sat,  1 Aug 2020 15:38:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596296298;
-        bh=R9Rinnbiavbu4gLpa/mmI6LL+DEK5QDx/kYCTyiidc0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uMPxyJJDjNSGBv0D/zupPMuJGNEvHiF/uosVwn+FNrKfKWa7teOSIjKbNPpc7TKJl
-         Io5c/genfnkgnGyZCIvDnPh2sC8XfytS4yaYUEklUE+Q/4ECB+IvPRi1SvUb6S5Vei
-         EVey38G27iPNAEPoMGUH2NMi0suxqvRX2dKhuork=
-Date:   Sat, 1 Aug 2020 16:38:13 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Ankit Baluni <b18007@students.iitmandi.ac.in>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -v2] Staging: iio: Fixed a punctuation and a spelling
- mistake.
-Message-ID: <20200801163813.12bc746b@archlinux>
-In-Reply-To: <CAHp75VdCBWLLMT7jm0CO+oK8eZf7cSMOM5sb9xZ1Po1_YFAMxw@mail.gmail.com>
-References: <CAHp75VcmMf5dt7mu9N0C=6Rej-WzZ0EpzntHYCQkgNLVZkPbgg@mail.gmail.com>
-        <20200729081155.3228-1-b18007@students.iitmandi.ac.in>
-        <CAHp75VdCBWLLMT7jm0CO+oK8eZf7cSMOM5sb9xZ1Po1_YFAMxw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 1 Aug 2020 11:41:01 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57661 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725841AbgHAPlA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 11:41:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596296458;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nQui1ORnPAKsuI1fhd31BLzq3dhoYk8J7BrcrmIiQ7Y=;
+        b=GMNOdfV8wCIFms44bMF7STXgCMj5updnvMr0KRIXqpXbrkbA+RGsrQ+RVUnb9sQRAAwYzC
+        8/G8Oa1BJgSkSGp50QiJvaNeXrsQFXfu9tdHcvG7H8bt0bI/Dxhmc3XmGZg8Z+LaQ7ouF3
+        yBhfkVY4ZSNYglLry+sHqBw+SI5XafI=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-237-meO6xYLTN0e3kpPgj7YxEg-1; Sat, 01 Aug 2020 11:40:57 -0400
+X-MC-Unique: meO6xYLTN0e3kpPgj7YxEg-1
+Received: by mail-qv1-f70.google.com with SMTP id v5so17591006qvr.1
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 08:40:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=nQui1ORnPAKsuI1fhd31BLzq3dhoYk8J7BrcrmIiQ7Y=;
+        b=dDK5RqAPyJ6G22uv1A41HTKGikSNP1+/L8IoxFNCt0E14qsLPluOMJxCpZlWH/+eTp
+         iB4yhue4+XxG458M8ThlCljIQ+nsXZtZfYuxbfeJeVwShCKZFeklTBJyeP8l+ByWFBKu
+         8YjUM14iFJAYGCE1BVJcGDNPXPH6OqU7wen8hvUwpa45WtfT8UcXCvacwEvEkXniffSG
+         4gczbnPxTr0hcMPFGJSld7t+4Wllzu0tLDukSKIdYT0c6zzCP8faTjk1LDZ01k7IsEuB
+         zJKCeNSGJ+yV24utoDWFs0Lqn8zplcPUuh9ye+78NOW3BPg9O9pXU+/GsDYR3DYgfh4Q
+         y3vw==
+X-Gm-Message-State: AOAM532lac2VXTp4UX1ku7s4tRgWldjkqclzTAAV1RfojULMQRWQq6Pg
+        H9ycVnmyaWc43R2CCXzeffMsK1jmcvQew2228n9vh/rdXFtIlQtTNbUK8FxeMAQDYnpR84Il2cB
+        dd6bIJuuPulsaEzHft4zMlMIN
+X-Received: by 2002:a05:620a:a51:: with SMTP id j17mr9138470qka.379.1596296456608;
+        Sat, 01 Aug 2020 08:40:56 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwb1zEjOToEa8dixgiMVuQZBz7J4GbATGr24cHiHBsdvkUHNiNmIZRnp/ckNVWvs57xuyQI3w==
+X-Received: by 2002:a05:620a:a51:: with SMTP id j17mr9138463qka.379.1596296456387;
+        Sat, 01 Aug 2020 08:40:56 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id j61sm13491860qtd.52.2020.08.01.08.40.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Aug 2020 08:40:55 -0700 (PDT)
+Subject: Re: [PATCH v2 1/4] fpga: dfl: change data type of feature id to u16
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lgoncalv@redhat.com
+References: <1595556555-9903-1-git-send-email-yilun.xu@intel.com>
+ <1595556555-9903-2-git-send-email-yilun.xu@intel.com>
+ <316f86d4-7bba-f0c7-3dde-794df80d32e7@redhat.com>
+ <20200731074837.GE1781@yilunxu-OptiPlex-7050>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <1d8198f3-10d6-118c-f767-cef88fa871c6@redhat.com>
+Date:   Sat, 1 Aug 2020 08:40:54 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200731074837.GE1781@yilunxu-OptiPlex-7050>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jul 2020 13:38:28 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-> On Wed, Jul 29, 2020 at 11:12 AM Ankit Baluni
-> <b18007@students.iitmandi.ac.in> wrote:
-> >
-> > Added a missing comma and changed 'it it useful' to 'it is useful'.  
-> 
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Gah. I had kind of forgotten these docs existed and they have
-rotted pretty badly from a quick glance.   Sometime soon I'll take
-a look and see if there is anything worth moving over to the main docs.
+On 7/31/20 12:48 AM, Xu Yilun wrote:
+> On Sat, Jul 25, 2020 at 06:29:53AM -0700, Tom Rix wrote:
+>> It would be good if the variable or element for the feature id had a consistent name.
+>>
+>>
+>>> @@ -197,7 +197,7 @@ int dfl_fpga_check_port_id(struct platform_device *pdev, void *pport_id);
+>>>   * @id: unique dfl private feature id.
+>>>   */
+>>>  struct dfl_feature_id {
+>>> -	u64 id;
+>>> +	u16 id;
+>>>  };
+>> Is this structure needed ?
+>>
+>> Here is how it could be changed to 
+>>
+>> struct dfl_feature_driver {
+>>
+>> -    const dfl_feature_id *
+>>
+>> +    const u16 *id_table;
+> This structure is to represent an id type, which is used to match
+> fme/port owned features. It could be extended if some feature drivers
+> needs driver_data.
+>
+> Actually I see some example of device_ids with similar structure, like:
+>
+>   struct mips_cdmm_device_id {
+>   	__u8	type;
+>   };
+>
+>   struct tee_client_device_id {
+> 	uuid_t uuid;
+>   };
+>
+Ok.
 
-In meantime, nothing wrong with cleaning them up a little as you Ankit
-has done here.
+Reviewed-by: Tom Rix <trix@redhat.com>
 
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to ignore them.
-
-Thanks,
-
-Jonathan
-
-> 
-> > Signed-off-by: Ankit Baluni <b18007@students.iitmandi.ac.in>
-> > ---
-> > Changes in -v2:
-> >         -Remove space before ':' in subject line.
-> >
-> >  drivers/staging/iio/Documentation/overview.txt | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/staging/iio/Documentation/overview.txt b/drivers/staging/iio/Documentation/overview.txt
-> > index ebdc64f451d7..00409d5dab4e 100644
-> > --- a/drivers/staging/iio/Documentation/overview.txt
-> > +++ b/drivers/staging/iio/Documentation/overview.txt
-> > @@ -9,7 +9,7 @@ The aim is to fill the gap between the somewhat similar hwmon and
-> >  input subsystems.  Hwmon is very much directed at low sample rate
-> >  sensors used in applications such as fan speed control and temperature
-> >  measurement.  Input is, as its name suggests focused on input
-> > -devices. In some cases there is considerable overlap between these and
-> > +devices. In some cases, there is considerable overlap between these and
-> >  IIO.
-> >
-> >  A typical device falling into this category would be connected via SPI
-> > @@ -38,7 +38,7 @@ series and Analog Devices ADXL345 accelerometers.  Each buffer supports
-> >  polling to establish when data is available.
-> >
-> >  * Trigger and software buffer support. In many data analysis
-> > -applications it it useful to be able to capture data based on some
-> > +applications it is useful to be able to capture data based on some
-> >  external signal (trigger).  These triggers might be a data ready
-> >  signal, a gpio line connected to some external system or an on
-> >  processor periodic interrupt.  A single trigger may initialize data
-> > --
-> > 2.25.1
-> >  
-> 
-> 
+> Thanks,
+> Yilun.
+>
+>> ...
+>>
+>> Tom
+>>
+>>
+>>>  
+>>>  /**
+>>> @@ -240,7 +240,7 @@ struct dfl_feature_irq_ctx {
+>>>   */
+>>>  struct dfl_feature {
+>>>  	struct platform_device *dev;
+>>> -	u64 id;
+>>> +	u16 id;
+>>>  	int resource_index;
+>>>  	void __iomem *ioaddr;
+>>>  	struct dfl_feature_irq_ctx *irq_ctx;
+>>> @@ -371,7 +371,7 @@ struct platform_device *dfl_fpga_inode_to_feature_dev(struct inode *inode)
+>>>  	   (feature) < (pdata)->features + (pdata)->num; (feature)++)
+>>>  
+>>>  static inline
+>>> -struct dfl_feature *dfl_get_feature_by_id(struct device *dev, u64 id)
+>>> +struct dfl_feature *dfl_get_feature_by_id(struct device *dev, u16 id)
+>>>  {
+>>>  	struct dfl_feature_platform_data *pdata = dev_get_platdata(dev);
+>>>  	struct dfl_feature *feature;
+>>> @@ -384,7 +384,7 @@ struct dfl_feature *dfl_get_feature_by_id(struct device *dev, u64 id)
+>>>  }
+>>>  
+>>>  static inline
+>>> -void __iomem *dfl_get_feature_ioaddr_by_id(struct device *dev, u64 id)
+>>> +void __iomem *dfl_get_feature_ioaddr_by_id(struct device *dev, u16 id)
+>>>  {
+>>>  	struct dfl_feature *feature = dfl_get_feature_by_id(dev, id);
+>>>  
+>>> @@ -395,7 +395,7 @@ void __iomem *dfl_get_feature_ioaddr_by_id(struct device *dev, u64 id)
+>>>  	return NULL;
+>>>  }
+>>>  
+>>> -static inline bool is_dfl_feature_present(struct device *dev, u64 id)
+>>> +static inline bool is_dfl_feature_present(struct device *dev, u16 id)
+>>>  {
+>>>  	return !!dfl_get_feature_ioaddr_by_id(dev, id);
+>>>  }
 
