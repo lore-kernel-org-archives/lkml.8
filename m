@@ -2,117 +2,237 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9A4C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 16:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC33C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 16:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6E9A2080C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 16:37:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="sLJ2YymD"
+	by mail.kernel.org (Postfix) with ESMTP id C962C207BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 16:39:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgHAQhC (ORCPT
+        id S1727113AbgHAQjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 12:37:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726456AbgHAQhB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 12:37:01 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DEAEC06174A
-        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 09:37:00 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id o23so6978474ejr.1
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 09:37:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7nWoFZS16KHN7ELInZM3NkAqbsw8HmgfQtV5PkaAdOs=;
-        b=sLJ2YymDgCE2aYqkgcFgGI6naddEomHT1AI/LblO1I2CIpKzR/X4HC0D8kFfsN6b+L
-         XCYiypkgq9U/ws9p617+waX57F8r3r9xw2IEJINKnzTBI1kuSBY9ijEvHwlcNtuSjqeZ
-         Hc2tgLSldiumX+1XnZPsDgJMdf1x61SK6XNyMc3TiFxkjVUQDHk06pK8LV6TXULby89E
-         Q+sc+6B4I8vfJLc3o9x4Nzoa4qysw9eANsa9JKWVrWyM3DFMjubaz5YpI0uzS2O4ob16
-         LSXsaZKRopTp92npa1jce/IFsU1kV5YolRnKSOBrqMK/vKjOiSQ1Nztp40qAyj1R/fd9
-         WV0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7nWoFZS16KHN7ELInZM3NkAqbsw8HmgfQtV5PkaAdOs=;
-        b=LZLkzcJP3KXQeRT3Tb5xVMoqEcTkCJJR1+kypp4hm5uYYce6o+RfIkaBeonwr6NbHE
-         N565Ii2PaWt5XfM0ksEr+GjI+Js8BX9FI/Tr8RFNNNf4Spk6a80FcaLwOAWexb3poLXP
-         SHDoapvfxNk7CbH3JGDKr8IkurFsL8EHwlN2DVaDMmc3d46iwWYr0kStm8unaJdzrdGA
-         0TpRmX3ARPdi/fPZxRWgTFmL2YxyI+wIgrEbFybFrwu0KAo4Dw6ap7WxSDK6SDSNnoge
-         0GW5pvUGEFdS40W0XdZUEcvsCvY/Js0ZMr7gUIzrrh1+r5cYZGMYJqQ9/jvnx6R4kKp6
-         +6FA==
-X-Gm-Message-State: AOAM530tPzDJHJcrHXzQpRs2+ZkndRSrR53hJr8PvN8vTNCmo0C3vNzK
-        Mzp/o0sSh9u12V3D/6HvSkOivr1SZfJ+IYXae4Alkg==
-X-Google-Smtp-Source: ABdhPJxOFGsY8qnjWmioIMQMzSoQMpAmcXHTZevYKI2hHLGadP9/WqNGAW9biPUhi7/KRXBONqPTrbpeIRc4H0g10M8=
-X-Received: by 2002:a17:907:72c8:: with SMTP id du8mr9038155ejc.237.1596299819131;
- Sat, 01 Aug 2020 09:36:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <159625229779.3040297.11363509688097221416.stgit@dwillia2-desk3.amr.corp.intel.com>
- <159625231266.3040297.2759117253481288037.stgit@dwillia2-desk3.amr.corp.intel.com>
- <545078f8-d6d3-5db7-02f6-648218513752@infradead.org>
-In-Reply-To: <545078f8-d6d3-5db7-02f6-648218513752@infradead.org>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sat, 1 Aug 2020 09:36:48 -0700
-Message-ID: <CAPcyv4iUtQ1Edau5e7GQumu1MxcAvorSNwnw9HGhzFDNuBS7=Q@mail.gmail.com>
-Subject: Re: [PATCH v3 02/23] x86/numa: Add 'nohmat' option
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, X86 ML <x86@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
+        Sat, 1 Aug 2020 12:39:32 -0400
+Received: from mga03.intel.com ([134.134.136.65]:28970 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726494AbgHAQjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 12:39:31 -0400
+IronPort-SDR: pZJAcrW2OCc/hHe7i4ZVYwcW1p/YDc5e0dvbSHPgRJNGzYT1uNmJMWBrKjCwL5uqaMr30+m/MF
+ 0UUe+LzD6B3w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9699"; a="151911531"
+X-IronPort-AV: E=Sophos;i="5.75,423,1589266800"; 
+   d="txt'?scan'208";a="151911531"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2020 09:39:30 -0700
+IronPort-SDR: m3hGwR8wWzEDR7gwPNrUqOp6ge3BGSba3XDKFpf+5Ay5AKTPiIX+oGCnwXiylkKWU1IHsq1tRN
+ XTSc9toW8UWQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,423,1589266800"; 
+   d="txt'?scan'208";a="365881424"
+Received: from ppurohit-mobl.amr.corp.intel.com ([10.212.162.156])
+  by orsmga001.jf.intel.com with ESMTP; 01 Aug 2020 09:39:30 -0700
+Message-ID: <6febe0592d1830dac04aab281f66b47498dda887.camel@linux.intel.com>
+Subject: Re: [PATCH v4 0/2] cpufreq: intel_pstate: Implement passive mode
+ with HWP enabled
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>
+Cc:     Linux Documentation <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Doug Smythies <dsmythies@telus.net>,
+        Francisco Jerez <francisco.jerez.plata@intel.com>
+Date:   Sat, 01 Aug 2020 09:39:30 -0700
+In-Reply-To: <13207937.r2GEYrEf4f@kreacher>
+References: <4981405.3kqTVLv5tO@kreacher> <1709487.Bxjb1zNRZM@kreacher>
+         <13207937.r2GEYrEf4f@kreacher>
+Content-Type: multipart/mixed; boundary="=-bU21ZBsdw4g45G9I/wXt"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 8:51 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 7/31/20 8:25 PM, Dan Williams wrote:
-> > Disable parsing of the HMAT for debug, to workaround broken platform
-> > instances, or cases where it is otherwise not wanted.
-> >
-> > ---
-> >  arch/x86/mm/numa.c       |    2 ++
-> >  drivers/acpi/numa/hmat.c |    8 +++++++-
-> >  include/acpi/acpi_numa.h |    8 ++++++++
-> >  3 files changed, 17 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-> > index 87c52822cc44..f3805bbaa784 100644
-> > --- a/arch/x86/mm/numa.c
-> > +++ b/arch/x86/mm/numa.c
-> > @@ -41,6 +41,8 @@ static __init int numa_setup(char *opt)
-> >               return numa_emu_cmdline(opt + 5);
-> >       if (!strncmp(opt, "noacpi", 6))
-> >               disable_srat();
-> > +     if (!strncmp(opt, "nohmat", 6))
-> > +             disable_hmat();
->
-> Hopefully that will be documented in
-> Documentation/x86/x86_64/boot-options.rst.
 
-Sorry, yes, you gave that feedback before. I can do a quick respin
-with this and the kbuild-robot compile fixups.
+--=-bU21ZBsdw4g45G9I/wXt
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+
+On Tue, 2020-07-28 at 17:09 +0200, Rafael J. Wysocki wrote:
+> Hi All,
+> 
+> On Monday, July 27, 2020 5:13:40 PM CEST Rafael J. Wysocki wrote:
+> > On Thursday, July 16, 2020 7:37:04 PM CEST Rafael J. Wysocki wrote:
+> > > This really is a v2 of this patch:
+> > > 
+> > > https://patchwork.kernel.org/patch/11663271/
+> > > 
+> > > with an extra preceding cleanup patch to avoid making unrelated
+> > > changes in the
+> > > [2/2].
+> > 
+I applied this series along with
+[PATCH] cpufreq: intel_pstate: Fix EPP setting via sysfs in active mode
+on 5.8 latest master (On top of raw epp patchset).
+
+When intel_pstate=passive from kernel command line then it is fine, no
+crash. But switch dynamically, crashed:
+Attached crash.txt. I may need to try your linux-pm tree.
+
+Then after some playing I reached a state when I monitor MSR 0x774:
+while true; do rdmsr 0x774; sleep 1; done
+80002704
+...
+...
+ff000101
+ff000101
+ff000101
+ff000101
+ff000101
+ff000101
+ff000101
+ff000101
+
+Don't have a recipe to reproduce this.
+
+Thanks,
+Srinivas
+
+> > Almost the same as before, but the first patch has been reworked to
+> > handle
+> > errors in store_energy_performance_preference() correctly and
+> > rebased on top
+> > of the current linux-pm.git branch.
+> > 
+> > No functional changes otherwise.
+> 
+> One more update of the second patch.
+> 
+> Namely, I realized that the hwp_dynamic_boost sysfs switch was
+> present in the
+> passive mode after the v3 (and the previous versions) of that patch
+> which isn't
+> correct, so this modifies it to avoid exposing hwp_dynamic_boost in
+> the passive
+> mode.
+> 
+> The first patch is the same as in the v2.
+> 
+> Thanks!
+> 
+> 
+> 
+
+--=-bU21ZBsdw4g45G9I/wXt
+Content-Disposition: attachment; filename="crash.txt"
+Content-Type: text/plain; name="crash.txt"; charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+WyAgMjMyLjQ4MzQyMF0gQlVHOiBrZXJuZWwgTlVMTCBwb2ludGVyIGRlcmVmZXJlbmNlLCBhZGRy
+ZXNzOiAwMDAwMDAwMDAwMDAwMDMwClsgIDIzMi40ODM0MzVdICNQRjogc3VwZXJ2aXNvciByZWFk
+IGFjY2VzcyBpbiBrZXJuZWwgbW9kZQpbICAyMzIuNDgzNDQxXSAjUEY6IGVycm9yX2NvZGUoMHgw
+MDAwKSAtIG5vdC1wcmVzZW50IHBhZ2UKWyAgMjMyLjQ4MzQ0Nl0gUEdEIDAgUDREIDAgClsgIDIz
+Mi40ODM0NTddIE9vcHM6IDAwMDAgWyMxXSBTTVAgTk9QVEkKWyAgMjMyLjQ4MzQ2OV0gQ1BVOiA3
+IFBJRDogMjA2NCBDb21tOiBiYXNoIFRhaW50ZWQ6IEcgICAgICAgIFcgICAgICAgICA1LjguMC1y
+YzYrICM2ClsgIDIzMi40ODM0NzRdIEhhcmR3YXJlIG5hbWU6IERlbGwgSW5jLiBYUFMgMTMgNzM5
+MCAyLWluLTEvMDZDRFZZLCBCSU9TIDEuMy4xIDAzLzAyLzIwMjAKWyAgMjMyLjQ4MzQ5MV0gUklQ
+OiAwMDEwOnN5c2ZzX3JlbW92ZV9maWxlX25zKzB4Ni8weDIwClsgIDIzMi40ODM1MDBdIENvZGU6
+IGZmIDRjIDg5IGU3IGU4IGJiIGNlIGZmIGZmIDRjIDg5IGVmIGU4IDQzIGY5IDFkIDAwIDQxIDVj
+IDQxIDVkIDVkIGMzIDY2IDY2IDJlIDBmIDFmIDg0IDAwIDAwIDAwIDAwIDAwIDY2IDkwIDBmIDFm
+IDQ0IDAwIDAwIDU1IDw0OD4gOGIgN2YgMzAgNDggOGIgMzYgNDggODkgZTUgZTggY2IgZTIgZmYg
+ZmYgNWQgYzMgNjYgMGYgMWYgODQgMDAKWyAgMjMyLjQ4MzUwN10gUlNQOiAwMDE4OmZmZmZhYTM3
+YzFjOTNkZjggRUZMQUdTOiAwMDAxMDI0NgpbICAyMzIuNDgzNTE0XSBSQVg6IDAwMDAwMDAwMDAw
+MDAwMDEgUkJYOiAwMDAwMDAwMDAwMDAwMDA3IFJDWDogMDAwMDAwMDAwMDAwMDAwOApbICAyMzIu
+NDgzNTE5XSBSRFg6IDAwMDAwMDAwMDAwMDAwMDAgUlNJOiBmZmZmZmZmZmE4N2YxZjYwIFJESTog
+MDAwMDAwMDAwMDAwMDAwMApbICAyMzIuNDgzNTI0XSBSQlA6IGZmZmZhYTM3YzFjOTNlMTggUjA4
+OiAwMDAwMDAwMDAwMDAwMDAwIFIwOTogZmZmZmZmZmZhNzkxZmYwMApbICAyMzIuNDgzNTI5XSBS
+MTA6IGZmZmY4YTE1YmMwZjM2MDAgUjExOiAwMDAwMDAwMDAwMDAwMDAxIFIxMjogMDAwMDAwMDAw
+MDAwMDAwOApbICAyMzIuNDgzNTMzXSBSMTM6IGZmZmY4YTE1YjMwNTkxOTcgUjE0OiBmZmZmZmZm
+ZmZmZmZmZmYyIFIxNTogZmZmZjhhMTU5Zjk0NTAyMApbICAyMzIuNDgzNTQxXSBGUzogIDAwMDA3
+ZjA2OGEzZDQ3NDAoMDAwMCkgR1M6ZmZmZjhhMTViZjdjMDAwMCgwMDAwKSBrbmxHUzowMDAwMDAw
+MDAwMDAwMDAwClsgIDIzMi40ODM1NDddIENTOiAgMDAxMCBEUzogMDAwMCBFUzogMDAwMCBDUjA6
+IDAwMDAwMDAwODAwNTAwMzMKWyAgMjMyLjQ4MzU1Ml0gQ1IyOiAwMDAwMDAwMDAwMDAwMDMwIENS
+MzogMDAwMDAwMDQ2ZWM3ODAwNCBDUjQ6IDAwMDAwMDAwMDA3NjBlZTAKWyAgMjMyLjQ4MzU1N10g
+UEtSVTogNTU1NTU1NTQKWyAgMjMyLjQ4MzU2MV0gQ2FsbCBUcmFjZToKWyAgMjMyLjQ4MzU4MV0g
+ID8gaW50ZWxfcHN0YXRlX2RyaXZlcl9jbGVhbnVwKzB4YmQvMHhkMApbICAyMzIuNDgzNTkwXSAg
+c3RvcmVfc3RhdHVzKzB4OWIvMHgxODAKWyAgMjMyLjQ4MzYwM10gIGtvYmpfYXR0cl9zdG9yZSsw
+eDEyLzB4MjAKWyAgMjMyLjQ4MzYxMF0gIHN5c2ZzX2tmX3dyaXRlKzB4M2UvMHg1MApbICAyMzIu
+NDgzNjIzXSAga2VybmZzX2ZvcF93cml0ZSsweGRhLzB4MWIwClsgIDIzMi40ODM2MzZdICB2ZnNf
+d3JpdGUrMHhjOS8weDIwMApbICAyMzIuNDgzNjQ3XSAga3N5c193cml0ZSsweDY3LzB4ZTAKWyAg
+MjMyLjQ4MzY1N10gIF9feDY0X3N5c193cml0ZSsweDFhLzB4MjAKWyAgMjMyLjQ4MzY2OF0gIGRv
+X3N5c2NhbGxfNjQrMHg1Mi8weGMwClsgIDIzMi40ODM2ODBdICBlbnRyeV9TWVNDQUxMXzY0X2Fm
+dGVyX2h3ZnJhbWUrMHg0NC8weGE5ClsgIDIzMi40ODM2ODldIFJJUDogMDAzMzoweDdmMDY4YTRl
+ODA1NwpbICAyMzIuNDgzNjkzXSBDb2RlOiBCYWQgUklQIHZhbHVlLgpbICAyMzIuNDgzNjk5XSBS
+U1A6IDAwMmI6MDAwMDdmZmUwZDRmYWVjOCBFRkxBR1M6IDAwMDAwMjQ2IE9SSUdfUkFYOiAwMDAw
+MDAwMDAwMDAwMDAxClsgIDIzMi40ODM3MDVdIFJBWDogZmZmZmZmZmZmZmZmZmZkYSBSQlg6IDAw
+MDAwMDAwMDAwMDAwMDggUkNYOiAwMDAwN2YwNjhhNGU4MDU3ClsgIDIzMi40ODM3MTBdIFJEWDog
+MDAwMDAwMDAwMDAwMDAwOCBSU0k6IDAwMDA1NWI1MmUzYTY3MDAgUkRJOiAwMDAwMDAwMDAwMDAw
+MDAxClsgIDIzMi40ODM3MTVdIFJCUDogMDAwMDU1YjUyZTNhNjcwMCBSMDg6IDAwMDAwMDAwMDAw
+MDAwMGEgUjA5OiAwMDAwMDAwMDAwMDAwMDA3ClsgIDIzMi40ODM3MTldIFIxMDogMDAwMDU1YjUy
+Y2NhNTAxNyBSMTE6IDAwMDAwMDAwMDAwMDAyNDYgUjEyOiAwMDAwMDAwMDAwMDAwMDA4ClsgIDIz
+Mi40ODM3MjRdIFIxMzogMDAwMDdmMDY4YTVjMzZhMCBSMTQ6IDAwMDA3ZjA2OGE1YzQ0YTAgUjE1
+OiAwMDAwN2YwNjhhNWMzOGEwClsgIDIzMi40ODM3MzVdIE1vZHVsZXMgbGlua2VkIGluOiBtc3Ig
+cmZjb21tIGNjbSBjbWFjIGFsZ2lmX2hhc2ggYWxnaWZfc2tjaXBoZXIgYWZfYWxnIHdhY29tIHVz
+YmhpZCBoaWRfbXVsdGl0b3VjaCBibmVwIGhpZF9zZW5zb3JfYWxzIGhpZF9zZW5zb3JfaW5jbF8z
+ZCBoaWRfc2Vuc29yX2FjY2VsXzNkIGhpZF9zZW5zb3JfbWFnbl8zZCBoaWRfc2Vuc29yX2d5cm9f
+M2QgaGlkX3NlbnNvcl9yb3RhdGlvbiBoaWRfc2Vuc29yX3RyaWdnZXIgaW5kdXN0cmlhbGlvX3Ry
+aWdnZXJlZF9idWZmZXIga2ZpZm9fYnVmIGhpZF9zZW5zb3JfaWlvX2NvbW1vbiBpbmR1c3RyaWFs
+aW8gaGlkX3NlbnNvcl9jdXN0b20geDg2X3BrZ190ZW1wX3RoZXJtYWwgaGlkX3NlbnNvcl9odWIg
+aW50ZWxfcG93ZXJjbGFtcCBoaWRfZ2VuZXJpYyBpbnRlbF9pc2h0cF9sb2FkZXIgc25kX3NvZl9w
+Y2kgc25kX3NvZl9pbnRlbF9ieXQgaW50ZWxfaXNodHBfaGlkIHNuZF9zb2ZfaW50ZWxfaXBjIGRl
+bGxfbGFwdG9wIGRlbGxfd21pIGNyb3NfZWNfaXNodHAgc25kX3NvZl9pbnRlbF9oZGFfY29tbW9u
+IG1laV9oZGNwIHJ0c3hfcGNpX3NkbW1jIGludGVsX3JhcGxfbXNyIGludGVsX3dtaV90aHVuZGVy
+Ym9sdCBjb3JldGVtcCB3bWlfYm1vZiBkZWxsX3NtYmlvcyBzbmRfc29jX2hkYWNfaGRhIGNyb3Nf
+ZWMgc25kX3NvZl94dGVuc2FfZHNwIHNuZF9zb2ZfaW50ZWxfaGRhIHNuZF9zb2Yga3ZtX2ludGVs
+IGRlbGxfd21pX2Rlc2NyaXB0b3Igc25kX2hkYV9jb2RlY19oZG1pIGRjZGJhcyBzbmRfaGRhX2V4
+dF9jb3JlIGRlbGxfc21tX2h3bW9uIG5sc19pc284ODU5XzEgc25kX3NvY19hY3BpX2ludGVsX21h
+dGNoIGt2bSBzbmRfaGRhX2NvZGVjX3JlYWx0ZWsgc25kX3NvY19hY3BpIHNuZF9oZGFfY29kZWNf
+Z2VuZXJpYyBpd2xtdm0gbGVkdHJpZ19hdWRpbyBzbmRfc29jX2NvcmUgY3JjdDEwZGlmX3BjbG11
+bCBjcmMzMl9wY2xtdWwgZ2hhc2hfY2xtdWxuaV9pbnRlbCBhZXNuaV9pbnRlbApbICAyMzIuNDgz
+ODIxXSAgY3J5cHRvX3NpbWQgY3J5cHRkIHNuZF9jb21wcmVzcyBnbHVlX2hlbHBlciBhYzk3X2J1
+cyBzbmRfcGNtX2RtYWVuZ2luZSByYXBsIG1hYzgwMjExIGludGVsX2NzdGF0ZSBzbmRfaGRhX2lu
+dGVsIHNuZF9pbnRlbF9kc3BjZmcgc25kX2hkYV9jb2RlYyBzbmRfaGRhX2NvcmUgam95ZGV2IHNu
+ZF9od2RlcCBzbmRfcGNtIGxpYmFyYzQgZWZpX3BzdG9yZSBpd2x3aWZpIGJ0dXNiIHNuZF9zZXFf
+bWlkaSBzbmRfc2VxX21pZGlfZXZlbnQgYnRydGwgc25kX3Jhd21pZGkgYnRiY20gYnRpbnRlbCBz
+bmRfc2VxIGJsdWV0b290aCBjZmc4MDIxMSBzbmRfc2VxX2RldmljZSBzbmRfdGltZXIgc25kIGky
+Y19pODAxIGkyY19zbWJ1cyB1Y3NpX2FjcGkgcHJvY2Vzc29yX3RoZXJtYWxfZGV2aWNlIHR5cGVj
+X3Vjc2kgaW50ZWxfcmFwbF9jb21tb24gaW50ZWxfbHBzc19wY2kgaW50ZWxfbHBzcyBpZG1hNjQg
+cnRzeF9wY2kgc291bmRjb3JlIG1laV9tZSBlY2RoX2dlbmVyaWMgbWVpIGludGVsX2lzaF9pcGMg
+ZWNjIGkyY19oaWQgaW50ZWxfaXNodHAgaW50ZWxfc29jX2R0c19pb3NmIHR5cGVjIHZpcnRfZG1h
+IHdtaSBoaWQgaW50MzQwM190aGVybWFsIHNvY19idXR0b25fYXJyYXkgaW50MzQweF90aGVybWFs
+X3pvbmUgaW50MzQwMF90aGVybWFsIGludGVsX2hpZCBhY3BpX3RoZXJtYWxfcmVsIHNwYXJzZV9r
+ZXltYXAgYWNwaV9wYWQgYWNwaV90YWQgc2NoX2ZxX2NvZGVsIHBhcnBvcnRfcGMgcHBkZXYgbHAg
+cGFycG9ydCBpcF90YWJsZXMgeF90YWJsZXMgYXV0b2ZzNCBpOTE1IGkyY19hbGdvX2JpdCBkcm1f
+a21zX2hlbHBlciBzeXNjb3B5YXJlYSBzeXNmaWxscmVjdCBzeXNpbWdibHQgZmJfc3lzX2ZvcHMg
+Y2VjIGRybSBwc21vdXNlIG52bWUgbnZtZV9jb3JlIGlucHV0X2xlZHMgc2VyaW9fcmF3IG1hY19o
+aWQgdmlkZW8gcGluY3RybF9pY2VsYWtlIHBpbmN0cmxfaW50ZWwKWyAgMjMyLjQ4Mzk0MF0gQ1Iy
+OiAwMDAwMDAwMDAwMDAwMDMwClsgIDIzMi40ODM5NTBdIC0tLVsgZW5kIHRyYWNlIDMxZGI0MWJh
+YjZmZGZmNmYgXS0tLQpbICAyMzMuODEyMjYwXSBSSVA6IDAwMTA6c3lzZnNfcmVtb3ZlX2ZpbGVf
+bnMrMHg2LzB4MjAKWyAgMjMzLjgxMjI4MV0gQ29kZTogZmYgNGMgODkgZTcgZTggYmIgY2UgZmYg
+ZmYgNGMgODkgZWYgZTggNDMgZjkgMWQgMDAgNDEgNWMgNDEgNWQgNWQgYzMgNjYgNjYgMmUgMGYg
+MWYgODQgMDAgMDAgMDAgMDAgMDAgNjYgOTAgMGYgMWYgNDQgMDAgMDAgNTUgPDQ4PiA4YiA3ZiAz
+MCA0OCA4YiAzNiA0OCA4OSBlNSBlOCBjYiBlMiBmZiBmZiA1ZCBjMyA2NiAwZiAxZiA4NCAwMApb
+ICAyMzMuODEyMjkyXSBSU1A6IDAwMTg6ZmZmZmFhMzdjMWM5M2RmOCBFRkxBR1M6IDAwMDEwMjQ2
+ClsgIDIzMy44MTIzMDJdIFJBWDogMDAwMDAwMDAwMDAwMDAwMSBSQlg6IDAwMDAwMDAwMDAwMDAw
+MDcgUkNYOiAwMDAwMDAwMDAwMDAwMDA4ClsgIDIzMy44MTIzMDhdIFJEWDogMDAwMDAwMDAwMDAw
+MDAwMCBSU0k6IGZmZmZmZmZmYTg3ZjFmNjAgUkRJOiAwMDAwMDAwMDAwMDAwMDAwClsgIDIzMy44
+MTIzMTNdIFJCUDogZmZmZmFhMzdjMWM5M2UxOCBSMDg6IDAwMDAwMDAwMDAwMDAwMDAgUjA5OiBm
+ZmZmZmZmZmE3OTFmZjAwClsgIDIzMy44MTIzMThdIFIxMDogZmZmZjhhMTViYzBmMzYwMCBSMTE6
+IDAwMDAwMDAwMDAwMDAwMDEgUjEyOiAwMDAwMDAwMDAwMDAwMDA4ClsgIDIzMy44MTIzMjNdIFIx
+MzogZmZmZjhhMTViMzA1OTE5NyBSMTQ6IGZmZmZmZmZmZmZmZmZmZjIgUjE1OiBmZmZmOGExNTlm
+OTQ1MDIwClsgIDIzMy44MTIzMzFdIEZTOiAgMDAwMDdmMDY4YTNkNDc0MCgwMDAwKSBHUzpmZmZm
+OGExNWJmN2MwMDAwKDAwMDApIGtubEdTOjAwMDAwMDAwMDAwMDAwMDAKWyAgMjMzLjgxMjMzN10g
+Q1M6ICAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMwpbICAyMzMu
+ODEyMzQzXSBDUjI6IDAwMDAwMDAwMDAwMDAwMzAgQ1IzOiAwMDAwMDAwNDZlYzc4MDA0IENSNDog
+MDAwMDAwMDAwMDc2MGVlMApbICAyMzMuODEyMzQ5XSBQS1JVOiA1NTU1NTU1NAoK
+
+
+--=-bU21ZBsdw4g45G9I/wXt--
+
