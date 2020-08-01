@@ -2,318 +2,441 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MALFORMED_FREEMAIL,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18574C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 19:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E02EDC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 19:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE2FE20781
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 19:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C682072A
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 19:23:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AYRgmSwl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpS7JGPu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbgHATWz (ORCPT
+        id S1727813AbgHATXS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 15:22:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33246 "EHLO
+        Sat, 1 Aug 2020 15:23:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726916AbgHATWy (ORCPT
+        with ESMTP id S1727006AbgHATXR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 15:22:54 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A75DC06174A
-        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 12:22:54 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id j187so31883572qke.11
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 12:22:54 -0700 (PDT)
+        Sat, 1 Aug 2020 15:23:17 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7FE0C06174A;
+        Sat,  1 Aug 2020 12:23:16 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id k8so12066137wma.2;
+        Sat, 01 Aug 2020 12:23:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
          :user-agent:mime-version;
-        bh=q4GZi4Kf5DXEeMyZGvNSCtr8zsFMta44KzAXttHuuE0=;
-        b=AYRgmSwlCbhmP5pYZUUR4sCshvWjsdzOlDg0JxdJkej1euzDxG9WHW7ZVtWaId1iqf
-         ZS0yTLi84i/6FC6dE4H6+jLAfmgUnms8dcvO+xepLw3Oo0yigsqosur9lXmjT2Rq0Hn6
-         URq+4lf74PrL0UCa/E09EmtF2JbmMQOez4iOg20hhoHisc/U8i3MwOj1Ow6jc/X8ub0j
-         ePncokutdFbDs3FcwJ77BG9yVZ9uYT9A3LSd8uOgFhXRFvbaOv0GHb0tpKki289HRHOr
-         HT0O/I0OgTDpqbrCWm+a+zgoBH/NKOudR9TYhShmL3EIz5x1W7OqqcJm09vkXV+W4doG
-         4kkw==
+        bh=lxmrQBrFfZXvQ6G6prEpJ8xP8QVgrd72b+FrTGiwTRo=;
+        b=BpS7JGPus75dtD3/ruZu4z4zMLaODhAjMs+ax3hyyB/ekrXzxUDzJHvFibBmKWbooo
+         wYMUH8HILczR/ih7+p0t4PFBbY10Jvkx5nthOTfzeBmsKN/myqyNeTezD5rQTd+FB8HB
+         PQLzUhTGydLjrz3HwrvX2SM49QcyFXGcMy2VDlfhXbHHPSBLbXw0PaQNXSaL/Jm/oKxY
+         IqXkJ1qixYWi+0cIrKleykSOpfFM9LW5CdVYgHqopGkyvYehSUejOoXHy60sbgUebXar
+         g26X8RR+sP1bsgh6PiJ/QivU1wgrQ5VH/ClYrmzdQzTTDDtchLV9+8COPmjikwKqbvzm
+         kGXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
          :references:user-agent:mime-version;
-        bh=q4GZi4Kf5DXEeMyZGvNSCtr8zsFMta44KzAXttHuuE0=;
-        b=Zy3NzPzbB1oqc6z1MyjnGtxddW87iRjjb9hxSr8svqUEcVMCERecY1HpEawlCVReHt
-         z4DHcRuGX3scPAEHS86N1rUMzcGSMGM7Q2kMDlYipv2RoKXWOna1fhUT35PGGpMdsO94
-         jgHzc86GQ8daB8Ix/RqulIkAIm8zE/E44r02ShYqGH2YAYkcUdwZgpq+7msof3pS3Hl2
-         dNLWSKiPBzhdKPYULzOfVSTwGnPrv5ojKRRD1KRbVwpgGe9G5SuRp7s9ltPPfI0iJzIY
-         cQsYGByYy44owhtjOydsZGcMTdeqxH4VdP8z9bFk48RaB42Az3/HfpCx1TrF0DtETRig
-         tKuw==
-X-Gm-Message-State: AOAM530l3tc20rLVoWikNmZOXr8vTa24taFmJmyR8FPvboNaYvSApPb+
-        CfmdRQmXRnFahaOGf8QT/0g4/Q==
-X-Google-Smtp-Source: ABdhPJy2uyI6oHAdI+296hCenAVQ2MQXwWTG7fao7gJpbyKCsf10jRdI/Zu/AjOJc0C2TFXKG1dmTg==
-X-Received: by 2002:a05:620a:22ee:: with SMTP id p14mr10088938qki.223.1596309773350;
-        Sat, 01 Aug 2020 12:22:53 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id 15sm5761877qkm.112.2020.08.01.12.22.50
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Sat, 01 Aug 2020 12:22:51 -0700 (PDT)
-Date:   Sat, 1 Aug 2020 12:22:27 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Chris Down <chris@chrisdown.name>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v7 1/2] tmpfs: Per-superblock i_ino support
-In-Reply-To: <1986b9d63b986f08ec07a4aa4b2275e718e47d8a.1594661218.git.chris@chrisdown.name>
-Message-ID: <alpine.LSU.2.11.2008011131200.10700@eggly.anvils>
-References: <cover.1594661218.git.chris@chrisdown.name> <1986b9d63b986f08ec07a4aa4b2275e718e47d8a.1594661218.git.chris@chrisdown.name>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        bh=lxmrQBrFfZXvQ6G6prEpJ8xP8QVgrd72b+FrTGiwTRo=;
+        b=tcMo6r8Yo4rs4mHAhEWBERN/vMYoOURr4aGoZOiXK2eeXd/kfZSTVfuHYRuyRNcjA1
+         BjLeZywxNAU++eO1rnzXNf5VA0wkytKabzVk7GANu3GkDWCjxZP9evqEbaRm2OilRPSg
+         7anj7yLlOFF/Nb41fiCKbMvZTURFvsLifqQH5CjZzLMnNFLuomW9dulbFM/0BbLmevrx
+         Q6Y9WLWgmpIuv2uH8QSdPuUw2fL5K33U3MEbGC5oNFT+J+7jD98y7xbuaLHqKRSDWbGy
+         pQkm0UI5fMi4jiHrkZQ3OKIPvCwmjKjiYob/nwM0naDva+ABp5BzRqS/YO+1AlzhPhQm
+         /uXA==
+X-Gm-Message-State: AOAM533agcwpO91Az1GBJpCb3s6OElTtRXB07VI4POT3rTgfmGVlvwP7
+        0vfeDhUfHtURjJoqkXRJ/Nw=
+X-Google-Smtp-Source: ABdhPJwE+m5AhLY0PPEfsjnGYu+BjMU8Cd4C2Lx5q/WTi4q+PKvWtvRS/km9+9pLa6mxBuIZEm9pvw==
+X-Received: by 2002:a7b:c3d4:: with SMTP id t20mr8929822wmj.8.1596309795243;
+        Sat, 01 Aug 2020 12:23:15 -0700 (PDT)
+Received: from felia ([2001:16b8:2de0:f200:cdcf:e9a1:5247:ee26])
+        by smtp.gmail.com with ESMTPSA id g70sm17425448wmg.24.2020.08.01.12.23.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Aug 2020 12:23:14 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Sat, 1 Aug 2020 21:23:05 +0200 (CEST)
+X-X-Sender: lukas@felia
+To:     Nathan Huckleberry <nhuck@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+cc:     masahiroy@kernel.org, michal.lkml@markovi.net,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com, pirama@google.com,
+        morbo@google.com
+Subject: Re: [PATCH v7] Makefile: Add clang-tidy and static analyzer support
+ to makefile
+In-Reply-To: <20200728004736.3590053-1-nhuck@google.com>
+Message-ID: <alpine.DEB.2.21.2008012031540.14646@felia>
+References: <CAKwvOdnni_G2tw+0eCLQQvvdcz97Fy1-cBjzPvLwbBNDu1-KqQ@mail.gmail.com> <20200728004736.3590053-1-nhuck@google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jul 2020, Chris Down wrote:
 
-> get_next_ino has a number of problems:
-> 
-> - It uses and returns a uint, which is susceptible to become overflowed
->   if a lot of volatile inodes that use get_next_ino are created.
-> - It's global, with no specificity per-sb or even per-filesystem. This
->   means it's not that difficult to cause inode number wraparounds on a
->   single device, which can result in having multiple distinct inodes
->   with the same inode number.
-> 
-> This patch adds a per-superblock counter that mitigates the second case.
-> This design also allows us to later have a specific i_ino size
-> per-device, for example, allowing users to choose whether to use 32- or
-> 64-bit inodes for each tmpfs mount. This is implemented in the next
-> commit.
-> 
-> For internal shmem mounts which may be less tolerant to spinlock delays,
-> we implement a percpu batching scheme which only takes the stat_lock at
-> each batch boundary.
-> 
-> Signed-off-by: Chris Down <chris@chrisdown.name>
-> Cc: Amir Goldstein <amir73il@gmail.com>
-> Cc: Hugh Dickins <hughd@google.com>
 
-Acked-by: Hugh Dickins <hughd@google.com>
+On Tue, 28 Jul 2020, 'Nathan Huckleberry' via Clang Built Linux wrote:
 
-Thanks for coming back and completing this, Chris.
-Some comments below, nothing to detract from that Ack, more notes to
-myself: things I might change slightly when I get back here later on.
-I'm glad to see Andrew pulled your 0/2 text into this 1/2.
+> This patch adds clang-tidy and the clang static-analyzer as make
+> targets. The goal of this patch is to make static analysis tools
+> usable and extendable by any developer or researcher who is familiar
+> with basic c++.
+> 
+> The current static analysis tools require intimate knowledge of the
+> internal workings of the static analysis. Clang-tidy and the clang
+> static analyzers expose an easy to use api and allow users unfamiliar
+> with clang to write new checks with relative ease.
+> 
+> ===Clang-tidy===
+> 
+> Clang-tidy is an easily extendable 'linter' that runs on the AST.
+> Clang-tidy checks are easy to write and understand. A check consists of
+> two parts, a matcher and a checker. The matcher is created using a
+> domain specific language that acts on the AST
+> (https://clang.llvm.org/docs/LibASTMatchersReference.html).  When AST
+> nodes are found by the matcher a callback is made to the checker. The
+> checker can then execute additional checks and issue warnings.
+> 
+> Here is an example clang-tidy check to report functions that have calls
+> to local_irq_disable without calls to local_irq_enable and vice-versa.
+> Functions flagged with __attribute((annotation("ignore_irq_balancing")))
+> are ignored for analysis. (https://reviews.llvm.org/D65828)
+> 
+> ===Clang static analyzer===
+> 
+> The clang static analyzer is a more powerful static analysis tool that
+> uses symbolic execution to find bugs. Currently there is a check that
+> looks for potential security bugs from invalid uses of kmalloc and
+> kfree. There are several more general purpose checks that are useful for
+> the kernel.
+> 
+> The clang static analyzer is well documented and designed to be
+> extensible.
+> (https://clang-analyzer.llvm.org/checker_dev_manual.html)
+> (https://github.com/haoNoQ/clang-analyzer-guide/releases/download/v0.1/clang-analyzer-guide-v0.1.pdf)
+> 
+> The main draw of the clang tools is how accessible they are. The clang
+> documentation is very nice and these tools are built specifically to be
+> easily extendable by any developer. They provide an accessible method of
+> bug-finding and research to people who are not overly familiar with the
+> kernel codebase.
+> 
+> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Jeff Layton <jlayton@kernel.org>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: linux-mm@kvack.org
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: kernel-team@fb.com
+Hi Nathan, Hi Nick,
+
+I have been busy with other topics around the kernel and static analysis; 
+but then, I read clang and static analysis in my mailbox in this patch.
+
+So, I thought let me give this patch a try on the weekend.
+
+I applied the patch on next-2020729; that worked.
+
+Then:
+$ make clang-tidy
+scripts/clang-tools/Makefile.clang-tools:13: *** clang-tidy requires 
+CC=clang.  Stop.
+
+Okay, that is a good and clear error message.
+
+Then:
+
+$ make CC=clang-10 defconfig
+$ make CC=clang-10 clang-tidy
+
+python3 scripts/clang-tools/gen_compile_commands.py
+WARNING: Found 8 entries. Have you compiled the kernel?
+python3 scripts/clang-tools/run-clang-tools.py clang-tidy 
+compile_commands.json
+ 
+Then actually an error in clang-tidy.
+Error: no checks enabled.
+USAGE: clang-tidy [options] <source0> [... <sourceN>]
+...
+
+I will get to that later how I fixed that for my setup.
+
+Okay, good, that is clear... I need to compile it first, got it.
+
+$ make CC=clang-10
+$ make CC=clang-10 clang-tidy
+
+Okay, I run except for the fix I needed.
+
+Where is the output from clang-tidy?
+
+It prints:
+
+python3 scripts/clang-tools/gen_compile_commands.py
+python3 scripts/clang-tools/run-clang-tools.py clang-tidy compile_commands.json
+
+That is it. Does that mean 0 warnings, or where do I find the output?
+The script suggests it should be in stderr once all the parallel runs 
+collected it, right?
+
+I was confused; maybe a short summary output might help here.
+
+Then, I ran
+
+$ make CC=clang-10 clang-analyzer
+
+And I see a lot of warnings... I guess that is intended.
+
+There is a lot of:
+
+Suppressed XX warnings (XX in non-user code).
+Use -header-filter=.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.
+
+To an outsider, it is unclear if that is intended or if the tool is broken 
+in this setup.
+
+Is there are way to silent that meta-warning? Or is my setup broken?
+
+In summary, it is pretty clear how to run clang-tidy and clang-analyzer 
+and it was a pretty smooth experience, even with no documentation at hand.
+
+It was fun for me. Keep up the good work!
+
+Just one issue... see below.
+
 > ---
->  include/linux/fs.h       | 15 +++++++++
->  include/linux/shmem_fs.h |  2 ++
->  mm/shmem.c               | 66 +++++++++++++++++++++++++++++++++++++---
->  3 files changed, 78 insertions(+), 5 deletions(-)
+> Changes v6->v7
+> * Fix issues with relative paths
+> * Additional style fixes
+>  MAINTAINERS                                   |  1 +
+>  Makefile                                      |  3 +
+>  scripts/clang-tools/Makefile.clang-tools      | 23 ++++++
+>  .../{ => clang-tools}/gen_compile_commands.py |  0
+>  scripts/clang-tools/run-clang-tools.py        | 74 +++++++++++++++++++
+>  5 files changed, 101 insertions(+)
+>  create mode 100644 scripts/clang-tools/Makefile.clang-tools
+>  rename scripts/{ => clang-tools}/gen_compile_commands.py (100%)
+>  create mode 100755 scripts/clang-tools/run-clang-tools.py
 > 
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index f15848899945..b70b334f8e16 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -2961,6 +2961,21 @@ extern void discard_new_inode(struct inode *);
->  extern unsigned int get_next_ino(void);
->  extern void evict_inodes(struct super_block *sb);
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1d4aa7f942de..a444564e5572 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4198,6 +4198,7 @@ W:	https://clangbuiltlinux.github.io/
+>  B:	https://github.com/ClangBuiltLinux/linux/issues
+>  C:	irc://chat.freenode.net/clangbuiltlinux
+>  F:	Documentation/kbuild/llvm.rst
+> +F:	scripts/clang-tools/
+>  K:	\b(?i:clang|llvm)\b
 >  
-> +/*
-> + * Userspace may rely on the the inode number being non-zero. For example, glibc
-> + * simply ignores files with zero i_ino in unlink() and other places.
-> + *
-> + * As an additional complication, if userspace was compiled with
-> + * _FILE_OFFSET_BITS=32 on a 64-bit kernel we'll only end up reading out the
-> + * lower 32 bits, so we need to check that those aren't zero explicitly. With
-> + * _FILE_OFFSET_BITS=64, this may cause some harmless false-negatives, but
-> + * better safe than sorry.
-> + */
-> +static inline bool is_zero_ino(ino_t ino)
-> +{
-> +	return (u32)ino == 0;
-> +}
-
-Hmm, okay. The value of this unnecessary, and inaccurately named,
-wrapper is in the great comment above it: which then suffers a bit
-from being hidden away in a header file.  I'd understand its placing
-better if you had also changed get_next_ino() to use it.
-
-And I have another reason for wondering whether this function is
-the right thing to abstract out: 1 is also somewhat special, being
-the ino of the root.  It seems a little unfortunate, when we recycle
-through the 32-bit space, to reuse the one ino that is certain to be
-still in use (maybe all the others get "rm -rf"ed every day).  But
-I haven't yet decided whether that's worth bothering about at all.
-
+>  CLEANCACHE API
+> diff --git a/Makefile b/Makefile
+> index fe0164a654c7..3e2df010b342 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -747,6 +747,7 @@ KBUILD_CFLAGS	+= $(call cc-option,-fno-allow-store-data-races)
+>  
+>  include scripts/Makefile.kcov
+>  include scripts/Makefile.gcc-plugins
+> +include scripts/clang-tools/Makefile.clang-tools
+>  
+>  ifdef CONFIG_READABLE_ASM
+>  # Disable optimizations that make assembler listings hard to read.
+> @@ -1543,6 +1544,8 @@ help:
+>  	@echo  '  export_report   - List the usages of all exported symbols'
+>  	@echo  '  headerdep       - Detect inclusion cycles in headers'
+>  	@echo  '  coccicheck      - Check with Coccinelle'
+> +	@echo  '  clang-analyzer  - Check with clang static analyzer'
+> +	@echo  '  clang-tidy      - Check with clang-tidy'
+>  	@echo  ''
+>  	@echo  'Tools:'
+>  	@echo  '  nsdeps          - Generate missing symbol namespace dependencies'
+> diff --git a/scripts/clang-tools/Makefile.clang-tools b/scripts/clang-tools/Makefile.clang-tools
+> new file mode 100644
+> index 000000000000..5c9d76f77595
+> --- /dev/null
+> +++ b/scripts/clang-tools/Makefile.clang-tools
+> @@ -0,0 +1,23 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Copyright (C) Google LLC, 2020
+> +#
+> +# Author: Nathan Huckleberry <nhuck@google.com>
+> +#
+> +PHONY += clang-tidy
+> +clang-tidy:
+> +ifdef CONFIG_CC_IS_CLANG
+> +	$(PYTHON3) scripts/clang-tools/gen_compile_commands.py
+> +	$(PYTHON3) scripts/clang-tools/run-clang-tools.py clang-tidy compile_commands.json
+> +else
+> +	$(error clang-tidy requires CC=clang)
+> +endif
 > +
->  extern void __iget(struct inode * inode);
->  extern void iget_failed(struct inode *);
->  extern void clear_inode(struct inode *);
-> diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
-> index 7a35a6901221..eb628696ec66 100644
-> --- a/include/linux/shmem_fs.h
-> +++ b/include/linux/shmem_fs.h
-> @@ -36,6 +36,8 @@ struct shmem_sb_info {
->  	unsigned char huge;	    /* Whether to try for hugepages */
->  	kuid_t uid;		    /* Mount uid for root directory */
->  	kgid_t gid;		    /* Mount gid for root directory */
-> +	ino_t next_ino;		    /* The next per-sb inode number to use */
-> +	ino_t __percpu *ino_batch;  /* The next per-cpu inode number to use */
->  	struct mempolicy *mpol;     /* default memory policy for mappings */
->  	spinlock_t shrinklist_lock;   /* Protects shrinklist */
->  	struct list_head shrinklist;  /* List of shinkable inodes */
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index a0dbe62f8042..0ae250b4da28 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -260,18 +260,67 @@ bool vma_is_shmem(struct vm_area_struct *vma)
->  static LIST_HEAD(shmem_swaplist);
->  static DEFINE_MUTEX(shmem_swaplist_mutex);
->  
-> -static int shmem_reserve_inode(struct super_block *sb)
-> +/*
-> + * shmem_reserve_inode() performs bookkeeping to reserve a shmem inode, and
-> + * produces a novel ino for the newly allocated inode.
-> + *
-> + * It may also be called when making a hard link to permit the space needed by
-> + * each dentry. However, in that case, no new inode number is needed since that
-> + * internally draws from another pool of inode numbers (currently global
-> + * get_next_ino()). This case is indicated by passing NULL as inop.
-> + */
-> +#define SHMEM_INO_BATCH 1024
-> +static int shmem_reserve_inode(struct super_block *sb, ino_t *inop)
->  {
->  	struct shmem_sb_info *sbinfo = SHMEM_SB(sb);
-> -	if (sbinfo->max_inodes) {
-> +	ino_t ino;
+> +PHONY += clang-analyzer
+> +clang-analyzer:
+> +ifdef CONFIG_CC_IS_CLANG
+> +	$(PYTHON3) scripts/clang-tools/gen_compile_commands.py
+> +	$(PYTHON3) scripts/clang-tools/run-clang-tools.py clang-analyzer compile_commands.json
+> +else
+> +	$(error clang-analyzer requires CC=clang)
+> +endif
+> diff --git a/scripts/gen_compile_commands.py b/scripts/clang-tools/gen_compile_commands.py
+> similarity index 100%
+> rename from scripts/gen_compile_commands.py
+> rename to scripts/clang-tools/gen_compile_commands.py
+> diff --git a/scripts/clang-tools/run-clang-tools.py b/scripts/clang-tools/run-clang-tools.py
+> new file mode 100755
+> index 000000000000..fa7655c7cec0
+> --- /dev/null
+> +++ b/scripts/clang-tools/run-clang-tools.py
+> @@ -0,0 +1,74 @@
+> +#!/usr/bin/env python
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Copyright (C) Google LLC, 2020
+> +#
+> +# Author: Nathan Huckleberry <nhuck@google.com>
+> +#
+> +"""A helper routine run clang-tidy and the clang static-analyzer on
+> +compile_commands.json.
+> +"""
 > +
-> +	if (!(sb->s_flags & SB_KERNMOUNT)) {
-
-I was disappointed to find that this is still decided by SB_KERNMOUNT
-instead of max_inodes, as we had discussed previously.  But it may just
-be me who sees that as a regression (taking stat_lock when minimizing
-stat_lock was the mounter's choice), so I'll accept responsibility to
-follow that up later (and in no great hurry).  And I may discover why
-you didn't make the change - remount with different options might
-well turn out to be a pain, and may entail some compromises.
-
->  		spin_lock(&sbinfo->stat_lock);
->  		if (!sbinfo->free_inodes) {
->  			spin_unlock(&sbinfo->stat_lock);
->  			return -ENOSPC;
->  		}
->  		sbinfo->free_inodes--;
-> +		if (inop) {
-> +			ino = sbinfo->next_ino++;
-> +			if (unlikely(is_zero_ino(ino)))
-> +				ino = sbinfo->next_ino++;
-> +			if (unlikely(ino > UINT_MAX)) {
-> +				/*
-> +				 * Emulate get_next_ino uint wraparound for
-> +				 * compatibility
-> +				 */
-> +				ino = 1;
-> +			}
-> +			*inop = ino;
-> +		}
->  		spin_unlock(&sbinfo->stat_lock);
-> +	} else if (inop) {
-> +		/*
-> +		 * __shmem_file_setup, one of our callers, is lock-free: it
-> +		 * doesn't hold stat_lock in shmem_reserve_inode since
-> +		 * max_inodes is always 0, and is called from potentially
-> +		 * unknown contexts. As such, use a per-cpu batched allocator
-> +		 * which doesn't require the per-sb stat_lock unless we are at
-> +		 * the batch boundary.
-> +		 */
-> +		ino_t *next_ino;
-> +		next_ino = per_cpu_ptr(sbinfo->ino_batch, get_cpu());
-> +		ino = *next_ino;
-> +		if (unlikely(ino % SHMEM_INO_BATCH == 0)) {
-> +			spin_lock(&sbinfo->stat_lock);
-> +			ino = sbinfo->next_ino;
-> +			sbinfo->next_ino += SHMEM_INO_BATCH;
-> +			spin_unlock(&sbinfo->stat_lock);
-> +			if (unlikely(is_zero_ino(ino)))
-> +				ino++;
-> +		}
-> +		*inop = ino;
-> +		*next_ino = ++ino;
-> +		put_cpu();
->  	}
+> +import argparse
+> +import json
+> +import multiprocessing
+> +import os
+> +import subprocess
+> +import sys
 > +
->  	return 0;
->  }
->  
-> @@ -2222,13 +2271,14 @@ static struct inode *shmem_get_inode(struct super_block *sb, const struct inode
->  	struct inode *inode;
->  	struct shmem_inode_info *info;
->  	struct shmem_sb_info *sbinfo = SHMEM_SB(sb);
-> +	ino_t ino;
->  
-> -	if (shmem_reserve_inode(sb))
-> +	if (shmem_reserve_inode(sb, &ino))
->  		return NULL;
->  
->  	inode = new_inode(sb);
->  	if (inode) {
-> -		inode->i_ino = get_next_ino();
-> +		inode->i_ino = ino;
->  		inode_init_owner(inode, dir, mode);
->  		inode->i_blocks = 0;
->  		inode->i_atime = inode->i_mtime = inode->i_ctime = current_time(inode);
-> @@ -2932,7 +2982,7 @@ static int shmem_link(struct dentry *old_dentry, struct inode *dir, struct dentr
->  	 * first link must skip that, to get the accounting right.
->  	 */
->  	if (inode->i_nlink) {
-> -		ret = shmem_reserve_inode(inode->i_sb);
-> +		ret = shmem_reserve_inode(inode->i_sb, NULL);
->  		if (ret)
->  			goto out;
->  	}
-> @@ -3584,6 +3634,7 @@ static void shmem_put_super(struct super_block *sb)
->  {
->  	struct shmem_sb_info *sbinfo = SHMEM_SB(sb);
->  
-> +	free_percpu(sbinfo->ino_batch);
->  	percpu_counter_destroy(&sbinfo->used_blocks);
->  	mpol_put(sbinfo->mpol);
->  	kfree(sbinfo);
-> @@ -3626,6 +3677,11 @@ static int shmem_fill_super(struct super_block *sb, struct fs_context *fc)
->  #endif
->  	sbinfo->max_blocks = ctx->blocks;
->  	sbinfo->free_inodes = sbinfo->max_inodes = ctx->inodes;
-> +	if (sb->s_flags & SB_KERNMOUNT) {
-> +		sbinfo->ino_batch = alloc_percpu(ino_t);
-> +		if (!sbinfo->ino_batch)
-> +			goto failed;
-> +	}
->  	sbinfo->uid = ctx->uid;
->  	sbinfo->gid = ctx->gid;
->  	sbinfo->mode = ctx->mode;
+> +
+> +def parse_arguments():
+> +    """Set up and parses command-line arguments.
+> +    Returns:
+> +        args: Dict of parsed args
+> +        Has keys: [path, type]
+> +    """
+> +    usage = """Run clang-tidy or the clang static-analyzer on a
+> +        compilation database."""
+> +    parser = argparse.ArgumentParser(description=usage)
+> +
+> +    type_help = "Type of analysis to be performed"
+> +    parser.add_argument("type",
+> +                        choices=["clang-tidy", "clang-analyzer"],
+> +                        help=type_help)
+> +    path_help = "Path to the compilation database to parse"
+> +    parser.add_argument("path", type=str, help=path_help)
+> +
+> +    return parser.parse_args()
+> +
+> +
+> +def init(l, a):
+> +    global lock
+> +    global args
+> +    lock = l
+> +    args = a
+> +
+> +
+> +def run_analysis(entry):
+> +    # Disable all checks, then re-enable the ones we want
+> +    checks = "-checks=-*,"
+> +    if args.type == "clang-tidy":
+> +        checks += "linuxkernel-*"
+> +    else:
+> +        checks += "clang-analyzer-*"
+> +    p = subprocess.run(["clang-tidy", "-p", args.path, checks, entry["file"]],
+
+You hardcoded here: clang-tidy
+
+But in my Ubuntu 18.04 setup, I got multiple versions of clang and 
+clang-tidy installed; yeah, maybe my setup is broken, but maybe those from 
+others are similar.
+
+When I run:
+
+  make CC=clang-10 clang-tidy
+
+it picks up the "wrong" clang-tidy version...
+
+My setup is:
+
+$ which clang-tidy
+/usr/bin/clang-tidy
+
+$ which clang-tidy-10
+/usr/bin/clang-tidy-10
+
+$ clang-tidy --version
+LLVM (http://llvm.org/):
+  LLVM version 6.0.0
+  
+  Optimized build.
+  Default target: x86_64-pc-linux-gnu
+  Host CPU: znver1
+
+$ clang-tidy-10 --version
+LLVM (http://llvm.org/):
+  LLVM version 10.0.1
+  
+  Optimized build.
+  Default target: x86_64-pc-linux-gnu
+  Host CPU: znver1
+
+When I run make CC=clang-10 clang-tidy, I would expect it to use 
+clang-tidy-10, not clang-tidy. (clang-tidy errors just because it is too 
+old; I guess it does have the linuxkernel-* options.)
+
+Now, I cannot fix that without touching your script. There is no way I can 
+tell the build target to use clang-tidy-10.
+
+With a quick touch:
+
+-    p = subprocess.run(["clang-tidy", "-p", args.path, checks, entry["file"]],
++    p = subprocess.run(["clang-tidy-10", "-p", args.path, checks, entry["file"]],
+
+I got it to work.
+
+Maybe you have a good idea how to get make clang-tidy to pick 
+up the intended version without touching the python script itself?
+
+It is a minor issue, but it would be nice if that setting would work 
+somehow.
+
+Thanks a lot.
+
+Best regards,
+
+Lukas
+
+> +                       stdout=subprocess.PIPE,
+> +                       stderr=subprocess.STDOUT,
+> +                       cwd=entry["directory"])
+> +    with lock:
+> +        sys.stderr.buffer.write(p.stdout)
+> +
+> +
+> +def main():
+> +    args = parse_arguments()
+> +
+> +    lock = multiprocessing.Lock()
+> +    pool = multiprocessing.Pool(initializer=init, initargs=(lock, args))
+> +    # Read JSON data into the datastore variable
+> +    with open(args.path, "r") as f:
+> +        datastore = json.load(f)
+> +        pool.map(run_analysis, datastore)
+> +
+> +
+> +if __name__ == "__main__":
+> +    main()
 > -- 
-> 2.27.0
+> 2.28.0.rc0.142.g3c755180ce-goog
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200728004736.3590053-1-nhuck%40google.com.
+> 
