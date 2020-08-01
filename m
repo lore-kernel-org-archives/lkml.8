@@ -2,150 +2,237 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D526C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 03:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FECBC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 03:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1D822076A
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 03:33:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Nl2jVfOG"
+	by mail.kernel.org (Postfix) with ESMTP id 253D820838
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 03:41:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgHADdC (ORCPT
+        id S1728471AbgHADlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 23:33:02 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:58288 "EHLO m43-7.mailgun.net"
+        Fri, 31 Jul 2020 23:41:22 -0400
+Received: from mga01.intel.com ([192.55.52.88]:8257 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728591AbgHADdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 23:33:00 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596252780; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=SxG9DUI8j6W7xcfFy8jWpjO+nuVORHIu2LMKU2ZnaKw=; b=Nl2jVfOGCW/6tJjF0b7ss057Nl9oCFhXMoPqdd2y+nYMPoKVUCgKMUaRHMGh/MCHHPW4//1y
- 9Bpu0lkoeTDiU0khUv62rzBAGlGyUZowpj0faZIA1c0QH/ADtPlablsQiZNDYcAfi4XvqblE
- mREmV7d2nR7y1VShs2D81VH52mk=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
- 5f24e24ad2bd131f6884af12 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 01 Aug 2020 03:32:26
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B2AEAC4339C; Sat,  1 Aug 2020 03:32:25 +0000 (UTC)
-Received: from mdtipton-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mdtipton)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id ABDF9C433C6;
-        Sat,  1 Aug 2020 03:32:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org ABDF9C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mdtipton@codeaurora.org
-From:   Mike Tipton <mdtipton@codeaurora.org>
-To:     georgi.djakov@linaro.org
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Tipton <mdtipton@codeaurora.org>
-Subject: [PATCH v3 1/6] dt-bindings: interconnect: Add generic qcom bindings
-Date:   Fri, 31 Jul 2020 20:32:10 -0700
-Message-Id: <20200801033215.1440-2-mdtipton@codeaurora.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200801033215.1440-1-mdtipton@codeaurora.org>
-References: <20200801033215.1440-1-mdtipton@codeaurora.org>
+        id S1727978AbgHADlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jul 2020 23:41:21 -0400
+IronPort-SDR: LT0jIbemwdaqRVJtOxBWamDHP0llDy/MGoYytI5CHeq0JRqBCkY6pHHocJQPRUqugNwmWG9ymk
+ 19bmF9DAYr2w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9699"; a="170007787"
+X-IronPort-AV: E=Sophos;i="5.75,420,1589266800"; 
+   d="scan'208";a="170007787"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 20:41:20 -0700
+IronPort-SDR: TxwR/M8d52bA9HGOPqqFlTAEflpVkTxN+rc4KBs0C5ON7Y0dcqLOWDQTZ+sqfDFBr701ElUs7E
+ MjR7k/BVmPdw==
+X-IronPort-AV: E=Sophos;i="5.75,420,1589266800"; 
+   d="scan'208";a="329492534"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2020 20:41:19 -0700
+Subject: [PATCH v3 00/23] device-dax: Support sub-dividing soft-reserved
+ ranges
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     akpm@linux-foundation.org
+Cc:     David Hildenbrand <david@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        David Airlie <airlied@linux.ie>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Wei Yang <richardw.yang@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Jason Gunthorpe <jgg@mellanox.com>, Jia He <justin.he@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Brice Goglin <Brice.Goglin@inria.fr>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, vishal.l.verma@intel.com,
+        linux-mm@kvack.org, linux-nvdimm@lists.01.org,
+        joao.m.martins@oracle.com, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, dri-devel@lists.freedesktop.org
+Date:   Fri, 31 Jul 2020 20:24:58 -0700
+Message-ID: <159625229779.3040297.11363509688097221416.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add generic qcom interconnect bindings that are common across platforms. In
-particular, these include QCOM_ICC_TAG_* macros that clients can use when
-calling icc_set_tag().
+Changes since v2 [1]:
+- Rebase on next/master to resolve conflicts with pending mem-hotplug
+  and memremap_pages() changes in -mm
 
-Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
+- Drop attempt at a generic phys_to_target_node() implementation and
+  just follow the default fallback approach taken with
+  memory_add_physaddr_to_nid() (Mike)
+
+- Fix test_hmm and other compilation fixups (Ralph)
+
+- Integrate Joao's extensions to the device-dax sub-division interface
+  (per-device align, user-directed extent allocation). (Joao)
+
+[1]: http://lore.kernel.org/r/159457116473.754248.7879464730875147365.stgit@dwillia2-desk3.amr.corp.intel.com
+
 ---
- drivers/interconnect/qcom/icc-rpmh.h        | 18 ++------------
- include/dt-bindings/interconnect/qcom,icc.h | 26 +++++++++++++++++++++
- 2 files changed, 28 insertions(+), 16 deletions(-)
- create mode 100644 include/dt-bindings/interconnect/qcom,icc.h
+Merge notes:
 
-diff --git a/drivers/interconnect/qcom/icc-rpmh.h b/drivers/interconnect/qcom/icc-rpmh.h
-index 903d25e61984..cb736b745e1a 100644
---- a/drivers/interconnect/qcom/icc-rpmh.h
-+++ b/drivers/interconnect/qcom/icc-rpmh.h
-@@ -6,6 +6,8 @@
- #ifndef __DRIVERS_INTERCONNECT_QCOM_ICC_RPMH_H__
- #define __DRIVERS_INTERCONNECT_QCOM_ICC_RPMH_H__
- 
-+#include <dt-bindings/interconnect/qcom,icc.h>
-+
- #define to_qcom_provider(_provider) \
- 	container_of(_provider, struct qcom_icc_provider, provider)
- 
-@@ -44,22 +46,6 @@ struct bcm_db {
- #define MAX_BCM_PER_NODE	3
- #define MAX_VCD			10
- 
--/*
-- * The AMC bucket denotes constraints that are applied to hardware when
-- * icc_set_bw() completes, whereas the WAKE and SLEEP constraints are applied
-- * when the execution environment transitions between active and low power mode.
-- */
--#define QCOM_ICC_BUCKET_AMC		0
--#define QCOM_ICC_BUCKET_WAKE		1
--#define QCOM_ICC_BUCKET_SLEEP		2
--#define QCOM_ICC_NUM_BUCKETS		3
--#define QCOM_ICC_TAG_AMC		BIT(QCOM_ICC_BUCKET_AMC)
--#define QCOM_ICC_TAG_WAKE		BIT(QCOM_ICC_BUCKET_WAKE)
--#define QCOM_ICC_TAG_SLEEP		BIT(QCOM_ICC_BUCKET_SLEEP)
--#define QCOM_ICC_TAG_ACTIVE_ONLY	(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE)
--#define QCOM_ICC_TAG_ALWAYS		(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE |\
--					 QCOM_ICC_TAG_SLEEP)
--
- /**
-  * struct qcom_icc_node - Qualcomm specific interconnect nodes
-  * @name: the node name used in debugfs
-diff --git a/include/dt-bindings/interconnect/qcom,icc.h b/include/dt-bindings/interconnect/qcom,icc.h
-new file mode 100644
-index 000000000000..cd34f36daaaa
---- /dev/null
-+++ b/include/dt-bindings/interconnect/qcom,icc.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ */
-+
-+#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_ICC_H
-+#define __DT_BINDINGS_INTERCONNECT_QCOM_ICC_H
-+
-+/*
-+ * The AMC bucket denotes constraints that are applied to hardware when
-+ * icc_set_bw() completes, whereas the WAKE and SLEEP constraints are applied
-+ * when the execution environment transitions between active and low power mode.
-+ */
-+#define QCOM_ICC_BUCKET_AMC		0
-+#define QCOM_ICC_BUCKET_WAKE		1
-+#define QCOM_ICC_BUCKET_SLEEP		2
-+#define QCOM_ICC_NUM_BUCKETS		3
-+
-+#define QCOM_ICC_TAG_AMC		(1 << QCOM_ICC_BUCKET_AMC)
-+#define QCOM_ICC_TAG_WAKE		(1 << QCOM_ICC_BUCKET_WAKE)
-+#define QCOM_ICC_TAG_SLEEP		(1 << QCOM_ICC_BUCKET_SLEEP)
-+#define QCOM_ICC_TAG_ACTIVE_ONLY	(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE)
-+#define QCOM_ICC_TAG_ALWAYS		(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE |\
-+					 QCOM_ICC_TAG_SLEEP)
-+
-+#endif
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Andrew, this series is rebased on today's next/master to resolve
+conflicts with some pending patches in -mm. I'd like to take it through
+your tree given the intersections with memremap_pages() and memory
+hotplug. If at all possible I'd like to see it in v5.10, but I realize
+time is short. Outside of the Intel identified use cases for this Joao
+has identified a use case for Oracle as well.
 
+I would have sent this earlier save for the fact I am mostly offline
+tending to a newborn these days. Vishal has stepped up to take on care
+and feeding of this patchset if additional review / integration fixups
+are needed.
+
+The one test feedback this wants is from Justin (justin.he@arm.com), and
+whether this lights up dax_kmem and now dax_hmem for him on arm64.
+Otherwise, Joao has written unit tests for this in his enabling of the
+daxctl userspace utility [2].
+
+---
+Cover:
+
+The device-dax facility allows an address range to be directly mapped
+through a chardev, or optionally hotplugged to the core kernel page
+allocator as System-RAM. It is the mechanism for converting persistent
+memory (pmem) to be used as another volatile memory pool i.e. the
+current Memory Tiering hot topic on linux-mm.
+
+In the case of pmem the nvdimm-namespace-label mechanism can sub-divide
+it, but that labeling mechanism is not available / applicable to
+soft-reserved ("EFI specific purpose") memory [3]. This series provides
+a sysfs-mechanism for the daxctl utility to enable provisioning of
+volatile-soft-reserved memory ranges.
+
+The motivations for this facility are:
+
+1/ Allow performance differentiated memory ranges to be split between
+   kernel-managed and directly-accessed use cases.
+
+2/ Allow physical memory to be provisioned along performance relevant
+   address boundaries. For example, divide a memory-side cache [4] along
+   cache-color boundaries.
+
+3/ Parcel out soft-reserved memory to VMs using device-dax as a security
+   / permissions boundary [5]. Specifically I have seen people (ab)using
+   memmap=nn!ss (mark System-RAM as Persistent Memory) just to get the
+   device-dax interface on custom address ranges. A follow-on for the VM
+   use case is to teach device-dax to dynamically allocate 'struct page' at
+   runtime to reduce the duplication of 'struct page' space in both the
+   guest and the host kernel for the same physical pages.
+
+[2]: http://lore.kernel.org/r/20200713160837.13774-11-joao.m.martins@oracle.com
+[3]: http://lore.kernel.org/r/157309097008.1579826.12818463304589384434.stgit@dwillia2-desk3.amr.corp.intel.com
+[4]: http://lore.kernel.org/r/154899811738.3165233.12325692939590944259.stgit@dwillia2-desk3.amr.corp.intel.com
+[5]: http://lore.kernel.org/r/20200110190313.17144-1-joao.m.martins@oracle.com
+
+---
+
+Dan Williams (19):
+      x86/numa: Cleanup configuration dependent command-line options
+      x86/numa: Add 'nohmat' option
+      efi/fake_mem: Arrange for a resource entry per efi_fake_mem instance
+      ACPI: HMAT: Refactor hmat_register_target_device to hmem_register_device
+      resource: Report parent to walk_iomem_res_desc() callback
+      mm/memory_hotplug: Introduce default phys_to_target_node() implementation
+      ACPI: HMAT: Attach a device for each soft-reserved range
+      device-dax: Drop the dax_region.pfn_flags attribute
+      device-dax: Move instance creation parameters to 'struct dev_dax_data'
+      device-dax: Make pgmap optional for instance creation
+      device-dax: Kill dax_kmem_res
+      device-dax: Add an allocation interface for device-dax instances
+      device-dax: Introduce 'seed' devices
+      drivers/base: Make device_find_child_by_name() compatible with sysfs inputs
+      device-dax: Add resize support
+      mm/memremap_pages: Convert to 'struct range'
+      mm/memremap_pages: Support multiple ranges per invocation
+      device-dax: Add dis-contiguous resource support
+      device-dax: Introduce 'mapping' devices
+
+Joao Martins (4):
+      device-dax: Make align a per-device property
+      device-dax: Add an 'align' attribute
+      dax/hmem: Introduce dax_hmem.region_idle parameter
+      device-dax: Add a range mapping allocation attribute
+
+
+ arch/powerpc/kvm/book3s_hv_uvmem.c     |   14 
+ arch/x86/include/asm/numa.h            |    8 
+ arch/x86/kernel/e820.c                 |   16 
+ arch/x86/mm/numa.c                     |   11 
+ arch/x86/mm/numa_emulation.c           |    3 
+ arch/x86/xen/enlighten_pv.c            |    2 
+ drivers/acpi/numa/hmat.c               |   76 --
+ drivers/acpi/numa/srat.c               |    9 
+ drivers/base/core.c                    |    2 
+ drivers/dax/Kconfig                    |    4 
+ drivers/dax/Makefile                   |    3 
+ drivers/dax/bus.c                      | 1055 ++++++++++++++++++++++++++++++--
+ drivers/dax/bus.h                      |   28 +
+ drivers/dax/dax-private.h              |   40 +
+ drivers/dax/device.c                   |  132 ++--
+ drivers/dax/hmem.c                     |   56 --
+ drivers/dax/hmem/Makefile              |    6 
+ drivers/dax/hmem/device.c              |  100 +++
+ drivers/dax/hmem/hmem.c                |   65 ++
+ drivers/dax/kmem.c                     |  199 +++---
+ drivers/dax/pmem/compat.c              |    2 
+ drivers/dax/pmem/core.c                |   22 -
+ drivers/firmware/efi/x86_fake_mem.c    |   12 
+ drivers/gpu/drm/nouveau/nouveau_dmem.c |   15 
+ drivers/nvdimm/badrange.c              |   26 -
+ drivers/nvdimm/claim.c                 |   13 
+ drivers/nvdimm/nd.h                    |    3 
+ drivers/nvdimm/pfn_devs.c              |   13 
+ drivers/nvdimm/pmem.c                  |   27 -
+ drivers/nvdimm/region.c                |   21 -
+ drivers/pci/p2pdma.c                   |   12 
+ include/acpi/acpi_numa.h               |   14 
+ include/linux/dax.h                    |    8 
+ include/linux/memory_hotplug.h         |    5 
+ include/linux/memremap.h               |   11 
+ include/linux/range.h                  |    6 
+ kernel/resource.c                      |   11 
+ lib/test_hmm.c                         |   15 
+ mm/memory_hotplug.c                    |   10 
+ mm/memremap.c                          |  299 +++++----
+ tools/testing/nvdimm/dax-dev.c         |   22 -
+ tools/testing/nvdimm/test/iomap.c      |    2 
+ 42 files changed, 1810 insertions(+), 588 deletions(-)
+ delete mode 100644 drivers/dax/hmem.c
+ create mode 100644 drivers/dax/hmem/Makefile
+ create mode 100644 drivers/dax/hmem/device.c
+ create mode 100644 drivers/dax/hmem/hmem.c
+
+base-commit: 01830e6c042e8eb6eb202e05d7df8057135b4c26
