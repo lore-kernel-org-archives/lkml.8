@@ -2,139 +2,97 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87119C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 02:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C72D0C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 02:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E83020838
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 02:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A856A2083B
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 02:17:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H0j3lwKV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kOp5n2iZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgHACMx (ORCPT
+        id S1728247AbgHACRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 22:12:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45708 "EHLO
+        Fri, 31 Jul 2020 22:17:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbgHACMw (ORCPT
+        with ESMTP id S1727047AbgHACRV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 22:12:52 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D18B1C06174A;
-        Fri, 31 Jul 2020 19:12:51 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id b2so4467091qvp.9;
-        Fri, 31 Jul 2020 19:12:51 -0700 (PDT)
+        Fri, 31 Jul 2020 22:17:21 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8CE8C06174A
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 19:17:21 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id s23so24482536qtq.12
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 19:17:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RcNuzy0I0GlSHPsgjAin26OQE0adxaomHrcIgCRJLsA=;
-        b=H0j3lwKVrWTDg9Nj6lVX8E+JSdSgFYHExHD3kQRejF/GSPasrUcW4qwkiqAR9d+N3o
-         3GyzgqqDKhtfP/fSUb/csNcwcdH2smwmb06YPDfK2hSusUJWXGtMhqYTvkRkpVDRb5yV
-         ceHtuJ7ki2HPQiCs63cDIX7EArJ+qR8ExtFfmrJt3FtGWFVv0l3NZ+PN6x3ZlT3zpBEJ
-         szBzA2zc3FwnVv39VVBY1dTUaO6w8TWIoyxvZdq55+HccFDvzp33gDoJp8N9CU8v6r0I
-         bDHiBKKIR4HXPxu+G7JWYuTrG/UO/eqb2/uIlG7jq1W47h7QmdVsDuESBeNVsyZH51hK
-         MW3w==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=551gxb/V4cTHIiiIvEHAlAkEOZo6GSnjWtQQen+5b6w=;
+        b=kOp5n2iZXKZcz2c1X475lqnIm8vIuCa31L9u9JzJGWOkwWQbIQLlZ+H1amAAkf7QHz
+         XgJ44qXJ+jM3HedbEquCiofO6qhNMjEnMpuqlRXhrGPiz62cxjy+LBGVuJGGZiD5cI79
+         sNV/5JsZtDcTbbGvs8Xx/qDgH4VKyZTgGqM1tXIbCvO+fKPIWWCy55t6XmV+OJ/7WbID
+         ab4tZEkFPTd1ROZ/MT0fTdfVNwA2ucD+CJ0qbNV/nyTcMshplVmt9Ic2H/yoffvBXkjT
+         /09Eg4qld3E0biyLZHdIXHcXQOvs+NPZwv0mWR23SQWtkTsnYJIsP0PUYtD5hSB3n496
+         8ndQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=RcNuzy0I0GlSHPsgjAin26OQE0adxaomHrcIgCRJLsA=;
-        b=MmeBFXNEg1AkrrcuaN/ccA7ktcCmiLuEwEzarwyXynHFSTQv5Q1Dq8bDszN5KkotnC
-         Od3uqb5vasz5N2vWWLj7i2T1Y/xadjptqDu5512uYfb6r/706E5Vl9AxY7DsAJXGTpX5
-         h0WKWApSIZ68Pl6HSGujKILgHzYSoNkV2racMd2aRXnC3DMxh1dredqzyMqh57N1oQMV
-         8IDVq+kE8u1SedDwS1Gp2xcPht+jFJcgwocy9GmPU8+AGAsj9AQF6Z4qbYi19KFUgK9n
-         08GiqLKKj8JBMYaJQw+//vMtnUKYW3ZC9dmb/QYN0KoHjGYtvzCSYamBI5I0Y+9yvRkl
-         BAqw==
-X-Gm-Message-State: AOAM531KgMfPi4HARyuSv8umTEOJseyUOMovwcUfEd9lyWaQfVl476/a
-        MSuLa4ER6KGSczt0faM5q6k=
-X-Google-Smtp-Source: ABdhPJznGsCyCuOqLliE1x4Zh3NMzH7OELuVpjiOV0wBqMg6k32zgEIVZ6p0HuoA1y4AaRJkh9a7eg==
-X-Received: by 2002:ad4:500c:: with SMTP id s12mr6997719qvo.101.1596247971068;
-        Fri, 31 Jul 2020 19:12:51 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id u42sm14062820qtu.48.2020.07.31.19.12.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 19:12:50 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 31 Jul 2020 22:12:48 -0400
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 29/36] x86/build: Enforce an empty .got.plt section
-Message-ID: <20200801021248.GB2700342@rani.riverdale.lan>
-References: <20200731230820.1742553-1-keescook@chromium.org>
- <20200731230820.1742553-30-keescook@chromium.org>
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=551gxb/V4cTHIiiIvEHAlAkEOZo6GSnjWtQQen+5b6w=;
+        b=rUDzHUE+ZEKWC7WRyuMXLPQLArWVmzqIQrTrXpTe3Ho+47Xm61NIF9bkHRD9CEUpkt
+         OVyh5ACrbwWweq72Y3mLgvWClAHG5VxKhrcKx0pVH0KndYypkYMxxf4E0pYrRJpBLCws
+         6KedVEO37pOCETGdsTkYShBW7CyGyEDA/AplqRHaCWn4eEIJhnKmNPjc2i8kFmYDnZfn
+         h1J5+3h2EbQodI+PgWEiZgIO04cQjd1YgzciPc+ACowbRo/59QKg822U7GQW9mn3sZr3
+         Ua3yOAwx8EkOe3tNT1tKt0iTMl5EO+kqeXA+2WnfFjwfjefYM/t7dJkQK0Y7xcFDkD19
+         74AA==
+X-Gm-Message-State: AOAM532hXkk15B1MvNKbC421hThaOCx8VFNDUz43cPnNjnh8VeJ9T9Ie
+        bJOLwuDaNoWm2XoU9AoW6hEo+g==
+X-Google-Smtp-Source: ABdhPJz3gH++78Vvmmq9ZZ1hzxWOKmU7mlavMunGl3Se40mVR64wiolL/i1HG7NMo1VevX15NFmYRQ==
+X-Received: by 2002:ac8:7402:: with SMTP id p2mr6521959qtq.19.1596248240453;
+        Fri, 31 Jul 2020 19:17:20 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id 78sm11130904qke.81.2020.07.31.19.17.18
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Fri, 31 Jul 2020 19:17:19 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 19:17:05 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Roman Gushchin <guro@fb.com>
+cc:     Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm: vmstat: fix /proc/sys/vm/stat_refresh generating
+ false warnings
+In-Reply-To: <20200801011821.GA859734@carbon.dhcp.thefacebook.com>
+Message-ID: <alpine.LSU.2.11.2007311915130.9716@eggly.anvils>
+References: <20200714173920.3319063-1-guro@fb.com> <alpine.LSU.2.11.2007291902340.6363@eggly.anvils> <20200730162348.GA679955@carbon.dhcp.thefacebook.com> <alpine.LSU.2.11.2007302018350.2410@eggly.anvils>
+ <20200801011821.GA859734@carbon.dhcp.thefacebook.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200731230820.1742553-30-keescook@chromium.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 04:08:13PM -0700, Kees Cook wrote:
-> The .got.plt section should always be zero (or filled only with the
-> linker-generated lazy dispatch entry). Enforce this with an assert and
-> mark the section as NOLOAD. This is more sensitive than just blindly
-> discarding the section.
+On Fri, 31 Jul 2020, Roman Gushchin wrote:
+> On Thu, Jul 30, 2020 at 09:06:55PM -0700, Hugh Dickins wrote:
+> > 
+> > Though another alternative did occur to me overnight: we could
+> > scrap the logged warning, and show "nr_whatever -53" as output
+> > from /proc/sys/vm/stat_refresh: that too would be acceptable
+> > to me, and you redirect to /dev/null.
 > 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/x86/kernel/vmlinux.lds.S | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-> index 0cc035cb15f1..7faffe7414d6 100644
-> --- a/arch/x86/kernel/vmlinux.lds.S
-> +++ b/arch/x86/kernel/vmlinux.lds.S
-> @@ -414,8 +414,20 @@ SECTIONS
->  	ELF_DETAILS
->  
->  	DISCARDS
-> -}
->  
-> +	/*
-> +	 * Make sure that the .got.plt is either completely empty or it
-> +	 * contains only the lazy dispatch entries.
-> +	 */
-> +	.got.plt (NOLOAD) : { *(.got.plt) }
-> +	ASSERT(SIZEOF(.got.plt) == 0 ||
-> +#ifdef CONFIG_X86_64
-> +	       SIZEOF(.got.plt) == 0x18,
-> +#else
-> +	       SIZEOF(.got.plt) == 0xc,
-> +#endif
-> +	       "Unexpected GOT/PLT entries detected!")
-> +}
->  
->  #ifdef CONFIG_X86_32
->  /*
-> -- 
-> 2.25.1
-> 
+> It sounds like a good idea to me. Do you want me to prepare a patch?
 
-Is this actually needed? vmlinux is a position-dependent executable, and
-it doesn't get linked with any shared libraries, so it should never have
-a .got or .got.plt at all I think? Does it show up as an orphan without
-this?
+Yes, if you like that one best, please do prepare a patch - thanks!
+
+Hugh
