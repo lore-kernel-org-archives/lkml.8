@@ -2,106 +2,138 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA1EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 08:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51491C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 09:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB72207D0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 08:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E8B20716
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 09:05:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="NLvj3hoT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbgHAI7U (ORCPT
+        id S1728103AbgHAJFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 04:59:20 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:47861 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725876AbgHAI7T (ORCPT
+        Sat, 1 Aug 2020 05:05:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52068 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbgHAJFA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 04:59:19 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0U4O6FF._1596272349;
-Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0U4O6FF._1596272349)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 01 Aug 2020 16:59:15 +0800
-From:   Wen Yang <wenyang@linux.alibaba.com>
-To:     davem@davemloft.net, Jakub Kicinski <kuba@kernel.org>
-Cc:     Xunlei Pang <xlpang@linux.alibaba.com>,
-        Caspar Zhang <caspar@linux.alibaba.com>,
-        Wen Yang <wenyang@linux.alibaba.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Eric Dumazet <edumazet@google.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Julian Wiedmann <jwi@linux.ibm.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: core: explicitly call linkwatch_fire_event to speed up the startup of network services
-Date:   Sat,  1 Aug 2020 16:58:45 +0800
-Message-Id: <20200801085845.20153-1-wenyang@linux.alibaba.com>
-X-Mailer: git-send-email 2.23.0
+        Sat, 1 Aug 2020 05:05:00 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE92BC061757
+        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 02:04:59 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id v12so4450661ljc.10
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 02:04:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ysGkfROsxh9fScF28a6Ab2vg7iqMPSIMDcq/54hw/Bs=;
+        b=NLvj3hoTucDf6+zODHoC036A5mqQFsEMXF7b9PN5sgndABfVg1Ow7CM9z9Ig0i/iAv
+         QjBs2ZE6feVJKQ1a+tEYAAXBL9kHxq1JWH4c6J4i3aGKMkU5naF/d8S9QRR9Spg25wtN
+         3KAlWP+ovjBMIMbRoEmAcCTTOelojk7X9esECTxq3bgiiEEurWT+vGuVs8BV3q3JBywM
+         wKbj+AjK4Ccn16LdqzXunJEsuGsVVQkxEHVUcPT6KA4ybrobiKAo263uG3OhHY0z/uHV
+         IvgAjzu8Uh0jKNNRJkMrNbJJrixlcMX9Cxbl9QT+B14Ky0lyXl1YvFdmHX7LHVxlZVUY
+         aatg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ysGkfROsxh9fScF28a6Ab2vg7iqMPSIMDcq/54hw/Bs=;
+        b=gn1Yv/bDwXvqGU9wtavdPFU5bM0kw0WG+3SDG3fSx7XNEfUafeNsniL40R8Tng6mky
+         pHu+tvJ+Ue7AHCMybSLrv16gEgwhEfqUk5cLcwrfnQeSvM3pAAC0Qrob826AEAZgWgFn
+         /n9Xadmh67qWsZEcGOSKSiXt/1Gyk2WpL1ku08ebzpIfoehxZfihpidW+cLslWQWU5ZI
+         Cl0aoQZsOd7BxDajsT6PTjl/ERPfQmvXC7GDcCEWYCcBq2bznvuAtlwLUiGrY+XHdo3/
+         LkuFLSP7abMrBhYsIQ24etxJheHFzyroV19OBvWqowP0yRaDDIMHiaAV8ZAHD6L5t+oq
+         FExQ==
+X-Gm-Message-State: AOAM532het+plUbj1tymLnJYzsZ3HZzlQYDgrVEr09ZbxoawzDMCmFsu
+        Y73HBvgIttayqB/ciB7UMS/FFQ==
+X-Google-Smtp-Source: ABdhPJy3b6mLEDRdxzHctsXC+DubwBmRjCbyeloTjS4iFDZlA4tJZMThjxXAl1XSuFAX1eIzRN7tDg==
+X-Received: by 2002:a2e:160d:: with SMTP id w13mr3732137ljd.470.1596272698238;
+        Sat, 01 Aug 2020 02:04:58 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id r19sm2556901lfi.58.2020.08.01.02.04.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Aug 2020 02:04:57 -0700 (PDT)
+Date:   Sat, 1 Aug 2020 11:04:56 +0200
+From:   Niklas <niklas.soderlund@ragnatech.se>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH] media: rcar-vin: Update crop and compose settings for
+ every s_fmt call
+Message-ID: <20200801090456.GB1379367@oden.dyn.berto.se>
+References: <1596187745-31596-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1596187745-31596-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The linkwatch_event work queue runs up to one second later.
-When the MicroVM starts, it takes 300+ms for the ethX flag
-to change from '+UP +LOWER_UP' to '+RUNNING', as follows:
-Jul 20 22:00:47.432552 systemd-networkd[210]: eth0: bringing link up
-...
-Jul 20 22:00:47.446108 systemd-networkd[210]: eth0: flags change: +UP +LOWER_UP
-...
-Jul 20 22:00:47.781463 systemd-networkd[210]: eth0: flags change: +RUNNING
+Hi Lad,
 
-Let's manually trigger it here to make the network service start faster.
+Thanks for your work.
 
-After applying this patch, the time consumption of
-systemd-networkd.service was reduced from 366ms to 50ms.
+On 2020-07-31 10:29:05 +0100, Lad Prabhakar wrote:
+> The crop and compose settings for VIN in non mc mode werent updated
+> in s_fmt call this resulted in captured images being clipped.
+> 
+> With the below sequence on the third capture where size is set to
+> 640x480 resulted in clipped image of size 320x240.
+> 
+> high(640x480) -> low (320x240) -> high (640x480)
+> 
+> This patch makes sure the VIN crop and compose settings are updated.
 
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jiri Pirko <jiri@mellanox.com>
-Cc: Leon Romanovsky <leon@kernel.org>
-Cc: Julian Wiedmann <jwi@linux.ibm.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- net/core/link_watch.c | 3 +++
- net/core/rtnetlink.c  | 1 +
- 2 files changed, 4 insertions(+)
+This is clearly an inconsistency in the VIN driver that should be fixed.  
+But I think the none-mc mode implements the correct behavior. That is 
+that S_FMT should not modify the crop/compose rectangles other then make 
+sure they don't go out of bounds. This is an area we tried to clarify in 
+the past but I'm still not sure what the correct answer to.
 
-diff --git a/net/core/link_watch.c b/net/core/link_watch.c
-index 75431ca..6b9d44b 100644
---- a/net/core/link_watch.c
-+++ b/net/core/link_watch.c
-@@ -98,6 +98,9 @@ static bool linkwatch_urgent_event(struct net_device *dev)
- 	if (netif_is_lag_port(dev) || netif_is_lag_master(dev))
- 		return true;
- 
-+	if ((dev->flags & IFF_UP) && dev->operstate == IF_OPER_DOWN)
-+		return true;
-+
- 	return netif_carrier_ok(dev) &&	qdisc_tx_changing(dev);
- }
- 
-diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
-index 58c484a..fd0b3b6 100644
---- a/net/core/rtnetlink.c
-+++ b/net/core/rtnetlink.c
-@@ -2604,6 +2604,7 @@ static int do_setlink(const struct sk_buff *skb,
- 				       extack);
- 		if (err < 0)
- 			goto errout;
-+		linkwatch_fire_event(dev);
- 	}
- 
- 	if (tb[IFLA_MASTER]) {
+> 
+> Fixes: 104464f573d ("media: rcar-vin: Do not reset the crop and compose rectangles in s_fmt")
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> ---
+>  drivers/media/platform/rcar-vin/rcar-v4l2.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c b/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> index f421e25..a9b13d9 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> @@ -319,6 +319,12 @@ static int rvin_s_fmt_vid_cap(struct file *file, void *priv,
+>  	fmt_rect.width = vin->format.width;
+>  	fmt_rect.height = vin->format.height;
+>  
+> +	vin->crop.top = 0;
+> +	vin->crop.left = 0;
+> +	vin->crop.width = vin->format.width;
+> +	vin->crop.height = vin->format.height;
+> +	vin->compose = vin->crop;
+> +
+>  	v4l2_rect_map_inside(&vin->crop, &src_rect);
+>  	v4l2_rect_map_inside(&vin->compose, &fmt_rect);
+>  	vin->src_rect = src_rect;
+> -- 
+> 2.7.4
+> 
+
 -- 
-1.8.3.1
-
+Regards,
+Niklas Söderlund
