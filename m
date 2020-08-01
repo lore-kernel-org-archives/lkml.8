@@ -2,356 +2,197 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2767C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 591D6C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 957432072A
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FAC72071E
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 17:12:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="r/OmJhld"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ldn6PBxD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgHARGu (ORCPT
+        id S1727775AbgHARM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 13:06:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40788 "EHLO
+        Sat, 1 Aug 2020 13:12:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgHARGt (ORCPT
+        with ESMTP id S1726494AbgHARM3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 13:06:49 -0400
-Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC160C06174A;
-        Sat,  1 Aug 2020 10:06:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
-         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
-        :To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=J21v//+D+WQBwLQxUxtty0MU2gMtN/xicNX0QEA/m18=; b=r/OmJhldn9r6xmhb4m6M4HkrvL
-        4WJzU4a6MjWHJT6K6TwWNuo1vwtXdX6FAhPoYw34bvbbYvJMapnqqsFwxsFDp/9rHnXoy+KB6+l/4
-        wbOXWYOZz3Ri7sGhEj6KR5xd2JifI8lrDum0qus+ZIfvVErO7RAUk9JRNFB1FmPj61ef6tWneByp9
-        Us8bZ9Aph8VPlA4y4rTpfFA6lIIzGtRTC89b7S2mFsZS2oYnmhlT8pDuClRYZWtXO5P3bvQ7U1V8c
-        5mw/WuRJCG/iUMrH1VEY9LRs59qVa1BJ7CW57jSYimEeIRODDh5kKHtdxlNP4xzIjIT7yayMUKCeb
-        UGULvvIw==;
-Received: from noodles by the.earth.li with local (Exim 4.92)
-        (envelope-from <noodles@earth.li>)
-        id 1k1uy6-0006pp-3D; Sat, 01 Aug 2020 18:06:46 +0100
-Date:   Sat, 1 Aug 2020 18:06:46 +0100
-From:   Jonathan McDowell <noodles@earth.li>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Matthew Hagan <mnhagan88@gmail.com>, netdev@vger.kernel.org,
+        Sat, 1 Aug 2020 13:12:29 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5460C06174A;
+        Sat,  1 Aug 2020 10:12:28 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id c9so1876482qvu.5;
+        Sat, 01 Aug 2020 10:12:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2o6GVTZCy3XlmzBSwd7fA26VADSjJEkCYNl3YQKOr2M=;
+        b=Ldn6PBxD4m7lMPymQjipKfl27zylKQuiR2k8wfxVSrmlQ5jpqIVVImGSZWjlPgIbGC
+         hDJ7BkFuGFrS7733Sa79QeGiqV0qQCemUiXRE/QiwWnLbm5EQ82dmxs/kG3UyfU7E7n8
+         nL536EWJMI21gMA9GAQJpy1F9/6iR1lsI9mBQIIRfbo6g7chxN3cmdc3uVhPEga7RQ4V
+         TEliR1I27x7f40QWq2Ktg3mUvoW/3WDyyvpBb63myjZ0gnPKNIW0MqE9glVDJBy3Bgqw
+         In5hjK+9C4XkaeRowWu/SdcdFCcOWgZbXvoQRkQSw2xxEZumWAOjTxrQxGG+33eaNoFE
+         aj7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=2o6GVTZCy3XlmzBSwd7fA26VADSjJEkCYNl3YQKOr2M=;
+        b=Dlxkj4gwDa3VAZVNrv9hw1JojMt5+vpiOLB+vkYEQBPdwM9S5jDV2rIGne+HuUAQOU
+         7BlQ/YkXTwh/eVktZHaijfYequ8PWQge+Kk4a/24lKyW5IAq/lQuS8ylOiK2n+Ui4wQp
+         7EnrtXgTPfBhCPqZq4DlY58FS7qjlMRiBU9pKOHU5K6UULrmMwWLV6LUuwFR2mdNugu0
+         in8ILi+AU9zuXaELgilZFz8+sIOVlpLFCJDMxymC+A9W+q3wMsQiKZZM+z5nsyfuitK8
+         RSx21XmrDqODOHGNAu12ZpUO/S/t/hhT+CqFkLlOROoPeREm/4TrqdHi/nHqPrieo+FD
+         7UVA==
+X-Gm-Message-State: AOAM532WSU+s03VmHGTa7xM8vcen43CLZOlnvD59LN4QYCPK5lKZeCdM
+        VXIHBrZ/aXx6iBtB9kUSxKA=
+X-Google-Smtp-Source: ABdhPJyvisrUtCH+yT5SZkhMZ5hRzUqOeeL+iqxCLSrjVaYvR2aM1RnsJVQsxy3ZgehzESYLcwGpwg==
+X-Received: by 2002:a0c:ffc6:: with SMTP id h6mr9551061qvv.251.1596301947711;
+        Sat, 01 Aug 2020 10:12:27 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id i19sm12760874qkk.68.2020.08.01.10.12.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Aug 2020 10:12:27 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Sat, 1 Aug 2020 13:12:25 -0400
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v3 2/2] net: dsa: qca8k: Add 802.1q VLAN support
-Message-ID: <ec320e8e5a9691b85ee79f6ef03f1b0b6a562655.1596301468.git.noodles@earth.li>
-References: <20200721171624.GK23489@earth.li>
+Subject: Re: [PATCH v5 32/36] x86/boot/compressed: Reorganize zero-size
+ section asserts
+Message-ID: <20200801171225.GB3249534@rani.riverdale.lan>
+References: <20200731230820.1742553-1-keescook@chromium.org>
+ <20200731230820.1742553-33-keescook@chromium.org>
+ <20200801014755.GA2700342@rani.riverdale.lan>
+ <20200801025325.GA2800311@rani.riverdale.lan>
+ <202007312235.4A48157938@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200721171624.GK23489@earth.li>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <202007312235.4A48157938@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds full 802.1q VLAN support to the qca8k, allowing the use of
-vlan_filtering and more complicated bridging setups than allowed by
-basic port VLAN support.
+On Fri, Jul 31, 2020 at 10:36:00PM -0700, Kees Cook wrote:
+> On Fri, Jul 31, 2020 at 10:53:25PM -0400, Arvind Sankar wrote:
+> > On Fri, Jul 31, 2020 at 09:47:55PM -0400, Arvind Sankar wrote:
+> > > On Fri, Jul 31, 2020 at 04:08:16PM -0700, Kees Cook wrote:
+> > > > For readability, move the zero-sized sections to the end after DISCARDS
+> > > > and mark them NOLOAD for good measure.
+> > > > 
+> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > > ---
+> > > >  arch/x86/boot/compressed/vmlinux.lds.S | 42 +++++++++++++++-----------
+> > > >  1 file changed, 25 insertions(+), 17 deletions(-)
+> > > > 
+> > > > diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+> > > > index 3c2ee9a5bf43..42dea70a5091 100644
+> > > > --- a/arch/x86/boot/compressed/vmlinux.lds.S
+> > > > +++ b/arch/x86/boot/compressed/vmlinux.lds.S
+> > > > @@ -42,18 +42,16 @@ SECTIONS
+> > > >  		*(.rodata.*)
+> > > >  		_erodata = . ;
+> > > >  	}
+> > > > -	.rel.dyn : {
+> > > > -		*(.rel.*)
+> > > > -	}
+> > > > -	.rela.dyn : {
+> > > > -		*(.rela.*)
+> > > > -	}
+> > > > -	.got : {
+> > > > -		*(.got)
+> > > > -	}
+> > > >  	.got.plt : {
+> > > >  		*(.got.plt)
+> > > >  	}
+> > > > +	ASSERT(SIZEOF(.got.plt) == 0 ||
+> > > > +#ifdef CONFIG_X86_64
+> > > > +	       SIZEOF(.got.plt) == 0x18,
+> > > > +#else
+> > > > +	       SIZEOF(.got.plt) == 0xc,
+> > > > +#endif
+> > > > +	       "Unexpected GOT/PLT entries detected!")
+> > > >  
+> > > >  	.data :	{
+> > > >  		_data = . ;
+> > > > @@ -85,13 +83,23 @@ SECTIONS
+> > > >  	ELF_DETAILS
+> > > >  
+> > > >  	DISCARDS
+> > > > -}
+> > > >  
+> > > > -ASSERT(SIZEOF(.got) == 0, "Unexpected GOT entries detected!")
+> > > > -#ifdef CONFIG_X86_64
+> > > > -ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT entries detected!")
+> > > > -#else
+> > > > -ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc, "Unexpected GOT/PLT entries detected!")
+> > > > -#endif
+> > > > +	/*
+> > > > +	 * Sections that should stay zero sized, which is safer to
+> > > > +	 * explicitly check instead of blindly discarding.
+> > > > +	 */
+> > > > +	.got (NOLOAD) : {
+> > > > +		*(.got)
+> > > > +	}
+> > > > +	ASSERT(SIZEOF(.got) == 0, "Unexpected GOT entries detected!")
+> > > >  
+> > > > -ASSERT(SIZEOF(.rel.dyn) == 0 && SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations detected!")
+> > > > +	/* ld.lld does not like .rel* sections being made "NOLOAD". */
+> > > > +	.rel.dyn : {
+> > > > +		*(.rel.*)
+> > > > +	}
+> > > > +	ASSERT(SIZEOF(.rel.dyn) == 0, "Unexpected run-time relocations (.rel) detected!")
+> > > > +	.rela.dyn : {
+> > > > +		*(.rela.*)
+> > > > +	}
+> > > > +	ASSERT(SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations (.rela) detected!")
+> > > > +}
+> > > > -- 
+> > > > 2.25.1
+> > > > 
+> > > 
+> > > There's no point in marking zero-size sections NOLOAD -- if the ASSERT's
+> > > passed, they won't be present in the file at all anyway.
+> > > 
+> > > The only section for which there might be a point is .got.plt, which is
+> > > non-empty on 32-bit, and only if it is first moved to the end. That
+> > > saves a few bytes.
+> > 
+> > Btw, you should move .got.plt also to the end anyway for readability,
+> > it's unused even if non-empty. And with the ASSERT being placed
+> > immediately after it, it's even more distracting from the actual section
+> > layout.
+> 
+> ld.bfd (if I'm remembering correctly) was extraordinarily upset about it
+> being at the end. I will retest and report back.
+> 
+> -- 
+> Kees Cook
 
-Tested with a number of untagged ports with separate VLANs and then a
-trunk port with all the VLANs tagged on it.
-
-v3:
-- Pull QCA8K_PORT_VID_DEF changes into separate cleanup patch
-- Reverse Christmas tree notation for variable definitions
-- Use untagged instead of tagged for consistency
-v2:
-- Return sensible errnos on failure rather than -1 (rmk)
-- Style cleanups based on Florian's feedback
-- Silently allow VLAN 0 as device correctly treats this as no tag
-
-Signed-off-by: Jonathan McDowell <noodles@earth.li>
----
- drivers/net/dsa/qca8k.c | 181 ++++++++++++++++++++++++++++++++++++++++
- drivers/net/dsa/qca8k.h |  27 ++++++
- 2 files changed, 208 insertions(+)
-
-diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
-index 3ebc4da63074..f1e484477e35 100644
---- a/drivers/net/dsa/qca8k.c
-+++ b/drivers/net/dsa/qca8k.c
-@@ -408,6 +408,112 @@ qca8k_fdb_flush(struct qca8k_priv *priv)
- 	mutex_unlock(&priv->reg_mutex);
- }
- 
-+static int
-+qca8k_vlan_access(struct qca8k_priv *priv, enum qca8k_vlan_cmd cmd, u16 vid)
-+{
-+	u32 reg;
-+
-+	/* Set the command and VLAN index */
-+	reg = QCA8K_VTU_FUNC1_BUSY;
-+	reg |= cmd;
-+	reg |= vid << QCA8K_VTU_FUNC1_VID_S;
-+
-+	/* Write the function register triggering the table access */
-+	qca8k_write(priv, QCA8K_REG_VTU_FUNC1, reg);
-+
-+	/* wait for completion */
-+	if (qca8k_busy_wait(priv, QCA8K_REG_VTU_FUNC1, QCA8K_VTU_FUNC1_BUSY))
-+		return -ETIMEDOUT;
-+
-+	/* Check for table full violation when adding an entry */
-+	if (cmd == QCA8K_VLAN_LOAD) {
-+		reg = qca8k_read(priv, QCA8K_REG_VTU_FUNC1);
-+		if (reg & QCA8K_VTU_FUNC1_FULL)
-+			return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+static int
-+qca8k_vlan_add(struct qca8k_priv *priv, u8 port, u16 vid, bool untagged)
-+{
-+	u32 reg;
-+	int ret;
-+
-+	/*
-+	   We do the right thing with VLAN 0 and treat it as untagged while
-+	   preserving the tag on egress.
-+	 */
-+	if (vid == 0)
-+		return 0;
-+
-+	mutex_lock(&priv->reg_mutex);
-+	ret = qca8k_vlan_access(priv, QCA8K_VLAN_READ, vid);
-+	if (ret < 0)
-+		goto out;
-+
-+	reg = qca8k_read(priv, QCA8K_REG_VTU_FUNC0);
-+	reg |= QCA8K_VTU_FUNC0_VALID | QCA8K_VTU_FUNC0_IVL_EN;
-+	reg &= ~(QCA8K_VTU_FUNC0_EG_MODE_MASK << QCA8K_VTU_FUNC0_EG_MODE_S(port));
-+	if (untagged)
-+		reg |= QCA8K_VTU_FUNC0_EG_MODE_UNTAG <<
-+				QCA8K_VTU_FUNC0_EG_MODE_S(port);
-+	else
-+		reg |= QCA8K_VTU_FUNC0_EG_MODE_TAG <<
-+				QCA8K_VTU_FUNC0_EG_MODE_S(port);
-+
-+	qca8k_write(priv, QCA8K_REG_VTU_FUNC0, reg);
-+	ret = qca8k_vlan_access(priv, QCA8K_VLAN_LOAD, vid);
-+
-+out:
-+	mutex_unlock(&priv->reg_mutex);
-+
-+	return ret;
-+}
-+
-+static int
-+qca8k_vlan_del(struct qca8k_priv *priv, u8 port, u16 vid)
-+{
-+	u32 reg, mask;
-+	int ret, i;
-+	bool del;
-+
-+	mutex_lock(&priv->reg_mutex);
-+	ret = qca8k_vlan_access(priv, QCA8K_VLAN_READ, vid);
-+	if (ret < 0)
-+		goto out;
-+
-+	reg = qca8k_read(priv, QCA8K_REG_VTU_FUNC0);
-+	reg &= ~(3 << QCA8K_VTU_FUNC0_EG_MODE_S(port));
-+	reg |= QCA8K_VTU_FUNC0_EG_MODE_NOT <<
-+			QCA8K_VTU_FUNC0_EG_MODE_S(port);
-+
-+	/* Check if we're the last member to be removed */
-+	del = true;
-+	for (i = 0; i < QCA8K_NUM_PORTS; i++) {
-+		mask = QCA8K_VTU_FUNC0_EG_MODE_NOT;
-+		mask <<= QCA8K_VTU_FUNC0_EG_MODE_S(i);
-+
-+		if ((reg & mask) != mask) {
-+			del = false;
-+			break;
-+		}
-+	}
-+
-+	if (del) {
-+		ret = qca8k_vlan_access(priv, QCA8K_VLAN_PURGE, vid);
-+	} else {
-+		qca8k_write(priv, QCA8K_REG_VTU_FUNC0, reg);
-+		ret = qca8k_vlan_access(priv, QCA8K_VLAN_LOAD, vid);
-+	}
-+
-+out:
-+	mutex_unlock(&priv->reg_mutex);
-+
-+	return ret;
-+}
-+
- static void
- qca8k_mib_init(struct qca8k_priv *priv)
- {
-@@ -1187,6 +1293,76 @@ qca8k_port_fdb_dump(struct dsa_switch *ds, int port,
- 	return 0;
- }
- 
-+static int
-+qca8k_port_vlan_filtering(struct dsa_switch *ds, int port, bool vlan_filtering)
-+{
-+	struct qca8k_priv *priv = ds->priv;
-+
-+	if (vlan_filtering) {
-+		qca8k_rmw(priv, QCA8K_PORT_LOOKUP_CTRL(port),
-+			  QCA8K_PORT_LOOKUP_VLAN_MODE,
-+			  QCA8K_PORT_LOOKUP_VLAN_MODE_SECURE);
-+	} else {
-+		qca8k_rmw(priv, QCA8K_PORT_LOOKUP_CTRL(port),
-+			  QCA8K_PORT_LOOKUP_VLAN_MODE,
-+			  QCA8K_PORT_LOOKUP_VLAN_MODE_NONE);
-+	}
-+
-+	return 0;
-+}
-+
-+static int
-+qca8k_port_vlan_prepare(struct dsa_switch *ds, int port,
-+			const struct switchdev_obj_port_vlan *vlan)
-+{
-+	return 0;
-+}
-+
-+static void
-+qca8k_port_vlan_add(struct dsa_switch *ds, int port,
-+		    const struct switchdev_obj_port_vlan *vlan)
-+{
-+	bool untagged = vlan->flags & BRIDGE_VLAN_INFO_UNTAGGED;
-+	bool pvid = vlan->flags & BRIDGE_VLAN_INFO_PVID;
-+	struct qca8k_priv *priv = ds->priv;
-+	int ret = 0;
-+	u16 vid;
-+
-+	for (vid = vlan->vid_begin; vid <= vlan->vid_end && !ret; ++vid)
-+		ret = qca8k_vlan_add(priv, port, vid, untagged);
-+
-+	if (ret)
-+		dev_err(priv->dev, "Failed to add VLAN to port %d (%d)", port, ret);
-+
-+	if (pvid) {
-+		int shift = 16 * (port % 2);
-+
-+		qca8k_rmw(priv, QCA8K_EGRESS_VLAN(port),
-+			  0xfff << shift,
-+			  vlan->vid_end << shift);
-+		qca8k_write(priv, QCA8K_REG_PORT_VLAN_CTRL0(port),
-+			    QCA8K_PORT_VLAN_CVID(vlan->vid_end) |
-+			    QCA8K_PORT_VLAN_SVID(vlan->vid_end));
-+	}
-+}
-+
-+static int
-+qca8k_port_vlan_del(struct dsa_switch *ds, int port,
-+		    const struct switchdev_obj_port_vlan *vlan)
-+{
-+	struct qca8k_priv *priv = ds->priv;
-+	int ret = 0;
-+	u16 vid;
-+
-+	for (vid = vlan->vid_begin; vid <= vlan->vid_end && !ret; ++vid)
-+		ret = qca8k_vlan_del(priv, port, vid);
-+
-+	if (ret)
-+		dev_err(priv->dev, "Failed to delete VLAN from port %d (%d)", port, ret);
-+
-+	return ret;
-+}
-+
- static enum dsa_tag_protocol
- qca8k_get_tag_protocol(struct dsa_switch *ds, int port,
- 		       enum dsa_tag_protocol mp)
-@@ -1212,6 +1388,10 @@ static const struct dsa_switch_ops qca8k_switch_ops = {
- 	.port_fdb_add		= qca8k_port_fdb_add,
- 	.port_fdb_del		= qca8k_port_fdb_del,
- 	.port_fdb_dump		= qca8k_port_fdb_dump,
-+	.port_vlan_filtering	= qca8k_port_vlan_filtering,
-+	.port_vlan_prepare	= qca8k_port_vlan_prepare,
-+	.port_vlan_add		= qca8k_port_vlan_add,
-+	.port_vlan_del		= qca8k_port_vlan_del,
- 	.phylink_validate	= qca8k_phylink_validate,
- 	.phylink_mac_link_state	= qca8k_phylink_mac_link_state,
- 	.phylink_mac_config	= qca8k_phylink_mac_config,
-@@ -1262,6 +1442,7 @@ qca8k_sw_probe(struct mdio_device *mdiodev)
- 
- 	priv->ds->dev = &mdiodev->dev;
- 	priv->ds->num_ports = QCA8K_NUM_PORTS;
-+	priv->ds->configure_vlan_while_not_filtering = true;
- 	priv->ds->priv = priv;
- 	priv->ops = qca8k_switch_ops;
- 	priv->ds->ops = &priv->ops;
-diff --git a/drivers/net/dsa/qca8k.h b/drivers/net/dsa/qca8k.h
-index 92216a52daa5..7ca4b93e0bb5 100644
---- a/drivers/net/dsa/qca8k.h
-+++ b/drivers/net/dsa/qca8k.h
-@@ -128,6 +128,19 @@
- #define   QCA8K_ATU_FUNC_FULL				BIT(12)
- #define   QCA8K_ATU_FUNC_PORT_M				0xf
- #define   QCA8K_ATU_FUNC_PORT_S				8
-+#define QCA8K_REG_VTU_FUNC0				0x610
-+#define   QCA8K_VTU_FUNC0_VALID				BIT(20)
-+#define   QCA8K_VTU_FUNC0_IVL_EN			BIT(19)
-+#define   QCA8K_VTU_FUNC0_EG_MODE_S(_i)			(4 + (_i) * 2)
-+#define   QCA8K_VTU_FUNC0_EG_MODE_MASK			3
-+#define   QCA8K_VTU_FUNC0_EG_MODE_UNMOD			0
-+#define   QCA8K_VTU_FUNC0_EG_MODE_UNTAG			1
-+#define   QCA8K_VTU_FUNC0_EG_MODE_TAG			2
-+#define   QCA8K_VTU_FUNC0_EG_MODE_NOT			3
-+#define QCA8K_REG_VTU_FUNC1				0x614
-+#define   QCA8K_VTU_FUNC1_BUSY				BIT(31)
-+#define   QCA8K_VTU_FUNC1_VID_S				16
-+#define   QCA8K_VTU_FUNC1_FULL				BIT(4)
- #define QCA8K_REG_GLOBAL_FW_CTRL0			0x620
- #define   QCA8K_GLOBAL_FW_CTRL0_CPU_PORT_EN		BIT(10)
- #define QCA8K_REG_GLOBAL_FW_CTRL1			0x624
-@@ -137,6 +150,11 @@
- #define   QCA8K_GLOBAL_FW_CTRL1_UC_DP_S			0
- #define QCA8K_PORT_LOOKUP_CTRL(_i)			(0x660 + (_i) * 0xc)
- #define   QCA8K_PORT_LOOKUP_MEMBER			GENMASK(6, 0)
-+#define   QCA8K_PORT_LOOKUP_VLAN_MODE			GENMASK(9, 8)
-+#define   QCA8K_PORT_LOOKUP_VLAN_MODE_NONE		(0 << 8)
-+#define   QCA8K_PORT_LOOKUP_VLAN_MODE_FALLBACK		(1 << 8)
-+#define   QCA8K_PORT_LOOKUP_VLAN_MODE_CHECK		(2 << 8)
-+#define   QCA8K_PORT_LOOKUP_VLAN_MODE_SECURE		(3 << 8)
- #define   QCA8K_PORT_LOOKUP_STATE_MASK			GENMASK(18, 16)
- #define   QCA8K_PORT_LOOKUP_STATE_DISABLED		(0 << 16)
- #define   QCA8K_PORT_LOOKUP_STATE_BLOCKING		(1 << 16)
-@@ -180,6 +198,15 @@ enum qca8k_fdb_cmd {
- 	QCA8K_FDB_SEARCH = 7,
- };
- 
-+enum qca8k_vlan_cmd {
-+	QCA8K_VLAN_FLUSH = 1,
-+	QCA8K_VLAN_LOAD = 2,
-+	QCA8K_VLAN_PURGE = 3,
-+	QCA8K_VLAN_REMOVE_PORT = 4,
-+	QCA8K_VLAN_NEXT = 5,
-+	QCA8K_VLAN_READ = 6,
-+};
-+
- struct ar8xxx_port_status {
- 	int enabled;
- };
--- 
-2.20.1
-
+Actually, moving it to the end also requires marking it INFO or
+stripping it out when creating the bzImage. Otherwise we get back to
+that old problem of materializing .bss/.pgtable in the bzImage.
