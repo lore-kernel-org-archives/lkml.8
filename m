@@ -2,163 +2,100 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E65C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 08:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF913C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 08:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 917132076A
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 08:01:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="v/0FkYbV"
+	by mail.kernel.org (Postfix) with ESMTP id C91742067D
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 08:10:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbgHAIA7 (ORCPT
+        id S1728260AbgHAIKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 04:00:59 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:58748 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgHAIA6 (ORCPT
+        Sat, 1 Aug 2020 04:10:32 -0400
+Received: from smtprelay0163.hostedemail.com ([216.40.44.163]:39208 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725283AbgHAIKc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 04:00:58 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0717wTFw026356;
-        Sat, 1 Aug 2020 08:00:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=JcmYWttSgHbw7qmGDRTSvtOA/0p07IlseUnTuNrFNjc=;
- b=v/0FkYbVaBTZHtmsPt81t2LxiXsh0E24AS2oPVkso964b5B5DXK85h8T1RZCzpD+qI4x
- eK9e51amSGeWeddjOl6FYD30GRjrEfH3oyckeRbi/Le+mL7HZOH1vklRd3uE6MPEZJSJ
- I1Y3dP/wa6iWOT/WEovib+rDatLM37z+SX+vBI1AnY1prLuE95IqNcuZ78qyvw9/0+pZ
- nBtFb3BJrp5Tq0ZK2nh/QYZsvPKoWo79Wb9N1TOsSpjjOlp4gFM0o6R36cD9GGzbOMhe
- W2vkOivca/j4VnEy+QUlcMzxX25lLqb4n8/Xo0b01bJKNHepm88iQp43QEsJEpLlZwwg gA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 32n0bkrcrc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 01 Aug 2020 08:00:43 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0717wlk5023636;
-        Sat, 1 Aug 2020 08:00:43 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3020.oracle.com with ESMTP id 32myqgqq4q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 01 Aug 2020 08:00:43 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07180g11028919;
-        Sat, 1 Aug 2020 08:00:42 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 32myqgqq41-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 01 Aug 2020 08:00:42 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07180c7b019130;
-        Sat, 1 Aug 2020 08:00:38 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 01 Aug 2020 01:00:37 -0700
-Date:   Sat, 1 Aug 2020 11:00:26 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Peilin Ye <yepeilin.cs@gmail.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak
- in rds_notify_queue_get()
-Message-ID: <20200801080026.GJ5493@kadam>
-References: <20200730192026.110246-1-yepeilin.cs@gmail.com>
- <20200731045301.GI75549@unreal>
- <20200731053306.GA466103@kroah.com>
- <20200731053333.GB466103@kroah.com>
- <20200731140452.GE24045@ziepe.ca>
- <20200731142148.GA1718799@kroah.com>
- <20200731143604.GF24045@ziepe.ca>
- <20200731171924.GA2014207@kroah.com>
- <20200731182712.GI24045@ziepe.ca>
+        Sat, 1 Aug 2020 04:10:32 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 314001800F08E;
+        Sat,  1 Aug 2020 08:10:31 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: bears44_4f154d426f8a
+X-Filterd-Recvd-Size: 2765
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Sat,  1 Aug 2020 08:10:29 +0000 (UTC)
+Message-ID: <0c1803c6aaca42579b7933fd219e4e208ab7524f.camel@perches.com>
+Subject: Re: [PATCH] scsi: libcxgbi: use kvzalloc instead of opencoded
+ kzalloc/vzalloc
+From:   Joe Perches <joe@perches.com>
+To:     Denis Efremov <efremov@linux.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Sat, 01 Aug 2020 01:10:28 -0700
+In-Reply-To: <c5a18804-3236-9688-2a3c-68184f0dd9e8@linux.com>
+References: <20200731215524.14295-1-efremov@linux.com>
+         <33d943d2b83f17371df09b5962c856ea2d894954.camel@perches.com>
+         <70fb8220-2102-adb5-bbe6-9c2ea74a0623@linux.com>
+         <8638183f559c0f8f8d377bd0a6c91903b2c588df.camel@perches.com>
+         <c5a18804-3236-9688-2a3c-68184f0dd9e8@linux.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200731182712.GI24045@ziepe.ca>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9699 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxscore=0
- clxscore=1011 phishscore=0 impostorscore=0 adultscore=0 suspectscore=0
- priorityscore=1501 malwarescore=0 mlxlogscore=999 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008010062
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 03:27:12PM -0300, Jason Gunthorpe wrote:
-> On Fri, Jul 31, 2020 at 07:19:24PM +0200, Greg Kroah-Hartman wrote:
-> 
-> > > I tried for a bit and didn't find a way to get even old gcc 4.4 to not
-> > > initialize the holes.
+On Sat, 2020-08-01 at 10:51 +0300, Denis Efremov wrote:
+> On 8/1/20 1:24 AM, Joe Perches wrote:
+> > On Sat, 2020-08-01 at 01:10 +0300, Denis Efremov wrote:
+> > > On 8/1/20 12:58 AM, Joe Perches wrote:
+> > > > On Sat, 2020-08-01 at 00:55 +0300, Denis Efremov wrote:
+> > > > > Remove cxgbi_alloc_big_mem(), cxgbi_free_big_mem() functions
+> > > > > and use kvzalloc/kvfree instead.
+> > > > 
+> > > > Sensible, thanks.
+> > > > 
+> > > > > diff --git a/drivers/scsi/cxgbi/libcxgbi.c b/drivers/scsi/cxgbi/libcxgbi.c
+> > > > []
+> > > > > @@ -77,9 +77,9 @@ int cxgbi_device_portmap_create(struct cxgbi_device *cdev, unsigned int base,
+> > > > >  {
+> > > > >  	struct cxgbi_ports_map *pmap = &cdev->pmap;
+> > > > >  
+> > > > > -	pmap->port_csk = cxgbi_alloc_big_mem(max_conn *
+> > > > > -					     sizeof(struct cxgbi_sock *),
+> > > > > -					     GFP_KERNEL);
+> > > > > +	pmap->port_csk = kvzalloc(array_size(max_conn,
+> > > > > +					     sizeof(struct cxgbi_sock *)),
+> > > > > +				  GFP_KERNEL);
+> > > > 
+> > > > missing __GFP_NOWARN
+> > > > 
+> > > 
+> > > kvmalloc_node adds __GFP_NOWARN internally to kmalloc call
+> > > https://elixir.bootlin.com/linux/v5.8-rc4/source/mm/util.c#L568
 > > 
-> > Odd, so it is just the "= {0};" that does not zero out the holes?
-> 
-> Nope, it seems to work fine too. I tried a number of situations and I
-> could not get the compiler to not zero holes, even back to gcc 4.4
-> 
-> It is not just accidental either, take this:
-> 
-> 	struct rds_rdma_notify {
-> 		unsigned long user_token;
-> 		unsigned char status;
-> 		unsigned long user_token1 __attribute__((aligned(32)));
-> 	} foo = {0};
-> 
-> Which has quite a big hole, clang generates:
-> 
-> 	movq	$0, 56(%rdi)
-> 	movq	$0, 48(%rdi)
-> 	movq	$0, 40(%rdi)
-> 	movq	$0, 32(%rdi)
-> 	movq	$0, 24(%rdi)
-> 	movq	$0, 16(%rdi)
-> 	movq	$0, 8(%rdi)
-> 	movq	$0, (%rdi)
-> 
-> Deliberate extra instructions to fill both holes. gcc 10 does the
-> same, older gcc's do create a rep stosq over the whole thing.
-> 
-> Some fiddling with godbolt shows quite a variety of output, but I
-> didn't see anything that looks like a compiler not filling
-> padding. Even godbolt's gcc 4.1 filled the padding, which is super old.
-> 
-> In several cases it seems the aggregate initializer produced better
-> code than memset, in other cases it didn't
-> 
-> Without an actual example where this doesn't work right it is hard to
-> say anything more..
+> > Only when there's a fallback, and the fallback does not.
+> Sorry, Joe, I don't understand why do we need to add __GFP_NOWARN here.
 
-Here is the example that set off the recent patches:
+Hi.
 
-https://lkml.org/lkml/2020/7/27/199
+The reason to add __GFP_NOWARN is so you don't get a
+dump_stack() as there's an existing error message
+output below this when OOM.
 
-Another example is commit 5ff223e86f5a ("net: Zeroing the structure
-ethtool_wolinfo in ethtool_get_wol()").  I tested this one with GCC 7.4
-at the time and it was a real life bug.
+You should either remove the error message as it just
+effectively duplicates the dump_stack or add __GFP_NOWARN.
 
-The rest of these patches were based on static analysis from Smatch.
-They're all "theoretical" bugs based on the C standard but it's
-impossible to know if and when they'll turn into real life bugs.
+Your choice.
 
-It's not a super long list of code that's affected because we've known
-that the bug was possible for a few years.  It was only last year when
-I saw that it had become a real life bug.
-
-regards,
-dan carpenter
+cheers, Joe
 
