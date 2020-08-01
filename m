@@ -2,103 +2,107 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 907C9C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 16:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 748E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 16:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED82207FB
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 16:02:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596297765;
-	bh=p2oDC8N96YV8ZYXENTyf4/gTFtcs++qxxMizDPrcRDg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=mFNdcexe06Dc6C2dw4IQX7J/zN3wbw6waGM5arWoIyRe0JBxZfNf/GwxsENPbHhh6
-	 N20Fhb6TdSmfqY1d93M+oVrT89D6r4dJ4aMppNJWa98RfHEO/gSfoh0XKSxACJC1F9
-	 yHrNoPPKKWQTFPOewhSHaoWPh31EdMvJWkGpbqcw=
+	by mail.kernel.org (Postfix) with ESMTP id 4D2B9206D4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 16:05:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgHAQCo (ORCPT
+        id S1726773AbgHAQF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 12:02:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725841AbgHAQCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 12:02:43 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 487AA207BC;
-        Sat,  1 Aug 2020 16:02:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596297763;
-        bh=p2oDC8N96YV8ZYXENTyf4/gTFtcs++qxxMizDPrcRDg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YwHwRk01ZdxpAR7bbkL/Psag7Er8KU65zF/vJW/GDIO4EhfSKtjwqmELyMfHmwGvr
-         csVCHv7u8gvajzdrvWYiywe/hLiCKs+/rgctewH8QYauc+KLedUkh63tuCL3b1vEwe
-         4VxHmyBJbu6hZv25YpVbFhY85erKyHZePQMc49oM=
-Date:   Sat, 1 Aug 2020 17:02:34 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Christian Eggers <ceggers@arri.de>
-Cc:     <stable@vger.kernel.org>, "Hartmut Knaack" <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: trigger: sysfs: Disable irqs before calling
- iio_trigger_poll()
-Message-ID: <20200801170234.2953b087@archlinux>
-In-Reply-To: <20200727145714.4377-1-ceggers@arri.de>
-References: <20200727145714.4377-1-ceggers@arri.de>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 1 Aug 2020 12:05:26 -0400
+Received: from smtprelay0195.hostedemail.com ([216.40.44.195]:54724 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726309AbgHAQFZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 12:05:25 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id B786C180A7FD8;
+        Sat,  1 Aug 2020 16:05:24 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: vest79_370b0cd26f8d
+X-Filterd-Recvd-Size: 2994
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf13.hostedemail.com (Postfix) with ESMTPA;
+        Sat,  1 Aug 2020 16:05:23 +0000 (UTC)
+Message-ID: <7e25090c79f6a69d502ab8219863300790192fe2.camel@perches.com>
+Subject: [PATCH] checkpatch: Remove missing switch/case break test
+From:   Joe Perches <joe@perches.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Whitcroft <apw@canonical.com>
+Cc:     linux-kernel@vger.kernel.org, Cambda Zhu <cambda@linux.alibaba.com>
+Date:   Sat, 01 Aug 2020 09:05:22 -0700
+In-Reply-To: <46F62293-BC9E-4428-94BD-186B0E3D3A5E@linux.alibaba.com>
+References: <46F62293-BC9E-4428-94BD-186B0E3D3A5E@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jul 2020 16:57:13 +0200
-Christian Eggers <ceggers@arri.de> wrote:
+This test doesn't work well and newer compilers are much better
+at emitting this warning.
 
-> iio_trigger_poll() calls generic_handle_irq(). This function expects to
-> be run with local IRQs disabled.
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+> 在 2020年8月1日，02:05，Joe Perches <joe@perches.com> 写道：
+> > ﻿On Wed, 2020-07-29 at 20:59 +0800, Cambda Zhu wrote:
+> > > The checkpatch.pl only searches 3 previous lines when finding missing
+> > > switch/case break, and macros are treated as normal statements. If the
+> > > cases are surrounded with CONFIG, checkpatch.pl may report false
+> > > warnings. For example:
+> > 
+> > Likely this test should be removed altogether as
+> > it's never really worked well and now compilers
+> > find this and emit warnings.
 
-Was there an error or warning that lead to this patch?
-Or can you point to what call in generic_handle_irq is making the
-assumption that we are breaking?
+ scripts/checkpatch.pl | 25 -------------------------
+ 1 file changed, 25 deletions(-)
 
-Given this is using the irq_work framework I'm wondering if this is
-a more general problem?
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index cc5542cc234f..4aa1d9d5e62c 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -6541,31 +6541,6 @@ sub process {
+ 			}
+ 		}
+ 
+-# check for case / default statements not preceded by break/fallthrough/switch
+-		if ($line =~ /^.\s*(?:case\s+(?:$Ident|$Constant)\s*|default):/) {
+-			my $has_break = 0;
+-			my $has_statement = 0;
+-			my $count = 0;
+-			my $prevline = $linenr;
+-			while ($prevline > 1 && ($file || $count < 3) && !$has_break) {
+-				$prevline--;
+-				my $rline = $rawlines[$prevline - 1];
+-				my $fline = $lines[$prevline - 1];
+-				last if ($fline =~ /^\@\@/);
+-				next if ($fline =~ /^\-/);
+-				next if ($fline =~ /^.(?:\s*(?:case\s+(?:$Ident|$Constant)[\s$;]*|default):[\s$;]*)*$/);
+-				$has_break = 1 if ($rline =~ /fall[\s_-]*(through|thru)/i);
+-				next if ($fline =~ /^.[\s$;]*$/);
+-				$has_statement = 1;
+-				$count++;
+-				$has_break = 1 if ($fline =~ /\bswitch\b|\b(?:break\s*;[\s$;]*$|exit\s*\(\b|return\b|goto\b|continue\b)/);
+-			}
+-			if (!$has_break && $has_statement) {
+-				WARN("MISSING_BREAK",
+-				     "Possible switch case/default not preceded by break or fallthrough comment\n" . $herecurr);
+-			}
+-		}
+-
+ # check for /* fallthrough */ like comment, prefer fallthrough;
+ 		my @fallthroughs = (
+ 			'fallthrough',
 
-Basically more info please!
-
-Thanks,
-
-Jonathan
-
-
-> 
-> Signed-off-by: Christian Eggers <ceggers@arri.de>
-> Cc: stable@vger.kernel.org
-> ---
->  drivers/iio/trigger/iio-trig-sysfs.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/iio/trigger/iio-trig-sysfs.c b/drivers/iio/trigger/iio-trig-sysfs.c
-> index e09e58072872..66a96b1632f8 100644
-> --- a/drivers/iio/trigger/iio-trig-sysfs.c
-> +++ b/drivers/iio/trigger/iio-trig-sysfs.c
-> @@ -94,7 +94,9 @@ static void iio_sysfs_trigger_work(struct irq_work *work)
->  	struct iio_sysfs_trig *trig = container_of(work, struct iio_sysfs_trig,
->  							work);
->  
-> +	local_irq_disable();
->  	iio_trigger_poll(trig->trig);
-> +	local_irq_enable();
->  }
->  
->  static ssize_t iio_sysfs_trigger_poll(struct device *dev,
 
