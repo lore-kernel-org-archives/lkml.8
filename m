@@ -2,219 +2,144 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E562C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 12:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1636C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 12:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 241532080C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 12:34:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596285246;
-	bh=aTvPSQqI0tqEGLWhHkbcbZSRAVoeM633/v0d7clCOr0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TvWrc1PQRtCuDawDiThDYKWDOKCVpNDqBQc8yIyCzrZTZf6A/T5q5dpaRb8nzCJS6
-	 o3s/Jo37SNVrrfGlthI8h/mcoWrZxzDH0ct/nKNfQSsxtgivYJbllTwZhdRM3hU2wh
-	 Uz1C2M5vKcoODziInYN9/lkyGTnkbN6YmEF01bAM=
+	by mail.kernel.org (Postfix) with ESMTP id 8B469206E6
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 12:46:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ju1mKBvs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbgHAMeF (ORCPT
+        id S1728955AbgHAMp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 08:34:05 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:44397 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728609AbgHAMeE (ORCPT
+        Sat, 1 Aug 2020 08:45:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57466 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728505AbgHAMp6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 08:34:04 -0400
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 071CXk9h006581;
-        Sat, 1 Aug 2020 21:33:46 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 071CXk9h006581
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1596285227;
-        bh=L+wjmNkKDft8GKG9TLffZw2+e6y2VA945fN99WOCg5k=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QSIXbanbw4HoVNfr4UXFTo03tYgdYRWf9AA16G9OBEfzhYdaSpa5kn9VIXWqQZRay
-         D5VVW6o9MLlMBVe7S1d0c7Wa6xNzGA6USl7kMsJ877xSt2iCkFfg5mp1TYmyhOX1ha
-         Y8HCAvccOu2gPXCyHt2qx6bCfDXelevv27BZ/42rkBa5x0Ac3vbmIg5giKDWhboS0I
-         wOc78Xg0vU5Z1GPUUcoRKzrKjgthSTIEdo/kmerKYyme8uErmXIK8o5CpSxnJ0goDY
-         94uTKhOdb+srpwqHqOEhtUVrd66bdKFrPJ7ODzV1MsdLfMTKvUQaHrAzZBjkMZWqNy
-         lusGUvRWJQfMQ==
-X-Nifty-SrcIP: [209.85.222.52]
-Received: by mail-ua1-f52.google.com with SMTP id e20so3219158uav.3;
-        Sat, 01 Aug 2020 05:33:46 -0700 (PDT)
-X-Gm-Message-State: AOAM531GqUGq41H8oWrf8rHKV0TawWcJkRpqQcywClvE2sFqV7hCbjp6
-        aZ+W1XQrB5wpLPXK3SxgjfMgQos70R+dKihBJi0=
-X-Google-Smtp-Source: ABdhPJzBsWqcTxd9WXWZUr7YBXQMw70o2ON5ypBMDI6XvCn9Co2N4uE2yk+11RzTLCuS6ikDu4zranuKXhb8p3HrUyk=
-X-Received: by 2002:ab0:5b91:: with SMTP id y17mr5816923uae.95.1596285225231;
- Sat, 01 Aug 2020 05:33:45 -0700 (PDT)
+        Sat, 1 Aug 2020 08:45:58 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E883C06174A;
+        Sat,  1 Aug 2020 05:45:58 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id b9so18600724plx.6;
+        Sat, 01 Aug 2020 05:45:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kFe+K+RIpsuMdBoFu+zsJoKd01qjdO0sdJp2aF1Jixg=;
+        b=ju1mKBvsuq7y2HUb+aIDhl5DEV8iocOWdju1zhvKCa6TpDFsEL1p9NXDWrPnPiGaqN
+         DeaF6GU5pXB+TZwo/vz2aU1jvyXNZLNugAtBCTcRLfaGI1yneAu2DWBoje4/EqH2F+K1
+         K6fpnG1ZV04ycAVtJjeZlE4Vk/kSsFJbGqCEVK29X5/jar4xMbtrOBCViKyukx6vfi7j
+         8Ai6G/WrNpZtVl0aze1Z5GblW3Eo9MI3ITje7eed6Cp77zwNpiWcm6kI2vPBTnDvreKm
+         AZjKEjyGnRVBcADdoQ7C+1M+DfQtmPEA78TZgdPOSUkNrYMIXJKw6cwW/mA5+DB3ih1k
+         LnIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kFe+K+RIpsuMdBoFu+zsJoKd01qjdO0sdJp2aF1Jixg=;
+        b=nBxnfjMdpxBx6knFxblN9wYRwkQX0bidn8wzRXF3xYuQ0y1ZzvHwPRs7UzKXhskjSm
+         KWaNN4yYO5ikYG8xnFxRhYpJS4sYQKXFvLHf+38OaS6QeGNKEe3VZYH5/GQidWR+Y0MS
+         cl/MUP8Qaf02jKV3vpRnldgZofUsDEimjgkawfrL74UdVyPtjZCSORoKFqjYsM2PL3WO
+         +SmmmDX3g3hHTz8zmogHMUJDtciGzzS4CGFdqzKYHvzWTmoffmVZPqvsRsTuzXrcGZ2R
+         EqATTZ0sfFZoYiqfDVtE+FH/mSqEqJ4y2O6BQRP5MBOjqCh26eEOOF5NzGrFr8UDEp6H
+         MTzw==
+X-Gm-Message-State: AOAM533TRI7xVsCuvZjaD72fNUIb3STIvyoaaOnCmzYmsoUUFyI823DZ
+        6mk0uUzaTrpcAVZrpbgxQrEmELhiMW+hHVxcB9k=
+X-Google-Smtp-Source: ABdhPJwCeSTSwShKQcPXNlapNXD0FdH0+2CcK/Eqlkm6aXKtmmzQSmYKog89Oo7z0QxTvYkFuVnkDXR18gR8bXXT/QI=
+X-Received: by 2002:a17:902:9b8f:: with SMTP id y15mr7860775plp.322.1596285958111;
+ Sat, 01 Aug 2020 05:45:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200719194602.61387-1-grandmaster@al2klimov.de>
-In-Reply-To: <20200719194602.61387-1-grandmaster@al2klimov.de>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 1 Aug 2020 21:33:08 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQywudK9hJLeAT+Z3HWt4bgR+Tf3PWWtqkc7LT=eKBMyA@mail.gmail.com>
-Message-ID: <CAK7LNAQywudK9hJLeAT+Z3HWt4bgR+Tf3PWWtqkc7LT=eKBMyA@mail.gmail.com>
-Subject: Re: [PATCH for v5.9] kbuild: Replace HTTP links with HTTPS ones
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <20200730073702.16887-1-xie.he.0141@gmail.com> <CAJht_ENjHRExBEHx--xmqnOy1MXY_6F5XZ_exinSfa6xU_XDJg@mail.gmail.com>
+ <CA+FuTSf_nuiah6rFy-KC1Taw+Wc4z0G7LzkAm-+Ms4FzYmTPEw@mail.gmail.com>
+ <CAJht_ENYxy4pseOO9gY=0R0bvPPvs4GKrGJOUMx6=LPwBa2+Bg@mail.gmail.com> <CA+FuTSeusqdfkqZihFhTE9vhcL5or6DEh8UffaKM2Px82z6BZQ@mail.gmail.com>
+In-Reply-To: <CA+FuTSeusqdfkqZihFhTE9vhcL5or6DEh8UffaKM2Px82z6BZQ@mail.gmail.com>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Sat, 1 Aug 2020 05:45:46 -0700
+Message-ID: <CAJht_EO4b=jC8KarwZyF1M3T57MrFCDvo-+Agnm9qD4pSCmODQ@mail.gmail.com>
+Subject: Re: [PATCH v2] drivers/net/wan/lapbether: Use needed_headroom instead
+ of hard_header_len
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux X25 <linux-x25@vger.kernel.org>,
+        Brian Norris <briannorris@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 4:46 AM Alexander A. Klimov
-<grandmaster@al2klimov.de> wrote:
+On Fri, Jul 31, 2020 at 7:33 PM Willem de Bruijn
+<willemdebruijn.kernel@gmail.com> wrote:
 >
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
->
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->           If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
->
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
+> I quickly scanned the main x.25 datapath code. Specifically
+> x25_establish_link, x25_terminate_link and x25_send_frame. These all
+> write this 1 byte header. It appears to be an in-band communication
+> means between the network and data link layer, never actually ending
+> up on the wire?
 
-Applied to linux-kbuild. Thanks.
+Yes, this 1-byte header is just a "fake" header that is only for
+communication between the network layer and the link layer. It never
+ends up on wire.
 
+I think we can think of it as the Ethernet header for Wifi drivers.
+Although Wifi doesn't actually use the Ethernet header, Wifi drivers
+use a "fake" Ethernet header to communicate with code outside of the
+driver. From outside, it appears that Wifi drivers use the Ethernet
+header.
 
+> > The best solution might be to implement header_ops for X.25 drivers
+> > and let dev_hard_header create this 1-byte header, so that
+> > hard_header_len can equal to the header length created by
+> > dev_hard_header. This might be the best way to fit the logic of
+> > af_packet.c. But this requires changing the interface of X.25 drivers
+> > so it might be a big change.
+>
+> Agreed.
 
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->  (Actually letting a shell for loop submit all this stuff for me.)
->
->  If there are any URLs to be removed completely
->  or at least not (just) HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
->
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
->
->  If you apply the patch, please let me know.
->
->  Sorry again to all maintainers who complained about subject lines.
->  Now I realized that you want an actually perfect prefixes,
->  not just subsystem ones.
->  I tried my best...
->  And yes, *I could* (at least half-)automate it.
->  Impossible is nothing! :)
->
->
->  Documentation/kbuild/Kconfig.recursion-issue-02 |  2 +-
->  Documentation/kbuild/kconfig-language.rst       | 14 +++++++-------
->  Documentation/kbuild/llvm.rst                   |  2 +-
->  scripts/package/mkdebian                        |  2 +-
->  scripts/package/mkspec                          |  2 +-
->  5 files changed, 11 insertions(+), 11 deletions(-)
->
-> diff --git a/Documentation/kbuild/Kconfig.recursion-issue-02 b/Documentation/kbuild/Kconfig.recursion-issue-02
-> index b9fd56c4b57e..df245fd7670d 100644
-> --- a/Documentation/kbuild/Kconfig.recursion-issue-02
-> +++ b/Documentation/kbuild/Kconfig.recursion-issue-02
-> @@ -42,7 +42,7 @@
->  # "select FW_LOADER" [0], in the end the simple alternative solution to this
->  # problem consisted on matching semantics with newly introduced features.
->  #
-> -# [0] http://lkml.kernel.org/r/1432241149-8762-1-git-send-email-mcgrof@do-not-panic.com
-> +# [0] https://lkml.kernel.org/r/1432241149-8762-1-git-send-email-mcgrof@do-not-panic.com
->
->  mainmenu "Simple example to demo cumulative kconfig recursive dependency implication"
->
-> diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
-> index a1601ec3317b..41bee6a171e3 100644
-> --- a/Documentation/kbuild/kconfig-language.rst
-> +++ b/Documentation/kbuild/kconfig-language.rst
-> @@ -688,10 +688,10 @@ and real world requirements were not well understood. As it stands though
->  only reverse engineering techniques have been used to deduce semantics from
->  variability modeling languages such as Kconfig [3]_.
->
-> -.. [0] http://www.eng.uwaterloo.ca/~shshe/kconfig_semantics.pdf
-> -.. [1] http://gsd.uwaterloo.ca/sites/default/files/vm-2013-berger.pdf
-> -.. [2] http://gsd.uwaterloo.ca/sites/default/files/ase241-berger_0.pdf
-> -.. [3] http://gsd.uwaterloo.ca/sites/default/files/icse2011.pdf
-> +.. [0] https://www.eng.uwaterloo.ca/~shshe/kconfig_semantics.pdf
-> +.. [1] https://gsd.uwaterloo.ca/sites/default/files/vm-2013-berger.pdf
-> +.. [2] https://gsd.uwaterloo.ca/sites/default/files/ase241-berger_0.pdf
-> +.. [3] https://gsd.uwaterloo.ca/sites/default/files/icse2011.pdf
->
->  Full SAT solver for Kconfig
->  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> @@ -710,10 +710,10 @@ such efforts somehow on Kconfig. There is enough interest from mentors of
->  existing projects to not only help advise how to integrate this work upstream
->  but also help maintain it long term. Interested developers should visit:
->
-> -http://kernelnewbies.org/KernelProjects/kconfig-sat
-> +https://kernelnewbies.org/KernelProjects/kconfig-sat
->
-> -.. [4] http://www.cs.cornell.edu/~sabhar/chapters/SATSolvers-KR-Handbook.pdf
-> -.. [5] http://gsd.uwaterloo.ca/sites/default/files/vm-2013-berger.pdf
-> +.. [4] https://www.cs.cornell.edu/~sabhar/chapters/SATSolvers-KR-Handbook.pdf
-> +.. [5] https://gsd.uwaterloo.ca/sites/default/files/vm-2013-berger.pdf
->  .. [6] https://cados.cs.fau.de
->  .. [7] https://vamos.cs.fau.de
->  .. [8] https://undertaker.cs.fau.de
-> diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
-> index c776b6eee969..2aac50b97921 100644
-> --- a/Documentation/kbuild/llvm.rst
-> +++ b/Documentation/kbuild/llvm.rst
-> @@ -76,7 +76,7 @@ Getting Help
->  Getting LLVM
->  -------------
->
-> -- http://releases.llvm.org/download.html
-> +- https://releases.llvm.org/download.html
->  - https://github.com/llvm/llvm-project
->  - https://llvm.org/docs/GettingStarted.html
->  - https://llvm.org/docs/CMake.html
-> diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
-> index df1adbfb8ead..48fbd3d0284a 100755
-> --- a/scripts/package/mkdebian
-> +++ b/scripts/package/mkdebian
-> @@ -175,7 +175,7 @@ Section: kernel
->  Priority: optional
->  Maintainer: $maintainer
->  Build-Depends: bc, rsync, kmod, cpio, bison, flex | flex:native $extra_build_depends
-> -Homepage: http://www.kernel.org/
-> +Homepage: https://www.kernel.org/
->
->  Package: $packagename
->  Architecture: $debarch
-> diff --git a/scripts/package/mkspec b/scripts/package/mkspec
-> index 8640c278f1aa..7c477ca7dc98 100755
-> --- a/scripts/package/mkspec
-> +++ b/scripts/package/mkspec
-> @@ -46,7 +46,7 @@ sed -e '/^DEL/d' -e 's/^\t*//' <<EOF
->         License: GPL
->         Group: System Environment/Kernel
->         Vendor: The Linux Community
-> -       URL: http://www.kernel.org
-> +       URL: https://www.kernel.org
->  $S     Source: kernel-$__KERNELRELEASE.tar.gz
->         Provides: $PROVIDES
->         %define __spec_install_post /usr/lib/rpm/brp-compress || :
-> --
-> 2.27.0
->
+Actually I tried this solution today. It was easier to implement than
+I originally thought. I implemented header_ops to make dev_hard_header
+generate the 1-byte header. And when receiving, (according to the
+requirement of af_packet.c) I pulled this 1-byte header before
+submitting the packet to upper layers. Everything worked fine, except
+one issue:
 
+When receiving, af_packet.c doesn't handle 0-sized packets well. It
+will drop them. This causes an AF_PACKET/DGRAM socket to receive no
+indication when it is connected or disconnected. Do you think this is
+a problem? Actually I'm also afraid that future changes in af_packet.c
+will make 0-sized packets not able to pass when sending as well.
 
--- 
-Best Regards
-Masahiro Yamada
+> Either lapbeth_xmit has to have a guard against 0 byte packets before
+> reading skb->data[0], or packet sockets should not be able to generate
+> those (is this actually possible today through PF_PACKET? not sure)
+>
+> If SOCK_DGRAM has to always select one of the three values (0x00:
+> data, 0x01: establish, 0x02: terminate) the first seems most sensible.
+> Though if there is no way to establish a connection with
+> PF_PACKET/SOCK_DGRAM, that whole interface may still be academic.
+> Maybe eventually either 0x00 or 0x01 could be selected based on
+> lapb->state.. That however is out of scope of this fix.
+
+Yes, I think the first solution may be better, because we need to have
+a way to drop 0-sized DGRAM packets (as long as we need to include the
+1-byte header when sending DGRAM packets) and I'm not aware
+af_packet.c can do this.
+
+Yes, I think maybe the best way is to get rid of the 1-byte header
+completely and use other ways to ask the driver to connect or
+disconnect, or let it connect and disconnect automatically.
+
+> Normally a fix should aim to have a Fixes: tag, but all this code
+> precedes git history, so that is not feasible here.
+
+Thanks for pointing this out!
