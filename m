@@ -2,146 +2,130 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7020AC433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D22C433E0
 	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 20:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49C2D20738
+	by mail.kernel.org (Postfix) with ESMTP id 2AA46206E9
 	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 20:35:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="A+0JKxQ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgHAUZE (ORCPT
+        id S1726907AbgHAUVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 16:25:04 -0400
-Received: from mga05.intel.com ([192.55.52.43]:64680 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbgHAUZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 16:25:04 -0400
-IronPort-SDR: jekXsi2FFocTM81AVhylK1BkjHEzGleHqP89XJeWBVwyRXATyhhTmb/aIMmBZHE+olmO8KEAA1
- IU+3iXYu47EA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9700"; a="236824398"
-X-IronPort-AV: E=Sophos;i="5.75,423,1589266800"; 
-   d="scan'208";a="236824398"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2020 13:25:03 -0700
-IronPort-SDR: 62NAZ/W1U7Q49Y+VXsvcwQdezbTP/fbT5w/3iubECJrFH8RFVSy3igWDdgFroC1ZdPgleEAdOs
- ElBR8boKzXTQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,423,1589266800"; 
-   d="scan'208";a="435774213"
-Received: from lkp-server01.sh.intel.com (HELO e21119890065) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 01 Aug 2020 13:25:02 -0700
-Received: from kbuild by e21119890065 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k1y3x-0000vR-SX; Sat, 01 Aug 2020 20:25:01 +0000
-Date:   Sun, 02 Aug 2020 04:23:29 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:sched/core] BUILD SUCCESS
- 949bcb8135a96a6923e676646bd29cbe69e8350f
-Message-ID: <5f25cf41.J9eb8cAtqcKNZJJh%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Sat, 1 Aug 2020 16:21:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbgHAUVa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 16:21:30 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3C54C06174A
+        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 13:21:29 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id i26so21313572edv.4
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 13:21:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DpdyXRkNBFG6+sXGVp5popQlf9jPzy3fYXE2HQTaqO8=;
+        b=A+0JKxQ5QCsn8gb7+xJ85umagCwJG/uw+1NzJiFLUjpgcXRR4gjtb5HE4aFnaPwzu1
+         HMjppwxQrBwv5i/v5lo63Hwjufzk5fxMThw+JV19D63g7GccUmHqIwIGmAnQ8+2VlPK0
+         wlC23XmHDRwDfW8thWYWg42PE0sDGTQ9GU2+ZVhQSHA1/ESReQTWSVYpwC3bzdJOansx
+         QVuuXFViM3gppuKL3Ly+bii6ahTj51ywLoc2sWZgUd8ndRaK3an8o4+tZTxO/W4Rc4vn
+         Q/dQ+ycq7cZdxFuoxGiRUVklqJCRKqWT+YiQFJQ61wAc7DKIKX90YQSB2XfED9dnYjnO
+         eXBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DpdyXRkNBFG6+sXGVp5popQlf9jPzy3fYXE2HQTaqO8=;
+        b=p3wIChUAsZ0yji6mPuOx6FAXfScDJCkARbMc1387d6w8LQAheaYHl/fHFrGjjZ/UAt
+         Mw1BX5W6rH5xhhsc0Fkkpj/niBk91IrolQYYdP9z3SFbWqgBmGtFcrRh+nwFZQfzv9bE
+         57yCNOMH5C00Cr1kHTRbUc5Yb2pDwfCBPjp+9tQRn0CbKF/SxpsRTgOTpxDl8CcVuw/3
+         mLcpvAogFLhhtQBg8gjBZU1Ho/OLjFEZ5ASvAuURWeik59BZIpLo+Ym3bkCyeA4iefxv
+         KSmjM7ovfZaDpLcy14oGdtCRL3mmdso0xhtH8E/OjsT2o7h0p4p2Ukzkqq1eppKEAbCl
+         e5KQ==
+X-Gm-Message-State: AOAM531TpGIdSDiBg64oB+5ghw3BJIzteRIHOu2BxHnEDlPPTHrlNZaZ
+        lRcGj8VqbuvC0+/b5JL/Tfyhqz0XS8Fe3oXRe+IC
+X-Google-Smtp-Source: ABdhPJxKvpP7c/4ASnHj27ybqk8nE0dF6fzyqwCvABNvHDQ61gcaXwTR2Q6Q0tBM+zsR0oflrNIPY5GLxaAiHJz9ksg=
+X-Received: by 2002:aa7:db10:: with SMTP id t16mr9125634eds.196.1596313287057;
+ Sat, 01 Aug 2020 13:21:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20200801184603.310769-1-jbi.octave@gmail.com> <20200801184603.310769-4-jbi.octave@gmail.com>
+In-Reply-To: <20200801184603.310769-4-jbi.octave@gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Sat, 1 Aug 2020 16:21:15 -0400
+Message-ID: <CAHC9VhTQTvr2+TTL3rWyweVEDx_=q81YozPJyfhELOpn9zxDqA@mail.gmail.com>
+Subject: Re: [PATCH 3/4] audit: uninitialize static variables
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Eric Paris <eparis@redhat.com>,
+        "moderated list:AUDIT SUBSYSTEM" <linux-audit@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  sched/core
-branch HEAD: 949bcb8135a96a6923e676646bd29cbe69e8350f  sched/doc: Factorize bits between sched-energy.rst & sched-capacity.rst
+On Sat, Aug 1, 2020 at 2:46 PM Jules Irenge <jbi.octave@gmail.com> wrote:
+>
+> Checkpatch tool reports an error at variable declaration
+>
+> "ERROR: do not initialise statics to 0"
+>
+> This is due to the fact that these variables are stored in the buffer
+> In the .bss section, one can not set an initial value
+> Here we can trust the compiler to automatically set them to zero.
+> The variable has since been uninitialized.
+>
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+> ---
+>  kernel/audit.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 
-elapsed time: 724m
+In general this is fine, but it will have to wait until after the
+merge window closes.
 
-configs tested: 76
-configs skipped: 2
+> diff --git a/kernel/audit.c b/kernel/audit.c
+> index 7b1a38a211a9..7d79ecb58b01 100644
+> --- a/kernel/audit.c
+> +++ b/kernel/audit.c
+> @@ -311,8 +311,8 @@ void audit_panic(const char *message)
+>
+>  static inline int audit_rate_check(void)
+>  {
+> -       static unsigned long    last_check = 0;
+> -       static int              messages   = 0;
+> +       static unsigned long    last_check;
+> +       static int              messages;
+>         static DEFINE_SPINLOCK(lock);
+>         unsigned long           flags;
+>         unsigned long           now;
+> @@ -348,7 +348,7 @@ static inline int audit_rate_check(void)
+>  */
+>  void audit_log_lost(const char *message)
+>  {
+> -       static unsigned long    last_msg = 0;
+> +       static unsigned long    last_msg;
+>         static DEFINE_SPINLOCK(lock);
+>         unsigned long           flags;
+>         unsigned long           now;
+> @@ -713,7 +713,7 @@ static int kauditd_send_queue(struct sock *sk, u32 portid,
+>  {
+>         int rc = 0;
+>         struct sk_buff *skb;
+> -       static unsigned int failed = 0;
+> +       static unsigned int failed;
+>
+>         /* NOTE: kauditd_thread takes care of all our locking, we just use
+>          *       the netlink info passed to us (e.g. sk and portid) */
+> --
+> 2.26.2
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                         cm_x300_defconfig
-sh                          kfr2r09_defconfig
-arm                            pleb_defconfig
-mips                  mips_paravirt_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a006-20200802
-x86_64               randconfig-a001-20200802
-x86_64               randconfig-a004-20200802
-x86_64               randconfig-a003-20200802
-x86_64               randconfig-a002-20200802
-x86_64               randconfig-a005-20200802
-i386                 randconfig-a005-20200731
-i386                 randconfig-a004-20200731
-i386                 randconfig-a006-20200731
-i386                 randconfig-a002-20200731
-i386                 randconfig-a001-20200731
-i386                 randconfig-a003-20200731
-x86_64               randconfig-a015-20200731
-x86_64               randconfig-a014-20200731
-x86_64               randconfig-a016-20200731
-x86_64               randconfig-a012-20200731
-x86_64               randconfig-a013-20200731
-x86_64               randconfig-a011-20200731
-i386                 randconfig-a016-20200731
-i386                 randconfig-a012-20200731
-i386                 randconfig-a014-20200731
-i386                 randconfig-a015-20200731
-i386                 randconfig-a011-20200731
-i386                 randconfig-a013-20200731
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+-- 
+paul moore
+www.paul-moore.com
