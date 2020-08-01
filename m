@@ -2,81 +2,48 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3A2C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 19:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 086B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 20:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E055A206E9
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 19:46:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HIEyUOLP"
+	by mail.kernel.org (Postfix) with ESMTP id DFBE920719
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 20:08:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbgHATqY (ORCPT
+        id S1727779AbgHAUFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 15:46:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36830 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbgHATqY (ORCPT
+        Sat, 1 Aug 2020 16:05:04 -0400
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:35463 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbgHAUFD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 15:46:24 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0BCCC06174A;
-        Sat,  1 Aug 2020 12:46:23 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id ed14so15704056qvb.2;
-        Sat, 01 Aug 2020 12:46:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ujYsQMCZbecD6bJOJC4Hkc6cL1ixRi2Hw1s2+qYZ8Ac=;
-        b=HIEyUOLPHv84IyjfJfi3d8BatiT6NbFRFo4ij+cTD9CJeCkKTEmiTauwNMEbVi8j5H
-         WUZk8m1BLwfiRWVb/wKvdceJhb+sY6NCjWQVGC56HCCpLqP8zDWFjm4kNyQhRqidxJK/
-         GrbwW9CqiPTw3gwxE4WQTnfvh5FV2F6v/RG3ky/Ehr3oRjhInC6MwSGDAT8Tu7+ySwQB
-         7TPBs+ODPpzT1BgGkvhTYQNjj3SRHZGocz9wc2pyerSBVQd9LsATV+T2rl2ZZV8DS4t6
-         Ad5bWemDX+rR3mc/tjNrx1Skb3x52oGEei/Dj7QD3NQ8w8GxHtqhJ8E/YQtdDX0rIWBJ
-         OVqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ujYsQMCZbecD6bJOJC4Hkc6cL1ixRi2Hw1s2+qYZ8Ac=;
-        b=HpN+mWIJyZcxs6qyrW+HwJ9rhkc9BcZVwqNgSfWyEx+ioDe847+yQmxiYU6RhChNWg
-         /bzb1aCgCOsUagDWLq18jr+QFOFnmxacevECEOb7sxXECe4JCNpqImQS6df1mLCHIQ3R
-         vsY4WDjRL7ZPJ8EyAjSXY4qr7zYQ1Cx0u8l2ppd1Q9gQxqJcrtiEn3Kk0+b/wfzgbapJ
-         +4fbDH8v6bsnD8LquXC2Ji9bqaoNSNTN5kBQVfg4evroAEdDDVArZQ8KzaNaGwmxj1M6
-         G66r6pJtmHf0nxopRmp1ltKMABFdUc+ZDPpGJda5F+nQ3eK1AwMWdkhASQSxaI8ruO1k
-         hUpQ==
-X-Gm-Message-State: AOAM532wEaNNawhoa2A4TSyHHpERAxlIpPYL+SJBYoSEqQOTxqoSpMNa
-        SgI6hn2GuhmmGKbIKEdbxg==
-X-Google-Smtp-Source: ABdhPJzDVgh81xMg4udcLC8TIzADu8oMa6/Aiz82VsTpmlIIxc01ZpgOmmLKGcMXX1gdukgbZPM0XA==
-X-Received: by 2002:a0c:d7c9:: with SMTP id g9mr10286039qvj.83.1596311183058;
-        Sat, 01 Aug 2020 12:46:23 -0700 (PDT)
-Received: from localhost.localdomain (146-115-88-66.s3894.c3-0.sbo-ubr1.sbo.ma.cable.rcncustomer.com. [146.115.88.66])
-        by smtp.gmail.com with ESMTPSA id q17sm7791343qte.61.2020.08.01.12.46.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Aug 2020 12:46:22 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Ursula Braun <ubraun@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Hans Wippel <hwippel@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH net] net/smc: Prevent kernel-infoleak in __smc_diag_dump()
-Date:   Sat,  1 Aug 2020 15:44:40 -0400
-Message-Id: <20200801194440.246747-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Sat, 1 Aug 2020 16:05:03 -0400
+Received: from fsav104.sakura.ne.jp (fsav104.sakura.ne.jp [27.133.134.231])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 071K4nvF072403;
+        Sun, 2 Aug 2020 05:04:49 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav104.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav104.sakura.ne.jp);
+ Sun, 02 Aug 2020 05:04:49 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav104.sakura.ne.jp)
+Received: from localhost.localdomain (121.252.232.153.ap.dti.ne.jp [153.232.252.121])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 071K4h2M072388
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Sun, 2 Aug 2020 05:04:49 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Subject: [PATCH] arm64: dts: rockchip: enable HDMI sound nodes for rk3328-rock64
+Date:   Sun,  2 Aug 2020 05:04:33 +0900
+Message-Id: <20200801200433.2617429-1-katsuhiro@katsuster.net>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,66 +51,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__smc_diag_dump() is potentially copying uninitialized kernel stack memory
-into socket buffers, since the compiler may leave a 4-byte hole near the
-beginning of `struct smcd_diag_dmbinfo`. Fix it by initializing `dinfo`
-with memset().
+This patch enables HDMI sound (I2S0) and Analog sound (I2S1) which
+are defined in rk3328.dtsi, and replace SPDIF nodes.
 
-Cc: stable@vger.kernel.org
-Fixes: 4b1b7d3b30a6 ("net/smc: add SMC-D diag support")
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+We can use SPDIF passthrough with suitable ALSA settings and on
+mpv or other media players.
+  - Settings: https://github.com/LibreELEC/LibreELEC.tv/blob/master/projects/Rockchip/filesystem/usr/share/alsa/cards/SPDIF.conf
+  - Ex.: mpv foo.ac3 --audio-spdif=ac3 --audio-device='alsa/SPDIF.pcm.iec958.0:SPDIF'
+
+[Why use simple-audio-card for SPDIF?]
+
+For newly adding nodes, ASoC guys recommend to use audio-graph-card.
+But all other sound nodes for rk3328 have already been defined by
+simple-audio-card. In this time, I chose consistency of sound nodes.
+
+[DMA allocation problem]
+
+After apply this patch, UART2 will fail to allocate DMA resources
+but UART driver can work fine without DMA.
+
+This error is related to the DMAC of rk3328 (pl330 or compatible).
+DMAC connected to 16 DMA sources. Each sources have ID number that is
+called 'Req number' in rk3328 TRM. After apply this patch total 7
+sources will be activated as follows:
+
+| Req number | Source | Required  |
+|            |        | channels  |
+|------------+--------+-----------|
+|  8,  9     | SPI0   | 2ch       |
+| 11, 12     | I2S0   | 2ch       |
+| 14, 15     | I2S1   | 2ch       |
+|     10     | SPDIF  | 1ch       |
+|------------+--------+-----------|
+|            | Total  | 7ch       |
+|------------+--------+-----------|
+|  6,  7     | UART2  | 2ch       | -> cannot get DMA channels
+
+Due to rk3328 DMAC specification we can use max 8 channels at same
+time. If SPI0/I2S0/I2S1/SPDIF will be activated by this patch,
+required DMAC channels reach to 7. So last two channels (for UART2)
+cannot get DMA resources.
+
+Virt-dma mechanism for pl0330 DMAC driver is needed to fix this
+problem.
+
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
 ---
-Reference: https://lwn.net/Articles/417989/
+ .../arm64/boot/dts/rockchip/rk3328-rock64.dts | 58 +++++++++----------
+ 1 file changed, 26 insertions(+), 32 deletions(-)
 
-$ pahole -C "smcd_diag_dmbinfo" net/smc/smc_diag.o
-struct smcd_diag_dmbinfo {
-	__u32                      linkid;               /*     0     4 */
-
-	/* XXX 4 bytes hole, try to pack */
-
-	__u64                      peer_gid __attribute__((__aligned__(8))); /*     8     8 */
-	__u64                      my_gid __attribute__((__aligned__(8))); /*    16     8 */
-	__u64                      token __attribute__((__aligned__(8))); /*    24     8 */
-	__u64                      peer_token __attribute__((__aligned__(8))); /*    32     8 */
-
-	/* size: 40, cachelines: 1, members: 5 */
-	/* sum members: 36, holes: 1, sum holes: 4 */
-	/* forced alignments: 4, forced holes: 1, sum forced holes: 4 */
-	/* last cacheline: 40 bytes */
-} __attribute__((__aligned__(8)));
-$ _
-
- net/smc/smc_diag.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/net/smc/smc_diag.c b/net/smc/smc_diag.c
-index e1f64f4ba236..da9ba6d1679b 100644
---- a/net/smc/smc_diag.c
-+++ b/net/smc/smc_diag.c
-@@ -170,13 +170,15 @@ static int __smc_diag_dump(struct sock *sk, struct sk_buff *skb,
- 	    (req->diag_ext & (1 << (SMC_DIAG_DMBINFO - 1))) &&
- 	    !list_empty(&smc->conn.lgr->list)) {
- 		struct smc_connection *conn = &smc->conn;
--		struct smcd_diag_dmbinfo dinfo = {
--			.linkid = *((u32 *)conn->lgr->id),
--			.peer_gid = conn->lgr->peer_gid,
--			.my_gid = conn->lgr->smcd->local_gid,
--			.token = conn->rmb_desc->token,
--			.peer_token = conn->peer_token
--		};
-+		struct smcd_diag_dmbinfo dinfo;
-+
-+		memset(&dinfo, 0, sizeof(dinfo));
-+
-+		dinfo.linkid = *((u32 *)conn->lgr->id);
-+		dinfo.peer_gid = conn->lgr->peer_gid;
-+		dinfo.my_gid = conn->lgr->smcd->local_gid;
-+		dinfo.token = conn->rmb_desc->token;
-+		dinfo.peer_token = conn->peer_token;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+index 86cfb5c50a94..4608f8fc6ff3 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+@@ -84,34 +84,34 @@ standby_led: led-1 {
+ 		};
+ 	};
  
- 		if (nla_put(skb, SMC_DIAG_DMBINFO, sizeof(dinfo), &dinfo) < 0)
- 			goto errout;
+-	sound {
+-		compatible = "audio-graph-card";
+-		label = "rockchip,rk3328";
+-		dais = <&i2s1_p0
+-			&spdif_p0>;
++	spdif_sound: spdif-sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "SPDIF";
++		status = "okay";
++
++		simple-audio-card,cpu {
++			sound-dai = <&spdif>;
++		};
++
++		simple-audio-card,codec {
++			sound-dai = <&spdif_dit>;
++		};
+ 	};
+ 
+-	spdif-dit {
++	spdif_dit: spdif-dit {
+ 		compatible = "linux,spdif-dit";
+ 		#sound-dai-cells = <0>;
+-
+-		port {
+-			dit_p0_0: endpoint {
+-				remote-endpoint = <&spdif_p0_0>;
+-			};
+-		};
++		status = "okay";
+ 	};
+ };
+ 
++&analog_sound {
++	status = "okay";
++};
++
+ &codec {
+ 	mute-gpios = <&grf_gpio 0 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+-
+-	port@0 {
+-		codec_p0_0: endpoint {
+-			remote-endpoint = <&i2s1_p0_0>;
+-		};
+-	};
+ };
+ 
+ &cpu0 {
+@@ -163,6 +163,10 @@ &hdmi {
+ 	status = "okay";
+ };
+ 
++&hdmi_sound {
++	status = "okay";
++};
++
+ &hdmiphy {
+ 	status = "okay";
+ };
+@@ -278,16 +282,12 @@ regulator-state-mem {
+ 	};
+ };
+ 
+-&i2s1 {
++&i2s0 {
+ 	status = "okay";
++};
+ 
+-	i2s1_p0: port {
+-		i2s1_p0_0: endpoint {
+-			dai-format = "i2s";
+-			mclk-fs = <256>;
+-			remote-endpoint = <&codec_p0_0>;
+-		};
+-	};
++&i2s1 {
++	status = "okay";
+ };
+ 
+ &io_domains {
+@@ -337,12 +337,6 @@ &sdmmc {
+ &spdif {
+ 	pinctrl-0 = <&spdifm0_tx>;
+ 	status = "okay";
+-
+-	spdif_p0: port {
+-		spdif_p0_0: endpoint {
+-			remote-endpoint = <&dit_p0_0>;
+-		};
+-	};
+ };
+ 
+ &spi0 {
 -- 
-2.25.1
+2.27.0
 
