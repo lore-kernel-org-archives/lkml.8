@@ -2,109 +2,167 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 234DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 03:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6A5C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 03:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00DE120836
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 03:52:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="koeUikLM"
+	by mail.kernel.org (Postfix) with ESMTP id AA5A12076C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 03:58:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728694AbgHADwi (ORCPT
+        id S1728576AbgHAD6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jul 2020 23:52:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728459AbgHADwh (ORCPT
+        Fri, 31 Jul 2020 23:58:55 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:41700 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728459AbgHAD6z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jul 2020 23:52:37 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 987BFC06174A;
-        Fri, 31 Jul 2020 20:52:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=Gnn9lbsi+QeiyHza8FsKfu17u4FjzzG+2+QxHKbvkV0=; b=koeUikLM4YRg0XyDmY1BhwjSlF
-        uor/b+viYycgrcVXM4guo6CwQeLIHEQxmH4CguPqoRNS+l4qsDN/2PmO8M2FxWgLjyHjgjLENGqNr
-        iT/GuKtmO5h6TH29C4GDiXSa0w8yZgN95XONwaxD52KbEb70ReRnZoxHp6g7jiqfRYf9vtJAy56sr
-        6CL/s96LlsZw6RGuqg/iwyB42lheEbryt0uA0AVDWDCT7RGfp2+RWThBjuwsVaGh3aivdUtH6Sbb3
-        FZL2tGXhLopnbwsqjbGDFyfocKIduTC6u1sS9/o/RS1kLbm+9ziQrzgQ3bNMX+ZzFh/TmzAit9517
-        taP6gV3A==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k1iZV-0005AU-5K; Sat, 01 Aug 2020 03:52:33 +0000
-Subject: Re: [PATCH net-next] fib: fix another fib_rules_ops indirect call
- wrapper problem
-To:     Brian Vazquez <brianvv@google.com>,
-        Brian Vazquez <brianvv.kernel@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-References: <20200801030110.747164-1-brianvv@google.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <55292447-c426-8421-3147-ef7fa6e4b471@infradead.org>
-Date:   Fri, 31 Jul 2020 20:52:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 31 Jul 2020 23:58:55 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R261e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U4MsvgN_1596254329;
+Received: from IT-FVFX43SYHV2H.lan(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U4MsvgN_1596254329)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 01 Aug 2020 11:58:50 +0800
+Subject: Re: [PATCH] mm/memcg: remove useless check on page->mem_cgroup
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1596166480-22814-1-git-send-email-alex.shi@linux.alibaba.com>
+ <20200731151655.GB491801@cmpxchg.org>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <9338716f-ca0e-057f-8d94-03e2b3f70281@linux.alibaba.com>
+Date:   Sat, 1 Aug 2020 11:58:41 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200801030110.747164-1-brianvv@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200731151655.GB491801@cmpxchg.org>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/31/20 8:01 PM, Brian Vazquez wrote:
-> It turns out that on commit 41d707b7332f ("fib: fix fib_rules_ops
-> indirect calls wrappers") I forgot to include the case when
-> CONFIG_IP_MULTIPLE_TABLES is not set.
+
+
+ÔÚ 2020/7/31 ÏÂÎç11:16, Johannes Weiner Ð´µÀ:
+>>  	if (!entry.val) {
+>>  		memcg_memory_event(memcg, MEMCG_SWAP_FAIL);
+> Uncharged readahead pages are gone, but I'm not 100% sure uncharged
+> pages in general are gone. ISTR that the !page->mem_cgroup check in
+> mem_cgroup_uncharge() prevented a crash - although that is of course a
+> much broader interface, whereas the ones you change should only apply
+> to LRU pages (which are hopefully all charged).
 > 
-> Fixes: 41d707b7332f ("fib: fix fib_rules_ops indirect calls wrappers")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Brian Vazquez <brianvv@google.com>
-
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-
-Thanks.
-
-> ---
->  net/core/fib_rules.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/net/core/fib_rules.c b/net/core/fib_rules.c
-> index fce645f6b9b10..a7a3f500a857b 100644
-> --- a/net/core/fib_rules.c
-> +++ b/net/core/fib_rules.c
-> @@ -17,10 +17,16 @@
->  #include <linux/indirect_call_wrapper.h>
->  
->  #ifdef CONFIG_IPV6_MULTIPLE_TABLES
-> +#ifdef CONFIG_IP_MULTIPLE_TABLES
->  #define INDIRECT_CALL_MT(f, f2, f1, ...) \
->  	INDIRECT_CALL_INET(f, f2, f1, __VA_ARGS__)
->  #else
-> +#define INDIRECT_CALL_MT(f, f2, f1, ...) INDIRECT_CALL_1(f, f2, __VA_ARGS__)
-> +#endif
-> +#elif CONFIG_IP_MULTIPLE_TABLES
->  #define INDIRECT_CALL_MT(f, f2, f1, ...) INDIRECT_CALL_1(f, f1, __VA_ARGS__)
-> +#else
-> +#define INDIRECT_CALL_MT(f, f2, f1, ...) f(__VA_ARGS__)
->  #endif
->  
->  static const struct fib_kuid_range fib_kuid_range_unset = {
-> 
+> Nevertheless, to avoid unnecessary crashes if we discover that we've
+> been wrong, how about leaving the branches for now, but adding a (new)
+> VM_WARN_ON_ONCE_PAGE() to them?
 
 
+Right, let's see if other unexcepted things happens, and then do actions.
+So it's the patch:
+
+From 28893cf8e55b98665cce58c0ba6d54aeafb63a62 Mon Sep 17 00:00:00 2001
+From: Alex Shi <alex.shi@linux.alibaba.com>
+Date: Sat, 1 Aug 2020 10:43:55 +0800
+Subject: [PATCH] mm/memcg: warning on !memcg after readahead page charged
+
+Since readahead page is charged on memcg too, in theory we don't have to
+check this exception now. Before safely remove them all, add a warning
+for the unexpected !memcg.
+
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: cgroups@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+---
+ include/linux/mmdebug.h |  8 ++++++++
+ mm/memcontrol.c         | 15 ++++++++-------
+ 2 files changed, 16 insertions(+), 7 deletions(-)
+
+diff --git a/include/linux/mmdebug.h b/include/linux/mmdebug.h
+index 2ad72d2c8cc5..639e98a3384e 100644
+--- a/include/linux/mmdebug.h
++++ b/include/linux/mmdebug.h
+@@ -37,6 +37,13 @@
+ 			BUG();						\
+ 		}							\
+ 	} while (0)
++#define VM_WARN_ON_ONCE_PAGE(cond, page)				\
++	do {								\
++		if (unlikely(cond)) {					\
++			dump_page(page, "VM_WARN_ON_ONCE_PAGE(" __stringify(cond)")");\
++			WARN_ON_ONCE(cond);				\
++		}							\
++	} while (0)
+ #define VM_WARN_ON(cond) (void)WARN_ON(cond)
+ #define VM_WARN_ON_ONCE(cond) (void)WARN_ON_ONCE(cond)
+ #define VM_WARN_ONCE(cond, format...) (void)WARN_ONCE(cond, format)
+@@ -48,6 +55,7 @@
+ #define VM_BUG_ON_MM(cond, mm) VM_BUG_ON(cond)
+ #define VM_WARN_ON(cond) BUILD_BUG_ON_INVALID(cond)
+ #define VM_WARN_ON_ONCE(cond) BUILD_BUG_ON_INVALID(cond)
++#define VM_WARN_ON_ONCE_PAGE(cond, page)  BUILD_BUG_ON_INVALID(cond)
+ #define VM_WARN_ONCE(cond, format...) BUILD_BUG_ON_INVALID(cond)
+ #define VM_WARN(cond, format...) BUILD_BUG_ON_INVALID(cond)
+ #endif
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index e84c2b5596f2..0174c31f6491 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1322,10 +1322,8 @@ struct lruvec *mem_cgroup_page_lruvec(struct page *page, struct pglist_data *pgd
+ 	}
+ 
+ 	memcg = page->mem_cgroup;
+-	/*
+-	 * Swapcache readahead pages are added to the LRU - and
+-	 * possibly migrated - before they are charged.
+-	 */
++	/* Readahead page is charged too, to see if other page uncharged */
++	VM_WARN_ON_ONCE_PAGE(!memcg, page);
+ 	if (!memcg)
+ 		memcg = root_mem_cgroup;
+ 
+@@ -6897,8 +6895,9 @@ void mem_cgroup_migrate(struct page *oldpage, struct page *newpage)
+ 	if (newpage->mem_cgroup)
+ 		return;
+ 
+-	/* Swapcache readahead pages can get replaced before being charged */
+ 	memcg = oldpage->mem_cgroup;
++	/* Readahead page is charged too, to see if other page uncharged */
++	VM_WARN_ON_ONCE_PAGE(!memcg, oldpage);
+ 	if (!memcg)
+ 		return;
+ 
+@@ -7095,7 +7094,8 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
+ 
+ 	memcg = page->mem_cgroup;
+ 
+-	/* Readahead page, never charged */
++	/* Readahead page is charged too, to see if other page uncharged */
++	VM_WARN_ON_ONCE_PAGE(!memcg, page);
+ 	if (!memcg)
+ 		return;
+ 
+@@ -7159,7 +7159,8 @@ int mem_cgroup_try_charge_swap(struct page *page, swp_entry_t entry)
+ 
+ 	memcg = page->mem_cgroup;
+ 
+-	/* Readahead page, never charged */
++	/* Readahead page is charged too, to see if other page uncharged */
++	VM_WARN_ON_ONCE_PAGE(!memcg, page);
+ 	if (!memcg)
+ 		return 0;
+ 
 -- 
-~Randy
+1.8.3.1
+
