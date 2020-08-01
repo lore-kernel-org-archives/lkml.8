@@ -2,110 +2,196 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1CCC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 04:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B5AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 04:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81CCF206D7
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 04:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C80F206D7
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 04:57:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="cLQnd51k"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wu7yScXQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725939AbgHAEzP (ORCPT
+        id S1725280AbgHAE5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 00:55:15 -0400
-Received: from st43p00im-zteg10072001.me.com ([17.58.63.167]:42230 "EHLO
-        st43p00im-zteg10072001.me.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725280AbgHAEzO (ORCPT
+        Sat, 1 Aug 2020 00:57:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42512 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgHAE5a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 00:55:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-        s=1a1hai; t=1596257713;
-        bh=/lGfYgpgU3rjk/7nACkAZxTe8aQjFNEo8HGM/KtHBog=;
-        h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:To;
-        b=cLQnd51kHmbJI0SZ6MNm/5h3hB4QkA09HLVzHtCISCmn6CoCTQ6JTxVU1/TXkjA3Y
-         cdIeFYByY7hBVsyRwNHEiPdg/TnG3vqn09SBZGTy1NNw856Rxlm7e71A8PmfJy3RO4
-         FnDWqZKRj0x2rdbMueYE8QnPXYtuifYC6fIkrPob+gANhtKi4gYWFBM4e8mfrRVzl+
-         rs2XQf7ux+FWokuRwRm7WcLmHP21aEauPFFrEbNBwAO3mVbhXtF6g8uQNggkiykLMp
-         +HTAa9QfKePNiXq2FtlORlrBodGaWdNI7aKccNWpQ+QHzl2oml/fHVAMm7uS/0KyoA
-         x2ozB+Vc5Vu5Q==
-Received: from localhost (84-114-122-94.cable.dynamic.surfer.at [84.114.122.94])
-        by st43p00im-zteg10072001.me.com (Postfix) with ESMTPSA id D9FDEC03F2;
-        Sat,  1 Aug 2020 04:55:12 +0000 (UTC)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   =?utf-8?Q?J=C3=BCrgen_Stauber?= <j.stauber@icloud.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: High load from process irq/65-i2c-INT3 - kernel module tps6598x
-Date:   Sat, 1 Aug 2020 06:55:10 +0200
-Message-Id: <2FD98070-4BF0-482B-979A-3E61574E63C3@icloud.com>
-References: <20200728123200.GF883641@kuha.fi.intel.com>
-Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20200728123200.GF883641@kuha.fi.intel.com>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-X-Mailer: iPhone Mail (18A5332f)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-01_01:2020-07-31,2020-08-01 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 clxscore=1015 mlxscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-2004280000 definitions=main-2008010037
+        Sat, 1 Aug 2020 00:57:30 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C082DC061756
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 21:57:30 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id e196so36329460ybh.6
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 21:57:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=0HSjKiu7FLMG9JODmmzMFPvijsZ8mJvDEnljEZc271M=;
+        b=Wu7yScXQEMDiLIc5zbIgKKdMtd3rUN0iWufpGypAGJEY137KamBDhfNTeiGjPP8P/7
+         bUQ6I8hexpnGbMBBBdp5GR0n+7efPq2Uix6tKByTI/c2jOn18/ZKm9yITDtFdQ6s6Iqn
+         BfoKomvEsMo2v0GBrnw19ZVkmQaJ8JxRgaxlMoLHc2GiSCR2gdqeBqaQVAaZjEo5Jcom
+         fMCycTQ5b0qari4hLY9JiSe1akNZVB2UNP2lNwPKSp1JuoPclIqochMKHHMxYlMhdCEr
+         G7qZG7iy1J2LyVhB7+8WcJaz+pFfgX7YRwz3FBWjdVgi+IISuXjz9HVL9gKsl0UygPLD
+         wYdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=0HSjKiu7FLMG9JODmmzMFPvijsZ8mJvDEnljEZc271M=;
+        b=F0b5VpsvqBoUkL8A4wssMsDdtAKMdsNlcFP2EkXk69I6k8tYGjV7yPDWAQcdk8uvwJ
+         TcPLg8vTMSiTr1xIkZoccI14yqmFq+DSq/7aCVQMvJA0b7uns15bXqV4N1cit1n4sgBq
+         3r0V5/cgo6PEFoqKPjYBYe+Dqx53KCLlzBlj1JlMvjh2ns4Sk9/vihlCQ9L3r1My86P0
+         7Gphw8pIsXehG+4+I3FLZOV/U6UI087giajFT4Wtri7AbVUg0bmK1mk4INVeUivhapyf
+         239xrRM1VYuMuzwnpriLu1GHlefE8alrN/wt8naYrOodSlZXJkrr+mrqGH74gnGOYHLt
+         7KRw==
+X-Gm-Message-State: AOAM533lLMc9CKLpA/mOhpXglOKc8cvzkvEKF5cgAm/mp4Fn3ebevxSE
+        0sbuOQ6vWl1Aagkwdfpo4AI6px2nQI9b
+X-Google-Smtp-Source: ABdhPJyMMNfjiPciRO8cGcXWZ55eVAyoXJmehLJWq1ExSF7kkVgrXiulR0kmno59SFUfbHCpZG/2UoWdxSBg
+X-Received: by 2002:a25:d44e:: with SMTP id m75mr10882380ybf.157.1596257849803;
+ Fri, 31 Jul 2020 21:57:29 -0700 (PDT)
+Date:   Fri, 31 Jul 2020 21:57:22 -0700
+Message-Id: <20200801045722.877331-1-brianvv@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+Subject: [PATCH bpf-next] bpf: make __htab_lookup_and_delete_batch faster when
+ map is almost empty
+From:   Brian Vazquez <brianvv@google.com>
+To:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Brian Vazquez <brianvv@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Luigi Rizzo <lrizzo@google.com>,
+        Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heikki,
+While running some experiments it was observed that map_lookup_batch was much
+slower than get_next_key + lookup when the syscall overhead is minimal.
+This was because the map_lookup_batch implementation was more expensive
+traversing empty buckets, this can be really costly when the pre-allocated
+map is too big.
 
-unfortunately I didn=E2=80=99t find any UCMCx option within the UEFI bios.=20=
+This patch optimizes the case when the bucket is empty so we can move quickly
+to next bucket.
 
+The benchmark to exercise this is as follows:
 
-kr,
-J=C3=BCrgen
+-The map was populate with a single entry to make sure that the syscall overhead
+is not helping the map_batch_lookup.
+-The size of the preallocated map was increased to show the effect of
+traversing empty buckets.
 
-> On 28.07.2020, at 14:32, Heikki Krogerus <heikki.krogerus@linux.intel.com>=
- wrote:
->=20
-> =EF=BB=BFHi J=C3=BCrgen,
->=20
-> I'm sorry about the late reply (vacation).
->=20
->> On Mon, Jul 20, 2020 at 06:31:04PM +0200, J=C3=BCrgen Stauber wrote:
->> Hi all,
->>=20
->> I was made aware in the following launchpad bug report, that I should rep=
-ort
->> the issue directly with the upstream maintainers:
->> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1883511
->> <https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1883511>
->>=20
->> As mentioned in the report, I experience high cpu load due to an interrup=
-ted
->> irq/65-i2c-INT3 process. A short fix is to unload the kernel module tps65=
-98x.
->>=20
->> Please be lenient with me, since I=E2=80=99ve got no glue whether I=E2=80=
-=99m doing this
->> correctly.
->>=20
->> In case you need more details/logs/information, please let me know.
->=20
-> There is one thing that you may be able to try. If you can enter the
-> BIOS menu, then you should be able to disable an option called
-> "UCMCx". Unfortunately I don't know the full path to that option in
-> the BIOS menu of the NUC, or is entering the BIOS menu possible in the
-> first place. It is also possible that there is no option "UCMCx" at
-> all.
->=20
-> Unfortunately I don't have access to NUC10 at the moment, but I'll try
-> get one.
->=20
-> Br,
->=20
-> --=20
-> heikki
+Results:
+
+  Using get_next_key + lookup:
+
+  Benchmark                Time(ns)        CPU(ns)     Iteration
+  ---------------------------------------------------------------
+  BM_DumpHashMap/1/1k          3593           3586         192680
+  BM_DumpHashMap/1/4k          6004           5972         100000
+  BM_DumpHashMap/1/16k        15755          15710          44341
+  BM_DumpHashMap/1/64k        59525          59376          10000
+
+  Using htab_lookup_batch before this patch:
+  Benchmark                Time(ns)        CPU(ns)     Iterations
+  ---------------------------------------------------------------
+  BM_DumpHashMap/1/1k          3933           3927         177978
+  BM_DumpHashMap/1/4k          9192           9177          73951
+  BM_DumpHashMap/1/16k        42011          41970          16789
+  BM_DumpHashMap/1/64k       117895         117661           6135
+
+  Using htab_lookup_batch with this patch:
+  Benchmark                Time(ns)        CPU(ns)     Iterations
+  ---------------------------------------------------------------
+  BM_DumpHashMap/1/1k          2809           2803         249212
+  BM_DumpHashMap/1/4k          5318           5316         100000
+  BM_DumpHashMap/1/16k        14925          14895          47448
+  BM_DumpHashMap/1/64k        58870          58674          10000
+
+Suggested-by: Luigi Rizzo <lrizzo@google.com>
+Cc: Yonghong Song <yhs@fb.com>
+Signed-off-by: Brian Vazquez <brianvv@google.com>
+---
+ kernel/bpf/hashtab.c | 23 ++++++++---------------
+ 1 file changed, 8 insertions(+), 15 deletions(-)
+
+diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
+index 2137e2200d95..150015ea6737 100644
+--- a/kernel/bpf/hashtab.c
++++ b/kernel/bpf/hashtab.c
+@@ -1351,7 +1351,6 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
+ 	struct hlist_nulls_head *head;
+ 	struct hlist_nulls_node *n;
+ 	unsigned long flags = 0;
+-	bool locked = false;
+ 	struct htab_elem *l;
+ 	struct bucket *b;
+ 	int ret = 0;
+@@ -1410,19 +1409,19 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
+ 	dst_val = values;
+ 	b = &htab->buckets[batch];
+ 	head = &b->head;
+-	/* do not grab the lock unless need it (bucket_cnt > 0). */
+-	if (locked)
+-		flags = htab_lock_bucket(htab, b);
+ 
++	l = hlist_nulls_entry_safe(rcu_dereference_raw(hlist_nulls_first_rcu(head)),
++					struct htab_elem, hash_node);
++	if (!l && (batch + 1 < htab->n_buckets)) {
++		batch++;
++		goto again_nocopy;
++	}
++
++	flags = htab_lock_bucket(htab, b);
+ 	bucket_cnt = 0;
+ 	hlist_nulls_for_each_entry_rcu(l, n, head, hash_node)
+ 		bucket_cnt++;
+ 
+-	if (bucket_cnt && !locked) {
+-		locked = true;
+-		goto again_nocopy;
+-	}
+-
+ 	if (bucket_cnt > (max_count - total)) {
+ 		if (total == 0)
+ 			ret = -ENOSPC;
+@@ -1448,10 +1447,6 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
+ 		goto alloc;
+ 	}
+ 
+-	/* Next block is only safe to run if you have grabbed the lock */
+-	if (!locked)
+-		goto next_batch;
+-
+ 	hlist_nulls_for_each_entry_safe(l, n, head, hash_node) {
+ 		memcpy(dst_key, l->key, key_size);
+ 
+@@ -1494,7 +1489,6 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
+ 	}
+ 
+ 	htab_unlock_bucket(htab, b, flags);
+-	locked = false;
+ 
+ 	while (node_to_free) {
+ 		l = node_to_free;
+@@ -1502,7 +1496,6 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
+ 		bpf_lru_push_free(&htab->lru, &l->lru_node);
+ 	}
+ 
+-next_batch:
+ 	/* If we are not copying data, we can go to next bucket and avoid
+ 	 * unlocking the rcu.
+ 	 */
+-- 
+2.28.0.163.g6104cc2f0b6-goog
+
