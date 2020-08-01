@@ -2,196 +2,73 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B5AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 04:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0939FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 05:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C80F206D7
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 04:57:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wu7yScXQ"
+	by mail.kernel.org (Postfix) with ESMTP id DAC90206D7
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 05:03:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725280AbgHAE5b (ORCPT
+        id S1725951AbgHAFDx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 00:57:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgHAE5a (ORCPT
+        Sat, 1 Aug 2020 01:03:53 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:53827 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725601AbgHAFDw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 00:57:30 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C082DC061756
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 21:57:30 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id e196so36329460ybh.6
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jul 2020 21:57:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=0HSjKiu7FLMG9JODmmzMFPvijsZ8mJvDEnljEZc271M=;
-        b=Wu7yScXQEMDiLIc5zbIgKKdMtd3rUN0iWufpGypAGJEY137KamBDhfNTeiGjPP8P/7
-         bUQ6I8hexpnGbMBBBdp5GR0n+7efPq2Uix6tKByTI/c2jOn18/ZKm9yITDtFdQ6s6Iqn
-         BfoKomvEsMo2v0GBrnw19ZVkmQaJ8JxRgaxlMoLHc2GiSCR2gdqeBqaQVAaZjEo5Jcom
-         fMCycTQ5b0qari4hLY9JiSe1akNZVB2UNP2lNwPKSp1JuoPclIqochMKHHMxYlMhdCEr
-         G7qZG7iy1J2LyVhB7+8WcJaz+pFfgX7YRwz3FBWjdVgi+IISuXjz9HVL9gKsl0UygPLD
-         wYdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=0HSjKiu7FLMG9JODmmzMFPvijsZ8mJvDEnljEZc271M=;
-        b=F0b5VpsvqBoUkL8A4wssMsDdtAKMdsNlcFP2EkXk69I6k8tYGjV7yPDWAQcdk8uvwJ
-         TcPLg8vTMSiTr1xIkZoccI14yqmFq+DSq/7aCVQMvJA0b7uns15bXqV4N1cit1n4sgBq
-         3r0V5/cgo6PEFoqKPjYBYe+Dqx53KCLlzBlj1JlMvjh2ns4Sk9/vihlCQ9L3r1My86P0
-         7Gphw8pIsXehG+4+I3FLZOV/U6UI087giajFT4Wtri7AbVUg0bmK1mk4INVeUivhapyf
-         239xrRM1VYuMuzwnpriLu1GHlefE8alrN/wt8naYrOodSlZXJkrr+mrqGH74gnGOYHLt
-         7KRw==
-X-Gm-Message-State: AOAM533lLMc9CKLpA/mOhpXglOKc8cvzkvEKF5cgAm/mp4Fn3ebevxSE
-        0sbuOQ6vWl1Aagkwdfpo4AI6px2nQI9b
-X-Google-Smtp-Source: ABdhPJyMMNfjiPciRO8cGcXWZ55eVAyoXJmehLJWq1ExSF7kkVgrXiulR0kmno59SFUfbHCpZG/2UoWdxSBg
-X-Received: by 2002:a25:d44e:: with SMTP id m75mr10882380ybf.157.1596257849803;
- Fri, 31 Jul 2020 21:57:29 -0700 (PDT)
-Date:   Fri, 31 Jul 2020 21:57:22 -0700
-Message-Id: <20200801045722.877331-1-brianvv@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-Subject: [PATCH bpf-next] bpf: make __htab_lookup_and_delete_batch faster when
- map is almost empty
-From:   Brian Vazquez <brianvv@google.com>
-To:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Brian Vazquez <brianvv@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Luigi Rizzo <lrizzo@google.com>,
-        Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 1 Aug 2020 01:03:52 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=cambda@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0U4MsdmN_1596258228;
+Received: from 10.150.185.158(mailfrom:cambda@linux.alibaba.com fp:SMTPD_---0U4MsdmN_1596258228)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 01 Aug 2020 13:03:50 +0800
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+From:   Cambda Zhu <cambda@linux.alibaba.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re:  [PATCH] checkpatch: skip macros when finding missing switch/case break
+Message-Id: <46F62293-BC9E-4428-94BD-186B0E3D3A5E@linux.alibaba.com>
+Date:   Sat, 1 Aug 2020 13:03:48 +0800
+Cc:     linux-kernel@vger.kernel.org
+To:     Joe Perches <joe@perches.com>
+X-Mailer: iPhone Mail (17G68)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While running some experiments it was observed that map_lookup_batch was much
-slower than get_next_key + lookup when the syscall overhead is minimal.
-This was because the map_lookup_batch implementation was more expensive
-traversing empty buckets, this can be really costly when the pre-allocated
-map is too big.
+﻿I agree with you. Actually there are some false warnings not mentioned in my patch, such as:
 
-This patch optimizes the case when the bucket is empty so we can move quickly
-to next bucket.
+case xxx: {
+   if () {
+       return;
+   } else {
+           if () {
+               return;
+           } else {
+               return;
+           }
+   }
+}
+case xxx:
+   ...
 
-The benchmark to exercise this is as follows:
+Since compiler can do this now, I think this test should be removed.
 
--The map was populate with a single entry to make sure that the syscall overhead
-is not helping the map_batch_lookup.
--The size of the preallocated map was increased to show the effect of
-traversing empty buckets.
+Regards,
+Cambda
 
-Results:
-
-  Using get_next_key + lookup:
-
-  Benchmark                Time(ns)        CPU(ns)     Iteration
-  ---------------------------------------------------------------
-  BM_DumpHashMap/1/1k          3593           3586         192680
-  BM_DumpHashMap/1/4k          6004           5972         100000
-  BM_DumpHashMap/1/16k        15755          15710          44341
-  BM_DumpHashMap/1/64k        59525          59376          10000
-
-  Using htab_lookup_batch before this patch:
-  Benchmark                Time(ns)        CPU(ns)     Iterations
-  ---------------------------------------------------------------
-  BM_DumpHashMap/1/1k          3933           3927         177978
-  BM_DumpHashMap/1/4k          9192           9177          73951
-  BM_DumpHashMap/1/16k        42011          41970          16789
-  BM_DumpHashMap/1/64k       117895         117661           6135
-
-  Using htab_lookup_batch with this patch:
-  Benchmark                Time(ns)        CPU(ns)     Iterations
-  ---------------------------------------------------------------
-  BM_DumpHashMap/1/1k          2809           2803         249212
-  BM_DumpHashMap/1/4k          5318           5316         100000
-  BM_DumpHashMap/1/16k        14925          14895          47448
-  BM_DumpHashMap/1/64k        58870          58674          10000
-
-Suggested-by: Luigi Rizzo <lrizzo@google.com>
-Cc: Yonghong Song <yhs@fb.com>
-Signed-off-by: Brian Vazquez <brianvv@google.com>
----
- kernel/bpf/hashtab.c | 23 ++++++++---------------
- 1 file changed, 8 insertions(+), 15 deletions(-)
-
-diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
-index 2137e2200d95..150015ea6737 100644
---- a/kernel/bpf/hashtab.c
-+++ b/kernel/bpf/hashtab.c
-@@ -1351,7 +1351,6 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
- 	struct hlist_nulls_head *head;
- 	struct hlist_nulls_node *n;
- 	unsigned long flags = 0;
--	bool locked = false;
- 	struct htab_elem *l;
- 	struct bucket *b;
- 	int ret = 0;
-@@ -1410,19 +1409,19 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
- 	dst_val = values;
- 	b = &htab->buckets[batch];
- 	head = &b->head;
--	/* do not grab the lock unless need it (bucket_cnt > 0). */
--	if (locked)
--		flags = htab_lock_bucket(htab, b);
- 
-+	l = hlist_nulls_entry_safe(rcu_dereference_raw(hlist_nulls_first_rcu(head)),
-+					struct htab_elem, hash_node);
-+	if (!l && (batch + 1 < htab->n_buckets)) {
-+		batch++;
-+		goto again_nocopy;
-+	}
-+
-+	flags = htab_lock_bucket(htab, b);
- 	bucket_cnt = 0;
- 	hlist_nulls_for_each_entry_rcu(l, n, head, hash_node)
- 		bucket_cnt++;
- 
--	if (bucket_cnt && !locked) {
--		locked = true;
--		goto again_nocopy;
--	}
--
- 	if (bucket_cnt > (max_count - total)) {
- 		if (total == 0)
- 			ret = -ENOSPC;
-@@ -1448,10 +1447,6 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
- 		goto alloc;
- 	}
- 
--	/* Next block is only safe to run if you have grabbed the lock */
--	if (!locked)
--		goto next_batch;
--
- 	hlist_nulls_for_each_entry_safe(l, n, head, hash_node) {
- 		memcpy(dst_key, l->key, key_size);
- 
-@@ -1494,7 +1489,6 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
- 	}
- 
- 	htab_unlock_bucket(htab, b, flags);
--	locked = false;
- 
- 	while (node_to_free) {
- 		l = node_to_free;
-@@ -1502,7 +1496,6 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
- 		bpf_lru_push_free(&htab->lru, &l->lru_node);
- 	}
- 
--next_batch:
- 	/* If we are not copying data, we can go to next bucket and avoid
- 	 * unlocking the rcu.
- 	 */
--- 
-2.28.0.163.g6104cc2f0b6-goog
+> 在 2020年8月1日，02:05，Joe Perches <joe@perches.com> 写道：
+> 
+> ﻿On Wed, 2020-07-29 at 20:59 +0800, Cambda Zhu wrote:
+>> The checkpatch.pl only searches 3 previous lines when finding missing
+>> switch/case break, and macros are treated as normal statements. If the
+>> cases are surrounded with CONFIG, checkpatch.pl may report false
+>> warnings. For example:
+> 
+> Likely this test should be removed altogether as
+> it's never really worked well and now compilers
+> find this and emit warnings.
 
