@@ -2,177 +2,197 @@ Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A2BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 11:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC65C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 11:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEBA92087C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 11:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 825422087C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 11:52:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LCpZ5ZAy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bH/7xYTV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbgHALuw (ORCPT
+        id S1728906AbgHALwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 07:50:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49086 "EHLO
+        Sat, 1 Aug 2020 07:52:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728505AbgHALuv (ORCPT
+        with ESMTP id S1728505AbgHALwD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 07:50:51 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBB70C06174A
-        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 04:50:51 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id u63so17374604oie.5
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 04:50:51 -0700 (PDT)
+        Sat, 1 Aug 2020 07:52:03 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04A9AC06174A;
+        Sat,  1 Aug 2020 04:52:03 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id lx9so9006447pjb.2;
+        Sat, 01 Aug 2020 04:52:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=vqmbfMdG1XwSN9CCMReRgW8QhRBkkbu9OHpIkCz9yJw=;
-        b=LCpZ5ZAy008sBZ5/VQCY3qwcTQar36Q1TJ9wsiBkCD9cMuAbdUuEK1XL++vN8dweGH
-         Jq+EsVCY468IQMHexb3bqZzVa5/Wn+Ir09P2t9QuYSj4aILrF7XXHVfJPHKThDL/RHUc
-         QJUIejvqJ9vDIXyaWn8XwdV3fxQ7ae0P6/OvwR5EzL4IP9PGGiue1SE2h6eQJ8WZOW5w
-         4n+OxbwDera8eKRRNcP8VldeXJJum1SzhkMsR8q4Eev1QkU48Wt9Q9JJoVId2nUPW1+S
-         QzhmP/K6ylCkz3BL/9FKyuGfl7OUV2gwewBVJq2PQ7xkb8RDuTXuI9ODOgow2lY2HvRQ
-         oC4w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h2cimN9Yvy25UPH51XSaIWZhhYkPPGceN+e4WaCDrxc=;
+        b=bH/7xYTVSzAYcbVdRzs8gJFpprccPE4mejvVwACUZSyaK4y7HU0D4JgmpJieFGMzca
+         By43QB0NUfbqvAw4PsJoN+Ka+Ac67V9IQ6ySwQVN3kmDMb5auEnBECTxFPziztvdXkBF
+         31lWDuJ4tH4zL5i2eokMS76E2FVS2yORWf5IHX0h6RA2qdyKnIMtpHSbt5i8rAwTTWv2
+         SBnXvJdgmVaSFQJDOk8imVfUnnqlOyfBVnYIH8Gg/JAMSzwZYnokzVlP80psyONL4+P0
+         k5+8HYB29ylJNQmSvVqkVp5zKe3zwzR5viY7ytlOQa69tkbQEOHw8fYGo1RUNlYl+U8T
+         DlfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=vqmbfMdG1XwSN9CCMReRgW8QhRBkkbu9OHpIkCz9yJw=;
-        b=dLA8ekO/tngMjQhdvCizSwgiNpnFtNr2mluWbtApqtRX1Z7ahBFHXbFWVqwbWZEABT
-         1gnWnQGmG6tjsrE/df/LJE80HjtF8rAiZur91MvPQqb3bUDL1UHh93BQYbGLwzp6vUmp
-         HyUI2Ulf3NdJITQSEPKW83K+Vt0pTfu9KuI32d4ReKrpSrJGgESaS/y/y3msGfEozbSu
-         V9KXNZjmwxL8XMI2+jkVO6iUw6H9QuMK4zpriWPIxh2VASnzGt4kD5zXzSU2HGGUCMoF
-         c/sjnWIt6nRiuaXQMG2EnS25HJNHV8XTVpyGfZ1hWOAOeOzeC630rJK2kpxbfQFhoZ0w
-         EJCw==
-X-Gm-Message-State: AOAM530zXoSgTCTsP8qbLPmGnYaG4GTjHD6710ID8QmEmf8zanwGNJlo
-        /Q9xdLDfmRrrw4+NIo+5VkQIZCtt9ejcqhjoOG0=
-X-Google-Smtp-Source: ABdhPJx2BZmReO1V1tzXBIT/jD94xZFXmrxuf25J7qJUkyd3XX3V0I9uXpt00VV11w3PEwT41V/s6ifG/7M8srLQGoc=
-X-Received: by 2002:aca:4e92:: with SMTP id c140mr5955996oib.70.1596282650952;
- Sat, 01 Aug 2020 04:50:50 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h2cimN9Yvy25UPH51XSaIWZhhYkPPGceN+e4WaCDrxc=;
+        b=D64GNYNAyyHz4jnGRc/WP8DMBV+5gHlf5wKwc5SbW+f31waxvjBAw4d4xEtSscxBeR
+         Oa8FuOesyYf2EaUWidjtf5c275Ek3giHBgnA6gnvP4GXFONsSxRISYLIKdLZdHknQwGk
+         6vwoV1scrAOtgyve8bgNA8UgmG7InkROLoULyeGp9+fA/iMvhLGZQT9fPDDkMcuIXemk
+         q9Tn5vEIziQ8StYyvo/HSB4ztzGRjoqo2T/8kSMz2MGvf/l3j56AjVYrGeSTY1cZSdud
+         sGJBhmCoWruiliU7g5miSJGAKvc3/6RTlN7yO3zmXB09nHzEwPDpydy4jOvnuvzoUQfy
+         e1qw==
+X-Gm-Message-State: AOAM531buHT1gBWAg4AvtPLuUdJJrgh838x7V77W05JEsMmaU1s3F4As
+        gZkzF1d9kWSIc0B0Kar0p6lQASlRdETu7wj15AQ=
+X-Google-Smtp-Source: ABdhPJwfp5CCIbJnTwmKX2fsq5+6kN32Du9swj9c1Soea9R8ZJZ1Lj85b5NXu/Fr1GYYpDt0bUqzDN277cRKM2FvJlQ=
+X-Received: by 2002:a17:902:8491:: with SMTP id c17mr7322900plo.262.1596282722426;
+ Sat, 01 Aug 2020 04:52:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200527135329.1172644-1-arnd@arndb.de>
-In-Reply-To: <20200527135329.1172644-1-arnd@arndb.de>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Sat, 1 Aug 2020 13:50:39 +0200
-Message-ID: <CA+icZUUcH91QDDEin9GyEoD8kqrQSPAnkZJyMnXU40Sk5FAo3A@mail.gmail.com>
-Subject: Re: [PATCH] x86: work around clang IAS bug referencing __force_order
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juergen Gross <jgross@suse.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        linux-kernel@vger.kernel.org,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
+References: <20200731123835.8003-1-a.fatoum@pengutronix.de>
+In-Reply-To: <20200731123835.8003-1-a.fatoum@pengutronix.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 1 Aug 2020 14:51:46 +0300
+Message-ID: <CAHp75VcnGX8Bjcxx6sVkp1wzeLb38eBqUhrPWqjnzc-7jXShGw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: don't use same lockdep class for all
+ devm_gpiochip_add_data users
+To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 3:53 PM Arnd Bergmann <arnd@arndb.de> wrote:
+On Fri, Jul 31, 2020 at 3:40 PM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
 >
-> When using the clang integrated assembler, we get a reference
-> to __force_order that should normally get ignored in a few
-> rare cases:
+> Commit 959bc7b22bd2 ("gpio: Automatically add lockdep keys") documents
+> in its commits message its intention to "create a unique class key for
+> each driver".
 >
-> ERROR: modpost: "__force_order" [drivers/cpufreq/powernow-k6.ko] undefined!
+> It does so by having gpiochip_add_data add in-place the definition of
+> two static lockdep classes for LOCKDEP use. That way, every caller of
+> the macro adds their gpiochip with unique lockdep classes.
 >
-> Add a 'static' definition so any file in which this happens can
-> have a local copy.
+> There are many indirect callers of gpiochip_add_data, however, via
+> use of devm_gpiochip_add_data. devm_gpiochip_add_data has external
+> linkage and all its users will share the same lockdep classes, which
+> probably is not intended.
 >
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Fix this by replicating the gpio_chip_add_data statics-in-macro for
+> the devm_ version as well.
 
-Hi,
+I ran into similar issues in another driver (not GPIO) and I agree with the fix.
 
-what is the status of this patch?
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-I needed this one to be able to build VirtualBox via DKMS as an
-out-of-tree kernel-module.
-Package: virtualbox-dkms version 6.1.12-dfsg-8 (Debian/unstable)
-
-To quote myself (see [1]):
-Passing LLVM_IAS=1 results in:
-
-  AR      /var/lib/dkms/virtualbox/6.1.12/build/built-in.a
-  MODPOST /var/lib/dkms/virtualbox/6.1.12/build/Module.symvers
-ERROR: modpost: "__force_order"
-[/var/lib/dkms/virtualbox/6.1.12/build/vboxdrv/vboxdrv.ko] undefined!
-
-Arnd's patch is mandatory to build with Clang's Integrated Assembler
-(make LLVM_IAS=1).
-Here: LLVM toolchain version 11.0.0-rc1
-
-Feel free to add:
-Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-
-Can one of the tip maintainers pick this up, please?
-
-Thanks.
-
-Regards,
-- Sedat -
-
-[1] https://github.com/ClangBuiltLinux/linux/issues/1104#issuecomment-667470053
-
-
+> Fixes: 959bc7b22bd2 ("gpio: Automatically add lockdep keys")
+> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
 > ---
->  arch/x86/boot/compressed/pgtable_64.c | 2 ++
->  arch/x86/include/asm/special_insns.h  | 7 +++++++
->  2 files changed, 9 insertions(+)
+> This doesn't fix any particular problem I ran into, but the code
+> looked buggy, at least to my lockdep-user-not-developer eyes.
+> ---
+>  drivers/gpio/gpiolib-devres.c | 13 ++++++++-----
+>  include/linux/gpio/driver.h   | 13 +++++++++++--
+>  2 files changed, 19 insertions(+), 7 deletions(-)
 >
-> diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
-> index c8862696a47b..8595194cea41 100644
-> --- a/arch/x86/boot/compressed/pgtable_64.c
-> +++ b/arch/x86/boot/compressed/pgtable_64.c
-> @@ -12,7 +12,9 @@
->   * It is not referenced from the code, but GCC < 5 with -fPIE would fail
->   * due to an undefined symbol. Define it to make these ancient GCCs work.
+> diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
+> index 5c91c4365da1..7dbce4c4ebdf 100644
+> --- a/drivers/gpio/gpiolib-devres.c
+> +++ b/drivers/gpio/gpiolib-devres.c
+> @@ -487,10 +487,12 @@ static void devm_gpio_chip_release(struct device *dev, void *res)
+>  }
+>
+>  /**
+> - * devm_gpiochip_add_data() - Resource managed gpiochip_add_data()
+> + * devm_gpiochip_add_data_with_key() - Resource managed gpiochip_add_data_with_key()
+>   * @dev: pointer to the device that gpio_chip belongs to.
+>   * @gc: the GPIO chip to register
+>   * @data: driver-private data associated with this chip
+> + * @lock_key: lockdep class for IRQ lock
+> + * @request_key: lockdep class for IRQ request
+>   *
+>   * Context: potentially before irqs will work
+>   *
+> @@ -501,8 +503,9 @@ static void devm_gpio_chip_release(struct device *dev, void *res)
+>   * gc->base is invalid or already associated with a different chip.
+>   * Otherwise it returns zero as a success code.
 >   */
-> +#ifndef CONFIG_CC_IS_CLANG
->  unsigned long __force_order;
-> +#endif
+> -int devm_gpiochip_add_data(struct device *dev, struct gpio_chip *gc,
+> -                          void *data)
+> +int devm_gpiochip_add_data_with_key(struct device *dev, struct gpio_chip *gc, void *data,
+> +                                   struct lock_class_key *lock_key,
+> +                                   struct lock_class_key *request_key)
+>  {
+>         struct gpio_chip **ptr;
+>         int ret;
+> @@ -512,7 +515,7 @@ int devm_gpiochip_add_data(struct device *dev, struct gpio_chip *gc,
+>         if (!ptr)
+>                 return -ENOMEM;
 >
->  #define BIOS_START_MIN         0x20000U        /* 128K, less than this is insane */
->  #define BIOS_START_MAX         0x9f000U        /* 640K, absolute maximum */
-> diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
-> index 82436cb04ccf..7081e587c1ea 100644
-> --- a/arch/x86/include/asm/special_insns.h
-> +++ b/arch/x86/include/asm/special_insns.h
-> @@ -16,8 +16,15 @@
->   * A memory clobber would solve the problem, but would prevent reordering of
->   * all loads stores around it, which can hurt performance. Solution is to
->   * use a variable and mimic reads and writes to it to enforce serialization
-> + *
-> + * Clang sometimes fails to kill the reference to the dummy variable, so
-> + * provide an actual copy.
->   */
-> +#ifdef CONFIG_CC_IS_CLANG
-> +static unsigned long __force_order;
-> +#else
->  extern unsigned long __force_order;
-> +#endif
+> -       ret = gpiochip_add_data(gc, data);
+> +       ret = gpiochip_add_data_with_key(gc, data, lock_key, request_key);
+>         if (ret < 0) {
+>                 devres_free(ptr);
+>                 return ret;
+> @@ -523,4 +526,4 @@ int devm_gpiochip_add_data(struct device *dev, struct gpio_chip *gc,
 >
->  void native_write_cr0(unsigned long val);
+>         return 0;
+>  }
+> -EXPORT_SYMBOL_GPL(devm_gpiochip_add_data);
+> +EXPORT_SYMBOL_GPL(devm_gpiochip_add_data_with_key);
+> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+> index c4f272af7af5..e6217d8e2e9f 100644
+> --- a/include/linux/gpio/driver.h
+> +++ b/include/linux/gpio/driver.h
+> @@ -509,8 +509,16 @@ extern int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>                 gpiochip_add_data_with_key(gc, data, &lock_key, \
+>                                            &request_key);         \
+>         })
+> +#define devm_gpiochip_add_data(dev, gc, data) ({ \
+> +               static struct lock_class_key lock_key;  \
+> +               static struct lock_class_key request_key;         \
+> +               devm_gpiochip_add_data_with_key(dev, gc, data, &lock_key, \
+> +                                          &request_key);         \
+> +       })
+>  #else
+>  #define gpiochip_add_data(gc, data) gpiochip_add_data_with_key(gc, data, NULL, NULL)
+> +#define devm_gpiochip_add_data(dev, gc, data) \
+> +       devm_gpiochip_add_data_with_key(dev, gc, data, NULL, NULL)
+>  #endif /* CONFIG_LOCKDEP */
 >
+>  static inline int gpiochip_add(struct gpio_chip *gc)
+> @@ -518,8 +526,9 @@ static inline int gpiochip_add(struct gpio_chip *gc)
+>         return gpiochip_add_data(gc, NULL);
+>  }
+>  extern void gpiochip_remove(struct gpio_chip *gc);
+> -extern int devm_gpiochip_add_data(struct device *dev, struct gpio_chip *gc,
+> -                                 void *data);
+> +extern int devm_gpiochip_add_data_with_key(struct device *dev, struct gpio_chip *gc, void *data,
+> +                                          struct lock_class_key *lock_key,
+> +                                          struct lock_class_key *request_key);
+>
+>  extern struct gpio_chip *gpiochip_find(void *data,
+>                               int (*match)(struct gpio_chip *gc, void *data));
 > --
-> 2.26.2
+> 2.27.0
 >
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200527135329.1172644-1-arnd%40arndb.de.
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
