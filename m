@@ -2,101 +2,114 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C83AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 17:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78949C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 17:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4CB62072A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 17:08:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596388104;
-	bh=Ueg/E/nPfiWqU92s3F8StP7QZAqD5EKpNriEqglQy6s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zzXT7qBXIhPn1AtQV2fueSzuwvXBvCaOWvWSGnnsTt42DBnx2D2zfjXfvdsGzMe2I
-	 yr8qeAUGsicC4wDvReTYYfhFLyIeL87K5yLkfufbVukcuVnl0Y2+GjX1tv/fyninvV
-	 YGJNil+oAJtGAp4MB0ShTFooYuw6X66KqEx7DTmg=
+	by mail.kernel.org (Postfix) with ESMTP id 59464206E7
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 17:12:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gbkTXtQM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgHBRIX (ORCPT
+        id S1726920AbgHBRM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 13:08:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725793AbgHBRIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 13:08:23 -0400
-Received: from localhost (router.4pisysteme.de [80.79.225.122])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37992206E7;
-        Sun,  2 Aug 2020 17:08:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596388102;
-        bh=Ueg/E/nPfiWqU92s3F8StP7QZAqD5EKpNriEqglQy6s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BcQu0fr14IdODrK0TSyznfrrcB1GtI3t4oB7WXb7dfNkXvCMLxpJ8zNFbwjvf1ggj
-         AhkainBW2YSxFEafQQc7YdFVpswtj0JkCHbeRLN47LkG+AvSl988WGdM9NpI6cK1qn
-         GzajU2vnYRcZMSK/NfwpRYjmsha82QzN6HJT66sM=
-Date:   Sun, 2 Aug 2020 19:08:20 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        robh+dt@kernel.org, ludovic.desroches@microchip.com,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        linux@armlinux.org.uk, kamel.bouhara@bootlin.com
-Subject: Re: [RFC PATCH 4/4] i2c: at91: Move to generic GPIO bus recovery
-Message-ID: <20200802170820.GC10193@kunai>
-References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
- <20200619141904.910889-5-codrin.ciubotariu@microchip.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="DIOMP1UsTsWJauNi"
-Content-Disposition: inline
-In-Reply-To: <20200619141904.910889-5-codrin.ciubotariu@microchip.com>
+        Sun, 2 Aug 2020 13:12:57 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:50657 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725793AbgHBRM4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 13:12:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596388375;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=cMGJeihf68/SzYvQTtJu1Xd1NxXkQ2OyiZYDKiEiLwg=;
+        b=gbkTXtQMHihK7N01Uirq2DhxG8phfN1uVr8WsTcglUbYXwE8WzWoVmEcH98cae+ykcYbTz
+        fclaH71IyD4hogsbZFeFivKCtkIwFwLA7pY1wTVwYa1mV7o73WnvDUtJAw8V3ZRMNxVP8/
+        2FlqVJ8b5KqfJ6oy37yV/mg74npC8DY=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-402-NQ4EN8QMNIW6wi6wV5Gjpw-1; Sun, 02 Aug 2020 13:12:53 -0400
+X-MC-Unique: NQ4EN8QMNIW6wi6wV5Gjpw-1
+Received: by mail-qk1-f200.google.com with SMTP id g4so14705785qki.8
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 10:12:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=cMGJeihf68/SzYvQTtJu1Xd1NxXkQ2OyiZYDKiEiLwg=;
+        b=fQjeYsisgRsZPIj3nJ6ApGSK/9/R5OiH9fDkZ3Q+5cwDb6jgkUFzxyFIw2Hy/zDS+Q
+         /qLjklEtMBxJsHMcnR9R5DcZN0hm1nCjMSYK/Mja7LsRrUm/cWyatOTIGboL+Ok9FuDk
+         Q3XLny5a0SCewae1VNIawil4fkg7ZSbTCNWL6/OCxu9SgtxdE4VCRQp+vw3ZmwjSvVRn
+         4Jhyx3e/zb3jkctmxvEir4/QC7ctPOF3UseaJpPnlqLbwH+R+Ox8YbLO1SjIS8ITP7+0
+         jjACorRGlVqblz9AZUo31QbLkbx5kXXiZUvolhCP0bb00RRhUiw7kun+0sK58P1+ruMi
+         UkMg==
+X-Gm-Message-State: AOAM533Nw89G6IX5uRAIz3UnStuL7dAnnirEhVVlPkVqHJLth8KZyXNi
+        pyIv9XLC5pDImyrE2pswPJiVLlWHAkNmganucRIy0D8YlVGRrGHJZj9m07k59Fb7JVmVvgZmpZq
+        S0hZZq5SOw/sN4v12GHMluHKC
+X-Received: by 2002:a37:910:: with SMTP id 16mr12366640qkj.466.1596388372916;
+        Sun, 02 Aug 2020 10:12:52 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxR7HqMksnZzGBECjPQnqdYT9adQy1oaafRwKuLOrG+gGnBFOCuGBMWoP3NZnzmDuFk4ncaVg==
+X-Received: by 2002:a37:910:: with SMTP id 16mr12366617qkj.466.1596388372629;
+        Sun, 02 Aug 2020 10:12:52 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id a3sm16735354qkf.131.2020.08.02.10.12.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Aug 2020 10:12:52 -0700 (PDT)
+From:   trix@redhat.com
+To:     herbert@gondor.apana.org.au, davem@davemloft.net,
+        smueller@chronox.de
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH] crypto: drbg: check blocklen is non zero
+Date:   Sun,  2 Aug 2020 10:12:47 -0700
+Message-Id: <20200802171247.16558-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Tom Rix <trix@redhat.com>
 
---DIOMP1UsTsWJauNi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Clang static analysis reports this error
 
-On Fri, Jun 19, 2020 at 05:19:04PM +0300, Codrin Ciubotariu wrote:
-> Make the Microchip at91 driver the first to use the generic GPIO bus
-> recovery support from the I2C core and discard the driver implementation.
->=20
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-> ---
->  drivers/i2c/busses/i2c-at91-master.c | 69 ++--------------------------
->  drivers/i2c/busses/i2c-at91.h        |  3 --
+crypto/drbg.c:441:40: warning: Division by zero
+        padlen = (inputlen + sizeof(L_N) + 1) % (drbg_blocklen(drbg));
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
 
-Nice diffstat! I will try using this new functionality with another
-controller next week.
+When drbg_bocklen fails it returns 0.
 
+	if (drbg && drbg->core)
+		return drbg->core->blocklen_bytes;
+	return 0;
 
---DIOMP1UsTsWJauNi
-Content-Type: application/pgp-signature; name="signature.asc"
+In many places in drbg_ctr_df drbg_bocklen is assumed to be non zero.
+So turn the assumption into a check.
 
------BEGIN PGP SIGNATURE-----
+Fixes: 541af946fe13 ("crypto: drbg - SP800-90A Deterministic Random Bit Generator")
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8m8wQACgkQFA3kzBSg
-KbaBmw//QdK4p7QCdFMhEXMOhurIjSRsRgKD9/Lzj4Sz25CH8dfzr+r8irJ2xDO3
-5GGH4kWTNKO/+6BFDRroooDsvwqC/seiu2kF0f+pWh7m8fIzTWM/NetRTJuAJ+Cq
-tczzLPFFILaUDrw1IoeglkA8dUqLOGatc+gdKIHHI04uakoE+rrcq8AJbkoBHKif
-/NAePpfsVXYdhKIBPY/NCZtNrSBhOfSvUZ3jmA8X/1IyWXoBRb79TwsMHsvmiAJ9
-W/mnxWPvUKyATnxa6/jHpfaQyuCzJSZDtHoHRwMxPLpFMZrkiAIjY55DhCaoF+AK
-7fDzS/dHPf9Isu7UBldxtH4myA5YZJ3OaQ5mWEOafHcGBK3k0r4N0oZBDobowHGQ
-h1GLAtwoC8scqIx1KSYH4WsYphA/zVMR0vgPUw4k35fgptz0cGVOPaBVZVUM8AWa
-Q3FZujEHtTfuDOksNqjOouFFkmvOUd7Aa+OCeL3W2ybHOMJ/O39DcmqdvL3CiJRL
-Bf7aL1LE3yBhYhJ7dRMrKpUVoSbMKMHm9PV65zwfB+4R8sRDGwmeShPUTOXRklqG
-+bTkrSYIRwGhdeYJJ2WzTziFzizMw3lomU00rWyLXlarUwr053flbv65XxNgfAhq
-NDKvO6H2IOqhZzZglqXB5hWQ3vA6OJlomTuG46wY7FojKuCLr+w=
-=ae5q
------END PGP SIGNATURE-----
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ crypto/drbg.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---DIOMP1UsTsWJauNi--
+diff --git a/crypto/drbg.c b/crypto/drbg.c
+index e99fe34cfa00..bd9a137e5473 100644
+--- a/crypto/drbg.c
++++ b/crypto/drbg.c
+@@ -420,6 +420,9 @@ static int drbg_ctr_df(struct drbg_state *drbg,
+ 	size_t inputlen = 0;
+ 	struct drbg_string *seed = NULL;
+ 
++	if (!drbg_blocklen(drbg))
++		return -EINVAL;
++
+ 	memset(pad, 0, drbg_blocklen(drbg));
+ 	memset(iv, 0, drbg_blocklen(drbg));
+ 
+-- 
+2.18.1
+
