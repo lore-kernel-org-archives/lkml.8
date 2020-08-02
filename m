@@ -2,114 +2,85 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA52FC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A353AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3A5320738
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:21:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ue9y1glW"
+	by mail.kernel.org (Postfix) with ESMTP id 8892F2072A
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:31:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgHBQVT (ORCPT
+        id S1725968AbgHBQbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 12:21:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55038 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgHBQVS (ORCPT
+        Sun, 2 Aug 2020 12:31:17 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:60051 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgHBQbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 12:21:18 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58ED3C06174A;
-        Sun,  2 Aug 2020 09:21:18 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a5so22068870wrm.6;
-        Sun, 02 Aug 2020 09:21:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=D5T1T+zFmu3MftYYttB9Il2EU0RTA1ff+C11FGJ2VQ8=;
-        b=ue9y1glWMg0U8okwewHtv5AE/SKIC3FROr0CO0Ij+gHtK76nmcGWrmBKrqvXJaZ+hh
-         GduDnbYhH+qsSBqY+iFDCrKXPd6o1nrDfER8PREo4bP6g77IqnGWrxHqR+eLBtjGK1DN
-         uPy/AeDAfZ8aG0AOsjJB+ulBuU3CHaONQxULXU2AW6dghB0VULeFKklFtrlPRIso6a9c
-         YN0GVFm1WxkVL/BzXRvrmyaRPsQm7XqQL9Y0CBQ0PydqcfQM/gcLKeJQMABrNVn6cJEg
-         WFcqmFqogSxqvDgrmjUIv0HxjLSPZHXHqq1Frqt8+7oUCsi9ewsmVvDHSCCoaC1WkyLU
-         8zPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=D5T1T+zFmu3MftYYttB9Il2EU0RTA1ff+C11FGJ2VQ8=;
-        b=F1ccFp9MhaHiKJAmpie+LLIYPJQ3YfwuJCPCk2inf6xhPuSVqyBPDCCn/86CtT023J
-         fJSSHOBe9ERTbjPsXQaSuphqFKvBSD6g+1BVJ7mIGaDlXmKM1PcfzcfE72jOS4VwH+ot
-         YiaVXo5JmTzqIGtGBf2WcpkbRL2dgiVtztViuw3TTJaK80NAYgOYbStOSg+HVDU8HXDg
-         O2R5vc6eISDMnIPozsJ1D51K5ycfrR29hH8pXFENvx5FwPfDwLtiitiBxhKQ0ie+PpiZ
-         pc4PcDlwwL2UTWB+nmRx57MrnIrNxo1HV+yKlT6t8nQ6tq4ALnvdleIZ5RYUT2aY7POV
-         DG7g==
-X-Gm-Message-State: AOAM532EYbR0D4S5BpRFMsSlav3y5NtB+jvc4N/kVrnC6zGDbJAVbLrf
-        J2Cs4LL8W0FOLKdZQoBpg04=
-X-Google-Smtp-Source: ABdhPJwMgL6A7e1V/dEg/MLvpj9US3SFGL5okBJaZwDhwNgzVQYuDpMoIECrBuN/Dw+z8alWVNYKjA==
-X-Received: by 2002:a5d:4e81:: with SMTP id e1mr11009751wru.22.1596385277100;
-        Sun, 02 Aug 2020 09:21:17 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2dd3:b900:5cb6:49ea:83a1:88c])
-        by smtp.gmail.com with ESMTPSA id p25sm18798905wma.39.2020.08.02.09.21.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Aug 2020 09:21:16 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Tao Zhou <ouwen210@hotmail.com>, linux-doc@vger.kernel.org
-Cc:     Harry Wei <harryxiyou@gmail.com>, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] doc/zh_CN: fix title heading markup in admin-guide cpu-load
-Date:   Sun,  2 Aug 2020 18:21:01 +0200
-Message-Id: <20200802162101.18875-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 2 Aug 2020 12:31:17 -0400
+Received: from dante.cb.ettle ([143.159.226.70]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.179]) with ESMTPSA (Nemesis) id
+ 1MVMJ7-1k9b0P0Uzf-00SN5k; Sun, 02 Aug 2020 18:30:58 +0200
+Message-ID: <11bdea17bed6fabed7a808111dc66083cb6933c4.camel@ettle.org.uk>
+Subject: Re: rtsx_pci not restoring ASPM state after suspend/resume
+From:   James Ettle <james@ettle.org.uk>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     =?UTF-8?Q?=E5=90=B3=E6=98=8A=E6=BE=84?= Ricky 
+        <ricky_wu@realtek.com>, Rui Feng <rui_feng@realsil.com.cn>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Len Brown <lenb@kernel.org>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jacopo De Simoi <wilderkde@gmail.com>
+Date:   Sun, 02 Aug 2020 17:30:55 +0100
+In-Reply-To: <20200728230603.GA1870954@bjorn-Precision-5520>
+References: <20200728230603.GA1870954@bjorn-Precision-5520>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.4 (3.36.4-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:i0uMgft/n0YUHgYJ+xRCTUHuh9ibvCZXeiFxt97RYUxvp/yvjcy
+ 5M0uVcMKvRlKzJlyrlhiZwlnRP8v4h996XGbR11kFvmMWiImUn7fqhkUh2raYH+aDkCV/fq
+ /n2wHzr8X7aUBCgeMzCAyPXnsM8roFlSNw0TvxzQdFrkOH3a2rLlWxHlxbPFfbwGb6AE23c
+ 1cbJGwhS5E8js/IfDGGUw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3TYrtuwh63g=:PqayZrJ1RA1Gixibc8lcKX
+ jRwCXW7NVRaStXmvhenNdxc7K5PwULeA4kfbxmAr4xUrI87qHGnlwKpQ53DYSiecw2//0s0Fs
+ uMZfhepWw+9IX8g7y4gYJE0XHmISvQkVGnee0L7aPk4UyoxAyJ8GHKLNy7hyzxj+Tez3g86YW
+ KubgT9to+EQj/sL40DwQDbKJj3y4rOwFKcM0o5pOvXk7qHmwsZHSoLkQ7lobjvqQJtzXAVDuS
+ +j1qjhXIK2yuIC/tPFwLKxVNAZI6ggxoaAoHKOySZpr4FtVEZHdsh6cTClXa5XR+RTlqwpPcR
+ YMOzD+YCoYh2/AVq+uAYywFSILKMsBh9CXUs5ErTgyRte8GAbdNkGdqYcCYygKCsqCSfOowCo
+ e50HnJDZ1kCihhIJMmpe8JrDAyTOhjh92wrqIDrt8NFzcKr2ya3NiRewI3RN42jy/rsBV2VQw
+ x3GOOw7XfD3AnOqsHlKbeEcSsFuUJmK+cbVg01esqpnXQd9DVALinAycTheuk3HbQuCgkVCdG
+ b2W1a8BQ9pTNvMVYREQcYLXfzNwMW7/w7GE5LTu6yXTl7WoYg4+WL7KvduVUVyQOdG1ZuSQXG
+ LMHzA9H4NS+3K28bwYmcwM5Pd+6b/ZyKLSiD9mBj3ebzrJdoSc4kE9OzNpc3na40xVovNLLTG
+ Dx9iLDIw3CYckuPjXuEWpfrBSAkIx1nJ8jx/mgfge5l5J7XMmKUVYqRQ9Xy20KqbHa3hM+xvm
+ UBFD/zwzHoY0H6Wf5hjs1yB1TkIeZUFnkVCfUngfQozVJlYNhp+Eky3BsbGr/69YczDCGeokb
+ hw2s/cWLabb5YOG4gsJmIK+KT/P2x8ZsH1edsC0ZjsUVXv+8Aawiq7tfUMiNdu6fHUjW4dA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation generation warns:
+Hello,
 
-  Documentation/translations/zh_CN/admin-guide/cpu-load.rst:1:
-  WARNING: Title overline too short.
+On Tue, 2020-07-28 at 18:06 -0500, Bjorn Helgaas wrote:
+> 
+> I tried to deduce the problem from the code in aspm.c, but I didn't
+> see the problem.  If you have the ability to build a kernel with a
+> debug patch, can you boot with the patch below and collect the dmesg
+> log?
 
-Extend title heading markup by one. It was just off by one.
+I've built such a kernel and attached the dmesg output at
 
-Fixes: e210c66d567c ("doc/zh_CN: add cpu-load Chinese version")
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-Alex, Tao, please ack.
+https://bugzilla.kernel.org/attachment.cgi?id=290713
 
-Jonathan, please pick this quick minor warning fix.
+For this, the machine was booted from off, no funny udev rules or sysfs
+tinkering.
 
-applies on your docs-next and next-20200731
-
- Documentation/translations/zh_CN/admin-guide/cpu-load.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/translations/zh_CN/admin-guide/cpu-load.rst b/Documentation/translations/zh_CN/admin-guide/cpu-load.rst
-index 0116d0477799..c972731c0e57 100644
---- a/Documentation/translations/zh_CN/admin-guide/cpu-load.rst
-+++ b/Documentation/translations/zh_CN/admin-guide/cpu-load.rst
-@@ -1,6 +1,6 @@
--=======
-+========
- CPU 负载
--=======
-+========
- 
- Linux通过``/proc/stat``和``/proc/uptime``导出各种信息，用户空间工具
- 如top(1)使用这些信息计算系统花费在某个特定状态的平均时间。
--- 
-2.17.1
+Thanks,
+-James
 
