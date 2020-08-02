@@ -2,104 +2,188 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4FCC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A602C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3D3A20759
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:42:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f9sNyyLw"
+	by mail.kernel.org (Postfix) with ESMTP id 106B720722
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:45:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgHBUmj (ORCPT
+        id S1726913AbgHBUpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 16:42:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725925AbgHBUmj (ORCPT
+        Sun, 2 Aug 2020 16:45:22 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:40291 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727804AbgHBUpU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 16:42:39 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49377C06174A;
-        Sun,  2 Aug 2020 13:42:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
-        Reply-To:Cc:Content-ID:Content-Description;
-        bh=v7okBghMo2AteEJTPGTY9KCeJL7oZdpEAZt/o6Oye7g=; b=f9sNyyLwyi6RgjrtzJp6BVKqEA
-        3iXhZ65TfR7O/R+/qUO/hgKAflRiLt1Oag5667tH+bPI3thnW0YtVXuVud6Nk++k8fttRSznLSWJ+
-        +5VhPUz05rFP6TVL7GZjRyS44Lqg8hEY/Dxf+d6N4bmue5lAUay5fWz/0Lc3+K958AU0Pa5gZs0qO
-        2JpAuOkStk3Ci4IL9ePYF1WMJkhSIysGK6FnU0Js6M6jGqyVEq3yoj72r7avOv7F/gmj6RkCFQ6KZ
-        Q/aqG12Ka3pD9+dugfb0XJt2ayM85xzONxlIV1ZDz9Nk1hV5FUf8WPGxv4PjLbnQm1iWsATMKCkNs
-        S2lg4Xqg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k2KoW-0001SL-51; Sun, 02 Aug 2020 20:42:36 +0000
-Subject: Re: [PATCH] ARM: s3c24xx: demote kerneldoc comment
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200802203605.15125-1-krzk@kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <4c8c1fe5-6212-57eb-7644-174ace5d3622@infradead.org>
-Date:   Sun, 2 Aug 2020 13:42:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sun, 2 Aug 2020 16:45:20 -0400
+Received: by mail-il1-f199.google.com with SMTP id z16so26061177ill.7
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 13:45:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=1xycOSK9097oITbtkPQ2Z+DRSqX1NFWh+pkPwjLV+LY=;
+        b=hbHGlor4aSslD65SV9iq/JhtPbKiAyrX7srkrQstADmtqGur5l7VDpOrkn4D1dBR8E
+         ybpRhDXqvqiX3VzhElvfGw0piPtFmVyY1OlVgjlGohElbdEgkL9Co5HuLtNUHRnEnY/8
+         l4EsocpOBblCOwJblL5bRqCJfe+IP3qnSIcqt5PCpYgi3BkTqZjQKZWnqudhl7vhLhrI
+         FzUTfrQ3jAHLjDljWYxlNhCEwtZkBeSVjW8JrNhVXlQFRVQtuGFsPOMsho7fv7k2J8Dk
+         I+j3dwPeh9K54QySPH323O6Hs4zLg//I0TJaJjS2cjtsXtiCVKYbzBfXziXh/f7MgDlz
+         Exhg==
+X-Gm-Message-State: AOAM530JchFrsi8HR9z7LeWUm3M8AnIyaOXCFtQmGqlfXXT/p+kmKAd+
+        iT/WgG3N3dxa6jIEL7cy2DR28NkleojFVcvNdf0zRH941smr
+X-Google-Smtp-Source: ABdhPJwVUWGfBOw2qltlxlKtIO0DVihpZCkVO501w3BsGQbUNyEt3TmeTq4L2nxZ+whRI96eKPygp/iHbXShO3RmXqYwHRR2fGTk
 MIME-Version: 1.0
-In-Reply-To: <20200802203605.15125-1-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:ba57:: with SMTP id o84mr13395563ili.215.1596401119857;
+ Sun, 02 Aug 2020 13:45:19 -0700 (PDT)
+Date:   Sun, 02 Aug 2020 13:45:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ab11c505abeb19f5@google.com>
+Subject: KASAN: use-after-free Write in __sco_sock_close
+From:   syzbot <syzbot+077eca30d3cb7c02b273@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/2/20 1:36 PM, Krzysztof Kozlowski wrote:
-> Remove kerneldoc annotation to fix warning:
-> 
->     arch/arm/mach-s3c24xx/mach-h1940.c:185: warning:
->         cannot understand function prototype: 'struct s3c2410fb_display h1940_lcd __initdata = '
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/arm/mach-s3c24xx/mach-h1940.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/mach-s3c24xx/mach-h1940.c b/arch/arm/mach-s3c24xx/mach-h1940.c
-> index 89528bea89f1..c09f61d35d57 100644
-> --- a/arch/arm/mach-s3c24xx/mach-h1940.c
-> +++ b/arch/arm/mach-s3c24xx/mach-h1940.c
-> @@ -179,9 +179,9 @@ static struct s3c2410_ts_mach_info h1940_ts_cfg __initdata = {
->  		.cfg_gpio = s3c24xx_ts_cfg_gpio,
->  };
->  
-> -/**
-> +/*
->   * Set lcd on or off
-> - **/
-> + */
+Hello,
 
-Yes, that's not kernel-doc notation, so demote it.
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
+syzbot found the following issue on:
+
+HEAD commit:    ac3a0c84 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17082904900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e59ee776d5aa8d55
+dashboard link: https://syzkaller.appspot.com/bug?extid=077eca30d3cb7c02b273
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12cf1904900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10d52e14900000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+077eca30d3cb7c02b273@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in instrument_atomic_write include/linux/instrumented.h:71 [inline]
+BUG: KASAN: use-after-free in atomic_dec_and_test include/asm-generic/atomic-instrumented.h:748 [inline]
+BUG: KASAN: use-after-free in hci_conn_drop include/net/bluetooth/hci_core.h:1049 [inline]
+BUG: KASAN: use-after-free in sco_chan_del net/bluetooth/sco.c:148 [inline]
+BUG: KASAN: use-after-free in __sco_sock_close+0x47c/0xed0 net/bluetooth/sco.c:433
+Write of size 4 at addr ffff88809191e010 by task syz-executor393/6961
+
+CPU: 0 PID: 6961 Comm: syz-executor393 Not tainted 5.8.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1f0/0x31e lib/dump_stack.c:118
+ print_address_description+0x66/0x5a0 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report+0x132/0x1d0 mm/kasan/report.c:530
+ check_memory_region_inline mm/kasan/generic.c:183 [inline]
+ check_memory_region+0x2b5/0x2f0 mm/kasan/generic.c:192
+ instrument_atomic_write include/linux/instrumented.h:71 [inline]
+ atomic_dec_and_test include/asm-generic/atomic-instrumented.h:748 [inline]
+ hci_conn_drop include/net/bluetooth/hci_core.h:1049 [inline]
+ sco_chan_del net/bluetooth/sco.c:148 [inline]
+ __sco_sock_close+0x47c/0xed0 net/bluetooth/sco.c:433
+ sco_sock_close net/bluetooth/sco.c:447 [inline]
+ sco_sock_release+0x63/0x4f0 net/bluetooth/sco.c:1021
+ __sock_release net/socket.c:605 [inline]
+ sock_close+0xd8/0x260 net/socket.c:1278
+ __fput+0x2f0/0x750 fs/file_table.c:281
+ task_work_run+0x137/0x1c0 kernel/task_work.c:135
+ exit_task_work include/linux/task_work.h:25 [inline]
+ do_exit+0x601/0x1f80 kernel/exit.c:805
+ do_group_exit+0x161/0x2d0 kernel/exit.c:903
+ get_signal+0x139b/0x1d30 kernel/signal.c:2743
+ do_signal+0x33/0x610 arch/x86/kernel/signal.c:810
+ exit_to_usermode_loop arch/x86/entry/common.c:235 [inline]
+ __prepare_exit_to_usermode+0xd7/0x1e0 arch/x86/entry/common.c:269
+ do_syscall_64+0x7f/0xe0 arch/x86/entry/common.c:393
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x446e69
+Code: Bad RIP value.
+RSP: 002b:00007ffde45fd7f8 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
+RAX: fffffffffffffffc RBX: 0000000000000000 RCX: 0000000000446e69
+RDX: 0000000000000008 RSI: 0000000020000000 RDI: 0000000000000004
+RBP: 0000000000000004 R08: 0000000000000002 R09: 00000003000000ff
+R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000407ac0 R14: 0000000000000000 R15: 0000000000000000
+
+Allocated by task 6961:
+ save_stack mm/kasan/common.c:48 [inline]
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc+0x103/0x140 mm/kasan/common.c:494
+ kmem_cache_alloc_trace+0x234/0x300 mm/slab.c:3551
+ kmalloc include/linux/slab.h:555 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ hci_conn_add+0x5d/0x1040 net/bluetooth/hci_conn.c:525
+ hci_connect_sco+0x29a/0xa10 net/bluetooth/hci_conn.c:1279
+ sco_connect net/bluetooth/sco.c:240 [inline]
+ sco_sock_connect+0x2de/0xaa0 net/bluetooth/sco.c:576
+ __sys_connect_file net/socket.c:1854 [inline]
+ __sys_connect+0x2da/0x360 net/socket.c:1871
+ __do_sys_connect net/socket.c:1882 [inline]
+ __se_sys_connect net/socket.c:1879 [inline]
+ __x64_sys_connect+0x76/0x80 net/socket.c:1879
+ do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Freed by task 6957:
+ save_stack mm/kasan/common.c:48 [inline]
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0x114/0x170 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10a/0x220 mm/slab.c:3757
+ device_release+0x70/0x1a0 drivers/base/core.c:1575
+ kobject_cleanup lib/kobject.c:693 [inline]
+ kobject_release lib/kobject.c:722 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x15b/0x220 lib/kobject.c:739
+ hci_conn_del+0x2c2/0x550 net/bluetooth/hci_conn.c:645
+ hci_phy_link_complete_evt net/bluetooth/hci_event.c:4921 [inline]
+ hci_event_packet+0x8335/0x18260 net/bluetooth/hci_event.c:6180
+ hci_rx_work+0x236/0x9c0 net/bluetooth/hci_core.c:4705
+ process_one_work+0x789/0xfc0 kernel/workqueue.c:2269
+ worker_thread+0xaa4/0x1460 kernel/workqueue.c:2415
+ kthread+0x37e/0x3a0 drivers/block/aoe/aoecmd.c:1234
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+
+The buggy address belongs to the object at ffff88809191e000
+ which belongs to the cache kmalloc-4k of size 4096
+The buggy address is located 16 bytes inside of
+ 4096-byte region [ffff88809191e000, ffff88809191f000)
+The buggy address belongs to the page:
+page:ffffea0002464780 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea0002464780 order:1 compound_mapcount:0
+flags: 0xfffe0000010200(slab|head)
+raw: 00fffe0000010200 ffffea0002489f88 ffffea000249dd08 ffff8880aa402000
+raw: 0000000000000000 ffff88809191e000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88809191df00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88809191df80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff88809191e000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                         ^
+ ffff88809191e080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88809191e100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
 
-OTOH, we could also add "__initdata" to something that can be
-handled by scripts/kernel-doc if it's needed, but it doesn't seem to
-be needed just yet.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
->  static struct s3c2410fb_display h1940_lcd __initdata = {
->  	.lcdcon5=	S3C2410_LCDCON5_FRM565 | \
->  			S3C2410_LCDCON5_INVVLINE | \
-> 
-
-thanks.
--- 
-~Randy
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
