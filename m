@@ -2,191 +2,76 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC90DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 03:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B71BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 04:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACD2B2075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 03:32:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RzjfWU1S"
+	by mail.kernel.org (Postfix) with ESMTP id 169D4206D4
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 04:00:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgHBDcH (ORCPT
+        id S1727794AbgHBD7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 23:32:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51132 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbgHBDcG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 23:32:06 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9972CC06174A;
-        Sat,  1 Aug 2020 20:32:06 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id z188so8576201pfc.6;
-        Sat, 01 Aug 2020 20:32:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NQA5xpV9Vfl3BUSLXPw3JQiC/8GdjqPpOyhk9KwqJ1Q=;
-        b=RzjfWU1SmtGiTRUrJ/qYDXji1/9h2sZQKC2J5y1qoyZZ7FVCT7NXQxDeQardydSAQy
-         3AlSMbfdWIZ3JqyYHPzxUFdsMfB3rf9+uBF9H+iJWNSpGyMkX/WV+Bu7XZF07FuujW0/
-         F+mSrE0SyaERcjG3EiKOUjxSd++ZUiD+amlJ2tQqdG/K1reXsz6ozKGXIE+0EDZdCYuz
-         pyyFLislYFDqRfmllKPpjW4QCSsqLF+jjJStDB1aoTPFgQk9msgwwfdAlrWqta4vTi8W
-         MInIyNQ1z5lZYaGVj+Nm1Gl6+fKj3QR625LR/JWnTXT1m+eCrvy9SMeeXCxdrv+oicXV
-         muvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NQA5xpV9Vfl3BUSLXPw3JQiC/8GdjqPpOyhk9KwqJ1Q=;
-        b=lEIMxKBZxw4uRyIch0+xcLcQEnJP6I3k+YpIaSRPlZ9a77axDAYZ6Apf1zn8rQirNU
-         TH03jKX1WgG0P1ENbTciFNBYw+k25S8Ms5vabxXhTpqYiBIhGfEKSbzEhabwX/kTF6Ih
-         3owmYpBQPDeeuQJe7Z7QFxlKb/fHQKmNORHv06sMHfCXSHnJDP8cINn9pblC6rZWZ4WO
-         Rgf9uMnNd2jK7mHyiUCyvrRgE/8ghnxvOIfaaFpt0BAkSQCiZQfV0JTPrfQ8ejW1vYz4
-         wUKNagTswoJo3fcRrgj5tmkNcWVc4rKQVRRNGqy+9hBLPeQtDcN6chDGp7FbZ3b5fuva
-         JTxA==
-X-Gm-Message-State: AOAM532le9ri7Qv7OmDRpUsfomd7yRdBPc5y8rQLMFpAknssjvwyTjxt
-        TxDQ28yywXXymhfi0OTwLa4=
-X-Google-Smtp-Source: ABdhPJwGr3Aw7529dBCQdHayEQ97tQrT/TiNVZc16m1LcA0UmEvbwc45EEwUm0S4Ope1OJsmfF36YA==
-X-Received: by 2002:aa7:9ace:: with SMTP id x14mr273559pfp.216.1596339125659;
-        Sat, 01 Aug 2020 20:32:05 -0700 (PDT)
-Received: from sol (106-69-185-93.dyn.iinet.net.au. [106.69.185.93])
-        by smtp.gmail.com with ESMTPSA id b24sm14800189pgn.8.2020.08.01.20.32.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Aug 2020 20:32:04 -0700 (PDT)
-Date:   Sun, 2 Aug 2020 11:31:58 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 05/18] gpiolib: cdev: support GPIO_GET_LINE_IOCTL and
- GPIOLINE_GET_VALUES_IOCTL
-Message-ID: <20200802033158.GA13174@sol>
-References: <20200725041955.9985-1-warthog618@gmail.com>
- <20200725041955.9985-6-warthog618@gmail.com>
- <CAHp75VcKtATPDKGAViWqjOJDqukDrgZ13aTU6rTJ1jEeB3vmVw@mail.gmail.com>
- <20200726011244.GA6587@sol>
- <CAMpxmJWaEVwjXSFHTYmwdfA+88upVkJ4ePSQf_ziSOa1YdOUKQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJWaEVwjXSFHTYmwdfA+88upVkJ4ePSQf_ziSOa1YdOUKQ@mail.gmail.com>
+        Sat, 1 Aug 2020 23:59:16 -0400
+Received: from smtp21.cstnet.cn ([159.226.251.21]:45718 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726387AbgHBD7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 23:59:16 -0400
+Received: from localhost.localdomain (unknown [117.135.91.130])
+        by APP-01 (Coremail) with SMTP id qwCowACnhwChNiZfP2pCAA--.6673S3;
+        Sun, 02 Aug 2020 11:45:16 +0800 (CST)
+From:   leesagacious <lizhe@cpu-os.ac.cn>
+To:     linux-kernel@vger.kernel.org
+Cc:     leesagacious <lizhe@cpu-os.ac.cn>
+Subject: [PATCH] Modify the parameters that are not used
+Date:   Sat,  1 Aug 2020 20:44:12 -0700
+Message-Id: <1596339852-41875-1-git-send-email-lizhe@cpu-os.ac.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: qwCowACnhwChNiZfP2pCAA--.6673S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrtr1xKr4kJr4rJr15Wry8Krg_yoWxKrg_Ga
+        1IqF4Uur15Zrn3Zw17Jr1DAayS934xX3W0gFn5Ka1fZ3Wqvw45J3WfJ347Ww1Y9wsxCFy3
+        Zas7WryxWr17KjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbwAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Jr0_
+        Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr
+        1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+        jxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+        1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxAIw28IcxkI7VAKI48J
+        MxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+        AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+        0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
+        v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
+        14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JU9189UUUUU=
+X-Originating-IP: [117.135.91.130]
+X-CM-SenderInfo: xol2xv46fs3g1rvotugofq/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 06:05:10PM +0200, Bartosz Golaszewski wrote:
-> On Sun, Jul 26, 2020 at 3:12 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> 
-> [snip]
-> 
-> > >
-> > > > +static bool padding_not_zeroed(__u32 *padding, int pad_size)
-> > > > +{
-> > > > +       int i, sum = 0;
-> > > > +
-> > > > +       for (i = 0; i < pad_size; i++)
-> > > > +               sum |= padding[i];
-> > > > +
-> > > > +       return sum;
-> > > > +}
-> > >
-> > > Reimplementation of memchr_inv() ?
-> > >
-> >
-> > I was hoping to find an existing function, surely checking a region is
-> > zeroed is a common thing, right?, so this was a place holder as much
-> > as anything.  Not sure memchr_inv fits the bill, but I'll give it a
-> > try...
-> >
-> 
-> If you don't find an appropriate function: please put your new
-> implementation in lib/ so that others may reuse it.
-> 
+Signed-off-by: leesagacious <lizhe@cpu-os.ac.cn>
+---
+ include/linux/bottom_half.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Changed to memchr_inv.
+diff --git a/include/linux/bottom_half.h b/include/linux/bottom_half.h
+index a19519f..ab54f34 100644
+--- a/include/linux/bottom_half.h
++++ b/include/linux/bottom_half.h
+@@ -7,7 +7,8 @@
+ #ifdef CONFIG_TRACE_IRQFLAGS
+ extern void __local_bh_disable_ip(unsigned long ip, unsigned int cnt);
+ #else
+-static __always_inline void __local_bh_disable_ip(unsigned long ip, unsigned int cnt)
++static __always_inline void __local_bh_disable_ip(unsigned long __unused ip,
++					unsigned int cnt)
+ {
+ 	preempt_count_add(cnt);
+ 	barrier();
+-- 
+2.7.4
 
-> > > ...
-> > >
-> > > > +static u64 gpioline_config_flags(struct gpioline_config *lc, int line_idx)
-> > > > +{
-> > > > +       int i;
-> > > > +
-> > > > +       for (i = lc->num_attrs - 1; i >= 0; i--) {
-> > >
-> > > Much better to read is
-> > >
-> > > unsigned int i = lc->num_attrs;
-> > >
-> > > while (i--) {
-> > >  ...
-> > > }
-> > >
-> >
-> > Really? I find that the post-decrement in the while makes determining the
-> > bounds of the loop more confusing.
-> >
-> 
-> Agreed, Andy: this is too much nit-picking. :)
-> 
-
-I was actually hoping for some feedback on the direction of that loop,
-as it relates to the handling of multiple instances of the same
-attribute associated with a given line.
-
-The reverse loop here implements a last in wins policy, but I'm now
-thinking the kernel should be encouraging userspace to only associate a
-given attribute with a line once, and that a first in wins would help do
-that - as additional associations would be ignored.
-
-Alternatively, the kernel should enforce that an attribute can only be
-associated once, but that would require adding more request validation.
-
-> [snip]
-> 
-> > > ...
-> > >
-> > > > +               struct gpio_desc *desc = gpiochip_get_desc(gdev->chip, offset);
-> > >
-> > > I prefer to see this split, but it's minor.
-> > >
-> > > > +               if (IS_ERR(desc)) {
-> > > > +                       ret = PTR_ERR(desc);
-> > > > +                       goto out_free_line;
-> > > > +               }
-> > >
-> > > ...
-> > >
-> > > > +               dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
-> > > > +                       offset);
-> > >
-> > > Perhaps tracepoint / event?
-> > >
-> >
-> > Again, a cut-and-paste from V1, and I have no experience with
-> > tracepoints or events, so I have no opinion on that.
-> >
-> > So, yeah - perhaps?
-> >
-> 
-> I think it's a good idea to add some proper instrumentation this time
-> other than much less reliable logs. Can you take a look at
-> include/trace/events/gpio.h? Adding new GPIO trace events should be
-> pretty straightforward by copy-pasti... drawing inspiration from
-> existing ones.
-> 
-
-You only want tracepoints to replace those dev_dbg()s, so when a line
-is requested? What about the release?  Any other points?
-
-Cheers,
-Kent.
