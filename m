@@ -2,140 +2,138 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4FDC433E4
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B1B7C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9C8B20885
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:39:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596386342;
-	bh=/OapfRuI75SY/XdIQJESU3T6prS3l8+u9aaoW6/2fF4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dr300FtFE+GJGCagN0nxkZqnD+c7uZCuS22+9mSAr/mOodWClzIDiZaAFqEdp0H2J
-	 UpWYDLgCFtMp8JMS4orQonyvs2QfL2cHqj8Mp2e9MgHPWaJGppwwQ/7wa5kHwfwpWL
-	 /LNQyXuP2YeSifzLMU0h1s07IINyapMlWeSy4m+w=
+	by mail.kernel.org (Postfix) with ESMTP id 04AD620759
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:39:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbgHBQjB (ORCPT
+        id S1727939AbgHBQjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 12:39:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48976 "EHLO mail.kernel.org"
+        Sun, 2 Aug 2020 12:39:13 -0400
+Received: from mailout07.rmx.de ([94.199.90.95]:58461 "EHLO mailout07.rmx.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbgHBQjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 12:39:01 -0400
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1725780AbgHBQjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 12:39:12 -0400
+Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF63120738;
-        Sun,  2 Aug 2020 16:38:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596386340;
-        bh=/OapfRuI75SY/XdIQJESU3T6prS3l8+u9aaoW6/2fF4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U3pdMYelKFOYAPi4XqQuIPvi0oETEzFpuTA29Gb8dtkzX+ka0NaEUYH0C58LpdHB/
-         wG3l284DStkVX5uTLvsOI+c/bAeW0eVhwoTZFrdlFwTetpqjSk7bfexzerRwzS3cCG
-         Cub8e8SRt2PAoFugs0sntHlR7cv3T4VybvnORg3k=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Simek <monstr@monstr.eu>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        clang-built-linux@googlegroups.com,
-        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
-        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
-Subject: [PATCH v2 15/17] memblock: remove unused memblock_mem_size()
-Date:   Sun,  2 Aug 2020 19:35:59 +0300
-Message-Id: <20200802163601.8189-16-rppt@kernel.org>
+        by mailout07.rmx.de (Postfix) with ESMTPS id 4BKRYS3r3jzBvn3;
+        Sun,  2 Aug 2020 18:39:08 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin02.retarus.com (Postfix) with ESMTPS id 4BKRY36QJrz2TS6Z;
+        Sun,  2 Aug 2020 18:38:47 +0200 (CEST)
+Received: from N95HX1G2.wgnetz.xx (192.168.54.16) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Sun, 2 Aug
+ 2020 18:38:24 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Cameron <jic23@kernel.org>
+CC:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Christian Eggers" <ceggers@arri.de>
+Subject: [PATCH v5 0/2] iio: light: Support AMS AS73211 digital XYZ sensor
+Date:   Sun, 2 Aug 2020 18:37:33 +0200
+Message-ID: <20200802163735.76617-1-ceggers@arri.de>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200802163601.8189-1-rppt@kernel.org>
-References: <20200802163601.8189-1-rppt@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [192.168.54.16]
+X-RMX-ID: 20200802-183849-4BKRY36QJrz2TS6Z-0@kdin02
+X-RMX-SOURCE: 217.111.95.66
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+This series adds support for the AMS AS73211 digital XYZ sensor. Some
+comments to the review emails below...
 
-The only user of memblock_mem_size() was x86 setup code, it is gone now and
-memblock_mem_size() funciton can be removed.
+Again, many thanks for the comprehensive reviews.
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- include/linux/memblock.h |  1 -
- mm/memblock.c            | 15 ---------------
- 2 files changed, 16 deletions(-)
+Changes in v5:
+---------------
+- [1/2] Reviewed by Rob Herring
+- [2/2] Added KHZ_PER_HR define
+- [2/2] Added AS73211_SAMPLE_FREQ_BASE define
+- [2/2] Slight changes in comments
+- [2/2] Claim direct mode in write_raw()
+- [2/2] Saturate only in case of overflow
+- [2/2] Don't set indio_dev->dev.parent
+- [2/2] Fix error path (order) in probe()
 
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index d70c2835e913..ec2fd8f32a19 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -450,7 +450,6 @@ static inline bool memblock_bottom_up(void)
- 
- phys_addr_t memblock_phys_mem_size(void);
- phys_addr_t memblock_reserved_size(void);
--phys_addr_t memblock_mem_size(unsigned long limit_pfn);
- phys_addr_t memblock_start_of_DRAM(void);
- phys_addr_t memblock_end_of_DRAM(void);
- void memblock_enforce_memory_limit(phys_addr_t memory_limit);
-diff --git a/mm/memblock.c b/mm/memblock.c
-index c1a4c8798973..48d614352b25 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -1656,21 +1656,6 @@ phys_addr_t __init_memblock memblock_reserved_size(void)
- 	return memblock.reserved.total_size;
- }
- 
--phys_addr_t __init memblock_mem_size(unsigned long limit_pfn)
--{
--	unsigned long pages = 0;
--	unsigned long start_pfn, end_pfn;
--	int i;
--
--	for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, NULL) {
--		start_pfn = min_t(unsigned long, start_pfn, limit_pfn);
--		end_pfn = min_t(unsigned long, end_pfn, limit_pfn);
--		pages += end_pfn - start_pfn;
--	}
--
--	return PFN_PHYS(pages);
--}
--
- /* lowest address */
- phys_addr_t __init_memblock memblock_start_of_DRAM(void)
- {
--- 
-2.26.2
+Changes in v4:
+---------------
+- Integrated 2nd review from Andy Shevchenko
+- Use more devm_ functions in as73211_probe()
+
+Changes in v3:
+---------------
+- Integrated comments from Andy Shevchenko
+- Integrated comments from Jonathan Cameron
+
+Changes in v2:
+---------------
+- Fix $id in dt binding
+- Document full I2C address range in "reg" property
+- Move "buffer" member out of "struct as73211_data"
+- Fix sparse warnings by using correct data types
+
+
+On Friday, 31 July 2020, 17:41:47 CEST, Andy Shevchenko wrote:
+> On Fri, Jul 31, 2020 at 1:52 PM Christian Eggers <ceggers@arri.de> wrote:
+> > devm_iio_device_alloc() doesn't pass 'dev' to iio_device_alloc().
+> > I already looked around, but I didn't find. And after debugging
+> > v5.4, devm_iio_device_alloc() definitely doesn't do it.
+> 
+> Why are you talking about v5.4? We are in v5.8 cycle contributing to v5.9.
+v5.4-rt is the version for my product release. Current base for these
+patches is 5.8-rc6
+
+
+On Friday, 31 July 2020, 18:19:55 CEST, Jonathan Cameron wrote:
+> > On Fri, Jul 31, 2020 at 1:52 PM Christian Eggers <ceggers@arri.de> wrote:
+> > Recently IIO gained some features among which I think the one that
+> > assigns parent devices.
+> 
+> yup. This should be in linux-next now for the coming merge window (which
+> probably opens on Sunday).
+Thanks for the hint. Is there a particular tree which is preferred for
+IIO development?
+
+
+On Saturday, 1 August 2020, 17:29:58 CEST, Jonathan Cameron wrote:
+> On Fri, 31 Jul 2020 09:01:14 +0200 Christian Eggers <ceggers@arri.de> wrote:
+> > +static int as73211_write_raw(struct iio_dev *indio_dev, struct
+> > iio_chan_spec const *chan, +			      int val, int val2, long mask)
+> > +{
+> > +	...
+> > +	/* Need to switch to config mode ... */
+> 
+> Is this safe whilst we are doing a capture?
+> You may want to claim_direct_mode for write_raw to ensure we don't get such
+> a race.
+> 
+That's an important point! As I use iio-trig-sysfs, I never had any
+problems with this. But if for instance iio-trig-hrtimer is active, this
+could become a problem.
+
+In v5, I have claimed direct mode. For the application this means, that
+buffer/enable has to be set to '0' before any settings can be
+changed. As libiio doesn't support enabling/disabling a buffer directly,
+the buffer needs to be destroyed and newly constructed.
+
+
 
