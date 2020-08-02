@@ -2,556 +2,240 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6235C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 21:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC5DC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 21:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E62A207FB
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 21:50:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596405040;
-	bh=U52ZmlpP/BJqqb7oCx/0CfuuQV0PlWo4accycesr3Vw=;
-	h=From:Date:Subject:To:List-ID:From;
-	b=BDi3IpnDXU5IdokhslGD82EHvSAVp14Ky6fGZoTgLGPO8J6MeDQ9ESSrEPkcNLVXH
-	 VaQuUm66wq3+0HVCqWEpanpLEzQFYMZf4zzarG8hYfjrCaFxuHl2yTMFYxE6eqC6Y3
-	 nO1s0vTTuTjkmygApMNmH20NXbkjPTU09TvUWvlM=
+	by mail.kernel.org (Postfix) with ESMTP id D74592076B
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 21:59:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgHBVuj (ORCPT
+        id S1727914AbgHBV7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 17:50:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48946 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbgHBVuj (ORCPT
+        Sun, 2 Aug 2020 17:59:24 -0400
+Received: from smtp-8fac.mail.infomaniak.ch ([83.166.143.172]:44043 "EHLO
+        smtp-8fac.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726813AbgHBV7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 17:50:39 -0400
-Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A6F7C06174A
-        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 14:50:38 -0700 (PDT)
-Received: by mail-lj1-x22d.google.com with SMTP id i10so2854934ljn.2
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 14:50:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=aptUehqVpYxjvQauCZHE1dfylEAk1wVk7L247f5f8Zo=;
-        b=aBk6Upj+b6TXQuKACpYvFErR8pZ75L57L1dwUYA/6iOmiI3vcJu4gqOuTzxDUSbOF0
-         uNBEB0RScismlEgtDPVRgOW918tS8id9aTqe3B4V82/dxml3OjVBtE6HYt0yIydjXGCD
-         W4bV73UceItVtpLBD1SUt3Hy632eCOr+ziQ8Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=aptUehqVpYxjvQauCZHE1dfylEAk1wVk7L247f5f8Zo=;
-        b=lG3WRKYKRdZh7bSvxr3gTMbQRZl/lm2EHAhzdjGiqUCiCbwNBpghse5VgFa7nzC4PK
-         jjT+NAZvD8dZA0lN8/cto1ohs0Qp4PRwUC4g0puq987uXenqGPnxTO45GWFnMT0nkpdS
-         1eSeZGLUBsy0zta8WkpWshQUG50RVtGEXKnjle9B08P6qI4Skxqfozi1Dg4QaG2XHro2
-         6626+xHJpybVsh26pIE6htx2TGK8Mo19+Uj81vWa36qngYUhc+5IoTKU1jtkFp+1zfyQ
-         5Fa/GKRa9ACxzFqCEtrpk4WoF+rEPlhkYW8thoN2h6DfUCEfA8QKHM/nu09Q1GopA8Km
-         FBGw==
-X-Gm-Message-State: AOAM530etIdB+9+yz4uHbfy/6XTe2+Lw2RxbBQfWgjDEoLTVqxWZPWnP
-        G0L68lWTFAGEkIBwP+HSDFslofO8xn4=
-X-Google-Smtp-Source: ABdhPJyhQzzKwvs5rDvzvlL4L8PC7aUxZUWOPTV8qSTq8EtT76++gLkSi8OV7g1hTZXBXO7hHzndlg==
-X-Received: by 2002:a2e:844a:: with SMTP id u10mr6536096ljh.213.1596405036358;
-        Sun, 02 Aug 2020 14:50:36 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id 29sm4016872ljv.72.2020.08.02.14.50.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Aug 2020 14:50:35 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id t23so14102429ljc.3
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 14:50:35 -0700 (PDT)
-X-Received: by 2002:a2e:b008:: with SMTP id y8mr5514769ljk.421.1596405034966;
- Sun, 02 Aug 2020 14:50:34 -0700 (PDT)
+        Sun, 2 Aug 2020 17:59:23 -0400
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4BKZfv5XWpzlhZrs;
+        Sun,  2 Aug 2020 23:59:19 +0200 (CEST)
+Received: from localhost (unknown [94.23.54.103])
+        by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4BKZfs71x8zlh8T5;
+        Sun,  2 Aug 2020 23:59:17 +0200 (CEST)
+From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-security-module@vger.kernel.org, x86@kernel.org
+Subject: [PATCH v20 00/12] Landlock LSM
+Date:   Sun,  2 Aug 2020 23:58:51 +0200
+Message-Id: <20200802215903.91936-1-mic@digikod.net>
+X-Mailer: git-send-email 2.28.0.rc2
 MIME-Version: 1.0
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 2 Aug 2020 14:50:18 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj+mDPbj8hXspXRAksh+1TmPjubc9RNEbu8EVpYyypX=w@mail.gmail.com>
-Message-ID: <CAHk-=wj+mDPbj8hXspXRAksh+1TmPjubc9RNEbu8EVpYyypX=w@mail.gmail.com>
-Subject: Linux 5.8
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So I considered making an rc8 all the way to the last minute, but
-decided it's not just worth waiting another week when there aren't any
-big looming worries around.
+Hi,
+
+This new patch series mainly replace the landlock(2) command multiplexor
+with 4 new dedicated syscalls:
+* landlock_get_features(2)
+* landlock_create_ruleset(2)
+* landlock_add_rule(2)
+* landlock_enforce_ruleset(2)
+
+The SLOC count is 1264 for security/landlock/ and 1712 for
+tools/testing/selftest/landlock/ .  Test coverage for security/landlock/
+is 93.6% of lines.  The code not covered only deals with internal kernel
+errors (e.g. memory allocation) and race conditions.
+
+The compiled documentation is available here:
+https://landlock.io/linux-doc/landlock-v20/security/landlock/index.html
+
+This series can be applied on top of v5.8-rc4 .  This can be tested with
+CONFIG_SECURITY_LANDLOCK and CONFIG_SAMPLE_LANDLOCK.  This patch series
+can be found in a Git repository here:
+https://github.com/landlock-lsm/linux/commits/landlock-v20
+I would really appreciate constructive comments on this patch series.
+
+
+# Landlock LSM
+
+The goal of Landlock is to enable to restrict ambient rights (e.g.
+global filesystem access) for a set of processes.  Because Landlock is a
+stackable LSM [1], it makes possible to create safe security sandboxes
+as new security layers in addition to the existing system-wide
+access-controls. This kind of sandbox is expected to help mitigate the
+security impact of bugs or unexpected/malicious behaviors in user-space
+applications. Landlock empowers any process, including unprivileged
+ones, to securely restrict themselves.
+
+Landlock is inspired by seccomp-bpf but instead of filtering syscalls
+and their raw arguments, a Landlock rule can restrict the use of kernel
+objects like file hierarchies, according to the kernel semantic.
+Landlock also takes inspiration from other OS sandbox mechanisms: XNU
+Sandbox, FreeBSD Capsicum or OpenBSD Pledge/Unveil.
+
+In this current form, Landlock misses some access-control features.
+This enables to minimize this patch series and ease review.  This series
+still addresses multiple use cases, especially with the combined use of
+seccomp-bpf: applications with built-in sandboxing, init systems,
+security sandbox tools and security-oriented APIs [2].
+
+Previous version:
+https://lore.kernel.org/lkml/20200707180955.53024-1-mic@digikod.net/
+
+[1] https://lore.kernel.org/lkml/50db058a-7dde-441b-a7f9-f6837fe8b69f@schaufler-ca.com/
+[2] https://lore.kernel.org/lkml/f646e1c7-33cf-333f-070c-0a40ad0468cd@digikod.net/
+
+
+Casey Schaufler (1):
+  LSM: Infrastructure management of the superblock
+
+Mickaël Salaün (11):
+  landlock: Add object management
+  landlock: Add ruleset and domain management
+  landlock: Set up the security framework and manage credentials
+  landlock: Add ptrace restrictions
+  fs,security: Add sb_delete hook
+  landlock: Support filesystem access-control
+  landlock: Add syscall implementations
+  arch: Wire up Landlock syscalls
+  selftests/landlock: Add initial tests
+  samples/landlock: Add a sandbox manager example
+  landlock: Add user and kernel documentation
+
+ Documentation/security/index.rst              |    1 +
+ Documentation/security/landlock/index.rst     |   18 +
+ Documentation/security/landlock/kernel.rst    |   69 +
+ Documentation/security/landlock/user.rst      |  271 +++
+ MAINTAINERS                                   |   11 +
+ arch/Kconfig                                  |    7 +
+ arch/alpha/kernel/syscalls/syscall.tbl        |    4 +
+ arch/arm/tools/syscall.tbl                    |    4 +
+ arch/arm64/include/asm/unistd.h               |    2 +-
+ arch/arm64/include/asm/unistd32.h             |    8 +
+ arch/ia64/kernel/syscalls/syscall.tbl         |    4 +
+ arch/m68k/kernel/syscalls/syscall.tbl         |    4 +
+ arch/microblaze/kernel/syscalls/syscall.tbl   |    4 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl     |    4 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl     |    4 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl     |    4 +
+ arch/parisc/kernel/syscalls/syscall.tbl       |    4 +
+ arch/powerpc/kernel/syscalls/syscall.tbl      |    4 +
+ arch/s390/kernel/syscalls/syscall.tbl         |    4 +
+ arch/sh/kernel/syscalls/syscall.tbl           |    4 +
+ arch/sparc/kernel/syscalls/syscall.tbl        |    4 +
+ arch/um/Kconfig                               |    1 +
+ arch/x86/entry/syscalls/syscall_32.tbl        |    4 +
+ arch/x86/entry/syscalls/syscall_64.tbl        |    4 +
+ arch/xtensa/kernel/syscalls/syscall.tbl       |    4 +
+ fs/super.c                                    |    1 +
+ include/linux/lsm_hook_defs.h                 |    1 +
+ include/linux/lsm_hooks.h                     |    3 +
+ include/linux/security.h                      |    4 +
+ include/linux/syscalls.h                      |    8 +
+ include/uapi/asm-generic/unistd.h             |   10 +-
+ include/uapi/linux/landlock.h                 |  209 ++
+ kernel/sys_ni.c                               |    6 +
+ samples/Kconfig                               |    7 +
+ samples/Makefile                              |    1 +
+ samples/landlock/.gitignore                   |    1 +
+ samples/landlock/Makefile                     |   15 +
+ samples/landlock/sandboxer.c                  |  248 +++
+ security/Kconfig                              |   11 +-
+ security/Makefile                             |    2 +
+ security/landlock/Kconfig                     |   18 +
+ security/landlock/Makefile                    |    4 +
+ security/landlock/common.h                    |   20 +
+ security/landlock/cred.c                      |   46 +
+ security/landlock/cred.h                      |   58 +
+ security/landlock/fs.c                        |  609 ++++++
+ security/landlock/fs.h                        |   60 +
+ security/landlock/object.c                    |   66 +
+ security/landlock/object.h                    |   91 +
+ security/landlock/ptrace.c                    |  120 ++
+ security/landlock/ptrace.h                    |   14 +
+ security/landlock/ruleset.c                   |  342 ++++
+ security/landlock/ruleset.h                   |  157 ++
+ security/landlock/setup.c                     |   40 +
+ security/landlock/setup.h                     |   18 +
+ security/landlock/syscall.c                   |  571 ++++++
+ security/security.c                           |   51 +-
+ security/selinux/hooks.c                      |   58 +-
+ security/selinux/include/objsec.h             |    6 +
+ security/selinux/ss/services.c                |    3 +-
+ security/smack/smack.h                        |    6 +
+ security/smack/smack_lsm.c                    |   35 +-
+ tools/testing/selftests/Makefile              |    1 +
+ tools/testing/selftests/landlock/.gitignore   |    2 +
+ tools/testing/selftests/landlock/Makefile     |   29 +
+ tools/testing/selftests/landlock/base_test.c  |  154 ++
+ tools/testing/selftests/landlock/common.h     |  122 ++
+ tools/testing/selftests/landlock/config       |    5 +
+ tools/testing/selftests/landlock/fs_test.c    | 1698 +++++++++++++++++
+ .../testing/selftests/landlock/ptrace_test.c  |  310 +++
+ tools/testing/selftests/landlock/true.c       |    5 +
+ 71 files changed, 5621 insertions(+), 77 deletions(-)
+ create mode 100644 Documentation/security/landlock/index.rst
+ create mode 100644 Documentation/security/landlock/kernel.rst
+ create mode 100644 Documentation/security/landlock/user.rst
+ create mode 100644 include/uapi/linux/landlock.h
+ create mode 100644 samples/landlock/.gitignore
+ create mode 100644 samples/landlock/Makefile
+ create mode 100644 samples/landlock/sandboxer.c
+ create mode 100644 security/landlock/Kconfig
+ create mode 100644 security/landlock/Makefile
+ create mode 100644 security/landlock/common.h
+ create mode 100644 security/landlock/cred.c
+ create mode 100644 security/landlock/cred.h
+ create mode 100644 security/landlock/fs.c
+ create mode 100644 security/landlock/fs.h
+ create mode 100644 security/landlock/object.c
+ create mode 100644 security/landlock/object.h
+ create mode 100644 security/landlock/ptrace.c
+ create mode 100644 security/landlock/ptrace.h
+ create mode 100644 security/landlock/ruleset.c
+ create mode 100644 security/landlock/ruleset.h
+ create mode 100644 security/landlock/setup.c
+ create mode 100644 security/landlock/setup.h
+ create mode 100644 security/landlock/syscall.c
+ create mode 100644 tools/testing/selftests/landlock/.gitignore
+ create mode 100644 tools/testing/selftests/landlock/Makefile
+ create mode 100644 tools/testing/selftests/landlock/base_test.c
+ create mode 100644 tools/testing/selftests/landlock/common.h
+ create mode 100644 tools/testing/selftests/landlock/config
+ create mode 100644 tools/testing/selftests/landlock/fs_test.c
+ create mode 100644 tools/testing/selftests/landlock/ptrace_test.c
+ create mode 100644 tools/testing/selftests/landlock/true.c
+
+-- 
+2.28.0.rc2
 
-Because despite the merge window having been very large, there really
-hasn't been anything scary going on in the release candidates. Yeah,
-we had some annoying noise with header file dependencies this week,
-but that's not a new annoyance, and it's also not the kind of subtle
-bug that keeps me up at night worrying about it.
-
-It did reinforce how nice it would be if we had some kind of tooling
-support to break nasty header file dependencies automatically, but if
-wishes were horses.. Maybe some day we'll have some kind of SAT-solver
-for symbol dependencies that can handle all our different
-architectures and configurations, but right now it's just a manual
-pain that occasionally bites us.
-
-Anyway..
-
-Aside from silly header file noise, the last week was mostly dominated
-by the networking pull, which accounts for about half of the changes
-(mellanox drivers and selftests stand out, but there's other smaller
-things in there too). Some RCU fixes stand out.
-
-Outside of the networking stuff, it's mostly various small driver
-fixes (gpu, rdma, sound and pinctrl being much of it), and some minor
-architecture noise (arm, x86, powerpc). But it's all fairly small.
-
-So there it is, a shiny new kernel. Give it a whirl before all you
-people start sending me the pull requests for the merge window, which
-I'll start handling tomorrow..
-
-                 Linus
-
----
-
-Aaron Ma (1):
-      e1000e: continue to init PHY even when failed to disable ULP
-
-Akash Asthana (1):
-      MAINTAINERS: Update GENI I2C maintainers list
-
-Al Viro (1):
-      fix a braino in cmsghdr_from_user_compat_to_kern()
-
-Alaa Hleihel (1):
-      net/mlx5e: Fix kernel crash when setting vf VLANID on a VF dev
-
-Alain Michaud (1):
-      Bluetooth: fix kernel oops in store_pending_adv_report
-
-Alex Deucher (1):
-      Revert "drm/amdgpu: Fix NULL dereference in dpm sysfs handlers"
-
-Alexander Duyck (1):
-      virtio-balloon: Document byte ordering of poison_val
-
-Amit Cohen (1):
-      selftests: ethtool: Fix test when only two speeds are supported
-
-Andrii Nakryiko (2):
-      bpf: Fix map leak in HASH_OF_MAPS map
-      selftests/bpf: Extend map-in-map selftest to detect memory leaks
-
-Ard Biesheuvel (1):
-      ARM: 8988/1: mmu: fix crash in EFI calls due to p4d typo in
-create_mapping_late()
-
-Armas Spann (2):
-      ALSA: hda/realtek: enable headset mic of ASUS ROG Zephyrus
-G15(GA502) series with ALC289
-      ALSA: hda/realtek: typo_fix: enable headset mic of ASUS ROG
-Zephyrus G14(GA401) series with ALC289
-
-Aya Levin (1):
-      net/mlx5e: Fix error path of device attach
-
-Ben Hutchings (1):
-      libtraceevent: Fix build with binutils 2.35
-
-Ben Skeggs (5):
-      drm/nouveau/disp/gm200-: fix regression from HDA SOR selection change=
-s
-      drm/nouveau/kms/gf100: use correct format modifiers
-      drm/nouveau/kms/tu102: wait for core update to complete when
-assigning windows
-      drm/nouveau/fbcon: fix module unload when fbcon init has failed
-for some reason
-      drm/nouveau/fbcon: zero-initialise the mode_cmd2 structure
-
-Biju Das (1):
-      drm: of: Fix double-free bug
-
-Christoph Hellwig (3):
-      net/9p: validate fds in p9_fd_open
-      nvme: add a Identify Namespace Identification Descriptor list quirk
-      net/bpfilter: Initialize pos in __bpfilter_process_sockopt
-
-Cong Wang (1):
-      ipv6: fix memory leaks on IPV6_ADDRFORM path
-
-David Howells (1):
-      rxrpc: Fix race between recvmsg and sendmsg on immediate call failure
-
-Douglas Anderson (2):
-      pinctrl: qcom: Handle broken/missing PDC dual edge IRQs on sc7180
-      drm: panel: simple: Delay HPD checking on boe_nv133fhm_n61 for 15 ms
-
-Eran Ben Elisha (3):
-      net/mlx5: Fix a bug of using ptp channel index as pin index
-      net/mlx5: Verify Hardware supports requested ptp function on a given =
-pin
-      net/mlx5: Query PPS pin operational status before registering it
-
-Fabio Estevam (2):
-      ARM: dts: imx6sx-sdb: Fix the phy-mode on fec2
-      ARM: dts: imx6sx-sabreauto: Fix the phy-mode on fec2
-
-Felix Fietkau (1):
-      mac80211: remove STA txq pending airtime underflow warning
-
-Francesco Ruggeri (1):
-      igb: reinit_locked() should be called with rtnl_lock
-
-Grygorii Strashko (2):
-      ARM: dts: keystone-k2g-evm: fix rgmii phy-mode for ksz9031 phy
-      ARM: percpu.h: fix build error
-
-Guido G=C3=BCnther (1):
-      drm/bridge: nwl-dsi: Drop DRM_BRIDGE_ATTACH_NO_CONNECTOR check.
-
-Guillaume Nault (1):
-      bareudp: forbid mixing IP and MPLS in multiproto mode
-
-Guojia Liao (2):
-      net: hns3: fix aRFS FD rules leftover after add a user FD rule
-      net: hns3: fix for VLAN config when reset failed
-
-Hangbin Liu (1):
-      selftests/bpf: fix netdevsim trap_flow_action_cookie read
-
-Herbert Xu (2):
-      rhashtable: Fix unprotected RCU dereference in __rht_ptr
-      rhashtable: Restore RCU marking on rhash_lock_head
-
-Ido Schimmel (7):
-      vxlan: Ensure FDB dump is performed under RCU
-      ipv4: Silence suspicious RCU usage warning
-      mlxsw: spectrum_router: Allow programming link-local host routes
-      mlxsw: spectrum: Use different trap group for externally routed packe=
-ts
-      mlxsw: core: Increase scope of RCU read-side critical section
-      mlxsw: core: Free EMAD transactions using kfree_rcu()
-      mlxsw: spectrum_router: Fix use-after-free in router init / de-init
-
-Jaedon Shin (1):
-      ARM: 8987/1: VDSO: Fix incorrect clock_gettime64
-
-Jakub Kicinski (2):
-      mlx4: disable device on shutdown
-      devlink: ignore -EOPNOTSUPP errors on dumpit
-
-James Jones (1):
-      drm/nouveau: Accept 'legacy' format modifiers
-
-Jason Gunthorpe (2):
-      RDMA/cm: Add min length checks to user structure copies
-      RDMA/mlx5: Fix prefetch memory leak if get_prefetchable_mr fails
-
-Jean-Philippe Brucker (1):
-      selftests/bpf: Fix cgroup sockopt verifier test
-
-Jian Shen (1):
-      net: hns3: add reset check for VF updating port based VLAN
-
-Jianbo Liu (3):
-      net/mlx5e: CT: Support restore ipv6 tunnel
-      net/mlx5e: E-Switch, Add misc bit when misc fields changed for mirror=
-ing
-      net/mlx5e: E-Switch, Specify flow_source for rule with no in_port
-
-Jitao Shi (1):
-      drm/panel: Fix auo, kd101n80-45na horizontal noise on edges of panel
-
-Johan Hovold (3):
-      net: lan78xx: add missing endpoint sanity check
-      net: lan78xx: fix transfer-buffer memory leak
-      net: lan78xx: replace bogus endpoint lookup
-
-John Garry (1):
-      MAINTAINERS: Include drivers subdirs for ARM PMU PROFILING AND
-DEBUGGING entry
-
-Joyce Ooi (1):
-      MAINTAINERS: Replace Thor Thayer as Altera Triple Speed Ethernet
-maintainer
-
-Julian Squires (1):
-      cfg80211: check vendor command doit pointer before use
-
-Kai-Heng Feng (1):
-      nvme-pci: prevent SK hynix PC400 from using Write Zeroes command
-
-Kailang Yang (1):
-      ALSA: hda/realtek - Fixed HP right speaker no sound
-
-Landen Chao (1):
-      net: ethernet: mtk_eth_soc: fix MTU warnings
-
-Laurence Tratt (1):
-      ALSA: usb-audio: Add implicit feedback quirk for SSL2
-
-Laurentiu Palcu (1):
-      drm/bridge/adv7511: set the bridge type properly
-
-Leon Romanovsky (4):
-      RDMA/mlx5: Allow providing extra scatter CQE QP flag
-      RDMA/mlx5: Initialize QP mutex for the debug kernels
-      RDMA/core: Stop DIM before destroying CQ
-      RDMA/core: Free DIM memory in error unwind
-
-Linus Torvalds (2):
-      random32: remove net_rand_state from the latent entropy gcc plugin
-      Linux 5.8
-
-Linus Walleij (1):
-      drm/mcde: Fix stability issue
-
-Lu Wei (1):
-      net: nixge: fix potential memory leak in nixge_probe()
-
-Maor Dickman (1):
-      net/mlx5e: Fix missing cleanup of ethtool steering during rep rx clea=
-nup
-
-Maor Gottlieb (1):
-      net/mlx5: Fix forward to next namespace
-
-Marc Zyngier (2):
-      KVM: arm64: Prevent vcpu_has_ptrauth from generating OOL functions
-      arm64: Drop unnecessary include from asm/smp.h
-
-Mark Salyzyn (1):
-      af_key: pfkey_dump needs parameter validation
-
-Martin Varghese (1):
-      Documentation: bareudp: Corrected description of bareudp module.
-
-Masahiro Yamada (8):
-      kconfig: qconf: use if_changed for qconf.moc rule
-      kconfig: qconf: compile moc object separately
-      kconfig: qconf: use delete[] instead of delete to free array
-      kconfig: qconf: remove "goBack" debug message
-      Revert "kconfig: qconf: Change title for the item window"
-      Revert "kconfig: qconf: don't show goback button on splitMode"
-      kconfig: qconf: remove wrong ConfigList::firstChild()
-      kbuild: remove redundant FORCE definition in scripts/Makefile.modpost
-
-Matthieu Baerts (1):
-      mptcp: fix joined subflows with unblocking sk
-
-Maxime Ripard (2):
-      ARM: dts sunxi: Relax a bit the CMA pool allocation range
-      arm64: dts: allwinner: h6: Fix Cedrus IOMMU usage
-
-Mazin Rezk (1):
-      drm/amd/display: Clear dm_state for fast updates
-
-Michael Karcher (1):
-      sh: Fix validation of system call number
-
-Michael S. Tsirkin (2):
-      vhost/scsi: fix up req type endian-ness
-      virtio_balloon: fix up endian-ness for free cmd id
-
-Michael Trimarchi (1):
-      ARM: dts: imx6qdl-icore: Fix OTG_ID pin and sdcard detect
-
-Mike Marciniszyn (1):
-      IB/rdmavt: Fix RQ counting issues causing use of an invalid RWQE
-
-Nicholas Piggin (1):
-      powerpc/64s/hash: Fix hash_preload running with interrupts enabled
-
-Paolo Bonzini (3):
-      selftests: kvm: do not set guest mode flag
-      KVM: nVMX: check for required but missing VMCS12 in KVM_SET_NESTED_ST=
-ATE
-      KVM: nVMX: check for invalid hdr.vmx.flags
-
-Parav Pandit (2):
-      net/mlx5: E-switch, Destroy TSAR when fail to enable the mode
-      net/mlx5: E-switch, Destroy TSAR after reload interface
-
-Paul Cercueil (1):
-      drm/dbi: Fix SPI Type 1 (9-bit) transfer
-
-Paul Moore (1):
-      revert: 1320a4052ea1 ("audit: trigger accompanying records when
-no rules present")
-
-Pavel Begunkov (2):
-      io_uring: fix ->work corruption with poll_add
-      io_uring: fix lockup in io_fail_links()
-
-Pavel Machek (1):
-      signal: fix typo in dequeue_synchronous_signal()
-
-PeiSen Hou (1):
-      ALSA: hda/realtek: Fix add a "ultra_low_power" function for
-intel reference board (alc256)
-
-Peilin Ye (3):
-      bpf: Fix NULL pointer dereference in __btf_resolve_helper_id()
-      drm/amdgpu: Prevent kernel-infoleak in amdgpu_info_ioctl()
-      rds: Prevent kernel-infoleak in rds_notify_queue_get()
-
-Peter Zijlstra (1):
-      sh/tlb: Fix PGTABLE_LEVELS > 2
-
-Philippe Duplessis-Guindon (1):
-      tools lib traceevent: Fix memory leak in process_dynamic_array_len
-
-Qiushi Wu (1):
-      firmware: Fix a reference count leak.
-
-Raed Salem (1):
-      net/mlx5e: Fix slab-out-of-bounds in mlx5e_rep_is_lag_netdev
-
-Rajkumar Manoharan (1):
-      mac80211: fix warning in 6 GHz IE addition in mesh mode
-
-Ranjani Sridharan (1):
-      ALSA: hda: fix NULL pointer dereference during suspend
-
-Remi Pommarel (2):
-      mac80211: mesh: Free ie data when leaving mesh
-      mac80211: mesh: Free pending skb when destroying a mpath
-
-Ren=C3=A9 van Dorst (1):
-      net: ethernet: mtk_eth_soc: Always call mtk_gmac0_rgmii_adjust()
-for mt7623
-
-Robert Hancock (1):
-      PCI/ASPM: Disable ASPM on ASMedia ASM1083/1085 PCIe-to-PCI bridge
-
-Robin Murphy (1):
-      arm64: csum: Fix handling of bad packets
-
-Ron Diskin (1):
-      net/mlx5e: Modify uplink state on interface up/down
-
-Russell King (1):
-      ARM: dts: armada-38x: fix NETA lockup when repeatedly switching speed=
-s
-
-Rustam Kovhaev (1):
-      usb: hso: check for return value in hso_serial_common_create()
-
-Sabrina Dubroca (7):
-      xfrm: esp6: fix encapsulation header offset computation
-      espintcp: support non-blocking sends
-      espintcp: recv() should return 0 when the peer socket is closed
-      xfrm: policy: fix IPv6-only espintcp compilation
-      xfrm: esp6: fix the location of the transport header with encapsulati=
-on
-      espintcp: handle short messages instead of breaking the encap socket
-      espintcp: count packets dropped in espintcp_rcv
-
-Sagi Grimberg (1):
-      nvme-tcp: fix possible hang waiting for icresp response
-
-Sam Ravnborg (1):
-      drm/drm_fb_helper: fix fbdev with sparc64
-
-Sami Tolvanen (1):
-      arm64/alternatives: move length validation inside the subsection
-
-Shannon Nelson (1):
-      ionic: unlock queue mutex in error path
-
-Stafford Horne (1):
-      io: Fix return type of _inb and _inl
-
-Steffen Klassert (1):
-      xfrm: Fix crash when the hold queue is used.
-
-Steve Cohen (1):
-      drm: hold gem reference until object is no longer accessed
-
-Subbaraya Sundeep (3):
-      octeontx2-pf: Fix reset_task bugs
-      octeontx2-pf: cancel reset_task work
-      octeontx2-pf: Unregister netdev at driver remove
-
-Taehee Yoo (1):
-      vxlan: fix memleak of fdb
-
-Takashi Iwai (2):
-      ALSA: hda: Workaround for spurious wakeups on some Intel platforms
-      ALSA: hda/hdmi: Fix keep_power assignment for non-component devices
-
-Tanner Love (4):
-      selftests/net: rxtimestamp: fix clang issues for target arch PowerPC
-      selftests/net: psock_fanout: fix clang issues for target arch PowerPC
-      selftests/net: so_txtime: fix clang issues for target arch PowerPC
-      selftests/net: tcp_mmap: fix clang warning for target arch PowerPC
-
-Thomas Falcon (1):
-      ibmvnic: Fix IRQ mapping disposal in error path
-
-Thomas Gleixner (1):
-      x86/i8259: Use printk_deferred() to prevent deadlock
-
-Thomas Richter (1):
-      perf tests: Fix test 68 zstd compression for s390
-
-Vasanthakumar Thiagarajan (1):
-      mac80211: Fix bug in Tx ack status reporting in 802.3 xmit path
-
-Wang Hai (2):
-      9p/trans_fd: Fix concurrency del of req_list in
-p9_fd_cancelled/p9_read_work
-      net: gemini: Fix missing clk_disable_unprepare() in error path
-of gemini_ethernet_port_probe()
-
-Wanpeng Li (2):
-      KVM: LAPIC: Prevent setting the tscdeadline timer if the lapic
-is hw disabled
-      KVM: SVM: Fix disable pause loop exit/pause filtering capability on S=
-VM
-
-Wei Li (1):
-      perf tools: Fix record failure when mixed with ARM SPE event
-
-Weilong Chen (1):
-      virtio-mem: Fix build error due to improper use 'select'
-
-Will Deacon (2):
-      ARM: 8986/1: hw_breakpoint: Don't invoke overflow handler on
-uaccess watchpoints
-      KVM: arm64: Don't inherit exec permission across page-table levels
-
-Willy Tarreau (2):
-      random32: update the net random state on interrupt and activity
-      random: fix circular include dependency on arm64 after addition
-of percpu.h
-
-Wolfram Sang (4):
-      modpost: explain why we can't use strsep
-      i2c: also convert placeholder function to return errno
-      i2c: slave: improve sanity check when registering
-      i2c: slave: add sanity check when unregistering
-
-Xin Long (1):
-      xfrm: policy: match with both mark and mask on user interfaces
-
-Xin Xiong (2):
-      atm: fix atm_dev refcnt leaks in atmtcp_remove_persistent
-      net/mlx5e: fix bpf_prog reference count leaks in mlx5e_alloc_rq
-
-Xiyu Yang (1):
-      ipv6: Fix nexthop refcnt leak when creating ipv6 route info
-
-Yonglong Liu (1):
-      net: hns3: fix a TX timeout issue
-
-Yunsheng Lin (1):
-      net: hns3: fix desc filling bug when skb is expanded or lineared
-
-laurent brando (1):
-      net: mscc: ocelot: fix hardware timestamp dequeue logic
-
-liujian (1):
-      net/sched: The error lable position is corrected in ct_init_module
