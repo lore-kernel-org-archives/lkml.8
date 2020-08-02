@@ -2,118 +2,147 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD53C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 03:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E3EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 03:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48ED62076A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 03:05:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VRMDBAM8"
+	by mail.kernel.org (Postfix) with ESMTP id 9F7B02067D
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 03:07:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596337677;
+	bh=BDe3yrs2v8VZq1a11x+flngPwziIhT6reSqN/ADz+Do=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HWiXcoJ7JUGFPTW23OmjSKTYXytJGorovyaQCELw9guG6xzyQ72VJC8q5lIgJ0gZ2
+	 TN7Bp4ztqJK/FLrLB5WJVtPT3j08Rf93O3KiIrb8dB6Y2b3mZcXJptq3NkARw7zF/S
+	 GO/Oaet226VA/yYz6yWKf41IksAjaAhX+/vCnZJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgHBDFw (ORCPT
+        id S1727997AbgHBDH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 23:05:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47150 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgHBDFw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 23:05:52 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3DCFC06174A;
-        Sat,  1 Aug 2020 20:05:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=C4AUGMo+yuGybGuPXaC+2uX4qyRucKB6ZNOOmOkSD7E=; b=VRMDBAM8eiF63PV0r/ghc0PsFd
-        kToIrHCsMaLbDIek4RS2VMdEYR9s9dJKNi4IiVZDdFY9BUZswQg8Kh9fD77vIOOOgSP75CJZR6tEb
-        ddfSSx1e8+ja8zK406tiGQem3almmIQSkZ5PR+HQEgq+9JikToOeYf8YhcwhQfg3PKzS9vLLIljiM
-        jYCRmU6prmsOaOWUKBQCdWCc4qN4yWyi2IPLj2+oMdV6B0uR7WJNusigjkCGMUn5QMr9hH9n8zog4
-        xS/twN4+ewlnCdh06/WFQ6PNz6KyTvFhV/hy1TjBTuVjYWTVA6Dm7gDmoe8JeipieZT4zkxg+jZ5P
-        dr4+XU+Q==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k24Jm-0004Sk-6Q; Sun, 02 Aug 2020 03:05:46 +0000
-Subject: Re: [PATCH mmotm] tmpfs: support 64-bit inums per-sb fix
-To:     Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chris Down <chris@chrisdown.name>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-References: <cover.1594661218.git.chris@chrisdown.name>
- <8b23758d0c66b5e2263e08baf9c4b6a7565cbd8f.1594661218.git.chris@chrisdown.name>
- <alpine.LSU.2.11.2008011223120.10700@eggly.anvils>
- <alpine.LSU.2.11.2008011928010.13320@eggly.anvils>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <4d2af3f7-eb4f-6313-1719-b1c532c9a96d@infradead.org>
-Date:   Sat, 1 Aug 2020 20:05:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sat, 1 Aug 2020 23:07:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44182 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbgHBDH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 23:07:56 -0400
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E8BE2067D
+        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 03:07:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596337675;
+        bh=BDe3yrs2v8VZq1a11x+flngPwziIhT6reSqN/ADz+Do=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=K+ksXFY7u11n48uVBOuFNHQQ9C51A4Cx58+FxIOWeKiJEnIL5aj1+hUZK1aggDn1z
+         myxPzZKhwAtNJMXb4+HnJmr6aMIR00n7EUNU0o1eHBY3QdqzCwEtTAvlh4i3oNpMo0
+         jhBDyaCR35CyK0BXxAATuMXx20uru00c1cnKX3RE=
+Received: by mail-ed1-f47.google.com with SMTP id n2so24925514edr.5
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 20:07:54 -0700 (PDT)
+X-Gm-Message-State: AOAM533G/PGVP4RVb7Wa+v2EbYYLNlj6H40IuVaFsRhrorOSYaCZTHlV
+        Q16abCjyc8Fh4FQp857dViU9+PUCGtGmm1R6/g==
+X-Google-Smtp-Source: ABdhPJyuI+jxJ9FjQ8z4X4OB88xraUiJO81XEDCBTWmaeVREdXxTr4LuiheHcUQRI8EXwQMSWtSMj+P+/FhYw6yGYmE=
+X-Received: by 2002:a05:6402:2037:: with SMTP id ay23mr10069970edb.48.1596337673694;
+ Sat, 01 Aug 2020 20:07:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.11.2008011928010.13320@eggly.anvils>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200728111800.77641-1-frank-w@public-files.de> <20200728111800.77641-5-frank-w@public-files.de>
+In-Reply-To: <20200728111800.77641-5-frank-w@public-files.de>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sun, 2 Aug 2020 11:07:41 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_99VEs2aNAoWBJhcCMsem5ewmV18B=GMLc_n-Wico_+Hg@mail.gmail.com>
+Message-ID: <CAAOTY_99VEs2aNAoWBJhcCMsem5ewmV18B=GMLc_n-Wico_+Hg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] drm/mediatek: dpi/dsi: change the getting
+ possible_crtc way
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jitao Shi <jitao.shi@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/1/20 7:37 PM, Hugh Dickins wrote:
-> Expanded Chris's Documentation and Kconfig help on tmpfs inode64.
-> TMPFS_INODE64 still there, still default N, but writing down its very
-> limited limitation does make me wonder again if we want the option.
-> 
-> Signed-off-by: Hugh Dickins <hughd@google.com>
+Hi, Frank:
+
+Frank Wunderlich <frank-w@public-files.de> =E6=96=BC 2020=E5=B9=B47=E6=9C=
+=8828=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=887:18=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+
+>
+> From: Jitao Shi <jitao.shi@mediatek.com>
+>
+> [Detail]
+> dpi/dsi get the possible_crtc by
+> mtk_drm_find_possible_crtc_by_comp(*drm_dev, ddp_comp)
+>
+
+I would like more information of why do this patch. For example:
+
+For current mediatek dsi encoder, its possible crtc is fixed in crtc
+0, and mediatek dpi encoder's possible crtc is fixed in crtc 1. In
+some SoC the possible crtc is not fixed in this case, so call
+mtk_drm_find_possible_crtc_by_comp() to find out the correct possible
+crtc.
+
+Regards,
+Chun-Kuang.
+
+> Test: build pass and boot to logo
+>
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 > ---
-> Andrew, please fold into tmpfs-support-64-bit-inums-per-sb.patch later.
-> 
-> Randy, you're very active on Documentation and linux-next: may I ask you
-> please to try applying this patch to latest, and see if tmpfs.rst comes
-> out looking right to you?  I'm an old dog still stuck in the days of
-
-Hi Hugh,
-It looks fine.
-
-> tmpfs.txt, hoping to avoid new tricks for a while.  Thanks!  (Bonus
-> points if you can explain what the "::" on line 122 is about. I started
-> out reading Documentation/doc-guide/sphinx.rst, but... got diverted.
-> Perhaps I should ask Mauro or Jon, but turning for help first to you.)
-
-That's the correct file. Around line 216, it says:
-
-* For inserting fixed width text blocks (for code examples, use case
-  examples, etc.), use ``::`` for anything that doesn't really benefit
-  from syntax highlighting, especially short snippets. Use
-  ``.. code-block:: <language>`` for longer code blocks that benefit
-  from highlighting. For a short snippet of code embedded in the text, use \`\`.
-
-
-so it's just for a (short) code example block, fixed font...
-
-
-> 
->  Documentation/filesystems/tmpfs.rst |   13 ++++++++++---
->  fs/Kconfig                          |   16 +++++++++++-----
->  2 files changed, 21 insertions(+), 8 deletions(-)
-> 
-> --- mmotm/Documentation/filesystems/tmpfs.rst	2020-07-27 18:54:51.116524795 -0700
-> +++ linux/Documentation/filesystems/tmpfs.rst	2020-08-01 18:37:07.719713987 -0700
-
-
-
-cheers.
--- 
-~Randy
-
+>  drivers/gpu/drm/mediatek/mtk_dpi.c | 3 ++-
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 3 ++-
+>  2 files changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediate=
+k/mtk_dpi.c
+> index d4f0fb7ad312..e43977015843 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
+> @@ -608,7 +608,8 @@ static int mtk_dpi_bind(struct device *dev, struct de=
+vice *master, void *data)
+>         drm_encoder_helper_add(&dpi->encoder, &mtk_dpi_encoder_helper_fun=
+cs);
+>
+>         /* Currently DPI0 is fixed to be driven by OVL1 */
+> -       dpi->encoder.possible_crtcs =3D BIT(1);
+> +       dpi->encoder.possible_crtcs =3D
+> +               mtk_drm_find_possible_crtc_by_comp(drm_dev, dpi->ddp_comp=
+);
+>
+>         ret =3D drm_bridge_attach(&dpi->encoder, dpi->bridge, NULL, 0);
+>         if (ret) {
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediate=
+k/mtk_dsi.c
+> index 270bf22c98fe..c31d9c12d4a9 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -892,7 +892,8 @@ static int mtk_dsi_create_conn_enc(struct drm_device =
+*drm, struct mtk_dsi *dsi)
+>          * Currently display data paths are statically assigned to a crtc=
+ each.
+>          * crtc 0 is OVL0 -> COLOR0 -> AAL -> OD -> RDMA0 -> UFOE -> DSI0
+>          */
+> -       dsi->encoder.possible_crtcs =3D 1;
+> +       dsi->encoder.possible_crtcs =3D
+> +               mtk_drm_find_possible_crtc_by_comp(drm, dsi->ddp_comp);
+>
+>         /* If there's a bridge, attach to it and let it create the connec=
+tor */
+>         if (dsi->bridge) {
+> --
+> 2.25.1
+>
