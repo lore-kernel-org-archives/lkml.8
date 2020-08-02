@@ -2,113 +2,100 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 089B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 10:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A0AC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 10:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D47B52075A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 10:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36E412075A
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 10:49:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Xbc+rEIN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbgHBKsx (ORCPT
+        id S1728093AbgHBKtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 06:48:53 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:36977 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbgHBKsw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 06:48:52 -0400
-Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N6c0W-1kp4iC24vm-0182c1 for <linux-kernel@vger.kernel.org>; Sun, 02 Aug
- 2020 12:48:50 +0200
-Received: by mail-qt1-f182.google.com with SMTP id c12so17259796qtn.9
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 03:48:50 -0700 (PDT)
-X-Gm-Message-State: AOAM533w7XPaqDcC436DxVuAHHOddiW71FyQZ86VcXJ5sCOAIq3eXhEL
-        AtYzCO+P0lkl0HDdNqXdpLjyL3PESlw3RuVlGBU=
-X-Google-Smtp-Source: ABdhPJzf7r69SJnZE7dgiyqiOZlGugwB3VvFrPiXTsViaVSwnZRTWmLBWUbY5NzH2nKwSgzfKWTGslZhrEN9SWRzWzM=
-X-Received: by 2002:aed:33e7:: with SMTP id v94mr11562770qtd.18.1596365329348;
- Sun, 02 Aug 2020 03:48:49 -0700 (PDT)
+        Sun, 2 Aug 2020 06:49:10 -0400
+Received: from ozlabs.org ([203.11.71.1]:54667 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726416AbgHBKtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 06:49:09 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BKHnH019cz9sTC;
+        Sun,  2 Aug 2020 20:48:50 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596365342;
+        bh=0e58QyusNP7dBqOpUMMNzByT3A8iFjdlwagp9rs7fZg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Xbc+rEINC/p8zdMP+wVqqxEYzzUg/s2Trwsg5PiaxXCKJdhlz4Ailqan+untf9cXa
+         zJXvEU+96RTuI5t/iUJTbDy2cNq1ktxJDxdxQJ8wkEpzGe8vf5EnljHXCbsplzApAJ
+         gjczTxgVNtgkTh0I9Xkt2bSBvnCzpT/hj43DjS5jaI60mMErx+iFTsc396SR55bOZe
+         d6/u2VL+7KYetz5csrN+5qDId8Q17KayHwxszQXltc+WBhNAXorgnIwY6xlVaqWlS6
+         irxVQOxwk1Ww23sGxIfAZo2i6MBuZgjDd4x2iG12afCEa1rIgpghe9Y8QrVbAyZ0HE
+         NeKWjjhCcMJnA==
+Date:   Sun, 2 Aug 2020 20:48:42 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Linux-kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     PowerPC <linuxppc-dev@lists.ozlabs.org>, Willy Tarreau <w@1wt.eu>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: powerpc: build failures in Linus' tree
+Message-ID: <20200802204842.36bca162@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200802005458-mutt-send-email-mst@kernel.org> <CAHp75Vfwhfrse47jRR9msFHA4ZqoVvE8RYHZNKxu-_ZiGyS9Sw@mail.gmail.com>
-In-Reply-To: <CAHp75Vfwhfrse47jRR9msFHA4ZqoVvE8RYHZNKxu-_ZiGyS9Sw@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sun, 2 Aug 2020 12:48:33 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0-gQEH3NpYUx=aFg6U8LagfYKuXqMMH4MvVS4SmaghOg@mail.gmail.com>
-Message-ID: <CAK8P3a0-gQEH3NpYUx=aFg6U8LagfYKuXqMMH4MvVS4SmaghOg@mail.gmail.com>
-Subject: Re: sparse warnings in vop
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        "sudeep.dutt@intel.com" <sudeep.dutt@intel.com>,
-        "ashutosh.dixit@intel.com" <ashutosh.dixit@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:2UfiMW94oLywLg7t89Vgq2wmaOI14QANsAqSN0qPVerD6+ryryU
- 54wqakUfSaC+iob96oTbeF9Kz/4ixBypGIsu2z1g9n1y0VDcZVErmXXsObdu/NzBdrQEhd/
- s8KK2CJlzQmOxzXjGnAq1zOumHDIxwpHYfFgfAGAwFTWNEz4UqrfVvSfD7cVfr5Id+EeyXY
- LuTA57EEbN1L5Hpcd9DHg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Vjy/ktTocks=:vu4w9xm30tncebyK4v1AFh
- tIIjiusEWJyRvBOV3gXX2h2ueJGO3IG7Fon1NisyD4MgUksbEewmTn23CAs4bWX++bV27UQ9F
- 2eHmJRubul6q6zLVYmyWBYQxVRDYLOnTj08q17WMy1Xbj5FL1hokFFvNbQvjqqT4cPxMqOWdL
- DCufpzTJAF8f+VKcM1NnOfinM1Nu237IOBHTmb2Fz22LZweSwrvhR8WCTyeUAJea62AbFTCsK
- CMNxzhELxtLezrzUIMN+KVlj3IhXlUPTRSHb1H9oPe98nHcGGlR4ogN81gco71j6gyEVOpkQj
- S1rQ37N5HSS88gMCQ/cDCsbJ8+sQ8VePSIGR0QzqDgME4nDJjCZGDrtKDmObuuecNO+ETOP6j
- 5Amu5vLZjbtYibpmiaC8uN9a1QiS4g7OyZVsD/2918hZTNzW3RSJrUtb8EKkNLEQCkBAnzWo8
- VK4RUTnBhFnLAQz3LXSJwPQPnPrwM8a9CRGKDg6BGCoqPeFQ9hCqz06mYZM1qx/1MFulCAnXI
- OBxpskO2y7tb10w6j8o34KjZctGqP4C3x+la2lAZ05E78Betl6LR91XgrejZktwmFlrBoPbXC
- Y3fnY4akio5PJj8zXWU0qKBbl2mCRwMm1GAxqR1oUup9m0YIeyeqFpBm/A6c08Xzf/oUS6kg9
- TGpfHmBMFpLdHydc9PuVEAekfeynnM/qEPCoIBrBCDPG/EJRUnzQSmZLfb4f9kwA1NBR0lbB3
- UM0bm0bc9wbXcGKRRruUGTvevQELkTPHGmmdzWTQ8W5MmAOkTVeeqXdQHBqOC00ryjHLCIDQz
- byfjq92UzS4AmV1J3HEe4X55EpnS1uN5F9YkazMR5MWUudRRVjBmKRpZS0P2DKdB6vJJYqM
+Content-Type: multipart/signed; boundary="Sig_/11ws0faSnCwwRvv=pFh50XV";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 2, 2020 at 9:25 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Sunday, August 2, 2020, Michael S. Tsirkin <mst@redhat.com> wrote:
->>
->> Hi!
->> Building vop with make C=1 produces the following:
->>
->> CHECK   drivers/misc/mic/vop/vop_main.c
->> drivers/misc/mic/vop/vop_main.c:551:58: warning: incorrect type in argument 1 (different address spaces)
->> drivers/misc/mic/vop/vop_main.c:551:58:    expected void const volatile [noderef] __iomem *addr
->> drivers/misc/mic/vop/vop_main.c:551:58:    got restricted __le64 *
->> drivers/misc/mic/vop/vop_main.c:560:49: warning: incorrect type in argument 1 (different address spaces)
->> drivers/misc/mic/vop/vop_main.c:560:49:    expected struct mic_device_ctrl *dc
->> drivers/misc/mic/vop/vop_main.c:560:49:    got struct mic_device_ctrl [noderef] __iomem *dc
->> drivers/misc/mic/vop/vop_main.c:579:49: warning: incorrect type in argument 1 (different address spaces)
->> drivers/misc/mic/vop/vop_main.c:579:49:    expected struct mic_device_ctrl *dc
->> drivers/misc/mic/vop/vop_main.c:579:49:    got struct mic_device_ctrl [noderef] __iomem *dc
->>
->> Would be nice to fix to silence the noise, but I'm not 100% sure
->> what the right thing to do here is. Tag struct members with __iomem or
->> cast with __force on use?
->
->
->
-> Sounds right to me.
+--Sig_/11ws0faSnCwwRvv=pFh50XV
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I don't think either of the above, adding __force is almost always wrong,
-and __iomem never applies to struct members, only to pointers.
+Hi all,
 
-The first problem I see is with:
+We are getting build failures in some PowerPC configs for Linus' tree.
+See e.g. http://kisskb.ellerman.id.au/kisskb/buildresult/14306515/
 
-static struct _vop_vdev *vop_dc_to_vdev(struct mic_device_ctrl *dc)
+In file included from /kisskb/src/arch/powerpc/include/asm/paca.h:18,
+                 from /kisskb/src/arch/powerpc/include/asm/percpu.h:13,
+                 from /kisskb/src/include/linux/random.h:14,
+                 from /kisskb/src/include/linux/net.h:18,
+                 from /kisskb/src/net/ipv6/ip6_fib.c:20:
+/kisskb/src/arch/powerpc/include/asm/mmu.h:139:22: error: unknown type name=
+ 'next_tlbcam_idx'
+  139 | DECLARE_PER_CPU(int, next_tlbcam_idx);
 
-The argument needs to be an __iomem pointer. In the structure, the
-first member has type __le64, which gets mentioned in the warning.
-We usually use __u64 instead (or don't use structures at all for __iomem
-operations), but I don't think this would cause a warning if the argument
-is fixed.
+I assume this is caused by commit
 
-Then there is the question of why in the world you would have an MMIO
-register contain a kernel pointer, but that is more a driver design question
-than something that causes a warning.
+  1c9df907da83 ("random: fix circular include dependency on arm64 after add=
+ition of percpu.h")
 
-      Arnd
+But I can't see how, sorry.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/11ws0faSnCwwRvv=pFh50XV
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8mmgoACgkQAVBC80lX
+0GyMiwf7BGCTCa8gdMsCcoo7i7NE9aJ+ZyU9KTXFRUteezTWskZrIwBlt73NEHY4
+UhXvkhsdhxmsIst8p2gPiX6nNQHhjHT1z7Z4ZyJzTTKPvsAEsJjqje1oWaxDF51l
+Q03MnxjXOTy+csqq0HzDmdJAOVV+B1NuRST9+1PwoMOnNIlF1qnEGv1yoSVTjnMX
+bW37I8ONw4Alw733Ipp31Sd2FW/JzanHtXF1QqjOY1KoJI7aYDrg2+leHZ/v1Tlr
+TWsmLWeKFD6F9S03VHbbmvOMRAkBW7OZk6XRqgmIeTAye6FA2Q/BfS+/JYOthXtk
+bOHzW2BicikZoUugvnh0ZEC6i66nIQ==
+=3kRN
+-----END PGP SIGNATURE-----
+
+--Sig_/11ws0faSnCwwRvv=pFh50XV--
