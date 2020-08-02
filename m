@@ -2,97 +2,98 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1603C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F8512072A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C141E2072A
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:59:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QF0Kh7z4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fu09evga"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgHBO6r (ORCPT
+        id S1726744AbgHBO7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 10:58:47 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:48895 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726664AbgHBO6q (ORCPT
+        Sun, 2 Aug 2020 10:59:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42516 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbgHBO7F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 10:58:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596380326; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=sJQnBpSFWLzIDnuY7Td1t6HUh2LChvYz8XgiglJnkfs=;
- b=QF0Kh7z4gW6Ca5X63n/WjKD9AtZQRBL/JuB9YC2OEPhT13n+Sb2fKKL8xLKgmiq1XmnkdOyb
- 65pMJGNy69vWhTLA95f7HrIjSwL2C4uMIkaHX96tke1uXsQ0K06gxUQE7SPU6Ta+dNtN9/NX
- adeafKoKSj27iaOxVTBPfWF0G9Y=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5f26d4a5ba6d142d1c2e0b42 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 02 Aug 2020 14:58:45
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BFC16C433CB; Sun,  2 Aug 2020 14:58:45 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 15F1DC433C6;
-        Sun,  2 Aug 2020 14:58:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 15F1DC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH for v5.9] prism54: Replace HTTP links with HTTPS ones
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200719121224.58581-1-grandmaster@al2klimov.de>
-References: <20200719121224.58581-1-grandmaster@al2klimov.de>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     mcgrof@kernel.org, davem@davemloft.net, kuba@kernel.org,
-        gustavoars@kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200802145845.BFC16C433CB@smtp.codeaurora.org>
-Date:   Sun,  2 Aug 2020 14:58:45 +0000 (UTC)
+        Sun, 2 Aug 2020 10:59:05 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D10BC06174A
+        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 07:59:04 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id c16so15672839ejx.12
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 07:59:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=yyL8IQ3p0GjDt22ZLGpFc90FrUfjHizo61odNCdZDrY=;
+        b=fu09evgatNAsy2nfTcEuGvs7voJG4NaA9XiThklVNg/cS6NMqFCAqnDO7DBWNwriuy
+         7ORnLTD+lBZimH5ZeKf+EBPTupqxyUo3fCShctlmDn4odx3eMHHCuq3FAhJSLvZ3HxH3
+         MXP1t1/NjLC1EPbdhrMqSm2rh1pD8gO3eahdSZ3up1akhjz/BZrIY/wwM6YdaEUKXOts
+         9CidCBuNTzx/Ie4LY1hQH8sHXcMC8DZhxOqedqQ1pDCWjpClYF8J5mZvjRSXvJsib3XM
+         xytcbqBW9R/pChCY7THaybMbJiDDoGko8C5wWMyc+Ij1454DpwwBopFgyG/+rr1uqGsh
+         171w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=yyL8IQ3p0GjDt22ZLGpFc90FrUfjHizo61odNCdZDrY=;
+        b=tZnkSThopnzVq5wXfoRjhuvMz1Twr9UCzTC1nI8KB7tB4CdFcUT6Ma7HB0kz23hNNR
+         Vdnk83ZXK0JidSmCX70aN0yrKrYPs+hbO+DRSR4pjLkJKQ/Px9jeDmxFLIRGe+4E8MMX
+         aLtQNYjjDqLZxeAe/Ihtr8tG/JkiL3lgfBIJlVFt670yR4hPMa0vdRqXNLGB/1VzI3rd
+         OKgtcNd8RiHlbFYOeAZxtsXEllbT+N9g0qCysFBhl1DFt5fFu7k6bhHV3+7LpEu4Y9GS
+         cToE4YnWKtfJ9Ry22Ino6YaBOjLFReI7644lbbOrt3ZAY1LOjTlso6ApCvSXJ1KPhQp7
+         Pp7g==
+X-Gm-Message-State: AOAM532gQ0HOeCYFdaBbf6e+5bnLv8XMApA5XhGgh2uibO9ySjVpCudE
+        oh78a0AeBxli6r2qVMS5jEY=
+X-Google-Smtp-Source: ABdhPJzRpAja7Xak7zQvGrymyc5+JcmUJ893bw4Qsq5P6SCV/KWHpaHkmO4P26EJYDBK3WYnBkQRTg==
+X-Received: by 2002:a17:906:43c9:: with SMTP id j9mr12422509ejn.542.1596380343249;
+        Sun, 02 Aug 2020 07:59:03 -0700 (PDT)
+Received: from localhost.localdomain ([2001:8f8:1821:5abb:6d82:a3:751a:a9fb])
+        by smtp.gmail.com with ESMTPSA id p21sm7843855edr.59.2020.08.02.07.59.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Aug 2020 07:59:02 -0700 (PDT)
+From:   Mohammed Rushad <mohammedrushad@gmail.com>
+To:     gregkh@linuxfoundation.org, gustavoars@kernel.org,
+        yuehaibing@huawei.com, dan.carpenter@oracle.com,
+        colin.king@canonical.com, usuraj35@gmail.com,
+        darshandv10@gmail.com, john.oldman@polehill.co.uk
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Staging: rtl8192e: fix indent coding style issue in rtllib_tx.c
+Date:   Sun,  2 Aug 2020 20:28:59 +0530
+Message-Id: <20200802145859.14143-1-mohammedrushad@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
+This is a patch to the rtllib_tx.c file that fixes fixes an improper
+indent found by the checkpatch.pl tool
 
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+Signed-off-by: Mohammed Rushad <mohammedrushad@gmail.com>
+---
+ drivers/staging/rtl8192e/rtllib_tx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Patch applied to wireless-drivers-next.git, thanks.
-
-87b589a19901 prism54: Replace HTTP links with HTTPS ones
-
+diff --git a/drivers/staging/rtl8192e/rtllib_tx.c b/drivers/staging/rtl8192e/rtllib_tx.c
+index 79d7ad7c0a4a..e0d79daca24a 100644
+--- a/drivers/staging/rtl8192e/rtllib_tx.c
++++ b/drivers/staging/rtl8192e/rtllib_tx.c
+@@ -859,7 +859,7 @@ static int rtllib_xmit_inter(struct sk_buff *skb, struct net_device *dev)
+ 			if (ieee->seq_ctrl[0] == 0xFFF)
+ 				ieee->seq_ctrl[0] = 0;
+ 			else
+-					ieee->seq_ctrl[0]++;
++				ieee->seq_ctrl[0]++;
+ 		}
+ 	} else {
+ 		if (unlikely(skb->len < sizeof(struct rtllib_hdr_3addr))) {
 -- 
-https://patchwork.kernel.org/patch/11672435/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.17.1
 
