@@ -2,117 +2,85 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B30DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4483FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6364620738
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:14:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="ZE71Wycl"
+	by mail.kernel.org (Postfix) with ESMTP id 2582920738
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:18:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbgHBNOW (ORCPT
+        id S1728265AbgHBNSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 09:14:22 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:39497 "EHLO ozlabs.org"
+        Sun, 2 Aug 2020 09:18:13 -0400
+Received: from mga12.intel.com ([192.55.52.136]:3848 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728043AbgHBNOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 09:14:21 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BKM0z2dLrz9sSG;
-        Sun,  2 Aug 2020 23:14:11 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1596374059;
-        bh=l8Vv313rJGqlK2PcaNCVrGcU8SJlDczW2rNrY770DTs=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=ZE71Wyclmt4MQrTZPs6iY6nA2eek+wB/iYUyHxx7nWlyJbBID58C0vJfORjrDD43E
-         wNND8mtfpDbimWptgmYv4VddxYAmX0rHolg1XVT+G8s2w1bA+8uHwFHNUayBhafmGn
-         U3RDd9O7hEfPsfEFxg1WUJgbZZ35QUi0zip6yzBRdj0KvzX0aIma+XejtIevU686ru
-         HM91WecXmsJTqK1azOcV4OJmJvhTYVRaSfqOgAvj1ip20Yb1FPEAys0j9IKpP3z8BI
-         XGg3VJKFsWHrW1MkBYjbjQi72gF9zJZpWvDX1DLzzpzZpzoVYn1bqH1kWqIhbU7xhV
-         gtswbHEE4eTGQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Michal Simek <monstr@monstr.eu>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        clang-built-linux@googlegroups.com,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
-        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org,
-        Hari Bathini <hbathini@in.ibm.com>
-Subject: Re: [PATCH 06/15] powerpc: fadamp: simplify fadump_reserve_crash_area()
-In-Reply-To: <20200801101854.GD534153@kernel.org>
-References: <20200728051153.1590-1-rppt@kernel.org> <20200728051153.1590-7-rppt@kernel.org> <87d04d5hda.fsf@mpe.ellerman.id.au> <20200801101854.GD534153@kernel.org>
-Date:   Sun, 02 Aug 2020 23:14:10 +1000
-Message-ID: <87o8nt197h.fsf@mpe.ellerman.id.au>
+        id S1728020AbgHBNSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 09:18:13 -0400
+IronPort-SDR: kKa7xpxMSHvfwalvfexwPfAKpw55KsxB5VEA06/uhbbLLm91i27r3IHE2SkV1/9YfI25HiRGEz
+ 3JtTTLzlX9Yg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9700"; a="131561915"
+X-IronPort-AV: E=Sophos;i="5.75,426,1589266800"; 
+   d="scan'208";a="131561915"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2020 06:18:13 -0700
+IronPort-SDR: D0XnYzrieY4fJFknkIn+xxzWKYgbCdjdSTI2rYUnCxaJcO5PpvCPzo7wH34w0rjIiMQc6QlL9A
+ RF1kyDOpmLqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,426,1589266800"; 
+   d="scan'208";a="331622703"
+Received: from cahanley-mobl.ger.corp.intel.com (HELO intel.com) ([10.252.10.182])
+  by orsmga007.jf.intel.com with ESMTP; 02 Aug 2020 06:18:09 -0700
+Date:   Sun, 2 Aug 2020 16:18:09 +0300
+From:   Andi Shyti <andi.shyti@intel.com>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        <dri-devel@lists.freedesktop.org>, <airlied@linux.ie>,
+        <intel-gfx@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <tianjia.zhang@alibaba.com>, <matthew.auld@intel.com>
+Subject: Re: [Intel-gfx] [PATCH] drm/i915: Fix wrong return value
+Message-ID: <20200802131809.GE4705@intel.intel>
+References: <20200802111534.5155-1-tianjia.zhang@linux.alibaba.com>
+ <20200802114044.GD4705@intel.intel>
+ <159636908251.23037.6183292610375916917@build.alporthouse.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159636908251.23037.6183292610375916917@build.alporthouse.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mike Rapoport <rppt@kernel.org> writes:
-> On Thu, Jul 30, 2020 at 10:15:13PM +1000, Michael Ellerman wrote:
->> Mike Rapoport <rppt@kernel.org> writes:
->> > From: Mike Rapoport <rppt@linux.ibm.com>
->> >
->> > fadump_reserve_crash_area() reserves memory from a specified base address
->> > till the end of the RAM.
->> >
->> > Replace iteration through the memblock.memory with a single call to
->> > memblock_reserve() with appropriate  that will take care of proper memory
->>                                      ^
->>                                      parameters?
->> > reservation.
->> >
->> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
->> > ---
->> >  arch/powerpc/kernel/fadump.c | 20 +-------------------
->> >  1 file changed, 1 insertion(+), 19 deletions(-)
->> 
->> I think this looks OK to me, but I don't have a setup to test it easily.
->> I've added Hari to Cc who might be able to.
->> 
->> But I'll give you an ack in the hope that it works :)
->
-> Actually, I did some digging in the git log and the traversal was added
-> there on purpose by the commit b71a693d3db3 ("powerpc/fadump: exclude
-> memory holes while reserving memory in second kernel")
-> Presuming this is still reqruired I'm going to drop this patch and will
-> simply replace for_each_memblock() with for_each_mem_range() in v2.
+> > > diff --git a/drivers/gpu/drm/i915/i915_active.c b/drivers/gpu/drm/i915/i915_active.c
+> > > index d960d0be5bd2..cc017e3cc9c5 100644
+> > > --- a/drivers/gpu/drm/i915/i915_active.c
+> > > +++ b/drivers/gpu/drm/i915/i915_active.c
+> > > @@ -758,7 +758,7 @@ int i915_active_acquire_preallocate_barrier(struct i915_active *ref,
+> > >       intel_engine_mask_t tmp, mask = engine->mask;
+> > >       struct llist_node *first = NULL, *last = NULL;
+> > >       struct intel_gt *gt = engine->gt;
+> > > -     int err;
+> > > +     int err = 0;
+> > 
+> > you don't need the initialization here.
+> 
+> But it's close enough that I can munge the patch inline.
+> Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
 
-Thanks.
+sure... you can also remove it before merging it and it might
+also need:
 
-cheers
+Fixes: d8af05ff38ae7 ("drm/i915: Allow sharing the idle-barrier from other kernel requests)
+
+but, yeah...
+
+Reviewed-by: Andi Shyti <andi.shyti@intel.com>
+
+... as well :)
+
+Andi
