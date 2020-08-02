@@ -6,79 +6,64 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ACE8C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A48C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F244D2075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E441822B43
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbgHBL4M (ORCPT
+        id S1728246AbgHBL5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 07:56:12 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:51162 "EHLO
+        Sun, 2 Aug 2020 07:57:10 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:51226 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbgHBL4K (ORCPT
+        with ESMTP id S1726578AbgHBL5K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 07:56:10 -0400
+        Sun, 2 Aug 2020 07:57:10 -0400
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id D07881C0BE1; Sun,  2 Aug 2020 13:56:08 +0200 (CEST)
-Date:   Sun, 2 Aug 2020 13:56:01 +0200
+        id 40AAC1C0BE1; Sun,  2 Aug 2020 13:57:08 +0200 (CEST)
+Date:   Sun, 2 Aug 2020 13:57:01 +0200
 From:   Pavel Machek <pavel@ucw.cz>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Andy Lutomirski' <luto@kernel.org>,
-        "madvenka@linux.microsoft.com" <madvenka@linux.microsoft.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
-Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-Message-ID: <20200802115600.GB1162@bug>
-References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
- <b9879beef3e740c0aeb1af73485069a8@AcuMS.aculab.com>
+To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Cc:     ssantosh@kernel.org, s-anna@ti.com, santosh.shilimkar@oracle.com,
+        robh+dt@kernel.org, lee.jones@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        wmills@ti.com, praneeth@ti.com
+Subject: Re: [PATCH 0/6] Add TI PRUSS platform driver
+Message-ID: <20200802115701.GD1162@bug>
+References: <1596020528-19510-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <20200802115330.GA1090@bug>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b9879beef3e740c0aeb1af73485069a8@AcuMS.aculab.com>
+In-Reply-To: <20200802115330.GA1090@bug>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
-
-> > This is quite clever, but now I???m wondering just how much kernel help
-> > is really needed. In your series, the trampoline is an non-executable
-> > page.  I can think of at least two alternative approaches, and I'd
-> > like to know the pros and cons.
-> > 
-> > 1. Entirely userspace: a return trampoline would be something like:
-> > 
-> > 1:
-> > pushq %rax
-> > pushq %rbc
-> > pushq %rcx
-> > ...
-> > pushq %r15
-> > movq %rsp, %rdi # pointer to saved regs
-> > leaq 1b(%rip), %rsi # pointer to the trampoline itself
-> > callq trampoline_handler # see below
+On Sun 2020-08-02 13:53:30, Pavel Machek wrote:
+> Hi!
 > 
-> For nested calls (where the trampoline needs to pass the
-> original stack frame to the nested function) I think you
-> just need a page full of:
-> 	mov	$0, scratch_reg; jmp trampoline_handler
+> > A typical usage scenario would be to load the application firmware into one or
+> > more of the PRU cores, initialize one or more of the peripherals and perform I/O
+> > through shared RAM from either a kernel driver or directly from userspace.
+> > 
+> > This series contains the PRUSS platform driver. This is the parent driver for
+> > the entire PRUSS and is used for managing the subsystem level resources like
+> > various memories and the CFG module.  It is responsible for the creation and
+> > deletion of the platform devices for the child PRU devices and other child
+> > devices (like Interrupt Controller, MDIO node and some syscon nodes) so that
+> > they can be managed by specific platform drivers.
+> 
+> >  drivers/soc/ti/Kconfig | 11 + drivers/soc/ti/Makefile | 1 + drivers/soc/ti/pruss.c | 
+> 
+> Is drivers/soc right place for that? We already have subsystem for various
+> programmable accelerators...
 
-I believe you could do with mov %pc, scratch_reg; jmp ...
-
-That has advantage of being able to share single physical page across multiple virtual pages...
-
-
+....see drivers/remoteproc.
 									Pavel
 -- 
 (english) http://www.livejournal.com/~pavelmachek
