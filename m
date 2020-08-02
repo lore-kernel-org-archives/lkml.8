@@ -3,91 +3,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABA3C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55011C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E80012075A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E822075B
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:24:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbgHBNVx (ORCPT
+        id S1728255AbgHBNYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 09:21:53 -0400
-Received: from mail-m127107.qiye.163.com ([115.236.127.107]:27654 "EHLO
-        mail-m127107.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728057AbgHBNVx (ORCPT
+        Sun, 2 Aug 2020 09:24:49 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:50483 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726578AbgHBNYt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 09:21:53 -0400
-X-Greylist: delayed 400 seconds by postgrey-1.27 at vger.kernel.org; Sun, 02 Aug 2020 09:21:44 EDT
-Received: from vivo.com (wm-12.qy.internal [127.0.0.1])
-        by mail-m127107.qiye.163.com (Hmail) with ESMTP id 99F0281725;
-        Sun,  2 Aug 2020 21:14:48 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <ADUAnwD8DVByMMSsrG-r3Kri.3.1596374087585.Hmail.wenhu.wang@vivo.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     elder@kernel.org, davem@davemloft.net, kuba@kernel.org,
-        kvalo@codeaurora.org, agross@kernel.org, ohad@wizery.com,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, alsa-devel@alsa-project.org,
-        ath11k@lists.infradead.org, netdev@vger.kernel.org,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        srinivas.kandagatla@linaro.org, sibis@codeaurora.org
-Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0gc29jOiBxbWk6IGFsbG93IHVzZXIgdG8gc2V0IGhhbmRsZSB3cSB0byBoaXByaW8=?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 58.251.74.226
-In-Reply-To: <20200727204521.GB229995@builder.lan>
+        Sun, 2 Aug 2020 09:24:49 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07425;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0U4TmhiN_1596374683;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U4TmhiN_1596374683)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sun, 02 Aug 2020 21:24:43 +0800
+Subject: Re: [PATCH 4/4] mm/thp: narrow lru locking
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Hugh Dickins <hughd@google.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <1596254957-22560-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1596254957-22560-4-git-send-email-alex.shi@linux.alibaba.com>
+ <20200802110925.GW23808@casper.infradead.org>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <2504ea84-110c-cf8e-d2f7-0aab97f6121a@linux.alibaba.com>
+Date:   Sun, 2 Aug 2020 21:24:32 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Received: from wenhu.wang@vivo.com( [58.251.74.226) ] by ajax-webmail ( [127.0.0.1] ) ; Sun, 2 Aug 2020 21:14:47 +0800 (GMT+08:00)
-From:   =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
-Date:   Sun, 2 Aug 2020 21:14:47 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgYFAkeWUFZS1VLWVdZKFlBSE83V1ktWUFJV1kPCR
-        oVCBIfWUFZTR1KTktOSx4aQkpOVkpOQk1ITE9LQ0JLSE5VEwETFhoSFyQUDg9ZV1kWGg8SFR0UWU
-        FZT0tIVUpKS0hKTFVKS0tZBg++
-X-HM-Sender-Digest: e1kJHlYWEh9ZQU5MTU1OSEpOS0tJN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6Py46FQw*Qz8tOQI2NigICTxWCUgwCRJVSFVKTkJNSExPS0NCQ0lDVTMWGhIXVQweFRMOVQwa
-        FRw7DRINFFUYFBZFWVdZEgtZQVlOQ1VJTkpVTE9VSUlNWVdZCAFZQU5LS0I3Bg++
-X-HM-Tid: 0a73af4f7bbb986bkuuu99f0281725
+In-Reply-To: <20200802110925.GW23808@casper.infradead.org>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cj4+IEN1cnJlbnRseSB0aGUgcW1pX2hhbmRsZSBpcyBpbml0aWFsaXplZCBzaW5nbGUgdGhyZWFk
-ZWQgYW5kIHN0cmljdGx5Cj4+IG9yZGVyZWQgd2l0aCB0aGUgYWN0aXZlIHNldCB0byAxLiBUaGlz
-IGlzIHByZXR0eSBzaW1wbGUgYW5kIHNhZmUgYnV0Cj4+IHNvbWV0aW1lcyBpbmVmZmVuY3kuIFNv
-IGl0IGlzIGJldHRlciB0byBhbGxvdyB1c2VyIHRvIGRlY2lkZSB3aGV0aGVyCj4+IGEgaGlnaCBw
-cmlvcml0eSB3b3JrcXVldWUgc2hvdWxkIGJlIHVzZWQuCj4KPkNhbiB5b3UgcGxlYXNlIGRlc2Ny
-aWJlIGEgc2NlbmFyaW8gd2hlcmUgdGhpcyBpcyBuZWVkZWQvZGVzaXJlZCBhbmQKPnBlcmhhcHMg
-YWxzbyBjb21tZW50IG9uIHdoeSB0aGlzIGlzIG5vdCBhbHdheXMgZGVzaXJlZD8KPgoKV2VsbCwg
-b25lIHNjZW5hcmlvIGlzIHRoYXQgd2hlbiB0aGUgQVAgd2FudHMgdG8gY2hlY2sgdGhlIHN0YXR1
-cyBvZiB0aGUKc3Vic3lzdGVtcyBhbmQgdGhlIHdob2xlIFFNSSBkYXRhIHBhdGguIEl0IGZpcnN0
-IHNlbmRzIG91dCBhbiBpbmRpY2F0aW9uCndoaWNoIGFza3MgdGhlIHN1YnN5c3RlbXMgdG8gcmVw
-b3J0IHRoZWlyIHN0YXR1cy4gQWZ0ZXIgdGhlIHN1YnN5c3RlbXMgc2VuZApyZXNwb25zZXMgdG8g
-dGhlIEFQLCB0aGUgcmVzcG9uc2VzIHRoZW4gYXJlIHF1ZXVlZCBvbiB0aGUgd29ya3F1ZXVlIG9m
-CnRoZSBRTUkgaGFuZGxlci4gQWN0dWFsbHkgdGhlIEFQIGlzIGNvbmZpZ3VyZWQgdG8gZG8gdGhl
-IGNoZWNrIGluIGEgc3BlY2lmaWMKaW50ZXJ2YWwgcmVndWxhcmx5LiBBbmQgaXQgY2hlY2sgdGhl
-IHJlcG9ydCBjb3VudHMgd2l0aGluIGEgc3BlY2lmaWMgZGVsYXkgYWZ0ZXIKaXQgc2VuZHMgb3V0
-IHRoZSByZWxhdGVkIGluZGljYXRpb24uIFdoZW4gdGhlIEFQIGhhcyBiZWVuIHVuZGVyIGEgaGVh
-dnkKbG9hZCBmb3IgbG9uZywgdGhlIHJlcG9ydHMgYXJlIHF1ZXVlIHRoZWlyIHdpdGhvdXQgQ1BV
-IHJlc291cmNlIHRvIHVwZGF0ZQp0aGUgcmVwb3J0IGNvdW50cyB3aXRoaW4gdGhlIHNwZWNpZmlj
-IGRlbGF5LiBBcyBhIHJlc3VsdCwgdGhlIHRocmVhZCB0aGF0IGNoZWNrcwp0aGUgcmVwb3J0IGNv
-dW50cyB0YWtlcyBpdCBtaXNsZWFkaW5nbHkgdGhhdCB0aGUgUU1JIGRhdGEgcGF0aCBvciB0aGUg
-c3Vic3lzdGVtcwphcmUgY3Jhc2hlZC4KClRoZSBwYXRjaCBjYW4gcmVhbGx5IHJlc29sdmUgdGhl
-IHByb2JsZW0gbWVudGlvbmVkIGFib2x2ZS4KCkZvciBuYXJtYWwgc2l0dWF0aW9ucywgaXQgaXMg
-ZW5vdWdoIHRvIGp1c3QgdXNlIG5vcm1hbCBwcmlvcml0eSBRTUkgd29ya3F1ZXVlLgoKPlJlZ2Fy
-ZHMsCj5Cam9ybgo+Cj4+IAo+PiBTaWduZWQtb2ZmLWJ5OiBXYW5nIFdlbmh1IDx3ZW5odS53YW5n
-QHZpdm8uY29tPgo+PiAtLS0KPj4gIGRyaXZlcnMvbmV0L2lwYS9pcGFfcW1pLmMgICAgICAgICAg
-ICAgfCA0ICsrLS0KPj4gIGRyaXZlcnMvbmV0L3dpcmVsZXNzL2F0aC9hdGgxMGsvcW1pLmMgfCAy
-ICstCj4+ICBkcml2ZXJzL25ldC93aXJlbGVzcy9hdGgvYXRoMTFrL3FtaS5jIHwgMiArLQo+PiAg
-ZHJpdmVycy9yZW1vdGVwcm9jL3Fjb21fc3lzbW9uLmMgICAgICB8IDIgKy0KPj4gIGRyaXZlcnMv
-c2xpbWJ1cy9xY29tLW5nZC1jdHJsLmMgICAgICAgfCA0ICsrLS0KPj4gIGRyaXZlcnMvc29jL3Fj
-b20vcGRyX2ludGVyZmFjZS5jICAgICAgfCA0ICsrLS0KPj4gIGRyaXZlcnMvc29jL3Fjb20vcW1p
-X2ludGVyZmFjZS5jICAgICAgfCA5ICsrKysrKystLQo+PiAgaW5jbHVkZS9saW51eC9zb2MvcWNv
-bS9xbWkuaCAgICAgICAgICB8IDMgKystCj4+ICBzYW1wbGVzL3FtaS9xbWlfc2FtcGxlX2NsaWVu
-dC5jICAgICAgIHwgNCArKy0tCj4+ICA5IGZpbGVzIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKyks
-IDE0IGRlbGV0aW9ucygtKQ0KDQo=
+
+
+ÔÚ 2020/8/2 ÏÂÎç7:09, Matthew Wilcox Ð´µÀ:
+> You're playing games with separating interrupt disabling from spinlocks.
+> Have you got any feedback from -rt people on this?
+
+Is there other suggestions to remove local_irq_disable?
+
+Just check again on kernel/mm directory on linux-next. there are still
+much local_irq_disable there.
+
+Guess we need a final solution instead of block new one.
+
+Thanks
+Alex
