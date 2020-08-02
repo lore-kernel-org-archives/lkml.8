@@ -2,117 +2,183 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE3AC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1156C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E397B20738
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8F3B20759
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:36:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596386152;
-	bh=f++43ND36E/PvWawbSmQCGIUPSGjWCiEQnp/AygD4tg=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=SmyShq1V3gk6Vrs/9+3XF6q8LZP9/f/iQJmWG9rcI7AN3fxtcfbx5kjq4DKQLjSPw
-	 qMOj6eHdP4syYMClqSeBjxcGsDqLjo/rqHONvcr8q/H53Q0two8ScgLX8SAWhomzgE
-	 48boNmpHz7ckCmrraOOlXw76cGqiVHM1xn98VjIU=
+	s=default; t=1596386180;
+	bh=wmlXgD0X96/wIUhcM0J0CaJw2U1ECwrd3G0AsFvEO4Y=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Lyw+JkQEVutzp3jdiGpaONQoTYB0ZP4rRPoRaTdntMngkirXbbfZPSEDoVFNOi15J
+	 ioIB5hk6rEH8/CPSNn3DzokyLNOO260eOHkj6CfRixvo71a13Q2FyDFd/SHR4o07lN
+	 Y/LpcQ7B8fSH2WhqKWw8oU2jHWUlyTXNjJfuPnH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgHBQfs (ORCPT
+        id S1726688AbgHBQgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 12:35:48 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:59477 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgHBQfs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 12:35:48 -0400
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 072GZYAE010032;
-        Mon, 3 Aug 2020 01:35:34 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 072GZYAE010032
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1596386135;
-        bh=buqQ+5V+jZVeUJqv5ynUltuexC7jQ90Idd2IOU9lLI8=;
-        h=From:Date:Subject:To:Cc:From;
-        b=Yiq/eYwc8od/CXLN3XIPvlPlxaljXLc1FTZ2wdoNOG7A4UoREGeqkyxUs+VEZshJS
-         IRoVU+zuT2lc67UdqhPQqug2I14rN/wcZkjPf1pGubYTUXO2FeCriS7NtGJNEJkecx
-         eWy1j345MU4q3pR4nDLJn/Sd+jeTw2FySUQ05FY4BXl1LS8sw+Nu5gp42BPCc0U4PA
-         g4MZf8CNVb4dxzUZBUP/Jm12xGsboE4eY0GXd+TNEhbVLyakwFpSB5JpcYltyjuisn
-         CLkMsl6XyBaWJIEv6UTSIQAvQO0nPXH4/Ua3CwHF1BYv6o6vo4omczVggz6ERJsu/W
-         FZVvBTQJC8xYg==
-X-Nifty-SrcIP: [209.85.222.50]
-Received: by mail-ua1-f50.google.com with SMTP id r63so11104738uar.9;
-        Sun, 02 Aug 2020 09:35:34 -0700 (PDT)
-X-Gm-Message-State: AOAM533td9vdpq0XEouWqMGxXmstbl9Ja7npSxt2c1gaw+gQFZQ6DaPj
-        1Ev0R8nxJIBS2847964rD+xAOw4jHO4Iwn10mD4=
-X-Google-Smtp-Source: ABdhPJwxFY3d019c2MX2wWRgJzpZrgSNxbaBHJ5+SamHhXc5OnRNKaTx7RUHCanswWoV0JyG8eJQ5icSEAuqNUDAroU=
-X-Received: by 2002:ab0:2390:: with SMTP id b16mr8660376uan.25.1596386133613;
- Sun, 02 Aug 2020 09:35:33 -0700 (PDT)
+        Sun, 2 Aug 2020 12:36:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44992 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725768AbgHBQgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 12:36:17 -0400
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A84AE20738;
+        Sun,  2 Aug 2020 16:36:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596386176;
+        bh=wmlXgD0X96/wIUhcM0J0CaJw2U1ECwrd3G0AsFvEO4Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LIo4s4fRmWHT6ME6g/ZjvzQ7HJRSuVu2NYrDbrd0chKpt6+b3ohxjDTyat5mFYLn4
+         aeP921+3zEtXOmJIAFZ0JgLAmKkmGOMoKwCqYXkOSHVuvR6uN6W8dMclI8JjGsPtcE
+         w3N+AA1SHOYg14yG/yF0pyqesAV5aB4w9VaQvzZA=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Simek <monstr@monstr.eu>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        clang-built-linux@googlegroups.com,
+        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
+        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
+Subject: [PATCH v2 00/17] memblock: seasonal cleaning^w cleanup
+Date:   Sun,  2 Aug 2020 19:35:44 +0300
+Message-Id: <20200802163601.8189-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 3 Aug 2020 01:34:57 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATJbLfuj8bbjPevXWTk5HAra3n2aG-B2ueTPxMpYhbZnQ@mail.gmail.com>
-Message-ID: <CAK7LNATJbLfuj8bbjPevXWTk5HAra3n2aG-B2ueTPxMpYhbZnQ@mail.gmail.com>
-Subject: [GIT PULL] Kbuild fixes for v5.8(-rc8)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-Please pull some more Kbuild fixes.
-Thanks.
+Hi,
 
-The following changes since commit 92ed301919932f777713b9172e525674157e983d:
+These patches simplify several uses of memblock iterators and hide some of
+the memblock implementation details from the rest of the system.
 
-  Linux 5.8-rc7 (2020-07-26 14:14:06 -0700)
+The patches are on top of v5.8-rc7 + cherry-pick of "mm/sparse: cleanup the
+code surrounding memory_present()" [1] from mmotm tree.
 
-are available in the Git repository at:
+v2 changes:
+* replace for_each_memblock() with two versions, one for memblock.memory
+  and another one for memblock.reserved
+* fix overzealous cleanup of powerpc fadamp: keep the traversal over the
+  memblocks, but use better suited iterators
+* don't remove traversal over memblock.reserved in x86 numa cleanup but
+  replace for_each_memblock() with new for_each_reserved_mem_region()
+* simplify ramdisk and crash kernel allocations on x86
+* drop more redundant and unused code: __next_reserved_mem_region() and
+  memblock_mem_size()
+* add description of numa initialization fix on arm64 (thanks Jonathan)
+* add Acked and Reviewed tags
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-tags/kbuild-fixes-v5.8-4
+[1] http://lkml.kernel.org/r/20200712083130.22919-1-rppt@kernel.org 
 
-for you to fetch changes up to 28ab576ba8de934ee3145b6d75119f016de567cb:
+Mike Rapoport (17):
+  KVM: PPC: Book3S HV: simplify kvm_cma_reserve()
+  dma-contiguous: simplify cma_early_percent_memory()
+  arm, xtensa: simplify initialization of high memory pages
+  arm64: numa: simplify dummy_numa_init()
+  h8300, nds32, openrisc: simplify detection of memory extents
+  riscv: drop unneeded node initialization
+  mircoblaze: drop unneeded NUMA and sparsemem initializations
+  memblock: make for_each_memblock_type() iterator private
+  memblock: make memblock_debug and related functionality private
+  memblock: reduce number of parameters in for_each_mem_range()
+  arch, mm: replace for_each_memblock() with for_each_mem_pfn_range()
+  arch, drivers: replace for_each_membock() with for_each_mem_range()
+  x86/setup: simplify initrd relocation and reservation
+  x86/setup: simplify reserve_crashkernel()
+  memblock: remove unused memblock_mem_size()
+  memblock: implement for_each_reserved_mem_region() using __next_mem_region()
+  memblock: use separate iterators for memory and reserved regions
 
-  kbuild: remove redundant FORCE definition in
-scripts/Makefile.modpost (2020-08-02 23:09:16 +0900)
-
-----------------------------------------------------------------
-Kbuild fixes for v5.8 (4th)
-
- - clean the generated moc file for xconfig
-
- - fix xconfig bugs, and revert some bad commits
-
-----------------------------------------------------------------
-Masahiro Yamada (8):
-      kconfig: qconf: use if_changed for qconf.moc rule
-      kconfig: qconf: compile moc object separately
-      kconfig: qconf: use delete[] instead of delete to free array
-      kconfig: qconf: remove "goBack" debug message
-      Revert "kconfig: qconf: Change title for the item window"
-      Revert "kconfig: qconf: don't show goback button on splitMode"
-      kconfig: qconf: remove wrong ConfigList::firstChild()
-      kbuild: remove redundant FORCE definition in scripts/Makefile.modpost
-
-Wolfram Sang (1):
-      modpost: explain why we can't use strsep
-
- scripts/Makefile.modpost   |  3 ---
- scripts/kconfig/.gitignore |  2 +-
- scripts/kconfig/Makefile   | 13 ++++++++-----
- scripts/kconfig/qconf.cc   | 23 ++++++-----------------
- scripts/kconfig/qconf.h    |  4 ----
- scripts/mod/modpost.c      |  1 +
- 6 files changed, 16 insertions(+), 30 deletions(-)
+ .clang-format                            |  4 +-
+ arch/arm/kernel/setup.c                  | 18 +++--
+ arch/arm/mm/init.c                       | 59 ++++------------
+ arch/arm/mm/mmu.c                        | 39 ++++-------
+ arch/arm/mm/pmsa-v7.c                    | 20 +++---
+ arch/arm/mm/pmsa-v8.c                    | 17 +++--
+ arch/arm/xen/mm.c                        |  7 +-
+ arch/arm64/kernel/machine_kexec_file.c   |  6 +-
+ arch/arm64/kernel/setup.c                |  4 +-
+ arch/arm64/mm/init.c                     | 11 ++-
+ arch/arm64/mm/kasan_init.c               | 10 +--
+ arch/arm64/mm/mmu.c                      | 11 +--
+ arch/arm64/mm/numa.c                     | 15 ++---
+ arch/c6x/kernel/setup.c                  |  9 +--
+ arch/h8300/kernel/setup.c                |  8 +--
+ arch/microblaze/mm/init.c                | 24 ++-----
+ arch/mips/cavium-octeon/dma-octeon.c     | 12 ++--
+ arch/mips/kernel/setup.c                 | 31 +++++----
+ arch/mips/netlogic/xlp/setup.c           |  2 +-
+ arch/nds32/kernel/setup.c                |  8 +--
+ arch/openrisc/kernel/setup.c             |  9 +--
+ arch/openrisc/mm/init.c                  |  8 ++-
+ arch/powerpc/kernel/fadump.c             | 57 ++++++++--------
+ arch/powerpc/kvm/book3s_hv_builtin.c     | 11 +--
+ arch/powerpc/mm/book3s64/hash_utils.c    | 16 ++---
+ arch/powerpc/mm/book3s64/radix_pgtable.c | 11 ++-
+ arch/powerpc/mm/kasan/kasan_init_32.c    |  8 +--
+ arch/powerpc/mm/mem.c                    | 33 +++++----
+ arch/powerpc/mm/numa.c                   |  7 +-
+ arch/powerpc/mm/pgtable_32.c             |  8 +--
+ arch/riscv/mm/init.c                     | 34 +++-------
+ arch/riscv/mm/kasan_init.c               | 10 +--
+ arch/s390/kernel/crash_dump.c            |  8 +--
+ arch/s390/kernel/setup.c                 | 31 +++++----
+ arch/s390/mm/page-states.c               |  6 +-
+ arch/s390/mm/vmem.c                      | 16 +++--
+ arch/sh/mm/init.c                        |  9 +--
+ arch/sparc/mm/init_64.c                  | 12 ++--
+ arch/x86/kernel/setup.c                  | 56 +++++-----------
+ arch/x86/mm/numa.c                       |  2 +-
+ arch/xtensa/mm/init.c                    | 55 +++------------
+ drivers/bus/mvebu-mbus.c                 | 12 ++--
+ drivers/irqchip/irq-gic-v3-its.c         |  2 +-
+ drivers/s390/char/zcore.c                |  9 +--
+ include/linux/memblock.h                 | 65 +++++++++---------
+ kernel/dma/contiguous.c                  | 11 +--
+ mm/memblock.c                            | 85 ++++++++----------------
+ mm/page_alloc.c                          | 11 ++-
+ mm/sparse.c                              | 10 ++-
+ 49 files changed, 366 insertions(+), 561 deletions(-)
 
 -- 
-Best Regards
-Masahiro Yamada
+2.26.2
+
