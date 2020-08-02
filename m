@@ -2,99 +2,89 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FEFC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EC3C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E76E82075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:17:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sa0GbdGm"
+	by mail.kernel.org (Postfix) with ESMTP id 0EB082075A
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:25:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbgHBLRK (ORCPT
+        id S1728043AbgHBLZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 07:17:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728074AbgHBLRJ (ORCPT
+        Sun, 2 Aug 2020 07:25:32 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:58157 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726578AbgHBLZb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 07:17:09 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DF1BC06174A;
-        Sun,  2 Aug 2020 04:17:09 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id s15so6826876pgc.8;
-        Sun, 02 Aug 2020 04:17:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G/SAAS8ZjrLaboM06g8Fjn6MZH5XRvOwa+XyUTUtB4Y=;
-        b=sa0GbdGmE4ZQqECUjR1TN/yQak1ZpkaJKAzcd0vxWTsdqllyYfBgBvU/L6GNyzB5wq
-         hpApMPUbAHzOrkWFJFN9E9lOp5VZS8hy9eFNdEn4GXUqyj6SkybZNA+1CSht4k/wmB2I
-         yiVmDcmzXTrhl6FGLSUaESBvBT14B7ZZPxQB5Rtc4YFGn+Gs2FZ+1osK3+1X/ZRYv0Pw
-         8b3sP2XJ/BVRMNjO91Dx0OhaTSgVvza99qMwFrKnYpVIx7q5nC4SOQHR8V+HOlzto3tu
-         8J9V54tMUXQGUlGPh96B9FzOrF5404V/aaFd6dAmVNq4R6nn4pSr7VyOVx2LuFE0R7eB
-         OeGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G/SAAS8ZjrLaboM06g8Fjn6MZH5XRvOwa+XyUTUtB4Y=;
-        b=T3IC2wZcndg2FKKqVxnpnTEc7kGC778wGhEdt1YgM7Z42ryZsd62Yd0M88+mchY1pc
-         SyY8EYz87g+UVW6tQ9wjCpc6v08IfNCxUCSUfXERMhbTuXM8o+C//70Tz2T1cWj+eZIR
-         XGZHNWJKzOtdFwSXPCNM6rJ43x7EC/J9DW/HEE8AAxHp6pTioIfI+z4FVpyaZkQNohTm
-         6KcaayAv5sCiLfdvh18+SerZvjKk27j8DkJLtLCR3OzIuKxFqnynF8g6lGmaOmc4eEq2
-         thYwjr/DZx6C585aCbXSYUq0YC2WKZ/nKJZapYNhmBUInKcfvqJWvvD/cdEo53UMZR+v
-         0Sew==
-X-Gm-Message-State: AOAM532kXEyn1uQY/8WG14uN6Na/HINpkYCOr2K34oUlgBt8cDKS5JAt
-        5Yj1U4gpQIuGx4nSQNd8nuSmaTfed2tGxXJysl/Ql/6X
-X-Google-Smtp-Source: ABdhPJy85UXpNV7LLuS8CX7kB8eHreGVZA8G9R+hdj1BAnhdpIP53PuHE8bfCunM1hWC+Kehx+VXBeyxLz1UbPNSAj0=
-X-Received: by 2002:a62:7b4e:: with SMTP id w75mr10910952pfc.130.1596367028479;
- Sun, 02 Aug 2020 04:17:08 -0700 (PDT)
+        Sun, 2 Aug 2020 07:25:31 -0400
+X-Originating-IP: 180.110.142.179
+Received: from localhost (unknown [180.110.142.179])
+        (Authenticated sender: fly@kernel.page)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 64DFD20007;
+        Sun,  2 Aug 2020 11:24:54 +0000 (UTC)
+Date:   Sun, 2 Aug 2020 19:23:47 +0800
+From:   Pengfei Li <fly@kernel.page>
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     Hugh Dickins <hughd@google.com>, akpm@linux-foundation.org,
+        bmt@zurich.ibm.com, dledford@redhat.com, willy@infradead.org,
+        vbabka@suse.cz, kirill.shutemov@linux.intel.com, jgg@ziepe.ca,
+        alex.williamson@redhat.com, cohuck@redhat.com, dbueso@suse.de,
+        jglisse@redhat.com, jhubbard@nvidia.com, ldufour@linux.ibm.com,
+        Liam.Howlett@oracle.com, peterz@infradead.org, cl@linux.com,
+        jack@suse.cz, rientjes@google.com, walken@google.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, fly@kernel.page
+Subject: Re: [PATCH 2/2] mm, util: account_locked_vm() does not hold
+ mmap_lock
+Message-ID: <20200802192347.534ece64.fly@kernel.page>
+In-Reply-To: <20200730205705.ityqlyeswzo5dkow@ca-dmjordan1.us.oracle.com>
+References: <20200726080224.205470-1-fly@kernel.page>
+        <20200726080224.205470-2-fly@kernel.page>
+        <alpine.LSU.2.11.2007291121280.4649@eggly.anvils>
+        <20200730205705.ityqlyeswzo5dkow@ca-dmjordan1.us.oracle.com>
 MIME-Version: 1.0
-References: <20200802054852.GR23458@shao2-debian> <CAHp75Vcdwz2RynZ0KVCDMFyO_GPREgGdCNVNGqosjf6iV0_uog@mail.gmail.com>
- <20200802105808.GA164531@kroah.com>
-In-Reply-To: <20200802105808.GA164531@kroah.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 2 Aug 2020 14:16:52 +0300
-Message-ID: <CAHp75VdAHGi3OtTe34TgpgBp_5=i0K6wa3vygaxHQv3OO=bA1Q@mail.gmail.com>
-Subject: Re: [serial] 679193b7ba: BUG:spinlock_bad_magic_on_CPU
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     kernel test robot <lkp@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        lkp@lists.01.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 2, 2020 at 1:58 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
-> On Sun, Aug 02, 2020 at 01:50:29PM +0300, Andy Shevchenko wrote:
-> > On Sun, Aug 2, 2020 at 8:54 AM kernel test robot <lkp@intel.com> wrote:
+On Thu, 30 Jul 2020 16:57:05 -0400
+Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
 
-...
-
-> > > If you fix the issue, kindly add following tag
-> > > Reported-by: kernel test robot <lkp@intel.com>
+> On Wed, Jul 29, 2020 at 12:21:11PM -0700, Hugh Dickins wrote:
+> > On Sun, 26 Jul 2020, Pengfei Li wrote:
+> > 
+> > > Since mm->locked_vm is already an atomic counter,
+> > > account_locked_vm() does not need to hold mmap_lock.
+> > 
+> > I am worried that this patch, already added to mmotm, along with its
+> > 1/2 making locked_vm an atomic64, might be rushed into v5.9 with
+> > just that two-line commit description, and no discussion at all.
+> > 
+> > locked_vm belongs fundamentally to mm/mlock.c, and the lock to guard
+> > it is mmap_lock; and mlock() has some complicated stuff to do under
+> > that lock while it decides how to adjust locked_vm.
 > >
-> > Thanks for the report. I didn't see it on real hardware though. Maybe
-> > because of timing (race?) differences.
-> >
-> > Greg, I think the best is to revert the change until I will have better one.
+> > It is very easy to convert an unsigned long to an atomic64_t, but
+> > "atomic read, check limit and do stuff, atomic add" does not give
+> > the same guarantee as holding the right lock around it all.
+> 
+> Yes, this is why I withdrew my attempt to do something similar last
+> year, I didn't want to make the accounting racy. Stack and heap
+> growing and mremap would be affected in addition to mlock.
 >
-> Can you send me a revert patch with the reported-by: set up?
+> It'd help to hear more about the motivation for this.
+> 
 
-Done.
+Thanks for your comments.
 
+My motivation is to allow mm related counters to be safely read and
+written without holding mmap_lock. But sorry i didn't do well.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Pengfei
