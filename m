@@ -2,62 +2,85 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AD0C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 22:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F00C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 23:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC12B20738
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 22:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E771920775
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 23:01:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="pT2y52UB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRyBHz/Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbgHBW7C (ORCPT
+        id S1727865AbgHBXBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 18:59:02 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:57188 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbgHBW7C (ORCPT
+        Sun, 2 Aug 2020 19:01:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59704 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbgHBXBJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 18:59:02 -0400
-Received: from [192.168.254.32] (unknown [47.187.206.220])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 2BD5420B4908;
-        Sun,  2 Aug 2020 15:59:00 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2BD5420B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1596409140;
-        bh=Q7q31WyGpO6J3iZ6HoTSTxcyY2RYOO3HoBrVjNyqpPA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=pT2y52UBji3W0nv8oaWqlXsVHl+hqxrTJnSZ5683V0Vq7481OEdHqda3OONYprXUp
-         pUvC7Ja7yH7A7A7PnhVPoN4/nCrqBhOuCsyTs5k8KgsuxVR6rM+c6V/PJxlx37f+KW
-         8krLq5y3aSQx9KIXxSdL4F/U4BEfCPv/l8nRqqTQ=
-Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
-References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
- <3b916198-3a98-bd19-9a1c-f2d8d44febe8@linux.microsoft.com>
- <CALCETrUJ2hBmJujyCtEqx4=pknRvjvi1-Gj9wfRcMMzejjKQsQ@mail.gmail.com>
-From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Message-ID: <0fa7d888-c4fd-aeb3-db08-151ea648558d@linux.microsoft.com>
-Date:   Sun, 2 Aug 2020 17:58:59 -0500
+        Sun, 2 Aug 2020 19:01:09 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3C62C06174A;
+        Sun,  2 Aug 2020 16:01:09 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ha11so10366787pjb.1;
+        Sun, 02 Aug 2020 16:01:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=uZ5xf5K5F6IXKJ1bHVKUxDYDtmw93bV77H+P4Hdhxpw=;
+        b=JRyBHz/Qm/Zn7f5p1TlKPAnZ1NX0e2CS2T2j+yV9XMeXBYATNQj87tOEQ3igINch3z
+         peRzkc3stoDtpC33Ej8bVin6JNMFntHB7Da6nz+zmcvcWgA/E/aX5AjYEYBOeDD7Il+9
+         AHCRSQUGiWJvfbDW5Xzan4hIfwtTxdpFZKXPL/nIAEeGjx13yLHxy78zOVzyyveny8YT
+         X9yabu1w9zIQDmf8X4YuBDzXH1I3PlX7ymQxzrx4V8Kd5RJZolVj6VWUJBrZsWFe30P7
+         9KaO/f4cif3fPnpiIFcXMWXKx2a2BJT6CRx4KJ7NMJEpylBsJQvWMgnfdXU1YM/F7UVs
+         vK4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uZ5xf5K5F6IXKJ1bHVKUxDYDtmw93bV77H+P4Hdhxpw=;
+        b=KjSCZdYA9WRwoXVfSP9MKmSQvpDsz13OYvwjcobdXlv6WkreqMQj5QanKFSMSzl6Uw
+         9EbmhgAAWuAfbCER6WY2afyA/yBAvA61vueOyFeejh4EE3QierjkOuzPvQnXiPA6XzOC
+         W9v4SIMTfgSAFqV9gOj7i1OeuWQswm4dqxND42rYXK3YS2eetN0oTiaGvy7c6b3kydL4
+         z2Pzje1EHBDyjSQStXVbIJ/3uj1CITN5fiEQEMwWHe/dIpxXIsapdxUK5mnKMA8Ut28M
+         Q314xshsXm6PP7JPIIzaE7jVufi0gUOQqDxliV9dl3zBOZBoIS3JYOvNo4+w+fHu1TX8
+         INZw==
+X-Gm-Message-State: AOAM533AAE6fst0R6Nr/HtV3um220dKU+vAXIkacQZvVFFzSXYhdKTow
+        RwABOb/CKfnJKUL7gdrERiF8h/s2
+X-Google-Smtp-Source: ABdhPJzATiT0H6891gyPi5Ro6fA1TcnURhx7rHO9tb4Bil3XSbt1xCPKLGnTXMcujtcN4Z4fWXUXYg==
+X-Received: by 2002:a17:902:64:: with SMTP id 91mr12682813pla.62.1596409268717;
+        Sun, 02 Aug 2020 16:01:08 -0700 (PDT)
+Received: from [10.1.10.11] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id 199sm18540220pgc.79.2020.08.02.16.01.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Aug 2020 16:01:07 -0700 (PDT)
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
+ bpf_prog_ADDR
+To:     syzbot <syzbot+192a7fbbece55f740074@syzkaller.appspotmail.com>,
+        andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, hawk@kernel.org,
+        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com
+References: <00000000000006209e05abecc711@google.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <618c205e-c92f-1c3a-94a3-00793f0ad279@gmail.com>
+Date:   Sun, 2 Aug 2020 16:01:06 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <CALCETrUJ2hBmJujyCtEqx4=pknRvjvi1-Gj9wfRcMMzejjKQsQ@mail.gmail.com>
+In-Reply-To: <00000000000006209e05abecc711@google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,106 +88,96 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 8/2/20 3:00 PM, Andy Lutomirski wrote:
-> On Sun, Aug 2, 2020 at 11:54 AM Madhavan T. Venkataraman
-> <madvenka@linux.microsoft.com> wrote:
->> More responses inline..
->>
->> On 7/28/20 12:31 PM, Andy Lutomirski wrote:
->>>> On Jul 28, 2020, at 6:11 AM, madvenka@linux.microsoft.com wrote:
->>>>
->>>> ﻿From: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
->>>>
->>> 2. Use existing kernel functionality.  Raise a signal, modify the
->>> state, and return from the signal.  This is very flexible and may not
->>> be all that much slower than trampfd.
->> Let me understand this. You are saying that the trampoline code
->> would raise a signal and, in the signal handler, set up the context
->> so that when the signal handler returns, we end up in the target
->> function with the context correctly set up. And, this trampoline code
->> can be generated statically at build time so that there are no
->> security issues using it.
->>
->> Have I understood your suggestion correctly?
-> yes.
->
->> So, my argument would be that this would always incur the overhead
->> of a trip to the kernel. I think twice the overhead if I am not mistaken.
->> With trampfd, we can have the kernel generate the code so that there
->> is no performance penalty at all.
-> I feel like trampfd is too poorly defined at this point to evaluate.
-> There are three general things it could do.  It could generate actual
-> code that varies by instance.  It could have static code that does not
-> vary.  And it could actually involve a kernel entry.
->
-> If it involves a kernel entry, then it's slow.  Maybe this is okay for
-> some use cases.
+On 8/2/20 3:45 PM, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    ac3a0c84 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13234970900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c0cfcf935bcc94d2
+> dashboard link: https://syzkaller.appspot.com/bug?extid=192a7fbbece55f740074
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=141541ea900000
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+192a7fbbece55f740074@syzkaller.appspotmail.com
+> 
+> BUG: kernel NULL pointer dereference, address: 0000000000000000
+> #PF: supervisor read access in kernel mode
+> #PF: error_code(0x0000) - not-present page
+> PGD 9176a067 P4D 9176a067 PUD 9176b067 PMD 0 
+> Oops: 0000 [#1] PREEMPT SMP KASAN
+> CPU: 1 PID: 8142 Comm: syz-executor.2 Not tainted 5.8.0-rc7-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> RIP: 0010:bpf_prog_e48ebe87b99394c4+0x1f/0x590
+> Code: cc cc cc cc cc cc cc cc cc cc cc 0f 1f 44 00 00 55 48 89 e5 48 81 ec 00 00 00 00 53 41 55 41 56 41 57 6a 00 31 c0 48 8b 47 28 <48> 8b 40 00 8b 80 00 01 00 00 5b 41 5f 41 5e 41 5d 5b c9 c3 cc cc
+> RSP: 0018:ffffc900038a7b00 EFLAGS: 00010246
+> RAX: 0000000000000000 RBX: dffffc0000000000 RCX: dffffc0000000000
+> RDX: ffff88808cfb0200 RSI: ffffc90000e7e038 RDI: ffffc900038a7ca8
+> RBP: ffffc900038a7b28 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: ffffc90000e7e000
+> R13: ffffc90000e7e000 R14: 0000000000000001 R15: 0000000000000000
+> FS:  00007fda07fef700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000000000000 CR3: 0000000091769000 CR4: 00000000001406e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  bpf_prog_run_xdp include/linux/filter.h:734 [inline]
+>  bpf_test_run+0x221/0xc70 net/bpf/test_run.c:47
+>  bpf_prog_test_run_xdp+0x2ca/0x510 net/bpf/test_run.c:524
+>  bpf_prog_test_run kernel/bpf/syscall.c:2983 [inline]
+>  __do_sys_bpf+0x2117/0x4b10 kernel/bpf/syscall.c:4135
+>  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> RIP: 0033:0x45cc79
+> Code: 2d b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb b5 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007fda07feec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+> RAX: ffffffffffffffda RBX: 0000000000001740 RCX: 000000000045cc79
+> RDX: 0000000000000028 RSI: 0000000020000080 RDI: 000000000000000a
+> RBP: 000000000078bfe0 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bfac
+> R13: 00007ffc3ef769bf R14: 00007fda07fef9c0 R15: 000000000078bfac
+> Modules linked in:
+> CR2: 0000000000000000
+> ---[ end trace b2d24107e7fdae7d ]---
+> RIP: 0010:bpf_prog_e48ebe87b99394c4+0x1f/0x590
+> Code: cc cc cc cc cc cc cc cc cc cc cc 0f 1f 44 00 00 55 48 89 e5 48 81 ec 00 00 00 00 53 41 55 41 56 41 57 6a 00 31 c0 48 8b 47 28 <48> 8b 40 00 8b 80 00 01 00 00 5b 41 5f 41 5e 41 5d 5b c9 c3 cc cc
+> RSP: 0018:ffffc900038a7b00 EFLAGS: 00010246
+> RAX: 0000000000000000 RBX: dffffc0000000000 RCX: dffffc0000000000
+> RDX: ffff88808cfb0200 RSI: ffffc90000e7e038 RDI: ffffc900038a7ca8
+> RBP: ffffc900038a7b28 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: ffffc90000e7e000
+> R13: ffffc90000e7e000 R14: 0000000000000001 R15: 0000000000000000
+> FS:  00007fda07fef700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000000000000 CR3: 0000000091769000 CR4: 00000000001406e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this issue, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+> 
 
-Yes. IMO, it is OK for most cases except where dynamic code
-is used specifically for enhancing performance such as interpreters
-using JIT code for frequently executed sequences and dynamic
-binary translation.
 
-> If it involves only static code, I see no good reason that it should
-> be in the kernel.
+# https://syzkaller.appspot.com/bug?id=d60883a0b19a778d2bcab55f3f6459467f4a3ea7
+# See https://goo.gl/kgGztJ for information about syzkaller reproducers.
+#{"threaded":true,"collide":true,"repeat":true,"procs":6,"sandbox":"none","fault_call":-1,"tun":true,"netdev":true,"resetnet":true,"cgroups":true,"binfmt_misc":true,"close_fds":true,"vhci":true,"tmpdir":true,"segv":true}
+bpf$PROG_LOAD(0x5, &(0x7f00000ba000)={0x6, 0x4, &(0x7f0000346fc8)=@framed={{}, [@alu={0x8000000201a7f19, 0x0, 0x201a7fa6, 0x0, 0x1, 0x14}]}, &(0x7f0000000040)='syzkaller\x00', 0x1, 0xfb, &(0x7f0000002880)=""/251, 0x0, 0x0, [], 0x0, 0x21}, 0x48)
+r0 = bpf$PROG_LOAD(0x5, &(0x7f00002a0fb8)={0x13, 0x4, &(0x7f0000000480)=ANY=[@ANYBLOB="8500000011000000350000000000000085000000230000009500000d000000003c8ea5932cf669ebecab19b3fd50fec5eade4bb02a231016bc5733a4f152b8bdfdfebcfdaf3d5363dd79d50034e58579eda0cfe296"], &(0x7f0000000140)='GPL\x00', 0x4, 0x99, &(0x7f0000000180)=""/153, 0x0, 0x0, [], 0x0, 0x0, 0xffffffffffffffff, 0x8, 0x0, 0x0, 0x10, 0x0, 0xfffffffffffffd0c}, 0x64)
+bpf$BPF_PROG_TEST_RUN(0xa, &(0x7f0000000080)={r0, 0x1000000, 0xe, 0x0, &(0x7f00000000c0)="61df712bc884fed5722780b6c2a7", 0x0, 0x8000, 0x0, 0xff9f}, 0x28)
 
-It does not involve only static code. This is meant for dynamic code.
-However, see below.
 
-> If it involves dynamic code, then I think it needs a clearly defined
-> use case that actually requires dynamic code.
+Not clear how a BPF_PROG_TYPE_LWT_SEG6LOCAL ends up using bpf_prog_test_run_xdp() ?
 
-Fair enough. I will work on this and get back to you. This might take
-a little time. So, bear with me.
 
-But I would like to make one point here. There are many applications
-and libraries out there that use trampolines. They may all require the
-same sort of things:
-
-    - set register context
-    - push stuff on stack
-    - jump to a target PC
-
-But in each case, the context would be different:
-
-    - only register context
-    - only stack context
-    - both register and stack contexts
-    - different registers
-    - different values pushed on the stack
-    - different target PCs
-
-If we had to do this purely at user level, each application/library would
-need to roll its own solution, the solution has to be implemented for
-each supported architecture and maintained. While the code is static
-in each separate case, it is dynamic across all of them.
-
-That is, the kernel will generate the code on the fly for each trampoline
-instance based on its current context. It will not maintain any static
-trampoline code at all.
-
-Basically, it will supply the context to an arch-specific function and say:
-
-    - generate instructions for loading these regs with these values
-    - generate instructions to push these values on the stack
-    - generate an instruction to jump to this target PC
-
-It will place all of those generated instructions on a page and return the address.
-
-So, even with the static case, there is a lot of value in the kernel providing
-this. Plus, it has the framework to handle dynamic code.
-
->> Also, signals are asynchronous. So, they are vulnerable to race conditions.
->> To prevent other signals from coming in while handling the raised signal,
->> we would need to block and unblock signals. This will cause more
->> overhead.
-> If you're worried about raise() racing against signals from out of
-> thread, you have bigger problems to deal with.
-
-Agreed. The signal blocking is just one example of problems related
-to signals. There are other bigger problems as well. So, let us remove
-the signal-based approach from our discussions.
-
-Thanks.
-
-Madhavan
