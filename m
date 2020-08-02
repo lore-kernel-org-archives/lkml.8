@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 257EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B3DC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 059CC206F6
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86509206F6
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596385106;
-	bh=nOa8wxJm1f8cjqGfL7NjNeo+Mx8Us8DVTtmrq2udKrY=;
+	s=default; t=1596385107;
+	bh=uduH/2NAifIDrvbdCQ9vNRzXuEtPGIsHVvhkDbPtI00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wbb5P/MBZQtbZaCbUO4XyWKdGSiBRL3Ewfd8AwXb12ukyAkx5jsIFBnsz/ql/4/qY
-	 i5b+Kw8Onk5/bS87WAzPASkWqF6yZtB60RjrjHPeemcPRziT35MF59KabZVXHv7uGB
-	 kpxWAsMmTK/IksyQhBvcDdXstU12xenZDaTQnS3o=
+	b=dfL0i6bQwfUpL/E03vGj1DEwp6Us2MhJ7orOt7qOnmKNnh1m09ApP2mTUrvzKXpSB
+	 32iuvEeZ9+hBTMDcpaLUGwuW0Dsfe8tEUVMGn0efMZ9s19EFHiUUzrE2e8yQfjbMCK
+	 w6TgImq0CMMidZFVynODQ1Rj+bobWXNyBOkCMkx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgHBQSY (ORCPT
+        id S1727085AbgHBQS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 12:18:24 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:48904 "EHLO
+        Sun, 2 Aug 2020 12:18:26 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:48914 "EHLO
         conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726965AbgHBQSG (ORCPT
+        with ESMTP id S1726975AbgHBQSG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 2 Aug 2020 12:18:06 -0400
 Received: from oscar.flets-west.jp (softbank126025067101.bbtec.net [126.25.67.101]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 072GHOam003720;
-        Mon, 3 Aug 2020 01:17:29 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 072GHOam003720
+        by conuserg-07.nifty.com with ESMTP id 072GHOao003720;
+        Mon, 3 Aug 2020 01:17:31 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 072GHOao003720
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1596385049;
-        bh=rxIR7xmDbgwILNsGth0BdqXszWzbdWYmbGkGpyVmV1M=;
+        s=dec2015msa; t=1596385051;
+        bh=Ap0/SOrgdWrc0cVJydhT7UgXLUOg9wnxtYtpXHl1wxk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tdBzI/TyyJdQ5b5Bfxv1PJHmHdhlSUaFQAJKZA/gBQWZLSMjmcPSTK+MyoKtuPOxS
-         E350UMAndXjLrZakLXXJ/tk0YJ3iW+yAgdwUgCa/jRJqxNXkJ8hcaKZUbLY1gVwP/K
-         qzIsFPeg9TCpLrL8uKvf2/xw80zcQxCMob5otvkYdpG66yrEtV14vDjw2QSE1qMPfW
-         Q6+umNouC5SV1EK06onCGRfEb2VKHC7b6/WtEw/1lG+ho7NTsNvcX2ztg0PzHuZRMv
-         E1zzulub4MYBKSvBW3o188EUmLiO+Ppe5bJBIre6/ctvnFM7bOWvCXx8PHOY1j8gCg
-         2ELS1FVxtYzLA==
+        b=ErjTkBoCwmdQBnWeoRACFUI24TEztcZBpB+2fzVuWRdLFRKI4tYBpC+njeHV8dwJd
+         CxKado7L0HUYttuTxialguev6O9VOHKNyVQEMW0seDSZcKKflfuulNTCWQKUgNv6Pq
+         e5M20pvuz6+SJ/aluZlYsbWHd7Hum97jc+0jMcfgBSHWV9kfVKVG1m10FFWZCfITaX
+         mddplkpf5grOSpdkKyaeudDgzVDFlWvE28bseESupfLsMwVSBXidEFou46Or3+mLI4
+         gtoa6MlAavZ4L1aBdQOWNGo7u7WSEr+7HiBszXF3pVU7OL/gih5geT4RsiOcDh9G3q
+         OvhL3lRdc3/qQ==
 X-Nifty-SrcIP: [126.25.67.101]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 11/16] kconfig: qconf: drop more localization code
-Date:   Mon,  3 Aug 2020 01:17:16 +0900
-Message-Id: <20200802161721.921721-11-masahiroy@kernel.org>
+Subject: [PATCH 13/16] kconfig: qconf: remove ConfigList::addColumn/removeColumn
+Date:   Mon,  3 Aug 2020 01:17:18 +0900
+Message-Id: <20200802161721.921721-13-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200802161721.921721-1-masahiroy@kernel.org>
 References: <20200802161721.921721-1-masahiroy@kernel.org>
@@ -60,61 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a remnant of commit 694c49a7c01c ("kconfig: drop localization
-support").
-
-Get it back to the code prior to commit 3b9fa0931dd8 ("[PATCH] Kconfig
-i18n support").
+Use QTreeView::showColumn/hideColumn directly.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/kconfig/qconf.cc | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ scripts/kconfig/qconf.cc | 22 +++++++++++-----------
+ scripts/kconfig/qconf.h  |  8 --------
+ 2 files changed, 11 insertions(+), 19 deletions(-)
 
 diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index 7f7164c71163..de46a2fc3f98 100644
+index 94ffb64d3eca..a73665d9ca78 100644
 --- a/scripts/kconfig/qconf.cc
 +++ b/scripts/kconfig/qconf.cc
-@@ -31,11 +31,6 @@ static ConfigSettings *configSettings;
+@@ -317,7 +317,7 @@ ConfigList::ConfigList(ConfigView* p, const char *name)
+ 		connect(configApp, SIGNAL(aboutToQuit()), SLOT(saveSettings()));
+ 	}
  
- QAction *ConfigMainWindow::saveAction;
+-	addColumn(promptColIdx);
++	showColumn(promptColIdx);
  
--static inline QString qgettext(const char* str)
--{
--	return QString::fromLocal8Bit(str);
--}
--
- ConfigSettings::ConfigSettings()
- 	: QSettings("kernel.org", "qconf")
+ 	reinit();
+ }
+@@ -335,21 +335,21 @@ bool ConfigList::menuSkip(struct menu *menu)
+ 
+ void ConfigList::reinit(void)
  {
-@@ -109,7 +104,7 @@ void ConfigItem::updateMenu(void)
+-	removeColumn(dataColIdx);
+-	removeColumn(yesColIdx);
+-	removeColumn(modColIdx);
+-	removeColumn(noColIdx);
+-	removeColumn(nameColIdx);
++	hideColumn(dataColIdx);
++	hideColumn(yesColIdx);
++	hideColumn(modColIdx);
++	hideColumn(noColIdx);
++	hideColumn(nameColIdx);
  
- 	sym = menu->sym;
- 	prop = menu->prompt;
--	prompt = qgettext(menu_get_prompt(menu));
-+	prompt = menu_get_prompt(menu);
+ 	if (showName)
+-		addColumn(nameColIdx);
++		showColumn(nameColIdx);
+ 	if (showRange) {
+-		addColumn(noColIdx);
+-		addColumn(modColIdx);
+-		addColumn(yesColIdx);
++		showColumn(noColIdx);
++		showColumn(modColIdx);
++		showColumn(yesColIdx);
+ 	}
+ 	if (showData)
+-		addColumn(dataColIdx);
++		showColumn(dataColIdx);
  
- 	if (prop) switch (prop->type) {
- 	case P_MENU:
-@@ -135,7 +130,7 @@ void ConfigItem::updateMenu(void)
- 	if (!sym)
- 		goto set_prompt;
+ 	updateListAll();
+ }
+diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
+index 5cda89a51740..daa180bdb9b4 100644
+--- a/scripts/kconfig/qconf.h
++++ b/scripts/kconfig/qconf.h
+@@ -88,14 +88,6 @@ public slots:
+ 		updateList();
+ 		updateAll = false;
+ 	}
+-	void addColumn(colIdx idx)
+-	{
+-		showColumn(idx);
+-	}
+-	void removeColumn(colIdx idx)
+-	{
+-		hideColumn(idx);
+-	}
+ 	void setAllOpen(bool open);
+ 	void setParentMenu(void);
  
--	setText(nameColIdx, QString::fromLocal8Bit(sym->name));
-+	setText(nameColIdx, sym->name);
- 
- 	type = sym_get_type(sym);
- 	switch (type) {
-@@ -265,7 +260,7 @@ void ConfigLineEdit::show(ConfigItem* i)
- {
- 	item = i;
- 	if (sym_get_string_value(item->menu->sym))
--		setText(QString::fromLocal8Bit(sym_get_string_value(item->menu->sym)));
-+		setText(sym_get_string_value(item->menu->sym));
- 	else
- 		setText(QString());
- 	Parent::show();
 -- 
 2.25.1
 
