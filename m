@@ -2,443 +2,357 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03226C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 09:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC6CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 10:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC4292075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 09:35:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMscgeQA"
+	by mail.kernel.org (Postfix) with ESMTP id AE53820738
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 10:08:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbgHBJfc (ORCPT
+        id S1728027AbgHBKHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 05:35:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49856 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726376AbgHBJfb (ORCPT
+        Sun, 2 Aug 2020 06:07:52 -0400
+Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:27019 "EHLO
+        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726416AbgHBKHv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 05:35:31 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 439BEC06174A;
-        Sun,  2 Aug 2020 02:35:29 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id o10so15507860edh.6;
-        Sun, 02 Aug 2020 02:35:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TFbAp4M9vuUJt2UaC+MnxBB5SfJJt6/itJ08qj7grVw=;
-        b=fMscgeQAEOkO7C6lVf2zq9EBCrzAkiZyijRpbFo4xVN5ZVLjB5ZfDLT0jRp87DrWW6
-         bgUIxWNbeVxUH3h6zzzLGng7+zcJF9oB5cyZy4AR9jWbNvazc04DXjHm/+qUPoqtlS4v
-         89F6mVA6zwCdBFaf78kujfiG1kn5rWcW7iW2inMHzoHHnqcr/dpG1/ggfNIDulkFbI8S
-         6pPzOt9Xr+7KdBdYaLyk7PFCe41V2eDbnxJ8vu+v8iDwSFeyEI4Wu67KFYl1v3/153Kk
-         UIKC+/Kt5CH0q+Csalm3ALmzFi0wql1XmIiRUXSUowxV3u55Up/BbvCLTSj9duHPCRPM
-         d+TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TFbAp4M9vuUJt2UaC+MnxBB5SfJJt6/itJ08qj7grVw=;
-        b=K8/v2tVDMMllOPHrRGM2tYY9ea9vOG8X2qXkekGVT4+niETFBXhxM1jQqtAgOCeVGd
-         XfwFHqpfKgi7vFt7kmG9LyKU0ENMS1YTIloiNT1u8iN4iWgdzFlFeV+0YSxU7sH6a5ye
-         cPxjg7ZecKOKdBP9EGP4kxJie0cwaGtROxaUIaey2fTBqKD5MeN/jsUAAsFv98yr1Vl1
-         LC9/qyQtg4JT0auj6vHT4+vp4ae3iKSedJj/xuVedD5JQcUS4FbCQKt0dz+ZLjaH6X0k
-         ewdrD57GefS+MeLpfVUbyrPHxUAtwbK29R/Zc3te7Oc/vGFjdkbv58Iznyp8Pgc6Nw0w
-         oXoA==
-X-Gm-Message-State: AOAM532dH61G+8DaR7ajskPsVif/OfOFNo4w6tNNhe3rUrxOoKEnp+0s
-        4WDrJxlW1o5f04dLYE7+4f+MENH6
-X-Google-Smtp-Source: ABdhPJw0XtnpQZasHiLXMzgAsp7Q7/Okl2XY1LF89nzRg/gCEkMD7jR5PNdmO0JtmFw2cqLAgl9RFg==
-X-Received: by 2002:aa7:d607:: with SMTP id c7mr11104722edr.184.1596360927908;
-        Sun, 02 Aug 2020 02:35:27 -0700 (PDT)
-Received: from BV030612LT ([86.121.43.21])
-        by smtp.gmail.com with ESMTPSA id u13sm12843552ejc.72.2020.08.02.02.35.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Aug 2020 02:35:27 -0700 (PDT)
-Date:   Sun, 2 Aug 2020 12:35:24 +0300
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add bindings for Actions S500
- SoC
-Message-ID: <20200802093524.GA1025476@BV030612LT>
-References: <cover.1593112402.git.cristian.ciocaltea@gmail.com>
- <2a7610ff9f33cf72d9df6fc4598741fb6d7836e0.1593112402.git.cristian.ciocaltea@gmail.com>
- <B6ED9520-2945-4181-8C3D-A1AA519248D9@linaro.org>
- <20200626130641.GA21994@BV030612LT>
- <20200801144606.GA20252@Mani-XPS-13-9360>
+        Sun, 2 Aug 2020 06:07:51 -0400
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHCAS1.zhaoxin.com
+ (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Sun, 2 Aug 2020
+ 18:07:44 +0800
+Received: from localhost.localdomain (114.242.249.158) by zxbjmbx1.zhaoxin.com
+ (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Sun, 2 Aug 2020
+ 18:07:42 +0800
+From:   FelixCuioc <FelixCui-oc@zhaoxin.com>
+To:     Joerg Roedel <joro@8bytes.org>, <iommu@lists.linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>
+CC:     <CobeChen@zhaoxin.com>, <RaymondPang@zhaoxin.com>
+Subject: [PATCH] iommu/vt-d:Add support for ACPI device in RMRR
+Date:   Sun, 2 Aug 2020 06:07:35 -0400
+Message-ID: <20200802100735.2722-1-FelixCui-oc@zhaoxin.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200801144606.GA20252@Mani-XPS-13-9360>
+Content-Type: text/plain
+X-Originating-IP: [114.242.249.158]
+X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
+ zxbjmbx1.zhaoxin.com (10.29.252.163)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 01, 2020 at 08:16:06PM +0530, Manivannan Sadhasivam wrote:
-> Hi,
-> 
-> On Fri, Jun 26, 2020 at 04:06:41PM +0300, Cristian Ciocaltea wrote:
-> > On Fri, Jun 26, 2020 at 12:50:46PM +0530, Manivannan Sadhasivam wrote:
-> > > 
-> > > 
-> > > On 26 June 2020 1:46:18 AM IST, Cristian Ciocaltea <cristian.ciocaltea@gmail.com> wrote:
-> > > >Add pinctrl and gpio bindings for Actions Semi S500 SoC.
-> > > >
-> > > >Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > > >---
-> > > > .../pinctrl/actions,s500-pinctrl.yaml         | 228 ++++++++++++++++++
-> > > > 1 file changed, 228 insertions(+)
-> > > >create mode 100644
-> > > >Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
-> > > >
-> > > >diff --git
-> > > >a/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
-> > > >b/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
-> > > >new file mode 100644
-> > > >index 000000000000..856947c70844
-> > > >--- /dev/null
-> > > >+++
-> > > >b/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
-> > > >@@ -0,0 +1,228 @@
-> > > >+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > >+%YAML 1.2
-> > > >+---
-> > > >+$id: http://devicetree.org/schemas/pinctrl/actions,s500-pinctrl.yaml#
-> > > >+$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > >+
-> > > >+title: Actions Semi S500 SoC pinmux & GPIO controller
-> > > >+
-> > > >+maintainers:
-> > > >+  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > 
-> > > Feel free to add yourself as co-maintainer since you are the one contributing S500 support. 
-> > 
-> > Ok, thanks!
-> > 
-> > > 
-> > > >+
-> > > >+description: |
-> > > >+  Pinmux & GPIO controller manages pin multiplexing & configuration
-> > > >including
-> > > >+  GPIO function selection & GPIO attributes configuration. Please
-> > > >refer to
-> > > >+  pinctrl-bindings.txt in this directory for common binding part and
-> > > >usage.
-> > > >+
-> > > >+properties:
-> > > >+  compatible:
-> > > >+    const: actions,s500-pinctrl
-> > > >+
-> > > >+  reg:
-> > > >+    minItems: 1
-> > > >+    maxItems: 4
-> > > 
-> > > 4?
-> > > 
-> > > Thanks, 
-> > > Mani
-> > 
-> > The pinctrl node in the owl-s500 DTS has a more granular specification
-> > for the reg property, in order to exclude the unused ranges (i.e. PWM):
-> > 
-> >   reg = <0xb01b0000 0x40>, /* GPIO */
-> >         <0xb01b0040 0x10>, <0xb01b0060 0x18>, <0xb01b0080 0xc>;
-> > 
-> > The complete node description is available in the related patch:
-> > https://lore.kernel.org/lkml/b43c9d1a1ef689403bc17b2474aff20629b58263.1593124368.git.cristian.ciocaltea@gmail.com/
-> > 
-> > For the sake of simplicity, in the example below I used the contiguous
-> > range. However, I've just noticed a copy/paste issue there, the correct
-> > range should be <0xb01b0000 0x8c> - will be fixed in the next revision.
-> > 
-> 
-> Hmm, okay. We don't have a better solution _yet_ for this issue and I'm okay
-> with specifying split ranges in the meantime.
+Some ACPI devices require access to the specified reserved memory
+region.BIOS report the specified reserved memory region through
+RMRR structures.Add analysis of ACPI device in RMRR and establish
+identity mapping for ACPI device.
 
-To avoid any further confusion, I will also change the example to use
-the split ranges. This will match the reg items description nodes as
-indicated by Rob.
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: FelixCuioc <FelixCui-oc@zhaoxin.com>
+---
+ drivers/iommu/intel/dmar.c  | 74 ++++++++++++++++++++-----------------
+ drivers/iommu/intel/iommu.c | 46 ++++++++++++++++++++++-
+ drivers/iommu/iommu.c       |  6 +++
+ include/linux/dmar.h        | 12 +++++-
+ include/linux/iommu.h       |  3 ++
+ 5 files changed, 105 insertions(+), 36 deletions(-)
 
-I will send a new revision of the patch series as soon as we clarify
-the GPIO ports offsets in the pinctrl driver implementation. Please
-let me know if I should provide more information on that topic.
-
-Thanks,
-Cristi
+diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
+index 93e6345f3414..024ca38dba12 100644
+--- a/drivers/iommu/intel/dmar.c
++++ b/drivers/iommu/intel/dmar.c
+@@ -215,7 +215,7 @@ static bool dmar_match_pci_path(struct dmar_pci_notify_info *info, int bus,
+ }
  
-> Thanks,
-> Mani
-> 
-> > Thanks for reviewing,
-> > Cristi
-> > 
-> > > 
-> > > >+
-> > > >+  clocks:
-> > > >+    maxItems: 1
-> > > >+
-> > > >+  gpio-controller: true
-> > > >+
-> > > >+  gpio-ranges:
-> > > >+    maxItems: 1
-> > > >+
-> > > >+  '#gpio-cells':
-> > > >+    description:
-> > > >+      Specifies the pin number and flags, as defined in
-> > > >+      include/dt-bindings/gpio/gpio.h
-> > > >+    const: 2
-> > > >+
-> > > >+  interrupt-controller: true
-> > > >+
-> > > >+  '#interrupt-cells':
-> > > >+    description:
-> > > >+      Specifies the pin number and flags, as defined in
-> > > >+      include/dt-bindings/interrupt-controller/irq.h
-> > > >+    const: 2
-> > > >+
-> > > >+  interrupts:
-> > > >+    description:
-> > > >+      One interrupt per each of the 5 GPIO ports supported by the
-> > > >controller,
-> > > >+      sorted by port number ascending order.
-> > > >+    minItems: 5
-> > > >+    maxItems: 5
-> > > >+
-> > > >+patternProperties:
-> > > >+  '^.*$':
-> > > >+    if:
-> > > >+      type: object
-> > > >+    then:
-> > > >+      patternProperties:
-> > > >+        'pinmux$':
-> > > >+          type: object
-> > > >+          description:
-> > > >+            Pinctrl node's client devices specify pin muxes using
-> > > >subnodes,
-> > > >+            which in turn use the standard properties below.
-> > > >+          $ref: pinmux-node.yaml#
-> > > >+
-> > > >+          properties:
-> > > >+            groups:
-> > > >+              description:
-> > > >+                List of gpio pin groups affected by the functions
-> > > >specified in
-> > > >+                this subnode.
-> > > >+              items:
-> > > >+                oneOf:
-> > > >+                  - enum: [lcd0_d18_mfp, rmii_crs_dv_mfp,
-> > > >rmii_txd0_mfp,
-> > > >+                      rmii_txd1_mfp, rmii_txen_mfp, rmii_rxen_mfp,
-> > > >+                      rmii_rxd1_mfp, rmii_rxd0_mfp, rmii_ref_clk_mfp,
-> > > >+                      i2s_d0_mfp, i2s_pcm1_mfp, i2s0_pcm0_mfp,
-> > > >i2s1_pcm0_mfp,
-> > > >+                      i2s_d1_mfp, ks_in2_mfp, ks_in1_mfp, ks_in0_mfp,
-> > > >+                      ks_in3_mfp, ks_out0_mfp, ks_out1_mfp,
-> > > >ks_out2_mfp,
-> > > >+                      lvds_o_pn_mfp, dsi_dn0_mfp, dsi_dp2_mfp,
-> > > >lcd0_d17_mfp,
-> > > >+                      dsi_dp3_mfp, dsi_dn3_mfp, dsi_dp0_mfp,
-> > > >lvds_ee_pn_mfp,
-> > > >+                      spi0_i2c_pcm_mfp, spi0_i2s_pcm_mfp,
-> > > >dsi_dnp1_cp_mfp,
-> > > >+                      lvds_e_pn_mfp, dsi_dn2_mfp, uart2_rtsb_mfp,
-> > > >+                      uart2_ctsb_mfp, uart3_rtsb_mfp, uart3_ctsb_mfp,
-> > > >+                      sd0_d0_mfp, sd0_d1_mfp, sd0_d2_d3_mfp,
-> > > >sd1_d0_d3_mfp,
-> > > >+                      sd0_cmd_mfp, sd0_clk_mfp, sd1_cmd_mfp,
-> > > >uart0_rx_mfp,
-> > > >+                      clko_25m_mfp, csi_cn_cp_mfp, sens0_ckout_mfp,
-> > > >+                      uart0_tx_mfp, i2c0_mfp, csi_dn_dp_mfp,
-> > > >sen0_pclk_mfp,
-> > > >+                      pcm1_in_mfp, pcm1_clk_mfp, pcm1_sync_mfp,
-> > > >pcm1_out_mfp,
-> > > >+                      dnand_data_wr_mfp, dnand_acle_ce0_mfp,
-> > > >nand_ceb2_mfp,
-> > > >+                      nand_ceb3_mfp]
-> > > >+              minItems: 1
-> > > >+              maxItems: 32
-> > > >+
-> > > >+            function:
-> > > >+              description:
-> > > >+                Specify the alternative function to be configured for
-> > > >the
-> > > >+                given gpio pin groups.
-> > > >+              enum: [nor, eth_rmii, eth_smii, spi0, spi1, spi2, spi3,
-> > > >sens0,
-> > > >+                sens1, uart0, uart1, uart2, uart3, uart4, uart5,
-> > > >uart6, i2s0,
-> > > >+                i2s1, pcm1, pcm0, ks, jtag, pwm0, pwm1, pwm2, pwm3,
-> > > >pwm4, pwm5,
-> > > >+                p0, sd0, sd1, sd2, i2c0, i2c1, i2c3, dsi, lvds, usb30,
-> > > >clko_25m,
-> > > >+                mipi_csi, nand, spdif, ts, lcd0]
-> > > >+
-> > > >+          required:
-> > > >+            - groups
-> > > >+            - function
-> > > >+
-> > > >+          additionalProperties: false
-> > > >+
-> > > >+        'pinconf$':
-> > > >+          type: object
-> > > >+          description:
-> > > >+            Pinctrl node's client devices specify pin configurations
-> > > >using
-> > > >+            subnodes, which in turn use the standard properties below.
-> > > >+          $ref: pincfg-node.yaml#
-> > > >+
-> > > >+          properties:
-> > > >+            groups:
-> > > >+              description:
-> > > >+                List of gpio pin groups affected by the drive-strength
-> > > >property
-> > > >+                specified in this subnode.
-> > > >+              items:
-> > > >+                oneOf:
-> > > >+                  - enum: [sirq_drv, rmii_txd01_txen_drv,
-> > > >rmii_rxer_drv,
-> > > >+                      rmii_crs_drv, rmii_rxd10_drv, rmii_ref_clk_drv,
-> > > >+                      smi_mdc_mdio_drv, i2s_d0_drv, i2s_bclk0_drv,
-> > > >i2s3_drv,
-> > > >+                      i2s13_drv, pcm1_drv, ks_in_drv, ks_out_drv,
-> > > >lvds_all_drv,
-> > > >+                      lcd_dsi_drv, dsi_drv, sd0_d0_d3_drv,
-> > > >sd1_d0_d3_drv,
-> > > >+                      sd0_cmd_drv, sd0_clk_drv, sd1_cmd_drv,
-> > > >sd1_clk_drv,
-> > > >+                      spi0_all_drv, uart0_rx_drv, uart0_tx_drv,
-> > > >uart2_all_drv,
-> > > >+                      i2c0_all_drv, i2c12_all_drv, sens0_pclk_drv,
-> > > >+                      sens0_ckout_drv, uart3_all_drv]
-> > > >+              minItems: 1
-> > > >+              maxItems: 32
-> > > >+
-> > > >+            pins:
-> > > >+              description:
-> > > >+                List of gpio pins affected by the bias-pull-* and
-> > > >+                input-schmitt-* properties specified in this subnode.
-> > > >+              items:
-> > > >+                oneOf:
-> > > >+                  - enum: [dnand_dqs, dnand_dqsn, eth_txd0, eth_txd1,
-> > > >eth_txen,
-> > > >+                      eth_rxer, eth_crs_dv, eth_rxd1, eth_rxd0,
-> > > >eth_ref_clk,
-> > > >+                      eth_mdc, eth_mdio, sirq0, sirq1, sirq2, i2s_d0,
-> > > >i2s_bclk0,
-> > > >+                      i2s_lrclk0, i2s_mclk0, i2s_d1, i2s_bclk1,
-> > > >i2s_lrclk1,
-> > > >+                      i2s_mclk1, ks_in0, ks_in1, ks_in2, ks_in3,
-> > > >ks_out0,
-> > > >+                      ks_out1, ks_out2, lvds_oep, lvds_oen, lvds_odp,
-> > > >lvds_odn,
-> > > >+                      lvds_ocp, lvds_ocn, lvds_obp, lvds_obn,
-> > > >lvds_oap,
-> > > >+                      lvds_oan, lvds_eep, lvds_een, lvds_edp,
-> > > >lvds_edn,
-> > > >+                      lvds_ecp, lvds_ecn, lvds_ebp, lvds_ebn,
-> > > >lvds_eap,
-> > > >+                      lvds_ean, lcd0_d18, lcd0_d17, dsi_dp3, dsi_dn3,
-> > > >dsi_dp1,
-> > > >+                      dsi_dn1, dsi_cp, dsi_cn, dsi_dp0, dsi_dn0,
-> > > >dsi_dp2,
-> > > >+                      dsi_dn2, sd0_d0, sd0_d1, sd0_d2, sd0_d3, sd1_d0,
-> > > >sd1_d1,
-> > > >+                      sd1_d2, sd1_d3, sd0_cmd, sd0_clk, sd1_cmd,
-> > > >sd1_clk,
-> > > >+                      spi0_sclk, spi0_ss, spi0_miso, spi0_mosi,
-> > > >uart0_rx,
-> > > >+                      uart0_tx, i2c0_sclk, i2c0_sdata, sensor0_pclk,
-> > > >+                      sensor0_ckout, dnand_ale, dnand_cle, dnand_ceb0,
-> > > >+                      dnand_ceb1, dnand_ceb2, dnand_ceb3, uart2_rx,
-> > > >uart2_tx,
-> > > >+                      uart2_rtsb, uart2_ctsb, uart3_rx, uart3_tx,
-> > > >uart3_rtsb,
-> > > >+                      uart3_ctsb, pcm1_in, pcm1_clk, pcm1_sync,
-> > > >pcm1_out,
-> > > >+                      i2c1_sclk, i2c1_sdata, i2c2_sclk, i2c2_sdata,
-> > > >csi_dn0,
-> > > >+                      csi_dp0, csi_dn1, csi_dp1, csi_dn2, csi_dp2,
-> > > >csi_dn3,
-> > > >+                      csi_dp3, csi_cn, csi_cp, dnand_d0, dnand_d1,
-> > > >dnand_d2,
-> > > >+                      dnand_d3, dnand_d4, dnand_d5, dnand_d6,
-> > > >dnand_d7,
-> > > >+                      dnand_rb, dnand_rdb, dnand_rdbn, dnand_wrb,
-> > > >porb,
-> > > >+                      clko_25m, bsel, pkg0, pkg1, pkg2, pkg3]
-> > > >+              minItems: 1
-> > > >+              maxItems: 64
-> > > >+
-> > > >+            bias-pull-up: true
-> > > >+            bias-pull-down: true
-> > > >+
-> > > >+            drive-strength:
-> > > >+              description:
-> > > >+                Selects the drive strength for the specified pins, in
-> > > >mA.
-> > > >+              enum: [2, 4, 8, 12]
-> > > >+
-> > > >+            input-schmitt-enable: true
-> > > >+            input-schmitt-disable: true
-> > > >+
-> > > >+          additionalProperties: false
-> > > >+
-> > > >+required:
-> > > >+  - compatible
-> > > >+  - reg
-> > > >+  - clocks
-> > > >+  - gpio-controller
-> > > >+  - gpio-ranges
-> > > >+  - '#gpio-cells'
-> > > >+  - interrupt-controller
-> > > >+  - '#interrupt-cells'
-> > > >+  - interrupts
-> > > >+
-> > > >+additionalProperties: false
-> > > >+
-> > > >+examples:
-> > > >+  - |
-> > > >+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > > >+    pinctrl: pinctrl@b01b0000 {
-> > > >+        compatible = "actions,s500-pinctrl";
-> > > >+        reg = <0xe01b0000 0x1000>;
-> > > >+        clocks = <&cmu 20>;
-> > > >+        gpio-controller;
-> > > >+        gpio-ranges = <&pinctrl 0 0 132>;
-> > > >+        #gpio-cells = <2>;
-> > > >+        interrupt-controller;
-> > > >+        #interrupt-cells = <2>;
-> > > >+        interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
-> > > >+                     <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
-> > > >+                     <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
-> > > >+                     <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
-> > > >+                     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-> > > >+
-> > > >+        i2c0_default: i2c0_default {
-> > > >+            pinmux {
-> > > >+                groups = "i2c0_mfp";
-> > > >+                function = "i2c0";
-> > > >+            };
-> > > >+
-> > > >+            pinconf {
-> > > >+                pins = "i2c0_sclk", "i2c0_sdata";
-> > > >+                bias-pull-up;
-> > > >+            };
-> > > >+        };
-> > > >+    };
-> > > >+
-> > > >+...
-> > > 
-> > > -- 
-> > > Sent from my Android device with K-9 Mail. Please excuse my brevity.
+ /* Return: > 0 if match found, 0 if no match found, < 0 if error happens */
+-int dmar_insert_dev_scope(struct dmar_pci_notify_info *info,
++int dmar_pci_insert_dev_scope(struct dmar_pci_notify_info *info,
+ 			  void *start, void*end, u16 segment,
+ 			  struct dmar_dev_scope *devices,
+ 			  int devices_cnt)
+@@ -304,7 +304,7 @@ static int dmar_pci_bus_add_dev(struct dmar_pci_notify_info *info)
+ 
+ 		drhd = container_of(dmaru->hdr,
+ 				    struct acpi_dmar_hardware_unit, header);
+-		ret = dmar_insert_dev_scope(info, (void *)(drhd + 1),
++		ret = dmar_pci_insert_dev_scope(info, (void *)(drhd + 1),
+ 				((void *)drhd) + drhd->header.length,
+ 				dmaru->segment,
+ 				dmaru->devices, dmaru->devices_cnt);
+@@ -696,48 +696,56 @@ dmar_find_matched_drhd_unit(struct pci_dev *dev)
+ 
+ 	return dmaru;
+ }
+-
+-static void __init dmar_acpi_insert_dev_scope(u8 device_number,
+-					      struct acpi_device *adev)
++int dmar_acpi_insert_dev_scope(u8 device_number,
++				struct acpi_device *adev,
++				void *start, void *end,
++				struct dmar_dev_scope *devices,
++				int devices_cnt)
+ {
+-	struct dmar_drhd_unit *dmaru;
+-	struct acpi_dmar_hardware_unit *drhd;
+ 	struct acpi_dmar_device_scope *scope;
+ 	struct device *tmp;
+ 	int i;
+ 	struct acpi_dmar_pci_path *path;
+ 
++	for (; start < end; start += scope->length) {
++		scope = start;
++		if (scope->entry_type != ACPI_DMAR_SCOPE_TYPE_NAMESPACE)
++			continue;
++		if (scope->enumeration_id != device_number)
++			continue;
++		path = (void *)(scope + 1);
++		for_each_dev_scope(devices, devices_cnt, i, tmp)
++			if (tmp == NULL) {
++				devices[i].bus = scope->bus;
++				devices[i].devfn = PCI_DEVFN(path->device, path->function);
++				rcu_assign_pointer(devices[i].dev,
++						   get_device(&adev->dev));
++				return 1;
++			}
++		WARN_ON(i >= devices_cnt);
++	}
++	return 0;
++}
++static int dmar_acpi_bus_add_dev(u8 device_number, struct acpi_device *adev)
++{
++	struct dmar_drhd_unit *dmaru;
++	struct acpi_dmar_hardware_unit *drhd;
++	int ret = 0;
++
+ 	for_each_drhd_unit(dmaru) {
+ 		drhd = container_of(dmaru->hdr,
+ 				    struct acpi_dmar_hardware_unit,
+ 				    header);
++		ret = dmar_acpi_insert_dev_scope(device_number, adev, (void *)(drhd+1),
++						((void *)drhd)+drhd->header.length,
++						dmaru->devices, dmaru->devices_cnt);
++		if (ret)
++			break;
++	}
++	ret = dmar_rmrr_add_acpi_dev(device_number, adev);
+ 
+-		for (scope = (void *)(drhd + 1);
+-		     (unsigned long)scope < ((unsigned long)drhd) + drhd->header.length;
+-		     scope = ((void *)scope) + scope->length) {
+-			if (scope->entry_type != ACPI_DMAR_SCOPE_TYPE_NAMESPACE)
+-				continue;
+-			if (scope->enumeration_id != device_number)
+-				continue;
++	return ret;
+ 
+-			path = (void *)(scope + 1);
+-			pr_info("ACPI device \"%s\" under DMAR at %llx as %02x:%02x.%d\n",
+-				dev_name(&adev->dev), dmaru->reg_base_addr,
+-				scope->bus, path->device, path->function);
+-			for_each_dev_scope(dmaru->devices, dmaru->devices_cnt, i, tmp)
+-				if (tmp == NULL) {
+-					dmaru->devices[i].bus = scope->bus;
+-					dmaru->devices[i].devfn = PCI_DEVFN(path->device,
+-									    path->function);
+-					rcu_assign_pointer(dmaru->devices[i].dev,
+-							   get_device(&adev->dev));
+-					return;
+-				}
+-			BUG_ON(i >= dmaru->devices_cnt);
+-		}
+-	}
+-	pr_warn("No IOMMU scope found for ANDD enumeration ID %d (%s)\n",
+-		device_number, dev_name(&adev->dev));
+ }
+ 
+ static int __init dmar_acpi_dev_scope_init(void)
+@@ -766,7 +774,7 @@ static int __init dmar_acpi_dev_scope_init(void)
+ 				       andd->device_name);
+ 				continue;
+ 			}
+-			dmar_acpi_insert_dev_scope(andd->device_number, adev);
++			dmar_acpi_bus_add_dev(andd->device_number, adev);
+ 		}
+ 	}
+ 	return 0;
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index ca557d351518..be1793415326 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -4507,6 +4507,24 @@ int dmar_find_matched_atsr_unit(struct pci_dev *dev)
+ 
+ 	return ret;
+ }
++int dmar_rmrr_add_acpi_dev(u8 device_number, struct acpi_device *adev)
++{
++	int ret;
++	struct dmar_rmrr_unit *rmrru;
++	struct acpi_dmar_reserved_memory *rmrr;
++
++	list_for_each_entry(rmrru, &dmar_rmrr_units, list) {
++		rmrr = container_of(rmrru->hdr,
++				struct acpi_dmar_reserved_memory,
++				header);
++		ret = dmar_acpi_insert_dev_scope(device_number, adev, (void *)(rmrr + 1),
++						((void *)rmrr) + rmrr->header.length,
++						rmrru->devices, rmrru->devices_cnt);
++		if (ret)
++			break;
++	}
++	return 0;
++}
+ 
+ int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info)
+ {
+@@ -4523,7 +4541,7 @@ int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info)
+ 		rmrr = container_of(rmrru->hdr,
+ 				    struct acpi_dmar_reserved_memory, header);
+ 		if (info->event == BUS_NOTIFY_ADD_DEVICE) {
+-			ret = dmar_insert_dev_scope(info, (void *)(rmrr + 1),
++			ret = dmar_pci_insert_dev_scope(info, (void *)(rmrr + 1),
+ 				((void *)rmrr) + rmrr->header.length,
+ 				rmrr->segment, rmrru->devices,
+ 				rmrru->devices_cnt);
+@@ -4541,7 +4559,7 @@ int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info)
+ 
+ 		atsr = container_of(atsru->hdr, struct acpi_dmar_atsr, header);
+ 		if (info->event == BUS_NOTIFY_ADD_DEVICE) {
+-			ret = dmar_insert_dev_scope(info, (void *)(atsr + 1),
++			ret = dmar_pci_insert_dev_scope(info, (void *)(atsr + 1),
+ 					(void *)atsr + atsr->header.length,
+ 					atsr->segment, atsru->devices,
+ 					atsru->devices_cnt);
+@@ -4779,6 +4797,26 @@ static int __init platform_optin_force_iommu(void)
+ 
+ 	return 1;
+ }
++static int acpi_device_create_direct_mappings(struct device *pn_dev, struct device *acpi_device)
++{
++	int ret;
++	struct iommu_group *group;
++
++	if (pn_dev == NULL) {
++		acpi_device->bus->iommu_ops = &intel_iommu_ops;
++		ret = iommu_probe_device(acpi_device);
++		if (ret) {
++			pr_err("acpi_device probe fail! ret:%d\n", ret);
++			return ret;
++		}
++		return 0;
++	}
++	acpi_device->bus->iommu_ops = &intel_iommu_ops;
++	group = iommu_group_get(pn_dev);
++	__acpi_device_create_direct_mappings(group, acpi_device);
++
++	return 0;
++}
+ 
+ static int __init probe_acpi_namespace_devices(void)
+ {
+@@ -4794,6 +4832,7 @@ static int __init probe_acpi_namespace_devices(void)
+ 			struct acpi_device_physical_node *pn;
+ 			struct iommu_group *group;
+ 			struct acpi_device *adev;
++			struct device *pn_dev = NULL;
+ 
+ 			if (dev->bus != &acpi_bus_type)
+ 				continue;
+@@ -4804,6 +4843,7 @@ static int __init probe_acpi_namespace_devices(void)
+ 					    &adev->physical_node_list, node) {
+ 				group = iommu_group_get(pn->dev);
+ 				if (group) {
++					pn_dev = pn->dev;
+ 					iommu_group_put(group);
+ 					continue;
+ 				}
+@@ -4812,7 +4852,9 @@ static int __init probe_acpi_namespace_devices(void)
+ 				ret = iommu_probe_device(pn->dev);
+ 				if (ret)
+ 					break;
++				pn_dev = pn->dev;
+ 			}
++			ret = acpi_device_create_direct_mappings(pn_dev, dev);
+ 			mutex_unlock(&adev->physical_node_lock);
+ 
+ 			if (ret)
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 609bd25bf154..4f714a2d5ef7 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -779,6 +779,12 @@ static bool iommu_is_attach_deferred(struct iommu_domain *domain,
+ 	return false;
+ }
+ 
++void  __acpi_device_create_direct_mappings(struct iommu_group *group, struct device *acpi_device)
++{
++	iommu_create_device_direct_mappings(group, acpi_device);
++}
++EXPORT_SYMBOL_GPL(__acpi_device_create_direct_mappings);
++
+ /**
+  * iommu_group_add_device - add a device to an iommu group
+  * @group: the group into which to add the device (reference should be held)
+diff --git a/include/linux/dmar.h b/include/linux/dmar.h
+index 65565820328a..881ac61a4336 100644
+--- a/include/linux/dmar.h
++++ b/include/linux/dmar.h
+@@ -113,10 +113,14 @@ extern int dmar_parse_dev_scope(void *start, void *end, int *cnt,
+ 				struct dmar_dev_scope **devices, u16 segment);
+ extern void *dmar_alloc_dev_scope(void *start, void *end, int *cnt);
+ extern void dmar_free_dev_scope(struct dmar_dev_scope **devices, int *cnt);
+-extern int dmar_insert_dev_scope(struct dmar_pci_notify_info *info,
++extern int dmar_pci_insert_dev_scope(struct dmar_pci_notify_info *info,
+ 				 void *start, void*end, u16 segment,
+ 				 struct dmar_dev_scope *devices,
+ 				 int devices_cnt);
++extern int dmar_acpi_insert_dev_scope(u8 device_number,
++				struct acpi_device *adev, void *start, void *end,
++				struct dmar_dev_scope *devices, int devices_cnt);
++
+ extern int dmar_remove_dev_scope(struct dmar_pci_notify_info *info,
+ 				 u16 segment, struct dmar_dev_scope *devices,
+ 				 int count);
+@@ -140,6 +144,7 @@ extern int dmar_parse_one_atsr(struct acpi_dmar_header *header, void *arg);
+ extern int dmar_check_one_atsr(struct acpi_dmar_header *hdr, void *arg);
+ extern int dmar_release_one_atsr(struct acpi_dmar_header *hdr, void *arg);
+ extern int dmar_iommu_hotplug(struct dmar_drhd_unit *dmaru, bool insert);
++extern int dmar_rmrr_add_acpi_dev(u8 device_number, struct acpi_device *adev);
+ extern int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info);
+ #else /* !CONFIG_INTEL_IOMMU: */
+ static inline int intel_iommu_init(void) { return -ENODEV; }
+@@ -150,6 +155,11 @@ static inline void intel_iommu_shutdown(void) { }
+ #define	dmar_check_one_atsr		dmar_res_noop
+ #define	dmar_release_one_atsr		dmar_res_noop
+ 
++static inline int dmar_rmrr_add_acpi_dev(u8 device_number, struct acpi_device *adev)
++{
++	return 0;
++}
++
+ static inline int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info)
+ {
+ 	return 0;
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index fee209efb756..9be134775886 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -514,6 +514,9 @@ extern void iommu_domain_window_disable(struct iommu_domain *domain, u32 wnd_nr)
+ extern int report_iommu_fault(struct iommu_domain *domain, struct device *dev,
+ 			      unsigned long iova, int flags);
+ 
++extern void __acpi_device_create_direct_mappings(struct iommu_group *group,
++						struct device *acpi_device);
++
+ static inline void iommu_flush_tlb_all(struct iommu_domain *domain)
+ {
+ 	if (domain->ops->flush_iotlb_all)
+-- 
+2.17.1
+
