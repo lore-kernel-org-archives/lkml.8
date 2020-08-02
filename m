@@ -2,152 +2,92 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FD7C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABA3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC4612075A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:21:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p4XSCN8y"
+	by mail.kernel.org (Postfix) with ESMTP id E80012075A
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:21:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbgHBNVp (ORCPT
+        id S1728414AbgHBNVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 09:21:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55940 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727914AbgHBNVp (ORCPT
+        Sun, 2 Aug 2020 09:21:53 -0400
+Received: from mail-m127107.qiye.163.com ([115.236.127.107]:27654 "EHLO
+        mail-m127107.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728057AbgHBNVx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 09:21:45 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0283C06174A;
-        Sun,  2 Aug 2020 06:21:44 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id kq25so22958946ejb.3;
-        Sun, 02 Aug 2020 06:21:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZUL/yD9zmO6DmcZy6KXxPbVU4U1pO6NSKiKrUZ+bXyM=;
-        b=p4XSCN8yGgZCIhrkkj1rFOVoYL7U2r0/270o3/AEHkM4jDzbO4LGflEOjQYiRZwSdq
-         7nS4D+YvJZvNmZFH6RyZuBI94p8IKHpEYyqBhnHgccFoyEyZwa+GqCceYwdpeDhVNdsi
-         f2pGhzQgfx3GFY0JDG6Kw5VBqTYWcteIz4SemeH+w4jOu5T9tp9pVRrAst7Ihzsw3XPv
-         3mjJELk+XFSCjE+6ZnJRoY0pAgo7yYQdYvjnNB+jFEdOscFgQRe9FBFw+1fKgzAziuf9
-         YBWbVvzMp2KOeYYuEaHBSXdLitmh1N8eotFy0TgUa5QRSCredN765aNtwKjC9AUz1WsH
-         I+aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZUL/yD9zmO6DmcZy6KXxPbVU4U1pO6NSKiKrUZ+bXyM=;
-        b=EGrrjEIgSt7VeHlRb+7Q0FLmyAKZ08hDZ4mAa8TKeldzutEtHwoGYQYYnlqXqGLExG
-         1V4IOJ3qZcZ2znuS2UWvSReqthvTPTwhTNS0PqFeI2+Bzv2Q/fXNNH0W0w0N1LmGKYK5
-         lre4b4/xutM28wdk+gECyuRL5poYJNGPVDCxCCt8QwJdmuUfILFYN6o61FOzTWQ+kRhN
-         sjuxgxJDH0HY2/JM4r7hzmb+LNnURJ0Uw7ANwp9/aPrcQqYzk3mrRU91de66eJYIo/H5
-         AcHRUZJcHlJFlzr2Kg6kFRyBplgIey+8tCCwmDgY4ody3sTKo42zPDD0tFTKY5sKdwU5
-         0bOw==
-X-Gm-Message-State: AOAM530bwSWiRB/h7DeVQR6h1w9y1kig3fkUmfcsgS/yoPUa5wiEPQe+
-        vf7AUFPjSk9XYQej5S79fUY=
-X-Google-Smtp-Source: ABdhPJwtfLVX/r+ZgDfvF/aaiqOf8MaZ5i1jtil/zwBqaXGuAF+t8Ds7ys5dYrEBiJ1waG2tLGonDQ==
-X-Received: by 2002:a17:906:95cb:: with SMTP id n11mr12145750ejy.506.1596374503481;
-        Sun, 02 Aug 2020 06:21:43 -0700 (PDT)
-Received: from skbuf ([188.26.57.97])
-        by smtp.gmail.com with ESMTPSA id q11sm3931651edn.52.2020.08.02.06.21.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Aug 2020 06:21:43 -0700 (PDT)
-Date:   Sun, 2 Aug 2020 16:21:41 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Jonathan McDowell <noodles@earth.li>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Matthew Hagan <mnhagan88@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3 1/2] net: dsa: qca8k: Add define for port VID
-Message-ID: <20200802132141.qobvb32guc3hx5lk@skbuf>
-References: <20200721171624.GK23489@earth.li>
- <08fd70c48668544408bdb7932ef23e13d1080ad1.1596301468.git.noodles@earth.li>
+        Sun, 2 Aug 2020 09:21:53 -0400
+X-Greylist: delayed 400 seconds by postgrey-1.27 at vger.kernel.org; Sun, 02 Aug 2020 09:21:44 EDT
+Received: from vivo.com (wm-12.qy.internal [127.0.0.1])
+        by mail-m127107.qiye.163.com (Hmail) with ESMTP id 99F0281725;
+        Sun,  2 Aug 2020 21:14:48 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <ADUAnwD8DVByMMSsrG-r3Kri.3.1596374087585.Hmail.wenhu.wang@vivo.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     elder@kernel.org, davem@davemloft.net, kuba@kernel.org,
+        kvalo@codeaurora.org, agross@kernel.org, ohad@wizery.com,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, alsa-devel@alsa-project.org,
+        ath11k@lists.infradead.org, netdev@vger.kernel.org,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        srinivas.kandagatla@linaro.org, sibis@codeaurora.org
+Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0gc29jOiBxbWk6IGFsbG93IHVzZXIgdG8gc2V0IGhhbmRsZSB3cSB0byBoaXByaW8=?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 58.251.74.226
+In-Reply-To: <20200727204521.GB229995@builder.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <08fd70c48668544408bdb7932ef23e13d1080ad1.1596301468.git.noodles@earth.li>
+Received: from wenhu.wang@vivo.com( [58.251.74.226) ] by ajax-webmail ( [127.0.0.1] ) ; Sun, 2 Aug 2020 21:14:47 +0800 (GMT+08:00)
+From:   =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
+Date:   Sun, 2 Aug 2020 21:14:47 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgYFAkeWUFZS1VLWVdZKFlBSE83V1ktWUFJV1kPCR
+        oVCBIfWUFZTR1KTktOSx4aQkpOVkpOQk1ITE9LQ0JLSE5VEwETFhoSFyQUDg9ZV1kWGg8SFR0UWU
+        FZT0tIVUpKS0hKTFVKS0tZBg++
+X-HM-Sender-Digest: e1kJHlYWEh9ZQU5MTU1OSEpOS0tJN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6Py46FQw*Qz8tOQI2NigICTxWCUgwCRJVSFVKTkJNSExPS0NCQ0lDVTMWGhIXVQweFRMOVQwa
+        FRw7DRINFFUYFBZFWVdZEgtZQVlOQ1VJTkpVTE9VSUlNWVdZCAFZQU5LS0I3Bg++
+X-HM-Tid: 0a73af4f7bbb986bkuuu99f0281725
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 01, 2020 at 06:05:54PM +0100, Jonathan McDowell wrote:
-> Rather than using a magic value of 1 when configuring the port VIDs add
-> a QCA8K_PORT_VID_DEF define and use that instead. Also fix up the
-> bitmask in the process; the top 4 bits are reserved so this wasn't a
-> problem, but only masking 12 bits is the correct approach.
-> 
-> Signed-off-by: Jonathan McDowell <noodles@earth.li>
-> ---
-
-Acked-by: Vladimir Oltean <olteanv@gmail.com>
-
->  drivers/net/dsa/qca8k.c | 11 ++++++-----
->  drivers/net/dsa/qca8k.h |  2 ++
->  2 files changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
-> index a5566de82853..3ebc4da63074 100644
-> --- a/drivers/net/dsa/qca8k.c
-> +++ b/drivers/net/dsa/qca8k.c
-> @@ -663,10 +663,11 @@ qca8k_setup(struct dsa_switch *ds)
->  			 * default egress vid
->  			 */
->  			qca8k_rmw(priv, QCA8K_EGRESS_VLAN(i),
-> -				  0xffff << shift, 1 << shift);
-> +				  0xfff << shift,
-> +				  QCA8K_PORT_VID_DEF << shift);
->  			qca8k_write(priv, QCA8K_REG_PORT_VLAN_CTRL0(i),
-> -				    QCA8K_PORT_VLAN_CVID(1) |
-> -				    QCA8K_PORT_VLAN_SVID(1));
-> +				    QCA8K_PORT_VLAN_CVID(QCA8K_PORT_VID_DEF) |
-> +				    QCA8K_PORT_VLAN_SVID(QCA8K_PORT_VID_DEF));
->  		}
->  	}
->  
-> @@ -1133,7 +1134,7 @@ qca8k_port_fdb_insert(struct qca8k_priv *priv, const u8 *addr,
->  {
->  	/* Set the vid to the port vlan id if no vid is set */
->  	if (!vid)
-> -		vid = 1;
-> +		vid = QCA8K_PORT_VID_DEF;
->  
->  	return qca8k_fdb_add(priv, addr, port_mask, vid,
->  			     QCA8K_ATU_STATUS_STATIC);
-> @@ -1157,7 +1158,7 @@ qca8k_port_fdb_del(struct dsa_switch *ds, int port,
->  	u16 port_mask = BIT(port);
->  
->  	if (!vid)
-> -		vid = 1;
-> +		vid = QCA8K_PORT_VID_DEF;
->  
->  	return qca8k_fdb_del(priv, addr, port_mask, vid);
->  }
-> diff --git a/drivers/net/dsa/qca8k.h b/drivers/net/dsa/qca8k.h
-> index 31439396401c..92216a52daa5 100644
-> --- a/drivers/net/dsa/qca8k.h
-> +++ b/drivers/net/dsa/qca8k.h
-> @@ -22,6 +22,8 @@
->  
->  #define QCA8K_CPU_PORT					0
->  
-> +#define QCA8K_PORT_VID_DEF				1
-> +
->  /* Global control registers */
->  #define QCA8K_REG_MASK_CTRL				0x000
->  #define   QCA8K_MASK_CTRL_ID_M				0xff
-> -- 
-> 2.20.1
-> 
+Cj4+IEN1cnJlbnRseSB0aGUgcW1pX2hhbmRsZSBpcyBpbml0aWFsaXplZCBzaW5nbGUgdGhyZWFk
+ZWQgYW5kIHN0cmljdGx5Cj4+IG9yZGVyZWQgd2l0aCB0aGUgYWN0aXZlIHNldCB0byAxLiBUaGlz
+IGlzIHByZXR0eSBzaW1wbGUgYW5kIHNhZmUgYnV0Cj4+IHNvbWV0aW1lcyBpbmVmZmVuY3kuIFNv
+IGl0IGlzIGJldHRlciB0byBhbGxvdyB1c2VyIHRvIGRlY2lkZSB3aGV0aGVyCj4+IGEgaGlnaCBw
+cmlvcml0eSB3b3JrcXVldWUgc2hvdWxkIGJlIHVzZWQuCj4KPkNhbiB5b3UgcGxlYXNlIGRlc2Ny
+aWJlIGEgc2NlbmFyaW8gd2hlcmUgdGhpcyBpcyBuZWVkZWQvZGVzaXJlZCBhbmQKPnBlcmhhcHMg
+YWxzbyBjb21tZW50IG9uIHdoeSB0aGlzIGlzIG5vdCBhbHdheXMgZGVzaXJlZD8KPgoKV2VsbCwg
+b25lIHNjZW5hcmlvIGlzIHRoYXQgd2hlbiB0aGUgQVAgd2FudHMgdG8gY2hlY2sgdGhlIHN0YXR1
+cyBvZiB0aGUKc3Vic3lzdGVtcyBhbmQgdGhlIHdob2xlIFFNSSBkYXRhIHBhdGguIEl0IGZpcnN0
+IHNlbmRzIG91dCBhbiBpbmRpY2F0aW9uCndoaWNoIGFza3MgdGhlIHN1YnN5c3RlbXMgdG8gcmVw
+b3J0IHRoZWlyIHN0YXR1cy4gQWZ0ZXIgdGhlIHN1YnN5c3RlbXMgc2VuZApyZXNwb25zZXMgdG8g
+dGhlIEFQLCB0aGUgcmVzcG9uc2VzIHRoZW4gYXJlIHF1ZXVlZCBvbiB0aGUgd29ya3F1ZXVlIG9m
+CnRoZSBRTUkgaGFuZGxlci4gQWN0dWFsbHkgdGhlIEFQIGlzIGNvbmZpZ3VyZWQgdG8gZG8gdGhl
+IGNoZWNrIGluIGEgc3BlY2lmaWMKaW50ZXJ2YWwgcmVndWxhcmx5LiBBbmQgaXQgY2hlY2sgdGhl
+IHJlcG9ydCBjb3VudHMgd2l0aGluIGEgc3BlY2lmaWMgZGVsYXkgYWZ0ZXIKaXQgc2VuZHMgb3V0
+IHRoZSByZWxhdGVkIGluZGljYXRpb24uIFdoZW4gdGhlIEFQIGhhcyBiZWVuIHVuZGVyIGEgaGVh
+dnkKbG9hZCBmb3IgbG9uZywgdGhlIHJlcG9ydHMgYXJlIHF1ZXVlIHRoZWlyIHdpdGhvdXQgQ1BV
+IHJlc291cmNlIHRvIHVwZGF0ZQp0aGUgcmVwb3J0IGNvdW50cyB3aXRoaW4gdGhlIHNwZWNpZmlj
+IGRlbGF5LiBBcyBhIHJlc3VsdCwgdGhlIHRocmVhZCB0aGF0IGNoZWNrcwp0aGUgcmVwb3J0IGNv
+dW50cyB0YWtlcyBpdCBtaXNsZWFkaW5nbHkgdGhhdCB0aGUgUU1JIGRhdGEgcGF0aCBvciB0aGUg
+c3Vic3lzdGVtcwphcmUgY3Jhc2hlZC4KClRoZSBwYXRjaCBjYW4gcmVhbGx5IHJlc29sdmUgdGhl
+IHByb2JsZW0gbWVudGlvbmVkIGFib2x2ZS4KCkZvciBuYXJtYWwgc2l0dWF0aW9ucywgaXQgaXMg
+ZW5vdWdoIHRvIGp1c3QgdXNlIG5vcm1hbCBwcmlvcml0eSBRTUkgd29ya3F1ZXVlLgoKPlJlZ2Fy
+ZHMsCj5Cam9ybgo+Cj4+IAo+PiBTaWduZWQtb2ZmLWJ5OiBXYW5nIFdlbmh1IDx3ZW5odS53YW5n
+QHZpdm8uY29tPgo+PiAtLS0KPj4gIGRyaXZlcnMvbmV0L2lwYS9pcGFfcW1pLmMgICAgICAgICAg
+ICAgfCA0ICsrLS0KPj4gIGRyaXZlcnMvbmV0L3dpcmVsZXNzL2F0aC9hdGgxMGsvcW1pLmMgfCAy
+ICstCj4+ICBkcml2ZXJzL25ldC93aXJlbGVzcy9hdGgvYXRoMTFrL3FtaS5jIHwgMiArLQo+PiAg
+ZHJpdmVycy9yZW1vdGVwcm9jL3Fjb21fc3lzbW9uLmMgICAgICB8IDIgKy0KPj4gIGRyaXZlcnMv
+c2xpbWJ1cy9xY29tLW5nZC1jdHJsLmMgICAgICAgfCA0ICsrLS0KPj4gIGRyaXZlcnMvc29jL3Fj
+b20vcGRyX2ludGVyZmFjZS5jICAgICAgfCA0ICsrLS0KPj4gIGRyaXZlcnMvc29jL3Fjb20vcW1p
+X2ludGVyZmFjZS5jICAgICAgfCA5ICsrKysrKystLQo+PiAgaW5jbHVkZS9saW51eC9zb2MvcWNv
+bS9xbWkuaCAgICAgICAgICB8IDMgKystCj4+ICBzYW1wbGVzL3FtaS9xbWlfc2FtcGxlX2NsaWVu
+dC5jICAgICAgIHwgNCArKy0tCj4+ICA5IGZpbGVzIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKyks
+IDE0IGRlbGV0aW9ucygtKQ0KDQo=
