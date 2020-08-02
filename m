@@ -2,460 +2,336 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2A2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E8AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D389E2076B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E8F2076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:08:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aIQrvSkw"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="I4z5p8hI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgHCMIJ (ORCPT
+        id S1726787AbgHCMIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:08:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39508 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgHCMIH (ORCPT
+        Mon, 3 Aug 2020 08:08:25 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:53238 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726394AbgHCMIT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:08:07 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 027B9C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 05:08:07 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id d190so14097003wmd.4
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 05:08:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=afJ+1jNa6X/wuA8VoCFPRYQ1rRNnN3KPn/mimhZlQcA=;
-        b=aIQrvSkwsRjBVYWO42rcANMyRI9aLykLtz986vO5Nbkyw9tR6uvzn4IRi11TK4RZe+
-         hoXXQX6+yvmnZ3YyWggiK1STXKxCHlNtsCLuctBagB9t+yED1mO2Gvd1KNQU79ESbusb
-         OFFDXWaWQ4fT+fLhSK6e0YbfSyBY3SECrperI7S7ci/Y4FnQEkJP0TSJpUXm7/4FCr/P
-         tPqidmlz4vL2a1ziiJP2alL3d21L1lx5zxBsTYghE3HRLahBRyDtm321AJbNFGceoH5d
-         FndlfZpIsiBNVVMKw6sMkhLslTiyl5JgrLs4BN1+rt8M9uE1VBli1KEr/AR3hcw7+Agz
-         NKww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=afJ+1jNa6X/wuA8VoCFPRYQ1rRNnN3KPn/mimhZlQcA=;
-        b=Xc4/yqYW+F5nYceho/U5UiaTpak2uyMHGqwnFRmLXswdSjidUft72lLiRiDyFZ5iUX
-         t0yCBtG8fV+2RaPLxvHagRRy0TaK3R/LPkt72q0cyEkJBHkywj8czJWiDiPNpxhc94Po
-         n//TTGr87xDZCcODS2WqlLWgRxQAgQydnsj3DqQ12JrEeSzh4BqO6DleCOg1aiQ4hUJY
-         UuE+1geOJ2KReZ6jRk5DUwdiCGRgdNEEGwSHUQP8zZj3BnMB4U1n+5BGsQPHy37zKbl3
-         RwoTbTUuA4oUKMR9yLKxxFvTApQKpU4OMUhbSml+IoRoCmKElZ3zrw2KwlWvFBdHtj46
-         lBUg==
-X-Gm-Message-State: AOAM530fl8qwI+uSAFgMfB3KuGhL6NAVmCP2+jrDpuNMmCI6B0xQFkcu
-        IMU27qJdoI2TmkrB0TiZPZXd+/nb
-X-Google-Smtp-Source: ABdhPJzJ6H6x3BoE6383oxJZrue/eKLKfiMNfDNLx+lUjqDwMByV0jwjh/N3ZP5YM3cbuLT/8kYHDA==
-X-Received: by 2002:a1c:9ec6:: with SMTP id h189mr2982151wme.22.1596456484480;
-        Mon, 03 Aug 2020 05:08:04 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
-        by smtp.gmail.com with ESMTPSA id p15sm24301209wrj.61.2020.08.03.05.08.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 05:08:03 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
-Cc:     Ofir Bitton <obitton@habana.ai>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: [PATCH v3 1/2] habanalabs: Replace dma-fence mechanism with completions
-Date:   Mon,  3 Aug 2020 15:07:58 +0300
-Message-Id: <20200803120759.14732-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 3 Aug 2020 08:08:19 -0400
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200803120815epoutp04d4c81d6740e0bd5c8e26c342d135ab10~nwLl04AZY0999609996epoutp04U;
+        Mon,  3 Aug 2020 12:08:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200803120815epoutp04d4c81d6740e0bd5c8e26c342d135ab10~nwLl04AZY0999609996epoutp04U
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1596456495;
+        bh=2WBgkLxsDeTPNmtuUxW8D2JTNPrc4cq3+DknlqZ+k0M=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=I4z5p8hIGDOhENavDCg3Lb+U2nwpNCgMJbCcT2Oo9XZJyhdNlIENaBtYYxnLuFbWY
+         52nxjhyn+vBVebz+9ohdY06QPT913KCSdFf9WZV2KoknGVa7SlkfeAFZ6Gmm0VxrG8
+         Jy3UO3nI7/NelfDDmC1J+sl9S7qoQk79KW8woss0=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+        20200803120814epcas5p46afbcf9a96442d7ed620110adac61d45~nwLk7fkfy1252012520epcas5p4N;
+        Mon,  3 Aug 2020 12:08:14 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        5E.4D.09467.E2EF72F5; Mon,  3 Aug 2020 21:08:14 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200802165825epcas5p3a2127be681530fdd785db0f8961eaf96~ngfp0TD2F0804708047epcas5p3y;
+        Sun,  2 Aug 2020 16:58:25 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200802165825epsmtrp223281b42c2c5ee489579389e6073e44b~ngfpy8fOh2950229502epsmtrp2U;
+        Sun,  2 Aug 2020 16:58:25 +0000 (GMT)
+X-AuditID: b6c32a49-a3fff700000024fb-23-5f27fe2ec2f4
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1E.A7.08303.1B0F62F5; Mon,  3 Aug 2020 01:58:25 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.108.92.210]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200802165819epsmtip240ae74d9e1a0130cf77f0e043f0612a6~ngfkZE_zL2814028140epsmtip2e;
+        Sun,  2 Aug 2020 16:58:19 +0000 (GMT)
+From:   Maninder Singh <maninder1.s@samsung.com>
+To:     catalin.marinas@arm.com, will@kernel.org, oleg@redhat.com,
+        keescook@chromium.org, arnd@arndb.de, gregkh@linuxfoundation.org,
+        adobriyan@gmail.com, rostedt@goodmis.org, mingo@redhat.com,
+        steve.capper@arm.com, mark.rutland@arm.com,
+        vincenzo.frascino@arm.com, anshuman.khandual@arm.com,
+        ardb@kernel.org, james.morse@arm.com, broonie@kernel.org,
+        maz@kernel.org, kristina.martsenko@arm.com,
+        samitolvanen@google.com, ebiederm@xmission.com,
+        akpm@linux-foundation.org, gladkov.alexey@gmail.com,
+        daniel.m.jordan@oracle.com, walken@google.com,
+        bernd.edlinger@hotmail.de, laoar.shao@gmail.com, avagin@gmail.com,
+        john.johansen@canonical.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, a.sahrawat@samsung.com,
+        Maninder Singh <maninder1.s@samsung.com>,
+        Vaneet narang <v.narang@samsung.com>
+Subject: [PATCH 1/1] arm64: add support for PAGE_SIZE aligned kernel stack
+Date:   Sun,  2 Aug 2020 22:05:15 +0530
+Message-Id: <1596386115-47228-1-git-send-email-maninder1.s@samsung.com>
+X-Mailer: git-send-email 1.9.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSf0xTVxTHva+v7z06qw807gpBRg06mwmaKbt2ottcwtMlizPEJUytjbwh
+        G6VdCxtbMFSpZCAolJ8iImBB1pXVdbVUfhQCWmDCtrIVB5PAAktVnLSUIULErTzM/vuc8/3e
+        7zknuRQvKI8IppJSUllViixZRAhwa9eWV7dGLm6Wbpu3bkTOFhaVnT6AKk1GAtl7TqCnM1MA
+        PdM5SNT3/CEPfVPiwlHJnxMEmqrPA6hitpxEz61aEtVMfYCyrpoINGq/hqGembME6jsnR6Pd
+        2Xx0zX2PRObxQT5qbevF0a/NlQTqupKNo7q7TgzdrOzlo4GOagzdaD8LkP3rMQzVNfzNR7pH
+        Vgx19l4GqG3xKY4WdaeQ9t7Ot0SMscoImIV5HWAqNPkEc0njxJmbFSMko7UPk0y1OY2p/fk2
+        zpgNOQTTU76AM+2XjSTzgz6T8f41jDNTdhfBnLcYAOMzbzgYGC/YncAmJ33OqqL2HBec/K2m
+        jqds25V+32vANaAkKhdQFKR3QMddWS4IoILoFgBrctNzgeA/ngZwtO8xyRU+AGtNrZjf5X9Q
+        PTHA54RmAAvcxmXXDIClVX8suQg6EhqaW3G/sJbO4cO5rGngL3i0E0BvfyfP71pDH4DmC+dJ
+        P+N0BOyoz8H9LKRjoUdTDLh5G2Cvo4jPcUsAzL+TxC3+LnTUCLj2Gviw20JyHAx9j9sI/yxI
+        ZwE4bW8EXFEMYJ3Tuxy0F05maTB/EI/eAk3NUVw7FJb8+N3SBTx6FcxfmFi+WQhtVS84AmqH
+        ri/HhECf14tz+zBwuAH4MYg+CtstGQUgtOL//GoADGA9q1TLE1n1TuX2FPaLSLVMrk5LSYw8
+        oZCbwdKHFe+3gZExT2QnwCjQCSDFE60Ven2bpUHCBNmXX7EqhVSVlsyqO0EIhYteForm+o4F
+        0YmyVPZTllWyqhcqRgUEa7C9gUclAaIHVGljbLxicb7ol9hEOziu1+YR2S9dPLPPt7LyweSZ
+        6d1lq27ZgHj2mG2bp9Q6MAziTePhNteEqzyzTz/5pj6uXxxqictAkzcKDypi9M7GjiPpyXHy
+        Z12HjReOSDT3PU+ioTshbCRjsOBbHraYN/ax6adTr713TrLulrtwzyset52KIYWi28HrC62Z
+        61yP5nZdHJq/o2s8JP2n/skbl1Sri1bQtfj79fqosEOSstOKptWvjzcIAla0bRJ/FN78ydDG
+        qug4Q2Dl7/s/TPU6ZkXFxi7Qf9jV8LZlhyoibN8VW1OGY1Cp/CzmevT34bWlku4maUxIdvvK
+        d7Z2i3D1Sdl2MU+llv0LCqgpFx8EAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWRe0xTZxyG951+5yLSeSwkO1pBU6dOMuqYU38mHfEWOV6WQGKyaTJLhWMl
+        0tL0iIrGWGdFLFc7myFyKWBBmqKuE0SE6sALTIRUQTbGzYiiRi04ZmSMYoD435s8T973j5eR
+        yKrxXCZBv08w6jWJCioAVzcq5of/OrRY/ZW3JgS81wX45dhmyL/kosDTFAejIz4E49Y7NLRM
+        vJRAha0Dg+3xAAW+sgwEee9yaZioNtNQ7IuB46WXKOjzlBPQNHKCgpZ0HfTdTSWhfLCbBveT
+        RyTU1TdjeFibT0FjUSoGR6eXgGv5zSQ8uGknoOrGCQSetH4CHBdek2B9VU1AQ3MBgnr/KAa/
+        9QiYu1esUfCuQhfix/6zIj7PlEnx50xezF/L66F5s6eL5u3uZL6k7Tbm3c5TFN+UO4b5GwUu
+        mv/t/FF++GkX5n2eDorPuuJE/D/u0OjZOwJU8UJiwn7BuCwyNmBPe7FDYqhfffD5sBObkG2Z
+        Bc1gOPYbzj7wgLSgAEbG1iDu/kmrZBrIuVG/D0/nIK7CP0hPS28R98hxEU0CilVyzto6PAmC
+        2UqSe9mVPWVJ2E7EtV9sIietIHYz587OoiczZhdxN8tOTdVK2ShuyHQGTU+Ecs13fiZzUKAd
+        feJEcwSDqNPqxAjD13rhgFLU6MRkvVYZl6Rzo6lrw8JqUJ1zSNmACAY1II6RKIKl4/6Fapk0
+        XpNySDAmqY3JiYLYgOQMVnwm/TeveKeM1Wr2CXsFwSAYP1KCmTHXRMwcD+71/fWsYGXp+sx7
+        5rqhH1nrwPPt6Qe+dYZ3RMZGtRZRqaqE5bH4uLXkKKGugifWpMWN2KSa9V3Zpj8N48uhc+Ne
+        2wZq17nOV44LS/qEbcUqri37bzLXlrhrUUZ0oZimVhPtW1ercixyc8YW/dbC98eC+u0/vKgN
+        Dcwyh3yesm53/5wWrxAm15TYj5wfuVd5Rno5LktyWN+zZntar7yHeH367Ek5U/n/RGQFlMtr
+        I/5YNXY5s21Bq1vRK71VfnWL0jP7++7TMjRv28CbLy3apVcWDg6nUJ9qhmPiVz5MT67/vdX1
+        lhBbvvgpUBs9r2qtTl51v88SHlJ6NqZIvSBHgcU9mogwiVHUfABDTntUSQMAAA==
+X-CMS-MailID: 20200802165825epcas5p3a2127be681530fdd785db0f8961eaf96
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200802165825epcas5p3a2127be681530fdd785db0f8961eaf96
+References: <CGME20200802165825epcas5p3a2127be681530fdd785db0f8961eaf96@epcas5p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ofir Bitton <obitton@habana.ai>
+currently THREAD_SIZE is always in power of 2, which will waste
+memory in cases there is need to increase of stack size.
 
-habanalabs driver uses dma-fence mechanism for synchronization.
-dma-fence mechanism was designed solely for GPUs, hence we purpose
-a simpler mechanism based on completions to replace current
-dma-fence objects.
+Thus adding support for PAGE_SIZE(not power of 2) stacks for arm64.
+User can decide any value 12KB, 16KB, 20 KB etc. based on value
+of THREAD_SHIFT. User can set any value which is PAGE_SIZE aligned for
+PAGE_ALIGNED_STACK_SIZE config.
 
-Signed-off-by: Ofir Bitton <obitton@habana.ai>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+Value of THREAD_SIZE is defined as 12KB for now, since with irq stacks
+it is enough and it will save 4KB per thread.
+
+IRQ stack size is not changed and alignement of IRQ stack and kernel stack
+is maintained same to catch stack overflow faults as earlier.
+
+THREAD_SIZE masking in common files is changed to THREAD_SIZE_ALIGNED.
+
+Co-developed-by: Vaneet narang <v.narang@samsung.com>
+Signed-off-by: Vaneet narang <v.narang@samsung.com>
+Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
 ---
-Changes in v3:
-  - mark two internal functions as static
+ arch/arm64/Kconfig              |  9 +++++++++
+ arch/arm64/include/asm/memory.h | 29 +++++++++++++++++++++++++----
+ arch/arm64/kernel/entry.S       |  4 ++--
+ arch/arm64/kernel/ptrace.c      |  4 ++--
+ drivers/misc/lkdtm/stackleak.c  |  2 +-
+ fs/proc/base.c                  |  4 ++--
+ include/linux/thread_info.h     |  4 ++++
+ kernel/trace/trace_stack.c      |  4 ++--
+ 8 files changed, 47 insertions(+), 13 deletions(-)
 
- .../habanalabs/common/command_submission.c    | 95 +++++++++----------
- drivers/misc/habanalabs/common/context.c      | 13 +--
- drivers/misc/habanalabs/common/habanalabs.h   | 30 ++++--
- drivers/misc/habanalabs/common/hw_queue.c     |  2 +-
- 4 files changed, 77 insertions(+), 63 deletions(-)
-
-diff --git a/drivers/misc/habanalabs/common/command_submission.c b/drivers/misc/habanalabs/common/command_submission.c
-index b9840e368eb5..2b40aa85bec9 100644
---- a/drivers/misc/habanalabs/common/command_submission.c
-+++ b/drivers/misc/habanalabs/common/command_submission.c
-@@ -38,26 +38,10 @@ void hl_sob_reset_error(struct kref *ref)
- 			hw_sob->q_idx, hw_sob->sob_id);
- }
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index c970171..301e068 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -977,6 +977,15 @@ config NODES_SHIFT
+ 	  Specify the maximum number of NUMA Nodes available on the target
+ 	  system.  Increases memory reserved to accommodate various tables.
  
--static const char *hl_fence_get_driver_name(struct dma_fence *fence)
--{
--	return "HabanaLabs";
--}
--
--static const char *hl_fence_get_timeline_name(struct dma_fence *fence)
--{
--	struct hl_cs_compl *hl_cs_compl =
--		container_of(fence, struct hl_cs_compl, base_fence);
--
--	return dev_name(hl_cs_compl->hdev->dev);
--}
--
--static bool hl_fence_enable_signaling(struct dma_fence *fence)
--{
--	return true;
--}
--
--static void hl_fence_release(struct dma_fence *fence)
-+static void hl_fence_release(struct kref *kref)
- {
-+	struct hl_fence *fence =
-+		container_of(kref, struct hl_fence, refcount);
- 	struct hl_cs_compl *hl_cs_cmpl =
- 		container_of(fence, struct hl_cs_compl, base_fence);
- 	struct hl_device *hdev = hl_cs_cmpl->hdev;
-@@ -99,15 +83,27 @@ static void hl_fence_release(struct dma_fence *fence)
- 	}
- 
- free:
--	kfree_rcu(hl_cs_cmpl, base_fence.rcu);
-+	kfree(hl_cs_cmpl);
- }
- 
--static const struct dma_fence_ops hl_fence_ops = {
--	.get_driver_name = hl_fence_get_driver_name,
--	.get_timeline_name = hl_fence_get_timeline_name,
--	.enable_signaling = hl_fence_enable_signaling,
--	.release = hl_fence_release
--};
-+void hl_fence_put(struct hl_fence *fence)
-+{
-+	if (fence)
-+		kref_put(&fence->refcount, hl_fence_release);
-+}
++config	PAGE_ALIGNED_STACK_SIZE
++	int "set per thread stack size (THREAD_SIZE)"
++	default 12288
++	depends on VMAP_STACK && ARM64_4K_PAGES && !KASAN
++	help
++	  Per Thread stack size, value must be PAGE_SIZE aligned.
++	  make sure value should be less than (1 << THREAD_SHIFT),
++	  otherwise increase THREAD_SHIFT also.
 +
-+void hl_fence_get(struct hl_fence *fence)
-+{
-+	if (fence)
-+		kref_get(&fence->refcount);
-+}
-+
-+static void hl_fence_init(struct hl_fence *fence)
-+{
-+	kref_init(&fence->refcount);
-+	fence->error = 0;
-+	init_completion(&fence->completion);
-+}
+ config USE_PERCPU_NUMA_NODE_ID
+ 	def_bool y
+ 	depends on NUMA
+diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
+index 5767836..597071e 100644
+--- a/arch/arm64/include/asm/memory.h
++++ b/arch/arm64/include/asm/memory.h
+@@ -93,6 +93,7 @@
+  */
+ #if defined(CONFIG_VMAP_STACK) && (MIN_THREAD_SHIFT < PAGE_SHIFT)
+ #define THREAD_SHIFT		PAGE_SHIFT
++#define THREAD_SIZE		(UL(1) << THREAD_SHIFT)
+ #else
+ #define THREAD_SHIFT		MIN_THREAD_SHIFT
+ #endif
+@@ -101,7 +102,15 @@
+ #define THREAD_SIZE_ORDER	(THREAD_SHIFT - PAGE_SHIFT)
+ #endif
  
- static void cs_get(struct hl_cs *cs)
- {
-@@ -336,7 +332,7 @@ static void cs_do_release(struct kref *ref)
- 		 * In case the wait for signal CS was submitted, the put occurs
- 		 * in init_signal_wait_cs() right before hanging on the PQ.
- 		 */
--		dma_fence_put(cs->signal_fence);
-+		hl_fence_put(cs->signal_fence);
- 	}
+-#define THREAD_SIZE		(UL(1) << THREAD_SHIFT)
++#define THREAD_SIZE_ALIGNED	(UL(1) << THREAD_SHIFT)
++
++#ifndef THREAD_SIZE
++#if defined(CONFIG_VMAP_STACK) && (CONFIG_PAGE_ALIGNED_STACK_SIZE)
++#define THREAD_SIZE		CONFIG_PAGE_ALIGNED_STACK_SIZE
++#else
++#define THREAD_SIZE		THREAD_SIZE_ALIGNED
++#endif
++#endif
+ 
+ /*
+  * By aligning VMAP'd stacks to 2 * THREAD_SIZE, we can detect overflow by
+@@ -109,12 +118,24 @@
+  * assembly.
+  */
+ #ifdef CONFIG_VMAP_STACK
+-#define THREAD_ALIGN		(2 * THREAD_SIZE)
++#define THREAD_ALIGN		(2 * THREAD_SIZE_ALIGNED)
+ #else
+-#define THREAD_ALIGN		THREAD_SIZE
++#define THREAD_ALIGN		THREAD_SIZE_ALIGNED
++#endif
++
++#ifdef CONFIG_PAGE_ALIGNED_STACK_SIZE
++
++#if (THREAD_SIZE_ALIGNED < THREAD_SIZE)
++#error "PAGE_ALIGNED_STACK_SIZE is more than THREAD_SIZE_ALIGNED, increase THREAD_SHIFT"
++#endif
++
++#if (THREAD_SIZE % PAGE_SIZE)
++#error "PAGE_ALIGNED_STACK_SIZE must be PAGE_SIZE align"
++#endif
++
+ #endif
+ 
+-#define IRQ_STACK_SIZE		THREAD_SIZE
++#define IRQ_STACK_SIZE		THREAD_SIZE_ALIGNED
+ 
+ #define OVERFLOW_STACK_SIZE	SZ_4K
+ 
+diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+index 13458c2..5190573 100644
+--- a/arch/arm64/kernel/entry.S
++++ b/arch/arm64/kernel/entry.S
+@@ -444,12 +444,12 @@ alternative_insn eret, nop, ARM64_UNMAP_KERNEL_AT_EL0
  
  	/*
-@@ -348,19 +344,18 @@ static void cs_do_release(struct kref *ref)
- 	hl_ctx_put(cs->ctx);
- 
- 	/* We need to mark an error for not submitted because in that case
--	 * the dma fence release flow is different. Mainly, we don't need
-+	 * the hl fence release flow is different. Mainly, we don't need
- 	 * to handle hw_sob for signal/wait
+ 	 * Compare sp with the base of the task stack.
+-	 * If the top ~(THREAD_SIZE - 1) bits match, we are on a task stack,
++	 * If the top ~(THREAD_SIZE_ALIGNED - 1) bits match, we are on a task stack,
+ 	 * and should switch to the irq stack.
  	 */
- 	if (cs->timedout)
--		dma_fence_set_error(cs->fence, -ETIMEDOUT);
-+		cs->fence->error = -ETIMEDOUT;
- 	else if (cs->aborted)
--		dma_fence_set_error(cs->fence, -EIO);
-+		cs->fence->error = -EIO;
- 	else if (!cs->submitted)
--		dma_fence_set_error(cs->fence, -EBUSY);
--
--	dma_fence_signal(cs->fence);
--	dma_fence_put(cs->fence);
-+		cs->fence->error = -EBUSY;
+ 	ldr	x25, [tsk, TSK_STACK]
+ 	eor	x25, x25, x19
+-	and	x25, x25, #~(THREAD_SIZE - 1)
++	and	x25, x25, #~(THREAD_SIZE_ALIGNED - 1)
+ 	cbnz	x25, 9998f
  
-+	complete_all(&cs->fence->completion);
-+	hl_fence_put(cs->fence);
- 	cs_counters_aggregate(hdev, cs->ctx);
- 
- 	kfree(cs->jobs_in_queue_cnt);
-@@ -401,7 +396,7 @@ static int allocate_cs(struct hl_device *hdev, struct hl_ctx *ctx,
- 			enum hl_cs_type cs_type, struct hl_cs **cs_new)
- {
- 	struct hl_cs_compl *cs_cmpl;
--	struct dma_fence *other = NULL;
-+	struct hl_fence *other = NULL;
- 	struct hl_cs *cs;
- 	int rc;
- 
-@@ -434,7 +429,8 @@ static int allocate_cs(struct hl_device *hdev, struct hl_ctx *ctx,
- 	cs_cmpl->cs_seq = ctx->cs_sequence;
- 	other = ctx->cs_pending[cs_cmpl->cs_seq &
- 				(hdev->asic_prop.max_pending_cs - 1)];
--	if ((other) && (!dma_fence_is_signaled(other))) {
-+
-+	if (other && !completion_done(&other->completion)) {
- 		dev_dbg(hdev->dev,
- 			"Rejecting CS because of too many in-flights CS\n");
- 		rc = -EAGAIN;
-@@ -448,8 +444,8 @@ static int allocate_cs(struct hl_device *hdev, struct hl_ctx *ctx,
- 		goto free_fence;
- 	}
- 
--	dma_fence_init(&cs_cmpl->base_fence, &hl_fence_ops, &cs_cmpl->lock,
--			ctx->asid, ctx->cs_sequence);
-+	/* init hl_fence */
-+	hl_fence_init(&cs_cmpl->base_fence);
- 
- 	cs->sequence = cs_cmpl->cs_seq;
- 
-@@ -458,9 +454,9 @@ static int allocate_cs(struct hl_device *hdev, struct hl_ctx *ctx,
- 							&cs_cmpl->base_fence;
- 	ctx->cs_sequence++;
- 
--	dma_fence_get(&cs_cmpl->base_fence);
-+	hl_fence_get(&cs_cmpl->base_fence);
- 
--	dma_fence_put(other);
-+	hl_fence_put(other);
- 
- 	spin_unlock(&ctx->cs_lock);
- 
-@@ -773,7 +769,7 @@ static int cs_ioctl_signal_wait(struct hl_fpriv *hpriv, enum hl_cs_type cs_type,
- 	struct hl_ctx *ctx = hpriv->ctx;
- 	struct hl_cs_chunk *cs_chunk_array, *chunk;
- 	struct hw_queue_properties *hw_queue_prop;
--	struct dma_fence *sig_fence = NULL;
-+	struct hl_fence *sig_fence = NULL;
- 	struct hl_cs_job *job;
- 	struct hl_cs *cs;
- 	struct hl_cb *cb;
-@@ -875,14 +871,14 @@ static int cs_ioctl_signal_wait(struct hl_fpriv *hpriv, enum hl_cs_type cs_type,
- 			dev_err(hdev->dev,
- 				"CS seq 0x%llx is not of a signal CS\n",
- 				signal_seq);
--			dma_fence_put(sig_fence);
-+			hl_fence_put(sig_fence);
- 			rc = -EINVAL;
- 			goto free_signal_seq_array;
- 		}
- 
--		if (dma_fence_is_signaled(sig_fence)) {
-+		if (completion_done(&sig_fence->completion)) {
- 			/* signal CS already finished */
--			dma_fence_put(sig_fence);
-+			hl_fence_put(sig_fence);
- 			rc = 0;
- 			goto free_signal_seq_array;
- 		}
-@@ -894,7 +890,7 @@ static int cs_ioctl_signal_wait(struct hl_fpriv *hpriv, enum hl_cs_type cs_type,
- 	rc = allocate_cs(hdev, ctx, cs_type, &cs);
- 	if (rc) {
- 		if (cs_type == CS_TYPE_WAIT)
--			dma_fence_put(sig_fence);
-+			hl_fence_put(sig_fence);
- 		hl_ctx_put(ctx);
- 		goto free_signal_seq_array;
- 	}
-@@ -1154,7 +1150,7 @@ int hl_cs_ioctl(struct hl_fpriv *hpriv, void *data)
- static long _hl_cs_wait_ioctl(struct hl_device *hdev,
- 		struct hl_ctx *ctx, u64 timeout_us, u64 seq)
- {
--	struct dma_fence *fence;
-+	struct hl_fence *fence;
- 	unsigned long timeout;
- 	long rc;
- 
-@@ -1173,12 +1169,15 @@ static long _hl_cs_wait_ioctl(struct hl_device *hdev,
- 				"Can't wait on CS %llu because current CS is at seq %llu\n",
- 				seq, ctx->cs_sequence);
- 	} else if (fence) {
--		rc = dma_fence_wait_timeout(fence, true, timeout);
-+		rc = wait_for_completion_interruptible_timeout(
-+				&fence->completion, timeout);
-+
- 		if (fence->error == -ETIMEDOUT)
- 			rc = -ETIMEDOUT;
- 		else if (fence->error == -EIO)
- 			rc = -EIO;
--		dma_fence_put(fence);
-+
-+		hl_fence_put(fence);
- 	} else {
- 		dev_dbg(hdev->dev,
- 			"Can't wait on seq %llu because current CS is at seq %llu (Fence is gone)\n",
-diff --git a/drivers/misc/habanalabs/common/context.c b/drivers/misc/habanalabs/common/context.c
-index 3e375958e73b..b168a9fce817 100644
---- a/drivers/misc/habanalabs/common/context.c
-+++ b/drivers/misc/habanalabs/common/context.c
-@@ -23,7 +23,7 @@ static void hl_ctx_fini(struct hl_ctx *ctx)
- 	 */
- 
- 	for (i = 0 ; i < hdev->asic_prop.max_pending_cs ; i++)
--		dma_fence_put(ctx->cs_pending[i]);
-+		hl_fence_put(ctx->cs_pending[i]);
- 
- 	kfree(ctx->cs_pending);
- 
-@@ -128,7 +128,7 @@ int hl_ctx_init(struct hl_device *hdev, struct hl_ctx *ctx, bool is_kernel_ctx)
- 	atomic_set(&ctx->thread_ctx_switch_token, 1);
- 	ctx->thread_ctx_switch_wait_token = 0;
- 	ctx->cs_pending = kcalloc(hdev->asic_prop.max_pending_cs,
--				sizeof(struct dma_fence *),
-+				sizeof(struct hl_fence *),
- 				GFP_KERNEL);
- 	if (!ctx->cs_pending)
- 		return -ENOMEM;
-@@ -184,10 +184,10 @@ int hl_ctx_put(struct hl_ctx *ctx)
- 	return kref_put(&ctx->refcount, hl_ctx_do_release);
- }
- 
--struct dma_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq)
-+struct hl_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq)
- {
- 	struct asic_fixed_properties *asic_prop = &ctx->hdev->asic_prop;
--	struct dma_fence *fence;
-+	struct hl_fence *fence;
- 
- 	spin_lock(&ctx->cs_lock);
- 
-@@ -201,8 +201,9 @@ struct dma_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq)
- 		return NULL;
- 	}
- 
--	fence = dma_fence_get(
--			ctx->cs_pending[seq & (asic_prop->max_pending_cs - 1)]);
-+	fence = ctx->cs_pending[seq & (asic_prop->max_pending_cs - 1)];
-+	hl_fence_get(fence);
-+
- 	spin_unlock(&ctx->cs_lock);
- 
- 	return fence;
-diff --git a/drivers/misc/habanalabs/common/habanalabs.h b/drivers/misc/habanalabs/common/habanalabs.h
-index 9722706a2d6c..474fb968532e 100644
---- a/drivers/misc/habanalabs/common/habanalabs.h
-+++ b/drivers/misc/habanalabs/common/habanalabs.h
-@@ -15,7 +15,6 @@
- #include <linux/cdev.h>
- #include <linux/iopoll.h>
- #include <linux/irqreturn.h>
--#include <linux/dma-fence.h>
- #include <linux/dma-direction.h>
- #include <linux/scatterlist.h>
- #include <linux/hashtable.h>
-@@ -342,9 +341,22 @@ struct asic_fixed_properties {
- 	u8				completion_queues_count;
- };
- 
-+/**
-+ * struct hl_fence - software synchronization primitive
-+ * @completion: fence is implemented using completion
-+ * @refcount: refcount for this fence
-+ * @error: mark this fence with error
-+ *
-+ */
-+struct hl_fence {
-+	struct completion	completion;
-+	struct kref		refcount;
-+	int			error;
-+};
-+
- /**
-  * struct hl_cs_compl - command submission completion object.
-- * @base_fence: kernel fence object.
-+ * @base_fence: hl fence object.
-  * @lock: spinlock to protect fence.
-  * @hdev: habanalabs device structure.
-  * @hw_sob: the H/W SOB used in this signal/wait CS.
-@@ -353,7 +365,7 @@ struct asic_fixed_properties {
-  * @sob_val: the SOB value that is used in this signal/wait CS.
+ 	ldr_this_cpu x25, irq_stack_ptr, x26
+diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+index b82eb50..800bb84 100644
+--- a/arch/arm64/kernel/ptrace.c
++++ b/arch/arm64/kernel/ptrace.c
+@@ -120,8 +120,8 @@ int regs_query_register_offset(const char *name)
   */
- struct hl_cs_compl {
--	struct dma_fence	base_fence;
-+	struct hl_fence		base_fence;
- 	spinlock_t		lock;
- 	struct hl_device	*hdev;
- 	struct hl_hw_sob	*hw_sob;
-@@ -800,7 +812,7 @@ struct hl_va_range {
-  * @hdev: pointer to the device structure.
-  * @refcount: reference counter for the context. Context is released only when
-  *		this hits 0l. It is incremented on CS and CS_WAIT.
-- * @cs_pending: array of DMA fence objects representing pending CS.
-+ * @cs_pending: array of hl fence objects representing pending CS.
-  * @host_va_range: holds available virtual addresses for host mappings.
-  * @host_huge_va_range: holds available virtual addresses for host mappings
-  *                      with huge pages.
-@@ -832,7 +844,7 @@ struct hl_ctx {
- 	struct hl_fpriv		*hpriv;
- 	struct hl_device	*hdev;
- 	struct kref		refcount;
--	struct dma_fence	**cs_pending;
-+	struct hl_fence		**cs_pending;
- 	struct hl_va_range	*host_va_range;
- 	struct hl_va_range	*host_huge_va_range;
- 	struct hl_va_range	*dram_va_range;
-@@ -919,8 +931,8 @@ struct hl_cs {
- 	struct list_head	job_list;
- 	spinlock_t		job_lock;
- 	struct kref		refcount;
--	struct dma_fence	*fence;
--	struct dma_fence	*signal_fence;
-+	struct hl_fence		*fence;
-+	struct hl_fence		*signal_fence;
- 	struct work_struct	finish_work;
- 	struct delayed_work	work_tdr;
- 	struct list_head	mirror_node;
-@@ -1736,7 +1748,7 @@ int hl_ctx_init(struct hl_device *hdev, struct hl_ctx *ctx, bool is_kernel_ctx);
- void hl_ctx_do_release(struct kref *ref);
- void hl_ctx_get(struct hl_device *hdev,	struct hl_ctx *ctx);
- int hl_ctx_put(struct hl_ctx *ctx);
--struct dma_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq);
-+struct hl_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq);
- void hl_ctx_mgr_init(struct hl_ctx_mgr *mgr);
- void hl_ctx_mgr_fini(struct hl_device *hdev, struct hl_ctx_mgr *mgr);
- 
-@@ -1778,6 +1790,8 @@ void hl_cs_rollback_all(struct hl_device *hdev);
- struct hl_cs_job *hl_cs_allocate_job(struct hl_device *hdev,
- 		enum hl_queue_type queue_type, bool is_kernel_allocated_cb);
- void hl_sob_reset_error(struct kref *ref);
-+void hl_fence_put(struct hl_fence *fence);
-+void hl_fence_get(struct hl_fence *fence);
- 
- void goya_set_asic_funcs(struct hl_device *hdev);
- void gaudi_set_asic_funcs(struct hl_device *hdev);
-diff --git a/drivers/misc/habanalabs/common/hw_queue.c b/drivers/misc/habanalabs/common/hw_queue.c
-index 287681646071..65b9aa69a83e 100644
---- a/drivers/misc/habanalabs/common/hw_queue.c
-+++ b/drivers/misc/habanalabs/common/hw_queue.c
-@@ -474,7 +474,7 @@ static void init_signal_wait_cs(struct hl_cs *cs)
- 		 * wait CS was submitted.
- 		 */
- 		mb();
--		dma_fence_put(cs->signal_fence);
-+		hl_fence_put(cs->signal_fence);
- 		cs->signal_fence = NULL;
- 	}
+ static bool regs_within_kernel_stack(struct pt_regs *regs, unsigned long addr)
+ {
+-	return ((addr & ~(THREAD_SIZE - 1))  ==
+-		(kernel_stack_pointer(regs) & ~(THREAD_SIZE - 1))) ||
++	return ((addr & ~(THREAD_SIZE_ALIGNED - 1))  ==
++		(kernel_stack_pointer(regs) & ~(THREAD_SIZE_ALIGNED - 1))) ||
+ 		on_irq_stack(addr, NULL);
  }
+ 
+diff --git a/drivers/misc/lkdtm/stackleak.c b/drivers/misc/lkdtm/stackleak.c
+index d1a5c07..f4ab60a 100644
+--- a/drivers/misc/lkdtm/stackleak.c
++++ b/drivers/misc/lkdtm/stackleak.c
+@@ -24,7 +24,7 @@ void lkdtm_STACKLEAK_ERASING(void)
+ 	 */
+ 	sp = PTR_ALIGN(&i, sizeof(unsigned long));
+ 
+-	left = ((unsigned long)sp & (THREAD_SIZE - 1)) / sizeof(unsigned long);
++	left = ((unsigned long)sp & (THREAD_SIZE_ALIGNED - 1)) / sizeof(unsigned long);
+ 	sp--;
+ 
+ 	/*
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index f3b6e12..f89e2c5 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -3135,9 +3135,9 @@ static int proc_stack_depth(struct seq_file *m, struct pid_namespace *ns,
+ 				struct pid *pid, struct task_struct *task)
+ {
+ 	unsigned long prev_depth = THREAD_SIZE -
+-				(task->prev_lowest_stack & (THREAD_SIZE - 1));
++				(task->prev_lowest_stack & (THREAD_SIZE_ALIGNED - 1));
+ 	unsigned long depth = THREAD_SIZE -
+-				(task->lowest_stack & (THREAD_SIZE - 1));
++				(task->lowest_stack & (THREAD_SIZE_ALIGNED - 1));
+ 
+ 	seq_printf(m, "previous stack depth: %lu\nstack depth: %lu\n",
+ 							prev_depth, depth);
+diff --git a/include/linux/thread_info.h b/include/linux/thread_info.h
+index e93e249..35a73b5 100644
+--- a/include/linux/thread_info.h
++++ b/include/linux/thread_info.h
+@@ -43,6 +43,10 @@ enum {
+ #define THREAD_ALIGN	THREAD_SIZE
+ #endif
+ 
++#ifndef THREAD_SIZE_ALIGNED
++#define THREAD_SIZE_ALIGNED	THREAD_SIZE
++#endif
++
+ #define THREADINFO_GFP		(GFP_KERNEL_ACCOUNT | __GFP_ZERO)
+ 
+ /*
+diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
+index 5810fb8..ef3d442 100644
+--- a/kernel/trace/trace_stack.c
++++ b/kernel/trace/trace_stack.c
+@@ -159,7 +159,7 @@ static void check_stack(unsigned long ip, unsigned long *stack)
+ 	int frame_size = READ_ONCE(tracer_frame);
+ 	int i, x;
+ 
+-	this_size = ((unsigned long)stack) & (THREAD_SIZE-1);
++	this_size = ((unsigned long)stack) & (THREAD_SIZE_ALIGNED - 1);
+ 	this_size = THREAD_SIZE - this_size;
+ 	/* Remove the frame of the tracer */
+ 	this_size -= frame_size;
+@@ -211,7 +211,7 @@ static void check_stack(unsigned long ip, unsigned long *stack)
+ 	x = 0;
+ 	start = stack;
+ 	top = (unsigned long *)
+-		(((unsigned long)start & ~(THREAD_SIZE-1)) + THREAD_SIZE);
++		(((unsigned long)start & ~(THREAD_SIZE_ALIGNED - 1)) + THREAD_SIZE);
+ 
+ 	/*
+ 	 * Loop through all the entries. One of the entries may
 -- 
-2.17.1
+1.9.1
 
