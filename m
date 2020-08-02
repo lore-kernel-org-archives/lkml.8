@@ -2,94 +2,119 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A59EAC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 12:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10142C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8508B207DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 12:56:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NG0Rp+3+"
+	by mail.kernel.org (Postfix) with ESMTP id DE8AA20738
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:11:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbgHBMz5 (ORCPT
+        id S1728302AbgHBNLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 08:55:57 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:12412 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728020AbgHBMz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 08:55:57 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596372956; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=vqFI7c3dNZv0B1DGOiIOgm5q/aIuLzWPrYQcR71+t7k=; b=NG0Rp+3+hvOHPH3U//5xCRtxNHu77sXyyHQFTyBaWDEVTMi2aQLSUdaZSs0QSyBOCzanx3Ch
- YLUE007YtF5fj+pGWu5ZoybZ9NHJLBKlic91siiAU3852DCeBjhxqTXlnCCd9F98YqXh4gUa
- KhGJlbnVfBvwr1ub5wwzfkSDNfo=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5f26b7d8eb556d49a6103267 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 02 Aug 2020 12:55:52
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 76D57C433CB; Sun,  2 Aug 2020 12:55:52 +0000 (UTC)
-Received: from charante-linux.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: charante)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4270AC433C6;
-        Sun,  2 Aug 2020 12:55:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4270AC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
-From:   Charan Teja Reddy <charante@codeaurora.org>
-To:     akpm@linux-foundation.org, linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, vinmenon@codeaurora.org,
-        Charan Teja Reddy <charante@codeaurora.org>
-Subject: [PATCH] mm, memory_hotplug: update pcp lists everytime onlining a memory block
-Date:   Sun,  2 Aug 2020 18:24:56 +0530
-Message-Id: <1596372896-15336-1-git-send-email-charante@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Sun, 2 Aug 2020 09:11:32 -0400
+Received: from zg8tmja5ljk3lje4mi4ymjia.icoremail.net ([209.97.182.222]:45614
+        "HELO zg8tmja5ljk3lje4mi4ymjia.icoremail.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with SMTP id S1726578AbgHBNLc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 09:11:32 -0400
+Received: from oslab.tsinghua.edu.cn (unknown [166.111.139.112])
+        by app-5 (Coremail) with SMTP id EwQGZQCnrnJtuyZfHMLtAw--.12483S2;
+        Sun, 02 Aug 2020 21:11:14 +0800 (CST)
+From:   Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+To:     doshir@vmware.com, pv-drivers@vmware.com, davem@davemloft.net,
+        kuba@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+Subject: [PATCH] net: vmxnet3: avoid accessing the data mapped to streaming DMA
+Date:   Sun,  2 Aug 2020 21:11:07 +0800
+Message-Id: <20200802131107.15857-1-baijiaju@tsinghua.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: EwQGZQCnrnJtuyZfHMLtAw--.12483S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7trWUKr1fCrW5AFy5AF48Xrb_yoW8urW3pF
+        ZxJ3WrJr42gr1qy3yrur4rW3W5Gr4rta4xKa4Utw1fWa9xZF1Iyr9Yyryjy34rK34Duan8
+        JFn2vw4rJr1xtw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Xr4l
+        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
+        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
+        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
+        4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+        0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU-_-PUUUUU=
+X-CM-SenderInfo: xedlyxhdmxq3pvlqwxlxdovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When onlining a first memory block in a zone, pcp lists are not updated
-thus pcp struct will have the default setting of ->high = 0,->batch = 1.
-This means till the second memory block in a zone(if it have) is onlined
-the pcp lists of this zone will not contain any pages because pcp's
-->count is always greater than ->high thus free_pcppages_bulk() is
-called to free batch size(=1) pages every time system wants to add a
-page to the pcp list through free_unref_page(). To put this in a word,
-system is not using benefits offered by the pcp lists when there is a
-single onlineable memory block in a zone. Correct this by always
-updating the pcp lists when memory block is onlined.
+In vmxnet3_probe_device(), "adapter" is mapped to streaming DMA:
+  adapter->adapter_pa = dma_map_single(..., adapter, ...);
 
-Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
+Then "adapter" is accessed at many places in this function.
+
+Theses accesses may cause data inconsistency between CPU cache and 
+hardware.
+
+To fix this problem, dma_map_single() is called after these accesses.
+
+Signed-off-by: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
 ---
- mm/memory_hotplug.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/vmxnet3/vmxnet3_drv.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index dcdf327..7f62d69 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -854,8 +854,7 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
- 	node_states_set_node(nid, &arg);
- 	if (need_zonelists_rebuild)
- 		build_all_zonelists(NULL);
--	else
--		zone_pcp_update(zone);
-+	zone_pcp_update(zone);
+diff --git a/drivers/net/vmxnet3/vmxnet3_drv.c b/drivers/net/vmxnet3/vmxnet3_drv.c
+index ca395f9679d0..96a4c28ba429 100644
+--- a/drivers/net/vmxnet3/vmxnet3_drv.c
++++ b/drivers/net/vmxnet3/vmxnet3_drv.c
+@@ -3445,14 +3445,6 @@ vmxnet3_probe_device(struct pci_dev *pdev,
+ 	}
  
- 	init_per_zone_wmark_min();
+ 	spin_lock_init(&adapter->cmd_lock);
+-	adapter->adapter_pa = dma_map_single(&adapter->pdev->dev, adapter,
+-					     sizeof(struct vmxnet3_adapter),
+-					     PCI_DMA_TODEVICE);
+-	if (dma_mapping_error(&adapter->pdev->dev, adapter->adapter_pa)) {
+-		dev_err(&pdev->dev, "Failed to map dma\n");
+-		err = -EFAULT;
+-		goto err_set_mask;
+-	}
+ 	adapter->shared = dma_alloc_coherent(
+ 				&adapter->pdev->dev,
+ 				sizeof(struct Vmxnet3_DriverShared),
+@@ -3628,6 +3620,16 @@ vmxnet3_probe_device(struct pci_dev *pdev,
+ 	}
  
+ 	vmxnet3_check_link(adapter, false);
++
++	adapter->adapter_pa = dma_map_single(&adapter->pdev->dev, adapter,
++					     sizeof(struct vmxnet3_adapter),
++					     PCI_DMA_TODEVICE);
++	if (dma_mapping_error(&adapter->pdev->dev, adapter->adapter_pa)) {
++		dev_err(&pdev->dev, "Failed to map dma\n");
++		err = -EFAULT;
++		goto err_register;
++	}
++
+ 	return 0;
+ 
+ err_register:
+@@ -3655,8 +3657,6 @@ vmxnet3_probe_device(struct pci_dev *pdev,
+ 			  sizeof(struct Vmxnet3_DriverShared),
+ 			  adapter->shared, adapter->shared_pa);
+ err_alloc_shared:
+-	dma_unmap_single(&adapter->pdev->dev, adapter->adapter_pa,
+-			 sizeof(struct vmxnet3_adapter), PCI_DMA_TODEVICE);
+ err_set_mask:
+ 	free_netdev(netdev);
+ 	return err;
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-member of the Code Aurora Forum, hosted by The Linux Foundation
+2.17.1
 
