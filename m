@@ -2,205 +2,118 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E8AC433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD53C433E3
 	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 03:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BE7B2067D
+	by mail.kernel.org (Postfix) with ESMTP id 48ED62076A
 	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 03:05:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596337555;
-	bh=69kZjUSWNDziqCdzHTUc/4mOGEuEQGCa68+3zSX0jzA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=w6kqg86wsyMkJVRlr3k8lRgyKjR/GT0IycHBCZfpsm6GRil9bqHpQosjsaMVEfQsO
-	 jjAY9HM/rfZ0AKnYNkNQwyTGxqTik3upigHoXP1PkfcqYyQhlwJWKSfTKATQsAKxtr
-	 xTsMP8ESqaHR9OWA86q0OQPU8s0bZ/BvEuASqcrc=
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VRMDBAM8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgHBDCs (ORCPT
+        id S1727976AbgHBDFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 23:02:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42820 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbgHBDCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 23:02:48 -0400
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 765EC2080C
-        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 03:02:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596337367;
-        bh=69kZjUSWNDziqCdzHTUc/4mOGEuEQGCa68+3zSX0jzA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SmpfRrTqdw7ywZ7jaI8zkGknqoIz3Z+lsCw+09LoYxUbxA8u697/wKTfJYsUscfI7
-         ZvfWIuoCJ/7PMpR9eZBmFy3ouzl0V2QHhQOTMrLMW8plbtkUUBn+EFuR1KXV6kFPQ4
-         Jyd/LDpSM9vxF2InbTRM/zoja6e78/kMuIxIzdBo=
-Received: by mail-ed1-f53.google.com with SMTP id c15so15253241edj.3
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 20:02:47 -0700 (PDT)
-X-Gm-Message-State: AOAM531L+EeqxudL76nRdOwbJ/UABRNKUas9C6dIxs57QaT2JLD/G84U
-        cS7Lybx8kQ4MXJBknUZoZchQr3Uh5C2gybLlDg==
-X-Google-Smtp-Source: ABdhPJxL3YzWx3FUUHJpPDKfq2eX1uVtVJzwi0mwaMzX1YCSOIhARaM52Fb4jPnqPRqSLl73JS5FF123RAsYJKlKGDg=
-X-Received: by 2002:a50:9e6f:: with SMTP id z102mr10521268ede.300.1596337365962;
- Sat, 01 Aug 2020 20:02:45 -0700 (PDT)
+        Sat, 1 Aug 2020 23:05:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47150 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbgHBDFw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 23:05:52 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3DCFC06174A;
+        Sat,  1 Aug 2020 20:05:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=C4AUGMo+yuGybGuPXaC+2uX4qyRucKB6ZNOOmOkSD7E=; b=VRMDBAM8eiF63PV0r/ghc0PsFd
+        kToIrHCsMaLbDIek4RS2VMdEYR9s9dJKNi4IiVZDdFY9BUZswQg8Kh9fD77vIOOOgSP75CJZR6tEb
+        ddfSSx1e8+ja8zK406tiGQem3almmIQSkZ5PR+HQEgq+9JikToOeYf8YhcwhQfg3PKzS9vLLIljiM
+        jYCRmU6prmsOaOWUKBQCdWCc4qN4yWyi2IPLj2+oMdV6B0uR7WJNusigjkCGMUn5QMr9hH9n8zog4
+        xS/twN4+ewlnCdh06/WFQ6PNz6KyTvFhV/hy1TjBTuVjYWTVA6Dm7gDmoe8JeipieZT4zkxg+jZ5P
+        dr4+XU+Q==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k24Jm-0004Sk-6Q; Sun, 02 Aug 2020 03:05:46 +0000
+Subject: Re: [PATCH mmotm] tmpfs: support 64-bit inums per-sb fix
+To:     Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chris Down <chris@chrisdown.name>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+References: <cover.1594661218.git.chris@chrisdown.name>
+ <8b23758d0c66b5e2263e08baf9c4b6a7565cbd8f.1594661218.git.chris@chrisdown.name>
+ <alpine.LSU.2.11.2008011223120.10700@eggly.anvils>
+ <alpine.LSU.2.11.2008011928010.13320@eggly.anvils>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <4d2af3f7-eb4f-6313-1719-b1c532c9a96d@infradead.org>
+Date:   Sat, 1 Aug 2020 20:05:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200728111800.77641-1-frank-w@public-files.de> <20200728111800.77641-4-frank-w@public-files.de>
-In-Reply-To: <20200728111800.77641-4-frank-w@public-files.de>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Sun, 2 Aug 2020 11:02:33 +0800
-X-Gmail-Original-Message-ID: <CAAOTY__QCoV62OZO__6Dg+r0sbJK3AgV7FzFPFYoz_DvXMj7uQ@mail.gmail.com>
-Message-ID: <CAAOTY__QCoV62OZO__6Dg+r0sbJK3AgV7FzFPFYoz_DvXMj7uQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] drm: Add get_possible_crtc API for dpi, dsi
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Stu Hsieh <stu.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <alpine.LSU.2.11.2008011928010.13320@eggly.anvils>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Frank:
-
-Frank Wunderlich <frank-w@public-files.de> =E6=96=BC 2020=E5=B9=B47=E6=9C=
-=8828=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=887:18=E5=AF=AB=E9=81=93=
-=EF=BC=9A
->
-
-Describe why need this patch. I think the reason is:
-
-For current mediatek dsi encoder, its possible crtc is fixed in crtc
-0, and mediatek dpi encoder's possible crtc is fixed in crtc 1. In
-some SoC the possible crtc is not fixed in this case, so search
-pipeline information to find out the correct possible crtc.
-
-> From: Stu Hsieh <stu.hsieh@mediatek.com>
->
-> Test: build pass and run ok
->
-> Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
-
-Need your signed-off-by tag.
-
+On 8/1/20 7:37 PM, Hugh Dickins wrote:
+> Expanded Chris's Documentation and Kconfig help on tmpfs inode64.
+> TMPFS_INODE64 still there, still default N, but writing down its very
+> limited limitation does make me wonder again if we want the option.
+> 
+> Signed-off-by: Hugh Dickins <hughd@google.com>
 > ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 42 +++++++++++++++++++++
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |  2 +
->  2 files changed, 44 insertions(+)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/dr=
-m/mediatek/mtk_drm_ddp_comp.c
-> index 57c88de9a329..a5f2ff6bea93 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> @@ -13,6 +13,8 @@
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
->  #include <linux/soc/mediatek/mtk-cmdq.h>
-> +#include <drm/drm_print.h>
-> +
->  #include "mtk_drm_drv.h"
->  #include "mtk_drm_plane.h"
->  #include "mtk_drm_ddp_comp.h"
-> @@ -412,6 +414,22 @@ static const struct mtk_ddp_comp_match mtk_ddp_match=
-es[DDP_COMPONENT_ID_MAX] =3D {
->         [DDP_COMPONENT_WDMA1]   =3D { MTK_DISP_WDMA,      1, NULL },
->  };
->
-> +static bool mtk_drm_find_comp_in_ddp(struct mtk_ddp_comp ddp_comp,
-> +                                        const enum mtk_ddp_comp_id *path=
-,
-> +                                        unsigned int path_len)
-> +{
-> +       unsigned int i;
-> +
-> +       if (path =3D=3D NULL)
-> +               return false;
+> Andrew, please fold into tmpfs-support-64-bit-inums-per-sb.patch later.
+> 
+> Randy, you're very active on Documentation and linux-next: may I ask you
+> please to try applying this patch to latest, and see if tmpfs.rst comes
+> out looking right to you?  I'm an old dog still stuck in the days of
 
-This checking is redundant, so remove it.
+Hi Hugh,
+It looks fine.
 
-> +
-> +       for (i =3D 0U; i < path_len; i++)
-> +               if (ddp_comp.id =3D=3D path[i])
-> +                       return true;
-> +
-> +       return false;
-> +}
-> +
->  int mtk_ddp_comp_get_id(struct device_node *node,
->                         enum mtk_ddp_comp_type comp_type)
->  {
-> @@ -427,6 +445,30 @@ int mtk_ddp_comp_get_id(struct device_node *node,
->         return -EINVAL;
->  }
->
-> +unsigned int mtk_drm_find_possible_crtc_by_comp(struct drm_device *drm,
-> +                                               struct mtk_ddp_comp ddp_c=
-omp)
-> +{
-> +       struct mtk_drm_private *private =3D drm->dev_private;
-> +       unsigned int ret;
-> +
-> +       if (mtk_drm_find_comp_in_ddp(ddp_comp, private->data->main_path,
-> +               private->data->main_len) =3D=3D true) {
+> tmpfs.txt, hoping to avoid new tricks for a while.  Thanks!  (Bonus
+> points if you can explain what the "::" on line 122 is about. I started
+> out reading Documentation/doc-guide/sphinx.rst, but... got diverted.
+> Perhaps I should ask Mauro or Jon, but turning for help first to you.)
 
-' =3D=3D true' is redundant, so remove it.
+That's the correct file. Around line 216, it says:
 
-> +               ret =3D BIT(0);
-> +       } else if (mtk_drm_find_comp_in_ddp(ddp_comp,
-> +               private->data->ext_path,
-> +               private->data->ext_len) =3D=3D true) {
+* For inserting fixed width text blocks (for code examples, use case
+  examples, etc.), use ``::`` for anything that doesn't really benefit
+  from syntax highlighting, especially short snippets. Use
+  ``.. code-block:: <language>`` for longer code blocks that benefit
+  from highlighting. For a short snippet of code embedded in the text, use \`\`.
 
-Ditto.
 
-> +               ret =3D BIT(1);
-> +       } else if (mtk_drm_find_comp_in_ddp(ddp_comp,
-> +               private->data->third_path,
-> +               private->data->third_len) =3D=3D true) {
+so it's just for a (short) code example block, fixed font...
 
-Ditto.
 
-> +               ret =3D BIT(2);
-> +       } else {
-> +               DRM_INFO("Failed to find comp in ddp table\n");
-> +               ret =3D 0;
-> +       }
-> +       return ret;
-> +}
-> +
->  int mtk_ddp_comp_init(struct device *dev, struct device_node *node,
->                       struct mtk_ddp_comp *comp, enum mtk_ddp_comp_id com=
-p_id,
->                       const struct mtk_ddp_comp_funcs *funcs)
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/dr=
-m/mediatek/mtk_drm_ddp_comp.h
-> index debe36395fe7..1d9e00b69462 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> @@ -202,6 +202,8 @@ static inline void mtk_ddp_ctm_set(struct mtk_ddp_com=
-p *comp,
->
->  int mtk_ddp_comp_get_id(struct device_node *node,
->                         enum mtk_ddp_comp_type comp_type);
-> +unsigned int mtk_drm_find_possible_crtc_by_comp(struct drm_device *drm,
-> +                                               struct mtk_ddp_comp ddp_c=
-omp);
->  int mtk_ddp_comp_init(struct device *dev, struct device_node *comp_node,
->                       struct mtk_ddp_comp *comp, enum mtk_ddp_comp_id com=
-p_id,
->                       const struct mtk_ddp_comp_funcs *funcs);
-> --
-> 2.25.1
->
+> 
+>  Documentation/filesystems/tmpfs.rst |   13 ++++++++++---
+>  fs/Kconfig                          |   16 +++++++++++-----
+>  2 files changed, 21 insertions(+), 8 deletions(-)
+> 
+> --- mmotm/Documentation/filesystems/tmpfs.rst	2020-07-27 18:54:51.116524795 -0700
+> +++ linux/Documentation/filesystems/tmpfs.rst	2020-08-01 18:37:07.719713987 -0700
+
+
+
+cheers.
+-- 
+~Randy
+
