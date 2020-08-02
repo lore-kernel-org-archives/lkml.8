@@ -2,68 +2,98 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A48C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AF8C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 12:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E441822B43
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8BA1207DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 12:00:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728246AbgHBL5K (ORCPT
+        id S1728109AbgHBMA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 07:57:10 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:51226 "EHLO
+        Sun, 2 Aug 2020 08:00:27 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:51402 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbgHBL5K (ORCPT
+        with ESMTP id S1726578AbgHBMA1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 07:57:10 -0400
+        Sun, 2 Aug 2020 08:00:27 -0400
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 40AAC1C0BE1; Sun,  2 Aug 2020 13:57:08 +0200 (CEST)
-Date:   Sun, 2 Aug 2020 13:57:01 +0200
+        id 7601C1C0BDD; Sun,  2 Aug 2020 14:00:23 +0200 (CEST)
+Date:   Sun, 2 Aug 2020 14:00:15 +0200
 From:   Pavel Machek <pavel@ucw.cz>
-To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-Cc:     ssantosh@kernel.org, s-anna@ti.com, santosh.shilimkar@oracle.com,
-        robh+dt@kernel.org, lee.jones@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        wmills@ti.com, praneeth@ti.com
-Subject: Re: [PATCH 0/6] Add TI PRUSS platform driver
-Message-ID: <20200802115701.GD1162@bug>
-References: <1596020528-19510-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <20200802115330.GA1090@bug>
+To:     Qiwu Huang <yanziily@gmail.com>
+Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        jiangfei1@xiaomi.com, Qiwu Huang <huangqiwu@xiaomi.com>
+Subject: Re: [PATCH v4 1/4] power: supply: core: add quick charge type
+ property
+Message-ID: <20200802120015.GA1289@bug>
+References: <cover.1595214246.git.huangqiwu@xiaomi.com>
+ <c9d3199ec18625f9cc4448c3b2049ea2ae80358b.1595214246.git.huangqiwu@xiaomi.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200802115330.GA1090@bug>
+In-Reply-To: <c9d3199ec18625f9cc4448c3b2049ea2ae80358b.1595214246.git.huangqiwu@xiaomi.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 2020-08-02 13:53:30, Pavel Machek wrote:
-> Hi!
+On Mon 2020-07-20 13:47:14, Qiwu Huang wrote:
+> From: Qiwu Huang <huangqiwu@xiaomi.com>
 > 
-> > A typical usage scenario would be to load the application firmware into one or
-> > more of the PRU cores, initialize one or more of the peripherals and perform I/O
-> > through shared RAM from either a kernel driver or directly from userspace.
-> > 
-> > This series contains the PRUSS platform driver. This is the parent driver for
-> > the entire PRUSS and is used for managing the subsystem level resources like
-> > various memories and the CFG module.  It is responsible for the creation and
-> > deletion of the platform devices for the child PRU devices and other child
-> > devices (like Interrupt Controller, MDIO node and some syscon nodes) so that
-> > they can be managed by specific platform drivers.
+> Reports the kind of quick charge type based on
+> different adapter power.
 > 
-> >  drivers/soc/ti/Kconfig | 11 + drivers/soc/ti/Makefile | 1 + drivers/soc/ti/pruss.c | 
+> Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
+> ---
+>  Documentation/ABI/testing/sysfs-class-power | 21 +++++++++++++++++++++
+>  drivers/power/supply/power_supply_sysfs.c   |  1 +
+>  include/linux/power_supply.h                | 10 ++++++++++
+>  3 files changed, 32 insertions(+)
 > 
-> Is drivers/soc right place for that? We already have subsystem for various
-> programmable accelerators...
+> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+> index 216d61a22f1e..dd3773dcf16a 100644
+> --- a/Documentation/ABI/testing/sysfs-class-power
+> +++ b/Documentation/ABI/testing/sysfs-class-power
+> @@ -708,3 +708,24 @@ Description:
+>  
+>  		Access: Read
+>  		Valid values: 1-31
+> +
+> +What:		/sys/class/power_supply/<supply_name>/quick_charge_type
+> +Date:		Jul 2020
+> +Contact:	Fei Jiang <jiangfei1@xiaomi.com>
+> +		Description:
+> +		Reports the kind of quick charge type based on different adapter power.
+> +		Different quick charge type represent different charging power.
+> +		QUICK_CHARGE_NORMAL : Charging Power <= 10W
+> +		QUICK_CHARGE_FAST : 10W < Charging Power <= 20W
+> +		QUICK_CHARGE_FLASH : 20W < Charging Power <= 30W
+> +		QUICK_CHARGE_TURBE : 30W < Charging Power <= 50W
+> +		QUICK_CHARGE_SUPER : Charging Power > 50W
+> +
+> +		Access: Read-Only
+> +		Valid values:
+> +			0: QUICK_CHARGE_NORMAL,
+> +			1: QUICK_CHARGE_FAST,
+> +			2: QUICK_CHARGE_FLASH,
+> +			3: QUICK_CHARGE_TURBE,
+> +			4: QUICK_CHARGE_SUPER.
 
-....see drivers/remoteproc.
+NAK.
+
+Just expose value in watts or something... People are talking about > 100W charging, no
+need to go with fast/turbe/super/hyper/nonsense.
+
+BTW fast charge is already "well defined", and what you call Normal is usually fast charge.
+
+
 									Pavel
 -- 
 (english) http://www.livejournal.com/~pavelmachek
