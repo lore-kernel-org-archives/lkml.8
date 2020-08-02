@@ -2,125 +2,121 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B379C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 09:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA7AC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 09:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7645E20738
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 09:32:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JiQq24jV"
+	by mail.kernel.org (Postfix) with ESMTP id A1D2720738
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 09:34:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgHBJcu (ORCPT
+        id S1728044AbgHBJe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 05:32:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726376AbgHBJct (ORCPT
+        Sun, 2 Aug 2020 05:34:28 -0400
+Received: from zg8tmty1ljiyny4xntqumjca.icoremail.net ([165.227.154.27]:41246
+        "HELO zg8tmty1ljiyny4xntqumjca.icoremail.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with SMTP id S1726376AbgHBJe2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 05:32:49 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49C30C06174A;
-        Sun,  2 Aug 2020 02:32:49 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id c10so5461364pjn.1;
-        Sun, 02 Aug 2020 02:32:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lQyCse9ldgzSvTNwCVrbnPBDFh47UeLMm99PjX/Y9Ug=;
-        b=JiQq24jVJttFMFq7sYFEaw6AvoUegLS2lzK0HxgFI0hxO2hNNYpCd6YFU+EBJWTNQf
-         p1QkXMfPFRy2+Tey4+LHSXeM8N+HX+rU7b3IWfoOpYyIPfepiuAEKK3wPzz8gsuS8cEV
-         YHlbJjwMMVw6aJZ4r8Do1bnwC3KXWbNDn4hWiebehnD4jnojcvhGaqDTMkfrq4//Q3R+
-         qcZmk4jtPTerl0Cwqk/FAnAM6wZj3P5u95iCdk35oAbtTSvHE327Hx1LjyBqAQVpImxT
-         QyiQJqfU33ksp3DgDOcgFwwrC//MZfVo/q4wybwSd83lFZZNY21xM1OKYeZxSw4Ww2zr
-         YQRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lQyCse9ldgzSvTNwCVrbnPBDFh47UeLMm99PjX/Y9Ug=;
-        b=V+xbDH5fvPngycJPD10ky79WG6FedxHWjVnPXeXl/S8lMrK+jTLeF94Z+qL9weSXIp
-         toR3m93mu/8neiGaV7FI4IdSeyUUitvsJfn33a2xwAUQ4yHy1M42TloLtwLwFYPGDJ26
-         mwEzC8CpTHawI8yz43GRjPl3bty/FMzFk2rSVj2RYCV1/pLS7WYQ+Wq5fZqoSaEre2AP
-         WMfdKXQyUSX3mL0dHylkAWWc7S/4RjsgVr24VK2IuU9gYjWbd3aFpBcBJR9TocOirw+6
-         dSKoYGE3skM1ok8sU8vARKe2Ki1w44cLWzC46Nt4JpczyLuB1RJkFloAbZlre+/b8pAu
-         lZRQ==
-X-Gm-Message-State: AOAM532D0ifnGj9y0qMuCjOfpszEdVURsGbNDEsjDhGahJOvPQ/tgjT8
-        f+YUPqbDZa/bBJlavqgEyIU=
-X-Google-Smtp-Source: ABdhPJwL0hTPFE5j/dtwuax92ub5eNLPucfnEP4P3GU0AB8UdeHnowIWbb93iQ6vSDf7f0Eij+alzQ==
-X-Received: by 2002:a17:90b:3d7:: with SMTP id go23mr11072181pjb.44.1596360768524;
-        Sun, 02 Aug 2020 02:32:48 -0700 (PDT)
-Received: from sol (106-69-185-93.dyn.iinet.net.au. [106.69.185.93])
-        by smtp.gmail.com with ESMTPSA id e15sm2818167pgr.39.2020.08.02.02.32.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Aug 2020 02:32:47 -0700 (PDT)
-Date:   Sun, 2 Aug 2020 17:32:42 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 05/18] gpiolib: cdev: support GPIO_GET_LINE_IOCTL and
- GPIOLINE_GET_VALUES_IOCTL
-Message-ID: <20200802093242.GA23877@sol>
-References: <20200725041955.9985-1-warthog618@gmail.com>
- <20200725041955.9985-6-warthog618@gmail.com>
- <CAHp75VcKtATPDKGAViWqjOJDqukDrgZ13aTU6rTJ1jEeB3vmVw@mail.gmail.com>
- <20200726011244.GA6587@sol>
- <CAMpxmJWaEVwjXSFHTYmwdfA+88upVkJ4ePSQf_ziSOa1YdOUKQ@mail.gmail.com>
- <20200802033158.GA13174@sol>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200802033158.GA13174@sol>
+        Sun, 2 Aug 2020 05:34:28 -0400
+Received: from oslab.tsinghua.edu.cn (unknown [166.111.139.112])
+        by app-3 (Coremail) with SMTP id EQQGZQBHj8x1iCZfvYLYAw--.49978S2;
+        Sun, 02 Aug 2020 17:33:53 +0800 (CST)
+From:   Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+To:     3chas3@gmail.com
+Cc:     linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+Subject: [PATCH] atm: idt77252: avoid accessing the data mapped to streaming DMA
+Date:   Sun,  2 Aug 2020 17:33:40 +0800
+Message-Id: <20200802093340.3475-1-baijiaju@tsinghua.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: EQQGZQBHj8x1iCZfvYLYAw--.49978S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7WF48JFW7Kr1UJFW5Gr45ZFb_yoW8tFW3pF
+        W7Gw1DWFs5t34rGFWDur45urW3Ga4FyF9xKFW7A3WfCFs0yF1kGF18GFW8XF1Yyrs5ursI
+        kF4rWrsYq34DKw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkv14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GFWl
+        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
+        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
+        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
+        4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+        42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUIhFcUUUUU=
+X-CM-SenderInfo: xedlyxhdmxq3pvlqwxlxdovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 02, 2020 at 11:31:58AM +0800, Kent Gibson wrote:
-> On Fri, Jul 31, 2020 at 06:05:10PM +0200, Bartosz Golaszewski wrote:
-> > On Sun, Jul 26, 2020 at 3:12 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > >
-> > 
-> > > >
-> > > > > +               dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
-> > > > > +                       offset);
-> > > >
-> > > > Perhaps tracepoint / event?
-> > > >
-> > >
-> > > Again, a cut-and-paste from V1, and I have no experience with
-> > > tracepoints or events, so I have no opinion on that.
-> > >
-> > > So, yeah - perhaps?
-> > >
-> > 
-> > I think it's a good idea to add some proper instrumentation this time
-> > other than much less reliable logs. Can you take a look at
-> > include/trace/events/gpio.h? Adding new GPIO trace events should be
-> > pretty straightforward by copy-pasti... drawing inspiration from
-> > existing ones.
-> > 
-> 
-> You only want tracepoints to replace those dev_dbg()s, so when a line
-> is requested? What about the release?  Any other points?
-> 
+In queue_skb(), skb->data is mapped to streaming DMA on line 850:
+  dma_map_single(..., skb->data, ...);
 
-Had a closer look and it seems to me that the correct place to add such
-tracepoints would be gpiod_request() and gpiod_free(), so they catch all
-requests, not just the cdev ones.  And that moves it outside the scope
-of this patch.
+Then skb->data is accessed on lines 862 and 863:
+  tbd->word_4 = (skb->data[0] << 24) | (skb->data[1] << 16) |
+           (skb->data[2] <<  8) | (skb->data[3] <<  0);
+and on lines 893 and 894:
+  tbd->word_4 = (skb->data[0] << 24) | (skb->data[1] << 16) |
+           (skb->data[2] <<  8) | (skb->data[3] <<  0);
 
-I personally don't have any use for the dev_dbg()s here and am happy to
-remove them - they were only there to match the behaviour of
-linehandle_create as closely as possible.
+These accesses may cause data inconsistency between CPU cache and
+hardware.
 
-Cheers,
-Kent.
+To fix this problem, the calculation result of skb->data is stored in a
+local variable before DMA mapping, and then the driver accesses this
+local variable instead of skb->data.
+
+Signed-off-by: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+---
+ drivers/atm/idt77252.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/atm/idt77252.c b/drivers/atm/idt77252.c
+index df51680e8931..65a3886f68c9 100644
+--- a/drivers/atm/idt77252.c
++++ b/drivers/atm/idt77252.c
+@@ -835,6 +835,7 @@ queue_skb(struct idt77252_dev *card, struct vc_map *vc,
+ 	unsigned long flags;
+ 	int error;
+ 	int aal;
++	u32 word4;
+ 
+ 	if (skb->len == 0) {
+ 		printk("%s: invalid skb->len (%d)\n", card->name, skb->len);
+@@ -846,6 +847,8 @@ queue_skb(struct idt77252_dev *card, struct vc_map *vc,
+ 
+ 	tbd = &IDT77252_PRV_TBD(skb);
+ 	vcc = ATM_SKB(skb)->vcc;
++	word4 = (skb->data[0] << 24) | (skb->data[1] << 16) |
++			(skb->data[2] <<  8) | (skb->data[3] <<  0);
+ 
+ 	IDT77252_PRV_PADDR(skb) = dma_map_single(&card->pcidev->dev, skb->data,
+ 						 skb->len, DMA_TO_DEVICE);
+@@ -859,8 +862,7 @@ queue_skb(struct idt77252_dev *card, struct vc_map *vc,
+ 		tbd->word_1 = SAR_TBD_OAM | ATM_CELL_PAYLOAD | SAR_TBD_EPDU;
+ 		tbd->word_2 = IDT77252_PRV_PADDR(skb) + 4;
+ 		tbd->word_3 = 0x00000000;
+-		tbd->word_4 = (skb->data[0] << 24) | (skb->data[1] << 16) |
+-			      (skb->data[2] <<  8) | (skb->data[3] <<  0);
++		tbd->word_4 = word4;
+ 
+ 		if (test_bit(VCF_RSV, &vc->flags))
+ 			vc = card->vcs[0];
+@@ -890,8 +892,7 @@ queue_skb(struct idt77252_dev *card, struct vc_map *vc,
+ 
+ 		tbd->word_2 = IDT77252_PRV_PADDR(skb) + 4;
+ 		tbd->word_3 = 0x00000000;
+-		tbd->word_4 = (skb->data[0] << 24) | (skb->data[1] << 16) |
+-			      (skb->data[2] <<  8) | (skb->data[3] <<  0);
++		tbd->word_4 = word4;
+ 		break;
+ 
+ 	case ATM_AAL5:
+-- 
+2.17.1
+
