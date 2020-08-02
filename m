@@ -2,71 +2,103 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A282CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC616C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86DC320738
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:15:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596399313;
-	bh=c4HUa2zyd17N3zS9aSB4blKgePk6o1UMnLiDfPUG7fI=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Qtf+TiT/19IGelji5VoIbdTqZc9SZCpxMZO7xbbb8zZbBEBFlNvbIDjs3AZXMMXrr
-	 wEe3l+BpI/ht2MHk27PNenXUOuB8/hL9YkR02VxdPqV2fspKVMfL1v0PvcSG0sp6F4
-	 PoRmhRYt/S/GKDTKf7L++3h3xYJylxGKYan/GxHE=
+	by mail.kernel.org (Postfix) with ESMTP id D9BA520738
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:18:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ceeiw+Mz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgHBUPE (ORCPT
+        id S1727788AbgHBUSi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 16:15:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49652 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbgHBUPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 16:15:04 -0400
-Subject: Re: [GIT PULL] x86 fix
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596399303;
-        bh=c4HUa2zyd17N3zS9aSB4blKgePk6o1UMnLiDfPUG7fI=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=pJz3kiGXanJp2gjnCja90nhge++/ig/+sbrglKcyxUxBXHUs6ww/8fNxBEvLoBYPx
-         ZdOZncwnzoDNhNM1XsAZuGeru1PFlA1X5dkkhe4lC4W6v7Gl00YNN0fCnWuWWq5qHg
-         kDc0RKpE3A2Iihi/mH6Y4fpF4Tw6IU3FGOafk+x0=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200802191745.GA122326@gmail.com>
-References: <20200802191745.GA122326@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200802191745.GA122326@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
- x86-urgent-2020-08-02
-X-PR-Tracked-Commit-Id: bdd65589593edd79b6a12ce86b3b7a7c6dae5208
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5a30a78924ecd97b0335d2e1d3e01a5023c1a3d8
-Message-Id: <159639930382.2245.9642040496773900422.pr-tracker-bot@kernel.org>
-Date:   Sun, 02 Aug 2020 20:15:03 +0000
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
+        Sun, 2 Aug 2020 16:18:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725910AbgHBUSi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 16:18:38 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44D10C06174A;
+        Sun,  2 Aug 2020 13:18:38 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id bh1so6606684plb.12;
+        Sun, 02 Aug 2020 13:18:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+VaeBdZD6BxbTiHiKYuiWDRV4AX+dW31+H1ogDniWgI=;
+        b=Ceeiw+MzYueUeDVdP0aj66GMYW33iLI4ekMXmYv+FHgInpLns+zq/m0PcRS50vHk26
+         ZJqElfQ7gpsFDwrRVA4jieBcPiI00xOX18tcSlqxEIbXQVrfeuzRI8FFVFHmBW98+B3D
+         lYC1KlNpbcjkLY1PcE6+1kJBXj7tY5LYchpqV++tDjNNLtYfRI0OhtvGiLCRHQ2TBlOP
+         C59RqhToVq4pGGZJu7lfAqrgr+Oe/7R2cPqOGb3Px4v2wITByfZODtDhadw8ysqvlNvP
+         O/Gtzqm2KKetS3DO60oHouD8tEgsCBYdLxioy5YIgOEFEtUGvWUCXje85REt7+m2oOq8
+         eHJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+VaeBdZD6BxbTiHiKYuiWDRV4AX+dW31+H1ogDniWgI=;
+        b=A7OGw3S7ePhuc68sd7lKhUG3nTeEK0Pr7yY+yI3zMWnaDTjdRi2JNWGeX6QCk1g5c5
+         yoxnq6UChdRa6mpBAR8yeojIlPbusMlN/lWgF3COPilMbubcdhSdnAIGHTkbyRdujRoX
+         bg3Xp+7IriXeNRgG8+c3WQ3OsG3KFYgIS6o2SmEgvYdRHbWgyXULLr0+K50/FoMEVw4M
+         WgRK5FwDAcbHmgIO22S+5M7GMZgumMXs9DsVnrBVpcHp839+fgZ7hEuyYU0w1V/2CjyW
+         qFZ/0n5HlaZ80sIZPBE1t+k+6Xap+UFrRfupv+pO8/UjPhDv2OchQaIk4pfWdJsvmXmh
+         7Ujw==
+X-Gm-Message-State: AOAM53189TVsPkDNqciDVJP/4uY5nWLfrOJ43D5gRkivE5qIQSCfjTMu
+        Tb10SHugP5uqXxY7ZKBztOM=
+X-Google-Smtp-Source: ABdhPJw/S1fMbFH207iXXnX3cp/cOSEnD+zqvERr2xiGFnu2wILqXwDyaISUCxeO8XSRK/QMUs0pmA==
+X-Received: by 2002:a17:902:7c03:: with SMTP id x3mr11920417pll.178.1596399517819;
+        Sun, 02 Aug 2020 13:18:37 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id s185sm13712146pgc.18.2020.08.02.13.18.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Aug 2020 13:18:36 -0700 (PDT)
+Subject: Re: [net-next PATCH] net: phy: mdio-mvusb: select MDIO_DEVRES in
+ Kconfig
+To:     Bartosz Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        kernel test robot <lkp@intel.com>
+References: <20200802074953.1529-1-brgl@bgdev.pl>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <a0143110-537d-7344-5b81-8ce656c5e9b7@gmail.com>
+Date:   Sun, 2 Aug 2020 13:18:35 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200802074953.1529-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 2 Aug 2020 21:17:45 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2020-08-02
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5a30a78924ecd97b0335d2e1d3e01a5023c1a3d8
+On 8/2/2020 12:49 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> PHYLIB is not selected by the mvusb driver but it uses mdio devres
+> helpers. Explicitly select MDIO_DEVRES in this driver's Kconfig entry.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Fixes: 1814cff26739 ("net: phy: add a Kconfig option for mdio_devres")
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Thank you!
-
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Florian
