@@ -2,124 +2,116 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2645EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 06:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3133C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 06:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9A6420885
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 06:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB5E207DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 06:53:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NVwzdDzr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="caiM1fPn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbgHBGoE (ORCPT
+        id S1726479AbgHBGxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 02:44:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52046 "EHLO
+        Sun, 2 Aug 2020 02:53:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbgHBGoD (ORCPT
+        with ESMTP id S1725850AbgHBGxb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 02:44:03 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97B30C06174A
-        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 23:44:03 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id p1so19240194pls.4
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 23:44:03 -0700 (PDT)
+        Sun, 2 Aug 2020 02:53:31 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7AF4C06174A;
+        Sat,  1 Aug 2020 23:53:30 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f1so30808265wro.2;
+        Sat, 01 Aug 2020 23:53:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=X2aoqAI7ZyUC5Rm/QGa/RZ2mj9QoixqrEf8FBg4wiIE=;
-        b=NVwzdDzrwGuTsH/vRGeNQFdLRqkgojk4/9Jlwet5zvG3h2zgFl7ZbxGfHRg8wffHUV
-         1a/LFn1ZW7JNnr8JoVOER9hf2rBtohqBMf8T6rO54OBH+FuZOrRXdtqfQvvN0WPJ1W5k
-         Q3ouXMqZXP7rj9EkRoqITzgshE5MVGBVCcl21FdPO4zv5GMcYT+AqefwIS03y+4sabBG
-         u8MBuDWOZ6IoFpbrYGAQN9NyDt0kipob/5m0LYS2Nn5n+AMRR6tqwuWoauLGMtweZa5a
-         30eeof/z+kPgHfve/tQG/b1IwEPqGVu6hzjIGyw67PY5Dex6SiMMHxTwzthlayu1G/A5
-         MZOQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=rs54B29tWCCrVhPxX04t7FFEWHnrLOxSKBgk2U1YFCA=;
+        b=caiM1fPnBhKvSeFdy1yX0uOl+tlPe4753gxbKBZEzWEgr6vZKU9rmQ60bEnTBrDSs6
+         gJOsHkGP1rNPQ+qvIpQZ5cj6Q+9osarcGlzLhvhYpjH0MeetPbVxbB58F5M7UvCAE+FJ
+         vnUg/jGtxOyOdkWcWTou73fL2CSkr1vHa0xJQT9gzuK68gy5LXWg2qTsnq3TrPf7m217
+         UQXwxadJuStCyop06PfNfgJMBskS8fTeZ7d0DoxRX7NUspkORquJO6o3G54oTbwS8/bj
+         ICISk4CRzmp+JUvmwyTSNDbory9P0oUOajXOQ9NkUYjV1UXJ78EA92za88r5GmxTviOv
+         ObvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X2aoqAI7ZyUC5Rm/QGa/RZ2mj9QoixqrEf8FBg4wiIE=;
-        b=bMOvW1/BL1PUlGyqUyxnbt2Vl49Le6znD62/azw0+WU7YwfKUE9/kEOmPEzCLgf5ZT
-         yco7H53NaUSXjP0V8fuSWOEabHwDOYqCHuir0+Y+vcZWEUu/3cWmETBdZxX9E3ew96tf
-         tgWMLPU35V0WB15yIZxzPyAUAWJUbxf/iVXGhTs2nkTdlGhDPtMvfQ+AF/K5EiYLf83D
-         5JgLQgBPozR5jGAYecnUip102qtIrsceXwQ6EK3Urkx9WpssVu+us9UPoyXP4VX4CAXf
-         t2m/si2MB14okFIoazaDfKUPaYCABvqMl1N6DWgf4oDyjm//+hoWTial8TB02bXqHF97
-         llmw==
-X-Gm-Message-State: AOAM532LmSKeAlqs7wQmEnQKFqJpPvgbXRUw8S4ZHoLsv7TDauvugrBP
-        ZCRfnsK63N1vnPIVG5jbTyBLyW+X7hI=
-X-Google-Smtp-Source: ABdhPJzT67tILFTVcT+5Nq4nLiq/ChOlKvzNLIZhqH09UIVzSNlqRhHDagQVesDQEPfSG0+9p5y7aQ==
-X-Received: by 2002:a17:90a:6285:: with SMTP id d5mr11743122pjj.85.1596350642900;
-        Sat, 01 Aug 2020 23:44:02 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id f18sm15347558pgv.84.2020.08.01.23.44.02
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 01 Aug 2020 23:44:02 -0700 (PDT)
-Date:   Sat, 1 Aug 2020 23:43:52 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] ASoC: fsl-asoc-card: Remove
- fsl_asoc_card_set_bias_level function
-Message-ID: <20200802064351.GA24213@Asurada-Nvidia>
-References: <1596102422-14010-1-git-send-email-shengjiu.wang@nxp.com>
- <20200801075954.GA19629@Asurada-Nvidia>
- <CAA+D8AMM90bt_WbPCny6C=R=dv6gXXh49p59yng2vH7DDuD2PQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA+D8AMM90bt_WbPCny6C=R=dv6gXXh49p59yng2vH7DDuD2PQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rs54B29tWCCrVhPxX04t7FFEWHnrLOxSKBgk2U1YFCA=;
+        b=Dbjt2k1pIDPvqXhgi8wRGnuIz7GN2YrlzfQ4PBFy+St7ZeaRo/R3ueaFbnAfhWRHYl
+         1kK+j8YpUCCAisCaHdhEWEjgmK1TNYCaiYikgJoDDfq6uuQWT+pHAdvS0DMPelvWONVa
+         Wkrn+/8XSM3BV0RMTP4RS8th3HcsiH+DXrSg9r15LiZvvBR2zcPzNjMym9zjd6zrMmlU
+         +gkk9n5obKh0k21FfbCySUs/jBkI+5mPeb3HSdrYNh71K+VEOzRI3VPVoGt0dfJw+rAV
+         pWVtqzv8KmPEmatTkZHRWPDz9pC9yU1pa9VzCnrFhvxE3StlNKV10krUx07uceIVCZzO
+         skgQ==
+X-Gm-Message-State: AOAM530P8qiHpNjZT65bPSM4lKARy7Gcl0tVMnVHx6FuGz4V+hKafnNS
+        5rcMfBxwn1D1mHxXy0pnscoKA0lZp2A=
+X-Google-Smtp-Source: ABdhPJzU737g4BQ0PI02QtqBBrYd5JaxPm0earZrC3QMVjeilkQqYT0dbhQi2VFzRmn+G1KvW9DkHA==
+X-Received: by 2002:a5d:4610:: with SMTP id t16mr10494065wrq.101.1596351209301;
+        Sat, 01 Aug 2020 23:53:29 -0700 (PDT)
+Received: from felia.fritz.box ([2001:16b8:2dd3:b900:b425:3ccc:d91f:7988])
+        by smtp.gmail.com with ESMTPSA id m126sm18166966wmf.3.2020.08.01.23.53.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Aug 2020 23:53:28 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>
+Cc:     Rob Clark <robdclark@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>, kernel-team@android.com,
+        iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
+        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: update QUALCOMM IOMMU after Arm SSMU drivers move
+Date:   Sun,  2 Aug 2020 08:53:20 +0200
+Message-Id: <20200802065320.7470-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 02, 2020 at 10:22:35AM +0800, Shengjiu Wang wrote:
+Commit e86d1aa8b60f ("iommu/arm-smmu: Move Arm SMMU drivers into their own
+subdirectory") moved drivers/iommu/qcom_iommu.c to
+drivers/iommu/arm/arm-smmu/qcom_iommu.c amongst other moves, adjusted some
+sections in MAINTAINERS, but missed adjusting the QUALCOMM IOMMU section.
 
-> > > +     /* Specific configuration for PLL */
-> > > +     if (codec_priv->pll_id && codec_priv->fll_id) {
-> > > +             if (priv->sample_format == SNDRV_PCM_FORMAT_S24_LE)
-> > > +                     pll_out = priv->sample_rate * 384;
-> > > +             else
-> > > +                     pll_out = priv->sample_rate * 256;
-> > > +
-> > > +             ret = snd_soc_dai_set_pll(asoc_rtd_to_codec(rtd, 0),
-> > > +                                       codec_priv->pll_id,
-> > > +                                       codec_priv->mclk_id,
-> > > +                                       codec_priv->mclk_freq, pll_out);
-> > > +             if (ret) {
-> > > +                     dev_err(dev, "failed to start FLL: %d\n", ret);
-> > > +                     goto out;
-> > > +             }
-> > > +
-> > > +             ret = snd_soc_dai_set_sysclk(asoc_rtd_to_codec(rtd, 0),
-> > > +                                          codec_priv->fll_id,
-> > > +                                          pll_out, SND_SOC_CLOCK_IN);
-> >
-> > Just came into my mind: do we need some protection here to prevent
-> > PLL/SYSCLK reconfiguration if TX/RX end up with different values?
-> >
-> Sorry,  not really catching your point. could you please elaborate?
-> Why do TX/RX end up with different values?
+Hence, ./scripts/get_maintainer.pl --self-test=patterns complains:
 
-If TX and RX run concurrently but in different sample rates or
-sample formats, pll_out would be overwritten to PLL/SYSCLK?
+  warning: no file matches    F:    drivers/iommu/qcom_iommu.c
 
-I remember imx-wm8962 uses SSI, having symmetric flags for rates/
-channels/samplebits, but fsl-asoc-card might have (or will have)
-other use case.
+Update the file entry in MAINTAINERS to the new location.
 
-If all existing combinations don't have any problem, we can add
-a protection later when we need.
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+Will, please ack.
+Joerg, please pick this minor non-urgent patch for your -next branch.
+
+applies cleanly on next-20200731
+
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1469cb81261d..e175c0741653 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14358,7 +14358,7 @@ M:	Rob Clark <robdclark@gmail.com>
+ L:	iommu@lists.linux-foundation.org
+ L:	linux-arm-msm@vger.kernel.org
+ S:	Maintained
+-F:	drivers/iommu/qcom_iommu.c
++F:	drivers/iommu/arm/arm-smmu/qcom_iommu.c
+ 
+ QUALCOMM IPCC MAILBOX DRIVER
+ M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+-- 
+2.17.1
+
