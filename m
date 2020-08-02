@@ -2,212 +2,97 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBB8C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 15:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F04EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 15:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74A612075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 15:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DB2F2072A
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 15:02:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mRD0S8jt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQytedup"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgHBPAB (ORCPT
+        id S1726299AbgHBPCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 11:00:01 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:36483 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725925AbgHBO75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 10:59:57 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596380397; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=U6gNUw8AiHtfEQJ6ccQRBNs+Stlh4D0vi0UlY1zrQy4=;
- b=mRD0S8jtGVUCuiHfBIjRhox381bJqD14fpidImOz6qHzQQn/V2PGJpAnR8Lko/BqFR8kVo3D
- iyI6qnY7yM38Wic4e1d3bP6W6gr7LXdBtu7CAxa4xXV7vfvOFkEpzF5LtOol+97yOCfBJb8g
- oOYcvIUzpZqYkPaQEfEOJ/aYEIg=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n13.prod.us-west-2.postgun.com with SMTP id
- 5f26d4ec21feae908b066b8c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 02 Aug 2020 14:59:56
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 48124C433C6; Sun,  2 Aug 2020 14:59:56 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C9A22C433C9;
-        Sun,  2 Aug 2020 14:59:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C9A22C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Sun, 2 Aug 2020 11:02:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42992 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725859AbgHBPCG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 11:02:06 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE8BBC06174A
+        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 08:02:05 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id 9so12189724wmj.5
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 08:02:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=dc2jyTne/kuOt10YK4BrvGoPmKDCRbld5Cypz0CqkIo=;
+        b=dQytedupL1Ato/YOt0Z4EAa9bXc950kyiFjxlL/mDb+wIUfHuqZJvTyE3aAnOkeXHg
+         rUeUVp+d4FN8moPYv1jWXKUWMnSW03aun3n++uQgnf+6XHB76TFwinGFS9mmDOpf1o0A
+         J8xSABqjqFNYDd3jMIQ9Bhgd3T4lT070y+0I1Y9S+9JagyXpcuZTTQsfVkKfupN/Om+6
+         7Ncb/0hyB6Bgavhgwcd2W0dUH4TygSbBboF5puRp1WmEp+p92pycFXtr2wJ3TjcIltmI
+         esD301F1sf2I/e+Mm8m1LA+LPCvlTIU92c0n8lBmXu8n7aa4BDlzAFu/69EYmQB60y1I
+         k78A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=dc2jyTne/kuOt10YK4BrvGoPmKDCRbld5Cypz0CqkIo=;
+        b=W58f4q8T84M1swQ372d2yjJhMs6X19rj8zJn0/OiXxSdf7DbhtjIOsBBfDNGLCZhpu
+         +bBkzHXJgqMTWI3/4VNu1RHWyeRdL+AmJv6dHCrD8dlqV4Nu3MR+HfYlnQQ/O67HvWn7
+         tsvFZwftmf2nmNk1/Nx5hyMtYFDeIywlx0qfVmtwjZT3uD8es9RxzOEwA2oA5K44Kyzv
+         kCBF9FUHtHlEFc0DdCLLQVveDTSTc5OFOafIfTeA3BhdHCyZzK8/EsdU3DUWbfZEZbuL
+         d7wQwt1m8QngIPjQFL+TuvJsyvTmJiJz0DpTUuJJfKwoVbznWRS2+dqEkZmQTYvKZxwB
+         80Jw==
+X-Gm-Message-State: AOAM532lQMsrgQFtdQ1ww/OQsm19otsX+yHQy/nMLtsVQOtjLUtV6u0W
+        Qw0wr2yIunAufbUBBQ8hc1o=
+X-Google-Smtp-Source: ABdhPJxjuHi2vABSz1QxlAE3aRTQbOREPQTDPOFpvYm9Cdwlq20qiL4SvUQ04KJ1lR7qTGLCn3sXvA==
+X-Received: by 2002:a05:600c:22cb:: with SMTP id 11mr12511026wmg.66.1596380524100;
+        Sun, 02 Aug 2020 08:02:04 -0700 (PDT)
+Received: from tsnow (IGLD-83-130-60-139.inter.net.il. [83.130.60.139])
+        by smtp.gmail.com with ESMTPSA id z63sm21165821wmb.2.2020.08.02.08.02.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Aug 2020 08:02:03 -0700 (PDT)
+Date:   Sun, 2 Aug 2020 18:01:57 +0300
+From:   Tomer Samara <tomersamara98@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: wfx: clear alignment style issues
+Message-ID: <20200802150157.GA3052@tsnow>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] prism54: switch from 'pci_' to 'dma_' API
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200722104534.30760-1-christophe.jaillet@wanadoo.fr>
-References: <20200722104534.30760-1-christophe.jaillet@wanadoo.fr>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     mcgrof@kernel.org, davem@davemloft.net, kuba@kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200802145956.48124C433C6@smtp.codeaurora.org>
-Date:   Sun,  2 Aug 2020 14:59:56 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
+  Clear checkpatch alignment style issues in debug.c.
+  CHECK: Alignment should match open parenthesis
 
-> The wrappers in include/linux/pci-dma-compat.h should go away.
-> 
-> The patch has been generated with the coccinelle script below and has been
-> hand modified to replace GFP_ with a correct flag.
-> It has been compile tested.
-> 
-> When memory is allocated in 'islpci_alloc_memory()' (islpci_dev.c),
-> GFP_KERNEL can be used because it is only called from a probe function
-> and no spin_lock is taken in the between.
-> 
-> The call chain is:
->    prism54_probe                   (probe function, in 'islpci_hotplug.c')
->       --> islpci_setup             (in 'islpci_dev.c')
->          --> islpci_alloc_memory   (in 'islpci_dev.c')
-> 
-> @@
-> @@
-> -    PCI_DMA_BIDIRECTIONAL
-> +    DMA_BIDIRECTIONAL
-> 
-> @@
-> @@
-> -    PCI_DMA_TODEVICE
-> +    DMA_TO_DEVICE
-> 
-> @@
-> @@
-> -    PCI_DMA_FROMDEVICE
-> +    DMA_FROM_DEVICE
-> 
-> @@
-> @@
-> -    PCI_DMA_NONE
-> +    DMA_NONE
-> 
-> @@
-> expression e1, e2, e3;
-> @@
-> -    pci_alloc_consistent(e1, e2, e3)
-> +    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-> 
-> @@
-> expression e1, e2, e3;
-> @@
-> -    pci_zalloc_consistent(e1, e2, e3)
-> +    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_free_consistent(e1, e2, e3, e4)
-> +    dma_free_coherent(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_map_single(e1, e2, e3, e4)
-> +    dma_map_single(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_unmap_single(e1, e2, e3, e4)
-> +    dma_unmap_single(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4, e5;
-> @@
-> -    pci_map_page(e1, e2, e3, e4, e5)
-> +    dma_map_page(&e1->dev, e2, e3, e4, e5)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_unmap_page(e1, e2, e3, e4)
-> +    dma_unmap_page(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_map_sg(e1, e2, e3, e4)
-> +    dma_map_sg(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_unmap_sg(e1, e2, e3, e4)
-> +    dma_unmap_sg(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
-> +    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_single_for_device(e1, e2, e3, e4)
-> +    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
-> +    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
-> +    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2;
-> @@
-> -    pci_dma_mapping_error(e1, e2)
-> +    dma_mapping_error(&e1->dev, e2)
-> 
-> @@
-> expression e1, e2;
-> @@
-> -    pci_set_dma_mask(e1, e2)
-> +    dma_set_mask(&e1->dev, e2)
-> 
-> @@
-> expression e1, e2;
-> @@
-> -    pci_set_consistent_dma_mask(e1, e2)
-> +    dma_set_coherent_mask(&e1->dev, e2)
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Tomer Samara <tomersamara98@gmail.com>
+---
+ drivers/staging/wfx/debug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Patch applied to wireless-drivers-next.git, thanks.
-
-84d47961a02c prism54: switch from 'pci_' to 'dma_' API
-
+diff --git a/drivers/staging/wfx/debug.c b/drivers/staging/wfx/debug.c
+index 3f1712b7c919..83ccbab50899 100644
+--- a/drivers/staging/wfx/debug.c
++++ b/drivers/staging/wfx/debug.c
+@@ -32,7 +32,7 @@ static const struct trace_print_flags wfx_reg_print_map[] = {
+ };
+ 
+ static const char *get_symbol(unsigned long val,
+-		const struct trace_print_flags *symbol_array)
++			      const struct trace_print_flags *symbol_array)
+ {
+ 	int i;
+ 
 -- 
-https://patchwork.kernel.org/patch/11678187/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.25.1
 
