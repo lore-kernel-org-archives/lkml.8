@@ -2,89 +2,75 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EC3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 677D1C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB082075A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 484C82075B
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:51:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgHBLZc (ORCPT
+        id S1728057AbgHBLkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 07:25:32 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:58157 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbgHBLZb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 07:25:31 -0400
-X-Originating-IP: 180.110.142.179
-Received: from localhost (unknown [180.110.142.179])
-        (Authenticated sender: fly@kernel.page)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 64DFD20007;
-        Sun,  2 Aug 2020 11:24:54 +0000 (UTC)
-Date:   Sun, 2 Aug 2020 19:23:47 +0800
-From:   Pengfei Li <fly@kernel.page>
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     Hugh Dickins <hughd@google.com>, akpm@linux-foundation.org,
-        bmt@zurich.ibm.com, dledford@redhat.com, willy@infradead.org,
-        vbabka@suse.cz, kirill.shutemov@linux.intel.com, jgg@ziepe.ca,
-        alex.williamson@redhat.com, cohuck@redhat.com, dbueso@suse.de,
-        jglisse@redhat.com, jhubbard@nvidia.com, ldufour@linux.ibm.com,
-        Liam.Howlett@oracle.com, peterz@infradead.org, cl@linux.com,
-        jack@suse.cz, rientjes@google.com, walken@google.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, fly@kernel.page
-Subject: Re: [PATCH 2/2] mm, util: account_locked_vm() does not hold
- mmap_lock
-Message-ID: <20200802192347.534ece64.fly@kernel.page>
-In-Reply-To: <20200730205705.ityqlyeswzo5dkow@ca-dmjordan1.us.oracle.com>
-References: <20200726080224.205470-1-fly@kernel.page>
-        <20200726080224.205470-2-fly@kernel.page>
-        <alpine.LSU.2.11.2007291121280.4649@eggly.anvils>
-        <20200730205705.ityqlyeswzo5dkow@ca-dmjordan1.us.oracle.com>
+        Sun, 2 Aug 2020 07:40:51 -0400
+Received: from mga09.intel.com ([134.134.136.24]:63624 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726578AbgHBLku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 07:40:50 -0400
+IronPort-SDR: pIGuwzKufxs2akpL7Yzx78afU0RZauTKHGS6xV/4EoAVUJgZkUGUpM1NZqLberyEXO4v4ACCWR
+ v9KyncTaziaQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9700"; a="153201991"
+X-IronPort-AV: E=Sophos;i="5.75,426,1589266800"; 
+   d="scan'208";a="153201991"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2020 04:40:50 -0700
+IronPort-SDR: zTmAvTqRF5Q/d8MAJQczFCPyOgqePoEIe4gpsyHTg45B1dHmF8LJdjZvJFUotZCyOJbim2Oxxp
+ KUn8qpeVMTlg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,426,1589266800"; 
+   d="scan'208";a="366035580"
+Received: from cahanley-mobl.ger.corp.intel.com (HELO intel.com) ([10.252.10.182])
+  by orsmga001.jf.intel.com with ESMTP; 02 Aug 2020 04:40:45 -0700
+Date:   Sun, 2 Aug 2020 14:40:44 +0300
+From:   Andi Shyti <andi.shyti@intel.com>
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Cc:     <jani.nikula@linux.intel.com>, <joonas.lahtinen@linux.intel.com>,
+        <rodrigo.vivi@intel.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <chris@chris-wilson.co.uk>, <matthew.auld@intel.com>,
+        <tvrtko.ursulin@intel.com>, <mika.kuoppala@linux.intel.com>,
+        <intel-gfx@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <tianjia.zhang@alibaba.com>
+Subject: Re: [PATCH] drm/i915: Fix wrong return value
+Message-ID: <20200802114044.GD4705@intel.intel>
+References: <20200802111534.5155-1-tianjia.zhang@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200802111534.5155-1-tianjia.zhang@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Jul 2020 16:57:05 -0400
-Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
+Hi Tianjia,
 
-> On Wed, Jul 29, 2020 at 12:21:11PM -0700, Hugh Dickins wrote:
-> > On Sun, 26 Jul 2020, Pengfei Li wrote:
-> > 
-> > > Since mm->locked_vm is already an atomic counter,
-> > > account_locked_vm() does not need to hold mmap_lock.
-> > 
-> > I am worried that this patch, already added to mmotm, along with its
-> > 1/2 making locked_vm an atomic64, might be rushed into v5.9 with
-> > just that two-line commit description, and no discussion at all.
-> > 
-> > locked_vm belongs fundamentally to mm/mlock.c, and the lock to guard
-> > it is mmap_lock; and mlock() has some complicated stuff to do under
-> > that lock while it decides how to adjust locked_vm.
-> >
-> > It is very easy to convert an unsigned long to an atomic64_t, but
-> > "atomic read, check limit and do stuff, atomic add" does not give
-> > the same guarantee as holding the right lock around it all.
-> 
-> Yes, this is why I withdrew my attempt to do something similar last
-> year, I didn't want to make the accounting racy. Stack and heap
-> growing and mremap would be affected in addition to mlock.
->
-> It'd help to hear more about the motivation for this.
-> 
+> diff --git a/drivers/gpu/drm/i915/i915_active.c b/drivers/gpu/drm/i915/i915_active.c
+> index d960d0be5bd2..cc017e3cc9c5 100644
+> --- a/drivers/gpu/drm/i915/i915_active.c
+> +++ b/drivers/gpu/drm/i915/i915_active.c
+> @@ -758,7 +758,7 @@ int i915_active_acquire_preallocate_barrier(struct i915_active *ref,
+>  	intel_engine_mask_t tmp, mask = engine->mask;
+>  	struct llist_node *first = NULL, *last = NULL;
+>  	struct intel_gt *gt = engine->gt;
+> -	int err;
+> +	int err = 0;
 
-Thanks for your comments.
+you don't need the initialization here.
 
-My motivation is to allow mm related counters to be safely read and
-written without holding mmap_lock. But sorry i didn't do well.
-
--- 
-Pengfei
+Thanks,
+Andi
