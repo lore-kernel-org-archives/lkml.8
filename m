@@ -2,127 +2,71 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B9DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F23C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6031207DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:14:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="gLYsrnb4"
+	by mail.kernel.org (Postfix) with ESMTP id AC2CB206DA
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:15:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725910AbgHBOOm (ORCPT
+        id S1726149AbgHBOP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 10:14:42 -0400
-Received: from cmta18.telus.net ([209.171.16.91]:52333 "EHLO cmta18.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725840AbgHBOOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 10:14:42 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id 2El3kztd8qUs32El4kwnOR; Sun, 02 Aug 2020 08:14:40 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1596377680; bh=CN/fUyh6opJ5vJi1/Nl1Yp+/imy9pfaN03xKOjmbT9E=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=gLYsrnb4IH6bArD+THINQqUeWy6q73DFicOjHiPwsFSF9Gh2GU3libf+0jS34FFty
-         1FWULe7Ar3kQd6V6IJ4CHJPa/DTkva8Ecgx6MbspFuT8qNTR2mP7FwbsxTZCIOr+WQ
-         jTVXJF7P77w3hkq46lateaksiOL3sPxVPftThQOwgVoJlSY6vtElkzgGQl0TzEuKNO
-         8MCt857dk6fODMxv3Scz7GesQnDXewI9XNlP70/epUnilInQQsrUNID1U9+Nd3LPmN
-         Hwlmzs+KjB1HbcFUQncAG6SLl9slYZPGSjhhR3Xh3PVTkXAg1Gme7TbIV61vXAkqNb
-         ebT6Lv8oCRLpQ==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=Mo8sFFSe c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=IkcTkHD0fZMA:10 a=QyXUC8HyAAAA:8
- a=UklZroHxuSD7NTiwK3MA:9 a=QEXdDO2ut3YA:10
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>
-Cc:     "'Linux Documentation'" <linux-doc@vger.kernel.org>,
-        "'LKML'" <linux-kernel@vger.kernel.org>,
-        "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
-        "'Francisco Jerez'" <francisco.jerez.plata@intel.com>,
-        "'Linux PM'" <linux-pm@vger.kernel.org>,
-        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
-References: <4981405.3kqTVLv5tO@kreacher> <1709487.Bxjb1zNRZM@kreacher>  <13207937.r2GEYrEf4f@kreacher> <4684795.LlGW2geaUc@kreacher> <0fad4951dbd0143b43d4ec7b0dcab6787e0c7a97.camel@linux.intel.com>
-In-Reply-To: <0fad4951dbd0143b43d4ec7b0dcab6787e0c7a97.camel@linux.intel.com>
-Subject: RE: [PATCH v4 2/2] cpufreq: intel_pstate: Implement passive mode with HWP enabled
-Date:   Sun, 2 Aug 2020 07:14:36 -0700
-Message-ID: <000401d668d7$426d8760$c7489620$@net>
+        Sun, 2 Aug 2020 10:15:28 -0400
+Received: from smtp07.smtpout.orange.fr ([80.12.242.129]:59881 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbgHBOP2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 10:15:28 -0400
+Received: from localhost.localdomain ([93.22.148.198])
+        by mwinf5d42 with ME
+        id AeFQ2300A4H42jh03eFRvj; Sun, 02 Aug 2020 16:15:26 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 02 Aug 2020 16:15:26 +0200
+X-ME-IP: 93.22.148.198
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     csully@google.com, sagis@google.com, jonolson@google.com,
+        davem@davemloft.net, kuba@kernel.org, lrizzo@google.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] gve: Fix the size used in a 'dma_free_coherent()' call
+Date:   Sun,  2 Aug 2020 16:15:23 +0200
+Message-Id: <20200802141523.691565-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Thread-Index: AdZoWn0mlfrYeATWTAeD6K2eVgHS6QAegGvw
-Content-Language: en-ca
-X-CMAE-Envelope: MS4wfEzoaqLdow3a5Y6lALb9PkjOMLhyfrIOQNzzW+hgN4PayDZQydBAuIQ7pJgOMwT+Zl8VsL8Ome9hRnRjGFEQfE4OozrCJlZfRwq5d4/KzZh47FEnpv+k
- hbzCq9d6A56lOdlZIxlP+9+OQFqtD94KzmYilv/OGmEAWpf1LT+RLICX9G5qNyYcHdAlmPyMeBF4UeIOPkYQGS9LquVCnaDAH9YZBmjO4YqCm0GtQJaLjYZh
- v3/8MxFyGj7UxdBD1aLUpVYMR9vNZp+7eIm8NqijEAVjKcOkE0SEHfIBQW6TAZs6eHvmDGiCV+Y08ntOXviqOJ7egM76O/jmasiTCFDPYFIB7yp2ziwVTYue
- M0G42KoyEzecNyLlFzSXEOdah6lZcgh55SA2imcqOGBmDGtZMU4lniiFSXKdqDpDfLQY8bigt2Z6UtMJmAX1eiPTIaiBOA==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020.08.01 16:41 Srinivas Pandruvada wrote:
-> On Tue, 2020-07-28 at 17:13 +0200, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > Allow intel_pstate to work in the passive mode with HWP enabled and
-> > make it set the HWP minimum performance limit (HWP floor) to the
-> > P-state value given by the target frequency supplied by the cpufreq
-> > governor, so as to prevent the HWP algorithm and the CPU scheduler
-> > from working against each other, at least when the schedutil governor
-> > is in use, and update the intel_pstate documentation accordingly.
-> >
-> > Among other things, this allows utilization clamps to be taken
-> > into account, at least to a certain extent, when intel_pstate is
-> > in use and makes it more likely that sufficient capacity for
-> > deadline tasks will be provided.
-> >
-> > After this change, the resulting behavior of an HWP system with
-> > intel_pstate in the passive mode should be close to the behavior
-> > of the analogous non-HWP system with intel_pstate in the passive
-> > mode, except that in the frequency range below the base frequency
-> > (ie. the frequency retured by the base_frequency cpufreq attribute
-> > in sysfs on HWP systems) the HWP algorithm is allowed to go above
-> > the floor P-state set by intel_pstate with or without hardware
-> > coordination of P-states among CPUs in the same package.
-> >
-> Do you mean HWP.req.min will be below base_freq (unless user overrides
-> it)?
+Update the size used in 'dma_free_coherent()' in order to match the one
+used in the corresponding 'dma_alloc_coherent()'.
 
-No.
+Fixes: 893ce44df5 ("gve: Add basic driver framework for Compute Engine Virtual NIC")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/net/ethernet/google/gve/gve_adminq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> With busy workload I see HWP req.min = HWP req.max.
-> The base freq: 1.3GHz (ratio 0x0d), MAX 1C turbo: 3.9GHz (ratio: 0x27)
-> When I monitor MSR 0x774 (HWP_REQ), I see
-> 0x80002727
-
-Yes, that is what I expect to see.
-
-> 
-> Normally msr 0x774
-> 0x80002704
-
-That would be "active" mode and the powersave governor, correct?.
-And yes that is what I expect for your processor.
-For mine, load or no load, decoded:
-0x774: IA32_HWP_REQUEST:    CPU 0-5 :
-    raw: 80002E08 : 80002E08 : 80002E08 : 80002E08 : 80002E08 : 80002E08 :
-    min:        8 :        8 :        8 :        8 :        8 :        8 :
-    max:       46 :       46 :       46 :       46 :       46 :       46 :
-    des:        0 :        0 :        0 :        0 :        0 :        0 :
-    epp:      128 :      128 :      128 :      128 :      128 :      128 :
-    act:        0 :        0 :        0 :        0 :        0 :        0 :
-
-This thread is about passive mode, and myself, I do not expect the last byte to be
-4 (8 for mine) under load.
-
-... Doug
-
+diff --git a/drivers/net/ethernet/google/gve/gve_adminq.c b/drivers/net/ethernet/google/gve/gve_adminq.c
+index c3ba7baf0107..883e173f5ca0 100644
+--- a/drivers/net/ethernet/google/gve/gve_adminq.c
++++ b/drivers/net/ethernet/google/gve/gve_adminq.c
+@@ -322,7 +322,7 @@ int gve_adminq_describe_device(struct gve_priv *priv)
+ 	priv->default_num_queues = be16_to_cpu(descriptor->default_num_queues);
+ 
+ free_device_descriptor:
+-	dma_free_coherent(&priv->pdev->dev, sizeof(*descriptor), descriptor,
++	dma_free_coherent(&priv->pdev->dev, PAGE_SIZE, descriptor,
+ 			  descriptor_bus);
+ 	return err;
+ }
+-- 
+2.25.1
 
