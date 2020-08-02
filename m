@@ -2,119 +2,127 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CDEC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 19:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE731C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF5920722
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 19:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B22F820829
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:01:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596398468;
+	bh=dArsY75FWjtt7As5xgbBwC+egu06UpMYVG1i87QOXX4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VLDGssbf9V27g0GvY+vVAl0VVm3c02O3+mmQJuHLSuaItDLv/D9vlOQOov2evNjaO
+	 KLf76f8FmIr67hwuKVQErmSmEwNjC8l0uXB1KXyFot9b30tOL6JuTALqAaaIRa5VX9
+	 zGTguCYpg82EDVaDGqTbTGttl8i7UtGmshoiKwjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgHBT71 (ORCPT
+        id S1727855AbgHBUBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 15:59:27 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:37461 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726058AbgHBT70 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 15:59:26 -0400
-Received: by mail-io1-f71.google.com with SMTP id f6so10844373ioa.4
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 12:59:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=F10XM7hC+E3LYcPRivzOjDTSVfMfyhzmJcx4FWkMrXc=;
-        b=EJ+MJ4rKv9JXnIQbPO5Y8h7P3ZjrICq1dXWUqS+ziOXY8ghBNnZ1fHp/piBY8qHGNt
-         Zx/TbxV/uVGV4m+ZuEkLtIATcVp/DWFcpH3MJS6jXyKnKyOuOpNrp8CEm/cyNBIkQLCe
-         zz3T9vTUk4qMJ6NQY/1O74yAADeVdmkXwvneoqd0HDFHxd4HzYPcoTjusv2hnXUv/Nh9
-         D/3b3TMm9SLLzQSFldNk3KzyBWlLZDiQL5cvmw4BbRIH2iY5Ov+pAFqzmN0DOW2yrYeh
-         pO7X4L2FtF2bri/1plBDjmYj5fyz0QSNlNJgt0N1Q76zPh1ImY8n3k9sqTRGQc0NjHWN
-         deyA==
-X-Gm-Message-State: AOAM533RnhBZqzBv/mkItwFhLI50jrfDh4bV/m09SpgpSqt3OGNfZXUk
-        qD9GahZ13DGbNPP0AUBToxEPEMv+HNrSsGFLYXePjHUJKBvQ
-X-Google-Smtp-Source: ABdhPJzfyholBojvTdXf18niTb+bG+GT/Pvyc0HPQj3ZJQzGGF27xphs6kDRmpgZm2imxrZ3RckHwdO2JIWfbXiCvUf2Hmw/beIP
+        Sun, 2 Aug 2020 16:01:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726345AbgHBUBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 16:01:07 -0400
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D2C0208B3
+        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 20:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596398466;
+        bh=dArsY75FWjtt7As5xgbBwC+egu06UpMYVG1i87QOXX4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lFOS7lJYqGZDUwyxfvUbEw3DcXArYKRSiYijAubBtPRJsaSTkU+wCq03sdFRLVP4y
+         AxSKRyRIeluQfLLcwq6rbGsNh5LQAyLHEcwqj39yOsWbZUGcPQzjGSJYbrAmCsU3Z1
+         2xtGHK38WBWYXZvVcRrlBcdTDy5mCbY9rXYSK5Qc=
+Received: by mail-wr1-f44.google.com with SMTP id z18so28755461wrm.12
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 13:01:06 -0700 (PDT)
+X-Gm-Message-State: AOAM533mqW+x0VhYSg3zjqnEWkm98a17v6t/s0Z1WwvsDsLGATNlBjq9
+        Aa9UfRkKwuqlXr8Om2xgJNgeInvBONNUNVfPCNOkyg==
+X-Google-Smtp-Source: ABdhPJzzn0TKME2O/OiT/zeV9TBqi5bQ33rtcB/MxXB3Iouj0pekgUtP+crNwDATDo4OGLVWkntyqQrZSKf4qTC10bw=
+X-Received: by 2002:adf:fa85:: with SMTP id h5mr12474521wrr.18.1596398464878;
+ Sun, 02 Aug 2020 13:01:04 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a02:84ac:: with SMTP id f41mr12062153jai.56.1596398365555;
- Sun, 02 Aug 2020 12:59:25 -0700 (PDT)
-Date:   Sun, 02 Aug 2020 12:59:25 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007fbe6605abea7514@google.com>
-Subject: INFO: task can't die in p9_client_rpc
-From:   syzbot <syzbot+a42aa715d3d32226792a@syzkaller.appspotmail.com>
-To:     asmadeus@codewreck.org, davem@davemloft.net, ericvh@gmail.com,
-        kuba@kernel.org, linux-kernel@vger.kernel.org, lucho@ionkov.net,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        v9fs-developer@lists.sourceforge.net
+References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com> <3b916198-3a98-bd19-9a1c-f2d8d44febe8@linux.microsoft.com>
+In-Reply-To: <3b916198-3a98-bd19-9a1c-f2d8d44febe8@linux.microsoft.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sun, 2 Aug 2020 13:00:53 -0700
+X-Gmail-Original-Message-ID: <CALCETrUJ2hBmJujyCtEqx4=pknRvjvi1-Gj9wfRcMMzejjKQsQ@mail.gmail.com>
+Message-ID: <CALCETrUJ2hBmJujyCtEqx4=pknRvjvi1-Gj9wfRcMMzejjKQsQ@mail.gmail.com>
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+To:     "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sun, Aug 2, 2020 at 11:54 AM Madhavan T. Venkataraman
+<madvenka@linux.microsoft.com> wrote:
+>
+> More responses inline..
+>
+> On 7/28/20 12:31 PM, Andy Lutomirski wrote:
+> >> On Jul 28, 2020, at 6:11 AM, madvenka@linux.microsoft.com wrote:
+> >>
+> >> =EF=BB=BFFrom: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.co=
+m>
+> >>
+> >
+> > 2. Use existing kernel functionality.  Raise a signal, modify the
+> > state, and return from the signal.  This is very flexible and may not
+> > be all that much slower than trampfd.
+>
+> Let me understand this. You are saying that the trampoline code
+> would raise a signal and, in the signal handler, set up the context
+> so that when the signal handler returns, we end up in the target
+> function with the context correctly set up. And, this trampoline code
+> can be generated statically at build time so that there are no
+> security issues using it.
+>
+> Have I understood your suggestion correctly?
 
-syzbot found the following issue on:
+yes.
 
-HEAD commit:    01830e6c Add linux-next specific files for 20200731
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=176146cc900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2e226b2d1364112c
-dashboard link: https://syzkaller.appspot.com/bug?extid=a42aa715d3d32226792a
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+>
+> So, my argument would be that this would always incur the overhead
+> of a trip to the kernel. I think twice the overhead if I am not mistaken.
+> With trampfd, we can have the kernel generate the code so that there
+> is no performance penalty at all.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+I feel like trampfd is too poorly defined at this point to evaluate.
+There are three general things it could do.  It could generate actual
+code that varies by instance.  It could have static code that does not
+vary.  And it could actually involve a kernel entry.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a42aa715d3d32226792a@syzkaller.appspotmail.com
+If it involves a kernel entry, then it's slow.  Maybe this is okay for
+some use cases.
 
-INFO: task syz-executor.5:24879 can't die for more than 143 seconds.
-syz-executor.5  D25688 24879   7480 0x00004004
-Call Trace:
- context_switch kernel/sched/core.c:3669 [inline]
- __schedule+0x8e5/0x21e0 kernel/sched/core.c:4418
- schedule+0xd0/0x2a0 kernel/sched/core.c:4493
- p9_client_rpc+0x3b5/0x11f0 net/9p/client.c:757
- p9_client_flush+0x1f9/0x430 net/9p/client.c:665
- p9_client_rpc+0xf93/0x11f0 net/9p/client.c:782
- p9_client_version net/9p/client.c:953 [inline]
- p9_client_create+0xa8f/0x10c0 net/9p/client.c:1053
- v9fs_session_init+0x1dd/0x1770 fs/9p/v9fs.c:406
- v9fs_mount+0x79/0x970 fs/9p/vfs_super.c:124
- legacy_get_tree+0x105/0x220 fs/fs_context.c:592
- vfs_get_tree+0x89/0x2f0 fs/super.c:1549
- do_new_mount fs/namespace.c:2912 [inline]
- do_mount+0x14f6/0x1e20 fs/namespace.c:3238
- __do_sys_mount fs/namespace.c:3448 [inline]
- __se_sys_mount fs/namespace.c:3425 [inline]
- __x64_sys_mount+0x18f/0x230 fs/namespace.c:3425
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cc79
-Code: Bad RIP value.
-RSP: 002b:00007f92f26b9c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 0000000000020480 RCX: 000000000045cc79
-RDX: 0000000020000100 RSI: 0000000020000040 RDI: 0000000000000000
-RBP: 000000000078bf50 R08: 0000000020000200 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bf0c
-R13: 00007fff9a822f9f R14: 00007f92f26ba9c0 R15: 000000000078bf0c
+If it involves only static code, I see no good reason that it should
+be in the kernel.
 
-Showing all locks held in the system:
-1 lock held by khungtaskd/1164:
- #0: ffffffff89c52a80 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x260 kernel/locking/lockdep.c:5823
-1 lock held by in:imklog/6729:
- #0: ffff8880a97c7db0 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:930
+If it involves dynamic code, then I think it needs a clearly defined
+use case that actually requires dynamic code.
 
-=============================================
+> Also, signals are asynchronous. So, they are vulnerable to race condition=
+s.
+> To prevent other signals from coming in while handling the raised signal,
+> we would need to block and unblock signals. This will cause more
+> overhead.
 
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+If you're worried about raise() racing against signals from out of
+thread, you have bigger problems to deal with.
