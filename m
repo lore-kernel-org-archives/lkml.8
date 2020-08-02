@@ -2,127 +2,71 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE731C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A282CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B22F820829
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86DC320738
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596398468;
-	bh=dArsY75FWjtt7As5xgbBwC+egu06UpMYVG1i87QOXX4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VLDGssbf9V27g0GvY+vVAl0VVm3c02O3+mmQJuHLSuaItDLv/D9vlOQOov2evNjaO
-	 KLf76f8FmIr67hwuKVQErmSmEwNjC8l0uXB1KXyFot9b30tOL6JuTALqAaaIRa5VX9
-	 zGTguCYpg82EDVaDGqTbTGttl8i7UtGmshoiKwjE=
+	s=default; t=1596399313;
+	bh=c4HUa2zyd17N3zS9aSB4blKgePk6o1UMnLiDfPUG7fI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=Qtf+TiT/19IGelji5VoIbdTqZc9SZCpxMZO7xbbb8zZbBEBFlNvbIDjs3AZXMMXrr
+	 wEe3l+BpI/ht2MHk27PNenXUOuB8/hL9YkR02VxdPqV2fspKVMfL1v0PvcSG0sp6F4
+	 PoRmhRYt/S/GKDTKf7L++3h3xYJylxGKYan/GxHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgHBUBH (ORCPT
+        id S1726913AbgHBUPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 16:01:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48722 "EHLO mail.kernel.org"
+        Sun, 2 Aug 2020 16:15:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726345AbgHBUBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 16:01:07 -0400
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D2C0208B3
-        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 20:01:06 +0000 (UTC)
+        id S1726163AbgHBUPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 16:15:04 -0400
+Subject: Re: [GIT PULL] x86 fix
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596398466;
-        bh=dArsY75FWjtt7As5xgbBwC+egu06UpMYVG1i87QOXX4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lFOS7lJYqGZDUwyxfvUbEw3DcXArYKRSiYijAubBtPRJsaSTkU+wCq03sdFRLVP4y
-         AxSKRyRIeluQfLLcwq6rbGsNh5LQAyLHEcwqj39yOsWbZUGcPQzjGSJYbrAmCsU3Z1
-         2xtGHK38WBWYXZvVcRrlBcdTDy5mCbY9rXYSK5Qc=
-Received: by mail-wr1-f44.google.com with SMTP id z18so28755461wrm.12
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 13:01:06 -0700 (PDT)
-X-Gm-Message-State: AOAM533mqW+x0VhYSg3zjqnEWkm98a17v6t/s0Z1WwvsDsLGATNlBjq9
-        Aa9UfRkKwuqlXr8Om2xgJNgeInvBONNUNVfPCNOkyg==
-X-Google-Smtp-Source: ABdhPJzzn0TKME2O/OiT/zeV9TBqi5bQ33rtcB/MxXB3Iouj0pekgUtP+crNwDATDo4OGLVWkntyqQrZSKf4qTC10bw=
-X-Received: by 2002:adf:fa85:: with SMTP id h5mr12474521wrr.18.1596398464878;
- Sun, 02 Aug 2020 13:01:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com> <3b916198-3a98-bd19-9a1c-f2d8d44febe8@linux.microsoft.com>
-In-Reply-To: <3b916198-3a98-bd19-9a1c-f2d8d44febe8@linux.microsoft.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 2 Aug 2020 13:00:53 -0700
-X-Gmail-Original-Message-ID: <CALCETrUJ2hBmJujyCtEqx4=pknRvjvi1-Gj9wfRcMMzejjKQsQ@mail.gmail.com>
-Message-ID: <CALCETrUJ2hBmJujyCtEqx4=pknRvjvi1-Gj9wfRcMMzejjKQsQ@mail.gmail.com>
-Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-To:     "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        s=default; t=1596399303;
+        bh=c4HUa2zyd17N3zS9aSB4blKgePk6o1UMnLiDfPUG7fI=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=pJz3kiGXanJp2gjnCja90nhge++/ig/+sbrglKcyxUxBXHUs6ww/8fNxBEvLoBYPx
+         ZdOZncwnzoDNhNM1XsAZuGeru1PFlA1X5dkkhe4lC4W6v7Gl00YNN0fCnWuWWq5qHg
+         kDc0RKpE3A2Iihi/mH6Y4fpF4Tw6IU3FGOafk+x0=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200802191745.GA122326@gmail.com>
+References: <20200802191745.GA122326@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200802191745.GA122326@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+ x86-urgent-2020-08-02
+X-PR-Tracked-Commit-Id: bdd65589593edd79b6a12ce86b3b7a7c6dae5208
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 5a30a78924ecd97b0335d2e1d3e01a5023c1a3d8
+Message-Id: <159639930382.2245.9642040496773900422.pr-tracker-bot@kernel.org>
+Date:   Sun, 02 Aug 2020 20:15:03 +0000
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 2, 2020 at 11:54 AM Madhavan T. Venkataraman
-<madvenka@linux.microsoft.com> wrote:
->
-> More responses inline..
->
-> On 7/28/20 12:31 PM, Andy Lutomirski wrote:
-> >> On Jul 28, 2020, at 6:11 AM, madvenka@linux.microsoft.com wrote:
-> >>
-> >> =EF=BB=BFFrom: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.co=
-m>
-> >>
-> >
-> > 2. Use existing kernel functionality.  Raise a signal, modify the
-> > state, and return from the signal.  This is very flexible and may not
-> > be all that much slower than trampfd.
->
-> Let me understand this. You are saying that the trampoline code
-> would raise a signal and, in the signal handler, set up the context
-> so that when the signal handler returns, we end up in the target
-> function with the context correctly set up. And, this trampoline code
-> can be generated statically at build time so that there are no
-> security issues using it.
->
-> Have I understood your suggestion correctly?
+The pull request you sent on Sun, 2 Aug 2020 21:17:45 +0200:
 
-yes.
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2020-08-02
 
->
-> So, my argument would be that this would always incur the overhead
-> of a trip to the kernel. I think twice the overhead if I am not mistaken.
-> With trampfd, we can have the kernel generate the code so that there
-> is no performance penalty at all.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/5a30a78924ecd97b0335d2e1d3e01a5023c1a3d8
 
-I feel like trampfd is too poorly defined at this point to evaluate.
-There are three general things it could do.  It could generate actual
-code that varies by instance.  It could have static code that does not
-vary.  And it could actually involve a kernel entry.
+Thank you!
 
-If it involves a kernel entry, then it's slow.  Maybe this is okay for
-some use cases.
-
-If it involves only static code, I see no good reason that it should
-be in the kernel.
-
-If it involves dynamic code, then I think it needs a clearly defined
-use case that actually requires dynamic code.
-
-> Also, signals are asynchronous. So, they are vulnerable to race condition=
-s.
-> To prevent other signals from coming in while handling the raised signal,
-> we would need to block and unblock signals. This will cause more
-> overhead.
-
-If you're worried about raise() racing against signals from out of
-thread, you have bigger problems to deal with.
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
