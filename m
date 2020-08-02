@@ -2,91 +2,110 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BBEC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 23:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D543C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 23:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B15820738
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 23:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EA9D2072A
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 23:32:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbgHBX2O (ORCPT
+        id S1727791AbgHBXbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 19:28:14 -0400
-Received: from mga02.intel.com ([134.134.136.20]:7963 "EHLO mga02.intel.com"
+        Sun, 2 Aug 2020 19:31:50 -0400
+Received: from mga07.intel.com ([134.134.136.100]:30971 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725925AbgHBX2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 19:28:13 -0400
-IronPort-SDR: OuMQsCLubhmGu+wWT3bZIdA3BTzSp6XtzUpgI0hvqZ2zMrDToAP+vJQs/FmVyLUIZluXrN4z1p
- dPTtMjs6QVoQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="139979729"
+        id S1725925AbgHBXbu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 19:31:50 -0400
+IronPort-SDR: jbgSSgeqgVMrI17qkPxSlfIVcni9MWllbYeT4d0sSapb82sds8zcjcU9b7DC7s8iWGFOVLeFDZ
+ BKGhsuRoPh+A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="216453370"
 X-IronPort-AV: E=Sophos;i="5.75,428,1589266800"; 
-   d="scan'208";a="139979729"
+   d="scan'208";a="216453370"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2020 16:28:12 -0700
-IronPort-SDR: YArqj2r6TsK68EyZcgFirnswYf/9TaBEBQOGQTx92NhjLYvYoXJQ40t6BmustXKC+3ghxS5hoo
- EAqfwWsyl1Kg==
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2020 16:31:49 -0700
+IronPort-SDR: 33PkiT8D9UxVWrMRPdyXZBGsnDjb5ocSXR3Ax8T8QTwsqGek7COeMaxlER8dXn9Z3wvtMYLu82
+ QtuB/gwXuDQQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,428,1589266800"; 
-   d="scan'208";a="273763970"
-Received: from orsosgc001.ra.intel.com ([10.23.184.150])
-  by fmsmga007.fm.intel.com with ESMTP; 02 Aug 2020 16:28:12 -0700
-From:   Ashutosh Dixit <ashutosh.dixit@intel.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, mst@redhat.com,
-        sudeep.dutt@intel.com, arnd@arndb.de, vincent.whitchurch@axis.com,
-        stable@vger.kernel.org
-Subject: [PATCH] vop: Add missing __iomem annotation in vop_dc_to_vdev()
-Date:   Sun,  2 Aug 2020 16:28:12 -0700
-Message-Id: <20200802232812.16794-1-ashutosh.dixit@intel.com>
-X-Mailer: git-send-email 2.26.2.108.g048abe1751
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+   d="scan'208";a="291865244"
+Received: from adixit-mobl.amr.corp.intel.com (HELO adixit-arch.intel.com) ([10.254.24.62])
+  by orsmga006.jf.intel.com with ESMTP; 02 Aug 2020 16:31:49 -0700
+Date:   Sun, 02 Aug 2020 16:31:12 -0700
+Message-ID: <87y2mwk4lb.wl-ashutosh.dixit@intel.com>
+From:   "Dixit, Ashutosh" <ashutosh.dixit@intel.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "sudeep.dutt@intel.com" <sudeep.dutt@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        vincent.whitchurch@axis.com
+Subject: Re: sparse warnings in vop
+In-Reply-To: <CAK8P3a0-gQEH3NpYUx=aFg6U8LagfYKuXqMMH4MvVS4SmaghOg@mail.gmail.com>
+References: <20200802005458-mutt-send-email-mst@kernel.org>     <CAHp75Vfwhfrse47jRR9msFHA4ZqoVvE8RYHZNKxu-_ZiGyS9Sw@mail.gmail.com>    <CAK8P3a0-gQEH3NpYUx=aFg6U8LagfYKuXqMMH4MvVS4SmaghOg@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following sparse warnings in drivers/misc/mic/vop//vop_main.c:
+On Sun, 02 Aug 2020 03:48:33 -0700, Arnd Bergmann wrote:
+>
+> On Sun, Aug 2, 2020 at 9:25 AM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Sunday, August 2, 2020, Michael S. Tsirkin <mst@redhat.com> wrote:
+> >>
+> >> Hi!
+> >> Building vop with make C=1 produces the following:
+> >>
+> >> CHECK   drivers/misc/mic/vop/vop_main.c
+> >> drivers/misc/mic/vop/vop_main.c:551:58: warning: incorrect type in argument 1 (different address spaces)
+> >> drivers/misc/mic/vop/vop_main.c:551:58:    expected void const volatile [noderef] __iomem *addr
+> >> drivers/misc/mic/vop/vop_main.c:551:58:    got restricted __le64 *
+> >> drivers/misc/mic/vop/vop_main.c:560:49: warning: incorrect type in argument 1 (different address spaces)
+> >> drivers/misc/mic/vop/vop_main.c:560:49:    expected struct mic_device_ctrl *dc
+> >> drivers/misc/mic/vop/vop_main.c:560:49:    got struct mic_device_ctrl [noderef] __iomem *dc
+> >> drivers/misc/mic/vop/vop_main.c:579:49: warning: incorrect type in argument 1 (different address spaces)
+> >> drivers/misc/mic/vop/vop_main.c:579:49:    expected struct mic_device_ctrl *dc
+> >> drivers/misc/mic/vop/vop_main.c:579:49:    got struct mic_device_ctrl [noderef] __iomem *dc
+> >>
+> >> Would be nice to fix to silence the noise, but I'm not 100% sure
+> >> what the right thing to do here is. Tag struct members with __iomem or
+> >> cast with __force on use?
+> >
+> > Sounds right to me.
+>
+> I don't think either of the above, adding __force is almost always wrong,
+> and __iomem never applies to struct members, only to pointers.
+>
+> The first problem I see is with:
+>
+> static struct _vop_vdev *vop_dc_to_vdev(struct mic_device_ctrl *dc)
+>
+> The argument needs to be an __iomem pointer. In the structure, the first
+> member has type __le64, which gets mentioned in the warning.  We usually
+> use __u64 instead (or don't use structures at all for __iomem
+> operations), but I don't think this would cause a warning if the argument
+> is fixed.
 
-551:58: warning: incorrect type in argument 1 (different address spaces)
-551:58:    expected void const volatile [noderef] __iomem *addr
-551:58:    got restricted __le64 *
-560:49: warning: incorrect type in argument 1 (different address spaces)
-560:49:    expected struct mic_device_ctrl *dc
-560:49:    got struct mic_device_ctrl [noderef] __iomem *dc
-579:49: warning: incorrect type in argument 1 (different address spaces)
-579:49:    expected struct mic_device_ctrl *dc
-579:49:    got struct mic_device_ctrl [noderef] __iomem *dc
+I have submitted a patch which fixes the warnings.
 
-Cc: Michael S. Tsirkin <mst@redhat.com>
-Cc: Sudeep Dutt <sudeep.dutt@intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Vincent Whitchurch <vincent.whitchurch@axis.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Ashutosh Dixit <ashutosh.dixit@intel.com>
----
- drivers/misc/mic/vop/vop_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Then there is the question of why in the world you would have an MMIO
+> register contain a kernel pointer, but that is more a driver design question
+> than something that causes a warning.
 
-diff --git a/drivers/misc/mic/vop/vop_main.c b/drivers/misc/mic/vop/vop_main.c
-index 85942f6717c5..25ed7d731701 100644
---- a/drivers/misc/mic/vop/vop_main.c
-+++ b/drivers/misc/mic/vop/vop_main.c
-@@ -546,7 +546,7 @@ static int vop_match_desc(struct device *dev, void *data)
- 	return vdev->desc == (void __iomem *)data;
- }
- 
--static struct _vop_vdev *vop_dc_to_vdev(struct mic_device_ctrl *dc)
-+static struct _vop_vdev *vop_dc_to_vdev(struct mic_device_ctrl __iomem *dc)
- {
- 	return (struct _vop_vdev *)(unsigned long)readq(&dc->vdev);
- }
--- 
-2.26.2.108.g048abe1751
-
+It is not a MMIO register, it is the OS running on PCI device accessing
+system memory which is ioremap'd for the PCI device OS. Also, the data
+structure is access both by the system OS (not __iomem) as well as the PCI
+device OS (__iomem). Therefore the structure members cannot be tagged
+__iomem. Doing so will fix the sparse warning for the PCI device OS but
+result in new sparse warnings for the system OS. Thanks.
