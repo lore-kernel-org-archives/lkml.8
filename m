@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34680C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A30C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14B12206F6
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04B32206F6
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596385120;
-	bh=oSoiLgLkhT7/7ytL42pA7OfrN+xEwzR+5SA+u+KCI0M=;
+	s=default; t=1596385123;
+	bh=8CP467njzFcgw1TGSpA5nswBzbqiPPWk079ixyaizAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rJcWik3COsSiNQf4reCi5HUfNDUeMLdKSK7jp2EqBfipIz4kCGWre65u50dJkp4BG
-	 qVugbDSARe3wpI9Bkzx1iddxBh4fUee2PDY2S3c8uSVONlYtYkqHeWfwnP2RmsrOo2
-	 OBG7r+iMbX8DPHVv7jsvqe+xWejypbFZhHelNLmA=
+	b=k6ihbkBu1jxrPRBx3ct8Fwl/6EyNlQluuSZSmTC0/fGbbdW+hVc5cxPOB5yMFmXWC
+	 QNJ4udL188P1gukbnZwsCHp/r2FXTglj0TQetU0NgVEcYbwcxC9E281kjFsYJ7GBhK
+	 p+l10ce3KHjluRkwGBU5ax7QZAxGyRny7p2sGr2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgHBQSi (ORCPT
+        id S1727796AbgHBQSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 12:18:38 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:48905 "EHLO
+        Sun, 2 Aug 2020 12:18:41 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:48897 "EHLO
         conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbgHBQSG (ORCPT
+        with ESMTP id S1725917AbgHBQSG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 2 Aug 2020 12:18:06 -0400
 Received: from oscar.flets-west.jp (softbank126025067101.bbtec.net [126.25.67.101]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 072GHOal003720;
-        Mon, 3 Aug 2020 01:17:29 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 072GHOal003720
+        by conuserg-07.nifty.com with ESMTP id 072GHOaj003720;
+        Mon, 3 Aug 2020 01:17:28 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 072GHOaj003720
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1596385049;
-        bh=qPig2vflg/7ZPARWjjn8bjUvyZZG6lOHLx5Ds8QNDF4=;
+        s=dec2015msa; t=1596385048;
+        bh=JUASlDdYi9Wry5HM8MJA4Tibcs9HL5OwbAaKk04di+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dt5KpR2Hmfslmk/Y0EYV5HeJSJTHofvwodcGZCEFSk9DShmFyPpeLxwbLA0vTDmWg
-         7KVSXCQsDugEZaqS2K5w2nHv+IyplDy7sYAj8Qo1065QLVR9r6x4jF9guxS8Z6IvYR
-         X7yj1coShLhnO6c8klRV2L7n+0TcMrjxGfN4G+bdfyOvkXlh2aClpdql9z4rKH7vXV
-         MZIvtS40FldagXQDjQgZ05bS7p1vjMieJNyPjdXKH4faI885/6JGG/0g8OomvksPPJ
-         VNMA4P8c9nIBnSWWgUbkQIDaC1lA089n2ZkQDMiu7wmq7X7MQ9glDnfVs1L48a8cpU
-         gIfpViYlLIp8A==
+        b=hAog5cgPDYhj605TPdzfy4AsA3biykyR3Et873GvJdYC4evWxEaoHppQvIrkGSLo3
+         OUJWP/KNTNf7Ujo6SqjoVLwDxfPmipcDmObrvoh+KxacTJrhL6x8LvnAJYX67empJW
+         pNvyrJOQEYAuKCfomE3/mhWzlgKQRTo10EltKQD4ktZbVIuHBBXKYVNPCO97p1GZxv
+         S/VAh/8CPR4cS0AB0DaTHPoRAaECgQQoNPaEHb5DimaKXjpfzCAoenWdjFqJorwSgr
+         WNsOxkX0/CzGLJ0ISvI3ntzapzPDWtqCM3bFYaMYx1x6YXr5Z6gcq4jJXUsAIrfykB
+         Dz0ZGCe8HuT8Q==
 X-Nifty-SrcIP: [126.25.67.101]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 10/16] kconfig: qconf: remove 'parent' from ConfigList::updateMenuList()
-Date:   Mon,  3 Aug 2020 01:17:15 +0900
-Message-Id: <20200802161721.921721-10-masahiroy@kernel.org>
+Subject: [PATCH 08/16] kconfig: qconf: remove unused argument from ConfigList::updateList()
+Date:   Mon,  3 Aug 2020 01:17:13 +0900
+Message-Id: <20200802161721.921721-8-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200802161721.921721-1-masahiroy@kernel.org>
 References: <20200802161721.921721-1-masahiroy@kernel.org>
@@ -60,103 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All the callers of this function passes 'this' to the first argument.
+This function allocates 'item' before using it, so the argument 'item'
+is always shadowed.
 
-So, 'parent' is always 'this'.
+Remove the meaningless argument.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/kconfig/qconf.cc | 18 +++++++++---------
- scripts/kconfig/qconf.h  |  2 +-
- 2 files changed, 10 insertions(+), 10 deletions(-)
+ scripts/kconfig/qconf.cc | 6 +++---
+ scripts/kconfig/qconf.h  | 4 ++--
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index f492e8810f89..7f7164c71163 100644
+index 81d55e75cf71..e65a323754fd 100644
 --- a/scripts/kconfig/qconf.cc
 +++ b/scripts/kconfig/qconf.cc
-@@ -446,7 +446,7 @@ void ConfigList::updateList()
- 		return;
- 	}
- update:
--	updateMenuList(this, rootEntry);
-+	updateMenuList(rootEntry);
- 	update();
- 	resizeColumnToContents(0);
- }
-@@ -524,7 +524,7 @@ void ConfigList::setRootMenu(struct menu *menu)
- 	type = menu && menu->prompt ? menu->prompt->type : P_UNKNOWN;
- 	if (type != P_MENU)
- 		return;
--	updateMenuList(this, 0);
-+	updateMenuList(0);
- 	rootEntry = menu;
- 	updateListAll();
- 	if (currentItem()) {
-@@ -628,7 +628,7 @@ hide:
- 	}
+@@ -404,15 +404,15 @@ void ConfigList::updateSelection(void)
+ 		emit menuSelected(menu);
  }
  
--void ConfigList::updateMenuList(ConfigList *parent, struct menu* menu)
-+void ConfigList::updateMenuList(struct menu* menu)
+-void ConfigList::updateList(ConfigItem* item)
++void ConfigList::updateList()
  {
- 	struct menu* child;
- 	ConfigItem* item;
-@@ -637,19 +637,19 @@ void ConfigList::updateMenuList(ConfigList *parent, struct menu* menu)
- 	enum prop_type type;
+ 	ConfigItem* last = 0;
++	ConfigItem *item;
  
- 	if (!menu) {
--		while (parent->topLevelItemCount() > 0)
-+		while (topLevelItemCount() > 0)
- 		{
--			delete parent->takeTopLevelItem(0);
-+			delete takeTopLevelItem(0);
- 		}
+ 	if (!rootEntry) {
+ 		if (mode != listMode)
+ 			goto update;
+ 		QTreeWidgetItemIterator it(this);
+-		ConfigItem* item;
  
- 		return;
- 	}
+ 		while (*it) {
+ 			item = (ConfigItem*)(*it);
+@@ -989,7 +989,7 @@ void ConfigView::updateList(ConfigItem* item)
+ 	ConfigView* v;
  
--	last = (ConfigItem*)parent->topLevelItem(0);
-+	last = (ConfigItem*)topLevelItem(0);
- 	if (last && !last->goParent)
- 		last = 0;
- 	for (child = menu->list; child; child = child->next) {
--		item = last ? last->nextSibling() : (ConfigItem*)parent->topLevelItem(0);
-+		item = last ? last->nextSibling() : (ConfigItem*)topLevelItem(0);
- 		type = child->prompt ? child->prompt->type : P_UNKNOWN;
+ 	for (v = viewList; v; v = v->nextView)
+-		v->list->updateList(item);
++		v->list->updateList();
+ }
  
- 		switch (mode) {
-@@ -670,7 +670,7 @@ void ConfigList::updateMenuList(ConfigList *parent, struct menu* menu)
- 			if (!child->sym && !child->list && !child->prompt)
- 				continue;
- 			if (!item || item->menu != child)
--				item = new ConfigItem(parent, last, child, visible);
-+				item = new ConfigItem(this, last, child, visible);
- 			else
- 				item->testUpdateMenu(visible);
- 
-@@ -683,7 +683,7 @@ void ConfigList::updateMenuList(ConfigList *parent, struct menu* menu)
- 		}
- hide:
- 		if (item && item->menu == child) {
--			last = (ConfigItem*)parent->topLevelItem(0);
-+			last = (ConfigItem*)topLevelItem(0);
- 			if (last == item)
- 				last = 0;
- 			else while (last->nextSibling() != item)
+ void ConfigView::updateListAll(void)
 diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
-index 6d06ec399ff0..952bd98d7912 100644
+index 335f0776984f..4dc5d34a6bca 100644
 --- a/scripts/kconfig/qconf.h
 +++ b/scripts/kconfig/qconf.h
-@@ -102,7 +102,7 @@ public slots:
- 	bool menuSkip(struct menu *);
+@@ -69,7 +69,7 @@ class ConfigList : public QTreeWidget {
+ public slots:
+ 	void setRootMenu(struct menu *menu);
  
- 	void updateMenuList(ConfigItem *parent, struct menu*);
--	void updateMenuList(ConfigList *parent, struct menu*);
-+	void updateMenuList(struct menu *menu);
- 
- 	bool updateAll;
- 
+-	void updateList(ConfigItem *item);
++	void updateList();
+ 	void setValue(ConfigItem* item, tristate val);
+ 	void changeValue(ConfigItem* item);
+ 	void updateSelection(void);
+@@ -85,7 +85,7 @@ public slots:
+ 	void updateListAll(void)
+ 	{
+ 		updateAll = true;
+-		updateList(NULL);
++		updateList();
+ 		updateAll = false;
+ 	}
+ 	void addColumn(colIdx idx)
 -- 
 2.25.1
 
