@@ -1,109 +1,69 @@
-Return-Path: <SRS0=dmjt=BL=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D20C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 23:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CF5C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 00:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04A5520691
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Aug 2020 23:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31D622086A
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 00:00:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596325861;
-	bh=/RTX0rVm2iLBMlRdDM24nNOFTPRHcYFdhTxisdSjWDM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qY2RGjyvIRH0ZhSS5NkEuNzeBTNnn7Rq+fgd7DgWlnRWho+wHNbRtn+VHjNBjHHHM
-	 Jh+EmROt4HAb2kcNVhF/mrhfnlxgf0PP3Y5y8PPVvGgSlDJUvOMXgtoNMFw2oWnI/G
-	 W6PLUQxYeLs2eLzz+ptjMIwST5TQsWOm06xsGFnE=
+	s=default; t=1596326416;
+	bh=yMDYNeNyapT8XmtkK6J9+a9r1Iq85mz0E82nfOGPK6k=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=s/1j8W2YICTqOsgMtZ0XG4QQLlWE/zqfSzhIPosjYquhH331mQ2E1XRmF1h5uV7o8
+	 Tb/j41xES2VsDnzpALakYoLW3A6i4LLUXDvH+lX9tRPIiFcldSx3FJx3+6nM8yUCba
+	 w+f6aAFFDCJy+6MjwPsziENIGCImqPdKckrEHCVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgHAXu4 (ORCPT
+        id S1727976AbgHBAAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 19:50:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57608 "EHLO mail.kernel.org"
+        Sat, 1 Aug 2020 20:00:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbgHAXuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 19:50:55 -0400
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D47C420789;
-        Sat,  1 Aug 2020 23:50:54 +0000 (UTC)
+        id S1727893AbgHBAAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Aug 2020 20:00:05 -0400
+Subject: Re: [GIT] Networking
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596325855;
-        bh=/RTX0rVm2iLBMlRdDM24nNOFTPRHcYFdhTxisdSjWDM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GKa0b1n++JBbGlBkW2Q8zcKWc/8G5g2kRJ1hJfSjcl0x25nRnPleix94G6SZQBMQf
-         CQBVbFMYm+Bwo6LXpkuUFdKiPhsXf5MRx+q682XvJ9JLGD6PVliYxMZVYv37rXZsGT
-         SRG9c33TAZhWB2sOk3/rPYxvyyMkSdpNP5xIvKPQ=
-Received: by mail-ed1-f52.google.com with SMTP id i26so21476911edv.4;
-        Sat, 01 Aug 2020 16:50:54 -0700 (PDT)
-X-Gm-Message-State: AOAM533cETGWa34GDD1RTJGvLLnrmUYg7KS0o7sn7TrFzvqkG20r7JTU
-        bCsruVDPh0ln68A13AoUYmCv4f2K1qJYOsCskg==
-X-Google-Smtp-Source: ABdhPJzQmcCCQwR67S6JChR4X8UlBaNrr/6FEYSwtL2uZyPlHYYi1Y8yC31MEt19hcsQnLvDj3qLleKurtzHXUqlyw8=
-X-Received: by 2002:a50:d2c7:: with SMTP id q7mr5358828edg.61.1596325853405;
- Sat, 01 Aug 2020 16:50:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <1596010690-13178-1-git-send-email-neal.liu@mediatek.com> <1596010690-13178-3-git-send-email-neal.liu@mediatek.com>
-In-Reply-To: <1596010690-13178-3-git-send-email-neal.liu@mediatek.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Sun, 2 Aug 2020 07:50:41 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_-RMT-1+-5aPxqhgLbk74j0MH8U78mibBZppt_OPPQrJA@mail.gmail.com>
-Message-ID: <CAAOTY_-RMT-1+-5aPxqhgLbk74j0MH8U78mibBZppt_OPPQrJA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] soc: mediatek: add mtk-devapc driver
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        s=default; t=1596326405;
+        bh=yMDYNeNyapT8XmtkK6J9+a9r1Iq85mz0E82nfOGPK6k=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=y2EWJPfXEdmWTPCO9hhUxbHP1sPZ4B4uy8x5v3be1YqYqjpO96B5FednbMOaOgYZm
+         BGSHzGkZ66NDrXOxVAZzAB1CgKFVxb+BFXFrfypp6ITrTDP/nEbVTFnxFIsbllQl9J
+         gGhndCmGcxXwrQcYjeG6x5ESXnGawqHUhZklV+/c=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200801.143631.1794965770015082550.davem@davemloft.net>
+References: <20200801.143631.1794965770015082550.davem@davemloft.net>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200801.143631.1794965770015082550.davem@davemloft.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
+ refs/heads/master
+X-PR-Tracked-Commit-Id: fda2ec62cf1aa7cbee52289dc8059cd3662795da
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ac3a0c8472969a03c0496ae774b3a29eb26c8d5a
+Message-Id: <159632640514.16599.3256502942163300629.pr-tracker-bot@kernel.org>
+Date:   Sun, 02 Aug 2020 00:00:05 +0000
+To:     David Miller <davem@davemloft.net>
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Neal:
+The pull request you sent on Sat, 01 Aug 2020 14:36:31 -0700 (PDT):
 
-Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8829=E6=97=
-=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:29=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> MediaTek bus fabric provides TrustZone security support and data
-> protection to prevent slaves from being accessed by unexpected
-> masters.
-> The security violation is logged and sent to the processor for
-> further analysis or countermeasures.
->
-> Any occurrence of security violation would raise an interrupt, and
-> it will be handled by mtk-devapc driver. The violation
-> information is printed in order to find the murderer.
->
-> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
-> ---
+> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git refs/heads/master
 
-[snip]
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ac3a0c8472969a03c0496ae774b3a29eb26c8d5a
 
-> +
-> +struct mtk_devapc_context {
-> +       struct device *dev;
-> +       u32 vio_idx_num;
-> +       void __iomem *devapc_pd_base;
+Thank you!
 
-This is devapc context, so prefix 'devapc' is redundant.
-And, what does 'pd' mean?
-
-Regards,
-Chun-Kuang.
-
-> +       struct mtk_devapc_vio_info *vio_info;
-> +       const struct mtk_devapc_pd_offset *offset;
-> +       const struct mtk_devapc_vio_dbgs *vio_dbgs;
-> +};
-> +
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
