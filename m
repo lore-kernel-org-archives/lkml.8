@@ -2,71 +2,136 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B42E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 814EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98B2020759
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69A9A2075B
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:28:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbgHBO0y (ORCPT
+        id S1726615AbgHBO21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 10:26:54 -0400
-Received: from zg8tmja5ljk3lje4mi4ymjia.icoremail.net ([209.97.182.222]:58570
-        "HELO zg8tmja5ljk3lje4mi4ymjia.icoremail.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with SMTP id S1726058AbgHBO0x (ORCPT
+        Sun, 2 Aug 2020 10:28:27 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:60200 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbgHBO21 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 10:26:53 -0400
-Received: from [101.5.209.60] (unknown [101.5.209.60])
-        by app-1 (Coremail) with SMTP id DwQGZQA3PeUJzSZfLxPrAw--.8196S2;
-        Sun, 02 Aug 2020 22:26:19 +0800 (CST)
-From:   Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
-Subject: [BUG] net: rocker: accessing the data mapped to streaming DMA
-To:     jiri@resnulli.us, davem@davemloft.net, kuba@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <a89769ea-67fd-89ce-d8fc-c12d98538065@tsinghua.edu.cn>
-Date:   Sun, 2 Aug 2020 22:26:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 2 Aug 2020 10:28:27 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id DF1EC1C0BD4; Sun,  2 Aug 2020 16:28:25 +0200 (CEST)
+Date:   Sun, 2 Aug 2020 16:28:25 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Qiwu Huang <yanziily@gmail.com>, sre@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jiangfei1@xiaomi.com, Qiwu Huang <huangqiwu@xiaomi.com>
+Subject: Re: [PATCH v4 1/4] power: supply: core: add quick charge type
+ property
+Message-ID: <20200802142825.GA20261@amd>
+References: <cover.1595214246.git.huangqiwu@xiaomi.com>
+ <c9d3199ec18625f9cc4448c3b2049ea2ae80358b.1595214246.git.huangqiwu@xiaomi.com>
+ <20200802120015.GA1289@bug>
+ <20200802123742.GA257810@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID: DwQGZQA3PeUJzSZfLxPrAw--.8196S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYI7k0a2IF6w1UM7kC6x804xWl14x267AK
-        xVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGw
-        A2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj
-        6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gc
-        CE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxI
-        r21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87
-        Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS
-        07AlzVAYIcxG8wCY02Avz4vE14v_Xryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
-        v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
-        1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
-        AIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyU
-        JwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-        nIWIevJa73UjIFyTuYvjxUcWrWUUUUU
-X-CM-SenderInfo: xedlyxhdmxq3pvlqwxlxdovvfxof0/
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
+Content-Disposition: inline
+In-Reply-To: <20200802123742.GA257810@kroah.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In rocker_dma_test_offset(), "buf" is mapped to streaming DMA on line 203:
-   dma_handle = pci_map_single(..., buf, ...);
 
-Then, "buf" is accessed on line 229:
-   expect[i] = ~buf[i];
+--2fHTh5uZTiUOsy+g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This access may cause data inconsistency between CPU cache and hardware.
+On Sun 2020-08-02 14:37:42, Greg KH wrote:
+> On Sun, Aug 02, 2020 at 02:00:15PM +0200, Pavel Machek wrote:
+> > On Mon 2020-07-20 13:47:14, Qiwu Huang wrote:
+> > > From: Qiwu Huang <huangqiwu@xiaomi.com>
+> > >=20
+> > > Reports the kind of quick charge type based on
+> > > different adapter power.
+> > >=20
+> > > Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
+> > > ---
+> > >  Documentation/ABI/testing/sysfs-class-power | 21 +++++++++++++++++++=
+++
+> > >  drivers/power/supply/power_supply_sysfs.c   |  1 +
+> > >  include/linux/power_supply.h                | 10 ++++++++++
+> > >  3 files changed, 32 insertions(+)
+> > >=20
+> > > diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentat=
+ion/ABI/testing/sysfs-class-power
+> > > index 216d61a22f1e..dd3773dcf16a 100644
+> > > --- a/Documentation/ABI/testing/sysfs-class-power
+> > > +++ b/Documentation/ABI/testing/sysfs-class-power
+> > > @@ -708,3 +708,24 @@ Description:
+> > > =20
+> > >  		Access: Read
+> > >  		Valid values: 1-31
+> > > +
+> > > +What:		/sys/class/power_supply/<supply_name>/quick_charge_type
+> > > +Date:		Jul 2020
+> > > +Contact:	Fei Jiang <jiangfei1@xiaomi.com>
+> > > +		Description:
+> > > +		Reports the kind of quick charge type based on different adapter p=
+ower.
+> > > +		Different quick charge type represent different charging power.
+> > > +		QUICK_CHARGE_NORMAL : Charging Power <=3D 10W
+> > > +		QUICK_CHARGE_FAST : 10W < Charging Power <=3D 20W
+> > > +		QUICK_CHARGE_FLASH : 20W < Charging Power <=3D 30W
+> > > +		QUICK_CHARGE_TURBE : 30W < Charging Power <=3D 50W
+> > > +		QUICK_CHARGE_SUPER : Charging Power > 50W
+> > > +
+> > > +		Access: Read-Only
+> > > +		Valid values:
+> > > +			0: QUICK_CHARGE_NORMAL,
+> > > +			1: QUICK_CHARGE_FAST,
+> > > +			2: QUICK_CHARGE_FLASH,
+> > > +			3: QUICK_CHARGE_TURBE,
+> > > +			4: QUICK_CHARGE_SUPER.
+> >=20
+> > NAK.
+> >=20
+> > Just expose value in watts or something... People are talking about > 1=
+00W charging, no
+> > need to go with fast/turbe/super/hyper/nonsense.
+> >=20
+> > BTW fast charge is already "well defined", and what you call Normal is =
+usually fast charge.
+>=20
+> I think these names come from the Qi charging spec, right?  So lets use
+> what is given to us.
 
-I am not sure how to properly fix this problem, and thus I only report it.
+There are other standards, and this should better be generic.
 
+Simply expose value in watts.
 
-Best wishes,
-Jia-Ju Bai
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
+--2fHTh5uZTiUOsy+g
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl8mzYkACgkQMOfwapXb+vLHmwCfe58sH+wQnjUwSoQDY71diLxA
+W1gAnjcLHsCbfBEBb8DBVMKF+jM8H2MM
+=GuP/
+-----END PGP SIGNATURE-----
+
+--2fHTh5uZTiUOsy+g--
