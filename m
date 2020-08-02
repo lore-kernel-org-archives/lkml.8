@@ -2,119 +2,117 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10142C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B30DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE8AA20738
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6364620738
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:14:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="ZE71Wycl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728302AbgHBNLc (ORCPT
+        id S1728318AbgHBNOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 09:11:32 -0400
-Received: from zg8tmja5ljk3lje4mi4ymjia.icoremail.net ([209.97.182.222]:45614
-        "HELO zg8tmja5ljk3lje4mi4ymjia.icoremail.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with SMTP id S1726578AbgHBNLc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 09:11:32 -0400
-Received: from oslab.tsinghua.edu.cn (unknown [166.111.139.112])
-        by app-5 (Coremail) with SMTP id EwQGZQCnrnJtuyZfHMLtAw--.12483S2;
-        Sun, 02 Aug 2020 21:11:14 +0800 (CST)
-From:   Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
-To:     doshir@vmware.com, pv-drivers@vmware.com, davem@davemloft.net,
-        kuba@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
-Subject: [PATCH] net: vmxnet3: avoid accessing the data mapped to streaming DMA
-Date:   Sun,  2 Aug 2020 21:11:07 +0800
-Message-Id: <20200802131107.15857-1-baijiaju@tsinghua.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: EwQGZQCnrnJtuyZfHMLtAw--.12483S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7trWUKr1fCrW5AFy5AF48Xrb_yoW8urW3pF
-        ZxJ3WrJr42gr1qy3yrur4rW3W5Gr4rta4xKa4Utw1fWa9xZF1Iyr9Yyryjy34rK34Duan8
-        JFn2vw4rJr1xtw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Xr4l
-        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
-        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
-        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
-        4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-        0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU-_-PUUUUU=
-X-CM-SenderInfo: xedlyxhdmxq3pvlqwxlxdovvfxof0/
+        Sun, 2 Aug 2020 09:14:22 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:39497 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728043AbgHBNOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 09:14:21 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BKM0z2dLrz9sSG;
+        Sun,  2 Aug 2020 23:14:11 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1596374059;
+        bh=l8Vv313rJGqlK2PcaNCVrGcU8SJlDczW2rNrY770DTs=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=ZE71Wyclmt4MQrTZPs6iY6nA2eek+wB/iYUyHxx7nWlyJbBID58C0vJfORjrDD43E
+         wNND8mtfpDbimWptgmYv4VddxYAmX0rHolg1XVT+G8s2w1bA+8uHwFHNUayBhafmGn
+         U3RDd9O7hEfPsfEFxg1WUJgbZZ35QUi0zip6yzBRdj0KvzX0aIma+XejtIevU686ru
+         HM91WecXmsJTqK1azOcV4OJmJvhTYVRaSfqOgAvj1ip20Yb1FPEAys0j9IKpP3z8BI
+         XGg3VJKFsWHrW1MkBYjbjQi72gF9zJZpWvDX1DLzzpzZpzoVYn1bqH1kWqIhbU7xhV
+         gtswbHEE4eTGQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        clang-built-linux@googlegroups.com,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
+        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org,
+        Hari Bathini <hbathini@in.ibm.com>
+Subject: Re: [PATCH 06/15] powerpc: fadamp: simplify fadump_reserve_crash_area()
+In-Reply-To: <20200801101854.GD534153@kernel.org>
+References: <20200728051153.1590-1-rppt@kernel.org> <20200728051153.1590-7-rppt@kernel.org> <87d04d5hda.fsf@mpe.ellerman.id.au> <20200801101854.GD534153@kernel.org>
+Date:   Sun, 02 Aug 2020 23:14:10 +1000
+Message-ID: <87o8nt197h.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In vmxnet3_probe_device(), "adapter" is mapped to streaming DMA:
-  adapter->adapter_pa = dma_map_single(..., adapter, ...);
+Mike Rapoport <rppt@kernel.org> writes:
+> On Thu, Jul 30, 2020 at 10:15:13PM +1000, Michael Ellerman wrote:
+>> Mike Rapoport <rppt@kernel.org> writes:
+>> > From: Mike Rapoport <rppt@linux.ibm.com>
+>> >
+>> > fadump_reserve_crash_area() reserves memory from a specified base address
+>> > till the end of the RAM.
+>> >
+>> > Replace iteration through the memblock.memory with a single call to
+>> > memblock_reserve() with appropriate  that will take care of proper memory
+>>                                      ^
+>>                                      parameters?
+>> > reservation.
+>> >
+>> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+>> > ---
+>> >  arch/powerpc/kernel/fadump.c | 20 +-------------------
+>> >  1 file changed, 1 insertion(+), 19 deletions(-)
+>> 
+>> I think this looks OK to me, but I don't have a setup to test it easily.
+>> I've added Hari to Cc who might be able to.
+>> 
+>> But I'll give you an ack in the hope that it works :)
+>
+> Actually, I did some digging in the git log and the traversal was added
+> there on purpose by the commit b71a693d3db3 ("powerpc/fadump: exclude
+> memory holes while reserving memory in second kernel")
+> Presuming this is still reqruired I'm going to drop this patch and will
+> simply replace for_each_memblock() with for_each_mem_range() in v2.
 
-Then "adapter" is accessed at many places in this function.
+Thanks.
 
-Theses accesses may cause data inconsistency between CPU cache and 
-hardware.
-
-To fix this problem, dma_map_single() is called after these accesses.
-
-Signed-off-by: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
----
- drivers/net/vmxnet3/vmxnet3_drv.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/net/vmxnet3/vmxnet3_drv.c b/drivers/net/vmxnet3/vmxnet3_drv.c
-index ca395f9679d0..96a4c28ba429 100644
---- a/drivers/net/vmxnet3/vmxnet3_drv.c
-+++ b/drivers/net/vmxnet3/vmxnet3_drv.c
-@@ -3445,14 +3445,6 @@ vmxnet3_probe_device(struct pci_dev *pdev,
- 	}
- 
- 	spin_lock_init(&adapter->cmd_lock);
--	adapter->adapter_pa = dma_map_single(&adapter->pdev->dev, adapter,
--					     sizeof(struct vmxnet3_adapter),
--					     PCI_DMA_TODEVICE);
--	if (dma_mapping_error(&adapter->pdev->dev, adapter->adapter_pa)) {
--		dev_err(&pdev->dev, "Failed to map dma\n");
--		err = -EFAULT;
--		goto err_set_mask;
--	}
- 	adapter->shared = dma_alloc_coherent(
- 				&adapter->pdev->dev,
- 				sizeof(struct Vmxnet3_DriverShared),
-@@ -3628,6 +3620,16 @@ vmxnet3_probe_device(struct pci_dev *pdev,
- 	}
- 
- 	vmxnet3_check_link(adapter, false);
-+
-+	adapter->adapter_pa = dma_map_single(&adapter->pdev->dev, adapter,
-+					     sizeof(struct vmxnet3_adapter),
-+					     PCI_DMA_TODEVICE);
-+	if (dma_mapping_error(&adapter->pdev->dev, adapter->adapter_pa)) {
-+		dev_err(&pdev->dev, "Failed to map dma\n");
-+		err = -EFAULT;
-+		goto err_register;
-+	}
-+
- 	return 0;
- 
- err_register:
-@@ -3655,8 +3657,6 @@ vmxnet3_probe_device(struct pci_dev *pdev,
- 			  sizeof(struct Vmxnet3_DriverShared),
- 			  adapter->shared, adapter->shared_pa);
- err_alloc_shared:
--	dma_unmap_single(&adapter->pdev->dev, adapter->adapter_pa,
--			 sizeof(struct vmxnet3_adapter), PCI_DMA_TODEVICE);
- err_set_mask:
- 	free_netdev(netdev);
- 	return err;
--- 
-2.17.1
-
+cheers
