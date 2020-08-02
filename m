@@ -2,100 +2,104 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D6CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 09:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B8BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 09:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A94B92075A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 09:11:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hFIyCvpC"
+	by mail.kernel.org (Postfix) with ESMTP id 9356E2075A
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 09:16:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgHBJLI (ORCPT
+        id S1727976AbgHBJQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 05:11:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725916AbgHBJLH (ORCPT
+        Sun, 2 Aug 2020 05:16:28 -0400
+Received: from zg8tmja5ljk3lje4mi4ymjia.icoremail.net ([209.97.182.222]:46932
+        "HELO zg8tmja5ljk3lje4mi4ymjia.icoremail.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with SMTP id S1726376AbgHBJQ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 05:11:07 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D8F5C06174A
-        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 02:11:07 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id 9so11790164wmj.5
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 02:11:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=GOI1c5bl4yi1L6tURgqekpW0DbIMIRV5G+t5vtGHdE0=;
-        b=hFIyCvpCtd1mxT/D4FkEIfIU6U3xn8HiZP7ovOg54nSjLKPMh5L2rJTUCyXIfJsMG+
-         YBtR9K9UDXgVlDIeVa3YDJ81GcPsEX8xlXOQoslRJW/1SuGDiADF8qqK41CHFjwtlKMf
-         OQ88aAklXFuY8+xifkUjPfhvw//yWVDy1jO2ETxTpU/tJC9W6NneGFSl6M8zbFYhcugQ
-         nZY/MggPKuch/IBGdLNjt8H7B570si91RiZdo9NVjWJRXVuqUIE28sKC8u42eBUfWnQe
-         Rp+q/hJ9LVVrLM2Rrnh87twqtYsivrqdqF6bHV7Kz2qfKuMSqL8uJxFsUtvWWBceP2SF
-         u3gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=GOI1c5bl4yi1L6tURgqekpW0DbIMIRV5G+t5vtGHdE0=;
-        b=VXFi+ZpnRNtT07FQ7EGgOPxJ+6FcSsMHzxXb3djrQovhbkr1gXDS3eLAROZtprMFHl
-         lpQbY9rdm9f32iiVlReaFzFiKcldK2PXn5v9x3NkcHnp/UUby6GkQ6N7nD6GZ3xsLrU1
-         dzeeLpOwlb0G4MhHAwtWnXD9FlRyQOsbPqfWPXlUZZgGbStJ8kHA8lR1RvAJ6F4G+Elf
-         HVH+Zyq6znVs+SgQLLVSC+aJi9UtzRj+UqLeZVzJr1We/gOeq2n0J35wTC4AKNmPMrdd
-         p0PfFgGC7+TNDy6PUlTHNj/m53f7zqgQzSEZURcnzAE3QS5G6yaiD5f9wqF7gWhWNMrE
-         oRVA==
-X-Gm-Message-State: AOAM531oM62RliGGn4dESQSrjuFyYVFhIfjRjNo2ZNYrAjNcZxNpcnhu
-        tah4YZt5pDLgVZoFKI+nASLvPE0I
-X-Google-Smtp-Source: ABdhPJy0IaCw5tudXdRthaPZfo+L1dWA0JwCjDufgvThz+kikOQNka7zpENwXOeM6eepFTXqPo032Q==
-X-Received: by 2002:a1c:7702:: with SMTP id t2mr5320261wmi.169.1596359465836;
-        Sun, 02 Aug 2020 02:11:05 -0700 (PDT)
-Received: from [192.168.178.22] (dslb-002-204-142-085.002.204.pools.vodafone-ip.de. [2.204.142.85])
-        by smtp.gmail.com with ESMTPSA id 126sm260904wme.42.2020.08.02.02.11.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Aug 2020 02:11:05 -0700 (PDT)
-To:     gregkh@linuxfoundation.org
-Cc:     christian.gromm@microchip.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-From:   Michael Straube <straube.linux@gmail.com>
-Subject: staging: most: Build error since commit "drivers: most: add USB
- adapter driver"
-Message-ID: <7c18e466-0941-ee7e-9a0f-5a993c993152@gmail.com>
-Date:   Sun, 2 Aug 2020 11:08:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sun, 2 Aug 2020 05:16:27 -0400
+Received: from oslab.tsinghua.edu.cn (unknown [166.111.139.112])
+        by app-4 (Coremail) with SMTP id EgQGZQDn79NehCZfxLnkAw--.3380S2;
+        Sun, 02 Aug 2020 17:16:19 +0800 (CST)
+From:   Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+To:     3chas3@gmail.com
+Cc:     linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+Subject: [PATCH] atm: eni: avoid accessing the data mapped to streaming DMA
+Date:   Sun,  2 Aug 2020 17:16:11 +0800
+Message-Id: <20200802091611.24331-1-baijiaju@tsinghua.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: EgQGZQDn79NehCZfxLnkAw--.3380S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7WF1DKrWrtrW5uw1UJr1rtFb_yoW8ArWkpF
+        yxGas0krW0qFyUta4vg3y5XrWIvayktryagFyYk3srZan8XF1F9ry8GFW8tr10ka4fGr1j
+        vwn5XryFgw1Dt3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkS14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+        jxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+        1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8uwCF
+        04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+        18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
+        r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
+        1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
+        cVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUn89NUUUUU
+X-CM-SenderInfo: xedlyxhdmxq3pvlqwxlxdovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+In do_tx(), skb->data is mapped to streaming DMA on line 1111:
+  paddr = dma_map_single(...,skb->data,DMA_TO_DEVICE);
 
-with commit 97a6f772f36b7f52bcfa56a581bbd2470cffe23d ("drivers: most: add USB adapter driver")
-I get build errors.
+Then skb->data is accessed on line 1153:
+  (skb->data[3] & 0xf)
 
-$ LANG=C make clean drivers/staging/rtl8188eu/
-scripts/Makefile.clean:15: drivers/staging/most/usb/Makefile: No such file or directory
-make[5]: *** No rule to make target 'drivers/staging/most/usb/Makefile'.  Stop.
-make[4]: *** [scripts/Makefile.clean:66: drivers/staging/most/usb] Error 2
-make[3]: *** [scripts/Makefile.clean:66: drivers/staging/most] Error 2
-make[2]: *** [scripts/Makefile.clean:66: drivers/staging] Error 2
-make[1]: *** [Makefile:1763: _clean_drivers] Error 2
-make: *** [Makefile:336: __build_one_by_one] Error 2
+This access may cause data inconsistency between CPU cache and hardware.
 
-Did you forgot to remove the below line from drivers/staging/most/Makefile ?
+To fix this problem, skb->data[3] is assigned to a local variable before
+DMA mapping, and then the driver accesses this local variable instead of
+skb->data[3].
 
-obj-$(CONFIG_MOST_USB)	+= usb/
+Signed-off-by: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+---
+ drivers/atm/eni.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/atm/eni.c b/drivers/atm/eni.c
+index 17d47ad03ab7..09f4e2f41363 100644
+--- a/drivers/atm/eni.c
++++ b/drivers/atm/eni.c
+@@ -1034,6 +1034,7 @@ static enum enq_res do_tx(struct sk_buff *skb)
+ 	u32 dma_rd,dma_wr;
+ 	u32 size; /* in words */
+ 	int aal5,dma_size,i,j;
++	unsigned char skb_data3;
+ 
+ 	DPRINTK(">do_tx\n");
+ 	NULLCHECK(skb);
+@@ -1108,6 +1109,7 @@ DPRINTK("iovcnt = %d\n",skb_shinfo(skb)->nr_frags);
+ 		    vcc->dev->number);
+ 		return enq_jam;
+ 	}
++	skb_data3 = skb->data[3];
+ 	paddr = dma_map_single(&eni_dev->pci_dev->dev,skb->data,skb->len,
+ 			       DMA_TO_DEVICE);
+ 	ENI_PRV_PADDR(skb) = paddr;
+@@ -1150,7 +1152,7 @@ DPRINTK("doing direct send\n"); /* @@@ well, this doesn't work anyway */
+ 	    (size/(ATM_CELL_PAYLOAD/4)),tx->send+tx->tx_pos*4);
+ /*printk("dsc = 0x%08lx\n",(unsigned long) readl(tx->send+tx->tx_pos*4));*/
+ 	writel((vcc->vci << MID_SEG_VCI_SHIFT) |
+-            (aal5 ? 0 : (skb->data[3] & 0xf)) |
++            (aal5 ? 0 : (skb_data3 & 0xf)) |
+ 	    (ATM_SKB(skb)->atm_options & ATM_ATMOPT_CLP ? MID_SEG_CLP : 0),
+ 	    tx->send+((tx->tx_pos+1) & (tx->words-1))*4);
+ 	DPRINTK("size: %d, len:%d\n",size,skb->len);
+-- 
+2.17.1
 
-Regards,
-Michael
