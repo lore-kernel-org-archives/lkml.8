@@ -2,89 +2,109 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C91DC433E5
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 936D62075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84C71207DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:07:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgHBLH1 (ORCPT
+        id S1728099AbgHBLHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 07:07:27 -0400
-Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:23500 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbgHBLH0 (ORCPT
+        Sun, 2 Aug 2020 07:07:52 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:34241 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726416AbgHBLHv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 07:07:26 -0400
-Received: from localhost.localdomain ([93.22.148.198])
-        by mwinf5d84 with ME
-        id Ab7P230064H42jh03b7PEJ; Sun, 02 Aug 2020 13:07:24 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 02 Aug 2020 13:07:24 +0200
-X-ME-IP: 93.22.148.198
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     QLogic-Storage-Upstream@qlogic.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, vikas.chaudhary@qlogic.com,
-        lalit.chandivade@qlogic.com, michaelc@cs.wisc.edu,
-        JBottomley@Parallels.com
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] scsi: qla2xxx: Fix the size used in a 'dma_free_coherent()' call
-Date:   Sun,  2 Aug 2020 13:07:21 +0200
-Message-Id: <20200802110721.677707-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Sun, 2 Aug 2020 07:07:51 -0400
+X-Originating-IP: 180.110.142.179
+Received: from localhost (unknown [180.110.142.179])
+        (Authenticated sender: fly@kernel.page)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 5F47260002;
+        Sun,  2 Aug 2020 11:07:34 +0000 (UTC)
+Date:   Sun, 2 Aug 2020 19:07:24 +0800
+From:   Pengfei Li <fly@kernel.page>
+To:     Hugh Dickins <hughd@google.com>
+Cc:     akpm@linux-foundation.org, bmt@zurich.ibm.com, dledford@redhat.com,
+        willy@infradead.org, vbabka@suse.cz,
+        kirill.shutemov@linux.intel.com, jgg@ziepe.ca,
+        alex.williamson@redhat.com, cohuck@redhat.com,
+        daniel.m.jordan@oracle.com, dbueso@suse.de, jglisse@redhat.com,
+        jhubbard@nvidia.com, ldufour@linux.ibm.com,
+        Liam.Howlett@oracle.com, peterz@infradead.org, cl@linux.com,
+        jack@suse.cz, rientjes@google.com, walken@google.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, fly@kernel.page
+Subject: Re: [PATCH 2/2] mm, util: account_locked_vm() does not hold
+ mmap_lock
+Message-ID: <20200802190724.493304b6.fly@kernel.page>
+In-Reply-To: <alpine.LSU.2.11.2007291121280.4649@eggly.anvils>
+References: <20200726080224.205470-1-fly@kernel.page>
+        <20200726080224.205470-2-fly@kernel.page>
+        <alpine.LSU.2.11.2007291121280.4649@eggly.anvils>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the size used in 'dma_free_coherent()' in order to match the one
-used in the corresponding 'dma_alloc_coherent()'.
+On Wed, 29 Jul 2020 12:21:11 -0700 (PDT)
+Hugh Dickins <hughd@google.com> wrote:
 
-While at it, remove a memset after a call to 'dma_alloc_coherent()'.
-This is useless since
-commit 518a2f1925c3 ("dma-mapping: zero memory returned from dma_alloc_*")
+Sorry for the late reply.
 
-Fixes: 4161cee52df8 ("[SCSI] qla4xxx: Add host statistics support")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-The memset has been added in the same commit, so I think it is ok to
-remove it in the same path.
----
- drivers/scsi/qla2xxx/qla_mbx.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+> On Sun, 26 Jul 2020, Pengfei Li wrote:
+> 
+> > Since mm->locked_vm is already an atomic counter,
+> > account_locked_vm() does not need to hold mmap_lock.  
+> 
+> I am worried that this patch, already added to mmotm, along with its
+> 1/2 making locked_vm an atomic64, might be rushed into v5.9 with just
+> that two-line commit description, and no discussion at all.
+> 
+> locked_vm belongs fundamentally to mm/mlock.c, and the lock to guard
+> it is mmap_lock; and mlock() has some complicated stuff to do under
+> that lock while it decides how to adjust locked_vm.
+> 
+> It is very easy to convert an unsigned long to an atomic64_t, but
+> "atomic read, check limit and do stuff, atomic add" does not give
+> the same guarantee as holding the right lock around it all.
+> 
+> (At the very least, __account_locked_vm() in 1/2 should be changed to
+> replace its atomic64_add by an atomic64_cmpxchg, to enforce the limit
+> that it just checked.  But that will be no more than lipstick on a
+> pig, when the right lock that everyone else agrees upon is not being
+> held.)
+> 
 
-diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
-index 73883435ab58..a43d7229f9a1 100644
---- a/drivers/scsi/qla2xxx/qla_mbx.c
-+++ b/drivers/scsi/qla2xxx/qla_mbx.c
-@@ -4933,8 +4933,6 @@ qla25xx_set_els_cmds_supported(scsi_qla_host_t *vha)
- 		return QLA_MEMORY_ALLOC_FAILED;
- 	}
- 
--	memset(els_cmd_map, 0, ELS_CMD_MAP_SIZE);
--
- 	/* List of Purex ELS */
- 	cmd_opcode[0] = ELS_FPIN;
- 	cmd_opcode[1] = ELS_RDP;
-@@ -4966,7 +4964,7 @@ qla25xx_set_els_cmds_supported(scsi_qla_host_t *vha)
- 		    "Done %s.\n", __func__);
- 	}
- 
--	dma_free_coherent(&ha->pdev->dev, DMA_POOL_SIZE,
-+	dma_free_coherent(&ha->pdev->dev, ELS_CMD_MAP_SIZE,
- 	   els_cmd_map, els_cmd_map_dma);
- 
- 	return rval;
+Thank you for your detailed comment.
+
+You are right, I should use atomic64_cmpxchg to guarantee the limit of
+RLIMIT_MEMLOCK.
+
+> Now, it can be argued that our locked_vm and pinned_vm maintenance
+> is so random and deficient, and too difficult to keep right across
+> a sprawl of drivers, that we should just be grateful for those that
+> do volunteer to subject themselves to RLIMIT_MEMLOCK limitation,
+> and never mind if it's a little racy.
+> 
+> And it may well be that all those who have made considerable efforts
+> in the past to improve the situation, have more interesting things to
+> devote their time to, and would prefer not to get dragged back here.
+> 
+> But let's at least give this a little more visibility, and hope
+> to hear opinions one way or the other from those who care.
+
+
+Thank you. My patch should be more thoughtful.
+
+I will send an email to Stephen soon asking to remove these two patches
+from -mm tree.
+
 -- 
-2.25.1
-
+Pengfei
