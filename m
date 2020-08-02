@@ -2,45 +2,50 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 814EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69A9A2075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D101420759
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:31:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgHBO21 (ORCPT
+        id S1726325AbgHBObr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 10:28:27 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:60200 "EHLO
+        Sun, 2 Aug 2020 10:31:47 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:60476 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725853AbgHBO21 (ORCPT
+        with ESMTP id S1725840AbgHBObr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 10:28:27 -0400
+        Sun, 2 Aug 2020 10:31:47 -0400
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id DF1EC1C0BD4; Sun,  2 Aug 2020 16:28:25 +0200 (CEST)
-Date:   Sun, 2 Aug 2020 16:28:25 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Qiwu Huang <yanziily@gmail.com>, sre@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jiangfei1@xiaomi.com, Qiwu Huang <huangqiwu@xiaomi.com>
-Subject: Re: [PATCH v4 1/4] power: supply: core: add quick charge type
- property
-Message-ID: <20200802142825.GA20261@amd>
-References: <cover.1595214246.git.huangqiwu@xiaomi.com>
- <c9d3199ec18625f9cc4448c3b2049ea2ae80358b.1595214246.git.huangqiwu@xiaomi.com>
- <20200802120015.GA1289@bug>
- <20200802123742.GA257810@kroah.com>
+        id 127351C0BD4; Sun,  2 Aug 2020 16:31:44 +0200 (CEST)
+Date:   Sun, 2 Aug 2020 16:31:43 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Deven Bowers <deven.desai@linux.microsoft.com>, agk@redhat.com,
+        axboe@kernel.dk, snitzer@redhat.com, jmorris@namei.org,
+        serge@hallyn.com, zohar@linux.ibm.com, viro@zeniv.linux.org.uk,
+        paul@paul-moore.com, eparis@redhat.com, jannh@google.com,
+        dm-devel@redhat.com, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-audit@redhat.com, tyhicks@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, corbet@lwn.net,
+        jaskarankhurana@linux.microsoft.com, mdsakib@microsoft.com,
+        nramas@linux.microsoft.com, pasha.tatashin@soleen.com
+Subject: Re: [RFC PATCH v5 00/11] Integrity Policy Enforcement LSM (IPE)
+Message-ID: <20200802143143.GB20261@amd>
+References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
+ <20200802115545.GA1162@bug>
+ <20200802140300.GA2975990@sasha-vm>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
+        protocol="application/pgp-signature"; boundary="s/l3CgOIzMHHjg/5"
 Content-Disposition: inline
-In-Reply-To: <20200802123742.GA257810@kroah.com>
+In-Reply-To: <20200802140300.GA2975990@sasha-vm>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -48,90 +53,58 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---2fHTh5uZTiUOsy+g
+--s/l3CgOIzMHHjg/5
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun 2020-08-02 14:37:42, Greg KH wrote:
-> On Sun, Aug 02, 2020 at 02:00:15PM +0200, Pavel Machek wrote:
-> > On Mon 2020-07-20 13:47:14, Qiwu Huang wrote:
-> > > From: Qiwu Huang <huangqiwu@xiaomi.com>
-> > >=20
-> > > Reports the kind of quick charge type based on
-> > > different adapter power.
-> > >=20
-> > > Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
-> > > ---
-> > >  Documentation/ABI/testing/sysfs-class-power | 21 +++++++++++++++++++=
-++
-> > >  drivers/power/supply/power_supply_sysfs.c   |  1 +
-> > >  include/linux/power_supply.h                | 10 ++++++++++
-> > >  3 files changed, 32 insertions(+)
-> > >=20
-> > > diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentat=
-ion/ABI/testing/sysfs-class-power
-> > > index 216d61a22f1e..dd3773dcf16a 100644
-> > > --- a/Documentation/ABI/testing/sysfs-class-power
-> > > +++ b/Documentation/ABI/testing/sysfs-class-power
-> > > @@ -708,3 +708,24 @@ Description:
-> > > =20
-> > >  		Access: Read
-> > >  		Valid values: 1-31
-> > > +
-> > > +What:		/sys/class/power_supply/<supply_name>/quick_charge_type
-> > > +Date:		Jul 2020
-> > > +Contact:	Fei Jiang <jiangfei1@xiaomi.com>
-> > > +		Description:
-> > > +		Reports the kind of quick charge type based on different adapter p=
-ower.
-> > > +		Different quick charge type represent different charging power.
-> > > +		QUICK_CHARGE_NORMAL : Charging Power <=3D 10W
-> > > +		QUICK_CHARGE_FAST : 10W < Charging Power <=3D 20W
-> > > +		QUICK_CHARGE_FLASH : 20W < Charging Power <=3D 30W
-> > > +		QUICK_CHARGE_TURBE : 30W < Charging Power <=3D 50W
-> > > +		QUICK_CHARGE_SUPER : Charging Power > 50W
-> > > +
-> > > +		Access: Read-Only
-> > > +		Valid values:
-> > > +			0: QUICK_CHARGE_NORMAL,
-> > > +			1: QUICK_CHARGE_FAST,
-> > > +			2: QUICK_CHARGE_FLASH,
-> > > +			3: QUICK_CHARGE_TURBE,
-> > > +			4: QUICK_CHARGE_SUPER.
-> >=20
-> > NAK.
-> >=20
-> > Just expose value in watts or something... People are talking about > 1=
-00W charging, no
-> > need to go with fast/turbe/super/hyper/nonsense.
-> >=20
-> > BTW fast charge is already "well defined", and what you call Normal is =
-usually fast charge.
+On Sun 2020-08-02 10:03:00, Sasha Levin wrote:
+> On Sun, Aug 02, 2020 at 01:55:45PM +0200, Pavel Machek wrote:
+> >Hi!
+> >
+> >>IPE is a Linux Security Module which allows for a configurable
+> >>policy to enforce integrity requirements on the whole system. It
+> >>attempts to solve the issue of Code Integrity: that any code being
+> >>executed (or files being read), are identical to the version that
+> >>was built by a trusted source.
+> >
+> >How is that different from security/integrity/ima?
 >=20
-> I think these names come from the Qi charging spec, right?  So lets use
-> what is given to us.
+> Maybe if you would have read the cover letter all the way down to the
+> 5th paragraph which explains how IPE is different from IMA we could
+> avoided this mail exchange...
 
-There are other standards, and this should better be generic.
+"
+IPE differs from other LSMs which provide integrity checking (for
+instance,
+IMA), as it has no dependency on the filesystem metadata itself. The
+attributes that IPE checks are deterministic properties that exist
+solely
+in the kernel. Additionally, IPE provides no additional mechanisms of
+verifying these files (e.g. IMA Signatures) - all of the attributes of
+verifying files are existing features within the kernel, such as
+dm-verity
+or fsverity.
+"
 
-Simply expose value in watts.
-
+That is not really helpful.
 									Pavel
+
 --=20
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
 g.html
 
---2fHTh5uZTiUOsy+g
+--s/l3CgOIzMHHjg/5
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iEYEARECAAYFAl8mzYkACgkQMOfwapXb+vLHmwCfe58sH+wQnjUwSoQDY71diLxA
-W1gAnjcLHsCbfBEBb8DBVMKF+jM8H2MM
-=GuP/
+iEYEARECAAYFAl8mzk8ACgkQMOfwapXb+vLIbgCaA3csU541jz7eEPNddFWHs7h3
+kiUAn0UO6AiyKqQwqSNgE+2r+SZ3D4bn
+=xwpV
 -----END PGP SIGNATURE-----
 
---2fHTh5uZTiUOsy+g--
+--s/l3CgOIzMHHjg/5--
