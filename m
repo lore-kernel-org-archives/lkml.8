@@ -2,111 +2,95 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE0DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 19:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA730C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 19:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA15206E9
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 19:13:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jtubiScP"
+	by mail.kernel.org (Postfix) with ESMTP id 96F6120759
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 19:14:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596395654;
+	bh=8BmtM5Wz6njp3alR4dE4/v12QyDF8IHMxGR5An5fCEM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=C/JxJWE80jM0HABoEInv0Wvy/d3DX8UcOKXQCKo+bgO8Pb94ft82jUXzQi324gn2T
+	 i0C5xYQout1OzdaTt+LdzrLlZmH0TQADteRsL72orcFeKnGqSDnHsF6LYaEpWcUta+
+	 7OUmNAGNMGodZev08NgbzYUp/xwWimKrOIgdJRl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbgHBTM7 (ORCPT
+        id S1727019AbgHBTOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 15:12:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725910AbgHBTM7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 15:12:59 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2FB0C06174A
-        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 12:12:58 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id b2so5862963qvp.9
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 12:12:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=XRgkO+pWg9WMheb+JuYC1vAI+vcvMh8iE4b2S931akA=;
-        b=jtubiScPdbrW2+U7U+6jrzTShJ5Sg9yHdKlHM1Y9mq8Amalzwv74e6GjZougu1lAPc
-         9jt9PbyLvszkkyA/zS4V6TxdEyB7CRSqfWRdTy5+0/FDOSu2M+Eg65uPiICpGw66FFT/
-         wdG04xdsqcxbo/7I8N6ygrqr7/9x7bfS37nqSdZjOPHFLiVulebhs1apxLRFxD7nhaGN
-         ErihAFyp0ylMXsZ8MGiWjvAsp3xJhmkQZ1bgcdhqfY/irbBnFXyH3UD5caeLp6s073gl
-         TaFut4XXDirwV1fq1Zlg2fYrCQLtRjK5WoJWJsU6Vj/e9/tIQQCiIyC1t/G9IlJ+XHeZ
-         rbSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=XRgkO+pWg9WMheb+JuYC1vAI+vcvMh8iE4b2S931akA=;
-        b=UkUwBtHdui9aeLnvEHnG8kYCBW/J6KyPbLtegpt7zD8OMnj5n43GwBKj9Nf8BAcUkZ
-         m3cJyiM7veEOtPu015HPXysSFc9Wzs/fyK64LEH+SU0O7zJSOTkOARZxNvcn881w4Klx
-         uwT2oOw9Pj+KwITSHQomjQXuXL9EMaGIh57AetU/ggs8RAOK7jFGCKRzktdHv+6YeN+E
-         OwEohVyUr9ao4iw3JlmTl4RLRdo80wRQD5qyUqgmtT7McPZeGhXiTIGv237CxKi/1py+
-         vbCxla4CqBoL5WwFRW/Y3X8plEaTFiuxOtSM1UgVsEEDKG8n90QLPTIpQUP2qJMuw6cK
-         pn+A==
-X-Gm-Message-State: AOAM531Fn9QWE/OAHFH06d1Q+vtI1f5hi4kkyMtrCa8ifPbNX5aaiEr7
-        1LndpzEfxXpqYeWyqlpFm9mptlivcCM=
-X-Google-Smtp-Source: ABdhPJx3nuFaSj5OTZQhiVFDS8UmH+7MuU+YZgjvS3G55rBmDRWqt8Q81TxAunQoMIQS7xaozuHgbw==
-X-Received: by 2002:ad4:41c9:: with SMTP id a9mr13360158qvq.171.1596395576614;
-        Sun, 02 Aug 2020 12:12:56 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id g21sm18668943qts.18.2020.08.02.12.12.54
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Sun, 02 Aug 2020 12:12:55 -0700 (PDT)
-Date:   Sun, 2 Aug 2020 12:12:42 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Andrew Morton <akpm@linux-foundation.org>
-cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: [PATCH] khugepaged: collapse_pte_mapped_thp() flush the right
- range
-Message-ID: <alpine.LSU.2.11.2008021204390.27773@eggly.anvils>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        Sun, 2 Aug 2020 15:14:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36902 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725917AbgHBTOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 15:14:09 -0400
+Received: from localhost (mobile-166-175-186-42.mycingular.net [166.175.186.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9B0F206E9;
+        Sun,  2 Aug 2020 19:14:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596395648;
+        bh=8BmtM5Wz6njp3alR4dE4/v12QyDF8IHMxGR5An5fCEM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=i/jHSvTUizuVlNBRmQdxRNPe6coho/ATL8nGKi/xOmyBYjKmz9+xWg85IsgGxSgIS
+         dL1yfc+oHKYsaeZL0AE3OSX+Y10i5fuMEzdWvutU18j1LA95jrbDgF15+X0v94hhxC
+         1mNVxGQqYc9cBpDxqrC9KNkOyCMbtt1kU/iMoM8s=
+Date:   Sun, 2 Aug 2020 14:14:06 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Saheed Bolarinwa <refactormyself@gmail.com>, trix@redhat.com,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Joerg Roedel <joro@8bytes.org>, bjorn@helgaas.com,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-mtd@lists.infradead.org, iommu@lists.linux-foundation.org,
+        linux-rdma@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        linux-gpio@vger.kernel.org, linux-fpga@vger.kernel.org,
+        linux-edac@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-crypto@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net
+Subject: Re: [RFC PATCH 00/17] Drop uses of pci_read_config_*() return value
+Message-ID: <20200802191406.GA248232@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200802184648.GA23190@nazgul.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pmdp_collapse_flush() should be given the start address at which the huge
-page is mapped, haddr: it was given addr, which at that point has been
-used as a local variable, incremented to the end address of the extent.
+On Sun, Aug 02, 2020 at 08:46:48PM +0200, Borislav Petkov wrote:
+> On Sun, Aug 02, 2020 at 07:28:00PM +0200, Saheed Bolarinwa wrote:
+> > Because the value ~0 has a meaning to some drivers and only
+> 
+> No, ~0 means that the PCI read failed. For *every* PCI device I know.
 
-Found by source inspection while chasing a hugepage locking bug, which
-I then could not explain by this. At first I thought this was very bad;
-then saw that all of the page translations that were not flushed would
-actually still point to the right pages afterwards, so harmless; then
-realized that I know nothing of how different architectures and models
-cache intermediate paging structures, so maybe it matters after all -
-particularly since the page table concerned is immediately freed.
+Wait, I'm not convinced yet.  I know that if a PCI read fails, you
+normally get ~0 data because the host bridge fabricates it to complete
+the CPU load.
 
-Much easier to fix than to think about.
+But what guarantees that a PCI config register cannot contain ~0?
+If there's something about that in the spec I'd love to know where it
+is because it would simplify a lot of things.
 
-Fixes: 27e1f8273113 ("khugepaged: enable collapse pmd for pte-mapped THP")
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Cc: stable@vger.kernel.org # v5.4+
----
+I don't think we should merge any of these patches as-is.  If we *do*
+want to go this direction, we at least need some kind of macro or
+function that tests for ~0 so we have a clue about what's happening
+and can grep for it.
 
- mm/khugepaged.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- 5.8-rc7/mm/khugepaged.c	2020-07-26 16:58:02.189038680 -0700
-+++ linux/mm/khugepaged.c	2020-08-02 10:48:59.890925896 -0700
-@@ -1502,7 +1502,7 @@ void collapse_pte_mapped_thp(struct mm_s
- 
- 	/* step 4: collapse pmd */
- 	ptl = pmd_lock(vma->vm_mm, pmd);
--	_pmd = pmdp_collapse_flush(vma, addr, pmd);
-+	_pmd = pmdp_collapse_flush(vma, haddr, pmd);
- 	spin_unlock(ptl);
- 	mm_dec_nr_ptes(mm);
- 	pte_free(mm, pmd_pgtable(_pmd));
+Bjorn
