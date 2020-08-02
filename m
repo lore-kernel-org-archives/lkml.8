@@ -2,116 +2,100 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3133C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 06:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAC1C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 07:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB5E207DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 06:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8F86207DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 07:01:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="caiM1fPn"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MSEWqFr0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgHBGxb (ORCPT
+        id S1726578AbgHBHBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 02:53:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbgHBGxb (ORCPT
+        Sun, 2 Aug 2020 03:01:20 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:34790 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725880AbgHBHBU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 02:53:31 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7AF4C06174A;
-        Sat,  1 Aug 2020 23:53:30 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f1so30808265wro.2;
-        Sat, 01 Aug 2020 23:53:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=rs54B29tWCCrVhPxX04t7FFEWHnrLOxSKBgk2U1YFCA=;
-        b=caiM1fPnBhKvSeFdy1yX0uOl+tlPe4753gxbKBZEzWEgr6vZKU9rmQ60bEnTBrDSs6
-         gJOsHkGP1rNPQ+qvIpQZ5cj6Q+9osarcGlzLhvhYpjH0MeetPbVxbB58F5M7UvCAE+FJ
-         vnUg/jGtxOyOdkWcWTou73fL2CSkr1vHa0xJQT9gzuK68gy5LXWg2qTsnq3TrPf7m217
-         UQXwxadJuStCyop06PfNfgJMBskS8fTeZ7d0DoxRX7NUspkORquJO6o3G54oTbwS8/bj
-         ICISk4CRzmp+JUvmwyTSNDbory9P0oUOajXOQ9NkUYjV1UXJ78EA92za88r5GmxTviOv
-         ObvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=rs54B29tWCCrVhPxX04t7FFEWHnrLOxSKBgk2U1YFCA=;
-        b=Dbjt2k1pIDPvqXhgi8wRGnuIz7GN2YrlzfQ4PBFy+St7ZeaRo/R3ueaFbnAfhWRHYl
-         1kK+j8YpUCCAisCaHdhEWEjgmK1TNYCaiYikgJoDDfq6uuQWT+pHAdvS0DMPelvWONVa
-         Wkrn+/8XSM3BV0RMTP4RS8th3HcsiH+DXrSg9r15LiZvvBR2zcPzNjMym9zjd6zrMmlU
-         +gkk9n5obKh0k21FfbCySUs/jBkI+5mPeb3HSdrYNh71K+VEOzRI3VPVoGt0dfJw+rAV
-         pWVtqzv8KmPEmatTkZHRWPDz9pC9yU1pa9VzCnrFhvxE3StlNKV10krUx07uceIVCZzO
-         skgQ==
-X-Gm-Message-State: AOAM530P8qiHpNjZT65bPSM4lKARy7Gcl0tVMnVHx6FuGz4V+hKafnNS
-        5rcMfBxwn1D1mHxXy0pnscoKA0lZp2A=
-X-Google-Smtp-Source: ABdhPJzU737g4BQ0PI02QtqBBrYd5JaxPm0earZrC3QMVjeilkQqYT0dbhQi2VFzRmn+G1KvW9DkHA==
-X-Received: by 2002:a5d:4610:: with SMTP id t16mr10494065wrq.101.1596351209301;
-        Sat, 01 Aug 2020 23:53:29 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2dd3:b900:b425:3ccc:d91f:7988])
-        by smtp.gmail.com with ESMTPSA id m126sm18166966wmf.3.2020.08.01.23.53.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Aug 2020 23:53:28 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>
-Cc:     Rob Clark <robdclark@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>, kernel-team@android.com,
-        iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: update QUALCOMM IOMMU after Arm SSMU drivers move
-Date:   Sun,  2 Aug 2020 08:53:20 +0200
-Message-Id: <20200802065320.7470-1-lukas.bulwahn@gmail.com>
+        Sun, 2 Aug 2020 03:01:20 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07271IVm058084;
+        Sun, 2 Aug 2020 02:01:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1596351678;
+        bh=8+gEs3KZgnLAa3nDsFEplrJEf4aVbPq8rbpBMuuwthE=;
+        h=From:To:CC:Subject:Date;
+        b=MSEWqFr0ef/mVjpB+Tfg5e+iB/gVpE7lSr8KhTto1IoMQyPnF5jOUky/EAPX5SS6N
+         7ZdKBLACKGqtnMFpaX38//Q2sGTZ89Ipx1EI6zzPIYKXBxP4JQYXdmFHHHWANUwT8T
+         uwDEn/XnufYTx8tlhPTHqTuOGpvREj7Vhtcb0ObM=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07271IVU029937
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 2 Aug 2020 02:01:18 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Sun, 2 Aug
+ 2020 02:01:18 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Sun, 2 Aug 2020 02:01:17 -0500
+Received: from a0230074-Latitude-E7470.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07271EhL124525;
+        Sun, 2 Aug 2020 02:01:15 -0500
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>
+CC:     <robh+dt@kernel.org>, <ulf.hansson@linaro.org>
+Subject: [PATCH] dt-bindings: mmc: sdhci-am654: Document bindings for the host controllers on TI's J7200 devices
+Date:   Sun, 2 Aug 2020 12:31:14 +0530
+Message-ID: <20200802070114.9624-1-faiz_abbas@ti.com>
 X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit e86d1aa8b60f ("iommu/arm-smmu: Move Arm SMMU drivers into their own
-subdirectory") moved drivers/iommu/qcom_iommu.c to
-drivers/iommu/arm/arm-smmu/qcom_iommu.c amongst other moves, adjusted some
-sections in MAINTAINERS, but missed adjusting the QUALCOMM IOMMU section.
+Add binding documentation for mmc host controllers present on
+TI's J7200 SOC
 
-Hence, ./scripts/get_maintainer.pl --self-test=patterns complains:
-
-  warning: no file matches    F:    drivers/iommu/qcom_iommu.c
-
-Update the file entry in MAINTAINERS to the new location.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
 ---
-Will, please ack.
-Joerg, please pick this minor non-urgent patch for your -next branch.
+ Documentation/devicetree/bindings/mmc/sdhci-am654.txt | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-applies cleanly on next-20200731
-
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1469cb81261d..e175c0741653 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14358,7 +14358,7 @@ M:	Rob Clark <robdclark@gmail.com>
- L:	iommu@lists.linux-foundation.org
- L:	linux-arm-msm@vger.kernel.org
- S:	Maintained
--F:	drivers/iommu/qcom_iommu.c
-+F:	drivers/iommu/arm/arm-smmu/qcom_iommu.c
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-am654.txt b/Documentation/devicetree/bindings/mmc/sdhci-am654.txt
+index 6d202f4d9249..b49cbfdd679f 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-am654.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-am654.txt
+@@ -12,6 +12,8 @@ Required Properties:
+ 			"ti,am654-sdhci-5.1": SDHCI on AM654 device.
+ 			"ti,j721e-sdhci-8bit": 8 bit SDHCI on J721E device.
+ 			"ti,j721e-sdhci-4bit": 4 bit SDHCI on J721E device.
++			"ti,j7200-sdhci-8bit": 8 bit SDHCI on J7200 device.
++			"ti,j7200-sdhci-4bit": 4 bit SDHCI on J7200 device.
+ 	- reg: Must be two entries.
+ 		- The first should be the sdhci register space
+ 		- The second should the subsystem/phy register space
+@@ -33,7 +35,9 @@ Required Properties:
+ 	  These bindings must be provided otherwise the driver will disable the
+ 	  corresponding speed mode (i.e. all nodes must provide at least -legacy)
  
- QUALCOMM IPCC MAILBOX DRIVER
- M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+-Optional Properties (Required for ti,am654-sdhci-5.1 and ti,j721e-sdhci-8bit):
++Optional Properties (Required for ti,am654-sdhci-5.1,
++				  ti,j721e-sdhci-8bit,
++				  ti,j7200-sdhci-8bit):
+ 	- ti,trm-icp: DLL trim select
+ 	- ti,driver-strength-ohm: driver strength in ohms.
+ 				  Valid values are 33, 40, 50, 66 and 100 ohms.
 -- 
 2.17.1
 
