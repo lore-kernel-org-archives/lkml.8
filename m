@@ -2,225 +2,109 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14333C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0840D2072A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A844F2072A
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:27:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgHBUYZ (ORCPT
+        id S1726819AbgHBU1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 16:24:25 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:9164 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725925AbgHBUYY (ORCPT
+        Sun, 2 Aug 2020 16:27:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725925AbgHBU1y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 16:24:24 -0400
-X-IronPort-AV: E=Sophos;i="5.75,427,1589234400"; 
-   d="scan'208";a="462198836"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Aug 2020 22:24:21 +0200
-Date:   Sun, 2 Aug 2020 22:24:21 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Denis Efremov <efremov@linux.com>
-cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6] coccinelle: api: add kvfree script
-In-Reply-To: <20200731210026.7186-1-efremov@linux.com>
-Message-ID: <alpine.DEB.2.22.394.2008022142550.2531@hadrien>
-References: <20200605204237.85055-1-efremov@linux.com> <20200731210026.7186-1-efremov@linux.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Sun, 2 Aug 2020 16:27:54 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22039C06174A
+        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 13:27:54 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k2Ka7-0004sM-La; Sun, 02 Aug 2020 22:27:43 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k2Ka5-0006cH-PD; Sun, 02 Aug 2020 22:27:41 +0200
+Date:   Sun, 2 Aug 2020 22:27:37 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>
+Subject: Re: [PATCH v3 4/6] pwm: cros-ec: Accept more error codes from
+ cros_ec_cmd_xfer_status
+Message-ID: <20200802202737.4ftnva6x345ddkki@pengutronix.de>
+References: <20200726220101.29059-1-linux@roeck-us.net>
+ <20200726220101.29059-5-linux@roeck-us.net>
+ <20200801072130.tmm7b4vtizshmmyo@pengutronix.de>
+ <20200801163219.GA230759@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gyzpfjrxwbgaefsm"
+Content-Disposition: inline
+In-Reply-To: <20200801163219.GA230759@roeck-us.net>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +@initialize:python@
-> +@@
-> +# low-level memory api
-> +filter = frozenset(['__vmalloc_area_node'])
-> +
-> +def relevant(p):
-> +    return not (filter & {el.current_element for el in p})
 
-Is this used?
+--gyzpfjrxwbgaefsm
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Otherwise, I think it would be good to not warn about a use of kvfree
-if that use is reachable from a kvmalloc.  There seems to be such a false
-positive in fs/btrfs/send.c, on line 1118.
+Hello Guenter,
 
-It also seems that when there are both a kmalloc and a vmalloc, there is
-no warning if kfree or vfree is used.  Is that intentional?
-
-julia
-
-
-> +
-> +@choice@
-> +expression E, E1;
-> +position kok, vok;
-> +@@
-> +
-> +(
-> +  if (...) {
-> +    ...
-> +    E = \(kmalloc\|kzalloc\|krealloc\|kcalloc\|
-> +          kmalloc_node\|kzalloc_node\|kmalloc_array\|
-> +          kmalloc_array_node\|kcalloc_node\)(...)@kok
-> +    ...
-> +  } else {
-> +    ...
-> +    E = \(vmalloc\|vzalloc\|vmalloc_user\|vmalloc_node\|
-> +          vzalloc_node\|vmalloc_exec\|vmalloc_32\|
-> +          vmalloc_32_user\|__vmalloc\|__vmalloc_node_range\|
-> +          __vmalloc_node\)(...)@vok
-> +    ...
-> +  }
-> +|
-> +  E = \(kmalloc\|kzalloc\|krealloc\|kcalloc\|kmalloc_node\|kzalloc_node\|
-> +        kmalloc_array\|kmalloc_array_node\|kcalloc_node\)(...)@kok
-> +  ... when != E = E1
-> +      when any
-> +  if (\(!E\|E == NULL\)) {
-> +    ...
-> +    E = \(vmalloc\|vzalloc\|vmalloc_user\|vmalloc_node\|
-> +          vzalloc_node\|vmalloc_exec\|vmalloc_32\|
-> +          vmalloc_32_user\|__vmalloc\|__vmalloc_node_range\|
-> +          __vmalloc_node\)(...)@vok
-> +    ...
-> +  }
-> +)
-> +
-> +@vfree depends on !patch@
-> +expression E;
-> +position k != choice.kok;
-> +position p;
-> +@@
-> +
-> +* E = \(kmalloc\|kzalloc\|krealloc\|kcalloc\|kmalloc_node\|
-> +*       kzalloc_node\|kmalloc_array\|kmalloc_array_node\|
-> +*       kcalloc_node\)(...)@k
-> +  ... when != if (...) { ... E = \(vmalloc\|vzalloc\|vmalloc_user\|vmalloc_node\|vzalloc_node\|vmalloc_exec\|vmalloc_32\|vmalloc_32_user\|__vmalloc\|__vmalloc_node_range\|__vmalloc_node\)(...); ... }
-> +      when != is_vmalloc_addr(E)
-> +      when any
-> +* \(vfree\|vfree_atomic\|kvfree\)(E)@p
-> +
-> +@pvfree depends on patch exists@
-> +expression E;
-> +position k != choice.kok;
-> +@@
-> +
-> +  E = \(kmalloc\|kzalloc\|krealloc\|kcalloc\|kmalloc_node\|
-> +        kzalloc_node\|kmalloc_array\|kmalloc_array_node\|
-> +        kcalloc_node\)(...)@k
-> +  ... when != if (...) { ... E = \(vmalloc\|vzalloc\|vmalloc_user\|vmalloc_node\|vzalloc_node\|vmalloc_exec\|vmalloc_32\|vmalloc_32_user\|__vmalloc\|__vmalloc_node_range\|__vmalloc_node\)(...); ... }
-> +      when != is_vmalloc_addr(E)
-> +      when any
-> +- \(vfree\|vfree_atomic\|kvfree\)(E)
-> ++ kfree(E)
-> +
-> +@kfree depends on !patch@
-> +expression E;
-> +position v != choice.vok;
-> +position p;
-> +@@
-> +
-> +* E = \(vmalloc\|vzalloc\|vmalloc_user\|vmalloc_node\|vzalloc_node\|
-> +*       vmalloc_exec\|vmalloc_32\|vmalloc_32_user\|__vmalloc\|
-> +*       __vmalloc_node_range\|__vmalloc_node\)(...)@v
-> +  ... when != !is_vmalloc_addr(E)
-> +      when any
-> +* \(kfree\|kzfree\|kvfree\)(E)@p
-> +
-> +@pkfree depends on patch exists@
-> +expression E;
-> +position v != choice.vok;
-> +@@
-> +
-> +  E = \(vmalloc\|vzalloc\|vmalloc_user\|vmalloc_node\|vzalloc_node\|
-> +        vmalloc_exec\|vmalloc_32\|vmalloc_32_user\|__vmalloc\|
-> +        __vmalloc_node_range\|__vmalloc_node\)(...)@v
-> +  ... when != !is_vmalloc_addr(E)
-> +      when any
-> +- \(kfree\|kvfree\)(E)
-> ++ vfree(E)
-> +
-> +@kvfree depends on !patch@
-> +expression E;
-> +position p, k;
-> +@@
-> +
-> +* E = \(kvmalloc\|kvzalloc\|kvcalloc\|kvzalloc_node\|kvmalloc_node\|
-> +*       kvmalloc_array\)(...)@k
-> +  ... when != is_vmalloc_addr(E)
-> +      when any
-> +* \(kfree\|kzfree\|vfree\|vfree_atomic\)(E)@p
-> +
-> +@pkvfree depends on patch exists@
-> +expression E;
-> +@@
-> +
-> +  E = \(kvmalloc\|kvzalloc\|kvcalloc\|kvzalloc_node\|kvmalloc_node\|
-> +        kvmalloc_array\)(...)
-> +  ... when != is_vmalloc_addr(E)
-> +      when any
-> +- \(kfree\|vfree\)(E)
-> ++ kvfree(E)
-> +
-> +@script: python depends on report@
-> +k << vfree.k;
-> +p << vfree.p;
-> +@@
-> +
-> +msg = "WARNING: kmalloc is used to allocate this memory at line %s" % (k[0].line)
-> +coccilib.report.print_report(p[0], msg)
-> +
-> +@script: python depends on org@
-> +k << vfree.k;
-> +p << vfree.p;
-> +@@
-> +
-> +msg = "WARNING: kmalloc is used to allocate this memory at line %s" % (k[0].line)
-> +coccilib.org.print_todo(p[0], msg)
-> +
-> +@script: python depends on report@
-> +v << kfree.v;
-> +p << kfree.p;
-> +@@
-> +
-> +msg = "WARNING: vmalloc is used to allocate this memory at line %s" % (v[0].line)
-> +coccilib.report.print_report(p[0], msg)
-> +
-> +@script: python depends on org@
-> +v << kfree.v;
-> +p << kfree.p;
-> +@@
-> +
-> +msg = "WARNING: vmalloc is used to allocate this memory at line %s" % (v[0].line)
-> +coccilib.org.print_todo(p[0], msg)
-> +
-> +@script: python depends on report@
-> +k << kvfree.k;
-> +p << kvfree.p;
-> +@@
-> +
-> +msg = "WARNING: kvmalloc is used to allocate this memory at line %s" % (k[0].line)
-> +coccilib.report.print_report(p[0], msg)
-> +
-> +@script: python depends on org@
-> +k << kvfree.k;
-> +p << kvfree.p;
-> +@@
-> +
-> +msg = "WARNING: kvmalloc is used to allocate this memory at line %s" % (k[0].line)
-> +coccilib.org.print_todo(p[0], msg)
-> --
-> 2.26.2
+On Sat, Aug 01, 2020 at 09:32:19AM -0700, Guenter Roeck wrote:
+> > If I understand correctly this surprising calling convention (output
+> > parameter is filled even though the function returned an error) is the
+> > old one that is to be fixed.
 >
->
+> Sorry, I don't get your point. This is the old convention, correct,
+> which we still want to support at this point. Plus, it matches the
+> current code, as surprosing as it may be.
+
+OK, so I understood correctly and everything is fine.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--gyzpfjrxwbgaefsm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8nIbYACgkQwfwUeK3K
+7AlpIgf/QRzJ1wUpff9rQuco3gAX0Q8PnlGIMy0x+36VjEaXUs0EaNnSQgaMxRiV
+RNL99R4V3KQuMVUr1t/zDiJd9wOwyWpLSjxuOIuFZOcR2uPf98QwLicI+ydKEe0A
+Na3dFO3Y1W5yWfRSzWvHAa1BZvQwcj4l8L/CodcUN2pKnMEvR46d5p2xZXOmRk7y
++TJRXoG0c4tlffsUyg89tYHdVuVwxqTnHh3JJoYgAidVppRGXzqbK7wEsTDXqfUb
+t+csrf2Q/rs1bjcepqbbg4nz/cPC385CSpXfKvMqC5ElvDgE1UK6+1UGWKsA50r+
+8YedjTyUxxCzOz+CCIL6YMPXjf30iQ==
+=q7la
+-----END PGP SIGNATURE-----
+
+--gyzpfjrxwbgaefsm--
