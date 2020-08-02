@@ -7,70 +7,84 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0697DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7D1320738
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 936D62075B
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:07:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgHBLCA (ORCPT
+        id S1728021AbgHBLH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 07:02:00 -0400
-Received: from smtp21.cstnet.cn ([159.226.251.21]:56806 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726578AbgHBLBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 07:01:55 -0400
-Received: from localhost.localdomain (unknown [117.135.91.130])
-        by APP-01 (Coremail) with SMTP id qwCowABHKAEDnSZfitNOAA--.18741S3;
-        Sun, 02 Aug 2020 19:01:44 +0800 (CST)
-From:   leesagacious <lizhe@cpu-os.ac.cn>
-To:     linux-kernel@vger.kernel.org
-Cc:     leesagacious <lizhe@cpu-os.ac.cn>
-Subject: [PATCH] include: Modify parameters that are not used in __local_bh_disable_ip()
-Date:   Sun,  2 Aug 2020 04:01:01 -0700
-Message-Id: <1596366061-20929-1-git-send-email-lizhe@cpu-os.ac.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: qwCowABHKAEDnSZfitNOAA--.18741S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrKr45tF4kZr4fGr17tF45Awb_yoWxtwb_Aa
-        1IqF4j9r1rZr9avw17tF1DAa1Sq34fXF4DWFn5Xa1fZ3Wqva15J3WfJ347Ww1Y9wsxCFy3
-        Za48WryxXr42gjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbwAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Jr0_
-        Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr
-        1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-        jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-        1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxAIw28IcxkI7VAKI48J
-        MxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-        AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-        0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
-        v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
-        14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUywZ7UUUUU=
-X-Originating-IP: [117.135.91.130]
-X-CM-SenderInfo: xol2xv46fs3g1rvotugofq/
+        Sun, 2 Aug 2020 07:07:27 -0400
+Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:23500 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726416AbgHBLH0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 07:07:26 -0400
+Received: from localhost.localdomain ([93.22.148.198])
+        by mwinf5d84 with ME
+        id Ab7P230064H42jh03b7PEJ; Sun, 02 Aug 2020 13:07:24 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 02 Aug 2020 13:07:24 +0200
+X-ME-IP: 93.22.148.198
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     QLogic-Storage-Upstream@qlogic.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, vikas.chaudhary@qlogic.com,
+        lalit.chandivade@qlogic.com, michaelc@cs.wisc.edu,
+        JBottomley@Parallels.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] scsi: qla2xxx: Fix the size used in a 'dma_free_coherent()' call
+Date:   Sun,  2 Aug 2020 13:07:21 +0200
+Message-Id: <20200802110721.677707-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: leesagacious <lizhe@cpu-os.ac.cn>
----
- include/linux/bottom_half.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Update the size used in 'dma_free_coherent()' in order to match the one
+used in the corresponding 'dma_alloc_coherent()'.
 
-diff --git a/include/linux/bottom_half.h b/include/linux/bottom_half.h
-index ab54f34..edcdf3fa 100644
---- a/include/linux/bottom_half.h
-+++ b/include/linux/bottom_half.h
-@@ -7,7 +7,7 @@
- #ifdef CONFIG_TRACE_IRQFLAGS
- extern void __local_bh_disable_ip(unsigned long ip, unsigned int cnt);
- #else
--static __always_inline void __local_bh_disable_ip(unsigned long __unused ip,
-+static __always_inline void __local_bh_disable_ip(__attribute__((unused)) unsigned long ip,
- 					unsigned int cnt)
- {
- 	preempt_count_add(cnt);
+While at it, remove a memset after a call to 'dma_alloc_coherent()'.
+This is useless since
+commit 518a2f1925c3 ("dma-mapping: zero memory returned from dma_alloc_*")
+
+Fixes: 4161cee52df8 ("[SCSI] qla4xxx: Add host statistics support")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+The memset has been added in the same commit, so I think it is ok to
+remove it in the same path.
+---
+ drivers/scsi/qla2xxx/qla_mbx.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
+index 73883435ab58..a43d7229f9a1 100644
+--- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -4933,8 +4933,6 @@ qla25xx_set_els_cmds_supported(scsi_qla_host_t *vha)
+ 		return QLA_MEMORY_ALLOC_FAILED;
+ 	}
+ 
+-	memset(els_cmd_map, 0, ELS_CMD_MAP_SIZE);
+-
+ 	/* List of Purex ELS */
+ 	cmd_opcode[0] = ELS_FPIN;
+ 	cmd_opcode[1] = ELS_RDP;
+@@ -4966,7 +4964,7 @@ qla25xx_set_els_cmds_supported(scsi_qla_host_t *vha)
+ 		    "Done %s.\n", __func__);
+ 	}
+ 
+-	dma_free_coherent(&ha->pdev->dev, DMA_POOL_SIZE,
++	dma_free_coherent(&ha->pdev->dev, ELS_CMD_MAP_SIZE,
+ 	   els_cmd_map, els_cmd_map_dma);
+ 
+ 	return rval;
 -- 
-2.7.4
+2.25.1
 
