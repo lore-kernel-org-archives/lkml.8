@@ -2,98 +2,111 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32223C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 19:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE0DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 19:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 109E4206E9
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 19:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DA15206E9
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 19:13:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q67Y0Hwg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jtubiScP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgHBTJb (ORCPT
+        id S1726688AbgHBTM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 15:09:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52378 "EHLO
+        Sun, 2 Aug 2020 15:12:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbgHBTJa (ORCPT
+        with ESMTP id S1725910AbgHBTM7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 15:09:30 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A0BAC06174A
-        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 12:09:30 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id o18so36413625eje.7
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 12:09:30 -0700 (PDT)
+        Sun, 2 Aug 2020 15:12:59 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2FB0C06174A
+        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 12:12:58 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id b2so5862963qvp.9
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 12:12:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=2ZdTJGdfMkugWUUlFCnGJvt+G+wKnuQhA+92KpbVTOY=;
-        b=Q67Y0HwgPZDjo/j7CtNy/dpI8cFR0nezF7HSoiAknIjLo4Vw0hmSEntR3koa0O/K0m
-         jPqd72OuOzJKsm0mIdvYgRuivhbvzjeevkSr5jicp7wKp8Mu/g2Tq6tgALRFrI1HInz8
-         FlERi6FsQMWBLk6ifVG+T4Rv0bGH7QvT5W/XIvZFs22w/OjzyQYrnHjPsddTLOfHoMVk
-         YR32c8hC3e8YU4XAOH0LR3NnUYKT4FP6ibRLo6S1+By3YlSNrn7ATbQT1KvP1S+JXtML
-         oqbMgptbMjxbXcfbbYwIghphfEPkyxvdexQ+EktV6+C02DVQuYfHiv3HrnBdxMTHDYjm
-         PUJA==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=XRgkO+pWg9WMheb+JuYC1vAI+vcvMh8iE4b2S931akA=;
+        b=jtubiScPdbrW2+U7U+6jrzTShJ5Sg9yHdKlHM1Y9mq8Amalzwv74e6GjZougu1lAPc
+         9jt9PbyLvszkkyA/zS4V6TxdEyB7CRSqfWRdTy5+0/FDOSu2M+Eg65uPiICpGw66FFT/
+         wdG04xdsqcxbo/7I8N6ygrqr7/9x7bfS37nqSdZjOPHFLiVulebhs1apxLRFxD7nhaGN
+         ErihAFyp0ylMXsZ8MGiWjvAsp3xJhmkQZ1bgcdhqfY/irbBnFXyH3UD5caeLp6s073gl
+         TaFut4XXDirwV1fq1Zlg2fYrCQLtRjK5WoJWJsU6Vj/e9/tIQQCiIyC1t/G9IlJ+XHeZ
+         rbSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=2ZdTJGdfMkugWUUlFCnGJvt+G+wKnuQhA+92KpbVTOY=;
-        b=hUJ1CIuEDwMC9KuULwtblrqrdT4923+KFR1BGX+uXJ/Xx/vO2J35ouUfgSI/qBoYiH
-         DyGGnMnMQDT+ZbS/FwvaDqgiGKTO9TbyqSU8HH7oiWX/jHXi1e1J8rtAE0MNGSkbWaz4
-         JSg+uavpVLg6FSlP1Pa05mzcPZQSGoGDmOnDi4PLj1pthm03wRc7Mkz8ad6YVl3N9vR+
-         zYEWYv6k36hyfzM4YRzaPN3ao44xb6Whk+1ASgVw8CuEEXZZTYCEqTIkBkYxfUBIDlh9
-         fwavSdpG8x1GcwvidJykLLhho+6RvV7kmdIlanySiFeLZcH63EW/OF6y9NjbwpidaV9T
-         lHhg==
-X-Gm-Message-State: AOAM531Nflf6igYlfzmC+zb6N/cyelNzC1pmUPNwkt5mLngxmv+trjrH
-        L94egprt0i5afNy6Q5I42oU=
-X-Google-Smtp-Source: ABdhPJzdLlT35Uan3irAk0q96AMsAocSIt/5jV5mbOwFkAzbRZJi2BIOP7YqPxbqqFOoB3qQGaLf3Q==
-X-Received: by 2002:a17:906:7a16:: with SMTP id d22mr13779348ejo.478.1596395369103;
-        Sun, 02 Aug 2020 12:09:29 -0700 (PDT)
-Received: from localhost.localdomain ([2001:8f8:1821:5abb:3429:e2f4:15c4:b960])
-        by smtp.gmail.com with ESMTPSA id x16sm2724349edr.25.2020.08.02.12.09.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Aug 2020 12:09:28 -0700 (PDT)
-From:   Mohammed Rushad <mohammedrushad@gmail.com>
-To:     gregkh@linuxfoundation.org, vkor@vkten.in, hdegoede@redhat.com,
-        Larry.Finger@lwfinger.net, john.oldman@polehill.co.uk,
-        yanaijie@huawei.com
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8723bs: os_dep: fix brace coding style issue in sdio_intf.c
-Date:   Mon,  3 Aug 2020 00:39:24 +0530
-Message-Id: <20200802190924.19964-1-mohammedrushad@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=XRgkO+pWg9WMheb+JuYC1vAI+vcvMh8iE4b2S931akA=;
+        b=UkUwBtHdui9aeLnvEHnG8kYCBW/J6KyPbLtegpt7zD8OMnj5n43GwBKj9Nf8BAcUkZ
+         m3cJyiM7veEOtPu015HPXysSFc9Wzs/fyK64LEH+SU0O7zJSOTkOARZxNvcn881w4Klx
+         uwT2oOw9Pj+KwITSHQomjQXuXL9EMaGIh57AetU/ggs8RAOK7jFGCKRzktdHv+6YeN+E
+         OwEohVyUr9ao4iw3JlmTl4RLRdo80wRQD5qyUqgmtT7McPZeGhXiTIGv237CxKi/1py+
+         vbCxla4CqBoL5WwFRW/Y3X8plEaTFiuxOtSM1UgVsEEDKG8n90QLPTIpQUP2qJMuw6cK
+         pn+A==
+X-Gm-Message-State: AOAM531Fn9QWE/OAHFH06d1Q+vtI1f5hi4kkyMtrCa8ifPbNX5aaiEr7
+        1LndpzEfxXpqYeWyqlpFm9mptlivcCM=
+X-Google-Smtp-Source: ABdhPJx3nuFaSj5OTZQhiVFDS8UmH+7MuU+YZgjvS3G55rBmDRWqt8Q81TxAunQoMIQS7xaozuHgbw==
+X-Received: by 2002:ad4:41c9:: with SMTP id a9mr13360158qvq.171.1596395576614;
+        Sun, 02 Aug 2020 12:12:56 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id g21sm18668943qts.18.2020.08.02.12.12.54
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Sun, 02 Aug 2020 12:12:55 -0700 (PDT)
+Date:   Sun, 2 Aug 2020 12:12:42 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Andrew Morton <akpm@linux-foundation.org>
+cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: [PATCH] khugepaged: collapse_pte_mapped_thp() flush the right
+ range
+Message-ID: <alpine.LSU.2.11.2008021204390.27773@eggly.anvils>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a patch to the sdio_intf.c file that fixes up an incorrectly
-placed brace found by the checkpatch.pl tool
+pmdp_collapse_flush() should be given the start address at which the huge
+page is mapped, haddr: it was given addr, which at that point has been
+used as a local variable, incremented to the end address of the extent.
 
-Signed-off-by: Mohammed Rushad <mohammedrushad@gmail.com>
+Found by source inspection while chasing a hugepage locking bug, which
+I then could not explain by this. At first I thought this was very bad;
+then saw that all of the page translations that were not flushed would
+actually still point to the right pages afterwards, so harmless; then
+realized that I know nothing of how different architectures and models
+cache intermediate paging structures, so maybe it matters after all -
+particularly since the page table concerned is immediately freed.
+
+Much easier to fix than to think about.
+
+Fixes: 27e1f8273113 ("khugepaged: enable collapse pmd for pte-mapped THP")
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Cc: stable@vger.kernel.org # v5.4+
 ---
- drivers/staging/rtl8723bs/os_dep/sdio_intf.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/os_dep/sdio_intf.c b/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-index 5b1392deb0a7..f1e2829a19a7 100644
---- a/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-+++ b/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-@@ -15,8 +15,7 @@
- #define dev_to_sdio_func(d)     container_of(d, struct sdio_func, dev)
- #endif
+ mm/khugepaged.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- 5.8-rc7/mm/khugepaged.c	2020-07-26 16:58:02.189038680 -0700
++++ linux/mm/khugepaged.c	2020-08-02 10:48:59.890925896 -0700
+@@ -1502,7 +1502,7 @@ void collapse_pte_mapped_thp(struct mm_s
  
--static const struct sdio_device_id sdio_ids[] =
--{
-+static const struct sdio_device_id sdio_ids[] = {
- 	{ SDIO_DEVICE(0x024c, 0x0523), },
- 	{ SDIO_DEVICE(0x024c, 0x0525), },
- 	{ SDIO_DEVICE(0x024c, 0x0623), },
--- 
-2.17.1
-
+ 	/* step 4: collapse pmd */
+ 	ptl = pmd_lock(vma->vm_mm, pmd);
+-	_pmd = pmdp_collapse_flush(vma, addr, pmd);
++	_pmd = pmdp_collapse_flush(vma, haddr, pmd);
+ 	spin_unlock(ptl);
+ 	mm_dec_nr_ptes(mm);
+ 	pte_free(mm, pmd_pgtable(_pmd));
