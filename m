@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F26C5C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC33BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D56A42087C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B5942075B
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:16:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgHBLQI (ORCPT
+        id S1728418AbgHBLQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 07:16:08 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:36739 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728271AbgHBLPr (ORCPT
+        Sun, 2 Aug 2020 07:16:10 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:44809 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728270AbgHBLPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 07:15:47 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R451e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07425;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0U4Tqfqz_1596366943;
-Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U4Tqfqz_1596366943)
+        Sun, 2 Aug 2020 07:15:46 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U4Tqfqu_1596366941;
+Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U4Tqfqu_1596366941)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 02 Aug 2020 19:15:43 +0800
+          Sun, 02 Aug 2020 19:15:42 +0800
 From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-To:     dledford@redhat.com, jgg@ziepe.ca, leon@kernel.org,
-        parav@mellanox.com, maorg@mellanox.com, maxg@mellanox.com,
-        monis@mellanox.com, chuck.lever@oracle.com
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tianjia.zhang@alibaba.com
-Subject: [PATCH] IB/core: Fix wrong return value in _ib_modify_qp()
-Date:   Sun,  2 Aug 2020 19:15:42 +0800
-Message-Id: <20200802111542.5475-1-tianjia.zhang@linux.alibaba.com>
+To:     ysato@users.sourceforge.jp, daniel.lezcano@linaro.org,
+        tglx@linutronix.de
+Cc:     uclinux-h8-devel@lists.sourceforge.jp,
+        linux-kernel@vger.kernel.org, tianjia.zhang@alibaba.com
+Subject: [PATCH] clocksource/h8300_timer8: Fix wrong return value in h8300_8timer_init()
+Date:   Sun,  2 Aug 2020 19:15:41 +0800
+Message-Id: <20200802111541.5429-1-tianjia.zhang@linux.alibaba.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On an error exit path, a negative error code should be returned
-instead of a positive return value.
+In the case of calling of_iomap() failed, a positive value ENXIO is
+returned here. I think this is a typo error. It is necessary to return
+a negative error value.
 
-Fixes: 7a5c938b9ed09 ("IB/core: Check for rdma_protocol_ib only after validating port_num")
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Fixes: 691f8f878290f ("clocksource/drivers/h8300_timer8: Convert init function to return error")
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
 ---
- drivers/infiniband/core/verbs.c | 2 +-
+ drivers/clocksource/h8300_timer8.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/core/verbs.c b/drivers/infiniband/core/verbs.c
-index 53d6505c0c7b..f369f0a19e85 100644
---- a/drivers/infiniband/core/verbs.c
-+++ b/drivers/infiniband/core/verbs.c
-@@ -1712,7 +1712,7 @@ static int _ib_modify_qp(struct ib_qp *qp, struct ib_qp_attr *attr,
- 		if (!(rdma_protocol_ib(qp->device,
- 				       attr->alt_ah_attr.port_num) &&
- 		      rdma_protocol_ib(qp->device, port))) {
--			ret = EINVAL;
-+			ret = -EINVAL;
- 			goto out;
- 		}
+diff --git a/drivers/clocksource/h8300_timer8.c b/drivers/clocksource/h8300_timer8.c
+index 1d740a8c42ab..47114c2a7cb5 100644
+--- a/drivers/clocksource/h8300_timer8.c
++++ b/drivers/clocksource/h8300_timer8.c
+@@ -169,7 +169,7 @@ static int __init h8300_8timer_init(struct device_node *node)
+ 		return PTR_ERR(clk);
  	}
+ 
+-	ret = ENXIO;
++	ret = -ENXIO;
+ 	base = of_iomap(node, 0);
+ 	if (!base) {
+ 		pr_err("failed to map registers for clockevent\n");
 -- 
 2.26.2
 
