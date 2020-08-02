@@ -2,113 +2,91 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B985C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 22:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B57C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 22:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D749A206F6
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 22:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45BD206D7
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 22:36:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="lIf6/YNu"
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="vnv9ed0O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgHBW2q (ORCPT
+        id S1726989AbgHBWgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 18:28:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgHBW2p (ORCPT
+        Sun, 2 Aug 2020 18:36:35 -0400
+Received: from mail-40134.protonmail.ch ([185.70.40.134]:20565 "EHLO
+        mail-40134.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbgHBWge (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 18:28:45 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E483C06174A
-        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 15:28:45 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id m7so1515115qki.12
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 15:28:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=X2bYgTX4K3EZYIeQDAN4hcSO5LdesUSG+q6mG9kn4ys=;
-        b=lIf6/YNuL/fGjujaZaoNWqjOsE+V2SxqHpXstZJx+0q2hXtLpUFUTz5JX8XdrjIX84
-         nHNBhu4B25HP4PjS2WRfH/wBVJnp15ux7/z2PJT4SEWunVT30EfxZztzctwXk7QW0gTo
-         9Nl0wqW9uhY/cOlHKkY2bAxXtZ8oU22wXRgsHJkYugvcXjiHns5QhPw+INH4KWhRatZ0
-         Zb9IgHQCzuejMB4jCfe0cnBMXT0o2vTT+BoP48ROWLDHm99aMCb15cx9yTnjG0xA+izp
-         1a2shGvPVx/c3qIncZKuA2cCSdiHnxQ4E8gu8ODnEPo0jl+X8CW+q5BGj0a6F6cDfN43
-         G5CA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=X2bYgTX4K3EZYIeQDAN4hcSO5LdesUSG+q6mG9kn4ys=;
-        b=kqht0fDuoB7x4rIQXNmxyiw+iU96QJxfgLI+vICz4lF3UTowuCUmJzKafPdB7xb5YZ
-         GDc2RbaJLGgaV+eAZpeaFHYXObtr06PkK3FMIsG9Y/iA08s2Rjz08vlkkufjVhBVSctv
-         kyZywnVzj416MsXt7am8nEmSBMaBJZHb2VIj7UklQJqOA+RcMRrL5hPM7JGs0WDVfDHW
-         pWEhNK7bfgup91EHL6HEkkfMS/DbZLtHhfGTdb47V+EvGbmndB1fxDYMljtwro0we4JI
-         bUWmvB8EkTllmzfy46HcTZczo+YeMyLDCqdj6hFI01V8aLG3hVnhAdfC4Tf4hWezeJ8C
-         6Sbw==
-X-Gm-Message-State: AOAM530Yr5SFGMiux8WwfjIWsGmP8yJH0X1C0d7DHrw7bX2NV0Q+EmbE
-        8YlsMYUmaeFfxo/prJ5MHT9CoQ==
-X-Google-Smtp-Source: ABdhPJy4eXa0DseBVUfptK+ZJ5ECzRMJW3DLsqYCv1XNOKBUDhbP4IqCmIWvuu9UONvVig+CWSFdDQ==
-X-Received: by 2002:a37:4c9:: with SMTP id 192mr13359614qke.125.1596407324789;
-        Sun, 02 Aug 2020 15:28:44 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id p33sm18333547qtp.49.2020.08.02.15.28.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Aug 2020 15:28:44 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1k2MTD-002q9U-LB; Sun, 02 Aug 2020 19:28:43 -0300
-Date:   Sun, 2 Aug 2020 19:28:43 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Joe Perches <joe@perches.com>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peilin Ye <yepeilin.cs@gmail.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak
- in rds_notify_queue_get()
-Message-ID: <20200802222843.GP24045@ziepe.ca>
-References: <20200731045301.GI75549@unreal>
- <20200731053306.GA466103@kroah.com>
- <20200731053333.GB466103@kroah.com>
- <20200731140452.GE24045@ziepe.ca>
- <20200731142148.GA1718799@kroah.com>
- <20200731143604.GF24045@ziepe.ca>
- <20200731171924.GA2014207@kroah.com>
- <20200801053833.GK75549@unreal>
- <20200802221020.GN24045@ziepe.ca>
- <fb7ec4d4ed78e6ae7fa6c04abb24d1c00dc2b0f7.camel@perches.com>
+        Sun, 2 Aug 2020 18:36:34 -0400
+Date:   Sun, 02 Aug 2020 22:36:30 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1596407792;
+        bh=uqkGqPHbw5SoGB+pvlSksm3A26SLfe0aDo1kq7+qs7U=;
+        h=Date:To:From:Cc:Reply-To:Subject:From;
+        b=vnv9ed0OT286DLgLvXEI6uD8tCjYwmwpRZDJ8xHNqfnzZN5AmxFpbXPHFOMfqd02b
+         fN4abzMew2dkyhvw/0yzvy3QRF5nl9vK2btPCPrnTjEsaoPOmEYf2g68bHUDY9Dt/E
+         E8817ZLizl/kV2WJAVTqp7Skfbiq8TzbMH5jgDH4=
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Gromm <christian.gromm@microchip.com>,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <masahiroy@kernel.org>
+From:   =?utf-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
+        <nfraprado@protonmail.com>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org
+Reply-To: =?utf-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
+          <nfraprado@protonmail.com>
+Subject: [PATCH] staging: most: dim2: Add missing identifier name to function argument
+Message-ID: <20200802223615.924307-1-nfraprado@protonmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fb7ec4d4ed78e6ae7fa6c04abb24d1c00dc2b0f7.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 02, 2020 at 03:23:58PM -0700, Joe Perches wrote:
-> On Sun, 2020-08-02 at 19:10 -0300, Jason Gunthorpe wrote:
-> > On Sat, Aug 01, 2020 at 08:38:33AM +0300, Leon Romanovsky wrote:
-> > 
-> > > I'm using {} instead of {0} because of this GCC bug.
-> > > https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53119
-> > 
-> > This is why the {} extension exists..
-> 
-> There is no guarantee that the gcc struct initialization {}
-> extension also zeros padding.
+A function definition argument should have an identifier name according
+to checkpatch:
 
-We just went over this. Yes there is, C11 requires it.
+WARNING: function definition argument 'struct platform_device *' should
+also have an identifier name
 
-Jason
+Name it pdev as that name is already used throughout the code.
+
+Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@protonmail.com>
+---
+ drivers/staging/most/dim2/dim2.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/staging/most/dim2/dim2.c b/drivers/staging/most/dim2/d=
+im2.c
+index 509c8012d20b..b34e3c130f53 100644
+--- a/drivers/staging/most/dim2/dim2.c
++++ b/drivers/staging/most/dim2/dim2.c
+@@ -100,12 +100,12 @@ struct dim2_hdm {
+ =09struct medialb_bus bus;
+ =09void (*on_netinfo)(struct most_interface *most_iface,
+ =09=09=09   unsigned char link_state, unsigned char *addrs);
+-=09void (*disable_platform)(struct platform_device *);
++=09void (*disable_platform)(struct platform_device *pdev);
+ };
+=20
+ struct dim2_platform_data {
+-=09int (*enable)(struct platform_device *);
+-=09void (*disable)(struct platform_device *);
++=09int (*enable)(struct platform_device *pdev);
++=09void (*disable)(struct platform_device *pdev);
+ };
+=20
+ #define iface_to_hdm(iface) container_of(iface, struct dim2_hdm, most_ifac=
+e)
+--=20
+2.28.0
+
+
