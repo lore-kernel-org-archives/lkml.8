@@ -2,103 +2,101 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC616C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB42CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9BA520738
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C089B2076B
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:18:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ceeiw+Mz"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="IpVr02DQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbgHBUSi (ORCPT
+        id S1727906AbgHBUSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 16:18:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725910AbgHBUSi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 16:18:38 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44D10C06174A;
-        Sun,  2 Aug 2020 13:18:38 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id bh1so6606684plb.12;
-        Sun, 02 Aug 2020 13:18:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+VaeBdZD6BxbTiHiKYuiWDRV4AX+dW31+H1ogDniWgI=;
-        b=Ceeiw+MzYueUeDVdP0aj66GMYW33iLI4ekMXmYv+FHgInpLns+zq/m0PcRS50vHk26
-         ZJqElfQ7gpsFDwrRVA4jieBcPiI00xOX18tcSlqxEIbXQVrfeuzRI8FFVFHmBW98+B3D
-         lYC1KlNpbcjkLY1PcE6+1kJBXj7tY5LYchpqV++tDjNNLtYfRI0OhtvGiLCRHQ2TBlOP
-         C59RqhToVq4pGGZJu7lfAqrgr+Oe/7R2cPqOGb3Px4v2wITByfZODtDhadw8ysqvlNvP
-         O/Gtzqm2KKetS3DO60oHouD8tEgsCBYdLxioy5YIgOEFEtUGvWUCXje85REt7+m2oOq8
-         eHJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+VaeBdZD6BxbTiHiKYuiWDRV4AX+dW31+H1ogDniWgI=;
-        b=A7OGw3S7ePhuc68sd7lKhUG3nTeEK0Pr7yY+yI3zMWnaDTjdRi2JNWGeX6QCk1g5c5
-         yoxnq6UChdRa6mpBAR8yeojIlPbusMlN/lWgF3COPilMbubcdhSdnAIGHTkbyRdujRoX
-         bg3Xp+7IriXeNRgG8+c3WQ3OsG3KFYgIS6o2SmEgvYdRHbWgyXULLr0+K50/FoMEVw4M
-         WgRK5FwDAcbHmgIO22S+5M7GMZgumMXs9DsVnrBVpcHp839+fgZ7hEuyYU0w1V/2CjyW
-         qFZ/0n5HlaZ80sIZPBE1t+k+6Xap+UFrRfupv+pO8/UjPhDv2OchQaIk4pfWdJsvmXmh
-         7Ujw==
-X-Gm-Message-State: AOAM53189TVsPkDNqciDVJP/4uY5nWLfrOJ43D5gRkivE5qIQSCfjTMu
-        Tb10SHugP5uqXxY7ZKBztOM=
-X-Google-Smtp-Source: ABdhPJw/S1fMbFH207iXXnX3cp/cOSEnD+zqvERr2xiGFnu2wILqXwDyaISUCxeO8XSRK/QMUs0pmA==
-X-Received: by 2002:a17:902:7c03:: with SMTP id x3mr11920417pll.178.1596399517819;
-        Sun, 02 Aug 2020 13:18:37 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id s185sm13712146pgc.18.2020.08.02.13.18.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Aug 2020 13:18:36 -0700 (PDT)
-Subject: Re: [net-next PATCH] net: phy: mdio-mvusb: select MDIO_DEVRES in
- Kconfig
-To:     Bartosz Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        kernel test robot <lkp@intel.com>
-References: <20200802074953.1529-1-brgl@bgdev.pl>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <a0143110-537d-7344-5b81-8ce656c5e9b7@gmail.com>
-Date:   Sun, 2 Aug 2020 13:18:35 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        Sun, 2 Aug 2020 16:18:46 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:58748 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725910AbgHBUSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 16:18:44 -0400
+Received: from nazgul.tnic (unknown [78.130.214.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4D2291EC02A8;
+        Sun,  2 Aug 2020 22:18:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1596399520;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=z0K+vlWV9j7wfXLQcUnvdJhwiVrF38RAZueHzdmaci0=;
+        b=IpVr02DQwE3yYwTGqHzkePquczoIuB3CSh4JRazV28rb0yxVyTjgJHeFSYXLscJQCgocj+
+        YjGRmfK2vuZ4xdnOu8V6Bj4srNoX1QpTQVYAD0HdeQama4rhKTHzaxEhs3BC4FYYx+fxXN
+        dZeZiogCz7IvNzoJKsyyZMEOy76rM2w=
+Date:   Sun, 2 Aug 2020 22:18:06 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Saheed Bolarinwa <refactormyself@gmail.com>, trix@redhat.com,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Joerg Roedel <joro@8bytes.org>, bjorn@helgaas.com,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-mtd@lists.infradead.org, iommu@lists.linux-foundation.org,
+        linux-rdma@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        linux-gpio@vger.kernel.org, linux-fpga@vger.kernel.org,
+        linux-edac@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-crypto@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net
+Subject: Re: [RFC PATCH 00/17] Drop uses of pci_read_config_*() return value
+Message-ID: <20200802201806.GA24437@nazgul.tnic>
+References: <20200802184648.GA23190@nazgul.tnic>
+ <20200802191406.GA248232@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20200802074953.1529-1-brgl@bgdev.pl>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200802191406.GA248232@bjorn-Precision-5520>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/2/2020 12:49 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Sun, Aug 02, 2020 at 02:14:06PM -0500, Bjorn Helgaas wrote:
+> Wait, I'm not convinced yet.  I know that if a PCI read fails, you
+> normally get ~0 data because the host bridge fabricates it to complete
+> the CPU load.
 > 
-> PHYLIB is not selected by the mvusb driver but it uses mdio devres
-> helpers. Explicitly select MDIO_DEVRES in this driver's Kconfig entry.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Fixes: 1814cff26739 ("net: phy: add a Kconfig option for mdio_devres")
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> But what guarantees that a PCI config register cannot contain ~0?
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Well, I don't think you can differentiate that case, right?
+
+I guess this is where the driver knowledge comes into play: if the read
+returns ~0, the pci_read_config* should probably return in that case
+something like:
+
+	PCIBIOS_READ_MAYBE_FAILED
+
+to denote it is all 1s and then the caller should be able to determine,
+based on any of domain:bus:slot.func and whatever else the driver knows
+about its hardware, whether the 1s are a valid value or an error.
+Hopefully.
+
+Or something better of which I cannot think of right now...
+
 -- 
-Florian
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
