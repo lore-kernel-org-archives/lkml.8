@@ -2,81 +2,104 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B58C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E888AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04D7320759
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE540206DA
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:00:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="k2AcceSD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725952AbgHBN5p (ORCPT
+        id S1725793AbgHBOA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 09:57:45 -0400
-Received: from albireo.enyo.de ([37.24.231.21]:57926 "EHLO albireo.enyo.de"
+        Sun, 2 Aug 2020 10:00:28 -0400
+Received: from cmta17.telus.net ([209.171.16.90]:57545 "EHLO cmta17.telus.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725290AbgHBN5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 09:57:45 -0400
-Received: from [172.17.203.2] (helo=deneb.enyo.de)
-        by albireo.enyo.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1k2EUc-0007uG-D1; Sun, 02 Aug 2020 13:57:38 +0000
-Received: from fw by deneb.enyo.de with local (Exim 4.92)
-        (envelope-from <fw@deneb.enyo.de>)
-        id 1k2EUZ-0006B6-7g; Sun, 02 Aug 2020 15:57:35 +0200
-From:   Florian Weimer <fw@deneb.enyo.de>
-To:     "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
-Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
-        <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
-        <6540b4b7-3f70-adbf-c922-43886599713a@linux.microsoft.com>
-        <CALCETrWnNR5v3ZCLfBVQGYK8M0jAvQMaAc9uuO05kfZuh-4d6w@mail.gmail.com>
-        <46a1adef-65f0-bd5e-0b17-54856fb7e7ee@linux.microsoft.com>
-Date:   Sun, 02 Aug 2020 15:57:35 +0200
-In-Reply-To: <46a1adef-65f0-bd5e-0b17-54856fb7e7ee@linux.microsoft.com>
-        (Madhavan T. Venkataraman's message of "Fri, 31 Jul 2020 12:13:49
-        -0500")
-Message-ID: <87o8nttak0.fsf@mid.deneb.enyo.de>
+        id S1725778AbgHBOA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 10:00:28 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id 2EXHkM4i8Ygvr2EXIkBLUO; Sun, 02 Aug 2020 08:00:26 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1596376826; bh=SzDoSBafKB3dI1ZEPVpUunrs6xSnoYFOgu5PBlceFsE=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=k2AcceSDKEJecK3UJv7fhRcgVN+TnL/0ouYqEOi5e3xZDRtxx1ZMyxxZR0kK4rpzG
+         c60RUAi46Fe+YwK+mRS7QotUCm+ZcOasSqQ4tbJ1emhRQ4U/cOIxuddw/9zj5Mm7QU
+         hqJCnwpRvG/Sh/sdHvk/fh2nFMMAmSAbEz8+tEbkZsJGw9awWP56KYTsKA5v6wzl/1
+         MLMN4EwYCpigA2aoaWYEOWu3jcKv9s2QRqDZCA34ezE/GDeQhwMyA6l3IpSzgPqlhr
+         bsYZoxRxvEVsfxorcHstn28Jbnnc4ryEEbZLLM4ZglzLkjexR78egSe/94P4Okz11N
+         A7Iz86HrZ+sAw==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=MIQeZ/Rl c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=IkcTkHD0fZMA:10 a=VwQbUJbxAAAA:8
+ a=ZIabrx5NIckfTXfnIBUA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>
+Cc:     "'Linux Documentation'" <linux-doc@vger.kernel.org>,
+        "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
+        "'Francisco Jerez'" <francisco.jerez.plata@intel.com>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>,
+        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
+References: <4981405.3kqTVLv5tO@kreacher> <1709487.Bxjb1zNRZM@kreacher>  <13207937.r2GEYrEf4f@kreacher> <6febe0592d1830dac04aab281f66b47498dda887.camel@linux.intel.com>
+In-Reply-To: <6febe0592d1830dac04aab281f66b47498dda887.camel@linux.intel.com>
+Subject: RE: [PATCH v4 0/2] cpufreq: intel_pstate: Implement passive mode with HWP enabled
+Date:   Sun, 2 Aug 2020 07:00:22 -0700
+Message-ID: <000301d668d5$45c10a10$d1431e30$@net>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Thread-Index: AdZoIlWzA7o73WknRLGs71sfWuU6HAAsJj+Q
+Content-Language: en-ca
+X-CMAE-Envelope: MS4wfDgAdYFHDxR5qZ0kyPgr3n9h2BxbW6s44BQp71VL3BZml3hb67guShWx5fqnpSkKJZhkA1SrDe57T5SH3KrrzKh4qPlJwbxCV+MZEMy0KWls7qjRulwB
+ sqKfQ7882w3ie5AxWh5IUgwws2F3eBuF9WIrgcyi6YXPUN2dvzrrO1fBpMb4oESwBrrYjmNDcQhfZL2nkRUoEVH/6sp7SoSeSTI4egS9t3eV2xe/vS54c7OG
+ FQ8Js7N7PpHFg1ipeBR2JWVcq16MuIHTHGEG19sU9Kli0jQG3koA0pn4RR3u+0nr08sKY48TOSAYS0LdimPFGlz1Ui1v2BdOc1MLPQbQFRXjNDy8Z9m0RJMZ
+ qrnwgCZGJ++cYo2s6RbPiXtQA/oGNetymxP/bTx3CEakeI1HOUIMCY7iUwnnz83ht7cku2/pmbIu4yQ+EBNTP195TVqZWQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Madhavan T. Venkataraman:
+On 2020.08.01 09:40 Srinivas Pandruvada wrote:
+>> On Monday, July 27, 2020 5:13:40 PM CEST Rafael J. Wysocki wrote:
+>>> On Thursday, July 16, 2020 7:37:04 PM CEST Rafael J. Wysocki wrote:
+>>>> This really is a v2 of this patch:
+>>>>
+>>>> https://patchwork.kernel.org/patch/11663271/
+>>>>
+>>>> with an extra preceding cleanup patch to avoid making unrelated
+>>>> changes in the
+>>>> [2/2].
+>>>
+> I applied this series along with
+> [PATCH] cpufreq: intel_pstate: Fix EPP setting via sysfs in active mode
+> on 5.8 latest master (On top of raw epp patchset).
 
-> Standardization
-> ---------------------
->
-> Trampfd is a framework that can be used to implement multiple
-> things. May be, a few of those things can also be implemented in
-> user land itself. But I think having just one mechanism to execute
-> dynamic code objects is preferable to having multiple mechanisms not
-> standardized across all applications.
->
-> As an example, let us say that I am able to implement support for
-> JIT code. Let us say that an interpreter uses libffi to execute a
-> generated function. The interpreter would use trampfd for the JIT
-> code object and get an address. Then, it would pass that to libffi
-> which would then use trampfd for the trampoline. So, trampfd based
-> code objects can be chained.
+Hi Srinivas,
 
-There is certainly value in coordination.  For example, it would be
-nice if unwinders could recognize the trampolines during all phases
-and unwind correctly through them (including when interrupted by an
-asynchronous symbol).  That requires some level of coordination with
-the unwinder and dynamic linker.
+Would you be kind enough to provide a "git log --oneline" output
+of what you did.
 
-A kernel solution could hide the intermediate state in a kernel-side
-trap handler, but I think it wouldn't reduce the overall complexity.
+I have been trying unsuccessfully to apply the patches,
+so somewhere I obviously missed something.
+
+> When intel_pstate=passive from kernel command line then it is fine, no
+> crash. But switch dynamically, crashed:
+
+I'll try to repeat, if I can get an actual kernel.
+
+> Attached crash.txt. I may need to try your linux-pm tree.
+
+I also tried the linux-pm tree, same.
+
+... Doug
+
+
