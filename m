@@ -4,67 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9756C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B12BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93B8E2075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FB17207DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:16:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbgHBLQZ (ORCPT
+        id S1728500AbgHBLQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 07:16:25 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:59000 "EHLO
+        Sun, 2 Aug 2020 07:16:31 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:44822 "EHLO
         out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727994AbgHBLPm (ORCPT
+        by vger.kernel.org with ESMTP id S1728132AbgHBLPm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 2 Aug 2020 07:15:42 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R621e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0U4T30Da_1596366937;
-Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U4T30Da_1596366937)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0U4T30DO_1596366936;
+Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U4T30DO_1596366936)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 02 Aug 2020 19:15:38 +0800
+          Sun, 02 Aug 2020 19:15:37 +0800
 From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-To:     irusskikh@marvell.com, davem@davemloft.net, kuba@kernel.org,
-        mstarovoitov@marvell.com, dbezrukov@marvell.com,
-        ndanilov@marvell.com, tianjia.zhang@linux.alibaba.com,
-        Pavel.Belous@aquantia.com, Alexander.Loktionov@aquantia.com,
-        Dmitrii.Tarakanov@aquantia.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tianjia.zhang@alibaba.com
-Subject: [PATCH] net: ethernet: aquantia: Fix wrong return value
-Date:   Sun,  2 Aug 2020 19:15:37 +0800
-Message-Id: <20200802111537.5292-1-tianjia.zhang@linux.alibaba.com>
+To:     harry.wentland@amd.com, sunpeng.li@amd.com,
+        alexander.deucher@amd.com, christian.koenig@amd.com,
+        airlied@linux.ie, daniel@ffwll.ch, nicholas.kazlauskas@amd.com,
+        Rodrigo.Siqueira@amd.com, Bhawanpreet.Lakha@amd.com,
+        stylon.wang@amd.com, roman.li@amd.com, mikita.lipski@amd.com
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, tianjia.zhang@alibaba.com
+Subject: [PATCH] drm/amd/display: Fix wrong return value in dm_update_plane_state()
+Date:   Sun,  2 Aug 2020 19:15:36 +0800
+Message-Id: <20200802111536.5246-1-tianjia.zhang@linux.alibaba.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In function hw_atl_a0_hw_multicast_list_set(), when an invalid
-request is encountered, a negative error code should be returned.
+On an error exit path, a negative error code should be returned
+instead of a positive return value.
 
-Fixes: bab6de8fd180b ("net: ethernet: aquantia: Atlantic A0 and B0 specific functions")
-Cc: David VomLehn <vomlehn@texas.net>
+Fixes: 9e869063b0021 ("drm/amd/display: Move iteration out of dm_update_planes")
+Cc: Leo Li <sunpeng.li@amd.com>
 Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
 ---
- drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c
-index a312864969af..6640fd35b29b 100644
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c
-@@ -782,7 +782,7 @@ static int hw_atl_a0_hw_multicast_list_set(struct aq_hw_s *self,
- 	int err = 0;
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 710edc70e37e..5810416e2ddc 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -8182,8 +8182,7 @@ static int dm_update_plane_state(struct dc *dc,
+ 				dm_old_plane_state->dc_state,
+ 				dm_state->context)) {
  
- 	if (count > (HW_ATL_A0_MAC_MAX - HW_ATL_A0_MAC_MIN)) {
--		err = EBADRQC;
-+		err = -EBADRQC;
- 		goto err_exit;
- 	}
- 	for (self->aq_nic_cfg->mc_list_count = 0U;
+-			ret = EINVAL;
+-			return ret;
++			return -EINVAL;
+ 		}
+ 
+ 
 -- 
 2.26.2
 
