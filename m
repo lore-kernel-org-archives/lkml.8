@@ -2,138 +2,195 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A673EC433E8
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 18:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87049C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 18:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91C5C2075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 18:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D4A1206DA
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 18:54:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="km2ppJ9W"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="fHpnzFOJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgHBSrZ (ORCPT
+        id S1726883AbgHBSyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 14:47:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbgHBSrW (ORCPT
+        Sun, 2 Aug 2020 14:54:39 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:55680 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbgHBSyi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 14:47:22 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90B30C06174A;
-        Sun,  2 Aug 2020 11:47:22 -0700 (PDT)
-Received: from nazgul.tnic (unknown [78.130.214.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6060E1EC027B;
-        Sun,  2 Aug 2020 20:47:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1596394040;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=6tNJPljLjNx2x9QEIVJnns37NMBlLLp4EAbpTzGkx/k=;
-        b=km2ppJ9W1lKPkeogNByCZRPPB90pQ77y1xFpzqsz5v2Gw4jUrJuG2BUGC6FlwifBWKp5xA
-        i/pwFuidiFCe1IAhyK7PX67NxCd1gqUPGlQREtpW/WPoHky93LT53Q3Zqf5RRY0CErhAu0
-        8YCnO7sm9NOsIwnrSCtwGhnf6GzAdAw=
-Date:   Sun, 2 Aug 2020 20:46:48 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Saheed Bolarinwa <refactormyself@gmail.com>
-Cc:     trix@redhat.com, helgaas@kernel.org,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Joerg Roedel <joro@8bytes.org>, bjorn@helgaas.com,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-mtd@lists.infradead.org, iommu@lists.linux-foundation.org,
-        linux-rdma@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        linux-gpio@vger.kernel.org, linux-fpga@vger.kernel.org,
-        linux-edac@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-crypto@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net
-Subject: Re: [RFC PATCH 00/17] Drop uses of pci_read_config_*() return value
-Message-ID: <20200802184648.GA23190@nazgul.tnic>
-References: <20200801112446.149549-1-refactormyself@gmail.com>
- <20200801125657.GA25391@nazgul.tnic>
- <b720aa44-895a-203b-e220-ecdb3acd9278@gmail.com>
+        Sun, 2 Aug 2020 14:54:38 -0400
+Received: from [192.168.254.32] (unknown [47.187.206.220])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 8B20620B4908;
+        Sun,  2 Aug 2020 11:54:36 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8B20620B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1596394477;
+        bh=Bi0Avm087nVKLtlYIbtSWKURIDHCpmDKtLVQ5vuWflc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=fHpnzFOJOlzwXKwSY8zPf6k+L+PvjjAKdLTYmh86GcRZ1GlLSdgkG9g2/aH5jJhcq
+         rLnj76Yu6QdnUO6KTpkXFwOCQ9jicshEkSNSDxcUKT9TPhmvEepbEQ05Wq5VephZTP
+         PadVn+hOSExc6VqPzwe7hlZHes7rqpGKqv+UP3nE=
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
+References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
+From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Message-ID: <3b916198-3a98-bd19-9a1c-f2d8d44febe8@linux.microsoft.com>
+Date:   Sun, 2 Aug 2020 13:54:35 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <b720aa44-895a-203b-e220-ecdb3acd9278@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 02, 2020 at 07:28:00PM +0200, Saheed Bolarinwa wrote:
-> Because the value ~0 has a meaning to some drivers and only
+More responses inline..
 
-No, ~0 means that the PCI read failed. For *every* PCI device I know.
+On 7/28/20 12:31 PM, Andy Lutomirski wrote:
+>> On Jul 28, 2020, at 6:11 AM, madvenka@linux.microsoft.com wrote:
+>>
+>> ﻿From: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+>>
+>
+> 2. Use existing kernel functionality.  Raise a signal, modify the
+> state, and return from the signal.  This is very flexible and may not
+> be all that much slower than trampfd.
 
-Here's me reading from 0xf0 offset of my hostbridge:
+Let me understand this. You are saying that the trampoline code
+would raise a signal and, in the signal handler, set up the context
+so that when the signal handler returns, we end up in the target
+function with the context correctly set up. And, this trampoline code
+can be generated statically at build time so that there are no
+security issues using it.
 
-# setpci -s 00:00.0 0xf0.l
-01000000
+Have I understood your suggestion correctly?
 
-That device doesn't have extended config space, so the last valid byte
-is 0xff. Let's read beyond that:
+So, my argument would be that this would always incur the overhead
+of a trip to the kernel. I think twice the overhead if I am not mistaken.
+With trampfd, we can have the kernel generate the code so that there
+is no performance penalty at all.
 
-# setpci -s 00:00.0 0x100.l
-ffffffff
+Signals have many problems. Which signal number should we use for this
+purpose? If we use an existing one, that might conflict with what the application
+is already handling. Getting a new signal number for this could meet
+with resistance from the community.
 
-> Again, only the drivers can determine if ~0 is a valid value. This
-> information is not available inside pci_config_read*().
+Also, signals are asynchronous. So, they are vulnerable to race conditions.
+To prevent other signals from coming in while handling the raised signal,
+we would need to block and unblock signals. This will cause more
+overhead.
 
-Of course it is.
+> 3. Use a syscall.  Instead of having the kernel handle page faults,
+> have the trampoline code push the syscall nr register, load a special
+> new syscall nr into the syscall nr register, and do a syscall. On
+> x86_64, this would be:
+>
+> pushq %rax
+> movq __NR_magic_trampoline, %rax
+> syscall
+>
+> with some adjustment if the stack slot you're clobbering is important.
 
-*every* change you've done in 6/17 - this is the only patch I have
-received - checks for == ~0. So that check can just as well be moved
-inside pci_config_read_*().
+How is this better than the kernel handling an address fault?
+The system call still needs to do the same work as the fault handler.
+We do need to specify the register and stack contexts before hand
+so the system call can do its job.
 
-Here's how one could do it:
+Also, this always incurs a trip to the kernel. With trampfd, the kernel
+could generate the code to avoid the performance penalty.
 
-#define PCI_OP_READ(size, type, len) \
-int noinline pci_bus_read_config_##size \
-	(struct pci_bus *bus, unsigned int devfn, int pos, type *value)	\
-{									\
-	int res;							\
-	unsigned long flags;						\
-	u32 data = 0;							\
-	if (PCI_##size##_BAD) return PCIBIOS_BAD_REGISTER_NUMBER;	\
-	pci_lock_config(flags);						\
-	res = bus->ops->read(bus, devfn, pos, len, &data);		\
 
-	/* Check we actually read something which is not all 1s.*/
-	if (data == ~0)
-		return PCIBIOS_READ_FAILED;
+>
+> Also, will using trampfd cause issues with various unwinders?  I can
+> easily imagine unwinders expecting code to be readable, although this
+> is slowly going away for other reasons.
 
-	*value = (type)data;						\
-	pci_unlock_config(flags);					\
-	return res;							\
-}
+I need to study unwinders a little before I respond to this question.
+So, bear with me.
 
-Also, I'd prefer a function to *not* return void but return either
-an error or success. In the success case, the @value argument can be
-consumed by the caller and otherwise not.
+> All this being said, I think that the kernel should absolutely add a
+> sensible interface for JITs to use to materialize their code.  This
+> would integrate sanely with LSMs and wouldn't require hacks like using
+> files, etc.  A cleverly designed JIT interface could function without
+> seriailization IPIs, and even lame architectures like x86 could
+> potentially avoid shootdown IPIs if the interface copied code instead
+> of playing virtual memory games.  At its very simplest, this could be:
+>
+> void *jit_create_code(const void *source, size_t len);
+>
+> and the result would be a new anonymous mapping that contains exactly
+> the code requested.  There could also be:
+>
+> int jittfd_create(...);
+>
+> that does something similar but creates a memfd.  A nicer
+> implementation for short JIT sequences would allow appending more code
+> to an existing JIT region.  On x86, an appendable JIT region would
+> start filled with 0xCC, and I bet there's a way to materialize new
+> code into a previously 0xcc-filled virtual page wthout any
+> synchronization.  One approach would be to start with:
+>
+> <some code>
+> 0xcc
+> 0xcc
+> ...
+> 0xcc
+>
+> and to create a whole new page like:
+>
+> <some code>
+> <some more code>
+> 0xcc
+> ...
+> 0xcc
+>
+> so that the only difference is that some code changed to some more
+> code.  Then replace the PTE to swap from the old page to the new page,
+> and arrange to avoid freeing the old page until we're sure it's gone
+> from all TLBs.  This may not work if <some more code> spans a page
+> boundary.  The #BP fixup would zap the TLB and retry.  Even just
+> directly copying code over some 0xcc bytes almost works, but there's a
+> nasty corner case involving instructions that fetch I$ fetch
+> boundaries.  I'm not sure to what extent I$ snooping helps.
 
-In any case, that change is a step in the wrong direction and I don't
-like it, sorry.
+I am thinking that the trampfd API can be used for addressing JIT
+code as well. I have not yet started thinking about the details. But I
+think the API is sufficient. E.g.,
 
--- 
-Regards/Gruss,
-    Boris.
+    struct trampfd_jit {
+        void    *source;
+        size_t    len;
+    };
 
-https://people.kernel.org/tglx/notes-about-netiquette
+    struct trampfd_jit    jit;
+    struct trampfd_map    map;
+    void    *addr;
+
+    jit.source = blah;
+    jit.size = blah;
+
+    fd = syscall(440, TRAMPFD_JIT, &jit, flags);
+    pread(fd, &map, sizeof(map), TRAMPFD_MAP_OFFSET);
+    addr = mmap(NULL, map.size, map.prot, map.flags, fd, map.offset);
+
+And addr would be used to invoke the generated JIT code.
+
+Madhavan
+
