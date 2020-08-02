@@ -2,140 +2,136 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 21:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFE7C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 21:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E97F7206D4
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 21:30:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H5BNbEYw"
+	by mail.kernel.org (Postfix) with ESMTP id 902FC20738
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 21:36:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgHBVZf (ORCPT
+        id S1727961AbgHBVgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 17:25:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727892AbgHBVZe (ORCPT
+        Sun, 2 Aug 2020 17:36:22 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:52770 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725925AbgHBVgV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 17:25:34 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F2DAC06174A
-        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 14:25:34 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id t6so11602875qvw.1
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 14:25:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+vPBcIAaDQT1fIr7QHvmC5z6P2qSBTffqgMpR1sAJ18=;
-        b=H5BNbEYwlq1eaQkM03llB+jv8CkBc+J5Zgu7JNzbHTkmruj9rx4ybP++eTVD8DoAsN
-         902r8DaB52xvylcxNmAUm22FWb/LRd2fxdc4Tu6JhF4/ZT9TeT9GXP6GWxO1M1QEgl3r
-         kIFO71kTZ23lj3v8hlQmrwteLSbleHC/jNtXVcdAUVQYuvegY0HiwMZ43cErM2M2iWhV
-         wk0h9mbN1hESKLNRsuMc40JUWR1z4pnQboCTZAeAgsAvPBD5ewobcDceLhTUXts9Yv0X
-         xTjqzLpm0efT8C9qRM1T8wmCI384Q675QPcgK3w0C0iWkppUJco9aSGa5C6pDFhxvWW4
-         jEiA==
+        Sun, 2 Aug 2020 17:36:21 -0400
+Received: by mail-io1-f69.google.com with SMTP id k12so25247436iom.19
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 14:36:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+vPBcIAaDQT1fIr7QHvmC5z6P2qSBTffqgMpR1sAJ18=;
-        b=pzS2uSV9uH96fF0o2qSUbDzFy7qVgew3EpUoQOC7OjwC9go0mqGIlloHdPNZUjla89
-         7UajVJk6a8JZR5hV2Ujh8qyYXn5dlAOjfXqGpChu4wRZVU+qqGTI/lUTk1LPMHwafIWK
-         5ZCNsdrf1OVM+fAC6DneSMualCyA9nx4RAcGiTdKPaRY+aHHIFm6OcdDCvcrvFZNftbC
-         TJUYrqYrAipaTChk025OJe67mFJPTTuVbWkPGOFPj2NyUMypP6W1GiD2ZfCB41MbYlsf
-         k/nu6SGBlB3+jtJozmI195pylWjnmh0btVMPMXYOqdycMRs4JCocZOtBxgqwdkE9aZnY
-         QadQ==
-X-Gm-Message-State: AOAM532UZ0wdIU+yFkLiuGuh6OCOQXgYEBOabN9D94/Hnm0dzglhpd2i
-        XaYnjBeUpkPPKNVTNtf4/XP0XqToBnfrqxo6azgSsd/P
-X-Google-Smtp-Source: ABdhPJy/D57l4PxXsvtNghGpZYYWxtQzGKIP9nS2mWv50e3fWXnuy/WrDD7ylBIgT36e7fl/UU0Xpv5GyujUEEZZD90=
-X-Received: by 2002:a0c:e9c7:: with SMTP id q7mr14265761qvo.195.1596403532995;
- Sun, 02 Aug 2020 14:25:32 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=jE1eXr0aFrBGEBZ/GquO7bRsGe66Rk2RCOW4RqQ0FHw=;
+        b=mWZPplNNP9Y+MtVUPRFsBBPlTydZUeE6qozcbm72gd/WP0fveD5+1p9Rwx2O6obnmV
+         a6tY1MXFqumm3Sxwe3o8U7xBUcZ4+wsI3L0Yr6GyEusGWimZbUL7LZJcZLAFFQqXT2kF
+         CVuoMNafPOEla35bHuRSy4ivoaXsUAN+rByD6rLIfw/mFpo1qbSPmG7oRY0fCd2EFWnX
+         inFMsX+5uJBU8I+3GVmxLWJ7wD2TQQ36P1FDTEK5NzTvImgAKVU/FLAkcG/0oFC648CR
+         9nph3hN7gVJ/fFEXt5y7xhqeA+mUepzF70yA4/kl+3J37iXKCyYXanlJkDopCxQJ9LRP
+         mz9w==
+X-Gm-Message-State: AOAM5300FexOJoRlYG01TNTswmq0fyKhovOsVPpcFRq8HpUAq304IWVs
+        ZNpNwJ5EZvpkl9pK6ymxfeun3YIbhoiv7PTAwBXE0+iuyEFK
+X-Google-Smtp-Source: ABdhPJxZzGmFuPg5FmbI2K9VWsx3CzEkSHK5VQYK7Ervj4iVi+5O0dnvvtMgJPr1SY0otVqLq14WPCR2aFZrHo32bi4SmirZ3ajk
 MIME-Version: 1.0
-References: <20200601091231.3794350-1-chengzhihao1@huawei.com>
-In-Reply-To: <20200601091231.3794350-1-chengzhihao1@huawei.com>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Sun, 2 Aug 2020 23:25:21 +0200
-Message-ID: <CAFLxGvwLSvYsQ+OPi85VS8aQ2uge_JqQRD2C8h=XMORvCej3Sw@mail.gmail.com>
-Subject: Re: [PATCH] ubi: check kthread_should_stop() after the setting of
- task state
-To:     Zhihao Cheng <chengzhihao1@huawei.com>
-Cc:     linux-mtd@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        "zhangyi (F)" <yi.zhang@huawei.com>
+X-Received: by 2002:a92:c7a1:: with SMTP id f1mr5341536ilk.162.1596404180792;
+ Sun, 02 Aug 2020 14:36:20 -0700 (PDT)
+Date:   Sun, 02 Aug 2020 14:36:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001d48cd05abebd088@google.com>
+Subject: WARNING: ODEBUG bug in bt_host_release
+From:   syzbot <syzbot+0ce8a29c6c6469b16632@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 1, 2020 at 11:13 AM Zhihao Cheng <chengzhihao1@huawei.com> wrote:
->
-> A detach hung is possible when a race occurs between the detach process
-> and the ubi background thread. The following sequences outline the race:
->
->   ubi thread: if (list_empty(&ubi->works)...
->
->   ubi detach: set_bit(KTHREAD_SHOULD_STOP, &kthread->flags)
->               => by kthread_stop()
->               wake_up_process()
->               => ubi thread is still running, so 0 is returned
->
->   ubi thread: set_current_state(TASK_INTERRUPTIBLE)
->               schedule()
->               => ubi thread will never be scheduled again
->
->   ubi detach: wait_for_completion()
->               => hung task!
->
-> To fix that, we need to check kthread_should_stop() after we set the
-> task state, so the ubi thread will either see the stop bit and exit or
-> the task state is reset to runnable such that it isn't scheduled out
-> indefinitely.
->
-> Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
-> Cc: <Stable@vger.kernel.org>
-> Fixes: 801c135ce73d5df1ca ("UBI: Unsorted Block Images")
-> Reported-by: syzbot+853639d0cb16c31c7a14@syzkaller.appspotmail.com
-> ---
->  drivers/mtd/ubi/wl.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/drivers/mtd/ubi/wl.c b/drivers/mtd/ubi/wl.c
-> index 5146cce5fe32..a4d4343053d7 100644
-> --- a/drivers/mtd/ubi/wl.c
-> +++ b/drivers/mtd/ubi/wl.c
-> @@ -1628,6 +1628,19 @@ int ubi_thread(void *u)
->                     !ubi->thread_enabled || ubi_dbg_is_bgt_disabled(ubi)) {
->                         set_current_state(TASK_INTERRUPTIBLE);
->                         spin_unlock(&ubi->wl_lock);
-> +
-> +                       /*
-> +                        * Check kthread_should_stop() after we set the task
-> +                        * state to guarantee that we either see the stop bit
-> +                        * and exit or the task state is reset to runnable such
-> +                        * that it's not scheduled out indefinitely and detects
-> +                        * the stop bit at kthread_should_stop().
-> +                        */
-> +                       if (kthread_should_stop()) {
-> +                               set_current_state(TASK_RUNNING);
-> +                               break;
-> +                       }
-> +
+Hello,
 
-Hmm, I see the problem but I fear this patch does not cure the race completely.
-It just lowers the chance to hit it.
-What if KTHREAD_SHOULD_STOP is set right after you checked for it?
+syzbot found the following issue on:
 
->                         schedule();
->                         continue;
->                 }
+HEAD commit:    ac3a0c84 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11e1da92900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e59ee776d5aa8d55
+dashboard link: https://syzkaller.appspot.com/bug?extid=0ce8a29c6c6469b16632
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14f653ca900000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+0ce8a29c6c6469b16632@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object type: timer_list hint: delayed_work_timer_fn+0x0/0x80 arch/x86/include/asm/paravirt.h:770
+WARNING: CPU: 1 PID: 20314 at lib/debugobjects.c:488 debug_print_object lib/debugobjects.c:485 [inline]
+WARNING: CPU: 1 PID: 20314 at lib/debugobjects.c:488 __debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
+WARNING: CPU: 1 PID: 20314 at lib/debugobjects.c:488 debug_check_no_obj_freed+0x45c/0x640 lib/debugobjects.c:998
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 20314 Comm: syz-executor.5 Not tainted 5.8.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1f0/0x31e lib/dump_stack.c:118
+ panic+0x264/0x7a0 kernel/panic.c:231
+ __warn+0x227/0x250 kernel/panic.c:600
+ report_bug+0x1b1/0x2e0 lib/bug.c:198
+ handle_bug+0x42/0x80 arch/x86/kernel/traps.c:235
+ exc_invalid_op+0x16/0x40 arch/x86/kernel/traps.c:255
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:540
+RIP: 0010:debug_print_object lib/debugobjects.c:485 [inline]
+RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
+RIP: 0010:debug_check_no_obj_freed+0x45c/0x640 lib/debugobjects.c:998
+Code: 74 08 4c 89 f7 e8 04 e4 11 fe 4d 8b 06 48 c7 c7 ef b7 14 89 48 c7 c6 fd 95 12 89 48 89 da 89 e9 4d 89 f9 31 c0 e8 64 95 a4 fd <0f> 0b 48 ba 00 00 00 00 00 fc ff df ff 05 86 c1 eb 05 48 8b 5c 24
+RSP: 0018:ffffc90003777b90 EFLAGS: 00010046
+RAX: ffd2d42dae8b6000 RBX: ffffffff8918b660 RCX: ffff888087ef6000
+RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffffffff815dd389 R09: ffffed1015d241c3
+R10: ffffed1015d241c3 R11: 0000000000000000 R12: ffff8880a131c9ec
+R13: ffffffff8ba5dfb8 R14: ffffffff894edb20 R15: ffffffff814c4b60
+ kfree+0xfc/0x220 mm/slab.c:3756
+ bt_host_release+0x18/0x20 net/bluetooth/hci_sysfs.c:86
+ device_release+0x70/0x1a0 drivers/base/core.c:1575
+ kobject_cleanup lib/kobject.c:693 [inline]
+ kobject_release lib/kobject.c:722 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x15b/0x220 lib/kobject.c:739
+ vhci_release+0x7b/0xc0 drivers/bluetooth/hci_vhci.c:341
+ __fput+0x2f0/0x750 fs/file_table.c:281
+ task_work_run+0x137/0x1c0 kernel/task_work.c:135
+ exit_task_work include/linux/task_work.h:25 [inline]
+ do_exit+0x601/0x1f80 kernel/exit.c:805
+ do_group_exit+0x161/0x2d0 kernel/exit.c:903
+ __do_sys_exit_group+0x13/0x20 kernel/exit.c:914
+ __se_sys_exit_group+0x10/0x10 kernel/exit.c:912
+ __x64_sys_exit_group+0x37/0x40 kernel/exit.c:912
+ do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45cc79
+Code: Bad RIP value.
+RSP: 002b:00007ffe023458d8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000045cc79
+RDX: 00000000004166d1 RSI: 0000000000ca85f0 RDI: 0000000000000043
+RBP: 00000000004c2903 R08: 000000000000000b R09: 0000000000000000
+R10: 000000000246f940 R11: 0000000000000246 R12: 0000000000000004
+R13: 00007ffe02345a20 R14: 00000000000b206f R15: 00007ffe02345a30
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
--- 
-Thanks,
-//richard
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
