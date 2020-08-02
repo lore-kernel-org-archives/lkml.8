@@ -7,87 +7,65 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DA5C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C517DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 338F520888
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB240208C7
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:15:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbgHBLPq (ORCPT
+        id S1728299AbgHBLPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 07:15:46 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:37088 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728211AbgHBLPl (ORCPT
+        Sun, 2 Aug 2020 07:15:50 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:52331 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728263AbgHBLPp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 07:15:41 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0U4T30D9_1596366934;
-Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U4T30D9_1596366934)
+        Sun, 2 Aug 2020 07:15:45 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0U4Tqfqn_1596366940;
+Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U4Tqfqn_1596366940)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 02 Aug 2020 19:15:34 +0800
+          Sun, 02 Aug 2020 19:15:40 +0800
 From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-To:     jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        chris@chris-wilson.co.uk, matthew.auld@intel.com,
-        tvrtko.ursulin@intel.com, mika.kuoppala@linux.intel.com,
-        andi.shyti@intel.com
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+To:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org,
+        quentin@isovalent.com, kuba@kernel.org, toke@redhat.com,
+        tklauser@distanz.ch, tianjia.zhang@linux.alibaba.com,
+        jolsa@kernel.org
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
         linux-kernel@vger.kernel.org, tianjia.zhang@alibaba.com
-Subject: [PATCH] drm/i915: Fix wrong return value
-Date:   Sun,  2 Aug 2020 19:15:34 +0800
-Message-Id: <20200802111534.5155-1-tianjia.zhang@linux.alibaba.com>
+Subject: [PATCH] tools/bpf/bpftool: Fix wrong return value in do_dump()
+Date:   Sun,  2 Aug 2020 19:15:40 +0800
+Message-Id: <20200802111540.5384-1-tianjia.zhang@linux.alibaba.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In function i915_active_acquire_preallocate_barrier(), not all
-paths have the return value set correctly, and in case of memory
-allocation failure, a negative error code should be returned.
+In case of btf_id does not exist, a negative error code -ENOENT
+should be returned.
 
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Fixes: c93cc69004df3 ("bpftool: add ability to dump BTF types")
+Cc: Andrii Nakryiko <andriin@fb.com>
 Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
 ---
- drivers/gpu/drm/i915/i915_active.c            | 4 ++--
- drivers/gpu/drm/i915/selftests/i915_request.c | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ tools/bpf/bpftool/btf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/i915/i915_active.c b/drivers/gpu/drm/i915/i915_active.c
-index d960d0be5bd2..cc017e3cc9c5 100644
---- a/drivers/gpu/drm/i915/i915_active.c
-+++ b/drivers/gpu/drm/i915/i915_active.c
-@@ -758,7 +758,7 @@ int i915_active_acquire_preallocate_barrier(struct i915_active *ref,
- 	intel_engine_mask_t tmp, mask = engine->mask;
- 	struct llist_node *first = NULL, *last = NULL;
- 	struct intel_gt *gt = engine->gt;
--	int err;
-+	int err = 0;
- 
- 	GEM_BUG_ON(i915_active_is_idle(ref));
- 
-@@ -782,7 +782,7 @@ int i915_active_acquire_preallocate_barrier(struct i915_active *ref,
- 		if (!node) {
- 			node = kmem_cache_alloc(global.slab_cache, GFP_KERNEL);
- 			if (!node) {
--				err = ENOMEM;
-+				err = -ENOMEM;
- 				goto unwind;
- 			}
- 
-diff --git a/drivers/gpu/drm/i915/selftests/i915_request.c b/drivers/gpu/drm/i915/selftests/i915_request.c
-index 6014e8dfcbb1..dda801a87b8a 100644
---- a/drivers/gpu/drm/i915/selftests/i915_request.c
-+++ b/drivers/gpu/drm/i915/selftests/i915_request.c
-@@ -326,7 +326,7 @@ static int __igt_breadcrumbs_smoketest(void *arg)
- 		if (!wait) {
- 			i915_sw_fence_commit(submit);
- 			heap_fence_put(submit);
--			err = ENOMEM;
-+			err = -ENOMEM;
- 			break;
+diff --git a/tools/bpf/bpftool/btf.c b/tools/bpf/bpftool/btf.c
+index faac8189b285..c2f1fd414820 100644
+--- a/tools/bpf/bpftool/btf.c
++++ b/tools/bpf/bpftool/btf.c
+@@ -596,7 +596,7 @@ static int do_dump(int argc, char **argv)
+ 			goto done;
  		}
- 
+ 		if (!btf) {
+-			err = ENOENT;
++			err = -ENOENT;
+ 			p_err("can't find btf with ID (%u)", btf_id);
+ 			goto done;
+ 		}
 -- 
 2.26.2
 
