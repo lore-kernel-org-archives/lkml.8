@@ -8,65 +8,71 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C6BC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA52FC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D9E62072A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A5320738
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:21:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uqiEiQcp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ue9y1glW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbgHBQUH (ORCPT
+        id S1726309AbgHBQVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 12:20:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54848 "EHLO
+        Sun, 2 Aug 2020 12:21:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbgHBQUG (ORCPT
+        with ESMTP id S1725768AbgHBQVS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 12:20:06 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AEB3C06174A;
-        Sun,  2 Aug 2020 09:20:06 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id r12so31977402wrj.13;
-        Sun, 02 Aug 2020 09:20:06 -0700 (PDT)
+        Sun, 2 Aug 2020 12:21:18 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58ED3C06174A;
+        Sun,  2 Aug 2020 09:21:18 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a5so22068870wrm.6;
+        Sun, 02 Aug 2020 09:21:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=4OQ/PelrCaLecz+CfF4+bB2gb2hH8VFrvo4a03w3HA8=;
-        b=uqiEiQcpXcLwPW3xlaLHFgSEZThuQViLLC3MwUBw3F8xtV2m+vIdHRe0/EsHVJjuDI
-         TxJrtjY42u9GL8wL05UVCzSrEwttevPdBZuJsNW1GZ3oPo1e8cNjRmNxTSeQjs8k+UGT
-         RUKUUHhQNg5+U5adjsdeae/2KvGg+1rcRWT1axd5qgv+NhiCPUOApKIdpNl/+D1jpnMy
-         eTR3He5YAkW5vfBFM81+xGc606Lttz435RhAC6sVdSFIlyPUu5X98GZsX+PHreAfET7K
-         DUlq+A67syD5LgOmZSoH/s4mUaNyjqYnEkcWrG+ln+AfWm+GnndHNYWmf9ZGvBr1TU0l
-         W4Vw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D5T1T+zFmu3MftYYttB9Il2EU0RTA1ff+C11FGJ2VQ8=;
+        b=ue9y1glWMg0U8okwewHtv5AE/SKIC3FROr0CO0Ij+gHtK76nmcGWrmBKrqvXJaZ+hh
+         GduDnbYhH+qsSBqY+iFDCrKXPd6o1nrDfER8PREo4bP6g77IqnGWrxHqR+eLBtjGK1DN
+         uPy/AeDAfZ8aG0AOsjJB+ulBuU3CHaONQxULXU2AW6dghB0VULeFKklFtrlPRIso6a9c
+         YN0GVFm1WxkVL/BzXRvrmyaRPsQm7XqQL9Y0CBQ0PydqcfQM/gcLKeJQMABrNVn6cJEg
+         WFcqmFqogSxqvDgrmjUIv0HxjLSPZHXHqq1Frqt8+7oUCsi9ewsmVvDHSCCoaC1WkyLU
+         8zPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4OQ/PelrCaLecz+CfF4+bB2gb2hH8VFrvo4a03w3HA8=;
-        b=ChjyWTONU+NzXMnNMhBkszgWi/rCXTZXEVE7r+q4PeBPbX8Al13GC49x2Re60qlU/P
-         bU19B+x2ug/HBe0wN6poVa5J7KP60mTnXtTVJNZYaMHWU8p+emxiTPtFoKPHWDoLLjQO
-         qeA6rvFLpV9oGt6ZX1vXqx4hlsWy0qeKeqTgGJ7LBKKUhsNKWnJsKFhuxKMuUOMwkY1a
-         iU3kHKeKJx2OQWYH/DnIl7uJlU3L7xt1KBD4UC7+eWBje0OnvrOy3/eZo6y9b9VsXvTx
-         Vs23k+debXqXw2pPwnQdmji40mRcAc/GAdxroHOlG2JbqVfCsZqxaiyXZAvAS2dfBdPu
-         ucaA==
-X-Gm-Message-State: AOAM5306tGl6FIJ5afhDYdxz6Qo4UMiGoDRg7wLwtbmvVZ9XEXLzUxbq
-        SLFyNoTzFYc2QY8noo8B0ew=
-X-Google-Smtp-Source: ABdhPJx6nOiOkR1PATijfL1SWXhD/Pp8EJDXAX4J28P0BCrqBzjgJxA9FiyuEpAOzmy3IlFGBYzAZA==
-X-Received: by 2002:a5d:4e81:: with SMTP id e1mr11006779wru.22.1596385205261;
-        Sun, 02 Aug 2020 09:20:05 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D5T1T+zFmu3MftYYttB9Il2EU0RTA1ff+C11FGJ2VQ8=;
+        b=F1ccFp9MhaHiKJAmpie+LLIYPJQ3YfwuJCPCk2inf6xhPuSVqyBPDCCn/86CtT023J
+         fJSSHOBe9ERTbjPsXQaSuphqFKvBSD6g+1BVJ7mIGaDlXmKM1PcfzcfE72jOS4VwH+ot
+         YiaVXo5JmTzqIGtGBf2WcpkbRL2dgiVtztViuw3TTJaK80NAYgOYbStOSg+HVDU8HXDg
+         O2R5vc6eISDMnIPozsJ1D51K5ycfrR29hH8pXFENvx5FwPfDwLtiitiBxhKQ0ie+PpiZ
+         pc4PcDlwwL2UTWB+nmRx57MrnIrNxo1HV+yKlT6t8nQ6tq4ALnvdleIZ5RYUT2aY7POV
+         DG7g==
+X-Gm-Message-State: AOAM532EYbR0D4S5BpRFMsSlav3y5NtB+jvc4N/kVrnC6zGDbJAVbLrf
+        J2Cs4LL8W0FOLKdZQoBpg04=
+X-Google-Smtp-Source: ABdhPJwMgL6A7e1V/dEg/MLvpj9US3SFGL5okBJaZwDhwNgzVQYuDpMoIECrBuN/Dw+z8alWVNYKjA==
+X-Received: by 2002:a5d:4e81:: with SMTP id e1mr11009751wru.22.1596385277100;
+        Sun, 02 Aug 2020 09:21:17 -0700 (PDT)
 Received: from felia.fritz.box ([2001:16b8:2dd3:b900:5cb6:49ea:83a1:88c])
-        by smtp.gmail.com with ESMTPSA id j11sm19417868wrq.69.2020.08.02.09.20.04
+        by smtp.gmail.com with ESMTPSA id p25sm18798905wma.39.2020.08.02.09.21.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Aug 2020 09:20:04 -0700 (PDT)
+        Sun, 02 Aug 2020 09:21:16 -0700 (PDT)
 From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
 To:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+        Jonathan Corbet <corbet@lwn.net>,
+        Tao Zhou <ouwen210@hotmail.com>, linux-doc@vger.kernel.org
 Cc:     Harry Wei <harryxiyou@gmail.com>, linux-kernel@vger.kernel.org,
         Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] doc/zh_CN: resolve undefined label warning in admin-guide index
-Date:   Sun,  2 Aug 2020 18:19:56 +0200
-Message-Id: <20200802161956.18268-1-lukas.bulwahn@gmail.com>
+Subject: [PATCH] doc/zh_CN: fix title heading markup in admin-guide cpu-load
+Date:   Sun,  2 Aug 2020 18:21:01 +0200
+Message-Id: <20200802162101.18875-1-lukas.bulwahn@gmail.com>
 X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -74,35 +80,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Documentation generation warns:
 
-  Documentation/translations/zh_CN/admin-guide/index.rst:3:
-  WARNING: undefined label: documentation/admin-guide/index.rst
+  Documentation/translations/zh_CN/admin-guide/cpu-load.rst:1:
+  WARNING: Title overline too short.
 
-Use doc reference for .rst files to resolve the warning.
+Extend title heading markup by one. It was just off by one.
 
-Fixes: 37a607cf2318 ("doc/zh_CN: add admin-guide index")
+Fixes: e210c66d567c ("doc/zh_CN: add cpu-load Chinese version")
 Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 ---
-Alex, please ack.
+Alex, Tao, please ack.
 
 Jonathan, please pick this quick minor warning fix.
 
 applies on your docs-next and next-20200731
 
- Documentation/translations/zh_CN/admin-guide/index.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/translations/zh_CN/admin-guide/cpu-load.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/translations/zh_CN/admin-guide/index.rst b/Documentation/translations/zh_CN/admin-guide/index.rst
-index 7d502fa5da64..ed5ab7e37f38 100644
---- a/Documentation/translations/zh_CN/admin-guide/index.rst
-+++ b/Documentation/translations/zh_CN/admin-guide/index.rst
+diff --git a/Documentation/translations/zh_CN/admin-guide/cpu-load.rst b/Documentation/translations/zh_CN/admin-guide/cpu-load.rst
+index 0116d0477799..c972731c0e57 100644
+--- a/Documentation/translations/zh_CN/admin-guide/cpu-load.rst
++++ b/Documentation/translations/zh_CN/admin-guide/cpu-load.rst
 @@ -1,6 +1,6 @@
- .. include:: ../disclaimer-zh_CN.rst
+-=======
++========
+ CPU 负载
+-=======
++========
  
--:Original: :ref:`Documentation/admin-guide/index.rst`
-+:Original: :doc:`../../../admin-guide/index`
- :Translator: Alex Shi <alex.shi@linux.alibaba.com>
- 
- 
+ Linux通过``/proc/stat``和``/proc/uptime``导出各种信息，用户空间工具
+ 如top(1)使用这些信息计算系统花费在某个特定状态的平均时间。
 -- 
 2.17.1
 
