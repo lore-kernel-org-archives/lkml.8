@@ -2,141 +2,125 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD60C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 09:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B379C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 09:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3E7620738
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 09:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7645E20738
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 09:32:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JiQq24jV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgHBJ2I (ORCPT
+        id S1727994AbgHBJcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 05:28:08 -0400
-Received: from mga01.intel.com ([192.55.52.88]:48545 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726376AbgHBJ2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 05:28:07 -0400
-IronPort-SDR: 8m93Abp3ydY86+scLotkQHwnjSra+iJTucNHm3SoYt96KcbfG6j45LIHGdr72Lh8eC5Iq/oQq2
- PJsbwmRB3lHQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9700"; a="170092746"
-X-IronPort-AV: E=Sophos;i="5.75,425,1589266800"; 
-   d="scan'208";a="170092746"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2020 02:28:05 -0700
-IronPort-SDR: JG4LbW5feZTiAc1/jxoIIZ+0PflY09eUSS9mfFy1SRszkmZs/9wC8LUGXabpQi4L57X/D1bM7u
- mS2Ce28w0XNw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,425,1589266800"; 
-   d="scan'208";a="287694083"
-Received: from lkp-server01.sh.intel.com (HELO e21119890065) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 02 Aug 2020 02:28:05 -0700
-Received: from kbuild by e21119890065 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k2AHl-0001Zz-9c; Sun, 02 Aug 2020 09:28:05 +0000
-Date:   Sun, 02 Aug 2020 17:27:48 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 587bb771546ebb8e3b18c5201af430573df41a9d
-Message-ID: <5f268714.muA18A8lgOymEoIR%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Sun, 2 Aug 2020 05:32:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49452 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726376AbgHBJct (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 05:32:49 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49C30C06174A;
+        Sun,  2 Aug 2020 02:32:49 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id c10so5461364pjn.1;
+        Sun, 02 Aug 2020 02:32:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lQyCse9ldgzSvTNwCVrbnPBDFh47UeLMm99PjX/Y9Ug=;
+        b=JiQq24jVJttFMFq7sYFEaw6AvoUegLS2lzK0HxgFI0hxO2hNNYpCd6YFU+EBJWTNQf
+         p1QkXMfPFRy2+Tey4+LHSXeM8N+HX+rU7b3IWfoOpYyIPfepiuAEKK3wPzz8gsuS8cEV
+         YHlbJjwMMVw6aJZ4r8Do1bnwC3KXWbNDn4hWiebehnD4jnojcvhGaqDTMkfrq4//Q3R+
+         qcZmk4jtPTerl0Cwqk/FAnAM6wZj3P5u95iCdk35oAbtTSvHE327Hx1LjyBqAQVpImxT
+         QyiQJqfU33ksp3DgDOcgFwwrC//MZfVo/q4wybwSd83lFZZNY21xM1OKYeZxSw4Ww2zr
+         YQRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lQyCse9ldgzSvTNwCVrbnPBDFh47UeLMm99PjX/Y9Ug=;
+        b=V+xbDH5fvPngycJPD10ky79WG6FedxHWjVnPXeXl/S8lMrK+jTLeF94Z+qL9weSXIp
+         toR3m93mu/8neiGaV7FI4IdSeyUUitvsJfn33a2xwAUQ4yHy1M42TloLtwLwFYPGDJ26
+         mwEzC8CpTHawI8yz43GRjPl3bty/FMzFk2rSVj2RYCV1/pLS7WYQ+Wq5fZqoSaEre2AP
+         WMfdKXQyUSX3mL0dHylkAWWc7S/4RjsgVr24VK2IuU9gYjWbd3aFpBcBJR9TocOirw+6
+         dSKoYGE3skM1ok8sU8vARKe2Ki1w44cLWzC46Nt4JpczyLuB1RJkFloAbZlre+/b8pAu
+         lZRQ==
+X-Gm-Message-State: AOAM532D0ifnGj9y0qMuCjOfpszEdVURsGbNDEsjDhGahJOvPQ/tgjT8
+        f+YUPqbDZa/bBJlavqgEyIU=
+X-Google-Smtp-Source: ABdhPJwL0hTPFE5j/dtwuax92ub5eNLPucfnEP4P3GU0AB8UdeHnowIWbb93iQ6vSDf7f0Eij+alzQ==
+X-Received: by 2002:a17:90b:3d7:: with SMTP id go23mr11072181pjb.44.1596360768524;
+        Sun, 02 Aug 2020 02:32:48 -0700 (PDT)
+Received: from sol (106-69-185-93.dyn.iinet.net.au. [106.69.185.93])
+        by smtp.gmail.com with ESMTPSA id e15sm2818167pgr.39.2020.08.02.02.32.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Aug 2020 02:32:47 -0700 (PDT)
+Date:   Sun, 2 Aug 2020 17:32:42 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 05/18] gpiolib: cdev: support GPIO_GET_LINE_IOCTL and
+ GPIOLINE_GET_VALUES_IOCTL
+Message-ID: <20200802093242.GA23877@sol>
+References: <20200725041955.9985-1-warthog618@gmail.com>
+ <20200725041955.9985-6-warthog618@gmail.com>
+ <CAHp75VcKtATPDKGAViWqjOJDqukDrgZ13aTU6rTJ1jEeB3vmVw@mail.gmail.com>
+ <20200726011244.GA6587@sol>
+ <CAMpxmJWaEVwjXSFHTYmwdfA+88upVkJ4ePSQf_ziSOa1YdOUKQ@mail.gmail.com>
+ <20200802033158.GA13174@sol>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200802033158.GA13174@sol>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: 587bb771546ebb8e3b18c5201af430573df41a9d  Merge branch 'WIP.x86/kaslr'
+On Sun, Aug 02, 2020 at 11:31:58AM +0800, Kent Gibson wrote:
+> On Fri, Jul 31, 2020 at 06:05:10PM +0200, Bartosz Golaszewski wrote:
+> > On Sun, Jul 26, 2020 at 3:12 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > >
+> > 
+> > > >
+> > > > > +               dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
+> > > > > +                       offset);
+> > > >
+> > > > Perhaps tracepoint / event?
+> > > >
+> > >
+> > > Again, a cut-and-paste from V1, and I have no experience with
+> > > tracepoints or events, so I have no opinion on that.
+> > >
+> > > So, yeah - perhaps?
+> > >
+> > 
+> > I think it's a good idea to add some proper instrumentation this time
+> > other than much less reliable logs. Can you take a look at
+> > include/trace/events/gpio.h? Adding new GPIO trace events should be
+> > pretty straightforward by copy-pasti... drawing inspiration from
+> > existing ones.
+> > 
+> 
+> You only want tracepoints to replace those dev_dbg()s, so when a line
+> is requested? What about the release?  Any other points?
+> 
 
-elapsed time: 806m
+Had a closer look and it seems to me that the correct place to add such
+tracepoints would be gpiod_request() and gpiod_free(), so they catch all
+requests, not just the cdev ones.  And that moves it outside the scope
+of this patch.
 
-configs tested: 71
-configs skipped: 1
+I personally don't have any use for the dev_dbg()s here and am happy to
+remove them - they were only there to match the behaviour of
+linehandle_create as closely as possible.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-h8300                            allyesconfig
-mips                        workpad_defconfig
-arm                            xcep_defconfig
-arm                      integrator_defconfig
-mips                      maltasmvp_defconfig
-sh                        sh7757lcr_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a006-20200802
-x86_64               randconfig-a001-20200802
-x86_64               randconfig-a004-20200802
-x86_64               randconfig-a003-20200802
-x86_64               randconfig-a002-20200802
-x86_64               randconfig-a005-20200802
-i386                 randconfig-a004-20200802
-i386                 randconfig-a005-20200802
-i386                 randconfig-a001-20200802
-i386                 randconfig-a002-20200802
-i386                 randconfig-a003-20200802
-i386                 randconfig-a006-20200802
-i386                 randconfig-a011-20200802
-i386                 randconfig-a012-20200802
-i386                 randconfig-a015-20200802
-i386                 randconfig-a014-20200802
-i386                 randconfig-a013-20200802
-i386                 randconfig-a016-20200802
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Cheers,
+Kent.
