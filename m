@@ -2,60 +2,60 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDFEC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF4F2065C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A26CF2065C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:44:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbgHBNfP (ORCPT
+        id S1728416AbgHBNoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 09:35:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57992 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728423AbgHBNfP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 09:35:15 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC10BC06174A
-        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 06:35:14 -0700 (PDT)
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 4BKMTC14kXz9sTH; Sun,  2 Aug 2020 23:35:10 +1000 (AEST)
-From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-To:     linuxppc-dev@lists.ozlabs.org, Vladis Dronov <vdronov@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-In-Reply-To: <20200729133741.62789-1-vdronov@redhat.com>
-References: <20200729133741.62789-1-vdronov@redhat.com>
-Subject: Re: [PATCH] powerpc: fix function annotations to avoid section mismatch warnings with gcc-10
-Message-Id: <159637523829.42190.11957533441290690592.b4-ty@ellerman.id.au>
-Date:   Sun,  2 Aug 2020 23:35:10 +1000 (AEST)
+        Sun, 2 Aug 2020 09:44:17 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:38856 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726578AbgHBNoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 09:44:15 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1k2EHS-007vVE-8B; Sun, 02 Aug 2020 15:44:02 +0200
+Date:   Sun, 2 Aug 2020 15:44:02 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>, g@lunn.ch
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [net-next PATCH] net: phy: mdio-mvusb: select MDIO_DEVRES in
+ Kconfig
+Message-ID: <20200802134402.GB1862409@lunn.ch>
+References: <20200802074953.1529-1-brgl@bgdev.pl>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200802074953.1529-1-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jul 2020 15:37:41 +0200, Vladis Dronov wrote:
-> Certain warnings are emitted for powerpc code when building with a gcc-10
-> toolset:
+On Sun, Aug 02, 2020 at 09:49:53AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
->     WARNING: modpost: vmlinux.o(.text.unlikely+0x377c): Section mismatch in
->     reference from the function remove_pmd_table() to the function
->     .meminit.text:split_kernel_mapping()
->     The function remove_pmd_table() references
->     the function __meminit split_kernel_mapping().
->     This is often because remove_pmd_table lacks a __meminit
->     annotation or the annotation of split_kernel_mapping is wrong.
+> PHYLIB is not selected by the mvusb driver but it uses mdio devres
+> helpers. Explicitly select MDIO_DEVRES in this driver's Kconfig entry.
 > 
-> [...]
+> Reported-by: kernel test robot <lkp@intel.com>
+> Fixes: 1814cff26739 ("net: phy: add a Kconfig option for mdio_devres")
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Applied to powerpc/next.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-[1/1] powerpc: fix function annotations to avoid section mismatch warnings with gcc-10
-      https://git.kernel.org/powerpc/c/aff779515a070df7e23da9e86f1096f7d10d647e
-
-cheers
+    Andrew
