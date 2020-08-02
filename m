@@ -7,65 +7,72 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B12BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA227C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB17207DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5A252075B
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:16:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728500AbgHBLQb (ORCPT
+        id S1728517AbgHBLQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 07:16:31 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:44822 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728132AbgHBLPm (ORCPT
+        Sun, 2 Aug 2020 07:16:37 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:54117 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728159AbgHBLPh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 07:15:42 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0U4T30DO_1596366936;
-Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U4T30DO_1596366936)
+        Sun, 2 Aug 2020 07:15:37 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R361e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0U4T1Vff_1596366933;
+Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U4T1Vff_1596366933)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 02 Aug 2020 19:15:37 +0800
+          Sun, 02 Aug 2020 19:15:33 +0800
 From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-To:     harry.wentland@amd.com, sunpeng.li@amd.com,
-        alexander.deucher@amd.com, christian.koenig@amd.com,
-        airlied@linux.ie, daniel@ffwll.ch, nicholas.kazlauskas@amd.com,
-        Rodrigo.Siqueira@amd.com, Bhawanpreet.Lakha@amd.com,
-        stylon.wang@amd.com, roman.li@amd.com, mikita.lipski@amd.com
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, tianjia.zhang@alibaba.com
-Subject: [PATCH] drm/amd/display: Fix wrong return value in dm_update_plane_state()
-Date:   Sun,  2 Aug 2020 19:15:36 +0800
-Message-Id: <20200802111536.5246-1-tianjia.zhang@linux.alibaba.com>
+To:     herbert@gondor.apana.org.au, davem@davemloft.net,
+        matthias.bgg@gmail.com, swboyd@chromium.org, yuehaibing@huawei.com,
+        tianjia.zhang@linux.alibaba.com, ryder.lee@mediatek.com
+Cc:     linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tianjia.zhang@alibaba.com
+Subject: [PATCH] crypto: mediatek - Fix wrong return value in mtk_desc_ring_alloc()
+Date:   Sun,  2 Aug 2020 19:15:32 +0800
+Message-Id: <20200802111532.5110-1-tianjia.zhang@linux.alibaba.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On an error exit path, a negative error code should be returned
-instead of a positive return value.
+In case of memory allocation failure, a negative error code should
+be returned.
 
-Fixes: 9e869063b0021 ("drm/amd/display: Move iteration out of dm_update_planes")
-Cc: Leo Li <sunpeng.li@amd.com>
+Fixes: 785e5c616c849 ("crypto: mediatek - Add crypto driver support for some MediaTek chips")
+Cc: Ryder Lee <ryder.lee@mediatek.com>
 Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/crypto/mediatek/mtk-platform.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 710edc70e37e..5810416e2ddc 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -8182,8 +8182,7 @@ static int dm_update_plane_state(struct dc *dc,
- 				dm_old_plane_state->dc_state,
- 				dm_state->context)) {
+diff --git a/drivers/crypto/mediatek/mtk-platform.c b/drivers/crypto/mediatek/mtk-platform.c
+index 7e3ad085b5bd..ef4339e84d03 100644
+--- a/drivers/crypto/mediatek/mtk-platform.c
++++ b/drivers/crypto/mediatek/mtk-platform.c
+@@ -442,7 +442,7 @@ static void mtk_desc_dma_free(struct mtk_cryp *cryp)
+ static int mtk_desc_ring_alloc(struct mtk_cryp *cryp)
+ {
+ 	struct mtk_ring **ring = cryp->ring;
+-	int i, err = ENOMEM;
++	int i;
  
--			ret = EINVAL;
--			return ret;
-+			return -EINVAL;
- 		}
+ 	for (i = 0; i < MTK_RING_MAX; i++) {
+ 		ring[i] = kzalloc(sizeof(**ring), GFP_KERNEL);
+@@ -476,7 +476,7 @@ static int mtk_desc_ring_alloc(struct mtk_cryp *cryp)
+ 				  ring[i]->cmd_base, ring[i]->cmd_dma);
+ 		kfree(ring[i]);
+ 	}
+-	return err;
++	return -ENOMEM;
+ }
  
- 
+ static int mtk_crypto_probe(struct platform_device *pdev)
 -- 
 2.26.2
 
