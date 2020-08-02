@@ -2,117 +2,119 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE20CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 19:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CDEC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 19:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D129320722
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 19:58:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="lR2KuM1C"
+	by mail.kernel.org (Postfix) with ESMTP id 4AF5920722
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 19:59:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbgHBT6h (ORCPT
+        id S1727830AbgHBT71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 15:58:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726058AbgHBT6h (ORCPT
+        Sun, 2 Aug 2020 15:59:27 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:37461 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726058AbgHBT70 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 15:58:37 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB8AEC06174A
-        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 12:58:36 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id f7so32346616wrw.1
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 12:58:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=subject:from:to:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=EY2GM8DAMcjIe2PibsUkkd0lvUS8v18wFqJKkQw10vU=;
-        b=lR2KuM1CkmbL3QM8ZBeu1Bu6902zGmKtJkkMlSUl1xP1YGYjFmDiD8hvQYC9SZl4Sk
-         bnsLzKmekMU+p8J/SpmSyuX4mIyiBh09rpiNzbFPGgfeFJTFdiHQo6HqCYyn5S2yu0Jv
-         pWDCB8K+U7R1cGYngpB064q8EnCkwdNtVUCsSQKsPUelTJdv8gdC04za4TAZ9TO+WsZV
-         x/NtF4/hRtglRH81xegr5f1mQCCy5daEP93etsaNBBSxMdVjUD7zf3cHgBGtDurMjleF
-         AcZcf7S84y1gdEVVX/cShP7kwOhjAcLofXAwKC3O3eHuW0zEIl+qvcYLGaTbVd70DeEB
-         1fvw==
+        Sun, 2 Aug 2020 15:59:26 -0400
+Received: by mail-io1-f71.google.com with SMTP id f6so10844373ioa.4
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 12:59:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EY2GM8DAMcjIe2PibsUkkd0lvUS8v18wFqJKkQw10vU=;
-        b=rn5143q5F48OVKfxmABaPbmP1aFDnCNGPsWGccGAsbFiyGDfiw7Cd9E823zs2W/jgO
-         OGkex36aFvKXz0K0OC/gO7MLqgFYpTytGwqEFE2lJ8MkwvMefZvLyRAg0CCYxIDWG0zr
-         E5giZD6ltnUqQFYfsrEmmclHntrKeSxgFxufMWEM8jujM0gbf2sEmYnNyrKvOzVhCW+M
-         zByHyuclmrT3MDHLPx53FZ5v5LSbJAVfG4fTrXj786OeilruXrb1h/DIFmdBZqC1wmXD
-         9DIANAzcgLfHk5pLaZqdeKRQzkXElRMe/206jMLE42ahRtgsB1QaUbRN/FUHiq0CIS2p
-         rpmA==
-X-Gm-Message-State: AOAM532oNXmvh74z56HUg5e4/W5ExRQud4e5S6+xTveE2b8g5nwQHpj5
-        08Q1TP2Jm6obYHsB+z0gF6c=
-X-Google-Smtp-Source: ABdhPJxXJm2pq/i0tJ+Ro+2DF6E2cgdBiHcgro15aChsIlOOknuFI8SGbys6muWJVrx25+LVkqCZCQ==
-X-Received: by 2002:a5d:4005:: with SMTP id n5mr11873938wrp.26.1596398315335;
-        Sun, 02 Aug 2020 12:58:35 -0700 (PDT)
-Received: from [192.168.1.20] ([213.122.218.185])
-        by smtp.googlemail.com with ESMTPSA id 65sm22205018wre.6.2020.08.02.12.58.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Aug 2020 12:58:34 -0700 (PDT)
-Subject: Re: PATCH: rtsx_pci driver - don't disable the rts5229 card reader on
- Intel NUC boxes
-From:   Chris Clayton <chris2553@googlemail.com>
-To:     LKML <linux-kernel@vger.kernel.org>, ricky_wu@realtek.com,
-        gregkh@linuxfoundation.org, rdunlap@infradead.org,
-        philquadra@gmail.com, Arnd Bergmann <arnd@arndb.de>
-References: <862172f0-cd23-800c-27b1-27cb49e99099@googlemail.com>
-Message-ID: <a9a94d7f-4873-7a10-4911-f3c760257c5c@googlemail.com>
-Date:   Sun, 2 Aug 2020 20:58:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.1.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=F10XM7hC+E3LYcPRivzOjDTSVfMfyhzmJcx4FWkMrXc=;
+        b=EJ+MJ4rKv9JXnIQbPO5Y8h7P3ZjrICq1dXWUqS+ziOXY8ghBNnZ1fHp/piBY8qHGNt
+         Zx/TbxV/uVGV4m+ZuEkLtIATcVp/DWFcpH3MJS6jXyKnKyOuOpNrp8CEm/cyNBIkQLCe
+         zz3T9vTUk4qMJ6NQY/1O74yAADeVdmkXwvneoqd0HDFHxd4HzYPcoTjusv2hnXUv/Nh9
+         D/3b3TMm9SLLzQSFldNk3KzyBWlLZDiQL5cvmw4BbRIH2iY5Ov+pAFqzmN0DOW2yrYeh
+         pO7X4L2FtF2bri/1plBDjmYj5fyz0QSNlNJgt0N1Q76zPh1ImY8n3k9sqTRGQc0NjHWN
+         deyA==
+X-Gm-Message-State: AOAM533RnhBZqzBv/mkItwFhLI50jrfDh4bV/m09SpgpSqt3OGNfZXUk
+        qD9GahZ13DGbNPP0AUBToxEPEMv+HNrSsGFLYXePjHUJKBvQ
+X-Google-Smtp-Source: ABdhPJzfyholBojvTdXf18niTb+bG+GT/Pvyc0HPQj3ZJQzGGF27xphs6kDRmpgZm2imxrZ3RckHwdO2JIWfbXiCvUf2Hmw/beIP
 MIME-Version: 1.0
-In-Reply-To: <862172f0-cd23-800c-27b1-27cb49e99099@googlemail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a02:84ac:: with SMTP id f41mr12062153jai.56.1596398365555;
+ Sun, 02 Aug 2020 12:59:25 -0700 (PDT)
+Date:   Sun, 02 Aug 2020 12:59:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007fbe6605abea7514@google.com>
+Subject: INFO: task can't die in p9_client_rpc
+From:   syzbot <syzbot+a42aa715d3d32226792a@syzkaller.appspotmail.com>
+To:     asmadeus@codewreck.org, davem@davemloft.net, ericvh@gmail.com,
+        kuba@kernel.org, linux-kernel@vger.kernel.org, lucho@ionkov.net,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        v9fs-developer@lists.sourceforge.net
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry, I should have said that the patch is against 5.7.12. It applies to upstream, but with offsets.
+Hello,
 
-On 02/08/2020 20:48, Chris Clayton wrote:
-> bede03a579b3 introduced a bug which leaves the rts5229 PCI Express card reader on my Intel NUC6CAYH box.
-> 
-> The bug is in drivers/misc/cardreader/rtsx_pcr.c. A call to rtsx_pci_init_ocp() was added to rtsx_pci_init_hw().
-> At the call point, pcr->ops->init_ocp is NULL and pcr->option.ocp_en is 0, so in rtsx_pci_init_ocp() the cardreader
-> gets disabled.
-> 
-> I've avoided this by making excution code that results in the reader being disabled conditional on the device
-> not being an RTS5229. Of course, other rtsxxx card readers may also be disabled by this bug. I don't have the
-> knowledge to address that, so I'll leave to the driver maintainers.
-> 
-> The patch to avoid the bug is attached.
-> 
-> Fixes: bede03a579b3 ("misc: rtsx: Enable OCP for rts522a rts524a rts525a rts5260")
-> Link: https://marc.info/?l=linux-kernel&m=159105912832257
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=204003
-> Signed-off-by: Chris Clayton <chris2553@googlemail.com>
-> 
-> bede03a579b3 introduced a bug which leaves the rts5229 PCI Express card reader on my Intel NUC6CAYH box.
-> 
-> The bug is in drivers/misc/cardreader/rtsx_pcr.c. A call to rtsx_pci_init_ocp() was added to rtsx_pci_init_hw().
-> At the call point, pcr->ops->init_ocp is NULL and pcr->option.ocp_en is 0, so in rtsx_pci_init_ocp() the cardreader
-> gets disabled.
-> 
-> I've avoided this by making excution code that results in the reader being disabled conditional on the device
-> not being an RTS5229. Of course, other rtsxxx card readers may also be disabled by this bug. I don't have the
-> knowledge to address that, so I'll leave to the driver maintainers.
-> 
-> The patch to avoid the bug is attached.
-> 
-> Chris
-> 
+syzbot found the following issue on:
+
+HEAD commit:    01830e6c Add linux-next specific files for 20200731
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=176146cc900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2e226b2d1364112c
+dashboard link: https://syzkaller.appspot.com/bug?extid=a42aa715d3d32226792a
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+a42aa715d3d32226792a@syzkaller.appspotmail.com
+
+INFO: task syz-executor.5:24879 can't die for more than 143 seconds.
+syz-executor.5  D25688 24879   7480 0x00004004
+Call Trace:
+ context_switch kernel/sched/core.c:3669 [inline]
+ __schedule+0x8e5/0x21e0 kernel/sched/core.c:4418
+ schedule+0xd0/0x2a0 kernel/sched/core.c:4493
+ p9_client_rpc+0x3b5/0x11f0 net/9p/client.c:757
+ p9_client_flush+0x1f9/0x430 net/9p/client.c:665
+ p9_client_rpc+0xf93/0x11f0 net/9p/client.c:782
+ p9_client_version net/9p/client.c:953 [inline]
+ p9_client_create+0xa8f/0x10c0 net/9p/client.c:1053
+ v9fs_session_init+0x1dd/0x1770 fs/9p/v9fs.c:406
+ v9fs_mount+0x79/0x970 fs/9p/vfs_super.c:124
+ legacy_get_tree+0x105/0x220 fs/fs_context.c:592
+ vfs_get_tree+0x89/0x2f0 fs/super.c:1549
+ do_new_mount fs/namespace.c:2912 [inline]
+ do_mount+0x14f6/0x1e20 fs/namespace.c:3238
+ __do_sys_mount fs/namespace.c:3448 [inline]
+ __se_sys_mount fs/namespace.c:3425 [inline]
+ __x64_sys_mount+0x18f/0x230 fs/namespace.c:3425
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45cc79
+Code: Bad RIP value.
+RSP: 002b:00007f92f26b9c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 0000000000020480 RCX: 000000000045cc79
+RDX: 0000000020000100 RSI: 0000000020000040 RDI: 0000000000000000
+RBP: 000000000078bf50 R08: 0000000020000200 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bf0c
+R13: 00007fff9a822f9f R14: 00007f92f26ba9c0 R15: 000000000078bf0c
+
+Showing all locks held in the system:
+1 lock held by khungtaskd/1164:
+ #0: ffffffff89c52a80 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x260 kernel/locking/lockdep.c:5823
+1 lock held by in:imklog/6729:
+ #0: ffff8880a97c7db0 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:930
+
+=============================================
+
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
