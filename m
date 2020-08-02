@@ -2,71 +2,114 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F23C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28926C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC2CB206DA
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:15:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFEC120759
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:23:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Erj3Mq7s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726149AbgHBOP2 (ORCPT
+        id S1726282AbgHBOXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 10:15:28 -0400
-Received: from smtp07.smtpout.orange.fr ([80.12.242.129]:59881 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbgHBOP2 (ORCPT
+        Sun, 2 Aug 2020 10:23:50 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26934 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725780AbgHBOXt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 10:15:28 -0400
-Received: from localhost.localdomain ([93.22.148.198])
-        by mwinf5d42 with ME
-        id AeFQ2300A4H42jh03eFRvj; Sun, 02 Aug 2020 16:15:26 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 02 Aug 2020 16:15:26 +0200
-X-ME-IP: 93.22.148.198
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     csully@google.com, sagis@google.com, jonolson@google.com,
-        davem@davemloft.net, kuba@kernel.org, lrizzo@google.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] gve: Fix the size used in a 'dma_free_coherent()' call
-Date:   Sun,  2 Aug 2020 16:15:23 +0200
-Message-Id: <20200802141523.691565-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 2 Aug 2020 10:23:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596378228;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=2/kHNXwW/Okw1oeFagoA94XTuvPYMO2ieikygdNu33E=;
+        b=Erj3Mq7sCoAsePSyM9uTtcVGmZNB5aknHoaeFRYUiebTKHGbxts3am1Ntp8osMpsmQ+BAV
+        eYbAqbXculULk14YwXtmT/BErUb2rWz9pQp16OaXUnlWxHM0QtCIzUV0l0UOd1+egC0Lwg
+        Hc9R6W3oFNb4b2HaP+4AgvLqli3gOmo=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-257-96u3dJ5bPJGxpffmzPcAag-1; Sun, 02 Aug 2020 10:23:46 -0400
+X-MC-Unique: 96u3dJ5bPJGxpffmzPcAag-1
+Received: by mail-qv1-f72.google.com with SMTP id l18so5879778qvq.16
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 07:23:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2/kHNXwW/Okw1oeFagoA94XTuvPYMO2ieikygdNu33E=;
+        b=ufzSnXN3+46Ij3TZApm/4yV4lYKrrPiPV18Dw0sjW+lxBDzpAURjM9FM9LnIjyR0KR
+         4cT13uz9G+n9gq1T5yUz8FcFwO142oyaXznp3PsEVd62l4u0M0UGZT42667MHzHBDm8D
+         ReFT+mP1oFIsHIkGzewIRg7XGtBcCAqmzLfiEfuzEb5PsTwzOoXAsNWZyojppMt7c40i
+         38N+c8kc0gEVzYiIoRZUjtzfVtaMU8NltPumNlWpuajgHMBiiW0HBMi7JjSQ9ys0JHwA
+         1jh/7k4pP5P+uzGYsgdH+xHoNWehGWUarz2OSkL6Hb54QCpoqqmGPsbZGU478AmJG1BQ
+         GFsw==
+X-Gm-Message-State: AOAM530t5B7H3k/aCQzqgngybAhHHOokutHKv3hPyQjvX4kuXwD/J0q1
+        iURuziWPxWMl3dDf0+zdZpJzU5nsQl69KWlav/BvcR71Hv51RmIt6dXiFArlHC93xWt+mW8t8br
+        3759UIpk1UXIkNyoGVzPguTW3
+X-Received: by 2002:a37:62cc:: with SMTP id w195mr12855863qkb.33.1596378226336;
+        Sun, 02 Aug 2020 07:23:46 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxgE09Sl0MfhLOKvnnEluSkBTqBNuCaM3HjAVewFzyYuhdgdEgcM4E45wQlwXc1nshAvd3KIA==
+X-Received: by 2002:a37:62cc:: with SMTP id w195mr12855832qkb.33.1596378226027;
+        Sun, 02 Aug 2020 07:23:46 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id g61sm18050245qtd.65.2020.08.02.07.23.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Aug 2020 07:23:45 -0700 (PDT)
+From:   trix@redhat.com
+To:     michael.hennerich@analog.com, alex.aring@gmail.com,
+        stefan@datenfreihafen.org, davem@davemloft.net, kuba@kernel.org,
+        marcel@holtmann.org
+Cc:     linux-wpan@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tom Rix <trix@redhat.com>
+Subject: [PATCH] ieee802154/adf7242: check status of adf7242_read_reg
+Date:   Sun,  2 Aug 2020 07:23:39 -0700
+Message-Id: <20200802142339.21091-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the size used in 'dma_free_coherent()' in order to match the one
-used in the corresponding 'dma_alloc_coherent()'.
+From: Tom Rix <trix@redhat.com>
 
-Fixes: 893ce44df5 ("gve: Add basic driver framework for Compute Engine Virtual NIC")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Clang static analysis reports this error
+
+adf7242.c:887:6: warning: Assigned value is garbage or undefined
+        len = len_u8;
+            ^ ~~~~~~
+
+len_u8 is set in
+       adf7242_read_reg(lp, 0, &len_u8);
+
+When this call fails, len_u8 is not set.
+
+So check the return code.
+
+Fixes: 7302b9d90117 ("ieee802154/adf7242: Driver for ADF7242 MAC IEEE802154")
+
+Signed-off-by: Tom Rix <trix@redhat.com>
 ---
- drivers/net/ethernet/google/gve/gve_adminq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ieee802154/adf7242.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/google/gve/gve_adminq.c b/drivers/net/ethernet/google/gve/gve_adminq.c
-index c3ba7baf0107..883e173f5ca0 100644
---- a/drivers/net/ethernet/google/gve/gve_adminq.c
-+++ b/drivers/net/ethernet/google/gve/gve_adminq.c
-@@ -322,7 +322,7 @@ int gve_adminq_describe_device(struct gve_priv *priv)
- 	priv->default_num_queues = be16_to_cpu(descriptor->default_num_queues);
+diff --git a/drivers/net/ieee802154/adf7242.c b/drivers/net/ieee802154/adf7242.c
+index c11f32f644db..7db9cbd0f5de 100644
+--- a/drivers/net/ieee802154/adf7242.c
++++ b/drivers/net/ieee802154/adf7242.c
+@@ -882,7 +882,9 @@ static int adf7242_rx(struct adf7242_local *lp)
+ 	int ret;
+ 	u8 lqi, len_u8, *data;
  
- free_device_descriptor:
--	dma_free_coherent(&priv->pdev->dev, sizeof(*descriptor), descriptor,
-+	dma_free_coherent(&priv->pdev->dev, PAGE_SIZE, descriptor,
- 			  descriptor_bus);
- 	return err;
- }
+-	adf7242_read_reg(lp, 0, &len_u8);
++	ret = adf7242_read_reg(lp, 0, &len_u8);
++	if (ret)
++		return ret;
+ 
+ 	len = len_u8;
+ 
 -- 
-2.25.1
+2.18.1
 
