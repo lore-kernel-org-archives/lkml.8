@@ -2,88 +2,86 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE705C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 15:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 15:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB3C20738
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 15:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D774620738
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 15:30:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AmAJ556b"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="n62munwO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgHBP0l (ORCPT
+        id S1726799AbgHBPaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 11:26:41 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:33400 "EHLO m43-7.mailgun.net"
+        Sun, 2 Aug 2020 11:30:16 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:49327 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbgHBP0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 11:26:41 -0400
+        id S1725968AbgHBPaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 11:30:15 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596382000; h=Date: Message-Id: Cc: To: References:
+ s=smtp; t=1596382214; h=Date: Message-Id: Cc: To: References:
  In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=GNA5OJNuR29Mlzis21RnUedjUzEFcyoDBxjkgslOWSs=;
- b=AmAJ556bPDmLjVIwxTryh+MrnkIG83HjODcCeqK9EdS9r8xS6SwFHAu675Kg8nZx67Az2fFv
- 4qn8MLhNKDenb3nc4HVwSdlkJtePpFktXuuEjHskZS+KhfzzLEuZEqSKsy2nglBXsIohbz2+
- zpS4ao/+1Ej3J+Tbm2ahv1z0Pec=
+ Content-Type: Sender; bh=A+g2QS0HdfByZolMx/cDo4EMXXNg/jBWqy9XDQ2JidY=;
+ b=n62munwOVvuZCpl3EsjA62hRT37oEAu+rhIqlCgB9ZXsmOgDJKbs5aawOmee6V4bRfIRXCML
+ QoSrP0pQ0qwmE4rBhY0J8VNcHlpv1tHn0uUlNyXXucaSdh7OgkeFvlRieCF7lWc23QEjgTeQ
+ sX2LPopJ3M3NmQm/tfTokyuA+iI=
 X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5f26db28798b102968042634 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 02 Aug 2020 15:26:32
+ smtp-out-n14.prod.us-east-1.postgun.com with SMTP id
+ 5f26dbf09403087e1001c11e (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 02 Aug 2020 15:29:52
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 617D3C433CA; Sun,  2 Aug 2020 15:26:31 +0000 (UTC)
+        id 3F2C4C433C6; Sun,  2 Aug 2020 15:29:51 +0000 (UTC)
 Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 009FDC433C9;
-        Sun,  2 Aug 2020 15:26:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 009FDC433C9
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 84F2AC433C6;
+        Sun,  2 Aug 2020 15:29:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 84F2AC433C6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] drivers: bcma: remove set but not used variable `addrh`
- and
- `sizeh`
+Subject: Re: [PATCH net-next] brcm80211: fix possible memleak in
+ brcmf_proto_msgbuf_attach
 From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200721083935.13306-1-zhengyongjun3@huawei.com>
-References: <20200721083935.13306-1-zhengyongjun3@huawei.com>
-To:     Zheng Yongjun <zhengyongjun3@huawei.com>
-Cc:     <zajec5@gmail.com>, <linux-wireless@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Zheng Yongjun <zhengyongjun3@huawei.com>
+In-Reply-To: <1595237765-66238-1-git-send-email-wangyufen@huawei.com>
+References: <1595237765-66238-1-git-send-email-wangyufen@huawei.com>
+To:     Wang Yufen <wangyufen@huawei.com>
+Cc:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <brcm80211-dev-list@cypress.com>, <linux-wireless@vger.kernel.org>,
+        <davem@davemloft.net>, <kuba@kernel.org>,
+        <franky.lin@broadcom.com>, <wright.feng@cypress.com>,
+        Wang Yufen <wangyufen@huawei.com>
 User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200802152631.617D3C433CA@smtp.codeaurora.org>
-Date:   Sun,  2 Aug 2020 15:26:31 +0000 (UTC)
+Message-Id: <20200802152951.3F2C4C433C6@smtp.codeaurora.org>
+Date:   Sun,  2 Aug 2020 15:29:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Zheng Yongjun <zhengyongjun3@huawei.com> wrote:
+Wang Yufen <wangyufen@huawei.com> wrote:
 
-> Fixes gcc '-Wunused-but-set-variable' warning:
+> When brcmf_proto_msgbuf_attach fail and msgbuf->txflow_wq != NULL,
+> we should destroy the workqueue.
 > 
-> drivers/bcma/scan.c: In function 'bcma_erom_get_addr_desc':
-> drivers/bcma/scan.c:219 warning:
-> variable `addrh` and `sizeh` set but not used [-Wunused-but-set-variable]
-> 
-> Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
+> Fixes: 05491d2ccf20 ("brcm80211: move under broadcom vendor directory")
 
-Patch applied to wireless-drivers-next.git, thanks.
-
-92d26d1abf8e drivers: bcma: remove set but not used variable `addrh` and `sizeh`
+Moving the driver to another directory cannot have caused this bug, so I'm
+removing the fixes tag. Please check your commit logs, don't just blindly copy
+what git-blame says.
 
 -- 
-https://patchwork.kernel.org/patch/11675235/
+https://patchwork.kernel.org/patch/11673291/
 
 https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
