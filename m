@@ -2,103 +2,97 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04587C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1C3C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E00292072A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F8512072A
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 14:58:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QF0Kh7z4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgHBO6T (ORCPT
+        id S1726773AbgHBO6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 10:58:19 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:54456 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725853AbgHBO6Q (ORCPT
+        Sun, 2 Aug 2020 10:58:47 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:48895 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726664AbgHBO6q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 10:58:16 -0400
-Received: by mail-io1-f69.google.com with SMTP id z25so17006410ioh.21
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 07:58:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=rP8qFuAIj5PA4GqYTY6invSs7s5chTKGJL4gZOv9MdY=;
-        b=OiR7vCLZEtQZTRHOUS3WFsyxGFAWS6LesFlhfd5vkUiUcEO/Drew24MXEzpqqnowL5
-         Uibn1cx6eXPgMu/GmQ+BU/MEkxO/LOvT1nZaS8zLCgKF/49yS7EKgx8MOqORSuhrk5bv
-         Tidulk/IRLMnjReqqnwrZHA8W7HpFudx9qSpplCnhavxZoJM9cQpId5CvTgGvk7jTTre
-         tSN/63QvYtpRh0I9tUbqdd9Noi/Aeg1ONXjJmn6+RSErRHPN4K+u74OQop+2zJXtqm9i
-         5hFZi5qjbb72xX/mVbvg+xFxjLCJE4fEK8C2MIICVJf0yUhYs3732LAWF/SrmW9TVI20
-         4jsA==
-X-Gm-Message-State: AOAM533pT+t4t7F4I1FTSSGx5Hj+xaMZS7Pvdzjn0RQpk3wUSJBVuk0U
-        TjDlMBk5MAgl6ZvXLYXo2MZSrr6oD1yqh1Q8c5zFr1nJIZ+X
-X-Google-Smtp-Source: ABdhPJx9ALeHovUaCpJtg/QHit8tfWWHnVJ9RsvBsueoJYR9kZOfzHYl19tkkKfuQ3rlXOOSq2JcbkvVksIk0rI4isSp62iyhVn9
+        Sun, 2 Aug 2020 10:58:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596380326; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=sJQnBpSFWLzIDnuY7Td1t6HUh2LChvYz8XgiglJnkfs=;
+ b=QF0Kh7z4gW6Ca5X63n/WjKD9AtZQRBL/JuB9YC2OEPhT13n+Sb2fKKL8xLKgmiq1XmnkdOyb
+ 65pMJGNy69vWhTLA95f7HrIjSwL2C4uMIkaHX96tke1uXsQ0K06gxUQE7SPU6Ta+dNtN9/NX
+ adeafKoKSj27iaOxVTBPfWF0G9Y=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5f26d4a5ba6d142d1c2e0b42 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 02 Aug 2020 14:58:45
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BFC16C433CB; Sun,  2 Aug 2020 14:58:45 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 15F1DC433C6;
+        Sun,  2 Aug 2020 14:58:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 15F1DC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-Received: by 2002:a92:9116:: with SMTP id t22mr4949412ild.305.1596380295789;
- Sun, 02 Aug 2020 07:58:15 -0700 (PDT)
-Date:   Sun, 02 Aug 2020 07:58:15 -0700
-In-Reply-To: <0000000000008b9e0705a38afe52@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000075030605abe640e5@google.com>
-Subject: Re: WARNING: refcount bug in do_enable_set
-From:   syzbot <syzbot+2e9900a1e1b3c9c96a77@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, hdanton@sina.com, johan.hedberg@gmail.com,
-        kuba@kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-kernel@vger.kernel.org, marcel@holtmann.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH for v5.9] prism54: Replace HTTP links with HTTPS ones
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200719121224.58581-1-grandmaster@al2klimov.de>
+References: <20200719121224.58581-1-grandmaster@al2klimov.de>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     mcgrof@kernel.org, davem@davemloft.net, kuba@kernel.org,
+        gustavoars@kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200802145845.BFC16C433CB@smtp.codeaurora.org>
+Date:   Sun,  2 Aug 2020 14:58:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following issue on:
+"Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
 
-HEAD commit:    ac3a0c84 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1194935c900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e59ee776d5aa8d55
-dashboard link: https://syzkaller.appspot.com/bug?extid=2e9900a1e1b3c9c96a77
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10b7ddca900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=126dcf6c900000
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+2e9900a1e1b3c9c96a77@syzkaller.appspotmail.com
+Patch applied to wireless-drivers-next.git, thanks.
 
-------------[ cut here ]------------
-refcount_t: underflow; use-after-free.
-WARNING: CPU: 1 PID: 2540 at lib/refcount.c:28 refcount_warn_saturate+0x15b/0x1a0 lib/refcount.c:28
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 2540 Comm: kworker/1:8 Not tainted 5.8.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events do_enable_set
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1f0/0x31e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:231
- __warn+0x227/0x250 kernel/panic.c:600
- report_bug+0x1b1/0x2e0 lib/bug.c:198
- handle_bug+0x42/0x80 arch/x86/kernel/traps.c:235
- exc_invalid_op+0x16/0x40 arch/x86/kernel/traps.c:255
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:540
-RIP: 0010:refcount_warn_saturate+0x15b/0x1a0 lib/refcount.c:28
-Code: c7 8a af 14 89 31 c0 e8 b3 f2 a8 fd 0f 0b eb 85 e8 2a 32 d7 fd c6 05 a4 d9 eb 05 01 48 c7 c7 b6 af 14 89 31 c0 e8 95 f2 a8 fd <0f> 0b e9 64 ff ff ff e8 09 32 d7 fd c6 05 84 d9 eb 05 01 48 c7 c7
-RSP: 0018:ffffc90007d27c48 EFLAGS: 00010246
-RAX: adb9104953f59b00 RBX: 0000000000000003 RCX: ffff8880a02d0540
-RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
-RBP: 0000000000000003 R08: ffffffff815dd389 R09: ffffed1015d262c0
-R10: ffffed1015d262c0 R11: 0000000000000000 R12: dffffc0000000000
-R13: ffff8880a0259118 R14: dffffc0000000000 R15: ffff8880ae9350c0
- do_enable_set+0x66e/0x900 net/bluetooth/6lowpan.c:1083
- process_one_work+0x789/0xfc0 kernel/workqueue.c:2269
- worker_thread+0xaa4/0x1460 kernel/workqueue.c:2415
- kthread+0x37e/0x3a0 drivers/block/aoe/aoecmd.c:1234
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+87b589a19901 prism54: Replace HTTP links with HTTPS ones
+
+-- 
+https://patchwork.kernel.org/patch/11672435/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
