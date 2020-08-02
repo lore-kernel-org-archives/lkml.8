@@ -2,80 +2,84 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_DIGITS,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BAFC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 07:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F34B7C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 07:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F0BA207FB
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 07:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D77E3207FB
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 07:44:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgHBHnH (ORCPT
+        id S1726766AbgHBHoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 03:43:07 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:51257 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbgHBHnG (ORCPT
+        Sun, 2 Aug 2020 03:44:19 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:47074 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725854AbgHBHoT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 03:43:06 -0400
-Received: by mail-il1-f198.google.com with SMTP id c84so1367439ila.18
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 00:43:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=eqE7M2+jLX9Z2b2ijRlZEwnniJaj49l3REpKdM5etlE=;
-        b=rR9ZSSicnQgUNipiNsViAWp1waWntq0xUE+hnQDz2H8+YUPMLSnaSNgnHqwfASn8Fh
-         sJxF7vXAEEwWdLg6YdQ4v29veJT0uziuJVMq5rYaIrZLE5f2PoQHcUFTg3F4JNC+1wol
-         t54GRTe2kXbGMr3TkGphFtkTq5StOyaUK+tIfehJYuC8cMQ53spstK+5bURZJH3pym2F
-         2YojB4h0lbBiMMJaAzbwrlOTyLeE1o2E1ZRwuiXnxP2fEU/cALTgvpnEHvVbELFFR6cu
-         WVcqUUNtbeYK1xx3jjXWcLScAJxaVqJ8wgV0A4UUYglIFE1TFIIeYRbSpGSUECZwCHLa
-         IJsw==
-X-Gm-Message-State: AOAM53352a2M3ocvurAmnZVQzZuVVfwfVQKlK0rErNYFfuyGuEaSjoxW
-        dKgThnwFXbWFoEurobGMr5iYFpT8DHxlLuwHauHwatx7Zss8
-X-Google-Smtp-Source: ABdhPJwPGH2yiYhjXOJM0c9EdW/Wpe7YJ1kZV2DXqRnNQjYhM6BG3LXmVT5ZL1XYU6JMC/FZ7hlVZVJTAwLiRQixN1DQMDrTFguA
-MIME-Version: 1.0
-X-Received: by 2002:a05:6638:2647:: with SMTP id n7mr1328983jat.61.1596354185896;
- Sun, 02 Aug 2020 00:43:05 -0700 (PDT)
-Date:   Sun, 02 Aug 2020 00:43:05 -0700
-In-Reply-To: <000000000000ea90600598c9b089@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002fa64705abe02c21@google.com>
-Subject: Re: possible deadlock in __dev_queue_xmit (3)
-From:   syzbot <syzbot+3b165dac15094065651e@syzkaller.appspotmail.com>
-To:     ap420073@gmail.com, davem@davemloft.net, jhs@mojatatu.com,
-        jiri@resnulli.us, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 2 Aug 2020 03:44:19 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=wenan.mao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U4SKUq2_1596354250;
+Received: from VM20200710-3.tbsite.net(mailfrom:wenan.mao@linux.alibaba.com fp:SMTPD_---0U4SKUq2_1596354250)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sun, 02 Aug 2020 15:44:16 +0800
+From:   Mao Wenan <wenan.mao@linux.alibaba.com>
+To:     mst@redhat.com, jasowang@redhat.com
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Mao Wenan <wenan.mao@linux.alibaba.com>
+Subject: [PATCH -next v3] virtio_ring: Avoid loop when vq is broken in virtqueue_poll
+Date:   Sun,  2 Aug 2020 15:44:09 +0800
+Message-Id: <1596354249-96204-1-git-send-email-wenan.mao@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <20200802022549-mutt-send-email-mst@kernel.org>
+References: <20200802022549-mutt-send-email-mst@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this issue to:
+The loop may exist if vq->broken is true,
+virtqueue_get_buf_ctx_packed or virtqueue_get_buf_ctx_split
+will return NULL, so virtnet_poll will reschedule napi to
+receive packet, it will lead cpu usage(si) to 100%.
 
-commit 1a33e10e4a95cb109ff1145098175df3113313ef
-Author: Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Sun May 3 05:22:19 2020 +0000
+call trace as below:
+virtnet_poll
+	virtnet_receive
+		virtqueue_get_buf_ctx
+			virtqueue_get_buf_ctx_packed
+			virtqueue_get_buf_ctx_split
+	virtqueue_napi_complete
+		virtqueue_poll           //return true
+		virtqueue_napi_schedule //it will reschedule napi
 
-    net: partially revert dynamic lockdep key changes
+to fix this, return false if vq is broken in virtqueue_poll.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10434970900000
-start commit:   d8b9faec Merge tag 'drm-fixes-2020-07-31' of git://anongit..
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=12434970900000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14434970900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c0cfcf935bcc94d2
-dashboard link: https://syzkaller.appspot.com/bug?extid=3b165dac15094065651e
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=163e2c92900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=143f2bb8900000
+Signed-off-by: Mao Wenan <wenan.mao@linux.alibaba.com>
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
+---
+ v2->v3: change subject, original is : "virtio_net: Avoid loop in virtnet_poll"
+ v1->v2: fix it in virtqueue_poll suggested by Michael S. Tsirkin <mst@redhat.com>
+ drivers/virtio/virtio_ring.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Reported-by: syzbot+3b165dac15094065651e@syzkaller.appspotmail.com
-Fixes: 1a33e10e4a95 ("net: partially revert dynamic lockdep key changes")
+diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+index 58b96ba..4f7c73e 100644
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -1960,6 +1960,9 @@ bool virtqueue_poll(struct virtqueue *_vq, unsigned last_used_idx)
+ {
+ 	struct vring_virtqueue *vq = to_vvq(_vq);
+ 
++	if (unlikely(vq->broken))
++		return false;
++
+ 	virtio_mb(vq->weak_barriers);
+ 	return vq->packed_ring ? virtqueue_poll_packed(_vq, last_used_idx) :
+ 				 virtqueue_poll_split(_vq, last_used_idx);
+-- 
+1.8.3.1
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
