@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7171C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 06:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D240EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 06:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76A952076B
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 06:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8D1E2076B
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 06:26:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q/XP8a2T"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N/4hoMMp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725992AbgHBGZv (ORCPT
+        id S1726398AbgHBG0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 02:25:51 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43708 "EHLO
+        Sun, 2 Aug 2020 02:26:24 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40987 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725823AbgHBGZv (ORCPT
+        with ESMTP id S1726086AbgHBG0X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 02:25:51 -0400
+        Sun, 2 Aug 2020 02:26:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596349549;
+        s=mimecast20190719; t=1596349582;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=S6OYCdbGW3vcu3y+tw3bsh0JBnWwiCW5p61nwH6OSdk=;
-        b=Q/XP8a2T99FM3ItA1jY9At27hJM5likCSB7In+3kCCjIblwiiHTtUYPDkNyDkU8KSCdfqw
-        tWVDnSxZwR5dvizcJwStq2JRvagJrevSlpLW/2A6yUQ5qLuYMOf4Am7Xy5J4xnMif57nmC
-        yPW6x8R8BQZ3Y+dNEui2joeLnpeJQ6Q=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-391-5WKU_gxoP_61H7iCsJI9EA-1; Sun, 02 Aug 2020 02:25:47 -0400
-X-MC-Unique: 5WKU_gxoP_61H7iCsJI9EA-1
-Received: by mail-wr1-f70.google.com with SMTP id z12so10358815wrl.16
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 23:25:47 -0700 (PDT)
+        bh=qtRwpw8KaYzbjOwsQk1RkKr/x7ohfyLS11IO8SCvDmU=;
+        b=N/4hoMMpDntozC/YLWPXOkpRUJTYUKEOJOp9DZItDedN2u1EpEtfaEYBm4bC6/s0TBBcVD
+        nTMkoDusDNtI/qv6r3OV+uodw5ztcGQtgRwFck28rcLF3tKw/KO1y+nXx+NH8wVzinVpNH
+        55GlVNjbqvAalZhM7s/aErU6mt+ffJw=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-407-hDRp6D5HPTC2_LWrmqykQg-1; Sun, 02 Aug 2020 02:26:20 -0400
+X-MC-Unique: hDRp6D5HPTC2_LWrmqykQg-1
+Received: by mail-wr1-f72.google.com with SMTP id e14so6862687wrr.7
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 23:26:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=S6OYCdbGW3vcu3y+tw3bsh0JBnWwiCW5p61nwH6OSdk=;
-        b=gLOiBfgPxeA0Nbx7ieF8cupm7Y2E5Ib9KsU9iA0RT+Z4g8AOWjuSMPTyMeQvOMWqrz
-         Ls2x2GFgkArR0yPhzuklZ8N5G9Km9KylW9TwEIc5cYOsLR9aBiS9SLpUY3R3I02/fKiP
-         ZLCq+4olZdutlf3DTwxmNglK5+xUElkbhceROo+wZeMP7LXne1wkooqtC95zIQ9zC8sd
-         J0zcmZ8QhjCrjZJSNvqD1T1iP8aFuIiKglHthpfgsjxz9yWPOGEy2pObG3f7LMbPwjZV
-         bvn83P0K/iv+g0RWHC3NzBFYdgx8z1IEft5l4eDGQvCBGlY4KI6QOvUq+rkTEohi6c2C
-         LwDA==
-X-Gm-Message-State: AOAM5305tBgv9xGhQN8u/a/+J24/FBSYnQ4x64voOOrO0LFZV+sSUXC8
-        pNnO0D3fyaJ6trOF/4Rd6jFg9dcX3BdB088yvpNoStaB30vccBi7n6nvdkcF/kOdMlcWRkanilo
-        Y76vTzBcpLZZ/quK0QmJ7gswq
-X-Received: by 2002:a7b:c154:: with SMTP id z20mr11102332wmi.118.1596349545808;
-        Sat, 01 Aug 2020 23:25:45 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJynZI0DXpqHK+lKgKMB/Q7mJUqK4kYuqt49mPCgR78Fj5Qunpo174be0PRlqdzVRrBirQfRJw==
-X-Received: by 2002:a7b:c154:: with SMTP id z20mr11102318wmi.118.1596349545515;
-        Sat, 01 Aug 2020 23:25:45 -0700 (PDT)
+        bh=qtRwpw8KaYzbjOwsQk1RkKr/x7ohfyLS11IO8SCvDmU=;
+        b=JbkVGo8P0gL/9j7KAmLw6wHxhXzh3Rf6f6PkfYPg2n+ZvnqURLXTMmOZvK/IUAKwbe
+         ue5bBmXC2FEiL7uAGyKjN8wuNm6t24J1YmebfIF0VkTe3EoptggwZ84NGQzfOyfRew+5
+         4gnv4Vf/7XUbpuENk2uu1E1VMZMt64DNTj7yQlzNPTPSpNbpKFnNqzlNz+NIb0B7ngKr
+         9tynrs08hjZJa+JIMDjbjndLygJh49QntukpmUXsD5BCevoiRjiQoMs3qjmRKhu04QBh
+         VV6Pbs5KaogJH3CuKKqDTufYKl6r97NjGi9yF/j6ITVp5H1KP1rfZ0ZODy0AK4it/1BU
+         lxCg==
+X-Gm-Message-State: AOAM530EsV21WM857MnAGzR7zW2NSzFZj6StXkVMxY7TSws6EDnWoBiK
+        /8QCoyeIIkw+WxoECQBaTg1DNPXr8blmH4RsetLMM2vaq9SobLpz+2xQZbo/oZuaiN/tX80DaDb
+        iYpXilppU2D0kiddfrpH4YQgY
+X-Received: by 2002:a7b:ca5a:: with SMTP id m26mr10442559wml.27.1596349579713;
+        Sat, 01 Aug 2020 23:26:19 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzvAvq/rmcOFNmC2cQwRvUGwvvyAevu+DIBOVOyEZmkvs+orMCEXN40U/UCKI6wBOhbPYCqoA==
+X-Received: by 2002:a7b:ca5a:: with SMTP id m26mr10442550wml.27.1596349579514;
+        Sat, 01 Aug 2020 23:26:19 -0700 (PDT)
 Received: from redhat.com (bzq-79-179-105-63.red.bezeqint.net. [79.179.105.63])
-        by smtp.gmail.com with ESMTPSA id 68sm19668139wra.39.2020.08.01.23.25.43
+        by smtp.gmail.com with ESMTPSA id 65sm20037688wre.6.2020.08.01.23.26.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Aug 2020 23:25:44 -0700 (PDT)
-Date:   Sun, 2 Aug 2020 02:25:42 -0400
+        Sat, 01 Aug 2020 23:26:18 -0700 (PDT)
+Date:   Sun, 2 Aug 2020 02:26:16 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     Mao Wenan <wenan.mao@linux.alibaba.com>
 Cc:     jasowang@redhat.com, virtualization@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
 Subject: Re: [PATCH -next v2] virtio_net: Avoid loop in virtnet_poll
-Message-ID: <20200802022521-mutt-send-email-mst@kernel.org>
+Message-ID: <20200802022549-mutt-send-email-mst@kernel.org>
 References: <20200802003818-mutt-send-email-mst@kernel.org>
  <1596347793-55894-1-git-send-email-wenan.mao@linux.alibaba.com>
 MIME-Version: 1.0
@@ -78,6 +78,10 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+
+
+Just noticed the subject is wrong: this is no longer
+a virtio_net patch.
 
 On Sun, Aug 02, 2020 at 01:56:33PM +0800, Mao Wenan wrote:
 > The loop may exist if vq->broken is true,
@@ -98,10 +102,6 @@ On Sun, Aug 02, 2020 at 01:56:33PM +0800, Mao Wenan wrote:
 > To fix this, return false if vq is broken in virtqueue_poll.
 > 
 > Signed-off-by: Mao Wenan <wenan.mao@linux.alibaba.com>
-
-Looks good:
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-
 > ---
 >  v1->v2: fix it in virtqueue_poll suggested by Michael S. Tsirkin <mst@redhat.com>
 >  drivers/virtio/virtio_ring.c | 3 +++
