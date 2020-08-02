@@ -2,104 +2,79 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B8BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 09:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEA2C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 09:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9356E2075A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 09:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F37B2075A
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 09:19:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596359958;
+	bh=0sI0cWie9tDag5hLKiiEIxgczqIVsId5Urn4Kg/NpKw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q0cIAaZLb9tfO8uye8evne/kKwdAZSVkJEokTaYzKXhM1ywgJouLXAHox4RVZhQgD
+	 cn3f5g/4IZ8+OjH8WED9u4CTI4CQZD4jup/bk/3LPV9h8e5GXwIBt6zLEXk9VyArBm
+	 vl6s7jjfAbUOEWDPBM0NhPKPvsOQ1NlErqSEHC3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgHBJQ2 (ORCPT
+        id S1727971AbgHBJSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 05:16:28 -0400
-Received: from zg8tmja5ljk3lje4mi4ymjia.icoremail.net ([209.97.182.222]:46932
-        "HELO zg8tmja5ljk3lje4mi4ymjia.icoremail.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with SMTP id S1726376AbgHBJQ1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 05:16:27 -0400
-Received: from oslab.tsinghua.edu.cn (unknown [166.111.139.112])
-        by app-4 (Coremail) with SMTP id EgQGZQDn79NehCZfxLnkAw--.3380S2;
-        Sun, 02 Aug 2020 17:16:19 +0800 (CST)
-From:   Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
-To:     3chas3@gmail.com
-Cc:     linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
-Subject: [PATCH] atm: eni: avoid accessing the data mapped to streaming DMA
-Date:   Sun,  2 Aug 2020 17:16:11 +0800
-Message-Id: <20200802091611.24331-1-baijiaju@tsinghua.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: EgQGZQDn79NehCZfxLnkAw--.3380S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7WF1DKrWrtrW5uw1UJr1rtFb_yoW8ArWkpF
-        yxGas0krW0qFyUta4vg3y5XrWIvayktryagFyYk3srZan8XF1F9ry8GFW8tr10ka4fGr1j
-        vwn5XryFgw1Dt3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkS14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-        jxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-        1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8uwCF
-        04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
-        18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
-        r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
-        1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
-        cVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUn89NUUUUU
-X-CM-SenderInfo: xedlyxhdmxq3pvlqwxlxdovvfxof0/
+        Sun, 2 Aug 2020 05:18:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59674 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725916AbgHBJSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 05:18:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EFFF2075A;
+        Sun,  2 Aug 2020 09:18:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596359928;
+        bh=0sI0cWie9tDag5hLKiiEIxgczqIVsId5Urn4Kg/NpKw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UjHZNGLz0TbQXYhHdW6OWrj7pa4joZga8CIPJb2UKyjNWCc1JkuPP9coatSZC0jyV
+         76oFX1J+0RfDgog+l0JGdanPNVux7AjCoFJeHhKZcx0e6zfx1/LnTpJs+QtWbUcMSb
+         +f6LrpF5CFnL/fnAGeuChwsz3k3syx0mkaxhUDcg=
+Date:   Sun, 2 Aug 2020 11:18:31 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Michael Straube <straube.linux@gmail.com>
+Cc:     devel@driverdev.osuosl.org, christian.gromm@microchip.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: staging: most: Build error since commit "drivers: most: add USB
+ adapter driver"
+Message-ID: <20200802091831.GA139182@kroah.com>
+References: <7c18e466-0941-ee7e-9a0f-5a993c993152@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7c18e466-0941-ee7e-9a0f-5a993c993152@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In do_tx(), skb->data is mapped to streaming DMA on line 1111:
-  paddr = dma_map_single(...,skb->data,DMA_TO_DEVICE);
+On Sun, Aug 02, 2020 at 11:08:12AM +0200, Michael Straube wrote:
+> Hi,
+> 
+> with commit 97a6f772f36b7f52bcfa56a581bbd2470cffe23d ("drivers: most: add USB adapter driver")
+> I get build errors.
+> 
+> $ LANG=C make clean drivers/staging/rtl8188eu/
+> scripts/Makefile.clean:15: drivers/staging/most/usb/Makefile: No such file or directory
+> make[5]: *** No rule to make target 'drivers/staging/most/usb/Makefile'.  Stop.
+> make[4]: *** [scripts/Makefile.clean:66: drivers/staging/most/usb] Error 2
+> make[3]: *** [scripts/Makefile.clean:66: drivers/staging/most] Error 2
+> make[2]: *** [scripts/Makefile.clean:66: drivers/staging] Error 2
+> make[1]: *** [Makefile:1763: _clean_drivers] Error 2
+> make: *** [Makefile:336: __build_one_by_one] Error 2
+> 
+> Did you forgot to remove the below line from drivers/staging/most/Makefile ?
+> 
+> obj-$(CONFIG_MOST_USB)	+= usb/
 
-Then skb->data is accessed on line 1153:
-  (skb->data[3] & 0xf)
+Ugh, yes, let me go fix that up right now, sorry...
 
-This access may cause data inconsistency between CPU cache and hardware.
-
-To fix this problem, skb->data[3] is assigned to a local variable before
-DMA mapping, and then the driver accesses this local variable instead of
-skb->data[3].
-
-Signed-off-by: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
----
- drivers/atm/eni.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/atm/eni.c b/drivers/atm/eni.c
-index 17d47ad03ab7..09f4e2f41363 100644
---- a/drivers/atm/eni.c
-+++ b/drivers/atm/eni.c
-@@ -1034,6 +1034,7 @@ static enum enq_res do_tx(struct sk_buff *skb)
- 	u32 dma_rd,dma_wr;
- 	u32 size; /* in words */
- 	int aal5,dma_size,i,j;
-+	unsigned char skb_data3;
- 
- 	DPRINTK(">do_tx\n");
- 	NULLCHECK(skb);
-@@ -1108,6 +1109,7 @@ DPRINTK("iovcnt = %d\n",skb_shinfo(skb)->nr_frags);
- 		    vcc->dev->number);
- 		return enq_jam;
- 	}
-+	skb_data3 = skb->data[3];
- 	paddr = dma_map_single(&eni_dev->pci_dev->dev,skb->data,skb->len,
- 			       DMA_TO_DEVICE);
- 	ENI_PRV_PADDR(skb) = paddr;
-@@ -1150,7 +1152,7 @@ DPRINTK("doing direct send\n"); /* @@@ well, this doesn't work anyway */
- 	    (size/(ATM_CELL_PAYLOAD/4)),tx->send+tx->tx_pos*4);
- /*printk("dsc = 0x%08lx\n",(unsigned long) readl(tx->send+tx->tx_pos*4));*/
- 	writel((vcc->vci << MID_SEG_VCI_SHIFT) |
--            (aal5 ? 0 : (skb->data[3] & 0xf)) |
-+            (aal5 ? 0 : (skb_data3 & 0xf)) |
- 	    (ATM_SKB(skb)->atm_options & ATM_ATMOPT_CLP ? MID_SEG_CLP : 0),
- 	    tx->send+((tx->tx_pos+1) & (tx->words-1))*4);
- 	DPRINTK("size: %d, len:%d\n",size,skb->len);
--- 
-2.17.1
-
+greg k-h
