@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A51C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A60EB20829
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF3DE20829
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596385116;
-	bh=wHTOrJnmmvaQ39KiSciZ+BzsInDpBJ9IEewHVShrfq4=;
+	s=default; t=1596385118;
+	bh=hocPG4Fjj8rGQzSIjfz8ZD386k+kX1y/zl0hAKQ/TNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AFzdrKgSQjKSg3AJ+rIiORHvOPhkEXDbwaPlbxsCdlbnz572SRYWOYKqCgZ5Wscj9
-	 laIX1kx0dpKjf9ctwrdtb9X50VO8pw+64fnKQ1koG/mcAlQCoJ9pRWQokbtJ1dFvYK
-	 aE8tsjROcv3S6YrG0rGmzvYAyjhwrUkESIa616oI=
+	b=NFmuUcL5JSw1/tsIdSlOoDU1bm0VCtOYrNWcrgy95GHbNIIi8iaV6lYnt2hq3ahlB
+	 8KzUYSDxggeVTZuo83G0ZGrnOle6yz2BsTiNi/3gobHBXsS1RRfK8BJXxDyOYd8xap
+	 vyfmovNQ97f8Uc9nLCFeKKaQZOUH6P7C3FSxsDcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgHBQSf (ORCPT
+        id S1727779AbgHBQSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 12:18:35 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:48909 "EHLO
+        Sun, 2 Aug 2020 12:18:37 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:48903 "EHLO
         conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726968AbgHBQSG (ORCPT
+        with ESMTP id S1726956AbgHBQSG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 2 Aug 2020 12:18:06 -0400
 Received: from oscar.flets-west.jp (softbank126025067101.bbtec.net [126.25.67.101]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 072GHOan003720;
-        Mon, 3 Aug 2020 01:17:30 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 072GHOan003720
+        by conuserg-07.nifty.com with ESMTP id 072GHOah003720;
+        Mon, 3 Aug 2020 01:17:27 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 072GHOah003720
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1596385051;
-        bh=1QwsYPX/TRZCCEnjbvN03XB9oaYZ36pUlFuofsrgnTo=;
+        s=dec2015msa; t=1596385047;
+        bh=dIQiuFuXJX/6WFvX4m7dkBVvzX0JYCw0Yn5678SsA1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WupozzFfskp/G//KCA4Rb+9BC2a8z28/W9jGmyZ4oW8GZLNs/pTndSguwyyEJHpHA
-         QEXsoZ9XohiW6bzBJx5PAjKlPBz2gBGrt6r2iIZkwPI0kGloQNdXOVWfmBQHSYRuHp
-         M9AJB1RtzMrB5vGFhE9UEeL7nPwbxEDMjACi4eZME5e/f5XoJxS9oIhY0M7Q3wXB6c
-         96Jl+a66930LeP1BIld2ezFst4EDUXOL26D6Cio/WBMKMDrQTzk5/5pRjWNmzvtYdC
-         d3gemRwz1kEQO779y6esFmBve2WXa5zaE8fcgQiiVZtxtwId/n1Z9OV/qCof3dyBj6
-         umML8E8O+pZ5Q==
+        b=jsYb6WG3NhEt4vsCAoE6JVuyo78CL9PS+BIvDRQM+vLgYbgzldVV0SZd29yzfiHiv
+         8tamTLm1UukR+wrEsxyNnNG1GvDDgZ/EYaVcq1yUWTFP5lcpub5zPwrxnK/K2bJ7vL
+         q2E/104dfNbpRR5ftq0XzDQZJNpyqnuR+2Cn0NFRqDAT9RUhZooAbKDHpctpMOtmHt
+         0nY4AaWuF9GZr/8j7CC/oQmuwlmxL7HHjkA3JxIMGAW6ne93OY0aa3UXraX13WgXSL
+         yfQGf60LL3QyHjljDJqNkCYg1uEDVYhb2QmzX4NiJiNVZwLCoxHDXYVbcE98eAjgCx
+         CkTLtPsnSg9yA==
 X-Nifty-SrcIP: [126.25.67.101]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 12/16] kconfig: qconf: remove ConfigItem::pixmap/setPixmap
-Date:   Mon,  3 Aug 2020 01:17:17 +0900
-Message-Id: <20200802161721.921721-12-masahiroy@kernel.org>
+Subject: [PATCH 06/16] kconfig: qconf: remove name from ConfigSearchWindow constructor
+Date:   Mon,  3 Aug 2020 01:17:11 +0900
+Message-Id: <20200802161721.921721-6-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200802161721.921721-1-masahiroy@kernel.org>
 References: <20200802161721.921721-1-masahiroy@kernel.org>
@@ -60,112 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use QTreeWidgetItem::icon/setIcon directly.
+This constructor is only called with "search" as the second argument.
+
+Hard-code the name in the constructor, and drop it from the function
+argument.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/kconfig/qconf.cc | 22 +++++++++++-----------
- scripts/kconfig/qconf.h  |  8 --------
- 2 files changed, 11 insertions(+), 19 deletions(-)
+ scripts/kconfig/qconf.cc | 44 +++++++++++++++++++---------------------
+ scripts/kconfig/qconf.h  |  2 +-
+ 2 files changed, 22 insertions(+), 24 deletions(-)
 
 diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index de46a2fc3f98..94ffb64d3eca 100644
+index e17c46bb75e8..a74bfc65b633 100644
 --- a/scripts/kconfig/qconf.cc
 +++ b/scripts/kconfig/qconf.cc
-@@ -97,7 +97,7 @@ void ConfigItem::updateMenu(void)
+@@ -1287,10 +1287,10 @@ void ConfigInfoView::contextMenuEvent(QContextMenuEvent *e)
+ 	Parent::contextMenuEvent(e);
+ }
  
- 	list = listView();
- 	if (goParent) {
--		setPixmap(promptColIdx, list->menuBackPix);
-+		setIcon(promptColIdx, list->menuBackPix);
- 		prompt = "..";
- 		goto set_prompt;
- 	}
-@@ -114,15 +114,15 @@ void ConfigItem::updateMenu(void)
- 			 */
- 			if (sym && list->rootEntry == menu)
- 				break;
--			setPixmap(promptColIdx, list->menuPix);
-+			setIcon(promptColIdx, list->menuPix);
- 		} else {
- 			if (sym)
- 				break;
--			setPixmap(promptColIdx, QIcon());
-+			setIcon(promptColIdx, QIcon());
- 		}
- 		goto set_prompt;
- 	case P_COMMENT:
--		setPixmap(promptColIdx, QIcon());
-+		setIcon(promptColIdx, QIcon());
- 		goto set_prompt;
- 	default:
- 		;
-@@ -139,7 +139,7 @@ void ConfigItem::updateMenu(void)
- 		char ch;
+-ConfigSearchWindow::ConfigSearchWindow(ConfigMainWindow* parent, const char *name)
++ConfigSearchWindow::ConfigSearchWindow(ConfigMainWindow *parent)
+ 	: Parent(parent), result(NULL)
+ {
+-	setObjectName(name);
++	setObjectName("search");
+ 	setWindowTitle("Search Config");
  
- 		if (!sym_is_changeable(sym) && list->optMode == normalOpt) {
--			setPixmap(promptColIdx, QIcon());
-+			setIcon(promptColIdx, QIcon());
- 			setText(noColIdx, QString());
- 			setText(modColIdx, QString());
- 			setText(yesColIdx, QString());
-@@ -149,22 +149,22 @@ void ConfigItem::updateMenu(void)
- 		switch (expr) {
- 		case yes:
- 			if (sym_is_choice_value(sym) && type == S_BOOLEAN)
--				setPixmap(promptColIdx, list->choiceYesPix);
-+				setIcon(promptColIdx, list->choiceYesPix);
- 			else
--				setPixmap(promptColIdx, list->symbolYesPix);
-+				setIcon(promptColIdx, list->symbolYesPix);
- 			setText(yesColIdx, "Y");
- 			ch = 'Y';
- 			break;
- 		case mod:
--			setPixmap(promptColIdx, list->symbolModPix);
-+			setIcon(promptColIdx, list->symbolModPix);
- 			setText(modColIdx, "M");
- 			ch = 'M';
- 			break;
- 		default:
- 			if (sym_is_choice_value(sym) && type == S_BOOLEAN)
--				setPixmap(promptColIdx, list->choiceNoPix);
-+				setIcon(promptColIdx, list->choiceNoPix);
- 			else
--				setPixmap(promptColIdx, list->symbolNoPix);
-+				setIcon(promptColIdx, list->symbolNoPix);
- 			setText(noColIdx, "N");
- 			ch = 'N';
- 			break;
-@@ -769,7 +769,7 @@ void ConfigList::mouseReleaseEvent(QMouseEvent* e)
- 	idx = header()->logicalIndexAt(x);
- 	switch (idx) {
- 	case promptColIdx:
--		icon = item->pixmap(promptColIdx);
-+		icon = item->icon(promptColIdx);
- 		if (!icon.isNull()) {
- 			int off = header()->sectionPosition(0) + visualRect(indexAt(p)).x() + 4; // 4 is Hardcoded image offset. There might be a way to do it properly.
- 			if (x >= off && x < off + icon.availableSizes().first().width()) {
+ 	QVBoxLayout* layout1 = new QVBoxLayout(this);
+@@ -1311,9 +1311,9 @@ ConfigSearchWindow::ConfigSearchWindow(ConfigMainWindow* parent, const char *nam
+ 
+ 	split = new QSplitter(this);
+ 	split->setOrientation(Qt::Vertical);
+-	list = new ConfigView(split, name);
++	list = new ConfigView(split, "search");
+ 	list->list->mode = listMode;
+-	info = new ConfigInfoView(split, name);
++	info = new ConfigInfoView(split, "search");
+ 	connect(list->list, SIGNAL(menuChanged(struct menu *)),
+ 		info, SLOT(setInfo(struct menu *)));
+ 	connect(list->list, SIGNAL(menuChanged(struct menu *)),
+@@ -1321,25 +1321,23 @@ ConfigSearchWindow::ConfigSearchWindow(ConfigMainWindow* parent, const char *nam
+ 
+ 	layout1->addWidget(split);
+ 
+-	if (name) {
+-		QVariant x, y;
+-		int width, height;
+-		bool ok;
++	QVariant x, y;
++	int width, height;
++	bool ok;
+ 
+-		configSettings->beginGroup(name);
+-		width = configSettings->value("/window width", parent->width() / 2).toInt();
+-		height = configSettings->value("/window height", parent->height() / 2).toInt();
+-		resize(width, height);
+-		x = configSettings->value("/window x");
+-		y = configSettings->value("/window y");
+-		if ((x.isValid())&&(y.isValid()))
+-			move(x.toInt(), y.toInt());
+-		QList<int> sizes = configSettings->readSizes("/split", &ok);
+-		if (ok)
+-			split->setSizes(sizes);
+-		configSettings->endGroup();
+-		connect(configApp, SIGNAL(aboutToQuit()), SLOT(saveSettings()));
+-	}
++	configSettings->beginGroup("search");
++	width = configSettings->value("/window width", parent->width() / 2).toInt();
++	height = configSettings->value("/window height", parent->height() / 2).toInt();
++	resize(width, height);
++	x = configSettings->value("/window x");
++	y = configSettings->value("/window y");
++	if (x.isValid() && y.isValid())
++		move(x.toInt(), y.toInt());
++	QList<int> sizes = configSettings->readSizes("/split", &ok);
++	if (ok)
++		split->setSizes(sizes);
++	configSettings->endGroup();
++	connect(configApp, SIGNAL(aboutToQuit()), SLOT(saveSettings()));
+ }
+ 
+ void ConfigSearchWindow::saveSettings(void)
+@@ -1643,7 +1641,7 @@ void ConfigMainWindow::saveConfigAs(void)
+ void ConfigMainWindow::searchConfig(void)
+ {
+ 	if (!searchWindow)
+-		searchWindow = new ConfigSearchWindow(this, "search");
++		searchWindow = new ConfigSearchWindow(this);
+ 	searchWindow->show();
+ }
+ 
 diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
-index 952bd98d7912..5cda89a51740 100644
+index 6e6bb0a96348..335f0776984f 100644
 --- a/scripts/kconfig/qconf.h
 +++ b/scripts/kconfig/qconf.h
-@@ -172,14 +172,6 @@ class ConfigItem : public QTreeWidgetItem {
- 	{
- 		return Parent::text(idx);
- 	}
--	void setPixmap(colIdx idx, const QIcon &icon)
--	{
--		Parent::setIcon(idx, icon);
--	}
--	const QIcon pixmap(colIdx idx) const
--	{
--		return icon(idx);
--	}
- 	// TODO: Implement paintCell
+@@ -272,7 +272,7 @@ class ConfigSearchWindow : public QDialog {
+ 	Q_OBJECT
+ 	typedef class QDialog Parent;
+ public:
+-	ConfigSearchWindow(ConfigMainWindow* parent, const char *name = 0);
++	ConfigSearchWindow(ConfigMainWindow *parent);
  
- 	ConfigItem* nextItem;
+ public slots:
+ 	void saveSettings(void);
 -- 
 2.25.1
 
