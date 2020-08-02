@@ -2,103 +2,58 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E916C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92C7B2075A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78B472075A
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 13:34:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728299AbgHBNaW (ORCPT
+        id S1728343AbgHBNe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 09:30:22 -0400
-Received: from zg8tmtm5lju5ljm3lje2naaa.icoremail.net ([139.59.37.164]:38745
-        "HELO zg8tmtm5lju5ljm3lje2naaa.icoremail.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with SMTP id S1726578AbgHBNaW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 09:30:22 -0400
-X-Greylist: delayed 1139 seconds by postgrey-1.27 at vger.kernel.org; Sun, 02 Aug 2020 09:30:19 EDT
-Received: from oslab.tsinghua.edu.cn (unknown [166.111.139.112])
-        by app-1 (Coremail) with SMTP id DwQGZQDn7MjOvyZfkEDqAw--.5190S2;
-        Sun, 02 Aug 2020 21:29:57 +0800 (CST)
-From:   Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
-To:     chunkeey@googlemail.com, kvalo@codeaurora.org, davem@davemloft.net,
-        kuba@kernel.org
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
-Subject: [PATCH] p54: avoid accessing the data mapped to streaming DMA
-Date:   Sun,  2 Aug 2020 21:29:49 +0800
-Message-Id: <20200802132949.26788-1-baijiaju@tsinghua.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: DwQGZQDn7MjOvyZfkEDqAw--.5190S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7WF48JFWrZFW8Ww15Cw4fGrg_yoW8ArW5pF
-        Z8Aa47Kr4YvF45W3W0kF4UuF1YyayrA3sF9F4Ykwnakr4kXr1SqFyruFWIkwn0yrs8A3y3
-        Ar1jqr47W3Z0y3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkm14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Xr4l
-        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
-        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAK
-        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F
-        4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-        42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUnpnQUUUUU
-X-CM-SenderInfo: xedlyxhdmxq3pvlqwxlxdovvfxof0/
+        Sun, 2 Aug 2020 09:34:58 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47499 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726578AbgHBNe5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 09:34:57 -0400
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 4BKMSw4507z9sSt; Sun,  2 Aug 2020 23:34:56 +1000 (AEST)
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+To:     Alastair D'Silva <alastair@d-silva.org>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Paul Mackerras <paulus@samba.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In-Reply-To: <20200415012343.919255-1-alastair@d-silva.org>
+References: <20200415012343.919255-1-alastair@d-silva.org>
+Subject: Re: [PATCH 0/2] powerpc: OpenCAPI Cleanup
+Message-Id: <159637523498.42190.4746198134743863254.b4-ty@ellerman.id.au>
+Date:   Sun,  2 Aug 2020 23:34:56 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In p54p_tx(), skb->data is mapped to streaming DMA on line 337:
-  mapping = pci_map_single(..., skb->data, ...);
+On Wed, 15 Apr 2020 11:23:41 +1000, Alastair D'Silva wrote:
+> These patches address checkpatch & kernel doc warnings
+> in the OpenCAPI infrastructure.
+> 
+> Alastair D'Silva (2):
+>   ocxl: Remove unnecessary externs
+>   ocxl: Address kernel doc errors & warnings
+> 
+> [...]
 
-Then skb->data is accessed on line 349:
-  desc->device_addr = ((struct p54_hdr *)skb->data)->req_id;
+Applied to powerpc/next.
 
-This access may cause data inconsistency between CPU cache and hardware.
+[1/2] ocxl: Remove unnecessary externs
+      https://git.kernel.org/powerpc/c/c75d42e4c768c403f259f6c7f6217c850cf11be9
+[2/2] ocxl: Address kernel doc errors & warnings
+      https://git.kernel.org/powerpc/c/3591538a31af37cf6a2d83f1da99e651a822af8b
 
-To fix this problem, ((struct p54_hdr *)skb->data)->req_id is stored in
-a local variable before DMA mapping, and then the driver accesses this
-local variable instead of skb->data.
-
-Signed-off-by: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
----
- drivers/net/wireless/intersil/p54/p54pci.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/intersil/p54/p54pci.c b/drivers/net/wireless/intersil/p54/p54pci.c
-index 80ad0b7eaef4..f8c6027cab6b 100644
---- a/drivers/net/wireless/intersil/p54/p54pci.c
-+++ b/drivers/net/wireless/intersil/p54/p54pci.c
-@@ -329,10 +329,12 @@ static void p54p_tx(struct ieee80211_hw *dev, struct sk_buff *skb)
- 	struct p54p_desc *desc;
- 	dma_addr_t mapping;
- 	u32 idx, i;
-+	__le32 device_addr;
- 
- 	spin_lock_irqsave(&priv->lock, flags);
- 	idx = le32_to_cpu(ring_control->host_idx[1]);
- 	i = idx % ARRAY_SIZE(ring_control->tx_data);
-+	device_addr = ((struct p54_hdr *)skb->data)->req_id;
- 
- 	mapping = pci_map_single(priv->pdev, skb->data, skb->len,
- 				 PCI_DMA_TODEVICE);
-@@ -346,7 +348,7 @@ static void p54p_tx(struct ieee80211_hw *dev, struct sk_buff *skb)
- 
- 	desc = &ring_control->tx_data[i];
- 	desc->host_addr = cpu_to_le32(mapping);
--	desc->device_addr = ((struct p54_hdr *)skb->data)->req_id;
-+	desc->device_addr = device_addr;
- 	desc->len = cpu_to_le16(skb->len);
- 	desc->flags = 0;
- 
--- 
-2.17.1
-
+cheers
