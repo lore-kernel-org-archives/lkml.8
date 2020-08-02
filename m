@@ -2,136 +2,117 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFE7C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 21:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BEBC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 21:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 902FC20738
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 21:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C39420738
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 21:41:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xfbCE69R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgHBVgW (ORCPT
+        id S1727091AbgHBVlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 17:36:22 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:52770 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725925AbgHBVgV (ORCPT
+        Sun, 2 Aug 2020 17:41:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726802AbgHBVlR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 17:36:21 -0400
-Received: by mail-io1-f69.google.com with SMTP id k12so25247436iom.19
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 14:36:21 -0700 (PDT)
+        Sun, 2 Aug 2020 17:41:17 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8734CC06179E
+        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 14:41:17 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id d27so26939055qtg.4
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 14:41:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+vVrgGh+FKZTumikQLMQ5VD9iTv9jTO6F54b15uPxzM=;
+        b=xfbCE69Roj++5y5XnvMOHsfu8LuLC5xeKYXMtwBooQr2QX0KopA2KI/E0cKhjagW/W
+         X6K4icziYVsSDLZXERIsop5RzhiCu25uLk2hp8/FAXI6QI7hq9BzsD1BBJD4489Uc0BM
+         V54UJwzQwhVMxMKG3/S+sTPGQto2Yrp1FeOjky6+2r46/Kpa2R0nG/njEjrT1vl7FHDj
+         GrP/H8rGR+gbCQutnQRvYdh+tbJpMSgKgsoSx27ZOX2qBHTb4onj8XUZ9MVBVmoSinmf
+         PwLCENu+f5AJY/EvH2JgnmZuZHNVsl2XzupC1Jc1sCCqYtKE+XXIM/OS7jIWSFwzQrXb
+         CJCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=jE1eXr0aFrBGEBZ/GquO7bRsGe66Rk2RCOW4RqQ0FHw=;
-        b=mWZPplNNP9Y+MtVUPRFsBBPlTydZUeE6qozcbm72gd/WP0fveD5+1p9Rwx2O6obnmV
-         a6tY1MXFqumm3Sxwe3o8U7xBUcZ4+wsI3L0Yr6GyEusGWimZbUL7LZJcZLAFFQqXT2kF
-         CVuoMNafPOEla35bHuRSy4ivoaXsUAN+rByD6rLIfw/mFpo1qbSPmG7oRY0fCd2EFWnX
-         inFMsX+5uJBU8I+3GVmxLWJ7wD2TQQ36P1FDTEK5NzTvImgAKVU/FLAkcG/0oFC648CR
-         9nph3hN7gVJ/fFEXt5y7xhqeA+mUepzF70yA4/kl+3J37iXKCyYXanlJkDopCxQJ9LRP
-         mz9w==
-X-Gm-Message-State: AOAM5300FexOJoRlYG01TNTswmq0fyKhovOsVPpcFRq8HpUAq304IWVs
-        ZNpNwJ5EZvpkl9pK6ymxfeun3YIbhoiv7PTAwBXE0+iuyEFK
-X-Google-Smtp-Source: ABdhPJxZzGmFuPg5FmbI2K9VWsx3CzEkSHK5VQYK7Ervj4iVi+5O0dnvvtMgJPr1SY0otVqLq14WPCR2aFZrHo32bi4SmirZ3ajk
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+vVrgGh+FKZTumikQLMQ5VD9iTv9jTO6F54b15uPxzM=;
+        b=oKQ0DTYozuPiGOUmZqG7jWBaCYx4xZ4+oRpaM7IsN6vyalf2GQpbU/j8I20OZrz4Xj
+         YfEzV2/q6pKyI0KtTmWmkUFnDWmejXwhJVwgIe5783IjRTqTbMQmxMXvBPrJ7+aILoDu
+         NRHhxoh0Oq9bk1Ngs635dDMA2cXByaXzLQr/K16aN1/LXALLXde52a0ThvocJyaO+aAO
+         /YILEiBl7izuq6WoIRs/Fj8BiBQEZJJWUrChnKaTLRPPmHjGQxe3Du00iSKFCSnsA/nq
+         S+hZQizwpd93NlKYMW6NEvA6pA9AYgiWDoueKLDlGOnnK9zS4HMNblV4uShrVSOILQZK
+         II6w==
+X-Gm-Message-State: AOAM5324gEPNuyopQ8BV5PEjcg69dQdWRzbu8dS2CTPJRZlwW188cDRv
+        I2gpALSahcB7eIxZVnM3rqtwbfJPk6h3PHqBbiDqHg==
+X-Google-Smtp-Source: ABdhPJzLUGvqAlacqIPSypPacSsR69kygSTFzmoRBFfCoX8+sQpcUqzLggUFnqzw5BRSxMAFINx/e3Qn19Lp2pQreqY=
+X-Received: by 2002:aed:22cb:: with SMTP id q11mr11268953qtc.200.1596404476604;
+ Sun, 02 Aug 2020 14:41:16 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a92:c7a1:: with SMTP id f1mr5341536ilk.162.1596404180792;
- Sun, 02 Aug 2020 14:36:20 -0700 (PDT)
-Date:   Sun, 02 Aug 2020 14:36:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001d48cd05abebd088@google.com>
-Subject: WARNING: ODEBUG bug in bt_host_release
-From:   syzbot <syzbot+0ce8a29c6c6469b16632@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+References: <1596020528-19510-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <20200802115330.GA1090@bug> <20200802115701.GD1162@bug>
+In-Reply-To: <20200802115701.GD1162@bug>
+From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Date:   Sun, 2 Aug 2020 23:41:05 +0200
+Message-ID: <CAMxfBF6k9wK1iPd7b42xGfDsG5rOBV2rWmVeWxY4UKTTwjSPDQ@mail.gmail.com>
+Subject: Re: [PATCH 0/6] Add TI PRUSS platform driver
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     ssantosh@kernel.org, "Anna, Suman" <s-anna@ti.com>,
+        santosh.shilimkar@oracle.com, robh+dt@kernel.org,
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        "Mills, William" <wmills@ti.com>,
+        "Bajjuri, Praneeth" <praneeth@ti.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi
 
-syzbot found the following issue on:
+On Sun, 2 Aug 2020 at 13:57, Pavel Machek <pavel@ucw.cz> wrote:
+>
+> On Sun 2020-08-02 13:53:30, Pavel Machek wrote:
+> > Hi!
+> >
+> > > A typical usage scenario would be to load the application firmware into one or
+> > > more of the PRU cores, initialize one or more of the peripherals and perform I/O
+> > > through shared RAM from either a kernel driver or directly from userspace.
+> > >
+> > > This series contains the PRUSS platform driver. This is the parent driver for
+> > > the entire PRUSS and is used for managing the subsystem level resources like
+> > > various memories and the CFG module.  It is responsible for the creation and
+> > > deletion of the platform devices for the child PRU devices and other child
+> > > devices (like Interrupt Controller, MDIO node and some syscon nodes) so that
+> > > they can be managed by specific platform drivers.
+> >
+> > >  drivers/soc/ti/Kconfig | 11 + drivers/soc/ti/Makefile | 1 + drivers/soc/ti/pruss.c |
+> >
+> > Is drivers/soc right place for that? We already have subsystem for various
+> > programmable accelerators...
+>
+> ....see drivers/remoteproc.
 
-HEAD commit:    ac3a0c84 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11e1da92900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e59ee776d5aa8d55
-dashboard link: https://syzkaller.appspot.com/bug?extid=0ce8a29c6c6469b16632
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14f653ca900000
+Yes I am aware of that and remoteproc sub-system will be used but only
+for managing PRU cores (drivers/remoteproc/pru-rproc - will be
+submitted soon), while this driver is the parent driver for the entire
+PRUSS (used for managing the subsystem level resources like various
+memories and the CFG module). This driver is also responsible for
+populating all child devices (described in DT), managed by specific
+(and separate) drivers: e.g.:
+- PRU core will be managed by drivers/remoteproc/pru-rproc (will be
+submitted next)
+- PRU interrupt controller will be managed by
+drivers/irqchip/irq-pruss-intc.c (it is already under review)
+etc.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+0ce8a29c6c6469b16632@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-ODEBUG: free active (active state 0) object type: timer_list hint: delayed_work_timer_fn+0x0/0x80 arch/x86/include/asm/paravirt.h:770
-WARNING: CPU: 1 PID: 20314 at lib/debugobjects.c:488 debug_print_object lib/debugobjects.c:485 [inline]
-WARNING: CPU: 1 PID: 20314 at lib/debugobjects.c:488 __debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
-WARNING: CPU: 1 PID: 20314 at lib/debugobjects.c:488 debug_check_no_obj_freed+0x45c/0x640 lib/debugobjects.c:998
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 20314 Comm: syz-executor.5 Not tainted 5.8.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1f0/0x31e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:231
- __warn+0x227/0x250 kernel/panic.c:600
- report_bug+0x1b1/0x2e0 lib/bug.c:198
- handle_bug+0x42/0x80 arch/x86/kernel/traps.c:235
- exc_invalid_op+0x16/0x40 arch/x86/kernel/traps.c:255
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:540
-RIP: 0010:debug_print_object lib/debugobjects.c:485 [inline]
-RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
-RIP: 0010:debug_check_no_obj_freed+0x45c/0x640 lib/debugobjects.c:998
-Code: 74 08 4c 89 f7 e8 04 e4 11 fe 4d 8b 06 48 c7 c7 ef b7 14 89 48 c7 c6 fd 95 12 89 48 89 da 89 e9 4d 89 f9 31 c0 e8 64 95 a4 fd <0f> 0b 48 ba 00 00 00 00 00 fc ff df ff 05 86 c1 eb 05 48 8b 5c 24
-RSP: 0018:ffffc90003777b90 EFLAGS: 00010046
-RAX: ffd2d42dae8b6000 RBX: ffffffff8918b660 RCX: ffff888087ef6000
-RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffffffff815dd389 R09: ffffed1015d241c3
-R10: ffffed1015d241c3 R11: 0000000000000000 R12: ffff8880a131c9ec
-R13: ffffffff8ba5dfb8 R14: ffffffff894edb20 R15: ffffffff814c4b60
- kfree+0xfc/0x220 mm/slab.c:3756
- bt_host_release+0x18/0x20 net/bluetooth/hci_sysfs.c:86
- device_release+0x70/0x1a0 drivers/base/core.c:1575
- kobject_cleanup lib/kobject.c:693 [inline]
- kobject_release lib/kobject.c:722 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x15b/0x220 lib/kobject.c:739
- vhci_release+0x7b/0xc0 drivers/bluetooth/hci_vhci.c:341
- __fput+0x2f0/0x750 fs/file_table.c:281
- task_work_run+0x137/0x1c0 kernel/task_work.c:135
- exit_task_work include/linux/task_work.h:25 [inline]
- do_exit+0x601/0x1f80 kernel/exit.c:805
- do_group_exit+0x161/0x2d0 kernel/exit.c:903
- __do_sys_exit_group+0x13/0x20 kernel/exit.c:914
- __se_sys_exit_group+0x10/0x10 kernel/exit.c:912
- __x64_sys_exit_group+0x37/0x40 kernel/exit.c:912
- do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cc79
-Code: Bad RIP value.
-RSP: 002b:00007ffe023458d8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000045cc79
-RDX: 00000000004166d1 RSI: 0000000000ca85f0 RDI: 0000000000000043
-RBP: 00000000004c2903 R08: 000000000000000b R09: 0000000000000000
-R10: 000000000246f940 R11: 0000000000000246 R12: 0000000000000004
-R13: 00007ffe02345a20 R14: 00000000000b206f R15: 00007ffe02345a30
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Best regards,
+Grzegorz
