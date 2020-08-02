@@ -7,33 +7,32 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA03C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8520EC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15F072075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BF9A2076B
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 11:16:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbgHBLP6 (ORCPT
+        id S1728380AbgHBLQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 07:15:58 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:36712 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728303AbgHBLPv (ORCPT
+        Sun, 2 Aug 2020 07:16:00 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:58146 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728311AbgHBLPw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 07:15:51 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R291e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0U4T1Vgt_1596366945;
-Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U4T1Vgt_1596366945)
+        Sun, 2 Aug 2020 07:15:52 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R521e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0U4TCtCH_1596366946;
+Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U4TCtCH_1596366946)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 02 Aug 2020 19:15:45 +0800
+          Sun, 02 Aug 2020 19:15:47 +0800
 From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-To:     james.smart@broadcom.com, kbusch@kernel.org, axboe@fb.com,
-        hch@lst.de, sagi@grimberg.me, jthumshirn@suse.de,
-        james_p_freyensee@linux.intel.com
-Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        vkoul@kernel.org, dovl@codeaurora.org, ygardi@codeaurora.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         tianjia.zhang@alibaba.com
-Subject: [PATCH] nvme-fc: Fix wrong return value in __nvme_fc_init_request()
-Date:   Sun,  2 Aug 2020 19:15:45 +0800
-Message-Id: <20200802111545.5566-1-tianjia.zhang@linux.alibaba.com>
+Subject: [PATCH] phy: qcom-ufs: Fix wrong return value in ufs_qcom_phy_calibrate()
+Date:   Sun,  2 Aug 2020 19:15:46 +0800
+Message-Id: <20200802111546.5611-1-tianjia.zhang@linux.alibaba.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -43,35 +42,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On an error exit path, a negative error code should be returned
 instead of a positive return value.
 
-Fixes: e399441de9115 ("nvme-fabrics: Add host support for FC transport")
-Cc: James Smart <jsmart2021@gmail.com>
+Fixes: adaafaa393ef1 ("phy: qcom-ufs: add support for QUALCOMM Technologies UFS PHY drivers")
+Cc: Yaniv Gardi <ygardi@codeaurora.org>
 Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
 ---
- drivers/nvme/host/fc.c | 4 ++--
+ drivers/phy/qualcomm/phy-qcom-ufs.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index e999a8c4b7e8..2e06f8f4cff1 100644
---- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -2075,7 +2075,7 @@ __nvme_fc_init_request(struct nvme_fc_ctrl *ctrl,
- 	if (fc_dma_mapping_error(ctrl->lport->dev, op->fcp_req.cmddma)) {
- 		dev_err(ctrl->dev,
- 			"FCP Op failed - cmdiu dma mapping failed.\n");
--		ret = EFAULT;
-+		ret = -EFAULT;
- 		goto out_on_error;
+diff --git a/drivers/phy/qualcomm/phy-qcom-ufs.c b/drivers/phy/qualcomm/phy-qcom-ufs.c
+index 763c8d396af1..49d47dc5bfd4 100644
+--- a/drivers/phy/qualcomm/phy-qcom-ufs.c
++++ b/drivers/phy/qualcomm/phy-qcom-ufs.c
+@@ -24,7 +24,7 @@ int ufs_qcom_phy_calibrate(struct ufs_qcom_phy *ufs_qcom_phy,
+ 
+ 	if (!tbl_A) {
+ 		dev_err(ufs_qcom_phy->dev, "%s: tbl_A is NULL", __func__);
+-		ret = EINVAL;
++		ret = -EINVAL;
+ 		goto out;
  	}
  
-@@ -2085,7 +2085,7 @@ __nvme_fc_init_request(struct nvme_fc_ctrl *ctrl,
- 	if (fc_dma_mapping_error(ctrl->lport->dev, op->fcp_req.rspdma)) {
- 		dev_err(ctrl->dev,
- 			"FCP Op failed - rspiu dma mapping failed.\n");
--		ret = EFAULT;
-+		ret = -EFAULT;
- 	}
+@@ -42,7 +42,7 @@ int ufs_qcom_phy_calibrate(struct ufs_qcom_phy *ufs_qcom_phy,
+ 		if (!tbl_B) {
+ 			dev_err(ufs_qcom_phy->dev, "%s: tbl_B is NULL",
+ 				__func__);
+-			ret = EINVAL;
++			ret = -EINVAL;
+ 			goto out;
+ 		}
  
- 	atomic_set(&op->state, FCPOP_STATE_IDLE);
 -- 
 2.26.2
 
