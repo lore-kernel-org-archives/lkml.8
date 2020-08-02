@@ -2,102 +2,191 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB01C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 03:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC90DC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 03:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4B1220722
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 03:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD2B2075B
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 03:32:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="0tGr6Iys"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RzjfWU1S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgHBDZg (ORCPT
+        id S1727984AbgHBDcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 23:25:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50148 "EHLO
+        Sat, 1 Aug 2020 23:32:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgHBDZg (ORCPT
+        with ESMTP id S1726387AbgHBDcG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 23:25:36 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7666C06174A
-        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 20:25:35 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id o13so18095494pgf.0
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 20:25:35 -0700 (PDT)
+        Sat, 1 Aug 2020 23:32:06 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9972CC06174A;
+        Sat,  1 Aug 2020 20:32:06 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id z188so8576201pfc.6;
+        Sat, 01 Aug 2020 20:32:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7TU0jVDkAi+TrfLwagAtvk/o+NPXU3FvHA83O5gmgbI=;
-        b=0tGr6IysV+eD9opoEGIr6mkegepTqnjGOL8YRmg0O7yoTPq2OW3noILiXRlqROwKMe
-         y5XvRVcaCNhbZ3la/jk1ZTiRg7hUtUYRtWKqQBzmRjJ9XFnAydqcUErnDwUnWYYClQIL
-         lndUK0Jpdl1+XhpLVu6Wpsl+n4Vl6pbeLF13s/Sh//2hpN5mAwJbjxBOLLwdIJHnhxDL
-         MRQUBBFotciWnOfqGVVn1uXuchDNo3OmkGiTjk7pD6ArG9Oh+dIMkTlfig5E1eb/RXpV
-         PPp0qfwtbL990UjpbSTzqu5ppvq2l6LjY9fTaDk8sll/VhgDM9g26/mt+yery33w4ysw
-         /QxQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NQA5xpV9Vfl3BUSLXPw3JQiC/8GdjqPpOyhk9KwqJ1Q=;
+        b=RzjfWU1SmtGiTRUrJ/qYDXji1/9h2sZQKC2J5y1qoyZZ7FVCT7NXQxDeQardydSAQy
+         3AlSMbfdWIZ3JqyYHPzxUFdsMfB3rf9+uBF9H+iJWNSpGyMkX/WV+Bu7XZF07FuujW0/
+         F+mSrE0SyaERcjG3EiKOUjxSd++ZUiD+amlJ2tQqdG/K1reXsz6ozKGXIE+0EDZdCYuz
+         pyyFLislYFDqRfmllKPpjW4QCSsqLF+jjJStDB1aoTPFgQk9msgwwfdAlrWqta4vTi8W
+         MInIyNQ1z5lZYaGVj+Nm1Gl6+fKj3QR625LR/JWnTXT1m+eCrvy9SMeeXCxdrv+oicXV
+         muvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7TU0jVDkAi+TrfLwagAtvk/o+NPXU3FvHA83O5gmgbI=;
-        b=cVUdkbU6q52TaFz8wulWuZYRQEpo21AJrXt+61+Mkiv4xiqMwn9St9nrx+LVAV0JCy
-         SWOgCh067QDUm4LbjwC7YRFganaXuCrafu+tjVr020P/2c9IKxr070eBusZDRxuQYuHm
-         J1N3in8iNh5uZJUZ37D/VqA8zA6lsEQ27JOhr90ogp+MNeTOcfLCm1gYRRY8f/WSKFWh
-         Eb2LETtjyT7Vdv88q2tUit7vJcY+jiuv1u5rDTNQq8zxX21KCucTN6xHvTBu4iXUHhAk
-         3WzN2HtmwjiiFuCTHGmoDjzYxL1+UxCVAIfxBUEMQe6rVqz8ky/VBXnR5D111B5Ufddn
-         SHZw==
-X-Gm-Message-State: AOAM532d0HEQf2i63/Bev2opy64kKmlu4VIw+ODzHfJvi4pXmCyUAR/8
-        9ObehbUunJizOTLBBILIuHoeeQ==
-X-Google-Smtp-Source: ABdhPJzCDvfKN4o4egxZWxHYrsT51nnaZpcJciej09GUhdkbrV74KESCD/rwpuL1HN0aUfm8Hf0iew==
-X-Received: by 2002:aa7:8a4d:: with SMTP id n13mr8130420pfa.143.1596338735295;
-        Sat, 01 Aug 2020 20:25:35 -0700 (PDT)
-Received: from localhost.localdomain (36-239-219-92.dynamic-ip.hinet.net. [36.239.219.92])
-        by smtp.gmail.com with ESMTPSA id k21sm12059565pgl.0.2020.08.01.20.25.32
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NQA5xpV9Vfl3BUSLXPw3JQiC/8GdjqPpOyhk9KwqJ1Q=;
+        b=lEIMxKBZxw4uRyIch0+xcLcQEnJP6I3k+YpIaSRPlZ9a77axDAYZ6Apf1zn8rQirNU
+         TH03jKX1WgG0P1ENbTciFNBYw+k25S8Ms5vabxXhTpqYiBIhGfEKSbzEhabwX/kTF6Ih
+         3owmYpBQPDeeuQJe7Z7QFxlKb/fHQKmNORHv06sMHfCXSHnJDP8cINn9pblC6rZWZ4WO
+         Rgf9uMnNd2jK7mHyiUCyvrRgE/8ghnxvOIfaaFpt0BAkSQCiZQfV0JTPrfQ8ejW1vYz4
+         wUKNagTswoJo3fcRrgj5tmkNcWVc4rKQVRRNGqy+9hBLPeQtDcN6chDGp7FbZ3b5fuva
+         JTxA==
+X-Gm-Message-State: AOAM532le9ri7Qv7OmDRpUsfomd7yRdBPc5y8rQLMFpAknssjvwyTjxt
+        TxDQ28yywXXymhfi0OTwLa4=
+X-Google-Smtp-Source: ABdhPJwGr3Aw7529dBCQdHayEQ97tQrT/TiNVZc16m1LcA0UmEvbwc45EEwUm0S4Ope1OJsmfF36YA==
+X-Received: by 2002:aa7:9ace:: with SMTP id x14mr273559pfp.216.1596339125659;
+        Sat, 01 Aug 2020 20:32:05 -0700 (PDT)
+Received: from sol (106-69-185-93.dyn.iinet.net.au. [106.69.185.93])
+        by smtp.gmail.com with ESMTPSA id b24sm14800189pgn.8.2020.08.01.20.32.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Aug 2020 20:25:34 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Prashant Malani <pmalani@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH] regulator: cros-ec-regulator: Add NULL test for devm_kmemdup call
-Date:   Sun,  2 Aug 2020 11:25:09 +0800
-Message-Id: <20200802032509.305425-1-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.25.1
+        Sat, 01 Aug 2020 20:32:04 -0700 (PDT)
+Date:   Sun, 2 Aug 2020 11:31:58 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 05/18] gpiolib: cdev: support GPIO_GET_LINE_IOCTL and
+ GPIOLINE_GET_VALUES_IOCTL
+Message-ID: <20200802033158.GA13174@sol>
+References: <20200725041955.9985-1-warthog618@gmail.com>
+ <20200725041955.9985-6-warthog618@gmail.com>
+ <CAHp75VcKtATPDKGAViWqjOJDqukDrgZ13aTU6rTJ1jEeB3vmVw@mail.gmail.com>
+ <20200726011244.GA6587@sol>
+ <CAMpxmJWaEVwjXSFHTYmwdfA+88upVkJ4ePSQf_ziSOa1YdOUKQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMpxmJWaEVwjXSFHTYmwdfA+88upVkJ4ePSQf_ziSOa1YdOUKQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix possible NULL pointer dereference.
+On Fri, Jul 31, 2020 at 06:05:10PM +0200, Bartosz Golaszewski wrote:
+> On Sun, Jul 26, 2020 at 3:12 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> 
+> [snip]
+> 
+> > >
+> > > > +static bool padding_not_zeroed(__u32 *padding, int pad_size)
+> > > > +{
+> > > > +       int i, sum = 0;
+> > > > +
+> > > > +       for (i = 0; i < pad_size; i++)
+> > > > +               sum |= padding[i];
+> > > > +
+> > > > +       return sum;
+> > > > +}
+> > >
+> > > Reimplementation of memchr_inv() ?
+> > >
+> >
+> > I was hoping to find an existing function, surely checking a region is
+> > zeroed is a common thing, right?, so this was a place holder as much
+> > as anything.  Not sure memchr_inv fits the bill, but I'll give it a
+> > try...
+> >
+> 
+> If you don't find an appropriate function: please put your new
+> implementation in lib/ so that others may reuse it.
+> 
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/cros-ec-regulator.c | 3 +++
- 1 file changed, 3 insertions(+)
+Changed to memchr_inv.
 
-diff --git a/drivers/regulator/cros-ec-regulator.c b/drivers/regulator/cros-ec-regulator.c
-index 3117bbd2826b..eb3fc1db4edc 100644
---- a/drivers/regulator/cros-ec-regulator.c
-+++ b/drivers/regulator/cros-ec-regulator.c
-@@ -170,6 +170,9 @@ static int cros_ec_regulator_init_info(struct device *dev,
- 	data->voltages_mV =
- 		devm_kmemdup(dev, resp.voltages_mv,
- 			     sizeof(u16) * data->num_voltages, GFP_KERNEL);
-+	if (!data->voltages_mV)
-+		return -ENOMEM;
-+
- 	data->desc.n_voltages = data->num_voltages;
- 
- 	/* Make sure the returned name is always a valid string */
--- 
-2.25.1
+> > > ...
+> > >
+> > > > +static u64 gpioline_config_flags(struct gpioline_config *lc, int line_idx)
+> > > > +{
+> > > > +       int i;
+> > > > +
+> > > > +       for (i = lc->num_attrs - 1; i >= 0; i--) {
+> > >
+> > > Much better to read is
+> > >
+> > > unsigned int i = lc->num_attrs;
+> > >
+> > > while (i--) {
+> > >  ...
+> > > }
+> > >
+> >
+> > Really? I find that the post-decrement in the while makes determining the
+> > bounds of the loop more confusing.
+> >
+> 
+> Agreed, Andy: this is too much nit-picking. :)
+> 
 
+I was actually hoping for some feedback on the direction of that loop,
+as it relates to the handling of multiple instances of the same
+attribute associated with a given line.
+
+The reverse loop here implements a last in wins policy, but I'm now
+thinking the kernel should be encouraging userspace to only associate a
+given attribute with a line once, and that a first in wins would help do
+that - as additional associations would be ignored.
+
+Alternatively, the kernel should enforce that an attribute can only be
+associated once, but that would require adding more request validation.
+
+> [snip]
+> 
+> > > ...
+> > >
+> > > > +               struct gpio_desc *desc = gpiochip_get_desc(gdev->chip, offset);
+> > >
+> > > I prefer to see this split, but it's minor.
+> > >
+> > > > +               if (IS_ERR(desc)) {
+> > > > +                       ret = PTR_ERR(desc);
+> > > > +                       goto out_free_line;
+> > > > +               }
+> > >
+> > > ...
+> > >
+> > > > +               dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
+> > > > +                       offset);
+> > >
+> > > Perhaps tracepoint / event?
+> > >
+> >
+> > Again, a cut-and-paste from V1, and I have no experience with
+> > tracepoints or events, so I have no opinion on that.
+> >
+> > So, yeah - perhaps?
+> >
+> 
+> I think it's a good idea to add some proper instrumentation this time
+> other than much less reliable logs. Can you take a look at
+> include/trace/events/gpio.h? Adding new GPIO trace events should be
+> pretty straightforward by copy-pasti... drawing inspiration from
+> existing ones.
+> 
+
+You only want tracepoints to replace those dev_dbg()s, so when a line
+is requested? What about the release?  Any other points?
+
+Cheers,
+Kent.
