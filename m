@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD55C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95198C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 671942072A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 800B02072A
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:29:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n/IHoxrj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="broiPk0P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgHBU2L (ORCPT
+        id S1727849AbgHBU3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 16:28:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36140 "EHLO
+        Sun, 2 Aug 2020 16:29:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725925AbgHBU2K (ORCPT
+        with ESMTP id S1725925AbgHBU3a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 16:28:10 -0400
+        Sun, 2 Aug 2020 16:29:30 -0400
 Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FF02C06174A;
-        Sun,  2 Aug 2020 13:28:10 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id c2so19957275edx.8;
-        Sun, 02 Aug 2020 13:28:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4E5CC06174A;
+        Sun,  2 Aug 2020 13:29:30 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id a14so8838446edx.7;
+        Sun, 02 Aug 2020 13:29:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
         bh=3J37uxaE+JC2NHgQ9X6Djh4nwsDEJFu6G317WySC1bg=;
-        b=n/IHoxrjJZ4ZhisSgFBb+cdqsIWOU93JzjASNqIBYlJcdJoyQjMZeLAFyk68m0sRFa
-         0ko5rcM41/kx665Np0hPtss5VMYQcKZcMIjFJ/6WF6x0752s7rgpn97X8iYRpTXQwF12
-         BUpPp9C488EyaoKda6Qokl7bG2ecXNk80LTmmlbb9pevyFzTdlYSCSiJh5utObNJVPSc
-         gOpJPDRzGJDTdsflxZhMkHo9Jh9kuSpaGcpKLdaywIjFO6H3kbwBUSy2T7ndl2SDrS9k
-         t36inOWdMd/Ja15gUWfvHsSt5Wf1Xo+GWhMemXUE+c9qw6f9YOI9u0yXVYru/9tM0mbw
-         1U/w==
+        b=broiPk0PLe4t5SEOb1FZw6YPVEHQNZo8VTOrF/K1nrirkum0BVWSt5Y7GF4I7zOGP6
+         PLnN7toCa4e+4wv6DDccsza42XCE5E0nQvkMW/U4H73tGSFWYE+XI/npsf3ZGQjx+qV7
+         UcwysbFJhSYMTgOEhY6odzo+h00KioAv90zyU3lYz9+3ZfLltS4xVJDCztMyuRPl9LWN
+         +WBGpSkUyqodvA2eYU88feICBmHSZeqVscQ04CUc05VxAzLA0Up3yaJB25nvBOvF+pqY
+         5Z8JCkIFi7DjbKRgifvDCMjjGqS1v1reTOGytkL0MpHvcPFI1R5QgnpCo7XoOFyZQ1Z1
+         2BvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
         bh=3J37uxaE+JC2NHgQ9X6Djh4nwsDEJFu6G317WySC1bg=;
-        b=j9H6x34cJS+5/9mxyqXBAKJPsEiheY/A3Rxcf7nmIa6CtAadLE/szAh3qf/VqY0kOR
-         jHHOWrSxuK1B85IG0IB1S4BqXatkJLN+Cb+lAA6TG6Sw7XCaKk/8/CjaW1jNQZE/Inxc
-         rGc9tiHiqRWsD7eeSPE3dVyXBb2mn/r9AfnYvk/Pi8eNtHQV7HEa7AiNz/US1PBFJNUh
-         zjCqylRA3t9uQCLe2jaAKbyimfFOnciXCqJQULwi72+LX+xZXgFku1lfX7u9xhQsn2Cd
-         5GD+Q0ITE0Ji1dHGvBPxSH+3GcM6evN8hyuMqcMyeO86TMKVHn2PsQn+epZipb2+1LRl
-         izbQ==
-X-Gm-Message-State: AOAM533K5rrRjtY8hGl96wer6PMvoC3c2/4eqxwi9dj+B6Mh1g35aDiH
-        3JbLIW/ekSPUe8aNgKjInUHDSutbsjk1kA==
-X-Google-Smtp-Source: ABdhPJykd60igEvNngpngTLYpb3bfNgCI6epetnrMQauXCt5NpCR2Lt53L0v8jfBzcACFQgwy+H/yQ==
-X-Received: by 2002:a05:6402:3128:: with SMTP id dd8mr2988200edb.97.1596400089110;
-        Sun, 02 Aug 2020 13:28:09 -0700 (PDT)
+        b=dPwITS3CuEJOiBX8xzxHWSs0E6bGJ1AFNSo5fkVxPc5PaPvvKoFCT5Hn5UopKJadLp
+         rB1vZpAjl+sPCweA4ikdP2q4RCGKQqNhOTFtRwkThwaUmf5wdrlmRICvv6fymOkE+ESN
+         h0ZpGYM045VrCtFFQWuV901r3a0LqhQqI7WGGD/atv2LM0UqSC4M/mervcdm5T5yXvSK
+         ZzEN2AkgLZhaIA7cN87L9XU4RlHJDh19B1/M7zxGwJamSmpMa6xTP+mFFJ68vIybACWe
+         LKneEXdYMV0+A1uoQWSwgye/zI+pvgsqMoCb/a5kMD2+pX9ewBiwgcB49eTjT35vcyEW
+         +vsg==
+X-Gm-Message-State: AOAM531wnA4wurQCrFS/yBusNvE2GwSHaPO+Cd+3AWBs5cbZX3R95MHE
+        9uh7e1pZ0WKcbwVbadMjZtn6zeYJDaWgMA==
+X-Google-Smtp-Source: ABdhPJybPMfke3pwRn41/RYWqF37HhqFC1CZFcBszUBJd+h40h/LPCD7oONJHqwuVykRDQTwLO+bqA==
+X-Received: by 2002:a05:6402:2379:: with SMTP id a25mr12669941eda.180.1596400169306;
+        Sun, 02 Aug 2020 13:29:29 -0700 (PDT)
 Received: from localhost.localdomain ([31.177.242.137])
-        by smtp.gmail.com with ESMTPSA id u17sm14090239ejx.10.2020.08.02.13.28.07
+        by smtp.gmail.com with ESMTPSA id c7sm14122011ejr.77.2020.08.02.13.29.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Aug 2020 13:28:08 -0700 (PDT)
+        Sun, 02 Aug 2020 13:29:28 -0700 (PDT)
 From:   stulluk@gmail.com
 To:     mripard@kernel.org
 Cc:     robh+dt@kernel.org, wens@csie.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Sertac TULLUK <stulluk@gmail.com>
+        linux-sunxi@googlegroups.com, Sertac TULLUK <stulluk@gmail.com>
 Subject: arm: dts: allwinner: a20: Add Drejo DS167 initial support
-Date:   Sun,  2 Aug 2020 23:27:45 +0300
-Message-Id: <20200802202745.5082-1-stulluk@gmail.com>
+Date:   Sun,  2 Aug 2020 23:29:24 +0300
+Message-Id: <20200802202924.5166-1-stulluk@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
