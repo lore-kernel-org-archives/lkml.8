@@ -2,174 +2,126 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D82C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 18:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 549F5C433E8
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 18:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD702065E
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 18:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39D0C20792
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 18:27:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YtJLT8D3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgHBS0V (ORCPT
+        id S1727804AbgHBS1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 14:26:21 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:49553 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbgHBS0U (ORCPT
+        Sun, 2 Aug 2020 14:27:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbgHBS1f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 14:26:20 -0400
-Received: by mail-io1-f72.google.com with SMTP id 189so823500iov.16
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 11:26:19 -0700 (PDT)
+        Sun, 2 Aug 2020 14:27:35 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CFDFC06174A;
+        Sun,  2 Aug 2020 11:27:35 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id v22so14915937edy.0;
+        Sun, 02 Aug 2020 11:27:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=ec+QZPQt4BI+HNScgjvbhAWx5U5Q2eYvCkS354frzh0=;
+        b=YtJLT8D3c903d3hsfGfmpRep4DyZJhzRytGWo/UssPWnsu4TDB7JZAkT1sTJMmJUH+
+         bq5rDlN4QtT+Xdj0JNzjtQ2QqTr2pVyC4JOlcnf9bRRCSyXgovVOl9FdgJQfsiPfkKzY
+         DWsX6GX1lxDOlwpnwJCtIh+GQ6RZkI/pzRvVJxUc5FGTjx+jay8s+7hZFlw796rU78Gc
+         7K1ApoysPqm8FRM+jQOGIRHengeFZ6xNP8mOw9mf8ONnQV8kOLpUVEJO7EpYgXqjQKbR
+         ZXY6Otij2DqA3PujrgbIOxTi9tcd/lHDFFPdppv1+HoL/eGjvY6ERK9eoJvC1OZ061lc
+         FmqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=wAkG0FHJ8ZDz983xILH6vmf8fGDdyhMkdSmDPazC4xw=;
-        b=HUxcNShnkH9zVOLsJvNZs9zSSzSKEAVtktqbDWgj0WtHpd31jWgTp2PUlbPBCAGxK0
-         OTWMrYoZrE7teNMg23lydzU2GGL2Q/xiX9BnvRs9pwfOqS91KsdZE+TtPjGdacQexGuP
-         xGtjk3t1olWNuk6N/gHYBQX0LRwCUhwGXf63RAaX8cfLTPadCr6uy75CABEntE0hP4a5
-         rQKzLszPA70/RRl38bYp/GDoQcBMcvDr5shnf3dY0YGe5dNKScza5Ya3Q9I/7cn6yd4y
-         5NVLXijAeh3070VH/9VCwdcP+9slrSCkrdrSdaH2mRo5pQR8dLYaJLsrJImii3+31Y8U
-         VdOw==
-X-Gm-Message-State: AOAM530LXY743nQG8wMj//r1NcrVqxFfo1vdLB0Fwoip8V6NppfLJ/Mv
-        oUzFCBvjzUdKd0x5on5/d+AEmRFUL/AeG+p2BG9tJpJpy5cz
-X-Google-Smtp-Source: ABdhPJwO6lidzMdjy2wDwPs72RNvZ6WdfXmtYZWKKdMansNpcLocxcs2/BSgCwfvY1soaNW+QtyLx8y6Ag41Fm6V95cvg2yjEB4u
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=ec+QZPQt4BI+HNScgjvbhAWx5U5Q2eYvCkS354frzh0=;
+        b=K83uV3irkoUMjiaYGxaIKS/7/Xhw9LmAzT7GEm14xlebX6o+ahYRqHbiMaUg91zym0
+         HOCPVuhQFvtyGr5sKMZ3VhY5avZJ3J0dVI3uEXdHfVHfig8ldeOikWvKCM8+E1bnUje6
+         G/2FKjqgmGFDuSn2GyziNsKTy4iraIy9TOXl3SKC+PujmY1oSm/6HcRfncJ6C8YW2FGY
+         Km/qhgofMmzTdBnhcOEh0R4V9pXI8vWWXUC2khNhxez7M0PSfQyiK6llzGQ952ESzuXB
+         ZusXTc+b95kxkHR72i9XG/IoQU3EUle4GttbIa1qAAdfKtjMbvTDrCQrParNiHz1fCFS
+         yGeQ==
+X-Gm-Message-State: AOAM532cCpjZiyS08P3ApXbDPMB2E+dwfN+U5Qy7ScIzWByrjx7/CRnq
+        Tr3hLoPvYHymHVvS49nNY94=
+X-Google-Smtp-Source: ABdhPJzPSVl/d4yXQb9tARqdTsGpw8tzteKDCnrRiPQdt2yWNobLwsKDJ8Loc5jmq7ZA1MaLrCqHCQ==
+X-Received: by 2002:aa7:c9c2:: with SMTP id i2mr12251380edt.326.1596392853909;
+        Sun, 02 Aug 2020 11:27:33 -0700 (PDT)
+Received: from net.saheed (95C84E0A.dsl.pool.telekom.hu. [149.200.78.10])
+        by smtp.gmail.com with ESMTPSA id b9sm2015326ejz.57.2020.08.02.11.27.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Aug 2020 11:27:33 -0700 (PDT)
+Subject: Re: [RFC PATCH 00/17] Drop uses of pci_read_config_*() return value
+To:     Borislav Petkov <bp@alien8.de>, trix@redhat.com
+Cc:     helgaas@kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Joerg Roedel <joro@8bytes.org>, bjorn@helgaas.com,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-mtd@lists.infradead.org, iommu@lists.linux-foundation.org,
+        linux-rdma@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        linux-gpio@vger.kernel.org, linux-fpga@vger.kernel.org,
+        linux-edac@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-crypto@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net
+References: <20200801112446.149549-1-refactormyself@gmail.com>
+ <20200801125657.GA25391@nazgul.tnic>
+From:   Saheed Bolarinwa <refactormyself@gmail.com>
+Message-ID: <b720aa44-895a-203b-e220-ecdb3acd9278@gmail.com>
+Date:   Sun, 2 Aug 2020 19:28:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:d4cf:: with SMTP id o15mr14277146ilm.25.1596392779066;
- Sun, 02 Aug 2020 11:26:19 -0700 (PDT)
-Date:   Sun, 02 Aug 2020 11:26:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000084b59f05abe928ee@google.com>
-Subject: INFO: task hung in pipe_release (2)
-From:   syzbot <syzbot+61acc40a49a3e46e25ea@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200801125657.GA25391@nazgul.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following issue on:
+On 8/1/20 2:56 PM, Borislav Petkov wrote:
+> On Sat, Aug 01, 2020 at 01:24:29PM +0200, Saheed O. Bolarinwa wrote:
+>> The return value of pci_read_config_*() may not indicate a device error.
+>> However, the value read by these functions is more likely to indicate
+>> this kind of error. This presents two overlapping ways of reporting
+>> errors and complicates error checking.
+> So why isn't the *value check done in the pci_read_config_* functions
+> instead of touching gazillion callers?
+Because the value ~0 has a meaning to some drivers and only
+drivers have this knowledge. For those cases more checks will
+be needed to ensure that it is an error that has actually
+happened.
+> For example, pci_conf{1,2}_read() could check whether the u32 *value it
+> just read depending on the access method, whether that value is ~0 and
+> return proper PCIBIOS_ error in that case.
 
-HEAD commit:    6ba1b005 Merge tag 'asm-generic-fixes-5.8' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16a5a3b0900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=84f076779e989e69
-dashboard link: https://syzkaller.appspot.com/bug?extid=61acc40a49a3e46e25ea
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=142ae224900000
+The primary goal is to make pci_config_read*() return void, so
+that there is *only* one way to check for error i.e. through the
+obtained value.
+Again, only the drivers can determine if ~0 is a valid value. This
+information is not available inside pci_config_read*().
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+61acc40a49a3e46e25ea@syzkaller.appspotmail.com
+- Saheed
 
-INFO: task syz-executor.0:7075 blocked for more than 143 seconds.
-      Not tainted 5.8.0-rc7-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.0  D28288  7075   6828 0x00000004
-Call Trace:
- context_switch kernel/sched/core.c:3458 [inline]
- __schedule+0x8ea/0x2210 kernel/sched/core.c:4219
- schedule+0xd0/0x2a0 kernel/sched/core.c:4294
- schedule_preempt_disabled+0xf/0x20 kernel/sched/core.c:4353
- __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
- __mutex_lock+0x3e2/0x10d0 kernel/locking/mutex.c:1103
- __pipe_lock fs/pipe.c:87 [inline]
- pipe_release+0x49/0x320 fs/pipe.c:722
- __fput+0x33c/0x880 fs/file_table.c:281
- task_work_run+0xdd/0x190 kernel/task_work.c:135
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_usermode_loop arch/x86/entry/common.c:239 [inline]
- __prepare_exit_to_usermode+0x1e9/0x1f0 arch/x86/entry/common.c:269
- do_syscall_64+0x6c/0xe0 arch/x86/entry/common.c:393
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x415ee1
-Code: Bad RIP value.
-RSP: 002b:00007ffd249bc0c0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000007 RCX: 0000000000415ee1
-RDX: 0000000000000000 RSI: 00000000007904d0 RDI: 0000000000000006
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 00007ffd249bc1b0 R11: 0000000000000293 R12: 00000000007905a8
-R13: 00000000000ffc79 R14: ffffffffffffffff R15: 000000000078bfac
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/1153:
- #0: ffffffff89bc11c0 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x260 kernel/locking/lockdep.c:5779
-1 lock held by in:imklog/6695:
- #0: ffff8880979b6670 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:826
-1 lock held by syz-executor.0/7075:
- #0: ffff8880a8e02068 (&pipe->mutex/1){+.+.}-{3:3}, at: __pipe_lock fs/pipe.c:87 [inline]
- #0: ffff8880a8e02068 (&pipe->mutex/1){+.+.}-{3:3}, at: pipe_release+0x49/0x320 fs/pipe.c:722
-2 locks held by syz-executor.0/7077:
-
-=============================================
-
-NMI backtrace for cpu 0
-CPU: 0 PID: 1153 Comm: khungtaskd Not tainted 5.8.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
- nmi_trigger_cpumask_backtrace+0x1b3/0x223 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:209 [inline]
- watchdog+0xd7d/0x1000 kernel/hung_task.c:295
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 PID: 7077 Comm: syz-executor.0 Not tainted 5.8.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:iov_iter_alignment+0x39e/0x850 lib/iov_iter.c:1236
-Code: 48 8b 44 24 18 80 38 00 0f 85 f4 03 00 00 4d 8b 7d 18 44 89 e3 48 89 d8 48 c1 e0 04 4c 01 f8 48 8d 78 0c 48 89 fa 48 c1 ea 03 <42> 0f b6 0c 32 48 89 fa 83 e2 07 83 c2 03 38 ca 7c 08 84 c9 0f 85
-RSP: 0018:ffffc9000206f868 EFLAGS: 00000a07
-RAX: ffff8880a8124c00 RBX: 0000000000000000 RCX: ffffffff8395bf6f
-RDX: 1ffff11015024981 RSI: ffffffff8395be14 RDI: ffff8880a8124c0c
-RBP: 0000000000000000 R08: 0000000000000000 R09: ffff8880994e63c7
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: ffffc9000206fc68 R14: dffffc0000000000 R15: ffff8880a8124c00
-FS:  00007fba306d0700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f9573761000 CR3: 0000000091a0d000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- ext4_unaligned_io fs/ext4/file.c:175 [inline]
- ext4_dio_write_iter fs/ext4/file.c:465 [inline]
- ext4_file_write_iter+0x345/0x13d0 fs/ext4/file.c:653
- call_write_iter include/linux/fs.h:1908 [inline]
- do_iter_readv_writev+0x567/0x780 fs/read_write.c:713
- do_iter_write+0x188/0x5f0 fs/read_write.c:1018
- vfs_iter_write+0x70/0xa0 fs/read_write.c:1059
- iter_file_splice_write+0x721/0xbe0 fs/splice.c:750
- do_splice_from fs/splice.c:846 [inline]
- do_splice+0xbcd/0x1820 fs/splice.c:1144
- __do_sys_splice fs/splice.c:1419 [inline]
- __se_sys_splice fs/splice.c:1401 [inline]
- __x64_sys_splice+0x198/0x250 fs/splice.c:1401
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45c369
-Code: 8d b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fba306cfc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000113
-RAX: ffffffffffffffda RBX: 0000000000032240 RCX: 000000000045c369
-RDX: 0000000000000003 RSI: 0000000000000000 RDI: 0000000000000005
-RBP: 000000000078bff8 R08: 000000000000ffe0 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bfac
-R13: 00007ffd249bc04f R14: 00007fba306d09c0 R15: 000000000078bfac
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
