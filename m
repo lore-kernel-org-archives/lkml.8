@@ -2,165 +2,89 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF6DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B545C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D965120722
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:46:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BAA020738
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 20:59:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aSrIKjrA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbgHBUq2 (ORCPT
+        id S1727019AbgHBU7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 16:46:28 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:38669 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727987AbgHBUqU (ORCPT
+        Sun, 2 Aug 2020 16:59:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726058AbgHBU7B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 16:46:20 -0400
-Received: by mail-il1-f198.google.com with SMTP id t79so23722572ild.5
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 13:46:20 -0700 (PDT)
+        Sun, 2 Aug 2020 16:59:01 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2469C06174A
+        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 13:59:01 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id l13so10148569qvt.10
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 13:59:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lpfNXkmyS/c2cFjwANzmOGpAdi0vE66LKzF6F3Z7eQk=;
+        b=aSrIKjrADoVRBEWSh724z0l2SvU7xD65h+yV3/tvRvc4/cmNs2OW8PRyVehHtJpRYV
+         4wxc0hi9G4yS6espX3YajJiLDsgaIJc0FlxfPwrNuqKpBD/HVpoQFDyu4ZgdEOdkembk
+         r1bZ/WWY8W34j5pRhgOUBfcXI+v51FJ2STU9iKSWU24sMdfHA/r3hu7sE0b67dbsUgtv
+         wIL0aAGIrrjEI11byUfwcbPq33IVEPvdQtAcW92QZbv5X4YHqn5AuwCnafgOPZFI4TM1
+         Xa/k4Lo1+761rmgR9pkHao0Xcow+NLOLryEQwq9By5y/Gxhd5CSg4gg3dm/U78OCXzwd
+         A3Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=UR/ZO0hH6TY23jTg0tEYuIZyHB35kzhpcW94c67p/IY=;
-        b=AR6zu9HhZJuP4w/57uEGeZs/0mBprTbIJ8ibwVISidC6fVEUy4Ui5w3c+L4Ej5bUEI
-         qbGWRESyfWDJ1cK1wENjrbo3b3vHFM9ah8egrCIvta8slYzHZ6u6cbSp4ktYTTGee+hz
-         j/uw7jwSNT1ukKecsMY7uOvCx1ljx5qh9ytjlF7CdVqOGTnxAiOwF69F4k59+IFJGj1T
-         RrkYMnk2XWdIZ5jjRcCOWYnomrRcjKPtbaFUp+RbR2fElMbRulTXRFGbtBhb/1DlQBb9
-         EwSnWEDv89T3BLSJJQd7jn00RBFK4dql4wrZfFR+TqYfaLxIke2DT40XTQyyFH+dOL8A
-         3qfg==
-X-Gm-Message-State: AOAM530X3W85bFdO35ehe6HwvyDfaXVQkBgoVgEDsUz4THSjJBxmUZm7
-        Q8sPQxURTsBn9w0K+6YuKTtDHLwVnUbnjlkhkibESlGkgGPF
-X-Google-Smtp-Source: ABdhPJz7QroLRzfyvDXIacdc4voPN0fxMrySmyqn0CFftkCfYMBM0YQGazUDxAJijzwoaYNvZzDHqwqhpHTS867zlK7eYtmTskSB
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lpfNXkmyS/c2cFjwANzmOGpAdi0vE66LKzF6F3Z7eQk=;
+        b=Yf0EPjSv4Kz2LJrJ+qOc9Zdv7oNv4POxz21q11Bh1e3/71EG8IBAG6RiS4Q99VdwtO
+         Mg01Mpki6xPphJZuVt/Zd1cltfC52ctgUWL/FSoNgQfaMUsVaFpW6nB+QNSu7scp4mM3
+         Y8xT6dER2SQUAmP7QciwbqsV5OiwTOET635+kiCRzDiQK3PoowCGDrrLcQpSKAyaC6Uz
+         NM23ZStRfO66FGwnh5OKo+Hs31K0ECdwbqWlaq6Ad+mAG1nR64vKNNey9UWjSequZit7
+         LdOu80vZnwLuhldnpPrlLnMkYvtji861CszXieWulXLGbgLxxyRfMGS1V6B7bev5UVgm
+         MZwQ==
+X-Gm-Message-State: AOAM533/y4AdEBYSQDgGkIdGHaE5GkJHglIWhLKiMcEmA0t8tpdqI7ER
+        Oec05fX7/cUf+i3TYUOl4SCr+U+sjYFnjnC49QA=
+X-Google-Smtp-Source: ABdhPJwX/6WflwM0v1M9O0qKnaq2kmODM4nZjATuNJy2Siy3bLl+GYVf1knPozuS+3wj/X+Eon00Kw1cjB/cV2f2tWU=
+X-Received: by 2002:a0c:d60f:: with SMTP id c15mr13951446qvj.17.1596401940674;
+ Sun, 02 Aug 2020 13:59:00 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:5d0a:: with SMTP id r10mr13874575iob.186.1596401179781;
- Sun, 02 Aug 2020 13:46:19 -0700 (PDT)
-Date:   Sun, 02 Aug 2020 13:46:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003d6e8405abeb1da7@google.com>
-Subject: KASAN: use-after-free Read in hci_send_acl
-From:   syzbot <syzbot+98228e7407314d2d4ba2@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+References: <20200720001444.30972-1-rdunlap@infradead.org>
+In-Reply-To: <20200720001444.30972-1-rdunlap@infradead.org>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Sun, 2 Aug 2020 22:58:49 +0200
+Message-ID: <CAFLxGvwKqQCbO_Rd6nadjwGD3-9HE4j9msOyUk+SuujiEbjN2g@mail.gmail.com>
+Subject: Re: [PATCH] ubifs: misc.h: delete a duplicated word
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, Jul 20, 2020 at 2:16 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> Drop the repeated word "as" in a comment.
+>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Richard Weinberger <richard@nod.at>
+> Cc: linux-mtd@lists.infradead.org
+> ---
+>  fs/ubifs/misc.h |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-syzbot found the following issue on:
+Applied!
 
-HEAD commit:    ac3a0c84 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13482904900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c0cfcf935bcc94d2
-dashboard link: https://syzkaller.appspot.com/bug?extid=98228e7407314d2d4ba2
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=152f1904900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1482dfca900000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+98228e7407314d2d4ba2@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in hci_send_acl+0xabe/0xc60 net/bluetooth/hci_core.c:3991
-Read of size 8 at addr ffff8880a6ff8818 by task kworker/u5:2/6855
-
-CPU: 1 PID: 6855 Comm: kworker/u5:2 Not tainted 5.8.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: hci0 hci_rx_work
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- hci_send_acl+0xabe/0xc60 net/bluetooth/hci_core.c:3991
- l2cap_send_cmd+0x6d5/0x8a0 net/bluetooth/l2cap_core.c:949
- l2cap_send_move_chan_cfm_icid net/bluetooth/l2cap_core.c:4917 [inline]
- l2cap_move_fail net/bluetooth/l2cap_core.c:5401 [inline]
- l2cap_move_channel_rsp net/bluetooth/l2cap_core.c:5440 [inline]
- l2cap_bredr_sig_cmd net/bluetooth/l2cap_core.c:5719 [inline]
- l2cap_sig_channel net/bluetooth/l2cap_core.c:6418 [inline]
- l2cap_recv_frame+0x6936/0xae10 net/bluetooth/l2cap_core.c:7660
- l2cap_recv_acldata+0x7f6/0x8e0 net/bluetooth/l2cap_core.c:8313
- hci_acldata_packet net/bluetooth/hci_core.c:4520 [inline]
- hci_rx_work+0x4c7/0xb10 net/bluetooth/hci_core.c:4710
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-Allocated by task 6855:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
- kmem_cache_alloc_trace+0x14f/0x2d0 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- hci_chan_create+0x9b/0x330 net/bluetooth/hci_conn.c:1692
- l2cap_conn_add.part.0+0x1e/0xe10 net/bluetooth/l2cap_core.c:7699
- l2cap_conn_add net/bluetooth/l2cap_core.c:8139 [inline]
- l2cap_connect_cfm+0x23b/0x1090 net/bluetooth/l2cap_core.c:8097
- hci_connect_cfm include/net/bluetooth/hci_core.h:1340 [inline]
- hci_remote_features_evt net/bluetooth/hci_event.c:3210 [inline]
- hci_event_packet+0x3e01/0x86f5 net/bluetooth/hci_event.c:6061
- hci_rx_work+0x22e/0xb10 net/bluetooth/hci_core.c:4705
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-Freed by task 6855:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x103/0x2c0 mm/slab.c:3757
- hci_disconn_loglink_complete_evt net/bluetooth/hci_event.c:4999 [inline]
- hci_event_packet+0x319a/0x86f5 net/bluetooth/hci_event.c:6188
- hci_rx_work+0x22e/0xb10 net/bluetooth/hci_core.c:4705
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-The buggy address belongs to the object at ffff8880a6ff8800
- which belongs to the cache kmalloc-128 of size 128
-The buggy address is located 24 bytes inside of
- 128-byte region [ffff8880a6ff8800, ffff8880a6ff8880)
-The buggy address belongs to the page:
-page:ffffea00029bfe00 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff8880a6ff8c00
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea0002934388 ffff8880aa001540 ffff8880aa000700
-raw: ffff8880a6ff8c00 ffff8880a6ff8000 000000010000000c 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8880a6ff8700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880a6ff8780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff8880a6ff8800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                            ^
- ffff8880a6ff8880: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff8880a6ff8900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+-- 
+Thanks,
+//richard
