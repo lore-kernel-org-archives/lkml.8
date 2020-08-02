@@ -2,146 +2,160 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 199B4C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CE9C433E1
 	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 02:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECAF22072A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 02:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14C402067D
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 02:33:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GT+DUHoL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hYyQUks+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbgHBCWs (ORCPT
+        id S1727914AbgHBCdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Aug 2020 22:22:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40634 "EHLO
+        Sat, 1 Aug 2020 22:33:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgHBCWs (ORCPT
+        with ESMTP id S1726387AbgHBCdW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Aug 2020 22:22:48 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDBDAC06174A
-        for <linux-kernel@vger.kernel.org>; Sat,  1 Aug 2020 19:22:47 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id d27so25929227qtg.4
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Aug 2020 19:22:47 -0700 (PDT)
+        Sat, 1 Aug 2020 22:33:22 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EA40C06174A;
+        Sat,  1 Aug 2020 19:33:22 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id x69so32442828qkb.1;
+        Sat, 01 Aug 2020 19:33:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=whOvptctYszI0TUoSb9wHwW4EucWmLnWHPSIiYGN8Wg=;
-        b=GT+DUHoLyEtK/qt+Sl6m8Mf+/U/Q8YGwJbZQspRR/1cq9u8FUPWTRWwLNmCNY3JUxP
-         1qy9NrIWokY2Vnh7eWIHVvWNN5jtyeXj1JPKyU8nDJI/CCYA68tNtCURbY1tL7UPSc22
-         3yQnM1wHR4Oe1023lD3cRY5PbLwT8Y8bxZbGaQSMrfZFWR5vI1is0il6HOs5wNN5daUe
-         vO1Qsh5a4CntBIYA5kpBv+7RBsOsRwopAO37ClYQyoNZsx5K78yetewKgHCZehgNRd1k
-         ZXThfFVMGKnTMdCRlnBGkrkWCfpcbnow50sw+sjZSScZkiOLCNWLhMd53Pxwj9zNvb52
-         idag==
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qh76r0/R+rEXWnTlGb5P7btqSGU2SCfDlWiL6NIkY7c=;
+        b=hYyQUks+AqVyPq7/q4lLsuKLhaTOp592VqDxfh+4bBwPILEMaEGFmDm98mqvaFEYd4
+         scTN1rZYCU3dya+9yUfYM/Ii3TwfTS3KUh6kTHaRC2S7mamkZnDFcAAvJQmus78Ulwvv
+         E/3mKP1UtgCr+eIpVfGJELWg3bD2xNS6KvoEDktgMjpnTWV7djBy1bo9KinS86H/BSt5
+         IxC1U4ndkF/ByrZHJRXuhLgxbnsfPkX1XWIW6XxzqmBK9IKca+jCMCJfL7bTAECgfNi/
+         GHq4OufZTW84FlksErc/99Xe7KOdbEnUTjC7Cx7vsayuklr/ixuYPQHe5kWrm46fu0Rw
+         u5Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=whOvptctYszI0TUoSb9wHwW4EucWmLnWHPSIiYGN8Wg=;
-        b=V+dKc8/FMEVMvanNSzrOqCSMogpkQBEwnvHTrjIKK+EWkgzxdcY+V+SpK3k6E+gvrJ
-         WhpAwD4i+7KMzGZN7zaQXMtltE5rWdKoZCuVdcJAnrbKKgruzOwiTlBdYVuPrGTXG9uV
-         IpF+Nr1AQsZ7Ca6wDLEr62b4KzTPbEsgTurPs/18aTHCw6xJg+tXdAl2rho/+yTLw3nh
-         yLghUl+FzuyDzvThEZQXxxqdfe+yxEqp2R3pww3q4vDqxCsb6/8wcKRUQbBOXqk68jPG
-         aIiEj54WjENeKffPgNiSI+stQLa7GJm5ctYkdr7dzbpQsJ23Nj8v1LYEruvqGzBgPOlw
-         TUEg==
-X-Gm-Message-State: AOAM532jSbkwueKt6Z3e/Ntf+mYvz2jkwYwkEBMGaEeaO1wquZ/Bgw99
-        hFeNY3CiTn1ap0jbTiX87jRqXvtWwx13CiHDOLJ/6SJR
-X-Google-Smtp-Source: ABdhPJx+oNY0MJ6Pd5AOYnXI12LGvR++U9v1s05zQk6gTj0oayzG0KE5Co6SYk/c4xn465qVOihcKPEWfsGkyGTJ6ws=
-X-Received: by 2002:ac8:450c:: with SMTP id q12mr10542733qtn.292.1596334966873;
- Sat, 01 Aug 2020 19:22:46 -0700 (PDT)
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=qh76r0/R+rEXWnTlGb5P7btqSGU2SCfDlWiL6NIkY7c=;
+        b=C0CJF/rw4fYA0AB7opjCnojx8inyoPWe6/zkUTWn1gtIsj7c0ZbE7cDAuPW6NM/ZKB
+         1hMM8eEZTcSEmlpO/MIqaHCooIjpNlGlCvdcpv9AalroxZnD2CVUytZttX4CC/MkWMfI
+         zARTrrelBhgU8Ux4k7O+Qinr7i4InzohkanzcOZzJF/Wrz05BVIJFPnzVHMc5behz3VI
+         eRu0M0JJOj2pav2xrnuPuGtj1fKpcOpWjuCv32RttnVxd8jSIGFYsGmYIqZcMYliMVHa
+         rZ2U0M7Kt2Uy5P0nAYj8B00/rKY6g60gEqtqoyuHg4MJVX1Moi04E1U8kpglf/XR4lXj
+         ipeA==
+X-Gm-Message-State: AOAM530wrADVu8jfafNapdhCT2HJc7cTOGL3LigWQ0yJg+dhS1/6mde/
+        eDgCecCSjTzw8ggujmjY5Uc=
+X-Google-Smtp-Source: ABdhPJy6UqPvoghO+l/O/yD9CRByuJospOw+gGGYEERjfM0CJS8Kn0NNaLtkI9aIJNpageB+6Rz0Hg==
+X-Received: by 2002:a05:620a:230:: with SMTP id u16mr9991610qkm.387.1596335601213;
+        Sat, 01 Aug 2020 19:33:21 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id y24sm15359536qtv.71.2020.08.01.19.33.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Aug 2020 19:33:20 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Sat, 1 Aug 2020 22:33:18 -0400
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 08/22] bootconfig: init: Allow admin to use bootconfig
+ for init command line
+Message-ID: <20200802023318.GA3981683@rani.riverdale.lan>
+References: <157867220019.17873.13377985653744804396.stgit@devnote2>
+ <157867229521.17873.654222294326542349.stgit@devnote2>
+ <202002070954.C18E7F58B@keescook>
+ <20200207144603.30688b94@oasis.local.home>
 MIME-Version: 1.0
-References: <1596102422-14010-1-git-send-email-shengjiu.wang@nxp.com> <20200801075954.GA19629@Asurada-Nvidia>
-In-Reply-To: <20200801075954.GA19629@Asurada-Nvidia>
-From:   Shengjiu Wang <shengjiu.wang@gmail.com>
-Date:   Sun, 2 Aug 2020 10:22:35 +0800
-Message-ID: <CAA+D8AMM90bt_WbPCny6C=R=dv6gXXh49p59yng2vH7DDuD2PQ@mail.gmail.com>
-Subject: Re: [PATCH v2] ASoC: fsl-asoc-card: Remove fsl_asoc_card_set_bias_level
- function
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200207144603.30688b94@oasis.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 1, 2020 at 4:01 PM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> Hi,
->
-> Having two nits and one question, inline:
->
-> On Thu, Jul 30, 2020 at 05:47:02PM +0800, Shengjiu Wang wrote:
-> > @@ -182,6 +180,69 @@ static int fsl_asoc_card_hw_params(struct snd_pcm_substream *substream,
-> >                                              cpu_priv->slot_width);
-> >               if (ret && ret != -ENOTSUPP) {
-> >                       dev_err(dev, "failed to set TDM slot for cpu dai\n");
-> > +                     goto out;
-> > +             }
-> > +     }
-> > +
-> > +     /* Specific configuration for PLL */
-> > +     if (codec_priv->pll_id && codec_priv->fll_id) {
-> > +             if (priv->sample_format == SNDRV_PCM_FORMAT_S24_LE)
-> > +                     pll_out = priv->sample_rate * 384;
-> > +             else
-> > +                     pll_out = priv->sample_rate * 256;
-> > +
-> > +             ret = snd_soc_dai_set_pll(asoc_rtd_to_codec(rtd, 0),
-> > +                                       codec_priv->pll_id,
-> > +                                       codec_priv->mclk_id,
-> > +                                       codec_priv->mclk_freq, pll_out);
-> > +             if (ret) {
-> > +                     dev_err(dev, "failed to start FLL: %d\n", ret);
-> > +                     goto out;
-> > +             }
-> > +
-> > +             ret = snd_soc_dai_set_sysclk(asoc_rtd_to_codec(rtd, 0),
-> > +                                          codec_priv->fll_id,
-> > +                                          pll_out, SND_SOC_CLOCK_IN);
->
-> Just came into my mind: do we need some protection here to prevent
-> PLL/SYSCLK reconfiguration if TX/RX end up with different values?
->
-Sorry,  not really catching your point. could you please elaborate?
-Why do TX/RX end up with different values?
+On Fri, Feb 07, 2020 at 02:46:03PM -0500, Steven Rostedt wrote:
+> 
+> diff --git a/init/main.c b/init/main.c
+> index 491f1cdb3105..113c8244e5f0 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -142,6 +142,15 @@ static char *extra_command_line;
+>  /* Extra init arguments */
+>  static char *extra_init_args;
+>  
+> +#ifdef CONFIG_BOOT_CONFIG
+> +/* Is bootconfig on command line? */
+> +static bool bootconfig_found;
+> +static bool initargs_found;
+> +#else
+> +# define bootconfig_found false
+> +# define initargs_found false
+> +#endif
+> +
+>  static char *execute_command;
+>  static char *ramdisk_execute_command;
+>  
+> @@ -336,17 +345,32 @@ u32 boot_config_checksum(unsigned char *p, u32 size)
+>  	return ret;
+>  }
+>  
+> +static int __init bootconfig_params(char *param, char *val,
+> +				    const char *unused, void *arg)
+> +{
+> +	if (strcmp(param, "bootconfig") == 0) {
+> +		bootconfig_found = true;
+> +	} else if (strcmp(param, "--") == 0) {
+> +		initargs_found = true;
+> +	}
+> +	return 0;
+> +}
+> +
 
-best regards
-wang shengiu
-> > +     return 0;
-> > +
-> > +out:
-> > +     priv->streams &= ~BIT(substream->stream);
-> > +     return ret;
->
-> Rather than "out:" which doesn't explicitly indicate an error-out,
-> "fail:" would be better, following what we used in probe().
->
-> > +static int fsl_asoc_card_hw_free(struct snd_pcm_substream *substream)
-> > +{
-> > +     struct snd_soc_pcm_runtime *rtd = substream->private_data;
-> > +     struct fsl_asoc_card_priv *priv = snd_soc_card_get_drvdata(rtd->card);
-> > +     struct codec_priv *codec_priv = &priv->codec_priv;
-> > +     struct device *dev = rtd->card->dev;
-> > +     int ret;
-> > +
-> > +     priv->streams &= ~BIT(substream->stream);
-> > +
->
-> > +     if (!priv->streams && codec_priv->pll_id &&
-> > +         codec_priv->fll_id) {
->
-> This now can fit into single line :)
+I came across this as I was poking around some of the command line
+parsing. AFAICT, initargs_found will never be set to true here, because
+parse_args handles "--" itself by immediately returning: it doesn't
+invoke the callback for it. So you'd instead have to check the return of
+parse_args("bootconfig"...) to detect the initargs_found case.
+
+>  static void __init setup_boot_config(const char *cmdline)
+>  {
+> +	static char tmp_cmdline[COMMAND_LINE_SIZE] __initdata;
+>  	u32 size, csum;
+>  	char *data, *copy;
+>  	const char *p;
+>  	u32 *hdr;
+>  	int ret;
+>  
+> -	p = strstr(cmdline, "bootconfig");
+> -	if (!p || (p != cmdline && !isspace(*(p-1))) ||
+> -	    (p[10] && !isspace(p[10])))
+> +	/* All fall through to do_early_param. */
+> +	strlcpy(tmp_cmdline, boot_command_line, COMMAND_LINE_SIZE);
+> +	parse_args("bootconfig", tmp_cmdline, NULL, 0, 0, 0, NULL,
+> +		   bootconfig_params);
+> +
+> +	if (!bootconfig_found)
+>  		return;
