@@ -2,93 +2,73 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C108C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 15:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9991C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 15:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE7320759
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 15:08:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WehmUc4O"
+	by mail.kernel.org (Postfix) with ESMTP id BF3AF20759
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 15:11:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726624AbgHBPIY (ORCPT
+        id S1726534AbgHBPLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 11:08:24 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:12470 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725925AbgHBPIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 11:08:24 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596380903; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=cvxSc4gEUIcYIWyzJ4Mw59VlVD4leSyPqAxWEQCt5i8=;
- b=WehmUc4OjSF5VrNTzYG3jZPWxQihbVw+j9LbWVdRyl7D8Qr7rE2w5bwB55W3xSfCLtP6Grsi
- ci6KMSJ9wAtfOofDx1b2+l0Ae2K7NdnWFNdKrcy1iv3aRok4pvJ66Y1Vc0e+WbwaDqqUMkLf
- VWuPa5KLlGm02NUyq7qFDpr5XaY=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
- 5f26d6e7849144fbcb4609f6 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 02 Aug 2020 15:08:23
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 19DF5C43391; Sun,  2 Aug 2020 15:08:23 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 68956C433C9;
-        Sun,  2 Aug 2020 15:08:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 68956C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Sun, 2 Aug 2020 11:11:03 -0400
+Received: from smtp07.smtpout.orange.fr ([80.12.242.129]:36575 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbgHBPLD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 11:11:03 -0400
+Received: from localhost.localdomain ([93.22.148.198])
+        by mwinf5d42 with ME
+        id AfB02300F4H42jh03fB1mg; Sun, 02 Aug 2020 17:11:01 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 02 Aug 2020 17:11:01 +0200
+X-ME-IP: 93.22.148.198
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     3chas3@gmail.com
+Cc:     linux-atm-general@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] atm: idt77252: Fix the size used in a 'dma_alloc_coherent()' call
+Date:   Sun,  2 Aug 2020 17:10:59 +0200
+Message-Id: <20200802151059.699977-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [RFC PATCH] iwlwifi: yoyo: don't print failure if debug firmware
- is
- missing
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200625165210.14904-1-wsa@kernel.org>
-References: <20200625165210.14904-1-wsa@kernel.org>
-To:     Wolfram Sang <wsa@kernel.org>
-Cc:     linux-wireless@vger.kernel.org, Wolfram Sang <wsa@kernel.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200802150823.19DF5C43391@smtp.codeaurora.org>
-Date:   Sun,  2 Aug 2020 15:08:23 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wolfram Sang <wsa@kernel.org> wrote:
+This should be TSQSIZE in order to be consistent with the surrounding code
+and the corresponding 'dma_free_coherent()' in 'deinit_tsq()'
 
-> Missing this firmware is not fatal, my wifi card still works. Even more,
-> I couldn't find any documentation what it is or where to get it. So, I
-> don't think the users should be notified if it is missing. If you browse
-> the net, you see the message is present is in quite some logs. Better
-> remove it.
-> 
-> Signed-off-by: Wolfram Sang <wsa@kernel.org>
+This is harmless because RSQSIZE and TSQSIZE have the same value (i.e.
+8192)
 
-Patch applied to wireless-drivers-next.git, thanks.
+Fixes: 	1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/atm/idt77252.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-3f4600de8c93 iwlwifi: yoyo: don't print failure if debug firmware is missing
-
+diff --git a/drivers/atm/idt77252.c b/drivers/atm/idt77252.c
+index df51680e8931..f459fafa902a 100644
+--- a/drivers/atm/idt77252.c
++++ b/drivers/atm/idt77252.c
+@@ -1373,7 +1373,7 @@ init_tsq(struct idt77252_dev *card)
+ {
+ 	struct tsq_entry *tsqe;
+ 
+-	card->tsq.base = dma_alloc_coherent(&card->pcidev->dev, RSQSIZE,
++	card->tsq.base = dma_alloc_coherent(&card->pcidev->dev, TSQSIZE,
+ 					    &card->tsq.paddr, GFP_KERNEL);
+ 	if (card->tsq.base == NULL) {
+ 		printk("%s: can't allocate TSQ.\n", card->name);
 -- 
-https://patchwork.kernel.org/patch/11625759/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.25.1
 
