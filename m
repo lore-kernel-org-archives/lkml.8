@@ -2,109 +2,130 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 957CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A89C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7049E206E7
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:55:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uc3Vw0xb"
+	by mail.kernel.org (Postfix) with ESMTP id 8D9D6207BB
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:57:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596387479;
+	bh=4kEI4l0aRvt5/h9g0xWJYrGj07HsmDRlUAaOJ6inO8o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lsgPgQ1oBzDlX8TyOcsYzR5lzNDxeAk9jlD61DwCIoQ1ikQXairhRqD7M6Fnu3es3
+	 6hC0C1d2Q91JHMIRO9YDhFWa4j9zjKI2/ebkaHCD/0TOm8ghjxxfP7YM6GIV2xcPd/
+	 UYvGr2aHFX2IZrP9k/t04PeyWKb5atSde618oLn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgHBQzl (ORCPT
+        id S1727063AbgHBQ56 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 12:55:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgHBQzk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 12:55:40 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E526C06174A
-        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 09:55:40 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id m7so1111348qki.12
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 09:55:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BINorMwcmmozTJcln0MY/a1goJtl5nuGFZ+Nkbr2f30=;
-        b=uc3Vw0xb0konWtvxSYuBa3RKAeGOwYP+qEpMumHLXgBBqNwKGhUGcWG7uDxoMh45ZL
-         1xErxsxzr06rsn5IUrENPlraLUXoBa76pkMUCQsMi7Lwzv1EB3itGyqJA6HaHqwnO1CI
-         FjGJcaS0q0oW0//LNoAkZHqs1tymQ7RJjzoZBmj5UXkpwwtKgI1FFp4E+FM1r1EZNKQn
-         HfihTKtxxcTF5+drYqGWRtLPqemk+VFBAwOAIwG10EsJ1QfmDtpEvp86xN0QNFyKQr2f
-         U34YNzRSM7g7/tyElMX5vVcrE9yljIRvyu6xRy7IJ711leLQ4HvJeZyXYv2YNSO//lTn
-         nNSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BINorMwcmmozTJcln0MY/a1goJtl5nuGFZ+Nkbr2f30=;
-        b=IROEHaGp6GFWzJLr/DxMg21zsoujOB2xdEd1JaOcwTFj0C9vlag/VPdE+qbfLAmgxv
-         K1si8B7BjHtkYpftmKoIgkqO0r5odRi6TA1m07rpzHgJevicUeQvl8U0zlrq4B2xLxNl
-         5AvAezNYY8cv+Us5l6+c8ryMer8IhHI84rbTeKdxEYA6yX4Z5oCplzN5+UnDC4suJids
-         U7b9aIipEFoo0v1ywMDCBHxm1DtwnDHrAMdOSABeK56XC/VOw/qEp+6fBSPrwfVHn0Cm
-         weelVEhwwC8OK81arVs8cQ1uwDJc5a+euiVZiTs90eFltqXVaDTc8XfZDWPOwt2Ng9yH
-         ZXQg==
-X-Gm-Message-State: AOAM532k8mC5BOTZRFXPgW1GGNlSFEArYQYAfGO3qA2awsWJlp/YCSpT
-        ee2sRSmZFvhEdwGnrvYpbg==
-X-Google-Smtp-Source: ABdhPJymQtwYnrk15jVl8++2D8fEG4xzmBUHJ/Uqnxy77RstBFGjbX7MLuzmJspbY8K11tAGoU9acQ==
-X-Received: by 2002:ae9:ef43:: with SMTP id d64mr13560246qkg.326.1596387338519;
-        Sun, 02 Aug 2020 09:55:38 -0700 (PDT)
-Received: from PWN (146-115-88-66.s3894.c3-0.sbo-ubr1.sbo.ma.cable.rcncustomer.com. [146.115.88.66])
-        by smtp.gmail.com with ESMTPSA id l189sm17094407qke.67.2020.08.02.09.55.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Aug 2020 09:55:38 -0700 (PDT)
-Date:   Sun, 2 Aug 2020 12:55:35 -0400
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [Linux-kernel-mentees] [PATCH v3] media/v4l2-core: Fix
- kernel-infoleak in video_put_user()
-Message-ID: <20200802165535.GA270694@PWN>
-References: <20200726220557.102300-1-yepeilin.cs@gmail.com>
- <20200726222703.102701-1-yepeilin.cs@gmail.com>
- <CAK8P3a3NB2BVo9fH-Wcinrhhs-QJ=9dK59Ds83TvgLmEkRy3qA@mail.gmail.com>
- <20200727131608.GD1913@kadam>
+        Sun, 2 Aug 2020 12:57:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53438 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726364AbgHBQ55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 12:57:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 699C2206E7;
+        Sun,  2 Aug 2020 16:57:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596387477;
+        bh=4kEI4l0aRvt5/h9g0xWJYrGj07HsmDRlUAaOJ6inO8o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=y4kBPwEDJbjOZEMc2uLF1D0tsUTpknH0xW29TRuBcLEgXiLx4yHZIn2WnfIrkRR4C
+         4Yd3SnOSonYPM+9KKcRRRIQT7Lq6mcM0UJ4+wrbuU3aMnIXr7IoJAbsNBq/F8ax6iE
+         TimPI9pa+I4T1t74FfpoSVs6hrOK2uVf4dFxjufk=
+Date:   Sun, 2 Aug 2020 18:57:38 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Qiwu Huang <yanziily@gmail.com>, sre@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jiangfei1@xiaomi.com, Qiwu Huang <huangqiwu@xiaomi.com>
+Subject: Re: [PATCH v4 1/4] power: supply: core: add quick charge type
+ property
+Message-ID: <20200802165738.GA293244@kroah.com>
+References: <cover.1595214246.git.huangqiwu@xiaomi.com>
+ <c9d3199ec18625f9cc4448c3b2049ea2ae80358b.1595214246.git.huangqiwu@xiaomi.com>
+ <20200802120015.GA1289@bug>
+ <20200802123742.GA257810@kroah.com>
+ <20200802142825.GA20261@amd>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200727131608.GD1913@kadam>
+In-Reply-To: <20200802142825.GA20261@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 04:16:08PM +0300, Dan Carpenter wrote:
-> kernel/signal.c:3524 __do_sys_rt_sigtimedwait() warn: check that 'info' doesn't leak information (struct has a hole after 'si_code')
-> kernel/signal.c:3524 __do_sys_rt_sigtimedwait() warn: check that 'info' doesn't leak information (struct has a hole after 'si_code')
-> kernel/signal.c:3556 __do_sys_rt_sigtimedwait_time32() warn: check that 'info' doesn't leak information (struct has a hole after 'si_code')
-> kernel/signal.c:3556 __do_sys_rt_sigtimedwait_time32() warn: check that 'info' doesn't leak information (struct has a hole after 'si_code')
+On Sun, Aug 02, 2020 at 04:28:25PM +0200, Pavel Machek wrote:
+> On Sun 2020-08-02 14:37:42, Greg KH wrote:
+> > On Sun, Aug 02, 2020 at 02:00:15PM +0200, Pavel Machek wrote:
+> > > On Mon 2020-07-20 13:47:14, Qiwu Huang wrote:
+> > > > From: Qiwu Huang <huangqiwu@xiaomi.com>
+> > > > 
+> > > > Reports the kind of quick charge type based on
+> > > > different adapter power.
+> > > > 
+> > > > Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
+> > > > ---
+> > > >  Documentation/ABI/testing/sysfs-class-power | 21 +++++++++++++++++++++
+> > > >  drivers/power/supply/power_supply_sysfs.c   |  1 +
+> > > >  include/linux/power_supply.h                | 10 ++++++++++
+> > > >  3 files changed, 32 insertions(+)
+> > > > 
+> > > > diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+> > > > index 216d61a22f1e..dd3773dcf16a 100644
+> > > > --- a/Documentation/ABI/testing/sysfs-class-power
+> > > > +++ b/Documentation/ABI/testing/sysfs-class-power
+> > > > @@ -708,3 +708,24 @@ Description:
+> > > >  
+> > > >  		Access: Read
+> > > >  		Valid values: 1-31
+> > > > +
+> > > > +What:		/sys/class/power_supply/<supply_name>/quick_charge_type
+> > > > +Date:		Jul 2020
+> > > > +Contact:	Fei Jiang <jiangfei1@xiaomi.com>
+> > > > +		Description:
+> > > > +		Reports the kind of quick charge type based on different adapter power.
+> > > > +		Different quick charge type represent different charging power.
+> > > > +		QUICK_CHARGE_NORMAL : Charging Power <= 10W
+> > > > +		QUICK_CHARGE_FAST : 10W < Charging Power <= 20W
+> > > > +		QUICK_CHARGE_FLASH : 20W < Charging Power <= 30W
+> > > > +		QUICK_CHARGE_TURBE : 30W < Charging Power <= 50W
+> > > > +		QUICK_CHARGE_SUPER : Charging Power > 50W
+> > > > +
+> > > > +		Access: Read-Only
+> > > > +		Valid values:
+> > > > +			0: QUICK_CHARGE_NORMAL,
+> > > > +			1: QUICK_CHARGE_FAST,
+> > > > +			2: QUICK_CHARGE_FLASH,
+> > > > +			3: QUICK_CHARGE_TURBE,
+> > > > +			4: QUICK_CHARGE_SUPER.
+> > > 
+> > > NAK.
+> > > 
+> > > Just expose value in watts or something... People are talking about > 100W charging, no
+> > > need to go with fast/turbe/super/hyper/nonsense.
+> > > 
+> > > BTW fast charge is already "well defined", and what you call Normal is usually fast charge.
+> > 
+> > I think these names come from the Qi charging spec, right?  So lets use
+> > what is given to us.
+> 
+> There are other standards, and this should better be generic.
 
-I think these are safe. Before getting to copy_siginfo_to_user(), all
-`info` run through:
+What standard?  Why not go with this one, it's documented and out there
+and being used.
 
-	do_sigtimedwait()
-		V
-	dequeue_signal()
-		V
-       __dequeue_signal()
-		V
-	collect_signal()
+> Simply expose value in watts.
 
-Where it either gets memcpy()'d by copy_siginfo(), or memset()'d by
-clear_siginfo().
+What if you do not know the watts, you just know these ranges.
 
-The only exception is when next_signal() fails in __dequeue_signal(),
-but that will cause do_sigtimedwait() to return an error, and we never
-reach copy_siginfo_to_user() in such a case.
+thanks,
 
-Thank you,
-Peilin Ye
+greg k-h
