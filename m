@@ -2,106 +2,115 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BDCC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 21:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFDA6C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 21:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8818E2087C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 21:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA0D120738
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 21:46:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="qHldnjF7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Dhp3GcG3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbgHBVoE (ORCPT
+        id S1727979AbgHBVqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 17:44:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725925AbgHBVoE (ORCPT
+        Sun, 2 Aug 2020 17:46:40 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:14837 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725925AbgHBVqj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 17:44:04 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D243C06174A
-        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 14:44:03 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id w14so7762233ljj.4
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 14:44:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=W+JW9/qURXxdJHu00PKJzuTat8D6D0UTqBo2IDM73ms=;
-        b=qHldnjF7bttAYl+4vR9WYNVBGhIodj7vux22J4S0paJxxX4KkZ8N7egol8vHxfmd64
-         +LfdWqs02/fD0tJQPYV22bCXkE0X+YPL0YYg94IIMKswYYYk9BT7gbliSYgxd+o5jw8e
-         fvyu/cs/74qRenHzx5R1FClEPRSomH5g9rkAkzX5KIV3dXLGPVRCdkr39kWDlMmcAdKD
-         xBjBvkL0ssDx62oO2dY5J0as+hohy1WhRtiyfh6Ur4Mnulur072oiwX2i3qw1gz9B/S8
-         +jg+danNDHtYnULYSj3ptjL+x1ALX/jSyBwV/8gWL1T7JlXCEpXrH/5oj0zu83cisNLZ
-         FYCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=W+JW9/qURXxdJHu00PKJzuTat8D6D0UTqBo2IDM73ms=;
-        b=U1aKtpjyMvt92r2DMBLUsHvf7rosZ8qRnRQaoEWsvgeYVaSSaIDv6U1MnzS4oucyOC
-         mtgFvadh5VSKilnvLdJWZLnrCGwD361Iw/ZJwCvnh3UPABN8Xh5qiAW+6LkWe9R+YV5N
-         wB6xgJ0c9SHcPH2wbkCSdLPGFTuG2MU3/MNfpN5L+h9KPIHYPNe75VIe7r/P/6ePgtVa
-         a125XbWq4x1/C0jjGKZ0PA8JO0pze9eCTA2dlBYCp7CxQyBJqUgVjrW7vkZqSmFjXcf5
-         M8MmbtbTqTEEJ7qsKjVYoWA1wGRrwWk+HBZZ5YLtiBpED6ZNHId4Q0RcBonODHrzy3AK
-         Xx6g==
-X-Gm-Message-State: AOAM532wYfIJpsgjzAQcFBeMlgSVVWonLNvu781BIkJlpq4fLveItpDF
-        naa8VZLDp8xrXvTI/qZoZlNA/A==
-X-Google-Smtp-Source: ABdhPJyvaMeTwdlHiWWUa3QZPEsnvfODeHluEuNvzw9qeydsh8K0hkI9EM4bXVwrQx8q87PK2vlwaA==
-X-Received: by 2002:a05:651c:1104:: with SMTP id d4mr6859667ljo.164.1596404641969;
-        Sun, 02 Aug 2020 14:44:01 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id a19sm3989856lff.25.2020.08.02.14.44.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Aug 2020 14:44:01 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 0AEBC102BA1; Mon,  3 Aug 2020 00:44:08 +0300 (+03)
-Date:   Mon, 3 Aug 2020 00:44:08 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH] khugepaged: retract_page_tables() remember to test exit
-Message-ID: <20200802214408.patvlf3sghro3nhi@box>
-References: <alpine.LSU.2.11.2008021204390.27773@eggly.anvils>
- <alpine.LSU.2.11.2008021215400.27773@eggly.anvils>
+        Sun, 2 Aug 2020 17:46:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1596404799; x=1627940799;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=HhMDDX9Zyq0lnAOjaZ2ZkZv1uEybzvPPlvRAKPE2Mi4=;
+  b=Dhp3GcG3AGn2YVR9hczUBPPeHRUbCw3nkvx3b7iI4SwTGqpgmb+xtaS7
+   eTum5I8rA1TEOLjgqQRpYe5UXlozN8VmshY4rmQgHkcjfCR88OuJtz41Q
+   35sbkTtZItI23hpepEDWF0Fq/9qBka1E9sb3flsYLo12cMZS4cQAoikBM
+   rnt4OFvig8B31Ctt6yfKmAveFv5vJA5xZhsLdHsnzmeer0ucCpWfrkCyU
+   xBB0LM748/laN0fZeKHkyAKENBETRSWfsPYG8MAlp2+LjYPM/B6bXUcWS
+   fMJEeF//I0V7RRnYNaJAGfow6SzzgbJd7s/oV7ZDOCfrMilbOS8bzFxkv
+   Q==;
+IronPort-SDR: mmGC6VYzUw0/Xm3SF7hz7+mqq/r+LRNGVbtlVKftD/xekcs0CTjvE6kzEf2bvCHP7QvbBxfDvK
+ OWrcSRPgEwcBDunBc+bwRkn1djtmBPjI/HywPouj1zsfO3BwyAdD/V1DLug6NSWg99NQRtWYS6
+ HpWeIP64ItHu1acYKWpbZ4rqy3fPOzwncqkwRiFuOwrUVRoPGEHKcE8TC1kNTWnPh0may3ZOHh
+ wWNWbZez0S7uefPsSFcK+B/sx9NfaaLocWAGb/1WpBH9Gn+rY86ykRiEb5fnwzVKMYocw1IR/7
+ mNA=
+X-IronPort-AV: E=Sophos;i="5.75,427,1589212800"; 
+   d="scan'208";a="145206025"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 03 Aug 2020 05:46:39 +0800
+IronPort-SDR: Of+NQSeWgfwtFfqruu8dUkJBUG+rmaqAx6V0PBh4ra70Xjik38WsDJ5/CDKQRCXPcbGuCCf7JU
+ zXeVX120rt/A==
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2020 14:34:41 -0700
+IronPort-SDR: JTyJYmcsIT11nuHwWLExo6iBi+mF5vdh7h7vaYkePP/j5kQrDj9empvuoa8t8vFkBznxCIW4zU
+ DS6T5zWH/Fvw==
+WDCIronportException: Internal
+Received: from unknown (HELO redsun52) ([10.149.66.28])
+  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2020 14:46:37 -0700
+Date:   Sun, 2 Aug 2020 22:46:31 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@wdc.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        linux-mips@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Zhou Yanjie <zhouyanjie@zoho.com>,
+        =?UTF-8?Q?=E5=91=A8=E7=90=B0=E6=9D=B0_=28Zhou_Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>,
+        Liangliang Huang <huanglllzu@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        "Maciej W. Rozycki" <macro@linux-mips.org>
+Subject: Re: [PATCH] MIPS: Provide Kconfig option for default IEEE754
+ conformance mode
+In-Reply-To: <20200731061702.fxdfyxpvd6qrhoql@mobilestation>
+Message-ID: <alpine.LFD.2.21.2008022213500.24175@redsun52.ssa.fujisawa.hgst.com>
+References: <20200731041018.1381642-1-jiaxun.yang@flygoat.com> <20200731061702.fxdfyxpvd6qrhoql@mobilestation>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.11.2008021215400.27773@eggly.anvils>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 02, 2020 at 12:16:53PM -0700, Hugh Dickins wrote:
-> Only once have I seen this scenario (and forgot even to notice what
-> forced the eventual crash): a sequence of "BUG: Bad page map" alerts
-> from vm_normal_page(), from zap_pte_range() servicing exit_mmap();
-> pmd:00000000, pte values corresponding to data in physical page 0.
-> 
-> The pte mappings being zapped in this case were supposed to be from a
-> huge page of ext4 text (but could as well have been shmem): my belief
-> is that it was racing with collapse_file()'s retract_page_tables(),
-> found *pmd pointing to a page table, locked it, but *pmd had become
-> 0 by the time start_pte was decided.
-> 
-> In most cases, that possibility is excluded by holding mmap lock;
-> but exit_mmap() proceeds without mmap lock.  Most of what's run by
-> khugepaged checks khugepaged_test_exit() after acquiring mmap lock:
-> khugepaged_collapse_pte_mapped_thps() and hugepage_vma_revalidate()
-> do so, for example.  But retract_page_tables() did not: fix that
-> (using an mm variable instead of vma->vm_mm repeatedly).
+On Fri, 31 Jul 2020, Serge Semin wrote:
 
-Hm. I'm not sure I follow. vma->vm_mm has to be valid as long as we hold
-i_mmap lock, no? Unlinking a VMA requires it.
+> > Requested by downstream distros, a Kconfig option for default
+> > IEEE754 conformance mode allows them to set their mode to
+> > relaxed by default.
+> 
+> That's what should have been here in the first place. Thanks!
 
--- 
- Kirill A. Shutemov
+ Well, originally plans were there to have NaN interlinking implemented 
+and no such mess or desire for hacks like one here would result.  Cf.:
+
+<https://gcc.gnu.org/ml/gcc/2015-11/msg00068.html>,
+<https://gcc.gnu.org/ml/gcc/2016-05/msg00137.html>,
+
+and then:
+
+<https://lkml.org/lkml/2015/11/16/386>,
+<https://sourceware.org/ml/libc-alpha/2015-11/msg00485.html>,
+<https://sourceware.org/ml/binutils/2015-11/msg00170.html>,
+<https://gcc.gnu.org/ml/gcc-patches/2015-11/msg03241.html>.
+
+You could well pick this work up and complete it if you like.  Final 
+conclusions for further work were made here:
+
+<https://gcc.gnu.org/ml/gcc/2016-11/msg00027.html>,
+<https://gcc.gnu.org/ml/gcc/2017-08/msg00260.html>,
+<https://gcc.gnu.org/ml/gcc/2017-10/msg00142.html>.
+
+ In the relaxed mode math programs may produce wrong results unless you 
+rebuild all your software for the correct NaN mode for the hardware used 
+(in which case you don't need the relaxed setting in the first place).
+
+  Maciej
