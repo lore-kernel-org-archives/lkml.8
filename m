@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACDCC433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08057C433DF
 	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 08:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEA7C20885
+	by mail.kernel.org (Postfix) with ESMTP id C82EF207BB
 	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 08:35:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Gc+/wFA/"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Odwr5dnQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbgHBIfJ (ORCPT
+        id S1727997AbgHBIfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 04:35:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727987AbgHBIfG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 2 Aug 2020 04:35:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbgHBIfF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 04:35:05 -0400
 Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15B03C06174A
-        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 01:35:06 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id r2so26385158wrs.8
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 01:35:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B98D1C061757
+        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 01:35:04 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id 88so31440273wrh.3
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 01:35:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=8Y9xTv9MTk+DYQZI9tVbj30/uWX0D0ZC3rsteP6Q+Zs=;
-        b=Gc+/wFA/StiehQxlzMY8fqj0bVBf1C0jXtl9hg8d9wg77qkCoTNxBo3K/xZntr8iHZ
-         3hfsckOk9hn48ROcXZrPYwrffMmWh++RsxoD+BKShP8uuW8X1mtb+ds1gwpKv0abtEpl
-         YK5V20N9qogrS4K1qKx0DV56EEFU65cz7ft6MQfG24bljea3C3IeHpAgSe41mMbrlv87
-         7+MqM8bZRMH2ZaLvn65KqGp0leYZxzRk2HE0jyx4nLO3inSK8vVDoRKif25jW+E8fvtR
-         rwOie0xF6MiUCIONp0DPkZQOhR5B746TM+2WuvHXSPYtvPlsxaxkBoBTeaaJJ/DT5Oit
-         w/JQ==
+        bh=kWeOEykzpMG2Cw53yqfEgcb8EdReZnui27iCByahu8k=;
+        b=Odwr5dnQlxxeq7nnAYc7r4M4OLEp/GYR7Ca7FnhDm45xiG7z476gWeuD/Ye+dFU80W
+         yF6u1ln9DArAzDV1he4Dypbqs4/+qSmQrWnvigb5+LKcxOkHwWaGYJM25fIaEZRPcwGC
+         C05giYnvs5Sa4zovdbKwLu6vadrtoTRupccM4a2GKt/1UEvMth8e7z1wIk1G6mfs4kym
+         EcZyj+4zPbup65n0uo8TUsnHZW71bLjS4BFiLkOyKvlBRnqqkJvJH+S2UbG6pUOPiRqV
+         RMc03ez2ntlv3a2degZucfenRvuKaVrxNZq6Mw2r8isAdyRD44z8chAPQbFJtzLFlpH/
+         AJ9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=8Y9xTv9MTk+DYQZI9tVbj30/uWX0D0ZC3rsteP6Q+Zs=;
-        b=MU35AZp22y6XcXXoYeEMfg/JoYy75QLMjBmUJUrOvJDIZMQavg+B5e0P4p6RnfhotA
-         I2nMBUZQw96/ixBYlmMmdF98yuchmH/OqUMcGzmfUvRW1ZMgZnklwA/czuOmk0JK6pmZ
-         1RK0ZxIVIlw62LbikAID9s0lPhuIESpC/1nNlLClVfbA/kSKtiNc+mzdIGgLhgRMeR4g
-         Ooiu8FOet4tOTllNXzQARUdJ3cUVL1EbobQPRtb4toq3n/GOMFvKlUw6AgPhtRXTW7lh
-         5us77kHwq9mWtmxnGvlkoh9YO9GQYeTXYUlWdgMvudGj+mfYOzEgiVmrNjXjPcqTt6vK
-         /8BA==
-X-Gm-Message-State: AOAM533s3EuC0KrZf6MbTYm9I5ibBl5nnZ4yWMa/LTZziyaPqOpAUKxQ
-        oncnzqSJGlUx6xFS+zb3BiNsCg==
-X-Google-Smtp-Source: ABdhPJyYHSswcTuNsg2F7JNqYkN23/0HBUDj3ea/z8shHnQyi8ZZj96oa0Q3T6KT13bGDG1cRROKbg==
-X-Received: by 2002:adf:bb0a:: with SMTP id r10mr9877323wrg.23.1596357304796;
-        Sun, 02 Aug 2020 01:35:04 -0700 (PDT)
+        bh=kWeOEykzpMG2Cw53yqfEgcb8EdReZnui27iCByahu8k=;
+        b=dj8JquktgZ17d3CrTeuK1IfkynAtat3toWgKTed1Z70HbK9aC7oeL/+JNTy+Vi2R77
+         U+eOoVhatXNHLfrLjUiXbYMoC6BGZ7m23oiigPTHxDyoihpqdxhrLVm2Ex3M12HsBe4z
+         nbh6HyT92N8htufDhTsICSCXloXyhwK1L2MswHECxheuB4jjSkGTFJPFF4BZZklfLGYV
+         OVH5ldXKY0mKVmya5JR9M2YnzMPBddIV35+NoZsWtH2jSyGuKvgXjh7gdg3x7q+RpVJv
+         bpHEVhndKcbH1DFOGJ5yD6ftcEO2bdXjQt4PaWWFXqfUhuxClwPc0zHNR7tm97sIwiUa
+         Dqhg==
+X-Gm-Message-State: AOAM531IZux8uM5ZR2jJhSCAdfJSycqdDHAuOECM1iEACSoV0Dt+FGeF
+        lOXWUaZ3lHufFl+4Oux9fB9mDw==
+X-Google-Smtp-Source: ABdhPJxKfVyRi6t5LbVxjQKeHdJnjlcFkUW5ThdSeo1/NDJhPMSDZStGtc9IbVpxiTwqKpLbvOJ22Q==
+X-Received: by 2002:a5d:4750:: with SMTP id o16mr11212856wrs.204.1596357303465;
+        Sun, 02 Aug 2020 01:35:03 -0700 (PDT)
 Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id d14sm19281466wre.44.2020.08.02.01.35.03
+        by smtp.gmail.com with ESMTPSA id d14sm19281466wre.44.2020.08.02.01.35.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Aug 2020 01:35:04 -0700 (PDT)
+        Sun, 02 Aug 2020 01:35:02 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Jonathan Cameron <jic23@kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
@@ -71,9 +71,9 @@ To:     Jonathan Cameron <jic23@kernel.org>,
 Cc:     linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v6 2/3] hwmon: pmbus: use more devres helpers
-Date:   Sun,  2 Aug 2020 10:34:57 +0200
-Message-Id: <20200802083458.24323-3-brgl@bgdev.pl>
+Subject: [PATCH v6 1/3] devres: provide devm_krealloc()
+Date:   Sun,  2 Aug 2020 10:34:56 +0200
+Message-Id: <20200802083458.24323-2-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200802083458.24323-1-brgl@bgdev.pl>
 References: <20200802083458.24323-1-brgl@bgdev.pl>
@@ -86,91 +86,120 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Shrink pmbus code by using devm_hwmon_device_register_with_groups()
-and devm_krealloc() instead of their non-managed variants.
+Implement the managed variant of krealloc(). This function works with
+all memory allocated by devm_kmalloc() (or devres functions using it
+implicitly like devm_kmemdup(), devm_kstrdup() etc.).
+
+Managed realloc'ed chunks can be manually released with devm_kfree().
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Acked-by: Guenter Roeck <linux@roeck-us.net>
 ---
- drivers/hwmon/pmbus/pmbus_core.c | 28 +++++++++-------------------
- 1 file changed, 9 insertions(+), 19 deletions(-)
+ .../driver-api/driver-model/devres.rst        |  1 +
+ drivers/base/devres.c                         | 65 +++++++++++++++++++
+ include/linux/device.h                        |  2 +
+ 3 files changed, 68 insertions(+)
 
-diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
-index 44535add3a4a..91839979cf6c 100644
---- a/drivers/hwmon/pmbus/pmbus_core.c
-+++ b/drivers/hwmon/pmbus/pmbus_core.c
-@@ -1018,9 +1018,9 @@ static int pmbus_add_attribute(struct pmbus_data *data, struct attribute *attr)
- {
- 	if (data->num_attributes >= data->max_attributes - 1) {
- 		int new_max_attrs = data->max_attributes + PMBUS_ATTR_ALLOC_SIZE;
--		void *new_attrs = krealloc(data->group.attrs,
--					   new_max_attrs * sizeof(void *),
--					   GFP_KERNEL);
-+		void *new_attrs = devm_krealloc(data->dev, data->group.attrs,
-+						new_max_attrs * sizeof(void *),
-+						GFP_KERNEL);
- 		if (!new_attrs)
- 			return -ENOMEM;
- 		data->group.attrs = new_attrs;
-@@ -2534,7 +2534,7 @@ int pmbus_do_probe(struct i2c_client *client, const struct i2c_device_id *id,
- 
- 	ret = pmbus_find_attributes(client, data);
- 	if (ret)
--		goto out_kfree;
-+		return ret;
- 
- 	/*
- 	 * If there are no attributes, something is wrong.
-@@ -2542,35 +2542,27 @@ int pmbus_do_probe(struct i2c_client *client, const struct i2c_device_id *id,
- 	 */
- 	if (!data->num_attributes) {
- 		dev_err(dev, "No attributes found\n");
--		ret = -ENODEV;
--		goto out_kfree;
-+		return -ENODEV;
- 	}
- 
- 	data->groups[0] = &data->group;
- 	memcpy(data->groups + 1, info->groups, sizeof(void *) * groups_num);
--	data->hwmon_dev = hwmon_device_register_with_groups(dev, client->name,
--							    data, data->groups);
-+	data->hwmon_dev = devm_hwmon_device_register_with_groups(dev,
-+					client->name, data, data->groups);
- 	if (IS_ERR(data->hwmon_dev)) {
--		ret = PTR_ERR(data->hwmon_dev);
- 		dev_err(dev, "Failed to register hwmon device\n");
--		goto out_kfree;
-+		return PTR_ERR(data->hwmon_dev);
- 	}
- 
- 	ret = pmbus_regulator_register(data);
- 	if (ret)
--		goto out_unregister;
-+		return ret;
- 
- 	ret = pmbus_init_debugfs(client, data);
- 	if (ret)
- 		dev_warn(dev, "Failed to register debugfs\n");
- 
- 	return 0;
--
--out_unregister:
--	hwmon_device_unregister(data->hwmon_dev);
--out_kfree:
--	kfree(data->group.attrs);
--	return ret;
+diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+index eaaaafc21134..f318a5c0033c 100644
+--- a/Documentation/driver-api/driver-model/devres.rst
++++ b/Documentation/driver-api/driver-model/devres.rst
+@@ -354,6 +354,7 @@ MEM
+   devm_kmalloc()
+   devm_kmalloc_array()
+   devm_kmemdup()
++  devm_krealloc()
+   devm_kstrdup()
+   devm_kvasprintf()
+   devm_kzalloc()
+diff --git a/drivers/base/devres.c b/drivers/base/devres.c
+index ed615d3b9cf1..68a5a7201065 100644
+--- a/drivers/base/devres.c
++++ b/drivers/base/devres.c
+@@ -837,6 +837,71 @@ void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp)
  }
- EXPORT_SYMBOL_GPL(pmbus_do_probe);
+ EXPORT_SYMBOL_GPL(devm_kmalloc);
  
-@@ -2580,8 +2572,6 @@ int pmbus_do_remove(struct i2c_client *client)
++/**
++ * devm_krealloc - Resource-managed krealloc()
++ * @dev: Device to re-allocate memory for
++ * @ptr: Pointer to the memory chunk to re-allocate
++ * @new_size: New allocation size
++ * @gfp: Allocation gfp flags
++ *
++ * Managed krealloc(). Resizes the memory chunk allocated with devm_kmalloc().
++ * Behaves similarly to regular krealloc(): if @ptr is NULL or ZERO_SIZE_PTR,
++ * it's the equivalent of devm_kmalloc(). If new_size is zero, it frees the
++ * previously allocated memory and returns ZERO_SIZE_PTR. This function doesn't
++ * change the order in which the release callback for the re-alloc'ed devres
++ * will be called (except when falling back to devm_kmalloc() or when freeing
++ * resources when new_size is zero). The contents of the memory are preserved
++ * up to the lesser of new and old sizes.
++ */
++void *devm_krealloc(struct device *dev, void *ptr, size_t new_size, gfp_t gfp)
++{
++	struct devres *old_dr, *new_dr;
++	struct list_head old_head;
++	unsigned long flags;
++	size_t total_size;
++
++	if (unlikely(!new_size)) {
++		devm_kfree(dev, ptr);
++		return ZERO_SIZE_PTR;
++	}
++
++	if (unlikely(ZERO_OR_NULL_PTR(ptr)))
++		return devm_kmalloc(dev, new_size, gfp);
++
++	if (WARN_ON(is_kernel_rodata((unsigned long)ptr)))
++		/*
++		 * We cannot reliably realloc a const string returned by
++		 * devm_kstrdup_const().
++		 */
++		return NULL;
++
++	if (!check_dr_size(new_size, &total_size))
++		return NULL;
++
++	spin_lock_irqsave(&dev->devres_lock, flags);
++	old_dr = find_dr(dev, devm_kmalloc_release, devm_kmalloc_match, ptr);
++	spin_unlock_irqrestore(&dev->devres_lock, flags);
++	if (!old_dr) {
++		WARN(1, "Memory chunk not managed or managed by a different device.");
++		return NULL;
++	}
++
++	old_head = old_dr->node.entry;
++
++	new_dr = krealloc(old_dr, total_size, gfp);
++	if (!new_dr)
++		return NULL;
++
++	if (new_dr != old_dr) {
++		spin_lock_irqsave(&dev->devres_lock, flags);
++		list_replace(&old_head, &new_dr->node.entry);
++		spin_unlock_irqrestore(&dev->devres_lock, flags);
++	}
++
++	return new_dr->data;
++}
++EXPORT_SYMBOL_GPL(devm_krealloc);
++
+ /**
+  * devm_kstrdup - Allocate resource managed space and
+  *                copy an existing string into that.
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 79ce404619e6..51fb33400d7a 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -206,6 +206,8 @@ int devres_release_group(struct device *dev, void *id);
  
- 	debugfs_remove_recursive(data->debugfs);
- 
--	hwmon_device_unregister(data->hwmon_dev);
--	kfree(data->group.attrs);
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(pmbus_do_remove);
+ /* managed devm_k.alloc/kfree for device drivers */
+ void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp) __malloc;
++void *devm_krealloc(struct device *dev, void *ptr, size_t size,
++		    gfp_t gfp) __must_check;
+ __printf(3, 0) char *devm_kvasprintf(struct device *dev, gfp_t gfp,
+ 				     const char *fmt, va_list ap) __malloc;
+ __printf(3, 4) char *devm_kasprintf(struct device *dev, gfp_t gfp,
 -- 
 2.26.1
 
