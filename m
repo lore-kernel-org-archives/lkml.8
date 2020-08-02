@@ -2,92 +2,100 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7070C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 12:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E5FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 12:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 868E72075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 12:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B30C12075B
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 12:48:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="FmKZR6LM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aJLN9zcY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbgHBMnB (ORCPT
+        id S1728267AbgHBMrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 08:43:01 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:53493 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727914AbgHBMnA (ORCPT
+        Sun, 2 Aug 2020 08:47:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728043AbgHBMrR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 08:43:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1596372179; x=1627908179;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=2Ba0sZwTEXhN5rMnYW6AFPc3pmPqVORnSGuOR6AbUuI=;
-  b=FmKZR6LM0SHAntEcgU1gwJq6Yww1rLW0U6Qp16DDtTlvUW3Pupc7umy1
-   uDAdcCw4OXBhrcl+YA1E/erNs8/UkPTqILQZQU6YwLxjhDJhc479bjUH/
-   mQNDcz+5rdjdKdght8ITuyxGRD/PADc1FwUe01Yk1X+r9w+sSmSwGoIqr
-   MKgnOspOpmo1g4QgaUcMXCDqSeWqi2VXyAeKc2U0FRDAY1JjSk5Z3dW+G
-   2kjN4DnmHtmTV2vum0ZAMZMAIqBm9RGIVaGwIPDxPmx1l1K+6iq7mStIT
-   CANmg06L/YqRcQ0cHgX7JxbxrzVdQFoNLMhKeCwbtBUVM/vGB3y3y2W36
-   A==;
-IronPort-SDR: zz8DiT5V4B+jjq/WpgSqBToxu/XDOQk2JTMBWP+xzbiXiyVLxEZsQDLuiAexLODUF61C2NSxxl
- vPsmu/kXiFTAECAHjr48i+s1PYZjx9vyC265yMnzds+nEUK9b0qnMfjx8BQtihhp3dCBOX7bRX
- vD4Prx+7jf4DQYLmHdBTQgI9kY9mEy0JXMg2WvUEjNahM65/tH0SUh2P1CkEddAUVZzbyPfUm3
- nnF46Zy6k53+zizrMRjiIkFxMcdNoGVy5uSt6dvM+A3+5Xaur6UORPZCvdIHuBwdpfBxzNk8CA
- hNE=
-X-IronPort-AV: E=Sophos;i="5.75,426,1589212800"; 
-   d="scan'208";a="253293763"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Aug 2020 20:42:59 +0800
-IronPort-SDR: 9p6TmkzxglvRTDTpzjFNzfDBQ2/mN63pPxpRxVMJeTXldRABGNSXOw/E+6eIRosQpQIre04eId
- 8uAC0X/qVQ0A==
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2020 05:31:02 -0700
-IronPort-SDR: vCKJjUggEeJrcizyNn1jQEEb8EnrrmDjgAlxUjyCHJTuklGiuPukmrXAUrqyCDpeYKy07LZKrf
- MqBed3i3K7Kg==
-WDCIronportException: Internal
-Received: from unknown (HELO redsun52) ([10.149.66.28])
-  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2020 05:42:57 -0700
-Date:   Sun, 2 Aug 2020 13:42:51 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@wdc.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Maciej W. Rozycki" <macro@linux-mips.org>
-Subject: Re: [PATCH v2 1/2] MAINTAINERS: Remove JZ4780 DMA driver entry
-In-Reply-To: <DGFFEQ.RMDW72DK0U5B1@crapouillou.net>
-Message-ID: <alpine.LFD.2.21.2008021339110.24175@redsun52.ssa.fujisawa.hgst.com>
-References: <20200726155559.4650-1-krzk@kernel.org> <alpine.LFD.2.21.2008012327070.24175@redsun52.ssa.fujisawa.hgst.com> <DGFFEQ.RMDW72DK0U5B1@crapouillou.net>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Sun, 2 Aug 2020 08:47:17 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 876BAC06174A
+        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 05:47:17 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a15so31737944wrh.10
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 05:47:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qxj7CDm8G5o5DKXYiU0gRx372hA5vyn7d2K7d5Klrxg=;
+        b=aJLN9zcY6rax5mB4sFLM9291LQqsRZnT8kNSlRN0Mgeu/rUbTqggdj46LFdMTUzHJG
+         5Ulcxg9HqoTF3xc/vn1jQlEAAg1OXHwVymO/nFXZCTST59xKEaufw9vgoQcgbUron4ca
+         rsVzQgbCOpoZzEPnUlXt5E0GguBYK+0FfpfmrN73qPBV1XCUnbgRhpKsVYeISaJJGjnk
+         tHL3emhFcPcrKELhKvORGsCPD7IEeUNNRpPWbv5sH8c1hovlbIMd972xihWfqwj+035O
+         qSy/Pj6IhREdm+iJmn97FqSgb56OWfg1uc06GcCQDq9Kg8M9ChHnWPkwmoCIKnWb1ewl
+         0LvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qxj7CDm8G5o5DKXYiU0gRx372hA5vyn7d2K7d5Klrxg=;
+        b=c/dbmWJC+KqxGd/qBUhln9NFFfrqAMlYPjhcN/7A3yfygmCegi5H7WbDwdL6w54mDK
+         2n6/5+57Vd9/9YXl8HX4hSmGR3xTCnKt610lntYfnS5Z4NSVZyoA9qhJUshxwBMLZV6A
+         7w8sC8JGv9CMSeelCSUusodGFKC1oyRRDrfnKF74bhNVpSoMd3tubZh52T/pM4qwbd/s
+         +HHKzrToXJ+E9fWvHpidsuPrP68Me3ZggrK17ycApppvzN5cIxwUkc8JyVs88STNeNWY
+         qS32uX/mbEZ7fswxkpcrP2HI2zMRnSJXJ3bLqzGHefR4V+w5+CB4BviDgyw2luDwHj/G
+         dqIQ==
+X-Gm-Message-State: AOAM531SPF+UIgidPAwe89sPB4KgJoQQdkT+jgf9tXQSXqELVTT3VlQM
+        Z/1ehpq9XdCwHud+kypKLC5k2JmvvUyE0A==
+X-Google-Smtp-Source: ABdhPJwQ1hOQdvkdrK0xBFN8STvIFB7VU+Zx8pZiXSETofpYVte0xAZm5QhcYMiN0g5k4E8bYP5y+A==
+X-Received: by 2002:adf:df91:: with SMTP id z17mr12197378wrl.149.1596372436002;
+        Sun, 02 Aug 2020 05:47:16 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:8872:7c8c:b1b3:10aa? ([2a01:e34:ed2f:f020:8872:7c8c:b1b3:10aa])
+        by smtp.googlemail.com with ESMTPSA id z6sm20434375wrs.36.2020.08.02.05.47.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Aug 2020 05:47:15 -0700 (PDT)
+Subject: Re: [PATCH] clocksource/h8300_timer8: Fix wrong return value in
+ h8300_8timer_init()
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        ysato@users.sourceforge.jp, tglx@linutronix.de
+Cc:     uclinux-h8-devel@lists.sourceforge.jp,
+        linux-kernel@vger.kernel.org, tianjia.zhang@alibaba.com
+References: <20200802111541.5429-1-tianjia.zhang@linux.alibaba.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <8f0e10e7-5a59-b6fb-c88a-769dd068cd28@linaro.org>
+Date:   Sun, 2 Aug 2020 14:47:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200802111541.5429-1-tianjia.zhang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2 Aug 2020, Paul Cercueil wrote:
+On 02/08/2020 13:15, Tianjia Zhang wrote:
+> In the case of calling of_iomap() failed, a positive value ENXIO is
+> returned here. I think this is a typo error. It is necessary to return
+> a negative error value.
 
-> >  FYI, the usual approach would be marking the entry "Orphan" rather 
-> > than
-> > removing it entirely, so that the mapping remains and makes it easy 
-> > for
-> > someone to pick it up.
-> 
-> This is OK in this case, as the driver is also listed as part of the 
-> "INGENIC JZ47xx SoCs".
+Yes, it is.
 
- Fair enough (and odd enough too to have two entries for one piece), 
-though in this case I think the commit description ought to mention it.  
-As it stands it makes one think the driver is not going to have a 
-maintainer anymore: "[...] and no maintenance is provided."
+Applied, thanks for the fix.
 
-  Maciej
+  -- Daniel
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
