@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D173CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 22:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E968C433E8
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 22:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAA032065C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 22:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09D2A204EA
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 22:00:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbgHBWAj (ORCPT
+        id S1728315AbgHBWAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 18:00:39 -0400
-Received: from smtp-bc09.mail.infomaniak.ch ([45.157.188.9]:54623 "EHLO
-        smtp-bc09.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728050AbgHBV7e (ORCPT
+        Sun, 2 Aug 2020 18:00:44 -0400
+Received: from smtp-8faa.mail.infomaniak.ch ([83.166.143.170]:32947 "EHLO
+        smtp-8faa.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727956AbgHBV7c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 17:59:34 -0400
+        Sun, 2 Aug 2020 17:59:32 -0400
 Received: from smtp-2-0000.mail.infomaniak.ch (unknown [10.5.36.107])
-        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4BKZg729TMzlhPDL;
-        Sun,  2 Aug 2020 23:59:31 +0200 (CEST)
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4BKZg43r36zlhZZH;
+        Sun,  2 Aug 2020 23:59:28 +0200 (CEST)
 Received: from localhost (unknown [94.23.54.103])
-        by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4BKZg66JZvzlh8TD;
-        Sun,  2 Aug 2020 23:59:30 +0200 (CEST)
+        by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4BKZg40ZXBzlh8T3;
+        Sun,  2 Aug 2020 23:59:28 +0200 (CEST)
 From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
@@ -48,9 +48,9 @@ Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
         linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
         linux-security-module@vger.kernel.org, x86@kernel.org
-Subject: [PATCH v20 06/12] fs,security: Add sb_delete hook
-Date:   Sun,  2 Aug 2020 23:58:57 +0200
-Message-Id: <20200802215903.91936-7-mic@digikod.net>
+Subject: [PATCH v20 04/12] landlock: Add ptrace restrictions
+Date:   Sun,  2 Aug 2020 23:58:55 +0200
+Message-Id: <20200802215903.91936-5-mic@digikod.net>
 X-Mailer: git-send-email 2.28.0.rc2
 In-Reply-To: <20200802215903.91936-1-mic@digikod.net>
 References: <20200802215903.91936-1-mic@digikod.net>
@@ -64,109 +64,219 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sb_delete security hook is called when shutting down a superblock,
-which may be useful to release kernel objects tied to the superblock's
-lifetime (e.g. inodes).
+Using ptrace(2) and related debug features on a target process can lead
+to a privilege escalation.  Indeed, ptrace(2) can be used by an attacker
+to impersonate another task and to remain undetected while performing
+malicious activities.  Thanks to  ptrace_may_access(), various part of
+the kernel can check if a tracer is more privileged than a tracee.
 
-This new hook is needed by Landlock to release (ephemerally) tagged
-struct inodes.  This comes from the unprivileged nature of Landlock
-described in the next commit.
+A landlocked process has fewer privileges than a non-landlocked process
+and must then be subject to additional restrictions when manipulating
+processes. To be allowed to use ptrace(2) and related syscalls on a
+target process, a landlocked process must have a subset of the target
+process' rules (i.e. the tracee must be in a sub-domain of the tracer).
 
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
 Cc: James Morris <jmorris@namei.org>
 Cc: Jann Horn <jannh@google.com>
 Cc: Kees Cook <keescook@chromium.org>
 Cc: Serge E. Hallyn <serge@hallyn.com>
 ---
 
-Changes since v17:
-* Initial patch to replace the direct call to landlock_release_inodes()
-  (requested by James Morris).
-  https://lore.kernel.org/lkml/alpine.LRH.2.21.2005150536440.7929@namei.org/
----
- fs/super.c                    | 1 +
- include/linux/lsm_hook_defs.h | 1 +
- include/linux/lsm_hooks.h     | 2 ++
- include/linux/security.h      | 4 ++++
- security/security.c           | 5 +++++
- 5 files changed, 13 insertions(+)
+Changes since v14:
+* Constify variables.
 
-diff --git a/fs/super.c b/fs/super.c
-index 904459b35119..d5517e49ccdf 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -454,6 +454,7 @@ void generic_shutdown_super(struct super_block *sb)
- 		evict_inodes(sb);
- 		/* only nonzero refcount inodes can have marks */
- 		fsnotify_sb_delete(sb);
-+		security_sb_delete(sb);
+Changes since v13:
+* Make the ptrace restriction mandatory, like in the v10.
+* Remove the eBPF dependency.
+
+Previous changes:
+https://lore.kernel.org/lkml/20191104172146.30797-5-mic@digikod.net/
+---
+ security/landlock/Makefile |   2 +-
+ security/landlock/ptrace.c | 120 +++++++++++++++++++++++++++++++++++++
+ security/landlock/ptrace.h |  14 +++++
+ security/landlock/setup.c  |   2 +
+ 4 files changed, 137 insertions(+), 1 deletion(-)
+ create mode 100644 security/landlock/ptrace.c
+ create mode 100644 security/landlock/ptrace.h
+
+diff --git a/security/landlock/Makefile b/security/landlock/Makefile
+index 041ea242e627..f1d1eb72fa76 100644
+--- a/security/landlock/Makefile
++++ b/security/landlock/Makefile
+@@ -1,4 +1,4 @@
+ obj-$(CONFIG_SECURITY_LANDLOCK) := landlock.o
  
- 		if (sb->s_dio_done_wq) {
- 			destroy_workqueue(sb->s_dio_done_wq);
-diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-index af998f93d256..2b855d6a299e 100644
---- a/include/linux/lsm_hook_defs.h
-+++ b/include/linux/lsm_hook_defs.h
-@@ -59,6 +59,7 @@ LSM_HOOK(int, 0, fs_context_dup, struct fs_context *fc,
- LSM_HOOK(int, -ENOPARAM, fs_context_parse_param, struct fs_context *fc,
- 	 struct fs_parameter *param)
- LSM_HOOK(int, 0, sb_alloc_security, struct super_block *sb)
-+LSM_HOOK(void, LSM_RET_VOID, sb_delete, struct super_block *sb)
- LSM_HOOK(void, LSM_RET_VOID, sb_free_security, struct super_block *sb)
- LSM_HOOK(void, LSM_RET_VOID, sb_free_mnt_opts, void *mnt_opts)
- LSM_HOOK(int, 0, sb_eat_lsm_opts, char *orig, void **mnt_opts)
-diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-index 80c629d8a2ad..499f19a70a19 100644
---- a/include/linux/lsm_hooks.h
-+++ b/include/linux/lsm_hooks.h
-@@ -108,6 +108,8 @@
-  *	allocated.
-  *	@sb contains the super_block structure to be modified.
-  *	Return 0 if operation was successful.
-+ * @sb_delete:
-+ *	Release objects tied to a superblock (e.g. inodes).
-  * @sb_free_security:
-  *	Deallocate and clear the sb->s_security field.
-  *	@sb contains the super_block structure to be modified.
-diff --git a/include/linux/security.h b/include/linux/security.h
-index 0a0a03b36a3b..28b0ee6c7239 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -286,6 +286,7 @@ void security_bprm_committed_creds(struct linux_binprm *bprm);
- int security_fs_context_dup(struct fs_context *fc, struct fs_context *src_fc);
- int security_fs_context_parse_param(struct fs_context *fc, struct fs_parameter *param);
- int security_sb_alloc(struct super_block *sb);
-+void security_sb_delete(struct super_block *sb);
- void security_sb_free(struct super_block *sb);
- void security_free_mnt_opts(void **mnt_opts);
- int security_sb_eat_lsm_opts(char *options, void **mnt_opts);
-@@ -614,6 +615,9 @@ static inline int security_sb_alloc(struct super_block *sb)
- 	return 0;
- }
- 
-+static inline void security_sb_delete(struct super_block *sb)
-+{ }
+ landlock-y := setup.o object.o ruleset.o \
+-	cred.o
++	cred.o ptrace.o
+diff --git a/security/landlock/ptrace.c b/security/landlock/ptrace.c
+new file mode 100644
+index 000000000000..61df38b13f5c
+--- /dev/null
++++ b/security/landlock/ptrace.c
+@@ -0,0 +1,120 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Landlock LSM - Ptrace hooks
++ *
++ * Copyright © 2017-2020 Mickaël Salaün <mic@digikod.net>
++ * Copyright © 2020 ANSSI
++ */
 +
- static inline void security_sb_free(struct super_block *sb)
- { }
- 
-diff --git a/security/security.c b/security/security.c
-index d60aa835b670..9337b511306c 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -898,6 +898,11 @@ int security_sb_alloc(struct super_block *sb)
- 	return rc;
- }
- 
-+void security_sb_delete(struct super_block *sb)
++#include <asm/current.h>
++#include <linux/cred.h>
++#include <linux/errno.h>
++#include <linux/kernel.h>
++#include <linux/lsm_hooks.h>
++#include <linux/rcupdate.h>
++#include <linux/sched.h>
++
++#include "common.h"
++#include "cred.h"
++#include "ptrace.h"
++#include "ruleset.h"
++#include "setup.h"
++
++/**
++ * domain_scope_le - Checks domain ordering for scoped ptrace
++ *
++ * @parent: Parent domain.
++ * @child: Potential child of @parent.
++ *
++ * Checks if the @parent domain is less or equal to (i.e. an ancestor, which
++ * means a subset of) the @child domain.
++ */
++static bool domain_scope_le(const struct landlock_ruleset *const parent,
++		const struct landlock_ruleset *const child)
 +{
-+	call_void_hook(sb_delete, sb);
++	const struct landlock_hierarchy *walker;
++
++	if (!parent)
++		return true;
++	if (!child)
++		return false;
++	for (walker = child->hierarchy; walker; walker = walker->parent) {
++		if (walker == parent->hierarchy)
++			/* @parent is in the scoped hierarchy of @child. */
++			return true;
++	}
++	/* There is no relationship between @parent and @child. */
++	return false;
 +}
 +
- void security_sb_free(struct super_block *sb)
++static bool task_is_scoped(const struct task_struct *const parent,
++		const struct task_struct *const child)
++{
++	bool is_scoped;
++	const struct landlock_ruleset *dom_parent, *dom_child;
++
++	rcu_read_lock();
++	dom_parent = landlock_get_task_domain(parent);
++	dom_child = landlock_get_task_domain(child);
++	is_scoped = domain_scope_le(dom_parent, dom_child);
++	rcu_read_unlock();
++	return is_scoped;
++}
++
++static int task_ptrace(const struct task_struct *const parent,
++		const struct task_struct *const child)
++{
++	/* Quick return for non-landlocked tasks. */
++	if (!landlocked(parent))
++		return 0;
++	if (task_is_scoped(parent, child))
++		return 0;
++	return -EPERM;
++}
++
++/**
++ * hook_ptrace_access_check - Determines whether the current process may access
++ *			      another
++ *
++ * @child: Process to be accessed.
++ * @mode: Mode of attachment.
++ *
++ * If the current task has Landlock rules, then the child must have at least
++ * the same rules.  Else denied.
++ *
++ * Determines whether a process may access another, returning 0 if permission
++ * granted, -errno if denied.
++ */
++static int hook_ptrace_access_check(struct task_struct *const child,
++		const unsigned int mode)
++{
++	return task_ptrace(current, child);
++}
++
++/**
++ * hook_ptrace_traceme - Determines whether another process may trace the
++ *			 current one
++ *
++ * @parent: Task proposed to be the tracer.
++ *
++ * If the parent has Landlock rules, then the current task must have the same
++ * or more rules.  Else denied.
++ *
++ * Determines whether the nominated task is permitted to trace the current
++ * process, returning 0 if permission is granted, -errno if denied.
++ */
++static int hook_ptrace_traceme(struct task_struct *const parent)
++{
++	return task_ptrace(parent, current);
++}
++
++static struct security_hook_list landlock_hooks[] __lsm_ro_after_init = {
++	LSM_HOOK_INIT(ptrace_access_check, hook_ptrace_access_check),
++	LSM_HOOK_INIT(ptrace_traceme, hook_ptrace_traceme),
++};
++
++__init void landlock_add_hooks_ptrace(void)
++{
++	security_add_hooks(landlock_hooks, ARRAY_SIZE(landlock_hooks),
++			LANDLOCK_NAME);
++}
+diff --git a/security/landlock/ptrace.h b/security/landlock/ptrace.h
+new file mode 100644
+index 000000000000..6740c6a723de
+--- /dev/null
++++ b/security/landlock/ptrace.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Landlock LSM - Ptrace hooks
++ *
++ * Copyright © 2017-2019 Mickaël Salaün <mic@digikod.net>
++ * Copyright © 2019 ANSSI
++ */
++
++#ifndef _SECURITY_LANDLOCK_PTRACE_H
++#define _SECURITY_LANDLOCK_PTRACE_H
++
++__init void landlock_add_hooks_ptrace(void);
++
++#endif /* _SECURITY_LANDLOCK_PTRACE_H */
+diff --git a/security/landlock/setup.c b/security/landlock/setup.c
+index 39ee1766f175..5e7540fdeefa 100644
+--- a/security/landlock/setup.c
++++ b/security/landlock/setup.c
+@@ -11,6 +11,7 @@
+ 
+ #include "common.h"
+ #include "cred.h"
++#include "ptrace.h"
+ #include "setup.h"
+ 
+ struct lsm_blob_sizes landlock_blob_sizes __lsm_ro_after_init = {
+@@ -20,6 +21,7 @@ struct lsm_blob_sizes landlock_blob_sizes __lsm_ro_after_init = {
+ static int __init landlock_init(void)
  {
- 	call_void_hook(sb_free_security, sb);
+ 	landlock_add_hooks_cred();
++	landlock_add_hooks_ptrace();
+ 	pr_info("Up and running.\n");
+ 	return 0;
+ }
 -- 
 2.28.0.rc2
 
