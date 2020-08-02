@@ -2,111 +2,103 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3310C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 22:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FDAC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 22:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B43F3204EA
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 22:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D201204EA
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 22:04:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Y8mOqd7h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgHBWDd (ORCPT
+        id S1727055AbgHBWEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 18:03:33 -0400
-Received: from mga06.intel.com ([134.134.136.31]:51631 "EHLO mga06.intel.com"
+        Sun, 2 Aug 2020 18:04:05 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:48343 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726364AbgHBWDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 18:03:32 -0400
-IronPort-SDR: MMoc+Es0RM/eF/itp/5uKzIILdE//1eUT7vqSoZnX9M+lWXgNfdK+S3/d9Itrkc2gKwrwTr52s
- /oKFS7b1PPEQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="213556387"
-X-IronPort-AV: E=Sophos;i="5.75,427,1589266800"; 
-   d="scan'208";a="213556387"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2020 15:03:31 -0700
-IronPort-SDR: zHmF67G0C6t+RqSNbsQR2JuTjknAm0KNygE22EuGYJnm9QRA3M6yzHaPWuPm6v/Nzw1tD4BwHO
- KyBzMIkPsTGA==
-X-IronPort-AV: E=Sophos;i="5.75,427,1589266800"; 
-   d="scan'208";a="466271087"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2020 15:03:31 -0700
-Date:   Sun, 2 Aug 2020 15:03:30 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Borislav Petkov <bp@alien8.de>, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] EDAC for 5.9
-Message-ID: <20200802220330.GA24423@agluck-desk2.amr.corp.intel.com>
+        id S1726364AbgHBWEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 18:04:04 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BKZmJ1BkMz9sPC;
+        Mon,  3 Aug 2020 08:03:59 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596405842;
+        bh=pQ3Sd7U4vE+w2/lTVbDs04/hjZDdOaGEZd/XadR12Ao=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Y8mOqd7hVKh/YCJsydQj0+K4RC0gJBzDXV2ag5TQJ1TEry6nM4mEhvtNlOi4CXRG/
+         wn7Pl0+vVdfNEe5cW+FYqWCdnd19bM9BKek1pvqRjXT8C+6kkjlbQSdtPNzlJ482Tf
+         gCivxyyx8i1dh6PVck3I9f51sJkby9pTKRnVIYR7cQU7KIG5lbX5WL35a5LPHUw8nM
+         /HT5U9OeMCots+BykzpQlFMM1OWXRwaC/kdlDB4r3KvesCBl/ALAyRoZbIWMgWBmDc
+         eNf1Gh2HL572GuQxvSOarApPGeibtZn3R5gChelh23jp2632XmrvswkZhNAf5Vf0s6
+         GUUiINjoMyhhQ==
+Date:   Mon, 3 Aug 2020 08:03:59 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        Wireless <linux-wireless@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Felix Fietkau <nbd@nbd.name>
+Subject: linux-next: Fixes tag needs some work in the wireless-drivers-next
+ tree
+Message-ID: <20200803080359.64b417e3@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: multipart/signed; boundary="Sig_/.dw=d/6DpwdkTfTtS7D8fHD";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+--Sig_/.dw=d/6DpwdkTfTtS7D8fHD
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Boris is on vacation and aske me to send you the pull request for EDAC
-changes that are queued for v5.9
+Hi all,
 
--Tony
+In commit
 
----
+  4c7e1711cf4c ("mt76: mt7915: fix potential memory leak in mcu message han=
+dler")
 
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+Fixes tag
 
-  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+  Fixes: c6b002bcdfa6 ("mt76: add mac80211 driver for MT7915 PCIe-based chi=
+psets")
 
-are available in the Git repository at:
+has these problem(s):
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_updates_for_5.9
+  - Target SHA1 does not exist
 
-for you to fetch changes up to 0f959e19fadf00638b686fdeb70e24dfcc7bbcac:
+Maybe you meant
 
-  Merge branch 'edac-ghes' into edac-for-next (2020-06-22 15:28:01 +0200)
+Fixes: e57b7901469f ("mt76: add mac80211 driver for MT7915 PCIe-based chips=
+ets")
 
-----------------------------------------------------------------
-17ed808ad243 ("EDAC: Fix reference count leaks")
-e370f886fefc ("EDAC: Remove edac_get_dimm_by_index()")
-b9cae27728d1 ("EDAC/ghes: Scan the system once on driver init")
-b001694d60fe ("EDAC/ghes: Remove unused members of struct ghes_edac_pvt, rename it to ghes_pvt")
-cb51a371d08e ("EDAC/ghes: Setup DIMM label from DMI and use it in error reports")
-8807e1559749 ("EDAC, {skx,i10nm}: Use CPU stepping macro to pass configurations")
-e9ff6636d3f9 ("EDAC/mc: Call edac_inc_ue_error() before panic")
-30bf38e4341b ("EDAC, pnd2: Set MCE_PRIO_EDAC priority for pnd2_mce_dec notifier")
+--=20
+Cheers,
+Stephen Rothwell
 
-----------------------------------------------------------------
-Borislav Petkov (3):
-      EDAC/ghes: Scan the system once on driver init
-      EDAC: Remove edac_get_dimm_by_index()
-      Merge branch 'edac-ghes' into edac-for-next
+--Sig_/.dw=d/6DpwdkTfTtS7D8fHD
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Qiushi Wu (1):
-      EDAC: Fix reference count leaks
+-----BEGIN PGP SIGNATURE-----
 
-Qiuxu Zhuo (1):
-      EDAC, {skx,i10nm}: Use CPU stepping macro to pass configurations
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8nOE8ACgkQAVBC80lX
+0GxaUAf/SptKRVKpWm13tMWq0MJ7Yw2NRvk6LlQHOMweDoHDz7a95dmR3g37k5sp
+wrTdKF4Cpt43G8Q1+rNlOk8YW1gY7JhMvQ5A1N3dv8x9mgC69/WJXBSibR7r+GxB
+BxrOiluNB7OWsNyYE1Eyim+BZeq2EeD3cBPVmdW43Wh1HyCzBwVGvTtU68vtZgtM
+Yzv+6zXGp+6eZK4bUTDzziZRLisI2SX0nSgEb1tYau/g2xy4Bupm7dKOmONB4s8U
+6xRjhLDxuCDKYnzLSxTH77IssJGeMu7b1sKHfqxmvemxAr4mOnJK4N1gYvN1dsf2
+CBEKb0qK1qH8OKXiJLs7pDQu3VYSQA==
+=eZJ2
+-----END PGP SIGNATURE-----
 
-Robert Richter (2):
-      EDAC/ghes: Setup DIMM label from DMI and use it in error reports
-      EDAC/ghes: Remove unused members of struct ghes_edac_pvt, rename it to ghes_pvt
-
-Zhenzhong Duan (2):
-      EDAC, pnd2: Set MCE_PRIO_EDAC priority for pnd2_mce_dec notifier
-      EDAC/mc: Call edac_inc_ue_error() before panic
-
- drivers/edac/edac_device_sysfs.c |   1 +
- drivers/edac/edac_mc.c           |   4 +-
- drivers/edac/edac_pci_sysfs.c    |   2 +-
- drivers/edac/ghes_edac.c         | 323 +++++++++++++++++++++++----------------
- drivers/edac/i10nm_base.c        |  12 +-
- drivers/edac/pnd2_edac.c         |   1 +
- drivers/edac/skx_base.c          |   2 +-
- include/linux/edac.h             |  29 +---
- 8 files changed, 211 insertions(+), 163 deletions(-)
+--Sig_/.dw=d/6DpwdkTfTtS7D8fHD--
