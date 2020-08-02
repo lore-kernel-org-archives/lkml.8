@@ -2,130 +2,192 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A89C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E56C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 17:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D9D6207BB
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 16:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D0F9206E7
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 17:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596387479;
-	bh=4kEI4l0aRvt5/h9g0xWJYrGj07HsmDRlUAaOJ6inO8o=;
+	s=default; t=1596387906;
+	bh=PWc3oVwKiB8qe+vnMnQ+QE/YaMVP0mT9tkx9mSi2wx0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lsgPgQ1oBzDlX8TyOcsYzR5lzNDxeAk9jlD61DwCIoQ1ikQXairhRqD7M6Fnu3es3
-	 6hC0C1d2Q91JHMIRO9YDhFWa4j9zjKI2/ebkaHCD/0TOm8ghjxxfP7YM6GIV2xcPd/
-	 UYvGr2aHFX2IZrP9k/t04PeyWKb5atSde618oLn8=
+	b=D88BpphyZTWH9NAIRTJaGej6tL0U/v+JFYpAwrtw8EXpETg7HQzbo82SOKa2Tf05/
+	 SlSEzXCabmbiRYDYTlKWR2yUR5zHHmbjzeANhEbXelYlRUyueWWAqjVPavdaDdiF2i
+	 3ziUMp5Mnb3UjS9J2BMSaZWYuE1zSC8ixsGVqjuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgHBQ56 (ORCPT
+        id S1727019AbgHBRFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 12:57:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53438 "EHLO mail.kernel.org"
+        Sun, 2 Aug 2020 13:05:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726364AbgHBQ55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 12:57:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726345AbgHBRFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 13:05:03 -0400
+Received: from localhost (router.4pisysteme.de [80.79.225.122])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 699C2206E7;
-        Sun,  2 Aug 2020 16:57:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1F21206E7;
+        Sun,  2 Aug 2020 17:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596387477;
-        bh=4kEI4l0aRvt5/h9g0xWJYrGj07HsmDRlUAaOJ6inO8o=;
+        s=default; t=1596387902;
+        bh=PWc3oVwKiB8qe+vnMnQ+QE/YaMVP0mT9tkx9mSi2wx0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=y4kBPwEDJbjOZEMc2uLF1D0tsUTpknH0xW29TRuBcLEgXiLx4yHZIn2WnfIrkRR4C
-         4Yd3SnOSonYPM+9KKcRRRIQT7Lq6mcM0UJ4+wrbuU3aMnIXr7IoJAbsNBq/F8ax6iE
-         TimPI9pa+I4T1t74FfpoSVs6hrOK2uVf4dFxjufk=
-Date:   Sun, 2 Aug 2020 18:57:38 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Qiwu Huang <yanziily@gmail.com>, sre@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jiangfei1@xiaomi.com, Qiwu Huang <huangqiwu@xiaomi.com>
-Subject: Re: [PATCH v4 1/4] power: supply: core: add quick charge type
- property
-Message-ID: <20200802165738.GA293244@kroah.com>
-References: <cover.1595214246.git.huangqiwu@xiaomi.com>
- <c9d3199ec18625f9cc4448c3b2049ea2ae80358b.1595214246.git.huangqiwu@xiaomi.com>
- <20200802120015.GA1289@bug>
- <20200802123742.GA257810@kroah.com>
- <20200802142825.GA20261@amd>
+        b=aw2ObVgJPVd2ENEl3i8ljrsW/KpxSbTBK3iV/ILQ3qCEdWZlP+pvXOcTYKyX4ehfg
+         8Z8S7ve7SJAJjneWZea2OjnCaZAlfNKmVwFLU6peywrd/9xyBa3aGw3LR5Uubki3yR
+         W2t8Vqau6YV2w+2mI5HBEF16k+R0KynqC5ZmNOTk=
+Date:   Sun, 2 Aug 2020 19:05:00 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        robh+dt@kernel.org, ludovic.desroches@microchip.com,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        linux@armlinux.org.uk, kamel.bouhara@bootlin.com
+Subject: Re: [RFC PATCH 3/4] i2c: core: treat EPROBE_DEFER when acquiring
+ SCL/SDA GPIOs
+Message-ID: <20200802170500.GB10193@kunai>
+References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
+ <20200619141904.910889-4-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="LpQ9ahxlCli8rRTG"
 Content-Disposition: inline
-In-Reply-To: <20200802142825.GA20261@amd>
+In-Reply-To: <20200619141904.910889-4-codrin.ciubotariu@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 02, 2020 at 04:28:25PM +0200, Pavel Machek wrote:
-> On Sun 2020-08-02 14:37:42, Greg KH wrote:
-> > On Sun, Aug 02, 2020 at 02:00:15PM +0200, Pavel Machek wrote:
-> > > On Mon 2020-07-20 13:47:14, Qiwu Huang wrote:
-> > > > From: Qiwu Huang <huangqiwu@xiaomi.com>
-> > > > 
-> > > > Reports the kind of quick charge type based on
-> > > > different adapter power.
-> > > > 
-> > > > Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
-> > > > ---
-> > > >  Documentation/ABI/testing/sysfs-class-power | 21 +++++++++++++++++++++
-> > > >  drivers/power/supply/power_supply_sysfs.c   |  1 +
-> > > >  include/linux/power_supply.h                | 10 ++++++++++
-> > > >  3 files changed, 32 insertions(+)
-> > > > 
-> > > > diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-> > > > index 216d61a22f1e..dd3773dcf16a 100644
-> > > > --- a/Documentation/ABI/testing/sysfs-class-power
-> > > > +++ b/Documentation/ABI/testing/sysfs-class-power
-> > > > @@ -708,3 +708,24 @@ Description:
-> > > >  
-> > > >  		Access: Read
-> > > >  		Valid values: 1-31
-> > > > +
-> > > > +What:		/sys/class/power_supply/<supply_name>/quick_charge_type
-> > > > +Date:		Jul 2020
-> > > > +Contact:	Fei Jiang <jiangfei1@xiaomi.com>
-> > > > +		Description:
-> > > > +		Reports the kind of quick charge type based on different adapter power.
-> > > > +		Different quick charge type represent different charging power.
-> > > > +		QUICK_CHARGE_NORMAL : Charging Power <= 10W
-> > > > +		QUICK_CHARGE_FAST : 10W < Charging Power <= 20W
-> > > > +		QUICK_CHARGE_FLASH : 20W < Charging Power <= 30W
-> > > > +		QUICK_CHARGE_TURBE : 30W < Charging Power <= 50W
-> > > > +		QUICK_CHARGE_SUPER : Charging Power > 50W
-> > > > +
-> > > > +		Access: Read-Only
-> > > > +		Valid values:
-> > > > +			0: QUICK_CHARGE_NORMAL,
-> > > > +			1: QUICK_CHARGE_FAST,
-> > > > +			2: QUICK_CHARGE_FLASH,
-> > > > +			3: QUICK_CHARGE_TURBE,
-> > > > +			4: QUICK_CHARGE_SUPER.
-> > > 
-> > > NAK.
-> > > 
-> > > Just expose value in watts or something... People are talking about > 100W charging, no
-> > > need to go with fast/turbe/super/hyper/nonsense.
-> > > 
-> > > BTW fast charge is already "well defined", and what you call Normal is usually fast charge.
-> > 
-> > I think these names come from the Qi charging spec, right?  So lets use
-> > what is given to us.
-> 
-> There are other standards, and this should better be generic.
 
-What standard?  Why not go with this one, it's documented and out there
-and being used.
+--LpQ9ahxlCli8rRTG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Simply expose value in watts.
+On Fri, Jun 19, 2020 at 05:19:03PM +0300, Codrin Ciubotariu wrote:
+> Even if I2C bus GPIO recovery is optional, devm_gpiod_get() can return
+> -EPROBE_DEFER, so we should at least treat that. This ends up with
+> i2c_register_adapter() to be able to return -EPROBE_DEFER.
+>=20
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> ---
+>  drivers/i2c/i2c-core-base.c | 22 ++++++++++++++++------
+>  1 file changed, 16 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> index 4ee29fec4e93..f8d9f2048ca8 100644
+> --- a/drivers/i2c/i2c-core-base.c
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -368,15 +368,16 @@ static int i2c_gpio_init_recovery(struct i2c_adapte=
+r *adap)
+>  	return i2c_gpio_init_generic_recovery(adap);
+>  }
+> =20
+> -static void i2c_init_recovery(struct i2c_adapter *adap)
+> +static int i2c_init_recovery(struct i2c_adapter *adap)
+>  {
+>  	struct i2c_bus_recovery_info *bri =3D adap->bus_recovery_info;
+>  	char *err_str;
+> =20
+>  	if (!bri)
+> -		return;
+> +		return 0;
+> =20
+> -	i2c_gpio_init_recovery(adap);
+> +	if (i2c_gpio_init_recovery(adap) =3D=3D -EPROBE_DEFER)
+> +		return -EPROBE_DEFER;
+> =20
+>  	if (!bri->recover_bus) {
+>  		err_str =3D "no recover_bus() found";
+> @@ -392,7 +393,7 @@ static void i2c_init_recovery(struct i2c_adapter *ada=
+p)
+>  			if (gpiod_get_direction(bri->sda_gpiod) =3D=3D 0)
+>  				bri->set_sda =3D set_sda_gpio_value;
+>  		}
+> -		return;
+> +		return 0;
 
-What if you do not know the watts, you just know these ranges.
+This is correct but I think the code flow is/was confusing. Can you drop
+this 'return' and use 'else if' for the next code block? I think this is
+more readable.
 
-thanks,
+>  	}
+> =20
+>  	if (bri->recover_bus =3D=3D i2c_generic_scl_recovery) {
+> @@ -407,10 +408,12 @@ static void i2c_init_recovery(struct i2c_adapter *a=
+dap)
+>  		}
+>  	}
+> =20
+> -	return;
+> +	return 0;
+>   err:
+>  	dev_err(&adap->dev, "Not using recovery: %s\n", err_str);
+>  	adap->bus_recovery_info =3D NULL;
+> +
+> +	return 0;
 
-greg k-h
+'return -EINVAL;' I'd suggest.
+
+>  }
+> =20
+>  static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
+> @@ -1476,7 +1479,9 @@ static int i2c_register_adapter(struct i2c_adapter =
+*adap)
+>  			 "Failed to create compatibility class link\n");
+>  #endif
+> =20
+> -	i2c_init_recovery(adap);
+> +	res =3D i2c_init_recovery(adap);
+> +	if (res =3D=3D -EPROBE_DEFER)
+> +		goto out_link;
+
+Please move 'i2c_init_recovery' above the class-link creation. It
+shouldn't make a difference but we can skip the extra label and the
+ifdeffery.
+
+> =20
+>  	/* create pre-declared device nodes */
+>  	of_i2c_register_devices(adap);
+> @@ -1493,6 +1498,11 @@ static int i2c_register_adapter(struct i2c_adapter=
+ *adap)
+> =20
+>  	return 0;
+> =20
+> +out_link:
+> +#ifdef CONFIG_I2C_COMPAT
+> +	class_compat_remove_link(i2c_adapter_compat_class, &adap->dev,
+> +				 adap->dev.parent);
+> +#endif
+>  out_reg:
+>  	init_completion(&adap->dev_released);
+>  	device_unregister(&adap->dev);
+> --=20
+> 2.25.1
+>=20
+
+--LpQ9ahxlCli8rRTG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8m8jsACgkQFA3kzBSg
+KbZWIg/9FIRUejaKiCa0YCPjG1nVCLh+KzDrWUxpOJLWbPjuwlAh8I9AXTt39j91
+7J5owEg+XW+A34bepy9rFJnfguYbiR1NKfhXTxou2dv/Jqb9QX7S0WGUxF621z8H
+lPX0HOomwn2s7gDwQ7273h0hORvKHLorgzxStLhxQBq0UYoJmo73Ezo2WtejIkJ7
+zQ3Czs9RPrEZ1sZs7jNg78TR7nlvyVvnNssP3BcHccD7x9ZDfgvBt2VpP/ToUJCi
+ENngj3cPnDBqQ0wKzbDKBu6fw6PgIkK6qSXYWKSc8mQNEwf85l1JI019ea3iy9/2
+/5TAtsX9Eu5fA45VxUF/NyNcCEimEsO0HIys3l0alXMGY3q+GmmO9I5zF/LYT7iq
+4FACxonEcU7YwWwuT0d+UOy5X+7OCoJYFpowSi0lShj/ap+JhlI+kMQeu+JmI9rA
+XulmXbSveSWjovoAKV94zzHb1hLAZhx5rtPbhU+V2nwUZCHu5CQbLUSkAQWXWFQ/
+xLfjSRxbW05YmxMN1THYfVcZSpAQ6vh+VLG41bpkRFNci7Wbx9FxSC24oDKP67as
+30iPMIFVuafJCO79hgDyWdaod+ghURBn8k+dcUDqrW6IZSOg8PdZVoBV0awqLSNf
+C07MYTcUZRrKOqpiOQK9AxyYdasr+lHqL5a81jFlNjpTh2YjS6g=
+=kUfd
+-----END PGP SIGNATURE-----
+
+--LpQ9ahxlCli8rRTG--
