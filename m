@@ -2,108 +2,73 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBFAC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 10:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C28FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 10:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1401620738
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 10:12:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RVutQfbq"
+	by mail.kernel.org (Postfix) with ESMTP id 6FFC520738
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 10:15:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbgHBKMR (ORCPT
+        id S1728034AbgHBKPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 06:12:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43162 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726376AbgHBKMQ (ORCPT
+        Sun, 2 Aug 2020 06:15:39 -0400
+Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:41213 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726416AbgHBKPj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 06:12:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596363135;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=jSxQ0k8/M2yKLog8LDz8HUyTSs6ZWh+UyZwI9wLnctI=;
-        b=RVutQfbqFSkqwfKUD3eFuroTklc4XMDgyroL2Onk4hKBUQV/GK22GwaRE2UvAYB9AbCCFs
-        6JMI1522A1IAwCFn8Znn2/Z3vGQsUsP5OcYgTxJPh1jXykEgMfs3qFAkkbkvtB/ijHRfHg
-        WWhXBWEO371+QpIDzNYko7c2Lz3v/TY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-36-x18vteqNN6CxokD561CStA-1; Sun, 02 Aug 2020 06:12:13 -0400
-X-MC-Unique: x18vteqNN6CxokD561CStA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6F1658015FB;
-        Sun,  2 Aug 2020 10:12:12 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1EB6D60CD1;
-        Sun,  2 Aug 2020 10:12:12 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [GIT PULL] Final KVM changes for Linux 5.8
-Date:   Sun,  2 Aug 2020 06:12:11 -0400
-Message-Id: <20200802101211.8454-1-pbonzini@redhat.com>
+        Sun, 2 Aug 2020 06:15:39 -0400
+Received: from localhost.localdomain ([93.22.148.198])
+        by mwinf5d84 with ME
+        id AaFX230014H42jh03aFXvG; Sun, 02 Aug 2020 12:15:35 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 02 Aug 2020 12:15:35 +0200
+X-ME-IP: 93.22.148.198
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     QLogic-Storage-Upstream@qlogic.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, michaelc@cs.wisc.edu,
+        JBottomley@Parallels.com, lalit.chandivade@qlogic.com,
+        vikas.chaudhary@qlogic.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] scsi: qla4xxx: Fix an error handling path in 'qla4xxx_get_host_stats()'
+Date:   Sun,  2 Aug 2020 12:15:27 +0200
+Message-Id: <20200802101527.676054-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+Update the size used in 'dma_free_coherent()' in order to match the one
+used in the corresponding 'dma_alloc_coherent()'.
 
-The following changes since commit 3d9fdc252b52023260de1d12399cb3157ed28c07:
+Fixes: 4161cee52df8 ("[SCSI] qla4xxx: Add host statistics support")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/scsi/qla4xxx/ql4_os.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  KVM: MIPS: Fix build errors for 32bit kernel (2020-07-10 06:15:38 -0400)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
-
-for you to fetch changes up to 830f01b089b12bbe93bd55f2d62837253012a30e:
-
-  KVM: SVM: Fix disable pause loop exit/pause filtering capability on SVM (2020-07-31 03:20:32 -0400)
-
-----------------------------------------------------------------
-Bugfixes and strengthening the validity checks on inputs from new userspace APIs.
-
-----------------------------------------------------------------
-
-Now I know why I shouldn't prepare pull requests on the weekend, it's
-hard to concentrate if your son is shouting about his latest Minecraft
-builds in your ear.  Fortunately all the patches were ready and I just
-had to check the test results...
-
-Marc Zyngier (1):
-      KVM: arm64: Prevent vcpu_has_ptrauth from generating OOL functions
-
-Paolo Bonzini (4):
-      selftests: kvm: do not set guest mode flag
-      KVM: nVMX: check for required but missing VMCS12 in KVM_SET_NESTED_STATE
-      KVM: nVMX: check for invalid hdr.vmx.flags
-      Merge tag 'kvmarm-fixes-5.8-4' of git://git.kernel.org/.../kvmarm/kvmarm into kvm-master
-
-Wanpeng Li (2):
-      KVM: LAPIC: Prevent setting the tscdeadline timer if the lapic is hw disabled
-      KVM: SVM: Fix disable pause loop exit/pause filtering capability on SVM
-
-Will Deacon (1):
-      KVM: arm64: Don't inherit exec permission across page-table levels
-
- arch/arm64/include/asm/kvm_host.h                  | 11 ++++--
- arch/arm64/kvm/mmu.c                               | 11 +++---
- arch/x86/kvm/lapic.c                               |  2 +-
- arch/x86/kvm/svm/svm.c                             |  9 +++--
- arch/x86/kvm/vmx/nested.c                          | 16 +++++++--
- arch/x86/kvm/vmx/nested.h                          |  5 +++
- .../kvm/x86_64/vmx_set_nested_state_test.c         | 42 +++++++++++++++++-----
- 7 files changed, 72 insertions(+), 24 deletions(-)
+diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
+index bab87e47b238..3c44f1d2802a 100644
+--- a/drivers/scsi/qla4xxx/ql4_os.c
++++ b/drivers/scsi/qla4xxx/ql4_os.c
+@@ -1254,7 +1254,7 @@ static int qla4xxx_get_host_stats(struct Scsi_Host *shost, char *buf, int len)
+ 			le64_to_cpu(ql_iscsi_stats->iscsi_sequence_error);
+ exit_host_stats:
+ 	if (ql_iscsi_stats)
+-		dma_free_coherent(&ha->pdev->dev, host_stats_size,
++		dma_free_coherent(&ha->pdev->dev, stats_size,
+ 				  ql_iscsi_stats, iscsi_stats_dma);
+ 
+ 	ql4_printk(KERN_INFO, ha, "%s: Get host stats done\n",
+-- 
+2.25.1
 
