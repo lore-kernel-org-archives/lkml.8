@@ -2,153 +2,304 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3134C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 08:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A679EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 09:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B40DF2075A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 08:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D697206F6
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 09:07:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pCo6Yays"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="AbZWqsMz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgHBIvz (ORCPT
+        id S1727914AbgHBJHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 04:51:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43234 "EHLO
+        Sun, 2 Aug 2020 05:07:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725819AbgHBIvz (ORCPT
+        with ESMTP id S1725882AbgHBJHC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 04:51:55 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07F14C06174A;
-        Sun,  2 Aug 2020 01:51:54 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id a26so9777064ejc.2;
-        Sun, 02 Aug 2020 01:51:54 -0700 (PDT)
+        Sun, 2 Aug 2020 05:07:02 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A150DC06174A
+        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 02:07:02 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id y206so6335367pfb.10
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 02:07:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:from:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zZ8TImNdC9DtEEprdQ1tyd5gm6hken4wBCiy5wzrb4A=;
-        b=pCo6Yaysv4klGIy5rsACwX8oOfLKJhzhtZwdDJCYSWAqyJbk+q+e+LNZim+g3mJTzd
-         HzjMj1/GPAtFaoPDlzYHU8EcOWFhc1LzfvuTABr8fhrkI+g2oEMi3GLWckNeNJ5rJRtp
-         HDviG5ZBIXw2fkkk1MwvEymHqIPMZZNE51rPKJbn6Q1hLtuqnGYwybsI+PzJabQOMfx3
-         1C0qFKybxz0BGIT7bRQQ7mo5t64+tx5wIZWb0rF76G87cq16TVziDhLR6t9Xyfn171+Y
-         BW2bgQf6DpJfE2HnjcDVnm7kpS10hb3AIsoaFklkYtA9MTLFtsxrwUNdc1aKp6puTOub
-         jmrw==
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IwkEo+Y+nNktkFgA0PKMVU3fk9mleArWbJu+Ey7ijyo=;
+        b=AbZWqsMz+j4O0ISeWj16aznaw7YuLorvfMagV0vvoXCz7Qki3G7lBG1Om+DNv2g03i
+         O7kWLhzuw3asVdVpFKOIdrE6Yf9PpzHzjIg7OMp1NtRZ5LXPpmv1j4WcBj8WXniim4CH
+         U3RYWEiOgKSnYWk7IjIpBeU9NzlJ/JCKdZnZhigjnsqqSsCiUa8i/TegWAyCfVMzt6UZ
+         Ln0rojcH8rmbVzkmj+Gb4nD/xeVUlJNIG+7CnEFjlFDEkzwL7sZ45LnB4sniA0NbFRmS
+         9pHGm/fxE2KHOwReZNWVFTn4vdHjfFSJswfGYA3Jz/fWyMKAtwv586SbRQFtBhcrL8Xy
+         dxiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=zZ8TImNdC9DtEEprdQ1tyd5gm6hken4wBCiy5wzrb4A=;
-        b=MCSKKCb9Bc06UdbPwhGkDqSEtCJnc7zqHkPquUzfC6nW6CrlzVDqKfT7bvSP6Ck53n
-         IkOinyTNYSghLgS/YaV7EE3lVJIF3QgL9NuysGuFJKgLmKXW3tMvYuLlF0K95zZwgc/E
-         EqnAuJO3deDIAHpgZnESzMsJsJrzMReBqopoOKG0suhVdy2Gcx/YejM6okQBj+qH2n6i
-         fAkYTcJ+Xw05zVN61NJTBSjsZa1kb1RIptR4MWpOAcUKovvU/UM8LQg81b2eADBPlQyM
-         mB5hlBN2DO0zZa47emMA8In1l8+JGbuAErHgIERKWhcQc4arSlCU7jfuTGIFomzu7F0t
-         mVTA==
-X-Gm-Message-State: AOAM5301Nzv5M3Gi+6Hoz/HqKLCiW8VoxH1i2XFul0p8uUPuxzonLPNU
-        xNdph+WxXM8pN7NiQhzfmhopC5W4
-X-Google-Smtp-Source: ABdhPJxQeBQPFFAeZ9ARR6t9KkIrZgezIGpEUsQxTMb9+Q+unlEWGSkcA58HIgKYpZaX/XGboVbX7w==
-X-Received: by 2002:a17:906:2542:: with SMTP id j2mr11380873ejb.442.1596358313055;
-        Sun, 02 Aug 2020 01:51:53 -0700 (PDT)
-Received: from [192.168.43.215] ([5.100.193.69])
-        by smtp.gmail.com with ESMTPSA id rv14sm12896267ejb.33.2020.08.02.01.51.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Aug 2020 01:51:52 -0700 (PDT)
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <12375b7baa741f0596d54eafc6b1cfd2489dd65a.1579553271.git.asml.silence@gmail.com>
- <20200130165425.GA8872@infradead.org>
- <0618f315-7061-c3fd-15d3-c19cea48cc4c@gmail.com>
- <20200801174110.GA8535@infradead.org>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Subject: Re: [PATCH] splice: direct call for default_file_splice*()
-Message-ID: <7eb5960a-4e92-a479-127d-6a0462e43e55@gmail.com>
-Date:   Sun, 2 Aug 2020 11:49:54 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IwkEo+Y+nNktkFgA0PKMVU3fk9mleArWbJu+Ey7ijyo=;
+        b=Ab9m+5I44CTfxXKkDq96WvAkG6UY5eg6RO73QHJM7R77241rokzublwCUk3mvsBcJ5
+         6ICFZukUfbArcRlCrtwD67Qb5yQgP6vWbYpguQV57xtEgQOeLQekTRmTdFtDMi0rM+TE
+         hUk432lkzmGynU6sBbIg7uHByF1OegWDDlYuPTIN7bS/qDG9ne4fgdvxQ/4sHRCYoFN5
+         +8Gn5adW37JGvIx3PsKZc/VnhRq4t9wwoMWE0bTKW64Wg/PsBOPBtXFE4Aib6VY3tOue
+         UlDLZbEu7w3OUeyIZ4xKhNZa5rpmrfU4xVKrVuf8FHNgVTlNI+rlGGzFDrHz50Nbsma5
+         TmMQ==
+X-Gm-Message-State: AOAM531c/0Glipd5TSR9kOx8KN1Afag9drsO6wAnuvkOO1CpNEthpzp6
+        5QNkGWihwb10zrkIZvXQeyWCMw==
+X-Google-Smtp-Source: ABdhPJyqjWG+ZsxkjYQTgNv9OyVN0bFZwRKSbGlXZC1lo/gaUPCB5JCRfZow/zJy6xAFDq9uRIElmg==
+X-Received: by 2002:a62:15d3:: with SMTP id 202mr10939698pfv.326.1596359221658;
+        Sun, 02 Aug 2020 02:07:01 -0700 (PDT)
+Received: from localhost.localdomain (36-239-219-92.dynamic-ip.hinet.net. [36.239.219.92])
+        by smtp.gmail.com with ESMTPSA id e125sm11041630pfh.69.2020.08.02.02.06.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Aug 2020 02:07:00 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Daniel Jeong <gshark.jeong@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH] regulator: lp8755: Get rid of lp8755_read/lp8755_write/lp8755_update_bits
+Date:   Sun,  2 Aug 2020 17:06:38 +0800
+Message-Id: <20200802090638.380589-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200801174110.GA8535@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/08/2020 20:41, Christoph Hellwig wrote:
-> On Sat, Aug 01, 2020 at 01:12:22PM +0300, Pavel Begunkov wrote:
->> On 30/01/2020 19:54, Christoph Hellwig wrote:
->>> On Mon, Jan 20, 2020 at 11:49:46PM +0300, Pavel Begunkov wrote:
->>>> Indirect calls could be very expensive nowadays, so try to use direct calls
->>>> whenever possible.
->>
->> Hah, I'm surprised to find it as
->> 00c285d0d0fe4 ("fs: simplify do_splice_from").
->>
->> Christoph, even though this one is not a big deal, I'm finding the
->> practice of taking others patches and silently sending them as yours
->> own in general disgusting. Just for you to know.
-> 
-> Err, what makes you think I took your patch vs just not remembering
-> and pointlessly doing the same cleanup again?  If I had rembered your
-> patch I would have just added to the series with your credit as I've
-> done for plenty other patches..
+Just use regmap_read/regmap_write/regmap_update_bits instead.
 
-I have no intention of picking it to pieces or something, it doesn't
-worth our time, and glad that's by accident, but you may guess how it
-looks -- you commented on it, and after not being picked, the patch
-reappears slightly rebranded.
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+ drivers/regulator/lp8755.c | 82 ++++++++++----------------------------
+ 1 file changed, 21 insertions(+), 61 deletions(-)
 
+diff --git a/drivers/regulator/lp8755.c b/drivers/regulator/lp8755.c
+index 4291df077c39..8cc9963023f2 100644
+--- a/drivers/regulator/lp8755.c
++++ b/drivers/regulator/lp8755.c
+@@ -49,53 +49,15 @@ struct lp8755_chip {
+ 	struct regulator_dev *rdev[LP8755_BUCK_MAX];
+ };
+ 
+-/**
+- *lp8755_read : read a single register value from lp8755.
+- *@pchip : device to read from
+- *@reg   : register to read from
+- *@val   : pointer to store read value
+- */
+-static int lp8755_read(struct lp8755_chip *pchip, unsigned int reg,
+-		       unsigned int *val)
+-{
+-	return regmap_read(pchip->regmap, reg, val);
+-}
+-
+-/**
+- *lp8755_write : write a single register value to lp8755.
+- *@pchip : device to write to
+- *@reg   : register to write to
+- *@val   : value to be written
+- */
+-static int lp8755_write(struct lp8755_chip *pchip, unsigned int reg,
+-			unsigned int val)
+-{
+-	return regmap_write(pchip->regmap, reg, val);
+-}
+-
+-/**
+- *lp8755_update_bits : set the values of bit fields in lp8755 register.
+- *@pchip : device to read from
+- *@reg   : register to update
+- *@mask  : bitmask to be changed
+- *@val   : value for bitmask
+- */
+-static int lp8755_update_bits(struct lp8755_chip *pchip, unsigned int reg,
+-			      unsigned int mask, unsigned int val)
+-{
+-	return regmap_update_bits(pchip->regmap, reg, mask, val);
+-}
+-
+ static int lp8755_buck_enable_time(struct regulator_dev *rdev)
+ {
+ 	int ret;
+ 	unsigned int regval;
+ 	enum lp8755_bucks id = rdev_get_id(rdev);
+-	struct lp8755_chip *pchip = rdev_get_drvdata(rdev);
+ 
+-	ret = lp8755_read(pchip, 0x12 + id, &regval);
++	ret = regmap_read(rdev->regmap, 0x12 + id, &regval);
+ 	if (ret < 0) {
+-		dev_err(pchip->dev, "i2c access error %s\n", __func__);
++		dev_err(&rdev->dev, "i2c access error %s\n", __func__);
+ 		return ret;
+ 	}
+ 	return (regval & 0xff) * 100;
+@@ -115,17 +77,17 @@ static int lp8755_buck_set_mode(struct regulator_dev *rdev, unsigned int mode)
+ 		break;
+ 	case REGULATOR_MODE_NORMAL:
+ 		/* enable automatic pwm/pfm mode */
+-		ret = lp8755_update_bits(pchip, 0x08 + id, 0x20, 0x00);
++		ret = regmap_update_bits(rdev->regmap, 0x08 + id, 0x20, 0x00);
+ 		if (ret < 0)
+ 			goto err_i2c;
+ 		break;
+ 	case REGULATOR_MODE_IDLE:
+ 		/* enable automatic pwm/pfm/lppfm mode */
+-		ret = lp8755_update_bits(pchip, 0x08 + id, 0x20, 0x20);
++		ret = regmap_update_bits(rdev->regmap, 0x08 + id, 0x20, 0x20);
+ 		if (ret < 0)
+ 			goto err_i2c;
+ 
+-		ret = lp8755_update_bits(pchip, 0x10, 0x01, 0x01);
++		ret = regmap_update_bits(rdev->regmap, 0x10, 0x01, 0x01);
+ 		if (ret < 0)
+ 			goto err_i2c;
+ 		break;
+@@ -135,12 +97,12 @@ static int lp8755_buck_set_mode(struct regulator_dev *rdev, unsigned int mode)
+ 		regbval = (0x01 << id);
+ 	}
+ 
+-	ret = lp8755_update_bits(pchip, 0x06, 0x01 << id, regbval);
++	ret = regmap_update_bits(rdev->regmap, 0x06, 0x01 << id, regbval);
+ 	if (ret < 0)
+ 		goto err_i2c;
+ 	return ret;
+ err_i2c:
+-	dev_err(pchip->dev, "i2c access error %s\n", __func__);
++	dev_err(&rdev->dev, "i2c access error %s\n", __func__);
+ 	return ret;
+ }
+ 
+@@ -149,9 +111,8 @@ static unsigned int lp8755_buck_get_mode(struct regulator_dev *rdev)
+ 	int ret;
+ 	unsigned int regval;
+ 	enum lp8755_bucks id = rdev_get_id(rdev);
+-	struct lp8755_chip *pchip = rdev_get_drvdata(rdev);
+ 
+-	ret = lp8755_read(pchip, 0x06, &regval);
++	ret = regmap_read(rdev->regmap, 0x06, &regval);
+ 	if (ret < 0)
+ 		goto err_i2c;
+ 
+@@ -159,7 +120,7 @@ static unsigned int lp8755_buck_get_mode(struct regulator_dev *rdev)
+ 	if (regval & (0x01 << id))
+ 		return REGULATOR_MODE_FAST;
+ 
+-	ret = lp8755_read(pchip, 0x08 + id, &regval);
++	ret = regmap_read(rdev->regmap, 0x08 + id, &regval);
+ 	if (ret < 0)
+ 		goto err_i2c;
+ 
+@@ -171,7 +132,7 @@ static unsigned int lp8755_buck_get_mode(struct regulator_dev *rdev)
+ 	return REGULATOR_MODE_NORMAL;
+ 
+ err_i2c:
+-	dev_err(pchip->dev, "i2c access error %s\n", __func__);
++	dev_err(&rdev->dev, "i2c access error %s\n", __func__);
+ 	return 0;
+ }
+ 
+@@ -180,7 +141,6 @@ static int lp8755_buck_set_ramp(struct regulator_dev *rdev, int ramp)
+ 	int ret;
+ 	unsigned int regval = 0x00;
+ 	enum lp8755_bucks id = rdev_get_id(rdev);
+-	struct lp8755_chip *pchip = rdev_get_drvdata(rdev);
+ 
+ 	/* uV/us */
+ 	switch (ramp) {
+@@ -209,17 +169,17 @@ static int lp8755_buck_set_ramp(struct regulator_dev *rdev, int ramp)
+ 		regval = 0x00;
+ 		break;
+ 	default:
+-		dev_err(pchip->dev,
++		dev_err(&rdev->dev,
+ 			"Not supported ramp value %d %s\n", ramp, __func__);
+ 		return -EINVAL;
+ 	}
+ 
+-	ret = lp8755_update_bits(pchip, 0x07 + id, 0x07, regval);
++	ret = regmap_update_bits(rdev->regmap, 0x07 + id, 0x07, regval);
+ 	if (ret < 0)
+ 		goto err_i2c;
+ 	return ret;
+ err_i2c:
+-	dev_err(pchip->dev, "i2c access error %s\n", __func__);
++	dev_err(&rdev->dev, "i2c access error %s\n", __func__);
+ 	return ret;
+ }
+ 
+@@ -278,7 +238,7 @@ static int lp8755_init_data(struct lp8755_chip *pchip)
+ 	struct lp8755_platform_data *pdata = pchip->pdata;
+ 
+ 	/* read back  muti-phase configuration */
+-	ret = lp8755_read(pchip, 0x3D, &regval);
++	ret = regmap_read(pchip->regmap, 0x3D, &regval);
+ 	if (ret < 0)
+ 		goto out_i2c_error;
+ 	pchip->mphase = regval & 0x0F;
+@@ -356,11 +316,11 @@ static irqreturn_t lp8755_irq_handler(int irq, void *data)
+ 	struct lp8755_chip *pchip = data;
+ 
+ 	/* read flag0 register */
+-	ret = lp8755_read(pchip, 0x0D, &flag0);
++	ret = regmap_read(pchip->regmap, 0x0D, &flag0);
+ 	if (ret < 0)
+ 		goto err_i2c;
+ 	/* clear flag register to pull up int. pin */
+-	ret = lp8755_write(pchip, 0x0D, 0x00);
++	ret = regmap_write(pchip->regmap, 0x0D, 0x00);
+ 	if (ret < 0)
+ 		goto err_i2c;
+ 
+@@ -377,11 +337,11 @@ static irqreturn_t lp8755_irq_handler(int irq, void *data)
+ 		}
+ 
+ 	/* read flag1 register */
+-	ret = lp8755_read(pchip, 0x0E, &flag1);
++	ret = regmap_read(pchip->regmap, 0x0E, &flag1);
+ 	if (ret < 0)
+ 		goto err_i2c;
+ 	/* clear flag register to pull up int. pin */
+-	ret = lp8755_write(pchip, 0x0E, 0x00);
++	ret = regmap_write(pchip->regmap, 0x0E, 0x00);
+ 	if (ret < 0)
+ 		goto err_i2c;
+ 
+@@ -423,7 +383,7 @@ static int lp8755_int_config(struct lp8755_chip *pchip)
+ 		return 0;
+ 	}
+ 
+-	ret = lp8755_read(pchip, 0x0F, &regval);
++	ret = regmap_read(pchip->regmap, 0x0F, &regval);
+ 	if (ret < 0) {
+ 		dev_err(pchip->dev, "i2c access error %s\n", __func__);
+ 		return ret;
+@@ -502,7 +462,7 @@ static int lp8755_probe(struct i2c_client *client,
+ err:
+ 	/* output disable */
+ 	for (icnt = 0; icnt < LP8755_BUCK_MAX; icnt++)
+-		lp8755_write(pchip, icnt, 0x00);
++		regmap_write(pchip->regmap, icnt, 0x00);
+ 
+ 	return ret;
+ }
+@@ -513,7 +473,7 @@ static int lp8755_remove(struct i2c_client *client)
+ 	struct lp8755_chip *pchip = i2c_get_clientdata(client);
+ 
+ 	for (icnt = 0; icnt < LP8755_BUCK_MAX; icnt++)
+-		lp8755_write(pchip, icnt, 0x00);
++		regmap_write(pchip->regmap, icnt, 0x00);
+ 
+ 	return 0;
+ }
 -- 
-Pavel Begunkov
+2.25.1
+
