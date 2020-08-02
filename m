@@ -2,136 +2,129 @@ Return-Path: <SRS0=HA/2=BM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9127EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 18:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AB0C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 18:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EFB420738
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 18:38:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="o30OIc8l"
+	by mail.kernel.org (Postfix) with ESMTP id 97BFD20738
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 18:39:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbgHBSig (ORCPT
+        id S1727855AbgHBSjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 14:38:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725910AbgHBSif (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 14:38:35 -0400
-Received: from forward500o.mail.yandex.net (forward500o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::610])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39FFAC06174A;
-        Sun,  2 Aug 2020 11:38:34 -0700 (PDT)
-Received: from mxback7o.mail.yandex.net (mxback7o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::21])
-        by forward500o.mail.yandex.net (Yandex) with ESMTP id 69E4460054;
-        Sun,  2 Aug 2020 21:38:32 +0300 (MSK)
-Received: from localhost (localhost [::1])
-        by mxback7o.mail.yandex.net (mxback/Yandex) with ESMTP id ZYUtAIGnwd-cVDSDtTX;
-        Sun, 02 Aug 2020 21:38:31 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1596393511;
-        bh=9Xpoz3PFFbPffZdHaYnv+jiyMQH/CQukz3eO2Np1tvY=;
-        h=Message-Id:Cc:Subject:Date:References:To:From;
-        b=o30OIc8ljvbdNE8zTXLiQjS5DpI1OdstfFF8re7kjUpkeTWNeaCspMlH8EUwjmCmP
-         a09+5ilYEYN8zazr7aK4mrzdfrOBTqvjjbWOrY3CNy1R8uO4DXEVnXiXe3eJAD9+u8
-         KQvtevP/SQuvV6QTyQutUyvEpdWU+0DeFiHskcTQ=
-Authentication-Results: mxback7o.mail.yandex.net; dkim=pass header.i=@yandex.ru
-Received: by myt1-5b550442eff4.qloud-c.yandex.net with HTTP;
-        Sun, 02 Aug 2020 21:38:31 +0300
-From:   Evgeny Novikov <novikov@ispras.ru>
-Envelope-From: eugenenovikov@yandex.ru
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "ldv-project@linuxtesting.org" <ldv-project@linuxtesting.org>
-References: <20200723170453.432-1-novikov@ispras.ru> <CA+V-a8uNfscxiM1fMjfdvZstZkkzxW41p40jpBXT3NeyiS9-Qw@mail.gmail.com>
-         <20927111595619342@mail.yandex.ru> <CA+V-a8tUmMnb8x=GPXJ8QGLJg5qGP+DP+F9EbUrDfUbrxWnkag@mail.gmail.com>
-Subject: Re: [PATCH] media: davinci: vpif_capture: fix potential double free
+        Sun, 2 Aug 2020 14:39:10 -0400
+Received: from mga03.intel.com ([134.134.136.65]:16182 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725910AbgHBSjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 14:39:09 -0400
+IronPort-SDR: oO+tuAyZCU1x0YSqJlp4owO+BLNTPA8CGqkpyZCOkUawgD5b86WiUpjY/nVSDBtCb8B3LdZTql
+ sWDHB43YArjw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="151982355"
+X-IronPort-AV: E=Sophos;i="5.75,427,1589266800"; 
+   d="scan'208";a="151982355"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2020 11:39:09 -0700
+IronPort-SDR: sFpbEWvzBHxVBB2Ys77Fjiu1nULfsafNPVgl4o6gwfpRMaQtuDyVTFR3YTTRLzlBeNBMnjqFZV
+ CjzkP/JvmVyA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,427,1589266800"; 
+   d="scan'208";a="291828968"
+Received: from fchen82-mobl1.amr.corp.intel.com ([10.213.183.84])
+  by orsmga006.jf.intel.com with ESMTP; 02 Aug 2020 11:39:08 -0700
+Message-ID: <24a3011a9004bdbd7a37c029f9c2153f3db61476.camel@linux.intel.com>
+Subject: Re: [PATCH v4 0/2] cpufreq: intel_pstate: Implement passive mode
+ with HWP enabled
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     'Linux Documentation' <linux-doc@vger.kernel.org>,
+        'LKML' <linux-kernel@vger.kernel.org>,
+        'Peter Zijlstra' <peterz@infradead.org>,
+        'Giovanni Gherdovich' <ggherdovich@suse.cz>,
+        'Francisco Jerez' <francisco.jerez.plata@intel.com>,
+        'Linux PM' <linux-pm@vger.kernel.org>,
+        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
+Date:   Sun, 02 Aug 2020 11:39:08 -0700
+In-Reply-To: <000301d668d5$45c10a10$d1431e30$@net>
+References: <4981405.3kqTVLv5tO@kreacher> <1709487.Bxjb1zNRZM@kreacher>
+         <13207937.r2GEYrEf4f@kreacher>
+         <6febe0592d1830dac04aab281f66b47498dda887.camel@linux.intel.com>
+         <000301d668d5$45c10a10$d1431e30$@net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date:   Sun, 02 Aug 2020 21:38:31 +0300
-Message-Id: <220911596048246@mail.yandex.ru>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lad,
+On Sun, 2020-08-02 at 07:00 -0700, Doug Smythies wrote:
+> On 2020.08.01 09:40 Srinivas Pandruvada wrote:
+> > > On Monday, July 27, 2020 5:13:40 PM CEST Rafael J. Wysocki wrote:
+> > > > On Thursday, July 16, 2020 7:37:04 PM CEST Rafael J. Wysocki
+> > > > wrote:
+> > > > > This really is a v2 of this patch:
+> > > > > 
+> > > > > https://patchwork.kernel.org/patch/11663271/
+> > > > > 
+> > > > > with an extra preceding cleanup patch to avoid making
+> > > > > unrelated
+> > > > > changes in the
+> > > > > [2/2].
+> > I applied this series along with
+> > [PATCH] cpufreq: intel_pstate: Fix EPP setting via sysfs in active
+> > mode
+> > on 5.8 latest master (On top of raw epp patchset).
+> 
+> Hi Srinivas,
+Hi Doug,
 
-25.07.2020, 01:06, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>:
-> Hi Evgeny,
->
-> On Fri, Jul 24, 2020 at 9:00 PM Evgeny Novikov <novikov@ispras.ru> wrote:
->>  Hi Lad,
->>
->>  Yet again I can not demonstrate you a nice error trace corresponding to the bug fixed by the patch. Indeed, there is a branch in vpif_probe() that explicitly invokes vpif_probe_complete() and the patch targets the possible issue that can happen during this.
->>
->>  When I developed the patch I saw on vpif_display.ko. It looks very similar regarding things touched by the patch. In particular, it does not free vpif_obj.sd in its vpif_probe_complete(). But now I see that it does this in vpif_remove()!
->
-> Makes sense.
->
->>  Do you think that vpif_capture.ko should do the same? If so, I guess that I should fix the patch appropriately since likely it just replaces one (very rare) bug with another one (on a typical execution path).
->
-> Yes it should.
+> 
+> Would you be kind enough to provide a "git log --oneline" output
+> of what you did.
 
-vpif_remove() from vpif_capture.ko already both frees vpif_obj.sd and unregisters the V4L2 device. So, there is no need to fix the patch.
+69dd9b2b11cd (HEAD -> 5-9-devel) cpufreq: intel_pstate: Implement
+passive mode with HWP enabled
+63efaa01b06a cpufreq: intel_pstate: Fix EPP setting via sysfs in active
+mode
+e11e0a2edf83 cpufreq: intel_pstate: Rearrange the storing of new EPP
+values
+93c3fd6a315c cpufreq: intel_pstate: Avoid enabling HWP if EPP is not
+supported
+7cef1dd371c3 cpufreq: intel_pstate: Clean up aperf_mperf_shift
+description
+a3248d8d3a11 cpufreq: intel_pstate: Supply struct attribute description
+for get_aperf_mperf_shift()
+f52b6b075b07 cpufreq: intel_pstate: Fix static checker warning for epp
+variable
+4a59d6be0774 cpufreq: intel_pstate: Allow raw energy performance
+preference value
+7b34b5acdcc6 cpufreq: intel_pstate: Allow enable/disable energy
+efficiency
+ac3a0c847296 (origin/master, origin/HEAD, master) Merge
+git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
 
-BTW, other drivers, e.g. drivers/media/platform/renesas-ceu.c, do not clean up memory allocated by probe within v4l2_async_notifier_operations.complete as well. 
+Thanks,
+Srinivas
 
---
-Best regards,
-Evgeny Novikov
+> 
+> I have been trying unsuccessfully to apply the patches,
+> so somewhere I obviously missed something.
+> 
+> > When intel_pstate=passive from kernel command line then it is fine,
+> > no
+> > crash. But switch dynamically, crashed:
+> 
+> I'll try to repeat, if I can get an actual kernel.
+> 
+> > Attached crash.txt. I may need to try your linux-pm tree.
+> 
+> I also tried the linux-pm tree, same.
+> ... Doug
+> 
+> 
 
-> Cheers,
-> --Prabhakar
->
->>  --
->>  Evgeny Novikov
->>  Linux Verification Center, ISP RAS
->>  http://linuxtesting.org
->>
->>  24.07.2020, 17:17, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>:
->>  > Hi Evgeny,
->>  >
->>  > Thank you for the patch.
->>  >
->>  > On Thu, Jul 23, 2020 at 6:04 PM Evgeny Novikov <novikov@ispras.ru> wrote:
->>  >> In case of errors vpif_probe_complete() releases memory for vpif_obj.sd
->>  >> and unregisters the V4L2 device. But then this is done again by
->>  >> vpif_probe() itself. The patch removes the cleaning from
->>  >> vpif_probe_complete().
->>  >>
->>  >> Found by Linux Driver Verification project (linuxtesting.org).
->>  >>
->>  >> Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
->>  >> ---
->>  >> drivers/media/platform/davinci/vpif_capture.c | 2 --
->>  >> 1 file changed, 2 deletions(-)
->>  >>
->>  >> diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/media/platform/davinci/vpif_capture.c
->>  >> index d9ec439faefa..72a0e94e2e21 100644
->>  >> --- a/drivers/media/platform/davinci/vpif_capture.c
->>  >> +++ b/drivers/media/platform/davinci/vpif_capture.c
->>  >> @@ -1482,8 +1482,6 @@ static int vpif_probe_complete(void)
->>  >> /* Unregister video device */
->>  >> video_unregister_device(&ch->video_dev);
->>  >> }
->>  >> - kfree(vpif_obj.sd);
->>  >> - v4l2_device_unregister(&vpif_obj.v4l2_dev);
->>  >
->>  > vpif_probe_complete() is a async callback and probe() should have
->>  > already completed by then.
->>  >
->>  > Cheers,
->>  > --Prabhakar
->>  >
->>  >> return err;
->>  >> }
->>  >> --
->>  >> 2.16.4
