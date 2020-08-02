@@ -6,86 +6,125 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC7AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 15:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18421C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 15:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADAE82075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 15:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E772E20759
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Aug 2020 15:14:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qFPwicu+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="j25VsjmJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbgHBPLy (ORCPT
+        id S1726752AbgHBPOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 11:11:54 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:13707 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725910AbgHBPLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 11:11:53 -0400
+        Sun, 2 Aug 2020 11:14:35 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:42976 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726347AbgHBPOf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 11:14:35 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596381113; h=Date: Message-Id: Cc: To: References:
+ s=smtp; t=1596381274; h=Date: Message-Id: Cc: To: References:
  In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=d3a5n4iRdThXJWDctbyZ9DWtTKYv5w4Rf8p1Jxgt3ac=;
- b=qFPwicu+uNWwsssoRCYUr3Ei2tqNmh4a1/6iJpCKc10ZPEdOgWevwJ6Yp0IBduICi22lpN0U
- 7FcMLP23EqojK3DCpYTWz1w2UDPht+CK0WWrVZeCP4Ljnq74Jfkk3l88tK4uTcmhH0D2Q+t7
- wkZG4fAsy/zyEu7t4EzAtzJvGZA=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ Content-Type: Sender; bh=MN8hv/xfsAGGdQUHt7lfq4izDzLjyVfS5K7dU+XV1Pw=;
+ b=j25VsjmJPt1T88Eubpc0tB3bG6C0GdPPwY5nL6gP/kPxb52tBNn0Rza4Q1qXaCvSB/iHdP6L
+ MAescyazTX2kWgzGUfxybrh5MnVULso64Fh1SDr2rGxFd6ZgwzBIrciGjRUVkqRdXdxt2fu7
+ rCJBrtiVdnN3726H8QN1lZlm/QE=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-east-1.postgun.com with SMTP id
- 5f26d7b9eecfc978d39a079a (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 02 Aug 2020 15:11:53
+ smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
+ 5f26d846849144fbcb489de1 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 02 Aug 2020 15:14:14
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D54C9C433C9; Sun,  2 Aug 2020 15:11:51 +0000 (UTC)
+        id A7508C433CA; Sun,  2 Aug 2020 15:14:14 +0000 (UTC)
 Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C3DBEC433C9;
-        Sun,  2 Aug 2020 15:11:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C3DBEC433C9
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B6038C433C6;
+        Sun,  2 Aug 2020 15:14:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B6038C433C6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] mt7601u: add missing release on skb in
- mt7601u_mcu_msg_send
+Subject: Re: [PATCH v1] rt2x00: pci: use generic power management
 From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200718052630.11032-1-navid.emamdoost@gmail.com>
-References: <20200718052630.11032-1-navid.emamdoost@gmail.com>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     Jakub Kicinski <kubakici@wp.pl>,
+In-Reply-To: <20200717110928.454867-1-vaibhavgupta40@gmail.com>
+References: <20200717110928.454867-1-vaibhavgupta40@gmail.com>
+To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Stanislaw Gruszka <stf_xl@wp.pl>,
+        Helmut Schaa <helmut.schaa@googlemail.com>,
+        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        emamd001@umn.edu, Navid Emamdoost <navid.emamdoost@gmail.com>
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
 User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200802151151.D54C9C433C9@smtp.codeaurora.org>
-Date:   Sun,  2 Aug 2020 15:11:51 +0000 (UTC)
+Message-Id: <20200802151414.A7508C433CA@smtp.codeaurora.org>
+Date:   Sun,  2 Aug 2020 15:14:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Navid Emamdoost <navid.emamdoost@gmail.com> wrote:
+Vaibhav Gupta <vaibhavgupta40@gmail.com> wrote:
 
-> In the implementation of mt7601u_mcu_msg_send(), skb is supposed to be
-> consumed on all execution paths. Release skb before returning if
-> test_bit() fails.
+> Drivers using legacy PM have to manage PCI states and device's PM states
+> themselves. They also need to take care of configuration registers.
 > 
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> Acked-by: Jakub Kicinski <kubakici@wp.pl>
+> With improved and powerful support of generic PM, PCI Core takes care of
+> above mentioned, device-independent, jobs.
+> 
+> The callbacks make use of PCI helper functions like
+> pci_save/restore_state(), pci_enable/disable_device() and
+> pci_set_power_state() to do required operations. In generic mode, they are
+> no longer needed.
+> 
+> Change function parameter in both .suspend() and .resume() to
+> "struct device*" type. Use dev_get_drvdata() to get drv data.
+> 
+> The .suspend() callback is invoking rt2x00lib_suspend() which needs to be
+> modified as generic rt2x00pci_suspend() has no pm_message_t type argument,
+> passed to it, which is required by it according to its declaration.
+> Although this variable remained unused in the function body. Hence, remove
+> it from the function definition & declaration.
+> 
+> rt2x00lib_suspend() is also invoked by rt2x00usb_suspend() and
+> rt2x00soc_suspend(). Thus, modify the functional call accordingly in their
+> function body.
+> 
+> Earlier, .suspend() & .resume() were exported and were used by the
+> following drivers:
+>     - drivers/net/wireless/ralink/rt2x00/rt2400pci.c
+>     - drivers/net/wireless/ralink/rt2x00/rt2500pci.c
+>     - drivers/net/wireless/ralink/rt2x00/rt2800pci.c
+>     - drivers/net/wireless/ralink/rt2x00/rt61pci.c
+> 
+> Now, we only need to bind "struct dev_pm_ops" variable to
+> "struct pci_driver". Thus, make the callbacks static. Declare an
+> "extern const struct dev_pm_ops" variable and bind PM callbacks to it. Now,
+> export the variable instead and use it in respective drivers.
+> 
+> Compile-tested only.
+> 
+> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 
 Patch applied to wireless-drivers-next.git, thanks.
 
-880e21490be6 mt7601u: add missing release on skb in mt7601u_mcu_msg_send
+560a218d1ce6 rt2x00: pci: use generic power management
 
 -- 
-https://patchwork.kernel.org/patch/11671657/
+https://patchwork.kernel.org/patch/11669881/
 
 https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
