@@ -4,55 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8749C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F37C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9123320738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDD5420738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457331;
-	bh=WyKSjpajL0Wrn6EPgmwu9jvodbEDJzLgR334xRdaG9Y=;
+	s=default; t=1596457340;
+	bh=jMTM9Awye6xGmKCtwUVQ9PWUR+npLdpUHGaUO7Onh5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jLxB/E25v09eNKrCp8fEYVfJGqLYiqMwdfq5hjdWPFwuNn2czNCO/2sPwM5N4xSFs
-	 nRNRJVS9PTxyxBZe1fK1AxplhVqijYdH7dWM1JE6F6sbUjavzIrL4j6MIcJPAAO6Rl
-	 7yLQJcov91kRC+n9t4lCwuVtJUz+YGP9rNdabqsk=
+	b=bdUWd6BQevLGLU5RMetGPIsTo59y1jgQWpvr7SEQZUJetrBSv4q/z8iKO3iyUWhLo
+	 auwf59gUqq6dUmDh9pB5CSlGFxm41J1R1C7mRhr58RFjDtjJWYopGpQDpeiRg9Aecx
+	 GWP/5iHlZCcQd5vf22O4i2/32pOdCkLjEm0q2Lyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgHCMWF (ORCPT
+        id S1726548AbgHCMWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:22:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45296 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:22:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726864AbgHCMVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:21:52 -0400
+        id S1726823AbgHCMWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:22:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2DAD204EC;
-        Mon,  3 Aug 2020 12:21:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19E4B20738;
+        Mon,  3 Aug 2020 12:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457310;
-        bh=WyKSjpajL0Wrn6EPgmwu9jvodbEDJzLgR334xRdaG9Y=;
+        s=default; t=1596457327;
+        bh=jMTM9Awye6xGmKCtwUVQ9PWUR+npLdpUHGaUO7Onh5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UF+Co8mkC219o6WlCcAIOEsUOd75KF30qrmIYnSR5VS6JjcZhwyozDFXxkkEBimbi
-         YR34oyHm46wokmb2FkbKQoFiSYoLrpTIAKkJNKoR+MR3aIuAqDqipE3Vf/4FgVY1cy
-         kHx0siLIsJBJsxTLZfxOAnv0MstWMrldAowhb0Fg=
+        b=2H3SNZSqIFa8nTrC6+3HDY3/rIecPx6LbYBnD6oU2FDA3VPCJLUk4GhisrHD6XtNi
+         yTDHFcfOaeUHcrxUUuUOSdm4kpxUBgNq8zsPN3LXd1+QB79KGAix4Zy9Md7sztMIjm
+         3G/LC1Gx5fEBDAl4tf8QHl3eqBRUoobRjBcrYhss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amit Klein <aksecurity@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>, Willy Tarreau <w@1wt.eu>
-Subject: [PATCH 5.7 021/120] random32: update the net random state on interrupt and activity
-Date:   Mon,  3 Aug 2020 14:17:59 +0200
-Message-Id: <20200803121903.882259078@linuxfoundation.org>
+        stable@vger.kernel.org, Armas Spann <zappel@retarded.farm>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.7 004/120] ALSA: hda/realtek: enable headset mic of ASUS ROG Zephyrus G15(GA502) series with ALC289
+Date:   Mon,  3 Aug 2020 14:17:42 +0200
+Message-Id: <20200803121903.078117908@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -65,109 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willy Tarreau <w@1wt.eu>
+From: Armas Spann <zappel@retarded.farm>
 
-commit f227e3ec3b5cad859ad15666874405e8c1bbc1d4 upstream.
+commit 4b43d05a1978a93a19374c6e6b817c9c1ff4ba4b upstream.
 
-This modifies the first 32 bits out of the 128 bits of a random CPU's
-net_rand_state on interrupt or CPU activity to complicate remote
-observations that could lead to guessing the network RNG's internal
-state.
+This patch adds support for headset mic to the ASUS ROG Zephyrus
+G15(GA502) notebook series by adding the corresponding
+vendor/pci_device id, as well as adding a new fixup for the used
+realtek ALC289. The fixup stets the correct pin to get the headset mic
+correctly recognized on audio-jack.
 
-Note that depending on some network devices' interrupt rate moderation
-or binding, this re-seeding might happen on every packet or even almost
-never.
-
-In addition, with NOHZ some CPUs might not even get timer interrupts,
-leaving their local state rarely updated, while they are running
-networked processes making use of the random state.  For this reason, we
-also perform this update in update_process_times() in order to at least
-update the state when there is user or system activity, since it's the
-only case we care about.
-
-Reported-by: Amit Klein <aksecurity@gmail.com>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Armas Spann <zappel@retarded.farm>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Willy Tarreau <w@1wt.eu>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20200724140616.298892-1-zappel@retarded.farm
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/random.c  |    1 +
- include/linux/random.h |    3 +++
- kernel/time/timer.c    |    8 ++++++++
- lib/random32.c         |    2 +-
- 4 files changed, 13 insertions(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -1277,6 +1277,7 @@ void add_interrupt_randomness(int irq, i
- 
- 	fast_mix(fast_pool);
- 	add_interrupt_bench(cycles);
-+	this_cpu_add(net_rand_state.s1, fast_pool->pool[cycles & 3]);
- 
- 	if (unlikely(crng_init == 0)) {
- 		if ((fast_pool->count >= 64) &&
---- a/include/linux/random.h
-+++ b/include/linux/random.h
-@@ -11,6 +11,7 @@
- #include <linux/kernel.h>
- #include <linux/list.h>
- #include <linux/once.h>
-+#include <linux/percpu.h>
- 
- #include <uapi/linux/random.h>
- 
-@@ -119,6 +120,8 @@ struct rnd_state {
- 	__u32 s1, s2, s3, s4;
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6118,6 +6118,7 @@ enum {
+ 	ALC269VC_FIXUP_ACER_HEADSET_MIC,
+ 	ALC269VC_FIXUP_ACER_MIC_NO_PRESENCE,
+ 	ALC289_FIXUP_ASUS_G401,
++	ALC289_FIXUP_ASUS_GA502,
+ 	ALC256_FIXUP_ACER_MIC_NO_PRESENCE,
  };
  
-+DECLARE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
-+
- u32 prandom_u32_state(struct rnd_state *state);
- void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
- void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -43,6 +43,7 @@
- #include <linux/sched/debug.h>
- #include <linux/slab.h>
- #include <linux/compat.h>
-+#include <linux/random.h>
- 
- #include <linux/uaccess.h>
- #include <asm/unistd.h>
-@@ -1743,6 +1744,13 @@ void update_process_times(int user_tick)
- 	scheduler_tick();
- 	if (IS_ENABLED(CONFIG_POSIX_TIMERS))
- 		run_posix_cpu_timers();
-+
-+	/* The current CPU might make use of net randoms without receiving IRQs
-+	 * to renew them often enough. Let's update the net_rand_state from a
-+	 * non-constant value that's not affine to the number of calls to make
-+	 * sure it's updated when there's some activity (we don't care in idle).
-+	 */
-+	this_cpu_add(net_rand_state.s1, rol32(jiffies, 24) + user_tick);
- }
- 
- /**
---- a/lib/random32.c
-+++ b/lib/random32.c
-@@ -48,7 +48,7 @@ static inline void prandom_state_selftes
- }
- #endif
- 
--static DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
-+DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
- 
- /**
-  *	prandom_u32_state - seeded pseudo-random number generator.
+@@ -7335,6 +7336,13 @@ static const struct hda_fixup alc269_fix
+ 			{ }
+ 		},
+ 	},
++	[ALC289_FIXUP_ASUS_GA502] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x19, 0x03a11020 }, /* headset mic with jack detect */
++			{ }
++		},
++	},
+ 	[ALC256_FIXUP_ACER_MIC_NO_PRESENCE] = {
+ 		.type = HDA_FIXUP_PINS,
+ 		.v.pins = (const struct hda_pintbl[]) {
+@@ -7526,6 +7534,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1043, 0x1bbd, "ASUS Z550MA", ALC255_FIXUP_ASUS_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1043, 0x1c23, "Asus X55U", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
+ 	SND_PCI_QUIRK(0x1043, 0x1ccd, "ASUS X555UB", ALC256_FIXUP_ASUS_MIC),
++	SND_PCI_QUIRK(0x1043, 0x1e11, "ASUS Zephyrus G15", ALC289_FIXUP_ASUS_GA502),
+ 	SND_PCI_QUIRK(0x1043, 0x1f11, "ASUS Zephyrus G14", ALC289_FIXUP_ASUS_G401),
+ 	SND_PCI_QUIRK(0x1043, 0x3030, "ASUS ZN270IE", ALC256_FIXUP_ASUS_AIO_GPIO2),
+ 	SND_PCI_QUIRK(0x1043, 0x831a, "ASUS P901", ALC269_FIXUP_STEREO_DMIC),
 
 
