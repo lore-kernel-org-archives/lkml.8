@@ -2,54 +2,53 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F41AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69064C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE0DA2177B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CFAE2083B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457755;
-	bh=cBXhftpuqSNUpg2hO4V9WZgyqofKDY4TSpRr8THldk4=;
+	s=default; t=1596457758;
+	bh=lRGvQiX1NE9fADubZkFmjLqelZvyaGRyN7GJQ68Un9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WL+/pi46/8KyZq/7OzOKSO3pBSRlODfYgn1+O38sDjpNLnIMCDr/cqBBuJP1RriLa
-	 gDmze+eR3bCddol8Zmft4lC9PK7PuEwEdkqGNUCKeZjF4bBaM13UHY04/YL8Q/9ad/
-	 HCJNXLJOtiVIpT4QJi0+myyU2fiYAyYBghPLjYFA=
+	b=nJhwvbq/7nSkAI9X9hPM4xmxeVbSm/iBZXNWekMGyF8t6B4o49qHmSutlIbLqTG9L
+	 1U0Pipuwkl4GbyK64XyoRNAWYWvTkS/tAqAGo343AekzsDfDUL2urpJQoBlnepWjqZ
+	 CAU/UX0NSfrhIbNtviZfexER10rf16qFoF0Wsc8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728858AbgHCM3I (ORCPT
+        id S1728298AbgHCM3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:29:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55290 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:29:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727786AbgHCM3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:29:01 -0400
+        id S1728492AbgHCM3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:29:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D022204EC;
-        Mon,  3 Aug 2020 12:28:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4B50204EC;
+        Mon,  3 Aug 2020 12:29:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457739;
-        bh=cBXhftpuqSNUpg2hO4V9WZgyqofKDY4TSpRr8THldk4=;
+        s=default; t=1596457750;
+        bh=lRGvQiX1NE9fADubZkFmjLqelZvyaGRyN7GJQ68Un9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vdu4vBGQ6H3ePHNDY/3aALnlBfzgQh7nwoGhMGNf7p5JhQFykNDiHb1EMkbbRYJRb
-         bEnFhwB/04G56JVH5T5ekqq40E0I1nFQC/F0aaM4OcpZHF5mWg23rALNwG/XF4X2xC
-         LRtsFJew9Sp8SnJJ0Bp6jka0T6HiwOWdPnsQEy2Y=
+        b=gjY9dRirc0EI0hGckUJ8f+ZLmbOHpAzcj1FDN4WgQiEQCd8rxR1hus8Lo69JMEuV9
+         GlvpEwVxcv2F1rd/K0kqf20vYco9WM7WcK15CNTMKj3eDSCZj1HK+6sJPiM8U/rYs3
+         vvq+rDBTEc8WMzlZPUJta9Yt6Sb6aDk0+hz4u9NA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jake Lawrence <lawja@fb.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 55/90] mlx4: disable device on shutdown
-Date:   Mon,  3 Aug 2020 14:19:17 +0200
-Message-Id: <20200803121900.288365745@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Emese Revfy <re.emese@gmail.com>,
+        Kees Cook <keescook@chromium.org>, Willy Tarreau <w@1wt.eu>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 30/90] random32: remove net_rand_state from the latent entropy gcc plugin
+Date:   Mon,  3 Aug 2020 14:18:52 +0200
+Message-Id: <20200803121859.081084452@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -62,74 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 3cab8c65525920f00d8f4997b3e9bb73aecb3a8e ]
+commit 83bdc7275e6206f560d247be856bceba3e1ed8f2 upstream.
 
-It appears that not disabling a PCI device on .shutdown may lead to
-a Hardware Error with particular (perhaps buggy) BIOS versions:
+It turns out that the plugin right now ends up being really unhappy
+about the change from 'static' to 'extern' storage that happened in
+commit f227e3ec3b5c ("random32: update the net random state on interrupt
+and activity").
 
-    mlx4_en: eth0: Close port called
-    mlx4_en 0000:04:00.0: removed PHC
-    reboot: Restarting system
-    {1}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 1
-    {1}[Hardware Error]: event severity: fatal
-    {1}[Hardware Error]:  Error 0, type: fatal
-    {1}[Hardware Error]:   section_type: PCIe error
-    {1}[Hardware Error]:   port_type: 4, root port
-    {1}[Hardware Error]:   version: 1.16
-    {1}[Hardware Error]:   command: 0x4010, status: 0x0143
-    {1}[Hardware Error]:   device_id: 0000:00:02.2
-    {1}[Hardware Error]:   slot: 0
-    {1}[Hardware Error]:   secondary_bus: 0x04
-    {1}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x2f06
-    {1}[Hardware Error]:   class_code: 000604
-    {1}[Hardware Error]:   bridge: secondary_status: 0x2000, control: 0x0003
-    {1}[Hardware Error]:   aer_uncor_status: 0x00100000, aer_uncor_mask: 0x00000000
-    {1}[Hardware Error]:   aer_uncor_severity: 0x00062030
-    {1}[Hardware Error]:   TLP Header: 40000018 040000ff 791f4080 00000000
-[hw error repeats]
-    Kernel panic - not syncing: Fatal hardware error!
-    CPU: 0 PID: 2189 Comm: reboot Kdump: loaded Not tainted 5.6.x-blabla #1
-    Hardware name: HP ProLiant DL380 Gen9/ProLiant DL380 Gen9, BIOS P89 05/05/2017
+This is probably a trivial fix for the latent_entropy plugin, but for
+now, just remove net_rand_state from the list of things the plugin
+worries about.
 
-Fix the mlx4 driver.
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Emese Revfy <re.emese@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Willy Tarreau <w@1wt.eu>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This is a very similar problem to what had been fixed in:
-commit 0d98ba8d70b0 ("scsi: hpsa: disable device during shutdown")
-to address https://bugzilla.kernel.org/show_bug.cgi?id=199779.
-
-Fixes: 2ba5fbd62b25 ("net/mlx4_core: Handle AER flow properly")
-Reported-by: Jake Lawrence <lawja@fb.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Reviewed-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/random.h |    2 +-
+ lib/random32.c         |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/main.c b/drivers/net/ethernet/mellanox/mlx4/main.c
-index 87c2e8de61029..942646fb2256c 100644
---- a/drivers/net/ethernet/mellanox/mlx4/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/main.c
-@@ -4354,12 +4354,14 @@ end:
- static void mlx4_shutdown(struct pci_dev *pdev)
- {
- 	struct mlx4_dev_persistent *persist = pci_get_drvdata(pdev);
-+	struct mlx4_dev *dev = persist->dev;
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -118,7 +118,7 @@ struct rnd_state {
+ 	__u32 s1, s2, s3, s4;
+ };
  
- 	mlx4_info(persist->dev, "mlx4_shutdown was called\n");
- 	mutex_lock(&persist->interface_state_mutex);
- 	if (persist->interface_state & MLX4_INTERFACE_STATE_UP)
- 		mlx4_unload_one(pdev);
- 	mutex_unlock(&persist->interface_state_mutex);
-+	mlx4_pci_disable_device(dev);
+-DECLARE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
++DECLARE_PER_CPU(struct rnd_state, net_rand_state);
+ 
+ u32 prandom_u32_state(struct rnd_state *state);
+ void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
+--- a/lib/random32.c
++++ b/lib/random32.c
+@@ -48,7 +48,7 @@ static inline void prandom_state_selftes
  }
+ #endif
  
- static const struct pci_error_handlers mlx4_err_handler = {
--- 
-2.25.1
-
+-DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
++DEFINE_PER_CPU(struct rnd_state, net_rand_state);
+ 
+ /**
+  *	prandom_u32_state - seeded pseudo-random number generator.
 
 
