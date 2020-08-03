@@ -2,156 +2,110 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BDFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0693C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B31ED20792
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45DAC22B4E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:17:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cCctHbSS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbgHCSRd (ORCPT
+        id S1728589AbgHCSRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 14:17:33 -0400
-Received: from mga12.intel.com ([192.55.52.136]:64254 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbgHCSRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 14:17:32 -0400
-IronPort-SDR: loAs93nzpjOkEnHDRT2GmaePKOyORBLTbtHOopOwbcRwogaw3wFNo1uxlSx1+Fq8iG0e8ux7fd
- GsC3Z9InH7rQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="131747474"
-X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
-   d="scan'208";a="131747474"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 11:17:31 -0700
-IronPort-SDR: qYwWbSdY2czxF1LXhZWr+jtXPPNYNiq2mfY0YwJjC7Ot1FOGTWET09qrJQ/cqYNEbRl5rrR0bK
- qMcClRYrJTgg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
-   d="scan'208";a="492008119"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.160])
-  by fmsmga006.fm.intel.com with ESMTP; 03 Aug 2020 11:17:31 -0700
-Date:   Mon, 3 Aug 2020 11:17:31 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH v3 2/4] KVM: SVM: Add GHCB definitions
-Message-ID: <20200803181731.GF3151@linux.intel.com>
-References: <20200803122708.5942-1-joro@8bytes.org>
- <20200803122708.5942-3-joro@8bytes.org>
+        Mon, 3 Aug 2020 14:17:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23947 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727076AbgHCSRw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 14:17:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596478671;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VMw7i1cpHh8qkyXWE10tJgStQ1flp9PULSkxAaczHSg=;
+        b=cCctHbSS1Veo1mxBoJLr5RHvRM3el8ufQJ/6cPJt0pcqdhu9y8Scx5oeiA9XoVFoLqzYwI
+        L7f09wup4sxg7/3Eqz2iJwVYXBKF9l7byk7fq1r3I4ZUOPsYTy6fjOIJQ/WkUurdC5/LmA
+        uscN374vAx8r72DGG0CHfxH9l+KUgF8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-251-fFB4_STrOvKdjZdsookBXA-1; Mon, 03 Aug 2020 14:17:46 -0400
+X-MC-Unique: fFB4_STrOvKdjZdsookBXA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 51F418017FB;
+        Mon,  3 Aug 2020 18:17:44 +0000 (UTC)
+Received: from [10.10.114.255] (ovpn-114-255.rdu2.redhat.com [10.10.114.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 45C4274F58;
+        Mon,  3 Aug 2020 18:17:42 +0000 (UTC)
+Subject: Re: [PATCH v4 00/10] Function Granular KASLR
+To:     Kees Cook <keescook@chromium.org>,
+        Evgenii Shatokhin <eshatokhin@virtuozzo.com>
+Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Miroslav Benes <mbenes@suse.cz>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, arjan@linux.intel.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com, rick.p.edgecombe@intel.com,
+        live-patching@vger.kernel.org,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        "Frank Ch. Eigler" <fche@redhat.com>
+References: <20200717170008.5949-1-kristen@linux.intel.com>
+ <alpine.LSU.2.21.2007221122110.10163@pobox.suse.cz>
+ <e9c4d88b-86db-47e9-4299-3fac45a7e3fd@virtuozzo.com>
+ <202008031043.FE182E9@keescook>
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+Message-ID: <fc6d2289-af97-5cf8-a4bb-77c2b0b8375c@redhat.com>
+Date:   Mon, 3 Aug 2020 14:17:41 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200803122708.5942-3-joro@8bytes.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <202008031043.FE182E9@keescook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 02:27:06PM +0200, Joerg Roedel wrote:
-> From: Tom Lendacky <thomas.lendacky@amd.com>
+On 8/3/20 1:45 PM, Kees Cook wrote:
+> On Mon, Aug 03, 2020 at 02:39:32PM +0300, Evgenii Shatokhin wrote:
+>> There are at least 2 places where high-order memory allocations might happen
+>> during module loading. Such allocations may fail if memory is fragmented,
+>> while physically contiguous memory areas are not really needed there. I
+>> suggest to switch to kvmalloc/kvfree there.
 > 
-> Extend the vmcb_safe_area with SEV-ES fields and add a new
-> 'struct ghcb' which will be used for guest-hypervisor communication.
+> While this does seem to be the right solution for the extant problem, I
+> do want to take a moment and ask if the function sections need to be
+> exposed at all? What tools use this information, and do they just want
+> to see the bounds of the code region? (i.e. the start/end of all the
+> .text* sections) Perhaps .text.* could be excluded from the sysfs
+> section list?
 > 
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  arch/x86/include/asm/svm.h | 45 +++++++++++++++++++++++++++++++++++++-
->  arch/x86/kvm/svm/svm.c     |  2 ++
->  2 files changed, 46 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-> index 8a1f5382a4ea..9a3e0b802716 100644
-> --- a/arch/x86/include/asm/svm.h
-> +++ b/arch/x86/include/asm/svm.h
-> @@ -200,13 +200,56 @@ struct __attribute__ ((__packed__)) vmcb_save_area {
->  	u64 br_to;
->  	u64 last_excp_from;
->  	u64 last_excp_to;
-> +
-> +	/*
-> +	 * The following part of the save area is valid only for
-> +	 * SEV-ES guests when referenced through the GHCB.
-> +	 */
-> +	u8 reserved_7[104];
-> +	u64 reserved_8;		/* rax already available at 0x01f8 */
-> +	u64 rcx;
-> +	u64 rdx;
-> +	u64 rbx;
-> +	u64 reserved_9;		/* rsp already available at 0x01d8 */
-> +	u64 rbp;
-> +	u64 rsi;
-> +	u64 rdi;
-> +	u64 r8;
-> +	u64 r9;
-> +	u64 r10;
-> +	u64 r11;
-> +	u64 r12;
-> +	u64 r13;
-> +	u64 r14;
-> +	u64 r15;
-> +	u8 reserved_10[16];
-> +	u64 sw_exit_code;
-> +	u64 sw_exit_info_1;
-> +	u64 sw_exit_info_2;
-> +	u64 sw_scratch;
-> +	u8 reserved_11[56];
-> +	u64 xcr0;
-> +	u8 valid_bitmap[16];
-> +	u64 x87_state_gpa;
-> +};
-> +
-> +struct __attribute__ ((__packed__)) ghcb {
 
-IMO this should use __packed straightaway, but I can also appreciate the
-desire for consistency within a given snapshot in time so I'm a-ok if you
-want to keep it as is.
+[[cc += FChE, see [0] for Evgenii's full mail ]]
 
-> +	struct vmcb_save_area save;
-> +	u8 reserved_save[2048 - sizeof(struct vmcb_save_area)];
-> +
-> +	u8 shared_buffer[2032];
-> +
-> +	u8 reserved_1[10];
-> +	u16 protocol_version;	/* negotiated SEV-ES/GHCB protocol version */
-> +	u32 ghcb_usage;
->  };
->  
->  
->  static inline void __unused_size_checks(void)
->  {
-> -	BUILD_BUG_ON(sizeof(struct vmcb_save_area) != 0x298);
-> +	BUILD_BUG_ON(sizeof(struct vmcb_save_area) != 1032);
->  	BUILD_BUG_ON(sizeof(struct vmcb_control_area) != 256);
-> +	BUILD_BUG_ON(sizeof(struct ghcb) != 4096);
->  }
->  
->  struct __attribute__ ((__packed__)) vmcb {
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 783330d0e7b8..953cf947f022 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -4161,6 +4161,8 @@ static struct kvm_x86_init_ops svm_init_ops __initdata = {
->  
->  static int __init svm_init(void)
->  {
-> +	__unused_size_checks();
-> +
->  	return kvm_init(&svm_init_ops, sizeof(struct vcpu_svm),
->  			__alignof__(struct vcpu_svm), THIS_MODULE);
->  }
-> -- 
-> 2.17.1
-> 
+It looks like debugging tools like systemtap [1], gdb [2] and its 
+add-symbol-file cmd, etc. peek at the /sys/module/<MOD>/section/ info.
+
+But yeah, it would be preferable if we didn't export a long sysfs 
+representation if nobody actually needs it.
+
+
+[0] 
+https://lore.kernel.org/lkml/e9c4d88b-86db-47e9-4299-3fac45a7e3fd@virtuozzo.com/
+[1] https://fossies.org/linux/systemtap/staprun/staprun.c
+[2] 
+https://www.oreilly.com/library/view/linux-device-drivers/0596005903/ch04.html#linuxdrive3-CHP-4-SECT-6.1
+
+-- Joe
+
