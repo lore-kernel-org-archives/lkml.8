@@ -7,54 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511A6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DA0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36F0620738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AAD920738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:04:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbgHCJEv (ORCPT
+        id S1726571AbgHCJEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 05:04:51 -0400
+        Mon, 3 Aug 2020 05:04:55 -0400
 Received: from labrats.qualcomm.com ([199.106.110.90]:8658 "EHLO
         labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbgHCJEv (ORCPT
+        with ESMTP id S1725971AbgHCJEw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 05:04:51 -0400
-IronPort-SDR: dajFYW/VqHUFnplPAQ6+aKrMR0HZvwvm685X8F5DC/fWctPM/9JsX8kq3BWkU8uY90lAO0mPQx
- nX/XlFF4TI9zd5l8fnJ6LlyY4Z6e1Lbf253DcqQFplP3OHX3TeNC0f5OTOyIbNUEFboLr+YbV0
- bE8ODrWu7SgUzjBLKyJ6qqAGMZ3j/GGTFvNUwSeGzecsW1Vj4Y1zO/4ECpD46yva7VG+NpXc2D
- Q1DjEEg4Zyo20+TFkx2lXuBekaH7NHFL0VHBETRpfK0CY004TdcvRwC3JGY+BDvpM77Sp4ohp4
- 9w4=
+        Mon, 3 Aug 2020 05:04:52 -0400
+IronPort-SDR: /Ez29SrVwXZjHEoGl3kpa6/DOIdI0wmUOnW6dHdFZD7L+CfvVKUSLxU0ASJMm90ztGWYnDQdJn
+ 3rn6tuiAESWQkGtv5gTDTjQoHZeJXk33tX5elokpDq3ElgBmE8JtgqGe4Xu7ELAuwbwAlpaSsh
+ gTWnEAZXOTBHQY5GfORm8BA65sBgBVHKyoon3dTolVwUsdzXsOb9KfD5fIS32KvgTntucQyu4o
+ 6/n+4n4DyEWb9DKU4SCN/5wz8uBKOYsPhPJTRIikHR5R6aB0svawy6E1y3UG8Lzn/nhY/eK9q3
+ ed8=
 X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
-   d="scan'208";a="47240952"
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by labrats.qualcomm.com with ESMTP; 03 Aug 2020 02:04:50 -0700
-Received: from stor-presley.qualcomm.com ([192.168.140.85])
-  by ironmsg05-sd.qualcomm.com with ESMTP; 03 Aug 2020 02:04:49 -0700
+   d="scan'208";a="47240954"
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
+  by labrats.qualcomm.com with ESMTP; 03 Aug 2020 02:04:51 -0700
+Received: from wsp769891wss.qualcomm.com (HELO stor-presley.qualcomm.com) ([192.168.140.85])
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 03 Aug 2020 02:04:50 -0700
 Received: by stor-presley.qualcomm.com (Postfix, from userid 359480)
-        id 71C3D214E4; Mon,  3 Aug 2020 02:04:49 -0700 (PDT)
+        id A4965214E4; Mon,  3 Aug 2020 02:04:50 -0700 (PDT)
 From:   Can Guo <cang@codeaurora.org>
 To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
         hongwus@codeaurora.org, rnayak@codeaurora.org,
         linux-scsi@vger.kernel.org, kernel-team@android.com,
         saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
         Avri Altman <avri.altman@wdc.com>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-kernel@vger.kernel.org (open list),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
-        support),
-        linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek SoC
-        support)
-Subject: [PATCH v9 1/9] scsi: ufs: Add checks before setting clk-gating states
-Date:   Mon,  3 Aug 2020 02:04:36 -0700
-Message-Id: <1596445485-19834-2-git-send-email-cang@codeaurora.org>
+        linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v9 3/9] scsi: ufs-qcom: Remove testbus dump in ufs_qcom_dump_dbg_regs
+Date:   Mon,  3 Aug 2020 02:04:38 -0700
+Message-Id: <1596445485-19834-4-git-send-email-cang@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596445485-19834-1-git-send-email-cang@codeaurora.org>
 References: <1596445485-19834-1-git-send-email-cang@codeaurora.org>
@@ -63,68 +58,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clock gating features can be turned on/off selectively which means its
-state information is only important if it is enabled. This change makes
-sure that we only look at state of clk-gating if it is enabled.
+Dumping testbus registers is heavy enough to cause stability issues
+sometime, just remove them as of now.
 
 Signed-off-by: Can Guo <cang@codeaurora.org>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
 Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
-Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
 Reviewed-by: Bean Huo <beanhuo@micron.com>
 ---
- drivers/scsi/ufs/ufshcd.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ drivers/scsi/ufs/ufs-qcom.c | 32 --------------------------------
+ 1 file changed, 32 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 3076222..5acb38c 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -1839,6 +1839,8 @@ static void ufshcd_init_clk_gating(struct ufs_hba *hba)
- 	if (!ufshcd_is_clkgating_allowed(hba))
- 		return;
+diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+index 823eccf..6b75338 100644
+--- a/drivers/scsi/ufs/ufs-qcom.c
++++ b/drivers/scsi/ufs/ufs-qcom.c
+@@ -1630,44 +1630,12 @@ int ufs_qcom_testbus_config(struct ufs_qcom_host *host)
+ 	return 0;
+ }
  
-+	hba->clk_gating.state = CLKS_ON;
-+
- 	hba->clk_gating.delay_ms = 150;
- 	INIT_DELAYED_WORK(&hba->clk_gating.gate_work, ufshcd_gate_work);
- 	INIT_WORK(&hba->clk_gating.ungate_work, ufshcd_ungate_work);
-@@ -2541,7 +2543,8 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
- 		err = SCSI_MLQUEUE_HOST_BUSY;
- 		goto out;
- 	}
--	WARN_ON(hba->clk_gating.state != CLKS_ON);
-+	WARN_ON(ufshcd_is_clkgating_allowed(hba) &&
-+		(hba->clk_gating.state != CLKS_ON));
+-static void ufs_qcom_testbus_read(struct ufs_hba *hba)
+-{
+-	ufshcd_dump_regs(hba, UFS_TEST_BUS, 4, "UFS_TEST_BUS ");
+-}
+-
+-static void ufs_qcom_print_unipro_testbus(struct ufs_hba *hba)
+-{
+-	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+-	u32 *testbus = NULL;
+-	int i, nminor = 256, testbus_len = nminor * sizeof(u32);
+-
+-	testbus = kmalloc(testbus_len, GFP_KERNEL);
+-	if (!testbus)
+-		return;
+-
+-	host->testbus.select_major = TSTBUS_UNIPRO;
+-	for (i = 0; i < nminor; i++) {
+-		host->testbus.select_minor = i;
+-		ufs_qcom_testbus_config(host);
+-		testbus[i] = ufshcd_readl(hba, UFS_TEST_BUS);
+-	}
+-	print_hex_dump(KERN_ERR, "UNIPRO_TEST_BUS ", DUMP_PREFIX_OFFSET,
+-			16, 4, testbus, testbus_len, false);
+-	kfree(testbus);
+-}
+-
+ static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
+ {
+ 	ufshcd_dump_regs(hba, REG_UFS_SYS1CLK_1US, 16 * 4,
+ 			 "HCI Vendor Specific Registers ");
  
- 	lrbp = &hba->lrb[tag];
+-	/* sleep a bit intermittently as we are dumping too much data */
+ 	ufs_qcom_print_hw_debug_reg_all(hba, NULL, ufs_qcom_dump_regs_wrapper);
+-	udelay(1000);
+-	ufs_qcom_testbus_read(hba);
+-	udelay(1000);
+-	ufs_qcom_print_unipro_testbus(hba);
+-	udelay(1000);
+ }
  
-@@ -8326,8 +8329,11 @@ static int ufshcd_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
- 		/* If link is active, device ref_clk can't be switched off */
- 		__ufshcd_setup_clocks(hba, false, true);
- 
--	hba->clk_gating.state = CLKS_OFF;
--	trace_ufshcd_clk_gating(dev_name(hba->dev), hba->clk_gating.state);
-+	if (ufshcd_is_clkgating_allowed(hba)) {
-+		hba->clk_gating.state = CLKS_OFF;
-+		trace_ufshcd_clk_gating(dev_name(hba->dev),
-+					hba->clk_gating.state);
-+	}
- 
- 	/* Put the host controller in low power mode if possible */
- 	ufshcd_hba_vreg_set_lpm(hba);
-@@ -8467,6 +8473,11 @@ static int ufshcd_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
- 	if (hba->clk_scaling.is_allowed)
- 		ufshcd_suspend_clkscaling(hba);
- 	ufshcd_setup_clocks(hba, false);
-+	if (ufshcd_is_clkgating_allowed(hba)) {
-+		hba->clk_gating.state = CLKS_OFF;
-+		trace_ufshcd_clk_gating(dev_name(hba->dev),
-+					hba->clk_gating.state);
-+	}
- out:
- 	hba->pm_op_in_progress = 0;
- 	if (ret)
+ /**
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
