@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE75C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62174C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C21B2054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 368232076E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458012;
-	bh=p6TsHCvvkp3SLABaDg9z5pQt9RWPKGLg3o7T1fgNJ4E=;
+	s=default; t=1596458015;
+	bh=jWGFztSlPZ2Ee/FF2hv8UCt06rAB2GbADoQoBX0DGEM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a1mLPsnjqIqGVGhUJywrF01EYZy3G0tJEY9DnFxVC/nbNvve0E2MI3VyHdyiyrDJA
-	 2pu00ir9kTdKmIHOo3pkb7SP83nrYKxKEbViE70UzqX0rN2GfgT0NnRSkf9Mfo4+vr
-	 5dU4u+H81eZQroHNlhViqHIUzfeCf30lI5FGebIc=
+	b=Lt+guUEmJ9IdE6alur+LgtHJp7Cnar3EcAtYTNFQmhmN80aOo4CyNuQ8N9dq5aYNK
+	 tew4J9+vdtt3Uk2wooD+Nrw4Hq+muQgbZI4Y+l1rbMQksBTgzyvVmtTfOvucepPnSM
+	 nGJYgNdPwrtjM55FhP1SFzv3jn1mXZQ+bp9TpOYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728875AbgHCMdb (ORCPT
+        id S1729457AbgHCMde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:33:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33296 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:33:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729427AbgHCMdZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:33:25 -0400
+        id S1729435AbgHCMd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:33:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C1C0204EC;
-        Mon,  3 Aug 2020 12:33:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9D7A204EC;
+        Mon,  3 Aug 2020 12:33:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596458003;
-        bh=p6TsHCvvkp3SLABaDg9z5pQt9RWPKGLg3o7T1fgNJ4E=;
+        s=default; t=1596458007;
+        bh=jWGFztSlPZ2Ee/FF2hv8UCt06rAB2GbADoQoBX0DGEM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BYsB6juNOKcRjjwM2vtSMzFg42eHGna7Gft+TVBnnT6pS3NjnPDAz/HZdNC0Y14zY
-         RxrxGxVbvXe3vS6jXJnUYeu/K9E3Hi3PyaQyHGuu9kUjq+5k5bIVf34GUN6hjblZ1f
-         QDi7mEf29/DbPziCgkFbWS8f06taOJVzibCE7bPg=
+        b=qy7jgukRHLVI1QPdzOGsTSZjep42qJuRDBAslHO60gN1aoeeigx6Wx5lNVfiaiefU
+         aZxAKUp9kJnEhbOIuhG+cmEQoaJydBu+zD9/ocNRN0ceyi+f8y8YjoEuSx0wqaeGjH
+         bDyzc5M9lezLKnvyDwQH+p5l80urdSyyMrpmd8hk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Rich Felker <dalias@libc.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 30/56] sh: Fix validation of system call number
-Date:   Mon,  3 Aug 2020 14:19:45 +0200
-Message-Id: <20200803121851.803645933@linuxfoundation.org>
+        stable@vger.kernel.org, Eran Ben Elisha <eranbe@mellanox.com>,
+        Ariel Levkovich <lariel@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 31/56] net/mlx5: Verify Hardware supports requested ptp function on a given pin
+Date:   Mon,  3 Aug 2020 14:19:46 +0200
+Message-Id: <20200803121851.847496622@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -61,55 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
+From: Eran Ben Elisha <eranbe@mellanox.com>
 
-[ Upstream commit 04a8a3d0a73f51c7c2da84f494db7ec1df230e69 ]
+[ Upstream commit 071995c877a8646209d55ff8edddd2b054e7424c ]
 
-The slow path for traced system call entries accessed a wrong memory
-location to get the number of the maximum allowed system call number.
-Renumber the numbered "local" label for the correct location to avoid
-collisions with actual local labels.
+Fix a bug where driver did not verify Hardware pin capabilities for
+PTP functions.
 
-Signed-off-by: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
-Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Fixes: f3a8308864f920d2 ("sh: Add a few missing irqflags tracing markers.")
-Signed-off-by: Rich Felker <dalias@libc.org>
+Fixes: ee7f12205abc ("net/mlx5e: Implement 1PPS support")
+Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+Reviewed-by: Ariel Levkovich <lariel@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sh/kernel/entry-common.S | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ .../ethernet/mellanox/mlx5/core/lib/clock.c   | 23 ++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/arch/sh/kernel/entry-common.S b/arch/sh/kernel/entry-common.S
-index 28cc61216b649..ed5b758c650d7 100644
---- a/arch/sh/kernel/entry-common.S
-+++ b/arch/sh/kernel/entry-common.S
-@@ -203,7 +203,7 @@ syscall_trace_entry:
- 	mov.l	@(OFF_R7,r15), r7   ! arg3
- 	mov.l	@(OFF_R3,r15), r3   ! syscall_nr
- 	!
--	mov.l	2f, r10			! Number of syscalls
-+	mov.l	6f, r10			! Number of syscalls
- 	cmp/hs	r10, r3
- 	bf	syscall_call
- 	mov	#-ENOSYS, r0
-@@ -357,7 +357,7 @@ ENTRY(system_call)
- 	tst	r9, r8
- 	bf	syscall_trace_entry
- 	!
--	mov.l	2f, r8			! Number of syscalls
-+	mov.l	6f, r8			! Number of syscalls
- 	cmp/hs	r8, r3
- 	bt	syscall_badsys
- 	!
-@@ -396,7 +396,7 @@ syscall_exit:
- #if !defined(CONFIG_CPU_SH2)
- 1:	.long	TRA
- #endif
--2:	.long	NR_syscalls
-+6:	.long	NR_syscalls
- 3:	.long	sys_call_table
- 7:	.long	do_syscall_trace_enter
- 8:	.long	do_syscall_trace_leave
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
+index 54f1a40a68edd..d359e850dbf07 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
+@@ -366,10 +366,31 @@ static int mlx5_ptp_enable(struct ptp_clock_info *ptp,
+ 	return 0;
+ }
+ 
++enum {
++	MLX5_MTPPS_REG_CAP_PIN_X_MODE_SUPPORT_PPS_IN = BIT(0),
++	MLX5_MTPPS_REG_CAP_PIN_X_MODE_SUPPORT_PPS_OUT = BIT(1),
++};
++
+ static int mlx5_ptp_verify(struct ptp_clock_info *ptp, unsigned int pin,
+ 			   enum ptp_pin_function func, unsigned int chan)
+ {
+-	return (func == PTP_PF_PHYSYNC) ? -EOPNOTSUPP : 0;
++	struct mlx5_clock *clock = container_of(ptp, struct mlx5_clock,
++						ptp_info);
++
++	switch (func) {
++	case PTP_PF_NONE:
++		return 0;
++	case PTP_PF_EXTTS:
++		return !(clock->pps_info.pin_caps[pin] &
++			 MLX5_MTPPS_REG_CAP_PIN_X_MODE_SUPPORT_PPS_IN);
++	case PTP_PF_PEROUT:
++		return !(clock->pps_info.pin_caps[pin] &
++			 MLX5_MTPPS_REG_CAP_PIN_X_MODE_SUPPORT_PPS_OUT);
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	return -EOPNOTSUPP;
+ }
+ 
+ static const struct ptp_clock_info mlx5_ptp_clock_info = {
 -- 
 2.25.1
 
