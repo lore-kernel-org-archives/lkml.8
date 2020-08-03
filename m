@@ -7,50 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 363B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04B8C206D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CEAE20678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458719;
-	bh=5zeqietPhyhUpjpUe2K3zAjtmebUM/EY9MObnePZxdw=;
+	s=default; t=1596458729;
+	bh=bnXW+kq4TokSOv/tJwzDwPvCTCgcOvHAglygsZOHc0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gW+RM1hLLGNrwzVHD2B7hH2DYHvph/1xM7+jyCnqvf0MrknE4xPkQs9XV1c3fr1kU
-	 bShxfdYKQnoJI89R/BTtDy8Uy1pf3wPKOR/6DjErXBykjTW0ljoU0MmzyDdQvTCoka
-	 fuvSMwVBOSghn1CIGc1nHXOFOzwK/XMlRxdttVag=
+	b=2fx6KOWuYidwbQ8COPWk7wAm0IsbTW1cChZErM54nUPlLx0VAijVUbEXY3/waQKBW
+	 2fch1AMdOzDPVPwZ7hu7az1J/bjoNBBJyLV/W7tpClsrs8DwiM28DIrk+IMA0JeCu9
+	 uDia1zA0679T/hrW6mJaX/NX8A2FNcm9vUlrqSkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729262AbgHCMpR (ORCPT
+        id S1729335AbgHCMp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:45:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53596 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:45:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726725AbgHCM1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:27:43 -0400
+        id S1728564AbgHCM1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:27:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DC98207FC;
-        Mon,  3 Aug 2020 12:27:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E865204EC;
+        Mon,  3 Aug 2020 12:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457662;
-        bh=5zeqietPhyhUpjpUe2K3zAjtmebUM/EY9MObnePZxdw=;
+        s=default; t=1596457651;
+        bh=bnXW+kq4TokSOv/tJwzDwPvCTCgcOvHAglygsZOHc0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tC7suW3kc6NUDhSfWM2FfA2nTwpRT8xLHzDJf2s+Yxo6+HqcMffnLv2a4/HovODWF
-         4r1dug6vaRex083LFvRJBH3yHmfQd7XOlNwFfy/kFsyYIdPod4J18L8+y4+L6GdPAr
-         Q92RHI/+hSvRRk9l5/VOY/rLagSvZH7uqnBkfq/g=
+        b=YPvfxEgjf93l8b3IVqCKCWbTy/cYLrkbWbb5NsFLVRtr495md53vS6Rh6XWDxV41J
+         3Qoo2fzPEoATBWQgUqNTMoWYdngmUobC5rtAfvTMO0J3v1dNRkkTl/KIKKKgL2K9do
+         DWk1XEMTWv2UmprjIiHP+fzJPV8yjqEFKK+bjW9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Minchan Kim <minchan@kernel.org>,
-        Robert Stupp <snazy@gmx.de>, Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        SeongJae Park <sjpark@amazon.com>
-Subject: [PATCH 5.4 06/90] mm/filemap.c: dont bother dropping mmap_sem for zero size readahead
-Date:   Mon,  3 Aug 2020 14:18:28 +0200
-Message-Id: <20200803121857.853351983@linuxfoundation.org>
+        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.4 24/90] Revert "drm/amdgpu: Fix NULL dereference in dpm sysfs handlers"
+Date:   Mon,  3 Aug 2020 14:18:46 +0200
+Message-Id: <20200803121858.796616416@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -63,42 +58,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-commit 5c72feee3e45b40a3c96c7145ec422899d0e8964 upstream.
+commit 87004abfbc27261edd15716515d89ab42198b405 upstream.
 
-When handling a page fault, we drop mmap_sem to start async readahead so
-that we don't block on IO submission with mmap_sem held.  However there's
-no point to drop mmap_sem in case readahead is disabled.  Handle that case
-to avoid pointless dropping of mmap_sem and retrying the fault.  This was
-actually reported to block mlockall(MCL_CURRENT) indefinitely.
+This regressed some working configurations so revert it.  Will
+fix this properly for 5.9 and backport then.
 
-Fixes: 6b4c9f446981 ("filemap: drop the mmap_sem for all blocking operations")
-Reported-by: Minchan Kim <minchan@kernel.org>
-Reported-by: Robert Stupp <snazy@gmx.de>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Minchan Kim <minchan@kernel.org>
-Link: http://lkml.kernel.org/r/20200212101356.30759-1-jack@suse.cz
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: SeongJae Park <sjpark@amazon.com>
+This reverts commit 38e0c89a19fd13f28d2b4721035160a3e66e270b.
+
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/filemap.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -2438,7 +2438,7 @@ static struct file *do_async_mmap_readah
- 	pgoff_t offset = vmf->pgoff;
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
+@@ -691,7 +691,8 @@ static ssize_t amdgpu_set_pp_od_clk_volt
+ 		tmp_str++;
+ 	while (isspace(*++tmp_str));
  
- 	/* If we don't want any read-ahead, don't bother */
--	if (vmf->vma->vm_flags & VM_RAND_READ)
-+	if (vmf->vma->vm_flags & VM_RAND_READ || !ra->ra_pages)
- 		return fpin;
- 	if (ra->mmap_miss > 0)
- 		ra->mmap_miss--;
+-	while ((sub_str = strsep(&tmp_str, delimiter)) != NULL) {
++	while (tmp_str[0]) {
++		sub_str = strsep(&tmp_str, delimiter);
+ 		ret = kstrtol(sub_str, 0, &parameter[parameter_size]);
+ 		if (ret)
+ 			return -EINVAL;
+@@ -882,7 +883,8 @@ static ssize_t amdgpu_read_mask(const ch
+ 	memcpy(buf_cpy, buf, bytes);
+ 	buf_cpy[bytes] = '\0';
+ 	tmp = buf_cpy;
+-	while ((sub_str = strsep(&tmp, delimiter)) != NULL) {
++	while (tmp[0]) {
++		sub_str = strsep(&tmp, delimiter);
+ 		if (strlen(sub_str)) {
+ 			ret = kstrtol(sub_str, 0, &level);
+ 			if (ret)
+@@ -1298,7 +1300,8 @@ static ssize_t amdgpu_set_pp_power_profi
+ 			i++;
+ 		memcpy(buf_cpy, buf, count-i);
+ 		tmp_str = buf_cpy;
+-		while ((sub_str = strsep(&tmp_str, delimiter)) != NULL) {
++		while (tmp_str[0]) {
++			sub_str = strsep(&tmp_str, delimiter);
+ 			ret = kstrtol(sub_str, 0, &parameter[parameter_size]);
+ 			if (ret) {
+ 				count = -EINVAL;
 
 
