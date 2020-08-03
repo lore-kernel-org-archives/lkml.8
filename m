@@ -2,130 +2,105 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC033C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5ED4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A263B2076B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:14:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596453281;
-	bh=5H3v1Du5rpRSWnXSCSiCk75bAcpRhnq+T5CXif4mD28=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XZQbN/nwI3KiHt98ko3+5x5dBsQc+dWVJ/kryr+1FRhpgwxU50NYn+KQeKbo5bG6y
-	 Fb3R3SCUwfN1w/SBgaCGe9JTv/OlJjtRX0D09I1m7XGTWmlwvE81ef9mSuzVhwV+V2
-	 2bh6D02czruPCL16xZ+mNNayvqBT09N7Rrf1GTSc=
+	by mail.kernel.org (Postfix) with ESMTP id 85DE120719
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:17:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="eoVrCN0P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgHCLOl (ORCPT
+        id S1726058AbgHCLRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 07:14:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51496 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbgHCLOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 07:14:41 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12AA420719;
-        Mon,  3 Aug 2020 11:14:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596453280;
-        bh=5H3v1Du5rpRSWnXSCSiCk75bAcpRhnq+T5CXif4mD28=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A3wQkcvAaAcrYqHs2CWdwYGBjxzh+8Bv3QZJ+6DfyRGG73tHlo8zhOhR+WHISnB7Z
-         l0is1udwf6mDqCHk5KUWla+ZCRZC5IuCGwzTu3pQaogw4DVeBG4n/VvQz6nNKS/W9N
-         FxApx86IozoVMOwtpMtKUA/hOwlW9sNSBnlbiBo4=
-Date:   Mon, 3 Aug 2020 16:44:36 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     dmaengine@vger.kernel.org, dan.j.williams@intel.com,
-        linux-arm-kernel@lists.infradead.org, nm@ti.com,
-        grygorii.strashko@ti.com, lokeshvutla@ti.com, nsekhar@ti.com,
-        kishon@ti.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dmaengine: ti: k3-psil: Use soc_device_match to get
- the psil map
-Message-ID: <20200803111436.GN12965@vkoul-mobl>
-References: <20200803101128.20885-1-peter.ujfalusi@ti.com>
- <20200803101128.20885-2-peter.ujfalusi@ti.com>
+        Mon, 3 Aug 2020 07:17:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbgHCLRT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 07:17:19 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90B11C061756
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 04:17:19 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id l23so13215620edv.11
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 04:17:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=phUao9tXf/t4b/68S+2rq16ySbBLGNbfI2sRyl9fmdU=;
+        b=eoVrCN0PZZ1JS+F3fakDr2Ij8wISyKSGPN0lWQaGRrdbv1WtI1HXeY2zQorKnB7Bi0
+         VRrysLvCQG2nw4yx00kjhBBvbRQCdLC+pMBHaFd4x+oUq5/iuV61KNUXUtmKl/01yaYQ
+         K72k3pKjdfjjKvewHfPgkAHJIvr563YyPdSN8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=phUao9tXf/t4b/68S+2rq16ySbBLGNbfI2sRyl9fmdU=;
+        b=gC9h4Dn40DHYR/zMyteQ7m6vpBieqbD37/P7VI8oK2YIEnD+MqjXM1uv7Pox/WZNhl
+         emcaNH32jPQWWVqK1WKX48NauJCIoBFcwk8xTOxatYana9+Kb8kXMKu3QqQTK6nmnH7G
+         JKeue2JP0Y8c7ZZMa3Nia2ClULGKK/8z4D/ZZeuNyWpT4R/bKKSgi+PHKIvB3BpaTjNl
+         Tl02TM3AddjH2Uo0rfL+jyM6zXEefRf9tP3E/c7Mg9V1FyorEaLQ8Tp4Mu1FSuoOSiuD
+         cU0kq4n3+c/k9QqB47nc23fwRpNcWX2x/VDLwj2qr2cFb4Zi7Jz4srKKI4r4WP/Zgkcj
+         Rmug==
+X-Gm-Message-State: AOAM533j+Guaujvb4h76FEjQgWEBLEKfsXG2ZJ4va4Zl8PfRG4ys446E
+        CuYA2N24Aj6OK31ul2qupanIycrQorLlkeFE+6AzbA==
+X-Google-Smtp-Source: ABdhPJzYkpExpfofwOysvG0SUfDHJUUcNoJnQSIchQHGMGBM9qKDjKahkgN9Xb26C1GwbhowgmIILXMGk8ZjU9gsAgI=
+X-Received: by 2002:a05:6402:13d4:: with SMTP id a20mr303427edx.161.1596453438170;
+ Mon, 03 Aug 2020 04:17:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200803101128.20885-2-peter.ujfalusi@ti.com>
+References: <1293241.1595501326@warthog.procyon.org.uk> <CAJfpegspWA6oUtdcYvYF=3fij=Bnq03b8VMbU9RNMKc+zzjbag@mail.gmail.com>
+ <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk>
+ <158454391302.2863966.1884682840541676280.stgit@warthog.procyon.org.uk>
+ <2003787.1595585999@warthog.procyon.org.uk> <865566fb800a014868a9a7e36a00a14430efb11e.camel@themaw.net>
+ <2023286.1595590563@warthog.procyon.org.uk> <CAJfpegsT_3YqHPWCZGX7Lr+sE0NVmczWz5L6cN8CzsVz4YKLCQ@mail.gmail.com>
+ <1283475.1596449889@warthog.procyon.org.uk>
+In-Reply-To: <1283475.1596449889@warthog.procyon.org.uk>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Mon, 3 Aug 2020 13:17:06 +0200
+Message-ID: <CAJfpeguO8Qwkzx9zfGVT7W+pT5p6fgj-_8oJqJbXX_KQBpLLEQ@mail.gmail.com>
+Subject: Re: [PATCH 13/17] watch_queue: Implement mount topology and attribute
+ change notifications [ver #5]
+To:     David Howells <dhowells@redhat.com>
+Cc:     Ian Kent <raven@themaw.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>, andres@anarazel.de,
+        Jeff Layton <jlayton@redhat.com>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>, keyrings@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-08-20, 13:11, Peter Ujfalusi wrote:
-> Instead of separate of_machine_is_compatible() it is better to use
-> soc_device_match() and soc_device_attribute struct to get the PSI-L map
-> for the booted device.
-> 
-> By using soc_device_match() it is easier to add support for new devices.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  drivers/dma/ti/k3-psil.c | 19 ++++++++++++++-----
->  1 file changed, 14 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/dma/ti/k3-psil.c b/drivers/dma/ti/k3-psil.c
-> index fb7c8150b0d1..3ca29aabac93 100644
-> --- a/drivers/dma/ti/k3-psil.c
-> +++ b/drivers/dma/ti/k3-psil.c
-> @@ -9,11 +9,18 @@
->  #include <linux/init.h>
->  #include <linux/mutex.h>
->  #include <linux/of.h>
-> +#include <linux/sys_soc.h>
->  
->  #include "k3-psil-priv.h"
->  
->  static DEFINE_MUTEX(ep_map_mutex);
-> -static struct psil_ep_map *soc_ep_map;
-> +static const struct psil_ep_map *soc_ep_map;
-> +
-> +static const struct soc_device_attribute k3_soc_devices[] = {
-> +	{ .family = "AM65X", .data = &am654_ep_map },
-> +	{ .family = "J721E", .data = &j721e_ep_map },
-> +	{ /* sentinel */ }
-> +};
->  
->  struct psil_endpoint_config *psil_get_ep_config(u32 thread_id)
->  {
-> @@ -21,15 +28,17 @@ struct psil_endpoint_config *psil_get_ep_config(u32 thread_id)
->  
->  	mutex_lock(&ep_map_mutex);
->  	if (!soc_ep_map) {
-> -		if (of_machine_is_compatible("ti,am654")) {
-> -			soc_ep_map = &am654_ep_map;
-> -		} else if (of_machine_is_compatible("ti,j721e")) {
-> -			soc_ep_map = &j721e_ep_map;
-> +		const struct soc_device_attribute *soc;
-> +
-> +		soc = soc_device_match(k3_soc_devices);
-> +		if (soc) {
-> +			soc_ep_map = soc->data;
->  		} else {
->  			pr_err("PSIL: No compatible machine found for map\n");
->  			mutex_unlock(&ep_map_mutex);
->  			return ERR_PTR(-ENOTSUPP);
->  		}
-> +
+On Mon, Aug 3, 2020 at 12:18 PM David Howells <dhowells@redhat.com> wrote:
+>
+> Miklos Szeredi <miklos@szeredi.hu> wrote:
+>
+> > > fsinfo() then allows you to retrieve them by path or by mount ID.
+> >
+> > Shouldn't the notification interface provide the unique ID?
+>
+> Hmmm...  If I'm going to do that, I have to put the fsinfo-core branch first
+> otherwise you can't actually retrieve the unique ID - and thus won't be able
+> to make sense of the notification record.  Such a rearrangement might make
+> sense anyway since Ian and Karel have been primarily concentrating on fsinfo
+> and only more recently started adding notification support.
 
-not related
+OTOH mount notification is way smaller and IMO a more mature
+interface.  So just picking the unique ID patch into this set might
+make sense.
 
->  		pr_debug("%s: Using map for %s\n", __func__, soc_ep_map->name);
->  	}
->  	mutex_unlock(&ep_map_mutex);
-> -- 
-> Peter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
--- 
-~Vinod
+Thanks,
+Miklos
