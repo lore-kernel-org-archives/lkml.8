@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A6AC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 670B8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6480F207FB
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37DD2207BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:24:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457485;
-	bh=NocX8FRNNofFxc9quJy1/gGLORMCIGCJ/kDCDScoBrE=;
+	s=default; t=1596457490;
+	bh=2MLEGzVbKjFBrgz5Z/lo+QYmUTrppw7aFMb2gaCkKGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fCA9Za7R38JtxWHtqPC52UVgo+vT/OKxCPUKkld/QtfMDVKp2t0hE9Iw8v2w6FvS/
-	 r+PvWZYflv0D7wwAzoZNknxRzvkcs2FTnP03BUhxwlZuJbDKXycrpCD6bUS3SkVP7B
-	 CYgTG5FLf+tVGUFZ+G9iMyg/2rb/sVgQcZc0yCwU=
+	b=gTuwzMZYG1n5pt9dcTuxbDN1NzoV9nNlg35UNjwtgQ3fvFsL1zcuauht1ElE03AT8
+	 RShpRMBqRUbd6RgI/LVIH7FCx66aiWRhCIbxM1W1KNUEvMOHsgJ21WO6C5xxiMEEbc
+	 H5u0QbvxOsVYkXCRHZlmnzV/7s/aNZEtRjMf5sVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgHCMYp (ORCPT
+        id S1728090AbgHCMYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:24:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48844 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:24:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728039AbgHCMYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:24:33 -0400
+        id S1726935AbgHCMYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:24:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C55DE207BB;
-        Mon,  3 Aug 2020 12:24:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90744204EC;
+        Mon,  3 Aug 2020 12:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457471;
-        bh=NocX8FRNNofFxc9quJy1/gGLORMCIGCJ/kDCDScoBrE=;
+        s=default; t=1596457481;
+        bh=2MLEGzVbKjFBrgz5Z/lo+QYmUTrppw7aFMb2gaCkKGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dDtzTh1yXXe7QKMfy4RlJx2WHJGgagm21tXxd0a3FQNT+puQCKBMUoqMmEdTwVfVF
-         XqEtGbBBbKLFj5o6aIMA5mZVzkLRc/ziVHAbdZccu2a4vg/8BZteNv3cxaU/1wlyZB
-         DOqgYdrluBdUdGW72b5GnZ/PxwCOGOFBUeyX8z30=
+        b=2S8EwzMbAsCbN27BKx+Ow72vTBWVg6lr2Ky8wVrzJI0S6XqJyBq4hIabphAyi7lD0
+         Jhlud55HDiuTl3XdzdqcDE/IN69ExfUjZ0uaponToACXn6flw/UP/BlaXlcM6D918u
+         jNMgXA/UsB5W5pevWTimzTQsWT0y4NjB06bOulqk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 079/120] mac80211: mesh: Free pending skb when destroying a mpath
-Date:   Mon,  3 Aug 2020 14:18:57 +0200
-Message-Id: <20200803121906.683861064@linuxfoundation.org>
+        stable@vger.kernel.org, guodeqing <geffrey.guo@huawei.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 083/120] arm64: csum: Fix handling of bad packets
+Date:   Mon,  3 Aug 2020 14:19:01 +0200
+Message-Id: <20200803121906.911884315@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -60,72 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Remi Pommarel <repk@triplefau.lt>
+From: Robin Murphy <robin.murphy@arm.com>
 
-[ Upstream commit 5e43540c2af0a0c0a18e39579b1ad49541f87506 ]
+[ Upstream commit 05fb3dbda187bbd9cc1cd0e97e5d6595af570ac6 ]
 
-A mpath object can hold reference on a list of skb that are waiting for
-mpath resolution to be sent. When destroying a mpath this skb list
-should be cleaned up in order to not leak memory.
+Although iph is expected to point to at least 20 bytes of valid memory,
+ihl may be bogus, for example on reception of a corrupt packet. If it
+happens to be less than 5, we really don't want to run away and
+dereference 16GB worth of memory until it wraps back to exactly zero...
 
-Fixing that kind of leak:
-
-unreferenced object 0xffff0000181c9300 (size 1088):
-  comm "openvpn", pid 1782, jiffies 4295071698 (age 80.416s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 f9 80 36 00 00 00 00 00  ..........6.....
-    02 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
-  backtrace:
-    [<000000004bc6a443>] kmem_cache_alloc+0x1a4/0x2f0
-    [<000000002caaef13>] sk_prot_alloc.isra.39+0x34/0x178
-    [<00000000ceeaa916>] sk_alloc+0x34/0x228
-    [<00000000ca1f1d04>] inet_create+0x198/0x518
-    [<0000000035626b1c>] __sock_create+0x134/0x328
-    [<00000000a12b3a87>] __sys_socket+0xb0/0x158
-    [<00000000ff859f23>] __arm64_sys_socket+0x40/0x58
-    [<00000000263486ec>] el0_svc_handler+0xd0/0x1a0
-    [<0000000005b5157d>] el0_svc+0x8/0xc
-unreferenced object 0xffff000012973a40 (size 216):
-  comm "openvpn", pid 1782, jiffies 4295082137 (age 38.660s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 c0 06 16 00 00 ff ff 00 93 1c 18 00 00 ff ff  ................
-  backtrace:
-    [<000000004bc6a443>] kmem_cache_alloc+0x1a4/0x2f0
-    [<0000000023c8c8f9>] __alloc_skb+0xc0/0x2b8
-    [<000000007ad950bb>] alloc_skb_with_frags+0x60/0x320
-    [<00000000ef90023a>] sock_alloc_send_pskb+0x388/0x3c0
-    [<00000000104fb1a3>] sock_alloc_send_skb+0x1c/0x28
-    [<000000006919d2dd>] __ip_append_data+0xba4/0x11f0
-    [<0000000083477587>] ip_make_skb+0x14c/0x1a8
-    [<0000000024f3d592>] udp_sendmsg+0xaf0/0xcf0
-    [<000000005aabe255>] inet_sendmsg+0x5c/0x80
-    [<000000008651ea08>] __sys_sendto+0x15c/0x218
-    [<000000003505c99b>] __arm64_sys_sendto+0x74/0x90
-    [<00000000263486ec>] el0_svc_handler+0xd0/0x1a0
-    [<0000000005b5157d>] el0_svc+0x8/0xc
-
-Fixes: 2bdaf386f99c (mac80211: mesh: move path tables into if_mesh)
-Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-Link: https://lore.kernel.org/r/20200704135419.27703-1-repk@triplefau.lt
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 0e455d8e80aa ("arm64: Implement optimised IP checksum helpers")
+Reported-by: guodeqing <geffrey.guo@huawei.com>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mesh_pathtbl.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/include/asm/checksum.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/net/mac80211/mesh_pathtbl.c b/net/mac80211/mesh_pathtbl.c
-index 117519bf33d65..aca608ae313fe 100644
---- a/net/mac80211/mesh_pathtbl.c
-+++ b/net/mac80211/mesh_pathtbl.c
-@@ -521,6 +521,7 @@ static void mesh_path_free_rcu(struct mesh_table *tbl,
- 	del_timer_sync(&mpath->timer);
- 	atomic_dec(&sdata->u.mesh.mpaths);
- 	atomic_dec(&tbl->entries);
-+	mesh_path_flush_pending(mpath);
- 	kfree_rcu(mpath, rcu);
- }
+diff --git a/arch/arm64/include/asm/checksum.h b/arch/arm64/include/asm/checksum.h
+index b6f7bc6da5fb3..93a161b3bf3fe 100644
+--- a/arch/arm64/include/asm/checksum.h
++++ b/arch/arm64/include/asm/checksum.h
+@@ -24,16 +24,17 @@ static inline __sum16 ip_fast_csum(const void *iph, unsigned int ihl)
+ {
+ 	__uint128_t tmp;
+ 	u64 sum;
++	int n = ihl; /* we want it signed */
  
+ 	tmp = *(const __uint128_t *)iph;
+ 	iph += 16;
+-	ihl -= 4;
++	n -= 4;
+ 	tmp += ((tmp >> 64) | (tmp << 64));
+ 	sum = tmp >> 64;
+ 	do {
+ 		sum += *(const u32 *)iph;
+ 		iph += 4;
+-	} while (--ihl);
++	} while (--n > 0);
+ 
+ 	sum += ((sum >> 32) | (sum << 32));
+ 	return csum_fold((__force u32)(sum >> 32));
 -- 
 2.25.1
 
