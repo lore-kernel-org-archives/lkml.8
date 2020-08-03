@@ -6,64 +6,62 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF07EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF73C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1B3322BEF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3096122B45
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:55:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596477306;
-	bh=64N0MF51YRsF4m4Bz4Qx3RoipKM/AU+s7LH+wHF3By4=;
+	s=default; t=1596477309;
+	bh=s6c5QfQxq1QUlzYHr4+jYy8dE8fKWC6Ch8rzwqnZxh4=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=ohAkqkcRLNz3w8fqhdb7nAsCeNh8c0S/ymjtfHyhX0AKqR1MXtthg4BIqek+lnPdb
-	 hpb17VuGBCiuYACp6Ab9h483Bh547eCsbtUGh8CTHHCx2i80mJxPmA7d0a2yCOQe1b
-	 urkb3QKko4PrDhumdXcUfow+MpUJ9VIEU65ldqi0=
+	b=vMlO+/Htp1sl3xVcdyrzGv/tME/IOUvAbP79f+kkVhnZFwk/Zi/WUmTt81xtzIG5A
+	 ivxyXyYTXDYpnIXhM/MSVfUxyuz1MZnLFDPTWlK9iptwXj0p4tgmWLALhEU8hMBJqk
+	 ODLPrxhk/KWDXuxrZMcYjWyNc+QBz35rWIBPiyu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728612AbgHCRzG (ORCPT
+        id S1728626AbgHCRzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 13:55:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52072 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 13:55:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728595AbgHCRzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 13:55:04 -0400
-Subject: Re: [GIT PULL] file locking fix for 5.9
+        id S1728596AbgHCRzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 13:55:05 -0400
+Subject: Re: [GIT PULL] tpmdd update for Linux v5.9
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596477303;
-        bh=64N0MF51YRsF4m4Bz4Qx3RoipKM/AU+s7LH+wHF3By4=;
+        s=default; t=1596477304;
+        bh=s6c5QfQxq1QUlzYHr4+jYy8dE8fKWC6Ch8rzwqnZxh4=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=ucEvz2XjDi60PzMWMhU5vEuHk0pCmyRkRC+iaUls4TuMxM0RVJ3LE4y7Yq4P2Qsf0
-         umns+CxUQ0RTgzQNySDe+DYN4yoeSLhhi2XvUMyPJ37f+4nPBBQ8XORvnEjISTHFOB
-         NxgOL6TQsBQc2qzVYrD0nsfJj2J08WK8pUGdammU=
+        b=inEFCAZnmIQOB0olG4H8ebdN7N1WCrVvU/Y3OrZ9VMQhoJprGANOI6TFrJP4j0TnO
+         TR0CZqHszLOCgjL9REWGNMaiqRJhZYSJqldKGouUVtxT+bknoNJU4ydyfwtpCIPWUf
+         F7DwIHlMICXDhvCMR3Ps6bl9tUcuSELHh/glXyNk=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <56a44e097a1408a6bf593270bc5e5d4bcc8b3766.camel@kernel.org>
-References: <56a44e097a1408a6bf593270bc5e5d4bcc8b3766.camel@kernel.org>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <56a44e097a1408a6bf593270bc5e5d4bcc8b3766.camel@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jlayton/linux.git
- tags/filelock-v5.9-1
-X-PR-Tracked-Commit-Id: 5ef159681309621aa8fe06d94397b85b51974d55
+In-Reply-To: <20200724064212.GA1871046@linux.intel.com>
+References: <20200724064212.GA1871046@linux.intel.com>
+X-PR-Tracked-List-Id: <linux-integrity.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200724064212.GA1871046@linux.intel.com>
+X-PR-Tracked-Remote: git://git.infradead.org/users/jjs/linux-tpmdd.git
+ tags/tpmdd-next-v5.9
+X-PR-Tracked-Commit-Id: 85467f63a05c43364ba0b90d0c05bb89191543fa
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3208167a865e862fff5045d7910387941ff7e114
-Message-Id: <159647730351.19506.4382570710178556452.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 92b7e4923fdbeda9b86b1398127449d5353f9123
+Message-Id: <159647730393.19506.15252934479107896206.pr-tracker-bot@kernel.org>
 Date:   Mon, 03 Aug 2020 17:55:03 +0000
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        yangerkun <yangerkun@huawei.com>,
-        Bruce Fields <bfields@fieldses.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, jmorris@namei.org,
+        dhowells@redhat.com, peterhuewe@gmx.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 03 Aug 2020 09:22:46 -0400:
+The pull request you sent on Fri, 24 Jul 2020 09:42:27 +0300:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jlayton/linux.git tags/filelock-v5.9-1
+> git://git.infradead.org/users/jjs/linux-tpmdd.git tags/tpmdd-next-v5.9
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3208167a865e862fff5045d7910387941ff7e114
+https://git.kernel.org/torvalds/c/92b7e4923fdbeda9b86b1398127449d5353f9123
 
 Thank you!
 
