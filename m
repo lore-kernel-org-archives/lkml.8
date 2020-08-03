@@ -2,93 +2,144 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E26CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F996C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B9AB206DA
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32DC7207FB
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:03:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="QHf+d+ad"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GOgxFTHV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbgHCQDY (ORCPT
+        id S1728344AbgHCQDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 12:03:24 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:43648 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726457AbgHCQDX (ORCPT
+        Mon, 3 Aug 2020 12:03:49 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:12424 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726457AbgHCQDs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 12:03:23 -0400
-Received: from [192.168.254.32] (unknown [47.187.206.220])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 09D5E20B4908;
-        Mon,  3 Aug 2020 09:03:21 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 09D5E20B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1596470602;
-        bh=ZiO52alLmnpxT7j4anLU5ZigsjFuPb9HBovKSoPQQ3w=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=QHf+d+adyjmFUMw8F6KIhtFl2KmvTj4vBrSymSBr/2bDq/bWh9j06EOVn5++PivQ+
-         voHvs0Lb2zIfoJuBfpScJ2evOehCf7CU8vfsuxDIGF7QhHjz3poDRcCPaEONbsDGN9
-         dqsnbvmNS9ytmBh/6/eiWhI5Hsbb5iwXGxjz1OIg=
-Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'Mark Rutland' <mark.rutland@arm.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
-References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
- <6540b4b7-3f70-adbf-c922-43886599713a@linux.microsoft.com>
- <CALCETrWnNR5v3ZCLfBVQGYK8M0jAvQMaAc9uuO05kfZuh-4d6w@mail.gmail.com>
- <46a1adef-65f0-bd5e-0b17-54856fb7e7ee@linux.microsoft.com>
- <20200731183146.GD67415@C02TD0UTHF1T.local>
- <a3068e3126a942c7a3e7ac115499deb1@AcuMS.aculab.com>
-From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Message-ID: <7fdc102e-75ea-6d91-d2a3-7fe8c91802ce@linux.microsoft.com>
-Date:   Mon, 3 Aug 2020 11:03:21 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Mon, 3 Aug 2020 12:03:48 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596470627; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=3o7Ua/B/jlY2+3cBPDuyOtwpBPiWkJKI/dCE//TXyZ0=; b=GOgxFTHVDvYzqHG+XGnsHnYEB68pOL6rvKSBrLf3URisfecFqf8GLiAvo77M81cY1F7fQa7H
+ nGxehcraORw3y62NfNkIlNH0xYeHkGzbSHbPs9QZRowEgN3y+PrwBB94uwEPB5xYI6ZI+Hr2
+ fjwAnw58AU5DXlw0KOmunPfDiew=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5f283510798b10296811bd5d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 03 Aug 2020 16:02:24
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1C6F7C433A0; Mon,  3 Aug 2020 16:02:21 +0000 (UTC)
+Received: from [192.168.8.168] (cpe-70-95-149-85.san.res.rr.com [70.95.149.85])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 47208C433C9;
+        Mon,  3 Aug 2020 16:02:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 47208C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [PATCH v9 7/9] scsi: ufs: Move dumps in IRQ handler to error
+ handler
+To:     Can Guo <cang@codeaurora.org>, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1596445485-19834-1-git-send-email-cang@codeaurora.org>
+ <1596445485-19834-8-git-send-email-cang@codeaurora.org>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <502fb8a9-db80-2d74-3272-52f2d1593451@codeaurora.org>
+Date:   Mon, 3 Aug 2020 09:02:19 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <a3068e3126a942c7a3e7ac115499deb1@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1596445485-19834-8-git-send-email-cang@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 8/3/2020 2:04 AM, Can Guo wrote:
+> Sometime dumps in IRQ handler are heavy enough to cause system stability
+> issues, move them to error handler and only print basic host regs here.
+> 
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> Reviewed-by: Bean Huo <beanhuo@micron.com>
+> ---
+
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+
+>   drivers/scsi/ufs/ufshcd.c | 23 +++++++++++++++--------
+>   1 file changed, 15 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index 6a10003..a79fbbd 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -5696,6 +5696,19 @@ static void ufshcd_err_handler(struct work_struct *work)
+>   				    UFSHCD_UIC_DL_TCx_REPLAY_ERROR))))
+>   		needs_reset = true;
+>   
+> +	if (hba->saved_err & (INT_FATAL_ERRORS | UIC_ERROR |
+> +			      UFSHCD_UIC_HIBERN8_MASK)) {
+> +		bool pr_prdt = !!(hba->saved_err & SYSTEM_BUS_FATAL_ERROR);
+> +
+> +		spin_unlock_irqrestore(hba->host->host_lock, flags);
+> +		ufshcd_print_host_state(hba);
+> +		ufshcd_print_pwr_info(hba);
+> +		ufshcd_print_host_regs(hba);
+> +		ufshcd_print_tmrs(hba, hba->outstanding_tasks);
+> +		ufshcd_print_trs(hba, hba->outstanding_reqs, pr_prdt);
+> +		spin_lock_irqsave(hba->host->host_lock, flags);
+> +	}
+> +
+>   	/*
+>   	 * if host reset is required then skip clearing the pending
+>   	 * transfers forcefully because they will get cleared during
+> @@ -5915,18 +5928,12 @@ static irqreturn_t ufshcd_check_errors(struct ufs_hba *hba)
+>   
+>   		/* dump controller state before resetting */
+>   		if (hba->saved_err & (INT_FATAL_ERRORS | UIC_ERROR)) {
+> -			bool pr_prdt = !!(hba->saved_err &
+> -					SYSTEM_BUS_FATAL_ERROR);
+> -
+>   			dev_err(hba->dev, "%s: saved_err 0x%x saved_uic_err 0x%x\n",
+>   					__func__, hba->saved_err,
+>   					hba->saved_uic_err);
+> -
+> -			ufshcd_print_host_regs(hba);
+> +			ufshcd_dump_regs(hba, 0, UFSHCI_REG_SPACE_SIZE,
+> +					 "host_regs: ");
+>   			ufshcd_print_pwr_info(hba);
+> -			ufshcd_print_tmrs(hba, hba->outstanding_tasks);
+> -			ufshcd_print_trs(hba, hba->outstanding_reqs,
+> -					pr_prdt);
+>   		}
+>   		ufshcd_schedule_eh_work(hba);
+>   		retval |= IRQ_HANDLED;
+> 
 
 
-On 8/3/20 3:27 AM, David Laight wrote:
-> From: Mark Rutland
->> Sent: 31 July 2020 19:32
-> ...
->>> It requires PC-relative data references. I have not worked on all architectures.
->>> So, I need to study this. But do all ISAs support PC-relative data references?
->> Not all do, but pretty much any recent ISA will as it's a practical
->> necessity for fast position-independent code.
-> i386 has neither PC-relative addressing nor moves from %pc.
-> The cpu architecture knows that the sequence:
-> 	call	1f  
-> 1:	pop	%reg  
-> is used to get the %pc value so is treated specially so that
-> it doesn't 'trash' the return stack.
->
-> So PIC code isn't too bad, but you have to use the correct
-> sequence.
-
-Is that true only for 32-bit systems only? I thought RIP-relative addressing was
-introduced in 64-bit mode. Please confirm.
-
-Madhavan
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
