@@ -2,126 +2,80 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDD7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B28DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48B872083B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:27:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457654;
-	bh=n0N1YzP0aiE4E/zJkWQULR+8qmvqaz1DHcmCF3D0kZY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AQwvUW7xZM2Hebi1Smz5a9IDRU8WBm07wFjZmscw7sthOP42PpQ9nAofh+ete4Ygt
-	 65e4VnpConmPk1UoiDfY5mz8s6JeaJV8DHoHHGwjzeag0OqqiBuuzJgeoF4caM/qiT
-	 FrVNmSOUhN0JYH6kHiCCheim3NYPtQMZcBaCzV1o=
+	by mail.kernel.org (Postfix) with ESMTP id E6EE6204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:27:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgHCM1d (ORCPT
+        id S1728570AbgHCM1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:27:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53112 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:27:37 -0400
+Received: from 8bytes.org ([81.169.241.247]:34650 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728526AbgHCM1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:27:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38CD9204EC;
-        Mon,  3 Aug 2020 12:27:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457640;
-        bh=n0N1YzP0aiE4E/zJkWQULR+8qmvqaz1DHcmCF3D0kZY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aGv6CRSwEm7Nrd0XNtiDnYkfShB14fXC7ZCRxL5yz6cN01QLfB/VJ3O3tnWVnP6/n
-         qVZOUlzwkTGpaLPVLsWbsLoDiC9r2kWACXJdKIwZNabhzhmVAtMSMpAsEtQDPYXzfY
-         FsO2W+FQNVeVrV+lZUNcx2fayz6JvYdTciRougJY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        Suniel Mahesh <sunil@amarulasolutions.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.4 20/90] ARM: dts: imx6qdl-icore: Fix OTG_ID pin and sdcard detect
-Date:   Mon,  3 Aug 2020 14:18:42 +0200
-Message-Id: <20200803121858.596760650@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
-References: <20200803121857.546052424@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1728530AbgHCM1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:27:24 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id E244D423; Mon,  3 Aug 2020 14:27:21 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/4] KVM: SVM: SEV-ES groundwork
+Date:   Mon,  3 Aug 2020 14:27:04 +0200
+Message-Id: <20200803122708.5942-1-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Trimarchi <michael@amarulasolutions.com>
+Hi Paolo,
 
-commit 4a601da92c2a782e5c022680d476104586b74994 upstream.
+here is v3 of the  groundwork patches for the upcoming SEV-ES support in
+the Linux kernel. They are part of both the client patch-set and the
+KVM hypervisor patches (under development).
 
-The current pin muxing scheme muxes GPIO_1 pad for USB_OTG_ID
-because of which when card is inserted, usb otg is enumerated
-and the card is never detected.
+Patch 1 necesary to fix a compile warning about a stack-frame getting
+too large. The other 3 patches define the Guest Hypervisor
+Communication Block (GHCB) and accessor functions.
 
-[   64.492645] cfg80211: failed to load regulatory.db
-[   64.492657] imx-sdma 20ec000.sdma: external firmware not found, using ROM firmware
-[   76.343711] ci_hdrc ci_hdrc.0: EHCI Host Controller
-[   76.349742] ci_hdrc ci_hdrc.0: new USB bus registered, assigned bus number 2
-[   76.388862] ci_hdrc ci_hdrc.0: USB 2.0 started, EHCI 1.00
-[   76.396650] usb usb2: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 5.08
-[   76.405412] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-[   76.412763] usb usb2: Product: EHCI Host Controller
-[   76.417666] usb usb2: Manufacturer: Linux 5.8.0-rc1-next-20200618 ehci_hcd
-[   76.424623] usb usb2: SerialNumber: ci_hdrc.0
-[   76.431755] hub 2-0:1.0: USB hub found
-[   76.435862] hub 2-0:1.0: 1 port detected
+This version addresses the review comments from Sean.
 
-The TRM mentions GPIO_1 pad should be muxed/assigned for card detect
-and ENET_RX_ER pad for USB_OTG_ID for proper operation.
+It would be great if you could consider them for v5.9, so that the
+client and the hypervisor patch-sets can be developed more independently
+of each other.
 
-This patch fixes pin muxing as per TRM and is tested on a
-i.Core 1.5 MX6 DL SOM.
+Please let me know what you think.
 
-[   22.449165] mmc0: host does not support reading read-only switch, assuming write-enable
-[   22.459992] mmc0: new high speed SDHC card at address 0001
-[   22.469725] mmcblk0: mmc0:0001 EB1QT 29.8 GiB
-[   22.478856]  mmcblk0: p1 p2
+Regards,
 
-Fixes: 6df11287f7c9 ("ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual initial support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Suniel Mahesh <sunil@amarulasolutions.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+	Joerg
 
----
- arch/arm/boot/dts/imx6qdl-icore.dtsi |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Borislav Petkov (1):
+  KVM: SVM: Use __packed shorthand
 
---- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-@@ -384,7 +384,7 @@
- 
- 	pinctrl_usbotg: usbotggrp {
- 		fsl,pins = <
--			MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
-+			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID 0x17059
- 		>;
- 	};
- 
-@@ -396,6 +396,7 @@
- 			MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17070
- 			MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17070
- 			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17070
-+			MX6QDL_PAD_GPIO_1__GPIO1_IO01  0x1b0b0
- 		>;
- 	};
- 
+Joerg Roedel (2):
+  KVM: SVM: nested: Don't allocate VMCB structures on stack
+  KVM: SVM: Add GHCB Accessor functions
 
+Tom Lendacky (1):
+  KVM: SVM: Add GHCB definitions
+
+ arch/x86/include/asm/svm.h | 100 ++++++++++++++++++++++++++++++++++---
+ arch/x86/kvm/svm/nested.c  |  47 +++++++++++------
+ arch/x86/kvm/svm/svm.c     |   2 +
+ 3 files changed, 128 insertions(+), 21 deletions(-)
+
+-- 
+2.17.1
 
