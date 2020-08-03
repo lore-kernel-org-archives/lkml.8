@@ -2,78 +2,76 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED73FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F86C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAAF42076C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:57:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596455823;
-	bh=1B32VBXkTOu6ya5xaGuX3/aemtBhFCxYL4uyodnisPw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NHFJa377mljTpNlUjAinJcN+laGQouTgNtpOmLtB7CW+bgltp3gfCa0L31aAD5K74
-	 8r6RF6JH7i5HspXAJKsBh7W35j7yG3oE/dYttfs6VTLX2LwbfliwnyS/QB9hNZ+Y3d
-	 xk2eFcXiBvXHy0mfSRcO0sR8kUPsl8s1EioCWeR8=
+	by mail.kernel.org (Postfix) with ESMTP id 7544C2076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgHCL5C (ORCPT
+        id S1726356AbgHCL7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 07:57:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35562 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbgHCL5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 07:57:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D09522076C;
-        Mon,  3 Aug 2020 11:56:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596455820;
-        bh=1B32VBXkTOu6ya5xaGuX3/aemtBhFCxYL4uyodnisPw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ySAidrBqFvVbFJBiyKk5eKRAVNEPQTe1b/IakySXRyswxtAk+Rb0NnSrrwhcl5NyP
-         6V6d/ViKOFYR+8cpXtDtVFD1TrgrQYhV45Xfq5uDIpa2QpodQbFboeVl7R+clRcRzV
-         cV0nkP+1OGKBRp7hZM2gmAG+kQwbZquZHKdOQSlA=
-Date:   Mon, 3 Aug 2020 13:56:44 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     Pavel Machek <pavel@denx.de>, Qiwu Huang <yanziily@gmail.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jiangfei1@xiaomi.com, Qiwu Huang <huangqiwu@xiaomi.com>
-Subject: Re: [PATCH v4 1/4] power: supply: core: add quick charge type
- property
-Message-ID: <20200803115644.GC955269@kroah.com>
-References: <cover.1595214246.git.huangqiwu@xiaomi.com>
- <c9d3199ec18625f9cc4448c3b2049ea2ae80358b.1595214246.git.huangqiwu@xiaomi.com>
- <20200802120015.GA1289@bug>
- <20200802123742.GA257810@kroah.com>
- <20200802142825.GA20261@amd>
- <20200802165738.GA293244@kroah.com>
- <20200803114950.oyb3gzyiccybah3u@earth.universe>
+        Mon, 3 Aug 2020 07:59:20 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:46622 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725945AbgHCL7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 07:59:19 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 2415758666F959E4BACB;
+        Mon,  3 Aug 2020 19:59:16 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Mon, 3 Aug 2020
+ 19:59:05 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <digetx@gmail.com>, <mchehab@kernel.org>,
+        <gregkh@linuxfoundation.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <hverkuil-cisco@xs4all.nl>
+CC:     <linux-media@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] media: staging: tegra-vde: Mark tegra_vde_runtime_suspend as __maybe_unused
+Date:   Mon, 3 Aug 2020 19:59:01 +0800
+Message-ID: <20200803115901.44068-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200803114950.oyb3gzyiccybah3u@earth.universe>
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 01:49:50PM +0200, Sebastian Reichel wrote:
-> More importantely I prefer not to merge new APIs without any users
-> (i.e. a driver making use of those values). Having a reference
-> driver means, that there is an example how to use the values
-> correctly and proves it is actually needed upstream. Right now
-> this looks like "let's modify the upstream kernel, so that we can
-> easily maintain our out of tree driver".
+If CONFIG_PM is not set, gcc warns:
 
-Agreed.  Qiwu, can you also submit your driver so we can see these
-values be used?
+drivers/staging/media/tegra-vde/vde.c:916:12:
+ warning: 'tegra_vde_runtime_suspend' defined but not used [-Wunused-function]
 
-thanks,
+Make it __maybe_unused to fix this.
 
-greg k-h
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/staging/media/tegra-vde/vde.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/media/tegra-vde/vde.c b/drivers/staging/media/tegra-vde/vde.c
+index a3c24d96d5b9..2d043d518eef 100644
+--- a/drivers/staging/media/tegra-vde/vde.c
++++ b/drivers/staging/media/tegra-vde/vde.c
+@@ -913,7 +913,7 @@ static irqreturn_t tegra_vde_isr(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static int tegra_vde_runtime_suspend(struct device *dev)
++static __maybe_unused int tegra_vde_runtime_suspend(struct device *dev)
+ {
+ 	struct tegra_vde *vde = dev_get_drvdata(dev);
+ 	int err;
+-- 
+2.17.1
+
+
