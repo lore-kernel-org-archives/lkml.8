@@ -2,98 +2,104 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B556C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C21AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17A6322B45
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:32:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o3dXV7G8"
+	by mail.kernel.org (Postfix) with ESMTP id AE8B9207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:35:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596483345;
+	bh=MxGoaTAtolmfHKz4zS7NCIftpCcbidZF08AQUmOu+t8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=kh9wyuLuYqfKbEp6zpck9bDpam4/tg2/09Feyzc7UNHVkPK3CrEIMBO51+o2g6TQ9
+	 4OxKTsyDmH5R0gXYPBGZiD5ElSkZITidGi0+gdCgql5C4E9PKvMepuqqzLnSrQ9GiY
+	 Ou6UqGDOvzORDIgwZcrFfRwZjPN5KM9BmJpF/C/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgHCTcw (ORCPT
+        id S1728057AbgHCTfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 15:32:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51730 "EHLO
+        Mon, 3 Aug 2020 15:35:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726906AbgHCTcv (ORCPT
+        with ESMTP id S1726906AbgHCTfo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 15:32:51 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A30B0C06174A;
-        Mon,  3 Aug 2020 12:32:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=tl6E9v7JdT5SPY6RMUgVUsix1wSI4Y22duyU2Vp5sVk=; b=o3dXV7G8FYbZAU/4Lg96+dolTO
-        DqoRG7LfpQE59kto5q1iSKTjpcj2KQjfXZvxPUY16QRZkDh7epiAhndKeQOJYEiwZDH1dLpThI/RR
-        0YXyYXpcpSyy2fQ0jAJYg9rXXvRnUnHGYc5zpTunKPoXC3O0yYG26lWEpt9G2IWLHnVvFgCSFzVcF
-        jbo+wP7Ibc7+21WihDdd6g+lxpyPGp4pvZ+8jYUpZvt70+bLfXqzb4A4vFPXTrE2EcmXq2wTl0Syo
-        qC20FgOvl8Ap6ocJcc4CrqRs6Spg1jZj35h998IC7L+Ntb6bGxopuich+GSzDEWTijX8DvWlpmqU8
-        91LjJiSg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k2gC2-0003qo-VT; Mon, 03 Aug 2020 19:32:25 +0000
-Subject: Re: [PATCH v4 4/6] can: ctucanfd: CTU CAN FD open-source IP core -
- PCI bus support.
-To:     pisa@cmp.felk.cvut.cz, linux-can@vger.kernel.org,
-        devicetree@vger.kernel.org, mkl@pengutronix.de,
-        socketcan@hartkopp.net
-Cc:     wg@grandegger.com, davem@davemloft.net, robh+dt@kernel.org,
-        mark.rutland@arm.com, c.emde@osadl.org, armbru@redhat.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        martin.jerabek01@gmail.com, ondrej.ille@gmail.com,
-        jnovak@fel.cvut.cz, jara.beran@gmail.com, porazil@pikron.com
-References: <cover.1596408856.git.pisa@cmp.felk.cvut.cz>
- <bad059402032f82fa63aa51d2122589a8a2cf6fd.1596408856.git.pisa@cmp.felk.cvut.cz>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <e4378bd9-6484-88bc-48d3-d7fdda62c844@infradead.org>
-Date:   Mon, 3 Aug 2020 12:32:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 3 Aug 2020 15:35:44 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF216C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 12:35:43 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id m20so18601708eds.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 12:35:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=UEsnFDOziY/SSigbmemZue+bgzYjtXS6TKGZJuhtS0M=;
+        b=c3ymGK1EIA+piK2yhfbf46E6AQhrP7ulZr7ALLwb90NrwIaKpk1LXqj1m+v6fJPYNI
+         dhSTmmrWWotGkCaEOArtFUIiaEy0Z7DKW3vrEu32uR1ZgX5/+epblHUSLTGcegXxiCua
+         H0wbHNy1uosqCvAVu6CLOnhj56MR7jen8jRLP5xfZy1qzEz2TS/MeEYJRLWOqpOVybDp
+         txkvCfZamy6At8PkFC26m+I+UXS/vRHIvonGpO9I5cEox2CYfMJTdigo00cxkrFzcXeG
+         F2tMhY4DwclmOjImBIxo5Z4o/6Ngtjr6gFqxvwEE7NZ4orG6Bczy4iaK4WQyVDXnEZDR
+         jVog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition;
+        bh=UEsnFDOziY/SSigbmemZue+bgzYjtXS6TKGZJuhtS0M=;
+        b=ELtBaOhca0qEmxckxeimYGTe1h0WaBwEW+3w1wapdgTHMxnYZnT8ifM33NoXF08T2F
+         60/em9VZYImUAwylr5t7HpPUKRKDcqWQvxGZ68ZKByo4dJNOsUQBzvBt9AfxM0l82jZe
+         lsmW1Kd+PdwNS/+V/flEv459L32V4M6zD1bdUoGgjc2ESlz86UvdUf5/TiN0ZQEgXCzM
+         LsQWyFilEw+Hj2dsgGGd8kMjoy43RH6Jp08N/ALSGmKQ7PCwtt59hA6bZkPT0NmrGEAH
+         M0Pvgi0NWE6qw8N5NKwMEE5FS0QHXUmL9gQfR8oj1gvpF8Ap7JPA1vR+Mkr6kBKg62Qn
+         v2tQ==
+X-Gm-Message-State: AOAM530Eb2Uu/aFGdGkdJIC2nAv4wdV1+o2lFQcNoTaqGIlRWZ/+TxsH
+        u9Z+4NZFTG8wwUB6G46WExc=
+X-Google-Smtp-Source: ABdhPJyxIvwWnM/3rGv7HWBgGbBREBrVOK2PfPeVBiWnw2y4ltG9QTPHZ+roYFJBH3k8KaqabsAHSA==
+X-Received: by 2002:a50:d1d8:: with SMTP id i24mr17816425edg.341.1596483342125;
+        Mon, 03 Aug 2020 12:35:42 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id n11sm16546091edv.39.2020.08.03.12.35.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 12:35:41 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 21:35:39 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/timers change for v5.9
+Message-ID: <20200803193539.GA1411343@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <bad059402032f82fa63aa51d2122589a8a2cf6fd.1596408856.git.pisa@cmp.felk.cvut.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/3/20 11:34 AM, pisa@cmp.felk.cvut.cz wrote:
-> diff --git a/drivers/net/can/ctucanfd/Kconfig b/drivers/net/can/ctucanfd/Kconfig
-> index 0620111d57fd..8a5f5d05fa72 100644
-> --- a/drivers/net/can/ctucanfd/Kconfig
-> +++ b/drivers/net/can/ctucanfd/Kconfig
-> @@ -15,4 +15,13 @@ config CAN_CTUCANFD
->  
->  if CAN_CTUCANFD
->  
-> +config CAN_CTUCANFD_PCI
-> +    tristate "CTU CAN-FD IP core PCI/PCIe driver"
-> +    depends on PCI
-> +	help
+Linus,
 
-"help" should be indented with one tab only (no spaces).
+Please pull the latest x86/timers git tree from:
 
-> +	  This driver adds PCI/PCIe support for CTU CAN-FD IP core.
-> +	  The project providing FPGA design for Intel EP4CGX15 based DB4CGX15
-> +	  PCIe board with PiKRON.com designed transceiver riser shield is available
-> +	  at https://gitlab.fel.cvut.cz/canbus/pcie-ctu_can_fd .
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-timers-2020-08-03
 
-help text should be indented with one tab + 2 spaces according to
-Documentation/process/coding-style.rst.
+   # HEAD: 898ec52d2ba05915aaedcdb21bff2e944c883cb8 x86/xen/time: Set the X86_FEATURE_TSC_KNOWN_FREQ flag in xen_tsc_khz()
 
-> +
->  endif
+A single commit which sets the X86_FEATURE_TSC_KNOWN_FREQ flag for Xen guests,
+to avoid recalibration.
 
-thanks.
--- 
-~Randy
+ Thanks,
+
+	Ingo
+
+------------------>
+Hayato Ohhashi (1):
+      x86/xen/time: Set the X86_FEATURE_TSC_KNOWN_FREQ flag in xen_tsc_khz()
+
+
+ arch/x86/xen/time.c | 1 +
+ 1 file changed, 1 insertion(+)
 
