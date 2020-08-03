@@ -2,116 +2,105 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16028C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2170C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DC8C2073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E53D220781
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:02:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ACOBYWjw"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="WvzRhMuo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729168AbgHCXBk (ORCPT
+        id S1729181AbgHCXCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 19:01:40 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:52876 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727991AbgHCXBi (ORCPT
+        Mon, 3 Aug 2020 19:02:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55774 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728421AbgHCXCO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 19:01:38 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 073MvwD1144602;
-        Mon, 3 Aug 2020 23:00:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=E0GKLnLPkLgbmbdNCW1tpyfjn343QfKzawDvG83iUPQ=;
- b=ACOBYWjwRJYSLKMLuZAP6zOqGxzP313nnbnv1A3elKctp6Z/mGmfTWQd1LwMJZUvU8c2
- a2pvVUxl3TVbEHuQbw4f9Bm57dHOlLEDA2oNbXSnNILlfU05BA7lTtn0RfkAnlib5q0U
- eUN5KX/q9gLS1f8e2SuLVsczgTk8VfS42JzGM2ZvLyZ49iZeavkS3YLyL8s9slUrlQUj
- gTpyc6M8cHiKH0jQ/g/K0cMCJLbL8w//efpdZc41OBSM/brQNGgJH3xmcENYRsGWZgi5
- lhmW5u1jHweqGNiFBGBlDJjKQ4/8eE95h67hwlAidTqZGl7EuQuoBMgUuUBcvtYPiuyw 4A== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 32n11n151a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 03 Aug 2020 23:00:59 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 073Mx5qK012948;
-        Mon, 3 Aug 2020 23:00:58 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 32p5grce4b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 03 Aug 2020 23:00:58 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 073N0suD006631;
-        Mon, 3 Aug 2020 23:00:54 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 03 Aug 2020 16:00:54 -0700
-Subject: Re: [PATCH] hugetlbfs: remove call to huge_pte_alloc without
- i_mmap_rwsem
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Kirill A.Shutemov" <kirill.shutemov@linux.intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Prakash Sangappa <prakash.sangappa@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        stable@vger.kernel.org
-References: <20200803224335.55794-1-mike.kravetz@oracle.com>
- <20200803225234.GD23808@casper.infradead.org>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <9072d352-7a07-aac7-3439-3f524fc465ed@oracle.com>
-Date:   Mon, 3 Aug 2020 16:00:52 -0700
+        Mon, 3 Aug 2020 19:02:14 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16428C061756
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 16:02:14 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id o5so3034740pgb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 16:02:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=V/+z/hxKFgTteJODvKkcx/ojBZuakxz0j5YHjVIKU/I=;
+        b=WvzRhMuo+Bhq3EFBZdXi/SgHsTe8rpKDUkQkc9iu++WXSNIDqmVy3dDn8sRLN7T/eO
+         I5z/tJlNF/CoQPYbXeY4zyQgcBzx/NK7gKR3VSmsCWbt4a63wjrorNpU5oK7/o9EZOb7
+         GbPlkTi5doGkvngQDeNHiK7aW320dZCIeL6HC7a4lnD8VLxmcvn2u4EPPsXE6V8IUM3m
+         rPVkbrqrwSUqWpNEvZvM+Kf+klqLwtyeqrppMj6Cn+IIGyxakTB42svkyBYmfeLCtMtf
+         tqEgDHKaHqyaEZ2+YlffH0DefvxZ20+vvWxiUoEvuAKYotl5pPF6eEfaTbizpQyCOlUy
+         97SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=V/+z/hxKFgTteJODvKkcx/ojBZuakxz0j5YHjVIKU/I=;
+        b=fiO3xpeTXtMIAvyxUsC4TO1dmaVXbyiBZMuXEXmM0KtD/NL4AckCMVL4CpAIlHfC0R
+         YRgrWzUTMfFLTlmvASzSjz4fNxlkIHxPgSFtzF91Qgl9v08Fgw5sLDndIfqxNsGYb6ql
+         n5xajHnKd+XpJj+1JZBJKTvlWxC2p5AC+ep5BzzPaYeNw90z0iHF4ooOWugL9w0pQ+nH
+         ekeMj2B2XHd9mKVv8+wKlXYbK04JP2O7LlTPmjb1eeIeAyDs8o2tnsTvDgWgLyRKy5n+
+         KDT/aon7GA0JKJ4oONN2kCO7c4liV9VvOsKfXBd2jp6YPt/jzSB0kiQJoJKRDYi+q3LN
+         afAQ==
+X-Gm-Message-State: AOAM531jcuhs/2nyeVA8U1PFa8sRBxtEcSHuWnlGjK+RefkzaZesjOXd
+        7qR2UlOpke0nSEF6F9/q9X0A1j5Pe7U=
+X-Google-Smtp-Source: ABdhPJxYaNOzfp7Coaq7/S3GFzQRaWKpMjthMCF1MVEAbgu6MXquqj4sTaj7nUYP30nuW+UakDmt1Q==
+X-Received: by 2002:a65:438c:: with SMTP id m12mr16411217pgp.373.1596495733364;
+        Mon, 03 Aug 2020 16:02:13 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id r185sm21403864pfr.8.2020.08.03.16.02.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Aug 2020 16:02:12 -0700 (PDT)
+To:     Theodore Ts'o <tytso@mit.edu>
+Cc:     linux-ext4@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH] ext4: flag as supporting buffered async reads
+Message-ID: <fb90cc2d-b12c-738f-21a4-dd7a8ae0556a@kernel.dk>
+Date:   Mon, 3 Aug 2020 17:02:11 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200803225234.GD23808@casper.infradead.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9702 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
- phishscore=0 spamscore=0 adultscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008030158
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9702 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0 mlxscore=0
- suspectscore=0 mlxlogscore=999 phishscore=0 adultscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008030158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/3/20 3:52 PM, Matthew Wilcox wrote:
-> On Mon, Aug 03, 2020 at 03:43:35PM -0700, Mike Kravetz wrote:
->> Commit c0d0381ade79 ("hugetlbfs: use i_mmap_rwsem for more pmd sharing
->> synchronization") requires callers of huge_pte_alloc to hold i_mmap_rwsem
->> in at least read mode.  This is because the explicit locking in
->> huge_pmd_share (called by huge_pte_alloc) was removed.  When restructuring
->> the code, the call to huge_pte_alloc in the else block at the beginning
->> of hugetlb_fault was missed.
-> 
-> Should we have a call to mmap_assert_locked() in huge_pte_alloc(),
-> at least the generic one?
+ext4 uses generic_file_read_iter(), which already supports this.
 
-That is the wrong semaphore.
+Cc: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 
-However, I was not aware of the checks for a semaphore being held as is
-done in rwsem_is_locked().  That would have caught this when the original
-code was changed.  Thanks for pointing this out.
+---
 
-Let me update the patch and add checks to huge_pmd_share().
+Resending this one, as I've been carrying it privately since May. The
+necessary bits are now upstream (and XFS/btrfs equiv changes as well),
+please consider this one for 5.9. Thanks!
+
+diff --git a/fs/ext4/file.c b/fs/ext4/file.c
+index 2a01e31a032c..1e827410e9e1 100644
+--- a/fs/ext4/file.c
++++ b/fs/ext4/file.c
+@@ -839,7 +839,7 @@ static int ext4_file_open(struct inode * inode, struct file * filp)
+ 			return ret;
+ 	}
+ 
+-	filp->f_mode |= FMODE_NOWAIT;
++	filp->f_mode |= FMODE_NOWAIT | FMODE_BUF_RASYNC;
+ 	return dquot_file_open(inode, filp);
+ }
+ 
 -- 
-Mike Kravetz
+Jens Axboe
+
