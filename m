@@ -2,135 +2,92 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D151C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 917B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71581206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6237020678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:18:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VBEL9t0T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgHCKRE (ORCPT
+        id S1726778AbgHCKSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 06:17:04 -0400
-Received: from relay.sw.ru ([185.231.240.75]:37986 "EHLO relay3.sw.ru"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725951AbgHCKRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 06:17:03 -0400
-Received: from [192.168.15.50] (helo=localhost.localdomain)
-        by relay3.sw.ru with esmtp (Exim 4.93)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1k2XWJ-0002Oe-Qa; Mon, 03 Aug 2020 13:16:39 +0300
-Subject: [PATCH 8/8] time: Use generic ns_common::count
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-To:     christian.brauner@ubuntu.com, akpm@linux-foundation.org,
-        ebiederm@xmission.com, viro@zeniv.linux.org.uk,
-        adobriyan@gmail.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, ktkhai@virtuozzo.com
-Date:   Mon, 03 Aug 2020 13:17:00 +0300
-Message-ID: <159644982033.604812.9406853013011123238.stgit@localhost.localdomain>
-In-Reply-To: <159644958332.604812.13004003379291842292.stgit@localhost.localdomain>
-References: <159644958332.604812.13004003379291842292.stgit@localhost.localdomain>
-User-Agent: StGit/0.19
+        Mon, 3 Aug 2020 06:18:21 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:47234 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726752AbgHCKSU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 06:18:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596449899;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bfXMCNI/Os0PHSTlvW49y4Nr2+FnMZYDapmptaEW04U=;
+        b=VBEL9t0Tt4gA/grwTrDZ2wi4qyr/OqEpSfoE2D9y2Kriajvba9USa8C5AAl9BQWE9skC1z
+        8wwB+lHyKNKam+MzzSWaq50JzNYlxr1bEOnvOOmda5QqAf+bJHzv2HsIy2/do6YFeNJa8y
+        3CA8uOkWlP19XIBMVYNOe0HuD7R+YXc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-368-K_5LoHEKMdSlR3ZUeqZ2fw-1; Mon, 03 Aug 2020 06:18:16 -0400
+X-MC-Unique: K_5LoHEKMdSlR3ZUeqZ2fw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 449B81005504;
+        Mon,  3 Aug 2020 10:18:13 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 17FC888F20;
+        Mon,  3 Aug 2020 10:18:09 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAJfpegsT_3YqHPWCZGX7Lr+sE0NVmczWz5L6cN8CzsVz4YKLCQ@mail.gmail.com>
+References: <CAJfpegsT_3YqHPWCZGX7Lr+sE0NVmczWz5L6cN8CzsVz4YKLCQ@mail.gmail.com> <1293241.1595501326@warthog.procyon.org.uk> <CAJfpegspWA6oUtdcYvYF=3fij=Bnq03b8VMbU9RNMKc+zzjbag@mail.gmail.com> <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk> <158454391302.2863966.1884682840541676280.stgit@warthog.procyon.org.uk> <2003787.1595585999@warthog.procyon.org.uk> <865566fb800a014868a9a7e36a00a14430efb11e.camel@themaw.net> <2023286.1595590563@warthog.procyon.org.uk>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     dhowells@redhat.com, Ian Kent <raven@themaw.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>, andres@anarazel.de,
+        Jeff Layton <jlayton@redhat.com>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>, keyrings@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 13/17] watch_queue: Implement mount topology and attribute change notifications [ver #5]
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1283474.1596449889.1@warthog.procyon.org.uk>
+Date:   Mon, 03 Aug 2020 11:18:09 +0100
+Message-ID: <1283475.1596449889@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert time namespace to use generic counter.
+Miklos Szeredi <miklos@szeredi.hu> wrote:
 
-Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
----
- include/linux/time_namespace.h |    9 ++++-----
- kernel/time/namespace.c        |    9 +++------
- 2 files changed, 7 insertions(+), 11 deletions(-)
+> > fsinfo() then allows you to retrieve them by path or by mount ID.
+> 
+> Shouldn't the notification interface provide the unique ID?
 
-diff --git a/include/linux/time_namespace.h b/include/linux/time_namespace.h
-index 5b6031385db0..a51ffc089219 100644
---- a/include/linux/time_namespace.h
-+++ b/include/linux/time_namespace.h
-@@ -4,7 +4,6 @@
- 
- 
- #include <linux/sched.h>
--#include <linux/kref.h>
- #include <linux/nsproxy.h>
- #include <linux/ns_common.h>
- #include <linux/err.h>
-@@ -18,7 +17,6 @@ struct timens_offsets {
- };
- 
- struct time_namespace {
--	struct kref		kref;
- 	struct user_namespace	*user_ns;
- 	struct ucounts		*ucounts;
- 	struct ns_common	ns;
-@@ -37,20 +35,21 @@ extern void timens_commit(struct task_struct *tsk, struct time_namespace *ns);
- 
- static inline struct time_namespace *get_time_ns(struct time_namespace *ns)
- {
--	kref_get(&ns->kref);
-+	refcount_inc(&ns->ns.count);
- 	return ns;
- }
- 
- struct time_namespace *copy_time_ns(unsigned long flags,
- 				    struct user_namespace *user_ns,
- 				    struct time_namespace *old_ns);
--void free_time_ns(struct kref *kref);
-+void free_time_ns(struct time_namespace *ns);
- int timens_on_fork(struct nsproxy *nsproxy, struct task_struct *tsk);
- struct vdso_data *arch_get_vdso_data(void *vvar_page);
- 
- static inline void put_time_ns(struct time_namespace *ns)
- {
--	kref_put(&ns->kref, free_time_ns);
-+	if (refcount_dec_and_test(&ns->ns.count))
-+		free_time_ns(ns);
- }
- 
- void proc_timens_show_offsets(struct task_struct *p, struct seq_file *m);
-diff --git a/kernel/time/namespace.c b/kernel/time/namespace.c
-index afc65e6be33e..c4c829eb3511 100644
---- a/kernel/time/namespace.c
-+++ b/kernel/time/namespace.c
-@@ -92,7 +92,7 @@ static struct time_namespace *clone_time_ns(struct user_namespace *user_ns,
- 	if (!ns)
- 		goto fail_dec;
- 
--	kref_init(&ns->kref);
-+	refcount_set(&ns->ns.count, 1);
- 
- 	ns->vvar_page = alloc_page(GFP_KERNEL | __GFP_ZERO);
- 	if (!ns->vvar_page)
-@@ -226,11 +226,8 @@ static void timens_set_vvar_page(struct task_struct *task,
- 	mutex_unlock(&offset_lock);
- }
- 
--void free_time_ns(struct kref *kref)
-+void free_time_ns(struct time_namespace *ns)
- {
--	struct time_namespace *ns;
--
--	ns = container_of(kref, struct time_namespace, kref);
- 	dec_time_namespaces(ns->ucounts);
- 	put_user_ns(ns->user_ns);
- 	ns_free_inum(&ns->ns);
-@@ -464,7 +461,7 @@ const struct proc_ns_operations timens_for_children_operations = {
- };
- 
- struct time_namespace init_time_ns = {
--	.kref		= KREF_INIT(3),
-+	.ns.count	= REFCOUNT_INIT(3),
- 	.user_ns	= &init_user_ns,
- 	.ns.inum	= PROC_TIME_INIT_INO,
- 	.ns.ops		= &timens_operations,
+Hmmm...  If I'm going to do that, I have to put the fsinfo-core branch first
+otherwise you can't actually retrieve the unique ID - and thus won't be able
+to make sense of the notification record.  Such a rearrangement might make
+sense anyway since Ian and Karel have been primarily concentrating on fsinfo
+and only more recently started adding notification support.
 
+David
 
