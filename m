@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F844C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD1DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39B8F204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C9312054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458215;
-	bh=XTzEKkCiT3hDLUuKnQImLhNJnYrQpx71QkDX6t+ecwA=;
+	s=default; t=1596458218;
+	bh=pj9Zf2gXN7/jLCNdK9KZMHeeAQyLHHaWLBIS4TQzfGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u+yN+y7Ntpk2/JDp/GrtKki3WVfnleUVvJHQdwcWLC8yJCu8hQagTN478xD0HSWQX
-	 T70L7vzbkHwEbuVzJkfHlFh8TDI/0deFb3bR69Q4Iu4coifD7kvCLeniGwYoO6aJYB
-	 xt5yx51PgVY00Nq1c/Ah4NGOLQFu5L9Jj4GnF6e0=
+	b=Y1ezIkMIQPSy4rvHK0PNdTgyJj5Vh1eC8IxC2pNu0kYKAngp3suPjs57tAu7BUhJE
+	 pbo+2jlq//NlJ91ZhK6pzUuHAs9uvNSi0IxF443fM+Z3kBsiu566OeI3VLbA7AJIeJ
+	 81jVlecF6iRXBUpesaooQcgjW9X5SFbDQc5IIWCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729206AbgHCMgy (ORCPT
+        id S1729443AbgHCMgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:36:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35712 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:36:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729651AbgHCMfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:35:23 -0400
+        id S1729652AbgHCMf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:35:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F0C4204EC;
-        Mon,  3 Aug 2020 12:35:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 760312054F;
+        Mon,  3 Aug 2020 12:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596458122;
-        bh=XTzEKkCiT3hDLUuKnQImLhNJnYrQpx71QkDX6t+ecwA=;
+        s=default; t=1596458124;
+        bh=pj9Zf2gXN7/jLCNdK9KZMHeeAQyLHHaWLBIS4TQzfGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xrM969VprDR9Da/6/wa9T8nip5UEHJ2uPNPTdVMXuQrEiu9Cu0f8Gvu+hDC42PdNn
-         QT3E8V5HZ6Hb21Vy6CThf7cdvnepiW9lt7sg8Tvbd9hQUZMATSX9rCF8NfZ4Hzg0Wy
-         pElIlfuK/npO9fEOg5LtWzzR7M70KmH6jGkaqfaQ=
+        b=kUpT0BJBFNaEATOqju1lXkb1ke0yqDQdE9tmUKFR1HovWLVjUiuqTU4GVhfFLKw/k
+         eqXENmxuzKnWR762/OkQVuiw4CbHKUAV8wdwfz9o9rgqZ4/SegwGS696B4nyD1gSq6
+         a/8l0okJV+4Zu+WutGVyWWMZhfJzSXjNYGaVNhkg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dirk Behme <dirk.behme@de.bosch.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Gong Chen <gongchen4@huawei.com>,
+        Sheng Yong <shengyong1@huawei.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 45/51] net: ethernet: ravb: exit if re-initialization fails in tx timeout
-Date:   Mon,  3 Aug 2020 14:20:30 +0200
-Message-Id: <20200803121851.775366532@linuxfoundation.org>
+Subject: [PATCH 4.14 17/51] f2fs: check if file namelen exceeds max value
+Date:   Mon,  3 Aug 2020 14:20:02 +0200
+Message-Id: <20200803121850.325340290@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121849.488233135@linuxfoundation.org>
 References: <20200803121849.488233135@linuxfoundation.org>
@@ -62,89 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Sheng Yong <shengyong1@huawei.com>
 
-[ Upstream commit 015c5d5e6aa3523c758a70eb87b291cece2dbbb4 ]
+[ Upstream commit 720db068634c91553a8e1d9a0fcd8c7050e06d2b ]
 
-According to the report of [1], this driver is possible to cause
-the following error in ravb_tx_timeout_work().
+Dentry bitmap is not enough to detect incorrect dentries. So this patch
+also checks the namelen value of a dentry.
 
-ravb e6800000.ethernet ethernet: failed to switch device to config mode
-
-This error means that the hardware could not change the state
-from "Operation" to "Configuration" while some tx and/or rx queue
-are operating. After that, ravb_config() in ravb_dmac_init() will fail,
-and then any descriptors will be not allocaled anymore so that NULL
-pointer dereference happens after that on ravb_start_xmit().
-
-To fix the issue, the ravb_tx_timeout_work() should check
-the return values of ravb_stop_dma() and ravb_dmac_init().
-If ravb_stop_dma() fails, ravb_tx_timeout_work() re-enables TX and RX
-and just exits. If ravb_dmac_init() fails, just exits.
-
-[1]
-https://lore.kernel.org/linux-renesas-soc/20200518045452.2390-1-dirk.behme@de.bosch.com/
-
-Reported-by: Dirk Behme <dirk.behme@de.bosch.com>
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Gong Chen <gongchen4@huawei.com>
+Signed-off-by: Sheng Yong <shengyong1@huawei.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/renesas/ravb_main.c | 26 ++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+ fs/f2fs/dir.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index d73617cc3b159..9f4d93a16b7e5 100644
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -1482,6 +1482,7 @@ static void ravb_tx_timeout_work(struct work_struct *work)
- 	struct ravb_private *priv = container_of(work, struct ravb_private,
- 						 work);
- 	struct net_device *ndev = priv->ndev;
-+	int error;
+diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+index 7a177b8f227d2..ff519f7a87847 100644
+--- a/fs/f2fs/dir.c
++++ b/fs/f2fs/dir.c
+@@ -819,7 +819,8 @@ int f2fs_fill_dentries(struct dir_context *ctx, struct f2fs_dentry_ptr *d,
  
- 	netif_tx_stop_all_queues(ndev);
- 
-@@ -1490,15 +1491,36 @@ static void ravb_tx_timeout_work(struct work_struct *work)
- 		ravb_ptp_stop(ndev);
- 
- 	/* Wait for DMA stopping */
--	ravb_stop_dma(ndev);
-+	if (ravb_stop_dma(ndev)) {
-+		/* If ravb_stop_dma() fails, the hardware is still operating
-+		 * for TX and/or RX. So, this should not call the following
-+		 * functions because ravb_dmac_init() is possible to fail too.
-+		 * Also, this should not retry ravb_stop_dma() again and again
-+		 * here because it's possible to wait forever. So, this just
-+		 * re-enables the TX and RX and skip the following
-+		 * re-initialization procedure.
-+		 */
-+		ravb_rcv_snd_enable(ndev);
-+		goto out;
-+	}
- 
- 	ravb_ring_free(ndev, RAVB_BE);
- 	ravb_ring_free(ndev, RAVB_NC);
- 
- 	/* Device init */
--	ravb_dmac_init(ndev);
-+	error = ravb_dmac_init(ndev);
-+	if (error) {
-+		/* If ravb_dmac_init() fails, descriptors are freed. So, this
-+		 * should return here to avoid re-enabling the TX and RX in
-+		 * ravb_emac_init().
-+		 */
-+		netdev_err(ndev, "%s: ravb_dmac_init() failed, error %d\n",
-+			   __func__, error);
-+		return;
-+	}
- 	ravb_emac_init(ndev);
- 
-+out:
- 	/* Initialise PTP Clock driver */
- 	if (priv->chip_id == RCAR_GEN2)
- 		ravb_ptp_init(ndev, priv->pdev);
+ 		/* check memory boundary before moving forward */
+ 		bit_pos += GET_DENTRY_SLOTS(le16_to_cpu(de->name_len));
+-		if (unlikely(bit_pos > d->max)) {
++		if (unlikely(bit_pos > d->max ||
++				le16_to_cpu(de->name_len) > F2FS_NAME_LEN)) {
+ 			f2fs_msg(F2FS_I_SB(d->inode)->sb, KERN_WARNING,
+ 				"%s: corrupted namelen=%d, run fsck to fix.",
+ 				__func__, le16_to_cpu(de->name_len));
 -- 
 2.25.1
 
