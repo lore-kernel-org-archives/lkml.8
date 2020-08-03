@@ -2,112 +2,143 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 550D9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C1082067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:29:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="E5LkGHz5"
+	by mail.kernel.org (Postfix) with ESMTP id 3874B206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:31:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbgHCJ3y (ORCPT
+        id S1726321AbgHCJbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 05:29:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43164 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbgHCJ3m (ORCPT
+        Mon, 3 Aug 2020 05:31:48 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34917 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbgHCJbs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 05:29:42 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71AFDC06179E
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 02:29:40 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id o10so17035641edh.6
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 02:29:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=owNLFqTMe1SU5EaKmrLtcVAQ4KDndakWi4Xb0Cu0Z7c=;
-        b=E5LkGHz5hRcvvUwxDdXSDeNZX1oJy9nnYaDR4Qa2WN7LPbOyqMkQToA2KaIosRDx2l
-         /vAExylwGECGrMNjwVPDmYo7pNQ2YqGjS2ohu2O6bKfvmdR8zsidyAa/NkbgnEMDSLHI
-         4UqRBKbGyq8XWb5T0s7zheGCNIklGnT6FDvMg=
+        Mon, 3 Aug 2020 05:31:48 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 93so17274377otx.2;
+        Mon, 03 Aug 2020 02:31:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=owNLFqTMe1SU5EaKmrLtcVAQ4KDndakWi4Xb0Cu0Z7c=;
-        b=ZAi2qcQ/cEF1rkQVyIPAz/x6twKH5gun1JamXBrueyUyvBl84VjFoT1sGAYSS/lkIE
-         IbfsmML/qDUQyjLtmFWS179jKSDPtBZ4+NfiG0RjHY9wihD4cySG7pjUUZbn+m67azPG
-         zH8X2WEbodIheXe142hxaqRGuZLvUQa7hZGXhnYHx9lZjEbg+TowNnynTm4E17mQByk0
-         7mzY6Fyw/oydfCvasnSTNFdJKm1roOetWsxa3UCUDfcmEQrteypvhJhJB5bapNKQaC0g
-         75hLTPj5HR7HP1Qykp6AOgTrapH4qU3KqRrNgfqOdFciZzlL1XYwDFto1ZsfxJ/CnNx9
-         OIMg==
-X-Gm-Message-State: AOAM530uvcsbfQx1Z/mxeQNCYveNEdn9kCblPjRgTOO1HmTWQ7d83cKc
-        gZgfvtRvKfiB/ddQpZrBkZhO4zG1yiCrnS1yCeiaCA==
-X-Google-Smtp-Source: ABdhPJwwRwE/z9+48aOsHKHN045IllUewS+ZVaDKVLXEbNVYV6u3PqSbaJ4L7LCc7hyeEJUAG7ii5G7P1/+cTZ4bZsc=
-X-Received: by 2002:aa7:c915:: with SMTP id b21mr15388861edt.17.1596446978906;
- Mon, 03 Aug 2020 02:29:38 -0700 (PDT)
+        bh=cNQhjEuMT8QktkBdiT53ZebNYf/kgY2N7FdiAWEIJE4=;
+        b=DlKWAQnOqjkK9QgfxqupuGgRa5A+/aiWLdoXyEwtT5d8ZrIkmjEozg7HOivQM05Faz
+         XtKLatZ9q11FQgNkkFhIofDdmJVX1X2QvNJe+UvhPNI8/rHshH/BRuSENwVfxJGfgCEg
+         1HXukUtXWpVjTSJlpLoav5Vq9mlr+hVIXijoxFrxZNrzzyhV5+4X+PKXAdsjcCVOH/Rr
+         iDZNww03yYgS5zh4KVIvZLHZSdvMTqbvcFU+ZfT7oPBnd60OIaNpGua8oI2rxdRKnpp5
+         s0+4F9p5cLmn72qr/0dFPTqRtNCWWSSXVlrVRqSAEFh6mC+hfe7PF4l7T5js0Emrkrap
+         JAuA==
+X-Gm-Message-State: AOAM530/OyHCS2pfZIGRIcJvzSBLUTBI6wqi4H556sMZLgUbv9IOOuFW
+        JL1Tp1JHDZ+3KWWPbSsF92vamQFC535Hgupxc54=
+X-Google-Smtp-Source: ABdhPJxWHu6bmTNcqR+flJJ2oDdPHMxmw1tynMHEul1JJgkV5TSGCfXj/5LSyfY8jhyV1OsM5EXnn9dNW/aJyDE/ox8=
+X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr12167826ote.107.1596447106515;
+ Mon, 03 Aug 2020 02:31:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk>
- <158454391302.2863966.1884682840541676280.stgit@warthog.procyon.org.uk>
- <CAJfpegspWA6oUtdcYvYF=3fij=Bnq03b8VMbU9RNMKc+zzjbag@mail.gmail.com> <1293241.1595501326@warthog.procyon.org.uk>
-In-Reply-To: <1293241.1595501326@warthog.procyon.org.uk>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Mon, 3 Aug 2020 11:29:27 +0200
-Message-ID: <CAJfpeguvLMCw1H8+DPsfZE_k0sEiRtA17pD9HjnceSsAvqqAZw@mail.gmail.com>
-Subject: Re: [PATCH 13/17] watch_queue: Implement mount topology and attribute
- change notifications [ver #5]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian@brauner.io>, andres@anarazel.de,
-        Jeff Layton <jlayton@redhat.com>, dray@redhat.com,
-        Karel Zak <kzak@redhat.com>, keyrings@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        LSM <linux-security-module@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
+References: <1595602732-25582-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1595602732-25582-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200724193752.GE2729799@oden.dyn.berto.se> <CA+V-a8s7UkhCGcP8eiiH_jd8hhnpLJA6QqfL7jXo_sAgRMfy8g@mail.gmail.com>
+ <20200725081146.GF2729799@oden.dyn.berto.se> <CA+V-a8sNxUaj88DDcWyc4zrmsAAGndjoQX=OmJ3u1GRJCT6TBQ@mail.gmail.com>
+ <20200801091759.GC1379367@oden.dyn.berto.se>
+In-Reply-To: <20200801091759.GC1379367@oden.dyn.berto.se>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 3 Aug 2020 11:31:35 +0200
+Message-ID: <CAMuHMdUv-8v1Uqh9qU5NfCz0gr2iag_9Y28NiHU_X8nijLXRKA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: media: renesas,vin: Document
+ renesas-vin-ycbcr-8b-g property
+To:     Niklas <niklas.soderlund@ragnatech.se>
+Cc:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 12:48 PM David Howells <dhowells@redhat.com> wrote:
+Hi Niklas,
 
->
-> > >                 __u32   topology_changes;
-> > >                 __u32   attr_changes;
-> > >                 __u32   aux_topology_changes;
+On Sat, Aug 1, 2020 at 11:18 AM Niklas <niklas.soderlund@ragnatech.se> wrote:
+> On 2020-07-25 23:23:13 +0100, Lad, Prabhakar wrote:
+> > On Sat, Jul 25, 2020 at 9:11 AM Niklas <niklas.soderlund@ragnatech.se> wrote:
+> > > On 2020-07-24 22:11:31 +0100, Lad, Prabhakar wrote:
+> > > > On Fri, Jul 24, 2020 at 8:37 PM Niklas <niklas.soderlund@ragnatech.se> wrote:
+> > > > > On 2020-07-24 15:58:51 +0100, Lad Prabhakar wrote:
+> > > > > > Add a DT property "renesas-vin-ycbcr-8b-g" to select YCbCr422 8-bit data
+> > > > > > input pins.
+
+> > > > > This nit apart I'm not sure a property is the right way here. Could it
+> > > > > not be possible on some designs to have two different sensors one wired
+> > > > > to DATA[7:0] and the other to DATA[15:8] and by controlling the
+> > > > > VNDRM2_YDS register at runtime switch between the two? If so adding a DT
+> > > > > property to hard-code one of the two options would prevent this. I fear
+> > > > > we need to think of a runtime way to deal with this.
+> > > > >
+> > > > Aha Gen2 and Gen3 hardware manuals have a bit different description
+> > > > about the YDS field. (I was working R8a7742 SoC so I referred Gen2
+> > > > manual)
+> > >
+> > > Ahh, I think we should use the Gen3 names as I find them overall an
+> > > improvement over the Gen2 ones.
+> > >
+> > Agreed.
 > >
-> > Being 32bit this introduces wraparound effects.  Is that really worth it?
+> > > >
+> > > > > The best way to do that I think is to extend the port@0 node to allow
+> > > > > for two endpoints, one for each of the two possible parallel sensors.
+> > > > > This would then have to be expressed in the media graph and selection if
+> > > > > YDS should be set or not depend on which media links are enabled.
+> > > > >
+> > > > In that case how do we handle endpoint matching each would have two
+> > > > subdevs to be matched.
+> > >
+> > > It would be handle in the same was as the multiple endpoints in port@1.
+> > >
+> > > > And in case non media-ctl cases we cannot
+> > > > switch between subdevs.
+> > >
+> > > For the Gen2 none media graph enabled mode this could be handled with
+> > > the S_INPUT ioctl. For this feature to be merged however I it needs to
+> > > be possible to select input both in Gen2 and Gen3 I'm afraid.
+> > Ohh yes S_INPUT could be used to switch inputs. But  how do we decide
+> > YDS needs to be enabled, for example with the below dts say vin3 is
+> > parallel bus split into 2x 8-bit bus one connected to a ov5640 sensor
+> > and other connected to ov7725 sensor. Should we use data-shift
+> > property for the second vin endpoint (vin3ep1) to enable YDS ?
 >
-> You'd have to make 2 billion changes without whoever's monitoring getting a
-> chance to update their counters.  But maybe it's not worth it putting them
-> here.  If you'd prefer, I can make the counters all 64-bit and just retrieve
-> them with fsinfo().
-
-Yes, I think that would be preferable.
-
-> > >         n->watch.info & NOTIFY_MOUNT_IS_RECURSIVE if true indicates that
-> > >         the notifcation was generated by an event (eg. SETATTR) that was
-> > >         applied recursively.  The notification is only generated for the
-> > >         object that initially triggered it.
-> >
-> > Unused in this patchset.  Please don't add things to the API which are not
-> > used.
+> Using data-shift is a great idea! If I understand your use-case you
+> currently only have one sensor attached on the parallel bus right? If so
+> we can postpone the multi sensor part until it's needed and just learn
+> the VIN driver about data-shift. From the documentation,
 >
-> Christian Brauner has patches for mount_setattr() that will need to use this.
+>   - data-shift: on the parallel data busses, if bus-width is used to
+>     specify the number of data lines, data-shift can be used to specify
+>     which data lines are used, e.g. "bus-width=<8>; data-shift=<2>;"
+>     means, that lines 9:2 are used.
+>
+> So in this case would not specifying data-shift=<8> solve the DT
+> description problem? The VIN driver still needs to learn about this tho.
 
-Fine, then that patch can add the flag.
+And the PFC drivers need to be extended with the data8_sft8 groups
+(present in the BSP), right?
 
-Thanks,
-Miklos
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
