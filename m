@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65DAFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3987C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C1B820738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8704A20738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458904;
-	bh=6EPqKZcKMj1r5rp1Qtz9O/AAQmR92Y7S/UwFmjjsyWk=;
+	s=default; t=1596458913;
+	bh=kTonF4eWHt52DeZ898QNeEouGbHV74JSsFJIkPdxvng=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T4b6GW2g1kOl218AE+ZOJCpOezZI8/z6pCxoQ818UfdiEoTV5X36OZX28OBvw1jnK
-	 hz5e+92cSbNUp+zDenI3XDM+glxJqfbYGQORzMCeP/YN0XzXMmbkb+8Qi+qHvGKRDX
-	 FeASomU8LT/wPIIVdhFqfLMjDBD8AHTcuYO9sHYA=
+	b=SvDUDCsN9fk5TBvUrWPHvCFQAl0c1AdFvRzS3yilEJ5tO0RVpvuoJitF6ZFN6M2WI
+	 iMrIHiQns9zuc62clV+gYQeVCMr8jrGtzsDMPGsMIeCD0+t6GV7i7CpMqXh56Nu8mF
+	 7zRmaYiYKY10z1RIihAjD6QYAEzOW2e8decxXbd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729662AbgHCMsV (ORCPT
+        id S1729668AbgHCMsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:48:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49390 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:48:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728100AbgHCMYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:24:52 -0400
+        id S1728092AbgHCMYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:24:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7211622B47;
-        Mon,  3 Aug 2020 12:24:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00A7C204EC;
+        Mon,  3 Aug 2020 12:24:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457491;
-        bh=6EPqKZcKMj1r5rp1Qtz9O/AAQmR92Y7S/UwFmjjsyWk=;
+        s=default; t=1596457488;
+        bh=kTonF4eWHt52DeZ898QNeEouGbHV74JSsFJIkPdxvng=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FMU1FOLH7w7pfumrpGeqJtLBk6neOSnxc9QKhgquesM1ZXYI7nYBSzbyCuTU567Fd
-         2wH+nKRcbLrQTHNLFBicaHcYN24wxwHTtFoqCXaRi+bRbz3+27Ci7G+LVbSdci1AK2
-         b1bO7fJ3SOTEBemxj7U3ou+IY5dIJr5PCTnSDo74=
+        b=u7hQGxyvKmhr4x3pH+WryWl3s7XYGLDc+5BouJYnxYfKOWIxF9EF8OFcv9T/tt3a0
+         2uR8KSacrxOL52YFD05GnQNCKEI1MoXLhjOGPNr47HGD6nhu90ggPMKEOde17zV3UA
+         aaBgyBFHDhaY/90NE6Dj/LzZF4by7nDL5dHI9Yec=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Landen Chao <landen.chao@mediatek.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Lu Wei <luwei32@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 087/120] net: ethernet: mtk_eth_soc: fix MTU warnings
-Date:   Mon,  3 Aug 2020 14:19:05 +0200
-Message-Id: <20200803121907.107316147@linuxfoundation.org>
+Subject: [PATCH 5.7 086/120] net: nixge: fix potential memory leak in nixge_probe()
+Date:   Mon,  3 Aug 2020 14:19:04 +0200
+Message-Id: <20200803121907.059730829@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -62,41 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Landen Chao <landen.chao@mediatek.com>
+From: Lu Wei <luwei32@huawei.com>
 
-[ Upstream commit 555a893303872e044fb86f0a5834ce78d41ad2e2 ]
+[ Upstream commit 366228ed01f6882cc203e3d5b40010dfae0be1c3 ]
 
-in recent kernel versions there are warnings about incorrect MTU size
-like these:
+If some processes in nixge_probe() fail, free_netdev(dev)
+needs to be called to aviod a memory leak.
 
-eth0: mtu greater than device maximum
-mtk_soc_eth 1b100000.ethernet eth0: error -22 setting MTU to include DSA overhead
-
-Fixes: bfcb813203e6 ("net: dsa: configure the MTU for switch ports")
-Fixes: 72579e14a1d3 ("net: dsa: don't fail to probe if we couldn't set the MTU")
-Fixes: 7a4c53bee332 ("net: report invalid mtu value via netlink extack")
-Signed-off-by: Landen Chao <landen.chao@mediatek.com>
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Fixes: 87ab207981ec ("net: nixge: Separate ctrl and dma resources")
+Fixes: abcd3d6fc640 ("net: nixge: Fix error path for obtaining mac address")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Lu Wei <luwei32@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/ni/nixge.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 09047109d0daa..b743d8b56c848 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -2882,6 +2882,8 @@ static int mtk_add_mac(struct mtk_eth *eth, struct device_node *np)
- 	eth->netdev[id]->irq = eth->irq[0];
- 	eth->netdev[id]->dev.of_node = np;
+diff --git a/drivers/net/ethernet/ni/nixge.c b/drivers/net/ethernet/ni/nixge.c
+index 2fdd0753b3afd..0e776131a3ef3 100644
+--- a/drivers/net/ethernet/ni/nixge.c
++++ b/drivers/net/ethernet/ni/nixge.c
+@@ -1298,19 +1298,21 @@ static int nixge_probe(struct platform_device *pdev)
+ 	netif_napi_add(ndev, &priv->napi, nixge_poll, NAPI_POLL_WEIGHT);
+ 	err = nixge_of_get_resources(pdev);
+ 	if (err)
+-		return err;
++		goto free_netdev;
+ 	__nixge_hw_set_mac_address(ndev);
  
-+	eth->netdev[id]->max_mtu = MTK_MAX_RX_LENGTH - MTK_RX_ETH_HLEN;
-+
- 	return 0;
+ 	priv->tx_irq = platform_get_irq_byname(pdev, "tx");
+ 	if (priv->tx_irq < 0) {
+ 		netdev_err(ndev, "could not find 'tx' irq");
+-		return priv->tx_irq;
++		err = priv->tx_irq;
++		goto free_netdev;
+ 	}
  
- free_netdev:
+ 	priv->rx_irq = platform_get_irq_byname(pdev, "rx");
+ 	if (priv->rx_irq < 0) {
+ 		netdev_err(ndev, "could not find 'rx' irq");
+-		return priv->rx_irq;
++		err = priv->rx_irq;
++		goto free_netdev;
+ 	}
+ 
+ 	priv->coalesce_count_rx = XAXIDMA_DFT_RX_THRESHOLD;
 -- 
 2.25.1
 
