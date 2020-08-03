@@ -2,147 +2,115 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E5AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E54DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56783206DA
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF6AB206DA
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:15:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="B2zEn/cT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EliOTm2U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbgHCOOp (ORCPT
+        id S1728296AbgHCOPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:14:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58994 "EHLO
+        Mon, 3 Aug 2020 10:15:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbgHCOOp (ORCPT
+        with ESMTP id S1726796AbgHCOPv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 10:14:45 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F77EC06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 07:14:45 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id l2so23819288wrc.7
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 07:14:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FLbHjv6sJwixVTPUkFoWSHRhodSffvVZyVRd7tIiasg=;
-        b=B2zEn/cTAPCSpXohJxxE9xLki5PX7qj9FmnR22H1MmYxjKdSSg9r8fn9D17nOWsVtF
-         fpVS7mehInJffm1ZUCUB5jRQIx1fCpAgsTJyn2PNCjOChfYXSZ1Uox5t9Jt35RUxLJaU
-         +/wMv7/H2JoJ+vt+M0cl367/9AZOYXG6Pk2fjwfbYyh2u3ZBqLWaw6MpROnuZniEy+w2
-         tzfUUvPNKwKzIeuwp/UoeEj/GZu6ToI2fNUJAzVG3Hr5Hg+JmYyWq0jc1ZSvubOs6x8D
-         T0gEKGEVsM/4QIa6Dxq3d/Pgbq+MtlXF5j2qK1/sHPLpUiEuqHY8YMxRipZRojLA3fXZ
-         mssg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FLbHjv6sJwixVTPUkFoWSHRhodSffvVZyVRd7tIiasg=;
-        b=KmWqnMN35Uo7HvtS1gCXPCAFXcWM4arZ5dgY7p+Q9ZpAJg3J2c660xIQyL/kJv0q67
-         apzhcfG5/0v3DcGZyeB+cEvipBDSO52CVvYsNqHadTj51fxUsGcp9jk2KrCi+wxqdTzn
-         cYSl25p0UcPVYG0j3yMwPFaoQG5ehnkctECIKa5oH196WIO5+apl5PU6cns08G/HT8Nh
-         cyeHyAUTfFyObvgnQH6PgGxOB4m8nRMtlJk1ErfcNq0DgXnNs+0GTFlOMJbld1sdQHrd
-         s2e3/Fg2jTpPvwt5iD4IgPMRI4KS8L2zLFQffXdz3r4FzPTMOVX4M2Hht8eMldJkbjmj
-         309g==
-X-Gm-Message-State: AOAM5331pTogcrGA6kVM289mXSfnTijWz2JUN74MWycXF9xjMYYM1PuB
-        U8l9m9ipIEF91JRNi+2Nw5gVeg==
-X-Google-Smtp-Source: ABdhPJznD3hJfUFTjJH7UPAa7GPUSxqJFZslJTkwakD2rL934AAb7jo0NMosIKQlNHjl0AMptdyVZQ==
-X-Received: by 2002:adf:a4c8:: with SMTP id h8mr15140393wrb.262.1596464083711;
-        Mon, 03 Aug 2020 07:14:43 -0700 (PDT)
-Received: from localhost (ip-89-176-225-97.net.upcbroadband.cz. [89.176.225.97])
-        by smtp.gmail.com with ESMTPSA id i82sm19051192wmi.10.2020.08.03.07.14.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 07:14:43 -0700 (PDT)
-Date:   Mon, 3 Aug 2020 16:14:42 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Moshe Shemesh <moshe@mellanox.com>
-Cc:     Jakub Kicinski <kuba@kernel.org>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Subject: Re: [PATCH net-next RFC 01/13] devlink: Add reload level option to
- devlink reload command
-Message-ID: <20200803141442.GB2290@nanopsycho>
-References: <20200728135808.GC2207@nanopsycho>
- <464add44-3ab1-21b8-3dba-a88202350bb9@intel.com>
- <20200728114458.762b5396@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <d6fbfedd-9022-ff67-23ed-418607beecc2@intel.com>
- <20200728130653.7ce2f013@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <04f00024-758c-bc19-c187-49847c24a5a4@mellanox.com>
- <20200729140708.5f914c15@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <3352bd96-d10e-6961-079d-5c913a967513@mellanox.com>
- <20200730161101.48f42c5b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <0f2467fd-ee2e-1a51-f9c1-02f8a579d542@mellanox.com>
+        Mon, 3 Aug 2020 10:15:51 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2508FC06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 07:15:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=tAS11sJpElMBs2Pfs6KLa4qx/lgKKhsfUzhtsaRTmoY=; b=EliOTm2U9G2AnO8zvDaIC4l0Yk
+        s9QE3PYEN+MjTLkLvLN3iT78LpVL6fJkdOmsvYe8TpxcMT0A+QzEgi33wM+24VrVr2Xr1laEDhhIm
+        SAibRNjK+KGNSalwfKqbXjblaK/DzDlVo4KklgJ10ACHz6KEt0R6Qx7FNsfCr/tKYfTxPl40G/+2q
+        ZAH87xvPiPivlT5x63I6H1RDl0V3y2CXwL/PmeQLvTsI5o+b3AxxnIXZ+67ziGX1dk1ZtY5yawHml
+        Ctr6ZdBvYORw91KD6xCoIGmpbu5WDSnCWrpg6AmISv4RPP6VpNBV54LUrVQs7xUWNbSyLE/c98c2D
+        ZqT29rGw==;
+Received: from 93-43-212-104.ip93.fastwebnet.it ([93.43.212.104] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k2bFj-0003E4-Sh; Mon, 03 Aug 2020 14:15:48 +0000
+Date:   Mon, 3 Aug 2020 16:15:47 +0200
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: [GIT PULL] dma-mapping updates for 5.9
+Message-ID: <20200803141547.GA752173@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0f2467fd-ee2e-1a51-f9c1-02f8a579d542@mellanox.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sat, Aug 01, 2020 at 11:32:25PM CEST, moshe@mellanox.com wrote:
->
->On 7/31/2020 2:11 AM, Jakub Kicinski wrote:
->> On Thu, 30 Jul 2020 15:30:45 +0300 Moshe Shemesh wrote:
->> > > > > My expectations would be that the driver must perform the lowest
->> > > > > reset level possible that satisfies the requested functional change.
->> > > > > IOW driver may do more, in fact it should be acceptable for the
->> > > > > driver to always for a full HW reset (unless --live or other
->> > > > > constraint is specified).
->> > > > OK, but some combinations may still not be valid for specific driver
->> > > > even if it tries lowest level possible.
->> > > Can you give an example?
->> > For example take the combination of fw-live-patch and param-init.
->> > 
->> > The fw-live-patch needs no re-initialization, while the param-init
->> > requires driver re-initialization.
->> > 
->> > So the only way to do that is to the one command after the other, not
->> > really combining.
->> You need to read my responses more carefully. I don't have
->> fw-live-patch in my proposal. The operation is fw-activate,
->> --live is independent and an constraint, not an operation.
->
->
->OK, I probably didn't get the whole picture right.
->
->I am not sure I got it yet, please review if that's the uAPI that you mean
->to:
->
->devlink dev reload [ net-ns-respawn { PID | NAME | ID } ] [ driver-param-init
->] [ fw-activate [ --live] ]
+Note that this adds a select to drivers/iommu/Kconfig symbols which moves
+to drivers/iommu/intel/Kconfig in the iommu tree. 
 
-Jakub, why do you prefer to have another extra level-specific option
-"live"? I think it is clear to have it as a separate level. The behaviour
-of the operation is quite different.
+The following changes since commit d9765e41d8e9ea2251bf73735a2895c8bad546fc:
 
+  dma-pool: do not allocate pool memory from CMA (2020-07-14 15:46:32 +0200)
 
->
->
->Also, I recall that before devlink param was added the devlink reload was
->used for devlink resources.
+are available in the Git repository at:
 
-Yes. That was the primary usecase. That is also why mlxsw does fw reset,
-because the fw reset is needed in order to pass resources configuration.
+  git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-5.9
 
-So I don't think that the name should be "driver-param-init" as it is
-not specific to params.
+for you to fetch changes up to 274b3f7bf34415eed106e479e4815e897ce5d763:
 
+  dma-contiguous: cleanup dma_alloc_contiguous (2020-07-28 13:42:15 +0200)
 
->
->I am not sure it is still used for devlink resources as I don't see it in the
->code of devlink reload.
->
->But if it is we probably should add it as another operation.
->
->Jiri, please comment on that.
->
+----------------------------------------------------------------
+dma-mapping updates for 5.9
+
+ - make support for dma_ops optional
+ - move more code out of line
+ - add generic support for a dma_ops bypass mode
+ - misc cleanups
+
+----------------------------------------------------------------
+Christoph Hellwig (7):
+      dma-mapping: move the remaining DMA API calls out of line
+      dma-mapping: inline the fast path dma-direct calls
+      dma-mapping: make support for dma ops optional
+      dma-mapping: add a dma_ops_bypass flag to struct device
+      powerpc: use the generic dma_ops_bypass mode
+      dma-debug: use named initializers for dir2name
+      dma-contiguous: cleanup dma_alloc_contiguous
+
+ arch/alpha/Kconfig                |   1 +
+ arch/arm/Kconfig                  |   1 +
+ arch/ia64/Kconfig                 |   1 +
+ arch/mips/Kconfig                 |   1 +
+ arch/parisc/Kconfig               |   1 +
+ arch/powerpc/Kconfig              |   2 +
+ arch/powerpc/include/asm/device.h |   5 -
+ arch/powerpc/kernel/dma-iommu.c   |  90 ++------------
+ arch/s390/Kconfig                 |   1 +
+ arch/sparc/Kconfig                |   1 +
+ arch/x86/Kconfig                  |   1 +
+ drivers/infiniband/core/device.c  |   6 +-
+ drivers/iommu/Kconfig             |   2 +
+ drivers/macintosh/macio_asic.c    |   4 +-
+ drivers/misc/mic/Kconfig          |   4 +
+ drivers/vdpa/Kconfig              |   1 +
+ drivers/xen/Kconfig               |   1 +
+ include/linux/device.h            |  11 +-
+ include/linux/dma-direct.h        | 104 ++++++++++++++++
+ include/linux/dma-mapping.h       | 251 +++++---------------------------------
+ kernel/dma/Kconfig                |  12 ++
+ kernel/dma/Makefile               |   3 +-
+ kernel/dma/contiguous.c           |  31 +++--
+ kernel/dma/debug.c                |   8 +-
+ kernel/dma/direct.c               |  74 -----------
+ kernel/dma/mapping.c              | 214 ++++++++++++++++++++++++++++++--
+ 26 files changed, 415 insertions(+), 416 deletions(-)
