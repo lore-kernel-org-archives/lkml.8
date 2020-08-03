@@ -2,282 +2,418 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E40C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 497FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C06E22B45
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44FA02086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:29:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pM9LeVfh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2pYtwPq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbgHCU2L (ORCPT
+        id S1728060AbgHCU3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 16:28:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60242 "EHLO
+        Mon, 3 Aug 2020 16:29:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbgHCU2L (ORCPT
+        with ESMTP id S1726725AbgHCU3t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 16:28:11 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24640C06174A;
-        Mon,  3 Aug 2020 13:28:11 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id kq25so27053636ejb.3;
-        Mon, 03 Aug 2020 13:28:11 -0700 (PDT)
+        Mon, 3 Aug 2020 16:29:49 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F02B3C06174A;
+        Mon,  3 Aug 2020 13:29:48 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id 184so827769wmb.0;
+        Mon, 03 Aug 2020 13:29:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2aSWORY9oAWNRE8xXVrMliziKzrNkAApqFQEbxBMDms=;
-        b=pM9LeVfhQspLoy8T+wOwOh66v+8IfX1DjYiw7oYHoUHOfpLmUqEROKQMN0qSBrrgNB
-         k7JA/Lkq1RpahqNNb/EasSQbVBBs2sy2iGGaV4VfFqizZIsL2pMhv0TgLKUi94/jWE6J
-         /lu5J/Lwl8ThqFj9bHaa4qEWvoqbEaBjyeuJ5IneNrOPJxDbOhe4OtDXsxJKL/gTIS5Z
-         Qcp5f4vMvo2PXGB0zt1ziOsRyhRya9f7VG/wRRDZtS+g1uG5EPGtQ2n6sH8MDPtLUWiz
-         B1kfbiH41tLxmjJ9+ok10ANWmslT6QHqy1pPLmMY9rqzCnQhd4uK2VRD+Thy1OOHzWZy
-         T8Zg==
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=rx326n8kqvmqtDBZg2KJuCvQxOiqLWGvh0q5L2Syl5A=;
+        b=A2pYtwPqV8cohAbvhHd+HDXl+q3mcOCDXEbjCVHBzEhbrgBn79Zjx0N6XV7Vijz5pg
+         Yd6pPcpjGEuuPk6nYCZ01Q34+8XtkdiaohLtU63fXO6EIoCZXtRhZwJ9c/1kqZes4985
+         vBqVckV6S5XLp2V+l5Hf7JNEuEDJyuVs1WvhqnECWu+1lxP0gTHw88ykt0Y5bjyK6FD8
+         3oMD0gQ/wWo21H0eMS+dmUFYL0obfNueURQLOZwjQVrk08MSP1g+R3dGMNY63kEh9dWB
+         gxT47LCArO6dIMoEsy8Iqr2v6UsqzcWnnpyj3dJGkYSYGimygDQN/PA2V9pWDu1mNS8M
+         aPyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2aSWORY9oAWNRE8xXVrMliziKzrNkAApqFQEbxBMDms=;
-        b=BDE4q7FWiniYdZzASnws5UhC2kr20dORR0+6SXRC508jEj6eB83052OnWkVA2z5D6R
-         8n/Tt6fk2GURTHHQOCaVjadtdhwND+AexWmy3Dsl2yzgpSuTNUcqlOiokT8WzhhjId7Z
-         E6ZZq+ObpuFKNy7EjsxJaUGaEsKphmKgHaWDWhIEsmhGmWBWqA5OANvt/YnI/ZLDs+JZ
-         vsXihNDeEidExepCGpN3/+CbLIkoIU3xEqOyUzCDNQPDnYiYxZbF/ldzLvIOTW256QBj
-         jeZNA31JUdSdcV3rO0wdIDH4idu2N6pnkaqafNmafrI4djNi+jobQtlxB8S52eQ3jaz1
-         /R0Q==
-X-Gm-Message-State: AOAM533LGV90VFQwg2O+BgkcsNw9oo4TEFr73339htfXpLkZVVJTgJ1i
-        8yWZA/Cyj4JmreUptv91PkecHtlc
-X-Google-Smtp-Source: ABdhPJzD18u4BB+gHJr0fDYI7QdVbV6wGliJO+uub6j9vI7d3zFY+jdf2zXz/1CS6nN+PAuv1J5cQg==
-X-Received: by 2002:a17:906:6406:: with SMTP id d6mr17644049ejm.30.1596486489794;
-        Mon, 03 Aug 2020 13:28:09 -0700 (PDT)
-Received: from localhost.localdomain ([86.121.43.21])
-        by smtp.gmail.com with ESMTPSA id v2sm17405859edb.95.2020.08.03.13.28.08
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=rx326n8kqvmqtDBZg2KJuCvQxOiqLWGvh0q5L2Syl5A=;
+        b=kYET5HERxeUhdR9q+llJw53tiLVe4qkbHGag1ko41eSv1MJKJpRyYe7qPtawRdKxjX
+         qb47XE5BVKOMyQDMH47iDab/h37rxNarrLx1lJV6tD/vg7iOM4T/jWu5B9iua2w4yE/o
+         7mCQjadyrwFyczOSpCFguV+opxU0YT+Ln/B7KxfLYoodzBwTfJ7lXj1kPAm1VTaFhGfQ
+         vRqi5PaxJXSiRJuXdbskmNE6qUzORjRvkbmVSAw1Ci9ZyQQV51DVET9aO+4KXvysFD8L
+         LW3CfT0Y5w5IRGw5c/tXOXwC4nD9uODephibPaX4+EpEnDSqHTsT0YPWRi/tTMGCNBI7
+         6M8w==
+X-Gm-Message-State: AOAM530eUQX250yICAoJ4RZX+Y0qx68kP0dl5/WIZ6dJQoLpkhvOSXwn
+        QgQRvOvvsiDIV94VRKEGO8U=
+X-Google-Smtp-Source: ABdhPJwS4tV5NQmuZcMsuCmlX4im7NjZ/SM18Vg7KW8Df9iXv+mBdrrDCVXNuyPVUSASFrVJhUt7Zw==
+X-Received: by 2002:a1c:1904:: with SMTP id 4mr775421wmz.119.1596486587182;
+        Mon, 03 Aug 2020 13:29:47 -0700 (PDT)
+Received: from felia ([2001:16b8:2dc4:9300:551e:9193:4727:1515])
+        by smtp.gmail.com with ESMTPSA id v29sm27887294wrv.51.2020.08.03.13.29.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 13:28:09 -0700 (PDT)
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
-Subject: [PATCH 1/1] i2c: busses: Add support for atomic transfers in Actions Semi Owl driver
-Date:   Mon,  3 Aug 2020 23:28:07 +0300
-Message-Id: <b086ef6d355d9730c839359e15eb06175283e323.1596485741.git.cristian.ciocaltea@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        Mon, 03 Aug 2020 13:29:46 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Mon, 3 Aug 2020 22:29:39 +0200 (CEST)
+X-X-Sender: lukas@felia
+To:     Nick Desaulniers <ndesaulniers@google.com>
+cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Nathan Huckleberry <nhuck@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Pirama Arumuga Nainar <pirama@google.com>,
+        Bill Wendling <morbo@google.com>
+Subject: Re: [PATCH v7] Makefile: Add clang-tidy and static analyzer support
+ to makefile
+In-Reply-To: <CAKwvOd=V6-p1H1F65gFAQm+h4Qgt_98-XJeUSNaONmPE9yZciA@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.2008032138070.9503@felia>
+References: <CAKwvOdnni_G2tw+0eCLQQvvdcz97Fy1-cBjzPvLwbBNDu1-KqQ@mail.gmail.com> <20200728004736.3590053-1-nhuck@google.com> <alpine.DEB.2.21.2008012031540.14646@felia> <CAKwvOd=V6-p1H1F65gFAQm+h4Qgt_98-XJeUSNaONmPE9yZciA@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Atomic transfers are required to properly power off a machine through
-an I2C controlled PMIC, such as the Actions Semi ATC260x series.
 
-System shutdown may happen with interrupts being disabled and, as a
-consequence, the kernel may hang if the driver does not support atomic
-transfers.
 
-This functionality is essentially implemented by polling the FIFO
-Status register until either Command Execute Completed or NACK Error
-bits are set.
+On Mon, 3 Aug 2020, Nick Desaulniers wrote:
 
-Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> On Sat, Aug 1, 2020 at 12:23 PM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
+> >
+> > Hi Nathan, Hi Nick,
+> >
+> > I have been busy with other topics around the kernel and static analysis;
+> > but then, I read clang and static analysis in my mailbox in this patch.
+> >
+> > So, I thought let me give this patch a try on the weekend.
+> >
+> > I applied the patch on next-2020729; that worked.
+> >
+> > Then:
+> > $ make clang-tidy
+> > scripts/clang-tools/Makefile.clang-tools:13: *** clang-tidy requires
+> > CC=clang.  Stop.
+> >
+> > Okay, that is a good and clear error message.
+> >
+> > Then:
+> >
+> > $ make CC=clang-10 defconfig
+> > $ make CC=clang-10 clang-tidy
+> >
+> > python3 scripts/clang-tools/gen_compile_commands.py
+> > WARNING: Found 8 entries. Have you compiled the kernel?
+> > python3 scripts/clang-tools/run-clang-tools.py clang-tidy
+> > compile_commands.json
+> >
+> > Then actually an error in clang-tidy.
+> > Error: no checks enabled.
+> > USAGE: clang-tidy [options] <source0> [... <sourceN>]
+> > ...
+> >
+> > I will get to that later how I fixed that for my setup.
+> >
+> > Okay, good, that is clear... I need to compile it first, got it.
+> 
+> Hi Lukas,
+> Thank you so much for taking the time to apply the patch and help test it.
+> 
+> For the case of not doing a build first: gen_compile_commands.py
+> parses the .*.d files to build the compilation database and warns if
+> not many were found.  I think it might be interesting for it to just
+> invoke a build if it sees that, or maybe for the clang-tidy and
+> clang-analyzer targets to somehow invoke the default make target.  The
+> issue there might be that you need to invoke `make clang-tidy` with
+> `make CC=clang LD=ld.lld ... clang-tidy` in order to trigger a build
+> successfully.
+>
+
+I think the workflow is good as it is.
+
+This already indicates to me that the clang-tidy result will depend on the 
+kernel config and the build, which is helpful to know.
+
+The coccicheck target, e.g., ignores the kernel config; other basic 
+'syntactic' checks in the Makefile, such as make includecheck, seem also 
+to be config-independent, but you cannot run it without having a config...
+that is a bit inconsistent in that case.
+ 
+> Also, I wonder if gen_compile_commands.py should set a return code in
+> that case so that callers can handle such an exceptional case?  In
+> that case, I'd consider that a papercut or potential improvement to
+> scripts/get_compile_commands.py orthogonal to this patch.
+>
+
+I cannot see the immediate use case yet, but maybe I can provide a 
+specific use case once I try using clang-tidy in my attempt to work with 
+Ericsson's CodeChecker Web UI. It is still a very investigation for me 
+here with that.
+
+> >
+> > $ make CC=clang-10
+> > $ make CC=clang-10 clang-tidy
+> >
+> > Okay, I run except for the fix I needed.
+> >
+> > Where is the output from clang-tidy?
+> >
+> > It prints:
+> >
+> > python3 scripts/clang-tools/gen_compile_commands.py
+> > python3 scripts/clang-tools/run-clang-tools.py clang-tidy compile_commands.json
+> >
+> > That is it. Does that mean 0 warnings, or where do I find the output?
+> > The script suggests it should be in stderr once all the parallel runs
+> > collected it, right?
+> >
+> > I was confused; maybe a short summary output might help here.
+> 
+> I was also caught by this; for x86 defconfig, the kernel is actually
+> clean of instances of linuxkernel-* clang-tidy checks (there was also
+> an issue with the CWD for x86 in v6, but was resolved in v7 of this
+> patch).  I had to add a case that should fail to make clang-tidy have
+> output, and the check only checks for unchecked "ERR_PTR", "PTR_ERR",
+> "IS_ERR", "IS_ERR_OR_NULL", "ERR_CAST", "PTR_ERR_OR_ZERO".
+> (Documentation for that should be improved.) So if you add a function
+> that just constructs an `ERR_PTR(0)` and call it from code that gets
+> compiled in, then you'll start to see warnings from clang-tidy for x86
+> defconfig.  For aarch64 and arm, you'll see there are some unchecked
+> cases that look like low hanging fruit to fix.
+>
+> It probably can be improved to note that there was no output, but that
+> will require more machinery to track how much output there was.  I'd
+> prefer to follow up with additional polish on top of this once this
+> lands.
+>
+
+Agree, it is somehow unfortunate that clang-tidy cannot provide such 
+summary. No big issue, though. You will just have further developers 
+asking the same question when more developers are attracted...
+ 
+> >
+> > Then, I ran
+> >
+> > $ make CC=clang-10 clang-analyzer
+> >
+> > And I see a lot of warnings... I guess that is intended.
+> >
+> > There is a lot of:
+> >
+> > Suppressed XX warnings (XX in non-user code).
+> > Use -header-filter=.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.
+> >
+> > To an outsider, it is unclear if that is intended or if the tool is broken
+> > in this setup.
+> >
+> > Is there are way to silent that meta-warning? Or is my setup broken?
+> 
+> See also my comment about disabling the clang-diagnostic-* analyzer
+> checks. We haven't had time to sort out the cause of them yet, and for
+> now they just look like noise.
+>
+
+Okay, good to know. So, my setup is not broken and the tool works :)
+
+So, then I guess I finished with this result:
+
+Tested-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+
+
+> >
+> > In summary, it is pretty clear how to run clang-tidy and clang-analyzer
+> > and it was a pretty smooth experience, even with no documentation at hand.
+> >
+> > It was fun for me. Keep up the good work!
+> >
+> > Just one issue... see below.
+> >
+> > > +    p = subprocess.run(["clang-tidy", "-p", args.path, checks, entry["file"]],
+> >
+> > You hardcoded here: clang-tidy
+> >
+> > But in my Ubuntu 18.04 setup, I got multiple versions of clang and
+> > clang-tidy installed; yeah, maybe my setup is broken, but maybe those from
+> > others are similar.
+> >
+> > When I run:
+> >
+> >   make CC=clang-10 clang-tidy
+> >
+> > it picks up the "wrong" clang-tidy version...
+> >
+> > My setup is:
+> >
+> > $ which clang-tidy
+> > /usr/bin/clang-tidy
+> >
+> > $ which clang-tidy-10
+> > /usr/bin/clang-tidy-10
+> >
+> > $ clang-tidy --version
+> > LLVM (http://llvm.org/):
+> >   LLVM version 6.0.0
+> >
+> >   Optimized build.
+> >   Default target: x86_64-pc-linux-gnu
+> >   Host CPU: znver1
+> >
+> > $ clang-tidy-10 --version
+> > LLVM (http://llvm.org/):
+> >   LLVM version 10.0.1
+> >
+> >   Optimized build.
+> >   Default target: x86_64-pc-linux-gnu
+> >   Host CPU: znver1
+> >
+> > When I run make CC=clang-10 clang-tidy, I would expect it to use
+> > clang-tidy-10, not clang-tidy. (clang-tidy errors just because it is too
+> > old; I guess it does have the linuxkernel-* options.)
+> >
+> > Now, I cannot fix that without touching your script. There is no way I can
+> > tell the build target to use clang-tidy-10.
+> >
+> > With a quick touch:
+> >
+> > -    p = subprocess.run(["clang-tidy", "-p", args.path, checks, entry["file"]],
+> > +    p = subprocess.run(["clang-tidy-10", "-p", args.path, checks, entry["file"]],
+> >
+> > I got it to work.
+> >
+> > Maybe you have a good idea how to get make clang-tidy to pick
+> > up the intended version without touching the python script itself?
+> >
+> > It is a minor issue, but it would be nice if that setting would work
+> > somehow.
+> 
+> Ah right, sorry, I tend to forget about the use case of having
+> multiple versions of clang installed.
+> 
+> I think the best approach here might be for the user (you, in this
+> case) to ensure that list of PATHs in the path list has the path to
+> the intended version of clang-tidy you'd like to run listed before
+> others.  That is similar to the recommendation for the LLVM=1 patch
+> set. ie.
+> commit a0d1c951ef08e ("kbuild: support LLVM=1 to switch the default
+> tools to Clang/LLVM")
+> specifically this part of the commit message:
+> 
+> > the suffixed versions in /usr/bin/ are symlinks to binaries in
+> > /usr/lib/llvm-#/bin/, so this can also be handled by PATH.
+> 
+> If `clang-tidy` on your system points to an old version of clang-tidy,
+> it may be worthwhile to uninstall the old version, and update the
+> symlink to point to a newer version.  That may be simpler than trying
+> to support invoking `make clang-tidy` for arbitrary versions or binary
+> names of clang-tidy.  I can understand having multiple versions of a
+> compiler installed for quickly checking compatibility (though these
+> days I prefer godbolt.org for that) or if a particular codebase is
+> stuck on an old version of a toolchain for whatever reason; but having
+> multiple versions of clang-tidy installed and supporting all of them
+> is a little harder to justify.
+
+I can live with that. I can modify the script or modify the symbolic link 
+of clang-tidy. No need to support arbitrary broken setups :)
+
+
+Other question I came across while playing around with clang-tidy on the 
+kernel sources.
+
+Is it possible to simply have a .clang-tidy in the repository root to 
+configure the clang-tidy invocation rather than having it in the python 
+script? If not, why?
+
+I tried it, but I could not really figure out what I really needed to do 
+to get the same output behavior than Nathan's command-line invocation 
+from the python script.
+
+Here is my .clang-tidy attempt:
+
+$ cat .clang-tidy 
+Checks:		'-*,linuxkernel-*'
+
+$ clang-tidy -dump-config
 ---
- drivers/i2c/busses/i2c-owl.c | 80 ++++++++++++++++++++++++++----------
- 1 file changed, 59 insertions(+), 21 deletions(-)
+Checks:          'clang-diagnostic-*,clang-analyzer-*,-*,linuxkernel-*'
+WarningsAsErrors: ''
+HeaderFilterRegex: ''
+AnalyzeTemporaryDtors: false
+FormatStyle:     none
+User:            lukas
+CheckOptions:    
+  - key:             
+google-readability-braces-around-statements.ShortStatementLines
+    value:           '1'
+  - key:             google-readability-function-size.StatementThreshold
+    value:           '800'
+  - key:             
+google-readability-namespace-comments.ShortNamespaceLines
+    value:           '10'
+  - key:             
+google-readability-namespace-comments.SpacesBeforeComments
+    value:           '2'
+  - key:             modernize-loop-convert.MaxCopySize
+    value:           '16'
+  - key:             modernize-loop-convert.MinConfidence
+    value:           reasonable
+  - key:             modernize-loop-convert.NamingStyle
+    value:           CamelCase
+  - key:             modernize-pass-by-value.IncludeStyle
+    value:           llvm
+  - key:             modernize-replace-auto-ptr.IncludeStyle
+    value:           llvm
+  - key:             modernize-use-nullptr.NullMacros
+    value:           'NULL'
+...
 
-diff --git a/drivers/i2c/busses/i2c-owl.c b/drivers/i2c/busses/i2c-owl.c
-index 672f1f239bd6..90dd2e814313 100644
---- a/drivers/i2c/busses/i2c-owl.c
-+++ b/drivers/i2c/busses/i2c-owl.c
-@@ -14,6 +14,7 @@
- #include <linux/i2c.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-+#include <linux/iopoll.h>
- #include <linux/module.h>
- #include <linux/of_device.h>
- 
-@@ -76,6 +77,7 @@
- #define OWL_I2C_FIFOCTL_TFR	BIT(2)
- 
- /* I2Cc_FIFOSTAT Bit Mask */
-+#define OWL_I2C_FIFOSTAT_CECB	BIT(0)
- #define OWL_I2C_FIFOSTAT_RNB	BIT(1)
- #define OWL_I2C_FIFOSTAT_RFE	BIT(2)
- #define OWL_I2C_FIFOSTAT_TFF	BIT(5)
-@@ -83,7 +85,8 @@
- #define OWL_I2C_FIFOSTAT_RFD	GENMASK(15, 8)
- 
- /* I2C bus timeout */
--#define OWL_I2C_TIMEOUT		msecs_to_jiffies(4 * 1000)
-+#define OWL_I2C_TIMEOUT_MS	(4 * 1000)
-+#define OWL_I2C_TIMEOUT		msecs_to_jiffies(OWL_I2C_TIMEOUT_MS)
- 
- #define OWL_I2C_MAX_RETRIES	50
- 
-@@ -161,29 +164,25 @@ static void owl_i2c_set_freq(struct owl_i2c_dev *i2c_dev)
- 	writel(OWL_I2C_DIV_FACTOR(val), i2c_dev->base + OWL_I2C_REG_CLKDIV);
- }
- 
--static irqreturn_t owl_i2c_interrupt(int irq, void *_dev)
-+static int owl_i2c_xfer_data(struct owl_i2c_dev *i2c_dev)
- {
--	struct owl_i2c_dev *i2c_dev = _dev;
- 	struct i2c_msg *msg = i2c_dev->msg;
--	unsigned long flags;
- 	unsigned int stat, fifostat;
- 
--	spin_lock_irqsave(&i2c_dev->lock, flags);
--
- 	i2c_dev->err = 0;
- 
- 	/* Handle NACK from slave */
- 	fifostat = readl(i2c_dev->base + OWL_I2C_REG_FIFOSTAT);
- 	if (fifostat & OWL_I2C_FIFOSTAT_RNB) {
- 		i2c_dev->err = -ENXIO;
--		goto stop;
-+		return 1;
- 	}
- 
- 	/* Handle bus error */
- 	stat = readl(i2c_dev->base + OWL_I2C_REG_STAT);
- 	if (stat & OWL_I2C_STAT_BEB) {
- 		i2c_dev->err = -EIO;
--		goto stop;
-+		return 1;
- 	}
- 
- 	/* Handle FIFO read */
-@@ -196,18 +195,30 @@ static irqreturn_t owl_i2c_interrupt(int irq, void *_dev)
- 	} else {
- 		/* Handle the remaining bytes which were not sent */
- 		while (!(readl(i2c_dev->base + OWL_I2C_REG_FIFOSTAT) &
--			 OWL_I2C_FIFOSTAT_TFF) && i2c_dev->msg_ptr < msg->len) {
-+			OWL_I2C_FIFOSTAT_TFF) && i2c_dev->msg_ptr < msg->len) {
- 			writel(msg->buf[i2c_dev->msg_ptr++],
- 			       i2c_dev->base + OWL_I2C_REG_TXDAT);
- 		}
- 	}
- 
--stop:
-+	return 0;
-+}
-+
-+static irqreturn_t owl_i2c_interrupt(int irq, void *_dev)
-+{
-+	struct owl_i2c_dev *i2c_dev = _dev;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&i2c_dev->lock, flags);
-+
-+	owl_i2c_xfer_data(i2c_dev);
-+
- 	/* Clear pending interrupts */
- 	owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_STAT,
- 			   OWL_I2C_STAT_IRQP, true);
- 
- 	complete_all(&i2c_dev->msg_complete);
-+
- 	spin_unlock_irqrestore(&i2c_dev->lock, flags);
- 
- 	return IRQ_HANDLED;
-@@ -235,8 +246,8 @@ static int owl_i2c_check_bus_busy(struct i2c_adapter *adap)
- 	return 0;
- }
- 
--static int owl_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
--			       int num)
-+static int owl_i2c_xfer_common(struct i2c_adapter *adap, struct i2c_msg *msgs,
-+			       int num, bool atomic)
- {
- 	struct owl_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
- 	struct i2c_msg *msg;
-@@ -280,11 +291,12 @@ static int owl_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
- 		goto err_exit;
- 	}
- 
--	reinit_completion(&i2c_dev->msg_complete);
-+	if (!atomic)
-+		reinit_completion(&i2c_dev->msg_complete);
- 
--	/* Enable I2C controller interrupt */
-+	/* Enable/disable I2C controller interrupt */
- 	owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_CTL,
--			   OWL_I2C_CTL_IRQE, true);
-+			   OWL_I2C_CTL_IRQE, !atomic);
- 
- 	/*
- 	 * Select: FIFO enable, Master mode, Stop enable, Data count enable,
-@@ -352,20 +364,33 @@ static int owl_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
- 
- 	spin_unlock_irqrestore(&i2c_dev->lock, flags);
- 
--	time_left = wait_for_completion_timeout(&i2c_dev->msg_complete,
--						adap->timeout);
-+	if (atomic) {
-+		/* Wait for Command Execute Completed or NACK Error bits */
-+		ret = readl_poll_timeout_atomic(i2c_dev->base + OWL_I2C_REG_FIFOSTAT,
-+						val, val & (OWL_I2C_FIFOSTAT_CECB |
-+							    OWL_I2C_FIFOSTAT_RNB),
-+						10, OWL_I2C_TIMEOUT_MS * 1000);
-+	} else {
-+		time_left = wait_for_completion_timeout(&i2c_dev->msg_complete,
-+							adap->timeout);
-+		if (!time_left)
-+			ret = -ETIMEDOUT;
-+	}
- 
- 	spin_lock_irqsave(&i2c_dev->lock, flags);
--	if (time_left == 0) {
-+
-+	if (ret) {
- 		dev_err(&adap->dev, "Transaction timed out\n");
- 		/* Send stop condition and release the bus */
- 		owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_CTL,
- 				   OWL_I2C_CTL_GBCC_STOP | OWL_I2C_CTL_RB,
- 				   true);
--		ret = -ETIMEDOUT;
- 		goto err_exit;
- 	}
- 
-+	if (atomic)
-+		owl_i2c_xfer_data(i2c_dev);
-+
- 	ret = i2c_dev->err < 0 ? i2c_dev->err : num;
- 
- err_exit:
-@@ -379,9 +404,22 @@ static int owl_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
- 	return ret;
- }
- 
-+static int owl_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
-+			int num)
-+{
-+	return owl_i2c_xfer_common(adap, msgs, num, false);
-+}
-+
-+static int owl_i2c_xfer_atomic(struct i2c_adapter *adap,
-+			       struct i2c_msg *msgs, int num)
-+{
-+	return owl_i2c_xfer_common(adap, msgs, num, true);
-+}
-+
- static const struct i2c_algorithm owl_i2c_algorithm = {
--	.master_xfer    = owl_i2c_master_xfer,
--	.functionality  = owl_i2c_func,
-+	.master_xfer	     = owl_i2c_xfer,
-+	.master_xfer_atomic  = owl_i2c_xfer_atomic,
-+	.functionality	     = owl_i2c_func,
- };
- 
- static const struct i2c_adapter_quirks owl_i2c_quirks = {
--- 
-2.28.0
+I could not understand why 'clang-diagnostic-*,clang-analyzer-*' is still 
+there when running clang-tidy. I think that actually leads to more 
+(unwanted) findings, when I run for example:
 
+$ find ./kernel/trace/ -name '*.c' -exec clang-tidy {} +
+
+such as:
+
+./arch/x86/include/asm/apic.h:107:2: error: expected '(' after 'asm' 
+[clang-diagnostic-error]
+        alternative_io("movl %0, %P1", "xchgl %0, %P1", X86_BUG_11AP,
+        ^
+./arch/x86/include/asm/alternative.h:240:2: note: expanded from macro 
+'alternative_io'
+        asm_inline volatile (ALTERNATIVE(oldinstr, newinstr, feature)   \
+        ^
+./include/linux/compiler_types.h:239:24: note: expanded from macro 
+'asm_inline'
+#define asm_inline asm __inline
+                       ^
+
+Is there no way to completely override the standard clang-tidy 
+configuration with .clang-tidy file?
+
+I expected that ',-*' deactivates everything that was activated to the 
+left of this checks expression, but it seems not to be the case. 
+
+Did you also try that and hence then settled for passing that checks as 
+command-line argument because there is no way to have a sane .clang-tidy 
+file in the root? Or did I stumble on some .clang-tidy file 
+misunderstanding and we can actually place a .clang-tidy file for simple 
+use cases as the example, find ... -exec clang-tidy {} +, above?
+
+
+Lukas
+
+> -- 
+> Thanks,
+> ~Nick Desaulniers
+> 
