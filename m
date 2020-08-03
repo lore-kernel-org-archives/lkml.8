@@ -2,104 +2,173 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B36BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856A1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBF2C20678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 640CF20678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596442129;
-	bh=d3hOVu6kwC4pDKCTJ3VSKXvkHDogYRpwhyPNHLs+/zE=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=OgJa5tKQD+DBTIITrEXWFGiEP9v1ywAbxqIfRB7PPUcJ9+Wk/0fAOYOunL749OGCy
-	 oyVvcKyTjWjp1S0bJcEySFR5DCVLrAQAthcG5sYEeAdWpzuXGm6L13ntzzN5xN3Ww7
-	 Y/gwNUrw2K5bBh07VkIPBUz3DWzsn/sH6/lIx7v8=
+	s=default; t=1596442347;
+	bh=RKalgdiYlR+G0pvUtSEnO+u1nBVfhaI4/jDMjgGDEWc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r9CHDClOveej+w57LBp13BcnFcNt3hDohnLKNqXz08I9k/5si4oFO8KnCV0C05pZZ
+	 zyaTpTuKa7nK5LafX3PgBupaYV143xZbmvluCadVL/jYdY7xgn+4dP+p3KotysncHi
+	 CLAID3pWOhk3RI9QMzwa/pKGaxTQcWmplU/rcjOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726125AbgHCIIs (ORCPT
+        id S1725957AbgHCIM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 04:08:48 -0400
-Received: from mail-ej1-f66.google.com ([209.85.218.66]:40245 "EHLO
-        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgHCIIs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 04:08:48 -0400
-Received: by mail-ej1-f66.google.com with SMTP id o18so37646380eje.7;
-        Mon, 03 Aug 2020 01:08:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=a0yu7M1tVw0zmP1gDFbyNUMxQCWzxTIkdFlcO1sI50Q=;
-        b=Tm9ZXWjzATs8hxYjcDO4hoclmKu7YD02YJ5lvDJcBvVEd7j5XcT74jAEvMfQqIKOu1
-         wxeiP0f793jY34Rw46P7wGrDsmfrQyc5rjyjO1t0Piy157bFFZ4ZtVukjKT3ONNMOOTp
-         uNuHLvvF7fx7uK1V5uNYAUrqaS0isDoqxK8z+d0DTrMBTjJURtZBVbGL8Qfn6IB2GrBP
-         5pyPX122yNQTwMDvNKftonRsHA9rRsbg652FfSBKAvy5F2uXSm/6dxRTZXxQoNmdjxrX
-         3ibdEUlMU1iQmJd4PUJrFXMX/a5ZhrCTaSzi2KaBG3mDs7csqZl2ZqstgRQR18zeHcXf
-         7JWg==
-X-Gm-Message-State: AOAM532ljj1tM4Vu7VKe3VQPfruWkAj/dny6znf3R3kPHrhSWcDvgmEI
-        ThrmWU5svLakYEFdMIOBMW+nu35D
-X-Google-Smtp-Source: ABdhPJwHcrqjaA28yGyrQjj55BAldR5dFDJiHH5/aOZ4EtnAnmSi9OPoDdHmcKT4tHNj8sn++fO6hg==
-X-Received: by 2002:a17:907:20db:: with SMTP id qq27mr16105471ejb.550.1596442125868;
-        Mon, 03 Aug 2020 01:08:45 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
-        by smtp.gmail.com with ESMTPSA id dm5sm6828068edb.32.2020.08.03.01.08.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Aug 2020 01:08:45 -0700 (PDT)
-Subject: Re: [PATCH] vgacon: fix out of bounds write to the scrollback buffer
-To:     =?UTF-8?B?5byg5LqR5rW3?= <zhangyunhai@nsfocus.com>,
-        Solar Designer <solar@openwall.com>
-Cc:     b.zolnierkie@samsung.com,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Kyungtae Kim <kt0755@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg KH <greg@kroah.com>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        Anthony Liguori <aliguori@amazon.com>,
-        xiao.zhang@windriver.com,
-        DRI devel <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-References: <659f8dcf-7802-1ca1-1372-eb7fefd4d8f4@kernel.org>
- <dbcf2841-7718-2ba7-11e0-efa4b9de8de1@nsfocus.com>
- <9fb43895-ca91-9b07-ebfd-808cf854ca95@nsfocus.com>
-From:   Jiri Slaby <jirislaby@kernel.org>
-Message-ID: <9386c640-34dd-0a50-5694-4f87cc600e0f@kernel.org>
-Date:   Mon, 3 Aug 2020 10:08:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 3 Aug 2020 04:12:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58434 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725806AbgHCIM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 04:12:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24B7D2065E;
+        Mon,  3 Aug 2020 08:12:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596442344;
+        bh=RKalgdiYlR+G0pvUtSEnO+u1nBVfhaI4/jDMjgGDEWc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=azvxcqEaIVIboo52XNzP9zs6V6Pcoh9pK5mQ/fTB2/sef6cbFsLw3tuOS6+9Cmm8G
+         S6thU+2qlTL6nwSDlHCSOVKjA5S1FSkbzwwmtUreuKz1MF4EeyNxqrw7fPOhAS/F2H
+         v9WBGz+V92wJl30PSn/+3HLbC5vzptiRHq2JJyGc=
+Date:   Mon, 3 Aug 2020 10:12:05 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Qu Wenruo <quwenruo.btrfs@gmx.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Guenter Roeck <guenter@roeck-us.net>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>
+Subject: Re: [PATCH] kobject: Avoid premature parent object freeing in
+ kobject_cleanup()
+Message-ID: <20200803081205.GA493272@kroah.com>
+References: <1908555.IiAGLGrh1Z@kreacher>
+ <d1e90fa3-d978-90ae-a015-288139be3450@gmx.com>
 MIME-Version: 1.0
-In-Reply-To: <9fb43895-ca91-9b07-ebfd-808cf854ca95@nsfocus.com>
-Content-Type: text/plain; charset=gbk
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <d1e90fa3-d978-90ae-a015-288139be3450@gmx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Aug 03, 2020 at 02:31:23PM +0800, Qu Wenruo wrote:
+> 
+> 
+> On 2020/6/5 ä¸Šåˆ1:46, Rafael J. Wysocki wrote:
+> > From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > 
+> > If kobject_del() is invoked by kobject_cleanup() to delete the
+> > target kobject, it may cause its parent kobject to be freed
+> > before invoking the target kobject's ->release() method, which
+> > effectively means freeing the parent before dealing with the
+> > child entirely.
+> > 
+> > That is confusing at best and it may also lead to functional
+> > issues if the callers of kobject_cleanup() are not careful enough
+> > about the order in which these calls are made, so avoid the
+> > problem by making kobject_cleanup() drop the last reference to
+> > the target kobject's parent at the end, after invoking the target
+> > kobject's ->release() method.
+> > 
+> > [ rjw: Rewrite the subject and changelog, make kobject_cleanup()
+> >   drop the parent reference only when __kobject_del() has been
+> >   called. ]
+> > 
+> > Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> > Reported-by: kernel test robot <rong.a.chen@intel.com>
+> > Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_release() function"")
+> > Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
+> > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> > 
+> > Hi Greg,
+> > 
+> > This is a replacement for commit 4ef12f719802 ("kobject: Make sure the parent
+> > does not get released before its children"), that you reverted, because it
+> > broke things and the reason why was that it was incorrect.
+> > 
+> > Namely, it called kobject_put() on the target kobject's parent in
+> > kobject_cleanup() unconditionally, but it should only call it after
+> > invoking __kobject_del() on the target kobject.
+> > 
+> > That problem is fixed in this patch and a functionally equivalent patch has
+> > been tested by Guenter without issues.
+> > 
+> > The underlying issue addressed by the reverted commit is still there and
+> > it may show up again even though the test that triggered it originally was
+> > fixed in the meantime.  IMO it is worth fixing even though it may not be
+> > readily visible in the current kernel, so please consider this one for
+> > applying.
+> > 
+> > Cheers!
+> > 
+> > ---
+> >  lib/kobject.c |   33 +++++++++++++++++++++++----------
+> >  1 file changed, 23 insertions(+), 10 deletions(-)
+> > 
+> > Index: linux-pm/lib/kobject.c
+> > ===================================================================
+> > --- linux-pm.orig/lib/kobject.c
+> > +++ linux-pm/lib/kobject.c
+> > @@ -599,14 +599,7 @@ out:
+> >  }
+> >  EXPORT_SYMBOL_GPL(kobject_move);
+> >  
+> > -/**
+> > - * kobject_del() - Unlink kobject from hierarchy.
+> > - * @kobj: object.
+> > - *
+> > - * This is the function that should be called to delete an object
+> > - * successfully added via kobject_add().
+> > - */
+> > -void kobject_del(struct kobject *kobj)
+> > +static void __kobject_del(struct kobject *kobj)
+> >  {
+> >  	struct kernfs_node *sd;
+> >  	const struct kobj_type *ktype;
+> > @@ -625,9 +618,23 @@ void kobject_del(struct kobject *kobj)
+> >  
+> >  	kobj->state_in_sysfs = 0;
+> >  	kobj_kset_leave(kobj);
+> > -	kobject_put(kobj->parent);
+> >  	kobj->parent = NULL;
+> >  }
+> > +
+> > +/**
+> > + * kobject_del() - Unlink kobject from hierarchy.
+> > + * @kobj: object.
+> > + *
+> > + * This is the function that should be called to delete an object
+> > + * successfully added via kobject_add().
+> > + */
+> > +void kobject_del(struct kobject *kobj)
+> > +{
+> > +	struct kobject *parent = kobj->parent;
+> > +
+> > +	__kobject_del(kobj);
+> > +	kobject_put(parent);
+> 
+> Could you please add an extra check on kobj before accessing kobj->parent?
 
-On 31. 07. 20, 7:22, ÕÅÔÆº£ wrote:
-> Remove whitespace at EOL
-
-I am fine with the patch. However it should be sent properly (inline
-mail, having a PATCH subject etc. -- see
-Documentation/process/submitting-patches.rst). git send-email after git
-format-patch handles most of it.
-
-There is also question who is willing to take it?
-
-Bart? Greg? Should we route it via akpm, or will you Linus directly? (I
-can sign off and resend the patch which was attached to the mail I am
-replying to too, if need be.)
+Sure, please just send a patch for this.
 
 thanks,
--- 
-js
-suse labs
+
+greg k-h
