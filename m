@@ -2,110 +2,134 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED670C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83935C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9F0A20775
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457914;
-	bh=Sp098mK9dW4CZGeuDCp6QtJHCUMG3PJjoVI6NAk/A5g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UiHsNS0HWJ8ynPzYO0ELTYedkN+sF1THbdO+PoQn0Tl/E9SmQwqk7OwZXheFQtEFq
-	 RR3ZUZ4rjucxT2Id2iUcSOzWv5duzUnW/P213CSYENlSANdSqK67IBFrpQBBCDg5my
-	 HIKFKDNK9a8XTvKw31UlruPn7PiCL2g8ZFxyY4t4=
+	by mail.kernel.org (Postfix) with ESMTP id 3FDD22076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RN7w1oMw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbgHCMby (ORCPT
+        id S1729246AbgHCMb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:31:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729229AbgHCMbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:31:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 3 Aug 2020 08:31:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729236AbgHCMbx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:31:53 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D3B9C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 05:31:53 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CAAF2054F;
-        Mon,  3 Aug 2020 12:31:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457908;
-        bh=Sp098mK9dW4CZGeuDCp6QtJHCUMG3PJjoVI6NAk/A5g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SQbJUF6wJ7oC5ETJ/+ds2s+/J9/JLFo+O+njRIXUGDRl3OPwG9iPGTrcNrAEsxw+3
-         Lm6BCvvHr1yd4wMEdc+PBj42SjtSNdjxuehcKJcc0Gyxpo6USjZlPAFEvBllVKXCxV
-         EK/+0hJIWjpW4JshKKXlxfePtnB9N53DMi3fr5C8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 06/56] ath9k_htc: release allocated buffer if timed out
-Date:   Mon,  3 Aug 2020 14:19:21 +0200
-Message-Id: <20200803121850.621312769@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
-References: <20200803121850.306734207@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BKy1c3Stbz9sWK;
+        Mon,  3 Aug 2020 22:31:48 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596457908;
+        bh=A1RYpQrdZ8SRLEMPPRLnaD8brc08MDwIZqWIqkU3Rgs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RN7w1oMw6XcjGMfR7TB4ijQsBlMR4XTWWlqQHCYWI7rPdKDuhVf3mf1xJH4dCKvK6
+         XAUtVLQllopcGiL1O5+K1/IoVxLu33I9uEPX/WECRZZLPtqkrBSmwEwmEgKPRaYMpR
+         csm68F1yGYLkkrHJ2OJZCCprywMrMslVUR1CxGCPNHxDhEQXlfMy4GvK7+2HaqF/tF
+         21yOmkkoWKvsoA4S/1widX/fK8PYJonub0DKeP4aGVBQSoQQFYDFi13mTvLzDus7Sj
+         HKDARDhm3x4eo17XHW8Wf34v3DzLTPtyeJhvmzLQV8di/snc2cUriJhVE3j3GQj1LB
+         K0eZD5WjF8Zlg==
+Date:   Mon, 3 Aug 2020 22:31:47 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Willy Tarreau <w@1wt.eu>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Linux-kernel Mailing List <linux-kernel@vger.kernel.org>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: powerpc: build failures in Linus' tree
+Message-ID: <20200803223147.28adac79@canb.auug.org.au>
+In-Reply-To: <87v9i0yo47.fsf@mpe.ellerman.id.au>
+References: <20200802204842.36bca162@canb.auug.org.au>
+        <20200802172019.GB26677@1wt.eu>
+        <20200803034547.GA15501@1wt.eu>
+        <87v9i0yo47.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/gTzTE=0PurNyae0JTgphoQ1";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+--Sig_/gTzTE=0PurNyae0JTgphoQ1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-[ Upstream commit 853acf7caf10b828102d92d05b5c101666a6142b ]
+Hi Michael,
 
-In htc_config_pipe_credits, htc_setup_complete, and htc_connect_service
-if time out happens, the allocated buffer needs to be released.
-Otherwise there will be memory leak.
+On Mon, 03 Aug 2020 21:18:00 +1000 Michael Ellerman <mpe@ellerman.id.au> wr=
+ote:
+>
+> If we just move the include of asm/paca.h below asm-generic/percpu.h
+> then it avoids the bad circular dependency and we still have paca.h
+> included from percpu.h as before.
+>=20
+> eg:
+>=20
+> diff --git a/arch/powerpc/include/asm/percpu.h b/arch/powerpc/include/asm=
+/percpu.h
+> index dce863a7635c..8e5b7d0b851c 100644
+> --- a/arch/powerpc/include/asm/percpu.h
+> +++ b/arch/powerpc/include/asm/percpu.h
+> @@ -10,8 +10,6 @@
+> =20
+>  #ifdef CONFIG_SMP
+> =20
+> -#include <asm/paca.h>
+> -
+>  #define __my_cpu_offset local_paca->data_offset
+> =20
+>  #endif /* CONFIG_SMP */
+> @@ -19,4 +17,6 @@
+> =20
+>  #include <asm-generic/percpu.h>
+> =20
+> +#include <asm/paca.h>
+> +
+>  #endif /* _ASM_POWERPC_PERCPU_H_ */
+>=20
+>=20
+> So I think I'm inclined to merge that as a minimal fix that's easy to
+> backport.
+>=20
+> cheers
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/ath/ath9k/htc_hst.c | 3 +++
- 1 file changed, 3 insertions(+)
+Looks ok, except does it matter that the include used to be only done
+if __powerpc64__ and CONFIG_SMP are defined?
 
-diff --git a/drivers/net/wireless/ath/ath9k/htc_hst.c b/drivers/net/wireless/ath/ath9k/htc_hst.c
-index d2e062eaf5614..f705f0e1cb5be 100644
---- a/drivers/net/wireless/ath/ath9k/htc_hst.c
-+++ b/drivers/net/wireless/ath/ath9k/htc_hst.c
-@@ -173,6 +173,7 @@ static int htc_config_pipe_credits(struct htc_target *target)
- 	time_left = wait_for_completion_timeout(&target->cmd_wait, HZ);
- 	if (!time_left) {
- 		dev_err(target->dev, "HTC credit config timeout\n");
-+		kfree_skb(skb);
- 		return -ETIMEDOUT;
- 	}
- 
-@@ -208,6 +209,7 @@ static int htc_setup_complete(struct htc_target *target)
- 	time_left = wait_for_completion_timeout(&target->cmd_wait, HZ);
- 	if (!time_left) {
- 		dev_err(target->dev, "HTC start timeout\n");
-+		kfree_skb(skb);
- 		return -ETIMEDOUT;
- 	}
- 
-@@ -280,6 +282,7 @@ int htc_connect_service(struct htc_target *target,
- 	if (!time_left) {
- 		dev_err(target->dev, "Service connection timeout for: %d\n",
- 			service_connreq->service_id);
-+		kfree_skb(skb);
- 		return -ETIMEDOUT;
- 	}
- 
--- 
-2.25.1
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/gTzTE=0PurNyae0JTgphoQ1
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8oA7MACgkQAVBC80lX
+0Gy0nggAjW0dxUlsqRQt/TwQPBQCCz/n8vIcBBuDcNL80vLeduZpiEP5v+/OEb+G
+nmf5Usmxk7VkODd5OUKIVkU2+q3BET5QBwxQ/BjtOhTGFfxoWzz1Ki1Q4z8fr6gl
+T8c0lwl2c9W4AUsaWIgroQR/KqVBkaPRhcEVcChBwdv1V4mqC61Xf6tsLouzEo8G
+q3ymOVn8kA1UKG4A7Ivk6JI00SYy1nZvEKaN0YRKaZzLmyCkaLa2UVToaRx5fXJ2
+LCTER0c4eNURY4AmGOulxANO2og1MGlU+n9J6zM7fiDb4lFCd5gI3IVQ9De6NAec
+p/fzXpVwEMgp7J+aZ3CLNHrOgTsmzw==
+=eLgV
+-----END PGP SIGNATURE-----
+
+--Sig_/gTzTE=0PurNyae0JTgphoQ1--
