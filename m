@@ -2,135 +2,76 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB56C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8332FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F294520678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:46:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WpMWmZ08"
+	by mail.kernel.org (Postfix) with ESMTP id 6818520678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:48:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbgHCIqb (ORCPT
+        id S1726080AbgHCIst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 04:46:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36534 "EHLO
+        Mon, 3 Aug 2020 04:48:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbgHCIqa (ORCPT
+        with ESMTP id S1725907AbgHCIst (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 04:46:30 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC555C06174A;
-        Mon,  3 Aug 2020 01:46:30 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id r21so16816173ota.10;
-        Mon, 03 Aug 2020 01:46:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ldpq9lUOsWhKwe/FZyOZtBINOPkrHNfkHnfcPwlRPCU=;
-        b=WpMWmZ08n26KnNJ8Kee1MYAG1Jm/zPcTsurcm70Oz6QCv5oFfJJeXvq3VcoC9Bqmp3
-         ZwUe+YLsT+FIs/9kGKQtxteKlRXHSSQ+XStDVRPK0FJ9rDWqULujkoduvfNvMAyy0GOg
-         NoXxh8OaGSL/tRiXvcDRUH0pjdIKGIrcWXdgMqadI1W4uKjz2xIadtm/umq1TPcJ2dwv
-         x921GXZ22H8R3fB7B0gACzntSyHHPZ4Uep08cGKEx1pE00WBaNIlW5skBV0VR9xSPFsw
-         +/MQUrW8/mEWr+pwjxhIKc3bVJJhFwBIXZ+8+jfHudxJdG2f4k8YUNGYS662utnJkUBW
-         AW1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ldpq9lUOsWhKwe/FZyOZtBINOPkrHNfkHnfcPwlRPCU=;
-        b=S2i4w17TkTjow/DAUUwUt4cLc0WVNL7DWcViXbTgk/rSb1TPPaqZMWb7GQhnyX/Rvc
-         w6YtVicIwgXzpsOGro85vUhiGOcW6kcrr8IQ2o8JMpj8+2zzGjnYtVby1Bwq7OY4Etjw
-         Qxz9Efp1zP4sU3G2sR/n0mGpiUplXkc9VmqOkb84Htje6dEgzLx+O1auCVIgZaA2YMxe
-         LHPkiQzg6cBO9mWOEQSmo5SJK1VBx43iWtJ7OOwjkUonc/lFa+kEZD+7PDwuEC619K5v
-         lm+twLIweE0UMxn9uhrGX2v+atdECWUQ7HMyoGsuk4G/iomj8mgum+X5xRnpi5Z+oWcN
-         u/ng==
-X-Gm-Message-State: AOAM533mbgZKP9u3qlrG77656FGd2AxYLyIEBX809A1GJteplh9KTB4u
-        q5oaQzRXBTfzRJkdD3sQHb5Yb8HNREpFZ3ae6Io=
-X-Google-Smtp-Source: ABdhPJywEIvpuyitAoDTtD0/wC6yQxi+TGZF6FmBDXPPZy9GwNZrNEeGyjiIoXvh3WcLO7UKIwA2uajhqG5WgWac/6c=
-X-Received: by 2002:a05:6830:1c65:: with SMTP id s5mr12486238otg.264.1596444390081;
- Mon, 03 Aug 2020 01:46:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200716030847.1564131-1-keescook@chromium.org>
- <87h7tpa3hg.fsf@nanos.tec.linutronix.de> <202007301113.45D24C9D@keescook>
-In-Reply-To: <202007301113.45D24C9D@keescook>
-From:   Allen <allen.lkml@gmail.com>
-Date:   Mon, 3 Aug 2020 14:16:15 +0530
-Message-ID: <CAOMdWSJQKHAWY1P297b9koOLd8sVtezEYEyWGtymN1YeY27M6A@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Modernize tasklet callback API
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Oscar Carter <oscar.carter@gmx.com>,
-        Romain Perier <romain.perier@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-usb@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
-        alsa-devel@alsa-project.org,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 3 Aug 2020 04:48:49 -0400
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C983C061756
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 01:48:48 -0700 (PDT)
+Received: from ramsan ([84.195.186.194])
+        by xavier.telenet-ops.be with bizsmtp
+        id Awol2300E4C55Sk01wolnW; Mon, 03 Aug 2020 10:48:45 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k2W9F-0006e5-C3; Mon, 03 Aug 2020 10:48:45 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k2W9F-0006L6-A8; Mon, 03 Aug 2020 10:48:45 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        David Gow <davidgow@google.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] clk: hsdk: Fix bad dependency on IOMEM
+Date:   Mon,  3 Aug 2020 10:48:35 +0200
+Message-Id: <20200803084835.21838-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees,
+CONFIG_IOMEM does not exist.  The correct symbol to depend on is
+CONFIG_HAS_IOMEM.
 
->
-> [heavily trimmed CC list because I think lkml is ignoring this
-> thread...]
->
-> On Thu, Jul 30, 2020 at 09:03:55AM +0200, Thomas Gleixner wrote:
-> > Kees,
-> >
-> > Kees Cook <keescook@chromium.org> writes:
-> > > This is the infrastructure changes to prepare the tasklet API for
-> > > conversion to passing the tasklet struct as the callback argument instead
-> > > of an arbitrary unsigned long. The first patch details why this is useful
-> > > (it's the same rationale as the timer_struct changes from a bit ago:
-> > > less abuse during memory corruption attacks, more in line with existing
-> > > ways of doing things in the kernel, save a little space in struct,
-> > > etc). Notably, the existing tasklet API use is much less messy, so there
-> > > is less to clean up.
-> > >
-> > > It's not clear to me which tree this should go through... Greg since it
-> > > starts with a USB clean-up, -tip for timer or interrupt, or if I should
-> > > just carry it. I'm open to suggestions, but if I don't hear otherwise,
-> > > I'll just carry it.
-> > >
-> > > My goal is to have this merged for v5.9-rc1 so that during the v5.10
-> > > development cycle the new API will be available. The entire tree of
-> > > changes is here[1] currently, but to split it up by maintainer the
-> > > infrastructure changes need to be landed first.
-> > >
-> > > Review and Acks appreciated! :)
-> >
-> > I'd rather see tasklets vanish from the planet completely, but that's
-> > going to be a daring feat. So, grudgingly:
->
-> Understood! I will update the comments near the tasklet API.
->
-> > Acked-by: Thomas Gleixner <tglx@linutronix.de>
->
+Fixes: 1e7468bd9d30a21e ("clk: Specify IOMEM dependency for HSDK pll driver")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/clk/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Here's the series re-based on top of 5.8
-https://github.com/allenpais/tasklets/tree/V3
-
-Let me know how you would want these to be reviewed.
-
-Also, I was thinking if removing tasklets completely could be a task
-on KSPP wiki. If yes, I did like to take ownership of that task. I have a
-couple of ideas in mind, which could be discussed in a separate email.
-
-Thanks.
-
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 326f91b2dda9fdc4..5f952e111ab5a6f8 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -50,7 +50,7 @@ source "drivers/clk/versatile/Kconfig"
+ config CLK_HSDK
+ 	bool "PLL Driver for HSDK platform"
+ 	depends on OF || COMPILE_TEST
+-	depends on IOMEM
++	depends on HAS_IOMEM
+ 	help
+ 	  This driver supports the HSDK core, system, ddr, tunnel and hdmi PLLs
+ 	  control.
 -- 
-       - Allen
+2.17.1
+
