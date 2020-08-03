@@ -2,155 +2,116 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2477C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA504C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BBA120678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:57:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596459450;
-	bh=6TKRQAx0bExw+dtJQ9fufqGombiOTqQtelaZgNQ8C6o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cqTSu3RXPc8Z+odJhKzw5MNCf7zLvlK11SHo2nS6papoWS79FT2dM/IWPZJI/SR+X
-	 Y5UlxZmh+qeQ5aZRzLFPwGom9u4mVv+kXen7ypBBzG4zj6zqxGZaEb8MXeEu92wS1j
-	 75c183MLC8BrRjhfMWtuiwZ2tIwp5JYwAX91hzBQ=
+	by mail.kernel.org (Postfix) with ESMTP id AB30320678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:58:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=eclypsium.com header.i=@eclypsium.com header.b="INrGUnJr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgHCMV1 (ORCPT
+        id S1727962AbgHCM6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:21:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbgHCMVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:21:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 796C820738;
-        Mon,  3 Aug 2020 12:21:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457275;
-        bh=6TKRQAx0bExw+dtJQ9fufqGombiOTqQtelaZgNQ8C6o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rTnzVTxbmJUOWgZi63eQu1zmANLqjjcz0XJut3pFy5jdUM6CPUaG9gMreYyExPkHo
-         nO+iWnl829WhWwLtAswA8zEy5S3Lf+Rf7neqLilX2LrxDXsq8gyemENhvossCnbGbK
-         vQe8rwv1BH7Js1UnOMQQMu9unn2L2QWm/LEM6BJg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, NeilBrown <neilb@suse.de>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 001/120] sunrpc: check that domain table is empty at module unload.
-Date:   Mon,  3 Aug 2020 14:17:39 +0200
-Message-Id: <20200803121902.935547948@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
-References: <20200803121902.860751811@linuxfoundation.org>
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
+        Mon, 3 Aug 2020 08:58:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727843AbgHCM6f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:58:35 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33052C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 05:58:35 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id ed14so17257812qvb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 05:58:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=eclypsium.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hMT0kXz5t1WlxhKdWYf7H/xItPGzEq+A55WtZ2+D4/I=;
+        b=INrGUnJrvvSk6e3+aV2VgzC0XESxwlRZvQcst2jXyBNpTkMHYyvuy8qp9Ut87dDQWG
+         y+aqedwp4Taqrqv94K3l9BkpYCF37e6KB/6Oj4roXPBX8SbTKWxSI8eRRlakZfCABbHv
+         /NoCR+7jDjWkKTqnC20Z+gEkUV89AAZsKMHcFOtfDeF0tEpSUhJlFUsw2q8dSaAaREX3
+         47vNOLCuofipKCY2DWZCOqF4K0DvLXMi+9BwL5eGKp+QaX1hyD9Qn6SWcnMhv7vktN2F
+         SINb5Jd0zS03FqG60FE3451vaoVPv23hkZ16Grbojnda2Tfl8EgZkyST1bijDHItC28p
+         ydtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hMT0kXz5t1WlxhKdWYf7H/xItPGzEq+A55WtZ2+D4/I=;
+        b=akjok1NPKv/dP1klMD1K5NgDH2yVFg3O9dqwJ0ZC5r+/qc8HGlgBlECIQSH4UwPGk5
+         llidx6+UQWr6Y+KIeBhhhuG/OGZz1Ebrj7idGmxQCJdjylL7I0JgrrDQP6O4fFGuL8up
+         Wrd5jEvSls7vWSakt0qw4V16M0DLEDZzV6fcEDoEvaJKMzq3XtDFs4ySHlfE3uHPsYZb
+         IWUZ2IDsm7FX+sHB8OKHJ1Ijfo1CbnXXb0GJ46t3lSqxScDK8Cq3nF6NKuaKOxYhZdV/
+         pQwuPi28EE5F49xfkPpYDcbTTar0JJdNh0DeRqKdh9UrPlMUrL5eOgBSN/zq2/+jdG0d
+         oiOw==
+X-Gm-Message-State: AOAM531oGKE9aE21C4E5KwhTre622RMdJh3g8V3va7fWEor3hYntL54m
+        24N15/X3mFjX+fBBoQA9d7V6ra/Ac3JKXo0RyeMltg==
+X-Google-Smtp-Source: ABdhPJxZmIwMOwJq4SwiSkCoJapyo5gtyYk7zA5OkjK+cKoeY/k56q8q8XGjCBAM2maXoOOquYPzasZBhozkWerzxHU=
+X-Received: by 2002:ad4:4cc9:: with SMTP id i9mr16260419qvz.131.1596459514234;
+ Mon, 03 Aug 2020 05:58:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200724212853.11601-1-daniel.gutson@eclypsium.com>
+ <20200803095720.GC1375436@lahna.fi.intel.com> <CAD2FfiFt6=OueX3E0g2ckPU+7F69yCmM0+bzF_6UD1sd4E_k_A@mail.gmail.com>
+ <20200803102711.GK1375436@lahna.fi.intel.com>
+In-Reply-To: <20200803102711.GK1375436@lahna.fi.intel.com>
+From:   Daniel Gutson <daniel@eclypsium.com>
+Date:   Mon, 3 Aug 2020 09:58:23 -0300
+Message-ID: <CAFmMkTHSjQZJNzvUzLHHJ7sUTVX4BV6TwB=P8EO-HNk_cv8RKg@mail.gmail.com>
+Subject: Re: [PATCH] Module argument to control whether intel-spi-pci attempts
+ to turn the SPI flash chip writeable
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Richard Hughes <hughsient@gmail.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Alex Bazhaniuk <alex@eclypsium.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: NeilBrown <neilb@suse.de>
+On Mon, Aug 3, 2020 at 7:27 AM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+>
+> On Mon, Aug 03, 2020 at 11:18:12AM +0100, Richard Hughes wrote:
+> > On Mon, 3 Aug 2020 at 10:57, Mika Westerberg
+> > <mika.westerberg@linux.intel.com> wrote:
+> > > I think instead of this we should simply make it so that the driver
+> > > never tries to make the chip writable.
+> >
+> > I think this is a good idea, but I wasn't sure if it was an acceptable
+> > behaviour change. Should the driver still try to set BCR_WPD when
+> > writing an image (i.e. defer the setting of write enable until later),
+> > or just not set the BCR register at all? I think your last comment was
+> > the latter, but wanted to check.
+>
+> I would say not set it at all. I think it was (my) mistake to set it in
+> the first place.
 
-[ Upstream commit f45db2b909c7e76f35850e78f017221f30282b8e ]
+Do you want me to remove the module parameter from intel-spi too and
+do the same?
 
-The domain table should be empty at module unload.  If it isn't there is
-a bug somewhere.  So check and report.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206651
-Signed-off-by: NeilBrown <neilb@suse.de>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/sunrpc/sunrpc.h      |  1 +
- net/sunrpc/sunrpc_syms.c |  2 ++
- net/sunrpc/svcauth.c     | 25 +++++++++++++++++++++++++
- 3 files changed, 28 insertions(+)
 
-diff --git a/net/sunrpc/sunrpc.h b/net/sunrpc/sunrpc.h
-index 47a756503d11c..f6fe2e6cd65a1 100644
---- a/net/sunrpc/sunrpc.h
-+++ b/net/sunrpc/sunrpc.h
-@@ -52,4 +52,5 @@ static inline int sock_is_loopback(struct sock *sk)
- 
- int rpc_clients_notifier_register(void);
- void rpc_clients_notifier_unregister(void);
-+void auth_domain_cleanup(void);
- #endif /* _NET_SUNRPC_SUNRPC_H */
-diff --git a/net/sunrpc/sunrpc_syms.c b/net/sunrpc/sunrpc_syms.c
-index f9edaa9174a43..236fadc4a4399 100644
---- a/net/sunrpc/sunrpc_syms.c
-+++ b/net/sunrpc/sunrpc_syms.c
-@@ -23,6 +23,7 @@
- #include <linux/sunrpc/rpc_pipe_fs.h>
- #include <linux/sunrpc/xprtsock.h>
- 
-+#include "sunrpc.h"
- #include "netns.h"
- 
- unsigned int sunrpc_net_id;
-@@ -131,6 +132,7 @@ cleanup_sunrpc(void)
- 	unregister_rpc_pipefs();
- 	rpc_destroy_mempool();
- 	unregister_pernet_subsys(&sunrpc_net_ops);
-+	auth_domain_cleanup();
- #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
- 	rpc_unregister_sysctl();
- #endif
-diff --git a/net/sunrpc/svcauth.c b/net/sunrpc/svcauth.c
-index 552617e3467bd..998b196b61767 100644
---- a/net/sunrpc/svcauth.c
-+++ b/net/sunrpc/svcauth.c
-@@ -21,6 +21,8 @@
- 
- #include <trace/events/sunrpc.h>
- 
-+#include "sunrpc.h"
-+
- #define RPCDBG_FACILITY	RPCDBG_AUTH
- 
- 
-@@ -205,3 +207,26 @@ struct auth_domain *auth_domain_find(char *name)
- 	return NULL;
- }
- EXPORT_SYMBOL_GPL(auth_domain_find);
-+
-+/**
-+ * auth_domain_cleanup - check that the auth_domain table is empty
-+ *
-+ * On module unload the auth_domain_table must be empty.  To make it
-+ * easier to catch bugs which don't clean up domains properly, we
-+ * warn if anything remains in the table at cleanup time.
-+ *
-+ * Note that we cannot proactively remove the domains at this stage.
-+ * The ->release() function might be in a module that has already been
-+ * unloaded.
-+ */
-+
-+void auth_domain_cleanup(void)
-+{
-+	int h;
-+	struct auth_domain *hp;
-+
-+	for (h = 0; h < DN_HASHMAX; h++)
-+		hlist_for_each_entry(hp, &auth_domain_table[h], hash)
-+			pr_warn("svc: domain %s still present at module unload.\n",
-+				hp->name);
-+}
 -- 
-2.25.1
+Daniel Gutson
+Argentina Site Director
+Enginieering Director
+Eclypsium
 
-
-
+Below The Surface: Get the latest threat research and insights on
+firmware and supply chain threats from the research team at Eclypsium.
+https://eclypsium.com/research/#threatreport
