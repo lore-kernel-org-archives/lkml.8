@@ -2,102 +2,151 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E732C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D16C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 559E3206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11060206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:03:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbgHCOBb (ORCPT
+        id S1728252AbgHCODF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:01:31 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63588 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726785AbgHCOBb (ORCPT
+        Mon, 3 Aug 2020 10:03:05 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:49529 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727792AbgHCODF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 10:01:31 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 073Dct2B053806;
-        Mon, 3 Aug 2020 10:01:25 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32pbywnnqu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Aug 2020 10:01:23 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 073E0TQF022470;
-        Mon, 3 Aug 2020 14:01:21 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma03ams.nl.ibm.com with ESMTP id 32n01828fc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Aug 2020 14:01:21 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 073Dxq8Y62980514
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 3 Aug 2020 13:59:52 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C995A42047;
-        Mon,  3 Aug 2020 14:01:18 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9E70442049;
-        Mon,  3 Aug 2020 14:01:18 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon,  3 Aug 2020 14:01:18 +0000 (GMT)
-From:   Sven Schnelle <svens@linux.ibm.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] vdso: allow to add architecture-specific vdso data
-References: <20200803055645.79042-1-svens@linux.ibm.com>
-        <20200803055645.79042-2-svens@linux.ibm.com>
-        <87ime0lyg6.fsf@nanos.tec.linutronix.de>
-Date:   Mon, 03 Aug 2020 16:01:18 +0200
-In-Reply-To: <87ime0lyg6.fsf@nanos.tec.linutronix.de> (Thomas Gleixner's
-        message of "Mon, 03 Aug 2020 14:13:13 +0200")
-Message-ID: <yt9dr1sn3k29.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+        Mon, 3 Aug 2020 10:03:05 -0400
+Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MMFdY-1kLv9c1CsA-00JG6n; Mon, 03 Aug 2020 16:03:02 +0200
+Received: by mail-qt1-f182.google.com with SMTP id o22so27993378qtt.13;
+        Mon, 03 Aug 2020 07:03:02 -0700 (PDT)
+X-Gm-Message-State: AOAM531H4Ztsp4lmZHE0hVpE09LjIihZ4anNdOXHKtYz1TkLDiSuprzP
+        Ahwx6nVPpRdzpnzSaHzBySk7+DaSeMqeLeCkz9I=
+X-Google-Smtp-Source: ABdhPJw2zR5rbY5JLrLg+SOnCxoaIDNRbKJLo+/dAo2RT/k0sLgir+vyUo3XbpuGMFZC+KhJcR2YgXGxdxfhSfDd7eY=
+X-Received: by 2002:aed:2946:: with SMTP id s64mr16834134qtd.204.1596463380844;
+ Mon, 03 Aug 2020 07:03:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-03_13:2020-08-03,2020-08-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=901 mlxscore=0
- lowpriorityscore=0 phishscore=0 impostorscore=0 suspectscore=0 spamscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 clxscore=1015 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008030102
+References: <20200730220750.18158-1-samuel@sholland.org> <CAK8P3a2p7dWhhCqAYF_Zos-X-zBK+id-xO5hPu2fRTbNyPo9Xg@mail.gmail.com>
+ <29ea8d0f-bcab-9ffd-0e2f-f022911f4bf2@sholland.org>
+In-Reply-To: <29ea8d0f-bcab-9ffd-0e2f-f022911f4bf2@sholland.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 3 Aug 2020 16:02:44 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0xSyyaLHziuv4JKimUggF96frwLPKmjQ4G9VBWRW2EMg@mail.gmail.com>
+Message-ID: <CAK8P3a0xSyyaLHziuv4JKimUggF96frwLPKmjQ4G9VBWRW2EMg@mail.gmail.com>
+Subject: Re: [PATCH v2] scsi: 3w-9xxx: Fix endianness issues found by sparse
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Adam Radford <aradford@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:e64ezUisEuE9nycpbx8ic+jqdEuyHo7xZIKF0JrUSXVeVXoMr45
+ NxBTI57MF/dEAoJzYSTYmaYXGRGjlXqbukQZmMLBWl/GwgoUqih9hkWgnI2cK2jCsBb226b
+ vX6Euowe8U9ORfwoHT3sQglECKF9zPsJlbju7ApGrltWdaJ9ND8iNY//NyEOBL82SzYkqbm
+ R5MM8KuJMcKWB+Cqr3lyw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4RmXT1mnDr4=:ch8gWzoUYWnwqpm8+VTY7E
+ 7+zkybGCsDxcgLCQTB1DEl29/K77JSKezwUBB2iXnZx0W0kV2djkaIqnhu1YYj2kRbkEyw/3i
+ ZrRakLKIVlxWIDND2CXciBMdoHN+R9xzgjyL+dmEG5gXEAaT96IprTMa0rU1HHi8SFxso2lpI
+ v2vJCmHfbmX22RAQW7aqE757bshw+JS/y+qf99J6FaYI6KXh/lkP0WcmRjSKEWeDk31Eq7XBV
+ VjJh5qUiPFGpzBJ3qAd+EQIjG4m4sbLVSq3HetAKTUrxn3sCspTsb/R42wF6JWUbcR8M5BjqZ
+ oomSkisD+OsIkrtH843OT30Qde280uRH3bEoTPzgb7h218/KKEJQRX0mzKSDKH/FsA8BoW1a8
+ xQnCGPEgaKcRSuW501XBukP7w4j0PxBIVSwkYouRvbsB3UC0R5evOFzdjj0IZtw+Ws5e1ppD7
+ hURU7doOFii2GeLXTMtpv0Rx5wMETqo98O/8j4Y9o/SRiYgl45T/51ACobVilcyka7b5HszGa
+ C2p46YumFEPPcPb+bVzFhHnm8H6NawNecpWeBANOOYMxmqxz5wyHqS6M8PnNDlQIJfp51/wha
+ J2HTjHfyfmcSZFQyUK9Jcy4ZwHwHZPrzsLQA+LSx4lOa5BIlZtzOiycVwcV1PfkNwNVnOWQbP
+ 3Yxs1QJHVxfJZB+WTxDwCwm61+cI4mHvmmAYuQrBLh1xS4+DroPGgbGxjqJAPN0qIYBPurP2D
+ Y2LfL0heWgGd+inq7izXYY8rOXF0k99sLqywHsbxYPqtFL3gqBkznbIMlyjSMHhJRXGUO//iE
+ NViQHsdkJyDbG7WNVIRRLdvP4UfP7DggJ0lPLBpNyVXPklC9mOhyt/rzFh8ntp2K5QcZHxPUr
+ S0jpJT6d4MXWahOf1W1G7lCrh30xX6DLHsCpomOVljS2mHRx0MXBq445hR06G7Fa+AjGeajht
+ GW0//Dwf2lu+cCNp8by/UULkG9gm1pFojKAT4B80p/J6vgDDelIf5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thomas Gleixner <tglx@linutronix.de> writes:
-
-> just a few nits.
+On Mon, Aug 3, 2020 at 5:42 AM Samuel Holland <samuel@sholland.org> wrote:
 >
-> Can you please spare that #ifdef and do:
+> On 7/31/20 2:29 AM, Arnd Bergmann wrote:
+> > On Fri, Jul 31, 2020 at 12:07 AM Samuel Holland <samuel@sholland.org> wrote:
+> >>
+> >> The main issue observed was at the call to scsi_set_resid, where the
+> >> byteswapped parameter would eventually trigger the alignment check at
+> >> drivers/scsi/sd.c:2009. At that point, the kernel would continuously
+> >> complain about an "Unaligned partial completion", and no further I/O
+> >> could occur.
+> >>
+> >> This gets the controller working on big endian powerpc64.
+> >>
+> >> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> >> ---
+> >>
+> >> Changes since v1:
+> >>  - Include changes to use __le?? types in command structures
+> >>  - Use an object literal for the intermediate "schedulertime" value
+> >>  - Use local "error" variable to avoid repeated byte swapping
+> >>  - Create a local "length" variable to avoid very long lines
+> >>  - Move byte swapping to TW_REQ_LUN_IN/TW_LUN_OUT to avoid long lines
+> >>
+> >
+> > Looks much better, thanks for the update. I see one more issue here
+> >>  /* Command Packet */
+> >>  typedef struct TW_Command {
+> >> -       unsigned char opcode__sgloffset;
+> >> -       unsigned char size;
+> >> -       unsigned char request_id;
+> >> -       unsigned char unit__hostid;
+> >> +       u8      opcode__sgloffset;
+> >> +       u8      size;
+> >> +       u8      request_id;
+> >> +       u8      unit__hostid;
+> >>         /* Second DWORD */
+> >> -       unsigned char status;
+> >> -       unsigned char flags;
+> >> +       u8      status;
+> >> +       u8      flags;
+> >>         union {
+> >> -               unsigned short block_count;
+> >> -               unsigned short parameter_count;
+> >> +               __le16  block_count;
+> >> +               __le16  parameter_count;
+> >>         } byte6_offset;
+> >>         union {
+> >>                 struct {
+> >> -                       u32 lba;
+> >> -                       TW_SG_Entry sgl[TW_ESCALADE_MAX_SGL_LENGTH];
+> >> -                       dma_addr_t padding;
+> >> +                       __le32          lba;
+> >> +                       TW_SG_Entry     sgl[TW_ESCALADE_MAX_SGL_LENGTH];
+> >> +                       dma_addr_t      padding;
+> >
+> >
+> > The use of dma_addr_t here seems odd, since this is neither endian-safe nor
+> > fixed-length. I see you replaced the dma_addr_t in TW_SG_Entry with
+> > a variable-length fixed-endian word. I guess there is a chance that this is
+> > correct, but it is really confusing. On top of that, it seems that there is
+> > implied padding in the structure when built with a 64-bit dma_addr_t
+> > on most architectures but not on x86-32 (which uses 32-bit alignment for
+> > 64-bit integers). I don't know what the hardware definition is for TW_Command,
+> > but ideally this would be expressed using only fixed-endian fixed-length
+> > members and explicit padding.
 >
-> #ifdef CONFIG_ARCH_HAS_VDSO_DATA
-> #include <asm/vdso/data.h>
-> #else
-> struct arch_vdso_data {};
-> #endif
+> All of the command structures are packed, due to the "#pragma pack(1)" earlier
+> in the file. So alignment is not an issue. This dma_addr_t member _is_ the
+> explicit padding to make sizeof(TW_Command) -
+> sizeof(TW_Command.byte8_offset.{io,param}.sgl) equal TW_COMMAND_SIZE * 4. And
+> indeed the structure is expected to be a different size depending on
+> sizeof(dma_addr_t).
 
-Ok.
+Ah, so only the first few members are accessed by hardware and the
+last union is only accessed by the OS then? In that case I suppose it is
+all fine, but I would also suggest removing the "#pragma packed"
+to get somewhat more efficient access on systems that have  problems
+with misaligned accesses.
 
-> Please keep the tabular alignment of the struct members and add kernel
-> doc in the comment above the struct.
-
-Ok.
-
-> Aside of that 'arch' is not really a intuitive name. 'arch_data' or
-> something like that. Hmm?
-
-arch_data is fine, thank you for your comments.
-
-Regards
-Sven
+      Arnd
