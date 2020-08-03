@@ -2,53 +2,53 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47943C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CACC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 140D22064B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 024852064B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596459245;
-	bh=SRurRWJJQO53QXGBHGNX5b7e/Byc0GKIJO6hr2NdXgM=;
+	s=default; t=1596459255;
+	bh=BocLtQpZTd5/Ym1RXKF6hFrclOeOhuwE8H0dnbnxEiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lAMlL3BbjNGPnKGmWOizKDT5Xt1i7LA+x/K6pp625hMP+cCi6mDH3hBAFtFZPsavG
-	 ZM3QxWnmAE9EOWjcw2F5huvfYOS133mrhqunvHdACSapwbXQuM3cRH/rfgdvbYDydK
-	 QiXlnMs6W2HdHDyCuFoCJe1B93Fx/q9tTvypgx/g=
+	b=2l0Ny3JYQ8qNcoGOrH4ufQ25oTqXmO1kGFoadv06pkkEtawEoy3HW+PL7c8LKs/eY
+	 6iCOsYT2ycx2ZSQDMn9p302tNHChr2trUBlUdkpbjdtWwKAiULUQKRvat7pWuvSRQV
+	 vwdw5P/2qnLs0GlFIaURiU8vMnjRgWHbfjdFt5fI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727808AbgHCMXn (ORCPT
+        id S1728081AbgHCMyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:23:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47768 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:54:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbgHCMXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:23:38 -0400
+        id S1727911AbgHCMXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:23:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E848120738;
-        Mon,  3 Aug 2020 12:23:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9ACA720738;
+        Mon,  3 Aug 2020 12:23:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457417;
-        bh=SRurRWJJQO53QXGBHGNX5b7e/Byc0GKIJO6hr2NdXgM=;
+        s=default; t=1596457423;
+        bh=BocLtQpZTd5/Ym1RXKF6hFrclOeOhuwE8H0dnbnxEiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aS1RHSFkCw3Lx2GrLxMSx+zCXodZ9mO+1jwaR3iPVAfqzHD9Kahu97duu2aqexXa7
-         eCVGimhUgganW4Y/mr++I5a2EjwiTNnkAUhaJ5Fn6zwxgrsQLagJmLS+5kpPRMROpJ
-         jqxwLHvmXnJ2qLexOG8h0vsxRNqSWR4+EE5ZK2kU=
+        b=EJj+2dqYTEvvznev54G/0KPO2JcCVTTFAsMFQ/Drh7q2uLuVh6ISByhZtYarsk7MY
+         Ar2G2oQiCfSMoO6T1XLoglzoSUk8zsvgfTC1PZiHM2drGRrU52MUaaqyNuYyNfyIz8
+         PjvraFZ8x9squO3WusFQSOr+spIj7BEMB9uXY2bk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eran Ben Elisha <eranbe@mellanox.com>,
-        Ariel Levkovich <lariel@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 058/120] net/mlx5: Verify Hardware supports requested ptp function on a given pin
-Date:   Mon,  3 Aug 2020 14:18:36 +0200
-Message-Id: <20200803121905.619010897@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Emese Revfy <re.emese@gmail.com>,
+        Kees Cook <keescook@chromium.org>, Willy Tarreau <w@1wt.eu>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.7 031/120] random32: remove net_rand_state from the latent entropy gcc plugin
+Date:   Mon,  3 Aug 2020 14:18:09 +0200
+Message-Id: <20200803121904.344860488@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -61,61 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eran Ben Elisha <eranbe@mellanox.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 071995c877a8646209d55ff8edddd2b054e7424c ]
+commit 83bdc7275e6206f560d247be856bceba3e1ed8f2 upstream.
 
-Fix a bug where driver did not verify Hardware pin capabilities for
-PTP functions.
+It turns out that the plugin right now ends up being really unhappy
+about the change from 'static' to 'extern' storage that happened in
+commit f227e3ec3b5c ("random32: update the net random state on interrupt
+and activity").
 
-Fixes: ee7f12205abc ("net/mlx5e: Implement 1PPS support")
-Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
-Reviewed-by: Ariel Levkovich <lariel@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This is probably a trivial fix for the latent_entropy plugin, but for
+now, just remove net_rand_state from the list of things the plugin
+worries about.
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Emese Revfy <re.emese@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Willy Tarreau <w@1wt.eu>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- .../ethernet/mellanox/mlx5/core/lib/clock.c   | 23 ++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ include/linux/random.h |    2 +-
+ lib/random32.c         |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
-index b88c6456d2154..0267552b8a61b 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
-@@ -387,10 +387,31 @@ static int mlx5_ptp_enable(struct ptp_clock_info *ptp,
- 	return 0;
- }
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -120,7 +120,7 @@ struct rnd_state {
+ 	__u32 s1, s2, s3, s4;
+ };
  
-+enum {
-+	MLX5_MTPPS_REG_CAP_PIN_X_MODE_SUPPORT_PPS_IN = BIT(0),
-+	MLX5_MTPPS_REG_CAP_PIN_X_MODE_SUPPORT_PPS_OUT = BIT(1),
-+};
-+
- static int mlx5_ptp_verify(struct ptp_clock_info *ptp, unsigned int pin,
- 			   enum ptp_pin_function func, unsigned int chan)
- {
--	return (func == PTP_PF_PHYSYNC) ? -EOPNOTSUPP : 0;
-+	struct mlx5_clock *clock = container_of(ptp, struct mlx5_clock,
-+						ptp_info);
-+
-+	switch (func) {
-+	case PTP_PF_NONE:
-+		return 0;
-+	case PTP_PF_EXTTS:
-+		return !(clock->pps_info.pin_caps[pin] &
-+			 MLX5_MTPPS_REG_CAP_PIN_X_MODE_SUPPORT_PPS_IN);
-+	case PTP_PF_PEROUT:
-+		return !(clock->pps_info.pin_caps[pin] &
-+			 MLX5_MTPPS_REG_CAP_PIN_X_MODE_SUPPORT_PPS_OUT);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return -EOPNOTSUPP;
- }
+-DECLARE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
++DECLARE_PER_CPU(struct rnd_state, net_rand_state);
  
- static const struct ptp_clock_info mlx5_ptp_clock_info = {
--- 
-2.25.1
-
+ u32 prandom_u32_state(struct rnd_state *state);
+ void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
+--- a/lib/random32.c
++++ b/lib/random32.c
+@@ -48,7 +48,7 @@ static inline void prandom_state_selftes
+ }
+ #endif
+ 
+-DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
++DEFINE_PER_CPU(struct rnd_state, net_rand_state);
+ 
+ /**
+  *	prandom_u32_state - seeded pseudo-random number generator.
 
 
