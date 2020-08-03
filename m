@@ -2,146 +2,114 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B18C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC044C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD5720781
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 011B920781
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:18:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="U3y1piV/"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="teumh6vg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729113AbgHCXQY (ORCPT
+        id S1729188AbgHCXSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 19:16:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57938 "EHLO
+        Mon, 3 Aug 2020 19:18:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728911AbgHCXQY (ORCPT
+        with ESMTP id S1729028AbgHCXSH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 19:16:24 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 654FDC06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 16:16:23 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id c16so19995069ejx.12
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 16:16:23 -0700 (PDT)
+        Mon, 3 Aug 2020 19:18:07 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F304C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 16:18:07 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id u10so12332584plr.7
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 16:18:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=RVPV7oxVS93iXefV8KQ0bKUcXLAvqUAHupIudOdk4DQ=;
-        b=U3y1piV/vs4p2cFmwFCj+by9kLDR7TX3YB4ZXXse0JO6mC48hufglIAmDp/1g9uIBs
-         6bsztBElrfuBb4hbJPfuLqZSxGJNSvj3/G4tM5tKjtd/+mJ3xHaLyMfG/xEXB0gSEnrx
-         +Ho6EB6vdUJfqAfUm9UIxvOml5mFY53nl3mWOdgnYADlDiIG9mv6Y3pEcDXf8uh8pN4v
-         lEUXWqwbSqYq3slPqu1zwYKeZNcHsx2O/SpnoafrqasFD6/YGwr8lJe/O/l7KqRj8hw7
-         fFIOLe8D2C4MlVvFUVRfyPQrYDBVsN0zOgTAJMNadcjyHptvP336kbT6Bk6BFB6uJfGy
-         FInw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=mE1Zo4WQEH1D2xB2gURPFr+G+GxzoBMDDrUhK5+OwFw=;
+        b=teumh6vgDlENKBXvNps2s40IxXmmMolX/zwdU6vj+I+rAzmtej4e+I4hWjJVbRIBfZ
+         kpTUCYsfLF2CxRHZu+Q+I+k+4wJZ76xv2Voa0HQrNLmk/3kXuAxdU8jqK6lpqRM9JOpV
+         j5YjyrxuorlMvw0cAJUlI8bt2HBDD1MJzL634YzjkSBy5ExCsyVPEst45m1VjTJna3BF
+         gRln5o5p8Muhl37cjLab4gwQNqbN9iexBBIVAVFo7fT6FOlTfdFZiongiAt7Lp+8mWIb
+         KrR1wCzvpN7waxNjDi3qmP+31XH7FSw5MlVsyAezJ8KBEKOldNzlaxosMwUKKaP654t5
+         IJog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=RVPV7oxVS93iXefV8KQ0bKUcXLAvqUAHupIudOdk4DQ=;
-        b=pcQodG0crxzX+dTk5I0BxnC0HmOE0Xjn80aAIe5k6H6T7RzdllNLQzFkPnxgvKMbKW
-         25MJgxCI9UheookI2FoV/KPD7OIe4B7COrCM0CF2YSPZxYds5r/v8xmF6qHJyjx75rmm
-         8hkFmH+c6kFjR0llV4MM8v5e1meVJbSZkWFVZQ51Cw9uKyu4XG3InpqKW7LH/U9cIJvL
-         BXSaucSBZ24h7qtEG4txiQz0hCBtiKhBXbDdjNq4cK2ANtYMCh1cHT3IpvEcu3Q/ITL2
-         AN/PSCPO04zFNDVltKHdXAyWwGOgAJ1bSr5H3hF/YG2mTP4ekyRQEtumDVxPk62vJBbe
-         e/Sw==
-X-Gm-Message-State: AOAM5304jYcolkjtfRHQ/de5h5T26pvOlG8RBudAzgMYmIYoZfNSJbKa
-        vL1MG9sCgatnVO5DGOKK756Jwf3h8p7ONcgeBLTZ
-X-Google-Smtp-Source: ABdhPJzbjZ+13fbSX2hywI8tfmTickIarJs8hvmSCpKZYozNkrcWSZ9Sw/Fd/U/iaB60GIdz7Me9Kr3ZxTHvXOaQ8Q8=
-X-Received: by 2002:a17:906:1911:: with SMTP id a17mr17799685eje.431.1596496582017;
- Mon, 03 Aug 2020 16:16:22 -0700 (PDT)
-MIME-Version: 1.0
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 3 Aug 2020 19:16:10 -0400
-Message-ID: <CAHC9VhTy5xcOqx2SRjsyC-H-xvj3vvbHDt7O-S7TLYhXjANZGw@mail.gmail.com>
-Subject: [GIT PULL] SELinux patches for v5.9
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mE1Zo4WQEH1D2xB2gURPFr+G+GxzoBMDDrUhK5+OwFw=;
+        b=i/D8k12g/qZbL9MoW3pmaFmOiRlXzus8DOJqcdNhyIpBa8tDeG6V6v50u0A6ZLX0Vb
+         +QkAWWN+KjFnszfj+nxd+MoLNB+9JN6Il/x6baGL8F8fB1pkykHuk0y32cN3/ZH4hFHS
+         4nNqWe+wXF7fgMdVvcnkvOO96MXeNluKuvBO6QyjgKMvkNUD2TKzrJEmquVqYuGEa8JP
+         PGU/fRoYrmjbT2T1gQWDxFWNAt7Gr7c/mUC1Wg34++eU0hvGpayGx7PDlmhIku8BSaw+
+         UT7IgHAEVy4755ZUNibtHVpnj7eW0kFQdf4ly+1rH+yBe/rHpevzXaYKnBi0mocD6Xw1
+         9V3w==
+X-Gm-Message-State: AOAM531xH7lNinLnm9pmCeQ9d7ZzoGTex2C9Y+TJwQXpIRJlVU6ELr4Y
+        0UTtvd65vbFFhs9Adre2ZWCZPAPlH/A=
+X-Google-Smtp-Source: ABdhPJyQ5beWiMDHZPKIOLmFs1yKzbJR+bIyuu4IFSXxWGZN6GmcaFXB9zUHuO4PVaq2DzCprWVemw==
+X-Received: by 2002:a17:90a:6b07:: with SMTP id v7mr1627114pjj.138.1596496686230;
+        Mon, 03 Aug 2020 16:18:06 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id g7sm516252pjj.2.2020.08.03.16.18.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Aug 2020 16:18:05 -0700 (PDT)
+Subject: Re: [GIT PULL] io_uring changes for 5.9-rc1
+From:   Jens Axboe <axboe@kernel.dk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <50466810-9148-e245-7c1e-e7435b753582@kernel.dk>
+ <CAHk-=wgaxWMA7DVTQq+KxqaWHPDrXDuScX9orzRgxdi7SBfmoA@mail.gmail.com>
+ <cd478521-e6ec-a1aa-5f93-29ad13d2a8bb@kernel.dk>
+Message-ID: <56cb11b1-7943-086e-fb31-6564f4d4d089@kernel.dk>
+Date:   Mon, 3 Aug 2020 17:18:04 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <cd478521-e6ec-a1aa-5f93-29ad13d2a8bb@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 8/3/20 4:30 PM, Jens Axboe wrote:
+>> Adding random kiocb helper functions to a core header file, when they
+>> are only used in one place, and when they only make sense in that one
+>> place?
+>>
+>> Not ok.
+> 
+> I'll move that into io_uring instead.
 
-Here is the SELinux pull request for the v5.9 release.  All the
-patches pass our test suite and earlier this evening they merged
-cleanly with your tree.
+I see that you handled most of the complaints already, so thanks for
+that. I've run some basic testing with master and it works for me,
+running some more testing on production too.
 
-Beyond the usual smattering of bug fixes, we've got three small
-improvements worth highlighting:
+I took a look at the rewrite you queued up, and made a matching change
+on the io_uring side:
 
-- Improved SELinux policy symbol table performance due to a reworking
-of the insert and search functions
+https://git.kernel.dk/cgit/linux-block/commit/?h=io_uring-5.9&id=419ebeb6f2d0d56f6b2844c0f77034d1048e37e9
 
-- Allow reading of SELinux labels before the policy is loaded,
-allowing for some more "exotic" initramfs approaches
+and also queued a documentation patch for the retry logic and the
+callback handler:
 
-- Improved checking an error reporting about process class/permissions
-during SELinux policy load
+https://git.kernel.dk/cgit/linux-block/commit/?h=io_uring-5.9&id=9541a9d4791c2d31ba74b92666edd3f1efd936a8
 
-Please merge these for v5.9.  Thanks,
--Paul
-
---
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
-
- Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
-
-are available in the Git repository at:
-
- git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
-   tags/selinux-pr-20200803
-
-for you to fetch changes up to 54b27f9287a7b3dfc85549f01fc9d292c92c68b9:
-
- selinux: complete the inlining of hashtab functions
-   (2020-07-09 19:08:16 -0400)
-
-----------------------------------------------------------------
-selinux/stable-5.9 PR 20200803
-
-----------------------------------------------------------------
-Ethan Edwards (1):
-     selinux: fixed a checkpatch warning with the sizeof macro
-
-Jonathan Lebon (1):
-     selinux: allow reading labels before policy is loaded
-
-Ondrej Mosnacek (3):
-     selinux: specialize symtab insert and search functions
-     selinux: prepare for inlining of hashtab functions
-     selinux: complete the inlining of hashtab functions
-
-Stephen Smalley (2):
-     scripts/selinux/mdp: fix initial SID handling
-     selinux: log error messages on required process class / permissions
-
-lihao (1):
-     selinux: Fix spelling mistakes in the comments
-
-scripts/selinux/mdp/mdp.c         |  23 ++++--
-security/selinux/hooks.c          |   7 +-
-security/selinux/netif.c          |   2 +-
-security/selinux/netnode.c        |   2 +-
-security/selinux/netport.c        |   2 +-
-security/selinux/ss/conditional.c |   8 +--
-security/selinux/ss/conditional.h |   2 +-
-security/selinux/ss/hashtab.c     |  59 ++-------------
-security/selinux/ss/hashtab.h     |  77 ++++++++++++++++----
-security/selinux/ss/mls.c         |  23 +++---
-security/selinux/ss/policydb.c    | 148 ++++++++++++++++++++++------------
-security/selinux/ss/policydb.h    |   9 +++
-security/selinux/ss/services.c    |  38 +++++-----
-security/selinux/ss/symtab.c      |  21 ++++--
-security/selinux/ss/symtab.h      |   3 +
-15 files changed, 258 insertions(+), 166 deletions(-)
+For the latter, let me know if you're happy with the explanation, or if
+you want other parts documented more thoroughly too. I'll make a pass
+through the file in any case once I've flushed out the other branches
+for this merge window in.
 
 -- 
-paul moore
-www.paul-moore.com
+Jens Axboe
+
