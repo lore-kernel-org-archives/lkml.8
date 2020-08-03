@@ -2,110 +2,193 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD46C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 04:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D3EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0B92068F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 04:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C7102068F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:03:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QQAcTy+N"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bS+QIwK0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbgHCE7Y (ORCPT
+        id S1726440AbgHCFDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 00:59:24 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:59217 "EHLO ozlabs.org"
+        Mon, 3 Aug 2020 01:03:36 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:54402 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725270AbgHCE7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 00:59:24 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725268AbgHCFDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 01:03:36 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596431015; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=ZEq3dQL1T4rfyaJOBFm/8UoCpiFNlnou1J2+YfKngHo=;
+ b=bS+QIwK0a6Gh7x4/kG4K0MKjr3pC09lXiNa+E1muUSEnialacWeTpPOwOK8ohzkKrWlpTlt5
+ dc+DnTPj9OfpMMONcVUeY1zB12pZ82P/R2uI2EUo966+PBJ648zjyqZry0RVDQUtlYi9WWqY
+ ZGnIsxeNTlAzOLNac4AA1/30k6k=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
+ 5f279a96498d6102394b66a2 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 03 Aug 2020 05:03:18
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 733C4C4339C; Mon,  3 Aug 2020 05:03:17 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BKlzY1RNmz9s1x;
-        Mon,  3 Aug 2020 14:59:21 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596430762;
-        bh=MPhLnoYZ1H5ZvLDWHdju+j3itySzNLNR+DZxYy9IYNw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QQAcTy+NeF/H+YtJdcgnyqiwVBl+3dAeUgIc/CElGZRCnphjUhbGe5K9KcHunBFpR
-         tCbo/SeRBBZS8I9wVXYEkjymC2cFBLpa8xcxN+zQiEopmTuVd1EXOyjbUSotq3yViw
-         AgC+AQb7rer1tNoxVwP9eX4g4qm4tJwZd6aWLqnodhNATEWxOujoVE2aVlLqoLk8Aa
-         BHqGkn3hxhM1m/i+yfc9P7MMv/MA7aq6oTXhnuqDgGdUi3IEVXPd+Bo+OuuHXwdhz1
-         tkoBoEE2oo+1S2yzA1owsIiYwg2Goev88O56jWESos4Coz9KUiGESLMcduyQLldQLZ
-         icRQJTv35wb6g==
-Date:   Mon, 3 Aug 2020 14:59:20 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Linux PowerPC List <linuxppc-dev@lists.ozlabs.org>,
-        Willy Tarreau <w@1wt.eu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] powerpc: fix up PPC_FSL_BOOK3E build
-Message-ID: <20200803145920.72a6fa4b@canb.auug.org.au>
-In-Reply-To: <20200803135447.3833067d@canb.auug.org.au>
-References: <20200803135447.3833067d@canb.auug.org.au>
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 198A3C433C6;
+        Mon,  3 Aug 2020 05:03:16 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/_a6zgj=YiioLKMMN9YZ42FX";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 03 Aug 2020 13:03:16 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
+        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
+        bvanassche@acm.org, beanhuo@micron.com, asutoshd@codeaurora.org,
+        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
+        chaotian.jing@mediatek.com, cc.chou@mediatek.com,
+        jiajie.hao@mediatek.com
+Subject: Re: [PATCH v6] scsi: ufs: Quiesce all scsi devices before shutdown
+In-Reply-To: <20200803042514.7111-1-stanley.chu@mediatek.com>
+References: <20200803042514.7111-1-stanley.chu@mediatek.com>
+Message-ID: <d85cdb877bced2d6b0a8ba67670271f2@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/_a6zgj=YiioLKMMN9YZ42FX
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Stanley,
 
-Hi all,
+On 2020-08-03 12:25, Stanley Chu wrote:
+> Currently I/O request could be still submitted to UFS device while
+> UFS is working on shutdown flow. This may lead to racing as below
+> scenarios and finally system may crash due to unclocked register
+> accesses.
+> 
+> To fix this kind of issues, in ufshcd_shutdown(),
+> 
+> 1. Use pm_runtime_get_sync() instead of resuming UFS device by
+>    ufshcd_runtime_resume() "internally" to let runtime PM framework
+>    manage and prevent concurrent runtime operations by incoming I/O
+>    requests.
+> 
+> 2. Specifically quiesce all SCSI devices to block all I/O requests
+>    after device is resumed.
+> 
+> Example of racing scenario: While UFS device is runtime-suspended
+> 
+> Thread #1: Executing UFS shutdown flow, e.g.,
+>            ufshcd_suspend(UFS_SHUTDOWN_PM)
+> 
+> Thread #2: Executing runtime resume flow triggered by I/O request,
+>            e.g., ufshcd_resume(UFS_RUNTIME_PM)
+> 
+> This breaks the assumption that UFS PM flows can not be running
+> concurrently and some unexpected racing behavior may happen.
+> 
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> ---
+> Changes:
+>   - Since v4: Use pm_runtime_get_sync() instead of resuming UFS device
+> by ufshcd_runtime_resume() "internally".
+> ---
+>  drivers/scsi/ufs/ufshcd.c | 39 ++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 34 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index 307622284239..fc01171d13b1 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -159,6 +159,12 @@ struct ufs_pm_lvl_states ufs_pm_lvl_states[] = {
+>  	{UFS_POWERDOWN_PWR_MODE, UIC_LINK_OFF_STATE},
+>  };
+> 
+> +#define ufshcd_scsi_for_each_sdev(fn) \
+> +	list_for_each_entry(starget, &hba->host->__targets, siblings) { \
+> +		__starget_for_each_device(starget, NULL, \
+> +					  fn); \
+> +	}
+> +
+>  static inline enum ufs_dev_pwr_mode
+>  ufs_get_pm_lvl_to_dev_pwr_mode(enum ufs_pm_level lvl)
+>  {
+> @@ -8629,6 +8635,13 @@ int ufshcd_runtime_idle(struct ufs_hba *hba)
+>  }
+>  EXPORT_SYMBOL(ufshcd_runtime_idle);
+> 
+> +static void ufshcd_quiesce_sdev(struct scsi_device *sdev, void *data)
+> +{
+> +	/* Suspended devices are already quiesced so can be skipped */
 
-On Mon, 3 Aug 2020 13:54:47 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> Commit
->=20
->   1c9df907da83 ("random: fix circular include dependency on arm64 after a=
-ddition of percpu.h")
->=20
-> exposed a curcular include dependency:
->=20
-> asm/mmu.h includes asm/percpu.h, which includes asm/paca.h, which
-> includes asm/mmu.h
->=20
-> So fix it by extracting the small part of asm/mmu.h that needs
-> asm/percu.h into a new file and including that where necessary.
->=20
-> Cc: Willy Tarreau <w@1wt.eu>
-> Cc: <stable@kernel.org>
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Why can runtime suspended sdevs be skipped? Block layer can still resume
+them at any time, no?
 
-I should have put:
+> +	if (!pm_runtime_suspended(&sdev->sdev_gendev))
+> +		scsi_device_quiesce(sdev);
+> +}
+> +
+>  /**
+>   * ufshcd_shutdown - shutdown routine
+>   * @hba: per adapter instance
+> @@ -8640,6 +8653,7 @@ EXPORT_SYMBOL(ufshcd_runtime_idle);
+>  int ufshcd_shutdown(struct ufs_hba *hba)
+>  {
+>  	int ret = 0;
+> +	struct scsi_target *starget;
+> 
+>  	if (!hba->is_powered)
+>  		goto out;
+> @@ -8647,11 +8661,26 @@ int ufshcd_shutdown(struct ufs_hba *hba)
+>  	if (ufshcd_is_ufs_dev_poweroff(hba) && ufshcd_is_link_off(hba))
+>  		goto out;
+> 
+> -	if (pm_runtime_suspended(hba->dev)) {
+> -		ret = ufshcd_runtime_resume(hba);
+> -		if (ret)
+> -			goto out;
+> -	}
+> +	/*
+> +	 * Let runtime PM framework manage and prevent concurrent runtime
+> +	 * operations with shutdown flow.
+> +	 */
+> +	pm_runtime_get_sync(hba->dev);
+> +
+> +	/*
+> +	 * Quiesce all SCSI devices to prevent any non-PM requests sending
+> +	 * from block layer during and after shutdown.
+> +	 *
+> +	 * Here we can not use blk_cleanup_queue() since PM requests
+> +	 * (with BLK_MQ_REQ_PREEMPT flag) are still required to be sent
+> +	 * through block layer. Therefore SCSI command queued after the
+> +	 * scsi_target_quiesce() call returned will block until
+> +	 * blk_cleanup_queue() is called.
+> +	 *
+> +	 * Besides, scsi_target_"un"quiesce (e.g., scsi_target_resume) can
+> +	 * be ignored since shutdown is one-way flow.
+> +	 */
+> +	ufshcd_scsi_for_each_sdev(ufshcd_quiesce_sdev);
 
-Fixes: 1c9df907da83 ("random: fix circular include dependency on arm64 afte=
-r addition of percpu.h")
+Any reasons why don't use scsi_target_quiesce() here?
 
---=20
-Cheers,
-Stephen Rothwell
+Thanks,
 
---Sig_/_a6zgj=YiioLKMMN9YZ42FX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Can Guo.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8nmagACgkQAVBC80lX
-0GzdnAf/efDjHOIC93+8ioQY0UcLlTfk9I7vm8keK3/kCYBUUFSV0y/ewUjRYz4s
-4WYVm0Xj00VX9FkiGB8lhoO0nGsf+P9O2k59Y6kQwndAldplPwcjzIgsSDSx+LBm
-/aBItNNDfabEUMp67T2ybKCfy1h08wsInmM9gl0V2z1Mo1r4ax3StistxUzQwGj5
-fScto/C2aistdWaybnT3Y8AQTMJhxBXkuZoc4s2aMEYC7JxVN/goi3ItOyC37GLL
-LR8a1XvjS3sdDZ7gGsY8PXBSB4AmDMx5UPNHAxQk0vKFOQqveoSNxoskOWUEKNrZ
-Px72hWk/2AInQqviFzFMMzsPmqw3og==
-=Ghwq
------END PGP SIGNATURE-----
-
---Sig_/_a6zgj=YiioLKMMN9YZ42FX--
+> 
+>  	ret = ufshcd_suspend(hba, UFS_SHUTDOWN_PM);
+>  out:
