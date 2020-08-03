@@ -2,141 +2,278 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CC8C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC542C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74A1D20578
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD8F5206D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:31:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="eMfuj2cA";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="koW4Adc0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P8g/zuT7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgHCOal (ORCPT
+        id S1727855AbgHCObY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:30:41 -0400
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:40355 "EHLO
-        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726358AbgHCOak (ORCPT
+        Mon, 3 Aug 2020 10:31:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbgHCObX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 10:30:40 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailnew.west.internal (Postfix) with ESMTP id 7BBDB10D1;
-        Mon,  3 Aug 2020 10:30:38 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Mon, 03 Aug 2020 10:30:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
-        6ek7rotfn8yHr2SVRzyFzJOuazfE8xSPG939AHlpXcs=; b=eMfuj2cAVKP+mJQT
-        biNupJQwLHqaYhHLFPuUZQyX6CGdZVry0cLxvTO0phcdbXXnC+pMPkI29PiaDNuG
-        aus0TI6+71rhFFJ6BuivmuUCNYH+sJkr9LS0qGEhf58g6Kq5foxI8EqS5PQ4BNtR
-        m2Hdlp6p41lZC7lp1a58aYOyyx6HUKRh+y49rCGvH3/At3UhVpzU/LLsFFbPog+Q
-        o+YatBlPIgnd5sSWDoODyp/+5qt4iIs/KHw+Wt+p37JNiEMwKJQSodCj8DAIHgqt
-        92SGbDsncSpk0NxE6QhXTLUk7L+zUbWsu/4R0Yvsu1HaAUw9aPmQK8Z3tV+EcTxW
-        XObDxQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=6ek7rotfn8yHr2SVRzyFzJOuazfE8xSPG939AHlpX
-        cs=; b=koW4Adc0qWAHAZh5OZze593zLQ5jC/97529jgi5ZrIO85WbZaTvEqIQYr
-        FzDW3RVPNUW5x4HnrPnHyRr6XmXm9VP8iHULgGRKn+X1jvbZ6z9ptyApoH5WSadi
-        H6wQAGmPvBQ4QiQWgzvSdwzx6x0ev37TRK7ZDLqk2H9gAmJeOH4fV/UIissEABEd
-        XpLESd5lLaS64CIhyrHxFsftbia3cayePjctHkOuTYP6ZBHCYy2iaZ9Ze725oW/D
-        fNGMN5ICfcWD3u4HYrxir3Sp56lt/TXEKJNl9Bg1yJWqZp3OgM88ok7OhlCLQ3Kd
-        CIIiZfqW8kk15A5jO9EULcEaGWWYw==
-X-ME-Sender: <xms:jB8oX9DYMRIhNCgzRhkgmRWYIqvLOsYXnTdrp5z4cl9pF3Zup2mUyw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrjeeggdejjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
-    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnhepfe
-    efteetvdeguddvveefveeftedtffduudehueeihfeuvefgveehffeludeggfejnecukfhp
-    peehkedrjedrvdehtddrudekheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:jB8oX7hMug9NSJyrBx-_hsaMghqA8sU1pT1QNwHXC8iZ-PoSEBXb8A>
-    <xmx:jB8oX4lSQFRztQdi_y97W_W-WMfF73BDlC4jB3L_cbtLHrSDvH_uzw>
-    <xmx:jB8oX3ymudJ9OvqndBdAuE8iQpa_i2PpNRXb7Io4TRefSNVLy68EDw>
-    <xmx:jh8oX5JfCwhU_CdTBs5mjIgpfDFvki_ar5qP-6ciQt1_eoT-iTdbyo6YQfc>
-Received: from mickey.themaw.net (58-7-250-185.dyn.iinet.net.au [58.7.250.185])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 01829328005D;
-        Mon,  3 Aug 2020 10:30:30 -0400 (EDT)
-Message-ID: <bfba8e858885b8c507b8816d5296f7ab7f949e78.camel@themaw.net>
-Subject: Re: [PATCH 13/17] watch_queue: Implement mount topology and
- attribute change notifications [ver #5]
-From:   Ian Kent <raven@themaw.net>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>, andres@anarazel.de,
-        Jeff Layton <jlayton@redhat.com>, dray@redhat.com,
-        Karel Zak <kzak@redhat.com>, keyrings@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        LSM <linux-security-module@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 03 Aug 2020 22:30:26 +0800
-In-Reply-To: <1692826.1596457912@warthog.procyon.org.uk>
-References: <303106be4785135446e56cb606138a6e94885887.camel@themaw.net>
-         <CAJfpeguO8Qwkzx9zfGVT7W+pT5p6fgj-_8oJqJbXX_KQBpLLEQ@mail.gmail.com>
-         <1293241.1595501326@warthog.procyon.org.uk>
-         <CAJfpegspWA6oUtdcYvYF=3fij=Bnq03b8VMbU9RNMKc+zzjbag@mail.gmail.com>
-         <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk>
-         <158454391302.2863966.1884682840541676280.stgit@warthog.procyon.org.uk>
-         <2003787.1595585999@warthog.procyon.org.uk>
-         <865566fb800a014868a9a7e36a00a14430efb11e.camel@themaw.net>
-         <2023286.1595590563@warthog.procyon.org.uk>
-         <CAJfpegsT_3YqHPWCZGX7Lr+sE0NVmczWz5L6cN8CzsVz4YKLCQ@mail.gmail.com>
-         <1283475.1596449889@warthog.procyon.org.uk>
-         <1576646.1596455376@warthog.procyon.org.uk>
-         <1692826.1596457912@warthog.procyon.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 3 Aug 2020 10:31:23 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67EA0C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 07:31:23 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a15so34405378wrh.10
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 07:31:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=a2kviffhQpyWDETYjhFA03IjjKlp6zqYMUxZqK+9AO8=;
+        b=P8g/zuT7lns/ELOxpJWMA5IhEac6jL7hYl4+iY4YMPJaR7OIxFVMZVPq3258LMlmpG
+         NJ6se1VRDsCZeJ9hG0yub6KR/P8Ht44V0A18acBANtBcbo3Zc83JXcnwKeD75J6emF9l
+         4QHzgLu4diglhSlgQ9a7um1CgY4aTW/M12sbeF6WYZyZOnrP5w4fGJr/G9+GZww2QzN0
+         KyLh6NDyH4+EYml/wMsRQjjcTDWSu2zoFEiXOxpIrM3bnav0TLdCc8B7/0SO/a1hHmnt
+         It5OmGA6qz2nlWnQXk5Qfd+PUGtRjnC3OnLevpGa06GZTEkECSf5JWhGnQCcQtnoc8jt
+         qyHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=a2kviffhQpyWDETYjhFA03IjjKlp6zqYMUxZqK+9AO8=;
+        b=GndceOQM1EXirJKsgQOuA6oTW/NbyGHpjgHzz5hJFmcn9CYJQtWAGGDZMpH3l4LFkR
+         RTKCjy799tHzEXZZiMCj+kaZgEZBUYa7LUU79cEQrt5+G6gzkrH6Cr9C0i8LAxXrNlCz
+         DusKW8lbVZR0cWDnHnyGhq4xVEy9BwiZ/o7+jzHby6Z0zD69ejtdEZg27hA671j6d6zb
+         lJhRGIsD/rWB7PG9DYVKwojohqf3Je3oWHGXRUXuOjrcWyiFzNZuQIzBZUnG9TDnDz0G
+         XfBBo6IC9e66U1ErQ+MN2WitfsfY0XcDGeV82QXJ8wlwdJrO/iqKuJ20082ZBvsaNhi7
+         Toig==
+X-Gm-Message-State: AOAM530KxiF6GkSr/q3yAltHBwrLeLkNwcpGfl6eidGbO/3BwL4oupy7
+        5shGXBhkOA/4jD3LEcm+7TiBEqIW
+X-Google-Smtp-Source: ABdhPJwM+IxSgvRo/WQiT0sDzyAfhsiRUHkDwaz8a1YTPGZp+j3ky5fTOMZIJE0ej4efnNWOWASlww==
+X-Received: by 2002:adf:e290:: with SMTP id v16mr15210366wri.259.1596465080714;
+        Mon, 03 Aug 2020 07:31:20 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
+        by smtp.gmail.com with ESMTPSA id f9sm24529072wru.47.2020.08.03.07.31.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 07:31:17 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
+Cc:     Ofir Bitton <obitton@habana.ai>
+Subject: [PATCH] habanalabs: expose sync manager resources allocation in INFO IOCTL
+Date:   Mon,  3 Aug 2020 17:31:14 +0300
+Message-Id: <20200803143114.32035-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-08-03 at 13:31 +0100, David Howells wrote:
-> Ian Kent <raven@themaw.net> wrote:
-> 
-> > > I'm changing it so that the fields are 64-bit, but initialised
-> > > with the
-> > > existing mount ID in the notifications set.  The fsinfo set
-> > > changes that
-> > > to a unique ID.  I'm tempted to make the unique IDs start at
-> > > UINT_MAX+1 to
-> > > disambiguate them.
-> > 
-> > Mmm ... so what would I use as a mount id that's not used, like
-> > NULL
-> > for strings?
-> 
-> Zero is skipped, so you could use that.
-> 
-> > I'm using -1 now but changing this will mean I need something
-> > different.
-> 
-> It's 64-bits, so you're not likely to see it reach -1, even if it
-> does start
-> at UINT_MAX+1.
+From: Ofir Bitton <obitton@habana.ai>
 
-Ha, either or, I don't think it will be a problem, there's
-bound to be a few changes so the components using this will
-need to change a bit before it's finalized, shouldn't be a
-big deal I think. At least not for me and shouldn't be much
-for libmount either I think.
+Although the driver defines the first user-available sync manager object
+and monitor in habanalabs.h, we would like to also expose this information
+via the INFO IOCTL so the runtime can get this information dynamically.
+This is because in future ASICs we won't need to define it statically.
 
-Ian
+Signed-off-by: Ofir Bitton <obitton@habana.ai>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/common/habanalabs.h   |  6 ++++
+ .../misc/habanalabs/common/habanalabs_ioctl.c | 30 ++++++++++++++++++-
+ drivers/misc/habanalabs/gaudi/gaudi.c         |  7 +++++
+ include/uapi/misc/habanalabs.h                | 23 ++++++++++++++
+ 4 files changed, 65 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/misc/habanalabs/common/habanalabs.h b/drivers/misc/habanalabs/common/habanalabs.h
+index 8b5b4afe42c7..52a07c8d7d7c 100644
+--- a/drivers/misc/habanalabs/common/habanalabs.h
++++ b/drivers/misc/habanalabs/common/habanalabs.h
+@@ -65,6 +65,8 @@
+ 
+ #define HL_PCI_NUM_BARS			6
+ 
++#define HL_MAX_DCORES			4
++
+ /**
+  * struct pgt_info - MMU hop page info.
+  * @node: hash linked-list node for the pgts shadow hash of pgts.
+@@ -291,6 +293,8 @@ struct hl_mmu_properties {
+  * @max_queues: maximum amount of queues in the system
+  * @sync_stream_first_sob: first sync object available for sync stream use
+  * @sync_stream_first_mon: first monitor available for sync stream use
++ * @first_available_user_sob: first sob available for the user
++ * @first_available_user_mon: first monitor available for the user
+  * @tpc_enabled_mask: which TPCs are enabled.
+  * @completion_queues_count: number of completion queues.
+  */
+@@ -337,6 +341,8 @@ struct asic_fixed_properties {
+ 	u32				max_queues;
+ 	u16				sync_stream_first_sob;
+ 	u16				sync_stream_first_mon;
++	u16				first_available_user_sob[HL_MAX_DCORES];
++	u16				first_available_user_mon[HL_MAX_DCORES];
+ 	u8				tpc_enabled_mask;
+ 	u8				completion_queues_count;
+ };
+diff --git a/drivers/misc/habanalabs/common/habanalabs_ioctl.c b/drivers/misc/habanalabs/common/habanalabs_ioctl.c
+index 4d838b1a3bbe..fe6c5534d378 100644
+--- a/drivers/misc/habanalabs/common/habanalabs_ioctl.c
++++ b/drivers/misc/habanalabs/common/habanalabs_ioctl.c
+@@ -8,6 +8,7 @@
+ #include <uapi/misc/habanalabs.h>
+ #include "habanalabs.h"
+ 
++#include <linux/kernel.h>
+ #include <linux/fs.h>
+ #include <linux/uaccess.h>
+ #include <linux/slab.h>
+@@ -314,7 +315,7 @@ static int clk_throttle_info(struct hl_fpriv *hpriv, struct hl_info_args *args)
+ static int cs_counters_info(struct hl_fpriv *hpriv, struct hl_info_args *args)
+ {
+ 	struct hl_device *hdev = hpriv->hdev;
+-	struct hl_info_cs_counters cs_counters = {0};
++	struct hl_info_cs_counters cs_counters = { {0} };
+ 	u32 max_size = args->return_size;
+ 	void __user *out = (void __user *) (uintptr_t) args->return_pointer;
+ 
+@@ -332,6 +333,30 @@ static int cs_counters_info(struct hl_fpriv *hpriv, struct hl_info_args *args)
+ 		min((size_t) max_size, sizeof(cs_counters))) ? -EFAULT : 0;
+ }
+ 
++static int sync_manager_info(struct hl_fpriv *hpriv, struct hl_info_args *args)
++{
++	struct hl_device *hdev = hpriv->hdev;
++	struct asic_fixed_properties *prop = &hdev->asic_prop;
++	struct hl_info_sync_manager sm_info = {0};
++	u32 max_size = args->return_size;
++	void __user *out = (void __user *) (uintptr_t) args->return_pointer;
++
++	if ((!max_size) || (!out))
++		return -EINVAL;
++
++	if (args->dcore_id >= HL_MAX_DCORES)
++		return -EINVAL;
++
++	sm_info.first_available_sync_object =
++			prop->first_available_user_sob[args->dcore_id];
++	sm_info.first_available_monitor =
++			prop->first_available_user_mon[args->dcore_id];
++
++
++	return copy_to_user(out, &sm_info, min_t(size_t, (size_t) max_size,
++			sizeof(sm_info))) ? -EFAULT : 0;
++}
++
+ static int _hl_info_ioctl(struct hl_fpriv *hpriv, void *data,
+ 				struct device *dev)
+ {
+@@ -401,6 +426,9 @@ static int _hl_info_ioctl(struct hl_fpriv *hpriv, void *data,
+ 	case HL_INFO_CLK_THROTTLE_REASON:
+ 		return clk_throttle_info(hpriv, args);
+ 
++	case HL_INFO_SYNC_MANAGER:
++		return sync_manager_info(hpriv, args);
++
+ 	default:
+ 		dev_err(dev, "Invalid request %d\n", args->op);
+ 		rc = -ENOTTY;
+diff --git a/drivers/misc/habanalabs/gaudi/gaudi.c b/drivers/misc/habanalabs/gaudi/gaudi.c
+index 41d55a5f7f83..437219985327 100644
+--- a/drivers/misc/habanalabs/gaudi/gaudi.c
++++ b/drivers/misc/habanalabs/gaudi/gaudi.c
+@@ -344,6 +344,7 @@ static void gaudi_mmu_prepare(struct hl_device *hdev, u32 asid);
+ static int gaudi_get_fixed_properties(struct hl_device *hdev)
+ {
+ 	struct asic_fixed_properties *prop = &hdev->asic_prop;
++	u32 num_sync_stream_queues = 0;
+ 	int i;
+ 
+ 	prop->max_queues = GAUDI_QUEUE_ID_SIZE;
+@@ -360,6 +361,7 @@ static int gaudi_get_fixed_properties(struct hl_device *hdev)
+ 			prop->hw_queues_props[i].driver_only = 0;
+ 			prop->hw_queues_props[i].requires_kernel_cb = 1;
+ 			prop->hw_queues_props[i].supports_sync_stream = 1;
++			num_sync_stream_queues++;
+ 		} else if (gaudi_queue_type[i] == QUEUE_TYPE_CPU) {
+ 			prop->hw_queues_props[i].type = QUEUE_TYPE_CPU;
+ 			prop->hw_queues_props[i].driver_only = 1;
+@@ -446,6 +448,11 @@ static int gaudi_get_fixed_properties(struct hl_device *hdev)
+ 
+ 	prop->max_pending_cs = GAUDI_MAX_PENDING_CS;
+ 
++	prop->first_available_user_sob[HL_GAUDI_WS_DCORE] =
++			num_sync_stream_queues * HL_RSVD_SOBS;
++	prop->first_available_user_mon[HL_GAUDI_WS_DCORE] =
++			num_sync_stream_queues * HL_RSVD_MONS;
++
+ 	return 0;
+ }
+ 
+diff --git a/include/uapi/misc/habanalabs.h b/include/uapi/misc/habanalabs.h
+index ee13b919db35..ca6dc1fc250e 100644
+--- a/include/uapi/misc/habanalabs.h
++++ b/include/uapi/misc/habanalabs.h
+@@ -266,6 +266,7 @@ enum hl_device_status {
+  * HL_INFO_CS_COUNTERS   - Retrieve command submission counters
+  * HL_INFO_PCI_COUNTERS  - Retrieve PCI counters
+  * HL_INFO_CLK_THROTTLE_REASON - Retrieve clock throttling reason
++ * HL_INFO_SYNC_MANAGER  - Retrieve sync manager info per dcore
+  */
+ #define HL_INFO_HW_IP_INFO		0
+ #define HL_INFO_HW_EVENTS		1
+@@ -280,6 +281,7 @@ enum hl_device_status {
+ #define HL_INFO_CS_COUNTERS		11
+ #define HL_INFO_PCI_COUNTERS		12
+ #define HL_INFO_CLK_THROTTLE_REASON	13
++#define HL_INFO_SYNC_MANAGER		14
+ 
+ #define HL_INFO_VERSION_MAX_LEN	128
+ #define HL_INFO_CARD_NAME_MAX_LEN	16
+@@ -367,6 +369,16 @@ struct hl_info_clk_throttle {
+ 	__u32 clk_throttling_reason;
+ };
+ 
++/**
++ * struct hl_info_sync_manager - sync manager information
++ * @first_available_sync_object: first available sob
++ * @first_available_monitor: first available monitor
++ */
++struct hl_info_sync_manager {
++	__u32 first_available_sync_object;
++	__u32 first_available_monitor;
++};
++
+ /**
+  * struct hl_info_cs_counters - command submission counters
+  * @out_of_mem_drop_cnt: dropped due to memory allocation issue
+@@ -386,6 +398,13 @@ struct hl_info_cs_counters {
+ 	struct hl_cs_counters ctx_cs_counters;
+ };
+ 
++enum gaudi_dcores {
++	HL_GAUDI_WS_DCORE,
++	HL_GAUDI_WN_DCORE,
++	HL_GAUDI_EN_DCORE,
++	HL_GAUDI_ES_DCORE
++};
++
+ struct hl_info_args {
+ 	/* Location of relevant struct in userspace */
+ 	__u64 return_pointer;
+@@ -402,6 +421,10 @@ struct hl_info_args {
+ 	__u32 op;
+ 
+ 	union {
++		/* Dcore id for which the information is relevant.
++		 * For Gaudi refer to 'enum gaudi_dcores'
++		 */
++		__u32 dcore_id;
+ 		/* Context ID - Currently not in use */
+ 		__u32 ctx_id;
+ 		/* Period value for utilization rate (100ms - 1000ms, in 100ms
+-- 
+2.17.1
 
