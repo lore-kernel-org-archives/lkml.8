@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1361DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F21C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE016204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7F09204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458078;
-	bh=hSBw4kuiG9AI2JgvgDHtRSwEZbIlznh+qqR13Tzzt7g=;
+	s=default; t=1596458082;
+	bh=RZr674kgVjcvIfO8c39ii+VFyK/OhKBGdmMXsLQk8Ds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H1zXePUCauVScYX/3KwuTD3QBBQvkF4pd2Nvi7ocUA3N//tGGvRAbdFS3N6b2OLND
-	 CQ3/fPYoh8scj4frsLXD4mqj9yXANh/uq4z+ivgE8UvgkWhidG4efJWZlXRce9HsxD
-	 5Ul0nGJ67u/1rThuqdxYUYz0kGsl0o7T/dmjmhH0=
+	b=E4ZLjh7+8MyrYvcuGG94DynJp1Kz8TxL3tqYxK4buSVn66GRarLnkmAI9N/uSRxfD
+	 xko/4M/pvKUHh9uLE0kvNaJXh4TrAfHy9MYDMXHsQAs3y92zQ7P056ThO9Gwmbtelj
+	 Z9pqjJO8TahG/3ULBFY6LIOHCQSBqPmfES5w5IiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729577AbgHCMei (ORCPT
+        id S1728323AbgHCMem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:34:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34466 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:34:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729544AbgHCMeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:34:21 -0400
+        id S1729545AbgHCMeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:34:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9DFC204EC;
-        Mon,  3 Aug 2020 12:34:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1ACB2076B;
+        Mon,  3 Aug 2020 12:34:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596458060;
-        bh=hSBw4kuiG9AI2JgvgDHtRSwEZbIlznh+qqR13Tzzt7g=;
+        s=default; t=1596458062;
+        bh=RZr674kgVjcvIfO8c39ii+VFyK/OhKBGdmMXsLQk8Ds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mHbYupISdWCItEGK4aSOKvqKyOCCdKPWUnRX2aJRrgMem+YSUMXRZE908salomYeM
-         B0nynnd+EUGnAjbUs2F474IZjPie3UaJMjWYKvvP18cqeHoWnfhlZKVe5e8u0gJtJp
-         ErKCMo07tbI5Ssuov0oWsurdo3rr3NuV5NBCZIiE=
+        b=XhAFFkzRJZNrBF8x0zNxTGQyj7zMaSE3RM096O+4q2SNfaY5DOmWKdd0pIJU8fH3j
+         wo9L5iL1DKv3yAPnCqrksIWPFol+9RbblLi+TLOSrVIRESgDRfgsSfK9wh6sy4k2d8
+         XbTKIJSBE2hKkA0eC9O9pc99YT4KDgEy1/nUZ3s0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Peilin Ye <yepeilin.cs@gmail.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 24/51] rds: Prevent kernel-infoleak in rds_notify_queue_get()
-Date:   Mon,  3 Aug 2020 14:20:09 +0200
-Message-Id: <20200803121850.696632977@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Mason <clm@fb.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Samuel Mendoza-Jonas <samjonas@amazon.com>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Suraj Jitindar Singh <surajjs@amazon.com>,
+        Benjamin Herrenschmidt <benh@amazon.com>,
+        Anchal Agarwal <anchalag@amazon.com>
+Subject: [PATCH 4.14 25/51] xfs: fix missed wakeup on l_flush_wait
+Date:   Mon,  3 Aug 2020 14:20:10 +0200
+Message-Id: <20200803121850.744837063@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121849.488233135@linuxfoundation.org>
 References: <20200803121849.488233135@linuxfoundation.org>
@@ -61,47 +66,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peilin Ye <yepeilin.cs@gmail.com>
+From: Rik van Riel <riel@surriel.com>
 
-commit bbc8a99e952226c585ac17477a85ef1194501762 upstream.
+commit cdea5459ce263fbc963657a7736762ae897a8ae6 upstream.
 
-rds_notify_queue_get() is potentially copying uninitialized kernel stack
-memory to userspace since the compiler may leave a 4-byte hole at the end
-of `cmsg`.
+The code in xlog_wait uses the spinlock to make adding the task to
+the wait queue, and setting the task state to UNINTERRUPTIBLE atomic
+with respect to the waker.
 
-In 2016 we tried to fix this issue by doing `= { 0 };` on `cmsg`, which
-unfortunately does not always initialize that 4-byte hole. Fix it by using
-memset() instead.
+Doing the wakeup after releasing the spinlock opens up the following
+race condition:
 
-Cc: stable@vger.kernel.org
-Fixes: f037590fff30 ("rds: fix a leak of kernel memory")
-Fixes: bdbe6fbc6a2f ("RDS: recv.c")
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Task 1					task 2
+add task to wait queue
+					wake up task
+set task state to UNINTERRUPTIBLE
+
+This issue was found through code inspection as a result of kworkers
+being observed stuck in UNINTERRUPTIBLE state with an empty
+wait queue. It is rare and largely unreproducable.
+
+Simply moving the spin_unlock to after the wake_up_all results
+in the waker not being able to see a task on the waitqueue before
+it has set its state to UNINTERRUPTIBLE.
+
+This bug dates back to the conversion of this code to generic
+waitqueue infrastructure from a counting semaphore back in 2008
+which didn't place the wakeups consistently w.r.t. to the relevant
+spin locks.
+
+[dchinner: Also fix a similar issue in the shutdown path on
+xc_commit_wait. Update commit log with more details of the issue.]
+
+Fixes: d748c62367eb ("[XFS] Convert l_flushsema to a sv_t")
+Reported-by: Chris Mason <clm@fb.com>
+Signed-off-by: Rik van Riel <riel@surriel.com>
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Cc: stable@vger.kernel.org # 4.9.x-4.19.x
+[modified for contextual change near xlog_state_do_callback()]
+Signed-off-by: Samuel Mendoza-Jonas <samjonas@amazon.com>
+Reviewed-by: Frank van der Linden <fllinden@amazon.com>
+Reviewed-by: Suraj Jitindar Singh <surajjs@amazon.com>
+Reviewed-by: Benjamin Herrenschmidt <benh@amazon.com>
+Reviewed-by: Anchal Agarwal <anchalag@amazon.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/rds/recv.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/xfs/xfs_log.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
---- a/net/rds/recv.c
-+++ b/net/rds/recv.c
-@@ -453,12 +453,13 @@ static int rds_still_queued(struct rds_s
- int rds_notify_queue_get(struct rds_sock *rs, struct msghdr *msghdr)
- {
- 	struct rds_notifier *notifier;
--	struct rds_rdma_notify cmsg = { 0 }; /* fill holes with zero */
-+	struct rds_rdma_notify cmsg;
- 	unsigned int count = 0, max_messages = ~0U;
- 	unsigned long flags;
- 	LIST_HEAD(copy);
- 	int err = 0;
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -2684,7 +2684,6 @@ xlog_state_do_callback(
+ 	int		   funcdidcallbacks; /* flag: function did callbacks */
+ 	int		   repeats;	/* for issuing console warnings if
+ 					 * looping too many times */
+-	int		   wake = 0;
  
-+	memset(&cmsg, 0, sizeof(cmsg));	/* fill holes with zero */
+ 	spin_lock(&log->l_icloglock);
+ 	first_iclog = iclog = log->l_iclog;
+@@ -2886,11 +2885,9 @@ xlog_state_do_callback(
+ #endif
  
- 	/* put_cmsg copies to user space and thus may sleep. We can't do this
- 	 * with rs_lock held, so first grab as many notifications as we can stuff
+ 	if (log->l_iclog->ic_state & (XLOG_STATE_ACTIVE|XLOG_STATE_IOERROR))
+-		wake = 1;
+-	spin_unlock(&log->l_icloglock);
+-
+-	if (wake)
+ 		wake_up_all(&log->l_flush_wait);
++
++	spin_unlock(&log->l_icloglock);
+ }
+ 
+ 
+@@ -4052,7 +4049,9 @@ xfs_log_force_umount(
+ 	 * item committed callback functions will do this again under lock to
+ 	 * avoid races.
+ 	 */
++	spin_lock(&log->l_cilp->xc_push_lock);
+ 	wake_up_all(&log->l_cilp->xc_commit_wait);
++	spin_unlock(&log->l_cilp->xc_push_lock);
+ 	xlog_state_do_callback(log, XFS_LI_ABORTED, NULL);
+ 
+ #ifdef XFSERRORDEBUG
 
 
