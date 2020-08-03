@@ -2,162 +2,142 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E75F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE5AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9E3120781
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E47B2206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:24:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgHCPXV (ORCPT
+        id S1726688AbgHCPYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 11:23:21 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:55307 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbgHCPXU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 11:23:20 -0400
-Received: by mail-io1-f71.google.com with SMTP id k10so26762549ioh.22
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 08:23:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=JP1YGuENzAUY/5Jsdx5Oue3ZQWquXQQ9HgkjsajeaVg=;
-        b=pSl+cnCBcmaISoIzFb0BgCMgnEMqxik8+sLJLLs5p8t/ATRq3D6aU9tD5Qm5JtXMTT
-         JN3w6PiokOV5CoJVd+QW+ZYXF7vjuewUugu32w5uL4ORWXCglQqrYHSBAFoB2siWWpAU
-         dNpMuk13Vgn4Nb9oKAAuA3q4oe+jr88UUZoRSONnA1kw9xP13loPK1hdBNgvNDzOUDQD
-         gjfV433UMAyjP6z9PLztiG1LnR/cZLPYZGzkAu6xkGvD/I+Zz8la326tn01XFeneDjl4
-         gPu3ruFVm6Zu6tujFf+xiRRni4CUASP1kGW7C6MLTpVllWGQKo+B7CNQEDQSrx6L7Qgd
-         WRGw==
-X-Gm-Message-State: AOAM5306KP7uMtqbcBCwe7aOkkNgdIaquUXZaLNmsBPOEYb365mhmvL6
-        eUzDqgb0WwXCXSA9jUq+sK+uO/dgyp4AHvKlNKNJmcoPEJP9
-X-Google-Smtp-Source: ABdhPJzgTiPAwDVjKfNb3vBVWd0nr8W0ENwq3LPAR5gOpvzrpdTelNlbqfnOipw5qp7R/GI7KhSxKCXiTJmZzC24ctm8YE442OIP
+        Mon, 3 Aug 2020 11:24:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:58920 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725945AbgHCPYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 11:24:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 480B430E;
+        Mon,  3 Aug 2020 08:24:02 -0700 (PDT)
+Received: from localhost (e108754-lin.cambridge.arm.com [10.1.198.53])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DDCC53F718;
+        Mon,  3 Aug 2020 08:24:01 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 16:24:00 +0100
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     rjw@rjwysocki.net, dietmar.eggemann@arm.com,
+        catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
+        linux@armlinux.org.uk, mingo@redhat.com, peterz@infradead.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/7] cpufreq: report whether cpufreq supports
+ Frequency Invariance (FI)
+Message-ID: <20200803152400.GB20312@arm.com>
+References: <20200722093732.14297-1-ionela.voinescu@arm.com>
+ <20200722093732.14297-5-ionela.voinescu@arm.com>
+ <20200730044346.rgtaikotkgwdpc3m@vireshk-mac-ubuntu>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:8a8:: with SMTP id a8mr18192239ilt.52.1596468199809;
- Mon, 03 Aug 2020 08:23:19 -0700 (PDT)
-Date:   Mon, 03 Aug 2020 08:23:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f1e88005abfab762@google.com>
-Subject: KASAN: use-after-free Read in tipc_bcast_get_mode
-From:   syzbot <syzbot+6ea1f7a8df64596ef4d7@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jmaloy@redhat.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730044346.rgtaikotkgwdpc3m@vireshk-mac-ubuntu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Viresh,
 
-syzbot found the following issue on:
+On Thursday 30 Jul 2020 at 10:13:46 (+0530), Viresh Kumar wrote:
+> On 22-07-20, 10:37, Ionela Voinescu wrote:
+> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > index 3497c1cd6818..1d0b046fe8e9 100644
+> > --- a/drivers/cpufreq/cpufreq.c
+> > +++ b/drivers/cpufreq/cpufreq.c
+> > @@ -61,6 +61,9 @@ static struct cpufreq_driver *cpufreq_driver;
+> >  static DEFINE_PER_CPU(struct cpufreq_policy *, cpufreq_cpu_data);
+> >  static DEFINE_RWLOCK(cpufreq_driver_lock);
+> >  
+> > +/* Mark support for the scheduler's frequency invariance engine */
+> > +static DEFINE_STATIC_KEY_FALSE(cpufreq_set_freq_scale);
+> > +
+> >  /* Flag to suspend/resume CPUFreq governors */
+> >  static bool cpufreq_suspended;
+> >  
+> > @@ -69,6 +72,25 @@ static inline bool has_target(void)
+> >  	return cpufreq_driver->target_index || cpufreq_driver->target;
+> >  }
+> >  
+> > +static inline
+> > +void enable_cpufreq_freq_invariance(struct cpufreq_driver *driver)
+> > +{
+> > +	if ((driver->target || driver->target_index || driver->fast_switch) &&
+> > +	    !driver->setpolicy) {
+> 
+> Just checking for !driver->setpolicy should be enough here.
+> 
 
-HEAD commit:    bd0b33b2 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=13f236a4900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=91a13b78c7dc258d
-dashboard link: https://syzkaller.appspot.com/bug?extid=6ea1f7a8df64596ef4d7
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+Right, cpufreq_register_driver() should check that at least one of them
+is present (although currently cpufreq_register_driver() will return
+-EINVAL if .fast_switch() alone is present - something to be fixed).
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+6ea1f7a8df64596ef4d7@syzkaller.appspotmail.com
-
-tipc: 32-bit node address hash set to fcff1eac
-==================================================================
-BUG: KASAN: use-after-free in tipc_bcast_get_mode+0x3ab/0x400 net/tipc/bcast.c:759
-Read of size 1 at addr ffff88805e6b3571 by task kworker/0:6/3850
-
-CPU: 0 PID: 3850 Comm: kworker/0:6 Not tainted 5.8.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events tipc_net_finalize_work
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- tipc_bcast_get_mode+0x3ab/0x400 net/tipc/bcast.c:759
- tipc_node_broadcast+0x9e/0xcc0 net/tipc/node.c:1744
- tipc_nametbl_publish+0x60b/0x970 net/tipc/name_table.c:752
- tipc_net_finalize net/tipc/net.c:141 [inline]
- tipc_net_finalize+0x1fa/0x310 net/tipc/net.c:131
- tipc_net_finalize_work+0x55/0x80 net/tipc/net.c:150
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-Allocated by task 8062:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
- kmem_cache_alloc_trace+0x14f/0x2d0 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- tipc_bcast_init+0x21e/0x7b0 net/tipc/bcast.c:689
- tipc_init_net+0x4f6/0x5c0 net/tipc/core.c:85
- ops_init+0xaf/0x470 net/core/net_namespace.c:151
- setup_net+0x2d8/0x850 net/core/net_namespace.c:341
- copy_net_ns+0x2cf/0x5e0 net/core/net_namespace.c:482
- create_new_namespaces+0x3f6/0xb10 kernel/nsproxy.c:110
- unshare_nsproxy_namespaces+0xbd/0x1f0 kernel/nsproxy.c:231
- ksys_unshare+0x36c/0x9a0 kernel/fork.c:2979
- __do_sys_unshare kernel/fork.c:3047 [inline]
- __se_sys_unshare kernel/fork.c:3045 [inline]
- __x64_sys_unshare+0x2d/0x40 kernel/fork.c:3045
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 8843:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x103/0x2c0 mm/slab.c:3757
- tipc_bcast_stop+0x1b0/0x2f0 net/tipc/bcast.c:721
- tipc_exit_net+0x24/0x270 net/tipc/core.c:112
- ops_exit_list+0xb0/0x160 net/core/net_namespace.c:186
- cleanup_net+0x4ea/0xa00 net/core/net_namespace.c:603
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-The buggy address belongs to the object at ffff88805e6b3500
- which belongs to the cache kmalloc-128 of size 128
-The buggy address is located 113 bytes inside of
- 128-byte region [ffff88805e6b3500, ffff88805e6b3580)
-The buggy address belongs to the page:
-page:ffffea000179acc0 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea0002375c48 ffff8880aa001550 ffff8880aa000700
-raw: 0000000000000000 ffff88805e6b3000 0000000100000010 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88805e6b3400: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff88805e6b3480: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff88805e6b3500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                             ^
- ffff88805e6b3580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff88805e6b3600: 00 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc
-==================================================================
+Will do, on both accounts.
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > +		static_branch_enable_cpuslocked(&cpufreq_set_freq_scale);
+> > +		pr_debug("%s: Driver %s can provide frequency invariance.",
+> > +			 __func__, driver->name);
+> 
+> I think a simpler print will work well too.
+> 
+>                 pr_debug("Freq invariance enabled");
+> 
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+I think the right way of reporting this support is important here.
+
+By enabling the static key here, we're not actually enabling frequency
+invariance. So printing "Freq invariance enabled" would be very
+misleading. Frequency invariance (scheduler concept) being truly enabled
+depends on three things:
+ - Having a source of information for current frequency and maximum
+   frequency (cpufreq, counters)
+ - Having arch support for using that information to set the frequency
+   scale factor: arch_set_freq_scale(), arch_scale_freq_tick()
+ - Having arch support for passing the set frequency scale factor to the
+   scheduler and reporting support for frequency invariance:
+   arch_scale_freq_capacity(), arch_scale_freq_invariant().
+
+Therefore, cpufreq can only report that the current driver can be a
+source of information for frequency invariance "Driver %s can provide
+frequency invariance", but it can't guarantee that the other conditions
+are accomplished.
+
+So I would recommend to keep this original debug message.
+
+> __func__ isn't really required as this is the only print with that
+> kind of info in cpufreq.c.
+>
+
+Makes sense!
+
+> > +	} else
+> > +		pr_err("%s: Driver %s cannot provide frequency invariance.",
+> > +		__func__, driver->name);
+> 
+> Why not supporting freq-invariance an error ? I will just drop this
+> message completely.
+
+Yes, an error does not make sense here. I was thinking to demote it to a
+warning instead in my previous reply to Rafael, but removing it
+altogether might be better.
+
+Many thanks for the thorough review,
+Ionela.
+
+> 
+> -- 
+> viresh
