@@ -2,217 +2,126 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24056C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03B2E206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:25:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="JEkYkiai"
+	by mail.kernel.org (Postfix) with ESMTP id 05FA9206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:27:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbgHCHZ3 (ORCPT
+        id S1725946AbgHCH1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 03:25:29 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:18596 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgHCHZ1 (ORCPT
+        Mon, 3 Aug 2020 03:27:35 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45107 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbgHCH1e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 03:25:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1596439527; x=1627975527;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=FiWLYOAdV1lwBOPSXO+yNFoXeb/CDTvo5oQEMUUm8Cc=;
-  b=JEkYkiai3QG0Z6kEYQvS/ewuUqe2msYkavptYOTav5etrSai9rX4ghuT
-   vmucjbiGe7s0D/WNlraX8CBU8kU89lTZO/f2bKaL7hZ1ZyyAhjJNGCR4H
-   2SJDLbvX/6lNX5oEF1SbrPkriNN3fTzzTRv0AHocTWRD8cpEj/48/NL/H
-   W9QWxPrM8CooZ2daRnIItWcvqXJcCyTph+awuM4XV9ddgBsdgBVFFr/ju
-   XwkIMnu9NQNeFcU81ITQwYmB8aZ23thqUFPSuT3z40NQbkWzJRyxD3LCW
-   VzDj62aNnX1ccUEG2AjM0y9ugFobUv3kNo+hvgUI6wbDW5QCXbzqjJ2TB
-   w==;
-IronPort-SDR: I8Aohz9CRjnZcar6IRgE7m/mykp72h0JJrg/bg02GR6/sy0Y1wMbcMqUX5MhpqmPEAv4B0ahzz
- QxMzYf74ye811wOhU35N0p/+EnsKhlhoGIsdpdhAquerN1q5UivemhHY9ovwyBa/sRUMG/8bF2
- t2WOdZvbyGaml6MmGBJvC5pveUjCIs17r1hs9dEr2zHF+/JKAyesh3/XsDzV8H4LDvVoqetA/t
- mvWbgmH3nw0X9BdhArsUJrCt+V3zeC7NUZjeYYxG+FBEQT9dwG8HfeBCK2ycdKzWc1zrohsbTq
- VQY=
-X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
-   d="scan'208";a="86388015"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Aug 2020 00:25:26 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 3 Aug 2020 00:25:24 -0700
-Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Mon, 3 Aug 2020 00:25:24 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH 1/3] ARM: at91: pm: add support for ulp0 fast mode
-Date:   Mon, 3 Aug 2020 10:25:15 +0300
-Message-ID: <1596439517-12993-2-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596439517-12993-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1596439517-12993-1-git-send-email-claudiu.beznea@microchip.com>
+        Mon, 3 Aug 2020 03:27:34 -0400
+Received: by mail-wr1-f67.google.com with SMTP id z18so29617470wrm.12;
+        Mon, 03 Aug 2020 00:27:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bk+w2IXrWrlLfK9eisE+wLzLklGKFWdlPBnk6Rh8O64=;
+        b=ZM96H6azdKk5z1l5Dj4VganJCVH4lFwksN+3jB1EQ54QYwQB0GbBTl24ZN//+MTYw9
+         /W+9Gn4pDAAUPh45JLSag7maksH9HShAZkIOGIBlfNuQ2hyZlgW7KW/F1FCbdhqHCAnV
+         u2HxCRjCwHY6/GJ01sYXLuZJdFwI8ZK5vRHpDClJpiRikbU/QxfzbPfE8MzLdQ+KSg/B
+         r+ocz6GhvsWK5fylI2NbnN40x8e/aE2ikovR2mJK0pZ+UxjmdcEJjt1MKU03SgER1jHE
+         CjPjwUqOsnklm5DjXAclUbHFwp4FZfxw0vDyYGYiZa9tvrLo7IIDuvqD5PkBZ3vdIjG4
+         DL3Q==
+X-Gm-Message-State: AOAM532wEzDw6eGW6KKi75j+DPJzrsQDWcv01PyjhlceOplslfkaGvTX
+        BBAd54WCiC37YTyEfRa+MP9zbOUB
+X-Google-Smtp-Source: ABdhPJwwT7go5S2QLv9PqWVF1Q/fRxRD0anTRKbY917MFHKIx4ANFqMKdEebkep2UNsdw+uif1yInA==
+X-Received: by 2002:adf:ec45:: with SMTP id w5mr14068689wrn.415.1596439652366;
+        Mon, 03 Aug 2020 00:27:32 -0700 (PDT)
+Received: from ?IPv6:2601:647:4802:9070:6dac:e394:c378:553e? ([2601:647:4802:9070:6dac:e394:c378:553e])
+        by smtp.gmail.com with ESMTPSA id l81sm22161672wmf.4.2020.08.03.00.27.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Aug 2020 00:27:31 -0700 (PDT)
+Subject: Re: [IB/srpt] c804af2c1d: last_state.test.blktests.exit_code.143
+To:     Yamin Friedman <yaminf@mellanox.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        kernel test robot <rong.a.chen@intel.com>
+Cc:     Jason Gunthorpe <jgg@nvidia.com>, Max Gurtovoy <maxg@mellanox.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg+lists@ziepe.ca>,
+        linux-rdma@vger.kernel.org, lkp@lists.01.org
+References: <20200802060925.GW23458@shao2-debian>
+ <f8ef3284-4646-94d9-7eea-14ac0873b03b@acm.org>
+ <ed6002b6-cd0c-55c5-c5a5-9c974a476a95@mellanox.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <0c42aeb4-23a5-b9d5-bc17-ef58a04db8e8@grimberg.me>
+Date:   Mon, 3 Aug 2020 00:27:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <ed6002b6-cd0c-55c5-c5a5-9c974a476a95@mellanox.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ULP0 fast improves suspend/resume time with few milliseconds the drawback
-being the power consumption. The mean values measured for suspend/resume
-time are as follows (measured on SAMA5D2 Xplained board), ULP0 compared
-with ULP0 fast:
-- ulp0 fast: suspend time: 169 ms, resume time: 216 ms
-- ulp0     : suspend time: 197 ms, resume time: 258 ms
 
-Current consumption while suspended (measured on SAMA5D2 Xplained board):
-- ulp0 fast: 730uA
-- ulp0     : 270uA
+>>> Greeting,
+>>>
+>>> FYI, we noticed the following commit (built with gcc-9):
+>>>
+>>> commit: c804af2c1d3152c0cf877eeb50d60c2d49ac0cf0 ("IB/srpt: use new 
+>>> shared CQ mechanism")
+>>> https://git.kernel.org/cgit/linux/kernel/git/rdma/rdma.git for-next
+>>>
+>>>
+>>> in testcase: blktests
+>>> with following parameters:
+>>>
+>>>     test: srp-group1
+>>>     ucode: 0x21
+>>>
+>>>
+>>>
+>>> on test machine: 4 threads Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz 
+>>> with 4G memory
+>>>
+>>> caused below changes (please refer to attached dmesg/kmsg for entire 
+>>> log/backtrace):
+>>>
+>>>
+>>>
+>>>
+>>> If you fix the issue, kindly add following tag
+>>> Reported-by: kernel test robot <rong.a.chen@intel.com>
+>>>
+>>>
+>>> user  :notice: [   44.688140] 2020-08-01 16:10:22 ./check srp/001 
+>>> srp/002 srp/003 srp/004 srp/005 srp/006 srp/007 srp/008 srp/009 
+>>> srp/010 srp/011 srp/012 srp/013 srp/015
+>>> user  :notice: [   44.706657] srp/001 (Create and remove LUNs)
+>>> user  :notice: [   44.718405] srp/001 (Create and remove 
+>>> LUNs)                             [passed]
+>>> user  :notice: [   44.729902]     runtime  ...  1.972s
+>>> user  :notice: [   99.038748] IPMI BMC is not supported on this 
+>>> machine, skip bmc-watchdog setup!
+>>> user  :notice: [ 3699.039790] Sat Aug  1 17:11:22 UTC 2020 detected 
+>>> soft_timeout
+>>> user  :notice: [ 3699.060341] kill 960 /usr/bin/time -v -o 
+>>> /tmp/lkp/blktests.time /lkp/lkp/src/tests/blktests
+>> Yamin and Max, can you take a look at this? The SRP tests from the
+>> blktests repository pass reliably with kernel version v5.7 and before.
+>> With label next-20200731 from linux-next however that test triggers the
+>> following hang:
+> 
+> I will look into it.
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- arch/arm/mach-at91/pm.c         |  9 +++++----
- arch/arm/mach-at91/pm.h         |  5 +++--
- arch/arm/mach-at91/pm_suspend.S | 41 +++++++++++++++++++++++++++++++++++++----
- 3 files changed, 45 insertions(+), 10 deletions(-)
-
-diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
-index 074bde64064e..04fdcbd57100 100644
---- a/arch/arm/mach-at91/pm.c
-+++ b/arch/arm/mach-at91/pm.c
-@@ -51,10 +51,11 @@ static struct at91_soc_pm soc_pm = {
- };
- 
- static const match_table_t pm_modes __initconst = {
--	{ AT91_PM_STANDBY, "standby" },
--	{ AT91_PM_ULP0, "ulp0" },
--	{ AT91_PM_ULP1, "ulp1" },
--	{ AT91_PM_BACKUP, "backup" },
-+	{ AT91_PM_STANDBY,	"standby" },
-+	{ AT91_PM_ULP0,		"ulp0" },
-+	{ AT91_PM_ULP0_FAST,    "ulp0-fast" },
-+	{ AT91_PM_ULP1,		"ulp1" },
-+	{ AT91_PM_BACKUP,	"backup" },
- 	{ -1, NULL },
- };
- 
-diff --git a/arch/arm/mach-at91/pm.h b/arch/arm/mach-at91/pm.h
-index 218e8d1a30fb..bfb260be371e 100644
---- a/arch/arm/mach-at91/pm.h
-+++ b/arch/arm/mach-at91/pm.h
-@@ -19,8 +19,9 @@
- 
- #define	AT91_PM_STANDBY		0x00
- #define AT91_PM_ULP0		0x01
--#define AT91_PM_ULP1		0x02
--#define	AT91_PM_BACKUP		0x03
-+#define AT91_PM_ULP0_FAST	0x02
-+#define AT91_PM_ULP1		0x03
-+#define	AT91_PM_BACKUP		0x04
- 
- #ifndef __ASSEMBLY__
- struct at91_pm_data {
-diff --git a/arch/arm/mach-at91/pm_suspend.S b/arch/arm/mach-at91/pm_suspend.S
-index be9764e8d3fa..0184de05c1be 100644
---- a/arch/arm/mach-at91/pm_suspend.S
-+++ b/arch/arm/mach-at91/pm_suspend.S
-@@ -164,7 +164,22 @@ ENDPROC(at91_backup_mode)
- 
- .macro at91_pm_ulp0_mode
- 	ldr	pmc, .pmc_base
-+	ldr	tmp2, .pm_mode
-+	ldr	tmp3, .mckr_offset
-+
-+	/* Check if ULP0 fast variant has been requested. */
-+	cmp	tmp2, #AT91_PM_ULP0_FAST
-+	bne	0f
-+
-+	/* Set highest prescaler for power saving */
-+	ldr	tmp1, [pmc, tmp3]
-+	bic	tmp1, tmp1, #AT91_PMC_PRES
-+	orr	tmp1, tmp1, #AT91_PMC_PRES_64
-+	str	tmp1, [pmc, tmp3]
-+	wait_mckrdy
-+	b	1f
- 
-+0:
- 	/* Turn off the crystal oscillator */
- 	ldr	tmp1, [pmc, #AT91_CKGR_MOR]
- 	bic	tmp1, tmp1, #AT91_PMC_MOSCEN
-@@ -192,7 +207,18 @@ ENDPROC(at91_backup_mode)
- 	/* Wait for interrupt */
- 1:	at91_cpu_idle
- 
--	/* Restore RC oscillator state */
-+	/* Check if ULP0 fast variant has been requested. */
-+	cmp	tmp2, #AT91_PM_ULP0_FAST
-+	bne	5f
-+
-+	/* Set lowest prescaler for fast resume. */
-+	ldr	tmp1, [pmc, tmp3]
-+	bic	tmp1, tmp1, #AT91_PMC_PRES
-+	str	tmp1, [pmc, tmp3]
-+	wait_mckrdy
-+	b	6f
-+
-+5:	/* Restore RC oscillator state */
- 	ldr	tmp1, .saved_osc_status
- 	tst	tmp1, #AT91_PMC_MOSCRCS
- 	beq	4f
-@@ -216,6 +242,7 @@ ENDPROC(at91_backup_mode)
- 	str	tmp1, [pmc, #AT91_CKGR_MOR]
- 
- 	wait_moscrdy
-+6:
- .endm
- 
- /**
-@@ -473,23 +500,29 @@ ENDPROC(at91_backup_mode)
- ENTRY(at91_ulp_mode)
- 	ldr	pmc, .pmc_base
- 	ldr	tmp2, .mckr_offset
-+	ldr	tmp3, .pm_mode
- 
- 	/* Save Master clock setting */
- 	ldr	tmp1, [pmc, tmp2]
- 	str	tmp1, .saved_mckr
- 
- 	/*
--	 * Set the Master clock source to slow clock
-+	 * Set master clock source to:
-+	 * - MAINCK if using ULP0 fast variant
-+	 * - slow clock, otherwise
- 	 */
- 	bic	tmp1, tmp1, #AT91_PMC_CSS
-+	cmp	tmp3, #AT91_PM_ULP0_FAST
-+	bne	save_mck
-+	orr	tmp1, tmp1, #AT91_PMC_CSS_MAIN
-+save_mck:
- 	str	tmp1, [pmc, tmp2]
- 
- 	wait_mckrdy
- 
- 	at91_plla_disable
- 
--	ldr	r0, .pm_mode
--	cmp	r0, #AT91_PM_ULP1
-+	cmp	tmp3, #AT91_PM_ULP1
- 	beq	ulp1_mode
- 
- 	at91_pm_ulp0_mode
--- 
-2.7.4
-
+FWIW, I ran into this as well with nvme-rdma, but it also reproduces
+when I revert the shared CQ patch from nvme-rdma. Another data point
+is that my tests passes with siw.
