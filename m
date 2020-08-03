@@ -2,120 +2,158 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF61C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D54B6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54B3D207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:59:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="H2NcxoBr"
+	by mail.kernel.org (Postfix) with ESMTP id 77B7A22CAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:00:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596484852;
+	bh=WW/ReI2Lpo+10NCbAObpKYY3zIWS1mXg+dJ8PJcCqI0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=L6MBIBr4gZMB9inNiKCVJKGtR/pqB0ApjCPP6H89RrTDdCggHdyMhCPFElBuhwdnR
+	 JEHLKX7AOCWKwNokB/6arbkKuM1+ryUtrGPFjXN2c3Y82lY0WfCXqPTj5KjY+cNscu
+	 iIUXT8y4d6r0ENiweSErafg4a2Z92chqgu0ci8f8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgHCT7j (ORCPT
+        id S1728701AbgHCUAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 15:59:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55860 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727091AbgHCT7j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 15:59:39 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA74AC06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 12:59:38 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id 77so4034648qkm.5
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 12:59:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WMr7j5kP6nex1WMLIUbWVtJxCoXdAe6Xx/9JM/a5res=;
-        b=H2NcxoBrl7r69IvVi/9x92XDg1z7WmHdxs423ix+1AoNv23v0/+F7C9fxhaZqBhmDY
-         CxtGBXCgtUn3x6dBNx0wBPYs1hRQlHmXDqw796NAbW03Q0aTuNpRESxJWOlaARyh5+1O
-         43E5lh12SZ8yDmVmtCuZDQhRedmezpD3g42/HlJYut9lf2g3+rPnosbdvnQBywTKf+eP
-         m4ifV99w/5uUmTNKap4TSizuU2qnfvob1O4EBwbkQAXfffGlVWjkMD1AC9B/1Y5+m+pj
-         bQKhhpC/5JB1XhhN9nkW/Fnuk0yg1m3XYTRHpTAaMWWQoK2HRp5bN19Lq5Z3DzdwDPWT
-         /MMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WMr7j5kP6nex1WMLIUbWVtJxCoXdAe6Xx/9JM/a5res=;
-        b=KWWqyyZ4sbClrBAOeIeh80XFjOlJK4vWdwS07RiYS8Yk9M08ueQJsQY8YwTKGxQvnJ
-         bVu2ZUFBf7qQ9OvSwRSOK1ZsCbUjK+7PL0rApGRRNfQLrCOfcJAXIDmOBvL5nnStWg3g
-         1MhLxlckoOJWNGLGfaLmIKrAcK1Q8lABqOp8v18tOcuQ7vjd63fIv2GrTXif1Eijz0S/
-         /M8ny3dra70O8z1cxmYIHk+YxR7CFPiyHd8zX0+iupDZ1YhANW21RQU7WYThGXksYTCa
-         pb9K4HuDKyUbO3MWdvyYE4zuSyh3Oph/uija3ifRkNEPmX/gnP1daP6PrG2n8fLpSXx5
-         tetA==
-X-Gm-Message-State: AOAM531RId9QjPRNLahAGt0UVw/8yZ6utruBDqeXS9zwTylUYp/ImPag
-        WpbgbIGywL1Afg/TuF5CyDyl90I2tbJZgodCcabv2w==
-X-Google-Smtp-Source: ABdhPJxDymFtZNgAnIJdxzvntCOIeqaOzyfwThGdou91UTBOOSVRS5gDgOWCrSjkXiDJGqr25BEvUWV5FAElompEqZw=
-X-Received: by 2002:a37:a495:: with SMTP id n143mr18005291qke.330.1596484778138;
- Mon, 03 Aug 2020 12:59:38 -0700 (PDT)
+        Mon, 3 Aug 2020 16:00:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34054 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727091AbgHCUAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 16:00:50 -0400
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9A0222CAF;
+        Mon,  3 Aug 2020 20:00:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596484850;
+        bh=WW/ReI2Lpo+10NCbAObpKYY3zIWS1mXg+dJ8PJcCqI0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JUcqzFd4A6yl5wjgxnvJtEqMsDIiLvFPojugVgGJCT+6YI378h8bswSw/TMYJNDO/
+         vcNeg5RjtuSF7vaCWxj8I20jj1akQOQCP42jHQmzp1H1dl8HtbMQH+N85y8yfIa56S
+         /kxD3Z/HLIAr98KvZAeuRajVevjOpt3MqUm+lVFY=
+Received: by mail-oi1-f175.google.com with SMTP id l204so5573235oib.3;
+        Mon, 03 Aug 2020 13:00:49 -0700 (PDT)
+X-Gm-Message-State: AOAM5307lHMBZ7srFqBes80CwlqEoR2bs0u+LTWrCRsGBaVBrYciRyES
+        bs/kL8o4Lpg3t82IyUlZKEs7NBaCCPK19m1Twg==
+X-Google-Smtp-Source: ABdhPJyWYwSBeWPX0Ikotw5BNtaMvn06MWvQpkwp8XBO1ywypqx8qlrtD9/CrTrHCN1+zeAP+fEy8K2k1MNq4ZAB5f4=
+X-Received: by 2002:aca:190c:: with SMTP id l12mr807066oii.147.1596484849037;
+ Mon, 03 Aug 2020 13:00:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200725041955.9985-1-warthog618@gmail.com> <20200725041955.9985-6-warthog618@gmail.com>
- <CAHp75VcKtATPDKGAViWqjOJDqukDrgZ13aTU6rTJ1jEeB3vmVw@mail.gmail.com>
- <20200726011244.GA6587@sol> <CAMpxmJWaEVwjXSFHTYmwdfA+88upVkJ4ePSQf_ziSOa1YdOUKQ@mail.gmail.com>
- <20200802033158.GA13174@sol> <20200802093242.GA23877@sol>
-In-Reply-To: <20200802093242.GA23877@sol>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 3 Aug 2020 21:59:27 +0200
-Message-ID: <CAMpxmJWD9mA_=+8QGq4iQgahEqh39m=7QkmTcMN_Q5XkBZys6w@mail.gmail.com>
-Subject: Re: [PATCH v2 05/18] gpiolib: cdev: support GPIO_GET_LINE_IOCTL and GPIOLINE_GET_VALUES_IOCTL
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
+References: <20200715142557.17115-1-marek.behun@nic.cz> <20200715142557.17115-5-marek.behun@nic.cz>
+ <20200729184809.GA569408@bogus> <20200803144634.nr5cjddyvdnv3lxo@pali>
+In-Reply-To: <20200803144634.nr5cjddyvdnv3lxo@pali>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 3 Aug 2020 14:00:37 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLvqt9VneSm3Up9ib0AH7jWytA9fss_QMfJwd8xrVEp4A@mail.gmail.com>
+Message-ID: <CAL_JsqLvqt9VneSm3Up9ib0AH7jWytA9fss_QMfJwd8xrVEp4A@mail.gmail.com>
+Subject: Re: [PATCH 4/5] PCI: aardvark: Implement driver 'remove' function and
+ allow to build it as module
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc:     =?UTF-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>,
+        PCI <linux-pci@vger.kernel.org>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>, Xogium <contact@xogium.me>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 2, 2020 at 11:32 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Mon, Aug 3, 2020 at 8:46 AM Pali Roh=C3=A1r <pali@kernel.org> wrote:
 >
-> On Sun, Aug 02, 2020 at 11:31:58AM +0800, Kent Gibson wrote:
-> > On Fri, Jul 31, 2020 at 06:05:10PM +0200, Bartosz Golaszewski wrote:
-> > > On Sun, Jul 26, 2020 at 3:12 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > > >
+> On Wednesday 29 July 2020 12:48:09 Rob Herring wrote:
+> > On Wed, Jul 15, 2020 at 04:25:56PM +0200, Marek Beh=C3=BAn wrote:
+> > > From: Pali Roh=C3=A1r <pali@kernel.org>
 > > >
-> > > > >
-> > > > > > +               dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
-> > > > > > +                       offset);
-> > > > >
-> > > > > Perhaps tracepoint / event?
-> > > > >
-> > > >
-> > > > Again, a cut-and-paste from V1, and I have no experience with
-> > > > tracepoints or events, so I have no opinion on that.
-> > > >
-> > > > So, yeah - perhaps?
-> > > >
+> > > Providing driver's 'remove' function allows kernel to bind and unbind=
+ devices
+> > > from aardvark driver. It also allows to build aardvark driver as a mo=
+dule.
 > > >
-> > > I think it's a good idea to add some proper instrumentation this time
-> > > other than much less reliable logs. Can you take a look at
-> > > include/trace/events/gpio.h? Adding new GPIO trace events should be
-> > > pretty straightforward by copy-pasti... drawing inspiration from
-> > > existing ones.
+> > > Compiling aardvark as a module simplifies development and debugging o=
+f
+> > > this driver as it can be reloaded at runtime without the need to rebo=
+ot
+> > > to new kernel.
 > > >
+> > > Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
+> > > Reviewed-by: Marek Beh=C3=BAn <marek.behun@nic.cz>
+> > > ---
+> > >  drivers/pci/controller/Kconfig        |  2 +-
+> > >  drivers/pci/controller/pci-aardvark.c | 25 ++++++++++++++++++++++---
+> > >  2 files changed, 23 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/=
+Kconfig
+> > > index adddf21fa381..f9da5ff2c517 100644
+> > > --- a/drivers/pci/controller/Kconfig
+> > > +++ b/drivers/pci/controller/Kconfig
+> > > @@ -12,7 +12,7 @@ config PCI_MVEBU
+> > >     select PCI_BRIDGE_EMUL
+> > >
+> > >  config PCI_AARDVARK
+> > > -   bool "Aardvark PCIe controller"
+> > > +   tristate "Aardvark PCIe controller"
+> > >     depends on (ARCH_MVEBU && ARM64) || COMPILE_TEST
+> > >     depends on OF
+> > >     depends on PCI_MSI_IRQ_DOMAIN
+> > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/cont=
+roller/pci-aardvark.c
+> > > index d5f58684d962..0a5aa6d77f5d 100644
+> > > --- a/drivers/pci/controller/pci-aardvark.c
+> > > +++ b/drivers/pci/controller/pci-aardvark.c
+> > > @@ -14,6 +14,7 @@
+> > >  #include <linux/irq.h>
+> > >  #include <linux/irqdomain.h>
+> > >  #include <linux/kernel.h>
+> > > +#include <linux/module.h>
+> > >  #include <linux/pci.h>
+> > >  #include <linux/init.h>
+> > >  #include <linux/phy/phy.h>
+> > > @@ -1114,6 +1115,7 @@ static int advk_pcie_probe(struct platform_devi=
+ce *pdev)
+> > >
+> > >     pcie =3D pci_host_bridge_priv(bridge);
+> > >     pcie->pdev =3D pdev;
+> > > +   platform_set_drvdata(pdev, pcie);
+> > >
+> > >     res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > >     pcie->base =3D devm_ioremap_resource(dev, res);
+> > > @@ -1204,18 +1206,35 @@ static int advk_pcie_probe(struct platform_de=
+vice *pdev)
+> > >     return 0;
+> > >  }
+> > >
+> > > +static int advk_pcie_remove(struct platform_device *pdev)
+> > > +{
+> > > +   struct advk_pcie *pcie =3D platform_get_drvdata(pdev);
+> > > +   struct pci_host_bridge *bridge =3D pci_host_bridge_from_priv(pcie=
+);
+> > > +
+> > > +   pci_stop_root_bus(bridge->bus);
+> > > +   pci_remove_root_bus(bridge->bus);
 > >
-> > You only want tracepoints to replace those dev_dbg()s, so when a line
-> > is requested? What about the release?  Any other points?
-> >
+> > Based on pci_host_common_remove() implementation, doesn't this need a
+> > lock around it (pci_lock_rescan_remove)?
 >
-> Had a closer look and it seems to me that the correct place to add such
-> tracepoints would be gpiod_request() and gpiod_free(), so they catch all
-> requests, not just the cdev ones.  And that moves it outside the scope
-> of this patch.
->
-> I personally don't have any use for the dev_dbg()s here and am happy to
-> remove them - they were only there to match the behaviour of
-> linehandle_create as closely as possible.
->
+> Well, I'm not sure. I looked into other pci drivers and none of
+> following drivers pci-tegra.c, pcie-altera.c, pcie-brcmstb.c,
+> pcie-iproc.c, pcie-mediatek.c, pcie-rockchip-host.c calls
+> pci_lock_rescan_remove() and pci_unlock_rescan_remove().
 
-Sounds good, we can work on trace points separately.
+The mutex protects the bus->devices list, so yes I believe it is needed.
 
-Bartosz
+Rob
