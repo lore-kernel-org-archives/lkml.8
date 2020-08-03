@@ -2,119 +2,143 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 506A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7857CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 052EB20A8B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:20:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="dddKWnC4";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="PLDu4peJ"
+	by mail.kernel.org (Postfix) with ESMTP id 3457C2086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgHCUUT (ORCPT
+        id S1726916AbgHCUXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 16:20:19 -0400
-Received: from pb-smtp20.pobox.com ([173.228.157.52]:64517 "EHLO
-        pb-smtp20.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgHCUUS (ORCPT
+        Mon, 3 Aug 2020 16:23:23 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:42854 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgHCUXX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 16:20:18 -0400
-Received: from pb-smtp20.pobox.com (unknown [127.0.0.1])
-        by pb-smtp20.pobox.com (Postfix) with ESMTP id 8731CF554D;
-        Mon,  3 Aug 2020 16:20:16 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=PF90wNMuKpjCQ5V/5619nvwTLro=; b=dddKWn
-        C44X0MRBNrallMp/OYIZNUaHHnSOD31wde63SYuclky+jvS7AokK5gpWV4ZpDQp8
-        1YS2JK/IY5WAZcq1jarHa6cRuFYp/jvIy4hyBAXdxB5LRAz+W4kPtznwOMHlWmc0
-        2aUvRMw7tYOPek0quk9K5ioEvcyKfG+qDDKrs=
-Received: from pb-smtp20.sea.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp20.pobox.com (Postfix) with ESMTP id 7F25CF554C;
-        Mon,  3 Aug 2020 16:20:16 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=Q9xTu3Q7G6ybCTets5WU0b++RTe3jw3gfIDCaIw+Fog=; b=PLDu4peJV9GFqRgQ/gK3uKs6SclhX6iumGQpARWgslvZ828s41isyydhcY7iIHhe2e64FRi8PUaMlo1CFSRE4HJYWM8Dru0DeXAh61lbYkj3l5iYcA95R9VwQbau3alTvFj1CKrn/zpzhsFyb/bU85/IesAEyZdhQ/WtDqbkfjA=
-Received: from yoda.home (unknown [24.203.50.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp20.pobox.com (Postfix) with ESMTPSA id 6E6C2F554B;
-        Mon,  3 Aug 2020 16:20:13 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 851B62DA0BFC;
-        Mon,  3 Aug 2020 16:20:11 -0400 (EDT)
-Date:   Mon, 3 Aug 2020 16:20:11 -0400 (EDT)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-cc:     Boris Brezillon <boris.brezillon@collabora.com>,
-        linux-i3c@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Conor Culhane <conor.culhane@silvaco.com>,
-        Rajeev Huralikoppi <rajeev.huralikoppi@silvaco.com>,
-        npitre@baylibre.com
-Subject: Re: [PATCH 3/4] i3c: master: svc: Add Silvaco I3C master driver
-In-Reply-To: <20200709080159.2178-3-miquel.raynal@bootlin.com>
-Message-ID: <nycvar.YSQ.7.77.849.2008031546570.1112668@knanqh.ubzr>
-References: <20200709080159.2178-1-miquel.raynal@bootlin.com> <20200709080159.2178-3-miquel.raynal@bootlin.com>
+        Mon, 3 Aug 2020 16:23:23 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k2gzR-009G4h-Hx; Mon, 03 Aug 2020 14:23:21 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k2gzQ-0000R5-O6; Mon, 03 Aug 2020 14:23:21 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     <linux-kernel@vger.kernel.org>
+Date:   Mon, 03 Aug 2020 15:20:07 -0500
+Message-ID: <87k0yfscqw.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: BCB8755A-D5C6-11EA-B562-F0EA2EB3C613-78420484!pb-smtp20.pobox.com
+Content-Type: text/plain
+X-XM-SPF: eid=1k2gzQ-0000R5-O6;;;mid=<87k0yfscqw.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/LdGJgW4IvzqUFH+hlQB3/SA4A6A27UI8=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [GIT PULL] exec cleanups for v5.9-rc1
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jul 2020, Miquel Raynal wrote:
 
-> Add support for Silvaco I3C dual-role IP. The master role is supported
-> in SDR mode only. I2C transfers have not been tested but are shared
-> because they are so close to the I3C transfers in terms of registers
-> configuration.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Please pull the exec-linus branch from the git tree:
 
-I'm worried by constructs like these:
+   git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git exec-linus
 
-> +static int svc_i3c_master_handle_ibi(struct svc_i3c_master *master,
-> +				     struct i3c_dev_desc *dev)
-> +{
-> +	struct svc_i3c_i2c_dev_data *data = i3c_dev_get_master_data(dev);
-> +	struct i3c_ibi_slot *slot;
-> +	unsigned int count;
-> +	u32 mdatactrl;
-> +	u8 *buf;
-> +	int ret;
-> +	u32 reg;
-> +
-> +	spin_lock(&master->ibi.lock);
-> +
-> +	slot = i3c_generic_ibi_get_free_slot(data->ibi_pool);
-> +	if (!slot) {
-> +		ret = -ENOSPC;
-> +		goto unlock;
-> +	}
-> +
-> +	slot->len = 0;
-> +	buf = slot->data;
-> +
-> +	ret = readl_poll_timeout(master->regs + SVC_I3C_MSTATUS, reg,
-> +				 reg & SVC_I3C_MINT_RXPEND, 0, 1000);
+   HEAD: 7fce69dff8db30cb93aace0bbebda09972027af7 Implement kernel_execve
 
-Here you're in atomic context due to the lock, and 
-readl_poll_timeout(() is built using usleep() which may ... sleep.
+During the development of v5.7 I ran into bugs and quality of
+implementation issues related to exec that could not be easily
+fixed because of the way exec is implemented.  So I have been
+diggin into exec and cleaning up what I can.
 
-Also, is it actually possible for execution to reach this point if 
-SVC_I3C_MINT_RXPEND is not set?
+This cycle I have been looking at different ideas and different
+implementations to see what is possible to improve exec, and cleaning
+the way exec interfaces with in kernel users.  Only cleaning up the
+interfaces of exec with rest of the kernel has managed to stabalize
+and make it through review in time for v5.9-rc1 resulting in 2
+sets of changes this cycle.
 
-The rest looks reasonable to me.
+      Implement kernel_execve
+      Make the user mode driver code a better citizen
 
+With kernel_execve the code size got a little larger as the copying of
+parameters from userspace and copying of parameters from userspace is
+now separate.  The good news is kernel threads no longer need to play
+games with set_fs to use exec.  Which when combined with the rest of
+Christophs set_fs changes should security bugs with set_fs much more
+difficult.
 
-Nicolas
+The first changeset "Make the user mode driver code a better citizen"
+should be both in this tree and in the bpf tree.
+
+This inches the exec code closer to sorting out the long standing issues
+I am aware of.
+
+After 5.9-rc1 is released I am hoping to quickly rebase and get a lot of
+changes posted, reviewed and merged.  I have a lot of additional fixes
+and cleanups that just need a little more attention before they are
+ready to merge.
+
+Eric W. Biederman (25):
+      umh: Capture the pid in umh_pipe_setup
+      umh: Move setting PF_UMH into umh_pipe_setup
+      umh: Rename the user mode driver helpers for clarity
+      umh: Remove call_usermodehelper_setup_file.
+      umh: Separate the user mode driver and the user mode helper support
+      umd: For clarity rename umh_info umd_info
+      umd: Rename umd_info.cmdline umd_info.driver_name
+      umd: Transform fork_usermode_blob into fork_usermode_driver
+      umh: Stop calling do_execve_file
+      exec: Remove do_execve_file
+      bpfilter: Move bpfilter_umh back into init data
+      umd: Track user space drivers with struct pid
+      exit: Factor thread_group_exited out of pidfd_poll
+      bpfilter: Take advantage of the facilities of struct pid
+      umd: Remove exit_umh
+      umd: Stop using split_argv
+      Make the user mode driver code a better citizen
+      exec: Remove unnecessary spaces from binfmts.h
+      exec: Factor out alloc_bprm
+      exec: Move initialization of bprm->filename into alloc_bprm
+      exec: Move bprm_mm_init into alloc_bprm
+      exec: Factor bprm_execve out of do_execve_common
+      exec: Factor bprm_stack_limits out of prepare_arg_pages
+      exec: Implement kernel_execve
+      Implement kernel_execve
+
+ arch/x86/entry/entry_32.S        |   2 +-
+ arch/x86/entry/entry_64.S        |   2 +-
+ arch/x86/kernel/unwind_frame.c   |   2 +-
+ fs/exec.c                        | 307 +++++++++++++++++++++++++--------------
+ include/linux/binfmts.h          |  21 +--
+ include/linux/bpfilter.h         |   7 +-
+ include/linux/sched.h            |   9 --
+ include/linux/sched/signal.h     |   2 +
+ include/linux/umh.h              |  15 --
+ include/linux/usermode_driver.h  |  18 +++
+ init/main.c                      |   4 +-
+ kernel/Makefile                  |   1 +
+ kernel/exit.c                    |  25 +++-
+ kernel/fork.c                    |   6 +-
+ kernel/umh.c                     | 171 +---------------------
+ kernel/usermode_driver.c         | 182 +++++++++++++++++++++++
+ net/bpfilter/bpfilter_kern.c     |  38 ++---
+ net/bpfilter/bpfilter_umh_blob.S |   2 +-
+ net/ipv4/bpfilter/sockopt.c      |  20 +--
+ security/tomoyo/common.h         |   2 +-
+ security/tomoyo/domain.c         |   4 +-
+ security/tomoyo/tomoyo.c         |   4 +-
+ 22 files changed, 480 insertions(+), 364 deletions(-)
+
+Eric
