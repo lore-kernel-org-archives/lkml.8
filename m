@@ -2,104 +2,84 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C21AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CEBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE8B9207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:35:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596483345;
-	bh=MxGoaTAtolmfHKz4zS7NCIftpCcbidZF08AQUmOu+t8=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=kh9wyuLuYqfKbEp6zpck9bDpam4/tg2/09Feyzc7UNHVkPK3CrEIMBO51+o2g6TQ9
-	 4OxKTsyDmH5R0gXYPBGZiD5ElSkZITidGi0+gdCgql5C4E9PKvMepuqqzLnSrQ9GiY
-	 Ou6UqGDOvzORDIgwZcrFfRwZjPN5KM9BmJpF/C/s=
+	by mail.kernel.org (Postfix) with ESMTP id 17A2B207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:35:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgHCTfo (ORCPT
+        id S1728249AbgHCTfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 15:35:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52164 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726906AbgHCTfo (ORCPT
+        Mon, 3 Aug 2020 15:35:54 -0400
+Received: from smtprelay0052.hostedemail.com ([216.40.44.52]:52322 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726906AbgHCTfy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 15:35:44 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF216C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 12:35:43 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id m20so18601708eds.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 12:35:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=UEsnFDOziY/SSigbmemZue+bgzYjtXS6TKGZJuhtS0M=;
-        b=c3ymGK1EIA+piK2yhfbf46E6AQhrP7ulZr7ALLwb90NrwIaKpk1LXqj1m+v6fJPYNI
-         dhSTmmrWWotGkCaEOArtFUIiaEy0Z7DKW3vrEu32uR1ZgX5/+epblHUSLTGcegXxiCua
-         H0wbHNy1uosqCvAVu6CLOnhj56MR7jen8jRLP5xfZy1qzEz2TS/MeEYJRLWOqpOVybDp
-         txkvCfZamy6At8PkFC26m+I+UXS/vRHIvonGpO9I5cEox2CYfMJTdigo00cxkrFzcXeG
-         F2tMhY4DwclmOjImBIxo5Z4o/6Ngtjr6gFqxvwEE7NZ4orG6Bczy4iaK4WQyVDXnEZDR
-         jVog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition;
-        bh=UEsnFDOziY/SSigbmemZue+bgzYjtXS6TKGZJuhtS0M=;
-        b=ELtBaOhca0qEmxckxeimYGTe1h0WaBwEW+3w1wapdgTHMxnYZnT8ifM33NoXF08T2F
-         60/em9VZYImUAwylr5t7HpPUKRKDcqWQvxGZ68ZKByo4dJNOsUQBzvBt9AfxM0l82jZe
-         lsmW1Kd+PdwNS/+V/flEv459L32V4M6zD1bdUoGgjc2ESlz86UvdUf5/TiN0ZQEgXCzM
-         LsQWyFilEw+Hj2dsgGGd8kMjoy43RH6Jp08N/ALSGmKQ7PCwtt59hA6bZkPT0NmrGEAH
-         M0Pvgi0NWE6qw8N5NKwMEE5FS0QHXUmL9gQfR8oj1gvpF8Ap7JPA1vR+Mkr6kBKg62Qn
-         v2tQ==
-X-Gm-Message-State: AOAM530Eb2Uu/aFGdGkdJIC2nAv4wdV1+o2lFQcNoTaqGIlRWZ/+TxsH
-        u9Z+4NZFTG8wwUB6G46WExc=
-X-Google-Smtp-Source: ABdhPJyxIvwWnM/3rGv7HWBgGbBREBrVOK2PfPeVBiWnw2y4ltG9QTPHZ+roYFJBH3k8KaqabsAHSA==
-X-Received: by 2002:a50:d1d8:: with SMTP id i24mr17816425edg.341.1596483342125;
-        Mon, 03 Aug 2020 12:35:42 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id n11sm16546091edv.39.2020.08.03.12.35.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 12:35:41 -0700 (PDT)
-Date:   Mon, 3 Aug 2020 21:35:39 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] x86/timers change for v5.9
-Message-ID: <20200803193539.GA1411343@gmail.com>
+        Mon, 3 Aug 2020 15:35:54 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id DDA80180A9F5C;
+        Mon,  3 Aug 2020 19:35:52 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: silk24_410b3b026fa0
+X-Filterd-Recvd-Size: 2397
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Mon,  3 Aug 2020 19:35:51 +0000 (UTC)
+Message-ID: <69b4c4838cb743e24a79f81de487ac2e494843ef.camel@perches.com>
+Subject: Re: [PATCH] gve: Fix the size used in a 'dma_free_coherent()' call
+From:   Joe Perches <joe@perches.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     csully@google.com, sagis@google.com, jonolson@google.com,
+        davem@davemloft.net, lrizzo@google.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Date:   Mon, 03 Aug 2020 12:35:49 -0700
+In-Reply-To: <3a25ddc6-adaa-d17d-50f4-8f8ab2ed25eb@wanadoo.fr>
+References: <20200802141523.691565-1-christophe.jaillet@wanadoo.fr>
+         <20200803084106.050eb7f6@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+         <3a25ddc6-adaa-d17d-50f4-8f8ab2ed25eb@wanadoo.fr>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Mon, 2020-08-03 at 21:19 +0200, Christophe JAILLET wrote:
+> Le 03/08/2020 à 17:41, Jakub Kicinski a écrit :
+> > On Sun,  2 Aug 2020 16:15:23 +0200 Christophe JAILLET wrote:
+> > > Update the size used in 'dma_free_coherent()' in order to match the one
+> > > used in the corresponding 'dma_alloc_coherent()'.
+> > > 
+> > > Fixes: 893ce44df5 ("gve: Add basic driver framework for Compute Engine Virtual NIC")
+> > > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> > 
+> > Fixes tag: Fixes: 893ce44df5 ("gve: Add basic driver framework for Compute Engine Virtual NIC")
+> > Has these problem(s):
+> > 	- SHA1 should be at least 12 digits long
+> > 	  Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+> > 	  or later) just making sure it is not set (or set to "auto").
+> > 
+> 
+> Hi,
+> 
+> I have git 2.25.1 and core.abbrev is already 12, both in my global 
+> .gitconfig and in the specific .git/gitconfig of my repo.
+> 
+> I would have expected checkpatch to catch this kind of small issue.
+> Unless I do something wrong, it doesn't.
+> 
+> Joe, does it make sense to you and would one of the following patch help?
 
-Please pull the latest x86/timers git tree from:
+18 months ago I sent:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-timers-2020-08-03
+https://lore.kernel.org/lkml/40bfc40958fca6e2cc9b86101153aa0715fac4f7.camel@perches.com/
 
-   # HEAD: 898ec52d2ba05915aaedcdb21bff2e944c883cb8 x86/xen/time: Set the X86_FEATURE_TSC_KNOWN_FREQ flag in xen_tsc_khz()
-
-A single commit which sets the X86_FEATURE_TSC_KNOWN_FREQ flag for Xen guests,
-to avoid recalibration.
-
- Thanks,
-
-	Ingo
-
------------------->
-Hayato Ohhashi (1):
-      x86/xen/time: Set the X86_FEATURE_TSC_KNOWN_FREQ flag in xen_tsc_khz()
-
-
- arch/x86/xen/time.c | 1 +
- 1 file changed, 1 insertion(+)
 
