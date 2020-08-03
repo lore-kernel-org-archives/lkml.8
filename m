@@ -2,157 +2,106 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A676AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDBFC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2B332076E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EC912076E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:51:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596491514;
+	bh=NGcDR1KaNhU41LcBuXJG16Vb08XHmxYCOBXL5/HWb0s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l4JXW95Y+GEL8ZO3iFCQwKohhfUeWT8bgrgiR9eN9MycFsXUAcJPW2UhlpRLMT+u9
+	 xhrr1sq6/7IiTd5iSGlOD/ZGeDCjgItYAWpkB/CPUOZMiKnl42zcwoOu11oCRfRPI0
+	 rbgXdo7hCbfAfOUcYpdJVkCS+y9NGHWXiJhhrOs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgHCVvu (ORCPT
+        id S1727951AbgHCVvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 17:51:50 -0400
-Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:44670 "EHLO
-        mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725863AbgHCVvu (ORCPT
+        Mon, 3 Aug 2020 17:51:53 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43107 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgHCVvv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 17:51:50 -0400
-Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
-        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id 3B98B1A8F2C;
-        Tue,  4 Aug 2020 07:51:45 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1k2iMy-0008H2-Kw; Tue, 04 Aug 2020 07:51:44 +1000
-Date:   Tue, 4 Aug 2020 07:51:44 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Ritesh Harjani <riteshh@linux.ibm.com>
-Cc:     linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-Subject: Re: [RFC 1/1] pmem: Add cond_resched() in bio_for_each_segment loop
- in pmem_make_request
-Message-ID: <20200803215144.GB2114@dread.disaster.area>
-References: <0d96e2481f292de2cda8828b03d5121004308759.1596011292.git.riteshh@linux.ibm.com>
- <20200802230148.GA2114@dread.disaster.area>
- <20200803071405.64C0711C058@d06av25.portsmouth.uk.ibm.com>
+        Mon, 3 Aug 2020 17:51:51 -0400
+Received: by mail-io1-f65.google.com with SMTP id k23so40077726iom.10;
+        Mon, 03 Aug 2020 14:51:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rTTd0JLEQIircW3THThScxa603LDzD4tC7cJBVnxw/8=;
+        b=PS9Vc/RaXghQo6qgZra6AA1HZaUeqqdzy5Sh+gGZDDLwLd3xw0hXBc2A9kgZ/p+kD3
+         CxamUkzPr2Zak69584gWpoPi9bHPd6T9g72y66RME3WGe88T/Kh56wOcNmPXqT8gWhPv
+         5Im1tAD/UlEefCQKXdrge5C73h1hnM0VY3cDkQ+o9vCylwNZaGvbI5PLwz+/m451yFcf
+         oNkSvqUHFncWrRWYCmRRpW+tz9Af23KH0RlIlcbNgs+TGoAQiE3GUjAYsuIZCp+g0Qg1
+         VoyIwUKcoZ4t7wN5Bs9uFL6sJd1MDBwzDXBwAkL7Thw87/1uHBONB7VHcXfgIptX6hnD
+         QJRA==
+X-Gm-Message-State: AOAM5300fO1gBZf1ZnUCqVxG8GxXcmb2qCFUISiVFzUjAB0gUBUsN0y5
+        cl3PoegjrrHTgpDYSZst3Q==
+X-Google-Smtp-Source: ABdhPJwk9JxW57b/cc2Ai3TSARPfqnml762G9Vu/UjF/k0tep6wviRYkAv+/P4mTcChWZ7hQ2RQBRg==
+X-Received: by 2002:a6b:dd12:: with SMTP id f18mr1938079ioc.109.1596491510169;
+        Mon, 03 Aug 2020 14:51:50 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id v63sm5891342ilk.67.2020.08.03.14.51.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 14:51:49 -0700 (PDT)
+Received: (nullmailer pid 3201910 invoked by uid 1000);
+        Mon, 03 Aug 2020 21:51:47 -0000
+Date:   Mon, 3 Aug 2020 15:51:47 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Subject: Re: [PATCH v2 1/5] dt-bindings: dma: dw: Add optional DMA-channels
+ mask cell support
+Message-ID: <20200803215147.GA3201744@bogus>
+References: <20200731200826.9292-1-Sergey.Semin@baikalelectronics.ru>
+ <20200731200826.9292-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200803071405.64C0711C058@d06av25.portsmouth.uk.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
-        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
-        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=VnNF1IyMAAAA:8 a=7-415B0cAAAA:8
-        a=O2OWZLGCkADlNaEqX4IA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20200731200826.9292-2-Sergey.Semin@baikalelectronics.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 12:44:04PM +0530, Ritesh Harjani wrote:
+On Fri, 31 Jul 2020 23:08:22 +0300, Serge Semin wrote:
+> Each DW DMA controller channel can be synthesized with different
+> parameters like maximum burst-length, multi-block support, maximum data
+> width, etc. Most of these parameters determine the DW DMAC channels
+> performance in its own aspect. On the other hand these parameters can
+> be implicitly responsible for the channels performance degradation
+> (for instance multi-block support is a very useful feature, but having
+> it disabled during the DW DMAC synthesize will provide a more optimized
+> core). Since DMA slave devices may have critical dependency on the DMA
+> engine performance, let's provide a way for the slave devices to have
+> the DMA-channels allocated from a pool of the channels, which according
+> to the system engineer fulfill their performance requirements.
 > 
+> The pool is determined by a mask optionally specified in the fifth
+> DMA-cell of the DMA DT-property. If the fifth cell is omitted from the
+> phandle arguments or the mask is zero, then the allocation will be
+> performed from a set of all channels provided by the DMA controller.
 > 
-> On 8/3/20 4:31 AM, Dave Chinner wrote:
-> > On Wed, Jul 29, 2020 at 02:15:18PM +0530, Ritesh Harjani wrote:
-> > > For systems which do not have CONFIG_PREEMPT set and
-> > > if there is a heavy multi-threaded load/store operation happening
-> > > on pmem + sometimes along with device latencies, softlockup warnings like
-> > > this could trigger. This was seen on Power where pagesize is 64K.
-> > > 
-> > > To avoid softlockup, this patch adds a cond_resched() in this path.
-> > > 
-> > > <...>
-> > > watchdog: BUG: soft lockup - CPU#31 stuck for 22s!
-> > > <...>
-> > > CPU: 31 PID: 15627 <..> 5.3.18-20
-> > > <...>
-> > > NIP memcpy_power7+0x43c/0x7e0
-> > > LR memcpy_flushcache+0x28/0xa0
-> > > 
-> > > Call Trace:
-> > > memcpy_power7+0x274/0x7e0 (unreliable)
-> > > memcpy_flushcache+0x28/0xa0
-> > > write_pmem+0xa0/0x100 [nd_pmem]
-> > > pmem_do_bvec+0x1f0/0x420 [nd_pmem]
-> > > pmem_make_request+0x14c/0x370 [nd_pmem]
-> > > generic_make_request+0x164/0x400
-> > > submit_bio+0x134/0x2e0
-> > > submit_bio_wait+0x70/0xc0
-> > > blkdev_issue_zeroout+0xf4/0x2a0
-> > > xfs_zero_extent+0x90/0xc0 [xfs]
-> > > xfs_bmapi_convert_unwritten+0x198/0x230 [xfs]
-> > > xfs_bmapi_write+0x284/0x630 [xfs]
-> > > xfs_iomap_write_direct+0x1f0/0x3e0 [xfs]
-> > > xfs_file_iomap_begin+0x344/0x690 [xfs]
-> > > dax_iomap_pmd_fault+0x488/0xc10
-> > > __xfs_filemap_fault+0x26c/0x2b0 [xfs]
-> > > __handle_mm_fault+0x794/0x1af0
-> > > handle_mm_fault+0x12c/0x220
-> > > __do_page_fault+0x290/0xe40
-> > > do_page_fault+0x38/0xc0
-> > > handle_page_fault+0x10/0x30
-> > > 
-> > > Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> > > Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
-> > > ---
-> > >   drivers/nvdimm/pmem.c | 1 +
-> > >   1 file changed, 1 insertion(+)
-> > > 
-> > > diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-> > > index 2df6994acf83..fcf7af13897e 100644
-> > > --- a/drivers/nvdimm/pmem.c
-> > > +++ b/drivers/nvdimm/pmem.c
-> > > @@ -214,6 +214,7 @@ static blk_qc_t pmem_make_request(struct request_queue *q, struct bio *bio)
-> > >   			bio->bi_status = rc;
-> > >   			break;
-> > >   		}
-> > > +		cond_resched();
-> > 
-> > There are already cond_resched() calls between submitted bios in
-> > blkdev_issue_zeroout() via both __blkdev_issue_zero_pages() and
-> > __blkdev_issue_write_zeroes(), so I'm kinda wondering where the
-> > problem is coming from here.
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> ---
+>  .../devicetree/bindings/dma/snps,dma-spear1340.yaml        | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> This problem is coming from that bio call- submit_bio()
-> 
-> > 
-> > Just how big is the bio being issued here that it spins for 22s
-> > trying to copy it?
-> 
-> It's 256 (due to BIO_MAX_PAGES) * 64KB (pagesize) = 16MB.
-> So this is definitely not an easy trigger as per tester was mainly seen
-> on a VM.
 
-Right, so a memcpy() of 16MB of data in a single bio is taking >22s?
-
-If so, then you can't solve this problem with cond_resched() - if
-something that should only take half a millisecond to run is taking
-22s of CPU time, there are bigger problems occurring that need
-fixing.
-
-i.e. if someone is running a workload that has effectively
-livelocked the hardware cache coherency protocol across the entire
-machine, then changing kernel code that requires memory bandwidth to
-be available is not going to fix the problem. All is does is shoot
-the messenger that tells you there is something going wrong.
-
-> Looking at the cond_resched() inside dax_writeback_mapping_range()
-> in xas_for_each_marked() loop, I thought it should be good to have a
-> cond_resched() in the above path as well.
-
-That's not done on every page/bio - that'd done every 4096 pages, or
-every 256MB of memory written back on 64k page machines. IOWs, using
-cond_resched() here is a sensible thing to do if you have a locked
-loop that might run for seconds.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Reviewed-by: Rob Herring <robh@kernel.org>
