@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC34FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8091208B3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFE5B204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457716;
-	bh=mMaacA9vE0nsei1eQU9xoZKDWVY7ktUlsDNk0P5mmr0=;
+	s=default; t=1596457721;
+	bh=r6tonUaCA4yIVYEdGSKBGBpprLWVpRT7OC1j2tMOSAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J12Vwh8ftQNW6uMxzTNYqhsndTbtl4Oe2UvnypACphF9rYGTbRrnKKHNVsrSz09vK
-	 FKv5WPXX0WYba3htNv3vpJauHEGZfPsWHEqWWQakR01z57ILF6ExQbw3dqF7BpKBBg
-	 YpFqNHfF6amcF3/6B1t+r+XNhqjsiEZ3Ulb+fojA=
+	b=JUldy5zEEIvfoC06onGi5QrEouTt9BN3pJXhsxJxRttLIiS5Vkppd+wXoSvGfmQ5H
+	 Aaehpyf+fp/vX22XvOms/GRy+uQI56qnTE6twjUIn2N2bgF5xrXcYpeYuYn3zHzZHH
+	 soovWuwzVU9fApdiL7uH8NQ8mZNoZaopUwUw/ocw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728755AbgHCM2f (ORCPT
+        id S1727906AbgHCM2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:28:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54482 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:28:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728147AbgHCM2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:28:20 -0400
+        id S1728764AbgHCM2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:28:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5DE22083B;
-        Mon,  3 Aug 2020 12:28:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE65B207DF;
+        Mon,  3 Aug 2020 12:28:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457699;
-        bh=mMaacA9vE0nsei1eQU9xoZKDWVY7ktUlsDNk0P5mmr0=;
+        s=default; t=1596457716;
+        bh=r6tonUaCA4yIVYEdGSKBGBpprLWVpRT7OC1j2tMOSAc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oRl/tMIu7+4mSOf30WsPj9zsTLK5eMTqpZhBLFDT2G4CMmohkhgle+S7ruYK0b/Pp
-         zfMtA90M2Ue/tS6lJocn8qgAgvbpNlJT9N2BoPaL63RN7Jafqn7+3IZ+WvZduzbu8W
-         G4e80omj8lW106lf4rpPzWZ0u/Q77xuNA0frPRi8=
+        b=qrfpgBhKtIXB7GyQIq1pTc0BtfXtfgtlz/qmg0aS94lyAH4THWi2oHuWkao9Kmado
+         byJet5klb02FRZM1vlzhUO35JezG7qwsazD83ynBAKyfZUgu/zTMpN7CoZTFLjWdDy
+         sqDtFLmlUUB8qgb8w8UsEeJob3efBuZUElY7tG04=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rich Felker <dalias@libc.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 43/90] sh/tlb: Fix PGTABLE_LEVELS > 2
-Date:   Mon,  3 Aug 2020 14:19:05 +0200
-Message-Id: <20200803121859.708701681@linuxfoundation.org>
+        stable@vger.kernel.org, Aya Levin <ayal@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 48/90] net/mlx5e: Fix error path of device attach
+Date:   Mon,  3 Aug 2020 14:19:10 +0200
+Message-Id: <20200803121859.946272744@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -61,55 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Aya Levin <ayal@mellanox.com>
 
-[ Upstream commit c7bcbc8ab9cb20536b8f50c62a48cebda965fdba ]
+[ Upstream commit 5cd39b6e9a420329a9a408894be7ba8aa7dd755e ]
 
-Geert reported that his SH7722-based Migo-R board failed to boot after
-commit:
+On failure to attach the netdev, fix the rollback by re-setting the
+device's state back to MLX5E_STATE_DESTROYING.
 
-  c5b27a889da9 ("sh/tlb: Convert SH to generic mmu_gather")
+Failing to attach doesn't stop statistics polling via .ndo_get_stats64.
+In this case, although the device is not attached, it falsely continues
+to query the firmware for counters. Setting the device's state back to
+MLX5E_STATE_DESTROYING prevents the firmware counters query.
 
-That commit fell victim to copying the wrong pattern --
-__pmd_free_tlb() used to be implemented with pmd_free().
-
-Fixes: c5b27a889da9 ("sh/tlb: Convert SH to generic mmu_gather")
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Rich Felker <dalias@libc.org>
+Fixes: 26e59d8077a3 ("net/mlx5e: Implement mlx5e interface attach/detach callbacks")
+Signed-off-by: Aya Levin <ayal@mellanox.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sh/include/asm/pgalloc.h | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/sh/include/asm/pgalloc.h b/arch/sh/include/asm/pgalloc.h
-index 22d968bfe9bb6..d770da3f8b6fb 100644
---- a/arch/sh/include/asm/pgalloc.h
-+++ b/arch/sh/include/asm/pgalloc.h
-@@ -12,6 +12,7 @@ extern void pgd_free(struct mm_struct *mm, pgd_t *pgd);
- extern void pud_populate(struct mm_struct *mm, pud_t *pudp, pmd_t *pmd);
- extern pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long address);
- extern void pmd_free(struct mm_struct *mm, pmd_t *pmd);
-+#define __pmd_free_tlb(tlb, pmdp, addr)		pmd_free((tlb)->mm, (pmdp))
- #endif
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index c133beb6a7a56..15db4a8746dd7 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -5356,6 +5356,8 @@ err_cleanup_tx:
+ 	profile->cleanup_tx(priv);
  
- static inline void pmd_populate_kernel(struct mm_struct *mm, pmd_t *pmd,
-@@ -33,13 +34,4 @@ do {							\
- 	tlb_remove_page((tlb), (pte));			\
- } while (0)
+ out:
++	set_bit(MLX5E_STATE_DESTROYING, &priv->state);
++	cancel_work_sync(&priv->update_stats_work);
+ 	return err;
+ }
  
--#if CONFIG_PGTABLE_LEVELS > 2
--#define __pmd_free_tlb(tlb, pmdp, addr)			\
--do {							\
--	struct page *page = virt_to_page(pmdp);		\
--	pgtable_pmd_page_dtor(page);			\
--	tlb_remove_page((tlb), page);			\
--} while (0);
--#endif
--
- #endif /* __ASM_SH_PGALLOC_H */
 -- 
 2.25.1
 
