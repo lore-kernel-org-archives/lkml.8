@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16771C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D0EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD4E920678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF2A20678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:47:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458807;
-	bh=I2dTzUq/9wZciNDjDhbRp5+H1zAaUup4cSjPwG9P8DI=;
+	s=default; t=1596458829;
+	bh=1/r9Q8IfWowqNWxBcXwbOD8b3HJEuZTPsq0N564a95c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uv25lXe2uM0nrSEEZ19gRtuKAqEU7XysY55VaOHxM72kIxytooPnnoXWgo5B5qcq5
-	 jVfe/Ux55w+1h7EUC4Lx0q5TVxvVhqvQawq3O5BoRi1dbK9gVWFrCLy6UcZOPjiSTk
-	 4PAiqWmzHrtOUUbznlsnydXcg6YTv0Rz3g+dWmjQ=
+	b=rcHE3y/e8g7QbknQNBdQRwfhUqdI46hkYtV4vB8ThZ3jsuEPs3gd6jayuoX0OwfL7
+	 39VQZBXAnmeXzi+OwMApIqfY94QqOd64R2O3b4m2hBKp6aem2knbTrIa/yIe9nYVL8
+	 wUiMZYwOuT+ENFbKvTHOThRXMHULlRRXuQt7AmpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728953AbgHCMqq (ORCPT
+        id S1728808AbgHCMrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:46:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52162 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:47:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728402AbgHCM0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:26:39 -0400
+        id S1728314AbgHCM0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:26:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F8AB207FC;
-        Mon,  3 Aug 2020 12:26:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4239B204EC;
+        Mon,  3 Aug 2020 12:26:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457597;
-        bh=I2dTzUq/9wZciNDjDhbRp5+H1zAaUup4cSjPwG9P8DI=;
+        s=default; t=1596457569;
+        bh=1/r9Q8IfWowqNWxBcXwbOD8b3HJEuZTPsq0N564a95c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wgndIT/Ut4wAxkkQgXJZJUaLL/5iixnne4Ih2w6A9YC92x3Ey92WnKFtsMiT//OgP
-         ReqaovWlxxw4zTmeOUPF9oy8fuSj7HvZQOjOUqOVcQGA2uiynG+V4CNMLY/eezheEo
-         2oLNXO6CqlyugF/nso5FB0/chCb/wO6NBgBBj4+Q=
+        b=VfxE/AEpfSe7XqWYEsCjHPTuuxVBSck3uqX9U8PZ6hJdzsaYjzKLH3j1VJgVSwg4V
+         lohTiKdWkkZom2JayUrNlknstaWe6GGeAo8VJfR6V5Lx11NgblbmF0I9Qbwccm3SZS
+         t3EQ6tkYvKY6lJbQdAviAriat6su3gQijlDq5dSg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Pisati <paolo.pisati@canonical.com>,
-        Jakub Kicinski <kuba@kernel.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Martin Schiller <ms@dev.tdt.de>,
+        Xie He <xie.he.0141@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 099/120] selftests: net: ip_defrag: modprobe missing nf_defrag_ipv6 support
-Date:   Mon,  3 Aug 2020 14:19:17 +0200
-Message-Id: <20200803121907.728790854@linuxfoundation.org>
+Subject: [PATCH 5.7 115/120] drivers/net/wan: lapb: Corrected the usage of skb_cow
+Date:   Mon,  3 Aug 2020 14:19:33 +0200
+Message-Id: <20200803121908.501864761@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -61,58 +62,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Pisati <paolo.pisati@canonical.com>
+From: Xie He <xie.he.0141@gmail.com>
 
-[ Upstream commit aba69d49fb49c9166596dd78926514173b7f9ab5 ]
+[ Upstream commit 8754e1379e7089516a449821f88e1fe1ebbae5e1 ]
 
-Fix ip_defrag.sh when CONFIG_NF_DEFRAG_IPV6=m:
+This patch fixed 2 issues with the usage of skb_cow in LAPB drivers
+"lapbether" and "hdlc_x25":
 
-$ sudo ./ip_defrag.sh
-+ set -e
-+ mktemp -u XXXXXX
-+ readonly NETNS=ns-rGlXcw
-+ trap cleanup EXIT
-+ setup
-+ ip netns add ns-rGlXcw
-+ ip -netns ns-rGlXcw link set lo up
-+ ip netns exec ns-rGlXcw sysctl -w net.ipv4.ipfrag_high_thresh=9000000
-+ ip netns exec ns-rGlXcw sysctl -w net.ipv4.ipfrag_low_thresh=7000000
-+ ip netns exec ns-rGlXcw sysctl -w net.ipv4.ipfrag_time=1
-+ ip netns exec ns-rGlXcw sysctl -w net.ipv6.ip6frag_high_thresh=9000000
-+ ip netns exec ns-rGlXcw sysctl -w net.ipv6.ip6frag_low_thresh=7000000
-+ ip netns exec ns-rGlXcw sysctl -w net.ipv6.ip6frag_time=1
-+ ip netns exec ns-rGlXcw sysctl -w net.netfilter.nf_conntrack_frag6_high_thresh=9000000
-+ cleanup
-+ ip netns del ns-rGlXcw
+1) After skb_cow fails, kfree_skb should be called to drop a reference
+to the skb. But in both drivers, kfree_skb is not called.
 
-$ ls -la /proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh
-ls: cannot access '/proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh': No such file or directory
+2) skb_cow should be called before skb_push so that is can ensure the
+safety of skb_push. But in "lapbether", it is incorrectly called after
+skb_push.
 
-$ sudo modprobe nf_defrag_ipv6
-$ ls -la /proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh
--rw-r--r-- 1 root root 0 Jul 14 12:34 /proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh
+More details about these 2 issues:
 
-Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
+1) The behavior of calling kfree_skb on failure is also the behavior of
+netif_rx, which is called by this function with "return netif_rx(skb);".
+So this function should follow this behavior, too.
+
+2) In "lapbether", skb_cow is called after skb_push. This results in 2
+logical issues:
+   a) skb_push is not protected by skb_cow;
+   b) An extra headroom of 1 byte is ensured after skb_push. This extra
+      headroom has no use in this function. It also has no use in the
+      upper-layer function that this function passes the skb to
+      (x25_lapb_receive_frame in net/x25/x25_dev.c).
+So logically skb_cow should instead be called before skb_push.
+
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/ip_defrag.sh | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wan/hdlc_x25.c  | 4 +++-
+ drivers/net/wan/lapbether.c | 8 +++++---
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/net/ip_defrag.sh b/tools/testing/selftests/net/ip_defrag.sh
-index 15d3489ecd9ce..ceb7ad4dbd945 100755
---- a/tools/testing/selftests/net/ip_defrag.sh
-+++ b/tools/testing/selftests/net/ip_defrag.sh
-@@ -6,6 +6,8 @@
- set +x
- set -e
+diff --git a/drivers/net/wan/hdlc_x25.c b/drivers/net/wan/hdlc_x25.c
+index c84536b03aa84..f70336bb6f524 100644
+--- a/drivers/net/wan/hdlc_x25.c
++++ b/drivers/net/wan/hdlc_x25.c
+@@ -71,8 +71,10 @@ static int x25_data_indication(struct net_device *dev, struct sk_buff *skb)
+ {
+ 	unsigned char *ptr;
  
-+modprobe -q nf_defrag_ipv6
+-	if (skb_cow(skb, 1))
++	if (skb_cow(skb, 1)) {
++		kfree_skb(skb);
+ 		return NET_RX_DROP;
++	}
+ 
+ 	skb_push(skb, 1);
+ 	skb_reset_network_header(skb);
+diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
+index 284832314f310..b2868433718f6 100644
+--- a/drivers/net/wan/lapbether.c
++++ b/drivers/net/wan/lapbether.c
+@@ -128,10 +128,12 @@ static int lapbeth_data_indication(struct net_device *dev, struct sk_buff *skb)
+ {
+ 	unsigned char *ptr;
+ 
+-	skb_push(skb, 1);
+-
+-	if (skb_cow(skb, 1))
++	if (skb_cow(skb, 1)) {
++		kfree_skb(skb);
+ 		return NET_RX_DROP;
++	}
 +
- readonly NETNS="ns-$(mktemp -u XXXXXX)"
++	skb_push(skb, 1);
  
- setup() {
+ 	ptr  = skb->data;
+ 	*ptr = X25_IFACE_DATA;
 -- 
 2.25.1
 
