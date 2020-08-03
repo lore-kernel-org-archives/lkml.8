@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1110C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE512177B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE3552177B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457812;
-	bh=ChVaTdwZsimVO9XXRPpvGgqVvr8Bhfap1whGtgk08Gc=;
+	s=default; t=1596457813;
+	bh=5AEzfnHIxTUPvHwW6Aw0AZi1yRgtffEJnAoZRhY67ZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J/u2cRZb2zhWSknIHqUZc5A7hr0OmMRgeaC8ZFWiTyHLjFllJUBiwIAied67Vb2yh
-	 Am43rVtlrVFJWQxYcIfoEjziiobpHX23dJG+7vX/4F7mOSO2PzEfj1w1+ZuURydqB6
-	 AIUitgs34+3320LyuSGJEqLN3I/YMRj19+aNmTnU=
+	b=yPvc+STHcHvbUan5tOQ9o9y8az4eQBg6rlwsXReKEHrRxxlE8GGpZ7jEH+8f405Jq
+	 LZVFtNu9jijCqqSDXOfWwWaGOfvYVNXev8He4aqyjquYMun0KEHjqg3WtmS2aOsMVt
+	 3FgbBAt5gC1Go7Trjv47Qdm9FGBk01IxogASj3HI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgHCMaM (ORCPT
+        id S1727929AbgHCMaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:30:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56766 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:30:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728987AbgHCM35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:29:57 -0400
+        id S1728999AbgHCM37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:29:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B4AB204EC;
-        Mon,  3 Aug 2020 12:29:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED17C2086A;
+        Mon,  3 Aug 2020 12:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457795;
-        bh=ChVaTdwZsimVO9XXRPpvGgqVvr8Bhfap1whGtgk08Gc=;
+        s=default; t=1596457798;
+        bh=5AEzfnHIxTUPvHwW6Aw0AZi1yRgtffEJnAoZRhY67ZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fYAepXKRnasVAaQI3pPuhEzhiXdas+ZfTYzojCJa+oYJRnzmroSvrZ5ZCyZQiruu5
-         SeVN7gAO5lWVhRw6AB7mmqUA5WiosS6xAKc7JBmMDt6WqTq28Q2cP9KMpThZgcvqhl
-         GGNxOLHujWp+iXDQRmbE5p7TUi72UZ3Ne3EPBjLg=
+        b=0TEJ8+fUWOAVH11pBuocIupi75/eDB/dqgaPmHRIh59mFxrkJ1mVTSqP6upUvxjCV
+         +CmD6pI3oChRog5fEpR2LRxK2BPHlzUuSRfwBBn+AdeBdAJs5EVQgA87w6ix9Q+qha
+         qvqHa0QSA2pMWwXNv2jAccInp81cBMHgrGYA1v64=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dirk Behme <dirk.behme@de.bosch.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 77/90] net: ethernet: ravb: exit if re-initialization fails in tx timeout
-Date:   Mon,  3 Aug 2020 14:19:39 +0200
-Message-Id: <20200803121901.344477818@linuxfoundation.org>
+Subject: [PATCH 5.4 60/90] mac80211: mesh: Free ie data when leaving mesh
+Date:   Mon,  3 Aug 2020 14:19:22 +0200
+Message-Id: <20200803121900.529042698@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -62,89 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Remi Pommarel <repk@triplefau.lt>
 
-[ Upstream commit 015c5d5e6aa3523c758a70eb87b291cece2dbbb4 ]
+[ Upstream commit 6a01afcf8468d3ca2bd8bbb27503f60dcf643b20 ]
 
-According to the report of [1], this driver is possible to cause
-the following error in ravb_tx_timeout_work().
+At ieee80211_join_mesh() some ie data could have been allocated (see
+copy_mesh_setup()) and need to be cleaned up when leaving the mesh.
 
-ravb e6800000.ethernet ethernet: failed to switch device to config mode
+This fixes the following kmemleak report:
 
-This error means that the hardware could not change the state
-from "Operation" to "Configuration" while some tx and/or rx queue
-are operating. After that, ravb_config() in ravb_dmac_init() will fail,
-and then any descriptors will be not allocaled anymore so that NULL
-pointer dereference happens after that on ravb_start_xmit().
+unreferenced object 0xffff0000116bc600 (size 128):
+  comm "wpa_supplicant", pid 608, jiffies 4294898983 (age 293.484s)
+  hex dump (first 32 bytes):
+    30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00  0...............
+    00 0f ac 08 00 00 00 00 c4 65 40 00 00 00 00 00  .........e@.....
+  backtrace:
+    [<00000000bebe439d>] __kmalloc_track_caller+0x1c0/0x330
+    [<00000000a349dbe1>] kmemdup+0x28/0x50
+    [<0000000075d69baa>] ieee80211_join_mesh+0x6c/0x3b8 [mac80211]
+    [<00000000683bb98b>] __cfg80211_join_mesh+0x1e8/0x4f0 [cfg80211]
+    [<0000000072cb507f>] nl80211_join_mesh+0x520/0x6b8 [cfg80211]
+    [<0000000077e9bcf9>] genl_family_rcv_msg+0x374/0x680
+    [<00000000b1bd936d>] genl_rcv_msg+0x78/0x108
+    [<0000000022c53788>] netlink_rcv_skb+0xb0/0x1c0
+    [<0000000011af8ec9>] genl_rcv+0x34/0x48
+    [<0000000069e41f53>] netlink_unicast+0x268/0x2e8
+    [<00000000a7517316>] netlink_sendmsg+0x320/0x4c0
+    [<0000000069cba205>] ____sys_sendmsg+0x354/0x3a0
+    [<00000000e06bab0f>] ___sys_sendmsg+0xd8/0x120
+    [<0000000037340728>] __sys_sendmsg+0xa4/0xf8
+    [<000000004fed9776>] __arm64_sys_sendmsg+0x44/0x58
+    [<000000001c1e5647>] el0_svc_handler+0xd0/0x1a0
 
-To fix the issue, the ravb_tx_timeout_work() should check
-the return values of ravb_stop_dma() and ravb_dmac_init().
-If ravb_stop_dma() fails, ravb_tx_timeout_work() re-enables TX and RX
-and just exits. If ravb_dmac_init() fails, just exits.
-
-[1]
-https://lore.kernel.org/linux-renesas-soc/20200518045452.2390-1-dirk.behme@de.bosch.com/
-
-Reported-by: Dirk Behme <dirk.behme@de.bosch.com>
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: c80d545da3f7 (mac80211: Let userspace enable and configure vendor specific path selection.)
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+Link: https://lore.kernel.org/r/20200704135007.27292-1-repk@triplefau.lt
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/renesas/ravb_main.c | 26 ++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+ net/mac80211/cfg.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index 3f165c137236d..30cdabf64ccc1 100644
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -1444,6 +1444,7 @@ static void ravb_tx_timeout_work(struct work_struct *work)
- 	struct ravb_private *priv = container_of(work, struct ravb_private,
- 						 work);
- 	struct net_device *ndev = priv->ndev;
-+	int error;
+diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
+index 0daaf7e37a211..a9dda5c228f60 100644
+--- a/net/mac80211/cfg.c
++++ b/net/mac80211/cfg.c
+@@ -2140,6 +2140,7 @@ static int ieee80211_leave_mesh(struct wiphy *wiphy, struct net_device *dev)
+ 	ieee80211_stop_mesh(sdata);
+ 	mutex_lock(&sdata->local->mtx);
+ 	ieee80211_vif_release_channel(sdata);
++	kfree(sdata->u.mesh.ie);
+ 	mutex_unlock(&sdata->local->mtx);
  
- 	netif_tx_stop_all_queues(ndev);
- 
-@@ -1452,15 +1453,36 @@ static void ravb_tx_timeout_work(struct work_struct *work)
- 		ravb_ptp_stop(ndev);
- 
- 	/* Wait for DMA stopping */
--	ravb_stop_dma(ndev);
-+	if (ravb_stop_dma(ndev)) {
-+		/* If ravb_stop_dma() fails, the hardware is still operating
-+		 * for TX and/or RX. So, this should not call the following
-+		 * functions because ravb_dmac_init() is possible to fail too.
-+		 * Also, this should not retry ravb_stop_dma() again and again
-+		 * here because it's possible to wait forever. So, this just
-+		 * re-enables the TX and RX and skip the following
-+		 * re-initialization procedure.
-+		 */
-+		ravb_rcv_snd_enable(ndev);
-+		goto out;
-+	}
- 
- 	ravb_ring_free(ndev, RAVB_BE);
- 	ravb_ring_free(ndev, RAVB_NC);
- 
- 	/* Device init */
--	ravb_dmac_init(ndev);
-+	error = ravb_dmac_init(ndev);
-+	if (error) {
-+		/* If ravb_dmac_init() fails, descriptors are freed. So, this
-+		 * should return here to avoid re-enabling the TX and RX in
-+		 * ravb_emac_init().
-+		 */
-+		netdev_err(ndev, "%s: ravb_dmac_init() failed, error %d\n",
-+			   __func__, error);
-+		return;
-+	}
- 	ravb_emac_init(ndev);
- 
-+out:
- 	/* Initialise PTP Clock driver */
- 	if (priv->chip_id == RCAR_GEN2)
- 		ravb_ptp_init(ndev, priv->pdev);
+ 	return 0;
 -- 
 2.25.1
 
