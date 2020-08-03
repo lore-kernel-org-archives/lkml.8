@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B76A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A34C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92EC7207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05A6D20829
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457579;
-	bh=5zHcSLLgbxN6DVs+tk1bx38p2/VIMIpLVoilitKcpfc=;
+	s=default; t=1596457583;
+	bh=6Bcql5MVpaJ1aPCHVFYp9K4kGhZ1iHGc4NWJiwBn1KM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oSAAX9dvIB/ieAymzTGLVyGy95NUIy9MjKSfZJ8iED+CnwXzZCZB7FehMxbngrXn3
-	 GrwuOsppNB5TpAuQ8dnj7EqhBcLYazERRqZRaJ/T8RzWkJ2cZgneavElmJyBs/6uro
-	 Gj2iAOkF3CXtURoI9QlZ884XIX4gpeIFiXjHe5iQ=
+	b=0z4DR/dPTpaU1UCkbm8pCZpP86yqt/XpGjjOWMhmiZUyk8EmqYGlRluoR6WQwt02e
+	 B4WqZHZZ4br5FjLWtt3xDzM0S7HyJ92OI4iXE2tWoSX7B52oXViQ/jdFVysSMBlo+w
+	 LFgFrk7VBxjj4X3D6iqdWmm3y4xyE8nmSdCrB6HU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgHCM0T (ORCPT
+        id S1728350AbgHCM0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:26:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51536 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:26:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728327AbgHCM0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:26:16 -0400
+        id S1728342AbgHCM0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:26:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01A1820829;
-        Mon,  3 Aug 2020 12:26:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4662204EC;
+        Mon,  3 Aug 2020 12:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457575;
-        bh=5zHcSLLgbxN6DVs+tk1bx38p2/VIMIpLVoilitKcpfc=;
+        s=default; t=1596457578;
+        bh=6Bcql5MVpaJ1aPCHVFYp9K4kGhZ1iHGc4NWJiwBn1KM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jt/I3u/gxlHyk58guhmCmHIehf8YRZ96wLRRfDaq+innZzwl7Pnh2vIYAXAevhesH
-         +UlotzoHsG+QT9V+68z+jhAjPIydY37Rk2R4soBzkHaiUWf0a+RSEx9M2W4s/dhBL3
-         4Zj9x1NpPysP2e63BvifMlXiUWHEX349CUxYqc5w=
+        b=zYSEg7rP84RKefzIG8hWkuWyiCtQVQI+es+7u4vgwEXd7IoSlJKyic0ojvjmvZqWg
+         psYMIzhrQ/hddbJqniFa9Ls2G8k6EgJAW2vFh7jjxdp5uZw3YDq29PG8Aun1e1md0u
+         /K0wCBv+r/mOlAv6pd/8deaCvZYYhZMItG4MQIi4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Quentin Perret <qperret@google.com>
-Subject: [PATCH 5.7 117/120] KVM: arm64: Dont inherit exec permission across page-table levels
-Date:   Mon,  3 Aug 2020 14:19:35 +0200
-Message-Id: <20200803121908.590749090@linuxfoundation.org>
+        stable@vger.kernel.org, Wanpeng Li <wanpengli@tencent.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.7 118/120] KVM: LAPIC: Prevent setting the tscdeadline timer if the lapic is hw disabled
+Date:   Mon,  3 Aug 2020 14:19:36 +0200
+Message-Id: <20200803121908.636931947@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -60,70 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Wanpeng Li <wanpengli@tencent.com>
 
-commit b757b47a2fcba584d4a32fd7ee68faca510ab96f upstream.
+commit d2286ba7d574ba3103a421a2f9ec17cb5b0d87a1 upstream.
 
-If a stage-2 page-table contains an executable, read-only mapping at the
-pte level (e.g. due to dirty logging being enabled), a subsequent write
-fault to the same page which tries to install a larger block mapping
-(e.g. due to dirty logging having been disabled) will erroneously inherit
-the exec permission and consequently skip I-cache invalidation for the
-rest of the block.
+Prevent setting the tscdeadline timer if the lapic is hw disabled.
 
-Ensure that exec permission is only inherited by write faults when the
-new mapping is of the same size as the existing one. A subsequent
-instruction abort will result in I-cache invalidation for the entire
-block mapping.
-
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Tested-by: Quentin Perret <qperret@google.com>
-Reviewed-by: Quentin Perret <qperret@google.com>
-Cc: Marc Zyngier <maz@kernel.org>
+Fixes: bce87cce88 (KVM: x86: consolidate different ways to test for in-kernel LAPIC)
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200723101714.15873-1-will@kernel.org
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+Message-Id: <1596165141-28874-1-git-send-email-wanpengli@tencent.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- virt/kvm/arm/mmu.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ arch/x86/kvm/lapic.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -1198,7 +1198,7 @@ static bool stage2_get_leaf_entry(struct
- 	return true;
- }
- 
--static bool stage2_is_exec(struct kvm *kvm, phys_addr_t addr)
-+static bool stage2_is_exec(struct kvm *kvm, phys_addr_t addr, unsigned long sz)
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -2136,7 +2136,7 @@ void kvm_set_lapic_tscdeadline_msr(struc
  {
- 	pud_t *pudp;
- 	pmd_t *pmdp;
-@@ -1210,11 +1210,11 @@ static bool stage2_is_exec(struct kvm *k
- 		return false;
+ 	struct kvm_lapic *apic = vcpu->arch.apic;
  
- 	if (pudp)
--		return kvm_s2pud_exec(pudp);
-+		return sz <= PUD_SIZE && kvm_s2pud_exec(pudp);
- 	else if (pmdp)
--		return kvm_s2pmd_exec(pmdp);
-+		return sz <= PMD_SIZE && kvm_s2pmd_exec(pmdp);
- 	else
--		return kvm_s2pte_exec(ptep);
-+		return sz == PAGE_SIZE && kvm_s2pte_exec(ptep);
- }
+-	if (!lapic_in_kernel(vcpu) || apic_lvtt_oneshot(apic) ||
++	if (!kvm_apic_present(vcpu) || apic_lvtt_oneshot(apic) ||
+ 			apic_lvtt_period(apic))
+ 		return;
  
- static int stage2_set_pte(struct kvm *kvm, struct kvm_mmu_memory_cache *cache,
-@@ -1801,7 +1801,8 @@ static int user_mem_abort(struct kvm_vcp
- 	 * execute permissions, and we preserve whatever we have.
- 	 */
- 	needs_exec = exec_fault ||
--		(fault_status == FSC_PERM && stage2_is_exec(kvm, fault_ipa));
-+		(fault_status == FSC_PERM &&
-+		 stage2_is_exec(kvm, fault_ipa, vma_pagesize));
- 
- 	if (vma_pagesize == PUD_SIZE) {
- 		pud_t new_pud = kvm_pfn_pud(pfn, mem_type);
 
 
