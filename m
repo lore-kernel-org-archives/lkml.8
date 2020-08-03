@@ -2,57 +2,58 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA78C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2477C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C171520678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BBA120678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:57:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596459447;
-	bh=G84AUxGogVsnmVra44Oao1d3jsTbdPjzCMOrVvh6gJQ=;
+	s=default; t=1596459450;
+	bh=6TKRQAx0bExw+dtJQ9fufqGombiOTqQtelaZgNQ8C6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=grPc6z4Swf7h69Xcjqqh9Qj33KBy5pjMQ5Zu9scUx9NrxoKpufwpXeZrMDuJwZzbI
-	 cD4ycgS9oX/KHrAGEdqytYrKEVjFwaf4o8KUsIJuK3D8wJsEGYFjdXHhVnaRN9PjeU
-	 RYBD2m1N86I9UduM/qP4Gd5NoboumIV9rdIk75jk=
+	b=cqTSu3RXPc8Z+odJhKzw5MNCf7zLvlK11SHo2nS6papoWS79FT2dM/IWPZJI/SR+X
+	 Y5UlxZmh+qeQ5aZRzLFPwGom9u4mVv+kXen7ypBBzG4zj6zqxGZaEb8MXeEu92wS1j
+	 75c183MLC8BrRjhfMWtuiwZ2tIwp5JYwAX91hzBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729748AbgHCM51 (ORCPT
+        id S1726533AbgHCMV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:57:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44688 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726511AbgHCMV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 3 Aug 2020 08:21:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725933AbgHCMVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:21:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A2D320738;
-        Mon,  3 Aug 2020 12:21:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 796C820738;
+        Mon,  3 Aug 2020 12:21:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457286;
-        bh=G84AUxGogVsnmVra44Oao1d3jsTbdPjzCMOrVvh6gJQ=;
+        s=default; t=1596457275;
+        bh=6TKRQAx0bExw+dtJQ9fufqGombiOTqQtelaZgNQ8C6o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h1cVo//qVdwXnfN2AG0aRQsIZidIqGsbphA18tCeFEFAzWQE3aLG3ykyhQaun1qYI
-         HIgY5An7QRBiZJYPcdyS8qWh42JbcNnnBivkYhkewx7jA5ugYY41tivU+O6mp13N43
-         egCoduWkO6c58pMdLf5zBPB7ZMRVOXyiuZIMRmJg=
+        b=rTnzVTxbmJUOWgZi63eQu1zmANLqjjcz0XJut3pFy5jdUM6CPUaG9gMreYyExPkHo
+         nO+iWnl829WhWwLtAswA8zEy5S3Lf+Rf7neqLilX2LrxDXsq8gyemENhvossCnbGbK
+         vQe8rwv1BH7Js1UnOMQQMu9unn2L2QWm/LEM6BJg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+77a25acfa0382e06ab23@syzkaller.appspotmail.com,
-        Wang Hai <wanghai38@huawei.com>,
-        Dominique Martinet <asmadeus@codewreck.org>
-Subject: [PATCH 5.7 013/120] 9p/trans_fd: Fix concurrency del of req_list in p9_fd_cancelled/p9_read_work
-Date:   Mon,  3 Aug 2020 14:17:51 +0200
-Message-Id: <20200803121903.502916735@linuxfoundation.org>
+        stable@vger.kernel.org, NeilBrown <neilb@suse.de>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 001/120] sunrpc: check that domain table is empty at module unload.
+Date:   Mon,  3 Aug 2020 14:17:39 +0200
+Message-Id: <20200803121902.935547948@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,64 +62,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: NeilBrown <neilb@suse.de>
 
-commit 74d6a5d5662975aed7f25952f62efbb6f6dadd29 upstream.
+[ Upstream commit f45db2b909c7e76f35850e78f017221f30282b8e ]
 
-p9_read_work and p9_fd_cancelled may be called concurrently.
-In some cases, req->req_list may be deleted by both p9_read_work
-and p9_fd_cancelled.
+The domain table should be empty at module unload.  If it isn't there is
+a bug somewhere.  So check and report.
 
-We can fix it by ignoring replies associated with a cancelled
-request and ignoring cancelled request if message has been received
-before lock.
-
-Link: http://lkml.kernel.org/r/20200612090833.36149-1-wanghai38@huawei.com
-Fixes: 60ff779c4abb ("9p: client: remove unused code and any reference to "cancelled" function")
-Cc: <stable@vger.kernel.org> # v3.12+
-Reported-by: syzbot+77a25acfa0382e06ab23@syzkaller.appspotmail.com
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206651
+Signed-off-by: NeilBrown <neilb@suse.de>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/9p/trans_fd.c |   15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ net/sunrpc/sunrpc.h      |  1 +
+ net/sunrpc/sunrpc_syms.c |  2 ++
+ net/sunrpc/svcauth.c     | 25 +++++++++++++++++++++++++
+ 3 files changed, 28 insertions(+)
 
---- a/net/9p/trans_fd.c
-+++ b/net/9p/trans_fd.c
-@@ -362,6 +362,10 @@ static void p9_read_work(struct work_str
- 		if (m->rreq->status == REQ_STATUS_SENT) {
- 			list_del(&m->rreq->req_list);
- 			p9_client_cb(m->client, m->rreq, REQ_STATUS_RCVD);
-+		} else if (m->rreq->status == REQ_STATUS_FLSHD) {
-+			/* Ignore replies associated with a cancelled request. */
-+			p9_debug(P9_DEBUG_TRANS,
-+				 "Ignore replies associated with a cancelled request\n");
- 		} else {
- 			spin_unlock(&m->client->lock);
- 			p9_debug(P9_DEBUG_ERROR,
-@@ -703,11 +707,20 @@ static int p9_fd_cancelled(struct p9_cli
- {
- 	p9_debug(P9_DEBUG_TRANS, "client %p req %p\n", client, req);
+diff --git a/net/sunrpc/sunrpc.h b/net/sunrpc/sunrpc.h
+index 47a756503d11c..f6fe2e6cd65a1 100644
+--- a/net/sunrpc/sunrpc.h
++++ b/net/sunrpc/sunrpc.h
+@@ -52,4 +52,5 @@ static inline int sock_is_loopback(struct sock *sk)
  
-+	spin_lock(&client->lock);
-+	/* Ignore cancelled request if message has been received
-+	 * before lock.
-+	 */
-+	if (req->status == REQ_STATUS_RCVD) {
-+		spin_unlock(&client->lock);
-+		return 0;
-+	}
+ int rpc_clients_notifier_register(void);
+ void rpc_clients_notifier_unregister(void);
++void auth_domain_cleanup(void);
+ #endif /* _NET_SUNRPC_SUNRPC_H */
+diff --git a/net/sunrpc/sunrpc_syms.c b/net/sunrpc/sunrpc_syms.c
+index f9edaa9174a43..236fadc4a4399 100644
+--- a/net/sunrpc/sunrpc_syms.c
++++ b/net/sunrpc/sunrpc_syms.c
+@@ -23,6 +23,7 @@
+ #include <linux/sunrpc/rpc_pipe_fs.h>
+ #include <linux/sunrpc/xprtsock.h>
+ 
++#include "sunrpc.h"
+ #include "netns.h"
+ 
+ unsigned int sunrpc_net_id;
+@@ -131,6 +132,7 @@ cleanup_sunrpc(void)
+ 	unregister_rpc_pipefs();
+ 	rpc_destroy_mempool();
+ 	unregister_pernet_subsys(&sunrpc_net_ops);
++	auth_domain_cleanup();
+ #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
+ 	rpc_unregister_sysctl();
+ #endif
+diff --git a/net/sunrpc/svcauth.c b/net/sunrpc/svcauth.c
+index 552617e3467bd..998b196b61767 100644
+--- a/net/sunrpc/svcauth.c
++++ b/net/sunrpc/svcauth.c
+@@ -21,6 +21,8 @@
+ 
+ #include <trace/events/sunrpc.h>
+ 
++#include "sunrpc.h"
 +
- 	/* we haven't received a response for oldreq,
- 	 * remove it from the list.
- 	 */
--	spin_lock(&client->lock);
- 	list_del(&req->req_list);
-+	req->status = REQ_STATUS_FLSHD;
- 	spin_unlock(&client->lock);
- 	p9_req_put(req);
+ #define RPCDBG_FACILITY	RPCDBG_AUTH
  
+ 
+@@ -205,3 +207,26 @@ struct auth_domain *auth_domain_find(char *name)
+ 	return NULL;
+ }
+ EXPORT_SYMBOL_GPL(auth_domain_find);
++
++/**
++ * auth_domain_cleanup - check that the auth_domain table is empty
++ *
++ * On module unload the auth_domain_table must be empty.  To make it
++ * easier to catch bugs which don't clean up domains properly, we
++ * warn if anything remains in the table at cleanup time.
++ *
++ * Note that we cannot proactively remove the domains at this stage.
++ * The ->release() function might be in a module that has already been
++ * unloaded.
++ */
++
++void auth_domain_cleanup(void)
++{
++	int h;
++	struct auth_domain *hp;
++
++	for (h = 0; h < DN_HASHMAX; h++)
++		hlist_for_each_entry(hp, &auth_domain_table[h], hash)
++			pr_warn("svc: domain %s still present at module unload.\n",
++				hp->name);
++}
+-- 
+2.25.1
+
 
 
