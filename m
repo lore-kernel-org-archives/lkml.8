@@ -2,113 +2,129 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD3AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F54C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8B7A2076E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:47:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596462432;
-	bh=4eQFf9ed2Dfrros1pnXhbWD114vwWyJ1fVfLwJi2D70=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Ap/3RyBU6jTSkbkaLM/4K+DY6xabPS5Vf/MU7ER3OjoYJpiA7hI1zEcQhESuY+aaf
-	 4vMOs7OjXBWu6nMMAFXDMZL36nJYTMlO5C/kvygMJHwHe5vV9L3mf2BofR4sjLMlS2
-	 E3L/DqMXhQhmAQhVfMhJ3QzgSaQ1j8oBkFABwvWY=
+	by mail.kernel.org (Postfix) with ESMTP id A06772076E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:48:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Um/nxUAC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgHCNrM (ORCPT
+        id S1726579AbgHCNsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 09:47:12 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38118 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727790AbgHCNrL (ORCPT
+        Mon, 3 Aug 2020 09:48:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30176 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726785AbgHCNsm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 09:47:11 -0400
-Received: by mail-oi1-f193.google.com with SMTP id u63so21515204oie.5;
-        Mon, 03 Aug 2020 06:47:11 -0700 (PDT)
+        Mon, 3 Aug 2020 09:48:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596462521;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=SMxVmqh9+IpJqntX4TYmN4Y+TTmVHJNY5eblJs9DUyI=;
+        b=Um/nxUAC1qB4cQfQL5bK5OEqDTuEpy/BmMl/5LKCPgISS75heJhk+3aQJIygDm+6Ao6nt9
+        iKyNSp+ExCi1QiRJUzG7ttgID9ZRAXys4cXNaxt55YOxhRh3HjIJRkLKhvyHCQjgbCIGqr
+        xA96mNggB5/kMX0nCD1voEdARP6foms=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-245-Mr_LVldAOhaDOQCZ2AR_Aw-1; Mon, 03 Aug 2020 09:48:39 -0400
+X-MC-Unique: Mr_LVldAOhaDOQCZ2AR_Aw-1
+Received: by mail-qv1-f71.google.com with SMTP id j13so17036286qvi.17
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 06:48:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h8dgWfdFWbvh9ZWZ1ZNBTHX4VAGf175AsYQyWP17dNI=;
-        b=RaSbfZuS52aO3YmqbAr3ZVDPgLhOeWHaJ+jj31gcLJE5P/JL5j+J/fDhbJtFpq+kil
-         QmLU+f2mFk/zKJoRRlaXaDPaqpmPuGEM1E1Jp6xjXrzKwSdaLcHKxQgGjFyCjGLlPzKn
-         fQmhDf7pZlbEo22R/CyTeqgc+AR0ewx/gvAouFb1SBsE6ajx7jjhTgyyiuQvvPU8z8S/
-         Qbt82EPkarhouJBklY4uniK5VzCCpIQqSev3zWegmKmMHVo0hBmRjEIrlE3e5E9Pkmdp
-         YLWe+N5ykTdT17/b6963lqAolfvrWoVuUX9XRc1D2TLqnJJibT0owIpUhbKL4noV4fIN
-         xKuw==
-X-Gm-Message-State: AOAM530cQBS2uTzw82PoVB7TQMmsi9iLb8RkAJS1vlcMrafgU2utQZFH
-        rN06kQwyAzx+FyArtaIF2hW1Z4poWf9udFys+L4=
-X-Google-Smtp-Source: ABdhPJyFUfBACH5XqP9tKDNYxFYYtA4RyrEcaKDspg6cpYPauGtzed7reeFZ0UlKtdcbE1mt7I5J5PAh4P2D1tNyOV4=
-X-Received: by 2002:a54:4f14:: with SMTP id e20mr10487303oiy.103.1596462430736;
- Mon, 03 Aug 2020 06:47:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200722093732.14297-1-ionela.voinescu@arm.com>
- <20200722093732.14297-2-ionela.voinescu@arm.com> <CAJZ5v0i5Xrk6oTt81aeXDi1F8gnEspJo9e6nGf10nSvBz-Dbkw@mail.gmail.com>
- <20200730034128.k4fmblfuwjcmqdze@vireshk-mac-ubuntu> <20200803132617.GA9512@arm.com>
-In-Reply-To: <20200803132617.GA9512@arm.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 3 Aug 2020 15:46:59 +0200
-Message-ID: <CAJZ5v0gOJXtpF4iy2v+Jbv9y9QZsAtEREMQwWv0u7Zks0Fvp1A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/7] cpufreq: move invariance setter calls in cpufreq core
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SMxVmqh9+IpJqntX4TYmN4Y+TTmVHJNY5eblJs9DUyI=;
+        b=bDp/En0Szv83SzvTIdvvfe6hxLhf30XMdjBrBCmSWTsdLGM/8AQx+SomZfZR8V3Mac
+         AYav0OkZFpRXB1HDCUMm74iJYvNzssHBC3Jn5KaPV7VFCVqC+xo73lBkUR+AiNOiOZgJ
+         31jUbCihRpNvhiDVszLFP/aE5K+ChHmr8fWqfk4JyrzoAbe/V33fYUaRQJ73Yi+B7k5X
+         hBrGPpdmGOBrzOKX3uTK9EenbxceV3oaR5p20utLy3+riEuc/q+ORJpyd7xju/cKVCnJ
+         1c9DfumJBEg+LABswkKisE2j3bkUJaukopv29mopnYAcs9UlKJgbr9V+//ekwa1e8vuF
+         1t2A==
+X-Gm-Message-State: AOAM533+nQ9JthnMI3gwwxi4Tz+2OOVtdGr15gZWy10h4HHA25BIR8sJ
+        5MxMYzEiT9VCACeZetFXLaNvDYgx8kfb0Fay4SUdgeop4xtMtGEh2gWi+wbEDpGBDwJQR3vLsc9
+        XwOTOMytJAaPEYeM0YwQHRHxl
+X-Received: by 2002:a37:90e:: with SMTP id 14mr16647332qkj.102.1596462519487;
+        Mon, 03 Aug 2020 06:48:39 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz0Q9H9YNB/cgP7w/wWSAvOIBiIgVexrNtMfORoaMNYcUfqssZruqZR5pgv924elJAriQdwDA==
+X-Received: by 2002:a37:90e:: with SMTP id 14mr16647309qkj.102.1596462519240;
+        Mon, 03 Aug 2020 06:48:39 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id d46sm22820662qtk.37.2020.08.03.06.48.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 06:48:38 -0700 (PDT)
+From:   trix@redhat.com
+To:     nick@shmanahar.org, dmitry.torokhov@gmail.com,
+        ezequiel@collabora.com, bleung@chromium.org
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH] input: atmel_mxt_ts: fix double free
+Date:   Mon,  3 Aug 2020 06:48:32 -0700
+Message-Id: <20200803134832.6290-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 3, 2020 at 3:26 PM Ionela Voinescu <ionela.voinescu@arm.com> wrote:
->
-> Hi guys,
->
-> On Thursday 30 Jul 2020 at 09:11:28 (+0530), Viresh Kumar wrote:
-> > On 27-07-20, 15:48, Rafael J. Wysocki wrote:
-> > > On Wed, Jul 22, 2020 at 11:38 AM Ionela Voinescu
-> > > <ionela.voinescu@arm.com> wrote:
-> > > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > > > index 036f4cc42ede..bac4101546db 100644
-> > > > --- a/drivers/cpufreq/cpufreq.c
-> > > > +++ b/drivers/cpufreq/cpufreq.c
-> > > > @@ -2058,9 +2058,16 @@ EXPORT_SYMBOL(cpufreq_unregister_notifier);
-> > > >  unsigned int cpufreq_driver_fast_switch(struct cpufreq_policy *policy,
-> > > >                                         unsigned int target_freq)
-> > > >  {
-> > > > +       unsigned int freq;
-> > > > +
-> > > >         target_freq = clamp_val(target_freq, policy->min, policy->max);
-> > > > +       freq = cpufreq_driver->fast_switch(policy, target_freq);
-> > > > +
-> > > > +       if (freq)
-> > > > +               arch_set_freq_scale(policy->related_cpus, freq,
-> > > > +                                   policy->cpuinfo.max_freq);
-> > >
-> > > Why can't arch_set_freq_scale() handle freq == 0?
-> >
->
-> Sorry, I seem to have missed this question the first time around.
->
-> arch_set_freq_scale() could handle freq == 0, but given that freq == 0
-> is signaling an error here, I do believe this check is well placed, to
-> prevent a useless call to arch_set_freq_scale(). Also [1]:
+From: Tom Rix <trix@redhat.com>
 
-So let me rephrase:
+Clang static analysis reports this error
 
-Doesn't this check add overhead in the empty arch_set_freq_scale() case?
+atmel_mxt_ts.c:1850:2: warning: Attempt to free released memory
+        kfree(id_buf);
+        ^~~~~~~~~~~~~
+
+The problem is with this code block
+
+data->raw_info_block = id_buf;
+...
+error = mxt_parse_object_table(data, id_buf + MXT_OBJECT_START);
+if (error) {
+	dev_err(&client->dev, "Error %d parsing object table\n", error);
+	mxt_free_object_table(data);
+	goto err_free_mem;
+}
+
+mxt_free_object_table() frees id_buf
+
+kfree(data->raw_info_block);
+
+So skip over the second free
+
+Fixes: 068bdb67ef74 ("Input: atmel_mxt_ts - fix the firmware update")
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/input/touchscreen/atmel_mxt_ts.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index 6b71b0aff115..1cc0f492f4f4 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -1839,7 +1839,7 @@ static int mxt_read_info_block(struct mxt_data *data)
+ 	if (error) {
+ 		dev_err(&client->dev, "Error %d parsing object table\n", error);
+ 		mxt_free_object_table(data);
+-		goto err_free_mem;
++		goto err_free_mem1;
+ 	}
+ 
+ 	data->object_table = (struct mxt_object *)(id_buf + MXT_OBJECT_START);
+@@ -1848,6 +1848,7 @@ static int mxt_read_info_block(struct mxt_data *data)
+ 
+ err_free_mem:
+ 	kfree(id_buf);
++err_free_mem1:
+ 	return error;
+ }
+ 
+-- 
+2.18.1
+
