@@ -2,100 +2,94 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26901C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F40C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9A56207FB
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11AF2207FB
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:15:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LBURf5Ja";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DC0RPbpC"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="SUD9wzKr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgHCPNV (ORCPT
+        id S1727891AbgHCPPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 11:13:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39768 "EHLO
+        Mon, 3 Aug 2020 11:15:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgHCPNV (ORCPT
+        with ESMTP id S1725933AbgHCPPP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 11:13:21 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49A00C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 08:13:21 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596467599;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zXGEztBjn4giLdEcSrD148UX+XKQGnk+zqs22R94Q+0=;
-        b=LBURf5Ja6M9Lac4WOtiuJ6bxV3P29YalLePHR73LPtA0WqbI3DEP5PI50sGfEKLrOxsHxk
-        SpZq/CrnkcSwoR5GhLAuMFCxRFIuwknKHC+j2k1XLlJy2dfbZCwoq4hpTrV8+rWguLLEus
-        6Cb0ASJC/yoHQrrJw5p3WETehitAxGJlOldFGFjwFnKPs+HbOx+h/iROd2tFeWUZ7EsBhG
-        VDwFIAonfMaIKyOmK5k8bevRY5d83pdzgieQQSzIVG+POWhTMuUsspi4MdsrfIgpH7v4pV
-        Ql0+pNsiIgi39OmQmKNAHz48/jKQCCg1HESutm3gcqlHSCNFCdw3ltBQ0/JLoQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596467599;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zXGEztBjn4giLdEcSrD148UX+XKQGnk+zqs22R94Q+0=;
-        b=DC0RPbpCWyjFYqilNHjgTKCW8agE9XURW0gniTmMsNl7HWZ5w0tXO+jy2OVEX4siXKFtfx
-        HVmiyqaI1kWcTFCQ==
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>,
-        Alison Wang <alison.wang@nxp.com>, catalin.marinas@arm.com,
-        will@kernel.org, paulmck@kernel.org, mw@semihalf.com,
-        leoyang.li@nxp.com, vladimir.oltean@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC PATCH] arm64: defconfig: Disable fine-grained task level IRQ time accounting
-In-Reply-To: <20200803114112.mrcuupz4ir5uqlp6@skbuf>
-References: <20200729033934.22349-1-alison.wang@nxp.com> <877dumbtoi.fsf@kurt> <20200729094943.lsmhsqlnl7rlnl6f@skbuf> <87mu3ho48v.fsf@kurt> <20200730082228.r24zgdeiofvwxijm@skbuf> <873654m9zi.fsf@kurt> <87lfiwm2bj.fsf@nanos.tec.linutronix.de> <20200803114112.mrcuupz4ir5uqlp6@skbuf>
-Date:   Mon, 03 Aug 2020 17:13:18 +0200
-Message-ID: <87d047n4oh.fsf@nanos.tec.linutronix.de>
+        Mon, 3 Aug 2020 11:15:15 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 253FBC06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 08:15:15 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a14so34591012wra.5
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 08:15:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iRgcxqpC2efMEL9W8jlRcgPY7vIoCAo/VNXdd6tUD/w=;
+        b=SUD9wzKr/3P2x6YjkkJR4VYMnEY1xlXykMlyvod+sPtx81Pe+VAU/Qv9NdgeqmVA4a
+         6dUpNRdD8YJzlmhQd2IZAztWDoN6exreIwHPEPSyJRRMk9ScigmaTvv0kp6Ufu4XfmCP
+         IMxdpKyi010H4ybO9yHiXI2jvFIRx2Dik8j9aMvxvB3NXtmEghghKgDKYrqLWYFRptwS
+         egSMzel9kkEMSbqQOwqU57cH17H321SEohky3IaYg810VJw5Z85c5Uz7L5h/dehQxvyc
+         Ew1QNa8PFg2m5KPYuQVd/TY5Hm2QR7ffbTwQ52gH/cT3sJa7XUrmlNdVe83QCjde+7Yg
+         T+xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iRgcxqpC2efMEL9W8jlRcgPY7vIoCAo/VNXdd6tUD/w=;
+        b=tXrbDrPJpm1aLf59Twj2mJJjFc7mVnWkKOhDKIcqZOZPMwmXgo72dky8Waf2dcD8jP
+         8lNPhxDJ/m9Yxu2rruN6svUE0rL+aKHnumh9rNTJlQ8OzImAjg30M1x9oxeGromBVwFF
+         4Sisy0L1M2KRTXrFUtJ5cyXUMx7vlZlzTSCW7+nZoVNHHp0fmn48yZ3EM98QjsQuicfH
+         0sqz8MDSJPqrJiFfnmEn8vLbDUKV4MBWw4V3ovOsYPiN7jfTSiYw8/bCMY4Sd/ulSdjo
+         HEYR1e38T1RK4h5MQ+KDYXmOQccC4cd2SIe3yMgp/VXIQE46bvHBun0p9vNAB+Kh7XEW
+         iWtQ==
+X-Gm-Message-State: AOAM530n7yQP88skKGy/eQzbMjT6Wusts76lMvd+09F+nAGYOphENkNM
+        dnsMHQgV5Gvn4Q6fBbyVNy+zcP4xVliBKb0HRX5B9Q==
+X-Google-Smtp-Source: ABdhPJzMUvQrkFMEjrfp8LRYvyTBsCuddDFCT+waMKo1jgBz4Wt7ZWjJF4QB3D9+HFdpRZnnJr+TalY0EQoSXwre8zo=
+X-Received: by 2002:a5d:5712:: with SMTP id a18mr15195681wrv.184.1596467713900;
+ Mon, 03 Aug 2020 08:15:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200803143231.GE2674@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200803143231.GE2674@hirez.programming.kicks-ass.net>
+From:   Andy Lutomirski <luto@amacapital.net>
+Date:   Mon, 3 Aug 2020 08:15:02 -0700
+Message-ID: <CALCETrXhgmkRNaZq9QFWjVVYiX+t=ML_e-oDw2PPEFxQdoA+6Q@mail.gmail.com>
+Subject: Re: [RFC][PATCH] objtool,x86_64,paravirt: Add pv_ops[] support
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, mbenes@suse.de,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Juergen Gross <jgross@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vladimir Oltean <olteanv@gmail.com> writes:
->>  1) When irq accounting is disabled, RT throttling kicks in as
->>     expected.
->> 
->>  2) With irq accounting the RT throttler does not kick in and the RCU
->>     stall/lockups happen.
->> 
->> Not much, but there is clearly interaction between irq time accounting
->> and scheduler accounting.
->> 
->> Can you please reduce /proc/sys/kernel/sched_rt_runtime_us in steps of
->> 50000? At least in theory, reduction should bring the throttling back.
+On Mon, Aug 3, 2020 at 7:33 AM <peterz@infradead.org> wrote:
 >
-> We already know from my original report that reducing
-> sched_rt_runtime_us to 80% (800000) gives us a stable system.
-> https://lkml.org/lkml/2020/6/4/1062
+>
+> Thomas wanted paramuck vs noinstr, here goes. Very rough, very nasty,
+> mostly works.
+>
+> It requires call sites are the normal indirect call, and not mangled
+> retpoison (slow_down_io() had those), it also requires pv_ops[]
+> assignments are single instructions and not laundered through some
+> pointless intermediate helper (hyperv).
+>
+> It doesn't warn when you get any of that wrong.
+>
+> But if you have it all lined up right, it will warn about noinstr
+> violations due to paramuck:
 
-Oh. Somehow missed that. Btw, can you please use links in the form of:
-
-    https://lore.kernel.org/r/$MSGID
-
-lkml.org is spotty and having the message id allows to search in the
-mail client as well.
-
-> What is this telling us?
-
-It seems that the fine grained irq time accounting affects the runtime
-accounting in some way which I haven't figured out yet.
-
-Thanks,
-
-        tglx
+I certainly agree that pv_ops is mucky, but could you expound on
+precisely what this patch actually does?  On a very quick
+read-through, I'm guessing you're complaining about any call to pv_ops
+in a noinstr section?  But maybe this is only calls to pv_ops that
+aren't themselves noinstr?
