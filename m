@@ -2,142 +2,120 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB50C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 03:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D14DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 03:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2259B206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 03:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0076E20775
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 03:53:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="n5Z9VFjw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbgHCDqP (ORCPT
+        id S1726824AbgHCDxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 23:46:15 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:39311 "EHLO 1wt.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725840AbgHCDqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 23:46:15 -0400
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id 0733jlX7015511;
-        Mon, 3 Aug 2020 05:45:47 +0200
-Date:   Mon, 3 Aug 2020 05:45:47 +0200
-From:   Willy Tarreau <w@1wt.eu>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Linux-kernel Mailing List <linux-kernel@vger.kernel.org>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: powerpc: build failures in Linus' tree
-Message-ID: <20200803034547.GA15501@1wt.eu>
-References: <20200802204842.36bca162@canb.auug.org.au>
- <20200802172019.GB26677@1wt.eu>
+        Sun, 2 Aug 2020 23:53:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbgHCDxP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 23:53:15 -0400
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74E07C06174A
+        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 20:53:15 -0700 (PDT)
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 38422891B1;
+        Mon,  3 Aug 2020 15:53:09 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1596426789;
+        bh=xof0h/0pnO1Lae3YBizaq9j/8bGmovt/UbEDx91yWmo=;
+        h=From:To:Cc:Subject:Date;
+        b=n5Z9VFjwn2twZEBE6Is0RR5wQim9jmK25wbBpx4CnQ2oZYxnIk8DaDCs/sxKUg2RK
+         bHApI2K+eUqbktD5uBywTlrUxUhsHUrvFT5+lZCagOtrDWhF7c1+Y7CVq6XkarHpaZ
+         Jy9EypitS48iyTPAAsE/9K+sJaa+ZxoZjZ26unFV8MrfFJ6od31pN6AQEjZAGkb56o
+         wCDbtZRyFvcmsDvUVRI6ZlS5ZqhPvKvOlTsdpgSiaoL8nZBwjzwo0+N1DUOFmMlPoq
+         oZ3XTehc0LdSxTIlxC2JquobGNNqShtdDzJNaDgS1SI65imThLS0qZhW7ksgHrToVU
+         ys21DG+lsqDdQ==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f278a250000>; Mon, 03 Aug 2020 15:53:09 +1200
+Received: from markto-dl.ws.atlnz.lc (markto-dl.ws.atlnz.lc [10.33.23.25])
+        by smtp (Postfix) with ESMTP id 3DA3313EEC9;
+        Mon,  3 Aug 2020 15:53:08 +1200 (NZST)
+Received: by markto-dl.ws.atlnz.lc (Postfix, from userid 1155)
+        id 1C8E434112F; Mon,  3 Aug 2020 15:53:09 +1200 (NZST)
+From:   Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+To:     ray.jui@broadcom.com, helgaas@kernel.org, sbranden@broadcom.com,
+        f.fainelli@gmail.com, lorenzo.pieralisi@arm.com, robh@kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Subject: [PATCH v3 1/2] PCI: iproc: Set affinity mask on MSI interrupts
+Date:   Mon,  3 Aug 2020 15:52:40 +1200
+Message-Id: <20200803035241.7737-1-mark.tomlinson@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="+QahgC5+KEYLbs62"
-Content-Disposition: inline
-In-Reply-To: <20200802172019.GB26677@1wt.eu>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The core interrupt code expects the irq_set_affinity call to update the
+effective affinity for the interrupt. This was not being done, so update
+iproc_msi_irq_set_affinity() to do so.
 
---+QahgC5+KEYLbs62
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi again Stephen,
-
-On Sun, Aug 02, 2020 at 07:20:19PM +0200, Willy Tarreau wrote:
-> On Sun, Aug 02, 2020 at 08:48:42PM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > We are getting build failures in some PowerPC configs for Linus' tree.
-> > See e.g. http://kisskb.ellerman.id.au/kisskb/buildresult/14306515/
-> > 
-> > In file included from /kisskb/src/arch/powerpc/include/asm/paca.h:18,
-> >                  from /kisskb/src/arch/powerpc/include/asm/percpu.h:13,
-> >                  from /kisskb/src/include/linux/random.h:14,
-> >                  from /kisskb/src/include/linux/net.h:18,
-> >                  from /kisskb/src/net/ipv6/ip6_fib.c:20:
-> > /kisskb/src/arch/powerpc/include/asm/mmu.h:139:22: error: unknown type name 'next_tlbcam_idx'
-> >   139 | DECLARE_PER_CPU(int, next_tlbcam_idx);
-> > 
-> > I assume this is caused by commit
-> > 
-> >   1c9df907da83 ("random: fix circular include dependency on arm64 after addition of percpu.h")
-> > 
-> > But I can't see how, sorry.
-> 
-> So there, asm/mmu.h includes asm/percpu.h, which includes asm/paca.h, which
-> includes asm/mmu.h.
-> 
-> I suspect that we can remove asm/paca.h from asm/percpu.h as it *seems*
-> to be only used by the #define __my_cpu_offset but I don't know if anything
-> will break further, especially if this __my_cpu_offset is used anywhere
-> without this paca definition.
-
-I tried this and it fixed 5.8 for me with your config above. I'm appending
-a patch that does just this. I didn't test other configs as I don't know
-which ones to test though. If it fixes the problem for you, maybe it can
-be picked by the PPC maintainers.
-
-Willy
-
---+QahgC5+KEYLbs62
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="0001-powerpc-fix-circular-dependency-in-percpu.h.patch"
-
-From bcd64a7d0f3445c9a75d3b4dc4837d2ce61660c9 Mon Sep 17 00:00:00 2001
-From: Willy Tarreau <w@1wt.eu>
-Date: Mon, 3 Aug 2020 05:27:57 +0200
-Subject: powerpc: fix circular dependency in percpu.h
-
-After random.h started to include percpu.h (commit f227e3e), several
-archs broke in circular dependencies around percpu.h.
-
-In https://lore.kernel.org/lkml/20200802204842.36bca162@canb.auug.org.au/
-Stephen Rothwell reported breakage for powerpc with CONFIG_PPC_FSL_BOOK3E.
-
-It turns out that asm/percpu.h includes asm/paca.h, which itself
-includes mmu.h, which includes percpu.h when CONFIG_PPC_FSL_BOOK3E=y.
-
-Percpu seems to include asm/paca.h only for local_paca which is used in
-the __my_cpu_offset macro. Removing this include solves the issue for
-this config.
-
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Fixes: f227e3e ("random32: update the net random state on interrupt and activity")
-Link: https://lore.kernel.org/lkml/20200802204842.36bca162@canb.auug.org.au/
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Signed-off-by: Willy Tarreau <w@1wt.eu>
+Fixes: 3bc2b2348835 ("PCI: iproc: Add iProc PCIe MSI support")
+Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
 ---
- arch/powerpc/include/asm/percpu.h | 2 --
- 1 file changed, 2 deletions(-)
+changes in v2:
+ - Patch 1/2 Added Fixes tag
+ - Patch 2/2 Replace original change with change suggested by Bjorn
+   Helgaas.
 
-diff --git a/arch/powerpc/include/asm/percpu.h b/arch/powerpc/include/asm/percpu.h
-index dce863a..cd3f6e5 100644
---- a/arch/powerpc/include/asm/percpu.h
-+++ b/arch/powerpc/include/asm/percpu.h
-@@ -10,8 +10,6 @@
- 
- #ifdef CONFIG_SMP
- 
--#include <asm/paca.h>
--
- #define __my_cpu_offset local_paca->data_offset
- 
- #endif /* CONFIG_SMP */
--- 
-2.9.0
+changes in v3:
+ - Use bitfield rather than bool to save memory.
 
+ drivers/pci/controller/pcie-iproc-msi.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
---+QahgC5+KEYLbs62--
+diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/contro=
+ller/pcie-iproc-msi.c
+index 3176ad3ab0e5..908475d27e0e 100644
+--- a/drivers/pci/controller/pcie-iproc-msi.c
++++ b/drivers/pci/controller/pcie-iproc-msi.c
+@@ -209,15 +209,20 @@ static int iproc_msi_irq_set_affinity(struct irq_da=
+ta *data,
+ 	struct iproc_msi *msi =3D irq_data_get_irq_chip_data(data);
+ 	int target_cpu =3D cpumask_first(mask);
+ 	int curr_cpu;
++	int ret;
+=20
+ 	curr_cpu =3D hwirq_to_cpu(msi, data->hwirq);
+ 	if (curr_cpu =3D=3D target_cpu)
+-		return IRQ_SET_MASK_OK_DONE;
++		ret =3D IRQ_SET_MASK_OK_DONE;
++	else {
++		/* steer MSI to the target CPU */
++		data->hwirq =3D hwirq_to_canonical_hwirq(msi, data->hwirq) + target_cp=
+u;
++		ret =3D IRQ_SET_MASK_OK;
++	}
+=20
+-	/* steer MSI to the target CPU */
+-	data->hwirq =3D hwirq_to_canonical_hwirq(msi, data->hwirq) + target_cpu=
+;
++	irq_data_update_effective_affinity(data, cpumask_of(target_cpu));
+=20
+-	return IRQ_SET_MASK_OK;
++	return ret;
+ }
+=20
+ static void iproc_msi_irq_compose_msi_msg(struct irq_data *data,
+--=20
+2.28.0
+
