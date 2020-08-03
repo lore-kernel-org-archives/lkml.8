@@ -2,67 +2,133 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AABAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D15C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 728F5206D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B19D2206DA
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:33:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6NQsPx1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbgHCOdY (ORCPT
+        id S1728439AbgHCOd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:33:24 -0400
-Received: from www62.your-server.de ([213.133.104.62]:42952 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbgHCOdX (ORCPT
+        Mon, 3 Aug 2020 10:33:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbgHCOd0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 10:33:23 -0400
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1k2bWb-00089n-50; Mon, 03 Aug 2020 16:33:13 +0200
-Received: from [178.196.57.75] (helo=pc-9.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1k2bWa-0008QJ-56; Mon, 03 Aug 2020 16:33:12 +0200
-Subject: Re: [PATCH] tools/bpf/bpftool: Fix wrong return value in do_dump()
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>, ast@kernel.org,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        quentin@isovalent.com, kuba@kernel.org, toke@redhat.com,
-        tklauser@distanz.ch, jolsa@kernel.org
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tianjia.zhang@alibaba.com
-References: <20200802111540.5384-1-tianjia.zhang@linux.alibaba.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <31eeb5d8-160a-64b8-9a39-a28add59ec74@iogearbox.net>
-Date:   Mon, 3 Aug 2020 16:33:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 3 Aug 2020 10:33:26 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69962C06174A;
+        Mon,  3 Aug 2020 07:33:26 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id l2so11844871pff.0;
+        Mon, 03 Aug 2020 07:33:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CSryihUrOfV/QpASOmMQXnPhqAteV/tdNxvfNf+2Xfg=;
+        b=f6NQsPx1SkjRWIIzrAvw+PGh7OTrPeRIjU09/5f1HbEsEBW3tw9g0Ar8D+a8idmOb4
+         5FTeGXd2+X2YtudoVzwpciidf2SUXhlbjHbPx6B/XR3tcXvBBWcbiSoeoa46lHW2N8Hg
+         p6Kc+bkMd02lDhTNFpL3vxsLMIZkPTai+FCiRW/lVS/lTNEydmuQ7uwyaJ5JHrJVtbCb
+         LxxcQ47FRB/UgRGX11GVDSIcxnXRu0gtVOXSvaLrGUI5utT828y27TVT8gtINMCh4pOK
+         P4doXOcAx6+88uFgzha2bpxsf14ck6e/d+qZ3BVSEbEzFT0D6G9xliA+Xl72rGid/RGL
+         REFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CSryihUrOfV/QpASOmMQXnPhqAteV/tdNxvfNf+2Xfg=;
+        b=Uqs/jLCLK9BRJBlfudPaztkIv7+nbKlBP21gmCxanlmO0souvzW/cByXf1B7FqKb/9
+         4m4wvedEzTOuOxSidS4i0eZpw60nFkrd6VIy86uYpRaH9YWHWXeLA01AWMXsF6HkkqvV
+         /m6grhkZ1fOlSoLnfATeJKqXAvPaNtepCeWNipCiCgLT+s/fBlkevzwWyimUGD+k+Ll/
+         +gNmHM2a8cG98zmj4KEtWMV9oiSuwOmZhYFfkwdKGx0KenQ3Hen8TCKiEBBdPboritk7
+         oMufWZL51chu+vTbOrhtqdIli7udtCoNqA8eijM48WdnaGoUs/5Pal8pxL2boBod0Zac
+         vfsA==
+X-Gm-Message-State: AOAM533AQDkGBROuSsSLtgDf7KljDsI4GepTqQxABT1zrFD/ykA1tP6M
+        vJSs15S4Gz3hvJY0/e7maQg=
+X-Google-Smtp-Source: ABdhPJw8jUAIC6cPasGvqz562zsJjwF1GyLzlxHbXTTNNN7GXWCblmsAa3t3KFutJ5N751+aeL6uNw==
+X-Received: by 2002:a62:19c4:: with SMTP id 187mr15865681pfz.312.1596465205971;
+        Mon, 03 Aug 2020 07:33:25 -0700 (PDT)
+Received: from yangdongdo-OptiPlex-9010.mioffice.cn ([209.9.72.214])
+        by smtp.gmail.com with ESMTPSA id x20sm15849188pgc.49.2020.08.03.07.33.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Aug 2020 07:33:25 -0700 (PDT)
+From:   Dongdong Yang <contribute.kernel@gmail.com>
+To:     gregkh@linuxfoundation.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-pm@vger.kernel.org, yangdongdong@xiaomi.com,
+        tanggeliang@xiaomi.com, taojun@xiaomi.com, huangqiwu@xiaomi.com,
+        rocking@linux.alibaba.com, fengwei@xiaomi.com,
+        zhangguoquan@xiaomi.com, gulinghua@xiaomi.com, duhui@xiaomi.com
+Subject: [PATCH v3] Provide USF for the portable equipment.
+Date:   Mon,  3 Aug 2020 22:31:14 +0800
+Message-Id: <cover.1596464894.git.yangdongdong@xiaomi.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20200802111540.5384-1-tianjia.zhang@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.3/25892/Sun Aug  2 17:01:36 2020)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/2/20 1:15 PM, Tianjia Zhang wrote:
-> In case of btf_id does not exist, a negative error code -ENOENT
-> should be returned.
-> 
-> Fixes: c93cc69004df3 ("bpftool: add ability to dump BTF types")
-> Cc: Andrii Nakryiko <andriin@fb.com>
-> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+From: Dongdong Yang <yangdongdong@xiaomi.com>
 
-Applied, thanks!
+This patch provides USF(User Sensitive Feedback factor) auxiliary
+cpufreq governor to support high level layer sysfs inodes setting
+for utils adjustment purpose from the identified scenario on portable
+equipment. Because the power consumption and UI response are more cared
+for by portable equipment users. And the "screen off" status stands for
+no request from the user, however, the kernel is still expected to
+notify the user in time on modem, network or powerkey events occur. USF
+provides "sched_usf_non_ux_r" sysfs inode to cut down the utils from
+user space tasks according to high level scenario. In addition, it
+usually hints more cpufreq demand that the preemptive counts of the
+tasks on the cpu burst and over the user expecting completed time such
+as the ratio sysctl_sched_latency to sysctl_sched_min_granularity on
+"screen on" status, which more likely with more UI. The sysfs inodes
+"sched_usf_up_l0_r" and "sched_usf_down_r" have been provided to adjust
+the utils according to high level identified scenario to alloc the
+cpufreq in time.
+
+Changes in v3
+  - Move usf.c to kernel/sched.
+  - Remove trace_printk and debugfs.
+  - Add document draft.
+  - Update comments.
+
+Changes in v2
+  - Add adjust_task_pred_set switch.
+  - Move adjust_task_pred_demand declaration into sched.h
+  - Update comments.
+
+
+Dongdong Yang (1):
+  sched: Provide USF for the portable equipment.
+
+ Documentation/scheduler/sched-ufs.txt |  78 +++++++++
+ drivers/cpufreq/Kconfig               |  11 ++
+ drivers/staging/Kconfig               |   2 +
+ drivers/staging/Makefile              |   1 +
+ include/trace/events/sched.h          |  35 ++++
+ kernel/sched/Makefile                 |   1 +
+ kernel/sched/cpufreq_schedutil.c      |   3 +
+ kernel/sched/sched.h                  |  10 ++
+ kernel/sched/usf.c                    | 305 ++++++++++++++++++++++++++++++++++
+ 9 files changed, 446 insertions(+)
+ create mode 100644 Documentation/scheduler/sched-ufs.txt
+ create mode 100644 kernel/sched/usf.c
+
+-- 
+2.7.4
+
