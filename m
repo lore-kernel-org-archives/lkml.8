@@ -2,54 +2,51 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9049AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A161C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66391207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39947208B3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457896;
-	bh=U/x+9rIQPqWbSNdYG2JR3fT9RsW6BpB3QK6PjdSa/sY=;
+	s=default; t=1596457900;
+	bh=RQXtsysRYwyCWMdXFPZZiEJXB2oU8sawg+DkvrD34Fc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sUj/SQYaU1H49lIxgeBUy149+6dQZzQWLiGEhn6K2YNdDJtu37Rq2cOagDjA6meJk
-	 KxqHmFLVpC6gfpkbWW3fxeDi050sI7xo7dKE8bwZP588ofrn+/WVZSgLMsfsuSDikk
-	 vtU7M2V6JR6csFtZ5/a7HT0BrjEswW9nynfcMYfM=
+	b=P81HqF2glkdcx25opZbtnlpAXSaGyDxRmVPu/Wfvx/jIF/oErN3hiyoI8py2poIwM
+	 41kiKvlqVhd1WtJUV0Q24qCcMpeQo9Air3mp4/T2gmvCKG9HiBABlJ0X8r9ZTLX2Ir
+	 DLQbRXJShuC5nKhVy5wI/6hgRYesGqMi5kHRIDyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729190AbgHCMbg (ORCPT
+        id S1729208AbgHCMbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:31:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59116 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:31:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729188AbgHCMbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:31:32 -0400
+        id S1729197AbgHCMbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:31:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEA7D20775;
-        Mon,  3 Aug 2020 12:31:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFD1220A8B;
+        Mon,  3 Aug 2020 12:31:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457891;
-        bh=U/x+9rIQPqWbSNdYG2JR3fT9RsW6BpB3QK6PjdSa/sY=;
+        s=default; t=1596457894;
+        bh=RQXtsysRYwyCWMdXFPZZiEJXB2oU8sawg+DkvrD34Fc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qWXCLUgIe2aJdCJHNRuoBk7rl4j8ROzKlKOS1EJr+HOB7GEyaEBcjGpL84Xy+49dw
-         hpFZnDuYmnfJP0gHlROBeuvEqH/pC8/K4iR9bdzr6J8EHu9YVyGTgZGOjvQ8MOPRQa
-         qf4M0BayrJUNzR9eBFalzOxvJqzi7mi9VEcblBzo=
+        b=Bx3ehIYtKfG8AilMeAw0qq7Cpb5xzC+7bvB+n0+uAQlJOx3e0o90oydIf2+YcLt+R
+         fxaMlkXWi4oIi+jCxH49zmy2ASUNYy0LrO5DjyAOinZhs8KO9p7TKA5P2nY6lxMBcY
+         sdX6heMsvOI/Scx7J3wgFZnRPxRkYq76ZYVmDlAw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 02/56] media: rc: prevent memory leak in cx23888_ir_probe
-Date:   Mon,  3 Aug 2020 14:19:17 +0200
-Message-Id: <20200803121850.418550105@linuxfoundation.org>
+        stable@vger.kernel.org, Steve Cohen <cohens@codeaurora.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: [PATCH 4.19 20/56] drm: hold gem reference until object is no longer accessed
+Date:   Mon,  3 Aug 2020 14:19:35 +0200
+Message-Id: <20200803121851.320584985@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -62,40 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Steve Cohen <cohens@codeaurora.org>
 
-[ Upstream commit a7b2df76b42bdd026e3106cf2ba97db41345a177 ]
+commit 8490d6a7e0a0a6fab5c2d82d57a3937306660864 upstream.
 
-In cx23888_ir_probe if kfifo_alloc fails the allocated memory for state
-should be released.
+A use-after-free in drm_gem_open_ioctl can happen if the
+GEM object handle is closed between the idr lookup and
+retrieving the size from said object since a local reference
+is not being held at that point. Hold the local reference
+while the object can still be accessed to fix this and
+plug the potential security hole.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Steve Cohen <cohens@codeaurora.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/1595284250-31580-1-git-send-email-cohens@codeaurora.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/media/pci/cx23885/cx23888-ir.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/drm_gem.c |   10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/pci/cx23885/cx23888-ir.c b/drivers/media/pci/cx23885/cx23888-ir.c
-index 00329f668b590..5177479d13d38 100644
---- a/drivers/media/pci/cx23885/cx23888-ir.c
-+++ b/drivers/media/pci/cx23885/cx23888-ir.c
-@@ -1178,8 +1178,11 @@ int cx23888_ir_probe(struct cx23885_dev *dev)
- 		return -ENOMEM;
+--- a/drivers/gpu/drm/drm_gem.c
++++ b/drivers/gpu/drm/drm_gem.c
+@@ -731,9 +731,6 @@ err:
+  * @file_priv: drm file-private structure
+  *
+  * Open an object using the global name, returning a handle and the size.
+- *
+- * This handle (of course) holds a reference to the object, so the object
+- * will not go away until the handle is deleted.
+  */
+ int
+ drm_gem_open_ioctl(struct drm_device *dev, void *data,
+@@ -758,14 +755,15 @@ drm_gem_open_ioctl(struct drm_device *de
  
- 	spin_lock_init(&state->rx_kfifo_lock);
--	if (kfifo_alloc(&state->rx_kfifo, CX23888_IR_RX_KFIFO_SIZE, GFP_KERNEL))
-+	if (kfifo_alloc(&state->rx_kfifo, CX23888_IR_RX_KFIFO_SIZE,
-+			GFP_KERNEL)) {
-+		kfree(state);
- 		return -ENOMEM;
-+	}
+ 	/* drm_gem_handle_create_tail unlocks dev->object_name_lock. */
+ 	ret = drm_gem_handle_create_tail(file_priv, obj, &handle);
+-	drm_gem_object_put_unlocked(obj);
+ 	if (ret)
+-		return ret;
++		goto err;
  
- 	state->dev = dev;
- 	sd = &state->sd;
--- 
-2.25.1
-
+ 	args->handle = handle;
+ 	args->size = obj->size;
+ 
+-	return 0;
++err:
++	drm_gem_object_put_unlocked(obj);
++	return ret;
+ }
+ 
+ /**
 
 
