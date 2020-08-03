@@ -2,124 +2,92 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B844AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BD7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA50820722
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27D4A2065E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:14:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="aQPbnrju"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z3mDxFDC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbgHCXGd (ORCPT
+        id S1729067AbgHCXOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 19:06:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56424 "EHLO
+        Mon, 3 Aug 2020 19:14:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728601AbgHCXGa (ORCPT
+        with ESMTP id S1728891AbgHCXOz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 19:06:30 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EBC9C061757
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 16:06:30 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id j187so36750662qke.11
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 16:06:30 -0700 (PDT)
+        Mon, 3 Aug 2020 19:14:55 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE62AC061757
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 16:14:54 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id g6so28856206ljn.11
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 16:14:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wAUE6jUn5mAwPKG/Q4g9vNtYtEutYsrwV5EW4m6aKOU=;
-        b=aQPbnrjunrUlMKPJZCkOu9GiuwLThf4AAYXaSayDvpYZIe0S0J5kWgrEUjiDBH9If6
-         Nk9QNCh3nxu8CXdo+xB/HLA8CehJ2h3vX8mFXWeKtG4Ehnv/lG4XUFRHkTOmDmx2Gu+t
-         isoDrdskWg1Yq4JaJ2gyFOMQASXHDC3AOHQFV8jXqTkjjMH9OISCb5l703LpOA/etz3n
-         Odi5KMRaQBfXsQRPGtsPxY+h2Mu3CS08N6pHNkSCakHEE7/ei6ZPcuVPeLMgC98An320
-         u+suEZDSIIjWB+8Yuby/tpgOMJBQQty/fmvjkfvWZZTaQmoN4l3AusKGnGnuiBnLxtgp
-         mMmQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6sO5NzAYzF4Z7+StBc9QAjAlFS3zl2TpvbmSdZORkr8=;
+        b=z3mDxFDCffCJcrBtd6tleopU1TkWZh7aIf5piB4S6ZbAN4vshkNGE2uM8a3EpXbNw2
+         HDWKYIpfNu08ks/wAhjJSp/LvJimjZefCuNgsgnSMeyIewJMkiVXVxlX1xNqy8nLNG5Z
+         NZmAtEMJGfoAAevVfsdO9E0grGTjgzgApZbQN/+ur1qVthzIYml5wMagKednsOFsUhq1
+         iJ0sYxcMy14YYfnn8VyWp6+fJEqD/bVjN42PLNqDOIHSF32IYu2qFDAZzxld/8gehaDt
+         Sn4/sNIROdjyaznE3SLVg3ig4zJCGvDYOp4HLpu9rrDt5UbbfP9UwP0ai6yMdSdg+VRG
+         fulQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wAUE6jUn5mAwPKG/Q4g9vNtYtEutYsrwV5EW4m6aKOU=;
-        b=c3t3WGtHCI8ffVMxnlTfg0m0PqBnJnrXiGsxopIsg0apQuh/PBf//X2PU/DNxr0Bov
-         l3Lm8ezOslxaf/0cygwq2BssjxoudtdCvZpuoapzG6Qep1VKUmH56RU6Qvwl+KXNAO3w
-         1RFtX0ChXc//MKSK3QqVt6aTnLVHpFesQawARkn3avxKNn1OffmKqwgTUfi5QdvT2bOb
-         e7Gc8NiV7br783BOE+oYlc33oZN7scTDE+ljNkOqYah+zjVWPrmYHKh/Evy7k1CJHfWK
-         afTzlfbgIYguMfU+mJaCwnTJZAjqMOprQr7iKBLHyABnJifNLdm4x6BjPx7sNpXhyYi5
-         gDWA==
-X-Gm-Message-State: AOAM530TfrKFa1O1D0Q8ImDyBBROJ1U+6pMkPM65bmr3jZhSLAMWCFj1
-        yoSYYyQRtFPdfI0QbDCan+EkNA==
-X-Google-Smtp-Source: ABdhPJyd0Tryhkzt206/Jh2HMiFEcuAT06LpeX3boAviXZIf/eRMRzhVp8FyjqPcmsR8tNjqSdSpPA==
-X-Received: by 2002:a37:649:: with SMTP id 70mr18613154qkg.318.1596495988988;
-        Mon, 03 Aug 2020 16:06:28 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id 9sm22473777qtg.4.2020.08.03.16.06.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 16:06:27 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1k2jXH-0039ha-72; Mon, 03 Aug 2020 20:06:27 -0300
-Date:   Mon, 3 Aug 2020 20:06:27 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Joe Perches <joe@perches.com>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peilin Ye <yepeilin.cs@gmail.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak
- in rds_notify_queue_get()
-Message-ID: <20200803230627.GQ24045@ziepe.ca>
-References: <20200731053333.GB466103@kroah.com>
- <20200731140452.GE24045@ziepe.ca>
- <20200731142148.GA1718799@kroah.com>
- <20200731143604.GF24045@ziepe.ca>
- <20200731171924.GA2014207@kroah.com>
- <20200801053833.GK75549@unreal>
- <20200802221020.GN24045@ziepe.ca>
- <fb7ec4d4ed78e6ae7fa6c04abb24d1c00dc2b0f7.camel@perches.com>
- <20200802222843.GP24045@ziepe.ca>
- <60584f4c0303106b42463ddcfb108ec4a1f0b705.camel@perches.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6sO5NzAYzF4Z7+StBc9QAjAlFS3zl2TpvbmSdZORkr8=;
+        b=Z1aq0rVTLwoVj0ube5iuNtL/2eIvgUkw6JM++FBMOIASA835inGhsiRr02/RiJBkFM
+         BSEv875DTCjYciod3jEHIll4/xp7gcXEhUK/BeugIrRxu4m1mSDHLWdZNKWCDyVlB6wN
+         PhaYY4nbJ6J9z2tT+7EtLHeYty1fJMS8gPQm91Bmiw+MVVAho3FKr8S6740tgovN4gHW
+         7XJCIiV8SomeOHwvjzDo8RfQ/ioIHsNvmCapM9DgfFHIgiD24rnv5EHTOOCSVZQJ3pzd
+         2+NZWMBjBy2Kg5oWvTHKyf1SmRpmT/xjPHVx7SbQiISsvqv8+e99/m7yuJeuLCE4Ak4W
+         TNNw==
+X-Gm-Message-State: AOAM530/G3bn7t4Sjou5zOQ/1tq2Ub9+m5ybGeu7Fg5QFqRC1YUIutGs
+        zhl8pIB3OOCR22xPDLRr3jxWVKo0ezCghMoWStgARg==
+X-Google-Smtp-Source: ABdhPJyxwO/dplsY1goNzKqNCb1LxmqZzJk7lXk1oGBimGh1jlNZw3ndPPcXRNzyk/QX4Qc7VgsDZWF1sNLM37sXc88=
+X-Received: by 2002:a2e:90e:: with SMTP id 14mr9048672ljj.293.1596496492990;
+ Mon, 03 Aug 2020 16:14:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <60584f4c0303106b42463ddcfb108ec4a1f0b705.camel@perches.com>
+References: <20200722153146.8767-1-dmurphy@ti.com> <20200722153146.8767-4-dmurphy@ti.com>
+In-Reply-To: <20200722153146.8767-4-dmurphy@ti.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 4 Aug 2020 01:14:42 +0200
+Message-ID: <CACRpkdYGvPfHoEeTPs5R1wt4SzW0KVRxmwu_QEfLD99X_6f=zA@mail.gmail.com>
+Subject: Re: [PATCH v32 3/6] ARM: defconfig: u8500: Add LP55XX_COMMON config flag
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
+        =?UTF-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 02, 2020 at 03:45:40PM -0700, Joe Perches wrote:
-> On Sun, 2020-08-02 at 19:28 -0300, Jason Gunthorpe wrote:
-> > On Sun, Aug 02, 2020 at 03:23:58PM -0700, Joe Perches wrote:
-> > > On Sun, 2020-08-02 at 19:10 -0300, Jason Gunthorpe wrote:
-> > > > On Sat, Aug 01, 2020 at 08:38:33AM +0300, Leon Romanovsky wrote:
-> > > > 
-> > > > > I'm using {} instead of {0} because of this GCC bug.
-> > > > > https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53119
-> > > > 
-> > > > This is why the {} extension exists..
-> > > 
-> > > There is no guarantee that the gcc struct initialization {}
-> > > extension also zeros padding.
-> >
-> > We just went over this. Yes there is, C11 requires it.
-> 
-> c11 is not c90.  The kernel uses c90.
+On Wed, Jul 22, 2020 at 5:32 PM Dan Murphy <dmurphy@ti.com> wrote:
 
-The kernel already relies on a lot of C11/C99 features and
-behaviors. For instance Linus just bumped the minimum compiler version
-so that C11's _Generic is usable.
+> The dependencies for the LP55XX LED drivers have been updated so that
+> the child devices (i.e. LP5521) now depends on the LP55XX_COMMON config
+> flag as opposed to the device selecting the LP55XX_COMMON flag.  The
+> LP55XX_COMMON needs to be set in the defconfig.
+>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 
-Why do you think this particular part of C11 shouldn't be relied on?
+OK then I guess you have good reasons to have it like this.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Jason
+Yours,
+Linus Walleij
