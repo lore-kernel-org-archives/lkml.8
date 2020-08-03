@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDD5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D4AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31555208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9378D204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458028;
-	bh=x4UMX5p252GYrKJ/aCarb85LZB57EhVLYClq7cIfOP0=;
+	s=default; t=1596458033;
+	bh=xUsj0SvQPFOPJt9RmavoyhnEOWip1p8YnmuqOsaFhaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RiNMJHtkWvqbO3sPVDiz9sPyUG8so5s7xJ0RCqAuLLjc3FtZzyxu0CHA4rQ7z6u2n
-	 wNOh9m1viL57rq1Sg7SWSeKa1nEbQ2ge5yUwpBxIIBo3VuCXM5CWGj+OM30RCjZ9dC
-	 h7F+JRAVqM+4Wg3tork+vmPWqsnJjTcL87+logbQ=
+	b=WIQTGgQ/7+ePRfxOD656YqN4CCiFE7kE51Y6jLubdouKznyFHidKw6D20V2fvvlNR
+	 olYF/4WR3Qd2t87I9/ywAxpOoz9kOiUn8fl/QAJplS+tz65dWhL4sJnyuYWq18tZ8T
+	 p7flHu2QF7tZ6ZdLifbveECOym0XXi84zzE8SXd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbgHCMdr (ORCPT
+        id S1729104AbgHCMdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:33:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33698 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:33:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729477AbgHCMdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:33:42 -0400
+        id S1729488AbgHCMds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:33:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74FCC20825;
-        Mon,  3 Aug 2020 12:33:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4410520825;
+        Mon,  3 Aug 2020 12:33:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596458021;
-        bh=x4UMX5p252GYrKJ/aCarb85LZB57EhVLYClq7cIfOP0=;
+        s=default; t=1596458027;
+        bh=xUsj0SvQPFOPJt9RmavoyhnEOWip1p8YnmuqOsaFhaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lfNh+zIa+QnMSdZb/vBdzQhqPLvzgii4CrnElbOpWul5FNkRRswP/DkdxUGmbwIbV
-         zGT5AZy1OzvPoEZgKJf8BHfjlMqOoGW4UhdrIQijJ9Oh/JLJAKrN8TEOPW4UJ5+8yH
-         +CwDkCdvhsrxqSkM85II0EEr7CVMzLnKhRe+SPB8=
+        b=pnulWSCFm7aKIXumpgub6qnDzxU6l21jneg/jTXUUz14L6TN3OoYDmIOphaTYJEGD
+         MUrs1KRwOPVVXOKDn4ZOJYwtIWIDkPwfypxKUMyraJn4b4q71twJ/bfSsyZordObnN
+         tc8OW8H1VGWeLVzy8rXbdZOpCLNoGOYVEqGZqXDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.14 10/51] wireless: Use offsetof instead of custom macro.
-Date:   Mon,  3 Aug 2020 14:19:55 +0200
-Message-Id: <20200803121849.964675445@linuxfoundation.org>
+        stable@vger.kernel.org, Amit Klein <aksecurity@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>, Willy Tarreau <w@1wt.eu>
+Subject: [PATCH 4.14 12/51] random32: update the net random state on interrupt and activity
+Date:   Mon,  3 Aug 2020 14:19:57 +0200
+Message-Id: <20200803121850.075432902@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121849.488233135@linuxfoundation.org>
 References: <20200803121849.488233135@linuxfoundation.org>
@@ -60,67 +65,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pi-Hsun Shih <pihsun@chromium.org>
+From: Willy Tarreau <w@1wt.eu>
 
-commit 6989310f5d4327e8595664954edd40a7f99ddd0d upstream.
+commit f227e3ec3b5cad859ad15666874405e8c1bbc1d4 upstream.
 
-Use offsetof to calculate offset of a field to take advantage of
-compiler built-in version when possible, and avoid UBSAN warning when
-compiling with Clang:
+This modifies the first 32 bits out of the 128 bits of a random CPU's
+net_rand_state on interrupt or CPU activity to complicate remote
+observations that could lead to guessing the network RNG's internal
+state.
 
-==================================================================
-UBSAN: Undefined behaviour in net/wireless/wext-core.c:525:14
-member access within null pointer of type 'struct iw_point'
-CPU: 3 PID: 165 Comm: kworker/u16:3 Tainted: G S      W         4.19.23 #43
-Workqueue: cfg80211 __cfg80211_scan_done [cfg80211]
-Call trace:
- dump_backtrace+0x0/0x194
- show_stack+0x20/0x2c
- __dump_stack+0x20/0x28
- dump_stack+0x70/0x94
- ubsan_epilogue+0x14/0x44
- ubsan_type_mismatch_common+0xf4/0xfc
- __ubsan_handle_type_mismatch_v1+0x34/0x54
- wireless_send_event+0x3cc/0x470
- ___cfg80211_scan_done+0x13c/0x220 [cfg80211]
- __cfg80211_scan_done+0x28/0x34 [cfg80211]
- process_one_work+0x170/0x35c
- worker_thread+0x254/0x380
- kthread+0x13c/0x158
- ret_from_fork+0x10/0x18
-===================================================================
+Note that depending on some network devices' interrupt rate moderation
+or binding, this re-seeding might happen on every packet or even almost
+never.
 
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Link: https://lore.kernel.org/r/20191204081307.138765-1-pihsun@chromium.org
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+In addition, with NOHZ some CPUs might not even get timer interrupts,
+leaving their local state rarely updated, while they are running
+networked processes making use of the random state.  For this reason, we
+also perform this update in update_process_times() in order to at least
+update the state when there is user or system activity, since it's the
+only case we care about.
+
+Reported-by: Amit Klein <aksecurity@gmail.com>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Willy Tarreau <w@1wt.eu>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/uapi/linux/wireless.h |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/char/random.c  |    1 +
+ include/linux/random.h |    3 +++
+ kernel/time/timer.c    |    8 ++++++++
+ lib/random32.c         |    2 +-
+ 4 files changed, 13 insertions(+), 1 deletion(-)
 
---- a/include/uapi/linux/wireless.h
-+++ b/include/uapi/linux/wireless.h
-@@ -74,6 +74,8 @@
- #include <linux/socket.h>		/* for "struct sockaddr" et al	*/
- #include <linux/if.h>			/* for IFNAMSIZ and co... */
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -1246,6 +1246,7 @@ void add_interrupt_randomness(int irq, i
  
-+#include <stddef.h>                     /* for offsetof */
+ 	fast_mix(fast_pool);
+ 	add_interrupt_bench(cycles);
++	this_cpu_add(net_rand_state.s1, fast_pool->pool[cycles & 3]);
+ 
+ 	if (unlikely(crng_init == 0)) {
+ 		if ((fast_pool->count >= 64) &&
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -9,6 +9,7 @@
+ 
+ #include <linux/list.h>
+ #include <linux/once.h>
++#include <linux/percpu.h>
+ 
+ #include <uapi/linux/random.h>
+ 
+@@ -116,6 +117,8 @@ struct rnd_state {
+ 	__u32 s1, s2, s3, s4;
+ };
+ 
++DECLARE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
 +
- /***************************** VERSION *****************************/
- /*
-  * This constant is used to know the availability of the wireless
-@@ -1090,8 +1092,7 @@ struct iw_event {
- /* iw_point events are special. First, the payload (extra data) come at
-  * the end of the event, so they are bigger than IW_EV_POINT_LEN. Second,
-  * we omit the pointer, so start at an offset. */
--#define IW_EV_POINT_OFF (((char *) &(((struct iw_point *) NULL)->length)) - \
--			  (char *) NULL)
-+#define IW_EV_POINT_OFF offsetof(struct iw_point, length)
- #define IW_EV_POINT_LEN	(IW_EV_LCP_LEN + sizeof(struct iw_point) - \
- 			 IW_EV_POINT_OFF)
+ u32 prandom_u32_state(struct rnd_state *state);
+ void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
+ void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -44,6 +44,7 @@
+ #include <linux/sched/debug.h>
+ #include <linux/slab.h>
+ #include <linux/compat.h>
++#include <linux/random.h>
  
+ #include <linux/uaccess.h>
+ #include <asm/unistd.h>
+@@ -1595,6 +1596,13 @@ void update_process_times(int user_tick)
+ 	scheduler_tick();
+ 	if (IS_ENABLED(CONFIG_POSIX_TIMERS))
+ 		run_posix_cpu_timers(p);
++
++	/* The current CPU might make use of net randoms without receiving IRQs
++	 * to renew them often enough. Let's update the net_rand_state from a
++	 * non-constant value that's not affine to the number of calls to make
++	 * sure it's updated when there's some activity (we don't care in idle).
++	 */
++	this_cpu_add(net_rand_state.s1, rol32(jiffies, 24) + user_tick);
+ }
+ 
+ /**
+--- a/lib/random32.c
++++ b/lib/random32.c
+@@ -48,7 +48,7 @@ static inline void prandom_state_selftes
+ }
+ #endif
+ 
+-static DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
++DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
+ 
+ /**
+  *	prandom_u32_state - seeded pseudo-random number generator.
 
 
