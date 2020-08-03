@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22806C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE75C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC8BB2054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C21B2054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458009;
-	bh=OtnXhp2U8pIrjCX+A+q845AQgjyLC0mf+i8t9s0aHRk=;
+	s=default; t=1596458012;
+	bh=p6TsHCvvkp3SLABaDg9z5pQt9RWPKGLg3o7T1fgNJ4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bewFRw99w6gBec1Olj5rsZ7xtoy/uKchRD78i8amS30mxNxwphIQUu1PNFSfpYhpD
-	 fSWQ5GNalkGedjpFa1O1SfF2fi4dbZaBEdZD+HZ7BYELcZk2eASPoARzAyJN/DWG/H
-	 SIplY7RtY/TT9KqjqSxjux7FlrwozytaaBwoHqas=
+	b=a1mLPsnjqIqGVGhUJywrF01EYZy3G0tJEY9DnFxVC/nbNvve0E2MI3VyHdyiyrDJA
+	 2pu00ir9kTdKmIHOo3pkb7SP83nrYKxKEbViE70UzqX0rN2GfgT0NnRSkf9Mfo4+vr
+	 5dU4u+H81eZQroHNlhViqHIUzfeCf30lI5FGebIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729442AbgHCMd2 (ORCPT
+        id S1728875AbgHCMdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:33:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33270 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:33:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729419AbgHCMdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:33:22 -0400
+        id S1729427AbgHCMdZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:33:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE90C2076B;
-        Mon,  3 Aug 2020 12:33:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C1C0204EC;
+        Mon,  3 Aug 2020 12:33:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596458001;
-        bh=OtnXhp2U8pIrjCX+A+q845AQgjyLC0mf+i8t9s0aHRk=;
+        s=default; t=1596458003;
+        bh=p6TsHCvvkp3SLABaDg9z5pQt9RWPKGLg3o7T1fgNJ4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mAY0TMwEkYW6w4SE1TZ8C7lLGqgebhzQjfvS6TKOrJPfUPEyXS58Mt/JWNL7ZY5RB
-         rLy4B1GUpGSN/9wnWgL6J27ObyvMSChUj2iltPI7GPnvXWDiXJHuKf6v0EEH0IdEZ/
-         FgQprrz7AtNr2xvKiUjHc3gINpPD4VkX3cTtHV9g=
+        b=BYsB6juNOKcRjjwM2vtSMzFg42eHGna7Gft+TVBnnT6pS3NjnPDAz/HZdNC0Y14zY
+         RxrxGxVbvXe3vS6jXJnUYeu/K9E3Hi3PyaQyHGuu9kUjq+5k5bIVf34GUN6hjblZ1f
+         QDi7mEf29/DbPziCgkFbWS8f06taOJVzibCE7bPg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tanner Love <tannerlove@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 29/56] selftests/net: psock_fanout: fix clang issues for target arch PowerPC
-Date:   Mon,  3 Aug 2020 14:19:44 +0200
-Message-Id: <20200803121851.757460525@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Rich Felker <dalias@libc.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 30/56] sh: Fix validation of system call number
+Date:   Mon,  3 Aug 2020 14:19:45 +0200
+Message-Id: <20200803121851.803645933@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -61,40 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tanner Love <tannerlove@google.com>
+From: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
 
-[ Upstream commit 64f9ede2274980076423583683d44480909b7a40 ]
+[ Upstream commit 04a8a3d0a73f51c7c2da84f494db7ec1df230e69 ]
 
-Clang 9 threw:
-warning: format specifies type 'unsigned short' but the argument has \
-type 'int' [-Wformat]
-                typeflags, PORT_BASE, PORT_BASE + port_off);
+The slow path for traced system call entries accessed a wrong memory
+location to get the number of the maximum allowed system call number.
+Renumber the numbered "local" label for the correct location to avoid
+collisions with actual local labels.
 
-Tested: make -C tools/testing/selftests TARGETS="net" run_tests
-
-Fixes: 77f65ebdca50 ("packet: packet fanout rollover during socket overload")
-Signed-off-by: Tanner Love <tannerlove@google.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
+Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Fixes: f3a8308864f920d2 ("sh: Add a few missing irqflags tracing markers.")
+Signed-off-by: Rich Felker <dalias@libc.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/psock_fanout.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/sh/kernel/entry-common.S | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/net/psock_fanout.c b/tools/testing/selftests/net/psock_fanout.c
-index bd9b9632c72b0..f496ba3b1cd37 100644
---- a/tools/testing/selftests/net/psock_fanout.c
-+++ b/tools/testing/selftests/net/psock_fanout.c
-@@ -364,7 +364,8 @@ static int test_datapath(uint16_t typeflags, int port_off,
- 	int fds[2], fds_udp[2][2], ret;
- 
- 	fprintf(stderr, "\ntest: datapath 0x%hx ports %hu,%hu\n",
--		typeflags, PORT_BASE, PORT_BASE + port_off);
-+		typeflags, (uint16_t)PORT_BASE,
-+		(uint16_t)(PORT_BASE + port_off));
- 
- 	fds[0] = sock_fanout_open(typeflags, 0);
- 	fds[1] = sock_fanout_open(typeflags, 0);
+diff --git a/arch/sh/kernel/entry-common.S b/arch/sh/kernel/entry-common.S
+index 28cc61216b649..ed5b758c650d7 100644
+--- a/arch/sh/kernel/entry-common.S
++++ b/arch/sh/kernel/entry-common.S
+@@ -203,7 +203,7 @@ syscall_trace_entry:
+ 	mov.l	@(OFF_R7,r15), r7   ! arg3
+ 	mov.l	@(OFF_R3,r15), r3   ! syscall_nr
+ 	!
+-	mov.l	2f, r10			! Number of syscalls
++	mov.l	6f, r10			! Number of syscalls
+ 	cmp/hs	r10, r3
+ 	bf	syscall_call
+ 	mov	#-ENOSYS, r0
+@@ -357,7 +357,7 @@ ENTRY(system_call)
+ 	tst	r9, r8
+ 	bf	syscall_trace_entry
+ 	!
+-	mov.l	2f, r8			! Number of syscalls
++	mov.l	6f, r8			! Number of syscalls
+ 	cmp/hs	r8, r3
+ 	bt	syscall_badsys
+ 	!
+@@ -396,7 +396,7 @@ syscall_exit:
+ #if !defined(CONFIG_CPU_SH2)
+ 1:	.long	TRA
+ #endif
+-2:	.long	NR_syscalls
++6:	.long	NR_syscalls
+ 3:	.long	sys_call_table
+ 7:	.long	do_syscall_trace_enter
+ 8:	.long	do_syscall_trace_leave
 -- 
 2.25.1
 
