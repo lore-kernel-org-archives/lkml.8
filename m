@@ -2,117 +2,94 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A763C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE8EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC1B2070A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C60322075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:57:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GEKOq4tq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgHCI52 (ORCPT
+        id S1726586AbgHCI5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 04:57:28 -0400
-Received: from mga17.intel.com ([192.55.52.151]:51372 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725806AbgHCI50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 04:57:26 -0400
-IronPort-SDR: 7fUg7uEm7MtdQAe5vwUgi0R/xAYEtx4a19YRhi5c0Eo+QXTGePYKfLE1pC1viTxF+fY2yng/Km
- bxnPfx97SgSA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="132126589"
-X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
-   d="scan'208";a="132126589"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 01:57:25 -0700
-IronPort-SDR: JK5u0nRI6ANficLgflI38qkeaJUkSIEq5iob74fmR3fksiXcD3CCwuq0KTyBu2bO7ciksosoe+
- J9ZAbCPwSYbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
-   d="scan'208";a="323978428"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 03 Aug 2020 01:57:22 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1k2WHZ-005tfH-PH; Mon, 03 Aug 2020 11:57:21 +0300
-Date:   Mon, 3 Aug 2020 11:57:21 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Vitor Massaru Iha <vitor@massaru.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, fkostenzer@live.at,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2] lib: kunit: Convert test_sort to KUnit test
-Message-ID: <20200803085721.GX3703480@smile.fi.intel.com>
-References: <20200729191151.476368-1-vitor@massaru.org>
- <20200729191948.GZ3703480@smile.fi.intel.com>
- <CAFd5g47MGZTo0k4s1ohRNT09D=NrsBQHOHQwLVq=uh8ezCuAQA@mail.gmail.com>
+        Mon, 3 Aug 2020 04:57:41 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:34318 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725806AbgHCI5k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 04:57:40 -0400
+X-UUID: 96cee2b537f1408297909ca48114b1b5-20200803
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=ERSI7lvLnv/tu/AUYaGM8CHfyvlRJpUTDWsBR5j2Xvw=;
+        b=GEKOq4tqqwW6xqawGaHXbMe+hHC8exyqRuyublY1HCUObDpmnSVWMDAd+BWB52HClfd1yKR+5/qR7vVfq11eAxXUKJcXbv8qJO0Z/kDRIWuOv3eVmD9OylJ4eWaeoslnoa9PIxffOUcorgcZMzfYjQ6+5jRaRKjfb9qq/sTHwPM=;
+X-UUID: 96cee2b537f1408297909ca48114b1b5-20200803
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <hsin-hsiung.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 160316854; Mon, 03 Aug 2020 16:57:38 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 3 Aug 2020 16:57:35 +0800
+Received: from mtksdaap41.mediatek.inc (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 3 Aug 2020 16:57:35 +0800
+From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Liam Girdwood <lgirdwood@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <srv_heupstream@mediatek.com>
+Subject: [PATCH 1/3] spmi: Add driver shutdown support
+Date:   Mon, 3 Aug 2020 16:57:25 +0800
+Message-ID: <1596445047-2975-2-git-send-email-hsin-hsiung.wang@mediatek.com>
+X-Mailer: git-send-email 2.6.4
+In-Reply-To: <1596445047-2975-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+References: <1596445047-2975-1-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFd5g47MGZTo0k4s1ohRNT09D=NrsBQHOHQwLVq=uh8ezCuAQA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 12:59:28PM -0700, Brendan Higgins wrote:
-> On Wed, Jul 29, 2020 at 12:19 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Wed, Jul 29, 2020 at 04:11:51PM -0300, Vitor Massaru Iha wrote:
-
-...
-
-> > >  lib/{test_sort.c => sort_kunit.c} | 31 +++++++++++++++----------------
-> >
-> > Still opened question why kunit is a suffix? Can't we leave same name? Can't we
-> > do it rather prefix?
-> 
-> Sorry to jump in now; I thought Vitor's reply with a link to the new
-> proposed documentation[1] addressed this. The naming convention issue
-> came up about a month ago[2]. The people in the discussion (including
-> myself) came to an agreement on _kunit.c. That being said, the
-> documentation hasn't been accepted yet, so if you really feel strongly
-> about it, now is the time to change it.
-
-My argument is to do something like
-
-  - ls .../test* vs. ls .../*_kunit.c
-
-  - use shell completion vs. no completion when looking if there is a test
-    module for something
-
-But I agree that this is matter of style.
-
-> All that being said, I would rather not discuss that issue here for
-> the benefit of the participants in the preceding discussions.
-> 
-> I posted lore links for the relevant threads, which should be easy
-> enough to In-Reply-To your way into. Nevertheless, if it makes it
-> easier, let me know and I can CC you into the discussions.
-
-No need. I think you have enough clever folks and good ideas behind this. Just
-put a reference to all these conversion patches to the summary of pros and cons
-of renaming.
-
-> [1] https://lore.kernel.org/linux-kselftest/20200620054944.167330-1-davidgow@google.com/T/#u
-> [2] https://lore.kernel.org/linux-kselftest/202006141005.BA19A9D3@keescook/t/#u
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+QWRkIG5ldyBzaHV0ZG93bigpIG1ldGhvZC4gIFVzZSBpdCBpbiB0aGUgc3RhbmRhcmQgZHJpdmVy
+IG1vZGVsIHN0eWxlLg0KDQpTaWduZWQtb2ZmLWJ5OiBIc2luLUhzaXVuZyBXYW5nIDxoc2luLWhz
+aXVuZy53YW5nQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvc3BtaS9zcG1pLmMgIHwgMTIg
+KysrKysrKysrKysrDQogZHJpdmVycy9zcG1pL3NwbWkuYyAgfCAxMiArKysrKysrKysrKysNCiBp
+bmNsdWRlL2xpbnV4L3NwbWkuaCB8ICAxICsNCiAyIGZpbGVzIGNoYW5nZWQsIDEzIGluc2VydGlv
+bnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3BtaS9zcG1pLmMgYi9kcml2ZXJzL3NwbWkv
+c3BtaS5jDQppbmRleCBjMTZiNjBmLi41ZmRlMDI0IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9zcG1p
+L3NwbWkuYw0KKysrIGIvZHJpdmVycy9zcG1pL3NwbWkuYw0KQEAgLTM1Nyw2ICszNTcsMTcgQEAg
+c3RhdGljIGludCBzcG1pX2Rydl9yZW1vdmUoc3RydWN0IGRldmljZSAqZGV2KQ0KIAlyZXR1cm4g
+MDsNCiB9DQogDQorc3RhdGljIHZvaWQgc3BtaV9kcnZfc2h1dGRvd24oc3RydWN0IGRldmljZSAq
+ZGV2KQ0KK3sNCisJY29uc3Qgc3RydWN0IHNwbWlfZHJpdmVyICpzZHJ2ID0gdG9fc3BtaV9kcml2
+ZXIoZGV2LT5kcml2ZXIpOw0KKw0KKwlpZiAoIXNkcnYpDQorCQlyZXR1cm47DQorDQorDQorCWlm
+IChzZHJ2LT5zaHV0ZG93bikNCisJCXNkcnYtPnNodXRkb3duKHRvX3NwbWlfZGV2aWNlKGRldikp
+Ow0KK30NCit9DQorDQogc3RhdGljIGludCBzcG1pX2Rydl91ZXZlbnQoc3RydWN0IGRldmljZSAq
+ZGV2LCBzdHJ1Y3Qga29ial91ZXZlbnRfZW52ICplbnYpDQogew0KIAlpbnQgcmV0Ow0KQEAgLTM3
+Myw2ICszODQsNyBAQCBzdGF0aWMgc3RydWN0IGJ1c190eXBlIHNwbWlfYnVzX3R5cGUgPSB7DQpA
+QCAtMzczLDYgKzM4NCw3IEBAIHN0YXRpYyBzdHJ1Y3QgYnVzX3R5cGUgc3BtaV9idXNfdHlwZSA9
+IHsNCiAJLm1hdGNoCQk9IHNwbWlfZGV2aWNlX21hdGNoLA0KIAkucHJvYmUJCT0gc3BtaV9kcnZf
+cHJvYmUsDQogCS5yZW1vdmUJCT0gc3BtaV9kcnZfcmVtb3ZlLA0KKwkuc2h1dGRvd24JPSBzcG1p
+X2Rydl9zaHV0ZG93biwNCiAJLnVldmVudAkJPSBzcG1pX2Rydl91ZXZlbnQsDQogfTsNCiANCmRp
+ZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3NwbWkuaCBiL2luY2x1ZGUvbGludXgvc3BtaS5oDQpp
+bmRleCAzOTRhM2Y2Li43MjliY2JmIDEwMDY0NA0KLS0tIGEvaW5jbHVkZS9saW51eC9zcG1pLmgN
+CisrKyBiL2luY2x1ZGUvbGludXgvc3BtaS5oDQpAQCAtMTM4LDYgKzEzOCw3IEBAIHN0cnVjdCBz
+cG1pX2RyaXZlciB7DQogCXN0cnVjdCBkZXZpY2VfZHJpdmVyIGRyaXZlcjsNCiAJaW50CSgqcHJv
+YmUpKHN0cnVjdCBzcG1pX2RldmljZSAqc2Rldik7DQogCXZvaWQJKCpyZW1vdmUpKHN0cnVjdCBz
+cG1pX2RldmljZSAqc2Rldik7DQorCXZvaWQJKCpzaHV0ZG93bikoc3RydWN0IHNwbWlfZGV2aWNl
+ICpzZGV2KTsNCiB9Ow0KIA0KIHN0YXRpYyBpbmxpbmUgc3RydWN0IHNwbWlfZHJpdmVyICp0b19z
+cG1pX2RyaXZlcihzdHJ1Y3QgZGV2aWNlX2RyaXZlciAqZCkNCi0tIA0KMi42LjQNCg==
 
