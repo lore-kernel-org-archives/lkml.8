@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBA4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 991FB206E9
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E448A206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:08:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="i2HU2cEI"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kwxcYa7g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgHCHI0 (ORCPT
+        id S1726586AbgHCHIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 03:08:26 -0400
-Received: from mail-db8eur05on2079.outbound.protection.outlook.com ([40.107.20.79]:36160
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        Mon, 3 Aug 2020 03:08:46 -0400
+Received: from mail-eopbgr150052.outbound.protection.outlook.com ([40.107.15.52]:25506
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725831AbgHCHIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 03:08:07 -0400
+        id S1726080AbgHCHIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 03:08:21 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E1P6vsWgtg6wiEf88Ol9Bu/jFWGddkxaodt78oDJYrTa9KdO0/NvY0fILAGmbybbIify874BB2uIeDD5W0j6suQTRXSoVQ+BhiLPHM9PdxCjlKjRIoQYJHKxJc864rcXFHOCWQbh72nfSnFYf7P1i0QHT78I20fCoXnpsEf0lkBIgvpvmCYEUYCBV6EaBxMY0z9RlMJo5639QdsKo+lEHhXQBXirwV488TOCHhzljslWyvqnm3/rU7zUp0KBBIDoNIWGRPsLfLRhTFwZ/hTwB7VzSCz3fkSEsRZD1VSIt6yWK7buaYs6Sihe/PQiQ03OeEUpyhXvCusISaJZceqnXA==
+ b=R7ba+hc/hPKOXTg5YtH9gr4M7NWOsB7qQZT9TQYpz1APn9XR4xr6QOML2RtsQugVjXu4Tk6rdbp5d6n7MV6T9oNN0tin5L3dcRM1PSWxDuxiNjoYHCvC9GqSlULRal3NGctAzbnCam1mmgaUPzHc8X+MAfBpVy/NNhUbSaQ55IXBzxCzo7DCE44n5Hw6j1tiss1DIVxCcCO0Jv9NL+A/XEXiwtOKXZ8o51CR8dWIENmrlSz9mYYBLZMSD7PgZ7kHpxSUet9B156FwPclSOpEPzWgQlTjvTzskvTHxSKLHCAY+IeG4cW2SAqvjfOk4a6ptzRJGvlxltsnFj//f2w7fA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D5EXPTd8jsItq9NYZoNS03BSXePTOwvGcM8pXbUG6zg=;
- b=E0J/H2ekjzHGQ7rmU7C/pI0kJafyNgiruJ/2mO1hz+yWvF9dexMB4QyWkDZD15fqGjEdbzGyvY21UdchtpDUTRHESqxx5Ua6KyrSCek/Nls3Lx4gL+9rL3ecIvm26nhLVirmgFhijQwwCEJ3IbCfQSr+HPjzpRRpg7GeRPtTJvEKBUTyMBs0iyG4zB52W8XgGG+1fRmex7zZbpcWSNIG7Vg4WzCb2hCDldnnSkcT34cGfIqmkuj3z4R6tLfANurrfa7EAvt/qjB6XQKiAA87RX22HGPeOCr5Vkj6nMuyXk7Dv/rxGWKoVDHNa4lv6ACN6mYwKHMH8REa/vQJm1OT1Q==
+ bh=5FKqNu/Ojl5Pg1nVU7wPMXNjc2QV8IFxQ/zjRMykop4=;
+ b=Vm/VyddnVFKgCVoA79dsKFZx1TrjIWcKCcdyOY1wUl1O+ZxNOtkdBr1ZiTMOHA36fsjm1dDaWbBbuADPNWyBskuMggPUrfAligA7FAcaO9tg+h3keDxXXAVXyGPkyu5lLYKjfp/VqLXBKedYyCPkRfbnnBrunwnVQi3FvF+OZnlZInfBvn+IOqm/mNA0l32VkrBzD4keVrVAItTPrKE/o1TCv6GkTbe/VOm1td1+d1AOsHOoUmvXHTKeyu6Hw6jz7WkWxATn2IiAcT99M8vojfUMiMD4trBpS3GzIEjVAx1U4x3qX+Dq9kGOS5G3QmztQono7xeF1fcsUr38JjSBRA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D5EXPTd8jsItq9NYZoNS03BSXePTOwvGcM8pXbUG6zg=;
- b=i2HU2cEI89cst8Nm2xwFox9nXndaIUBdaR6k8cINvR12zZKLBfXHLEpfQM+u+u/vlbE9WqSZSEoI+aSerJHQIYB6f92kSSQKN85FCLLmIWn1+kP4iQ+LoiyIManG+1LAno5zcHf0D1qtU8OY7cdtIU2Yi6wuoXVdGQ+ovi+NxRQ=
+ bh=5FKqNu/Ojl5Pg1nVU7wPMXNjc2QV8IFxQ/zjRMykop4=;
+ b=kwxcYa7gNSuSIkxHl2tKvjI9yXAZI3iBGlEdzrgzMESNT+wuJXya4M9Ov4HFkkmvGBoApYs7x3keRNEcGFyO4IbnLzFpuwBrotHd9JU0dewWO/0hV3UQnHCxXS2BtgeaHo1Hk6BBU2oiC+7WgxDaHWkGdSujfEH+NvNXSYcLPAE=
 Authentication-Results: nxp.com; dkim=none (message not signed)
  header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
 Received: from AM0PR04MB5443.eurprd04.prod.outlook.com (2603:10a6:208:119::33)
- by AM0PR04MB5233.eurprd04.prod.outlook.com (2603:10a6:208:c9::27) with
+ by AM0PR04MB4356.eurprd04.prod.outlook.com (2603:10a6:208:5c::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Mon, 3 Aug
- 2020 07:08:02 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.21; Mon, 3 Aug
+ 2020 07:08:04 +0000
 Received: from AM0PR04MB5443.eurprd04.prod.outlook.com
  ([fe80::f0b7:8439:3b5a:61bd]) by AM0PR04MB5443.eurprd04.prod.outlook.com
  ([fe80::f0b7:8439:3b5a:61bd%7]) with mapi id 15.20.3239.021; Mon, 3 Aug 2020
- 07:08:02 +0000
+ 07:08:04 +0000
 From:   Florinel Iordache <florinel.iordache@nxp.com>
 To:     madalin.bucur@nxp.com, davem@davemloft.net, kuba@kernel.org,
         netdev@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Florinel Iordache <florinel.iordache@nxp.com>
-Subject: [PATCH net v3 1/5] fsl/fman: use 32-bit unsigned integer
-Date:   Mon,  3 Aug 2020 10:07:30 +0300
-Message-Id: <1596438454-4895-2-git-send-email-florinel.iordache@nxp.com>
+Subject: [PATCH net v3 3/5] fsl/fman: fix unreachable code
+Date:   Mon,  3 Aug 2020 10:07:32 +0300
+Message-Id: <1596438454-4895-4-git-send-email-florinel.iordache@nxp.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1596438454-4895-1-git-send-email-florinel.iordache@nxp.com>
 References: <1596438454-4895-1-git-send-email-florinel.iordache@nxp.com>
@@ -66,64 +66,58 @@ X-ClientProxiedBy: AM0PR07CA0007.eurprd07.prod.outlook.com
  (2603:10a6:208:119::33)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fsr-ub1464-128.ea.freescale.net (83.217.231.2) by AM0PR07CA0007.eurprd07.prod.outlook.com (2603:10a6:208:ac::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3261.13 via Frontend Transport; Mon, 3 Aug 2020 07:08:02 +0000
+Received: from fsr-ub1464-128.ea.freescale.net (83.217.231.2) by AM0PR07CA0007.eurprd07.prod.outlook.com (2603:10a6:208:ac::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3261.13 via Frontend Transport; Mon, 3 Aug 2020 07:08:03 +0000
 X-Mailer: git-send-email 1.9.1
 X-Originating-IP: [83.217.231.2]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 9373fc1e-5a4b-4439-1981-08d8377bf64d
-X-MS-TrafficTypeDiagnostic: AM0PR04MB5233:
+X-MS-Office365-Filtering-Correlation-Id: 3ed018de-12da-4cde-7828-08d8377bf70e
+X-MS-TrafficTypeDiagnostic: AM0PR04MB4356:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB5233C70C56B672E975FC911BFB4D0@AM0PR04MB5233.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-Microsoft-Antispam-PRVS: <AM0PR04MB43567AA24B53BB9527E62FFAFB4D0@AM0PR04MB4356.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +anoBJC7a4FaSn5ix/lMYptTEtGH8t1QdanNfHO+F0IVoKPP3UMO/MNeJragPjBpgNl7dv7EcTiKsMwPk1s8GdAulxMlGXcPiXlyeTfgxFmE+7ajPTI4PErs7DvQq+oQk3M7v7M0TvGTh63p3olaeB+MWBf8wYZZpr0uhYEo60nahfFp3XC57Hs8bkLlyppb5S+4z5018Cy2DDPgannHpCO5ttpycv7W1XhEIwiu8K3Iegy9+PVi2y3DrU5Lpzj0zN0E38Am+O7y3nVudjGM5g07BC7tnNhXfAKVxg5paa4YWnHi5jlHjxahJNNghmWud55gtgk0YQRYkfsGZNoFgw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5443.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(376002)(346002)(366004)(136003)(316002)(6486002)(52116002)(16526019)(2906002)(8676002)(26005)(4326008)(6506007)(3450700001)(186003)(8936002)(478600001)(44832011)(6512007)(6666004)(83380400001)(66946007)(956004)(5660300002)(2616005)(66476007)(36756003)(86362001)(66556008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 47ccfNCe6yHA0EER7pCb1GRkJTYpM1HI/WFP2kM5fJB7leyoKdnoy3U4KxpI7NVcbcQ/WbbpI8UtilcHIEgdxzgjAcPgTxa3DFdTG8cvrioAtfKyz2yIOO+pS/nL+pWVDv8BIQbnTo64fAE2tBRQVTKKyycQiMieC5SUzuU7yjZ86VrAQwOOKJO6YirSP2fXIioewbcr+SfDR7ZOoA0Bhf8ms/u9FrteINE4Q6nmqf4n/RwG8B9/HQUqxAClo/mmTX+8nG8+lDxhq8N0iidLHZJLe+1AIwwKX/P1ZcWtjyVqO2Ih6ANccpEpeeuk3LRYRUfAI6NA6WiUDHWOLmRGM/8WMqKTwIRP+FD4sklnIBqAxCM85PKEL1PNEyQMNTLCWJ+LhsAzyOV1wacseIkEskl2Si61Xh4Vhlv4ukgBle5xZhi1aD3rirmpo8KPa18aREVsRbR/CE9hHkzUCPbkGhF0I9utBN9anTGHvd585S2kyCzivNaWGfYiEJ6T6OzyrJhmG9BSLrfdyRG6/lW4GzTdFt+ZBJ692xklV5XRgF4CAqyktBmVY+fiyIZ12oB/vFEdrjXY5zvJkMRkwdFTY1gl8wXjm5trnuitEq/HiGCep+y/eXHmfXO1DvuDO8k0KOr2Cp3PxzwnopvnJpdZfQ==
+X-Microsoft-Antispam-Message-Info: k7Esdnz835KVerT3GzroYzeu+nvKqyOR/08jyk2zazF/Q4UhzEOUGLgBMfOmVLP1zQ6BXPSnBRuf2k873fdtf21y0eIUeMJyVMGgwsXGw+XEuGCixvwKdUo9vNHmgXbqXP/M/0RvqCDdx70qiSBNJNo2ryh9XECqDy80KM3IyN+cq4LBtQn1mvysApZn1+usxVXD25Eyu/M+j3iNj96qXO9HEFF+3wRFS4G6VGSywHG9vY6vq22HsdBW8jCEL3umcUZyKwzTtHAMeZZAdmyTxv4jr4DnHOOzFOylfd94pVhdB5eBcuZmAj3+3632AMmFlKe+siq9rbc58rafYxjURA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5443.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(376002)(39860400002)(396003)(366004)(956004)(6506007)(52116002)(83380400001)(6512007)(2616005)(316002)(36756003)(66946007)(2906002)(86362001)(6666004)(478600001)(66476007)(66556008)(3450700001)(6486002)(26005)(4326008)(4744005)(8936002)(5660300002)(186003)(44832011)(8676002)(16526019);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: QmMatqxVXOM6NQSdSza24PXmiIILafEtuIUVyv3ja7gFgVYQsoub2nNgIUAJL0ceW8JA0K+QBxjjdbqbgJ+h3xjKDXxbhA+I6LmYvCjUiHFiAIb+OMWKe58R3z05f/vO53ciDTIPE2eP/EASlkBxKZKXNv0okP9e30zMepKJ1BnfIe4loO8C9dp4pmjIh8ANsDeOGhBmLDFgf8GIUDbe6lXvL0puHtDS65mJROHh+amur5c9Rxd0YC9Bzzv+CkPEHSIBwD8498cRCts1r1TM6HztnHID0kgvoFq5CD4IU9pUwB03/TWPlO98K90O3PanG04I0vw8ZUMgeCXYEqi3jqnX2I7pcuvyWQ/BHXrE/1aNd+DZcDvRnl45NcZn63RLovL7ZrJPBEAJhtTIY9U5JZysZuSFya8Eo0lATY54BVsorss2dI5m8d84phnGYYMBNSyIv3ztW/X4Tzb5sEpwVhwzzfHTMENd+GNtTnVmzOjDeHi9Wv1vfzyOa9tAj/UvsNtc2RmL4YBAqSY7RRP0gY2NZXaI9ViaEaG6T3jj9oM7y/bTlSJMiLfG5iQ3Lnq9v4EYlLAB7xzyGXBxGJrApXslT7rgaXzcSHxP75Q9+EzTVqH8MM3MQkTpLFrkr747hNS+MjutA70t9TzfgVUaNg==
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9373fc1e-5a4b-4439-1981-08d8377bf64d
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3ed018de-12da-4cde-7828-08d8377bf70e
 X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB5443.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2020 07:08:02.7267
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2020 07:08:03.9590
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jW1DRvjhhmEImCQDlvdhjlRKiJehzL2Ry9OTvHRWF+unToAj3I7eVJaizteX3rn0pBox9I8S9+Qfls88SMAJm/1CFMzWl70LPls25+ocfGE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5233
+X-MS-Exchange-CrossTenant-UserPrincipalName: aVz6tZyNovxtqFNeZU39GOIoRN53d8JLdhBE+oPMgp2lK30YrkeLo4W2tav0BS9nHdW/7p2xjuDDK90GSHnQHjIeyhf9+GwVj93OcpcFdQU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4356
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Potentially overflowing expression (ts_freq << 16 and intgr << 16)
-declared as type u32 (32-bit unsigned) is evaluated using 32-bit
-arithmetic and then used in a context that expects an expression of
-type u64 (64-bit unsigned) which ultimately is used as 16-bit
-unsigned by typecasting to u16. Fixed by using an unsigned 32-bit
-integer since the value is truncated anyway in the end.
+The parameter 'priority' is incorrectly forced to zero which ultimately
+induces logically dead code in the subsequent lines.
 
-Fixes: 414fd46e7762 ("fsl/fman: Add FMan support")
+Fixes: 57ba4c9b56d8 ("fsl/fman: Add FMan MAC support")
 Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
 ---
- drivers/net/ethernet/freescale/fman/fman.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/freescale/fman/fman_memac.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/fman/fman.c b/drivers/net/ethernet/freescale/fman/fman.c
-index f151d6e..ef67e85 100644
---- a/drivers/net/ethernet/freescale/fman/fman.c
-+++ b/drivers/net/ethernet/freescale/fman/fman.c
-@@ -1398,8 +1398,7 @@ static void enable_time_stamp(struct fman *fman)
- {
- 	struct fman_fpm_regs __iomem *fpm_rg = fman->fpm_regs;
- 	u16 fm_clk_freq = fman->state->fm_clk_freq;
--	u32 tmp, intgr, ts_freq;
--	u64 frac;
-+	u32 tmp, intgr, ts_freq, frac;
+diff --git a/drivers/net/ethernet/freescale/fman/fman_memac.c b/drivers/net/ethernet/freescale/fman/fman_memac.c
+index a5500ed..bb02b37 100644
+--- a/drivers/net/ethernet/freescale/fman/fman_memac.c
++++ b/drivers/net/ethernet/freescale/fman/fman_memac.c
+@@ -852,7 +852,6 @@ int memac_set_tx_pause_frames(struct fman_mac *memac, u8 priority,
  
- 	ts_freq = (u32)(1 << fman->state->count1_micro_bit);
- 	/* configure timestamp so that bit 8 will count 1 microsecond
+ 	tmp = ioread32be(&regs->command_config);
+ 	tmp &= ~CMD_CFG_PFC_MODE;
+-	priority = 0;
+ 
+ 	iowrite32be(tmp, &regs->command_config);
+ 
 -- 
 1.9.1
 
