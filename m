@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A72C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B558C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D3AF20678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC1D02054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:41:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458447;
-	bh=5rkRIb3U+cgcQZ4kmQQZEzU4H5D2wfdrv2LhgBPwlHc=;
+	s=default; t=1596458464;
+	bh=bgAddR/u870zWR7NHJFFnORjmWhzCSF1Zmk3C6mtp4o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kLgjqMo1JaFcuPMTDYtyKz3dWhsJjkQ9D5sLe/HpxL4+yekifVPKSdB5yOw0LXFAC
-	 as8K0O0+orgcPUgy6OVHON6QJNB0nmiu51XxTx3CsL9Z0XuEKqchgmiDsXUdE6+I29
-	 evRj0xj9Ccus/E79tfsBMAEizC6PpR+YoPj6EOls=
+	b=R+qUTtzdh5Zh0cNP/eKSGrQLIU8JjkCYeR0AmUEEsqYxzIWBdfUsrrI6NG//oZ/uK
+	 /YVZKrbbuTtpbKaD3yrStTROXdesA8D0v5TpYuLDbX45eXOOVxlolN79zVLumw1sAf
+	 24SZOfKJL0q1M29UAEZkrmSmLylugsxjy+mT1xMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729379AbgHCMdB (ORCPT
+        id S1729131AbgHCMlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:33:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60816 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:41:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729356AbgHCMct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:32:49 -0400
+        id S1728592AbgHCMc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:32:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA7CA2054F;
-        Mon,  3 Aug 2020 12:32:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3FD62054F;
+        Mon,  3 Aug 2020 12:32:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457968;
-        bh=5rkRIb3U+cgcQZ4kmQQZEzU4H5D2wfdrv2LhgBPwlHc=;
+        s=default; t=1596457976;
+        bh=bgAddR/u870zWR7NHJFFnORjmWhzCSF1Zmk3C6mtp4o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vmMEHxlkIrZv31mynTOrgTuK3HC2Z46tIeT0LkwpGvEbECD4tbh6axrWQxshLdekX
-         izBAM3uKuGY+8AnFJgmU3F3AxDjtDOBFxOrpay3Kc8jYiOEnOFoOgblEHoQmYXgU6C
-         PjKdb3770fK5oR/Ok7ZSvR7kRroAyO0zL3Uju0R0=
+        b=YXCbffeKbZEK6byME6mUEYifM8zgKOzfQleKqrkSY+CIGT+5A3dwnl4HpKS0sfVmR
+         NdymAb7uXH0TXrrFqhWvJyH+khXloIqTCIThQ7vPn59ODkmwtqeZwC52/LmfsdK7Ra
+         6CtSllgZ68NRlncxX3JszMM7WaZ1g+8sUCApj1kk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laurence Oberman <loberman@redhat.com>,
+        stable@vger.kernel.org, Dirk Behme <dirk.behme@de.bosch.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 47/56] qed: Disable "MFW indication via attention" SPAM every 5 minutes
-Date:   Mon,  3 Aug 2020 14:20:02 +0200
-Message-Id: <20200803121852.618349390@linuxfoundation.org>
+Subject: [PATCH 4.19 50/56] net: ethernet: ravb: exit if re-initialization fails in tx timeout
+Date:   Mon,  3 Aug 2020 14:20:05 +0200
+Message-Id: <20200803121852.769062363@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -60,36 +62,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurence Oberman <loberman@redhat.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-[ Upstream commit 1d61e21852d3161f234b9656797669fe185c251b ]
+[ Upstream commit 015c5d5e6aa3523c758a70eb87b291cece2dbbb4 ]
 
-This is likely firmware causing this but its starting to annoy customers.
-Change the message level to verbose to prevent the spam.
-Note that this seems to only show up with ISCSI enabled on the HBA via the
-qedi driver.
+According to the report of [1], this driver is possible to cause
+the following error in ravb_tx_timeout_work().
 
-Signed-off-by: Laurence Oberman <loberman@redhat.com>
+ravb e6800000.ethernet ethernet: failed to switch device to config mode
+
+This error means that the hardware could not change the state
+from "Operation" to "Configuration" while some tx and/or rx queue
+are operating. After that, ravb_config() in ravb_dmac_init() will fail,
+and then any descriptors will be not allocaled anymore so that NULL
+pointer dereference happens after that on ravb_start_xmit().
+
+To fix the issue, the ravb_tx_timeout_work() should check
+the return values of ravb_stop_dma() and ravb_dmac_init().
+If ravb_stop_dma() fails, ravb_tx_timeout_work() re-enables TX and RX
+and just exits. If ravb_dmac_init() fails, just exits.
+
+[1]
+https://lore.kernel.org/linux-renesas-soc/20200518045452.2390-1-dirk.behme@de.bosch.com/
+
+Reported-by: Dirk Behme <dirk.behme@de.bosch.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Sergei Shtylyov <sergei.shtylyov@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_int.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/renesas/ravb_main.c | 26 ++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_int.c b/drivers/net/ethernet/qlogic/qed/qed_int.c
-index f9e475075d3ea..61d5d76545687 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_int.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_int.c
-@@ -1015,7 +1015,8 @@ static int qed_int_attentions(struct qed_hwfn *p_hwfn)
- 			index, attn_bits, attn_acks, asserted_bits,
- 			deasserted_bits, p_sb_attn_sw->known_attn);
- 	} else if (asserted_bits == 0x100) {
--		DP_INFO(p_hwfn, "MFW indication via attention\n");
-+		DP_VERBOSE(p_hwfn, NETIF_MSG_INTR,
-+			   "MFW indication via attention\n");
- 	} else {
- 		DP_VERBOSE(p_hwfn, NETIF_MSG_INTR,
- 			   "MFW indication [deassertion]\n");
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index faaf74073a120..569e698b5c807 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -1445,6 +1445,7 @@ static void ravb_tx_timeout_work(struct work_struct *work)
+ 	struct ravb_private *priv = container_of(work, struct ravb_private,
+ 						 work);
+ 	struct net_device *ndev = priv->ndev;
++	int error;
+ 
+ 	netif_tx_stop_all_queues(ndev);
+ 
+@@ -1453,15 +1454,36 @@ static void ravb_tx_timeout_work(struct work_struct *work)
+ 		ravb_ptp_stop(ndev);
+ 
+ 	/* Wait for DMA stopping */
+-	ravb_stop_dma(ndev);
++	if (ravb_stop_dma(ndev)) {
++		/* If ravb_stop_dma() fails, the hardware is still operating
++		 * for TX and/or RX. So, this should not call the following
++		 * functions because ravb_dmac_init() is possible to fail too.
++		 * Also, this should not retry ravb_stop_dma() again and again
++		 * here because it's possible to wait forever. So, this just
++		 * re-enables the TX and RX and skip the following
++		 * re-initialization procedure.
++		 */
++		ravb_rcv_snd_enable(ndev);
++		goto out;
++	}
+ 
+ 	ravb_ring_free(ndev, RAVB_BE);
+ 	ravb_ring_free(ndev, RAVB_NC);
+ 
+ 	/* Device init */
+-	ravb_dmac_init(ndev);
++	error = ravb_dmac_init(ndev);
++	if (error) {
++		/* If ravb_dmac_init() fails, descriptors are freed. So, this
++		 * should return here to avoid re-enabling the TX and RX in
++		 * ravb_emac_init().
++		 */
++		netdev_err(ndev, "%s: ravb_dmac_init() failed, error %d\n",
++			   __func__, error);
++		return;
++	}
+ 	ravb_emac_init(ndev);
+ 
++out:
+ 	/* Initialise PTP Clock driver */
+ 	if (priv->chip_id == RCAR_GEN2)
+ 		ravb_ptp_init(ndev, priv->pdev);
 -- 
 2.25.1
 
