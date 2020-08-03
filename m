@@ -2,184 +2,97 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 444B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F329C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 224912076E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:46:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596465998;
-	bh=EedRPINOKfpkKJFcMma8Y9eMI4MC2bcF2mDpZ3GPHJM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=G3Yo66Gi0bcKSK2ax0AoEUgXNmFS/w9wB+WwIXDa/xFIRNIOhUxzXLqS2rim8R3Es
-	 jJpAU8Q+yX5HpuDIe1r6rY9G961KTdQX/a5b28FrYQevbimOqt1sEx1s3AwgSgoTrW
-	 HA+KcmoUurgAQQuXL+BdCnatvhlZDsJ7FlDSZLfQ=
+	by mail.kernel.org (Postfix) with ESMTP id 6995D206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:47:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NGJ+cGs/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgHCOqi (ORCPT
+        id S1727808AbgHCOrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:46:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40898 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726189AbgHCOqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 10:46:37 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C64C206D7;
-        Mon,  3 Aug 2020 14:46:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596465995;
-        bh=EedRPINOKfpkKJFcMma8Y9eMI4MC2bcF2mDpZ3GPHJM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IwaBT7lWkehhcjmXNFPkyfd+oAlG8VzGlsuplyxppCBzmutiVjnidPYNCq0FwwcGA
-         0+H7xupjlZJbFD/S2T3/qPDPRMcDRvL8Cu9k4Rzhg1LmOtP98HsWXuqB/1sYv6GNGW
-         xnIRLYEwT+XHNZs83VMSK8uzKa+ujtwxt3IwTer8=
-Received: by pali.im (Postfix)
-        id C0A3A121D; Mon,  3 Aug 2020 16:46:34 +0200 (CEST)
-Date:   Mon, 3 Aug 2020 16:46:34 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        linux-pci@vger.kernel.org, Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Xogium <contact@xogium.me>
-Subject: Re: [PATCH 4/5] PCI: aardvark: Implement driver 'remove' function
- and allow to build it as module
-Message-ID: <20200803144634.nr5cjddyvdnv3lxo@pali>
-References: <20200715142557.17115-1-marek.behun@nic.cz>
- <20200715142557.17115-5-marek.behun@nic.cz>
- <20200729184809.GA569408@bogus>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200729184809.GA569408@bogus>
-User-Agent: NeoMutt/20180716
+        Mon, 3 Aug 2020 10:47:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbgHCOrp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 10:47:45 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBCAFC06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 07:47:44 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id r12so2190303qvx.20
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 07:47:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=jSEcpjJOquc529ZwoycPhflNQKRcL97Z3GUPK/MTFhg=;
+        b=NGJ+cGs/7Y5yanvxauvBQNlpaQtun8x5OXswBR95fjESI+Q1GyxIm26mBIJiQZlchx
+         DnHpQPnaiAYiQeJ7fbILu6QdY5Rd11V8/qKJe4l/2w1iWVLomfjMRhY7F1HbDB+a88/v
+         OxW7fJVYu/9qupGnZQbIDl8RQ39QYHWJjpj6Y7eEVD2A8NOnmSLcJvTqsh8RSUHTZPrm
+         iB78LpIkLOgboZguy+rRN/6HLRUkZASiQtIdBkfmKC7u09IfxeH6wtHsiiiO6m7p/yy5
+         JixVWy5wqO/esbMdb7V3i86xLFulz50ivT2vhoOcOZ+NFnlgeqV1YkGRMJJ5EjFVX0il
+         hJDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=jSEcpjJOquc529ZwoycPhflNQKRcL97Z3GUPK/MTFhg=;
+        b=seGN8mqQn+BmqVaLnL5vQaZjrJ/w8eUCG/wRy9gsNBc8ZFI2AoSi5hMqsAwNTaNXBM
+         OlhZxcO99jQuHidPo3yjE+r7v2vP4Ge8wIlUbHvdLbHWl2imz4Qmzu0N4+qdo0JN5Wn1
+         RDbJCQ+P3E3poLzuPYIjSVcgdyOp1GO9Qw0RSkd7r1b+2UKmb3zDGF1nnux3FQV1mPTd
+         dQ9h7lV+D7L1DHleZAoxX5K1lFdCRGuCRnogr2QFm64p3ubYvoHiNvmacpM8/cmB/I7L
+         fJ97H7tQneRqyMKke+vL1aIQ8HTBfTpaD7AEf/pN0FohR217zZu11Oe/oPwC7pjSRTxP
+         EIfw==
+X-Gm-Message-State: AOAM53111xWi1g/TvaKFYhrkij9j8Ovg8VZeMWjkBGefk2qfMN/XIRzs
+        6/psXXb50x+3CqnOZAiI4ckxe2dEUPeWt5HEpA==
+X-Google-Smtp-Source: ABdhPJw7sHEqkxXBQdZEh6QBRcoghAHfysqJXJXhfAsQDkKtCR//v760mqThiImnXfcrSB5dpdxJ6/pM/TKRNguNpQ==
+X-Received: by 2002:ad4:4482:: with SMTP id m2mr15332118qvt.102.1596466063346;
+ Mon, 03 Aug 2020 07:47:43 -0700 (PDT)
+Date:   Mon,  3 Aug 2020 14:47:17 +0000
+Message-Id: <20200803144719.3184138-1-kaleshsingh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+Subject: [PATCH 0/2] Per process tracking of dma buffers
+From:   Kalesh Singh <kaleshsingh@google.com>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
+        Suren Baghdasaryan <surenb@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Ioannis Ilkos <ilkos@google.com>,
+        John Stultz <john.stultz@linaro.org>, kernel-team@android.com,
+        Kalesh Singh <kaleshsingh@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 29 July 2020 12:48:09 Rob Herring wrote:
-> On Wed, Jul 15, 2020 at 04:25:56PM +0200, Marek Behún wrote:
-> > From: Pali Rohár <pali@kernel.org>
-> > 
-> > Providing driver's 'remove' function allows kernel to bind and unbind devices
-> > from aardvark driver. It also allows to build aardvark driver as a module.
-> > 
-> > Compiling aardvark as a module simplifies development and debugging of
-> > this driver as it can be reloaded at runtime without the need to reboot
-> > to new kernel.
-> > 
-> > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > Reviewed-by: Marek Behún <marek.behun@nic.cz>
-> > ---
-> >  drivers/pci/controller/Kconfig        |  2 +-
-> >  drivers/pci/controller/pci-aardvark.c | 25 ++++++++++++++++++++++---
-> >  2 files changed, 23 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> > index adddf21fa381..f9da5ff2c517 100644
-> > --- a/drivers/pci/controller/Kconfig
-> > +++ b/drivers/pci/controller/Kconfig
-> > @@ -12,7 +12,7 @@ config PCI_MVEBU
-> >  	select PCI_BRIDGE_EMUL
-> >  
-> >  config PCI_AARDVARK
-> > -	bool "Aardvark PCIe controller"
-> > +	tristate "Aardvark PCIe controller"
-> >  	depends on (ARCH_MVEBU && ARM64) || COMPILE_TEST
-> >  	depends on OF
-> >  	depends on PCI_MSI_IRQ_DOMAIN
-> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > index d5f58684d962..0a5aa6d77f5d 100644
-> > --- a/drivers/pci/controller/pci-aardvark.c
-> > +++ b/drivers/pci/controller/pci-aardvark.c
-> > @@ -14,6 +14,7 @@
-> >  #include <linux/irq.h>
-> >  #include <linux/irqdomain.h>
-> >  #include <linux/kernel.h>
-> > +#include <linux/module.h>
-> >  #include <linux/pci.h>
-> >  #include <linux/init.h>
-> >  #include <linux/phy/phy.h>
-> > @@ -1114,6 +1115,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
-> >  
-> >  	pcie = pci_host_bridge_priv(bridge);
-> >  	pcie->pdev = pdev;
-> > +	platform_set_drvdata(pdev, pcie);
-> >  
-> >  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >  	pcie->base = devm_ioremap_resource(dev, res);
-> > @@ -1204,18 +1206,35 @@ static int advk_pcie_probe(struct platform_device *pdev)
-> >  	return 0;
-> >  }
-> >  
-> > +static int advk_pcie_remove(struct platform_device *pdev)
-> > +{
-> > +	struct advk_pcie *pcie = platform_get_drvdata(pdev);
-> > +	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-> > +
-> > +	pci_stop_root_bus(bridge->bus);
-> > +	pci_remove_root_bus(bridge->bus);
-> 
-> Based on pci_host_common_remove() implementation, doesn't this need a 
-> lock around it (pci_lock_rescan_remove)?
+Since debugfs doesn't have stable abi. This patch series enables per
+process accounting of dma buffers using trace events.
 
-Well, I'm not sure. I looked into other pci drivers and none of
-following drivers pci-tegra.c, pcie-altera.c, pcie-brcmstb.c,
-pcie-iproc.c, pcie-mediatek.c, pcie-rockchip-host.c calls
-pci_lock_rescan_remove() and pci_unlock_rescan_remove().
+Kalesh Singh (2):
+  fs: Add fd_install file operation
+  dmabuf/tracing: Add dma-buf trace events
 
-Only pci-host-common.c and pci-hyperv.c protect pci_stop_root_bus() and
-pci_remove_root_bus() by locks.
+ Documentation/filesystems/vfs.rst |  5 ++
+ drivers/dma-buf/dma-buf.c         | 29 ++++++++++++
+ fs/file.c                         |  3 ++
+ include/linux/fs.h                |  1 +
+ include/trace/events/dma_buf.h    | 77 +++++++++++++++++++++++++++++++
+ 5 files changed, 115 insertions(+)
+ create mode 100644 include/trace/events/dma_buf.h
 
-> We should probably have a common function (say pci_bridge_remove) to 
-> implement this. You could use pci_host_common_remove(), but you'd have 
-> to adjust drvdata.
+-- 
+2.28.0.163.g6104cc2f0b6-goog
 
-Ok, I agree that some common function could be useful as the same code
-(pci_stop_root_bus(); pci_remove_root_bus();) is called in more pci
-drivers.
-
-But first we need to know if locks are required or not.
-
-> > +
-> > +	advk_pcie_remove_msi_irq_domain(pcie);
-> > +	advk_pcie_remove_irq_domain(pcie);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static const struct of_device_id advk_pcie_of_match_table[] = {
-> >  	{ .compatible = "marvell,armada-3700-pcie", },
-> >  	{},
-> >  };
-> > +MODULE_DEVICE_TABLE(of, advk_pcie_of_match_table);
-> >  
-> >  static struct platform_driver advk_pcie_driver = {
-> >  	.driver = {
-> >  		.name = "advk-pcie",
-> >  		.of_match_table = advk_pcie_of_match_table,
-> > -		/* Driver unloading/unbinding currently not supported */
-> > -		.suppress_bind_attrs = true,
-> >  	},
-> >  	.probe = advk_pcie_probe,
-> > +	.remove = advk_pcie_remove,
-> >  };
-> > -builtin_platform_driver(advk_pcie_driver);
-> > +module_platform_driver(advk_pcie_driver);
-> > +
-> > +MODULE_DESCRIPTION("Aardvark PCIe controller");
-> > +MODULE_LICENSE("GPL v2");
-> > -- 
-> > 2.26.2
-> > 
