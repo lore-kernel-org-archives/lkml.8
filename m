@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE341C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A0EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB869206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F68D206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:57:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596459426;
-	bh=1NJdlySNwlZG7pancpbQGVvWZeWCVGv8qXRslt06aVQ=;
+	s=default; t=1596459433;
+	bh=gInQwPd+EnPSeAJ4zDWgp2u5GpqqQwc2FKg5EWUzg+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UOVxsCK4hmVFL0j0Pr7pptFy6h0NQBfuW4+KYAKrOZjrtxdPZ8jnfGdby7Un0S8M6
-	 RB2kN6LsLIErF0KjcqD3K32OAEKgMFJDvJyiO1v/lwhTIYxzzDTB4WXBvlbjjyiDNb
-	 WZJ0KTEK4AxHQ5Ukj+IC04JqM/q+dUMbamXtxeKY=
+	b=PYEdVHF+d4Qjz2Zpc3G/nel8G2mhTZk4WgilXEuZZ/UX6xA7uUKUzjdApHQeYpTVG
+	 DCgs/OPW2N81+suON+lTzzQ4D2U/oOuSVu1U/IU2zr79XV+fgRVKbEAh7qtpk6HG9L
+	 +sVFpWyeyN9uGzLPlCLbUFegjLdDVk9bIsPnvmE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729725AbgHCM5F (ORCPT
+        id S1729733AbgHCM5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:57:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45080 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:57:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726824AbgHCMVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:21:43 -0400
+        id S1726774AbgHCMVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:21:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6027B204EC;
-        Mon,  3 Aug 2020 12:21:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10B152076E;
+        Mon,  3 Aug 2020 12:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457302;
-        bh=1NJdlySNwlZG7pancpbQGVvWZeWCVGv8qXRslt06aVQ=;
+        s=default; t=1596457296;
+        bh=gInQwPd+EnPSeAJ4zDWgp2u5GpqqQwc2FKg5EWUzg+c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HMSyV5mDykgdQaXvGi0p03+95dj0nYE/AG7D7AFiFuNjlb0JUUdn3X9px4seGVZ64
-         A/NbE961XEOwNpkMFjJ3uJ4q8if7QYAnH0EDBB4d/qvwwvO2/4TTjQHOL+NJyiOZE6
-         eC7bZAHhghw1gkN9A/RWq06z/Bs/SUoWZip5FZMc=
+        b=uRFbUyMNrTC0tdJdNbJZNjV5yLEFX/E6LZlPrBNFXQcMLbrJb+IRODbWqZxSCp3kV
+         UQQi7qE6P0P7mYMQAJdCPwL5OrL5QYktAQTkbgaA5aMOL7ODjP4x7VLt0wJACW8pze
+         iJ0xZolHCHvoVwVl7TMrfDts8eHoRLItTyojYnao=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        Suniel Mahesh <sunil@amarulasolutions.com>,
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
         Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.7 019/120] ARM: dts: imx6qdl-icore: Fix OTG_ID pin and sdcard detect
-Date:   Mon,  3 Aug 2020 14:17:57 +0200
-Message-Id: <20200803121903.786244511@linuxfoundation.org>
+Subject: [PATCH 5.7 017/120] ARM: dts: imx6sx-sabreauto: Fix the phy-mode on fec2
+Date:   Mon,  3 Aug 2020 14:17:55 +0200
+Message-Id: <20200803121903.695847816@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -61,67 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Trimarchi <michael@amarulasolutions.com>
+From: Fabio Estevam <festevam@gmail.com>
 
-commit 4a601da92c2a782e5c022680d476104586b74994 upstream.
+commit d36f260718d83928e6012247a7e1b9791cdb12ff upstream.
 
-The current pin muxing scheme muxes GPIO_1 pad for USB_OTG_ID
-because of which when card is inserted, usb otg is enumerated
-and the card is never detected.
+Commit 0672d22a1924 ("ARM: dts: imx: Fix the AR803X phy-mode") fixed the
+phy-mode for fec1, but missed to fix it for the fec2 node.
 
-[   64.492645] cfg80211: failed to load regulatory.db
-[   64.492657] imx-sdma 20ec000.sdma: external firmware not found, using ROM firmware
-[   76.343711] ci_hdrc ci_hdrc.0: EHCI Host Controller
-[   76.349742] ci_hdrc ci_hdrc.0: new USB bus registered, assigned bus number 2
-[   76.388862] ci_hdrc ci_hdrc.0: USB 2.0 started, EHCI 1.00
-[   76.396650] usb usb2: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 5.08
-[   76.405412] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-[   76.412763] usb usb2: Product: EHCI Host Controller
-[   76.417666] usb usb2: Manufacturer: Linux 5.8.0-rc1-next-20200618 ehci_hcd
-[   76.424623] usb usb2: SerialNumber: ci_hdrc.0
-[   76.431755] hub 2-0:1.0: USB hub found
-[   76.435862] hub 2-0:1.0: 1 port detected
+Fix fec2 to also use "rgmii-id" as the phy-mode.
 
-The TRM mentions GPIO_1 pad should be muxed/assigned for card detect
-and ENET_RX_ER pad for USB_OTG_ID for proper operation.
-
-This patch fixes pin muxing as per TRM and is tested on a
-i.Core 1.5 MX6 DL SOM.
-
-[   22.449165] mmc0: host does not support reading read-only switch, assuming write-enable
-[   22.459992] mmc0: new high speed SDHC card at address 0001
-[   22.469725] mmcblk0: mmc0:0001 EB1QT 29.8 GiB
-[   22.478856]  mmcblk0: p1 p2
-
-Fixes: 6df11287f7c9 ("ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual initial support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Suniel Mahesh <sunil@amarulasolutions.com>
+Cc: <stable@vger.kernel.org>
+Fixes: 0672d22a1924 ("ARM: dts: imx: Fix the AR803X phy-mode")
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/imx6qdl-icore.dtsi |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6sx-sabreauto.dts |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-@@ -397,7 +397,7 @@
- 
- 	pinctrl_usbotg: usbotggrp {
- 		fsl,pins = <
--			MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
-+			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID 0x17059
- 		>;
- 	};
- 
-@@ -409,6 +409,7 @@
- 			MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17070
- 			MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17070
- 			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17070
-+			MX6QDL_PAD_GPIO_1__GPIO1_IO01  0x1b0b0
- 		>;
- 	};
- 
+--- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
++++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
+@@ -99,7 +99,7 @@
+ &fec2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet2>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	phy-handle = <&ethphy0>;
+ 	fsl,magic-packet;
+ 	status = "okay";
 
 
