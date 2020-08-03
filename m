@@ -5,55 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F21C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C639C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7F09204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022A120781
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:34:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458082;
-	bh=RZr674kgVjcvIfO8c39ii+VFyK/OhKBGdmMXsLQk8Ds=;
+	s=default; t=1596458085;
+	bh=4+bJ4V4+h+IhJBG4UFGNp9Sstd5C8TtRB8gNzvGlyBs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E4ZLjh7+8MyrYvcuGG94DynJp1Kz8TxL3tqYxK4buSVn66GRarLnkmAI9N/uSRxfD
-	 xko/4M/pvKUHh9uLE0kvNaJXh4TrAfHy9MYDMXHsQAs3y92zQ7P056ThO9Gwmbtelj
-	 Z9pqjJO8TahG/3ULBFY6LIOHCQSBqPmfES5w5IiI=
+	b=Dpz/AO6rbpAFZAqLGXeMqR8FEwg6A3Fuk9VU2qGIZdYcIuDeESbzQPAtlFweWZ4Nx
+	 tIU64p2ieYQYqXqTqTjmJf8xbBO0oj13aNSJMTytW3KdriHBjXry6NXbAy40gMKLHa
+	 VD1BaaBi+oNunAxoURSOmA+aTff2LzmZIy4gXmnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbgHCMem (ORCPT
+        id S1729194AbgHCMeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:34:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34514 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:34:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729545AbgHCMeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:34:23 -0400
+        id S1729174AbgHCMe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:34:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1ACB2076B;
-        Mon,  3 Aug 2020 12:34:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CB842054F;
+        Mon,  3 Aug 2020 12:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596458062;
-        bh=RZr674kgVjcvIfO8c39ii+VFyK/OhKBGdmMXsLQk8Ds=;
+        s=default; t=1596458067;
+        bh=4+bJ4V4+h+IhJBG4UFGNp9Sstd5C8TtRB8gNzvGlyBs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XhAFFkzRJZNrBF8x0zNxTGQyj7zMaSE3RM096O+4q2SNfaY5DOmWKdd0pIJU8fH3j
-         wo9L5iL1DKv3yAPnCqrksIWPFol+9RbblLi+TLOSrVIRESgDRfgsSfK9wh6sy4k2d8
-         XbTKIJSBE2hKkA0eC9O9pc99YT4KDgEy1/nUZ3s0=
+        b=vXZad+COAy/ymRFysxwreBpBWsN+D5t6De4wHgYE9JzHJMu0LmmoH+hjW1FJ7Wd1U
+         fWyJ2nFTam7tu/Sht8KTtrmaKAVdbmTDfID35Oel7hmdj4+0aUamZBUj05itYVNyYH
+         m8nVj/r2/eC+G1iMY1HNebVR6fOItDb76MxJYtMY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Mason <clm@fb.com>,
-        Rik van Riel <riel@surriel.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Samuel Mendoza-Jonas <samjonas@amazon.com>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Suraj Jitindar Singh <surajjs@amazon.com>,
-        Benjamin Herrenschmidt <benh@amazon.com>,
-        Anchal Agarwal <anchalag@amazon.com>
-Subject: [PATCH 4.14 25/51] xfs: fix missed wakeup on l_flush_wait
-Date:   Mon,  3 Aug 2020 14:20:10 +0200
-Message-Id: <20200803121850.744837063@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+6db548b615e5aeefdce2@syzkaller.appspotmail.com,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 27/51] net/x25: Fix null-ptr-deref in x25_disconnect
+Date:   Mon,  3 Aug 2020 14:20:12 +0200
+Message-Id: <20200803121850.842132215@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121849.488233135@linuxfoundation.org>
 References: <20200803121849.488233135@linuxfoundation.org>
@@ -66,90 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rik van Riel <riel@surriel.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit cdea5459ce263fbc963657a7736762ae897a8ae6 upstream.
+commit 8999dc89497ab1c80d0718828e838c7cd5f6bffe upstream.
 
-The code in xlog_wait uses the spinlock to make adding the task to
-the wait queue, and setting the task state to UNINTERRUPTIBLE atomic
-with respect to the waker.
+We should check null before do x25_neigh_put in x25_disconnect,
+otherwise may cause null-ptr-deref like this:
 
-Doing the wakeup after releasing the spinlock opens up the following
-race condition:
+ #include <sys/socket.h>
+ #include <linux/x25.h>
 
-Task 1					task 2
-add task to wait queue
-					wake up task
-set task state to UNINTERRUPTIBLE
+ int main() {
+    int sck_x25;
+    sck_x25 = socket(AF_X25, SOCK_SEQPACKET, 0);
+    close(sck_x25);
+    return 0;
+ }
 
-This issue was found through code inspection as a result of kworkers
-being observed stuck in UNINTERRUPTIBLE state with an empty
-wait queue. It is rare and largely unreproducable.
+BUG: kernel NULL pointer dereference, address: 00000000000000d8
+CPU: 0 PID: 4817 Comm: t2 Not tainted 5.7.0-rc3+ #159
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-
+RIP: 0010:x25_disconnect+0x91/0xe0
+Call Trace:
+ x25_release+0x18a/0x1b0
+ __sock_release+0x3d/0xc0
+ sock_close+0x13/0x20
+ __fput+0x107/0x270
+ ____fput+0x9/0x10
+ task_work_run+0x6d/0xb0
+ exit_to_usermode_loop+0x102/0x110
+ do_syscall_64+0x23c/0x260
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
 
-Simply moving the spin_unlock to after the wake_up_all results
-in the waker not being able to see a task on the waitqueue before
-it has set its state to UNINTERRUPTIBLE.
-
-This bug dates back to the conversion of this code to generic
-waitqueue infrastructure from a counting semaphore back in 2008
-which didn't place the wakeups consistently w.r.t. to the relevant
-spin locks.
-
-[dchinner: Also fix a similar issue in the shutdown path on
-xc_commit_wait. Update commit log with more details of the issue.]
-
-Fixes: d748c62367eb ("[XFS] Convert l_flushsema to a sv_t")
-Reported-by: Chris Mason <clm@fb.com>
-Signed-off-by: Rik van Riel <riel@surriel.com>
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Cc: stable@vger.kernel.org # 4.9.x-4.19.x
-[modified for contextual change near xlog_state_do_callback()]
-Signed-off-by: Samuel Mendoza-Jonas <samjonas@amazon.com>
-Reviewed-by: Frank van der Linden <fllinden@amazon.com>
-Reviewed-by: Suraj Jitindar Singh <surajjs@amazon.com>
-Reviewed-by: Benjamin Herrenschmidt <benh@amazon.com>
-Reviewed-by: Anchal Agarwal <anchalag@amazon.com>
+Reported-by: syzbot+6db548b615e5aeefdce2@syzkaller.appspotmail.com
+Fixes: 4becb7ee5b3d ("net/x25: Fix x25_neigh refcnt leak when x25 disconnect")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/xfs/xfs_log.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ net/x25/x25_subr.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -2684,7 +2684,6 @@ xlog_state_do_callback(
- 	int		   funcdidcallbacks; /* flag: function did callbacks */
- 	int		   repeats;	/* for issuing console warnings if
- 					 * looping too many times */
--	int		   wake = 0;
- 
- 	spin_lock(&log->l_icloglock);
- 	first_iclog = iclog = log->l_iclog;
-@@ -2886,11 +2885,9 @@ xlog_state_do_callback(
- #endif
- 
- 	if (log->l_iclog->ic_state & (XLOG_STATE_ACTIVE|XLOG_STATE_IOERROR))
--		wake = 1;
--	spin_unlock(&log->l_icloglock);
--
--	if (wake)
- 		wake_up_all(&log->l_flush_wait);
-+
-+	spin_unlock(&log->l_icloglock);
+--- a/net/x25/x25_subr.c
++++ b/net/x25/x25_subr.c
+@@ -363,10 +363,12 @@ void x25_disconnect(struct sock *sk, int
+ 		sk->sk_state_change(sk);
+ 		sock_set_flag(sk, SOCK_DEAD);
+ 	}
+-	read_lock_bh(&x25_list_lock);
+-	x25_neigh_put(x25->neighbour);
+-	x25->neighbour = NULL;
+-	read_unlock_bh(&x25_list_lock);
++	if (x25->neighbour) {
++		read_lock_bh(&x25_list_lock);
++		x25_neigh_put(x25->neighbour);
++		x25->neighbour = NULL;
++		read_unlock_bh(&x25_list_lock);
++	}
  }
  
- 
-@@ -4052,7 +4049,9 @@ xfs_log_force_umount(
- 	 * item committed callback functions will do this again under lock to
- 	 * avoid races.
- 	 */
-+	spin_lock(&log->l_cilp->xc_push_lock);
- 	wake_up_all(&log->l_cilp->xc_commit_wait);
-+	spin_unlock(&log->l_cilp->xc_push_lock);
- 	xlog_state_do_callback(log, XFS_LI_ABORTED, NULL);
- 
- #ifdef XFSERRORDEBUG
+ /*
 
 
