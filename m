@@ -2,53 +2,53 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F54C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 947E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C4C7204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AEE2207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:28:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457678;
-	bh=ILED36g7XK7OsIw9mWBl8jjwQQwW/mGNlEfD6N8GLFI=;
+	s=default; t=1596457683;
+	bh=qXRrT1m0tUkhRIHg6U4hF3VyK3WiNLfY+zhJKIyIWHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VPPqWtF+6khBj4/LQ9BgxTEJPnk69x+cEGxlhh3izuYIDwsh/aiAb6eGZ1suL57ri
-	 yws8XbiMccBLA/Qp58dltbGXf2XBKd3Kb5yF+Sx/fjT57REusgzS08CfLRjnVv1Z+g
-	 7cE+n1B6U/4wZfhyaJJJ50M0Uw/assuiEbNZFKdQ=
+	b=UOq3QftlR1SgpH3iSlVriiS55TtaCGNiBISpLYWHg1C5QqziRZWUYrue3wLx49MU4
+	 +NyW6UIQShfXF6GgQWgJIbndAFiA6cIM8dktZXRLDmiFFDIx0s42isA1EmjsetlPef
+	 dMZFCJ03QgRloYLqoxqXxxFI1A3xy96n79O92JUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728666AbgHCM16 (ORCPT
+        id S1728674AbgHCM2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:27:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53826 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:28:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728649AbgHCM14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:27:56 -0400
+        id S1726821AbgHCM17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:27:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DDF7204EC;
-        Mon,  3 Aug 2020 12:27:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DAD8207DF;
+        Mon,  3 Aug 2020 12:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457675;
-        bh=ILED36g7XK7OsIw9mWBl8jjwQQwW/mGNlEfD6N8GLFI=;
+        s=default; t=1596457677;
+        bh=qXRrT1m0tUkhRIHg6U4hF3VyK3WiNLfY+zhJKIyIWHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ftgA9+R9HzA6OPzjpKJJnpZt9nQRCfSQeAtQu6IWKxq3bOAG7zsdI4dYsCGYraG4B
-         1JyBPrw4vaze2YCU+srzzEwnyS0Q6S56XXcWPIvENV7uff5Th9tVkFmdxFd2ENUl3r
-         j+zSLeDtrMLJU7od3k25px50h4pge+9+i5BuWcbk=
+        b=UK5z+s4NH6f7uvIJ003hg6zS7kbbpWGFTcQ9Bdk0OoubcdX4wc4AEW6wPzB1/VnWE
+         5SJ9slDxXUWKSHs7uHV1KBhBZBo2/+NUv9fOpZzpJ6WOtDU7iXxKI7qHXfHECNu9Dj
+         X858DjVtW0imCtBZ1nY55TsUNe25WIczdNE8mbIA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Peilin Ye <yepeilin.cs@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.4 26/90] drm/amdgpu: Prevent kernel-infoleak in amdgpu_info_ioctl()
-Date:   Mon,  3 Aug 2020 14:18:48 +0200
-Message-Id: <20200803121858.892244197@linuxfoundation.org>
+        stable@vger.kernel.org, Tobias Brunner <tobias@strongswan.org>,
+        Xin Long <lucien.xin@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 35/90] xfrm: policy: match with both mark and mask on user interfaces
+Date:   Mon,  3 Aug 2020 14:18:57 +0200
+Message-Id: <20200803121859.311515938@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -61,44 +61,263 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peilin Ye <yepeilin.cs@gmail.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit 543e8669ed9bfb30545fd52bc0e047ca4df7fb31 upstream.
+[ Upstream commit 4f47e8ab6ab796b5380f74866fa5287aca4dcc58 ]
 
-Compiler leaves a 4-byte hole near the end of `dev_info`, causing
-amdgpu_info_ioctl() to copy uninitialized kernel stack memory to userspace
-when `size` is greater than 356.
+In commit ed17b8d377ea ("xfrm: fix a warning in xfrm_policy_insert_list"),
+it would take 'priority' to make a policy unique, and allow duplicated
+policies with different 'priority' to be added, which is not expected
+by userland, as Tobias reported in strongswan.
 
-In 2015 we tried to fix this issue by doing `= {};` on `dev_info`, which
-unfortunately does not initialize that 4-byte hole. Fix it by using
-memset() instead.
+To fix this duplicated policies issue, and also fix the issue in
+commit ed17b8d377ea ("xfrm: fix a warning in xfrm_policy_insert_list"),
+when doing add/del/get/update on user interfaces, this patch is to change
+to look up a policy with both mark and mask by doing:
 
-Cc: stable@vger.kernel.org
-Fixes: c193fa91b918 ("drm/amdgpu: information leak in amdgpu_info_ioctl()")
-Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  mark.v == pol->mark.v && mark.m == pol->mark.m
 
+and leave the check:
+
+  (mark & pol->mark.m) == pol->mark.v
+
+for tx/rx path only.
+
+As the userland expects an exact mark and mask match to manage policies.
+
+v1->v2:
+  - make xfrm_policy_mark_match inline and fix the changelog as
+    Tobias suggested.
+
+Fixes: 295fae568885 ("xfrm: Allow user space manipulation of SPD mark")
+Fixes: ed17b8d377ea ("xfrm: fix a warning in xfrm_policy_insert_list")
+Reported-by: Tobias Brunner <tobias@strongswan.org>
+Tested-by: Tobias Brunner <tobias@strongswan.org>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/net/xfrm.h     | 11 +++++++----
+ net/key/af_key.c       |  4 ++--
+ net/xfrm/xfrm_policy.c | 39 ++++++++++++++++-----------------------
+ net/xfrm/xfrm_user.c   | 18 +++++++++++-------
+ 4 files changed, 36 insertions(+), 36 deletions(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-@@ -667,9 +667,10 @@ static int amdgpu_info_ioctl(struct drm_
- 		return n ? -EFAULT : 0;
+diff --git a/include/net/xfrm.h b/include/net/xfrm.h
+index fb391c00c19ac..e7a480a4ffb90 100644
+--- a/include/net/xfrm.h
++++ b/include/net/xfrm.h
+@@ -1636,13 +1636,16 @@ int xfrm_policy_walk(struct net *net, struct xfrm_policy_walk *walk,
+ 		     void *);
+ void xfrm_policy_walk_done(struct xfrm_policy_walk *walk, struct net *net);
+ int xfrm_policy_insert(int dir, struct xfrm_policy *policy, int excl);
+-struct xfrm_policy *xfrm_policy_bysel_ctx(struct net *net, u32 mark, u32 if_id,
+-					  u8 type, int dir,
++struct xfrm_policy *xfrm_policy_bysel_ctx(struct net *net,
++					  const struct xfrm_mark *mark,
++					  u32 if_id, u8 type, int dir,
+ 					  struct xfrm_selector *sel,
+ 					  struct xfrm_sec_ctx *ctx, int delete,
+ 					  int *err);
+-struct xfrm_policy *xfrm_policy_byid(struct net *net, u32 mark, u32 if_id, u8,
+-				     int dir, u32 id, int delete, int *err);
++struct xfrm_policy *xfrm_policy_byid(struct net *net,
++				     const struct xfrm_mark *mark, u32 if_id,
++				     u8 type, int dir, u32 id, int delete,
++				     int *err);
+ int xfrm_policy_flush(struct net *net, u8 type, bool task_valid);
+ void xfrm_policy_hash_rebuild(struct net *net);
+ u32 xfrm_get_acqseq(void);
+diff --git a/net/key/af_key.c b/net/key/af_key.c
+index b67ed3a8486c2..979c579afc63b 100644
+--- a/net/key/af_key.c
++++ b/net/key/af_key.c
+@@ -2400,7 +2400,7 @@ static int pfkey_spddelete(struct sock *sk, struct sk_buff *skb, const struct sa
+ 			return err;
  	}
- 	case AMDGPU_INFO_DEV_INFO: {
--		struct drm_amdgpu_info_device dev_info = {};
-+		struct drm_amdgpu_info_device dev_info;
- 		uint64_t vm_size;
  
-+		memset(&dev_info, 0, sizeof(dev_info));
- 		dev_info.device_id = dev->pdev->device;
- 		dev_info.chip_rev = adev->rev_id;
- 		dev_info.external_rev = adev->external_rev_id;
+-	xp = xfrm_policy_bysel_ctx(net, DUMMY_MARK, 0, XFRM_POLICY_TYPE_MAIN,
++	xp = xfrm_policy_bysel_ctx(net, &dummy_mark, 0, XFRM_POLICY_TYPE_MAIN,
+ 				   pol->sadb_x_policy_dir - 1, &sel, pol_ctx,
+ 				   1, &err);
+ 	security_xfrm_policy_free(pol_ctx);
+@@ -2651,7 +2651,7 @@ static int pfkey_spdget(struct sock *sk, struct sk_buff *skb, const struct sadb_
+ 		return -EINVAL;
+ 
+ 	delete = (hdr->sadb_msg_type == SADB_X_SPDDELETE2);
+-	xp = xfrm_policy_byid(net, DUMMY_MARK, 0, XFRM_POLICY_TYPE_MAIN,
++	xp = xfrm_policy_byid(net, &dummy_mark, 0, XFRM_POLICY_TYPE_MAIN,
+ 			      dir, pol->sadb_x_policy_id, delete, &err);
+ 	if (xp == NULL)
+ 		return -ENOENT;
+diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
+index 6a1a21ae47bbd..2917711ff8ab6 100644
+--- a/net/xfrm/xfrm_policy.c
++++ b/net/xfrm/xfrm_policy.c
+@@ -1430,14 +1430,10 @@ static void xfrm_policy_requeue(struct xfrm_policy *old,
+ 	spin_unlock_bh(&pq->hold_queue.lock);
+ }
+ 
+-static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
+-				   struct xfrm_policy *pol)
++static inline bool xfrm_policy_mark_match(const struct xfrm_mark *mark,
++					  struct xfrm_policy *pol)
+ {
+-	if (policy->mark.v == pol->mark.v &&
+-	    policy->priority == pol->priority)
+-		return true;
+-
+-	return false;
++	return mark->v == pol->mark.v && mark->m == pol->mark.m;
+ }
+ 
+ static u32 xfrm_pol_bin_key(const void *data, u32 len, u32 seed)
+@@ -1500,7 +1496,7 @@ static void xfrm_policy_insert_inexact_list(struct hlist_head *chain,
+ 		if (pol->type == policy->type &&
+ 		    pol->if_id == policy->if_id &&
+ 		    !selector_cmp(&pol->selector, &policy->selector) &&
+-		    xfrm_policy_mark_match(policy, pol) &&
++		    xfrm_policy_mark_match(&policy->mark, pol) &&
+ 		    xfrm_sec_ctx_match(pol->security, policy->security) &&
+ 		    !WARN_ON(delpol)) {
+ 			delpol = pol;
+@@ -1535,7 +1531,7 @@ static struct xfrm_policy *xfrm_policy_insert_list(struct hlist_head *chain,
+ 		if (pol->type == policy->type &&
+ 		    pol->if_id == policy->if_id &&
+ 		    !selector_cmp(&pol->selector, &policy->selector) &&
+-		    xfrm_policy_mark_match(policy, pol) &&
++		    xfrm_policy_mark_match(&policy->mark, pol) &&
+ 		    xfrm_sec_ctx_match(pol->security, policy->security) &&
+ 		    !WARN_ON(delpol)) {
+ 			if (excl)
+@@ -1607,9 +1603,8 @@ int xfrm_policy_insert(int dir, struct xfrm_policy *policy, int excl)
+ EXPORT_SYMBOL(xfrm_policy_insert);
+ 
+ static struct xfrm_policy *
+-__xfrm_policy_bysel_ctx(struct hlist_head *chain, u32 mark, u32 if_id,
+-			u8 type, int dir,
+-			struct xfrm_selector *sel,
++__xfrm_policy_bysel_ctx(struct hlist_head *chain, const struct xfrm_mark *mark,
++			u32 if_id, u8 type, int dir, struct xfrm_selector *sel,
+ 			struct xfrm_sec_ctx *ctx)
+ {
+ 	struct xfrm_policy *pol;
+@@ -1620,7 +1615,7 @@ __xfrm_policy_bysel_ctx(struct hlist_head *chain, u32 mark, u32 if_id,
+ 	hlist_for_each_entry(pol, chain, bydst) {
+ 		if (pol->type == type &&
+ 		    pol->if_id == if_id &&
+-		    (mark & pol->mark.m) == pol->mark.v &&
++		    xfrm_policy_mark_match(mark, pol) &&
+ 		    !selector_cmp(sel, &pol->selector) &&
+ 		    xfrm_sec_ctx_match(ctx, pol->security))
+ 			return pol;
+@@ -1629,11 +1624,10 @@ __xfrm_policy_bysel_ctx(struct hlist_head *chain, u32 mark, u32 if_id,
+ 	return NULL;
+ }
+ 
+-struct xfrm_policy *xfrm_policy_bysel_ctx(struct net *net, u32 mark, u32 if_id,
+-					  u8 type, int dir,
+-					  struct xfrm_selector *sel,
+-					  struct xfrm_sec_ctx *ctx, int delete,
+-					  int *err)
++struct xfrm_policy *
++xfrm_policy_bysel_ctx(struct net *net, const struct xfrm_mark *mark, u32 if_id,
++		      u8 type, int dir, struct xfrm_selector *sel,
++		      struct xfrm_sec_ctx *ctx, int delete, int *err)
+ {
+ 	struct xfrm_pol_inexact_bin *bin = NULL;
+ 	struct xfrm_policy *pol, *ret = NULL;
+@@ -1700,9 +1694,9 @@ struct xfrm_policy *xfrm_policy_bysel_ctx(struct net *net, u32 mark, u32 if_id,
+ }
+ EXPORT_SYMBOL(xfrm_policy_bysel_ctx);
+ 
+-struct xfrm_policy *xfrm_policy_byid(struct net *net, u32 mark, u32 if_id,
+-				     u8 type, int dir, u32 id, int delete,
+-				     int *err)
++struct xfrm_policy *
++xfrm_policy_byid(struct net *net, const struct xfrm_mark *mark, u32 if_id,
++		 u8 type, int dir, u32 id, int delete, int *err)
+ {
+ 	struct xfrm_policy *pol, *ret;
+ 	struct hlist_head *chain;
+@@ -1717,8 +1711,7 @@ struct xfrm_policy *xfrm_policy_byid(struct net *net, u32 mark, u32 if_id,
+ 	ret = NULL;
+ 	hlist_for_each_entry(pol, chain, byidx) {
+ 		if (pol->type == type && pol->index == id &&
+-		    pol->if_id == if_id &&
+-		    (mark & pol->mark.m) == pol->mark.v) {
++		    pol->if_id == if_id && xfrm_policy_mark_match(mark, pol)) {
+ 			xfrm_pol_hold(pol);
+ 			if (delete) {
+ 				*err = security_xfrm_policy_delete(
+diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
+index e6cfaa680ef3d..fbb7d9d064787 100644
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -1863,7 +1863,6 @@ static int xfrm_get_policy(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 	struct km_event c;
+ 	int delete;
+ 	struct xfrm_mark m;
+-	u32 mark = xfrm_mark_get(attrs, &m);
+ 	u32 if_id = 0;
+ 
+ 	p = nlmsg_data(nlh);
+@@ -1880,8 +1879,11 @@ static int xfrm_get_policy(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 	if (attrs[XFRMA_IF_ID])
+ 		if_id = nla_get_u32(attrs[XFRMA_IF_ID]);
+ 
++	xfrm_mark_get(attrs, &m);
++
+ 	if (p->index)
+-		xp = xfrm_policy_byid(net, mark, if_id, type, p->dir, p->index, delete, &err);
++		xp = xfrm_policy_byid(net, &m, if_id, type, p->dir,
++				      p->index, delete, &err);
+ 	else {
+ 		struct nlattr *rt = attrs[XFRMA_SEC_CTX];
+ 		struct xfrm_sec_ctx *ctx;
+@@ -1898,8 +1900,8 @@ static int xfrm_get_policy(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 			if (err)
+ 				return err;
+ 		}
+-		xp = xfrm_policy_bysel_ctx(net, mark, if_id, type, p->dir, &p->sel,
+-					   ctx, delete, &err);
++		xp = xfrm_policy_bysel_ctx(net, &m, if_id, type, p->dir,
++					   &p->sel, ctx, delete, &err);
+ 		security_xfrm_policy_free(ctx);
+ 	}
+ 	if (xp == NULL)
+@@ -2166,7 +2168,6 @@ static int xfrm_add_pol_expire(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 	u8 type = XFRM_POLICY_TYPE_MAIN;
+ 	int err = -ENOENT;
+ 	struct xfrm_mark m;
+-	u32 mark = xfrm_mark_get(attrs, &m);
+ 	u32 if_id = 0;
+ 
+ 	err = copy_from_user_policy_type(&type, attrs);
+@@ -2180,8 +2181,11 @@ static int xfrm_add_pol_expire(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 	if (attrs[XFRMA_IF_ID])
+ 		if_id = nla_get_u32(attrs[XFRMA_IF_ID]);
+ 
++	xfrm_mark_get(attrs, &m);
++
+ 	if (p->index)
+-		xp = xfrm_policy_byid(net, mark, if_id, type, p->dir, p->index, 0, &err);
++		xp = xfrm_policy_byid(net, &m, if_id, type, p->dir, p->index,
++				      0, &err);
+ 	else {
+ 		struct nlattr *rt = attrs[XFRMA_SEC_CTX];
+ 		struct xfrm_sec_ctx *ctx;
+@@ -2198,7 +2202,7 @@ static int xfrm_add_pol_expire(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 			if (err)
+ 				return err;
+ 		}
+-		xp = xfrm_policy_bysel_ctx(net, mark, if_id, type, p->dir,
++		xp = xfrm_policy_bysel_ctx(net, &m, if_id, type, p->dir,
+ 					   &p->sel, ctx, 0, &err);
+ 		security_xfrm_policy_free(ctx);
+ 	}
+-- 
+2.25.1
+
 
 
