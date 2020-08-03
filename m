@@ -2,53 +2,52 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 379FFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9826AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17B172076B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D55F2054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457987;
-	bh=cW0MevAFt8H5njALXBT6v761SRuxFMSBRNmZHnFg2CY=;
+	s=default; t=1596457993;
+	bh=0Aup74NOSS42XQ7aEIwZYIA0RB6k4tahoOrwdO6yJoc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IstfGMaI24aBKSXtLFuXOknX5ZJyooRY5mEG/WvcHvz7a0P1Q0vOp5fdifzlTVBpz
-	 nNggQmOUOtrTIQ727GF5OQOesPvyWIOmh/9zg1Jz0aSFQFP7d4SoI7oIVKqubCkCwB
-	 Etpcsud7jUAIfYtl97y9vXFP1kpiaEJbH89/dVCA=
+	b=MW1Sh65OozD/JQQjH/FuDlMtCCzNJL6E6/zpeaZjH/+4j6NresAxuiVuOPBUW2f+z
+	 XXf8Pe0yTgFRqloUnaAYUnmj3qwVtVUfgpvrI2eS6C/o0hKZ2K3wqN2JKmzbcgHTeh
+	 2H8IlMEGGvQUUYpdQJDp6798E8N0cEItFuyoWIro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbgHCMdE (ORCPT
+        id S1729399AbgHCMdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:33:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60902 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:33:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729364AbgHCMcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:32:55 -0400
+        id S1729386AbgHCMdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:33:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 206E5204EC;
-        Mon,  3 Aug 2020 12:32:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27DE3204EC;
+        Mon,  3 Aug 2020 12:33:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457973;
-        bh=cW0MevAFt8H5njALXBT6v761SRuxFMSBRNmZHnFg2CY=;
+        s=default; t=1596457981;
+        bh=0Aup74NOSS42XQ7aEIwZYIA0RB6k4tahoOrwdO6yJoc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fwtAi0jJ5zfVdXSEdlPwDFwXcjhFuSktHsUcvzLm1Ek2cxtEXQ9TfefIEHFrM0NdM
-         Or/AK9OHxQuE8DyHYrxbZWxOsIRPaOWwWNRcqh9JbAU+Wm+MNaZTgz8nNPD2ya7nWl
-         q3g461MGhqGOITlnkH3l1Q5IhZ46d2wqVDkvcAwA=
+        b=aHouRpdtEiNUA954OAhLcSwwkYxP/f+Sb9wVQ7934gsCuYSPj7aSdd3ZIsIDc2rEz
+         4VJQKnozglM3YuF/k5VqB+TRfSHtz2U8FfjsjSEZL5EZGW3prnrK1PXJ1FLPaJczFq
+         xgzu44Oskavjgr2F0x7rZ4rRRuUiQMWSWevjFhFQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Liam Beguin <liambeguin@gmail.com>,
-        Dave Anglin <dave.anglin@bell.net>,
-        Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 49/56] parisc: add support for cmpxchg on u8 pointers
-Date:   Mon,  3 Aug 2020 14:20:04 +0200
-Message-Id: <20200803121852.720664294@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 25/56] net/x25: Fix x25_neigh refcnt leak when x25 disconnect
+Date:   Mon,  3 Aug 2020 14:19:40 +0200
+Message-Id: <20200803121851.567113942@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -61,74 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liam Beguin <liambeguin@gmail.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit b344d6a83d01c52fddbefa6b3b4764da5b1022a0 ]
+commit 4becb7ee5b3d2829ed7b9261a245a77d5b7de902 upstream.
 
-The kernel test bot reported[1] that using set_mask_bits on a u8 causes
-the following issue on parisc:
+x25_connect() invokes x25_get_neigh(), which returns a reference of the
+specified x25_neigh object to "x25->neighbour" with increased refcnt.
 
-	hppa-linux-ld: drivers/phy/ti/phy-tusb1210.o: in function `tusb1210_probe':
-	>> (.text+0x2f4): undefined reference to `__cmpxchg_called_with_bad_pointer'
-	>> hppa-linux-ld: (.text+0x324): undefined reference to `__cmpxchg_called_with_bad_pointer'
-	hppa-linux-ld: (.text+0x354): undefined reference to `__cmpxchg_called_with_bad_pointer'
+When x25 connect success and returns, the reference still be hold by
+"x25->neighbour", so the refcount should be decreased in
+x25_disconnect() to keep refcount balanced.
 
-Add support for cmpxchg on u8 pointers.
+The reference counting issue happens in x25_disconnect(), which forgets
+to decrease the refcnt increased by x25_get_neigh() in x25_connect(),
+causing a refcnt leak.
 
-[1] https://lore.kernel.org/patchwork/patch/1272617/#1468946
+Fix this issue by calling x25_neigh_put() before x25_disconnect()
+returns.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Liam Beguin <liambeguin@gmail.com>
-Tested-by: Dave Anglin <dave.anglin@bell.net>
-Signed-off-by: Helge Deller <deller@gmx.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/parisc/include/asm/cmpxchg.h |  2 ++
- arch/parisc/lib/bitops.c          | 12 ++++++++++++
- 2 files changed, 14 insertions(+)
+ net/x25/x25_subr.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/parisc/include/asm/cmpxchg.h b/arch/parisc/include/asm/cmpxchg.h
-index ab5c215cf46c3..0689585758717 100644
---- a/arch/parisc/include/asm/cmpxchg.h
-+++ b/arch/parisc/include/asm/cmpxchg.h
-@@ -60,6 +60,7 @@ extern void __cmpxchg_called_with_bad_pointer(void);
- extern unsigned long __cmpxchg_u32(volatile unsigned int *m, unsigned int old,
- 				   unsigned int new_);
- extern u64 __cmpxchg_u64(volatile u64 *ptr, u64 old, u64 new_);
-+extern u8 __cmpxchg_u8(volatile u8 *ptr, u8 old, u8 new_);
- 
- /* don't worry...optimizer will get rid of most of this */
- static inline unsigned long
-@@ -71,6 +72,7 @@ __cmpxchg(volatile void *ptr, unsigned long old, unsigned long new_, int size)
- #endif
- 	case 4: return __cmpxchg_u32((unsigned int *)ptr,
- 				     (unsigned int)old, (unsigned int)new_);
-+	case 1: return __cmpxchg_u8((u8 *)ptr, (u8)old, (u8)new_);
+--- a/net/x25/x25_subr.c
++++ b/net/x25/x25_subr.c
+@@ -362,6 +362,10 @@ void x25_disconnect(struct sock *sk, int
+ 		sk->sk_state_change(sk);
+ 		sock_set_flag(sk, SOCK_DEAD);
  	}
- 	__cmpxchg_called_with_bad_pointer();
- 	return old;
-diff --git a/arch/parisc/lib/bitops.c b/arch/parisc/lib/bitops.c
-index 70ffbcf889b8e..2e4d1f05a9264 100644
---- a/arch/parisc/lib/bitops.c
-+++ b/arch/parisc/lib/bitops.c
-@@ -79,3 +79,15 @@ unsigned long __cmpxchg_u32(volatile unsigned int *ptr, unsigned int old, unsign
- 	_atomic_spin_unlock_irqrestore(ptr, flags);
- 	return (unsigned long)prev;
++	read_lock_bh(&x25_list_lock);
++	x25_neigh_put(x25->neighbour);
++	x25->neighbour = NULL;
++	read_unlock_bh(&x25_list_lock);
  }
-+
-+u8 __cmpxchg_u8(volatile u8 *ptr, u8 old, u8 new)
-+{
-+	unsigned long flags;
-+	u8 prev;
-+
-+	_atomic_spin_lock_irqsave(ptr, flags);
-+	if ((prev = *ptr) == old)
-+		*ptr = new;
-+	_atomic_spin_unlock_irqrestore(ptr, flags);
-+	return prev;
-+}
--- 
-2.25.1
-
+ 
+ /*
 
 
