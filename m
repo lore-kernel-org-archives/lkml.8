@@ -2,115 +2,133 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E54DBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8B3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF6AB206DA
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:15:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59A93207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:16:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EliOTm2U"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="kSGrcoMk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbgHCOPv (ORCPT
+        id S1728329AbgHCOQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:15:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59166 "EHLO
+        Mon, 3 Aug 2020 10:16:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbgHCOPv (ORCPT
+        with ESMTP id S1726767AbgHCOQP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 10:15:51 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2508FC06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 07:15:51 -0700 (PDT)
+        Mon, 3 Aug 2020 10:16:15 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 779AAC06174A;
+        Mon,  3 Aug 2020 07:16:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=tAS11sJpElMBs2Pfs6KLa4qx/lgKKhsfUzhtsaRTmoY=; b=EliOTm2U9G2AnO8zvDaIC4l0Yk
-        s9QE3PYEN+MjTLkLvLN3iT78LpVL6fJkdOmsvYe8TpxcMT0A+QzEgi33wM+24VrVr2Xr1laEDhhIm
-        SAibRNjK+KGNSalwfKqbXjblaK/DzDlVo4KklgJ10ACHz6KEt0R6Qx7FNsfCr/tKYfTxPl40G/+2q
-        ZAH87xvPiPivlT5x63I6H1RDl0V3y2CXwL/PmeQLvTsI5o+b3AxxnIXZ+67ziGX1dk1ZtY5yawHml
-        Ctr6ZdBvYORw91KD6xCoIGmpbu5WDSnCWrpg6AmISv4RPP6VpNBV54LUrVQs7xUWNbSyLE/c98c2D
-        ZqT29rGw==;
-Received: from 93-43-212-104.ip93.fastwebnet.it ([93.43.212.104] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k2bFj-0003E4-Sh; Mon, 03 Aug 2020 14:15:48 +0000
-Date:   Mon, 3 Aug 2020 16:15:47 +0200
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [GIT PULL] dma-mapping updates for 5.9
-Message-ID: <20200803141547.GA752173@infradead.org>
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Qag0mgZqT4bNueVSCcbNmY9WCf2Ib/QmqRu677bcwIw=; b=kSGrcoMkWr8Ja1keSlEfp60kY
+        P43VpVbqh45axG9v5UoRiB5LBDyE5T/C6vl4QTFD4c6VO8vx754cBGznLHIdd1GCKslyRoDjlVlJt
+        SlL/bGYkLIUXgJ44wYaTtn6EpEBwX9LOFXAifa3WsLsz1AAoQzmmNE88amEF80+feG+lTI6hQJiNl
+        /maSAJgNfJx2VOG9GdjVA0h4aMpbgwyT4QAm94N0KbjcFUZKd9JQ/IaK38Ti3BAbz5JkKEeJRkTU1
+        hjqNENuCeQEzZ4hYkPrV4/5dTp9Cg0QZcmo1TP7Abxypn66Vtj5dnQ23GmjgmgSLxTh06581vA4Kz
+        wy0UaH4WA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47822)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1k2bGA-0001as-42; Mon, 03 Aug 2020 15:16:14 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1k2bG9-00039O-M1; Mon, 03 Aug 2020 15:16:13 +0100
+Date:   Mon, 3 Aug 2020 15:16:13 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Codrin.Ciubotariu@microchip.com
+Cc:     wsa@kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org,
+        Ludovic.Desroches@microchip.com, Nicolas.Ferre@microchip.com,
+        alexandre.belloni@bootlin.com, kamel.bouhara@bootlin.com
+Subject: Re: [RFC PATCH 1/4] dt-binding: i2c: add generic properties for GPIO
+ bus recovery
+Message-ID: <20200803141613.GN1551@shell.armlinux.org.uk>
+References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
+ <20200619141904.910889-2-codrin.ciubotariu@microchip.com>
+ <20200705211918.GB1055@kunai>
+ <20200724193913.GD1227@ninjato>
+ <20200724205209.GC1551@shell.armlinux.org.uk>
+ <b3a04528-0053-16bf-f092-147685298ced@microchip.com>
+ <20200727105029.GI1551@shell.armlinux.org.uk>
+ <1e788319-c841-d1f1-b65c-d25052f7f90b@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <1e788319-c841-d1f1-b65c-d25052f7f90b@microchip.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Note that this adds a select to drivers/iommu/Kconfig symbols which moves
-to drivers/iommu/intel/Kconfig in the iommu tree. 
+On Thu, Jul 30, 2020 at 09:00:36AM +0000, Codrin.Ciubotariu@microchip.com wrote:
+> On 27.07.2020 13:50, Russell King - ARM Linux admin wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> > 
+> > On Mon, Jul 27, 2020 at 10:44:57AM +0000, Codrin.Ciubotariu@microchip.com wrote:
+> >> On 24.07.2020 23:52, Russell King - ARM Linux admin wrote:
+> >>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> >>>
+> >>> On Fri, Jul 24, 2020 at 09:39:13PM +0200, Wolfram Sang wrote:
+> >>>> On Sun, Jul 05, 2020 at 11:19:18PM +0200, Wolfram Sang wrote:
+> >>>>>
+> >>>>>> +- pinctrl
+> >>>>>> + add extra pinctrl to configure SCL/SDA pins to GPIO function for bus
+> >>>>>> + recovery, call it "gpio" or "recovery" state
+> >>>>>
+> >>>>> I think we should stick with "gpio" only. That is what at91 and imx have
+> >>>>> in their bindings. pxa uses "recovery" as a pinctrl state name but I
+> >>>>> can't find any further use or documentation of that. PXA is not fully
+> >>>>> converted to the best of my knowledge, so maybe it is no problem for PXA
+> >>>>> to switch to "gpio", too? We should ask Russell King (cced).
+> >>>
+> >>> Fully converted to what?  The generic handling where the i2c core layer
+> >>> handles everything to do with recovery, including the switch between
+> >>> modes?
+> >>>
+> >>> i2c-pxa _intentionally_ carefully handles the switch between i2c mode and
+> >>> GPIO mode, and I don't see a generic driver doing that to avoid causing
+> >>> any additional glitches on the bus.  Given the use case that this recovery
+> >>> is targetted at, avoiding glitches is very important to keep.
+> >>
+> >> Why is it not possbile to handle glitches in a generic way? I guess it
+> >> depends on the pinctl, but we could treat a worst-case scenario to
+> >> assure the switch between states is done properly.
+> > 
+> > Please look at how i2c-pxa switches between the two, and decide whether
+> > the generic implementation can do the same.
+> 
+> The handling of glitches from initialization looks generic to me. I see 
+> that there are specific clear/reset routines that are in the 
+> (un)prepare_recovery() callbacks, but these callbacks are not replaced 
+> by the generic i2c recovery and will still be used if given by the 
+> driver. The only thing the generic recovery does is to switch the pinmux 
+> state. We can discuss whether we want to change the pinmux state first 
+> or call the (un)preapre_recovery().
 
-The following changes since commit d9765e41d8e9ea2251bf73735a2895c8bad546fc:
+Right, the key point i2c-pxa does is that on prepare:
+- read the current state of the SCL and SDA lines and set the GPIO to
+  reflect those values.
+- then switch the pinmux state.
 
-  dma-pool: do not allocate pool memory from CMA (2020-07-14 15:46:32 +0200)
+That must be preserved, otherwise if SCL is being held low by the I2C
+master, and we switch to GPIO mode, SCL will be released.  So the
+driver needs to be involved before the pinmux state is changed.
 
-are available in the Git repository at:
-
-  git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-5.9
-
-for you to fetch changes up to 274b3f7bf34415eed106e479e4815e897ce5d763:
-
-  dma-contiguous: cleanup dma_alloc_contiguous (2020-07-28 13:42:15 +0200)
-
-----------------------------------------------------------------
-dma-mapping updates for 5.9
-
- - make support for dma_ops optional
- - move more code out of line
- - add generic support for a dma_ops bypass mode
- - misc cleanups
-
-----------------------------------------------------------------
-Christoph Hellwig (7):
-      dma-mapping: move the remaining DMA API calls out of line
-      dma-mapping: inline the fast path dma-direct calls
-      dma-mapping: make support for dma ops optional
-      dma-mapping: add a dma_ops_bypass flag to struct device
-      powerpc: use the generic dma_ops_bypass mode
-      dma-debug: use named initializers for dir2name
-      dma-contiguous: cleanup dma_alloc_contiguous
-
- arch/alpha/Kconfig                |   1 +
- arch/arm/Kconfig                  |   1 +
- arch/ia64/Kconfig                 |   1 +
- arch/mips/Kconfig                 |   1 +
- arch/parisc/Kconfig               |   1 +
- arch/powerpc/Kconfig              |   2 +
- arch/powerpc/include/asm/device.h |   5 -
- arch/powerpc/kernel/dma-iommu.c   |  90 ++------------
- arch/s390/Kconfig                 |   1 +
- arch/sparc/Kconfig                |   1 +
- arch/x86/Kconfig                  |   1 +
- drivers/infiniband/core/device.c  |   6 +-
- drivers/iommu/Kconfig             |   2 +
- drivers/macintosh/macio_asic.c    |   4 +-
- drivers/misc/mic/Kconfig          |   4 +
- drivers/vdpa/Kconfig              |   1 +
- drivers/xen/Kconfig               |   1 +
- include/linux/device.h            |  11 +-
- include/linux/dma-direct.h        | 104 ++++++++++++++++
- include/linux/dma-mapping.h       | 251 +++++---------------------------------
- kernel/dma/Kconfig                |  12 ++
- kernel/dma/Makefile               |   3 +-
- kernel/dma/contiguous.c           |  31 +++--
- kernel/dma/debug.c                |   8 +-
- kernel/dma/direct.c               |  74 -----------
- kernel/dma/mapping.c              | 214 ++++++++++++++++++++++++++++++--
- 26 files changed, 415 insertions(+), 416 deletions(-)
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
