@@ -2,52 +2,60 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1F1C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AEF7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B49DF2086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 019C520829
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457587;
-	bh=+3EfgGtmCKrNepVQ0cjyTDgJi1Grs6bidEQ5QqtEGDA=;
+	s=default; t=1596457593;
+	bh=1mhfn0JbiQDfYhpxjOS3Uga4z4btaREdfOD5ayAKZfU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vE+IbWOMxTkCgh2sgQyR5H63pqregS8LeYW/BusK0YEFBYFuao0Cl+5hN81ZfECEc
-	 ES9DYeSEPmb0We3TPA3bWfBox9Jva22FAhSmiQfsOvQq+rdUFm4OCygDAUbGKaRtrX
-	 uqD+r3vmuWLDWNoljoj3DrlDIXz3/GjR4u0iWWss=
+	b=GIA78Flz8DuxmbLx1qJtqXRw32KTGzgAkbDfR4vCyLbr4zehPhdfez56xxlEsOEhL
+	 lLGsZ9R7Y9rigxTfL0bS+nLOzVfNCuy1jV43QOWraVrkNcCiQ9JUh3VNzvp2nj54Ei
+	 OmlQMqmuWpBSG0o3Gf+qwIni6obQWykFkD2czpaw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbgHCM01 (ORCPT
+        id S1728395AbgHCM0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:26:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51792 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:26:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728362AbgHCM0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:26:25 -0400
+        id S1728373AbgHCM02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:26:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC7A9207FC;
-        Mon,  3 Aug 2020 12:26:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10E72208C7;
+        Mon,  3 Aug 2020 12:26:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457584;
-        bh=+3EfgGtmCKrNepVQ0cjyTDgJi1Grs6bidEQ5QqtEGDA=;
+        s=default; t=1596457586;
+        bh=1mhfn0JbiQDfYhpxjOS3Uga4z4btaREdfOD5ayAKZfU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g/PsVGOtokMH4Z9iGHumSPBO6ieVmrepy9TvPQnrCHT59dmX8dEGaLWjKUuQmrxe/
-         xsHclLhrWPlYpo4CBvLIsaeRhQCnxL0wU3qOv7QpA67CpkU83diSJUUhAWnEXyGXgm
-         lzZ3TFSaaohtE1A9qDnAgGvhRWu3x9wycLaEbCsg=
+        b=lm6FjZs82Df2cipa0h16uTpR9xQ5E6I9UbQKECAWVvQkSraX9QD7Zq8oTzpe+xt/E
+         z4AcbCyZeLLPhY2sO1XBpjLr/LlWnaY4aM2Hp4h/E2eL+1YryUBXmLcit3SZ63fk7e
+         VST9M4wuFYevaJikdzXkMIqCx2NbndIfzalUPO1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.7 120/120] x86/i8259: Use printk_deferred() to prevent deadlock
-Date:   Mon,  3 Aug 2020 14:19:38 +0200
-Message-Id: <20200803121908.732241710@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        =?UTF-8?q?Dieter=20N=C3=BCtzel?= <Dieter@nuetzel-hh.de>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 095/120] iwlwifi: fix crash in iwl_dbg_tlv_alloc_trigger
+Date:   Mon,  3 Aug 2020 14:19:13 +0200
+Message-Id: <20200803121907.541688166@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -60,51 +68,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit bdd65589593edd79b6a12ce86b3b7a7c6dae5208 upstream.
+[ Upstream commit ea0cca61d628662e4a1b26c77c7646f9a0257069 ]
 
-0day reported a possible circular locking dependency:
+The tlv passed to iwl_dbg_tlv_alloc_trigger comes from a loaded firmware
+file. The memory can be marked as read-only as firmware could be
+shared. In anyway, writing to this memory is not expected. So,
+iwl_dbg_tlv_alloc_trigger can crash now:
 
-Chain exists of:
-  &irq_desc_lock_class --> console_owner --> &port_lock_key
+  BUG: unable to handle page fault for address: ffffae2c01bfa794
+  PF: supervisor write access in kernel mode
+  PF: error_code(0x0003) - permissions violation
+  PGD 107d51067 P4D 107d51067 PUD 107d52067 PMD 659ad2067 PTE 8000000662298161
+  CPU: 2 PID: 161 Comm: kworker/2:1 Not tainted 5.7.0-3.gad96a07-default #1 openSUSE Tumbleweed (unreleased)
+  RIP: 0010:iwl_dbg_tlv_alloc_trigger+0x25/0x60 [iwlwifi]
+  Code: eb f2 0f 1f 00 66 66 66 66 90 83 7e 04 33 48 89 f8 44 8b 46 10 48 89 f7 76 40 41 8d 50 ff 83 fa 19 77 23 8b 56 20 85 d2 75 07 <c7> 46 20 ff ff ff ff 4b 8d 14 40 48 c1 e2 04 48 8d b4 10 00 05 00
+  RSP: 0018:ffffae2c00417ce8 EFLAGS: 00010246
+  RAX: ffff8f0522334018 RBX: ffff8f0522334018 RCX: ffffffffc0fc26c0
+  RDX: 0000000000000000 RSI: ffffae2c01bfa774 RDI: ffffae2c01bfa774
+  RBP: 0000000000000000 R08: 0000000000000004 R09: 0000000000000001
+  R10: 0000000000000034 R11: ffffae2c01bfa77c R12: ffff8f0522334230
+  R13: 0000000001000009 R14: ffff8f0523fdbc00 R15: ffff8f051f395800
+  FS:  0000000000000000(0000) GS:ffff8f0527c80000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: ffffae2c01bfa794 CR3: 0000000389eba000 CR4: 00000000000006e0
+  Call Trace:
+   iwl_dbg_tlv_alloc+0x79/0x120 [iwlwifi]
+   iwl_parse_tlv_firmware.isra.0+0x57d/0x1550 [iwlwifi]
+   iwl_req_fw_callback+0x3f8/0x6a0 [iwlwifi]
+   request_firmware_work_func+0x47/0x90
+   process_one_work+0x1e3/0x3b0
+   worker_thread+0x46/0x340
+   kthread+0x115/0x140
+   ret_from_fork+0x1f/0x40
 
- Possible unsafe locking scenario:
+As can be seen, write bit is not set in the PTE. Read of
+trig->occurrences succeeds in iwl_dbg_tlv_alloc_trigger, but
+trig->occurrences = cpu_to_le32(-1); fails there, obviously.
 
-       CPU0                    CPU1
-       ----                    ----
-  lock(&port_lock_key);
-                               lock(console_owner);
-                               lock(&port_lock_key);
-  lock(&irq_desc_lock_class);
+This is likely because we (at SUSE) use compressed firmware and that is
+marked as RO after decompression (see fw_map_paged_buf).
 
-The reason for this is a printk() in the i8259 interrupt chip driver
-which is invoked with the irq descriptor lock held, which reverses the
-lock operations vs. printk() from arbitrary contexts.
+Fix it by creating a temporary buffer in case we need to change the
+memory.
 
-Switch the printk() to printk_deferred() to avoid that.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/87365abt2v.fsf@nanos.tec.linutronix.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Reported-by: Dieter Nützel <Dieter@nuetzel-hh.de>
+Tested-by: Dieter Nützel <Dieter@nuetzel-hh.de>
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Cc: Luca Coelho <luciano.coelho@intel.com>
+Cc: Intel Linux Wireless <linuxwifi@intel.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200612073800.27742-1-jslaby@suse.cz
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/i8259.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kernel/i8259.c
-+++ b/arch/x86/kernel/i8259.c
-@@ -207,7 +207,7 @@ spurious_8259A_irq:
- 		 * lets ACK and report it. [once per IRQ]
- 		 */
- 		if (!(spurious_irq_mask & irqmask)) {
--			printk(KERN_DEBUG
-+			printk_deferred(KERN_DEBUG
- 			       "spurious 8259A interrupt: IRQ%d.\n", irq);
- 			spurious_irq_mask |= irqmask;
- 		}
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c b/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
+index bf2f00b892140..85b132a77787d 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
+@@ -263,6 +263,8 @@ static int iwl_dbg_tlv_alloc_trigger(struct iwl_trans *trans,
+ {
+ 	struct iwl_fw_ini_trigger_tlv *trig = (void *)tlv->data;
+ 	u32 tp = le32_to_cpu(trig->time_point);
++	struct iwl_ucode_tlv *dup = NULL;
++	int ret;
+ 
+ 	if (le32_to_cpu(tlv->length) < sizeof(*trig))
+ 		return -EINVAL;
+@@ -275,10 +277,20 @@ static int iwl_dbg_tlv_alloc_trigger(struct iwl_trans *trans,
+ 		return -EINVAL;
+ 	}
+ 
+-	if (!le32_to_cpu(trig->occurrences))
++	if (!le32_to_cpu(trig->occurrences)) {
++		dup = kmemdup(tlv, sizeof(*tlv) + le32_to_cpu(tlv->length),
++				GFP_KERNEL);
++		if (!dup)
++			return -ENOMEM;
++		trig = (void *)dup->data;
+ 		trig->occurrences = cpu_to_le32(-1);
++		tlv = dup;
++	}
++
++	ret = iwl_dbg_tlv_add(tlv, &trans->dbg.time_point[tp].trig_list);
++	kfree(dup);
+ 
+-	return iwl_dbg_tlv_add(tlv, &trans->dbg.time_point[tp].trig_list);
++	return ret;
+ }
+ 
+ static int (*dbg_tlv_alloc[])(struct iwl_trans *trans,
+-- 
+2.25.1
+
 
 
