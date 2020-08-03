@@ -2,285 +2,125 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 061CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD89CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5E052070A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCD4A207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:51:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qo7Mi4cL"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PYaGIC/z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgHCSta (ORCPT
+        id S1726615AbgHCSvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 14:49:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45024 "EHLO
+        Mon, 3 Aug 2020 14:51:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbgHCSt3 (ORCPT
+        with ESMTP id S1725945AbgHCSvc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 14:49:29 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEA93C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 11:49:29 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id m8so11820774pfh.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 11:49:29 -0700 (PDT)
+        Mon, 3 Aug 2020 14:51:32 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DF07C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 11:51:32 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id o5so2530920pgb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 11:51:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xo2g0ZZdJl+wryEK7qdihsTMQHTPQB2RjHE5hEFtg1o=;
-        b=Qo7Mi4cLHZ/oUwJB/vQTyljNfA6w1NlYAnGD8hyPJ9jPd9wDst5b1hChLc+Y562YUX
-         H47FJgjuM+SW7oZPpknzkLih3bkbBWnxnGk5gt0a3XTZ7+poYTh1X/m61bei26p10nWY
-         ff+AnK30/MK1V9W65UZ9j1GD6d8Pia4TwnTg/zSbI6wNXo2lSodCQwRAH72twFWkdDCe
-         ZX9db2X7nVmLbnopIOljvlw8ljoXZ+sjwugKQQL2ak6ZoNJU4ZuD/kml0tltjllHrEav
-         dO6Dag7GkbAlcbeJIjIz9d11XCXU3GkF/2he6IlO51NL2ImHfAD58jsfBDEjGYMqub0Z
-         9i6w==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=BsEgPEuWxPot+NjZbzUbvZI7wPQ90QV+Bo897F+Xb+M=;
+        b=PYaGIC/zqukBk7/VfhOApHlzjpl6h9bs3Qt/qOPYNji5Kv2hMe8FiKZZsmV+bcG7kj
+         /+je8CwsSrBtmp1ie4YYuLpzv+XcEeAwVNaHItc123d5TE/Oq9P+4zhr4ii8luM4hpeF
+         K5ZatAxHUxM08034mZcjG4h1JqtKPx8Yhiw34=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xo2g0ZZdJl+wryEK7qdihsTMQHTPQB2RjHE5hEFtg1o=;
-        b=F08uElMFsmqvi+sn75aqPXFvDj8XgZb9Ya4YiXHpOH65nUPm5bN1iqTKpAruXw8KoC
-         +4AbFahem1DBwuv6AoLY+my6Eibuw8rvHnk2myqPiI4z5IPBLAhGLLdWyfqbpvC9Cgtw
-         5hMqAHZApRo4hVNpCvxUAE/Gr/qZH1PR/cYYcrLzO43kpKRbFjOIqWJ9khfD99wLKGVw
-         E3drP9nheNlcgeGs8xifJynFbxQWfljL1KeLc8SatAOGrcL6evXYRzYGGuon89I4gVwf
-         Tonhth8cQmJECKV2X3bkr1bTRbWTtDjuQ0yyObxw6rdNaM78xzGMc41hKHuqNfKe9ndb
-         GhoA==
-X-Gm-Message-State: AOAM530sbp802V9vue2MLb1euAKJ66KWb+epxOFCRd1/h5IE4RZmoONf
-        MnP+LKkzyB99vFouB2e75HUR1+Qwh3EXhyclm8NeaA==
-X-Google-Smtp-Source: ABdhPJwcK0kD977AMGNMBr+ExlRdEb1ogbKe83zUVStJC7iUARcFsgFodDJLaQYPDKeEmG50fv58Yhhr7Hk3zC61bfI=
-X-Received: by 2002:a63:b546:: with SMTP id u6mr15616172pgo.381.1596480568482;
- Mon, 03 Aug 2020 11:49:28 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=BsEgPEuWxPot+NjZbzUbvZI7wPQ90QV+Bo897F+Xb+M=;
+        b=V3QL2DtpURzqoJkHH+fpEtZAwtG0RTTl5UceARIHxJRpz23uJiDq7R7lnIv+K4b6uF
+         kUntabxNpvP0OCsGDkgB/636fZIvDjC4bH5u5lzcnBeMqA9Z55NDCfTvpqCQ5Dg9JpSW
+         AYsAAQmwUMY0t/ZWXXhbSVTPtaAeJeZx41gAUZhgddutvjBdukT7UzSs+i8vnTg0LYam
+         PNEjW2G2TlwNSlXaoDhdbkiiwojFrTT0ubtj2ICtBDWzS44KzuqdwsWLHwYeuluGeOYM
+         CcgZR7K9hGLM0t+KCZkqDesxcGOMfqgDS9IsidR64hjRvDBbBC9folL9mMU/qfwuQpkJ
+         sNkA==
+X-Gm-Message-State: AOAM530VTaLSd66i8ABPEtdsfkVlrNIl/bNHZGnR46ja5f3Vl9HDLxvL
+        LPkHCMbMTKfjlzn13xgEb2JHgbuHcsY=
+X-Google-Smtp-Source: ABdhPJxu9iFRKMyP6AGWzhzaM3NL4IC7Xf4qjyWphyvaL0Mi651oIJQ4hUfQ2R4rdjuWIyUJXWCHTQ==
+X-Received: by 2002:a65:6703:: with SMTP id u3mr15651743pgf.254.1596480691795;
+        Mon, 03 Aug 2020 11:51:31 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r191sm21241800pfr.181.2020.08.03.11.51.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 11:51:30 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 11:51:29 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        Alexander Popov <alex.popov@linux.com>,
+        Kees Cook <keescook@chromium.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Subject: [GIT PULL] gcc-plugins updates for v5.9-rc1
+Message-ID: <202008031150.63BAD93@keescook>
 MIME-Version: 1.0
-References: <CAKwvOdnni_G2tw+0eCLQQvvdcz97Fy1-cBjzPvLwbBNDu1-KqQ@mail.gmail.com>
- <20200728004736.3590053-1-nhuck@google.com> <alpine.DEB.2.21.2008012031540.14646@felia>
-In-Reply-To: <alpine.DEB.2.21.2008012031540.14646@felia>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 3 Aug 2020 11:49:16 -0700
-Message-ID: <CAKwvOd=V6-p1H1F65gFAQm+h4Qgt_98-XJeUSNaONmPE9yZciA@mail.gmail.com>
-Subject: Re: [PATCH v7] Makefile: Add clang-tidy and static analyzer support
- to makefile
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Nathan Huckleberry <nhuck@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Pirama Arumuga Nainar <pirama@google.com>,
-        Bill Wendling <morbo@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 1, 2020 at 12:23 PM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
->
-> Hi Nathan, Hi Nick,
->
-> I have been busy with other topics around the kernel and static analysis;
-> but then, I read clang and static analysis in my mailbox in this patch.
->
-> So, I thought let me give this patch a try on the weekend.
->
-> I applied the patch on next-2020729; that worked.
->
-> Then:
-> $ make clang-tidy
-> scripts/clang-tools/Makefile.clang-tools:13: *** clang-tidy requires
-> CC=clang.  Stop.
->
-> Okay, that is a good and clear error message.
->
-> Then:
->
-> $ make CC=clang-10 defconfig
-> $ make CC=clang-10 clang-tidy
->
-> python3 scripts/clang-tools/gen_compile_commands.py
-> WARNING: Found 8 entries. Have you compiled the kernel?
-> python3 scripts/clang-tools/run-clang-tools.py clang-tidy
-> compile_commands.json
->
-> Then actually an error in clang-tidy.
-> Error: no checks enabled.
-> USAGE: clang-tidy [options] <source0> [... <sourceN>]
-> ...
->
-> I will get to that later how I fixed that for my setup.
->
-> Okay, good, that is clear... I need to compile it first, got it.
+Hi Linus,
 
-Hi Lukas,
-Thank you so much for taking the time to apply the patch and help test it.
+Please pull these gcc-plugins updates for v5.9-rc1. It is primarily
+improvements to STACKLEAK from Alexander Popov, along with some additional
+cleanups.
 
-For the case of not doing a build first: gen_compile_commands.py
-parses the .*.d files to build the compilation database and warns if
-not many were found.  I think it might be interesting for it to just
-invoke a build if it sees that, or maybe for the clang-tidy and
-clang-analyzer targets to somehow invoke the default make target.  The
-issue there might be that you need to invoke `make clang-tidy` with
-`make CC=clang LD=ld.lld ... clang-tidy` in order to trigger a build
-successfully.
+Thanks!
 
-Also, I wonder if gen_compile_commands.py should set a return code in
-that case so that callers can handle such an exceptional case?  In
-that case, I'd consider that a papercut or potential improvement to
-scripts/get_compile_commands.py orthogonal to this patch.
+-Kees
 
->
-> $ make CC=clang-10
-> $ make CC=clang-10 clang-tidy
->
-> Okay, I run except for the fix I needed.
->
-> Where is the output from clang-tidy?
->
-> It prints:
->
-> python3 scripts/clang-tools/gen_compile_commands.py
-> python3 scripts/clang-tools/run-clang-tools.py clang-tidy compile_commands.json
->
-> That is it. Does that mean 0 warnings, or where do I find the output?
-> The script suggests it should be in stderr once all the parallel runs
-> collected it, right?
->
-> I was confused; maybe a short summary output might help here.
+The following changes since commit 48778464bb7d346b47157d21ffde2af6b2d39110:
 
-I was also caught by this; for x86 defconfig, the kernel is actually
-clean of instances of linuxkernel-* clang-tidy checks (there was also
-an issue with the CWD for x86 in v6, but was resolved in v7 of this
-patch).  I had to add a case that should fail to make clang-tidy have
-output, and the check only checks for unchecked "ERR_PTR", "PTR_ERR",
-"IS_ERR", "IS_ERR_OR_NULL", "ERR_CAST", "PTR_ERR_OR_ZERO".
-(Documentation for that should be improved.) So if you add a function
-that just constructs an `ERR_PTR(0)` and call it from code that gets
-compiled in, then you'll start to see warnings from clang-tidy for x86
-defconfig.  For aarch64 and arm, you'll see there are some unchecked
-cases that look like low hanging fruit to fix.
+  Linux 5.8-rc2 (2020-06-21 15:45:29 -0700)
 
-It probably can be improved to note that there was no output, but that
-will require more machinery to track how much output there was.  I'd
-prefer to follow up with additional polish on top of this once this
-lands.
+are available in the Git repository at:
 
->
-> Then, I ran
->
-> $ make CC=clang-10 clang-analyzer
->
-> And I see a lot of warnings... I guess that is intended.
->
-> There is a lot of:
->
-> Suppressed XX warnings (XX in non-user code).
-> Use -header-filter=.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.
->
-> To an outsider, it is unclear if that is intended or if the tool is broken
-> in this setup.
->
-> Is there are way to silent that meta-warning? Or is my setup broken?
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/gcc-plugins-v5.9-rc1
 
-See also my comment about disabling the clang-diagnostic-* analyzer
-checks. We haven't had time to sort out the cause of them yet, and for
-now they just look like noise.
+for you to fetch changes up to 496b24ec6d47f2d304a0c5836ba4b1bb5d30bab8:
 
->
-> In summary, it is pretty clear how to run clang-tidy and clang-analyzer
-> and it was a pretty smooth experience, even with no documentation at hand.
->
-> It was fun for me. Keep up the good work!
->
-> Just one issue... see below.
->
-> > +    p = subprocess.run(["clang-tidy", "-p", args.path, checks, entry["file"]],
->
-> You hardcoded here: clang-tidy
->
-> But in my Ubuntu 18.04 setup, I got multiple versions of clang and
-> clang-tidy installed; yeah, maybe my setup is broken, but maybe those from
-> others are similar.
->
-> When I run:
->
->   make CC=clang-10 clang-tidy
->
-> it picks up the "wrong" clang-tidy version...
->
-> My setup is:
->
-> $ which clang-tidy
-> /usr/bin/clang-tidy
->
-> $ which clang-tidy-10
-> /usr/bin/clang-tidy-10
->
-> $ clang-tidy --version
-> LLVM (http://llvm.org/):
->   LLVM version 6.0.0
->
->   Optimized build.
->   Default target: x86_64-pc-linux-gnu
->   Host CPU: znver1
->
-> $ clang-tidy-10 --version
-> LLVM (http://llvm.org/):
->   LLVM version 10.0.1
->
->   Optimized build.
->   Default target: x86_64-pc-linux-gnu
->   Host CPU: znver1
->
-> When I run make CC=clang-10 clang-tidy, I would expect it to use
-> clang-tidy-10, not clang-tidy. (clang-tidy errors just because it is too
-> old; I guess it does have the linuxkernel-* options.)
->
-> Now, I cannot fix that without touching your script. There is no way I can
-> tell the build target to use clang-tidy-10.
->
-> With a quick touch:
->
-> -    p = subprocess.run(["clang-tidy", "-p", args.path, checks, entry["file"]],
-> +    p = subprocess.run(["clang-tidy-10", "-p", args.path, checks, entry["file"]],
->
-> I got it to work.
->
-> Maybe you have a good idea how to get make clang-tidy to pick
-> up the intended version without touching the python script itself?
->
-> It is a minor issue, but it would be nice if that setting would work
-> somehow.
+  gcc-plugins: Replace HTTP links with HTTPS ones (2020-07-13 09:29:09 -0700)
 
-Ah right, sorry, I tend to forget about the use case of having
-multiple versions of clang installed.
+----------------------------------------------------------------
+GCC plugins updates for v5.9-rc1
 
-I think the best approach here might be for the user (you, in this
-case) to ensure that list of PATHs in the path list has the path to
-the intended version of clang-tidy you'd like to run listed before
-others.  That is similar to the recommendation for the LLVM=1 patch
-set. ie.
-commit a0d1c951ef08e ("kbuild: support LLVM=1 to switch the default
-tools to Clang/LLVM")
-specifically this part of the commit message:
+- Update URLs for HTTPS scheme where available (Alexander A. Klimov)
+- Improve STACKLEAK code generation on x86 (Alexander Popov)
 
-> the suffixed versions in /usr/bin/ are symlinks to binaries in
-> /usr/lib/llvm-#/bin/, so this can also be handled by PATH.
+----------------------------------------------------------------
+Alexander A. Klimov (1):
+      gcc-plugins: Replace HTTP links with HTTPS ones
 
-If `clang-tidy` on your system points to an old version of clang-tidy,
-it may be worthwhile to uninstall the old version, and update the
-symlink to point to a newer version.  That may be simpler than trying
-to support invoking `make clang-tidy` for arbitrary versions or binary
-names of clang-tidy.  I can understand having multiple versions of a
-compiler installed for quickly checking compatibility (though these
-days I prefer godbolt.org for that) or if a particular codebase is
-stuck on an old version of a toolchain for whatever reason; but having
-multiple versions of clang-tidy installed and supporting all of them
-is a little harder to justify.
+Alexander Popov (4):
+      gcc-plugins/stackleak: Don't instrument itself
+      ARM: vdso: Don't use gcc plugins for building vgettimeofday.c
+      gcc-plugins/stackleak: Use asm instrumentation to avoid useless register saving
+      gcc-plugins/stackleak: Add 'verbose' plugin parameter
+
+ arch/arm/vdso/Makefile                      |   2 +-
+ include/linux/compiler_attributes.h         |  13 ++
+ kernel/Makefile                             |   1 +
+ kernel/stackleak.c                          |  16 +-
+ scripts/Makefile.gcc-plugins                |   2 +
+ scripts/gcc-plugins/cyc_complexity_plugin.c |   2 +-
+ scripts/gcc-plugins/sancov_plugin.c         |   2 +-
+ scripts/gcc-plugins/stackleak_plugin.c      | 248 ++++++++++++++++++++++++----
+ scripts/gcc-plugins/structleak_plugin.c     |   2 +-
+ 9 files changed, 241 insertions(+), 47 deletions(-)
+
 -- 
-Thanks,
-~Nick Desaulniers
+Kees Cook
