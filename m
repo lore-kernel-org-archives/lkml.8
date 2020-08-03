@@ -2,76 +2,94 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47555C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 612E7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28566206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3063C20678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:45:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GYuThUnh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbgHCFog (ORCPT
+        id S1728314AbgHCFpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 01:44:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39242 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727015AbgHCFog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 01:44:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 2B2BAAC20;
-        Mon,  3 Aug 2020 05:44:50 +0000 (UTC)
-Subject: Re: [PATCH v3 0/3] Few bug fixes and Convert to pin_user_pages*()
-To:     Souptick Joarder <jrdr.linux@gmail.com>,
-        boris.ostrovsky@oracle.com, sstabellini@kernel.org
-Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        John Hubbard <jhubbard@nvidia.com>,
-        Paul Durrant <xadimgnik@gmail.com>
-References: <1594525195-28345-1-git-send-email-jrdr.linux@gmail.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <b26b61b9-de1f-b86c-be8b-049fa412b509@suse.com>
-Date:   Mon, 3 Aug 2020 07:44:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 3 Aug 2020 01:45:20 -0400
+Received: from mx07-00178001.pphosted.com ([185.132.182.106]:9556 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728295AbgHCFpS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 01:45:18 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0735H2xv031305;
+        Mon, 3 Aug 2020 07:18:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=I5RMLhsf+2H/+2z062Q7AViIP2i9l6KE48tTultTe6U=;
+ b=GYuThUnhsjrsn76SrPD+b3L+9ncls2UMnhL9ISWU93U6rfo7esPs5BT8kEOVGYvvQ7Px
+ kFjwEjIwzt15spHAjKg7893He7/zI59++FUy6xt7ZRxWmcA2lEnB6vrs9861/YvJRPiH
+ SQNzvchTtQ60dks7lt8qasxEtGZo4+IYWWkPy7mIBCXY7kyVrgY0cq0tg7Wn72jXYwDV
+ L4f7Qp0HTMMKerlRQsO8uqytmcWL/vntXQ6AARtaH6552vYnVzG4achPMtv/BtGGHbjA
+ MHrghwmdjwfOGiwVZErWq40qaU0XbAdJkdl5xIhDcv7KwBXpZTDT8A1EdEms1QHUC3bk oA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 32n6th4vff-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 07:18:45 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BA80910002A;
+        Mon,  3 Aug 2020 07:18:43 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3184A20F450;
+        Mon,  3 Aug 2020 07:18:43 +0200 (CEST)
+Received: from localhost (10.75.127.49) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Aug 2020 07:18:42
+ +0200
+From:   Alain Volmat <alain.volmat@st.com>
+To:     <wsa@kernel.org>, <pierre-yves.mordret@st.com>
+CC:     <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
+        <alain.volmat@st.com>
+Subject: [PATCH v3 0/2] i2c: stm32: add host-notify support via i2c slave
+Date:   Mon, 3 Aug 2020 07:17:54 +0200
+Message-ID: <1596431876-24115-1-git-send-email-alain.volmat@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <1594525195-28345-1-git-send-email-jrdr.linux@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-03_04:2020-07-31,2020-08-03 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.07.20 05:39, Souptick Joarder wrote:
-> This series contains few clean up, minor bug fixes and
-> Convert get_user_pages() to pin_user_pages().
-> 
-> I'm compile tested this, but unable to run-time test,
-> so any testing help is much appriciated.
-> 
-> v2:
->          Addressed few review comments and compile issue.
->          Patch[1/2] from v1 split into 2 in v2.
-> v3:
-> 	Address review comment. Add review tag.
-> 
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: Paul Durrant <xadimgnik@gmail.com>
-> 
-> Souptick Joarder (3):
->    xen/privcmd: Corrected error handling path
->    xen/privcmd: Mark pages as dirty
->    xen/privcmd: Convert get_user_pages*() to pin_user_pages*()
-> 
->   drivers/xen/privcmd.c | 32 ++++++++++++++------------------
->   1 file changed, 14 insertions(+), 18 deletions(-)
-> 
+This serie replaces the previous 'stm32-f7: Addition of SMBus Alert /
+Host-notify features' serie to only focus on the SMBus Host-Notify feature.
+It should be applied with "[PATCH] i2c: add binding to mark a bus as SMBus"
+from Wolfram which defines the newly introduced "smbus" binding.
 
-Series pushed to xen/tip.git for-linus-5.9
+Alain Volmat (2):
+  i2c: smbus: add core function handling SMBus host-notify
+  i2c: stm32f7: Add SMBus Host-Notify protocol support
 
+ drivers/i2c/busses/Kconfig       |   1 +
+ drivers/i2c/busses/i2c-stm32f7.c | 110 +++++++++++++++++++++++++++++++++------
+ drivers/i2c/i2c-smbus.c          | 107 +++++++++++++++++++++++++++++++++++++
+ include/linux/i2c-smbus.h        |  12 +++++
+ 4 files changed, 215 insertions(+), 15 deletions(-)
 
-Juergen
+-- 
+v3: move smbus host-notify slave code into i2c-smbus.c file
+    rework slave callback index handling
+    add sanity check in slave free function
+
+v2: fix a bad test within the i2c-stm32f7 driver leading to decrease of
+    available slave slot
+
