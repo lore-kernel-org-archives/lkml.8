@@ -2,190 +2,124 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B20E4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5C08206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:14:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bT28odVq"
+	by mail.kernel.org (Postfix) with ESMTP id 986752065C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:16:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgHCFOI (ORCPT
+        id S1727948AbgHCFQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 01:14:08 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:64904 "EHLO m43-7.mailgun.net"
+        Mon, 3 Aug 2020 01:16:51 -0400
+Received: from mailout09.rmx.de ([94.199.88.74]:53497 "EHLO mailout09.rmx.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726661AbgHCFOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 01:14:07 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596431646; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=2SttEpjWkPUzgGIFPGBOgS8vyJzXv+pt+lN3X+pHN84=;
- b=bT28odVq5FY/sbyWe3cRnftgmqJtFmBCH4dny+g9beLuJfYaAQU7kBElQVNjh1AHoTos65DL
- jL07jommm12iN87nReGplBrzcBHMnD4vpqMJvdSG1+H1SJERwczpPCCSnpq8UNkrDWW1rMNc
- tEP4lBhpL87Fq99vUeaZjAQB8GM=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
- 5f279d1e798b102968ef1b24 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 03 Aug 2020 05:14:06
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2C3B9C433A0; Mon,  3 Aug 2020 05:14:04 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id S1726824AbgHCFQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 01:16:50 -0400
+Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 01717C433C9;
-        Mon,  3 Aug 2020 05:14:02 +0000 (UTC)
+        by mailout09.rmx.de (Postfix) with ESMTPS id 4BKmMd4xzCzbj4g;
+        Mon,  3 Aug 2020 07:16:45 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin02.retarus.com (Postfix) with ESMTPS id 4BKmMK0C8lz2TTLy;
+        Mon,  3 Aug 2020 07:16:29 +0200 (CEST)
+Received: from n95hx1g2.localnet (192.168.54.30) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 3 Aug
+ 2020 07:16:16 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Jonathan Cameron <jic23@kernel.org>
+CC:     <stable@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
+        "Lars-Peter Clausen" <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: trigger: sysfs: Disable irqs before calling iio_trigger_poll()
+Date:   Mon, 3 Aug 2020 07:16:14 +0200
+Message-ID: <2272098.D4WoNcAbr4@n95hx1g2>
+Organization: Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+In-Reply-To: <20200801170234.2953b087@archlinux>
+References: <20200727145714.4377-1-ceggers@arri.de> <20200801170234.2953b087@archlinux>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 03 Aug 2020 13:14:02 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Avri Altman <Avri.Altman@wdc.com>, linux-scsi@vger.kernel.org,
-        martin.petersen@oracle.com, alim.akhtar@samsung.com,
-        jejb@linux.ibm.com, beanhuo@micron.com, asutoshd@codeaurora.org,
-        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
-        chaotian.jing@mediatek.com, cc.chou@mediatek.com
-Subject: Re: [PATCH v4] scsi: ufs: Cleanup completed request without interrupt
- notification
-In-Reply-To: <1596423655.32283.7.camel@mtkswgap22>
-References: <20200724140246.19434-1-stanley.chu@mediatek.com>
- <SN6PR04MB4640B5FC06968244DDACB8BEFC720@SN6PR04MB4640.namprd04.prod.outlook.com>
- <1596159018.17247.53.camel@mtkswgap22>
- <97f1dfb0-41b6-0249-3e82-cae480b0efb6@acm.org>
- <8b0a158a7c3ee2165e09290996521ffc@codeaurora.org>
- <f45c6c47-ffc5-3f8e-3234-9e5989dbf996@acm.org>
- <548b602daa1e15415625cb8d1f81a208@codeaurora.org>
- <1596423655.32283.7.camel@mtkswgap22>
-Message-ID: <3b144ed6897483d1ae3ced6de2dfc64c@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Originating-IP: [192.168.54.30]
+X-RMX-ID: 20200803-071635-4BKmMK0C8lz2TTLy-0@kdin02
+X-RMX-SOURCE: 217.111.95.66
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stanley,
+On Saturday, 1 August 2020, 18:02:34 CEST, Jonathan Cameron wrote:
+> On Mon, 27 Jul 2020 16:57:13 +0200
+> 
+> Christian Eggers <ceggers@arri.de> wrote:
+> > iio_trigger_poll() calls generic_handle_irq(). This function expects to
+> > be run with local IRQs disabled.
+> 
+> Was there an error or warning that lead to this patch?
+[   17.448466] 000: ------------[ cut here ]------------
+[   17.448481] 000: WARNING: CPU: 0 PID: 9 at kernel/irq/handle.c:152 __handle_irq_event_percpu+0x55/0xae
+[   17.448511] 000: irq 236 handler irq_default_primary_handler+0x1/0x4 enabled interrupts
+[   17.448526] 000: Modules linked in: bridge stp llc usb_f_ncm u_ether libcomposite sd_mod configfs cdc_acm usb_storage scsi_mod ci_hdrc_imx ci_hdrc st_magn_spi ulpi st_sensors_spi ehci_hcd regmap_spi tcpm roles st_magn_i2c typec st_sensors_i2c udc_core st_magn as73211 st_sensors imx_thermal usb49xx usbcore industrialio_triggered_buffer rtc_rv3028 kfifo_buf at24 usb_common nls_base i2c_dev usbmisc_imx phy_mxs_usb anatop_regulator imx2_wdt imx_fan spidev leds_pwm leds_gpio led_class iio_trig_sysfs imx6sx_adc industrialio fixed at25 spi_imx spi_bitbang imx_napi dev imx_sdma virt_dma nfsv3 nfs lockd grace sunrpc ksz9477_i2c ksz9477 tag_ksz ksz_common dsa_core phylink regmap_i2c i2c_imx i2c_core fec ptp pps_core micrel
+[   17.448712] 000: CPU: 0 PID: 9 Comm: ksoftirqd/0 Not tainted 5.4.47-rt28+ #446
+[   17.448723] 000: Hardware name: Freescale i.MX6 Ultralite (Device Tree)
+[   17.448738] 000: [<c0108265>] (unwind_backtrace) from [<c01070a7>] (show_stack+0xb/0xc)
+[   17.448754] 000: [<c01070a7>] (show_stack) from [<c0110673>] (__warn+0x7b/0x8c)
+[   17.448772] 000: [<c0110673>] (__warn) from [<c01106b5>] (warn_slowpath_fmt+0x31/0x50)
+[   17.448787] 000: [<c01106b5>] (warn_slowpath_fmt) from [<c012be53>] (__handle_irq_event_percpu+0x55/0xae)
+[   17.448807] 000: [<c012be53>] (__handle_irq_event_percpu) from [<c012bec5>] (handle_irq_event_percpu+0x19/0x40)
+[   17.448823] 000: [<c012bec5>] (handle_irq_event_percpu) from [<c012bf2b>] (handle_irq_event+0x3f/0x5c)
+[   17.448839] 000: [<c012bf2b>] (handle_irq_event) from [<c012dd73>] (handle_simple_irq+0x67/0x6a)
+[   17.448854] 000: [<c012dd73>] (handle_simple_irq) from [<c012b915>] (generic_handle_irq+0xd/0x16)
+[   17.448870] 000: [<c012b915>] (generic_handle_irq) from [<bf8fcf05>] (iio_trigger_poll+0x33/0x44 [industrialio])
+[   17.448962] 000: [<bf8fcf05>] (iio_trigger_poll [industrialio]) from [<c0147b93>] (irq_work_run_list+0x43/0x66)
+[   17.449010] 000: [<c0147b93>] (irq_work_run_list) from [<c013804f>] (run_timer_softirq+0x7/0x3c)
+[   17.449029] 000: [<c013804f>] (run_timer_softirq) from [<c01022cf>] (__do_softirq+0x10f/0x160)
+[   17.449045] 000: [<c01022cf>] (__do_softirq) from [<c0112255>] (run_ksoftirqd+0x19/0x2c)
+[   17.449061] 000: [<c0112255>] (run_ksoftirqd) from [<c012153b>] (smpboot_thread_fn+0x13b/0x140)
+[   17.449078] 000: [<c012153b>] (smpboot_thread_fn) from [<c011f823>] (kthread+0xa3/0xac)
+[   17.449095] 000: [<c011f823>] (kthread) from [<c01010f1>] (ret_from_fork+0x11/0x20)
+[   17.449110] 000: Exception stack(0xc2063fb0 to 0xc2063ff8)
+[   17.449119] 000: 3fa0:                                     00000000 00000000 00000000 00000000
+[   17.449130] 000: 3fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[   17.449139] 000: 3fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[   17.449146] 000: ---[ end trace 0000000000000002 ]---
 
-On 2020-08-03 11:00, Stanley Chu wrote:
-> Hi Can,
+
+
+> Or can you point to what call in generic_handle_irq is making the
+> assumption that we are breaking?
 > 
-> On Sat, 2020-08-01 at 07:17 +0800, Can Guo wrote:
->> Hi Bart,
->> 
->> On 2020-08-01 00:51, Bart Van Assche wrote:
->> > On 2020-07-31 01:00, Can Guo wrote:
->> >> AFAIK, sychronization of scsi_done is not a problem here, because scsi
->> >> layer
->> >> use the atomic state, namely SCMD_STATE_COMPLETE, of a scsi cmd to
->> >> prevent
->> >> the concurrency of abort and real completion of it.
->> >>
->> >> Check func scsi_times_out(), hope it helps.
->> >>
->> >> enum blk_eh_timer_return scsi_times_out(struct request *req)
->> >> {
->> >> ...
->> >>         if (rtn == BLK_EH_DONE) {
->> >>                 /*
->> >>                  * Set the command to complete first in order to
->> >> prevent
->> >> a real
->> >>                  * completion from releasing the command while error
->> >> handling
->> >>                  * is using it. If the command was already completed,
->> >> then the
->> >>                  * lower level driver beat the timeout handler, and it
->> >> is safe
->> >>                  * to return without escalating error recovery.
->> >>                  *
->> >>                  * If timeout handling lost the race to a real
->> >> completion, the
->> >>                  * block layer may ignore that due to a fake timeout
->> >> injection,
->> >>                  * so return RESET_TIMER to allow error handling
->> >> another
->> >> shot
->> >>                  * at this command.
->> >>                  */
->> >>                 if (test_and_set_bit(SCMD_STATE_COMPLETE,
->> >> &scmd->state))
->> >>                         return BLK_EH_RESET_TIMER;
->> >>                 if (scsi_abort_command(scmd) != SUCCESS) {
->> >>                         set_host_byte(scmd, DID_TIME_OUT);
->> >>                         scsi_eh_scmd_add(scmd);
->> >>                 }
->> >>         }
->> >> }
->> >
->> > I am familiar with this mechanism. My concern is that both the regular
->> > completion path and the abort handler must call scsi_dma_unmap() before
->> > calling cmd->scsi_done(cmd). I don't see how
->> > test_and_set_bit(SCMD_STATE_COMPLETE, &scmd->state) could prevent that
->> > the regular completion path and the abort handler call scsi_dma_unmap()
->> > concurrently since both calls happen before the SCMD_STATE_COMPLETE bit
->> > is set?
->> >
->> > Thanks,
->> >
->> > Bart.
->> 
->> For scsi_dma_unmap() part, that is true - we should make it serialized
->> with
->> any other completion paths. I've found it during my fault injection
->> test, so
->> I've made a patch to fix it, but it only comes in my next error 
->> recovery
->> enhancement patch series. Please check the attachment.
->> 
+> Given this is using the irq_work framework I'm wondering if this is
+> a more general problem?
+
+If I understand correctly, the kernel temporarily disables hardware interrupts
+while hardware irq handlers are run. In case of the iio-trig-hrtim and iio-trig-sysfs
+interrupts, __handle_irq_event_percpu() is not called from a hardware irq
+(where interrupts would be disabled), but from software.
+
+Similar examples found here:
+0a29ac5bd3 ("net: usb: lan78xx: Disable interrupts before calling generic_handle_irq()")
+
+and
+drivers/i2c/busses/i2c-cht-wc.c:103
+
+
 > 
-> Your patch looks good to me.
-> 
-> I have the same idea before but I found that calling scsi_done() (by
-> __ufshcd_transfer_req_compl()) in ufshcd_abort() in old kernel (e.g.,
-> 4.14) will cause issues but it has been resolved by introduced
-> SCMD_STATE_COMPLETE flag in newer kernel. So your patch makes sense.
-> 
-> Would you mind sending out this draft patch as a formal patch together
-> with my patch to fix issues in ufshcd_abort()? Our patches are aimed to
-> fix cases that host/device reset eventually not being triggered by the
-> result of ufshcd_abort(), for example, command is aborted successfully
-> or command is not pending in device with its doorbell also cleared.
+> Basically more info please!
 > 
 > Thanks,
-> Stanley Chu
 > 
+> Jonathan
+> 
+Regards
+Christian
 
-I don't quite actually follow your fix here and I didn't test the 
-similar
-fault injection scenario like you do here, so I am not sure if I should
-just absorb your fix into mine. How about I put my fix in my current 
-error
-recovery patch series (maybe in next version of it) and you can give 
-your
-review. So you can still go with your fix as it is. Mine will be picked 
-up
-later by Martin. What do you think?
 
-Thanks,
 
-Can Guo.
-
->> Thanks,
->> 
->> Can Guo.
->> 
