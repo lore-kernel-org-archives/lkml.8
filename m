@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F8AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA78C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB1E1206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C171520678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:57:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596459443;
-	bh=0Nnr52XMSJnMBpdN4Zi3KaJuzM8KsrD/MyR3/JGEUf4=;
+	s=default; t=1596459447;
+	bh=G84AUxGogVsnmVra44Oao1d3jsTbdPjzCMOrVvh6gJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nHkPdA+5BKgSJot9pDEuQttq6eb3pLp8AmSTTdBWolxzaWt+TY6cAi8M/bgODEnZ2
-	 Tu9XzwYU84G1TI0V/raZAkl0GXQg5Qt1Ev4B5b3a9DUTc3yXEGBtlaoIOJ82OQsFpY
-	 Y14jGonxgyiUU9R4UyaTZexQwdB7m3b474Ifam0g=
+	b=grPc6z4Swf7h69Xcjqqh9Qj33KBy5pjMQ5Zu9scUx9NrxoKpufwpXeZrMDuJwZzbI
+	 cD4ycgS9oX/KHrAGEdqytYrKEVjFwaf4o8KUsIJuK3D8wJsEGYFjdXHhVnaRN9PjeU
+	 RYBD2m1N86I9UduM/qP4Gd5NoboumIV9rdIk75jk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729743AbgHCM5U (ORCPT
+        id S1729748AbgHCM51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:57:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44758 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:57:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726676AbgHCMVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:21:30 -0400
+        id S1726511AbgHCMV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:21:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1453A204EC;
-        Mon,  3 Aug 2020 12:21:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A2D320738;
+        Mon,  3 Aug 2020 12:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457288;
-        bh=0Nnr52XMSJnMBpdN4Zi3KaJuzM8KsrD/MyR3/JGEUf4=;
+        s=default; t=1596457286;
+        bh=G84AUxGogVsnmVra44Oao1d3jsTbdPjzCMOrVvh6gJQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ANd28LFAZGRDbqIwbfypFbU056FeWBysV2mxPgnZFIFnKduKinPg/PUQiiV+wowp3
-         JLVQWj2NhbvU/1Sr51B7staXcF9OxwykiMafC1s03O0VPvpLAIthNYp0j9b3ggO7UP
-         aKhf1xaFyfPEdqjQBE+AiyASLOuvkMOp0yP1zksU=
+        b=h1cVo//qVdwXnfN2AG0aRQsIZidIqGsbphA18tCeFEFAzWQE3aLG3ykyhQaun1qYI
+         HIgY5An7QRBiZJYPcdyS8qWh42JbcNnnBivkYhkewx7jA5ugYY41tivU+O6mp13N43
+         egCoduWkO6c58pMdLf5zBPB7ZMRVOXyiuZIMRmJg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, j2468h@googlemail.com,
-        Paul Moore <paul@paul-moore.com>
-Subject: [PATCH 5.7 014/120] revert: 1320a4052ea1 ("audit: trigger accompanying records when no rules present")
-Date:   Mon,  3 Aug 2020 14:17:52 +0200
-Message-Id: <20200803121903.554565390@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+77a25acfa0382e06ab23@syzkaller.appspotmail.com,
+        Wang Hai <wanghai38@huawei.com>,
+        Dominique Martinet <asmadeus@codewreck.org>
+Subject: [PATCH 5.7 013/120] 9p/trans_fd: Fix concurrency del of req_list in p9_fd_cancelled/p9_read_work
+Date:   Mon,  3 Aug 2020 14:17:51 +0200
+Message-Id: <20200803121903.502916735@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -59,78 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Moore <paul@paul-moore.com>
+From: Wang Hai <wanghai38@huawei.com>
 
-commit 8ac68dc455d9d18241d44b96800d73229029ed34 upstream.
+commit 74d6a5d5662975aed7f25952f62efbb6f6dadd29 upstream.
 
-Unfortunately the commit listed in the subject line above failed
-to ensure that the task's audit_context was properly initialized/set
-before enabling the "accompanying records".  Depending on the
-situation, the resulting audit_context could have invalid values in
-some of it's fields which could cause a kernel panic/oops when the
-task/syscall exists and the audit records are generated.
+p9_read_work and p9_fd_cancelled may be called concurrently.
+In some cases, req->req_list may be deleted by both p9_read_work
+and p9_fd_cancelled.
 
-We will revisit the original patch, with the necessary fixes, in a
-future kernel but right now we just want to fix the kernel panic
-with the least amount of added risk.
+We can fix it by ignoring replies associated with a cancelled
+request and ignoring cancelled request if message has been received
+before lock.
 
-Cc: stable@vger.kernel.org
-Fixes: 1320a4052ea1 ("audit: trigger accompanying records when no rules present")
-Reported-by: j2468h@googlemail.com
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Link: http://lkml.kernel.org/r/20200612090833.36149-1-wanghai38@huawei.com
+Fixes: 60ff779c4abb ("9p: client: remove unused code and any reference to "cancelled" function")
+Cc: <stable@vger.kernel.org> # v3.12+
+Reported-by: syzbot+77a25acfa0382e06ab23@syzkaller.appspotmail.com
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/audit.c   |    1 -
- kernel/audit.h   |    8 --------
- kernel/auditsc.c |    3 +++
- 3 files changed, 3 insertions(+), 9 deletions(-)
+ net/9p/trans_fd.c |   15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -1811,7 +1811,6 @@ struct audit_buffer *audit_log_start(str
- 	}
+--- a/net/9p/trans_fd.c
++++ b/net/9p/trans_fd.c
+@@ -362,6 +362,10 @@ static void p9_read_work(struct work_str
+ 		if (m->rreq->status == REQ_STATUS_SENT) {
+ 			list_del(&m->rreq->req_list);
+ 			p9_client_cb(m->client, m->rreq, REQ_STATUS_RCVD);
++		} else if (m->rreq->status == REQ_STATUS_FLSHD) {
++			/* Ignore replies associated with a cancelled request. */
++			p9_debug(P9_DEBUG_TRANS,
++				 "Ignore replies associated with a cancelled request\n");
+ 		} else {
+ 			spin_unlock(&m->client->lock);
+ 			p9_debug(P9_DEBUG_ERROR,
+@@ -703,11 +707,20 @@ static int p9_fd_cancelled(struct p9_cli
+ {
+ 	p9_debug(P9_DEBUG_TRANS, "client %p req %p\n", client, req);
  
- 	audit_get_stamp(ab->ctx, &t, &serial);
--	audit_clear_dummy(ab->ctx);
- 	audit_log_format(ab, "audit(%llu.%03lu:%u): ",
- 			 (unsigned long long)t.tv_sec, t.tv_nsec/1000000, serial);
- 
---- a/kernel/audit.h
-+++ b/kernel/audit.h
-@@ -290,13 +290,6 @@ extern int audit_signal_info_syscall(str
- extern void audit_filter_inodes(struct task_struct *tsk,
- 				struct audit_context *ctx);
- extern struct list_head *audit_killed_trees(void);
--
--static inline void audit_clear_dummy(struct audit_context *ctx)
--{
--	if (ctx)
--		ctx->dummy = 0;
--}
--
- #else /* CONFIG_AUDITSYSCALL */
- #define auditsc_get_stamp(c, t, s) 0
- #define audit_put_watch(w) {}
-@@ -330,7 +323,6 @@ static inline int audit_signal_info_sysc
- }
- 
- #define audit_filter_inodes(t, c) AUDIT_DISABLED
--#define audit_clear_dummy(c) {}
- #endif /* CONFIG_AUDITSYSCALL */
- 
- extern char *audit_unpack_string(void **bufp, size_t *remain, size_t len);
---- a/kernel/auditsc.c
-+++ b/kernel/auditsc.c
-@@ -1406,6 +1406,9 @@ static void audit_log_proctitle(void)
- 	struct audit_context *context = audit_context();
- 	struct audit_buffer *ab;
- 
-+	if (!context || context->dummy)
-+		return;
++	spin_lock(&client->lock);
++	/* Ignore cancelled request if message has been received
++	 * before lock.
++	 */
++	if (req->status == REQ_STATUS_RCVD) {
++		spin_unlock(&client->lock);
++		return 0;
++	}
 +
- 	ab = audit_log_start(context, GFP_KERNEL, AUDIT_PROCTITLE);
- 	if (!ab)
- 		return;	/* audit_panic or being filtered */
+ 	/* we haven't received a response for oldreq,
+ 	 * remove it from the list.
+ 	 */
+-	spin_lock(&client->lock);
+ 	list_del(&req->req_list);
++	req->status = REQ_STATUS_FLSHD;
+ 	spin_unlock(&client->lock);
+ 	p9_req_put(req);
+ 
 
 
