@@ -2,122 +2,167 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBA4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFC5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E448A206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:08:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kwxcYa7g"
+	by mail.kernel.org (Postfix) with ESMTP id E94B8206E9
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:14:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbgHCHIq (ORCPT
+        id S1725933AbgHCHOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 03:08:46 -0400
-Received: from mail-eopbgr150052.outbound.protection.outlook.com ([40.107.15.52]:25506
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726080AbgHCHIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 03:08:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R7ba+hc/hPKOXTg5YtH9gr4M7NWOsB7qQZT9TQYpz1APn9XR4xr6QOML2RtsQugVjXu4Tk6rdbp5d6n7MV6T9oNN0tin5L3dcRM1PSWxDuxiNjoYHCvC9GqSlULRal3NGctAzbnCam1mmgaUPzHc8X+MAfBpVy/NNhUbSaQ55IXBzxCzo7DCE44n5Hw6j1tiss1DIVxCcCO0Jv9NL+A/XEXiwtOKXZ8o51CR8dWIENmrlSz9mYYBLZMSD7PgZ7kHpxSUet9B156FwPclSOpEPzWgQlTjvTzskvTHxSKLHCAY+IeG4cW2SAqvjfOk4a6ptzRJGvlxltsnFj//f2w7fA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5FKqNu/Ojl5Pg1nVU7wPMXNjc2QV8IFxQ/zjRMykop4=;
- b=Vm/VyddnVFKgCVoA79dsKFZx1TrjIWcKCcdyOY1wUl1O+ZxNOtkdBr1ZiTMOHA36fsjm1dDaWbBbuADPNWyBskuMggPUrfAligA7FAcaO9tg+h3keDxXXAVXyGPkyu5lLYKjfp/VqLXBKedYyCPkRfbnnBrunwnVQi3FvF+OZnlZInfBvn+IOqm/mNA0l32VkrBzD4keVrVAItTPrKE/o1TCv6GkTbe/VOm1td1+d1AOsHOoUmvXHTKeyu6Hw6jz7WkWxATn2IiAcT99M8vojfUMiMD4trBpS3GzIEjVAx1U4x3qX+Dq9kGOS5G3QmztQono7xeF1fcsUr38JjSBRA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5FKqNu/Ojl5Pg1nVU7wPMXNjc2QV8IFxQ/zjRMykop4=;
- b=kwxcYa7gNSuSIkxHl2tKvjI9yXAZI3iBGlEdzrgzMESNT+wuJXya4M9Ov4HFkkmvGBoApYs7x3keRNEcGFyO4IbnLzFpuwBrotHd9JU0dewWO/0hV3UQnHCxXS2BtgeaHo1Hk6BBU2oiC+7WgxDaHWkGdSujfEH+NvNXSYcLPAE=
-Authentication-Results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-Received: from AM0PR04MB5443.eurprd04.prod.outlook.com (2603:10a6:208:119::33)
- by AM0PR04MB4356.eurprd04.prod.outlook.com (2603:10a6:208:5c::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.21; Mon, 3 Aug
- 2020 07:08:04 +0000
-Received: from AM0PR04MB5443.eurprd04.prod.outlook.com
- ([fe80::f0b7:8439:3b5a:61bd]) by AM0PR04MB5443.eurprd04.prod.outlook.com
- ([fe80::f0b7:8439:3b5a:61bd%7]) with mapi id 15.20.3239.021; Mon, 3 Aug 2020
- 07:08:04 +0000
-From:   Florinel Iordache <florinel.iordache@nxp.com>
-To:     madalin.bucur@nxp.com, davem@davemloft.net, kuba@kernel.org,
-        netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Florinel Iordache <florinel.iordache@nxp.com>
-Subject: [PATCH net v3 3/5] fsl/fman: fix unreachable code
-Date:   Mon,  3 Aug 2020 10:07:32 +0300
-Message-Id: <1596438454-4895-4-git-send-email-florinel.iordache@nxp.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1596438454-4895-1-git-send-email-florinel.iordache@nxp.com>
-References: <1596438454-4895-1-git-send-email-florinel.iordache@nxp.com>
-Reply-to: florinel.iordache@nxp.com
-Content-Type: text/plain
-X-ClientProxiedBy: AM0PR07CA0007.eurprd07.prod.outlook.com
- (2603:10a6:208:ac::20) To AM0PR04MB5443.eurprd04.prod.outlook.com
- (2603:10a6:208:119::33)
+        Mon, 3 Aug 2020 03:14:14 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53840 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725826AbgHCHON (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 03:14:13 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07371xNB126358;
+        Mon, 3 Aug 2020 03:14:10 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32pakccrev-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 03:14:10 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0737AIlx026036;
+        Mon, 3 Aug 2020 07:14:08 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03ams.nl.ibm.com with ESMTP id 32n0181vuq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 07:14:08 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0737E6he27591050
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 3 Aug 2020 07:14:06 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6367011C05B;
+        Mon,  3 Aug 2020 07:14:06 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 64C0711C058;
+        Mon,  3 Aug 2020 07:14:05 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.43.55])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  3 Aug 2020 07:14:05 +0000 (GMT)
+Subject: Re: [RFC 1/1] pmem: Add cond_resched() in bio_for_each_segment loop
+ in pmem_make_request
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+References: <0d96e2481f292de2cda8828b03d5121004308759.1596011292.git.riteshh@linux.ibm.com>
+ <20200802230148.GA2114@dread.disaster.area>
+From:   Ritesh Harjani <riteshh@linux.ibm.com>
+Date:   Mon, 3 Aug 2020 12:44:04 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fsr-ub1464-128.ea.freescale.net (83.217.231.2) by AM0PR07CA0007.eurprd07.prod.outlook.com (2603:10a6:208:ac::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3261.13 via Frontend Transport; Mon, 3 Aug 2020 07:08:03 +0000
-X-Mailer: git-send-email 1.9.1
-X-Originating-IP: [83.217.231.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 3ed018de-12da-4cde-7828-08d8377bf70e
-X-MS-TrafficTypeDiagnostic: AM0PR04MB4356:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB43567AA24B53BB9527E62FFAFB4D0@AM0PR04MB4356.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: k7Esdnz835KVerT3GzroYzeu+nvKqyOR/08jyk2zazF/Q4UhzEOUGLgBMfOmVLP1zQ6BXPSnBRuf2k873fdtf21y0eIUeMJyVMGgwsXGw+XEuGCixvwKdUo9vNHmgXbqXP/M/0RvqCDdx70qiSBNJNo2ryh9XECqDy80KM3IyN+cq4LBtQn1mvysApZn1+usxVXD25Eyu/M+j3iNj96qXO9HEFF+3wRFS4G6VGSywHG9vY6vq22HsdBW8jCEL3umcUZyKwzTtHAMeZZAdmyTxv4jr4DnHOOzFOylfd94pVhdB5eBcuZmAj3+3632AMmFlKe+siq9rbc58rafYxjURA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5443.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(376002)(39860400002)(396003)(366004)(956004)(6506007)(52116002)(83380400001)(6512007)(2616005)(316002)(36756003)(66946007)(2906002)(86362001)(6666004)(478600001)(66476007)(66556008)(3450700001)(6486002)(26005)(4326008)(4744005)(8936002)(5660300002)(186003)(44832011)(8676002)(16526019);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: QmMatqxVXOM6NQSdSza24PXmiIILafEtuIUVyv3ja7gFgVYQsoub2nNgIUAJL0ceW8JA0K+QBxjjdbqbgJ+h3xjKDXxbhA+I6LmYvCjUiHFiAIb+OMWKe58R3z05f/vO53ciDTIPE2eP/EASlkBxKZKXNv0okP9e30zMepKJ1BnfIe4loO8C9dp4pmjIh8ANsDeOGhBmLDFgf8GIUDbe6lXvL0puHtDS65mJROHh+amur5c9Rxd0YC9Bzzv+CkPEHSIBwD8498cRCts1r1TM6HztnHID0kgvoFq5CD4IU9pUwB03/TWPlO98K90O3PanG04I0vw8ZUMgeCXYEqi3jqnX2I7pcuvyWQ/BHXrE/1aNd+DZcDvRnl45NcZn63RLovL7ZrJPBEAJhtTIY9U5JZysZuSFya8Eo0lATY54BVsorss2dI5m8d84phnGYYMBNSyIv3ztW/X4Tzb5sEpwVhwzzfHTMENd+GNtTnVmzOjDeHi9Wv1vfzyOa9tAj/UvsNtc2RmL4YBAqSY7RRP0gY2NZXaI9ViaEaG6T3jj9oM7y/bTlSJMiLfG5iQ3Lnq9v4EYlLAB7xzyGXBxGJrApXslT7rgaXzcSHxP75Q9+EzTVqH8MM3MQkTpLFrkr747hNS+MjutA70t9TzfgVUaNg==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ed018de-12da-4cde-7828-08d8377bf70e
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB5443.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2020 07:08:03.9590
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aVz6tZyNovxtqFNeZU39GOIoRN53d8JLdhBE+oPMgp2lK30YrkeLo4W2tav0BS9nHdW/7p2xjuDDK90GSHnQHjIeyhf9+GwVj93OcpcFdQU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4356
+In-Reply-To: <20200802230148.GA2114@dread.disaster.area>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Message-Id: <20200803071405.64C0711C058@d06av25.portsmouth.uk.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-03_04:2020-07-31,2020-08-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 suspectscore=0 malwarescore=0 mlxscore=0 bulkscore=0
+ priorityscore=1501 adultscore=0 mlxlogscore=999 clxscore=1015
+ impostorscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008030046
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The parameter 'priority' is incorrectly forced to zero which ultimately
-induces logically dead code in the subsequent lines.
 
-Fixes: 57ba4c9b56d8 ("fsl/fman: Add FMan MAC support")
-Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
----
- drivers/net/ethernet/freescale/fman/fman_memac.c | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/fman/fman_memac.c b/drivers/net/ethernet/freescale/fman/fman_memac.c
-index a5500ed..bb02b37 100644
---- a/drivers/net/ethernet/freescale/fman/fman_memac.c
-+++ b/drivers/net/ethernet/freescale/fman/fman_memac.c
-@@ -852,7 +852,6 @@ int memac_set_tx_pause_frames(struct fman_mac *memac, u8 priority,
- 
- 	tmp = ioread32be(&regs->command_config);
- 	tmp &= ~CMD_CFG_PFC_MODE;
--	priority = 0;
- 
- 	iowrite32be(tmp, &regs->command_config);
- 
--- 
-1.9.1
+On 8/3/20 4:31 AM, Dave Chinner wrote:
+> On Wed, Jul 29, 2020 at 02:15:18PM +0530, Ritesh Harjani wrote:
+>> For systems which do not have CONFIG_PREEMPT set and
+>> if there is a heavy multi-threaded load/store operation happening
+>> on pmem + sometimes along with device latencies, softlockup warnings like
+>> this could trigger. This was seen on Power where pagesize is 64K.
+>>
+>> To avoid softlockup, this patch adds a cond_resched() in this path.
+>>
+>> <...>
+>> watchdog: BUG: soft lockup - CPU#31 stuck for 22s!
+>> <...>
+>> CPU: 31 PID: 15627 <..> 5.3.18-20
+>> <...>
+>> NIP memcpy_power7+0x43c/0x7e0
+>> LR memcpy_flushcache+0x28/0xa0
+>>
+>> Call Trace:
+>> memcpy_power7+0x274/0x7e0 (unreliable)
+>> memcpy_flushcache+0x28/0xa0
+>> write_pmem+0xa0/0x100 [nd_pmem]
+>> pmem_do_bvec+0x1f0/0x420 [nd_pmem]
+>> pmem_make_request+0x14c/0x370 [nd_pmem]
+>> generic_make_request+0x164/0x400
+>> submit_bio+0x134/0x2e0
+>> submit_bio_wait+0x70/0xc0
+>> blkdev_issue_zeroout+0xf4/0x2a0
+>> xfs_zero_extent+0x90/0xc0 [xfs]
+>> xfs_bmapi_convert_unwritten+0x198/0x230 [xfs]
+>> xfs_bmapi_write+0x284/0x630 [xfs]
+>> xfs_iomap_write_direct+0x1f0/0x3e0 [xfs]
+>> xfs_file_iomap_begin+0x344/0x690 [xfs]
+>> dax_iomap_pmd_fault+0x488/0xc10
+>> __xfs_filemap_fault+0x26c/0x2b0 [xfs]
+>> __handle_mm_fault+0x794/0x1af0
+>> handle_mm_fault+0x12c/0x220
+>> __do_page_fault+0x290/0xe40
+>> do_page_fault+0x38/0xc0
+>> handle_page_fault+0x10/0x30
+>>
+>> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+>> Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+>> ---
+>>   drivers/nvdimm/pmem.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+>> index 2df6994acf83..fcf7af13897e 100644
+>> --- a/drivers/nvdimm/pmem.c
+>> +++ b/drivers/nvdimm/pmem.c
+>> @@ -214,6 +214,7 @@ static blk_qc_t pmem_make_request(struct request_queue *q, struct bio *bio)
+>>   			bio->bi_status = rc;
+>>   			break;
+>>   		}
+>> +		cond_resched();
+> 
+> There are already cond_resched() calls between submitted bios in
+> blkdev_issue_zeroout() via both __blkdev_issue_zero_pages() and
+> __blkdev_issue_write_zeroes(), so I'm kinda wondering where the
+> problem is coming from here.
 
+This problem is coming from that bio call- submit_bio()
+
+> 
+> Just how big is the bio being issued here that it spins for 22s
+> trying to copy it?
+
+It's 256 (due to BIO_MAX_PAGES) * 64KB (pagesize) = 16MB.
+So this is definitely not an easy trigger as per tester was mainly seen
+on a VM.
+
+Looking at the cond_resched() inside dax_writeback_mapping_range()
+in xas_for_each_marked() loop, I thought it should be good to have a
+cond_resched() in the above path as well.
+
+Hence an RFC for discussion.
+
+> 
+> And, really, if the system is that bound on cacheline bouncing that
+> it prevents memcpy() from making progress, I think we probably
+> should be issuing a soft lockup warning like this... >
+> Cheers,
+> 
+> Dave.
+> 
