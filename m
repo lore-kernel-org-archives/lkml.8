@@ -2,193 +2,109 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D3EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73EDBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C7102068F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48F8A2068F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:04:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bS+QIwK0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qsuUjjXa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgHCFDg (ORCPT
+        id S1727784AbgHCFE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 01:03:36 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:54402 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgHCFDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 01:03:36 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596431015; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=ZEq3dQL1T4rfyaJOBFm/8UoCpiFNlnou1J2+YfKngHo=;
- b=bS+QIwK0a6Gh7x4/kG4K0MKjr3pC09lXiNa+E1muUSEnialacWeTpPOwOK8ohzkKrWlpTlt5
- dc+DnTPj9OfpMMONcVUeY1zB12pZ82P/R2uI2EUo966+PBJ648zjyqZry0RVDQUtlYi9WWqY
- ZGnIsxeNTlAzOLNac4AA1/30k6k=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
- 5f279a96498d6102394b66a2 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 03 Aug 2020 05:03:18
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 733C4C4339C; Mon,  3 Aug 2020 05:03:17 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 198A3C433C6;
-        Mon,  3 Aug 2020 05:03:16 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+        Mon, 3 Aug 2020 01:04:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58850 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgHCFEZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 01:04:25 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40F1DC06174A;
+        Sun,  2 Aug 2020 22:04:25 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id w12so23686764iom.4;
+        Sun, 02 Aug 2020 22:04:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding;
+        bh=jG5Ttu2IFR0hBTgY1CkuGVNQzM97L3YaR4HgFRRkO2Y=;
+        b=qsuUjjXaCVRc88NKXyC1q3qETut38wpfLJsTYlOf8l4aOOcJaEJmxmrmVNsiCzx16v
+         Sej6ZBkm3+CloRFsjDkncvSWsgoE2W9OXxYIRyUT2ES93/ZaV5DBmkdlYg/DsvM1Pkw8
+         5ohLFELVgacdOGMSg39B9a66dQCNXk3GazOqO/1x+odVwWyqm7RZDgwUuOJ/Zm7ZiQCa
+         S2V2lqbrZx0fVhu0euDtebgKVAdTH5yGgpVctvzW6qw+iWvuLY7d/uYI07LJmkMqaBhp
+         V76sIXuXsMD66hhshZ77fu7qHIjpLAarO9lQA9XN1XHAbsn41mP5KGoD2C4++d+KUqWP
+         Q/Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding;
+        bh=jG5Ttu2IFR0hBTgY1CkuGVNQzM97L3YaR4HgFRRkO2Y=;
+        b=STVT+odWGgRWdQCNC1tp+iMRPPdaEgE4NZCAb3GvRsq2S+pgZC8iG3ppuTMZKiDB1S
+         hPUMecyW0fpAElyVPIgN/wvO1qxqfZ0sKva8Gw3xPJW0J3s3KY+pVRkB/O4+0U5Qc7pa
+         cf83LMHJYqJlIu+ac9DH+lj42ccnSb276atzS4qYQ/QjVK+9WqkiHOKZUAMcuaywfTCP
+         nFnGjvR70+t+owaz3OLmKtQteVr2AyFKaqz792s1MF7toCZKfeh7lXiqyfnPTYKkTmZA
+         OiwPjj3x73jb7kkVgAqJg7J1ZUYnF3BqrjoJoMaUodiXgFJc8EKJHBcREoZlCZLD9Dfe
+         ZUmw==
+X-Gm-Message-State: AOAM531R0Rw/tO2RHju6noNHLPJLxQhnpzeg0vTprpoOacnr9PfZvgTh
+        M/oqABTQ9Sra6sFHl39n7hw=
+X-Google-Smtp-Source: ABdhPJwM7KXEwGDiCmEWj+KcqyzW3x/5HxDbNTDIWoKV7ADzASuPsYT9zqef5MTsxeg3n21QqWRYjw==
+X-Received: by 2002:a02:838e:: with SMTP id z14mr19188094jag.84.1596431064695;
+        Sun, 02 Aug 2020 22:04:24 -0700 (PDT)
+Received: from localhost ([184.63.162.180])
+        by smtp.gmail.com with ESMTPSA id f84sm5869159ilh.72.2020.08.02.22.04.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Aug 2020 22:04:23 -0700 (PDT)
+Date:   Sun, 02 Aug 2020 22:04:14 -0700
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
+        Tobias Klauser <tklauser@distanz.ch>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        tianjia.zhang@alibaba.com
+Message-ID: <5f279aceeb809_5782b0a7167a5c487@john-XPS-13-9370.notmuch>
+In-Reply-To: <CAEf4Bza0C3iB3S8wXkkQxPoE+ndNuUtkmU3L8g7NzMgjHzkx8Q@mail.gmail.com>
+References: <20200802111540.5384-1-tianjia.zhang@linux.alibaba.com>
+ <CAEf4Bza0C3iB3S8wXkkQxPoE+ndNuUtkmU3L8g7NzMgjHzkx8Q@mail.gmail.com>
+Subject: Re: [PATCH] tools/bpf/bpftool: Fix wrong return value in do_dump()
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 03 Aug 2020 13:03:16 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
-        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
-        bvanassche@acm.org, beanhuo@micron.com, asutoshd@codeaurora.org,
-        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
-        chaotian.jing@mediatek.com, cc.chou@mediatek.com,
-        jiajie.hao@mediatek.com
-Subject: Re: [PATCH v6] scsi: ufs: Quiesce all scsi devices before shutdown
-In-Reply-To: <20200803042514.7111-1-stanley.chu@mediatek.com>
-References: <20200803042514.7111-1-stanley.chu@mediatek.com>
-Message-ID: <d85cdb877bced2d6b0a8ba67670271f2@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stanley,
+Andrii Nakryiko wrote:
+> On Sun, Aug 2, 2020 at 4:16 AM Tianjia Zhang
+> <tianjia.zhang@linux.alibaba.com> wrote:
+> >
+> > In case of btf_id does not exist, a negative error code -ENOENT
+> > should be returned.
+> >
+> > Fixes: c93cc69004df3 ("bpftool: add ability to dump BTF types")
+> > Cc: Andrii Nakryiko <andriin@fb.com>
+> > Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+> > ---
+> 
+> 
+> Acked-by: Andrii Nakryiko <andriin@fb.com>
+> 
 
-On 2020-08-03 12:25, Stanley Chu wrote:
-> Currently I/O request could be still submitted to UFS device while
-> UFS is working on shutdown flow. This may lead to racing as below
-> scenarios and finally system may crash due to unclocked register
-> accesses.
-> 
-> To fix this kind of issues, in ufshcd_shutdown(),
-> 
-> 1. Use pm_runtime_get_sync() instead of resuming UFS device by
->    ufshcd_runtime_resume() "internally" to let runtime PM framework
->    manage and prevent concurrent runtime operations by incoming I/O
->    requests.
-> 
-> 2. Specifically quiesce all SCSI devices to block all I/O requests
->    after device is resumed.
-> 
-> Example of racing scenario: While UFS device is runtime-suspended
-> 
-> Thread #1: Executing UFS shutdown flow, e.g.,
->            ufshcd_suspend(UFS_SHUTDOWN_PM)
-> 
-> Thread #2: Executing runtime resume flow triggered by I/O request,
->            e.g., ufshcd_resume(UFS_RUNTIME_PM)
-> 
-> This breaks the assumption that UFS PM flows can not be running
-> concurrently and some unexpected racing behavior may happen.
-> 
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-> ---
-> Changes:
->   - Since v4: Use pm_runtime_get_sync() instead of resuming UFS device
-> by ufshcd_runtime_resume() "internally".
-> ---
->  drivers/scsi/ufs/ufshcd.c | 39 ++++++++++++++++++++++++++++++++++-----
->  1 file changed, 34 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index 307622284239..fc01171d13b1 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -159,6 +159,12 @@ struct ufs_pm_lvl_states ufs_pm_lvl_states[] = {
->  	{UFS_POWERDOWN_PWR_MODE, UIC_LINK_OFF_STATE},
->  };
-> 
-> +#define ufshcd_scsi_for_each_sdev(fn) \
-> +	list_for_each_entry(starget, &hba->host->__targets, siblings) { \
-> +		__starget_for_each_device(starget, NULL, \
-> +					  fn); \
-> +	}
-> +
->  static inline enum ufs_dev_pwr_mode
->  ufs_get_pm_lvl_to_dev_pwr_mode(enum ufs_pm_level lvl)
->  {
-> @@ -8629,6 +8635,13 @@ int ufshcd_runtime_idle(struct ufs_hba *hba)
->  }
->  EXPORT_SYMBOL(ufshcd_runtime_idle);
-> 
-> +static void ufshcd_quiesce_sdev(struct scsi_device *sdev, void *data)
-> +{
-> +	/* Suspended devices are already quiesced so can be skipped */
-
-Why can runtime suspended sdevs be skipped? Block layer can still resume
-them at any time, no?
-
-> +	if (!pm_runtime_suspended(&sdev->sdev_gendev))
-> +		scsi_device_quiesce(sdev);
-> +}
-> +
->  /**
->   * ufshcd_shutdown - shutdown routine
->   * @hba: per adapter instance
-> @@ -8640,6 +8653,7 @@ EXPORT_SYMBOL(ufshcd_runtime_idle);
->  int ufshcd_shutdown(struct ufs_hba *hba)
->  {
->  	int ret = 0;
-> +	struct scsi_target *starget;
-> 
->  	if (!hba->is_powered)
->  		goto out;
-> @@ -8647,11 +8661,26 @@ int ufshcd_shutdown(struct ufs_hba *hba)
->  	if (ufshcd_is_ufs_dev_poweroff(hba) && ufshcd_is_link_off(hba))
->  		goto out;
-> 
-> -	if (pm_runtime_suspended(hba->dev)) {
-> -		ret = ufshcd_runtime_resume(hba);
-> -		if (ret)
-> -			goto out;
-> -	}
-> +	/*
-> +	 * Let runtime PM framework manage and prevent concurrent runtime
-> +	 * operations with shutdown flow.
-> +	 */
-> +	pm_runtime_get_sync(hba->dev);
-> +
-> +	/*
-> +	 * Quiesce all SCSI devices to prevent any non-PM requests sending
-> +	 * from block layer during and after shutdown.
-> +	 *
-> +	 * Here we can not use blk_cleanup_queue() since PM requests
-> +	 * (with BLK_MQ_REQ_PREEMPT flag) are still required to be sent
-> +	 * through block layer. Therefore SCSI command queued after the
-> +	 * scsi_target_quiesce() call returned will block until
-> +	 * blk_cleanup_queue() is called.
-> +	 *
-> +	 * Besides, scsi_target_"un"quiesce (e.g., scsi_target_resume) can
-> +	 * be ignored since shutdown is one-way flow.
-> +	 */
-> +	ufshcd_scsi_for_each_sdev(ufshcd_quiesce_sdev);
-
-Any reasons why don't use scsi_target_quiesce() here?
-
-Thanks,
-
-Can Guo.
-
-> 
->  	ret = ufshcd_suspend(hba, UFS_SHUTDOWN_PM);
->  out:
+Acked-by: John Fastabend <john.fastabend@gmail.com>
