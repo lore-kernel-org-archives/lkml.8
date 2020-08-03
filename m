@@ -2,91 +2,116 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5849C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0B6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B254020719
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AADE820719
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:30:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qta2F5Ya"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="qZifY37z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgHCK2J (ORCPT
+        id S1726189AbgHCKan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 06:28:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52414 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgHCK2I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 06:28:08 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 788CEC06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 03:28:08 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id q76so13715851wme.4
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 03:28:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :mime-version;
-        bh=wera6Uyhs3n9BVFUTcfSgmx3CiTiA8VGTYm4K/HGON4=;
-        b=qta2F5YaeaL2dux1TY+QhrovZpd/nWVLNVeS04xtI6jnMOfLmla5kIafRXyh/sSG6C
-         pr5C2DoZpVun3tRT4Cinin+ZL0afuonyNIKwfiR8RyVHH6J1GnRFS/4UfW6pRWOlkcwl
-         eHl7+LbZiB6KFOwMlHH1TeIktM//2Jes/S9xvYeUj4NifPV078j3vHFgZoB9djsIu2xi
-         d5DV8s3Cg1b1rj7pZZBfvHFLQZEQ5BkE8UKC2DTMipP7ASH8MO65tByQierjrq/kY4YT
-         mE3fGnzsmFbjnBZYrnueYdgcdDHnAkMkKnqzYSAr7s8AIW5PM0TqMYVTLAMxtJ7NYN18
-         8kSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:mime-version;
-        bh=wera6Uyhs3n9BVFUTcfSgmx3CiTiA8VGTYm4K/HGON4=;
-        b=hL957l7CihjffSXmtXJYGLTJx9YtztdMT97P44xwNiqJLY+8lEX5xBGbZlsQvzQY9o
-         8aPGg/R3l9DXgXGCvxYm//2yAWs0iyIwWUNCGwE+46OsJDAub11RPQIwYAO9GCRSrBRs
-         ocd4RRoBg5r+CkCrLPR5/omUX06pL+JFXHUSUaskb5ILt978lxUMO2CUGPoLays1T4hb
-         MfszAr4/wbZQvWz3ChGpsO3dDxKuybkw6nj70s+vtoLNh0C9ugdqRAFvW82EnaXN4IAD
-         nzgv8jugfucegTkkMTy8KLCM+zlWCTgUqJ5AT/1nHBzEuzai1cK/gcRgS77h3uzBbJDP
-         CPEA==
-X-Gm-Message-State: AOAM531aZAvg2v36HzXFP3avk5ys/msiiTil2j++GZjoRzpwNv34NpvP
-        A0l50Wp1ogj9fIaVZtMNRw==
-X-Google-Smtp-Source: ABdhPJx8zKQPgAW5VKuEDyJMQrOxHklxvIvV9/3EeTiVpYaWnzhOWKoG+1y34Lnw7dYHuEPuvzpxfA==
-X-Received: by 2002:a1c:23c2:: with SMTP id j185mr14897074wmj.84.1596450486979;
-        Mon, 03 Aug 2020 03:28:06 -0700 (PDT)
-Received: from localhost.localdomain (host-92-25-238-49.as13285.net. [92.25.238.49])
-        by smtp.gmail.com with ESMTPSA id g188sm26307154wma.5.2020.08.03.03.28.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 03:28:06 -0700 (PDT)
-From:   Jules Irenge <jbi.octave@gmail.com>
-X-Google-Original-From: Jules Irenge <jules@gmail.com>
-Date:   Mon, 3 Aug 2020 11:27:54 +0100 (BST)
-X-X-Sender: jules@localhost
-To:     peterz@infradead.org
-cc:     Jules Irenge <jbi.octave@gmail.com>, linux-kernel@vger.kernel.org,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 4/4] context_tracking: uninitialize static variables
-In-Reply-To: <20200803093751.GD2674@hirez.programming.kicks-ass.net>
-Message-ID: <alpine.LFD.2.23.451.2008031117370.72290@localhost>
-References: <0/4> <20200801184603.310769-1-jbi.octave@gmail.com> <20200801184603.310769-5-jbi.octave@gmail.com> <20200803093751.GD2674@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 3 Aug 2020 06:30:43 -0400
+Received: from m12-11.163.com ([220.181.12.11]:49845 "EHLO m12-11.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725933AbgHCKam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 06:30:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=QJHCOddwJcC9lTJOiH
+        oPrd47VTm47RKffasxqfRctE4=; b=qZifY37z5/MsHAjEFUrfWMGPBMr8btv8fd
+        UYF6QqXrAxICXfwfoOGghW82AkTF9h01TjRnJKEU2C0L8P8sVk6TGgjUPzZKNhr5
+        58rtG3AXGE+X/Oi6jaGZzmcfQkvjZJw2cy7O8rRv1k3REysa4HIDki4kT1Nghilc
+        yNxwO0bOk=
+Received: from localhost.localdomain (unknown [58.33.79.182])
+        by smtp7 (Coremail) with SMTP id C8CowAA3FLEb5ydf1tATBg--.63493S2;
+        Mon, 03 Aug 2020 18:29:54 +0800 (CST)
+From:   Grant Feng <von81@163.com>
+To:     von81@163.com, jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        dmurphy@ti.com, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] leds: is31fl32xx: Add sdb pin and generate a 5ms low pulse when startup
+Date:   Mon,  3 Aug 2020 18:29:35 +0800
+Message-Id: <20200803102935.24364-1-von81@163.com>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: C8CowAA3FLEb5ydf1tATBg--.63493S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7AF17trykZw1fWrWfKF4DArb_yoW8ArW5pF
+        4DCFy5Jr45AryfKwnrZF4UZFy3Jay8JFyDtFWfC34ay3W2k3sYqFyvkryqv3Z8XF95uay5
+        ZFs8tFs8Cr48Zw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jwhL8UUUUU=
+X-Originating-IP: [58.33.79.182]
+X-CM-SenderInfo: xyrqmii6rwjhhfrp/1tbiNwJ1OlWBhi8+4AAAsZ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+generate a 5ms low pulse on sdb pin when startup, then the chip
+becomes more stable in the complex EM environment.
 
+Signed-off-by: Grant Feng <von81@163.com>
+---
+ drivers/leds/leds-is31fl32xx.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-On Mon, 3 Aug 2020, peterz@infradead.org wrote:
+diff --git a/drivers/leds/leds-is31fl32xx.c b/drivers/leds/leds-is31fl32xx.c
+index cd768f991da1..e0f8734223c0 100644
+--- a/drivers/leds/leds-is31fl32xx.c
++++ b/drivers/leds/leds-is31fl32xx.c
+@@ -16,6 +16,8 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/delay.h>
++#include <linux/gpio/consumer.h>
  
-> So personally I prefer having the '= false' there. It used to be that
-> compilers were stupid and would put any initialized static variable in
-> .data, even if it was initialized with 0. But AFAIK compilers are no
-> longer that stupid.
-> 
-Thanks for the reply, I completely understand the precaution measure.  
+ /* Used to indicate a device has no such register */
+ #define IS31FL32XX_REG_NONE 0xFF
+@@ -43,6 +45,7 @@ struct is31fl32xx_led_data {
+ struct is31fl32xx_priv {
+ 	const struct is31fl32xx_chipdef *cdef;
+ 	struct i2c_client *client;
++	struct gpio_desc *sdb_pin;
+ 	unsigned int num_leds;
+ 	struct is31fl32xx_led_data leds[];
+ };
+@@ -405,6 +408,15 @@ static int is31fl32xx_parse_dt(struct device *dev,
+ 		priv->num_leds++;
+ 	}
+ 
++	priv->sdb_pin = gpiod_get(dev, "sdb", GPIOD_ASIS);
++	if (IS_ERR(priv->sdb_pin)) {
++		dev_warn(dev, "failed to get SDB GPIO, try default\r\n");
++	} else {
++		gpiod_direction_output(priv->sdb_pin, 0);
++		mdelay(5);
++		gpiod_direction_output(priv->sdb_pin, 1);
++	}
++
+ 	return 0;
+ 
+ err:
+@@ -453,11 +465,11 @@ static int is31fl32xx_probe(struct i2c_client *client,
+ 	priv->cdef = cdef;
+ 	i2c_set_clientdata(client, priv);
+ 
+-	ret = is31fl32xx_init_regs(priv);
++	ret = is31fl32xx_parse_dt(dev, priv);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = is31fl32xx_parse_dt(dev, priv);
++	ret = is31fl32xx_init_regs(priv);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.17.1
+
+
