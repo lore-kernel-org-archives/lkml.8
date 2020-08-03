@@ -6,64 +6,66 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8145C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 015BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAB0122B40
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1359C22BED
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596492609;
-	bh=HBMwVE6RQbuowtbOoRbsvu3OXPOlO2TlcRgtjHFfjgU=;
+	s=default; t=1596492611;
+	bh=TLnLG9HmcPLzl3JqJN85w25AnzNRNsD3wzvofF4bEUU=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=JmOUeY8voQ6A/cRT/4VKFS7Zws/Q/vDOoAVgXJ+f5XirBtfuHpjDvk4jcnMEoh1Gf
-	 2mr1KUIT7xqNvb27XVkclkltkxkQQPeY+uA6N7y9js4DIZ/B+jeiqCoOfWAQXbxzH7
-	 mVuKjN9PQTKDb4KQKgqBFbqkrL+NHv2ASPHOswjE=
+	b=M91pNj+3gMh4x4n2isiOdki+/Jc3zf8dWXNYifGcdrb/aqbYAAXFt6SGCwJuy6zr9
+	 QC+LGv6JHeQOK1mdZpMrk3i5e6EHO/QTHNd2kTpK1DA3P3LNH54tFcNSbYdyk9fwLc
+	 VgXmwhMxQGQyFPBePa1HYFWpvb6iFBavQVYpmtHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729518AbgHCWKH (ORCPT
+        id S1728118AbgHCWKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 18:10:07 -0400
+        Mon, 3 Aug 2020 18:10:09 -0400
 Received: from mail.kernel.org ([198.145.29.99]:56418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729497AbgHCWKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 18:10:05 -0400
-Subject: Re: [GIT PULL] RCU changes for v5.9
+        id S1729508AbgHCWKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 18:10:06 -0400
+Subject: Re: [GIT PULL] objtool changes for v5.9
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596492605;
-        bh=HBMwVE6RQbuowtbOoRbsvu3OXPOlO2TlcRgtjHFfjgU=;
+        s=default; t=1596492606;
+        bh=TLnLG9HmcPLzl3JqJN85w25AnzNRNsD3wzvofF4bEUU=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=tXZbQhvCCajHyRGaQ16pYj8H50JfqppAHk4jF5IJiQcQO+QkkUoiDm/KHulRnlMzb
-         Gw92539M9Ca0kLE5twFB54tx53UukQYF5DNXOybT31CKI6n0/mOj/5NaFlxqTZgIJq
-         /EzKNCqLlhptEd+3Ye6y+CAir+lXU3G7PZ150938=
+        b=gmakMPZmIN6yedB3PnAfO5FllDimbP1L8qQ79/L2FSlWkforfBACxaKmcmuhELbCT
+         X+gaH53a7gv7/Xm8+EdiRzLYEcwwi9bmzHGhgLorQ2/0Eky9OBlQBRy94/5dOkEamU
+         HChDInMMaP17briafl+IA9rFLCmPUVFSomQCdMeQ=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200803113032.GA415083@gmail.com>
-References: <20200803113032.GA415083@gmail.com>
+In-Reply-To: <20200803120602.GA506993@gmail.com>
+References: <20200803120602.GA506993@gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200803113032.GA415083@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-rcu-2020-08-03
-X-PR-Tracked-Commit-Id: c1cc4784ce6e8cceff1013709abd74bcbf7fbf24
+X-PR-Tracked-Message-Id: <20200803120602.GA506993@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+ objtool-core-2020-08-03
+X-PR-Tracked-Commit-Id: d832c0051f4e9cc7d26ef3bc6e9b662bc6a90f3a
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8f0cb6660acb0d4756df880a3e60e73daa9c244e
-Message-Id: <159649260513.26696.9986057276164405777.pr-tracker-bot@kernel.org>
-Date:   Mon, 03 Aug 2020 22:10:05 +0000
+X-PR-Merge-Commit-Id: 9dee86896c5968a928e56828236af41c136bdfbd
+Message-Id: <159649260613.26696.11610296713749503249.pr-tracker-bot@kernel.org>
+Date:   Mon, 03 Aug 2020 22:10:06 +0000
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         linux-kernel@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
         Andrew Morton <akpm@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 3 Aug 2020 13:30:32 +0200:
+The pull request you sent on Mon, 3 Aug 2020 14:06:02 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-rcu-2020-08-03
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool-core-2020-08-03
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8f0cb6660acb0d4756df880a3e60e73daa9c244e
+https://git.kernel.org/torvalds/c/9dee86896c5968a928e56828236af41c136bdfbd
 
 Thank you!
 
