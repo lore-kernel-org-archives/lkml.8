@@ -2,149 +2,109 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E71B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06CEE20786
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:59:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MHUNxH6s"
+	by mail.kernel.org (Postfix) with ESMTP id 0BCD9206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:59:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729546AbgHCX7V (ORCPT
+        id S1729556AbgHCX71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 19:59:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36270 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729146AbgHCX6W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 19:58:22 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A24E3C061756
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 16:58:22 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id f68so10791856ilh.12
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 16:58:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bp6OwO92DPNru+lJBtL8+lflqmBd40LGlvDc78rVJ9c=;
-        b=MHUNxH6sVnlzX16mnBO0Libr5RgVsQYv7/UqRC0xTEUbYCbo3sOqowucBA3nb+m5MX
-         m8FwZqCpFUl/T08XoQJUnhJNTzHCdLOmUkdAV6Pnv+6WaOYjgLjlNOPBAK2MVIOrIRhP
-         eQ1iYXdyJitiQUzJSNADJUzaWFUIrKDbJSCOU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bp6OwO92DPNru+lJBtL8+lflqmBd40LGlvDc78rVJ9c=;
-        b=oTCLDm3/poAtaFMl60ocd8YeQp3MftYwOifToHT+zO0/ppv84ta9KOtc6AWK9OFoBQ
-         BXK2pI4iB5hOs82fgDqDMJDD0LOb3xlnp44vZcp41igz88wSziyIiq36RWVyf8k7Oco2
-         P0VZ8EemCjzcIK1FuVPIymAa7kLXgcc/keJA+hRKIUcDV9U7eAEZk2FwsfInBxpZMFR5
-         gAy0HbRxDeVmH/7nhJlaQswZPHmsqW+hupZ7PlptDrZTWzc/pRsY4CgYwbShF9eKMdmv
-         Vok+3uImdsltaT+taa25OE13qFXPf02wj05xH7v6l1jnSEadxOf5f1rl0Oc4Lex8rBxr
-         vaDg==
-X-Gm-Message-State: AOAM533Nj80Dky8rWMFmeQEP68iJOfdfDCS5hghVa+KG+VlbRQg0MIGV
-        DNTTeO4qHlp6obmZnZ+LUdWNzA==
-X-Google-Smtp-Source: ABdhPJxHGJNGeHI0qdX4nnx8eSv09ZJiDnvrlC0tQ13wHy6OexeBXFmXFY6nkq0UlgH4JqadZFUj6w==
-X-Received: by 2002:a92:3006:: with SMTP id x6mr2079172ile.260.1596499102078;
-        Mon, 03 Aug 2020 16:58:22 -0700 (PDT)
-Received: from derch.Home (97-122-92-59.hlrn.qwest.net. [97.122.92.59])
-        by smtp.gmail.com with ESMTPSA id x185sm11075992iof.41.2020.08.03.16.58.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 16:58:21 -0700 (PDT)
-From:   Daniel Campello <campello@chromium.org>
-To:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Daniel Campello <campello@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org
-Subject: [PATCH v5 03/15] iio: sx9310: Fix irq handling
-Date:   Mon,  3 Aug 2020 17:58:03 -0600
-Message-Id: <20200803175559.v5.3.Idbfcd2e92d2fd89b6ed2e83211bd3e6c06852c33@changeid>
-X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-In-Reply-To: <20200803235815.778997-1-campello@chromium.org>
-References: <20200803235815.778997-1-campello@chromium.org>
+        Mon, 3 Aug 2020 19:59:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:35568 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729146AbgHCX70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 19:59:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F6131FB;
+        Mon,  3 Aug 2020 16:59:26 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 46F193F71F;
+        Mon,  3 Aug 2020 16:59:24 -0700 (PDT)
+References: <20200729033934.22349-1-alison.wang@nxp.com> <877dumbtoi.fsf@kurt> <20200729094943.lsmhsqlnl7rlnl6f@skbuf> <87mu3ho48v.fsf@kurt> <20200730082228.r24zgdeiofvwxijm@skbuf> <873654m9zi.fsf@kurt> <87lfiwm2bj.fsf@nanos.tec.linutronix.de> <20200803114112.mrcuupz4ir5uqlp6@skbuf> <87d047n4oh.fsf@nanos.tec.linutronix.de> <jhjh7tjivew.mognet@arm.com> <875z9zmt4i.fsf@nanos.tec.linutronix.de>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Vladimir Oltean <olteanv@gmail.com>,
+        Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>,
+        Alison Wang <alison.wang@nxp.com>, catalin.marinas@arm.com,
+        will@kernel.org, paulmck@kernel.org, mw@semihalf.com,
+        leoyang.li@nxp.com, vladimir.oltean@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC PATCH] arm64: defconfig: Disable fine-grained task level IRQ time accounting
+In-reply-to: <875z9zmt4i.fsf@nanos.tec.linutronix.de>
+Date:   Tue, 04 Aug 2020 00:59:19 +0100
+Message-ID: <jhjft93i8mg.mognet@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes enable/disable irq handling at various points. The driver needs to
-only enable/disable irqs if there is an actual irq handler installed.
 
-Signed-off-by: Daniel Campello <campello@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
----
+On 03/08/20 20:22, Thomas Gleixner wrote:
+> Valentin,
+>
+> Valentin Schneider <valentin.schneider@arm.com> writes:
+>> On 03/08/20 16:13, Thomas Gleixner wrote:
+>>> Vladimir Oltean <olteanv@gmail.com> writes:
+>>>>>  1) When irq accounting is disabled, RT throttling kicks in as
+>>>>>     expected.
+>>>>>
+>>>>>  2) With irq accounting the RT throttler does not kick in and the RCU
+>>>>>     stall/lockups happen.
+>>>> What is this telling us?
+>>>
+>>> It seems that the fine grained irq time accounting affects the runtime
+>>> accounting in some way which I haven't figured out yet.
+>>>
+>>
+>> With IRQ_TIME_ACCOUNTING, rq_clock_task() will always be incremented by a
+>> lesser-or-equal value than when not having the option; you start with the
+>> same delta_exec but slice some for the IRQ accounting, and leave the rest
+>> for the rq_clock_task() (+paravirt).
+>>
+>> IIUC this means that if you spend e.g. 10% of the time in IRQ and 90% of
+>> the time running the stress-ng RT tasks, despite having RT tasks hogging
+>> the entirety of the "available time" it is still only 90% runtime, which is
+>> below the 95% default and the throttling doesn't happen.
+>
+>    totaltime = irqtime + tasktime
+>
+> Ignoring irqtime and pretending that totaltime is what the scheduler
+> can control and deal with is naive at best.
+>
 
-Changes in v5: None
-Changes in v4:
- - Reverted condition check logic on enable/disable_irq methods.
+Agreed, however AFAICT rt_time is only incremented by rq_clock_task()
+deltas, which don't include IRQ time with IRQ_TIME_ACCOUNTING=y. That would
+then be directly compared to the sysctl runtime.
 
-Changes in v3:
- - Moved irq presence check down to lower methods
+Adding some prints in sched_rt_runtime_exceeded() and running this test
+case on my Juno, I get:
 
-Changes in v2:
- - Reordered error handling on sx9310_resume()
+  # IRQ_TIME_ACCOUNTING=y
+  cpu=2 rt_time=713455220 runtime=950000000 rq->avg_irq.util_avg=265
+  (rt_time oscillates between [70.1e7, 75.1e7]; avg_irq between [220, 270])
 
- drivers/iio/proximity/sx9310.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+  # IRQ_TIME_ACCOUNTING=n
+  cpu=2 rt_time=963035300 runtime=949951811
+  (rt_time oscillates between [94.1e7, 96.1e7];
 
-diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-index d7c77fc661ba86..dafee85018aa6d 100644
---- a/drivers/iio/proximity/sx9310.c
-+++ b/drivers/iio/proximity/sx9310.c
-@@ -323,11 +323,15 @@ static int sx9310_put_event_channel(struct sx9310_data *data, int channel)
- 
- static int sx9310_enable_irq(struct sx9310_data *data, unsigned int irq)
- {
-+	if (!data->client->irq)
-+		return 0;
- 	return regmap_update_bits(data->regmap, SX9310_REG_IRQ_MSK, irq, irq);
- }
- 
- static int sx9310_disable_irq(struct sx9310_data *data, unsigned int irq)
- {
-+	if (!data->client->irq)
-+		return 0;
- 	return regmap_update_bits(data->regmap, SX9310_REG_IRQ_MSK, irq, 0);
- }
- 
-@@ -381,7 +385,7 @@ static int sx9310_read_proximity(struct sx9310_data *data,
- 
- 	mutex_unlock(&data->mutex);
- 
--	if (data->client->irq > 0) {
-+	if (data->client->irq) {
- 		ret = wait_for_completion_interruptible(&data->completion);
- 		reinit_completion(&data->completion);
- 	} else {
-@@ -1010,10 +1014,11 @@ static int __maybe_unused sx9310_resume(struct device *dev)
- 
- out:
- 	mutex_unlock(&data->mutex);
-+	if (ret)
-+		return ret;
- 
- 	enable_irq(data->client->irq);
--
--	return ret;
-+	return 0;
- }
- 
- static const struct dev_pm_ops sx9310_pm_ops = {
--- 
-2.28.0.163.g6104cc2f0b6-goog
+Throttling happens for IRQ_TIME_ACCOUNTING=n and doesn't for
+IRQ_TIME_ACCOUNTING=y - clearly the accounted rt_time isn't high enough for
+that to happen, and it does look like what is missing in rt_time (or what
+should be subtracted from the available runtime) is there in the avg_irq.
 
+Or is that another case where I shouldn't have been writing emails at this
+hour?
+
+> Thanks,
+>
+>         tglx
