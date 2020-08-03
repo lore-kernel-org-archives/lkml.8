@@ -2,106 +2,106 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E34E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC780C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00DDD2068F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0EC12076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:41:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QG4ZErxq"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KL8cTaCZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbgHCWjr (ORCPT
+        id S1728102AbgHCWl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 18:39:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52252 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbgHCWjr (ORCPT
+        Mon, 3 Aug 2020 18:41:57 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53868 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbgHCWl5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 18:39:47 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3846FC06174A;
-        Mon,  3 Aug 2020 15:39:47 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id g26so36787624qka.3;
-        Mon, 03 Aug 2020 15:39:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qq/OoGqAWgSNxLVy8asfjdh45pV617fREiK/m3ZEZvc=;
-        b=QG4ZErxqYyI5iREiUFB1jMDEgaclsLXRd3qwNHgPxJzT+aVI+210+43VgEexTxw6IX
-         y74sgnsPzSLxLnp0of6tip9TkJMrGZTLca4BZPcGmV4QSuxBHbQ8KuZD2HKe2n/FwK0d
-         yiyFxmA6bZvuGva3RjPOo+IQtbABTApfwxzEa5UTTNDvgkxhj6+iH2Vtw39VhLRndJr+
-         vuCoE9wIGSE6oGCunTqahhgLIg/m77qW/XGZQv0yV7j4hrkv207z9NIYQkz6McOWqQzV
-         mORR1fIYynddz6vh2HAmDPzlVdz6aEpFFt2K8j589b00+45j5QZ9vWmK2swulkUEe5cO
-         f1+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qq/OoGqAWgSNxLVy8asfjdh45pV617fREiK/m3ZEZvc=;
-        b=RMZ9XlL9cETbY942TaDmRcPq6CKWYDlgMMOY/lKAtL3BvPeGQwwUk8Tcdfi2vPJRqW
-         wd1k9ilhrF+BFT+Ihk0u3iaHEkoSpUEk9fczpHmkVKq6YAtQKYEuecvVz3U7/+v0+yIW
-         eFhovPOPQvR9DBD7O5LOcGxOBU0B100y1YFrDF8gemhxiuw3vU2Lcldv4DVqryQLLTcO
-         qz5t1B8cNSv4YHaI45RS5RB7/9N9RuUYHIUVUkhOPrdnIcdyUqV9NzbUGhZdLJw3Wmns
-         9T9IXzeG/CbyqZDS1UwqWGJEW7YM+rWvO0hao50FcPDUtBB3Ii1P/IfPbAiLmBkCHFl8
-         MIXg==
-X-Gm-Message-State: AOAM531whge0IvDV1g+NLBkQTOdgm4o1Fg3KbKe10wXdjsnTlKOyJ6Ap
-        k5VnMUW4ZlZJigrJ9Z5qrNoMJnA=
-X-Google-Smtp-Source: ABdhPJw+GsNsQWRmU7MC/kx5uUzqsIy4eLp6XbvQecrcAmCCTD9dKtBc1b16dqlFsVR4Ob1pT8i7xQ==
-X-Received: by 2002:a37:8047:: with SMTP id b68mr17229339qkd.299.1596494386464;
-        Mon, 03 Aug 2020 15:39:46 -0700 (PDT)
-Received: from PWN (146-115-88-66.s3894.c3-0.sbo-ubr1.sbo.ma.cable.rcncustomer.com. [146.115.88.66])
-        by smtp.gmail.com with ESMTPSA id u37sm24292165qtj.47.2020.08.03.15.39.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 15:39:46 -0700 (PDT)
-Date:   Mon, 3 Aug 2020 18:39:43 -0400
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     pshelar@ovn.org, kuba@kernel.org, dan.carpenter@oracle.com,
-        arnd@arndb.de, gregkh@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        netdev@vger.kernel.org, dev@openvswitch.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH net] openvswitch: Prevent
- kernel-infoleak in ovs_ct_put_key()
-Message-ID: <20200803223943.GA279188@PWN>
-References: <20200731044838.213975-1-yepeilin.cs@gmail.com>
- <20200803.151038.440269686968773655.davem@davemloft.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200803.151038.440269686968773655.davem@davemloft.net>
+        Mon, 3 Aug 2020 18:41:57 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 073MbQVp072566;
+        Mon, 3 Aug 2020 22:41:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2020-01-29;
+ bh=lFsx27GcMAb6M+HPbhV7YgCeHD9h46fDEAYwzzxawRY=;
+ b=KL8cTaCZbKMpTXoTjUQ0Dn9Dt/bgySKmrn7zt6fTe1R7oIF4vC+O/HK7gjt8oFMfiivT
+ lKG27MtYue9kOE/AoqP6nJfAv4k2pqDzRGqtPk16Z+x5NHZAcXw7N+FS8O1WZphMc3gq
+ 6Xa4CUqMFhrN0YLnZj0CssaOvyZ9/YJQUv2oRqrqn2QOWNjDEmkN1uv/e3mgxfoffrNW
+ wODbIjyiKVyDYGb+fe8s881po36GasIn6Pdy15Pu14nLwWlej5d+/pkZhC73z7cbTkMK
+ PKgJrreYLFTxMl1nhonQ4f35q0zzzqqBznWhpTXfe3eZJxu9WLGHP/cVyZh0TNuUJUiu Sg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 32pdnq4dts-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 03 Aug 2020 22:41:52 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 073McntC063213;
+        Mon, 3 Aug 2020 22:41:51 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 32pdnp07d9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 03 Aug 2020 22:41:51 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 073Mfo26026448;
+        Mon, 3 Aug 2020 22:41:50 GMT
+Received: from brm-x32-03.us.oracle.com (/10.80.150.35)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 03 Aug 2020 15:41:50 -0700
+From:   Jane Chu <jane.chu@oracle.com>
+To:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
+        dave.jiang@intel.com, ira.weiny@intel.com, jmoyer@redhat.com,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Cc:     jane.chu@oracle.com
+Subject: [PATCH v2 1/3] libnvdimm/security: fix a typo
+Date:   Mon,  3 Aug 2020 16:41:37 -0600
+Message-Id: <1596494499-9852-1-git-send-email-jane.chu@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9702 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 mlxscore=0
+ bulkscore=0 adultscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008030155
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9702 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
+ suspectscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 adultscore=0
+ malwarescore=0 phishscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008030155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 03:10:38PM -0700, David Miller wrote:
-> From: Peilin Ye <yepeilin.cs@gmail.com>
-> Date: Fri, 31 Jul 2020 00:48:38 -0400
-> 
-> > ovs_ct_put_key() is potentially copying uninitialized kernel stack memory
-> > into socket buffers, since the compiler may leave a 3-byte hole at the end
-> > of `struct ovs_key_ct_tuple_ipv4` and `struct ovs_key_ct_tuple_ipv6`. Fix
-> > it by initializing `orig` with memset().
-> > 
-> > Cc: stable@vger.kernel.org
-> 
-> Please don't CC: stable for networking fixes.
+commit d78c620a2e82 ("libnvdimm/security: Introduce a 'frozen' attribute")
+introduced a typo, causing a 'nvdimm->sec.flags' update being overwritten
+by the subsequent update meant for 'nvdimm->sec.ext_flags'.
 
-Sorry, I didn't know about that.
+Cc: Dan Williams <dan.j.williams@intel.com>
+Fixes: d78c620a2e82 ("libnvdimm/security: Introduce a 'frozen' attribute")
+Signed-off-by: Jane Chu <jane.chu@oracle.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/nvdimm/security.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > Fixes: 9dd7f8907c37 ("openvswitch: Add original direction conntrack tuple to sw_flow_key.")
-> > Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-> 
-> Applied and queued up for -stable, thank you.
+diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
+index 4cef69b..8f3971c 100644
+--- a/drivers/nvdimm/security.c
++++ b/drivers/nvdimm/security.c
+@@ -457,7 +457,7 @@ void __nvdimm_security_overwrite_query(struct nvdimm *nvdimm)
+ 	clear_bit(NDD_WORK_PENDING, &nvdimm->flags);
+ 	put_device(&nvdimm->dev);
+ 	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
+-	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
++	nvdimm->sec.ext_flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
+ }
+ 
+ void nvdimm_security_overwrite_query(struct work_struct *work)
+-- 
+1.8.3.1
 
-Thank you for reviewing the patch!
-
-Peilin Ye
