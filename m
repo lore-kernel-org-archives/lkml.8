@@ -2,106 +2,148 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A9DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F019EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94E32206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5132206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725958AbgHCIXI (ORCPT
+        id S1726002AbgHCIXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 04:23:08 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:42776 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725861AbgHCIXI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 04:23:08 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mtapsc-1-jniEonvpM6WuyKoEFdxDSQ-2; Mon, 03 Aug 2020 09:23:04 +0100
-X-MC-Unique: jniEonvpM6WuyKoEFdxDSQ-2
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 3 Aug 2020 09:23:03 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 3 Aug 2020 09:23:03 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "'Madhavan T. Venkataraman'" <madvenka@linux.microsoft.com>,
-        "Andy Lutomirski" <luto@kernel.org>
-CC:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "LSM List" <linux-security-module@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
-Subject: RE: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-Thread-Topic: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-Thread-Index: AQHWaP5tgOpJhgITEEScB0GhgJrbRKkmC0zQ
-Date:   Mon, 3 Aug 2020 08:23:03 +0000
-Message-ID: <a5fb2778a86f45b58ef5dd35228d950b@AcuMS.aculab.com>
-References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
- <3b916198-3a98-bd19-9a1c-f2d8d44febe8@linux.microsoft.com>
-In-Reply-To: <3b916198-3a98-bd19-9a1c-f2d8d44febe8@linux.microsoft.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 3 Aug 2020 04:23:33 -0400
+Received: from mga07.intel.com ([134.134.136.100]:34766 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725965AbgHCIXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 04:23:32 -0400
+IronPort-SDR: 5jktLlD9grkGgOvxBtzh8TIXl61whsEF41wavJj2w9CH2R0OlWOjR+yN/FhH7+v22+Qrvs1CXU
+ +GZHO2SbRdng==
+X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="216487932"
+X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
+   d="scan'208";a="216487932"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 01:23:32 -0700
+IronPort-SDR: IqKQYllmsmUv1SF5B7jY+UiuAiPWzm98dCbhaC3Q5ZJE0AmQILR9xC90WHYbW93Slw25btj1Fr
+ iSAkhYogKByg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
+   d="scan'208";a="329927012"
+Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.135]) ([10.239.161.135])
+  by FMSMGA003.fm.intel.com with ESMTP; 03 Aug 2020 01:23:26 -0700
+From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
+Subject: Re: [RFC PATCH 00/16] Core scheduling v6
+To:     viremana@linux.microsoft.com,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joel Fernandes <joelaf@google.com>, joel@joelfernandes.org,
+        vineethrp@gmail.com, Chen Yu <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        "Ning, Hongyu" <hongyu.ning@linux.intel.com>,
+        =?UTF-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>
+References: <cover.1593530334.git.vpillai@digitalocean.com>
+Message-ID: <6d0f9fc0-2e34-f559-29bc-4143e6d3f751@linux.intel.com>
+Date:   Mon, 3 Aug 2020 16:23:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+In-Reply-To: <cover.1593530334.git.vpillai@digitalocean.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTWFkaGF2YW4gVC4gVmVua2F0YXJhbWFuDQo+IFNlbnQ6IDAyIEF1Z3VzdCAyMDIwIDE5
-OjU1DQo+IFRvOiBBbmR5IEx1dG9taXJza2kgPGx1dG9Aa2VybmVsLm9yZz4NCj4gQ2M6IEtlcm5l
-bCBIYXJkZW5pbmcgPGtlcm5lbC1oYXJkZW5pbmdAbGlzdHMub3BlbndhbGwuY29tPjsgTGludXgg
-QVBJIDxsaW51eC1hcGlAdmdlci5rZXJuZWwub3JnPjsNCj4gbGludXgtYXJtLWtlcm5lbCA8bGlu
-dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnPjsgTGludXggRlMgRGV2ZWwgPGxpbnV4
-LQ0KPiBmc2RldmVsQHZnZXIua2VybmVsLm9yZz47IGxpbnV4LWludGVncml0eSA8bGludXgtaW50
-ZWdyaXR5QHZnZXIua2VybmVsLm9yZz47IExLTUwgPGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJu
-ZWwub3JnPjsgTFNNIExpc3QgPGxpbnV4LXNlY3VyaXR5LW1vZHVsZUB2Z2VyLmtlcm5lbC5vcmc+
-OyBPbGVnIE5lc3Rlcm92DQo+IDxvbGVnQHJlZGhhdC5jb20+OyBYODYgTUwgPHg4NkBrZXJuZWwu
-b3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYxIDAvNF0gW1JGQ10gSW1wbGVtZW50IFRyYW1w
-b2xpbmUgRmlsZSBEZXNjcmlwdG9yDQo+IA0KPiBNb3JlIHJlc3BvbnNlcyBpbmxpbmUuLg0KPiAN
-Cj4gT24gNy8yOC8yMCAxMjozMSBQTSwgQW5keSBMdXRvbWlyc2tpIHdyb3RlOg0KPiA+PiBPbiBK
-dWwgMjgsIDIwMjAsIGF0IDY6MTEgQU0sIG1hZHZlbmthQGxpbnV4Lm1pY3Jvc29mdC5jb20gd3Jv
-dGU6DQo+ID4+DQo+ID4+IO+7v0Zyb206ICJNYWRoYXZhbiBULiBWZW5rYXRhcmFtYW4iIDxtYWR2
-ZW5rYUBsaW51eC5taWNyb3NvZnQuY29tPg0KPiA+Pg0KPiA+DQo+ID4gMi4gVXNlIGV4aXN0aW5n
-IGtlcm5lbCBmdW5jdGlvbmFsaXR5LiAgUmFpc2UgYSBzaWduYWwsIG1vZGlmeSB0aGUNCj4gPiBz
-dGF0ZSwgYW5kIHJldHVybiBmcm9tIHRoZSBzaWduYWwuICBUaGlzIGlzIHZlcnkgZmxleGlibGUg
-YW5kIG1heSBub3QNCj4gPiBiZSBhbGwgdGhhdCBtdWNoIHNsb3dlciB0aGFuIHRyYW1wZmQuDQo+
-IA0KPiBMZXQgbWUgdW5kZXJzdGFuZCB0aGlzLiBZb3UgYXJlIHNheWluZyB0aGF0IHRoZSB0cmFt
-cG9saW5lIGNvZGUNCj4gd291bGQgcmFpc2UgYSBzaWduYWwgYW5kLCBpbiB0aGUgc2lnbmFsIGhh
-bmRsZXIsIHNldCB1cCB0aGUgY29udGV4dA0KPiBzbyB0aGF0IHdoZW4gdGhlIHNpZ25hbCBoYW5k
-bGVyIHJldHVybnMsIHdlIGVuZCB1cCBpbiB0aGUgdGFyZ2V0DQo+IGZ1bmN0aW9uIHdpdGggdGhl
-IGNvbnRleHQgY29ycmVjdGx5IHNldCB1cC4gQW5kLCB0aGlzIHRyYW1wb2xpbmUgY29kZQ0KPiBj
-YW4gYmUgZ2VuZXJhdGVkIHN0YXRpY2FsbHkgYXQgYnVpbGQgdGltZSBzbyB0aGF0IHRoZXJlIGFy
-ZSBubw0KPiBzZWN1cml0eSBpc3N1ZXMgdXNpbmcgaXQuDQo+IA0KPiBIYXZlIEkgdW5kZXJzdG9v
-ZCB5b3VyIHN1Z2dlc3Rpb24gY29ycmVjdGx5Pw0KDQpJIHdhcyB0aGlua2luZyB0aGF0IHlvdSdk
-IGp1c3QgbGV0IHRoZSAnbm90IGV4ZWN1dGFibGUnIHBhZ2UgZmF1bHQNCnNpZ25hbCBoYXBwZW4g
-KFNJR1NFR1Y/KSB3aGVuIHRoZSBjb2RlIGp1bXBzIHRvIG9uLXN0YWNrIHRyYW1wb2xpbmUNCmlz
-IGV4ZWN1dGVkLg0KDQpUaGUgdXNlciBzaWduYWwgaGFuZGxlciBjYW4gdGhlbiBkZWNvZGUgdGhl
-IGZhdWx0aW5nIGluc3RydWN0aW9uDQphbmQsIGlmIGl0IG1hdGNoZXMgdGhlIGV4cGVjdGVkIG9u
-LXN0YWNrIHRyYW1wb2xpbmUsIG1vZGlmeSB0aGUNCnNhdmVkIHJlZ2lzdGVycyBiZWZvcmUgcmV0
-dXJuaW5nIGZyb20gdGhlIHNpZ25hbC4NCg0KTm8ga2VybmVsIGNoYW5nZXMgYW5kIGFsbCB5b3Ug
-bmVlZCB0byBhZGQgdG8gdGhlIHByb2dyYW0gaXMNCmFuIGFyY2hpdGVjdHVyZS1kZXBlbmRhbnQg
-c2lnbmFsIGhhbmRsZXIuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNp
-ZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsN
-ClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+On 2020/7/1 5:32, Vineeth Remanan Pillai wrote:
+> Sixth iteration of the Core-Scheduling feature.
+> 
+> Core scheduling is a feature that allows only trusted tasks to run
+> concurrently on cpus sharing compute resources (eg: hyperthreads on a
+> core). The goal is to mitigate the core-level side-channel attacks
+> without requiring to disable SMT (which has a significant impact on
+> performance in some situations). Core scheduling (as of v6) mitigates
+> user-space to user-space attacks and user to kernel attack when one of
+> the siblings enters the kernel via interrupts. It is still possible to
+> have a task attack the sibling thread when it enters the kernel via
+> syscalls.
+> 
+> By default, the feature doesn't change any of the current scheduler
+> behavior. The user decides which tasks can run simultaneously on the
+> same core (for now by having them in the same tagged cgroup). When a
+> tag is enabled in a cgroup and a task from that cgroup is running on a
+> hardware thread, the scheduler ensures that only idle or trusted tasks
+> run on the other sibling(s). Besides security concerns, this feature
+> can also be beneficial for RT and performance applications where we
+> want to control how tasks make use of SMT dynamically.
+> 
+> This iteration is mostly a cleanup of v5 except for a major feature of
+> pausing sibling when a cpu enters kernel via nmi/irq/softirq. Also
+> introducing documentation and includes minor crash fixes.
+> 
+> One major cleanup was removing the hotplug support and related code.
+> The hotplug related crashes were not documented and the fixes piled up
+> over time leading to complex code. We were not able to reproduce the
+> crashes in the limited testing done. But if they are reroducable, we
+> don't want to hide them. We should document them and design better
+> fixes if any.
+> 
+> In terms of performance, the results in this release are similar to
+> v5. On a x86 system with N hardware threads:
+> - if only N/2 hardware threads are busy, the performance is similar
+>   between baseline, corescheduling and nosmt
+> - if N hardware threads are busy with N different corescheduling
+>   groups, the impact of corescheduling is similar to nosmt
+> - if N hardware threads are busy and multiple active threads share the
+>   same corescheduling cookie, they gain a performance improvement over
+>   nosmt.
+>   The specific performance impact depends on the workload, but for a
+>   really busy database 12-vcpu VM (1 coresched tag) running on a 36
+>   hardware threads NUMA node with 96 mostly idle neighbor VMs (each in
+>   their own coresched tag), the performance drops by 54% with
+>   corescheduling and drops by 90% with nosmt.
+> 
+
+We found uperf(in cgroup) throughput drops by ~50% with corescheduling.
+
+The problem is, uperf triggered a lot of softirq and offloaded softirq
+service to *ksoftirqd* thread. 
+
+- default, ksoftirqd thread can run with uperf on the same core, we saw
+  100% CPU utilization.
+- coresched enabled, ksoftirqd's core cookie is different from uperf, so
+  they can't run concurrently on the same core, we saw ~15% forced idle.
+
+I guess this kind of performance drop can be replicated by other similar
+(a lot of softirq activities) workloads.
+
+Currently core scheduler picks cookie-match tasks for all SMT siblings, does
+it make sense we add a policy to allow cookie-compatible task running together?
+For example, if a task is trusted(set by admin), it can work with kernel thread.
+The difference from corescheduling disabled is that we still have user to user
+isolation.
+
+Thanks,
+-Aubrey
+
+
+
+
+
 
