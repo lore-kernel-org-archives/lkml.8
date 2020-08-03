@@ -2,97 +2,123 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61857C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2614C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D44720738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FA30206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:25:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Fjc7HVvo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O5SDH4Wd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725951AbgHCHZZ (ORCPT
+        id S1726080AbgHCHZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 03:25:25 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:39719 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725270AbgHCHZZ (ORCPT
+        Mon, 3 Aug 2020 03:25:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52330 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725270AbgHCHZ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 03:25:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1596439524; x=1627975524;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=oMWg5fmcj4i94jtAVqNu7HyEx05/B6CcovlpJXQlAQM=;
-  b=Fjc7HVvoDHE8U6JvghiL78AYZwOypBi4aGWLJysMXTNwQb8xqOSEuwfA
-   386fnw5xiNZgS5lOm5gIm51X9IMZrJ+A9bP/aiJO/rd88TNX1KCnaGzOa
-   5UFDcbWbPsac6I7xUgSyNCylI/12uDodD14WxxVN8DXOELW7M6JZHYXAv
-   LSpkL0NMkDpA+ch5NmRdsD/WFXhrzbOWTO04NnlVPtHfev2WyoiIAUGhi
-   1gSPcgLwlc0tcV+B2shXMwCPWFLoZmIh5I1XaY2RJmi8XBT1FDobJFBoO
-   Eh+pjUFlgJVAjgfruGVfyrFk3eziNCK6ZbSoIRT7h7JI8kcQ8HX2pRkZ5
-   w==;
-IronPort-SDR: HK3YbIkszbVy/V2MqxfrhoqdC8RYpFvC1yUb/psG551OXECq80wJc4OPKyy0WUFErM1L9/vF5n
- GqGIf9Y4sdvuKKVjlwmIlCOOfsrtafVXhJYFWZvytF4fyQ1zDal0v6eh+DdWfMsbuuvrFcapS/
- vTpETQuf8VK7iYYLYhOIB/RrYiyLouBtoxlM/jQGL3lxzH7nAr/6mgK+6g1NttL3F490mx/Ryx
- Xq3Ec/0MYUS3h6yz4hQqan4rfftQV3AF8kJ+Hud5s85O6l738pXPZOedV/roLhXmb7L/f3dagR
- KPA=
-X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
-   d="scan'208";a="21509731"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Aug 2020 00:25:24 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 3 Aug 2020 00:25:22 -0700
-Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Mon, 3 Aug 2020 00:25:19 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH 0/3] AT91 PM improvements
-Date:   Mon, 3 Aug 2020 10:25:14 +0300
-Message-ID: <1596439517-12993-1-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 3 Aug 2020 03:25:26 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF9FBC06174A;
+        Mon,  3 Aug 2020 00:25:26 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id i92so7272033pje.0;
+        Mon, 03 Aug 2020 00:25:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=to4odp1EU84jY7NPS+Ne28o7/CevkLRl0Wqah8jQXE8=;
+        b=O5SDH4WdNlUsy4HbeFubvtlZJpGBS5lHiqd28mVxNJcoQvt95IPUdwOMzy9qeB/kBL
+         J7LSKwEMD7+MFD5DQ+nxSPf3hmOFD5giyledMdrvjGQtJ9S5gDnchD/AQ9OUB6oC5xMe
+         HHCj6htwsVAEdxlPw02DH5S5uGqV9zdBidwYEW9RV/2hbulRGMcVZXBxSiFGBWqOZesj
+         2kVDa1Hi5IM+Eum/KzNuZ1IZjVDybQe79U1np/gNtS0U/Z165z9ACk7HTPD9ndmaQo/8
+         Dcv8ylrYoND8Wv9erH+RZwUL2mqqvPaKN6nQ1t+Tmw+DmvQW/kabPMQ+/g0UAkOUsxlZ
+         D0CQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=to4odp1EU84jY7NPS+Ne28o7/CevkLRl0Wqah8jQXE8=;
+        b=mUx8PptO4Q4CnTx3T8S1N93Qf5LwuVgs3+2S4YH0vwnW5d5AaAyxZibZiGC4OaMT05
+         Q4SxiS0rKDpY2vQ/U36nKjkoXJ5SAJHX8nOsikiL2ioJpRO8eJfisK6Ar1JAbkWqb0Yk
+         GCLt5RYPtXKttRdjt98t8bknPh3Qejr9m3wee/JJU1SWaxZ0lzCFn4npzH1C7hpDapEW
+         NVm0bAkjjz6q7TWxYMK+QXNTPPaLWy3082/9ttsNvQ+P6TCKP2nPKCDwUWOIUHv+C/UP
+         QPuyFLvVYa77aTfJWDSACUWaDgRAbRJNR1kJe0ab+350nUO3Zrq2wV8nP+Nl4cUFd7ai
+         qxNg==
+X-Gm-Message-State: AOAM532Uwz8OIA7+SwGGXbaPIba3ZP9pGhDIbRWLhGgY3vwi+CBcsnl1
+        8r6AyF6xXbsKwLaZdFqcP7A+BpmXeZDteCLCc5pLySIE
+X-Google-Smtp-Source: ABdhPJzyF4NRF1oPCywZLE6fn/M3iN0NHD1/e5vlz6HFEV3eAV6I/KCbM82H2ys2YV9ReTsyimi4RA1cJmwyxPh3TwM=
+X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr16414053pjp.228.1596439526201;
+ Mon, 03 Aug 2020 00:25:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <1908555.IiAGLGrh1Z@kreacher> <d1e90fa3-d978-90ae-a015-288139be3450@gmx.com>
+In-Reply-To: <d1e90fa3-d978-90ae-a015-288139be3450@gmx.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 3 Aug 2020 10:25:11 +0300
+Message-ID: <CAHp75VcbSR1NSSPemg5dMyfp00uC4wkktVjKSFx4sjSgFC-_vQ@mail.gmail.com>
+Subject: Re: [PATCH] kobject: Avoid premature parent object freeing in kobject_cleanup()
+To:     Qu Wenruo <quwenruo.btrfs@gmx.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Guenter Roeck <guenter@roeck-us.net>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Aug 3, 2020 at 9:47 AM Qu Wenruo <quwenruo.btrfs@gmx.com> wrote:
+> On 2020/6/5 =E4=B8=8A=E5=8D=881:46, Rafael J. Wysocki wrote:
 
-This series adds ULP0 fast mode intended to reduce the suspend/resume
-time in the detriment of power consumption (patch 1/3).
-Along with this patch 2/3 adds code to avoid requesting a PM mode
-not available on platforms not supporting it.
-Patch 3/3 decrements a device_node refcount after its usage.
+...
 
-Thank you,
-Claudiu Beznea
+> > +/**
+> > + * kobject_del() - Unlink kobject from hierarchy.
+> > + * @kobj: object.
+> > + *
+> > + * This is the function that should be called to delete an object
+> > + * successfully added via kobject_add().
+> > + */
+> > +void kobject_del(struct kobject *kobj)
+> > +{
+> > +     struct kobject *parent =3D kobj->parent;
+> > +
+> > +     __kobject_del(kobj);
+> > +     kobject_put(parent);
+>
+> Could you please add an extra check on kobj before accessing kobj->parent=
+?
 
-Claudiu Beznea (3):
-  ARM: at91: pm: add support for ulp0 fast mode
-  ARM: at91: pm: add per soc validation of pm modes
-  ARM: at91: pm: put node after its usage
+I do not understand. Where do we access it?
+kobject_put() is NULL-aware.
 
- arch/arm/mach-at91/at91rm9200.c | 10 +++++-
- arch/arm/mach-at91/at91sam9.c   |  9 ++++-
- arch/arm/mach-at91/generic.h    | 20 +++++------
- arch/arm/mach-at91/pm.c         | 79 +++++++++++++++++++++++++++++++++++------
- arch/arm/mach-at91/pm.h         |  5 +--
- arch/arm/mach-at91/pm_suspend.S | 41 ++++++++++++++++++---
- arch/arm/mach-at91/sam9x60.c    | 11 +++++-
- arch/arm/mach-at91/sama5.c      | 21 +++++++++--
- 8 files changed, 165 insertions(+), 31 deletions(-)
+> This patch in fact removes the ability to call kobject_del() on NULL
+> pointer while not cause anything wrong.
+>
+> I know this is not a big deal, but such behavior change has already
+> caused some problem for the incoming btrfs code.
+> (Now I feels guilty just by looking into the old
+> kobject_del()/kobject_put() and utilize that feature in btrfs)
+>
+> Since the old kobject_del() accepts NULL pointer intentionally, it would
+> be much better to keep such behavior.
 
--- 
-2.7.4
+Can you elaborate, please?
 
+--=20
+With Best Regards,
+Andy Shevchenko
