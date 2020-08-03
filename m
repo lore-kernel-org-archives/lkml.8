@@ -5,50 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA4DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCFFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19581208B3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C82E204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457771;
-	bh=HmViFfTeuoqo2TmTzNPF8HktHsQ5kxq3RpEg7IDwKwY=;
+	s=default; t=1596457774;
+	bh=MPorudU0yKZNviFiD8N6aBXJXOyf1iQeYGVYQZrt2hs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=STGHoIYlcBfKBnFU0U7lBcj4vdwAorAMikg4wAWdXwh+2HHv9tJqEBsUcaUUFZVmf
-	 sfz8ArJS64ZuJBxYix17+e3nfGmW57/kDvFHXz3FztPkUv5NqJ52dr5fbqLxvKKrYs
-	 7JnjVoPaFkn1qTYlTkrv/zoiFReizL5kKUl8BAOQ=
+	b=qvRtu9vBGVnAQ6Sv0oSRD0CUJlQAnavojV82FcJ18INzQXA1MvwdDLAn8iisgxcok
+	 dZoJyEspAP/k9XAUtGzPbUCaO7N3UNYIZUCdfjSxipQRFbCICOszKJZ6Jlwt3/WZu0
+	 plbrr93MmOsW3cwdlE7GJQ8/pCAVyxjmHjUx1/2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbgHCM3a (ORCPT
+        id S1728930AbgHCM3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:29:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55928 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:29:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728908AbgHCM32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:29:28 -0400
+        id S1728921AbgHCM3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:29:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D955E22B45;
-        Mon,  3 Aug 2020 12:29:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A32AB207DF;
+        Mon,  3 Aug 2020 12:29:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457767;
-        bh=HmViFfTeuoqo2TmTzNPF8HktHsQ5kxq3RpEg7IDwKwY=;
+        s=default; t=1596457770;
+        bh=MPorudU0yKZNviFiD8N6aBXJXOyf1iQeYGVYQZrt2hs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bl9p5GiaLWn4U5/WoDN3IuK/fhai+Wa3NWohfQjaLhZPy1QV4TZdTEHLyFWyTzlSM
-         IM00+qp2Fsi3BTt/5AeK8p66SDkcBzfeB8WX6yqo4fFn4AQwu10hEHXECs9J27oUwD
-         lwgxupcCeys3Ti0DLFS2rA1w/r5rRAAMSHkDbU3k=
+        b=Aj07cbd/m81Mi9Mk2GXN4efO4QYJHvcCpvAn0vqOdozSbM3Ki/rUWBl86P5LpW2q8
+         k3xTQgQPzT9vKRe4o47BulL2+QZBWw1OQ0QiSOu4g8wYFP0bnpMxomDXARMFSnqTK4
+         0Ggg7POUa1MoTtYmY0bnfK9tUubeZTfl5xYRoxNs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 59/90] bpf: Fix map leak in HASH_OF_MAPS map
-Date:   Mon,  3 Aug 2020 14:19:21 +0200
-Message-Id: <20200803121900.478974297@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Li <liwei391@huawei.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Kim Phillips <kim.phillips@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH 5.4 68/90] perf tools: Fix record failure when mixed with ARM SPE event
+Date:   Mon,  3 Aug 2020 14:19:30 +0200
+Message-Id: <20200803121900.912821445@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -61,61 +71,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Wei Li <liwei391@huawei.com>
 
-[ Upstream commit 1d4e1eab456e1ee92a94987499b211db05f900ea ]
+[ Upstream commit bd3c628f8fafa6cbd6a1ca440034b841f0080160 ]
 
-Fix HASH_OF_MAPS bug of not putting inner map pointer on bpf_map_elem_update()
-operation. This is due to per-cpu extra_elems optimization, which bypassed
-free_htab_elem() logic doing proper clean ups. Make sure that inner map is put
-properly in optimized case as well.
+When recording with cache-misses and arm_spe_x event, I found that it
+will just fail without showing any error info if i put cache-misses
+after 'arm_spe_x' event.
 
-Fixes: 8c290e60fa2a ("bpf: fix hashmap extra_elems logic")
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Song Liu <songliubraving@fb.com>
-Link: https://lore.kernel.org/bpf/20200729040913.2815687-1-andriin@fb.com
+  [root@localhost 0620]# perf record -e cache-misses \
+				-e arm_spe_0/ts_enable=1,pct_enable=1,pa_enable=1,load_filter=1,jitter=1,store_filter=1,min_latency=0/ sleep 1
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.067 MB perf.data ]
+  [root@localhost 0620]#
+  [root@localhost 0620]# perf record -e arm_spe_0/ts_enable=1,pct_enable=1,pa_enable=1,load_filter=1,jitter=1,store_filter=1,min_latency=0/ \
+				     -e  cache-misses sleep 1
+  [root@localhost 0620]#
+
+The current code can only work if the only event to be traced is an
+'arm_spe_x', or if it is the last event to be specified. Otherwise the
+last event type will be checked against all the arm_spe_pmus[i]->types,
+none will match and an out of bound 'i' index will be used in
+arm_spe_recording_init().
+
+We don't support concurrent multiple arm_spe_x events currently, that
+is checked in arm_spe_recording_options(), and it will show the relevant
+info. So add the check and record of the first found 'arm_spe_pmu' to
+fix this issue here.
+
+Fixes: ffd3d18c20b8 ("perf tools: Add ARM Statistical Profiling Extensions (SPE) support")
+Signed-off-by: Wei Li <liwei391@huawei.com>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Tested-by-by: Leo Yan <leo.yan@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Hanjun Guo <guohanjun@huawei.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kim Phillips <kim.phillips@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mike Leach <mike.leach@linaro.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lore.kernel.org/lkml/20200724071111.35593-2-liwei391@huawei.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/hashtab.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ tools/perf/arch/arm/util/auxtrace.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
-index 22066a62c8c97..039d64b1bfb7d 100644
---- a/kernel/bpf/hashtab.c
-+++ b/kernel/bpf/hashtab.c
-@@ -675,15 +675,20 @@ static void htab_elem_free_rcu(struct rcu_head *head)
- 	preempt_enable();
- }
+diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
+index 0a6e75b8777a6..28a5d0c18b1d2 100644
+--- a/tools/perf/arch/arm/util/auxtrace.c
++++ b/tools/perf/arch/arm/util/auxtrace.c
+@@ -56,7 +56,7 @@ struct auxtrace_record
+ 	struct perf_pmu	*cs_etm_pmu;
+ 	struct evsel *evsel;
+ 	bool found_etm = false;
+-	bool found_spe = false;
++	struct perf_pmu *found_spe = NULL;
+ 	static struct perf_pmu **arm_spe_pmus = NULL;
+ 	static int nr_spes = 0;
+ 	int i = 0;
+@@ -74,12 +74,12 @@ struct auxtrace_record
+ 		    evsel->core.attr.type == cs_etm_pmu->type)
+ 			found_etm = true;
  
--static void free_htab_elem(struct bpf_htab *htab, struct htab_elem *l)
-+static void htab_put_fd_value(struct bpf_htab *htab, struct htab_elem *l)
- {
- 	struct bpf_map *map = &htab->map;
-+	void *ptr;
+-		if (!nr_spes)
++		if (!nr_spes || found_spe)
+ 			continue;
  
- 	if (map->ops->map_fd_put_ptr) {
--		void *ptr = fd_htab_map_get_ptr(map, l);
--
-+		ptr = fd_htab_map_get_ptr(map, l);
- 		map->ops->map_fd_put_ptr(ptr);
- 	}
-+}
-+
-+static void free_htab_elem(struct bpf_htab *htab, struct htab_elem *l)
-+{
-+	htab_put_fd_value(htab, l);
+ 		for (i = 0; i < nr_spes; i++) {
+ 			if (evsel->core.attr.type == arm_spe_pmus[i]->type) {
+-				found_spe = true;
++				found_spe = arm_spe_pmus[i];
+ 				break;
+ 			}
+ 		}
+@@ -96,7 +96,7 @@ struct auxtrace_record
  
- 	if (htab_is_prealloc(htab)) {
- 		__pcpu_freelist_push(&htab->freelist, &l->fnode);
-@@ -735,6 +740,7 @@ static struct htab_elem *alloc_htab_elem(struct bpf_htab *htab, void *key,
- 			 */
- 			pl_new = this_cpu_ptr(htab->extra_elems);
- 			l_new = *pl_new;
-+			htab_put_fd_value(htab, old_elem);
- 			*pl_new = old_elem;
- 		} else {
- 			struct pcpu_freelist_node *l;
+ #if defined(__aarch64__)
+ 	if (found_spe)
+-		return arm_spe_recording_init(err, arm_spe_pmus[i]);
++		return arm_spe_recording_init(err, found_spe);
+ #endif
+ 
+ 	/*
 -- 
 2.25.1
 
