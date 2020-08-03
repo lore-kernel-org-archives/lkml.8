@@ -2,40 +2,39 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78521C433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C245AC433E4
 	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6173720672
+	by mail.kernel.org (Postfix) with ESMTP id A2E0320672
 	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:16:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbgHCGNB (ORCPT
+        id S1726927AbgHCGQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 02:13:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58866 "EHLO mx2.suse.de"
+        Mon, 3 Aug 2020 02:16:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59906 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727813AbgHCGNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 02:13:01 -0400
+        id S1725831AbgHCGQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 02:16:22 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C2BBFB597;
-        Mon,  3 Aug 2020 06:13:14 +0000 (UTC)
-Date:   Mon, 03 Aug 2020 08:12:59 +0200
-Message-ID: <s5heeoo6yvo.wl-tiwai@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id 64D6BAF38;
+        Mon,  3 Aug 2020 06:16:35 +0000 (UTC)
+Date:   Mon, 03 Aug 2020 08:16:20 +0200
+Message-ID: <s5hd0486yq3.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
-To:     Connor McAdams <conmanx360@gmail.com>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        =?UTF-8?B?UGF3ZcWC?= Rekowski <p.rekowski@gmail.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] ALSA: hda/ca0132 - Fix AE-5 microphone selection commands.
-In-Reply-To: <20200803002928.8638-3-conmanx360@gmail.com>
-References: <20200803002928.8638-1-conmanx360@gmail.com>
-        <20200803002928.8638-3-conmanx360@gmail.com>
+To:     "Zhang, Qiang" <Qiang.Zhang@windriver.com>
+Cc:     "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: =?UTF-8?B?5Zue5aSNOg==?= [PATCH] ALSA: seq: KASAN:
+ use-after-free Read in delete_and_unsubscribe_port
+In-Reply-To: <BYAPR11MB2632746756E574DE66BAC427FF4D0@BYAPR11MB2632.namprd11.prod.outlook.com>
+References: <20200801062403.8005-1-qiang.zhang@windriver.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -46,15 +45,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 03 Aug 2020 02:29:27 +0200,
-Connor McAdams wrote:
+On Mon, 03 Aug 2020 03:35:05 +0200,
+Zhang, Qiang wrote:
 > 
-> The ca0113 command had the wrong group_id, 0x48 when it should've been
-> 0x30. The front microphone selection should now work.
+> >Thanks for the patch.  But I'm afraid that this change would break the
+> >existing behavior and might have a bad side-effect.
 > 
-> Signed-off-by: Connor McAdams <conmanx360@gmail.com>
+> >It's likely the same issue as reported in another syzkaller report
+> >("KASAN: invalid-free in snd_seq_port_disconnect"), and Hillf's patch
+> >below should covert this as well.  Could you check whether it works?
+> 
+> yes It's should same issue, add mutex lock in odev_ioctl, ensure serialization.
+> however, it should not be necessary to mutually exclusive with open and close.
 
-Applied, thanks.
+That's a big-hammer approach indeed, but it should be more reasonable
+in this case.  It makes the patch shorter and simpler, while the OSS
+sequencer is an ancient interface that wasn't considered much for the
+concurrency, and this might also cover the case where the access to
+another sequencer object that is being to be closed.
 
+So, it'd be great if you can confirm that the patch actually works.
+Then we can brush up and merge it for 5.9-rc1.
+
+
+thanks,
 
 Takashi
+
+> 
+> 
+> 
+> >thanks,
+> 
+> >Takashi
+> 
+> >---
+> >--- a/sound/core/seq/oss/seq_oss.c
+> >+++ b/sound/core/seq/oss/seq_oss.c
+> >@@ -167,11 +167,17 @@ odev_write(struct file *file, const char
+>  >static long
+>  >odev_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+>  >{
+> >+       long rc;
+> >      struct seq_oss_devinfo *dp;
+> >+
+> >+       mutex_lock(&register_mutex);
+> >       dp = file->private_data;
+> >        if (snd_BUG_ON(!dp))
+> >-               return -ENXIO;
+> >-       return snd_seq_oss_ioctl(dp, cmd, arg);
+> >+               rc = -ENXIO;
+> >+       else
+> >+               rc = snd_seq_oss_ioctl(dp, cmd, arg);
+> >+       mutex_unlock(&register_mutex);
+> >+       return rc;
+>  >}
+> 
+>  >#ifdef CONFIG_COMPAT
