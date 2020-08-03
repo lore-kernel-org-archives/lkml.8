@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA553C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA0152054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:41:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0C8E2054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458490;
-	bh=VeedW/TdBWMBwomzzS5MbUD45mopZmtJobYBsMLixqQ=;
+	s=default; t=1596458504;
+	bh=YNA98/VYZBGjK6vD7eh5FlJ9EYCaI1/4wP4CAgOGUGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RYfW9+nM/oRB5GkYN5t06MjGCxL/Qm1Bjl4JIhPvW3RnI82KYcLbRQvYGNNMBHOnL
-	 H3B5iteMiRe1pGJqErTBYqK3rZ/7v9ezXIs3dcyhb/VxYRs4YX0Hd6ivZgx96COWB+
-	 I6LzMPFd9ivAueROaXFIYdGpjo6NgGLEVe+Uqim0=
+	b=ygbVNQwaA2DyjtUCZ63yB4HrEk+0KRuCFfFUNB0JH967y+Hx7eSi5bzLK9PanFwJS
+	 XWZwbynqTdAL2NgumNWQQIijqWU4XZz0hxt24L9ooWAUX6SFI4eh0F4OjCpPOtELm/
+	 2jy5e7+jlo0aQLqDybnrtcv0KOisKocajVEhFWk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgHCMla (ORCPT
+        id S1728960AbgHCMln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:41:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60616 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:41:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728578AbgHCMck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:32:40 -0400
+        id S1729288AbgHCMcS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:32:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 058022054F;
-        Mon,  3 Aug 2020 12:32:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2B6F204EC;
+        Mon,  3 Aug 2020 12:32:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457957;
-        bh=VeedW/TdBWMBwomzzS5MbUD45mopZmtJobYBsMLixqQ=;
+        s=default; t=1596457936;
+        bh=YNA98/VYZBGjK6vD7eh5FlJ9EYCaI1/4wP4CAgOGUGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pOn8lb1q/36FFdv88tecdPe6XIrQPn9e5gkyLNKA0fNeyftZKoseqDipNLDV0/3vM
-         qtfHK83L3NXm5BQOrPIdYzYVHfx/J5j9IuwM7yrZqrnzo0LWQ8W7vCgQqMN3riP+na
-         XLOBI3y56WnUdV2pRe7uDhccdm8WEugybp/07X9k=
+        b=Wb2L64qvN45d3r7i8gAibGra1lvETo0agQJKGWgeq8Nk++Mazl0xH4FX51Yb3OrIC
+         zInseqdR//P1CQRnajZV/C6uy+fI/DtTvxHK7ilkQ73/TdVn4V11wKRYmXkasrP7RF
+         LRfch175euaYg/cmFK+9wfrXyNtqylr1MXYAlIo4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Nguyen <theflow@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
-        Alain Michaud <alainm@chromium.org>,
-        Sonny Sasaka <sonnysasaka@chromium.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 43/56] Bluetooth: fix kernel oops in store_pending_adv_report
-Date:   Mon,  3 Aug 2020 14:19:58 +0200
-Message-Id: <20200803121852.419620562@linuxfoundation.org>
+Subject: [PATCH 4.19 36/56] mlxsw: core: Free EMAD transactions using kfree_rcu()
+Date:   Mon,  3 Aug 2020 14:19:51 +0200
+Message-Id: <20200803121852.091662854@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -64,153 +61,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alain Michaud <alainm@chromium.org>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit a2ec905d1e160a33b2e210e45ad30445ef26ce0e ]
+[ Upstream commit 3c8ce24b037648a5a15b85888b259a74b05ff97d ]
 
-Fix kernel oops observed when an ext adv data is larger than 31 bytes.
+The lifetime of EMAD transactions (i.e., 'struct mlxsw_reg_trans') is
+managed using RCU. They are freed using kfree_rcu() once the transaction
+ends.
 
-This can be reproduced by setting up an advertiser with advertisement
-larger than 31 bytes.  The issue is not sensitive to the advertisement
-content.  In particular, this was reproduced with an advertisement of
-229 bytes filled with 'A'.  See stack trace below.
+However, in case the transaction failed it is freed immediately after being
+removed from the active transactions list. This is problematic because it is
+still possible for a different CPU to dereference the transaction from an RCU
+read-side critical section while traversing the active transaction list in
+mlxsw_emad_rx_listener_func(). In which case, a use-after-free is triggered
+[1].
 
-This is fixed by not catching ext_adv as legacy adv are only cached to
-be able to concatenate a scanable adv with its scan response before
-sending it up through mgmt.
+Fix this by freeing the transaction after a grace period by calling
+kfree_rcu().
 
-With ext_adv, this is no longer necessary.
+[1]
+BUG: KASAN: use-after-free in mlxsw_emad_rx_listener_func+0x969/0xac0 drivers/net/ethernet/mellanox/mlxsw/core.c:671
+Read of size 8 at addr ffff88800b7964e8 by task syz-executor.2/2881
 
-  general protection fault: 0000 [#1] SMP PTI
-  CPU: 6 PID: 205 Comm: kworker/u17:0 Not tainted 5.4.0-37-generic #41-Ubuntu
-  Hardware name: Dell Inc. XPS 15 7590/0CF6RR, BIOS 1.7.0 05/11/2020
-  Workqueue: hci0 hci_rx_work [bluetooth]
-  RIP: 0010:hci_bdaddr_list_lookup+0x1e/0x40 [bluetooth]
-  Code: ff ff e9 26 ff ff ff 0f 1f 44 00 00 0f 1f 44 00 00 55 48 8b 07 48 89 e5 48 39 c7 75 0a eb 24 48 8b 00 48 39 f8 74 1c 44 8b 06 <44> 39 40 10 75 ef 44 0f b7 4e 04 66 44 39 48 14 75 e3 38 50 16 75
-  RSP: 0018:ffffbc6a40493c70 EFLAGS: 00010286
-  RAX: 4141414141414141 RBX: 000000000000001b RCX: 0000000000000000
-  RDX: 0000000000000000 RSI: ffff9903e76c100f RDI: ffff9904289d4b28
-  RBP: ffffbc6a40493c70 R08: 0000000093570362 R09: 0000000000000000
-  R10: 0000000000000000 R11: ffff9904344eae38 R12: ffff9904289d4000
-  R13: 0000000000000000 R14: 00000000ffffffa3 R15: ffff9903e76c100f
-  FS: 0000000000000000(0000) GS:ffff990434580000(0000) knlGS:0000000000000000
-  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00007feed125a000 CR3: 00000001b860a003 CR4: 00000000003606e0
-  Call Trace:
-    process_adv_report+0x12e/0x560 [bluetooth]
-    hci_le_meta_evt+0x7b2/0xba0 [bluetooth]
-    hci_event_packet+0x1c29/0x2a90 [bluetooth]
-    hci_rx_work+0x19b/0x360 [bluetooth]
-    process_one_work+0x1eb/0x3b0
-    worker_thread+0x4d/0x400
-    kthread+0x104/0x140
+CPU: 0 PID: 2881 Comm: syz-executor.2 Not tainted 5.8.0-rc4+ #44
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xf6/0x16e lib/dump_stack.c:118
+ print_address_description.constprop.0+0x1c/0x250 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ mlxsw_emad_rx_listener_func+0x969/0xac0 drivers/net/ethernet/mellanox/mlxsw/core.c:671
+ mlxsw_core_skb_receive+0x571/0x700 drivers/net/ethernet/mellanox/mlxsw/core.c:2061
+ mlxsw_pci_cqe_rdq_handle drivers/net/ethernet/mellanox/mlxsw/pci.c:595 [inline]
+ mlxsw_pci_cq_tasklet+0x12a6/0x2520 drivers/net/ethernet/mellanox/mlxsw/pci.c:651
+ tasklet_action_common.isra.0+0x13f/0x3e0 kernel/softirq.c:550
+ __do_softirq+0x223/0x964 kernel/softirq.c:292
+ asm_call_on_stack+0x12/0x20 arch/x86/entry/entry_64.S:711
+ </IRQ>
+ __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
+ run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
+ do_softirq_own_stack+0x109/0x140 arch/x86/kernel/irq_64.c:77
+ invoke_softirq kernel/softirq.c:387 [inline]
+ __irq_exit_rcu kernel/softirq.c:417 [inline]
+ irq_exit_rcu+0x16f/0x1a0 kernel/softirq.c:429
+ sysvec_apic_timer_interrupt+0x4e/0xd0 arch/x86/kernel/apic/apic.c:1091
+ asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:587
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
+RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160 [inline]
+RIP: 0010:_raw_spin_unlock_irqrestore+0x3b/0x40 kernel/locking/spinlock.c:191
+Code: e8 2a c3 f4 fc 48 89 ef e8 12 96 f5 fc f6 c7 02 75 11 53 9d e8 d6 db 11 fd 65 ff 0d 1f 21 b3 56 5b 5d c3 e8 a7 d7 11 fd 53 9d <eb> ed 0f 1f 00 55 48 89 fd 65 ff 05 05 21 b3 56 ff 74 24 08 48 8d
+RSP: 0018:ffff8880446ffd80 EFLAGS: 00000286
+RAX: 0000000000000006 RBX: 0000000000000286 RCX: 0000000000000006
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffffa94ecea9
+RBP: ffff888012934408 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000001 R11: fffffbfff57be301 R12: 1ffff110088dffc1
+R13: ffff888037b817c0 R14: ffff88802442415a R15: ffff888024424000
+ __do_sys_perf_event_open+0x1b5d/0x2bd0 kernel/events/core.c:11874
+ do_syscall_64+0x56/0xa0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x473dbd
+Code: Bad RIP value.
+RSP: 002b:00007f21e5e9cc28 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
+RAX: ffffffffffffffda RBX: 000000000057bf00 RCX: 0000000000473dbd
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000040
+RBP: 000000000057bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000003 R11: 0000000000000246 R12: 000000000057bf0c
+R13: 00007ffd0493503f R14: 00000000004d0f46 R15: 00007f21e5e9cd80
 
-Fixes: c215e9397b00 ("Bluetooth: Process extended ADV report event")
-Reported-by: Andy Nguyen <theflow@google.com>
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Reported-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Signed-off-by: Alain Michaud <alainm@chromium.org>
-Tested-by: Sonny Sasaka <sonnysasaka@chromium.org>
-Acked-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Allocated by task 871:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc mm/kasan/common.c:494 [inline]
+ __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:467
+ kmalloc include/linux/slab.h:555 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ mlxsw_core_reg_access_emad+0x70/0x1410 drivers/net/ethernet/mellanox/mlxsw/core.c:1812
+ mlxsw_core_reg_access+0xeb/0x540 drivers/net/ethernet/mellanox/mlxsw/core.c:1991
+ mlxsw_sp_port_get_hw_xstats+0x335/0x7e0 drivers/net/ethernet/mellanox/mlxsw/spectrum.c:1130
+ update_stats_cache+0xf4/0x140 drivers/net/ethernet/mellanox/mlxsw/spectrum.c:1173
+ process_one_work+0xa3e/0x17a0 kernel/workqueue.c:2269
+ worker_thread+0x9e/0x1050 kernel/workqueue.c:2415
+ kthread+0x355/0x470 kernel/kthread.c:291
+ ret_from_fork+0x22/0x30 arch/x86/entry/entry_64.S:293
+
+Freed by task 871:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0x12c/0x170 mm/kasan/common.c:455
+ slab_free_hook mm/slub.c:1474 [inline]
+ slab_free_freelist_hook mm/slub.c:1507 [inline]
+ slab_free mm/slub.c:3072 [inline]
+ kfree+0xe6/0x320 mm/slub.c:4052
+ mlxsw_core_reg_access_emad+0xd45/0x1410 drivers/net/ethernet/mellanox/mlxsw/core.c:1819
+ mlxsw_core_reg_access+0xeb/0x540 drivers/net/ethernet/mellanox/mlxsw/core.c:1991
+ mlxsw_sp_port_get_hw_xstats+0x335/0x7e0 drivers/net/ethernet/mellanox/mlxsw/spectrum.c:1130
+ update_stats_cache+0xf4/0x140 drivers/net/ethernet/mellanox/mlxsw/spectrum.c:1173
+ process_one_work+0xa3e/0x17a0 kernel/workqueue.c:2269
+ worker_thread+0x9e/0x1050 kernel/workqueue.c:2415
+ kthread+0x355/0x470 kernel/kthread.c:291
+ ret_from_fork+0x22/0x30 arch/x86/entry/entry_64.S:293
+
+The buggy address belongs to the object at ffff88800b796400
+ which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 232 bytes inside of
+ 512-byte region [ffff88800b796400, ffff88800b796600)
+The buggy address belongs to the page:
+page:ffffea00002de500 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea00002de500 order:2 compound_mapcount:0 compound_pincount:0
+flags: 0x100000000010200(slab|head)
+raw: 0100000000010200 dead000000000100 dead000000000122 ffff88806c402500
+raw: 0000000000000000 0000000000100010 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88800b796380: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88800b796400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88800b796480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                          ^
+ ffff88800b796500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88800b796580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+
+Fixes: caf7297e7ab5 ("mlxsw: core: Introduce support for asynchronous EMAD register access")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_event.c | 26 +++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index a044e6bb12b84..cdb92b129906f 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -1229,6 +1229,9 @@ static void store_pending_adv_report(struct hci_dev *hdev, bdaddr_t *bdaddr,
- {
- 	struct discovery_state *d = &hdev->discovery;
- 
-+	if (len > HCI_MAX_AD_LENGTH)
-+		return;
-+
- 	bacpy(&d->last_adv_addr, bdaddr);
- 	d->last_adv_addr_type = bdaddr_type;
- 	d->last_adv_rssi = rssi;
-@@ -5116,7 +5119,8 @@ static struct hci_conn *check_pending_le_conn(struct hci_dev *hdev,
- 
- static void process_adv_report(struct hci_dev *hdev, u8 type, bdaddr_t *bdaddr,
- 			       u8 bdaddr_type, bdaddr_t *direct_addr,
--			       u8 direct_addr_type, s8 rssi, u8 *data, u8 len)
-+			       u8 direct_addr_type, s8 rssi, u8 *data, u8 len,
-+			       bool ext_adv)
- {
- 	struct discovery_state *d = &hdev->discovery;
- 	struct smp_irk *irk;
-@@ -5138,6 +5142,11 @@ static void process_adv_report(struct hci_dev *hdev, u8 type, bdaddr_t *bdaddr,
- 		return;
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
+index 3cebea6f3e6ad..d8e7ca48753fb 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/core.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
+@@ -1384,7 +1384,7 @@ static int mlxsw_core_reg_access_emad(struct mlxsw_core *mlxsw_core,
+ 	err = mlxsw_emad_reg_access(mlxsw_core, reg, payload, type, trans,
+ 				    bulk_list, cb, cb_priv, tid);
+ 	if (err) {
+-		kfree(trans);
++		kfree_rcu(trans, rcu);
+ 		return err;
  	}
- 
-+	if (!ext_adv && len > HCI_MAX_AD_LENGTH) {
-+		bt_dev_err_ratelimited(hdev, "legacy adv larger than 31 bytes");
-+		return;
-+	}
-+
- 	/* Find the end of the data in case the report contains padded zero
- 	 * bytes at the end causing an invalid length value.
- 	 *
-@@ -5197,7 +5206,7 @@ static void process_adv_report(struct hci_dev *hdev, u8 type, bdaddr_t *bdaddr,
- 	 */
- 	conn = check_pending_le_conn(hdev, bdaddr, bdaddr_type, type,
- 								direct_addr);
--	if (conn && type == LE_ADV_IND) {
-+	if (!ext_adv && conn && type == LE_ADV_IND && len <= HCI_MAX_AD_LENGTH) {
- 		/* Store report for later inclusion by
- 		 * mgmt_device_connected
- 		 */
-@@ -5251,7 +5260,7 @@ static void process_adv_report(struct hci_dev *hdev, u8 type, bdaddr_t *bdaddr,
- 	 * event or send an immediate device found event if the data
- 	 * should not be stored for later.
- 	 */
--	if (!has_pending_adv_report(hdev)) {
-+	if (!ext_adv &&	!has_pending_adv_report(hdev)) {
- 		/* If the report will trigger a SCAN_REQ store it for
- 		 * later merging.
- 		 */
-@@ -5286,7 +5295,8 @@ static void process_adv_report(struct hci_dev *hdev, u8 type, bdaddr_t *bdaddr,
- 		/* If the new report will trigger a SCAN_REQ store it for
- 		 * later merging.
- 		 */
--		if (type == LE_ADV_IND || type == LE_ADV_SCAN_IND) {
-+		if (!ext_adv && (type == LE_ADV_IND ||
-+				 type == LE_ADV_SCAN_IND)) {
- 			store_pending_adv_report(hdev, bdaddr, bdaddr_type,
- 						 rssi, flags, data, len);
- 			return;
-@@ -5326,7 +5336,7 @@ static void hci_le_adv_report_evt(struct hci_dev *hdev, struct sk_buff *skb)
- 			rssi = ev->data[ev->length];
- 			process_adv_report(hdev, ev->evt_type, &ev->bdaddr,
- 					   ev->bdaddr_type, NULL, 0, rssi,
--					   ev->data, ev->length);
-+					   ev->data, ev->length, false);
- 		} else {
- 			bt_dev_err(hdev, "Dropping invalid advertising data");
- 		}
-@@ -5400,7 +5410,8 @@ static void hci_le_ext_adv_report_evt(struct hci_dev *hdev, struct sk_buff *skb)
- 		if (legacy_evt_type != LE_ADV_INVALID) {
- 			process_adv_report(hdev, legacy_evt_type, &ev->bdaddr,
- 					   ev->bdaddr_type, NULL, 0, ev->rssi,
--					   ev->data, ev->length);
-+					   ev->data, ev->length,
-+					   !(evt_type & LE_EXT_ADV_LEGACY_PDU));
- 		}
- 
- 		ptr += sizeof(*ev) + ev->length + 1;
-@@ -5598,7 +5609,8 @@ static void hci_le_direct_adv_report_evt(struct hci_dev *hdev,
- 
- 		process_adv_report(hdev, ev->evt_type, &ev->bdaddr,
- 				   ev->bdaddr_type, &ev->direct_addr,
--				   ev->direct_addr_type, ev->rssi, NULL, 0);
-+				   ev->direct_addr_type, ev->rssi, NULL, 0,
-+				   false);
- 
- 		ptr += sizeof(*ev);
- 	}
+ 	return 0;
 -- 
 2.25.1
 
