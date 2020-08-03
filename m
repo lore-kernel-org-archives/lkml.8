@@ -2,236 +2,125 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88767C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F74C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B10520678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:37:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="d4dbP850"
+	by mail.kernel.org (Postfix) with ESMTP id CA36E207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:41:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgHCUhI (ORCPT
+        id S1728427AbgHCUlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 16:37:08 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:49588 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728005AbgHCUhI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 16:37:08 -0400
-Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 04B6E20B4908;
-        Mon,  3 Aug 2020 13:37:05 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 04B6E20B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1596487026;
-        bh=aHKVZ7SSbnAmTVhsQyHgG5x0Q/cXXLhXiGDpJjIfJ7g=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=d4dbP850mHmXBViMoDqPPeMY0lBvvv7e+nZenzB3pWb67C0MQcKoE+nY9qS0BlYcN
-         KdBwGYNRAGyAJ5NJILPJwq7WAXKEC9tHUJkKnLnHWNX7tXo9YBbxjxVSlQ+D9J3mzd
-         rsiOo5KDs37gv58ogW8SDw6OHbM1EzlHI/QR3XmE=
-Subject: Re: [PATCH v5 3/4] LSM: Define SELinux function to measure state and
- policy
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Tyler Hicks <tyhicks@linux.microsoft.com>, sashal@kernel.org,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200730034724.3298-1-nramas@linux.microsoft.com>
- <20200730034724.3298-4-nramas@linux.microsoft.com>
- <dfd6f9c8-d62a-d278-9b0e-6b1f5ad03d3e@gmail.com>
- <6371efa9-5ae6-05ac-c357-3fbe1a5a93d5@linux.microsoft.com>
- <CAEjxPJ789kmdDwy-6RaL7HuMFxKpQ9Hwxj9J-_-f62XDCNJUiA@mail.gmail.com>
- <f992901f-6dca-7d31-3426-5a74d36c2c8c@gmail.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <d988a6d0-04e0-62f0-2705-4352b268ca55@linux.microsoft.com>
-Date:   Mon, 3 Aug 2020 13:37:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Mon, 3 Aug 2020 16:41:24 -0400
+Received: from mga14.intel.com ([192.55.52.115]:57646 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726693AbgHCUlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 16:41:23 -0400
+IronPort-SDR: 0dxJHq23PloThClgcHFfTjARH7mmCFe/8O7zWVgfhIz5xU2B6m22LXCXDuqYpT4Q0JYDsNtJDx
+ qh3iDqayxRLQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="151428262"
+X-IronPort-AV: E=Sophos;i="5.75,431,1589266800"; 
+   d="scan'208";a="151428262"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 13:41:22 -0700
+IronPort-SDR: iFi7RNfxqEjT9sKJPJCjrNKn/WYf8bCytJNouHIrjN7xU8DcScew7N9F1vbxd4EHxa6/UHGOid
+ ptI+di/H7GBA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,431,1589266800"; 
+   d="scan'208";a="314943442"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.255.79.119]) ([10.255.79.119])
+  by fmsmga004.fm.intel.com with ESMTP; 03 Aug 2020 13:41:22 -0700
+Subject: Re: [PATCH 1/2] libnvdimm/security: 'security' attr never show
+ 'overwrite' state
+To:     Jane Chu <jane.chu@oracle.com>, dan.j.williams@intel.com,
+        vishal.l.verma@intel.com, ira.weiny@intel.com, jmoyer@redhat.com,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+References: <1595606959-8516-1-git-send-email-jane.chu@oracle.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <cb8c1944-f72c-ecfa-bd3d-276f504542e1@intel.com>
+Date:   Mon, 3 Aug 2020 13:41:21 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <f992901f-6dca-7d31-3426-5a74d36c2c8c@gmail.com>
+In-Reply-To: <1595606959-8516-1-git-send-email-jane.chu@oracle.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/3/20 1:29 PM, Stephen Smalley wrote:
-> On 8/3/20 4:00 PM, Stephen Smalley wrote:
+
+
+On 7/24/2020 9:09 AM, Jane Chu wrote:
+> Since
+> commit d78c620a2e82 ("libnvdimm/security: Introduce a 'frozen' attribute"),
+> when issue
+>   # ndctl sanitize-dimm nmem0 --overwrite
+> then immediately check the 'security' attribute,
+>   # cat /sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0012:00/ndbus0/nmem0/security
+>   unlocked
+> Actually the attribute stays 'unlocked' through out the entire overwrite
+> operation, never changed.  That's because 'nvdimm->sec.flags' is a bitmap
+> that has both bits set indicating 'overwrite' and 'unlocked'.
+> But security_show() checks the mutually exclusive bits before it checks
+> the 'overwrite' bit at last. The order should be reversed.
 > 
->> On Mon, Aug 3, 2020 at 12:14 PM Lakshmi Ramasubramanian
->> <nramas@linux.microsoft.com> wrote:
->>> On 8/3/20 8:11 AM, Stephen Smalley wrote:
->>>> Possibly I'm missing something but with these patches applied on top of
->>>> next-integrity, and the following lines added to /etc/ima/ima-policy:
->>>>
->>>> measure func=LSM_STATE template=ima-buf
->>>> measure func=LSM_POLICY
->>>>
->>>> I still don't get the selinux-state or selinux-policy-hash entries in
->>>> the ascii_runtime_measurements file.  No errors during loading of the
->>>> ima policy as far as I can see.
->>>>
->>> Could you please check if the following config is set?
->>> CONFIG_IMA_QUEUE_EARLY_BOOT_DATA=y
->> Yes, I have that set.
->>
->>> Try changing /sys/fs/selinux/checkreqprot and check
->>> ascii_runtime_measurements file again?
->> No change.  Likewise for changing enforce or running load_policy again.
->>
->>> Also, could you please check if
->>> /sys/kernel/security/integrity/ima/policy contains LSM_STATE and
->>> LSM_POLICY entries?
->> Yes, it does.  However, I noticed that if I reduce the policy to only
->> contain those entries and no others and reboot, then I get
->> measurements.  Whereas if I append them to an existing policy like the
->> one below, they seem to be ignored:
->> dont_measure fsmagic=0x9fa0
->> dont_measure fsmagic=0x62656572
->> dont_measure fsmagic=0x64626720
->> dont_measure fsmagic=0x1021994
->> dont_measure fsmagic=0x858458f6
->> dont_measure fsmagic=0x73636673
->> measure func=BPRM_CHECK
->> measure func=MMAP_CHECK mask=MAY_EXEC
->> measure func=MODULE_CHECK uid=0
->> measure func=LSM_STATE template=ima-buf
->> measure func=LSM_POLICY
->>
->> Also, I noticed the following in my dmesg output:
->> [   68.870715] ------------[ cut here ]------------
->> [   68.870715] WARNING: CPU: 2 PID: 1 at mm/page_alloc.c:4826
->> __alloc_pages_nodemask+0x627/0x700
->> [   68.870715] Modules linked in: 8139too crct10dif_pclmul
->> crc32_pclmul crc32c_intel ghash_clmulni_intel qxl serio_raw
->> drm_ttm_helper ttm drm_kms_helper virtio_console cec drm 8139cp
->> ata_generic mii pata_acpi floppy qemu_fw_cfg fuse
->> [   68.870715] CPU: 2 PID: 1 Comm: systemd Not tainted 5.8.0-rc2+ #44
->> [   68.870715] RIP: 0010:__alloc_pages_nodemask+0x627/0x700
->> [   68.870715] Code: ff ff 75 6c 48 8b 85 48 ff ff ff 4c 89 c2 44 89
->> e6 44 89 ff 41 c6 45 d0 00 49 89 45 b8 e8 41 e2 ff ff 49 89 c6 e9 9d
->> fc ff ff <0f> 0b e9 d4 fd ff ff 0f 0b e9 bc fc ff ff 0f 0b e9 f9 fd ff
->> ff e8
->> [   68.870715] RSP: 0000:ffff8881e82a7a18 EFLAGS: 00010246
->> [   68.870715] RAX: ffffed103d054f48 RBX: 1ffff1103d054f48 RCX: 
->> 0000000000000000
->> [   68.870715] RDX: 0000000000000000 RSI: 000000000000000b RDI: 
->> 0000000000000000
->> [   68.870715] RBP: ffff8881e82a7ae8 R08: ffffffffaa3fe2d5 R09: 
->> 0000000000000001
->> [   68.870715] R10: fffffbfff5a88f0f R11: 0000000000000001 R12: 
->> 00000000007eef6a
->> [   68.870715] R13: 0000000000040cc0 R14: 000000000000000b R15: 
->> ffffffffadde766b
->> [   68.870715] FS:  00007fdeb168c600(0000) GS:ffff8881e9800000(0000)
->> knlGS:0000000000000000
->> [   68.870715] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [   68.870715] CR2: 00007fdeb17dd1d6 CR3: 00000001cc2d2002 CR4: 
->> 00000000003606e0
->> [   68.870715] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 
->> 0000000000000000
->> [   68.870715] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 
->> 0000000000000400
->> [   68.870715] Call Trace:
->> [   68.870715]  ? sched_clock_cpu+0xf5/0x110
->> [   68.870715]  ? __alloc_pages_slowpath.constprop.0+0x17a0/0x17a0
->> [   68.870715]  ? match_held_lock+0x2e/0x240
->> [   68.870715]  ? policy_nodemask+0x1a/0xa0
->> [   68.870715]  ? policy_node+0x56/0x60
->> [   68.870715]  kmalloc_order+0x25/0xc0
->> [   68.870715]  kmalloc_order_trace+0x1d/0x140
->> [   68.870715]  kmemdup+0x1a/0x40
->> [   68.870715]  ima_queue_data+0x61/0x370
->> [   68.870715]  ima_measure_lsm_data+0x32/0x60
->> [   68.870715]  selinux_measure_state+0x2b8/0x2bd
->> [   68.870715]  ? selinux_event_name+0xe0/0xe0
->> [   68.870715]  ? rcu_is_watching+0x39/0x50
->> [   68.870715]  security_load_policy+0x44c/0x8e0
->> [   68.870715]  ? mark_lock+0xa6/0xbd0
->> [   68.870715]  ? security_change_sid+0x90/0x90
->> [   68.870715]  ? mark_held_locks+0x3e/0xa0
->> [   68.870715]  ? lockdep_hardirqs_on_prepare+0x100/0x260
->> [   68.870715]  ? asm_exc_page_fault+0x1e/0x30
->> [   68.870715]  ? lockdep_hardirqs_on+0xc5/0x1b0
->> [   68.870715]  ? asm_exc_page_fault+0x1e/0x30
->> [   68.870715]  ? copy_user_enhanced_fast_string+0xe/0x30
->> [   68.870715]  sel_write_load+0x157/0x260
->> [   68.870715]  vfs_write+0x135/0x290
->> [   68.870715]  ksys_write+0xb1/0x140
->> [   68.870715]  ? __ia32_sys_read+0x50/0x50
->> [   68.870715]  ? lockdep_hardirqs_on_prepare+0x100/0x260
->> [   68.870715]  ? do_syscall_64+0x12/0xb0
->> [   68.870715]  do_syscall_64+0x52/0xb0
->> [   68.870715]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->> [   68.870715] RIP: 0033:0x7fdeb2539497
->> [   68.870715] Code: Bad RIP value.
->> [   68.870715] RSP: 002b:00007fff6352b308 EFLAGS: 00000246 ORIG_RAX:
->> 0000000000000001
->> [   68.870715] RAX: ffffffffffffffda RBX: 0000000000000020 RCX: 
->> 00007fdeb2539497
->> [   68.870715] RDX: 00000000007eef6a RSI: 00007fdeb0de1000 RDI: 
->> 0000000000000004
->> [   68.870715] RBP: 0000000000000004 R08: 00007fdeb25d0040 R09: 
->> 00007fff6352b1a0
->> [   68.870715] R10: 0000000000000000 R11: 0000000000000246 R12: 
->> 00007fdeb0de1000
->> [   68.870715] R13: 00000000007eef6a R14: 000000000000000f R15: 
->> 0000000000000003
->> [   68.870715] irq event stamp: 23486085
->> [   68.870715] hardirqs last  enabled at (23486085):
->> [<ffffffffaa419406>] _raw_spin_unlock_irqrestore+0x46/0x60
->> [   68.870715] hardirqs last disabled at (23486084):
->> [<ffffffffaa419443>] _raw_spin_lock_irqsave+0x23/0x90
->> [   68.870715] softirqs last  enabled at (23486074):
->> [<ffffffffaa8004f3>] __do_softirq+0x4f3/0x662
->> [   68.870715] softirqs last disabled at (23486067):
->> [<ffffffffaa601072>] asm_call_on_stack+0x12/0x20
->> [   68.870715] ---[ end trace fb02740ff6f4d0cd ]---
+> The commit also has a typo: in one occasion, 'nvdimm->sec.ext_state'
+> assignment is replaced with 'nvdimm->sec.flags' assignment for
+> the NVDIMM_MASTER type.
+
+May be best to split this fix to a different patch? Just thinking git bisect 
+later on to track issues. Otherwise Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
 > 
-> I think one issue here is that systemd loads SELinux policy first, then 
-> IMA policy, so it doesn't know whether it needs to measure SELinux 
-> policy on first policy load, and another issue is that the policy is too 
-> large to just queue the policy data itself this way (or you need to use 
-> an allocator that can handle larger sizes).
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Fixes: d78c620a2e82 ("libnvdimm/security: Introduce a 'frozen' attribute")
+> Signed-off-by: Jane Chu <jane.chu@oracle.com>
+> ---
+>   drivers/nvdimm/dimm_devs.c | 4 ++--
+>   drivers/nvdimm/security.c  | 2 +-
+>   2 files changed, 3 insertions(+), 3 deletions(-)
 > 
-
-The problem seems to be that a lock is held when the IMA hook to measure 
-the LSM state is called. So memory allocation is not allowed, but the 
-hook is doing an allocation. I'll address this - thanks for catching it.
-
-I have the following CONFIGs enabled, but I still don't see the above 
-issue on my machine.
-
-Could you please let me know what CONFIG(s) to enable?
-
-#
-# Lock Debugging (spinlocks, mutexes, etc...)
-#
-CONFIG_LOCK_DEBUGGING_SUPPORT=y
-CONFIG_PROVE_LOCKING=y
-CONFIG_DEBUG_RT_MUTEXES=y
-CONFIG_DEBUG_SPINLOCK=y
-CONFIG_DEBUG_MUTEXES=y
-CONFIG_DEBUG_WW_MUTEX_SLOWPATH=y
-CONFIG_DEBUG_RWSEMS=y
-CONFIG_DEBUG_LOCK_ALLOC=y
-CONFIG_LOCKDEP=y
-CONFIG_DEBUG_ATOMIC_SLEEP=y
-
-I'll also try with the policy you have, check why the LSM policy is 
-ignored when there are other policy entries.
-
-thanks,
-  -lakshmi
-
+> diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
+> index b7b77e8..5d72026 100644
+> --- a/drivers/nvdimm/dimm_devs.c
+> +++ b/drivers/nvdimm/dimm_devs.c
+> @@ -363,14 +363,14 @@ __weak ssize_t security_show(struct device *dev,
+>   {
+>   	struct nvdimm *nvdimm = to_nvdimm(dev);
+>   
+> +	if (test_bit(NVDIMM_SECURITY_OVERWRITE, &nvdimm->sec.flags))
+> +		return sprintf(buf, "overwrite\n");
+>   	if (test_bit(NVDIMM_SECURITY_DISABLED, &nvdimm->sec.flags))
+>   		return sprintf(buf, "disabled\n");
+>   	if (test_bit(NVDIMM_SECURITY_UNLOCKED, &nvdimm->sec.flags))
+>   		return sprintf(buf, "unlocked\n");
+>   	if (test_bit(NVDIMM_SECURITY_LOCKED, &nvdimm->sec.flags))
+>   		return sprintf(buf, "locked\n");
+> -	if (test_bit(NVDIMM_SECURITY_OVERWRITE, &nvdimm->sec.flags))
+> -		return sprintf(buf, "overwrite\n");
+>   	return -ENOTTY;
+>   }
+>   
+> diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
+> index 4cef69b..8f3971c 100644
+> --- a/drivers/nvdimm/security.c
+> +++ b/drivers/nvdimm/security.c
+> @@ -457,7 +457,7 @@ void __nvdimm_security_overwrite_query(struct nvdimm *nvdimm)
+>   	clear_bit(NDD_WORK_PENDING, &nvdimm->flags);
+>   	put_device(&nvdimm->dev);
+>   	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
+> -	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
+> +	nvdimm->sec.ext_flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
+>   }
+>   
+>   void nvdimm_security_overwrite_query(struct work_struct *work)
+> 
