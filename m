@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F558C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADACFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE59206D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8984A206D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458768;
-	bh=1JjwvQSZ4M0VBLRdBVcCv8G8o/5zetcQ2B4CQCnzuTs=;
+	s=default; t=1596458772;
+	bh=x4UMX5p252GYrKJ/aCarb85LZB57EhVLYClq7cIfOP0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sI9rv3Shu9EImWuxANd5/botcojOfPrlHgz+Fys77I9Oq8iD+0XZb7MSLQhYoWdfM
-	 Mq2NVJn7Ri/RjdOMBIYf3VMDW6tHVUBUL/YPfBfwsQr/NtgmxCWVS4bEeImr7tatmo
-	 ZKzA/pwKjk4Uo6tjcgGZsGOQ8ArcHOsq3MS4Rjlc=
+	b=oyobM9n4A7JCobTNPclVKbtTGmc0FzCTMcXk+ZVj9MwHYN+LIRBqkzD2+TAOdBMU4
+	 AZ0SkELJmo6CZ4JWyKGJNj7zMxJzjUCwFUc6yUs43/Qqq/cUHwRYTin/kkcMtPUKih
+	 zoiTFumEV7F/snzqkAslNvs/ASmogiOm1zG6OniY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbgHCM1K (ORCPT
+        id S1728592AbgHCMqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:27:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52720 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:46:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728481AbgHCM1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:27:03 -0400
+        id S1726865AbgHCM1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:27:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F6862083B;
-        Mon,  3 Aug 2020 12:27:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0BA6207DF;
+        Mon,  3 Aug 2020 12:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457622;
-        bh=1JjwvQSZ4M0VBLRdBVcCv8G8o/5zetcQ2B4CQCnzuTs=;
+        s=default; t=1596457627;
+        bh=x4UMX5p252GYrKJ/aCarb85LZB57EhVLYClq7cIfOP0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0+t3sF8VrkB24vr+uf/bn5BO8QGKQfFlDTUyRq3xv623X0TMqSO5KGf/BIC/xCrwG
-         0wupjASzJ9Zvb75FbLY6tDwrrJbq2fsZWquySwBJ/dscw4UWao4yjeukTRKsvd22aw
-         TMynq7H5UAqTxRMFIQI1y1Bb7WQ3cC57ucxbc66w=
+        b=Mv4Kgjfr70R7EjeH37qSLloEZNoJR3ixr6hIkmm1QNKMw4tEAkMTrwCImqNx75Wu+
+         q+oFHbdPK5PQm7S8xmN/9u0eZJYWWqU4Bg0fPnl5jIDMbYEvUxzjjzsJqZBFIlrS3q
+         kMesOpNjGMZtfiTUHW+3MwCGxSCJEnq6JCEAYUgU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Subject: [PATCH 5.4 14/90] vhost/scsi: fix up req type endian-ness
-Date:   Mon,  3 Aug 2020 14:18:36 +0200
-Message-Id: <20200803121858.291243957@linuxfoundation.org>
+        stable@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.4 16/90] wireless: Use offsetof instead of custom macro.
+Date:   Mon,  3 Aug 2020 14:18:38 +0200
+Message-Id: <20200803121858.404958387@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -60,36 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael S. Tsirkin <mst@redhat.com>
+From: Pi-Hsun Shih <pihsun@chromium.org>
 
-commit 295c1b9852d000580786375304a9800bd9634d15 upstream.
+commit 6989310f5d4327e8595664954edd40a7f99ddd0d upstream.
 
-vhost/scsi doesn't handle type conversion correctly
-for request type when using virtio 1.0 and up for BE,
-or cross-endian platforms.
+Use offsetof to calculate offset of a field to take advantage of
+compiler built-in version when possible, and avoid UBSAN warning when
+compiling with Clang:
 
-Fix it up using vhost_32_to_cpu.
+==================================================================
+UBSAN: Undefined behaviour in net/wireless/wext-core.c:525:14
+member access within null pointer of type 'struct iw_point'
+CPU: 3 PID: 165 Comm: kworker/u16:3 Tainted: G S      W         4.19.23 #43
+Workqueue: cfg80211 __cfg80211_scan_done [cfg80211]
+Call trace:
+ dump_backtrace+0x0/0x194
+ show_stack+0x20/0x2c
+ __dump_stack+0x20/0x28
+ dump_stack+0x70/0x94
+ ubsan_epilogue+0x14/0x44
+ ubsan_type_mismatch_common+0xf4/0xfc
+ __ubsan_handle_type_mismatch_v1+0x34/0x54
+ wireless_send_event+0x3cc/0x470
+ ___cfg80211_scan_done+0x13c/0x220 [cfg80211]
+ __cfg80211_scan_done+0x28/0x34 [cfg80211]
+ process_one_work+0x170/0x35c
+ worker_thread+0x254/0x380
+ kthread+0x13c/0x158
+ ret_from_fork+0x10/0x18
+===================================================================
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Link: https://lore.kernel.org/r/20191204081307.138765-1-pihsun@chromium.org
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/vhost/scsi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/uapi/linux/wireless.h |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/vhost/scsi.c
-+++ b/drivers/vhost/scsi.c
-@@ -1215,7 +1215,7 @@ vhost_scsi_ctl_handle_vq(struct vhost_sc
- 			continue;
- 		}
+--- a/include/uapi/linux/wireless.h
++++ b/include/uapi/linux/wireless.h
+@@ -74,6 +74,8 @@
+ #include <linux/socket.h>		/* for "struct sockaddr" et al	*/
+ #include <linux/if.h>			/* for IFNAMSIZ and co... */
  
--		switch (v_req.type) {
-+		switch (vhost32_to_cpu(vq, v_req.type)) {
- 		case VIRTIO_SCSI_T_TMF:
- 			vc.req = &v_req.tmf;
- 			vc.req_size = sizeof(struct virtio_scsi_ctrl_tmf_req);
++#include <stddef.h>                     /* for offsetof */
++
+ /***************************** VERSION *****************************/
+ /*
+  * This constant is used to know the availability of the wireless
+@@ -1090,8 +1092,7 @@ struct iw_event {
+ /* iw_point events are special. First, the payload (extra data) come at
+  * the end of the event, so they are bigger than IW_EV_POINT_LEN. Second,
+  * we omit the pointer, so start at an offset. */
+-#define IW_EV_POINT_OFF (((char *) &(((struct iw_point *) NULL)->length)) - \
+-			  (char *) NULL)
++#define IW_EV_POINT_OFF offsetof(struct iw_point, length)
+ #define IW_EV_POINT_LEN	(IW_EV_LCP_LEN + sizeof(struct iw_point) - \
+ 			 IW_EV_POINT_OFF)
+ 
 
 
