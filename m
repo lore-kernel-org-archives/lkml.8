@@ -2,141 +2,120 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 315DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B773C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0269820738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:46:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BoX7LO2I"
+	by mail.kernel.org (Postfix) with ESMTP id 4DD5620738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:46:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbgHCLp4 (ORCPT
+        id S1725965AbgHCLql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 07:45:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35928 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbgHCLop (ORCPT
+        Mon, 3 Aug 2020 07:46:41 -0400
+Received: from mail-lj1-f174.google.com ([209.85.208.174]:36397 "EHLO
+        mail-lj1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726609AbgHCLpT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 07:44:45 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E63DFC061757;
-        Mon,  3 Aug 2020 04:44:42 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BKwz85lBdz9sTX;
-        Mon,  3 Aug 2020 21:44:36 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596455077;
-        bh=gcpvU8LYemiHsYHR84r1v7l12RPbYT5UxJdD42wefu8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=BoX7LO2IKe/M1WYgwYtuIOkRjOIgPwqE2znroXmXds/mBitK6PqzD2QpwB+f9K/Fy
-         vVUHTjKYE5iMOFS6lrQuiVRhwul7dIiviOV6YkTgX7lUfbXyOCpgi5fv930M5+j+jS
-         cm0WYOQdfkIZyq9dmhWZ7DPVN7gcZtAqhK/sSgnNg2/ljq03S6i0S0PDT089y/hmlJ
-         HX8gy/ZGwXBWnrA+Mai/odL2qFSVXdw2bG6wTIeYHDP2KSfpfMgn4+rhq/Pz30vc2k
-         9ScFkG9B3iGA0pDdmdu03CfPuEga0zQesVdHAytjBV8Ml6rJ5n98QswvR6v4hJDPc5
-         0JSr7hWta3dgg==
-Date:   Mon, 3 Aug 2020 21:44:33 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: linux-next: panic on boot
-Message-ID: <20200803214433.4c1b08cb@canb.auug.org.au>
+        Mon, 3 Aug 2020 07:45:19 -0400
+Received: by mail-lj1-f174.google.com with SMTP id t23so15764600ljc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 04:45:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Wgz/Io1GfjZYtYGC7Rm9doT12fGmxzEVVO30k3CbLqw=;
+        b=IidJSayH7Af/o8fs9LdQFh5rRwsXiD73Qj9KVoK2+wfLrwUOPfqh+MZMFPixC5qeE5
+         M4MI4LfHsM6w17UAjnX3WX6oVojcJP5LHgTyi4+4UXnAIEdBZ1zExA71YmIxccNd5UXD
+         h7kJgco8We6OoYOWA+zKkoRMsuRz+Ah8mHyTvyeQhTx6rPSLqrEjGTS9qqlk0YcGVkt8
+         fX3K4zt2C4ViwlMndYQ4xxuSA5+mrNRweS5LwXL/K0hsedwaeRXrWLiK9gsHX1mOTgxB
+         m7f4rZUGFyy9Ius2WaU/iLrHFJRTx6jmBMzynlBUe4J+1KXaoBEUu1QH1ox4VjPxzgMa
+         DNcw==
+X-Gm-Message-State: AOAM531VfZpPRJOoxSRoT8TTfEZ3RtqHuu5m1JFQIhyIT5ZrhjK41yx1
+        Ts0cmbaH5kUME+D/jBn0pIecuVFg
+X-Google-Smtp-Source: ABdhPJwMGcRUIDwVwhfs8ZZNwUQF+Mn7JLKyv13M3hWhgrw//DNPni35Az6u5vgtHmAASeNItaC/0w==
+X-Received: by 2002:a2e:9886:: with SMTP id b6mr7112805ljj.258.1596455116340;
+        Mon, 03 Aug 2020 04:45:16 -0700 (PDT)
+Received: from [10.68.32.147] (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
+        by smtp.gmail.com with ESMTPSA id s8sm3660814ljd.105.2020.08.03.04.45.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Aug 2020 04:45:15 -0700 (PDT)
+Reply-To: efremov@linux.com
+Subject: Re: [PATCH v6] coccinelle: api: add kvfree script
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org
+References: <20200605204237.85055-1-efremov@linux.com>
+ <20200731210026.7186-1-efremov@linux.com>
+From:   Denis Efremov <efremov@linux.com>
+Autocrypt: addr=efremov@linux.com; keydata=
+ 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
+Message-ID: <8171ffcd-9f60-26a8-3c6a-4356297a12d1@linux.com>
+Date:   Mon, 3 Aug 2020 14:45:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/MEzDrBWRGeAvtsA9GqonXyg";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200731210026.7186-1-efremov@linux.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/MEzDrBWRGeAvtsA9GqonXyg
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Is there a difference from cocci point of view between:
 
-Hi all,
+... when != !is_vmalloc_addr(E)
 
-As part of my testing of linux-next, I do a qemu boot of a powerpc
-pseries_le_defconfig build.  Today it paniced after reaching user mode
-(but before the console login prompt):
+and 
 
-[    2.286787][    T1] Run /init as init process
-[    2.557885][   T50] mount (50) used greatest stack depth: 10880 bytes le=
-ft
-[    2.574629][    T1] Kernel panic - not syncing: Attempted to kill init! =
-exitcode=3D0x00000200
-[    2.575079][    T1] CPU: 0 PID: 1 Comm: init Not tainted 5.8.0 #2
-[    2.575421][    T1] Call Trace:
-[    2.576197][    T1] [c00000007e3a3b90] [c0000000006f5de0] dump_stack+0xc=
-4/0x114 (unreliable)
-[    2.576450][    T1] [c00000007e3a3be0] [c000000000122318] panic+0x16c/0x=
-404
-[    2.576540][    T1] [c00000007e3a3c80] [c00000000012a690] do_exit+0xc70/=
-0xd10
-[    2.576613][    T1] [c00000007e3a3d60] [c00000000012a804] do_group_exit+=
-0x64/0x110
-[    2.576812][    T1] [c00000007e3a3da0] [c00000000012a8d4] sys_exit_group=
-+0x24/0x30
-[    2.576891][    T1] [c00000007e3a3dc0] [c000000000032cbc] system_call_ex=
-ception+0x14c/0x230
-[    2.576969][    T1] [c00000007e3a3e20] [c00000000000d740] system_call_co=
-mmon+0xf0/0x27c
+... when != is_vmalloc_addr(E)
 
-This boot is of a simple initramfs whose only purpose is to shutdown.
+Should the latter one be used in most cases?
 
-/init is a shell script:
-
-#!/bin/sh
-# devtmpfs does not get automounted for initramfs
-/bin/mount -t devtmpfs devtmpfs /dev
-exec 0</dev/console
-exec 1>/dev/console
-exec 2>/dev/console
-exec /sbin/init $*
-
-/sbin/init is busybox and this is the /etc/inittab
-
-::sysinit:/bin/mount -t proc proc /proc
-::sysinit:/bin/mount -o remount,rw /
-::sysinit:/bin/mkdir -p /dev/pts
-::sysinit:/bin/mkdir -p /dev/shm
-::sysinit:/bin/mount -a
-::sysinit:/bin/hostname -F /etc/hostname
-::sysinit:/etc/init.d/rcS
-console::respawn:/sbin/getty -L  console 0 vt100 # GENERIC_SERIAL
-::shutdown:/etc/init.d/rcK
-::shutdown:/sbin/swapoff -a
-::shutdown:/bin/umount -a -r
-
-and there are no init scripts.
-
-Chritoph and Al are cc'd since we have some init stuff rewrite in the
-vfs tree for the first time today.
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/MEzDrBWRGeAvtsA9GqonXyg
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8n+KEACgkQAVBC80lX
-0GzVzAf+JFK5CuJ8nrI4bwOqKhIGdwx4HTWd0cUyIE/Jm1+Fesqi9K5VRAh80HWx
-TkcP7TYWOqHN10xXPFJStSCLkDkGHevsQDaMsvXzLWxDNKOHkidZtsuulcECOpqX
-8P1I2M8z9F8oYAuwz9Ql9RgO9rZ+d+oQv/L+p2E7XySrLRg8MtgudoXJ1Z62Pk3f
-aDgQUdkL2A4Xk8EcpyMX14bCv93+FBdagkwJ+u1MLf6MyNtJRh453X758tIpdhPX
-Oadp+k9tJO78+IH1Zo3fxRB6V/vrtSIji/exfJeRh64hRUzvpvGx1wgJLSqUv4iJ
-IlOaVdNga3pDP7oMe51AAvF59Hq9Gg==
-=Li34
------END PGP SIGNATURE-----
-
---Sig_/MEzDrBWRGeAvtsA9GqonXyg--
+Thanks,
+Denis
