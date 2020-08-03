@@ -2,105 +2,155 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 01:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2A2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 01:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E73B2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 01:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C21F206D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 01:40:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hcPAvsm8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qo3krC/5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbgHCBgZ (ORCPT
+        id S1726963AbgHCBkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 21:36:25 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:59139 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbgHCBgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 21:36:25 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BKgTL2gDjz9sR4;
-        Mon,  3 Aug 2020 11:36:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596418583;
-        bh=PRtsXniWkKEieJSVsKxBiZKfDhPg+R812rt3/H5ilng=;
-        h=Date:From:To:Cc:Subject:From;
-        b=hcPAvsm8wAYGTFUcmfMccEOFBqkr0Sk8f+r/ivr9M9k8B/fW+thcqscRwaOjFvp9f
-         SBS7jiPTsC2boud5fzqCCUHuBNGxLtXx3sfAMdp2dUCLXC8ec18irlTvjW1q5R6Jba
-         teGE6b6bhAYVdfJCgj6oAIlyQbKu+7bFQsZl+fuU5tLGc+L7qXcMb+PX51q/a7O+Zn
-         MASJQG1X39nZlwqlWIx9kUmkynQEA42983JiUa7cnQh9t81d76yhQFYZjkhU4/La+M
-         lhy+C1SAH+WKx8UAvTtFygSDTuyG7dJHuY9bqJgwvsDU3RmJbjzK9oOTtPN4uBlZTM
-         TKli57O0DdE3A==
-Date:   Mon, 3 Aug 2020 11:36:20 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>
-Subject: linux-next: build failure after merge of the pci tree
-Message-ID: <20200803113620.25de9de3@canb.auug.org.au>
+        Sun, 2 Aug 2020 21:40:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55684 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgHCBkj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 21:40:39 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDFB0C06174A;
+        Sun,  2 Aug 2020 18:40:38 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id u43so6088021ybi.11;
+        Sun, 02 Aug 2020 18:40:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kIvJdyOzuGLb+Zojh+U9lDyJFRxoHNP9AKVQhedhbfs=;
+        b=qo3krC/5s4se8mCR1BLNwK4VWaSmC1IDxpIbGXvDCjhFlk0KqS/GR81ZROtr0QWflT
+         0uClIyx4QCNjAbYOqcjm0+3uxQB2P24lhicg7VtB2rLlMShDuKr/YO8Kqj0KrdOHpLnz
+         W+jzNLTp/pAfCKbqrXss7BSRs321el1o7PsD1ImI1jnIGfP00c2z3TuOKFSMcUDXjBJN
+         6Dq4wiaKzq0WPvPkr7Rh0Qob9KRsYYlRgbjizRf7q7bMDZnnmO6SHlLgUPt+M7mN0y22
+         4CTEX/pA2EmqpkUzzUbqgzEoMTGhgz+SxZu14G0TzabihVL9IBSFGlVwxdEDs5MHud47
+         CTZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kIvJdyOzuGLb+Zojh+U9lDyJFRxoHNP9AKVQhedhbfs=;
+        b=A3H+VjF6cgQM8L5095hV5QoZgW4zXYY1kuAVg2eiJJE5TmGSAtf6e2rPglgocKJ0s2
+         l4S3CBTYhRVol9CmRZg8N0B04EVkdHPaN6xrWZl6w8FbTKZre+YStlOZsGizelKNn/1Y
+         d/BsPPWefr1odKi4I5Pkx+1Jktz2Exkz/O5+tIusB2oyeiLhF1fMQv4KULmPpH+g5EE7
+         j5juM/DuPwCST7G7AAvOFbJuoiwjdoapmqEk6g8PXXdThGibFq3G3x/Dd1AQmTGtYl5A
+         GywEVTRJYYraSyHuBupdbxaVpRP63ITsJAKUfUXD9tVZJlQoNFcPM2XbFExA606IgBuD
+         UBcA==
+X-Gm-Message-State: AOAM533xcRzCV7rnrfJU9HS/OkXTmi7qDKdIle4UY6rG2Sk1YyQZupDt
+        OolFyTThevXWlyTqIGdeleeLVP+btjbNTVy/jYs5CQ==
+X-Google-Smtp-Source: ABdhPJx+CRJvFSjRrIr/OeivdlP3UZ772kyYEHNvys7X6RDyFK0aTNJT37ZEGv3rYJOdXUVWEif247nqio4Z2bgkRdw=
+X-Received: by 2002:a25:84cd:: with SMTP id x13mr22817105ybm.425.1596418838070;
+ Sun, 02 Aug 2020 18:40:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/zyqByTSa56DhGmoVC3dav1t";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200801084721.1812607-1-songliubraving@fb.com> <20200801084721.1812607-3-songliubraving@fb.com>
+In-Reply-To: <20200801084721.1812607-3-songliubraving@fb.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Sun, 2 Aug 2020 18:40:27 -0700
+Message-ID: <CAEf4BzYp4gO1P+OrY7hGyQjdia3BuSu4DX2_z=UF6RfGNa+gkQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 2/5] libbpf: support BPF_PROG_TYPE_USER programs
+To:     Song Liu <songliubraving@fb.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Xu <dlxu@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/zyqByTSa56DhGmoVC3dav1t
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sat, Aug 1, 2020 at 1:50 AM Song Liu <songliubraving@fb.com> wrote:
+>
+> Add cpu_plus to bpf_prog_test_run_attr. Add BPF_PROG_SEC "user" for
+> BPF_PROG_TYPE_USER programs.
+>
+> Signed-off-by: Song Liu <songliubraving@fb.com>
+> ---
+>  tools/lib/bpf/bpf.c           | 1 +
+>  tools/lib/bpf/bpf.h           | 3 +++
+>  tools/lib/bpf/libbpf.c        | 1 +
+>  tools/lib/bpf/libbpf_probes.c | 1 +
+>  4 files changed, 6 insertions(+)
+>
+> diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
+> index e1bdf214f75fe..b28c3daa9c270 100644
+> --- a/tools/lib/bpf/bpf.c
+> +++ b/tools/lib/bpf/bpf.c
+> @@ -693,6 +693,7 @@ int bpf_prog_test_run_xattr(struct bpf_prog_test_run_attr *test_attr)
+>         attr.test.ctx_size_in = test_attr->ctx_size_in;
+>         attr.test.ctx_size_out = test_attr->ctx_size_out;
+>         attr.test.repeat = test_attr->repeat;
+> +       attr.test.cpu_plus = test_attr->cpu_plus;
+>
+>         ret = sys_bpf(BPF_PROG_TEST_RUN, &attr, sizeof(attr));
+>         test_attr->data_size_out = attr.test.data_size_out;
+> diff --git a/tools/lib/bpf/bpf.h b/tools/lib/bpf/bpf.h
+> index 6d367e01d05e9..0c799740df566 100644
+> --- a/tools/lib/bpf/bpf.h
+> +++ b/tools/lib/bpf/bpf.h
+> @@ -205,6 +205,9 @@ struct bpf_prog_test_run_attr {
+>         void *ctx_out;      /* optional */
+>         __u32 ctx_size_out; /* in: max length of ctx_out
+>                              * out: length of cxt_out */
+> +       __u32 cpu_plus;     /* specify which cpu to run the test with
+> +                            * cpu_plus = cpu_id + 1.
+> +                            * If cpu_plus = 0, run on current cpu */
 
-Hi all,
+We can't do this due to ABI guarantees. We'll have to add a new API
+using OPTS arguments.
 
-After merging the pci tree, today's linux-next build (x86_64 allmodconfig)
-failed like this:
+>  };
+>
+>  LIBBPF_API int bpf_prog_test_run_xattr(struct bpf_prog_test_run_attr *test_attr);
+> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> index b9f11f854985b..9ce175a486214 100644
+> --- a/tools/lib/bpf/libbpf.c
+> +++ b/tools/lib/bpf/libbpf.c
+> @@ -6922,6 +6922,7 @@ static const struct bpf_sec_def section_defs[] = {
+>         BPF_PROG_SEC("lwt_out",                 BPF_PROG_TYPE_LWT_OUT),
+>         BPF_PROG_SEC("lwt_xmit",                BPF_PROG_TYPE_LWT_XMIT),
+>         BPF_PROG_SEC("lwt_seg6local",           BPF_PROG_TYPE_LWT_SEG6LOCAL),
+> +       BPF_PROG_SEC("user",                    BPF_PROG_TYPE_USER),
 
-drivers/pci/controller/pcie-xilinx-cpm.c: In function 'xilinx_cpm_pcie_prob=
-e':
-drivers/pci/controller/pcie-xilinx-cpm.c:553:8: error: implicit declaration=
- of function 'pci_parse_request_of_pci_ranges' [-Werror=3Dimplicit-function=
--declaration]
-  553 |  err =3D pci_parse_request_of_pci_ranges(dev, &bridge->windows,
-      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+let's do "user/" for consistency with most other prog types (and nice
+separation between prog type and custom user name)
 
-Caused by commit
 
-  f0fdb84da7a9 ("PCI: Move DT resource setup into devm_pci_alloc_host_bridg=
-e()")
-
-interacting with commit
-
-  e5672b8109a9 ("PCI: xilinx-cpm: Add Versal CPM Root Port driver")
-
-I have used the pci tree from next-20200731 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/zyqByTSa56DhGmoVC3dav1t
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8nahQACgkQAVBC80lX
-0Gz0iwf/Z37CX1IIpP4V8rCT655N2AFijLY5FCx2zzyzdVLqB+PFYyLyrtYfyImS
-IZ126InkSLzeZyY7+MEEP6nN7x1xceqqGj44APzN7PkOQxp3kcb0P9WT8IeqAKcV
-GRbpOoyI91E51D7OWGK5O86ICuTJvUP7AzpBxaOhy8MDCtXbZqTq45WrBbKAw8Us
-3SqiPzvmkYYU2alB4Oxr4ywRlMHK27xIQRy2Fz9400zVLe8ZVG/gCOv/LqObJ5zH
-3zI3gjoCclIi2xaTejj/2y+1g3EBNLzGmDmJpxZ/hjx5wF5gXZpVypGY0K28SUBr
-8JlMHOgye29X8nv4Jgg4q96z+db1UA==
-=Lhv6
------END PGP SIGNATURE-----
-
---Sig_/zyqByTSa56DhGmoVC3dav1t--
+>         BPF_APROG_SEC("cgroup_skb/ingress",     BPF_PROG_TYPE_CGROUP_SKB,
+>                                                 BPF_CGROUP_INET_INGRESS),
+>         BPF_APROG_SEC("cgroup_skb/egress",      BPF_PROG_TYPE_CGROUP_SKB,
+> diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
+> index 5a3d3f0784081..163013084000e 100644
+> --- a/tools/lib/bpf/libbpf_probes.c
+> +++ b/tools/lib/bpf/libbpf_probes.c
+> @@ -112,6 +112,7 @@ probe_load(enum bpf_prog_type prog_type, const struct bpf_insn *insns,
+>         case BPF_PROG_TYPE_STRUCT_OPS:
+>         case BPF_PROG_TYPE_EXT:
+>         case BPF_PROG_TYPE_LSM:
+> +       case BPF_PROG_TYPE_USER:
+>         default:
+>                 break;
+>         }
+> --
+> 2.24.1
+>
