@@ -2,53 +2,53 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CACC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687BCC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 024852064B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E8852064B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596459255;
-	bh=BocLtQpZTd5/Ym1RXKF6hFrclOeOhuwE8H0dnbnxEiI=;
+	s=default; t=1596459259;
+	bh=wUGwfYYUp+m6tPyzzV64uHY20TtTjscM989H6gUPW8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2l0Ny3JYQ8qNcoGOrH4ufQ25oTqXmO1kGFoadv06pkkEtawEoy3HW+PL7c8LKs/eY
-	 6iCOsYT2ycx2ZSQDMn9p302tNHChr2trUBlUdkpbjdtWwKAiULUQKRvat7pWuvSRQV
-	 vwdw5P/2qnLs0GlFIaURiU8vMnjRgWHbfjdFt5fI=
+	b=XbwF/dRVzgJdqqFkRCrZHpxfWslKVG3rhEYuGaRC4Ar/uuYV31SjkLIVpESZ0Ba0B
+	 Elt7IDDOshPY+fUOUAFMvoZaAs70y84yo0erZ8yZq9ZnoBHigHjtlm0KQ/A1YrINGv
+	 bP3802CLowzYbAVHBXlm7tNoTJSEso88qr23gG5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgHCMyO (ORCPT
+        id S1727876AbgHCMXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:54:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47908 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:23:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727911AbgHCMXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:23:44 -0400
+        id S1727855AbgHCMX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:23:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ACA720738;
-        Mon,  3 Aug 2020 12:23:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B43D0204EC;
+        Mon,  3 Aug 2020 12:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457423;
-        bh=BocLtQpZTd5/Ym1RXKF6hFrclOeOhuwE8H0dnbnxEiI=;
+        s=default; t=1596457406;
+        bh=wUGwfYYUp+m6tPyzzV64uHY20TtTjscM989H6gUPW8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EJj+2dqYTEvvznev54G/0KPO2JcCVTTFAsMFQ/Drh7q2uLuVh6ISByhZtYarsk7MY
-         Ar2G2oQiCfSMoO6T1XLoglzoSUk8zsvgfTC1PZiHM2drGRrU52MUaaqyNuYyNfyIz8
-         PjvraFZ8x9squO3WusFQSOr+spIj7BEMB9uXY2bk=
+        b=NpgHjDDSmqiqJp/XprRGGF0dhxRQjhPaDwlVsqEuhFv+fav6mJpxdqrn8wlySm4VP
+         EOfNvijto2E56LFQ9zJQyA9AvAg07wcWbE0aA7GlroabJen8ceYqPTmq1PvFWd0KQT
+         6FVdPU/zDjaCPJsLU4g2nU8LFmU2auzK4VrJjSWM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Emese Revfy <re.emese@gmail.com>,
-        Kees Cook <keescook@chromium.org>, Willy Tarreau <w@1wt.eu>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.7 031/120] random32: remove net_rand_state from the latent entropy gcc plugin
-Date:   Mon,  3 Aug 2020 14:18:09 +0200
-Message-Id: <20200803121904.344860488@linuxfoundation.org>
+        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
+        Roi Dayan <roid@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 055/120] net/mlx5: E-switch, Destroy TSAR after reload interface
+Date:   Mon,  3 Aug 2020 14:18:33 +0200
+Message-Id: <20200803121905.474985067@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -61,52 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Parav Pandit <parav@mellanox.com>
 
-commit 83bdc7275e6206f560d247be856bceba3e1ed8f2 upstream.
+[ Upstream commit 0c2600c619578f759cf3d5192b01bd14e281f24c ]
 
-It turns out that the plugin right now ends up being really unhappy
-about the change from 'static' to 'extern' storage that happened in
-commit f227e3ec3b5c ("random32: update the net random state on interrupt
-and activity").
+When eswitch offloads is enabled, TSAR is created before reloading
+the interfaces.
+However when eswitch offloads mode is disabled, TSAR is disabled before
+reloading the interfaces.
 
-This is probably a trivial fix for the latent_entropy plugin, but for
-now, just remove net_rand_state from the list of things the plugin
-worries about.
+To keep the eswitch enable/disable sequence as mirror, destroy TSAR
+after reloading the interfaces.
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Emese Revfy <re.emese@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Willy Tarreau <w@1wt.eu>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 1bd27b11c1df ("net/mlx5: Introduce E-switch QoS management")
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/random.h |    2 +-
- lib/random32.c         |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/include/linux/random.h
-+++ b/include/linux/random.h
-@@ -120,7 +120,7 @@ struct rnd_state {
- 	__u32 s1, s2, s3, s4;
- };
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+index 459cd668b9e2f..3bb4f72b76da2 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+@@ -2206,8 +2206,6 @@ void mlx5_eswitch_disable_locked(struct mlx5_eswitch *esw, bool clear_vf)
+ 	else if (esw->mode == MLX5_ESWITCH_OFFLOADS)
+ 		esw_offloads_disable(esw);
  
--DECLARE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
-+DECLARE_PER_CPU(struct rnd_state, net_rand_state);
+-	esw_destroy_tsar(esw);
+-
+ 	old_mode = esw->mode;
+ 	esw->mode = MLX5_ESWITCH_NONE;
  
- u32 prandom_u32_state(struct rnd_state *state);
- void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
---- a/lib/random32.c
-+++ b/lib/random32.c
-@@ -48,7 +48,7 @@ static inline void prandom_state_selftes
+@@ -2217,6 +2215,8 @@ void mlx5_eswitch_disable_locked(struct mlx5_eswitch *esw, bool clear_vf)
+ 		mlx5_reload_interface(esw->dev, MLX5_INTERFACE_PROTOCOL_IB);
+ 		mlx5_reload_interface(esw->dev, MLX5_INTERFACE_PROTOCOL_ETH);
+ 	}
++	esw_destroy_tsar(esw);
++
+ 	if (clear_vf)
+ 		mlx5_eswitch_clear_vf_vports_info(esw);
  }
- #endif
- 
--DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
-+DEFINE_PER_CPU(struct rnd_state, net_rand_state);
- 
- /**
-  *	prandom_u32_state - seeded pseudo-random number generator.
+-- 
+2.25.1
+
 
 
