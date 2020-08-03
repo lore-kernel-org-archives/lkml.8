@@ -2,53 +2,52 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95522C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67891C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7275320678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44ED2206D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458931;
-	bh=pDPhXUaeA3ju6d7X/LYtdzrS+oR8oXm+myPL4xopds4=;
+	s=default; t=1596458940;
+	bh=2f+qknLEBJ9Scqg4MEihsT/+/GaFehSaxFPzxZeMMnM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=REm52/MUNT/AgNaqaDuTyb3bT87uys/keDt4ajoGM+pv29DayKhJ8CA1JjYjPSoaQ
-	 agpR1XpRSnNtkJ41cEkqI/U5ArOsZDqBgcRQeBC3Y8zCRDIlxKHECYz3gADt+yOOm8
-	 /WFlltyaQpjSvA/rdJeN+g87Oli0Dwf9RmKxpaBU=
+	b=IddIZnlVbem7PnjawR0IFZvw/jLpiJZPY5pLiZXq4MTWq5KFi3HAc274mZTaX/hkt
+	 DQfj2DElvLcCLQ1ysciFvloG+b6a37iJnCymA/GiPJkufuVi9u9i86rFc1+y4erwhj
+	 o4+6H9HszDIjsFHhyb48SHbwLyKRnImvfegCmTIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729675AbgHCMsv (ORCPT
+        id S1726826AbgHCMYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:48:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48650 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:24:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbgHCMYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:24:22 -0400
+        id S1727941AbgHCMXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:23:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 972A1204EC;
-        Mon,  3 Aug 2020 12:24:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E30E9204EC;
+        Mon,  3 Aug 2020 12:23:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457461;
-        bh=pDPhXUaeA3ju6d7X/LYtdzrS+oR8oXm+myPL4xopds4=;
+        s=default; t=1596457431;
+        bh=2f+qknLEBJ9Scqg4MEihsT/+/GaFehSaxFPzxZeMMnM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1J+q4u+iSa4pEM8KSL+gxdaSyxauUoEKnQKwoNHfj5whsvaaydr9H/Vw9WULKbiL0
-         HrONBbdiMM2UdOmTUXbzvP9bfsX3tWs7eTWYV3fsmejqQ9GVsMe06HbrbxXPOlUH28
-         bRMZ1AeejfxvJcJA70okeV3EOFALRGTEBqwLpSsU=
+        b=i/a98lwVbBxgL8/8B7QFq99k9orTFSNwL61VjBUXo/IMQY0A1DiPpfVMjC7UPvztf
+         +skZ8AuXqZg/K5ZfkrW+rIzaPOpMGUJP4l7AagrFLi+xcnLSF1KubsPYjTuPg2f59z
+         1oPz+YlYZgAcc19crXTYGYtA+3yXrMQMtv0KIL2c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 076/120] bpf: Fix map leak in HASH_OF_MAPS map
-Date:   Mon,  3 Aug 2020 14:18:54 +0200
-Message-Id: <20200803121906.514666643@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 034/120] net/x25: Fix x25_neigh refcnt leak when x25 disconnect
+Date:   Mon,  3 Aug 2020 14:18:12 +0200
+Message-Id: <20200803121904.491450067@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -61,63 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 1d4e1eab456e1ee92a94987499b211db05f900ea ]
+commit 4becb7ee5b3d2829ed7b9261a245a77d5b7de902 upstream.
 
-Fix HASH_OF_MAPS bug of not putting inner map pointer on bpf_map_elem_update()
-operation. This is due to per-cpu extra_elems optimization, which bypassed
-free_htab_elem() logic doing proper clean ups. Make sure that inner map is put
-properly in optimized case as well.
+x25_connect() invokes x25_get_neigh(), which returns a reference of the
+specified x25_neigh object to "x25->neighbour" with increased refcnt.
 
-Fixes: 8c290e60fa2a ("bpf: fix hashmap extra_elems logic")
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Song Liu <songliubraving@fb.com>
-Link: https://lore.kernel.org/bpf/20200729040913.2815687-1-andriin@fb.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+When x25 connect success and returns, the reference still be hold by
+"x25->neighbour", so the refcount should be decreased in
+x25_disconnect() to keep refcount balanced.
+
+The reference counting issue happens in x25_disconnect(), which forgets
+to decrease the refcnt increased by x25_get_neigh() in x25_connect(),
+causing a refcnt leak.
+
+Fix this issue by calling x25_neigh_put() before x25_disconnect()
+returns.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/bpf/hashtab.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ net/x25/x25_subr.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
-index d541c8486c95d..5e1ac22adf7a2 100644
---- a/kernel/bpf/hashtab.c
-+++ b/kernel/bpf/hashtab.c
-@@ -779,15 +779,20 @@ static void htab_elem_free_rcu(struct rcu_head *head)
- 	htab_elem_free(htab, l);
+--- a/net/x25/x25_subr.c
++++ b/net/x25/x25_subr.c
+@@ -363,6 +363,10 @@ void x25_disconnect(struct sock *sk, int
+ 		x25->neighbour = NULL;
+ 		read_unlock_bh(&x25_list_lock);
+ 	}
++	read_lock_bh(&x25_list_lock);
++	x25_neigh_put(x25->neighbour);
++	x25->neighbour = NULL;
++	read_unlock_bh(&x25_list_lock);
  }
  
--static void free_htab_elem(struct bpf_htab *htab, struct htab_elem *l)
-+static void htab_put_fd_value(struct bpf_htab *htab, struct htab_elem *l)
- {
- 	struct bpf_map *map = &htab->map;
-+	void *ptr;
- 
- 	if (map->ops->map_fd_put_ptr) {
--		void *ptr = fd_htab_map_get_ptr(map, l);
--
-+		ptr = fd_htab_map_get_ptr(map, l);
- 		map->ops->map_fd_put_ptr(ptr);
- 	}
-+}
-+
-+static void free_htab_elem(struct bpf_htab *htab, struct htab_elem *l)
-+{
-+	htab_put_fd_value(htab, l);
- 
- 	if (htab_is_prealloc(htab)) {
- 		__pcpu_freelist_push(&htab->freelist, &l->fnode);
-@@ -839,6 +844,7 @@ static struct htab_elem *alloc_htab_elem(struct bpf_htab *htab, void *key,
- 			 */
- 			pl_new = this_cpu_ptr(htab->extra_elems);
- 			l_new = *pl_new;
-+			htab_put_fd_value(htab, old_elem);
- 			*pl_new = old_elem;
- 		} else {
- 			struct pcpu_freelist_node *l;
--- 
-2.25.1
-
+ /*
 
 
