@@ -2,148 +2,153 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1960C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB30C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 103CD22C9F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DC2E22BF3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:12:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="coDDm+vP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KI+YOp/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgHCSJf (ORCPT
+        id S1728223AbgHCSMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 14:09:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38886 "EHLO
+        Mon, 3 Aug 2020 14:12:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgHCSJf (ORCPT
+        with ESMTP id S1726130AbgHCSMA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 14:09:35 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3432C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 11:09:34 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id j23so13461236vsq.7
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 11:09:34 -0700 (PDT)
+        Mon, 3 Aug 2020 14:12:00 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C666C06174A;
+        Mon,  3 Aug 2020 11:12:00 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id p191so4375768ybg.0;
+        Mon, 03 Aug 2020 11:12:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jVtWQUGpmw8jhNyuuKCyNkZI5368yArYPxJOwi5ESm4=;
-        b=coDDm+vPAuh6Fuh2z/owncaMvXWcMJtlRYB7hg03SaGSChcDWim/iI7wQu6Gtru4LI
-         LNNy/0P59m7hXu3w8xvG2OpKtNRj3lQLUBTX0H4+160GNmcD4+O94D6G26WpSJdbxPGx
-         S9b8lEbGDCKUi6B37X/bH0jLuj/oO8PhAeAds=
+         :cc:content-transfer-encoding;
+        bh=J7r7YpmcchYGchQNEBkoeTg3Nnece6VxKk14FSGb/wg=;
+        b=KI+YOp/8fZfo8O25o8ruNnOpVKqngH04wZu7j4+45EG69hqJEJrNj3YJqLyKderBRb
+         FqcnzqGp51v+YqnWzfdPXbTlMvi85BzASMDf8cxJciN7iM00LQ2nXXYUBw3uXOstD0fL
+         ehG61mzYsgxMHpAdCe59A1MI86zAiAjLpYFGZSgfGIdyZ7rjtIB2msfMFfsTuZG8XspJ
+         Pc1KaKSskqbDRoq96nYvH5h2f1+qr1qc6/Tg1fuyXo/F5OMhzWnXPNN5+J9OIkFghrGR
+         WJsSX+jUlp2fIaAoCpP3aGN8JZfjvoMffk6MYgyyXx4kkEbEhGZTsKFlZyR0TA9HKEfW
+         Q6Lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jVtWQUGpmw8jhNyuuKCyNkZI5368yArYPxJOwi5ESm4=;
-        b=Qu7L/770j1SGaYv1ERKsq89eMKBebsaVje/XSJp1mmeO96Tw80tzR6IWTRq/7feCwD
-         6/K23Dhv21CbUVNx1lU7szWdumIFvhQZ39rk2+lE8q2TF4tXPhMsCo1x25jF3jSEPBhT
-         YCJ1ZUhAZVJXnrTOdYFdiMBLecs+s0w9Q4gxQxFGjW15O9aPRNRZ67jjPAFlYUAEs/hy
-         Jr7oth+v+75T6UXfAduzh9l6gslm+iYvy3yfqMf0YZjFiBiLgBfVz/gkih+6Wv1UAvU5
-         IunDel4BmQcJmg35/CxVC83b4TTwWI3NM0ReuIdsHKwCUdGSUmBawupbcyo4/b2GFfbA
-         xXJw==
-X-Gm-Message-State: AOAM530E4Mk9sH0S81K/g0p1HMPuQOdluJKqhOER4DNf5slq3a4lB+sN
-        5rR3Fas7vF0bPSFiZqSz64Vg2BBlf5U=
-X-Google-Smtp-Source: ABdhPJxGgaIW4Sruf6QfVttExcXGpWKuD1aMgV5mLvGKiXiJdwXqb47nsOlDZkOqwM+IEBpgth5IUw==
-X-Received: by 2002:a67:2043:: with SMTP id g64mr10706230vsg.25.1596478173386;
-        Mon, 03 Aug 2020 11:09:33 -0700 (PDT)
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
-        by smtp.gmail.com with ESMTPSA id n20sm881803vsr.6.2020.08.03.11.09.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Aug 2020 11:09:31 -0700 (PDT)
-Received: by mail-ua1-f50.google.com with SMTP id q68so9056580uaq.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 11:09:30 -0700 (PDT)
-X-Received: by 2002:ab0:44e5:: with SMTP id n92mr12122918uan.121.1596478170242;
- Mon, 03 Aug 2020 11:09:30 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=J7r7YpmcchYGchQNEBkoeTg3Nnece6VxKk14FSGb/wg=;
+        b=J8RWaOluSqyOteb6EpFUTDF9UJb8ILGy1/2tYAcjMBivFoKWcmLjrRGH8Gi0T5AUGQ
+         WYqeu/FlnNLaPI6Kq1SR4XFGV5pjkqmA6fBskSApzwx+O0ZCXGmUQUkKHI/UoOCqPybL
+         kYtTKze+AZu5O/CfJsI87Bocvc7FZNDYSr+0AYZeb79ag2S9GjKEwJtO3Mp24xRn5Q7h
+         FalxdUXdg+LePeHa5ot6sqqs3YBCKdJ+nzNxtsA+YzRPABmJ8toPriMBX3lujq6y7RHk
+         3CbA/X2Hpj/raxms0sjaKU6V48T4nDnNfebRcfBqvtzViJnl/1pBBqFRa4R3vGF1Rmdt
+         EwYA==
+X-Gm-Message-State: AOAM531qDm4JaLHki0kHZTeR6zBkaUp3p97kv3ncp/U4TrhciE0DTbrk
+        VoNltYfEZRTZHLt16p8u2Jl7cIELtPNyKXLy2HI=
+X-Google-Smtp-Source: ABdhPJyrr530gC4Jdav1r+XBP0uq3CXKHqcK+f26v2g+FqCFA9k5lH1XYBneFu3632cOeHFdUVjHKitJaafwPbdo2oI=
+X-Received: by 2002:a25:4fd6:: with SMTP id d205mr28216774ybb.214.1596478319311;
+ Mon, 03 Aug 2020 11:11:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <1596305615-5894-1-git-send-email-tdas@codeaurora.org> <1596305615-5894-2-git-send-email-tdas@codeaurora.org>
-In-Reply-To: <1596305615-5894-2-git-send-email-tdas@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 3 Aug 2020 11:09:18 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Vm4bF07OFQv85kmOyzK9=TcC0gJuuxcJwUxGNed06QTw@mail.gmail.com>
-Message-ID: <CAD=FV=Vm4bF07OFQv85kmOyzK9=TcC0gJuuxcJwUxGNed06QTw@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: qcom: sc7180: Add LPASS clock controller nodes
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
+References: <1596187745-31596-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200801090456.GB1379367@oden.dyn.berto.se>
+In-Reply-To: <20200801090456.GB1379367@oden.dyn.berto.se>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 3 Aug 2020 19:11:32 +0100
+Message-ID: <CA+V-a8sOHct_JetCsug8Z2BQpMLH2p39hj2XNw_1N5gkBQp1Gg@mail.gmail.com>
+Subject: Re: [PATCH] media: rcar-vin: Update crop and compose settings for
+ every s_fmt call
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Niklas <niklas.soderlund@ragnatech.se>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Hans,
 
-On Sat, Aug 1, 2020 at 11:14 AM Taniya Das <tdas@codeaurora.org> wrote:
+On Sat, Aug 1, 2020 at 10:04 AM Niklas <niklas.soderlund@ragnatech.se> wrot=
+e:
 >
-> Update the clock controller nodes for Low power audio subsystem
-> functionality.
+> Hi Lad,
 >
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
+> Thanks for your work.
 >
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index d46b383..7cf8bfe 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -8,6 +8,7 @@
->  #include <dt-bindings/clock/qcom,dispcc-sc7180.h>
->  #include <dt-bindings/clock/qcom,gcc-sc7180.h>
->  #include <dt-bindings/clock/qcom,gpucc-sc7180.h>
-> +#include <dt-bindings/clock/qcom,lpasscorecc-sc7180.h>
->  #include <dt-bindings/clock/qcom,rpmh.h>
->  #include <dt-bindings/clock/qcom,videocc-sc7180.h>
->  #include <dt-bindings/interconnect/qcom,osm-l3.h>
-> @@ -3312,6 +3313,30 @@
->                         qcom,msa-fixed-perm;
->                         status = "disabled";
->                 };
-> +
-> +               lpasscc: clock-controller@62d00000 {
-> +                       compatible = "qcom,sc7180-lpasscorecc";
-> +                       reg = <0 0x62d00000 0 0x50000>,
-> +                           <0 0x62780000 0 0x30000>;
-> +                       reg-names = "lpass_core_cc", "lpass_audio_cc";
-> +                       clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>,
-> +                                <&rpmhcc RPMH_CXO_CLK>;
-> +                       clock-names = "iface", "bi_tcxo";
-> +                       power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
-> +                       #clock-cells = <1>;
-> +                       #power-domain-cells = <1>;
-> +               };
-> +
-> +               lpass_hm: clock-controller@63000000 {
-> +                       compatible = "qcom,sc7180-lpasshm";
-> +                       reg = <0 0x63000000 0 0x28>;
-> +                       clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>,
-> +                                <&rpmhcc RPMH_CXO_CLK>;
-> +                       clock-names = "iface", "bi_tcxo";
-> +                       #clock-cells = <1>;
-> +                       #power-domain-cells = <1>;
-> +               };
-> +
->         };
+> On 2020-07-31 10:29:05 +0100, Lad Prabhakar wrote:
+> > The crop and compose settings for VIN in non mc mode werent updated
+> > in s_fmt call this resulted in captured images being clipped.
+> >
+> > With the below sequence on the third capture where size is set to
+> > 640x480 resulted in clipped image of size 320x240.
+> >
+> > high(640x480) -> low (320x240) -> high (640x480)
+> >
+> > This patch makes sure the VIN crop and compose settings are updated.
+>
+> This is clearly an inconsistency in the VIN driver that should be fixed.
+> But I think the none-mc mode implements the correct behavior. That is
+> that S_FMT should not modify the crop/compose rectangles other then make
+> sure they don't go out of bounds. This is an area we tried to clarify in
+> the past but I'm still not sure what the correct answer to.
+>
+What should be the exact behaviour of the bridge driver  for s_fmt
+call. Should the crop/compose settings be updated for every s_fmt
+callback or should they be only updated on s_selection callback.
+Currently the non-mc rcar-vin doesnt update the crop/compose setting
+in s_fmt callback due to which I see the above issue as mentioned.
 
-You end up adding a blank line at the end that Bjron can probably fix
-when applying, but other than that this looks good to me.
+Cheers,
+Prabhakar
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> >
+> > Fixes: 104464f573d ("media: rcar-vin: Do not reset the crop and compose=
+ rectangles in s_fmt")
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > ---
+> >  drivers/media/platform/rcar-vin/rcar-v4l2.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c b/drivers/medi=
+a/platform/rcar-vin/rcar-v4l2.c
+> > index f421e25..a9b13d9 100644
+> > --- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> > +++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> > @@ -319,6 +319,12 @@ static int rvin_s_fmt_vid_cap(struct file *file, v=
+oid *priv,
+> >       fmt_rect.width =3D vin->format.width;
+> >       fmt_rect.height =3D vin->format.height;
+> >
+> > +     vin->crop.top =3D 0;
+> > +     vin->crop.left =3D 0;
+> > +     vin->crop.width =3D vin->format.width;
+> > +     vin->crop.height =3D vin->format.height;
+> > +     vin->compose =3D vin->crop;
+> > +
+> >       v4l2_rect_map_inside(&vin->crop, &src_rect);
+> >       v4l2_rect_map_inside(&vin->compose, &fmt_rect);
+> >       vin->src_rect =3D src_rect;
+> > --
+> > 2.7.4
+> >
+>
+> --
+> Regards,
+> Niklas S=C3=B6derlund
