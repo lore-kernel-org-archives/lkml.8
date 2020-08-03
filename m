@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CDCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D92A7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BA63207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABD9B20738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:23:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457394;
-	bh=mMaacA9vE0nsei1eQU9xoZKDWVY7ktUlsDNk0P5mmr0=;
+	s=default; t=1596457399;
+	bh=pcjrk+k05ecvavclJwsjuBbQGLr9xVYSL2eKdW2XNzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=meC0DHe0PHVMpccGFvh5/2jNaCbkIoDOVIvaSWmf7QmdFJIxQRZ+1jz7j8UqHI0/S
-	 Q7yC6NHdLf4BzubKU9SpOdubP7dhKHzZELP4Jhhm/TJ2Pf26wcSxSQogNJjofnUgyO
-	 YiT8j4kwgAFqfTHLXGWULF4usNMsIDG1LMU06u2c=
+	b=1gUVAKeasmPkPZg9TQewuqKYxiL6IAKnh6NLIwsjxNIdzuel0VBnDZ5/KOW+++kWb
+	 RwaMwHF8WmZd/I8AhVXurwJOj9X7LhILTDBA6fP5rPSAPRdZ+XTq+Nwhj0ZJIbTNGc
+	 uSz1h1fc/Ue4NZW9cdwcLvr9pyh8xm1n2SBuSggw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgHCMXK (ORCPT
+        id S1727828AbgHCMXS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:23:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46974 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:23:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727797AbgHCMXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:23:05 -0400
+        id S1727809AbgHCMXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:23:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 013B92076B;
-        Mon,  3 Aug 2020 12:23:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C4E120738;
+        Mon,  3 Aug 2020 12:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457383;
-        bh=mMaacA9vE0nsei1eQU9xoZKDWVY7ktUlsDNk0P5mmr0=;
+        s=default; t=1596457386;
+        bh=pcjrk+k05ecvavclJwsjuBbQGLr9xVYSL2eKdW2XNzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iK3VSBvfmbS2vG655fbbTUI5yq/mDCk5rsI1vj+Dg7ZMb9Bet3ebTTusuabAxoFsw
-         vqGB7sp6eSekfhVzviXjnZlm3AyObz/phZYDJQMUXe0F7VOad64SoHpjdRURyL6MCT
-         A57hL8ADoPdICyfkASqGpTbv6Mzb49/YNtpe4aAU=
+        b=0htg38NTUqT4XUqeb/vR4xJr5Kbl0QcJGofcAIvJ9Z00l3M6zXpZXKzhwhP6PD24j
+         uq7oEl3GAvWT38CiihQOd0O94a/komhfQXcgBOS8v8Hi7am283IX07Fh1+H8sM0PjP
+         X2cp4NFlZ2tIbZjuEPEDfrrfKFjTZtzvvRhD3LP0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        stable@vger.kernel.org,
+        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
         Rich Felker <dalias@libc.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 047/120] sh/tlb: Fix PGTABLE_LEVELS > 2
-Date:   Mon,  3 Aug 2020 14:18:25 +0200
-Message-Id: <20200803121905.098549302@linuxfoundation.org>
+Subject: [PATCH 5.7 048/120] sh: Fix validation of system call number
+Date:   Mon,  3 Aug 2020 14:18:26 +0200
+Message-Id: <20200803121905.146270575@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -61,55 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
 
-[ Upstream commit c7bcbc8ab9cb20536b8f50c62a48cebda965fdba ]
+[ Upstream commit 04a8a3d0a73f51c7c2da84f494db7ec1df230e69 ]
 
-Geert reported that his SH7722-based Migo-R board failed to boot after
-commit:
+The slow path for traced system call entries accessed a wrong memory
+location to get the number of the maximum allowed system call number.
+Renumber the numbered "local" label for the correct location to avoid
+collisions with actual local labels.
 
-  c5b27a889da9 ("sh/tlb: Convert SH to generic mmu_gather")
-
-That commit fell victim to copying the wrong pattern --
-__pmd_free_tlb() used to be implemented with pmd_free().
-
-Fixes: c5b27a889da9 ("sh/tlb: Convert SH to generic mmu_gather")
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
+Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Fixes: f3a8308864f920d2 ("sh: Add a few missing irqflags tracing markers.")
 Signed-off-by: Rich Felker <dalias@libc.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sh/include/asm/pgalloc.h | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+ arch/sh/kernel/entry-common.S | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/sh/include/asm/pgalloc.h b/arch/sh/include/asm/pgalloc.h
-index 22d968bfe9bb6..d770da3f8b6fb 100644
---- a/arch/sh/include/asm/pgalloc.h
-+++ b/arch/sh/include/asm/pgalloc.h
-@@ -12,6 +12,7 @@ extern void pgd_free(struct mm_struct *mm, pgd_t *pgd);
- extern void pud_populate(struct mm_struct *mm, pud_t *pudp, pmd_t *pmd);
- extern pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long address);
- extern void pmd_free(struct mm_struct *mm, pmd_t *pmd);
-+#define __pmd_free_tlb(tlb, pmdp, addr)		pmd_free((tlb)->mm, (pmdp))
+diff --git a/arch/sh/kernel/entry-common.S b/arch/sh/kernel/entry-common.S
+index 956a7a03b0c83..9bac5bbb67f33 100644
+--- a/arch/sh/kernel/entry-common.S
++++ b/arch/sh/kernel/entry-common.S
+@@ -199,7 +199,7 @@ syscall_trace_entry:
+ 	mov.l	@(OFF_R7,r15), r7   ! arg3
+ 	mov.l	@(OFF_R3,r15), r3   ! syscall_nr
+ 	!
+-	mov.l	2f, r10			! Number of syscalls
++	mov.l	6f, r10			! Number of syscalls
+ 	cmp/hs	r10, r3
+ 	bf	syscall_call
+ 	mov	#-ENOSYS, r0
+@@ -353,7 +353,7 @@ ENTRY(system_call)
+ 	tst	r9, r8
+ 	bf	syscall_trace_entry
+ 	!
+-	mov.l	2f, r8			! Number of syscalls
++	mov.l	6f, r8			! Number of syscalls
+ 	cmp/hs	r8, r3
+ 	bt	syscall_badsys
+ 	!
+@@ -392,7 +392,7 @@ syscall_exit:
+ #if !defined(CONFIG_CPU_SH2)
+ 1:	.long	TRA
  #endif
- 
- static inline void pmd_populate_kernel(struct mm_struct *mm, pmd_t *pmd,
-@@ -33,13 +34,4 @@ do {							\
- 	tlb_remove_page((tlb), (pte));			\
- } while (0)
- 
--#if CONFIG_PGTABLE_LEVELS > 2
--#define __pmd_free_tlb(tlb, pmdp, addr)			\
--do {							\
--	struct page *page = virt_to_page(pmdp);		\
--	pgtable_pmd_page_dtor(page);			\
--	tlb_remove_page((tlb), page);			\
--} while (0);
--#endif
--
- #endif /* __ASM_SH_PGALLOC_H */
+-2:	.long	NR_syscalls
++6:	.long	NR_syscalls
+ 3:	.long	sys_call_table
+ 7:	.long	do_syscall_trace_enter
+ 8:	.long	do_syscall_trace_leave
 -- 
 2.25.1
 
