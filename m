@@ -2,124 +2,113 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F43AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD3AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FDC720775
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:45:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=eclypsium.com header.i=@eclypsium.com header.b="BRxWYRrr"
+	by mail.kernel.org (Postfix) with ESMTP id B8B7A2076E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:47:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596462432;
+	bh=4eQFf9ed2Dfrros1pnXhbWD114vwWyJ1fVfLwJi2D70=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Ap/3RyBU6jTSkbkaLM/4K+DY6xabPS5Vf/MU7ER3OjoYJpiA7hI1zEcQhESuY+aaf
+	 4vMOs7OjXBWu6nMMAFXDMZL36nJYTMlO5C/kvygMJHwHe5vV9L3mf2BofR4sjLMlS2
+	 E3L/DqMXhQhmAQhVfMhJ3QzgSaQ1j8oBkFABwvWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgHCNpU (ORCPT
+        id S1727905AbgHCNrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 09:45:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbgHCNpT (ORCPT
+        Mon, 3 Aug 2020 09:47:12 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38118 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727790AbgHCNrL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 09:45:19 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EAF9C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 06:45:19 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id h7so35091572qkk.7
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 06:45:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eclypsium.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5jZpyOsHwlMwVkwX/UG+yhCnHasbRZdF2QEv3wd8FYg=;
-        b=BRxWYRrrGBIwd61roJhGedBKxiROX9FIdXtsSlHnnRy//E0ye8dDxT9fgkxfU3CbwO
-         NED8qQKFG7oRyGcjviIr24/E0oXZ31UA8WCDvQhkyQ0jy4nVjn5UZHH4654gMhaFYeuj
-         u2v5h0cKqCxdHwkbAckMgLOY+hcMV34hxzYNghB0LJx0wevTaJ7tRs5zi5RUU5zjMcpu
-         AYhugN2Pk3PIfd9YEZJQmaUf1gGd1gQrkWmUle26CPFJPoY3Jgw3WeBH/EWD/OhdIulp
-         frJwg2uy3YYLzGMsDHo1GRpBTxSvcjcMpMCL0ZPkeQTA5dpa4+APPDTuKYHPrL1XbYGe
-         c2nw==
+        Mon, 3 Aug 2020 09:47:11 -0400
+Received: by mail-oi1-f193.google.com with SMTP id u63so21515204oie.5;
+        Mon, 03 Aug 2020 06:47:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5jZpyOsHwlMwVkwX/UG+yhCnHasbRZdF2QEv3wd8FYg=;
-        b=j+ootxHYdP0gOa0NVtvZ7Li5N/R1CtmvPgtAmyjjxEZudNlRHeeiChX0rudboaICIx
-         REoJxpWywLvwkoa3M6+6bpIde+3JdT3Xhesp5rqyjsNMeoJ18lNYpBZ3vZ2JeotcsuRr
-         rrq1jt7eYQ5bH3ItA543VK5z7Y6a7bt9eku68q5wGzv20HrD0r1XTZNhhi/RT7j2fENf
-         QYHzLsmGFMbiFZxNjbkekJAm5DnCu7lFh5j0WExdhN7CQwWhY4/olMnUsaN8O15WGf7B
-         CqGIJYThGwGil1RJt3giNuEBFlBRV9P+vRa4emUFe0nKUObxwmnRiZeww4iQ+APXJFLr
-         lBGw==
-X-Gm-Message-State: AOAM530f/Ci8IgVnlq0KPtQf1JFVXBnWmA4OhO85239Z+ZKqkAuSSZkt
-        WBrJf9K45TVrto9t61IDXUycvg==
-X-Google-Smtp-Source: ABdhPJzeQaFTlpvYXYws/wBRMz1IvaAHL6jQqA1oSXICoac3JwjCsMaaUfpn4WOcucvP48rWnKtNug==
-X-Received: by 2002:a37:9c7:: with SMTP id 190mr12769774qkj.303.1596462318338;
-        Mon, 03 Aug 2020 06:45:18 -0700 (PDT)
-Received: from localhost ([190.190.138.51])
-        by smtp.gmail.com with ESMTPSA id g4sm20078538qtp.89.2020.08.03.06.45.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Aug 2020 06:45:17 -0700 (PDT)
-From:   Daniel Gutson <daniel.gutson@eclypsium.com>
-To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Daniel Gutson <daniel.gutson@eclypsium.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Alex Bazhaniuk <alex@eclypsium.com>,
-        Richard Hughes <hughsient@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH] Remove attempt by intel-spi-pci to turn the SPI flash chip writeable
-Date:   Mon,  3 Aug 2020 10:44:49 -0300
-Message-Id: <20200803134449.72502-1-daniel.gutson@eclypsium.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h8dgWfdFWbvh9ZWZ1ZNBTHX4VAGf175AsYQyWP17dNI=;
+        b=RaSbfZuS52aO3YmqbAr3ZVDPgLhOeWHaJ+jj31gcLJE5P/JL5j+J/fDhbJtFpq+kil
+         QmLU+f2mFk/zKJoRRlaXaDPaqpmPuGEM1E1Jp6xjXrzKwSdaLcHKxQgGjFyCjGLlPzKn
+         fQmhDf7pZlbEo22R/CyTeqgc+AR0ewx/gvAouFb1SBsE6ajx7jjhTgyyiuQvvPU8z8S/
+         Qbt82EPkarhouJBklY4uniK5VzCCpIQqSev3zWegmKmMHVo0hBmRjEIrlE3e5E9Pkmdp
+         YLWe+N5ykTdT17/b6963lqAolfvrWoVuUX9XRc1D2TLqnJJibT0owIpUhbKL4noV4fIN
+         xKuw==
+X-Gm-Message-State: AOAM530cQBS2uTzw82PoVB7TQMmsi9iLb8RkAJS1vlcMrafgU2utQZFH
+        rN06kQwyAzx+FyArtaIF2hW1Z4poWf9udFys+L4=
+X-Google-Smtp-Source: ABdhPJyFUfBACH5XqP9tKDNYxFYYtA4RyrEcaKDspg6cpYPauGtzed7reeFZ0UlKtdcbE1mt7I5J5PAh4P2D1tNyOV4=
+X-Received: by 2002:a54:4f14:: with SMTP id e20mr10487303oiy.103.1596462430736;
+ Mon, 03 Aug 2020 06:47:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200722093732.14297-1-ionela.voinescu@arm.com>
+ <20200722093732.14297-2-ionela.voinescu@arm.com> <CAJZ5v0i5Xrk6oTt81aeXDi1F8gnEspJo9e6nGf10nSvBz-Dbkw@mail.gmail.com>
+ <20200730034128.k4fmblfuwjcmqdze@vireshk-mac-ubuntu> <20200803132617.GA9512@arm.com>
+In-Reply-To: <20200803132617.GA9512@arm.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 3 Aug 2020 15:46:59 +0200
+Message-ID: <CAJZ5v0gOJXtpF4iy2v+Jbv9y9QZsAtEREMQwWv0u7Zks0Fvp1A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] cpufreq: move invariance setter calls in cpufreq core
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the intel-spi-pci driver tries to unconditionally set
-the SPI chip writeable. After discussing in the LKML, the original
-author decided that it was better  to remove the attempt.
+On Mon, Aug 3, 2020 at 3:26 PM Ionela Voinescu <ionela.voinescu@arm.com> wrote:
+>
+> Hi guys,
+>
+> On Thursday 30 Jul 2020 at 09:11:28 (+0530), Viresh Kumar wrote:
+> > On 27-07-20, 15:48, Rafael J. Wysocki wrote:
+> > > On Wed, Jul 22, 2020 at 11:38 AM Ionela Voinescu
+> > > <ionela.voinescu@arm.com> wrote:
+> > > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > > > index 036f4cc42ede..bac4101546db 100644
+> > > > --- a/drivers/cpufreq/cpufreq.c
+> > > > +++ b/drivers/cpufreq/cpufreq.c
+> > > > @@ -2058,9 +2058,16 @@ EXPORT_SYMBOL(cpufreq_unregister_notifier);
+> > > >  unsigned int cpufreq_driver_fast_switch(struct cpufreq_policy *policy,
+> > > >                                         unsigned int target_freq)
+> > > >  {
+> > > > +       unsigned int freq;
+> > > > +
+> > > >         target_freq = clamp_val(target_freq, policy->min, policy->max);
+> > > > +       freq = cpufreq_driver->fast_switch(policy, target_freq);
+> > > > +
+> > > > +       if (freq)
+> > > > +               arch_set_freq_scale(policy->related_cpus, freq,
+> > > > +                                   policy->cpuinfo.max_freq);
+> > >
+> > > Why can't arch_set_freq_scale() handle freq == 0?
+> >
+>
+> Sorry, I seem to have missed this question the first time around.
+>
+> arch_set_freq_scale() could handle freq == 0, but given that freq == 0
+> is signaling an error here, I do believe this check is well placed, to
+> prevent a useless call to arch_set_freq_scale(). Also [1]:
 
-Context, the intel-spi has a module argument that controls
-whether the driver attempts to turn the SPI flash chip writeable.
-The default value is FALSE (don't try to make it writeable).
-However, this flag applies only for a number of devices, coming from the
-platform driver, whereas the devices detected through the PCI driver
-(intel-spi-pci) are not subject to this check since the configuration
-takes place in intel-spi-pci which doesn't have an argument.
+So let me rephrase:
 
-This patch removes the code that attempts to turn the SPI chip writeable.
-
-Signed-off-by: Daniel Gutson <daniel.gutson@eclypsium.com>
----
- drivers/mtd/spi-nor/controllers/intel-spi-pci.c | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/drivers/mtd/spi-nor/controllers/intel-spi-pci.c b/drivers/mtd/spi-nor/controllers/intel-spi-pci.c
-index 81329f680bec..d721ba4e8b41 100644
---- a/drivers/mtd/spi-nor/controllers/intel-spi-pci.c
-+++ b/drivers/mtd/spi-nor/controllers/intel-spi-pci.c
-@@ -41,13 +41,7 @@ static int intel_spi_pci_probe(struct pci_dev *pdev,
- 	if (!info)
- 		return -ENOMEM;
- 
--	/* Try to make the chip read/write */
- 	pci_read_config_dword(pdev, BCR, &bcr);
--	if (!(bcr & BCR_WPD)) {
--		bcr |= BCR_WPD;
--		pci_write_config_dword(pdev, BCR, bcr);
--		pci_read_config_dword(pdev, BCR, &bcr);
--	}
- 	info->writeable = !!(bcr & BCR_WPD);
- 
- 	ispi = intel_spi_probe(&pdev->dev, &pdev->resource[0], info);
--- 
-2.25.1
-
+Doesn't this check add overhead in the empty arch_set_freq_scale() case?
