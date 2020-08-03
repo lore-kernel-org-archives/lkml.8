@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43115C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC58C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16BD220738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C6272076E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:21:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457310;
-	bh=BVwzFKiVpuCd9zR8RL2bcPlOG5HmNG3KEtqme8bzdcI=;
+	s=default; t=1596457316;
+	bh=CDmO9XrYo5F5yWtezrGi445Z+qZ86t9Xk+um3LOorFM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rlBE+VvSFnYRBGWhJdsiZl+VpFN+GVu0R2JbzeLSok757rPxZ6Emx9/Xt23yg+emM
-	 5NLxHLKqd4n3cc4p4jDDfkPgtxEiczn5iajEVtFTWpCupXA3OXiSRKm5YeJePUKtyy
-	 7jtGXEquobvx9MI4HHpTpMbHdmWfE/hZpHaY5W7s=
+	b=GPeZtH3xlzpTtfp9tzySuJ35S5iFWl4TfJd2gIvJNp6EBBFOe0FINCUHZerq4NMVp
+	 IfSIZvItFHONzXlZ7psnJBCtxJWelESwf8w1VfgsUL8m6z/Dh6pfc9ZNNsngjBhUQn
+	 DJqBjNTJI2yVO6Xx7h4jkZr//qWwX2zqE3RPYyOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgHCMVt (ORCPT
+        id S1726862AbgHCMVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:21:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45016 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:21:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726789AbgHCMVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:21:40 -0400
+        id S1726835AbgHCMVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:21:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 997BC20775;
-        Mon,  3 Aug 2020 12:21:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B7882076E;
+        Mon,  3 Aug 2020 12:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457299;
-        bh=BVwzFKiVpuCd9zR8RL2bcPlOG5HmNG3KEtqme8bzdcI=;
+        s=default; t=1596457308;
+        bh=CDmO9XrYo5F5yWtezrGi445Z+qZ86t9Xk+um3LOorFM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EmzuVN98oZqEwVnhQiDN2mOTJncjl6llupVvDxoL79KlrIoCOaEJPpP7nifPABKhu
-         dtPKP4OGFhTEV/EpBSolPjOAU+kckFJVvwLjQOmRCvIdXUBrxSRvNVeBsv+nWgwTEh
-         lk06h57lMyzgAag7fApBQ3f8Fg16PsH5D6V7LE0M=
+        b=Gkv9jEVgwdeve58KHqv+ZyRar5HUEvqPq+jYh2J3JUvHqxSVBwYRlJzRCXrROVvUV
+         k6ocx+GCVFDc8fPiGZbLCL3hZJ/m4X+IxwysxWm+dPKRSzI4Hqh+e8KJ+CmsVsK5Oy
+         wWKAF+2wgnaDHi4tREFw6JnYsohqgLN+kncWdGFU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.7 018/120] ARM: dts: imx6sx-sdb: Fix the phy-mode on fec2
-Date:   Mon,  3 Aug 2020 14:17:56 +0200
-Message-Id: <20200803121903.739270751@linuxfoundation.org>
+        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Wei Wang <wei.w.wang@intel.com>,
+        David Hildenbrand <david@redhat.com>
+Subject: [PATCH 5.7 020/120] virtio_balloon: fix up endian-ness for free cmd id
+Date:   Mon,  3 Aug 2020 14:17:58 +0200
+Message-Id: <20200803121903.833733094@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -59,35 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Michael S. Tsirkin <mst@redhat.com>
 
-commit c696afd331be1acb39206aba53048f2386b781fc upstream.
+commit 168c358af2f8c5a37f8b5f877ba2cc93995606ee upstream.
 
-Commit 0672d22a1924 ("ARM: dts: imx: Fix the AR803X phy-mode") fixed the
-phy-mode for fec1, but missed to fix it for the fec2 node.
+free cmd id is read using virtio endian, spec says all fields
+in balloon are LE. Fix it up.
 
-Fix fec2 to also use "rgmii-id" as the phy-mode.
-
-Cc: <stable@vger.kernel.org>
-Fixes: 0672d22a1924 ("ARM: dts: imx: Fix the AR803X phy-mode")
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 86a559787e6f ("virtio-balloon: VIRTIO_BALLOON_F_FREE_PAGE_HINT")
+Cc: stable@vger.kernel.org
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
+Reviewed-by: Wei Wang <wei.w.wang@intel.com>
+Acked-by: David Hildenbrand <david@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/imx6sx-sdb.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/virtio/virtio_balloon.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
-+++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
-@@ -213,7 +213,7 @@
- &fec2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet2>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&ethphy2>;
- 	status = "okay";
- };
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -578,10 +578,14 @@ static int init_vqs(struct virtio_balloo
+ static u32 virtio_balloon_cmd_id_received(struct virtio_balloon *vb)
+ {
+ 	if (test_and_clear_bit(VIRTIO_BALLOON_CONFIG_READ_CMD_ID,
+-			       &vb->config_read_bitmap))
++			       &vb->config_read_bitmap)) {
+ 		virtio_cread(vb->vdev, struct virtio_balloon_config,
+ 			     free_page_hint_cmd_id,
+ 			     &vb->cmd_id_received_cache);
++		/* Legacy balloon config space is LE, unlike all other devices. */
++		if (!virtio_has_feature(vb->vdev, VIRTIO_F_VERSION_1))
++			vb->cmd_id_received_cache = le32_to_cpu((__force __le32)vb->cmd_id_received_cache);
++	}
+ 
+ 	return vb->cmd_id_received_cache;
+ }
 
 
