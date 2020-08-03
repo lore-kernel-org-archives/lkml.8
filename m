@@ -2,460 +2,263 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 942C5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF75C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 688CB20738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 568D720775
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:48:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akTfqrW0"
+	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="he33lcPS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgHCLru (ORCPT
+        id S1726789AbgHCLsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 07:47:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726585AbgHCLoM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 07:44:12 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AC06C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 04:44:11 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z18so30332719wrm.12
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 04:44:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=MSBSvmjm8Dab2AsIfnzY3jPCUEYi7Wki8rvAcELJwN8=;
-        b=akTfqrW0jov/Or3O6P2ONODMhbsETl00Pq8mhuKef/BKShsAinsxZ8o1JUfRSmqlfy
-         5QPrjSmKaDEepVcdGUDSbLygaI8tjk05PlYNjmsoEv5/0kwYwS+oQhQcwlNW5ZpPiu9z
-         ou8Mf6Km8RBn5NxIq9zPW27utx/GyJbtJOBIaOT18giyrhQo0ftrKZYKBUsyIwFodfMk
-         isZtdG9rYYsyBrN6MXfuVI6Pq4g6s6iGMncIxLqcdOw53+yf+Swpmib6rwLAuJgzErPH
-         CMswV5DjZnS38+snyW9OOzGzoSGxT/2e9CPQLDuZ3yZNe+wwhxPxFElS8wE+ws8i4ZJa
-         ydwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MSBSvmjm8Dab2AsIfnzY3jPCUEYi7Wki8rvAcELJwN8=;
-        b=J2o3Rtp8xy0V+gPUU8KRASxzKigz8jZpm0Q4qm3olbISunubrv3KiNt6Xrxtc4bdL0
-         GxCezmg8lUfaCVoFPKAYfFiyLnXlb+s7da4ZKKDGeZz7OxvWDgMcGHIfamAGdTWNDf+m
-         pMGIYyJtKlB4M9w+FrBwtVOfsTiJ7PHjp/CoUEB4m7Am0IKgS/m03xWP/lqEJS9u3SFP
-         4eUiO1/NJkwNhmxRNXB301NGw2aJgjsLYU3IDxUkqGXLgOUrxsDBTG1qQug1EbNmgDgD
-         U9HgBUOlFZthEedoChnqoYGgRZRDhr1IY43rdWzGhnP9eKwt7UtNU9yLpiAO8DoXwer0
-         cQZw==
-X-Gm-Message-State: AOAM532ax1ROAMhNsWFXh7mno25vsdBeeVDCTkAhhif07u8fvO/WXpQt
-        goqLGsZbJQdoHnZVCV5AbwD59L+W
-X-Google-Smtp-Source: ABdhPJz/bAQGun66KYA1f1lhVpdkDVYhlKDpqcB9S4hnntd/lS4Z22pG6iioDRfUTO57qzmxL03AUg==
-X-Received: by 2002:adf:bc4b:: with SMTP id a11mr14076463wrh.381.1596455047343;
-        Mon, 03 Aug 2020 04:44:07 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
-        by smtp.gmail.com with ESMTPSA id 128sm24155441wmz.43.2020.08.03.04.44.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 04:44:05 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
-Cc:     Ofir Bitton <obitton@habana.ai>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: [PATCH v2 1/2] habanalabs: Replace dma-fence mechanism with completions
-Date:   Mon,  3 Aug 2020 14:44:01 +0300
-Message-Id: <20200803114402.26013-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 3 Aug 2020 07:48:18 -0400
+Received: from mail-eopbgr20102.outbound.protection.outlook.com ([40.107.2.102]:35446
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726478AbgHCLj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 07:39:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EWZTwN/wHlDZtC8NVHY6ToAj1ssyvLWzzZHtQxV8oLKtjXljXoiBgu0copdB7RXw8706zRC0BWcZ2hPDh9UMIX3rup11xLE1Z6Z7xZRvRmDmFxIzWjv10poXl9fGNIlGXzwyY7KBlSJecYcsg+Q2OlFzRrgSlw/e2ig4/nkqHpU0JowT8GJZC0wZH5HIgu4ez+BFkZ/fetK4EnDMI3clvHhDdc8JS3+xPI8v8XTjQm9hQBDjIW42hVRSJ+J17/MfzxrGAj6F/gtahlniZ9sXO0VBu7QfAP7p9wl0xd9CaEZq7v2aIMDE0yDD69haMoo+3dpYKbK0Jb2Mc+oIb1C/Fg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ljp5JyGi7M+gL51naH3VD0H9kZsTyUyAvcDR2m40Y7Q=;
+ b=KS7U1bIJp7NxXDWl7zu2wFG9E9EMQOU1Wj9SxcP8MnewsvGj8HnjHNe17+yBa15A03xu4KOXD4TAsKcvaZu+plxRSCyjPVRyxwRuog5mDKAh2ZOz2Eu9cgpnzUG/E7leqGrqe2dWkUmKVpdgIYZfGwgHmczzShbjs1dBmtZBp0LVZ7RJhQtu0mezyvbE/CpCiGN840Mw4ZA5HnG4HrBBOFmjl9AOCLQvPr2Kvsc+ot9cHCRIloJtBRiFEcCu5N1g6JCaMTV5gaRaFvhdp9slSPHzyQiG4yR/sdKaXMkJ2/HpcSBS1lt6UBhESaxaYAbXagvwaeb5HsYh30iRgSTVuw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
+ header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ljp5JyGi7M+gL51naH3VD0H9kZsTyUyAvcDR2m40Y7Q=;
+ b=he33lcPSEljoGyS27S8gDi916bS4Dph9vAw+LYSwbUy4Esb9Dqej7vD4o2S6GBPen9u2e9wIb/35XpquyAFN3pRE+9D7YY4rsWUteqAV2ZlcHjpGyaWqaAUj5Kr/i2aOp372QyjbaSOtQbYrdl0BLAIvNHE4Ng64lU7qiwKAYQk=
+Authentication-Results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=virtuozzo.com;
+Received: from DB8PR08MB5019.eurprd08.prod.outlook.com (2603:10a6:10:e0::21)
+ by DB7PR08MB3786.eurprd08.prod.outlook.com (2603:10a6:10:79::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17; Mon, 3 Aug
+ 2020 11:39:35 +0000
+Received: from DB8PR08MB5019.eurprd08.prod.outlook.com
+ ([fe80::b3:b2de:237f:587a]) by DB8PR08MB5019.eurprd08.prod.outlook.com
+ ([fe80::b3:b2de:237f:587a%3]) with mapi id 15.20.3239.021; Mon, 3 Aug 2020
+ 11:39:34 +0000
+Subject: Re: [PATCH v4 00/10] Function Granular KASLR
+To:     Kristen Carlson Accardi <kristen@linux.intel.com>
+Cc:     Miroslav Benes <mbenes@suse.cz>, keescook@chromium.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        arjan@linux.intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        rick.p.edgecombe@intel.com, live-patching@vger.kernel.org,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+References: <20200717170008.5949-1-kristen@linux.intel.com>
+ <alpine.LSU.2.21.2007221122110.10163@pobox.suse.cz>
+From:   Evgenii Shatokhin <eshatokhin@virtuozzo.com>
+Message-ID: <e9c4d88b-86db-47e9-4299-3fac45a7e3fd@virtuozzo.com>
+Date:   Mon, 3 Aug 2020 14:39:32 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+In-Reply-To: <alpine.LSU.2.21.2007221122110.10163@pobox.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM0PR04CA0121.eurprd04.prod.outlook.com
+ (2603:10a6:208:55::26) To DB8PR08MB5019.eurprd08.prod.outlook.com
+ (2603:10a6:10:e0::21)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.45] (95.27.164.21) by AM0PR04CA0121.eurprd04.prod.outlook.com (2603:10a6:208:55::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17 via Frontend Transport; Mon, 3 Aug 2020 11:39:33 +0000
+X-Originating-IP: [95.27.164.21]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d7b25dfc-36e2-49a5-c836-08d837a1e50c
+X-MS-TrafficTypeDiagnostic: DB7PR08MB3786:
+X-Microsoft-Antispam-PRVS: <DB7PR08MB3786448D919F6A507296877CD94D0@DB7PR08MB3786.eurprd08.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: QrrUTbNpSspdQ9wCgUsdMeID3KSUVdTTlepQ+d2g1/UTMTXsy7SwekizMntsCOz3En1EwYaEbN8FTbiSzkQBq8JYbzmsj17qjEUBmE3sqbP6q72l/5eyiZbSfCkBG9EUoO6NKyoPLPIQ43tFNTfp4W2xMsrKF5wAlMcq25hywvzwadwXhjZn7c8tp+h97sFDQ/np8PHY3DOH8sixpe42hMogDhedXDI2S1l7xKr22lXnXndVotQHwyMYx/4wtbCTdLc5ZRNIBMiCki+9l5EeOSbS8NBEsCx5p+MFvh79bIkz2206NQiuVHDwiLksYREV7vtUEuc4djgBudrrVrjuhZxLNsy/Ie4sPHppUt+IJPLvWPTpCsu0LP3vDoxcyh4arwrG8YbA/zuKibhkfaiYeLhL6jP5beBoI89lnumNQueMkal/GBC1bsu2uDRWjmliuQWG69O2NKLPqShuEXnyNg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR08MB5019.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(376002)(39840400004)(136003)(396003)(31696002)(54906003)(16576012)(86362001)(316002)(186003)(52116002)(16526019)(6486002)(5660300002)(6916009)(8936002)(966005)(66946007)(66556008)(66476007)(8676002)(31686004)(26005)(956004)(2616005)(83380400001)(478600001)(7416002)(2906002)(4326008)(36756003)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: 3BOIXmR9MFqjNgCHyx8wiFimPbET6srlu28jt5LHPcw0VJ9NYdWm/UqFhP18tQc025/uIqkzC2Cl2GIiHq7hpweqA3aGnwK++PaRLJcRK9+Pbh01t/kluUIYZuPH80I0Bp+0fMPp8qmKLAwuo5L9WIErRfE1LV0Zwmp2TPQVlZUzB/mF6cs92BPV1AOzlVgHMgs5GGUEEvFlWy9KNq7gXTNqf/JcttGUdAvHXOuBkKndoGEYL6Pju6pdEXScwOdWS9urZ9h319Uh3jqVWJIUStgggiB7LqQNmmVuEsoBLQXpJbQbaWxOr9g+HCPbw/xv0345n0M4O0SBNyF8u20oDuMbblUmzUiQNCqcWBRQmf7RE0F+UwPUdFU14V1H3kPmUpsF/+0XSbqk6hhWecjVxVfr9rDQfcw1NrZNCwBtiOX6Qn9gk9MHWz/rtth5msrkft0XDmLCL7gWVtNH1t2cGtZFjLlrzLGfmS9Ipy3ggBWV9cLPRmHIPi9u9t/yPzPkemodFMjgokvEQewqzp5eivYEqX9Qry/NwzA9eZEG57bdfljuQnRE6oj5GeXvm4tA/DrQJduH/k+iqalZ5EvFw3XQCPDxDsx5+WylHUAiV1tp1TEuazc0bWhSTAhSYrmmLsE/8b+01Sr2jC/1pQQP7Q==
+X-OriginatorOrg: virtuozzo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7b25dfc-36e2-49a5-c836-08d837a1e50c
+X-MS-Exchange-CrossTenant-AuthSource: DB8PR08MB5019.eurprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2020 11:39:34.8005
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3TX0iS0WcVmUREVe5zYgWBRYoVr8ExpRgcf1bPMCvg+JFBbQjC0sNzjKnd4iWAE/Uw3GVBjJkmQy3hqLDdIgzkkIEN41356DAsUr//nxkNU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3786
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ofir Bitton <obitton@habana.ai>
+Hi,
 
-habanalabs driver uses dma-fence mechanism for synchronization.
-dma-fence mechanism was designed solely for GPUs, hence we purpose
-a simpler mechanism based on completions to replace current
-dma-fence objects.
+> On Fri, 17 Jul 2020, Kristen Carlson Accardi wrote:
+> 
+>> Function Granular Kernel Address Space Layout Randomization (fgkaslr)
+>> ---------------------------------------------------------------------
+>>
+>> This patch set is an implementation of finer grained kernel address space
+>> randomization. It rearranges your kernel code at load time
+>> on a per-function level granularity, with only around a second added to
+>> boot time.
+> 
+> [...]
 
-Signed-off-by: Ofir Bitton <obitton@habana.ai>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
----
-Changes in v2:
-  - Replace kfree_rcu with regular kfree
+>> Modules
+>> -------
+>> Modules are randomized similarly to the rest of the kernel by shuffling
+>> the sections at load time prior to moving them into memory. The module must
+>> also have been build with the -ffunction-sections compiler option.
 
- .../habanalabs/common/command_submission.c    | 95 +++++++++----------
- drivers/misc/habanalabs/common/context.c      | 13 +--
- drivers/misc/habanalabs/common/habanalabs.h   | 30 ++++--
- drivers/misc/habanalabs/common/hw_queue.c     |  2 +-
- 4 files changed, 77 insertions(+), 63 deletions(-)
+It seems, a couple more adjustments are needed in the module loader code.
 
-diff --git a/drivers/misc/habanalabs/common/command_submission.c b/drivers/misc/habanalabs/common/command_submission.c
-index b9840e368eb5..3d79ad3ce7e0 100644
---- a/drivers/misc/habanalabs/common/command_submission.c
-+++ b/drivers/misc/habanalabs/common/command_submission.c
-@@ -38,26 +38,10 @@ void hl_sob_reset_error(struct kref *ref)
- 			hw_sob->q_idx, hw_sob->sob_id);
- }
- 
--static const char *hl_fence_get_driver_name(struct dma_fence *fence)
--{
--	return "HabanaLabs";
--}
--
--static const char *hl_fence_get_timeline_name(struct dma_fence *fence)
--{
--	struct hl_cs_compl *hl_cs_compl =
--		container_of(fence, struct hl_cs_compl, base_fence);
--
--	return dev_name(hl_cs_compl->hdev->dev);
--}
--
--static bool hl_fence_enable_signaling(struct dma_fence *fence)
--{
--	return true;
--}
--
--static void hl_fence_release(struct dma_fence *fence)
-+void hl_fence_release(struct kref *kref)
- {
-+	struct hl_fence *fence =
-+		container_of(kref, struct hl_fence, refcount);
- 	struct hl_cs_compl *hl_cs_cmpl =
- 		container_of(fence, struct hl_cs_compl, base_fence);
- 	struct hl_device *hdev = hl_cs_cmpl->hdev;
-@@ -99,15 +83,27 @@ static void hl_fence_release(struct dma_fence *fence)
- 	}
- 
- free:
--	kfree_rcu(hl_cs_cmpl, base_fence.rcu);
-+	kfree(hl_cs_cmpl);
- }
- 
--static const struct dma_fence_ops hl_fence_ops = {
--	.get_driver_name = hl_fence_get_driver_name,
--	.get_timeline_name = hl_fence_get_timeline_name,
--	.enable_signaling = hl_fence_enable_signaling,
--	.release = hl_fence_release
--};
-+void hl_fence_put(struct hl_fence *fence)
-+{
-+	if (fence)
-+		kref_put(&fence->refcount, hl_fence_release);
-+}
-+
-+void hl_fence_get(struct hl_fence *fence)
-+{
-+	if (fence)
-+		kref_get(&fence->refcount);
-+}
-+
-+void hl_fence_init(struct hl_fence *fence)
-+{
-+	kref_init(&fence->refcount);
-+	fence->error = 0;
-+	init_completion(&fence->completion);
-+}
- 
- static void cs_get(struct hl_cs *cs)
- {
-@@ -336,7 +332,7 @@ static void cs_do_release(struct kref *ref)
- 		 * In case the wait for signal CS was submitted, the put occurs
- 		 * in init_signal_wait_cs() right before hanging on the PQ.
- 		 */
--		dma_fence_put(cs->signal_fence);
-+		hl_fence_put(cs->signal_fence);
- 	}
- 
- 	/*
-@@ -348,19 +344,18 @@ static void cs_do_release(struct kref *ref)
- 	hl_ctx_put(cs->ctx);
- 
- 	/* We need to mark an error for not submitted because in that case
--	 * the dma fence release flow is different. Mainly, we don't need
-+	 * the hl fence release flow is different. Mainly, we don't need
- 	 * to handle hw_sob for signal/wait
- 	 */
- 	if (cs->timedout)
--		dma_fence_set_error(cs->fence, -ETIMEDOUT);
-+		cs->fence->error = -ETIMEDOUT;
- 	else if (cs->aborted)
--		dma_fence_set_error(cs->fence, -EIO);
-+		cs->fence->error = -EIO;
- 	else if (!cs->submitted)
--		dma_fence_set_error(cs->fence, -EBUSY);
--
--	dma_fence_signal(cs->fence);
--	dma_fence_put(cs->fence);
-+		cs->fence->error = -EBUSY;
- 
-+	complete_all(&cs->fence->completion);
-+	hl_fence_put(cs->fence);
- 	cs_counters_aggregate(hdev, cs->ctx);
- 
- 	kfree(cs->jobs_in_queue_cnt);
-@@ -401,7 +396,7 @@ static int allocate_cs(struct hl_device *hdev, struct hl_ctx *ctx,
- 			enum hl_cs_type cs_type, struct hl_cs **cs_new)
- {
- 	struct hl_cs_compl *cs_cmpl;
--	struct dma_fence *other = NULL;
-+	struct hl_fence *other = NULL;
- 	struct hl_cs *cs;
- 	int rc;
- 
-@@ -434,7 +429,8 @@ static int allocate_cs(struct hl_device *hdev, struct hl_ctx *ctx,
- 	cs_cmpl->cs_seq = ctx->cs_sequence;
- 	other = ctx->cs_pending[cs_cmpl->cs_seq &
- 				(hdev->asic_prop.max_pending_cs - 1)];
--	if ((other) && (!dma_fence_is_signaled(other))) {
-+
-+	if (other && !completion_done(&other->completion)) {
- 		dev_dbg(hdev->dev,
- 			"Rejecting CS because of too many in-flights CS\n");
- 		rc = -EAGAIN;
-@@ -448,8 +444,8 @@ static int allocate_cs(struct hl_device *hdev, struct hl_ctx *ctx,
- 		goto free_fence;
- 	}
- 
--	dma_fence_init(&cs_cmpl->base_fence, &hl_fence_ops, &cs_cmpl->lock,
--			ctx->asid, ctx->cs_sequence);
-+	/* init hl_fence */
-+	hl_fence_init(&cs_cmpl->base_fence);
- 
- 	cs->sequence = cs_cmpl->cs_seq;
- 
-@@ -458,9 +454,9 @@ static int allocate_cs(struct hl_device *hdev, struct hl_ctx *ctx,
- 							&cs_cmpl->base_fence;
- 	ctx->cs_sequence++;
- 
--	dma_fence_get(&cs_cmpl->base_fence);
-+	hl_fence_get(&cs_cmpl->base_fence);
- 
--	dma_fence_put(other);
-+	hl_fence_put(other);
- 
- 	spin_unlock(&ctx->cs_lock);
- 
-@@ -773,7 +769,7 @@ static int cs_ioctl_signal_wait(struct hl_fpriv *hpriv, enum hl_cs_type cs_type,
- 	struct hl_ctx *ctx = hpriv->ctx;
- 	struct hl_cs_chunk *cs_chunk_array, *chunk;
- 	struct hw_queue_properties *hw_queue_prop;
--	struct dma_fence *sig_fence = NULL;
-+	struct hl_fence *sig_fence = NULL;
- 	struct hl_cs_job *job;
- 	struct hl_cs *cs;
- 	struct hl_cb *cb;
-@@ -875,14 +871,14 @@ static int cs_ioctl_signal_wait(struct hl_fpriv *hpriv, enum hl_cs_type cs_type,
- 			dev_err(hdev->dev,
- 				"CS seq 0x%llx is not of a signal CS\n",
- 				signal_seq);
--			dma_fence_put(sig_fence);
-+			hl_fence_put(sig_fence);
- 			rc = -EINVAL;
- 			goto free_signal_seq_array;
- 		}
- 
--		if (dma_fence_is_signaled(sig_fence)) {
-+		if (completion_done(&sig_fence->completion)) {
- 			/* signal CS already finished */
--			dma_fence_put(sig_fence);
-+			hl_fence_put(sig_fence);
- 			rc = 0;
- 			goto free_signal_seq_array;
- 		}
-@@ -894,7 +890,7 @@ static int cs_ioctl_signal_wait(struct hl_fpriv *hpriv, enum hl_cs_type cs_type,
- 	rc = allocate_cs(hdev, ctx, cs_type, &cs);
- 	if (rc) {
- 		if (cs_type == CS_TYPE_WAIT)
--			dma_fence_put(sig_fence);
-+			hl_fence_put(sig_fence);
- 		hl_ctx_put(ctx);
- 		goto free_signal_seq_array;
- 	}
-@@ -1154,7 +1150,7 @@ int hl_cs_ioctl(struct hl_fpriv *hpriv, void *data)
- static long _hl_cs_wait_ioctl(struct hl_device *hdev,
- 		struct hl_ctx *ctx, u64 timeout_us, u64 seq)
- {
--	struct dma_fence *fence;
-+	struct hl_fence *fence;
- 	unsigned long timeout;
- 	long rc;
- 
-@@ -1173,12 +1169,15 @@ static long _hl_cs_wait_ioctl(struct hl_device *hdev,
- 				"Can't wait on CS %llu because current CS is at seq %llu\n",
- 				seq, ctx->cs_sequence);
- 	} else if (fence) {
--		rc = dma_fence_wait_timeout(fence, true, timeout);
-+		rc = wait_for_completion_interruptible_timeout(
-+				&fence->completion, timeout);
-+
- 		if (fence->error == -ETIMEDOUT)
- 			rc = -ETIMEDOUT;
- 		else if (fence->error == -EIO)
- 			rc = -EIO;
--		dma_fence_put(fence);
-+
-+		hl_fence_put(fence);
- 	} else {
- 		dev_dbg(hdev->dev,
- 			"Can't wait on seq %llu because current CS is at seq %llu (Fence is gone)\n",
-diff --git a/drivers/misc/habanalabs/common/context.c b/drivers/misc/habanalabs/common/context.c
-index 3e375958e73b..b168a9fce817 100644
---- a/drivers/misc/habanalabs/common/context.c
-+++ b/drivers/misc/habanalabs/common/context.c
-@@ -23,7 +23,7 @@ static void hl_ctx_fini(struct hl_ctx *ctx)
- 	 */
- 
- 	for (i = 0 ; i < hdev->asic_prop.max_pending_cs ; i++)
--		dma_fence_put(ctx->cs_pending[i]);
-+		hl_fence_put(ctx->cs_pending[i]);
- 
- 	kfree(ctx->cs_pending);
- 
-@@ -128,7 +128,7 @@ int hl_ctx_init(struct hl_device *hdev, struct hl_ctx *ctx, bool is_kernel_ctx)
- 	atomic_set(&ctx->thread_ctx_switch_token, 1);
- 	ctx->thread_ctx_switch_wait_token = 0;
- 	ctx->cs_pending = kcalloc(hdev->asic_prop.max_pending_cs,
--				sizeof(struct dma_fence *),
-+				sizeof(struct hl_fence *),
- 				GFP_KERNEL);
- 	if (!ctx->cs_pending)
- 		return -ENOMEM;
-@@ -184,10 +184,10 @@ int hl_ctx_put(struct hl_ctx *ctx)
- 	return kref_put(&ctx->refcount, hl_ctx_do_release);
- }
- 
--struct dma_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq)
-+struct hl_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq)
- {
- 	struct asic_fixed_properties *asic_prop = &ctx->hdev->asic_prop;
--	struct dma_fence *fence;
-+	struct hl_fence *fence;
- 
- 	spin_lock(&ctx->cs_lock);
- 
-@@ -201,8 +201,9 @@ struct dma_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq)
- 		return NULL;
- 	}
- 
--	fence = dma_fence_get(
--			ctx->cs_pending[seq & (asic_prop->max_pending_cs - 1)]);
-+	fence = ctx->cs_pending[seq & (asic_prop->max_pending_cs - 1)];
-+	hl_fence_get(fence);
-+
- 	spin_unlock(&ctx->cs_lock);
- 
- 	return fence;
-diff --git a/drivers/misc/habanalabs/common/habanalabs.h b/drivers/misc/habanalabs/common/habanalabs.h
-index 018d9d67e8e6..6df9db821a31 100644
---- a/drivers/misc/habanalabs/common/habanalabs.h
-+++ b/drivers/misc/habanalabs/common/habanalabs.h
-@@ -15,7 +15,6 @@
- #include <linux/cdev.h>
- #include <linux/iopoll.h>
- #include <linux/irqreturn.h>
--#include <linux/dma-fence.h>
- #include <linux/dma-direction.h>
- #include <linux/scatterlist.h>
- #include <linux/hashtable.h>
-@@ -342,9 +341,22 @@ struct asic_fixed_properties {
- 	u8				completion_queues_count;
- };
- 
-+/**
-+ * struct hl_fence - software synchronization primitive
-+ * @completion: fence is implemented using completion
-+ * @refcount: refcount for this fence
-+ * @error: mark this fence with error
-+ *
-+ */
-+struct hl_fence {
-+	struct completion	completion;
-+	struct kref		refcount;
-+	int			error;
-+};
-+
- /**
-  * struct hl_cs_compl - command submission completion object.
-- * @base_fence: kernel fence object.
-+ * @base_fence: hl fence object.
-  * @lock: spinlock to protect fence.
-  * @hdev: habanalabs device structure.
-  * @hw_sob: the H/W SOB used in this signal/wait CS.
-@@ -353,7 +365,7 @@ struct asic_fixed_properties {
-  * @sob_val: the SOB value that is used in this signal/wait CS.
-  */
- struct hl_cs_compl {
--	struct dma_fence	base_fence;
-+	struct hl_fence		base_fence;
- 	spinlock_t		lock;
- 	struct hl_device	*hdev;
- 	struct hl_hw_sob	*hw_sob;
-@@ -800,7 +812,7 @@ struct hl_va_range {
-  * @hdev: pointer to the device structure.
-  * @refcount: reference counter for the context. Context is released only when
-  *		this hits 0l. It is incremented on CS and CS_WAIT.
-- * @cs_pending: array of DMA fence objects representing pending CS.
-+ * @cs_pending: array of hl fence objects representing pending CS.
-  * @host_va_range: holds available virtual addresses for host mappings.
-  * @host_huge_va_range: holds available virtual addresses for host mappings
-  *                      with huge pages.
-@@ -832,7 +844,7 @@ struct hl_ctx {
- 	struct hl_fpriv		*hpriv;
- 	struct hl_device	*hdev;
- 	struct kref		refcount;
--	struct dma_fence	**cs_pending;
-+	struct hl_fence		**cs_pending;
- 	struct hl_va_range	*host_va_range;
- 	struct hl_va_range	*host_huge_va_range;
- 	struct hl_va_range	*dram_va_range;
-@@ -919,8 +931,8 @@ struct hl_cs {
- 	struct list_head	job_list;
- 	spinlock_t		job_lock;
- 	struct kref		refcount;
--	struct dma_fence	*fence;
--	struct dma_fence	*signal_fence;
-+	struct hl_fence		*fence;
-+	struct hl_fence		*signal_fence;
- 	struct work_struct	finish_work;
- 	struct delayed_work	work_tdr;
- 	struct list_head	mirror_node;
-@@ -1736,7 +1748,7 @@ int hl_ctx_init(struct hl_device *hdev, struct hl_ctx *ctx, bool is_kernel_ctx);
- void hl_ctx_do_release(struct kref *ref);
- void hl_ctx_get(struct hl_device *hdev,	struct hl_ctx *ctx);
- int hl_ctx_put(struct hl_ctx *ctx);
--struct dma_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq);
-+struct hl_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq);
- void hl_ctx_mgr_init(struct hl_ctx_mgr *mgr);
- void hl_ctx_mgr_fini(struct hl_device *hdev, struct hl_ctx_mgr *mgr);
- 
-@@ -1778,6 +1790,8 @@ void hl_cs_rollback_all(struct hl_device *hdev);
- struct hl_cs_job *hl_cs_allocate_job(struct hl_device *hdev,
- 		enum hl_queue_type queue_type, bool is_kernel_allocated_cb);
- void hl_sob_reset_error(struct kref *ref);
-+void hl_fence_put(struct hl_fence *fence);
-+void hl_fence_get(struct hl_fence *fence);
- 
- void goya_set_asic_funcs(struct hl_device *hdev);
- void gaudi_set_asic_funcs(struct hl_device *hdev);
-diff --git a/drivers/misc/habanalabs/common/hw_queue.c b/drivers/misc/habanalabs/common/hw_queue.c
-index 287681646071..65b9aa69a83e 100644
---- a/drivers/misc/habanalabs/common/hw_queue.c
-+++ b/drivers/misc/habanalabs/common/hw_queue.c
-@@ -474,7 +474,7 @@ static void init_signal_wait_cs(struct hl_cs *cs)
- 		 * wait CS was submitted.
- 		 */
- 		mb();
--		dma_fence_put(cs->signal_fence);
-+		hl_fence_put(cs->signal_fence);
- 		cs->signal_fence = NULL;
- 	}
- }
--- 
-2.17.1
+With function granular KASLR, modules will have lots of ELF sections due 
+to -ffunction-sections.
+On my x86_64 system with kernel 5.8-rc7 with FG KASLR patches, for 
+example, xfs.ko has 4849 ELF sections total, 2428 of these are loaded 
+and shown in /sys/module/xfs/sections/.
 
+There are at least 2 places where high-order memory allocations might 
+happen during module loading. Such allocations may fail if memory is 
+fragmented, while physically contiguous memory areas are not really 
+needed there. I suggest to switch to kvmalloc/kvfree there.
+
+1. kernel/module.c, randomize_text():
+	Elf_Shdr **text_list;
+	...
+	int max_sections = info->hdr->e_shnum;
+	...
+	text_list = kmalloc_array(max_sections, sizeof(*text_list), GFP_KERNEL);
+
+The size of the allocated memory area is (8 * total_number_of_sections), 
+if I understand it right, which is 38792 for xfs.ko, a 4th order allocation.
+
+2. kernel/module.c, mod_sysfs_setup() => add_sect_attrs().
+
+This allocation can be larger than the first one.
+
+We found this issue with livepatch modules some time ago (these modules 
+are already built with -ffunction-sections) [1], but, with FG KASLR, it 
+affects all kernel modules. Large ones like xfs.ko, btrfs.ko, etc., 
+could suffer the most from it.
+
+When a module is loaded sysfs attributes are created for its ELF 
+sections (visible as /sys/module/<module_name>/sections/*). and contain 
+the start addresses of these ELF sections. A single memory chunk is 
+allocated
+for all these:
+
+         size[0] = ALIGN(sizeof(*sect_attrs)
+                         + nloaded * sizeof(sect_attrs->attrs[0]),
+                         sizeof(sect_attrs->grp.attrs[0]));
+         size[1] = (nloaded + 1) * sizeof(sect_attrs->grp.attrs[0]);
+         sect_attrs = kzalloc(size[0] + size[1], GFP_KERNEL);
+
+'nloaded' is the number of loaded ELF section in the module.
+
+For the kernel 5.8-rc7 on my system, the total size is 56 + 72 * 
+nloaded, which is 174872 for xfs.ko, 43 pages, 6th order allocation.
+
+I enabled 'mm_page_alloc' tracepoint with filter 'order > 3' to confirm 
+the issue and, indeed, got these two allocations when modprobe'ing xfs:
+----------------------------
+/sys/kernel/debug/tracing/trace:
+         modprobe-1509  <...>: mm_page_alloc: <...> order=4 
+migratetype=0 gfp_flags=GFP_KERNEL|__GFP_COMP
+         modprobe-1509  <stack trace>
+		=> __alloc_pages_nodemask
+		=> alloc_pages_current
+		=> kmalloc_order
+		=> kmalloc_order_trace
+		=> __kmalloc
+		=> load_module
+
+         modprobe-1509  <...>: mm_page_alloc: <...> order=6 
+migratetype=0 gfp_flags=GFP_KERNEL|__GFP_COMP|__GFP_ZERO
+         modprobe-1509  <stack trace>
+		=> __alloc_pages_nodemask
+		=> alloc_pages_current
+		=> kmalloc_order
+		=> kmalloc_order_trace
+		=> __kmalloc
+		=> mod_sysfs_setup
+		=> load_module
+----------------------------
+
+I suppose, something like this can be used as workaround:
+
+* for randomize_text():
+-----------
+diff --git a/kernel/module.c b/kernel/module.c
+index 0f4f4e567a42..a2473db1d0a3 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -2433,7 +2433,7 @@ static void randomize_text(struct module *mod, 
+struct load_info *info)
+  	if (sec == 0)
+  		return;
+
+-	text_list = kmalloc_array(max_sections, sizeof(*text_list), GFP_KERNEL);
++	text_list = kvmalloc_array(max_sections, sizeof(*text_list), GFP_KERNEL);
+  	if (!text_list)
+  		return;
+
+@@ -2466,7 +2466,7 @@ static void randomize_text(struct module *mod, 
+struct load_info *info)
+  		shdr->sh_entsize = get_offset(mod, &size, shdr, 0);
+  	}
+
+-	kfree(text_list);
++	kvfree(text_list);
+  }
+
+  /* Lay out the SHF_ALLOC sections in a way not dissimilar to how ld
+
+-----------
+
+* for add_sect_attrs():
+-----------
+diff --git a/kernel/module.c b/kernel/module.c
+index 0f4f4e567a42..a2473db1d0a3 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1541,7 +1541,7 @@ static void free_sect_attrs(struct 
+module_sect_attrs *sect_attrs)
+
+  	for (section = 0; section < sect_attrs->nsections; section++)
+  		kfree(sect_attrs->attrs[section].battr.attr.name);
+-	kfree(sect_attrs);
++	kvfree(sect_attrs);
+  }
+
+  static void add_sect_attrs(struct module *mod, const struct load_info 
+*info)
+@@ -1558,7 +1558,7 @@ static void add_sect_attrs(struct module *mod, 
+const struct load_info *info)
+  	size[0] = ALIGN(struct_size(sect_attrs, attrs, nloaded),
+  			sizeof(sect_attrs->grp.bin_attrs[0]));
+  	size[1] = (nloaded + 1) * sizeof(sect_attrs->grp.bin_attrs[0]);
+-	sect_attrs = kzalloc(size[0] + size[1], GFP_KERNEL);
++	sect_attrs = kvzalloc(size[0] + size[1], GFP_KERNEL);
+  	if (sect_attrs == NULL)
+  		return;
+
+-----------
+
+[1] https://github.com/dynup/kpatch/pull/1131
+
+Regards,
+Evgenii
