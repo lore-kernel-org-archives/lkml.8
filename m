@@ -2,104 +2,110 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A524C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8B0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6551720A8B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AF9B2072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:59:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jw5pRmV9"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="CmZKNOH/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgHCP6Y (ORCPT
+        id S1728209AbgHCP7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 11:58:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbgHCP6X (ORCPT
+        Mon, 3 Aug 2020 11:59:06 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:43092 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgHCP7G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 11:58:23 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BFF8C06174A;
-        Mon,  3 Aug 2020 08:58:23 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id w17so20893350ply.11;
-        Mon, 03 Aug 2020 08:58:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uNcX+w5uM4upQQA3Q+enW7rhMX5vu+tOoGt/oT0GACA=;
-        b=jw5pRmV9q6/UvCiaUhYwloQRKVn8t/5dmLyXg3Efzy5/vKGDlYI1ercQIWgjA0zpAl
-         ab2Ad58P29yddolAAqK0zI0w4+Fd2akKc0o3sRUbMhJybq2g4Vmt+Qi7Ea+fPbBHHjL+
-         yHmU5mDakyOOY7GVDpUdgImlO/hsIaLkt03JRSo81YNAQiSuqmvnm/s+AIxpbvGUts12
-         qJA2UKxYzH7SjsiZLS21otYRPGWp47UNoONIg00DTu7noD5kRrvyNOl5sA/8wCBLDa7F
-         F46TYX4BF6u2pgbI0XMyykvrPqZdC+rl6QEscExSJFLjZ5vv0hkt+/9x9XmvBW0FDkW9
-         ZSTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uNcX+w5uM4upQQA3Q+enW7rhMX5vu+tOoGt/oT0GACA=;
-        b=mFEb4mlfwOArdiv/+3wXys664id5zEoY5xZzZCcEA2U6vWrqnJ1enOHF5uh7QrLCvW
-         B+sGzgUTsYMgEa0/k0i5MNfAiHL3ghjc8IINfI8yAZlUFnOG33IHwJJh1CvBRy6VGZzz
-         QH8bIoD/PW9a+Wd92Gkd/vbfW3wWTUDyYxDsNkDpIJepyAvXnbjeI2FqBdO+N0klSZr4
-         cD5fpYzp/gGo+UPxotNhTichfuweFwVUP12ngz5opcoQfyJVWuX3yqwVytPs4pr6vxk7
-         rFPgvggkqi1/vooqypO+U7Fb8BJJWabcSpML3YhOdyb/Dme+46VHUdeVRfCWFfRah0og
-         IFvw==
-X-Gm-Message-State: AOAM533tNivxj1uQdU8vkxBLODyJxokTdvF0qJ/RZ0Rto2KryBgjxKT7
-        7Np4uKMttcTaAWvX8FCy6/I=
-X-Google-Smtp-Source: ABdhPJzAC/Hkdp9eGSxOKQDvUjMdkM74ZCW1KpdISI5JmiVIczYDHX0LyNKJ/dbtHAzPETGKwK9yRA==
-X-Received: by 2002:a17:902:a418:: with SMTP id p24mr16008521plq.55.1596470303083;
-        Mon, 03 Aug 2020 08:58:23 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x7sm20131022pfc.209.2020.08.03.08.58.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Aug 2020 08:58:22 -0700 (PDT)
-Date:   Mon, 3 Aug 2020 08:58:20 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.7 000/120] 5.7.13-rc1 review
-Message-ID: <20200803155820.GA160756@roeck-us.net>
-References: <20200803121902.860751811@linuxfoundation.org>
+        Mon, 3 Aug 2020 11:59:06 -0400
+Received: from [192.168.254.32] (unknown [47.187.206.220])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 0B58220B4908;
+        Mon,  3 Aug 2020 08:59:04 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0B58220B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1596470345;
+        bh=61JblHzq4qhtQkPzj2G3tGZ75oReI0NIx105fosLKrI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=CmZKNOH/KALtRXbeh0M5SY5+FforFJaVBEotq9VkjW4009Y9gJ4Y8SiPFK60B63Ek
+         PKT5VksgRHxxB2UeKRaW8GTHJZ0qNSXo3Bv3a1oHMYNew4GGXbm8WZ2IzEPQtDPc28
+         jbSZxdwUc01p8o/CYVhWcBeeqUmlISxGx9Y/uaWA=
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+To:     David Laight <David.Laight@ACULAB.COM>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
+References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
+ <3b916198-3a98-bd19-9a1c-f2d8d44febe8@linux.microsoft.com>
+ <a5fb2778a86f45b58ef5dd35228d950b@AcuMS.aculab.com>
+From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Message-ID: <8f938da2-a10d-ca15-56f0-70315c678771@linux.microsoft.com>
+Date:   Mon, 3 Aug 2020 10:59:04 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <a5fb2778a86f45b58ef5dd35228d950b@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 02:17:38PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.7.13 release.  There
-> are 120 patches in this series, all will be posted as a response to this one.
-> If anyone has any issues with these being applied, please let me know.
-> 
-> Responses should be made by Wed, 05 Aug 2020 12:18:33 +0000.  Anything
-> received after that time might be too late.
-> 
 
-Building sparc64:allmodconfig ... failed
---------------
-Error log:
-<stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-In file included from arch/sparc/include/asm/percpu_64.h:11,
-                 from arch/sparc/include/asm/percpu.h:5,
-                 from include/linux/random.h:14,
-                 from fs/crypto/policy.c:13:
-arch/sparc/include/asm/trap_block.h:54:39: error: 'NR_CPUS' undeclared here (not in a function)
-   54 | extern struct trap_per_cpu trap_block[NR_CPUS];
 
-Inherited from mainline. Builds are not complete yet;
-we may see a few more failures (powerpc:ppc64e_defconfig
-fails to build in mainline as well).
+On 8/3/20 3:23 AM, David Laight wrote:
+> From: Madhavan T. Venkataraman
+>> Sent: 02 August 2020 19:55
+>> To: Andy Lutomirski <luto@kernel.org>
+>> Cc: Kernel Hardening <kernel-hardening@lists.openwall.com>; Linux API <linux-api@vger.kernel.org>;
+>> linux-arm-kernel <linux-arm-kernel@lists.infradead.org>; Linux FS Devel <linux-
+>> fsdevel@vger.kernel.org>; linux-integrity <linux-integrity@vger.kernel.org>; LKML <linux-
+>> kernel@vger.kernel.org>; LSM List <linux-security-module@vger.kernel.org>; Oleg Nesterov
+>> <oleg@redhat.com>; X86 ML <x86@kernel.org>
+>> Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+>>
+>> More responses inline..
+>>
+>> On 7/28/20 12:31 PM, Andy Lutomirski wrote:
+>>>> On Jul 28, 2020, at 6:11 AM, madvenka@linux.microsoft.com wrote:
+>>>>
+>>>> ﻿From: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+>>>>
+>>> 2. Use existing kernel functionality.  Raise a signal, modify the
+>>> state, and return from the signal.  This is very flexible and may not
+>>> be all that much slower than trampfd.
+>> Let me understand this. You are saying that the trampoline code
+>> would raise a signal and, in the signal handler, set up the context
+>> so that when the signal handler returns, we end up in the target
+>> function with the context correctly set up. And, this trampoline code
+>> can be generated statically at build time so that there are no
+>> security issues using it.
+>>
+>> Have I understood your suggestion correctly?
+> I was thinking that you'd just let the 'not executable' page fault
+> signal happen (SIGSEGV?) when the code jumps to on-stack trampoline
+> is executed.
+>
+> The user signal handler can then decode the faulting instruction
+> and, if it matches the expected on-stack trampoline, modify the
+> saved registers before returning from the signal.
+>
+> No kernel changes and all you need to add to the program is
+> an architecture-dependant signal handler.
 
-Guenter
+Understood.
+
+Madhavan
