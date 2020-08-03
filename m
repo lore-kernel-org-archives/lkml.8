@@ -2,58 +2,81 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57003C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EAF6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72A832075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38AD52075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:26:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DhsOo1fJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbgHCV0U (ORCPT
+        id S1729168AbgHCV0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 17:26:20 -0400
-Received: from mga14.intel.com ([192.55.52.115]:61897 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726398AbgHCV0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 17:26:20 -0400
-IronPort-SDR: ssX42FjQr0Xie2qeK3Sdgt3U3gQbyeCSKNemYYN9Flo7Wq2fl7JPDFhG6poFfjLVTECWUBq3LX
- QygLZ90mVgVA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="151434420"
-X-IronPort-AV: E=Sophos;i="5.75,431,1589266800"; 
-   d="scan'208";a="151434420"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 14:26:19 -0700
-IronPort-SDR: RulXwNywhv1eI8mAx/l2FWKIOuoPQn3y862B8fRMfSTGFJVWGCJfUoaFdi2W5KFVaVNAJJW7qT
- 9QbcAWE9RiPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,431,1589266800"; 
-   d="scan'208";a="314981446"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.255.79.119]) ([10.255.79.119])
-  by fmsmga004.fm.intel.com with ESMTP; 03 Aug 2020 14:26:19 -0700
-Subject: Re: [PATCH 1/2] libnvdimm/security: 'security' attr never show
- 'overwrite' state
-To:     Jane Chu <jane.chu@oracle.com>, dan.j.williams@intel.com,
-        vishal.l.verma@intel.com, ira.weiny@intel.com, jmoyer@redhat.com,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-References: <1595606959-8516-1-git-send-email-jane.chu@oracle.com>
- <cb8c1944-f72c-ecfa-bd3d-276f504542e1@intel.com>
- <73f2eadf-3377-db62-ebd1-1eff99d4842e@oracle.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <69576669-632e-1821-2076-7bc47c0bbd85@intel.com>
-Date:   Mon, 3 Aug 2020 14:26:18 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <73f2eadf-3377-db62-ebd1-1eff99d4842e@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 3 Aug 2020 17:26:52 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:35059 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726398AbgHCV0v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 17:26:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596490010;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=iRtJQGNbvmgaLcvaxkwOS7vH+SUEibACGG1bnindh24=;
+        b=DhsOo1fJv0V5OIYq7CysiXQpV/SYXpISXqa+fPa+SNih5uzeJvrx8isgBIopA/9tvJahMM
+        aooM+xrXrGH27g/mMYuOhkVLtJ+YsOhP2tqzDlvS/L1dID9dbatjCVrd8Z/Yvos3q8Af3X
+        xrCPJqVvMRYU0JNV31m5GKo0Cw9NXUM=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-30-kMKC7qJPPRae66OsdacJzw-1; Mon, 03 Aug 2020 17:26:48 -0400
+X-MC-Unique: kMKC7qJPPRae66OsdacJzw-1
+Received: by mail-ej1-f69.google.com with SMTP id q20so5427109ejx.13
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 14:26:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=iRtJQGNbvmgaLcvaxkwOS7vH+SUEibACGG1bnindh24=;
+        b=aWhrapHfJh75SVL4oOe9MAfJKAx4XVOFYLUZB1GlgPAwsaHKeooq1v3AmpBTb5a7ot
+         I0x90mZ8yHB+QC4YsNuv2weWzdnKUDmVvvyVNO30ing0hGdei/YjyZvtSWJjoiov09l3
+         5ix7FvK1imWPQXf0SRkpY7OnNGnZSZsJfEfg/rf+H5+DKxEhnrwYCC/Xx8OVzKVv98pJ
+         vWBXrwZlenBcHP38ae425KoZoBXSJOsBrPFxD2CZrjBGmaOHItSAnfadhR4nyTOhP/ZR
+         3Pfto35cezLQ1SADLFWQn3qHlfwNWkgSXxVekRqS3C0DD9zk/+j1vMYmltQKZlUJCnwl
+         zrsQ==
+X-Gm-Message-State: AOAM531/P5MAedHSCJs8ysgfwi20IoHTwKfLXNpFZM1KyIK9nj6DBcCN
+        WaiKuaZVVK57kVTc/8dnf7dwALDfSRmn0cNz9R15i2gR8F+AY+WhbDBRbWrUfcvtNW5n6WtYU2C
+        Al9rjr84RpOiexL9I1gjJ/rK3
+X-Received: by 2002:a50:9e4c:: with SMTP id z70mr17274779ede.384.1596490007153;
+        Mon, 03 Aug 2020 14:26:47 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwiOz/r6BIu9VkOdQ1URaCztVYMV7EL3eZ1EToZBNUnt7wGWXQQoZarZ0Kjj1o9DJbuN2x5LA==
+X-Received: by 2002:a50:9e4c:: with SMTP id z70mr17274769ede.384.1596490006986;
+        Mon, 03 Aug 2020 14:26:46 -0700 (PDT)
+Received: from [192.168.3.122] (p5b0c6449.dip0.t-ipconnect.de. [91.12.100.73])
+        by smtp.gmail.com with ESMTPSA id dm5sm8476175edb.32.2020.08.03.14.26.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Aug 2020 14:26:46 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   David Hildenbrand <david@redhat.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2 05/24] virtio_balloon: correct tags for config space fields
+Date:   Mon, 3 Aug 2020 23:26:46 +0200
+Message-Id: <1E428D95-19D2-40BA-9C46-CA7B0D823A7E@redhat.com>
+References: <20200803205814.540410-6-mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>,
+        David Hildenbrand <david@redhat.com>
+In-Reply-To: <20200803205814.540410-6-mst@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+X-Mailer: iPhone Mail (17F80)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -61,37 +84,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 8/3/2020 2:10 PM, Jane Chu wrote:
-> Hi, Dave,
-> 
-> On 8/3/2020 1:41 PM, Dave Jiang wrote:
->> On 7/24/2020 9:09 AM, Jane Chu wrote:
->>> Since
->>> commit d78c620a2e82 ("libnvdimm/security: Introduce a 'frozen' attribute"),
->>> when issue
->>>   # ndctl sanitize-dimm nmem0 --overwrite
->>> then immediately check the 'security' attribute,
->>>   # cat /sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0012:00/ndbus0/nmem0/security
->>>   unlocked
->>> Actually the attribute stays 'unlocked' through out the entire overwrite
->>> operation, never changed.  That's because 'nvdimm->sec.flags' is a bitmap
->>> that has both bits set indicating 'overwrite' and 'unlocked'.
->>> But security_show() checks the mutually exclusive bits before it checks
->>> the 'overwrite' bit at last. The order should be reversed.
->>>
->>> The commit also has a typo: in one occasion, 'nvdimm->sec.ext_state'
->>> assignment is replaced with 'nvdimm->sec.flags' assignment for
->>> the NVDIMM_MASTER type.
->>
->> May be best to split this fix to a different patch? Just thinking git bisect 
->> later on to track issues. Otherwise Reviewed-by: Dave Jiang 
->> <dave.jiang@intel.com>
-> 
-> Sure. I take it you meant to separate the typo fix from the change that tests 
-> the OVERWRITE bit first?
+> Am 03.08.2020 um 22:59 schrieb Michael S. Tsirkin <mst@redhat.com>:
+>=20
+> =EF=BB=BFTag config space fields as having little endian-ness.
+> Note that balloon is special: LE even when using
+> the legacy interface.
+>=20
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 
-Yep!
+Acked-by: David Hildenbrand <david@redhat.com>
 
-> 
-> Regards,
-> -jane
+> ---
+> include/uapi/linux/virtio_balloon.h | 10 +++++-----
+> 1 file changed, 5 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/include/uapi/linux/virtio_balloon.h b/include/uapi/linux/virt=
+io_balloon.h
+> index dc3e656470dd..ddaa45e723c4 100644
+> --- a/include/uapi/linux/virtio_balloon.h
+> +++ b/include/uapi/linux/virtio_balloon.h
+> @@ -45,20 +45,20 @@
+> #define VIRTIO_BALLOON_CMD_ID_DONE    1
+> struct virtio_balloon_config {
+>    /* Number of pages host wants Guest to give up. */
+> -    __u32 num_pages;
+> +    __le32 num_pages;
+>    /* Number of pages we've actually got in balloon. */
+> -    __u32 actual;
+> +    __le32 actual;
+>    /*
+>     * Free page hint command id, readonly by guest.
+>     * Was previously named free_page_report_cmd_id so we
+>     * need to carry that name for legacy support.
+>     */
+>    union {
+> -        __u32 free_page_hint_cmd_id;
+> -        __u32 free_page_report_cmd_id;    /* deprecated */
+> +        __le32 free_page_hint_cmd_id;
+> +        __le32 free_page_report_cmd_id;    /* deprecated */
+>    };
+>    /* Stores PAGE_POISON if page poisoning is in use */
+> -    __u32 poison_val;
+> +    __le32 poison_val;
+> };
+>=20
+> #define VIRTIO_BALLOON_S_SWAP_IN  0   /* Amount of memory swapped in */
+> --=20
+> MST
+>=20
+
