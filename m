@@ -2,66 +2,54 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F843C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3604C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1697C20678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90A2620678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458778;
-	bh=MPorudU0yKZNviFiD8N6aBXJXOyf1iQeYGVYQZrt2hs=;
+	s=default; t=1596458786;
+	bh=xttePjRSo/HvUvQlP8Rh7kntoyB1U0ZEsi/FLPpeVlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1oXtIoQ6wcqkc3m9UeHiCrfEyk3vWIX/xDH313+ylOGBqWnocXuEa37o7vtUubTr1
-	 goE9OP8oSogtdRtyzekc2xo7nivtzNsZoi0fjTSvIDtbhysUJVUU5+iynnvj6zJrZU
-	 FP05D7swKPUtMiWGw4caFrHe7t/BlqC1j8QaKWrQ=
+	b=evXsMULqTJ/9Mk7pSVIILwnZ748zz2EKrb8CxzSlE3CcroFntGfipwvwUMM/nZ7r6
+	 a/tFnaZMxQ7UKHMv1DttaBJ8SWp8wmXsd0bug+CMi1n+i1V4wPLX9aqMSN9v/2JRDZ
+	 rHq0Z6R2WcRz1tFJCKf4e8D0YQ6k+gsI2Q5kTUvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgHCM04 (ORCPT
+        id S1729028AbgHCMqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:26:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52358 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:46:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728419AbgHCM0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:26:48 -0400
+        id S1728439AbgHCM0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:26:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2C13207DF;
-        Mon,  3 Aug 2020 12:26:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA148204EC;
+        Mon,  3 Aug 2020 12:26:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457606;
-        bh=MPorudU0yKZNviFiD8N6aBXJXOyf1iQeYGVYQZrt2hs=;
+        s=default; t=1596457614;
+        bh=xttePjRSo/HvUvQlP8Rh7kntoyB1U0ZEsi/FLPpeVlk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L96xnD8CVP/75ru3jOZ03s/0VbWIyA4cKcGFVheyVEnGfFAgT/ms63ZWJcfgWPxwq
-         bb4rDMDAi5In2+W1tJcDZc+jh4OhC+Sne2rJLr7Zobz36jqCvmtwG1s0OeQZSTpQ25
-         VQ+J/RqvKDq3kQiEZfYcdCVB/wGDCnes/UykUvoI=
+        b=hMedszlSbgCtqiTkLUMqqal+0Lq5iF2es7CkAsEkkQyH6D//ipA0lH3GDb44usKVv
+         s8SY8EHhT73RI2oFSGKzHG54zVGnvDjovo9TGGjFJdxoDEVfxItq4hwPGWUpFL4z9h
+         yLinv6CcHuezxiYW3xeLZuYdMURZZLGD+MavglCA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Li <liwei391@huawei.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Kim Phillips <kim.phillips@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH 5.7 092/120] perf tools: Fix record failure when mixed with ARM SPE event
-Date:   Mon,  3 Aug 2020 14:19:10 +0200
-Message-Id: <20200803121907.394401662@linuxfoundation.org>
+        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 11/90] ALSA: hda/realtek - Fixed HP right speaker no sound
+Date:   Mon,  3 Aug 2020 14:18:33 +0200
+Message-Id: <20200803121858.093900741@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
-References: <20200803121902.860751811@linuxfoundation.org>
+In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
+References: <20200803121857.546052424@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -71,94 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Li <liwei391@huawei.com>
+From: Kailang Yang <kailang@realtek.com>
 
-[ Upstream commit bd3c628f8fafa6cbd6a1ca440034b841f0080160 ]
+commit 5649625344fe1f4695eace7c37d011e317bf66d5 upstream.
 
-When recording with cache-misses and arm_spe_x event, I found that it
-will just fail without showing any error info if i put cache-misses
-after 'arm_spe_x' event.
+HP NB right speaker had no sound output.
+This platform was connected to I2S Amp for speaker out.(None Realtek I2S Amp IC)
+EC need to check codec GPIO1 pin to initial I2S Amp.
 
-  [root@localhost 0620]# perf record -e cache-misses \
-				-e arm_spe_0/ts_enable=1,pct_enable=1,pa_enable=1,load_filter=1,jitter=1,store_filter=1,min_latency=0/ sleep 1
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.067 MB perf.data ]
-  [root@localhost 0620]#
-  [root@localhost 0620]# perf record -e arm_spe_0/ts_enable=1,pct_enable=1,pa_enable=1,load_filter=1,jitter=1,store_filter=1,min_latency=0/ \
-				     -e  cache-misses sleep 1
-  [root@localhost 0620]#
+Signed-off-by: Kailang Yang <kailang@realtek.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/01285f623ac7447187482fb4a8ecaa7c@realtek.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-The current code can only work if the only event to be traced is an
-'arm_spe_x', or if it is the last event to be specified. Otherwise the
-last event type will be checked against all the arm_spe_pmus[i]->types,
-none will match and an out of bound 'i' index will be used in
-arm_spe_recording_init().
-
-We don't support concurrent multiple arm_spe_x events currently, that
-is checked in arm_spe_recording_options(), and it will show the relevant
-info. So add the check and record of the first found 'arm_spe_pmu' to
-fix this issue here.
-
-Fixes: ffd3d18c20b8 ("perf tools: Add ARM Statistical Profiling Extensions (SPE) support")
-Signed-off-by: Wei Li <liwei391@huawei.com>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Tested-by-by: Leo Yan <leo.yan@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Hanjun Guo <guohanjun@huawei.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kim Phillips <kim.phillips@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mike Leach <mike.leach@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lore.kernel.org/lkml/20200724071111.35593-2-liwei391@huawei.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/arch/arm/util/auxtrace.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ sound/pci/hda/patch_realtek.c |   19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
-index 0a6e75b8777a6..28a5d0c18b1d2 100644
---- a/tools/perf/arch/arm/util/auxtrace.c
-+++ b/tools/perf/arch/arm/util/auxtrace.c
-@@ -56,7 +56,7 @@ struct auxtrace_record
- 	struct perf_pmu	*cs_etm_pmu;
- 	struct evsel *evsel;
- 	bool found_etm = false;
--	bool found_spe = false;
-+	struct perf_pmu *found_spe = NULL;
- 	static struct perf_pmu **arm_spe_pmus = NULL;
- 	static int nr_spes = 0;
- 	int i = 0;
-@@ -74,12 +74,12 @@ struct auxtrace_record
- 		    evsel->core.attr.type == cs_etm_pmu->type)
- 			found_etm = true;
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5940,6 +5940,16 @@ static void alc_fixup_disable_mic_vref(s
+ 		snd_hda_codec_set_pin_target(codec, 0x19, PIN_VREFHIZ);
+ }
  
--		if (!nr_spes)
-+		if (!nr_spes || found_spe)
- 			continue;
++static void  alc285_fixup_hp_gpio_amp_init(struct hda_codec *codec,
++			      const struct hda_fixup *fix, int action)
++{
++	if (action != HDA_FIXUP_ACT_INIT)
++		return;
++
++	msleep(100);
++	alc_write_coef_idx(codec, 0x65, 0x0);
++}
++
+ /* for hda_fixup_thinkpad_acpi() */
+ #include "thinkpad_helper.c"
  
- 		for (i = 0; i < nr_spes; i++) {
- 			if (evsel->core.attr.type == arm_spe_pmus[i]->type) {
--				found_spe = true;
-+				found_spe = arm_spe_pmus[i];
- 				break;
- 			}
- 		}
-@@ -96,7 +96,7 @@ struct auxtrace_record
+@@ -6120,6 +6130,7 @@ enum {
+ 	ALC289_FIXUP_ASUS_GA401,
+ 	ALC289_FIXUP_ASUS_GA502,
+ 	ALC256_FIXUP_ACER_MIC_NO_PRESENCE,
++	ALC285_FIXUP_HP_GPIO_AMP_INIT,
+ };
  
- #if defined(__aarch64__)
- 	if (found_spe)
--		return arm_spe_recording_init(err, arm_spe_pmus[i]);
-+		return arm_spe_recording_init(err, found_spe);
- #endif
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -7352,6 +7363,12 @@ static const struct hda_fixup alc269_fix
+ 		.chained = true,
+ 		.chain_id = ALC256_FIXUP_ASUS_HEADSET_MODE
+ 	},
++	[ALC285_FIXUP_HP_GPIO_AMP_INIT] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc285_fixup_hp_gpio_amp_init,
++		.chained = true,
++		.chain_id = ALC285_FIXUP_HP_GPIO_LED
++	},
+ };
  
- 	/*
--- 
-2.25.1
-
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -7502,7 +7519,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x103c, 0x84e7, "HP Pavilion 15", ALC269_FIXUP_HP_MUTE_LED_MIC3),
+ 	SND_PCI_QUIRK(0x103c, 0x869d, "HP", ALC236_FIXUP_HP_MUTE_LED),
+ 	SND_PCI_QUIRK(0x103c, 0x8729, "HP", ALC285_FIXUP_HP_GPIO_LED),
+-	SND_PCI_QUIRK(0x103c, 0x8736, "HP", ALC285_FIXUP_HP_GPIO_LED),
++	SND_PCI_QUIRK(0x103c, 0x8736, "HP", ALC285_FIXUP_HP_GPIO_AMP_INIT),
+ 	SND_PCI_QUIRK(0x103c, 0x877a, "HP", ALC285_FIXUP_HP_MUTE_LED),
+ 	SND_PCI_QUIRK(0x103c, 0x877d, "HP", ALC236_FIXUP_HP_MUTE_LED),
+ 	SND_PCI_QUIRK(0x1043, 0x103e, "ASUS X540SA", ALC256_FIXUP_ASUS_MIC),
 
 
