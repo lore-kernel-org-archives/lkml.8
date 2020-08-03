@@ -2,204 +2,109 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 576EDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF777C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B12222B40
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD70222B4E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:20:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbgHCRTw (ORCPT
+        id S1728311AbgHCRUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 13:19:52 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:53208 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727803AbgHCRTv (ORCPT
+        Mon, 3 Aug 2020 13:20:54 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:10752 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727803AbgHCRUy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 13:19:51 -0400
-Received: from 89-64-89-42.dynamic.chello.pl (89.64.89.42) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 1004877ac9269e33; Mon, 3 Aug 2020 19:19:47 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Francisco Jerez <currojerez@riseup.net>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Documentation <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Doug Smythies <dsmythies@telus.net>,
-        0day robot <lkp@intel.com>, lkp@lists.01.org
-Subject: Re: [cpufreq] 48fc4efcdd: WARNING:possible_circular_locking_dependency_detected
-Date:   Mon, 03 Aug 2020 19:19:47 +0200
-Message-ID: <2379312.oHovjqWFI2@kreacher>
-In-Reply-To: <87v9i3clnh.fsf@riseup.net>
-References: <20200731115929.GQ23458@shao2-debian> <87v9i3clnh.fsf@riseup.net>
+        Mon, 3 Aug 2020 13:20:54 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 073H4tdq023250;
+        Mon, 3 Aug 2020 13:20:52 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 32n69efbae-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 13:20:52 -0400
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 073HKokS063783
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Mon, 3 Aug 2020 13:20:51 -0400
+Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 3 Aug 2020 10:20:49 -0700
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 3 Aug 2020 10:20:49 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Mon, 3 Aug 2020 10:20:49 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 073HKlag008684;
+        Mon, 3 Aug 2020 13:20:48 -0400
+From:   <alexandru.tachici@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>
+Subject: [PATCH v4 0/3] iio: accel: adxl372: add peak mode
+Date:   Mon, 3 Aug 2020 20:22:16 +0300
+Message-ID: <20200803172219.33911-1-alexandru.tachici@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-03_15:2020-08-03,2020-08-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ lowpriorityscore=0 phishscore=0 adultscore=0 spamscore=0 clxscore=1015
+ mlxscore=0 malwarescore=0 suspectscore=0 priorityscore=1501
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008030123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Saturday, August 1, 2020 1:25:22 AM CEST Francisco Jerez wrote:
-> kernel test robot <rong.a.chen@intel.com> writes:
-> 
-> > Greeting,
-> >
-> > FYI, we noticed the following commit (built with gcc-9):
-> >
-> > commit: 48fc4efcdd584e8f04da8b195262ec38221bd6db ("[PATCH v2 2/2] cpufreq: intel_pstate: Implement passive mode with HWP enabled")
-> > url: https://github.com/0day-ci/linux/commits/Rafael-J-Wysocki/cpufreq-intel_pstate-Implement-passive-mode-with-HWP-enabled/20200717-014718
-> > base: https://git.kernel.org/cgit/linux/kernel/git/rafael/linux-pm.git linux-next
-> >
-> > in testcase: kernel-selftests
-> > with following parameters:
-> >
-> > 	group: kselftests-cpufreq
-> > 	ucode: 0x5002f01
-> >
-> > test-description: The kernel contains a set of "self tests" under the tools/testing/selftests/ directory. These are intended to be small unit tests to exercise individual code paths in the kernel.
-> > test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
-> >
-> >
-> > on test machine: 192 threads Intel(R) Xeon(R) Platinum 9242 CPU @ 2.30GHz with 192G memory
-> >
-> > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> >
-> >
-> >
-> >
-> > If you fix the issue, kindly add following tag
-> > Reported-by: kernel test robot <rong.a.chen@intel.com>
-> >
-> >
-> > [   74.745395] WARNING: possible circular locking dependency detected
-> > [   74.752071] 5.8.0-rc5-00064-g48fc4efcdd584 #1 Not tainted
-> > [   74.757949] ------------------------------------------------------
-> > [   74.764604] main.sh/3019 is trying to acquire lock:
-> > [   74.769954] ffffffff82ec7f08 (intel_pstate_driver_lock){+.+.}-{3:3}, at: store_energy_performance_preference+0xec/0x250
-> > [   74.781228] 
-> > [   74.781228] but task is already holding lock:
-> > [   74.788017] ffff88b07b5f8380 (&policy->rwsem){++++}-{3:3}, at: store+0x69/0xa0
-> > [   74.795711] 
-> > [   74.795711] which lock already depends on the new lock.
-> > [   74.795711] 
-> > [   74.805222] 
-> > [   74.805222] the existing dependency chain (in reverse order) is:
-> > [   74.813529] 
-> > [   74.813529] -> #2 (&policy->rwsem){++++}-{3:3}:
-> > [   74.820371]        __lock_acquire+0x538/0xa90
-> > [   74.825144]        lock_acquire+0xab/0x390
-> > [   74.829660]        down_write+0x38/0x70
-> > [   74.833910]        store+0x69/0xa0
-> > [   74.837724]        kernfs_fop_write+0xdc/0x1c0
-> > [   74.842576]        vfs_write+0xee/0x220
-> > [   74.846814]        ksys_write+0x68/0xe0
-> > [   74.851039]        do_syscall_64+0x52/0xb0
-> > [   74.855512]        entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > [   74.861463] 
-> > [   74.861463] -> #1 (cpu_hotplug_lock){++++}-{0:0}:
-> > [   74.868395]        __lock_acquire+0x538/0xa90
-> > [   74.873127]        lock_acquire+0xab/0x390
-> > [   74.877597]        cpus_read_lock+0x39/0xd0
-> > [   74.882146]        cpufreq_register_driver+0xb6/0x2a0
-> > [   74.887556]        intel_pstate_register_driver+0x32/0x70
-> > [   74.893312]        intel_pstate_init+0x45d/0x4ca
-> > [   74.898281]        do_one_initcall+0x5d/0x330
-> > [   74.902984]        kernel_init_freeable+0x248/0x2c9
-> > [   74.908185]        kernel_init+0xa/0x112
-> > [   74.912430]        ret_from_fork+0x1f/0x30
-> > [   74.916850] 
-> > [   74.916850] -> #0 (intel_pstate_driver_lock){+.+.}-{3:3}:
-> > [   74.924376]        check_prev_add+0x8e/0x9f0
-> > [   74.928988]        validate_chain+0x79b/0x1080
-> > [   74.933773]        __lock_acquire+0x538/0xa90
-> > [   74.938469]        lock_acquire+0xab/0x390
-> > [   74.942896]        __mutex_lock+0xac/0x9c0
-> > [   74.947318]        store_energy_performance_preference+0xec/0x250
-> > [   74.953735]        store+0x7c/0xa0
-> > [   74.957458]        kernfs_fop_write+0xdc/0x1c0
-> > [   74.962231]        vfs_write+0xee/0x220
-> > [   74.966395]        ksys_write+0x68/0xe0
-> > [   74.970549]        do_syscall_64+0x52/0xb0
-> > [   74.974975]        entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > [   74.980859] 
-> > [   74.980859] other info that might help us debug this:
-> > [   74.980859] 
-> > [   74.989744] Chain exists of:
-> > [   74.989744]   intel_pstate_driver_lock --> cpu_hotplug_lock --> &policy->rwsem
-> > [   74.989744] 
-> > [   75.002149]  Possible unsafe locking scenario:
-> > [   75.002149] 
-> > [   75.008643]        CPU0                    CPU1
-> > [   75.013461]        ----                    ----
-> > [   75.018275]   lock(&policy->rwsem);
-> > [   75.022037]                                lock(cpu_hotplug_lock);
-> > [   75.028495]                                lock(&policy->rwsem);
-> > [   75.034773]   lock(intel_pstate_driver_lock);
-> > [   75.039427] 
-> > [   75.039427]  *** DEADLOCK ***
-> > [   75.039427] 
-> > [   75.046168] 5 locks held by main.sh/3019:
-> > [   75.050456]  #0: ffff888b9d973438 (sb_writers#4){.+.+}-{0:0}, at: vfs_write+0x1ba/0x220
-> > [   75.058750]  #1: ffff888beaaec488 (&of->mutex){+.+.}-{3:3}, at: kernfs_fop_write+0xa5/0x1c0
-> > [   75.067413]  #2: ffff8898284de890 (kn->active#163){.+.+}-{0:0}, at: kernfs_fop_write+0xad/0x1c0
-> > [   75.076422]  #3: ffffffff82c73a70 (cpu_hotplug_lock){++++}-{0:0}, at: store+0x26/0xa0
-> > [   75.084566]  #4: ffff88b07b5f8380 (&policy->rwsem){++++}-{3:3}, at: store+0x69/0xa0
-> > [   75.092528] 
-> > [   75.092528] stack backtrace:
-> > [   75.097500] CPU: 0 PID: 3019 Comm: main.sh Not tainted 5.8.0-rc5-00064-g48fc4efcdd584 #1
-> > [   75.105902] Hardware name: Intel Corporation ............/S9200WKBRD2, BIOS SE5C620.86B.0D.01.0552.060220191912 06/02/2019
-> > [   75.117274] Call Trace:
-> > [   75.120081]  dump_stack+0x96/0xd0
-> > [   75.123754]  check_noncircular+0x162/0x180
-> > [   75.128220]  check_prev_add+0x8e/0x9f0
-> > [   75.132325]  validate_chain+0x79b/0x1080
-> > [   75.136589]  __lock_acquire+0x538/0xa90
-> > [   75.140767]  lock_acquire+0xab/0x390
-> > [   75.144684]  ? store_energy_performance_preference+0xec/0x250
-> > [   75.150775]  __mutex_lock+0xac/0x9c0
-> > [   75.154697]  ? store_energy_performance_preference+0xec/0x250
-> > [   75.160786]  ? __lock_acquire+0x538/0xa90
-> > [   75.165147]  ? store_energy_performance_preference+0xec/0x250
-> > [   75.171282]  ? sscanf+0x4e/0x70
-> > [   75.174781]  ? store_energy_performance_preference+0xec/0x250
-> > [   75.180886]  store_energy_performance_preference+0xec/0x250
-> > [   75.186816]  store+0x7c/0xa0
-> > [   75.190056]  kernfs_fop_write+0xdc/0x1c0
-> > [   75.194338]  vfs_write+0xee/0x220
-> > [   75.198011]  ksys_write+0x68/0xe0
-> > [   75.201685]  do_syscall_64+0x52/0xb0
-> > [   75.205617]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > [   75.211051] RIP: 0033:0x7f2c1dfa9504
-> > [   75.214999] Code: Bad RIP value.
-> > [   75.218582] RSP: 002b:00007fffe26da068 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> >
-> 
-> Was about to review v4 of this series, but from my reading of it it
-> seems like this locking inversion situation could also occur with your
-> last revision.  Is it a legitimate concern Rafael?
-> 
-> >[...]
-> 
+From: Alexandru Tachici <alexandru.tachici@analog.com>
 
-There a mistake in the patch.
+This series adds the possibility to configure
+the device, from sysfs, to work in peak mode. This enables
+adxl372 to capture only over threshold accelerations.
 
-Because energy_performance_preference is a policy attribute,
-it is not valid to acquire intel_pstate_driver_lock in its "store"
-routine, but that routine can check the driver pointer without additional
-locking, because that pointer cannot change while it is running.
+1. Create sysfs files for falling_period/rising_period
+and thresh_falling_value/thresh_rising_value in events/ dir.
+Set INT1 reg for activity/inactivity and push
+event code in events fifo on irq.
 
-I've just sent a v5 to fix this problem.
+2. Document use of iio events sysfs files.
 
-Thanks!
+Alexandru Tachici (2):
+  iio: accel: adxl372: add event interface
+  docs: iio: Add adxl372 documentation
 
+1. Device FIFO can now be set in peak mode and only over the
+threshold accelerations will be stored. Driver sets adxl372
+FIFO in peak mode when the peak iio:trigger is selected.
 
+Stefan Popa (1):
+  iio: accel: adxl372: Add support for FIFO peak mode
+
+  Changelog v3 -> v4:
+  - add mutex for threshold write so that writing the two
+  registers becomes atomic
+  - added a trigger for peak mode, when selected in the trigger
+  user interface, adxl372 will start recording only peak acceleration
+  data in the fifo
+  - added a adxl372.rst doc file explaining the use of iio events sysfs
+
+ Documentation/iio/adxl372.rst |  46 +++++
+ Documentation/iio/index.rst   |   1 +
+ drivers/iio/accel/adxl372.c   | 328 +++++++++++++++++++++++++++++++++-
+ 3 files changed, 367 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/iio/adxl372.rst
+
+-- 
+2.20.1
 
