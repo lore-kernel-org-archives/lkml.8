@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E457EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE108C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8D6620678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9D0A20678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596459333;
-	bh=Ra0sNR3wVYMaJ2vnp53y3iy9sBigv+XID83l4LIHiJ4=;
+	s=default; t=1596459350;
+	bh=4y2n0jy/N97pc+QEFGNpXS+JrtHgv7CaUW3acs2G54A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I5TEZCBtZKi30uRr/k8VZeOXaXZrqVKrrhh2OIxzMSd/44p1EsJQqnV0kKwPr0OR0
-	 KyQVmDhubP4HkKs7YV6+MQb1aqXu5c0NncqLITVV+O/HZ2nH4rAmMg6FGKhpYVz2d2
-	 woD8+Yy1H3zhBD5MC810vl3bq62E0VVJV7qaqTRs=
+	b=k9Ljpvf0an/3K2ppU0LlCNv5kt+7W+m049uGb7TR60c4+zEGCKD6nf9SFDmdLq5g1
+	 MVCGukRPUfPpE9gYEhQJ3TPveQjXsO4MXRFfKNGi2orqYQ0ZBydcrLi0flG5fSWClz
+	 uU25bS3zbv7cJBNvkbbNxteyZkc6d6+SFO/1y7Q8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgHCMWW (ORCPT
+        id S1729283AbgHCMzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:22:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45612 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:55:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726645AbgHCMWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:22:06 -0400
+        id S1727001AbgHCMW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:22:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 516BD2076B;
-        Mon,  3 Aug 2020 12:22:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FCBB2076E;
+        Mon,  3 Aug 2020 12:22:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457324;
-        bh=Ra0sNR3wVYMaJ2vnp53y3iy9sBigv+XID83l4LIHiJ4=;
+        s=default; t=1596457347;
+        bh=4y2n0jy/N97pc+QEFGNpXS+JrtHgv7CaUW3acs2G54A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jqQ8Qu1ji+goK4z4XZjO8SxV9bqFzu3DFSGIun3EjytOUFRD//2V5kpVFtXtw8vWm
-         H6DmMDfa3AO9aS/ueixpb/5oNJerpUuba2kOz2xULsg1yod/bffjIjb3SUOuMNSuui
-         eW4jg+kMuW7JCJ31FSeXYkf0PuVule7glkcMr3NI=
+        b=2Jh8i7AdZehGmf/f0EoItYD0cUHdMwhaO/nlrGSZLE5fdU7dN7Ryt6oaYxMVE7Cx0
+         u0g8D5ZnfWknBfvShI87oQ6mdxOmxE3G7dGflumGjN6MaAaLxm9jJ+dXqjU2WlTjCg
+         TCI/RUL23hes2g1ygd6eGRnqJhepFyGjCLOVtWKY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry <dpavlushko@gmail.com>,
-        Laurence Tratt <laurie@tratt.net>, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.7 003/120] ALSA: usb-audio: Add implicit feedback quirk for SSL2
-Date:   Mon,  3 Aug 2020 14:17:41 +0200
-Message-Id: <20200803121903.032661965@linuxfoundation.org>
+        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH 5.7 027/120] drm/mcde: Fix stability issue
+Date:   Mon,  3 Aug 2020 14:18:05 +0200
+Message-Id: <20200803121904.168818490@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -59,33 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurence Tratt <laurie@tratt.net>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-commit 3da87ec67a491b9633a82045896c076b794bf938 upstream.
+commit aa7bf898d4bf921f61fab078040e8baec3f28126 upstream.
 
-As expected, this requires the same quirk as the SSL2+ in order for the
-clock to sync. This was suggested by, and tested on an SSL2, by Dmitry.
+Whenever a display update was sent, apart from updating
+the memory base address, we called mcde_display_send_one_frame()
+which also sent a command to the display requesting the TE IRQ
+and enabling the FIFO.
 
-Suggested-by: Dmitry <dpavlushko@gmail.com>
-Signed-off-by: Laurence Tratt <laurie@tratt.net>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200621075005.52mjjfc6dtdjnr3h@overdrive.tratt.net
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+When continuous updates are running this is wrong: we need
+to only send this to start the flow to the display on
+the very first update. This lead to the display pipeline
+locking up and crashing.
+
+Check if the flow is already running and in that case
+do not call mcde_display_send_one_frame().
+
+This fixes crashes on the Samsung GT-S7710 (Skomer).
+
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Acked-by: Stephan Gerhold <stephan@gerhold.net>
+Cc: Stephan Gerhold <stephan@gerhold.net>
+Cc: stable@vger.kernel.org
+Link: https://patchwork.freedesktop.org/patch/msgid/20200718233323.3407670-1-linus.walleij@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/pcm.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/mcde/mcde_display.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -367,6 +367,7 @@ static int set_sync_ep_implicit_fb_quirk
- 		ifnum = 0;
- 		goto add_sync_ep_from_ifnum;
- 	case USB_ID(0x07fd, 0x0008): /* MOTU M Series */
-+	case USB_ID(0x31e9, 0x0001): /* Solid State Logic SSL2 */
- 	case USB_ID(0x31e9, 0x0002): /* Solid State Logic SSL2+ */
- 	case USB_ID(0x0d9a, 0x00df): /* RTX6001 */
- 		ep = 0x81;
+--- a/drivers/gpu/drm/mcde/mcde_display.c
++++ b/drivers/gpu/drm/mcde/mcde_display.c
+@@ -1060,9 +1060,14 @@ static void mcde_display_update(struct d
+ 	 */
+ 	if (fb) {
+ 		mcde_set_extsrc(mcde, drm_fb_cma_get_gem_addr(fb, pstate, 0));
+-		if (!mcde->video_mode)
+-			/* Send a single frame using software sync */
+-			mcde_display_send_one_frame(mcde);
++		if (!mcde->video_mode) {
++			/*
++			 * Send a single frame using software sync if the flow
++			 * is not active yet.
++			 */
++			if (mcde->flow_active == 0)
++				mcde_display_send_one_frame(mcde);
++		}
+ 		dev_info_once(mcde->dev, "sent first display update\n");
+ 	} else {
+ 		/*
 
 
