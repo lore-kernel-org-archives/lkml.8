@@ -2,106 +2,91 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D34C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 034F4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5762076C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63A02076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:53:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728367AbgHCOvL (ORCPT
+        id S1726861AbgHCOxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:51:11 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40782 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728309AbgHCOvK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 10:51:10 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 073EYKBb139790;
-        Mon, 3 Aug 2020 10:50:59 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32pkrghyyk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Aug 2020 10:50:59 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 073EYwTB143770;
-        Mon, 3 Aug 2020 10:50:59 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32pkrghyy6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Aug 2020 10:50:59 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 073Eo0ID016173;
-        Mon, 3 Aug 2020 14:50:58 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma04wdc.us.ibm.com with ESMTP id 32n018rrnd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Aug 2020 14:50:58 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 073EosVh30277916
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 3 Aug 2020 14:50:54 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3D99F136051;
-        Mon,  3 Aug 2020 14:50:57 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AE4A4136055;
-        Mon,  3 Aug 2020 14:50:56 +0000 (GMT)
-Received: from ghost4.ibm.com (unknown [9.163.93.250])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon,  3 Aug 2020 14:50:56 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-leds@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, dmurphy@ti.com, pavel@ucw.cz,
-        jacek.anaszewski@gmail.com, vishwa@linux.ibm.com,
-        andy.shevchenko@gmail.com, eajames@linux.ibm.com
-Subject: [PATCH v2 1/2] dt-bindings: leds: pca955x: Add IBM implementation compatible string
-Date:   Mon,  3 Aug 2020 09:50:54 -0500
-Message-Id: <20200803145055.5203-2-eajames@linux.ibm.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200803145055.5203-1-eajames@linux.ibm.com>
-References: <20200803145055.5203-1-eajames@linux.ibm.com>
+        Mon, 3 Aug 2020 10:53:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41834 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726497AbgHCOxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 10:53:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 0D2AAB626;
+        Mon,  3 Aug 2020 14:53:38 +0000 (UTC)
+Date:   Mon, 3 Aug 2020 16:53:21 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: VAIO EEPROM support in at24
+Message-ID: <20200803165321.4334af05@endymion>
+In-Reply-To: <20200317150142.GA1134@ninjato>
+References: <20200317151409.7940926c@endymion>
+        <CAMRc=Mdoh5Sk3iS_CO4+++SG2jJOy1qrG4q2zOzbeYYMdJR0VA@mail.gmail.com>
+        <20200317150142.GA1134@ninjato>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-03_13:2020-08-03,2020-08-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
- lowpriorityscore=0 impostorscore=0 mlxscore=0 priorityscore=1501
- phishscore=0 suspectscore=1 adultscore=0 bulkscore=0 mlxlogscore=999
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008030106
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IBM created an implementation of the PCA9552 on a PIC16F
-microcontroller. Document the new compatible string for this device.
+Hi Wolfram,
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- Documentation/devicetree/bindings/leds/leds-pca955x.txt | 1 +
- 1 file changed, 1 insertion(+)
+Sorry, somehow this message of yours slipped through the cracks.
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-pca955x.txt b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
-index 7a5830f8d5ab..817f460f3a72 100644
---- a/Documentation/devicetree/bindings/leds/leds-pca955x.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
-@@ -9,6 +9,7 @@ Required properties:
- 	"nxp,pca9550"
- 	"nxp,pca9551"
- 	"nxp,pca9552"
-+	"ibm,pca9552"
- 	"nxp,pca9553"
- - #address-cells: must be 1
- - #size-cells: must be 0
+On Tue, 17 Mar 2020 16:01:42 +0100, Wolfram Sang wrote:
+> > And we could introduce a new macro called AT24_CHIP_DATA_MASKED that
+> > would automacially set the AT24_FLAG_MASKED_RANGE flag and take
+> > another argument that would contain the address and size of the masked
+> > register range (we'd put it into the "masked" resource)?  
+> 
+> I am all for generic solutions. One thing to consider here is that we
+> need a generic way to detect the various types. I guess it will
+> always(?) be decided on some memory locations having specific values?
+
+In the case of Sony VAIO EEPROMs, they can be identified by the
+combination of the EEPROM's I2C address (always 0x57) and the value of
+the 4 bytes at register address 0x80 (would read either "PCG-" or
+"VGN-"). If that's not considered robust enough then I suppose we could
+improve it further by checking that the DMI vendor is "Sony
+Corporation".
+
+That being said, automatic detection was not even on my mind
+originally. If we had a specific type defined for these EEPROMs, as we
+do with SPD EEPROMs, then one could easily instantiate them from
+user-space using the "new_device" sysfs attribute at the I2C bus level.
+This is exactly how we have been doing it for SPD EEPROMs until
+recently, as you have just merged my patch set to automate this
+recently. And even then, it's still limited to x86 and specific systems
+at the moment.
+
+Incidentally, instantiating these Sony VAIO EEPROMs automatically would
+share some code with that patch set, so that might be a good sign that
+it's the right time to look into that.
+
+I may give a try to Bartosz's idea to make it somewhat generic if
+everybody agrees that's the way to go. I'm not deeply familiar with the
+at24 driver so I'm not sure how to do it, but hopefully it will get
+clearer as I progress.
+
 -- 
-2.24.0
-
+Jean Delvare
+SUSE L3 Support
