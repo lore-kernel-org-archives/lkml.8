@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F27AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C553FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B388207FB
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D05220829
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457559;
-	bh=6A+UnJffvNtJviVbexL14aZ+ErblWEm8XBAuF4tWmpM=;
+	s=default; t=1596457568;
+	bh=k9WgX49UhER9eYl15sr7XTWMTSzUTaFe3tk7B9RNLmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zsWhcaY6erFT2rQ6Tnu2Qnx74JtVaPzrXA4VMyuPlGia/sVwc+8RRjHCGeRcX2V86
-	 o0+plZstLplQPXWUWdMqauWKidbJr+MJhK+7RM8x/sKixBhsCF5dENeC9B5B6bxIbS
-	 c6ao4bWmHslD9ZWiCVOlCSnDV+H8oRaqzpIfvLTU=
+	b=fT37gnbwoaMH0PLDul/lKH7xshUZBIZleFsLDdfbVqYeGnqYkr+A2YwT+5SN1D5D2
+	 UXpSr2E0KrLCtG29PlVuiU8zCLNnCNIPR5bkqchlV0JjsABupQq25MJF18pMrqy9f0
+	 VRmhIczSbAo45l87S5cmNmiQmcztxh4YtxbIK+rU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbgHCMZ5 (ORCPT
+        id S1726999AbgHCM0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:25:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50968 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:26:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbgHCMZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:25:54 -0400
+        id S1728296AbgHCMZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:25:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 422B2204EC;
-        Mon,  3 Aug 2020 12:25:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 143F0207DF;
+        Mon,  3 Aug 2020 12:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457552;
-        bh=6A+UnJffvNtJviVbexL14aZ+ErblWEm8XBAuF4tWmpM=;
+        s=default; t=1596457555;
+        bh=k9WgX49UhER9eYl15sr7XTWMTSzUTaFe3tk7B9RNLmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kP14ROpsSbqMyTxIryJwq/BCWOli35kBA2T9MjGKI3NVxOgMYkwiUtjayIjDoXk1K
-         CJgIiXlEfUjww/5JBfTpnmmQkoZEmlZeyBTJV4zslG40rFvWyrxrMe+juKEk01duZb
-         ijO4yHTjtTZbhXjjIiu5Uz1zCuNkW7XN+RcibZYo=
+        b=flgMXCEi80yhHssYGl3xQBRdhr7P/E6Kh0DcE5jnHAx7tDNasjumqOPMuYPtzoNDv
+         8z705IJ3DunxayIzdAxlfkgX2QG4/urgK2ed9ul90h3oM1tndt3jeYC41QoHokrep6
+         aviDcsQFGOMaU3bNgW9yo6TUhiw0E1NpOR7sMxdI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 110/120] x86/unwind/orc: Fix ORC for newly forked tasks
-Date:   Mon,  3 Aug 2020 14:19:28 +0200
-Message-Id: <20200803121908.251940954@linuxfoundation.org>
+Subject: [PATCH 5.7 111/120] x86/stacktrace: Fix reliable check for empty user task stacks
+Date:   Mon,  3 Aug 2020 14:19:29 +0200
+Message-Id: <20200803121908.300695312@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -63,53 +63,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit 372a8eaa05998cd45b3417d0e0ffd3a70978211a ]
+[ Upstream commit 039a7a30ec102ec866d382a66f87f6f7654f8140 ]
 
-The ORC unwinder fails to unwind newly forked tasks which haven't yet
-run on the CPU.  It correctly reads the 'ret_from_fork' instruction
-pointer from the stack, but it incorrectly interprets that value as a
-call stack address rather than a "signal" one, so the address gets
-incorrectly decremented in the call to orc_find(), resulting in bad ORC
-data.
+If a user task's stack is empty, or if it only has user regs, ORC
+reports it as a reliable empty stack.  But arch_stack_walk_reliable()
+incorrectly treats it as unreliable.
 
-Fix it by forcing 'ret_from_fork' frames to be signal frames.
+That happens because the only success path for user tasks is inside the
+loop, which only iterates on non-empty stacks.  Generally, a user task
+must end in a user regs frame, but an empty stack is an exception to
+that rule.
+
+Thanks to commit 71c95825289f ("x86/unwind/orc: Fix error handling in
+__unwind_start()"), unwind_start() now sets state->error appropriately.
+So now for both ORC and FP unwinders, unwind_done() and !unwind_error()
+always means the end of the stack was successfully reached.  So the
+success path for kthreads is no longer needed -- it can also be used for
+empty user tasks.
 
 Reported-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Tested-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-Link: https://lkml.kernel.org/r/f91a8778dde8aae7f71884b5df2b16d552040441.1594994374.git.jpoimboe@redhat.com
+Link: https://lkml.kernel.org/r/f136a4e5f019219cbc4f4da33b30c2f44fa65b84.1594994374.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/unwind_orc.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/x86/kernel/stacktrace.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 7f969b2d240fd..ec88bbe08a328 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -440,8 +440,11 @@ bool unwind_next_frame(struct unwind_state *state)
- 	/*
- 	 * Find the orc_entry associated with the text address.
- 	 *
--	 * Decrement call return addresses by one so they work for sibling
--	 * calls and calls to noreturn functions.
-+	 * For a call frame (as opposed to a signal frame), state->ip points to
-+	 * the instruction after the call.  That instruction's stack layout
-+	 * could be different from the call instruction's layout, for example
-+	 * if the call was to a noreturn function.  So get the ORC data for the
-+	 * call instruction itself.
- 	 */
- 	orc = orc_find(state->signal ? state->ip : state->ip - 1);
- 	if (!orc) {
-@@ -662,6 +665,7 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
- 		state->sp = task->thread.sp;
- 		state->bp = READ_ONCE_NOCHECK(frame->bp);
- 		state->ip = READ_ONCE_NOCHECK(frame->ret_addr);
-+		state->signal = (void *)state->ip == ret_from_fork;
- 	}
+diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
+index 6ad43fc44556e..2fd698e28e4d5 100644
+--- a/arch/x86/kernel/stacktrace.c
++++ b/arch/x86/kernel/stacktrace.c
+@@ -58,7 +58,6 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
+ 			 * or a page fault), which can make frame pointers
+ 			 * unreliable.
+ 			 */
+-
+ 			if (IS_ENABLED(CONFIG_FRAME_POINTER))
+ 				return -EINVAL;
+ 		}
+@@ -81,10 +80,6 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
+ 	if (unwind_error(&state))
+ 		return -EINVAL;
  
- 	if (get_stack_info((unsigned long *)state->sp, state->task,
+-	/* Success path for non-user tasks, i.e. kthreads and idle tasks */
+-	if (!(task->flags & (PF_KTHREAD | PF_IDLE)))
+-		return -EINVAL;
+-
+ 	return 0;
+ }
+ 
 -- 
 2.25.1
 
