@@ -6,141 +6,151 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 367ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABCAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 186EC206DA
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DF2F20719
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:39:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgHCQg5 (ORCPT
+        id S1726773AbgHCQjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 12:36:57 -0400
-Received: from mga09.intel.com ([134.134.136.24]:33517 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbgHCQg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 12:36:57 -0400
-IronPort-SDR: XVdF5A3PWDhCGqPMkyHVk4yO9HXOASMbbJ0GXqRNK5mu/YXBnb/IAnj8/4DIA4w54Zadl+T9XK
- m0P1rdf3zRsw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="153332595"
-X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
-   d="scan'208";a="153332595"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 09:36:56 -0700
-IronPort-SDR: IQCmQ9mvzUfLpSJQZHe4TyzmJ4mVnZkH9iucNdLDuGrF43Bij5vBskehjFajd/KersME2+ybFR
- 5DQOMeKI91uQ==
-X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
-   d="scan'208";a="466586856"
-Received: from arossfer-mobl.amr.corp.intel.com (HELO [10.255.230.80]) ([10.255.230.80])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 09:36:55 -0700
-Subject: Re: [PATCH v6 12/12] x86/traps: Fix up invalid PASID
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joerg Roedel <joro@8bytes.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        H Peter Anvin <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Jacob Jun Pan <jacob.jun.pan@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Sohil Mehta <sohil.mehta@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, iommu <iommu@lists.linux-foundation.org>,
-        amd-gfx <amd-gfx@lists.freedesktop.org>
-References: <1594684087-61184-1-git-send-email-fenghua.yu@intel.com>
- <1594684087-61184-13-git-send-email-fenghua.yu@intel.com>
- <CALCETrXnO4oh+WyxtSM-j_pP4QgkSg24=y76OBEHxXxAfJtPhA@mail.gmail.com>
- <f6d34d59-e6eb-ee9f-d247-8fb2f0e37549@intel.com>
- <CALCETrXLFwzCzoE8ZjciBO_WSK8StyTfO1yXVm4v2qFQZpfasg@mail.gmail.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <12fbdc01-e444-8d10-5790-e3495fc8a837@intel.com>
-Date:   Mon, 3 Aug 2020 09:36:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 3 Aug 2020 12:39:05 -0400
+Received: from www62.your-server.de ([213.133.104.62]:38276 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgHCQjE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 12:39:04 -0400
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1k2dUL-0001qr-Rq; Mon, 03 Aug 2020 18:39:01 +0200
+Received: from [178.196.57.75] (helo=pc-9.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1k2dUL-000L6j-LU; Mon, 03 Aug 2020 18:39:01 +0200
+Subject: Re: [PATCH bpf-next v3 00/29] bpf: switch to memcg-based memory
+ accounting
+To:     Roman Gushchin <guro@fb.com>
+Cc:     bpf@vger.kernel.org, netdev@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>, kernel-team@fb.com,
+        linux-kernel@vger.kernel.org
+References: <20200730212310.2609108-1-guro@fb.com>
+ <6b1777ac-cae1-fa1f-db53-f6061d9ae675@iogearbox.net>
+ <20200803153449.GA1020566@carbon.DHCP.thefacebook.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <a620f231-1e68-6ac5-d7d2-57afa68e91c9@iogearbox.net>
+Date:   Mon, 3 Aug 2020 18:39:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <CALCETrXLFwzCzoE8ZjciBO_WSK8StyTfO1yXVm4v2qFQZpfasg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200803153449.GA1020566@carbon.DHCP.thefacebook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.3/25893/Mon Aug  3 17:01:47 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/3/20 8:12 AM, Andy Lutomirski wrote:
-> I could easily be convinced that the PASID fixup is so trivial and so
-> obviously free of misfiring in a way that causes an infinite loop that
-> this code is fine.  But I think we first need to answer the bigger
-> question of why we're doing a lazy fixup in the first place.
+On 8/3/20 5:34 PM, Roman Gushchin wrote:
+> On Mon, Aug 03, 2020 at 02:05:29PM +0200, Daniel Borkmann wrote:
+>> On 7/30/20 11:22 PM, Roman Gushchin wrote:
+>>> Currently bpf is using the memlock rlimit for the memory accounting.
+>>> This approach has its downsides and over time has created a significant
+>>> amount of problems:
+>>>
+>>> 1) The limit is per-user, but because most bpf operations are performed
+>>>      as root, the limit has a little value.
+>>>
+>>> 2) It's hard to come up with a specific maximum value. Especially because
+>>>      the counter is shared with non-bpf users (e.g. memlock() users).
+>>>      Any specific value is either too low and creates false failures
+>>>      or too high and useless.
+>>>
+>>> 3) Charging is not connected to the actual memory allocation. Bpf code
+>>>      should manually calculate the estimated cost and precharge the counter,
+>>>      and then take care of uncharging, including all fail paths.
+>>>      It adds to the code complexity and makes it easy to leak a charge.
+>>>
+>>> 4) There is no simple way of getting the current value of the counter.
+>>>      We've used drgn for it, but it's far from being convenient.
+>>>
+>>> 5) Cryptic -EPERM is returned on exceeding the limit. Libbpf even had
+>>>      a function to "explain" this case for users.
+>>>
+>>> In order to overcome these problems let's switch to the memcg-based
+>>> memory accounting of bpf objects. With the recent addition of the percpu
+>>> memory accounting, now it's possible to provide a comprehensive accounting
+>>> of memory used by bpf programs and maps.
+>>>
+>>> This approach has the following advantages:
+>>> 1) The limit is per-cgroup and hierarchical. It's way more flexible and allows
+>>>      a better control over memory usage by different workloads.
+>>>
+>>> 2) The actual memory consumption is taken into account. It happens automatically
+>>>      on the allocation time if __GFP_ACCOUNT flags is passed. Uncharging is also
+>>>      performed automatically on releasing the memory. So the code on the bpf side
+>>>      becomes simpler and safer.
+>>>
+>>> 3) There is a simple way to get the current value and statistics.
+>>>
+>>> The patchset consists of the following parts:
+>>> 1) memcg-based accounting for various bpf objects: progs and maps
+>>> 2) removal of the rlimit-based accounting
+>>> 3) removal of rlimit adjustments in userspace samples
+> 
+>> The diff stat looks nice & agree that rlimit sucks, but I'm missing how this is set
+>> is supposed to work reliably, at least I currently fail to see it. Elaborating on this
+>> in more depth especially for the case of unprivileged users should be a /fundamental/
+>> part of the commit message.
+>>
+>> Lets take an example: unprivileged user adds a max sized hashtable to one of its
+>> programs, and configures the map that it will perform runtime allocation. The load
+>> succeeds as it doesn't surpass the limits set for the current memcg. Kernel then
+>> processes packets from softirq. Given the runtime allocations, we end up mischarging
+>> to whoever ended up triggering __do_softirq(). If, for example, ksoftirq thread, then
+>> it's probably reasonable to assume that this might not be accounted e.g. limits are
+>> not imposed on the root cgroup. If so we would probably need to drag the context of
+>> /where/ this must be charged to __memcg_kmem_charge_page() to do it reliably. Otherwise
+>> how do you protect unprivileged users to OOM the machine?
+> 
+> this is a valid concern, thank you for bringing it in. It can be resolved by
+> associating a map with a memory cgroup on creation, so that we can charge
+> this memory cgroup later, even from a soft-irq context. The question here is
+> whether we want to do it for all maps, or just for dynamic hashtables
+> (or any similar cases, if there are any)? I think the second option
+> is better. With the first option we have to annotate all memory allocations
+> in bpf maps code with memalloc_use_memcg()/memalloc_unuse_memcg(),
+> so it's easy to mess it up in the future.
+> What do you think?
 
-There was an (internal to Intel) implementation of this about a year ago
-that used smp_call_function_many() to force the MSR state into all
-threads of a process.  I took one look at it, decided there was a 0%
-chance of it actually functioning and recommended we find another way.
-While I'm sure it could be done more efficiently, the implementation I
-looked at took ~200 lines of code and comments.  It started to look too
-much like another instance of mm->cpumask for my comfort.
+We would need to do it for all maps that are configured with non-prealloc, e.g. not
+only hash/LRU table but also others like LPM maps etc. I wonder whether program entry/
+exit could do the memalloc_use_memcg() / memalloc_unuse_memcg() and then everything
+would be accounted against the prog's memcg from runtime side, but then there's the
+usual issue with 'unuse'-restore on tail calls, and it doesn't solve the syscall side.
+But seems like the memalloc_{use,unuse}_memcg()'s remote charging is lightweight
+anyway compared to some of the other map update work such as taking bucket lock etc.
 
-The only other option I could think of would be an ABI where threads
-were required to call into the kernel at least once after creation
-before calling ENQCMD.  All ENQCMDs would be required to be "wrapped" by
-code doing this syscall.  Something like this:
+>> Similarly, what happens to unprivileged users if kmemcg was not configured into the
+>> kernel or has been disabled?
+> 
+> Well, I don't think we can address it. Memcg-based memory accounting requires
+> enabled memory cgroups, a properly configured cgroup tree and also the kernel
+> memory accounting turned on to function properly.
+> Because we at Facebook are using cgroup for the memory accounting and control
+> everywhere, I might be biased. If there are real !memcg systems which are
+> actively using non-privileged bpf, we should keep the old system in place
+> and make it optional, so everyone can choose between having both accounting
+> systems or just the new one. Or we can disable the rlimit-based accounting
+> for root. But eliminating it completely looks so much nicer to me.
 
-	if (!thread_local(did_pasid_init))
-		sys_pasid_init(); // new syscall or prctl
+Eliminating it entirely feels better indeed. Another option could be that BPF kconfig
+would select memcg, so it's always built with it. Perhaps that is an acceptable tradeoff.
 
-	thread_local(did_pasid_init) = 1;
-
-	// ENQCMD here
+Thanks,
+Daniel
