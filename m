@@ -2,148 +2,160 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54638C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4250C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3493C20678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C08B920678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:01:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nBNTu43w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbgHCKBm (ORCPT
+        id S1726504AbgHCKB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 06:01:42 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46964 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725968AbgHCKBl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 06:01:41 -0400
-Received: by mail-ot1-f66.google.com with SMTP id v6so16699365ota.13;
-        Mon, 03 Aug 2020 03:01:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YRL/NSrOTXGW5tVFZP1w9ujyG9ApelIKXaN1/erg484=;
-        b=dhZFlWmSf+Uwo+vFIlvnlPA/fV85bK0xUZDSngLpTNfrQNAuI2SGAky9rt1PX8Js4A
-         UJyMjXx/qGlYhtdgpAu/p4NES2wcCiYw2AkN70TbwUiuMrukzhyrz+zCe7iK/dO5ZcQp
-         sd3rAZvjFQDyPA0a6B1eB/Kic93w0Y/AsRmWTp+x+D6OdreAAre6ugKbUm8S8eoa71yx
-         7Ed/AOo+QKzqUzZVv7UXeWNgkyRGouTnIaZGVZ3qNoK2DqDaTKoFID++oqeYs7TL42O1
-         41jTG+eivjAOMyf7/uFhMHUM04wLVl2waKWpuf/WZXe3fzPzYRXkLn+qPl/YH5wxTjKW
-         9qig==
-X-Gm-Message-State: AOAM530w5nk3Vx6E2T5rmFjf/k2p1eybUYJzdfvkJwAbdWDuIovJJ2QM
-        /uxVGxxjlv5KC/qxn5+gfpaSzOrXskWWVE8QE9WUs98e
-X-Google-Smtp-Source: ABdhPJwlDuinaynFGJMz+BX1NkzN1mj7ncnxIYpvjq4x0l0CyuS1Qg7VFTYWsRmoQKZkLoUyUXV5w5bszIyg49+V37w=
-X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr12244586ote.107.1596448900646;
- Mon, 03 Aug 2020 03:01:40 -0700 (PDT)
+        Mon, 3 Aug 2020 06:01:58 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:15355 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725968AbgHCKB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 06:01:57 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596448917; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=0DuhPig/BdjwtnY2fgM6R8kgAL7yGAywFUS6sxjdcPY=; b=nBNTu43wdX/GgqjfRTWAPthqakxiG+kU9wRV5HH7/YO8xMlZQTS8wcA5mwNz+DoF9GHjebQa
+ xT7GEHy9BdVTdg33cqvxAWtyx0mBv0EoCw2NlleD+W01HvJmxfNA1qkQ41tsA8ZlBYZDopPW
+ Lt1Bmo2UervLJs/jCaRxdtfwFsc=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5f27e05714acd1952ba7381a (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 03 Aug 2020 10:00:55
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7D8C3C4339C; Mon,  3 Aug 2020 10:00:53 +0000 (UTC)
+Received: from [192.168.0.105] (unknown [103.248.210.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vjitta)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B2DB4C433C6;
+        Mon,  3 Aug 2020 10:00:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B2DB4C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vjitta@codeaurora.org
+Subject: Re: [PATCH 2/2] iommu/iova: Free global iova rcache on iova alloc
+ failure
+To:     joro@8bytes.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     vinmenon@codeaurora.org, kernel-team@android.com
+References: <1593785835-27250-1-git-send-email-vjitta@codeaurora.org>
+ <1593785835-27250-2-git-send-email-vjitta@codeaurora.org>
+From:   Vijayanand Jitta <vjitta@codeaurora.org>
+Message-ID: <29f44540-44f8-570d-886f-2090596a3b8e@codeaurora.org>
+Date:   Mon, 3 Aug 2020 15:30:48 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <87wob2clos.wl-kuninori.morimoto.gx@renesas.com>
- <20200722023840.GA55317@roeck-us.net> <20200722225239.GX14669@brightrain.aerifal.cx>
- <fa0456c9-cef0-45e7-59d7-ad652734b1d5@roeck-us.net>
-In-Reply-To: <fa0456c9-cef0-45e7-59d7-ad652734b1d5@roeck-us.net>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 3 Aug 2020 12:01:29 +0200
-Message-ID: <CAMuHMdUvSVs7vQ7GDhHx4Rp-DJZuSU2xtPVtX86+p9GptHfBhQ@mail.gmail.com>
-Subject: Re: [PATCH] sh: add missing EXPORT_SYMBOL() for __delay
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Rich Felker <dalias@libc.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1593785835-27250-2-git-send-email-vjitta@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 1:53 AM Guenter Roeck <linux@roeck-us.net> wrote:
-> On 7/22/20 3:52 PM, Rich Felker wrote:
-> > On Tue, Jul 21, 2020 at 07:38:40PM -0700, Guenter Roeck wrote:
-> >> On Thu, Dec 12, 2019 at 11:38:43AM +0900, Kuninori Morimoto wrote:
-> >>> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> >>>
-> >>> __delay() is used from kernel module.
-> >>> We need EXPORT_SYMBOL(), otherwise we will get compile error.
-> >>>
-> >>> ERROR: "__delay" [drivers/net/phy/mdio-cavium.ko] undefined!
-> >>>
-> >>> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> >>
-> >> I must admit that this patch completely baffles me. __delay was
-> >> already exported, only elsewhere in the file. With this patch
-> >> in place, it is exported twice, and all sh builds in -next fail
-> >> with
-> >>
-> >> In file included from include/linux/linkage.h:7,
-> >>                  from arch/sh/include/asm/bug.h:5,
-> >>                  from include/linux/bug.h:5,
-> >>                  from include/linux/thread_info.h:12,
-> >>                  from include/asm-generic/current.h:5,
-> >>                  from ./arch/sh/include/generated/asm/current.h:1,
-> >>                  from include/linux/sched.h:12,
-> >>                  from arch/sh/lib/delay.c:8:
-> >> include/linux/export.h:67:36: error: redefinition of '__ksymtab___delay'
-> >>
-> >> Guenter
-> >>
-> >>> ---
-> >>>  arch/sh/lib/delay.c | 1 +
-> >>>  1 file changed, 1 insertion(+)
-> >>>
-> >>> diff --git a/arch/sh/lib/delay.c b/arch/sh/lib/delay.c
-> >>> index dad8e6a..540e670 100644
-> >>> --- a/arch/sh/lib/delay.c
-> >>> +++ b/arch/sh/lib/delay.c
-> >>> @@ -29,6 +29,7 @@ void __delay(unsigned long loops)
-> >>>             : "0" (loops)
-> >>>             : "t");
-> >>>  }
-> >>> +EXPORT_SYMBOL(__delay);
-> >>>
-> >>>  inline void __const_udelay(unsigned long xloops)
-> >>>  {
-> >
-> > I presently have a revert of this commit in queue for next. If it's
-> > sufficiently breaking (and especially if there are other regressions
-> > that need to be fixed, see the pmd_free thing) I could try to get it
-> > in for 5.8 still but that's getting a bit late.
-> >
->
-> The patch in mainline is ok. It appears that it has been applied
-> again in -next.
->
-> "git log --oneline v5.7.. arch/sh/lib/delay.c" on top of next-20200721
-> reports:
->
-> ee0e4f15dfd4 (origin/akpm) sh: add missing EXPORT_SYMBOL() for __delay
-> d1f56f318d23 sh: add missing EXPORT_SYMBOL() for __delay
->
-> Maybe it just needs to be dropped from the akpm tree in -next ?
 
-IMHO all of them should be dropped/reverted.
-__delay is an internal implementation detail, not to be used by drivers.
 
-See also include/asm-generic/delay.h:
+On 7/3/2020 7:47 PM, vjitta@codeaurora.org wrote:
+> From: Vijayanand Jitta <vjitta@codeaurora.org>
+> 
+> When ever an iova alloc request fails we free the iova
+> ranges present in the percpu iova rcaches and then retry
+> but the global iova rcache is not freed as a result we could
+> still see iova alloc failure even after retry as global
+> rcache is holding the iova's which can cause fragmentation.
+> So, free the global iova rcache as well and then go for the
+> retry.
+> 
+> Change-Id: Ib8236dc88ba5516b73d4fbf6bf8e68bbf09bbad2
+> Signed-off-by: Vijayanand Jitta <vjitta@codeaurora.org>
+> ---
+>  drivers/iommu/iova.c | 23 +++++++++++++++++++++++
+>  include/linux/iova.h |  6 ++++++
+>  2 files changed, 29 insertions(+)
+> 
+> diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+> index 4e77116..5836c87 100644
+> --- a/drivers/iommu/iova.c
+> +++ b/drivers/iommu/iova.c
+> @@ -442,6 +442,7 @@ struct iova *find_iova(struct iova_domain *iovad, unsigned long pfn)
+>  		flush_rcache = false;
+>  		for_each_online_cpu(cpu)
+>  			free_cpu_cached_iovas(cpu, iovad);
+> +		free_global_cached_iovas(iovad);
+>  		goto retry;
+>  	}
+>  
+> @@ -1055,5 +1056,27 @@ void free_cpu_cached_iovas(unsigned int cpu, struct iova_domain *iovad)
+>  	}
+>  }
+>  
+> +/*
+> + * free all the IOVA ranges of global cache
+> + */
+> +void free_global_cached_iovas(struct iova_domain *iovad)
+> +{
+> +	struct iova_rcache *rcache;
+> +	unsigned long flags;
+> +	int i, j;
+> +
+> +	for (i = 0; i < IOVA_RANGE_CACHE_MAX_SIZE; ++i) {
+> +		rcache = &iovad->rcaches[i];
+> +		spin_lock_irqsave(&rcache->lock, flags);
+> +		for (j = 0; j < rcache->depot_size; ++j) {
+> +			iova_magazine_free_pfns(rcache->depot[j], iovad);
+> +			iova_magazine_free(rcache->depot[j]);
+> +			rcache->depot[j] = NULL;
+> +		}
+> +		rcache->depot_size = 0;
+> +		spin_unlock_irqrestore(&rcache->lock, flags);
+> +	}
+> +}
+> +
+>  MODULE_AUTHOR("Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>");
+>  MODULE_LICENSE("GPL");
+> diff --git a/include/linux/iova.h b/include/linux/iova.h
+> index a0637ab..a905726 100644
+> --- a/include/linux/iova.h
+> +++ b/include/linux/iova.h
+> @@ -163,6 +163,7 @@ int init_iova_flush_queue(struct iova_domain *iovad,
+>  struct iova *split_and_remove_iova(struct iova_domain *iovad,
+>  	struct iova *iova, unsigned long pfn_lo, unsigned long pfn_hi);
+>  void free_cpu_cached_iovas(unsigned int cpu, struct iova_domain *iovad);
+> +void free_global_cached_iovas(struct iova_domain *iovad);
+>  #else
+>  static inline int iova_cache_get(void)
+>  {
+> @@ -270,6 +271,11 @@ static inline void free_cpu_cached_iovas(unsigned int cpu,
+>  					 struct iova_domain *iovad)
+>  {
+>  }
+> +
+> +static inline void free_global_cached_iovas(struct iova_domain *iovad)
+> +{
+> +}
+> +
+>  #endif
+>  
+>  #endif
+> 
 
-    /* Undefined functions to get compile-time errors */
-    ...
-    extern void __delay(unsigned long loops);
-
-Cfr. '[PATCH] Revert "sh: add missing EXPORT_SYMBOL() for __delay"'
-https://lore.kernel.org/lkml/20200608080636.27862-1-geert+renesas@glider.be/
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+ping?
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+member of Code Aurora Forum, hosted by The Linux Foundation
