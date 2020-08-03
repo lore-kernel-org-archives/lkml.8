@@ -2,53 +2,54 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FE6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9049AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBA4C208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66391207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457894;
-	bh=2JT30Mg+Jr0ZteIkhVIf2ruEenMvuGx4U1kmh9bx+jg=;
+	s=default; t=1596457896;
+	bh=U/x+9rIQPqWbSNdYG2JR3fT9RsW6BpB3QK6PjdSa/sY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2gcoGxDDfO8VPjryWRtmYPzfubhfPhgnUf9kwTeoxxJMryYAH2R/JWTqlrVyx/e81
-	 UiCdZzJoHk66ig3eojmI34Me5D9ty0uBehLCMGWoSfrEL54eob97nNMjXljBenUYh4
-	 61KZlkF0cLBIAaLVsQU5tX2U6oWG2e5lT5ezPb/w=
+	b=sUj/SQYaU1H49lIxgeBUy149+6dQZzQWLiGEhn6K2YNdDJtu37Rq2cOagDjA6meJk
+	 KxqHmFLVpC6gfpkbWW3fxeDi050sI7xo7dKE8bwZP588ofrn+/WVZSgLMsfsuSDikk
+	 vtU7M2V6JR6csFtZ5/a7HT0BrjEswW9nynfcMYfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729191AbgHCMbd (ORCPT
+        id S1729190AbgHCMbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:31:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59048 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:31:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729180AbgHCMba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:31:30 -0400
+        id S1729188AbgHCMbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:31:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 470232076B;
-        Mon,  3 Aug 2020 12:31:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEA7D20775;
+        Mon,  3 Aug 2020 12:31:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457888;
-        bh=2JT30Mg+Jr0ZteIkhVIf2ruEenMvuGx4U1kmh9bx+jg=;
+        s=default; t=1596457891;
+        bh=U/x+9rIQPqWbSNdYG2JR3fT9RsW6BpB3QK6PjdSa/sY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tWs0BRs0SEcFVHesAHJlxlGXIXACv2X1b48F0lgf8gEqayDFUYPKxaOtI1IF9zJG1
-         mRcagS29nBPF/1NVXFHG4WWHpfqxbba5wJ9W3MGW03lW46Hr7iAwQ2li3DC0It5xRj
-         LBDQVaro8vbSxUz3UDKyimTYhSlX3eB+Xz6wON/Q=
+        b=qWXCLUgIe2aJdCJHNRuoBk7rl4j8ROzKlKOS1EJr+HOB7GEyaEBcjGpL84Xy+49dw
+         hpFZnDuYmnfJP0gHlROBeuvEqH/pC8/K4iR9bdzr6J8EHu9YVyGTgZGOjvQ8MOPRQa
+         qf4M0BayrJUNzR9eBFalzOxvJqzi7mi9VEcblBzo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Peilin Ye <yepeilin.cs@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 4.19 19/56] drm/amdgpu: Prevent kernel-infoleak in amdgpu_info_ioctl()
-Date:   Mon,  3 Aug 2020 14:19:34 +0200
-Message-Id: <20200803121851.277418241@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 02/56] media: rc: prevent memory leak in cx23888_ir_probe
+Date:   Mon,  3 Aug 2020 14:19:17 +0200
+Message-Id: <20200803121850.418550105@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -61,44 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peilin Ye <yepeilin.cs@gmail.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit 543e8669ed9bfb30545fd52bc0e047ca4df7fb31 upstream.
+[ Upstream commit a7b2df76b42bdd026e3106cf2ba97db41345a177 ]
 
-Compiler leaves a 4-byte hole near the end of `dev_info`, causing
-amdgpu_info_ioctl() to copy uninitialized kernel stack memory to userspace
-when `size` is greater than 356.
+In cx23888_ir_probe if kfifo_alloc fails the allocated memory for state
+should be released.
 
-In 2015 we tried to fix this issue by doing `= {};` on `dev_info`, which
-unfortunately does not initialize that 4-byte hole. Fix it by using
-memset() instead.
-
-Cc: stable@vger.kernel.org
-Fixes: c193fa91b918 ("drm/amdgpu: information leak in amdgpu_info_ioctl()")
-Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/pci/cx23885/cx23888-ir.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-@@ -549,9 +549,10 @@ static int amdgpu_info_ioctl(struct drm_
- 		return n ? -EFAULT : 0;
- 	}
- 	case AMDGPU_INFO_DEV_INFO: {
--		struct drm_amdgpu_info_device dev_info = {};
-+		struct drm_amdgpu_info_device dev_info;
- 		uint64_t vm_size;
+diff --git a/drivers/media/pci/cx23885/cx23888-ir.c b/drivers/media/pci/cx23885/cx23888-ir.c
+index 00329f668b590..5177479d13d38 100644
+--- a/drivers/media/pci/cx23885/cx23888-ir.c
++++ b/drivers/media/pci/cx23885/cx23888-ir.c
+@@ -1178,8 +1178,11 @@ int cx23888_ir_probe(struct cx23885_dev *dev)
+ 		return -ENOMEM;
  
-+		memset(&dev_info, 0, sizeof(dev_info));
- 		dev_info.device_id = dev->pdev->device;
- 		dev_info.chip_rev = adev->rev_id;
- 		dev_info.external_rev = adev->external_rev_id;
+ 	spin_lock_init(&state->rx_kfifo_lock);
+-	if (kfifo_alloc(&state->rx_kfifo, CX23888_IR_RX_KFIFO_SIZE, GFP_KERNEL))
++	if (kfifo_alloc(&state->rx_kfifo, CX23888_IR_RX_KFIFO_SIZE,
++			GFP_KERNEL)) {
++		kfree(state);
+ 		return -ENOMEM;
++	}
+ 
+ 	state->dev = dev;
+ 	sd = &state->sd;
+-- 
+2.25.1
+
 
 
