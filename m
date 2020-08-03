@@ -2,138 +2,93 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD4DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E26CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13994206DA
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B9AB206DA
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:03:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="QHf+d+ad"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbgHCQDE (ORCPT
+        id S1728327AbgHCQDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 12:03:04 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:40157 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726457AbgHCQDE (ORCPT
+        Mon, 3 Aug 2020 12:03:24 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:43648 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726457AbgHCQDX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 12:03:04 -0400
-X-IronPort-AV: E=Sophos;i="5.75,430,1589209200"; 
-   d="scan'208";a="53754805"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 04 Aug 2020 01:03:02 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 2643040062DB;
-        Tue,  4 Aug 2020 01:03:00 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Niklas <niklas.soderlund@ragnatech.se>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2] media: rcar-vin: Add support to select data pins for YCbCr422-8bit input
-Date:   Mon,  3 Aug 2020 17:02:53 +0100
-Message-Id: <1596470573-15065-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 3 Aug 2020 12:03:23 -0400
+Received: from [192.168.254.32] (unknown [47.187.206.220])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 09D5E20B4908;
+        Mon,  3 Aug 2020 09:03:21 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 09D5E20B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1596470602;
+        bh=ZiO52alLmnpxT7j4anLU5ZigsjFuPb9HBovKSoPQQ3w=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=QHf+d+adyjmFUMw8F6KIhtFl2KmvTj4vBrSymSBr/2bDq/bWh9j06EOVn5++PivQ+
+         voHvs0Lb2zIfoJuBfpScJ2evOehCf7CU8vfsuxDIGF7QhHjz3poDRcCPaEONbsDGN9
+         dqsnbvmNS9ytmBh/6/eiWhI5Hsbb5iwXGxjz1OIg=
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+To:     David Laight <David.Laight@ACULAB.COM>,
+        'Mark Rutland' <mark.rutland@arm.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
+References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
+ <6540b4b7-3f70-adbf-c922-43886599713a@linux.microsoft.com>
+ <CALCETrWnNR5v3ZCLfBVQGYK8M0jAvQMaAc9uuO05kfZuh-4d6w@mail.gmail.com>
+ <46a1adef-65f0-bd5e-0b17-54856fb7e7ee@linux.microsoft.com>
+ <20200731183146.GD67415@C02TD0UTHF1T.local>
+ <a3068e3126a942c7a3e7ac115499deb1@AcuMS.aculab.com>
+From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Message-ID: <7fdc102e-75ea-6d91-d2a3-7fe8c91802ce@linux.microsoft.com>
+Date:   Mon, 3 Aug 2020 11:03:21 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <a3068e3126a942c7a3e7ac115499deb1@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Select the data pins for YCbCr422-8bit input format depending on
-bus_width and data_shift passed as part of DT.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-Changes for v2:
-* Dropped DT binding documentation patch
-* Select the data pins depending on bus-width and data-shift
 
-v1 -
-https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=323799
----
- drivers/media/platform/rcar-vin/rcar-core.c | 5 +++++
- drivers/media/platform/rcar-vin/rcar-dma.c  | 7 +++++++
- drivers/media/platform/rcar-vin/rcar-vin.h  | 5 +++++
- 3 files changed, 17 insertions(+)
+On 8/3/20 3:27 AM, David Laight wrote:
+> From: Mark Rutland
+>> Sent: 31 July 2020 19:32
+> ...
+>>> It requires PC-relative data references. I have not worked on all architectures.
+>>> So, I need to study this. But do all ISAs support PC-relative data references?
+>> Not all do, but pretty much any recent ISA will as it's a practical
+>> necessity for fast position-independent code.
+> i386 has neither PC-relative addressing nor moves from %pc.
+> The cpu architecture knows that the sequence:
+> 	call	1f  
+> 1:	pop	%reg  
+> is used to get the %pc value so is treated specially so that
+> it doesn't 'trash' the return stack.
+>
+> So PIC code isn't too bad, but you have to use the correct
+> sequence.
 
-diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
-index 7440c8965d27..55005d86928d 100644
---- a/drivers/media/platform/rcar-vin/rcar-core.c
-+++ b/drivers/media/platform/rcar-vin/rcar-core.c
-@@ -624,6 +624,11 @@ static int rvin_parallel_parse_v4l2(struct device *dev,
- 	vin->parallel = rvpe;
- 	vin->parallel->mbus_type = vep->bus_type;
- 
-+	/* select VInDATA[15:8] pins for YCbCr422-8bit format */
-+	if (vep->bus.parallel.bus_width == BUS_WIDTH_8 &&
-+	    vep->bus.parallel.data_shift == DATA_SHIFT_8)
-+		vin->parallel->ycbcr_8b_g = true;
-+
- 	switch (vin->parallel->mbus_type) {
- 	case V4L2_MBUS_PARALLEL:
- 		vin_dbg(vin, "Found PARALLEL media bus\n");
-diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media/platform/rcar-vin/rcar-dma.c
-index 1a30cd036371..5db483877d65 100644
---- a/drivers/media/platform/rcar-vin/rcar-dma.c
-+++ b/drivers/media/platform/rcar-vin/rcar-dma.c
-@@ -127,6 +127,8 @@
- #define VNDMR2_FTEV		(1 << 17)
- #define VNDMR2_VLV(n)		((n & 0xf) << 12)
- 
-+#define VNDMR2_YDS		BIT(22)
-+
- /* Video n CSI2 Interface Mode Register (Gen3) */
- #define VNCSI_IFMD_DES1		(1 << 26)
- #define VNCSI_IFMD_DES0		(1 << 25)
-@@ -698,6 +700,11 @@ static int rvin_setup(struct rvin_dev *vin)
- 		/* Data Enable Polarity Select */
- 		if (vin->parallel->mbus_flags & V4L2_MBUS_DATA_ENABLE_LOW)
- 			dmr2 |= VNDMR2_CES;
-+
-+		if (vin->parallel->ycbcr_8b_g && vin->mbus_code == MEDIA_BUS_FMT_UYVY8_2X8)
-+			dmr2 |= VNDMR2_YDS;
-+		else
-+			dmr2 &= ~VNDMR2_YDS;
- 	}
- 
- 	/*
-diff --git a/drivers/media/platform/rcar-vin/rcar-vin.h b/drivers/media/platform/rcar-vin/rcar-vin.h
-index c19d077ce1cb..3126fee9a89b 100644
---- a/drivers/media/platform/rcar-vin/rcar-vin.h
-+++ b/drivers/media/platform/rcar-vin/rcar-vin.h
-@@ -87,6 +87,9 @@ struct rvin_video_format {
- 	u8 bpp;
- };
- 
-+#define BUS_WIDTH_8	8
-+#define DATA_SHIFT_8	8
-+
- /**
-  * struct rvin_parallel_entity - Parallel video input endpoint descriptor
-  * @asd:	sub-device descriptor for async framework
-@@ -95,6 +98,7 @@ struct rvin_video_format {
-  * @mbus_flags:	media bus configuration flags
-  * @source_pad:	source pad of remote subdevice
-  * @sink_pad:	sink pad of remote subdevice
-+ * @ycbcr_8b_g:	select data pins for YCbCr422-8bit
-  *
-  */
- struct rvin_parallel_entity {
-@@ -106,6 +110,7 @@ struct rvin_parallel_entity {
- 
- 	unsigned int source_pad;
- 	unsigned int sink_pad;
-+	bool ycbcr_8b_g;
- };
- 
- /**
--- 
-2.17.1
+Is that true only for 32-bit systems only? I thought RIP-relative addressing was
+introduced in 64-bit mode. Please confirm.
 
+Madhavan
