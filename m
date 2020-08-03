@@ -2,60 +2,56 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E86C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BABC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 543EF2054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 295132054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458567;
-	bh=C8PD6oRY0Isp66vleS6E1szTsB0xCyrvx6x4AqQUzOk=;
+	s=default; t=1596458575;
+	bh=/MYNAPYE/vhRm3KQ1iV5bwTlt3kOQSZhVZGSqqU20N8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kKHD5/vJVVEXVLVn1ijtbafgSoiYFJTr55MRpbO5pPihsvSfmQlrL8PRK/O22FdSO
-	 ufrBJOnPaoYY5xA1Km+sQeoFJ94+mxaQWmYtap4aIrA9B5u3WiZG1M30YYLimlg15J
-	 W/KVQgB+KGZODKrxIpKIpwo5//AHiRlN8pQypulQ=
+	b=RB03HiHr80Za15Cjy69y/xktTAfQ0SDQisIYm2m9hGcAGfi7rP4xuAh8EwIb9qsTz
+	 vntrByleOiSY8K76/YZPtYR7YlpPhQZ7/XHD0D1cpEVzhc/6y6hPDNbwRMPq+An+WT
+	 54BeQkQZ4CCdDpAyO9bUuqlLy8gfOUiTRRJSO7dM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729476AbgHCMmq (ORCPT
+        id S1729052AbgHCMaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:42:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58316 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:30:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729133AbgHCMbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:31:01 -0400
+        id S1729035AbgHCMaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:30:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06FEB2076B;
-        Mon,  3 Aug 2020 12:30:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EB1E2054F;
+        Mon,  3 Aug 2020 12:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457860;
-        bh=C8PD6oRY0Isp66vleS6E1szTsB0xCyrvx6x4AqQUzOk=;
+        s=default; t=1596457821;
+        bh=/MYNAPYE/vhRm3KQ1iV5bwTlt3kOQSZhVZGSqqU20N8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JTyP+dJvcLHvfHis2NYLcKnxMtXjOdgZFm9AKlmgF1QShiAsVHYf7cWzwR8mrwZ/u
-         1mAxP6EnYPL5D+PO7XlnSWOd+bjzBRgjai6wD2dSqreicYzamzk7lEpiNH3ej26s4E
-         NMtDSGYUIyfPVq0HALJ5J0oWPjPKt4ccHt99/ASw=
+        b=ZYMw0hZ14OGloNhm5KzJyEcGilI16KiDPVrndiHZqc2qPnrDR1PC71lWEIJYu2Sh6
+         NklH4yuRGX60ftLEWrv3zAYdNjLj3MZCp9RtYK4X2ilZ5sG08HVXKoSHAu1sBqEmvP
+         rfO/8hRKyn54Lpc4SSZd8j+VZeruxLxJ9F+QVPkA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Gary R Hook <gary.hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 01/56] crypto: ccp - Release all allocated memory if sha type is invalid
-Date:   Mon,  3 Aug 2020 14:19:16 +0200
-Message-Id: <20200803121850.381405558@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Quentin Perret <qperret@google.com>
+Subject: [PATCH 5.4 85/90] KVM: arm64: Dont inherit exec permission across page-table levels
+Date:   Mon,  3 Aug 2020 14:19:47 +0200
+Message-Id: <20200803121901.710117656@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
-References: <20200803121850.306734207@linuxfoundation.org>
+In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
+References: <20200803121857.546052424@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,41 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 128c66429247add5128c03dc1e144ca56f05a4e2 ]
+commit b757b47a2fcba584d4a32fd7ee68faca510ab96f upstream.
 
-Release all allocated memory if sha type is invalid:
-In ccp_run_sha_cmd, if the type of sha is invalid, the allocated
-hmac_buf should be released.
+If a stage-2 page-table contains an executable, read-only mapping at the
+pte level (e.g. due to dirty logging being enabled), a subsequent write
+fault to the same page which tries to install a larger block mapping
+(e.g. due to dirty logging having been disabled) will erroneously inherit
+the exec permission and consequently skip I-cache invalidation for the
+rest of the block.
 
-v2: fix the goto.
+Ensure that exec permission is only inherited by write faults when the
+new mapping is of the same size as the existing one. A subsequent
+instruction abort will result in I-cache invalidation for the entire
+block mapping.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Acked-by: Gary R Hook <gary.hook@amd.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Tested-by: Quentin Perret <qperret@google.com>
+Reviewed-by: Quentin Perret <qperret@google.com>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200723101714.15873-1-will@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/crypto/ccp/ccp-ops.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ virt/kvm/arm/mmu.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/crypto/ccp/ccp-ops.c b/drivers/crypto/ccp/ccp-ops.c
-index 330853a2702f0..43b74cf0787e1 100644
---- a/drivers/crypto/ccp/ccp-ops.c
-+++ b/drivers/crypto/ccp/ccp-ops.c
-@@ -1783,8 +1783,9 @@ ccp_run_sha_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
- 			       LSB_ITEM_SIZE);
- 			break;
- 		default:
-+			kfree(hmac_buf);
- 			ret = -EINVAL;
--			goto e_ctx;
-+			goto e_data;
- 		}
+--- a/virt/kvm/arm/mmu.c
++++ b/virt/kvm/arm/mmu.c
+@@ -1199,7 +1199,7 @@ static bool stage2_get_leaf_entry(struct
+ 	return true;
+ }
  
- 		memset(&hmac_cmd, 0, sizeof(hmac_cmd));
--- 
-2.25.1
-
+-static bool stage2_is_exec(struct kvm *kvm, phys_addr_t addr)
++static bool stage2_is_exec(struct kvm *kvm, phys_addr_t addr, unsigned long sz)
+ {
+ 	pud_t *pudp;
+ 	pmd_t *pmdp;
+@@ -1211,11 +1211,11 @@ static bool stage2_is_exec(struct kvm *k
+ 		return false;
+ 
+ 	if (pudp)
+-		return kvm_s2pud_exec(pudp);
++		return sz <= PUD_SIZE && kvm_s2pud_exec(pudp);
+ 	else if (pmdp)
+-		return kvm_s2pmd_exec(pmdp);
++		return sz <= PMD_SIZE && kvm_s2pmd_exec(pmdp);
+ 	else
+-		return kvm_s2pte_exec(ptep);
++		return sz == PAGE_SIZE && kvm_s2pte_exec(ptep);
+ }
+ 
+ static int stage2_set_pte(struct kvm *kvm, struct kvm_mmu_memory_cache *cache,
+@@ -1805,7 +1805,8 @@ static int user_mem_abort(struct kvm_vcp
+ 	 * execute permissions, and we preserve whatever we have.
+ 	 */
+ 	needs_exec = exec_fault ||
+-		(fault_status == FSC_PERM && stage2_is_exec(kvm, fault_ipa));
++		(fault_status == FSC_PERM &&
++		 stage2_is_exec(kvm, fault_ipa, vma_pagesize));
+ 
+ 	if (vma_pagesize == PUD_SIZE) {
+ 		pud_t new_pud = kvm_pfn_pud(pfn, mem_type);
 
 
