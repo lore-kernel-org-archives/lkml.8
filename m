@@ -5,74 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E365C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E0DC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7E7322C9F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8713222C9F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:00:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JZiu2XqQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VaNCLoo1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729173AbgHCVAF (ORCPT
+        id S1729181AbgHCVAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 17:00:05 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50030 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729163AbgHCVAB (ORCPT
+        Mon, 3 Aug 2020 17:00:07 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20588 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729171AbgHCVAF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 17:00:01 -0400
+        Mon, 3 Aug 2020 17:00:05 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596488400;
+        s=mimecast20190719; t=1596488404;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=I+p73nl+scMLErwVWZPy2fCb3efmQTrWaZiPCg4cXlI=;
-        b=JZiu2XqQ33YzTnDft6q/pJwazFo/2uxUC8iRHMlqkuN4Fq8xiMly2Ld52bbOTaT/4gqFkW
-        oBHIsqnh+bjUjB6zfzivkwX44275kSfXvnpGghWVxDtRQo8jLdW6P2UwHBJm+zE+jghNLv
-        fWvEj/Os3Q8nCGh3Su/B9AG6uwe3tYo=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-496-WF_PfxhrMNWlmPEZAEFbZg-1; Mon, 03 Aug 2020 16:59:58 -0400
-X-MC-Unique: WF_PfxhrMNWlmPEZAEFbZg-1
-Received: by mail-qk1-f199.google.com with SMTP id z1so21355492qkg.23
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 13:59:58 -0700 (PDT)
+        bh=THaB8S+209mrmnxdJZIOkJCpQ5DDeAQcpm4IqDkBrvY=;
+        b=VaNCLoo1Btp6/Go5q3/Ez7pu5F/Z+A7bo42howe+0XLEiRzIq9s1JZoVnZNYakcqfR8Vs9
+        so79hdh29LpXDPel+b0cfqDHvL15Ex6guKiDU+jXGbAtaTpdajRCpYDSBqrl5p72HaDSr8
+        O+ER5/39Rv2f92Gz6R8krPDMjw839oE=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-296-FkES2kB0OriNAiFlGLX31Q-1; Mon, 03 Aug 2020 17:00:02 -0400
+X-MC-Unique: FkES2kB0OriNAiFlGLX31Q-1
+Received: by mail-qt1-f197.google.com with SMTP id r9so27755739qtp.7
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 14:00:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=I+p73nl+scMLErwVWZPy2fCb3efmQTrWaZiPCg4cXlI=;
-        b=hlIT9HfJnkHBC02IOdYJYoWqGIvdqMd8rbvVDIXA0cNUF8qWldp6Us5rIKf/+D/8F2
-         ezXSfVXviTWiceEvMfMD+N/8F2m7XqovkIr+IcqQo9h1LW4FaPywddw7QNpWdHTXSNk4
-         JLG00UyqDAtW5TANyVitA1t/uV3R8nzs9cjYeIXVuEA2AEwQ0VKJcIiOZ2JGP65KJsJP
-         QypA5g+aEkvyUbCrfKopWRTkYTucMCnAmjJiRaXSAeSURdo/YY6akKui58N79RGwa1nT
-         JK2lqtQY+q7vXy1O7OUNI4cCjWKrSY6HKLCkKNKkkDNRVw40pv2iOMgiqGP4HG6rLIS2
-         LG+g==
-X-Gm-Message-State: AOAM531oIZ1b3ncQPM/SHf+JfjLiwyP9UcPwfIWbS2L4XUW1oavoxH1+
-        PnC2nlX+6ZDCLkbGcqy+C7a6L8sJ5m0PjDtHw+q5rDcwa0qnOT2OnwKfV47w8nf/B9heffRJcNt
-        XDf9XW63gyX3pCsGbi0ue4SQP
-X-Received: by 2002:a37:8a06:: with SMTP id m6mr17949042qkd.191.1596488397675;
-        Mon, 03 Aug 2020 13:59:57 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz+kFhyjENOmK99izI/iD0vLcf7qIDUTr7k6L/7ugA+5BkNdYKwj7GdM+Gahf0BqUL5tx7Xeg==
-X-Received: by 2002:a37:8a06:: with SMTP id m6mr17949024qkd.191.1596488397469;
-        Mon, 03 Aug 2020 13:59:57 -0700 (PDT)
+        bh=THaB8S+209mrmnxdJZIOkJCpQ5DDeAQcpm4IqDkBrvY=;
+        b=X9BD82ozwIzBZZvwOMRuxnN5TrdvHXksVeCDYNg/wYLpoLNIyHdggaO6nVSI0fqzl1
+         W2r36ML239oIzWvrOwU+s8M4MsIOxjgoVWG/GlpJhFnaQaFLApYQmkJjMiBvGonNxzV2
+         CK2MFwYbAsCs0iy1W5ByoixjoBqigL5nLaYMLaE7mAhWayv69uI/YhWsB8x/TYqY1CVC
+         PUxDKbHlUFwEFF9wfPf6ANQK/HynFqhBOZnlGu5EO8PRyhl25tg4356gYjtE6AMkLglv
+         EZwY9qeog92IY0xBEYXU/H3eYt6cqnr1hjO5R0wjeUVOU/DaNxlAxM1fjhPZ5r5pS6jg
+         9Kcg==
+X-Gm-Message-State: AOAM531fUAliWP6n3rmFd3AVEOZpIPSAzlGLWT+9LLOTGUzURG5H4sCx
+        N4lHqTyXN0/w9ahwHxRR1XTx6DhxBSR8at9YAPmsXj9+/jqrka6Q3PRnJ1WXZShAwijBNWRU6Ur
+        iy/Rcuqs7LdIMuPQ4NHNpQqzl
+X-Received: by 2002:ac8:520f:: with SMTP id r15mr19359541qtn.116.1596488401509;
+        Mon, 03 Aug 2020 14:00:01 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwpoSbBmND+77f/SL3KacqAGZQ60M66o69zSkBXnG4eygyZXA8NQ5Vn+5rYip5o5+5O6T9cDg==
+X-Received: by 2002:ac8:520f:: with SMTP id r15mr19359526qtn.116.1596488401300;
+        Mon, 03 Aug 2020 14:00:01 -0700 (PDT)
 Received: from redhat.com (bzq-79-177-102-128.red.bezeqint.net. [79.177.102.128])
-        by smtp.gmail.com with ESMTPSA id t35sm23436618qth.79.2020.08.03.13.59.47
+        by smtp.gmail.com with ESMTPSA id w44sm23888660qtj.86.2020.08.03.13.59.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 13:59:56 -0700 (PDT)
-Date:   Mon, 3 Aug 2020 16:59:45 -0400
+        Mon, 03 Aug 2020 14:00:00 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 16:59:57 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH v2 16/24] virtio_scsi: correct tags for config space fields
-Message-ID: <20200803205814.540410-17-mst@redhat.com>
+        Jason Wang <jasowang@redhat.com>
+Subject: [PATCH v2 17/24] virtio_config: disallow native type fields
+Message-ID: <20200803205814.540410-18-mst@redhat.com>
 References: <20200803205814.540410-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -85,66 +80,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tag config space fields as having virtio endian-ness.
+Transitional devices should all use __virtioXX types.
+Modern ones should use __leXX.
+_uXX type would be a bug.
+Let's prevent that.
 
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- drivers/scsi/virtio_scsi.c       |  4 ++--
- include/uapi/linux/virtio_scsi.h | 20 ++++++++++----------
- 2 files changed, 12 insertions(+), 12 deletions(-)
+ include/linux/virtio_config.h | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/virtio_scsi.c b/drivers/scsi/virtio_scsi.c
-index 0e0910c5b942..c36aeb9a1330 100644
---- a/drivers/scsi/virtio_scsi.c
-+++ b/drivers/scsi/virtio_scsi.c
-@@ -746,14 +746,14 @@ static struct scsi_host_template virtscsi_host_template = {
+diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
+index 64da491936f7..c68f58f3bf34 100644
+--- a/include/linux/virtio_config.h
++++ b/include/linux/virtio_config.h
+@@ -319,9 +319,8 @@ static inline __virtio64 cpu_to_virtio64(struct virtio_device *vdev, u64 val)
+ 	__virtio_pick_type(x, __u8, __u8,					\
+ 		__virtio_pick_endian(x, __virtio16, __virtio32, __virtio64,	\
+ 			__virtio_pick_endian(x, __le16, __le32, __le64,		\
+-				__virtio_pick_endian(x, __u16, __u32, __u64,	\
+-					/* No other type allowed */		\
+-					(void)0)))))
++				/* No other type allowed */			\
++				(void)0))))
  
- #define virtscsi_config_get(vdev, fld) \
- 	({ \
--		typeof(((struct virtio_scsi_config *)0)->fld) __val; \
-+		__virtio_native_type(struct virtio_scsi_config, fld) __val; \
- 		virtio_cread(vdev, struct virtio_scsi_config, fld, &__val); \
- 		__val; \
- 	})
+ #endif
  
- #define virtscsi_config_set(vdev, fld, val) \
- 	do { \
--		typeof(((struct virtio_scsi_config *)0)->fld) __val = (val); \
-+		__virtio_native_type(struct virtio_scsi_config, fld) __val = (val); \
- 		virtio_cwrite(vdev, struct virtio_scsi_config, fld, &__val); \
- 	} while(0)
- 
-diff --git a/include/uapi/linux/virtio_scsi.h b/include/uapi/linux/virtio_scsi.h
-index cc18ef8825c0..0abaae4027c0 100644
---- a/include/uapi/linux/virtio_scsi.h
-+++ b/include/uapi/linux/virtio_scsi.h
-@@ -103,16 +103,16 @@ struct virtio_scsi_event {
- } __attribute__((packed));
- 
- struct virtio_scsi_config {
--	__u32 num_queues;
--	__u32 seg_max;
--	__u32 max_sectors;
--	__u32 cmd_per_lun;
--	__u32 event_info_size;
--	__u32 sense_size;
--	__u32 cdb_size;
--	__u16 max_channel;
--	__u16 max_target;
--	__u32 max_lun;
-+	__virtio32 num_queues;
-+	__virtio32 seg_max;
-+	__virtio32 max_sectors;
-+	__virtio32 cmd_per_lun;
-+	__virtio32 event_info_size;
-+	__virtio32 sense_size;
-+	__virtio32 cdb_size;
-+	__virtio16 max_channel;
-+	__virtio16 max_target;
-+	__virtio32 max_lun;
- } __attribute__((packed));
- 
- /* Feature Bits */
 -- 
 MST
 
