@@ -2,129 +2,142 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 057F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6C6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B64F22B45
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:03:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="UTAFAQAz"
+	by mail.kernel.org (Postfix) with ESMTP id 0C63B22B4E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:03:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596477822;
+	bh=gG1nd579SgehLZ1Y0KRxeScORYBGahYzVewQTJj+czM=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=ay+XNSenQDXh+laFlnmefPgMXMTcO80MaCpn2UBrEsr5csRLeis+Nr/7Y2+I4D8o0
+	 kAYXmEjCuDjGL8LQL4tQ1ceRZ6BW7dKT7mjTSRtJWhUt/pcm24UKF4vSAEPTpVPsH6
+	 y+O2SfWwNuj0IqIhPrGMoGJfXL/n5J6N2lJ3xNyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgHCSDQ (ORCPT
+        id S1727852AbgHCSDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 14:03:16 -0400
-Received: from mout.gmx.net ([212.227.17.20]:46191 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbgHCSDM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 14:03:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1596477768;
-        bh=BBa3NSjXaC3TQAHSDrvm2A0DeRZLmH0CWpxHTLdlYjs=;
-        h=X-UI-Sender-Class:Date:In-Reply-To:References:Subject:Reply-to:To:
-         CC:From;
-        b=UTAFAQAzApPZZ0flsN9S1yEnccWgfdgX7V9WZUnOsUBFIqOuXwq3VHF97JnHS2iUf
-         kG+viCGPchkFkwExep2S5/u0UME9TcEfaeyT1JeSfrM1uBULYdrccAGh9PS7OOO5RT
-         543q1lHNvfC35ZsMYpalHjQ4lz9/DkIeEjLRi02I=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from frank-s9 ([217.61.148.26]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MmlXK-1kUsso2yBS-00juVp; Mon, 03
- Aug 2020 20:02:48 +0200
-Date:   Mon, 03 Aug 2020 20:02:38 +0200
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAAOTY_-H3L=uJNJRF1VedbwXNwY2N-q4F6A-NsdNwbQswG0D-Q@mail.gmail.com>
-References: <20200728111800.77641-1-frank-w@public-files.de> <20200728111800.77641-2-frank-w@public-files.de> <CAAOTY_8nm0KDHFzOX9+qTTHOUd0Vik063J+rScu_y-hTBTkrCQ@mail.gmail.com> <trinity-2bdb3521-256a-4d4d-928a-be9b8c179d4c-1596355539029@3c-app-gmx-bs58> <CAAOTY__TsqrfRX-z+DE0+X_UzxBqChJ+VdyQG6z9N6Qr4bn2Kg@mail.gmail.com> <trinity-b0ca2ee2-259a-4a1e-86ee-63b093202060-1596451368067@3c-app-gmx-bap36> <CAAOTY_-H3L=uJNJRF1VedbwXNwY2N-q4F6A-NsdNwbQswG0D-Q@mail.gmail.com>
+        Mon, 3 Aug 2020 14:03:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37976 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgHCSDk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 14:03:40 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B977C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 11:03:40 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id c2so22043881edx.8
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 11:03:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=Zz8pMnWfwqjIc1QH80CM195LrN4zEHz6+QPeMsumgmA=;
+        b=rkZBWfQGxFIsbvByQHe4jspK9v9vFtSG2lVJZKMxFhs/dh5FGbNtL4hPJHsRHbHVn7
+         +a9Z2oEEwV94sWxz3rqVeKJY2onSbonouyURxV97gy4h7ln/j4r4n6HJz06Sjedt1hNv
+         NDn5OzW7fvqOioeQzpzRnp1EFDU1L7wrdQGEkdxAEl9tKmY5dLPj0JXqpc08CmSRBMg0
+         2Rpy2Eryaw4LMPzbKJFUbIlko3aIlNcLtoM/n0gu4xID2lZxu/eJdc1zPO/bqiIgZ4l3
+         xPedAAgoUYshQ31rw4S0jYt5JA079uEJ8y4hNTBJPlh5Goum7LPXpuX/B47MZZ9m63/X
+         7SRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition;
+        bh=Zz8pMnWfwqjIc1QH80CM195LrN4zEHz6+QPeMsumgmA=;
+        b=HVDNCCb7Uaa3yhvwrJlXxYmshr2wNuygXJEJynJMiHmefuhaNnoaMLE76mexas2wDt
+         MXwLVEy+/oxN6JL5fM6mzolarVqTp5nKQO7iIVm/uwMusT9OmbRwWSb+7qkLW/zLKH2c
+         x/Z8lvSG0bqHmetrW30qODKpVByD71UKzlZPfcZikA+D8H3JI0CF6+Nss9zQywv3CpO1
+         nyhdh902UcCKt/l1z0vehLrFhVPPL52RSsAUiYCkYH5gnPE6zwSOKskiAemM5Fweyy2G
+         hYgphMn8v4m67q6fCajORUTo0fdF+tEOeytehYW7NFBzFkUagS5//dkBLcPlvRoI/WLL
+         lrqA==
+X-Gm-Message-State: AOAM533mtLOuSq4QgXOHBF0xJZMFpJ83w4v9oFPwuYop7XVcAAD2LZ/n
+        ufcBRZaqmnjyFMkO9rIiD7k+ABdd
+X-Google-Smtp-Source: ABdhPJx6jeOQ0ivGVE1Alf+zhPAROKHodplfgEIUeh2NqIiu2vu90oGgtzRkQlBUY89xkkeLRgZiQA==
+X-Received: by 2002:a50:e848:: with SMTP id k8mr8403750edn.192.1596477818917;
+        Mon, 03 Aug 2020 11:03:38 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id c7sm16579423ejr.77.2020.08.03.11.03.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 11:03:38 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 20:03:36 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/cpu changes for v5.9
+Message-ID: <20200803180336.GA1041383@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: Re: Re: [PATCH v2 1/5] drm/mediatek: config component output by device node port
-Reply-to: frank-w@public-files.de
-To:     linux-mediatek@lists.infradead.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>, ryder.lee@mediatek.com
-CC:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-From:   Frank Wunderlich <frank-w@public-files.de>
-Message-ID: <D0A969BC-1BB3-4EBB-8D03-DAA610E62EBE@public-files.de>
-X-Provags-ID: V03:K1:WAQfzGVjSkS/16yz9r7IpNOuSlMl2BMKsoaMRRAoP3sVBH84qNq
- wD261Oq8/ov+9nxyiq1n/yjiI8bous5siv81EUe0lDdC9apZwvIfi//d2RQVhmg/5lFA683
- eKifWM6puhV8WX6izdjWHwl8PERQlm8PXD7uwIsSjbGuzFloLAdV9Z2Zd1l8AbB9pcv2dZN
- 6qiuH0R+YQg36uqjHpCsA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bv0vMe1HGgs=:Ot2Dri9B6JRi7gkA5+I8B+
- PkMBVJDfumgzFBC3CAldXejaKPq/gpCzWuT3RtgtVVFXdmR5m3flZOp6k5exj3VBkPa8JxIA9
- DrQrWK6khzrvwaWTrGJOEmFAfUhnickZo96K9r8xubioKh6F1+NQw+raMXePuDtkFHP0uy/au
- 0PdQ5f+q2IUCXAOVfUwTeyCDuMSmIDSBIoezxbnZFHc1SiuJ3yuty8m8eA0OKGiO69fyfDlPW
- SBTzkzznB1IVSMoOizir+Nn7RFwKtIvGyGOXLD1v871lz9baNXqH3pLUY8cY/eOFPZslwoVCL
- QgIZ8CjC04iP2GPLpWDGmyzPbyGuqnwgdFJIh2TM1cxX10TlBYssqjlLMIUhn4bVOEfIRRAU3
- gd7TuYa4x4EyLnrWkl3Las+b1DjIlbwkYrH1mIn68uAQjblxXziZpAaR6YHryS8jo1FCGzRg2
- gyVkyclaURvX1y7AM0ZBDSLsetp7N3gfgfHm2nekEQuFDbi+PN6gK5m2604vYrPi7w0XivnDd
- 3kYUfi17Zn7Xgq74Et16bhWi3o626NdEC2FfQNPc6v2ltiVsZXNpcuxeZCgpjqVlj0rvYiyDi
- n8c/VlUmFSipPoNIQMZA2rLkAjY9dXkS5UzW6KRHt5JZSSE0ahio5T+YkR+MJowQ0std6ESSR
- w6CowPHmidjF6E1/Ch0jooaRnn1424QJZ1MBy1/X6/k/yhteMzr8Uu/GBzUjnctHY7SLFTR+x
- mLzcvIg7Lidvw0UaPqz5yRWKeSlxA4ATOwigXDVgqx/ucoWQPriOTfHYML2qgENx+pVH+sRDr
- c06+FvRlOEZfC0Br91IBXyZ77BsJgBkA3nWlfAAQJlSkjRF0KEAJNdd1MP/KHVnjEapH8ppdp
- MXR0CjgycbAui4PWvs6m27hG/8KU31mHdOaqhMLS8xT6E24GL6iuRREeU+58q2OlMKGxrjDBs
- pLi8jD6lsNgP5/TQjeFeYtBE8Y5D4U2SL0YGPK6L9U3KAjwr7nSKlGAFXvmS/Kn3y4j/YJ+7p
- EDCpkFfnMeFSDksEWqRJIX6H1l0K647GOBnEwBf++o2RMRnTW2i8HfAqm/37Y0amCkm9xxIOO
- TyLihjFr4r4WBP/33uFJmuhTSn5Vsar624OOJYh4D3mCXEhx8+C07YScahCH8kQ4Dva9Omt7T
- 31rYgmi+/nYkeJ5y2uOa8kVGdGV0Dg0T+tH1v/coBnzCk1tbua9LopdHd64z8Schp2vR8IrYa
- oZ9Y6BN43P46iOgYzXsiLhiIHGEF/sddtg029cw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Linus,
+
+Please pull the latest x86/cpu git tree from:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-cpu-2020-08-03
+
+   # HEAD: f69ca629d89d65737537e05308ac531f7bb07d5c x86/cpu: Refactor sync_core() for readability
+
+Misc changes:
+
+ - Prepare for Intel's new SERIALIZE instruction
+ - Enable split-lock debugging on more CPUs
+ - Add more Intel CPU models
+ - Optimize stack canary initialization a bit
+ - Simplify the Spectre logic a bit
+
+  out-of-topic modifications in x86-cpu-2020-08-03:
+  ---------------------------------------------------
+  drivers/misc/sgi-gru/grufault.c    # 9998a9832c40: x86/cpu: Relocate sync_core(
+  drivers/misc/sgi-gru/gruhandles.c  # 9998a9832c40: x86/cpu: Relocate sync_core(
+  drivers/misc/sgi-gru/grukservices.c# 9998a9832c40: x86/cpu: Relocate sync_core(
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Borislav Petkov (1):
+      x86/speculation: Merge one test in spectre_v2_user_select_mitigation()
+
+Brian Gerst (1):
+      x86/stackprotector: Pre-initialize canary for secondary CPUs
+
+Fenghua Yu (1):
+      x86/split_lock: Enable the split lock feature on Sapphire Rapids and Alder Lake CPUs
+
+Ricardo Neri (3):
+      x86/cpufeatures: Add enumeration for SERIALIZE instruction
+      x86/cpu: Relocate sync_core() to sync_core.h
+      x86/cpu: Refactor sync_core() for readability
+
+Tony Luck (1):
+      x86/cpu: Add Lakefield, Alder Lake and Rocket Lake models to the to Intel CPU family
 
 
-Am 3=2E August 2020 18:27:02 MESZ schrieb Chun-Kuang Hu <chunkuang=2Ehu@ke=
-rnel=2Eorg>:
-
->But now I have a solution that you need not to modify binding document=2E
->Because now mt7623 has a different routing than mt2701, and this
->patch's approach is to use different port setting in each device tree=2E
->My solution is that these two SoC has different compatible string:
->"mediatek,mt7623-mmsys" and "mediatek,mt2701-mmsys"=2E For now,
->"mediatek,mt2701-mmsys" has its data as
->
->static const struct mtk_mmsys_driver_data mt2701_mmsys_driver_data =3D {
->=2Emain_path =3D mt2701_mtk_ddp_main,
->=2Emain_len =3D ARRAY_SIZE(mt2701_mtk_ddp_main),
->=2Eext_path =3D mt2701_mtk_ddp_ext,
->=2Eext_len =3D ARRAY_SIZE(mt2701_mtk_ddp_ext),
->=2Eshadow_register =3D true,
->};
->
->I think you could create a data for "mediatek,mt7623-mmsys" which has
->a different routing=2E
-
-The paths are defined as this:
-
-static enum mtk_ddp_comp_id mt2701_mtk_ddp_main[] =3D {	DDP_COMPONENT_OVL0=
-,	DDP_COMPONENT_RDMA0,	DDP_COMPONENT_COLOR0,	DDP_COMPONENT_BLS,	DDP_COMPONE=
-NT_DSI0,};
-
-static enum mtk_ddp_comp_id mt2701_mtk_ddp_ext[] =3D {	DDP_COMPONENT_RDMA1=
-,	DDP_COMPONENT_DPI0,};
-
-First thing i notice is that main=3Ddsi and ext=3Ddpi (hdmi)=2E I guess dp=
-i should be main,right? And bls is actually routed to dpi=2E=2E=2Ehow about=
- the other components?
-
-The 2 loops are not really clear to me (except 1st overwrites mt2701 main-=
-path and second ext_path based on ports/endpoints) but this only applies fr=
-om bls-dpi-hdmi-connector,not xdma/color or similar=2E
-Or should be main-path (or external) only bls and dpi? It looks like it on=
-ly swappes dpi and dsi in my case=2E
-
-@Ryder Lee can you explain it?
-regards Frank
+ arch/x86/include/asm/cpufeatures.h    |  1 +
+ arch/x86/include/asm/intel-family.h   |  7 ++++
+ arch/x86/include/asm/processor.h      | 64 -------------------------------
+ arch/x86/include/asm/special_insns.h  |  1 -
+ arch/x86/include/asm/stackprotector.h | 12 ++++++
+ arch/x86/include/asm/sync_core.h      | 72 +++++++++++++++++++++++++++++++++++
+ arch/x86/kernel/alternative.c         |  1 +
+ arch/x86/kernel/cpu/bugs.c            | 13 ++-----
+ arch/x86/kernel/cpu/intel.c           |  2 +
+ arch/x86/kernel/cpu/mce/core.c        |  1 +
+ arch/x86/kernel/smpboot.c             | 14 +------
+ arch/x86/xen/smp_pv.c                 |  2 -
+ drivers/misc/sgi-gru/grufault.c       |  1 +
+ drivers/misc/sgi-gru/gruhandles.c     |  1 +
+ drivers/misc/sgi-gru/grukservices.c   |  1 +
+ 15 files changed, 105 insertions(+), 88 deletions(-)
