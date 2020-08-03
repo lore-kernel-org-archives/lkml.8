@@ -2,108 +2,118 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E589AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E53C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4FDE20A8B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3714020678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:01:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="aFVPc1Gu"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="u5qUlejN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbgHCRAH (ORCPT
+        id S1728024AbgHCRBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 13:00:07 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:50684 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbgHCRAG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 13:00:06 -0400
-Received: from [192.168.254.32] (unknown [47.187.206.220])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 78F6120B4908;
-        Mon,  3 Aug 2020 10:00:05 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 78F6120B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1596474006;
-        bh=xPQidYuoj27KLcDBCgI71AQFyVVUOYWMoSSTSHUPbW8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=aFVPc1Gu41xtINHxdFGnzfv2HBq0EGEd0iH8amloyMh8tYfeAU7clLOSMb6TuEJmU
-         hfVT4JzlCTZI9FgI54InEHWWr99xf3Egvr+DSd/z2OzTw7yIg+2Z6TOublxySEu1T5
-         rUlm/3leT/O5FXJfSA+UW2fG5vVktd6bCmKVR4as=
-Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'Mark Rutland' <mark.rutland@arm.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
-References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
- <6540b4b7-3f70-adbf-c922-43886599713a@linux.microsoft.com>
- <CALCETrWnNR5v3ZCLfBVQGYK8M0jAvQMaAc9uuO05kfZuh-4d6w@mail.gmail.com>
- <46a1adef-65f0-bd5e-0b17-54856fb7e7ee@linux.microsoft.com>
- <20200731183146.GD67415@C02TD0UTHF1T.local>
- <a3068e3126a942c7a3e7ac115499deb1@AcuMS.aculab.com>
- <7fdc102e-75ea-6d91-d2a3-7fe8c91802ce@linux.microsoft.com>
- <f87f84e466a041fbabd2bba84f4592a5@AcuMS.aculab.com>
-From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Message-ID: <b28abf39-8b62-f861-1325-aa7ce28fa6d3@linux.microsoft.com>
-Date:   Mon, 3 Aug 2020 12:00:04 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 3 Aug 2020 13:01:47 -0400
+Received: from crapouillou.net ([89.234.176.41]:36854 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726878AbgHCRBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 13:01:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1596474104; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=IHahTxqH5pJQsph2AgIZKKb59G/0qrY+uO1a0r6IFQQ=;
+        b=u5qUlejNFsTbId8n+cwzby1MYQsmxrbPl5dEr2QJ6d1qoJetE+odh7OAw7lg3LjTZFTN1c
+        1kvHDx6jTh8bMHdwXZ+Jkin7/w3hByNV/ioSPNx5PNg5qpNJThsXc2gQqnQwgB+LtR5YwX
+        fsdpkDpDye10wHtF6tBfOk4YM/SJXhw=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Paul Burton <paulburton@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0?= <zhouyanjie@wanyeetech.com>,
+        od@zcrc.me, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 00/13] MIPS: Convert Ingenic to a generic board
+Date:   Mon,  3 Aug 2020 19:01:11 +0200
+Message-Id: <20200803170124.231110-1-paul@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <f87f84e466a041fbabd2bba84f4592a5@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Thomas & list,
 
+Here is a set of patches for 5.10 (no rush) to move Ingenic support from
+arch/mips/jz4740/ to arch/mips/generic/.
 
-On 8/3/20 11:57 AM, David Laight wrote:
-> From: Madhavan T. Venkataraman
->> Sent: 03 August 2020 17:03
->>
->> On 8/3/20 3:27 AM, David Laight wrote:
->>> From: Mark Rutland
->>>> Sent: 31 July 2020 19:32
->>> ...
->>>>> It requires PC-relative data references. I have not worked on all architectures.
->>>>> So, I need to study this. But do all ISAs support PC-relative data references?
->>>> Not all do, but pretty much any recent ISA will as it's a practical
->>>> necessity for fast position-independent code.
->>> i386 has neither PC-relative addressing nor moves from %pc.
->>> The cpu architecture knows that the sequence:
->>> 	call	1f
->>> 1:	pop	%reg
->>> is used to get the %pc value so is treated specially so that
->>> it doesn't 'trash' the return stack.
->>>
->>> So PIC code isn't too bad, but you have to use the correct
->>> sequence.
->> Is that true only for 32-bit systems only? I thought RIP-relative addressing was
->> introduced in 64-bit mode. Please confirm.
-> I said i386 not amd64 or x86-64.
+There are some Kconfig changes that I think should be reviewed in detail
+to avoid breakages elsewhere. The idea behind these changes is to allow
+the Ingenic "generic" code to be built in a non-generic kernel, since
+generic kernels bring lots of dependencies which result in a +7% size
+increase.
 
-I am sorry. My bad.
+Support for booting the generic kernel with a built-in and/or appended
+devicetree, as well as support for compressed (vmlinuz) kernels, has
+been added as well.
 
->
-> So yes, 64bit code has PC-relative addressing.
-> But I'm pretty sure it has no other way to get the PC itself
-> except using call - certainly nothing in the 'usual' instructions.
+Cheers,
+-Paul
 
-OK.
+Paul Cercueil (13):
+  MIPS: cpu-probe: Set Ingenic's writecombine to _CACHE_CACHABLE_WA
+  MIPS: cpu-probe: Mark XBurst CPU as having vtagged caches
+  MIPS: cpu-probe: ingenic: Fix broken BUG_ON
+  MIPS: Kconfig: add MIPS_GENERIC_KERNEL symbol
+  MIPS: machine: Add get_system_type callback
+  MIPS: generic: Call the machine's .get_system_type callback if
+    provided
+  MIPS: generic: Support booting with built-in or appended DTB
+  MIPS: generic: Add support for zboot
+  MIPS: generic: Increase NR_IRQS to 256
+  MIPS: generic: Add support for Ingenic SoCs
+  MIPS: jz4740: Drop folder
+  MIPS: configs: Regenerate configs of Ingenic boards
+  MAINTAINERS: Update paths to Ingenic platform code
 
-Madhavan
+ MAINTAINERS                                   |   4 +-
+ arch/mips/Kbuild.platforms                    |   1 -
+ arch/mips/Kconfig                             |  43 ++++--
+ arch/mips/configs/ci20_defconfig              |   4 +-
+ arch/mips/configs/cu1000-neo_defconfig        |  16 +-
+ arch/mips/configs/gcw0_defconfig              |   2 +-
+ arch/mips/configs/qi_lb60_defconfig           |   5 +-
+ arch/mips/configs/rs90_defconfig              |   4 +-
+ arch/mips/generic/Kconfig                     |   8 +-
+ arch/mips/generic/Makefile                    |   2 +-
+ arch/mips/generic/Platform                    |   1 +
+ arch/mips/generic/board-ingenic.c             | 108 +++++++++++++
+ arch/mips/generic/init.c                      |  28 +++-
+ arch/mips/generic/proc.c                      |  25 ---
+ arch/mips/include/asm/mach-generic/irq.h      |   2 +-
+ .../asm/mach-jz4740/cpu-feature-overrides.h   |  50 ------
+ arch/mips/include/asm/mach-jz4740/irq.h       |  13 --
+ arch/mips/include/asm/machine.h               |   1 +
+ arch/mips/include/asm/pgtable-bits.h          |   5 -
+ arch/mips/{jz4740 => ingenic}/Kconfig         |  16 +-
+ arch/mips/jz4740/Makefile                     |   9 --
+ arch/mips/jz4740/Platform                     |   3 -
+ arch/mips/jz4740/setup.c                      | 145 ------------------
+ arch/mips/kernel/cpu-probe.c                  |   8 +-
+ 24 files changed, 198 insertions(+), 305 deletions(-)
+ create mode 100644 arch/mips/generic/board-ingenic.c
+ delete mode 100644 arch/mips/generic/proc.c
+ delete mode 100644 arch/mips/include/asm/mach-jz4740/cpu-feature-overrides.h
+ delete mode 100644 arch/mips/include/asm/mach-jz4740/irq.h
+ rename arch/mips/{jz4740 => ingenic}/Kconfig (91%)
+ delete mode 100644 arch/mips/jz4740/Makefile
+ delete mode 100644 arch/mips/jz4740/Platform
+ delete mode 100644 arch/mips/jz4740/setup.c
+
+-- 
+2.27.0
+
