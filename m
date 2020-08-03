@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D67C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 987D5204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3CE5204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457475;
-	bh=XBvsK20w6/gS9XX8ytMSJQLUzv9/dWAw8I3cJHHSmio=;
+	s=default; t=1596457479;
+	bh=Sumtk5lb6qXFhZ5ilsU/T/L3Jos2ypCHO1g+vCn+ePU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GKXwCQe/uX9K9kQIXYzr3B/UhOUY42Dny65yz7oM201wKHRmd67Dh2ZjSCff0eHlC
-	 yF2fd1bHCzGNhQ3dPUjcfCCn+tpBmrl1jwOsthWCXBkoE0o5sZism5svu6a7Z8v2pY
-	 9K0FGiTt7PLNENUNgNxuVmc4NJ/SjJ+56IU1jlwo=
+	b=PrFgyeHMsY+nR0jox6nxGxAVUlhZu37pWEe4FcfM0GWOdQYv+AAVJrRNofb02lvH5
+	 3TnKjyHKZqbQ7ZCxES8oNc2NTehkb/MZSl3Gzow60cA3/Y+LAla8nQpWqAZVRI6hT9
+	 uGXSWXo64XE066zgFpv0RxthD2mc0WQyR0/t8q9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728038AbgHCMYb (ORCPT
+        id S1728044AbgHCMYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:24:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48776 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:24:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728013AbgHCMY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:24:27 -0400
+        id S1728034AbgHCMYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:24:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1D09207BB;
-        Mon,  3 Aug 2020 12:24:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D6F0207DF;
+        Mon,  3 Aug 2020 12:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457466;
-        bh=XBvsK20w6/gS9XX8ytMSJQLUzv9/dWAw8I3cJHHSmio=;
+        s=default; t=1596457468;
+        bh=Sumtk5lb6qXFhZ5ilsU/T/L3Jos2ypCHO1g+vCn+ePU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wd5cZUgx0gZ1bjYD5TRUhNow5Q+PdYLsHwjiuRlYR4YvjI5BGsGBaB9PSd8xPJO9W
-         Tv3zSBN+ibBejcUf1zgujSS/P4PX3Q53J/ZKhsBfHqJBHyLTtGe8j15uVjbOeLLAT2
-         J9CEFyqTA2MgN+Tjv/1Md1FtsKlUlWhngydgiyXg=
+        b=mdgpHzDAqTb6iyQOGo9gXTKVoOaQuKMC/Fe77H3nuGOVsaiMQVxgpDvxAeJdJ27yF
+         5mOE36pfvhDkJCfeYa6eYamBcIF6BwrtryBl2YFdVq7IFS7my67SDCfRM7NI/7GgQm
+         2Xeg5VASznneCvT1dPAhh3T84ftzEa+RtJlWUl+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Alaa Hleihel <alaa@mellanox.com>,
+        Roi Dayan <roid@mellanox.com>,
+        Vlad Buslov <vladbu@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 078/120] mac80211: mesh: Free ie data when leaving mesh
-Date:   Mon,  3 Aug 2020 14:18:56 +0200
-Message-Id: <20200803121906.632519018@linuxfoundation.org>
+Subject: [PATCH 5.7 061/120] net/mlx5e: Fix kernel crash when setting vf VLANID on a VF dev
+Date:   Mon,  3 Aug 2020 14:18:39 +0200
+Message-Id: <20200803121905.771772188@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -60,59 +62,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Remi Pommarel <repk@triplefau.lt>
+From: Alaa Hleihel <alaa@mellanox.com>
 
-[ Upstream commit 6a01afcf8468d3ca2bd8bbb27503f60dcf643b20 ]
+[ Upstream commit 350a63249d270b1f5bd05c7e2a24cd8de0f9db20 ]
 
-At ieee80211_join_mesh() some ie data could have been allocated (see
-copy_mesh_setup()) and need to be cleaned up when leaving the mesh.
+After the cited commit, function 'mlx5_eswitch_set_vport_vlan' started
+to acquire esw->state_lock.
+However, esw is not defined for VF devices, hence attempting to set vf
+VLANID on a VF dev will cause a kernel panic.
 
-This fixes the following kmemleak report:
+Fix it by moving up the (redundant) esw validation from function
+'__mlx5_eswitch_set_vport_vlan' since the rest of the callers now have
+and use a valid esw.
 
-unreferenced object 0xffff0000116bc600 (size 128):
-  comm "wpa_supplicant", pid 608, jiffies 4294898983 (age 293.484s)
-  hex dump (first 32 bytes):
-    30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00  0...............
-    00 0f ac 08 00 00 00 00 c4 65 40 00 00 00 00 00  .........e@.....
-  backtrace:
-    [<00000000bebe439d>] __kmalloc_track_caller+0x1c0/0x330
-    [<00000000a349dbe1>] kmemdup+0x28/0x50
-    [<0000000075d69baa>] ieee80211_join_mesh+0x6c/0x3b8 [mac80211]
-    [<00000000683bb98b>] __cfg80211_join_mesh+0x1e8/0x4f0 [cfg80211]
-    [<0000000072cb507f>] nl80211_join_mesh+0x520/0x6b8 [cfg80211]
-    [<0000000077e9bcf9>] genl_family_rcv_msg+0x374/0x680
-    [<00000000b1bd936d>] genl_rcv_msg+0x78/0x108
-    [<0000000022c53788>] netlink_rcv_skb+0xb0/0x1c0
-    [<0000000011af8ec9>] genl_rcv+0x34/0x48
-    [<0000000069e41f53>] netlink_unicast+0x268/0x2e8
-    [<00000000a7517316>] netlink_sendmsg+0x320/0x4c0
-    [<0000000069cba205>] ____sys_sendmsg+0x354/0x3a0
-    [<00000000e06bab0f>] ___sys_sendmsg+0xd8/0x120
-    [<0000000037340728>] __sys_sendmsg+0xa4/0xf8
-    [<000000004fed9776>] __arm64_sys_sendmsg+0x44/0x58
-    [<000000001c1e5647>] el0_svc_handler+0xd0/0x1a0
+For example with vf device eth4:
+ # ip link set dev eth4 vf 0 vlan 0
 
-Fixes: c80d545da3f7 (mac80211: Let userspace enable and configure vendor specific path selection.)
-Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-Link: https://lore.kernel.org/r/20200704135007.27292-1-repk@triplefau.lt
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Trace of the panic:
+ [  411.409842] BUG: unable to handle page fault for address: 00000000000011b8
+ [  411.449745] #PF: supervisor read access in kernel mode
+ [  411.452348] #PF: error_code(0x0000) - not-present page
+ [  411.454938] PGD 80000004189c9067 P4D 80000004189c9067 PUD 41899a067 PMD 0
+ [  411.458382] Oops: 0000 [#1] SMP PTI
+ [  411.460268] CPU: 4 PID: 5711 Comm: ip Not tainted 5.8.0-rc4_for_upstream_min_debug_2020_07_08_22_04 #1
+ [  411.462447] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+ [  411.464158] RIP: 0010:__mutex_lock+0x4e/0x940
+ [  411.464928] Code: fd 41 54 49 89 f4 41 52 53 89 d3 48 83 ec 70 44 8b 1d ee 03 b0 01 65 48 8b 04 25 28 00 00 00 48 89 45 c8 31 c0 45 85 db 75 0a <48> 3b 7f 60 0f 85 7e 05 00 00 49 8d 45 68 41 56 41 b8 01 00 00 00
+ [  411.467678] RSP: 0018:ffff88841fcd74b0 EFLAGS: 00010246
+ [  411.468562] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+ [  411.469715] RDX: 0000000000000000 RSI: 0000000000000002 RDI: 0000000000001158
+ [  411.470812] RBP: ffff88841fcd7550 R08: ffffffffa00fa1ce R09: 0000000000000000
+ [  411.471835] R10: ffff88841fcd7570 R11: 0000000000000000 R12: 0000000000000002
+ [  411.472862] R13: 0000000000001158 R14: ffffffffa00fa1ce R15: 0000000000000000
+ [  411.474004] FS:  00007faee7ca6b80(0000) GS:ffff88846fc00000(0000) knlGS:0000000000000000
+ [  411.475237] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ [  411.476129] CR2: 00000000000011b8 CR3: 000000041909c006 CR4: 0000000000360ea0
+ [  411.477260] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ [  411.478340] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ [  411.479332] Call Trace:
+ [  411.479760]  ? __nla_validate_parse.part.6+0x57/0x8f0
+ [  411.482825]  ? mlx5_eswitch_set_vport_vlan+0x3e/0xa0 [mlx5_core]
+ [  411.483804]  mlx5_eswitch_set_vport_vlan+0x3e/0xa0 [mlx5_core]
+ [  411.484733]  mlx5e_set_vf_vlan+0x41/0x50 [mlx5_core]
+ [  411.485545]  do_setlink+0x613/0x1000
+ [  411.486165]  __rtnl_newlink+0x53d/0x8c0
+ [  411.486791]  ? mark_held_locks+0x49/0x70
+ [  411.487429]  ? __lock_acquire+0x8fe/0x1eb0
+ [  411.488085]  ? rcu_read_lock_sched_held+0x52/0x60
+ [  411.488998]  ? kmem_cache_alloc_trace+0x16d/0x2d0
+ [  411.489759]  rtnl_newlink+0x47/0x70
+ [  411.490357]  rtnetlink_rcv_msg+0x24e/0x450
+ [  411.490978]  ? netlink_deliver_tap+0x92/0x3d0
+ [  411.491631]  ? validate_linkmsg+0x330/0x330
+ [  411.492262]  netlink_rcv_skb+0x47/0x110
+ [  411.492852]  netlink_unicast+0x1ac/0x270
+ [  411.493551]  netlink_sendmsg+0x336/0x450
+ [  411.494209]  sock_sendmsg+0x30/0x40
+ [  411.494779]  ____sys_sendmsg+0x1dd/0x1f0
+ [  411.495378]  ? copy_msghdr_from_user+0x5c/0x90
+ [  411.496082]  ___sys_sendmsg+0x87/0xd0
+ [  411.496683]  ? lock_acquire+0xb9/0x3a0
+ [  411.497322]  ? lru_cache_add+0x5/0x170
+ [  411.497944]  ? find_held_lock+0x2d/0x90
+ [  411.498568]  ? handle_mm_fault+0xe46/0x18c0
+ [  411.499205]  ? __sys_sendmsg+0x51/0x90
+ [  411.499784]  __sys_sendmsg+0x51/0x90
+ [  411.500341]  do_syscall_64+0x59/0x2e0
+ [  411.500938]  ? asm_exc_page_fault+0x8/0x30
+ [  411.501609]  ? rcu_read_lock_sched_held+0x52/0x60
+ [  411.502350]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ [  411.503093] RIP: 0033:0x7faee73b85a7
+ [  411.503654] Code: Bad RIP value.
+
+Fixes: 0e18134f4f9f ("net/mlx5e: Eswitch, use state_lock to synchronize vlan change")
+Signed-off-by: Alaa Hleihel <alaa@mellanox.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
+Reviewed-by: Vlad Buslov <vladbu@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/cfg.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
-index 0f72813fed53e..4230b483168a1 100644
---- a/net/mac80211/cfg.c
-+++ b/net/mac80211/cfg.c
-@@ -2140,6 +2140,7 @@ static int ieee80211_leave_mesh(struct wiphy *wiphy, struct net_device *dev)
- 	ieee80211_stop_mesh(sdata);
- 	mutex_lock(&sdata->local->mtx);
- 	ieee80211_vif_release_channel(sdata);
-+	kfree(sdata->u.mesh.ie);
- 	mutex_unlock(&sdata->local->mtx);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+index 577a5b3b841ed..77a1ac1b1cc17 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+@@ -2435,8 +2435,6 @@ int __mlx5_eswitch_set_vport_vlan(struct mlx5_eswitch *esw,
+ 	struct mlx5_vport *evport = mlx5_eswitch_get_vport(esw, vport);
+ 	int err = 0;
  
- 	return 0;
+-	if (!ESW_ALLOWED(esw))
+-		return -EPERM;
+ 	if (IS_ERR(evport))
+ 		return PTR_ERR(evport);
+ 	if (vlan > 4095 || qos > 7)
+@@ -2464,6 +2462,9 @@ int mlx5_eswitch_set_vport_vlan(struct mlx5_eswitch *esw,
+ 	u8 set_flags = 0;
+ 	int err;
+ 
++	if (!ESW_ALLOWED(esw))
++		return -EPERM;
++
+ 	if (vlan || qos)
+ 		set_flags = SET_VLAN_STRIP | SET_VLAN_INSERT;
+ 
 -- 
 2.25.1
 
