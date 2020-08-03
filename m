@@ -2,248 +2,157 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E60C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A676AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AF492076E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:51:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JqLm+r0w"
+	by mail.kernel.org (Postfix) with ESMTP id C2B332076E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:51:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgHCVvZ (ORCPT
+        id S1727779AbgHCVvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 17:51:25 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:34668 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725863AbgHCVvZ (ORCPT
+        Mon, 3 Aug 2020 17:51:50 -0400
+Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:44670 "EHLO
+        mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725863AbgHCVvu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 17:51:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596491483;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=sv2XsTeWz2TVZEta2DR1f3kdqAspwL7XI5PcNC38+D8=;
-        b=JqLm+r0wsB4PIQYqbtBEfEHntPIxxa9xlQHggHvyZwY1cGR9ZWuENmWKlowcp22rSZQYRR
-        FON9EITMLZUmiM8rn1CL126+w+0VW/eGL73GDmMrQs4w0UypeXObW3p7s8nyqMHbw0WHNK
-        pKsgF85xxD8kv5eaV1WARlwZmWcgM+M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-466-OdevD_g0NfyNZB6F7MUszQ-1; Mon, 03 Aug 2020 17:51:20 -0400
-X-MC-Unique: OdevD_g0NfyNZB6F7MUszQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0C56F80046B;
-        Mon,  3 Aug 2020 21:51:19 +0000 (UTC)
-Received: from treble (ovpn-113-147.rdu2.redhat.com [10.10.113.147])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DD0481001901;
-        Mon,  3 Aug 2020 21:51:16 +0000 (UTC)
-Date:   Mon, 3 Aug 2020 16:51:14 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     syzbot <syzbot+c05e6eff86f7a430fa73@syzkaller.appspotmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>
-Cc:     bp@alien8.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, viro@zeniv.linux.org.uk, x86@kernel.org
-Subject: Re: BUG: stack guard page was hit in arch_stack_walk
-Message-ID: <20200803215114.lyltnm4u7qisyqys@treble>
-References: <0000000000000897ba05abd4ce25@google.com>
- <20200803214840.mzjq4gk4o2737leo@treble>
+        Mon, 3 Aug 2020 17:51:50 -0400
+Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
+        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id 3B98B1A8F2C;
+        Tue,  4 Aug 2020 07:51:45 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1k2iMy-0008H2-Kw; Tue, 04 Aug 2020 07:51:44 +1000
+Date:   Tue, 4 Aug 2020 07:51:44 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Ritesh Harjani <riteshh@linux.ibm.com>
+Cc:     linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+Subject: Re: [RFC 1/1] pmem: Add cond_resched() in bio_for_each_segment loop
+ in pmem_make_request
+Message-ID: <20200803215144.GB2114@dread.disaster.area>
+References: <0d96e2481f292de2cda8828b03d5121004308759.1596011292.git.riteshh@linux.ibm.com>
+ <20200802230148.GA2114@dread.disaster.area>
+ <20200803071405.64C0711C058@d06av25.portsmouth.uk.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200803214840.mzjq4gk4o2737leo@treble>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200803071405.64C0711C058@d06av25.portsmouth.uk.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
+        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
+        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=VnNF1IyMAAAA:8 a=7-415B0cAAAA:8
+        a=O2OWZLGCkADlNaEqX4IA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 04:48:46PM -0500, Josh Poimboeuf wrote:
-> Hi Cong,
+On Mon, Aug 03, 2020 at 12:44:04PM +0530, Ritesh Harjani wrote:
 > 
-> This looks similar to the stack overflow which was attempted to be fixed
-> by dd912306ff00 ("net: fix a potential recursive NETDEV_FEAT_CHANGE").
 > 
-> And another syzbot report here:
+> On 8/3/20 4:31 AM, Dave Chinner wrote:
+> > On Wed, Jul 29, 2020 at 02:15:18PM +0530, Ritesh Harjani wrote:
+> > > For systems which do not have CONFIG_PREEMPT set and
+> > > if there is a heavy multi-threaded load/store operation happening
+> > > on pmem + sometimes along with device latencies, softlockup warnings like
+> > > this could trigger. This was seen on Power where pagesize is 64K.
+> > > 
+> > > To avoid softlockup, this patch adds a cond_resched() in this path.
+> > > 
+> > > <...>
+> > > watchdog: BUG: soft lockup - CPU#31 stuck for 22s!
+> > > <...>
+> > > CPU: 31 PID: 15627 <..> 5.3.18-20
+> > > <...>
+> > > NIP memcpy_power7+0x43c/0x7e0
+> > > LR memcpy_flushcache+0x28/0xa0
+> > > 
+> > > Call Trace:
+> > > memcpy_power7+0x274/0x7e0 (unreliable)
+> > > memcpy_flushcache+0x28/0xa0
+> > > write_pmem+0xa0/0x100 [nd_pmem]
+> > > pmem_do_bvec+0x1f0/0x420 [nd_pmem]
+> > > pmem_make_request+0x14c/0x370 [nd_pmem]
+> > > generic_make_request+0x164/0x400
+> > > submit_bio+0x134/0x2e0
+> > > submit_bio_wait+0x70/0xc0
+> > > blkdev_issue_zeroout+0xf4/0x2a0
+> > > xfs_zero_extent+0x90/0xc0 [xfs]
+> > > xfs_bmapi_convert_unwritten+0x198/0x230 [xfs]
+> > > xfs_bmapi_write+0x284/0x630 [xfs]
+> > > xfs_iomap_write_direct+0x1f0/0x3e0 [xfs]
+> > > xfs_file_iomap_begin+0x344/0x690 [xfs]
+> > > dax_iomap_pmd_fault+0x488/0xc10
+> > > __xfs_filemap_fault+0x26c/0x2b0 [xfs]
+> > > __handle_mm_fault+0x794/0x1af0
+> > > handle_mm_fault+0x12c/0x220
+> > > __do_page_fault+0x290/0xe40
+> > > do_page_fault+0x38/0xc0
+> > > handle_page_fault+0x10/0x30
+> > > 
+> > > Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> > > Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+> > > ---
+> > >   drivers/nvdimm/pmem.c | 1 +
+> > >   1 file changed, 1 insertion(+)
+> > > 
+> > > diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+> > > index 2df6994acf83..fcf7af13897e 100644
+> > > --- a/drivers/nvdimm/pmem.c
+> > > +++ b/drivers/nvdimm/pmem.c
+> > > @@ -214,6 +214,7 @@ static blk_qc_t pmem_make_request(struct request_queue *q, struct bio *bio)
+> > >   			bio->bi_status = rc;
+> > >   			break;
+> > >   		}
+> > > +		cond_resched();
+> > 
+> > There are already cond_resched() calls between submitted bios in
+> > blkdev_issue_zeroout() via both __blkdev_issue_zero_pages() and
+> > __blkdev_issue_write_zeroes(), so I'm kinda wondering where the
+> > problem is coming from here.
 > 
-> https://lkml.kernel.org/r/000000000000cb6afe05ab34e77e@google.com
+> This problem is coming from that bio call- submit_bio()
+> 
+> > 
+> > Just how big is the bio being issued here that it spins for 22s
+> > trying to copy it?
+> 
+> It's 256 (due to BIO_MAX_PAGES) * 64KB (pagesize) = 16MB.
+> So this is definitely not an easy trigger as per tester was mainly seen
+> on a VM.
 
-And another:
+Right, so a memcpy() of 16MB of data in a single bio is taking >22s?
 
-https://lkml.kernel.org/r/0000000000000897ba05abd4ce25@google.com
+If so, then you can't solve this problem with cond_resched() - if
+something that should only take half a millisecond to run is taking
+22s of CPU time, there are bigger problems occurring that need
+fixing.
 
-> 
-> On Sat, Aug 01, 2020 at 11:09:21AM -0700, syzbot wrote:
-> > Hello,
-> > 
-> > syzbot found the following issue on:
-> > 
-> > HEAD commit:    92ed3019 Linux 5.8-rc7
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=12c98f28900000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=84f076779e989e69
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=c05e6eff86f7a430fa73
-> > compiler:       gcc (GCC) 10.1.0-syz 20200507
-> > 
-> > Unfortunately, I don't have any reproducer for this issue yet.
-> > 
-> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > Reported-by: syzbot+c05e6eff86f7a430fa73@syzkaller.appspotmail.com
-> > 
-> > BUG: stack guard page was hit at 000000009157a0b1 (stack is 000000007cb00dab..0000000055f9d23d)
-> > kernel stack overflow (double-fault): 0000 [#1] PREEMPT SMP KASAN
-> > CPU: 0 PID: 13871 Comm: syz-executor.4 Not tainted 5.8.0-rc7-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > RIP: 0010:arch_stack_walk+0x0/0xf0 arch/x86/kernel/stacktrace.c:17
-> > Code: 8b eb c0 e6 82 89 fa ee ee 8d 57 01 ee ee eb cd e6 81 eb f1 e6 87 eb ed e6 83 eb e9 cc cc cc cc cc cc cc cc cc cc cc cc cc cc <55> 48 89 e5 41 56 49 89 d6 41 55 49 89 cd 41 54 49 89 f4 53 48 89
-> > RSP: 0018:ffffc90008b18000 EFLAGS: 00010246
-> > RAX: 0000000000000000 RBX: fffff52001163001 RCX: 0000000000000000
-> > RDX: ffff88802b30e480 RSI: ffffc90008b18028 RDI: ffffffff8162c090
-> > RBP: 0000000000000cc0 R08: ffffed1006f83078 R09: ffffed1006f83094
-> > R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000cc0
-> > R13: 0000000000000000 R14: ffff88821b77f8c0 R15: 00000000000000e0
-> > FS:  00007f7369ba8700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: ffffc90008b17ff8 CR3: 00000000a21ec000 CR4: 00000000001426f0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > Call Trace:
-> >  stack_trace_save+0x8c/0xc0 kernel/stacktrace.c:123
-> >  save_stack+0x1b/0x40 mm/kasan/common.c:48
-> >  set_track mm/kasan/common.c:56 [inline]
-> >  __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
-> >  slab_post_alloc_hook mm/slab.h:586 [inline]
-> >  slab_alloc_node mm/slab.c:3263 [inline]
-> >  kmem_cache_alloc_node+0x130/0x3c0 mm/slab.c:3575
-> >  __alloc_skb+0x71/0x550 net/core/skbuff.c:198
-> >  alloc_skb include/linux/skbuff.h:1083 [inline]
-> >  nlmsg_new include/net/netlink.h:940 [inline]
-> >  rtmsg_ifinfo_build_skb+0x72/0x1a0 net/core/rtnetlink.c:3702
-> >  rtmsg_ifinfo_event net/core/rtnetlink.c:3738 [inline]
-> >  rtmsg_ifinfo_event net/core/rtnetlink.c:3729 [inline]
-> >  rtnetlink_event+0x123/0x1d0 net/core/rtnetlink.c:5512
-> >  notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
-> >  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
-> >  call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
-> >  call_netdevice_notifiers net/core/dev.c:2053 [inline]
-> >  netdev_features_change net/core/dev.c:1443 [inline]
-> >  netdev_sync_lower_features net/core/dev.c:9056 [inline]
-> >  __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
-> >  netdev_change_features+0x61/0xb0 net/core/dev.c:9259
-> >  bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
-> >  bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
-> >  bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
-> >  notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
-> >  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
-> >  call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
-> >  call_netdevice_notifiers net/core/dev.c:2053 [inline]
-> >  netdev_features_change net/core/dev.c:1443 [inline]
-> >  netdev_sync_lower_features net/core/dev.c:9056 [inline]
-> >  __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
-> >  netdev_change_features+0x61/0xb0 net/core/dev.c:9259
-> >  bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
-> >  bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
-> >  bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
-> >  notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
-> >  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
-> >  call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
-> >  call_netdevice_notifiers net/core/dev.c:2053 [inline]
-> >  netdev_features_change net/core/dev.c:1443 [inline]
-> >  netdev_sync_lower_features net/core/dev.c:9056 [inline]
-> >  __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
-> >  netdev_change_features+0x61/0xb0 net/core/dev.c:9259
-> >  bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
-> >  bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
-> >  bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
-> >  notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
-> >  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
-> >  call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
-> >  call_netdevice_notifiers net/core/dev.c:2053 [inline]
-> >  netdev_features_change net/core/dev.c:1443 [inline]
-> >  netdev_sync_lower_features net/core/dev.c:9056 [inline]
-> >  __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
-> >  netdev_change_features+0x61/0xb0 net/core/dev.c:9259
-> >  bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
-> >  bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
-> >  bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
-> >  notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
-> >  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
-> >  call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
-> >  call_netdevice_notifiers net/core/dev.c:2053 [inline]
-> >  netdev_features_change net/core/dev.c:1443 [inline]
-> >  netdev_sync_lower_features net/core/dev.c:9056 [inline]
-> >  __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
-> >  netdev_change_features+0x61/0xb0 net/core/dev.c:9259
-> >  bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
-> >  bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
-> >  bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
-> >  notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
-> >  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
-> >  call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
-> >  call_netdevice_notifiers net/core/dev.c:2053 [inline]
-> >  netdev_features_change net/core/dev.c:1443 [inline]
-> >  netdev_sync_lower_features net/core/dev.c:9056 [inline]
-> >  __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
-> >  netdev_change_features+0x61/0xb0 net/core/dev.c:9259
-> >  bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
-> >  bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
-> >  bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
-> >  notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
-> >  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
-> >  call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
-> >  call_netdevice_notifiers net/core/dev.c:2053 [inline]
-> >  netdev_features_change net/core/dev.c:1443 [inline]
-> >  netdev_sync_lower_features net/core/dev.c:9056 [inline]
-> >  __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
-> >  netdev_change_features+0x61/0xb0 net/core/dev.c:9259
-> >  bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
-> >  bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
-> >  bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
-> >  notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
-> >  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
-> >  call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
-> >  call_netdevice_notifiers net/core/dev.c:2053 [inline]
-> >  netdev_features_change net/core/dev.c:1443 [inline]
-> >  netdev_sync_lower_features net/core/dev.c:9056 [inline]
-> >  __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
-> >  netdev_change_features+0x61/0xb0 net/core/dev.c:9259
-> >  bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
-> > Lost 536 message(s)!
-> > ---[ end trace 00f7ed0d29de9cad ]---
-> > RIP: 0010:arch_stack_walk+0x0/0xf0 arch/x86/kernel/stacktrace.c:17
-> > Code: 8b eb c0 e6 82 89 fa ee ee 8d 57 01 ee ee eb cd e6 81 eb f1 e6 87 eb ed e6 83 eb e9 cc cc cc cc cc cc cc cc cc cc cc cc cc cc <55> 48 89 e5 41 56 49 89 d6 41 55 49 89 cd 41 54 49 89 f4 53 48 89
-> > RSP: 0018:ffffc90008b18000 EFLAGS: 00010246
-> > RAX: 0000000000000000 RBX: fffff52001163001 RCX: 0000000000000000
-> > RDX: ffff88802b30e480 RSI: ffffc90008b18028 RDI: ffffffff8162c090
-> > RBP: 0000000000000cc0 R08: ffffed1006f83078 R09: ffffed1006f83094
-> > R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000cc0
-> > R13: 0000000000000000 R14: ffff88821b77f8c0 R15: 00000000000000e0
-> > FS:  00007f7369ba8700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: ffffc90008b17ff8 CR3: 00000000a21ec000 CR4: 00000000001426f0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > 
-> > 
-> > ---
-> > This report is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> > 
-> > syzbot will keep track of this issue. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> > 
-> 
-> -- 
-> Josh
+i.e. if someone is running a workload that has effectively
+livelocked the hardware cache coherency protocol across the entire
+machine, then changing kernel code that requires memory bandwidth to
+be available is not going to fix the problem. All is does is shoot
+the messenger that tells you there is something going wrong.
 
+> Looking at the cond_resched() inside dax_writeback_mapping_range()
+> in xas_for_each_marked() loop, I thought it should be good to have a
+> cond_resched() in the above path as well.
+
+That's not done on every page/bio - that'd done every 4096 pages, or
+every 256MB of memory written back on 64k page machines. IOWs, using
+cond_resched() here is a sensible thing to do if you have a locked
+loop that might run for seconds.
+
+Cheers,
+
+Dave.
 -- 
-Josh
-
+Dave Chinner
+david@fromorbit.com
