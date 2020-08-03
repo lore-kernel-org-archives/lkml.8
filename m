@@ -2,53 +2,53 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC1DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1361DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC39E20775
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE016204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:34:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458075;
-	bh=tAyamzmykEeNs7zG/CGyzEdNvKuy3fcdrgqm5YlfXXI=;
+	s=default; t=1596458078;
+	bh=hSBw4kuiG9AI2JgvgDHtRSwEZbIlznh+qqR13Tzzt7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OEZM42hB+5QwGjdd/Rff6Nug+EqrT7X5WU6xcOEUiHPmkmNdaDc1SPw98XZpw8232
-	 M7ygblNGWrPsSZ2jEpGzKjR9iWNdOuFk3sD5+uFahqIuOshj4btlsbxj4T3JSYpKGC
-	 oGZH0kqb0HBkSR9jX4pII+sSg5+lhA5a9J4XurPs=
+	b=H1zXePUCauVScYX/3KwuTD3QBBQvkF4pd2Nvi7ocUA3N//tGGvRAbdFS3N6b2OLND
+	 CQ3/fPYoh8scj4frsLXD4mqj9yXANh/uq4z+ivgE8UvgkWhidG4efJWZlXRce9HsxD
+	 5Ul0nGJ67u/1rThuqdxYUYz0kGsl0o7T/dmjmhH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbgHCMee (ORCPT
+        id S1729577AbgHCMei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:34:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34384 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:34:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729537AbgHCMeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:34:19 -0400
+        id S1729544AbgHCMeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:34:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DF152054F;
-        Mon,  3 Aug 2020 12:34:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9DFC204EC;
+        Mon,  3 Aug 2020 12:34:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596458057;
-        bh=tAyamzmykEeNs7zG/CGyzEdNvKuy3fcdrgqm5YlfXXI=;
+        s=default; t=1596458060;
+        bh=hSBw4kuiG9AI2JgvgDHtRSwEZbIlznh+qqR13Tzzt7g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BYTLWrMPzckxLqaBQh1vL5PICydY9FAISj68Mgcc02sXKFiSXMtmuBzY0uyCPGitF
-         5BSkwvVHplcQDBrdjE0Qs68mjfG4Hh7euTMudSt9kRHIMg6SMNMkCyrlh6fFlvBRMV
-         AS7oo/ddCPMd3cXvpJr7BBKtQxW80v5aUtBWMgsc=
+        b=mHbYupISdWCItEGK4aSOKvqKyOCCdKPWUnRX2aJRrgMem+YSUMXRZE908salomYeM
+         B0nynnd+EUGnAjbUs2F474IZjPie3UaJMjWYKvvP18cqeHoWnfhlZKVe5e8u0gJtJp
+         ErKCMo07tbI5Ssuov0oWsurdo3rr3NuV5NBCZIiE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 23/51] x86, vmlinux.lds: Page-align end of ..page_aligned sections
-Date:   Mon,  3 Aug 2020 14:20:08 +0200
-Message-Id: <20200803121850.643036041@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 24/51] rds: Prevent kernel-infoleak in rds_notify_queue_get()
+Date:   Mon,  3 Aug 2020 14:20:09 +0200
+Message-Id: <20200803121850.696632977@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121849.488233135@linuxfoundation.org>
 References: <20200803121849.488233135@linuxfoundation.org>
@@ -61,84 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Peilin Ye <yepeilin.cs@gmail.com>
 
-[ Upstream commit de2b41be8fcccb2f5b6c480d35df590476344201 ]
+commit bbc8a99e952226c585ac17477a85ef1194501762 upstream.
 
-On x86-32 the idt_table with 256 entries needs only 2048 bytes. It is
-page-aligned, but the end of the .bss..page_aligned section is not
-guaranteed to be page-aligned.
+rds_notify_queue_get() is potentially copying uninitialized kernel stack
+memory to userspace since the compiler may leave a 4-byte hole at the end
+of `cmsg`.
 
-As a result, objects from other .bss sections may end up on the same 4k
-page as the idt_table, and will accidentially get mapped read-only during
-boot, causing unexpected page-faults when the kernel writes to them.
+In 2016 we tried to fix this issue by doing `= { 0 };` on `cmsg`, which
+unfortunately does not always initialize that 4-byte hole. Fix it by using
+memset() instead.
 
-This could be worked around by making the objects in the page aligned
-sections page sized, but that's wrong.
-
-Explicit sections which store only page aligned objects have an implicit
-guarantee that the object is alone in the page in which it is placed. That
-works for all objects except the last one. That's inconsistent.
-
-Enforcing page sized objects for these sections would wreckage memory
-sanitizers, because the object becomes artificially larger than it should
-be and out of bound access becomes legit.
-
-Align the end of the .bss..page_aligned and .data..page_aligned section on
-page-size so all objects places in these sections are guaranteed to have
-their own page.
-
-[ tglx: Amended changelog ]
-
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200721093448.10417-1-joro@8bytes.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: f037590fff30 ("rds: fix a leak of kernel memory")
+Fixes: bdbe6fbc6a2f ("RDS: recv.c")
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kernel/vmlinux.lds.S     | 1 +
- include/asm-generic/vmlinux.lds.h | 5 ++++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ net/rds/recv.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index f9f33a168a002..d3dc8bc6b3adf 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -352,6 +352,7 @@ SECTIONS
- 	.bss : AT(ADDR(.bss) - LOAD_OFFSET) {
- 		__bss_start = .;
- 		*(.bss..page_aligned)
-+		. = ALIGN(PAGE_SIZE);
- 		*(BSS_MAIN)
- 		. = ALIGN(PAGE_SIZE);
- 		__bss_stop = .;
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index c229ffbed6d4c..48e618b20d34b 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -251,7 +251,8 @@
+--- a/net/rds/recv.c
++++ b/net/rds/recv.c
+@@ -453,12 +453,13 @@ static int rds_still_queued(struct rds_s
+ int rds_notify_queue_get(struct rds_sock *rs, struct msghdr *msghdr)
+ {
+ 	struct rds_notifier *notifier;
+-	struct rds_rdma_notify cmsg = { 0 }; /* fill holes with zero */
++	struct rds_rdma_notify cmsg;
+ 	unsigned int count = 0, max_messages = ~0U;
+ 	unsigned long flags;
+ 	LIST_HEAD(copy);
+ 	int err = 0;
  
- #define PAGE_ALIGNED_DATA(page_align)					\
- 	. = ALIGN(page_align);						\
--	*(.data..page_aligned)
-+	*(.data..page_aligned)						\
-+	. = ALIGN(page_align);
++	memset(&cmsg, 0, sizeof(cmsg));	/* fill holes with zero */
  
- #define READ_MOSTLY_DATA(align)						\
- 	. = ALIGN(align);						\
-@@ -619,7 +620,9 @@
- 	. = ALIGN(bss_align);						\
- 	.bss : AT(ADDR(.bss) - LOAD_OFFSET) {				\
- 		BSS_FIRST_SECTIONS					\
-+		. = ALIGN(PAGE_SIZE);					\
- 		*(.bss..page_aligned)					\
-+		. = ALIGN(PAGE_SIZE);					\
- 		*(.dynbss)						\
- 		*(BSS_MAIN)						\
- 		*(COMMON)						\
--- 
-2.25.1
-
+ 	/* put_cmsg copies to user space and thus may sleep. We can't do this
+ 	 * with rs_lock held, so first grab as many notifications as we can stuff
 
 
