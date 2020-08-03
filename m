@@ -2,153 +2,169 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB30C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 918D5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC2E22BF3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0344222BF3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:14:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KI+YOp/8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LXLalZvP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbgHCSMB (ORCPT
+        id S1728577AbgHCSO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 14:12:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39260 "EHLO
+        Mon, 3 Aug 2020 14:14:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgHCSMA (ORCPT
+        with ESMTP id S1726130AbgHCSO2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 14:12:00 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C666C06174A;
-        Mon,  3 Aug 2020 11:12:00 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id p191so4375768ybg.0;
-        Mon, 03 Aug 2020 11:12:00 -0700 (PDT)
+        Mon, 3 Aug 2020 14:14:28 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB37BC06174A;
+        Mon,  3 Aug 2020 11:14:27 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id 88so35048640wrh.3;
+        Mon, 03 Aug 2020 11:14:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=J7r7YpmcchYGchQNEBkoeTg3Nnece6VxKk14FSGb/wg=;
-        b=KI+YOp/8fZfo8O25o8ruNnOpVKqngH04wZu7j4+45EG69hqJEJrNj3YJqLyKderBRb
-         FqcnzqGp51v+YqnWzfdPXbTlMvi85BzASMDf8cxJciN7iM00LQ2nXXYUBw3uXOstD0fL
-         ehG61mzYsgxMHpAdCe59A1MI86zAiAjLpYFGZSgfGIdyZ7rjtIB2msfMFfsTuZG8XspJ
-         Pc1KaKSskqbDRoq96nYvH5h2f1+qr1qc6/Tg1fuyXo/F5OMhzWnXPNN5+J9OIkFghrGR
-         WJsSX+jUlp2fIaAoCpP3aGN8JZfjvoMffk6MYgyyXx4kkEbEhGZTsKFlZyR0TA9HKEfW
-         Q6Lg==
+        h=from:to:cc:subject:date:message-id;
+        bh=xYmgJ9q6WmAiysmjl1lzv94xYZ4lfXJx4yvPnQA+3M0=;
+        b=LXLalZvPCz2jqU161ucRPSMW06oGrqpvKoH27x0ATSl192G+i8fP5C3Nl9qTtXQ4B9
+         +KLA1W4n4lhfeer4dMuQq8d5LvW13W3GQvCD8TIOtUQJdVFqWajJOiS8wMMEi0fRZBJY
+         B4HMmbnZEHUtKaeMO/UOzqX+nG/czudlreN0nF7GraHW6HQ1XmgOXaatRlgUULLl9q4l
+         g6Kd5SSb8uxifr7WywcN1UwA4Af3DUcLuhUY2Bn73oRXnh+HKa4Oct2bON2rpsJQ6Qxo
+         wcm3ZWrbQ6DnPRxyAdn1cZUcVYVPVBnAWqyS7ROW9iq9XuK0N7qIIBFJYYDv9tGG1GA5
+         AuAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=J7r7YpmcchYGchQNEBkoeTg3Nnece6VxKk14FSGb/wg=;
-        b=J8RWaOluSqyOteb6EpFUTDF9UJb8ILGy1/2tYAcjMBivFoKWcmLjrRGH8Gi0T5AUGQ
-         WYqeu/FlnNLaPI6Kq1SR4XFGV5pjkqmA6fBskSApzwx+O0ZCXGmUQUkKHI/UoOCqPybL
-         kYtTKze+AZu5O/CfJsI87Bocvc7FZNDYSr+0AYZeb79ag2S9GjKEwJtO3Mp24xRn5Q7h
-         FalxdUXdg+LePeHa5ot6sqqs3YBCKdJ+nzNxtsA+YzRPABmJ8toPriMBX3lujq6y7RHk
-         3CbA/X2Hpj/raxms0sjaKU6V48T4nDnNfebRcfBqvtzViJnl/1pBBqFRa4R3vGF1Rmdt
-         EwYA==
-X-Gm-Message-State: AOAM531qDm4JaLHki0kHZTeR6zBkaUp3p97kv3ncp/U4TrhciE0DTbrk
-        VoNltYfEZRTZHLt16p8u2Jl7cIELtPNyKXLy2HI=
-X-Google-Smtp-Source: ABdhPJyrr530gC4Jdav1r+XBP0uq3CXKHqcK+f26v2g+FqCFA9k5lH1XYBneFu3632cOeHFdUVjHKitJaafwPbdo2oI=
-X-Received: by 2002:a25:4fd6:: with SMTP id d205mr28216774ybb.214.1596478319311;
- Mon, 03 Aug 2020 11:11:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <1596187745-31596-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200801090456.GB1379367@oden.dyn.berto.se>
-In-Reply-To: <20200801090456.GB1379367@oden.dyn.berto.se>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 3 Aug 2020 19:11:32 +0100
-Message-ID: <CA+V-a8sOHct_JetCsug8Z2BQpMLH2p39hj2XNw_1N5gkBQp1Gg@mail.gmail.com>
-Subject: Re: [PATCH] media: rcar-vin: Update crop and compose settings for
- every s_fmt call
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Niklas <niklas.soderlund@ragnatech.se>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xYmgJ9q6WmAiysmjl1lzv94xYZ4lfXJx4yvPnQA+3M0=;
+        b=Kj9wKYTiMjvO56ziX9Jtqa5YNhHOI/66qTELB7ZpVkiYy+bWNNfknl0urrugSe4b/a
+         3/RVAhOnt0UJ0ENRh/XuqUljMiO0hVe0/0+cJzQ488QLdg0DjEXi5oZzAyi3ASq5WKow
+         T52WTORPJPtWp5kKeUnoJIhfrYfiS9pxJCPByIHntXQrg+4Sq4A0Z8KX+hL/aMwxwn/q
+         8rkfA/yu8ly3J6K2uJRPs2cWwbwmXzjYekYlkNfCU9HmoIV7nuSvrtGZfr2rzLEri7nL
+         AMDrCQJ2OFrGfci0kWw6tCMxkKQfNOWHFwJcFAuqnkXQlGzQyii2TLDXMq0Qh0b5DJVV
+         +SUw==
+X-Gm-Message-State: AOAM532S1cKbNeC4fyIkh+H+6K6odZcUQtAuHpnbtzMxxc2FWZNsbown
+        RyqdSv9pDAIGzKTqbjzLdRg=
+X-Google-Smtp-Source: ABdhPJyMr45lC/evGy9WXmIvt25trODkkhEKUYG93zlPxp2YZMwv0I2e0z1BFB7LEAnQc7E9RBIBSQ==
+X-Received: by 2002:a05:6000:18a:: with SMTP id p10mr14970147wrx.33.1596478466650;
+        Mon, 03 Aug 2020 11:14:26 -0700 (PDT)
+Received: from ubuntu18_1.cisco.com ([173.38.220.35])
+        by smtp.gmail.com with ESMTPSA id p25sm549060wma.39.2020.08.03.11.14.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 11:14:26 -0700 (PDT)
+From:   Ahmed Abdelsalam <ahabdels@gmail.com>
+To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andrea.mayer@uniroma2.it
+Cc:     Ahmed Abdelsalam <ahabdels@gmail.com>
+Subject: [net-next v2] seg6: using DSCP of inner IPv4 packets
+Date:   Mon,  3 Aug 2020 18:14:17 +0000
+Message-Id: <20200803181417.1320-1-ahabdels@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
+This patch allows copying the DSCP from inner IPv4 header to the
+outer IPv6 header, when doing SRv6 Encapsulation.
 
-On Sat, Aug 1, 2020 at 10:04 AM Niklas <niklas.soderlund@ragnatech.se> wrot=
-e:
->
-> Hi Lad,
->
-> Thanks for your work.
->
-> On 2020-07-31 10:29:05 +0100, Lad Prabhakar wrote:
-> > The crop and compose settings for VIN in non mc mode werent updated
-> > in s_fmt call this resulted in captured images being clipped.
-> >
-> > With the below sequence on the third capture where size is set to
-> > 640x480 resulted in clipped image of size 320x240.
-> >
-> > high(640x480) -> low (320x240) -> high (640x480)
-> >
-> > This patch makes sure the VIN crop and compose settings are updated.
->
-> This is clearly an inconsistency in the VIN driver that should be fixed.
-> But I think the none-mc mode implements the correct behavior. That is
-> that S_FMT should not modify the crop/compose rectangles other then make
-> sure they don't go out of bounds. This is an area we tried to clarify in
-> the past but I'm still not sure what the correct answer to.
->
-What should be the exact behaviour of the bridge driver  for s_fmt
-call. Should the crop/compose settings be updated for every s_fmt
-callback or should they be only updated on s_selection callback.
-Currently the non-mc rcar-vin doesnt update the crop/compose setting
-in s_fmt callback due to which I see the above issue as mentioned.
+This allows forwarding packet across the SRv6 fabric based on their
+original traffic class.
 
-Cheers,
-Prabhakar
+Signed-off-by: Ahmed Abdelsalam <ahabdels@gmail.com>
+---
+ net/ipv6/seg6_iptunnel.c | 37 ++++++++++++++++++-------------------
+ 1 file changed, 18 insertions(+), 19 deletions(-)
 
-> >
-> > Fixes: 104464f573d ("media: rcar-vin: Do not reset the crop and compose=
- rectangles in s_fmt")
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > ---
-> >  drivers/media/platform/rcar-vin/rcar-v4l2.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c b/drivers/medi=
-a/platform/rcar-vin/rcar-v4l2.c
-> > index f421e25..a9b13d9 100644
-> > --- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
-> > +++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
-> > @@ -319,6 +319,12 @@ static int rvin_s_fmt_vid_cap(struct file *file, v=
-oid *priv,
-> >       fmt_rect.width =3D vin->format.width;
-> >       fmt_rect.height =3D vin->format.height;
-> >
-> > +     vin->crop.top =3D 0;
-> > +     vin->crop.left =3D 0;
-> > +     vin->crop.width =3D vin->format.width;
-> > +     vin->crop.height =3D vin->format.height;
-> > +     vin->compose =3D vin->crop;
-> > +
-> >       v4l2_rect_map_inside(&vin->crop, &src_rect);
-> >       v4l2_rect_map_inside(&vin->compose, &fmt_rect);
-> >       vin->src_rect =3D src_rect;
-> > --
-> > 2.7.4
-> >
->
-> --
-> Regards,
-> Niklas S=C3=B6derlund
+diff --git a/net/ipv6/seg6_iptunnel.c b/net/ipv6/seg6_iptunnel.c
+index e0e9f48ab14f..79abbfc95739 100644
+--- a/net/ipv6/seg6_iptunnel.c
++++ b/net/ipv6/seg6_iptunnel.c
+@@ -87,8 +87,7 @@ static void set_tun_src(struct net *net, struct net_device *dev,
+ }
+ 
+ /* Compute flowlabel for outer IPv6 header */
+-static __be32 seg6_make_flowlabel(struct net *net, struct sk_buff *skb,
+-				  struct ipv6hdr *inner_hdr)
++static __be32 seg6_make_flowlabel(struct net *net, struct sk_buff *skb)
+ {
+ 	int do_flowlabel = net->ipv6.sysctl.seg6_flowlabel;
+ 	__be32 flowlabel = 0;
+@@ -99,7 +98,7 @@ static __be32 seg6_make_flowlabel(struct net *net, struct sk_buff *skb,
+ 		hash = rol32(hash, 16);
+ 		flowlabel = (__force __be32)hash & IPV6_FLOWLABEL_MASK;
+ 	} else if (!do_flowlabel && skb->protocol == htons(ETH_P_IPV6)) {
+-		flowlabel = ip6_flowlabel(inner_hdr);
++		flowlabel = ip6_flowlabel(ipv6_hdr(skb));
+ 	}
+ 	return flowlabel;
+ }
+@@ -109,10 +108,10 @@ int seg6_do_srh_encap(struct sk_buff *skb, struct ipv6_sr_hdr *osrh, int proto)
+ {
+ 	struct dst_entry *dst = skb_dst(skb);
+ 	struct net *net = dev_net(dst->dev);
+-	struct ipv6hdr *hdr, *inner_hdr;
+ 	struct ipv6_sr_hdr *isrh;
+ 	int hdrlen, tot_len, err;
+-	__be32 flowlabel;
++	struct ipv6hdr *hdr;
++	__be32 flowlabel, tos = 0;
+ 
+ 	hdrlen = (osrh->hdrlen + 1) << 3;
+ 	tot_len = hdrlen + sizeof(*hdr);
+@@ -121,31 +120,31 @@ int seg6_do_srh_encap(struct sk_buff *skb, struct ipv6_sr_hdr *osrh, int proto)
+ 	if (unlikely(err))
+ 		return err;
+ 
+-	inner_hdr = ipv6_hdr(skb);
+-	flowlabel = seg6_make_flowlabel(net, skb, inner_hdr);
+-
+-	skb_push(skb, tot_len);
+-	skb_reset_network_header(skb);
+-	skb_mac_header_rebuild(skb);
+-	hdr = ipv6_hdr(skb);
+-
+ 	/* inherit tc, flowlabel and hlim
+ 	 * hlim will be decremented in ip6_forward() afterwards and
+ 	 * decapsulation will overwrite inner hlim with outer hlim
+ 	 */
+ 
++	flowlabel = seg6_make_flowlabel(net, skb);
++
+ 	if (skb->protocol == htons(ETH_P_IPV6)) {
+-		ip6_flow_hdr(hdr, ip6_tclass(ip6_flowinfo(inner_hdr)),
+-			     flowlabel);
+-		hdr->hop_limit = inner_hdr->hop_limit;
++		tos = ip6_tclass(ip6_flowinfo(ipv6_hdr(skb)));
++	} else if (skb->protocol == htons(ETH_P_IP)) {
++		tos = ip_hdr(skb)->tos;
++		memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
+ 	} else {
+-		ip6_flow_hdr(hdr, 0, flowlabel);
+-		hdr->hop_limit = ip6_dst_hoplimit(skb_dst(skb));
+-
+ 		memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
+ 	}
+ 
++	skb_push(skb, tot_len);
++	skb_reset_network_header(skb);
++	skb_mac_header_rebuild(skb);
++	hdr = ipv6_hdr(skb);
++
++	ip6_flow_hdr(hdr, tos, flowlabel);
++
+ 	hdr->nexthdr = NEXTHDR_ROUTING;
++	hdr->hop_limit = ip6_dst_hoplimit(skb_dst(skb));
+ 
+ 	isrh = (void *)hdr + sizeof(*hdr);
+ 	memcpy(isrh, osrh, hdrlen);
+-- 
+2.17.1
+
