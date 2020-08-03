@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E66AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7435BC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF5B420738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51F0D2054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458647;
-	bh=upQ0vadh/GU4f/aiUZGGppbmhZRBx7Ux6CJdmf4im6w=;
+	s=default; t=1596458652;
+	bh=GrhT//HZ6Trt8cdhY+u75Odkq8ovmv0Vn4Pk3W6PgTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TNgFeaELiCigpWcjmOuR0E5gN2soNjVo3IlfMO83D3+Y0O9d8FsbL3ajwzMhGll6I
-	 KRfHdj4JqJ3p2uyniaM7lIziw1mJ1CcTWAb2gUD/ClkZ7fyjARFUU4jSPOq7NIa6NN
-	 FcniQg0db2V/loYUePHMpWHHhdErVO3BbSj1EKEU=
+	b=HQeFhzLk+E+FRe7cNwtIFmI80PT4D2IwZ8tuYLDt7Al5+MlUhHO72i6jpa7BZDnoI
+	 2oJ1FCikK1ORor3HdlTNBrCIdoN+4/aph7SpfEE7oep3TbqF61BPXZvVmyvrEO43Ia
+	 fQlX4Gm4HazQ3XiO5ljVXMFzhbmsDqJkj0QRR/Tc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbgHCM2i (ORCPT
+        id S1729505AbgHCMoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:28:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54694 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:44:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728721AbgHCM2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:28:32 -0400
+        id S1728186AbgHCM23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:28:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BC34204EC;
-        Mon,  3 Aug 2020 12:28:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE4DB207FC;
+        Mon,  3 Aug 2020 12:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457710;
-        bh=upQ0vadh/GU4f/aiUZGGppbmhZRBx7Ux6CJdmf4im6w=;
+        s=default; t=1596457708;
+        bh=GrhT//HZ6Trt8cdhY+u75Odkq8ovmv0Vn4Pk3W6PgTQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kKPeuSxrzJBnoRLM5z6ZteGxSvzDZ4jjynT9yPwif2GcEPHz5CEhLiMS4q/nYRc2g
-         qoKdDCY5/ql6i8dyciwKShGFdD6/X8jhiZpAYBJOuik1jUzPPwgu2A/Lalt3RkA6bC
-         RtpOsqJ+2NC+J6M2DX28I+cEKoqehSYm9/mMdbEw=
+        b=uWSguoVnYXHipZuTyBb4nvS67SvreAJeUxTVTtePHxi25upaWjlml2LS2btB5fNPW
+         H70g3KnTqTF5dai6Vhg6kh4QkM+X8ETTMZRBHcQ+0Mm8HP8XyAlnzTzBEdipYC6WGM
+         9ADTKcJDGISt3f2wMYxKc2C4gHAqsHk4pfzU8jQQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guojia Liao <liaoguojia@huawei.com>,
+        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 46/90] net: hns3: fix aRFS FD rules leftover after add a user FD rule
-Date:   Mon,  3 Aug 2020 14:19:08 +0200
-Message-Id: <20200803121859.851258153@linuxfoundation.org>
+Subject: [PATCH 5.4 45/90] net: hns3: fix a TX timeout issue
+Date:   Mon,  3 Aug 2020 14:19:07 +0200
+Message-Id: <20200803121859.803431403@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -61,141 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guojia Liao <liaoguojia@huawei.com>
+From: Yonglong Liu <liuyonglong@huawei.com>
 
-[ Upstream commit efe3fa45f770f1d66e2734ee7a3523c75694ff04 ]
+[ Upstream commit a7e90ee5965fafc53d36e8b3205f08c88d7bc11f ]
 
-When user had created a FD rule, all the aRFS rules should be clear up.
-HNS3 process flow as below:
-1.get spin lock of fd_ruls_list
-2.clear up all aRFS rules
-3.release lock
-4.get spin lock of fd_ruls_list
-5.creat a rules
-6.release lock;
+When the queue depth and queue parameters are modified, there is
+a low probability that TX timeout occurs. The two operations cause
+the link to be down or up when the watchdog is still working. All
+queues are stopped when the link is down. After the carrier is on,
+all queues are woken up. If the watchdog detects the link between
+the carrier on and wakeup queues, a false TX timeout occurs.
 
-There is a short period of time between step 3 and step 4, which would
-creatting some new aRFS FD rules if driver was receiving packet.
-So refactor the fd_rule_lock to fix it.
+So fix this issue by modifying the sequence of carrier on and queue
+wakeup, which is symmetrical to the link down action.
 
-Fixes: 441228875706 ("net: hns3: refine the flow director handle")
-Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
+Fixes: 76ad4f0ee747 ("net: hns3: Add support of HNS3 Ethernet Driver for hip08 SoC")
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../hisilicon/hns3/hns3pf/hclge_main.c        | 28 ++++++++++---------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index d4652dea4569b..6c3d13110993f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -5627,9 +5627,9 @@ static int hclge_add_fd_entry(struct hnae3_handle *handle,
- 	/* to avoid rule conflict, when user configure rule by ethtool,
- 	 * we need to clear all arfs rules
- 	 */
-+	spin_lock_bh(&hdev->fd_rule_lock);
- 	hclge_clear_arfs_rules(handle);
- 
--	spin_lock_bh(&hdev->fd_rule_lock);
- 	ret = hclge_fd_config_rule(hdev, rule);
- 
- 	spin_unlock_bh(&hdev->fd_rule_lock);
-@@ -5672,6 +5672,7 @@ static int hclge_del_fd_entry(struct hnae3_handle *handle,
- 	return ret;
- }
- 
-+/* make sure being called after lock up with fd_rule_lock */
- static void hclge_del_all_fd_entries(struct hnae3_handle *handle,
- 				     bool clear_list)
- {
-@@ -5684,7 +5685,6 @@ static void hclge_del_all_fd_entries(struct hnae3_handle *handle,
- 	if (!hnae3_dev_fd_supported(hdev))
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 506381224559f..a8ce6ca0f5081 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -4014,8 +4014,8 @@ static void hns3_link_status_change(struct hnae3_handle *handle, bool linkup)
  		return;
  
--	spin_lock_bh(&hdev->fd_rule_lock);
- 	for_each_set_bit(location, hdev->fd_bmap,
- 			 hdev->fd_cfg.rule_num[HCLGE_FD_STAGE_1])
- 		hclge_fd_tcam_config(hdev, HCLGE_FD_STAGE_1, true, location,
-@@ -5701,8 +5701,6 @@ static void hclge_del_all_fd_entries(struct hnae3_handle *handle,
- 		bitmap_zero(hdev->fd_bmap,
- 			    hdev->fd_cfg.rule_num[HCLGE_FD_STAGE_1]);
- 	}
--
--	spin_unlock_bh(&hdev->fd_rule_lock);
- }
- 
- static int hclge_restore_fd_entries(struct hnae3_handle *handle)
-@@ -6069,7 +6067,7 @@ static int hclge_add_fd_entry_by_arfs(struct hnae3_handle *handle, u16 queue_id,
- 				      u16 flow_id, struct flow_keys *fkeys)
- {
- 	struct hclge_vport *vport = hclge_get_vport(handle);
--	struct hclge_fd_rule_tuples new_tuples;
-+	struct hclge_fd_rule_tuples new_tuples = {};
- 	struct hclge_dev *hdev = vport->back;
- 	struct hclge_fd_rule *rule;
- 	u16 tmp_queue_id;
-@@ -6079,20 +6077,18 @@ static int hclge_add_fd_entry_by_arfs(struct hnae3_handle *handle, u16 queue_id,
- 	if (!hnae3_dev_fd_supported(hdev))
- 		return -EOPNOTSUPP;
- 
--	memset(&new_tuples, 0, sizeof(new_tuples));
--	hclge_fd_get_flow_tuples(fkeys, &new_tuples);
--
--	spin_lock_bh(&hdev->fd_rule_lock);
--
- 	/* when there is already fd rule existed add by user,
- 	 * arfs should not work
- 	 */
-+	spin_lock_bh(&hdev->fd_rule_lock);
- 	if (hdev->fd_active_type == HCLGE_FD_EP_ACTIVE) {
- 		spin_unlock_bh(&hdev->fd_rule_lock);
- 
- 		return -EOPNOTSUPP;
- 	}
- 
-+	hclge_fd_get_flow_tuples(fkeys, &new_tuples);
-+
- 	/* check is there flow director filter existed for this flow,
- 	 * if not, create a new filter for it;
- 	 * if filter exist with different queue id, modify the filter;
-@@ -6177,6 +6173,7 @@ static void hclge_rfs_filter_expire(struct hclge_dev *hdev)
- #endif
- }
- 
-+/* make sure being called after lock up with fd_rule_lock */
- static void hclge_clear_arfs_rules(struct hnae3_handle *handle)
- {
- #ifdef CONFIG_RFS_ACCEL
-@@ -6221,10 +6218,14 @@ static void hclge_enable_fd(struct hnae3_handle *handle, bool enable)
- 
- 	hdev->fd_en = enable;
- 	clear = hdev->fd_active_type == HCLGE_FD_ARFS_ACTIVE;
--	if (!enable)
-+
-+	if (!enable) {
-+		spin_lock_bh(&hdev->fd_rule_lock);
- 		hclge_del_all_fd_entries(handle, clear);
--	else
-+		spin_unlock_bh(&hdev->fd_rule_lock);
-+	} else {
- 		hclge_restore_fd_entries(handle);
-+	}
- }
- 
- static void hclge_cfg_mac_mode(struct hclge_dev *hdev, bool enable)
-@@ -6678,8 +6679,9 @@ static void hclge_ae_stop(struct hnae3_handle *handle)
- 	int i;
- 
- 	set_bit(HCLGE_STATE_DOWN, &hdev->state);
--
-+	spin_lock_bh(&hdev->fd_rule_lock);
- 	hclge_clear_arfs_rules(handle);
-+	spin_unlock_bh(&hdev->fd_rule_lock);
- 
- 	/* If it is not PF reset, the firmware will disable the MAC,
- 	 * so it only need to stop phy here.
+ 	if (linkup) {
+-		netif_carrier_on(netdev);
+ 		netif_tx_wake_all_queues(netdev);
++		netif_carrier_on(netdev);
+ 		if (netif_msg_link(handle))
+ 			netdev_info(netdev, "link up\n");
+ 	} else {
 -- 
 2.25.1
 
