@@ -2,211 +2,116 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D057C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEFFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4865B20738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ADFD2064B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:52:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="onefh8/J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XfvhYsgH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbgHCMv6 (ORCPT
+        id S1729234AbgHCMwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:51:58 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:36355 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729542AbgHCMv0 (ORCPT
+        Mon, 3 Aug 2020 08:52:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728089AbgHCMvY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:51:26 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596459077; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=jepPBJzpwNuriMTj33dYfuOkzUu353rrYsvD7FzsN1c=;
- b=onefh8/J05V1Fr7p1QxbPn+0PxBz6lLF2aQLcNuTM7CRNU0zlgNXHUtDDNcc7cB2MbjdLAfh
- eTVCdYeDFiWgOOHw0Cwa86G0jUQr5M7H3tYmO1JmBLfUSAYKxZ0w8mq/sfJi5cs++CZhEhWp
- ApKUKpe3jbVmBvcjLD9jGdyn8xQ=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
- 5f28083a849144fbcbb7ff4d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 03 Aug 2020 12:51:06
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4DF52C433A1; Mon,  3 Aug 2020 12:51:05 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F0205C433C6;
-        Mon,  3 Aug 2020 12:51:03 +0000 (UTC)
+        Mon, 3 Aug 2020 08:51:24 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BD16C06174A;
+        Mon,  3 Aug 2020 05:51:20 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id v12so9171970ljc.10;
+        Mon, 03 Aug 2020 05:51:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=E1PtArgjfRMgQPkbPEpkNWZtVLcHwOpeacE7i+LTE34=;
+        b=XfvhYsgHRryIe56E2n3nbUW+sRNhQGKbCAxxYdMS79gHcrQZ3iwoA5THCyJwqFvMan
+         zEg/iqNxdvpeglrBf4i+8ZZVqTGFskKUU8FVFpIykIEzfv+0tZbp91OyTbmA94ImGJpD
+         aiVKRIlTvCjZVCsOPqyf+O3aJFPX92Zd01jLqLbAzaU7hhBwN4QGg3DhjajdjnHmC4/U
+         qABVxbj+TfwdOe1Fe/U7hspoM8HDJclIw3EHFBTAIpggmogkEyMtGhG2Ta4hRl3Qgaa5
+         Lxu+J9+MF95vx2Mvy5InboBYs1/nDLoL6jgmsnlpD5G4+3UjmxAcR3tm4+AxiM5/nPZA
+         LAxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=E1PtArgjfRMgQPkbPEpkNWZtVLcHwOpeacE7i+LTE34=;
+        b=LdIOzs+JSnGadcwqODh9poaFVlHG+0OCTp/sVl2w/jz1Yeya3NTuQ3Yk+Toj7L1B7h
+         M9jAcUBWEeKwE3puyBUozRsbQl5esrp6g5ATt2OVz358peys7j6va3YvTKgptA+9uT5o
+         ayc654lnJtJ61csbiYLh5+Jr1zCCGGJJoff6gkQL36QqlqGETCkhFMtURa4hQ/n+qQqS
+         ajw4iNg9x/2fiPwBtzK5O0HRk9nLRhB/jooxBVNnAxBIbVK1Q5cE/PyJkqULcsZkgvWT
+         Hl/0m1HqQWa6CuOv5OtYgvafo6bLaEVPup8XnnmiQL4GTaQQ9Hlnp7aJAQGE2q1VztW+
+         lqEQ==
+X-Gm-Message-State: AOAM531BQTeT+JU/eu+9O+Tj2+6ZdOPLwozwtGugSi8q00iG/cZz2hvy
+        mrZzthI0PUFYElkAnZIkC01uJGuT
+X-Google-Smtp-Source: ABdhPJzz8tZyKT2FTlauL+UMMliVTqWJRdc4UfHZdfhNi5L45Su0vIUq+s+xHJd9w4s7odh9priVvg==
+X-Received: by 2002:a2e:7f0f:: with SMTP id a15mr6801520ljd.454.1596459078782;
+        Mon, 03 Aug 2020 05:51:18 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
+        by smtp.googlemail.com with ESMTPSA id t20sm876625ljd.12.2020.08.03.05.51.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Aug 2020 05:51:18 -0700 (PDT)
+Subject: Re: [PATCH -next] media: staging: tegra-vde: Mark
+ tegra_vde_runtime_suspend as __maybe_unused
+To:     YueHaibing <yuehaibing@huawei.com>, mchehab@kernel.org,
+        gregkh@linuxfoundation.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, hverkuil-cisco@xs4all.nl
+Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+References: <20200803115901.44068-1-yuehaibing@huawei.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <721b8d01-5d7e-09c6-5f86-705130ab31a9@gmail.com>
+Date:   Mon, 3 Aug 2020 15:51:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 03 Aug 2020 20:51:03 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
-        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
-        bvanassche@acm.org, beanhuo@micron.com, asutoshd@codeaurora.org,
-        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
-        chaotian.jing@mediatek.com, cc.chou@mediatek.com,
-        jiajie.hao@mediatek.com
-Subject: Re: [PATCH v7] scsi: ufs: Quiesce all scsi devices before shutdown
-In-Reply-To: <20200803100448.2738-1-stanley.chu@mediatek.com>
-References: <20200803100448.2738-1-stanley.chu@mediatek.com>
-Message-ID: <70222bbb82a8b167475189110cf69317@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <20200803115901.44068-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stanley,
-
-Sorry for the noises, please ignore my previous 2 mails and let's
-focus on this one.
-
-On 2020-08-03 18:04, Stanley Chu wrote:
-> Currently I/O request could be still submitted to UFS device while
-> UFS is working on shutdown flow. This may lead to racing as below
-> scenarios and finally system may crash due to unclocked register
-> accesses.
+03.08.2020 14:59, YueHaibing пишет:
+> If CONFIG_PM is not set, gcc warns:
 > 
-> To fix this kind of issues, in ufshcd_shutdown(),
+> drivers/staging/media/tegra-vde/vde.c:916:12:
+>  warning: 'tegra_vde_runtime_suspend' defined but not used [-Wunused-function]
 > 
-> 1. Use pm_runtime_get_sync() instead of resuming UFS device by
->    ufshcd_runtime_resume() "internally" to let runtime PM framework
->    manage and prevent concurrent runtime operations by incoming I/O
->    requests.
+> Make it __maybe_unused to fix this.
 > 
-> 2. Specifically quiesce all SCSI devices to block all I/O requests
->    after device is resumed.
-> 
-> Example of racing scenario: While UFS device is runtime-suspended
-> 
-> Thread #1: Executing UFS shutdown flow, e.g.,
->            ufshcd_suspend(UFS_SHUTDOWN_PM)
-> 
-> Thread #2: Executing runtime resume flow triggered by I/O request,
->            e.g., ufshcd_resume(UFS_RUNTIME_PM)
-> 
-> This breaks the assumption that UFS PM flows can not be running
-> concurrently and some unexpected racing behavior may happen.
-> 
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
-> Changes:
->   - Since v6:
-> 	- Do quiesce to all SCSI devices.
->   - Since v4:
-> 	- Use pm_runtime_get_sync() instead of resuming UFS device by
-> ufshcd_runtime_resume() "internally".
-> ---
->  drivers/scsi/ufs/ufshcd.c | 27 ++++++++++++++++++++++-----
->  1 file changed, 22 insertions(+), 5 deletions(-)
+>  drivers/staging/media/tegra-vde/vde.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index 307622284239..7cb220b3fde0 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -8640,6 +8640,7 @@ EXPORT_SYMBOL(ufshcd_runtime_idle);
->  int ufshcd_shutdown(struct ufs_hba *hba)
+> diff --git a/drivers/staging/media/tegra-vde/vde.c b/drivers/staging/media/tegra-vde/vde.c
+> index a3c24d96d5b9..2d043d518eef 100644
+> --- a/drivers/staging/media/tegra-vde/vde.c
+> +++ b/drivers/staging/media/tegra-vde/vde.c
+> @@ -913,7 +913,7 @@ static irqreturn_t tegra_vde_isr(int irq, void *data)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> -static int tegra_vde_runtime_suspend(struct device *dev)
+> +static __maybe_unused int tegra_vde_runtime_suspend(struct device *dev)
 >  {
->  	int ret = 0;
-> +	struct scsi_target *starget;
-> 
->  	if (!hba->is_powered)
->  		goto out;
-> @@ -8647,11 +8648,27 @@ int ufshcd_shutdown(struct ufs_hba *hba)
->  	if (ufshcd_is_ufs_dev_poweroff(hba) && ufshcd_is_link_off(hba))
->  		goto out;
-> 
-> -	if (pm_runtime_suspended(hba->dev)) {
-> -		ret = ufshcd_runtime_resume(hba);
-> -		if (ret)
-> -			goto out;
-> -	}
-> +	/*
-> +	 * Let runtime PM framework manage and prevent concurrent runtime
-> +	 * operations with shutdown flow.
-> +	 */
-> +	pm_runtime_get_sync(hba->dev);
-> +
-> +	/*
-> +	 * Quiesce all SCSI devices to prevent any non-PM requests sending
-> +	 * from block layer during and after shutdown.
-> +	 *
-> +	 * Here we can not use blk_cleanup_queue() since PM requests
-> +	 * (with BLK_MQ_REQ_PREEMPT flag) are still required to be sent
-> +	 * through block layer. Therefore SCSI command queued after the
-> +	 * scsi_target_quiesce() call returned will block until
-> +	 * blk_cleanup_queue() is called.
-> +	 *
-> +	 * Besides, scsi_target_"un"quiesce (e.g., scsi_target_resume) can
-> +	 * be ignored since shutdown is one-way flow.
-> +	 */
-> +	list_for_each_entry(starget, &hba->host->__targets, siblings)
-> +		scsi_target_quiesce(starget);
+>  	struct tegra_vde *vde = dev_get_drvdata(dev);
+>  	int err;
 > 
 
-Sorry for misleading you to scsi_target_quiesce(), maybe below is 
-better.
+Hello Yue,
 
-     shost_for_each_device(sdev, hba->host)
-         scsi_device_quiesce(sdev);
-
-We may need to discuss more about this quiesce part since I missed 
-something.
-
-After we quiesce the scsi devices, only PM requests are allowed, but it
-is still not safe - PM requests can still pass through.
-
-How about only quiescing the UFS device well known scsi device but using
-freeze_queue to the other scsi devices? blk_mq_freeze_queue can 
-eliminate
-the risk.
-
-      shost_for_each_device(sdev, hba->host) {
-          if (sdev == hba->sdev_ufs_device)
-               scsi_device_quiesce(sdev);
-          else
-               blk_mq_freeze_queue(sdev->request_queue);
-      }
-
-IF blk_mq_freeze_queue is not allowed to be used by LLD (I think we can
-use it as I recalled Bart used to use it in one of his changes to UFS 
-scaling),
-we can use scsi_remove_device instead, it changes scsi device's state to
-SDEV_DEL and calls blk_cleanup_queue.
-
-We can also use scsi_autopm_get_device like below. It is to make sure
-no more PM requests sent to scsi devices (since PM requests are only 
-sent
-during PM ops).
-
-     shost_for_each_device(sdev, hba->host) {
-         scsi_autopm_get_device(sdev);
-         scsi_device_quiesce(sdev);
-     }
-
-Please let me know which one do you prefer or if you have better ideas, 
-thanks!
-
-Regards,
-
-Can Guo.
-
->  	ret = ufshcd_suspend(hba, UFS_SHUTDOWN_PM);
->  out:
+Shouldn't the tegra_vde_runtime_resume() be marked as well?
