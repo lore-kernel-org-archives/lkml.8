@@ -2,121 +2,140 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1749C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEAEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90D3D206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87431206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:26:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qKouz3LM"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="PYb1qa1u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgHCIZ6 (ORCPT
+        id S1726257AbgHCI0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 04:25:58 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58893 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbgHCIZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 04:25:57 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BKrYt2639z9sTY;
-        Mon,  3 Aug 2020 18:25:53 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596443155;
-        bh=YnMOzIpXq9jSIY1rYsGmRo9mgwR6qjcxTtHyHMUgcBs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=qKouz3LMJNEtMomI301ijlYnZucEMX7IprHnmnN2FEddKkKWEbCt/gO0LOFP8jjDS
-         lLHOfk2TKk7hsceYA9QDjAiVMMMiYnXYlm8HDCrU66kxVp+/2rC/SYJnBN0NvHPjpP
-         +BSTybIdEker/8+7Y7EXPqTp+95lvovFmGNQ7xn/QoCHGIDrFV3dYrFmRwHi9A41qC
-         WFYLqbgjup00CnJD4ZNiT4+Md1vj+BNsgBwQvkJCj0NXGnZ6KjRdwuK1lJZMRSc6eh
-         LWJZIlNShu5IgQa2UVe2MlzfBPrfgS2FN7qG3UQW6Ny41ec/Y2rPIDwQI7Vwo5ZMFz
-         pjACjyp4CDS5w==
-Date:   Mon, 3 Aug 2020 18:25:50 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christian Brauner <christian@brauner.io>,
-        Guo Ren <ren_guo@c-sky.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the pidfd tree with the csky tree
-Message-ID: <20200803182550.4c7df8ae@canb.auug.org.au>
+        Mon, 3 Aug 2020 04:26:35 -0400
+Received: from mail-am6eur05on2040.outbound.protection.outlook.com ([40.107.22.40]:31073
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725806AbgHCI0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 04:26:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=T5+RByLtvjcr5bRdjYRTwzXv9i5iotHunoAF7PtDy8XM+MaFI+Q7/0kXTT7WRoyLJ9GZoGDYHtGfx1t9SPlG6N5cgbJ/iA6aUnNvIUF1Pj6q63ceKy8ZQXySgX2U8f3WvfuOK1iDuCkvAFXt2lnjLKRttKkk98FSDoAlIjHUxVSludmTMykjcpJTUEcTT+zLhvz+GntXBnZacovPnaLKqgNrtuAW4i5z/nHf85UaXeJwjKSm/jYTa6l9TVK55d+Jqv2n0eh3OFvm/EKcpqspJWKuwCxVDh7nsG3u4BMIfeeRVeFNVCXMS+ULSOFAnoNt8BKaK4s7PbXtQ5AlsWKekw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WXJw+6VdEVlE7mTz5qRxvF08bL5zNpEfBfQPoHnP/Qo=;
+ b=IPjtg0kbe4wFjq3lWItWGvUqF+8iimXGB1P9NlaT1eMkxKaqvszLhRNg/BMuXJmUYYhcipYmqSJ9MrLd2xpF/WXskAvl31C6adlGpS59x33JZj1Fgc5TNroOlddS/hCX3k2BbXLRKywyn7gMvZmUzn7lmjECvUeidVt28mTYGSD+zmkwfmqcdAMl6gS7jYhga5fgPtgksoeiFop4U2kF6K53aL2x2glwGzS3Xerh9iXHXt1Xtdu+aGUptOXVRRORq5+ydkpQKSWzOcmIyI8BnrVcsNO7ENZcJru9ZmvblQGN7vfko3Yza6qqZ9aZ8TuQO0QCl62/LximB0e0mb0iXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WXJw+6VdEVlE7mTz5qRxvF08bL5zNpEfBfQPoHnP/Qo=;
+ b=PYb1qa1u2UvRsLIXD02wScyqq0Sg7I9EUKxAHo/mXamTqTXUGS89e/2xZ40qmBgPgS64Qn3PIP6IaGzf3971WhcI/73VrQ2mrr+9f5QiRG5MCys8IsFUF2j0bDSNsuxiBPVqApuGKRxcIENKkLl6IWoCPIuT/D8BFYkBbtsQO/A=
+Received: from AM6PR04MB3976.eurprd04.prod.outlook.com (2603:10a6:209:3f::17)
+ by AM7PR04MB6776.eurprd04.prod.outlook.com (2603:10a6:20b:103::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Mon, 3 Aug
+ 2020 08:26:31 +0000
+Received: from AM6PR04MB3976.eurprd04.prod.outlook.com
+ ([fe80::f5cb:bc18:1991:c31f]) by AM6PR04MB3976.eurprd04.prod.outlook.com
+ ([fe80::f5cb:bc18:1991:c31f%2]) with mapi id 15.20.3239.021; Mon, 3 Aug 2020
+ 08:26:31 +0000
+From:   "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
+To:     Florinel Iordache <florinel.iordache@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net v3 0/5] DPAA FMan driver fixes
+Thread-Topic: [PATCH net v3 0/5] DPAA FMan driver fixes
+Thread-Index: AQHWaWTTu6rv82yb40iH+bUNSp5ZT6kmDMlQ
+Date:   Mon, 3 Aug 2020 08:26:31 +0000
+Message-ID: <AM6PR04MB39765DF82C41B84D41FBEE5DEC4D0@AM6PR04MB3976.eurprd04.prod.outlook.com>
+References: <1596438454-4895-1-git-send-email-florinel.iordache@nxp.com>
+In-Reply-To: <1596438454-4895-1-git-send-email-florinel.iordache@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=oss.nxp.com;
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [82.76.227.152]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e60e4736-7b4c-4243-3360-08d83786ece8
+x-ms-traffictypediagnostic: AM7PR04MB6776:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM7PR04MB677607D21A3D9ADCDD48E358AD4D0@AM7PR04MB6776.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nIdShuGluIoY1X+BC0gF/Tixi/oG6wA7jc+P/txU986z9Km+4dseVotqTd2Xk8xnxuZ3KzsUEdyFhz65pfDHK76/pMxOVdOlvAOibvYN3JsqiGW9nNybuRXwFZO2t2SD6sMo/073agZ8HOOfQcyf7wpYmf/G+N1W2Oev2IwgfPR/60BUI7FdSXnj/r4F5j9A0fnu+no2BYgfU9kMBXlNLZUcbhEjHqvdBV+8Sc9vKORz1wd3TY0h36SczRbtmyMgo7N8t1/U3JxeW/s9UjHUVGNRMdU7KJ18qrjUIfg1P8FO87iocPOGzmNZwFJki7gooMb2oevafi0BJPh/FjTWjA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB3976.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(346002)(136003)(366004)(396003)(33656002)(316002)(5660300002)(6506007)(71200400001)(53546011)(26005)(110136005)(186003)(2906002)(478600001)(83380400001)(86362001)(76116006)(9686003)(66946007)(8936002)(66556008)(64756008)(55016002)(66476007)(7696005)(52536014)(66446008)(8676002)(4326008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 63YSK+ZcoRxq8NqTHs7dp1BcZE4/kxwPsTQ+Ek3nDsVdc+9GnIf7Mpsiin9ZFTtWhwhYpqu8W/6d780En1g2YigyCKt+xi/t3n62YYsdHeETiVcDTnfs7Gh6ZTtYXD29+dIH4qZZSrhE0AH/MYL+tGXCyQ3JR/y7VwQoUiUljwXWgHFUCaZD+vJmlCRaV7nIoxh3MPUCE1/0ZQzSCsmPSWDycECJlKgDrewZb/vtIAfodMvYxxP9enydD0sGI0uP/uaiWctAhYjMvVOA29WMo9P/W43B+rn+tuW3O3wkYkxwQg+8eZL84vxZW6laZbWjUZF9WYOzNqXyZ8g60x1EoMVLOpH4UOS7hx6uZ4sCoaiIWp3K1dTwhcUSueiO1iIw3BdXPh98RNEl4VP9R6imqygd63IX5j3jqlX2x9p29SiLQk/x30foPk7l5F6r4x7LIRTs43YiiuB4+cEGIBjUAUZA8M7WY7FLksezPiNkliFtgcFdJrblqujSnpmKfLRYtBRmOpHQZCIsCplDlzVt9Za7weY8tBzBOug6bgRKH1MXADk5dbybVRQdjNxVxRLhZtPm43V+iK65tHxgumhECHErUsL3yG1xuNzV62xueUwxujNXCZHJ1tCu6KXk1bUOi2pG4HSv7VPbaqfPokwZ6g==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/K5_Ix7sG1uomC5F7r_8XzSm";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB3976.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e60e4736-7b4c-4243-3360-08d83786ece8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Aug 2020 08:26:31.1351
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Lvw9nJXtOh6y3rHkgq+/Wa/M5gPJMdAi9yGMnPrhWywUktIczVF3eShdU6CASdCrFXN9yC8eCaW3jLaFKBYymQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6776
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/K5_Ix7sG1uomC5F7r_8XzSm
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+> -----Original Message-----
+> From: netdev-owner@vger.kernel.org <netdev-owner@vger.kernel.org> On
+> Behalf Of Florinel Iordache
+> Sent: 03 August 2020 10:07
+> To: Madalin Bucur <madalin.bucur@nxp.com>; davem@davemloft.net;
+> kuba@kernel.org; netdev@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org; Florinel Iordache
+> <florinel.iordache@nxp.com>
+> Subject: [PATCH net v3 0/5] DPAA FMan driver fixes
+>=20
+> Here are several fixes for the DPAA FMan driver.
+>=20
+> v2 changes:
+> * corrected patch 4 by removing the line added by mistake
+> * used longer fixes tags with the first 12 characters of the SHA-1 ID
+>=20
+> v3 changes:
+> * remove the empty line inserted after fixes tag
+>=20
+> Florinel Iordache (5):
+>   fsl/fman: use 32-bit unsigned integer
+>   fsl/fman: fix dereference null return value
+>   fsl/fman: fix unreachable code
+>   fsl/fman: check dereferencing null pointer
+>   fsl/fman: fix eth hash table allocation
+>=20
+>  drivers/net/ethernet/freescale/fman/fman.c       | 3 +--
+>  drivers/net/ethernet/freescale/fman/fman_dtsec.c | 4 ++--
+>  drivers/net/ethernet/freescale/fman/fman_mac.h   | 2 +-
+>  drivers/net/ethernet/freescale/fman/fman_memac.c | 3 +--
+>  drivers/net/ethernet/freescale/fman/fman_port.c  | 9 ++++++++-
+>  drivers/net/ethernet/freescale/fman/fman_tgec.c  | 2 +-
+>  6 files changed, 14 insertions(+), 9 deletions(-)
+>=20
+> --
+> 1.9.1
 
-Hi all,
+For the series,
 
-Today's linux-next merge of the pidfd tree got a conflict in:
-
-  arch/csky/Kconfig
-
-between commits:
-
-  e95a4f8cb985 ("csky: Add SECCOMP_FILTER supported")
-  953131e5b5a5 ("csky: Use top-down mmap layout")
-  bdcd93ef9afb ("csky: Add context tracking support")
-
-from the csky tree and commit:
-
-  140c8180eb7c ("arch: remove HAVE_COPY_THREAD_TLS")
-
-from the pidfd tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/csky/Kconfig
-index af238739811e,902f1142d550..000000000000
---- a/arch/csky/Kconfig
-+++ b/arch/csky/Kconfig
-@@@ -39,11 -38,6 +39,10 @@@ config CSK
-  	select GX6605S_TIMER if CPU_CK610
-  	select HAVE_ARCH_TRACEHOOK
-  	select HAVE_ARCH_AUDITSYSCALL
- +	select HAVE_ARCH_MMAP_RND_BITS
- +	select HAVE_ARCH_SECCOMP_FILTER
-- 	select HAVE_COPY_THREAD_TLS
- +	select HAVE_CONTEXT_TRACKING
- +	select HAVE_VIRT_CPU_ACCOUNTING_GEN
-  	select HAVE_DEBUG_BUGVERBOSE
-  	select HAVE_DYNAMIC_FTRACE
-  	select HAVE_DYNAMIC_FTRACE_WITH_REGS
-
---Sig_/K5_Ix7sG1uomC5F7r_8XzSm
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8nyg4ACgkQAVBC80lX
-0GxJbgf/QUrWTfBukHTFPeLkKQgGDtyxMTSdIHwNoMa32DScnBsUGfjUI6G2qJO7
-VvNETdDCfqrKz1+ls/0uEoNwa+lJbyjFP+PTRquXv2h+XmHBHAYLnADg38h7lRUZ
-6eij3YO3LmbAA9MxN9RByiMnnKN83k87iGucxRf46ZPmlGVMoJvdr+3ApiId2IKR
-W8+GxrNOEpuRgOuAnZynRNeCG5MIHoEwgj/s5zZ4Praj9vkZZ4zYe+E61HNrnzKy
-2eBeTW4O5Pn90ya7Wa26g6sjUH0oF9P7w9cziqV5Xg8WGRy9+NCs9Vr3VaceTUxn
-Bh0H/vD/5Fq+I2cgnxBU6bu4sZxqig==
-=KH3P
------END PGP SIGNATURE-----
-
---Sig_/K5_Ix7sG1uomC5F7r_8XzSm--
+Acked-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
