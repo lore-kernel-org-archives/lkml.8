@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BF9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA60C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C663A2086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0A21208B3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457786;
-	bh=kbe8WXIGRrAQO4d8dZZB8ZfVPuIxlU9GkwkGd1km1gg=;
+	s=default; t=1596457789;
+	bh=I2dTzUq/9wZciNDjDhbRp5+H1zAaUup4cSjPwG9P8DI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p+crM/Lzb3OjWcBIBI4bnR6/URrxKdopzRfTsdXHX4boOQ8rp1rM+Vgr8w9DlnDyD
-	 zGiKJxkOXZqn5oaf0475eHQAbHXCUXSymg6wC2sdvOhMS7/bdbxzHcNPYn59djWPrH
-	 1ab+7Tm1ybkxRfxjS8utVjoX3y2tSmTSXPsuhQW4=
+	b=d2JYwJOfA6c7SBTbkKGj8ou0VDQF98DTgUwsvduGn053veZ8Vtw18vKo2zOtY17wc
+	 tk8s0iNrs79JoXREwkWAOH75hTgGdDk1mdMyamHL0SykMKJjZBPPe4B/8fMjLBPpAF
+	 AXKO4FMn3HnhWf2UmKcPbYr7yppccLOB6QifpLdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbgHCM3p (ORCPT
+        id S1728343AbgHCM3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:29:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56382 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:29:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728955AbgHCM3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:29:42 -0400
+        id S1728965AbgHCM3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:29:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20CB1204EC;
-        Mon,  3 Aug 2020 12:29:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C23B3204EC;
+        Mon,  3 Aug 2020 12:29:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457781;
-        bh=kbe8WXIGRrAQO4d8dZZB8ZfVPuIxlU9GkwkGd1km1gg=;
+        s=default; t=1596457784;
+        bh=I2dTzUq/9wZciNDjDhbRp5+H1zAaUup4cSjPwG9P8DI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2plaoJ6wPNLrs9EptCnjtkW6N3j0gQNEx0dNL8ua6jveWymvAD6uCzCpI9TBlU7Uk
-         H0J+WzUJbjrqkgUK/yB5yJS4TY8CLp2WwVFMBIM11W8zMJw8caOzVAZWXb2vgYyTQc
-         6SF2tRKxBTiLxY/v0yUlmsg0oWHqn401ZXMJB4XE=
+        b=m/MexlLfoQNbB8RxoXfu/YAxjYaThGWVOU7GdKUh4cDaN8X9UNsuF0o2D96Ut0WUE
+         lEHr7px6vzHslEq8rAqQCnxJy2T0Q5iGQS/0fjFIcEKvbvA/tQ4VXKJIr8wfRMFrSS
+         wkf9gOQWWr/4+Dkl35fM4eaW+vc7ApD9os9hxJBc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laurence Oberman <loberman@redhat.com>,
+        stable@vger.kernel.org, Paolo Pisati <paolo.pisati@canonical.com>,
+        Jakub Kicinski <kuba@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 72/90] qed: Disable "MFW indication via attention" SPAM every 5 minutes
-Date:   Mon,  3 Aug 2020 14:19:34 +0200
-Message-Id: <20200803121901.098286610@linuxfoundation.org>
+Subject: [PATCH 5.4 73/90] selftests: net: ip_defrag: modprobe missing nf_defrag_ipv6 support
+Date:   Mon,  3 Aug 2020 14:19:35 +0200
+Message-Id: <20200803121901.147778151@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -60,36 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurence Oberman <loberman@redhat.com>
+From: Paolo Pisati <paolo.pisati@canonical.com>
 
-[ Upstream commit 1d61e21852d3161f234b9656797669fe185c251b ]
+[ Upstream commit aba69d49fb49c9166596dd78926514173b7f9ab5 ]
 
-This is likely firmware causing this but its starting to annoy customers.
-Change the message level to verbose to prevent the spam.
-Note that this seems to only show up with ISCSI enabled on the HBA via the
-qedi driver.
+Fix ip_defrag.sh when CONFIG_NF_DEFRAG_IPV6=m:
 
-Signed-off-by: Laurence Oberman <loberman@redhat.com>
+$ sudo ./ip_defrag.sh
++ set -e
++ mktemp -u XXXXXX
++ readonly NETNS=ns-rGlXcw
++ trap cleanup EXIT
++ setup
++ ip netns add ns-rGlXcw
++ ip -netns ns-rGlXcw link set lo up
++ ip netns exec ns-rGlXcw sysctl -w net.ipv4.ipfrag_high_thresh=9000000
++ ip netns exec ns-rGlXcw sysctl -w net.ipv4.ipfrag_low_thresh=7000000
++ ip netns exec ns-rGlXcw sysctl -w net.ipv4.ipfrag_time=1
++ ip netns exec ns-rGlXcw sysctl -w net.ipv6.ip6frag_high_thresh=9000000
++ ip netns exec ns-rGlXcw sysctl -w net.ipv6.ip6frag_low_thresh=7000000
++ ip netns exec ns-rGlXcw sysctl -w net.ipv6.ip6frag_time=1
++ ip netns exec ns-rGlXcw sysctl -w net.netfilter.nf_conntrack_frag6_high_thresh=9000000
++ cleanup
++ ip netns del ns-rGlXcw
+
+$ ls -la /proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh
+ls: cannot access '/proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh': No such file or directory
+
+$ sudo modprobe nf_defrag_ipv6
+$ ls -la /proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh
+-rw-r--r-- 1 root root 0 Jul 14 12:34 /proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh
+
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+Reviewed-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_int.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/ip_defrag.sh | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_int.c b/drivers/net/ethernet/qlogic/qed/qed_int.c
-index 8d106063e9275..666e43748a5f4 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_int.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_int.c
-@@ -1180,7 +1180,8 @@ static int qed_int_attentions(struct qed_hwfn *p_hwfn)
- 			index, attn_bits, attn_acks, asserted_bits,
- 			deasserted_bits, p_sb_attn_sw->known_attn);
- 	} else if (asserted_bits == 0x100) {
--		DP_INFO(p_hwfn, "MFW indication via attention\n");
-+		DP_VERBOSE(p_hwfn, NETIF_MSG_INTR,
-+			   "MFW indication via attention\n");
- 	} else {
- 		DP_VERBOSE(p_hwfn, NETIF_MSG_INTR,
- 			   "MFW indication [deassertion]\n");
+diff --git a/tools/testing/selftests/net/ip_defrag.sh b/tools/testing/selftests/net/ip_defrag.sh
+index 15d3489ecd9ce..ceb7ad4dbd945 100755
+--- a/tools/testing/selftests/net/ip_defrag.sh
++++ b/tools/testing/selftests/net/ip_defrag.sh
+@@ -6,6 +6,8 @@
+ set +x
+ set -e
+ 
++modprobe -q nf_defrag_ipv6
++
+ readonly NETNS="ns-$(mktemp -u XXXXXX)"
+ 
+ setup() {
 -- 
 2.25.1
 
