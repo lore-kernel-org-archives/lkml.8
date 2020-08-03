@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516BCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E65CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2506E2083B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6AB622B42
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457760;
-	bh=pPLMt+TyjFNT7l3WxNhNb9IrLTc7yKu/fEg5hGC/7gw=;
+	s=default; t=1596457761;
+	bh=ydK9cr8WcttdvYlxvmGns+HK1944d3qEWesYbgDU2qE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ah67l+7z6ShD67EcSSfCS8YUCjlj0HHAq/mPaOqL21kFes53HdKf/iVWJPRA9TRkK
-	 cF/K1JTK4Ap3aSJ9GkVbE0tr5mUVFvYXCR2iRuQrLBltOzmG/786ltsODz6Blh0SVe
-	 qU33WwTpoQ3nsatFQc3Owr7jIDXfxlx3wmEL+HKQ=
+	b=elcdbh39albbSPxLSvBfsQe8goWfWQx8eNkDX2a1oOibe5sdrdHkc3Hi3gSade5TY
+	 dl3aklJ/3woWTbzEQcWDRzMblI9OjTifXimTHk2I+mpEwda6CSjSGh85kcVUKAYrPz
+	 ivEh7JEa5/Qro0sEPFQJDnY8+qj9SbjD74z9q64M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728888AbgHCM3T (ORCPT
+        id S1728898AbgHCM3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:29:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55626 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:29:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728877AbgHCM3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:29:17 -0400
+        id S1727814AbgHCM3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:29:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04E582086A;
-        Mon,  3 Aug 2020 12:29:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53AA72245C;
+        Mon,  3 Aug 2020 12:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457755;
-        bh=pPLMt+TyjFNT7l3WxNhNb9IrLTc7yKu/fEg5hGC/7gw=;
+        s=default; t=1596457758;
+        bh=ydK9cr8WcttdvYlxvmGns+HK1944d3qEWesYbgDU2qE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1AbOmEUBv54zdtqa3MKqBecToMmye8LmofEoDDRrxwF2DQVfaAgFxa2WuzzW57D84
-         6a2jn76xoxA7mbZaIqFfMV4OujU3ICw4MDrGutc4rte83L8R8AmDFDUxg6jh1JRLyE
-         LsVe93spUaMKiD+uI75BgvgBfC2C0qbtvNWp4GSw=
+        b=WMP9zJY52r68QpXhv3SfKk3jjiPEQOUbCOq5kcK6+Yp2qB/TtMlpaBY0602460Kic
+         SKwfxyi8Kt48SkgNvxVEaQ2JWQdtDdPZsUKH33gZuCHAEDpmc6KxOsgnRas5NSrCJU
+         UVITW8P2mzl9KIqk1kerr35EVrM2+IH8uADHwHGc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>,
-        Salvatore Bonaccorso <carnil@debian.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-trace-devel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.4 32/90] libtraceevent: Fix build with binutils 2.35
-Date:   Mon,  3 Aug 2020 14:18:54 +0200
-Message-Id: <20200803121859.168687426@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 33/90] net/x25: Fix x25_neigh refcnt leak when x25 disconnect
+Date:   Mon,  3 Aug 2020 14:18:55 +0200
+Message-Id: <20200803121859.217192052@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -62,37 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-commit 39efdd94e314336f4acbac4c07e0f37bdc3bef71 upstream.
+commit 4becb7ee5b3d2829ed7b9261a245a77d5b7de902 upstream.
 
-In binutils 2.35, 'nm -D' changed to show symbol versions along with
-symbol names, with the usual @@ separator.  When generating
-libtraceevent-dynamic-list we need just the names, so strip off the
-version suffix if present.
+x25_connect() invokes x25_get_neigh(), which returns a reference of the
+specified x25_neigh object to "x25->neighbour" with increased refcnt.
 
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-Tested-by: Salvatore Bonaccorso <carnil@debian.org>
-Reviewed-by: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-devel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+When x25 connect success and returns, the reference still be hold by
+"x25->neighbour", so the refcount should be decreased in
+x25_disconnect() to keep refcount balanced.
+
+The reference counting issue happens in x25_disconnect(), which forgets
+to decrease the refcnt increased by x25_get_neigh() in x25_connect(),
+causing a refcnt leak.
+
+Fix this issue by calling x25_neigh_put() before x25_disconnect()
+returns.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/lib/traceevent/plugins/Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/x25/x25_subr.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/tools/lib/traceevent/plugins/Makefile
-+++ b/tools/lib/traceevent/plugins/Makefile
-@@ -196,7 +196,7 @@ define do_generate_dynamic_list_file
- 	xargs echo "U w W" | tr 'w ' 'W\n' | sort -u | xargs echo`;\
- 	if [ "$$symbol_type" = "U W" ];then				\
- 		(echo '{';                                              \
--		$(NM) -u -D $1 | awk 'NF>1 {print "\t"$$2";"}' | sort -u;\
-+		$(NM) -u -D $1 | awk 'NF>1 {sub("@.*", "", $$2); print "\t"$$2";"}' | sort -u;\
- 		echo '};';                                              \
- 		) > $2;                                                 \
- 	else                                                            \
+--- a/net/x25/x25_subr.c
++++ b/net/x25/x25_subr.c
+@@ -357,6 +357,10 @@ void x25_disconnect(struct sock *sk, int
+ 		sk->sk_state_change(sk);
+ 		sock_set_flag(sk, SOCK_DEAD);
+ 	}
++	read_lock_bh(&x25_list_lock);
++	x25_neigh_put(x25->neighbour);
++	x25->neighbour = NULL;
++	read_unlock_bh(&x25_list_lock);
+ }
+ 
+ /*
 
 
