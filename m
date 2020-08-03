@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E87A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7176C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C94EA20678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6CC12064B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596459288;
-	bh=5K8yZzDkipZ/HEQTB9fDYk/IC/b3+nBlZqhBFh1ALQ0=;
+	s=default; t=1596459294;
+	bh=cEtJnSUaGtbTxH18GKYsJEmTgJr5ZoxfZl79ZRBrVn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rgm73FMMttcSnjMYs4+ymG7GaSO3jFO9vvEQ+WYxva4j+lFgXEtdSSBKSLlpfUQM0
-	 oBSDilW9X2tqhQJBXA8yPX9bdiCcdFQWaqgYeoJ96Y51lJcpsVCS/njCQwzonKc/vE
-	 4fuRn9n4O1vZuCkkdnquO7yUiXcrUh644xAlyJbc=
+	b=xI4mpkSfyCnW6NPRA+G/8lvawquq0NZ29FLSE1tjdT/JvJ4tqKqP+mIcFSmMRa/rM
+	 Z0DKlEJB7I6PX/cTdfYkLAe5tIE/ZO5jxnXiibP+F/F+JP4ltMbPxni0twgFGm/FuK
+	 Qpxa391nv9BhKRsLN+PPwGMfOgzvq8WVSyOC7UgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbgHCMys (ORCPT
+        id S1728669AbgHCMyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:54:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47384 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:54:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727843AbgHCMXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:23:22 -0400
+        id S1727817AbgHCMXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:23:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 342902076B;
-        Mon,  3 Aug 2020 12:23:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F30722076B;
+        Mon,  3 Aug 2020 12:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457400;
-        bh=5K8yZzDkipZ/HEQTB9fDYk/IC/b3+nBlZqhBFh1ALQ0=;
+        s=default; t=1596457389;
+        bh=cEtJnSUaGtbTxH18GKYsJEmTgJr5ZoxfZl79ZRBrVn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zz/S4Q+z7RXh8N9p2glHHxVDABmUXozJwLhqnF6e+A+UT1/1zN6urRqIzQtwMwgaA
-         Tb9MzVXSisNb862Tk4wmr3/3WctmiESPuuBvzKthASzL4hAPgJfUkKQA+VQqVJi+kB
-         tC/Q/j0kd6TejFwB2mAbw8pqR3vetLGS9grJ7wqA=
+        b=0rtZLjAL9aJg2PqUwfYpt+eI0gAlcKgLqUNOBYHvVyx0xkVn6uRKr77t8MmBsHyrd
+         9nQVsjtk2oXu/gNVWxIIvlktd5iI+sGYEn03qDt5k1HooDn+eEwsAYA+UfRq3+BHgr
+         6v7uKUJ033KLB7n73w58pejHXo8W1NKH9ARuef7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guojia Liao <liaoguojia@huawei.com>,
+        stable@vger.kernel.org, Yunsheng Lin <linyunsheng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 053/120] net: hns3: fix for VLAN config when reset failed
-Date:   Mon,  3 Aug 2020 14:18:31 +0200
-Message-Id: <20200803121905.378939723@linuxfoundation.org>
+Subject: [PATCH 5.7 049/120] net: hns3: fix desc filling bug when skb is expanded or lineared
+Date:   Mon,  3 Aug 2020 14:18:27 +0200
+Message-Id: <20200803121905.192237001@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -61,73 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guojia Liao <liaoguojia@huawei.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-[ Upstream commit b7b5d25bdd7bdea7d72a41e0a97b1b8f3dea2ee7 ]
+[ Upstream commit cfdaeba5ddc98b303639a3265c2031ac5db249d6 ]
 
-When device is resetting or reset failed, firmware is unable to
-handle mailbox. VLAN should not be configured in this case.
+The linear and frag data part may be changed when the skb is expanded
+or lineared in skb_cow_head() or skb_checksum_help(), which is called
+by hns3_fill_skb_desc(), so the linear len return by skb_headlen()
+before the calling of hns3_fill_skb_desc() is unreliable.
 
-Fixes: fe4144d47eef ("net: hns3: sync VLAN filter entries when kill VLAN ID failed")
-Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
+Move hns3_fill_skb_desc() before the calling of skb_headlen() to fix
+this bug.
+
+Fixes: 76ad4f0ee747 ("net: hns3: Add support of HNS3 Ethernet Driver for hip08 SoC")
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c    |  7 ++++---
- .../net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 10 ++++++----
- 2 files changed, 10 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index ae4c415b97e45..dfe247ad84751 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -8534,11 +8534,12 @@ int hclge_set_vlan_filter(struct hnae3_handle *handle, __be16 proto,
- 	bool writen_to_tbl = false;
- 	int ret = 0;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index df1cb0441183c..0b12425fa2845 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -1098,16 +1098,8 @@ static int hns3_fill_desc(struct hns3_enet_ring *ring, void *priv,
+ 	int k, sizeoflast;
+ 	dma_addr_t dma;
  
--	/* When device is resetting, firmware is unable to handle
--	 * mailbox. Just record the vlan id, and remove it after
-+	/* When device is resetting or reset failed, firmware is unable to
-+	 * handle mailbox. Just record the vlan id, and remove it after
- 	 * reset finished.
- 	 */
--	if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state) && is_kill) {
-+	if ((test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state) ||
-+	     test_bit(HCLGE_STATE_RST_FAIL, &hdev->state)) && is_kill) {
- 		set_bit(vlan_id, vport->vlan_del_fail_bmap);
- 		return -EBUSY;
- 	}
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index 1bdff64bb70f9..0060fa643d0e3 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -1322,11 +1322,12 @@ static int hclgevf_set_vlan_filter(struct hnae3_handle *handle,
- 	if (proto != htons(ETH_P_8021Q))
- 		return -EPROTONOSUPPORT;
+-	if (type == DESC_TYPE_SKB) {
+-		struct sk_buff *skb = (struct sk_buff *)priv;
+-		int ret;
+-
+-		ret = hns3_fill_skb_desc(ring, skb, desc);
+-		if (unlikely(ret < 0))
+-			return ret;
+-
+-		dma = dma_map_single(dev, skb->data, size, DMA_TO_DEVICE);
+-	} else if (type == DESC_TYPE_FRAGLIST_SKB) {
++	if (type == DESC_TYPE_FRAGLIST_SKB ||
++	    type == DESC_TYPE_SKB) {
+ 		struct sk_buff *skb = (struct sk_buff *)priv;
  
--	/* When device is resetting, firmware is unable to handle
--	 * mailbox. Just record the vlan id, and remove it after
-+	/* When device is resetting or reset failed, firmware is unable to
-+	 * handle mailbox. Just record the vlan id, and remove it after
- 	 * reset finished.
- 	 */
--	if (test_bit(HCLGEVF_STATE_RST_HANDLING, &hdev->state) && is_kill) {
-+	if ((test_bit(HCLGEVF_STATE_RST_HANDLING, &hdev->state) ||
-+	     test_bit(HCLGEVF_STATE_RST_FAIL, &hdev->state)) && is_kill) {
- 		set_bit(vlan_id, hdev->vlan_del_fail_bmap);
- 		return -EBUSY;
- 	}
-@@ -3146,7 +3147,8 @@ void hclgevf_update_port_base_vlan_info(struct hclgevf_dev *hdev, u16 state,
+ 		dma = dma_map_single(dev, skb->data, size, DMA_TO_DEVICE);
+@@ -1452,6 +1444,10 @@ netdev_tx_t hns3_nic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
  
- 	rtnl_lock();
+ 	next_to_use_head = ring->next_to_use;
  
--	if (test_bit(HCLGEVF_STATE_RST_HANDLING, &hdev->state)) {
-+	if (test_bit(HCLGEVF_STATE_RST_HANDLING, &hdev->state) ||
-+	    test_bit(HCLGEVF_STATE_RST_FAIL, &hdev->state)) {
- 		dev_warn(&hdev->pdev->dev,
- 			 "is resetting when updating port based vlan info\n");
- 		rtnl_unlock();
++	ret = hns3_fill_skb_desc(ring, skb, &ring->desc[ring->next_to_use]);
++	if (unlikely(ret < 0))
++		goto fill_err;
++
+ 	ret = hns3_fill_skb_to_desc(ring, skb, DESC_TYPE_SKB);
+ 	if (unlikely(ret < 0))
+ 		goto fill_err;
 -- 
 2.25.1
 
