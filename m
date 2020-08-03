@@ -2,123 +2,473 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B99BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66132C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC302075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D15D20722
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:39:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596447589;
+	bh=A6pdrJac209oL6Jt8qw0836N9oAsZBGFJC+ecL2wqxU=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=PkDcZCvd9YQoWvZaWcSdLD3qOssInoyP2kvqriCUjeZ93linCFTq07S433C5AKqM2
+	 WXt6eFHDT97xLrN3ycBYUR7VVCFKGnsM9L0JjO9kVUqkMFU4WHddgZeTBEnkLEg0Yt
+	 hCNRWwkLakUP1KMD/5DU/MhC3Ar5zgY+at2ieLAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbgHCJjo (ORCPT
+        id S1726398AbgHCJjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 05:39:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34578 "EHLO mx2.suse.de"
+        Mon, 3 Aug 2020 05:39:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbgHCJjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 05:39:43 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 06D79AB7A;
-        Mon,  3 Aug 2020 09:39:57 +0000 (UTC)
-Subject: Re: [PATCH] btrfs: fix error value in btrfs_get_extent
-To:     Pavel Machek <pavel@denx.de>, clm@fb.com, jbacik@fb.com,
-        dsterba@suse.com, sashal@kernel.org, wqu@suse.com,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jungyeon@gatech.edu, stable@kernel.org
-References: <20200803093506.GA19472@amd>
-From:   Nikolay Borisov <nborisov@suse.com>
-Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <4e88eb32-ac7d-f0cb-d089-ec197595bce9@suse.com>
-Date:   Mon, 3 Aug 2020 12:39:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1725948AbgHCJjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 05:39:47 -0400
+Received: from kernel.org (unknown [87.70.91.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4466420719;
+        Mon,  3 Aug 2020 09:39:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596447585;
+        bh=A6pdrJac209oL6Jt8qw0836N9oAsZBGFJC+ecL2wqxU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=sKup/vJQfbGwbGgkOfN9KrXVdFXun9eBJtglCOOkztrZxPI18mo4r+aEGgXITqSt2
+         pYsHLdDyH1/blW3SL7tsS9IQbCdmj9Is8CH4err4MJhkCbZ7KacDQ4z0d6r8ByplcD
+         B7I8YTibkl6xFnh9c/dt008UXWdZqXG3pYqgJJrk=
+Date:   Mon, 3 Aug 2020 12:39:39 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Guan Xuetao <gxt@pku.edu.cn>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] remove unicore32 support
+Message-ID: <20200803093939.GA8243@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200803093506.GA19472@amd>
-Content-Type: text/plain; charset=UTF-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
+The following changes since commit 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68:
 
-On 3.08.20 г. 12:35 ч., Pavel Machek wrote:
-> btrfs_get_extent() sets variable ret, but out: error path expect error
-> to be in variable err. Fix that.
-> 
-> Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
+  Linux 5.8-rc3 (2020-06-28 15:00:24 -0700)
 
-Good catch, this also needs:
+are available in the Git repository at:
 
-Fixes: 6bf9e4bd6a27 ("btrfs: inode: Verify inode mode to avoid NULL
-pointer dereference")
+  https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git/ tags/rm-unicore32
 
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+for you to fetch changes up to 3346dd99fb4cd174fdbfb68dc62cd109e4323f0f:
 
+  MAINTAINERS: remove "PKUNITY SOC DRIVERS" entry (2020-07-01 12:11:02 +0300)
 
-> 
-> ---
-> 
-> Notice that patch introducing this problem is on its way to 4.19.137-stable.
-> 
-> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-> index 7befb7c12bd3..4aaa01540f89 100644
-> --- a/fs/btrfs/inode.c
-> +++ b/fs/btrfs/inode.c
-> @@ -7012,7 +7012,7 @@ struct extent_map *btrfs_get_extent(struct btrfs_inode *inode,
->  	    found_type == BTRFS_FILE_EXTENT_PREALLOC) {
->  		/* Only regular file could have regular/prealloc extent */
->  		if (!S_ISREG(inode->vfs_inode.i_mode)) {
-> -			ret = -EUCLEAN;
-> +			err = -EUCLEAN;
->  			btrfs_crit(fs_info,
->  		"regular/prealloc extent found for non-regular inode %llu",
->  				   btrfs_ino(inode));
-> 
+----------------------------------------------------------------
+
+The unicore32 port do not seem maintained for a long time now, there is no
+upstream toolchain that can create unicore32 binaries and all the links to
+prebuilt toolchains for unicore32 are dead. Even compilers that were
+available are not supported by the kernel anymore.
+
+Guenter Roeck says:
+
+  I have stopped building unicore32 images since v4.19 since there is no
+  available compiler that is still supported by the kernel. I am surprised
+  that support for it has not been removed from the kernel.
+
+However, it's worth pointing out two things:
+
+- Guan Xuetao is still listed as maintainer and asked for the port to be
+  kept around the last time Arnd suggested removing it two years ago. He
+  promised that there would be compiler sources (presumably llvm), but has
+  not made those available since.
+
+- https://github.com/gxt has patches to linux-4.9 and qemu-2.7, both
+  released in 2016, with patches dated early 2019. These patches mainly
+  restore a syscall ABI that was never part of mainline Linux but apparently
+  used in production. qemu-2.8 removed support for that ABI and newer kernels
+  (4.19+) can no longer be built with the old toolchain, so apparently
+  there will not be any future updates to that git tree.
+
+----------------------------------------------------------------
+Mike Rapoport (8):
+      arch: remove unicore32 port
+      cpufreq: remove unicore32 driver
+      i2c/buses: remove i2c-puv3  driver
+      input: i8042: remove support for 8042-unicore32io
+      pwm: remove pwm-puv3  driver
+      video: fbdev: remove fb-puv3  driver
+      rtc: remove fb-puv3  driver
+      MAINTAINERS: remove "PKUNITY SOC DRIVERS" entry
+
+ .../features/core/cBPF-JIT/arch-support.txt        |   1 -
+ .../features/core/eBPF-JIT/arch-support.txt        |   1 -
+ .../core/generic-idle-thread/arch-support.txt      |   1 -
+ .../features/core/jump-labels/arch-support.txt     |   1 -
+ .../features/core/tracehook/arch-support.txt       |   1 -
+ .../features/debug/KASAN/arch-support.txt          |   1 -
+ .../debug/debug-vm-pgtable/arch-support.txt        |   1 -
+ .../debug/gcov-profile-all/arch-support.txt        |   1 -
+ Documentation/features/debug/kgdb/arch-support.txt |   1 -
+ .../debug/kprobes-on-ftrace/arch-support.txt       |   1 -
+ .../features/debug/kprobes/arch-support.txt        |   1 -
+ .../features/debug/kretprobes/arch-support.txt     |   1 -
+ .../features/debug/optprobes/arch-support.txt      |   1 -
+ .../features/debug/stackprotector/arch-support.txt |   1 -
+ .../features/debug/uprobes/arch-support.txt        |   1 -
+ .../debug/user-ret-profiler/arch-support.txt       |   1 -
+ .../features/io/dma-contiguous/arch-support.txt    |   1 -
+ .../locking/cmpxchg-local/arch-support.txt         |   1 -
+ .../features/locking/lockdep/arch-support.txt      |   1 -
+ .../locking/queued-rwlocks/arch-support.txt        |   1 -
+ .../locking/queued-spinlocks/arch-support.txt      |   1 -
+ .../features/perf/kprobes-event/arch-support.txt   |   1 -
+ .../features/perf/perf-regs/arch-support.txt       |   1 -
+ .../features/perf/perf-stackdump/arch-support.txt  |   1 -
+ .../sched/membarrier-sync-core/arch-support.txt    |   1 -
+ .../features/sched/numa-balancing/arch-support.txt |   1 -
+ .../seccomp/seccomp-filter/arch-support.txt        |   1 -
+ .../time/arch-tick-broadcast/arch-support.txt      |   1 -
+ .../features/time/clockevents/arch-support.txt     |   1 -
+ .../time/context-tracking/arch-support.txt         |   1 -
+ .../features/time/irq-time-acct/arch-support.txt   |   1 -
+ .../time/modern-timekeeping/arch-support.txt       |   1 -
+ .../features/time/virt-cpuacct/arch-support.txt    |   1 -
+ .../features/vm/ELF-ASLR/arch-support.txt          |   1 -
+ .../features/vm/PG_uncached/arch-support.txt       |   1 -
+ Documentation/features/vm/THP/arch-support.txt     |   1 -
+ Documentation/features/vm/TLB/arch-support.txt     |   1 -
+ .../features/vm/huge-vmap/arch-support.txt         |   1 -
+ .../features/vm/ioremap_prot/arch-support.txt      |   1 -
+ .../features/vm/pte_special/arch-support.txt       |   1 -
+ MAINTAINERS                                        |  17 -
+ arch/unicore32/.gitignore                          |  22 -
+ arch/unicore32/Kconfig                             | 200 -----
+ arch/unicore32/Kconfig.debug                       |  29 -
+ arch/unicore32/Makefile                            |  59 --
+ arch/unicore32/boot/Makefile                       |  39 -
+ arch/unicore32/boot/compressed/Makefile            |  64 --
+ arch/unicore32/boot/compressed/head.S              | 201 -----
+ arch/unicore32/boot/compressed/misc.c              | 123 ---
+ arch/unicore32/boot/compressed/piggy.S.in          |   6 -
+ arch/unicore32/boot/compressed/vmlinux.lds.S       |  58 --
+ arch/unicore32/configs/defconfig                   | 214 ------
+ arch/unicore32/include/asm/Kbuild                  |   7 -
+ arch/unicore32/include/asm/assembler.h             | 128 ----
+ arch/unicore32/include/asm/barrier.h               |  16 -
+ arch/unicore32/include/asm/bitops.h                |  46 --
+ arch/unicore32/include/asm/bug.h                   |  20 -
+ arch/unicore32/include/asm/cache.h                 |  24 -
+ arch/unicore32/include/asm/cacheflush.h            | 186 -----
+ arch/unicore32/include/asm/checksum.h              |  38 -
+ arch/unicore32/include/asm/cmpxchg.h               |  58 --
+ arch/unicore32/include/asm/cpu-single.h            |  42 --
+ arch/unicore32/include/asm/cputype.h               |  30 -
+ arch/unicore32/include/asm/delay.h                 |  49 --
+ arch/unicore32/include/asm/dma.h                   |  20 -
+ arch/unicore32/include/asm/elf.h                   |  90 ---
+ arch/unicore32/include/asm/fpstate.h               |  23 -
+ arch/unicore32/include/asm/fpu-ucf64.h             |  50 --
+ arch/unicore32/include/asm/gpio.h                  | 101 ---
+ arch/unicore32/include/asm/hwcap.h                 |  29 -
+ arch/unicore32/include/asm/hwdef-copro.h           |  45 --
+ arch/unicore32/include/asm/io.h                    |  69 --
+ arch/unicore32/include/asm/irq.h                   | 102 ---
+ arch/unicore32/include/asm/irqflags.h              |  50 --
+ arch/unicore32/include/asm/linkage.h               |  19 -
+ arch/unicore32/include/asm/memblock.h              |  43 --
+ arch/unicore32/include/asm/memory.h                | 102 ---
+ arch/unicore32/include/asm/mmu.h                   |  14 -
+ arch/unicore32/include/asm/mmu_context.h           |  98 ---
+ arch/unicore32/include/asm/page.h                  |  74 --
+ arch/unicore32/include/asm/pci.h                   |  20 -
+ arch/unicore32/include/asm/pgalloc.h               |  87 ---
+ arch/unicore32/include/asm/pgtable-hwdef.h         |  51 --
+ arch/unicore32/include/asm/pgtable.h               | 267 -------
+ arch/unicore32/include/asm/processor.h             |  74 --
+ arch/unicore32/include/asm/ptrace.h                |  58 --
+ arch/unicore32/include/asm/stacktrace.h            |  28 -
+ arch/unicore32/include/asm/string.h                |  35 -
+ arch/unicore32/include/asm/suspend.h               |  26 -
+ arch/unicore32/include/asm/switch_to.h             |  27 -
+ arch/unicore32/include/asm/syscall.h               |  12 -
+ arch/unicore32/include/asm/thread_info.h           | 133 ----
+ arch/unicore32/include/asm/timex.h                 |  31 -
+ arch/unicore32/include/asm/tlb.h                   |  24 -
+ arch/unicore32/include/asm/tlbflush.h              | 192 -----
+ arch/unicore32/include/asm/traps.h                 |  18 -
+ arch/unicore32/include/asm/uaccess.h               |  38 -
+ arch/unicore32/include/asm/vmalloc.h               |   4 -
+ arch/unicore32/include/mach/PKUnity.h              |  95 ---
+ arch/unicore32/include/mach/bitfield.h             |  21 -
+ arch/unicore32/include/mach/dma.h                  |  45 --
+ arch/unicore32/include/mach/hardware.h             |  30 -
+ arch/unicore32/include/mach/map.h                  |  17 -
+ arch/unicore32/include/mach/memory.h               |  54 --
+ arch/unicore32/include/mach/ocd.h                  |  33 -
+ arch/unicore32/include/mach/pm.h                   |  37 -
+ arch/unicore32/include/mach/regs-ac97.h            |  33 -
+ arch/unicore32/include/mach/regs-dmac.h            |  82 --
+ arch/unicore32/include/mach/regs-gpio.h            |  71 --
+ arch/unicore32/include/mach/regs-i2c.h             |  64 --
+ arch/unicore32/include/mach/regs-intc.h            |  29 -
+ arch/unicore32/include/mach/regs-nand.h            |  80 --
+ arch/unicore32/include/mach/regs-ost.h             |  91 ---
+ arch/unicore32/include/mach/regs-pci.h             |  95 ---
+ arch/unicore32/include/mach/regs-pm.h              | 127 ----
+ arch/unicore32/include/mach/regs-ps2.h             |  21 -
+ arch/unicore32/include/mach/regs-resetc.h          |  35 -
+ arch/unicore32/include/mach/regs-rtc.h             |  38 -
+ arch/unicore32/include/mach/regs-sdc.h             | 157 ----
+ arch/unicore32/include/mach/regs-spi.h             |  99 ---
+ arch/unicore32/include/mach/regs-uart.h            |   3 -
+ arch/unicore32/include/mach/regs-umal.h            | 230 ------
+ arch/unicore32/include/mach/regs-unigfx.h          | 201 -----
+ arch/unicore32/include/mach/uncompress.h           |  31 -
+ arch/unicore32/include/uapi/asm/Kbuild             |   2 -
+ arch/unicore32/include/uapi/asm/byteorder.h        |  25 -
+ arch/unicore32/include/uapi/asm/ptrace.h           |  91 ---
+ arch/unicore32/include/uapi/asm/sigcontext.h       |  30 -
+ arch/unicore32/include/uapi/asm/unistd.h           |  21 -
+ arch/unicore32/kernel/Makefile                     |  31 -
+ arch/unicore32/kernel/asm-offsets.c                | 108 ---
+ arch/unicore32/kernel/clock.c                      | 387 ----------
+ arch/unicore32/kernel/debug-macro.S                |  86 ---
+ arch/unicore32/kernel/debug.S                      |  82 --
+ arch/unicore32/kernel/dma.c                        | 179 -----
+ arch/unicore32/kernel/early_printk.c               |  46 --
+ arch/unicore32/kernel/elf.c                        |  35 -
+ arch/unicore32/kernel/entry.S                      | 802 --------------------
+ arch/unicore32/kernel/fpu-ucf64.c                  | 117 ---
+ arch/unicore32/kernel/gpio.c                       | 121 ---
+ arch/unicore32/kernel/head.S                       | 249 ------
+ arch/unicore32/kernel/hibernate.c                  | 159 ----
+ arch/unicore32/kernel/hibernate_asm.S              | 114 ---
+ arch/unicore32/kernel/irq.c                        | 371 ---------
+ arch/unicore32/kernel/ksyms.c                      |  57 --
+ arch/unicore32/kernel/ksyms.h                      |  14 -
+ arch/unicore32/kernel/module.c                     | 105 ---
+ arch/unicore32/kernel/pci.c                        | 371 ---------
+ arch/unicore32/kernel/pm.c                         | 121 ---
+ arch/unicore32/kernel/process.c                    | 319 --------
+ arch/unicore32/kernel/ptrace.c                     | 147 ----
+ arch/unicore32/kernel/puv3-core.c                  | 276 -------
+ arch/unicore32/kernel/puv3-nb0916.c                | 147 ----
+ arch/unicore32/kernel/setup.c                      | 352 ---------
+ arch/unicore32/kernel/setup.h                      |  36 -
+ arch/unicore32/kernel/signal.c                     | 424 -----------
+ arch/unicore32/kernel/sleep.S                      | 199 -----
+ arch/unicore32/kernel/stacktrace.c                 | 127 ----
+ arch/unicore32/kernel/sys.c                        |  37 -
+ arch/unicore32/kernel/time.c                       | 128 ----
+ arch/unicore32/kernel/traps.c                      | 322 --------
+ arch/unicore32/kernel/vmlinux.lds.S                |  59 --
+ arch/unicore32/lib/Makefile                        |  28 -
+ arch/unicore32/lib/backtrace.S                     | 168 -----
+ arch/unicore32/lib/clear_user.S                    |  54 --
+ arch/unicore32/lib/copy_from_user.S                | 101 ---
+ arch/unicore32/lib/copy_page.S                     |  36 -
+ arch/unicore32/lib/copy_template.S                 | 211 ------
+ arch/unicore32/lib/copy_to_user.S                  |  93 ---
+ arch/unicore32/lib/delay.S                         |  48 --
+ arch/unicore32/lib/findbit.S                       |  97 ---
+ arch/unicore32/lib/strncpy_from_user.S             |  42 --
+ arch/unicore32/lib/strnlen_user.S                  |  39 -
+ arch/unicore32/mm/Kconfig                          |  41 -
+ arch/unicore32/mm/Makefile                         |  14 -
+ arch/unicore32/mm/alignment.c                      | 524 -------------
+ arch/unicore32/mm/cache-ucv2.S                     | 209 ------
+ arch/unicore32/mm/extable.c                        |  21 -
+ arch/unicore32/mm/fault.c                          | 481 ------------
+ arch/unicore32/mm/flush.c                          |  94 ---
+ arch/unicore32/mm/init.c                           | 261 -------
+ arch/unicore32/mm/ioremap.c                        | 242 ------
+ arch/unicore32/mm/mm.h                             |  31 -
+ arch/unicore32/mm/mmu.c                            | 513 -------------
+ arch/unicore32/mm/pgd.c                            | 102 ---
+ arch/unicore32/mm/proc-macros.S                    | 142 ----
+ arch/unicore32/mm/proc-syms.c                      |  19 -
+ arch/unicore32/mm/proc-ucv2.S                      | 131 ----
+ arch/unicore32/mm/tlb-ucv2.S                       |  86 ---
+ drivers/cpufreq/Makefile                           |   1 -
+ drivers/cpufreq/unicore2-cpufreq.c                 |  76 --
+ drivers/i2c/busses/Kconfig                         |  11 -
+ drivers/i2c/busses/Makefile                        |   1 -
+ drivers/i2c/busses/i2c-puv3.c                      | 275 -------
+ drivers/input/serio/i8042-unicore32io.h            |  70 --
+ drivers/input/serio/i8042.h                        |   2 -
+ drivers/pwm/Kconfig                                |   9 -
+ drivers/pwm/Makefile                               |   1 -
+ drivers/pwm/pwm-puv3.c                             | 150 ----
+ drivers/rtc/Kconfig                                |   9 -
+ drivers/rtc/Makefile                               |   1 -
+ drivers/rtc/rtc-puv3.c                             | 286 -------
+ drivers/video/fbdev/Kconfig                        |  11 -
+ drivers/video/fbdev/Makefile                       |   1 -
+ drivers/video/fbdev/fb-puv3.c                      | 836 ---------------------
+ kernel/reboot.c                                    |   2 +-
+ 206 files changed, 1 insertion(+), 17455 deletions(-)
+ delete mode 100644 arch/unicore32/.gitignore
+ delete mode 100644 arch/unicore32/Kconfig
+ delete mode 100644 arch/unicore32/Kconfig.debug
+ delete mode 100644 arch/unicore32/Makefile
+ delete mode 100644 arch/unicore32/boot/Makefile
+ delete mode 100644 arch/unicore32/boot/compressed/Makefile
+ delete mode 100644 arch/unicore32/boot/compressed/head.S
+ delete mode 100644 arch/unicore32/boot/compressed/misc.c
+ delete mode 100644 arch/unicore32/boot/compressed/piggy.S.in
+ delete mode 100644 arch/unicore32/boot/compressed/vmlinux.lds.S
+ delete mode 100644 arch/unicore32/configs/defconfig
+ delete mode 100644 arch/unicore32/include/asm/Kbuild
+ delete mode 100644 arch/unicore32/include/asm/assembler.h
+ delete mode 100644 arch/unicore32/include/asm/barrier.h
+ delete mode 100644 arch/unicore32/include/asm/bitops.h
+ delete mode 100644 arch/unicore32/include/asm/bug.h
+ delete mode 100644 arch/unicore32/include/asm/cache.h
+ delete mode 100644 arch/unicore32/include/asm/cacheflush.h
+ delete mode 100644 arch/unicore32/include/asm/checksum.h
+ delete mode 100644 arch/unicore32/include/asm/cmpxchg.h
+ delete mode 100644 arch/unicore32/include/asm/cpu-single.h
+ delete mode 100644 arch/unicore32/include/asm/cputype.h
+ delete mode 100644 arch/unicore32/include/asm/delay.h
+ delete mode 100644 arch/unicore32/include/asm/dma.h
+ delete mode 100644 arch/unicore32/include/asm/elf.h
+ delete mode 100644 arch/unicore32/include/asm/fpstate.h
+ delete mode 100644 arch/unicore32/include/asm/fpu-ucf64.h
+ delete mode 100644 arch/unicore32/include/asm/gpio.h
+ delete mode 100644 arch/unicore32/include/asm/hwcap.h
+ delete mode 100644 arch/unicore32/include/asm/hwdef-copro.h
+ delete mode 100644 arch/unicore32/include/asm/io.h
+ delete mode 100644 arch/unicore32/include/asm/irq.h
+ delete mode 100644 arch/unicore32/include/asm/irqflags.h
+ delete mode 100644 arch/unicore32/include/asm/linkage.h
+ delete mode 100644 arch/unicore32/include/asm/memblock.h
+ delete mode 100644 arch/unicore32/include/asm/memory.h
+ delete mode 100644 arch/unicore32/include/asm/mmu.h
+ delete mode 100644 arch/unicore32/include/asm/mmu_context.h
+ delete mode 100644 arch/unicore32/include/asm/page.h
+ delete mode 100644 arch/unicore32/include/asm/pci.h
+ delete mode 100644 arch/unicore32/include/asm/pgalloc.h
+ delete mode 100644 arch/unicore32/include/asm/pgtable-hwdef.h
+ delete mode 100644 arch/unicore32/include/asm/pgtable.h
+ delete mode 100644 arch/unicore32/include/asm/processor.h
+ delete mode 100644 arch/unicore32/include/asm/ptrace.h
+ delete mode 100644 arch/unicore32/include/asm/stacktrace.h
+ delete mode 100644 arch/unicore32/include/asm/string.h
+ delete mode 100644 arch/unicore32/include/asm/suspend.h
+ delete mode 100644 arch/unicore32/include/asm/switch_to.h
+ delete mode 100644 arch/unicore32/include/asm/syscall.h
+ delete mode 100644 arch/unicore32/include/asm/thread_info.h
+ delete mode 100644 arch/unicore32/include/asm/timex.h
+ delete mode 100644 arch/unicore32/include/asm/tlb.h
+ delete mode 100644 arch/unicore32/include/asm/tlbflush.h
+ delete mode 100644 arch/unicore32/include/asm/traps.h
+ delete mode 100644 arch/unicore32/include/asm/uaccess.h
+ delete mode 100644 arch/unicore32/include/asm/vmalloc.h
+ delete mode 100644 arch/unicore32/include/mach/PKUnity.h
+ delete mode 100644 arch/unicore32/include/mach/bitfield.h
+ delete mode 100644 arch/unicore32/include/mach/dma.h
+ delete mode 100644 arch/unicore32/include/mach/hardware.h
+ delete mode 100644 arch/unicore32/include/mach/map.h
+ delete mode 100644 arch/unicore32/include/mach/memory.h
+ delete mode 100644 arch/unicore32/include/mach/ocd.h
+ delete mode 100644 arch/unicore32/include/mach/pm.h
+ delete mode 100644 arch/unicore32/include/mach/regs-ac97.h
+ delete mode 100644 arch/unicore32/include/mach/regs-dmac.h
+ delete mode 100644 arch/unicore32/include/mach/regs-gpio.h
+ delete mode 100644 arch/unicore32/include/mach/regs-i2c.h
+ delete mode 100644 arch/unicore32/include/mach/regs-intc.h
+ delete mode 100644 arch/unicore32/include/mach/regs-nand.h
+ delete mode 100644 arch/unicore32/include/mach/regs-ost.h
+ delete mode 100644 arch/unicore32/include/mach/regs-pci.h
+ delete mode 100644 arch/unicore32/include/mach/regs-pm.h
+ delete mode 100644 arch/unicore32/include/mach/regs-ps2.h
+ delete mode 100644 arch/unicore32/include/mach/regs-resetc.h
+ delete mode 100644 arch/unicore32/include/mach/regs-rtc.h
+ delete mode 100644 arch/unicore32/include/mach/regs-sdc.h
+ delete mode 100644 arch/unicore32/include/mach/regs-spi.h
+ delete mode 100644 arch/unicore32/include/mach/regs-uart.h
+ delete mode 100644 arch/unicore32/include/mach/regs-umal.h
+ delete mode 100644 arch/unicore32/include/mach/regs-unigfx.h
+ delete mode 100644 arch/unicore32/include/mach/uncompress.h
+ delete mode 100644 arch/unicore32/include/uapi/asm/Kbuild
+ delete mode 100644 arch/unicore32/include/uapi/asm/byteorder.h
+ delete mode 100644 arch/unicore32/include/uapi/asm/ptrace.h
+ delete mode 100644 arch/unicore32/include/uapi/asm/sigcontext.h
+ delete mode 100644 arch/unicore32/include/uapi/asm/unistd.h
+ delete mode 100644 arch/unicore32/kernel/Makefile
+ delete mode 100644 arch/unicore32/kernel/asm-offsets.c
+ delete mode 100644 arch/unicore32/kernel/clock.c
+ delete mode 100644 arch/unicore32/kernel/debug-macro.S
+ delete mode 100644 arch/unicore32/kernel/debug.S
+ delete mode 100644 arch/unicore32/kernel/dma.c
+ delete mode 100644 arch/unicore32/kernel/early_printk.c
+ delete mode 100644 arch/unicore32/kernel/elf.c
+ delete mode 100644 arch/unicore32/kernel/entry.S
+ delete mode 100644 arch/unicore32/kernel/fpu-ucf64.c
+ delete mode 100644 arch/unicore32/kernel/gpio.c
+ delete mode 100644 arch/unicore32/kernel/head.S
+ delete mode 100644 arch/unicore32/kernel/hibernate.c
+ delete mode 100644 arch/unicore32/kernel/hibernate_asm.S
+ delete mode 100644 arch/unicore32/kernel/irq.c
+ delete mode 100644 arch/unicore32/kernel/ksyms.c
+ delete mode 100644 arch/unicore32/kernel/ksyms.h
+ delete mode 100644 arch/unicore32/kernel/module.c
+ delete mode 100644 arch/unicore32/kernel/pci.c
+ delete mode 100644 arch/unicore32/kernel/pm.c
+ delete mode 100644 arch/unicore32/kernel/process.c
+ delete mode 100644 arch/unicore32/kernel/ptrace.c
+ delete mode 100644 arch/unicore32/kernel/puv3-core.c
+ delete mode 100644 arch/unicore32/kernel/puv3-nb0916.c
+ delete mode 100644 arch/unicore32/kernel/setup.c
+ delete mode 100644 arch/unicore32/kernel/setup.h
+ delete mode 100644 arch/unicore32/kernel/signal.c
+ delete mode 100644 arch/unicore32/kernel/sleep.S
+ delete mode 100644 arch/unicore32/kernel/stacktrace.c
+ delete mode 100644 arch/unicore32/kernel/sys.c
+ delete mode 100644 arch/unicore32/kernel/time.c
+ delete mode 100644 arch/unicore32/kernel/traps.c
+ delete mode 100644 arch/unicore32/kernel/vmlinux.lds.S
+ delete mode 100644 arch/unicore32/lib/Makefile
+ delete mode 100644 arch/unicore32/lib/backtrace.S
+ delete mode 100644 arch/unicore32/lib/clear_user.S
+ delete mode 100644 arch/unicore32/lib/copy_from_user.S
+ delete mode 100644 arch/unicore32/lib/copy_page.S
+ delete mode 100644 arch/unicore32/lib/copy_template.S
+ delete mode 100644 arch/unicore32/lib/copy_to_user.S
+ delete mode 100644 arch/unicore32/lib/delay.S
+ delete mode 100644 arch/unicore32/lib/findbit.S
+ delete mode 100644 arch/unicore32/lib/strncpy_from_user.S
+ delete mode 100644 arch/unicore32/lib/strnlen_user.S
+ delete mode 100644 arch/unicore32/mm/Kconfig
+ delete mode 100644 arch/unicore32/mm/Makefile
+ delete mode 100644 arch/unicore32/mm/alignment.c
+ delete mode 100644 arch/unicore32/mm/cache-ucv2.S
+ delete mode 100644 arch/unicore32/mm/extable.c
+ delete mode 100644 arch/unicore32/mm/fault.c
+ delete mode 100644 arch/unicore32/mm/flush.c
+ delete mode 100644 arch/unicore32/mm/init.c
+ delete mode 100644 arch/unicore32/mm/ioremap.c
+ delete mode 100644 arch/unicore32/mm/mm.h
+ delete mode 100644 arch/unicore32/mm/mmu.c
+ delete mode 100644 arch/unicore32/mm/pgd.c
+ delete mode 100644 arch/unicore32/mm/proc-macros.S
+ delete mode 100644 arch/unicore32/mm/proc-syms.c
+ delete mode 100644 arch/unicore32/mm/proc-ucv2.S
+ delete mode 100644 arch/unicore32/mm/tlb-ucv2.S
+ delete mode 100644 drivers/cpufreq/unicore2-cpufreq.c
+ delete mode 100644 drivers/i2c/busses/i2c-puv3.c
+ delete mode 100644 drivers/input/serio/i8042-unicore32io.h
+ delete mode 100644 drivers/pwm/pwm-puv3.c
+ delete mode 100644 drivers/rtc/rtc-puv3.c
+ delete mode 100644 drivers/video/fbdev/fb-puv3.c
