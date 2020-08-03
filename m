@@ -2,148 +2,99 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A98C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5659EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F63B20678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F878205CB
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:00:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="rWDrRDt2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgHCM7U (ORCPT
+        id S1726817AbgHCNAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:59:20 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2557 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726478AbgHCM7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:59:19 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id A8DF816A36FAD6C13464;
-        Mon,  3 Aug 2020 13:59:18 +0100 (IST)
-Received: from [127.0.0.1] (10.210.168.55) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 3 Aug 2020
- 13:59:17 +0100
-Subject: Re: [PATCH 4.14 01/51] scsi: libsas: direct call probe and destruct
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        yanaijie <yanaijie@huawei.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Ewan Milne <emilne@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Tomas Henzl <thenzl@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-References: <20200803121849.488233135@linuxfoundation.org>
- <20200803121849.564535738@linuxfoundation.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <8743227b-adb3-ed1f-3559-e562555ac045@huawei.com>
-Date:   Mon, 3 Aug 2020 13:57:14 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Mon, 3 Aug 2020 09:00:11 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:56407 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726291AbgHCNAG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 09:00:06 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 2a4Qko4eJuuXO2a4RkccFX; Mon, 03 Aug 2020 15:00:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1596459604; bh=1yqyfOlE3EzYvqZxQNITXZHea/U7xgp9NSdCTeNETiI=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=rWDrRDt2VbwgVdLVi3tMdXbNe35OWeD2SCAL6Vh0Wt4HiCjM9QlPpfwTnY4vB5rM2
+         G3La/j5P8tqeYdeZXmRE7qo+CFEnSVuMxUSgFmh9ykmVED0psf8phFU/XRPa/KnXdL
+         JxXhx7yjVQ2DxAS0gk5+CFhlqFw+6VNknoTV+zQLjZmhGwkCC++Y02NZIBjNZ0aaXs
+         w+//6mfVaS9JEqldbDnW9ItEBW0dNEK8zXxVKuxzFOc9jbRjPiZ5TgbZAt2gq0xzQ2
+         8MpzzlloGw4ckzJzdAReS+/5VE8QBkpzwbda3hS7t6ZWdBqgo+va6Go23gu29CJKQH
+         N4ginYew4yLfg==
+Subject: Re: [PATCH 1/3] dt-bindings: vendor-prefixes: Add KT Micro
+To:     Santiago Hormazabal <santiagohssl@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20200803020921.64151-1-santiagohssl@gmail.com>
+ <20200803020921.64151-2-santiagohssl@gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <2b629e8c-3f05-be0e-2e7d-9461924ff462@xs4all.nl>
+Date:   Mon, 3 Aug 2020 15:00:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200803121849.564535738@linuxfoundation.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200803020921.64151-2-santiagohssl@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.168.55]
-X-ClientProxiedBy: lhreml726-chm.china.huawei.com (10.201.108.77) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+X-CMAE-Envelope: MS4wfJwx4h/GOcMoVFWvbH3QVkv7iGULnltU8bU1y5otAe2bRJ9GPQk5xe7XbRgH7ldZJ6dQLI6ECnWXsEOQIYXRJNvsd5+jOJgLg3dOus5vjo1njNQwuEZj
+ /2HrINAXjdUeeLqi0nTRdNmCtlccDzJdzF6kx77K3nF0GBcYkS1DcoJTBiXj9UeYxD2tWVqrUfn/2GbrAdu7eUI4NAXmQaLB1Z8uzanTp53Coo0yGOZGVc+M
+ kSMMqINA5qU2ozb9CBdecMOMo9PVaBNii5V7C8yybMu9fZXpU8+y+8KtcRoDDAB59L1yOuyCM4365qmG8evApHh1E6ML1SUoab0PHBsUpmL3NPynz4A2rDQG
+ mCXYYGx809KABVMXysRIPf1/i/dxpIfT4QdcGyPm4TIkU/zcPSWfCoTlJtSM/LdVeLZ6QmsqqAjfO251GMxk/KFzG6Ujhf+fSqq4FAMNcmgG8u/Ruch3KAXY
+ lZ3Lk2DHF0SDkiS3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/08/2020 13:19, Greg Kroah-Hartman wrote:
-> From: Jason Yan <yanaijie@huawei.com>
+On 03/08/2020 04:09, Santiago Hormazabal wrote:
+> Adds ktm as the prefix of KT Micro, Inc.
 > 
-> [ Upstream commit 0558f33c06bb910e2879e355192227a8e8f0219d ]
-> 
+> Signed-off-by: Santiago Hormazabal <santiagohssl@gmail.com>
 
-Hi Greg,
+Rob provided a Acked-by for v1 of this patch, so when you post a v2 you should
+add that Acked-by as well (unless you made major changes to the code).
 
-This patch was one of a series from Jason to fix this WARN issue, below:
+Ditto for patch 2/3 for which Rob provided a Reviewed-by.
 
-https://lore.kernel.org/linux-scsi/8f6e3763-2b04-23e8-f1ec-8ed3c58f55d3@huawei.com/
+Regards,
 
-I'm doubtful that it should be taken in isolation. Maybe 1 or 2 other 
-patches are required.
+	Hans
 
-The WARN was really annoying, so we could spend a bit of time to test a 
-backport of what is strictly required. Let us know.
-
-Thanks,
-John
-
-> In commit 87c8331fcf72 ("[SCSI] libsas: prevent domain rediscovery
-> competing with ata error handling") introduced disco mutex to prevent
-> rediscovery competing with ata error handling and put the whole
-> revalidation in the mutex. But the rphy add/remove needs to wait for the
-> error handling which also grabs the disco mutex. This may leads to dead
-> lock.So the probe and destruct event were introduce to do the rphy
-> add/remove asynchronously and out of the lock.
-> 
-> The asynchronously processed workers makes the whole discovery process
-> not atomic, the other events may interrupt the process. For example,
-> if a loss of signal event inserted before the probe event, the
-> sas_deform_port() is called and the port will be deleted.
-> 
-> And sas_port_delete() may run before the destruct event, but the
-> port-x:x is the top parent of end device or expander. This leads to
-> a kernel WARNING such as:
-> 
-> [   82.042979] sysfs group 'power' not found for kobject 'phy-1:0:22'
-> [   82.042983] ------------[ cut here ]------------
-> [   82.042986] WARNING: CPU: 54 PID: 1714 at fs/sysfs/group.c:237
-> sysfs_remove_group+0x94/0xa0
-> [   82.043059] Call trace:
-> [   82.043082] [<ffff0000082e7624>] sysfs_remove_group+0x94/0xa0
-> [   82.043085] [<ffff00000864e320>] dpm_sysfs_remove+0x60/0x70
-> [   82.043086] [<ffff00000863ee10>] device_del+0x138/0x308
-> [   82.043089] [<ffff00000869a2d0>] sas_phy_delete+0x38/0x60
-> [   82.043091] [<ffff00000869a86c>] do_sas_phy_delete+0x6c/0x80
-> [   82.043093] [<ffff00000863dc20>] device_for_each_child+0x58/0xa0
-> [   82.043095] [<ffff000008696f80>] sas_remove_children+0x40/0x50
-> [   82.043100] [<ffff00000869d1bc>] sas_destruct_devices+0x64/0xa0
-> [   82.043102] [<ffff0000080e93bc>] process_one_work+0x1fc/0x4b0
-> [   82.043104] [<ffff0000080e96c0>] worker_thread+0x50/0x490
-> [   82.043105] [<ffff0000080f0364>] kthread+0xfc/0x128
-> [   82.043107] [<ffff0000080836c0>] ret_from_fork+0x10/0x50
-> 
-> Make probe and destruct a direct call in the disco and revalidate function,
-> but put them outside the lock. The whole discovery or revalidate won't
-> be interrupted by other events. And the DISCE_PROBE and DISCE_DESTRUCT
-> event are deleted as a result of the direct call.
-> 
-> Introduce a new list to destruct the sas_port and put the port delete after
-> the destruct. This makes sure the right order of destroying the sysfs
-> kobject and fix the warning above.
-> 
-> In sas_ex_revalidate_domain() have a loop to find all broadcasted
-> device, and sometimes we have a chance to find the same expander twice.
-> Because the sas_port will be deleted at the end of the whole revalidate
-> process, sas_port with the same name cannot be added before this.
-> Otherwise the sysfs will complain of creating duplicate filename. Since
-> the LLDD will send broadcast for every device change, we can only
-> process one expander's revalidation.
-> 
-> [mkp: kbuild test robot warning]
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> CC: John Garry <john.garry@huawei.com>
-> CC: Johannes Thumshirn <jthumshirn@suse.de>
-> CC: Ewan Milne <emilne@redhat.com>
-> CC: Christoph Hellwig <hch@lst.de>
-> CC: Tomas Henzl <thenzl@redhat.com>
-> CC: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Hannes Reinecke <hare@suse.com>
-> Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
 > ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 8261ede298f8..34809300fddd 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -547,6 +547,8 @@ patternProperties:
+>      description: Kontron S&T AG
+>    "^kosagi,.*":
+>      description: Sutajio Ko-Usagi PTE Ltd.
+> +  "^ktm,.*":
+> +    description: KT Micro, Inc.
+>    "^kyo,.*":
+>      description: Kyocera Corporation
+>    "^lacie,.*":
+> 
 
