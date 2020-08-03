@@ -2,145 +2,92 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0559CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F26C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D06B7206DA
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:29:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xdhDCEB5"
+	by mail.kernel.org (Postfix) with ESMTP id B2EBD206DA
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:34:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596461686;
+	bh=lCnx6/lKKN71vDIoGZq4QZBOOZHHDefyQEvwAiDgM2M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ywPflVZ2sYytwipq0a9JZNnFW65uSlNmuEHxDji4TKlYtWAFVga6pvrEbOZc9b5Ku
+	 mZjUZxrNxzEXP55mmUT5N0i0xxH4a6nmTvd3VGawQc8WK2/JVmhmXnOLuZ4JS8hwhY
+	 c4CAQCLWEQQFykjIezHJ70ZYvxG/+etC82YH7JOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgHCN3I (ORCPT
+        id S1726933AbgHCNeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 09:29:08 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:31336 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726398AbgHCN3I (ORCPT
+        Mon, 3 Aug 2020 09:34:46 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:46877 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726398AbgHCNep (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 09:29:08 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596461347; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=5lz/yjuFSbfi7AP16DemqYxIyN/7sfSVueFdw1yEZKU=; b=xdhDCEB56/5qVQt4nvInLbSFbXofGuzl2oi5fGyrRygDOqHSLFzgvELjCO586xbD6lwHUJNd
- NwEDxVVN5Dk0w6qWJ7h5isRk9BPolWIfivZPcUrJleEM57TMHGov2zZeTJvO8bbjLEfSGCq7
- H9NprDY5bNozGc5DzXvwfLsDtXQ=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
- 5f28110f21feae908b7919f3 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 03 Aug 2020 13:28:47
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5A305C43395; Mon,  3 Aug 2020 13:28:46 +0000 (UTC)
-Received: from [192.168.1.103] (unknown [183.83.143.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: charante)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1E264C433C9;
-        Mon,  3 Aug 2020 13:28:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1E264C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
-Subject: Re: [PATCH] mm, memory_hotplug: update pcp lists everytime onlining a
- memory block
-To:     David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
-        linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, vinmenon@codeaurora.org
-References: <1596372896-15336-1-git-send-email-charante@codeaurora.org>
- <e15bc2ca-6bc5-158c-41df-af13aba75e54@redhat.com>
-From:   Charan Teja Kalla <charante@codeaurora.org>
-Message-ID: <f7913d7d-9fd9-97a5-eae8-3a5bb2683e19@codeaurora.org>
-Date:   Mon, 3 Aug 2020 18:58:42 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 3 Aug 2020 09:34:45 -0400
+Received: by mail-ed1-f66.google.com with SMTP id q4so24008628edv.13;
+        Mon, 03 Aug 2020 06:34:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=i2n3wIwb+hcZxYRuwftBDgqPr+Mdz9q2nSbmotV8e58=;
+        b=gC/3QIUoaqK3FGyp1lVRgfHLd3X3hq6r7nS3meJD6wwWElaJCOKqDpxX8+lChbPQzS
+         j4cQRYM5g1EztdseoI1OnY17tUavY4XS9YFDpAATKrrRabiG3RJniOcWlFuMqEVbA9Zr
+         KSEeha3XR/s0DDzpt3vcrn+AlTmr75oaDq3hQFbK+zf1UyDNCA18ADMkHC4xo+Kdhw62
+         CpzBht2LRom6aSSN0dQk/yfPX4+ReL2TKk3fQdMqqqXNI2VPs+P/kCtveZ1MMR1pIAeu
+         i7/EnEFKWuz75P9+QAk11k16zq+i7d+82v1UXHhRygP+IxR5cwBI4Jy1ZrZXResZAV0C
+         ok/w==
+X-Gm-Message-State: AOAM531T47GP7SQmmMeQE2QdrWNAkjbTR70zuZF1Q5PvPcEsymmc96fY
+        61Xx8jF76kQyuxk8yC6poew/+61ZDJU=
+X-Google-Smtp-Source: ABdhPJzNijIPixZfXIS6XxW0zDL2p3v+qA9MAw0zyiUVWPbpOHV/fLTU8cMpHgpxrwN5HZNA62aBog==
+X-Received: by 2002:a05:6402:38c:: with SMTP id o12mr16286914edv.271.1596461682835;
+        Mon, 03 Aug 2020 06:34:42 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.117])
+        by smtp.googlemail.com with ESMTPSA id m20sm16177431ejk.90.2020.08.03.06.34.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Aug 2020 06:34:42 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 15:34:39 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, kernel@collabora.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] ARM: exynos: clear L220_AUX_CTRL_NS_LOCKDOWN in
+ default l2c_aux_val
+Message-ID: <20200803133439.GB476@kozik-lap>
+References: <860eb8a1eed879e55daf960c96acdac514cbda93.1596028601.git.guillaume.tucker@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <e15bc2ca-6bc5-158c-41df-af13aba75e54@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <860eb8a1eed879e55daf960c96acdac514cbda93.1596028601.git.guillaume.tucker@collabora.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks David for the comments.
-
-On 8/3/2020 1:35 PM, David Hildenbrand wrote:
-> On 02.08.20 14:54, Charan Teja Reddy wrote:
->> When onlining a first memory block in a zone, pcp lists are not updated
->> thus pcp struct will have the default setting of ->high = 0,->batch = 1.
->> This means till the second memory block in a zone(if it have) is onlined
->> the pcp lists of this zone will not contain any pages because pcp's
->> ->count is always greater than ->high thus free_pcppages_bulk() is
->> called to free batch size(=1) pages every time system wants to add a
->> page to the pcp list through free_unref_page(). To put this in a word,
->> system is not using benefits offered by the pcp lists when there is a
->> single onlineable memory block in a zone. Correct this by always
->> updating the pcp lists when memory block is onlined.
+On Wed, Jul 29, 2020 at 02:47:31PM +0100, Guillaume Tucker wrote:
+> The L220_AUX_CTRL_NS_LOCKDOWN flag is set during the L2C enable
+> sequence.  There is no need to set it in the default register value,
+> this was done before support for it was implemented in the code.  It
+> is not set in the hardware initial value either.
 > 
-> I guess such setups are rare ... but I can imagine it being the case
-> with virtio-mem in the future ... not 100% if this performance
-> optimization is really relevant in practice ... how did you identify this?
-
-Even the Snapdragon hardware that I had tested on contain multiple
-onlineable memory blocks. But we have the use case in which we online
-single memory block and once it is filled then online the next block. In
-the step where single block is onlined, we observed the below pageset
-params.
-  pagesets
-    cpu: 0
-              count: 0
-              high:  0
-              batch: 1
-Once the second block is onlined then only seeing some sane values as below.
-    cpu: 0
-              count: 32
-              high:  378
-              batch: 63
-
-In the above case, till the second block is onlined, no page is held in
-the pcp list. So, updating the pcp params every time when onlining the
-memory block is required, as an example in the usecase that I had
-mentioned.
-
+> Clean this up by removing this flag from the default l2c_aux_val, and
+> add it to the l2c_aux_mask to print an alert message if it was already
+> set before the kernel initialisation.
 > 
->>
->> Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
->> ---
->>  mm/memory_hotplug.c | 3 +--
->>  1 file changed, 1 insertion(+), 2 deletions(-)
->>
->> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
->> index dcdf327..7f62d69 100644
->> --- a/mm/memory_hotplug.c
->> +++ b/mm/memory_hotplug.c
->> @@ -854,8 +854,7 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
->>  	node_states_set_node(nid, &arg);
->>  	if (need_zonelists_rebuild)
->>  		build_all_zonelists(NULL);
->> -	else
->> -		zone_pcp_update(zone);
->> +	zone_pcp_update(zone);
->>  
->>  	init_per_zone_wmark_min();
->>  
->>
-> 
-> Does, in general, look sane to me.
-> 
-> Reviewed-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
+> ---
+>  arch/arm/mach-exynos/exynos.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks for the ACK.
+Makes sense. I'll take it after the merge window.
 
-> 
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-Forum, a Linux Foundation Collaborative Project
+Best regards,
+Krzysztof
