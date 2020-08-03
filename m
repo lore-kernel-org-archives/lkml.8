@@ -2,108 +2,88 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA092C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A3CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9AF2068F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C127E2068F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:57:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Y6dX8N7Y"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Imiqwh2w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgHCGzw (ORCPT
+        id S1727879AbgHCG5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 02:55:52 -0400
-Received: from ozlabs.org ([203.11.71.1]:35593 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725867AbgHCGzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 02:55:51 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BKpYw6HYbz9sRN;
-        Mon,  3 Aug 2020 16:55:48 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596437749;
-        bh=LKuvMMPVIvA+B/kFD48oSrZiCdXwCQMwR14E2UPRJ5o=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Y6dX8N7YA0LM9DL0xsUsZNZZCF5y0RPaSlAqOH9UmPuMo8zFtiC64K0KTD8JT0NN9
-         bpng8nZ5STUygwKlhR6dFbM2q0cXP2JN7SV1H5eeq3kyGJCbI1xCt5cd5IrDsxKPq2
-         iafFVfugXz9fKAJq9mFID2jm58pEY3neCSAk7C28DKgfVaP+m2h0j/VitaVRDTDem7
-         gispg5Zw+IuiZusToa9GOSrMyJAX9/NInMThjcOgo22ujjCLx0KSPPFCewT4EuKLql
-         z2aU2LqnYJiY1Clv1bHim9+MZhF/7JEoRSWu6ySuhz2CLULCxwCBLXs7BekNe/4eZu
-         NQDwUidhnqh5Q==
-Date:   Mon, 3 Aug 2020 16:55:46 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alastair D'Silva <alastair@d-silva.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: linux-next: manual merge of the char-misc tree with the powerpc
- tree
-Message-ID: <20200803165546.6ab5ab6f@canb.auug.org.au>
+        Mon, 3 Aug 2020 02:57:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgHCG5C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 02:57:02 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFBB4C06174A;
+        Sun,  2 Aug 2020 23:57:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=S81Y7/E/1KRByHOMFTAO1WQMOll7HWoP+pv/fCo/3sI=; b=Imiqwh2wh6gfO95HVgGWdIpJ7R
+        qFqJDaURIpsOiDpUCq2k3ILdHp9/G64PbhflfbfwXUHR3YCqdMM2JIr5p2HV5QlEFNjYcibq1cAwB
+        k5jcDFqNUiYh1ErghhsIpsN5baKyFw50AsjkOnyh0RkcQvG4I/FuQV4i+K4smxUlt0gQ8ZINX4zk1
+        zqYZrKBpxdTsr3nucjd2JPKqfEkufPqh/aFaSwGu2mFtFylC2a36pyZdPfsQXEbP1+7In5Kkj2kTD
+        iIuAdnnH0jCfMh5vNRvgFzTjztCURqfBsmyFjwViAe1IQB++yIvaVvpqhNNNwV/B+lmZFzbHjUNTv
+        QTu3Qcmg==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k2UOb-0005Zd-6v; Mon, 03 Aug 2020 06:56:29 +0000
+Date:   Mon, 3 Aug 2020 07:56:29 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Saheed Bolarinwa <refactormyself@gmail.com>, trix@redhat.com,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Joerg Roedel <joro@8bytes.org>, bjorn@helgaas.com,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-mtd@lists.infradead.org, iommu@lists.linux-foundation.org,
+        linux-rdma@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        linux-gpio@vger.kernel.org, linux-fpga@vger.kernel.org,
+        linux-edac@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-crypto@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net
+Subject: Re: [RFC PATCH 00/17] Drop uses of pci_read_config_*() return value
+Message-ID: <20200803065629.GA19534@infradead.org>
+References: <20200802184648.GA23190@nazgul.tnic>
+ <20200802191406.GA248232@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/qHOjcln.v14dlTifU=wo.eC";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200802191406.GA248232@bjorn-Precision-5520>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/qHOjcln.v14dlTifU=wo.eC
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Aug 02, 2020 at 02:14:06PM -0500, Bjorn Helgaas wrote:
+> But what guarantees that a PCI config register cannot contain ~0?
+> If there's something about that in the spec I'd love to know where it
+> is because it would simplify a lot of things.
 
-Hi all,
-
-Today's linux-next merge of the char-misc tree got a conflict in:
-
-  drivers/misc/ocxl/config.c
-
-between commit:
-
-  3591538a31af ("ocxl: Address kernel doc errors & warnings")
-
-from the powerpc tree and commit:
-
-  28fc491e9be6 ("misc: ocxl: config: Provide correct formatting to function=
- headers")
-
-from the char-misc tree.
-
-I fixed it up (as it was just differences in comments, I just arbitrarily
-chose the latter version) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/qHOjcln.v14dlTifU=wo.eC
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8ntPIACgkQAVBC80lX
-0GwH1Qf9HjXBmc/hCbg+8mUN8HeO99NLP+3Z73rBfw04BVzR8UCN4n2Sz6gty35l
-nKxiWyIS8eccOL5RcIuR6XY+jT4uqdUOzllsytZpgf01VrBs9yLeWtQoRU5C3jyT
-EUpLDCpu/Gs3NsRmG3bFBoqV9Xv7CpAs3NFSkKckXhh0DWp6DbIXqWOTXFyE6yd3
-x1EyD3n02t9Kcq1h2lN0GchNanmaC1egu9lXK1ovPeuaGQ9+PPIpdANLBpw5HEKS
-3+fXriRx5zHVZJkPL8709HL5GCMelIol4y+XZlQI/KOnrutXY4EneugpLlepWq7M
-CcDGU9A9w3NwGLuPpOGK3i1jpVzgZQ==
-=u9Jo
------END PGP SIGNATURE-----
-
---Sig_/qHOjcln.v14dlTifU=wo.eC--
+There isn't.  An we even have cases like the NVMe controller memory
+buffer and persistent memory region, which are BARs that store
+abritrary values for later retreival, so it can't.  (now those
+features have a major issue with error detection, but that is another
+issue)
