@@ -2,53 +2,51 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0BAC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FB6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 427322177B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D2D2076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457818;
-	bh=h5rqxxYfACI8lziQ7XNfbCk2S/drUfGwBebl1x248LA=;
+	s=default; t=1596457831;
+	bh=W+fL/TrifVBAVrzVE/HowuH99DgPJsSTdJHaUKb5KX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eFkG38byiD5jC+25rtRtf0gSU9hSIBZV1IGpdP+9UgxoihTGlIk4whG5x6Gc1ew/j
-	 13mtz9+Lf4giEFzIHgy5LJaw3ZqqhuISERBPJJWgTt2dKD+4CvrsPsmF0W9vSRzcTw
-	 PQNtq6jV2Aes1LPtMXKoMPPVZ5S/YIjIOtA4bqWY=
+	b=jNcj3BpZlcjrWvmlGggwikZOBB6DbuV+RXV5hiPIcp86ovboHLeEj7+muauvywd6k
+	 HQFTyVjRkNzeS41RtNQ564KAIaeWbPz02BJk7NaIn5J/82vWFCOkEW8HOD6JT3Z0kV
+	 3hSmhAgBowFvhEn9J7JnWHepiPSEsWTVJHH01y/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbgHCMaR (ORCPT
+        id S1729059AbgHCMab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:30:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57052 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:30:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbgHCMaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:30:08 -0400
+        id S1729039AbgHCMaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:30:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 810AB208B3;
-        Mon,  3 Aug 2020 12:30:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C46320738;
+        Mon,  3 Aug 2020 12:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457807;
-        bh=h5rqxxYfACI8lziQ7XNfbCk2S/drUfGwBebl1x248LA=;
+        s=default; t=1596457823;
+        bh=W+fL/TrifVBAVrzVE/HowuH99DgPJsSTdJHaUKb5KX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rFHNAq7fZC8tOMkPFfgNll1+OjU86hfmNqduZcxakraZfmUQBAnA4fbJQSnUgBKGv
-         kgn9yKS2G1CAauy18odK7nx451XOiQrb32JX3/pzDZqMXmI8ICFegSIVF0oYAYu01s
-         ZlZbUpwcXiCueoXIG9C+SLibieTqb0OTG08MHHD4=
+        b=QZ3cabdOnheTOtrLSaO72aziKbl0hZGuw0EEF+tCAq/bicvuiDKTWg13eQwTXCX54
+         qPGG1x8tYvrSSh7yscYS0+sdL7bVR6sc9PIf71llhDqPI7sHXa5Hp8y5QaEPDgSWxz
+         vGUyJ2pT5tU1iQUNlni2yt6ZfnppddnBYdoVydQo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wang ShaoBo <bobo.shaobowang@huawei.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 80/90] x86/stacktrace: Fix reliable check for empty user task stacks
-Date:   Mon,  3 Aug 2020 14:19:42 +0200
-Message-Id: <20200803121901.482736973@linuxfoundation.org>
+        stable@vger.kernel.org, Wanpeng Li <wanpengli@tencent.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 86/90] KVM: LAPIC: Prevent setting the tscdeadline timer if the lapic is hw disabled
+Date:   Mon,  3 Aug 2020 14:19:48 +0200
+Message-Id: <20200803121901.758058491@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -61,61 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Wanpeng Li <wanpengli@tencent.com>
 
-[ Upstream commit 039a7a30ec102ec866d382a66f87f6f7654f8140 ]
+commit d2286ba7d574ba3103a421a2f9ec17cb5b0d87a1 upstream.
 
-If a user task's stack is empty, or if it only has user regs, ORC
-reports it as a reliable empty stack.  But arch_stack_walk_reliable()
-incorrectly treats it as unreliable.
+Prevent setting the tscdeadline timer if the lapic is hw disabled.
 
-That happens because the only success path for user tasks is inside the
-loop, which only iterates on non-empty stacks.  Generally, a user task
-must end in a user regs frame, but an empty stack is an exception to
-that rule.
+Fixes: bce87cce88 (KVM: x86: consolidate different ways to test for in-kernel LAPIC)
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+Message-Id: <1596165141-28874-1-git-send-email-wanpengli@tencent.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Thanks to commit 71c95825289f ("x86/unwind/orc: Fix error handling in
-__unwind_start()"), unwind_start() now sets state->error appropriately.
-So now for both ORC and FP unwinders, unwind_done() and !unwind_error()
-always means the end of the stack was successfully reached.  So the
-success path for kthreads is no longer needed -- it can also be used for
-empty user tasks.
-
-Reported-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-Link: https://lkml.kernel.org/r/f136a4e5f019219cbc4f4da33b30c2f44fa65b84.1594994374.git.jpoimboe@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/stacktrace.c | 5 -----
- 1 file changed, 5 deletions(-)
+ arch/x86/kvm/lapic.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
-index 2d6898c2cb647..6d83b4b857e6a 100644
---- a/arch/x86/kernel/stacktrace.c
-+++ b/arch/x86/kernel/stacktrace.c
-@@ -58,7 +58,6 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
- 			 * or a page fault), which can make frame pointers
- 			 * unreliable.
- 			 */
--
- 			if (IS_ENABLED(CONFIG_FRAME_POINTER))
- 				return -EINVAL;
- 		}
-@@ -81,10 +80,6 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
- 	if (unwind_error(&state))
- 		return -EINVAL;
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -2085,7 +2085,7 @@ void kvm_set_lapic_tscdeadline_msr(struc
+ {
+ 	struct kvm_lapic *apic = vcpu->arch.apic;
  
--	/* Success path for non-user tasks, i.e. kthreads and idle tasks */
--	if (!(task->flags & (PF_KTHREAD | PF_IDLE)))
--		return -EINVAL;
--
- 	return 0;
- }
+-	if (!lapic_in_kernel(vcpu) || apic_lvtt_oneshot(apic) ||
++	if (!kvm_apic_present(vcpu) || apic_lvtt_oneshot(apic) ||
+ 			apic_lvtt_period(apic))
+ 		return;
  
--- 
-2.25.1
-
 
 
