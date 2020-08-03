@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687BCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EDEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E8852064B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE1842064B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596459259;
-	bh=wUGwfYYUp+m6tPyzzV64uHY20TtTjscM989H6gUPW8k=;
+	s=default; t=1596459265;
+	bh=soTYc1QE3Dv28sQn4ZvbPIO2zXj0JHGiazOciM5OGV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XbwF/dRVzgJdqqFkRCrZHpxfWslKVG3rhEYuGaRC4Ar/uuYV31SjkLIVpESZ0Ba0B
-	 Elt7IDDOshPY+fUOUAFMvoZaAs70y84yo0erZ8yZq9ZnoBHigHjtlm0KQ/A1YrINGv
-	 bP3802CLowzYbAVHBXlm7tNoTJSEso88qr23gG5g=
+	b=r0oR3Y7kpHHKGrrdKcTwWaUOHruRmvYJbfiNsY29oQin5cVY5ixctwUOJmIwYzSJa
+	 GT1PU9i0hMDq1oQMfUV1qmKSAEc/8cz8EhjlXbfgKh6LNdcpxf1h1WcyliaFz+SLLI
+	 8Pf3BGBEO5fdFq+ZoaYsX1VqjHzCND1Pohm6YfQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgHCMXe (ORCPT
+        id S1728152AbgHCMyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:23:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47524 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:54:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727855AbgHCMX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:23:27 -0400
+        id S1726610AbgHCMXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:23:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B43D0204EC;
-        Mon,  3 Aug 2020 12:23:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73E7220738;
+        Mon,  3 Aug 2020 12:23:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457406;
-        bh=wUGwfYYUp+m6tPyzzV64uHY20TtTjscM989H6gUPW8k=;
+        s=default; t=1596457412;
+        bh=soTYc1QE3Dv28sQn4ZvbPIO2zXj0JHGiazOciM5OGV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NpgHjDDSmqiqJp/XprRGGF0dhxRQjhPaDwlVsqEuhFv+fav6mJpxdqrn8wlySm4VP
-         EOfNvijto2E56LFQ9zJQyA9AvAg07wcWbE0aA7GlroabJen8ceYqPTmq1PvFWd0KQT
-         6FVdPU/zDjaCPJsLU4g2nU8LFmU2auzK4VrJjSWM=
+        b=IY9bA/Mx0dM4QlhStAkdkB0PmGinIyFYjz+N3DnxJS1tgQwrwqnJAk7IvfFVV6K/C
+         fKFJHX5ookXJoTu6y2JzcjBmkNfHElb1aW+XUZt4u1uf6FhDdbNk83rbnADHbQjNXs
+         GcEkC0zp/Qwjd6AAxhJ5JxBZvrWDYEPVT3ila4U4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Roi Dayan <roid@mellanox.com>,
+        stable@vger.kernel.org, Aya Levin <ayal@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 055/120] net/mlx5: E-switch, Destroy TSAR after reload interface
-Date:   Mon,  3 Aug 2020 14:18:33 +0200
-Message-Id: <20200803121905.474985067@linuxfoundation.org>
+Subject: [PATCH 5.7 056/120] net/mlx5e: Fix error path of device attach
+Date:   Mon,  3 Aug 2020 14:18:34 +0200
+Message-Id: <20200803121905.524095852@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -61,49 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Aya Levin <ayal@mellanox.com>
 
-[ Upstream commit 0c2600c619578f759cf3d5192b01bd14e281f24c ]
+[ Upstream commit 5cd39b6e9a420329a9a408894be7ba8aa7dd755e ]
 
-When eswitch offloads is enabled, TSAR is created before reloading
-the interfaces.
-However when eswitch offloads mode is disabled, TSAR is disabled before
-reloading the interfaces.
+On failure to attach the netdev, fix the rollback by re-setting the
+device's state back to MLX5E_STATE_DESTROYING.
 
-To keep the eswitch enable/disable sequence as mirror, destroy TSAR
-after reloading the interfaces.
+Failing to attach doesn't stop statistics polling via .ndo_get_stats64.
+In this case, although the device is not attached, it falsely continues
+to query the firmware for counters. Setting the device's state back to
+MLX5E_STATE_DESTROYING prevents the firmware counters query.
 
-Fixes: 1bd27b11c1df ("net/mlx5: Introduce E-switch QoS management")
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
+Fixes: 26e59d8077a3 ("net/mlx5e: Implement mlx5e interface attach/detach callbacks")
+Signed-off-by: Aya Levin <ayal@mellanox.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-index 459cd668b9e2f..3bb4f72b76da2 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-@@ -2206,8 +2206,6 @@ void mlx5_eswitch_disable_locked(struct mlx5_eswitch *esw, bool clear_vf)
- 	else if (esw->mode == MLX5_ESWITCH_OFFLOADS)
- 		esw_offloads_disable(esw);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index bc54913c58618..5f8c69ea82539 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -5395,6 +5395,8 @@ err_cleanup_tx:
+ 	profile->cleanup_tx(priv);
  
--	esw_destroy_tsar(esw);
--
- 	old_mode = esw->mode;
- 	esw->mode = MLX5_ESWITCH_NONE;
- 
-@@ -2217,6 +2215,8 @@ void mlx5_eswitch_disable_locked(struct mlx5_eswitch *esw, bool clear_vf)
- 		mlx5_reload_interface(esw->dev, MLX5_INTERFACE_PROTOCOL_IB);
- 		mlx5_reload_interface(esw->dev, MLX5_INTERFACE_PROTOCOL_ETH);
- 	}
-+	esw_destroy_tsar(esw);
-+
- 	if (clear_vf)
- 		mlx5_eswitch_clear_vf_vports_info(esw);
+ out:
++	set_bit(MLX5E_STATE_DESTROYING, &priv->state);
++	cancel_work_sync(&priv->update_stats_work);
+ 	return err;
  }
+ 
 -- 
 2.25.1
 
