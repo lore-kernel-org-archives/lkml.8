@@ -2,117 +2,95 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07444C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 069BCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D66C220738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8BEE2076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:49:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="YgFQOIXp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="exPCUDNk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WW2P/omh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgHCKnY (ORCPT
+        id S1726125AbgHCKtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 06:43:24 -0400
-Received: from mout.gmx.net ([212.227.17.20]:53999 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbgHCKnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 06:43:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1596451368;
-        bh=6ZdvDRYWWS7W/6/oWpKYAUXrrNsMjE9GC1lFAPjaEbw=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=YgFQOIXpoeE0isYRbE+//h9fGfSrM8aL7YJADOrNEOolBREQDdrjYWZgecMGW2XZb
-         0VnfeCrPgyOO4/yLsmGWWlAgaYqFj+dktiNElbM6ZxNilnTrh6W8CQMZBkxMVpHq8O
-         EcrdV2wZY/LIQzwVm4qp4DtoT5U/3NqukT++M8hg=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [217.61.148.26] ([217.61.148.26]) by web-mail.gmx.net
- (3c-app-gmx-bap36.server.lan [172.19.172.106]) (via HTTP); Mon, 3 Aug 2020
- 12:42:48 +0200
+        Mon, 3 Aug 2020 06:49:49 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35218 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgHCKtj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 06:49:39 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1596451777;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KCcHpfOYP09p8zY14r/HtTxM2t9JURMOmwbTy+WTzEQ=;
+        b=exPCUDNkIUSsEk+m93wt286ygaaCqgwqdD6dmnXCCpNcDlS+ANw9TPI9tyr9UedVBK91yK
+        wVaETPEKGYC5SuiO+opVJKVO178taH1yV/dGFfN39zIxD3YgRh+SQcfpoUGQuET13hfuL9
+        VY5+0MzVXbK17SuypLCIscQQk5nOETJePrsN7SpH255LdJGIceMxTGHnqJtDk2gm+VJSfj
+        R36bdYgczuRW1CHB9G2WXL/hRvLovDRtGtlR0lj8zs6/r7n3svbJEBeGQBrgLPkrNopYWT
+        OfqiQ9u0GZrFZ0ETjfYAHYPjudz5ETLh1r+1fP4Cy4T1KLe2SwNqm/5JGwKmHg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1596451777;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KCcHpfOYP09p8zY14r/HtTxM2t9JURMOmwbTy+WTzEQ=;
+        b=WW2P/omh52HC9kFYVAeeg3h+L56cnLkgbjiWsO8VD72lowVNM28fz0fbaLs9T49RJDULRX
+        eY0JDYKN9PJq8EAA==
+To:     Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>,
+        Vladimir Oltean <olteanv@gmail.com>
+Cc:     Alison Wang <alison.wang@nxp.com>, catalin.marinas@arm.com,
+        will@kernel.org, paulmck@kernel.org, mw@semihalf.com,
+        leoyang.li@nxp.com, vladimir.oltean@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC PATCH] arm64: defconfig: Disable fine-grained task level IRQ time accounting
+In-Reply-To: <873654m9zi.fsf@kurt>
+References: <20200729033934.22349-1-alison.wang@nxp.com> <877dumbtoi.fsf@kurt> <20200729094943.lsmhsqlnl7rlnl6f@skbuf> <87mu3ho48v.fsf@kurt> <20200730082228.r24zgdeiofvwxijm@skbuf> <873654m9zi.fsf@kurt>
+Date:   Mon, 03 Aug 2020 12:49:36 +0200
+Message-ID: <87lfiwm2bj.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Message-ID: <trinity-b0ca2ee2-259a-4a1e-86ee-63b093202060-1596451368067@3c-app-gmx-bap36>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Aw: Re: Re: [PATCH v2 1/5] drm/mediatek: config component output by
- device node port
-Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 3 Aug 2020 12:42:48 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <CAAOTY__TsqrfRX-z+DE0+X_UzxBqChJ+VdyQG6z9N6Qr4bn2Kg@mail.gmail.com>
-References: <20200728111800.77641-1-frank-w@public-files.de>
- <20200728111800.77641-2-frank-w@public-files.de>
- <CAAOTY_8nm0KDHFzOX9+qTTHOUd0Vik063J+rScu_y-hTBTkrCQ@mail.gmail.com>
- <trinity-2bdb3521-256a-4d4d-928a-be9b8c179d4c-1596355539029@3c-app-gmx-bs58>
- <CAAOTY__TsqrfRX-z+DE0+X_UzxBqChJ+VdyQG6z9N6Qr4bn2Kg@mail.gmail.com>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:9vlPvrNuItAQckw+6Ztr8lZ2c93kbfFS161DRt6sRjSdDULNAQlBMNQB3GV/A6BxYIa+v
- 0wTqKAVV/0jzVQPBNcW0QKpI8hY0RaP73QzX4DpYLEFzxg5do1dVhrUZZMRaGDDUMWIueRHUlTU8
- I8kQ69OzYmW5ViqJ8J2jSM+k1Q+z19cHIrSuC9bR2diMxNvC4nhekLn41fYjAnG1kO5EkmLO6zLR
- RHumKNb7xPc8lspeBR96Xz/qavYqtpJBM6ZjIZLoFxpmtqsRtVau9sZbJT7FTbu+AgKwRU9KZvCM
- 64=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LmNch36Mr4A=:JD93BKiMGIJiXySOkV52id
- N6pKQF65QAVqSn9LU7LQEgkFHs84FX758r47lR3woRap5WbCDsfWaHk1ajDGlpUQMZeEUBOkr
- /CXLr+XW4q5Cw+/voF+S08eF+3mH9gfkiwESM4dbO+WleliG7YY6zguuOTuRtIRgH585NtCML
- E2CjEQ6mzHQfFIMeFSabZnn0/6R/qcSCNNmJX2D3BvTrem1I8gRS3FGix5OT8KNmkBb65Bn2u
- X3xMEnCYZEqIoA+3UHlAlNWyObtxLumQw0lAXqalFnBt8iEAIJju8/qglfgRvnanEvkpZcS+I
- uH81zKy1/XlqfhY/63qGbx0GpwnRgKnPmvXohJLgNooKDKC59kFah8G//BcA5kvxBdhwCZtRt
- 8fXByWsWTTKHRD0sUKPFyU0EzTv3675AWMYeDzk334tAGim1t5+LRG4h1akxkT3+UJzcypy62
- 2A5EvKQIMV6nMuWNUraGLmJ6zEuwhyYPC6VsEVPzAq2xB3SOn7nU+Y+2FqFdLWbq7Fob4PJca
- CEo/btnLGCfLwrtjRZhp9YkEnPXXf3/xg9ZhklsRFj9KeLYLQOwvuiW6lXK0g2QF/gkzRUXuW
- yeSp30plsVMwxJQJyAw0PJtyopinMrbnaFlbjKTU7Xi1aO0Dp2P+0Wjb+CSCivXbYeRDthqLP
- gzLaSccrtNvAfSVL69W8m3OOtEHw0Oo56mu5ZwjmvWD0UzHr6lgPHjmVhRPQ8jdoZJOU=
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
-> Gesendet: Montag, 03. August 2020 um 01:47 Uhr
-> Von: "Chun-Kuang Hu" <chunkuang.hu@kernel.org>
+Kurt,
 
-> Now I just care about the bls to dpi. So in mediatek,disp.txt, you
-> just need to add a Optional properties - port (input and output), and
-> modify mediatek,dpi.txt for its input port.
+Kurt Kanzenbach <kurt.kanzenbach@linutronix.de> writes:
+> On Thu Jul 30 2020, Vladimir Oltean wrote:
+> OK. I've reproduced it on a Marvell Armada SoC with v5.6 mainline. See
+> splats below. Running with irq time accounting enabled, kills the
+> machine immediately. However, I'm not getting the possible deadlock
+> warnings in 8250 as you did. So that might be unrelated.
+>
+> Unfortunately I have no idea what to debug here.
 
-you mean something like this is enough:
+lets look at the facts we have so far.
 
-Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+ 1) When irq accounting is disabled, RT throttling kicks in as
+    expected.
 
-   argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.tx=
-t
-   for details.
+ 2) With irq accounting the RT throttler does not kick in and the RCU
+    stall/lockups happen.
 
-+Optional properties:
-+- port (input and output) see ../../media/video-interfaces.txt
-+
- Examples:
+Not much, but there is clearly interaction between irq time accounting
+and scheduler accounting.
 
-Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt:
+Can you please reduce /proc/sys/kernel/sched_rt_runtime_us in steps of
+50000? At least in theory, reduction should bring the throttling back.
 
- Optional properties:
- - pinctrl-names: Contain "default" and "sleep".
-+- port: Input port node with endpoint definition, this can be connected t=
-o <chipid>-disp-pwm
+Thanks,
 
- Example:
+        tglx
 
-should i link to pwm/pwm-mtk-disp.txt in doc?
 
-regards Frank
+
