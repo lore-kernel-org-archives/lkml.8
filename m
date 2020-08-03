@@ -2,123 +2,130 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38656C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 01:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7320DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 01:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09D1E206E9
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 01:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49D8F206E9
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 01:28:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FQudipL0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fEdiU72r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbgHCBZ0 (ORCPT
+        id S1726881AbgHCB2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 21:25:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53358 "EHLO
+        Sun, 2 Aug 2020 21:28:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbgHCBZZ (ORCPT
+        with ESMTP id S1725820AbgHCB2N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 21:25:25 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 750DDC06174A;
-        Sun,  2 Aug 2020 18:25:25 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id d18so36993251ion.0;
-        Sun, 02 Aug 2020 18:25:25 -0700 (PDT)
+        Sun, 2 Aug 2020 21:28:13 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0CFDC06174A
+        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 18:28:12 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id d27so27175780qtg.4
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 18:28:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wVSfXa5Ic9bcSsi1l7jOjJtzRsSr8hAuHXLBgAaKg4Y=;
-        b=FQudipL07NEvLgz8nTn96jNAE2t+GE/6dbCq3s/St2AO8HkzFo758+5PskcCIwhlmM
-         3PC9+v1r4/vJqZerGpylYkcUbYW9v0GJnOkEcAQDtSMDo12z5V57HoTB5A5CY6w5vBdS
-         XaqFVGkz3P1hVAncm8M0WRH7nqRrY8KIJCfLyHixiDHkqgO2k+fJXybCUyAaD0QHcMCy
-         SeoAuYY26g25MEXUyZm9Tj4ilZFWANQL+nQ/f6bTDLd4A4LGNdlbG9BOUUI4wtrDevDg
-         2E/RPm27a+6fGTPUlKIzQ6UZKtVPCRWIlYoXOBnPCsGD1jhKD1nu8bsztzLeLdK1eJby
-         51Tg==
+        bh=ZdPTwt6GzaEE8ypkWcyEAGla3ExjJ1L9xlPLjdJjECo=;
+        b=fEdiU72rgYUFv9VxZJS1kvdK2VZZ3oV8HbXncHDDjA5BQ65BZMi8GwdFhXl1Ye4PpZ
+         bI1ijchagYxkSM4OfR2b6qC7gI4oNsmp9TcwMT80BR6lleR9ee9i7WFxeCVdvfuvSqLu
+         UHltGgZaXzD77Vy6L32svJpXEJvmaB0fTCbw4JubQ2ny2imbJtgqROPHQyU2A7xfvrxs
+         6n780V50p67eQizGGpyIKfBpqyIVN9iNtvGYaML06s2jMGegknEJIFwJkCfoSABhJba+
+         +0zBty3ts1Q/agn7DV2tT6YXAfZFPp8/5OX+J35KOQdo+w55Gr6sS5hy+RTcU9Pacz82
+         1f2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wVSfXa5Ic9bcSsi1l7jOjJtzRsSr8hAuHXLBgAaKg4Y=;
-        b=J2vMwaM4vEhItqfVF6RibIhFYL2+MMLlr0bbYQuFgRlhy+Z3ka5/BqF1uPphAaROzW
-         t8tC2Rciqn1h2vOoxGunTfvuOL3pbQe3CBWUR0Ccqk0mI8nK8ELKSrhPeUmW4zgu9S2S
-         R+hrvgGZ8RDzyphlpuoEgkarF9/sMFNjfK7z/JmbQ/+o7msVKTT6vDtHLSgVS2AK2Hwh
-         +Nc8IhIz2wlUYm1+ReR4eocmHtP+aiwCbaB3c2SgeDPrTPYpuE4n5HtGbP9ueNAWEwub
-         MZ0AxLmHyPuEELz0LA2mKnMIlRZwvTCwUv9hnkf9v0sDSOP1ctvfVjvzg54MI9X5HSu1
-         yvvw==
-X-Gm-Message-State: AOAM5326Uh0qDIbWYNu+o6X2WsYiL9VhbcPlZG4ZsEDKJVqVzuxeCKgD
-        V8l5bzM+FiV00uH3eG5BKcTG9MvwkGAmZpcekF4=
-X-Google-Smtp-Source: ABdhPJzCOzH478zKqYtpOI4VPAcZgDPybIoNUAzpu0NGPN6Yqg1S/KV8K5lvf4H8i53CRT7zzN2e5fIokX234lNTHUU=
-X-Received: by 2002:a5d:93c5:: with SMTP id j5mr14700313ioo.161.1596417924507;
- Sun, 02 Aug 2020 18:25:24 -0700 (PDT)
+        bh=ZdPTwt6GzaEE8ypkWcyEAGla3ExjJ1L9xlPLjdJjECo=;
+        b=g6YftySs6T8SG8+eGPr2RMiiLXgSglNyrRxk2Jy22O+DPYNC38aqham3OzF/344a+G
+         s9H0IlMLJupEP2B3WwgGydBzPULMosxtg0jh4B0lQFQX0YHGaaP8k48D9mVIx9PLwOGc
+         Tr3VjgGo11T3OHqsCgKykC/GJjPhms+E8+kxu+LI46QHHAhXwlAkwWey2ywbChfw02Xf
+         2F+0BGP7sZqahU4dOfmpHSqjSVMCbestKXLtQQUHNuvcRCoEUeLvLS1nv6eQh/crZ9lQ
+         EFwRpKkunypnirZpiWWI+RUSfkzLNgK4WYy8c3YfOtJZs00GMSQTf9A23wQjPb/T07i3
+         wXew==
+X-Gm-Message-State: AOAM532Gu1cjT6XvGpTnpGIVlzm6gHEOrsJyEW0zLqs3qbv59Gh4c24h
+        EphXp+zYtO/yJB3RVxDJGZ+mEi/GVtbrZfp0k24=
+X-Google-Smtp-Source: ABdhPJwocfcyQPliB369D5sk19qV1NbUk9jBsxi7F2QFFlJFuMT6+0u0s+7ZI7bqi/ttnQcjQ9O5aO+qWGK5SbuojF0=
+X-Received: by 2002:ac8:6d0f:: with SMTP id o15mr14208849qtt.121.1596418092106;
+ Sun, 02 Aug 2020 18:28:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200731082513.11806-1-gmayyyha@gmail.com> <8e87954aa5d04dd25330afd68b396ef40ff53398.camel@kernel.org>
-In-Reply-To: <8e87954aa5d04dd25330afd68b396ef40ff53398.camel@kernel.org>
-From:   Yanhu Cao <gmayyyha@gmail.com>
-Date:   Mon, 3 Aug 2020 09:25:13 +0800
-Message-ID: <CAB9OAC2x-jTELNSqbmbC-x=VsGmUdHPJQL__vBC8K9PAwW14Mw@mail.gmail.com>
-Subject: Re: [v2] ceph: use frag's MDS in either mode
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <1596102422-14010-1-git-send-email-shengjiu.wang@nxp.com>
+ <20200801075954.GA19629@Asurada-Nvidia> <CAA+D8AMM90bt_WbPCny6C=R=dv6gXXh49p59yng2vH7DDuD2PQ@mail.gmail.com>
+ <20200802064351.GA24213@Asurada-Nvidia>
+In-Reply-To: <20200802064351.GA24213@Asurada-Nvidia>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Mon, 3 Aug 2020 09:28:01 +0800
+Message-ID: <CAA+D8APexk_-o91B=u1bthVxXr_+gUL9Yq4UA5zscLfP3Xsa6Q@mail.gmail.com>
+Subject: Re: [PATCH v2] ASoC: fsl-asoc-card: Remove fsl_asoc_card_set_bias_level
+ function
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 7:57 PM Jeff Layton <jlayton@kernel.org> wrote:
+On Sun, Aug 2, 2020 at 2:44 PM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
 >
-> On Fri, 2020-07-31 at 16:25 +0800, Yanhu Cao wrote:
-> > When doing some tests with multiple mds, there are many
-> > mds forwarding requests between them and then the client request
-> > is resent.
-> >
-> > If the request is a modification operation and the mode is set to USE_AUTH_MDS.
-> > Auth mds should be selected to handle the request, and if auth mds for
-> > frag is already set, it can be returned directly without the logic behind it.
-> >
-> > But the current logic doesn't return directly because the condition
-> > 'mode == USE_AUTH_MDS', and sometimes frag's mds is not equal to
-> > cap's session mds, which then causes the request to be resent.
-> >
-> > Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
-> > ---
-> >  fs/ceph/mds_client.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> >
-> > diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-> > index a50497142e59..b2255a9be7c0 100644
-> > --- a/fs/ceph/mds_client.c
-> > +++ b/fs/ceph/mds_client.c
-> > @@ -1103,8 +1103,7 @@ static int __choose_mds(struct ceph_mds_client *mdsc,
-> >                                    frag.frag, mds);
-> >                               if (ceph_mdsmap_get_state(mdsc->mdsmap, mds) >=
-> >                                   CEPH_MDS_STATE_ACTIVE) {
-> > -                                     if (mode == USE_ANY_MDS &&
-> > -                                         !ceph_mdsmap_is_laggy(mdsc->mdsmap,
-> > +                                     if (!ceph_mdsmap_is_laggy(mdsc->mdsmap,
-> >                                                                 mds))
-> >                                               goto out;
-> >                               }
+> On Sun, Aug 02, 2020 at 10:22:35AM +0800, Shengjiu Wang wrote:
 >
+> > > > +     /* Specific configuration for PLL */
+> > > > +     if (codec_priv->pll_id && codec_priv->fll_id) {
+> > > > +             if (priv->sample_format == SNDRV_PCM_FORMAT_S24_LE)
+> > > > +                     pll_out = priv->sample_rate * 384;
+> > > > +             else
+> > > > +                     pll_out = priv->sample_rate * 256;
+> > > > +
+> > > > +             ret = snd_soc_dai_set_pll(asoc_rtd_to_codec(rtd, 0),
+> > > > +                                       codec_priv->pll_id,
+> > > > +                                       codec_priv->mclk_id,
+> > > > +                                       codec_priv->mclk_freq, pll_out);
+> > > > +             if (ret) {
+> > > > +                     dev_err(dev, "failed to start FLL: %d\n", ret);
+> > > > +                     goto out;
+> > > > +             }
+> > > > +
+> > > > +             ret = snd_soc_dai_set_sysclk(asoc_rtd_to_codec(rtd, 0),
+> > > > +                                          codec_priv->fll_id,
+> > > > +                                          pll_out, SND_SOC_CLOCK_IN);
+> > >
+> > > Just came into my mind: do we need some protection here to prevent
+> > > PLL/SYSCLK reconfiguration if TX/RX end up with different values?
+> > >
+> > Sorry,  not really catching your point. could you please elaborate?
+> > Why do TX/RX end up with different values?
 >
-> Much better! A good changelog is as important as the patch, esp in code
-> like this that is quite non-obvious.
+> If TX and RX run concurrently but in different sample rates or
+> sample formats, pll_out would be overwritten to PLL/SYSCLK?
 >
-> Merged into testing branch. I did clean up the changelog a bit before I
-> merged it. Please take a look when you have time and let me know if you
-> think I got it wrong.
-LGTM.
+> I remember imx-wm8962 uses SSI, having symmetric flags for rates/
+> channels/samplebits, but fsl-asoc-card might have (or will have)
+> other use case.
+>
+> If all existing combinations don't have any problem, we can add
+> a protection later when we need.
 
-Thanks.
->
-> Thanks!
-> --
-> Jeff Layton <jlayton@kernel.org>
->
+Good point. Current cases should be ok, as the boards with
+wm8960 and wm8962 are all designed as synchronous mode.
+
+Agree to add protection when needed in the future.
+
+I will fix the nits and send v3.
+
+best regards
+wang shengjiu
