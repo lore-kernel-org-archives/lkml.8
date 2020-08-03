@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2735BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1745AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 037A3208B3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0D8F204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457777;
-	bh=2p0RX5zCSgS9Ba6CF+WarrcyVNe21ABsL3/IG4LdK54=;
+	s=default; t=1596457781;
+	bh=S6znPVZ89jcmyvwj57Su9erZ8HNhREGGkPYBHmEPk6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EB423htOM8zs63WihUP0zX87CZ3L3hGAvjXeoJIUvb7OV3tlfMFCKJXyP/EP6mtxO
-	 pusoVcjeqpmKRWGBM6/RuVbtlhPsSJUJqJm62oX1xK1texlbZ3AcQdihgK02nJ2PbK
-	 Y0tODLczYAIZHZdQ1uqRDaej13+DofngOK9pmiXQ=
+	b=r4xc1P0/dQyjuYC8hZVVyAvv8iOadC1JtARc+OyDADa7s+p2CXERKwuFIoN/bQYHG
+	 St+pxOIZwAEYVdOUJ/DMiiOu9B5PvDbrRa3XksqY7UrN6BEcX5XDLcCoSHNp3jiPGj
+	 eCe2xobnD8LHTuwQpxcEs89sHzyoeFwpmiOVsSuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbgHCM3g (ORCPT
+        id S1728951AbgHCM3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:29:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56170 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:29:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728929AbgHCM3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:29:34 -0400
+        id S1728941AbgHCM3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:29:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 826A5208B3;
-        Mon,  3 Aug 2020 12:29:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AA4C204EC;
+        Mon,  3 Aug 2020 12:29:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457773;
-        bh=2p0RX5zCSgS9Ba6CF+WarrcyVNe21ABsL3/IG4LdK54=;
+        s=default; t=1596457776;
+        bh=S6znPVZ89jcmyvwj57Su9erZ8HNhREGGkPYBHmEPk6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jw4U8oPYnD3qrmBlK2ET7yvxDWlzkVcvnnLENPWaVfVwjMP9WHesGfMYddKrG7pQB
-         BSkb7Ri7j7qYb2qPZBToD4XiTbQiMXfPPfqtAhzUl/E1NWyvrHOMfTxL4NQ1PEZZ5v
-         QGQYLKQF+3aXWzEAR2t+L77tEhwyRC4cei4g3yZ0=
+        b=lflf2sr9lxZ2DJ92v/CrlTas4LuqyhZzHvLYZ9CvwRS/CYZnePxW2sO2my79wdlh3
+         afKLRpb1KdyWbaIp4tx7SoGWU2oREB9zf9pIaQLRaHpL4IdVB/7ei5MBYTFWWDYZ+1
+         Mmkg+Pxn//VGwSh8kjW7gbMNIqVzmsRmHkNK+UAA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 69/90] vxlan: fix memleak of fdb
-Date:   Mon,  3 Aug 2020 14:19:31 +0200
-Message-Id: <20200803121900.958223920@linuxfoundation.org>
+Subject: [PATCH 5.4 70/90] usb: hso: Fix debug compile warning on sparc32
+Date:   Mon,  3 Aug 2020 14:19:32 +0200
+Message-Id: <20200803121901.006670097@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -61,92 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-[ Upstream commit fda2ec62cf1aa7cbee52289dc8059cd3662795da ]
+[ Upstream commit e0484010ec05191a8edf980413fc92f28050c1cc ]
 
-When vxlan interface is deleted, all fdbs are deleted by vxlan_flush().
-vxlan_flush() flushes fdbs but it doesn't delete fdb, which contains
-all-zeros-mac because it is deleted by vxlan_uninit().
-But vxlan_uninit() deletes only the fdb, which contains both all-zeros-mac
-and default vni.
-So, the fdb, which contains both all-zeros-mac and non-default vni
-will not be deleted.
+On sparc32, tcflag_t is "unsigned long", unlike on all other
+architectures, where it is "unsigned int":
 
-Test commands:
-    ip link add vxlan0 type vxlan dstport 4789 external
-    ip link set vxlan0 up
-    bridge fdb add to 00:00:00:00:00:00 dst 172.0.0.1 dev vxlan0 via lo \
-	    src_vni 10000 self permanent
-    ip link del vxlan0
+    drivers/net/usb/hso.c: In function ‘hso_serial_set_termios’:
+    include/linux/kern_levels.h:5:18: warning: format ‘%d’ expects argument of type ‘unsigned int’, but argument 4 has type ‘tcflag_t {aka long unsigned int}’ [-Wformat=]
+    drivers/net/usb/hso.c:1393:3: note: in expansion of macro ‘hso_dbg’
+       hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
+       ^~~~~~~
+    include/linux/kern_levels.h:5:18: warning: format ‘%d’ expects argument of type ‘unsigned int’, but argument 5 has type ‘tcflag_t {aka long unsigned int}’ [-Wformat=]
+    drivers/net/usb/hso.c:1393:3: note: in expansion of macro ‘hso_dbg’
+       hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
+       ^~~~~~~
 
-kmemleak reports as follows:
-unreferenced object 0xffff9486b25ced88 (size 96):
-  comm "bridge", pid 2151, jiffies 4294701712 (age 35506.901s)
-  hex dump (first 32 bytes):
-    02 00 00 00 ac 00 00 01 40 00 09 b1 86 94 ff ff  ........@.......
-    46 02 00 00 00 00 00 00 a7 03 00 00 12 b5 6a 6b  F.............jk
-  backtrace:
-    [<00000000c10cf651>] vxlan_fdb_append.part.51+0x3c/0xf0 [vxlan]
-    [<000000006b31a8d9>] vxlan_fdb_create+0x184/0x1a0 [vxlan]
-    [<0000000049399045>] vxlan_fdb_update+0x12f/0x220 [vxlan]
-    [<0000000090b1ef00>] vxlan_fdb_add+0x12a/0x1b0 [vxlan]
-    [<0000000056633c2c>] rtnl_fdb_add+0x187/0x270
-    [<00000000dd5dfb6b>] rtnetlink_rcv_msg+0x264/0x490
-    [<00000000fc44dd54>] netlink_rcv_skb+0x4a/0x110
-    [<00000000dff433e7>] netlink_unicast+0x18e/0x250
-    [<00000000b87fb421>] netlink_sendmsg+0x2e9/0x400
-    [<000000002ed55153>] ____sys_sendmsg+0x237/0x260
-    [<00000000faa51c66>] ___sys_sendmsg+0x88/0xd0
-    [<000000006c3982f1>] __sys_sendmsg+0x4e/0x80
-    [<00000000a8f875d2>] do_syscall_64+0x56/0xe0
-    [<000000003610eefa>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-unreferenced object 0xffff9486b1c40080 (size 128):
-  comm "bridge", pid 2157, jiffies 4294701754 (age 35506.866s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 f8 dc 42 b2 86 94 ff ff  ..........B.....
-    6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
-  backtrace:
-    [<00000000a2981b60>] vxlan_fdb_create+0x67/0x1a0 [vxlan]
-    [<0000000049399045>] vxlan_fdb_update+0x12f/0x220 [vxlan]
-    [<0000000090b1ef00>] vxlan_fdb_add+0x12a/0x1b0 [vxlan]
-    [<0000000056633c2c>] rtnl_fdb_add+0x187/0x270
-    [<00000000dd5dfb6b>] rtnetlink_rcv_msg+0x264/0x490
-    [<00000000fc44dd54>] netlink_rcv_skb+0x4a/0x110
-    [<00000000dff433e7>] netlink_unicast+0x18e/0x250
-    [<00000000b87fb421>] netlink_sendmsg+0x2e9/0x400
-    [<000000002ed55153>] ____sys_sendmsg+0x237/0x260
-    [<00000000faa51c66>] ___sys_sendmsg+0x88/0xd0
-    [<000000006c3982f1>] __sys_sendmsg+0x4e/0x80
-    [<00000000a8f875d2>] do_syscall_64+0x56/0xe0
-    [<000000003610eefa>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+As "unsigned long" is 32-bit on sparc32, fix this by casting all tcflag_t
+parameters to "unsigned int".
+While at it, use "%u" to format unsigned numbers.
 
-Fixes: 3ad7a4b141eb ("vxlan: support fdb and learning in COLLECT_METADATA mode")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Acked-by: Roopa Prabhu <roopa@cumulusnetworks.com>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vxlan.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/usb/hso.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
-index 03434db36b5c7..b49b6f0cee500 100644
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -2863,8 +2863,10 @@ static void vxlan_flush(struct vxlan_dev *vxlan, bool do_all)
- 			if (!do_all && (f->state & (NUD_PERMANENT | NUD_NOARP)))
- 				continue;
- 			/* the all_zeros_mac entry is deleted at vxlan_uninit */
--			if (!is_zero_ether_addr(f->eth_addr))
--				vxlan_fdb_destroy(vxlan, f, true, true);
-+			if (is_zero_ether_addr(f->eth_addr) &&
-+			    f->vni == vxlan->cfg.vni)
-+				continue;
-+			vxlan_fdb_destroy(vxlan, f, true, true);
- 		}
- 		spin_unlock_bh(&vxlan->hash_lock[h]);
- 	}
+diff --git a/drivers/net/usb/hso.c b/drivers/net/usb/hso.c
+index 74849da031fab..66a8b835aa94c 100644
+--- a/drivers/net/usb/hso.c
++++ b/drivers/net/usb/hso.c
+@@ -1389,8 +1389,9 @@ static void hso_serial_set_termios(struct tty_struct *tty, struct ktermios *old)
+ 	unsigned long flags;
+ 
+ 	if (old)
+-		hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
+-			tty->termios.c_cflag, old->c_cflag);
++		hso_dbg(0x16, "Termios called with: cflags new[%u] - old[%u]\n",
++			(unsigned int)tty->termios.c_cflag,
++			(unsigned int)old->c_cflag);
+ 
+ 	/* the actual setup */
+ 	spin_lock_irqsave(&serial->serial_lock, flags);
 -- 
 2.25.1
 
