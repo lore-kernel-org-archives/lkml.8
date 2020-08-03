@@ -2,52 +2,51 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7905BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD08C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BBED20678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B189206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596459375;
-	bh=BeTP5E8N4TxHgMJsyoBUItQTsU9Pz7lqhT9OygRn2fQ=;
+	s=default; t=1596459379;
+	bh=xttePjRSo/HvUvQlP8Rh7kntoyB1U0ZEsi/FLPpeVlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jLk4U3GTluek0Byk05gGxPPtb8jRPAgqAtz5ZF1vsG1aYNbtEDOk5XygUWxr3Z6Oi
-	 dLj/gwayKgoYIw8i9vfCOoUB9tcteN8IdGINeFJHz0GBXfHUfVozN4i/rJsRSxG1eh
-	 w96yi9l8KzVpfmAGGY8MjEqYGcncwiLW65WUBDs8=
+	b=eLv0+eqBM8RvMFI952eW7LmGnyR7U/u+db6H1HIkyJ3NpmuO+u7d6MtUxoCasB5w6
+	 0WZeEqv8IaRoTbQqwOBw4YL0SmjqNNsTcODjnoij/2BPxCzOQBuOMyeGretiaYy+/z
+	 1SGXv8dPBoJqHpRt1sZ4RfsJSmw8whRUCSsdgO4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729695AbgHCM4O (ORCPT
+        id S1728267AbgHCM4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:56:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56080 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:56:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729349AbgHCMz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:55:59 -0400
+        id S1726971AbgHCMWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:22:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B7BA20678;
-        Mon,  3 Aug 2020 12:55:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 915EF204EC;
+        Mon,  3 Aug 2020 12:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596459357;
-        bh=BeTP5E8N4TxHgMJsyoBUItQTsU9Pz7lqhT9OygRn2fQ=;
+        s=default; t=1596457336;
+        bh=xttePjRSo/HvUvQlP8Rh7kntoyB1U0ZEsi/FLPpeVlk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q384vg0KQ0kX8W2mC5CRWdfcQc9pFoT309rijIeIAE4T7X2j6LaR5XYyO1HvF+CH9
-         mWix7Nqi2accfd1CE3Drm42+bj+IZAEQqxbfvWhVH+TcxzsB9497EsOfBfoXnd2mqa
-         ZgX1NnJBOI4Z03NwkAY+9UvpamUxDd3JqqMkr154=
+        b=2CrKUnjwCdj50QUqKZmzF7WIFXUp5RZ5G/Xc+LGA/CL/xqCR7LO90PstHslHyMX8R
+         4eypEIK4NRL+M3gAxDokyhwoc5aJDyGc6GELZJsOqdTRzrKh+qs10z0ISUO2xFZ062
+         AwZf7GMMQBbSBt94akjOYiLJXqJpX+Hx/BfzvGeg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 081/120] RDMA/core: Free DIM memory in error unwind
-Date:   Mon,  3 Aug 2020 14:18:59 +0200
-Message-Id: <20200803121906.816057541@linuxfoundation.org>
+        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.7 007/120] ALSA: hda/realtek - Fixed HP right speaker no sound
+Date:   Mon,  3 Aug 2020 14:17:45 +0200
+Message-Id: <20200803121903.216058784@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -60,37 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+From: Kailang Yang <kailang@realtek.com>
 
-[ Upstream commit fb448ce87a4a9482b084e67faf804aec79ed9b43 ]
+commit 5649625344fe1f4695eace7c37d011e317bf66d5 upstream.
 
-The memory allocated for the DIM wasn't freed in in error unwind path, fix
-it by calling to rdma_dim_destroy().
+HP NB right speaker had no sound output.
+This platform was connected to I2S Amp for speaker out.(None Realtek I2S Amp IC)
+EC need to check codec GPIO1 pin to initial I2S Amp.
 
-Fixes: da6629793aa6 ("RDMA/core: Provide RDMA DIM support for ULPs")
-Link: https://lore.kernel.org/r/20200730082719.1582397-4-leon@kernel.org
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com <mailto:maxg@mellanox.com>>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Kailang Yang <kailang@realtek.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/01285f623ac7447187482fb4a8ecaa7c@realtek.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/infiniband/core/cq.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/pci/hda/patch_realtek.c |   19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/core/cq.c b/drivers/infiniband/core/cq.c
-index c259f632f257f..6bb62d04030ac 100644
---- a/drivers/infiniband/core/cq.c
-+++ b/drivers/infiniband/core/cq.c
-@@ -270,6 +270,7 @@ struct ib_cq *__ib_alloc_cq_user(struct ib_device *dev, void *private,
- 	return cq;
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5940,6 +5940,16 @@ static void alc_fixup_disable_mic_vref(s
+ 		snd_hda_codec_set_pin_target(codec, 0x19, PIN_VREFHIZ);
+ }
  
- out_destroy_cq:
-+	rdma_dim_destroy(cq);
- 	rdma_restrack_del(&cq->res);
- 	cq->device->ops.destroy_cq(cq, udata);
- out_free_wc:
--- 
-2.25.1
-
++static void  alc285_fixup_hp_gpio_amp_init(struct hda_codec *codec,
++			      const struct hda_fixup *fix, int action)
++{
++	if (action != HDA_FIXUP_ACT_INIT)
++		return;
++
++	msleep(100);
++	alc_write_coef_idx(codec, 0x65, 0x0);
++}
++
+ /* for hda_fixup_thinkpad_acpi() */
+ #include "thinkpad_helper.c"
+ 
+@@ -6120,6 +6130,7 @@ enum {
+ 	ALC289_FIXUP_ASUS_GA401,
+ 	ALC289_FIXUP_ASUS_GA502,
+ 	ALC256_FIXUP_ACER_MIC_NO_PRESENCE,
++	ALC285_FIXUP_HP_GPIO_AMP_INIT,
+ };
+ 
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -7352,6 +7363,12 @@ static const struct hda_fixup alc269_fix
+ 		.chained = true,
+ 		.chain_id = ALC256_FIXUP_ASUS_HEADSET_MODE
+ 	},
++	[ALC285_FIXUP_HP_GPIO_AMP_INIT] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc285_fixup_hp_gpio_amp_init,
++		.chained = true,
++		.chain_id = ALC285_FIXUP_HP_GPIO_LED
++	},
+ };
+ 
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -7502,7 +7519,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x103c, 0x84e7, "HP Pavilion 15", ALC269_FIXUP_HP_MUTE_LED_MIC3),
+ 	SND_PCI_QUIRK(0x103c, 0x869d, "HP", ALC236_FIXUP_HP_MUTE_LED),
+ 	SND_PCI_QUIRK(0x103c, 0x8729, "HP", ALC285_FIXUP_HP_GPIO_LED),
+-	SND_PCI_QUIRK(0x103c, 0x8736, "HP", ALC285_FIXUP_HP_GPIO_LED),
++	SND_PCI_QUIRK(0x103c, 0x8736, "HP", ALC285_FIXUP_HP_GPIO_AMP_INIT),
+ 	SND_PCI_QUIRK(0x103c, 0x877a, "HP", ALC285_FIXUP_HP_MUTE_LED),
+ 	SND_PCI_QUIRK(0x103c, 0x877d, "HP", ALC236_FIXUP_HP_MUTE_LED),
+ 	SND_PCI_QUIRK(0x1043, 0x103e, "ASUS X540SA", ALC256_FIXUP_ASUS_MIC),
 
 
