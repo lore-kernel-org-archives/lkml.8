@@ -2,217 +2,198 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE48C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FF8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0940D20825
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C68A92245C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:05:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EffEtYrt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2OHatuhc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RRT3NoZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbgHCQF2 (ORCPT
+        id S1728391AbgHCQFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 12:05:28 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37166 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbgHCQF1 (ORCPT
+        Mon, 3 Aug 2020 12:05:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47970 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbgHCQFk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 12:05:27 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596470725;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cjQTCHJ3y4DCe0XgrxEsW/lCFVYz3XtncIs9t2KFDWo=;
-        b=EffEtYrtRBMLVtJXM7+7hG8uxCdzx7hhyRA3cvJilaJdtMn9hxMjuVfyfSdHYFFADGTfYT
-        cX0wzmKxApuNteQZgaGezuvlaGYRUxXEmh//UmD8WUrHKuNLoJ2X6jACzJ+bCKKWGKRS6T
-        Ze7ShKjud+8Q89ibfrQiOVaGrl5NpESoLojyt+g54oSUignh2cITub++ty/ezi80oPtzTD
-        pfJt4AAy3xKEY6UF0wabSMAjvQJWrvzLIbWHNRi9oE2BkXvt1I2EIT4C7D8b/mrzRNWJDw
-        2R8ops7ds7t3QIR+E4puS5eLc29HmvFjTm3ZBtg/7dSS8in+DZLPUFIoVXpXnQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596470725;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cjQTCHJ3y4DCe0XgrxEsW/lCFVYz3XtncIs9t2KFDWo=;
-        b=2OHatuhcfrikbBZ3q7Z3YDoAaiFa4hvsDYhozvIhnqBz5gClQ5RAMRdNpDItrOLLnO6KLJ
-        U5RzVquCNm1yfICA==
-To:     Sven Schnelle <svens@linux.ibm.com>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-s390@vger.kernel.org, hca@linux.ibm.com
-Subject: Re: [PATCH 2/2] s390: convert to GENERIC_VDSO
-In-Reply-To: <yt9dmu3b3jo3.fsf@linux.ibm.com>
-References: <20200803055645.79042-1-svens@linux.ibm.com> <20200803055645.79042-3-svens@linux.ibm.com> <87ft93ncaa.fsf@nanos.tec.linutronix.de> <yt9dmu3b3jo3.fsf@linux.ibm.com>
-Date:   Mon, 03 Aug 2020 18:05:24 +0200
-Message-ID: <87a6zbn29n.fsf@nanos.tec.linutronix.de>
+        Mon, 3 Aug 2020 12:05:40 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF65FC06174A;
+        Mon,  3 Aug 2020 09:05:39 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id jp10so12634287ejb.0;
+        Mon, 03 Aug 2020 09:05:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ah4YH4xbs7o/4fq+m4lwGvpsZR2W5DSohgKfYKy8nDY=;
+        b=RRT3NoZzMjb6Id7P0RK+UDCMsf5oZdEydsvBjoMiJcskzKRpOUEsQzx6qIvuoQlmDT
+         u8vRodRqxLsPWN5Dbj2lA2PviILlK5OwWWUFTbYWQTvS9W6fhhBrOsCEbN5MkJ3IG9HW
+         eIgu3QAEawQBR3Cv2vkjl2bXrYrf8zIgZ3UWAZ6DMQY0sW+2ac/IuRcOKVyhVykmSWRX
+         Y74nTh4lPAbGDNg+C2zB/FD976THLzC5hXy9pS2ljImHkaOpf7cXMGodgJMan0Toee4N
+         qte5ce3imkSfVSwKVxqNEM4LVNSKw9WHeyqYDiqh+Vos87hWhPJkMXhyevGdBlz6A9UA
+         aKJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ah4YH4xbs7o/4fq+m4lwGvpsZR2W5DSohgKfYKy8nDY=;
+        b=mk3vXgVfkDFtTCRmBPDNVNiLZfEGaUGJuykFO0dDOtb/wQnhes7pXTy4yllx9rb3mY
+         ppfLwH+7Syc0vtF9buGZ1hQymlpI43vy1LYdKj9CHWx7gvXFs5my+l6xR8JDiqQVnOWW
+         q/SC/3lWFZN1bSTtKDUiIvVu3mTVqR1fTMUvbDCLTt1VnHJ/WwPqUGw3IWuG+sDRp/0l
+         fARV2OA2NDzmV1vMkTm9l5QIMVHLTurqZmEkUksS3onOygTiCNvPCEsnA8zhM1oZEi5T
+         WeSwQAI35gAWIlI/IilSwY5uW3AEcagfIA4QNKoMHWqbRqySyGpUO9cKzHCMYvjLSb2q
+         dS2Q==
+X-Gm-Message-State: AOAM531Nr9VV/kBwvHcrO8A8cj428Z/NVqWPMaBLwTLs4saXg5GLUC9T
+        OQpigdy3JAwB3xxD1Ox44U45rgrnr23CevrkygY=
+X-Google-Smtp-Source: ABdhPJxIp3nRKzPD7aLMKkOD0USdNBngKLF1wq5jJex6eDWi4SWxesozUtiIOxBttUwOihyMdPPdYfhg8CuqAY8V+Gs=
+X-Received: by 2002:a17:906:3449:: with SMTP id d9mr17737671ejb.460.1596470738295;
+ Mon, 03 Aug 2020 09:05:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200726111215.22361-1-konradybcio@gmail.com> <20200726111215.22361-5-konradybcio@gmail.com>
+ <20200803110016.GL12965@vkoul-mobl>
+In-Reply-To: <20200803110016.GL12965@vkoul-mobl>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 3 Aug 2020 09:06:22 -0700
+Message-ID: <CAF6AEGtW29BtJPq1xDEtvtkPHFVWEd_QJk5FpJEQPbmofnS64Q@mail.gmail.com>
+Subject: Re: [PATCH 4/9] drm/msm/dsi: Add phy configuration for SDM630/636/660
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        martin.botka1@gmail.com, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        zhengbin <zhengbin13@huawei.com>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Harigovindan P <harigovi@codeaurora.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Xiaozhe Shi <xiaozhes@codeaurora.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sven,
-
-Sven Schnelle <svens@linux.ibm.com> writes:
-> Thomas Gleixner <tglx@linutronix.de> writes:
->>>  			rc = chsc_sstpc(stp_page, STP_OP_SYNC, 0,
->>>  					&clock_delta);
->>>  			if (rc == 0) {
->>> @@ -609,6 +567,8 @@ static int stp_sync_clock(void *data)
->>>  				if (rc == 0 && stp_info.tmd != 2)
->>>  					rc = -EAGAIN;
->>>  			}
->>> +			smp_wmb(); /* see comment above */
->>
->> See my comments above :)
+On Mon, Aug 3, 2020 at 4:00 AM Vinod Koul <vkoul@kernel.org> wrote:
 >
-> :-)
+> On 26-07-20, 13:12, Konrad Dybcio wrote:
+> > These SoCs make use of the 14nm phy, but at different
+> > addresses than other 14nm units.
+> >
+> > Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+> > ---
+> >  .../devicetree/bindings/display/msm/dsi.txt    |  1 +
+> >  drivers/gpu/drm/msm/dsi/phy/dsi_phy.c          |  2 ++
+> >  drivers/gpu/drm/msm/dsi/phy/dsi_phy.h          |  1 +
+> >  drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c     | 18 ++++++++++++++++++
 >
-> What do you think about my question on using vdso_write_begin/end()?
-> __arch_get_hw_counter() is called inside a vdso_read_retry() loop, so i
-> would think that just enclosing this update with vdso_write_begin/end()
-> should sufficient. But i'm not sure whether arch/ should call these
-> functions.
+> Is there a reason why dsi phy needs to be here and not in phy subsystem
+> drivers/phy/ ?
 
-My knee jerk reaction is obviously NO, but OTOH it makes sense to
-utilize the existing sequence count for that.
+*maybe* it would be possible to split out all of the dsi (and hdmi)
+phy to drivers/phy.  But splitting out just the new ones wouldn't be
+practical (it would duplicate a lot of code, and make the rest of the
+dsi code have to deal with both cases).  And unlike dp/usb-c I'm not
+really sure I see an advantage to justify the churn.
 
-Though that want's a bit more than just fiddling with the sequence
-counter to be future proof and not restricted to the horrors of stomp
-machine context or some other orchestration mechanism. Something like
-the below.
+BR,
+-R
 
-Thanks,
-
-        tglx
-
-----
-Subject: timekeeping/vsyscall: Provide vdso_update_begin/end()
-From: Thomas Gleixner <tglx@linutronix.de>
-Date: Mon, 03 Aug 2020 17:25:31 +0200
-
-Architectures can have the requirement to add additional architecture
-specific data to the VDSO data page which needs to be updated independent
-of the timekeeper updates.
-
-To protect these updates vs. concurrent readers and a conflicting update
-through timekeeping, provide helper functions to make such updates safe.
-
-vdso_update_begin() takes the timekeeper_lock to protect against a
-potential update from timekeeper code and increments the VDSO sequence
-count to signal data inconsistency to concurrent readers. vdso_update_end()
-makes the sequence count even again to signal data consistency and drops
-the timekeeper lock.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- include/vdso/vsyscall.h            |    3 +++
- kernel/time/timekeeping.c          |    2 +-
- kernel/time/timekeeping_internal.h |   11 ++++++++---
- kernel/time/vsyscall.c             |   30 ++++++++++++++++++++++++++++++
- 4 files changed, 42 insertions(+), 4 deletions(-)
-
---- a/include/vdso/vsyscall.h
-+++ b/include/vdso/vsyscall.h
-@@ -6,6 +6,9 @@
- 
- #include <asm/vdso/vsyscall.h>
- 
-+void vdso_update_begin(void);
-+void vdso_update_end(void);
-+
- #endif /* !__ASSEMBLY__ */
- 
- #endif /* __VDSO_VSYSCALL_H */
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -50,7 +50,7 @@ static struct {
- 	.seq = SEQCNT_ZERO(tk_core.seq),
- };
- 
--static DEFINE_RAW_SPINLOCK(timekeeper_lock);
-+DEFINE_RAW_SPINLOCK(timekeeper_lock);
- static struct timekeeper shadow_timekeeper;
- 
- /**
---- a/kernel/time/timekeeping_internal.h
-+++ b/kernel/time/timekeeping_internal.h
-@@ -1,12 +1,14 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #ifndef _TIMEKEEPING_INTERNAL_H
- #define _TIMEKEEPING_INTERNAL_H
--/*
-- * timekeeping debug functions
-- */
-+
- #include <linux/clocksource.h>
-+#include <linux/spinlock.h>
- #include <linux/time.h>
- 
-+/*
-+ * timekeeping debug functions
-+ */
- #ifdef CONFIG_DEBUG_FS
- extern void tk_debug_account_sleep_time(const struct timespec64 *t);
- #else
-@@ -31,4 +33,7 @@ static inline u64 clocksource_delta(u64
- }
- #endif
- 
-+/* Semi public for serialization of non timekeeper VDSO updates. */
-+extern raw_spinlock_t timekeeper_lock;
-+
- #endif /* _TIMEKEEPING_INTERNAL_H */
---- a/kernel/time/vsyscall.c
-+++ b/kernel/time/vsyscall.c
-@@ -13,6 +13,8 @@
- #include <vdso/helpers.h>
- #include <vdso/vsyscall.h>
- 
-+#include "timekeeping_internal.h"
-+
- static inline void update_vdso_data(struct vdso_data *vdata,
- 				    struct timekeeper *tk)
- {
-@@ -127,3 +129,31 @@ void update_vsyscall_tz(void)
- 
- 	__arch_sync_vdso_data(vdata);
- }
-+
-+/**
-+ * vdso_update_begin - Start of a VDSO update section
-+ *
-+ * Allows architecture code to safely update the architecture specific VDSO
-+ * data.
-+ */
-+void vdso_update_begin(void)
-+{
-+	struct vdso_data *vdata = __arch_get_k_vdso_data();
-+
-+	raw_spin_lock(&timekeeper_lock);
-+	vdso_write_begin(vdata);
-+}
-+
-+/**
-+ * vdso_update_end - End of a VDSO update section
-+ *
-+ * Pairs with vdso_update_begin().
-+ */
-+void vdso_update_end(void)
-+{
-+	struct vdso_data *vdata = __arch_get_k_vdso_data();
-+
-+	vdso_write_end(vdata);
-+	__arch_sync_vdso_data(vdata);
-+	raw_spin_unlock(&timekeeper_lock);
-+}
+>
+> >  4 files changed, 22 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> > index af95586c898f..7884fd7a85c1 100644
+> > --- a/Documentation/devicetree/bindings/display/msm/dsi.txt
+> > +++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> > @@ -87,6 +87,7 @@ Required properties:
+> >    * "qcom,dsi-phy-20nm"
+> >    * "qcom,dsi-phy-28nm-8960"
+> >    * "qcom,dsi-phy-14nm"
+> > +  * "qcom,dsi-phy-14nm-660"
+> >    * "qcom,dsi-phy-10nm"
+> >    * "qcom,dsi-phy-10nm-8998"
+> >  - reg: Physical base address and length of the registers of PLL, PHY. Some
+> > diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+> > index f509ebd77500..009f5b843dd1 100644
+> > --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+> > +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+> > @@ -499,6 +499,8 @@ static const struct of_device_id dsi_phy_dt_match[] = {
+> >  #ifdef CONFIG_DRM_MSM_DSI_14NM_PHY
+> >       { .compatible = "qcom,dsi-phy-14nm",
+> >         .data = &dsi_phy_14nm_cfgs },
+> > +     { .compatible = "qcom,dsi-phy-14nm-660",
+> > +       .data = &dsi_phy_14nm_660_cfgs },
+> >  #endif
+> >  #ifdef CONFIG_DRM_MSM_DSI_10NM_PHY
+> >       { .compatible = "qcom,dsi-phy-10nm",
+> > diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
+> > index 24b294ed3059..ef8672d7b123 100644
+> > --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
+> > +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
+> > @@ -45,6 +45,7 @@ extern const struct msm_dsi_phy_cfg dsi_phy_28nm_lp_cfgs;
+> >  extern const struct msm_dsi_phy_cfg dsi_phy_20nm_cfgs;
+> >  extern const struct msm_dsi_phy_cfg dsi_phy_28nm_8960_cfgs;
+> >  extern const struct msm_dsi_phy_cfg dsi_phy_14nm_cfgs;
+> > +extern const struct msm_dsi_phy_cfg dsi_phy_14nm_660_cfgs;
+> >  extern const struct msm_dsi_phy_cfg dsi_phy_10nm_cfgs;
+> >  extern const struct msm_dsi_phy_cfg dsi_phy_10nm_8998_cfgs;
+> >
+> > diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c
+> > index 1594f1422372..519400501bcd 100644
+> > --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c
+> > +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c
+> > @@ -161,3 +161,21 @@ const struct msm_dsi_phy_cfg dsi_phy_14nm_cfgs = {
+> >       .io_start = { 0x994400, 0x996400 },
+> >       .num_dsi_phy = 2,
+> >  };
+> > +
+> > +const struct msm_dsi_phy_cfg dsi_phy_14nm_660_cfgs = {
+> > +     .type = MSM_DSI_PHY_14NM,
+> > +     .src_pll_truthtable = { {false, false}, {true, false} },
+> > +     .reg_cfg = {
+> > +             .num = 1,
+> > +             .regs = {
+> > +                     {"vcca", 17000, 32},
+> > +             },
+> > +     },
+> > +     .ops = {
+> > +             .enable = dsi_14nm_phy_enable,
+> > +             .disable = dsi_14nm_phy_disable,
+> > +             .init = dsi_14nm_phy_init,
+> > +     },
+> > +     .io_start = { 0xc994400, 0xc996000 },
+> > +     .num_dsi_phy = 2,
+> > +};
+> > --
+> > 2.27.0
+>
+> --
+> ~Vinod
