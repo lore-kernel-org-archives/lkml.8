@@ -2,96 +2,71 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D40C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E03C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAB3E22BF3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 458DD22CAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596488013;
-	bh=x3L8lRLXfnWYRIovMlX1r9qPhv5raP0v+jZygpBnzvo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=iR07SCORiJCLplEpO5pz+DoBtp4Ib2Nlv49Tq49qFADnjgQr5Bykpv7rQe7dBqFoV
-	 1RCztgFP+IGBcwNlz7yYdvtI5mSWPjMTG03sPfuYc5YDo6eLgkjqXAqTAAYN2mVrqz
-	 mmIhx+5vkvK+iy4qCLtOq8XeZOwVkvg42ghBCsyI=
+	s=default; t=1596488020;
+	bh=63vausDKl51fDul3cYf/wPKP2WMfhfwyaq3HXHq6eDM=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=qzuJRFSZKCSu/cbTKBWG6fepUxZk3YD4hQqC1UpFS4zEoohCUpQxGw7AZ3vE7L+OA
+	 IpvnbulR1jcEZF06vpO4Lx/8HbQNz3ZOGMRwDo17x5/CYlOTmyLvg05gMX12tCWOa+
+	 95A53o9FZisMTVbKeC9dxQZjZjQdusqQaECKn/F0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbgHCUxc (ORCPT
+        id S1728764AbgHCUxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 16:53:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgHCUxb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 16:53:31 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76314C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 13:53:31 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id t6so28237582ljk.9
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 13:53:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=boqqlPEphuqFOJvJXYWvtssstb3e5GfHxvP4UX5Sq5c=;
-        b=KoLB4qo00ttZ2rb6l5YXNE1gls5lSCPrNhMgqClS0lvY/JPsH9QzjORUdh/XfpVP9d
-         llAyfafcZTRGmbD3dCIvElgiiL5Wmg1ePatuFMFxwUHOf39YQbD87hnmiBrhYtv6T491
-         lr09HtKaYwZyX7qWtmxXfWf0EEMNi9ni6Qxns=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=boqqlPEphuqFOJvJXYWvtssstb3e5GfHxvP4UX5Sq5c=;
-        b=Ixr1XhqcLMSARJrCMA1YMcsyvyiN7nDXbGjG8sWPfFet029WBRzTAniFaPBTfXHPj8
-         8UksCnJECtQn2Q4ipRGP5fi0uFJ0zUmYOoK35pAWWLh9yHOljpg1S9Jt92NDxe8/k6/S
-         SSIOxhNm1+FkBaHsEkiGz/P17NABH1bgZZQdPgg0Y/t7NVzzBG2O/zEg6dOyT340pb3P
-         fuIPgyKwo+YUmQ0YZjdoy6NHpm23NYBeXpP1nzgJQGpMFb2zNvtJFxJG63hahTUnW491
-         SCZvLCMiDQHSWy0UGke39MV2KW6iHXAvBm4+LsUG1pDOf8shm/2hNC7jX/Vhr4+sYJ9g
-         uXSg==
-X-Gm-Message-State: AOAM5332p3SGAkGm3r3hn9vFpXahAqyQNP3bvCcQKFOl37IKEzWiOFBS
-        FDV0LUXKGe1dXdd8DUOJdIa8B+3xHv4=
-X-Google-Smtp-Source: ABdhPJwyAKA8O/AzPOokuMxroSCk98dghHhYuYH7c2M+yxbO06vpX0otZQnvoSFtPVOiZLTwKngtqw==
-X-Received: by 2002:a05:651c:d0:: with SMTP id 16mr8604043ljr.313.1596488009601;
-        Mon, 03 Aug 2020 13:53:29 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id p11sm5296833lfo.71.2020.08.03.13.53.28
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Aug 2020 13:53:28 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id c15so3885722lfi.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 13:53:28 -0700 (PDT)
-X-Received: by 2002:ac2:46d0:: with SMTP id p16mr9624647lfo.142.1596488008455;
- Mon, 03 Aug 2020 13:53:28 -0700 (PDT)
+        Mon, 3 Aug 2020 16:53:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727003AbgHCUxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 16:53:38 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32BDE22BF3;
+        Mon,  3 Aug 2020 20:53:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596488018;
+        bh=63vausDKl51fDul3cYf/wPKP2WMfhfwyaq3HXHq6eDM=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=CL9EukmtgevqRm17QTiuKMh+tUSO32Wcv45FcTnONooSMa1oMhDlN+jaAKRAN6Suv
+         UZYlzJMS+14rthWqFV0B7nwrtkGTykxS2SjIINdR4qwsHemi95QBL8OXEPhCmWeI5n
+         IT8S00vlubSd4B/jEh6zQqJv2LQHq02R7OnHytus=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <50466810-9148-e245-7c1e-e7435b753582@kernel.dk> <CAHk-=wgaxWMA7DVTQq+KxqaWHPDrXDuScX9orzRgxdi7SBfmoA@mail.gmail.com>
-In-Reply-To: <CAHk-=wgaxWMA7DVTQq+KxqaWHPDrXDuScX9orzRgxdi7SBfmoA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 3 Aug 2020 13:53:12 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjztm0K9e_62KZj9vJXhmid-=euv-pOHg97LUbHyPKwzA@mail.gmail.com>
-Message-ID: <CAHk-=wjztm0K9e_62KZj9vJXhmid-=euv-pOHg97LUbHyPKwzA@mail.gmail.com>
-Subject: Re: [GIT PULL] io_uring changes for 5.9-rc1
-To:     Jens Axboe <axboe@kernel.dk>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc:     io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1596272022-14173-1-git-send-email-Julia.Lawall@inria.fr>
+References: <1596272022-14173-1-git-send-email-Julia.Lawall@inria.fr>
+Subject: Re: [PATCH] clk: drop unused function __clk_get_flags
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     kernel-janitors@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+To:     Julia Lawall <Julia.Lawall@inria.fr>,
+        Michael Turquette <mturquette@baylibre.com>
+Date:   Mon, 03 Aug 2020 13:53:36 -0700
+Message-ID: <159648801691.1360974.3807233534486926682@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 3, 2020 at 1:48 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> I've pushed out my merge of this thing [..]
+Quoting Julia Lawall (2020-08-01 01:53:42)
+> The function __clk_get_flags has not been used since the April 2019
+> commit a348f05361c9 ("ARM: omap2+: hwmod: drop CLK_IS_BASIC
+> flag usage").  Other uses were removed in June 2015, eg by
+> commit 98d8a60eccee ("clk: Convert __clk_get_flags() to
+> clk_hw_get_flags()"), which shows how clk_hw_get_flags can easily
+> be used instead.
+>=20
+> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+>=20
+> ---
 
-It seems I'm not the only one unhappy with the pull request.
-
-For some reason I also don't see pr-tracker-bot being all happy and
-excited about it. I wonder why.
-
-                     Linus
+Applied to clk-next
