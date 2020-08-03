@@ -4,33 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3313CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 332BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 180B720678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05A90206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:16:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgHCKQa (ORCPT
+        id S1726622AbgHCKQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 06:16:30 -0400
-Received: from relay.sw.ru ([185.231.240.75]:37768 "EHLO relay3.sw.ru"
+        Mon, 3 Aug 2020 06:16:35 -0400
+Received: from relay.sw.ru ([185.231.240.75]:37816 "EHLO relay3.sw.ru"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725951AbgHCKQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 06:16:29 -0400
+        id S1725951AbgHCKQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 06:16:35 -0400
 Received: from [192.168.15.50] (helo=localhost.localdomain)
         by relay3.sw.ru with esmtp (Exim 4.93)
         (envelope-from <ktkhai@virtuozzo.com>)
-        id 1k2XVm-0002Nk-Fm; Mon, 03 Aug 2020 13:16:06 +0300
-Subject: [PATCH 3/8] ipc: Use generic ns_common::count
+        id 1k2XVr-0002Nw-Oz; Mon, 03 Aug 2020 13:16:11 +0300
+Subject: [PATCH 4/8] pid: Use generic ns_common::count
 From:   Kirill Tkhai <ktkhai@virtuozzo.com>
 To:     christian.brauner@ubuntu.com, akpm@linux-foundation.org,
         ebiederm@xmission.com, viro@zeniv.linux.org.uk,
         adobriyan@gmail.com, davem@davemloft.net,
         linux-kernel@vger.kernel.org, ktkhai@virtuozzo.com
-Date:   Mon, 03 Aug 2020 13:16:27 +0300
-Message-ID: <159644978697.604812.16592754423881032385.stgit@localhost.localdomain>
+Date:   Mon, 03 Aug 2020 13:16:32 +0300
+Message-ID: <159644979226.604812.7512601754841882036.stgit@localhost.localdomain>
 In-Reply-To: <159644958332.604812.13004003379291842292.stgit@localhost.localdomain>
 References: <159644958332.604812.13004003379291842292.stgit@localhost.localdomain>
 User-Agent: StGit/0.19
@@ -42,71 +43,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert uts namespace to use generic counter.
+Convert pid namespace to use generic counter.
 
 Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
- include/linux/ipc_namespace.h |    3 +--
- ipc/msgutil.c                 |    2 +-
- ipc/namespace.c               |    4 ++--
- 3 files changed, 4 insertions(+), 5 deletions(-)
+ include/linux/pid_namespace.h |    4 +---
+ kernel/pid.c                  |    2 +-
+ kernel/pid_namespace.c        |   13 +++----------
+ 3 files changed, 5 insertions(+), 14 deletions(-)
 
-diff --git a/include/linux/ipc_namespace.h b/include/linux/ipc_namespace.h
-index a06a78c67f19..05e22770af51 100644
---- a/include/linux/ipc_namespace.h
-+++ b/include/linux/ipc_namespace.h
-@@ -27,7 +27,6 @@ struct ipc_ids {
- };
+diff --git a/include/linux/pid_namespace.h b/include/linux/pid_namespace.h
+index 5a5cb45ac57e..7c7e627503d2 100644
+--- a/include/linux/pid_namespace.h
++++ b/include/linux/pid_namespace.h
+@@ -8,7 +8,6 @@
+ #include <linux/workqueue.h>
+ #include <linux/threads.h>
+ #include <linux/nsproxy.h>
+-#include <linux/kref.h>
+ #include <linux/ns_common.h>
+ #include <linux/idr.h>
  
- struct ipc_namespace {
--	refcount_t	count;
- 	struct ipc_ids	ids[3];
+@@ -18,7 +17,6 @@
+ struct fs_pin;
  
- 	int		sem_ctls[4];
-@@ -128,7 +127,7 @@ extern struct ipc_namespace *copy_ipcs(unsigned long flags,
- static inline struct ipc_namespace *get_ipc_ns(struct ipc_namespace *ns)
+ struct pid_namespace {
+-	struct kref kref;
+ 	struct idr idr;
+ 	struct rcu_head rcu;
+ 	unsigned int pid_allocated;
+@@ -43,7 +41,7 @@ extern struct pid_namespace init_pid_ns;
+ static inline struct pid_namespace *get_pid_ns(struct pid_namespace *ns)
  {
- 	if (ns)
--		refcount_inc(&ns->count);
+ 	if (ns != &init_pid_ns)
+-		kref_get(&ns->kref);
 +		refcount_inc(&ns->ns.count);
  	return ns;
  }
  
-diff --git a/ipc/msgutil.c b/ipc/msgutil.c
-index 3149b4a379de..d0a0e877cadd 100644
---- a/ipc/msgutil.c
-+++ b/ipc/msgutil.c
-@@ -26,7 +26,7 @@ DEFINE_SPINLOCK(mq_lock);
-  * and not CONFIG_IPC_NS.
+diff --git a/kernel/pid.c b/kernel/pid.c
+index de9d29c41d77..3b9e67736ef4 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -72,7 +72,7 @@ int pid_max_max = PID_MAX_LIMIT;
+  * the scheme scales to up to 4 million PIDs, runtime.
   */
- struct ipc_namespace init_ipc_ns = {
--	.count		= REFCOUNT_INIT(1),
-+	.ns.count = REFCOUNT_INIT(1),
- 	.user_ns = &init_user_ns,
- 	.ns.inum = PROC_IPC_INIT_INO,
- #ifdef CONFIG_IPC_NS
-diff --git a/ipc/namespace.c b/ipc/namespace.c
-index 24e7b45320f7..7bd0766ddc3b 100644
---- a/ipc/namespace.c
-+++ b/ipc/namespace.c
-@@ -51,7 +51,7 @@ static struct ipc_namespace *create_ipc_ns(struct user_namespace *user_ns,
- 		goto fail_free;
- 	ns->ns.ops = &ipcns_operations;
+ struct pid_namespace init_pid_ns = {
+-	.kref = KREF_INIT(2),
++	.ns.count = REFCOUNT_INIT(2),
+ 	.idr = IDR_INIT(init_pid_ns.idr),
+ 	.pid_allocated = PIDNS_ADDING,
+ 	.level = 0,
+diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
+index 0e5ac162c3a8..d02dc1696edf 100644
+--- a/kernel/pid_namespace.c
++++ b/kernel/pid_namespace.c
+@@ -102,7 +102,7 @@ static struct pid_namespace *create_pid_namespace(struct user_namespace *user_ns
+ 		goto out_free_idr;
+ 	ns->ns.ops = &pidns_operations;
  
--	refcount_set(&ns->count, 1);
+-	kref_init(&ns->kref);
 +	refcount_set(&ns->ns.count, 1);
+ 	ns->level = level;
+ 	ns->parent = get_pid_ns(parent_pid_ns);
  	ns->user_ns = get_user_ns(user_ns);
- 	ns->ucounts = ucounts;
+@@ -148,22 +148,15 @@ struct pid_namespace *copy_pid_ns(unsigned long flags,
+ 	return create_pid_namespace(user_ns, old_ns);
+ }
  
-@@ -164,7 +164,7 @@ static DECLARE_WORK(free_ipc_work, free_ipc);
-  */
- void put_ipc_ns(struct ipc_namespace *ns)
+-static void free_pid_ns(struct kref *kref)
+-{
+-	struct pid_namespace *ns;
+-
+-	ns = container_of(kref, struct pid_namespace, kref);
+-	destroy_pid_namespace(ns);
+-}
+-
+ void put_pid_ns(struct pid_namespace *ns)
  {
--	if (refcount_dec_and_lock(&ns->count, &mq_lock)) {
-+	if (refcount_dec_and_lock(&ns->ns.count, &mq_lock)) {
- 		mq_clear_sbinfo(ns);
- 		spin_unlock(&mq_lock);
+ 	struct pid_namespace *parent;
  
+ 	while (ns != &init_pid_ns) {
+ 		parent = ns->parent;
+-		if (!kref_put(&ns->kref, free_pid_ns))
++		if (!refcount_dec_and_test(&ns->ns.count))
+ 			break;
++		destroy_pid_namespace(ns);
+ 		ns = parent;
+ 	}
+ }
 
 
