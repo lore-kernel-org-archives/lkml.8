@@ -2,108 +2,100 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD879C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8235C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC65320719
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E94E20719
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:37:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IdhZIY/V"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZpPiDdU+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgHCJgl (ORCPT
+        id S1726239AbgHCJh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 05:36:41 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:36112 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgHCJgk (ORCPT
+        Mon, 3 Aug 2020 05:37:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44434 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbgHCJh5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 05:36:40 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0739H7gc054959;
-        Mon, 3 Aug 2020 09:36:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=IM7JPKhzENSyYGDL/C7fWaTdj+MTBkjqO/862CoRfz8=;
- b=IdhZIY/VQCGYYE4ZcaOwrsrMvJ26+J6VKhPX2OIwmRbnNwsfcQrAbj5M5SS8Ge82UApy
- bnRo4Qxk5O/vAbO2DEOYpdI6EujgzX9f+zAPVG5EKTXzqaT7VxZOXOgDnLSp0eqtwcYT
- N5xe7zq5KQNYdwXv0D024Zyq/2jDiCP732JoU90stmHNtCP6gIbg6znBT5w54izyJufW
- Q77/QCZdnSwSxo49Uv3kj32dHtEjY/eO8WzGo5QhEmr0/CyYwd5AVzXDOM1AoJSXVOgO
- MGgIykhTYK3BiwFicoWZdS4A6HfVXNTYrFEP45DqkMIEZMR7eDyzXgzHGLxAHO1GzRRF wQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 32pdnq0rpm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 03 Aug 2020 09:36:29 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0739X3aW020788;
-        Mon, 3 Aug 2020 09:34:29 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3030.oracle.com with ESMTP id 32p5gqgpfq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 03 Aug 2020 09:34:29 +0000
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0739YSQk023748;
-        Mon, 3 Aug 2020 09:34:28 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 32p5gqgpfa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 03 Aug 2020 09:34:28 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0739YOdY020620;
-        Mon, 3 Aug 2020 09:34:24 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 03 Aug 2020 02:34:23 -0700
-Date:   Mon, 3 Aug 2020 12:34:14 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Peilin Ye <yepeilin.cs@gmail.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak
- in rds_notify_queue_get()
-Message-ID: <20200803093414.GL5493@kadam>
-References: <20200731045301.GI75549@unreal>
- <20200731053306.GA466103@kroah.com>
- <20200731053333.GB466103@kroah.com>
- <20200731140452.GE24045@ziepe.ca>
- <20200731142148.GA1718799@kroah.com>
- <20200731143604.GF24045@ziepe.ca>
- <20200731171924.GA2014207@kroah.com>
- <20200731182712.GI24045@ziepe.ca>
- <20200801080026.GJ5493@kadam>
- <20200801144030.GM24045@ziepe.ca>
+        Mon, 3 Aug 2020 05:37:57 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DCBDC06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 02:37:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=UbRjqa0bLC9sUnNplV+mhL8Jmlbwd8SnDkco5utAUSc=; b=ZpPiDdU+LOwUbCnqWeNDxyTS3P
+        83SJlXZhJQgAAwhUfujeYkdc6b/zHYQ4yD/THmovQlRkn0XwKrT067ZiIw8wCbF06UG78SPG8DbdW
+        /6cNzRUkhcURd+0y/H1m/A5lHIp1r3RAfdUCVdc4ZrXEv4eW7gly+TRSgrQGpi+5oozDHH/M3QZDX
+        NGVY5ox+e6i2aWawk4OJRkvsEQoTupMQmLiWoIbQZsNYgNWIDNTBrUS9vHcDYKksw8Hqp5ooPWCl3
+        rDnlzx1kExokVOXpGU0vSAzIZIbwYjm7yqEPBrLI7RNv/nCrjZn6Hguh/g72gbljQ6mlwXRtsVi6O
+        TiT9gzDQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k2Wun-0007dB-9T; Mon, 03 Aug 2020 09:37:53 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A23F3301A66;
+        Mon,  3 Aug 2020 11:37:51 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 940C8236F1EB3; Mon,  3 Aug 2020 11:37:51 +0200 (CEST)
+Date:   Mon, 3 Aug 2020 11:37:51 +0200
+From:   peterz@infradead.org
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH 4/4] context_tracking: uninitialize static variables
+Message-ID: <20200803093751.GD2674@hirez.programming.kicks-ass.net>
+References: <0/4>
+ <20200801184603.310769-1-jbi.octave@gmail.com>
+ <20200801184603.310769-5-jbi.octave@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200801144030.GM24045@ziepe.ca>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9701 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
- suspectscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 adultscore=0
- malwarescore=0 phishscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008030068
+In-Reply-To: <20200801184603.310769-5-jbi.octave@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ah, thanks.  We've had a bunch of discussions about these leaks but I
-wasn't aware of this.
+On Sat, Aug 01, 2020 at 07:46:03PM +0100, Jules Irenge wrote:
+> Checkpatch tool reports an error at a staic variable declaration
+> 
+> "ERROR: do not initialise statics to false"
+> 
+> This is due to the fact that this variable is stored in the buffer
+> In the .bss section, one can not set an initial value
+> Here we can trust the compiler to automatically set them to false.
+> The variable has since been uninitialized.
+> 
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+> ---
+>  kernel/context_tracking.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/context_tracking.c b/kernel/context_tracking.c
+> index 36a98c48aedc..21881c534152 100644
+> --- a/kernel/context_tracking.c
+> +++ b/kernel/context_tracking.c
+> @@ -190,7 +190,7 @@ NOKPROBE_SYMBOL(context_tracking_user_exit);
+>  
+>  void __init context_tracking_cpu_set(int cpu)
+>  {
+> -	static __initdata bool initialized = false;
+> +	static __initdata bool initialized;
 
-regards,
-dan carpenter
+So personally I prefer having the '= false' there. It used to be that
+compilers were stupid and would put any initialized static variable in
+.data, even if it was initialized with 0. But AFAIK compilers are no
+longer that stupid.
 
