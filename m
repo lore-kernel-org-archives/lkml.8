@@ -2,99 +2,124 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F316C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFFCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAF8F22C9F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:05:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596488751;
-	bh=BRNU18Dd2KXV4shv+fX1dMhET2qEHhyQRbZE4S9P2dI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gprtl6NkIdal3Gd2eDpYaMWM1BA9amdt7MXDaY1HSftmRSkrmdoztN0mO6HfFR+0w
-	 zJ52b3Ut+FLNwsiYNmfP9xcZ5HRZvZ0jIkYdNQtlPa1KUvbNothQw2ALE4QmTKviZi
-	 7PTwgi9iFo0aleXtbXV2wDIZdq6qfywKeI/TKOLU=
+	by mail.kernel.org (Postfix) with ESMTP id E899C22BF3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:06:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ijZHz8Uz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbgHCVFu (ORCPT
+        id S1729084AbgHCVGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 17:05:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37826 "EHLO
+        Mon, 3 Aug 2020 17:06:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728400AbgHCVFt (ORCPT
+        with ESMTP id S1728400AbgHCVGg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 17:05:49 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 726AEC06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 14:05:49 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id i80so21191311lfi.13
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 14:05:49 -0700 (PDT)
+        Mon, 3 Aug 2020 17:06:36 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62F38C06174A;
+        Mon,  3 Aug 2020 14:06:36 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id 77so3891383ilc.5;
+        Mon, 03 Aug 2020 14:06:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=CKnuHzsPFl3igWb8A7Hqb4zxCAnSQsvvvuOQtZj62Yg=;
-        b=bDASN69sSb9uMh0TJLpCPepp3MmCFHCIGBlN2sijiSgnFv+KcJOKK2TxJQTHm90WSK
-         2vtr8w9lVx6HUAYgnD62xrWS96qR/oWrJX+YcbPzNwh6BlUcztXOWxvKrrk6qMad1rI+
-         BoSlcfsCOQttzv8zWsudz+wIl8atq1nIl+cbM=
+        bh=I8E3XSJDvDX1egjA2GUXctrW6F+MeWdt3qnYussCHHQ=;
+        b=ijZHz8UzGGZ/lxjpnlwB+zPaLAj+Wkm6TPf2WxOY2ZS01RRfI5oYVTmoJpOmTLxYVV
+         22hkznu90lUCsXc0bDEAH+lhC4uWKdv0hi+vRw4iRn/1k6SbMp6KdV08RpTY9o+y79bj
+         A7NikTxAa2dyl4mE+RGJG7cT6TieeAmV1VgtROBkn8FgDsngGas05muf52+94kJLn9TT
+         EZYYFwxmel46D+KiHmSS8AG6S2ciiEwWuIyviSzjrWDbOSh5Be7U5N3k6IH0wHMt/G+A
+         j0BrBAJlXNLod9ZybzKUxyUVaqSlZJThl8ervfSS8/1Fsz06FUVYMHZUriORTqOlBsOK
+         Vppw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CKnuHzsPFl3igWb8A7Hqb4zxCAnSQsvvvuOQtZj62Yg=;
-        b=M75dZOvm9PqUWlmzMF/Q2ti0oLub7VpF6XBliSEgh2KVHE+vtMRk2kB56FZAAfywDw
-         AxkF3FSYAKes/7ZCJlh4WvoQ2zCmZvSuwxrH/ygALUrztaDQK56IvOO78NVymmAanQL5
-         M1xh38sqSXI2L8hoQh+F2CKSqnx6ebxtDeUYvLKjYhbv4sTTwdAkmRU4AUeyTXnyoeg1
-         xsR50P+yy9d+7xjH0bs5ftgqWglzfwtvtz6Edr16EczG5OUuvIXvk/otI9zdXTbvKZb0
-         Ms6U5wvs+yluQZ14H0hEy51eXsnoO7sHzMnSWuposxbo6FrAgVcoKb0eGSqNGFarfIBA
-         ou1A==
-X-Gm-Message-State: AOAM530hZXrRXroJyXn3ndSQeLGiXB5Z30Xtzr8u7OeMyLOFTzURbkzn
-        F/R/NdvSemz2ucz+ce03bdMjpKw9wKg=
-X-Google-Smtp-Source: ABdhPJw9A5D9YoHPptKLLE8QOme5vMYjDuhQ5K+bI3JnMRlKAb5y7qmgcquVRoT5uJZkOYB/3lVheA==
-X-Received: by 2002:a19:c7d7:: with SMTP id x206mr9153024lff.67.1596488746350;
-        Mon, 03 Aug 2020 14:05:46 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id j2sm4625075ljb.98.2020.08.03.14.05.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Aug 2020 14:05:45 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id v4so31529291ljd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 14:05:45 -0700 (PDT)
-X-Received: by 2002:a2e:9a11:: with SMTP id o17mr1326612lji.314.1596488744685;
- Mon, 03 Aug 2020 14:05:44 -0700 (PDT)
+        bh=I8E3XSJDvDX1egjA2GUXctrW6F+MeWdt3qnYussCHHQ=;
+        b=ZhnGt8B9Xw7lW58ILvmQNoiFfKWLm6SrV5WrfBCTU7eqrdZLsYAl9vx9t12omTMb4Z
+         gO3v+21iTBCxJ0O3LB8+z3RZAutTVOHXA3BOsuaB8uASy+PX2pTSkXYdO2vn9zvPzwEw
+         Q3YPiAbDb/6IAEMhObqieiKO1CaP1UGU8B7FDubZDI2rqm873Dv5p2Gly1HUd3dg6Fju
+         WfGcmKFlaLrYFLKbaxepGxya8PsCZy8om1ON9IzvUqNTcDtZ2EE5o7Fss+CMTypkvtgp
+         mWs2zHOXOgjzHtcsYR03jrK1cEBX9PuxEEB8Gu4KrSHJ0Iv49WY5381hRmUsNJPNFNjE
+         O5OQ==
+X-Gm-Message-State: AOAM531CJ1J/Opxi90jrm0/tNjvI5oVEMs1NO7+tWn6V8RD+99f5dL3l
+        9taDfWT/uR+IAh88fsQNQyR33QRiJ5uUf6qOc40=
+X-Google-Smtp-Source: ABdhPJzMP/AfQwwTdCMUhAIaQPr+JCoZfZydL4H1zf0+6aUdK9VYmFGd08a6HCEh564qh6z4RBSNAoTSkVZEgtGRwlU=
+X-Received: by 2002:a92:da10:: with SMTP id z16mr1333579ilm.293.1596488795803;
+ Mon, 03 Aug 2020 14:06:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200803093939.GA8243@kernel.org>
-In-Reply-To: <20200803093939.GA8243@kernel.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 3 Aug 2020 14:05:28 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wipLW2khbyYT2sGPm4p6ru+0brUxRRwiRD6zBo37WYAAg@mail.gmail.com>
-Message-ID: <CAHk-=wipLW2khbyYT2sGPm4p6ru+0brUxRRwiRD6zBo37WYAAg@mail.gmail.com>
-Subject: Re: [GIT PULL] remove unicore32 support
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Guan Xuetao <gxt@pku.edu.cn>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200714080254.v3.1.Ie0d730120b232a86a4eac1e2909bcbec844d1766@changeid>
+In-Reply-To: <20200714080254.v3.1.Ie0d730120b232a86a4eac1e2909bcbec844d1766@changeid>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Mon, 3 Aug 2020 14:06:24 -0700
+Message-ID: <CANcMJZC-kAc1kqqNhfd9wvFS4ans8t7cpAfNVZbybA4W6x5-KQ@mail.gmail.com>
+Subject: Re: [PATCH v3] pinctrl: qcom: Handle broken/missing PDC dual edge
+ IRQs on sc7180
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>, rnayak@codeaurora.org,
+        mkshah@codeaurora.org, Marc Zyngier <maz@kernel.org>,
+        ilina@codeaurora.org, cychiang@chromium.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Todd Kjos <tkjos@google.com>,
+        Amit Pundir <amit.pundir@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 3, 2020 at 2:39 AM Mike Rapoport <rppt@kernel.org> wrote:
+On Tue, Jul 14, 2020 at 8:08 AM Douglas Anderson <dianders@chromium.org> wrote:
 >
-> The unicore32 port do not seem maintained for a long time now, there is no
-> upstream toolchain that can create unicore32 binaries and all the links to
-> prebuilt toolchains for unicore32 are dead. Even compilers that were
-> available are not supported by the kernel anymore.
+> Depending on how you look at it, you can either say that:
+> a) There is a PDC hardware issue (with the specific IP rev that exists
+>    on sc7180) that causes the PDC not to work properly when configured
+>    to handle dual edges.
+> b) The dual edge feature of the PDC hardware was only added in later
+>    HW revisions and thus isn't in all hardware.
+>
+> Regardless of how you look at it, let's work around the lack of dual
+> edge support by only ever letting our parent see requests for single
+> edge interrupts on affected hardware.
+>
+> NOTE: it's possible that a driver requesting a dual edge interrupt
+> might get several edges coalesced into a single IRQ.  For instance if
+> a line starts low and then goes high and low again, the driver that
+> requested the IRQ is not guaranteed to be called twice.  However, it
+> is guaranteed that once the driver's interrupt handler starts running
+> its first instruction that any new edges coming in will cause the
+> interrupt to fire again.  This is relatively commonplace for dual-edge
+> gpio interrupts (many gpio controllers require software to emulate
+> dual edge with single edge) so client drivers should be setup to
+> handle it.
+>
+> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-Fair enough, pulled. If things change, it's always there in the git
-history and people can resurrect it.
+Just as a heads up. I started seeing boot failures (crashes really
+early before we get serial output) with db845c when testing with the
+android-mainline tree that pulled v5.8 in.
+I did some quick bisection and came down to this patch, and sure
+enough things boot again with this patch reverted.
 
-               Linus
+In my testing earlier today with v5.8 (+ just a few patches for db845c
+support), I didn't see this failure, but the configs in use are
+different there.
+
+I'll try to spend a bit of time to understand exactly what is failing,
+but if you have any initial suggestions for things to try, I'd
+appreciate it.
+
+thanks
+-john
