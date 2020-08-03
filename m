@@ -2,133 +2,124 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A10C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B844AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC7620722
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA50820722
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:06:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="aQPbnrju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728997AbgHCXFm (ORCPT
+        id S1729052AbgHCXGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 19:05:42 -0400
-Received: from mga02.intel.com ([134.134.136.20]:62209 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726805AbgHCXFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 19:05:41 -0400
-IronPort-SDR: qdg8klklWczlkcLZql8hQLazshlJhTZv9F2m43tUCewf20IUtsx5+7cISPhZPc9ttSPFfuD6bp
- iEzhOKaG2Vtg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="140145307"
-X-IronPort-AV: E=Sophos;i="5.75,431,1589266800"; 
-   d="scan'208";a="140145307"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 16:05:40 -0700
-IronPort-SDR: omar6H3guThDhPd7u5yuLJD4/BHZY6Rz4B9iOvx+ricH30FFPP3T50x64nP83nmWM2nnWOVSEO
- 4CEfOK7yv48g==
-X-IronPort-AV: E=Sophos;i="5.75,431,1589266800"; 
-   d="scan'208";a="324348530"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 16:05:38 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 6ED6920878; Tue,  4 Aug 2020 02:05:36 +0300 (EEST)
-Date:   Tue, 4 Aug 2020 02:05:36 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Wolfram Sang <wsa@kernel.org>
-Subject: Re: [PATCH] PM: runtime: Add kerneldoc comments to multiple helpers
-Message-ID: <20200803230536.GB13316@paasikivi.fi.intel.com>
-References: <2672940.cHDmkauF2A@kreacher>
- <20200803085347.GV13316@paasikivi.fi.intel.com>
- <CAJZ5v0hRi3DZ69b1b=xes4qz2keq_aGDzX5kKQsR_rkwuFgk0w@mail.gmail.com>
+        Mon, 3 Aug 2020 19:06:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728601AbgHCXGa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 19:06:30 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EBC9C061757
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 16:06:30 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id j187so36750662qke.11
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 16:06:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wAUE6jUn5mAwPKG/Q4g9vNtYtEutYsrwV5EW4m6aKOU=;
+        b=aQPbnrjunrUlMKPJZCkOu9GiuwLThf4AAYXaSayDvpYZIe0S0J5kWgrEUjiDBH9If6
+         Nk9QNCh3nxu8CXdo+xB/HLA8CehJ2h3vX8mFXWeKtG4Ehnv/lG4XUFRHkTOmDmx2Gu+t
+         isoDrdskWg1Yq4JaJ2gyFOMQASXHDC3AOHQFV8jXqTkjjMH9OISCb5l703LpOA/etz3n
+         Odi5KMRaQBfXsQRPGtsPxY+h2Mu3CS08N6pHNkSCakHEE7/ei6ZPcuVPeLMgC98An320
+         u+suEZDSIIjWB+8Yuby/tpgOMJBQQty/fmvjkfvWZZTaQmoN4l3AusKGnGnuiBnLxtgp
+         mMmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wAUE6jUn5mAwPKG/Q4g9vNtYtEutYsrwV5EW4m6aKOU=;
+        b=c3t3WGtHCI8ffVMxnlTfg0m0PqBnJnrXiGsxopIsg0apQuh/PBf//X2PU/DNxr0Bov
+         l3Lm8ezOslxaf/0cygwq2BssjxoudtdCvZpuoapzG6Qep1VKUmH56RU6Qvwl+KXNAO3w
+         1RFtX0ChXc//MKSK3QqVt6aTnLVHpFesQawARkn3avxKNn1OffmKqwgTUfi5QdvT2bOb
+         e7Gc8NiV7br783BOE+oYlc33oZN7scTDE+ljNkOqYah+zjVWPrmYHKh/Evy7k1CJHfWK
+         afTzlfbgIYguMfU+mJaCwnTJZAjqMOprQr7iKBLHyABnJifNLdm4x6BjPx7sNpXhyYi5
+         gDWA==
+X-Gm-Message-State: AOAM530TfrKFa1O1D0Q8ImDyBBROJ1U+6pMkPM65bmr3jZhSLAMWCFj1
+        yoSYYyQRtFPdfI0QbDCan+EkNA==
+X-Google-Smtp-Source: ABdhPJyd0Tryhkzt206/Jh2HMiFEcuAT06LpeX3boAviXZIf/eRMRzhVp8FyjqPcmsR8tNjqSdSpPA==
+X-Received: by 2002:a37:649:: with SMTP id 70mr18613154qkg.318.1596495988988;
+        Mon, 03 Aug 2020 16:06:28 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id 9sm22473777qtg.4.2020.08.03.16.06.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 16:06:27 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1k2jXH-0039ha-72; Mon, 03 Aug 2020 20:06:27 -0300
+Date:   Mon, 3 Aug 2020 20:06:27 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Joe Perches <joe@perches.com>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak
+ in rds_notify_queue_get()
+Message-ID: <20200803230627.GQ24045@ziepe.ca>
+References: <20200731053333.GB466103@kroah.com>
+ <20200731140452.GE24045@ziepe.ca>
+ <20200731142148.GA1718799@kroah.com>
+ <20200731143604.GF24045@ziepe.ca>
+ <20200731171924.GA2014207@kroah.com>
+ <20200801053833.GK75549@unreal>
+ <20200802221020.GN24045@ziepe.ca>
+ <fb7ec4d4ed78e6ae7fa6c04abb24d1c00dc2b0f7.camel@perches.com>
+ <20200802222843.GP24045@ziepe.ca>
+ <60584f4c0303106b42463ddcfb108ec4a1f0b705.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0hRi3DZ69b1b=xes4qz2keq_aGDzX5kKQsR_rkwuFgk0w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <60584f4c0303106b42463ddcfb108ec4a1f0b705.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
-
-On Mon, Aug 03, 2020 at 01:36:52PM +0200, Rafael J. Wysocki wrote:
-> Hi Sakari,
-> 
-> On Mon, Aug 3, 2020 at 10:53 AM Sakari Ailus
-> <sakari.ailus@linux.intel.com> wrote:
+On Sun, Aug 02, 2020 at 03:45:40PM -0700, Joe Perches wrote:
+> On Sun, 2020-08-02 at 19:28 -0300, Jason Gunthorpe wrote:
+> > On Sun, Aug 02, 2020 at 03:23:58PM -0700, Joe Perches wrote:
+> > > On Sun, 2020-08-02 at 19:10 -0300, Jason Gunthorpe wrote:
+> > > > On Sat, Aug 01, 2020 at 08:38:33AM +0300, Leon Romanovsky wrote:
+> > > > 
+> > > > > I'm using {} instead of {0} because of this GCC bug.
+> > > > > https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53119
+> > > > 
+> > > > This is why the {} extension exists..
+> > > 
+> > > There is no guarantee that the gcc struct initialization {}
+> > > extension also zeros padding.
 > >
-> > Hi Rafael,
-> >
-> > Thanks for the patch.
-> >
-> > On Fri, Jul 31, 2020 at 07:03:26PM +0200, Rafael J. Wysocki wrote:
-> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > >
-> > > Add kerneldoc comments to multiple PM-runtime helper functions
-> > > defined as static inline wrappers around lower-level routines to
-> > > provide quick reference decumentation of their behavior.
-> >
-> > > Some of them are similar to each other with subtle differences only
-> > > and the behavior of some of them may appear as counter-intuitive, so
-> > > clarify all that to avoid confusion.
-> > >
-> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > ---
-> > >  include/linux/pm_runtime.h |  246 +++++++++++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 246 insertions(+)
-> > >
-> > > Index: linux-pm/include/linux/pm_runtime.h
-> > > ===================================================================
-> > > --- linux-pm.orig/include/linux/pm_runtime.h
-> > > +++ linux-pm/include/linux/pm_runtime.h
-> > > @@ -60,58 +60,151 @@ extern void pm_runtime_put_suppliers(str
-> > >  extern void pm_runtime_new_link(struct device *dev);
-> > >  extern void pm_runtime_drop_link(struct device *dev);
-> > >
-> > > +/**
-> > > + * pm_runtime_get_if_in_use - Conditionally bump up runtime PM usage counter.
-> > > + * @dev: Target device.
-> > > + *
-> > > + * Increment the runtime PM usage counter of @dev if its runtime PM status is
-> > > + * %RPM_ACTIVE and its runtime PM usage counter is greater than 0.
-> >
-> > The implementation of the non-runtime PM variants (used when CONFIG_PM is
-> > disabled) isn't here but I think it'd be nice if their behaviour was also
-> > documented here. pm_runtime_get_if_in_use() returns -EINVAL if CONFIG_PM is
-> > disabled, for instance.
+> > We just went over this. Yes there is, C11 requires it.
 > 
-> These kerneldoc comments cover the CONFIG_PM case only.  The behavior
-> for !CONFIG_PM needs to be figured out from the code, if it matters.
-> 
-> I'm not sure why it would matter for pm_runtime_get_if_in_use(), in particular?
+> c11 is not c90.  The kernel uses c90.
 
-Just as an example. It depends on the use case, but there have been bugs
-related to these (e.g. commit 4d471563d87b2b83e73b8abffb9273950e6d2e36),
-likely at least partly because it's extra manual work to figure out what a
-given API function could return when it's not documented.
+The kernel already relies on a lot of C11/C99 features and
+behaviors. For instance Linus just bumped the minimum compiler version
+so that C11's _Generic is usable.
 
-> 
-> > pm_runtime_disable() is defined here but the documentation in corresponding
-> > pm_runtime_enable() in drivers/base/power/runtime.c is rather terse. It'd
-> > be nice to improve that now (or separately).
-> 
-> Yes, separately.
+Why do you think this particular part of C11 shouldn't be relied on?
 
-Thanks!
-
--- 
-Regards,
-
-Sakari Ailus
+Jason
