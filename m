@@ -2,97 +2,134 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCE0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19571C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBC492076E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:22:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="RsMZkts9"
+	by mail.kernel.org (Postfix) with ESMTP id 02C22206D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:25:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgHCOWt (ORCPT
+        id S1726913AbgHCOZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:22:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbgHCOWs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 10:22:48 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A555AC06174A;
-        Mon,  3 Aug 2020 07:22:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=j2YFIam7494qTnawoI5t1lPh5O713n3GMls1dHCPXuo=; b=RsMZkts9WY+1FGSehXFi1VUhA
-        uAHprLNgD2y2iMK2QdcWMXML3fYnbOHpXir2T8oJPcvLMMkS44Rl+9GJa+/04KVxu97aFil56BN0R
-        ey8yQBLTBlNk4xZWEWQrwcOc4cOGTVEcn8ILOHHsv2HsMwT78++K+t1kMluqwh1wUEQgZV0SLA+UD
-        wIFZafthZEFovFFkMDtHWL/8pUKkaY1ZAjJjRDY2j/dbJxVcHNguZ4JGNsRJCTq8cELNT5D9RTVSo
-        MBVK7Fq6QAZgR42Hqv0BP26U1dJCj442YakkjGsKP8L9IjaMY/emfnqxjf5CPtzQgu5BkA78faX8q
-        TMGlafSCQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47824)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1k2bMS-0001bs-Mj; Mon, 03 Aug 2020 15:22:44 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1k2bMS-00039a-8c; Mon, 03 Aug 2020 15:22:44 +0100
-Date:   Mon, 3 Aug 2020 15:22:44 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Guillaume Tucker <guillaume.tucker@collabora.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, kernel@collabora.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] ARM: exynos: clear L220_AUX_CTRL_NS_LOCKDOWN in
- default l2c_aux_val
-Message-ID: <20200803142244.GO1551@shell.armlinux.org.uk>
-References: <860eb8a1eed879e55daf960c96acdac514cbda93.1596028601.git.guillaume.tucker@collabora.com>
- <20200803133439.GB476@kozik-lap>
+        Mon, 3 Aug 2020 10:25:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52558 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726358AbgHCOZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 10:25:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 4A3CEACC3;
+        Mon,  3 Aug 2020 14:26:04 +0000 (UTC)
+Message-ID: <9200970a917a9cabdc5b17483b5a8725111eb9d0.camel@suse.de>
+Subject: [PATCH] of: unittest: Use bigger address cells to catch parser
+ regressions
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Mon, 03 Aug 2020 16:25:47 +0200
+In-Reply-To: <CAL_JsqKu4CB7-b_hRvu63c9jQ_S91epWMr=P__9Fu-h_WFR-_Q@mail.gmail.com>
+References: <20200731100248.26982-1-nsaenzjulienne@suse.de>
+         <CAL_JsqKu4CB7-b_hRvu63c9jQ_S91epWMr=P__9Fu-h_WFR-_Q@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-ivQUVYgzUHw4VCNNTbEO"
+User-Agent: Evolution 3.36.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200803133439.GB476@kozik-lap>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 03:34:39PM +0200, Krzysztof Kozlowski wrote:
-> On Wed, Jul 29, 2020 at 02:47:31PM +0100, Guillaume Tucker wrote:
-> > The L220_AUX_CTRL_NS_LOCKDOWN flag is set during the L2C enable
-> > sequence.  There is no need to set it in the default register value,
-> > this was done before support for it was implemented in the code.  It
-> > is not set in the hardware initial value either.
-> > 
-> > Clean this up by removing this flag from the default l2c_aux_val, and
-> > add it to the l2c_aux_mask to print an alert message if it was already
-> > set before the kernel initialisation.
-> > 
-> > Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
-> > ---
-> >  arch/arm/mach-exynos/exynos.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> Makes sense. I'll take it after the merge window.
 
-Yes, because platforms actually have no control over this bit through
-these values.
+--=-ivQUVYgzUHw4VCNNTbEO
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Please fix the description to use the right define, it's
-L310_AUX_CTRL_NS_LOCKDOWN not L220_AUX_CTRL_NS_LOCKDOWN.
+Getting address and size cells for dma-ranges/ranges parsing is tricky
+and shouldn't rely on the node's count_cells() method. The function
+starts looking for cells on the parent node, as its supposed to work
+with device nodes, which doesn't work when input with bus nodes, as
+generally done when parsing ranges.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+Add test to catch regressions on that specific quirk as developers will
+be tempted to edit it out in favor of the default method.
+
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
+ drivers/of/unittest-data/tests-address.dtsi | 10 +++++-----
+ drivers/of/unittest.c                       |  2 +-
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/of/unittest-data/tests-address.dtsi b/drivers/of/unitt=
+est-data/tests-address.dtsi
+index 3fe5d3987beb..6604a52bf6cb 100644
+--- a/drivers/of/unittest-data/tests-address.dtsi
++++ b/drivers/of/unittest-data/tests-address.dtsi
+@@ -23,13 +23,13 @@ device@70000000 {
+ 			};
+=20
+ 			bus@80000000 {
+-				#address-cells =3D <1>;
+-				#size-cells =3D <1>;
+-				ranges =3D <0x0 0x80000000 0x100000>;
+-				dma-ranges =3D <0x10000000 0x0 0x40000000>;
++				#address-cells =3D <2>;
++				#size-cells =3D <2>;
++				ranges =3D <0x0 0x0 0x80000000 0x0 0x100000>;
++				dma-ranges =3D <0x1 0x0 0x0 0x20 0x0>;
+=20
+ 				device@1000 {
+-					reg =3D <0x1000 0x1000>;
++					reg =3D <0x0 0x1000 0x0 0x1000>;
+ 				};
+ 			};
+=20
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 398de04fd19c..9b7e84bdc7d4 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -900,7 +900,7 @@ static void __init of_unittest_parse_dma_ranges(void)
+ 	of_unittest_dma_ranges_one("/testcase-data/address-tests/device@70000000"=
+,
+ 		0x0, 0x20000000, 0x40000000);
+ 	of_unittest_dma_ranges_one("/testcase-data/address-tests/bus@80000000/dev=
+ice@1000",
+-		0x10000000, 0x20000000, 0x40000000);
++		0x100000000, 0x20000000, 0x2000000000);
+ 	of_unittest_dma_ranges_one("/testcase-data/address-tests/pci@90000000",
+ 		0x80000000, 0x20000000, 0x10000000);
+ }
+--=20
+2.28.0
+
+
+
+--=-ivQUVYgzUHw4VCNNTbEO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl8oHmsACgkQlfZmHno8
+x/7E7Qf+OOvK2j5/TLbzr9HCeeQU+tUJlMB/8OaT/q7Ua9Aderb9K9Y8xs7WXvdf
+FHNwMq5gdmmBSisG+3gS8Ekdp2CWZKQmg03JE8ZUhdt6Yp9D+z2tIF7jy2udZdNI
+p3lJFxA3u608htW6lXnwHwvllvQOFDEBpHngF8KwoSZMhhbxInHOKzGnggU57sAY
+FB2MtCzzzw0e85jHjoGrguKGqxPv1d4E7jyr6LgYil3zH2lYUvClZzPR89J8ZAVl
+5xc5mQpk8XB+27+lb4e+H43ufypyxAftMYrEuiRkC+Lez1CfbU/QuJtIfAw2z7dk
+rRrbduOOXb/K2mRA8f1WWgztYgWHGw==
+=1rhk
+-----END PGP SIGNATURE-----
+
+--=-ivQUVYgzUHw4VCNNTbEO--
+
