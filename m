@@ -2,220 +2,201 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC9EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CCAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3073720672
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D56D206D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:21:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="sp9+XCG3"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="IXREQKa5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgHCGTx (ORCPT
+        id S1728014AbgHCGVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 02:19:53 -0400
-Received: from mail-db8eur05on2052.outbound.protection.outlook.com ([40.107.20.52]:29664
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725980AbgHCGTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 02:19:53 -0400
+        Mon, 3 Aug 2020 02:21:17 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:18830 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726279AbgHCGVQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 02:21:16 -0400
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0736G3JZ019404;
+        Mon, 3 Aug 2020 02:21:02 -0400
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2176.outbound.protection.outlook.com [104.47.55.176])
+        by mx0b-00128a01.pphosted.com with ESMTP id 32n6y9mrpp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 02:21:02 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eyMbLjxJlDufyvwotpn75uFMqYezAkqPbdb7nQR1ZoRY6KQTRvun3/OgXW6SS5r/spgk8A5Tff+3DIEWUdJiXb4Rs0GeYqNkak5ZHBJKW6KdtwVmTCkDUo2RYmW2wvSEn9uPgGXyzzfNp/qpqc6nv2ieweg8EQkUbe5NqhQ0bKWXcba80NrnjM5Nv4ve6llPdZhAcEBvO7Og05pqHTfG3r15q/G5gQXC7klnPANRKjAZWeWS0du1TmpUhXjQkg3PYacV57p+HfhmilylAFvpT7jofJ4eW4dKJ9qxMOAWHnCA0b6090VAERrESgevJVIOMLtadLo3Q4iZ7G3i6ugo/Q==
+ b=WYCMJgXd+jO2a1qIP0hl8Tz9AqMMUN5DNLPLvtZPB6QCJr4oyoJ6dIkYkxmetBEzGglLDvKmMtfb1gihJjeJnV36/iV64n1D9pKTzv7NA8nNsI1FyQkx9ukUlKUf224SvLPNUUurD9b4cSROqIVI4+GSauxc2tRrE4C0YFU6d4C2zBJZmNyYjT3ht2UW7LLYyeyPaCJ0ACcfMQWMMhD/JZXJpZSRUPSf/jnTsIWqBwxPS0rRvvRkNNfYEIIAD/CFG9s7MXvTTFx8CrSKN7XKfDJuSZcbH5QLCPVN3pasYC5abCEc4OQ4+0ZoJFKFzuabNDFD1/Z6A253k0a04oTAtQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J++VLJyJkUU+hb49mEJh1rGv/EDV2GJaunAC3F0hAD0=;
- b=XwaUJUMOBz2FdR86TEm54Oyrpa1gHWdfMoWMMxiFRdvAzjjIzqWOyp1EZ+ojG+iULlVv84GMUja87jOjirLBzk0PQrgAgVoylipaiQS+ILaXWhJ1N4hCxQ3+NZ5n+2rZpkj9QbIrismWCtCr7sJY/eeFptldeXy71nuqYEIyJxbn/c5viNeAswSkQaD5Fn54Ws9dYZJ96/psJ/0o0CYDxHcUce2uJJOZ/J3fviD75vAYrFny0cQvahVUBz71v7jf2bV4qHgmuNYFny0Y693LSmF9k9YepyXQcDRRfev3end3ZMoxLcu8dRyyTYeMfrFxqjtRnjZohpPuDM3y4Scocw==
+ bh=JVSSZ/RsrjvvWi5ePii7JKkPY+lhVDFz1fSAI0cJKOI=;
+ b=QP5ymzYvAidNJ02+cyxJm+abxcxFc04a5F/11FsjNKDmMWtU0AnaXLoDuXYAU4byjBsULz4ycBSEUw6RJ13j1BLviQuTJv7B7s0Z4R8/9tZbR15meyIVGr/fuqQM7YdO8f1xr81MBxfy5dRIK1yJkkMf2HiNS3/y1KUgaNEZVzDuOqP98sdEejzYLy5mMtW3/QdWgDNaqefVV06VJHoZwJUa3HbdfX8gBGTXsJRZ4EEQD+94fQI9JWlqlSYGvILc2TqbWa9tKHKHPFy9BB9/BsVtJPQC8w2tLqpcMrCzkzOyUPGD7WSNNcmaUZTVmcNxC9YFE+do+Ao2qLZBjxlHPA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J++VLJyJkUU+hb49mEJh1rGv/EDV2GJaunAC3F0hAD0=;
- b=sp9+XCG38u7l78L2hSLxk8+Orq2Qk53rtud4MO9XDv6a3gA64UUfPsjpVMUxk4egp4nfTxrRM2iKjX5ad5nc6n0FGlGs5+VmuUZf2rJ9TyV/XHLoDclkC8kqq7rsg1xyrz38ffFwLHl1N/USkZEWE9LA75xzThS3XCyq/Wx13+0=
-Authentication-Results: lists.01.org; dkim=none (message not signed)
- header.d=none;lists.01.org; dmarc=none action=none header.from=mellanox.com;
-Received: from DB3PR0502MB4011.eurprd05.prod.outlook.com (2603:10a6:8:9::11)
- by DB6PR05MB4598.eurprd05.prod.outlook.com (2603:10a6:6:4d::19) with
+ bh=JVSSZ/RsrjvvWi5ePii7JKkPY+lhVDFz1fSAI0cJKOI=;
+ b=IXREQKa5/3KB3EXY3m44etaz53GGWrQ+8Urrw5FQP/iUSfL7LPmao6kyS35GMetAXPFs2+u9wedvD/U24efVKsZ/Y/gaHJbmsL3kpsfDZtr55CIaANZTf5R1/ZOSVquIbAFxBy5MATiuk/urSQnodxRa4sQr/8QgXV1PYp/aAtY=
+Received: from BN6PR03MB2596.namprd03.prod.outlook.com (2603:10b6:404:56::13)
+ by BN6PR03MB2530.namprd03.prod.outlook.com (2603:10b6:404:19::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Mon, 3 Aug
- 2020 06:19:48 +0000
-Received: from DB3PR0502MB4011.eurprd05.prod.outlook.com
- ([fe80::d01d:afa5:a941:8e77]) by DB3PR0502MB4011.eurprd05.prod.outlook.com
- ([fe80::d01d:afa5:a941:8e77%7]) with mapi id 15.20.3216.034; Mon, 3 Aug 2020
- 06:19:48 +0000
-Subject: Re: [IB/srpt] c804af2c1d: last_state.test.blktests.exit_code.143
-To:     Bart Van Assche <bvanassche@acm.org>,
-        kernel test robot <rong.a.chen@intel.com>
-Cc:     Jason Gunthorpe <jgg@nvidia.com>, Max Gurtovoy <maxg@mellanox.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg+lists@ziepe.ca>,
-        linux-rdma@vger.kernel.org, lkp@lists.01.org
-References: <20200802060925.GW23458@shao2-debian>
- <f8ef3284-4646-94d9-7eea-14ac0873b03b@acm.org>
-From:   Yamin Friedman <yaminf@mellanox.com>
-Message-ID: <ed6002b6-cd0c-55c5-c5a5-9c974a476a95@mellanox.com>
-Date:   Mon, 3 Aug 2020 09:19:33 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <f8ef3284-4646-94d9-7eea-14ac0873b03b@acm.org>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+ 2020 06:20:58 +0000
+Received: from BN6PR03MB2596.namprd03.prod.outlook.com
+ ([fe80::7ddb:b5e3:4dd0:dcc9]) by BN6PR03MB2596.namprd03.prod.outlook.com
+ ([fe80::7ddb:b5e3:4dd0:dcc9%8]) with mapi id 15.20.3239.021; Mon, 3 Aug 2020
+ 06:20:58 +0000
+From:   "Hennerich, Michael" <Michael.Hennerich@analog.com>
+To:     "trix@redhat.com" <trix@redhat.com>,
+        "alex.aring@gmail.com" <alex.aring@gmail.com>,
+        "stefan@datenfreihafen.org" <stefan@datenfreihafen.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "marcel@holtmann.org" <marcel@holtmann.org>
+CC:     "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] ieee802154/adf7242: check status of adf7242_read_reg
+Thread-Topic: [PATCH] ieee802154/adf7242: check status of adf7242_read_reg
+Thread-Index: AQHWaNiPlSyywotpzkO5mKQpKWz1qakl6r2g
+Date:   Mon, 3 Aug 2020 06:20:58 +0000
+Message-ID: <BN6PR03MB25967591266E409D1DA920D68E4D0@BN6PR03MB2596.namprd03.prod.outlook.com>
+References: <20200802142339.21091-1-trix@redhat.com>
+In-Reply-To: <20200802142339.21091-1-trix@redhat.com>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
-X-ClientProxiedBy: AM3PR05CA0103.eurprd05.prod.outlook.com
- (2603:10a6:207:1::29) To DB3PR0502MB4011.eurprd05.prod.outlook.com
- (2603:10a6:8:9::11)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcbWhlbm5lcmlc?=
+ =?us-ascii?Q?YXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRi?=
+ =?us-ascii?Q?YTI5ZTM1Ylxtc2dzXG1zZy03ZDA2MDkxYS1kNTUxLTExZWEtOTA0MS00ODg5?=
+ =?us-ascii?Q?ZTc3Y2RkZWNcYW1lLXRlc3RcN2QwNjA5MWMtZDU1MS0xMWVhLTkwNDEtNDg4?=
+ =?us-ascii?Q?OWU3N2NkZGVjYm9keS50eHQiIHN6PSIxNzM0IiB0PSIxMzI0MDkwOTI1NjQ5?=
+ =?us-ascii?Q?NzU4NzEiIGg9Im4zeld3RG9RQU9MUVFkTW5aR21VQWFsdFE2az0iIGlkPSIi?=
+ =?us-ascii?Q?IGJsPSIwIiBibz0iMSIgY2k9ImNBQUFBRVJIVTFSU1JVRk5DZ1VBQUVvQ0FB?=
+ =?us-ascii?Q?RC9BRjQvWG1uV0FRTC9xOTUvYzdRQkF2K3Izbjl6dEFFREFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFIQUFBQURhQVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFRQUJBQUFBOHpRWGF3QUFBQUFBQUFBQUFBQUFBSjRBQUFCaEFHUUFh?=
+ =?us-ascii?Q?UUJmQUhNQVpRQmpBSFVBY2dCbEFGOEFjQUJ5QUc4QWFnQmxBR01BZEFCekFG?=
+ =?us-ascii?Q?OEFaZ0JoQUd3QWN3QmxBRjhBWmdCdkFITUFhUUIwQUdrQWRnQmxBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR0VBWkFCcEFGOEFjd0JsQUdNQWRR?=
+ =?us-ascii?Q?QnlBR1VBWHdCd0FISUFid0JxQUdVQVl3QjBBSE1BWHdCMEFHa0FaUUJ5QURF?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FB?=
+ =?us-ascii?Q?QUFBQUNlQUFBQVlRQmtBR2tBWHdCekFHVUFZd0IxQUhJQVpRQmZBSEFBY2dC?=
+ =?us-ascii?Q?dkFHb0FaUUJqQUhRQWN3QmZBSFFBYVFCbEFISUFNZ0FBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFBPT0iLz48L21l?=
+ =?us-ascii?Q?dGE+?=
+x-dg-rorf: true
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=analog.com;
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 95b3cff6-95fa-4942-4925-08d8377562da
+x-ms-traffictypediagnostic: BN6PR03MB2530:
+x-microsoft-antispam-prvs: <BN6PR03MB253031469231F6D31294199E8E4D0@BN6PR03MB2530.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2733;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: G7K2lZuFLknTAKbKAGWRdZJqg3086KL9l5IdPm3U7vDEm6WnwPWgSIpClBeCAxOgBUmu+GvJiWCreYimAsr1GsCDDDz6xf7FrCmLFrIDusSGrT5nmb5enRlJw8+Lp0hdtxvsdMgtZLpAHbxmuRuyE+PB+oBkCwWpoqubH1yAY+sSrrxuvJWsmQqunJEEWZLTLgtBWc1GNm0XskJDYjgVwraqKjsAb0M2tzpPEP/pYVnL9YXd5XdobcY9g8ts/ELGu4n2Rx0iCJshOQolhviglvfi/T1lkdz9Q3vKA8fLUtrfcKGX456GY5mi2pXvoFH4Xg60K8KLv9DdF45keECA4w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR03MB2596.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(396003)(39860400002)(366004)(136003)(55016002)(9686003)(53546011)(478600001)(2906002)(26005)(186003)(6506007)(52536014)(71200400001)(83380400001)(110136005)(8676002)(66556008)(8936002)(66476007)(76116006)(4326008)(316002)(33656002)(66946007)(7696005)(5660300002)(66446008)(64756008)(86362001)(54906003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: lHaGkoxO+j239rS6GpJxQ/OqL737+zgec5M0lMlQGbc95sXumYcbmuZ+7fPk4T3LpYrT++D9kgJMm5nIXrQQbc5VsvHmrNECFmMP+ZOgUz743j7RmRHdIJc8pbqAxf/OAcVG9eIaEGMB/7xQQQwq3rFZwglPDm1BqlnlwVKOs/j8tOC7jItz0K8JEeyKuVJyf5awrikdBJ5WTy/eF2yMoeB8AXnnlFaNdXLg5+hjU+WlI8ThQqP3mLmeFx3Mm3AhVEsC3Z+6vWSDHF/zikE1z/AT2gMJbwpNJ5iUi3vvS9RzbRZGfWJZj3Ka3P6ofZoXbBQ7yfa/+mYUdcPVCxvGQZBhg+GhzHEp6gukVclKvNHeN2BsJbSPbzx6Qk13VyDCE0Ak5vpF8yEq9GCehSTqVrOOESIPZmYRl4D8M+wTda1A4sSPPyST0KJkPeZA5NGB5Ap5K2TmNnDDA3OzBuDFz630LrQcFuiM3qW7fGbzqUR0CvIMo5GFqVTx2BUHTEpyezdvh7WU6Qq8/EZ8W/XQ6LZcnHu8ummfRc4iZaXdFIXhH9AGz64kJMQuoX9NNkPETqa+h9Rj9NCRDJ92ILsjnIzfjgp8f76irYzB0HLaT+OhXVTCw9ndVbg+/h2Ap0uoI2Ipp2fdbOGWQ5umsbuygA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.100.102.11] (217.132.245.180) by AM3PR05CA0103.eurprd05.prod.outlook.com (2603:10a6:207:1::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Mon, 3 Aug 2020 06:19:47 +0000
-X-Originating-IP: [217.132.245.180]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 66271b18-82cb-46f3-c474-08d83775395b
-X-MS-TrafficTypeDiagnostic: DB6PR05MB4598:
-X-LD-Processed: a652971c-7d2e-4d9b-a6a4-d149256f461b,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB6PR05MB459804EA8615A2622A329DB9B14D0@DB6PR05MB4598.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: mTpJ4giYeCRRd2GHGsxLO2Z0g7nsq+tYYcqpiQF0Oky4VW9YeBd52QAg5x6fUZOreKZMuhPbfJlr1l7DiCjjhP+W0TTwqxr8N4aNetou1/zqArhx09VjuehkS8R8AGQzsyIF7nkjoUCbH5YKdM3Ncb4NuxboNU3yuNiW6/Z57GB5dyuLUU/Pg2oH0cpm16fundUur2u1b9iPC3Nzs8zqiuFfmhP+eiol175nHsgZ9+e6yz7C+YjZHP0Jlrgex0n2I8GMqFjqzZRZ/a70syJkXTBKPn5EPjgn4+rJoB5e59kyAbHdztkpGa/lijRVWTRaretssuAZQpTyc287tLEichLNvh28OgiLc3ttp2mAeqy8rZGSzFr2WblLaXqV0/Mb+WNxO6mx8RC/a8MtR7+k0Yw+gnDTiEkI7aJAKZTjqPvDx6+I5xEvbbHvZyIZXcxH89erKGO5ozTyN6rtm9N5nQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0502MB4011.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(376002)(136003)(39860400002)(396003)(478600001)(8936002)(966005)(8676002)(6486002)(36756003)(31696002)(2906002)(66556008)(83380400001)(66946007)(66476007)(6666004)(53546011)(2616005)(956004)(5660300002)(31686004)(4326008)(16576012)(316002)(16526019)(54906003)(86362001)(52116002)(26005)(110136005)(186003)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: gz725TdBFEZChCvdvA7AB8eEWb9tZckwDeiDWSXgbheUq0tJPbUUcLhPu5T8tjrOf2ybj/WAFyDk2lNtsNJJNnk6qohjdHNwIrFfWdw+Cz9LeSc2aNiAghpk+QMNRAbAHk5NkqN5a+OqUPeK60FeZCUrVFZ6tiSlRzxvFdhKO1t1rANAyQXFASIuhFw4jvehjpIaFNTFF5VFaA85N+9lQYXt0Yj/RbSyc8RLIlrHwkfjqioXi84liKdUTjmxLcjs9EcGxw+znMatcxpw5RIqaQsGfI7Z/vcCL2yXCkm5RTiD+/gmKGxBR0OoYYqkVVRWIhyBYH2JF/muKJD20GznA91sdKDZ5jNJxGhEZ5fiRfmcQshoWA7dne+yxxh9AU0bivFbBPXO+7dk4c4Q0p7TJLXdRDs5rbzcUpl7TgyCx/ZDckLAHAyOcc9Rise8G2FzKbtMWDo8ILBGu/ioooRPCIUvdZEd+oMK1WkZ6x9QFKOYTF6sUw8YgGfQb9DKEIJ05bwuFlUjX7SxPbVOT2HaW9pUUS6Im13g3cL1tTgsm5O4pw/SheZz+gQezvyJ0mRUUipB/DaTkP3TUTVfsIFnBq5vhjNVFLFyYyhw6uebHjyoPHvL7Um9GjQYFP6YjuFHkDDSQ/I32UryO/qK1YhlIw==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66271b18-82cb-46f3-c474-08d83775395b
-X-MS-Exchange-CrossTenant-AuthSource: DB3PR0502MB4011.eurprd05.prod.outlook.com
+X-OriginatorOrg: analog.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2020 06:19:48.7421
+X-MS-Exchange-CrossTenant-AuthSource: BN6PR03MB2596.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 95b3cff6-95fa-4942-4925-08d8377562da
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Aug 2020 06:20:58.1109
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9yfIM5q6jvQnlHUxSlYfRFU/E6gha7ixTksbVPQOU1ymlsCNyhz5NAKM2RmyJ3FHAJ8jQmABn/eJd5IIIxJd1w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR05MB4598
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Me1cQ4xZOuZhnnR3WFeyS8sIQ0WZoh+eMWHJ3bRKqDrPYBO21QOraMRy5IsDx+wl5DAFx8Y7kWgsMdDmnxKJIwfl5Y0r1kD8PKyqAtI8+yQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR03MB2530
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-03_04:2020-07-31,2020-08-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ clxscore=1011 suspectscore=0 priorityscore=1501 lowpriorityscore=0
+ adultscore=0 spamscore=0 impostorscore=0 mlxscore=0 bulkscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008030045
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 8/2/2020 6:05 PM, Bart Van Assche wrote:
-> On 2020-08-01 23:09, kernel test robot wrote:
->> Greeting,
->>
->> FYI, we noticed the following commit (built with gcc-9):
->>
->> commit: c804af2c1d3152c0cf877eeb50d60c2d49ac0cf0 ("IB/srpt: use new shared CQ mechanism")
->> https://git.kernel.org/cgit/linux/kernel/git/rdma/rdma.git for-next
->>
->>
->> in testcase: blktests
->> with following parameters:
->>
->> 	test: srp-group1
->> 	ucode: 0x21
->>
->>
->>
->> on test machine: 4 threads Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz with 4G memory
->>
->> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
->>
->>
->>
->>
->> If you fix the issue, kindly add following tag
->> Reported-by: kernel test robot <rong.a.chen@intel.com>
->>
->>
->> user  :notice: [   44.688140] 2020-08-01 16:10:22 ./check srp/001 srp/002 srp/003 srp/004 srp/005 srp/006 srp/007 srp/008 srp/009 srp/010 srp/011 srp/012 srp/013 srp/015
->> user  :notice: [   44.706657] srp/001 (Create and remove LUNs)
->> user  :notice: [   44.718405] srp/001 (Create and remove LUNs)                             [passed]
->> user  :notice: [   44.729902]     runtime  ...  1.972s
->> user  :notice: [   99.038748] IPMI BMC is not supported on this machine, skip bmc-watchdog setup!
->> user  :notice: [ 3699.039790] Sat Aug  1 17:11:22 UTC 2020 detected soft_timeout
->> user  :notice: [ 3699.060341] kill 960 /usr/bin/time -v -o /tmp/lkp/blktests.time /lkp/lkp/src/tests/blktests
-> Yamin and Max, can you take a look at this? The SRP tests from the
-> blktests repository pass reliably with kernel version v5.7 and before.
-> With label next-20200731 from linux-next however that test triggers the
-> following hang:
 
-I will look into it.
+> -----Original Message-----
+> From: trix@redhat.com <trix@redhat.com>
+> Sent: Sonntag, 2. August 2020 16:24
+> To: Hennerich, Michael <Michael.Hennerich@analog.com>;
+> alex.aring@gmail.com; stefan@datenfreihafen.org; davem@davemloft.net;
+> kuba@kernel.org; marcel@holtmann.org
+> Cc: linux-wpan@vger.kernel.org; netdev@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Tom Rix <trix@redhat.com>
+> Subject: [PATCH] ieee802154/adf7242: check status of adf7242_read_reg
+>=20
+>=20
+> From: Tom Rix <trix@redhat.com>
+>=20
+> Clang static analysis reports this error
+>=20
+> adf7242.c:887:6: warning: Assigned value is garbage or undefined
+>         len =3D len_u8;
+>             ^ ~~~~~~
+>=20
+> len_u8 is set in
+>        adf7242_read_reg(lp, 0, &len_u8);
+>=20
+> When this call fails, len_u8 is not set.
+>=20
+> So check the return code.
+>=20
+> Fixes: 7302b9d90117 ("ieee802154/adf7242: Driver for ADF7242 MAC
+> IEEE802154")
+>=20
+> Signed-off-by: Tom Rix <trix@redhat.com>
 
->
-> sd 8:0:0:0: [sda] Synchronizing SCSI cache
-> rdma_rxe: not configured on eth0
-> rdma_rxe: not configured on lo
-> INFO: task modprobe:1894 blocked for more than 122 seconds.
->        Not tainted 5.8.0-rc7-next-20200731-dbg+ #3
-> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> modprobe        D27624  1894   1081 0x00004000
-> Call Trace:
->   __schedule+0x4ee/0x1170
->   schedule+0x7f/0x170
->   schedule_timeout+0x453/0x6f0
->   wait_for_completion+0x126/0x1b0
->   disable_device+0x12a/0x1c0 [ib_core]
->   __ib_unregister_device+0x64/0x100 [ib_core]
->   ib_unregister_driver+0x11c/0x180 [ib_core]
->   rxe_module_exit+0x1e/0x36 [rdma_rxe]
->   __x64_sys_delete_module+0x22a/0x310
->   do_syscall_64+0x36/0x80
->   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> RIP: 0033:0x7f8d0e0c8a3b
-> Code: Bad RIP value.
-> RSP: 002b:00007ffe8238f798 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
-> RAX: ffffffffffffffda RBX: 000055a2c7d9be80 RCX: 00007f8d0e0c8a3b
-> RDX: 0000000000000000 RSI: 0000000000000800 RDI: 000055a2c7d9bee8
-> RBP: 000055a2c7d9be80 R08: 0000000000000000 R09: 0000000000000000
-> R10: 00007f8d0e144ac0 R11: 0000000000000206 R12: 000055a2c7d9bee8
-> R13: 0000000000000000 R14: 000055a2c7d9bee8 R15: 000055a2c7d9be80
->
-> Showing all locks held in the system:
-> 1 lock held by khungtaskd/53:
->   #0: ffffffff82895880 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x37/0x20f
-> 1 lock held by modprobe/1894:
->   #0: ffff8881c5e8c660 (&device->unregistration_lock){+.+.}-{3:3}, at: __ib_unregister_device+0x23/0x100 [ib_core]
->
-> =============================================
-> INFO: task modprobe:1894 blocked for more than 245 seconds.
->        Not tainted 5.8.0-rc7-next-20200731-dbg+ #3
-> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> modprobe        D27624  1894   1081 0x00004000
-> Call Trace:
->   __schedule+0x4ee/0x1170
->   schedule+0x7f/0x170
->   schedule_timeout+0x453/0x6f0
->   wait_for_completion+0x126/0x1b0
->   disable_device+0x12a/0x1c0 [ib_core]
->   __ib_unregister_device+0x64/0x100 [ib_core]
->   ib_unregister_driver+0x11c/0x180 [ib_core]
->   rxe_module_exit+0x1e/0x36 [rdma_rxe]
->   __x64_sys_delete_module+0x22a/0x310
->   do_syscall_64+0x36/0x80
->   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> RIP: 0033:0x7f8d0e0c8a3b
-> Code: Bad RIP value.
-> RSP: 002b:00007ffe8238f798 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
-> RAX: ffffffffffffffda RBX: 000055a2c7d9be80 RCX: 00007f8d0e0c8a3b
-> RDX: 0000000000000000 RSI: 0000000000000800 RDI: 000055a2c7d9bee8
-> RBP: 000055a2c7d9be80 R08: 0000000000000000 R09: 0000000000000000
-> R10: 00007f8d0e144ac0 R11: 0000000000000206 R12: 000055a2c7d9bee8
-> R13: 0000000000000000 R14: 000055a2c7d9bee8 R15: 000055a2c7d9be80
->
-> Showing all locks held in the system:
-> 1 lock held by khungtaskd/53:
->   #0: ffffffff82895880 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x37/0x20f
-> no locks held by systemd-journal/241.
-> 1 lock held by modprobe/1894:
->   #0: ffff8881c5e8c660 (&device->unregistration_lock){+.+.}-{3:3}, at: __ib_unregister_device+0x23/0x100 [ib_core]
->
-> =============================================
+Acked-by: Michael Hennerich <michael.hennerich@analog.com>
+
+> ---
+>  drivers/net/ieee802154/adf7242.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/net/ieee802154/adf7242.c
+> b/drivers/net/ieee802154/adf7242.c
+> index c11f32f644db..7db9cbd0f5de 100644
+> --- a/drivers/net/ieee802154/adf7242.c
+> +++ b/drivers/net/ieee802154/adf7242.c
+> @@ -882,7 +882,9 @@ static int adf7242_rx(struct adf7242_local *lp)
+>  	int ret;
+>  	u8 lqi, len_u8, *data;
+>=20
+> -	adf7242_read_reg(lp, 0, &len_u8);
+> +	ret =3D adf7242_read_reg(lp, 0, &len_u8);
+> +	if (ret)
+> +		return ret;
+>=20
+>  	len =3D len_u8;
+>=20
+> --
+> 2.18.1
+
