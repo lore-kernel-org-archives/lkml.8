@@ -2,68 +2,68 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA7FC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D34C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17F7020775
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A5762076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:51:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbgHCOvJ (ORCPT
+        id S1728367AbgHCOvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:51:09 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35070 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728224AbgHCOvH (ORCPT
+        Mon, 3 Aug 2020 10:51:11 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40782 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728309AbgHCOvK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 10:51:07 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 073EcNX9020207;
-        Mon, 3 Aug 2020 10:51:01 -0400
+        Mon, 3 Aug 2020 10:51:10 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 073EYKBb139790;
+        Mon, 3 Aug 2020 10:50:59 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32pkyfsce4-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32pkrghyyk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Aug 2020 10:51:01 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 073EcWkq021051;
-        Mon, 3 Aug 2020 10:51:00 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32pkyfscdp-1
+        Mon, 03 Aug 2020 10:50:59 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 073EYwTB143770;
+        Mon, 3 Aug 2020 10:50:59 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32pkrghyy6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Aug 2020 10:51:00 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 073EnrmE005097;
-        Mon, 3 Aug 2020 14:50:59 GMT
+        Mon, 03 Aug 2020 10:50:59 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 073Eo0ID016173;
+        Mon, 3 Aug 2020 14:50:58 GMT
 Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma05wdc.us.ibm.com with ESMTP id 32nxe47h64-1
+        by ppma04wdc.us.ibm.com with ESMTP id 32n018rrnd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Aug 2020 14:50:59 +0000
+        Mon, 03 Aug 2020 14:50:58 +0000
 Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 073EotnQ35258822
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 073EosVh30277916
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 3 Aug 2020 14:50:55 GMT
+        Mon, 3 Aug 2020 14:50:54 GMT
 Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BA103136051;
+        by IMSVA (Postfix) with ESMTP id 3D99F136051;
         Mon,  3 Aug 2020 14:50:57 +0000 (GMT)
 Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4EED9136060;
-        Mon,  3 Aug 2020 14:50:57 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id AE4A4136055;
+        Mon,  3 Aug 2020 14:50:56 +0000 (GMT)
 Received: from ghost4.ibm.com (unknown [9.163.93.250])
         by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon,  3 Aug 2020 14:50:57 +0000 (GMT)
+        Mon,  3 Aug 2020 14:50:56 +0000 (GMT)
 From:   Eddie James <eajames@linux.ibm.com>
 To:     linux-leds@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         robh+dt@kernel.org, dmurphy@ti.com, pavel@ucw.cz,
         jacek.anaszewski@gmail.com, vishwa@linux.ibm.com,
         andy.shevchenko@gmail.com, eajames@linux.ibm.com
-Subject: [PATCH v2 2/2] leds: pca955x: Add an IBM software implementation of the PCA9552 chip
-Date:   Mon,  3 Aug 2020 09:50:55 -0500
-Message-Id: <20200803145055.5203-3-eajames@linux.ibm.com>
+Subject: [PATCH v2 1/2] dt-bindings: leds: pca955x: Add IBM implementation compatible string
+Date:   Mon,  3 Aug 2020 09:50:54 -0500
+Message-Id: <20200803145055.5203-2-eajames@linux.ibm.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200803145055.5203-1-eajames@linux.ibm.com>
 References: <20200803145055.5203-1-eajames@linux.ibm.com>
@@ -72,10 +72,10 @@ Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-08-03_13:2020-08-03,2020-08-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
- clxscore=1015 lowpriorityscore=0 adultscore=0 priorityscore=1501
- malwarescore=0 suspectscore=1 bulkscore=0 spamscore=0 mlxscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
+ lowpriorityscore=0 impostorscore=0 mlxscore=0 priorityscore=1501
+ phishscore=0 suspectscore=1 adultscore=0 bulkscore=0 mlxlogscore=999
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2008030106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -83,56 +83,25 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 IBM created an implementation of the PCA9552 on a PIC16F
-microcontroller. The I2C device addresses are different from the
-hardware PCA9552, so add a new compatible string and associated
-platform data to be able to probe this device.
+microcontroller. Document the new compatible string for this device.
 
 Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Reviewed-by: Vishwanatha Subbanna <vishwa@linux.vnet.ibm.com>
 ---
- drivers/leds/leds-pca955x.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ Documentation/devicetree/bindings/leds/leds-pca955x.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/leds/leds-pca955x.c b/drivers/leds/leds-pca955x.c
-index 131f8e922ade..7087ca4592fc 100644
---- a/drivers/leds/leds-pca955x.c
-+++ b/drivers/leds/leds-pca955x.c
-@@ -65,6 +65,7 @@ enum pca955x_type {
- 	pca9550,
- 	pca9551,
- 	pca9552,
-+	ibm_pca9552,
- 	pca9553,
- };
- 
-@@ -90,6 +91,11 @@ static struct pca955x_chipdef pca955x_chipdefs[] = {
- 		.slv_addr	= /* 1100xxx */ 0x60,
- 		.slv_addr_shift	= 3,
- 	},
-+	[ibm_pca9552] = {
-+		.bits		= 16,
-+		.slv_addr	= /* 0110xxx */ 0x30,
-+		.slv_addr_shift	= 3,
-+	},
- 	[pca9553] = {
- 		.bits		= 4,
- 		.slv_addr	= /* 110001x */ 0x62,
-@@ -101,6 +107,7 @@ static const struct i2c_device_id pca955x_id[] = {
- 	{ "pca9550", pca9550 },
- 	{ "pca9551", pca9551 },
- 	{ "pca9552", pca9552 },
-+	{ "ibm-pca9552", ibm_pca9552 },
- 	{ "pca9553", pca9553 },
- 	{ }
- };
-@@ -412,6 +419,7 @@ static const struct of_device_id of_pca955x_match[] = {
- 	{ .compatible = "nxp,pca9550", .data = (void *)pca9550 },
- 	{ .compatible = "nxp,pca9551", .data = (void *)pca9551 },
- 	{ .compatible = "nxp,pca9552", .data = (void *)pca9552 },
-+	{ .compatible = "ibm,pca9552", .data = (void *)ibm_pca9552 },
- 	{ .compatible = "nxp,pca9553", .data = (void *)pca9553 },
- 	{},
- };
+diff --git a/Documentation/devicetree/bindings/leds/leds-pca955x.txt b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
+index 7a5830f8d5ab..817f460f3a72 100644
+--- a/Documentation/devicetree/bindings/leds/leds-pca955x.txt
++++ b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
+@@ -9,6 +9,7 @@ Required properties:
+ 	"nxp,pca9550"
+ 	"nxp,pca9551"
+ 	"nxp,pca9552"
++	"ibm,pca9552"
+ 	"nxp,pca9553"
+ - #address-cells: must be 1
+ - #size-cells: must be 0
 -- 
 2.24.0
 
