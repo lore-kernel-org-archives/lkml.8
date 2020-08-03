@@ -2,81 +2,107 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E63C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A61C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 424172245C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DF972076E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:08:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727852AbgHCPHH (ORCPT
+        id S1726579AbgHCPIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 11:07:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50020 "EHLO mx2.suse.de"
+        Mon, 3 Aug 2020 11:08:07 -0400
+Received: from verein.lst.de ([213.95.11.211]:39081 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbgHCPHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 11:07:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C6737AB3E;
-        Mon,  3 Aug 2020 15:07:20 +0000 (UTC)
-Date:   Mon, 3 Aug 2020 17:07:04 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Hugh Dickins <hughd@google.com>, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        hannes@cmpxchg.org, lkp@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        shakeelb@google.com, iamjoonsoo.kim@lge.com,
-        richard.weiyang@gmail.com, kirill@shutemov.name,
-        alexander.duyck@gmail.com, rong.a.chen@intel.com
-Subject: Re: [PATCH v17 00/21] per memcg lru lock
-Message-ID: <20200803150704.GV5174@dhcp22.suse.cz>
-References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
- <49d4f3bf-ccce-3c97-3a4c-f5cefe2d623a@linux.alibaba.com>
- <c00ac587-7f69-768a-84ea-53cbf7469ae9@linux.alibaba.com>
- <alpine.LSU.2.11.2007291105570.4649@eggly.anvils>
- <08c8797d-1935-7b41-b8db-d22f054912ac@linux.alibaba.com>
+        id S1726276AbgHCPIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 11:08:07 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id E766D68BFE; Mon,  3 Aug 2020 17:08:02 +0200 (CEST)
+Date:   Mon, 3 Aug 2020 17:08:02 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        sfr@canb.auug.org.au, linux-next@vger.kernel.org
+Subject: Re: add file system helpers that take kernel pointers for the init
+ code v4
+Message-ID: <20200803150802.GA19112@lst.de>
+References: <20200728163416.556521-1-hch@lst.de> <20200803145622.GB4631@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <08c8797d-1935-7b41-b8db-d22f054912ac@linux.alibaba.com>
+In-Reply-To: <20200803145622.GB4631@lca.pw>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 30-07-20 10:16:13, Alex Shi wrote:
-> 
-> 
-> 在 2020/7/30 上午2:06, Hugh Dickins 写道:
-> > On Wed, 29 Jul 2020, Alex Shi wrote:
-> >>
-> >> Is there any comments or suggestion for this patchset?
-> >> Any hints will be very appreciated.
+On Mon, Aug 03, 2020 at 10:56:23AM -0400, Qian Cai wrote:
+> On Tue, Jul 28, 2020 at 06:33:53PM +0200, Christoph Hellwig wrote:
+> > Hi Al and Linus,
 > > 
-> > Alex: it is now v5.8-rc7, obviously too late for this patchset to make
-> > v5.9, so I'm currently concentrated on checking some patches headed for
-> > v5.9 (and some bugfix patches of my own that I don't get time to send):
-> > I'll get back to responding on lru_lock in a week or two's time.
+> > currently a lot of the file system calls in the early in code (and the
+> > devtmpfs kthread) rely on the implicit set_fs(KERNEL_DS) during boot.
+> > This is one of the few last remaining places we need to deal with to kill
+> > off set_fs entirely, so this series adds new helpers that take kernel
+> > pointers.  These helpers are in init/ and marked __init and thus will
+> > be discarded after bootup.  A few also need to be duplicated in devtmpfs,
+> > though unfortunately.
 > 
-> Hi Hugh,
-> 
-> Thanks a lot for response! It's fine to wait longer.
-> But thing would be more efficient if review get concentrated...
-> I am still too new in mm area.
+> Reverting this series from next-20200803 fixed the crash below on shutdown.
 
-I am sorry and owe you a review but it is hard to find time for that.
-This is a large change and the review will be really far from trivial.
-If this version is mostly stable then I would recommend not posting new
-versions and simply remind people you expect the review from by a
-targeted ping.
+Please try this patch:
+
+---
+From 6448eebe2fe7189cedc5136ab3464517956922b7 Mon Sep 17 00:00:00 2001
+From: Christoph Hellwig <hch@lst.de>
+Date: Mon, 3 Aug 2020 15:56:18 +0200
+Subject: init: fix init_dup
+
+Don't allocate an unused fd for each call.  Also drop the extra
+reference from filp_open after the init_dup calls while we're at it.
+
+Fixes: 36e96b411649 ("init: add an init_dup helper")
+Reported-by Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/init.c   | 2 +-
+ init/main.c | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/fs/init.c b/fs/init.c
+index 730e05acda2392..e9c320a48cf157 100644
+--- a/fs/init.c
++++ b/fs/init.c
+@@ -260,6 +260,6 @@ int __init init_dup(struct file *file)
+ 	fd = get_unused_fd_flags(0);
+ 	if (fd < 0)
+ 		return fd;
+-	fd_install(get_unused_fd_flags(0), get_file(file));
++	fd_install(fd, get_file(file));
+ 	return 0;
+ }
+diff --git a/init/main.c b/init/main.c
+index 089e21504b1fc1..9dae9c4f806bb9 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -1470,6 +1470,7 @@ void __init console_on_rootfs(void)
+ 	init_dup(file);
+ 	init_dup(file);
+ 	init_dup(file);
++	fput(file);
+ }
+ 
+ static noinline void __init kernel_init_freeable(void)
 -- 
-Michal Hocko
-SUSE Labs
+2.27.0
+
