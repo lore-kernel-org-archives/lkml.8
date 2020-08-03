@@ -2,141 +2,101 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 289EFC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBC6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0D7E22CA1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:44:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RRfGmOJD"
+	by mail.kernel.org (Postfix) with ESMTP id D589E22C9F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:44:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbgHCToh (ORCPT
+        id S1728724AbgHCTo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 15:44:37 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:18161 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728541AbgHCTod (ORCPT
+        Mon, 3 Aug 2020 15:44:58 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:42938 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728069AbgHCTo4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 15:44:33 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2868bf0001>; Mon, 03 Aug 2020 12:42:55 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 03 Aug 2020 12:44:32 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 03 Aug 2020 12:44:32 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Aug
- 2020 19:44:29 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 3 Aug 2020 19:44:29 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.221]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f28691c0001>; Mon, 03 Aug 2020 12:44:29 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <robh+dt@kernel.org>
-CC:     <skomatineni@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>
-Subject: [PATCH v1 3/6] arm64: tegra: Add missing timeout clock to Tegra210 SDMMC
-Date:   Mon, 3 Aug 2020 12:44:20 -0700
-Message-ID: <1596483863-22153-4-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596483863-22153-1-git-send-email-skomatineni@nvidia.com>
-References: <1596483863-22153-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Mon, 3 Aug 2020 15:44:56 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id ACF8380503;
+        Mon,  3 Aug 2020 21:44:52 +0200 (CEST)
+Date:   Mon, 3 Aug 2020 21:44:51 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     trix@redhat.com
+Cc:     b.zolnierkie@samsung.com, jhubbard@nvidia.com,
+        daniel.vetter@ffwll.ch, gustavo@embeddedor.com, arnd@arndb.de,
+        jani.nikula@intel.com, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] video: fbdev: pvr2fb: initialize variables
+Message-ID: <20200803194451.GB525506@ravnborg.org>
+References: <20200720191845.20115-1-trix@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596483775; bh=ACOKX3Nl/6yIILPCm9RSoySc3q8XcKN5zLWzcZFbHZo=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=RRfGmOJDNczyzsuvs19oBlkeDSKvqOY8hcWp33uilYHkkgzw9DbbKWcEGiH33OtOa
-         M59cwbXjH/P2Lyjft3lwqDIzW9BcJ/tG/PyX/nk9v8u28Oa/8uCvl5noLMXv373mNp
-         AtfVv08L/vp71zq14gXd2sIIg4M3ILBxQYkkj6Iyi7SjvRJG1FY3RHvfvX/SYbsBNe
-         AhFTQdIWiW5jUe++6q5lcDS+IyqWm3uxtt/T8mNlrzupG1cjhr/0U6kJwJFkWwmBZa
-         sucNYz6rbyx6I5IgwdaiyMmqvuYuZ5X7rGBX7y0Bga4k0qF3sfHfOTL8Lb20+qWCVW
-         Jvf4vSisWelcg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200720191845.20115-1-trix@redhat.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=20KFwNOVAAAA:8 a=e5mUnYsNAAAA:8
+        a=qnTn4qAwrYwZIjOlhbIA:9 a=CjuIK1q_8ugA:10 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 742af7e7a0a1 ("arm64: tegra: Add Tegra210 support")
+Hi Tom,
 
-Tegra210 uses separate SDMMC_LEGACY_TM clock for data timeout and
-this clock is not enabled currently which is not recommended.
+On Mon, Jul 20, 2020 at 12:18:45PM -0700, trix@redhat.com wrote:
+> From: Tom Rix <trix@redhat.com>
+> 
+> clang static analysis reports this repesentative error
+> 
+> pvr2fb.c:1049:2: warning: 1st function call argument
+>   is an uninitialized value [core.CallAndMessage]
+>         if (*cable_arg)
+>         ^~~~~~~~~~~~~~~
+> 
+> Problem is that cable_arg depends on the input loop to
+> set the cable_arg[0].  If it does not, then some random
+> value from the stack is used.
+> 
+> A similar problem exists for output_arg.
+> 
+> So initialize cable_arg and output_arg.
+> 
+> Signed-off-by: Tom Rix <trix@redhat.com>
 
-Tegra SDMMC advertises 12Mhz as timeout clock frequency in host
-capability register.
+Thanks, applied to drm-misc-next.
 
-So, this clock should be kept enabled by SDMMC driver.
+	Sam
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra210.dtsi | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index 829f786..8cca216 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -1194,8 +1194,9 @@
- 		compatible = "nvidia,tegra210-sdhci";
- 		reg = <0x0 0x700b0000 0x0 0x200>;
- 		interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&tegra_car TEGRA210_CLK_SDMMC1>;
--		clock-names = "sdhci";
-+		clocks = <&tegra_car TEGRA210_CLK_SDMMC1>,
-+			 <&tegra_car TEGRA210_CLK_SDMMC_LEGACY>;
-+		clock-names = "sdhci", "tmclk";
- 		resets = <&tegra_car 14>;
- 		reset-names = "sdhci";
- 		pinctrl-names = "sdmmc-3v3", "sdmmc-1v8",
-@@ -1222,8 +1223,9 @@
- 		compatible = "nvidia,tegra210-sdhci";
- 		reg = <0x0 0x700b0200 0x0 0x200>;
- 		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&tegra_car TEGRA210_CLK_SDMMC2>;
--		clock-names = "sdhci";
-+		clocks = <&tegra_car TEGRA210_CLK_SDMMC2>,
-+			 <&tegra_car TEGRA210_CLK_SDMMC_LEGACY>;
-+		clock-names = "sdhci", "tmclk";
- 		resets = <&tegra_car 9>;
- 		reset-names = "sdhci";
- 		pinctrl-names = "sdmmc-1v8-drv";
-@@ -1239,8 +1241,9 @@
- 		compatible = "nvidia,tegra210-sdhci";
- 		reg = <0x0 0x700b0400 0x0 0x200>;
- 		interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&tegra_car TEGRA210_CLK_SDMMC3>;
--		clock-names = "sdhci";
-+		clocks = <&tegra_car TEGRA210_CLK_SDMMC3>,
-+			 <&tegra_car TEGRA210_CLK_SDMMC_LEGACY>;
-+		clock-names = "sdhci", "tmclk";
- 		resets = <&tegra_car 69>;
- 		reset-names = "sdhci";
- 		pinctrl-names = "sdmmc-3v3", "sdmmc-1v8",
-@@ -1262,8 +1265,9 @@
- 		compatible = "nvidia,tegra210-sdhci";
- 		reg = <0x0 0x700b0600 0x0 0x200>;
- 		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&tegra_car TEGRA210_CLK_SDMMC4>;
--		clock-names = "sdhci";
-+		clocks = <&tegra_car TEGRA210_CLK_SDMMC4>,
-+			 <&tegra_car TEGRA210_CLK_SDMMC_LEGACY>;
-+		clock-names = "sdhci", "tmclk";
- 		resets = <&tegra_car 15>;
- 		reset-names = "sdhci";
- 		pinctrl-names = "sdmmc-3v3-drv", "sdmmc-1v8-drv";
--- 
-2.7.4
-
+> ---
+>  drivers/video/fbdev/pvr2fb.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/video/fbdev/pvr2fb.c b/drivers/video/fbdev/pvr2fb.c
+> index 2d9f69b93392..f4add36cb5f4 100644
+> --- a/drivers/video/fbdev/pvr2fb.c
+> +++ b/drivers/video/fbdev/pvr2fb.c
+> @@ -1028,6 +1028,8 @@ static int __init pvr2fb_setup(char *options)
+>  	if (!options || !*options)
+>  		return 0;
+>  
+> +	cable_arg[0] = output_arg[0] = 0;
+> +
+>  	while ((this_opt = strsep(&options, ","))) {
+>  		if (!*this_opt)
+>  			continue;
+> -- 
+> 2.18.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
