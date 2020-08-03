@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60013C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8FCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33E5C204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E47962054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457939;
-	bh=LZWwTvS0tp1gdoXEyc79W/d6yllJPiT86ElTRyUHeQY=;
+	s=default; t=1596457941;
+	bh=i95n0WsFW8jreM24pKk2d83Mpzoj/NmK0klcShWUGuI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fQXZsivktVgS/ld9Tke75VOE7d2yU2ClJEzrXtkD17a2HbSf6vmt9iQD5OLnZ9pif
-	 uU4CqFu2AxgjvhY5S9TXoRBW1XTpuGd2MSpuN7K1FDXXO3GlQWi41BN4Mwcd33J77M
-	 S2u99RmH2B3LrfiHSj+NjMwpYSQeBXEa+b1iXREk=
+	b=iFP01cHGtPqITzE0iZ2fDD04jKqBJ97fPvwhGyoBUcwb3jR73iR4WYtLrsxLckJmR
+	 jZjJz9Ep/1IQXf++YqeLjKEhu6aU9Qy8OAh/MWS5lQDyN+CM00eFQ/Gm0ZnEDnEd9s
+	 tYZQJJi99SVcN3RPfKefqhFePqaZVhhJsgOvvbTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729287AbgHCMcR (ORCPT
+        id S1728855AbgHCMcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:32:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60004 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:32:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728460AbgHCMcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:32:09 -0400
+        id S1729265AbgHCMcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:32:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABAF12076B;
-        Mon,  3 Aug 2020 12:32:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ADEA2076B;
+        Mon,  3 Aug 2020 12:32:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457928;
-        bh=LZWwTvS0tp1gdoXEyc79W/d6yllJPiT86ElTRyUHeQY=;
+        s=default; t=1596457933;
+        bh=i95n0WsFW8jreM24pKk2d83Mpzoj/NmK0klcShWUGuI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rUlIB0u4sryH/Y3G4t7boTSEc8XWNe6T1fT3z510RnY5KnGs/JeBEO+xc7PdmWD7C
-         +Mj3ECHsqQ1nTP3LZusUYvPkVgT/8fyCsiUBzrRwUOgb36RUWL3vL2EUHPkN6LRmu2
-         zKZANGXT7xec81YxAecM+vy+fRMYcf4YhwUCj8pQ=
+        b=nuWEwKBhO7RAsbDZi5XEpf0vgqlHs6dUiM47++I/YtlGk9GZ1+/D3bZ6okK2dnUmF
+         Nea/r+VpKgWPPJTfJ/qyF1dagmqMEMAsQsUTiVrAMEOnQOgKuOchnNH6AOfiKsIJ9R
+         C0rU3o7rP/NziqWXGTRoMcr1yPxba8t5voWxiq1g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Woojung.Huh@microchip.com" <Woojung.Huh@microchip.com>,
-        Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 33/56] net: lan78xx: fix transfer-buffer memory leak
-Date:   Mon,  3 Aug 2020 14:19:48 +0200
-Message-Id: <20200803121851.938595494@linuxfoundation.org>
+Subject: [PATCH 4.19 35/56] mlxsw: core: Increase scope of RCU read-side critical section
+Date:   Mon,  3 Aug 2020 14:19:50 +0200
+Message-Id: <20200803121852.041985890@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -62,34 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 63634aa679ba8b5e306ad0727120309ae6ba8a8e ]
+[ Upstream commit 7d8e8f3433dc8d1dc87c1aabe73a154978fb4c4d ]
 
-The interrupt URB transfer-buffer was never freed on disconnect or after
-probe errors.
+The lifetime of the Rx listener item ('rxl_item') is managed using RCU,
+but is dereferenced outside of RCU read-side critical section, which can
+lead to a use-after-free.
 
-Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
-Cc: Woojung.Huh@microchip.com <Woojung.Huh@microchip.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fix this by increasing the scope of the RCU read-side critical section.
+
+Fixes: 93c1edb27f9e ("mlxsw: Introduce Mellanox switch driver core")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/lan78xx.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/mellanox/mlxsw/core.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 2dff233814ea5..d198f36785a46 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -3815,6 +3815,7 @@ static int lan78xx_probe(struct usb_interface *intf,
- 			usb_fill_int_urb(dev->urb_intr, dev->udev,
- 					 dev->pipe_intr, buf, maxp,
- 					 intr_complete, dev, period);
-+			dev->urb_intr->transfer_flags |= URB_FREE_BUFFER;
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
+index e180ec4f1a248..3cebea6f3e6ad 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/core.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
+@@ -1605,11 +1605,13 @@ void mlxsw_core_skb_receive(struct mlxsw_core *mlxsw_core, struct sk_buff *skb,
+ 			break;
  		}
  	}
+-	rcu_read_unlock();
+-	if (!found)
++	if (!found) {
++		rcu_read_unlock();
+ 		goto drop;
++	}
  
+ 	rxl->func(skb, local_port, rxl_item->priv);
++	rcu_read_unlock();
+ 	return;
+ 
+ drop:
 -- 
 2.25.1
 
