@@ -3,88 +3,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 865BBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25D792068F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 644882068F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:39:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725957AbgHCHhJ (ORCPT
+        id S1725951AbgHCHjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 03:37:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:53472 "EHLO foss.arm.com"
+        Mon, 3 Aug 2020 03:39:03 -0400
+Received: from mga17.intel.com ([192.55.52.151]:42699 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725806AbgHCHhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 03:37:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8DC3D6E;
-        Mon,  3 Aug 2020 00:37:07 -0700 (PDT)
-Received: from [192.168.178.2] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A6EC3F718;
-        Mon,  3 Aug 2020 00:37:01 -0700 (PDT)
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: Re: [PATCH] sched/fair: Fix the logic about active_balance in
- load_balance()
-To:     Qi Zheng <arch0.zheng@gmail.com>, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, rostedt@goodmis.org,
-        bsegall@google.com, mgorman@suse.de
-Cc:     linux-kernel@vger.kernel.org
-References: <20200802045141.130533-1-arch0.zheng@gmail.com>
-Message-ID: <c9afe264-d453-1676-77c9-b29db3481107@arm.com>
-Date:   Mon, 3 Aug 2020 09:36:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1725806AbgHCHjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 03:39:03 -0400
+IronPort-SDR: oDQgT4ftQIQcZrVMgrZawjt3FU+pw+nru3Qzh8NKVKRYs7TUSLKgpl4Bq1RAjWgx6Fv0+v/bi4
+ ljdJjzavJb2A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="132119042"
+X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
+   d="scan'208";a="132119042"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 00:39:02 -0700
+IronPort-SDR: sRn8YPHQGXW0yOEBBTt8qqgg4d8e+r39AI12m2c75yHXA7t36ehtFt5xAObiGkhZqVpn3QZkBz
+ SSjBOtXpWWkA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
+   d="scan'208";a="491734962"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga006.fm.intel.com with ESMTP; 03 Aug 2020 00:39:01 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 484CF130; Mon,  3 Aug 2020 10:39:00 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Qu Wenruo <quwenruo.btrfs@gmx.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: [PATCH v1] kobject: Restore old behaviour of kobject_del(NULL)
+Date:   Mon,  3 Aug 2020 10:38:59 +0300
+Message-Id: <20200803073859.43664-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200802045141.130533-1-arch0.zheng@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/08/2020 06:51, Qi Zheng wrote:
-> I think the unbalance scenario here should be that we need to
-> do active balance but it is not actually done. So fix it.
-> 
-> Signed-off-by: Qi Zheng <arch0.zheng@gmail.com>
-> ---
->  kernel/sched/fair.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 2ba8f230feb9..6d8c53718b67 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -9710,7 +9710,7 @@ static int load_balance(int this_cpu, struct rq *this_rq,
->  	} else
->  		sd->nr_balance_failed = 0;
->  
-> -	if (likely(!active_balance) || voluntary_active_balance(&env)) {
-> +	if (likely(!active_balance) && voluntary_active_balance(&env)) {
->  		/* We were unbalanced, so reset the balancing interval */
->  		sd->balance_interval = sd->min_interval;
->  	} else {
-> 
+The commit 079ad2fb4bf9 ("kobject: Avoid premature parent object freeing in
+kobject_cleanup()") inadvertently dropped a possibility to call kobject_del()
+with NULL pointer. Restore the old behaviour.
 
-Active balance is potentially already been done when we reach this code.
+Fixes: 079ad2fb4bf9 ("kobject: Avoid premature parent object freeing in kobject_cleanup()")
+Reported-by: Qu Wenruo <quwenruo.btrfs@gmx.com>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ lib/kobject.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-See 'if (need_active_balance(&env))' and 'if (!busiest->active_balance)'
-further up.
+diff --git a/lib/kobject.c b/lib/kobject.c
+index 3afb939f2a1c..f5f5273031d2 100644
+--- a/lib/kobject.c
++++ b/lib/kobject.c
+@@ -637,7 +637,7 @@ static void __kobject_del(struct kobject *kobj)
+  */
+ void kobject_del(struct kobject *kobj)
+ {
+-	struct kobject *parent = kobj->parent;
++	struct kobject *parent = kobj ? kobj->parent : NULL;
+ 
+ 	__kobject_del(kobj);
+ 	kobject_put(parent);
+-- 
+2.27.0
 
-Here we only reset sd->balance_interval in case:
-(A) the last load balance wasn't an active one
-(B) the reason for the active load balance was:
-    (1) asym packing
-    (2) capacity of src_cpu is reduced compared to the one of dst_cpu
-    (3) misfit handling
-
-(B) is done to not unnecessarily increase of balance interval, see
-commit 46a745d90585 ("sched/fair: Fix unnecessary increase of balance
-interval").
