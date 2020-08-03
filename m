@@ -2,336 +2,133 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B60C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD841C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 618C620722
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:58:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AEHkwZqw"
+	by mail.kernel.org (Postfix) with ESMTP id 9E06E20A8B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:59:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596473958;
+	bh=DqVTfmEqV/Cd46vTFRwbyJjRVKLkVy4VzmMDGHxdDeQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LbwectOF8dkE6lOevcAYhui+6Z7lbwOmpyHmO+7S+LPkQ2jdpYUd+Lzv2Ft3vC4Et
+	 IeKMnUxcYY0SQFFty0545IvTEfw7v5SJXPb3oElRPPa9CNsqo4PG62pAvHjzbM0iXC
+	 mwiKVSb3b1uwXd71plW+AM8byjuKxiClc6Rsq4Nw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgHCQ6B (ORCPT
+        id S1728061AbgHCQ7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 12:58:01 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:50394 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgHCQ6B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 12:58:01 -0400
-Received: from [192.168.254.32] (unknown [47.187.206.220])
-        by linux.microsoft.com (Postfix) with ESMTPSA id B467120B4908;
-        Mon,  3 Aug 2020 09:57:58 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B467120B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1596473879;
-        bh=/Go4zDYeTSuk4ndgu/MFpJIHKPIA61513wAH+zPQLoI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=AEHkwZqwS8l770QsNs1X/AW1JIln6ecQ6zphLAP5to5/s35qA3/J5LEbv6frVRUUF
-         MHxTURiYIgHfk2JxoDpbifS5VeL98OH4Nf74SvuznSa1gdrWSWukAFBDwb8hz1JjEQ
-         hZaM11haDW8Rx5erWwK/c0VofTMWwP0O5L7cEKXQ=
-Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, oleg@redhat.com,
-        x86@kernel.org
-References: <aefc85852ea518982e74b233e11e16d2e707bc32>
- <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <20200731180955.GC67415@C02TD0UTHF1T.local>
-From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Message-ID: <6236adf7-4bed-534e-0956-fddab4fd96b6@linux.microsoft.com>
-Date:   Mon, 3 Aug 2020 11:57:57 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 3 Aug 2020 12:59:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34468 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726664AbgHCQ7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 12:59:17 -0400
+Received: from localhost (router.4pisysteme.de [80.79.225.122])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78B0622B40;
+        Mon,  3 Aug 2020 16:59:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596473955;
+        bh=DqVTfmEqV/Cd46vTFRwbyJjRVKLkVy4VzmMDGHxdDeQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zDNggJHg+wW8HizMOFqed5jrz1O7yhNyHY66jfbF9gNNWuCWCccP0bQ7aQf5QBrcu
+         Jjfz5XlzXoL0va1gSo7csbJ4QcLDkQmSBicLlb/dw5sDtKa+xk6RNSklE2k9m1k4rT
+         zRy7bO1p/sStqAO69VEyefPafi1GDw2c58jJN2I0=
+Date:   Mon, 3 Aug 2020 18:59:14 +0200
+From:   <wsa@kernel.org>
+To:     <Codrin.Ciubotariu@microchip.com>
+Cc:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <robh+dt@kernel.org>,
+        <Ludovic.Desroches@microchip.com>, <Nicolas.Ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
+        <kamel.bouhara@bootlin.com>
+Subject: Re: Re: [RFC PATCH 3/4] i2c: core: treat EPROBE_DEFER when acquiring
+ SCL/SDA GPIOs
+Message-ID: <20200803165914.GB1094@kunai>
+Mail-Followup-To: <wsa@kernel.org>, <Codrin.Ciubotariu@microchip.com>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <robh+dt@kernel.org>,
+        <Ludovic.Desroches@microchip.com>, <Nicolas.Ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
+        <kamel.bouhara@bootlin.com>
+References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
+ <20200619141904.910889-4-codrin.ciubotariu@microchip.com>
+ <20200802170500.GB10193@kunai>
+ <15a449fa-d649-846a-e6f2-1540f9581846@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <20200731180955.GC67415@C02TD0UTHF1T.local>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="H1spWtNR+x+ondvy"
+Content-Disposition: inline
+In-Reply-To: <15a449fa-d649-846a-e6f2-1540f9581846@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Responses inline..
 
-On 7/31/20 1:09 PM, Mark Rutland wrote:
-> Hi,
->
-> On Tue, Jul 28, 2020 at 08:10:46AM -0500, madvenka@linux.microsoft.com wrote:
->> From: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
->> Trampoline code is placed either in a data page or in a stack page. In
->> order to execute a trampoline, the page it resides in needs to be mapped
->> with execute permissions. Writable pages with execute permissions provide
->> an attack surface for hackers. Attackers can use this to inject malicious
->> code, modify existing code or do other harm.
-> For the purpose of below, IIUC this assumes the adversary has an
-> arbitrary write.
->
->> To mitigate this, LSMs such as SELinux may not allow pages to have both
->> write and execute permissions. This prevents trampolines from executing
->> and blocks applications that use trampolines. To allow genuine applications
->> to run, exceptions have to be made for them (by setting execmem, etc).
->> In this case, the attack surface is just the pages of such applications.
->>
->> An application that is not allowed to have writable executable pages
->> may try to load trampoline code into a file and map the file with execute
->> permissions. In this case, the attack surface is just the buffer that
->> contains trampoline code. However, a successful exploit may provide the
->> hacker with means to load his own code in a file, map it and execute it.
-> It's not clear to me what power the adversary is assumed to have here,
-> and consequently it's not clear to me how the proposal mitigates this.
->
-> For example, if the attack can control the arguments to syscalls, and
-> has an arbitrary write as above, what prevents them from creating a
-> trampfd of their own?
+--H1spWtNR+x+ondvy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That is the point. If a process is allowed to have pages that are both
-writable and executable, a hacker can exploit some vulnerability such
-as buffer overflow to write his own code into a page and somehow
-contrive to execute that.
 
-So, the context is - if security settings in a system disallow a page to have
-both write and execute permissions, how do you allow the execution of
-genuine trampolines that are runtime generated and placed in a data
-page or a stack page?
+> > This is correct but I think the code flow is/was confusing. Can you drop
+> > this 'return' and use 'else if' for the next code block? I think this is
+> > more readable.
+>=20
+> Ok, it makes sense. Should I make a separate patch for this only?
 
-trampfd tries to address that. So, trampfd is not a measure that increases
-the security of a system or mitigates a security problem. It is a framework
-to allow safe forms of dynamic code to execute when security settings
-will block them otherwise.
+I am fine if this is included in this change.
 
->
-> [...]
->
->> GCC has traditionally used trampolines for implementing nested
->> functions. The trampoline is placed on the user stack. So, the stack
->> needs to be executable.
-> IIUC generally nested functions are avoided these days, specifically to
-> prevent the creation of gadgets on the stack. So I don't think those are
-> relevant as a cased to care about. Applications using them should move
-> to not using them, and would be more secure generally for doing so.
+> One more question, should we keep:
+> if (!bri->set_sda && !bri->get_sda) {
+> 	err_str =3D "either get_sda() or set_sda() needed";
+> 	goto err;
+> }
+> ?
+> Without {get/set}_sda we won't be able to generate stop commands and=20
+> possibly check if the bus is free, but we can still generate the SCL=20
+> clock pulses.
 
-Could not agree with you more.
->
-> [...]
->
->> Trampoline File Descriptor (trampfd)
->> --------------------------
->>
->> I am proposing a kernel API using anonymous file descriptors that
->> can be used to create and execute trampolines with the help of the
->> kernel. In this solution also, the kernel does the work of the trampoline.
-> What's the rationale for the kernel emulating the trampoline here?
->
-> In ther case of EMUTRAMP this was necessary to work with existing
-> application binaries and kernel ABIs which placed instructions onto the
-> stack, and the stack needed to remain RW for other reasons. That
-> restriction doesn't apply here.
+My gut feeling says we need to keep it. I can't recall the reason now
+and want to send out this answer ASAP. Anyhow, this definately would be
+a seperate patch. If you really want to, send a patch, and then I have
+to think why we still need it ;)
 
-In addition to the stack, EMUTRAMP also allows the emulation
-of the same well-known trampolines placed in a non-stack data page.
-For instance, libffi closures embed a trampoline in a closure structure.
-That gets executed when the caller of libffi invokes it.
+> Ok. Perhaps I should also move the debug print with the registered=20
+> adapter after calling i2c_init_recovery().
 
-The goal of EMUTRAMP is to allow safe trampolines to execute when
-security settings disallow their execution. Mainly, it permits applications
-that use libffi to run. A lot of applications use libffi.
+Yes, makes sense.
 
-They chose the emulation method so that no changes need to be made
-to application code to use them. But the EMUTRAMP implementors note
-in their description that the real solution to the problem is a kernel
-API that is backed by a safe code generator.
+> Do you want me to integrate this patch in the previous one?
 
-trampd is an attempt to define such an API. This is just a starting point.
-I realize that we need to have a lot of discussion to refine the approach.
+Nope, please keep it seperate.
 
-> Assuming trampfd creation is somehow authenticated, the code could be
-> placed in a r-x page (which the kernel could refuse to add write
-> permission), in order to prevent modification. If that's sufficient,
-> it's not much of a leap to allow userspace to generate the code.
 
-IIUC, you are suggesting that the user hands the kernel a code fragment
-and requests it to be placed in an r-x page, correct? However, the
-kernel cannot trust any code given to it by the user. Nor can it scan any
-piece of code and reliably decide if it is safe or not.
+--H1spWtNR+x+ondvy
+Content-Type: application/pgp-signature; name="signature.asc"
 
-So, the problem of executing dynamic code when security settings are
-restrictive cannot be solved in userland. The only option I can think of is
-to have the kernel provide support for dynamic code. It must have one
-or more safe, trusted code generation components and an API to use
-the components.
+-----BEGIN PGP SIGNATURE-----
 
-My goal is to introduce an API and start off by supporting simple, regular
-trampolines that are widely used. Then, evolve the feature over a period
-of time to include other forms of dynamic code such as JIT code.
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8oQmIACgkQFA3kzBSg
+KbZAwBAAppfK0ya+k9k/yXUrX5Y6knQZb/OpTwELmfjUaWHzhPRzFDfJrjuDb1QM
+/ZL+DKK8/NsKLsWv1RSjd5BydPiToyQG+vcKGSBzcxLrXogzuqR4SP81uuwxUBzb
+uKyCjQoJg+wYR4wbjAInYtSaygqXfyjkhtJOjtBnn9eXxu0Z/3HojJhTfpREwoss
+oIO86EySSKGJ1U5u7uSJD0ghSVjzGgWjilAmXV+JwcKHkl/dRl88ztiri+qzVScw
+apychYdxxB2CjTrgS8oV1A1rv3fiPhBOvLs2a6yQ57K5MzY6wdzcb6phrwSA9iFm
+aNsmVLOtRiVVCe832EgYmyVMb2PPuuWcwo88jNJ1bawIlLHctqdjngeg/nG/oiRv
+bhoy5sy5/Lg5nce7bpWUGovkwr/vCyhe3B6gGX4VmUgHu7ElKhy4Tc0azte5lD3H
+nR49oIvZUertN6pX8kx2dZTq6h/Lsc4aFxVoc3tWDFQVaG82L5HohwDW69c8n8QO
+1Bwi70uJGjaeGQ2+RVqz8M37Qz3Rk7sfs3N+/a8pxHOY9MrlOANNE3jIN/MSbdc9
+n2WUkMP4EPDjBAHyzcmNj7Xx93rt/2cQvfANgnO5N+Z+m7ut0zZnxlVtg3YkhtpH
+y1VJXkPg7BCvFCn6xKDa9Dpb7fOGgUVUGdX4yqDXCRbuW5m5Sl0=
+=42Sy
+-----END PGP SIGNATURE-----
 
->> The kernel creates the trampoline mapping without any permissions. When
->> the trampoline is executed by user code, a page fault happens and the
->> kernel gets control. The kernel recognizes that this is a trampoline
->> invocation. It sets up the user registers based on the specified
->> register context, and/or pushes values on the user stack based on the
->> specified stack context, and sets the user PC to the requested target
->> PC. When the kernel returns, execution continues at the target PC.
->> So, the kernel does the work of the trampoline on behalf of the
->> application.
->>
->> In this case, the attack surface is the context buffer. A hacker may
->> attack an application with a vulnerability and may be able to modify the
->> context buffer. So, when the register or stack context is set for
->> a trampoline, the values may have been tampered with. From an attack
->> surface perspective, this is similar to Trampoline Emulation. But
->> with trampfd, user code can retrieve a trampoline's context from the
->> kernel and add defensive checks to see if the context has been
->> tampered with.
-> Can you elaborate on this: what sort of checks would be applied, and
-> how?
-
-So, an application that uses trampfd would do the following steps:
-
-1. Create a trampoline by calling trampfd_create()
-2. Set the register and/or stack contexts for the trampoline.
-3. mmap() the trampoline to get an address
-4. Invoke the trampoline using the address
-
-Let us say that the application has a vulnerability such as buffer overflow
-that allows a hacker to modify the data that is used to do step 2.
-
-Potentially, a hacker could modify the following things:
-    - register values specified in the register context
-    - values specified in the stack context
-    - the target PC specified in the register context
-
-When the trampoline is invoked in step 4, the kernel will gain control,
-load the registers, push stuff on the stack and transfer control to the target
-PC. Whatever the hacker had modified in step 2 will take effect in step 4.
-His values will get loaded and his PC is the one that will get control.
-
-A paranoid application could add a step to this sequence. So, the steps
-would be:
-
-1. Create a trampoline by calling trampfd_create()
-2. Set the register and/or stack contexts for the trampoline.
-3. mmap() the trampoline to get an address
-4a. Retrieve the register and stack context for the trampoline from the
-      kernel and check if anything has been altered. If yes, abort.
-4b. Invoke the trampoline using the address
-
-The check that I mentioned will be in step 4a. Now, the hacker has to
-hack both step 2 and step 4a to let his stuff take effect. That is far
-less likely to succeed because there needs to exist a vulnerability in
-both places.
-
-> Why is this not possible in a r-x user page?
-
-This is answered above.
->
-> [...]
->
->> - trampfd provides a basic framework. In the future, new trampoline types
->>   can be implemented, new contexts can be defined, and additional rules
->>   can be implemented for security purposes.
-> >From a kernel developer perspective, this reads as "this ABI will become
-> more complex", which I think is worrisome.
-
-I hear you. My goal from the beginning is to not have the kernel deal
-with ABI issues. ABI handling is best left to userland (except in cases
-like signal handlers where the kernel does have to deal with it).
-
-In the libffi changes, this is certainly true. The kernel only helps with
-the trampoline that passes control to the ABI handler. The ABI handler
-itself is part of libffi.
-
-> I'm also worried that this is liable to have nasty interaction with HW
-> CFI mechanisms (e.g. PAC+BTI on arm64) either now or in future, and that
-> we bake incompatibility into ABI.
-
-I will study CFI and then answer this question. So, bear with me.
->> - For instance, trampfd defines an "Allowed PCs" context in this initial
->>   work. As an example, libffi can create a read-only array of all ABI
->>   handlers for an architecture at build time. This array can be used to
->>   set the list of allowed PCs for a trampoline. This will mean that a hacker
->>   cannot hack the PC part of the register context and make it point to
->>   arbitrary locations.
-> I'm not exactly sure what's meant here. Do you mean that this prevents
-> userspace from branching into the middle of a trampoline, or that the
-> trampfd code prevents where the trampoline itself can branch to?
->
-> Both x86 and arm64 have upcoming HW CFI (CET and BTI) to deal with the
-> former, and I believe the latter can also be implemented in userspace
-> with defensive checks in the trampolines, provided that they are
-> protected read-only.
-
-So, I mentioned before that a hacker can potentially alter the target
-PC that a trampoline finally jumps to.
-
-If a process were allowed to have pages with both write and execute
-permissions, a hacker could load his own code in one of those pages and
-point the PC to that.
-
-In the context of trampfd, we are talking about the case where a process is
-not permitted to have both write and execute permissions. In this case,
-the hacker cannot load his own code anywhere and hope to execute it.
-But a hacker can point the PC to some arbitrary place such as return
-from glibc.
-
->
->> - An SELinux setting called "exectramp" can be implemented along the
->>   lines of "execmem", "execstack" and "execheap" to selectively allow the
->>   use of trampolines on a per application basis.
->>
->> - User code can add defensive checks in the code before invoking a
->>   trampoline to make sure that a hacker has not modified the context data.
->>   It can do this by getting the trampoline context from the kernel and
->>   double checking it.
-> As above, without examples it's not clear to me what sort of chacks are
-> possible nor where they wouild need to be made. So it's difficult to see
-> whether that's actually possible or subject to TOCTTOU races and
-> similar.
-
-I have explained this above. If there are any further questions on that,
-please let me know.
-
->
->> - In the future, if the kernel can be enhanced to use a safe code
->>   generation component, that code can be placed in the trampoline mapping
->>   pages. Then, the trampoline invocation does not have to incur a trip
->>   into the kernel.
->>
->> - Also, if the kernel can be enhanced to use a safe code generation
->>   component, other forms of dynamic code such as JIT code can be
->>   addressed by the trampfd framework.
-> I don't see why it's necessary for the kernel to generate code at all.
-> If the trampfd creation requests can be trusted, what prevents trusting
-> a sealed set of instructions generated in userspace?
-
-Let us consider a system in which:
-    - a process is not permitted to have pages with both write and execute
-    - a process is not permitted to map any file as executable unless it
-      is properly signed. In other words, cryptographically verified.
-
-Then, the process cannot execute any code that is runtime generated.
-That includes trampolines. Only trampoline code that is part of program
-text at build time would be permitted to execute.
-
-In this scenario, trampfd requests are coming from signed code. So, they
-are trusted by the kernel. But trampoline code could be dynamically generated.
-The kernel will not trust it.
-
->> - Trampolines can be shared across processes which can give rise to
->>   interesting uses in the future.
-> This sounds like the use-case of a sealed memfd. Is a sealed executable
-> memfd not sufficient?
-
-I will answer this in a separate email.
-
-Thanks.
-
-Madhavan
+--H1spWtNR+x+ondvy--
