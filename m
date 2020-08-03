@@ -3,129 +3,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFC4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6558C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EE9820775
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B3C206DA
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:12:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZMmlG02v"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="CXs8wayI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgHCOLa (ORCPT
+        id S1728403AbgHCOMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:11:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58480 "EHLO
+        Mon, 3 Aug 2020 10:12:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728345AbgHCOL3 (ORCPT
+        with ESMTP id S1728114AbgHCOL7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 10:11:29 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 803AEC061756;
-        Mon,  3 Aug 2020 07:11:26 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id 185so29566138ljj.7;
-        Mon, 03 Aug 2020 07:11:26 -0700 (PDT)
+        Mon, 3 Aug 2020 10:11:59 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98D5BC06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 07:11:58 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id p14so14475910wmg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 07:11:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YH7oVYHUYOmF2ZJdLJ9+nyMxPgXidrzPU6lX6vlVRJY=;
-        b=ZMmlG02vyjbYZRIKxDsPQ1IWCfK2i1G9Zv0ChJdx6D3BsN7+02eLisw6oxRkploX1E
-         81SeGVNSYrZwclL6vrSDB/9ESU480wBTty8BvTlgw08fRVilSJ5bK6m5sYSz/94iW2K2
-         ByggkqK70WXpRT8cpGoti4+4YMnO+rWxEf37UtRVjde7+1JZgSdvFB2js2s/Rv+1SW30
-         YgRjt4wq6xozFBHT/WSBuvNRWOkHAPIdITsQLBJsTNPAnJdK/4eIBmpOVuCLwrvahkIw
-         W9CiTOdwjKkymHWiBw7OVzs6vgdDKi4PfaC/xtL6fpGp7Glu1qgDCoVdXeD5vDtkf1bK
-         C7tA==
+        d=ffwll.ch; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UAnP6E5TPeMdf1SeFFPVmgwF97w2X2IThLR1O4ARXkc=;
+        b=CXs8wayIt9gkwiEND6J4tnORfRlfqI4dBUO/SU872gahC4Q4k7r7xqgNDX3DmyeY6U
+         XXNdebKUqyc/PObSAdx2U+RvTVU2VvDDBYxb6g+gotbon53TQBPj7Dr/N8jE94OOF9zd
+         VS7FBulmM5S8s6FeqX/9x3wG82TCUOcfYiAqQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=YH7oVYHUYOmF2ZJdLJ9+nyMxPgXidrzPU6lX6vlVRJY=;
-        b=iSYl7tcdhakhLwWYILVKtxXJJAUzZIppRs21ADFVD9oRFTijeh6zdsTV6sdmssNNsU
-         JZzPreFMg8CGwCYpvFqz880ASUkomZeYhmkQDONTbznbpjnCXaPc8ZKW4SIfRf5kROXk
-         lCT/NwxuLoPCgB1Ng6NZYF6YLhg5yeCl939Ry597GmPGLhBzLNe9dZM11g8ZGMWJ9z9C
-         f5I8r1QefjeJT9vwRcjyHbHr7GQhhPtoOHthZY0C9KbI5CHxDBiIe4XAvji3DKeAWlqW
-         JHetcZzQmmnYHbHeUcubRkDGjy7ZRIuzsjbfH00Qb7KAAQBbdAYfcd3Ep1TIhQKKNWjG
-         nvjg==
-X-Gm-Message-State: AOAM533LLgafVv1xbBc0Avh1ZlTCaNkrzRWRybX/n+3K1TAWcwlUdE9Q
-        Xa5NqDtQEcwsr/lG98O/rJYFzFea
-X-Google-Smtp-Source: ABdhPJyPkmQIsIxZcpJbVcfG0GS1zjreLf3UCcfaqInza2W6ea+wP8F2ZE2lzGs6+STG30tb79F5TQ==
-X-Received: by 2002:a05:651c:118f:: with SMTP id w15mr8041034ljo.211.1596463884908;
-        Mon, 03 Aug 2020 07:11:24 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
-        by smtp.googlemail.com with ESMTPSA id d6sm2596272ljg.25.2020.08.03.07.11.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Aug 2020 07:11:24 -0700 (PDT)
-Subject: Re: [PATCH -next] media: staging: tegra-vde: Mark
- tegra_vde_runtime_suspend as __maybe_unused
-To:     Yuehaibing <yuehaibing@huawei.com>, mchehab@kernel.org,
-        gregkh@linuxfoundation.org, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, hverkuil-cisco@xs4all.nl
-Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-References: <20200803115901.44068-1-yuehaibing@huawei.com>
- <721b8d01-5d7e-09c6-5f86-705130ab31a9@gmail.com>
- <e15a688e-934b-82a8-34c5-aac07928fd8f@huawei.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <95162bdc-2658-30a7-6ed2-63e095244139@gmail.com>
-Date:   Mon, 3 Aug 2020 17:11:23 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        bh=UAnP6E5TPeMdf1SeFFPVmgwF97w2X2IThLR1O4ARXkc=;
+        b=PoWp+XoZ25CRoTYsi5mS6cVjycYocvkHwRZM/zIOJSOeGZ4gD+sopKTGlaKS+aH+AB
+         nWKQlSnrCAFtzfTP5gUOKo4eKU7lyQmcLpHHk3paKV5H0S49PNVbxaga/C7EuXO0rTPT
+         oBaz2EG565gspGvo69Vf5afNwQFLPr7MlgQhi7Yk9GmWYAJ499EAv2JqxlfTvuplLNkr
+         kclVGS722K3YJAh3NTQ6LIrKpCDXKurZFnrWOP/XBbNfI4h4SmGwl/LynpKQ2HumJIDc
+         nazcGJmHtyE9CM+u+J8V29SQS8FlNOzF55kZg3Z23+mmEwNYvsIZRqIxPC3lmi1kpr9d
+         vdVg==
+X-Gm-Message-State: AOAM531bM2y0+yhG505J1NaZ0EB/EnwdQomqnN/K6j24tyomrZI5ovm3
+        IrrHMWjSXbQmwPEL+o/HOsLqz3seDOU=
+X-Google-Smtp-Source: ABdhPJw8ovdXsMle2mqTETLoD1e1Q8sFNlfkx9e/fXxnzUHfWMx2Q/5woZYfJ03+EnQGocc0EknlCQ==
+X-Received: by 2002:a1c:26c4:: with SMTP id m187mr227846wmm.90.1596463916859;
+        Mon, 03 Aug 2020 07:11:56 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id l18sm25376005wrm.52.2020.08.03.07.11.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 07:11:55 -0700 (PDT)
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Greg KH <greg@kroah.com>, dri-devel@lists.freedesktop.org,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: [PATCH] MAINTAINERS: enlist Greg formally for console stuff
+Date:   Mon,  3 Aug 2020 16:11:42 +0200
+Message-Id: <20200803141142.1606661-1-daniel.vetter@ffwll.ch>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <e15a688e-934b-82a8-34c5-aac07928fd8f@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-03.08.2020 16:00, Yuehaibing пишет:
-> On 2020/8/3 20:51, Dmitry Osipenko wrote:
->> 03.08.2020 14:59, YueHaibing пишет:
->>> If CONFIG_PM is not set, gcc warns:
->>>
->>> drivers/staging/media/tegra-vde/vde.c:916:12:
->>>  warning: 'tegra_vde_runtime_suspend' defined but not used [-Wunused-function]
->>>
->>> Make it __maybe_unused to fix this.
->>>
->>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->>> ---
->>>  drivers/staging/media/tegra-vde/vde.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/staging/media/tegra-vde/vde.c b/drivers/staging/media/tegra-vde/vde.c
->>> index a3c24d96d5b9..2d043d518eef 100644
->>> --- a/drivers/staging/media/tegra-vde/vde.c
->>> +++ b/drivers/staging/media/tegra-vde/vde.c
->>> @@ -913,7 +913,7 @@ static irqreturn_t tegra_vde_isr(int irq, void *data)
->>>  	return IRQ_HANDLED;
->>>  }
->>>  
->>> -static int tegra_vde_runtime_suspend(struct device *dev)
->>> +static __maybe_unused int tegra_vde_runtime_suspend(struct device *dev)
->>>  {
->>>  	struct tegra_vde *vde = dev_get_drvdata(dev);
->>>  	int err;
->>>
->>
->> Hello Yue,
->>
->> Shouldn't the tegra_vde_runtime_resume() be marked as well?
-> 
-> No, tegra_vde_runtime_resume() always be called by tegra_vde_shutdown().
+I did a few greps for main console data structures, and there's a few
+places outside of drivers/video/console:
+- a braille driver
+- a sisusbvga driver
+- fbcon, but I think that's fine if we leave that officially under
+  fbdev maintainership
+- lots of stuff in drivers/tty/vt, which is already under Greg's
+  maintainership.
 
-Well.. it's unused, but compiler doesn't complain about runtime_resume()
-because it sees the potential reference to that function in the code
-(even that it's a dead code), while runtime_suspend() reference is
-completely removed by preprocessor before compiler sees the code.
+So I think this match gives reasonably useful Cc: lists for the files
+and places I've tested.
 
-Should be nicer to have both suspend and resume functions marked, for
-consistency, IMO.
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Greg KH <greg@kroah.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+---
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ab94723c0cae..8084d118892c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4343,6 +4343,12 @@ L:	netdev@vger.kernel.org
+ S:	Maintained
+ F:	drivers/connector/
+ 
++CONSOLE SUBSYSTEM
++M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
++S:	Supported
++F:	drivers/video/console/
++F:	include/linux/console*
++
+ CONTROL GROUP (CGROUP)
+ M:	Tejun Heo <tj@kernel.org>
+ M:	Li Zefan <lizefan@huawei.com>
+-- 
+2.27.0
+
