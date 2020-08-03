@@ -2,115 +2,88 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C1CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD88C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D99220678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:06:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CFE7206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:08:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e3dLOS9V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgHCKGr (ORCPT
+        id S1726433AbgHCKId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 06:06:47 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41454 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725968AbgHCKGq (ORCPT
+        Mon, 3 Aug 2020 06:08:33 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51752 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725968AbgHCKIc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 06:06:46 -0400
-Received: by mail-ot1-f65.google.com with SMTP id a65so18318855otc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 03:06:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OpbEohH8OUi/epyUcg1f5tBFIW7tKev1cp8OSm9Qyi4=;
-        b=n6XYC6aSPyxdP+K8fleJR77XF/g6c4k7ygEXE+1JJ/EPDGebbj3WEoOi/Il1gkrl4x
-         fxSNYz7rgjaRxUrdzYyaxtuVdSg/UTB9c3hI4tIRbRm6oNj1ZtrPqmu3R6VBEkpt4Du4
-         IuQ1OpVQEaR9ls8aoGsmZjd1oJTH09O7ioQcI2mzZUi6SRGiHpbiOs1vguQzQhvhl+o3
-         6REPBgYOVFxbI6nRV6rVqTW45ZNX5LdcHM7cETt7irDdYVUB08CEUzONEMhOQRxosnQH
-         yk+Yn314ckYaZXSmClkBRAigeaVflBkNqCnejbytlwvgJC978EBnGbPV+hahSSQs9PiU
-         I6ZA==
-X-Gm-Message-State: AOAM531M1+v8KGmP/VFhiS5G7QqHphy9sAa0Cej3lkD0AlFTz72aK5sX
-        U8PR+SP9ovKKoYXz7SDM+py2h3l2vKSXEkoU7o0=
-X-Google-Smtp-Source: ABdhPJx6E8jYekM61xWgh5QG5QIcwianLym1nuVniubEPeWhR5+9U4zRKDcBThxt+YKKXL5S6joXDgPgsop9nM33pkg=
-X-Received: by 2002:a9d:7d8c:: with SMTP id j12mr13074211otn.250.1596449205821;
- Mon, 03 Aug 2020 03:06:45 -0700 (PDT)
+        Mon, 3 Aug 2020 06:08:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596449310;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wb/gJmdKHBmw6w0WHlFlXyZB6Hy72W8IZAqpbVBmJts=;
+        b=e3dLOS9VLP2siLJemojoMxuqpV66RGG8hYumbidgZuRooIf4xgaUTYpAoBRVDnX7OIYpNc
+        w61qrHuUOJYGNva+VbS5Ct2CE0YN31ASlF+20LWyVIa3tTJktmTKCLvUYTRMk054stWleU
+        T5Jglp5RA4Jz9U5g0UBXVqQoN45bddY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-165-7YYFm4bNOqa5LSseulTMqA-1; Mon, 03 Aug 2020 06:08:29 -0400
+X-MC-Unique: 7YYFm4bNOqa5LSseulTMqA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8F8761005504;
+        Mon,  3 Aug 2020 10:08:26 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BAFD85D9F7;
+        Mon,  3 Aug 2020 10:08:22 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAJfpegsT_3YqHPWCZGX7Lr+sE0NVmczWz5L6cN8CzsVz4YKLCQ@mail.gmail.com>
+References: <CAJfpegsT_3YqHPWCZGX7Lr+sE0NVmczWz5L6cN8CzsVz4YKLCQ@mail.gmail.com> <1293241.1595501326@warthog.procyon.org.uk> <CAJfpegspWA6oUtdcYvYF=3fij=Bnq03b8VMbU9RNMKc+zzjbag@mail.gmail.com> <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk> <158454391302.2863966.1884682840541676280.stgit@warthog.procyon.org.uk> <2003787.1595585999@warthog.procyon.org.uk> <865566fb800a014868a9a7e36a00a14430efb11e.camel@themaw.net> <2023286.1595590563@warthog.procyon.org.uk>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     dhowells@redhat.com, Ian Kent <raven@themaw.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>, andres@anarazel.de,
+        Jeff Layton <jlayton@redhat.com>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>, keyrings@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 13/17] watch_queue: Implement mount topology and attribute change notifications [ver #5]
 MIME-Version: 1.0
-References: <20200624035920.835571-1-natechancellor@gmail.com>
- <CAMuHMdU_KfQ-RT_nev5LgN=Vj_P97Fn=nwRoC6ZREFLa3Ysj7w@mail.gmail.com> <20200720210252.GO30544@gate.crashing.org>
-In-Reply-To: <20200720210252.GO30544@gate.crashing.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 3 Aug 2020 12:06:34 +0200
-Message-ID: <CAMuHMdUmHE-KVQuo=b2rn9EPgmnqSDi4i16NPbL5rXLLSCoyKg@mail.gmail.com>
-Subject: Re: [PATCH] powerpc/boot: Use address-of operator on section symbols
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geoff Levand <geoff@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Joel Stanley <joel@jms.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1272196.1596449301.1@warthog.procyon.org.uk>
+Date:   Mon, 03 Aug 2020 11:08:21 +0100
+Message-ID: <1272197.1596449301@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Segher,
+Miklos Szeredi <miklos@szeredi.hu> wrote:
 
-On Mon, Jul 20, 2020 at 11:03 PM Segher Boessenkool
-<segher@kernel.crashing.org> wrote:
-> On Sat, Jul 18, 2020 at 09:50:50AM +0200, Geert Uytterhoeven wrote:
-> > On Wed, Jun 24, 2020 at 6:02 AM Nathan Chancellor
-> > <natechancellor@gmail.com> wrote:
-> > >         /* If we have an image attached to us, it overrides anything
-> > >          * supplied by the loader. */
-> > > -       if (_initrd_end > _initrd_start) {
-> > > +       if (&_initrd_end > &_initrd_start) {
-> >
-> > Are you sure that fix is correct?
-> >
-> >     extern char _initrd_start[];
-> >     extern char _initrd_end[];
-> >     extern char _esm_blob_start[];
-> >     extern char _esm_blob_end[];
-> >
-> > Of course the result of their comparison is a constant, as the addresses
-> > are constant.  If clangs warns about it, perhaps that warning should be moved
-> > to W=1?
-> >
-> > But adding "&" is not correct, according to C.
->
-> Why not?
->
-> 6.5.3.2/3
-> The unary & operator yields the address of its operand.  [...]
-> Otherwise, the result is a pointer to the object or function designated
-> by its operand.
->
-> This is the same as using the name of an array without anything else,
-> yes.  It is a bit clearer if it would not be declared as array, perhaps,
-> but it is correct just fine like this.
+> > fsinfo() then allows you to retrieve them by path or by mount ID.
+> 
+> Shouldn't the notification interface provide the unique ID?
 
-Thanks, I stand corrected.
+It could make sense - instead of the reusable mnt_id.
 
-Regardless, the comparison is still a comparison between two constant
-addresses, so my fear is that the compiler will start generating
-warnings for that in the near or distant future, making this change
-futile.
+David
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
