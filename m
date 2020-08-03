@@ -2,213 +2,109 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CF4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 00:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F89BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 00:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 987A42070A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 00:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 517E82070A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 00:29:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="tlKP98xQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhHemzLk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgHCA0f (ORCPT
+        id S1727077AbgHCA3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 20:26:35 -0400
-Received: from cmta16.telus.net ([209.171.16.89]:51289 "EHLO cmta16.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726906AbgHCA0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 20:26:34 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id 2OJAky0C25b7l2OJBkGkKZ; Sun, 02 Aug 2020 18:26:31 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1596414391; bh=OzKdaN6shwOvhXo+DLx43ep5Lhv4yZVCcDMi841OidI=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=tlKP98xQjZq2UvO+CaB38haED/uFYZAgBfwJ5cxVPTvqTCQ9q7UXl7zK044Ht2P+S
-         Un/tDywlgamARVCfnOWAzp1lZkZamkBHxllM0ugdPPFcrJqewGURUo1XQgrhmvW7wM
-         65VNRPQFTndxEJLckWtN8ITOPTp/4dqLJmSF+Z5Vh1aqt0PVZiDzUQhpb0IP8UAbFf
-         wGVW3JjvSWNn3DkC8Mp1IRzVrCa0U/gojoxzbFkLNAiNEC8D+Xm+ALbknY9qt7IXOV
-         wdKDQ2PDBakFtahY1WB86Q/UBOI9I77+JILld+f6OZ4MEf7othlW2r1olpf9wBDCVX
-         HcIp4XznqVbjQ==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=YPHhNiOx c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=IkcTkHD0fZMA:10 a=VwQbUJbxAAAA:8
- a=TeswGVX_M4DXQs4YhE0A:9 a=eCsET7RYUF58Bk87:21 a=QYMj-0FJlSCgP01B:21
- a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>
-Cc:     "'Linux Documentation'" <linux-doc@vger.kernel.org>,
-        "'LKML'" <linux-kernel@vger.kernel.org>,
-        "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
-        "'Francisco Jerez'" <francisco.jerez.plata@intel.com>,
-        "'Linux PM'" <linux-pm@vger.kernel.org>,
-        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
-References: <4981405.3kqTVLv5tO@kreacher> <1709487.Bxjb1zNRZM@kreacher>  <13207937.r2GEYrEf4f@kreacher>  <6febe0592d1830dac04aab281f66b47498dda887.camel@linux.intel.com>        <000301d668d5$45c10a10$d1431e30$@net> <24a3011a9004bdbd7a37c029f9c2153f3db61476.camel@linux.intel.com>
-In-Reply-To: <24a3011a9004bdbd7a37c029f9c2153f3db61476.camel@linux.intel.com>
-Subject: RE: [PATCH v4 0/2] cpufreq: intel_pstate: Implement passive mode with HWP enabled
-Date:   Sun, 2 Aug 2020 17:26:27 -0700
-Message-ID: <000001d6692c$bc5605c0$35021140$@net>
+        Sun, 2 Aug 2020 20:29:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbgHCA3g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 20:29:36 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78554C06174A
+        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 17:29:36 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id 6so27149295qtt.0
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 17:29:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6DcF2CQ32e+6T5/Eij0S3nNKEWsEJxFYAl3hAL1skHs=;
+        b=UhHemzLkoLwi0a/DM7/+VsmtHjz3MNMEYycZRp61AOazxWaPvS9SmhweW3Pg5ViAU8
+         2N/Yx5bfETvcDv7rlczF4Xoev+qzCy0eglCrf2VSh9p0HP9xrJSr/ycImcV9WWcmNo3b
+         q7/ZuaPAkT+qQbcN7uLHlN2y+kv3ub/cXajqPwLVNik5USqtvmsfrilx+ZdGrIwUht/y
+         oW9oXn2Rmy2UdIkyTZTSApuej4wi+0t8c93vNrB3PMk45TsxOnHJtGuE6mBrFXKCG7Jv
+         9UmFXZqttvwCQF2cpHdmpSgZW2CuN4bEnbfoW3AAHaNXOsbHS3KJ7B7z/CnVD1FflgHe
+         DjRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6DcF2CQ32e+6T5/Eij0S3nNKEWsEJxFYAl3hAL1skHs=;
+        b=fLLuZDhdjDOzhuAg8UBKQlXyV3os9YkRz1DnVbMFyr9wS7To8AxCg0Wqsf3m1XkL7F
+         7OVx9CMkEkD3ebCxabrPcLZ06Tk30LSSRrI0RDJR8WplPArQge8xlEyH0ZGltxLrz39q
+         iWk5iZ1lc59ox1VYrcuJ36+3leSaNY/+xtIM9kZOby4dZP2/Cl5XDF483RddZrz1W7Dx
+         tVWXKRHNk3bcOEY3clU2k1ie69j3fyIF19fXexNSt0JOy3/zbpA9PG6W0IrepQvE4Qzl
+         aYVQ5Ru3HzToSH2nMJLX1M2lEyyiURrP4JBaLSDbxVOZvFWhu8IejrDkEjC83jaDm7zZ
+         0TJw==
+X-Gm-Message-State: AOAM530wGwCVC8S+QN9VsJYda57hY0trKN0iEDA1a9qYg1vj63vWrF7J
+        qbVAoVuc4WrQ3TrhdtWMrrk=
+X-Google-Smtp-Source: ABdhPJxdbpufdzGT1QAY4uOYq5MtdXAGk9PrJwux/EjOnuLwxvNY6TW1aPj7cLO6DV4Lh8bggdUJBA==
+X-Received: by 2002:ac8:678b:: with SMTP id b11mr14547229qtp.386.1596414575650;
+        Sun, 02 Aug 2020 17:29:35 -0700 (PDT)
+Received: from localhost.localdomain (cpe-71-65-111-223.cinci.res.rr.com. [71.65.111.223])
+        by smtp.googlemail.com with ESMTPSA id e23sm18261614qto.15.2020.08.02.17.29.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Aug 2020 17:29:35 -0700 (PDT)
+From:   Connor McAdams <conmanx360@gmail.com>
+Cc:     conmanx360@gmail.com, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        =?UTF-8?q?Pawe=C5=82=20Rekowski?= <p.rekowski@gmail.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Geoffrey Allott <geoffrey@allott.email>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] ALSA: hda/ca0132 - Fix ZxR Headphone gain control get value.
+Date:   Sun,  2 Aug 2020 20:29:25 -0400
+Message-Id: <20200803002928.8638-1-conmanx360@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Office Outlook 12.0
-Thread-Index: AdZo/DaI9v1ri9sAR0isEjECaQnrNgALClsg
-Content-Language: en-ca
-X-CMAE-Envelope: MS4wfCvYaSucJJVgw7O/2uYTcLKWQbUa4Lqdp3l76R9nnrJ/BtCofkpLpU9jngHorlo/TT0MNJuGKi75GbtlCITJAcsJ+grBvVbJia3eQ2pNIsPT5QVbs7Cb
- DiOsWOxbK6kZ/Ni5H1BAW1XvSzIWi1voJgHCsH9uf/asLtU2UcBMSA4d2z19PvqMxf5CNpLOAt6O+VESJGFEXIqQEhDk7hqSYccsoLHr2VzM+x9m3GR3BiDC
- GbVPYqpQswESk9y8bhOXJUWdy1DZfobTcXiYokILeqOqPQ00BzAnoguTfT6ZxepCGsj7cGAQxBchCFpXXPiP9eDx/R218D+DeLBFzdZoNf+futjvlgVqfdtj
- C2/Ni73l+o6epEd1ATZKlc52jUWFxnjBRnDDjA+6bKrCxcntQbd6asX9/9RFrm3qrJe1wK39uo8mOub+Wpoi+NtKjRUddw==
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Srinivas,
+When the ZxR headphone gain control was added, the ca0132_switch_get
+function was not updated, which meant that the changes to the control
+state were not saved when entering/exiting alsamixer.
 
-Thanks for your help. I was missing several needed patches.
+Signed-off-by: Connor McAdams <conmanx360@gmail.com>
+---
+ sound/pci/hda/patch_ca0132.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-On 2020.08.02 11:39 Srinivas Pandruvada wrote:
-> On Sun, 2020-08-02 at 07:00 -0700, Doug Smythies wrote:
-> > On 2020.08.01 09:40 Srinivas Pandruvada wrote:
-> > > > On Monday, July 27, 2020 5:13:40 PM CEST Rafael J. Wysocki =
-wrote:
-> > > > > On Thursday, July 16, 2020 7:37:04 PM CEST Rafael J. Wysocki
-> > > > > wrote:
-> > > > > > This really is a v2 of this patch:
-> > > > > >
-> > > > > > https://patchwork.kernel.org/patch/11663271/
-> > > > > >
-> > > > > > with an extra preceding cleanup patch to avoid making
-> > > > > > unrelated
-> > > > > > changes in the
-> > > > > > [2/2].
-> > > I applied this series along with
-> > > [PATCH] cpufreq: intel_pstate: Fix EPP setting via sysfs in active
-> > > mode
-> > > on 5.8 latest master (On top of raw epp patchset).
-> >
-> > Would you be kind enough to provide a "git log --oneline" output
-> > of what you did.
->=20
-> 69dd9b2b11cd (HEAD -> 5-9-devel) cpufreq: intel_pstate: Implement
-> passive mode with HWP enabled
-> 63efaa01b06a cpufreq: intel_pstate: Fix EPP setting via sysfs in =
-active
-> mode
-> e11e0a2edf83 cpufreq: intel_pstate: Rearrange the storing of new EPP
-> values
-> 93c3fd6a315c cpufreq: intel_pstate: Avoid enabling HWP if EPP is not
-> supported
-> 7cef1dd371c3 cpufreq: intel_pstate: Clean up aperf_mperf_shift
-> description
-> a3248d8d3a11 cpufreq: intel_pstate: Supply struct attribute =
-description
-> for get_aperf_mperf_shift()
-> f52b6b075b07 cpufreq: intel_pstate: Fix static checker warning for epp
-> variable
-> 4a59d6be0774 cpufreq: intel_pstate: Allow raw energy performance
-> preference value
-> 7b34b5acdcc6 cpufreq: intel_pstate: Allow enable/disable energy
-> efficiency
-> ac3a0c847296 (origin/master, origin/HEAD, master) Merge
-> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
-> >
-> > I have been trying unsuccessfully to apply the patches,
-> > so somewhere I obviously missed something.
-> >
-> > > When intel_pstate=3Dpassive from kernel command line then it is =
-fine,
-> > > no
-> > > crash. But switch dynamically, crashed:
-> >
-> > I'll try to repeat, if I can get an actual kernel.
-
-I could not repeat your crash.
-
-I tried booting with and without intel_pstate=3Dpassive
-on the kernel command line and then switching back and
-forth thereafter.
-
-However, I do confirm EPP is messed up. But not min
-and max from MSR 0x774, they behave as expected,
-based on quick testing only.
-
-Since you mentioned:
-
->>> Don't have a recipe to reproduce this.
-
-Maybe I simply didn't hit whatever.
-
-... Doug
-
-Useless additional stuff:
-
-# cat /proc/cmdline
-BOOT_IMAGE=3D/boot/vmlinuz-5.8.0-rc7-dssp =
-root=3DUUID=3D0ac356c1-caa9-4c2e-8229-4408bd998dbd ro ipv6.disable=3D1 =
-consoleblank=3D450 intel_pstate=3Dpassive cpuidle_sysfs_switch =
-cpuidle.governor=3Dteo
-
-Went "active" then "passive" and set ondemand governor. 2 X 100% CPU =
-loads:
-
-# /home/doug/c/msr-decoder
-How many CPUs?: 6
-8.) 0x198: IA32_PERF_STATUS     : CPU 0-5 :  46 :  46 :  46 :  46 :  46 =
-:  46 :
-B.) 0x770: IA32_PM_ENABLE: 1 : HWP enable
-1.) 0x19C: IA32_THERM_STATUS: 883C0000
-2.) 0x1AA: MSR_MISC_PWR_MGMT: 401CC0 EIST enabled Coordination enabled =
-OOB Bit 8 reset OOB Bit 18 reset
-3.) 0x1B1: IA32_PACKAGE_THERM_STATUS: 882D0000
-4.) 0x64F: MSR_CORE_PERF_LIMIT_REASONS: 0
-A.) 0x1FC: MSR_POWER_CTL: 3C005D : C1E disable : EEO disable : RHO =
-disable
-5.) 0x771: IA32_HWP_CAPABILITIES (performance): 10B252E : high 46 : =
-guaranteed 37 : efficient 11 : lowest 1
-6.) 0x774: IA32_HWP_REQUEST:    CPU 0-5 :
-    raw: FF002E0A : FF002E2E : FF002E2E : FF002E08 : FF002E18 : FF002E08 =
-:
-    min:       10 :       46 :       46 :        8 :       24 :        8 =
-:
-    max:       46 :       46 :       46 :       46 :       46 :       46 =
-:
-    des:        0 :        0 :        0 :        0 :        0 :        0 =
-:
-    epp:      255 :      255 :      255 :      255 :      255 :      255 =
-:
-    act:        0 :        0 :        0 :        0 :        0 :        0 =
-:
-7.) 0x777: IA32_HWP_STATUS: 4 : high 4 : guaranteed 0 : efficient 0 : =
-lowest 0
-
-Kernel:
-
-d72c8472dbd5 (HEAD -> k58rc7-d3) cpufreq: intel_pstate: Fix EPP setting =
-via sysfs in active mode
-c2f4869fbc27 cpufreq: intel_pstate: Implement passive mode with HWP =
-enabled
-85219968fab9 cpufreq: intel_pstate: Rearrange the storing of new EPP =
-values
-5c09a1a38106 cpufreq: intel_pstate: Avoid enabling HWP if EPP is not =
-supported
-9f29c81fe0b3 cpufreq: intel_pstate: Clean up aperf_mperf_shift =
-description
-2a863c241495 cpufreq: intel_pstate: Supply struct attribute description =
-for get_aperf_mperf_shift()
-4180d8413037 cpufreq: intel_pstate: Fix static checker warning for epp =
-variable
-7cd50e86a9e6 cpufreq: intel_pstate: Allow raw energy performance =
-preference value
-56dce9a1081e cpufreq: intel_pstate: Allow enable/disable energy =
-efficiency
-92ed30191993 (tag: v5.8-rc7) Linux 5.8-rc7
-
+diff --git a/sound/pci/hda/patch_ca0132.c b/sound/pci/hda/patch_ca0132.c
+index 19c575fd28a1..2cbe01d59c16 100644
+--- a/sound/pci/hda/patch_ca0132.c
++++ b/sound/pci/hda/patch_ca0132.c
+@@ -5748,6 +5748,11 @@ static int ca0132_switch_get(struct snd_kcontrol *kcontrol,
+ 		return 0;
+ 	}
+ 
++	if (nid == ZXR_HEADPHONE_GAIN) {
++		*valp = spec->zxr_gain_set;
++		return 0;
++	}
++
+ 	return 0;
+ }
+ 
+-- 
+2.20.1
 
