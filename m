@@ -2,80 +2,78 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64324C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D0AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40618207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:08:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596467296;
-	bh=Lrbi2rsIAExF59EuLBc7ucnI9amz38W6mCJdKugNiSY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nAvifxSS+eRf64gv84ZOonE4WNk/lzJLtAnwaHHrf6sg+boNc/GOGZIct9rc1TAFL
-	 w3JYfeev+CbPVFIKJkWT10L8RjtB9MV379pitN3nhLvLtBu5g4n9yxOoQQdp6/q5YM
-	 MCVm7Gm5Yyke9WeEnpafUHGX2iyS/s1xKa7qgt7s=
+	by mail.kernel.org (Postfix) with ESMTP id 1020A207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:09:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgHCPIQ (ORCPT
+        id S1728041AbgHCPJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 11:08:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49036 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 11:09:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50398 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbgHCPIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 11:08:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C71A12076E;
-        Mon,  3 Aug 2020 15:08:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596467294;
-        bh=Lrbi2rsIAExF59EuLBc7ucnI9amz38W6mCJdKugNiSY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ICoWVarNkJzobZx++tnhhJngFcae6r4xhlEqj89aatZag49QjN5O7mXay7bxj7NCH
-         JQE6yTT6PfFgtOkugp3ORwOlnC4/BgyQYnlSHTNw08W/1cT7W8D1WHH92PsbDVprvw
-         hGrE+qO9QSqdzq+k0XSsdZeJMweV3FqiiRp79DUg=
-Date:   Mon, 3 Aug 2020 17:07:56 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dongdong Yang <contribute.kernel@gmail.com>
-Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        devel@driverdev.osuosl.org, gulinghua@xiaomi.com,
-        tanggeliang@xiaomi.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yangdongdong@xiaomi.com,
-        duhui@xiaomi.com, zhangguoquan@xiaomi.com, fengwei@xiaomi.com,
-        taojun@xiaomi.com, rocking@linux.alibaba.com, huangqiwu@xiaomi.com
-Subject: Re: [PATCH v3] sched: Provide USF for the portable equipment.
-Message-ID: <20200803150756.GA1098726@kroah.com>
-References: <cover.1596464894.git.yangdongdong@xiaomi.com>
- <23719695ee476715ec54d3310c95d535f8e1391a.1596464896.git.yangdongdong@xiaomi.com>
+        id S1726276AbgHCPJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 11:09:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 87089AF76;
+        Mon,  3 Aug 2020 15:09:14 +0000 (UTC)
+Date:   Mon, 3 Aug 2020 17:08:58 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        Vlastimil Babka <vbabka@suse.cz>, kernel-team@fb.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 05/19] mm: memcontrol: decouple reference counting
+ from page accounting
+Message-ID: <20200803150858.GW5174@dhcp22.suse.cz>
+References: <20200623174037.3951353-1-guro@fb.com>
+ <20200623174037.3951353-6-guro@fb.com>
+ <20200803090033.GE5174@dhcp22.suse.cz>
+ <20200803150349.GA502356@cmpxchg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <23719695ee476715ec54d3310c95d535f8e1391a.1596464896.git.yangdongdong@xiaomi.com>
+In-Reply-To: <20200803150349.GA502356@cmpxchg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 10:31:15PM +0800, Dongdong Yang wrote:
-> +	/*
-> +	 * create a sched_usf in cpu_subsys:
-> +	 * /sys/devices/system/cpu/sched_usf/...
+On Mon 03-08-20 11:03:49, Johannes Weiner wrote:
+> On Mon, Aug 03, 2020 at 11:00:33AM +0200, Michal Hocko wrote:
+> > On Tue 23-06-20 10:40:23, Roman Gushchin wrote:
+> > > @@ -5456,7 +5460,10 @@ static int mem_cgroup_move_account(struct page *page,
+> > >  	 */
+> > >  	smp_mb();
+> > >  
+> > > -	page->mem_cgroup = to; 	/* caller should have done css_get */
+> > > +	css_get(&to->css);
+> > > +	css_put(&from->css);
+> > > +
+> > > +	page->mem_cgroup = to;
+> > >  
+> > >  	__unlock_page_memcg(from);
+> > 
+> > What prevents from memcg to be released here?
+> 
+> ->attach_task() and kill_css() are exclusive through the cgroup_mutex,
+> so the base ref cannot disappear from under us during this operation.
 
-I thought I asked you not to use a "raw" kobject, you are making this
-much harder than it has to be.
+OK, is this worth a comment? Reference counting before other operation
+on the object always makes me worried and those details are hidden
+elsewhere.
 
-Just use a normal struct device.
-
-Also you failed to document your new sysfs files in Documentation/ABI/
-like is required :(
-
-Because of both of those things, this isn't ok as-is, sorry.
-
-greg k-h
+Btw. with the follow up fix from Hugh
+Acked-by: Michal Hocko <mhocko@suse.com>
+-- 
+Michal Hocko
+SUSE Labs
