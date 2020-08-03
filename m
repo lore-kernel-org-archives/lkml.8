@@ -2,93 +2,193 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6799FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46410C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42AB820738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:49:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RGeyIuWJ"
+	by mail.kernel.org (Postfix) with ESMTP id 203392076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:50:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596455418;
+	bh=TS+oGh6Jm5K4oAPLNUEIM1NC7EmU71L2qngjo1TPL5c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BqcWknqPrMIUyKZ05C1cAZStweZkxL5w8APGxYc3Fqlz3+0+hrW2E95cYvnsRoqa3
+	 E6CrFbPcn7TX/CvvXAk0UTHUqp9JJ8MMvaV5TFtO4yrzRwkOHBkX6QUaL9DEXXe1hW
+	 MmdXkQhXthU+BdzaQj2T2AuTwrR4aGK5YiLN3DTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgHCLtr (ORCPT
+        id S1726757AbgHCLuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 07:49:47 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37896 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726276AbgHCLtp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 07:49:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596455383;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Y7A0KqHzsih4FN0U7UPM6hXJyI43+O97k28kO2Dcea4=;
-        b=RGeyIuWJ6ny6OOOsQZzQdPf3vI6o9lWoLFja5X7Uo5x/I1VN47vQ4k8NqK9l6bA6tQxaRC
-        MVP+kuVvAogHJWDN6lgqURxlT3vq7wrcZrRrpk+AdzSjLMaaTOazbNFqxebas0riWtQDbD
-        uHLJgFP36I6kgm/LnUHEIWUqRA2hiEo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-390-m5UBWlmIMdumhLLGKaz-Rw-1; Mon, 03 Aug 2020 07:49:42 -0400
-X-MC-Unique: m5UBWlmIMdumhLLGKaz-Rw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 3 Aug 2020 07:50:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60734 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726276AbgHCLty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 07:49:54 -0400
+Received: from earth.universe (dyndsl-095-033-153-018.ewe-ip-backbone.de [95.33.153.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 066411009442;
-        Mon,  3 Aug 2020 11:49:40 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DBC3F60BF4;
-        Mon,  3 Aug 2020 11:49:36 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAJfpeguO8Qwkzx9zfGVT7W+pT5p6fgj-_8oJqJbXX_KQBpLLEQ@mail.gmail.com>
-References: <CAJfpeguO8Qwkzx9zfGVT7W+pT5p6fgj-_8oJqJbXX_KQBpLLEQ@mail.gmail.com> <1293241.1595501326@warthog.procyon.org.uk> <CAJfpegspWA6oUtdcYvYF=3fij=Bnq03b8VMbU9RNMKc+zzjbag@mail.gmail.com> <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk> <158454391302.2863966.1884682840541676280.stgit@warthog.procyon.org.uk> <2003787.1595585999@warthog.procyon.org.uk> <865566fb800a014868a9a7e36a00a14430efb11e.camel@themaw.net> <2023286.1595590563@warthog.procyon.org.uk> <CAJfpegsT_3YqHPWCZGX7Lr+sE0NVmczWz5L6cN8CzsVz4YKLCQ@mail.gmail.com> <1283475.1596449889@warthog.procyon.org.uk>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     dhowells@redhat.com, Ian Kent <raven@themaw.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>, andres@anarazel.de,
-        Jeff Layton <jlayton@redhat.com>, dray@redhat.com,
-        Karel Zak <kzak@redhat.com>, keyrings@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        LSM <linux-security-module@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 13/17] watch_queue: Implement mount topology and attribute change notifications [ver #5]
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F62E20738;
+        Mon,  3 Aug 2020 11:49:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596455392;
+        bh=TS+oGh6Jm5K4oAPLNUEIM1NC7EmU71L2qngjo1TPL5c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JseAVszHk4cgS5ayaSb7PJB6N8DHMrl278H7TfUHY4Pti3KQ2bgRvmhRAUm1T5hf5
+         izrz3Z+HjMo3YPuvPwnYwO5SiGa2QZncewINUwZaW2xMPFcOu2Gj1y23iNsWM/H0z/
+         dWCRMXhzOThfMH3osFUg0hPtSir5NJcn4Z9PF7IY=
+Received: by earth.universe (Postfix, from userid 1000)
+        id C9B543C0B95; Mon,  3 Aug 2020 13:49:50 +0200 (CEST)
+Date:   Mon, 3 Aug 2020 13:49:50 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Pavel Machek <pavel@denx.de>, Qiwu Huang <yanziily@gmail.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jiangfei1@xiaomi.com, Qiwu Huang <huangqiwu@xiaomi.com>
+Subject: Re: [PATCH v4 1/4] power: supply: core: add quick charge type
+ property
+Message-ID: <20200803114950.oyb3gzyiccybah3u@earth.universe>
+References: <cover.1595214246.git.huangqiwu@xiaomi.com>
+ <c9d3199ec18625f9cc4448c3b2049ea2ae80358b.1595214246.git.huangqiwu@xiaomi.com>
+ <20200802120015.GA1289@bug>
+ <20200802123742.GA257810@kroah.com>
+ <20200802142825.GA20261@amd>
+ <20200802165738.GA293244@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1576645.1596455376.1@warthog.procyon.org.uk>
-Date:   Mon, 03 Aug 2020 12:49:36 +0100
-Message-ID: <1576646.1596455376@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3tlbatxliq5aoxn6"
+Content-Disposition: inline
+In-Reply-To: <20200802165738.GA293244@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Miklos Szeredi <miklos@szeredi.hu> wrote:
 
-> OTOH mount notification is way smaller and IMO a more mature
-> interface.  So just picking the unique ID patch into this set might
-> make sense.
+--3tlbatxliq5aoxn6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-But userspace can't retrieve the unique ID without fsinfo() as things stand.
+Hi,
 
-I'm changing it so that the fields are 64-bit, but initialised with the
-existing mount ID in the notifications set.  The fsinfo set changes that to a
-unique ID.  I'm tempted to make the unique IDs start at UINT_MAX+1 to
-disambiguate them.
+On Sun, Aug 02, 2020 at 06:57:38PM +0200, Greg KH wrote:
+> On Sun, Aug 02, 2020 at 04:28:25PM +0200, Pavel Machek wrote:
+> > On Sun 2020-08-02 14:37:42, Greg KH wrote:
+> > > On Sun, Aug 02, 2020 at 02:00:15PM +0200, Pavel Machek wrote:
+> > > > On Mon 2020-07-20 13:47:14, Qiwu Huang wrote:
+> > > > > From: Qiwu Huang <huangqiwu@xiaomi.com>
+> > > > >=20
+> > > > > Reports the kind of quick charge type based on
+> > > > > different adapter power.
+> > > > >=20
+> > > > > Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
+> > > > > ---
+> > > > >  Documentation/ABI/testing/sysfs-class-power | 21 +++++++++++++++=
+++++++
+> > > > >  drivers/power/supply/power_supply_sysfs.c   |  1 +
+> > > > >  include/linux/power_supply.h                | 10 ++++++++++
+> > > > >  3 files changed, 32 insertions(+)
+> > > > >=20
+> > > > > diff --git a/Documentation/ABI/testing/sysfs-class-power b/Docume=
+ntation/ABI/testing/sysfs-class-power
+> > > > > index 216d61a22f1e..dd3773dcf16a 100644
+> > > > > --- a/Documentation/ABI/testing/sysfs-class-power
+> > > > > +++ b/Documentation/ABI/testing/sysfs-class-power
+> > > > > @@ -708,3 +708,24 @@ Description:
+> > > > > =20
+> > > > >  		Access: Read
+> > > > >  		Valid values: 1-31
+> > > > > +
+> > > > > +What:		/sys/class/power_supply/<supply_name>/quick_charge_type
+> > > > > +Date:		Jul 2020
+> > > > > +Contact:	Fei Jiang <jiangfei1@xiaomi.com>
+> > > > > +		Description:
+> > > > > +		Reports the kind of quick charge type based on different adapt=
+er power.
+> > > > > +		Different quick charge type represent different charging power.
+> > > > > +		QUICK_CHARGE_NORMAL : Charging Power <=3D 10W
+> > > > > +		QUICK_CHARGE_FAST : 10W < Charging Power <=3D 20W
+> > > > > +		QUICK_CHARGE_FLASH : 20W < Charging Power <=3D 30W
+> > > > > +		QUICK_CHARGE_TURBE : 30W < Charging Power <=3D 50W
+> > > > > +		QUICK_CHARGE_SUPER : Charging Power > 50W
+> > > > > +
+> > > > > +		Access: Read-Only
+> > > > > +		Valid values:
+> > > > > +			0: QUICK_CHARGE_NORMAL,
+> > > > > +			1: QUICK_CHARGE_FAST,
+> > > > > +			2: QUICK_CHARGE_FLASH,
+> > > > > +			3: QUICK_CHARGE_TURBE,
+> > > > > +			4: QUICK_CHARGE_SUPER.
+> > > >=20
+> > > > NAK.
+> > > >=20
+> > > > Just expose value in watts or something... People are talking about=
+ > 100W charging, no
+> > > > need to go with fast/turbe/super/hyper/nonsense.
+> > > >=20
+> > > > BTW fast charge is already "well defined", and what you call Normal=
+ is usually fast charge.
+> > >=20
+> > > I think these names come from the Qi charging spec, right?  So lets u=
+se
+> > > what is given to us.
+> >=20
+> > There are other standards, and this should better be generic.
+>=20
+> What standard?  Why not go with this one, it's documented and out there
+> and being used.
 
-David
+Well there is Power Delivery from USB Standard, Quick Charge from
+Qualcomm, Super Charge from Huawei, Dash/Warp Charge from OnePlus,
+Pump Express from Mediatek and the Qi stuff for wireless charging.
+Possibly a few more, that I'm not aware of. Quickly charging devices
+is a huge mess :(
 
+The naming suggests that this is for Qualcomm's "Quick Charge"?
+
+> > Simply expose value in watts.
+>=20
+> What if you do not know the watts, you just know these ranges.
+
+In general those chargers often do not know the exact watts/amps
+and that information can only be gained from the battery fuel
+gauge (which usually has a coulomb counter). Exposing the charger
+class means there is a way to debug problems, so it makes sense
+IMHO. But the classification is quite different between the vendor's
+proprietary quick charge algorithms, so we need to be careful with
+the naming. It should be clear which property should be used
+for given hardware.
+
+More importantely I prefer not to merge new APIs without any users
+(i.e. a driver making use of those values). Having a reference
+driver means, that there is an example how to use the values
+correctly and proves it is actually needed upstream. Right now
+this looks like "let's modify the upstream kernel, so that we can
+easily maintain our out of tree driver".
+
+-- Sebastian
+
+--3tlbatxliq5aoxn6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8n+cwACgkQ2O7X88g7
++pp8bxAAoAuqFLNlN/96pOqBrHgZNuR9pbfYZPYn7nBJi8tYYmjKGb7lKEjKAgOj
+hp93fE6SWVzaLpVqbIq1TReb66CPOoiXgmw+nUonj9v+2CsskCD9R3CYsf+XH+N6
+vtYo/ptQGoYM1Mr/sVYTQvh8glkDzCa5N2bCqSUY4xXidHflGfa9pwVzUijJ9ZFr
+tFESWJ/WfOdXRavmuDQk5/jXKxn161uqW6pURwkdwHSHD0Wp0pmZMbnUOlsZgim9
+6y3qiL/duWwlZuHUjKXncO/Q8Z025jgAQcoADZjKDtky/tkGRjaPEZmN0hreNHNg
+k5f9n8Gkar6pOQeWr4LFfOghaBT57TBCryA3lCUmfaUd1fdbd88KwFCU48K9Eq7y
+wtdU/Squh08tUAKEx8IHejHwA8YoSaJfRqt2eXTxMIsM4FN4HXi48aZ6h7VmpsLl
+u0AzJ1jPr0UOBP6u2K8MVMcLmP/nrfcwgNvAkft1AUAEzuT6WeKfXLcgLYQoZavT
+cl3vrJ/fCRQS0mbZopaScwkYUt2q0mGBng+CPdHgcvcFbZWFQz3gasAdqLTckgcT
+BZ4i42ewffch+1d/PwwEYJUuGGsR2anq35iDKJ+fHHBa+C5oOTzbRDv3N/M7zULI
+9GD+al+aFuc1ij6GYDzhYShRbHtbwV5kZKrN5zeIF2RzttH78p4=
+=yf/q
+-----END PGP SIGNATURE-----
+
+--3tlbatxliq5aoxn6--
