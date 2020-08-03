@@ -2,52 +2,54 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D56AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD09C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 080CF2076E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E19A32054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457834;
-	bh=NocX8FRNNofFxc9quJy1/gGLORMCIGCJ/kDCDScoBrE=;
+	s=default; t=1596457837;
+	bh=iAGyPGM4lSTLZk9iRrkFiQnLYnmPbVi5L3xtgaUb3aQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jwg5CTdBANA4z6t5VO5wW+3s6HrP1Bi4auvVrku45TAo173MtU/f5n2twaRVjkSN9
-	 3Nc//v8e97TVF5dkw9TY5259wrmh03N9Cv/aZWJZWQE5PZiGlqOkYvSLlMqzrCz2xY
-	 FDXY3fNiGTUmSByZsYgyGrJBa3ced8LabRdtow5I=
+	b=YmcBlqtznbVQNG60lu/P84/pBl6lHlQOaEiZjOqsWcdG7dnATO70oqR8IMWs89mtF
+	 aBRKFlLUN9EVfBExPetdfdHmrh4sFXBlcZe+J4IE4OyXB5Qican+rTfqrNEI4SU6Tk
+	 vtsaUTevYcB6edF0czzrVpkP7w407UXXyQAZ09Qc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbgHCMac (ORCPT
+        id S1729078AbgHCMag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:30:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57506 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:30:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728518AbgHCMab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:30:31 -0400
+        id S1729069AbgHCMad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:30:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0124A2076B;
-        Mon,  3 Aug 2020 12:30:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8C982054F;
+        Mon,  3 Aug 2020 12:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457829;
-        bh=NocX8FRNNofFxc9quJy1/gGLORMCIGCJ/kDCDScoBrE=;
+        s=default; t=1596457832;
+        bh=iAGyPGM4lSTLZk9iRrkFiQnLYnmPbVi5L3xtgaUb3aQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tx0MpscVORalkSLKDgEejse/mWWsZAbQV0uh1hIuAW7QTnFGZYXjdAY8yjHt/gOeW
-         Vo2jTp/icdmAq5hZat8lThUIq25saA0unHYKMsQl6m8nsz/7wxA2c6sZPvQU+U/rMd
-         K5Mbl3yY8sPHMPfEOE/clFXQGIV4xra25TxHWiys=
+        b=MiphkTw/LfdaW2m0T1Q3BrZCn4ZnZUanrxUIZ+V2to2UoX5Yjp/abv42vzYvdoJ3J
+         hW325QLmyCobCyZL3YZE3Bx+F8G9s3vbY85SViIcTN2oxevSxXYxtQQyZzfgzdtj5+
+         nZv/biAlS1pWiIq2L6Fa4DfBhwkoF1CRFdPzy/lw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 61/90] mac80211: mesh: Free pending skb when destroying a mpath
-Date:   Mon,  3 Aug 2020 14:19:23 +0200
-Message-Id: <20200803121900.576638446@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 5.4 88/90] perf tests bp_account: Make global variable static
+Date:   Mon,  3 Aug 2020 14:19:50 +0200
+Message-Id: <20200803121901.844033863@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -60,74 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Remi Pommarel <repk@triplefau.lt>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 5e43540c2af0a0c0a18e39579b1ad49541f87506 ]
+commit cff20b3151ccab690715cb6cf0f5da5cccb32adf upstream.
 
-A mpath object can hold reference on a list of skb that are waiting for
-mpath resolution to be sent. When destroying a mpath this skb list
-should be cleaned up in order to not leak memory.
+To fix the build with newer gccs, that without this patch exit with:
 
-Fixing that kind of leak:
+    LD       /tmp/build/perf/tests/perf-in.o
+  ld: /tmp/build/perf/tests/bp_account.o:/git/perf/tools/perf/tests/bp_account.c:22: multiple definition of `the_var'; /tmp/build/perf/tests/bp_signal.o:/git/perf/tools/perf/tests/bp_signal.c:38: first defined here
+  make[4]: *** [/git/perf/tools/build/Makefile.build:145: /tmp/build/perf/tests/perf-in.o] Error 1
 
-unreferenced object 0xffff0000181c9300 (size 1088):
-  comm "openvpn", pid 1782, jiffies 4295071698 (age 80.416s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 f9 80 36 00 00 00 00 00  ..........6.....
-    02 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
-  backtrace:
-    [<000000004bc6a443>] kmem_cache_alloc+0x1a4/0x2f0
-    [<000000002caaef13>] sk_prot_alloc.isra.39+0x34/0x178
-    [<00000000ceeaa916>] sk_alloc+0x34/0x228
-    [<00000000ca1f1d04>] inet_create+0x198/0x518
-    [<0000000035626b1c>] __sock_create+0x134/0x328
-    [<00000000a12b3a87>] __sys_socket+0xb0/0x158
-    [<00000000ff859f23>] __arm64_sys_socket+0x40/0x58
-    [<00000000263486ec>] el0_svc_handler+0xd0/0x1a0
-    [<0000000005b5157d>] el0_svc+0x8/0xc
-unreferenced object 0xffff000012973a40 (size 216):
-  comm "openvpn", pid 1782, jiffies 4295082137 (age 38.660s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 c0 06 16 00 00 ff ff 00 93 1c 18 00 00 ff ff  ................
-  backtrace:
-    [<000000004bc6a443>] kmem_cache_alloc+0x1a4/0x2f0
-    [<0000000023c8c8f9>] __alloc_skb+0xc0/0x2b8
-    [<000000007ad950bb>] alloc_skb_with_frags+0x60/0x320
-    [<00000000ef90023a>] sock_alloc_send_pskb+0x388/0x3c0
-    [<00000000104fb1a3>] sock_alloc_send_skb+0x1c/0x28
-    [<000000006919d2dd>] __ip_append_data+0xba4/0x11f0
-    [<0000000083477587>] ip_make_skb+0x14c/0x1a8
-    [<0000000024f3d592>] udp_sendmsg+0xaf0/0xcf0
-    [<000000005aabe255>] inet_sendmsg+0x5c/0x80
-    [<000000008651ea08>] __sys_sendto+0x15c/0x218
-    [<000000003505c99b>] __arm64_sys_sendto+0x74/0x90
-    [<00000000263486ec>] el0_svc_handler+0xd0/0x1a0
-    [<0000000005b5157d>] el0_svc+0x8/0xc
+First noticed in fedora:rawhide/32 with:
 
-Fixes: 2bdaf386f99c (mac80211: mesh: move path tables into if_mesh)
-Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-Link: https://lore.kernel.org/r/20200704135419.27703-1-repk@triplefau.lt
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  [perfbuilder@a5ff49d6e6e4 ~]$ gcc --version
+  gcc (GCC) 10.0.1 20200216 (Red Hat 10.0.1-0.8)
+
+Reported-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/mac80211/mesh_pathtbl.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/tests/bp_account.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mac80211/mesh_pathtbl.c b/net/mac80211/mesh_pathtbl.c
-index 117519bf33d65..aca608ae313fe 100644
---- a/net/mac80211/mesh_pathtbl.c
-+++ b/net/mac80211/mesh_pathtbl.c
-@@ -521,6 +521,7 @@ static void mesh_path_free_rcu(struct mesh_table *tbl,
- 	del_timer_sync(&mpath->timer);
- 	atomic_dec(&sdata->u.mesh.mpaths);
- 	atomic_dec(&tbl->entries);
-+	mesh_path_flush_pending(mpath);
- 	kfree_rcu(mpath, rcu);
- }
+--- a/tools/perf/tests/bp_account.c
++++ b/tools/perf/tests/bp_account.c
+@@ -23,7 +23,7 @@
+ #include "../perf-sys.h"
+ #include "cloexec.h"
  
--- 
-2.25.1
-
+-volatile long the_var;
++static volatile long the_var;
+ 
+ static noinline int test_function(void)
+ {
 
 
