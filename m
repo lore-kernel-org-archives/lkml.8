@@ -2,53 +2,56 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B52C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 123FCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D07EF204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D736220775
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457418;
-	bh=Hh1DLbFjydQzfY0ESF6hsKREFsDzyERKMwVwlFnK8M8=;
+	s=default; t=1596457427;
+	bh=slR+AYmepWH5RbfuDWkszwUVsGqLY8LvH8mAxHRHiv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vl8Psy93DCatv4ZCA1wvJtl1HPfNbp0DFNBVplrYcGvDBnoAzgBYaWKjuG1MrMBqf
-	 8IW7lAvRKRXCfI2Wc5TnoK2/jXjBN66PM2iqdb51v3HZ3kzs4YN+yXKay70sGu0RRa
-	 Ct3PBAHVMBzEH57TC4jMBvlJap8g5yVqnyOC669U=
+	b=Vms7ftLrfKAb3hVBbHUqMFd7FP/qTFgDsePylh2GAuPiGG1MVgWdTP/HbfEMDitbR
+	 PVWaJtJro6nss1L1PWDO3LraWIBqPWxLuWU7DJNHnwC612IGHDO7FKAxOMS6tOlEi6
+	 27aqOCVtVTQ1gV7Cj0XuYIOizur1SARiXiG0ZLOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbgHCMXh (ORCPT
+        id S1726664AbgHCMXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:23:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47692 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:23:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727874AbgHCMXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:23:35 -0400
+        id S1727908AbgHCMXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:23:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C569204EC;
-        Mon,  3 Aug 2020 12:23:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C1AD2076B;
+        Mon,  3 Aug 2020 12:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457414;
-        bh=Hh1DLbFjydQzfY0ESF6hsKREFsDzyERKMwVwlFnK8M8=;
+        s=default; t=1596457420;
+        bh=slR+AYmepWH5RbfuDWkszwUVsGqLY8LvH8mAxHRHiv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=obQ63xZKiifhwCAm5E5t+Q+jBDxfe/7hj85zZPyFspRUHnqR5yaJV01tx/6CO9SWM
-         Tfbf1r+icUw7rgoMH8fElvR9MzUG3dd7uHrcCvTWTMC+OItMrxul196YN/T7LObAGK
-         EbpRG5UNwb3kMIG+JemKQOOtqjHqlEBFviFjp2Oc=
+        b=aOnerVrL73xoeLKqHa8Gk1hLc7L2t3hbTL3Aw5iXQJUSAkS0obDwS51yMRGqAVQ/P
+         XqcRt3w6foXzKtmsuvVeDyowoABI+xVQ80OMxNwXnx/uT9sedHxFhzkdhyXWWP/esE
+         Bdx2J3uPLnIqT8fZE7DLqZPmMR63L3ieFG6QfpgM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eran Ben Elisha <eranbe@mellanox.com>,
-        Ariel Levkovich <lariel@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 057/120] net/mlx5: Fix a bug of using ptp channel index as pin index
-Date:   Mon,  3 Aug 2020 14:18:35 +0200
-Message-Id: <20200803121905.571639182@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Willy Tarreau <w@1wt.eu>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.7 030/120] random: fix circular include dependency on arm64 after addition of percpu.h
+Date:   Mon,  3 Aug 2020 14:18:08 +0200
+Message-Id: <20200803121904.296327854@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -61,100 +64,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eran Ben Elisha <eranbe@mellanox.com>
+From: Willy Tarreau <w@1wt.eu>
 
-[ Upstream commit 88c8cf92db48b2e359fe3051ad8e09829c1bee5d ]
+commit 1c9df907da83812e4f33b59d3d142c864d9da57f upstream.
 
-On PTP mlx5_ptp_enable(on=0) flow, driver mistakenly used channel index
-as pin index.
+Daniel Díaz and Kees Cook independently reported that commit
+f227e3ec3b5c ("random32: update the net random state on interrupt and
+activity") broke arm64 due to a circular dependency on include files
+since the addition of percpu.h in random.h.
 
-After ptp patch marked in fixes tag was introduced, driver can freely
-call ptp_find_pin() as part of the .enable() callback.
+The correct fix would definitely be to move all the prandom32 stuff out
+of random.h but for backporting, a smaller solution is preferred.
 
-Fix driver mlx5_ptp_enable(on=0) flow to always use ptp_find_pin(). With
-that, Driver will use the correct pin index in mlx5_ptp_enable(on=0) flow.
+This one replaces linux/percpu.h with asm/percpu.h, and this fixes the
+problem on x86_64, arm64, arm, and mips.  Note that moving percpu.h
+around didn't change anything and that removing it entirely broke
+differently.  When backporting, such options might still be considered
+if this patch fails to help.
 
-In addition, when initializing the pins, always set channel to zero. As
-all pins can be attached to all channels, let ptp_set_pinfunc() to move
-them between the channels.
+[ It turns out that an alternate fix seems to be to just remove the
+  troublesome <asm/pointer_auth.h> remove from the arm64 <asm/smp.h>
+  that causes the circular dependency.
 
-For stable branches, this fix to be applied only on kernels that includes
-both patches in fixes tag. Otherwise, mlx5_ptp_enable(on=0) will be stuck
-on pincfg_mux.
+  But we might as well do the whole belt-and-suspenders thing, and
+  minimize inclusion in <linux/random.h> too. Either will fix the
+  problem, and both are good changes.   - Linus ]
 
-Fixes: 62582a7ee783 ("ptp: Avoid deadlocks in the programmable pin code.")
-Fixes: ee7f12205abc ("net/mlx5e: Implement 1PPS support")
-Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
-Reviewed-by: Ariel Levkovich <lariel@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Daniel Díaz <daniel.diaz@linaro.org>
+Reported-by: Kees Cook <keescook@chromium.org>
+Tested-by: Marc Zyngier <maz@kernel.org>
+Fixes: f227e3ec3b5c
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Willy Tarreau <w@1wt.eu>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- .../ethernet/mellanox/mlx5/core/lib/clock.c   | 21 +++++++++----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ include/linux/random.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
-index 43f97601b5000..b88c6456d2154 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
-@@ -252,17 +252,17 @@ static int mlx5_extts_configure(struct ptp_clock_info *ptp,
- 	if (rq->extts.index >= clock->ptp_info.n_pins)
- 		return -EINVAL;
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -11,7 +11,7 @@
+ #include <linux/kernel.h>
+ #include <linux/list.h>
+ #include <linux/once.h>
+-#include <linux/percpu.h>
++#include <asm/percpu.h>
  
-+	pin = ptp_find_pin(clock->ptp, PTP_PF_EXTTS, rq->extts.index);
-+	if (pin < 0)
-+		return -EBUSY;
-+
- 	if (on) {
--		pin = ptp_find_pin(clock->ptp, PTP_PF_EXTTS, rq->extts.index);
--		if (pin < 0)
--			return -EBUSY;
- 		pin_mode = MLX5_PIN_MODE_IN;
- 		pattern = !!(rq->extts.flags & PTP_FALLING_EDGE);
- 		field_select = MLX5_MTPPS_FS_PIN_MODE |
- 			       MLX5_MTPPS_FS_PATTERN |
- 			       MLX5_MTPPS_FS_ENABLE;
- 	} else {
--		pin = rq->extts.index;
- 		field_select = MLX5_MTPPS_FS_ENABLE;
- 	}
+ #include <uapi/linux/random.h>
  
-@@ -310,12 +310,12 @@ static int mlx5_perout_configure(struct ptp_clock_info *ptp,
- 	if (rq->perout.index >= clock->ptp_info.n_pins)
- 		return -EINVAL;
- 
--	if (on) {
--		pin = ptp_find_pin(clock->ptp, PTP_PF_PEROUT,
--				   rq->perout.index);
--		if (pin < 0)
--			return -EBUSY;
-+	pin = ptp_find_pin(clock->ptp, PTP_PF_PEROUT,
-+			   rq->perout.index);
-+	if (pin < 0)
-+		return -EBUSY;
- 
-+	if (on) {
- 		pin_mode = MLX5_PIN_MODE_OUT;
- 		pattern = MLX5_OUT_PATTERN_PERIODIC;
- 		ts.tv_sec = rq->perout.period.sec;
-@@ -341,7 +341,6 @@ static int mlx5_perout_configure(struct ptp_clock_info *ptp,
- 			       MLX5_MTPPS_FS_ENABLE |
- 			       MLX5_MTPPS_FS_TIME_STAMP;
- 	} else {
--		pin = rq->perout.index;
- 		field_select = MLX5_MTPPS_FS_ENABLE;
- 	}
- 
-@@ -431,7 +430,7 @@ static int mlx5_init_pin_config(struct mlx5_clock *clock)
- 			 "mlx5_pps%d", i);
- 		clock->ptp_info.pin_config[i].index = i;
- 		clock->ptp_info.pin_config[i].func = PTP_PF_NONE;
--		clock->ptp_info.pin_config[i].chan = i;
-+		clock->ptp_info.pin_config[i].chan = 0;
- 	}
- 
- 	return 0;
--- 
-2.25.1
-
 
 
