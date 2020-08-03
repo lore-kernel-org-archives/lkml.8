@@ -2,53 +2,52 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62174C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D18C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 368232076E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FDC320781
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458015;
-	bh=jWGFztSlPZ2Ee/FF2hv8UCt06rAB2GbADoQoBX0DGEM=;
+	s=default; t=1596458018;
+	bh=+3EfgGtmCKrNepVQ0cjyTDgJi1Grs6bidEQ5QqtEGDA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lt+guUEmJ9IdE6alur+LgtHJp7Cnar3EcAtYTNFQmhmN80aOo4CyNuQ8N9dq5aYNK
-	 tew4J9+vdtt3Uk2wooD+Nrw4Hq+muQgbZI4Y+l1rbMQksBTgzyvVmtTfOvucepPnSM
-	 nGJYgNdPwrtjM55FhP1SFzv3jn1mXZQ+bp9TpOYk=
+	b=MJkeRF87aU3m6ZHCLkXDEufAIbGcMVEjAd4iY/SquIcrR+MA9qCb7Xs+HKSIsBpj0
+	 GaJeVYQq3C8Z18Jq/Wlo7I5e7ZrT3ZXUGqdqBsIyrE7q0GVXmuaRh6r7xXCxygbVO/
+	 pfPYzhbRGsE3SS0f1bZSYPgRk6Y0gffRRPbU0EDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729457AbgHCMde (ORCPT
+        id S1729464AbgHCMdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:33:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33380 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:33:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729435AbgHCMd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:33:28 -0400
+        id S1729455AbgHCMde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:33:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9D7A204EC;
-        Mon,  3 Aug 2020 12:33:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CAEB204EC;
+        Mon,  3 Aug 2020 12:33:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596458007;
-        bh=jWGFztSlPZ2Ee/FF2hv8UCt06rAB2GbADoQoBX0DGEM=;
+        s=default; t=1596458012;
+        bh=+3EfgGtmCKrNepVQ0cjyTDgJi1Grs6bidEQ5QqtEGDA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qy7jgukRHLVI1QPdzOGsTSZjep42qJuRDBAslHO60gN1aoeeigx6Wx5lNVfiaiefU
-         aZxAKUp9kJnEhbOIuhG+cmEQoaJydBu+zD9/ocNRN0ceyi+f8y8YjoEuSx0wqaeGjH
-         bDyzc5M9lezLKnvyDwQH+p5l80urdSyyMrpmd8hk=
+        b=xegTBw0l3Go0/lS2Fo3jd1XdNfrz2InuOB6OWXrfKtwMB1bQUwnU+dCYa4K6RY9t/
+         oYT239/lpPws0XYtOg3Fx5W5ZPU+iailBBXyH3c4qp+XynQXXAiqI1IGCdwmub4EKz
+         EJ6QgpC4eQdhrITI/85RAyjoc4zSZp701psP0wvw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eran Ben Elisha <eranbe@mellanox.com>,
-        Ariel Levkovich <lariel@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 31/56] net/mlx5: Verify Hardware supports requested ptp function on a given pin
-Date:   Mon,  3 Aug 2020 14:19:46 +0200
-Message-Id: <20200803121851.847496622@linuxfoundation.org>
+        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.19 56/56] x86/i8259: Use printk_deferred() to prevent deadlock
+Date:   Mon,  3 Aug 2020 14:20:11 +0200
+Message-Id: <20200803121853.061508887@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -61,61 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eran Ben Elisha <eranbe@mellanox.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit 071995c877a8646209d55ff8edddd2b054e7424c ]
+commit bdd65589593edd79b6a12ce86b3b7a7c6dae5208 upstream.
 
-Fix a bug where driver did not verify Hardware pin capabilities for
-PTP functions.
+0day reported a possible circular locking dependency:
 
-Fixes: ee7f12205abc ("net/mlx5e: Implement 1PPS support")
-Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
-Reviewed-by: Ariel Levkovich <lariel@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Chain exists of:
+  &irq_desc_lock_class --> console_owner --> &port_lock_key
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&port_lock_key);
+                               lock(console_owner);
+                               lock(&port_lock_key);
+  lock(&irq_desc_lock_class);
+
+The reason for this is a printk() in the i8259 interrupt chip driver
+which is invoked with the irq descriptor lock held, which reverses the
+lock operations vs. printk() from arbitrary contexts.
+
+Switch the printk() to printk_deferred() to avoid that.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/87365abt2v.fsf@nanos.tec.linutronix.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- .../ethernet/mellanox/mlx5/core/lib/clock.c   | 23 ++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ arch/x86/kernel/i8259.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
-index 54f1a40a68edd..d359e850dbf07 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
-@@ -366,10 +366,31 @@ static int mlx5_ptp_enable(struct ptp_clock_info *ptp,
- 	return 0;
- }
- 
-+enum {
-+	MLX5_MTPPS_REG_CAP_PIN_X_MODE_SUPPORT_PPS_IN = BIT(0),
-+	MLX5_MTPPS_REG_CAP_PIN_X_MODE_SUPPORT_PPS_OUT = BIT(1),
-+};
-+
- static int mlx5_ptp_verify(struct ptp_clock_info *ptp, unsigned int pin,
- 			   enum ptp_pin_function func, unsigned int chan)
- {
--	return (func == PTP_PF_PHYSYNC) ? -EOPNOTSUPP : 0;
-+	struct mlx5_clock *clock = container_of(ptp, struct mlx5_clock,
-+						ptp_info);
-+
-+	switch (func) {
-+	case PTP_PF_NONE:
-+		return 0;
-+	case PTP_PF_EXTTS:
-+		return !(clock->pps_info.pin_caps[pin] &
-+			 MLX5_MTPPS_REG_CAP_PIN_X_MODE_SUPPORT_PPS_IN);
-+	case PTP_PF_PEROUT:
-+		return !(clock->pps_info.pin_caps[pin] &
-+			 MLX5_MTPPS_REG_CAP_PIN_X_MODE_SUPPORT_PPS_OUT);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return -EOPNOTSUPP;
- }
- 
- static const struct ptp_clock_info mlx5_ptp_clock_info = {
--- 
-2.25.1
-
+--- a/arch/x86/kernel/i8259.c
++++ b/arch/x86/kernel/i8259.c
+@@ -207,7 +207,7 @@ spurious_8259A_irq:
+ 		 * lets ACK and report it. [once per IRQ]
+ 		 */
+ 		if (!(spurious_irq_mask & irqmask)) {
+-			printk(KERN_DEBUG
++			printk_deferred(KERN_DEBUG
+ 			       "spurious 8259A interrupt: IRQ%d.\n", irq);
+ 			spurious_irq_mask |= irqmask;
+ 		}
 
 
