@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 012CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E66AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7B5E2054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF5B420738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:44:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458646;
-	bh=Q/WErorfwQmavjrNJC3/0nwL753dymrid//mUfxcNUA=;
+	s=default; t=1596458647;
+	bh=upQ0vadh/GU4f/aiUZGGppbmhZRBx7Ux6CJdmf4im6w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R/NzFY/368gGCthvrazupuwmXZ+Nm396MFiW5b2/NaqaMT8ANtGyWLPK1ykDBXt7v
-	 iN8UOV/HbetnPhFmjWAHt1hoWYTwhR170rrF87y+U8Fkpvx2DlluF+nOCz89m9OhLY
-	 Z13hZiVr2lzmDUZeg7lEdBvi/eVtApOMYRrQIvvE=
+	b=TNgFeaELiCigpWcjmOuR0E5gN2soNjVo3IlfMO83D3+Y0O9d8FsbL3ajwzMhGll6I
+	 KRfHdj4JqJ3p2uyniaM7lIziw1mJ1CcTWAb2gUD/ClkZ7fyjARFUU4jSPOq7NIa6NN
+	 FcniQg0db2V/loYUePHMpWHHhdErVO3BbSj1EKEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgHCM2k (ORCPT
+        id S1728768AbgHCM2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:28:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54750 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:28:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728754AbgHCM2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:28:34 -0400
+        id S1728721AbgHCM2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:28:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F03C2083B;
-        Mon,  3 Aug 2020 12:28:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BC34204EC;
+        Mon,  3 Aug 2020 12:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457713;
-        bh=Q/WErorfwQmavjrNJC3/0nwL753dymrid//mUfxcNUA=;
+        s=default; t=1596457710;
+        bh=upQ0vadh/GU4f/aiUZGGppbmhZRBx7Ux6CJdmf4im6w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KcD9G0dWDbExJwJbRzLEGoNaW3nRD0qshprHYZOOXQJQpf/yKlsYG2iBiTb2kSlbu
-         O/a5pwuX22qZ63NnPYp6IgqT209tPHuaW6nNk4wD/AuOezSwwfaSRPE2zS+Hv4voH3
-         66700Rp9FnWKj5iu4x2xWnWoq3tsXsPiAmO/cBmE=
+        b=kKPeuSxrzJBnoRLM5z6ZteGxSvzDZ4jjynT9yPwif2GcEPHz5CEhLiMS4q/nYRc2g
+         qoKdDCY5/ql6i8dyciwKShGFdD6/X8jhiZpAYBJOuik1jUzPPwgu2A/Lalt3RkA6bC
+         RtpOsqJ+2NC+J6M2DX28I+cEKoqehSYm9/mMdbEw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Roi Dayan <roid@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org, Guojia Liao <liaoguojia@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 47/90] net/mlx5: E-switch, Destroy TSAR when fail to enable the mode
-Date:   Mon,  3 Aug 2020 14:19:09 +0200
-Message-Id: <20200803121859.898505363@linuxfoundation.org>
+Subject: [PATCH 5.4 46/90] net: hns3: fix aRFS FD rules leftover after add a user FD rule
+Date:   Mon,  3 Aug 2020 14:19:08 +0200
+Message-Id: <20200803121859.851258153@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -61,37 +61,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Guojia Liao <liaoguojia@huawei.com>
 
-[ Upstream commit 2b8e9c7c3fd0e31091edb1c66cc06ffe4988ca21 ]
+[ Upstream commit efe3fa45f770f1d66e2734ee7a3523c75694ff04 ]
 
-When either esw_legacy_enable() or esw_offloads_enable() fails,
-code missed to destroy the created TSAR.
+When user had created a FD rule, all the aRFS rules should be clear up.
+HNS3 process flow as below:
+1.get spin lock of fd_ruls_list
+2.clear up all aRFS rules
+3.release lock
+4.get spin lock of fd_ruls_list
+5.creat a rules
+6.release lock;
 
-Hence, add the missing call to destroy the TSAR.
+There is a short period of time between step 3 and step 4, which would
+creatting some new aRFS FD rules if driver was receiving packet.
+So refactor the fd_rule_lock to fix it.
 
-Fixes: 610090ebce92 ("net/mlx5: E-switch, Initialize TSAR Qos hardware block before its user vports")
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: 441228875706 ("net: hns3: refine the flow director handle")
+Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../hisilicon/hns3/hns3pf/hclge_main.c        | 28 ++++++++++---------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-index c6ed4b7f4f972..422a57404407d 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-@@ -1919,7 +1919,7 @@ abort:
- 		mlx5_reload_interface(esw->dev, MLX5_INTERFACE_PROTOCOL_IB);
- 		mlx5_reload_interface(esw->dev, MLX5_INTERFACE_PROTOCOL_ETH);
- 	}
--
-+	esw_destroy_tsar(esw);
- 	return err;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index d4652dea4569b..6c3d13110993f 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -5627,9 +5627,9 @@ static int hclge_add_fd_entry(struct hnae3_handle *handle,
+ 	/* to avoid rule conflict, when user configure rule by ethtool,
+ 	 * we need to clear all arfs rules
+ 	 */
++	spin_lock_bh(&hdev->fd_rule_lock);
+ 	hclge_clear_arfs_rules(handle);
+ 
+-	spin_lock_bh(&hdev->fd_rule_lock);
+ 	ret = hclge_fd_config_rule(hdev, rule);
+ 
+ 	spin_unlock_bh(&hdev->fd_rule_lock);
+@@ -5672,6 +5672,7 @@ static int hclge_del_fd_entry(struct hnae3_handle *handle,
+ 	return ret;
  }
  
++/* make sure being called after lock up with fd_rule_lock */
+ static void hclge_del_all_fd_entries(struct hnae3_handle *handle,
+ 				     bool clear_list)
+ {
+@@ -5684,7 +5685,6 @@ static void hclge_del_all_fd_entries(struct hnae3_handle *handle,
+ 	if (!hnae3_dev_fd_supported(hdev))
+ 		return;
+ 
+-	spin_lock_bh(&hdev->fd_rule_lock);
+ 	for_each_set_bit(location, hdev->fd_bmap,
+ 			 hdev->fd_cfg.rule_num[HCLGE_FD_STAGE_1])
+ 		hclge_fd_tcam_config(hdev, HCLGE_FD_STAGE_1, true, location,
+@@ -5701,8 +5701,6 @@ static void hclge_del_all_fd_entries(struct hnae3_handle *handle,
+ 		bitmap_zero(hdev->fd_bmap,
+ 			    hdev->fd_cfg.rule_num[HCLGE_FD_STAGE_1]);
+ 	}
+-
+-	spin_unlock_bh(&hdev->fd_rule_lock);
+ }
+ 
+ static int hclge_restore_fd_entries(struct hnae3_handle *handle)
+@@ -6069,7 +6067,7 @@ static int hclge_add_fd_entry_by_arfs(struct hnae3_handle *handle, u16 queue_id,
+ 				      u16 flow_id, struct flow_keys *fkeys)
+ {
+ 	struct hclge_vport *vport = hclge_get_vport(handle);
+-	struct hclge_fd_rule_tuples new_tuples;
++	struct hclge_fd_rule_tuples new_tuples = {};
+ 	struct hclge_dev *hdev = vport->back;
+ 	struct hclge_fd_rule *rule;
+ 	u16 tmp_queue_id;
+@@ -6079,20 +6077,18 @@ static int hclge_add_fd_entry_by_arfs(struct hnae3_handle *handle, u16 queue_id,
+ 	if (!hnae3_dev_fd_supported(hdev))
+ 		return -EOPNOTSUPP;
+ 
+-	memset(&new_tuples, 0, sizeof(new_tuples));
+-	hclge_fd_get_flow_tuples(fkeys, &new_tuples);
+-
+-	spin_lock_bh(&hdev->fd_rule_lock);
+-
+ 	/* when there is already fd rule existed add by user,
+ 	 * arfs should not work
+ 	 */
++	spin_lock_bh(&hdev->fd_rule_lock);
+ 	if (hdev->fd_active_type == HCLGE_FD_EP_ACTIVE) {
+ 		spin_unlock_bh(&hdev->fd_rule_lock);
+ 
+ 		return -EOPNOTSUPP;
+ 	}
+ 
++	hclge_fd_get_flow_tuples(fkeys, &new_tuples);
++
+ 	/* check is there flow director filter existed for this flow,
+ 	 * if not, create a new filter for it;
+ 	 * if filter exist with different queue id, modify the filter;
+@@ -6177,6 +6173,7 @@ static void hclge_rfs_filter_expire(struct hclge_dev *hdev)
+ #endif
+ }
+ 
++/* make sure being called after lock up with fd_rule_lock */
+ static void hclge_clear_arfs_rules(struct hnae3_handle *handle)
+ {
+ #ifdef CONFIG_RFS_ACCEL
+@@ -6221,10 +6218,14 @@ static void hclge_enable_fd(struct hnae3_handle *handle, bool enable)
+ 
+ 	hdev->fd_en = enable;
+ 	clear = hdev->fd_active_type == HCLGE_FD_ARFS_ACTIVE;
+-	if (!enable)
++
++	if (!enable) {
++		spin_lock_bh(&hdev->fd_rule_lock);
+ 		hclge_del_all_fd_entries(handle, clear);
+-	else
++		spin_unlock_bh(&hdev->fd_rule_lock);
++	} else {
+ 		hclge_restore_fd_entries(handle);
++	}
+ }
+ 
+ static void hclge_cfg_mac_mode(struct hclge_dev *hdev, bool enable)
+@@ -6678,8 +6679,9 @@ static void hclge_ae_stop(struct hnae3_handle *handle)
+ 	int i;
+ 
+ 	set_bit(HCLGE_STATE_DOWN, &hdev->state);
+-
++	spin_lock_bh(&hdev->fd_rule_lock);
+ 	hclge_clear_arfs_rules(handle);
++	spin_unlock_bh(&hdev->fd_rule_lock);
+ 
+ 	/* If it is not PF reset, the firmware will disable the MAC,
+ 	 * so it only need to stop phy here.
 -- 
 2.25.1
 
