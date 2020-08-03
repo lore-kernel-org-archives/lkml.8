@@ -2,173 +2,101 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39791C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A72C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 184202076C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:50:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596466251;
-	bh=hYqtB5D8bWSgMhqH73CrhvUPEYWs3SY+kGQi2srIaeo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=B9uEIUC9Xm7PGDdDRcrDBHEuyCvumo9gRDYYmgetcGLThazkel3JX36rCwu3bESaX
-	 xwvmtqX/k9zAlX0wY11nrSk14BeAopqIfP3RGbnpW47LrTiJc15GRRKVH97A25JlbF
-	 1TNE+it+IMGn56N7JnPRaDCO92yawcYN6BegacSU=
+	by mail.kernel.org (Postfix) with ESMTP id 83AF02076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:51:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbgHCOuv (ORCPT
+        id S1728281AbgHCOvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:50:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726189AbgHCOuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 10:50:50 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74A152076E;
-        Mon,  3 Aug 2020 14:50:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596466249;
-        bh=hYqtB5D8bWSgMhqH73CrhvUPEYWs3SY+kGQi2srIaeo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=q+iSnGP5ZNkXtGQxke2PTU+GyeDD/wYYeOyi+w/42hBZHwEgwWfTWTG6noTc02Lfo
-         qcPdCNpZTW5UcOW0Xfs6iJ4erN+q3x9pHzlt8aWgfzoliUC53iWlbYEX+5MoQV20iD
-         lKE2twHBN05pcyPdii3h1bNPN6r9NIHtyS9sFf3U=
-Date:   Mon, 3 Aug 2020 23:50:42 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Muchun Song <songmuchun@bytedance.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-        davem@davemloft.net, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Chengming Zhou <zhouchengming@bytedance.com>
-Subject: Re: [PATCH] kprobes: fix NULL pointer dereference at
- kprobe_ftrace_handler
-Message-Id: <20200803235042.6bacaf3eb53b7ab831f4edd3@kernel.org>
-In-Reply-To: <CAMZfGtUDmQgDySu7OSBNYv5y2_QJfzDcVeYG2eY6-1xYq+t1Uw@mail.gmail.com>
-References: <20200728064536.24405-1-songmuchun@bytedance.com>
-        <CAMZfGtUDmQgDySu7OSBNYv5y2_QJfzDcVeYG2eY6-1xYq+t1Uw@mail.gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 3 Aug 2020 10:51:06 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60096 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726189AbgHCOvG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 10:51:06 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 073Ea1wr095836;
+        Mon, 3 Aug 2020 10:50:59 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32pkehjkp1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 10:50:59 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 073EaBaV096607;
+        Mon, 3 Aug 2020 10:50:59 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32pkehjknf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 10:50:59 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 073Enifb015875;
+        Mon, 3 Aug 2020 14:50:57 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma02wdc.us.ibm.com with ESMTP id 32n018rtn9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 14:50:57 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 073Eorf064618862
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 3 Aug 2020 14:50:53 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9B7DA136051;
+        Mon,  3 Aug 2020 14:50:56 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1A41213605D;
+        Mon,  3 Aug 2020 14:50:56 +0000 (GMT)
+Received: from ghost4.ibm.com (unknown [9.163.93.250])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon,  3 Aug 2020 14:50:55 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-leds@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, dmurphy@ti.com, pavel@ucw.cz,
+        jacek.anaszewski@gmail.com, vishwa@linux.ibm.com,
+        andy.shevchenko@gmail.com, eajames@linux.ibm.com
+Subject: [PATCH v2 0/2] leds: pca955x: Add IBM software implemenation of the PCA9552 chip
+Date:   Mon,  3 Aug 2020 09:50:53 -0500
+Message-Id: <20200803145055.5203-1-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-03_13:2020-08-03,2020-08-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 adultscore=0 phishscore=0 spamscore=0 impostorscore=0
+ bulkscore=0 mlxscore=0 clxscore=1015 mlxlogscore=753 suspectscore=1
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008030110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 3 Aug 2020 13:46:25 +0800
-Muchun Song <songmuchun@bytedance.com> wrote:
+IBM created an implementation of the PCA9552 on a PIC16F
+microcontroller. The I2C device addresses are different from the
+hardware PCA9552, so add a new compatible string and associated
+platform data to be able to probe this device, and document the new
+string.
 
-> Ping guys. Any comments or suggestions?
-> 
-> On Tue, Jul 28, 2020 at 2:45 PM Muchun Song <songmuchun@bytedance.com> wrote:
-> >
-> > We found a case of kernel panic on our server. The stack trace is as
-> > follows(omit some irrelevant information):
-> >
-> >   BUG: kernel NULL pointer dereference, address: 0000000000000080
-> >   RIP: 0010:kprobe_ftrace_handler+0x5e/0xe0
-> >   RSP: 0018:ffffb512c6550998 EFLAGS: 00010282
-> >   RAX: 0000000000000000 RBX: ffff8e9d16eea018 RCX: 0000000000000000
-> >   RDX: ffffffffbe1179c0 RSI: ffffffffc0535564 RDI: ffffffffc0534ec0
-> >   RBP: ffffffffc0534ec1 R08: ffff8e9d1bbb0f00 R09: 0000000000000004
-> >   R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> >   R13: ffff8e9d1f797060 R14: 000000000000bacc R15: ffff8e9ce13eca00
-> >   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >   CR2: 0000000000000080 CR3: 00000008453d0005 CR4: 00000000003606e0
-> >   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> >   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> >   Call Trace:
-> >    <IRQ>
-> >    ftrace_ops_assist_func+0x56/0xe0
-> >    ftrace_call+0x5/0x34
-> >    tcpa_statistic_send+0x5/0x130 [ttcp_engine]
-> >
-> > The tcpa_statistic_send is the function being kprobed. After analysis,
-> > the root cause is that the fourth parameter regs of kprobe_ftrace_handler
-> > is NULL. Why regs is NULL? We use the crash tool to analyze the kdump.
-> >
-> >   crash> dis tcpa_statistic_send -r
-> >          <tcpa_statistic_send>: callq 0xffffffffbd8018c0 <ftrace_caller>
-> >
-> > The tcpa_statistic_send calls ftrace_caller instead of ftrace_regs_caller.
-> > So it is reasonable that the fourth parameter regs of kprobe_ftrace_handler
-> > is NULL. In theory, we should call the ftrace_regs_caller instead of the
-> > ftrace_caller. After in-depth analysis, we found a reproducible path.
-> >
-> >   Writing a simple kernel module which starts a periodic timer. The
-> >   timer's handler is named 'kprobe_test_timer_handler'. The module
-> >   name is kprobe_test.ko.
-> >
-> >   1) insmod kprobe_test.ko
-> >   2) bpftrace -e 'kretprobe:kprobe_test_timer_handler {}'
-> >   3) echo 0 > /proc/sys/kernel/ftrace_enabled
-> >   4) rmmod kprobe_test
-> >   5) stop step 2) kprobe
-> >   6) insmod kprobe_test.ko
-> >   7) bpftrace -e 'kretprobe:kprobe_test_timer_handler {}'
-> >
-> > We mark the kprobe as GONE but not disarm the kprobe in the step 4).
-> > The step 5) also do not disarm the kprobe when unregister kprobe. So
-> > we do not remove the ip from the filter. In this case, when the module
-> > loads again in the step 6), we will replace the code to ftrace_caller
-> > via the ftrace_module_enable(). When we register kprobe again, we will
-> > not replace ftrace_caller to ftrace_regs_caller because the ftrace is
-> > disabled in the step 3). So the step 7) will trigger kernel panic. Fix
-> > this problem by disarming the kprobe when the module is going away.
-> >
+Changes since v1:
+ - Switch the vendor part of the compatible string to ibm
+ - Change the enum in the driver to be ibm_<part no>
 
-Nice catch!
+Eddie James (2):
+  dt-bindings: leds: pca955x: Add IBM implementation compatible string
+  leds: pca955x: Add an IBM software implementation of the PCA9552 chip
 
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-Fixes: ae6aa16fdc16 ("kprobes: introduce ftrace based optimization")
-Cc: stable@vger.kernel.org
-
-Thank you!
-
-> > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> > Co-developed-by: Chengming Zhou <zhouchengming@bytedance.com>
-> > Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
-> > ---
-> >  kernel/kprobes.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >
-> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> > index 146c648eb943..503add629599 100644
-> > --- a/kernel/kprobes.c
-> > +++ b/kernel/kprobes.c
-> > @@ -2148,6 +2148,13 @@ static void kill_kprobe(struct kprobe *p)
-> >          * the original probed function (which will be freed soon) any more.
-> >          */
-> >         arch_remove_kprobe(p);
-> > +
-> > +       /*
-> > +        * The module is going away. We should disarm the kprobe which
-> > +        * is using ftrace.
-> > +        */
-> > +       if (kprobe_ftrace(p))
-> > +               disarm_kprobe_ftrace(p);
-> >  }
-> >
-> >  /* Disable one kprobe */
-> > --
-> > 2.11.0
-> >
-> 
-> 
-> -- 
-> Yours,
-> Muchun
-
+ Documentation/devicetree/bindings/leds/leds-pca955x.txt | 1 +
+ drivers/leds/leds-pca955x.c                             | 8 ++++++++
+ 2 files changed, 9 insertions(+)
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.24.0
+
