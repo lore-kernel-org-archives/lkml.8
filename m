@@ -8,66 +8,65 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0686EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 942C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D02F720738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 688CB20738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:47:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rkaLrT2R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akTfqrW0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgHCLrq (ORCPT
+        id S1726810AbgHCLru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 07:47:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35840 "EHLO
+        Mon, 3 Aug 2020 07:47:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbgHCLoM (ORCPT
+        with ESMTP id S1726585AbgHCLoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 3 Aug 2020 07:44:12 -0400
 Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 490EEC061756
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AC06C06174A
         for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 04:44:11 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id a5so23931898wrm.6
+Received: by mail-wr1-x441.google.com with SMTP id z18so30332719wrm.12
         for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 04:44:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=wktAXltXvw+OcOM7RYbNsAn2eLrVA+oJrzBSiLVt/V0=;
-        b=rkaLrT2R+413cMnXQSy3VNCm9Nq/WBVIhwd+EDbkxcmEJY4uUXRoP1RZ9+0ROn1AcK
-         YQbElyabChQlEQ73N5zmCKTeNxPe4TlZULeCzZ2jl8OXePossA6Rq5ZJ1OVlmY5z9ET1
-         orORHgh0b77urWJ6y7CbzJqkdbGb1e5kP3CSEsUY00v3c4XNBk5JzBL+2dmHS5TvSxYc
-         MJ0elmZ6eIMiFXPLeGXV+T9B56fTO06/HHB+4hVj0j1f002EIMwIKmbXnujEISUzpOfH
-         DqxovOKa8GVmmBrXg78TZyjVO1+/ODPZof+JHXpxDQUlS9WizZQ8Fxn834l7UTn9gHIA
-         RImw==
+        h=from:to:cc:subject:date:message-id;
+        bh=MSBSvmjm8Dab2AsIfnzY3jPCUEYi7Wki8rvAcELJwN8=;
+        b=akTfqrW0jov/Or3O6P2ONODMhbsETl00Pq8mhuKef/BKShsAinsxZ8o1JUfRSmqlfy
+         5QPrjSmKaDEepVcdGUDSbLygaI8tjk05PlYNjmsoEv5/0kwYwS+oQhQcwlNW5ZpPiu9z
+         ou8Mf6Km8RBn5NxIq9zPW27utx/GyJbtJOBIaOT18giyrhQo0ftrKZYKBUsyIwFodfMk
+         isZtdG9rYYsyBrN6MXfuVI6Pq4g6s6iGMncIxLqcdOw53+yf+Swpmib6rwLAuJgzErPH
+         CMswV5DjZnS38+snyW9OOzGzoSGxT/2e9CPQLDuZ3yZNe+wwhxPxFElS8wE+ws8i4ZJa
+         ydwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=wktAXltXvw+OcOM7RYbNsAn2eLrVA+oJrzBSiLVt/V0=;
-        b=ntaq2Ga9k0qaHjWqwPwcJvE7MClfLLgb86MOB1pFc3RITJziCrKakvX+xwWPZfat5t
-         lWrDCnFHQ9pBOEUMuePzeQfgfiaupPU268AxCMn36cZtzNVrXm5HoQ/DBdLqiaXxmQPt
-         iFoegkrUr9K0N9t3oVgSNk6ago8HOrMxOsTuV9Zb3Nb4udhwwEx3FnyxevtHMPFrB/Wh
-         iZ53xtkKhCc+36BIpWg8eKA+zOfkcavJcHxQBHxWOi6Vca70QeyOk2kNjSH/0XMMnQ9F
-         0whSfQAs41buySbAsdueHezq05CeNZWvi3HT8mRaxgdQDpYmxFGZJdU23HDczb6AYmbU
-         Mmlw==
-X-Gm-Message-State: AOAM530bN1PFGhoUYmj/LX84gOA2onHxa6Da3VC90ZRQ6wGG28FlSG6v
-        lsT0OLuC7wu5GJjEjTydEtqrJHVF
-X-Google-Smtp-Source: ABdhPJzVqxe6f9eqD/c+WSr4c0lJ/wQR9BJw1a3ePbUWctwUz4KbcITx+v9/0j7vCQxjaKBHP6cVtg==
-X-Received: by 2002:a5d:6348:: with SMTP id b8mr14646045wrw.362.1596455049138;
-        Mon, 03 Aug 2020 04:44:09 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
-        by smtp.gmail.com with ESMTPSA id 128sm24155441wmz.43.2020.08.03.04.44.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=MSBSvmjm8Dab2AsIfnzY3jPCUEYi7Wki8rvAcELJwN8=;
+        b=J2o3Rtp8xy0V+gPUU8KRASxzKigz8jZpm0Q4qm3olbISunubrv3KiNt6Xrxtc4bdL0
+         GxCezmg8lUfaCVoFPKAYfFiyLnXlb+s7da4ZKKDGeZz7OxvWDgMcGHIfamAGdTWNDf+m
+         pMGIYyJtKlB4M9w+FrBwtVOfsTiJ7PHjp/CoUEB4m7Am0IKgS/m03xWP/lqEJS9u3SFP
+         4eUiO1/NJkwNhmxRNXB301NGw2aJgjsLYU3IDxUkqGXLgOUrxsDBTG1qQug1EbNmgDgD
+         U9HgBUOlFZthEedoChnqoYGgRZRDhr1IY43rdWzGhnP9eKwt7UtNU9yLpiAO8DoXwer0
+         cQZw==
+X-Gm-Message-State: AOAM532ax1ROAMhNsWFXh7mno25vsdBeeVDCTkAhhif07u8fvO/WXpQt
+        goqLGsZbJQdoHnZVCV5AbwD59L+W
+X-Google-Smtp-Source: ABdhPJz/bAQGun66KYA1f1lhVpdkDVYhlKDpqcB9S4hnntd/lS4Z22pG6iioDRfUTO57qzmxL03AUg==
+X-Received: by 2002:adf:bc4b:: with SMTP id a11mr14076463wrh.381.1596455047343;
         Mon, 03 Aug 2020 04:44:07 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
+        by smtp.gmail.com with ESMTPSA id 128sm24155441wmz.43.2020.08.03.04.44.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 04:44:05 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
-Cc:     Ofir Bitton <obitton@habana.ai>
-Subject: [PATCH v2 2/2] habanalabs: add information about PCIe controller
-Date:   Mon,  3 Aug 2020 14:44:02 +0300
-Message-Id: <20200803114402.26013-2-oded.gabbay@gmail.com>
+Cc:     Ofir Bitton <obitton@habana.ai>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: [PATCH v2 1/2] habanalabs: Replace dma-fence mechanism with completions
+Date:   Mon,  3 Aug 2020 14:44:01 +0300
+Message-Id: <20200803114402.26013-1-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200803114402.26013-1-oded.gabbay@gmail.com>
-References: <20200803114402.26013-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -75,320 +74,388 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ofir Bitton <obitton@habana.ai>
 
-Update firmware header with new API for getting pcie info
-such as tx/rx throughput and replay counter.
-These counters are needed by customers for monitor and maintenance
-of multiple devices.
-Add new opcodes to the INFO ioctl to retrieve these counters.
+habanalabs driver uses dma-fence mechanism for synchronization.
+dma-fence mechanism was designed solely for GPUs, hence we purpose
+a simpler mechanism based on completions to replace current
+dma-fence objects.
 
 Signed-off-by: Ofir Bitton <obitton@habana.ai>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
 Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
 Changes in v2:
-  - Properly cast message variables sent to device CPU when fetching
-    PCI throughput counters
+  - Replace kfree_rcu with regular kfree
 
- drivers/misc/habanalabs/common/firmware_if.c  | 48 +++++++++++++++++++
- drivers/misc/habanalabs/common/habanalabs.h   |  4 ++
- .../misc/habanalabs/common/habanalabs_ioctl.c | 41 ++++++++++++++++
- drivers/misc/habanalabs/gaudi/gaudi.c         |  4 ++
- drivers/misc/habanalabs/goya/goya.c           |  4 ++
- .../misc/habanalabs/include/common/armcp_if.h | 10 ++++
- include/uapi/misc/habanalabs.h                | 27 +++++++++++
- 7 files changed, 138 insertions(+)
+ .../habanalabs/common/command_submission.c    | 95 +++++++++----------
+ drivers/misc/habanalabs/common/context.c      | 13 +--
+ drivers/misc/habanalabs/common/habanalabs.h   | 30 ++++--
+ drivers/misc/habanalabs/common/hw_queue.c     |  2 +-
+ 4 files changed, 77 insertions(+), 63 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/common/firmware_if.c b/drivers/misc/habanalabs/common/firmware_if.c
-index f70302cdab1b..0842c2211475 100644
---- a/drivers/misc/habanalabs/common/firmware_if.c
-+++ b/drivers/misc/habanalabs/common/firmware_if.c
-@@ -354,6 +354,54 @@ int hl_fw_get_eeprom_data(struct hl_device *hdev, void *data, size_t max_size)
- 	return rc;
+diff --git a/drivers/misc/habanalabs/common/command_submission.c b/drivers/misc/habanalabs/common/command_submission.c
+index b9840e368eb5..3d79ad3ce7e0 100644
+--- a/drivers/misc/habanalabs/common/command_submission.c
++++ b/drivers/misc/habanalabs/common/command_submission.c
+@@ -38,26 +38,10 @@ void hl_sob_reset_error(struct kref *ref)
+ 			hw_sob->q_idx, hw_sob->sob_id);
  }
  
-+int hl_fw_armcp_pci_counters_get(struct hl_device *hdev,
-+		struct hl_info_pci_counters *counters)
+-static const char *hl_fence_get_driver_name(struct dma_fence *fence)
+-{
+-	return "HabanaLabs";
+-}
+-
+-static const char *hl_fence_get_timeline_name(struct dma_fence *fence)
+-{
+-	struct hl_cs_compl *hl_cs_compl =
+-		container_of(fence, struct hl_cs_compl, base_fence);
+-
+-	return dev_name(hl_cs_compl->hdev->dev);
+-}
+-
+-static bool hl_fence_enable_signaling(struct dma_fence *fence)
+-{
+-	return true;
+-}
+-
+-static void hl_fence_release(struct dma_fence *fence)
++void hl_fence_release(struct kref *kref)
+ {
++	struct hl_fence *fence =
++		container_of(kref, struct hl_fence, refcount);
+ 	struct hl_cs_compl *hl_cs_cmpl =
+ 		container_of(fence, struct hl_cs_compl, base_fence);
+ 	struct hl_device *hdev = hl_cs_cmpl->hdev;
+@@ -99,15 +83,27 @@ static void hl_fence_release(struct dma_fence *fence)
+ 	}
+ 
+ free:
+-	kfree_rcu(hl_cs_cmpl, base_fence.rcu);
++	kfree(hl_cs_cmpl);
+ }
+ 
+-static const struct dma_fence_ops hl_fence_ops = {
+-	.get_driver_name = hl_fence_get_driver_name,
+-	.get_timeline_name = hl_fence_get_timeline_name,
+-	.enable_signaling = hl_fence_enable_signaling,
+-	.release = hl_fence_release
+-};
++void hl_fence_put(struct hl_fence *fence)
 +{
-+	struct armcp_packet pkt = {};
-+	long result;
-+	int rc;
-+
-+	pkt.ctl = cpu_to_le32(ARMCP_PACKET_PCIE_THROUGHPUT_GET <<
-+			ARMCP_PKT_CTL_OPCODE_SHIFT);
-+
-+	/* Fetch PCI rx counter */
-+	pkt.index = cpu_to_le32(armcp_pcie_throughput_rx);
-+	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
-+					HL_ARMCP_INFO_TIMEOUT_USEC, &result);
-+	if (rc) {
-+		dev_err(hdev->dev,
-+			"Failed to handle ArmCP PCI info pkt, error %d\n", rc);
-+		return rc;
-+	}
-+	counters->rx_throughput = result;
-+
-+	/* Fetch PCI tx counter */
-+	pkt.index = cpu_to_le32(armcp_pcie_throughput_tx);
-+	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
-+					HL_ARMCP_INFO_TIMEOUT_USEC, &result);
-+	if (rc) {
-+		dev_err(hdev->dev,
-+			"Failed to handle ArmCP PCI info pkt, error %d\n", rc);
-+		return rc;
-+	}
-+	counters->tx_throughput = result;
-+
-+	/* Fetch PCI replay counter */
-+	pkt.ctl = cpu_to_le32(ARMCP_PACKET_PCIE_REPLAY_CNT_GET <<
-+			ARMCP_PKT_CTL_OPCODE_SHIFT);
-+
-+	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
-+			HL_ARMCP_INFO_TIMEOUT_USEC, &result);
-+	if (rc) {
-+		dev_err(hdev->dev,
-+			"Failed to handle ArmCP PCI info pkt, error %d\n", rc);
-+		return rc;
-+	}
-+	counters->replay_cnt = (u32) result;
-+
-+	return rc;
++	if (fence)
++		kref_put(&fence->refcount, hl_fence_release);
 +}
 +
- static void fw_read_errors(struct hl_device *hdev, u32 boot_err0_reg)
++void hl_fence_get(struct hl_fence *fence)
++{
++	if (fence)
++		kref_get(&fence->refcount);
++}
++
++void hl_fence_init(struct hl_fence *fence)
++{
++	kref_init(&fence->refcount);
++	fence->error = 0;
++	init_completion(&fence->completion);
++}
+ 
+ static void cs_get(struct hl_cs *cs)
  {
- 	u32 err_val;
+@@ -336,7 +332,7 @@ static void cs_do_release(struct kref *ref)
+ 		 * In case the wait for signal CS was submitted, the put occurs
+ 		 * in init_signal_wait_cs() right before hanging on the PQ.
+ 		 */
+-		dma_fence_put(cs->signal_fence);
++		hl_fence_put(cs->signal_fence);
+ 	}
+ 
+ 	/*
+@@ -348,19 +344,18 @@ static void cs_do_release(struct kref *ref)
+ 	hl_ctx_put(cs->ctx);
+ 
+ 	/* We need to mark an error for not submitted because in that case
+-	 * the dma fence release flow is different. Mainly, we don't need
++	 * the hl fence release flow is different. Mainly, we don't need
+ 	 * to handle hw_sob for signal/wait
+ 	 */
+ 	if (cs->timedout)
+-		dma_fence_set_error(cs->fence, -ETIMEDOUT);
++		cs->fence->error = -ETIMEDOUT;
+ 	else if (cs->aborted)
+-		dma_fence_set_error(cs->fence, -EIO);
++		cs->fence->error = -EIO;
+ 	else if (!cs->submitted)
+-		dma_fence_set_error(cs->fence, -EBUSY);
+-
+-	dma_fence_signal(cs->fence);
+-	dma_fence_put(cs->fence);
++		cs->fence->error = -EBUSY;
+ 
++	complete_all(&cs->fence->completion);
++	hl_fence_put(cs->fence);
+ 	cs_counters_aggregate(hdev, cs->ctx);
+ 
+ 	kfree(cs->jobs_in_queue_cnt);
+@@ -401,7 +396,7 @@ static int allocate_cs(struct hl_device *hdev, struct hl_ctx *ctx,
+ 			enum hl_cs_type cs_type, struct hl_cs **cs_new)
+ {
+ 	struct hl_cs_compl *cs_cmpl;
+-	struct dma_fence *other = NULL;
++	struct hl_fence *other = NULL;
+ 	struct hl_cs *cs;
+ 	int rc;
+ 
+@@ -434,7 +429,8 @@ static int allocate_cs(struct hl_device *hdev, struct hl_ctx *ctx,
+ 	cs_cmpl->cs_seq = ctx->cs_sequence;
+ 	other = ctx->cs_pending[cs_cmpl->cs_seq &
+ 				(hdev->asic_prop.max_pending_cs - 1)];
+-	if ((other) && (!dma_fence_is_signaled(other))) {
++
++	if (other && !completion_done(&other->completion)) {
+ 		dev_dbg(hdev->dev,
+ 			"Rejecting CS because of too many in-flights CS\n");
+ 		rc = -EAGAIN;
+@@ -448,8 +444,8 @@ static int allocate_cs(struct hl_device *hdev, struct hl_ctx *ctx,
+ 		goto free_fence;
+ 	}
+ 
+-	dma_fence_init(&cs_cmpl->base_fence, &hl_fence_ops, &cs_cmpl->lock,
+-			ctx->asid, ctx->cs_sequence);
++	/* init hl_fence */
++	hl_fence_init(&cs_cmpl->base_fence);
+ 
+ 	cs->sequence = cs_cmpl->cs_seq;
+ 
+@@ -458,9 +454,9 @@ static int allocate_cs(struct hl_device *hdev, struct hl_ctx *ctx,
+ 							&cs_cmpl->base_fence;
+ 	ctx->cs_sequence++;
+ 
+-	dma_fence_get(&cs_cmpl->base_fence);
++	hl_fence_get(&cs_cmpl->base_fence);
+ 
+-	dma_fence_put(other);
++	hl_fence_put(other);
+ 
+ 	spin_unlock(&ctx->cs_lock);
+ 
+@@ -773,7 +769,7 @@ static int cs_ioctl_signal_wait(struct hl_fpriv *hpriv, enum hl_cs_type cs_type,
+ 	struct hl_ctx *ctx = hpriv->ctx;
+ 	struct hl_cs_chunk *cs_chunk_array, *chunk;
+ 	struct hw_queue_properties *hw_queue_prop;
+-	struct dma_fence *sig_fence = NULL;
++	struct hl_fence *sig_fence = NULL;
+ 	struct hl_cs_job *job;
+ 	struct hl_cs *cs;
+ 	struct hl_cb *cb;
+@@ -875,14 +871,14 @@ static int cs_ioctl_signal_wait(struct hl_fpriv *hpriv, enum hl_cs_type cs_type,
+ 			dev_err(hdev->dev,
+ 				"CS seq 0x%llx is not of a signal CS\n",
+ 				signal_seq);
+-			dma_fence_put(sig_fence);
++			hl_fence_put(sig_fence);
+ 			rc = -EINVAL;
+ 			goto free_signal_seq_array;
+ 		}
+ 
+-		if (dma_fence_is_signaled(sig_fence)) {
++		if (completion_done(&sig_fence->completion)) {
+ 			/* signal CS already finished */
+-			dma_fence_put(sig_fence);
++			hl_fence_put(sig_fence);
+ 			rc = 0;
+ 			goto free_signal_seq_array;
+ 		}
+@@ -894,7 +890,7 @@ static int cs_ioctl_signal_wait(struct hl_fpriv *hpriv, enum hl_cs_type cs_type,
+ 	rc = allocate_cs(hdev, ctx, cs_type, &cs);
+ 	if (rc) {
+ 		if (cs_type == CS_TYPE_WAIT)
+-			dma_fence_put(sig_fence);
++			hl_fence_put(sig_fence);
+ 		hl_ctx_put(ctx);
+ 		goto free_signal_seq_array;
+ 	}
+@@ -1154,7 +1150,7 @@ int hl_cs_ioctl(struct hl_fpriv *hpriv, void *data)
+ static long _hl_cs_wait_ioctl(struct hl_device *hdev,
+ 		struct hl_ctx *ctx, u64 timeout_us, u64 seq)
+ {
+-	struct dma_fence *fence;
++	struct hl_fence *fence;
+ 	unsigned long timeout;
+ 	long rc;
+ 
+@@ -1173,12 +1169,15 @@ static long _hl_cs_wait_ioctl(struct hl_device *hdev,
+ 				"Can't wait on CS %llu because current CS is at seq %llu\n",
+ 				seq, ctx->cs_sequence);
+ 	} else if (fence) {
+-		rc = dma_fence_wait_timeout(fence, true, timeout);
++		rc = wait_for_completion_interruptible_timeout(
++				&fence->completion, timeout);
++
+ 		if (fence->error == -ETIMEDOUT)
+ 			rc = -ETIMEDOUT;
+ 		else if (fence->error == -EIO)
+ 			rc = -EIO;
+-		dma_fence_put(fence);
++
++		hl_fence_put(fence);
+ 	} else {
+ 		dev_dbg(hdev->dev,
+ 			"Can't wait on seq %llu because current CS is at seq %llu (Fence is gone)\n",
+diff --git a/drivers/misc/habanalabs/common/context.c b/drivers/misc/habanalabs/common/context.c
+index 3e375958e73b..b168a9fce817 100644
+--- a/drivers/misc/habanalabs/common/context.c
++++ b/drivers/misc/habanalabs/common/context.c
+@@ -23,7 +23,7 @@ static void hl_ctx_fini(struct hl_ctx *ctx)
+ 	 */
+ 
+ 	for (i = 0 ; i < hdev->asic_prop.max_pending_cs ; i++)
+-		dma_fence_put(ctx->cs_pending[i]);
++		hl_fence_put(ctx->cs_pending[i]);
+ 
+ 	kfree(ctx->cs_pending);
+ 
+@@ -128,7 +128,7 @@ int hl_ctx_init(struct hl_device *hdev, struct hl_ctx *ctx, bool is_kernel_ctx)
+ 	atomic_set(&ctx->thread_ctx_switch_token, 1);
+ 	ctx->thread_ctx_switch_wait_token = 0;
+ 	ctx->cs_pending = kcalloc(hdev->asic_prop.max_pending_cs,
+-				sizeof(struct dma_fence *),
++				sizeof(struct hl_fence *),
+ 				GFP_KERNEL);
+ 	if (!ctx->cs_pending)
+ 		return -ENOMEM;
+@@ -184,10 +184,10 @@ int hl_ctx_put(struct hl_ctx *ctx)
+ 	return kref_put(&ctx->refcount, hl_ctx_do_release);
+ }
+ 
+-struct dma_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq)
++struct hl_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq)
+ {
+ 	struct asic_fixed_properties *asic_prop = &ctx->hdev->asic_prop;
+-	struct dma_fence *fence;
++	struct hl_fence *fence;
+ 
+ 	spin_lock(&ctx->cs_lock);
+ 
+@@ -201,8 +201,9 @@ struct dma_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq)
+ 		return NULL;
+ 	}
+ 
+-	fence = dma_fence_get(
+-			ctx->cs_pending[seq & (asic_prop->max_pending_cs - 1)]);
++	fence = ctx->cs_pending[seq & (asic_prop->max_pending_cs - 1)];
++	hl_fence_get(fence);
++
+ 	spin_unlock(&ctx->cs_lock);
+ 
+ 	return fence;
 diff --git a/drivers/misc/habanalabs/common/habanalabs.h b/drivers/misc/habanalabs/common/habanalabs.h
-index 6df9db821a31..942f7e52f1a2 100644
+index 018d9d67e8e6..6df9db821a31 100644
 --- a/drivers/misc/habanalabs/common/habanalabs.h
 +++ b/drivers/misc/habanalabs/common/habanalabs.h
-@@ -1481,6 +1481,7 @@ struct hl_device_idle_busy_ts {
-  * @soft_reset_cnt: number of soft reset since the driver was loaded.
-  * @hard_reset_cnt: number of hard reset since the driver was loaded.
-  * @idle_busy_ts_idx: index of current entry in idle_busy_ts_arr
-+ * @clk_throttling_reason: bitmask represents the current clk throttling reasons
-  * @id: device minor.
-  * @id_control: minor of the control device
-  * @cpu_pci_msb_addr: 50-bit extension bits for the device CPU's 40-bit
-@@ -1584,6 +1585,7 @@ struct hl_device {
- 	u32				soft_reset_cnt;
- 	u32				hard_reset_cnt;
- 	u32				idle_busy_ts_idx;
-+	u32				clk_throttling_reason;
- 	u16				id;
- 	u16				id_control;
- 	u16				cpu_pci_msb_addr;
-@@ -1838,6 +1840,8 @@ void hl_fw_cpu_accessible_dma_pool_free(struct hl_device *hdev, size_t size,
- int hl_fw_send_heartbeat(struct hl_device *hdev);
- int hl_fw_armcp_info_get(struct hl_device *hdev);
- int hl_fw_get_eeprom_data(struct hl_device *hdev, void *data, size_t max_size);
-+int hl_fw_armcp_pci_counters_get(struct hl_device *hdev,
-+		struct hl_info_pci_counters *counters);
- int hl_fw_init_cpu(struct hl_device *hdev, u32 cpu_boot_status_reg,
- 			u32 msg_to_cpu_reg, u32 cpu_msg_status_reg,
- 			u32 boot_err0_reg, bool skip_bmc,
-diff --git a/drivers/misc/habanalabs/common/habanalabs_ioctl.c b/drivers/misc/habanalabs/common/habanalabs_ioctl.c
-index 5af1c03da473..4d838b1a3bbe 100644
---- a/drivers/misc/habanalabs/common/habanalabs_ioctl.c
-+++ b/drivers/misc/habanalabs/common/habanalabs_ioctl.c
-@@ -276,6 +276,41 @@ static int time_sync_info(struct hl_device *hdev, struct hl_info_args *args)
- 		min((size_t) max_size, sizeof(time_sync))) ? -EFAULT : 0;
- }
- 
-+static int pci_counters_info(struct hl_fpriv *hpriv, struct hl_info_args *args)
-+{
-+	struct hl_device *hdev = hpriv->hdev;
-+	struct hl_info_pci_counters pci_counters = {0};
-+	u32 max_size = args->return_size;
-+	void __user *out = (void __user *) (uintptr_t) args->return_pointer;
-+	int rc;
-+
-+	if ((!max_size) || (!out))
-+		return -EINVAL;
-+
-+	rc = hl_fw_armcp_pci_counters_get(hdev, &pci_counters);
-+	if (rc)
-+		return rc;
-+
-+	return copy_to_user(out, &pci_counters,
-+		min((size_t) max_size, sizeof(pci_counters))) ? -EFAULT : 0;
-+}
-+
-+static int clk_throttle_info(struct hl_fpriv *hpriv, struct hl_info_args *args)
-+{
-+	struct hl_device *hdev = hpriv->hdev;
-+	struct hl_info_clk_throttle clk_throttle = {0};
-+	u32 max_size = args->return_size;
-+	void __user *out = (void __user *) (uintptr_t) args->return_pointer;
-+
-+	if ((!max_size) || (!out))
-+		return -EINVAL;
-+
-+	clk_throttle.clk_throttling_reason = hdev->clk_throttling_reason;
-+
-+	return copy_to_user(out, &clk_throttle,
-+		min((size_t) max_size, sizeof(clk_throttle))) ? -EFAULT : 0;
-+}
-+
- static int cs_counters_info(struct hl_fpriv *hpriv, struct hl_info_args *args)
- {
- 	struct hl_device *hdev = hpriv->hdev;
-@@ -360,6 +395,12 @@ static int _hl_info_ioctl(struct hl_fpriv *hpriv, void *data,
- 	case HL_INFO_CS_COUNTERS:
- 		return cs_counters_info(hpriv, args);
- 
-+	case HL_INFO_PCI_COUNTERS:
-+		return pci_counters_info(hpriv, args);
-+
-+	case HL_INFO_CLK_THROTTLE_REASON:
-+		return clk_throttle_info(hpriv, args);
-+
- 	default:
- 		dev_err(dev, "Invalid request %d\n", args->op);
- 		rc = -ENOTTY;
-diff --git a/drivers/misc/habanalabs/gaudi/gaudi.c b/drivers/misc/habanalabs/gaudi/gaudi.c
-index 00a0a7238d81..41d55a5f7f83 100644
---- a/drivers/misc/habanalabs/gaudi/gaudi.c
-+++ b/drivers/misc/habanalabs/gaudi/gaudi.c
-@@ -5620,21 +5620,25 @@ static void gaudi_print_clk_change_info(struct hl_device *hdev,
- {
- 	switch (event_type) {
- 	case GAUDI_EVENT_FIX_POWER_ENV_S:
-+		hdev->clk_throttling_reason |= HL_CLK_THROTTLE_POWER;
- 		dev_info_ratelimited(hdev->dev,
- 			"Clock throttling due to power consumption\n");
- 		break;
- 
- 	case GAUDI_EVENT_FIX_POWER_ENV_E:
-+		hdev->clk_throttling_reason &= ~HL_CLK_THROTTLE_POWER;
- 		dev_info_ratelimited(hdev->dev,
- 			"Power envelop is safe, back to optimal clock\n");
- 		break;
- 
- 	case GAUDI_EVENT_FIX_THERMAL_ENV_S:
-+		hdev->clk_throttling_reason |= HL_CLK_THROTTLE_THERMAL;
- 		dev_info_ratelimited(hdev->dev,
- 			"Clock throttling due to overheating\n");
- 		break;
- 
- 	case GAUDI_EVENT_FIX_THERMAL_ENV_E:
-+		hdev->clk_throttling_reason &= ~HL_CLK_THROTTLE_THERMAL;
- 		dev_info_ratelimited(hdev->dev,
- 			"Thermal envelop is safe, back to optimal clock\n");
- 		break;
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 85030759b2af..c497ae25c331 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -4549,18 +4549,22 @@ static void goya_print_clk_change_info(struct hl_device *hdev, u16 event_type)
- {
- 	switch (event_type) {
- 	case GOYA_ASYNC_EVENT_ID_FIX_POWER_ENV_S:
-+		hdev->clk_throttling_reason |= HL_CLK_THROTTLE_POWER;
- 		dev_info_ratelimited(hdev->dev,
- 			"Clock throttling due to power consumption\n");
- 		break;
- 	case GOYA_ASYNC_EVENT_ID_FIX_POWER_ENV_E:
-+		hdev->clk_throttling_reason &= ~HL_CLK_THROTTLE_POWER;
- 		dev_info_ratelimited(hdev->dev,
- 			"Power envelop is safe, back to optimal clock\n");
- 		break;
- 	case GOYA_ASYNC_EVENT_ID_FIX_THERMAL_ENV_S:
-+		hdev->clk_throttling_reason |= HL_CLK_THROTTLE_THERMAL;
- 		dev_info_ratelimited(hdev->dev,
- 			"Clock throttling due to overheating\n");
- 		break;
- 	case GOYA_ASYNC_EVENT_ID_FIX_THERMAL_ENV_E:
-+		hdev->clk_throttling_reason &= ~HL_CLK_THROTTLE_THERMAL;
- 		dev_info_ratelimited(hdev->dev,
- 			"Thermal envelop is safe, back to optimal clock\n");
- 		break;
-diff --git a/drivers/misc/habanalabs/include/common/armcp_if.h b/drivers/misc/habanalabs/include/common/armcp_if.h
-index 07f9972db28d..1403c937253c 100644
---- a/drivers/misc/habanalabs/include/common/armcp_if.h
-+++ b/drivers/misc/habanalabs/include/common/armcp_if.h
-@@ -243,6 +243,8 @@ enum armcp_packet_id {
- 	ARMCP_PACKET_TEMPERATURE_SET,		/* sysfs */
- 	ARMCP_PACKET_VOLTAGE_SET,		/* sysfs */
- 	ARMCP_PACKET_CURRENT_SET,		/* sysfs */
-+	ARMCP_PACKET_PCIE_THROUGHPUT_GET,	/* internal */
-+	ARMCP_PACKET_PCIE_REPLAY_CNT_GET,	/* internal */
- };
- 
- #define ARMCP_PACKET_FENCE_VAL	0xFE8CE7A5
-@@ -277,6 +279,9 @@ struct armcp_packet {
- 			__u8 pad; /* unused */
- 		};
- 
-+		/* For any general request */
-+		__le32 index;
-+
- 		/* For frequency get/set */
- 		__le32 pll_index;
- 
-@@ -344,6 +349,11 @@ enum armcp_pwm_attributes {
- 	armcp_pwm_enable
- };
- 
-+enum armcp_pcie_throughput_attributes {
-+	armcp_pcie_throughput_tx,
-+	armcp_pcie_throughput_rx
-+};
-+
- /* Event Queue Packets */
- 
- struct eq_generic_event {
-diff --git a/include/uapi/misc/habanalabs.h b/include/uapi/misc/habanalabs.h
-index d5c4f983b7a8..ee13b919db35 100644
---- a/include/uapi/misc/habanalabs.h
-+++ b/include/uapi/misc/habanalabs.h
-@@ -264,6 +264,8 @@ enum hl_device_status {
-  * HL_INFO_TIME_SYNC     - Retrieve the device's time alongside the host's time
-  *                         for synchronization.
-  * HL_INFO_CS_COUNTERS   - Retrieve command submission counters
-+ * HL_INFO_PCI_COUNTERS  - Retrieve PCI counters
-+ * HL_INFO_CLK_THROTTLE_REASON - Retrieve clock throttling reason
-  */
- #define HL_INFO_HW_IP_INFO		0
- #define HL_INFO_HW_EVENTS		1
-@@ -276,6 +278,8 @@ enum hl_device_status {
- #define HL_INFO_RESET_COUNT		9
- #define HL_INFO_TIME_SYNC		10
- #define HL_INFO_CS_COUNTERS		11
-+#define HL_INFO_PCI_COUNTERS		12
-+#define HL_INFO_CLK_THROTTLE_REASON	13
- 
- #define HL_INFO_VERSION_MAX_LEN	128
- #define HL_INFO_CARD_NAME_MAX_LEN	16
-@@ -340,6 +344,29 @@ struct hl_info_time_sync {
- 	__u64 host_time;
+@@ -15,7 +15,6 @@
+ #include <linux/cdev.h>
+ #include <linux/iopoll.h>
+ #include <linux/irqreturn.h>
+-#include <linux/dma-fence.h>
+ #include <linux/dma-direction.h>
+ #include <linux/scatterlist.h>
+ #include <linux/hashtable.h>
+@@ -342,9 +341,22 @@ struct asic_fixed_properties {
+ 	u8				completion_queues_count;
  };
  
 +/**
-+ * struct hl_info_pci_counters - pci counters
-+ * @rx_throughput: PCI rx throughput KBps
-+ * @tx_throughput: PCI tx throughput KBps
-+ * @replay_cnt: PCI replay counter
++ * struct hl_fence - software synchronization primitive
++ * @completion: fence is implemented using completion
++ * @refcount: refcount for this fence
++ * @error: mark this fence with error
++ *
 + */
-+struct hl_info_pci_counters {
-+	__u64 rx_throughput;
-+	__u64 tx_throughput;
-+	__u64 replay_cnt;
-+};
-+
-+#define HL_CLK_THROTTLE_POWER	0x1
-+#define HL_CLK_THROTTLE_THERMAL	0x2
-+
-+/**
-+ * struct hl_info_clk_throttle - clock throttling reason
-+ * @clk_throttling_reason: each bit represents a clk throttling reason
-+ */
-+struct hl_info_clk_throttle {
-+	__u32 clk_throttling_reason;
++struct hl_fence {
++	struct completion	completion;
++	struct kref		refcount;
++	int			error;
 +};
 +
  /**
-  * struct hl_info_cs_counters - command submission counters
-  * @out_of_mem_drop_cnt: dropped due to memory allocation issue
+  * struct hl_cs_compl - command submission completion object.
+- * @base_fence: kernel fence object.
++ * @base_fence: hl fence object.
+  * @lock: spinlock to protect fence.
+  * @hdev: habanalabs device structure.
+  * @hw_sob: the H/W SOB used in this signal/wait CS.
+@@ -353,7 +365,7 @@ struct asic_fixed_properties {
+  * @sob_val: the SOB value that is used in this signal/wait CS.
+  */
+ struct hl_cs_compl {
+-	struct dma_fence	base_fence;
++	struct hl_fence		base_fence;
+ 	spinlock_t		lock;
+ 	struct hl_device	*hdev;
+ 	struct hl_hw_sob	*hw_sob;
+@@ -800,7 +812,7 @@ struct hl_va_range {
+  * @hdev: pointer to the device structure.
+  * @refcount: reference counter for the context. Context is released only when
+  *		this hits 0l. It is incremented on CS and CS_WAIT.
+- * @cs_pending: array of DMA fence objects representing pending CS.
++ * @cs_pending: array of hl fence objects representing pending CS.
+  * @host_va_range: holds available virtual addresses for host mappings.
+  * @host_huge_va_range: holds available virtual addresses for host mappings
+  *                      with huge pages.
+@@ -832,7 +844,7 @@ struct hl_ctx {
+ 	struct hl_fpriv		*hpriv;
+ 	struct hl_device	*hdev;
+ 	struct kref		refcount;
+-	struct dma_fence	**cs_pending;
++	struct hl_fence		**cs_pending;
+ 	struct hl_va_range	*host_va_range;
+ 	struct hl_va_range	*host_huge_va_range;
+ 	struct hl_va_range	*dram_va_range;
+@@ -919,8 +931,8 @@ struct hl_cs {
+ 	struct list_head	job_list;
+ 	spinlock_t		job_lock;
+ 	struct kref		refcount;
+-	struct dma_fence	*fence;
+-	struct dma_fence	*signal_fence;
++	struct hl_fence		*fence;
++	struct hl_fence		*signal_fence;
+ 	struct work_struct	finish_work;
+ 	struct delayed_work	work_tdr;
+ 	struct list_head	mirror_node;
+@@ -1736,7 +1748,7 @@ int hl_ctx_init(struct hl_device *hdev, struct hl_ctx *ctx, bool is_kernel_ctx);
+ void hl_ctx_do_release(struct kref *ref);
+ void hl_ctx_get(struct hl_device *hdev,	struct hl_ctx *ctx);
+ int hl_ctx_put(struct hl_ctx *ctx);
+-struct dma_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq);
++struct hl_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq);
+ void hl_ctx_mgr_init(struct hl_ctx_mgr *mgr);
+ void hl_ctx_mgr_fini(struct hl_device *hdev, struct hl_ctx_mgr *mgr);
+ 
+@@ -1778,6 +1790,8 @@ void hl_cs_rollback_all(struct hl_device *hdev);
+ struct hl_cs_job *hl_cs_allocate_job(struct hl_device *hdev,
+ 		enum hl_queue_type queue_type, bool is_kernel_allocated_cb);
+ void hl_sob_reset_error(struct kref *ref);
++void hl_fence_put(struct hl_fence *fence);
++void hl_fence_get(struct hl_fence *fence);
+ 
+ void goya_set_asic_funcs(struct hl_device *hdev);
+ void gaudi_set_asic_funcs(struct hl_device *hdev);
+diff --git a/drivers/misc/habanalabs/common/hw_queue.c b/drivers/misc/habanalabs/common/hw_queue.c
+index 287681646071..65b9aa69a83e 100644
+--- a/drivers/misc/habanalabs/common/hw_queue.c
++++ b/drivers/misc/habanalabs/common/hw_queue.c
+@@ -474,7 +474,7 @@ static void init_signal_wait_cs(struct hl_cs *cs)
+ 		 * wait CS was submitted.
+ 		 */
+ 		mb();
+-		dma_fence_put(cs->signal_fence);
++		hl_fence_put(cs->signal_fence);
+ 		cs->signal_fence = NULL;
+ 	}
+ }
 -- 
 2.17.1
 
