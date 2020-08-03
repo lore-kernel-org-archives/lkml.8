@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA60C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB478C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0A21208B3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7915E2086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457789;
-	bh=I2dTzUq/9wZciNDjDhbRp5+H1zAaUup4cSjPwG9P8DI=;
+	s=default; t=1596457794;
+	bh=2lk5uht8HIRYz3UwO/2cD6dc8jKUN8zbECfiXqIVzu0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d2JYwJOfA6c7SBTbkKGj8ou0VDQF98DTgUwsvduGn053veZ8Vtw18vKo2zOtY17wc
-	 tk8s0iNrs79JoXREwkWAOH75hTgGdDk1mdMyamHL0SykMKJjZBPPe4B/8fMjLBPpAF
-	 AXKO4FMn3HnhWf2UmKcPbYr7yppccLOB6QifpLdk=
+	b=eFugB5kBNZU+WNYUOSjEb35uod56CoGo6Wqo8u6lIiVvR7v7cYAzcpU/XbOcw6+hx
+	 gfs2lYDyrX7oE5FRFp8BS0coSMxhr7lD1JiZ8NWKb+c3wmOidvOhox8869LLh5nPhY
+	 uf/fuHh3tTY9lWAcKIWAnMcElW4wRyDH6vnqIVgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbgHCM3t (ORCPT
+        id S1728362AbgHCM3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:29:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56456 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:29:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728965AbgHCM3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:29:45 -0400
+        id S1728972AbgHCM3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:29:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C23B3204EC;
-        Mon,  3 Aug 2020 12:29:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7C5B22CAE;
+        Mon,  3 Aug 2020 12:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457784;
-        bh=I2dTzUq/9wZciNDjDhbRp5+H1zAaUup4cSjPwG9P8DI=;
+        s=default; t=1596457787;
+        bh=2lk5uht8HIRYz3UwO/2cD6dc8jKUN8zbECfiXqIVzu0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m/MexlLfoQNbB8RxoXfu/YAxjYaThGWVOU7GdKUh4cDaN8X9UNsuF0o2D96Ut0WUE
-         lEHr7px6vzHslEq8rAqQCnxJy2T0Q5iGQS/0fjFIcEKvbvA/tQ4VXKJIr8wfRMFrSS
-         wkf9gOQWWr/4+Dkl35fM4eaW+vc7ApD9os9hxJBc=
+        b=WQrNjqyHB5ikzgoT6XEX+P4UdGsN73Bsy1Z4WYNuXr2gZkR30uCksnAO490oyKJQR
+         G5cLjxTykhBdwDAINMmSETG3aeyUHXkFSkgDL3r+ZzwXFpd3/Ey/aVAMY8MTAYTQQn
+         kgJr4OHIZApWMZYBJz5sb+3O41dXPK1b2vXbrHmY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Pisati <paolo.pisati@canonical.com>,
-        Jakub Kicinski <kuba@kernel.org>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 73/90] selftests: net: ip_defrag: modprobe missing nf_defrag_ipv6 support
-Date:   Mon,  3 Aug 2020 14:19:35 +0200
-Message-Id: <20200803121901.147778151@linuxfoundation.org>
+Subject: [PATCH 5.4 74/90] nfc: s3fwrn5: add missing release on skb in s3fwrn5_recv_frame
+Date:   Mon,  3 Aug 2020 14:19:36 +0200
+Message-Id: <20200803121901.195570101@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -61,58 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Pisati <paolo.pisati@canonical.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit aba69d49fb49c9166596dd78926514173b7f9ab5 ]
+[ Upstream commit 1e8fd3a97f2d83a7197876ceb4f37b4c2b00a0f3 ]
 
-Fix ip_defrag.sh when CONFIG_NF_DEFRAG_IPV6=m:
+The implementation of s3fwrn5_recv_frame() is supposed to consume skb on
+all execution paths. Release skb before returning -ENODEV.
 
-$ sudo ./ip_defrag.sh
-+ set -e
-+ mktemp -u XXXXXX
-+ readonly NETNS=ns-rGlXcw
-+ trap cleanup EXIT
-+ setup
-+ ip netns add ns-rGlXcw
-+ ip -netns ns-rGlXcw link set lo up
-+ ip netns exec ns-rGlXcw sysctl -w net.ipv4.ipfrag_high_thresh=9000000
-+ ip netns exec ns-rGlXcw sysctl -w net.ipv4.ipfrag_low_thresh=7000000
-+ ip netns exec ns-rGlXcw sysctl -w net.ipv4.ipfrag_time=1
-+ ip netns exec ns-rGlXcw sysctl -w net.ipv6.ip6frag_high_thresh=9000000
-+ ip netns exec ns-rGlXcw sysctl -w net.ipv6.ip6frag_low_thresh=7000000
-+ ip netns exec ns-rGlXcw sysctl -w net.ipv6.ip6frag_time=1
-+ ip netns exec ns-rGlXcw sysctl -w net.netfilter.nf_conntrack_frag6_high_thresh=9000000
-+ cleanup
-+ ip netns del ns-rGlXcw
-
-$ ls -la /proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh
-ls: cannot access '/proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh': No such file or directory
-
-$ sudo modprobe nf_defrag_ipv6
-$ ls -la /proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh
--rw-r--r-- 1 root root 0 Jul 14 12:34 /proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh
-
-Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/ip_defrag.sh | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/nfc/s3fwrn5/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/selftests/net/ip_defrag.sh b/tools/testing/selftests/net/ip_defrag.sh
-index 15d3489ecd9ce..ceb7ad4dbd945 100755
---- a/tools/testing/selftests/net/ip_defrag.sh
-+++ b/tools/testing/selftests/net/ip_defrag.sh
-@@ -6,6 +6,8 @@
- set +x
- set -e
- 
-+modprobe -q nf_defrag_ipv6
-+
- readonly NETNS="ns-$(mktemp -u XXXXXX)"
- 
- setup() {
+diff --git a/drivers/nfc/s3fwrn5/core.c b/drivers/nfc/s3fwrn5/core.c
+index 91d4d5b28a7d9..ba6c486d64659 100644
+--- a/drivers/nfc/s3fwrn5/core.c
++++ b/drivers/nfc/s3fwrn5/core.c
+@@ -198,6 +198,7 @@ int s3fwrn5_recv_frame(struct nci_dev *ndev, struct sk_buff *skb,
+ 	case S3FWRN5_MODE_FW:
+ 		return s3fwrn5_fw_recv_frame(ndev, skb);
+ 	default:
++		kfree_skb(skb);
+ 		return -ENODEV;
+ 	}
+ }
 -- 
 2.25.1
 
